@@ -1,0 +1,100 @@
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/Framework/interface/EDProducer.h"
+
+#include "CommonTools/Utils/interface/StringCutObjectSelector.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
+
+template<class FinalState>
+class PATTripletFinalStateBuilderT : public edm::EDProducer {
+  public:
+    typedef std::vector<FinalState> FinalStateCollection;
+
+    PATTripletFinalStateBuilderT(const edm::ParameterSet& pset);
+    virtual ~PATTripletFinalStateBuilderT(){}
+    void produce(edm::Event& evt, const edm::EventSetup& es);
+  private:
+    edm::InputTag leg1Src_;
+    edm::InputTag leg2Src_;
+    edm::InputTag leg3Src_;
+    edm::InputTag metSrc_;
+    edm::InputTag pvSrc_;
+    edm::InputTag evtSrc_;
+    StringCutObjectSelector<PATFinalState> cut_;
+};
+
+template<class FinalState>
+PATTripletFinalStateBuilderT<FinalState>::PATTripletFinalStateBuilderT(
+    const edm::ParameterSet& pset):
+  cut_(pset.getParameter<std::string>("cut"), true) {
+  leg1Src_ = pset.getParameter<edm::InputTag>("leg1Src");
+  leg2Src_ = pset.getParameter<edm::InputTag>("leg2Src");
+  leg3Src_ = pset.getParameter<edm::InputTag>("leg3Src");
+  metSrc_ = pset.getParameter<edm::InputTag>("metSrc");
+  pvSrc_ = pset.getParameter<edm::InputTag>("pvSrc");
+  evtSrc_ = pset.getParameter<edm::InputTag>("evtSrc");
+  produces<FinalStateCollection>();
+}
+
+template<class FinalState> void
+PATTripletFinalStateBuilderT<FinalState>::produce(
+    edm::Event& evt, const edm::EventSetup& es) {
+  // Get vertex & MET
+  edm::Handle<edm::View<pat::MET> > mets;
+  evt.getByLabel(metSrc_, mets);
+  edm::Ptr<pat::MET> met = mets->ptrAt(0);
+  assert(met.isNonnull());
+
+  edm::Handle<edm::View<reco::Vertex> > vertices;
+  evt.getByLabel(pvSrc_, vertices);
+  edm::Ptr<reco::Vertex> vtx = vertices->ptrAt(0);
+  assert(vtx.isNonnull());
+
+  edm::Handle<edm::View<PATFinalStateEvent> > fsEvent;
+  evt.getByLabel(evtSrc_, fsEvent);
+  edm::Ptr<PATFinalStateEvent> evtPtr = fsEvent->ptrAt(0);
+  assert(evtPtr.isNonnull());
+
+  std::auto_ptr<FinalStateCollection> output(new FinalStateCollection);
+
+  edm::Handle<edm::View<typename FinalState::daughter1_type> > leg1s;
+  evt.getByLabel(leg1Src_, leg1s);
+
+  edm::Handle<edm::View<typename FinalState::daughter2_type> > leg2s;
+  evt.getByLabel(leg2Src_, leg2s);
+
+  edm::Handle<edm::View<typename FinalState::daughter3_type> > leg3s;
+  evt.getByLabel(leg3Src_, leg3s);
+
+  for (size_t iLeg1 = 0; iLeg1 < leg1s->size(); ++iLeg1) {
+    edm::Ptr<typename FinalState::daughter1_type> leg1 = leg1s->ptrAt(iLeg1);
+    assert(leg1.isNonnull());
+
+    for (size_t iLeg2 = 0; iLeg2 < leg2s->size(); ++iLeg2) {
+      edm::Ptr<typename FinalState::daughter2_type> leg2 = leg2s->ptrAt(iLeg2);
+      assert(leg2.isNonnull());
+
+      // Skip if the two objects are the same thing.
+      if (reco::CandidatePtr(leg1) == reco::CandidatePtr(leg2))
+        continue;
+
+      for (size_t iLeg3 = 0; iLeg3 < leg3s->size(); ++iLeg3) {
+        edm::Ptr<typename FinalState::daughter3_type> leg3 = leg3s->ptrAt(iLeg3);
+        assert(leg3.isNonnull());
+
+        // Skip if the two objects are the same thing.
+        if (reco::CandidatePtr(leg1) == reco::CandidatePtr(leg3))
+          continue;
+        if (reco::CandidatePtr(leg2) == reco::CandidatePtr(leg3))
+          continue;
+
+        FinalState outputCand(leg1, leg2, leg3, met, vtx, evtPtr);
+        if (cut_(outputCand))
+          output->push_back(outputCand);
+      }
+    }
+  }
+  evt.put(output);
+}

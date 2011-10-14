@@ -1,0 +1,6 @@
+<library   file="*.cc" name="FinalStateAnalysisRecoToolsPlugins">
+  <flags   EDM_PLUGIN="1"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="FWCore/Framework"/>
+  <use   name="DataFormats/Candidate"/>
+</library>

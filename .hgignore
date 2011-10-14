@@ -1,0 +1,6 @@
+.*.pyc
+CVS
+.*.pdf
+.*.png
+__init__.py
+.*.root
