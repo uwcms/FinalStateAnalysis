@@ -1,0 +1,10 @@
+<use   name="root"/>
+<use   name="boost_program_options"/>
+<use   name="PhysicsTools/FWLite"/>
+<use   name="PhysicsTools/UtilAlgos"/>
+<use   name="EvanSoft/DataFormats"/>
+<use   name="EvanSoft/Selectors"/>
+
+<environment>
+  <bin   file="analyzeFinalStates.cc"></bin>
+</environment>

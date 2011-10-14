@@ -110,6 +110,18 @@ HLT_Mu15 = cms.PSet(
     invert = cms.bool(False)
 )
 
+HLT_Mu30 = cms.PSet(
+    name = cms.string("${name}_HLT_Mu30"),
+    description = cms.string("$nicename trigger match HLT_Mu30"),
+    cut = cms.string(
+        r'matchToHLTPath(${index}, "HLT_Mu30_v\\d+")'
+    ),
+    plottable = cms.string(
+        r'matchToHLTPath(${index}, "HLT_Mu30_v\\d+")'
+    ),
+    invert = cms.bool(False)
+)
+
 # For HLT Mu17 Ele8.
 HLT_Mu17_Ele8 = cms.PSet(
     name = cms.string("${name}_HLT_Mu17_Ele8"),
