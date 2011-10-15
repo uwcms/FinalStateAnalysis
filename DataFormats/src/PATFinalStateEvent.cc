@@ -4,7 +4,7 @@
 #include <boost/regex.hpp>
 
 namespace {
-  bool matchedToAnObject(const pat::TriggerObjectRefVector& trgObjects,
+  int matchedToAnObject(const pat::TriggerObjectRefVector& trgObjects,
       const reco::Candidate& cand, double maxDeltaR) {
     bool matched = false;
     for (size_t i = 0; i < trgObjects.size(); ++i) {
@@ -13,7 +13,9 @@ namespace {
         break;
       }
     }
-    return matched;
+    if (matched)
+      return 1;
+    else return 0;
   }
 }
 
@@ -87,33 +89,35 @@ PATFinalStateEvent::matchingTriggerFilters(const std::string& pattern,
   return output;
 }
 
-bool PATFinalStateEvent::hltResult(const std::string& pattern) const {
+int PATFinalStateEvent::hltResult(const std::string& pattern) const {
   std::vector<const pat::TriggerPath*> paths = matchingTriggerPaths(pattern);
-  bool result = false;
+  if (!paths.size())
+    return -1;
+  int result = 0;
   for (size_t i = 0; i < paths.size(); ++i) {
     if (paths[i]->wasAccept()) {
-      result = true;
+      result = 1;
       break;
     }
   }
   return result;
 }
 
-bool PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
+int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
   std::vector<const pat::TriggerFilter*> filters =
     matchingTriggerFilters(pattern);
   if (!filters.size())
-    return false;
+    return -1;
   return matchedToAnObject(
       triggerEvent_.filterObjects(filters[0]->label()), cand, maxDeltaR);
 }
 
-bool PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
+int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
   std::vector<const pat::TriggerPath*> paths = matchingTriggerPaths(pattern);
   if (!paths.size())
-    return false;
+    return -1;
   return matchedToAnObject(
       triggerEvent_.pathObjects(paths[0]->name()), cand, maxDeltaR);
 }

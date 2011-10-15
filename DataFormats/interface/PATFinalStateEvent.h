@@ -61,15 +61,15 @@ class PATFinalStateEvent {
     std::vector<const pat::TriggerFilter*> matchingTriggerFilters(
         const std::string& pattern, bool ez=false) const;
 
-    /// Get the result of a given path.  Returns false if it doesn't exist
-    bool hltResult(const std::string& pattern) const;
+    /// Get the result of a given path.  Returns -1 if it doesn't exist
+    int hltResult(const std::string& pattern) const;
 
     /// Determine if a candidate is matched to an HLT filter
-    bool matchedToFilter(const reco::Candidate& cand, const std::string& filter,
+    int matchedToFilter(const reco::Candidate& cand, const std::string& filter,
         double maxDeltaR = 0.3) const;
 
     /// Determine if a candidate is matched to an HLT path
-    bool matchedToPath(const reco::Candidate& cand, const std::string& pattern,
+    int matchedToPath(const reco::Candidate& cand, const std::string& pattern,
         double maxDeltaR = 0.3) const;
 
     /// Get a named event weight

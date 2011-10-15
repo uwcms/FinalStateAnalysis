@@ -228,7 +228,7 @@ PATFinalState::ptOrdered(size_t i, size_t j, const std::string& tags) const {
   return d[i]->pt() > d[j]->pt();
 }
 
-bool
+int
 PATFinalState::matchToHLTFilter(size_t i, const std::string& filter,
     double maxDeltaR) const {
   const reco::Candidate* dau = this->daughter(i);
@@ -236,7 +236,7 @@ PATFinalState::matchToHLTFilter(size_t i, const std::string& filter,
   return evt()->matchedToFilter(*dau, filter, maxDeltaR);
 }
 
-bool
+int
 PATFinalState::matchToHLTPath(size_t i, const std::string& path,
     double maxDeltaR) const {
   const reco::Candidate* dau = this->daughter(i);

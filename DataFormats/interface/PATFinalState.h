@@ -82,11 +82,13 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     edm::Ptr<pat::Electron> daughterAsElectron(size_t i) const;
     edm::Ptr<pat::Jet> daughterAsJet(size_t i) const;
 
-    /// Check if the ith daughter is matched to a given filter
-    bool matchToHLTFilter(size_t i, const std::string& filter,
+    /// Check if the ith daughter is matched to a given filter.  Returns -1
+    /// if filter doesn't exist.
+    int matchToHLTFilter(size_t i, const std::string& filter,
         double maxDeltaR = 0.3) const;
-    /// Check if the ith daughter is matched to a given path
-    bool matchToHLTPath(size_t i, const std::string& path,
+    /// Check if the ith daughter is matched to a given path.  Returns -1
+    /// if filter doesn't exists.
+    int matchToHLTPath(size_t i, const std::string& path,
         double maxDeltaR = 0.3) const;
 
     // Evaluate a string function on this object (might be slow)
