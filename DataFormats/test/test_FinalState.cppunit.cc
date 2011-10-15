@@ -6,8 +6,8 @@
 #include <Utilities/Testing/interface/CppUnit_testdriver.icpp>
 #include <vector>
 
-#include "EvanSoft/DataFormats/interface/PATDiLeptonFinalStates.h"
-#include "EvanSoft/DataFormats/interface/PATTriLeptonFinalStates.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATDiLeptonFinalStates.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATTriLeptonFinalStates.h"
 
 #include "DataFormats/Math/interface/Vector3D.h"
 

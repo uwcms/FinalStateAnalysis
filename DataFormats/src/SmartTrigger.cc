@@ -1,7 +1,14 @@
-#include "EvanSoft/DataFormats/interface/SmartTrigger.h"
+#include "FinalStateAnalysis/DataFormats/interface/SmartTrigger.h"
+
+#include <string>
+#include <vector>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/erase.hpp>
+#include <boost/regex.hpp>
+
+#include "DataFormats/PatCandidates/interface/TriggerEvent.h"
+#include "DataFormats/Luminosity/interface/LumiSummary.h"
 
 typedef std::vector<std::string> vstring;
 
@@ -28,7 +35,7 @@ getFullName(const std::string& glob, const vstring& paths) {
   boost::regex regexp(glob);
   size_t result = paths.size();
   for (size_t i = 0; i < paths.size(); ++i) {
-    if (regexp.match(paths[i])) {
+    if (boost::regex_match(paths[i], regexp)) {
       // Make sure only one path matches our glob.
       if (result != paths.size())
         throw;
@@ -40,12 +47,12 @@ getFullName(const std::string& glob, const vstring& paths) {
 }
 
 unsigned int
-getPrescale(const std::string& path, const pat::TriggerEvent& trgResult)
+getPrescale(const std::string& path, const pat::TriggerEvent& trgResult) {
   return 999;
 }
 
 unsigned int
-getPrescale(const std::string& path, const LumiSummary& trgResult)
+getPrescale(const std::string& path, const LumiSummary& trgResult) {
   return 999;
 }
 
@@ -82,6 +89,8 @@ chooseGroup(const VVInt& prescales) {
   return bestGroup;
 }
 
+} // End internal functions
+
 SmartTriggerResult makeDecision(const VVInt& prescales, const VVInt& results) {
   unsigned int prescale = 0;
   bool passed = false;
@@ -90,7 +99,7 @@ SmartTriggerResult makeDecision(const VVInt& prescales, const VVInt& results) {
     // We know by construction the prescales are the same in the whole group
     prescale = prescales[group][0];
     for (size_t i = 0; i < results.size(); ++i) {
-      if (results[i]) {
+      if (results[group][i]) {
         passed = true;
         break;
       }
@@ -98,12 +107,12 @@ SmartTriggerResult makeDecision(const VVInt& prescales, const VVInt& results) {
   }
   SmartTriggerResult output;
   output.group = group;
-  output.prescale = prescae;
+  output.prescale = prescale;
   output.passed = passed;
   return output;
 }
 
-SmartTrigger
+SmartTriggerResult
 smartTrigger(const std::string& trgs, const pat::TriggerEvent& result) {
   // Tokenize the trigger groups
   vstring groups = getGroups(trgs);
@@ -116,30 +125,11 @@ smartTrigger(const std::string& trgs, const pat::TriggerEvent& result) {
     vstring paths = getPaths(groups[i]);
     for (size_t p = 0; p < paths.size(); ++p) {
       const std::string& path = paths[p];
-      groupPrescale.push_back(result.prescale(path));
-      groupResult.push_back(result.accept(path));
-    }
-    prescales.push_back(groupPrescale);
-    results.push_back(groupResult);
-  }
-  return makeDecision(prescales, results);
-}
-
-SmartTrigger
-smartTrigger(const std::string& trgs, const pat::TriggerEvent& result) {
-  // Tokenize the trigger groups
-  vstring groups = getGroups(trgs);
-  VVInt prescales;
-  VVInt results;
-  for (size_t i = 0; i < groups.size(); ++i) {
-    // Get the paths in this group
-    VInt groupPrescale;
-    VInt groupResult;
-    vstring paths = getPaths(groups[i]);
-    for (size_t p = 0; p < paths.size(); ++p) {
-      const std::string& path = paths[p];
-      groupPrescale.push_back(result.prescale(path));
-      groupResult.push_back(result.accept(path));
+      const pat::TriggerPath* trgPath = result.path(path);
+      int thePrescale = (trgPath != NULL) ? trgPath->prescale() : -1;
+      int theResult = (trgPath != NULL) ? trgPath->wasAccept() : -1;
+      groupPrescale.push_back(thePrescale);
+      groupResult.push_back(theResult);
     }
     prescales.push_back(groupPrescale);
     results.push_back(groupResult);

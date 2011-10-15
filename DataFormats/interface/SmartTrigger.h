@@ -30,6 +30,8 @@
  *
  */
 
+#include <string>
+#include <vector>
 // Fwd Declarations
 namespace pat {
   class TriggerEvent;
@@ -49,5 +51,11 @@ SmartTriggerResult smartTrigger(
 /// Get the result for a whole lumi section.
 SmartTriggerResult smartTrigger(
     const std::string& trgs, const LumiSummary& lumiSummary);
+
+/// Expose main method for testing.  Not for general use.
+SmartTriggerResult makeDecision(
+    const std::vector<std::vector<unsigned int> >& prescales,
+    const std::vector<std::vector<unsigned int> >& results);
+
 
 #endif /* end of include guard: SMARTTRIGGER_ZE9BQMEK */
