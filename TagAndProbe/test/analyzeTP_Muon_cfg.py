@@ -1,6 +1,9 @@
 import FWCore.ParameterSet.Config as cms
+import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
+from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
+from FinalStateAnalysis.Selectors.selectors import selectors
+from FinalStateAnalysis.Selectors.plotting import plotting
 
-import EvanSoft.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
     skipEvents=0, # For debugging
 )
@@ -55,7 +58,7 @@ selections = cms.VPSet(
     # Trigger on single muon events with HLT_Mu30
     PSetTemplate(selectors.trigger.hlt).replace(
         name = 'HLT_Mu30', nicename = 'HLT Muon 30 result',
-        hlt_path = r'HLT_Mu30_v\\d+'
+        hlt_path = r'HLT_Mu30_v\\d+',
     ),
 
     # Initially, there is double counting in the FinalStates. i.e. for muons A
@@ -97,6 +100,25 @@ plots = cms.PSet(
     )
 )
 
+def add_ntuple(name, function):
+    setattr(plots.ntuple, name, cms.string(function))
+
+for leg in [leg1, leg2]:
+    for plot in plotting.muons.all:
+        plot_cfg = PSetTemplate(plot).replace(**leg)
+        add_ntuple(plot_cfg.name.value(), plot_cfg.plotquantity.value())
+
+for plot in plotting.candidate.all:
+    plot_cfg = PSetTemplate(plot).replace(
+            name = 'finalStateVisP4',
+            nicename = 'Visible final state',
+            getter = ''
+        )
+    add_ntuple(plot_cfg.name.value(), plot_cfg.plotquantity.value())
+
+add_ntuple('evt', 'userInt("evt")')
+add_ntuple('run', 'userInt("run")')
+
 # Analyze MuMu states
 process.mm = cms.PSet(
     process.common,
@@ -106,7 +128,7 @@ process.mm = cms.PSet(
         final = cms.PSet(
             sort = cms.string('daughter(2).pt'),
             take = cms.uint32(1),
-            plots = plots
+            plot = plots
         ),
         selections = selections
     )
