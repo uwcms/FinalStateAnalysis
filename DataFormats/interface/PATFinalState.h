@@ -13,6 +13,8 @@
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
 
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateProxy.h"
+
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
 
@@ -153,14 +155,14 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         const std::string& label, const std::string& filter="") const;
 
     /// Build a subcandidate
-    std::auto_ptr<PATFinalState> subcand(int i, int j,
+    PATFinalStateProxy subcand(int i, int j,
         int x=-1, int y=-1, int z=-1) const;
 
     /// Build a subcand using a tag string
-    std::auto_ptr<PATFinalState> subcand(const std::string& tags) const;
+    PATFinalStateProxy subcand(const std::string& tags) const;
 
     /// Build a subcand using a tag string with included (filtered) extras
-    std::auto_ptr<PATFinalState> subcand(
+    PATFinalStateProxy subcand(
         const std::string& tags, const std::string& extras,
         const std::string& filter="") const;
 

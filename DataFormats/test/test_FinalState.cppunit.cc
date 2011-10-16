@@ -357,7 +357,7 @@ void testFinalState::testTriLepton() {
   CPPUNIT_ASSERT(finalState.vertexObject() == nullVtx);
 
   {
-    std::auto_ptr<PATFinalState> subcand = finalState.subcand(1, 2);
+    PATFinalStateProxy subcand = finalState.subcand(1, 2);
     reco::Candidate::LorentzVector expectP4 = mockMuonPtr1_->p4() + mockMuonPtr2_->p4();
     int nDaughters = subcand->numberOfDaughters();
     CPPUNIT_ASSERT_EQUAL(2, nDaughters);

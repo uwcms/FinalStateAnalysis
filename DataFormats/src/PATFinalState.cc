@@ -426,7 +426,7 @@ std::vector<reco::CandidatePtr> PATFinalState::extras(
   return output;
 }
 
-std::auto_ptr<PATFinalState>
+PATFinalStateProxy
 PATFinalState::subcand(int i, int j, int x, int y, int z) const {
   std::vector<reco::CandidatePtr> output;
   output.push_back(daughterPtr(i));
@@ -437,18 +437,18 @@ PATFinalState::subcand(int i, int j, int x, int y, int z) const {
     output.push_back(daughterPtr(y));
   if (z > -1)
     output.push_back(daughterPtr(z));
-  return std::auto_ptr<PATFinalState>(
+  return PATFinalStateProxy(
       new PATMultiCandFinalState(output, met(), vertexObject(), evt()));
 }
 
-std::auto_ptr<PATFinalState>
+PATFinalStateProxy
 PATFinalState::subcand(const std::string& tags) const {
   const std::vector<reco::CandidatePtr> daus = daughterPtrs(tags);
-  return std::auto_ptr<PATFinalState>(
+  return PATFinalStateProxy(
       new PATMultiCandFinalState(daus, met(), vertexObject(), evt()));
 }
 
-std::auto_ptr<PATFinalState>
+PATFinalStateProxy
 PATFinalState::subcand(const std::string& tags,
     const std::string& extraColl, const std::string& filter) const {
   const std::vector<reco::CandidatePtr> daus = daughterPtrs(tags);
@@ -461,7 +461,7 @@ PATFinalState::subcand(const std::string& tags,
   for (size_t i = 0; i < daus.size(); ++i) {
     toAdd.push_back(daus[i]);
   }
-  return std::auto_ptr<PATFinalState>(
+  return PATFinalStateProxy(
       new PATMultiCandFinalState(toAdd, met(), vertexObject(), evt()));
 }
 
