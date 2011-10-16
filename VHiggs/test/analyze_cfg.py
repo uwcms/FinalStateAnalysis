@@ -27,7 +27,10 @@ process.TFileService = cms.Service(
 process.steering = cms.PSet(
     analyzers = cms.vstring(
         'eee',
-        'eem', 'eet', 'emm', 'emt',
+        'eem',
+        'eet',
+        'emm',
+        'emt',
         'ett',
         'mmm',
         'mmt',
