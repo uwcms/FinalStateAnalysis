@@ -64,7 +64,7 @@ void testSmartTrigger::testGroupSelect() {
 
   // Prescale & Result from C
   CPPUNIT_ASSERT(result.prescale == 5);
-  CPPUNIT_ASSERT(result.passed == 1);
+  CPPUNIT_ASSERT(result.passed == true);
 }
 
 void testSmartTrigger::testMissingTrigger() {
@@ -76,7 +76,7 @@ void testSmartTrigger::testMissingTrigger() {
   VInt groupC;
   groupC.push_back(0);
   VInt groupD;
-  groupD.push_back(69);
+  groupD.push_back(19);
   VVInt prescales;
   prescales.push_back(groupA);
   prescales.push_back(groupB);
@@ -103,8 +103,8 @@ void testSmartTrigger::testMissingTrigger() {
   CPPUNIT_ASSERT(result.group == 3);
 
   // Prescale & Result from D
-  CPPUNIT_ASSERT(result.prescale == 69);
-  CPPUNIT_ASSERT(result.passed == 10);
+  CPPUNIT_ASSERT(result.prescale == 19);
+  CPPUNIT_ASSERT(result.passed == true);
 }
 
 // If everything is missing, return group = nGroups
@@ -145,7 +145,7 @@ void testSmartTrigger::testAllMissingTrigger() {
 
   // Prescale & Result from D
   CPPUNIT_ASSERT(result.prescale == 0);
-  CPPUNIT_ASSERT(result.passed == 0);
+  CPPUNIT_ASSERT(result.passed == false);
 }
 
 // You can OR triggers.
@@ -188,7 +188,7 @@ void testSmartTrigger::testOR() {
 
     // Prescale & Result from C
     CPPUNIT_ASSERT(result.prescale == 4);
-    CPPUNIT_ASSERT(result.passed == 1);
+    CPPUNIT_ASSERT(result.passed == true);
   }
 
   {
@@ -215,7 +215,7 @@ void testSmartTrigger::testOR() {
 
     // Prescale & Result from C
     CPPUNIT_ASSERT(result.prescale == 4);
-    CPPUNIT_ASSERT(result.passed == 1);
+    CPPUNIT_ASSERT(result.passed == true);
   }
 
   {
@@ -242,7 +242,7 @@ void testSmartTrigger::testOR() {
 
     // Prescale & Result from C
     CPPUNIT_ASSERT(result.prescale == 4);
-    CPPUNIT_ASSERT(result.passed == 0);
+    CPPUNIT_ASSERT_EQUAL(false, result.passed);
   }
 }
 
@@ -285,7 +285,7 @@ void testSmartTrigger::testORDifferentPrescales() {
 
   // Prescale & Result from D
   CPPUNIT_ASSERT(result.prescale == 5);
-  CPPUNIT_ASSERT(result.passed == 10);
+  CPPUNIT_ASSERT(result.passed == true);
 }
 
 CPPUNIT_TEST_SUITE_REGISTRATION(testSmartTrigger);

@@ -79,6 +79,9 @@ chooseGroup(const VVInt& prescales) {
     // Make sure all items have the same prescale.  If not, skip this group.
     if (minInGrp != maxInGrp)
       continue;
+    // If the prescale is zero, the trigger is off. Skip it.
+    if (minInGrp == 0)
+      continue;
     // Otherwise use this one (as it comes first) if it has a LOWER prescale
     // Not LT not LTE
     if (minInGrp < lowest) {
@@ -98,7 +101,7 @@ SmartTriggerResult makeDecision(const VVInt& prescales, const VVInt& results) {
   if (group < prescales.size()) {
     // We know by construction the prescales are the same in the whole group
     prescale = prescales[group][0];
-    for (size_t i = 0; i < results.size(); ++i) {
+    for (size_t i = 0; i < results[group].size(); ++i) {
       if (results[group][i]) {
         passed = true;
         break;

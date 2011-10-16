@@ -41,7 +41,7 @@ class LumiSummary;
 struct SmartTriggerResult {
   unsigned int group;
   unsigned int prescale;
-  unsigned int passed;
+  bool passed;
 };
 
 /// Get the result for a single event using the pat::TriggerEvent
