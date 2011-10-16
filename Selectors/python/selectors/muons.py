@@ -122,6 +122,20 @@ HLT_Mu30 = cms.PSet(
     invert = cms.bool(False)
 )
 
+# For Mu30 (the above doesn't work in MC??)
+
+hltSingleMu30L3Filtered30 = cms.PSet(
+    name = cms.string("${name}_hltSingleMu30L3Filtered30 "),
+    description = cms.string("$nicename trigger match (hltSingleMu30L3Filtered30) HLT_Mu30"),
+    cut = cms.string(
+        r'matchToHLTFilter(${index}, "hltSingleMu30(L2Qual|)L3Filtered30")'
+    ),
+    plottable = cms.string(
+        r'matchToHLTFilter(${index}, "hltSingleMu30(L2Qual|)L3Filtered30")'
+    ),
+    invert = cms.bool(False)
+)
+
 # For HLT Mu17 Ele8.
 HLT_Mu17_Ele8 = cms.PSet(
     name = cms.string("${name}_HLT_Mu17_Ele8"),
