@@ -81,7 +81,7 @@ selections = cms.VPSet(
 
     # Muon 0 is now defined as our tag muon.  Require it's matched to the firing
     # trigger.
-    PSetTemplate(selectors.muons.HLT_Mu30).replace(
+    PSetTemplate(selectors.muons.hltSingleMu30L3Filtered30).replace(
         name = 'TagMuon', nicename = 'Tag muon',
         index = 0
     ),
