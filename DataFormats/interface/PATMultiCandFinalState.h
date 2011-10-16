@@ -2,6 +2,7 @@
 #define FinalStateAnalysis_DataFormats_PATMultiCandFinalState_h
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "DataFormats/Candidate/interface/CandidateFwd.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 

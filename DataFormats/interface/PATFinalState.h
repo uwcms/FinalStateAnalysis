@@ -49,7 +49,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // Specify some of the systags for the daughters, in a comma separated list.
     std::vector<const reco::Candidate*> daughters(
         const std::string& tags) const;
-    reco::CandidatePtrVector daughterPtrs(const std::string& tags) const;
+    std::vector<reco::CandidatePtr> daughterPtrs(const std::string& tags) const;
 
     /// Check if the ith daughter has given user cand
     bool daughterHasUserCand(size_t i, const std::string& tag) const;
@@ -149,18 +149,18 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     bool likeFlavor(int i, int j) const;
 
     /// Get a collection of embedded extras
-    reco::CandidatePtrVector extras(
+    std::vector<reco::CandidatePtr> extras(
         const std::string& label, const std::string& filter="") const;
 
     /// Build a subcandidate
-    reco::CompositePtrCandidate subcand(int i, int j,
+    std::auto_ptr<PATFinalState> subcand(int i, int j,
         int x=-1, int y=-1, int z=-1) const;
 
     /// Build a subcand using a tag string
-    reco::CompositePtrCandidate subcand(const std::string& tags) const;
+    std::auto_ptr<PATFinalState> subcand(const std::string& tags) const;
 
     /// Build a subcand using a tag string with included (filtered) extras
-    reco::CompositePtrCandidate subcand(
+    std::auto_ptr<PATFinalState> subcand(
         const std::string& tags, const std::string& extras,
         const std::string& filter="") const;
 

@@ -1,4 +1,5 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalState.h"
 
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
@@ -124,7 +125,7 @@ std::vector<const reco::Candidate*> PATFinalState::daughters() const {
   return output;
 }
 
-reco::CandidatePtrVector
+std::vector<reco::CandidatePtr>
 PATFinalState::daughterPtrs(const std::string& tags) const {
   std::vector<std::string> tokens;
   tokens.reserve(numberOfDaughters());
@@ -141,7 +142,7 @@ PATFinalState::daughterPtrs(const std::string& tags) const {
       << ")" << std::endl;
   }
 
-  reco::CandidatePtrVector output;
+  std::vector<reco::CandidatePtr> output;
   for (size_t i = 0; i < numberOfDaughters(); ++i) {
     const std::string& token = tokens[i];
     if (token == "#") // skip daughter
@@ -411,14 +412,12 @@ PATFinalState::ht() const {
   return output;
 }
 
-reco::CandidatePtrVector PATFinalState::extras(
+std::vector<reco::CandidatePtr> PATFinalState::extras(
     const std::string& label, const std::string& filter) const {
   // maybe this needs to be optimized
-  if (filter == "")
-    return overlaps(label);
   StringCutObjectSelector<reco::Candidate> cut(filter, true);
   const reco::CandidatePtrVector& unfiltered = overlaps(label);
-  reco::CandidatePtrVector output;
+  std::vector<reco::CandidatePtr> output;
   for (size_t i = 0; i < unfiltered.size(); ++i) {
     const reco::CandidatePtr& cand = unfiltered[i];
     if (cut(*cand))
@@ -427,46 +426,43 @@ reco::CandidatePtrVector PATFinalState::extras(
   return output;
 }
 
-reco::CompositePtrCandidate
+std::auto_ptr<PATFinalState>
 PATFinalState::subcand(int i, int j, int x, int y, int z) const {
-  reco::CompositePtrCandidate output;
-  output.addDaughter(daughterPtr(i));
-  output.addDaughter(daughterPtr(j));
+  std::vector<reco::CandidatePtr> output;
+  output.push_back(daughterPtr(i));
+  output.push_back(daughterPtr(j));
   if (x > -1)
-    output.addDaughter(daughterPtr(x));
+    output.push_back(daughterPtr(x));
   if (y > -1)
-    output.addDaughter(daughterPtr(y));
+    output.push_back(daughterPtr(y));
   if (z > -1)
-    output.addDaughter(daughterPtr(z));
-  addFourMomenta(output);
-  return output;
+    output.push_back(daughterPtr(z));
+  return std::auto_ptr<PATFinalState>(
+      new PATMultiCandFinalState(output, met(), vertexObject(), evt()));
 }
 
-reco::CompositePtrCandidate
+std::auto_ptr<PATFinalState>
 PATFinalState::subcand(const std::string& tags) const {
-  reco::CompositePtrCandidate output;
-  const reco::CandidatePtrVector daus = daughterPtrs(tags);
-  for (size_t i = 0; i < daus.size(); ++i) {
-    output.addDaughter(daus[i]);
-  }
-  addFourMomenta(output);
-  return output;
+  const std::vector<reco::CandidatePtr> daus = daughterPtrs(tags);
+  return std::auto_ptr<PATFinalState>(
+      new PATMultiCandFinalState(daus, met(), vertexObject(), evt()));
 }
 
-reco::CompositePtrCandidate
+std::auto_ptr<PATFinalState>
 PATFinalState::subcand(const std::string& tags,
     const std::string& extraColl, const std::string& filter) const {
-  reco::CompositePtrCandidate output;
-  const reco::CandidatePtrVector daus = daughterPtrs(tags);
-  const reco::CandidatePtrVector cands = extras(extraColl, filter);
+  const std::vector<reco::CandidatePtr> daus = daughterPtrs(tags);
+  const std::vector<reco::CandidatePtr> cands = extras(extraColl, filter);
+  std::vector<reco::CandidatePtr> toAdd;
+  toAdd.reserve(daus.size() + cands.size());
   for (size_t i = 0; i < cands.size(); ++i) {
-    output.addDaughter(cands[i]);
+    toAdd.push_back(cands[i]);
   }
   for (size_t i = 0; i < daus.size(); ++i) {
-    output.addDaughter(daus[i]);
+    toAdd.push_back(daus[i]);
   }
-  addFourMomenta(output);
-  return output;
+  return std::auto_ptr<PATFinalState>(
+      new PATMultiCandFinalState(toAdd, met(), vertexObject(), evt()));
 }
 
 bool PATFinalState::likeSigned(int i, int j) const {

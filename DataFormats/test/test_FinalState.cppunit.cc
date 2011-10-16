@@ -59,7 +59,8 @@ class testFinalState: public CppUnit::TestFixture {
 
     ProductID jetPID;
     std::vector<reco::LeafCandidate> mockJetColl_;
-    edm::PtrVector<reco::LeafCandidate> mockJetPtrVector_;
+    edm::PtrVector<reco::LeafCandidate> mockJetEdmPtrVector_;
+    std::vector<edm::Ptr<reco::Candidate> > mockJetPtrVector_;
 };
 
 void testFinalState::setUp() {
@@ -120,7 +121,8 @@ void testFinalState::setUp() {
   jetPID = ProductID(1, 4);
   TestHandle<std::vector<reco::LeafCandidate> > jetHandle(&mockJetColl_, jetPID);
   for (size_t i = 0; i < mockJetColl_.size(); ++i) {
-    mockJetPtrVector_.push_back(Ptr<reco::LeafCandidate>(jetHandle, i));
+    mockJetEdmPtrVector_.push_back(Ptr<reco::LeafCandidate>(jetHandle, i));
+    mockJetPtrVector_.push_back(Ptr<reco::Candidate>(jetHandle, i));
   }
 }
 
@@ -217,7 +219,7 @@ void testFinalState::testDiLepton() {
   CPPUNIT_ASSERT(theDaughters[0] == mockElectronPtr_.get());
   CPPUNIT_ASSERT(theDaughters[1] == mockUserCandPtr2_.get());
 
-  reco::CandidatePtrVector daughterPtrs = finalState.daughterPtrs("@,aUserCand2");
+  std::vector<reco::CandidatePtr> daughterPtrs = finalState.daughterPtrs("@,aUserCand2");
   CPPUNIT_ASSERT(daughterPtrs.size() == 2);
   reco::CandidatePtr dauPtr0 = daughterPtrs[0];
   reco::CandidatePtr dauPtr1 = daughterPtrs[1];
@@ -355,14 +357,14 @@ void testFinalState::testTriLepton() {
   CPPUNIT_ASSERT(finalState.vertexObject() == nullVtx);
 
   {
-    reco::CompositePtrCandidate subcand = finalState.subcand(1, 2);
+    std::auto_ptr<PATFinalState> subcand = finalState.subcand(1, 2);
     reco::Candidate::LorentzVector expectP4 = mockMuonPtr1_->p4() + mockMuonPtr2_->p4();
-    int nDaughters = subcand.numberOfDaughters();
+    int nDaughters = subcand->numberOfDaughters();
     CPPUNIT_ASSERT_EQUAL(2, nDaughters);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(subcand.pt(), expectP4.pt(), 1e-6);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(subcand.phi(), expectP4.phi(), 1e-6);
-    CPPUNIT_ASSERT_DOUBLES_EQUAL(subcand.eta(), expectP4.eta(), 1e-6);
-    CPPUNIT_ASSERT(subcand.charge() == -2);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(subcand->pt(), expectP4.pt(), 1e-6);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(subcand->phi(), expectP4.phi(), 1e-6);
+    CPPUNIT_ASSERT_DOUBLES_EQUAL(subcand->eta(), expectP4.eta(), 1e-6);
+    CPPUNIT_ASSERT(subcand->charge() == -2);
   }
 
 
@@ -387,10 +389,10 @@ void testFinalState::testOverlaps() {
   edm::Ptr<PATFinalStateEvent> evt;
   PATElecMuMuFinalState finalStateNonConst(mockElectronPtr_, mockMuonPtr1_, mockMuonPtr2_,
       mockMETPtr_, nullVtx, evt);
-  finalStateNonConst.setOverlaps("jets", mockJetPtrVector_);
+  finalStateNonConst.setOverlaps("jets", mockJetEdmPtrVector_);
   const PATElecMuMuFinalState finalState(finalStateNonConst);
   CPPUNIT_ASSERT(finalState.hasOverlaps("jets"));
-  CPPUNIT_ASSERT(finalState.overlaps("jets") == mockJetPtrVector_);
+  CPPUNIT_ASSERT(finalState.overlaps("jets") == mockJetEdmPtrVector_);
   // No filter
   CPPUNIT_ASSERT(finalState.extras("jets", "") == mockJetPtrVector_);
   size_t actual = 0;
@@ -410,12 +412,12 @@ void testFinalState::testOverlaps() {
 
   // Test overlap subcandidate creation
   CPPUNIT_ASSERT_DOUBLES_EQUAL(
-      finalState.subcand("#,#,#", "jets", "pt > 43.2").pt(),
+      finalState.subcand("#,#,#", "jets", "pt > 43.2")->pt(),
       p4Total.pt(), 1e-6);
 
   p4Total += mockElectronPtr_->p4();
   CPPUNIT_ASSERT_DOUBLES_EQUAL(
-      finalState.subcand("@,#,#", "jets", "pt > 43.2").pt(),
+      finalState.subcand("@,#,#", "jets", "pt > 43.2")->pt(),
       p4Total.pt(), 1e-6);
 
   CPPUNIT_ASSERT_DOUBLES_EQUAL(
