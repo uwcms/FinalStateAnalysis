@@ -26,6 +26,8 @@
   <class name="edm::RefProd<PATFinalStateCollection>"/>
   <class name="edm::Ptr<PATFinalState>"/>
 
+  <class name="PATFinalStateProxy"/>
+
   <class name="PATFinalStateEvent"/>
   <class name="PATFinalStateEventCollection"/>
   <class name="edm::Wrapper<PATFinalStateEvent>"/>

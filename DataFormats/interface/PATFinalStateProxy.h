@@ -9,16 +9,16 @@
  */
 
 #include <boost/shared_ptr.hpp>
-
 class PATFinalState;
 
 class PATFinalStateProxy {
   public:
-    explicit PATFinalStateProxy(PATFinalState* finalState);
+    PATFinalStateProxy(PATFinalState* finalState);
+    PATFinalStateProxy();
     const PATFinalState* get() const;
-    const PATFinalState& operator->() const;
+    const PATFinalState* operator->() const;
   private:
-    boost::shared_ptr finalState_;
+    boost::shared_ptr<PATFinalState> finalState_;
 };
 
 #endif /* end of include guard: PATFINALSTATEPROXY_7FWRI39L */
