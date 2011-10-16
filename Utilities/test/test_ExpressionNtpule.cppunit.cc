@@ -41,7 +41,8 @@ void testExpressionNtuple::testBooking() {
   CPPUNIT_ASSERT(ntuple_->tree()->GetBranch("eta"));
   CPPUNIT_ASSERT(ntuple_->tree()->GetBranch("abseta"));
   CPPUNIT_ASSERT(ntuple_->tree()->GetBranch("charge"));
-  CPPUNIT_ASSERT(ntuple_->tree()->GetListOfBranches()->GetEntries() == 4);
+  // There is one additional branch, which is the IDX of each element.
+  CPPUNIT_ASSERT(ntuple_->tree()->GetListOfBranches()->GetEntries() == 5);
 }
 
 void testExpressionNtuple::testFilling() {
@@ -55,12 +56,13 @@ void testExpressionNtuple::testFilling() {
       nEntriesPtGt53++;
     if (std::abs(eta) > 2)
       nEntriesAbsEtaGt2++;
-    ntuple_->fill(cand);
+    ntuple_->fill(cand, i);
   }
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries() == 100);
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("pt > 53") == nEntriesPtGt53);
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("abs(eta) > 2.0") == nEntriesAbsEtaGt2);
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("abseta > 2.0") == nEntriesAbsEtaGt2);
+  CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("idx == 1") == 1);
 }
 
 
