@@ -35,6 +35,15 @@
   <class name="edm::RefProd<PATFinalStateEventCollection>"/>
   <class name="edm::Ptr<PATFinalStateEvent>"/>
 
+  <class name="PATMultiCandFinalState"/>
+  <class name="PATMultiCandFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMultiCandFinalState>"/>
+  <class name="edm::Wrapper<PATMultiCandFinalStateCollection>"/>
+  <class name="edm::Ref<PATMultiCandFinalStateCollection,PATMultiCandFinalState,edm::refhelper::FindUsingAdvance<PATMultiCandFinalStateCollection,PATMultiCandFinalState> >"/>
+  <class name="edm::RefVector<PATMultiCandFinalStateCollection,PATMultiCandFinalState,edm::refhelper::FindUsingAdvance<PATMultiCandFinalStateCollection,PATMultiCandFinalState> >"/>
+  <class name="edm::RefProd<PATMultiCandFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMultiCandFinalState>"/>
+
   <class name="PATElecElecFinalState"/>
   <class name="PATElecElecFinalStateCollection"/>
   <class name="edm::Wrapper<PATElecElecFinalState>"/>
