@@ -4,6 +4,6 @@ V01-02-07 RecoTauTag/RecoTau
 V01-02-00 RecoTauTag/TauTagTools
 V01-02-03 RecoTauTag/Configuration
 # For updated lumi tools
-V03-01-00 RecoLuminosity/LumiDB 
+V03-03-02 RecoLuminosity/LumiDB 
 # Add and patch to way speed up trigger matching
 V06-04-16 DataFormats/PatCandidates
