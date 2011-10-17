@@ -15,7 +15,7 @@ pairMass = cms.PSet(
     nbins = cms.untracked.int32(200),
     name = cms.untracked.string("${name}_Mass"),
     description = cms.untracked.string("${nicename} Mass"),
-    plotquantity = cms.untracked.string("subcand(${index1}, ${index2}).mass"),
+    plotquantity = cms.untracked.string("subcand(${index1}, ${index2}).get.mass"),
 )
 
 pairDPhi = cms.PSet(

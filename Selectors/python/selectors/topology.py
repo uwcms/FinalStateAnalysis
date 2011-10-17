@@ -21,8 +21,8 @@ z_veto = cms.PSet(
     description = cms.string("$nicename OS, like-flavor, 85 < M < 95 veto"),
     cut = cms.string("likeSigned(${index1}, ${index2}) || "
                      "!likeFlavor(${index1}, ${index2}) || "
-                     "subcand(${index1}, ${index2}).mass() < 85 || "
-                     "subcand(${index1}, ${index2}).mass() > 95"),
+                     "subcand(${index1}, ${index2}).get.mass() < 85 || "
+                     "subcand(${index1}, ${index2}).get.mass() > 95"),
     invert = cms.bool(False),
 )
 
