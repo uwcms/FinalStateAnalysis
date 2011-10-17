@@ -1,8 +1,8 @@
 import FWCore.ParameterSet.Config as cms
 
-import EvanSoft.Selectors.selectors.selectors as selectors
-from EvanSoft.VHiggs.selectionCommon import common
-from EvanSoft.Utilities.PSetTemplate import PSetTemplate
+import FinalStateAnalysis.Selectors.selectors.selectors as selectors
+from FinalStateAnalysis.VHiggs.selectionCommon import common
+from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
 
 leg1 = {
     'name' : 'Elec1', 'getter' :'daughter(0).', 'nicename' : 'Electron (1)',
@@ -107,7 +107,7 @@ selections = cms.VPSet(
 # Define plots
 ###########################################################################
 
-from EvanSoft.VHiggs.plotBuilder import trileptonFinalPlots
+from FinalStateAnalysis.VHiggs.plotBuilder import trileptonFinalPlots
 all_plots, ntuple = trileptonFinalPlots(leg1, leg2, leg3)
 
 # Split into OS/SS regions

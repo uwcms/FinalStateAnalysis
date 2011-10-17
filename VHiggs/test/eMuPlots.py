@@ -4,8 +4,8 @@ import sys
 import glob
 import logging
 import math
-from EvanSoft.Utilities.AnalysisPlotter import styling,samplestyles
-from EvanSoft.PatTools.datadefs import datadefs
+from FinalStateAnalysis.Utilities.AnalysisPlotter import styling,samplestyles
+from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 logging.basicConfig(filename='example.log',level=logging.DEBUG)
 log = logging.getLogger("plotting")
