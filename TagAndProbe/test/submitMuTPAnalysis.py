@@ -2,12 +2,11 @@ import os
 import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
-cfg = 'analyze_cfg.py'
-jobId = '2011-10-17-v1-WHAnalyze'
+cfg = 'analyzeFinalStates.py'
+jobId = '2011-10-17-v3-MuonTP'
 
-patJobId = '2011-10-07-WHReSkim'
-#patCfg = 'patTuple_cfg'
-patCfg = 'analyze_cfg'
+patJobId = '2011-10-06-EWKPatTuple'
+patCfg = 'patTuple_cfg'
 
 def get_dir(sample):
     dir_name = '-'.join([patJobId, sample, patCfg])
@@ -15,13 +14,11 @@ def get_dir(sample):
     return base_dir + dir_name
 
 for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
-    if 'TauPlusX' in sample:
-        continue
-    if 'MuHad' in sample:
+    if 'SingleMu' not in sample and 'Zjet' not in sample and 'QCD' not in sample:
         continue
 
     path_name = os.path.join(os.environ['scratch'], '-'.join(
-        [jobId, sample, 'analyzeFinalStates']))
+        [jobId, sample, patCfg]))
     sys.stderr.write('Building sample submit dir %s\n' % (sample))
     if os.path.exists(path_name):
         sys.stderr.write('Skipping existing submit directory for %s\n' % sample)
@@ -36,10 +33,10 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         '--varparsing',
         '--fwklite',
         #'--no-submit',
-        #'--job-count=20',
+        #'--job-count=2',
         #'--input-files-per-job=%i' % (sample_info['ana_group']*2),
         ' --exclude-input-files="*plots.root"',
-        '--input-files-per-job=%i' % 5,
+        '--input-files-per-job=%i' % 10,
     ]
 
     #if 'WplusJets' in sample:
@@ -51,6 +48,7 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
     command.append(os.path.join(
         os.environ['CMSSW_BASE'], 'bin',
         os.environ['SCRAM_ARCH'], 'analyzeFinalStates'))
+
     command.append(os.path.abspath(cfg))
     command.extend(options)
     print ' '.join(command)
