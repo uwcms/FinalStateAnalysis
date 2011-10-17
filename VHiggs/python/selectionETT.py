@@ -6,12 +6,15 @@ from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
 
 leg1 = {
     'name' : 'Elec', 'getter' :'daughter(0).', 'nicename' : 'Electron',
+    'index' : 0,
 }
 leg2 = {
     'name' : 'Tau1', 'getter' :'daughter(1).', 'nicename' : 'Tau (1)',
+    'index' : 1,
 }
 leg3 = {
     'name' : 'Tau2', 'getter' :'daughter(2).', 'nicename' : 'Tau (2)',
+    'index' : 2,
 }
 
 selections = cms.VPSet(

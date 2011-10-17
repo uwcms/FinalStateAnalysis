@@ -158,6 +158,17 @@ def trileptonFinalPlots(leg1, leg2, leg3):
     # Add in the lumi weight
     add_ntuple("puWeight", "evt().weight('puAvg')")
 
+    # Add some control paths
+    im24_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
+        name = "IsoMu24", nicename = "Iso Mu 24",
+        hlt_path = r'HLT_IsoMu24_v\\d+')
+    add_ntuple(im24_trig_cfg.name.value(), im24_trig_cfg.plotquantity.value())
+
+    m30_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
+        name = "Mu30", nicename = "Mu 30",
+        hlt_path = r'HLT_Mu30_v\\d+')
+    add_ntuple(m30_trig_cfg.name.value(), m30_trig_cfg.plotquantity.value())
+
     # Add our trilepton HLT paths
     emu_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
         name = "Mu8Ele17", nicename = "Mu(8) Ele(17)",

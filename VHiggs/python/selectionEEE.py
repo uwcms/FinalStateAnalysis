@@ -6,12 +6,16 @@ from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
 
 leg1 = {
     'name' : 'Elec1', 'getter' :'daughter(0).', 'nicename' : 'Electron (1)',
+    'index' : 0,
 }
 leg2 = {
     'name' : 'Elec2', 'getter' :'daughter(1).', 'nicename' : 'Electron (2)',
+    'index' : 1,
 }
+
 leg3 = {
     'name' : 'Elec3', 'getter' :'daughter(2).', 'nicename' : 'Electron (3)',
+    'index' : 2,
 }
 
 ###########################################################################
