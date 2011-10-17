@@ -2,7 +2,7 @@ import glob
 import os
 import sys
 
-from EvanSoft.VHiggs.datadefs import datadefs
+from FinalStateAnalysis.VHiggs.datadefs import datadefs
 
 anaCfg = 'analyzeFinalStates'
 anaJobId = '2011-10-03-v4-WHAnalyze'

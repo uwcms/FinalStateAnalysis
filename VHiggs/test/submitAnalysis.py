@@ -1,9 +1,9 @@
 import os
 import sys
-from EvanSoft.PatTools.datadefs import datadefs
+from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-10-14-v1-WHAnalyze'
+jobId = '2011-10-17-v1-WHAnalyze'
 
 patJobId = '2011-10-07-WHReSkim'
 #patCfg = 'patTuple_cfg'
@@ -15,11 +15,9 @@ def get_dir(sample):
     return base_dir + dir_name
 
 for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
-    if 'SingleMu' in sample:
-        continue
     if 'TauPlusX' in sample:
         continue
-    if 'DoubleElectron' in sample:
+    if 'MuHad' in sample:
         continue
 
     path_name = os.path.join(os.environ['scratch'], '-'.join(

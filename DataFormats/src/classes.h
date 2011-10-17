@@ -4,6 +4,8 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateFwd.h"
 
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateProxy.h"
+
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalStateFwd.h"
 
@@ -37,6 +39,8 @@ namespace {
     PATMuTauSystematicsRefProd dummyMuTauSysRefProd;
     PATMuTauSystematicsRefVector dummyMuTauSysRefVector;
     PATMuTauSystematicsPtr dummyMuTauSysPtr;
+
+    PATFinalStateProxy proxyDummy;
 
     FWD_ABS_CLASSDECL(PATFinalState)
     FWD_CLASSDECL(PATFinalStateEvent)

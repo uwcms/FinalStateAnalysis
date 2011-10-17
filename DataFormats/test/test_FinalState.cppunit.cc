@@ -421,7 +421,7 @@ void testFinalState::testOverlaps() {
       p4Total.pt(), 1e-6);
 
   CPPUNIT_ASSERT_DOUBLES_EQUAL(
-      finalState.eval("subcand('@,#,#').pt - daughter(0).pt"), 0, 1e-6);
+      finalState.eval("subcand('@,#,#').get.pt - daughter(0).pt"), 0, 1e-6);
 }
 
 void testFinalState::testIndexGetter() {

@@ -43,13 +43,12 @@ hltSingleMu13L3Filtered13  = get_trigger_matching('hltSingleMu13L3Filtered13')
 hltDiMuonL3p5PreFiltered8  = get_trigger_matching('hltDiMuonL3p5PreFiltered8')
 hltDiMuonL3PreFiltered7  = get_trigger_matching('hltDiMuonL3PreFiltered7')
 hltSingleMu30L3Filtered30  = get_trigger_matching('hltSingleMu30L3Filtered30')
-HLT_IsoMu17  = get_trigger_matching('HLT_IsoMu17')
-HLT_IsoMu24  = get_trigger_matching('HLT_IsoMu24')
-HLT_Mu15  = get_trigger_matching('HLT_Mu15')
-HLT_Mu17_Ele8  = get_trigger_matching('HLT_Mu17_Ele8')
-HLT_Mu8_Ele17  = get_trigger_matching('HLT_Mu8_Ele17')
+hltSingleMuIsoL3IsoFiltered24  = get_trigger_matching('hltSingleMuIsoL3IsoFiltered24')
+hltL1Mu3EG5L3Filtered8  = get_trigger_matching('hltL1Mu3EG5L3Filtered8')
+hltL1Mu3EG5L3Filtered17  = get_trigger_matching('hltL1Mu3EG5L3Filtered17')
 
 all = [reliso,
        hltSingleMu13L3Filtered13, hltDiMuonL3p5PreFiltered8,
        hltDiMuonL3PreFiltered7, hltSingleMu30L3Filtered30,
-       HLT_IsoMu17, HLT_Mu15, HLT_IsoMu24, HLT_Mu17_Ele8, HLT_Mu8_Ele17]
+       hltSingleMuIsoL3IsoFiltered24,
+       hltL1Mu3EG5L3Filtered17, hltL1Mu3EG5L3Filtered8 ]

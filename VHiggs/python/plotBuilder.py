@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
-import EvanSoft.Selectors.plotting.plotting as plotting
-from EvanSoft.Utilities.PSetTemplate import PSetTemplate
+import FinalStateAnalysis.Selectors.plotting.plotting as plotting
+from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
 
 def trileptonFinalPlots(leg1, leg2, leg3):
     # Build the Histo Folder

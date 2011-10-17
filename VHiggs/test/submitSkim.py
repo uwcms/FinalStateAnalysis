@@ -1,6 +1,6 @@
 import os
 import sys
-from EvanSoft.PatTools.datadefs import datadefs
+from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
 jobId = '2011-10-07-WHReSkim'

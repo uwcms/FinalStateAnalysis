@@ -68,7 +68,19 @@ dz = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+mass = cms.PSet(
+    min = cms.untracked.double(0),
+    max = cms.untracked.double(100),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}Mass"),
+    description = cms.untracked.string("${nicename} Mass"),
+    plotquantity = cms.untracked.string(
+        "${getter}mass",
+    ),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 # Collect the common ones
 all = [
-    pt, phi, eta, abseta, charge, genPdgId, dz
+    pt, phi, eta, abseta, charge, genPdgId, dz, mass
 ]

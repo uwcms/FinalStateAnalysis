@@ -1,7 +1,7 @@
 import ROOT
 import math
-import EvanSoft.Utilities.DataCard as dc
-import EvanSoft.Utilities.Histo as Histo
+import FinalStateAnalysis.Utilities.DataCard as dc
+import FinalStateAnalysis.Utilities.Histo as Histo
 
 shape_file = "all_shapes.root"
 
