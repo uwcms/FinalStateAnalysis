@@ -21,15 +21,62 @@ reliso = cms.PSet(
     invert = cms.bool(False)
 )
 
-# For HLT Mu17 Ele8.
-HLT_Mu17_Ele8 = cms.PSet(
-    name = cms.string("${name}_HLT_Mu17_Ele8"),
-    description = cms.string("$nicename trigger match HLT_Mu17_Ele8"),
+# For  HLT_Mu17_Ele8_CaloIdL_v*
+hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter = cms.PSet(
+    name = cms.string("${name}_hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter"),
+    description = cms.string(
+        "$nicename trigger match "
+        "hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter (HLT_Mu17_Ele8)"),
     cut = cms.string(
-        'matchToHLTPath(${index}, "HLT_Mu17_Ele8_CaloId(T|L)(_CaloIsoVL|)_v\d+")'
+        r'matchToHLTFilter(${index}, "hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter")'
     ),
     plottable = cms.string(
-        'matchToHLTPath(${index}, "HLT_Mu17_Ele8_CaloId(T|L)(_CaloIsoVL|)_v\d+")'
+        r'matchToHLTFilter(${index}, "hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter")'
+    ),
+    invert = cms.bool(False)
+)
+
+# For  HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v*
+hltMu17Ele8CaloIdTPixelMatchFilter = cms.PSet(
+    name = cms.string("${name}_hltMu17Ele8CaloIdTPixelMatchFilter"),
+    description = cms.string(
+        "$nicename trigger match "
+        "hltMu17Ele8CaloIdTPixelMatchFilter (HLT_Mu17_Ele8)"),
+    cut = cms.string(
+        r'matchToHLTFilter(${index}, "hltMu17Ele8CaloIdTPixelMatchFilter")'
+    ),
+    plottable = cms.string(
+        r'matchToHLTFilter(${index}, "hltMu17Ele8CaloIdTPixelMatchFilter")'
+    ),
+    invert = cms.bool(False)
+)
+
+# For HLT_Mu8_Ele17_CaloIdL_v*
+hltL1NonIsoHLTNonIsoMu8Ele17PixelMatchFilter = cms.PSet(
+    name = cms.string("${name}_hltL1NonIsoHLTNonIsoMu8Ele17PixelMatchFilter"),
+    description = cms.string(
+        "$nicename trigger match "
+        "hltL1NonIsoHLTNonIsoMu8Ele17PixelMatchFilter (HLT_Mu8_Ele17)"),
+    cut = cms.string(
+        r'matchToHLTFilter(${index}, "hltL1NonIsoHLTNonIsoMu8Ele17PixelMatchFilter")'
+    ),
+    plottable = cms.string(
+        r'matchToHLTFilter(${index}, "hltL1NonIsoHLTNonIsoMu8Ele17PixelMatchFilter")'
+    ),
+    invert = cms.bool(False)
+)
+
+# For HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v*
+hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter = cms.PSet(
+    name = cms.string("${name}_hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter"),
+    description = cms.string(
+        "$nicename trigger match "
+        "hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter (HLT_Mu8_Ele17)"),
+    cut = cms.string(
+        r'matchToHLTFilter(${index}, "hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter")'
+    ),
+    plottable = cms.string(
+        r'matchToHLTFilter(${index}, "hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter")'
     ),
     invert = cms.bool(False)
 )
