@@ -1,3 +1,43 @@
+'''
+TNPFitter
+=========
+
+Author: Evan K. Friis, UW Madison
+
+A class which performs Tag and Probe fits by making selections on an input tree.
+
+The constructor takes a TTree/Chain and list of RooRealVars.
+
+A given region can be fitted using the [fit] method.
+
+    def fit(self, xaxis, base_sel, pass_sel, fail_sel, pdfs,
+            init_eff = 0.9, init_signal_fraction = 0.9):
+
+The xaxis is the dependent variable (i.e. dimuon mass).  The base_sel is a list
+TTree cuts ([ 'Mu1Pt > 10', 'Mu1Iso < 0.3' ] etc) which defines the denominator.
+The [pass_sel] and [fail_sel] arguments are cuts applied on top of this to
+select the passing and failing regions.  NB the pass and fail cuts be exclusive!
+
+The [pdfs] parameter is a list of arguments to be passed to a RooWorkspace
+factory.  They must define the following PDFs:
+
+    signalPass, signalFail, backgroundPass, backgroundFail
+
+Example:
+    pdf = [
+        "Voigtian::signalPass(finalStateVisP4Mass, mean[90,80,100], "
+            "width[2.495], sigma[3,1,20])",
+        "Voigtian::signalFail(finalStateVisP4Mass, mean, width, sigma)",
+        "Exponential::backgroundPass(finalStateVisP4Mass, lp[0,-5,5])",
+        "Exponential::backgroundFail(finalStateVisP4Mass, lf[0,-5,5])",
+    ]
+
+
+The [fit_trend] method automatically does fits in a set of binned regions of
+another variable.
+
+'''
+
 import hashlib
 import logging
 
@@ -29,6 +69,7 @@ class TNPFitter(object):
         return md5.hexdigest()
 
     def reduce_data(self, selections):
+        # TODO make this smarter
         key = self.selection_key(selections)
         self.log.info("Reducing data using %i selections. key: %s",
                       len(selections), key)
@@ -57,7 +98,9 @@ class TNPFitter(object):
             results.append((start, end, ws, fit_result))
         return results
 
-    def make_trend_graph(self, results):
+    @staticmethod
+    def make_trend_graph(results):
+        ''' Parse the results from fit_trend and make a TGraph.  '''
         output = ROOT.TGraphAsymmErrors(len(results))
         for i, (start, end, ws, fit_result) in enumerate(results):
             bin_width = end-start
@@ -69,6 +112,19 @@ class TNPFitter(object):
             output.SetPointEYhigh(i, efficiency.getErrorHi())
             output.SetPointEYlow(i, -1*efficiency.getErrorLo())
         return output
+
+    @staticmethod
+    def fit_trend_graph(graph):
+        fit_func = ROOT.TF1(
+            "fit_func", "[0]*0.5*(1 + TMath::Erf([2]*x - [1]))", 2)
+        fit_func.SetParameter(0, 0.95)
+        fit_func.SetParLimits(0, 0, 1)
+        fit_func.SetParameter(1, 20)
+        fit_func.SetParLimits(1, 0, 200)
+        fit_func.SetParameter(2, 3)
+        fit_func.SetParLimits(2, 0.01, 50)
+        graph.Fit(fit_func)
+        return fit_func
 
     def fit(self, xaxis, base_sel, pass_sel, fail_sel, pdfs,
             init_eff = 0.9, init_signal_fraction = 0.9):
