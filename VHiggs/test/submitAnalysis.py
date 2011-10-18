@@ -3,7 +3,7 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-10-17-v1-WHAnalyze'
+jobId = '2011-10-17-v2-WHAnalyze'
 
 patJobId = '2011-10-07-WHReSkim'
 #patCfg = 'patTuple_cfg'
@@ -18,6 +18,8 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
     if 'TauPlusX' in sample:
         continue
     if 'MuHad' in sample:
+        continue
+    if 'SingleMu' in sample:
         continue
 
     path_name = os.path.join(os.environ['scratch'], '-'.join(
