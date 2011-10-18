@@ -7,8 +7,8 @@ jobId = '2011-10-06-EWKPatTuple'
 
 for sample, sample_info in datadefs.iteritems():
 
-    if 'TauPlusX' in sample:
-        continue
+    #if 'TauPlusX' in sample:
+        #continue
     #if 'DoubleElectron' in sample:
         #continue
     #if 'SingleMu' in sample:
