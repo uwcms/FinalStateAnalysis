@@ -28,6 +28,68 @@ reliso = cms.PSet(
     invert = cms.bool(False)
 )
 
+# Non-PFlow relative isolation
+relSubDetIso = cms.PSet(
+    name = cms.string("${name}_RelIsoSubDet"),
+    description = cms.string("$nicename Sub. Det. Rel. Iso (#DeltaR < 0.3)"),
+    cut = cms.string(
+        "(${getter}trackIso()"
+        "+${getter}ecalIso()"
+        "+${getter}hcalIso())"
+        "/${getter}pt() < ${threshold}"
+    ),
+    plottable = cms.string("(${getter}trackIso()"
+        "+${getter}ecalIso()"
+        "+${getter}hcalIso())"
+        "/${getter}pt()"
+    ),
+    invert = cms.bool(False)
+)
+
+# Non-PFlow ECAL abs. isolation
+ecalIso = cms.PSet(
+    name = cms.string("${name}_ECALIso"),
+    description = cms.string("$nicename ECAL Iso < ${threshold}"),
+    cut = cms.string(
+        "${getter}ecalIso() < ${threshold}"
+    ),
+    plottable = cms.string(
+        "${getter}ecalIso()"
+    ),
+    invert = cms.bool(False)
+)
+
+# Non-PFlow HCAL abs. isolation
+hcalIso = cms.PSet(
+    name = cms.string("${name}_HCALIso"),
+    description = cms.string("$nicename HCAL Iso < ${threshold}"),
+    cut = cms.string(
+        "${getter}hcalIso() < ${threshold}"
+    ),
+    plottable = cms.string(
+        "${getter}hcalIso()"
+    ),
+    invert = cms.bool(False)
+)
+
+# Normalized chi2 of global track
+trkNormChi2 = cms.PSet(
+    name = cms.string("${name}_GlbTrkNormChi2"),
+    description = cms.string("$nicename normalized #chi^{2} < ${threshold}"),
+    cut = cms.string("${getter}normChi2() < ${threshold}"),
+    plottable = cms.string("${getter}normChi2()"),
+    invert = cms.bool(False)
+)
+
+# Cut on IP
+d0 = cms.PSet(
+    name = cms.string("${name}_MuonIP"),
+    description = cms.string("$nicename 3D IP < ${threshold}"),
+    cut = cms.string("${getter}dB('PV3D') < ${threshold}"),
+    plottable = cms.string("${getter}dB('PV3D')"),
+    invert = cms.bool(False)
+)
+
 ################################################################################
 ### Trigger match selectors  ###################################################
 ################################################################################

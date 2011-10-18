@@ -80,5 +80,5 @@ ht = cms.PSet(
     nbins = cms.untracked.int32(100),
     name = cms.untracked.string("${name}_Ht"),
     description = cms.untracked.string("${nicename} H_{T}"),
-    plotquantity = cms.untracked.string("ht()"),
+    plotquantity = cms.untracked.string("${getter}ht()"),
 )

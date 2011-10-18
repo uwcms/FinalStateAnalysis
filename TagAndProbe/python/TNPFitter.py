@@ -47,6 +47,14 @@ def importer(ws, obj):
     # Workaround to allow use of reserved word
     getattr(ws, 'import')(obj)
 
+def _eff_and_errors(passing, failing):
+    num = ROOT.TH1F("temp_num", "temp", 1, -0.5, 0.5)
+    den = ROOT.TH1F("temp_den", "temp", 1, -0.5, 0.5)
+    num.SetBinContent(1, passing)
+    den.SetBinContent(1, passing + failing)
+    tgraph = ROOT.TGraphAsymmErrors(num, den)
+    return (tgraph.GetY()[0], tgraph.GetEYhigh()[0], tgraph.GetEYlow()[0])
+
 class TNPFitter(object):
     log = logging.getLogger("TNPFitter")
     def __init__(self, tree, vars):
@@ -95,17 +103,45 @@ class TNPFitter(object):
             ws, fit_result = self.fit(
                 xaxis, full_sel, pass_sel, fail_sel, pdfs, init_eff,
                 init_signal_fraction)
-            results.append((start, end, ws, fit_result))
+            efficiency = fit_result.floatParsFinal().find('efficiency')
+            results.append((start, end, ws, fit_result, efficiency))
+        return results
+
+    def mc_trend(self, bin_var, bins, xaxis,
+                 truth_sel, base_sel, pass_sel, fail_sel):
+        results = []
+        # Run over pairs of cuts
+        for i, (start, end) in enumerate(zip(bins[:-1], bins[1:])):
+            print start, end
+            full_sel = truth_sel + base_sel + [
+                '%s > %0.3f' % (bin_var, start),
+                '%s <= %0.3f' % (bin_var, end)
+            ]
+            pass_data = self.reduce_data(full_sel + pass_sel).numEntries()
+            fail_data = self.reduce_data(full_sel + fail_sel).numEntries()
+
+            class FakeEfficiency(object):
+                def __init__(self, passing, failing):
+                    self.eff, self.errUp, self.errDown = _eff_and_errors(
+                        passing, failing)
+                def getVal(self):
+                    return self.eff
+                def getErrorLo(self):
+                    return self.errDown*-1
+                def getErrorHi(self):
+                    return self.errUp
+
+            results.append((start, end, None, None,
+                            FakeEfficiency(pass_data, fail_data)))
         return results
 
     @staticmethod
     def make_trend_graph(results):
         ''' Parse the results from fit_trend and make a TGraph.  '''
         output = ROOT.TGraphAsymmErrors(len(results))
-        for i, (start, end, ws, fit_result) in enumerate(results):
+        for i, (start, end, ws, fit_result, efficiency) in enumerate(results):
             bin_width = end-start
             middle =  bin_width*0.5 + start
-            efficiency = fit_result.floatParsFinal().find('efficiency')
             output.SetPoint(i, middle, efficiency.getVal())
             output.SetPointEXlow(i, 0.5*bin_width)
             output.SetPointEXhigh(i, 0.5*bin_width)
@@ -116,7 +152,7 @@ class TNPFitter(object):
     @staticmethod
     def fit_trend_graph(graph):
         fit_func = ROOT.TF1(
-            "fit_func", "[0]*0.5*(1 + TMath::Erf([2]*x - [1]))", 2)
+            "fit_func", "[0]*0.5*(1 + TMath::Erf([2]*(x - [1])))", 2)
         fit_func.SetParameter(0, 0.95)
         fit_func.SetParLimits(0, 0, 1)
         fit_func.SetParameter(1, 20)

@@ -26,8 +26,8 @@ from data import build_data
 #samples, plotter = build_data('2011-10-03-v4-WHAnalyze', 'scratch', 1249, skips)
 skips =['QCD', 'TauPlusX', '2011B', 'SingleMu', 'inbetween', 'DoubleEl', 'v4']
 #samples, plotter = build_data('2011-10-05-v1-WHAnalyze', 'scratch_results', 1249, skips)
-skips =['EM', 'MuPt5', 'TauPlusX', '2011B_PromptReco_v1_b', 'SingleMu', 'MuEG', 'DoubleEl', '2011B']
-samples, plotter = build_data('2011-10-10-v1-WHAnalyze', 'scratch_results', 2175, skips)
+skips =['EM', 'MuPt5', 'TauPlusX', '2011B_PromptReco_v1_b', 'SingleMu', 'MuEG', 'DoubleEl', '2011B', 'MuHad']
+samples, plotter = build_data('2011-10-17-v2-WHAnalyze', 'scratch_results', 2140, skips)
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 
@@ -49,13 +49,17 @@ legend = plotter.build_legend(
     include = os_include,
     drawopt='lf')
 
-base_dimuon_selection = \
-        'Muon1Pt > 15 && Muon2Pt > 9 && Muon1AbsEta < 2.1 && Muon2AbsEta < 2.1' \
-        ' && Muon1_MuRelIso < 0.3 && Muon2_MuRelIso < 0.3'
+base_dimuon_selection = (
+    'Muon1Pt > 15 && Muon2Pt > 9 && Muon1AbsEta < 2.1 && Muon2AbsEta < 2.1'
+    ' && Muon1_MuRelIso < 0.3 && Muon2_MuRelIso < 0.3 && '
+    ' ( (run < 1.5 && DoubleMu7_HLT > 0.5) ||'
+    '   (run > 160430 && run < 165088 && DoubleMu7_HLT > 0.5) || '
+    '   (run >= 165088 && Mu13Mu8_HLT) )'
+)
 
 ss_dimuon_selection = base_dimuon_selection + '&& Muon1Charge*Muon2Charge > 0'
 os_dimuon_selection = base_dimuon_selection + '&& Muon1Charge*Muon2Charge < 0'
-os_dimuon_selection_trg = os_dimuon_selection + '&& Mu13Mu8_HLT > 0'
+os_dimuon_selection_trg = os_dimuon_selection
 
 plotter.register_tree(
     'SelectedDiMuonMass',
@@ -63,7 +67,7 @@ plotter.register_tree(
     'Leg1Leg2_Mass',
     os_dimuon_selection,
     w = 'puWeight',
-    binning = [100, 0, 200],
+    binning = [120, 60, 120],
     #include = ['Zj*', '*DoubleMu*'],
     include = ['Zj*', 'Wp*'],
 )
@@ -74,7 +78,7 @@ plotter.register_tree(
     'Leg1Leg2_Mass',
     os_dimuon_selection_trg,
     w = 'puWeight',
-    binning = [100, 0, 200],
+    binning = [120, 60, 120],
     include = ['*DoubleMu*'],
 )
 
@@ -252,11 +256,16 @@ saveplot("tauFakeRatePt")
 ###############################################################################
 
 
-qcd_selection = \
-        'Muon1Pt > 15 && Muon2Pt > 9 && Muon1AbsEta < 2.1 && Muon2AbsEta < 2.1' \
-        ' && Muon1_MuRelIso > 0.3 && Muon2_MuRelIso > 0.3' \
-        ' && Muon1Charge*Muon2Charge > 0'
-qcd_selection_trg = qcd_selection + ' && Mu13Mu8_HLT > 0.5'
+qcd_selection = (
+    'Muon1Pt > 15 && Muon2Pt > 9 && Muon1AbsEta < 2.1 && Muon2AbsEta < 2.1'
+    ' && Muon1_MuRelIso > 0.3 && Muon2_MuRelIso > 0.3'
+    ' && Muon1Charge*Muon2Charge > 0'
+    ' && ( (run < 1.5 && DoubleMu7_HLT > 0.5) ||'
+    '   (run > 160430 && run < 165088 && DoubleMu7_HLT > 0.5) || '
+    '   (run >= 165088 && Mu13Mu8_HLT) )'
+)
+
+qcd_selection_trg = qcd_selection
 qcd_selection_hpsloose = qcd_selection + ' && Tau_LooseHPS > 0.5'
 qcd_selection_hpsloose_trg = qcd_selection_trg + ' && Tau_LooseHPS > 0.5'
 
@@ -270,6 +279,7 @@ plotter.register_tree(
     include = ['*',],
     exclude = ['*data*'],
 )
+
 # Now w/ trigger
 plotter.register_tree(
     'QCDTauJetPtHPSLoose',
@@ -348,13 +358,128 @@ jetpt_fit_func.Draw("same")
 saveplot("qcd_tauJetPt_fakerate")
 
 ###############################################################################
+#### QCD control plots   ######################################################
+###############################################################################
+
+plotter.register_tree(
+    'QCDNBjets',
+    '/mmt/final/Ntuple',
+    'NBjetsPt20_Nbjets',
+    qcd_selection,
+    w = 'puWeight',
+    binning = [10, -0.5, 9.5],
+    include = ['*',],
+)
+
+stack = plotter.build_stack(
+    '/mmt/final/Ntuple:QCDNBjets',
+    include = ['*',],
+    exclude = ['*data*'],
+    title = 'Num. b-jets in QCD events',
+    rebin = 1, show_overflows=True,
+)
+
+data = plotter.get_histogram(
+    'data_DoubleMu', '/mmt/final/Ntuple:QCDNBjets',
+    rebin = 1, show_overflows=True,
+)
+
+stack.Draw()
+stack.GetXaxis().SetTitle("N bjets")
+data.Draw("pe, same")
+stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
+
+sm_legend.Draw()
+
+saveplot("qcd_nBjets")
+
+###############################################################################
+#### Debug discrepancy plots
+###############################################################################
+
+# Same as Z selection, but no iso requirement on second leg
+loose_Z_selection = (
+    'Muon1Pt > 15 && Muon2Pt > 9 && Muon1AbsEta < 2.1 && Muon2AbsEta < 2.1'
+    ' && Muon1_MuRelIso < 0.3 && '
+    ' ( (run < 1.5 && DoubleMu7_HLT > 0.5) ||'
+    '   (run > 160430 && run < 165088 && DoubleMu7_HLT > 0.5) || '
+    '   (run >= 165088 && Mu13Mu8_HLT) )'
+    ' && Leg1Leg2_Mass < 100 && Leg1Leg2_Mass > 80'
+    ' && Muon1Charge*Muon2Charge < 0'
+)
+
+plotter.register_tree(
+    'ZLeg2Iso',
+    '/mmt/final/Ntuple',
+    'Muon2_MuRelIso',
+    loose_Z_selection,
+    w = 'puWeight',
+    binning = [100, 0, 0.5],
+    include = ['*',],
+)
+
+stack = plotter.build_stack(
+    '/mmt/final/Ntuple:ZLeg2Iso',
+    include = ['*',],
+    exclude = ['*data*'],
+    title = 'Rel. Iso. for subleading muon',
+    rebin = 1, show_overflows=True,
+)
+
+data = plotter.get_histogram(
+    'data_DoubleMu', '/mmt/final/Ntuple:ZLeg2Iso',
+    rebin = 1, show_overflows=True,
+)
+
+stack.Draw()
+stack.GetXaxis().SetTitle("Rel. Iso.")
+data.Draw("pe, same")
+stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
+
+sm_legend.Draw()
+
+saveplot("looseZ_relIso")
+
+plotter.register_tree(
+    'LooseZMass',
+    '/mmt/final/Ntuple',
+    'Leg1Leg2_Mass',
+    loose_Z_selection,
+    w = 'puWeight',
+    binning = [120, 60, 120],
+    include = ['*',],
+)
+
+stack = plotter.build_stack(
+    '/mmt/final/Ntuple:LooseZMass',
+    include = ['*',],
+    exclude = ['*data*'],
+    title = 'Mass',
+    rebin = 1, show_overflows=True,
+)
+
+data = plotter.get_histogram(
+    'data_DoubleMu', '/mmt/final/Ntuple:LooseZMass',
+    rebin = 1, show_overflows=True,
+)
+
+stack.Draw()
+stack.GetXaxis().SetTitle("Rel. Iso.")
+data.Draw("pe, same")
+stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
+
+sm_legend.Draw()
+
+saveplot("looseZ_mass")
+
+###############################################################################
 #### Signal region plots ######################################################
 ###############################################################################
 
 mc_legend = plotter.build_legend(
     '/mmt/final/SS/finalState/Leg1Leg2_Mass',
     include = ['*'],
-    exclude = ['data*']
+    exclude = ['data*', 'VH*']
 )
 
 for var, label, title, binning in [
@@ -574,8 +699,8 @@ for var, label, title, binning in [
 
 ##### BUILD DATA CARD
 
-label = 'vtxChi2NODF'
-#label = 'MuTauMass'
+#label = 'vtxChi2NODF'
+label = 'MuTauMass'
 
 data = plotter.get_histogram(
     'data_DoubleMu', '/mmt/final/Ntuple:SS%sFinal' % label,
@@ -612,17 +737,23 @@ zz_fr = plotter.get_histogram(
 )
 zz_corrected = zz_final - zz_fr
 
-signal = plotter.get_histogram(
-    'VH115', '/mmt/final/Ntuple:SS%sFinal' % label,
-    rebin = 10, show_overflows=True,
-)
 
-output = ROOT.TFile("mmtHistograms.root", 'RECREATE')
-channel_dir = output.mkdir("mmt")
-channel_dir.cd()
-data.Write("data_obs")
-data_fr.Write("fakes")
-data_wvetos.Write("ext_data_unweighted")
-wz_corrected.Write("wz")
-zz_corrected.Write("zz")
-signal.Write("signal")
+print "Writing data card"
+output = ROOT.TFile("mmt_shapes.root", 'RECREATE')
+
+for mass in [110, 115, 120, 125]:
+    channel_dir = output.mkdir("mmt_%i" % mass)
+    channel_dir.cd()
+    data.Write("data_obs")
+    data_fr.Write("fakes")
+    data_wvetos.Write("ext_data_unweighted")
+    wz_corrected.Write("wz")
+    zz_corrected.Write("zz")
+
+    signal = plotter.get_histogram(
+        'VH%s' % mass, '/mmt/final/Ntuple:SS%sFinal' % label,
+        rebin = 10, show_overflows=True,
+    )
+    signal.Write("signal")
+
+

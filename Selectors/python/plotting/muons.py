@@ -26,6 +26,63 @@ reliso = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+relSubDetIso = cms.PSet(
+    min = cms.untracked.double(0.0),
+    max = cms.untracked.double(2),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_MuSubDetRelIso"),
+    description = cms.untracked.string("${nicename} Muon Sub. Det. Rel. Iso"),
+    plotquantity = cms.untracked.string(
+        selectors.muons.relSubDetIso.plottable.value()),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+
+ecalIso = cms.PSet(
+    min = cms.untracked.double(0.0),
+    max = cms.untracked.double(20),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_ECALIso"),
+    description = cms.untracked.string("${nicename} Abs. ECAL Iso"),
+    plotquantity = cms.untracked.string(
+        selectors.muons.ecalIso.plottable.value()),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+hcalIso = cms.PSet(
+    min = cms.untracked.double(0.0),
+    max = cms.untracked.double(20),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_HCALIso"),
+    description = cms.untracked.string("${nicename} Abs. HCAL Iso"),
+    plotquantity = cms.untracked.string(
+        selectors.muons.hcalIso.plottable.value()),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+trkNormChi2 = cms.PSet(
+    min = cms.untracked.double(0.0),
+    max = cms.untracked.double(20),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_TrkNormChi2"),
+    description = cms.untracked.string("${nicename} Norm. #chi^{2}"),
+    plotquantity = cms.untracked.string(
+        selectors.muons.trkNormChi2.plottable.value()),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+d0 = cms.PSet(
+    min = cms.untracked.double(0.0),
+    max = cms.untracked.double(2),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_D0"),
+    description = cms.untracked.string("${nicename} 3D IP"),
+    plotquantity = cms.untracked.string(
+        selectors.muons.d0.plottable.value()),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+# Define all the trigger matching quantities
 def get_trigger_matching(trg_name):
     output = cms.PSet(
         _binary_bins,
@@ -47,7 +104,7 @@ hltSingleMuIsoL3IsoFiltered24  = get_trigger_matching('hltSingleMuIsoL3IsoFilter
 hltL1Mu3EG5L3Filtered8  = get_trigger_matching('hltL1Mu3EG5L3Filtered8')
 hltL1Mu3EG5L3Filtered17  = get_trigger_matching('hltL1Mu3EG5L3Filtered17')
 
-all = [reliso,
+all = [reliso, relSubDetIso, ecalIso, hcalIso, trkNormChi2, d0,
        hltSingleMu13L3Filtered13, hltDiMuonL3p5PreFiltered8,
        hltDiMuonL3PreFiltered7, hltSingleMu30L3Filtered30,
        hltSingleMuIsoL3IsoFiltered24,

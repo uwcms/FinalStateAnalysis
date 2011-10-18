@@ -18,8 +18,8 @@ canvas.Divide(2)
 chain = ROOT.TChain("mm/final/Ntuple")
 
 path = os.path.join(os.environ['scratch_results'],
-                    #'2011-10-17-v4-MuonTP-Zjets_M50-analyzeFinalStates',
-                    '2011-10-17-v4-MuonTP-data_SingleMu_Run2011A_*',
+                    '2011-10-17-v5-MuonTP-Zjets_M50-analyzeFinalStates',
+                    #'2011-10-17-v5-MuonTP-data_SingleMu_Run2011A_*',
                     '*', '*.root')
 for ifile, file in enumerate(glob.glob(path)):
     print file
@@ -31,9 +31,13 @@ for ifile, file in enumerate(glob.glob(path)):
 vars = [
     ROOT.RooRealVar("finalStateVisP4Mass", "M_{#mu#mu}", 70, 110, "GeV/c^{2}"),
     ROOT.RooRealVar("Muon2_hltSingleMuIsoL3IsoFiltered24", "Iso Mu 24", -2, 2),
-    ROOT.RooRealVar("Muon2_hltDiMuonL3p5PreFiltered8", "Iso Mu 24", -2, 2),
+    ROOT.RooRealVar("Muon2_hltDiMuonL3p5PreFiltered8", "Mu 8", -2, 2),
+    ROOT.RooRealVar("Muon2_hltSingleMu13L3Filtered13", "Mu 8", -2, 2),
+    ROOT.RooRealVar("Muon2_hltDiMuonL3PreFiltered7", "DoubleMu7", -2, 2),
     ROOT.RooRealVar("Muon2Pt", "Muon p_{T}", 0, 100, "GeV/c"),
-    ROOT.RooRealVar("Muon2_MuRelIso", "Muon Rel. Iso.", 0, 1, "GeV/c"),
+    ROOT.RooRealVar("Muon2_MuRelIso", "Muon Rel. Iso.", 0, 10),
+    ROOT.RooRealVar("Muon2_MuID_WWID", "Muon WW ID", -2, 2),
+    ROOT.RooRealVar("Muon2GenPdgId", "Muon MC Match", -5, 20),
 ]
 # We fit the dimuon mass
 fit_var = vars[0]
@@ -42,17 +46,16 @@ fitter = TNPFitter(chain, vars)
 
 # Define our shapes
 pdf_config = [
-    #"CBShape::signalPass(finalStateVisP4Mass, mean[90,80,100], sigma[2.5, 0.5, 10]," "alpha[1, -10, 10], n[3, 0, 10])",
-    #"CBShape::signalFail(finalStateVisP4Mass, mean, sigma," "alpha, n)",
-    "Voigtian::signalPass(finalStateVisP4Mass, mean[90,80,100], width[2.495], sigma[3,1,20])",
+    "Voigtian::signalPass(finalStateVisP4Mass, mean[90,80,100], width[2.495], sigma[3,0.01,20])",
     "Voigtian::signalFail(finalStateVisP4Mass, mean, width, sigma)",
     "Exponential::backgroundPass(finalStateVisP4Mass, lp[0,-5,5])",
     "Exponential::backgroundFail(finalStateVisP4Mass, lf[0,-5,5])",
 ]
 
 # What we measure the triggers against
-base_probe_selections = ['Muon2_MuRelIso < 0.3']
-pt_bins = range(5, 40, 1) + range(45, 65, 5) + range(65, 105, 10)
+base_probe_selections = ['Muon2_MuRelIso < 0.3', 'Muon2_MuID_WWID > 0.5' ]
+mc_probe_selections = [ 'Muon2GenPdgId > 12' ]
+pt_bins = range(5, 40, 1)
 
 #ws, result = fitter.fit(
     #fit_var,
@@ -62,18 +65,31 @@ pt_bins = range(5, 40, 1) + range(45, 65, 5) + range(65, 105, 10)
     #pdf_config,
 #)
 
-trend = fitter.fit_trend(
+#trend = fitter.fit_trend(
+    #'Muon2Pt',
+    #pt_bins,
+    #fit_var,
+    #base_probe_selections,
+    #['Muon2_hltDiMuonL3PreFiltered7 > 0.5'],
+    #['Muon2_hltDiMuonL3PreFiltered7 > -0.5', 'Muon2_hltDiMuonL3PreFiltered7 < 0.5'],
+    #pdf_config,
+#)
+
+trend = fitter.mc_trend(
     'Muon2Pt',
     pt_bins,
     fit_var,
+    mc_probe_selections,
     base_probe_selections,
-    ['Muon2_hltSingleMuIsoL3IsoFiltered24 > 0.5'],
-    ['Muon2_hltSingleMuIsoL3IsoFiltered24 > -0.5', 'Muon2_hltSingleMuIsoL3IsoFiltered24 < 0.5'],
-    pdf_config,
+    ['Muon2_hltDiMuonL3PreFiltered7 > 0.5'],
+    ['Muon2_hltDiMuonL3PreFiltered7 > -0.5', 'Muon2_hltDiMuonL3PreFiltered7 < 0.5'],
 )
 
 tgraph = fitter.make_trend_graph(trend)
 tgraph.Draw("ape")
+
+turnon = fitter.fit_trend_graph(tgraph)
+turnon.Draw('same')
 
 
 #frame_pass = vars[0].frame()

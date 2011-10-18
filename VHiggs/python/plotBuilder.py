@@ -148,7 +148,7 @@ def trileptonFinalPlots(leg1, leg2, leg3):
     output.extras.histos.append(b_veto_cfg)
     add_ntuple(b_veto_cfg.name.value(), b_veto_cfg.plotquantity.value())
 
-    btau_veto_cfg = PSetTemplate(plotting.extras.nbjets).replace(
+    btau_veto_cfg = PSetTemplate(plotting.extras.nbjetsHPSLoose).replace(
             name = 'NBjetsPt20HPSLoose', nicename = 'p_{T} > 20',
             pt_threshold = '20', eta_threshold = '2.5',
             btag_threshold = '3.3' )

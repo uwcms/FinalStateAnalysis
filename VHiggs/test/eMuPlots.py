@@ -10,7 +10,7 @@ from FinalStateAnalysis.PatTools.datadefs import datadefs
 logging.basicConfig(filename='example.log',level=logging.DEBUG)
 log = logging.getLogger("plotting")
 h1 = logging.StreamHandler(sys.stdout)
-h1.level = logging.WARNING
+h1.level = logging.INFO
 log.addHandler(h1)
 
 logging.getLogger("AnalysisPlotter").addHandler(h1)
@@ -26,16 +26,8 @@ ROOT.SetMemoryPolicy( ROOT.kMemoryStrict )
 
 from data import build_data
 
-#print "NOT USING PROMPT RECO V4!!!"
-#skips =['QCD', 'TauPlusX', '2011B', 'SingleMu', 'inbetween', 'DoubleEl', 'PromptReco_v4']
-#samples, plotter = build_data('2011-10-05-v1-WHAnalyze', 'scratch_results', 1249, skips)
-
-skips =[ 'EM', 'MuPt5', 'TauPlusX', '2011B', 'SingleMu', 'DoubleEl', ]
-samples, plotter = build_data('2011-10-10-v1-WHAnalyze', 'scratch_results', 2175, skips)
-
-#print "NOT USING PROMPT RECO V4!!!"
-#skips =['QCD', 'TauPlusX', '2011B', 'SingleMu', 'DoubleEl', 'v4']
-#samples, plotter = build_data('2011-10-07-WHReSkim', 'scratch_results', 1249, skips)
+skips =[ 'EM', 'MuPt5', 'TauPlusX', '2011B', 'SingleMu', 'DoubleEl', 'MuHad']
+samples, plotter = build_data('2011-10-17-v2-WHAnalyze', 'scratch_results', 2140, skips)
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 def saveplot(filename):
@@ -109,7 +101,7 @@ variables = [
     ('TauJetPt', 'Tau Jet p_{t}', [100, 0, 200]),
     ('TauPt', 'Tau p_{t}', [100, 0, 200]),
     ('METPt',  'MET', [100, 0, 200]),
-    ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDOF', [100, 0, 15]),
+    ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDOF', [100, 0, 30]),
     ('NIsoMuonsPt5_Nmuons', 'N_{#mu}', [10, -0.5, 9.5]),
     ('NIsoElecPt5_Nelectrons', 'N_{e}', [10, -0.5, 9.5]),
     ('NjetsPt20_Njets', 'N_{jets}', [10, -0.5, 9.5]),
@@ -120,7 +112,7 @@ variables = [
 mc_legend = plotter.build_legend(
     '/mmt/final/SS/finalState/Leg1Leg2_Mass',
     include = ['*'],
-    exclude = ['data*']
+    exclude = ['data*', 'VH*']
 )
 
 for variable, var_name, binning in variables:
@@ -347,18 +339,20 @@ zz_final = plotter.get_histogram(
 )
 zz_corrected = zz_final - zz_fr
 
-signal = plotter.get_histogram(
-    'VH115', '/emt/final/Ntuple:%s' % final_name,
-    rebin = rebin,
-            show_overflows=True,
-)
 
-output = ROOT.TFile("emtHistograms.root", 'RECREATE')
-channel_dir = output.mkdir("emt")
-channel_dir.cd()
-data_final.Write("data_obs")
-data_fr.Write("fakes")
-data_unweighted.Write("ext_data_unweighted")
-wz_corrected.Write("wz")
-zz_corrected.Write("zz")
-signal.Write("signal")
+output = ROOT.TFile("emt_shapes.root", 'RECREATE')
+
+for mass in [110, 115, 120, 125]:
+    channel_dir = output.mkdir("emt_%i" % mass)
+    channel_dir.cd()
+    data_final.Write("data_obs")
+    data_fr.Write("fakes")
+    data_unweighted.Write("ext_data_unweighted")
+    wz_corrected.Write("wz")
+    zz_corrected.Write("zz")
+    print "Getting signal for mass", mass
+    signal = plotter.get_histogram(
+        'VH%s' % mass, '/emt/final/Ntuple:%s' % final_name,
+        rebin = rebin, show_overflows=True,
+    )
+    signal.Write("signal")

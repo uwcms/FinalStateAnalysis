@@ -14,26 +14,29 @@ def quad(*xs):
 # NB the data samples are built automatically at the bottom
 
 data_name_map = {
-  #'Zjets' : ['Zjets_M50', 'Zbb_M50'],
-  'Zjets' : ['Zjets_M50'],
+    # Fixme there is some double counting here!
+    'Zjets' : ['Zjets_M50', 'Zbb_M50', 'Zcc_M40'],
 
-  #'QCDMu' : ['QCD_15to20_MuPt5', 'QCD_20to30_MuPt5', 'QCD_30to50_MuPt5',
-             #'QCD_50to80_MuPt5', 'QCD_80to120_MuPt5', 'QCD_120to150_MuPt5',
-             #'QCD_150_MuPt5'],
-  'QCDMu' : ['QCD_20toInf_MuPt15'],
+    #'QCDMu' : ['QCD_15to20_MuPt5', 'QCD_20to30_MuPt5', 'QCD_30to50_MuPt5',
+    #'QCD_50to80_MuPt5', 'QCD_80to120_MuPt5', 'QCD_120to150_MuPt5',
+    #'QCD_150_MuPt5'],
+    'QCDMu' : ['QCD_20toInf_MuPt15'],
 
-  'QCDE' : ['QCD_20to30_EM', 'QCD_30to80_EM', 'QCD_80to120_MuPt5',
-            'QCD_120to150_MuPt5', 'QCD_150_MuPt5'],
+    'QCDE' : ['QCD_20to30_EM', 'QCD_30to80_EM', 'QCD_80to120_MuPt5',
+              'QCD_120to150_MuPt5', 'QCD_150_MuPt5'],
 
-  'Wjets' : ['WplusJets_madgraph'],
+    'Wjets' : ['WplusJets_madgraph'],
 
-  'WW' : ['WWJetsTo2L2Nu'],
-  'WZ' : ['WZJetsTo3LNu'],
-  'ZZ' : ['ZZJetsTo4L'],
+    'WW' : ['WWJetsTo2L2Nu'],
+    'WZ' : ['WZJetsTo3LNu'],
+    'ZZ' : ['ZZJetsTo4L'],
 
-  'ttjets': ['TTplusJets_madgraph'],
+    'ttjets': ['TTplusJets_madgraph'],
 
-  'VH115' : ['VH_115'],
+    'VH110' : ['VH_110'],
+    'VH115' : ['VH_115'],
+    'VH120' : ['VH_120'],
+    'VH125' : ['VH_125'],
 }
 
 
@@ -206,7 +209,13 @@ datadefs = {
       'x_sec' : (0.6729 + 0.3158 + 0.08634)*_picobarns*6.37e-2,
       'ana_group' : 1,
       'analyses' : ['VH'],
-    }
+    },
+    #'VH_130' : {
+      #'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-125_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+      #'x_sec' : (0.6729 + 0.3158 + 0.08634)*_picobarns*6.37e-2,
+      #'ana_group' : 1,
+      #'analyses' : ['VH'],
+    #}
     }
 
 # Add all the datasets

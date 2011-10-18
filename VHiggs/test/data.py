@@ -17,7 +17,7 @@ def get_result_dir(jobid, source, sample):
     result_dir = "-".join([jobid, sample, 'analyze*'])
     return os.path.join(os.environ[source], result_dir, '*', '*.root')
 
-def build_data(jobid, source, target_lumi, skips):
+def build_data(jobid, source, target_lumi, skips, count='emt/skimCounter'):
     raw_samples = {}
     # Build the basic weighted files
     for name, info in datadefs.datadefs.iteritems():
@@ -37,7 +37,7 @@ def build_data(jobid, source, target_lumi, skips):
                 'target_lumi' : target_lumi,
                 'xsec' : info['x_sec'],
                 'skim_eff' : 1.0,
-                'event_count' : 'eee/skimCounter',
+                'event_count' : count,
                 'verbose' : True
             }
 
