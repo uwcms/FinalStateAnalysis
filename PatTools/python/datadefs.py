@@ -14,7 +14,8 @@ def quad(*xs):
 # NB the data samples are built automatically at the bottom
 
 data_name_map = {
-  'Zjets' : ['Zjets_M50', 'Zbb_M50'],
+  #'Zjets' : ['Zjets_M50', 'Zbb_M50'],
+  'Zjets' : ['Zjets_M50'],
 
   #'QCDMu' : ['QCD_15to20_MuPt5', 'QCD_20to30_MuPt5', 'QCD_30to50_MuPt5',
              #'QCD_50to80_MuPt5', 'QCD_80to120_MuPt5', 'QCD_120to150_MuPt5',
@@ -43,7 +44,7 @@ datadefs = {
 
     'Zjets_M50' : {
       'datasetpath' : '/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM',
-      'x_sec' : 2475*_picobarns, # FIX ME
+      'x_sec' : 3048*_picobarns, #NNLO
       'size' : 3768,
       'analyses' : ['HTT', 'SSDL', 'VH', 'Tau'],
     },
