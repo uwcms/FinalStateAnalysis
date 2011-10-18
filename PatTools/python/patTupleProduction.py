@@ -126,6 +126,15 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('patJets_selectedPatJets_*_*')
 
     # Customize/embed all our sequences
+    process.load("FinalStateAnalysis.PatTools.patJetProduction_cff")
+    final_jet_collection = chain_sequence(
+        process.customizeJetSequence, "patJets")
+    process.customizeJetSequence.insert(0, process.patJets)
+    # We can't mess up the selected pat jets because the taus use them.
+    process.selectedPatJets.src = final_jet_collection
+    process.patDefaultSequence.replace(process.patJets,
+                                       process.customizeJetSequence)
+
     process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
     final_tau_collection = chain_sequence(
         process.customizeTauSequence, "selectedPatTaus")
