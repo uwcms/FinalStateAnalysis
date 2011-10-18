@@ -100,9 +100,16 @@ void PATMuonSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup&
   for (size_t i = 0; i < muons->size(); ++i) {
     pat::Muon muon = muons->at(i); // make a local copy
 
-    double correctedPt = (*corrector_.get())(muon);
-    double correctedPtUp = (*correctorUp_.get())(muon);
-    double correctedPtDown = (*correctorDown_.get())(muon);
+    // In data, we apply no correction.
+    double correctedPt = muon.pt();
+    double correctedPtUp = correctedPt;
+    double correctedPtDown = correctedPt;
+
+    if (!evt.isRealData()) {
+      correctedPt = (*corrector_.get())(muon);
+      correctedPtUp = (*correctorUp_.get())(muon);
+      correctedPtDown = (*correctorDown_.get())(muon);
+    }
 
     double eta = muon.eta();
     double phi = muon.phi();
