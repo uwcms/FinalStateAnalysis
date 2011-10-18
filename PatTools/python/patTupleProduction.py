@@ -77,6 +77,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
     # Load PFNoPileup.  Make sure we do this after pat messes around w/ it
     process.tuplize += configurePFNoPileup(process)
+    # Embed muon tracks
+    process.patMuons.embedTrack = True
+    process.patMuons.pvSrc = cms.InputTag("selectedPrimaryVertex")
     # Do extra electron ID
     process.load("FinalStateAnalysis.RecoTools.electronID_cff")
     process.tuplize += process.recoElectronID
@@ -92,8 +95,13 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Disable tau IsoDeposits
     process.patTaus.isoDeposits = cms.PSet()
     process.patTaus.userIsolation = cms.PSet()
-    process.patTaus.embedGenMatch = False # kept in ntuple
+
+    # Disable gen match embedding - we keep it in the ntuple
+    process.patMuons.embedGenMatch = False
+    process.patElectrons.embedGenMatch = False
+    process.patTaus.embedGenMatch = False
     process.patTaus.embedGenJetMatch = False
+
     # Use PFJets and turn on JEC
     jec = [ 'L1FastJet', 'L2Relative', 'L3Absolute' ]
     #if not isMC:
