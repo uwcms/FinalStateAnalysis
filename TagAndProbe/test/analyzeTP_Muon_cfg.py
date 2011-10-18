@@ -37,9 +37,7 @@ process.common = cms.PSet(
     skimCounter = cms.InputTag("eventCount", "", "TUPLE"),
 )
 
-process.steering.ignored_cuts = cms.vstring(
-    "*_BJetVeto", "*RelIso*", "*Veto*", "*CombinedIsolation*"
-)
+process.steering.ignored_cuts = cms.vstring()
 
 # Define the configuration for each leg.
 leg1 = {
@@ -107,6 +105,12 @@ for leg in [leg1, leg2]:
     for plot in plotting.muons.all:
         plot_cfg = PSetTemplate(plot).replace(**leg)
         add_ntuple(plot_cfg.name.value(), plot_cfg.plotquantity.value())
+    for plot in plotting.candidate.all:
+        plot_cfg = PSetTemplate(plot).replace(**leg)
+        add_ntuple(plot_cfg.name.value(), plot_cfg.plotquantity.value())
+    plot_cfg = PSetTemplate(plotting.muons.id).replace(
+        muID = 'WWID', **leg)
+    add_ntuple(plot_cfg.name.value(), plot_cfg.plotquantity.value())
 
 for plot in plotting.candidate.all:
     plot_cfg = PSetTemplate(plot).replace(
@@ -149,6 +153,12 @@ im24_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
     name = "IsoMu24", nicename = "Iso Mu 24",
     hlt_path = r'HLT_IsoMu24_v\\d+')
 add_ntuple(im24_trig_cfg.name.value(), im24_trig_cfg.plotquantity.value())
+
+m30_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
+    name = "Mu30", nicename = "Mu 30",
+    hlt_path = r'HLT_Mu30_v\\d+')
+add_ntuple(m30_trig_cfg.name.value(), m30_trig_cfg.plotquantity.value())
+
 
 add_ntuple("puWeight", "evt().weight('puAvg')")
 

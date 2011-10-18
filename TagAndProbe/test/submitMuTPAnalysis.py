@@ -2,8 +2,8 @@ import os
 import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
-cfg = 'analyzeFinalStates.py'
-jobId = '2011-10-17-v3-MuonTP'
+cfg = 'analyzeTP_Muon_cfg.py'
+jobId = '2011-10-17-v5-MuonTP'
 
 patJobId = '2011-10-06-EWKPatTuple'
 patCfg = 'patTuple_cfg'
