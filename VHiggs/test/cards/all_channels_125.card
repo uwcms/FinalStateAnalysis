@@ -1,0 +1,22 @@
+# VHtautau fit
+# 2.1 fb-1
+imax 2
+jmax *
+kmax *
+------------
+shapes * * all_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
+bin mmt_125 emt_125
+observation 4.0 12.0
+------------
+  bin    mmt_125  mmt_125  mmt_125  mmt_125  emt_125  emt_125  emt_125  emt_125
+  process    wz  signal  zz  fakes  wz  signal  zz  fakes
+  process    2  0  3  1  2  0  3  1
+  rate    0.649611626752  0.219058265182  0.361552130547  0.753878423944  2.24394135922  0.33112695413  0.516595949186  6.340444915
+  mmt_fake_err  lnN  -  -  -  1.14  -  -  -  -
+  e_id  lnN  -  -  -  -  1.02  1.02  1.02  -
+  tau_id  lnN  1.06  1.06  1.06  -  1.06  1.06  1.06  -
+  lumi  lnN  1.04  1.04  1.04  -  1.04  1.04  1.04  -
+  zz  lnN  -  -  1.40  -  -  -  1.40  -
+  mu_id  lnN  1.01  1.01  1.01  -  1.01  1.01  1.01  -
+  emt_fake_err  lnN  -  -  -  -  -  -  -  1.07
+  wz  lnN  1.17  -  -  -  1.17  -  -  -

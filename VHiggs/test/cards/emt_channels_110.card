@@ -1,0 +1,21 @@
+# VHtautau fit
+# 2.1 fb-1
+imax 1
+jmax *
+kmax *
+------------
+shapes * * all_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
+bin emt_110
+observation 12.0
+------------
+  bin    emt_110  emt_110  emt_110  emt_110
+  process    wz  signal  zz  fakes
+  process    2  0  3  1
+  rate    2.24394135922  0.497158466052  0.516595949186  6.340444915
+  tau_id  lnN  1.06  1.06  1.06  -
+  lumi  lnN  1.04  1.04  1.04  -
+  e_id  lnN  1.02  1.02  1.02  -
+  zz  lnN  -  -  1.40  -
+  mu_id  lnN  1.01  1.01  1.01  -
+  emt_fake_err  lnN  -  -  -  1.07
+  wz  lnN  1.17  -  -  -
