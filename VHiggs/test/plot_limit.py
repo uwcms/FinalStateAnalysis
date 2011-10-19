@@ -61,8 +61,9 @@ if __name__ == "__main__":
     frame = ROOT.TH1F('frame', 'frame', 10, 110, 130)
     frame.SetMaximum(35)
     frame.SetMinimum(0.5)
+    frame.SetTitle("WH(#tau#tau) limits [2.1 fb^{-1}]")
     frame.GetYaxis().SetTitle("95% UL on #sigma/#sigma_{SM}")
-    frame.GetXaxis().SetTitle("M_H (GeV)")
+    frame.GetXaxis().SetTitle("M_{H} (GeV)")
     frame.Draw()
     twosig.Draw('3')
     onesig.Draw('3')
@@ -72,4 +73,4 @@ if __name__ == "__main__":
 
     canvas.Update()
 
-    canvas.SaveAs("limit.png")
+    canvas.SaveAs("limit.pdf")
