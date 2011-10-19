@@ -38,9 +38,11 @@ vars = [
     ROOT.RooRealVar("Muon2_MuRelIso", "Muon Rel. Iso.", 0, 10),
     ROOT.RooRealVar("Muon2_MuID_WWID", "Muon WW ID", -2, 2),
     ROOT.RooRealVar("Muon2GenPdgId", "Muon MC Match", -5, 20),
+    ROOT.RooRealVar("puWeight", "PU Weight", 0, 5),
 ]
 # We fit the dimuon mass
 fit_var = vars[0]
+pu_var = vars[-1]
 
 fitter = TNPFitter(chain, vars)
 
@@ -79,6 +81,7 @@ trend = fitter.mc_trend(
     'Muon2Pt',
     pt_bins,
     fit_var,
+    ROOT.RooArgList(pu_var),
     mc_probe_selections,
     base_probe_selections,
     ['Muon2_hltDiMuonL3PreFiltered7 > 0.5'],

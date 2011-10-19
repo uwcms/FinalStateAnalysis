@@ -42,6 +42,7 @@ import hashlib
 import logging
 
 import ROOT
+from FinalStateAnalysis.Utilities.Histo import Histo
 
 def importer(ws, obj):
     # Workaround to allow use of reserved word
@@ -55,13 +56,27 @@ def _eff_and_errors(passing, failing):
     tgraph = ROOT.TGraphAsymmErrors(num, den)
     return (tgraph.GetY()[0], tgraph.GetEYhigh()[0], tgraph.GetEYlow()[0])
 
+def _total_weight(weight_dist):
+    """ Get the total weight of the sample given the weight distribution """
+    # Use our handy utility
+    output = 0
+    weight_histo = Histo(weight_dist)
+    for bin in weight_histo.bins():
+        weight = bin.center()
+        entries = bin.value()
+        output += weight * entries
+    return output
+
 class TNPFitter(object):
     log = logging.getLogger("TNPFitter")
     def __init__(self, tree, vars):
         print self.log
         self.vars = vars
         self.log.info("Constructing RooDataSet using vars: %s", vars)
-        data = ROOT.RooDataSet("data", "TNP Data", tree, ROOT.RooArgSet(*vars))
+        argset = ROOT.RooArgSet()
+        for var in vars:
+            argset.add(var)
+        data = ROOT.RooDataSet("data", "TNP Data", tree, argset)
         self.ws = ROOT.RooWorkspace()
         self.log.info("Import dataset into persistent workspace")
         self.imp(data)
@@ -107,8 +122,9 @@ class TNPFitter(object):
             results.append((start, end, ws, fit_result, efficiency))
         return results
 
-    def mc_trend(self, bin_var, bins, xaxis,
+    def mc_trend(self, bin_var, bins, xaxis, weight,
                  truth_sel, base_sel, pass_sel, fail_sel):
+        # Weight is a RooArgList of a single weight variable
         results = []
         # Run over pairs of cuts
         for i, (start, end) in enumerate(zip(bins[:-1], bins[1:])):
@@ -117,8 +133,17 @@ class TNPFitter(object):
                 '%s > %0.3f' % (bin_var, start),
                 '%s <= %0.3f' % (bin_var, end)
             ]
-            pass_data = self.reduce_data(full_sel + pass_sel).numEntries()
-            fail_data = self.reduce_data(full_sel + fail_sel).numEntries()
+            # We need to compute the total number of passing/failing entries
+            # with the PU weights
+            pass_data = self.reduce_data(full_sel + pass_sel)
+            fail_data = self.reduce_data(full_sel + fail_sel)
+            pass_weighted = ROOT.TH1F("pass_weights", "pass_weights", 100, 0, 2)
+            fail_weighted = ROOT.TH1F("fail_weights", "fail_weights", 100, 0, 2)
+
+            pass_data.fillHistogram(pass_weighted, weight)
+            passing_weighted = _total_weight(pass_weighted)
+            fail_data.fillHistogram(fail_weighted, weight)
+            failing_weighted = _total_weight(fail_weighted)
 
             class FakeEfficiency(object):
                 def __init__(self, passing, failing):
@@ -132,7 +157,7 @@ class TNPFitter(object):
                     return self.errUp
 
             results.append((start, end, None, None,
-                            FakeEfficiency(pass_data, fail_data)))
+                            FakeEfficiency(passing_weighted, failing_weighted)))
         return results
 
     @staticmethod
@@ -151,11 +176,25 @@ class TNPFitter(object):
 
     @staticmethod
     def fit_trend_graph(graph):
+        ''' Fit a trend to an error function '''
         fit_func = ROOT.TF1(
             "fit_func", "[0]*0.5*(1 + TMath::Erf([2]*(x - [1])))", 2)
-        fit_func.SetParameter(0, 0.95)
+        fit_func.SetParameter(0, graph.GetMaximum())
         fit_func.SetParLimits(0, 0, 1)
-        fit_func.SetParameter(1, 20)
+        # Find turnon
+        before_turnon = graph.GetXaxis().GetXmin()
+        after_turnon = graph.GetXaxis().GetXmax()
+        graph_max = graph.GetMaximum()
+        for i in xrange(graph.GetN()):
+            x = graph.GetXaxis().GetBinCenter(i)
+            y = graph.Eval(x)
+            if y < 0.1*graph_max and x > before_turnon:
+                before_turnon = x
+            if y > 0.9*graph_max and x < after_turnon:
+                after_turnon = x
+
+        fit_func.SetParameter(
+            1, 0.5*(after_turnon - before_turnon) + before_turnon)
         fit_func.SetParLimits(1, 0, 200)
         fit_func.SetParameter(2, 3)
         fit_func.SetParLimits(2, 0.01, 50)
