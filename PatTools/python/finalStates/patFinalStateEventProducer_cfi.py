@@ -10,8 +10,17 @@ patFinalStateEventProducer = cms.EDProducer(
     puInfoSrc = cms.InputTag("addPileupInfo"),
     extraWeights = cms.PSet(
         #anyOldThing = cms.double(9999), # just an example
-        puAvg = cms.InputTag("lumiWeights", "3bx"),
-        puInTime = cms.InputTag("lumiWeights"),
-        puOOT = cms.InputTag("lumiWeights", "oot"),
+        #puAvg = cms.InputTag("lumiWeights", "3bx"),
+        #puInTime = cms.InputTag("lumiWeights"),
     )
 )
+
+# Add the different possible PU weights
+for weight in [ 'lumiWeightsS42011A', 'lumiWeightsS42011B178078',
+               'lumiWeightsS42011AB178078' ]:
+    setattr(patFinalStateEventProducer.extraWeights,
+            weight.replace('lumiWeights', '3bx_'),
+            cms.InputTag(weight, "3bx"))
+    setattr(patFinalStateEventProducer.extraWeights,
+            weight.replace('lumiWeights', 'intime_'),
+            cms.InputTag(weight))
