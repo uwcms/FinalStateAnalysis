@@ -1,15 +1,5 @@
 <lcgdict>
 <selection>
-  <!-- create dictionaries for PATMuTauSystematics objects -->
-  <class name="PATMuTauSystematics"/>
-  <class name="std::vector<PATMuTauSystematics >"/>
-  <class name="edm::Wrapper<PATMuTauSystematics >"/>
-  <class name="edm::Wrapper<std::vector<PATMuTauSystematics > >"/>
-  <class name="edm::Ref<PATMuTauSystematicsCollection,PATMuTauSystematics,edm::refhelper::FindUsingAdvance<PATMuTauSystematicsCollection,PATMuTauSystematics> >"/>
-  <class name="edm::RefVector<PATMuTauSystematicsCollection,PATMuTauSystematics,edm::refhelper::FindUsingAdvance<PATMuTauSystematicsCollection,PATMuTauSystematics> >"/>
-  <class name="edm::RefProd<PATMuTauSystematicsCollection>"/>
-  <class name="edm::Ptr<PATMuTauSystematics >"/>
-
   <class name="edm::Ptr<reco::Vertex >"/>
   <class name="edm::PtrVector<reco::Vertex >"/>
   <class name="std::map<std::string, float>"/>

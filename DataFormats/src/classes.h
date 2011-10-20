@@ -1,6 +1,3 @@
-#include "FinalStateAnalysis/DataFormats/interface/PATDiCandidateSystematics.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATDiCandidateSystematicsFwd.h"
-
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateFwd.h"
 
@@ -22,7 +19,6 @@
 
 namespace {
   struct FinalStateAnalysis_DataFormats_dicts {
-    // Needed by dicandidate systematics object
     edm::Ptr<reco::Vertex> dummyVertexPtr;
     edm::PtrVector<reco::Vertex> dummyVertexPtrVector;
 
@@ -30,15 +26,6 @@ namespace {
     std::map<std::string, int> dummyIntMap;
     std::pair<std::string, float> dummyFloatPair;
     std::pair<std::string, int> dummyIntPair;
-
-    PATMuTauSystematics dummyMuTauSys;
-    edm::Wrapper<PATMuTauSystematics> dummyMuTauSysW;
-    PATMuTauSystematicsCollection dummyMuTauSysColl;
-    edm::Wrapper<PATMuTauSystematicsCollection> dummyMuTauSysCollW;
-    PATMuTauSystematicsRef dummyMuTauSysRef;
-    PATMuTauSystematicsRefProd dummyMuTauSysRefProd;
-    PATMuTauSystematicsRefVector dummyMuTauSysRefVector;
-    PATMuTauSystematicsPtr dummyMuTauSysPtr;
 
     PATFinalStateProxy proxyDummy;
 
