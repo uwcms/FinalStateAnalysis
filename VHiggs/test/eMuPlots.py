@@ -76,20 +76,27 @@ selections = {
 
     'ht_cut' :
     'FinalState_Ht > 80',
+
+    'vtx_cut' :
+    'vtxChi2/vtxNDOF < 10',
 }
 
 tauPt_fr_weight = '(((0.013318 + 0.185314*exp(-0.064584*TauPt)))/(1-(0.013318 + 0.185314*exp(-0.064584*TauPt))))'
-fr_weight_cmd = '(%s && Tau_LooseHPS < 0.5)*(' + tauPt_fr_weight + ')'
 jetPt_fr = '(0.009659 + 18.071184*exp(-0.125145*TauJetPt))'
+jetPtWeight= "((%s)/(1-%s))" % (jetPt_fr, jetPt_fr)
+
+#fr_weight_cmd = '(%s && Tau_LooseHPS < 0.5)*(' + tauPt_fr_weight + ')'
+fr_weight_cmd = '(%s && Tau_LooseHPS < 0.5)*(' + jetPtWeight + ')'
 
 regions = {
     'os_fr_region' : ['kine', 'os_em', 'mu_iso', 'e_iso'],
     'os_fr_region_ttbar' : ['kine', 'os_em', 'mu_iso', 'e_iso', 'ttbar_enriched'],
     'ss_fr_region' : ['kine', 'ss_em', 'mu_iso', 'e_iso'],
-    'ss_fr_super_region' : ['kine', 'ss_em', 'mu_iso', 'e_iso', 'mu_veto', 'b_veto', 'ht_cut'],
+    'ss_fr_super_region' : ['kine', 'ss_em', 'mu_iso', 'e_iso', 'mu_veto', 'b_veto', 'ht_cut', 'vtx_cut'],
     'os_final_region' : ['kine', 'os_em', 'mu_iso', 'e_iso', 'hps_pass'],
     'os_final_region_ttbar' : ['kine', 'os_em', 'mu_iso', 'e_iso', 'hps_pass', 'ttbar_enriched'],
-    'ss_final_super_region' : ['kine', 'ss_em', 'mu_iso', 'e_iso', 'hps_pass', 'mu_veto', 'b_veto', 'ht_cut'],
+    'ss_final_region' : ['kine', 'ss_em', 'mu_iso', 'e_iso', 'hps_pass', 'mu_veto', 'b_veto',],
+    'ss_final_super_region' : ['kine', 'ss_em', 'mu_iso', 'e_iso', 'hps_pass', 'mu_veto', 'b_veto', 'ht_cut', 'vtx_cut'],
 }
 
 variables = [

@@ -69,6 +69,7 @@ def trileptonFinalPlots(leg1, leg2, leg3):
     output.finalState.histos.append(
         PSetTemplate(plotting.topology.ht).replace(
             name = 'finalState', nicename = 'Final state',
+            getter = ''
         )
     )
 
@@ -93,6 +94,7 @@ def trileptonFinalPlots(leg1, leg2, leg3):
 
     ht_cfg = PSetTemplate(plotting.topology.ht).replace(
         name = 'FinalState', nicename = 'Final State',
+        getter = ''
     )
     output.finalState.histos.append(ht_cfg)
     add_ntuple(ht_cfg.name.value(), ht_cfg.plotquantity.value())
@@ -148,12 +150,12 @@ def trileptonFinalPlots(leg1, leg2, leg3):
     output.extras.histos.append(b_veto_cfg)
     add_ntuple(b_veto_cfg.name.value(), b_veto_cfg.plotquantity.value())
 
-    btau_veto_cfg = PSetTemplate(plotting.extras.nbjetsHPSLoose).replace(
-            name = 'NBjetsPt20HPSLoose', nicename = 'p_{T} > 20',
-            pt_threshold = '20', eta_threshold = '2.5',
-            btag_threshold = '3.3' )
-    output.extras.histos.append(btau_veto_cfg)
-    add_ntuple(btau_veto_cfg.name.value(), btau_veto_cfg.plotquantity.value())
+    #btau_veto_cfg = PSetTemplate(plotting.extras.nbjetsHPSLoose).replace(
+            #name = 'NBjetsPt20HPSLoose', nicename = 'p_{T} > 20',
+            #pt_threshold = '20', eta_threshold = '2.5',
+            #btag_threshold = '3.3' )
+    #output.extras.histos.append(btau_veto_cfg)
+    #add_ntuple(btau_veto_cfg.name.value(), btau_veto_cfg.plotquantity.value())
 
     # Add in the lumi weight
     add_ntuple("puWeight", "evt().weight('puAvg')")

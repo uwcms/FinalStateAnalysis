@@ -15,6 +15,15 @@ id = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+wwid = cms.PSet(
+    _binary_bins,
+    name = cms.untracked.string("${name}_MuID_WWID"),
+    description = cms.untracked.string("${nicename} Muon WWID"),
+    plotquantity = cms.untracked.string(
+        selectors.muons.id.plottable.value().replace('${muID}', 'WWID')),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 reliso = cms.PSet(
     min = cms.untracked.double(0.0),
     max = cms.untracked.double(2),
@@ -104,7 +113,8 @@ hltSingleMuIsoL3IsoFiltered24  = get_trigger_matching('hltSingleMuIsoL3IsoFilter
 hltL1Mu3EG5L3Filtered8  = get_trigger_matching('hltL1Mu3EG5L3Filtered8')
 hltL1Mu3EG5L3Filtered17  = get_trigger_matching('hltL1Mu3EG5L3Filtered17')
 
-all = [reliso, relSubDetIso, ecalIso, hcalIso, trkNormChi2, d0,
+all = [wwid, reliso, relSubDetIso, ecalIso, hcalIso,
+       #trkNormChi2, d0,
        hltSingleMu13L3Filtered13, hltDiMuonL3p5PreFiltered8,
        hltDiMuonL3PreFiltered7, hltSingleMu30L3Filtered30,
        hltSingleMuIsoL3IsoFiltered24,

@@ -32,7 +32,7 @@ process.steering = cms.PSet(
         'emm',
         'emt',
         #'ett',
-        #'mmm',
+        'mmm',
         'mmt',
         #'mtt'
     ),
@@ -52,7 +52,7 @@ process.common = cms.PSet(
 )
 
 process.steering.ignored_cuts = cms.vstring(
-    "*_BJetVeto", "*RelIso*", "*Veto*", "*CombinedIsolation*"
+    "*ID*", "*_BJetVeto", "*RelIso*", "*Veto*", "*CombinedIsolation*"
 )
 
 from FinalStateAnalysis.VHiggs.selectionEEE import selections as selectionsEEE

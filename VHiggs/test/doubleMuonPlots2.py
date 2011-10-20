@@ -27,7 +27,7 @@ from data import build_data
 skips =['QCD', 'TauPlusX', '2011B', 'SingleMu', 'inbetween', 'DoubleEl', 'v4']
 #samples, plotter = build_data('2011-10-05-v1-WHAnalyze', 'scratch_results', 1249, skips)
 skips =['EM', 'MuPt5', 'TauPlusX', '2011B_PromptReco_v1_b', 'SingleMu', 'MuEG', 'DoubleEl', '2011B', 'MuHad']
-samples, plotter = build_data('2011-10-17-v2-WHAnalyze', 'scratch_results', 2140, skips)
+samples, plotter = build_data('2011-10-20-v2-WHAnalyze', 'scratch_results', 2140, skips)
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 
@@ -51,6 +51,7 @@ legend = plotter.build_legend(
 
 base_dimuon_selection = (
     'Muon1Pt > 15 && Muon2Pt > 9 && Muon1AbsEta < 2.1 && Muon2AbsEta < 2.1'
+    ' && Muon1_MuID_WWID > 0.5'
     ' && Muon1_MuRelIso < 0.3 && Tau_LooseHPS > 0.5 && '
     ' ( (run < 1.5 && DoubleMu7_HLT > 0.5) ||'
     '   (run > 160430 && run < 165088 && DoubleMu7_HLT > 0.5) || '
@@ -69,7 +70,7 @@ os_dimuon_selection_trg = os_dimuon_selection
 qcd_selection = (
     'Muon1Pt > 15 && Muon2Pt > 9 && Muon1AbsEta < 2.1 && Muon2AbsEta < 2.1'
     ' && Muon1_MuRelIso > 0.3 && Tau_LooseHPS < 0.5'
-    ' && Muon1Charge*Muon2Charge < 0'
+    ' && Muon1Charge*Muon2Charge > 0'
     ' && NIsoMuonsPt5_Nmuons < 0.5'
     ' && Leg2_MtToMET < 25 '
     #' && (Leg1Leg2_Mass < 70 || Leg1Leg2_Mass > 110)'
@@ -147,8 +148,16 @@ jetpt_fit_func.SetParameter(1, 2.69)
 jetpt_fit_func.SetParameter(2, -0.1)
 jetpt_fit_func.SetLineColor(ROOT.EColor.kRed)
 qcd_fake_rate.Fit(jetpt_fit_func)
+
+val_func_str = "(-0.057323 + 1.051400*exp(-0.078962*(x)))"
+val_func = ROOT.TF1("f1", val_func_str, 0, 250)
+val_func.SetLineColor(ROOT.EColor.kBlue)
+val_func.Draw('same')
+
 jetpt_fit_func.Draw("same")
 saveplot("qcd_muJetPt_fakerate")
+
+
 
 jetPtFR = "(%f + %f*exp(%f*(Muon2Pt + Muon2_MuRelIso*Muon2Pt)))" % (jetpt_fit_func.GetParameter(0),
                                           jetpt_fit_func.GetParameter(1),
@@ -245,7 +254,7 @@ for var, label, title, binning in [
     mc_legend.Draw()
     saveplot("ss_%s_wvetos" % label)
 
-    ss_signal_selection = ss_fr_signal_selection + ' && Muon2_MuRelIso < 0.3'
+    ss_signal_selection = ss_fr_signal_selection + ' && Muon2_MuRelIso < 0.3 && Muon2_MuID_WWID > 0.5'
 
     plotter.register_tree(
         'SS%sFinal' % label,
@@ -277,7 +286,7 @@ for var, label, title, binning in [
     mc_legend.Draw()
     saveplot("ss_%s_final" %label)
 
-    ss_fr_signal_selection_weighted = "(%s && Muon2_MuRelIso > 0.3)*(%s)" % (
+    ss_fr_signal_selection_weighted = "(%s && (Muon2_MuRelIso > 0.3 || Muon2_MuID_WWID < 0.5))*(%s)" % (
         ss_fr_signal_selection, jetPtWeight)
 
     plotter.register_tree(

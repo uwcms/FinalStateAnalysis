@@ -106,4 +106,19 @@ selections = cms.VPSet(
 ###########################################################################
 
 from FinalStateAnalysis.VHiggs.plotBuilder import trileptonFinalPlots
-plots, ntuple = trileptonFinalPlots(leg1, leg2, leg3)
+
+all_plots, ntuple = trileptonFinalPlots(leg1, leg2, leg3)
+
+# Split into OS/SS regions
+plots = cms.PSet(
+    histos = cms.VPSet(),
+    ntuple = ntuple,
+    SS = cms.PSet(
+        all_plots,
+        SELECT = cms.string('likeSigned(0,1)'),
+    ),
+    OS = cms.PSet(
+        all_plots,
+        SELECT = cms.string('!likeSigned(0,1)'),
+    ),
+)

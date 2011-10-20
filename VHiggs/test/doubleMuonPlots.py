@@ -529,6 +529,7 @@ for var, label, title, binning in [
         #+ ' && NBjetsPt20_Nbjets < 1' \
         #+ ' && NIsoMuonsPt5_Nmuons < 1' \
         + ' && FinalState_Ht > 80'
+        + ' && vtxChi2/vtxNDOF < 15'
     )
 
     plotter.register_tree(

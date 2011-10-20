@@ -16,8 +16,10 @@ def get_dir(sample):
 for sample, sample_info in datadefs.iteritems():
     if 'TauPlusX' in sample:
         continue
-    if 'DoubleElectron' in sample:
+    if 'MuHad' in sample:
         continue
+    #if 'DoubleElectron' in sample:
+        #continue
     #if 'QCD' in sample or 'data' in sample:
         #continue
     path_name = os.path.join(os.environ['scratch'], '-'.join(

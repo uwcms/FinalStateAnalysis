@@ -3,7 +3,7 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-10-17-v2-WHAnalyze'
+jobId = '2011-10-20-v2-WHAnalyze'
 
 patJobId = '2011-10-07-WHReSkim'
 #patCfg = 'patTuple_cfg'
@@ -19,8 +19,20 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         continue
     if 'MuHad' in sample:
         continue
-    if 'SingleMu' in sample:
+    if 'DoubleE' in sample:
         continue
+    #if 'QCD' in sample:
+        #continue
+    if '2011B' in sample:
+        continue
+    #if 'VH' in sample:
+        #continue
+    #if 'TT' in sample:
+        #continue
+    #if 'W' in sample:
+        #continue
+    #if 'ZZ' in sample:
+        #continue
 
     path_name = os.path.join(os.environ['scratch'], '-'.join(
         [jobId, sample, 'analyzeFinalStates']))
@@ -37,11 +49,12 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         'farmoutAnalysisJobs2',
         '--varparsing',
         '--fwklite',
+        '--express-queue',
         #'--no-submit',
         #'--job-count=20',
         #'--input-files-per-job=%i' % (sample_info['ana_group']*2),
         ' --exclude-input-files="*plots.root"',
-        '--input-files-per-job=%i' % 5,
+        '--input-files-per-job=%i' % 2,
     ]
 
     #if 'WplusJets' in sample:

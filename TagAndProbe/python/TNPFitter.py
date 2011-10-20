@@ -184,10 +184,19 @@ class TNPFitter(object):
         # Find turnon
         before_turnon = graph.GetXaxis().GetXmin()
         after_turnon = graph.GetXaxis().GetXmax()
-        graph_max = graph.GetMaximum()
+        # Find maximum
+        graph_max = 0
         for i in xrange(graph.GetN()):
             x = graph.GetXaxis().GetBinCenter(i)
             y = graph.Eval(x)
+            if y > graph_max:
+                graph_max = y
+
+        print before_turnon, after_turnon, graph_max
+        for i in xrange(graph.GetN()):
+            x = graph.GetXaxis().GetBinCenter(i)
+            y = graph.Eval(x)
+            print x, y, before_turnon, after_turnon, graph_max
             if y < 0.1*graph_max and x > before_turnon:
                 before_turnon = x
             if y > 0.9*graph_max and x < after_turnon:
