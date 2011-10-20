@@ -43,7 +43,7 @@ if __name__ == "__main__":
         assert(match)
         output = {'obs' : float(match.group('limit'))}
         sys.stdout.write(json.dumps(output) + '\n')
-    # Detect if this is a toys
+    # Detect if this is using toys
     elif last_lines[-1].strip().startswith('95'):
         match95 = band95_re.match(last_lines[-1].strip())
         match68 = band68_re.match(last_lines[-2].strip())
@@ -60,3 +60,14 @@ if __name__ == "__main__":
             '+2' : float(match95.group('hi95')),
         }
         sys.stdout.write(json.dumps(output) + '\n')
+    # Detect asymptotic
+    elif 'Asymptotic' in last_lines[-9]:
+        #Observed Limit: r < 15.3322
+        #Expected  2.5%: r < 5.5286
+        #Expected 16.0%: r < 7.3538
+        #Expected 50.0%: r < 10.1900
+        #Expected 84.0%: r < 14.1539
+        #Expected 97.5%: r < 18.8053
+        #
+        #Done in 0.00 min (cpu), 0.00 min (real)
+
