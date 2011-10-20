@@ -22,6 +22,8 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/EDProducer.h"
 #include "DataFormats/Luminosity/interface/LumiSummary.h"
+#include "DataFormats/PatCandidates/interface/TriggerEvent.h"
+#include "FWCore/Framework/interface/LuminosityBlock.h"
 
 class MCLumiProducer : public edm::EDProducer {
   public:
@@ -31,22 +33,33 @@ class MCLumiProducer : public edm::EDProducer {
     void endLuminosityBlock(
         edm::LuminosityBlock& ls, const edm::EventSetup& es);
   private:
+    const edm::InputTag trigSrc_;
     // The process xsec
     const double xSec_;
-    const double xSecErrUp_;
+    const double xSecErr_;
     unsigned int eventCount_;
-
+    // Store a copy of the trigger event from one of the events
+    bool needTriggerEvent_;
+    pat::TriggerEvent trigEvent_;
 };
 
 MCLumiProducer::MCLumiProducer(const edm::ParameterSet& pset):
+  trigSrc_(pset.getParameter<edm::InputTag>("trigSrc")),
   xSec_(pset.getParameter<double>("xSec")),
-  xSecErr_(pset.getParameter<double>("xSecErr")),
+  xSecErr_(pset.getParameter<double>("xSecErr")) {
   eventCount_ = 0;
+  needTriggerEvent_ = true;
   produces<LumiSummary, edm::InLumi>();
 }
 
 void MCLumiProducer::produce(edm::Event& evt, const edm::EventSetup& es) {
   eventCount_ += 1;
+  if (needTriggerEvent_) {
+    edm::Handle<pat::TriggerEvent> trigEv;
+    evt.getByLabel(trigSrc_,trigEv);
+    trigEvent_ = *trigEv;
+    needTriggerEvent_ = false;
+  }
 }
 
 void MCLumiProducer::endLuminosityBlock(
@@ -56,17 +69,18 @@ void MCLumiProducer::endLuminosityBlock(
 
   std::auto_ptr<LumiSummary> output(new LumiSummary);
   output->setLumiVersion("MC");
-  output->setLumiData(effLumi, effLumiErr, LUMI_QUALITY);
-  output->setlsnumber(ls.LUMI_NUM);
+  output->setLumiData(effLumi, effLumiErr, 1); // last field is lumi quality??
+  output->setlsnumber(ls.id().luminosityBlock());
 
   // Now we need to get the L1 & HLT info somehow.
   std::vector<LumiSummary::HLT> hltInfos;
-  // paths = ?
-  for (size_t i = 0; i < paths.size(); ++i) {
-    const std::string& pathName = ;
-    int prescale = ;
-    int ratecount = ;
-    int inputcount = ;
+  const pat::TriggerPathCollection * paths = trigEvent_.paths();
+  assert(paths);
+  for (size_t i = 0; i < paths->size(); ++i) {
+    const std::string& pathName = paths->at(i).name();
+    int prescale = paths->at(i).prescale();
+    int ratecount = -1;
+    int inputcount = -1;
     LumiSummary::HLT hltInfo;
     hltInfo.pathname = pathName;
     hltInfo.prescale = prescale;
@@ -76,13 +90,13 @@ void MCLumiProducer::endLuminosityBlock(
   }
 
   std::vector<LumiSummary::L1> l1Infos;
-  // paths = ?
-  for (size_t i = 0; i < triggers.size(); ++i) {
-    const std::string& triggerName = ;
-    int prescale = ;
-    int ratecount = ;
+  const pat::TriggerAlgorithmCollection* triggers = trigEvent_.algorithms();
+  for (size_t i = 0; i < triggers->size(); ++i) {
+    const std::string& triggerName = triggers->at(i).name();
+    int prescale = triggers->at(i).prescale();
+    int ratecount = 999;
     LumiSummary::L1 l1Info;
-    l1Info.pathname = pathName;
+    l1Info.triggername = triggerName;
     l1Info.prescale = prescale;
     l1Info.ratecount = ratecount;
     l1Infos.push_back(l1Info);
@@ -91,6 +105,7 @@ void MCLumiProducer::endLuminosityBlock(
   output->swapL1Data(l1Infos);
   ls.put(output);
   eventCount_ = 0;
+  needTriggerEvent_ = true;
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"
