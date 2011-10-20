@@ -56,7 +56,7 @@ lumiWeightsS42011AB178078 = cms.EDProducer(
 )
 
 lumiWeights = cms.Sequence(
-    lumiWeights2011A
-    + lumiWeights2011B178078
-    + lumiWeights2011AB178078
+    lumiWeightsS42011A
+    + lumiWeightsS42011B178078
+    + lumiWeightsS42011AB178078
 )
