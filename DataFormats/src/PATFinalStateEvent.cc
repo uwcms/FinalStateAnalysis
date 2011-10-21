@@ -1,4 +1,6 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
+#include "FinalStateAnalysis/DataFormats/interface/SmartTrigger.h"
+
 #include "FWCore/Utilities/interface/RegexMatch.h"
 #include "DataFormats/Math/interface/deltaR.h"
 #include <boost/regex.hpp>
@@ -60,6 +62,7 @@ const edm::EventID& PATFinalStateEvent::id() const {
   return evtID_;
 }
 
+// Superseded by the smart trigger
 std::vector<const pat::TriggerPath*> PATFinalStateEvent::matchingTriggerPaths(
     const std::string& pattern, bool ez) const {
   std::vector<const pat::TriggerPath*> output;
@@ -90,17 +93,18 @@ PATFinalStateEvent::matchingTriggerFilters(const std::string& pattern,
 }
 
 int PATFinalStateEvent::hltResult(const std::string& pattern) const {
-  std::vector<const pat::TriggerPath*> paths = matchingTriggerPaths(pattern);
-  if (!paths.size())
-    return -1;
-  int result = 0;
-  for (size_t i = 0; i < paths.size(); ++i) {
-    if (paths[i]->wasAccept()) {
-      result = 1;
-      break;
-    }
-  }
-  return result;
+  SmartTriggerResult result = smartTrigger(pattern, trig());
+  return result.passed;
+}
+
+int PATFinalStateEvent::hltPrescale(const std::string& pattern) const {
+  SmartTriggerResult result = smartTrigger(pattern, trig());
+  return result.prescale;
+}
+
+int PATFinalStateEvent::hltGroup(const std::string& pattern) const {
+  SmartTriggerResult result = smartTrigger(pattern, trig());
+  return result.group;
 }
 
 int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
@@ -115,11 +119,18 @@ int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
 
 int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
-  std::vector<const pat::TriggerPath*> paths = matchingTriggerPaths(pattern);
-  if (!paths.size())
+  SmartTriggerResult result = smartTrigger(pattern, trig());
+  // Loop over all the paths that fired and see if any matched this object.
+  if (!result.paths.size())
     return -1;
-  return matchedToAnObject(
-      triggerEvent_.pathObjects(paths[0]->name()), cand, maxDeltaR);
+  int result = 0;
+  for (size_t i = 0; i < result.paths.size(); ++i) {
+    bool matched = matchedToAnObject(
+      triggerEvent_.pathObjects(result.paths[i]->name()), cand, maxDeltaR);
+    if (matched)
+      result += 1;
+  }
+  return matched;
 }
 
 float PATFinalStateEvent::weight(const std::string& name) const {

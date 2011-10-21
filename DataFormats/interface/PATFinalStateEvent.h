@@ -61,8 +61,19 @@ class PATFinalStateEvent {
     std::vector<const pat::TriggerFilter*> matchingTriggerFilters(
         const std::string& pattern, bool ez=false) const;
 
-    /// Get the result of a given path.  Returns -1 if it doesn't exist
+    /// The following functions use the "SmartTrigger" functionality.
+    /// They can be passed a comma separated list of paths:
+    ///   hltResult("HLT_Mu15_v.*,HLT_Mu30_v.*")
+    /// And the first path with the lowest prescale will be chosen.
+
+    /// Get the result of the chosen path.  Returns -1 if it doesn't exist
     int hltResult(const std::string& pattern) const;
+
+    /// Get the prescale of a given path.  Returns -1 if it doesn't exist
+    int hltPrescale(const std::string& pattern) const;
+
+    /// Get the group of a given path.  Returns -1 if it doesn't exist
+    int hltGroup(const std::string& pattern) const;
 
     /// Determine if a candidate is matched to an HLT filter
     int matchedToFilter(const reco::Candidate& cand, const std::string& filter,
