@@ -35,6 +35,8 @@
 // Fwd Declarations
 namespace pat {
   class TriggerEvent;
+  class TriggerPath;
+  class TriggerFilter;
 }
 class LumiSummary;
 
@@ -53,9 +55,21 @@ SmartTriggerResult smartTrigger(
 SmartTriggerResult smartTrigger(
     const std::string& trgs, const LumiSummary& lumiSummary);
 
+/// Get the list of trigger paths matching a given pattern.  If [ez] is
+// true, use the friendly '*' syntax.  Otherwise use boost::regexp.
+std::vector<const pat::TriggerPath*> matchingTriggerPaths(
+    const pat::TriggerEvent& result,
+    const std::string& pattern, bool ez=false);
+
+/// Get the list of trigger filters matching a given pattern.  If [ez] is
+// true, use the friendly '*' syntax.  Otherwise use boost::regexp.
+std::vector<const pat::TriggerFilter*> matchingTriggerFilters(
+    const pat::TriggerEvent& result,
+    const std::string& pattern, bool ez=false);
+
 /// Expose decision making method for testing.  Not for general use.
 SmartTriggerResult makeDecision(
-    const std::vector<std::vector<std::string> >& paths,,
+    const std::vector<std::vector<std::string> >& paths,
     const std::vector<std::vector<unsigned int> >& prescales,
     const std::vector<std::vector<unsigned int> >& results);
 

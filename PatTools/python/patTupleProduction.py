@@ -178,13 +178,23 @@ def configurePatTuple(process, isMC=True, **kwargs):
                            % process.name_())
 
     # Define the default lepton cleaning
-    process.cleanPatElectrons.preselection = cms.string(
-        'pt > 8 & '
-        'userFloat("wp95")'
-    )
+    process.cleanPatElectrons.preselection = cms.string('pt > 8')
     process.cleanPatElectrons.checkOverlaps.muons.requireNoOverlaps = True
-    # We require no cleaning on the pat::Taus, since they are the patJets as
-    # well.
+    # Make sure we don't kill any good taus by calling them electrons
+    process.cleanPatElectrons.checkOverlaps.taus = cms.PSet(
+        src = final_tau_collection,
+        algorithm = cms.string("byDeltaR"),
+        preselection = cms.string(
+            "tauID('decayModeFinding') > 0.5 &&"
+            "tauID('byLooseCombinedIsolationDeltaBetaCorr') > 0.5 &&"
+            "tauID('againstElectronTight') > 0.5 && "
+            "pt > 15"
+        ),
+        deltaR = cms.double(0.1),
+        checkRecoComponents = cms.bool(False),
+        pairCut = cms.string(""),
+        requireNoOverlaps = cms.bool(True),
+    )
     process.cleanPatTaus.preselection =  cms.string('')
     # Remove muons and electrons
     process.cleanPatTaus.checkOverlaps.muons.requireNoOverlaps = True
@@ -228,7 +238,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.buildDiLeptons = cms.Sequence()
 
     finalStatePtCuts = {
-        'Elec' : 'daughter(%i).pt > 8',
+        'Elec' : 'daughter(%i).pt > 5',
         'Mu' : 'daughter(%i).pt > 5',
         'Tau' : 'daughter(%i).pt > 10',
     }

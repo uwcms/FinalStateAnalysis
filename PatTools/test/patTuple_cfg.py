@@ -64,5 +64,5 @@ tuplize.insert(0, process.eventCount)
 
 process.p = cms.Path(tuplize)
 
-process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+#process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.outpath = cms.EndPath(process.out)

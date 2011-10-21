@@ -1,9 +1,7 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/SmartTrigger.h"
 
-#include "FWCore/Utilities/interface/RegexMatch.h"
 #include "DataFormats/Math/interface/deltaR.h"
-#include <boost/regex.hpp>
 
 namespace {
   int matchedToAnObject(const pat::TriggerObjectRefVector& trgObjects,
@@ -30,15 +28,18 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::Ptr<pat::MET>& met,
     const pat::TriggerEvent& triggerEvent,
     const std::vector<PileupSummaryInfo>& puInfo,
-    const edm::EventID& evtId) {
-  rho_ = rho;
-  pv_ = pv;
-  met_ = met;
-  recoVertices_ = recoVertices;
-  triggerEvent_ = triggerEvent;
-  puInfo_ = puInfo;
-  evtID_ = evtId;
-}
+    const lhef::HEPEUP& hepeup,
+    const reco::GenParticleRefProd& genParticles,
+    const edm::EventID& evtId):
+  rho_(rho),
+  triggerEvent_(triggerEvent),
+  pv_(pv),
+  recoVertices_(recoVertices),
+  met_(met),
+  puInfo_(puInfo),
+  lhe_(hepeup),
+  genParticles_(genParticles),
+  evtID_(evtId) { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
 
@@ -47,6 +48,10 @@ const edm::PtrVector<reco::Vertex>& PATFinalStateEvent::recoVertices() const {
 
 const std::vector<PileupSummaryInfo>& PATFinalStateEvent::puInfo() const {
   return puInfo_;
+}
+
+const lhef::HEPEUP& PATFinalStateEvent::lesHouches() const {
+  return lhe_;
 }
 
 double PATFinalStateEvent::rho() const { return rho_; }
@@ -63,35 +68,6 @@ const edm::EventID& PATFinalStateEvent::id() const {
 }
 
 // Superseded by the smart trigger
-std::vector<const pat::TriggerPath*> PATFinalStateEvent::matchingTriggerPaths(
-    const std::string& pattern, bool ez) const {
-  std::vector<const pat::TriggerPath*> output;
-  boost::regex matcher(ez ? edm::glob2reg(pattern) : pattern);
-  const pat::TriggerPathCollection* paths = trig().paths();
-  for (size_t i = 0; i < paths->size(); ++i) {
-    //std::cout << " path: " << paths->at(i).name() << " " << pattern;
-    if (boost::regex_match(paths->at(i).name(), matcher)) {
-      output.push_back(&paths->at(i));
-      //std::cout << " match!";
-    }
-    //std::cout << std::endl;
-  }
-  return output;
-}
-
-std::vector<const pat::TriggerFilter*>
-PATFinalStateEvent::matchingTriggerFilters(const std::string& pattern,
-    bool ez) const {
-  std::vector<const pat::TriggerFilter*> output;
-  boost::regex matcher(ez ? edm::glob2reg(pattern) : pattern);
-  const pat::TriggerFilterCollection* filters = trig().filters();
-  for (size_t i = 0; i < filters->size(); ++i) {
-    if (boost::regex_match(filters->at(i).label(), matcher))
-      output.push_back(&filters->at(i));
-  }
-  return output;
-}
-
 int PATFinalStateEvent::hltResult(const std::string& pattern) const {
   SmartTriggerResult result = smartTrigger(pattern, trig());
   return result.passed;
@@ -110,7 +86,7 @@ int PATFinalStateEvent::hltGroup(const std::string& pattern) const {
 int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
   std::vector<const pat::TriggerFilter*> filters =
-    matchingTriggerFilters(pattern);
+    matchingTriggerFilters(trig(), pattern);
   if (!filters.size())
     return -1;
   return matchedToAnObject(
@@ -123,14 +99,14 @@ int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
   // Loop over all the paths that fired and see if any matched this object.
   if (!result.paths.size())
     return -1;
-  int result = 0;
+  int matchCount = 0;
   for (size_t i = 0; i < result.paths.size(); ++i) {
     bool matched = matchedToAnObject(
-      triggerEvent_.pathObjects(result.paths[i]->name()), cand, maxDeltaR);
+      triggerEvent_.pathObjects(result.paths[i]), cand, maxDeltaR);
     if (matched)
-      result += 1;
+      matchCount += 1;
   }
-  return matched;
+  return matchCount;
 }
 
 float PATFinalStateEvent::weight(const std::string& name) const {

@@ -75,7 +75,7 @@ void MCLumiProducer::produce(edm::Event& evt, const edm::EventSetup& es) {
       hltInfos_.push_back(hltInfo);
     }
 
-    const pat::TriggerAlgorithmCollection* triggers = trigEvent_.algorithms();
+    const pat::TriggerAlgorithmCollection* triggers = trigEv->algorithms();
     l1Infos_.clear();
     assert(triggers);
     for (size_t i = 0; i < triggers->size(); ++i) {

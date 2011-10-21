@@ -15,6 +15,7 @@
 #include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
+#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
 
 class PATFinalStateEventProducer : public edm::EDProducer {
@@ -29,6 +30,7 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     edm::InputTag metSrc_;
     edm::InputTag trgSrc_;
     edm::InputTag puInfoSrc_;
+    edm::InputTag truthSrc_;
     edm::ParameterSet extraWeights_;
 };
 
@@ -40,6 +42,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   metSrc_ = pset.getParameter<edm::InputTag>("metSrc");
   trgSrc_ = pset.getParameter<edm::InputTag>("trgSrc");
   puInfoSrc_ = pset.getParameter<edm::InputTag>("puInfoSrc");
+  truthSrc_ = pset.getParameter<edm::InputTag>("genParticleSrc");
   extraWeights_ = pset.getParameterSet("extraWeights");
   produces<PATFinalStateEventCollection>();
 }
@@ -75,8 +78,23 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   if (puInfo.isValid())
     myPuInfo = * puInfo;
 
+  // Try and get the Les Hoochies information
+  edm::Handle<LHEEventProduct> hoochie;
+  evt.getByType(hoochie);
+  // Get the event tag
+  lhef::HEPEUP genInfo;
+  if (hoochie.isValid())
+    genInfo = hoochie->hepeup();
+
+  // Try and get the gen information if it exists
+  edm::Handle<reco::GenParticleCollection> genParticles;
+  evt.getByLabel(truthSrc_, genParticles);
+  reco::GenParticleRefProd genParticlesRef;
+  if (!evt.isRealData())
+    genParticlesRef = reco::GenParticleRefProd(genParticles);
+
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr,
-      *trig, myPuInfo, evt.id());
+      *trig, myPuInfo, genInfo, genParticlesRef, evt.id());
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {

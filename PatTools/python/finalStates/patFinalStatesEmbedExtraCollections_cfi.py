@@ -21,12 +21,23 @@ patFinalStatesEmbedTaus = cms.EDProducer(
     cut = cms.string('userCand("patJet").pt > 10'),
 )
 
+patFinalStatesEmbedJets = cms.EDProducer(
+    "PATFinalStateOverlapEmbedder",
+    src = cms.InputTag("fixme"),
+    toEmbedSrc = cms.InputTag("cleanPatJets"),
+    name = cms.string("extJets"), # external taus
+    minDeltaR = cms.double(0.3),
+    maxDeltaR = cms.double(1e9),
+    cut = cms.string('pt > 10'),
+)
+
 patFinalStatesEmbedMuons = cms.EDProducer(
     "PATFinalStateOverlapEmbedder",
     src = cms.InputTag("fixme"),
     toEmbedSrc = cms.InputTag("cleanPatMuons"),
     name = cms.string("extMuons"), # external taus
-    minDeltaR = cms.double(0.3),
+    # Make this small, so we can pick up stuff like J/Psi
+    minDeltaR = cms.double(0.05),
     maxDeltaR = cms.double(1e9),
     cut = cms.string(''),
 )
@@ -36,7 +47,7 @@ patFinalStatesEmbedElectrons = cms.EDProducer(
     src = cms.InputTag("fixme"),
     toEmbedSrc = cms.InputTag("cleanPatElectrons"),
     name = cms.string("extElecs"), # external taus
-    minDeltaR = cms.double(0.3),
+    minDeltaR = cms.double(0.1),
     maxDeltaR = cms.double(1e9),
     cut = cms.string(''),
 )
@@ -45,6 +56,7 @@ patFinalStatesEmbedObjects = cms.Sequence(
     patFinalStatesEmbedIdx +
     patFinalStateVertexFitter +
     patFinalStatesEmbedTaus +
+    patFinalStatesEmbedJets +
     patFinalStatesEmbedElectrons +
     patFinalStatesEmbedMuons
 )

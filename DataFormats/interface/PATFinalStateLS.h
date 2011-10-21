@@ -10,17 +10,17 @@
 #define PATFINALSTATELS_HT41P3HF
 
 #include <string>
-#include "FWCore/Common/interface/LuminosityBlockId.h"
+#include "DataFormats/Provenance/interface/LuminosityBlockID.h"
 #include "DataFormats/Luminosity/interface/LumiSummary.h"
 
 class PATFinalStateLS {
   public:
     PATFinalStateLS();
-    PATFinalStateLS(const LuminosityBlockID& id,
+    PATFinalStateLS(const edm::LuminosityBlockID& id,
         const LumiSummary& lumiSummary);
 
     /// Get the ID with lumi & run number
-    const LuminosityBlockID& id() const;
+    const edm::LuminosityBlockID& id() const;
 
     /// Access to the lumi summary information
     const LumiSummary& lumiSummary() const;
@@ -35,7 +35,7 @@ class PATFinalStateLS {
     double intLumi(const std::string& triggers) const;
 
   private:
-    LuminosityBlockID id_;
+    edm::LuminosityBlockID id_;
     LumiSummary lumiSummary_;
 };
 

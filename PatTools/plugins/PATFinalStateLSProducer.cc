@@ -8,6 +8,7 @@
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/LuminosityBlock.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/EDProducer.h"
@@ -37,8 +38,8 @@ PATFinalStateLSProducer::produce(edm::Event& evt, const edm::EventSetup& es) { }
 
 void PATFinalStateLSProducer::endLuminosityBlock(
     edm::LuminosityBlock& ls, const edm::EventSetup& es) {
-  edm::Handle<LumiSumary> summary;
-  evt.getByLabel(src_, summary);
+  edm::Handle<LumiSummary> summary;
+  ls.getByLabel(src_, summary);
 
   std::auto_ptr<PATFinalStateLS> output(
       new PATFinalStateLS(ls.id(), *summary));

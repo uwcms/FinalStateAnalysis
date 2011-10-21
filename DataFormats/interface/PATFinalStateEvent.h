@@ -17,7 +17,9 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
+#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 #include "DataFormats/Provenance/interface/EventID.h"
 
 #include <map>
@@ -33,8 +35,9 @@ class PATFinalStateEvent {
         const edm::Ptr<pat::MET>& met,
         const pat::TriggerEvent& triggerEvent,
         const std::vector<PileupSummaryInfo>& puInfo,
+        const lhef::HEPEUP& hepeup, // Les Houches info
+        const reco::GenParticleRefProd& genParticles,
         const edm::EventID& evtId);
-
 
     /// Get PV
     const edm::Ptr<reco::Vertex>& pv() const;
@@ -42,6 +45,8 @@ class PATFinalStateEvent {
     const edm::PtrVector<reco::Vertex>& recoVertices() const;
     /// Get PU information
     const std::vector<PileupSummaryInfo>& puInfo() const;
+    /// Get the Les Houches event information
+    const lhef::HEPEUP& lesHouches() const;
     /// Get FastJet rho
     double rho() const;
     /// Get trigger information
@@ -50,16 +55,6 @@ class PATFinalStateEvent {
     const edm::Ptr<pat::MET>& met() const;
     /// Get the event ID
     const edm::EventID& id() const;
-
-    /// Get the list of trigger paths matching a given pattern.  If [ez] is
-    // true, use the friendly '*' syntax.  Otherwise use boost::regexp.
-    std::vector<const pat::TriggerPath*> matchingTriggerPaths(
-        const std::string& pattern, bool ez=false) const;
-
-    /// Get the list of trigger filters matching a given pattern.  If [ez] is
-    // true, use the friendly '*' syntax.  Otherwise use boost::regexp.
-    std::vector<const pat::TriggerFilter*> matchingTriggerFilters(
-        const std::string& pattern, bool ez=false) const;
 
     /// The following functions use the "SmartTrigger" functionality.
     /// They can be passed a comma separated list of paths:
@@ -100,6 +95,8 @@ class PATFinalStateEvent {
     edm::PtrVector<reco::Vertex> recoVertices_;
     edm::Ptr<pat::MET> met_;
     std::vector<PileupSummaryInfo> puInfo_;
+    lhef::HEPEUP lhe_;
+    reco::GenParticleRefProd genParticles_;
     edm::EventID evtID_;
 };
 

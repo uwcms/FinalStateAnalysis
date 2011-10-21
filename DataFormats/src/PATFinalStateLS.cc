@@ -3,23 +3,23 @@
 
 PATFinalStateLS::PATFinalStateLS() {}
 
-PATFinalStateLS::PATFinalStateLS(const LuminosityBlockID& id,
-        const LumiSumary& lumiSummary):
+PATFinalStateLS::PATFinalStateLS(const edm::LuminosityBlockID& id,
+        const LumiSummary& lumiSummary):
   id_(id),lumiSummary_(lumiSummary) {}
 
 
-const LuminosityBlockID&
+const edm::LuminosityBlockID&
 PATFinalStateLS::id() const { return id_; }
 
-const LumiSumary&
+const LumiSummary&
 PATFinalStateLS::lumiSummary() const { return lumiSummary_; }
 
 double PATFinalStateLS::instantaneousLumi() const {
-  return lumiSummary_.instRecLumi();
+  return lumiSummary_.avgInsRecLumi();
 }
 
 double PATFinalStateLS::intLumi() const {
-  return lumiSummary_.intRecLumi();
+  return lumiSummary_.intgRecLumi();
 }
 
 double PATFinalStateLS::intLumi(const std::string& triggers) const {
@@ -28,5 +28,5 @@ double PATFinalStateLS::intLumi(const std::string& triggers) const {
   if (prescale == 0)
     return 0.;
   else
-    return lumiSummary_.intRecLumi()/prescale;
+    return lumiSummary_.intgRecLumi()/prescale;
 }
