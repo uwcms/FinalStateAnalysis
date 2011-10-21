@@ -40,7 +40,8 @@ class MCLumiProducer : public edm::EDProducer {
     unsigned int eventCount_;
     // Store a copy of the trigger event from one of the events
     bool needTriggerEvent_;
-    pat::TriggerEvent trigEvent_;
+    std::vector<LumiSummary::HLT> hltInfos_;
+    std::vector<LumiSummary::L1> l1Infos_;
 };
 
 MCLumiProducer::MCLumiProducer(const edm::ParameterSet& pset):
@@ -58,13 +59,42 @@ void MCLumiProducer::produce(edm::Event& evt, const edm::EventSetup& es) {
   if (needTriggerEvent_) {
     edm::Handle<pat::TriggerEvent> trigEv;
     evt.getByLabel(trigSrc_,trigEv);
-    trigEvent_ = *trigEv;
+    const pat::TriggerPathCollection * paths = trigEv->paths();
+    hltInfos_.clear();
+    assert(paths);
+    for (size_t i = 0; i < paths->size(); ++i) {
+      const std::string& pathName = paths->at(i).name();
+      int prescale = paths->at(i).prescale();
+      int ratecount = -1;
+      int inputcount = -1;
+      LumiSummary::HLT hltInfo;
+      hltInfo.pathname = pathName;
+      hltInfo.prescale = prescale;
+      hltInfo.ratecount = ratecount;
+      hltInfo.inputcount = inputcount;
+      hltInfos_.push_back(hltInfo);
+    }
+
+    const pat::TriggerAlgorithmCollection* triggers = trigEvent_.algorithms();
+    l1Infos_.clear();
+    assert(triggers);
+    for (size_t i = 0; i < triggers->size(); ++i) {
+      const std::string& triggerName = triggers->at(i).name();
+      int prescale = triggers->at(i).prescale();
+      int ratecount = 999;
+      LumiSummary::L1 l1Info;
+      l1Info.triggername = triggerName;
+      l1Info.prescale = prescale;
+      l1Info.ratecount = ratecount;
+      l1Infos_.push_back(l1Info);
+    }
     needTriggerEvent_ = false;
   }
 }
 
 void MCLumiProducer::endLuminosityBlock(
         edm::LuminosityBlock& ls, const edm::EventSetup& es) {
+  // Compute the effective luminosity
   double effLumi = eventCount_ / xSec_;
   double effLumiErr = eventCount_ / (xSec_ + xSecErr_);
 
@@ -73,40 +103,14 @@ void MCLumiProducer::endLuminosityBlock(
   output->setLumiData(effLumi, effLumiErr, 1); // last field is lumi quality??
   output->setlsnumber(ls.id().luminosityBlock());
 
-  // Now we need to get the L1 & HLT info somehow.
-  std::vector<LumiSummary::HLT> hltInfos;
-  const pat::TriggerPathCollection * paths = trigEvent_.paths();
-  assert(paths);
-  for (size_t i = 0; i < paths->size(); ++i) {
-    const std::string& pathName = paths->at(i).name();
-    int prescale = paths->at(i).prescale();
-    int ratecount = -1;
-    int inputcount = -1;
-    LumiSummary::HLT hltInfo;
-    hltInfo.pathname = pathName;
-    hltInfo.prescale = prescale;
-    hltInfo.ratecount = ratecount;
-    hltInfo.inputcount = inputcount;
-    hltInfos.push_back(hltInfo);
-  }
+  std::vector<LumiSummary::HLT> hltInfos = hltInfos_;
+  std::vector<LumiSummary::L1> l1Infos = l1Infos_;
 
-  std::vector<LumiSummary::L1> l1Infos;
-  const pat::TriggerAlgorithmCollection* triggers = trigEvent_.algorithms();
-  assert(triggers);
-  for (size_t i = 0; i < triggers->size(); ++i) {
-    const std::string& triggerName = triggers->at(i).name();
-    int prescale = triggers->at(i).prescale();
-    int ratecount = 999;
-    LumiSummary::L1 l1Info;
-    l1Info.triggername = triggerName;
-    l1Info.prescale = prescale;
-    l1Info.ratecount = ratecount;
-    l1Infos.push_back(l1Info);
-  }
   output->swapHLTData(hltInfos);
   output->swapL1Data(l1Infos);
   ls.put(output);
   eventCount_ = 0;
+  // We need to update the trigger information after each LS
   needTriggerEvent_ = true;
 }
 
