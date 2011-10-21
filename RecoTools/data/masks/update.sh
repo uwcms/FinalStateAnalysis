@@ -6,6 +6,6 @@
 base=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/
 
 # Get 2011 prompt jsons
-rsync -v -n -a --exclude="*CMSSW*" --exclude="*/*" --include="*.txt" $base/Collisions11/7TeV/Prompt/ .
+rsync -v -a --exclude="*CMSSW*" --exclude="*/" --exclude="*/*" --include="Cert*.txt" --exclude="*" $base/Collisions11/7TeV/Prompt/ .
 # Get 2011 reprocessing jsons
-rsync -v -n -a --exclude="*CMSSW*" --exclude="*/*" --include="*.txt" $base/Collisions11/7TeV/Reprocessing/ .
+rsync -v -a --exclude="*CMSSW*" --exclude="*/" --exclude="*/*" --include="Cert*.txt" --exclude="*" $base/Collisions11/7TeV/Reprocessing/ .
