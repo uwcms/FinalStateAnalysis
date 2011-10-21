@@ -17,13 +17,9 @@ data_name_map = {
     # Fixme there is some double counting here!
     'Zjets' : ['Zjets_M50', 'Zbb_M50', 'Zcc_M40'],
 
-    #'QCDMu' : ['QCD_15to20_MuPt5', 'QCD_20to30_MuPt5', 'QCD_30to50_MuPt5',
-    #'QCD_50to80_MuPt5', 'QCD_80to120_MuPt5', 'QCD_120to150_MuPt5',
-    #'QCD_150_MuPt5'],
     'QCDMu' : ['QCD_20toInf_MuPt15'],
 
-    'QCDE' : ['QCD_20to30_EM', 'QCD_30to80_EM', 'QCD_80to120_MuPt5',
-              'QCD_120to150_MuPt5', 'QCD_150_MuPt5'],
+    'QCDE' : ['QCD_20to30_EM', 'QCD_30to80_EM', 'QCD_80to170_EM'],
 
     'Wjets' : ['WplusJets_madgraph'],
 
@@ -37,6 +33,11 @@ data_name_map = {
     'VH115' : ['VH_115'],
     'VH120' : ['VH_120'],
     'VH125' : ['VH_125'],
+    #'VH130' : ['VH_130'],
+    #'VH135' : ['VH_135'],
+    #'VH140' : ['VH_140'],
+    #'VH145' : ['VH_145'],
+    #'VH150' : ['VH_150'],
 }
 
 
@@ -125,41 +126,41 @@ datadefs = {
         'x_sec' : 2.966E8*_picobarns*2.855E-4,
         'analyses' : ['HTT', 'VH'],
     },
-    'QCD_15to20_MuPt5' : {
-      'datasetpath' : "/QCD_Pt-15to20_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM",
-      'x_sec' : 5.792E8*_picobarns*0.00288,
-      'analyses' : ['HTT', 'VH'],
-    },
-    'QCD_20to30_MuPt5' : {
-      'datasetpath' : "/QCD_Pt-20to30_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM",
-      'x_sec' : 2.363E8*_picobarns*0.00568,
-      'analyses' : ['HTT', 'VH'],
-    },
-    'QCD_30to50_MuPt5' : {
-      'datasetpath' : "/QCD_Pt-30to50_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM",
-      'x_sec' : 5.307E7*_picobarns*0.01124,
-      'analyses' : ['HTT', 'VH'],
-    },
-    'QCD_50to80_MuPt5' : {
-      'datasetpath' : "/QCD_Pt-50to80_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
-      'x_sec' : 6351000.0*_picobarns*0.02205,
-      'analyses' : ['HTT', 'VH'],
-    },
-    'QCD_80to120_MuPt5' : {
-      'datasetpath' : "/QCD_Pt-80to120_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
-      'x_sec' : 785100.0*_picobarns*0.03636,
-      'analyses' : ['HTT', 'VH'],
-    },
-    'QCD_120to150_MuPt5' : {
-      'datasetpath' : "/QCD_Pt-120to150_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
-      'x_sec' : 92950.0*_picobarns*0.04866,
-      'analyses' : ['HTT', 'VH'],
-    },
-    'QCD_150_MuPt5' : {
-      'datasetpath' : "/QCD_Pt-150_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
-      'x_sec' : 47580.0*_picobarns*47580.0,
-      'analyses' : ['HTT', 'VH'],
-    },
+    #'QCD_15to20_MuPt5' : {
+      #'datasetpath' : "/QCD_Pt-15to20_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM",
+      #'x_sec' : 5.792E8*_picobarns*0.00288,
+      #'analyses' : ['HTT', 'VH'],
+    #},
+    #'QCD_20to30_MuPt5' : {
+      #'datasetpath' : "/QCD_Pt-20to30_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM",
+      #'x_sec' : 2.363E8*_picobarns*0.00568,
+      #'analyses' : ['HTT', 'VH'],
+    #},
+    #'QCD_30to50_MuPt5' : {
+      #'datasetpath' : "/QCD_Pt-30to50_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM",
+      #'x_sec' : 5.307E7*_picobarns*0.01124,
+      #'analyses' : ['HTT', 'VH'],
+    #},
+    #'QCD_50to80_MuPt5' : {
+      #'datasetpath' : "/QCD_Pt-50to80_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
+      #'x_sec' : 6351000.0*_picobarns*0.02205,
+      #'analyses' : ['HTT', 'VH'],
+    #},
+    #'QCD_80to120_MuPt5' : {
+      #'datasetpath' : "/QCD_Pt-80to120_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
+      #'x_sec' : 785100.0*_picobarns*0.03636,
+      #'analyses' : ['HTT', 'VH'],
+    #},
+    #'QCD_120to150_MuPt5' : {
+      #'datasetpath' : "/QCD_Pt-120to150_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
+      #'x_sec' : 92950.0*_picobarns*0.04866,
+      #'analyses' : ['HTT', 'VH'],
+    #},
+    #'QCD_150_MuPt5' : {
+      #'datasetpath' : "/QCD_Pt-150_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
+      #'x_sec' : 47580.0*_picobarns*47580.0,
+      #'analyses' : ['HTT', 'VH'],
+    #},
     # Electron enriched
     'QCD_20to30_EM' : {
       'datasetpath' : "/QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
@@ -210,71 +211,88 @@ datadefs = {
       'ana_group' : 1,
       'analyses' : ['VH'],
     },
-    #'VH_130' : {
-      #'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-125_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      #'x_sec' : (0.6729 + 0.3158 + 0.08634)*_picobarns*6.37e-2,
-      #'ana_group' : 1,
-      #'analyses' : ['VH'],
-    #}
+    'VH_130' : {
+      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-130_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+      'x_sec' : (0.5008 + 0.2778 + 0.07658)*_picobarns*5.48-2,
+      'ana_group' : 1,
+      'analyses' : ['VH'],
+    },
+    'VH_135' : {
+      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-135_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+      'x_sec' : (0.4390 + 0.2453 + 0.06810)*_picobarns*4.52e-2,
+      'ana_group' : 1,
+      'analyses' : ['VH'],
+    },
+    'VH_140' : {
+      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-140_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+      'x_sec' : (0.3857 + 0.2172 + 0.06072)*_picobarns*3.54e-2,
+      'ana_group' : 1,
+      'analyses' : ['VH'],
+    },
+    'VH_145' : {
+      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-145_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+      'x_sec' : (0.3406 + 0.1930 + 0.05435)*_picobarns*2.61e-2,
+      'ana_group' : 1,
+      'analyses' : ['VH'],
+    },
+    'VH_150' : {
+      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-150_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+      'x_sec' : (0.3011 + 0.1713 + 0.04869)*_picobarns*1.78e-2,
+      'ana_group' : 1,
+      'analyses' : ['VH'],
+    },
     }
 
 # Add all the datasets
 def build_data_set(pd, analyses):
   subsample_dict = {
+    'data_%s_Run2011B_PromptReco_v1_c' % pd : {
+      'datasetpath' : "/%s/Run2011B-PromptReco-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-178677_7TeV_PromptReco_Collisions11_JSON.txt",
+      'firstRun' : 177516,
+      'lastRun' : 178677,
+      'analyses' : analyses,
+    },
     'data_%s_Run2011B_PromptReco_v1_b' % pd : {
       'datasetpath' : "/%s/Run2011B-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/Prompt/Cert_160404-177515_7TeV_PromptReco_Collisions11_JSON.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-178677_7TeV_PromptReco_Collisions11_JSON.txt",
       'firstRun' : 177074,
       'lastRun' : 177515,
-      'conditions' : 'GR_R_42_V14::All',
       'analyses' : analyses,
     },
     'data_%s_Run2011B_PromptReco_v1_a' % pd : {
       'datasetpath' : "/%s/Run2011B-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/Prompt/Cert_160404-177053_7TeV_PromptReco_Collisions11_JSON.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-178677_7TeV_PromptReco_Collisions11_JSON.txt",
       'firstRun' : 175832,
       'lastRun' : 177053,
-      'conditions' : 'GR_R_42_V14::All',
       'analyses' : analyses,
     },
     'data_%s_Run2011A_PromptReco_v6_1409' % pd : {
       'datasetpath' : "/%s/Run2011A-PromptReco-v6/AOD" % pd,
-      'lumi_mask' : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/Prompt/Cert_160404-177053_7TeV_PromptReco_Collisions11_JSON.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-178677_7TeV_PromptReco_Collisions11_JSON.txt",
       'firstRun' : 172620,
       'lastRun' : 175831,
-      'conditions' : 'GR_R_42_V14::All',
       'analyses' : analyses,
     },
     'data_%s_Run2011A_05Aug2011_v1' % pd : {
       'datasetpath' : "/%s/Run2011A-05Aug2011-v1/AOD" % pd,
-      'lumi_mask' : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/Reprocessing/Cert_170249-172619_7TeV_ReReco5Aug_Collisions11_JSON_v2.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_170249-172619_7TeV_ReReco5Aug_Collisions11_JSON_v3.txt",
       'firstRun' : 170249,
       'lastRun' : 172619,
-      'conditions' : 'GR_R_42_V14::All',
       'analyses' : analyses,
     },
-    #'data_%s_Run2011A_PromptReco_v6_inbetween' % pd : {
-      #'datasetpath' : "/%s/Run2011A-PromptReco-v6/AOD" % pd,
-      #'lumi_mask' : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/Prompt/Cert_160404-176309_7TeV_PromptReco_Collisions11_JSON.txt",
-      #'firstRun' : 163870,
-      #'lastRun' : 170248,
-      #'conditions' : 'GR_R_42_V14::All',
-      #'analyses' : analyses,
-    #},
     'data_%s_Run2011A_PromptReco_v4' % pd : {
       'datasetpath' : "/%s/Run2011A-PromptReco-v4/AOD" % pd,
-      'lumi_mask' : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/Prompt/Cert_160404-177053_7TeV_PromptReco_Collisions11_JSON.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-178677_7TeV_PromptReco_Collisions11_JSON.txt",
       'firstRun' : 163870,
       'lastRun' : 170248,
-      'conditions' : 'GR_R_42_V14::All',
       'analyses' : analyses,
     },
     'data_%s_Run2011A_May10ReReco_v1' % pd : {
       'datasetpath' : "/%s/Run2011A-May10ReReco-v1/AOD" % pd,
-      'lumi_mask' : "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/Reprocessing/Cert_160404-163869_7TeV_May10ReReco_Collisions11_JSON_v3.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-163869_7TeV_May10ReReco_Collisions11_JSON_v3.txt",
       'firstRun' : 160404,
       'lastRun' : 163869,
-      'conditions' : 'GR_R_42_V14::All',
       'analyses' : analyses,
     },
   }

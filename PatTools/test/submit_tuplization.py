@@ -27,12 +27,15 @@ for sample, sample_info in datadefs.iteritems():
 
     if 'data' not in sample:
         options.append('isMC=1')
-        options.append('globalTag=START42_V13::All')
+        options.append('globalTag=START42_V15B::All')
     else:
         options.append('isMC=0')
-        options.append('globalTag=GR_R_42_V19::All')
-        options.append('lumiMask=%s' % sample_info['lumi_mask'])
-        farmout_options.append('--lumi-mask=%s' % sample_info['lumi_mask'])
+        options.append('globalTag=GR_R_42_V21::All')
+        lumi_mask_fip = sample_info['lumi_mask']
+        lumi_mask_path = os.path.join(
+            os.environ['CMSSW_BASE'], 'src', lumi_mask_fip)
+        options.append('lumiMask=%s' % lumi_mask_path)
+        farmout_options.append('--lumi-mask=%s' % lumi_mask_path)
         if 'firstRun' in sample_info:
             farmout_options.append(
                 '--input-runs=%i-%i' %
