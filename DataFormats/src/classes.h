@@ -9,6 +9,9 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
 
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLS.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLSFwd.h"
+
 #include "FinalStateAnalysis/DataFormats/interface/PATDiLeptonFinalStates.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATDiLeptonFinalStatesFwd.h"
 
@@ -31,6 +34,7 @@ namespace {
 
     FWD_ABS_CLASSDECL(PATFinalState)
     FWD_CLASSDECL(PATFinalStateEvent)
+    FWD_CLASSDECL(PATFinalStateLS)
 
     FWD_CLASSDECL(PATMultiCandFinalState)
 

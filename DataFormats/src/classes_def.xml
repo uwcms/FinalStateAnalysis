@@ -27,6 +27,15 @@
   <class name="edm::RefProd<PATFinalStateEventCollection>"/>
   <class name="edm::Ptr<PATFinalStateEvent>"/>
 
+  <class name="PATFinalStateLS"/>
+  <class name="PATFinalStateLSCollection"/>
+  <class name="edm::Wrapper<PATFinalStateLS>"/>
+  <class name="edm::Wrapper<PATFinalStateLSCollection>"/>
+  <class name="edm::Ref<PATFinalStateLSCollection,PATFinalStateLS,edm::refhelper::FindUsingAdvance<PATFinalStateLSCollection,PATFinalStateLS> >"/>
+  <class name="edm::RefVector<PATFinalStateLSCollection,PATFinalStateLS,edm::refhelper::FindUsingAdvance<PATFinalStateLSCollection,PATFinalStateLS> >"/>
+  <class name="edm::RefProd<PATFinalStateLSCollection>"/>
+  <class name="edm::Ptr<PATFinalStateLS>"/>
+
   <class name="PATMultiCandFinalState"/>
   <class name="PATMultiCandFinalStateCollection"/>
   <class name="edm::Wrapper<PATMultiCandFinalState>"/>
