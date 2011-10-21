@@ -53,6 +53,7 @@ MCLumiProducer::MCLumiProducer(const edm::ParameterSet& pset):
 }
 
 void MCLumiProducer::produce(edm::Event& evt, const edm::EventSetup& es) {
+  // FIXME JUST FILL LS::HLT/L1 vectors here
   eventCount_ += 1;
   if (needTriggerEvent_) {
     edm::Handle<pat::TriggerEvent> trigEv;
@@ -65,7 +66,7 @@ void MCLumiProducer::produce(edm::Event& evt, const edm::EventSetup& es) {
 void MCLumiProducer::endLuminosityBlock(
         edm::LuminosityBlock& ls, const edm::EventSetup& es) {
   double effLumi = eventCount_ / xSec_;
-  double effLumiErr = eventCount_ / xSecErr_;
+  double effLumiErr = eventCount_ / (xSec_ + xSecErr_);
 
   std::auto_ptr<LumiSummary> output(new LumiSummary);
   output->setLumiVersion("MC");
@@ -91,6 +92,7 @@ void MCLumiProducer::endLuminosityBlock(
 
   std::vector<LumiSummary::L1> l1Infos;
   const pat::TriggerAlgorithmCollection* triggers = trigEvent_.algorithms();
+  assert(triggers);
   for (size_t i = 0; i < triggers->size(); ++i) {
     const std::string& triggerName = triggers->at(i).name();
     int prescale = triggers->at(i).prescale();

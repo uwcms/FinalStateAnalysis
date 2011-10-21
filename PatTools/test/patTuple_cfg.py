@@ -4,6 +4,8 @@ import FWCore.ParameterSet.Config as cms
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
     ewkSkim=1,    # Apply EWK skim conditions
+    xSec = -999.0,
+    xSecErr = 0.0,
     skipEvents=0, # For debugging
 )
 
@@ -46,7 +48,7 @@ process.out = cms.OutputModule(
 # Configure the pat tuple
 import FinalStateAnalysis.PatTools.patTupleProduction as tuplizer
 tuplize, output_commands = tuplizer.configurePatTuple(
-    process, isMC=options.isMC)
+    process, isMC=options.isMC, xSec=options.xSec, xSecErr=options.xSecErr)
 for keep in output_commands:
     process.out.outputCommands.append('keep %s' % keep)
 
