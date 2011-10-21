@@ -6,7 +6,7 @@ Embed the Tag & Probe preselection into pat taus
 '''
 
 patTauEmbedPresel = cms.EDFilter(
-    "PATPFTauSelectorForTauIdEff2",
+    "PATTauPreselectionEmbedder",
     src = cms.InputTag("fixme"),
     #minJetPt = cms.double(20.0),
     minJetPt = cms.double(15), # lower for systematics reasons
