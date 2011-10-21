@@ -18,6 +18,8 @@ class testSmartTrigger: public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE_END();
   typedef std::vector<unsigned int>  VInt;
   typedef std::vector<VInt> VVInt;
+  typedef std::vector<std::string> vstring;
+  typedef std::vector<vstring> VVString;
   public:
   void testGroupSelect();
   void testMissingTrigger();
@@ -57,7 +59,21 @@ void testSmartTrigger::testGroupSelect() {
   results.push_back(resultC);
   results.push_back(resultD);
 
-  SmartTriggerResult result = makeDecision(prescales, results);
+  VVString paths;
+  vstring pathA;
+  pathA.push_back("pathA");
+  paths.push_back(pathA);
+  vstring pathB;
+  pathB.push_back("pathB");
+  paths.push_back(pathB);
+  vstring pathC;
+  pathC.push_back("pathC");
+  paths.push_back(pathC);
+  vstring pathD;
+  pathD.push_back("pathD");
+  paths.push_back(pathD);
+
+  SmartTriggerResult result = makeDecision(paths, prescales, results);
 
   // Group C
   CPPUNIT_ASSERT(result.group == 2);
@@ -97,7 +113,21 @@ void testSmartTrigger::testMissingTrigger() {
   results.push_back(resultC);
   results.push_back(resultD);
 
-  SmartTriggerResult result = makeDecision(prescales, results);
+  VVString paths;
+  vstring pathA;
+  pathA.push_back("pathA");
+  paths.push_back(pathA);
+  vstring pathB;
+  pathB.push_back("pathB");
+  paths.push_back(pathB);
+  vstring pathC;
+  pathC.push_back("pathC");
+  paths.push_back(pathC);
+  vstring pathD;
+  pathD.push_back("pathD");
+  paths.push_back(pathD);
+
+  SmartTriggerResult result = makeDecision(paths, prescales, results);
 
   // Group D
   CPPUNIT_ASSERT(result.group == 3);
@@ -138,7 +168,21 @@ void testSmartTrigger::testAllMissingTrigger() {
   results.push_back(resultC);
   results.push_back(resultD);
 
-  SmartTriggerResult result = makeDecision(prescales, results);
+  VVString paths;
+  vstring pathA;
+  pathA.push_back("pathA");
+  paths.push_back(pathA);
+  vstring pathB;
+  pathB.push_back("pathB");
+  paths.push_back(pathB);
+  vstring pathC;
+  pathC.push_back("pathC");
+  paths.push_back(pathC);
+  vstring pathD;
+  pathD.push_back("pathD");
+  paths.push_back(pathD);
+
+  SmartTriggerResult result = makeDecision(paths, prescales, results);
 
   // Group D
   CPPUNIT_ASSERT(result.group == 4);
@@ -165,6 +209,21 @@ void testSmartTrigger::testOR() {
   prescales.push_back(groupC);
   prescales.push_back(groupD);
 
+  VVString paths;
+  vstring pathA;
+  pathA.push_back("pathA");
+  paths.push_back(pathA);
+  vstring pathB;
+  pathB.push_back("pathB");
+  paths.push_back(pathB);
+  vstring pathC;
+  pathC.push_back("pathCa");
+  pathC.push_back("pathCb");
+  paths.push_back(pathC);
+  vstring pathD;
+  pathD.push_back("pathD");
+  paths.push_back(pathD);
+
   {
     VInt resultA;
     resultA.push_back(0);
@@ -181,7 +240,7 @@ void testSmartTrigger::testOR() {
     results.push_back(resultC);
     results.push_back(resultD);
 
-    SmartTriggerResult result = makeDecision(prescales, results);
+    SmartTriggerResult result = makeDecision(paths, prescales, results);
 
     // Group C
     CPPUNIT_ASSERT(result.group == 2);
@@ -208,7 +267,7 @@ void testSmartTrigger::testOR() {
     results.push_back(resultC);
     results.push_back(resultD);
 
-    SmartTriggerResult result = makeDecision(prescales, results);
+    SmartTriggerResult result = makeDecision(paths, prescales, results);
 
     // Group C
     CPPUNIT_ASSERT(result.group == 2);
@@ -235,7 +294,7 @@ void testSmartTrigger::testOR() {
     results.push_back(resultC);
     results.push_back(resultD);
 
-    SmartTriggerResult result = makeDecision(prescales, results);
+    SmartTriggerResult result = makeDecision(paths, prescales, results);
 
     // Group C
     CPPUNIT_ASSERT(result.group == 2);
@@ -278,7 +337,22 @@ void testSmartTrigger::testORDifferentPrescales() {
   results.push_back(resultC);
   results.push_back(resultD);
 
-  SmartTriggerResult result = makeDecision(prescales, results);
+  VVString paths;
+  vstring pathA;
+  pathA.push_back("pathA");
+  paths.push_back(pathA);
+  vstring pathB;
+  pathB.push_back("pathB");
+  paths.push_back(pathB);
+  vstring pathC;
+  pathC.push_back("pathCa");
+  pathC.push_back("pathCb");
+  paths.push_back(pathC);
+  vstring pathD;
+  pathD.push_back("pathD");
+  paths.push_back(pathD);
+
+  SmartTriggerResult result = makeDecision(paths, prescales, results);
 
   // Group D - C has different prescales
   CPPUNIT_ASSERT(result.group == 3);
@@ -286,6 +360,7 @@ void testSmartTrigger::testORDifferentPrescales() {
   // Prescale & Result from D
   CPPUNIT_ASSERT(result.prescale == 5);
   CPPUNIT_ASSERT(result.passed == true);
+  CPPUNIT_ASSERT(result.paths.size() == 2);
 }
 
 CPPUNIT_TEST_SUITE_REGISTRATION(testSmartTrigger);

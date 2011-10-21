@@ -41,6 +41,7 @@ class LumiSummary;
 struct SmartTriggerResult {
   unsigned int group;
   unsigned int prescale;
+  std::vector<std::string> paths;
   bool passed;
 };
 
@@ -52,8 +53,9 @@ SmartTriggerResult smartTrigger(
 SmartTriggerResult smartTrigger(
     const std::string& trgs, const LumiSummary& lumiSummary);
 
-/// Expose main method for testing.  Not for general use.
+/// Expose decision making method for testing.  Not for general use.
 SmartTriggerResult makeDecision(
+    const std::vector<std::vector<std::string> >& paths,,
     const std::vector<std::vector<unsigned int> >& prescales,
     const std::vector<std::vector<unsigned int> >& results);
 

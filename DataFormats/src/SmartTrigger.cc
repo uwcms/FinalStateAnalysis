@@ -58,6 +58,7 @@ getPrescale(const std::string& path, const LumiSummary& trgResult) {
 
 typedef std::vector<unsigned int>  VInt;
 typedef std::vector<VInt> VVInt;
+typedef std::vector<vstring> VVString;
 
 // Choose which group to use, given the prescales
 unsigned int
@@ -94,21 +95,25 @@ chooseGroup(const VVInt& prescales) {
 
 } // End internal functions
 
-SmartTriggerResult makeDecision(const VVInt& prescales, const VVInt& results) {
+SmartTriggerResult makeDecision(
+    const VVString& paths, const VVInt& prescales, const VVInt& results) {
   unsigned int prescale = 0;
   bool passed = false;
   unsigned int group = chooseGroup(prescales);
+  VString chosenPaths;
   if (group < prescales.size()) {
     // We know by construction the prescales are the same in the whole group
     prescale = prescales[group][0];
     for (size_t i = 0; i < results[group].size(); ++i) {
       if (results[group][i]) {
         passed = true;
-        break;
+        // Push back all the paths that passed
+        chosenPaths.push_back(paths[group][i]);
       }
     }
   }
   SmartTriggerResult output;
+  output.paths = chosenPaths;
   output.group = group;
   output.prescale = prescale;
   output.passed = passed;
@@ -121,6 +126,7 @@ smartTrigger(const std::string& trgs, const pat::TriggerEvent& result) {
   vstring groups = getGroups(trgs);
   VVInt prescales;
   VVInt results;
+  VVString pathGroups;
   for (size_t i = 0; i < groups.size(); ++i) {
     // Get the paths in this group
     VInt groupPrescale;
@@ -134,8 +140,9 @@ smartTrigger(const std::string& trgs, const pat::TriggerEvent& result) {
       groupPrescale.push_back(thePrescale);
       groupResult.push_back(theResult);
     }
+    pathGroups.push_back(paths);
     prescales.push_back(groupPrescale);
     results.push_back(groupResult);
   }
-  return makeDecision(prescales, results);
+  return makeDecision(pathGroups, prescales, results);
 }
