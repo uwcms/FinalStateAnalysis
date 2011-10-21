@@ -54,8 +54,11 @@ can then be made from this ntuple.
 ---+++ Electrons
 
 The <verbatim>cleanPatElectrons<\verbatim> collection is defined as electrons
-which have <verbatim>pt > 8<\verbatim>, pass VBTF <verbatim>wp95<\verbatim>, and
-are not overlapping a cleanPatMuon.
+which have <verbatim>pt > 8<\verbatim>. 
+
+Electrons which overlap a cleanPatMuon, or overlap 
+a tau candidate which has pt > 15, passes decay mode
+finding, loose combined isolation, and againstElectronTight are removed.
 
 The following electron IDs are embedded as userFloats:
 
