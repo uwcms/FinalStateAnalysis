@@ -17,13 +17,13 @@ class PATFinalStateLS {
   public:
     PATFinalStateLS();
     PATFinalStateLS(const LuminosityBlockID& id,
-        const LumiSumary& lumiSummary);
+        const LumiSummary& lumiSummary);
 
     /// Get the ID with lumi & run number
     const LuminosityBlockID& id() const;
 
     /// Access to the lumi summary information
-    const LumiSumary& lumiSummary() const;
+    const LumiSummary& lumiSummary() const;
 
     /// Get the inst. luminosity in this lumi
     double instantaneousLumi() const;
@@ -36,7 +36,7 @@ class PATFinalStateLS {
 
   private:
     LuminosityBlockID id_;
-    LumiSumary lumiSummary_;
+    LumiSummary lumiSummary_;
 };
 
 #endif /* end of include guard: PATFINALSTATELS_HT41P3HF */
