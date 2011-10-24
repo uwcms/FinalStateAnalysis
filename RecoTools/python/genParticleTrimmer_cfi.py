@@ -17,6 +17,7 @@ prunedGenParticles = cms.EDProducer(
         "keep++ pdgId = 24", # W+
         'keep++ pdgId = 6', # top quark
         'keep++ pdgId = 15', # Any tau daughter
+        'keep++ pdgId = 15', # Any tau daughter
         'keep++ pdgId = 25', # Higgs
         'keep++ pdgId = 35', # MSSM H
         'keep++ pdgId = 36', # MSSM A
