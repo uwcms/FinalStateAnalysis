@@ -27,7 +27,7 @@ lumiWeightsS42011A = cms.EDProducer(
     monteCarlo = simPUScenarios.PU_S4,
     data = cms.PSet(
         fileName = cms.FileInPath(
-            "FinalStateAnalysis/RecoTools/data/allData_2011A_173692.root"),
+            "FinalStateAnalysis/RecoTools/data/pu/allData_2011A_173692.root"),
         pathToHist = cms.string("pileup"),
     ),
     autoPad = cms.bool(True),
@@ -38,7 +38,7 @@ lumiWeightsS42011B178078 = cms.EDProducer(
     monteCarlo = simPUScenarios.PU_S4,
     data = cms.PSet(
         fileName = cms.FileInPath(
-            "FinalStateAnalysis/RecoTools/data/allData_2011B_178078.root"),
+            "FinalStateAnalysis/RecoTools/data/pu/allData_2011B_178078.root"),
         pathToHist = cms.string("pileup"),
     ),
     autoPad = cms.bool(True),
@@ -49,7 +49,7 @@ lumiWeightsS42011AB178078 = cms.EDProducer(
     monteCarlo = simPUScenarios.PU_S4,
     data = cms.PSet(
         fileName = cms.FileInPath(
-            "FinalStateAnalysis/RecoTools/data/allData_2011AB_178078.root"),
+            "FinalStateAnalysis/RecoTools/data/pu/allData_2011AB_178078.root"),
         pathToHist = cms.string("pileup"),
     ),
     autoPad = cms.bool(True),
