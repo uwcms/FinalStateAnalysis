@@ -3,9 +3,9 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-10-07-WHReSkim'
+jobId = '2011-10-25-WHReSkim'
 
-patJobId = '2011-10-06-EWKPatTuple'
+patJobId = '2011-10-21-EWKPatTuple'
 patCfg = 'patTuple_cfg'
 
 def get_dir(sample):
@@ -14,14 +14,9 @@ def get_dir(sample):
     return base_dir + dir_name
 
 for sample, sample_info in datadefs.iteritems():
-    if 'TauPlusX' in sample:
+    if 'VH' not in sample_info['analyses']:
         continue
-    if 'MuHad' in sample:
-        continue
-    #if 'DoubleElectron' in sample:
-        #continue
-    #if 'QCD' in sample or 'data' in sample:
-        #continue
+
     path_name = os.path.join(os.environ['scratch'], '-'.join(
         [jobId, sample, cfg.replace('.py', '')]))
     sys.stderr.write('Building sample submit dir %s\n' % (sample))

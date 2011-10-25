@@ -174,13 +174,13 @@ def trileptonFinalPlots(leg1, leg2, leg3):
     # Add our trilepton HLT paths
     emu_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
         name = "Mu8Ele17", nicename = "Mu(8) Ele(17)",
-        hlt_path = r"HLT_Mu8_Ele17_CaloId(T|L)(_CaloIsoVL|)_v\\d+")
+        hlt_path = r"HLT_Mu8_Ele17_CaloId(T|L)(_CaloIsoVL|)_v\d+")
     add_ntuple(emu_trig_cfg.name.value(), emu_trig_cfg.plotquantity.value())
 
-    mue_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
-        name = "Mu17Ele8", nicename = "Mu(17) Ele(8)",
-        hlt_path = r"HLT_Mu17_Ele8_CaloId(T|L)(_CaloIsoVL|)_v\\d+")
-    add_ntuple(mue_trig_cfg.name.value(), mue_trig_cfg.plotquantity.value())
+    #mue_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
+        #name = "Mu17Ele8", nicename = "Mu(17) Ele(8)",
+        #hlt_path = r"HLT_Mu17_Ele8_CaloId(T|L)(_CaloIsoVL|)_v\\d+")
+    #add_ntuple(mue_trig_cfg.name.value(), mue_trig_cfg.plotquantity.value())
 
     ee_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
         name = "E17E8", nicename = "Ele(17) E(8)",

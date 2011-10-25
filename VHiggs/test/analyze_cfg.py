@@ -21,7 +21,7 @@ process.source = cms.Source(
 plots_filename = options.outputFile.replace('.root', '.plots.root')
 process.fwliteOutput = cms.PSet(fileName = cms.string(options.outputFile))
 process.TFileService = cms.Service(
-    "TFileService", fileName = cms.string(options.outputFile)
+    "TFileService", fileName = cms.string(plots_filename)
 )
 
 process.steering = cms.PSet(
@@ -34,7 +34,7 @@ process.steering = cms.PSet(
         #'ett',
         'mmm',
         'mmt',
-        #'mtt'
+        'mtt'
     ),
     reportAfter = cms.uint32(1000),
     ignored_cuts = cms.vstring()
