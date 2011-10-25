@@ -72,12 +72,21 @@ hcalIso = cms.PSet(
     invert = cms.bool(False)
 )
 
+# Global muon
+globalTrk = cms.PSet(
+    name = cms.string("${name}_GlbTrk"),
+    description = cms.string("$nicename has global track"),
+    cut = cms.string("${getter}combinedMuon.isNonnull"),
+    plottable = cms.string("${getter}combinedMuon.isNonnull"),
+    invert = cms.bool(False)
+)
+
 # Normalized chi2 of global track
 trkNormChi2 = cms.PSet(
     name = cms.string("${name}_GlbTrkNormChi2"),
     description = cms.string("$nicename normalized #chi^{2} < ${threshold}"),
-    cut = cms.string("${getter}normChi2() < ${threshold}"),
-    plottable = cms.string("${getter}normChi2()"),
+    cut = cms.string("${getter}combinedMuon.chi2/${getter}combinedMuon.ndof < ${threshold}"),
+    plottable = cms.string("${getter}combinedMuon.chi2/${getter}combinedMuon.ndof"),
     invert = cms.bool(False)
 )
 
