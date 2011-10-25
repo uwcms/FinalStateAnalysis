@@ -57,7 +57,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.tuplize += process.selectPrimaryVertices
     # Luminosity weighting
     process.load("FinalStateAnalysis.RecoTools.lumiWeighting_cfi")
-    output_commands.append('*_lumiWeights_*_*')
+    output_commands.append('*_lumiWeights*_*_*')
     process.tuplize += process.lumiWeights
     # Rerun tau-ID
     process.load('Configuration/StandardSequences/Services_cff')
