@@ -5,6 +5,8 @@
 #include "FinalStateAnalysis/Selectors/interface/PATFinalStateSelection.h"
 #include "FinalStateAnalysis/Utilities/interface/CutFlow.h"
 
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
+
 #include "FWCore/Common/interface/LuminosityBlockBase.h"
 #include "CommonTools/Utils/interface/TFileDirectory.h"
 #include "DataFormats/Common/interface/MergeableCounter.h"
@@ -18,7 +20,15 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
   BasicAnalyzer(pset, fs),fs_(fs) {
   src_ = pset.getParameter<edm::InputTag>("src");
   name_ = pset.getParameter<std::string>("@module_label");
-  weights_ = pset.getParameter<VInputTag>("weights");
+
+  // Setup the code to apply event level weights
+  std::vector<std::string> weights =
+    pset.getParameter<std::vector<std::string> >("weights");
+  for (size_t i = 0; i < weights.size(); ++i) {
+    evtWeights_.push_back(EventFunction(weights[i]));
+  }
+  evtSrc_ = pset.getParameter<edm::InputTag>("evtSrc");
+
   analysisCfg_ = pset.getParameterSet("analysis");
   filter_ = pset.exists("filter") ? pset.getParameter<bool>("filter") : false;
   // Build the analyzer
@@ -65,10 +75,13 @@ void PATFinalStateAnalysis::beginLuminosityBlock(
 bool PATFinalStateAnalysis::filter(const edm::EventBase& evt) {
   // Get the event weight
   double eventWeight = 1.0;
-  for (size_t i = 0; i < weights_.size(); ++i) {
-    edm::Handle<double> weightH;
-    evt.getByLabel(weights_[i], weightH);
-    eventWeight *= *weightH;
+
+  if (evtWeights_.size()) {
+    edm::Handle<PATFinalStateEventCollection> event;
+    evt.getByLabel(evtSrc_, event);
+    for (size_t i = 0; i < evtWeights_.size(); ++i) {
+      eventWeight *= evtWeights_[i]( (*event)[0] );
+    }
   }
   // Count this event
   eventCounter_->Fill(0.0);
@@ -83,20 +96,20 @@ bool PATFinalStateAnalysis::filter(const edm::EventBase& evt) {
   finalStatePtrs.reserve(finalStates->size());
 
   //Normal running
-//  bool mustCleanupFinalStates = false;
-//  for (size_t i = 0; i < finalStates->size(); ++i) {
-//    finalStatePtrs.push_back( &( (*finalStates)[i] ) );
-//  }
+  bool mustCleanupFinalStates = false;
+  for (size_t i = 0; i < finalStates->size(); ++i) {
+    finalStatePtrs.push_back( &( (*finalStates)[i] ) );
+  }
 
   // Hack workarounds into ntuple
-  bool mustCleanupFinalStates = true;
-  for (size_t i = 0; i < finalStates->size(); ++i) {
-    PATFinalState * clone = (*finalStates)[i].clone();
-    clone->addUserInt("evt", evt.id().event());
-    clone->addUserInt("run", evt.id().run());
-    clone->addUserInt("idx", i);
-    finalStatePtrs.push_back(clone);
-  }
+//  bool mustCleanupFinalStates = true;
+//  for (size_t i = 0; i < finalStates->size(); ++i) {
+//    PATFinalState * clone = (*finalStates)[i].clone();
+//    clone->addUserInt("evt", evt.id().event());
+//    clone->addUserInt("run", evt.id().run());
+//    clone->addUserInt("idx", i);
+//    finalStatePtrs.push_back(clone);
+//  }
 
   // Check if we want to split by runs
   if (splitRuns_) {

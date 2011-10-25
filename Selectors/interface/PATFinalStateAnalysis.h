@@ -6,16 +6,19 @@
 #ifndef PATFINALSTATEANALYSIS_FRM3UCVB
 #define PATFINALSTATEANALYSIS_FRM3UCVB
 
+#include <vector>
+#include <map>
+#include <boost/shared_ptr.hpp>
+
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/Provenance/interface/RunID.h"
 
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
+#include "CommonTools/Utils/interface/StringObjectFunction.h"
 #include "PhysicsTools/UtilAlgos/interface/BasicAnalyzer.h"
-#include <vector>
-#include <map>
-#include <boost/shared_ptr.hpp>
 
 class TH1;
 class PATFinalStateSelection;
@@ -36,13 +39,16 @@ class PATFinalStateAnalysis : public edm::BasicAnalyzer {
     void beginLuminosityBlock(const edm::LuminosityBlockBase& ls);
 
   private:
-    typedef std::vector<edm::InputTag> VInputTag;
     edm::InputTag src_;
     std::string name_;
     TFileDirectory& fs_;
     edm::ParameterSet analysisCfg_;
     boost::shared_ptr<PATFinalStateSelection> analysis_;
-    VInputTag weights_;
+
+    // Tools for applying event weights
+    typedef StringObjectFunction<PATFinalStateEvent> EventFunction;
+    edm::InputTag evtSrc_;
+    std::vector<EventFunction> evtWeights_;
 
     // Tool for examining individual runs
     bool splitRuns_;
