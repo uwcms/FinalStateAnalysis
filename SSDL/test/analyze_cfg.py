@@ -37,9 +37,10 @@ process.maxEvents = cms.untracked.PSet(
 
 # Common among all analyzers
 process.common = cms.PSet(
-    weights = cms.VInputTag(
-        cms.InputTag("lumiWeights", "3bx")
+    weights = cms.vstring(
+        'weight("3bx_S42011A")'
     ),
+    evtSrc = cms.InputTag("patFinalStateEventProducer"),
     skimCounter = cms.InputTag("eventCount", "", "TUPLE"),
 )
 
@@ -71,7 +72,7 @@ process.schedule = cms.Schedule(process.count)
 
 process.out = cms.OutputModule(
     "PoolOutputModule",
-    fileName = cms.untracked.string(options.outputFile),
+    fileName = cms.untracked.string(options.outputFile.replace('.root', '.edm.root')),
     SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring()
     ),

@@ -3,13 +3,9 @@ import FinalStateAnalysis.Selectors.plotting.plotting as plotting
 from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
 
 config = cms.PSet(
-    subcand = cms.string('subcand("@,@", "extTaus", "%s")' % (
-    'userCand(\'patJet\').pt > 40 & abs(userCand(\'patJet\').eta) < 2.5 '
-    '& userCand(\'patJet\').neutralHadronEnergyFraction  < 0.99'
-    '& userCand(\'patJet\').getPFConstituents.size() > 0'
-    '& userCand(\'patJet\').chargedHadronMultiplicity > 0'
-    '& userCand(\'patJet\').chargedHadronEnergyFraction > 0'
-    '& userCand(\'patJet\').chargedEmEnergyFraction < 0.99')
+    subcand = cms.string('subcand("@,@", "extJets", "%s")' % (
+        'pt > 40 & abs(eta) < 2.5'
+        ' & userFloat(\'idLoose\') > 0.5')
     )
 )
 
@@ -68,20 +64,19 @@ def dileptonFinalPlots(leg1, leg2):
         )
 
     # Add the evt#, run# and idx
-    # TODO change paths fix this on next pat tuple iteration
-    add_ntuple('evt', 'userInt("evt")')
-    add_ntuple('run', 'userInt("run")')
+    add_ntuple('evt', 'evt.id.event')
+    add_ntuple('run', 'evt.id.run')
 
     add_ntuple('vtxChi2', 'userFloat("vtxChi2")')
     add_ntuple('vtxNDOF', 'userFloat("vtxNDOF")')
 
-    # Make HT hisotgram
     output.finalState.histos.append(
         PSetTemplate(plotting.topology.phiTopology).replace(
             name = 'finalState', nicename = 'Final state',
         )
     )
 
+    #Make HT hisotgram
     add_ntuple('ht', '%s.ht' % config.subcand.value())
 
     output.finalState.histos.append(

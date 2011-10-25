@@ -35,25 +35,27 @@ selections = cms.VPSet(
     # Muon ID cuts
     ###########################################################################
 
+    PSetTemplate(selectors.muons.globalTrk).replace(**leg1),
     PSetTemplate(selectors.muons.trkNormChi2).replace(
         threshold = 10,  **leg1),
-    PSetTemplate(selectors.muons.relSubDetIso).replace(
-        threshold = 0.15, **leg1),
     PSetTemplate(selectors.muons.d0).replace(
         threshold = 0.02, **leg1),
+
+    PSetTemplate(selectors.muons.relSubDetIso).replace(
+        threshold = 0.15, **leg1),
     PSetTemplate(selectors.muons.ecalIso).replace(
         threshold = 4, **leg1),
     PSetTemplate(selectors.muons.hcalIso).replace(
         threshold = 6, **leg1),
 
     PSetTemplate(selectors.muons.id).replace(
-        muID = 'WWID', **leg2),
+        muID = 'WWID', **leg1),
     PSetTemplate(selectors.muons.reliso).replace(
-        threshold = '0.15', **leg2),
+        threshold = '0.15', **leg1),
 
-    ###########################################################################
-    # Tau ID cuts
-    ###########################################################################
+    ############################################################################
+    ## Tau ID cuts
+    ############################################################################
     PSetTemplate(selectors.taus.id).replace(
         tauID = 'decayModeFinding', **leg2),
     PSetTemplate(selectors.taus.id).replace(
