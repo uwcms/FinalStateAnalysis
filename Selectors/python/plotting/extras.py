@@ -41,7 +41,8 @@ nbjets = cms.PSet(
 bjet_tauid = 'userCand(\'patJet\').pt > ${pt_threshold} &' \
         'abs(userCand(\'patJet\').eta) < ${eta_threshold} & ' \
         'userCand(\'patJet\').bDiscriminator(\'\') > ${btag_threshold} & ' \
-        'tauID("byLooseCombinedIsolationDeltaBetaCorr")'
+        'tauID(\'byLooseCombinedIsolationDeltaBetaCorr\')'
+
 plottable = cms.string('extras("extTaus", "%s").size()' % bjet_tauid)
 
 nbjetsHPSLoose = cms.PSet(
