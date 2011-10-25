@@ -24,7 +24,7 @@ patFinalStatesEmbedTaus = cms.EDProducer(
 patFinalStatesEmbedJets = cms.EDProducer(
     "PATFinalStateOverlapEmbedder",
     src = cms.InputTag("fixme"),
-    toEmbedSrc = cms.InputTag("cleanPatJets"),
+    toEmbedSrc = cms.InputTag("selectedPatJets"),
     name = cms.string("extJets"), # external taus
     minDeltaR = cms.double(0.3),
     maxDeltaR = cms.double(1e9),
