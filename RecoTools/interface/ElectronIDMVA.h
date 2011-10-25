@@ -43,8 +43,18 @@ class ElectronIDMVA {
     double MVAValue(const reco::GsfElectron *ele, const reco::Vertex vertex,
                     EcalClusterLazyTools myEcalCluster,
                     const TransientTrackBuilder *transientTrackBuilder);
+
     double MVAValue(const reco::GsfElectron *ele,
                     EcalClusterLazyTools myEcalCluster);
+
+    // Build the lazy tools internally
+    double MVAValue(
+        const reco::GsfElectron *ele,
+        const edm::Event& evt,
+        const edm::EventSetup& es,
+        const edm::InputTag& ebRecHits,
+        const edm::InputTag& eeRecHits);
+
     double MVAValue(double ElePt , double EleSCEta,
                     double EleSigmaIEtaIEta,
                     double EleDEtaIn,

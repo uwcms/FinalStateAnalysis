@@ -3,7 +3,7 @@ import os
 import sys
 
 cfg = 'patTuple_cfg.py'
-jobId = '2011-10-06-EWKPatTuple'
+jobId = '2011-10-21-EWKPatTuple'
 
 for sample, sample_info in datadefs.iteritems():
 
@@ -28,6 +28,7 @@ for sample, sample_info in datadefs.iteritems():
     if 'data' not in sample:
         options.append('isMC=1')
         options.append('globalTag=START42_V15B::All')
+        options.append('xSec=%0.4f' % sample_info['x_sec'])
     else:
         options.append('isMC=0')
         options.append('globalTag=GR_R_42_V21::All')

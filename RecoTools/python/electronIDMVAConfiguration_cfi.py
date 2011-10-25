@@ -11,14 +11,14 @@ electronMVAIDNOIPcfg = cms.PSet(
     Subdet2Pt10To20Weights = cms.FileInPath(
         "FinalStateAnalysis/RecoTools/data/ElectronMVAWeights/Subdet2LowPt_NoIPInfo_BDTG.weights.xml"
     ),
-    Subdet0Pt20toInfWeights = cms.FileInPath(
+    Subdet0Pt20ToInfWeights = cms.FileInPath(
         "FinalStateAnalysis/RecoTools/data/ElectronMVAWeights/Subdet0HighPt_NoIPInfo_BDTG.weights.xml"
     ),
-    Subdet1Pt20toInfWeights = cms.FileInPath(
+    Subdet1Pt20ToInfWeights = cms.FileInPath(
         "FinalStateAnalysis/RecoTools/data/ElectronMVAWeights/Subdet1HighPt_NoIPInfo_BDTG.weights.xml"
     ),
-    Subdet2Pt20toInfWeights = cms.FileInPath(
+    Subdet2Pt20ToInfWeights = cms.FileInPath(
         "FinalStateAnalysis/RecoTools/data/ElectronMVAWeights/Subdet2HighPt_NoIPInfo_BDTG.weights.xml"
     ),
-    type = cms.uint32(1) # No IP infor
+    mvaType = cms.uint32(1) # No IP infor
 )

@@ -38,11 +38,11 @@ ElectronIDMVA::~ElectronIDMVA()
 
 //--------------------------------------------------------------------------------------------------
 void ElectronIDMVA::Initialize( std::string methodName,
-                                std::string Subdet0Pt10To20Weights , 
-                                std::string Subdet1Pt10To20Weights , 
+                                std::string Subdet0Pt10To20Weights ,
+                                std::string Subdet1Pt10To20Weights ,
                                 std::string Subdet2Pt10To20Weights,
                                 std::string Subdet0Pt20ToInfWeights,
-                                std::string Subdet1Pt20ToInfWeights, 
+                                std::string Subdet1Pt20ToInfWeights,
                                 std::string Subdet2Pt20ToInfWeights,
                                 ElectronIDMVA::MVAType type) {
 
@@ -50,11 +50,11 @@ void ElectronIDMVA::Initialize( std::string methodName,
   fMVAType = type;
 
   fMethodname = methodName;
-    
+
   for(UInt_t i=0; i<6; ++i) {
     if (fTMVAReader[i]) delete fTMVAReader[i];
 
-    fTMVAReader[i] = new TMVA::Reader( "!Color:!Silent:Error" );  
+    fTMVAReader[i] = new TMVA::Reader( "!Color:!Silent:Error" );
     fTMVAReader[i]->SetVerbose(kTRUE);
 
     if (type == kBaseline) {
@@ -64,9 +64,9 @@ void ElectronIDMVA::Initialize( std::string methodName,
       fTMVAReader[i]->AddVariable( "FBrem",                 &fMVAVar_EleFBrem                 );
       fTMVAReader[i]->AddVariable( "SigmaIPhiIPhi",         &fMVAVar_EleSigmaIPhiIPhi         );
       fTMVAReader[i]->AddVariable( "NBrem",                 &fMVAVar_EleNBrem                 );
-      fTMVAReader[i]->AddVariable( "OneOverEMinusOneOverP", &fMVAVar_EleOneOverEMinusOneOverP );      
+      fTMVAReader[i]->AddVariable( "OneOverEMinusOneOverP", &fMVAVar_EleOneOverEMinusOneOverP );
     }
-    
+
     if (type == kNoIPInfo) {
       fTMVAReader[i]->AddVariable( "SigmaIEtaIEta",         &fMVAVar_EleSigmaIEtaIEta         );
       fTMVAReader[i]->AddVariable( "DEtaIn",                &fMVAVar_EleDEtaIn                );
@@ -76,7 +76,7 @@ void ElectronIDMVA::Initialize( std::string methodName,
       fTMVAReader[i]->AddVariable( "ESeedClusterOverPout",  &fMVAVar_EleESeedClusterOverPout  );
       fTMVAReader[i]->AddVariable( "SigmaIPhiIPhi",         &fMVAVar_EleSigmaIPhiIPhi         );
       fTMVAReader[i]->AddVariable( "NBrem",                 &fMVAVar_EleNBrem                 );
-      fTMVAReader[i]->AddVariable( "OneOverEMinusOneOverP", &fMVAVar_EleOneOverEMinusOneOverP );      
+      fTMVAReader[i]->AddVariable( "OneOverEMinusOneOverP", &fMVAVar_EleOneOverEMinusOneOverP );
       fTMVAReader[i]->AddVariable( "ESeedClusterOverPIn",   &fMVAVar_EleESeedClusterOverPIn   );
     }
     if (type == kWithIPInfo) {
@@ -89,7 +89,7 @@ void ElectronIDMVA::Initialize( std::string methodName,
       fTMVAReader[i]->AddVariable( "ESeedClusterOverPout",  &fMVAVar_EleESeedClusterOverPout  );
       fTMVAReader[i]->AddVariable( "SigmaIPhiIPhi",         &fMVAVar_EleSigmaIPhiIPhi         );
       fTMVAReader[i]->AddVariable( "NBrem",                 &fMVAVar_EleNBrem                 );
-      fTMVAReader[i]->AddVariable( "OneOverEMinusOneOverP", &fMVAVar_EleOneOverEMinusOneOverP );      
+      fTMVAReader[i]->AddVariable( "OneOverEMinusOneOverP", &fMVAVar_EleOneOverEMinusOneOverP );
       fTMVAReader[i]->AddVariable( "ESeedClusterOverPIn",   &fMVAVar_EleESeedClusterOverPIn   );
       fTMVAReader[i]->AddVariable( "IP3d",                  &fMVAVar_EleIP3d                  );
       fTMVAReader[i]->AddVariable( "IP3dSig",               &fMVAVar_EleIP3dSig               );
@@ -133,9 +133,9 @@ Double_t ElectronIDMVA::MVAValue(Double_t ElePt , Double_t EleSCEta,
                                  Double_t EleIP3d,
                                  Double_t EleIP3dSig
   ) {
-  
-  if (!fIsInitialized) { 
-    std::cout << "Error: ElectronIDMVA not properly initialized.\n"; 
+
+  if (!fIsInitialized) {
+    std::cout << "Error: ElectronIDMVA not properly initialized.\n";
     return -9999;
   }
 
@@ -145,7 +145,7 @@ Double_t ElectronIDMVA::MVAValue(Double_t ElePt , Double_t EleSCEta,
   else subdet = 2;
   Int_t ptBin = 0;
   if (ElePt > 20.0) ptBin = 1;
-  
+
   //set all input variables
   fMVAVar_EleSigmaIEtaIEta = EleSigmaIEtaIEta;
   fMVAVar_EleDEtaIn = EleDEtaIn;
@@ -162,7 +162,7 @@ Double_t ElectronIDMVA::MVAValue(Double_t ElePt , Double_t EleSCEta,
   fMVAVar_EleIP3d = EleIP3d;
   fMVAVar_EleIP3dSig = EleIP3dSig;
 
-  Double_t mva = -9999;  
+  Double_t mva = -9999;
   TMVA::Reader *reader = 0;
   Int_t MVABin = -1;
   if (subdet == 0 && ptBin == 0) MVABin = 0;
@@ -173,7 +173,7 @@ Double_t ElectronIDMVA::MVAValue(Double_t ElePt , Double_t EleSCEta,
   if (subdet == 2 && ptBin == 1) MVABin = 5;
   assert(MVABin >= 0 && MVABin <= 5);
   reader = fTMVAReader[MVABin];
-                                                
+
   mva = reader->EvaluateMVA( fMethodname );
 
   return mva;
@@ -182,12 +182,12 @@ Double_t ElectronIDMVA::MVAValue(Double_t ElePt , Double_t EleSCEta,
 
 
 //--------------------------------------------------------------------------------------------------
-Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele, const reco::Vertex vertex, 
+Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele, const reco::Vertex vertex,
                                  EcalClusterLazyTools myEcalCluster,
                                  const TransientTrackBuilder *transientTrackBuilder) {
-  
-  if (!fIsInitialized) { 
-    std::cout << "Error: ElectronIDMVA not properly initialized.\n"; 
+
+  if (!fIsInitialized) {
+    std::cout << "Error: ElectronIDMVA not properly initialized.\n";
     return -9999;
   }
 
@@ -213,16 +213,16 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele, const reco::Verte
   else subdet = 2;
   Int_t ptBin = 0;
   if (ele->pt() > 20.0) ptBin = 1;
-  
+
   //set all input variables
-  fMVAVar_EleSigmaIEtaIEta = ele->sigmaIetaIeta() ; 
+  fMVAVar_EleSigmaIEtaIEta = ele->sigmaIetaIeta() ;
   fMVAVar_EleDEtaIn = ele->deltaEtaSuperClusterTrackAtVtx();
   fMVAVar_EleDPhiIn = ele->deltaPhiSuperClusterTrackAtVtx();
-  fMVAVar_EleHoverE = ele->hcalOverEcal(); 
+  fMVAVar_EleHoverE = ele->hcalOverEcal();
 
-  fMVAVar_EleFBrem = ele->fbrem(); 
-  fMVAVar_EleEOverP = ele->eSuperClusterOverP(); 
-  fMVAVar_EleESeedClusterOverPout = ele->eSeedClusterOverPout(); 
+  fMVAVar_EleFBrem = ele->fbrem();
+  fMVAVar_EleEOverP = ele->eSuperClusterOverP();
+  fMVAVar_EleESeedClusterOverPout = ele->eSeedClusterOverPout();
 
   //temporary fix for weird electrons with Sigma iPhi iPhi == Nan
   //these occur at the sub-percent level
@@ -230,36 +230,36 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele, const reco::Verte
   if (!isnan(vCov[2])) fMVAVar_EleSigmaIPhiIPhi = sqrt (vCov[2]);
   else fMVAVar_EleSigmaIPhiIPhi = ele->sigmaIetaIeta();
 
-  fMVAVar_EleNBrem = ele->basicClustersSize() - 1; 
-  fMVAVar_EleOneOverEMinusOneOverP = (1.0/(ele->superCluster()->energy())) - 1.0 / ele->gsfTrack()->p(); 
-  fMVAVar_EleESeedClusterOverPIn = ele->superCluster()->seed()->energy() / ele->trackMomentumAtVtx().R(); 
+  fMVAVar_EleNBrem = ele->basicClustersSize() - 1;
+  fMVAVar_EleOneOverEMinusOneOverP = (1.0/(ele->superCluster()->energy())) - 1.0 / ele->gsfTrack()->p();
+  fMVAVar_EleESeedClusterOverPIn = ele->superCluster()->seed()->energy() / ele->trackMomentumAtVtx().R();
 
   //d0
   if (ele->gsfTrack().isNonnull()) {
-    fMVAVar_EleD0 = (-1.0)*ele->gsfTrack()->dxy(vertex.position()); 
+    fMVAVar_EleD0 = (-1.0)*ele->gsfTrack()->dxy(vertex.position());
   } else if (ele->closestCtfTrackRef().isNonnull()) {
-    fMVAVar_EleD0 = (-1.0)*ele->closestCtfTrackRef()->dxy(vertex.position()); 
+    fMVAVar_EleD0 = (-1.0)*ele->closestCtfTrackRef()->dxy(vertex.position());
   } else {
     fMVAVar_EleD0 = -9999.0;
   }
-    
+
   //default values for IP3D
-  fMVAVar_EleIP3d = -999.0; 
+  fMVAVar_EleIP3d = -999.0;
   fMVAVar_EleIP3dSig = 0.0;
   if (ele->gsfTrack().isNonnull()) {
     const double gsfsign   = ( (-ele->gsfTrack()->dxy(vertex.position()))   >=0 ) ? 1. : -1.;
-      
-    const reco::TransientTrack &tt = transientTrackBuilder->build(ele->gsfTrack()); 
+
+    const reco::TransientTrack &tt = transientTrackBuilder->build(ele->gsfTrack());
     const std::pair<bool,Measurement1D> &ip3dpv =  IPTools::absoluteImpactParameter3D(tt,vertex);
     if (ip3dpv.first) {
       double ip3d = gsfsign*ip3dpv.second.value();
-      double ip3derr = ip3dpv.second.error();  
-      fMVAVar_EleIP3d = ip3d; 
+      double ip3derr = ip3dpv.second.error();
+      fMVAVar_EleIP3d = ip3d;
       fMVAVar_EleIP3dSig = ip3d/ip3derr;
     }
   }
 
-  Double_t mva = -9999;  
+  Double_t mva = -9999;
   TMVA::Reader *reader = 0;
   Int_t MVABin = -1;
   if (subdet == 0 && ptBin == 0) MVABin = 0;
@@ -270,7 +270,7 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele, const reco::Verte
   if (subdet == 2 && ptBin == 1) MVABin = 5;
   assert(MVABin >= 0 && MVABin <= 5);
   reader = fTMVAReader[MVABin];
-                                
+
   mva = reader->EvaluateMVA( fMethodname );
 
 //   ***************************************************
@@ -301,11 +301,11 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele, const reco::Verte
 
 
 //--------------------------------------------------------------------------------------------------
-Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele, 
+Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele,
                                  EcalClusterLazyTools myEcalCluster) {
-  
-  if (!fIsInitialized) { 
-    std::cout << "Error: ElectronIDMVA not properly initialized.\n"; 
+
+  if (!fIsInitialized) {
+    std::cout << "Error: ElectronIDMVA not properly initialized.\n";
     return -9999;
   }
   if (fMVAType == kWithIPInfo) {
@@ -333,16 +333,16 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele,
   else subdet = 2;
   Int_t ptBin = 0;
   if (ele->pt() > 20.0) ptBin = 1;
-  
+
   //set all input variables
-  fMVAVar_EleSigmaIEtaIEta = ele->sigmaIetaIeta() ; 
+  fMVAVar_EleSigmaIEtaIEta = ele->sigmaIetaIeta() ;
   fMVAVar_EleDEtaIn = ele->deltaEtaSuperClusterTrackAtVtx();
   fMVAVar_EleDPhiIn = ele->deltaPhiSuperClusterTrackAtVtx();
-  fMVAVar_EleHoverE = ele->hcalOverEcal(); 
+  fMVAVar_EleHoverE = ele->hcalOverEcal();
 
-  fMVAVar_EleFBrem = ele->fbrem(); 
-  fMVAVar_EleEOverP = ele->eSuperClusterOverP(); 
-  fMVAVar_EleESeedClusterOverPout = ele->eSeedClusterOverPout(); 
+  fMVAVar_EleFBrem = ele->fbrem();
+  fMVAVar_EleEOverP = ele->eSuperClusterOverP();
+  fMVAVar_EleESeedClusterOverPout = ele->eSeedClusterOverPout();
 
   //temporary fix for weird electrons with Sigma iPhi iPhi == Nan
   //these occur at the sub-percent level
@@ -350,12 +350,12 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele,
   if (!isnan(vCov[2])) fMVAVar_EleSigmaIPhiIPhi = sqrt (vCov[2]);
   else fMVAVar_EleSigmaIPhiIPhi = ele->sigmaIetaIeta();
 
-  fMVAVar_EleNBrem = ele->basicClustersSize() - 1; 
-  fMVAVar_EleOneOverEMinusOneOverP = (1.0/(ele->superCluster()->energy())) - 1.0 / ele->gsfTrack()->p(); 
-  fMVAVar_EleESeedClusterOverPIn = ele->superCluster()->seed()->energy() / ele->trackMomentumAtVtx().R(); 
+  fMVAVar_EleNBrem = ele->basicClustersSize() - 1;
+  fMVAVar_EleOneOverEMinusOneOverP = (1.0/(ele->superCluster()->energy())) - 1.0 / ele->gsfTrack()->p();
+  fMVAVar_EleESeedClusterOverPIn = ele->superCluster()->seed()->energy() / ele->trackMomentumAtVtx().R();
 
 
-  Double_t mva = -9999;  
+  Double_t mva = -9999;
   TMVA::Reader *reader = 0;
   Int_t MVABin = -1;
   if (subdet == 0 && ptBin == 0) MVABin = 0;
@@ -366,7 +366,7 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele,
   if (subdet == 2 && ptBin == 1) MVABin = 5;
   assert(MVABin >= 0 && MVABin <= 5);
   reader = fTMVAReader[MVABin];
-                                
+
   mva = reader->EvaluateMVA( fMethodname );
 
 //   ***************************************************
@@ -392,4 +392,12 @@ Double_t ElectronIDMVA::MVAValue(const reco::GsfElectron *ele,
   return mva;
 }
 
-
+double ElectronIDMVA::MVAValue(
+    const reco::GsfElectron *ele,
+    const edm::Event& evt,
+    const edm::EventSetup& es,
+    const edm::InputTag& ebRecHits,
+    const edm::InputTag& eeRecHits) {
+  EcalClusterLazyTools clusterTool(evt, es, ebRecHits, eeRecHits);
+  return MVAValue(ele, clusterTool);
+}
