@@ -67,3 +67,15 @@ The following electron IDs are embedded as userFloats:
    * wp95
    * WWID
  
+
+---+++ Jets
+
+The following jet IDs are embedded into the PFJets.
+
+These correspond to the PFJet IDs listed here:
+
+  https://twiki.cern.ch/twiki/bin/view/CMS/JetID
+
+   * idLoose
+   * idMedium
+   * idTight
