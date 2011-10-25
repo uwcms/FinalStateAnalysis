@@ -3,11 +3,13 @@
 #include <string>
 #include <vector>
 
+#include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/erase.hpp>
+#include <boost/algorithm/string/regex.hpp>
+
 #include "FWCore/Utilities/interface/RegexMatch.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
-#include <boost/regex.hpp>
 
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 #include "DataFormats/Luminosity/interface/LumiSummary.h"
@@ -26,8 +28,7 @@ vstring getGroups(const std::string& trgGrps) {
 
 vstring getPaths(const std::string& grp) {
   vstring tokens;
-  // FIXME replace || with |
-  boost::split(tokens, grp, boost::is_any_of("|"));
+  boost::split_regex(tokens, grp, boost::regex(" OR "));
   return tokens;
 }
 
@@ -102,15 +103,18 @@ std::vector<const pat::TriggerPath*> matchingTriggerPaths(
     const pat::TriggerEvent& result,
     const std::string& pattern, bool ez) {
   std::vector<const pat::TriggerPath*> output;
-  boost::regex matcher(ez ? edm::glob2reg(pattern) : pattern);
-  const pat::TriggerPathCollection* paths = result.paths();
-  for (size_t i = 0; i < paths->size(); ++i) {
-    //std::cout << " path: " << paths->at(i).name() << " " << pattern;
-    if (boost::regex_match(paths->at(i).name(), matcher)) {
-      output.push_back(&paths->at(i));
-      //std::cout << " match!";
+  try {
+    boost::regex matcher(ez ? edm::glob2reg(pattern) : pattern);
+    const pat::TriggerPathCollection* paths = result.paths();
+    for (size_t i = 0; i < paths->size(); ++i) {
+      if (boost::regex_match(paths->at(i).name(), matcher)) {
+        output.push_back(&paths->at(i));
+      }
     }
-    //std::cout << std::endl;
+  } catch (std::exception& e) {
+    edm::LogError("PathRegexParse") << "Caught exception when parsing"
+      << " trigger path regex expression: [" << pattern << "]" << std::endl;
+    throw;
   }
   return output;
 }
