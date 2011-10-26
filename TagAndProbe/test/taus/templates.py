@@ -3,7 +3,6 @@ import ROOT
 import pprint
 import FinalStateAnalysis.Utilities.RooFitTools as rft
 from FinalStateAnalysis.Utilities.Histo import Histo
-import FinalStateAnalysis.Utilities.HistoEqualizer as he
 from data_sources import data_sources, data_name_map
 
 regions = ['os_pass', 'os_fail', 'ss_pass', 'ss_fail']
@@ -187,9 +186,6 @@ def build_templates(ws):
             get_th1('data', 'qcdFailOS', 'Mvis')
     data_qcd_pass = get_th1('data', 'qcdPassSS', 'Mvis') + \
             get_th1('data', 'qcdPassOS', 'Mvis')
-
-    fail_pass_tr = he.HistoEqualizer(data_qcd_fail, data_qcd_pass)
-    #data_sigfailss_transformed = data_sigfailss.transform(fail_pass_tr)
 
     # Take template from PassSS data
     wjets_factor = get_th1('wjets', 'sigPassSS', 'AbsTauEta').Integral()/ \
