@@ -47,8 +47,15 @@ ExpressionNtuple<T>::ExpressionNtuple(const edm::ParameterSet& pset) {
   tree_ = NULL;
   typedef std::vector<std::string> vstring;
   vstring columnNames = pset.getParameterNames();
+  std::set<std::string> enteredAlready;
   for (size_t i = 0; i < columnNames.size(); ++i) {
     const std::string& colName = columnNames[i];
+    if (enteredAlready.count(colName)) {
+      throw cms::Exception("DuplicatedBranch")
+        << " The ntuple branch with name " << colName
+        << " has already been registered!" << std::endl;
+    }
+    enteredAlready.insert(colName);
     // Build the function object
     Column newCol(colName, pset.getParameter<std::string>(colName));
     columns_.push_back(newCol);
