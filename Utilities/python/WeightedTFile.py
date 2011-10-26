@@ -61,9 +61,10 @@ class WeightedTFile(object):
             if isinstance(self.event_count, str):
                 count_histo = self.file.Get(self.event_count)
                 if not count_histo:
-                    raise IOError("<WeightedTFile> Could not load event count "
-                                  "histo %s from file %s" % (self.event_count,
-                                                             self.file))
+                    raise IOError(
+                        "<WeightedTFile> Could not load event count "
+                        "histo %s from file %s" % (
+                            self.event_count, self.file))
                 assert(count_histo)
                 self.event_count = count_histo.Integral()
                 self.log.info("Got event cout %i", self.event_count)
