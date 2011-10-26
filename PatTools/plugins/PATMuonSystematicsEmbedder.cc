@@ -105,7 +105,8 @@ void PATMuonSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup&
     double correctedPtUp = correctedPt;
     double correctedPtDown = correctedPt;
 
-    if (!evt.isRealData()) {
+    // Not sure what is the correct prescription applying to both for now.
+    if (true || !evt.isRealData()) {
       correctedPt = (*corrector_.get())(muon);
       correctedPtUp = (*correctorUp_.get())(muon);
       correctedPtDown = (*correctorDown_.get())(muon);
