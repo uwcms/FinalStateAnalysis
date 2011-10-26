@@ -62,4 +62,14 @@ btag = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
-all = [decayMode, vlooseID, looseID, mediumID, jetpt, btag]
+tnpPresel = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(0.5),
+    nbins = cms.untracked.int32(2),
+    name = cms.untracked.string("${name}_TauTNPPresel"),
+    description = cms.untracked.string("${nicename} tau seed jet b-tag"),
+    plotquantity = cms.untracked.string('${getter}userInt("ps_sel_nom")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+all = [decayMode, vlooseID, looseID, mediumID, jetpt, btag, tnpPresel]
