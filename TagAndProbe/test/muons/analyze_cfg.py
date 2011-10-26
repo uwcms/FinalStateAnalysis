@@ -126,12 +126,22 @@ add_ntuple('run', 'userInt("run")')
 # Add our trilepton HLT paths
 emu_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
     name = "Mu8Ele17", nicename = "Mu(8) Ele(17)",
-    hlt_path = r"HLT_Mu8_Ele17_CaloId(T|L)(_CaloIsoVL|)_v\\d+")
+    hlt_path = r"HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+")
+add_ntuple(emu_trig_cfg.name.value(), emu_trig_cfg.plotquantity.value())
+
+emu_trig_cfg = PSetTemplate(plotting.trigger.hltGroup).replace(
+    name = "Mu8Ele17", nicename = "Mu(8) Ele(17)",
+    hlt_path = r"HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+")
 add_ntuple(emu_trig_cfg.name.value(), emu_trig_cfg.plotquantity.value())
 
 mue_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
     name = "Mu17Ele8", nicename = "Mu(17) Ele(8)",
-    hlt_path = r"HLT_Mu17_Ele8_CaloId(T|L)(_CaloIsoVL|)_v\\d+")
+    hlt_path = r"HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+")
+add_ntuple(mue_trig_cfg.name.value(), mue_trig_cfg.plotquantity.value())
+
+mue_trig_cfg = PSetTemplate(plotting.trigger.hltGroup).replace(
+    name = "Mu17Ele8", nicename = "Mu(17) Ele(8)",
+    hlt_path = r"HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+")
 add_ntuple(mue_trig_cfg.name.value(), mue_trig_cfg.plotquantity.value())
 
 ee_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
@@ -149,6 +159,16 @@ mm77_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
     hlt_path = r'HLT_DoubleMu7_v\\d+')
 add_ntuple(mm77_trig_cfg.name.value(), mm77_trig_cfg.plotquantity.value())
 
+mm77_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
+    name = "DoubleMuTriggers", nicename = "Double Muon 7/7 + 13/8",
+    hlt_path = r'HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+')
+add_ntuple(mm77_trig_cfg.name.value(), mm77_trig_cfg.plotquantity.value())
+
+mm77_trig_cfg = PSetTemplate(plotting.trigger.hltGroup).replace(
+    name = "DoubleMuTriggers", nicename = "Double Muon 7/7 + 13/8",
+    hlt_path = r'HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+')
+add_ntuple(mm77_trig_cfg.name.value(), mm77_trig_cfg.plotquantity.value())
+
 im24_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
     name = "IsoMu24", nicename = "Iso Mu 24",
     hlt_path = r'HLT_IsoMu24_v\\d+')
@@ -158,7 +178,6 @@ m30_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
     name = "Mu30", nicename = "Mu 30",
     hlt_path = r'HLT_Mu30_v\\d+')
 add_ntuple(m30_trig_cfg.name.value(), m30_trig_cfg.plotquantity.value())
-
 
 add_ntuple("puWeight", "evt().weight('puAvg')")
 
