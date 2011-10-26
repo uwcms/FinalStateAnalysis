@@ -112,6 +112,10 @@ class TauVarParsing(VarParsing.VarParsing):
                           self.type_map[type(value)],
                           "Custom arg: %s" % key)
 
+    # Override the stupid setupTags function
+    def setupTags(self, **kwargs):
+        pass
+
     def buildPoolSourceLumiMask(self):
         # From https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGoodLumiSectionsJSONFile#cmsRun
         jsonFile = self.lumiMask
