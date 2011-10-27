@@ -124,8 +124,11 @@ class TFileCollection(ROOTObjectCache.ROOTObjectCache):
         return CachingTTree.CachingTTree(cached_chain, base_path, self.cache_file)
 
     def Get(self, path):
+        self.log.info("Getting %s" % path)
         proto_obj = self.proto_file.Get(path)
         if isinstance(proto_obj, ROOT.TTree):
+            self.log.info(" == >  getting in Tree mode")
             return self.get_tree(path)
         elif isinstance(proto_obj, ROOT.TH1):
+            self.log.info(" == >  getting in TH1 mode")
             return self.get_histo(path)

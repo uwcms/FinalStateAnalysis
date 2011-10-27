@@ -22,6 +22,7 @@ Author: Evan K. Friis, UW Madison
 class CachingTTree(ROOTObjectCache.ROOTObjectCache):
     @staticmethod
     def get_key(path, variable, selection, binning):
+
         ''' Get a unique key for a TTree '''
         m = hashlib.md5()
         m.update(path)
@@ -37,7 +38,9 @@ class CachingTTree(ROOTObjectCache.ROOTObjectCache):
         self.cache_log = logging.getLogger('ROOTCache')
         self.cache = cache_file
         self.log.info("CachingTTree(%s) in cache file: %s", tree.GetName(),
-                      cache_file)
+                      cache_file.GetPath())
+        self.log.info("CachingTTree(%s) has %s subfiles", tree.GetName(),
+                      tree.GetListOfFiles().GetEntries())
         super(CachingTTree, self).__init__(cache_file)
         self.tree = tree
         assert(isinstance(self.tree, ROOT.TTree))
@@ -48,7 +51,11 @@ class CachingTTree(ROOTObjectCache.ROOTObjectCache):
         self.path = path
 
     def key(self, variable, selection, binning=None):
-        return self.get_key(self.path, variable, selection, binning)
+        self.log.debug("Getting key for path: %s, variable: %s, selection: %s"
+                       " binning: %s", self.path, variable, selection, binning)
+        key = self.get_key(self.path, variable, selection, binning)
+        self.log.debug("Got key: %s", key)
+        return key
 
     def draw(self, variable, selection, binning=None):
         key = self.key(variable, selection, binning)
@@ -57,6 +64,8 @@ class CachingTTree(ROOTObjectCache.ROOTObjectCache):
         # Try and get object from the cache
         cached = self.get(key)
         if cached:
+            self.log.debug("CachingTTree::object is cached! %s int = %s",
+                           cached, cached.Integral())
             return cached
         self.cache_log.info(
             "Drawing %s::(%s) from %i files",

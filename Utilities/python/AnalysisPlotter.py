@@ -88,6 +88,9 @@ class AnalysisSample(object):
         #print self.name
         #print self.file
         key = ":".join([tree, name])
+        #if key in self.computed_hists:
+            #return
+
         ttree = self.file.get_unweighted(tree)
         name = key.replace(':', '')
         self.check_hists('begin')
@@ -104,10 +107,10 @@ class AnalysisSample(object):
 
         histo = ttree.draw(var, selection, binning)
         assert(histo)
-        #ROOT.SetOwnership(histo, 1)
         self.computed_hists[key] = histo
-        self.log.debug("AnalysisSample(%s) registered computed hist %s = %s",
-                       self.name, key, self.computed_hists[key])
+        self.log.debug(
+            "AnalysisSample(%s) registered computed hist %s = %s, int = %s",
+            self.name, key, self.computed_hists[key], histo.Integral())
         self.check_hists('end')
         #self.log.debug("AnalysisSample(%s) all registered computed hist %s",
                        #self.name, self.computed_hists.keys())
@@ -117,8 +120,8 @@ class AnalysisSample(object):
             if not value:
                 self.log.warning(
                     "AnalysisSample(%s) @ %s computed hist: %s has become %s!"
-                    " (is none = %s)",
-                    self.name, label, key, value, value is None)
+                    " %s (is none = %s)",
+                    self.name, label, key, str(value), repr(value), value is None)
 
 
 class AnalysisMultiSample(AnalysisSample):
