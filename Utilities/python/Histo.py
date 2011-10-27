@@ -87,7 +87,8 @@ class Histo(object):
 
     '''
     def __init__(self, th1, **kwargs):
-        self.th1 = th1
+        self.th1 = th1.Clone()
+        self.th1.SetDirectory(0)
         # Check if we want to rebin the histogram
         if 'rebin' in kwargs:
             clone = self.th1.Clone()
