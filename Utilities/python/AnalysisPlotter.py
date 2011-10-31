@@ -107,6 +107,9 @@ class AnalysisSample(object):
 
         histo = ttree.draw(var, selection, binning)
         assert(histo)
+        histo = histo.Clone()
+        histo.SetDirectory(0)
+        ROOT.SetOwnership(histo, 0)
         self.computed_hists[key] = histo
         self.log.debug(
             "AnalysisSample(%s) registered computed hist %s = %s, int = %s",
