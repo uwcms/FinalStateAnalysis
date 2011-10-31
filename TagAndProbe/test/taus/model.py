@@ -175,6 +175,26 @@ def build_model(workspace, init_vals, fit_ss_fail=True, fit_ss_pass=True):
     ws.factory('n_wjets_sb_all_pass[%f, 0, 10000000]' % init_vals['n_wjets_all_pass'])
     ws.factory('n_wjets_sb_all_fail[%f, 0, 10000000]' % init_vals['n_wjets_all_fail'])
 
+    ## Constrain using Wjets sideband
+    #ws.factory('RooGaussian::n_wjets_ss_pass_con('
+               #'n_wjets_ss_pass, %f, %f)' %  (
+                   #init_vals['data_exp_wjets_ss_pass'] ,
+                   #0.1*init_vals['data_exp_wjets_ss_pass'])
+              #)
+
+    ## Constrain using Wjets sideband
+    #ws.factory('RooGaussian::n_wjets_os_pass_con('
+               #'n_wjets_os_pass, %f, %f)' %  (
+                   #init_vals['data_exp_wjets_os_pass'] ,
+                   #0.1*init_vals['data_exp_wjets_os_pass'])
+              #)
+
+    #ws.factory('RooGaussian::n_wjets_os_fail_con('
+               #'n_wjets_os_fail, %f, %f)' %  (
+                   #init_vals['data_exp_wjets_os_fail'] ,
+                   #0.1*init_vals['data_exp_wjets_os_fail'])
+              #)
+
     # ##############################################################################
     # Zll yields in all regions
     # ##############################################################################
@@ -348,7 +368,8 @@ def build_model(workspace, init_vals, fit_ss_fail=True, fit_ss_pass=True):
 
 if __name__ == "__main__":
     ws = ROOT.RooWorkspace("workspace")
-    templates.build_all_vars(ws)
+    templates.build_fit_vars(ws)
     templates.build_templates(ws)
     build_model(ws, templates.get_initial_sizes())
     ws.Print("v")
+    ws.pdf('n_wjets_os_fail_con').printCompactTree()

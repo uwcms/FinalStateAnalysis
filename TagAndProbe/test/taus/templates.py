@@ -1,9 +1,21 @@
 import os
+import sys
+import logging
 import ROOT
 import pprint
+
 import FinalStateAnalysis.Utilities.RooFitTools as rft
 from FinalStateAnalysis.Utilities.Histo import Histo
-from data_sources import data_sources, data_name_map
+#from data_sources import data_sources, data_name_map
+from data import get_th1, plotter
+
+logging.basicConfig(filename='example.log',level=logging.DEBUG, filemode='w')
+#h1 = logging.StreamHandler(sys.stdout)
+#h1.level = logging.DEBUG
+#logging.getLogger("AnalysisPlotter").addHandler(h1)
+#h2 = logging.StreamHandler(sys.stderr)
+#h2.level = logging.DEBUG
+#logging.getLogger("ROOTCache").addHandler(h2)
 
 regions = ['os_pass', 'os_fail', 'ss_pass', 'ss_fail']
 
@@ -12,38 +24,41 @@ ROOT.gROOT.SetStyle("Plain")
 def build_fit_vars(ws):
     ws.factory('abstaueta[1, 0, 2.1]')
     ws.factory('pzeta[1.0, -20, 30]')
-    ws.factory('mvis[1.0, 10, 200]')
+    ws.factory('mvis[1.0, 0, 300]')
     ws.factory('dca[1.0, 0, 3.0]')
     ws.factory('pt[1.0, 0, 80]')
-    ws.factory('dm[1.0, 0, 80]')
+    ws.factory('dm[1.0, -0.5, 20.5]')
     ws.factory('iso[1.0, 0, 0.3]')
-    ws.factory('mt[1.0, 0, 100]')
+    ws.factory('mt[1.0, 0, 40]')
+    ws.factory('charge[0.0, -2, 2]')
     #ws.defineSet('fit_vars', 'abstaueta,pzeta')
     #ws.defineSet('fit_vars', 'pt')
     #ws.defineSet('fit_vars', 'pt,pzeta')
     #ws.defineSet('fit_vars', 'dca')
     #ws.defineSet('fit_vars', 'dca,pzeta')
     #ws.defineSet('fit_vars', 'mvis,dm,pzeta')
-    ws.defineSet('fit_vars', 'mvis')
+    ws.defineSet('fit_vars', 'mvis,charge,dm')
     #ws.defineSet('all_vars', 'pzeta,mvis,abstaueta,pt,dca')
-    ws.defineSet('all_vars', 'pzeta,mvis,pt,dca,abstaueta,dm,iso,mt')
+    #ws.defineSet('all_vars', 'pzeta,mvis,pt,dca,abstaueta,dm,iso,mt')
+    ws.defineSet('all_vars', 'mvis,mt,charge,dm')
     #ws.defineSet('fit_vars', 'abstaueta')
-    ws.var("abstaueta").SetTitle("|#eta_{#tau}|")
-    ws.var("pzeta").SetTitle("P_{#zeta}")
+    #ws.var("abstaueta").SetTitle("|#eta_{#tau}|")
+    #ws.var("pzeta").SetTitle("P_{#zeta}")
     ws.var("mvis").SetTitle("m_{vis}")
-    ws.var("pt").SetTitle("p_{T}^{#tau}")
+    ws.var("charge").SetTitle("Muon charge")
+    #ws.var("pt").SetTitle("p_{T}^{#tau}")
     ws.var("dm").SetTitle("Tau Decay Mode")
-    ws.var("iso").SetTitle("Muon Rel. Iso")
+    #ws.var("iso").SetTitle("Muon Rel. Iso")
     ws.var("mt").SetTitle("MT1MEt")
 
-def get_th1(sample, region, histo, rebin=None):
-    th1 = data_sources[data_name_map[sample]]['file'].get_weighted(os.path.join(
-        "ohyeah", region, histo))
-    assert(th1)
-    if rebin and rebin > 1:
-        return Histo(th1, rebin = rebin)
-    else:
-        return Histo(th1)
+#def get_th1(sample, region, histo, rebin=None):
+    #th1 = data_sources[data_name_map[sample]]['file'].get_weighted(os.path.join(
+        #"ohyeah", region, histo))
+    #assert(th1)
+    #if rebin and rebin > 1:
+        #return Histo(th1, rebin = rebin)
+    #else:
+        #return Histo(th1)
 
 def ws_importer(ws):
     # Work around the limitation reserved word limitation affecting
@@ -54,25 +69,27 @@ def ws_importer(ws):
 def build_templates(ws):
 
     rooVars = {
-        'abstaueta' : ws.var('abstaueta'),
-        'pzeta' : ws.var('pzeta'),
-        'dca' : ws.var('dca'),
+        #'abstaueta' : ws.var('abstaueta'),
+        #'pzeta' : ws.var('pzeta'),
+        #'dca' : ws.var('dca'),
         'mvis' : ws.var('mvis'),
-        'pt' : ws.var('pt'),
+        'charge' : ws.var('charge'),
+        #'pt' : ws.var('pt'),
         'dm' : ws.var('dm'),
-        'iso' : ws.var('iso'),
+        #'iso' : ws.var('iso'),
         'mt' : ws.var('mt'),
     }
 
     rebinning = {
-        'abstaueta' : 10,
-        'pzeta' : 5,
-        'dca' : 4,
-        'mvis' : 4,
+        'abstaueta' : 1,
+        'pzeta' : 1,
+        'dca' : 1,
+        'mvis' : 1,
         'pt' : 1,
         'dm' : 1,
         'iso' : 1,
-        'mt' : 4,
+        'mt' : 1,
+        'charge' : 1,
     }
 
     rebinning_region = {
@@ -108,6 +125,7 @@ def build_templates(ws):
         'dm' : 'TauDecayMode',
         'iso' : 'MuonIso',
         'mt' : 'MT1',
+        'charge' : 'MuonCharge',
     }
 
     importer = ws_importer(ws)
@@ -116,7 +134,8 @@ def build_templates(ws):
     # Make QCD templates
     # #########################################################################
     #  We take everything right now from the anti-iso region, except Mvis?
-    for var in ['abstaueta', 'pzeta', 'dca', 'pt', 'mt']:
+    #for var in ['abstaueta', 'pzeta', 'dca', 'pt', 'mt']:
+    for var in ['mt', 'dm']:
         for region in regions:
             print var, region
             # Get the anti-iso region
@@ -133,7 +152,8 @@ def build_templates(ws):
             #importer(datahist)
 
     # From MC
-    for var in ['dm', 'iso']:
+    #for var in ['dm', 'iso']:
+    for var in ['charge']:
         for region in regions:
             print var, region
             histo = get_th1('qcd', 'sig' + folder_map[region], var_map[var],
@@ -150,11 +170,11 @@ def build_templates(ws):
     #for var in ['mvis']:
         #for region in regions:
             #print var, region
-            ## Get the anti-iso region
+             #Get the anti-iso region
             #histo = get_th1('qcd', 'qcd' + folder_map[region], var_map[var],
                             #rebin=rebinning[var]*rebinning_region[region])
-            ## Get as roodatahist.  We need to keep this, because other wise
-            ## the GC will kill it and the PDF references it.
+             #Get as roodatahist.  We need to keep this, because other wise
+             #the GC will kill it and the PDF references it.
             #datahist, datapdf = histo.makeRooHistPdf(rooVars[var])
             #pdf_name = 'pdf_qcd_%s_%s' % (region, rooVars[var].GetName())
             #datahist_name = pdf_name + '_hist'
@@ -163,8 +183,12 @@ def build_templates(ws):
             #importer(datapdf)
 
     # First correct W+jets contribution to sigFailSS
-    wjets_factor = get_th1('wjets', 'sigFailSS', 'AbsTauEta').Integral()/ \
-            get_th1('wjets', 'wjetsFailSS', 'AbsTauEta').Integral()
+    wjetsSigFailSS = get_th1('wjets', 'sigFailSS', 'AbsTauEta').Integral()
+    wjetsWjetsFailSS = get_th1('wjets', 'wjetsFailSS', 'AbsTauEta').Integral()
+    print wjetsSigFailSS
+    print wjetsWjetsFailSS
+
+    wjets_factor = wjetsSigFailSS/wjetsWjetsFailSS
 
     wjets_yield = wjets_factor*get_th1(
         'data', 'wjetsFailSS', 'AbsTauEta').Integral()
@@ -181,11 +205,13 @@ def build_templates(ws):
 
     data_sigfailss = data_sigfailss - wjets_shape
 
-    # Figure out the pass shape from the fail shape
-    data_qcd_fail = get_th1('data', 'qcdFailSS', 'Mvis') + \
-            get_th1('data', 'qcdFailOS', 'Mvis')
-    data_qcd_pass = get_th1('data', 'qcdPassSS', 'Mvis') + \
-            get_th1('data', 'qcdPassOS', 'Mvis')
+    # Subtract the Zfakes and ttbar
+    zjets_sigfailss = get_th1('zjets', 'sigFailSS/fakeTau', 'Mvis')
+    ttbar_sigfailss = get_th1('ttbar', 'sigFailSS', 'Mvis')
+
+    data_sigfailss = data_sigfailss - zjets_sigfailss
+    data_sigfailss = data_sigfailss - ttbar_sigfailss
+    data_sigfailss.zeroOutNegativeBins()
 
     # Take template from PassSS data
     wjets_factor = get_th1('wjets', 'sigPassSS', 'AbsTauEta').Integral()/ \
@@ -202,7 +228,17 @@ def build_templates(ws):
         'data', 'sigPassSS', 'Mvis',
         rebin=rebinning['mvis']*rebinning_region['os_pass'])
 
-    data_sigpassss_corrected = data_sigpassss - wjets_shape
+    # Subtract the Zfakes and ttbar
+    zjets_sigpassss = get_th1('zjets', 'sigPassSS/fakeTau', 'Mvis')
+    ttbar_sigpassss = get_th1('ttbar', 'sigPassSS', 'Mvis')
+
+    data_sigpassss = data_sigpassss - wjets_shape
+    data_sigpassss = data_sigpassss - zjets_sigpassss
+    data_sigpassss = data_sigpassss - ttbar_sigpassss
+
+    print "AHHHHHH"
+    print data_sigpassss.Integral()
+    data_sigpassss.zeroOutNegativeBins()
 
     for var in ['mvis']:
         for region in regions:
@@ -211,7 +247,7 @@ def build_templates(ws):
                 histo = data_sigfailss
             else:
                 #histo = data_sigfailss_transformed
-                histo = data_sigpassss_corrected
+                histo = data_sigpassss
             # Get as roodatahist.  We need to keep this, because other wise
             # the GC will kill it and the PDF references it.
             datahist, datapdf = histo.makeRooHistPdf(rooVars[var])
@@ -225,7 +261,8 @@ def build_templates(ws):
     # Make Wjets templates
     # #########################################################################
     #  Pzeta and Mvis comes from MC
-    for var in ['pzeta', 'mvis', 'mt']:
+    #for var in ['pzeta', 'mvis', 'mt']:
+    for var in ['mvis', 'mt', 'charge', 'dm']:
         for region in regions:
             histo = get_th1('wjets', 'sig' + folder_map[region], var_map[var],
                             rebin=rebinning[var]*rebinning_region[region])
@@ -237,7 +274,8 @@ def build_templates(ws):
             importer(datapdf)
 
     # Eta comes from data
-    for var in ['abstaueta', 'dca', 'pt', 'dm', 'iso']:
+    #for var in ['abstaueta', 'dca', 'pt', 'dm', 'iso']:
+    for var in []:
         for region in regions:
             histo = get_th1('data', 'wjets' + folder_map[region], var_map[var],
                             rebin=rebinning[var]*rebinning_region[region])
@@ -252,7 +290,8 @@ def build_templates(ws):
     # Make ZTT templates
     # #########################################################################
     #  Everything comes from MC, taking only real taus
-    for var in ['abstaueta', 'pzeta', 'mvis', 'dca', 'pt', 'dm', 'iso', 'mt']:
+    #for var in ['abstaueta', 'pzeta', 'mvis', 'dca', 'pt', 'dm', 'iso', 'mt']:
+    for var in ['mvis', 'mt', 'charge', 'dm']:
         for region in regions:
             # Get the anti-iso region
             histo = get_th1(
@@ -270,8 +309,10 @@ def build_templates(ws):
     # #########################################################################
     # Make ZTT (fake) templates
     # #########################################################################
-    for var in ['abstaueta', 'pzeta', 'mvis', 'dca', 'pt', 'dm', 'iso', 'mt']:
+    #for var in ['abstaueta', 'pzeta', 'mvis', 'dca', 'pt', 'dm', 'iso', 'mt']:
+    for var in ['mvis', 'mt', 'charge', 'dm']:
         for region in regions:
+            print var, region
             # We can't get the templates from the PassSS region, since the
             # statistics is really poor.  So we don't apply any TauID when
             # building the templates.
@@ -311,7 +352,8 @@ def build_templates(ws):
     # Make ttbar templates
     # #########################################################################
     #  Everything comes from MC
-    for var in ['abstaueta', 'pzeta', 'mvis', 'dca', 'pt', 'dm', 'iso', 'mt']:
+    #for var in ['abstaueta', 'pzeta', 'mvis', 'dca', 'pt', 'dm', 'iso', 'mt']:
+    for var in ['mvis', 'mt', 'charge', 'dm']:
         for region in regions:
             # Get the anti-iso region
             histo = get_th1(
@@ -379,21 +421,22 @@ def build_templates(ws):
 
 def get_initial_sizes(fit_fail_ss = False, fit_pass_ss = True):
     output = {}
-    for sample in ['wjets', 'qcd', 'ttbar', 'data']:
-        pass_os = get_th1(sample, 'sigPassOS', 'AbsTauEta').Integral()
-        pass_ss = get_th1(sample, 'sigPassSS', 'AbsTauEta').Integral()
+
+    for sample in ['qcd', 'ttbar', 'data']:
+        print sample
         fail_os = get_th1(sample, 'sigFailOS', 'AbsTauEta').Integral()
         fail_ss = get_th1(sample, 'sigFailSS', 'AbsTauEta').Integral()
+        pass_os = get_th1(sample, 'sigPassOS', 'AbsTauEta').Integral()
+        pass_ss = get_th1(sample, 'sigPassSS', 'AbsTauEta').Integral()
         output['n_%s_os_pass' % sample]  = pass_os
         output['n_%s_os_fail' % sample]  = fail_os
         output['n_%s_ss_pass' % sample]  = pass_ss
         output['n_%s_ss_fail' % sample]  = fail_ss
         output['n_%s_all_pass' % sample] = pass_os
-        if True or fit_pass_ss:
-            output['n_%s_all_pass' % sample] += pass_ss
-        output['n_%s_all_fail' % sample] = fail_os
-        if True or fit_fail_ss: # always do this because of layout of fit model
-            output['n_%s_all_fail' % sample] += fail_ss
+        output['n_%s_all_pass' % sample] += pass_ss
+        #output['n_%s_all_fail' % sample] = fail_os
+        #if True or fit_fail_ss: # always do this because of layout of fit model
+            #output['n_%s_all_fail' % sample] += fail_ss
 
     # Real ZTT taus
     pass_os = get_th1('zjets', 'sigPassOS/realTau', 'AbsTauEta').Integral()
@@ -402,11 +445,8 @@ def get_initial_sizes(fit_fail_ss = False, fit_pass_ss = True):
     fail_ss = get_th1('zjets', 'sigFailSS/realTau', 'AbsTauEta').Integral()
     sample = 'ztt'
     output['n_%s_all_pass' % sample] = pass_os
-    if fit_pass_ss:
-        output['n_%s_all_pass' % sample] += pass_ss
-    output['n_%s_all_fail' % sample] = fail_os
-    if fit_fail_ss:
-        output['n_%s_all_fail' % sample] += fail_ss
+    output['n_%s_all_pass' % sample] += pass_ss
+    output['n_%s_os_fail' % sample] = fail_os
 
     # ZTT fake contribution
     pass_os = get_th1('zjets', 'sigPassOS/fakeTau', 'AbsTauEta').Integral()
@@ -415,11 +455,24 @@ def get_initial_sizes(fit_fail_ss = False, fit_pass_ss = True):
     fail_ss = get_th1('zjets', 'sigFailSS/fakeTau', 'AbsTauEta').Integral()
     sample = 'zjetsfakes'
     output['n_%s_all_pass' % sample] = pass_os
-    if True or fit_pass_ss:
-        output['n_%s_all_pass' % sample] += pass_ss
-    output['n_%s_all_fail' % sample] = fail_os
-    if True or fit_fail_ss:
-        output['n_%s_all_fail' % sample] += fail_ss
+    output['n_%s_all_pass' % sample] += pass_ss
+    output['n_%s_os_fail' % sample] = fail_os
+
+    def get_expected_wjets(region):
+        # Make the guess for the wjets sideband constraint
+        mc_wjets_cr = get_th1('wjets', 'wjets' + region, 'AbsTauEta').Integral()
+        mc_wjets_sr = get_th1('wjets', 'sig' + region, 'AbsTauEta').Integral()
+        data_wjets_cr = get_th1('data', 'wjets' + region, 'AbsTauEta').Integral()
+
+        return data_wjets_cr*(mc_wjets_sr/mc_wjets_cr)
+
+    # Use data expectation of Wjets
+    output['data_exp_wjets_os_fail'] = get_expected_wjets('FailOS')
+    output['data_exp_wjets_os_pass'] = get_expected_wjets('PassOS')
+    output['data_exp_wjets_ss_pass'] = get_expected_wjets('PassSS')
+    output['n_wjets_all_pass'] = output['data_exp_wjets_ss_pass'] + \
+            output['data_exp_wjets_os_pass']
+    output['n_wjets_os_fail'] = output['data_exp_wjets_os_fail']
 
     return output
 
