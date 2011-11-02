@@ -34,12 +34,12 @@ PATElectronMVAIDEmbedder::PATElectronMVAIDEmbedder(const edm::ParameterSet& pset
   /*code*/
 
   std::string method_ = pset.getParameter<std::string>("methodName");
-  edm::FileInPath Subdet0Pt10To20Weights = pset.getParameter<edm::FileInPath>("Subdet0PtLowPtWeights");
-  edm::FileInPath Subdet1Pt10To20Weights = pset.getParameter<edm::FileInPath>("Subdet1PtLowPtWeights");
-  edm::FileInPath Subdet2Pt10To20Weights = pset.getParameter<edm::FileInPath>("Subdet2PtLowPtWeights");
-  edm::FileInPath Subdet0Pt20ToInfWeights = pset.getParameter<edm::FileInPath>("Subdet0Pt20ToInfWeights");
-  edm::FileInPath Subdet1Pt20ToInfWeights = pset.getParameter<edm::FileInPath>("Subdet1Pt20ToInfWeights");
-  edm::FileInPath Subdet2Pt20ToInfWeights = pset.getParameter<edm::FileInPath>("Subdet2Pt20ToInfWeights");
+  edm::FileInPath Subdet0Pt10To20Weights = pset.getParameter<edm::FileInPath>("Subdet0LowPtWeights");
+  edm::FileInPath Subdet1Pt10To20Weights = pset.getParameter<edm::FileInPath>("Subdet1LowPtWeights");
+  edm::FileInPath Subdet2Pt10To20Weights = pset.getParameter<edm::FileInPath>("Subdet2LowPtWeights");
+  edm::FileInPath Subdet0HighPtWeights = pset.getParameter<edm::FileInPath>("Subdet0HighPtWeights");
+  edm::FileInPath Subdet1HighPtWeights = pset.getParameter<edm::FileInPath>("Subdet1HighPtWeights");
+  edm::FileInPath Subdet2HighPtWeights = pset.getParameter<edm::FileInPath>("Subdet2HighPtWeights");
   ElectronIDMVA::MVAType mvaType = static_cast<ElectronIDMVA::MVAType>(
       pset.getParameter<unsigned int>("mvaType"));
 
@@ -48,9 +48,9 @@ PATElectronMVAIDEmbedder::PATElectronMVAIDEmbedder(const edm::ParameterSet& pset
       Subdet0Pt10To20Weights.fullPath(),
       Subdet1Pt10To20Weights.fullPath(),
       Subdet2Pt10To20Weights.fullPath(),
-      Subdet0Pt20ToInfWeights.fullPath(),
-      Subdet1Pt20ToInfWeights.fullPath(),
-      Subdet2Pt20ToInfWeights.fullPath(),
+      Subdet0HighPtWeights.fullPath(),
+      Subdet1HighPtWeights.fullPath(),
+      Subdet2HighPtWeights.fullPath(),
       mvaType);
 
   produces<pat::ElectronCollection>();
