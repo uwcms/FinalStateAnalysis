@@ -21,12 +21,16 @@ def build_data(jobid, source, target_lumi, skips, count='emt/skimCounter'):
     raw_samples = {}
     # Build the basic weighted files
     for name, info in datadefs.datadefs.iteritems():
+        if 'VH' not in info['analyses']:
+            continue
         log.info("Building sample %s", name)
+
         if skip_sample(name, skips):
             continue
         if not glob.glob(get_result_dir(jobid, source, name)):
             log.warning("No files - skipping sample %s!", name)
             continue
+
         collection = TFileCollection.TFileCollection(
             get_result_dir(jobid, source, name))
 
@@ -53,6 +57,8 @@ def build_data(jobid, source, target_lumi, skips, count='emt/skimCounter'):
 
     # Build the composite files
     for name, subsample_names in datadefs.data_name_map.iteritems():
+        if 'VH' not in datadefs.datadefs[subsample_names[0]]['analyses']:
+            continue
         #print subsample_names
         subsamples = [raw_samples[x]['sample'] for x in subsample_names
                       if not skip_sample(x, skips)]
