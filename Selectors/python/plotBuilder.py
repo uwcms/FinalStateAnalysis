@@ -5,6 +5,15 @@ Add the general set of plots in the ntuple.
 Returns (histos, ntuple), where histos is a cms.PSet() for a HistoFolder
 and ntuple is a PSet() of ntuple commands.
 
+Inputs are a list of dicts which define how each leg works.
+
+Options:
+--------
+
+* puWeight = [ list of pu weights to add ]
+* triggers = [ list of triggers to add ]
+
+
 '''
 
 import FWCore.ParameterSet.Config as cms
