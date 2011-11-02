@@ -14,7 +14,11 @@ addpkg -Q CommonTools/Utils V00-04-02
 patch -N -p0 < FinalStateAnalysis/recipe/patches/V00-04-02_CommonTools_Utils_Add2DHistoFeature.patch
 
 echo "Checking out pat support for new tau discriminators"
-addpkg -Q PhysicsTools/PatAlgos # For new tau discriminators
+addpkg -Q PhysicsTools/PatAlgos 
+# For new tau discriminators
 cvs up -r 1.43 PhysicsTools/PatAlgos/python/tools/tauTools.py
+# For bug fixes (mainly where runOnData overwrote the JEC
+# http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/CMSSW/PhysicsTools/PatAlgos/python/tools/coreTools.py?revision=1.33.4.2&view=markup
+cvs up -r 1.33.4.6 PhysicsTools/PatAlgos/python/tools/coreTools.py
 
 echo "Now run: scram b -j 4"

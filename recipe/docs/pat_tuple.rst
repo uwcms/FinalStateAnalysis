@@ -1,7 +1,6 @@
 Philosophy
 ==========
 
-
 The final state analysis package is built around the data format PATFinalState.
 This abstract which encapsulates all of the interesting information needed by
 the analyst.   Another way of imagining the PATFinalState is that it represents
@@ -114,6 +113,29 @@ They correspond to the official PFJet IDs listed on the `JetMET twiki`_.
 * ``idLoose``
 * ``idMedium``
 * ``idTight``
+
+Corrections
+'''''''''''
+
+The L1FastJet, L2Relative, L3Absolute corrections are applied to MC & Data.  The
+L2L3Residual corrections are additionally applied to Data. Reference:
+`IntroToJEC twiki`_.
+
+.. _IntroToJEC twiki: https://twiki.cern.ch/twiki/bin/view/CMS/IntroToJEC
+
+The uncorrected, and 1 sigma uncertainties on the JEC are available from the
+``pat::Jets`` via;
+
+* ``userCand("uncorr")``
+* ``userCand("jes+")``
+* ``userCand("jes-")``
+
+
+Taus
+----
+
+The seed jets are available via the ``userCand('patJet')`` function.
+
 
 
 Utilities
