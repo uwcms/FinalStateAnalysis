@@ -81,3 +81,5 @@ muon_charge_ass('data', 'wjetsPass')
 muon_charge_ass('wjets', 'sigPass')
 muon_charge_ass('zjets', 'sigPass/realTau')
 muon_charge_ass('zjets', 'sigPass/fakeTau')
+
+# Check W extrapolation error

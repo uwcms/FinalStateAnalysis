@@ -113,7 +113,7 @@ def build_model(workspace, init_vals):
                    #0.1*init_vals['data_exp_wjets_os_fail'])
               #)
 
-    ws.factory('RooGaussian::n_wjets_all_pass_con(n_wjets_all_pass_scale, 1., 0.07)')
+    ws.factory('RooGaussian::n_wjets_all_pass_con(n_wjets_all_pass_scale, 1., 0.05)')
     ws.factory('RooGaussian::n_wjets_os_fail_con(n_wjets_os_fail_scale, 1., 0.05)')
 
     # ##############################################################################
@@ -151,8 +151,10 @@ def build_model(workspace, init_vals):
               "'@0 - @1', {n_ttbar_all_pass, n_ttbar_ss_pass})")
 
     # Constraint
-    ws.factory('RooGaussian::n_ttbar_all_pass_con(n_ttbar_all_pass_scale, 1, 0.086)')
-    ws.factory('RooGaussian::n_ttbar_os_fail_con(n_ttbar_os_fail_scale, 1, 0.086)')
+    #ws.factory('RooGaussian::n_ttbar_all_pass_con(n_ttbar_all_pass_scale, 1, 0.086)')
+    #ws.factory('RooGaussian::n_ttbar_os_fail_con(n_ttbar_os_fail_scale, 1, 0.086)')
+    ws.factory('RooGaussian::n_ttbar_all_pass_con(n_ttbar_all_pass_scale, 1, 0.1)')
+    ws.factory('RooGaussian::n_ttbar_os_fail_con(n_ttbar_os_fail_scale, 1, 0.1)')
 
     # ##############################################################################
     # Total yield in each region
@@ -191,7 +193,6 @@ def build_model(workspace, init_vals):
     #ws.factory('RooPoisson::ss_pass_obs_con(n_all_ss_pass, n_data_ss_pass_obs[%f])' % init_vals['n_data_ss_pass'])
 
     #ws.var('tau_charge_misid').setConstant(True)
-    #ws.factory('RooGaussian::tau_charge_misid_con(tau_charge_misid, 0.01, 0.03)')
 
     # Get all the constraints
     con_pdf = []

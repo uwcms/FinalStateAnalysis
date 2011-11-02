@@ -60,7 +60,8 @@ for var in rft.iter_collection(fit_vars):
         data = data_sets[(var.GetName(), region)]
         options = ROOT.RooLinkedList()
         #if True or not nlls:
-        if True or not nlls:
+        #if True or not nlls:
+        if 'os_pass' in region and 'mvis' in var.GetName():
             options.Add(ROOT.RooFit.ExternalConstraints(
                 ROOT.RooArgSet(ws.pdf('constraints'))))
         options.Add(ROOT.RooFit.Extended(True))
@@ -116,7 +117,7 @@ for region in templates.regions:
             print norm_arg
             normalization = norm_arg.getVal()
             data.plotOn(frame)
-            model.plotOn(frame, ROOT.RooFit.Normalization(normalization, ROOT.RooAbsReal.NumEvent))
+            #model.plotOn(frame, ROOT.RooFit.Normalization(normalization, ROOT.RooAbsReal.NumEvent))
 
             for stack_arg in stack_args:
                 #continue
@@ -142,10 +143,10 @@ for region in templates.regions:
             title += type
             frame.SetTitle(title)
             legend.Draw()
-            #canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result.pdf")
+            canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result.pdf")
             canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result.png")
             canvas.SetLogy(True)
-            #canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result_log.pdf")
+            canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result_log.pdf")
             canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result_log.png")
             canvas.SetLogy(False)
 
@@ -156,9 +157,13 @@ pass_ss =  templates.get_th1('zjets', 'sigPassSS/realTau', 'AbsTauEta').Integral
 
 mc_eff = (pass_os/(pass_os + fail_os))
 mc_eff_err = math.sqrt(pass_os*(1 - mc_eff))/(pass_os + fail_os)
+
+mc_charge_eff = (pass_ss/(pass_os + pass_ss))
+mc_charge_eff_error = math.sqrt(pass_ss*(1 - mc_charge_eff))/(pass_os + pass_ss)
+
 print "MC eff:", "%0.4f +/- %0.4f" % (mc_eff , mc_eff_err)
 print "Measured eff:", "%0.4f" % ws.var('tau_id_eff').getVal(), "+/-", "%0.4f" % ws.var('tau_id_eff').getError()
-print "MC charge:", "%0.4f" % (pass_ss/(pass_os + pass_ss))
+print "MC charge:", "%0.4f" % mc_charge_eff, "+/-", "%0.4f" % mc_charge_eff_error
 print "Measured charge:", "%0.4f" % ws.var('tau_charge_misid').getVal(), "+/-", "%0.4f" % ws.var('tau_charge_misid').getError()
 
 #ws.var('tau_id_eff').Print()

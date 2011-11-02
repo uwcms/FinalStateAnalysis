@@ -40,24 +40,25 @@ process.common = cms.PSet(
 process.steering.ignored_cuts = cms.vstring()
 
 # Define the configuration for each leg.
-leg1 = {
+mu_leg1 = {
     'name' : 'Muon1', 'getter' :'daughter(0).', 'nicename' : 'Muon (1)',
     'index' : 0,
 }
-leg2 = {
+mu_leg2 = {
     'name' : 'Muon2', 'getter' :'daughter(1).', 'nicename' : 'Muon (2)',
     'index' : 1,
 }
+
+e_leg2 = {
+    'name' : 'Electron', 'getter' :'daughter(1).', 'nicename' : 'Electron',
+    'index' : 1,
+}
+
 # Define the selections
 selections = cms.VPSet(
     ###########################################################################
     # Uniqueness cut
     ###########################################################################
-    # Trigger on single muon events with HLT_Mu30
-    PSetTemplate(selectors.trigger.hlt).replace(
-        name = 'HLT_Mu30', nicename = 'HLT Muon 30 result',
-        hlt_path = r'HLT_Mu30_v\\d+',
-    ),
 
     # Initially, there is double counting in the FinalStates. i.e. for muons A
     # and B, there is an AB final state and a BA final state.  Here, we select
@@ -72,23 +73,10 @@ selections = cms.VPSet(
     PSetTemplate(selectors.candidate.eta).replace(
         threshold = '2.1', **leg1),
     PSetTemplate(selectors.candidate.pt).replace(
-        threshold = '31', **leg1),
+        threshold = '15', **leg1),
     # Require WWID on the tag muon
     PSetTemplate(selectors.muons.id).replace(
         muID = 'WWID', **leg1),
-
-    # Muon 0 is now defined as our tag muon.  Require it's matched to the firing
-    # trigger.
-    PSetTemplate(selectors.muons.hltSingleMu30L3Filtered30).replace(
-        name = 'TagMuon', nicename = 'Tag muon',
-        index = 0
-    ),
-
-    # Some stupid cuts on the probe muon
-    PSetTemplate(selectors.candidate.eta).replace(
-        threshold = '2.5', **leg2),
-    PSetTemplate(selectors.candidate.pt).replace(
-        threshold = '5', **leg2),
 )
 
 # Define what we are going to plot
@@ -101,7 +89,7 @@ plots = cms.PSet(
 def add_ntuple(name, function):
     setattr(plots.ntuple, name, cms.string(function))
 
-for leg in [leg1, leg2]:
+for leg in [mu_leg1, leg2]:
     for plot in plotting.muons.all:
         plot_cfg = PSetTemplate(plot).replace(**leg)
         add_ntuple(plot_cfg.name.value(), plot_cfg.plotquantity.value())

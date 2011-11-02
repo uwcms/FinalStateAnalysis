@@ -1,5 +1,6 @@
 import os
 import sys
+import math
 import logging
 import ROOT
 import pprint
@@ -8,6 +9,9 @@ import FinalStateAnalysis.Utilities.RooFitTools as rft
 from FinalStateAnalysis.Utilities.Histo import Histo
 #from data_sources import data_sources, data_name_map
 from data import get_th1, plotter
+
+def quad(*xs):
+    return math.sqrt(sum(x*x for x in xs))
 
 logging.basicConfig(filename='example.log',level=logging.DEBUG, filemode='w')
 #h1 = logging.StreamHandler(sys.stdout)
@@ -37,10 +41,10 @@ def build_fit_vars(ws):
     #ws.defineSet('fit_vars', 'dca')
     #ws.defineSet('fit_vars', 'dca,pzeta')
     #ws.defineSet('fit_vars', 'mvis,dm,pzeta')
-    ws.defineSet('fit_vars', 'mvis,charge,dm')
+    ws.defineSet('fit_vars', 'mvis,charge')
     #ws.defineSet('all_vars', 'pzeta,mvis,abstaueta,pt,dca')
     #ws.defineSet('all_vars', 'pzeta,mvis,pt,dca,abstaueta,dm,iso,mt')
-    ws.defineSet('all_vars', 'mvis,mt,charge,dm')
+    ws.defineSet('all_vars', 'mvis,mt,charge,dm,abstaueta')
     #ws.defineSet('fit_vars', 'abstaueta')
     #ws.var("abstaueta").SetTitle("|#eta_{#tau}|")
     #ws.var("pzeta").SetTitle("P_{#zeta}")
@@ -69,7 +73,7 @@ def ws_importer(ws):
 def build_templates(ws):
 
     rooVars = {
-        #'abstaueta' : ws.var('abstaueta'),
+        'abstaueta' : ws.var('abstaueta'),
         #'pzeta' : ws.var('pzeta'),
         #'dca' : ws.var('dca'),
         'mvis' : ws.var('mvis'),
@@ -135,7 +139,7 @@ def build_templates(ws):
     # #########################################################################
     #  We take everything right now from the anti-iso region, except Mvis?
     #for var in ['abstaueta', 'pzeta', 'dca', 'pt', 'mt']:
-    for var in ['mt', 'dm']:
+    for var in ['mt', 'dm', 'abstaueta']:
         for region in regions:
             print var, region
             # Get the anti-iso region
@@ -207,10 +211,12 @@ def build_templates(ws):
 
     # Subtract the Zfakes and ttbar
     zjets_sigfailss = get_th1('zjets', 'sigFailSS/fakeTau', 'Mvis')
+    sig_sigfailss = get_th1('zjets', 'sigFailSS/realTau', 'Mvis')
     ttbar_sigfailss = get_th1('ttbar', 'sigFailSS', 'Mvis')
 
     data_sigfailss = data_sigfailss - zjets_sigfailss
     data_sigfailss = data_sigfailss - ttbar_sigfailss
+    data_sigfailss = data_sigfailss - sig_sigfailss
     data_sigfailss.zeroOutNegativeBins()
 
     # Take template from PassSS data
@@ -262,7 +268,7 @@ def build_templates(ws):
     # #########################################################################
     #  Pzeta and Mvis comes from MC
     #for var in ['pzeta', 'mvis', 'mt']:
-    for var in ['mvis', 'mt', 'charge', 'dm']:
+    for var in ['mvis', 'mt', 'charge', 'dm', 'abstaueta']:
         for region in regions:
             histo = get_th1('wjets', 'sig' + folder_map[region], var_map[var],
                             rebin=rebinning[var]*rebinning_region[region])
@@ -291,7 +297,7 @@ def build_templates(ws):
     # #########################################################################
     #  Everything comes from MC, taking only real taus
     #for var in ['abstaueta', 'pzeta', 'mvis', 'dca', 'pt', 'dm', 'iso', 'mt']:
-    for var in ['mvis', 'mt', 'charge', 'dm']:
+    for var in ['mvis', 'mt', 'charge', 'dm', 'abstaueta']:
         for region in regions:
             # Get the anti-iso region
             histo = get_th1(
@@ -310,7 +316,7 @@ def build_templates(ws):
     # Make ZTT (fake) templates
     # #########################################################################
     #for var in ['abstaueta', 'pzeta', 'mvis', 'dca', 'pt', 'dm', 'iso', 'mt']:
-    for var in ['mvis', 'mt', 'charge', 'dm']:
+    for var in ['mvis', 'mt', 'charge', 'dm', 'abstaueta']:
         for region in regions:
             print var, region
             # We can't get the templates from the PassSS region, since the
@@ -353,7 +359,7 @@ def build_templates(ws):
     # #########################################################################
     #  Everything comes from MC
     #for var in ['abstaueta', 'pzeta', 'mvis', 'dca', 'pt', 'dm', 'iso', 'mt']:
-    for var in ['mvis', 'mt', 'charge', 'dm']:
+    for var in ['mvis', 'mt', 'charge', 'dm', 'abstaueta']:
         for region in regions:
             # Get the anti-iso region
             histo = get_th1(
@@ -460,18 +466,39 @@ def get_initial_sizes(fit_fail_ss = False, fit_pass_ss = True):
 
     def get_expected_wjets(region):
         # Make the guess for the wjets sideband constraint
-        mc_wjets_cr = get_th1('wjets', 'wjets' + region, 'AbsTauEta').Integral()
-        mc_wjets_sr = get_th1('wjets', 'sig' + region, 'AbsTauEta').Integral()
-        data_wjets_cr = get_th1('data', 'wjets' + region, 'AbsTauEta').Integral()
+        mc_wjets_cr_th1 = get_th1('wjets', 'wjets' + region, 'AbsTauEta')
+        mc_wjets_sr_th1 = get_th1('wjets', 'sig' + region, 'AbsTauEta')
 
-        return data_wjets_cr*(mc_wjets_sr/mc_wjets_cr)
+        mc_wjets_cr = mc_wjets_cr_th1.Integral()
+        mc_wjets_sr = mc_wjets_sr_th1.Integral()
+
+        def get_rel_error(th1):
+            return math.sqrt(th1.GetEntries())/th1.GetEntries()
+        # Determine counting error on extrapolation
+        mc_wjets_ratio_rel_error = quad(
+            get_rel_error(mc_wjets_cr_th1), get_rel_error(mc_wjets_sr_th1))
+
+        data_wjets_cr_th1 = get_th1('data', 'wjets' + region, 'AbsTauEta')
+        data_wjets_cr = data_wjets_cr_th1.Integral()
+
+        total_rel_error = quad(
+            get_rel_error(data_wjets_cr_th1), mc_wjets_ratio_rel_error)
+
+        expected = data_wjets_cr*(mc_wjets_sr/mc_wjets_cr)
+
+        return expected, total_rel_error*expected
 
     # Use data expectation of Wjets
-    output['data_exp_wjets_os_fail'] = get_expected_wjets('FailOS')
-    output['data_exp_wjets_os_pass'] = get_expected_wjets('PassOS')
-    output['data_exp_wjets_ss_pass'] = get_expected_wjets('PassSS')
+    output['data_exp_wjets_os_fail'], output['data_exp_wjets_os_fail_err'] = get_expected_wjets('FailOS')
+    output['data_exp_wjets_os_pass'], output['data_exp_wjets_os_pass_err']  = get_expected_wjets('PassOS')
+    output['data_exp_wjets_ss_pass'], output['data_exp_wjets_ss_pass_err'] = get_expected_wjets('PassSS')
+
     output['n_wjets_all_pass'] = output['data_exp_wjets_ss_pass'] + \
             output['data_exp_wjets_os_pass']
+
+    output['n_wjets_all_pass_err'] = quad(output['data_exp_wjets_ss_pass_err'],
+            output['data_exp_wjets_os_pass_err'])/output['n_wjets_all_pass']
+
     output['n_wjets_os_fail'] = output['data_exp_wjets_os_fail']
 
     return output
