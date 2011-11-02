@@ -15,24 +15,8 @@ def get_dir(sample):
     return base_dir + dir_name
 
 for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
-    if 'TauPlusX' in sample:
+    if 'VH' not in sample_info['analyses']:
         continue
-    if 'MuHad' in sample:
-        continue
-    if 'DoubleE' in sample:
-        continue
-    #if 'QCD' in sample:
-        #continue
-    if '2011B' in sample:
-        continue
-    #if 'VH' in sample:
-        #continue
-    #if 'TT' in sample:
-        #continue
-    #if 'W' in sample:
-        #continue
-    #if 'ZZ' in sample:
-        #continue
 
     path_name = os.path.join(os.environ['scratch'], '-'.join(
         [jobId, sample, 'analyzeFinalStates']))
