@@ -72,4 +72,15 @@ tnpPresel = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
-all = [decayMode, vlooseID, looseID, mediumID, jetpt, btag, tnpPresel]
+genDecayMode = cms.PSet(
+    min = cms.untracked.double(-2.5),
+    max = cms.untracked.double(16.5),
+    nbins = cms.untracked.int32(19),
+    name = cms.untracked.string("${name}_GenDecayMode"),
+    description = cms.untracked.string("${nicename} tau gen decay mode"),
+    plotquantity = cms.untracked.string('${getter}userInt("genDecayMode")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+all = [decayMode, vlooseID, looseID, mediumID, jetpt, btag, tnpPresel,
+      genDecayMode]

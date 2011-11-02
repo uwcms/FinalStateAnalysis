@@ -19,6 +19,15 @@ nmuons = cms.PSet(
     plotquantity = cms.untracked.string(extras.mu_veto.plottable.value()),
 )
 
+nglbmuons = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(10.5),
+    nbins = cms.untracked.int32(11),
+    name = cms.untracked.string("${name}_NGlbmuons"),
+    description = cms.untracked.string("${nicename} N_{Global #muon}"),
+    plotquantity = cms.untracked.string(extras.glbmu_veto.plottable.value()),
+)
+
 njets = cms.PSet(
     min = cms.untracked.double(-0.5),
     max = cms.untracked.double(10.5),

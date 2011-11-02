@@ -40,6 +40,16 @@ mu_veto = cms.PSet(
     invert = cms.bool(False),
 )
 
+glbmu_sel_for_veto = "pt > ${pt_threshold} & abs(eta) < ${eta_threshold}"
+glbmu_veto = cms.PSet(
+    name = cms.string("${name}_GlbMuonVeto"),
+    description = cms.string("$nicename no extra global muons"),
+    cut = cms.string('extras("extMuons", "%s").size() == 0' % glbmu_sel_for_veto),
+    plottable = cms.string('extras("extMuons", "%s").size()' % glbmu_sel_for_veto),
+    invert = cms.bool(False),
+)
+
+
 jet_id_for_veto = 'userCand(\'patJet\').pt > ${pt_threshold} & abs(userCand(\'patJet\').eta) < ${eta_threshold}'
 jet_veto = cms.PSet(
     name = cms.string("${name}_JetVeto"),
