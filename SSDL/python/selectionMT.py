@@ -48,10 +48,10 @@ selections = cms.VPSet(
     PSetTemplate(selectors.muons.hcalIso).replace(
         threshold = 6, **leg1),
 
-    PSetTemplate(selectors.muons.id).replace(
-        muID = 'WWID', **leg1),
-    PSetTemplate(selectors.muons.reliso).replace(
-        threshold = '0.15', **leg1),
+    #PSetTemplate(selectors.muons.id).replace(
+        #muID = 'WWID', **leg1),
+    #PSetTemplate(selectors.muons.reliso).replace(
+        #threshold = '0.15', **leg1),
 
     ############################################################################
     ## Tau ID cuts

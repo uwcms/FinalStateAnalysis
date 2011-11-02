@@ -55,7 +55,7 @@ process.mt = cms.PSet(
     analysis = cms.PSet(
         ignore = process.steering.ignored_cuts,
         final = cms.PSet(
-            sort = cms.string('daughter(2).pt'),
+            sort = cms.string('daughter(1).pt'),
             take = cms.uint32(5),
             plot = plotsMT,
         ),

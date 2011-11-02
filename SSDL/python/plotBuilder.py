@@ -3,9 +3,9 @@ import FinalStateAnalysis.Selectors.plotting.plotting as plotting
 from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
 
 config = cms.PSet(
-    subcand = cms.string('subcand("@,@", "extJets", "%s")' % (
-        'pt > 40 & abs(eta) < 2.5'
-        ' & userFloat(\'idLoose\') > 0.5')
+    subcand = cms.string('subcand("@,@", "extTaus", "%s")' % (
+        'userCand(\'patJet\').pt > 40 & abs(userCand(\'patJet\').eta) < 2.5'
+        ' & userCand(\'patJet\').userFloat(\'idLoose\') > 0.5')
     )
 )
 
@@ -64,8 +64,8 @@ def dileptonFinalPlots(leg1, leg2):
         )
 
     # Add the evt#, run# and idx
-    add_ntuple('evt', 'evt.id.event')
-    add_ntuple('run', 'evt.id.run')
+    #add_ntuple('evt', 'evt().id().event')
+    #add_ntuple('run', 'evt().id().run')
 
     add_ntuple('vtxChi2', 'userFloat("vtxChi2")')
     add_ntuple('vtxNDOF', 'userFloat("vtxNDOF")')
@@ -77,7 +77,7 @@ def dileptonFinalPlots(leg1, leg2):
     )
 
     #Make HT hisotgram
-    add_ntuple('ht', '%s.ht' % config.subcand.value())
+    add_ntuple('ht', '%s.get.ht' % config.subcand.value())
 
     output.finalState.histos.append(
         PSetTemplate(plotting.topology.lowestTwoAreOS).replace(
@@ -85,7 +85,7 @@ def dileptonFinalPlots(leg1, leg2):
         )
     )
 
-    for index, legname in enumerate(['Leg1', 'Leg2', 'Leg3']):
+    for index, legname in enumerate(['Leg1', 'Leg2']):
         mtMET_cfg = PSetTemplate(plotting.topology.mtMET).replace(
                 name = legname, nicename = legname, index = index
         )
@@ -155,5 +155,20 @@ def dileptonFinalPlots(leg1, leg2):
         name = "Mu30", nicename = "Mu 30",
         hlt_path = r'HLT_Mu30_v\\d+')
     add_ntuple(m30_trig_cfg.name.value(), m30_trig_cfg.plotquantity.value())
+
+    mht_trgs = PSetTemplate(plotting.trigger.hlt).replace(
+        name = "Mu5_MHT", nicename = "Mu5 MHT Triggers",
+        hlt_path = r'HLT_HT200_Mu5_PFMHT35_v\\d+,HLT_HT250_Mu5_PFMHT35_v\\d+,HLT_HT300_Mu5_PFMHT40_v\\d+,HLT_HT350_Mu5_PFMHT45_v\\d+')
+    add_ntuple(mht_trgs.name.value(), mht_trgs.plotquantity.value())
+
+    mht_trgs = PSetTemplate(plotting.trigger.hltGroup).replace(
+        name = "Mu5_MHT", nicename = "Mu5 MHT Triggers",
+        hlt_path = r'HLT_HT200_Mu5_PFMHT35_v\\d+,HLT_HT250_Mu5_PFMHT35_v\\d+,HLT_HT300_Mu5_PFMHT40_v\\d+,HLT_HT350_Mu5_PFMHT45_v\\d+')
+    add_ntuple(mht_trgs.name.value(), mht_trgs.plotquantity.value())
+
+    mht_trgs = PSetTemplate(plotting.trigger.hltPrescale).replace(
+        name = "Mu5_MHT", nicename = "Mu5 MHT Triggers",
+        hlt_path = r'HLT_HT200_Mu5_PFMHT35_v\\d+,HLT_HT250_Mu5_PFMHT35_v\\d+,HLT_HT300_Mu5_PFMHT40_v\\d+,HLT_HT350_Mu5_PFMHT45_v\\d+')
+    add_ntuple(mht_trgs.name.value(), mht_trgs.plotquantity.value())
 
     return output,ntuple
