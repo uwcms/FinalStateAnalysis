@@ -19,14 +19,15 @@ The required arguments are:
               processed events.
 
 '''
+import os
+import glob
+import logging
+
+import FinalStateAnalysis.PatTools.datadefs as datadefs
 
 import FinalStateAnalysis.Utilities.WeightedTFile as WeightedTFile
 import FinalStateAnalysis.Utilities.TFileCollection as TFileCollection
 import FinalStateAnalysis.Utilities.AnalysisPlotter as AnalysisPlotter
-import FinalStateAnalysis.PatTools.datadefs as datadefs
-import os
-import glob
-import logging
 
 log = logging.getLogger("data_construction")
 
@@ -37,8 +38,8 @@ def get_result_dir(jobid, source, sample):
     result_dir = "-".join([jobid, sample, 'analyze*'])
     return os.path.join(os.environ[source], result_dir, '*', '*.root')
 
-def build_data(analysis jobid, source, target_lumi,
-               skips, count='emt/skimCounter'):
+def build_data(analysis, jobid, source, target_lumi,
+               skips, count='emt/skimCounter', unweighted=False):
     raw_samples = {}
     # Build the basic weighted files
     for name, info in datadefs.datadefs.iteritems():
@@ -57,7 +58,7 @@ def build_data(analysis jobid, source, target_lumi,
 
         weightfile_args = { 'weight' : 1.0,}
         # For MC, we apply weight.
-        if 'x_sec' in info:
+        if not unweighted and 'x_sec' in info:
             weightfile_args = {
                 'target_lumi' : target_lumi,
                 'xsec' : info['x_sec'],
