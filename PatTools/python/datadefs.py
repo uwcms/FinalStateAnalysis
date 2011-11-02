@@ -15,7 +15,8 @@ def quad(*xs):
 
 data_name_map = {
     # Fixme there is some double counting here!
-    'Zjets' : ['Zjets_M50', 'Zbb_M50', 'Zcc_M40'],
+    #'Zjets' : ['Zjets_M50', 'Zbb_M50', 'Zcc_M40'],
+    'Zjets' : ['Zjets_M50',],
 
     'QCDMu' : ['QCD_20toInf_MuPt15'],
 
@@ -66,7 +67,7 @@ datadefs = {
       'ana_group' : 1,
       'skim' : 14.4211/100.0,
       'size' : 3238,
-      'analyses' : ['HTT', 'SSDL', 'VH'],
+      'analyses' : ['HTT', 'SSDL', 'VH', 'Tau'],
     },
     'Zbb_M50' : {
       'datasetpath' : '/ZbbToLL_M-50_TuneZ2_7TeV-madgraph-pythia6_tauola/Summer11-PU_S4_START42_V11-v1/AODSIM',
@@ -124,7 +125,7 @@ datadefs = {
     'QCD_20toInf_MuPt15' : {
         'datasetpath' : '/QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM',
         'x_sec' : 2.966E8*_picobarns*2.855E-4,
-        'analyses' : ['HTT', 'VH'],
+        'analyses' : ['HTT', 'VH', 'Tau'],
     },
     #'QCD_15to20_MuPt5' : {
       #'datasetpath' : "/QCD_Pt-15to20_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM",
