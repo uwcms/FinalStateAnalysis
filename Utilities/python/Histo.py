@@ -89,6 +89,7 @@ class Histo(object):
     def __init__(self, th1, **kwargs):
         self.th1 = th1.Clone()
         self.th1.SetDirectory(0)
+        ROOT.SetOwnership(self.th1, 0)
         # Check if we want to rebin the histogram
         if 'rebin' in kwargs:
             clone = self.th1.Clone()
@@ -198,6 +199,11 @@ class Histo(object):
         cdf, cdf_inverse = self.cdf(False, True, True)
         for i in xrange(n):
             return cdf_inverse(random.random())
+
+    def zeroOutNegativeBins(self):
+        for bin in self.bins():
+            if bin.value() < 0:
+                bin.set(0)
 
     def transform(self, function, steps_per_bin=1e4):
         output = self.th1.Clone()
