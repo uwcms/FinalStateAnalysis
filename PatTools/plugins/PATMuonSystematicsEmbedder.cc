@@ -69,6 +69,7 @@ PATMuonSystematicsEmbedder::PATMuonSystematicsEmbedder(
   // Embedded output collection
   produces<pat::MuonCollection>();
   // Collections of shifted candidates
+  produces<ShiftedCandCollection>("p4OutUncorr");
   produces<ShiftedCandCollection>("p4OutNom");
   produces<ShiftedCandCollection>("p4OutUp");
   produces<ShiftedCandCollection>("p4OutDown");
@@ -86,6 +87,7 @@ void PATMuonSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup&
 
   std::auto_ptr<pat::MuonCollection> output(new pat::MuonCollection);
   std::auto_ptr<ShiftedCandCollection> p4OutNom(new ShiftedCandCollection);
+  std::auto_ptr<ShiftedCandCollection> p4OutUncorr(new ShiftedCandCollection);
   std::auto_ptr<ShiftedCandCollection> p4OutUp(new ShiftedCandCollection);
   std::auto_ptr<ShiftedCandCollection> p4OutDown(new ShiftedCandCollection);
 
@@ -94,30 +96,23 @@ void PATMuonSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup&
 
   output->reserve(muons->size());
   p4OutNom->reserve(muons->size());
+  p4OutUncorr->reserve(muons->size());
   p4OutUp->reserve(muons->size());
   p4OutDown->reserve(muons->size());
 
   for (size_t i = 0; i < muons->size(); ++i) {
     pat::Muon muon = muons->at(i); // make a local copy
 
-    // In data, we apply no correction.
-    double correctedPt = muon.pt();
-    double correctedPtUp = correctedPt;
-    double correctedPtDown = correctedPt;
-
-    // Not sure what is the correct prescription applying to both for now.
-    if (true || !evt.isRealData()) {
-      correctedPt = (*corrector_.get())(muon);
-      correctedPtUp = (*correctorUp_.get())(muon);
-      correctedPtDown = (*correctorDown_.get())(muon);
-    }
+    double correctedPt = (*corrector_.get())(muon);
+    double correctedPtUp = (*correctorUp_.get())(muon);
+    double correctedPtDown = (*correctorDown_.get())(muon);
 
     double eta = muon.eta();
     double phi = muon.phi();
     double mass = muon.mass();
 
-    muon.setP4(reco::Particle::PolarLorentzVector(
-          correctedPt, eta, phi, mass));
+    ShiftedCand uncorr(muon);
+    muon.setP4(reco::Particle::PolarLorentzVector(correctedPt, eta, phi, mass));
     ShiftedCand nominal(muon);
     ShiftedCand mesUp(muon);
     ShiftedCand mesDown(muon);
@@ -129,6 +124,7 @@ void PATMuonSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup&
           correctedPtDown, eta, phi, mass));
 
     output->push_back(muon);
+    p4OutUncorr->push_back(uncorr);
     p4OutNom->push_back(nominal);
     p4OutUp->push_back(mesUp);
     p4OutDown->push_back(mesDown);
@@ -136,19 +132,21 @@ void PATMuonSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup&
 
   // Put the shifted collections in the event
   typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
+  PutHandle p4OutUncorrH = evt.put(p4OutUncorr, "p4OutUncorr");
   PutHandle p4OutNomH = evt.put(p4OutNom, "p4OutNom");
   PutHandle p4OutUpH = evt.put(p4OutUp, "p4OutUp");
   PutHandle p4OutDownH = evt.put(p4OutDown, "p4OutDown");
 
   // Now embed the shifted collections into the output muon collection
   for (size_t i = 0; i < muons->size(); ++i) {
+    CandidatePtr uncorrPtr(p4OutUncorrH, i);
     CandidatePtr nomPtr(p4OutDownH, i);
     CandidatePtr upPtr(p4OutDownH, i);
     CandidatePtr downPtr(p4OutDownH, i);
 
     pat::Muon& muon = output->at(i);
 
-    muon.addUserCand("nom", nomPtr);
+    muon.addUserCand("uncorr", uncorrPtr);
     muon.addUserCand("mes-", downPtr);
     muon.addUserCand("mes+", upPtr);
   }

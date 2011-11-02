@@ -38,7 +38,7 @@ PATElectronSystematicsEmbedder::PATElectronSystematicsEmbedder(
   // Embedded output collection
   produces<pat::ElectronCollection>();
   // Collections of shifted candidates
-  produces<ShiftedCandCollection>("p4OutNom");
+  produces<ShiftedCandCollection>("p4OutUncorr");
   produces<ShiftedCandCollection>("p4OutUp");
   produces<ShiftedCandCollection>("p4OutDown");
 }
@@ -61,6 +61,8 @@ void PATElectronSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSe
     pat::Electron electron = electrons->at(i); // make a local copy
 
     double pt = electron.pt();
+    ShiftedCand uncorr(electron);
+
     double correctedPt = nominal_*pt;
     double correctedPtUp = eScaleUp_*pt;
     double correctedPtDown = eScaleDown_*pt;
@@ -72,7 +74,6 @@ void PATElectronSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSe
     electron.setP4(reco::Particle::PolarLorentzVector(
           correctedPt, eta, phi, mass));
 
-    ShiftedCand nominal(electron);
     ShiftedCand mesUp(electron);
     ShiftedCand mesDown(electron);
 
@@ -83,14 +84,14 @@ void PATElectronSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSe
           correctedPtDown, eta, phi, mass));
 
     output->push_back(electron);
-    p4OutNom->push_back(nominal);
+    p4OutNom->push_back(uncorr);
     p4OutUp->push_back(mesUp);
     p4OutDown->push_back(mesDown);
   }
 
   // Put the shifted collections in the event
   typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
-  PutHandle p4OutNomH = evt.put(p4OutNom, "p4OutNom");
+  PutHandle p4OutNomH = evt.put(p4OutNom, "p4OutUncorr");
   PutHandle p4OutUpH = evt.put(p4OutUp, "p4OutUp");
   PutHandle p4OutDownH = evt.put(p4OutDown, "p4OutDown");
 
@@ -102,7 +103,7 @@ void PATElectronSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSe
 
     pat::Electron& electron = output->at(i);
 
-    electron.addUserCand("nom", nomPtr);
+    electron.addUserCand("uncorr", nomPtr);
     electron.addUserCand("ees-", downPtr);
     electron.addUserCand("ees+", upPtr);
   }

@@ -125,28 +125,16 @@ class PATTauSystematicsEmbedder : public edm::EDProducer {
   private:
     edm::InputTag src_;
     CorrectorFromDB tauJetCorrection_;
-    CorrectorFromDB jetCorrection_;
-    double unclusteredEnergyScale_;
 };
 
 PATTauSystematicsEmbedder::PATTauSystematicsEmbedder(
     const edm::ParameterSet& pset):
-  tauJetCorrection_(pset.getParameterSet("tauEnergyScale")),
-  jetCorrection_(pset.getParameterSet("jetEnergyScale"))
+  tauJetCorrection_(pset.getParameterSet("tauEnergyScale"))
 {
   src_ = pset.getParameter<edm::InputTag>("src");
-  unclusteredEnergyScale_ = pset.getParameter<double>(
-      "unclusteredEnergyScale");
 
   // Produce the (corrected) nominal p4 collections for the jet and taus
-  produces<ShiftedCandCollection>("p4OutNomJets");
   produces<ShiftedCandCollection>("p4OutNomTaus");
-
-  // JES and UES affect the underlying jet
-  produces<ShiftedCandCollection>("p4OutJESUpJets");
-  produces<ShiftedCandCollection>("p4OutJESDownJets");
-  produces<ShiftedCandCollection>("p4OutUESUpJets");
-  produces<ShiftedCandCollection>("p4OutUESDownJets");
 
   // TES affects the tau
   produces<ShiftedCandCollection>("p4OutTESUpTaus");
@@ -157,7 +145,6 @@ PATTauSystematicsEmbedder::PATTauSystematicsEmbedder(
 
 void PATTauSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 
-  jetCorrection_.refresh(es);
   tauJetCorrection_.refresh(es);
 
   edm::Handle<edm::View<pat::Tau> > taus;
@@ -167,42 +154,19 @@ void PATTauSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   std::auto_ptr<pat::TauCollection> output(new pat::TauCollection);
   output->reserve(nTaus);
 
-  std::auto_ptr<ShiftedCandCollection> p4OutNomJets(new ShiftedCandCollection);
   std::auto_ptr<ShiftedCandCollection> p4OutNomTaus(new ShiftedCandCollection);
-  std::auto_ptr<ShiftedCandCollection> p4OutJESUpJets(new ShiftedCandCollection);
-  std::auto_ptr<ShiftedCandCollection> p4OutJESDownJets(new ShiftedCandCollection);
-  std::auto_ptr<ShiftedCandCollection> p4OutUESUpJets(new ShiftedCandCollection);
-  std::auto_ptr<ShiftedCandCollection> p4OutUESDownJets(new ShiftedCandCollection);
   std::auto_ptr<ShiftedCandCollection> p4OutTESUpTaus(new ShiftedCandCollection);
   std::auto_ptr<ShiftedCandCollection> p4OutTESDownTaus(new ShiftedCandCollection);
 
-  p4OutNomJets->reserve(nTaus);
   p4OutNomTaus->reserve(nTaus);
-  p4OutJESUpJets->reserve(nTaus);
-  p4OutJESDownJets->reserve(nTaus);
-  p4OutUESUpJets->reserve(nTaus);
-  p4OutUESDownJets->reserve(nTaus);
   p4OutTESUpTaus->reserve(nTaus);
   p4OutTESDownTaus->reserve(nTaus);
 
   for (size_t i = 0; i < nTaus; ++i) {
     const pat::Tau& origTau = taus->at(i);
     output->push_back(origTau); // make our own copy
-
-    reco::PFJetRef pfJet = origTau.pfJetRef();
-    // Create initial uncorrected versions
-    ShiftedCand p4OutNomJet(*pfJet);
     ShiftedCand p4OutNomTau(origTau);
-    // Now apply a correction to the jet if desired (from CV)
-    if (jetCorrection_.corr()) {
-      double pfJetJEC = jetCorrection_.corr()->correction(
-          *pfJet, edm::RefToBase<reco::Jet>(pfJet), evt, es);
-      // Correct jet four vector
-      p4OutNomJet.setP4(pfJetJEC*p4OutNomJet.p4());
-    }
-    p4OutNomJets->push_back(p4OutNomJet);
     p4OutNomTaus->push_back(p4OutNomTau);
-
     // Now make the smeared versions of the jets and taus
     // TES uncertainty
     ShiftedLorentzVectors tesShifts = tauJetCorrection_.uncertainties(
@@ -214,52 +178,21 @@ void PATTauSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     ShiftedCand p4OutTESDownTau(p4OutNomTau);
     p4OutTESDownTau.setP4(tesShifts.shiftedDown);
     p4OutTESDownTaus->push_back(p4OutTESDownTau);
-
-    // JES uncertainty
-    ShiftedLorentzVectors jesShifts = jetCorrection_.uncertainties(
-        p4OutNomJet.p4());
-    ShiftedCand p4OutJESUpJet(p4OutNomJet);
-    p4OutJESUpJet.setP4(jesShifts.shiftedUp);
-    p4OutJESUpJets->push_back(p4OutJESUpJet);
-
-    ShiftedCand p4OutJESDownJet(p4OutNomJet);
-    p4OutJESDownJet.setP4(jesShifts.shiftedDown);
-    p4OutJESDownJets->push_back(p4OutJESDownJet);
-
-    // UES uncertainty
-    ShiftedCand p4OutUESUpJet(p4OutNomJet);
-    p4OutUESUpJet.setP4((1+unclusteredEnergyScale_)*p4OutUESUpJet.p4());
-    p4OutUESUpJets->push_back(p4OutUESUpJet);
-
-    ShiftedCand p4OutUESDownJet(p4OutNomJet);
-    p4OutUESDownJet.setP4((1-unclusteredEnergyScale_)*p4OutUESDownJet.p4());
-    p4OutUESDownJets->push_back(p4OutUESDownJet);
   }
 
   // Put the shifted collections in the event
   typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
 
-  PutHandle p4OutNomJetsH = evt.put(p4OutNomJets, "p4OutNomJets");
   PutHandle p4OutNomTausH = evt.put(p4OutNomTaus, "p4OutNomTaus");
-  PutHandle p4OutJESUpJetsH = evt.put(p4OutJESUpJets, "p4OutJESUpJets");
-  PutHandle p4OutJESDownJetsH = evt.put(p4OutJESDownJets, "p4OutJESDownJets");
-  PutHandle p4OutUESUpJetsH = evt.put(p4OutUESUpJets, "p4OutUESUpJets");
-  PutHandle p4OutUESDownJetsH = evt.put(p4OutUESDownJets, "p4OutUESDownJets");
   PutHandle p4OutTESUpTausH = evt.put(p4OutTESUpTaus, "p4OutTESUpTaus");
   PutHandle p4OutTESDownTausH = evt.put(p4OutTESDownTaus, "p4OutTESDownTaus");
 
   // Now embed the shifted collections into our output pat taus
   for (size_t i = 0; i < output->size(); ++i) {
     pat::Tau& tau = output->at(i);
-    tau.addUserCand("jet_nom", CandidatePtr(p4OutNomJetsH, i));
-    tau.addUserCand("jet_jes+", CandidatePtr(p4OutJESUpJetsH, i));
-    tau.addUserCand("jet_jes-", CandidatePtr(p4OutJESDownJetsH, i));
-    tau.addUserCand("jet_ues+", CandidatePtr(p4OutUESUpJetsH, i));
-    tau.addUserCand("jet_ues-", CandidatePtr(p4OutUESDownJetsH, i));
-
-    tau.addUserCand("tau_nom", CandidatePtr(p4OutNomTausH, i));
-    tau.addUserCand("tau_tes+", CandidatePtr(p4OutTESUpTausH, i));
-    tau.addUserCand("tau_tes-", CandidatePtr(p4OutTESDownTausH, i));
+    tau.addUserCand("uncorr", CandidatePtr(p4OutNomTausH, i));
+    tau.addUserCand("tes+", CandidatePtr(p4OutTESUpTausH, i));
+    tau.addUserCand("tes-", CandidatePtr(p4OutTESDownTausH, i));
   }
   evt.put(output);
 }

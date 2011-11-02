@@ -5,10 +5,11 @@ metTypeCategorization = cms.PSet(
         'pt > 10 && (tauID("decayModeFinding") && tauID("byLooseIsolation"))'
     ),
     jetCut = cms.string(
-        '!(tauID("decayModeFinding") && tauID("byLooseIsolation")) && pt > 10'
+        '!(tauID("decayModeFinding") && tauID("byLooseIsolation")) && userCand("patJet").pt > 10'
     ),
+    # The part about passing the tauID is to catch the low pt taus
     unclusteredCut = cms.string(
-        'pt <= 10'
+        'userCand("patJet").pt < 10 | (pt < 10 && tauID("decayModeFinding") && tauID("byLooseIsolation"))'
     ),
 )
 
@@ -21,4 +22,9 @@ systematicsMET = cms.EDProducer(
     tauCut = metTypeCategorization.tauCut,
     jetCut = metTypeCategorization.jetCut,
     unclusteredCut = metTypeCategorization.unclusteredCut,
+    applyType1ForTaus = cms.bool(False),
+    applyType1ForMuons = cms.bool(False),
+    applyType1ForElectrons = cms.bool(False),
+    applyType1ForJets = cms.bool(True),
+    applyType2ForJets = cms.bool(False),
 )

@@ -104,8 +104,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Use PFJets and turn on JEC
     jec = [ 'L1FastJet', 'L2Relative', 'L3Absolute' ]
-    #if not isMC:
-        #jec.extend([ 'L2L3Residual' ])
+    if not isMC:
+        jec.extend([ 'L2L3Residual' ])
     # Use AK5 PFJets
     jettools.switchJetCollection(process,
                                  cms.InputTag('ak5PFJets'),

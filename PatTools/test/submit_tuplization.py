@@ -3,7 +3,7 @@ import os
 import sys
 
 cfg = 'patTuple_cfg.py'
-jobId = '2011-10-21-EWKPatTuple'
+jobId = '2011-11-02-EWKPatTuple'
 
 for sample, sample_info in datadefs.iteritems():
 

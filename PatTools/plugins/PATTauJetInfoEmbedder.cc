@@ -54,9 +54,10 @@ void PATTauJetInfoEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) 
     double closestDeltaR = std::numeric_limits<double>::infinity();
     for (size_t j = 0; j < jets->size(); ++j) {
       JetPtr jet = jets->ptrAt(j);
-      // Use the uncorrected P4
-      pat::Jet uncorrected = jet->correctedJet("Uncorrected");
-      double deltaR = reco::deltaR(tauP4, uncorrected.p4());
+      // Use the uncorrected P4. Embedded in the UncorrectedEmbedder module.
+      assert(jet->userCand("uncorr").isNonnull());
+      reco::Candidate::LorentzVector jetP4 = jet->userCand("uncorr")->p4();
+      double deltaR = reco::deltaR(tauP4, jetP4);
       if (deltaR < closestDeltaR) {
         closestDeltaR = deltaR;
         closestJet = jet;
@@ -64,6 +65,7 @@ void PATTauJetInfoEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) 
     }
     assert(closestJet.isNonnull());
     if (closestDeltaR > 0.1) {
+      std::cout << closestJet->currentJECLevel() << " " << closestJet->currentJECSet() << std::endl;
       throw cms::Exception("BadJetMatch") << "Couldn't find a jet close to the"
         << " tau in PATTauJetInfoEmbedder. The tau jetref has (pt/eta/phi): ("
         << tauP4.pt() << "/" << tauP4.eta() << "/" << tauP4.phi()
@@ -71,7 +73,7 @@ void PATTauJetInfoEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) 
         << closestJet->pt() << "/" << closestJet->eta() << "/" << closestJet->phi()
         << ") giving a deltaR of " << closestDeltaR << std::endl;
     }
-    assert(closestDeltaR < 0.1);
+    assert(closestDeltaR < 0.25);
     tau.addUserCand("patJet" + suffix_, closestJet);
     if (embedBtags_) {
       typedef std::pair<std::string, float> IdPair;

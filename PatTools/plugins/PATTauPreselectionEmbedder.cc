@@ -279,10 +279,8 @@ bool PATTauPreselectionEmbedder::filter(edm::Event& evt, const edm::EventSetup& 
     if (isMuon)
       passesAll = false;
 
-    // Now our shit starts to depend on jet corrections
+    // Fuck the JEC for this tool
     std::vector<std::string> correctionTypes;
-    correctionTypes.push_back("jes+");
-    correctionTypes.push_back("jes-");
     correctionTypes.push_back("nom");
 
     for (size_t iCorr = 0; iCorr < correctionTypes.size(); ++iCorr) {
@@ -291,7 +289,7 @@ bool PATTauPreselectionEmbedder::filter(edm::Event& evt, const edm::EventSetup& 
 
       const std::string& corrType = correctionTypes[iCorr];
       reco::Candidate::LorentzVector p4PFJetCorrected =
-        pfTau_input->userCand("jet_"+ corrType)->p4();
+        pfTau_input->userCand("patJet")->p4();
 
       bool isECALcrack = (TMath::Abs(p4PFJetCorrected.eta()) > 1.442 &&
           TMath::Abs(p4PFJetCorrected.eta()) < 1.560);

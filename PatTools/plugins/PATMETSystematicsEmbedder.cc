@@ -7,6 +7,7 @@
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
 
 #include "DataFormats/Candidate/interface/LeafCandidate.h"
@@ -27,6 +28,13 @@ class PATMETSystematicsEmbedder : public edm::EDProducer {
     edm::InputTag muonSrc_;
     edm::InputTag electronSrc_;
     edm::InputTag metSrc_;
+
+    bool applyType1ForTaus_;
+    bool applyType1ForMuons_;
+    bool applyType1ForElectrons_;
+    bool applyType1ForJets_;
+    bool applyType2ForJets_;
+
     // How to split the taus into taus, jets, and unclustered energy
     StringCutObjectSelector<pat::Tau> tauCut_;
     StringCutObjectSelector<pat::Tau> jetCut_;
@@ -38,24 +46,38 @@ PATMETSystematicsEmbedder::PATMETSystematicsEmbedder(
   tauCut_(pset.getParameter<std::string>("tauCut")),
   jetCut_(pset.getParameter<std::string>("jetCut")),
   unclusteredCut_(pset.getParameter<std::string>("unclusteredCut")) {
-  produces<pat::METCollection>();
+    produces<pat::METCollection>();
 
-  tauSrc_ = pset.getParameter<edm::InputTag>("tauSrc");
-  muonSrc_ = pset.getParameter<edm::InputTag>("muonSrc");
-  electronSrc_ = pset.getParameter<edm::InputTag>("electronSrc");
-  metSrc_ = pset.getParameter<edm::InputTag>("src");
+    applyType1ForTaus_ = pset.getParameter<bool>("applyType1ForTaus");
+    applyType1ForMuons_ = pset.getParameter<bool>("applyType1ForMuons");
+    applyType1ForElectrons_ = pset.getParameter<bool>("applyType1ForElectrons");
+    applyType1ForJets_ = pset.getParameter<bool>("applyType1ForJets");
+    applyType2ForJets_ = pset.getParameter<bool>("applyType2ForJets");
 
-  produces<ShiftedCandCollection>("metsNominal");
-  produces<ShiftedCandCollection>("metsMESUp");
-  produces<ShiftedCandCollection>("metsMESDown");
-  produces<ShiftedCandCollection>("metsTESUp");
-  produces<ShiftedCandCollection>("metsTESDown");
-  produces<ShiftedCandCollection>("metsEESUp");
-  produces<ShiftedCandCollection>("metsEESDown");
-  produces<ShiftedCandCollection>("metsJESUp");
-  produces<ShiftedCandCollection>("metsJESDown");
-  produces<ShiftedCandCollection>("metsUESUp");
-  produces<ShiftedCandCollection>("metsUESDown");
+    tauSrc_ = pset.getParameter<edm::InputTag>("tauSrc");
+    muonSrc_ = pset.getParameter<edm::InputTag>("muonSrc");
+    electronSrc_ = pset.getParameter<edm::InputTag>("electronSrc");
+    metSrc_ = pset.getParameter<edm::InputTag>("src");
+
+    produces<ShiftedCandCollection>("metsRaw");
+    produces<ShiftedCandCollection>("metsMESUp");
+    produces<ShiftedCandCollection>("metsMESDown");
+    produces<ShiftedCandCollection>("metsTESUp");
+    produces<ShiftedCandCollection>("metsTESDown");
+    produces<ShiftedCandCollection>("metsEESUp");
+    produces<ShiftedCandCollection>("metsEESDown");
+    produces<ShiftedCandCollection>("metsJESUp");
+    produces<ShiftedCandCollection>("metsJESDown");
+    produces<ShiftedCandCollection>("metsUESUp");
+    produces<ShiftedCandCollection>("metsUESDown");
+}
+
+// Get the transverse component of the vector
+reco::Candidate::LorentzVector
+transverse(const reco::Candidate::LorentzVector& input) {
+  math::PtEtaPhiMLorentzVector output(input.pt(), 0, input.phi(), 0);
+  reco::Candidate::LorentzVector outputT(output);
+  return outputT;
 }
 
 void embedShift(pat::MET& met, edm::Event& evt,
@@ -69,7 +91,7 @@ void embedShift(pat::MET& met, edm::Event& evt,
 
   std::auto_ptr<ShiftedCandCollection> output(new ShiftedCandCollection);
   ShiftedCand newCand(met);
-  newCand.setP4(newCand.p4() + residual);
+  newCand.setP4(newCand.p4() + transverse(residual));
   output->push_back(newCand);
   PutHandle outputH = evt.put(output, branchName);
   met.addUserCand(embedName, CandidatePtr(outputH, 0));
@@ -77,6 +99,7 @@ void embedShift(pat::MET& met, edm::Event& evt,
 
 
 void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
+
 
   edm::Handle<edm::View<pat::Tau> > taus;
   evt.getByLabel(tauSrc_, taus);
@@ -95,51 +118,57 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   const pat::MET& inputMET = mets->at(0);
   pat::MET outputMET = inputMET;
 
-  // Nominal MET
-  embedShift(outputMET, evt, "metsNominal", "nom", LorentzVector());
+  // Raw MET
+  embedShift(outputMET, evt, "metsRaw", "raw", LorentzVector());
+
+  // Keep track of the type 1 correction
+  LorentzVector type1Correction;
 
   // Do MES shifts
+  LorentzVector uncorrMuonP4;
   LorentzVector nominalMuonP4;
   LorentzVector mesUpMuonP4;
   LorentzVector mesDownMuonP4;
 
   for (size_t i = 0; i < muons->size(); ++i) {
     const pat::Muon& muon = muons->at(i);
-    nominalMuonP4 += muon.userCand("nom")->p4();
+    assert(muon.userCand("uncorr").isNonnull());
+    assert(muon.userCand("mes+").isNonnull());
+    assert(muon.userCand("mes-").isNonnull());
+    uncorrMuonP4 += muon.userCand("uncorr")->p4();
+    nominalMuonP4 += muon.p4();
     mesUpMuonP4 += muon.userCand("mes+")->p4();
     mesDownMuonP4 += muon.userCand("mes-")->p4();
   }
 
-  embedShift(outputMET, evt, "metsMESUp", "mes+",
-      nominalMuonP4 - mesUpMuonP4);
-  embedShift(outputMET, evt, "metsMESDown", "mes-",
-      nominalMuonP4 - mesDownMuonP4);
-
   // Do EES shifts
+  LorentzVector uncorrElectronP4;
   LorentzVector nominalElectronP4;
   LorentzVector eesUpElectronP4;
   LorentzVector eesDownElectronP4;
 
   for (size_t i = 0; i < electrons->size(); ++i) {
     const pat::Electron& electron = electrons->at(i);
-    nominalElectronP4 += electron.userCand("nom")->p4();
+    assert(electron.userCand("uncorr").isNonnull());
+    assert(electron.userCand("ees+").isNonnull());
+    assert(electron.userCand("ees-").isNonnull());
+    nominalElectronP4 += electron.p4();
+    uncorrElectronP4 += electron.userCand("uncorr")->p4();
     eesUpElectronP4 += electron.userCand("ees+")->p4();
     eesDownElectronP4 += electron.userCand("ees-")->p4();
   }
 
-  embedShift(outputMET, evt, "metsEESUp", "ees+",
-      nominalElectronP4 - eesUpElectronP4);
-  embedShift(outputMET, evt, "metsEESDown", "ees-",
-      nominalElectronP4 - eesDownElectronP4);
-
+  LorentzVector uncorrTauP4;
   LorentzVector nominalTauP4;
   LorentzVector tesUpTauP4;
   LorentzVector tesDownTauP4;
 
+  LorentzVector uncorrJetP4;
   LorentzVector nominalJetP4;
   LorentzVector jesUpJetP4;
   LorentzVector jesDownJetP4;
 
+  LorentzVector uncorrUnclusteredP4;
   LorentzVector nominalUnclusteredP4;
   LorentzVector uesUpUnclusteredP4;
   LorentzVector uesDownUnclusteredP4;
@@ -150,28 +179,44 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   size_t shiftedUnclustered = 0; // counter for sanity check
   for (size_t i = 0; i < taus->size(); ++i) {
     const pat::Tau& tau = taus->at(i);
+    // Get the underlying seed jet
+    edm::Ptr<pat::Jet> seedJet(tau.userCand("patJet"));
+    assert(seedJet.isNonnull());
+    const pat::Jet& jet = *seedJet;
     if (tauCut_(tau)) {
       shiftedTaus++;
-      nominalTauP4 += tau.userCand("tau_nom")->p4();
-      tesUpTauP4 += tau.userCand("tau_tes+")->p4();
-      tesDownTauP4 += tau.userCand("tau_tes-")->p4();
+      assert(tau.userCand("uncorr").isNonnull());
+      assert(tau.userCand("tes+").isNonnull());
+      assert(tau.userCand("tes-").isNonnull());
+      uncorrTauP4 += tau.userCand("uncorr")->p4();
+      nominalTauP4 += tau.p4();
+      tesUpTauP4 += tau.userCand("tes+")->p4();
+      tesDownTauP4 += tau.userCand("tes-")->p4();
     }
     if (jetCut_(tau)) {
       shiftedJets++;
-      nominalJetP4 += tau.userCand("jet_nom")->p4();
-      jesUpJetP4 == tau.userCand("jet_jes+")->p4();
-      jesDownJetP4 == tau.userCand("jet_jes-")->p4();
+      assert(jet.userCand("uncorr").isNonnull());
+      assert(jet.userCand("jes+").isNonnull());
+      assert(jet.userCand("jes-").isNonnull());
+      uncorrJetP4 += jet.userCand("uncorr")->p4();
+      nominalJetP4 += jet.p4();
+      jesUpJetP4 += jet.userCand("jes+")->p4();
+      jesDownJetP4 += jet.userCand("jes-")->p4();
     }
     if (unclusteredCut_(tau)) {
       shiftedUnclustered++;
-      nominalUnclusteredP4 += tau.userCand("jet_nom")->p4();
-      uesUpUnclusteredP4 == tau.userCand("jet_ues+")->p4();
-      uesDownUnclusteredP4 == tau.userCand("jet_ues-")->p4();
+      assert(jet.userCand("uncorr").isNonnull());
+      assert(jet.userCand("ues+").isNonnull());
+      assert(jet.userCand("ues-").isNonnull());
+      uncorrUnclusteredP4 += jet.userCand("uncorr")->p4();
+      nominalUnclusteredP4 += jet.p4();
+      uesUpUnclusteredP4 += jet.userCand("ues+")->p4();
+      uesDownUnclusteredP4 += jet.userCand("ues-")->p4();
     }
   }
 
   if (shiftedUnclustered + shiftedJets + shiftedTaus != taus->size()) {
-    throw cms::Exception("BadExclusivityCuts") <<
+    edm::LogWarning("BadExclusivityCuts") <<
       "The set of cuts used to split taus into real taus, jets, and unclustered"
       << " jets are not exclusive/do not span the whole space."
       << " There are " << taus->size() << " original taus and "
@@ -179,6 +224,49 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
       << shiftedJets << " selected as jets,"
       << shiftedUnclustered << " selected as unclustered." << std::endl;
   }
+
+  LorentzVector outputMETP4 = outputMET.p4();
+  // Check if we want to apply type1 corrections to the MET
+  if (applyType1ForJets_) {
+    LorentzVector deltaJets = nominalJetP4 - uncorrJetP4;
+    outputMETP4 -= transverse(deltaJets);
+  }
+
+  if (applyType2ForJets_) {
+    LorentzVector deltaJets = nominalUnclusteredP4 - uncorrUnclusteredP4;
+    outputMETP4 -= transverse(deltaJets);
+  }
+
+  if (applyType1ForTaus_) {
+    LorentzVector deltaTaus = nominalTauP4 - uncorrTauP4;
+    outputMETP4 -= transverse(deltaTaus);
+  }
+
+  if (applyType1ForElectrons_) {
+    LorentzVector deltaElectrons = nominalElectronP4 - uncorrElectronP4;
+    outputMETP4 -= transverse(deltaElectrons);
+  }
+
+  if (applyType1ForMuons_) {
+    LorentzVector deltaMuons = nominalMuonP4 - uncorrMuonP4;
+    outputMETP4 -= transverse(deltaMuons);
+  }
+  outputMET.setP4(outputMETP4);
+
+  embedShift(outputMET, evt, "metsMESUp", "mes+",
+      nominalMuonP4 - mesUpMuonP4);
+  embedShift(outputMET, evt, "metsMESDown", "mes-",
+      nominalMuonP4 - mesDownMuonP4);
+
+  embedShift(outputMET, evt, "metsEESUp", "ees+",
+      nominalElectronP4 - eesUpElectronP4);
+  embedShift(outputMET, evt, "metsEESDown", "ees-",
+      nominalElectronP4 - eesDownElectronP4);
+
+  embedShift(outputMET, evt, "metsTESUp", "tes+",
+      nominalTauP4 - tesUpTauP4);
+  embedShift(outputMET, evt, "metsTESDown", "tes-",
+      nominalTauP4 - tesDownTauP4);
 
   embedShift(outputMET, evt, "metsJESUp", "jes+",
       nominalJetP4 - jesUpJetP4);
