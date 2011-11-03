@@ -135,16 +135,16 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patDefaultSequence.replace(process.patJets,
                                        process.customizeJetSequence)
 
-    process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
-    final_tau_collection = chain_sequence(
-        process.customizeTauSequence, "selectedPatTaus")
-    # Inject into the pat sequence
-    process.customizeTauSequence.insert(0, process.selectedPatTaus)
-    # We have to do the pat Jets before the pat taus since we embed them
-    process.customizeTauSequence.insert(0, process.selectedPatJets)
-    process.patDefaultSequence.replace(process.selectedPatTaus,
-                                       process.customizeTauSequence)
-    process.cleanPatTaus.src = final_tau_collection
+    process.load("FinalStateAnalysis.PatTools.patElectronProduction_cff")
+    final_electron_collection = chain_sequence(
+        process.customizeElectronSequence, "selectedPatElectrons")
+    process.tuplize += process.customizeElectronSequence
+    process.customizeElectronSequence.insert(0, process.selectedPatElectrons)
+    process.patDefaultSequence.replace(process.selectedPatElectrons,
+                                       process.customizeElectronSequence)
+    # We have to do the pat Jets before the pat electrons since we embed them
+    process.customizeElectronSequence.insert(0, process.selectedPatJets)
+    process.cleanPatElectrons.src = final_electron_collection
 
     process.load("FinalStateAnalysis.PatTools.patMuonProduction_cff")
     final_muon_collection = chain_sequence(
@@ -154,14 +154,14 @@ def configurePatTuple(process, isMC=True, **kwargs):
                                        process.customizeMuonSequence)
     process.cleanPatMuons.src = final_muon_collection
 
-    process.load("FinalStateAnalysis.PatTools.patElectronProduction_cff")
-    final_electron_collection = chain_sequence(
-        process.customizeElectronSequence, "selectedPatElectrons")
-    process.tuplize += process.customizeElectronSequence
-    process.customizeElectronSequence.insert(0, process.selectedPatElectrons)
-    process.patDefaultSequence.replace(process.selectedPatElectrons,
-                                       process.customizeElectronSequence)
-    process.cleanPatElectrons.src = final_electron_collection
+    process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
+    final_tau_collection = chain_sequence(
+        process.customizeTauSequence, "selectedPatTaus")
+    # Inject into the pat sequence
+    process.customizeTauSequence.insert(0, process.selectedPatTaus)
+    process.patDefaultSequence.replace(process.selectedPatTaus,
+                                       process.customizeTauSequence)
+    process.cleanPatTaus.src = final_tau_collection
 
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
@@ -174,7 +174,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.systematicsMET.electronSrc = cms.InputTag("cleanPatElectrons")
 
     # Keep all the data formats needed for the systematics
-    output_commands.append('recoLeafCandidates_*systematics*_*_%s'
+    output_commands.append('recoLeafCandidates_*_*_%s'
                            % process.name_())
 
     # Define the default lepton cleaning

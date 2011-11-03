@@ -13,9 +13,13 @@ from FinalStateAnalysis.PatTools.electrons.triggerMatch_cfi import triggeredPatE
 from FinalStateAnalysis.PatTools.electrons.patElectronMVAIDEmbedding_cfi import\
         patElectronMVAIDEmbedder
 
+from FinalStateAnalysis.PatTools.electrons.patElectronEmbedJetInfo_cfi import \
+        patElectronsEmbedJetInfo
+
 customizeElectronSequence = cms.Sequence()
 customizeElectronSequence += electronsWWID
 customizeElectronSequence += electronsVBTFId
+customizeElectronSequence += patElectronsEmbedJetInfo
 customizeElectronSequence += electronSystematics
 customizeElectronSequence += triggeredPatElectrons
 customizeElectronSequence += patElectronMVAIDEmbedder

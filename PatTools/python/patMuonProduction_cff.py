@@ -17,6 +17,10 @@ customizeMuonSequence += patVBTFMuonMatch
 from FinalStateAnalysis.PatTools.muons.patMuonIpEmbedding_cfi import patMuonsEmbedIp
 customizeMuonSequence += patMuonsEmbedIp
 
+from FinalStateAnalysis.PatTools.muons.patMuonEmbedJetInfo_cfi import \
+        patMuonsEmbedJetInfo
+customizeMuonSequence += patMuonsEmbedJetInfo
+
 from FinalStateAnalysis.PatTools.muons.muonSystematics_cfi import \
         poolDBESSourceMuScleFitCentralValue, \
         poolDBESSourceMuScleFitShiftUp, \

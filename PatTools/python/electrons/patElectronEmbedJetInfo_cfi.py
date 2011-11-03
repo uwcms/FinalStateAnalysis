@@ -1,10 +1,10 @@
 import FWCore.ParameterSet.Config as cms
 
-patTausEmbedJetInfo = cms.EDProducer(
-    "PATTauJetInfoEmbedder",
+patElectronsEmbedJetInfo = cms.EDProducer(
+    "PATElectronJetInfoEmbedder",
     src = cms.InputTag("fixme"),
     embedBtags = cms.bool(False),
     suffix = cms.string(''),
     jetSrc = cms.InputTag("selectedPatJets"),
-    maxDeltaR = cms.double(0.1),
+    maxDeltaR = cms.double(0.5),
 )
