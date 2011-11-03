@@ -110,6 +110,15 @@ lhe_info = pt.clone(
     plotquantity = "evt().lesHouches().NUP"
 )
 
+process_id = pt.clone(
+    min = 0,
+    max = 100,
+    nbins = 100,
+    description = "Process ID",
+    name = "ProcessID",
+    plotquantity = "evt().genEventInfo.signalProcessID()"
+)
+
 process.mt = cms.EDAnalyzer(
     "CandViewHistoAnalyzer",
     src = cms.InputTag("finalStateMuTau"),
@@ -124,6 +133,7 @@ process.mt = cms.EDAnalyzer(
         hltPass,
         hltGroup,
         hltPrescale,
+        process_id,
     )
 )
 

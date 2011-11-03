@@ -20,6 +20,7 @@
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
+#include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "DataFormats/Provenance/interface/EventID.h"
 
 #include <map>
@@ -37,7 +38,8 @@ class PATFinalStateEvent {
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
         const reco::GenParticleRefProd& genParticles,
-        const edm::EventID& evtId);
+        const edm::EventID& evtId,
+        const GenEventInfoProduct& genEventInfoProd);
 
     /// Get PV
     const edm::Ptr<reco::Vertex>& pv() const;
@@ -47,6 +49,8 @@ class PATFinalStateEvent {
     const std::vector<PileupSummaryInfo>& puInfo() const;
     /// Get the Les Houches event information
     const lhef::HEPEUP& lesHouches() const;
+    /// Get the GenEventInfo product
+    const GenEventInfoProduct& genEventInfo() const;
     /// Get FastJet rho
     double rho() const;
     /// Get trigger information
@@ -54,7 +58,7 @@ class PATFinalStateEvent {
     /// Get MET
     const edm::Ptr<pat::MET>& met() const;
     /// Get the event ID
-    const edm::EventID& id() const;
+    const edm::EventID& evtId() const;
 
     /// The following functions use the "SmartTrigger" functionality.
     /// They can be passed a comma separated list of paths:
@@ -98,6 +102,7 @@ class PATFinalStateEvent {
     lhef::HEPEUP lhe_;
     reco::GenParticleRefProd genParticles_;
     edm::EventID evtID_;
+    GenEventInfoProduct genEventInfoProduct_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */

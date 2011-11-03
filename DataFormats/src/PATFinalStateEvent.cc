@@ -30,7 +30,8 @@ PATFinalStateEvent::PATFinalStateEvent(
     const std::vector<PileupSummaryInfo>& puInfo,
     const lhef::HEPEUP& hepeup,
     const reco::GenParticleRefProd& genParticles,
-    const edm::EventID& evtId):
+    const edm::EventID& evtId,
+    const GenEventInfoProduct& genEventInfo):
   rho_(rho),
   triggerEvent_(triggerEvent),
   pv_(pv),
@@ -39,7 +40,8 @@ PATFinalStateEvent::PATFinalStateEvent(
   puInfo_(puInfo),
   lhe_(hepeup),
   genParticles_(genParticles),
-  evtID_(evtId) { }
+  evtID_(evtId),
+  genEventInfoProduct_(genEventInfo) { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
 
@@ -54,6 +56,10 @@ const lhef::HEPEUP& PATFinalStateEvent::lesHouches() const {
   return lhe_;
 }
 
+const GenEventInfoProduct& PATFinalStateEvent::genEventInfo() const {
+  return genEventInfoProduct_;
+}
+
 double PATFinalStateEvent::rho() const { return rho_; }
 
 const pat::TriggerEvent& PATFinalStateEvent::trig() const {
@@ -63,7 +69,7 @@ const edm::Ptr<pat::MET>& PATFinalStateEvent::met() const {
   return met_;
 }
 
-const edm::EventID& PATFinalStateEvent::id() const {
+const edm::EventID& PATFinalStateEvent::evtId() const {
   return evtID_;
 }
 
