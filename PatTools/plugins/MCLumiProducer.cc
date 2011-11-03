@@ -6,7 +6,8 @@
  * the normalization factor used to plot to final the events automatically
  * calculated.
  *
- * The integrated lumi and x_sec are/should be specified in pb.
+ * The x_sec should be specified in pb.  The units of
+ * integrated luminosity in the final output are (1/microbarn).
  *
  * The integrated luminosity is calculated as
  *
@@ -54,7 +55,6 @@ MCLumiProducer::MCLumiProducer(const edm::ParameterSet& pset):
 }
 
 void MCLumiProducer::produce(edm::Event& evt, const edm::EventSetup& es) {
-  // FIXME JUST FILL LS::HLT/L1 vectors here
   eventCount_ += 1;
   if (needTriggerEvent_) {
     edm::Handle<pat::TriggerEvent> trigEv;
@@ -97,6 +97,10 @@ void MCLumiProducer::endLuminosityBlock(
   // Compute the effective luminosity
   double effLumi = eventCount_ / xSec_;
   double effLumiErr = eventCount_ / (xSec_ + xSecErr_);
+
+  // Convert to inverse microbarns
+  effLumi *= 1e6;
+  effLumiErr *= 1e6;
 
   std::auto_ptr<LumiSummary> output(new LumiSummary);
   output->setLumiVersion("MC");
