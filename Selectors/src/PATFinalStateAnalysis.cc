@@ -59,6 +59,7 @@ PATFinalStateAnalysis::~PATFinalStateAnalysis() { }
 
 void PATFinalStateAnalysis::beginLuminosityBlock(
     const edm::LuminosityBlockBase& ls) {
+  //std::cout << "Analyzing lumisec: " << ls.id() << std::endl;
 
   edm::Handle<edm::MergeableCounter> skimmedEvents;
   ls.getByLabel(skimCounter_, skimmedEvents);
@@ -68,6 +69,7 @@ void PATFinalStateAnalysis::beginLuminosityBlock(
   edm::Handle<LumiSummary> lumiSummary;
   ls.getByLabel(lumiProducer_, lumiSummary);
   if (lumiSummary.isValid()) {
+    //std::cout << "RecLumi: " << lumiSummary->intgRecLumi() << std::endl;
     integratedLumi_->Fill(0.0, lumiSummary->intgRecLumi());
   }
 }
