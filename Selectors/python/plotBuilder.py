@@ -143,6 +143,12 @@ def makePlots(*legs, **kwargs):
     histos.extras.histos.append(jet_veto_cfg)
     add_ntuple(jet_veto_cfg.name.value(), jet_veto_cfg.plotquantity.value())
 
+    tau_veto_cfg = PSetTemplate(plotting.extras.ntaus).replace(
+        name = 'NIsoTausPt20', nicename = 'p_{T} > 20',
+        pt_threshold = '20', eta_threshold = '2.5',)
+    histos.extras.histos.append(tau_veto_cfg)
+    add_ntuple(tau_veto_cfg.name.value(), tau_veto_cfg.plotquantity.value())
+
     b_veto_cfg = PSetTemplate(plotting.extras.nbjets).replace(
             name = 'NBjetsPt20', nicename = 'p_{T} > 20',
             pt_threshold = '20', eta_threshold = '2.5',

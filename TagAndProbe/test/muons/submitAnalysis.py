@@ -2,10 +2,10 @@ import os
 import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
-cfg = 'analyzeTP_Muon_cfg.py'
-jobId = '2011-10-17-v5-MuonTP'
+cfg = 'analyze_cfg.py'
+jobId = '2011-11-02-v1-MuonTP'
 
-patJobId = '2011-10-06-EWKPatTuple'
+patJobId = '2011-10-21-EWKPatTuple'
 patCfg = 'patTuple_cfg'
 
 def get_dir(sample):
@@ -14,7 +14,7 @@ def get_dir(sample):
     return base_dir + dir_name
 
 for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
-    if 'SingleMu' not in sample and 'Zjet' not in sample and 'QCD' not in sample:
+    if 'Mu' not in sample_info['analyses']:
         continue
 
     path_name = os.path.join(os.environ['scratch'], '-'.join(
@@ -32,6 +32,7 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         'farmoutAnalysisJobs2',
         '--varparsing',
         '--fwklite',
+        '--express-queue',
         #'--no-submit',
         #'--job-count=2',
         #'--input-files-per-job=%i' % (sample_info['ana_group']*2),
@@ -51,4 +52,5 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
 
     command.append(os.path.abspath(cfg))
     command.extend(options)
+    print "export TERMCAP=screen"
     print ' '.join(command)

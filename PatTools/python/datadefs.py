@@ -247,6 +247,13 @@ datadefs = {
 # Add all the datasets
 def build_data_set(pd, analyses):
   subsample_dict = {
+    'data_%s_Run2011B_PromptReco_v1_d' % pd : {
+      'datasetpath' : "/%s/Run2011B-PromptReco-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-179431_7TeV_PromptReco_Collisions11_JSON.txt",
+      'firstRun' : 178678,
+      'lastRun' : 179431,
+      'analyses' : analyses,
+    },
     'data_%s_Run2011B_PromptReco_v1_c' % pd : {
       'datasetpath' : "/%s/Run2011B-PromptReco-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-178677_7TeV_PromptReco_Collisions11_JSON.txt",

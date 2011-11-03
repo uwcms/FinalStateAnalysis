@@ -16,6 +16,7 @@ process.fwliteInput = cms.PSet(fileNames = cms.vstring(options.inputFiles))
 process.source = cms.Source(
     "PoolSource", fileNames = cms.untracked.vstring(options.inputFiles),
     skipEvents = cms.untracked.uint32(options.skipEvents),
+    lumisToProcess = options.buildPoolSourceLumiMask()
 )
 
 plots_filename = options.outputFile.replace('.root', '.plots.root')

@@ -49,6 +49,18 @@ glbmu_veto = cms.PSet(
     invert = cms.bool(False),
 )
 
+tau_sel_for_veto = (
+    'pt > ${pt_threshold} & abs(eta) < ${eta_threshold} &'
+    ' tauID(\'decayModeFinding\') & '
+    'tauID(\'byLooseCombinedIsolationDeltaBetaCorr\')')
+
+tau_veto = cms.PSet(
+    name = cms.string("${name}_TauVeto"),
+    description = cms.string("$nicename no extra iso. taus"),
+    cut = cms.string('extras("extTaus", "%s").size() == 0' % tau_sel_for_veto),
+    plottable = cms.string('extras("extTaus", "%s").size()' % tau_sel_for_veto),
+    invert = cms.bool(False),
+)
 
 jet_id_for_veto = 'userCand(\'patJet\').pt > ${pt_threshold} & abs(userCand(\'patJet\').eta) < ${eta_threshold}'
 jet_veto = cms.PSet(

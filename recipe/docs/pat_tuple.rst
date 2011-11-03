@@ -134,8 +134,33 @@ The uncorrected, and 1 sigma uncertainties on the JEC are available from the
 Taus
 ----
 
-The seed jets are available via the ``userCand('patJet')`` function.
+The taus are HPS PFTaus.
 
+
+Discriminators
+''''''''''''''
+The standard complement of discriminators are available.
+
+* ``decayModeFinding``
+* ``byVLooseIsolation``
+* ``byLooseIsolation``
+* ``byMediumIsolation``
+* ``byTightIsolation``
+* ``byVLooseIsolationDeltaBetaCorr``
+* ``byLooseIsolationDeltaBetaCorr``
+* ``byMediumIsolationDeltaBetaCorr``
+* ``byTightIsolationDeltaBetaCorr``
+* ``byVLooseCombinedIsolationDeltaBetaCorr``
+* ``byLooseCombinedIsolationDeltaBetaCorr``
+* ``byMediumCombinedIsolationDeltaBetaCorr``
+* ``byTightCombinedIsolationDeltaBetaCorr``
+* ``againstElectronLoose``
+* ``againstElectronMedium``
+* ``againstElectronTight``
+* ``againstMuonLoose``
+* ``againstMuonTight``
+
+The seed jets are available via the ``userCand('patJet')`` function.
 
 
 Utilities

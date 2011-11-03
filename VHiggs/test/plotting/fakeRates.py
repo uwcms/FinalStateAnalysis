@@ -56,10 +56,28 @@ base_dimuon_selection = [
     'Muon2_MuRelIso < 0.15',
     'Muon1_MuID_WWID > 0.5',
     'Muon2_MuID_WWID > 0.5',
-    'NIsoMuonsPt5_Nmuons < 1',
+    'NIsoMuonsPt5_Nmuons < 0.5',
     'NBjetsPt20_Nbjets < 1', # Against ttbar
     'DoubleMuTriggers_HLT > 0.5 ',
     'Muon1Charge*Muon2Charge < 0',
+    'vtxNDOF > 0',
+    'vtxChi2/vtxNDOF < 10',
+]
+
+# We also look at Mu-Mu (SS) + Anti-Tau.  We require the leading muon to have a
+# good MT.
+base_ttbar_selection = [
+    'Muon1Pt > 15',
+    'Muon2Pt > 9',
+    'Muon1AbsEta < 2.1',
+    'Muon2AbsEta < 2.1',
+    'Muon1_MuRelIso < 0.15',
+    'Muon1_MuID_WWID > 0.5',
+    'NIsoMuonsPt5_Nmuons < 1',
+    #'NBjetsPt20_Nbjets > 0', # For ttbar
+    'DoubleMuTriggers_HLT > 0.5 ',
+    'Muon1Charge*Muon2Charge > 0', # Same sign (to kill DY)
+    'Tau_LooseHPS < 0.5',
 ]
 
 # Stupid names are different, fix this
@@ -88,18 +106,21 @@ fakerates = {
     'tau' : {
         'ntuple' : 'mmtFilter',
         'pd' : 'data_DoubleMu',
+        'mc_pd' : 'Zjets',
         'varname' : 'TauJetPt',
         'vartitle' : 'Tau Jet p_{T}',
         'var' : 'TauJetPt',
-        'varbinning' : [300, 0, 300],
+        'varbinning' : [100, 0, 100],
         'rebin' : 4,
         'zMassVar' : 'Leg1Leg2_Mass',
         'zMassTitle' : 'Dimuon mass (GeV)',
         'evtType' : '#mu#mu + jet',
         'base_cuts' : base_dimuon_selection,
         'zcuts' : [
-            'Leg1Leg2_Mass > 70',
-            'Leg1Leg2_Mass < 110',
+            #'Leg1Leg2_Mass > 70',
+            #'Leg1Leg2_Mass < 110',
+            'Leg1Leg2_Mass > 86',
+            'Leg1Leg2_Mass < 95',
             'Leg3_MtToMET < 40'
         ],
         'denom' : [
@@ -114,18 +135,21 @@ fakerates = {
     'mu' : {
         'ntuple' : 'mmmFilter',
         'pd' : 'data_DoubleMu',
+        'mc_pd' : 'Zjets',
         'varname' : 'MuJetPt',
         'var' : 'Muon3Pt + Muon3Pt*Muon3_MuRelIso',
         'vartitle' : 'Mu Jet p_{T}',
-        'varbinning' : [300, 0, 300],
+        'varbinning' : [100, 0, 100],
         'rebin' : 5,
         'zMassVar' : 'Leg1Leg2_Mass',
         'zMassTitle' : 'Dimuon mass (GeV)',
         'evtType' : '#mu#mu + jet',
         'base_cuts' : base_dimuon_selection,
         'zcuts' : [
-            'Leg1Leg2_Mass > 70',
-            'Leg1Leg2_Mass < 110',
+            #'Leg1Leg2_Mass > 70',
+            #'Leg1Leg2_Mass < 110',
+            'Leg1Leg2_Mass > 86',
+            'Leg1Leg2_Mass < 95',
             'Leg3_MtToMET < 40'
         ],
         'denom' : [
@@ -137,21 +161,48 @@ fakerates = {
             'Muon3_MuRelIso < 0.3',
         ]
     },
+    'muTTbar' : {
+        'ntuple' : 'mmtFilter',
+        'pd' : 'data_DoubleMu',
+        'mc_pd' : 'ttjets',
+        'varname' : 'MuJetPt',
+        'var' : 'Muon2Pt + Muon2Pt*Muon2_MuRelIso',
+        'vartitle' : 'Mu Jet p_{T}',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'zMassVar' : 'Leg1_MtToMET',
+        'zMassTitle' : 'Leading Muon M_{T}',
+        'evtType' : '#mu#mu + jet',
+        'base_cuts' : base_ttbar_selection,
+        'zcuts' : [
+            'Leg1_MtToMET > 30',
+            'METPt > 20',
+        ],
+        'denom' : [
+        ],
+        'num' : [
+            'Muon2_MuID_WWID > 0.5',
+            'Muon2_MuRelIso < 0.3',
+        ]
+    },
     'e' : {
         'ntuple' : 'emmFilter',
         'pd' : 'data_DoubleMu',
+        'mc_pd' : 'Zjets',
         'varname' : 'EJetPt',
         'var' : 'ElecPt + ElecPt*Elec_ERelIso',
         'vartitle' : 'Electron Jet p_{T}',
-        'varbinning' : [300, 0, 300],
+        'varbinning' : [100, 0, 100],
         'rebin' : 5,
         'zMassVar' : 'Leg2Leg3_Mass',
         'zMassTitle' : 'Dimuon mass (GeV)',
         'evtType' : '#mu#mu + jet',
         'base_cuts' : base_dimuon_emm,
         'zcuts' : [
-            'Leg2Leg3_Mass > 70',
-            'Leg2Leg3_Mass < 110',
+            #'Leg2Leg3_Mass > 70',
+            #'Leg2Leg3_Mass < 110',
+            'Leg2Leg3_Mass > 86',
+            'Leg2Leg3_Mass < 95',
             'Leg1_MtToMET < 40'
         ],
         'denom' : [
@@ -166,19 +217,22 @@ fakerates = {
     'tauZEE' : {
         'ntuple' : 'eetFilter',
         'pd' : 'data_DoubleElectron',
+        'mc_pd' : 'Zjets',
         'varname' : 'TauJetPt',
         'vartitle' : 'Tau Jet p_{T}',
         'var' : 'TauJetPt',
-        'varbinning' : [300, 0, 300],
+        'varbinning' : [100, 0, 100],
         'rebin' : 4,
         'zMassVar' : 'Leg1Leg2_Mass',
         'zMassTitle' : 'Dielectron mass (GeV)',
         'evtType' : 'ee + jet',
         'base_cuts' : base_dielectron_selection,
         'zcuts' : [
-            'Leg1Leg2_Mass > 70',
-            'Leg1Leg2_Mass < 110',
-            'Leg3_MtToMET < 40'
+            #'Leg1Leg2_Mass > 70',
+            #'Leg1Leg2_Mass < 110',
+            'Leg1Leg2_Mass > 86',
+            'Leg1Leg2_Mass < 95',
+            'Leg3_MtToMET < 20'
         ],
         'denom' : [
             'TauPt > 15',
@@ -192,19 +246,22 @@ fakerates = {
     'muZEE' : {
         'ntuple' : 'eemFilter',
         'pd' : 'data_DoubleElectron',
+        'mc_pd' : 'Zjets',
         'varname' : 'MuJetPt',
         'var' : 'MuPt + MuPt*Mu_MuRelIso',
         'vartitle' : 'Mu Jet p_{T}',
-        'varbinning' : [300, 0, 300],
+        'varbinning' : [100, 0, 100],
         'rebin' : 5,
         'zMassVar' : 'Leg1Leg2_Mass',
         'evtType' : 'ee + jet',
         'base_cuts' : base_dielectron_selection,
         'zMassTitle' : 'Dielectron mass (GeV)',
         'zcuts' : [
-            'Leg1Leg2_Mass > 70',
-            'Leg1Leg2_Mass < 110',
-            'Leg3_MtToMET < 40'
+            #'Leg1Leg2_Mass > 70',
+            #'Leg1Leg2_Mass < 110',
+            'Leg1Leg2_Mass > 86',
+            'Leg1Leg2_Mass < 95',
+            'Leg3_MtToMET < 20'
         ],
         'denom' : [
             'MuPt > 9',
@@ -322,7 +379,7 @@ for fr_type, fr_info in fakerates.iteritems():
     )
 
     mc_num = plotter.get_histogram(
-        'Zjets',
+        fr_info['mc_pd'],
         '/%s/final/Ntuple:%s' % (
             fr_info['ntuple'], 'Num' + fr_info['varname']),
         show_overflows = True,
@@ -330,7 +387,7 @@ for fr_type, fr_info in fakerates.iteritems():
     )
 
     mc_denom = plotter.get_histogram(
-        'Zjets',
+        fr_info['mc_pd'],
         '/%s/final/Ntuple:%s' % (
             fr_info['ntuple'], 'Denom' + fr_info['varname']),
         show_overflows = True,
@@ -342,6 +399,7 @@ for fr_type, fr_info in fakerates.iteritems():
     data_curve = ROOT.TGraphAsymmErrors(data_num.th1, data_denom.th1)
     data_fit_func = ROOT.TF1("f1", "[0] + [1]*exp([2]*x)", 0, 200)
     data_fit_func.SetParameter(0, 0.02)
+    data_fit_func.SetParLimits(0, 0.0, 1)
     data_fit_func.SetParameter(1, 1.87)
     data_fit_func.SetParameter(2, -9.62806e-02)
     data_fit_func.SetLineColor(ROOT.EColor.kBlack)
@@ -351,6 +409,7 @@ for fr_type, fr_info in fakerates.iteritems():
     mc_curve.SetMarkerColor(ROOT.EColor.kRed)
     mc_fit_func = ROOT.TF1("f1", "[0] + [1]*exp([2]*x)", 0, 200)
     mc_fit_func.SetParameter(0, 0.02)
+    mc_fit_func.SetParLimits(0, 0.0, 1)
     mc_fit_func.SetParameter(1, 1.87)
     mc_fit_func.SetParameter(2, -9.62806e-02)
     mc_fit_func.SetLineColor(ROOT.EColor.kRed)
@@ -358,8 +417,8 @@ for fr_type, fr_info in fakerates.iteritems():
 
     canvas.Clear()
     multi = ROOT.TMultiGraph("fake_rates", "Fake Rates")
-    multi.Add(data_curve, "pe")
     multi.Add(mc_curve, "pe")
+    multi.Add(data_curve, "pe")
 
     multi.Draw("ape")
     multi.GetHistogram().SetMinimum(1e-3)
@@ -367,6 +426,15 @@ for fr_type, fr_info in fakerates.iteritems():
     multi.GetHistogram().SetTitle(
         'Fake rate in ' + fr_info['evtType'] + ' events')
 
-    data_curve.Draw('same')
-    mc_curve.Draw('same')
+    data_fit_func.Draw('same')
+    mc_fit_func.Draw('same')
     saveplot(fr_type + "_fakerate")
+
+    data_num = plotter.get_histogram(
+        'data_DoubleMu',
+        '/emtFilter/intLumi',
+        show_overflows = True,
+    )
+
+    data_num.Draw()
+    saveplot('intlumi')

@@ -37,6 +37,15 @@ njets = cms.PSet(
     plotquantity = cms.untracked.string(extras.jet_veto.plottable.value()),
 )
 
+njets = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(10.5),
+    nbins = cms.untracked.int32(11),
+    name = cms.untracked.string("${name}_Njets"),
+    description = cms.untracked.string("${nicename} N_{jets}"),
+    plotquantity = cms.untracked.string(extras.jet_veto.plottable.value()),
+)
+
 nbjets = cms.PSet(
     min = cms.untracked.double(-0.5),
     max = cms.untracked.double(10.5),
@@ -44,6 +53,15 @@ nbjets = cms.PSet(
     name = cms.untracked.string("${name}_Nbjets"),
     description = cms.untracked.string("${nicename} N_{b-jets}"),
     plotquantity = cms.untracked.string(extras.bjet_veto.plottable.value()),
+)
+
+ntaus = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(10.5),
+    nbins = cms.untracked.int32(11),
+    name = cms.untracked.string("${name}_NIsoTaus"),
+    description = cms.untracked.string("${nicename} Num. Iso Taus"),
+    plotquantity = cms.untracked.string(extras.tau_veto.plottable.value()),
 )
 
 # Number of bjets passing hps loose

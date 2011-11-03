@@ -22,6 +22,16 @@ jetpt = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+decayFinding = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(1.5),
+    nbins = cms.untracked.int32(2),
+    name = cms.untracked.string("${name}_DecayModeFinding"),
+    description = cms.untracked.string("${nicename} Decay Mode Finding"),
+    plotquantity = cms.untracked.string('${getter}tauID("decayModeFinding")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 vlooseID = cms.PSet(
     min = cms.untracked.double(-0.5),
     max = cms.untracked.double(1.5),
@@ -82,5 +92,5 @@ genDecayMode = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
-all = [decayMode, vlooseID, looseID, mediumID, jetpt, btag, tnpPresel,
-      genDecayMode]
+all = [decayMode, decayModeFinding, vlooseID, looseID, mediumID, jetpt, btag,
+       tnpPresel, genDecayMode]

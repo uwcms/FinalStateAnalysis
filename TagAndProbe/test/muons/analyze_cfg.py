@@ -1,8 +1,16 @@
+'''
+
+Construction of Ntuples for quantities measured with SingleMu dataset
+
+
+'''
+
 import FWCore.ParameterSet.Config as cms
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
 from FinalStateAnalysis.Selectors.selectors import selectors
 from FinalStateAnalysis.Selectors.plotting import plotting
+from FinalStateAnalysis.Selectors.plotBuilder import makePlots
 
 options = TauVarParsing.TauVarParsing(
     skipEvents=0, # For debugging
@@ -20,7 +28,8 @@ process.fwliteOutput = cms.PSet(fileName = cms.string(options.outputFile))
 
 process.steering = cms.PSet(
     analyzers = cms.vstring(
-        'mm'
+        'mm',
+        'em'
     ),
     reportAfter = cms.uint32(1000),
     ignored_cuts = cms.vstring()
@@ -31,9 +40,10 @@ process.maxEvents = cms.untracked.PSet(
 
 # Common among all analyzers
 process.common = cms.PSet(
-    weights = cms.VInputTag(
-        cms.InputTag("lumiWeights", "3bx")
+    weights = cms.vstring(
+        'weight("3bx_S42011A")'
     ),
+    evtSrc = cms.InputTag("patFinalStateEventProducer"),
     skimCounter = cms.InputTag("eventCount", "", "TUPLE"),
 )
 
@@ -49,13 +59,18 @@ mu_leg2 = {
     'index' : 1,
 }
 
-e_leg2 = {
-    'name' : 'Electron', 'getter' :'daughter(1).', 'nicename' : 'Electron',
-    'index' : 1,
+e_leg1 = {
+    'name' : 'Electron', 'getter' :'daughter(0).', 'nicename' : 'Electron',
+    'index' : 0,
 }
 
 # Define the selections
-selections = cms.VPSet(
+mm_selections = cms.VPSet(
+    # Take the best unprescaled SingleMu trigger
+    #PSetTemplate(selectors.trigger.hlt).replace(
+        #name = 'HLTSingleMu', nicename = 'Single Mu (no iso)',
+        #hlt_path = r'HLT_Mu15_v\\d+, HLT_Mu24_v\\d+, HLT_Mu30_v\\d+',
+    #),
     ###########################################################################
     # Uniqueness cut
     ###########################################################################
@@ -66,108 +81,43 @@ selections = cms.VPSet(
     # object.
     PSetTemplate(selectors.topology.descending_phi).replace(
         name = 'TagMuonID', nicename = 'Muon 1 is TagMuon',
-        getter1 = leg1['getter'], getter2 = leg2['getter']
+        getter1 = mu_leg1['getter'], getter2 = mu_leg2['getter']
     ),
 
     # Offline cuts on tag muon
     PSetTemplate(selectors.candidate.eta).replace(
-        threshold = '2.1', **leg1),
+        threshold = '2.1', **mu_leg1),
     PSetTemplate(selectors.candidate.pt).replace(
-        threshold = '15', **leg1),
+        threshold = '15', **mu_leg1),
     # Require WWID on the tag muon
     PSetTemplate(selectors.muons.id).replace(
-        muID = 'WWID', **leg1),
+        muID = 'WWID', **mu_leg1),
 )
 
-# Define what we are going to plot
-plots = cms.PSet(
-    histos = cms.VPSet(),
-    ntuple = cms.PSet(
-    )
-)
+puWeights = [
+    '3bx_S42011A',
+    '3bx_S42011AB178078',
+    '3bx_S42011B178078',
+]
 
-def add_ntuple(name, function):
-    setattr(plots.ntuple, name, cms.string(function))
+mu_triggers = [
+    ('Mu15', 'Mu 15', r'HLT_Mu15_v\\d+'),
+    ('Mu24', 'Mu 24', r'HLT_Mu24_v\\d+'),
+    ('Mu30', 'Mu 30', r'HLT_Mu30_v\\d+'),
+    ('SingleMus', 'SingleMu', r'HLT_Mu15_v\\d+, HLT_Mu24_v\\d+, HLT_Mu30_v\\d+'),
 
-for leg in [mu_leg1, leg2]:
-    for plot in plotting.muons.all:
-        plot_cfg = PSetTemplate(plot).replace(**leg)
-        add_ntuple(plot_cfg.name.value(), plot_cfg.plotquantity.value())
-    for plot in plotting.candidate.all:
-        plot_cfg = PSetTemplate(plot).replace(**leg)
-        add_ntuple(plot_cfg.name.value(), plot_cfg.plotquantity.value())
-    plot_cfg = PSetTemplate(plotting.muons.id).replace(
-        muID = 'WWID', **leg)
-    add_ntuple(plot_cfg.name.value(), plot_cfg.plotquantity.value())
+    ('IsoMu17', 'Iso Mu 17', r'HLT_IsoMu17_v\\d+'),
+    ('IsoMu20', 'Iso Mu 20', r'HLT_IsoMu20_v\\d+'),
+    ('IsoMu24', 'Iso Mu 24', r'HLT_IsoMu24_v\\d+'),
+    ('IsoMus', 'Iso Mu Any', r'HLT_IsoMu17_v\\d+, HLT_IsoMu20_v\\d+, HLT_IsoMu24_v\\d+'),
 
-for plot in plotting.candidate.all:
-    plot_cfg = PSetTemplate(plot).replace(
-            name = 'finalStateVisP4',
-            nicename = 'Visible final state',
-            getter = ''
-        )
-    add_ntuple(plot_cfg.name.value(), plot_cfg.plotquantity.value())
+    ('DoubleMu7', 'Double Mu 17', r'HLT_DoubleMu7_v\\d+'),
+    ('Mu13Mu8', 'Mu (13) Mu (8)', r'HLT_Mu13_Mu8_v\\d+'),
+    ('DoubleMus', 'DoubleMuTriggers', r'HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+'),
+]
 
-add_ntuple('evt', 'userInt("evt")')
-add_ntuple('run', 'userInt("run")')
-
-# Add our trilepton HLT paths
-emu_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
-    name = "Mu8Ele17", nicename = "Mu(8) Ele(17)",
-    hlt_path = r"HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+")
-add_ntuple(emu_trig_cfg.name.value(), emu_trig_cfg.plotquantity.value())
-
-emu_trig_cfg = PSetTemplate(plotting.trigger.hltGroup).replace(
-    name = "Mu8Ele17", nicename = "Mu(8) Ele(17)",
-    hlt_path = r"HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+")
-add_ntuple(emu_trig_cfg.name.value(), emu_trig_cfg.plotquantity.value())
-
-mue_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
-    name = "Mu17Ele8", nicename = "Mu(17) Ele(8)",
-    hlt_path = r"HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+")
-add_ntuple(mue_trig_cfg.name.value(), mue_trig_cfg.plotquantity.value())
-
-mue_trig_cfg = PSetTemplate(plotting.trigger.hltGroup).replace(
-    name = "Mu17Ele8", nicename = "Mu(17) Ele(8)",
-    hlt_path = r"HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+")
-add_ntuple(mue_trig_cfg.name.value(), mue_trig_cfg.plotquantity.value())
-
-ee_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
-    name = "E17E8", nicename = "Ele(17) E(8)",
-    hlt_path = r'HLT_Ele17_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_Ele8_CaloIdT_TrkIdVL_CaloIsoVL_TrkIsoVL_v\\d+')
-add_ntuple(ee_trig_cfg.name.value(), ee_trig_cfg.plotquantity.value())
-
-mm_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
-    name = "Mu13Mu8", nicename = "Mu(13) Mu(8)",
-    hlt_path = r'HLT_Mu13_Mu8_v\\d+')
-add_ntuple(mm_trig_cfg.name.value(), mm_trig_cfg.plotquantity.value())
-
-mm77_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
-    name = "DoubleMu7", nicename = "Double Muon 7",
-    hlt_path = r'HLT_DoubleMu7_v\\d+')
-add_ntuple(mm77_trig_cfg.name.value(), mm77_trig_cfg.plotquantity.value())
-
-mm77_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
-    name = "DoubleMuTriggers", nicename = "Double Muon 7/7 + 13/8",
-    hlt_path = r'HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+')
-add_ntuple(mm77_trig_cfg.name.value(), mm77_trig_cfg.plotquantity.value())
-
-mm77_trig_cfg = PSetTemplate(plotting.trigger.hltGroup).replace(
-    name = "DoubleMuTriggers", nicename = "Double Muon 7/7 + 13/8",
-    hlt_path = r'HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+')
-add_ntuple(mm77_trig_cfg.name.value(), mm77_trig_cfg.plotquantity.value())
-
-im24_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
-    name = "IsoMu24", nicename = "Iso Mu 24",
-    hlt_path = r'HLT_IsoMu24_v\\d+')
-add_ntuple(im24_trig_cfg.name.value(), im24_trig_cfg.plotquantity.value())
-
-m30_trig_cfg = PSetTemplate(plotting.trigger.hlt).replace(
-    name = "Mu30", nicename = "Mu 30",
-    hlt_path = r'HLT_Mu30_v\\d+')
-add_ntuple(m30_trig_cfg.name.value(), m30_trig_cfg.plotquantity.value())
-
-add_ntuple("puWeight", "evt().weight('puAvg')")
+mm_plots, mm_ntuple = makePlots(mu_leg1, mu_leg2,
+                                triggers = mu_triggers, puWeights=puWeights)
 
 # Analyze MuMu states
 process.mm = cms.PSet(
@@ -178,9 +128,55 @@ process.mm = cms.PSet(
         final = cms.PSet(
             sort = cms.string('daughter(2).pt'),
             take = cms.uint32(1),
-            plot = plots
+            plot = cms.PSet(histos = cms.VPSet(), ntuple = mm_ntuple)
         ),
-        selections = selections
+        selections = mm_selections
     )
 )
 
+# Define selections for emu selections
+em_selections = cms.VPSet(
+    # Take the best unprescaled SingleMu trigger
+    #PSetTemplate(selectors.trigger.hlt).replace(
+        #name = 'HLTSingleMu', nicename = 'Single Mu (no iso)',
+        #hlt_path = r'HLT_Mu15_v\\d+, HLT_Mu24_v\\d+, HLT_Mu30_v\\d+',
+    #),
+    # We don't need to worry about double counting here
+    # Offline cuts on tag muon
+    PSetTemplate(selectors.candidate.eta).replace(
+        threshold = '2.1', **mu_leg2),
+    PSetTemplate(selectors.candidate.pt).replace(
+        threshold = '15', **mu_leg2),
+    # Require WWID on the tag muon
+    PSetTemplate(selectors.muons.id).replace(
+        muID = 'WWID', **mu_leg2),
+)
+
+emu_triggers = [
+    ('Mu8Ele17CaloIDL', 'Mu (8) Ele (17)', r"HLT_Mu8_Ele17_CaloIdL_v\\d+"),
+    ('Mu8Ele17CaloIDT', 'Mu (8) Ele (17)', r"HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+"),
+    ('Mu8Ele17All', 'Mu (8) Ele (17)', r"HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+"),
+
+    ('Mu17Ele8CaloIDL', 'Mu (17) Ele (8)', r"HLT_Mu17_Ele8_CaloIdL_v\\d+"),
+    ('Mu17Ele8CaloIDT', 'Mu (17) Ele (8)', r"HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+"),
+    ('Mu17Ele8All', 'Mu (17) Ele (8)', r"HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+"),
+]
+
+em_plots, em_ntuple = makePlots(mu_leg2, e_leg1,
+                                triggers = emu_triggers + mu_triggers,
+                                puWeights = puWeights)
+
+# Analyze MuMu states
+process.em = cms.PSet(
+    process.common,
+    src = cms.InputTag('finalStateElecMu'),
+    analysis = cms.PSet(
+        ignore = process.steering.ignored_cuts,
+        final = cms.PSet(
+            sort = cms.string('daughter(2).pt'),
+            take = cms.uint32(1),
+            plot = cms.PSet(histos = cms.VPSet(), ntuple = em_ntuple)
+        ),
+        selections = em_selections
+    )
+)
