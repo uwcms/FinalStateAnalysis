@@ -88,8 +88,9 @@ class AnalysisSample(object):
         #print self.name
         #print self.file
         key = ":".join([tree, name])
-        #if key in self.computed_hists:
-            #return
+        if key in self.computed_hists:
+            raise ValueError("The histogram with key %s has"
+                             " already been registered!" % key)
 
         ttree = self.file.get_unweighted(tree)
         name = key.replace(':', '')
