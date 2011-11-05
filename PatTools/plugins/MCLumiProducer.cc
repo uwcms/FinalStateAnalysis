@@ -16,6 +16,7 @@
  * Author: Evan K. Friis, UW Madison
  *
  */
+/*
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/Event.h"
@@ -120,3 +121,4 @@ void MCLumiProducer::endLuminosityBlock(
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 DEFINE_FWK_MODULE(MCLumiProducer);
+*/
