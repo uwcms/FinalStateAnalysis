@@ -216,20 +216,14 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.tuplize += process.patFinalStateEventProducer
     output_commands.append('*_patFinalStateEventProducer_*_*')
 
-    # Build the Lumi-Block level quantities
-    # If MC, make a fake lumi summary object that holds the effective integrated
-    # luminosity
-    if isMC:
-        process.load("FinalStateAnalysis.PatTools.mcLumiProducer_cfi")
-        process.lumiProducer.xSec = kwargs['xSec']
-        process.lumiProducer.xSecErr = kwargs.get('xSecErr', 0)
-        process.tuplize += process.lumiProducer
 
     # Now build the PATFinalStateLS object, which holds LumiSection info.
     process.load(
         "FinalStateAnalysis.PatTools.finalStates.patFinalStateLSProducer_cfi")
     process.tuplize += process.finalStateLS
     output_commands.append('*_finalStateLS_*_*')
+    if isMC:
+        process.finalStateLS.xSec = kwargs['xSec']
 
     # Now build all of our DiLeptons and TriLepton final states
     lepton_types = [('Elec', cms.InputTag("cleanPatElectrons")),

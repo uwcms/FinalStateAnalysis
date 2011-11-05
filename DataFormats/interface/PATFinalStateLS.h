@@ -17,13 +17,13 @@ class PATFinalStateLS {
   public:
     PATFinalStateLS();
     PATFinalStateLS(const edm::LuminosityBlockID& id,
-        const LumiSummary& lumiSummary);
+        double integratedLuminosity,
+        double instantaneousLumi,
+        const std::vector<LumiSummary::HLT>& hltInfos,
+        const std::vector<LumiSummary::L1>& l1Infos);
 
     /// Get the ID with lumi & run number
-    const edm::LuminosityBlockID& id() const;
-
-    /// Access to the lumi summary information
-    const LumiSummary& lumiSummary() const;
+    const edm::LuminosityBlockID& lsID() const;
 
     /// Get the inst. luminosity in this lumi
     double instantaneousLumi() const;
@@ -36,7 +36,10 @@ class PATFinalStateLS {
 
   private:
     edm::LuminosityBlockID id_;
-    LumiSummary lumiSummary_;
+    double integratedLumi_;
+    double instaneousLumi_;
+    std::vector<LumiSummary::HLT> hltInfos_;
+    std::vector<LumiSummary::L1> l1Infos_;
 };
 
 #endif /* end of include guard: PATFINALSTATELS_HT41P3HF */
