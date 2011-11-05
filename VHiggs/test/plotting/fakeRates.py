@@ -11,12 +11,13 @@ import glob
 import logging
 import math
 from FinalStateAnalysis.Utilities.AnalysisPlotter import styling,samplestyles
+import FinalStateAnalysis.PatTools.data as data_tool
 
 # Logging options
 logging.basicConfig(filename='fakeRates.log',level=logging.DEBUG, filemode='w')
 log = logging.getLogger("plotting")
 h1 = logging.StreamHandler(sys.stdout)
-h1.level = logging.INFO
+h1.level = logging.DEBUG
 log.addHandler(h1)
 logging.getLogger("AnalysisPlotter").addHandler(h1)
 h2 = logging.StreamHandler(sys.stderr)
@@ -25,24 +26,6 @@ logging.getLogger("ROOTCache").addHandler(h2)
 
 ROOT.gROOT.SetBatch(True)
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
-
-def saveplot(filename):
-    # Save the current canvas
-    filetype = '.pdf'
-    canvas.SetLogy(False)
-    canvas.Update()
-    canvas.Print(os.path.join(
-        "plots", 'fakeRates', filename + filetype))
-    canvas.SetLogy(True)
-    canvas.Update()
-    canvas.Print(os.path.join(
-        "plots", 'fakeRates', filename + '_log' + filetype))
-
-from data import build_data
-skips =['EM', '2011B_PromptReco_v1_b', '2011B']
-samples, plotter = build_data('2011-10-25-WHReSkim', 'scratch_results',
-                              2170, skips, count='emtFilter/skimCounter')
-
 
 # Dimuon selection
 base_dimuon_selection = [
@@ -62,6 +45,7 @@ base_dimuon_selection = [
     'Muon1Charge*Muon2Charge < 0',
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
+    'METPt < 20',
 ]
 
 # We also look at Mu-Mu (SS) + Anti-Tau.  We require the leading muon to have a
@@ -78,6 +62,24 @@ base_ttbar_selection = [
     'DoubleMuTriggers_HLT > 0.5 ',
     'Muon1Charge*Muon2Charge > 0', # Same sign (to kill DY)
     'Tau_LooseHPS < 0.5',
+    'vtxNDOF > 0',
+    'vtxChi2/vtxNDOF < 10',
+]
+
+base_qcd_selection = [
+    'Muon1Pt > 15',
+    'Muon2Pt > 9',
+    'Muon1AbsEta < 2.1',
+    'Muon2AbsEta < 2.1',
+    'Muon1_MuRelIso > 0.5',
+    'Muon1_MuID_WWID > 0.5',
+    'NIsoMuonsPt5_Nmuons < 1',
+    #'NBjetsPt20_Nbjets > 0', # For ttbar
+    'DoubleMuTriggers_HLT > 0.5 ',
+    'Muon1Charge*Muon2Charge > 0', # Same sign (to kill DY)
+    'Tau_LooseHPS < 0.5',
+    'vtxNDOF > 0',
+    'vtxChi2/vtxNDOF < 10',
 ]
 
 # Stupid names are different, fix this
@@ -100,12 +102,16 @@ base_dielectron_selection = [
     'NBjetsPt20_Nbjets < 1', # Against ttbar
     #'DoubleMuTriggers_HLT > 0.5 ',
     'Elec1Charge*Elec2Charge < 0',
+    'vtxNDOF > 0',
+    'vtxChi2/vtxNDOF < 10',
+    'METPt < 20',
 ]
 
 fakerates = {
     'tau' : {
         'ntuple' : 'mmtFilter',
         'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'Zjets',
         'varname' : 'TauJetPt',
         'vartitle' : 'Tau Jet p_{T}',
@@ -135,6 +141,7 @@ fakerates = {
     'mu' : {
         'ntuple' : 'mmmFilter',
         'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'Zjets',
         'varname' : 'MuJetPt',
         'var' : 'Muon3Pt + Muon3Pt*Muon3_MuRelIso',
@@ -150,7 +157,7 @@ fakerates = {
             #'Leg1Leg2_Mass < 110',
             'Leg1Leg2_Mass > 86',
             'Leg1Leg2_Mass < 95',
-            'Leg3_MtToMET < 40'
+            'Leg3_MtToMET < 10'
         ],
         'denom' : [
             'Muon3Pt > 9',
@@ -164,6 +171,7 @@ fakerates = {
     'muTTbar' : {
         'ntuple' : 'mmtFilter',
         'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'ttjets',
         'varname' : 'MuJetPt',
         'var' : 'Muon2Pt + Muon2Pt*Muon2_MuRelIso',
@@ -176,7 +184,33 @@ fakerates = {
         'base_cuts' : base_ttbar_selection,
         'zcuts' : [
             'Leg1_MtToMET > 30',
+            'Leg2_MtToMET < 30',
             'METPt > 20',
+        ],
+        'denom' : [
+        ],
+        'num' : [
+            'Muon2_MuID_WWID > 0.5',
+            'Muon2_MuRelIso < 0.3',
+        ]
+    },
+    'muQCD' : {
+        'ntuple' : 'mmtFilter',
+        'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*'],
+        'mc_pd' : 'QCDMu',
+        'varname' : 'MuJetPt',
+        'var' : 'Muon2Pt + Muon2Pt*Muon2_MuRelIso',
+        'vartitle' : 'Mu Jet p_{T}',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'zMassVar' : 'Leg1_MtToMET',
+        'zMassTitle' : 'Leading Muon M_{T}',
+        'evtType' : '#mu#mu + jet',
+        'base_cuts' : base_qcd_selection,
+        'zcuts' : [
+            #'Leg2_MtToMET < 30',
+            'METPt < 20',
         ],
         'denom' : [
         ],
@@ -188,6 +222,7 @@ fakerates = {
     'e' : {
         'ntuple' : 'emmFilter',
         'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'Zjets',
         'varname' : 'EJetPt',
         'var' : 'ElecPt + ElecPt*Elec_ERelIso',
@@ -218,6 +253,7 @@ fakerates = {
         'ntuple' : 'eetFilter',
         'pd' : 'data_DoubleElectron',
         'mc_pd' : 'Zjets',
+        'exclude' : ['*DoubleMu*', '*MuEG*'],
         'varname' : 'TauJetPt',
         'vartitle' : 'Tau Jet p_{T}',
         'var' : 'TauJetPt',
@@ -247,11 +283,12 @@ fakerates = {
         'ntuple' : 'eemFilter',
         'pd' : 'data_DoubleElectron',
         'mc_pd' : 'Zjets',
+        'exclude' : ['*DoubleMu*', '*MuEG*'],
         'varname' : 'MuJetPt',
         'var' : 'MuPt + MuPt*Mu_MuRelIso',
         'vartitle' : 'Mu Jet p_{T}',
         'varbinning' : [100, 0, 100],
-        'rebin' : 5,
+        'rebin' : 4,
         'zMassVar' : 'Leg1Leg2_Mass',
         'evtType' : 'ee + jet',
         'base_cuts' : base_dielectron_selection,
@@ -274,167 +311,197 @@ fakerates = {
     },
 }
 
-for fr_type, fr_info in fakerates.iteritems():
-    # Draw the Z-mumu mass
-    denom_selection_list = \
-            fr_info['base_cuts'] + fr_info['zcuts'] + fr_info['denom']
-    denom_selection = " && ".join(denom_selection_list)
+output_file = ROOT.TFile("results_fakeRates.root", "RECREATE")
 
-    num_selection_list = denom_selection_list + fr_info['num']
-    num_selection = ' && '.join(num_selection_list)
+for data_set, skips, int_lumi in [('2011A', ['2011B', 'EM'], 2170),
+                                  ('2011B', ['2011A', 'v1_d', 'EM'], 2170),
+                                  ('2011AB', ['v1_d', 'EM'], 4000)]:
 
-    weight = 'puWeight2011A'
+    samples, plotter = data_tool.build_data(
+        'VH', '2011-10-25-WHReSkim', 'scratch_results',
+        int_lumi, skips, count='emtFilter/skimCounter')
 
-    plotter.register_tree(
-        'DenomZMass',
-        '/%s/final/Ntuple' % fr_info['ntuple'],
-        fr_info['zMassVar'],
-        denom_selection,
-        w = weight,
-        binning = [80, 70, 110],
+    legend = plotter.build_legend(
+        '/emtFilter/skimCounter',
         include = ['*'],
-    )
+        exclude = ['*data*','*VH*'],
+        drawopt='lf')
 
-    plotter.register_tree(
-        'NumZMass',
-        '/%s/final/Ntuple' % fr_info['ntuple'],
-        fr_info['zMassVar'],
-        num_selection,
-        w = weight,
-        binning = [80, 70, 110],
-        include = ['*'],
-    )
+    def saveplot(filename):
+        # Save the current canvas
+        filetype = '.pdf'
+        #legend.Draw()
+        canvas.SetLogy(False)
+        canvas.Update()
+        canvas.Print(os.path.join(
+            "plots", 'fakeRates', data_set, filename + filetype))
+        canvas.SetLogy(True)
+        canvas.Update()
+        canvas.Print(os.path.join(
+            "plots", 'fakeRates', data_set, filename + '_log' + filetype))
 
-    plotter.register_tree(
-        'Denom' + fr_info['varname'],
-        '/%s/final/Ntuple' % fr_info['ntuple'],
-        fr_info['var'],
-        denom_selection,
-        w = weight,
-        binning = fr_info['varbinning'],
-        include = ['*'],
-    )
 
-    plotter.register_tree(
-        'Num' + fr_info['varname'],
-        '/%s/final/Ntuple' % fr_info['ntuple'],
-        fr_info['var'],
-        num_selection,
-        w = weight,
-        binning = fr_info['varbinning'],
-        include = ['*'],
-    )
+    for fr_type, fr_info in fakerates.iteritems():
+        # Draw the Z-mumu mass
+        denom_selection_list = \
+                fr_info['base_cuts'] + fr_info['zcuts'] + fr_info['denom']
+        denom_selection = " && ".join(denom_selection_list)
 
-    to_plot = [
-        ('DenomZMass', 'Dilepton mass (loose)', fr_info['zMassTitle']),
-        ('NumZMass', 'Dilepton mass (tight)', fr_info['zMassTitle']),
-        ('Num' + fr_info['varname'], '%s mass (tight)' % fr_info['vartitle'], fr_info['vartitle']),
-        ('Denom' + fr_info['varname'], '%s mass (loose)' % fr_info['vartitle'], fr_info['vartitle']),
-    ]
+        num_selection_list = denom_selection_list + fr_info['num']
+        num_selection = ' && '.join(num_selection_list)
 
-    # Make plots
-    for name, title, xtitle in to_plot:
-        rebin = 1
-        if 'Z' not in name:
-            rebin = fr_info['rebin']
+        weight = 'puWeight2011A'
 
-        stack = plotter.build_stack(
-            '/%s/final/Ntuple:%s' % (fr_info['ntuple'], name),
+        plotter.register_tree(
+            fr_type + 'DenomZMass',
+            '/%s/final/Ntuple' % fr_info['ntuple'],
+            fr_info['zMassVar'],
+            denom_selection,
+            w = weight,
+            binning = [80, 70, 110],
             include = ['*'],
-            exclude = ['*data*'],
-            title = title,
-            show_overflows = True,
-            rebin = rebin,
+            exclude = fr_info['exclude'],
         )
-        data = plotter.get_histogram(
+
+        plotter.register_tree(
+            fr_type + 'NumZMass',
+            '/%s/final/Ntuple' % fr_info['ntuple'],
+            fr_info['zMassVar'],
+            num_selection,
+            w = weight,
+            binning = [80, 70, 110],
+            include = ['*'],
+            exclude = fr_info['exclude'],
+        )
+
+        plotter.register_tree(
+            fr_type + 'Denom' + fr_info['varname'],
+            '/%s/final/Ntuple' % fr_info['ntuple'],
+            fr_info['var'],
+            denom_selection,
+            w = weight,
+            binning = fr_info['varbinning'],
+            include = ['*'],
+            exclude = fr_info['exclude'],
+        )
+
+        plotter.register_tree(
+            fr_type + 'Num' + fr_info['varname'],
+            '/%s/final/Ntuple' % fr_info['ntuple'],
+            fr_info['var'],
+            num_selection,
+            w = weight,
+            binning = fr_info['varbinning'],
+            include = ['*'],
+            exclude = fr_info['exclude'],
+        )
+
+        to_plot = [
+            (fr_type + 'DenomZMass', 'Dilepton mass (loose)', fr_info['zMassTitle']),
+            (fr_type + 'NumZMass', 'Dilepton mass (tight)', fr_info['zMassTitle']),
+            (fr_type + 'Num' + fr_info['varname'], '%s mass (tight)' % fr_info['vartitle'], fr_info['vartitle']),
+            (fr_type + 'Denom' + fr_info['varname'], '%s mass (loose)' % fr_info['vartitle'], fr_info['vartitle']),
+        ]
+
+        # Make plots
+        for name, title, xtitle in to_plot:
+            rebin = 1
+            if 'ZMass' not in name:
+                rebin = fr_info['rebin']
+
+            stack = plotter.build_stack(
+                '/%s/final/Ntuple:%s' % (fr_info['ntuple'], name),
+                include = ['*'],
+                exclude = ['*data*'],
+                title = title,
+                show_overflows = True,
+                rebin = rebin,
+            )
+            data = plotter.get_histogram(
+                fr_info['pd'],
+                '/%s/final/Ntuple:%s' % (fr_info['ntuple'], name),
+                show_overflows = True,
+                rebin = rebin,
+            )
+            stack.Draw()
+            stack.GetXaxis().SetTitle(xtitle)
+            data.Draw("pe, same")
+            stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
+            stack.GetHistogram().SetTitle(
+                 xtitle + ' in ' + fr_info['evtType'] + ' events')
+
+            saveplot(fr_type + '_' + name)
+
+        # Make efficiency curve
+        data_num = plotter.get_histogram(
             fr_info['pd'],
-            '/%s/final/Ntuple:%s' % (fr_info['ntuple'], name),
+            '/%s/final/Ntuple:%s' % (
+                fr_info['ntuple'], fr_type + 'Num' + fr_info['varname']),
             show_overflows = True,
-            rebin = rebin,
+            rebin = fr_info['rebin'],
         )
-        stack.Draw()
-        stack.GetXaxis().SetTitle(xtitle)
-        data.Draw("pe, same")
-        stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
-        stack.GetHistogram().SetTitle(
-             xtitle + ' in ' + fr_info['evtType'] + ' events')
 
-        saveplot(fr_type + '_' + name)
+        data_denom = plotter.get_histogram(
+            fr_info['pd'],
+            '/%s/final/Ntuple:%s' % (
+                fr_info['ntuple'], fr_type + 'Denom' + fr_info['varname']),
+            show_overflows = True,
+            rebin = fr_info['rebin'],
+        )
 
-    # Make efficiency curve
-    data_num = plotter.get_histogram(
-        fr_info['pd'],
-        '/%s/final/Ntuple:%s' % (
-            fr_info['ntuple'], 'Num' + fr_info['varname']),
-        show_overflows = True,
-        rebin = fr_info['rebin'],
-    )
+        mc_num = plotter.get_histogram(
+            fr_info['mc_pd'],
+            '/%s/final/Ntuple:%s' % (
+                fr_info['ntuple'], fr_type + 'Num' + fr_info['varname']),
+            show_overflows = True,
+            rebin = fr_info['rebin'],
+        )
 
-    data_denom = plotter.get_histogram(
-        fr_info['pd'],
-        '/%s/final/Ntuple:%s' % (
-            fr_info['ntuple'], 'Denom' + fr_info['varname']),
-        show_overflows = True,
-        rebin = fr_info['rebin'],
-    )
+        mc_denom = plotter.get_histogram(
+            fr_info['mc_pd'],
+            '/%s/final/Ntuple:%s' % (
+                fr_info['ntuple'], fr_type + 'Denom' + fr_info['varname']),
+            show_overflows = True,
+            rebin = fr_info['rebin'],
+        )
 
-    mc_num = plotter.get_histogram(
-        fr_info['mc_pd'],
-        '/%s/final/Ntuple:%s' % (
-            fr_info['ntuple'], 'Num' + fr_info['varname']),
-        show_overflows = True,
-        rebin = fr_info['rebin'],
-    )
+        print data_denom, data_num
 
-    mc_denom = plotter.get_histogram(
-        fr_info['mc_pd'],
-        '/%s/final/Ntuple:%s' % (
-            fr_info['ntuple'], 'Denom' + fr_info['varname']),
-        show_overflows = True,
-        rebin = fr_info['rebin'],
-    )
+        data_curve = ROOT.TGraphAsymmErrors(data_num.th1, data_denom.th1)
+        data_fit_func = ROOT.TF1("f1", "[0] + [1]*exp([2]*x)", 0, 200)
+        data_fit_func.SetParameter(0, 0.02)
+        data_fit_func.SetParLimits(0, 0.0, 1)
+        data_fit_func.SetParameter(1, 1.87)
+        data_fit_func.SetParameter(2, -9.62806e-02)
+        data_fit_func.SetLineColor(ROOT.EColor.kBlack)
+        data_curve.Fit(data_fit_func)
 
-    print data_denom, data_num
+        mc_curve = ROOT.TGraphAsymmErrors(mc_num.th1, mc_denom.th1)
+        mc_curve.SetMarkerColor(ROOT.EColor.kRed)
+        mc_fit_func = ROOT.TF1("f1", "[0] + [1]*exp([2]*x)", 0, 200)
+        mc_fit_func.SetParameter(0, 0.02)
+        mc_fit_func.SetParLimits(0, 0.0, 1)
+        mc_fit_func.SetParameter(1, 1.87)
+        mc_fit_func.SetParameter(2, -9.62806e-02)
+        mc_fit_func.SetLineColor(ROOT.EColor.kRed)
+        mc_curve.Fit(mc_fit_func)
 
-    data_curve = ROOT.TGraphAsymmErrors(data_num.th1, data_denom.th1)
-    data_fit_func = ROOT.TF1("f1", "[0] + [1]*exp([2]*x)", 0, 200)
-    data_fit_func.SetParameter(0, 0.02)
-    data_fit_func.SetParLimits(0, 0.0, 1)
-    data_fit_func.SetParameter(1, 1.87)
-    data_fit_func.SetParameter(2, -9.62806e-02)
-    data_fit_func.SetLineColor(ROOT.EColor.kBlack)
-    data_curve.Fit(data_fit_func)
+        canvas.Clear()
+        multi = ROOT.TMultiGraph("fake_rates", "Fake Rates")
+        multi.Add(mc_curve, "pe")
+        multi.Add(data_curve, "pe")
 
-    mc_curve = ROOT.TGraphAsymmErrors(mc_num.th1, mc_denom.th1)
-    mc_curve.SetMarkerColor(ROOT.EColor.kRed)
-    mc_fit_func = ROOT.TF1("f1", "[0] + [1]*exp([2]*x)", 0, 200)
-    mc_fit_func.SetParameter(0, 0.02)
-    mc_fit_func.SetParLimits(0, 0.0, 1)
-    mc_fit_func.SetParameter(1, 1.87)
-    mc_fit_func.SetParameter(2, -9.62806e-02)
-    mc_fit_func.SetLineColor(ROOT.EColor.kRed)
-    mc_curve.Fit(mc_fit_func)
+        multi.Draw("ape")
+        multi.GetHistogram().SetMinimum(1e-3)
+        multi.GetHistogram().SetMaximum(1.0)
+        multi.GetHistogram().GetXaxis().SetTitle(fr_info['vartitle'])
+        multi.GetHistogram().SetTitle(
+            'Fake rate in ' + fr_info['evtType'] + ' events')
 
-    canvas.Clear()
-    multi = ROOT.TMultiGraph("fake_rates", "Fake Rates")
-    multi.Add(mc_curve, "pe")
-    multi.Add(data_curve, "pe")
+        data_fit_func.Draw('same')
+        mc_fit_func.Draw('same')
+        saveplot(fr_type + "_fakerate")
 
-    multi.Draw("ape")
-    multi.GetHistogram().SetMinimum(1e-3)
-    multi.GetHistogram().GetXaxis().SetTitle(fr_info['vartitle'])
-    multi.GetHistogram().SetTitle(
-        'Fake rate in ' + fr_info['evtType'] + ' events')
-
-    data_fit_func.Draw('same')
-    mc_fit_func.Draw('same')
-    saveplot(fr_type + "_fakerate")
-
-    data_num = plotter.get_histogram(
-        'data_DoubleMu',
-        '/emtFilter/intLumi',
-        show_overflows = True,
-    )
-
-    data_num.Draw()
-    saveplot('intlumi')
+        output_file.cd()
+        data_denom.Write("_".join([data_set, fr_type, 'data_denom']))
+        data_num.Write("_".join([data_set, fr_type, 'data_num']))

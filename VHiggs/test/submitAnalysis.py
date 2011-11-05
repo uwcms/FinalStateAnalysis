@@ -3,11 +3,11 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-10-20-v2-WHAnalyze'
+jobId = '2011-11-04-v1-WHAnalyze'
 
-patJobId = '2011-10-07-WHReSkim'
-#patCfg = 'patTuple_cfg'
-patCfg = 'analyze_cfg'
+patJobId = '2011-10-21-EWKPatTuple'
+patCfg = 'patTuple_cfg'
+#patCfg = 'analyze_cfg'
 
 def get_dir(sample):
     dir_name = '-'.join([patJobId, sample, patCfg])
@@ -33,12 +33,12 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         'farmoutAnalysisJobs2',
         '--varparsing',
         '--fwklite',
-        '--express-queue',
+        #'--express-queue',
         #'--no-submit',
         #'--job-count=20',
         #'--input-files-per-job=%i' % (sample_info['ana_group']*2),
         ' --exclude-input-files="*plots.root"',
-        '--input-files-per-job=%i' % 2,
+        '--input-files-per-job=%i' % 10,
     ]
 
     #if 'WplusJets' in sample:
