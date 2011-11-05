@@ -80,6 +80,17 @@ trkNormChi2 = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+pixelHits = cms.PSet(
+    min = cms.untracked.double(-1.5),
+    max = cms.untracked.double(6.5),
+    nbins = cms.untracked.int32(8),
+    name = cms.untracked.string("${name}_NPixHits"),
+    description = cms.untracked.string("${nicename} Num. Pixel Hits"),
+    plotquantity = cms.untracked.string(
+        selectors.muons.pixelHits.plottable.value()),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 d0 = cms.PSet(
     min = cms.untracked.double(0.0),
     max = cms.untracked.double(2),
@@ -114,7 +125,7 @@ hltL1Mu3EG5L3Filtered8  = get_trigger_matching('hltL1Mu3EG5L3Filtered8')
 hltL1Mu3EG5L3Filtered17  = get_trigger_matching('hltL1Mu3EG5L3Filtered17')
 
 all = [wwid, reliso, relSubDetIso, ecalIso, hcalIso,
-       #trkNormChi2, d0,
+       pixelHits, trkNormChi2, d0,
        hltSingleMu13L3Filtered13, hltDiMuonL3p5PreFiltered8,
        hltDiMuonL3PreFiltered7, hltSingleMu30L3Filtered30,
        hltSingleMuIsoL3IsoFiltered24,

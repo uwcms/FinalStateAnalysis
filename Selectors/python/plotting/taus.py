@@ -92,5 +92,5 @@ genDecayMode = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
-all = [decayMode, decayModeFinding, vlooseID, looseID, mediumID, jetpt, btag,
+all = [decayMode, decayFinding, vlooseID, looseID, mediumID, jetpt, btag,
        tnpPresel, genDecayMode]

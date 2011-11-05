@@ -81,12 +81,31 @@ globalTrk = cms.PSet(
     invert = cms.bool(False)
 )
 
+# Global muon
+pixelHits = cms.PSet(
+    name = cms.string("${name}_NpixHits"),
+    description = cms.string("$nicename number pixel hits"),
+    cut = cms.string("? ${getter}combinedMuon.isNonnull ? "
+                     "${getter}combinedMuon.hitPattern.numberOfValidPixelHits :"
+                     "-1 > ${threshold}"),
+    plottable = cms.string(
+        "? ${getter}combinedMuon.isNonnull ? "
+        "${getter}combinedMuon.hitPattern.numberOfValidPixelHits : -1"),
+    invert = cms.bool(False)
+)
+
 # Normalized chi2 of global track
 trkNormChi2 = cms.PSet(
     name = cms.string("${name}_GlbTrkNormChi2"),
     description = cms.string("$nicename normalized #chi^{2} < ${threshold}"),
-    cut = cms.string("${getter}combinedMuon.chi2/${getter}combinedMuon.ndof < ${threshold}"),
-    plottable = cms.string("${getter}combinedMuon.chi2/${getter}combinedMuon.ndof"),
+    cut = cms.string(
+        "? ${getter}combinedMuon.isNonnull ? "
+        "${getter}combinedMuon.chi2/${getter}combinedMuon.ndof : 1e99"
+        "< ${threshold}"),
+    plottable = cms.string(
+        "? ${getter}combinedMuon.isNonnull ? "
+        "${getter}combinedMuon.chi2/${getter}combinedMuon.ndof : 1e99"
+    ),
     invert = cms.bool(False)
 )
 
