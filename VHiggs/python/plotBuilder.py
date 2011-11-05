@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 import FinalStateAnalysis.Selectors.plotting.plotting as plotting
 from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
 
-def trileptonFinalPlots(leg1, leg2, leg3):
+def makePlots(leg1, leg2, leg3):
     # Build the Histo Folder
     output = cms.PSet()
     output.histos = cms.VPSet()
