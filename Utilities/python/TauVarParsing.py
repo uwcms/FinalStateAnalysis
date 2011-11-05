@@ -119,6 +119,8 @@ class TauVarParsing(VarParsing.VarParsing):
     def buildPoolSourceLumiMask(self):
         # From https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideGoodLumiSectionsJSONFile#cmsRun
         jsonFile = self.lumiMask
+        if not os.path.exists(jsonFile):
+            raise IOError("Lumi mask file %s does not exist!" % jsonFile)
         lumiList = LumiList.LumiList(filename = jsonFile)
         runs = lumiList.getRuns()
         bad_runs = []
