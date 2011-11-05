@@ -110,5 +110,5 @@ selections = cms.VPSet(
 # Define plots
 ###########################################################################
 
-from FinalStateAnalysis.VHiggs.plotBuilder import trileptonFinalPlots
-plots, ntuple = trileptonFinalPlots(leg1, leg2, leg3)
+from FinalStateAnalysis.Selectors.plotBuilder import makePlots
+plots, ntuple = makePlots(leg1, leg2, leg3)
