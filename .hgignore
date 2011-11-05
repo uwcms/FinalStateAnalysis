@@ -6,3 +6,4 @@ __init__.py
 .*.root
 do_.*.txt
 .*.log
+.*.txt
