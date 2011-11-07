@@ -48,53 +48,53 @@ datadefs = {
     ############################################################################
 
     'Zjets_M50' : {
-      'datasetpath' : '/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM',
-      'x_sec' : 3048*_picobarns, #NNLO
-      'size' : 3768,
-      'analyses' : ['HTT', 'SSDL', 'VH', 'Tau', 'Mu'],
+        'datasetpath' : '/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
+        'x_sec' : 3048*_picobarns, #NNLO
+        'pu' : 'S6',
+        'analyses' : ['HTT', 'SSDL', 'VH', 'Tau', 'Mu'],
     },
     'WplusJets_madgraph' : {
-      'datasetpath' : "/WJetsToLNu_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : 31314*_picobarns,
-      'ana_group' : 2,
-      #'skim' :  1.8076/100.0,
-      'size' : 3639,
-      'analyses' : ['HTT', 'SSDL', 'VH', 'Tau', 'Mu'],
+        'datasetpath' : "/WJetsToLNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 31314*_picobarns,
+        'pu' : 'S6',
+        'analyses' : ['HTT', 'SSDL', 'VH', 'Tau', 'Mu'],
     },
     'TTplusJets_madgraph' : {
-      'datasetpath' : "/TTJets_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : 157.5*_picobarns, # NLO cross-section from https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSections
-      'ana_group' : 1,
-      'skim' : 14.4211/100.0,
-      'size' : 3238,
-      'analyses' : ['HTT', 'SSDL', 'VH', 'Tau', 'Mu'],
+        'datasetpath' : "/TTJets_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 157.5*_picobarns, # NLO cross-section from https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSections
+        'pu' : 'S6',
+        'analyses' : ['HTT', 'SSDL', 'VH', 'Tau', 'Mu'],
     },
-    'Zbb_M50' : {
-      'datasetpath' : '/ZbbToLL_M-50_TuneZ2_7TeV-madgraph-pythia6_tauola/Summer11-PU_S4_START42_V11-v1/AODSIM',
-      'x_sec' : 13.75*_picobarns,
-      'analyses' : ['HTT', 'VH'],
-    },
-    'Zcc_M40' : {
-        'datasetpath': '/ZccToLL_M-40_PtB1-15_TuneZ2_7TeV-madgraph-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM',
-        'x_sec' : 18.74*_picobarns,
-        'analyses' : ['HTT', 'VH'],
-    },
+    #'Zbb_M50' : {
+        #'datasetpath' : '/ZbbToLL_M-40_PtB1-15_TuneZ2_7TeV-madgraph-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM',
+        #'x_sec' : 13.75*_picobarns,
+        #'pu' : 'S4',
+        #'analyses' : ['HTT', 'VH'],
+    #},
+    #'Zcc_M40' : {
+        #'datasetpath': '/ZccToLL_M-40_PtB1-15_TuneZ2_7TeV-madgraph-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM',
+        #'x_sec' : 18.74*_picobarns,
+        #'pu' : 'S4',
+        #'analyses' : ['HTT', 'VH'],
+    #},
 
     ############################################################################
     #### VGamma background datasets         ####################################
     ############################################################################
-    'VGjets' : {
-        'datasetpath' : '/GVJets_7TeV-madgraph/Summer11-PU_S4_START42_V11-v1/AODSIM',
-        'x_sec' : 56.64*_picobarns,
-        'analyses' : ['HTT', 'VH'],
-    },
+    #'VGjets' : {
+        #'datasetpath' : '/GVJets_7TeV-madgraph/Summer11-PU_S4_START42_V11-v1/AODSIM',
+        #'x_sec' : 56.64*_picobarns,
+        #'pu' : 'S4',
+        #'analyses' : ['HTT', 'VH'],
+    #},
 
     ############################################################################
     #### Diboson datasets                   ####################################
     ############################################################################
 
     'ZZJetsTo4L' : {
-        'datasetpath' : "/ZZJetsTo4L_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+        'datasetpath' : "/ZZJetsTo4L_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'pu' : 'S6',
         #'x_sec' : 0.03906*_picobarns,
         # 3.8 +- 1.5 0.2 0.2 from EWK-11-10
         'x_sec' : 3.8*_picobarns*0.1096*0.1096,
@@ -102,7 +102,8 @@ datadefs = {
         'analyses' : ['VH', 'SSDL'],
     },
     'WZJetsTo3LNu' : {
-        'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+        'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6-START44_V5-v1/AODSIM",
+        'pu' : 'S6',
         #'x_sec' : 0.7192*_picobarns, # FROM PREP
         # 17 +- 2.4 1.1 1.0 from EWK-11-10
         'x_sec' : 17.0*_picobarns*0.3257*0.1096,
@@ -111,6 +112,7 @@ datadefs = {
     },
     'WWJetsTo2L2Nu' : {
         'datasetpath' : '/WWJetsTo2L2Nu_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM',
+        'pu' : 'S4',
         #'x_sec' : 3.783*_picobarns, # FROM PREP
         # 55.3 +- 3.3 6.9 3.3 from EWK-11-10
         'x_sec' : 55.3*_picobarns*0.3257*0.3257, # 32.57% BR to leptons
@@ -124,123 +126,100 @@ datadefs = {
 
     'QCD_20toInf_MuPt15' : {
         'datasetpath' : '/QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM',
+        'pu' : 'S4',
         'x_sec' : 2.966E8*_picobarns*2.855E-4,
         'analyses' : ['HTT', 'VH', 'Tau', 'Mu'],
     },
-    #'QCD_15to20_MuPt5' : {
-      #'datasetpath' : "/QCD_Pt-15to20_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM",
-      #'x_sec' : 5.792E8*_picobarns*0.00288,
-      #'analyses' : ['HTT', 'VH'],
-    #},
-    #'QCD_20to30_MuPt5' : {
-      #'datasetpath' : "/QCD_Pt-20to30_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM",
-      #'x_sec' : 2.363E8*_picobarns*0.00568,
-      #'analyses' : ['HTT', 'VH'],
-    #},
-    #'QCD_30to50_MuPt5' : {
-      #'datasetpath' : "/QCD_Pt-30to50_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM",
-      #'x_sec' : 5.307E7*_picobarns*0.01124,
-      #'analyses' : ['HTT', 'VH'],
-    #},
-    #'QCD_50to80_MuPt5' : {
-      #'datasetpath' : "/QCD_Pt-50to80_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
-      #'x_sec' : 6351000.0*_picobarns*0.02205,
-      #'analyses' : ['HTT', 'VH'],
-    #},
-    #'QCD_80to120_MuPt5' : {
-      #'datasetpath' : "/QCD_Pt-80to120_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
-      #'x_sec' : 785100.0*_picobarns*0.03636,
-      #'analyses' : ['HTT', 'VH'],
-    #},
-    #'QCD_120to150_MuPt5' : {
-      #'datasetpath' : "/QCD_Pt-120to150_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
-      #'x_sec' : 92950.0*_picobarns*0.04866,
-      #'analyses' : ['HTT', 'VH'],
-    #},
-    #'QCD_150_MuPt5' : {
-      #'datasetpath' : "/QCD_Pt-150_MuPt5Enriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v2/AODSIM",
-      #'x_sec' : 47580.0*_picobarns*47580.0,
-      #'analyses' : ['HTT', 'VH'],
-    #},
     # Electron enriched
-    'QCD_20to30_EM' : {
-      'datasetpath' : "/QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : 2.361E8*_picobarns*0.0106,
-      'analyses' : ['HTT', 'VH'],
-    },
+    #'QCD_20to30_EM' : {
+        #'datasetpath' : "/QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        #'pu' : 'S6',
+        #'x_sec' : 2.361E8*_picobarns*0.0106,
+        #'analyses' : ['HTT', 'VH'],
+    #},
     'QCD_30to80_EM' : {
-      'datasetpath' : "/QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : 5.944E7*_picobarns*0.061,
-      'analyses' : ['HTT', 'VH'],
+        'datasetpath' : "/QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6/Fall11-PU_S6-START44_V5-v1/AODSIM",
+        'pu' : 'S6',
+        # FIXME
+        'x_sec' : 5.944E7*_picobarns*0.061,
+        'analyses' : ['HTT', 'VH'],
     },
     'QCD_80to170_EM' : {
-      'datasetpath' : "/QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : 898200.0*_picobarns*0.159,
-      'analyses' : ['HTT', 'VH'],
+        'datasetpath' : "/QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia/Fall11-PU_S6-START44_V5-v1/AODSIM",
+        'pu' : 'S6',
+        # FIXME
+        'x_sec' : 898200.0*_picobarns*0.159,
+        'analyses' : ['HTT', 'VH'],
     },
     'VH_100' : {
-      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-100_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : (1.186 + 0.6313 + 0.1638)*_picobarns*8.36e-2,
-      'ana_group' : 1,
-      'skim' : 1.0,
-      'analyses' : ['VH'],
+        'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'pu' : 'S6',
+        'x_sec' : (1.186 + 0.6313 + 0.1638)*_picobarns*8.36e-2,
+        'skim' : 1.0,
+        'analyses' : ['VH'],
     },
     'VH_110' : {
-      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-110_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : (0.8754 + 0.4721 + 0.1257)*_picobarns*8.02e-2,
-      'ana_group' : 1,
-      'skim' : 1.0,
-      'analyses' : ['VH'],
+        'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-110_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'pu' : 'S6',
+        'x_sec' : (0.8754 + 0.4721 + 0.1257)*_picobarns*8.02e-2,
+        'skim' : 1.0,
+        'analyses' : ['VH'],
     },
     'VH_115' : {
-      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-115_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : (0.7546 + 0.4107 + 0.1106)*_picobarns*7.65e-2,
-      'ana_group' : 1,
-      'skim' : 1.0,
-      'analyses' : ['VH'],
+        'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-115_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'pu' : 'S6',
+        'x_sec' : (0.7546 + 0.4107 + 0.1106)*_picobarns*7.65e-2,
+        'skim' : 1.0,
+        'analyses' : ['VH'],
     },
     'VH_120' : {
-      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-120_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : (0.6561 + 0.3598 + 0.09756)*_picobarns*7.1e-2,
-      'ana_group' : 1,
-      'skim' : 1.0,
-      'analyses' : ['VH'],
+        'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-120_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'pu' : 'S6',
+        'x_sec' : (0.6561 + 0.3598 + 0.09756)*_picobarns*7.1e-2,
+        'skim' : 1.0,
+        'analyses' : ['VH'],
     },
     'VH_125' : {
-      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-125_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : (0.6729 + 0.3158 + 0.08634)*_picobarns*6.37e-2,
-      'ana_group' : 1,
-      'analyses' : ['VH'],
+        'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-125_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.6729 + 0.3158 + 0.08634)*_picobarns*6.37e-2,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
     },
-    'VH_130' : {
-      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-130_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : (0.5008 + 0.2778 + 0.07658)*_picobarns*5.48-2,
-      'ana_group' : 1,
-      'analyses' : ['VH'],
-    },
+    #'VH_130' : {
+        #'datasetpath' :"",
+        #'x_sec' : (0.5008 + 0.2778 + 0.07658)*_picobarns*5.48-2,
+        #'pu' : 'S6',
+        #'analyses' : ['VH'],
+    #},
     'VH_135' : {
-      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-135_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : (0.4390 + 0.2453 + 0.06810)*_picobarns*4.52e-2,
-      'ana_group' : 1,
-      'analyses' : ['VH'],
+        'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-135_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.4390 + 0.2453 + 0.06810)*_picobarns*4.52e-2,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
     },
     'VH_140' : {
-      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-140_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : (0.3857 + 0.2172 + 0.06072)*_picobarns*3.54e-2,
-      'ana_group' : 1,
-      'analyses' : ['VH'],
+        'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-140_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.3857 + 0.2172 + 0.06072)*_picobarns*3.54e-2,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
     },
     'VH_145' : {
-      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-145_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : (0.3406 + 0.1930 + 0.05435)*_picobarns*2.61e-2,
-      'ana_group' : 1,
-      'analyses' : ['VH'],
+        'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-145_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.3406 + 0.1930 + 0.05435)*_picobarns*2.61e-2,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
     },
-    'VH_150' : {
-      'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-150_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-      'x_sec' : (0.3011 + 0.1713 + 0.04869)*_picobarns*1.78e-2,
-      'ana_group' : 1,
-      'analyses' : ['VH'],
+    #'VH_150' : {
+        #'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-150_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+        #'x_sec' : (0.3011 + 0.1713 + 0.04869)*_picobarns*1.78e-2,
+        #'pu' : 'S6',
+        #'analyses' : ['VH'],
+    #},
+    'VH_160' : {
+        'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-160_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 10000,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
     },
     }
 
