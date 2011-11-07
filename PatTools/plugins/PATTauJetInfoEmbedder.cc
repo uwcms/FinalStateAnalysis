@@ -70,6 +70,12 @@ void PATObjectJetInfoEmbedder<T>::produce(
   edm::Handle<edm::View<pat::Jet> > jets;
   evt.getByLabel(jetSrc_, jets);
 
+//  edm::Handle<edm::View<reco::Jet> > recoJets;
+//  evt.getByLabel("ak5PFJets", recoJets);
+//
+//  edm::Handle<edm::View<reco::PFCandidate> > pfCands;
+//  evt.getByLabel("particleFlow", pfCands);
+//
   typedef edm::Ptr<pat::Jet> JetPtr;
 
   for (size_t i = 0; i < objects->size(); ++i) {
@@ -90,19 +96,39 @@ void PATObjectJetInfoEmbedder<T>::produce(
         closestJet = jet;
       }
     }
-    assert(closestJet.isNonnull());
     if (closestDeltaR > maxDeltaR_) {
+      double phi = -999;
+      double eta = -999;
+      double pt = -999;
+      if (closestJet.isNonnull()) {
+        phi = closestJet->phi();
+        pt = closestJet->pt();
+        eta = closestJet->eta();
+      }
+
       edm::LogWarning("BadJetMatch") << "Couldn't find a jet close to the"
         << " object in PATObjectJetInfoEmbedder. "
         << "The object jetref has (pt/eta/phi): ("
         << objectP4.pt() << "/" << objectP4.eta() << "/" << objectP4.phi()
-        << ") and the closest jet is at "
-        << closestJet->pt() << "/" << closestJet->eta()
-        << "/" << closestJet->phi()
+        << ") and the closest jet (out of " << jets->size()
+        //<< ", " << recoJets->size() << ", " << pfCands->size()
+        << ") is at "
+        << phi << "/" << eta
+        << "/" << pt
         << ") giving a deltaR of " << closestDeltaR << std::endl;
+
+      // Null jet
+      object.addUserCand("patJet" + suffix_, reco::CandidatePtr());
+      // The jet pt is just the object pt
+      object.addUserFloat("jetPt", objectP4.pt());
+    } else {
+      // Null jet
+      object.addUserCand("patJet" + suffix_, closestJet);
+      // The jet pt is just the object pt
+      object.addUserFloat("jetPt", closestJet->pt());
     }
-    object.addUserCand("patJet" + suffix_, closestJet);
-    if (embedBtags_) {
+
+    if (embedBtags_ && closestJet.isNonnull()) {
       typedef std::pair<std::string, float> IdPair;
       typedef std::vector<IdPair> IdPairs;
       const IdPairs& bTags = closestJet->getPairDiscri();
