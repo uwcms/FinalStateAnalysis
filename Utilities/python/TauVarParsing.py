@@ -10,6 +10,8 @@ Author: Evan K. Friis, UW Madison
 See: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideAboutPythonConfigFile#Passing_Command_Line_Arguments_T
 
 '''
+import os
+
 import FWCore.ParameterSet.VarParsing as VarParsing
 import Configuration.PyReleaseValidation.autoCond as autoCond
 import FWCore.PythonUtilities.LumiList as LumiList
