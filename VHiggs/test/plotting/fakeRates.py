@@ -7,22 +7,19 @@ Measure jet->mu, jet->e, and jet->tau fake rates in trilepton event topologies.
 import ROOT
 import os
 import sys
-import glob
 import logging
-import math
-from FinalStateAnalysis.Utilities.AnalysisPlotter import styling,samplestyles
 import FinalStateAnalysis.PatTools.data as data_tool
 
 # Logging options
 logging.basicConfig(filename='fakeRates.log',level=logging.DEBUG, filemode='w')
-log = logging.getLogger("plotting")
-h1 = logging.StreamHandler(sys.stdout)
-h1.level = logging.DEBUG
-log.addHandler(h1)
-logging.getLogger("AnalysisPlotter").addHandler(h1)
-h2 = logging.StreamHandler(sys.stderr)
-h2.level = logging.DEBUG
-logging.getLogger("ROOTCache").addHandler(h2)
+#log = logging.getLogger("plotting")
+#h1 = logging.StreamHandler(sys.stdout)
+#h1.level = logging.DEBUG
+#log.addHandler(h1)
+#logging.getLogger("AnalysisPlotter").addHandler(h1)
+#h2 = logging.StreamHandler(sys.stderr)
+#h2.level = logging.DEBUG
+#logging.getLogger("ROOTCache").addHandler(h2)
 
 ROOT.gROOT.SetBatch(True)
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
@@ -41,11 +38,14 @@ base_dimuon_selection = [
     'Muon2_MuID_WWID > 0.5',
     'NIsoMuonsPt5_Nmuons < 0.5',
     'NBjetsPt20_Nbjets < 1', # Against ttbar
-    'DoubleMuTriggers_HLT > 0.5 ',
+    'DoubleMus_HLT > 0.5 ',
+    '(Muon1_hltDiMuonL3PreFiltered7 |  Muon1_hltSingleMu13L3Filtered13)',
+    '(Muon2_hltDiMuonL3PreFiltered7 | Muon2_hltDiMuonL3p5PreFiltered8)',
     'Muon1Charge*Muon2Charge < 0',
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
     'METPt < 20',
+    'Muon2_NPixHits > 1',
 ]
 
 # We also look at Mu-Mu (SS) + Anti-Tau.  We require the leading muon to have a
@@ -59,11 +59,12 @@ base_ttbar_selection = [
     'Muon1_MuID_WWID > 0.5',
     'NIsoMuonsPt5_Nmuons < 1',
     #'NBjetsPt20_Nbjets > 0', # For ttbar
-    'DoubleMuTriggers_HLT > 0.5 ',
+    'DoubleMus_HLT > 0.5 ',
     'Muon1Charge*Muon2Charge > 0', # Same sign (to kill DY)
     'Tau_LooseHPS < 0.5',
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
+    'Muon2_NPixHits > 1',
 ]
 
 base_qcd_selection = [
@@ -75,11 +76,17 @@ base_qcd_selection = [
     'Muon1_MuID_WWID > 0.5',
     'NIsoMuonsPt5_Nmuons < 1',
     #'NBjetsPt20_Nbjets > 0', # For ttbar
-    'DoubleMuTriggers_HLT > 0.5 ',
+    'DoubleMus_HLT > 0.5 ',
     'Muon1Charge*Muon2Charge > 0', # Same sign (to kill DY)
     'Tau_LooseHPS < 0.5',
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
+    'Muon2_NPixHits > 1',
+]
+
+# For e fake rate measurement
+base_qcd_emt_selection = [
+
 ]
 
 # Stupid names are different, fix this
@@ -105,41 +112,42 @@ base_dielectron_selection = [
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
     'METPt < 20',
+    'Mu_NPixHits > 1',
 ]
 
 fakerates = {
-    'tau' : {
-        'ntuple' : 'mmtFilter',
-        'pd' : 'data_DoubleMu',
-        'exclude' : ['*DoubleE*', '*MuEG*'],
-        'mc_pd' : 'Zjets',
-        'varname' : 'TauJetPt',
-        'vartitle' : 'Tau Jet p_{T}',
-        'var' : 'TauJetPt',
-        'varbinning' : [100, 0, 100],
-        'rebin' : 4,
-        'zMassVar' : 'Leg1Leg2_Mass',
-        'zMassTitle' : 'Dimuon mass (GeV)',
-        'evtType' : '#mu#mu + jet',
-        'base_cuts' : base_dimuon_selection,
-        'zcuts' : [
-            #'Leg1Leg2_Mass > 70',
-            #'Leg1Leg2_Mass < 110',
-            'Leg1Leg2_Mass > 86',
-            'Leg1Leg2_Mass < 95',
-            'Leg3_MtToMET < 40'
-        ],
-        'denom' : [
-            'TauPt > 15',
-            'TauAbsEta < 2.5',
-            'Tau_DecayMode > 0.5',
-        ],
-        'num' : [
-            'Tau_LooseHPS > 0.5'
-        ],
-    },
+    #'tau' : {
+        #'ntuple' : 'mmt',
+        #'pd' : 'data_DoubleMu',
+        #'exclude' : ['*DoubleE*', '*MuEG*'],
+        #'mc_pd' : 'Zjets',
+        #'varname' : 'TauJetPt',
+        #'vartitle' : 'Tau Jet p_{T}',
+        #'var' : 'TauJetPt',
+        #'varbinning' : [100, 0, 100],
+        #'rebin' : 4,
+        #'zMassVar' : 'Muon1_Muon2_Mass',
+        #'zMassTitle' : 'Dimuon mass (GeV)',
+        #'evtType' : '#mu#mu + jet',
+        #'base_cuts' : base_dimuon_selection,
+        #'zcuts' : [
+            ##'Muon1_Muon2_Mass > 70',
+            ##'Muon1_Muon2_Mass < 110',
+            #'Muon1_Muon2_Mass > 86',
+            #'Muon1_Muon2_Mass < 95',
+            #'Leg3_MtToMET < 40'
+        #],
+        #'denom' : [
+            #'TauPt > 15',
+            #'TauAbsEta < 2.5',
+            #'Tau_DecayMode > 0.5',
+        #],
+        #'num' : [
+            #'Tau_LooseHPS > 0.5'
+        #],
+    #},
     'mu' : {
-        'ntuple' : 'mmmFilter',
+        'ntuple' : 'mmm',
         'pd' : 'data_DoubleMu',
         'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'Zjets',
@@ -148,20 +156,21 @@ fakerates = {
         'vartitle' : 'Mu Jet p_{T}',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
-        'zMassVar' : 'Leg1Leg2_Mass',
+        'zMassVar' : 'Muon1_Muon2_Mass',
         'zMassTitle' : 'Dimuon mass (GeV)',
         'evtType' : '#mu#mu + jet',
         'base_cuts' : base_dimuon_selection,
         'zcuts' : [
-            #'Leg1Leg2_Mass > 70',
-            #'Leg1Leg2_Mass < 110',
-            'Leg1Leg2_Mass > 86',
-            'Leg1Leg2_Mass < 95',
-            'Leg3_MtToMET < 10'
+            #'Muon1_Muon2_Mass > 70',
+            #'Muon1_Muon2_Mass < 110',
+            'Muon1_Muon2_Mass > 86',
+            'Muon1_Muon2_Mass < 95',
+            'Muon3_MtToMET < 10'
         ],
         'denom' : [
             'Muon3Pt > 9',
             'Muon3AbsEta < 2.1',
+            'Muon3_NPixHits > 0',
         ],
         'num' : [
             'Muon3_MuID_WWID > 0.5',
@@ -169,7 +178,7 @@ fakerates = {
         ]
     },
     'muTTbar' : {
-        'ntuple' : 'mmtFilter',
+        'ntuple' : 'mmt',
         'pd' : 'data_DoubleMu',
         'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'ttjets',
@@ -178,13 +187,13 @@ fakerates = {
         'vartitle' : 'Mu Jet p_{T}',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
-        'zMassVar' : 'Leg1_MtToMET',
+        'zMassVar' : 'Muon1_MtToMET',
         'zMassTitle' : 'Leading Muon M_{T}',
         'evtType' : '#mu#mu + jet',
         'base_cuts' : base_ttbar_selection,
         'zcuts' : [
-            'Leg1_MtToMET > 30',
-            'Leg2_MtToMET < 30',
+            'Muon1_MtToMET > 30',
+            'Muon2_MtToMET < 30',
             'METPt > 20',
         ],
         'denom' : [
@@ -195,7 +204,7 @@ fakerates = {
         ]
     },
     'muQCD' : {
-        'ntuple' : 'mmtFilter',
+        'ntuple' : 'mmt',
         'pd' : 'data_DoubleMu',
         'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'QCDMu',
@@ -204,7 +213,7 @@ fakerates = {
         'vartitle' : 'Mu Jet p_{T}',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
-        'zMassVar' : 'Leg1_MtToMET',
+        'zMassVar' : 'Muon1_MtToMET',
         'zMassTitle' : 'Leading Muon M_{T}',
         'evtType' : '#mu#mu + jet',
         'base_cuts' : base_qcd_selection,
@@ -220,7 +229,7 @@ fakerates = {
         ]
     },
     'e' : {
-        'ntuple' : 'emmFilter',
+        'ntuple' : 'emm',
         'pd' : 'data_DoubleMu',
         'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'Zjets',
@@ -229,16 +238,16 @@ fakerates = {
         'vartitle' : 'Electron Jet p_{T}',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
-        'zMassVar' : 'Leg2Leg3_Mass',
+        'zMassVar' : 'Mu1_Mu2_Mass',
         'zMassTitle' : 'Dimuon mass (GeV)',
         'evtType' : '#mu#mu + jet',
         'base_cuts' : base_dimuon_emm,
         'zcuts' : [
             #'Leg2Leg3_Mass > 70',
             #'Leg2Leg3_Mass < 110',
-            'Leg2Leg3_Mass > 86',
-            'Leg2Leg3_Mass < 95',
-            'Leg1_MtToMET < 40'
+            'Mu1_Mu2_Mass > 86',
+            'Mu1_Mu2_Mass < 95',
+            'Elec_MtToMET < 40'
         ],
         'denom' : [
             'ElecPt > 10',
@@ -249,38 +258,63 @@ fakerates = {
             'Elec_ERelIso < 0.3',
         ]
     },
-    'tauZEE' : {
-        'ntuple' : 'eetFilter',
-        'pd' : 'data_DoubleElectron',
-        'mc_pd' : 'Zjets',
-        'exclude' : ['*DoubleMu*', '*MuEG*'],
-        'varname' : 'TauJetPt',
-        'vartitle' : 'Tau Jet p_{T}',
-        'var' : 'TauJetPt',
-        'varbinning' : [100, 0, 100],
-        'rebin' : 4,
-        'zMassVar' : 'Leg1Leg2_Mass',
-        'zMassTitle' : 'Dielectron mass (GeV)',
-        'evtType' : 'ee + jet',
-        'base_cuts' : base_dielectron_selection,
-        'zcuts' : [
-            #'Leg1Leg2_Mass > 70',
-            #'Leg1Leg2_Mass < 110',
-            'Leg1Leg2_Mass > 86',
-            'Leg1Leg2_Mass < 95',
-            'Leg3_MtToMET < 20'
-        ],
-        'denom' : [
-            'TauPt > 15',
-            'TauAbsEta < 2.5',
-            'Tau_DecayMode > 0.5',
-        ],
-        'num' : [
-            'Tau_LooseHPS > 0.5'
-        ],
-    },
+    #'eQCD' : {
+        #'ntuple' : 'emt',
+        #'pd' : 'data_MuEG',
+        #'exclude' : ['*DoubleE*', '*DoubleMu*'],
+        #'mc_pd' : 'QCDMu',
+        #'varname' : 'EJetPt',
+        #'var' : 'ElecPt + ElecPt*Elec_ERelIso',
+        #'vartitle' : 'E Jet p_{T}',
+        #'varbinning' : [100, 0, 100],
+        #'rebin' : 5,
+        #'zMassVar' : 'Mu_MtToMET',
+        #'zMassTitle' : 'Leading Muon M_{T}',
+        #'evtType' : '#mu#mu + jet',
+        #'base_cuts' : base_qcd_selection,
+        #'zcuts' : [
+            ##'Leg2_MtToMET < 30',
+            #'METPt < 20',
+        #],
+        #'denom' : [
+        #],
+        #'num' : [
+            #'Muon2_MuID_WWID > 0.5',
+            #'Muon2_MuRelIso < 0.3',
+        #]
+    #},
+    #'tauZEE' : {
+        #'ntuple' : 'eet',
+        #'pd' : 'data_DoubleElectron',
+        #'mc_pd' : 'Zjets',
+        #'exclude' : ['*DoubleMu*', '*MuEG*'],
+        #'varname' : 'TauJetPt',
+        #'vartitle' : 'Tau Jet p_{T}',
+        #'var' : 'TauJetPt',
+        #'varbinning' : [100, 0, 100],
+        #'rebin' : 4,
+        #'zMassVar' : 'Muon1_Muon2_Mass',
+        #'zMassTitle' : 'Dielectron mass (GeV)',
+        #'evtType' : 'ee + jet',
+        #'base_cuts' : base_dielectron_selection,
+        #'zcuts' : [
+            ##'Muon1_Muon2_Mass > 70',
+            ##'Muon1_Muon2_Mass < 110',
+            #'Muon1_Muon2_Mass > 86',
+            #'Muon1_Muon2_Mass < 95',
+            #'Leg3_MtToMET < 20'
+        #],
+        #'denom' : [
+            #'TauPt > 15',
+            #'TauAbsEta < 2.5',
+            #'Tau_DecayMode > 0.5',
+        #],
+        #'num' : [
+            #'Tau_LooseHPS > 0.5'
+        #],
+    #},
     'muZEE' : {
-        'ntuple' : 'eemFilter',
+        'ntuple' : 'eem',
         'pd' : 'data_DoubleElectron',
         'mc_pd' : 'Zjets',
         'exclude' : ['*DoubleMu*', '*MuEG*'],
@@ -288,17 +322,17 @@ fakerates = {
         'var' : 'MuPt + MuPt*Mu_MuRelIso',
         'vartitle' : 'Mu Jet p_{T}',
         'varbinning' : [100, 0, 100],
-        'rebin' : 4,
-        'zMassVar' : 'Leg1Leg2_Mass',
+        'rebin' : 5,
+        'zMassVar' : 'Elec1_Elec2_Mass',
         'evtType' : 'ee + jet',
         'base_cuts' : base_dielectron_selection,
         'zMassTitle' : 'Dielectron mass (GeV)',
         'zcuts' : [
-            #'Leg1Leg2_Mass > 70',
-            #'Leg1Leg2_Mass < 110',
-            'Leg1Leg2_Mass > 86',
-            'Leg1Leg2_Mass < 95',
-            'Leg3_MtToMET < 20'
+            #'Muon1_Muon2_Mass > 70',
+            #'Muon1_Muon2_Mass < 110',
+            'Elec1_Elec2_Mass > 86',
+            'Elec1_Elec2_Mass < 95',
+            'Mu_MtToMET < 20'
         ],
         'denom' : [
             'MuPt > 9',
@@ -318,11 +352,11 @@ for data_set, skips, int_lumi in [('2011A', ['2011B', 'EM'], 2170),
                                   ('2011AB', ['v1_d', 'EM'], 4000)]:
 
     samples, plotter = data_tool.build_data(
-        'VH', '2011-10-25-WHReSkim', 'scratch_results',
-        int_lumi, skips, count='emtFilter/skimCounter')
+        'VH', '2011-11-07-v1-WHAnalyze', 'scratch_results',
+        int_lumi, skips, count='emt/skimCounter')
 
     legend = plotter.build_legend(
-        '/emtFilter/skimCounter',
+        '/emt/skimCounter',
         include = ['*'],
         exclude = ['*data*','*VH*'],
         drawopt='lf')
@@ -350,7 +384,7 @@ for data_set, skips, int_lumi in [('2011A', ['2011B', 'EM'], 2170),
         num_selection_list = denom_selection_list + fr_info['num']
         num_selection = ' && '.join(num_selection_list)
 
-        weight = 'puWeight2011A'
+        weight = 'puWeight_3bx_S42011AB178078'
 
         plotter.register_tree(
             fr_type + 'DenomZMass',
