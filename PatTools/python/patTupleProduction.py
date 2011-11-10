@@ -325,6 +325,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
         setattr(process, producer_name, final_module)
         output_commands.append("*_%s_*_*" % producer_name)
 
+    # Tell the framework to shut up!
+    process.load("FWCore.MessageLogger.MessageLogger_cfi")
+    process.MessageLogger.cerr.FwkReport.reportEvery = 1000
+
     process.tuplize += process.buildTriLeptons
     return process.tuplize, output_commands
 
