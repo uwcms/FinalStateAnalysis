@@ -3,7 +3,7 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-11-04-v1-WHAnalyze'
+jobId = '2011-11-07-v1-WHAnalyze'
 
 patJobId = '2011-10-21-EWKPatTuple'
 patCfg = 'patTuple_cfg'
@@ -52,4 +52,5 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         os.environ['SCRAM_ARCH'], 'analyzeFinalStates'))
     command.append(os.path.abspath(cfg))
     command.extend(options)
+    print 'export TERMCAP=screen'
     print ' '.join(command)
