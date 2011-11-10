@@ -3,7 +3,7 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-11-02-v1-MuonTP'
+jobId = '2011-11-04-v1-MuonTP'
 
 patJobId = '2011-10-21-EWKPatTuple'
 patCfg = 'patTuple_cfg'
@@ -32,7 +32,7 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         'farmoutAnalysisJobs2',
         '--varparsing',
         '--fwklite',
-        '--express-queue',
+        #'--express-queue',
         #'--no-submit',
         #'--job-count=2',
         #'--input-files-per-job=%i' % (sample_info['ana_group']*2),
