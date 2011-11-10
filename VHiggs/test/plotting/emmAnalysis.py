@@ -17,16 +17,16 @@ log = logging.getLogger("emmChannel")
 ROOT.gROOT.SetBatch(True)
 
 # Define the fake rate versus muon pt
-
-FAKE_RATE_0 = 0.0025
-FAKE_RATE_1 = 0.19
-FAKE_RATE_2 = -0.185
+FAKE_RATE_0 = 0.00435
+FAKE_RATE_1 = 4.247
+FAKE_RATE_2 = -0.1967
 
 FAKE_RATE = '(%0.4f + %0.4f*TMath::Exp(%0.4f * (VAR) ) )' % (
     FAKE_RATE_0, FAKE_RATE_1, FAKE_RATE_2)
 
-FR_X = 'ElecPt + ElecPt*Elec_ERelIso'
+FR_X = 'Mu2Pt + Mu2Pt*Mu2_MuRelIso'
 FAKE_RATE = FAKE_RATE.replace('VAR', FR_X)
+#FR_WEIGHT = '((%s)/(1-%s))' % (FAKE_RATE, FAKE_RATE)
 FR_WEIGHT = '((%s)/(1-%s))' % (FAKE_RATE, FAKE_RATE)
 
 base_selection = [
@@ -38,12 +38,12 @@ base_selection = [
     'Mu2AbsEta < 2.1',
     'Mu1_MuRelIso < 0.3',
     'Mu1_MuID_WWID > 0.5',
-    'Mu2_MuRelIso < 0.3',
-    'Mu2_MuID_WWID > 0.5',
     #'NIsoMuonsPt5_Nmuons < 0.5',
     #'DoubleMus_HLT > 0.5 ',
     #'NIsoElecsPt20_NIsoElecs < 0.5',
     #'ElecPt > 20',
+    'Elec_EID_WWID > 0.5',
+    'Elec_ERelIso < 0.3',
     'ElecPt > 10',
     'Mu1Charge*Mu2Charge > 0',
 ]
@@ -57,12 +57,12 @@ passes_vtx = [
 ]
 
 bkg_enriched = [
-    '(Elec_EID_WWID < 0.5 || Elec_ERelIso > 0.3)'
+    '(Mu2_MuRelIso > 0.3 || Mu2_MuID_WWID < 0.5)'
 ]
 
 final_selection = [
-    'Elec_EID_WWID > 0.5',
-    'Elec_ERelIso < 0.3'
+    'Mu2_MuRelIso < 0.3',
+    'Mu2_MuID_WWID > 0.5',
 ]
 
 variables = {
