@@ -79,13 +79,15 @@ def build_data(analysis, jobid, source, target_lumi,
 
     # Build the composite files
     for name, subsample_names in datadefs.data_name_map.iteritems():
-        if analysis not in datadefs.datadefs[subsample_names[0]]['analyses']:
+        valid_subsamples = [
+            x for x in subsample_names if not skip_sample(x, skips)]
+        if not valid_subsamples:
             continue
         #print subsample_names
-        subsamples = [raw_samples[x]['sample'] for x in subsample_names
-                      if not skip_sample(x, skips)]
-        if not subsamples:
+        if analysis not in datadefs.datadefs[valid_subsamples[0]]['analyses']:
             continue
+        subsamples = [raw_samples[x]['sample'] for x in valid_subsamples]
+
         samples[name] = AnalysisPlotter.AnalysisMultiSample(name, *subsamples)
 
     plotter = AnalysisPlotter.AnalysisPlotter(*samples.values())

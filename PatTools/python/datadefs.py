@@ -314,10 +314,12 @@ datadefs.update(data_MuHad)
 data_name_map.update(list_MuHad)
 
 if __name__ == "__main__":
-  samples = []
-  for sample, sample_info in datadefs.iteritems():
-    if 'data' not in sample:
-      samples.append(sample_info['datasetpath'].split('/')[1])
+    # Print a latex table of the samples
+    samples = []
+    for sample, sample_info in datadefs.iteritems():
+        if 'data' not in sample:
+            #samples.append(sample_info['datasetpath'].split('/')[1])
+            samples.append(sample_info['datasetpath'])
 
     for sample in sorted(samples):
-      print sample.replace('_', '\_')
+        print sample.replace('_', '\_') + ' \\\\'
