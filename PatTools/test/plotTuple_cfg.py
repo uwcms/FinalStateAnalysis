@@ -59,6 +59,19 @@ hasTaus = hasMuons.clone(
     plotquantity = "hasOverlaps('extTaus')",
 )
 
+muon_jetpt = pt.clone(
+    name = "MuJetPt",
+    plotquantity = "daughter(0).userFloat('jetPt')"
+)
+
+muon_reljetpt = pt.clone(
+    min = 0,
+    max = 5,
+    nbins = 100,
+    name = "RelMuJetPt",
+    plotquantity = "daughter(0).pt/daughter(0).userFloat('jetPt')"
+)
+
 extras_jetpt = pt.clone(
     description = "Ext Jet Pt",
     name = "extJetPt",
@@ -126,6 +139,8 @@ process.mt = cms.EDAnalyzer(
         pt,
         hasMuons,
         hasElectrons,
+        muon_jetpt,
+        muon_reljetpt,
         hasTaus,
         extras_jetbtag,
         extras_jetpt,

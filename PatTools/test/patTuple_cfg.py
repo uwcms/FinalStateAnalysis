@@ -66,3 +66,7 @@ process.p = cms.Path(tuplize)
 
 #process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.outpath = cms.EndPath(process.out)
+
+# Tell the framework to shut up!
+process.load("FWCore.MessageLogger.MessageLogger_cfi")
+process.MessageLogger.cerr.FwkReport.reportEvery = 2000

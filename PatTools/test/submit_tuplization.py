@@ -3,16 +3,14 @@ import os
 import sys
 
 cfg = 'patTuple_cfg.py'
-jobId = '2011-11-02-EWKPatTuple'
+jobId = '2011-11-08-EWKPatTuple'
 
-for sample, sample_info in datadefs.iteritems():
+print 'export TERMCAP=screen'
+for sample in sorted(datadefs.keys()):
+    sample_info = datadefs[sample]
+    if 'VH' not in sample_info['analyses'] and 'Tau' not in sample_info['analyses']:
+        continue
 
-    #if 'TauPlusX' in sample:
-        #continue
-    #if 'DoubleElectron' in sample:
-        #continue
-    #if 'SingleMu' in sample:
-        #continue
     path_name = os.path.join(os.environ['scratch'], '-'.join(
         [jobId, sample, cfg.replace('.py', '')]))
     sys.stderr.write('Building sample submit dir %s\n' % (sample))
