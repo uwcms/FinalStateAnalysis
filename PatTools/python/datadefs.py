@@ -102,8 +102,8 @@ datadefs = {
         'analyses' : ['VH', 'SSDL'],
     },
     'WZJetsTo3LNu' : {
-        'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6-START44_V5-v1/AODSIM",
-        'pu' : 'S6',
+        'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+        'pu' : 'S4',
         #'x_sec' : 0.7192*_picobarns, # FROM PREP
         # 17 +- 2.4 1.1 1.0 from EWK-11-10
         'x_sec' : 17.0*_picobarns*0.3257*0.1096,
@@ -138,15 +138,15 @@ datadefs = {
         #'analyses' : ['HTT', 'VH'],
     #},
     'QCD_30to80_EM' : {
-        'datasetpath' : "/QCD_Pt-30to80_BCtoE_TuneZ2_7TeV-pythia6/Fall11-PU_S6-START44_V5-v1/AODSIM",
-        'pu' : 'S6',
+        'datasetpath' : "/QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
+        'pu' : 'S4',
         # FIXME
         'x_sec' : 5.944E7*_picobarns*0.061,
         'analyses' : ['HTT', 'VH'],
     },
     'QCD_80to170_EM' : {
-        'datasetpath' : "/QCD_Pt-80to170_BCtoE_TuneZ2_7TeV-pythia/Fall11-PU_S6-START44_V5-v1/AODSIM",
-        'pu' : 'S6',
+        'datasetpath' : "/QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
+        'pu' : 'S4',
         # FIXME
         'x_sec' : 898200.0*_picobarns*0.159,
         'analyses' : ['HTT', 'VH'],
