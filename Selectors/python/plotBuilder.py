@@ -13,12 +13,20 @@ Options:
 * puWeight = [ list of pu weights to add ]
 * triggers = [ list of triggers to add ]
 
+If no puWeight or triggers are specified, all triggers in plotBuilderCommon
+will be added.
+
 
 '''
+import itertools
 
 import FWCore.ParameterSet.Config as cms
 import FinalStateAnalysis.Selectors.plotting.plotting as plotting
+# Import some common trigger defintions.
+import FinalStateAnalysis.Selectors.plotBuilderCommon as common
+
 from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
+
 
 def makePlots(*legs, **kwargs):
     histos = cms.PSet(histos=cms.VPSet())
@@ -90,12 +98,27 @@ def makePlots(*legs, **kwargs):
     add_ntuple(ht_cfg.name.value(), ht_cfg.plotquantity.value())
 
     # Add pileup re-weights
-    puWeights = kwargs.get('puWeights', [])
+    puWeights = kwargs.get('puWeights', common.puWeights)
     for weight in puWeights:
         add_ntuple('puWeight_%s' % weight, 'evt.weight("%s")' % weight)
 
+    # Make leg pair plots if we have more than 2 legs
+    if len(legs) > 2:
+        for leg1, leg2 in itertools.combinations(legs, 2):
+            combo_dict = {
+                'name' : "_".join([leg1['name'], leg2['name']]),
+                'nicename' : ' '.join([leg1['nicename'], leg2['nicename']]),
+                'index1' : leg1['index'],
+                'index2' : leg2['index'],
+            }
+            for pair_plot in [plotting.topology.pairMass,
+                              plotting.topology.pairDPhi]:
+                plot_cfg = PSetTemplate(pair_plot).replace(**combo_dict)
+                histos.finalState.histos.append(plot_cfg)
+                add_ntuple(plot_cfg.name.value(), plot_cfg.plotquantity.value())
+
     # Add triggers
-    trig_cfgs = kwargs.get('triggers', [])
+    trig_cfgs = kwargs.get('triggers', common.all_triggers)
     for trig_cfg in trig_cfgs:
         name, nicename, path = trig_cfg
         # Add HLT pass result
