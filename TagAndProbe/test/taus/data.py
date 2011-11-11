@@ -5,7 +5,7 @@ import logging
 import FinalStateAnalysis.PatTools.data as data
 
 #skips = ['2011B', 'PromptReco_v6_1409']
-skips = ['2011B', ]
+skips = ['2011B', 'EM',  ]
 
 data_sample, plotter = data.build_data(
     'Tau', '2011-10-28-v2-TauTNP', 'scratch_results', 1551, skips,
@@ -85,6 +85,8 @@ rebinning = {
     'Mvis' : 2,
 }
 
+registered = set([])
+
 def get_th1(sample, region, histo, **kwargs):
     # Figure out what selections are applicable in this region
     selections = copy.copy(base_selections)
@@ -116,15 +118,19 @@ def get_th1(sample, region, histo, **kwargs):
 
     output_name = '_'.join([region, histo])
 
-    plotter.register_tree(
-        output_name,
-        '/mt/final/Ntuple',
-        histoVarMap[histo][0],
-        full_selection,
-        w = 'puWeight_3bx_S42011A',
-        binning = histoVarMap[histo][1],
-        include = [sampleMap[sample]],
-    )
+    key = (sample, output_name)
+
+    if key not in registered:
+        plotter.register_tree(
+            output_name,
+            '/mt/final/Ntuple',
+            histoVarMap[histo][0],
+            full_selection,
+            w = 'puWeight_3bx_S42011A',
+            binning = histoVarMap[histo][1],
+            include = [sampleMap[sample]],
+        )
+        registered.add(key)
 
     rebin = 1
     if histo in rebinning:
@@ -133,4 +139,5 @@ def get_th1(sample, region, histo, **kwargs):
     result = plotter.get_histogram(
         sampleMap[sample],
         '/mt/final/Ntuple:' + output_name, rebin = rebin)
+
     return result
