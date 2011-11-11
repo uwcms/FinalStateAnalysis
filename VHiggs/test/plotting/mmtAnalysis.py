@@ -17,7 +17,6 @@ log = logging.getLogger("mmtChannel")
 ROOT.gROOT.SetBatch(True)
 
 # Define the fake rate versus muon pt
-
 FAKE_RATE_0 = 0.00435
 FAKE_RATE_1 = 4.247
 FAKE_RATE_2 = -0.1967

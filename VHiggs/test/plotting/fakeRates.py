@@ -85,8 +85,21 @@ base_qcd_selection = [
 ]
 
 # For e fake rate measurement
-base_qcd_emt_selection = [
-
+base_qcd_emm_selection = [
+    'Mu1Pt > 15',
+    'Mu2Pt > 9',
+    'Mu1AbsEta < 2.1',
+    'Mu2AbsEta < 2.1',
+    'Mu1_MuRelIso > 0.5',
+    'Mu1_MuID_WWID > 0.5',
+    'Mu2_MuRelIso > 0.5',
+    'Mu2_MuID_WWID > 0.5',
+    'NIsoMuonsPt5_Nmuons < 1',
+    'NBjetsPt20_Nbjets < 0.5', # For ttbar
+    #'DoubleMus_HLT > 0.5 ',
+    'Mu1Charge*Mu2Charge > 0', # Same sign (to kill DY)
+    'vtxNDOF > 0',
+    'vtxChi2/vtxNDOF < 10',
 ]
 
 # Stupid names are different, fix this
@@ -258,31 +271,32 @@ fakerates = {
             'Elec_ERelIso < 0.3',
         ]
     },
-    #'eQCD' : {
-        #'ntuple' : 'emt',
-        #'pd' : 'data_MuEG',
-        #'exclude' : ['*DoubleE*', '*DoubleMu*'],
-        #'mc_pd' : 'QCDMu',
-        #'varname' : 'EJetPt',
-        #'var' : 'ElecPt + ElecPt*Elec_ERelIso',
-        #'vartitle' : 'E Jet p_{T}',
-        #'varbinning' : [100, 0, 100],
-        #'rebin' : 5,
-        #'zMassVar' : 'Mu_MtToMET',
-        #'zMassTitle' : 'Leading Muon M_{T}',
-        #'evtType' : '#mu#mu + jet',
-        #'base_cuts' : base_qcd_selection,
-        #'zcuts' : [
-            ##'Leg2_MtToMET < 30',
-            #'METPt < 20',
-        #],
-        #'denom' : [
-        #],
-        #'num' : [
-            #'Muon2_MuID_WWID > 0.5',
-            #'Muon2_MuRelIso < 0.3',
-        #]
-    #},
+    'eQCD' : {
+        'ntuple' : 'emm',
+        'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*'],
+        'mc_pd' : 'QCDMu',
+        'varname' : 'EJetPt',
+        'var' : 'ElecPt + ElecPt*Elec_ERelIso',
+        'vartitle' : 'E Jet p_{T}',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'zMassVar' : 'Mu1_MtToMET',
+        'zMassTitle' : 'Leading Muon M_{T}',
+        'evtType' : '#mu#mu + jet',
+        'base_cuts' : base_qcd_emm_selection,
+        'zcuts' : [
+            #'Leg2_MtToMET < 30',
+            'METPt < 20',
+        ],
+        'denom' : [
+            'ElecPt > 10',
+        ],
+        'num' : [
+            'Elec_EID_WWID > 0.5',
+            'Elec_ERelIso < 0.3',
+        ]
+    },
     #'tauZEE' : {
         #'ntuple' : 'eet',
         #'pd' : 'data_DoubleElectron',
