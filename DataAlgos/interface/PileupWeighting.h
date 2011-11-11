@@ -11,10 +11,11 @@
  * =============================================================================
  */
 
-class PileupSummaryInfo;
 #include <string>
+#include <vector>
 
-/// Get the pileup weight using the given mode and data and MC scenarios
-double getPileupWeight(const std::string& mode,
-    const std::string& dataTag, const std::string& mcTag,
-    const PileupSummaryInfo& puInfo);
+class PileupSummaryInfo;
+
+/// Get the 3D pileup weight using the given data and MC scenarios
+double get3DPileupWeight(const std::string& dataTag, const std::string& mcTag,
+    const std::vector<PileupSummaryInfo>& puInfo);
