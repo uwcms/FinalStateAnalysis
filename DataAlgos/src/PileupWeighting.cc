@@ -1,12 +1,13 @@
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 
+#include "FWCore/Utilities/interface/Exception.h"
 #include "FWCore/ParameterSet/interface/FileInPath.h"
 #include "TH1.h"
 #include "TFile.h"
 
 #include <boost/shared_ptr.hpp>
-#include <boost/assign/std/map.hpp>
+#include <boost/assign/list_of.hpp>
 #include <map>
 
 typedef boost::shared_ptr<TH1> TH1Ptr;
@@ -16,7 +17,7 @@ namespace {
   TH1Ptr loadAndNormHistogram(const edm::FileInPath& path,
       const std::string& name="pileup") {
     TFile file(path.fullPath().c_str(), "READ");
-    TH1Ptr output(static_cast<TH1*>(file.Get(name))->Clone());
+    TH1Ptr output(static_cast<TH1*>(file.Get(name.c_str())->Clone()));
     if (output.get() == NULL) {
       throw cms::Exception("BadPileupFile")
         << "The file " << path.fullPath() << " does not contain histogram: "
@@ -60,8 +61,8 @@ get3DPileupWeight(const std::string& dataTag, const std::string& mcTag,
   int np0=-1;
   int npp1=-1;
 
-  for(std::vector<PileupSummaryInfo>::const_iterator PVI = puInfo->begin();
-      PVI != puInfo->end(); ++PVI) {
+  for(std::vector<PileupSummaryInfo>::const_iterator PVI = puInfo.begin();
+      PVI != puInfo.end(); ++PVI) {
 
     int BX = PVI->getBunchCrossing();
 
@@ -81,12 +82,12 @@ get3DPileupWeight(const std::string& dataTag, const std::string& mcTag,
   np0 = std::min(np0,49);
   npp1 = std::min(npp1,49);
 
-  assert(npm1 != -1)
-  assert(np0 != -1)
-  assert(npp1 != -1)
+  assert(npm1 != -1);
+  assert(np0 != -1);
+  assert(npp1 != -1);
 
-  double mcProb = mcHisto->get()->GetBinContent(npm1+1, np0+1, npp1+1);
-  double dataProb = dataHisto->get()->GetBinContent(npm1+1, np0+1, npp1+1);
+  double mcProb = mcHisto->second->GetBinContent(npm1+1, np0+1, npp1+1);
+  double dataProb = dataHisto->second->GetBinContent(npm1+1, np0+1, npp1+1);
 
   return dataProb/mcProb;
 }
