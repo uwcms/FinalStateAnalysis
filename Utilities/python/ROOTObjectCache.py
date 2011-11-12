@@ -2,7 +2,9 @@ import ROOT
 import os
 import logging
 
+
 class ROOTObjectCache(object):
+    open_files = {}
     def __init__(self, file, reset = False):
         # Instrument for testing
         self.log = logging.getLogger("ROOTObjectCache")
@@ -10,12 +12,15 @@ class ROOTObjectCache(object):
         self.put_counter = 0
         self.keep = []
         if isinstance(file, basestring):
-            if not reset and os.path.exists(file):
+            if file in self.open_files:
+                self.cache_file = self.open_files[file]
+            elif not reset and os.path.exists(file):
                 self.log.info("Using existing cache file at path: %s", file)
                 self.cache_file = ROOT.TFile(file, "UPDATE")
             else:
                 self.log.info("Creating new cache file at path: %s", file)
                 self.cache_file = ROOT.TFile(file, "RECREATE")
+            self.open_files[file] = self.cache_file
         else:
             self.cache_file = file
 
