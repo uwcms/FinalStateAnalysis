@@ -8,22 +8,15 @@ Measure jet->lepton fake rates in single muon events
 import ROOT
 import os
 import sys
-import glob
 import logging
-import math
-from FinalStateAnalysis.Utilities.AnalysisPlotter import styling,samplestyles
-import FinalStateAnalysis.PatTools.data as data
+import FinalStateAnalysis.PatTools.data as data_tool
 
 # Logging options
-logging.basicConfig(filename='fakeRates.log',level=logging.DEBUG, filemode='w')
-log = logging.getLogger("plotting")
+logging.basicConfig(filename='singleMuFakeRates.log',level=logging.DEBUG, filemode='w')
+log = logging.getLogger("fakerates")
 h1 = logging.StreamHandler(sys.stdout)
 h1.level = logging.INFO
 log.addHandler(h1)
-logging.getLogger("AnalysisPlotter").addHandler(h1)
-h2 = logging.StreamHandler(sys.stderr)
-h2.level = logging.DEBUG
-logging.getLogger("ROOTCache").addHandler(h2)
 
 ROOT.gROOT.SetBatch(True)
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
@@ -34,9 +27,11 @@ wjets_selection = [
     'Muon1AbsEta < 2.1',
     'Muon1_MtToMET > 40',
     'METPt > 30',
+    'Muon1_MuID_WWID > 0.5',
     'Muon1_MuRelIso < 0.1',
     'Muon1Charge*Muon2Charge > 0',
     'NIsoMuonsPt5_Nmuons < 0.5',
+    'NIsoElecPt10_Nelectrons < 0.5',
     'NBjetsPt20_Nbjets < 0.5',
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
@@ -45,7 +40,6 @@ wjets_selection = [
 ]
 
 qcd_selection = [
-    'Mu30_HLT',
     'Muon1Pt > 30',
     'Muon1AbsEta < 2.1',
     'Muon1_MuRelIso > 0.5',
@@ -57,29 +51,36 @@ qcd_selection = [
     'METPt < 20',
     'Muon2_NPixHits > 1',
     'NIsoTausPt20_NIsoTaus < 0.5',
+    'NIsoElecPt10_Nelectrons < 0.5',
+]
+
+# In the emu channels, the muon is the second leg.
+wjets_selection_emu = [
+    x.replace('Muon1', 'Muon2') for x in wjets_selection
+]
+
+qcd_selection_emu = [
+    x.replace('Muon1', 'Muon2') for x in qcd_selection
 ]
 
 fakerates = {
     'mu' : {
         'ntuple' : 'mm',
         'pd' : 'data_SingleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*DoubleMu*'],
         'mc_pd' : 'Wjets',
         'varname' : 'MuJetPt',
         'vartitle' : 'Mu Jet Pt',
         'var' : 'Muon2Pt + Muon2Pt*Muon2_MuRelIso',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
-        'zMassVar' : 'Muon1_MtToMET',
-        'zMassTitle' : 'Muon 1 MT to MET',
         'evtType' : '#mu#mu',
         'base_cuts' : wjets_selection,
-        'zcuts' : [
-            #'Leg1Leg2_Mass > 70',
-            #'Leg1Leg2_Mass < 110',
-            #'(finalStateVisP4Mass < 80 || finalStateVisP4Mass > 100)',
-            #'Leg3_MtToMET < 40'
+        'control_plots' : [
         ],
+        'final_cuts' : [],
         'denom' : [
+            'DoubleMus_HLT > 0.5',
             'Muon2Pt > 9',
             'Muon2AbsEta < 2.1',
         ],
@@ -91,23 +92,19 @@ fakerates = {
     'muQCD' : {
         'ntuple' : 'mm',
         'pd' : 'data_SingleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*DoubleMu*'],
         'mc_pd' : 'QCDMu',
         'varname' : 'MuJetPt',
         'vartitle' : 'Mu Jet Pt',
         'var' : 'Muon2Pt + Muon2Pt*Muon2_MuRelIso',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
-        'zMassVar' : 'Muon1_MtToMET',
-        'zMassTitle' : 'Muon 1 MT to MET',
         'evtType' : '#mu#mu',
         'base_cuts' : qcd_selection,
-        'zcuts' : [
-            #'Leg1Leg2_Mass > 70',
-            #'Leg1Leg2_Mass < 110',
-            #'(finalStateVisP4Mass < 80 || finalStateVisP4Mass > 100)',
-            #'Leg3_MtToMET < 40'
-        ],
+        'control_plots' : [],
+        'final_cuts' : [],
         'denom' : [
+            'DoubleMus_HLT > 0.5',
             'Muon2Pt > 9',
             'Muon2AbsEta < 2.1',
         ],
@@ -115,20 +112,77 @@ fakerates = {
             'Muon2_MuID_WWID > 0.5',
             'Muon2_MuRelIso < 0.3',
         ]
+    },
+    'e' : {
+        'ntuple' : 'em',
+        'pd' : 'data_SingleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*DoubleMu*'],
+        'mc_pd' : 'Wjets',
+        'varname' : 'EJetPt',
+        'vartitle' : 'Electron Jet Pt',
+        'var' : 'ElectronPt + ElectronPt*Electron_ERelIso',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'evtType' : 'e#mu',
+        'base_cuts' : wjets_selection_emu,
+        'control_plots' : [
+            ('Njets', 'NjetsPt20_Njets',
+             "Number of jets", [10, -0.5, 9.5]),
+        ],
+        'final_cuts' : [],
+        'denom' : [
+            'Mu17Ele8All_HLT > 0.5',
+            'ElectronPt > 9',
+            'ElectronAbsEta < 2.5',
+            'ElectronCharge*Muon2Charge > 0',
+        ],
+        'num' : [
+            'Electron_EID_WWID > 0.5',
+            'Electron_ERelIso < 0.3',
+        ]
+    },
+    'eQCD' : {
+        'ntuple' : 'em',
+        'pd' : 'data_SingleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*DoubleMu*'],
+        'mc_pd' : 'QCDMu',
+        'varname' : 'EJetPt',
+        'vartitle' : 'Electrontron Jet Pt',
+        'var' : 'ElectronPt + ElectronPt*Electron_ERelIso',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'evtType' : 'e#mu',
+        'base_cuts' : qcd_selection_emu,
+        'control_plots' : [],
+        'final_cuts' : [],
+        'denom' : [
+            'Mu17Ele8All_HLT > 0.5',
+            'ElectronCharge*Muon2Charge > 0',
+            'ElectronPt > 9',
+            'ElectronAbsEta < 2.5',
+        ],
+        'num' : [
+            'Electron_EID_WWID > 0.5',
+            'Electron_ERelIso < 0.3',
+        ]
     }
 }
 
 output_file = ROOT.TFile("results_singleMuFakeRates.root", "RECREATE")
+for data_set, skips, int_lumi in [('2011A', ['2011B', 'EM'], 2170),
+                                  ('2011B', ['2011A', 'v1_d', 'EM'], 2170),
+                                  ('2011AB', ['v1_d', 'EM'], 4000)]:
+    log.info("Plotting dataset: %s", data_set)
 
-for data_set, skips, int_lumi in [('2011A', ['2011B'], 2170),
-                                  ('2011B', ['2011A', 'v1_d'], 2170),
-                                  ('2011AB', ['v1_d'], 4000)]:
-
-    data_sample, plotter = data.build_data(
+    samples, plotter = data_tool.build_data(
         'Tau', '2011-11-04-v1-MuonTP', 'scratch_results', int_lumi, skips,
         count = '/mm/skimCounter', unweighted = False)
 
-    log.info("Making plots for dataset %s", data_set)
+    legend = plotter.build_legend(
+        '/em/skimCounter',
+        include = ['*'],
+        exclude = ['*data*','*VH*'],
+        drawopt='lf')
 
     def saveplot(filename):
         # Save the current canvas
@@ -146,33 +200,60 @@ for data_set, skips, int_lumi in [('2011A', ['2011B'], 2170),
         log.info("Doing fake rate type %s", fr_type)
         # Draw the Z-mumu mass
         denom_selection_list = \
-                fr_info['base_cuts'] + fr_info['zcuts'] + fr_info['denom']
+                fr_info['base_cuts'] + fr_info['denom']
         denom_selection = " && ".join(denom_selection_list)
 
         num_selection_list = denom_selection_list + fr_info['num']
         num_selection = ' && '.join(num_selection_list)
 
-        weight = 'puWeight_3bx_S42011A'
+        weight = 'puWeight_3bx_S42011AB178078'
 
-        plotter.register_tree(
-            fr_type + 'DenomZMass',
-            '/%s/final/Ntuple' % fr_info['ntuple'],
-            fr_info['zMassVar'],
-            denom_selection,
-            w = weight,
-            binning = [80, 70, 110],
-            include = ['*'],
-        )
+        # List of final plots to make
+        to_plot = [
+            (fr_type + 'Num' + fr_info['varname'],
+             '%s mass (tight)' % fr_info['vartitle'],
+             fr_info['vartitle'], fr_info['rebin']),
+            (fr_type + 'Denom' + fr_info['varname'],
+             '%s mass (loose)' % fr_info['vartitle'],
+             fr_info['vartitle'], fr_info['rebin']),
+        ]
 
-        plotter.register_tree(
-            fr_type + 'NumZMass',
-            '/%s/final/Ntuple' % fr_info['ntuple'],
-            fr_info['zMassVar'],
-            num_selection,
-            w = weight,
-            binning = [80, 70, 110],
-            include = ['*'],
-        )
+        for label, var, title, binning in fr_info['control_plots']:
+            log.info("Plotting control plot %s", label)
+            plotter.register_tree(
+                fr_type + label + 'Denom',
+                '/%s/final/Ntuple' % fr_info['ntuple'],
+                var,
+                denom_selection,
+                w = weight,
+                binning = binning,
+                include = ['*'],
+                exclude = fr_info['exclude'],
+            )
+
+            plotter.register_tree(
+                fr_type + label + 'Num',
+                '/%s/final/Ntuple' % fr_info['ntuple'],
+                var,
+                num_selection,
+                w = weight,
+                binning = binning,
+                include = ['*'],
+                exclude = fr_info['exclude'],
+            )
+            to_plot.append(
+                (fr_type + label + 'Denom', "%s (loose)" % title, title, 1)
+            )
+            to_plot.append(
+                (fr_type + label + 'Num', "%s (tight)" % title, title, 1)
+            )
+
+        # Add the final cuts in
+        denom_selection_list += fr_info['final_cuts']
+        denom_selection = " && ".join(denom_selection_list)
+
+        num_selection_list += fr_info['final_cuts']
+        num_selection = ' && '.join(num_selection_list)
 
         plotter.register_tree(
             fr_type + 'Denom' + fr_info['varname'],
@@ -182,6 +263,7 @@ for data_set, skips, int_lumi in [('2011A', ['2011B'], 2170),
             w = weight,
             binning = fr_info['varbinning'],
             include = ['*'],
+            exclude = fr_info['exclude'],
         )
 
         plotter.register_tree(
@@ -192,20 +274,11 @@ for data_set, skips, int_lumi in [('2011A', ['2011B'], 2170),
             w = weight,
             binning = fr_info['varbinning'],
             include = ['*'],
+            exclude = fr_info['exclude'],
         )
 
-        to_plot = [
-            (fr_type + 'DenomZMass', 'Dilepton mass (loose)', fr_info['zMassTitle']),
-            (fr_type + 'NumZMass', 'Dilepton mass (tight)', fr_info['zMassTitle']),
-            (fr_type + 'Num' + fr_info['varname'], '%s mass (tight)' % fr_info['vartitle'], fr_info['vartitle']),
-            (fr_type + 'Denom' + fr_info['varname'], '%s mass (loose)' % fr_info['vartitle'], fr_info['vartitle']),
-        ]
-
         # Make plots
-        for name, title, xtitle in to_plot:
-            rebin = 1
-            if 'Z' not in name:
-                rebin = fr_info['rebin']
+        for name, title, xtitle, rebin in to_plot:
 
             stack = plotter.build_stack(
                 '/%s/final/Ntuple:%s' % (fr_info['ntuple'], name),
@@ -215,7 +288,7 @@ for data_set, skips, int_lumi in [('2011A', ['2011B'], 2170),
                 show_overflows = True,
                 rebin = rebin,
             )
-            data_hist = plotter.get_histogram(
+            data = plotter.get_histogram(
                 fr_info['pd'],
                 '/%s/final/Ntuple:%s' % (fr_info['ntuple'], name),
                 show_overflows = True,
@@ -223,8 +296,8 @@ for data_set, skips, int_lumi in [('2011A', ['2011B'], 2170),
             )
             stack.Draw()
             stack.GetXaxis().SetTitle(xtitle)
-            data_hist.Draw("pe, same")
-            stack.SetMaximum(max(stack.GetMaximum(), data_hist.GetMaximum())*1.5)
+            data.Draw("pe, same")
+            stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
             stack.GetHistogram().SetTitle(
                  xtitle + ' in ' + fr_info['evtType'] + ' events')
 
@@ -292,10 +365,10 @@ for data_set, skips, int_lumi in [('2011A', ['2011B'], 2170),
 
         canvas.Clear()
         multi = ROOT.TMultiGraph("fake_rates", "Fake Rates")
-        multi.Add(mc_curve, "p")
-        multi.Add(data_curve, "p")
+        multi.Add(mc_curve, "pe")
+        multi.Add(data_curve, "pe")
 
-        multi.Draw("a")
+        multi.Draw("ape")
         multi.GetHistogram().SetMinimum(1e-3)
         multi.GetHistogram().SetMaximum(1.0)
         multi.GetHistogram().GetXaxis().SetTitle(fr_info['vartitle'])

@@ -18,9 +18,9 @@ ROOT.gROOT.SetBatch(True)
 
 # Define the fake rate versus muon pt
 
-FAKE_RATE_0 = 0.0025
-FAKE_RATE_1 = 0.19
-FAKE_RATE_2 = -0.185
+FAKE_RATE_0 = 0.01306
+FAKE_RATE_1 = 0.194
+FAKE_RATE_2 = -0.1134
 
 FAKE_RATE = '(%0.4f + %0.4f*TMath::Exp(%0.4f * (VAR) ) )' % (
     FAKE_RATE_0, FAKE_RATE_1, FAKE_RATE_2)
