@@ -14,7 +14,7 @@ if __name__ == "__main__":
             continue
         bins.append(float(line.strip().strip(',')))
 
-    output_hist = ROOT.TH1F("pileup", "pileup", len(bins), -0.5, -0.5*len(bins))
+    output_hist = ROOT.TH1F("pileup", "pileup", len(bins), 0, len(bins))
 
     for i, bin in enumerate(bins):
         output_hist.SetBinContent(i+1, bin)
