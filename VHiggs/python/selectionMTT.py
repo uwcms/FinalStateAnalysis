@@ -113,4 +113,10 @@ selections = cms.VPSet(
 ###########################################################################
 
 from FinalStateAnalysis.Selectors.plotBuilder import makePlots
-plots, ntuple = makePlots(leg1, leg2, leg3)
+all_plots, ntuple = makePlots(leg1, leg2, leg3)
+
+# Split into OS/SS regions
+plots = cms.PSet(
+    histos = cms.VPSet(),
+    ntuple = ntuple,
+)
