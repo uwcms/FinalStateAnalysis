@@ -119,7 +119,7 @@ jetPt = cms.PSet(
     nbins = cms.untracked.int32(200),
     name = cms.untracked.string("${name}_JetPt"),
     description = cms.untracked.string("${nicename} JetPt"),
-    plotquantity = cms.untracked.string("userFloat('jetPt')"),
+    plotquantity = cms.untracked.string("${getter}userFloat('jetPt')"),
     lazyParsing = cms.untracked.bool(True),
 )
 

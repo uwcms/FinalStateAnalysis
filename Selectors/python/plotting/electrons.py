@@ -54,7 +54,7 @@ jetPt = cms.PSet(
     nbins = cms.untracked.int32(200),
     name = cms.untracked.string("${name}_JetPt"),
     description = cms.untracked.string("${nicename} JetPt"),
-    plotquantity = cms.untracked.string("userFloat('jetPt')"),
+    plotquantity = cms.untracked.string("${getter}userFloat('jetPt')"),
     lazyParsing = cms.untracked.bool(True),
 )
 
@@ -62,8 +62,8 @@ btag = cms.PSet(
     min = cms.untracked.double(-10),
     max = cms.untracked.double(10),
     nbins = cms.untracked.int32(200),
-    name = cms.untracked.string("${name}_MuBtag"),
-    description = cms.untracked.string("${nicename} muon seed jet b-tag"),
+    name = cms.untracked.string("${name}_EBtag"),
+    description = cms.untracked.string("${nicename} electron seed jet b-tag"),
     plotquantity = cms.untracked.string(
         '? ${getter}userCand("patJet").isNonnull ? '
         '${getter}userCand("patJet").bDiscriminator("") : -5'),
@@ -74,8 +74,8 @@ btagmuon = cms.PSet(
     min = cms.untracked.double(-10),
     max = cms.untracked.double(10),
     nbins = cms.untracked.int32(200),
-    name = cms.untracked.string("${name}_MuBtagSoftMuon"),
-    description = cms.untracked.string("${nicename} muon seed jet b-tag"),
+    name = cms.untracked.string("${name}_EBtagSoftMuon"),
+    description = cms.untracked.string("${nicename} electron seed jet b-tag"),
     plotquantity = cms.untracked.string(
         '? ${getter}userCand("patJet").isNonnull ? '
         '${getter}userCand("patJet").bDiscriminator("softMuonByIP3dBJetTagsAOD") : -5'),
