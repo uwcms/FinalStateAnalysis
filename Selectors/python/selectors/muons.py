@@ -94,6 +94,19 @@ pixelHits = cms.PSet(
     invert = cms.bool(False)
 )
 
+innerTrk = cms.PSet(
+    name = cms.string("${name}_InnerNpixHits"),
+    description = cms.string("$nicename number inner pixel hits"),
+    cut = cms.string("? ${getter}innerTrack.isNonnull ? "
+                     "${getter}innerTrack.hitPattern.numberOfValidPixelHits :"
+                     "-1 > ${threshold}"),
+    plottable = cms.string(
+        "? ${getter}innerTrack.isNonnull ? "
+        "${getter}innerTrack.hitPattern.numberOfValidPixelHits : -1"),
+    invert = cms.bool(False)
+)
+
+
 # Normalized chi2 of global track
 trkNormChi2 = cms.PSet(
     name = cms.string("${name}_GlbTrkNormChi2"),
