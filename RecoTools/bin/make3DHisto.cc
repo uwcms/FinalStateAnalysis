@@ -115,6 +115,7 @@ int main(int argc, char* argv[]) {
     if(mean<0.) {
       std::cerr
         << " Your histogram generates MC luminosity values less than zero!"
+        << " value: " << mean
         << " Please Check.  Terminating." << std::endl;
       return 3;
     }

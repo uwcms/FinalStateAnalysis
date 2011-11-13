@@ -3,9 +3,9 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-11-07-v1-WHAnalyze'
+jobId = '2011-11-13-v1-WHAnalyze'
 
-patJobId = '2011-10-21-EWKPatTuple'
+patJobId = '2011-11-08-EWKPatTuple'
 patCfg = 'patTuple_cfg'
 #patCfg = 'analyze_cfg'
 
@@ -14,6 +14,7 @@ def get_dir(sample):
     base_dir = '--input-dir=root://cmsxrootd.hep.wisc.edu//store/user/efriis/'
     return base_dir + dir_name
 
+print 'export TERMCAP=screen'
 for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
     if 'VH' not in sample_info['analyses']:
         continue
@@ -26,6 +27,13 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         continue
 
     options = []
+
+    if 'data' not in sample:
+        options.append('isMC=1')
+        options.append('puScenario=%s' % sample_info['pu'])
+    else:
+        options.append('isMC=0')
+
     farmout_options = []
     farmout_options.append(get_dir(sample))
 
@@ -52,5 +60,6 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         os.environ['SCRAM_ARCH'], 'analyzeFinalStates'))
     command.append(os.path.abspath(cfg))
     command.extend(options)
-    print 'export TERMCAP=screen'
+
+
     print ' '.join(command)
