@@ -91,6 +91,17 @@ pixelHits = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+innerTrackPixHits = cms.PSet(
+    min = cms.untracked.double(-1.5),
+    max = cms.untracked.double(6.5),
+    nbins = cms.untracked.int32(8),
+    name = cms.untracked.string("${name}_InnerNPixHits"),
+    description = cms.untracked.string("${nicename} Inner Track Pixel Hits"),
+    plotquantity = cms.untracked.string(
+        selectors.muons.innerTrk.plottable.value()),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 d0 = cms.PSet(
     min = cms.untracked.double(0.0),
     max = cms.untracked.double(2),
@@ -99,6 +110,40 @@ d0 = cms.PSet(
     description = cms.untracked.string("${nicename} 3D IP"),
     plotquantity = cms.untracked.string(
         selectors.muons.d0.plottable.value()),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+jetPt = cms.PSet(
+    min = cms.untracked.double(0.0),
+    max = cms.untracked.double(200),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_JetPt"),
+    description = cms.untracked.string("${nicename} JetPt"),
+    plotquantity = cms.untracked.string("userFloat('jetPt')"),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+btag = cms.PSet(
+    min = cms.untracked.double(-10),
+    max = cms.untracked.double(10),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_MuBtag"),
+    description = cms.untracked.string("${nicename} muon seed jet b-tag"),
+    plotquantity = cms.untracked.string(
+        '? ${getter}userCand("patJet").isNonnull ? '
+        '${getter}userCand("patJet").bDiscriminator("") : -5'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+btagmuon = cms.PSet(
+    min = cms.untracked.double(-10),
+    max = cms.untracked.double(10),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_MuBtagSoftMuon"),
+    description = cms.untracked.string("${nicename} muon seed jet b-tag"),
+    plotquantity = cms.untracked.string(
+        '? ${getter}userCand("patJet").isNonnull ? '
+        '${getter}userCand("patJet").bDiscriminator("softMuonByIP3dBJetTagsAOD") : -5'),
     lazyParsing = cms.untracked.bool(True),
 )
 
@@ -125,7 +170,8 @@ hltL1Mu3EG5L3Filtered8  = get_trigger_matching('hltL1Mu3EG5L3Filtered8')
 hltL1Mu3EG5L3Filtered17  = get_trigger_matching('hltL1Mu3EG5L3Filtered17')
 
 all = [wwid, reliso, relSubDetIso, ecalIso, hcalIso,
-       pixelHits, trkNormChi2, d0,
+       jetPt, btag, btagmuon,
+       pixelHits, innerTrackPixHits, trkNormChi2, d0,
        hltSingleMu13L3Filtered13, hltDiMuonL3p5PreFiltered8,
        hltDiMuonL3PreFiltered7, hltSingleMu30L3Filtered30,
        hltSingleMuIsoL3IsoFiltered24,

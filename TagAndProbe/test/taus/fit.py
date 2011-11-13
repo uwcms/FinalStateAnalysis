@@ -132,20 +132,34 @@ for region in templates.regions:
 
             legend = ROOT.TLegend(0.65, 0.65, 0.86, 0.86, "", "brNDC")
             legend.SetFillStyle(0)
-
             legend_maker(frame, legend)
+
+            label = ROOT.TPaveText(0.12, 0.80, 0.5, 0.9, "NDC")
+            label.AddText("CMS Preliminary L = 1.5 fb^{-1}")
+            label.SetBorderSize(0)
+            label.SetFillStyle(0)
+            label.SetTextAlign(13)
 
             frame.Draw()
             frame.SetMaximum(1.5*frame.GetMaximum())
-            frame.GetYaxis().SetTitle("")
-            title = "Fitted yields in %s region with tau ID = %s " % tuple(
-                region.upper().split('_'))
-            title += type
-            frame.SetTitle(title)
+            frame.GetYaxis().SetTitleOffset(1.2)
+            frame.GetYaxis().SetTitle("Events")
+            if 'mvis' in var.GetName():
+                frame.GetYaxis().SetTitle("Events / 6 GeV")
+            sign_region, tauid = region.split('_')
+            sign_region = sign_region.upper()
+            #title = "Fitted yields in %s region with tau ID %sed " % (
+                #sign_region, tauid)
+            title = "Fitted yields in %s region" % (sign_region)
+            #title += type
+            #frame.SetTitle(title)
+            frame.SetTitle("")
             legend.Draw()
+            label.Draw()
             canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result.pdf")
             canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result.png")
             canvas.SetLogy(True)
+            frame.SetMaximum(5*frame.GetMaximum())
             canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result_log.pdf")
             canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result_log.png")
             canvas.SetLogy(False)
