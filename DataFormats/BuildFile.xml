@@ -3,6 +3,7 @@
 <use   name="DataFormats/PatCandidates"/>
 <use   name="DataFormats/Luminosity"/>
 <use   name="SimDataFormats/PileupSummaryInfo"/>
+<use   name="FinalStateAnalysis/DataAlgos"/>
 <use   name="CommonTools/Utils"/>
 <use   name="rootrflx"/>
 <export>

@@ -1,5 +1,6 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/SmartTrigger.h"
+#include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
 
@@ -113,6 +114,11 @@ int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
       matchCount += 1;
   }
   return matchCount;
+}
+
+double PATFinalStateEvent::puWeight(const std::string& dataTag,
+    const std::string& mcTag) const {
+  return get3DPileupWeight(dataTag, mcTag, puInfo_);
 }
 
 float PATFinalStateEvent::weight(const std::string& name) const {

@@ -82,6 +82,10 @@ class PATFinalStateEvent {
     int matchedToPath(const reco::Candidate& cand, const std::string& pattern,
         double maxDeltaR = 0.3) const;
 
+    /// The following allow use of the PileupWeighting feature in DataAlgos
+    /// For the available tags, see DataAlgos/src/PileupWeighting.cc
+    double puWeight(const std::string& dataTag, const std::string& mcTag) const;
+
     /// Get a named event weight
     float weight(const std::string& name) const;
     void addWeight(const std::string& name, float weight);
