@@ -289,7 +289,7 @@ def build_data_set(pd, analyses):
   return subsample_dict, sample_dict
 
 # Build all the PDs we use
-data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH'])
+data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu'])
 datadefs.update(data_DoubleMu)
 data_name_map.update(list_DoubleMu)
 
