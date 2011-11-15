@@ -31,7 +31,6 @@ class DataCardChannel(object):
             for sample_item in sample:
                 sys_dict[sample_item] = value
 
-
     def get_process_columns(self, systematics):
         for idx, sample in self.samples:
             bin_name = self.name

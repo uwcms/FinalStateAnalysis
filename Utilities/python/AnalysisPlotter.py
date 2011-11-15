@@ -234,6 +234,10 @@ class AnalysisPlotter(object):
         return output
 
     def get_histogram(self, sample, path, **kwargs):
+        if sample not in self.sample_dict:
+            raise KeyError(
+                "I don't know anything about sample %s - only these: %s" % (
+                    sample, ", ".join(self.sample_dict.keys())))
         histo = self.sample_dict[sample].get(path, **kwargs)
         drawopt = self.sample_dict[sample].style_dict.get('draw_opt', '')
         histo.SetOption(drawopt)
