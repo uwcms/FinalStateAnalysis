@@ -30,14 +30,15 @@ data_name_map = {
 
     'ttjets': ['TTplusJets_madgraph'],
 
+    'VH100' : ['VH_100'],
     'VH110' : ['VH_110'],
     'VH115' : ['VH_115'],
     'VH120' : ['VH_120'],
     'VH125' : ['VH_125'],
-    #'VH130' : ['VH_130'],
-    #'VH135' : ['VH_135'],
-    #'VH140' : ['VH_140'],
-    #'VH145' : ['VH_145'],
+    'VH135' : ['VH_135'],
+    'VH140' : ['VH_140'],
+    'VH145' : ['VH_145'],
+    'VH160' : ['VH_160'],
     #'VH150' : ['VH_150'],
 }
 
@@ -217,7 +218,7 @@ datadefs = {
     #},
     'VH_160' : {
         'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-160_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 10000,
+        'x_sec' : (0.2291 + 0.1334 + 0.03942)*_picobarns*3.96E-03,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
