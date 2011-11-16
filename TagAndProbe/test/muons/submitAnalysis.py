@@ -26,6 +26,11 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         continue
 
     options = []
+    if 'data' not in sample:
+        options.append('isMC=1')
+    else:
+        options.append('isMC=0')
+
     farmout_options = []
     farmout_options.append(get_dir(sample))
 

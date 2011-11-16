@@ -180,3 +180,24 @@ process.em = cms.PSet(
         selections = em_selections
     )
 )
+
+# Build the filter selectors for skimming events.
+for channel in process.steering.analyzers:
+    module = getattr(process, channel)
+    if options.isMC:
+        scenario = options.puScenario
+        print "Configuring %s ntuple for %s PU re-weighting" % (
+            channel, scenario)
+        module.analysis.final.plot.ntuple.pu2011A = cms.string(
+            "evt.puWeight('2011A', '%s')" % scenario
+        )
+        module.analysis.final.plot.ntuple.pu2011B = cms.string(
+            "evt.puWeight('2011B', '%s')" % scenario
+        )
+        module.analysis.final.plot.ntuple.pu2011AB = cms.string(
+            "evt.puWeight('2011AB', '%s')" % scenario
+        )
+    else:
+        module.analysis.final.plot.ntuple.pu2011A = cms.string("1.0")
+        module.analysis.final.plot.ntuple.pu2011B = cms.string("1.0")
+        module.analysis.final.plot.ntuple.pu2011AB = cms.string("1.0")
