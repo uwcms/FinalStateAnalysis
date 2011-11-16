@@ -179,4 +179,14 @@ def makePlots(*legs, **kwargs):
     histos.extras.histos.append(b_veto_cfg)
     add_ntuple(b_veto_cfg.name.value(), b_veto_cfg.plotquantity.value())
 
+    nvtx_cfg = PSetTemplate(plotting.extras.nvtx).replace(
+        name = "FinalState", nicename="Final State")
+    histos.extras.histos.append(nvtx_cfg)
+    add_ntuple(nvtx_cfg.name.value(), nvtx_cfg.plotquantity.value())
+
+    rho_cfg = PSetTemplate(plotting.extras.rho).replace(
+        name = "FinalState", nicename="Final State")
+    histos.extras.histos.append(rho_cfg)
+    add_ntuple(rho_cfg.name.value(), rho_cfg.plotquantity.value())
+
     return histos, ntuple

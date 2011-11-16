@@ -37,6 +37,15 @@ wwid = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+mitid = cms.PSet(
+    _binary_bins,
+    name = cms.untracked.string("${name}_EID_MITID"),
+    description = cms.untracked.string("${nicename} Electron MITID"),
+    plotquantity = cms.untracked.string(
+        selectors.electrons.id.plottable.value().replace('${eID}', 'MITID')),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 reliso = cms.PSet(
     min = cms.untracked.double(0.0),
     max = cms.untracked.double(2),
@@ -96,7 +105,7 @@ hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter = get_trigger_matching(
     'hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter')
 
 all = [
-    reliso, wwid, jetPt, btag, btagmuon,
+    reliso, wwid, mitid, jetPt, btag, btagmuon,
     hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter,
     hltMu17Ele8CaloIdTPixelMatchFilter,
     hltL1NonIsoHLTNonIsoMu8Ele17PixelMatchFilter,

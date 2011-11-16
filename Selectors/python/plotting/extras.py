@@ -64,6 +64,24 @@ ntaus = cms.PSet(
     plotquantity = cms.untracked.string(extras.tau_veto.plottable.value()),
 )
 
+nvtx = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(20.5),
+    nbins = cms.untracked.int32(21),
+    name = cms.untracked.string("${name}_NVtx"),
+    description = cms.untracked.string("${nicename} Num. Vtx"),
+    plotquantity = cms.untracked.string("evt.recoVertices.size()"),
+)
+
+rho = cms.PSet(
+    min = cms.untracked.double(0.0),
+    max = cms.untracked.double(20),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_Rho"),
+    description = cms.untracked.string("${nicename} #rho"),
+    plotquantity = cms.untracked.string("evt.rho()"),
+)
+
 # Number of bjets passing hps loose
 bjet_tauid = 'userCand(\'patJet\').pt > ${pt_threshold} &' \
         'abs(userCand(\'patJet\').eta) < ${eta_threshold} & ' \
