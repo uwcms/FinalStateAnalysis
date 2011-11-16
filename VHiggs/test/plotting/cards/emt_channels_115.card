@@ -1,21 +1,21 @@
 # VHtautau fit
-# 2.1 fb-1
+# 4.6 fb-1
 imax 1
 jmax *
 kmax *
 ------------
 shapes * * all_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
-bin emt_115
-observation 24.0
+bin emt_115_final_vtxChi2NODF
+observation 18.0
 ------------
-  bin    emt_115  emt_115  emt_115  emt_115
+  bin    emt_115_final_vtxChi2NODF  emt_115_final_vtxChi2NODF  emt_115_final_vtxChi2NODF  emt_115_final_vtxChi2NODF
   process    wz  signal  zz  fakes
   process    2  0  3  1
-  rate    7.13503478467  1.07528006472  1.27536750073  19.063796401
+  rate    3.75667146966  0.739896379411  1.72603330389  4.7979722321
   tau_id  lnN  1.06  1.06  1.06  -
   lumi  lnN  1.04  1.04  1.04  -
   e_id  lnN  1.02  1.02  1.02  -
   zz  lnN  -  -  1.40  -
   mu_id  lnN  1.01  1.01  1.01  -
-  emt_fake_err  lnN  -  -  -  1.11
+  emt_fake_err  lnN  -  -  -  1.05
   wz  lnN  1.17  -  -  -

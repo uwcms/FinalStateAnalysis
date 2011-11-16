@@ -2,7 +2,7 @@
 
 # Merge all of our channel shapes
 #hadd -f all_shapes.root emt_shapes.root mmt_shapes.root
-hadd -f all_shapes.root emt_shapes.root mmt_shapes.root emt_shapes.root mmt_shapes.root emt_shapes.root mmt_shapes.root 
+hadd -f all_shapes.root emt_shapes.root mmt_shapes.root emm_shapes.root
 # Generate the cards
 python makeDataCard.py
 

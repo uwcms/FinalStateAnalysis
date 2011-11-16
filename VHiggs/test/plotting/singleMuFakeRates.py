@@ -23,33 +23,31 @@ canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 
 wjets_selection = [
     #'(IsoMu17_HLT || IsoMu20_HLT)',
-    'Muon1Pt > 20',
+    'Muon1Pt > 18',
     'Muon1AbsEta < 2.1',
-    'Muon1_MtToMET > 40',
+    'Muon1_MtToMET > 30',
     'METPt > 30',
     'Muon1_MuID_WWID > 0.5',
     'Muon1_MuRelIso < 0.1',
     'Muon1Charge*Muon2Charge > 0',
     'NIsoMuonsPt5_Nmuons < 0.5',
     'NIsoElecPt10_Nelectrons < 0.5',
-    'NBjetsPt20_Nbjets < 0.5',
+    #'NBjetsPt20_Nbjets < 0.5',
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
-    'Muon2_NPixHits > 1',
     'NIsoTausPt20_NIsoTaus < 0.5',
 ]
 
 qcd_selection = [
-    'Muon1Pt > 30',
+    'Muon1Pt > 18',
     'Muon1AbsEta < 2.1',
-    'Muon1_MuRelIso > 0.5',
+    'Muon1_MuRelIso > 0.3',
     'Muon1Charge*Muon2Charge > 0',
     'NIsoMuonsPt5_Nmuons < 0.5',
     'NBjetsPt20_Nbjets < 0.5',
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
     'METPt < 20',
-    'Muon2_NPixHits > 1',
     'NIsoTausPt20_NIsoTaus < 0.5',
     'NIsoElecPt10_Nelectrons < 0.5',
 ]
@@ -66,20 +64,24 @@ qcd_selection_emu = [
 fakerates = {
     'mu' : {
         'ntuple' : 'mm',
-        'pd' : 'data_SingleMu',
-        'exclude' : ['*DoubleE*', '*MuEG*', '*DoubleMu*'],
+        'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*SingleMu*'],
         'mc_pd' : 'Wjets',
         'varname' : 'MuJetPt',
         'vartitle' : 'Mu Jet Pt',
-        'var' : 'Muon2Pt + Muon2Pt*Muon2_MuRelIso',
+        'var' : 'Muon2_JetPt',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
         'evtType' : '#mu#mu',
         'base_cuts' : wjets_selection,
         'control_plots' : [
+            ('Btag', 'Muon2_MuBtag',
+             "Probe TCHE", [100, -5, 5]),
         ],
         'final_cuts' : [],
         'denom' : [
+            'Muon2_MuBtag < 3.3',
+            'Muon2_InnerNPixHits > 0.5',
             'DoubleMus_HLT > 0.5',
             'Muon2Pt > 9',
             'Muon2AbsEta < 2.1',
@@ -91,19 +93,24 @@ fakerates = {
     },
     'muQCD' : {
         'ntuple' : 'mm',
-        'pd' : 'data_SingleMu',
-        'exclude' : ['*DoubleE*', '*MuEG*', '*DoubleMu*'],
+        'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*SingleMu*'],
         'mc_pd' : 'QCDMu',
         'varname' : 'MuJetPt',
         'vartitle' : 'Mu Jet Pt',
-        'var' : 'Muon2Pt + Muon2Pt*Muon2_MuRelIso',
+        'var' : 'Muon2_JetPt',
         'varbinning' : [100, 0, 100],
-        'rebin' : 5,
+        'rebin' : 2,
         'evtType' : '#mu#mu',
         'base_cuts' : qcd_selection,
-        'control_plots' : [],
+        'control_plots' : [
+            ('Btag', 'Muon2_MuBtag',
+             "Probe TCHE", [100, -5, 5]),
+        ],
         'final_cuts' : [],
         'denom' : [
+            'Muon2_MuBtag < 3.3',
+            'Muon2_InnerNPixHits > 0.5',
             'DoubleMus_HLT > 0.5',
             'Muon2Pt > 9',
             'Muon2AbsEta < 2.1',
@@ -120,7 +127,7 @@ fakerates = {
         'mc_pd' : 'Wjets',
         'varname' : 'EJetPt',
         'vartitle' : 'Electron Jet Pt',
-        'var' : 'ElectronPt + ElectronPt*Electron_ERelIso',
+        'var' : 'Electron_JetPt',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
         'evtType' : 'e#mu',
@@ -132,9 +139,9 @@ fakerates = {
         'final_cuts' : [],
         'denom' : [
             'Mu17Ele8All_HLT > 0.5',
+            'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 9',
             'ElectronAbsEta < 2.5',
-            'ElectronCharge*Muon2Charge > 0',
         ],
         'num' : [
             'Electron_EID_WWID > 0.5',
@@ -147,8 +154,8 @@ fakerates = {
         'exclude' : ['*DoubleE*', '*MuEG*', '*DoubleMu*'],
         'mc_pd' : 'QCDMu',
         'varname' : 'EJetPt',
-        'vartitle' : 'Electrontron Jet Pt',
-        'var' : 'ElectronPt + ElectronPt*Electron_ERelIso',
+        'vartitle' : 'Electron Jet Pt',
+        'var' : 'Electron_JetPt',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
         'evtType' : 'e#mu',
@@ -169,13 +176,14 @@ fakerates = {
 }
 
 output_file = ROOT.TFile("results_singleMuFakeRates.root", "RECREATE")
-for data_set, skips, int_lumi in [('2011A', ['2011B', 'EM'], 2170),
-                                  ('2011B', ['2011A', 'v1_d', 'EM'], 2170),
-                                  ('2011AB', ['v1_d', 'EM'], 4000)]:
+for data_set, skips, int_lumi in [
+    ('2011A', ['2011B', 'EM'], 2170),
+    ('2011B', ['2011A', 'EM'], 2170),
+    ('2011AB', ['EM'], 4000) ]:
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'Tau', '2011-11-04-v1-MuonTP', 'scratch_results', int_lumi, skips,
+        'Mu', '2011-11-13-v2-MuonTP', 'scratch_results', int_lumi, skips,
         count = '/mm/skimCounter', unweighted = False)
 
     legend = plotter.build_legend(
@@ -340,15 +348,27 @@ for data_set, skips, int_lumi in [('2011A', ['2011B', 'EM'], 2170),
         )
         log.info("MC denominator has %i entries", mc_denom.Integral())
 
-        print data_denom, data_num
+        frame = ROOT.TH1F("frame",
+                          'Fake rate in ' + fr_info['evtType'] + ' events',
+                          100, 0, 100)
+        frame.GetXaxis().SetTitle(fr_info['vartitle'])
+        frame.SetMinimum(1e-3)
+        frame.SetMaximum(1.0)
 
         data_curve = ROOT.TGraphAsymmErrors(data_num.th1, data_denom.th1)
         data_curve.SetLineStyle(0)
         data_fit_func = ROOT.TF1("f1", "[0] + [1]*exp([2]*x)", 0, 200)
+        #data_fit_func = ROOT.TF1(
+            #"f1", "[0] + [1]*exp([2]*(x-9))"
+            #" + [3]*exp([4]*(x-9)*(x-9))",
+            #0, 200)
         data_fit_func.SetParameter(0, 0.02)
         data_fit_func.SetParLimits(0, 0.0, 1)
         data_fit_func.SetParameter(1, 1.87)
         data_fit_func.SetParameter(2, -9.62806e-02)
+        #data_fit_func.SetParameter(3, 1.87)
+        #data_fit_func.SetParLimits(3, 0, 100)
+        #data_fit_func.SetParameter(4, -9.62806e-02)
         data_fit_func.SetLineColor(ROOT.EColor.kBlack)
         data_curve.Fit(data_fit_func)
 
@@ -368,16 +388,29 @@ for data_set, skips, int_lumi in [('2011A', ['2011B', 'EM'], 2170),
         multi.Add(mc_curve, "pe")
         multi.Add(data_curve, "pe")
 
-        multi.Draw("ape")
-        multi.GetHistogram().SetMinimum(1e-3)
-        multi.GetHistogram().SetMaximum(1.0)
-        multi.GetHistogram().GetXaxis().SetTitle(fr_info['vartitle'])
-        multi.GetHistogram().SetTitle(
-            'Fake rate in ' + fr_info['evtType'] + ' events')
+        frame.Draw()
+        multi.Draw("pe")
 
         data_fit_func.Draw('same')
         mc_fit_func.Draw('same')
         saveplot(fr_type + "_fakerate")
+
+        # Save non rebinned histos
+        data_num = plotter.get_histogram(
+            fr_info['pd'],
+            '/%s/final/Ntuple:%s' % (
+                fr_info['ntuple'], fr_type + 'Num' + fr_info['varname']),
+            show_overflows = True,
+        )
+        log.info("Data numerator has %i entries", data_num.Integral())
+
+        data_denom = plotter.get_histogram(
+            fr_info['pd'],
+            '/%s/final/Ntuple:%s' % (
+                fr_info['ntuple'], fr_type + 'Denom' + fr_info['varname']),
+            show_overflows = True,
+        )
+        log.info("Data denom has %i entries", data_denom.Integral())
 
         output_file.cd()
         data_denom.Write("_".join([data_set, fr_type, 'data_denom']))

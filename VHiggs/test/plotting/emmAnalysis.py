@@ -16,17 +16,17 @@ log = logging.getLogger("emmChannel")
 
 ROOT.gROOT.SetBatch(True)
 
-# Define the fake rate versus muon pt
-FAKE_RATE_0 = 0.00435
-FAKE_RATE_1 = 4.247
-FAKE_RATE_2 = -0.1967
+#Define the fake rate versus muon pt
+FAKE_RATE_0 = 3.174
+FAKE_RATE_1 = 14.99
+FAKE_RATE_2 = 2.47
+FAKE_RATE_3 = 6.75e-3
 
-FAKE_RATE = '(%0.4f + %0.4f*TMath::Exp(%0.4f * (VAR) ) )' % (
-    FAKE_RATE_0, FAKE_RATE_1, FAKE_RATE_2)
+FAKE_RATE = "(%0.4f*TMath::Landau(VAR, %0.4f, %0.4f,0)+%0.4f)" % (
+    FAKE_RATE_0, FAKE_RATE_1, FAKE_RATE_2, FAKE_RATE_3)
 
-FR_X = 'Mu2Pt + Mu2Pt*Mu2_MuRelIso'
+FR_X = 'Mu2_JetPt'
 FAKE_RATE = FAKE_RATE.replace('VAR', FR_X)
-#FR_WEIGHT = '((%s)/(1-%s))' % (FAKE_RATE, FAKE_RATE)
 FR_WEIGHT = '((%s)/(1-%s))' % (FAKE_RATE, FAKE_RATE)
 
 base_selection = [
@@ -39,13 +39,14 @@ base_selection = [
     'Mu1_MuRelIso < 0.3',
     'Mu1_MuID_WWID > 0.5',
     #'NIsoMuonsPt5_Nmuons < 0.5',
-    #'DoubleMus_HLT > 0.5 ',
+    'DoubleMus_HLT > 0.5 ',
     #'NIsoElecsPt20_NIsoElecs < 0.5',
     #'ElecPt > 20',
     'Elec_EID_WWID > 0.5',
     'Elec_ERelIso < 0.3',
     'ElecPt > 10',
     'Mu1Charge*Mu2Charge > 0',
+    'Mu2_InnerNPixHits > 0.5',
 ]
 
 passes_ht = [
@@ -53,7 +54,8 @@ passes_ht = [
 ]
 
 passes_vtx = [
-    'vtxChi2/vtxNDOF < 15'
+    'vtxChi2/vtxNDOF < 10',
+    'Mu2_MuBtag < 3.3',
 ]
 
 bkg_enriched = [
@@ -67,7 +69,7 @@ final_selection = [
 
 variables = {
 #    'DiMuonMass' : ('Mu1_Mu2_Mass', 'M_{#mu#mu}', [100, 0, 300],),
-    'MuElecMass' : ('Elec_Mu2_Mass', 'M_{#mu#tau}', [60, 0, 300],),
+    'MuElecMass' : ('Elec_Mu2_Mass', 'M_{e#mu}', [60, 0, 300],),
     'Mu1_MtToMET' : ('Mu1_MtToMET', 'M_{T} #mu(1)-#tau', [60, 0, 300],),
 #    'Mu2_MtToMET' : ('Mu2_MtToMET', 'M_{T} #mu(2)-#tau', [100, 0, 300],),
     'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NODF', [100, 0, 30],),
@@ -111,11 +113,14 @@ selections = {
 }
 
 # Samples we aren't interested in
-skips = ['MuEG', 'DoubleEl', 'EM', 'v1_d', ]
-int_lumi = 3900
+skips = ['MuEG', 'DoubleEl', 'EM',]
+int_lumi = 4600
 samples, plotter = data_tool.build_data(
-    'VH', '2011-11-07-v1-WHAnalyze', 'scratch_results',
+    'VH', '2011-11-13-v1-WHAnalyze', 'scratch_results',
     int_lumi, skips, count='emt/skimCounter')
+
+# Make legends
+
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 def saveplot(filename):
@@ -139,6 +144,9 @@ def saveplot(filename):
 lumi = plotter.get_histogram( 'data_DoubleMu', '/emm/intLumi',)
 lumi.Draw()
 saveplot('intlumi')
+
+# Data card output
+data_card_file = ROOT.TFile("emm_shapes.root", 'RECREATE')
 
 for selection, selection_info in selections.iteritems():
     log.info("Doing " + selection)
@@ -178,7 +186,7 @@ for selection, selection_info in selections.iteritems():
             '/emm/final/Ntuple',
             draw_str,
             ' && '.join(fr_selection),
-            w = '(puWeight_3bx_S42011AB178078)',
+            w = 'pu2011AB',
             binning = binning,
             include = ['*'],
         )
@@ -189,7 +197,7 @@ for selection, selection_info in selections.iteritems():
             '/emm/final/Ntuple',
             draw_str,
             ' && '.join(fr_selection),
-            w = '(puWeight_3bx_S42011AB178078)*(%s)' % FR_WEIGHT,
+            w = '(pu2011AB)*(%s)' % FR_WEIGHT,
             binning = binning,
             include = ['*'],
         )
@@ -199,7 +207,7 @@ for selection, selection_info in selections.iteritems():
             '/emm/final/Ntuple',
             draw_str,
             ' && '.join(the_final_selection),
-            w = 'puWeight_3bx_S42011AB178078',
+            w = 'pu2011AB',
             binning = binning,
             include = ['*'],
         )
@@ -261,6 +269,13 @@ for selection, selection_info in selections.iteritems():
         )
 
         # The background prediction
+        data_bkg = plotter.get_histogram(
+            'data_DoubleMu',
+            '/emm/final/Ntuple:' + selection + var + '_bkg_fr',
+            rebin = rebin, show_overflows = True
+        )
+
+        # The background prediction
         data_bkg_fr = plotter.get_histogram(
             'data_DoubleMu',
             '/emm/final/Ntuple:' + selection + var + '_bkg_fr',
@@ -296,7 +311,6 @@ for selection, selection_info in selections.iteritems():
         stack = ROOT.THStack(selection + var + "FR_FINAL", "Final #mu#mu#tau selection")
         for histo in corrected_mc_histos:
             stack.Add(histo.th1, 'hist')
-            stack.Add(histo.th1, 'hist')
 
         styling.apply_style(data_bkg_fr, **samplestyles.SAMPLE_STYLES['ztt'])
         stack.Add(data_bkg_fr.th1, 'hist')
@@ -309,3 +323,21 @@ for selection, selection_info in selections.iteritems():
         stack.GetXaxis().SetTitle(x_title)
 
         saveplot(selection + var + '_fr')
+
+        # Now right data card histogram
+        for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
+            channel_dir = data_card_file.mkdir(
+                "emm_%i_%s_%s" % (mass, selection, var))
+            channel_dir.cd()
+            data.Write('data_obs')
+            data_bkg_fr.Write('fakes')
+            data_bkg.Write('ext_data_unweighted')
+            corrected_mc_histos[0].Write('zz')
+            corrected_mc_histos[1].Write('wz')
+
+            signal = plotter.get_histogram(
+                'VH%s' % mass,
+                '/emm/final/Ntuple:' + selection + var + '_fin',
+                rebin = rebin, show_overflows=True,
+            )
+            signal.Write('signal')

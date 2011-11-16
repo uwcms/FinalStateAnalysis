@@ -1,22 +1,23 @@
 # VHtautau fit
-# 2.1 fb-1
-imax 2
+# 4.6 fb-1
+imax 3
 jmax *
 kmax *
 ------------
 shapes * * all_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
-bin mmt_120 emt_120
-observation 12.0 24.0
+bin mmt_120_final_vtxChi2NODF emt_120_final_vtxChi2NODF emm_120_final_MuElecMass
+observation 3.0 18.0 11.0
 ------------
-  bin    mmt_120  mmt_120  mmt_120  mmt_120  emt_120  emt_120  emt_120  emt_120
-  process    wz  signal  zz  fakes  wz  signal  zz  fakes
-  process    2  0  3  1  2  0  3  1
-  rate    2.64223725256  0.61989422742  1.04919405654  3.63462819532  7.13503478467  0.937764375005  1.27536750073  19.063796401
-  mmt_fake_err  lnN  -  -  -  1.07  -  -  -  -
-  e_id  lnN  -  -  -  -  1.02  1.02  1.02  -
-  tau_id  lnN  1.06  1.06  1.06  -  1.06  1.06  1.06  -
-  lumi  lnN  1.04  1.04  1.04  -  1.04  1.04  1.04  -
-  zz  lnN  -  -  1.40  -  -  -  1.40  -
-  mu_id  lnN  1.01  1.01  1.01  -  1.01  1.01  1.01  -
-  emt_fake_err  lnN  -  -  -  -  -  -  -  1.11
-  wz  lnN  1.17  -  -  -  1.17  -  -  -
+  bin    mmt_120_final_vtxChi2NODF  mmt_120_final_vtxChi2NODF  mmt_120_final_vtxChi2NODF  mmt_120_final_vtxChi2NODF  emt_120_final_vtxChi2NODF  emt_120_final_vtxChi2NODF  emt_120_final_vtxChi2NODF  emt_120_final_vtxChi2NODF  emm_120_final_MuElecMass  emm_120_final_MuElecMass  emm_120_final_MuElecMass  emm_120_final_MuElecMass
+  process    wz  signal  zz  fakes  wz  signal  zz  fakes  wz  signal  zz  fakes
+  process    2  0  3  1  2  0  3  1  2  0  3  1
+  rate    1.35930837318  0.359891773202  0.152393664233  2.4094046019  3.75667146966  0.64398347307  1.72603330389  4.7979722321  0.422630365075  0.182062443433  0.260162286603  7.22046348918
+  mmt_fake_err  lnN  -  -  -  1.12  -  -  -  -  -  -  -  -
+  e_id  lnN  -  -  -  -  1.02  1.02  1.02  -  -  -  -  -
+  tau_id  lnN  1.06  1.06  1.06  -  1.06  1.06  1.06  -  -  -  -  -
+  lumi  lnN  1.04  1.04  1.04  -  1.04  1.04  1.04  -  1.04  1.04  1.04  -
+  emm_fake_err  lnN  -  -  -  -  -  -  -  -  -  -  -  1.37
+  zz  lnN  -  -  1.40  -  -  -  1.40  -  -  -  1.40  -
+  mu_id  lnN  1.01  1.01  1.01  -  1.01  1.01  1.01  -  1.01  1.01  1.01  -
+  emt_fake_err  lnN  -  -  -  -  -  -  -  1.05  -  -  -  -
+  wz  lnN  1.17  -  -  -  1.17  -  -  -  1.17  -  -  -
