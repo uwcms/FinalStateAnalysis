@@ -35,9 +35,9 @@ base_dimuon_selection = [
     'NIsoMuonsPt5_Nmuons < 0.5',
     'NBjetsPt20_Nbjets < 1', # Against ttbar
     'DoubleMus_HLT > 0.5 ',
-    '(Muon1_hltDiMuonL3PreFiltered7 | Muon2_hltDiMuonL3p5PreFiltered8 |'
-        'Muon1_hltSingleMu13L3Filtered13)',
-    '(Muon2_hltDiMuonL3PreFiltered7 | Muon2_hltDiMuonL3p5PreFiltered8)',
+    #'(Muon1_hltDiMuonL3PreFiltered7 | Muon2_hltDiMuonL3p5PreFiltered8 |'
+        #'Muon1_hltSingleMu13L3Filtered13)',
+    #'(Muon2_hltDiMuonL3PreFiltered7 | Muon2_hltDiMuonL3p5PreFiltered8)',
     'Muon1Charge*Muon2Charge < 0',
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
@@ -141,18 +141,15 @@ fakerates = {
         'var' : 'TauJetPt',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
-        'zMassVar' : 'Muon1_Muon2_Mass',
-        'zMassTitle' : 'Dimuon mass (GeV)',
         'evtType' : '#mu#mu + jet',
         'base_cuts' : base_dimuon_selection,
-        'zcuts' : [
-            #'Muon1_Muon2_Mass > 70',
-            #'Muon1_Muon2_Mass < 110',
+        'control_plots' : [
+        ],
+        'final_cuts' : [],
+        'denom' : [
             'Muon1_Muon2_Mass > 86',
             'Muon1_Muon2_Mass < 95',
-            'Leg3_MtToMET < 40'
-        ],
-        'denom' : [
+            'Tau_MtToMET < 40',
             'TauPt > 15',
             'TauAbsEta < 2.5',
             'Tau_DecayMode > 0.5',
