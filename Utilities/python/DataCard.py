@@ -108,7 +108,7 @@ class DataCard(object):
         columns.append(sys_type_labels)
 
         # Add data
-        print nuisances
+        #print nuisances
         for channel in self.channels:
             columns.extend(channel.get_process_columns(nuisances))
 
