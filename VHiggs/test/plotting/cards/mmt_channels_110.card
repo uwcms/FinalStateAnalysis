@@ -4,17 +4,18 @@ imax 1
 jmax *
 kmax *
 ------------
-shapes * * all_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
-bin mmt_110_final_vtxChi2NODF
+shapes * * wh_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
+bin mmt_110_final_MuTauMass
 observation 3.0
 ------------
-  bin    mmt_110_final_vtxChi2NODF  mmt_110_final_vtxChi2NODF  mmt_110_final_vtxChi2NODF  mmt_110_final_vtxChi2NODF
+  bin    mmt_110_final_MuTauMass  mmt_110_final_MuTauMass  mmt_110_final_MuTauMass  mmt_110_final_MuTauMass
   process    wz  signal  zz  fakes
   process    2  0  3  1
-  rate    1.35930837318  0.464163192548  0.152393664233  2.4094046019
+  rate    1.35930830939  0.464163213968  0.151817754878  2.3367837728
+  pdf_vh  lnN  -  1.03  -  -
   mmt_fake_err  lnN  -  -  -  1.12
-  tau_id  lnN  1.06  1.06  1.06  -
-  lumi  lnN  1.04  1.04  1.04  -
+  CMS_eff_t  lnN  1.06  1.06  1.06  -
   zz  lnN  -  -  1.40  -
-  mu_id  lnN  1.01  1.01  1.01  -
+  lumi  lnN  1.04  1.04  1.04  -
   wz  lnN  1.17  -  -  -
+  CMS_eff_m  lnN  1.02  1.02  1.02  -

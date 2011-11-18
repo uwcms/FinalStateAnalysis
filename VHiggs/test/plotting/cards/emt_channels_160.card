@@ -5,13 +5,13 @@ jmax *
 kmax *
 ------------
 shapes * * wh_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
-bin emt_110_final_ETauMass
+bin emt_160_final_ETauMass
 observation 18.0
 ------------
-  bin    emt_110_final_ETauMass  emt_110_final_ETauMass  emt_110_final_ETauMass  emt_110_final_ETauMass
+  bin    emt_160_final_ETauMass  emt_160_final_ETauMass  emt_160_final_ETauMass  emt_160_final_ETauMass
   process    wz  signal  zz  fakes
   process    2  0  3  1
-  rate    3.72660490684  0.907825619914  1.71404960565  8.108286337
+  rate    3.72660490684  0.0189622017497  1.71404960565  8.108286337
   pdf_vh  lnN  -  1.03  -  -
   zz  lnN  -  -  1.40  -
   CMS_eff_t  lnN  1.06  1.06  1.06  -

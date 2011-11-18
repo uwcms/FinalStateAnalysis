@@ -4,18 +4,19 @@ imax 1
 jmax *
 kmax *
 ------------
-shapes * * all_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
-bin emt_115_final_vtxChi2NODF
+shapes * * wh_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
+bin emt_115_final_ETauMass
 observation 18.0
 ------------
-  bin    emt_115_final_vtxChi2NODF  emt_115_final_vtxChi2NODF  emt_115_final_vtxChi2NODF  emt_115_final_vtxChi2NODF
+  bin    emt_115_final_ETauMass  emt_115_final_ETauMass  emt_115_final_ETauMass  emt_115_final_ETauMass
   process    wz  signal  zz  fakes
   process    2  0  3  1
-  rate    3.75667146966  0.739896379411  1.72603330389  4.7979722321
-  tau_id  lnN  1.06  1.06  1.06  -
-  lumi  lnN  1.04  1.04  1.04  -
-  e_id  lnN  1.02  1.02  1.02  -
+  rate    3.72660490684  0.739896362647  1.71404960565  8.108286337
+  pdf_vh  lnN  -  1.03  -  -
   zz  lnN  -  -  1.40  -
-  mu_id  lnN  1.01  1.01  1.01  -
+  CMS_eff_t  lnN  1.06  1.06  1.06  -
+  CMS_eff_e  lnN  1.02  1.02  1.02  -
+  lumi  lnN  1.04  1.04  1.04  -
   emt_fake_err  lnN  -  -  -  1.05
   wz  lnN  1.17  -  -  -
+  CMS_eff_m  lnN  1.01  1.01  1.01  -
