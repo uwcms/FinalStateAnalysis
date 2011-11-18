@@ -3,7 +3,7 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-11-13-v2-MuonTP'
+jobId = '2011-11-17-v1-MuonTP'
 
 patJobId = '2011-11-08-EWKPatTuple'
 patCfg = 'patTuple_cfg'
@@ -28,6 +28,7 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
     options = []
     if 'data' not in sample:
         options.append('isMC=1')
+        options.append('puScenario=%s' % sample_info['pu'])
     else:
         options.append('isMC=0')
 

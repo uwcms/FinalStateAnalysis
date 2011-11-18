@@ -294,7 +294,7 @@ data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu'])
 datadefs.update(data_DoubleMu)
 data_name_map.update(list_DoubleMu)
 
-data_MuEG, list_MuEG = build_data_set('MuEG', ['VH', 'HTT'])
+data_MuEG, list_MuEG = build_data_set('MuEG', ['VH', 'HTT', 'Mu'])
 datadefs.update(data_MuEG)
 data_name_map.update(list_MuEG)
 
@@ -317,6 +317,7 @@ data_name_map.update(list_MuHad)
 if __name__ == "__main__":
     # Print a latex table of the samples
     samples = []
+    data_samples = []
     for sample, sample_info in datadefs.iteritems():
         if 'data' not in sample:
             #samples.append(sample_info['datasetpath'].split('/')[1])
