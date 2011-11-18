@@ -47,6 +47,9 @@ base_selection = [
     'ElecPt > 10',
     'Mu1Charge*Mu2Charge > 0',
     'Mu2_InnerNPixHits > 0.5',
+    'Mu1DZ < 0.2',
+    'Mu2DZ < 0.2',
+    'ElecDZ < 0.2',
 ]
 
 passes_ht = [
@@ -118,9 +121,6 @@ int_lumi = 4600
 samples, plotter = data_tool.build_data(
     'VH', '2011-11-13-v1-WHAnalyze', 'scratch_results',
     int_lumi, skips, count='emt/skimCounter')
-
-# Make legends
-
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 def saveplot(filename):
@@ -215,6 +215,10 @@ for selection, selection_info in selections.iteritems():
         ##########################################
         # Compute results using MC in final region
         ##########################################
+        legend = plotter.build_legend(
+            '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf',
+            xlow = 0.6, ylow=0.5,)
+
         rebin = 5
 
         histo_name = selection + var + '_bkg'
@@ -234,6 +238,10 @@ for selection, selection_info in selections.iteritems():
 
         stack.Draw()
         data.Draw('same,pe')
+        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
+        stack.GetXaxis().SetTitle(x_title)
+        legend.Draw()
+        canvas.Update()
         saveplot(histo_name)
 
         histo_name = selection + var + '_fin'
@@ -253,8 +261,11 @@ for selection, selection_info in selections.iteritems():
 
         stack.Draw()
         data.Draw('same,pe')
-        stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
+        legend.Draw()
+        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
         stack.GetXaxis().SetTitle(x_title)
+        legend.Draw()
+        canvas.Update()
         saveplot(histo_name)
 
         ##########################################
@@ -285,6 +296,11 @@ for selection, selection_info in selections.iteritems():
         corrected_mc = ['ZZ', 'WZ']
         corrected_mc_histos = []
 
+        # Legend for FR plots
+        legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+        legend.SetFillStyle(0)
+        legend.SetBorderSize(0)
+
         # Now we need to correct the backgrounds which aren't correctly
         # estimated by the FR method.
         for to_correct in corrected_mc:
@@ -309,8 +325,9 @@ for selection, selection_info in selections.iteritems():
         )
 
         stack = ROOT.THStack(selection + var + "FR_FINAL", "Final #mu#mu#tau selection")
-        for histo in corrected_mc_histos:
+        for histo_name, histo in zip(corrected_mc, corrected_mc_histos):
             stack.Add(histo.th1, 'hist')
+            legend.AddEntry(histo.th1, histo_name, 'lf')
 
         styling.apply_style(data_bkg_fr, **samplestyles.SAMPLE_STYLES['ztt'])
         stack.Add(data_bkg_fr.th1, 'hist')
@@ -319,8 +336,12 @@ for selection, selection_info in selections.iteritems():
         stack.Add(signal.th1, 'hist')
         stack.Draw()
         data.Draw('pe,same')
-        stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
+        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum())*1.5)
         stack.GetXaxis().SetTitle(x_title)
+
+        legend.AddEntry(data_bkg_fr.th1, "Fakes", 'lf')
+        legend.AddEntry(signal.th1, "VH(120) #times 5", 'lf')
+        legend.Draw()
 
         saveplot(selection + var + '_fr')
 

@@ -229,7 +229,6 @@ fakerates = {
         'control_plots' : [],
         'final_cuts' : [],
         'denom' : [
-            'Muon2_hltDiMuonL3p5PreFiltered8 > 0.5',
             'Muon2_InnerNPixHits > 0.5',
             'Muon2_MuBtag < 3.3',
             'METPt < 20',
@@ -555,6 +554,7 @@ for data_set, skips, int_lumi in [
             stack.Draw()
             stack.GetXaxis().SetTitle(xtitle)
             data.Draw("pe, same")
+            legend.Draw()
             stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
             stack.GetHistogram().SetTitle(
                  xtitle + ' in ' + fr_info['evtType'] + ' events')

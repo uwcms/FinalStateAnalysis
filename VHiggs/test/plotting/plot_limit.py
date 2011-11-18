@@ -5,7 +5,7 @@ import json
 import os
 import re
 
-mass_getter = re.compile('.*_(?P<mass>[0-9]+)\.card\.(exp|obs)\.json')
+mass_getter = re.compile('.*_(?P<mass>[0-9]+)\.card\.(exp|obs|asymp)\.json')
 
 def get_mass(filename):
     file = os.path.basename(filename)
@@ -21,13 +21,14 @@ def make_exp_band(files):
         mass = get_mass(file)
         result = json.loads(open(file, 'r').read())
         print result
-        exp.SetPoint(i, mass, result['median'])
-        onesig.SetPoint(i, mass, result['median'])
-        twosig.SetPoint(i, mass, result['median'])
-        onesig.SetPointEYlow(i,  result['median'] - result['-1'])
-        onesig.SetPointEYhigh(i, result['+1'] - result['median'] )
-        twosig.SetPointEYlow(i,  result['median'] - result['-2'])
-        twosig.SetPointEYhigh(i, result['+2'] - result['median'] )
+        median = result.get('exp')
+        exp.SetPoint(i, mass, median)
+        onesig.SetPoint(i, mass, median)
+        twosig.SetPoint(i, mass, median)
+        onesig.SetPointEYlow(i,  median - result['-1'])
+        onesig.SetPointEYhigh(i, result['+1'] - median )
+        twosig.SetPointEYlow(i,  median - result['-2'])
+        twosig.SetPointEYhigh(i, result['+2'] - median )
     exp.SetLineStyle(2)
     exp.SetLineWidth(2)
     exp.SetLineColor(ROOT.EColor.kBlack)
@@ -51,28 +52,28 @@ def make_obs(files):
 
 if __name__ == "__main__":
     prefix = sys.argv[1]
-    print prefix
-    exp_files = list(glob.glob('cards/%s*.card.exp.json' % prefix))
-    obs_files = list(glob.glob('cards/%s*.card.obs.json' % prefix))
+    exp_files = list(glob.glob('cards/%s*.card.asymp.json' % prefix))
+    obs_files = list(glob.glob('cards/%s*.card.asymp.json' % prefix))
     exp, onesig, twosig = make_exp_band(exp_files)
     obs = make_obs(obs_files)
 
     canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
-    frame = ROOT.TH1F('frame', 'frame', 10, 110, 130)
-    frame.SetMaximum(35)
+    frame = ROOT.TH1F('frame', 'frame', 10, 100, 160)
+    frame.SetMaximum(40)
     frame.SetMinimum(0)
-    frame.SetTitle("WH(#tau#tau) limits [2.1 fb^{-1}]")
-    frame.GetYaxis().SetTitle("95% UL on #sigma/#sigma_{SM}")
+    frame.SetTitle("WH(#tau#tau) limits [4.6 fb^{-1}]")
+    frame.GetYaxis().SetTitle("95% CL upper limit on #sigma/#sigma_{SM}")
     frame.GetXaxis().SetTitle("M_{H} (GeV)")
     frame.Draw()
     twosig.Draw('3')
     onesig.Draw('3')
     exp.Draw('l')
-    #obs.Draw('lp')
-    legend = ROOT.TLegend(0.19, 0.7, 0.4, 0.89, "", "NDC")
+    obs.Draw('lp')
+    #legend = ROOT.TLegend(0.19, 0.7, 0.4, 0.89, "", "NDC")
+    legend = ROOT.TLegend(0.7, 0.17, 0.9, 0.45, "", "NDC")
     legend.SetBorderSize(0)
     legend.SetFillStyle(0)
-    #legend.AddEntry(obs,"Observed",  'lp')
+    legend.AddEntry(obs,"Observed",  'lp')
     legend.AddEntry(exp, "Expected", 'l')
     legend.AddEntry(onesig, "#pm 1 #sigma",  'f')
     legend.AddEntry(twosig, "#pm 2 #sigma",  'f')

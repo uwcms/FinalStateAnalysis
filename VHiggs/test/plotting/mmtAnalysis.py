@@ -54,6 +54,9 @@ base_selection = [
     'Tau_LooseHPS > 0.5',
     'Muon1Charge*Muon2Charge > 0',
     'Muon2_InnerNPixHits > 0.5',
+    'Muon1DZ < 0.2',
+    'Muon2DZ < 0.2',
+    'TauDZ < 0.2',
 ]
 
 passes_ht = [
@@ -75,7 +78,7 @@ final_selection = [
 ]
 
 variables = {
-#    'DiMuonMass' : ('Muon1_Muon2_Mass', 'M_{#mu#mu}', [100, 0, 300],),
+    'DiMuonMass' : ('Muon1_Muon2_Mass', 'M_{#mu#mu}', [100, 0, 300],),
     'MuTauMass' : ('Muon2_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300],),
     'Muon1_MtToMET' : ('Muon1_MtToMET', 'M_{T} #mu(1)-#tau', [60, 0, 300],),
     'Muon2_Btag' : ('Muon2_MuBtag', 'Sub leading mu btag', [120, -30, 30],),
@@ -108,6 +111,13 @@ selections = {
             'Muon1_MtToMET',
             'vtxChi2NODF',
             'Muon2_Btag',
+        ],
+    },
+    'with_vtx' : {
+        'select' : base_selection + passes_vtx,
+        'title' : "Base Selection + #chi^{2}",
+        'vars' : [
+            'HT',
         ],
     },
     'final' : {
@@ -189,6 +199,17 @@ for selection, selection_info in selections.iteritems():
             continue
         draw_str, x_title, binning = variables[var]
 
+        # The "Loose" selection
+        plotter.register_tree(
+            selection + var + '_loose',
+            '/mmt/final/Ntuple',
+            draw_str,
+            ' && '.join(selection_info['select']),
+            w = '(pu2011AB)',
+            binning = binning,
+            include = ['*'],
+        )
+
         plotter.register_tree(
             selection + var + '_bkg',
             '/mmt/final/Ntuple',
@@ -220,10 +241,41 @@ for selection, selection_info in selections.iteritems():
             include = ['*'],
         )
 
+        legend = plotter.build_legend(
+            '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf',
+            xlow = 0.6, ylow=0.5,)
+
+        rebin = 5
+
+        ##########################################
+        # Compute results using MC in loose region
+        ##########################################
+        histo_name = selection + var + '_loose'
+
+        stack = plotter.build_stack(
+            '/mmt/final/Ntuple:' + histo_name,
+            include = ['*'],
+            exclude = ['data*', '*VH*'],
+            rebin = rebin, show_overflows=True,
+        )
+
+        data = plotter.get_histogram(
+            'data_DoubleMu',
+            '/mmt/final/Ntuple:' + histo_name,
+            rebin = rebin, show_overflows=True,
+        )
+
+        stack.Draw()
+        data.Draw('same,pe')
+        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
+        stack.GetXaxis().SetTitle(x_title)
+        legend.Draw()
+        canvas.Update()
+        saveplot(histo_name)
+
         ##########################################
         # Compute results using MC in final region
         ##########################################
-        rebin = 5
 
         histo_name = selection + var + '_bkg'
 
@@ -242,6 +294,10 @@ for selection, selection_info in selections.iteritems():
 
         stack.Draw()
         data.Draw('same,pe')
+        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
+        stack.GetXaxis().SetTitle(x_title)
+        legend.Draw()
+        canvas.Update()
         saveplot(histo_name)
 
         histo_name = selection + var + '_fin'
@@ -259,14 +315,13 @@ for selection, selection_info in selections.iteritems():
             rebin = rebin, show_overflows=True,
         )
 
-        legend = plotter.build_legend(
-            '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf')
-
         stack.Draw()
         data.Draw('same,pe')
         legend.Draw()
-        stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*2)
+        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
         stack.GetXaxis().SetTitle(x_title)
+        legend.Draw()
+        canvas.Update()
         saveplot(histo_name)
 
         ##########################################
@@ -298,7 +353,7 @@ for selection, selection_info in selections.iteritems():
         corrected_mc_histos = []
 
         # Legend for FR plots
-        legend = ROOT.TLegend(0.6, 0.7, 0.85, 0.95, "", "brNDC")
+        legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
         legend.SetFillStyle(0)
         legend.SetBorderSize(0)
 
@@ -337,7 +392,7 @@ for selection, selection_info in selections.iteritems():
         stack.Add(signal.th1, 'hist')
         stack.Draw()
         data.Draw('pe,same')
-        stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
+        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum())*1.5)
         stack.GetXaxis().SetTitle(x_title)
 
         legend.AddEntry(data_bkg_fr.th1, "Fakes", 'lf')
@@ -363,4 +418,3 @@ for selection, selection_info in selections.iteritems():
                 rebin = rebin, show_overflows=True,
             )
             signal.Write('signal')
-

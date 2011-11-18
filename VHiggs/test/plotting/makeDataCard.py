@@ -8,6 +8,7 @@ zz_err = 0.40
 lumi_err = 0.045
 tau_err = 0.06
 mu_id_err = 0.014
+pdf_err = 0.03
 
 def quad(*xs):
     return math.sqrt(sum(x*x for x in xs))
@@ -33,18 +34,17 @@ def dump_table(file, folder, stream):
     stream.write("\hline\n")
     stream.write(" VH(115) & %0.1f \\\\\n" % signal)
 
-shape_file = "all_shapes.root"
-#shape_file = "2x_shapes.root"
+shape_file = "wh_shapes.root"
 
 shapes = ROOT.TFile.Open(shape_file, "READ")
 
-for folder in ['mmt_115_final_vtxChi2NODF', 'emt_115_final_vtxChi2NODF',
+for folder in ['mmt_115_final_MuTauMass', 'emt_115_final_ETauMass',
                'emm_115_final_MuElecMass', ]:
     file = open(folder + 'yields.tex', 'w')
     dump_table(shapes, folder, file)
 
-for mass in [110, 115, 120, 125]:
-    mmt = dc.DataCardChannel("mmt_%i_final_vtxChi2NODF" % mass, shapes)
+for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
+    mmt = dc.DataCardChannel("mmt_%i_final_MuTauMass" % mass, shapes)
     mmt.add_signal('signal')
     mmt.add_background('fakes')
     mmt.add_background('wz')
@@ -53,14 +53,15 @@ for mass in [110, 115, 120, 125]:
     mmt.add_sys('lumi', 1 + lumi_err, ['signal', 'wz', 'zz'])
     mmt.add_sys('wz', 1.0 + wz_err, ['wz'])
     mmt.add_sys('zz', 1.0 + zz_err, ['zz'])
-    mmt.add_sys('tau_id', 1+ tau_err, ['wz', 'signal', 'zz'])
-    mmt.add_sys('mu_id', 1.014, ['wz', 'signal', 'zz'])
+    mmt.add_sys('CMS_eff_t', 1+ tau_err, ['wz', 'signal', 'zz'])
+    mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), ['wz', 'signal', 'zz'])
+    mmt.add_sys('pdf_vh', 1 + pdf_err, ['signal'])
 
     mmt_fake_unweighted = Histo.Histo(shapes.Get('mmt_115_final_vtxChi2NODF/ext_data_unweighted'))
     mmt_fake_error = 1 + math.sqrt(mmt_fake_unweighted.Integral())/mmt_fake_unweighted.Integral()
     mmt.add_sys('mmt_fake_err', mmt_fake_error, ['fakes'])
 
-    emt = dc.DataCardChannel("emt_%i_final_vtxChi2NODF" % mass, shapes)
+    emt = dc.DataCardChannel("emt_%i_final_ETauMass" % mass, shapes)
     emt.add_signal('signal')
     emt.add_background('fakes')
     emt.add_background('wz')
@@ -69,9 +70,10 @@ for mass in [110, 115, 120, 125]:
     emt.add_sys('lumi', 1 + lumi_err, ['signal', 'wz', 'zz'])
     emt.add_sys('wz', 1.0 + wz_err, ['wz'])
     emt.add_sys('zz', 1.0 + zz_err, ['zz'])
-    emt.add_sys('tau_id', 1 + tau_err, ['wz', 'signal', 'zz'])
-    emt.add_sys('mu_id', 1.01, ['wz', 'signal', 'zz'])
-    emt.add_sys('e_id', 1.02, ['wz', 'signal', 'zz'])
+    emt.add_sys('CMS_eff_t', 1 + tau_err, ['wz', 'signal', 'zz'])
+    emt.add_sys('CMS_eff_m', 1 + mu_id_err, ['wz', 'signal', 'zz'])
+    emt.add_sys('CMS_eff_e', 1.02, ['wz', 'signal', 'zz'])
+    emt.add_sys('pdf_vh', 1 + pdf_err, ['signal'])
 
     emt_fake_unweighted = Histo.Histo(shapes.Get('emt_115_final_vtxChi2NODF/ext_data_unweighted'))
     emt_fake_error = 1 + math.sqrt(emt_fake_unweighted.Integral())/emt_fake_unweighted.Integral()
@@ -86,8 +88,9 @@ for mass in [110, 115, 120, 125]:
     emm.add_sys('lumi', 1 + lumi_err, ['signal', 'wz', 'zz'])
     emm.add_sys('wz', 1.0 + wz_err, ['wz'])
     emm.add_sys('zz', 1.0 + zz_err, ['zz'])
-    emm.add_sys('mu_id', 1.014, ['wz', 'signal', 'zz'])
-    emt.add_sys('e_id', 1.02, ['wz', 'signal', 'zz'])
+    emm.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), ['wz', 'signal', 'zz'])
+    emm.add_sys('CMS_eff_e', 1.02, ['wz', 'signal', 'zz'])
+    emm.add_sys('pdf_vh', 1 + pdf_err, ['signal'])
 
     emm_fake_unweighted = Histo.Histo(shapes.Get('emm_115_final_MuElecMass/ext_data_unweighted'))
     emm_fake_error = 1 + math.sqrt(emm_fake_unweighted.Integral())/emm_fake_unweighted.Integral()

@@ -85,6 +85,8 @@ fakerates = {
             'DoubleMus_HLT > 0.5',
             'Muon2Pt > 9',
             'Muon2AbsEta < 2.1',
+            'Muon1DZ < 0.2',
+            'Muon2DZ < 0.2',
         ],
         'num' : [
             'Muon2_MuID_WWID > 0.5',
@@ -114,6 +116,8 @@ fakerates = {
             'DoubleMus_HLT > 0.5',
             'Muon2Pt > 9',
             'Muon2AbsEta < 2.1',
+            'Muon1DZ < 0.2',
+            'Muon2DZ < 0.2',
         ],
         'num' : [
             'Muon2_MuID_WWID > 0.5',
@@ -142,6 +146,9 @@ fakerates = {
             'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 9',
             'ElectronAbsEta < 2.5',
+            'Electron_EBtag < 3.3',
+            'Muon2DZ < 0.2',
+            'ElectronDZ < 0.2',
         ],
         'num' : [
             'Electron_EID_WWID > 0.5',
@@ -167,6 +174,9 @@ fakerates = {
             'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 9',
             'ElectronAbsEta < 2.5',
+            'Electron_EBtag < 3.3',
+            'Muon2DZ < 0.2',
+            'ElectronDZ < 0.2',
         ],
         'num' : [
             'Electron_EID_WWID > 0.5',
@@ -177,9 +187,9 @@ fakerates = {
 
 output_file = ROOT.TFile("results_singleMuFakeRates.root", "RECREATE")
 for data_set, skips, int_lumi in [
-    ('2011A', ['2011B', 'EM'], 2170),
-    ('2011B', ['2011A', 'EM'], 2170),
-    ('2011AB', ['EM'], 4000) ]:
+    #('2011A', ['2011B', 'EM'], 2170),
+    #('2011B', ['2011A', 'EM'], 2170),
+    ('2011AB', ['EM'], 4600) ]:
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
@@ -305,6 +315,7 @@ for data_set, skips, int_lumi in [
             stack.Draw()
             stack.GetXaxis().SetTitle(xtitle)
             data.Draw("pe, same")
+            legend.Draw()
             stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
             stack.GetHistogram().SetTitle(
                  xtitle + ' in ' + fr_info['evtType'] + ' events')
