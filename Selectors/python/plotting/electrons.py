@@ -90,8 +90,20 @@ btagmuon = cms.PSet(
         '${getter}userCand("patJet").bDiscriminator("softMuonByIP3dBJetTagsAOD") : -5'),
     lazyParsing = cms.untracked.bool(True),
 )
-# Add all the interesting electron trigger filter matchings
 
+missingHits = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(10.5),
+    nbins = cms.untracked.int32(11),
+    name = cms.untracked.string("${name}_MissingHits"),
+    description = cms.untracked.string("${nicename} electron missing hits"),
+    plotquantity = cms.untracked.string(
+        '? ${getter}gsfTrack.isNonnull? '
+        '${getter}gsfTrack.trackerExpectedHitsInner.numberOfHits() : 10'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+# Add all the interesting electron trigger filter matchings
 hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter = get_trigger_matching(
     'hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter')
 
@@ -105,7 +117,7 @@ hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter = get_trigger_matching(
     'hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter')
 
 all = [
-    reliso, wwid, mitid, jetPt, btag, btagmuon,
+    reliso, wwid, mitid, jetPt, btag, btagmuon, missingHits,
     hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter,
     hltMu17Ele8CaloIdTPixelMatchFilter,
     hltL1NonIsoHLTNonIsoMu8Ele17PixelMatchFilter,
