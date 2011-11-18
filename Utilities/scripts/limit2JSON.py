@@ -30,6 +30,11 @@ band95_re = re.compile(
     r'95% expected band : (?P<lo95>[0-9\.]+) < r < (?P<hi95>[0-9\.]+)'
 )
 
+# Asymptotic limit
+ass_extractor = re.compile( # hee hee
+    r'.*: r < (?P<value>[0-9\.]+)'
+)
+
 if __name__ == "__main__":
     last_lines = []
     for line in sys.stdin:
@@ -38,7 +43,7 @@ if __name__ == "__main__":
             last_lines.pop(0)
 
     # Detect if this is the observed limit
-    if last_lines[-1].startswith('Done in'):
+    if last_lines[-1].startswith('Done in') and 'Asymptotic' not in last_lines[-9]:
         match = obs_re.match(last_lines[-2])
         assert(match)
         output = {'obs' : float(match.group('limit'))}
@@ -52,7 +57,7 @@ if __name__ == "__main__":
         assert(match68)
         assert(median)
         output = {
-            'median' : float(median.group('limit')),
+            'exp' : float(median.group('limit')),
             'ntoys' : int(median.group('ntoys')),
             '-1' : float(match68.group('lo68')),
             '-2' : float(match95.group('lo95')),
@@ -62,12 +67,27 @@ if __name__ == "__main__":
         sys.stdout.write(json.dumps(output) + '\n')
     # Detect asymptotic
     elif 'Asymptotic' in last_lines[-9]:
-        #Observed Limit: r < 15.3322
-        #Expected  2.5%: r < 5.5286
-        #Expected 16.0%: r < 7.3538
-        #Expected 50.0%: r < 10.1900
-        #Expected 84.0%: r < 14.1539
-        #Expected 97.5%: r < 18.8053
-        #
-        #Done in 0.00 min (cpu), 0.00 min (real)
+        #7 Observed Limit: r < 15.3322
+        #6 Expected  2.5%: r < 5.5286
+        #5 Expected 16.0%: r < 7.3538
+        #4 Expected 50.0%: r < 10.1900
+        #3 Expected 84.0%: r < 14.1539
+        #2 Expected 97.5%: r < 18.8053
+        #1
+        #0 Done in 0.00 min (cpu), 0.00 min (real)
+        obs = float(ass_extractor.match(last_lines[-8]).group('value'))
+        expm2 = float(ass_extractor.match(last_lines[-7]).group('value'))
+        expm1 = float(ass_extractor.match(last_lines[-6]).group('value'))
+        exp = float(ass_extractor.match(last_lines[-5]).group('value'))
+        expp1 = float(ass_extractor.match(last_lines[-4]).group('value'))
+        expp2 = float(ass_extractor.match(last_lines[-3]).group('value'))
+        output = {
+            'obs' : obs,
+            'exp' : exp,
+            '-1' : expm1,
+            '-2' : expm2,
+            '+1' : expp1,
+            '+2' : expp2,
+        }
+        sys.stdout.write(json.dumps(output) + '\n')
 
