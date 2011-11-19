@@ -101,6 +101,13 @@ selections = {
             'vtxChi2NODF',
         ],
     },
+    'with_vtx' : {
+        'select' : base_selection + passes_vtx,
+        'title' : "Base Selection + #chi^{2}",
+        'vars' : [
+            'HT',
+        ],
+    },
     'final' : {
         'title' : "Final Selection",
         'select' : base_selection + passes_ht + passes_vtx,
@@ -179,6 +186,17 @@ for selection, selection_info in selections.iteritems():
             continue
         draw_str, x_title, binning = variables[var]
 
+        # The "Loose" selection
+        plotter.register_tree(
+            selection + var + '_loose',
+            '/emt/final/Ntuple',
+            draw_str,
+            ' && '.join(selection_info['select']),
+            w = '(pu2011AB)',
+            binning = binning,
+            include = ['*'],
+        )
+
         plotter.register_tree(
             selection + var + '_bkg',
             '/emt/final/Ntuple',
@@ -210,14 +228,41 @@ for selection, selection_info in selections.iteritems():
             include = ['*'],
         )
 
-        ##########################################
-        # Compute results using MC in final region
-        ##########################################
         legend = plotter.build_legend(
             '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf',
             xlow = 0.6, ylow=0.5,)
 
         rebin = 5
+
+        ##########################################
+        # Compute results using MC in loose region
+        ##########################################
+        histo_name = selection + var + '_loose'
+
+        stack = plotter.build_stack(
+            '/emt/final/Ntuple:' + histo_name,
+            include = ['*'],
+            exclude = ['data*', '*VH*'],
+            rebin = rebin, show_overflows=True,
+        )
+
+        data = plotter.get_histogram(
+            'data_MuEG',
+            '/emt/final/Ntuple:' + histo_name,
+            rebin = rebin, show_overflows=True,
+        )
+
+        stack.Draw()
+        data.Draw('same,pe')
+        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
+        stack.GetXaxis().SetTitle(x_title)
+        legend.Draw()
+        canvas.Update()
+        saveplot(histo_name)
+
+        ##########################################
+        # Compute results using MC in final region
+        ##########################################
 
         histo_name = selection + var + '_bkg'
 

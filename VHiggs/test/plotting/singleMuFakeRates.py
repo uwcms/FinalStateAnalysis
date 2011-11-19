@@ -102,7 +102,7 @@ fakerates = {
         'vartitle' : 'Mu Jet Pt',
         'var' : 'Muon2_JetPt',
         'varbinning' : [100, 0, 100],
-        'rebin' : 2,
+        'rebin' : 10,
         'evtType' : '#mu#mu',
         'base_cuts' : qcd_selection,
         'control_plots' : [
@@ -142,6 +142,8 @@ fakerates = {
         ],
         'final_cuts' : [],
         'denom' : [
+            'IsoMus_HLT > 0.5',
+            'Muon2Pt > 24',
             'Mu17Ele8All_HLT > 0.5',
             'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 9',
@@ -187,10 +189,11 @@ fakerates = {
 
 output_file = ROOT.TFile("results_singleMuFakeRates.root", "RECREATE")
 for data_set, skips, int_lumi in [
-    #('2011A', ['2011B', 'EM'], 2170),
+    ('2011A', ['2011B', 'EM', 'MuEG'], 2170),
     #('2011B', ['2011A', 'EM'], 2170),
-    ('2011AB', ['EM'], 4600) ]:
+    ('2011AB', ['EM', 'MuEG'], 4600) ]:
     log.info("Plotting dataset: %s", data_set)
+    print "WARNING SKIPPING MUEG"
 
     samples, plotter = data_tool.build_data(
         'Mu', '2011-11-13-v2-MuonTP', 'scratch_results', int_lumi, skips,

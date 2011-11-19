@@ -3,11 +3,10 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-11-13-v1-WHAnalyze'
+jobId = '2011-11-18-v1-WHAnalyze'
 
 patJobId = '2011-11-08-EWKPatTuple'
 patCfg = 'patTuple_cfg'
-#patCfg = 'analyze_cfg'
 
 def get_dir(sample):
     dir_name = '-'.join([patJobId, sample, patCfg])

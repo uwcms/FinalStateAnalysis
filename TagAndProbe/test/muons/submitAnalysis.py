@@ -3,7 +3,7 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-11-17-v1-MuonTP'
+jobId = '2011-11-18-v1-MuonTP'
 
 patJobId = '2011-11-08-EWKPatTuple'
 patCfg = 'patTuple_cfg'
@@ -20,6 +20,7 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
 
     path_name = os.path.join(os.environ['scratch'], '-'.join(
         [jobId, sample, patCfg]))
+    sys.stderr.write(path_name + '\n')
     sys.stderr.write('Building sample submit dir %s\n' % (sample))
     if os.path.exists(path_name):
         sys.stderr.write('Skipping existing submit directory for %s\n' % sample)
