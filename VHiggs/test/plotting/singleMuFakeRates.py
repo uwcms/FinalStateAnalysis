@@ -126,8 +126,8 @@ fakerates = {
     },
     'e' : {
         'ntuple' : 'em',
-        'pd' : 'data_SingleMu',
-        'exclude' : ['*DoubleE*', '*MuEG*', '*DoubleMu*'],
+        'pd' : 'data_MuEG',
+        'exclude' : ['*DoubleE*', '*SingleMu*', '*DoubleMu*'],
         'mc_pd' : 'Wjets',
         'varname' : 'EJetPt',
         'vartitle' : 'Electron Jet Pt',
@@ -139,8 +139,11 @@ fakerates = {
         'control_plots' : [
             ('Njets', 'NjetsPt20_Njets',
              "Number of jets", [10, -0.5, 9.5]),
+            ('Nhits', 'Electron_MissingHits',
+             "Number of hits", [10, -0.5, 9.5]),
         ],
-        'final_cuts' : [],
+        'final_cuts' : [
+        ],
         'denom' : [
             'IsoMus_HLT > 0.5',
             'Muon2Pt > 24',
@@ -151,6 +154,7 @@ fakerates = {
             'Electron_EBtag < 3.3',
             'Muon2DZ < 0.2',
             'ElectronDZ < 0.2',
+            #'Electron_MissingHits < 0.5',
         ],
         'num' : [
             'Electron_EID_WWID > 0.5',
@@ -159,8 +163,8 @@ fakerates = {
     },
     'eQCD' : {
         'ntuple' : 'em',
-        'pd' : 'data_SingleMu',
-        'exclude' : ['*DoubleE*', '*MuEG*', '*DoubleMu*'],
+        'pd' : 'data_MuEG',
+        'exclude' : ['*DoubleE*', '*SingleMu*', '*DoubleMu*'],
         'mc_pd' : 'QCDMu',
         'varname' : 'EJetPt',
         'vartitle' : 'Electron Jet Pt',
@@ -169,7 +173,10 @@ fakerates = {
         'rebin' : 5,
         'evtType' : 'e#mu',
         'base_cuts' : qcd_selection_emu,
-        'control_plots' : [],
+        'control_plots' : [
+            ('Nhits', 'Electron_MissingHits',
+             "Number of hits", [10, -0.5, 9.5]),
+        ],
         'final_cuts' : [],
         'denom' : [
             'Mu17Ele8All_HLT > 0.5',
@@ -179,6 +186,7 @@ fakerates = {
             'Electron_EBtag < 3.3',
             'Muon2DZ < 0.2',
             'ElectronDZ < 0.2',
+            #'Electron_MissingHits < 0.5',
         ],
         'num' : [
             'Electron_EID_WWID > 0.5',
@@ -189,14 +197,13 @@ fakerates = {
 
 output_file = ROOT.TFile("results_singleMuFakeRates.root", "RECREATE")
 for data_set, skips, int_lumi in [
-    ('2011A', ['2011B', 'EM', 'MuEG'], 2170),
+    ('2011A', ['2011B', 'EM',], 2170),
     #('2011B', ['2011A', 'EM'], 2170),
-    ('2011AB', ['EM', 'MuEG'], 4600) ]:
+    ('2011AB', ['EM',], 4600) ]:
     log.info("Plotting dataset: %s", data_set)
-    print "WARNING SKIPPING MUEG"
 
     samples, plotter = data_tool.build_data(
-        'Mu', '2011-11-13-v2-MuonTP', 'scratch_results', int_lumi, skips,
+        'Mu', '2011-11-18-v1-MuonTP', 'scratch_results', int_lumi, skips,
         count = '/mm/skimCounter', unweighted = False)
 
     legend = plotter.build_legend(
