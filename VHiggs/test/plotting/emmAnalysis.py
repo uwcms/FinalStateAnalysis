@@ -42,7 +42,7 @@ base_selection = [
 
     # Object vetos
     'NIsoMuonsPt5_Nmuons < 0.5',
-    'NIsoElecsPt20_NIsoElecs < 0.5',
+    'NIsoElecPt10_Nelectrons < 0.5',
     'NBjetsPt20_Nbjets < 0.5',
 
     #'ElecPt > 20',
