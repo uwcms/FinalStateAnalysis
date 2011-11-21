@@ -63,6 +63,7 @@ passes_ht = [
 passes_vtx = [
     'vtxChi2/vtxNDOF < 10',
     'Mu2_MuBtag < 3.3',
+    'Mu1_MuBtag < 3.3',
 ]
 
 bkg_enriched = [
