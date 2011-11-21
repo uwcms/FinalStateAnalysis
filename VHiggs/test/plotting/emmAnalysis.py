@@ -38,9 +38,13 @@ base_selection = [
     'Mu2AbsEta < 2.1',
     'Mu1_MuRelIso < 0.3',
     'Mu1_MuID_WWID > 0.5',
-    #'NIsoMuonsPt5_Nmuons < 0.5',
     'DoubleMus_HLT > 0.5 ',
-    #'NIsoElecsPt20_NIsoElecs < 0.5',
+
+    # Object vetos
+    'NIsoMuonsPt5_Nmuons < 0.5',
+    'NIsoElecsPt20_NIsoElecs < 0.5',
+    'NBjetsPt20_Nbjets < 0.5',
+
     #'ElecPt > 20',
     'Elec_EID_WWID > 0.5',
     'Elec_ERelIso < 0.3',
