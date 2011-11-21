@@ -17,16 +17,12 @@ log = logging.getLogger("emtChannel")
 ROOT.gROOT.SetBatch(True)
 
 #Define the fake rate versus muon pt
-#FAKE_RATE_0 = 5.97e-1
-#FAKE_RATE_1 = 15.24
-#FAKE_RATE_2 = 2.6
-#FAKE_RATE_3 = 7.88e-3
 
 # Wjets FR
-FAKE_RATE_0 = 1.076
-FAKE_RATE_1 = 1.298e+1
-FAKE_RATE_2 = 2.41
-FAKE_RATE_3 = 1.516e-2
+FAKE_RATE_0 = 1.28
+FAKE_RATE_1 = 1.194e+1
+FAKE_RATE_2 = 2.05
+FAKE_RATE_3 = 1.47e-2
 
 FAKE_RATE = "(%0.4f*TMath::Landau(VAR, %0.4f, %0.4f,0)+%0.4f)" % (
     FAKE_RATE_0, FAKE_RATE_1, FAKE_RATE_2, FAKE_RATE_3)
@@ -83,12 +79,12 @@ selections = {
         'select' : base_selection,
         'title' : "Base Selection",
         'vars' : [
-            'DiMuonMass',
-            'MuTauMass',
-            'Muon1_MtToMET',
-            'MET',
-            'HT',
-            'vtxChi2NODF',
+            #'DiMuonMass',
+            #'MuTauMass',
+            #'Muon1_MtToMET',
+            #'MET',
+            #'HT',
+            #'vtxChi2NODF',
         ],
     },
     'with_ht' : {
