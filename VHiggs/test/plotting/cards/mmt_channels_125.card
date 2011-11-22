@@ -6,14 +6,14 @@ kmax *
 ------------
 shapes * * wh_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
 bin mmt_125_final_MuTauMass
-observation 3.0
+observation 2.0
 ------------
   bin    mmt_125_final_MuTauMass  mmt_125_final_MuTauMass  mmt_125_final_MuTauMass  mmt_125_final_MuTauMass
   process    wz  signal  zz  fakes
   process    2  0  3  1
-  rate    1.35930830939  0.328672856558  0.151817754878  2.3367837728
+  rate    1.33188568801  0.281366921961  0.14263403025  1.98371294932
   pdf_vh  lnN  -  1.03  -  -
-  mmt_fake_err  lnN  -  -  -  1.12
+  mmt_fake_err  lnN  -  -  -  1.14
   CMS_eff_t  lnN  1.06  1.06  1.06  -
   zz  lnN  -  -  1.40  -
   lumi  lnN  1.04  1.04  1.04  -
