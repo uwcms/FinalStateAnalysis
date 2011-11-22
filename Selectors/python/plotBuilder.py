@@ -189,4 +189,8 @@ def makePlots(*legs, **kwargs):
     histos.extras.histos.append(rho_cfg)
     add_ntuple(rho_cfg.name.value(), rho_cfg.plotquantity.value())
 
+    # Add event and run number
+    add_ntuple('evt', 'evt().evtId().event()')
+    add_ntuple('run', 'evt().evtId().run()')
+
     return histos, ntuple
