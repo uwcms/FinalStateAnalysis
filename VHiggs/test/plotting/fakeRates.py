@@ -223,7 +223,7 @@ fakerates = {
         'var' : 'Muon2_JetPt',
         'vartitle' : 'Mu Jet p_{T}',
         'varbinning' : [100, 0, 100],
-        'rebin' : 5,
+        'rebin' : 10,
         'evtType' : '#mu#mu + jet',
         'base_cuts' : base_qcd_selection,
         'control_plots' : [],
@@ -232,8 +232,6 @@ fakerates = {
             'Muon2_InnerNPixHits > 0.5',
             'Muon2_MuBtag < 3.3',
             'METPt < 20',
-            'Muon2_MuBtag < 3.3',
-            'Muon2_InnerNPixHits > 0.5',
         ],
         'num' : [
             'Muon2_MuID_WWID > 0.5',

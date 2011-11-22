@@ -52,6 +52,17 @@ qcd_selection = [
     'NIsoElecPt10_Nelectrons < 0.5',
 ]
 
+wjets_selection_os = wjets_selection[:]
+wjets_selection_os.remove(
+    'Muon1Charge*Muon2Charge > 0',
+)
+wjets_selection_os.remove(
+    'Muon1_MtToMET > 30',
+)
+wjets_selection_os.append('Muon1Charge*Muon2Charge < 0')
+#wjets_selection_os.append('Muon1_MtToMET > 50')
+wjets_selection_os.append('METPt > 40')
+
 # In the emu channels, the muon is the second leg.
 wjets_selection_emu = [
     x.replace('Muon1', 'Muon2') for x in wjets_selection
@@ -77,6 +88,41 @@ fakerates = {
         'control_plots' : [
             ('Btag', 'Muon2_MuBtag',
              "Probe TCHE", [100, -5, 5]),
+            ('METPt', 'METPt',
+             "METPt", [100, 0, 100]),
+        ],
+        'final_cuts' : [],
+        'denom' : [
+            'Muon2_MuBtag < 3.3',
+            'Muon2_InnerNPixHits > 0.5',
+            'DoubleMus_HLT > 0.5',
+            'Muon2Pt > 9',
+            'Muon2AbsEta < 2.1',
+            'Muon1DZ < 0.2',
+            'Muon2DZ < 0.2',
+        ],
+        'num' : [
+            'Muon2_MuID_WWID > 0.5',
+            'Muon2_MuRelIso < 0.3',
+        ]
+    },
+    'muOS' : {
+        'ntuple' : 'mm',
+        'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*SingleMu*'],
+        'mc_pd' : 'Wjets',
+        'varname' : 'MuJetPt',
+        'vartitle' : 'Mu Jet Pt',
+        'var' : 'Muon2_JetPt',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'evtType' : '#mu#mu',
+        'base_cuts' : wjets_selection_os,
+        'control_plots' : [
+            ('Btag', 'Muon2_MuBtag',
+             "Probe TCHE", [100, -5, 5]),
+            ('Mu1Mt', 'Muon1_MtToMET',
+             "Mu 1 MtToMET", [100, 0, 100]),
         ],
         'final_cuts' : [],
         'denom' : [
@@ -139,8 +185,10 @@ fakerates = {
         'control_plots' : [
             ('Njets', 'NjetsPt20_Njets',
              "Number of jets", [10, -0.5, 9.5]),
-            ('Nhits', 'Electron_MissingHits',
-             "Number of hits", [10, -0.5, 9.5]),
+            #('Nhits', 'Electron_MissingHits',
+             #"Number of hits", [10, -0.5, 9.5]),
+            ('AbsIso', 'Electron_ERelIso*ElectronPt',
+             "Absolute Iso", [100, 0, 20]),
         ],
         'final_cuts' : [
         ],
@@ -176,6 +224,8 @@ fakerates = {
         'control_plots' : [
             ('Nhits', 'Electron_MissingHits',
              "Number of hits", [10, -0.5, 9.5]),
+            ('AbsIso', 'Electron_ERelIso*ElectronPt',
+             "Absolute Iso", [100, 0, 20]),
         ],
         'final_cuts' : [],
         'denom' : [
