@@ -15,13 +15,3 @@ patFinalStateEventProducer = cms.EDProducer(
         #puInTime = cms.InputTag("lumiWeights"),
     )
 )
-
-# Add the different possible PU weights
-for weight in [ 'lumiWeightsS42011A', 'lumiWeightsS42011B178078',
-               'lumiWeightsS42011AB178078' ]:
-    setattr(patFinalStateEventProducer.extraWeights,
-            weight.replace('lumiWeights', '3bx_'),
-            cms.InputTag(weight, "3bx"))
-    setattr(patFinalStateEventProducer.extraWeights,
-            weight.replace('lumiWeights', 'intime_'),
-            cms.InputTag(weight))
