@@ -8,5 +8,7 @@ patElectronMVAIDEmbedder = cms.EDProducer(
     src = cms.InputTag("fixme"),
     ebRecHits = cms.InputTag("reducedEcalRecHitsEB"),
     eeRecHits = cms.InputTag("reducedEcalRecHitsEE"),
-    userLabel = cms.string("MITID"),
+    srcVertices = cms.InputTag("selectedPrimaryVertex"),
+    maxDZ = cms.double(0.2),
+    maxDB = cms.double(0.045),
 )
