@@ -4,6 +4,7 @@ from FinalStateAnalysis.PatTools.taus.patTauSystematics_cfi import systematicsTa
 from FinalStateAnalysis.PatTools.taus.patTauEmbedJetInfo_cfi import patTausEmbedJetInfo
 from FinalStateAnalysis.PatTools.taus.patTauEmbedPresel_cfi import patTauEmbedPresel
 from FinalStateAnalysis.PatTools.taus.triggerMatch_cfi import triggeredPatTaus
+from FinalStateAnalysis.PatTools.taus.patTausIpEmbedding_cfi import patTausEmbedIp
 
 customizeTauSequence = cms.Sequence()
 
@@ -17,3 +18,4 @@ customizeTauSequence += patTausEmbedJetInfo
 customizeTauSequence += triggeredPatTaus
 customizeTauSequence += systematicsTaus
 customizeTauSequence += patTauEmbedPresel # this has to come after the systematics
+customizeTauSequence += patTausEmbedIp

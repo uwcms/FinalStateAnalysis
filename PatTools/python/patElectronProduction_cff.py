@@ -16,6 +16,9 @@ from FinalStateAnalysis.PatTools.electrons.patElectronMVAIDEmbedding_cfi import\
 from FinalStateAnalysis.PatTools.electrons.patElectronEmbedJetInfo_cfi import \
         patElectronsEmbedJetInfo
 
+from FinalStateAnalysis.PatTools.electrons.patElectronsIpEmbedding_cfi import \
+        patElectronsEmbedIp
+
 customizeElectronSequence = cms.Sequence()
 customizeElectronSequence += electronsWWID
 customizeElectronSequence += electronsVBTFId
@@ -23,3 +26,4 @@ customizeElectronSequence += patElectronsEmbedJetInfo
 customizeElectronSequence += electronSystematics
 customizeElectronSequence += triggeredPatElectrons
 customizeElectronSequence += patElectronMVAIDEmbedder
+customizeElectronSequence += patElectronsEmbedIp
