@@ -191,6 +191,7 @@ def makePlots(*legs, **kwargs):
 
     # Add event and run number
     add_ntuple('evt', 'evt().evtId().event()')
+    add_ntuple('lumi', 'evt().evtId().luminosityBlock()')
     add_ntuple('run', 'evt().evtId().run()')
 
     return histos, ntuple
