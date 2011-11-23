@@ -64,6 +64,14 @@ fakeTau = [
     'Tau_GenDecayMode < -0.5'
 ]
 
+highPu = [
+    'FinalState_NVtx > 7.5'
+]
+
+lowPu = [
+    'FinalState_NVtx < 7.5'
+]
+
 # Map histo names in template.py to the string needed to draw them
 histoVarMap = {
     'Mvis' : ('muTauJetMass', (100, 0, 300)),
@@ -111,6 +119,11 @@ def get_th1(sample, region, histo, **kwargs):
         selections += realTau
     if 'fakeTau' in region:
         selections += fakeTau
+
+    if 'lowPu' in region:
+        selections += lowPu
+    if 'highPu' in region:
+        selections += highPu
 
     full_selection = ' && '.join(selections)
 

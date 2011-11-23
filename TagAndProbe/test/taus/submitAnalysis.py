@@ -3,9 +3,9 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-10-28-v2-TauTNP'
+jobId = '2011-11-23-v1-TauTNP'
 
-patJobId = '2011-10-21-EWKPatTuple'
+patJobId = '2011-11-08-EWKPatTuple'
 patCfg = 'patTuple_cfg'
 
 def get_dir(sample):
@@ -34,7 +34,6 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         'farmoutAnalysisJobs2',
         '--varparsing',
         '--fwklite',
-        '--express-queue',
         #'--no-submit',
         #'--job-count=20',
         #'--input-files-per-job=%i' % (sample_info['ana_group']*2),
