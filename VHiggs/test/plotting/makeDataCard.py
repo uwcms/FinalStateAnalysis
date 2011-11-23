@@ -8,7 +8,7 @@ zz_err = 0.40
 lumi_err = 0.045
 tau_err = 0.06
 mu_id_err = 0.014
-pdf_err = 0.03
+pdf_err = 0.04
 
 def quad(*xs):
     return math.sqrt(sum(x*x for x in xs))
