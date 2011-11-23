@@ -119,6 +119,13 @@ class AnalysisSample(object):
         #self.log.debug("AnalysisSample(%s) all registered computed hist %s",
                        #self.name, self.computed_hists.keys())
 
+    def scan_to_file(self, filename, tree, var, selection):
+        ttree = self.file.get_unweighted(tree)
+        outputname = "_".join([filename, self.name, "scanlog"])
+        ttree.GetPlayer().SetScanRedirect(True)
+        ttree.GetPlayer().SetScanFileName(outputname)
+        ttree.Scan(var, selection, 'precision=20')
+
     def check_hists(self, label):
         for key, value in self.computed_hists.iteritems():
             if not value:
@@ -147,6 +154,10 @@ class AnalysisMultiSample(AnalysisSample):
         object = self.owned[owned_key]
         styling.apply_style(object, **self.style_dict)
         return object
+
+    def scan_to_file(self, filename, tree, var, selection):
+        for subsample in self.subsamples:
+            subsample.scan_to_file(filename, tree, var, selection)
 
     def register_tree(self, name, tree, var, selection, w=None, binning=None):
         for subsample in self.subsamples:
@@ -201,6 +212,12 @@ class AnalysisPlotter(object):
         for subsample in self.samples:
             if self.match_sample(subsample.name, include, exclude):
                 subsample.register_tree(name, tree, var, selection, w, binning)
+
+    def scan_to_file(self, filename, tree, var, selection,
+                     include='*', exclude=None):
+        for subsample in self.samples:
+            if self.match_sample(subsample.name, include, exclude):
+                subsample.scan_to_file(filename, tree, var, selection)
 
     def build_stack(self, path, include='*', exclude=None,
                     title=None, **kwargs):
