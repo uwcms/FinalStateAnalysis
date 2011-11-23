@@ -11,7 +11,7 @@ observation 13.0
   bin    emt_100_final_ETauMass  emt_100_final_ETauMass  emt_100_final_ETauMass  emt_100_final_ETauMass
   process    wz  signal  zz  fakes
   process    2  0  3  1
-  rate    3.19897644687  0.734467543196  0.367009162728  5.74037415534
+  rate    3.19897644687  0.734467543196  0.367009162728  5.72481987625
   pdf_vh  lnN  -  1.03  -  -
   zz  lnN  -  -  1.40  -
   CMS_eff_t  lnN  1.06  1.06  1.06  -

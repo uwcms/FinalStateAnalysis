@@ -6,17 +6,17 @@ kmax *
 ------------
 shapes * * wh_shapes.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
 bin mmt_115_final_MuTauMass emt_115_final_ETauMass emm_115_final_MuElecMass
-observation 2.0 13.0 8.0
+observation 2.0 13.0 5.0
 ------------
   bin    mmt_115_final_MuTauMass  mmt_115_final_MuTauMass  mmt_115_final_MuTauMass  mmt_115_final_MuTauMass  emt_115_final_ETauMass  emt_115_final_ETauMass  emt_115_final_ETauMass  emt_115_final_ETauMass  emm_115_final_MuElecMass  emm_115_final_MuElecMass  emm_115_final_MuElecMass  emm_115_final_MuElecMass
   process    wz  signal  zz  fakes  wz  signal  zz  fakes  wz  signal  zz  fakes
   process    2  0  3  1  2  0  3  1  2  0  3  1
-  rate    1.33188568801  0.325920243282  0.14263403025  1.98371294932  3.19897644687  0.538122932427  0.367009162728  5.74037415534  0.402902222986  0.119336850526  0.0486690598865  5.63148430921
+  rate    1.33188568801  0.325920243282  0.14263403025  1.98371294932  3.19897644687  0.538122932427  0.367009162728  5.72481987625  0.312752626543  0.0806301370903  0.0392434880545  1.51578006614
   pdf_vh  lnN  -  1.03  -  -  -  1.03  -  -  -  1.03  -  -
   mmt_fake_err  lnN  -  -  -  1.14  -  -  -  -  -  -  -  -
   CMS_eff_e  lnN  -  -  -  -  1.02  1.02  1.02  -  1.02  1.02  1.02  -
   CMS_eff_t  lnN  1.06  1.06  1.06  -  1.06  1.06  1.06  -  -  -  -  -
-  emm_fake_err  lnN  -  -  -  -  -  -  -  -  -  -  -  1.42
+  emm_fake_err  lnN  -  -  -  -  -  -  -  -  -  -  -  1.81
   zz  lnN  -  -  1.40  -  -  -  1.40  -  -  -  1.40  -
   lumi  lnN  1.04  1.04  1.04  -  1.04  1.04  1.04  -  1.04  1.04  1.04  -
   emt_fake_err  lnN  -  -  -  -  -  -  -  1.06  -  -  -  -
