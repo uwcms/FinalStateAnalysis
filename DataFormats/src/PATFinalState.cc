@@ -16,7 +16,11 @@ namespace {
       const reco::Candidate::LorentzVector& p2){
     double totalEt = p1.Et() + p2.Et();
     double totalPt = (p1 + p2).pt();
-    return std::sqrt(totalEt*totalEt - totalPt*totalPt);
+    double mt2 = totalEt*totalEt - totalPt*totalPt;
+    if (mt2 < 0) {
+      std::cout << "P1 = " << p1 << " P2 = " << p2 << " " << mt2 << std::endl;
+    }
+    return std::sqrt(std::abs(mt2));
   }
 
   // Taken from CommonTools/CandUtils/AddFourMomenta.h
