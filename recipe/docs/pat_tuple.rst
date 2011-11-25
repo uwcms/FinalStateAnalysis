@@ -75,7 +75,13 @@ The following isolation quantities are embedded as userFloats (no DB correction)
 * ``pfLooseIsoPt04``
 * ``pfLooseIsoPt06``
 
-The impact parameter to the PV is embedded as userFloat: ``vertexDXY``
+The following IP information is embedded as userFloats: 
+* ``ipDXY``
+* ``dz``
+* ``ip3D``
+* ``ip3DS`` - significance
+* ``tip`` 
+* ``tipS``  - significance
 
 The following systematics candidates are embedded (as userCands)
 
@@ -83,6 +89,9 @@ The following systematics candidates are embedded (as userCands)
 * ``nom`` (nominal ES correction, same as pat::Muon p4)
 * ``mes-`` (down 1 sigma)
 * ``mes+`` (up 1 sigma)
+
+The closest PF patJet is available via the ``userCand('patJet')`` function.
+This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.
 
 
 Electrons
@@ -101,6 +110,26 @@ The following electron IDs are embedded as userFloats:
 * ``wp90``
 * ``wp95``
 * ``WWID``
+
+The following electron IDs are embedded as as eIDs (pat defaults):
+
+* ``cicHyperTight1 --> eidHyperTight1``
+* ``cicTight --> eidTight``
+* ``cicHyperTight3 --> eidHyperTight3``
+* ``cicHyperTight2 --> eidHyperTight2``
+* ``cicHyperTight4 --> eidHyperTight4``
+* ``cicVeryLoose --> eidVeryLoose``
+* ``cicLoose --> eidLoose``
+* ``cicSuperTight --> eidSuperTight``
+* ``cicMedium --> eidMedium``
+
+The following IP information is embedded as userFloats: 
+* ``ipDXY``
+* ``dz``
+* ``ip3D``
+* ``ip3DS`` - significance
+* ``tip`` 
+* ``tipS``  - significance
 
 Jets
 ----
@@ -130,6 +159,8 @@ The uncorrected, and 1 sigma uncertainties on the JEC are available from the
 * ``userCand("jes+")``
 * ``userCand("jes-")``
 
+The closest PF patJet is available via the ``userCand('patJet')`` function.
+This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.
 
 Taus
 ----
@@ -161,7 +192,15 @@ The standard complement of discriminators are available.
 * ``againstMuonTight``
 
 The seed jets are available via the ``userCand('patJet')`` function.
+The jet pt is stored as ``userFloat('jetPt')``.
 
+The following IP information is embedded as userFloats: 
+* ``ipDXY``
+* ``dz``
+* ``ip3D``
+* ``ip3DS`` - significance
+* ``tip`` 
+* ``tipS``  - significance
 
 Utilities
 =========
