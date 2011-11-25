@@ -39,7 +39,8 @@ class PATFinalStateEvent {
         const lhef::HEPEUP& hepeup, // Les Houches info
         const reco::GenParticleRefProd& genParticles,
         const edm::EventID& evtId,
-        const GenEventInfoProduct& genEventInfoProd);
+        const GenEventInfoProduct& genEventInfoProd,
+        bool isRealData);
 
     /// Get PV
     const edm::Ptr<reco::Vertex>& pv() const;
@@ -94,6 +95,9 @@ class PATFinalStateEvent {
     int flag(const std::string& flag) const;
     void addFlag(const std::string& name, int flag);
 
+    /// Is real data
+    bool isRealData() const { return isRealData_; }
+
   private:
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;
@@ -107,6 +111,7 @@ class PATFinalStateEvent {
     reco::GenParticleRefProd genParticles_;
     edm::EventID evtID_;
     GenEventInfoProduct genEventInfoProduct_;
+    bool isRealData_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */

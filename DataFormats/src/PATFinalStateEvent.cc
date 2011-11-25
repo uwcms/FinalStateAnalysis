@@ -32,7 +32,8 @@ PATFinalStateEvent::PATFinalStateEvent(
     const lhef::HEPEUP& hepeup,
     const reco::GenParticleRefProd& genParticles,
     const edm::EventID& evtId,
-    const GenEventInfoProduct& genEventInfo):
+    const GenEventInfoProduct& genEventInfo,
+    bool isRealData):
   rho_(rho),
   triggerEvent_(triggerEvent),
   pv_(pv),
@@ -42,7 +43,8 @@ PATFinalStateEvent::PATFinalStateEvent(
   lhe_(hepeup),
   genParticles_(genParticles),
   evtID_(evtId),
-  genEventInfoProduct_(genEventInfo) { }
+  genEventInfoProduct_(genEventInfo),
+  isRealData_(isRealData) { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
 

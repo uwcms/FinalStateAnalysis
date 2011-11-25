@@ -103,7 +103,8 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr,
-      *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo);
+      *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo,
+      evt.isRealData());
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
