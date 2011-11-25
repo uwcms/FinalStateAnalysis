@@ -25,8 +25,8 @@ wjets_selection = [
     #'(IsoMu17_HLT || IsoMu20_HLT)',
     'Muon1Pt > 18',
     'Muon1AbsEta < 2.1',
-    'Muon1_MtToMET > 30',
-    'METPt > 30',
+    'Muon1_MtToMET > 40',
+    #'METPt > 30',
     'Muon1_MuID_WWID > 0.5',
     'Muon1_MuRelIso < 0.1',
     'Muon1Charge*Muon2Charge > 0',
@@ -52,17 +52,6 @@ qcd_selection = [
     'NIsoElecPt10_Nelectrons < 0.5',
 ]
 
-wjets_selection_os = wjets_selection[:]
-wjets_selection_os.remove(
-    'Muon1Charge*Muon2Charge > 0',
-)
-wjets_selection_os.remove(
-    'Muon1_MtToMET > 30',
-)
-wjets_selection_os.append('Muon1Charge*Muon2Charge < 0')
-#wjets_selection_os.append('Muon1_MtToMET > 50')
-wjets_selection_os.append('METPt > 40')
-
 # In the emu channels, the muon is the second leg.
 wjets_selection_emu = [
     x.replace('Muon1', 'Muon2') for x in wjets_selection
@@ -71,6 +60,22 @@ wjets_selection_emu = [
 qcd_selection_emu = [
     x.replace('Muon1', 'Muon2') for x in qcd_selection
 ]
+
+mva_cut = (
+    '('
+    '(pt < 20 && eta < 1 && mva > 0.133) ||'
+    '(pt < 20 && eta > 1  && eta < 1.5 && mva > 0.465) ||'
+    '(pt < 20 && eta > 1.5 && mva > 0.518) ||'
+
+    '(pt > 20 && eta < 1 && mva > 0.942) ||'
+    '(pt > 20 && eta > 1  && eta < 1.5 && mva > 0.947) ||'
+    '(pt > 20 && eta > 1.5 && mva > 0.878)'
+    ')'
+)
+
+mva_cut = mva_cut.replace('pt', 'ElectronPt')
+mva_cut = mva_cut.replace('eta', 'ElectronAbsEta')
+mva_cut = mva_cut.replace('mva', 'Electron_EID_MITID')
 
 fakerates = {
     'mu' : {
@@ -90,39 +95,6 @@ fakerates = {
              "Probe TCHE", [100, -5, 5]),
             ('METPt', 'METPt',
              "METPt", [100, 0, 100]),
-        ],
-        'final_cuts' : [],
-        'denom' : [
-            'Muon2_MuBtag < 3.3',
-            'Muon2_InnerNPixHits > 0.5',
-            'DoubleMus_HLT > 0.5',
-            'Muon2Pt > 9',
-            'Muon2AbsEta < 2.1',
-            'Muon1DZ < 0.2',
-            'Muon2DZ < 0.2',
-        ],
-        'num' : [
-            'Muon2_MuID_WWID > 0.5',
-            'Muon2_MuRelIso < 0.3',
-        ]
-    },
-    'muOS' : {
-        'ntuple' : 'mm',
-        'pd' : 'data_DoubleMu',
-        'exclude' : ['*DoubleE*', '*MuEG*', '*SingleMu*'],
-        'mc_pd' : 'Wjets',
-        'varname' : 'MuJetPt',
-        'vartitle' : 'Mu Jet Pt',
-        'var' : 'Muon2_JetPt',
-        'varbinning' : [100, 0, 100],
-        'rebin' : 5,
-        'evtType' : '#mu#mu',
-        'base_cuts' : wjets_selection_os,
-        'control_plots' : [
-            ('Btag', 'Muon2_MuBtag',
-             "Probe TCHE", [100, -5, 5]),
-            ('Mu1Mt', 'Muon1_MtToMET',
-             "Mu 1 MtToMET", [100, 0, 100]),
         ],
         'final_cuts' : [],
         'denom' : [
@@ -170,6 +142,62 @@ fakerates = {
             'Muon2_MuRelIso < 0.3',
         ]
     },
+    'muTight' : {
+        'ntuple' : 'mm',
+        'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*SingleMu*'],
+        'mc_pd' : 'Wjets',
+        'varname' : 'MuJetPt',
+        'vartitle' : 'Mu Jet Pt',
+        'var' : 'Muon2_JetPt',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'evtType' : '#mu#mu',
+        'base_cuts' : wjets_selection,
+        'control_plots' : [ ],
+        'final_cuts' : [],
+        'denom' : [
+            'Muon2_MuBtag < 3.3',
+            'Muon2_InnerNPixHits > 0.5',
+            'DoubleMus_HLT > 0.5',
+            'Muon2Pt > 9',
+            'Muon2AbsEta < 2.1',
+            'Muon1DZ < 0.2',
+            'Muon2DZ < 0.2',
+        ],
+        'num' : [
+            'Muon2_MuID_WWID > 0.5',
+            'Muon2_MuRelIso < 0.1',
+        ]
+    },
+    'muQCDTight' : {
+        'ntuple' : 'mm',
+        'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*SingleMu*'],
+        'mc_pd' : 'QCDMu',
+        'varname' : 'MuJetPt',
+        'vartitle' : 'Mu Jet Pt',
+        'var' : 'Muon2_JetPt',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 10,
+        'evtType' : '#mu#mu',
+        'base_cuts' : qcd_selection,
+        'control_plots' : [ ],
+        'final_cuts' : [],
+        'denom' : [
+            'Muon2_MuBtag < 3.3',
+            'Muon2_InnerNPixHits > 0.5',
+            'DoubleMus_HLT > 0.5',
+            'Muon2Pt > 9',
+            'Muon2AbsEta < 2.1',
+            'Muon1DZ < 0.2',
+            'Muon2DZ < 0.2',
+        ],
+        'num' : [
+            'Muon2_MuID_WWID > 0.5',
+            'Muon2_MuRelIso < 0.1',
+        ]
+    },
     'e' : {
         'ntuple' : 'em',
         'pd' : 'data_MuEG',
@@ -193,8 +221,6 @@ fakerates = {
         'final_cuts' : [
         ],
         'denom' : [
-            'IsoMus_HLT > 0.5',
-            'Muon2Pt > 24',
             'Mu17Ele8All_HLT > 0.5',
             'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 9',
@@ -205,6 +231,44 @@ fakerates = {
             #'Electron_MissingHits < 0.5',
         ],
         'num' : [
+            'Electron_EID_WWID > 0.5',
+            'Electron_ERelIso < 0.3',
+        ]
+    },
+    'eMIT' : {
+        'ntuple' : 'em',
+        'pd' : 'data_MuEG',
+        'exclude' : ['*DoubleE*', '*SingleMu*', '*DoubleMu*'],
+        'mc_pd' : 'Wjets',
+        'varname' : 'EJetPt',
+        'vartitle' : 'Electron Jet Pt',
+        'var' : 'Electron_JetPt',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'evtType' : 'e#mu',
+        'base_cuts' : wjets_selection_emu,
+        'control_plots' : [
+            ('Njets', 'NjetsPt20_Njets',
+             "Number of jets", [10, -0.5, 9.5]),
+            #('Nhits', 'Electron_MissingHits',
+             #"Number of hits", [10, -0.5, 9.5]),
+            ('AbsIso', 'Electron_ERelIso*ElectronPt',
+             "Absolute Iso", [100, 0, 20]),
+        ],
+        'final_cuts' : [
+        ],
+        'denom' : [
+            'Mu17Ele8All_HLT > 0.5',
+            'ElectronCharge*Muon2Charge > 0',
+            'ElectronPt > 9',
+            'ElectronAbsEta < 2.5',
+            'Electron_EBtag < 3.3',
+            'Muon2DZ < 0.2',
+            'ElectronDZ < 0.2',
+            #'Electron_MissingHits < 0.5',
+        ],
+        'num' : [
+            mva_cut,
             'Electron_EID_WWID > 0.5',
             'Electron_ERelIso < 0.3',
         ]
@@ -242,18 +306,53 @@ fakerates = {
             'Electron_EID_WWID > 0.5',
             'Electron_ERelIso < 0.3',
         ]
+    },
+    'eQCDMIT' : {
+        'ntuple' : 'em',
+        'pd' : 'data_MuEG',
+        'exclude' : ['*DoubleE*', '*SingleMu*', '*DoubleMu*'],
+        'mc_pd' : 'QCDMu',
+        'varname' : 'EJetPt',
+        'vartitle' : 'Electron Jet Pt',
+        'var' : 'Electron_JetPt',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'evtType' : 'e#mu',
+        'base_cuts' : qcd_selection_emu,
+        'control_plots' : [
+            ('Nhits', 'Electron_MissingHits',
+             "Number of hits", [10, -0.5, 9.5]),
+            ('AbsIso', 'Electron_ERelIso*ElectronPt',
+             "Absolute Iso", [100, 0, 20]),
+        ],
+        'final_cuts' : [],
+        'denom' : [
+            'Mu17Ele8All_HLT > 0.5',
+            'ElectronCharge*Muon2Charge > 0',
+            'ElectronPt > 9',
+            'ElectronAbsEta < 2.5',
+            'Electron_EBtag < 3.3',
+            'Muon2DZ < 0.2',
+            'ElectronDZ < 0.2',
+            #'Electron_MissingHits < 0.5',
+        ],
+        'num' : [
+            mva_cut,
+            'Electron_EID_WWID > 0.5',
+            'Electron_ERelIso < 0.3',
+        ]
     }
 }
 
 output_file = ROOT.TFile("results_singleMuFakeRates.root", "RECREATE")
 for data_set, skips, int_lumi in [
-    ('2011A', ['2011B', 'EM',], 2170),
+    #('2011A', ['2011B', 'EM',], 2170),
     #('2011B', ['2011A', 'EM'], 2170),
     ('2011AB', ['EM',], 4600) ]:
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'Mu', '2011-11-18-v1-MuonTP', 'scratch_results', int_lumi, skips,
+        'Mu', '2011-11-24-v1-MuonTP', 'scratch_results', int_lumi, skips,
         count = '/mm/skimCounter', unweighted = False)
 
     legend = plotter.build_legend(

@@ -74,6 +74,24 @@ object_config = {
         'function' : muon_fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
     },
+    'muTight' : {
+        'scenarios' : {
+            'SingleMu_Wjets' : {
+                'title' : 'W+jet_{#mu} (Single Mu)',
+                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muTight'),
+                'rebin' : 5,
+            },
+            'SingleMu_QCD' : {
+                'title' : 'QCD (Single Mu)',
+                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muQCDTight'),
+                'rebin' : 1,
+            },
+        },
+        'rebin' : 1,
+        'fit_label' : 'Combined Fit',
+        'function' : muon_fit_func,
+        'label' : 'Jet #rightarrow #mu fake rate',
+    },
     'e' : {
         'scenarios' : {
             'SingleMu_Wjets' : {
@@ -91,6 +109,25 @@ object_config = {
                 'title' : 'Z#mu #mu + jet_{#mu} (Double Mu)',
                 'histos' : get_histograms(trilepton_fr_file, '2011AB', 'e'),
                 'rebin' : 5,
+                'exclude' : True,
+            },
+        },
+        'rebin' : 5,
+        'fit_label' : 'Wjets Fit',
+        'function' : muon_fit_func,
+        'label' : 'Jet #rightarrow e fake rate',
+    },
+    'eMIT' : {
+        'scenarios' : {
+            'SingleMu_Wjets' : {
+                'title' : 'W+jet_{#mu} (Single Mu)',
+                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'eMIT'),
+                'rebin' : 5,
+            },
+            'SingleMu_QCD' : {
+                'title' : 'QCD (Single Mu)',
+                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'eQCDMIT'),
+                'rebin' : 1,
                 'exclude' : True,
             },
         },
