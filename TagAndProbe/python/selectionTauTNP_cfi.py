@@ -66,7 +66,7 @@ from FinalStateAnalysis.Selectors.plotBuilder import makePlots
 all_plots, ntuple = makePlots(leg1, leg2, triggers=triggers, puWeights=puWeights)
 
 # Add an extra plot of the mass using the tau jet pt and the muon
-ntuple.muTauJetMass = cms.string("subcand('@,jet_nom').get.mass")
+ntuple.muTauJetMass = cms.string("subcand('@,patJet').get.mass")
 
 # Split into OS/SS regions
 plots = cms.PSet(
