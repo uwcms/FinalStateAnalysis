@@ -82,12 +82,12 @@ datadefs = {
     ############################################################################
     #### VGamma background datasets         ####################################
     ############################################################################
-    #'VGjets' : {
-        #'datasetpath' : '/GVJets_7TeV-madgraph/Summer11-PU_S4_START42_V11-v1/AODSIM',
-        #'x_sec' : 56.64*_picobarns,
-        #'pu' : 'S4',
-        #'analyses' : ['HTT', 'VH'],
-    #},
+    'VGjets' : {
+        'datasetpath' : '/GVJets_7TeV-madgraph/Summer11-PU_S4_START42_V11-v1/AODSIM',
+        'x_sec' : 56.64*_picobarns,
+        'pu' : 'S4',
+        'analyses' : ['HTT', 'VH'],
+    },
 
     ############################################################################
     #### Diboson datasets                   ####################################
