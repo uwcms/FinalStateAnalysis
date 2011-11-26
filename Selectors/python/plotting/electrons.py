@@ -103,6 +103,50 @@ missingHits = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+cicLoose = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(10.5),
+    nbins = cms.untracked.int32(11),
+    name = cms.untracked.string("${name}_cicLoose"),
+    description = cms.untracked.string("${nicename} cicLoose"),
+    plotquantity = cms.untracked.string(
+        '${getter}electronID("cicLoose")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+cicMedium = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(10.5),
+    nbins = cms.untracked.int32(11),
+    name = cms.untracked.string("${name}_cicMedium"),
+    description = cms.untracked.string("${nicename} cicMedium"),
+    plotquantity = cms.untracked.string(
+        '${getter}electronID("cicMedium")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+cicTight = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(10.5),
+    nbins = cms.untracked.int32(11),
+    name = cms.untracked.string("${name}_cicTight"),
+    description = cms.untracked.string("${nicename} cicTight"),
+    plotquantity = cms.untracked.string(
+        '${getter}electronID("cicTight")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+cicHyperTight = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(10.5),
+    nbins = cms.untracked.int32(11),
+    name = cms.untracked.string("${name}_cicHyperTight1"),
+    description = cms.untracked.string("${nicename} cicHyperTight1"),
+    plotquantity = cms.untracked.string(
+        '${getter}electronID("cicHyperTight1")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 # Add all the interesting electron trigger filter matchings
 hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter = get_trigger_matching(
     'hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter')
@@ -118,6 +162,7 @@ hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter = get_trigger_matching(
 
 all = [
     reliso, wwid, mitid, jetPt, btag, btagmuon, missingHits,
+    cicLoose, cicMedium, cicTight, cicHyperTight,
     hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter,
     hltMu17Ele8CaloIdTPixelMatchFilter,
     hltL1NonIsoHLTNonIsoMu8Ele17PixelMatchFilter,
