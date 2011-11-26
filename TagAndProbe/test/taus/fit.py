@@ -84,8 +84,8 @@ result.Print("v")
 
 canvas = ROOT.TCanvas("asdf", "adsf", 800, 600)
 
-stack = ['*_ztt_*', '*qcd*', '*wjets*',  '*_zjetsfakes_*', '*ttbar*',]
-stack_names = ['Z#tau#tau', 'QCD', 'W+jets',  'Z+jets (fake)', 'tt+jets',]
+stack = ['*_ztt_*', '*qcd*', '*wjets*',  '*_zjetsfakes_*', '*ttbar*', '*_zll_*']
+stack_names = ['Z#tau#tau', 'QCD', 'W+jets',  'Z+jets (fake)', 'tt+jets', 'Z#mu#mu']
 color_names = [
     'ewk_yellow',
     'ewk_orange',

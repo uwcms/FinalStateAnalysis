@@ -136,6 +136,16 @@ def build_model(workspace, init_vals):
     ws.factory('RooGaussian::n_zjetsfakes_os_fail_con(n_zjetsfakes_os_fail_scale, 1., 0.05)')
 
     # ##############################################################################
+    # Zll fakes yields in all regions
+    # ##############################################################################
+
+    ws.factory('prod::n_zll_os_pass(n_zll_os_pass_scale[1.0, 0.0, 50],'
+               'n_zll_pass_init[%f])' % max(150, init_vals['n_zll_os_pass']))
+
+    # Constraint
+    ws.factory('RooGaussian::n_zll_os_pass_con(n_zll_os_pass_scale, 1., 0.65)')
+
+    # ##############################################################################
     # ttbar yields
     # ##############################################################################
 
@@ -164,6 +174,8 @@ def build_model(workspace, init_vals):
         if 'ss_fail' in region:
             continue
         yield_sum_list = []
+        if 'os_pass' in region:
+            yield_sum_list.append('n_zll_os_pass')
         for sample in ['ztt', 'qcd', 'wjets', 'ttbar', 'zjetsfakes']:
             yield_num = 'n_%s_%s' % (sample, region)
             yield_sum_list.append(yield_num)
@@ -178,8 +190,11 @@ def build_model(workspace, init_vals):
             if 'ss_fail' in region:
                 continue
             pdf_product_list = []
+            samples = ['ztt', 'qcd', 'wjets', 'ttbar', 'zjetsfakes']
+            if 'os_pass' in region:
+                samples.append('zll')
             # SUM::name(f1*pdf1,f2*pdf2,f3*pdf3)
-            for sample in ['ztt', 'qcd', 'wjets', 'ttbar', 'zjetsfakes']:
+            for sample in samples:
                 yield_var_name = 'n_%s_%s' % (sample, region)
                 pdf_name = 'pdf_%s_%s_%s' % (sample, region, var.GetName())
                 pdf_product_list.append("%s*%s" % (yield_var_name, pdf_name))

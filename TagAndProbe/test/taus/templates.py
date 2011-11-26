@@ -4,6 +4,7 @@ import math
 import logging
 import ROOT
 import pprint
+import random
 
 import FinalStateAnalysis.Utilities.RooFitTools as rft
 from FinalStateAnalysis.Utilities.Histo import Histo
@@ -340,19 +341,30 @@ def build_templates(ws):
     ## #########################################################################
     ##  Everything comes from MC, not splitting pass/fail
     #for var in ['abstaueta', 'pzeta', 'mvis', 'dca', 'pt', 'dm', 'iso', 'mt']:
-        #for region in regions:
-            ## Get the anti-iso region
-            #histo = get_th1(
-                #'zll', 'sig' + folder_map_noid[region], var_map[var],
-                #rebin=rebinning[var]*rebinning_region[region])
-            ## Get as roodatahist.  We need to keep this, because other wise
-            ## the GC will kill it and the PDF references it.
-            #datahist, datapdf = histo.makeRooHistPdf(rooVars[var])
-            #pdf_name = 'pdf_zll_%s_%s' % (region, rooVars[var].GetName())
-            #datahist_name = pdf_name + '_hist'
-            #datapdf.SetName(pdf_name)
-            #datahist.SetName(datahist_name)
-            #importer(datapdf)
+    for var in ['mvis', 'mt', 'charge', 'dm', 'abstaueta']:
+        for region in regions:
+            # We can only take from the sigOS
+            folder = 'sigOS'
+            histo = get_th1(
+                'zjets', 'sig' + folder + '/lepTau', var_map[var],
+                rebin=rebinning[var]*rebinning_region[region])
+            histo.th1.Reset()
+            for i in range(1e5):
+                if var == 'mvis':
+                    histo.Fill(random.gauss(91, 4))
+                elif var == 'charge':
+                    histo.Fill(random.choice([-1, 1]))
+                else:
+                    histo.Fill(random.gauss(90, 90))
+
+            # Get as roodatahist.  We need to keep this, because other wise
+            # the GC will kill it and the PDF references it.
+            datahist, datapdf = histo.makeRooHistPdf(rooVars[var])
+            pdf_name = 'pdf_zll_%s_%s' % (region, rooVars[var].GetName())
+            datahist_name = pdf_name + '_hist'
+            datapdf.SetName(pdf_name)
+            datahist.SetName(datahist_name)
+            importer(datapdf)
 
     # #########################################################################
     # Make ttbar templates
@@ -500,6 +512,8 @@ def get_initial_sizes(fit_fail_ss = False, fit_pass_ss = True):
             output['data_exp_wjets_os_pass_err'])/output['n_wjets_all_pass']
 
     output['n_wjets_os_fail'] = output['data_exp_wjets_os_fail']
+
+    output['n_zll_os_pass'] = get_th1('zjets', 'sigPassOS/lepTau', 'AbsTauEta').Integral()
 
     return output
 

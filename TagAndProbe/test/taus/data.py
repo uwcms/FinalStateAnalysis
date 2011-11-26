@@ -9,6 +9,7 @@ skips = ['2011B', 'EM',  ]
 
 data_sample, plotter = data.build_data(
     'Tau', '2011-10-28-v2-TauTNP', 'scratch_results', 1551, skips,
+    #'Tau', '2011-11-23-v1-TauTNP', 'scratch_results', 1551, skips,
     count = '/mt/skimCounter', unweighted = False)
 
 base_selections = [
@@ -61,15 +62,20 @@ realTau = [
 ]
 
 fakeTau = [
-    'Tau_GenDecayMode < -0.5'
+    'Tau_GenDecayMode < -1.5'
+]
+
+lepTau = [
+    'Tau_GenDecayMode < -0.5',
+    'Tau_GenDecayMode > -1.5',
 ]
 
 highPu = [
-    'FinalState_NVtx > 7.5'
+    'FinalState_NVtx > 5.5'
 ]
 
 lowPu = [
-    'FinalState_NVtx < 7.5'
+    'FinalState_NVtx < 5.5'
 ]
 
 # Map histo names in template.py to the string needed to draw them
@@ -119,6 +125,8 @@ def get_th1(sample, region, histo, **kwargs):
         selections += realTau
     if 'fakeTau' in region:
         selections += fakeTau
+    if 'lepTau' in region:
+        selections += lepTau
 
     if 'lowPu' in region:
         selections += lowPu
