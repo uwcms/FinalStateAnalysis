@@ -106,16 +106,16 @@ void PATObjectJetInfoEmbedder<T>::produce(
         eta = closestJet->eta();
       }
 
-      edm::LogWarning("BadJetMatch") << "Couldn't find a jet close to the"
-        << " object in PATObjectJetInfoEmbedder. "
-        << "The object jetref has (pt/eta/phi): ("
-        << objectP4.pt() << "/" << objectP4.eta() << "/" << objectP4.phi()
-        << ") and the closest jet (out of " << jets->size()
-        //<< ", " << recoJets->size() << ", " << pfCands->size()
-        << ") is at "
-        << phi << "/" << eta
-        << "/" << pt
-        << ") giving a deltaR of " << closestDeltaR << std::endl;
+//      edm::LogWarning("BadJetMatch") << "Couldn't find a jet close to the"
+//        << " object in PATObjectJetInfoEmbedder. "
+//        << "The object jetref has (pt/eta/phi): ("
+//        << objectP4.pt() << "/" << objectP4.eta() << "/" << objectP4.phi()
+//        << ") and the closest jet (out of " << jets->size()
+//        //<< ", " << recoJets->size() << ", " << pfCands->size()
+//        << ") is at "
+//        << phi << "/" << eta
+//        << "/" << pt
+//        << ") giving a deltaR of " << closestDeltaR << std::endl;
 
       // Null jet
       object.addUserCand("patJet" + suffix_, reco::CandidatePtr());
