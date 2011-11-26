@@ -54,7 +54,7 @@ void ElectronIDMVA::Initialize( std::string methodName,
   for(UInt_t i=0; i<6; ++i) {
     if (fTMVAReader[i]) delete fTMVAReader[i];
 
-    fTMVAReader[i] = new TMVA::Reader( "!Color:!Silent:Error" );
+    fTMVAReader[i] = new TMVA::Reader( "!Color:Silent:Error" );
     fTMVAReader[i]->SetVerbose(kTRUE);
 
     if (type == kBaseline) {
