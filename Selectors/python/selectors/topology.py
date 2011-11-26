@@ -29,7 +29,7 @@ z_veto = cms.PSet(
 mtMetCut = cms.PSet(
     name = cms.string("${name}_MET_M_{T}"),
     description = cms.string("$nicename-MET M_{T}"),
-    cut = cms.string('mtMET(${index}) < ${threshold}'),
-    plottable = cms.string('mtMET(${index})'),
+    cut = cms.string('mtMET(${index}, "raw") < ${threshold}'),
+    plottable = cms.string('mtMET(${index}, "raw")'),
     invert = cms.bool(False),
 )
