@@ -91,7 +91,7 @@ void embedShift(pat::MET& met, edm::Event& evt,
 
   std::auto_ptr<ShiftedCandCollection> output(new ShiftedCandCollection);
   ShiftedCand newCand(met);
-  newCand.setP4(newCand.p4() + transverse(residual));
+  newCand.setP4(transverse(newCand.p4() + residual));
   output->push_back(newCand);
   PutHandle outputH = evt.put(output, branchName);
   met.addUserCand(embedName, CandidatePtr(outputH, 0));
@@ -251,6 +251,8 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     LorentzVector deltaMuons = nominalMuonP4 - uncorrMuonP4;
     outputMETP4 -= transverse(deltaMuons);
   }
+  // Make sure we haven't picked up a mass component
+  outputMETP4 = transverse(outputMETP4);
   outputMET.setP4(outputMETP4);
 
   embedShift(outputMET, evt, "metsMESUp", "mes+",
