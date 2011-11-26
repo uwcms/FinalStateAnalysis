@@ -3,7 +3,7 @@ import os
 import sys
 
 cfg = 'patTuple_cfg.py'
-jobId = '2011-11-08-EWKPatTuple'
+jobId = '2011-11-26-EWKPatTuple'
 
 print 'export TERMCAP=screen'
 for sample in sorted(datadefs.keys()):
@@ -45,7 +45,7 @@ for sample in sorted(datadefs.keys()):
     command = [
         'farmoutAnalysisJobs2',
         '--varparsing',
-        '--input-files-per-job=1',
+        '--input-files-per-job=2',
     ]
 
     command.extend(farmout_options)
