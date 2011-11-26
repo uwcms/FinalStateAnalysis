@@ -3,6 +3,7 @@
 Combine fake rates from many channels.
 
 '''
+import sys
 import logging
 log = logging.getLogger("combineFR")
 ch = logging.StreamHandler()
@@ -22,18 +23,19 @@ def get_histograms(file, data_set, fr_type):
     return Histo(num), Histo(denom)
 
 # Muon fit function
-muon_fit_func = ROOT.TF1("f1", "[0]*TMath::Landau(x,[1],[2],0)+[3]", 10, 200)
-muon_fit_func.SetParameter(0, 0.5)
-muon_fit_func.SetParLimits(0, 0.0, 10)
-muon_fit_func.SetParameter(1, 15)
-muon_fit_func.SetParameter(2, 1)
-muon_fit_func.SetParameter(3, 5e-3)
+fit_func_str = "[0]*TMath::Landau(x,[1],[2],0)+[3]"
+roo_fit_func_str = "scale*TMath::Landau(jetPt,mu,sigma,0)+offset"
+fit_func = ROOT.TF1("f1", "[0]*TMath::Landau(x,[1],[2],0)+[3]", 10, 200)
 
-elec_fit_func = ROOT.TF1("f1", "[0] + [1]*exp([2]*x)", 0, 200)
-elec_fit_func.SetParameter(0, 0.02)
-elec_fit_func.SetParLimits(0, 0.0, 1)
-elec_fit_func.SetParameter(1, 1.87)
-elec_fit_func.SetParameter(2, -9.62806e-02)
+fit_func.SetParameter(0, 0.5)
+fit_func.SetParName(0, "scale")
+fit_func.SetParLimits(0, 0.0, 10)
+fit_func.SetParameter(1, 15)
+fit_func.SetParName(1, "mu")
+fit_func.SetParameter(2, 1)
+fit_func.SetParName(2, "sigma")
+fit_func.SetParameter(3, 5e-3)
+fit_func.SetParName(3, "constant")
 
 object_config = {
     'mu' : {
@@ -71,7 +73,7 @@ object_config = {
         },
         'rebin' : 1,
         'fit_label' : 'Combined Fit',
-        'function' : muon_fit_func,
+        'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
     },
     'muTight' : {
@@ -89,7 +91,7 @@ object_config = {
         },
         'rebin' : 1,
         'fit_label' : 'Combined Fit',
-        'function' : muon_fit_func,
+        'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
     },
     'e' : {
@@ -114,7 +116,7 @@ object_config = {
         },
         'rebin' : 5,
         'fit_label' : 'Wjets Fit',
-        'function' : muon_fit_func,
+        'function' : fit_func,
         'label' : 'Jet #rightarrow e fake rate',
     },
     'eMIT' : {
@@ -133,7 +135,7 @@ object_config = {
         },
         'rebin' : 5,
         'fit_label' : 'Wjets Fit',
-        'function' : muon_fit_func,
+        'function' : fit_func,
         'label' : 'Jet #rightarrow e fake rate',
     },
 }
@@ -172,8 +174,6 @@ for object, object_info in object_config.iteritems():
         efficiency = ROOT.TGraphAsymmErrors(num.th1, denom.th1)
         type_info['efficiency'] = efficiency
 
-
-
     canvas.SetLogy(True)
 
     frame = ROOT.TH1F("frame", "Fake rate", 100, 0, 100)
@@ -190,6 +190,11 @@ for object, object_info in object_config.iteritems():
 
     data_fit_func.SetLineColor(ROOT.EColor.kRed)
 
+    ############################################################################
+    ### Fit using regular ROOT  ################################################
+    ############################################################################
+
+    log.info("Fitting using ROOT")
     combined_eff.Fit(data_fit_func)
     frame.Draw()
     combined_eff.Draw("p")
@@ -214,6 +219,85 @@ for object, object_info in object_config.iteritems():
     canvas.SaveAs("plots/combineFakeRates/%s_combined_eff.pdf" % object)
     canvas.SetLogy(False)
     canvas.SaveAs("plots/combineFakeRates/%s_combined_eff_lin.pdf" % object)
+
+    ############################################################################
+    ### Fit using RooFit  ######################################################
+    ############################################################################
+    log.info("Fitting using RooFit")
+    # following http://root.cern.ch/root/html/tutorials/roofit/rf701_efficiencyfit.C.html
+    jet_pt = ROOT.RooRealVar("jetPt", "Jet Pt", 1, 0, 100, "GeV")
+    # Fit function parameters
+    scale = ROOT.RooRealVar("scale", "Landau Scale", 0.5, 0, 10)
+    mu = ROOT.RooRealVar("mu", "Landau #mu", 15, 0, 100)
+    sigma = ROOT.RooRealVar("sigma", "Landau #sigma", 1, 0, 10)
+    constant = ROOT.RooRealVar("offset", "constant", 1.0e-2, 0, 1)
+
+    roo_fit_func = ROOT.RooFormulaVar(
+        "fake_rate", "Fake Rate", roo_fit_func_str,
+        ROOT.RooArgList(scale, mu, sigma, constant, jet_pt))
+
+    roo_cut = ROOT.RooCategory("cut", "cutr")
+    roo_cut.defineType("accept", 1)
+    roo_cut.defineType("reject", 0)
+
+    roo_eff = ROOT.RooEfficiency("fake_rate_pdf", "Fake Rate",
+                                 roo_fit_func, roo_cut, "accept")
+
+    combined_fail = combined_denom - combined_num
+
+    roo_pass = combined_num.makeRooDataHist(jet_pt)
+    roo_fail = combined_fail.makeRooDataHist(jet_pt)
+
+    roo_data = ROOT.RooDataHist(
+        "data", "data",
+        ROOT.RooArgList(jet_pt), ROOT.RooFit.Index(roo_cut),
+        ROOT.RooFit.Import("accept", roo_pass),
+        ROOT.RooFit.Import("reject", roo_fail),
+    )
+
+    fit_result = roo_eff.fitTo(
+        roo_data, ROOT.RooFit.ConditionalObservables(ROOT.RooArgSet(jet_pt)),
+        ROOT.RooFit.Save(True)
+    )
+
+    fit_result.Print("v")
+
+
+    roo_frame = jet_pt.frame(ROOT.RooFit.Title("Efficiency"))
+    roo_data.plotOn(roo_frame, ROOT.RooFit.Efficiency(roo_cut))
+    roo_fit_func.plotOn(roo_frame, ROOT.RooFit.LineColor(ROOT.EColor.kRed))
+
+    roo_pars = roo_fit_func.getParameters(ROOT.RooArgSet(jet_pt))
+    roo_pars.Print("v")
+
+    keep = []
+
+    for i in range(10):
+        break
+        log.info("Smearing parameters %i", i)
+        smeared_pars = fit_result.randomizePars()
+        # Create a non-owning list of arguments
+        non_owned = ROOT.RooArgList(smeared_pars)
+        non_owned.add(jet_pt)
+        smeared_fit = ROOT.RooFormulaVar(
+            "fake_rate_smeared_%i" % i, "Fake Rate", roo_fit_func_str,
+            non_owned)
+        smeared_fit.plotOn(roo_frame)
+        keep.append((smeared_fit, smeared_pars))
+
+    roo_frame.SetMinimum(1e-3)
+    roo_frame.SetMaximum(1.0)
+
+    roo_frame.Draw()
+
+    canvas.Update()
+
+    canvas.SetLogy(True)
+    canvas.SaveAs("plots/combineFakeRates/%s_combined_eff_roofit.pdf" % object)
+
+    ############################################################################
+    ### Compare all regions to fitted fake rate  ###############################
+    ############################################################################
 
     for type, type_info in scenarios.iteritems():
         eff = type_info['efficiency']

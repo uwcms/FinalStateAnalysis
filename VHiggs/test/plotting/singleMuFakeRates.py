@@ -228,7 +228,7 @@ fakerates = {
             'Electron_EBtag < 3.3',
             'Muon2DZ < 0.2',
             'ElectronDZ < 0.2',
-            #'Electron_MissingHits < 0.5',
+            'Electron_MissingHits < 0.5',
         ],
         'num' : [
             'Electron_EID_WWID > 0.5',
@@ -265,7 +265,7 @@ fakerates = {
             'Electron_EBtag < 3.3',
             'Muon2DZ < 0.2',
             'ElectronDZ < 0.2',
-            #'Electron_MissingHits < 0.5',
+            'Electron_MissingHits < 0.5',
         ],
         'num' : [
             mva_cut,
@@ -300,7 +300,7 @@ fakerates = {
             'Electron_EBtag < 3.3',
             'Muon2DZ < 0.2',
             'ElectronDZ < 0.2',
-            #'Electron_MissingHits < 0.5',
+            'Electron_MissingHits < 0.5',
         ],
         'num' : [
             'Electron_EID_WWID > 0.5',

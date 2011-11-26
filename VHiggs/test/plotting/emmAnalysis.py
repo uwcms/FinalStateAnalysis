@@ -17,10 +17,10 @@ log = logging.getLogger("emmChannel")
 ROOT.gROOT.SetBatch(True)
 
 #Define the fake rate versus muon pt
-FAKE_RATE_0 = 3.174
-FAKE_RATE_1 = 14.99
-FAKE_RATE_2 = 2.47
-FAKE_RATE_3 = 6.75e-3
+FAKE_RATE_0 = 1.47
+FAKE_RATE_1 = 13.4
+FAKE_RATE_2 = 1.56
+FAKE_RATE_3 = 8.19e-3
 
 FAKE_RATE = "(%0.4f*TMath::Landau(VAR, %0.4f, %0.4f,0)+%0.4f)" % (
     FAKE_RATE_0, FAKE_RATE_1, FAKE_RATE_2, FAKE_RATE_3)
@@ -36,7 +36,7 @@ base_selection = [
     'Mu2Pt > 9',
     'Mu1AbsEta < 2.1',
     'Mu2AbsEta < 2.1',
-    'Mu1_MuRelIso < 0.3',
+    'Mu1_MuRelIso < 0.1',
     'Mu1_MuID_WWID > 0.5',
     'DoubleMus_HLT > 0.5 ',
 
@@ -67,11 +67,11 @@ passes_vtx = [
 ]
 
 bkg_enriched = [
-    '(Mu2_MuRelIso > 0.3 || Mu2_MuID_WWID < 0.5)'
+    '(Mu2_MuRelIso > 0.1 || Mu2_MuID_WWID < 0.5)'
 ]
 
 final_selection = [
-    'Mu2_MuRelIso < 0.3',
+    'Mu2_MuRelIso < 0.1',
     'Mu2_MuID_WWID > 0.5',
 ]
 
@@ -124,7 +124,7 @@ selections = {
 skips = ['MuEG', 'DoubleEl', 'EM',]
 int_lumi = 4600
 samples, plotter = data_tool.build_data(
-    'VH', '2011-11-13-v1-WHAnalyze', 'scratch_results',
+    'VH', '2011-11-24-v1-WHAnalyze', 'scratch_results',
     int_lumi, skips, count='emt/skimCounter')
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)

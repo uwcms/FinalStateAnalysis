@@ -75,6 +75,7 @@ variables = {
     #'Muon1_MtToMET' : ('Muon1_MtToMET', 'M_{T} #mu(1)-#tau', [60, 0, 300],),
 #    'Muon2_MtToMET' : ('Muon2_MtToMET', 'M_{T} #mu(2)-#tau', [100, 0, 300],),
     'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NODF', [100, 0, 30],),
+    'electronMVA' : ('Elec_EID_MITID', 'MIT ID', [100, -2, 2],),
 #    'MET' : ('METPt', 'MET', [100, 0, 200]),
     'HT' : ('VisFinalState_Ht', 'H_{T}', [60, 0, 300]),
 }
@@ -96,9 +97,9 @@ selections = {
         'select' : base_selection + passes_ht,
         'title' : "Base Selection + H_{T}",
         'vars' : [
-            'DiMuonMass',
+            #'DiMuonMass',
             'MuTauMass',
-            'Muon1_MtToMET',
+            #'Muon1_MtToMET',
             'vtxChi2NODF',
         ],
     },
@@ -117,15 +118,16 @@ selections = {
             'ETauMass',
             'Muon1_MtToMET',
             'vtxChi2NODF',
+            'electronMVA',
         ],
     },
 }
 
 # Samples we aren't interested in
-skips = ['DoubleEl', 'EM', ]
+skips = ['DoubleEl', 'EM', 'DoubleMu']
 int_lumi = 4600
 samples, plotter = data_tool.build_data(
-    'VH', '2011-11-13-v1-WHAnalyze', 'scratch_results',
+    'VH', '2011-11-24-v1-WHAnalyze', 'scratch_results',
     int_lumi, skips, count='emt/skimCounter')
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
@@ -150,6 +152,21 @@ def saveplot(filename):
 lumi = plotter.get_histogram( 'data_MuEG', '/emt/intLumi',)
 lumi.Draw()
 saveplot('intlumi')
+
+################################################################################
+###  Get final run event numbers           #####################################
+################################################################################
+
+log.info("Saving run-event numbers for final selected events")
+# Get run/evt numbers for final event selection
+all_cuts = ' && '.join(selections['final']['select'] + final_selection)
+plotter.scan_to_file(
+    'emt_channel_evts',
+    '/emt/final/Ntuple',
+    'run:lumi:evt',
+    all_cuts,
+    include = '*data*'
+)
 
 # Data card output
 data_card_file = ROOT.TFile("emt_shapes.root", 'RECREATE')

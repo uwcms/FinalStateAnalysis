@@ -142,7 +142,7 @@ selections = {
 skips = ['MuEG', 'DoubleEl', 'EM',]
 int_lumi = 4600
 samples, plotter = data_tool.build_data(
-    'VH', '2011-11-13-v1-WHAnalyze', 'scratch_results',
+    'VH', '2011-11-24-v1-WHAnalyze', 'scratch_results',
     int_lumi, skips, count='emt/skimCounter')
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
@@ -167,6 +167,21 @@ def saveplot(filename):
 lumi = plotter.get_histogram( 'data_DoubleMu', '/mmt/intLumi',)
 lumi.Draw()
 saveplot('intlumi')
+
+################################################################################
+###  Get final run event numbers           #####################################
+################################################################################
+
+log.info("Saving run-event numbers for final selected events")
+# Get run/evt numbers for final event selection
+all_cuts = ' && '.join(selections['final']['select'] + final_selection)
+plotter.scan_to_file(
+    'mmt_channel_evts',
+    '/mmt/final/Ntuple',
+    'run:lumi:evt',
+    all_cuts,
+    include = '*data*'
+)
 
 # Data card output
 data_card_file = ROOT.TFile("mmt_shapes.root", 'RECREATE')
