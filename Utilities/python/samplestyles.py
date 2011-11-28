@@ -45,6 +45,10 @@ SAMPLE_STYLES = {
         'color' : styling.colors['light_blue'],
         'nicename' : 'WW',
     },
+    'VGamma' : {
+        'color' : styling.colors['ewk_purple'],
+        'nicename' : 'V#gamma',
+    },
     'data*' : {
         'marker_style' : 20,
         'marker_size' : 1,
