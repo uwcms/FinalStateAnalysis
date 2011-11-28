@@ -123,6 +123,14 @@ The following electron IDs are embedded as as eIDs (pat defaults):
 * ``cicSuperTight --> eidSuperTight``
 * ``cicMedium --> eidMedium``
 
+The following electron MVA ID related information is embedded:
+
+* ``hasConversion``
+* ``missingHits`` - number of missing hits 
+* ``idDZ`` - dz used for MVA id
+* ``MVA`` - raw MVA value
+* ``MITID`` - MIT MVA ID working point binary value
+
 The following IP information is embedded as userFloats: 
 * ``ipDXY``
 * ``dz``
