@@ -30,6 +30,8 @@ data_name_map = {
 
     'ttjets': ['TTplusJets_madgraph'],
 
+    'VGamma': ['VGjets'],
+
     'VH100' : ['VH_100'],
     'VH110' : ['VH_110'],
     'VH115' : ['VH_115'],
@@ -86,7 +88,7 @@ datadefs = {
         'datasetpath' : '/GVJets_7TeV-madgraph/Summer11-PU_S4_START42_V11-v1/AODSIM',
         'x_sec' : 56.64*_picobarns,
         'pu' : 'S4',
-        'analyses' : ['HTT', 'VH'],
+        'analyses' : ['Mu', 'VH'],
     },
 
     ############################################################################
