@@ -8,3 +8,5 @@ do_.*.txt
 .*.log
 .*.txt
 .*.tgz
+.*card.*json
+.*\.card
