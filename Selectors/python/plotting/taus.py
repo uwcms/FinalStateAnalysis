@@ -92,5 +92,15 @@ genDecayMode = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+againstElectronMVA = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(0.5),
+    nbins = cms.untracked.int32(2),
+    name = cms.untracked.string("${name}_ElectronMVA"),
+    description = cms.untracked.string("${nicename} anti electron MVA"),
+    plotquantity = cms.untracked.string('${getter}tauID("againstElectronMVA")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 all = [decayMode, decayFinding, vlooseID, looseID, mediumID, jetpt, btag,
-       tnpPresel, genDecayMode]
+       tnpPresel, genDecayMode, againstElectronMVA]

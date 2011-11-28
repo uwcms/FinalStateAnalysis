@@ -46,6 +46,14 @@ mitid = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+hasConversion = cms.PSet(
+    _binary_bins,
+    name = cms.untracked.string("${name}_hasConversion"),
+    description = cms.untracked.string("${nicename} Electron has conversion"),
+    plotquantity = cms.untracked.string('${getter}userFloat("hasConversion")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 reliso = cms.PSet(
     min = cms.untracked.double(0.0),
     max = cms.untracked.double(2),
@@ -162,6 +170,7 @@ hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter = get_trigger_matching(
 
 all = [
     reliso, wwid, mitid, jetPt, btag, btagmuon, missingHits,
+    hasConversion,
     cicLoose, cicMedium, cicTight, cicHyperTight,
     hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter,
     hltMu17Ele8CaloIdTPixelMatchFilter,

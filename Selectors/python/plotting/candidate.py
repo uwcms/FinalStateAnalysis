@@ -62,9 +62,7 @@ dz = cms.PSet(
     nbins = cms.untracked.int32(100),
     name = cms.untracked.string("${name}DZ"),
     description = cms.untracked.string("${nicename} #Delta_{PV}"),
-    plotquantity = cms.untracked.string(
-        "abs(${getter}vertex().z() - evt.pv.position.z)",
-    ),
+    plotquantity = cms.untracked.string( '${getter}userFloat("dz")'),
     lazyParsing = cms.untracked.bool(True),
 )
 
@@ -80,7 +78,17 @@ mass = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+ip3Ds = cms.PSet(
+    min = cms.untracked.double(0),
+    max = cms.untracked.double(30),
+    nbins = cms.untracked.int32(100),
+    name = cms.untracked.string("${name}IPDS"),
+    description = cms.untracked.string("${nicename} IP3D S"),
+    plotquantity = cms.untracked.string( '${getter}userFloat("ip3DS")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 # Collect the common ones
 all = [
-    pt, phi, eta, abseta, charge, genPdgId, dz, mass
+    pt, phi, eta, abseta, charge, genPdgId, dz, mass, ip3Ds
 ]

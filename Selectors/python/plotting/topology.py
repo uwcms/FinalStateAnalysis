@@ -71,7 +71,7 @@ mtMET = cms.PSet(
     nbins = cms.untracked.int32(100),
     name = cms.untracked.string("${name}_MtToMET"),
     description = cms.untracked.string("${nicename} M_{T} with MET"),
-    plotquantity = cms.untracked.string("mtMET(${index}, 'unsmeared')"),
+    plotquantity = cms.untracked.string("mtMET(${index})"),
 )
 
 ht = cms.PSet(
