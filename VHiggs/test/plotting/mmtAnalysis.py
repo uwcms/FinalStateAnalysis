@@ -83,14 +83,16 @@ final_selection = [
 ]
 
 variables = {
-    'DiMuonMass' : ('Muon1_Muon2_Mass', 'M_{#mu#mu}', [100, 0, 300],),
-    'MuTauMass' : ('Muon2_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300],),
-    'Muon1_MtToMET' : ('Muon1_MtToMET', 'M_{T} #mu(1)-#tau', [60, 0, 300],),
-    'Muon2_Btag' : ('Muon2_MuBtag', 'Sub leading mu btag', [120, -30, 30],),
+    'DiMuonMass' : ('Muon1_Muon2_Mass', 'M_{#mu#mu}', [100, 0, 300], 5),
+    'MuTauMass' : ('Muon2_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300], 5),
+    'Muon1_MtToMET' : ('Muon1_MtToMET', 'M_{T} #mu(1)-#tau', [60, 0, 300], 5),
+    'Muon2_Btag' : ('Muon2_MuBtag', 'Sub leading mu btag', [120, -30, 30], 5),
 #    'Muon2_MtToMET' : ('Muon2_MtToMET', 'M_{T} #mu(2)-#tau', [100, 0, 300],),
-    'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NODF', [100, 0, 30],),
+    'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NODF', [100, 0, 30], 5),
 #    'MET' : ('METPt', 'MET', [100, 0, 200]),
-    'HT' : ('VisFinalState_Ht', 'H_{T}', [60, 0, 300]),
+    'Njets' : ('NjetsPt20_Njets', 'N_{jets}', [10, -0.5, 9.5], 1),
+    'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 5),
+    'count' : ('1', 'Count', [1, 0, 1], 1),
 }
 
 selections = {
@@ -98,13 +100,13 @@ selections = {
         'select' : base_selection,
         'title' : "Base Selection",
         'vars' : [
-            'DiMuonMass',
-            'MuTauMass',
-            'Muon1_MtToMET',
-            'Muon2_Btag',
-            'MET',
-            'HT',
-            'vtxChi2NODF',
+            #'DiMuonMass',
+            #'MuTauMass',
+            #'Muon1_MtToMET',
+            #'Muon2_Btag',
+            #'MET',
+            #'HT',
+            #'vtxChi2NODF',
         ],
     },
     'with_ht' : {
@@ -134,6 +136,8 @@ selections = {
             'Muon1_MtToMET',
             'vtxChi2NODF',
             'Muon2_Btag',
+            'Njets',
+            'count',
         ],
     },
 }
@@ -142,7 +146,7 @@ selections = {
 skips = ['MuEG', 'DoubleEl', 'EM',]
 int_lumi = 4600
 samples, plotter = data_tool.build_data(
-    'VH', '2011-11-24-v1-WHAnalyze', 'scratch_results',
+    'VH', '2011-11-27-v1-WHAnalyze', 'scratch_results',
     int_lumi, skips, count='emt/skimCounter')
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
@@ -217,7 +221,7 @@ for selection, selection_info in selections.iteritems():
         if var not in variables:
             print "Skipping", var
             continue
-        draw_str, x_title, binning = variables[var]
+        draw_str, x_title, binning, rebin = variables[var]
 
         # The "Loose" selection
         plotter.register_tree(
@@ -264,8 +268,6 @@ for selection, selection_info in selections.iteritems():
         legend = plotter.build_legend(
             '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf',
             xlow = 0.6, ylow=0.5,)
-
-        rebin = 5
 
         ##########################################
         # Compute results using MC in loose region

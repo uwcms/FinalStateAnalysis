@@ -94,6 +94,25 @@ object_config = {
         'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
     },
+    'muHighPt' : {
+        'scenarios' : {
+            'SingleMu_Wjets' : {
+                'title' : 'W+jet_{#mu} (Single Mu)',
+                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muHighPt'),
+                'rebin' : 5,
+            },
+            'SingleMu_QCD' : {
+                'title' : 'QCD (Single Mu)',
+                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muQCDHighPt'),
+                'rebin' : 5,
+                'exclude' : True,
+            },
+        },
+        'rebin' : 5,
+        'fit_label' : 'Combined Fit',
+        'function' : fit_func,
+        'label' : 'Jet #rightarrow #mu fake rate',
+    },
     'e' : {
         'scenarios' : {
             'SingleMu_Wjets' : {
@@ -105,12 +124,6 @@ object_config = {
                 'title' : 'QCD (Single Mu)',
                 'histos' : get_histograms(singlemu_fr_file, '2011AB', 'eQCD'),
                 'rebin' : 1,
-                'exclude' : True,
-            },
-            'TriLep_ZMM' : {
-                'title' : 'Z#mu #mu + jet_{#mu} (Double Mu)',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'e'),
-                'rebin' : 5,
                 'exclude' : True,
             },
         },
@@ -131,6 +144,12 @@ object_config = {
                 'histos' : get_histograms(singlemu_fr_file, '2011AB', 'eQCDMIT'),
                 'rebin' : 1,
                 'exclude' : True,
+            },
+            'TriLep_ZMM' : {
+                'title' : 'Z#mu#mu + jet_{e}',
+                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'eMuEG'),
+                'rebin' : 10,
+                'exclude' : False,
             },
         },
         'rebin' : 5,

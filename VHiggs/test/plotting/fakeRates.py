@@ -44,20 +44,20 @@ base_dimuon_selection = [
     'METPt < 20',
 ]
 
-# We also look at Mu-Mu (SS) + Anti-Tau.  We require the leading muon to have a
-# good MT.
+# We also look at E-Mu OS + probe
 base_ttbar_selection = [
-    'Muon1Pt > 15',
-    'Muon2Pt > 9',
-    'Muon1AbsEta < 2.1',
-    'Muon2AbsEta < 2.1',
-    'Muon1_MuRelIso < 0.15',
-    'Muon1_MuID_WWID > 0.5',
+    'Mu1Pt > 18',
+    'ElecPt > 10',
+    'Mu1AbsEta < 2.1',
+    'Mu1_MuRelIso < 0.1',
+    'Mu1_MuID_WWID > 0.5',
+
+    'Elec_ERelIso < 0.15',
+    'Elec_EID_MITID > 0.5',
+    'NBjetsPt20_Nbjets > 0.5', # For ttbar
+
     'NIsoMuonsPt5_Nmuons < 1',
-    #'NBjetsPt20_Nbjets > 0', # For ttbar
-    'DoubleMus_HLT > 0.5 ',
-    'Muon1Charge*Muon2Charge > 0', # Same sign (to kill DY)
-    'Tau_LooseHPS < 0.5',
+    'ElecCharge*Mu1Charge < 0',
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
 ]
@@ -97,6 +97,11 @@ base_qcd_emm_selection = [
 
 # Stupid names are different, fix this
 base_dimuon_emm = [
+    x.replace('Muon1', 'Mu1').replace('Muon2', 'Mu2')
+    for x in base_dimuon_selection
+]
+
+base_ttbar_eem = [
     x.replace('Muon1', 'Mu1').replace('Muon2', 'Mu2')
     for x in base_dimuon_selection
 ]
@@ -189,12 +194,12 @@ fakerates = {
         ]
     },
     'muTTbar' : {
-        'ntuple' : 'mmt',
+        'ntuple' : 'emm',
         'pd' : 'data_DoubleMu',
         'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'ttjets',
         'varname' : 'MuJetPt',
-        'var' : 'Muon2_JetPt',
+        'var' : 'Mu2_JetPt',
         'vartitle' : 'Mu Jet p_{T}',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
@@ -203,15 +208,17 @@ fakerates = {
         'control_plots' : [],
         'final_cuts' : [],
         'denom' : [
-            'Muon1_MtToMET > 30',
-            'Muon2_MtToMET < 30',
+            'DoubleMus_HLT > 0.5',
+            'Mu1Charge*Mu2Charge > 0', # against DY
+            'Mu2Pt > 9',
+            'Mu2AbsEta < 2.1',
             'METPt > 20',
-            'Muon2_MuBtag < 3.3',
-            'Muon2_InnerNPixHits > 0.5',
+            'Mu2_MuBtag < 3.3',
+            'Mu2_InnerNPixHits > 0.5',
         ],
         'num' : [
-            'Muon2_MuID_WWID > 0.5',
-            'Muon2_MuRelIso < 0.3',
+            'Mu2_MuID_WWID > 0.5',
+            'Mu2_MuRelIso < 0.3',
         ]
     },
     'muQCD' : {
@@ -238,34 +245,34 @@ fakerates = {
             'Muon2_MuRelIso < 0.3',
         ]
     },
-    'e' : {
-        'ntuple' : 'emm',
-        'pd' : 'data_DoubleMu',
-        'exclude' : ['*DoubleE*', '*MuEG*'],
-        'mc_pd' : 'Zjets',
-        'varname' : 'EJetPt',
-        'var' : 'ElecPt + ElecPt*Elec_ERelIso',
-        'vartitle' : 'Electron Jet p_{T}',
-        'varbinning' : [100, 0, 100],
-        'rebin' : 5,
-        'evtType' : '#mu#mu + jet',
-        'base_cuts' : base_dimuon_emm,
-        'control_plots' : [],
-        'final_cuts' : [],
-        'denom' : [
-            'Mu17Ele8All_HLT > 0.5',
-            'ElecPt > 10',
-            'ElecAbsEta < 2.5',
-            'Mu1_Mu2_Mass > 86',
-            'Mu1_Mu2_Mass < 95',
-            'Elec_MtToMET < 30',
-            'NIsoElecPt10_Nelectrons < 0.5',
-        ],
-        'num' : [
-            'Elec_EID_WWID > 0.5',
-            'Elec_ERelIso < 0.3',
-        ]
-    },
+    #'e' : {
+        #'ntuple' : 'emm',
+        #'pd' : 'data_DoubleMu',
+        #'exclude' : ['*DoubleE*', '*MuEG*'],
+        #'mc_pd' : 'Zjets',
+        #'varname' : 'EJetPt',
+        #'var' : 'ElecPt + ElecPt*Elec_ERelIso',
+        #'vartitle' : 'Electron Jet p_{T}',
+        #'varbinning' : [100, 0, 100],
+        #'rebin' : 5,
+        #'evtType' : '#mu#mu + jet',
+        #'base_cuts' : base_dimuon_emm,
+        #'control_plots' : [],
+        #'final_cuts' : [],
+        #'denom' : [
+            #'Mu17Ele8All_HLT > 0.5',
+            #'ElecPt > 10',
+            #'ElecAbsEta < 2.5',
+            #'Mu1_Mu2_Mass > 86',
+            #'Mu1_Mu2_Mass < 95',
+            #'Elec_MtToMET < 30',
+            #'NIsoElecPt10_Nelectrons < 0.5',
+        #],
+        #'num' : [
+            #'Elec_EID_WWID > 0.5',
+            #'Elec_ERelIso < 0.3',
+        #]
+    #},
     'eMuEG' : {
         'ntuple' : 'emm',
         'pd' : 'data_MuEG',
@@ -290,79 +297,79 @@ fakerates = {
             'NIsoElecPt10_Nelectrons < 0.5',
         ],
         'num' : [
-            'Elec_EID_WWID > 0.5',
+            'Elec_EID_MITID > 0.5',
             'Elec_ERelIso < 0.3',
         ]
     },
-    'eQCD' : {
-        'ntuple' : 'emm',
-        'pd' : 'data_DoubleMu',
-        'exclude' : ['*DoubleE*', '*MuEG*'],
-        'mc_pd' : 'QCDMu',
-        'varname' : 'EJetPt',
-        'var' : 'Elec_JetPt',
-        'vartitle' : 'E Jet p_{T}',
-        'varbinning' : [100, 0, 100],
-        'rebin' : 5,
-        'evtType' : '#mu#mu + jet',
-        'base_cuts' : base_qcd_emm_selection,
-        'control_plots' : [
-            ('NBjets', 'NBjetsPt20_Nbjets',
-             "Number of b-tags", [10, -0.5, 9.5]),
-            ('Njets', 'NjetsPt20_Njets',
-             "Number of jets", [10, -0.5, 9.5]),
-            ('Elec_MtToMET', 'Elec_MtToMET',
-             "Electron MET-MT", [10, 0, 100]),
-        ],
-        'final_cuts' : [
-            'NjetsPt20_Njets < 2.5',
-            'Elec_MtToMET < 30',
-        ],
-        'denom' : [
-            'DoubleMus_HLT > 0.5',
-            'Mu17Ele8All_HLT > 0.5',
-            'ElecPt > 10',
-            'METPt < 10',
-        ],
-        'num' : [
-            'Elec_EID_WWID > 0.5',
-            'Elec_ERelIso < 0.3',
-        ]
-    },
-    'eQCDMuEG' : {
-        'ntuple' : 'emm',
-        'mc_pd' : 'QCDMu',
-        'pd' : 'data_MuEG',
-        'exclude' : ['*DoubleE*', '*DoubleMu*'],
-        'varname' : 'EJetPt',
-        'var' : 'Elec_JetPt',
-        'vartitle' : 'E Jet p_{T}',
-        'varbinning' : [100, 0, 100],
-        'rebin' : 5,
-        'evtType' : '#mu#mu + jet',
-        'base_cuts' : base_qcd_emm_selection,
-        'control_plots' : [
-            ('NBjets', 'NBjetsPt20_Nbjets',
-             "Number of b-tags", [10, -0.5, 9.5]),
-            ('Njets', 'NjetsPt20_Njets',
-             "Number of jets", [10, -0.5, 9.5]),
-            ('Elec_MtToMET', 'Elec_MtToMET',
-             "Electron MET-MT", [10, 0, 100]),
-        ],
-        'final_cuts' : [
-            'NjetsPt20_Njets < 2.5',
-            'Elec_MtToMET < 30',
-        ],
-        'denom' : [
-            'Mu17Ele8All_HLT > 0.5',
-            'ElecPt > 10',
-            'METPt < 10',
-        ],
-        'num' : [
-            'Elec_EID_WWID > 0.5',
-            'Elec_ERelIso < 0.3',
-        ]
-    },
+    #'eQCD' : {
+        #'ntuple' : 'emm',
+        #'pd' : 'data_DoubleMu',
+        #'exclude' : ['*DoubleE*', '*MuEG*'],
+        #'mc_pd' : 'QCDMu',
+        #'varname' : 'EJetPt',
+        #'var' : 'Elec_JetPt',
+        #'vartitle' : 'E Jet p_{T}',
+        #'varbinning' : [100, 0, 100],
+        #'rebin' : 5,
+        #'evtType' : '#mu#mu + jet',
+        #'base_cuts' : base_qcd_emm_selection,
+        #'control_plots' : [
+            #('NBjets', 'NBjetsPt20_Nbjets',
+             #"Number of b-tags", [10, -0.5, 9.5]),
+            #('Njets', 'NjetsPt20_Njets',
+             #"Number of jets", [10, -0.5, 9.5]),
+            #('Elec_MtToMET', 'Elec_MtToMET',
+             #"Electron MET-MT", [10, 0, 100]),
+        #],
+        #'final_cuts' : [
+            #'NjetsPt20_Njets < 2.5',
+            #'Elec_MtToMET < 30',
+        #],
+        #'denom' : [
+            #'DoubleMus_HLT > 0.5',
+            #'Mu17Ele8All_HLT > 0.5',
+            #'ElecPt > 10',
+            #'METPt < 10',
+        #],
+        #'num' : [
+            #'Elec_EID_WWID > 0.5',
+            #'Elec_ERelIso < 0.3',
+        #]
+    #},
+    #'eQCDMuEG' : {
+        #'ntuple' : 'emm',
+        #'mc_pd' : 'QCDMu',
+        #'pd' : 'data_MuEG',
+        #'exclude' : ['*DoubleE*', '*DoubleMu*'],
+        #'varname' : 'EJetPt',
+        #'var' : 'Elec_JetPt',
+        #'vartitle' : 'E Jet p_{T}',
+        #'varbinning' : [100, 0, 100],
+        #'rebin' : 5,
+        #'evtType' : '#mu#mu + jet',
+        #'base_cuts' : base_qcd_emm_selection,
+        #'control_plots' : [
+            #('NBjets', 'NBjetsPt20_Nbjets',
+             #"Number of b-tags", [10, -0.5, 9.5]),
+            #('Njets', 'NjetsPt20_Njets',
+             #"Number of jets", [10, -0.5, 9.5]),
+            #('Elec_MtToMET', 'Elec_MtToMET',
+             #"Electron MET-MT", [10, 0, 100]),
+        #],
+        #'final_cuts' : [
+            #'NjetsPt20_Njets < 2.5',
+            #'Elec_MtToMET < 30',
+        #],
+        #'denom' : [
+            #'Mu17Ele8All_HLT > 0.5',
+            #'ElecPt > 10',
+            #'METPt < 10',
+        #],
+        #'num' : [
+            #'Elec_EID_WWID > 0.5',
+            #'Elec_ERelIso < 0.3',
+        #]
+    #},
     #'tauZEE' : {
         #'ntuple' : 'eet',
         #'pd' : 'data_DoubleElectron',
@@ -432,7 +439,7 @@ for data_set, skips, int_lumi in [
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'VH', '2011-11-13-v1-WHAnalyze', 'scratch_results',
+        'VH', '2011-11-27-v1-WHAnalyze', 'scratch_results',
         int_lumi, skips, count='emt/skimCounter')
 
     legend = plotter.build_legend(
@@ -465,7 +472,7 @@ for data_set, skips, int_lumi in [
         num_selection_list = denom_selection_list + fr_info['num']
         num_selection = ' && '.join(num_selection_list)
 
-        weight = 'puWeight_3bx_S42011AB178078'
+        weight = '(pu2011AB)'
 
         # List of final plots to make
         to_plot = [

@@ -61,22 +61,6 @@ qcd_selection_emu = [
     x.replace('Muon1', 'Muon2') for x in qcd_selection
 ]
 
-mva_cut = (
-    '('
-    '(pt < 20 && eta < 1 && mva > 0.133) ||'
-    '(pt < 20 && eta > 1  && eta < 1.5 && mva > 0.465) ||'
-    '(pt < 20 && eta > 1.5 && mva > 0.518) ||'
-
-    '(pt > 20 && eta < 1 && mva > 0.942) ||'
-    '(pt > 20 && eta > 1  && eta < 1.5 && mva > 0.947) ||'
-    '(pt > 20 && eta > 1.5 && mva > 0.878)'
-    ')'
-)
-
-mva_cut = mva_cut.replace('pt', 'ElectronPt')
-mva_cut = mva_cut.replace('eta', 'ElectronAbsEta')
-mva_cut = mva_cut.replace('mva', 'Electron_EID_MITID')
-
 fakerates = {
     'mu' : {
         'ntuple' : 'mm',
@@ -102,6 +86,39 @@ fakerates = {
             'Muon2_InnerNPixHits > 0.5',
             'DoubleMus_HLT > 0.5',
             'Muon2Pt > 9',
+            'Muon2AbsEta < 2.1',
+            'Muon1DZ < 0.2',
+            'Muon2DZ < 0.2',
+        ],
+        'num' : [
+            'Muon2_MuID_WWID > 0.5',
+            'Muon2_MuRelIso < 0.3',
+        ]
+    },
+    'muHighPt' : {
+        'ntuple' : 'mm',
+        'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*SingleMu*'],
+        'mc_pd' : 'Wjets',
+        'varname' : 'MuJetPt',
+        'vartitle' : 'Mu Jet Pt',
+        'var' : 'Muon2_JetPt',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'evtType' : '#mu#mu',
+        'base_cuts' : wjets_selection,
+        'control_plots' : [
+            ('Btag', 'Muon2_MuBtag',
+             "Probe TCHE", [100, -5, 5]),
+            ('METPt', 'METPt',
+             "METPt", [100, 0, 100]),
+        ],
+        'final_cuts' : [],
+        'denom' : [
+            'Muon2_MuBtag < 3.3',
+            'Muon2_InnerNPixHits > 0.5',
+            'DoubleMus_HLT > 0.5',
+            'Muon2Pt > 18',
             'Muon2AbsEta < 2.1',
             'Muon1DZ < 0.2',
             'Muon2DZ < 0.2',
@@ -170,6 +187,37 @@ fakerates = {
             'Muon2_MuRelIso < 0.1',
         ]
     },
+    'muQCDHighPt' : {
+        'ntuple' : 'mm',
+        'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*SingleMu*'],
+        'mc_pd' : 'QCDMu',
+        'varname' : 'MuJetPt',
+        'vartitle' : 'Mu Jet Pt',
+        'var' : 'Muon2_JetPt',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 10,
+        'evtType' : '#mu#mu',
+        'base_cuts' : qcd_selection,
+        'control_plots' : [
+            ('Btag', 'Muon2_MuBtag',
+             "Probe TCHE", [100, -5, 5]),
+        ],
+        'final_cuts' : [],
+        'denom' : [
+            'Muon2_MuBtag < 3.3',
+            'Muon2_InnerNPixHits > 0.5',
+            'DoubleMus_HLT > 0.5',
+            'Muon2Pt > 18',
+            'Muon2AbsEta < 2.1',
+            'Muon1DZ < 0.2',
+            'Muon2DZ < 0.2',
+        ],
+        'num' : [
+            'Muon2_MuID_WWID > 0.5',
+            'Muon2_MuRelIso < 0.3',
+        ]
+    },
     'muQCDTight' : {
         'ntuple' : 'mm',
         'pd' : 'data_DoubleMu',
@@ -222,6 +270,7 @@ fakerates = {
         ],
         'denom' : [
             'Mu17Ele8All_HLT > 0.5',
+            'Muon2_MuBtag < 0.5',
             'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 9',
             'ElectronAbsEta < 2.5',
@@ -229,6 +278,7 @@ fakerates = {
             'Muon2DZ < 0.2',
             'ElectronDZ < 0.2',
             'Electron_MissingHits < 0.5',
+            'Electron_hasConversion < 0.5',
         ],
         'num' : [
             'Electron_EID_WWID > 0.5',
@@ -259,6 +309,7 @@ fakerates = {
         ],
         'denom' : [
             'Mu17Ele8All_HLT > 0.5',
+            'Muon2_MuBtag < 0.5',
             'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 9',
             'ElectronAbsEta < 2.5',
@@ -266,10 +317,10 @@ fakerates = {
             'Muon2DZ < 0.2',
             'ElectronDZ < 0.2',
             'Electron_MissingHits < 0.5',
+            'Electron_hasConversion < 0.5',
         ],
         'num' : [
-            mva_cut,
-            'Electron_EID_WWID > 0.5',
+            'Electron_EID_MITID > 0.5',
             'Electron_ERelIso < 0.3',
         ]
     },
@@ -294,6 +345,7 @@ fakerates = {
         'final_cuts' : [],
         'denom' : [
             'Mu17Ele8All_HLT > 0.5',
+            'Muon2_MuBtag < 0.5',
             'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 9',
             'ElectronAbsEta < 2.5',
@@ -301,6 +353,7 @@ fakerates = {
             'Muon2DZ < 0.2',
             'ElectronDZ < 0.2',
             'Electron_MissingHits < 0.5',
+            'Electron_hasConversion < 0.5',
         ],
         'num' : [
             'Electron_EID_WWID > 0.5',
@@ -328,31 +381,32 @@ fakerates = {
         'final_cuts' : [],
         'denom' : [
             'Mu17Ele8All_HLT > 0.5',
+            'Muon2_MuBtag < 0.5',
             'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 9',
             'ElectronAbsEta < 2.5',
             'Electron_EBtag < 3.3',
             'Muon2DZ < 0.2',
             'ElectronDZ < 0.2',
-            #'Electron_MissingHits < 0.5',
+            'Electron_MissingHits < 0.5',
+            'Electron_hasConversion < 0.5',
         ],
         'num' : [
-            mva_cut,
-            'Electron_EID_WWID > 0.5',
+            'Electron_EID_MITID > 0.5',
             'Electron_ERelIso < 0.3',
         ]
     }
 }
 
 output_file = ROOT.TFile("results_singleMuFakeRates.root", "RECREATE")
-for data_set, skips, int_lumi in [
-    #('2011A', ['2011B', 'EM',], 2170),
+for data_set, skips, int_lumi, puTag in [
+    ('2011A', ['2011B', 'EM',], 2170, 'pu2011A'),
     #('2011B', ['2011A', 'EM'], 2170),
-    ('2011AB', ['EM',], 4600) ]:
+    ('2011AB', ['EM',], 4600, 'pu2011AB') ]:
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'Mu', '2011-11-24-v1-MuonTP', 'scratch_results', int_lumi, skips,
+        'Mu', '2011-11-27-v1-MuonTP', 'scratch_results', int_lumi, skips,
         count = '/mm/skimCounter', unweighted = False)
 
     legend = plotter.build_legend(
@@ -383,7 +437,7 @@ for data_set, skips, int_lumi in [
         num_selection_list = denom_selection_list + fr_info['num']
         num_selection = ' && '.join(num_selection_list)
 
-        weight = 'puWeight_3bx_S42011AB178078'
+        weight = '(%s)' % puTag
 
         # List of final plots to make
         to_plot = [

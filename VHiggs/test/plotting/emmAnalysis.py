@@ -77,12 +77,13 @@ final_selection = [
 
 variables = {
 #    'DiMuonMass' : ('Mu1_Mu2_Mass', 'M_{#mu#mu}', [100, 0, 300],),
-    'MuElecMass' : ('Elec_Mu2_Mass', 'M_{e#mu}', [60, 0, 300],),
-    'Mu1_MtToMET' : ('Mu1_MtToMET', 'M_{T} #mu(1)-#tau', [60, 0, 300],),
+    'MuElecMass' : ('Elec_Mu2_Mass', 'M_{e#mu}', [60, 0, 300], 5),
+    'Mu1_MtToMET' : ('Mu1_MtToMET', 'M_{T} #mu(1)-#tau', [60, 0, 300], 5),
 #    'Mu2_MtToMET' : ('Mu2_MtToMET', 'M_{T} #mu(2)-#tau', [100, 0, 300],),
-    'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NODF', [100, 0, 30],),
+    'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NODF', [100, 0, 30], 5),
 #    'MET' : ('METPt', 'MET', [100, 0, 200]),
-    'HT' : ('VisFinalState_Ht', 'H_{T}', [60, 0, 300]),
+    'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 5),
+    'count' : ('1', 'Count', [1, 0, 1], 1),
 }
 
 selections = {
@@ -116,6 +117,7 @@ selections = {
             'MuElecMass',
             'Mu1_MtToMET',
             'vtxChi2NODF',
+            'count',
         ],
     },
 }
@@ -124,7 +126,7 @@ selections = {
 skips = ['MuEG', 'DoubleEl', 'EM',]
 int_lumi = 4600
 samples, plotter = data_tool.build_data(
-    'VH', '2011-11-24-v1-WHAnalyze', 'scratch_results',
+    'VH', '2011-11-27-v1-WHAnalyze', 'scratch_results',
     int_lumi, skips, count='emt/skimCounter')
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
@@ -184,7 +186,7 @@ for selection, selection_info in selections.iteritems():
         if var not in variables:
             print "Skipping", var
             continue
-        draw_str, x_title, binning = variables[var]
+        draw_str, x_title, binning, rebin = variables[var]
 
         plotter.register_tree(
             selection + var + '_bkg',
@@ -223,8 +225,6 @@ for selection, selection_info in selections.iteritems():
         legend = plotter.build_legend(
             '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf',
             xlow = 0.6, ylow=0.5,)
-
-        rebin = 5
 
         histo_name = selection + var + '_bkg'
 
