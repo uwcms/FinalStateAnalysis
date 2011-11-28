@@ -7,6 +7,7 @@ options = TauVarParsing.TauVarParsing(
     xSec = -999.0,
     xSecErr = 0.0,
     skipEvents=0, # For debugging
+    keepEverything=0,
 )
 
 files = [
@@ -36,19 +37,24 @@ if not options.isMC and options.lumiMask:
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(options.maxEvents))
 
+output_command = 'drop *'
+if options.keepEverything:
+    output_command = 'keep *'
+
 process.out = cms.OutputModule(
     "PoolOutputModule",
     fileName = cms.untracked.string(options.outputFile),
     SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring('p',)
     ),
-    outputCommands = cms.untracked.vstring('drop *')
+    outputCommands = cms.untracked.vstring(output_command)
 )
 
 # Configure the pat tuple
 import FinalStateAnalysis.PatTools.patTupleProduction as tuplizer
 tuplize, output_commands = tuplizer.configurePatTuple(
     process, isMC=options.isMC, xSec=options.xSec, xSecErr=options.xSecErr)
+
 for keep in output_commands:
     process.out.outputCommands.append('keep %s' % keep)
 
