@@ -31,7 +31,7 @@ class ROOTObjectCache(object):
     def get(self, key):
         self.get_counter += 1
         self.log.debug("ObjectCache: getting %s", key)
-        self.cache_file.ReadAll()
+        #self.cache_file.ReadAll()
         object = self.cache_file.Get(key + ";1")
         #object.GetDirectory()
         return object
