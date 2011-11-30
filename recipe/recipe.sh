@@ -18,4 +18,8 @@ addpkg -z PhysicsTools/PatAlgos
 # Add Mike's muon discriminant
 cvs co -r 1.46 PhysicsTools/PatAlgos/python/tools/tauTools.py
 
-echo "Now run: scram b -j 4"
+# Note you need to install virtual env
+
+echo "Now run ./install_python.sh to install python"
+
+echo "To compile: scram b -j 4"
