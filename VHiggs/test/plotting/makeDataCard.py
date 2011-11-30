@@ -40,6 +40,7 @@ shapes = ROOT.TFile.Open(shape_file, "READ")
 
 for folder in ['mmt_115_final_MuTauMass', 'emt_115_final_ETauMass',
                'emm_115_final_MuElecMass', ]:
+    break
     file = open(folder + 'yields.tex', 'w')
     dump_table(shapes, folder, file)
 
@@ -49,9 +50,9 @@ emt_shape = 'ETauMass'
 emm_shape = 'MuElecMass'
 
 # Counting experiment only
-mmt_shape = 'count'
-emt_shape = 'count'
-emm_shape = 'count'
+#mmt_shape = 'count'
+#emt_shape = 'count'
+#emm_shape = 'count'
 
 # Add an arbitrary penalty factor to the fake rate error (for testing)
 #fake_err_penalty = math.sqrt(3)
@@ -60,7 +61,8 @@ fake_err_penalty = 1
 for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
     mmt = dc.DataCardChannel("mmt_%i_final_%s" % (mass, mmt_shape), shapes)
     mmt.add_signal('signal')
-    mmt.add_background('fakes')
+    mmt.add_background('lead_fakes')
+    mmt.add_background('sub_fakes')
     mmt.add_background('wz')
     mmt.add_background('zz')
 
@@ -71,13 +73,18 @@ for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
     mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), ['wz', 'signal', 'zz'])
     mmt.add_sys('pdf_vh', 1 + pdf_err, ['signal'])
 
-    mmt_fake_unweighted = Histo.Histo(shapes.Get('mmt_115_final_vtxChi2NODF/ext_data_unweighted'))
+    mmt_fake_unweighted = Histo.Histo(shapes.Get('mmt_115_final_vtxChi2NODF/sub_ext_data_unweighted'))
     mmt_fake_error = 1 + fake_err_penalty*math.sqrt(mmt_fake_unweighted.Integral())/mmt_fake_unweighted.Integral()
-    mmt.add_sys('mmt_fake_err', mmt_fake_error, ['fakes'])
+    mmt.add_sys('sub_mmt_fake_err', mmt_fake_error, ['sub_fakes'])
+
+    mmt_fake_unweighted = Histo.Histo(shapes.Get('mmt_115_final_vtxChi2NODF/lead_ext_data_unweighted'))
+    mmt_fake_error = 1 + fake_err_penalty*math.sqrt(mmt_fake_unweighted.Integral())/mmt_fake_unweighted.Integral()
+    mmt.add_sys('lead_mmt_fake_err', mmt_fake_error, ['lead_fakes'])
 
     emt = dc.DataCardChannel("emt_%i_final_%s" % (mass, emt_shape), shapes)
     emt.add_signal('signal')
-    emt.add_background('fakes')
+    emt.add_background('e_fakes')
+    emt.add_background('mu_fakes')
     emt.add_background('wz')
     emt.add_background('zz')
 
@@ -89,9 +96,13 @@ for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
     emt.add_sys('CMS_eff_e', 1.02, ['wz', 'signal', 'zz'])
     emt.add_sys('pdf_vh', 1 + pdf_err, ['signal'])
 
-    emt_fake_unweighted = Histo.Histo(shapes.Get('emt_115_final_vtxChi2NODF/ext_data_unweighted'))
+    emt_fake_unweighted = Histo.Histo(shapes.Get('emt_115_final_vtxChi2NODF/e_ext_data_unweighted'))
     emt_fake_error = 1 + fake_err_penalty*math.sqrt(emt_fake_unweighted.Integral())/emt_fake_unweighted.Integral()
-    emt.add_sys('emt_fake_err', emt_fake_error, ['fakes'])
+    emt.add_sys('e_emt_fake_err', emt_fake_error, ['e_fakes'])
+
+    emt_fake_unweighted = Histo.Histo(shapes.Get('emt_115_final_vtxChi2NODF/mu_ext_data_unweighted'))
+    emt_fake_error = 1 + fake_err_penalty*math.sqrt(emt_fake_unweighted.Integral())/emt_fake_unweighted.Integral()
+    emt.add_sys('mu_emt_fake_err', emt_fake_error, ['mu_fakes'])
 
     emm = dc.DataCardChannel("emm_%i_final_%s" % (mass, emm_shape), shapes)
     emm.add_signal('signal')

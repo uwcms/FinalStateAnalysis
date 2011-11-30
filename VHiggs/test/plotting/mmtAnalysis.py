@@ -16,27 +16,30 @@ log = logging.getLogger("mmtChannel")
 
 ROOT.gROOT.SetBatch(True)
 
-# Define the fake rate versus muon pt
-#FAKE_RATE_0 = 0.00435
-#FAKE_RATE_1 = 4.247
-#FAKE_RATE_2 = -0.1967
+#Define the fake rate versus muon pt for the subleading muon
+SUB_FAKE_RATE_0 = 3.174
+SUB_FAKE_RATE_1 = 14.99
+SUB_FAKE_RATE_2 = 2.47
+SUB_FAKE_RATE_3 = 6.75e-3
 
-#FAKE_RATE = '(%0.4f + %0.4f*TMath::Exp(%0.4f * (VAR) ) )' % (
-    #FAKE_RATE_0, FAKE_RATE_1, FAKE_RATE_2)
+SUB_FAKE_RATE = "(%0.4f*TMath::Landau(VAR, %0.4f, %0.4f,0)+%0.4f)" % (
+    SUB_FAKE_RATE_0, SUB_FAKE_RATE_1, SUB_FAKE_RATE_2, SUB_FAKE_RATE_3)
 
-#Define the fake rate versus muon pt
-FAKE_RATE_0 = 3.174
-FAKE_RATE_1 = 14.99
-FAKE_RATE_2 = 2.47
-FAKE_RATE_3 = 6.75e-3
+SUB_FR_X = 'Muon2_JetPt'
+SUB_FAKE_RATE = SUB_FAKE_RATE.replace('VAR', SUB_FR_X)
+SUB_FR_WEIGHT = '((%s)/(1-%s))' % (SUB_FAKE_RATE, SUB_FAKE_RATE)
 
-FAKE_RATE = "(%0.4f*TMath::Landau(VAR, %0.4f, %0.4f,0)+%0.4f)" % (
-    FAKE_RATE_0, FAKE_RATE_1, FAKE_RATE_2, FAKE_RATE_3)
+LEAD_FAKE_RATE_0 = 4.5
+LEAD_FAKE_RATE_1 = 26.6
+LEAD_FAKE_RATE_2 = 3.59
+LEAD_FAKE_RATE_3 = 1.01e-2
 
-FR_X = 'Muon2_JetPt'
-FAKE_RATE = FAKE_RATE.replace('VAR', FR_X)
-FR_WEIGHT = '((%s)/(1-%s))' % (FAKE_RATE, FAKE_RATE)
-#FR_WEIGHT = '(%s)' % FAKE_RATE
+LEAD_FAKE_RATE = "(%0.4f*TMath::Landau(VAR, %0.4f, %0.4f,0)+%0.4f)" % (
+    LEAD_FAKE_RATE_0, LEAD_FAKE_RATE_1, LEAD_FAKE_RATE_2, LEAD_FAKE_RATE_3)
+
+LEAD_FR_X = 'Muon1_JetPt'
+LEAD_FAKE_RATE = LEAD_FAKE_RATE.replace('VAR', LEAD_FR_X)
+LEAD_FR_WEIGHT = '((%s)/(1-%s))' % (LEAD_FAKE_RATE, LEAD_FAKE_RATE)
 
 base_selection = [
     #'(run < 5 && Muon1Pt > 13.5 || Muon1Pt > 13.365)',
@@ -45,8 +48,6 @@ base_selection = [
     'Muon2Pt > 9',
     'Muon1AbsEta < 2.1',
     'Muon2AbsEta < 2.1',
-    'Muon1_MuRelIso < 0.3',
-    'Muon1_MuID_WWID > 0.5',
     'DoubleMus_HLT > 0.5 ',
 
     # Object vetos
@@ -59,6 +60,7 @@ base_selection = [
     'Tau_LooseHPS > 0.5',
     'Muon1Charge*Muon2Charge > 0',
     'Muon2_InnerNPixHits > 0.5',
+    'Muon1_InnerNPixHits > 0.5',
     'Muon1DZ < 0.2',
     'Muon2DZ < 0.2',
     'TauDZ < 0.2',
@@ -71,15 +73,26 @@ passes_ht = [
 passes_vtx = [
     'vtxChi2/vtxNDOF < 10',
     'Muon2_MuBtag < 3.3',
+    'Muon1_MuBtag < 3.3',
 ]
 
-bkg_enriched = [
-    '(Muon2_MuID_WWID < 0.5 || Muon2_MuRelIso > 0.3)'
+sub_bkg_enriched = [
+    '(Muon2_MuID_WWID < 0.5 || Muon2_MuRelIso > 0.3)',
+    'Muon1_MuRelIso < 0.3',
+    'Muon1_MuID_WWID > 0.5',
+]
+
+lead_bkg_enriched = [
+    '(Muon1_MuID_WWID < 0.5 || Muon1_MuRelIso > 0.3)',
+    'Muon2_MuRelIso < 0.3',
+    'Muon2_MuID_WWID > 0.5',
 ]
 
 final_selection = [
     'Muon2_MuID_WWID > 0.5',
-    'Muon2_MuRelIso < 0.3'
+    'Muon2_MuRelIso < 0.3',
+    'Muon1_MuRelIso < 0.3',
+    'Muon1_MuID_WWID > 0.5',
 ]
 
 variables = {
@@ -93,6 +106,9 @@ variables = {
     'Njets' : ('NjetsPt20_Njets', 'N_{jets}', [10, -0.5, 9.5], 1),
     'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 5),
     'count' : ('1', 'Count', [1, 0, 1], 1),
+    'mu1IP3DS' : ('Muon1IPDS', '3D IP signficance', [50, 0, 20], 2),
+    'mu2IP3DS' : ('Muon2IPDS', '3D IP signficance', [50, 0, 20], 2),
+    'tauIP3DS' : ('TauIPDS', '3D IP signficance', [50, 0, 20], 2),
 }
 
 selections = {
@@ -138,6 +154,9 @@ selections = {
             'Muon2_Btag',
             'Njets',
             'count',
+            'muIP3DS',
+            'eIP3DS',
+            'tauIP3DS',
         ],
     },
 }
@@ -195,15 +214,16 @@ for selection, selection_info in selections.iteritems():
 
     log.info("Plotting distribution of FR weights")
 
-    fr_selection = selection_info['select'] + bkg_enriched
+    sub_fr_selection = selection_info['select'] + sub_bkg_enriched
+    lead_fr_selection = selection_info['select'] + lead_bkg_enriched
     the_final_selection = selection_info['select'] + final_selection
 
     # Version with weights applied
     plotter.register_tree(
         selection + '_fr_weights',
         '/mmt/final/Ntuple',
-        FR_WEIGHT,
-        ' && '.join(fr_selection),
+        SUB_FR_WEIGHT,
+        ' && '.join(sub_fr_selection),
         #w = '(%s)' % FR_WEIGHT,
         binning = [200, 0, 1],
         include = ['*data*'],
@@ -235,10 +255,10 @@ for selection, selection_info in selections.iteritems():
         )
 
         plotter.register_tree(
-            selection + var + '_bkg',
+            selection + var + '_lead_bkg',
             '/mmt/final/Ntuple',
             draw_str,
-            ' && '.join(fr_selection),
+            ' && '.join(lead_fr_selection),
             w = '(pu2011AB)',
             binning = binning,
             include = ['*'],
@@ -246,11 +266,32 @@ for selection, selection_info in selections.iteritems():
 
         # Version with weights applied
         plotter.register_tree(
-            selection + var + '_bkg_fr',
+            selection + var + '_lead_bkg_fr',
             '/mmt/final/Ntuple',
             draw_str,
-            ' && '.join(fr_selection),
-            w = '(pu2011AB)*(%s)' % FR_WEIGHT,
+            ' && '.join(lead_fr_selection),
+            w = '(pu2011AB)*(%s)' % LEAD_FR_WEIGHT,
+            binning = binning,
+            include = ['*'],
+        )
+
+        plotter.register_tree(
+            selection + var + '_sub_bkg',
+            '/mmt/final/Ntuple',
+            draw_str,
+            ' && '.join(sub_fr_selection),
+            w = '(pu2011AB)',
+            binning = binning,
+            include = ['*'],
+        )
+
+        # Version with weights applied
+        plotter.register_tree(
+            selection + var + '_sub_bkg_fr',
+            '/mmt/final/Ntuple',
+            draw_str,
+            ' && '.join(sub_fr_selection),
+            w = '(pu2011AB)*(%s)' % SUB_FR_WEIGHT,
             binning = binning,
             include = ['*'],
         )
@@ -299,7 +340,30 @@ for selection, selection_info in selections.iteritems():
         # Compute results using MC in final region
         ##########################################
 
-        histo_name = selection + var + '_bkg'
+        histo_name = selection + var + '_lead_bkg'
+
+        stack = plotter.build_stack(
+            '/mmt/final/Ntuple:' + histo_name,
+            include = ['*'],
+            exclude = ['data*', '*VH*'],
+            rebin = rebin, show_overflows=True,
+        )
+
+        data = plotter.get_histogram(
+            'data_DoubleMu',
+            '/mmt/final/Ntuple:' + histo_name,
+            rebin = rebin, show_overflows=True,
+        )
+
+        stack.Draw()
+        data.Draw('same,pe')
+        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
+        stack.GetXaxis().SetTitle(x_title)
+        legend.Draw()
+        canvas.Update()
+        saveplot(histo_name)
+
+        histo_name = selection + var + '_sub_bkg'
 
         stack = plotter.build_stack(
             '/mmt/final/Ntuple:' + histo_name,
@@ -358,16 +422,30 @@ for selection, selection_info in selections.iteritems():
         )
 
         # The unweighted background prediction
-        data_bkg = plotter.get_histogram(
+        data_sub_bkg = plotter.get_histogram(
             'data_DoubleMu',
-            '/mmt/final/Ntuple:' + selection + var + '_bkg',
+            '/mmt/final/Ntuple:' + selection + var + '_sub_bkg',
             rebin = rebin, show_overflows = True
         )
 
         # The background prediction
-        data_bkg_fr = plotter.get_histogram(
+        data_sub_bkg_fr = plotter.get_histogram(
             'data_DoubleMu',
-            '/mmt/final/Ntuple:' + selection + var + '_bkg_fr',
+            '/mmt/final/Ntuple:' + selection + var + '_sub_bkg_fr',
+            rebin = rebin, show_overflows = True
+        )
+
+        # The unweighted background prediction
+        data_lead_bkg = plotter.get_histogram(
+            'data_DoubleMu',
+            '/mmt/final/Ntuple:' + selection + var + '_lead_bkg',
+            rebin = rebin, show_overflows = True
+        )
+
+        # The background prediction
+        data_lead_bkg_fr = plotter.get_histogram(
+            'data_DoubleMu',
+            '/mmt/final/Ntuple:' + selection + var + '_lead_bkg_fr',
             rebin = rebin, show_overflows = True
         )
 
@@ -388,12 +466,18 @@ for selection, selection_info in selections.iteritems():
                 rebin = rebin, show_overflows = True
             )
             # Get the contribution from the FR method
-            mc_bkg_fr = plotter.get_histogram(
+            mc_sub_bkg_fr = plotter.get_histogram(
                 to_correct,
-                '/mmt/final/Ntuple:' + selection + var + '_bkg_fr',
+                '/mmt/final/Ntuple:' + selection + var + '_sub_bkg_fr',
                 rebin = rebin, show_overflows = True
             )
-            mc_correct = mc_final - mc_bkg_fr
+            mc_lead_bkg_fr = plotter.get_histogram(
+                to_correct,
+                '/mmt/final/Ntuple:' + selection + var + '_lead_bkg_fr',
+                rebin = rebin, show_overflows = True
+            )
+            mc_correct = mc_final - mc_sub_bkg_fr
+            mc_correct = mc_correct - mc_lead_bkg_fr
             corrected_mc_histos.append(mc_correct)
 
         signal = plotter.get_histogram(
@@ -407,8 +491,10 @@ for selection, selection_info in selections.iteritems():
             stack.Add(histo.th1, 'hist')
             legend.AddEntry(histo.th1, histo_name, 'lf')
 
-        styling.apply_style(data_bkg_fr, **samplestyles.SAMPLE_STYLES['ztt'])
-        stack.Add(data_bkg_fr.th1, 'hist')
+        styling.apply_style(data_sub_bkg_fr, **samplestyles.SAMPLE_STYLES['ztt'])
+        stack.Add(data_sub_bkg_fr.th1, 'hist')
+        styling.apply_style(data_lead_bkg_fr, **samplestyles.SAMPLE_STYLES['zll'])
+        stack.Add(data_lead_bkg_fr.th1, 'hist')
 
         signal = signal*5
         stack.Add(signal.th1, 'hist')
@@ -417,7 +503,8 @@ for selection, selection_info in selections.iteritems():
         stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum())*1.5)
         stack.GetXaxis().SetTitle(x_title)
 
-        legend.AddEntry(data_bkg_fr.th1, "Fakes", 'lf')
+        legend.AddEntry(data_lead_bkg_fr.th1, "#mu_{1} fakes", 'lf')
+        legend.AddEntry(data_sub_bkg_fr.th1, "#mu_{2} fakes", 'lf')
         legend.AddEntry(signal.th1, "VH(120) #times 5", 'lf')
         legend.Draw()
 
@@ -428,15 +515,17 @@ for selection, selection_info in selections.iteritems():
             channel_dir = data_card_file.mkdir(
                 "mmt_%i_%s_%s" % (mass, selection, var))
             channel_dir.cd()
-            data.Write('data_obs')
-            data_bkg_fr.Write('fakes')
-            data_bkg.Write('ext_data_unweighted')
-            corrected_mc_histos[0].Write('zz')
-            corrected_mc_histos[1].Write('wz')
+            data.SetName('data_obs'); data.Write()
+            data_sub_bkg_fr.SetName('sub_fakes'); data_sub_bkg_fr.Write()
+            data_sub_bkg.SetName('sub_ext_data_unweighted'); data_sub_bkg.Write()
+            data_lead_bkg_fr.SetName('lead_fakes'); data_lead_bkg_fr.Write()
+            data_lead_bkg.SetName('lead_ext_data_unweighted'); data_lead_bkg.Write()
+            corrected_mc_histos[0].SetName('zz'); corrected_mc_histos[0].Write()
+            corrected_mc_histos[1].SetName('wz'); corrected_mc_histos[1].Write()
 
             signal = plotter.get_histogram(
                 'VH%s' % mass,
                 '/mmt/final/Ntuple:' + selection + var + '_fin',
                 rebin = rebin, show_overflows=True,
             )
-            signal.Write('signal')
+            signal.SetName('signal'); signal.Write()
