@@ -10,3 +10,4 @@ do_.*.txt
 .*.tgz
 .*card.*json
 .*\.card
+recipe/external/.*
