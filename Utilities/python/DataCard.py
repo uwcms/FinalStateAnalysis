@@ -7,6 +7,7 @@ class DataCardChannel(object):
         self.signal_name = None
         self.samples = set([])
         self.systematics = {}
+        self.systematics_types = {}
         self.dir = file.Get(self.name)
 
     def get_rate(self, name):
@@ -23,8 +24,9 @@ class DataCardChannel(object):
     def obs_data(self):
         return self.dir.Get('data_obs').Integral()
 
-    def add_sys(self, name, value, sample):
+    def add_sys(self, name, value, sample, type='lnN'):
         sys_dict = self.systematics.setdefault(name, {})
+        self.systematics_types[name] = type
         if isinstance(sample, basestring):
             sys_dict[sample] = value
         else:
@@ -36,7 +38,7 @@ class DataCardChannel(object):
             bin_name = self.name
             process_name = sample
             process_code = idx
-            rate = self.get_rate(sample)
+            rate = "%0.3f" % self.get_rate(sample)
             output = [bin_name, process_name, process_code, rate]
             for sys in systematics:
                 value = '-'
@@ -61,7 +63,8 @@ class DataCard(object):
         all_systematics = set([])
         for channel in self.channels:
             for sys in channel.systematics.keys():
-                all_systematics.add(sys)
+                sys_type = channel.systematics_types[sys]
+                all_systematics.add((sys, sys_type))
         return all_systematics
 
     def write(self, stream):
@@ -97,25 +100,23 @@ class DataCard(object):
             'process',
             'rate',
         ]
-        nuisances = self.nuisances()
-        row_labels.extend(nuisances)
+        nuisances = sorted(list(self.nuisances()))
+        row_labels.extend(x[0] for x in nuisances)
         columns.append(row_labels)
 
         # A column giving the type of systematics.  We have to skip the first
         # few rows
         sys_type_labels = [ '', '', '', '', ]
-        sys_type_labels.extend('lnN' for x in nuisances)
+        sys_type_labels.extend(x[1] for x in nuisances)
         columns.append(sys_type_labels)
 
         # Add data
-        #print nuisances
         for channel in self.channels:
-            columns.extend(channel.get_process_columns(nuisances))
+            columns.extend(channel.get_process_columns([x[0] for x in nuisances]))
 
         # Write the columns
         for irow in xrange(len(row_labels)):
             for column in columns:
-                #print column
-                stream.write('  ' + '%s' % column[irow])
+                stream.write('  ' + '%20s' % column[irow])
             stream.write('\n')
 
