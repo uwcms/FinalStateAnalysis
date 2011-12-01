@@ -3,9 +3,9 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-11-25-v1-WHAnalyze'
+jobId = '2011-11-27-v1-WHAnalyze'
 
-patJobId = '2011-11-08-EWKPatTuple'
+patJobId = '2011-11-26-EWKPatTuple'
 patCfg = 'patTuple_cfg'
 
 def get_dir(sample):
