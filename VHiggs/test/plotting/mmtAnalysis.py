@@ -7,6 +7,7 @@ Implementation of mu-mu-tau channel analysis
 import ROOT
 import os
 import sys
+import json
 import logging
 import FinalStateAnalysis.PatTools.data as data_tool
 from FinalStateAnalysis.Utilities.AnalysisPlotter import styling,samplestyles
@@ -198,13 +199,13 @@ saveplot('intlumi')
 log.info("Saving run-event numbers for final selected events")
 # Get run/evt numbers for final event selection
 all_cuts = ' && '.join(selections['final']['select'] + final_selection)
-plotter.scan_to_file(
-    'mmt_channel_evts',
+run_evts = plotter.get_run_lumi_evt(
     '/mmt/final/Ntuple',
-    'run:lumi:evt',
     all_cuts,
     include = '*data*'
 )
+with open('mmt_events.json', 'w') as run_evt_file:
+    run_evt_file.write(json.dumps(run_evts))
 
 # Data card output
 data_card_file = ROOT.TFile("mmt_shapes.root", 'RECREATE')

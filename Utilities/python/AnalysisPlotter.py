@@ -1,7 +1,10 @@
 import ROOT
 import fnmatch
+import itertools
+import re
 import logging
 import hashlib
+import tempfile
 
 import samplestyles
 import styling
@@ -124,7 +127,64 @@ class AnalysisSample(object):
         outputname = "_".join([filename, self.name, "scanlog"])
         ttree.GetPlayer().SetScanRedirect(True)
         ttree.GetPlayer().SetScanFileName(outputname)
-        ttree.Scan(var, selection, 'precision=20')
+        ttree.Scan(var, selection, 'precision=30')
+        return outputname
+
+    def query(self, tree, vars, selection):
+        ttree = self.file.get_unweighted(tree)
+        print ttree
+        result = ttree.Query(vars, selection)
+        # Initialize output lists
+        output = {}
+        for i in range(result.GetFieldCount()):
+            output[result.GetFieldName(i)] =  []
+        row = result.Next()
+        while row:
+            for i in range(result.GetFieldCount()):
+                print i,result.GetFieldName(i)
+                #value = str(row.GetField(i))
+                value = row[i]
+                print value
+                output[result.GetFieldName(i)] = value
+            row = result.Next()
+        return output
+
+    def get_run_lumi_evt_broken(self, tree, selection):
+        # We have to split the event field, because otherwise stupid root will
+        # round it.
+        result = self.query(tree, "run:lumi:evt%10000:evt/10000", selection)
+        # This is broken in current pyroot version??  Works on laptop.
+        output = []
+        for run, lumi, evt_lsbs, evt_msbs in itertools.izip(
+            result['run'], result['lumi'], result['evt%10000'],
+            result['evt/10000']):
+            run = int(run)
+            lumi = int(lumi)
+            evt = int(evt_msbs)*10000 + int(evt_lsbs)
+            output.append( (run, lumi, evt) )
+        return output
+
+    def get_run_lumi_evt(self, tree, selection):
+        # Workaround using scan_to_file
+        self.log.info("Temporary run-lumi-evt workaround")
+        tempfilename = tempfile.mktemp()
+        self.log.info("Temporary run-lumi-evt file: %s", tempfilename)
+        final_file = self.scan_to_file(
+            tempfilename, tree,
+            "run:lumi:evt%10000:TMath::Floor(evt/10000)", selection)
+        matcher = re.compile(r'\*\s+(?P<row>\d+) \*\s+(?P<run>\d+) \*\s+(?P<lumi>\d+) \*\s+(?P<evt_lsb>\d+) \*\s+(?P<evt_msb>\d+) \*')
+        output = []
+        with open(final_file) as f:
+            for line in f:
+                match = matcher.match(line.strip())
+                if match:
+                    run = int(match.group('run'))
+                    lumi = int(match.group('lumi'))
+                    evt = int(match.group('evt_msb'))*10000 + \
+                            int(match.group('evt_lsb'))
+                    output.append( (run, lumi, evt) )
+        return output
+
 
     def check_hists(self, label):
         for key, value in self.computed_hists.iteritems():
@@ -158,6 +218,12 @@ class AnalysisMultiSample(AnalysisSample):
     def scan_to_file(self, filename, tree, var, selection):
         for subsample in self.subsamples:
             subsample.scan_to_file(filename, tree, var, selection)
+
+    def get_run_lumi_evt(self, tree, selection):
+        output = {}
+        for subsample in self.subsamples:
+            output[subsample.name] = subsample.get_run_lumi_evt(tree, selection)
+        return output
 
     def register_tree(self, name, tree, var, selection, w=None, binning=None):
         for subsample in self.subsamples:
@@ -218,6 +284,13 @@ class AnalysisPlotter(object):
         for subsample in self.samples:
             if self.match_sample(subsample.name, include, exclude):
                 subsample.scan_to_file(filename, tree, var, selection)
+
+    def get_run_lumi_evt(self, tree, selection, include='*', exclude=None):
+        output = {}
+        for subsample in self.samples:
+            if self.match_sample(subsample.name, include, exclude):
+                output.update(subsample.get_run_lumi_evt(tree, selection))
+        return output
 
     def build_stack(self, path, include='*', exclude=None,
                     title=None, **kwargs):
