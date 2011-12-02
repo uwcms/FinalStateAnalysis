@@ -63,7 +63,7 @@ base_ttbar_selection = [
 ]
 
 base_qcd_selection = [
-    'Muon1Pt > 15',
+    'Muon1Pt > 18',
     'Muon2Pt > 9',
     'Muon1AbsEta < 2.1',
     'Muon2AbsEta < 2.1',
@@ -78,9 +78,24 @@ base_qcd_selection = [
     'vtxChi2/vtxNDOF < 10',
 ]
 
+base_qcd_for_taus_selection = [
+    'Muon1Pt > 18',
+    'Muon2Pt > 9',
+    'Muon1AbsEta < 2.1',
+    'Muon2AbsEta < 2.1',
+    'Muon1_MuRelIso > 0.5',
+    'Muon2_MuRelIso > 0.5',
+    'NIsoMuonsPt5_Nmuons < 1',
+    #'NBjetsPt20_Nbjets > 0', # For ttbar
+    'DoubleMus_HLT > 0.5 ',
+    'vtxNDOF > 0',
+    'vtxChi2/vtxNDOF < 10',
+]
+
+
 # For e fake rate measurement
 base_qcd_emm_selection = [
-    'Mu1Pt > 15',
+    'Mu1Pt > 18',
     'Mu2Pt > 9',
     'Mu1AbsEta < 2.1',
     'Mu2AbsEta < 2.1',
@@ -155,9 +170,34 @@ fakerates = {
             'Muon1_Muon2_Mass > 86',
             'Muon1_Muon2_Mass < 95',
             'Tau_MtToMET < 40',
-            'TauPt > 15',
+            'TauPt > 20',
             'TauAbsEta < 2.5',
             'Tau_DecayMode > 0.5',
+        ],
+        'num' : [
+            'Tau_LooseHPS > 0.5'
+        ],
+    },
+    'tauQCD' : {
+        'ntuple' : 'mmt',
+        'pd' : 'data_DoubleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*'],
+        'mc_pd' : 'Zjets',
+        'varname' : 'TauJetPt',
+        'vartitle' : 'Tau Jet p_{T}',
+        'var' : 'TauJetPt',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'evtType' : '#mu#mu + jet',
+        'base_cuts' : base_qcd_for_taus_selection,
+        'control_plots' : [
+        ],
+        'final_cuts' : [],
+        'denom' : [
+            'TauPt > 20',
+            'TauAbsEta < 2.5',
+            'Tau_DecayMode > 0.5',
+            'METPt < 30',
         ],
         'num' : [
             'Tau_LooseHPS > 0.5'
@@ -294,6 +334,9 @@ fakerates = {
             'Mu1_Mu2_Mass > 86',
             'Mu1_Mu2_Mass < 95',
             'Elec_MtToMET < 30',
+            'Elec_EBtag < 3.3',
+            'Elec_MissingHits < 0.5',
+            'Elec_hasConversion < 0.5',
             'NIsoElecPt10_Nelectrons < 0.5',
         ],
         'num' : [

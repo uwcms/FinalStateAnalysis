@@ -4,6 +4,7 @@ Combine fake rates from many channels.
 
 '''
 import sys
+import json
 import logging
 log = logging.getLogger("combineFR")
 ch = logging.StreamHandler()
@@ -113,6 +114,20 @@ object_config = {
         'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
     },
+    'muHighPtQCDOnly' : {
+        'scenarios' : {
+            'SingleMu_QCD' : {
+                'title' : 'QCD (Single Mu)',
+                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muQCDHighPt'),
+                'rebin' : 5,
+                'exclude' : False,
+            },
+        },
+        'rebin' : 5,
+        'fit_label' : 'QCD Fit',
+        'function' : fit_func,
+        'label' : 'Jet #rightarrow #mu fake rate',
+    },
     'e' : {
         'scenarios' : {
             'SingleMu_Wjets' : {
@@ -157,10 +172,68 @@ object_config = {
         'function' : fit_func,
         'label' : 'Jet #rightarrow e fake rate',
     },
+    'eMITQCD' : {
+        'scenarios' : {
+            'SingleMu_QCD' : {
+                'title' : 'QCD (Single Mu)',
+                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'eQCDMIT'),
+                'rebin' : 1,
+                'exclude' : False,
+            },
+        },
+        'rebin' : 1,
+        'fit_label' : 'QCD Fit',
+        'function' : fit_func,
+        'label' : 'Jet #rightarrow e fake rate',
+    },
+    'tau' : {
+        'scenarios' : {
+            'TriLep_ZMM' : {
+                'title' : 'Z#mu#mu + jet_{#tau}',
+                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'tau'),
+                'rebin' : 1,
+                'exclude' : False,
+            },
+            'TriLep_AntiIsoMM' : {
+                'title' : 'QCD + jet_{#tau}',
+                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'tauQCD'),
+                'rebin' : 2,
+                'exclude' : True,
+            },
+        },
+        'rebin' : 1,
+        'fit_label' : 'Zjets Fit',
+        'function' : fit_func,
+        'label' : 'Jet #rightarrow #tau fake rate',
+    },
+    'tauQCD' : {
+        'scenarios' : {
+            'TriLep_AntiIsoMM' : {
+                'title' : 'QCD + jet_{#tau}',
+                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'tauQCD'),
+                'rebin' : 1,
+                'exclude' : False,
+            },
+            'TriLep_ZMM' : {
+                'title' : 'Z#mu#mu + jet_{#tau}',
+                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'tau'),
+                'rebin' : 1,
+                'exclude' : True,
+            },
+        },
+        'rebin' : 1,
+        'fit_label' : 'QCD Fit',
+        'function' : fit_func,
+        'label' : 'Jet #rightarrow #tau fake rate',
+    },
 }
 
+# Store the fit results so we can put them in a json at the end
+fit_results = {}
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 for object, object_info in object_config.iteritems():
+    object_result = {}
+    fit_results[object] = object_result
     log.info("Computing fake rates for object: %s", object)
     scenarios = object_info['scenarios']
 
@@ -247,7 +320,7 @@ for object, object_info in object_config.iteritems():
     jet_pt = ROOT.RooRealVar("jetPt", "Jet Pt", 1, 0, 100, "GeV")
     # Fit function parameters
     scale = ROOT.RooRealVar("scale", "Landau Scale", 0.5, 0, 10)
-    mu = ROOT.RooRealVar("mu", "Landau #mu", 15, 0, 100)
+    mu = ROOT.RooRealVar("mu", "Landau #mu", 10, 0, 100)
     sigma = ROOT.RooRealVar("sigma", "Landau #sigma", 1, 0, 10)
     constant = ROOT.RooRealVar("offset", "constant", 1.0e-2, 0, 1)
 
@@ -279,15 +352,24 @@ for object, object_info in object_config.iteritems():
         ROOT.RooFit.Save(True)
     )
 
-    fit_result.Print("v")
+    #fit_result.Print("v")
 
 
     roo_frame = jet_pt.frame(ROOT.RooFit.Title("Efficiency"))
     roo_data.plotOn(roo_frame, ROOT.RooFit.Efficiency(roo_cut))
     roo_fit_func.plotOn(roo_frame, ROOT.RooFit.LineColor(ROOT.EColor.kRed))
 
-    roo_pars = roo_fit_func.getParameters(ROOT.RooArgSet(jet_pt))
-    roo_pars.Print("v")
+    fit_result_vars = fit_result.floatParsFinal()
+    # Store the fit results for later
+    object_result_vars = {}
+    object_result['vars'] = object_result_vars
+    object_result['raw_func'] = roo_fit_func_str
+    fitted_fit_func = roo_fit_func_str.replace('jetPt', 'VAR')
+    for var in ['scale', 'mu', 'sigma', 'offset']:
+        value = fit_result_vars.find(var).getVal()
+        object_result_vars[var] = value
+        fitted_fit_func = fitted_fit_func.replace(var, '%0.4e' % value)
+    object_result['fitted_func'] = fitted_fit_func
 
     keep = []
 
@@ -342,3 +424,7 @@ for object, object_info in object_config.iteritems():
         canvas.SaveAs("plots/combineFakeRates/%s_%s_eff.pdf" % (object, type))
         canvas.SetLogy(False)
         canvas.SaveAs("plots/combineFakeRates/%s_%s_eff_lin.pdf" % (object, type))
+
+# Save the files to an output json
+with open('fake_rates.json', 'w') as json_file:
+    json_file.write(json.dumps(fit_results, indent=4))
