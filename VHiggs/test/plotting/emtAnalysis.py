@@ -17,53 +17,52 @@ log = logging.getLogger("emtChannel")
 
 ROOT.gROOT.SetBatch(True)
 
-#Define the fake rate versus muon pt
+fake_rates_file = open('fake_rates.json')
+fake_rates_info = json.load(fake_rates_file)
+
+def get_fake_rate_weight(label, variable):
+    # Load the appropriate function from the json file and use the correct
+    # dependent variable
+    fake_rate_fun = fake_rates_info[label]['fitted_func']
+    fake_rate_fun = fake_rate_fun.replace('VAR', variable)
+    weight = '((%s)/(1-%s))' % (fake_rate_fun, fake_rate_fun)
+    return weight
 
 # Wjets + ZMM FR
-E_FAKE_RATE_0 = 1.00835
-E_FAKE_RATE_1 = 14.67
-E_FAKE_RATE_2 = 2.32
-E_FAKE_RATE_3 = 1.38e-2
+E_FR_WEIGHT = get_fake_rate_weight('eMIT', 'Elec_JetPt')
+E_QCD_FR_WEIGHT = get_fake_rate_weight('eMITQCD', 'Elec_JetPt')
 
-E_FAKE_RATE = "(%0.4f*TMath::Landau(VAR, %0.4f, %0.4f,0)+%0.4f)" % (
-    E_FAKE_RATE_0, E_FAKE_RATE_1, E_FAKE_RATE_2, E_FAKE_RATE_3)
+MU_FR_WEIGHT = get_fake_rate_weight('muHighPt', 'Mu_JetPt')
+MU_QCD_FR_WEIGHT = get_fake_rate_weight('muHighPtQCDOnly', 'Mu_JetPt')
 
-E_FR_X = 'Elec_JetPt'
-E_FAKE_RATE = E_FAKE_RATE.replace('VAR', E_FR_X)
-E_FR_WEIGHT = '((%s)/(1-%s))' % (E_FAKE_RATE, E_FAKE_RATE)
-
-MU_FAKE_RATE_0 = 4.5
-MU_FAKE_RATE_1 = 26.6
-MU_FAKE_RATE_2 = 3.59
-MU_FAKE_RATE_3 = 1.01e-2
-
-MU_FAKE_RATE = "(%0.4f*TMath::Landau(VAR, %0.4f, %0.4f,0)+%0.4f)" % (
-    MU_FAKE_RATE_0, MU_FAKE_RATE_1, MU_FAKE_RATE_2, MU_FAKE_RATE_3)
-
-MU_FR_X = 'Mu_JetPt'
-MU_FAKE_RATE = MU_FAKE_RATE.replace('VAR', MU_FR_X)
-MU_FR_WEIGHT = '((%s)/(1-%s))' % (MU_FAKE_RATE, MU_FAKE_RATE)
+TAU_FR_WEIGHT = get_fake_rate_weight('tau', 'TauJetPt')
 
 base_selection = [
     'MuPt > 18',
-    'ElecPt > 9',
+    'ElecPt > 10',
     'MuAbsEta < 2.1',
     'ElecAbsEta < 2.5',
-    #'Mu_MuRelIso < 0.3',
-    #'Mu_MuID_WWID > 0.5',
     'Mu17Ele8All_HLT > 0.5',
     # Object vetos
     'NIsoMuonsPt5_Nmuons < 0.5',
     'NIsoElecPt10_Nelectrons < 0.5',
     'NBjetsPt20_Nbjets < 0.5',
-    'Mu_InnerNPixHits > 0.5',
 
-    'Tau_LooseHPS > 0.5',
+    'Mu_InnerNPixHits > 0.5',
+    'Elec_EBtag < 3.3',
+    'Elec_MissingHits < 0.5',
+    'Elec_hasConversion < 0.5',
+
     'MuCharge*ElecCharge > 0',
     'Mu_MuBtag < 3.3',
+
     'MuDZ < 0.2',
     'ElecDZ < 0.2',
     'TauDZ < 0.2',
+]
+
+passes_tau = [
+    'Tau_LooseHPS > 0.5',
 ]
 
 passes_ht = [
@@ -84,6 +83,17 @@ mu_bkg_enriched = [
     '(Mu_MuRelIso > 0.3 || Mu_MuID_WWID < 0.5)',
     'Elec_EID_MITID > 0.5',
     'Elec_ERelIso < 0.3',
+]
+
+double_bkg_enriched = [
+    '(Mu_MuRelIso > 0.3 || Mu_MuID_WWID < 0.5) &&'
+    '(Elec_EID_MITID < 0.5 || Elec_ERelIso > 0.3)',
+]
+
+triple_bkg_enriched = [
+    '(Mu_MuRelIso > 0.3 || Mu_MuID_WWID < 0.5)',
+    '(Elec_EID_MITID < 0.5 || Elec_ERelIso > 0.3)',
+    '(Tau_LooseHPS < 0.5)',
 ]
 
 final_selection = [
@@ -145,6 +155,7 @@ selections = {
         'vars' : [
             'DiMuonMass',
             'ETauMass',
+            'HT',
             'Muon1_MtToMET',
             'vtxChi2NODF',
             'Njets',
@@ -192,7 +203,7 @@ saveplot('intlumi')
 
 log.info("Saving run-event numbers for final selected events")
 # Get run/evt numbers for final event selection
-all_cuts = ' && '.join(selections['final']['select'] + final_selection)
+all_cuts = ' && '.join(selections['final']['select'] + final_selection + passes_tau)
 run_evts = plotter.get_run_lumi_evt(
     '/emt/final/Ntuple',
     all_cuts,
@@ -209,9 +220,11 @@ for selection, selection_info in selections.iteritems():
 
     log.info("Plotting distribution of FR weights")
 
-    e_fr_selection = selection_info['select'] + e_bkg_enriched
-    mu_fr_selection = selection_info['select'] + mu_bkg_enriched
-    the_final_selection = selection_info['select'] + final_selection
+    e_fr_selection = selection_info['select'] + passes_tau + e_bkg_enriched
+    mu_fr_selection = selection_info['select'] + passes_tau + mu_bkg_enriched
+    double_fr_selection = selection_info['select'] + passes_tau + double_bkg_enriched
+    triple_fr_selection = selection_info['select'] + triple_bkg_enriched
+    the_final_selection = selection_info['select'] + passes_tau + final_selection
 
     # Version with weights applied
     plotter.register_tree(
@@ -292,6 +305,49 @@ for selection, selection_info in selections.iteritems():
         )
 
         plotter.register_tree(
+            selection + var + '_double_bkg',
+            '/emt/final/Ntuple',
+            draw_str,
+            ' && '.join(double_fr_selection),
+            w = '(pu2011AB)',
+            binning = binning,
+            include = ['*'],
+        )
+
+        # Version with weights applied
+        plotter.register_tree(
+            selection + var + '_double_bkg_fr',
+            '/emt/final/Ntuple',
+            draw_str,
+            ' && '.join(double_fr_selection),
+            w = '(pu2011AB)*(%s)*(%s)' % (MU_FR_WEIGHT, E_FR_WEIGHT),
+            binning = binning,
+            include = ['*'],
+        )
+
+        # Get the triple background (QCD) extrapolated into the electron bkg region
+        plotter.register_tree(
+            selection + var + '_triple_bkg_to_e_bkg_fr',
+            '/emt/final/Ntuple',
+            draw_str,
+            ' && '.join(triple_fr_selection),
+            w = '(pu2011AB)*(%s)*(%s)' % (MU_QCD_FR_WEIGHT, TAU_FR_WEIGHT),
+            binning = binning,
+            include = ['*'],
+        )
+
+        # Get the triple background extrapolated into the muon bkg region
+        plotter.register_tree(
+            selection + var + '_triple_bkg_to_mu_bkg_fr',
+            '/emt/final/Ntuple',
+            draw_str,
+            ' && '.join(triple_fr_selection),
+            w = '(pu2011AB)*(%s)*(%s)' % (E_QCD_FR_WEIGHT, TAU_FR_WEIGHT),
+            binning = binning,
+            include = ['*'],
+        )
+
+        plotter.register_tree(
             selection + var + '_fin',
             '/emt/final/Ntuple',
             draw_str,
@@ -350,13 +406,34 @@ for selection, selection_info in selections.iteritems():
             rebin = rebin, show_overflows=True,
         )
 
+        data_triple_bkg_in_mu_bkg_fr = plotter.get_histogram(
+            'data_MuEG',
+            '/emt/final/Ntuple:' + selection + var + '_triple_bkg_to_mu_bkg_fr',
+            rebin = rebin, show_overflows = True
+        )
+
         stack.Draw()
         data.Draw('same,pe')
+        #data_triple_bkg_in_mu_bkg_fr.Draw('same,hist')
         stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
         stack.GetXaxis().SetTitle(x_title)
         legend.Draw()
         canvas.Update()
         saveplot(histo_name)
+
+        data.Draw('pe')
+        data_triple_bkg_in_mu_bkg_fr.SetLineColor(ROOT.EColor.kRed)
+        data_triple_bkg_in_mu_bkg_fr.SetLineWidth(2)
+        data_triple_bkg_in_mu_bkg_fr.Draw('same,hist')
+        data.SetMaximum(2*max(data.GetMaximum(),
+                            data_triple_bkg_in_mu_bkg_fr.GetMaximum()))
+        triple_legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+        triple_legend.SetBorderSize(0)
+        triple_legend.SetFillStyle(0)
+        triple_legend.AddEntry(data.th1, "#mu anti-iso region", "pe")
+        triple_legend.AddEntry(data_triple_bkg_in_mu_bkg_fr.th1, "Triple fakes", "l")
+        triple_legend.Draw()
+        saveplot(histo_name + '_with_qcd')
 
         histo_name = selection + var + '_e_bkg'
 
@@ -373,13 +450,34 @@ for selection, selection_info in selections.iteritems():
             rebin = rebin, show_overflows=True,
         )
 
+        data_triple_bkg_in_e_bkg_fr = plotter.get_histogram(
+            'data_MuEG',
+            '/emt/final/Ntuple:' + selection + var + '_triple_bkg_to_e_bkg_fr',
+            rebin = rebin, show_overflows = True
+        )
+
         stack.Draw()
         data.Draw('same,pe')
+        #data_triple_bkg_in_e_bkg_fr.Draw('same,hist')
         stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
         stack.GetXaxis().SetTitle(x_title)
         legend.Draw()
         canvas.Update()
         saveplot(histo_name)
+
+        data.Draw('pe')
+        data_triple_bkg_in_e_bkg_fr.SetLineColor(ROOT.EColor.kRed)
+        data_triple_bkg_in_e_bkg_fr.SetLineWidth(2)
+        data_triple_bkg_in_e_bkg_fr.Draw('same,hist')
+        data.SetMaximum(2*max(data.GetMaximum(),
+                            data_triple_bkg_in_e_bkg_fr.GetMaximum()))
+        triple_legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+        triple_legend.SetBorderSize(0)
+        triple_legend.SetFillStyle(0)
+        triple_legend.AddEntry(data.th1, "e anti-iso region", "pe")
+        triple_legend.AddEntry(data_triple_bkg_in_mu_bkg_fr.th1, "Triple fakes", "l")
+        triple_legend.Draw()
+        saveplot(histo_name + '_with_qcd')
 
         histo_name = selection + var + '_fin'
 
@@ -430,6 +528,12 @@ for selection, selection_info in selections.iteritems():
             rebin = rebin, show_overflows = True
         )
 
+        data_triple_bkg_in_mu_bkg_fr = plotter.get_histogram(
+            'data_MuEG',
+            '/emt/final/Ntuple:' + selection + var + '_triple_bkg_to_mu_bkg_fr',
+            rebin = rebin, show_overflows = True
+        )
+
         # The unweighted background prediction
         data_e_bkg = plotter.get_histogram(
             'data_MuEG',
@@ -441,6 +545,13 @@ for selection, selection_info in selections.iteritems():
         data_e_bkg_fr = plotter.get_histogram(
             'data_MuEG',
             '/emt/final/Ntuple:' + selection + var + '_e_bkg_fr',
+            rebin = rebin, show_overflows = True
+        )
+
+        # The background prediction from double fakes
+        data_double_bkg_fr = plotter.get_histogram(
+            'data_MuEG',
+            '/emt/final/Ntuple:' + selection + var + '_double_bkg_fr',
             rebin = rebin, show_overflows = True
         )
 
@@ -495,6 +606,8 @@ for selection, selection_info in selections.iteritems():
         stack.Add(signal.th1, 'hist')
         stack.Draw()
         data.Draw('pe,same')
+        data_double_bkg_fr.SetMarkerColor(ROOT.EColor.kRed)
+        data_double_bkg_fr.Draw('pe, same')
         stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum())*1.5)
         stack.GetXaxis().SetTitle(x_title)
 
