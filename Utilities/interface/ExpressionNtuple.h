@@ -1,21 +1,24 @@
 /*
- * Tool to build a TTree of floats of from StringObjectFunctions
+ * Tool to build a TTree of columns of from StringObjectFunctions.
  *
- * Author: Evan K. Friis, UC Davis
+ * Author: Evan K. Friis, UW Madison
  *
  */
 
 #ifndef EXPRESSIONNTUPLE_XZ7TV8E1
 #define EXPRESSIONNTUPLE_XZ7TV8E1
 
+#include "boost/utility.hpp"
+ #include <boost/ptr_container/ptr_vector.hpp>
+
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "CommonTools/Utils/interface/TFileDirectory.h"
-#include "CommonTools/Utils/interface/StringObjectFunction.h"
-
 #include "TTree.h"
 
+#include "FinalStateAnalysis/Utilities/interface/ExpressionNtupleColumn.h"
+
 template<class T>
-class ExpressionNtuple {
+class ExpressionNtuple : private boost::noncopyable {
   public:
     ExpressionNtuple(const edm::ParameterSet& pset);
     ~ExpressionNtuple();
@@ -27,38 +30,29 @@ class ExpressionNtuple {
     // Get access to the internal tree
     TTree* tree() const { return tree_; }
   private:
-    struct Column {
-      Column(const std::string& n, const std::string& f):
-        name(n),func(f, true) {
-        branch.reset(new Float_t);
-      }
-      std::string name;
-      StringObjectFunction<T> func;
-      boost::shared_ptr<Float_t> branch;
-    };
     TTree* tree_;
+    std::vector<std::string> columnNames_;
+    edm::ParameterSet pset_;
+    boost::ptr_vector<ExpressionNtupleColumn<T> > columns_;
     boost::shared_ptr<Int_t> idxBranch_;
-    std::vector<Column> columns_;
 };
 
-
 template<class T>
-ExpressionNtuple<T>::ExpressionNtuple(const edm::ParameterSet& pset) {
+ExpressionNtuple<T>::ExpressionNtuple(const edm::ParameterSet& pset):
+  pset_(pset) {
   tree_ = NULL;
   typedef std::vector<std::string> vstring;
-  vstring columnNames = pset.getParameterNames();
+  // Double check no column already exists
+  columnNames_ = pset.getParameterNames();
   std::set<std::string> enteredAlready;
-  for (size_t i = 0; i < columnNames.size(); ++i) {
-    const std::string& colName = columnNames[i];
+  for (size_t i = 0; i < columnNames_.size(); ++i) {
+    const std::string& colName = columnNames_[i];
     if (enteredAlready.count(colName)) {
       throw cms::Exception("DuplicatedBranch")
         << " The ntuple branch with name " << colName
         << " has already been registered!" << std::endl;
     }
     enteredAlready.insert(colName);
-    // Build the function object
-    Column newCol(colName, pset.getParameter<std::string>(colName));
-    columns_.push_back(newCol);
   }
   idxBranch_.reset(new Int_t);
 }
@@ -68,19 +62,17 @@ template<class T> ExpressionNtuple<T>::~ExpressionNtuple() {}
 template<class T> void ExpressionNtuple<T>::initialize(TFileDirectory& fs) {
   tree_ = fs.make<TTree>("Ntuple", "Expression Ntuple");
   // Build branches
-  for (size_t i = 0; i < columns_.size(); ++i) {
-    const Column& col = columns_[i];
-    std::string branchCmd = col.name + "/F";
-    tree_->Branch(col.name.c_str(), col.branch.get(), branchCmd.c_str());
+  for (size_t i = 0; i < columnNames_.size(); ++i) {
+    columns_.push_back(buildColumn<T>(columnNames_[i], pset_, tree_));
   }
+  // A special branch so we know which subrow we are on.
   tree_->Branch("idx", idxBranch_.get(), "idx/I");
 }
 
 template<class T> void ExpressionNtuple<T>::fill(const T& element, int idx) {
   for (size_t i = 0; i < columns_.size(); ++i) {
-    Column& col = columns_[i];
-    const StringObjectFunction<T>& func = col.func;
-    *(col.branch) = func(element);
+    // Compute the function and load the value into the column.
+    columns_[i].compute(element);
   }
   *idxBranch_ = idx;
   tree_->Fill();
