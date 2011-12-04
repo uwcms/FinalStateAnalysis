@@ -39,29 +39,29 @@ class ExpressionNtupleColumn {
 template<typename T>
 ExpressionNtupleColumn<T>::ExpressionNtupleColumn(
     const std::string& name, const std::string& func):
-  name_(name), func_(func) {}
+  name_(name), func_(func, true) {}
 
-template<typename T> void ExpressionNtupleColumn<T>::fill(const T& obj) {
+template<typename T> void ExpressionNtupleColumn<T>::compute(const T& obj) {
   this->setValue(func_(obj));
 }
 
 namespace {
-  template<T> std::string getTypeCmd();
+  template<typename T> std::string getTypeCmd();
   template<> std::string getTypeCmd<Float_t>() { return "/F"; }
   template<> std::string getTypeCmd<Int_t>() { return "/I"; }
   template<> std::string getTypeCmd<Double_t>() { return "/D"; }
 
-  template<T> T convertVal(double x);
-  template<> Double_t convertVal<Double_t>(double x) { return x; };
-  template<> Float_t convertVal<Float_t>(double x) { return x; };
-  template<> Int_t convertVal<Int_t>(double x) { return TMath::Nint(x); };
+  template<typename T> T convertVal(double x);
+  template<> Double_t convertVal<Double_t>(double x) { return x; }
+  template<> Float_t convertVal<Float_t>(double x) { return x; }
+  template<> Int_t convertVal<Int_t>(double x) { return TMath::Nint(x); }
 }
 
 // Explicit typed (float, double, etc) ntuple column
 template<typename ObjType, typename ColType>
 class ExpressionNtupleColumnT : public ExpressionNtupleColumn<ObjType> {
   public:
-    ExpressionNtupleColumn(const std::string& name, const std::string& func,
+    ExpressionNtupleColumnT(const std::string& name, const std::string& func,
         TTree* tree);
   protected:
     /// Abstract function
@@ -72,17 +72,16 @@ class ExpressionNtupleColumnT : public ExpressionNtupleColumn<ObjType> {
 
 // Explicit typed (float, double, etc) ntuple column
 template<typename ObjType, typename ColType>
-ExpressionNtupleColumn<ObjType, ColType>::ExpressionNtupleColumnT(
-    const std::string& name, const std::string& func,
-    const std::string& typeCmd, TTree* tree):
+ExpressionNtupleColumnT<ObjType, ColType>::ExpressionNtupleColumnT(
+    const std::string& name, const std::string& func, TTree* tree):
   ExpressionNtupleColumn<ObjType>(name, func) {
     branch_.reset(new ColType);
-    std::string branchCmd = name + typeCmd;
+    std::string branchCmd = name + getTypeCmd<ColType>();
     tree->Branch(name.c_str(), branch_.get(), branchCmd.c_str());
 }
 
 template<typename ObjType, typename ColType>
-double ExpressionNtupleColumn<ObjType, ColType>::setValue(double value) {
+void ExpressionNtupleColumnT<ObjType, ColType>::setValue(double value) {
   *branch_ = convertVal<ColType>(value);
 }
 
@@ -99,7 +98,7 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
   if (pset.existsAs<std::string>(name)) {
     output.reset(new ExpressionNtupleColumnT<T, Float_t>(name,
           pset.getParameter<std::string>(name), tree));
-  } else if (pset.existsAs<std::string>(name)){
+  } else if (pset.existsAs<vstring>(name)){
     vstring command = pset.getParameter<vstring>(name);
     if (command.size() != 2) {
       throw cms::Exception("BadTypeSpecifier")
@@ -124,6 +123,10 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
         << "The column " << name << " has declared type " << command[1]
         << ", which I don't understand.  Allowed: I, F, and D" << std::endl;
     }
+  } else {
+      throw cms::Exception("BadColumn")
+        << "The column " << name << " is not a cms.vstring or cms.string!"
+        << std::endl;
   }
   return output;
 }

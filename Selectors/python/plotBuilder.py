@@ -190,8 +190,8 @@ def makePlots(*legs, **kwargs):
     add_ntuple(rho_cfg.name.value(), rho_cfg.plotquantity.value())
 
     # Add event and run number
-    add_ntuple('evt', 'evt().evtId().event()')
     add_ntuple('lumi', 'evt().evtId().luminosityBlock()')
     add_ntuple('run', 'evt().evtId().run()')
+    ntuple.evt = cms.vstring('evt().evtId().event()', 'I')
 
     return histos, ntuple
