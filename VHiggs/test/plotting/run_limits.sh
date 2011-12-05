@@ -1,8 +1,10 @@
 #!/bin/bash
-export NOFWLITE=1
+export NOFWLITE=blah
 
 echo "Combining shape files"
 hadd -f wh_shapes.root emt_shapes.root mmt_shapes.root emm_shapes.root > /dev/null
+
+echo "Adding statistical shape uncertainties"
 ./addStatShapes.py wh_shapes.root
 
 echo "Building data cards"
