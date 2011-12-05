@@ -29,6 +29,7 @@ def make_exp_band(files):
         onesig.SetPointEYhigh(i, result['+1'] - median )
         twosig.SetPointEYlow(i,  median - result['-2'])
         twosig.SetPointEYhigh(i, result['+2'] - median )
+
     exp.SetLineStyle(2)
     exp.SetLineWidth(2)
     exp.SetLineColor(ROOT.EColor.kBlack)
@@ -37,6 +38,23 @@ def make_exp_band(files):
     #twosig.SetFillStyle(1)
     twosig.SetFillColor(ROOT.EColor.kYellow)
     return (exp, onesig, twosig)
+
+def make_tex_table(files):
+    tex_output = \
+"""
+\hline
+            &  \multicolumn{5}{c}{Expected limit} &  \\\\
+$m_H$ (GeV) & $-2 \sigma$ & $-1 \sigma$ & nominal & $+1 \sigma$ & $+2 \sigma$ & Observed \\\\
+\hline
+"""
+    for i, file in enumerate(sorted(files)):
+        mass = get_mass(file)
+        result = json.loads(open(file, 'r').read())
+        tex_output += \
+            "%i & %0.1f & %0.1f & %0.1f & %0.1f & %0.1f & %0.1f \\\\\n" % (
+                mass, result['-2'], result['-1'], result['exp'],
+                result['+1'], result['+2'], result['obs'])
+    return tex_output
 
 def make_obs(files):
     obs = ROOT.TGraph(len(files))
@@ -81,5 +99,8 @@ if __name__ == "__main__":
     legend.Draw()
 
     canvas.Update()
-
     canvas.SaveAs("cards/%s_limit.pdf" % prefix)
+
+    tex = make_tex_table(exp_files)
+    tex_file = open("cards/%s_limit.tex" % prefix, 'w')
+    tex_file.write(tex)
