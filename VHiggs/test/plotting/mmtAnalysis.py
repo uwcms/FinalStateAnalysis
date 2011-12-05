@@ -17,30 +17,25 @@ log = logging.getLogger("mmtChannel")
 
 ROOT.gROOT.SetBatch(True)
 
+fake_rates_file = open('fake_rates.json')
+fake_rates_info = json.load(fake_rates_file)
+
+def get_fake_rate_weight(label, variable):
+    # Load the appropriate function from the json file and use the correct
+    # dependent variable
+    fake_rate_fun = fake_rates_info[label]['fitted_func']
+    fake_rate_fun = fake_rate_fun.replace('VAR', variable)
+    weight = '((%s)/(1-%s))' % (fake_rate_fun, fake_rate_fun)
+    return weight
+
 #Define the fake rate versus muon pt for the subleading muon
-SUB_FAKE_RATE_0 = 3.174
-SUB_FAKE_RATE_1 = 14.99
-SUB_FAKE_RATE_2 = 2.47
-SUB_FAKE_RATE_3 = 6.75e-3
+SUB_FR_WEIGHT = get_fake_rate_weight('mu', 'Muon2_JetPt')
 
-SUB_FAKE_RATE = "(%0.4f*TMath::Landau(VAR, %0.4f, %0.4f,0)+%0.4f)" % (
-    SUB_FAKE_RATE_0, SUB_FAKE_RATE_1, SUB_FAKE_RATE_2, SUB_FAKE_RATE_3)
+#Define the fake rate versus muon pt for the leading muon
+LEAD_FR_WEIGHT = get_fake_rate_weight('muHighPt', 'Muon1_JetPt')
+LEAD_QCD_FR_WEIGHT = get_fake_rate_weight('muHighPt', 'Muon1_JetPt')
 
-SUB_FR_X = 'Muon2_JetPt'
-SUB_FAKE_RATE = SUB_FAKE_RATE.replace('VAR', SUB_FR_X)
-SUB_FR_WEIGHT = '((%s)/(1-%s))' % (SUB_FAKE_RATE, SUB_FAKE_RATE)
-
-LEAD_FAKE_RATE_0 = 4.5
-LEAD_FAKE_RATE_1 = 26.6
-LEAD_FAKE_RATE_2 = 3.59
-LEAD_FAKE_RATE_3 = 1.01e-2
-
-LEAD_FAKE_RATE = "(%0.4f*TMath::Landau(VAR, %0.4f, %0.4f,0)+%0.4f)" % (
-    LEAD_FAKE_RATE_0, LEAD_FAKE_RATE_1, LEAD_FAKE_RATE_2, LEAD_FAKE_RATE_3)
-
-LEAD_FR_X = 'Muon1_JetPt'
-LEAD_FAKE_RATE = LEAD_FAKE_RATE.replace('VAR', LEAD_FR_X)
-LEAD_FR_WEIGHT = '((%s)/(1-%s))' % (LEAD_FAKE_RATE, LEAD_FAKE_RATE)
+TAU_FR_WEIGHT = get_fake_rate_weight('tau', 'TauJetPt')
 
 base_selection = [
     #'(run < 5 && Muon1Pt > 13.5 || Muon1Pt > 13.365)',
@@ -58,13 +53,16 @@ base_selection = [
 
     #'NIsoTausPt20_NIsoTaus < 0.5',
     #'TauPt > 20',
-    'Tau_LooseHPS > 0.5',
     'Muon1Charge*Muon2Charge > 0',
     'Muon2_InnerNPixHits > 0.5',
     'Muon1_InnerNPixHits > 0.5',
     'Muon1DZ < 0.2',
     'Muon2DZ < 0.2',
     'TauDZ < 0.2',
+]
+
+passes_tau = [
+    'Tau_LooseHPS > 0.5',
 ]
 
 passes_ht = [
@@ -87,6 +85,17 @@ lead_bkg_enriched = [
     '(Muon1_MuID_WWID < 0.5 || Muon1_MuRelIso > 0.3)',
     'Muon2_MuRelIso < 0.3',
     'Muon2_MuID_WWID > 0.5',
+]
+
+double_bkg_enriched = [
+    '(Muon2_MuID_WWID < 0.5 || Muon2_MuRelIso > 0.3)',
+    '(Muon1_MuID_WWID < 0.5 || Muon1_MuRelIso > 0.3)',
+]
+
+triple_bkg_enriched = [
+    '(Muon2_MuID_WWID < 0.5 || Muon2_MuRelIso > 0.3)',
+    '(Muon1_MuID_WWID < 0.5 || Muon1_MuRelIso > 0.3)',
+    'Tau_LooseHPS < 0.5',
 ]
 
 final_selection = [
@@ -198,7 +207,7 @@ saveplot('intlumi')
 
 log.info("Saving run-event numbers for final selected events")
 # Get run/evt numbers for final event selection
-all_cuts = ' && '.join(selections['final']['select'] + final_selection)
+all_cuts = ' && '.join(selections['final']['select'] + final_selection + passes_tau)
 run_evts = plotter.get_run_lumi_evt(
     '/mmt/final/Ntuple',
     all_cuts,
@@ -215,9 +224,11 @@ for selection, selection_info in selections.iteritems():
 
     log.info("Plotting distribution of FR weights")
 
-    sub_fr_selection = selection_info['select'] + sub_bkg_enriched
-    lead_fr_selection = selection_info['select'] + lead_bkg_enriched
-    the_final_selection = selection_info['select'] + final_selection
+    sub_fr_selection = selection_info['select'] + passes_tau + sub_bkg_enriched
+    lead_fr_selection = selection_info['select'] + passes_tau + lead_bkg_enriched
+    double_fr_selection = selection_info['select'] + passes_tau + double_bkg_enriched
+    triple_fr_selection = selection_info['select'] + triple_bkg_enriched
+    the_final_selection = selection_info['select'] + passes_tau + final_selection
 
     # Version with weights applied
     plotter.register_tree(
@@ -297,6 +308,39 @@ for selection, selection_info in selections.iteritems():
             include = ['*'],
         )
 
+        # Version with weights applied
+        plotter.register_tree(
+            selection + var + '_double_bkg_fr',
+            '/mmt/final/Ntuple',
+            draw_str,
+            ' && '.join(double_fr_selection),
+            w = '(pu2011AB)*(%s)*(%s)' % (LEAD_FR_WEIGHT, SUB_FR_WEIGHT),
+            binning = binning,
+            include = ['*'],
+        )
+
+        # Get the triple background (QCD) extrapolated into the electron bkg region
+        plotter.register_tree(
+            selection + var + '_triple_bkg_to_lead_bkg_fr',
+            '/mmt/final/Ntuple',
+            draw_str,
+            ' && '.join(triple_fr_selection),
+            w = '(pu2011AB)*(%s)*(%s)' % (SUB_FR_WEIGHT, TAU_FR_WEIGHT),
+            binning = binning,
+            include = ['*'],
+        )
+
+        # Get the triple background extrapolated into the muon bkg region
+        plotter.register_tree(
+            selection + var + '_triple_bkg_to_sub_bkg_fr',
+            '/mmt/final/Ntuple',
+            draw_str,
+            ' && '.join(triple_fr_selection),
+            w = '(pu2011AB)*(%s)*(%s)' % (LEAD_FR_WEIGHT, TAU_FR_WEIGHT),
+            binning = binning,
+            include = ['*'],
+        )
+
         plotter.register_tree(
             selection + var + '_fin',
             '/mmt/final/Ntuple',
@@ -338,6 +382,22 @@ for selection, selection_info in selections.iteritems():
         saveplot(histo_name)
 
         ##########################################
+        # Get QCD contamination in lead/sub control regions
+        ##########################################
+
+        data_triple_bkg_in_sub_bkg_fr = plotter.get_histogram(
+            'data_DoubleMu',
+            '/mmt/final/Ntuple:' + selection + var + '_triple_bkg_to_sub_bkg_fr',
+            rebin = rebin, show_overflows = True
+        )
+
+        data_triple_bkg_in_lead_bkg_fr = plotter.get_histogram(
+            'data_DoubleMu',
+            '/mmt/final/Ntuple:' + selection + var + '_triple_bkg_to_lead_bkg_fr',
+            rebin = rebin, show_overflows = True
+        )
+
+        ##########################################
         # Compute results using MC in final region
         ##########################################
 
@@ -364,6 +424,23 @@ for selection, selection_info in selections.iteritems():
         canvas.Update()
         saveplot(histo_name)
 
+        #######################################################################
+        # Make an extra plot showing the triple fake contamination
+        #######################################################################
+        data.Draw('pe')
+        data_triple_bkg_in_lead_bkg_fr.SetLineColor(ROOT.EColor.kRed)
+        data_triple_bkg_in_lead_bkg_fr.SetLineWidth(2)
+        data_triple_bkg_in_lead_bkg_fr.Draw('hist, same')
+        data.SetMaximum(2*max(data.GetMaximum(),
+                              data_triple_bkg_in_lead_bkg_fr.GetMaximum()))
+        triple_legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+        triple_legend.SetBorderSize(0)
+        triple_legend.SetFillStyle(0)
+        triple_legend.AddEntry(data.th1, "Lead #mu anti-iso region", "pe")
+        triple_legend.AddEntry(data_triple_bkg_in_lead_bkg_fr.th1, "Triple fakes", "l")
+        triple_legend.Draw()
+        saveplot(histo_name + '_with_qcd')
+
         histo_name = selection + var + '_sub_bkg'
 
         stack = plotter.build_stack(
@@ -386,6 +463,23 @@ for selection, selection_info in selections.iteritems():
         legend.Draw()
         canvas.Update()
         saveplot(histo_name)
+
+        #######################################################################
+        # Make an extra plot showing the triple fake contamination
+        #######################################################################
+        data.Draw('pe')
+        data_triple_bkg_in_sub_bkg_fr.SetLineColor(ROOT.EColor.kRed)
+        data_triple_bkg_in_sub_bkg_fr.SetLineWidth(2)
+        data_triple_bkg_in_sub_bkg_fr.Draw('hist, same')
+        data.SetMaximum(2*max(data.GetMaximum(),
+                              data_triple_bkg_in_sub_bkg_fr.GetMaximum()))
+        triple_legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+        triple_legend.SetBorderSize(0)
+        triple_legend.SetFillStyle(0)
+        triple_legend.AddEntry(data.th1, "Sub #mu anti-iso region", "pe")
+        triple_legend.AddEntry(data_triple_bkg_in_sub_bkg_fr.th1, "Triple fakes", "l")
+        triple_legend.Draw()
+        saveplot(histo_name + '_with_qcd')
 
         histo_name = selection + var + '_fin'
 
@@ -450,6 +544,13 @@ for selection, selection_info in selections.iteritems():
             rebin = rebin, show_overflows = True
         )
 
+        # The background prediction from double fakes
+        data_double_bkg_fr = plotter.get_histogram(
+            'data_DoubleMu',
+            '/mmt/final/Ntuple:' + selection + var + '_double_bkg_fr',
+            rebin = rebin, show_overflows = True
+        )
+
         corrected_mc = ['ZZ', 'WZ']
         corrected_mc_histos = []
 
@@ -501,6 +602,8 @@ for selection, selection_info in selections.iteritems():
         stack.Add(signal.th1, 'hist')
         stack.Draw()
         data.Draw('pe,same')
+        data_double_bkg_fr.SetMarkerColor(ROOT.EColor.kRed)
+        data_double_bkg_fr.Draw('pe, same')
         stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum())*1.5)
         stack.GetXaxis().SetTitle(x_title)
 
