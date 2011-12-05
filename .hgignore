@@ -11,3 +11,4 @@ do_.*.txt
 .*card.*json
 .*\.card
 recipe/external/.*
+docs/build/.*
