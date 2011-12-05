@@ -24,7 +24,6 @@ def get_histograms(file, data_set, fr_type):
     return Histo(num), Histo(denom)
 
 # Muon fit function
-fit_func_str = "[0]*TMath::Landau(x,[1],[2],0)+[3]"
 roo_fit_func_str = "scale*TMath::Landau(jetPt,mu,sigma,0)+offset"
 fit_func = ROOT.TF1("f1", "[0]*TMath::Landau(x,[1],[2],0)+[3]", 10, 200)
 
