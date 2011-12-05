@@ -5,9 +5,9 @@
 cmsenv
 
 export FSAHOME=$CMSSW_BASE/src/FinalStateAnalysis/
-cd $FSAHOME
 
 export vpython=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/vpython
 
 cd $vpython
 source bin/activate
+cd -
