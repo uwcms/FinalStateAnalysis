@@ -54,4 +54,7 @@ if __name__ == "__main__":
             for item in runevts:
                 command.append(':'.join('%i' % x for x in item))
                 sys.stderr.write('Running: ' + ' '.join(command) + '\n')
-        p = Popen(command)
+        p = Popen(command, stdout=PIPE, stderr=PIPE)
+        stdoutdata, stderrdata = p.communicate()
+        sys.stderr.write(stderrdata)
+        sys.stdout.write(stdoutdata)
