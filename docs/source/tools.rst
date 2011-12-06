@@ -1,6 +1,8 @@
 pickEvents.py
 =============
 
+Location: PatTools/scripts/pickEvents.py
+
 Given a json file which maps dataset names to lists of run/evt/lumis, create a
 file which will call the appropriate copyPickMerge commands.
 
@@ -18,6 +20,14 @@ Usage:
 
   pickEvents.py [json_file] > pickers.sh
   bash < pickers.sh
+
+printEvents.py
+=============
+
+Location: PatTools/scripts/printEvents.py
+
+Companion to pickEvents (above).  Prints out a nicely formatted list given the
+run-lumi-evt json file.
 
 deltaR.py
 =========
