@@ -51,9 +51,9 @@ if __name__ == "__main__":
             continue
         else:
             sys.stderr.write('==> picking %i events\n' % len(runevts))
-            for item in runevts:
-                command.append(':'.join('%i' % x for x in item))
-                sys.stderr.write('Running: ' + ' '.join(command) + '\n')
+        for item in runevts:
+            command.append(':'.join('%i' % x for x in item))
+        sys.stderr.write('Running: ' + ' '.join(command) + '\n')
         p = Popen(command, stdout=PIPE, stderr=PIPE)
         stdoutdata, stderrdata = p.communicate()
         sys.stderr.write(stderrdata)
