@@ -167,6 +167,8 @@ selections = {
     },
 }
 
+all_cuts = selections['final']['select'] + final_selection + passes_tau
+
 if __name__ == "__main__":
     # Samples we aren't interested in
     skips = ['DoubleEl', 'EM', 'DoubleMu']
@@ -204,11 +206,9 @@ if __name__ == "__main__":
 
     log.info("Saving run-event numbers for final selected events")
     # Get run/evt numbers for final event selection
-    all_cuts = ' && '.join(selections['final']['select'] + final_selection + passes_tau)
-    print all_cuts
     run_evts = plotter.get_run_lumi_evt(
         '/emt/final/Ntuple',
-        all_cuts,
+        ' && '.join(all_cuts),
         include = '*data*'
     )
     with open('emt_events.json', 'w') as run_evt_file:
