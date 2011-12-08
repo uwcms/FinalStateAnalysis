@@ -167,474 +167,476 @@ selections = {
     },
 }
 
-# Samples we aren't interested in
-skips = ['DoubleEl', 'EM', 'DoubleMu']
-int_lumi = 4600
-samples, plotter = data_tool.build_data(
-    'VH', '2011-11-27-v1-WHAnalyze', 'scratch_results',
-    int_lumi, skips, count='emt/skimCounter')
+if __name__ == "__main__":
+    # Samples we aren't interested in
+    skips = ['DoubleEl', 'EM', 'DoubleMu']
+    int_lumi = 4600
+    samples, plotter = data_tool.build_data(
+        'VH', '2011-12-05-v1-WHAnalyze', 'scratch_results',
+        int_lumi, skips, count='emt/skimCounter')
 
-canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
-def saveplot(filename):
-    # Save the current canvas
-    filetype = '.pdf'
-    #legend.Draw()
-    canvas.SetLogy(False)
-    canvas.Update()
-    canvas.Print(os.path.join(
-        "plots", 'emtChannel', filename + filetype))
-    canvas.SetLogy(True)
-    canvas.Update()
-    canvas.Print(os.path.join(
-        "plots", 'emtChannel', filename + '_log' + filetype))
+    canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
+    def saveplot(filename):
+        # Save the current canvas
+        filetype = '.pdf'
+        #legend.Draw()
+        canvas.SetLogy(False)
+        canvas.Update()
+        canvas.Print(os.path.join(
+            "plots", 'emtChannel', filename + filetype))
+        canvas.SetLogy(True)
+        canvas.Update()
+        canvas.Print(os.path.join(
+            "plots", 'emtChannel', filename + '_log' + filetype))
 
-################################################################################
-###  Control plot: check integrated lumi   #####################################
-################################################################################
-
-# Version with weights applied
-lumi = plotter.get_histogram( 'data_MuEG', '/emt/intLumi',)
-lumi.Draw()
-saveplot('intlumi')
-
-################################################################################
-###  Get final run event numbers           #####################################
-################################################################################
-
-log.info("Saving run-event numbers for final selected events")
-# Get run/evt numbers for final event selection
-all_cuts = ' && '.join(selections['final']['select'] + final_selection + passes_tau)
-run_evts = plotter.get_run_lumi_evt(
-    '/emt/final/Ntuple',
-    all_cuts,
-    include = '*data*'
-)
-with open('emt_events.json', 'w') as run_evt_file:
-    run_evt_file.write(json.dumps(run_evts))
-
-# Data card output
-data_card_file = ROOT.TFile("emt_shapes.root", 'RECREATE')
-
-for selection, selection_info in selections.iteritems():
-    log.info("Doing " + selection)
-
-    log.info("Plotting distribution of FR weights")
-
-    e_fr_selection = selection_info['select'] + passes_tau + e_bkg_enriched
-    mu_fr_selection = selection_info['select'] + passes_tau + mu_bkg_enriched
-    double_fr_selection = selection_info['select'] + passes_tau + double_bkg_enriched
-    triple_fr_selection = selection_info['select'] + triple_bkg_enriched
-    the_final_selection = selection_info['select'] + passes_tau + final_selection
+    ################################################################################
+    ###  Control plot: check integrated lumi   #####################################
+    ################################################################################
 
     # Version with weights applied
-    plotter.register_tree(
-        selection + '_fr_weights',
+    lumi = plotter.get_histogram( 'data_MuEG', '/emt/intLumi',)
+    lumi.Draw()
+    saveplot('intlumi')
+
+    ################################################################################
+    ###  Get final run event numbers           #####################################
+    ################################################################################
+
+    log.info("Saving run-event numbers for final selected events")
+    # Get run/evt numbers for final event selection
+    all_cuts = ' && '.join(selections['final']['select'] + final_selection + passes_tau)
+    print all_cuts
+    run_evts = plotter.get_run_lumi_evt(
         '/emt/final/Ntuple',
-        E_FR_WEIGHT,
-        ' && '.join(e_fr_selection),
-        #w = '(%s)' % E_FR_WEIGHT,
-        binning = [200, 0, 1],
-        include = ['*data*'],
+        all_cuts,
+        include = '*data*'
     )
+    with open('emt_events.json', 'w') as run_evt_file:
+        run_evt_file.write(json.dumps(run_evts, indent=4))
 
-    weight_histo = plotter.get_histogram(
-        'data_MuEG',
-        '/emt/final/Ntuple:' + selection + '_fr_weights',
-        show_overflows = True,
-    )
-    weight_histo.Draw()
-    saveplot(selection + '_fr_weights')
+    # Data card output
+    data_card_file = ROOT.TFile("emt_shapes.root", 'RECREATE')
 
-    for var in selection_info['vars']:
-        if var not in variables:
-            print "Skipping", var
-            continue
-        draw_str, x_title, binning, rebin = variables[var]
+    for selection, selection_info in selections.iteritems():
+        log.info("Doing " + selection)
 
-        # The "Loose" selection
+        log.info("Plotting distribution of FR weights")
+
+        e_fr_selection = selection_info['select'] + passes_tau + e_bkg_enriched
+        mu_fr_selection = selection_info['select'] + passes_tau + mu_bkg_enriched
+        double_fr_selection = selection_info['select'] + passes_tau + double_bkg_enriched
+        triple_fr_selection = selection_info['select'] + triple_bkg_enriched
+        the_final_selection = selection_info['select'] + passes_tau + final_selection
+
+        # Version with weights applied
         plotter.register_tree(
-            selection + var + '_loose',
+            selection + '_fr_weights',
             '/emt/final/Ntuple',
-            draw_str,
-            ' && '.join(selection_info['select']),
-            w = '(pu2011AB)',
-            binning = binning,
-            include = ['*'],
-        )
-
-        plotter.register_tree(
-            selection + var + '_e_bkg',
-            '/emt/final/Ntuple',
-            draw_str,
+            E_FR_WEIGHT,
             ' && '.join(e_fr_selection),
-            w = '(pu2011AB)',
-            binning = binning,
-            include = ['*'],
+            #w = '(%s)' % E_FR_WEIGHT,
+            binning = [200, 0, 1],
+            include = ['*data*'],
         )
 
-        # Version with weights applied
-        plotter.register_tree(
-            selection + var + '_e_bkg_fr',
-            '/emt/final/Ntuple',
-            draw_str,
-            ' && '.join(e_fr_selection),
-            w = '(pu2011AB)*(%s)' % E_FR_WEIGHT,
-            binning = binning,
-            include = ['*'],
-        )
-
-        plotter.register_tree(
-            selection + var + '_mu_bkg',
-            '/emt/final/Ntuple',
-            draw_str,
-            ' && '.join(mu_fr_selection),
-            w = '(pu2011AB)',
-            binning = binning,
-            include = ['*'],
-        )
-
-        # Version with weights applied
-        plotter.register_tree(
-            selection + var + '_mu_bkg_fr',
-            '/emt/final/Ntuple',
-            draw_str,
-            ' && '.join(mu_fr_selection),
-            w = '(pu2011AB)*(%s)' % MU_FR_WEIGHT,
-            binning = binning,
-            include = ['*'],
-        )
-
-        plotter.register_tree(
-            selection + var + '_double_bkg',
-            '/emt/final/Ntuple',
-            draw_str,
-            ' && '.join(double_fr_selection),
-            w = '(pu2011AB)',
-            binning = binning,
-            include = ['*'],
-        )
-
-        # Version with weights applied
-        plotter.register_tree(
-            selection + var + '_double_bkg_fr',
-            '/emt/final/Ntuple',
-            draw_str,
-            ' && '.join(double_fr_selection),
-            w = '(pu2011AB)*(%s)*(%s)' % (MU_FR_WEIGHT, E_FR_WEIGHT),
-            binning = binning,
-            include = ['*'],
-        )
-
-        # Get the triple background (QCD) extrapolated into the electron bkg region
-        plotter.register_tree(
-            selection + var + '_triple_bkg_to_e_bkg_fr',
-            '/emt/final/Ntuple',
-            draw_str,
-            ' && '.join(triple_fr_selection),
-            w = '(pu2011AB)*(%s)*(%s)' % (MU_QCD_FR_WEIGHT, TAU_FR_WEIGHT),
-            binning = binning,
-            include = ['*'],
-        )
-
-        # Get the triple background extrapolated into the muon bkg region
-        plotter.register_tree(
-            selection + var + '_triple_bkg_to_mu_bkg_fr',
-            '/emt/final/Ntuple',
-            draw_str,
-            ' && '.join(triple_fr_selection),
-            w = '(pu2011AB)*(%s)*(%s)' % (E_QCD_FR_WEIGHT, TAU_FR_WEIGHT),
-            binning = binning,
-            include = ['*'],
-        )
-
-        plotter.register_tree(
-            selection + var + '_fin',
-            '/emt/final/Ntuple',
-            draw_str,
-            ' && '.join(the_final_selection),
-            w = 'pu2011AB',
-            binning = binning,
-            include = ['*'],
-        )
-
-        legend = plotter.build_legend(
-            '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf',
-            xlow = 0.6, ylow=0.5,)
-
-        ##########################################
-        # Compute results using MC in loose region
-        ##########################################
-        histo_name = selection + var + '_loose'
-
-        stack = plotter.build_stack(
-            '/emt/final/Ntuple:' + histo_name,
-            include = ['*'],
-            exclude = ['data*', '*VH*'],
-            rebin = rebin, show_overflows=True,
-        )
-
-        data = plotter.get_histogram(
+        weight_histo = plotter.get_histogram(
             'data_MuEG',
-            '/emt/final/Ntuple:' + histo_name,
-            rebin = rebin, show_overflows=True,
+            '/emt/final/Ntuple:' + selection + '_fr_weights',
+            show_overflows = True,
         )
+        weight_histo.Draw()
+        saveplot(selection + '_fr_weights')
 
-        stack.Draw()
-        data.Draw('same,pe')
-        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
-        stack.GetXaxis().SetTitle(x_title)
-        legend.Draw()
-        canvas.Update()
-        saveplot(histo_name)
+        for var in selection_info['vars']:
+            if var not in variables:
+                print "Skipping", var
+                continue
+            draw_str, x_title, binning, rebin = variables[var]
 
-        ##########################################
-        # Compute results using MC in final region
-        ##########################################
+            # The "Loose" selection
+            plotter.register_tree(
+                selection + var + '_loose',
+                '/emt/final/Ntuple',
+                draw_str,
+                ' && '.join(selection_info['select']),
+                w = '(pu2011AB)',
+                binning = binning,
+                include = ['*'],
+            )
 
-        histo_name = selection + var + '_mu_bkg'
+            plotter.register_tree(
+                selection + var + '_e_bkg',
+                '/emt/final/Ntuple',
+                draw_str,
+                ' && '.join(e_fr_selection),
+                w = '(pu2011AB)',
+                binning = binning,
+                include = ['*'],
+            )
 
-        stack = plotter.build_stack(
-            '/emt/final/Ntuple:' + histo_name,
-            include = ['*'],
-            exclude = ['data*', '*VH*'],
-            rebin = rebin, show_overflows=True,
-        )
+            # Version with weights applied
+            plotter.register_tree(
+                selection + var + '_e_bkg_fr',
+                '/emt/final/Ntuple',
+                draw_str,
+                ' && '.join(e_fr_selection),
+                w = '(pu2011AB)*(%s)' % E_FR_WEIGHT,
+                binning = binning,
+                include = ['*'],
+            )
 
-        data = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + histo_name,
-            rebin = rebin, show_overflows=True,
-        )
+            plotter.register_tree(
+                selection + var + '_mu_bkg',
+                '/emt/final/Ntuple',
+                draw_str,
+                ' && '.join(mu_fr_selection),
+                w = '(pu2011AB)',
+                binning = binning,
+                include = ['*'],
+            )
 
-        data_triple_bkg_in_mu_bkg_fr = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + selection + var + '_triple_bkg_to_mu_bkg_fr',
-            rebin = rebin, show_overflows = True
-        )
+            # Version with weights applied
+            plotter.register_tree(
+                selection + var + '_mu_bkg_fr',
+                '/emt/final/Ntuple',
+                draw_str,
+                ' && '.join(mu_fr_selection),
+                w = '(pu2011AB)*(%s)' % MU_FR_WEIGHT,
+                binning = binning,
+                include = ['*'],
+            )
 
-        stack.Draw()
-        data.Draw('same,pe')
-        #data_triple_bkg_in_mu_bkg_fr.Draw('same,hist')
-        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
-        stack.GetXaxis().SetTitle(x_title)
-        legend.Draw()
-        canvas.Update()
-        saveplot(histo_name)
+            plotter.register_tree(
+                selection + var + '_double_bkg',
+                '/emt/final/Ntuple',
+                draw_str,
+                ' && '.join(double_fr_selection),
+                w = '(pu2011AB)',
+                binning = binning,
+                include = ['*'],
+            )
 
-        data.Draw('pe')
-        data_triple_bkg_in_mu_bkg_fr.SetLineColor(ROOT.EColor.kRed)
-        data_triple_bkg_in_mu_bkg_fr.SetLineWidth(2)
-        data_triple_bkg_in_mu_bkg_fr.Draw('same,hist')
-        data.SetMaximum(2*max(data.GetMaximum(),
-                            data_triple_bkg_in_mu_bkg_fr.GetMaximum()))
-        triple_legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
-        triple_legend.SetBorderSize(0)
-        triple_legend.SetFillStyle(0)
-        triple_legend.AddEntry(data.th1, "#mu anti-iso region", "pe")
-        triple_legend.AddEntry(data_triple_bkg_in_mu_bkg_fr.th1, "Triple fakes", "l")
-        triple_legend.Draw()
-        saveplot(histo_name + '_with_qcd')
+            # Version with weights applied
+            plotter.register_tree(
+                selection + var + '_double_bkg_fr',
+                '/emt/final/Ntuple',
+                draw_str,
+                ' && '.join(double_fr_selection),
+                w = '(pu2011AB)*(%s)*(%s)' % (MU_FR_WEIGHT, E_FR_WEIGHT),
+                binning = binning,
+                include = ['*'],
+            )
 
-        histo_name = selection + var + '_e_bkg'
+            # Get the triple background (QCD) extrapolated into the electron bkg region
+            plotter.register_tree(
+                selection + var + '_triple_bkg_to_e_bkg_fr',
+                '/emt/final/Ntuple',
+                draw_str,
+                ' && '.join(triple_fr_selection),
+                w = '(pu2011AB)*(%s)*(%s)' % (MU_QCD_FR_WEIGHT, TAU_FR_WEIGHT),
+                binning = binning,
+                include = ['*'],
+            )
 
-        stack = plotter.build_stack(
-            '/emt/final/Ntuple:' + histo_name,
-            include = ['*'],
-            exclude = ['data*', '*VH*'],
-            rebin = rebin, show_overflows=True,
-        )
+            # Get the triple background extrapolated into the muon bkg region
+            plotter.register_tree(
+                selection + var + '_triple_bkg_to_mu_bkg_fr',
+                '/emt/final/Ntuple',
+                draw_str,
+                ' && '.join(triple_fr_selection),
+                w = '(pu2011AB)*(%s)*(%s)' % (E_QCD_FR_WEIGHT, TAU_FR_WEIGHT),
+                binning = binning,
+                include = ['*'],
+            )
 
-        data = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + histo_name,
-            rebin = rebin, show_overflows=True,
-        )
+            plotter.register_tree(
+                selection + var + '_fin',
+                '/emt/final/Ntuple',
+                draw_str,
+                ' && '.join(the_final_selection),
+                w = 'pu2011AB',
+                binning = binning,
+                include = ['*'],
+            )
 
-        data_triple_bkg_in_e_bkg_fr = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + selection + var + '_triple_bkg_to_e_bkg_fr',
-            rebin = rebin, show_overflows = True
-        )
+            legend = plotter.build_legend(
+                '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf',
+                xlow = 0.6, ylow=0.5,)
 
-        stack.Draw()
-        data.Draw('same,pe')
-        #data_triple_bkg_in_e_bkg_fr.Draw('same,hist')
-        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
-        stack.GetXaxis().SetTitle(x_title)
-        legend.Draw()
-        canvas.Update()
-        saveplot(histo_name)
+            ##########################################
+            # Compute results using MC in loose region
+            ##########################################
+            histo_name = selection + var + '_loose'
 
-        data.Draw('pe')
-        data_triple_bkg_in_e_bkg_fr.SetLineColor(ROOT.EColor.kRed)
-        data_triple_bkg_in_e_bkg_fr.SetLineWidth(2)
-        data_triple_bkg_in_e_bkg_fr.Draw('same,hist')
-        data.SetMaximum(2*max(data.GetMaximum(),
-                            data_triple_bkg_in_e_bkg_fr.GetMaximum()))
-        triple_legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
-        triple_legend.SetBorderSize(0)
-        triple_legend.SetFillStyle(0)
-        triple_legend.AddEntry(data.th1, "e anti-iso region", "pe")
-        triple_legend.AddEntry(data_triple_bkg_in_mu_bkg_fr.th1, "Triple fakes", "l")
-        triple_legend.Draw()
-        saveplot(histo_name + '_with_qcd')
+            stack = plotter.build_stack(
+                '/emt/final/Ntuple:' + histo_name,
+                include = ['*'],
+                exclude = ['data*', '*VH*'],
+                rebin = rebin, show_overflows=True,
+            )
 
-        histo_name = selection + var + '_fin'
+            data = plotter.get_histogram(
+                'data_MuEG',
+                '/emt/final/Ntuple:' + histo_name,
+                rebin = rebin, show_overflows=True,
+            )
 
-        stack = plotter.build_stack(
-            '/emt/final/Ntuple:' + histo_name,
-            include = ['*'],
-            exclude = ['data*', '*VH*'],
-            rebin = rebin, show_overflows=True,
-        )
+            stack.Draw()
+            data.Draw('same,pe')
+            stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
+            stack.GetXaxis().SetTitle(x_title)
+            legend.Draw()
+            canvas.Update()
+            saveplot(histo_name)
 
-        data = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + histo_name,
-            rebin = rebin, show_overflows=True,
-        )
+            ##########################################
+            # Compute results using MC in final region
+            ##########################################
 
-        stack.Draw()
-        data.Draw('same,pe')
-        legend.Draw()
-        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
-        stack.GetXaxis().SetTitle(x_title)
-        legend.Draw()
-        canvas.Update()
-        saveplot(histo_name)
+            histo_name = selection + var + '_mu_bkg'
 
-        ##########################################
-        # Compute results using FR metho
-        ##########################################
+            stack = plotter.build_stack(
+                '/emt/final/Ntuple:' + histo_name,
+                include = ['*'],
+                exclude = ['data*', '*VH*'],
+                rebin = rebin, show_overflows=True,
+            )
 
-        # The final selected events
-        data = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + selection + var + '_fin',
-            rebin = rebin, show_overflows = True
-        )
+            data = plotter.get_histogram(
+                'data_MuEG',
+                '/emt/final/Ntuple:' + histo_name,
+                rebin = rebin, show_overflows=True,
+            )
 
-        # The unweighted background prediction
-        data_mu_bkg = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + selection + var + '_mu_bkg',
-            rebin = rebin, show_overflows = True
-        )
+            data_triple_bkg_in_mu_bkg_fr = plotter.get_histogram(
+                'data_MuEG',
+                '/emt/final/Ntuple:' + selection + var + '_triple_bkg_to_mu_bkg_fr',
+                rebin = rebin, show_overflows = True
+            )
 
-        # The background prediction
-        data_mu_bkg_fr = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + selection + var + '_mu_bkg_fr',
-            rebin = rebin, show_overflows = True
-        )
+            stack.Draw()
+            data.Draw('same,pe')
+            #data_triple_bkg_in_mu_bkg_fr.Draw('same,hist')
+            stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
+            stack.GetXaxis().SetTitle(x_title)
+            legend.Draw()
+            canvas.Update()
+            saveplot(histo_name)
 
-        data_triple_bkg_in_mu_bkg_fr = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + selection + var + '_triple_bkg_to_mu_bkg_fr',
-            rebin = rebin, show_overflows = True
-        )
+            data.Draw('pe')
+            data_triple_bkg_in_mu_bkg_fr.SetLineColor(ROOT.EColor.kRed)
+            data_triple_bkg_in_mu_bkg_fr.SetLineWidth(2)
+            data_triple_bkg_in_mu_bkg_fr.Draw('same,hist')
+            data.SetMaximum(2*max(data.GetMaximum(),
+                                data_triple_bkg_in_mu_bkg_fr.GetMaximum()))
+            triple_legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+            triple_legend.SetBorderSize(0)
+            triple_legend.SetFillStyle(0)
+            triple_legend.AddEntry(data.th1, "#mu anti-iso region", "pe")
+            triple_legend.AddEntry(data_triple_bkg_in_mu_bkg_fr.th1, "Triple fakes", "l")
+            triple_legend.Draw()
+            saveplot(histo_name + '_with_qcd')
 
-        # The unweighted background prediction
-        data_e_bkg = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + selection + var + '_e_bkg',
-            rebin = rebin, show_overflows = True
-        )
+            histo_name = selection + var + '_e_bkg'
 
-        # The background prediction
-        data_e_bkg_fr = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + selection + var + '_e_bkg_fr',
-            rebin = rebin, show_overflows = True
-        )
+            stack = plotter.build_stack(
+                '/emt/final/Ntuple:' + histo_name,
+                include = ['*'],
+                exclude = ['data*', '*VH*'],
+                rebin = rebin, show_overflows=True,
+            )
 
-        # The background prediction from double fakes
-        data_double_bkg_fr = plotter.get_histogram(
-            'data_MuEG',
-            '/emt/final/Ntuple:' + selection + var + '_double_bkg_fr',
-            rebin = rebin, show_overflows = True
-        )
+            data = plotter.get_histogram(
+                'data_MuEG',
+                '/emt/final/Ntuple:' + histo_name,
+                rebin = rebin, show_overflows=True,
+            )
 
-        corrected_mc = ['ZZ', 'WZ']
-        corrected_mc_histos = []
+            data_triple_bkg_in_e_bkg_fr = plotter.get_histogram(
+                'data_MuEG',
+                '/emt/final/Ntuple:' + selection + var + '_triple_bkg_to_e_bkg_fr',
+                rebin = rebin, show_overflows = True
+            )
 
-        # Legend for FR plots
-        legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
-        legend.SetFillStyle(0)
-        legend.SetBorderSize(0)
+            stack.Draw()
+            data.Draw('same,pe')
+            #data_triple_bkg_in_e_bkg_fr.Draw('same,hist')
+            stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
+            stack.GetXaxis().SetTitle(x_title)
+            legend.Draw()
+            canvas.Update()
+            saveplot(histo_name)
 
-        # Now we need to correct the backgrounds which aren't correctly
-        # estimated by the FR method.
-        for to_correct in corrected_mc:
-            mc_final = plotter.get_histogram(
-                to_correct,
+            data.Draw('pe')
+            data_triple_bkg_in_e_bkg_fr.SetLineColor(ROOT.EColor.kRed)
+            data_triple_bkg_in_e_bkg_fr.SetLineWidth(2)
+            data_triple_bkg_in_e_bkg_fr.Draw('same,hist')
+            data.SetMaximum(2*max(data.GetMaximum(),
+                                data_triple_bkg_in_e_bkg_fr.GetMaximum()))
+            triple_legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+            triple_legend.SetBorderSize(0)
+            triple_legend.SetFillStyle(0)
+            triple_legend.AddEntry(data.th1, "e anti-iso region", "pe")
+            triple_legend.AddEntry(data_triple_bkg_in_mu_bkg_fr.th1, "Triple fakes", "l")
+            triple_legend.Draw()
+            saveplot(histo_name + '_with_qcd')
+
+            histo_name = selection + var + '_fin'
+
+            stack = plotter.build_stack(
+                '/emt/final/Ntuple:' + histo_name,
+                include = ['*'],
+                exclude = ['data*', '*VH*'],
+                rebin = rebin, show_overflows=True,
+            )
+
+            data = plotter.get_histogram(
+                'data_MuEG',
+                '/emt/final/Ntuple:' + histo_name,
+                rebin = rebin, show_overflows=True,
+            )
+
+            stack.Draw()
+            data.Draw('same,pe')
+            legend.Draw()
+            stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum()))
+            stack.GetXaxis().SetTitle(x_title)
+            legend.Draw()
+            canvas.Update()
+            saveplot(histo_name)
+
+            ##########################################
+            # Compute results using FR metho
+            ##########################################
+
+            # The final selected events
+            data = plotter.get_histogram(
+                'data_MuEG',
                 '/emt/final/Ntuple:' + selection + var + '_fin',
                 rebin = rebin, show_overflows = True
             )
-            # Get the contribution from the FR method
-            mc_e_bkg_fr = plotter.get_histogram(
-                to_correct,
-                '/emt/final/Ntuple:' + selection + var + '_e_bkg_fr',
+
+            # The unweighted background prediction
+            data_mu_bkg = plotter.get_histogram(
+                'data_MuEG',
+                '/emt/final/Ntuple:' + selection + var + '_mu_bkg',
                 rebin = rebin, show_overflows = True
             )
-            mc_mu_bkg_fr = plotter.get_histogram(
-                to_correct,
+
+            # The background prediction
+            data_mu_bkg_fr = plotter.get_histogram(
+                'data_MuEG',
                 '/emt/final/Ntuple:' + selection + var + '_mu_bkg_fr',
                 rebin = rebin, show_overflows = True
             )
-            mc_correct = mc_final - mc_e_bkg_fr
-            mc_correct = mc_correct - mc_mu_bkg_fr
-            corrected_mc_histos.append(mc_correct)
 
-        signal = plotter.get_histogram(
-            'VH120',
-            '/emt/final/Ntuple:' + selection + var + '_fin',
-            rebin = rebin, show_overflows = True
-        )
+            data_triple_bkg_in_mu_bkg_fr = plotter.get_histogram(
+                'data_MuEG',
+                '/emt/final/Ntuple:' + selection + var + '_triple_bkg_to_mu_bkg_fr',
+                rebin = rebin, show_overflows = True
+            )
 
-        stack = ROOT.THStack(selection + var + "FR_FINAL", "Final #mu#mu#tau selection")
-        for histo_name, histo in zip(corrected_mc, corrected_mc_histos):
-            stack.Add(histo.th1, 'hist')
-            legend.AddEntry(histo.th1, histo_name, 'lf')
+            # The unweighted background prediction
+            data_e_bkg = plotter.get_histogram(
+                'data_MuEG',
+                '/emt/final/Ntuple:' + selection + var + '_e_bkg',
+                rebin = rebin, show_overflows = True
+            )
 
-        styling.apply_style(data_e_bkg_fr, **samplestyles.SAMPLE_STYLES['ztt'])
-        stack.Add(data_e_bkg_fr.th1, 'hist')
-        styling.apply_style(data_mu_bkg_fr, **samplestyles.SAMPLE_STYLES['QCD*'])
-        stack.Add(data_mu_bkg_fr.th1, 'hist')
+            # The background prediction
+            data_e_bkg_fr = plotter.get_histogram(
+                'data_MuEG',
+                '/emt/final/Ntuple:' + selection + var + '_e_bkg_fr',
+                rebin = rebin, show_overflows = True
+            )
 
-        signal = signal*5
-        stack.Add(signal.th1, 'hist')
-        stack.Draw()
-        data.Draw('pe,same')
-        data_double_bkg_fr.SetMarkerColor(ROOT.EColor.kRed)
-        data_double_bkg_fr.Draw('pe, same')
-        stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum())*1.5)
-        stack.GetXaxis().SetTitle(x_title)
+            # The background prediction from double fakes
+            data_double_bkg_fr = plotter.get_histogram(
+                'data_MuEG',
+                '/emt/final/Ntuple:' + selection + var + '_double_bkg_fr',
+                rebin = rebin, show_overflows = True
+            )
 
-        legend.AddEntry(data_e_bkg_fr.th1, "e fakes", 'lf')
-        legend.AddEntry(data_mu_bkg_fr.th1, "#mu fakes", 'lf')
-        legend.AddEntry(signal.th1, "VH(120) #times 5", 'lf')
-        legend.Draw()
+            corrected_mc = ['ZZ', 'WZ']
+            corrected_mc_histos = []
 
-        saveplot(selection + var + '_fr')
+            # Legend for FR plots
+            legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+            legend.SetFillStyle(0)
+            legend.SetBorderSize(0)
 
-        # Now right data card histogram
-        for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
-            channel_dir = data_card_file.mkdir(
-                "emt_%i_%s_%s" % (mass, selection, var))
-            channel_dir.cd()
-            data.SetName('data_obs'); data.Write()
-            data_e_bkg_fr.SetName('e_fakes'); data_e_bkg_fr.Write()
-            data_e_bkg.SetName('e_ext_data_unweighted'); data_e_bkg.Write()
-            data_mu_bkg_fr.SetName('mu_fakes'); data_mu_bkg_fr.Write()
-            data_mu_bkg.SetName('mu_ext_data_unweighted'); data_mu_bkg.Write()
-            corrected_mc_histos[0].SetName('zz'); corrected_mc_histos[0].Write()
-            corrected_mc_histos[1].SetName('wz'); corrected_mc_histos[1].Write()
+            # Now we need to correct the backgrounds which aren't correctly
+            # estimated by the FR method.
+            for to_correct in corrected_mc:
+                mc_final = plotter.get_histogram(
+                    to_correct,
+                    '/emt/final/Ntuple:' + selection + var + '_fin',
+                    rebin = rebin, show_overflows = True
+                )
+                # Get the contribution from the FR method
+                mc_e_bkg_fr = plotter.get_histogram(
+                    to_correct,
+                    '/emt/final/Ntuple:' + selection + var + '_e_bkg_fr',
+                    rebin = rebin, show_overflows = True
+                )
+                mc_mu_bkg_fr = plotter.get_histogram(
+                    to_correct,
+                    '/emt/final/Ntuple:' + selection + var + '_mu_bkg_fr',
+                    rebin = rebin, show_overflows = True
+                )
+                mc_correct = mc_final - mc_e_bkg_fr
+                mc_correct = mc_correct - mc_mu_bkg_fr
+                corrected_mc_histos.append(mc_correct)
 
             signal = plotter.get_histogram(
-                'VH%s' % mass,
+                'VH120',
                 '/emt/final/Ntuple:' + selection + var + '_fin',
-                rebin = rebin, show_overflows=True,
+                rebin = rebin, show_overflows = True
             )
-            signal.SetName('signal'); signal.Write()
+
+            stack = ROOT.THStack(selection + var + "FR_FINAL", "Final #mu#mu#tau selection")
+            for histo_name, histo in zip(corrected_mc, corrected_mc_histos):
+                stack.Add(histo.th1, 'hist')
+                legend.AddEntry(histo.th1, histo_name, 'lf')
+
+            styling.apply_style(data_e_bkg_fr, **samplestyles.SAMPLE_STYLES['ztt'])
+            stack.Add(data_e_bkg_fr.th1, 'hist')
+            styling.apply_style(data_mu_bkg_fr, **samplestyles.SAMPLE_STYLES['QCD*'])
+            stack.Add(data_mu_bkg_fr.th1, 'hist')
+
+            signal = signal*5
+            stack.Add(signal.th1, 'hist')
+            stack.Draw()
+            data.Draw('pe,same')
+            data_double_bkg_fr.SetMarkerColor(ROOT.EColor.kRed)
+            data_double_bkg_fr.Draw('pe, same')
+            stack.SetMaximum(max(stack.GetHistogram().GetMaximum(), data.GetMaximum())*1.5)
+            stack.GetXaxis().SetTitle(x_title)
+
+            legend.AddEntry(data_e_bkg_fr.th1, "e fakes", 'lf')
+            legend.AddEntry(data_mu_bkg_fr.th1, "#mu fakes", 'lf')
+            legend.AddEntry(signal.th1, "VH(120) #times 5", 'lf')
+            legend.Draw()
+
+            saveplot(selection + var + '_fr')
+
+            # Now right data card histogram
+            for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
+                channel_dir = data_card_file.mkdir(
+                    "emt_%i_%s_%s" % (mass, selection, var))
+                channel_dir.cd()
+                data.SetName('data_obs'); data.Write()
+                data_e_bkg_fr.SetName('e_fakes'); data_e_bkg_fr.Write()
+                data_e_bkg.SetName('e_ext_data_unweighted'); data_e_bkg.Write()
+                data_mu_bkg_fr.SetName('mu_fakes'); data_mu_bkg_fr.Write()
+                data_mu_bkg.SetName('mu_ext_data_unweighted'); data_mu_bkg.Write()
+                corrected_mc_histos[0].SetName('zz'); corrected_mc_histos[0].Write()
+                corrected_mc_histos[1].SetName('wz'); corrected_mc_histos[1].Write()
+
+                signal = plotter.get_histogram(
+                    'VH%s' % mass,
+                    '/emt/final/Ntuple:' + selection + var + '_fin',
+                    rebin = rebin, show_overflows=True,
+                )
+                signal.SetName('signal'); signal.Write()
 
