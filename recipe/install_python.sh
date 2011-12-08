@@ -39,3 +39,5 @@ source bin/activate; rehash
 pip install -U matplotlib
 echo "Installing ipython"
 pip install -U ipython
+echo "Installing termcolor"
+pip install -U termcolor
