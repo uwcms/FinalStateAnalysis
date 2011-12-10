@@ -99,16 +99,23 @@ Corrections
 
 The L1FastJet, L2Relative, L3Absolute corrections are applied to MC & Data.  The
 L2L3Residual corrections are additionally applied to Data. Reference:
-`IntroToJEC twiki`_.
+`IntroToJEC twiki`_.  In simulation, a smearing correction (see PAS JME-10-014)
+is additionally applied to correct the simulated jet energy resolution.
+The energy corrections are applied after the smearing is done.
 
 .. _IntroToJEC twiki: https://twiki.cern.ch/twiki/bin/view/CMS/IntroToJEC
 
 The uncorrected, and 1 sigma uncertainties on the JEC are available from the
 ``pat::Jets`` via;
 
-* ``userCand("uncorr")``
-* ``userCand("jes+")``
-* ``userCand("jes-")``
+* ``userCand("uncorr")`` - no corrections or smearing applied
+* ``userCand("unsmeared")`` - the same as above...
+* ``userCand("smear+")`` - smear error up
+* ``userCand("smear-")`` - smear error down
+* ``userCand("jes+")`` - using the JES uncertainty from the CondDB
+* ``userCand("jes-")`` - using the JES uncertainty from the CondDB
+* ``userCand("ues+")`` - using the UES uncertainty of 10%
+* ``userCand("ues-")`` - using the UES uncertainty of 10%
 
 The closest PF patJet is available via the ``userCand('patJet')`` function.
 This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.
