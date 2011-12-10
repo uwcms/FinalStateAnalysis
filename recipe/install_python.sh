@@ -41,3 +41,5 @@ echo "Installing ipython"
 pip install -U ipython
 echo "Installing termcolor"
 pip install -U termcolor
+echo "Installing uncertainties <-- awesome error propagation"
+pip install -U uncertainties
