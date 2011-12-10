@@ -8,6 +8,7 @@ The ``cleanPatElectrons`` collection is defined as electrons
 which have ``pt > 8``. 
 
 The following muon IDs are embedded:
+
 * ``userInt('WWID')``
 * ``userInt('VBTF')``
 
