@@ -22,6 +22,16 @@ jetpt = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+rawjetpt = cms.PSet(
+    min = cms.untracked.double(0),
+    max = cms.untracked.double(200),
+    nbins = cms.untracked.int32(100),
+    name = cms.untracked.string("${name}RawJetPt"),
+    description = cms.untracked.string("${nicename} seed jet raw p_{T}"),
+    plotquantity = cms.untracked.string("${getter}userCand('patJet').userCand('uncorr').pt"),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 decayFinding = cms.PSet(
     min = cms.untracked.double(-0.5),
     max = cms.untracked.double(1.5),
@@ -102,5 +112,5 @@ againstElectronMVA = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
-all = [decayMode, decayFinding, vlooseID, looseID, mediumID, jetpt, btag,
+all = [decayMode, decayFinding, vlooseID, looseID, mediumID, rawjetpt, jetpt, btag,
        tnpPresel, genDecayMode, againstElectronMVA]

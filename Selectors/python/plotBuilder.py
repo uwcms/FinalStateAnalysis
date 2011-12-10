@@ -97,13 +97,6 @@ def makePlots(*legs, **kwargs):
     histos.finalState.histos.append(ht_cfg)
     add_ntuple(ht_cfg.name.value(), ht_cfg.plotquantity.value())
 
-    jetht_cfg = PSetTemplate(plotting.topology.jetht).replace(
-        name = 'VisFinalState', nicename = 'Final State',
-        getter = '',
-    )
-    histos.finalState.histos.append(jetht_cfg)
-    add_ntuple(jetht_cfg.name.value(), jetht_cfg.plotquantity.value())
-
     # Add pileup re-weights
     puWeights = kwargs.get('puWeights', common.puWeights)
     for weight in puWeights:
@@ -111,6 +104,13 @@ def makePlots(*legs, **kwargs):
 
     # Make leg pair plots if we have more than 2 legs
     if len(legs) > 2:
+        jetht_cfg = PSetTemplate(plotting.topology.jetht).replace(
+            name = 'VisFinalState', nicename = 'Final State',
+            getter = '',
+        )
+        histos.finalState.histos.append(jetht_cfg)
+        add_ntuple(jetht_cfg.name.value(), jetht_cfg.plotquantity.value())
+
         for leg1, leg2 in itertools.combinations(legs, 2):
             combo_dict = {
                 'name' : "_".join([leg1['name'], leg2['name']]),

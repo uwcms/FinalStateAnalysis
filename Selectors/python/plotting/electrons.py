@@ -74,6 +74,17 @@ jetPt = cms.PSet(
     plotquantity = cms.untracked.string("${getter}userFloat('jetPt')"),
     lazyParsing = cms.untracked.bool(True),
 )
+rawJetPt = cms.PSet(
+    min = cms.untracked.double(0.0),
+    max = cms.untracked.double(200),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_RawJetPt"),
+    description = cms.untracked.string("${nicename} JetPt"),
+    plotquantity = cms.untracked.string(
+        '? ${getter}userCand("patJet").isNonnull ? '
+        '${getter}userCand("patJet").userCand("uncorr").pt : userFloat("jetPt")'),
+    lazyParsing = cms.untracked.bool(True),
+)
 
 btag = cms.PSet(
     min = cms.untracked.double(-10),
@@ -169,7 +180,7 @@ hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter = get_trigger_matching(
     'hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter')
 
 all = [
-    reliso, wwid, mitid, jetPt, btag, btagmuon, missingHits,
+    reliso, wwid, mitid, jetPt, rawJetPt, btag, btagmuon, missingHits,
     hasConversion,
     cicLoose, cicMedium, cicTight, cicHyperTight,
     hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter,

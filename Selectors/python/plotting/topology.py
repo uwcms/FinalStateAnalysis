@@ -89,6 +89,6 @@ jetht = cms.PSet(
     nbins = cms.untracked.int32(100),
     name = cms.untracked.string("${name}_JetHt"),
     description = cms.untracked.string("${nicename} Jet H_{T}"),
-    plotquantity = cms.untracked.string('subcand("#,#,#", "extJets", "pt > 10 & userFloat(\'idLoose\') > 0.5").get.ht'),
+    plotquantity = cms.untracked.string('${getter}subcand("#,#,#", "extJets", "pt > 10 & userFloat(\'idLoose\') > 0.5").get.ht'),
 )
 
