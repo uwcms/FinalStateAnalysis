@@ -18,6 +18,7 @@ The following isolation quantities are embedded as userFloats (no DB correction)
 * ``pfLooseIsoPt06``
 
 The following IP information is embedded as userFloats: 
+
 * ``ipDXY``
 * ``dz``
 * ``ip3D``
@@ -34,7 +35,6 @@ The following systematics candidates are embedded (as userCands)
 
 The closest PF patJet is available via the ``userCand('patJet')`` function.
 This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.
-
 
 Electrons
 ---------
@@ -146,13 +146,16 @@ The standard complement of discriminators are available.
 * ``againstElectronLoose``
 * ``againstElectronMedium``
 * ``againstElectronTight``
+* ``againstElectronMVA``
 * ``againstMuonLoose``
+* ``againstMuonMedium``
 * ``againstMuonTight``
 
 The seed jets are available via the ``userCand('patJet')`` function.
-The jet pt is stored as ``userFloat('jetPt')``.
+The corrected jet pt is stored as ``userFloat('jetPt')``.
 
 The following IP information is embedded as userFloats: 
+
 * ``ipDXY``
 * ``dz``
 * ``ip3D``
