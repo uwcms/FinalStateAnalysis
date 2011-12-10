@@ -30,7 +30,8 @@ process.fwliteOutput = cms.PSet(fileName = cms.string(options.outputFile))
 process.steering = cms.PSet(
     analyzers = cms.vstring(
         'mm',
-        'em'
+        'em',
+        'mt',
     ),
     reportAfter = cms.uint32(1000),
     ignored_cuts = cms.vstring()
@@ -64,6 +65,12 @@ e_leg1 = {
     'name' : 'Electron', 'getter' :'daughter(0).', 'nicename' : 'Electron',
     'index' : 0,
 }
+
+tau_leg2 = {
+    'name' : 'Tau', 'getter' :'daughter(1).', 'nicename' : 'Tau',
+    'index' : 1,
+}
+
 
 # Define the selections
 mm_selections = cms.VPSet(
@@ -146,6 +153,43 @@ process.em = cms.PSet(
         selections = em_selections
     )
 )
+
+mt_plots, mt_ntuple = makePlots(mu_leg1, tau_leg2)
+
+mt_selections = cms.VPSet(
+    # Take the best unprescaled SingleMu trigger
+    #PSetTemplate(selectors.trigger.hlt).replace(
+        #name = 'HLTSingleMu', nicename = 'Single Mu (no iso)',
+        #hlt_path = r'HLT_Mu15_v\\d+, HLT_Mu24_v\\d+, HLT_Mu30_v\\d+',
+    #),
+    # We don't need to worry about double counting here
+    # Offline cuts on tag muon
+    PSetTemplate(selectors.candidate.eta).replace(
+        threshold = '2.1', **mu_leg1),
+    PSetTemplate(selectors.candidate.pt).replace(
+        threshold = '15', **mu_leg1),
+    # Require WWID on the tag muon
+    PSetTemplate(selectors.muons.id).replace(
+        muID = 'WWID', **mu_leg1),
+)
+
+em_plots, em_ntuple = makePlots(mu_leg2, e_leg1)
+
+# Analyze MuMu states
+process.mt = cms.PSet(
+    process.common,
+    src = cms.InputTag('finalStateMuTau'),
+    analysis = cms.PSet(
+        ignore = process.steering.ignored_cuts,
+        final = cms.PSet(
+            sort = cms.string('daughter(2).pt'),
+            take = cms.uint32(1),
+            plot = cms.PSet(histos = cms.VPSet(), ntuple = mt_ntuple)
+        ),
+        selections = mt_selections
+    )
+)
+
 
 # Build the filter selectors for skimming events.
 for channel in process.steering.analyzers:

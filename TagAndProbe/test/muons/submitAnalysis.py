@@ -3,7 +3,7 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-12-04-v1-MuonTP'
+jobId = '2011-12-10-v1-MuonTP'
 
 patJobId = '2011-11-26-EWKPatTuple'
 patCfg = 'patTuple_cfg'
