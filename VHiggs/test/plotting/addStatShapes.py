@@ -22,12 +22,24 @@ logging.basicConfig(level=logging.INFO)
 
 from rootpy.io import open, DoesNotExist
 
-fake_finder = re.compile('(?P<type>.*)_fakes')
+fake_finder = re.compile('fakes')
 
 def update_file(f):
+    path_regex = re.compile(
+      '(?P<channel>[^_]+)_(?P<charge>[^_]+)_(?P<mass>\d+)_(?P<var>[^_]+)')
+
     for thing in f.walk(class_pattern='TH1*'):
         path, subdirs, histos = thing
         log.info("==> examining directory %s", path)
+        if not histos:
+          continue
+
+        path_match = path_regex.match(path)
+        assert(path_match)
+        # Get a unique label for this channel to use for the fake rate bin
+        # systematics.
+        type = '%s_%s' % (
+            path_match.group('channel'), path_match.group('charge'))
 
         directory = f.get(path)
         directory.cd()
@@ -36,10 +48,6 @@ def update_file(f):
             match = fake_finder.match(histo)
             if match:
                 log.info("Found fake histogram: %s", histo)
-                type = match.group('type')
-                bkg_enriched = '%s_ext_data_unweighted' % type
-                assert(bkg_enriched in histos)
-                bkg_enriched_h = f.get(os.path.join(path, bkg_enriched))
 
                 final_h = f.get(os.path.join(path, histo))
 
@@ -47,11 +55,11 @@ def update_file(f):
 
                 min_threshold = 0.02
 
-                for i, bin in enumerate(bkg_enriched_h):
+                for i, bin in enumerate(final_h):
                     # Skip empty bins
                     if bin == 0:
                         continue
-                    bin_error = math.sqrt(bin)/bin
+                    bin_error = final_h.getBinError(i+1)/bin
                     if bin_error < min_threshold:
                         continue
 

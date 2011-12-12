@@ -13,7 +13,11 @@ import os
 import json
 import sys
 import logging
+import uncertainties
+import math
 import FinalStateAnalysis.PatTools.data as data_tool
+from FinalStateAnalysis.Utilities.AnalysisPlotter import styling,samplestyles
+from FinalStateAnalysis.Utilities.Histo import Histo
 from analysis_cfg import cfg
 
 # Setup logging
@@ -22,6 +26,55 @@ logging.basicConfig(
 log = logging.getLogger("analysis")
 stderr_log = logging.StreamHandler()
 log.addHandler(stderr_log)
+
+def estimate_fake_sum(fr1, fr2, fr12s, fr12en):
+    '''
+    Estimate the total fake rate sum, with proper errors.
+
+    Arguments
+    ---------
+
+    * fr1 and fr2 should be dictionaries with information about the two
+      fake object types. They should have the following entries
+      - en : yield in enriched region
+      - ewk_s : estimated signal yield using EWK fake rate
+      - qcd_s : estimated signal yield using QCD fake rate
+      - 123 : estimated QCD fraction in enriched region
+      - 123en : enriched QCD yield
+    * fr12s and fr12en should give signal yield and enriched count for the
+      double object fake rate
+
+    '''
+    ufloat = uncertainties.ufloat
+    def get_rel_counting_err(number):
+        ''' Get the relative counting error of a number '''
+        return ufloat((1.0, math.sqrt(number)/number))
+
+    # Error on fr1 signal estimate due to counting in enriched region
+    def compute_errors(fakerate):
+        ''' Get the val and error from fr1 dictionary. '''
+        # Counting error due to count in enriched region
+        if not fakerate['en']:
+            return ufloat((0, 0))
+        enriched_region_error = get_rel_counting_err(fakerate['en'])
+        qcd_in_enriched_region_error = get_rel_counting_err(fakerate['123en'])
+
+        qcd_fraction = (fakerate['123']*qcd_in_enriched_region_error/
+                        (fakerate['en']*enriched_region_error))
+
+        est_yield = enriched_region_error*(
+            (1 - qcd_fraction)*fakerate['ewk_s'] +
+            qcd_fraction*fakerate['qcd_s'])
+        return est_yield
+
+    fake1est = compute_errors(fr1)
+    fake2est = compute_errors(fr2)
+    double_est = 0
+    if fr12en:
+        double_est = fr12s*get_rel_counting_err(fr12en)
+
+    total_yield = fake1est + fake2est - double_est
+    return total_yield
 
 if __name__ == "__main__":
     ############################################################################
@@ -34,6 +87,8 @@ if __name__ == "__main__":
         int_lumi, skips, count='emt/skimCounter')
 
     canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
+
+    shape_file = ROOT.TFile("wh_shapes.root", 'RECREATE')
 
     legend = plotter.build_legend(
         '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf',
@@ -103,6 +158,7 @@ if __name__ == "__main__":
                     canvas.Update()
                     filename = os.path.join("plots", channel, charge_cat,
                                             filename + filetype)
+                    log.info('saving %s', filename)
                     canvas.Print(filename)
                     canvas.SetLogy(True)
                     canvas.Update()
@@ -235,15 +291,28 @@ if __name__ == "__main__":
                                       object2_cfg['qcd_fr'],
                                       object3_cfg['qcd_fr']
                                   ))
+                    log.info("------ extrapolating (EWK) triple fakes into fake #2 region")
                     # Extrapolate from triple fakes into fake2 enriched region
                     register_tree('fr123en2_ewk', fr123en_selection,
                                   '(pu2011AB)*(%s)*(%s)' % (
                                       object1_cfg['ewk_fr'],
                                       object3_cfg['ewk_fr']
                                   ))
+                    log.info("------ extrapolating (QCD) triple fakes into fake #2 region")
                     register_tree('fr123en2_qcd', fr123en_selection,
                                   '(pu2011AB)*(%s)*(%s)' % (
                                       object1_cfg['qcd_fr'],
+                                      object3_cfg['qcd_fr']
+                                  ))
+
+                    log.info("------ extrapolating (EWK) triple fakes into double fake 2 region")
+                    register_tree('fr123en12_ewk', fr123en_selection,
+                                  '(pu2011AB)*(%s)' % (
+                                      object3_cfg['ewk_fr']
+                                  ))
+                    log.info("------ extrapolating (QCD) triple fakes into double fake 2 region")
+                    register_tree('fr123en12_qcd', fr123en_selection,
+                                  '(pu2011AB)*(%s)' % (
                                       object3_cfg['qcd_fr']
                                   ))
 
@@ -294,3 +363,255 @@ if __name__ == "__main__":
                     # correction overlayed.
                     # Final prediction with combined fake rate
 
+                    # So we we want fr1en (data), with fr123en1_qcd
+                    for region in ['1', '2', '12']:
+                        data_plot_name = 'fr%sen' % region
+                        triple_fakes = 'fr123en%s_qcd' % region
+                        data_plot = plotter.get_histogram(
+                            primds,
+                            ntuple + ':' + plot_base_name + '_' + data_plot_name,
+                            rebin = rebin, show_overflows=True,
+                        )
+                        fake_plot = plotter.get_histogram(
+                            primds,
+                            ntuple + ':' + plot_base_name + '_' + triple_fakes,
+                            rebin = rebin, show_overflows=True,
+                        )
+                        fake_plot.SetLineWidth(2)
+                        fake_plot.SetLineColor(ROOT.EColor.kRed)
+                        legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+                        legend.SetFillStyle(0)
+                        legend.AddEntry(data_plot.th1, "data", "pe")
+                        legend.AddEntry(fake_plot.th1, "QCD est.", "l")
+                        data_plot.Draw('pe')
+                        fake_plot.Draw('same')
+                        legend.Draw()
+                        saveplot(plot_name + data_plot_name + '_wqcd')
+
+                    ############################################################
+                    ### Get the signal yields for all fake rate types    #######
+                    ############################################################
+
+                    data_fr1s_ewk = plotter.get_histogram(
+                        primds,
+                        ntuple + ':' + plot_base_name + '_fr1s_ewk',
+                        rebin = rebin, show_overflows=True,
+                    )
+                    data_fr2s_ewk = plotter.get_histogram(
+                        primds,
+                        ntuple + ':' + plot_base_name + '_fr2s_ewk',
+                        rebin = rebin, show_overflows=True,
+                    )
+                    data_fr1s_qcd = plotter.get_histogram(
+                        primds,
+                        ntuple + ':' + plot_base_name + '_fr1s_qcd',
+                        rebin = rebin, show_overflows=True,
+                    )
+                    data_fr2s_qcd = plotter.get_histogram(
+                        primds,
+                        ntuple + ':' + plot_base_name + '_fr2s_qcd',
+                        rebin = rebin, show_overflows=True,
+                    )
+                    data_fr12s_ewk = plotter.get_histogram(
+                        primds,
+                        ntuple + ':' + plot_base_name + '_fr12s_ewk',
+                        rebin = rebin, show_overflows=True,
+                    )
+                    data_fr12s_qcd = plotter.get_histogram(
+                        primds,
+                        ntuple + ':' + plot_base_name + '_fr12s_qcd',
+                        rebin = rebin, show_overflows=True,
+                    )
+
+                    ############################################################
+                    ### The final selected data events #########################
+                    ############################################################
+
+                    ult_data = plotter.get_histogram(
+                        primds, ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows=True,
+                    )
+
+                    ############################################################
+                    ### Corrected WZ and ZZ for fake rate contamination  #######
+                    ############################################################
+                    # (these only use EWK FR)
+                    corrected_mc = ['ZZ', 'WZ']
+                    corrected_mc_histos = []
+                    for to_correct in corrected_mc:
+                        log.info("------- correcting final %s MC", to_correct)
+                        mc_final = plotter.get_histogram(
+                            to_correct,
+                            ntuple + ':' + plot_base_name + '_ult',
+                            rebin = rebin, show_overflows = True
+                        )
+                        log.info("-------- initial yield %0.2f",
+                                 mc_final.Integral())
+                        # Get the contribution from the FR method
+                        mc_fake1_bkg_fr = plotter.get_histogram(
+                            to_correct,
+                            ntuple + ':' + plot_base_name + '_fr1s_ewk',
+                            rebin = rebin, show_overflows = True
+                        )
+                        log.info("-------- fake1 yield %0.2f",
+                                 mc_fake1_bkg_fr.Integral())
+                        mc_fake2_bkg_fr = plotter.get_histogram(
+                            to_correct,
+                            ntuple + ':' + plot_base_name + '_fr1s_ewk',
+                            rebin = rebin, show_overflows = True
+                        )
+                        log.info("-------- fake2 yield %0.2f",
+                                 mc_fake2_bkg_fr.Integral())
+                        mc_correct = mc_final - mc_fake2_bkg_fr
+                        mc_correct = mc_correct - mc_fake1_bkg_fr
+                        corrected_mc_histos.append(mc_correct)
+
+                    ############################################################
+                    ### Make the stacked plot showing both fake sources  #######
+                    ############################################################
+
+                    signal = plotter.get_histogram(
+                        'VH125',
+                        ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True
+                    )
+                    stack = ROOT.THStack("FR_FINAL",
+                                         "Final #mu#mu#tau selection")
+                    for histo_name, histo in zip(corrected_mc,
+                                                 corrected_mc_histos):
+                        stack.Add(histo.th1, 'hist')
+                        legend.AddEntry(histo.th1, histo_name, 'lf')
+
+                    styling.apply_style(data_fr1s_ewk,
+                                        **samplestyles.SAMPLE_STYLES['ztt'])
+                    stack.Add(data_fr1s_ewk.th1, 'hist')
+                    styling.apply_style(data_fr2s_ewk,
+                                        **samplestyles.SAMPLE_STYLES['QCD*'])
+                    stack.Add(data_fr2s_ewk.th1, 'hist')
+                    stack.Draw()
+                    ult_data.Draw('same, pe')
+                    stack.SetMaximum(2.*max(
+                        stack.GetHistogram().GetMaximum(),
+                        ult_data.GetMaximum()))
+
+                    saveplot(plot_base_name + '_ult_wfrs')
+
+                    ############################################################
+                    ### Now do the full error estimation of the fake bkgs ######
+                    ############################################################
+
+                    # Uncertainty prescription
+                    # For each bin
+                    # For a single fake rates
+                    # Have an EWK and QCD signal region estimate
+                    # Get the fraction F of QCD in the enriched region
+                    # total yield = (1 - F)*EWK_s + F*QCD_s
+                    # Assume double fakes are dominated by QCD FIXME?
+
+                    def get_data_fr_yield(region, bin):
+                        histo = plotter.get_histogram(
+                            primds,
+                            ntuple + ':' + plot_base_name + '_' + region,
+                            rebin = rebin, show_overflows=True,
+                        )
+                        return histo.GetBinContent(bin)
+
+                    # Loop over the bins
+                    all_fakes = Histo(data_fr2s_ewk)
+                    all_fakes.SetName(plot_base_name + "_all_fakes")
+                    all_fakes.Reset()
+                    styling.apply_style(all_fakes,
+                                        **samplestyles.SAMPLE_STYLES['ztt'])
+
+                    for i in range(0, data_fr2s_ewk.GetNbinsX()+2):
+                        fake1 = {
+                            'en' : get_data_fr_yield('fr1en', i),
+                            'ewk_s' : get_data_fr_yield('fr1s_ewk', i),
+                            'qcd_s' : get_data_fr_yield('fr1s_qcd', i),
+                            '123' : get_data_fr_yield('fr123en1_qcd', i),
+                            '123en' : get_data_fr_yield('fr123en', i),
+                        }
+                        fake2 = {
+                            'en' : get_data_fr_yield('fr2en', i),
+                            'ewk_s' : get_data_fr_yield('fr2s_ewk', i),
+                            'qcd_s' : get_data_fr_yield('fr2s_qcd', i),
+                            '123' : get_data_fr_yield('fr123en2_qcd', i),
+                            '123en' : get_data_fr_yield('fr123en', i),
+                        }
+                        doubles = get_data_fr_yield('fr12s_qcd', i)
+                        doubles_en = get_data_fr_yield('fr12en', i)
+                        total_yield = estimate_fake_sum(
+                            fake1, fake2, doubles, doubles_en)
+                        all_fakes.SetBinContent(
+                            i, max(0, total_yield.nominal_value))
+                        all_fakes.SetBinError(i, total_yield.std_dev())
+                    #all_fakes.Draw('pe')
+
+                    stack = ROOT.THStack("FR_FINAL",
+                                         "Final #mu#mu#tau selection")
+                    for histo_name, histo in zip(corrected_mc,
+                                                 corrected_mc_histos):
+                        stack.Add(histo.th1, 'hist')
+                    stack.Add(all_fakes.th1, 'hist')
+                    stack.Draw()
+
+                    ############################################################
+                    ### Make a nice error band of the fake estimate       ######
+                    ############################################################
+
+                    error_band_hist = all_fakes + \
+                            corrected_mc_histos[0] + corrected_mc_histos[1]
+                    # Copy only errors from fake rate
+                    for i in range(0, data_fr2s_ewk.GetNbinsX()+2):
+                        error_band_hist.SetBinError(i, all_fakes.GetBinError(i))
+
+                    error_band_hist.SetLineColor(ROOT.EColor.kBlack)
+                    error_band_hist.SetFillColor(
+                        samplestyles.SAMPLE_STYLES['fake_error']['color'].code
+                    )
+                    error_band_hist.SetFillStyle(1001)
+                    error_band_hist.SetMarkerSize(0)
+                    error_band_hist.DrawCopy('same,e2')
+                    error_band_hist.SetFillStyle(0)
+                    error_band_hist.Draw('same,hist')
+                    ult_data.Draw('pe,same,x0')
+                    stack.SetMaximum(2.*max(
+                            stack.GetHistogram().GetMaximum(),
+                            ult_data.GetMaximum()))
+
+                    signalx5 = signal*5
+                    signalx5.SetLineStyle(1)
+                    signalx5.SetLineWidth(2)
+                    signalx5.SetLineColor(ROOT.EColor.kRed)
+                    signalx5.SetFillStyle(0)
+                    signalx5.Draw('same, hist')
+
+                    saveplot(plot_base_name + '_ult_combfks')
+
+                    ############################################################
+                    ### Now save the results in a root file for limits    ######
+                    ############################################################
+                    # We make a different output for each higgs mass
+                    for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
+                        # Set the correct name for everything
+                        ult_data.SetName('data_obs')
+                        corrected_mc_histos[0].SetName('zz')
+                        corrected_mc_histos[1].SetName('wz')
+                        all_fakes.SetName('fakes')
+                        signal = plotter.get_histogram(
+                            'VH%i' % mass,
+                            ntuple + ':' + plot_base_name + '_ult',
+                            rebin = rebin, show_overflows = True
+                        )
+                        signal.SetName('signal')
+                        # Make the output TDirectory
+                        output_dir = shape_file.mkdir('_'.join(
+                            [channel, charge_cat, str(mass), var]
+                        ))
+                        # Write everything to the output directory
+                        output_dir.cd()
+                        ult_data.Write()
+                        corrected_mc_histos[0].Write()
+                        corrected_mc_histos[1].Write()
+                        all_fakes.Write()
+                        signal.Write()
