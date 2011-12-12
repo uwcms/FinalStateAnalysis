@@ -56,6 +56,9 @@ qcd_selection = [
 wjets_selection_emu = [
     x.replace('Muon1', 'Muon2') for x in wjets_selection
 ]
+wjets_selection_tau = [
+    x.replace('Muon2', 'Tau') for x in wjets_selection
+]
 
 qcd_selection_emu = [
     x.replace('Muon1', 'Muon2') for x in qcd_selection
@@ -395,6 +398,33 @@ fakerates = {
             'Electron_EID_MITID > 0.5',
             'Electron_ERelIso < 0.3',
         ]
+    },
+    'tau' : {
+        'ntuple' : 'mt',
+        'pd' : 'data_SingleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*DoubleMu*'],
+        'mc_pd' : 'Wjets',
+        'varname' : 'TauJetPt',
+        'vartitle' : 'Tau Jet Pt',
+        'var' : 'TauJetPt',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'evtType' : '#mu#tau',
+        'base_cuts' : wjets_selection_tau,
+        'control_plots' : [
+        ],
+        'final_cuts' : [],
+        'denom' : [
+            'IsoMus_HLT > 0.5',
+            'TauCharge*Muon1Charge > 0',
+            'TauPt > 20',
+            'TauAbsEta < 2.5',
+            'Tau_TauBtag < 3.3',
+            'TauDZ < 0.2',
+        ],
+        'num' : [
+            'Tau_LooseHPS > 0.5',
+        ]
     }
 }
 
@@ -406,7 +436,7 @@ for data_set, skips, int_lumi, puTag in [
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'Mu', '2011-11-27-v1-MuonTP', 'scratch_results', int_lumi, skips,
+        'Mu', '2011-12-10-v1-MuonTP', 'scratch_results', int_lumi, skips,
         count = '/mm/skimCounter', unweighted = False)
 
     legend = plotter.build_legend(
