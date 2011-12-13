@@ -8,7 +8,7 @@ options = TauVarParsing.TauVarParsing(
     xSecErr = 0.0,
     skipEvents=0, # For debugging
     keepEverything=0,
-    verbose=1, # Print out summary table at end
+    verbose=0, # Print out summary table at end
 )
 
 files = [
