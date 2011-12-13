@@ -50,7 +50,8 @@ def build_data(analysis, jobid, source, target_lumi,
         if skip_sample(name, skips):
             continue
         if not glob.glob(get_result_dir(jobid, source, name)):
-            log.warning("No files - skipping sample %s!", name)
+            log.warning("No files in %s - skipping sample %s!",
+                        get_result_dir(jobid, source, name), name)
             continue
 
         collection = TFileCollection.TFileCollection(
