@@ -8,6 +8,7 @@ options = TauVarParsing.TauVarParsing(
     xSecErr = 0.0,
     skipEvents=0, # For debugging
     keepEverything=0,
+    verbose=1, # Print out summary table at end
 )
 
 files = [
@@ -70,7 +71,8 @@ tuplize.insert(0, process.eventCount)
 
 process.p = cms.Path(tuplize)
 
-#process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+if options.verbose:
+    process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.outpath = cms.EndPath(process.out)
 
 # Tell the framework to shut up!
