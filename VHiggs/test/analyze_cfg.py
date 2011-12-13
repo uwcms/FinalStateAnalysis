@@ -20,6 +20,10 @@ process.source = cms.Source(
     #lumisToProcess = options.buildPoolSourceLumiMask()
 )
 
+if options.eventsToProcess:
+    process.source.eventsToProcess = cms.untracked.VEventRange(
+        options.eventsToProcess)
+
 plots_filename = options.outputFile.replace('.root', '.plots.root')
 process.fwliteOutput = cms.PSet(fileName = cms.string(options.outputFile))
 process.TFileService = cms.Service(
@@ -45,10 +49,14 @@ process.steering = cms.PSet(
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(options.maxEvents))
 
+pu_weight = 'puWeight("2011AB", "%s")' % options.puScenario
+if not options.isMC:
+    pu_weight = '1.0'
+
 # Common among all analyzers
 process.common = cms.PSet(
     weights = cms.vstring(
-        'weight("3bx_S42011A")'
+        pu_weight
     ),
     evtSrc = cms.InputTag("patFinalStateEventProducer"),
     skimCounter = cms.InputTag("eventCount", "", "TUPLE"),
