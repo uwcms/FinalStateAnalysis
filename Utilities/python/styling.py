@@ -61,6 +61,7 @@ class RootColor(object):
 
 colors = {
     'ewk_yellow' : RootColor(255, 204, 51),
+    'ewk_dark_yellow' : RootColor(191, 153, 38),
     'ewk_orange' : RootColor(255, 102, 0),
     'ewk_purple' : RootColor(153, 51, 204),
     'ewk_light_purple' : RootColor(153, 51, 204).lighter(1.5),

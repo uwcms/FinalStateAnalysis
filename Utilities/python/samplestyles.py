@@ -16,6 +16,10 @@ SAMPLE_STYLES = {
         'color' : styling.colors['ewk_yellow'],
         'nicename' : 'Z+jets',
     },
+    'fake_error' : {
+        'color' : styling.colors['ewk_dark_yellow'],
+        'nicename' : 'Z+jets',
+    },
     'zll' : {
         'color' : styling.colors['ewk_purple'],
         'nicename' : 'Z #rightarrow ll',
