@@ -21,7 +21,7 @@ goodMuons = cms.EDFilter(
     "MuonSelector",
     src = cms.InputTag('muons'),
     cut = cms.string(
-        "(isGlobalMuon | isStandAloneMuon | isTrackerMuon) & abs(eta) < 2.1 & pt > 25.0"),
+        "(isGlobalMuon | isStandAloneMuon | isTrackerMuon) & abs(eta) < 2.1 & pt > 5.0"),
     filter = cms.bool(False)
 )
 
@@ -29,7 +29,7 @@ goodElectrons = cms.EDFilter(
     "GsfElectronSelector",
     src = cms.InputTag('gsfElectrons'),
     cut = cms.string(
-        "abs(eta) < 2.5 & pt > 8.0"),
+        "abs(eta) < 2.5 & pt > 7.0"),
     filter = cms.bool(False)
 )
 
