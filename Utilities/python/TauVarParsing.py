@@ -102,6 +102,11 @@ class TauVarParsing(VarParsing.VarParsing):
                       self.multiplicity.singleton,
                       self.varType.string,
                       "Path to lumi mask JSON file")
+        self.register('eventsToProcess',
+                      '',
+                      self.multiplicity.list,
+                      self.varType.string,
+                      "Events to process")
 
         # Get extra options w/ their defaults
         for key, value in kwargs.iteritems():
