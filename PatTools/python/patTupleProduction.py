@@ -176,7 +176,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Define the default lepton cleaning
     process.cleanPatElectrons.preselection = cms.string('pt > 8')
-    process.cleanPatElectrons.checkOverlaps.muons.requireNoOverlaps = True
+    process.cleanPatElectrons.checkOverlaps.muons.requireNoOverlaps = False
     # Make sure we don't kill any good taus by calling them electrons
     process.cleanPatElectrons.checkOverlaps.taus = cms.PSet(
         src = final_tau_collection,
@@ -184,18 +184,18 @@ def configurePatTuple(process, isMC=True, **kwargs):
         preselection = cms.string(
             "tauID('decayModeFinding') > 0.5 &&"
             "tauID('byLooseCombinedIsolationDeltaBetaCorr') > 0.5 &&"
-            "tauID('againstElectronTight') > 0.5 && "
-            "pt > 15"
+            "tauID('againstElectronLoose') > 0.5 && "
+            "pt > 10"
         ),
         deltaR = cms.double(0.1),
         checkRecoComponents = cms.bool(False),
         pairCut = cms.string(""),
-        requireNoOverlaps = cms.bool(True),
+        requireNoOverlaps = cms.bool(False),
     )
     process.cleanPatTaus.preselection =  cms.string('')
     # Remove muons and electrons
-    process.cleanPatTaus.checkOverlaps.muons.requireNoOverlaps = True
-    process.cleanPatTaus.checkOverlaps.electrons.requireNoOverlaps = True
+    process.cleanPatTaus.checkOverlaps.muons.requireNoOverlaps = False
+    process.cleanPatTaus.checkOverlaps.electrons.requireNoOverlaps = False
 
     output_commands.append('*_cleanPatTaus_*_*')
     output_commands.append('*_cleanPatElectrons_*_*')
