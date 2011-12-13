@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
     shape_file = ROOT.TFile("wh_shapes.root", 'RECREATE')
 
-    legend = plotter.build_legend(
+    mc_legend = plotter.build_legend(
         '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf',
         xlow = 0.6, ylow=0.5,)
 
@@ -153,7 +153,6 @@ if __name__ == "__main__":
                 def saveplot(filename):
                     # Save the current canvas
                     filetype = '.pdf'
-                    #legend.Draw()
                     canvas.SetLogy(False)
                     canvas.Update()
                     filename = os.path.join("plots", channel, charge_cat,
@@ -341,13 +340,12 @@ if __name__ == "__main__":
                             rebin = rebin, show_overflows=True,
                         )
                         stack.Draw()
-                        data.Draw('same,pe')
-                        legend.Draw()
+                        data.Draw('same,pe,x0')
                         stack.SetMaximum(max(
                             stack.GetHistogram().GetMaximum(),
                             data.GetMaximum()))
                         stack.GetXaxis().SetTitle(xaxis_title)
-                        legend.Draw()
+                        mc_legend.Draw()
                         canvas.Update()
                         saveplot(plot_name + '_mc')
 
@@ -381,9 +379,9 @@ if __name__ == "__main__":
                         fake_plot.SetLineColor(ROOT.EColor.kRed)
                         legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
                         legend.SetFillStyle(0)
-                        legend.AddEntry(data_plot.th1, "data", "pe")
+                        legend.AddEntry(data_plot.th1, "data", "lpe,x0")
                         legend.AddEntry(fake_plot.th1, "QCD est.", "l")
-                        data_plot.Draw('pe')
+                        data_plot.Draw('pe,x0')
                         fake_plot.Draw('same')
                         legend.Draw()
                         saveplot(plot_name + data_plot_name + '_wqcd')
@@ -477,6 +475,8 @@ if __name__ == "__main__":
                     )
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
+                    legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+                    legend.SetFillStyle(0)
                     for histo_name, histo in zip(corrected_mc,
                                                  corrected_mc_histos):
                         stack.Add(histo.th1, 'hist')
@@ -485,11 +485,16 @@ if __name__ == "__main__":
                     styling.apply_style(data_fr1s_ewk,
                                         **samplestyles.SAMPLE_STYLES['ztt'])
                     stack.Add(data_fr1s_ewk.th1, 'hist')
+                    legend.AddEntry(data_fr1s_ewk.th1,
+                                    "%s fakes" % object1_cfg['name'], "lf")
                     styling.apply_style(data_fr2s_ewk,
                                         **samplestyles.SAMPLE_STYLES['QCD*'])
                     stack.Add(data_fr2s_ewk.th1, 'hist')
+                    legend.AddEntry(data_fr2s_ewk.th1,
+                                    "%s fakes" % object2_cfg['name'], "lf")
                     stack.Draw()
-                    ult_data.Draw('same, pe')
+                    ult_data.Draw('same, pe,x0')
+                    legend.Draw()
                     stack.SetMaximum(2.*max(
                         stack.GetHistogram().GetMaximum(),
                         ult_data.GetMaximum()))
@@ -547,12 +552,16 @@ if __name__ == "__main__":
                         all_fakes.SetBinError(i, total_yield.std_dev())
                     #all_fakes.Draw('pe')
 
+                    legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+                    legend.SetFillStyle(0)
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
                     for histo_name, histo in zip(corrected_mc,
                                                  corrected_mc_histos):
                         stack.Add(histo.th1, 'hist')
+                        legend.AddEntry(histo.th1, histo_name, 'lf')
                     stack.Add(all_fakes.th1, 'hist')
+                    legend.AddEntry(all_fakes.th1, "Fakes", "lf")
                     stack.Draw()
 
                     ############################################################
@@ -571,6 +580,7 @@ if __name__ == "__main__":
                     )
                     error_band_hist.SetFillStyle(1001)
                     error_band_hist.SetMarkerSize(0)
+                    legend.AddEntry(error_band_hist.th1, "Fake error", "lf")
                     error_band_hist.DrawCopy('same,e2')
                     error_band_hist.SetFillStyle(0)
                     error_band_hist.Draw('same,hist')
@@ -585,6 +595,8 @@ if __name__ == "__main__":
                     signalx5.SetLineColor(ROOT.EColor.kRed)
                     signalx5.SetFillStyle(0)
                     signalx5.Draw('same, hist')
+                    legend.AddEntry(signalx5.th1, "VH(125) #times 5 ", "lf")
+                    legend.Draw()
 
                     saveplot(plot_base_name + '_ult_combfks')
 

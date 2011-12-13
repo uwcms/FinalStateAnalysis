@@ -60,6 +60,7 @@ cfg = {
                     }
                 },
                 'object1' : {
+                    'name' : 'e',
                     'pass' : [
                         'Elec_EID_MITID > 0.5',
                         'Elec_ERelIso < 0.3',
@@ -69,6 +70,7 @@ cfg = {
                     'qcd_fr' : get_fr('eMITQCD', 'Elec_JetPt'),
                 },
                 'object2' : {
+                    'name' : '#mu',
                     'pass' : [
                         'Mu_MuRelIso < 0.3',
                         'Mu_MuID_WWID > 0.5',
@@ -78,6 +80,7 @@ cfg = {
                     'qcd_fr' : get_fr('muHighPtQCDOnly', 'Mu_JetPt'),
                 },
                 'object3' : {
+                    'name' : '#tau',
                     'pass' : ['Tau_LooseHPS > 0.5'],
                     'fail' : ['Tau_LooseHPS < 0.5'],
                     'ewk_fr' : get_fr('tau', 'TauJetPt'),
@@ -97,12 +100,14 @@ cfg = {
                     }
                 },
                 'object1' : {
+                    'name' : '#tau',
                     'pass' : ['Tau_LooseHPS > 0.5'],
                     'fail' : ['Tau_LooseHPS < 0.5'],
                     'ewk_fr' : get_fr('tau', 'TauJetPt'),
                     'qcd_fr' : get_fr('tau', 'TauJetPt'), # FIXME
                 },
                 'object2' : {
+                    'name' : '#mu',
                     'pass' : [
                         'Mu_MuRelIso < 0.3',
                         'Mu_MuID_WWID > 0.5',
@@ -112,6 +117,7 @@ cfg = {
                     'qcd_fr' : get_fr('muHighPtQCDOnly', 'Mu_JetPt'),
                 },
                 'object3' : {
+                    'name' : 'e',
                     'pass' : [
                         'Elec_EID_MITID > 0.5',
                         'Elec_ERelIso < 0.3',
@@ -175,6 +181,7 @@ cfg = {
                     }
                 },
                 'object1' : {
+                    'name' : '#mu_{2}',
                     'pass' : [
                         'Muon2_MuRelIso < 0.3',
                         'Muon2_MuID_WWID > 0.5',
@@ -184,6 +191,7 @@ cfg = {
                     'qcd_fr' : get_fr('muQCD', 'Muon2_JetPt'),
                 },
                 'object2' : {
+                    'name' : '#mu_{1}',
                     'pass' : [
                         'Muon1_MuRelIso < 0.3',
                         'Muon1_MuID_WWID > 0.5',
@@ -193,6 +201,7 @@ cfg = {
                     'qcd_fr' : get_fr('muHighPtQCDOnly', 'Muon1_JetPt'),
                 },
                 'object3' : {
+                    'name' : '#tau',
                     'pass' : ['Tau_LooseHPS > 0.5'],
                     'fail' : ['Tau_LooseHPS < 0.5'],
                     'ewk_fr' : get_fr('tau', 'TauJetPt'),
@@ -246,6 +255,7 @@ cfg = {
                     }
                 },
                 'object1' : {
+                    'name' : '#mu_{2}',
                     'pass' : [
                         'Mu2_MuRelIso < 0.1',
                         'Mu2_MuID_WWID > 0.5',
@@ -255,6 +265,7 @@ cfg = {
                     'qcd_fr' : get_fr('muQCDTight', 'Mu2_JetPt'),
                 },
                 'object2' : {
+                    'name' : '#mu_{1}',
                     'pass' : [
                         'Mu1_MuRelIso < 0.3',
                         'Mu1_MuID_WWID > 0.5',
@@ -264,6 +275,7 @@ cfg = {
                     'qcd_fr' : get_fr('muHighPtQCDOnly', 'Mu1_JetPt'),
                 },
                 'object3' : {
+                    'name' : '#tau',
                     'pass' : [
                         'Elec_EID_WWID > 0.5',
                         'Elec_ERelIso < 0.3',
