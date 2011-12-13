@@ -29,6 +29,7 @@ process.Out = cms.OutputModule(
     "PoolOutputModule",
     fileName = cms.untracked.string (options.outputFile),
     outputCommands = cms.untracked.vstring(
+        'keep *',
         'drop LumiDetails_lumiProducer_*_*',
         'drop LumiSummary_lumiProducer_*_*',
         'drop RunSummary_lumiProducer_*_*',
