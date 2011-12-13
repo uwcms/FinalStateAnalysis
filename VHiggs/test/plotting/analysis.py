@@ -83,7 +83,7 @@ if __name__ == "__main__":
     int_lumi = 4600
     skips = ['DoubleEl', 'EM']
     samples, plotter = data_tool.build_data(
-        'VH', '2011-12-05-v1-WHAnalyze', 'scratch_results',
+        'VH', '2011-12-10-v1-WHAnalyze', 'scratch_results',
         int_lumi, skips, count='emt/skimCounter')
 
     canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)

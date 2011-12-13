@@ -57,7 +57,15 @@ cfg = {
                             'vtxChi2/vtxNDOF < 10',
                         ],
                         'vars' : ['ETauMass', 'EJetPt', 'HT'],
-                    }
+                    },
+                    'htonly' : {
+                        'cuts' : [ 'VisFinalState_Ht > 80',],
+                        'vars' : ['vtxChi2NODF'],
+                    },
+                    'vtxonly' : {
+                        'cuts' : ['vtxChi2/vtxNDOF < 10'],
+                        'vars' : ['HT'],
+                    },
                 },
                 'object1' : {
                     'name' : 'e',
@@ -178,7 +186,15 @@ cfg = {
                             'vtxChi2/vtxNDOF < 10',
                         ],
                         'vars' : ['MuTauMass', 'HT'],
-                    }
+                    },
+                    'htonly' : {
+                        'cuts' : [ 'VisFinalState_Ht > 80',],
+                        'vars' : ['vtxChi2NODF'],
+                    },
+                    'vtxonly' : {
+                        'cuts' : ['vtxChi2/vtxNDOF < 10'],
+                        'vars' : ['HT'],
+                    },
                 },
                 'object1' : {
                     'name' : '#mu_{2}',
