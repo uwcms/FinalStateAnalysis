@@ -37,3 +37,28 @@ This stupid thing just figures out the deltaR on the command line
 Usage: 
 
   deltaR.py eta1,phi1 eta2,phi2
+
+dropLumiInfo.py
+===============
+
+If you merge a very tight skim together into one EDM root file, it still has the
+lumi information from every skimmed lumisection/run.  This can take a lot of
+space O(1GB).  This script just takes an input file and drops all the lumi and
+run auxilliary information from it.
+
+Usage:
+
+  dropLumiInfo.py inputFiles=[input_file] outputFile=[output_file]
+
+
+addSelectedHPSTaus.py
+=====================
+
+Fireworks (cmsShow) works on a collection basis, so it doesn't work well w/ the
+PFTau discriminator model.  This script just takes an input file, runs PFTau,
+and adds a collection "hpsLooseTaus", which are taus which pass the decay mode
+and loose combined iso discriminators. 
+
+Usage:
+
+  addSelectedHPSTaus.py inputFiles=[input_file] outputFile=[output_file]
