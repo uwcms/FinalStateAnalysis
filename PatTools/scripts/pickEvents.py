@@ -4,6 +4,10 @@
 
 Pick events from different datasets using a special json specifier file.
 
+Usage:
+
+    pickEvents.py json_file [label]
+
 The json file should have the following format:
 
 {
@@ -14,7 +18,7 @@ The json file should have the following format:
 The actual dataset corresponding to a dataset alias is mapped in
 PatTools.python.datadefs
 
-The resulting edmPickEvents.py calles
+The resulting edmPickEvents.py calls are written to stdout
 
 Author: Evan K. Friis, UW Madison
 
@@ -36,13 +40,17 @@ if __name__ == "__main__":
         sys.stderr.write("Input file %s does not exist!\n" % filename)
         sys.exit(2)
 
+    label = ''
+    if len(sys.argv) > 2:
+        label = sys.argv[2]
+
     file = open(filename, 'r')
     events = json.load(file)
 
     for dataset, runevts in events.iteritems():
         real_dataset = datadefs[dataset]['datasetpath']
         command = ['edmPickEvents.py']
-        command.append('--output=%s' % dataset)
+        command.append('--output=%s' % (dataset + label))
         command.append(real_dataset)
         sys.stderr.write('Picking events for dataset: %s = %s '
                          % (dataset, real_dataset))
