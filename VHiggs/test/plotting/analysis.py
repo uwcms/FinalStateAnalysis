@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
     canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 
-    shape_file = ROOT.TFile("wh_shapes.root", 'RECREATE')
+    shape_file = ROOT.TFile("wh_shapes_raw.root", 'RECREATE')
 
     mc_legend = plotter.build_legend(
         '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf',
@@ -618,7 +618,7 @@ if __name__ == "__main__":
                         signal.SetName('signal')
                         # Make the output TDirectory
                         output_dir = shape_file.mkdir('_'.join(
-                            [channel, charge_cat, str(mass), var]
+                            [channel, charge_cat, selection_name, str(mass), var]
                         ))
                         # Write everything to the output directory
                         output_dir.cd()

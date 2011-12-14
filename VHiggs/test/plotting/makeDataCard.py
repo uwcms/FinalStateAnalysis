@@ -47,9 +47,9 @@ shape_file = "wh_shapes.root"
 
 shapes = io.open(shape_file, "READ")
 
-for label, folder in [('mmt_mumu', 'mmt_mumu_115_MuTauMass'),
-                      ('emt_emu', 'emt_emu_115_ETauMass'),
-                      ('emm_mumu', 'emm_mumu_115_MuElecMass')]:
+for label, folder in [('mmt_mumu', 'mmt_mumu_final_115_MuTauMass'),
+                      ('emt_emu', 'emt_emu_final_115_ETauMass'),
+                      ('emm_mumu', 'emm_mumu_final_115_MuElecMass')]:
     file = open(label + '_yields.tex', 'w')
     dump_table(shapes, folder, file)
 
@@ -64,7 +64,7 @@ emm_shape = 'MuElecMass'
 #emm_shape = 'count'
 
 for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
-    mmt_folder = "mmt_mumu_%i_%s" % (mass, mmt_shape)
+    mmt_folder = "mmt_mumu_final_%i_%s" % (mass, mmt_shape)
     mmt = dc.DataCardChannel(mmt_folder, shapes)
     mmt.add_signal('signal')
     mmt.add_background('fakes')
@@ -92,7 +92,7 @@ for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
         for fake_sys in fake_sys_bins:
             mmt.add_sys(fake_sys, 1.0, 'fakes', type='shape')
 
-    emt_folder = "emt_emu_%i_%s" % (mass, emt_shape)
+    emt_folder = "emt_emu_final_%i_%s" % (mass, emt_shape)
     emt = dc.DataCardChannel(emt_folder, shapes)
     emt.add_signal('signal')
     emt.add_background('fakes')
@@ -120,8 +120,8 @@ for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
         for fake_sys in fake_sys_bins:
             emt.add_sys(fake_sys, 1.0, 'fakes', type='shape')
 
-    emm_folder = "emm_mumu_%i_%s" % (mass, emm_shape)
-    emm = dc.DataCardChannel("emm_mumu_%i_%s" % (mass, emm_shape), shapes)
+    emm_folder = "emm_mumu_final_%i_%s" % (mass, emm_shape)
+    emm = dc.DataCardChannel(emm_folder, shapes)
     emm.add_signal('signal')
     emm.add_background('fakes')
     emm.add_background('wz')

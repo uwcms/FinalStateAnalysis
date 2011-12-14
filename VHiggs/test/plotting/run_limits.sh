@@ -1,6 +1,8 @@
 #!/bin/bash
 export NOFWLITE=blah
+set -e # fail immediately on error
 
+cp wh_shapes_raw.root wh_shapes.root
 echo "Adding statistical shape uncertainties"
 ./addStatShapes.py wh_shapes.root
 
@@ -19,14 +21,3 @@ python plot_limit.py all_channels
 python plot_limit.py emm_channels
 python plot_limit.py emt_channels
 python plot_limit.py mmt_channels
-
-#ntoys=50
-
-#for card in cards/*.card
-#do
-  #echo "Doing expected limits for $card"
-  #combine $card -t $ntoys | limit2JSON.py > $card.exp.json
-  #echo "Doing observed limits for $card"
-  #combine $card | limit2JSON.py > $card.obs.json
-  #echo "Doing asymptotic limits for $card"
-#done
