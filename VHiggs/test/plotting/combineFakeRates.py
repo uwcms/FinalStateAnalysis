@@ -8,7 +8,7 @@ import json
 import logging
 log = logging.getLogger("combineFR")
 ch = logging.StreamHandler()
-log.setLevel(logging.INFO)
+log.setLevel(logging.DEBUG)
 log.addHandler(ch)
 
 import ROOT
@@ -27,15 +27,19 @@ def get_histograms(file, data_set, fr_type):
 roo_fit_func_str = "scale*TMath::Landau(jetPt,mu,sigma,0)+offset"
 fit_func = ROOT.TF1("f1", "[0]*TMath::Landau(x,[1],[2],0)+[3]", 10, 200)
 
-fit_func.SetParameter(0, 0.5)
-fit_func.SetParName(0, "scale")
-fit_func.SetParLimits(0, 0.0, 10)
-fit_func.SetParameter(1, 15)
-fit_func.SetParName(1, "mu")
-fit_func.SetParameter(2, 1)
-fit_func.SetParName(2, "sigma")
-fit_func.SetParameter(3, 5e-3)
-fit_func.SetParName(3, "constant")
+def setup_func_pars(func):
+    ''' Refresh the fit parameters '''
+    func.SetParameter(0, 3.5)
+    func.SetParName(0, "scale")
+    func.SetParLimits(0, 0.0, 10)
+    func.SetParameter(1, 17)
+    func.SetParName(1, "mu")
+    func.SetParameter(2, 1.9)
+    func.SetParName(2, "sigma")
+    func.SetParameter(3, 10e-3)
+    func.SetParName(3, "constant")
+
+setup_func_pars(fit_func)
 
 object_config = {
     'mu' : {
@@ -56,24 +60,24 @@ object_config = {
                 'histos' : get_histograms(trilepton_fr_file, '2011AB', 'mu'),
                 'rebin' : 5,
             },
-            'TriLep_ZEE' : {
-                'title' : 'Zee + jet_{#mu} (Double Elec)',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muZEE'),
-                'rebin' : 5,
-            },
-            #'Trilep_TT' : {
-                #'title' : 'ttbar + jet_{#mu} (Double Mu)',
-                #'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muTTbar'),
+            #'TriLep_ZEE' : {
+                #'title' : 'Zee + jet_{#mu} (Double Elec)',
+                #'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muZEE'),
                 #'rebin' : 5,
             #},
-            'Trilep_QCD' : {
-                'title' : 'QCD (Double Mu)',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muQCD'),
-                'rebin' : 5,
-                'exclude' : True,
-            },
+            ##'Trilep_TT' : {
+                ##'title' : 'ttbar + jet_{#mu} (Double Mu)',
+                ##'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muTTbar'),
+                ##'rebin' : 5,
+            ##},
+            #'Trilep_QCD' : {
+                #'title' : 'QCD (Double Mu)',
+                #'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muQCD'),
+                #'rebin' : 5,
+                #'exclude' : True,
+            #},
         },
-        'rebin' : 1,
+        'rebin' : 2,
         'fit_label' : 'EWK Fit',
         'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
@@ -300,6 +304,11 @@ object_config = {
 # Store the fit results so we can put them in a json at the end
 fit_results = {}
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
+frame = ROOT.TH1F("frame", "Fake rate", 100, 0, 100)
+frame.GetXaxis().SetTitle("Jet p_{T}")
+frame.SetMinimum(1e-3)
+frame.SetMaximum(1.0)
+
 for object, object_info in object_config.iteritems():
     object_result = {}
     fit_results[object] = object_result
@@ -319,12 +328,11 @@ for object, object_info in object_config.iteritems():
 
         if not type_info.get('exclude'):
             if combined_denom is None:
-                combined_denom = denom
+                combined_denom = Histo(denom.th1.Clone())
             else:
                 combined_denom = combined_denom + denom
-
             if combined_num is None:
-                combined_num = num
+                combined_num = Histo(num.th1.Clone())
             else:
                 combined_num = combined_num + num
 
@@ -332,24 +340,41 @@ for object, object_info in object_config.iteritems():
         num = Histo(num.th1, rebin=type_info['rebin'])
         denom = Histo(denom.th1, rebin=type_info['rebin'])
 
+        log.debug("Numerator N=%i min=%f max=%f",
+                  num.GetNbinsX(), num.GetXaxis().GetXmin(),
+                  num.GetXaxis().GetXmax())
+        log.debug("Denominator N=%i min=%f max=%f",
+                  denom.GetNbinsX(), denom.GetXaxis().GetXmin(),
+                  denom.GetXaxis().GetXmax())
+
         efficiency = ROOT.TGraphAsymmErrors(num.th1, denom.th1)
         type_info['efficiency'] = efficiency
 
     canvas.SetLogy(True)
 
-    frame = ROOT.TH1F("frame", "Fake rate", 100, 0, 100)
-    frame.GetXaxis().SetTitle("Jet p_{T}")
-    frame.SetMinimum(1e-3)
-    frame.SetMaximum(1.0)
+    log.info("Computing combined efficiency")
 
     combined_num = Histo(combined_num.th1, rebin=object_info['rebin'])
     combined_denom = Histo(combined_denom.th1, rebin=object_info['rebin'])
 
+    log.debug("Numerator N=%i min=%f max=%f",
+              combined_num.GetNbinsX(), combined_num.GetXaxis().GetXmin(),
+              combined_num.GetXaxis().GetXmax())
+    log.debug("Denominator N=%i min=%f max=%f",
+              combined_denom.GetNbinsX(), combined_denom.GetXaxis().GetXmin(),
+              combined_denom.GetXaxis().GetXmax())
+
     combined_eff = ROOT.TGraphAsymmErrors(combined_num.th1, combined_denom.th1)
 
+    log.debug("WTF")
+
     data_fit_func = object_info['function']
+    setup_func_pars(data_fit_func)
 
     data_fit_func.SetLineColor(ROOT.EColor.kRed)
+    data_fit_func.SetLineWidth(3)
+
+    log.info("Fitting")
 
     ############################################################################
     ### Fit using regular ROOT  ################################################
