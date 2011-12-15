@@ -19,7 +19,8 @@ cfg = {
             'ETauMass' : ('Elec_Tau_Mass', 'M_{e#tau}', [60, 0, 300], 5),
             'EJetPt' : ('Elec_JetPt', 'p_{T}', [100, 0, 200], 5),
             'TauJetPt' : ('TauJetPt', 'p_{T}', [100, 0, 200], 5),
-            'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 5),
+            'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDF', [100, 0, 30], 5),
+            'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
         },
         'baseline' : [
             'MuPt > 18',
@@ -147,10 +148,10 @@ cfg = {
         'variables' : {
             'MuTauMass' : ('Muon2_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300], 5),
             #    'Muon2_MtToMET' : ('Muon2_MtToMET', 'M_{T} #mu(2)-#tau', [100, 0, 300],),
-            'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NODF', [100, 0, 30], 5),
+            'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDF', [100, 0, 30], 5),
             #    'MET' : ('METPt', 'MET', [100, 0, 200]),
             'Njets' : ('NjetsPt20_Njets', 'N_{jets}', [10, -0.5, 9.5], 1),
-            'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 5),
+            'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
             'count' : ('1', 'Count', [1, 0, 1], 1),
         },
         'baseline' : [
@@ -235,7 +236,7 @@ cfg = {
         'variables' : {
             'MuElecMass' : ('Elec_Mu2_Mass', 'M_{e#mu}', [60, 0, 300], 5),
             'Mu1_MtToMET' : ('Mu1_MtToMET', 'M_{T} #mu(1)-#tau', [60, 0, 300], 5),
-            'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 5),
+            'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
             'count' : ('1', 'Count', [1, 0, 1], 1),
         },
         'baseline' : [
