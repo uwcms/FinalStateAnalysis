@@ -36,7 +36,7 @@ skips = ['EM']
 int_lumi = 4600
 
 samples, plotter = data_tool.build_data(
-    'VH', '2011-11-16-v1-WHAnalyze', 'scratch_results', int_lumi, skips,
+    'VH', '2011-12-10-v1-WHAnalyze', 'scratch_results', int_lumi, skips,
     count = '/mmt/skimCounter', unweighted = False)
 
 
