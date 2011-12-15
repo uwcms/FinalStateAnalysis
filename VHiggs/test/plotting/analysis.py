@@ -327,6 +327,16 @@ if __name__ == "__main__":
                         'fr1s_qcd', 'fr2s_qcd', 'fr12s_qcd',
                         'fr123en'
                     ]
+                    signalx100 = plotter.get_histogram(
+                        'VH125',
+                        ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True
+                    )
+                    signalx100 = signalx100*100
+                    signalx100.SetFillStyle(0)
+                    signalx100.SetLineWidth(3)
+                    mc_legend_with_signal = mc_legend.Clone()
+                    mc_legend_with_signal.AddEntry(signalx100.th1, "VH(125) #times 100", "l")
                     for plot in mc_plots:
                         plot_name = plot_base_name + '_' + plot
                         stack = plotter.build_stack(
@@ -348,6 +358,13 @@ if __name__ == "__main__":
                         mc_legend.Draw()
                         canvas.Update()
                         saveplot(plot_name + '_mc')
+
+                        stack.Draw()
+                        data.Draw('same,pe,x0')
+                        signalx100.Draw('same,hist')
+                        mc_legend_with_signal.Draw()
+                        canvas.Update()
+                        saveplot(plot_name + '_mc_with_signal100')
 
                     ############################################################
                     ### Now make control plots of the background regions #######
@@ -382,6 +399,7 @@ if __name__ == "__main__":
                         legend.AddEntry(data_plot.th1, "data", "lpe,x0")
                         legend.AddEntry(fake_plot.th1, "QCD est.", "l")
                         data_plot.Draw('pe,x0')
+                        data_plot.SetTitle(xaxis_title)
                         fake_plot.Draw('same')
                         legend.Draw()
                         saveplot(plot_name + data_plot_name + '_wqcd')
@@ -493,6 +511,7 @@ if __name__ == "__main__":
                     legend.AddEntry(data_fr2s_ewk.th1,
                                     "%s fakes" % object2_cfg['name'], "lf")
                     stack.Draw()
+                    stack.GetXaxis().SetTitle(xaxis_title)
                     ult_data.Draw('same, pe,x0')
                     legend.Draw()
                     stack.SetMaximum(2.*max(
@@ -554,6 +573,7 @@ if __name__ == "__main__":
 
                     legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
                     legend.SetFillStyle(0)
+                    legend.SetBorderSize(1)
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
                     for histo_name, histo in zip(corrected_mc,
@@ -563,6 +583,7 @@ if __name__ == "__main__":
                     stack.Add(all_fakes.th1, 'hist')
                     legend.AddEntry(all_fakes.th1, "Fakes", "lf")
                     stack.Draw()
+                    stack.GetXaxis().SetTitle(xaxis_title)
 
                     ############################################################
                     ### Make a nice error band of the fake estimate       ######
