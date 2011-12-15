@@ -41,7 +41,7 @@ base_dimuon_selection = [
     'Muon1Charge*Muon2Charge < 0',
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
-    'METPt < 20',
+    'METPt < 30',
 ]
 
 # We also look at E-Mu OS + probe
@@ -337,6 +337,7 @@ fakerates = {
             'Elec_EBtag < 3.3',
             'Elec_MissingHits < 0.5',
             'Elec_hasConversion < 0.5',
+            'ElecDZ < 0.2',
             'NIsoElecPt10_Nelectrons < 0.5',
         ],
         'num' : [
@@ -476,13 +477,13 @@ fakerates = {
 
 output_file = ROOT.TFile("results_fakeRates.root", "RECREATE")
 for data_set, skips, int_lumi in [
-    #('2011A', ['2011B', 'EM'], 2170),
+    ('2011A', ['2011B', 'EM'], 2170),
     #('2011B', ['2011A', 'v1_d', 'EM'], 2170),
-                                  ('2011AB', ['EM'], 4600)]:
+    ('2011AB', ['EM'], 4600)]:
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'VH', '2011-11-27-v1-WHAnalyze', 'scratch_results',
+        'VH', '2011-12-10-v1-WHAnalyze', 'scratch_results',
         int_lumi, skips, count='emt/skimCounter')
 
     legend = plotter.build_legend(

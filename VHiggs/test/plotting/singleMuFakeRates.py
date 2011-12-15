@@ -32,7 +32,6 @@ wjets_selection = [
     'Muon1Charge*Muon2Charge > 0',
     'NIsoMuonsPt5_Nmuons < 0.5',
     'NIsoElecPt10_Nelectrons < 0.5',
-    #'NBjetsPt20_Nbjets < 0.5',
     'vtxNDOF > 0',
     'vtxChi2/vtxNDOF < 10',
     'NIsoTausPt20_NIsoTaus < 0.5',
@@ -264,6 +263,8 @@ fakerates = {
         'control_plots' : [
             ('Njets', 'NjetsPt20_Njets',
              "Number of jets", [10, -0.5, 9.5]),
+            ('Nbjets', 'NBjetsPt20_Nbjets',
+             "Number of b-jets", [10, -0.5, 9.5]),
             #('Nhits', 'Electron_MissingHits',
              #"Number of hits", [10, -0.5, 9.5]),
             ('AbsIso', 'Electron_ERelIso*ElectronPt',
@@ -274,6 +275,7 @@ fakerates = {
         'denom' : [
             'Mu17Ele8All_HLT > 0.5',
             'Muon2_MuBtag < 0.5',
+            #'NBjetsPt20_Nbjets < 0.5',
             'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 10',
             'ElectronAbsEta < 2.5',
@@ -303,8 +305,8 @@ fakerates = {
         'control_plots' : [
             ('Njets', 'NjetsPt20_Njets',
              "Number of jets", [10, -0.5, 9.5]),
-            #('Nhits', 'Electron_MissingHits',
-             #"Number of hits", [10, -0.5, 9.5]),
+            ('Nbjets', 'NBjetsPt20_Nbjets',
+             "Number of b-jets", [10, -0.5, 9.5]),
             ('AbsIso', 'Electron_ERelIso*ElectronPt',
              "Absolute Iso", [100, 0, 20]),
         ],
