@@ -16,7 +16,7 @@ a single row in an ntuple.  The advantage of the single object is that is both
 lightweight and that it holds references to all of the interesting information
 in the event.  Thus you can compose complex observables using only a single
 object, enabling many tasks to use the string cut parser.  This allows new cuts
-to be implemented quickly, and without writing an C++ code.
+to be implemented quickly, and without writing any C++ code.
 
 Contents:
 

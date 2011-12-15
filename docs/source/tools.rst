@@ -1,5 +1,10 @@
+Tools
+=====
+
+These are various scripts that automate tedious tasks.
+
 pickEvents.py
-=============
+-------------
 
 Location: PatTools/scripts/pickEvents.py
 
@@ -18,11 +23,12 @@ the datadefs dictionary in ``PatTools/datadefs.py``
 
 Usage: 
 
-  pickEvents.py [json_file] > pickers.sh
+  pickEvents.py json_file > pickers.sh
+
   bash < pickers.sh
 
 printEvents.py
-=============
+-------------
 
 Location: PatTools/scripts/printEvents.py
 
@@ -30,7 +36,7 @@ Companion to pickEvents (above).  Prints out a nicely formatted list given the
 run-lumi-evt json file.
 
 deltaR.py
-=========
+---------
 
 This stupid thing just figures out the deltaR on the command line
 
@@ -39,7 +45,7 @@ Usage:
   deltaR.py eta1,phi1 eta2,phi2
 
 dropLumiInfo.py
-===============
+---------------
 
 If you merge a very tight skim together into one EDM root file, it still has the
 lumi information from every skimmed lumisection/run.  This can take a lot of
@@ -52,7 +58,7 @@ Usage:
 
 
 addSelectedHPSTaus.py
-=====================
+---------------------
 
 Fireworks (cmsShow) works on a collection basis, so it doesn't work well w/ the
 PFTau discriminator model.  This script just takes an input file, runs PFTau,

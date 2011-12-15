@@ -1,5 +1,9 @@
 import rootpy.io as io
-import emtAnalysis as emt
+import sys
+sys.path.append('.')
+from analysis_cfg import cfg
+
+print "Run me from test/plotting"
 
 file = io.open('../vhiggs.root')
 
@@ -20,6 +24,13 @@ events = [
     (180241, 731156083),
 ]
 
+all_cuts = cfg['emt']['baseline'] + \
+        cfg['emt']['charge_categories']['emu']['object1']['pass'] +\
+        cfg['emt']['charge_categories']['emu']['object2']['pass'] +\
+        cfg['emt']['charge_categories']['emu']['object3']['pass'] +\
+        cfg['emt']['charge_categories']['emu']['selections']['final']['cuts']
+
+
 good_events = 0
 for run, event in events:
     run_evt = [
@@ -37,7 +48,7 @@ for run, event in events:
         idx_cut = ['idx == %i' % i]
         bad_cuts = 0
         good_cands = 0
-        for cut in emt.all_cuts:
+        for cut in all_cuts:
             if 'MuCharge' in cut:
                 continue
             to_test = run_evt + idx_cut + [cut]
