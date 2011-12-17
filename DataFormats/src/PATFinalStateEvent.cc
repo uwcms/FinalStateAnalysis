@@ -1,5 +1,5 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
-#include "FinalStateAnalysis/DataFormats/interface/SmartTrigger.h"
+#include "FinalStateAnalysis/DataAlgos/interface/SmartTrigger.h"
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
 
 #include "DataFormats/Math/interface/deltaR.h"

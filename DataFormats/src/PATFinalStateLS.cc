@@ -1,5 +1,5 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLS.h"
-#include "FinalStateAnalysis/DataFormats/interface/SmartTrigger.h"
+#include "FinalStateAnalysis/DataAlgos/interface/SmartTrigger.h"
 
 PATFinalStateLS::PATFinalStateLS() {}
 

@@ -5,8 +5,3 @@
   <use   name="DataFormats/Common"/>
   <use   name="cppunit"/>
 </bin>
-
-<bin   name="TestSmartTrigger" file="test_SmartTrigger.cppunit.cc">
-  <use   name="FinalStateAnalysis/DataFormats"/>
-  <use   name="cppunit"/>
-</bin>

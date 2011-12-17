@@ -6,7 +6,7 @@
 #include <Utilities/Testing/interface/CppUnit_testdriver.icpp>
 #include <vector>
 
-#include "FinalStateAnalysis/DataFormats/interface/SmartTrigger.h"
+#include "FinalStateAnalysis/DataAlgos/interface/SmartTrigger.h"
 
 class testSmartTrigger: public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(testSmartTrigger);

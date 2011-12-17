@@ -1,4 +1,4 @@
-#include "FinalStateAnalysis/DataFormats/interface/SmartTrigger.h"
+#include "FinalStateAnalysis/DataAlgos/interface/SmartTrigger.h"
 
 #include <string>
 #include <vector>
