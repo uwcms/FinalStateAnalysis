@@ -27,7 +27,8 @@ The following IP information is embedded as userFloats:
 * ``tip`` 
 * ``tipS``  - significance
 
-The following systematics candidates are embedded (as userCands)
+The following systematics candidates are embedded (as userCands).  The energy
+scale uncertainty is taken from the muon MuscleFit.
 
 * ``uncorr`` (no muon energy scale)
 * ``nom`` (nominal ES correction, same as pat::Muon p4)
@@ -83,6 +84,14 @@ The following IP information is embedded as userFloats:
 * ``tip`` 
 * ``tipS``  - significance
 
+The following systematics candidates are embedded (as userCands).  The electron
+energy scale uncertainty is currently configured to be 6% (I think this is a
+fixme)
+
+* ``uncorr`` (no muon energy scale)
+* ``ees-`` (down 1 sigma)
+* ``ees+`` (up 1 sigma)
+
 Jets
 ----
 
@@ -126,7 +135,6 @@ Taus
 
 The taus are HPS PFTaus.
 
-
 Discriminators
 ''''''''''''''
 The standard complement of discriminators are available.
@@ -164,13 +172,9 @@ The following IP information is embedded as userFloats:
 * ``tip`` 
 * ``tipS``  - significance
 
-Utilities
-=========
+The following systematics candidates are embedded (as userCands).  The tau
+energy scale uncertainty is currently configured to be 3% 
 
-Scripts
--------
-    
-* ``trimJSON.py`` apply a run selection to a JSON file
-
-
-
+* ``uncorr`` (no tau energy scale)
+* ``tes-`` (down 1 sigma)
+* ``tes+`` (up 1 sigma)

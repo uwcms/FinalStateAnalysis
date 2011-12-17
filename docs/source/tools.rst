@@ -28,7 +28,7 @@ Usage:
   bash < pickers.sh
 
 printEvents.py
--------------
+--------------
 
 Location: PatTools/scripts/printEvents.py
 
@@ -68,3 +68,15 @@ and loose combined iso discriminators.
 Usage:
 
   addSelectedHPSTaus.py inputFiles=[input_file] outputFile=[output_file]
+
+trimJSON.py
+-----------
+
+Location: Utilities/scripts/trimJSON.py
+
+Apply a run selection to a JSON file.
+
+Usage:
+
+  trimJSON.py -i json_in -o json_out [-firstRun X] [-lastRun Y]
+
