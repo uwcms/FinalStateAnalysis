@@ -1,4 +1,5 @@
 #!/bin/bash
+cmsenv
 
 export recipe=$CMSSW_BASE/src/FinalStateAnalysis/recipe
 export vpython=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/vpython

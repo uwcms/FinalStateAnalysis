@@ -24,15 +24,17 @@ Contents:
    :maxdepth: 2
 
    intro
+   install
    pat_tuple
    tools
+   version_control
 
 
+Building this documentation
+---------------------------
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+This documentation is contained in the FinalStateAnalysis/docs/source folder.
+It's built using Sphinx.  The doc files are formatted as 
+`Restructured Text <http://docutils.sourceforge.net/rst.html>`_.   To build
+the documentation, run ``make html`` in FinalStateAnalysis/docs, and open 
+``FinalStateAnalysis/docs/build/html/index.html`` in your web browser.
