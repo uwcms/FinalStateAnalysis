@@ -1,3 +1,4 @@
+==========================
 FinalStateAnalysis Package
 ==========================
 
@@ -5,9 +6,7 @@ The Final State Analysis (FSA) package is a CMSSW analysis framework.  Common
 utilities are organized as subpackages.  Each analysis (Higgs to tau, SSDL, etc)
 should exists as a separate subpackage.
 
-The full `Final State Analysis documentation
-<http://readthedocs.org/docs/final-state-analysis/en/latest/>`_ is available
-online.
+The full documentation is available at http://readthedocs.org/docs/final-state-analysis/en/latest/. 
 
 DataFormats
 -----------
@@ -25,7 +24,7 @@ RecoTools
 ---------
 
 The RecoTools package contains plugin modules and utilities for dealing with
-RECO and AOD content.  This package is not FWKLITE compatible.
+RECO and AOD content.  This package is **not** FWKLITE compatible.
 
 PatTools
 --------
@@ -41,3 +40,28 @@ the final analysis builder.  It additionally contains additional helper classes
 to analyze PATFinalStates, as well as the python definitions of common cuts to
 be applied.  New selections and plots should be defined in
 ``Selectors/python/selectors`` and ``Selectors/python/plotting``, respectively.
+
+Analysis Specific Packages
+==========================
+
+Each analysis, which uses the above packages, is configued in a separate
+sub--package.  In general, an analysis can/should have some variation of following content:
+
+python/selection.py 
+  Defines the selections and plots (from the Selectors package) used in the
+  analysis.  
+ 
+test/analyze_cfg.py
+  Defines the final ntuple production cfg.  This is the steering file for the
+  analyzeFinalStatesBinary.
+ 
+test/submit_analysis.py
+  Submits the analyze_cfg.py jobs to condor/GRID/etc.
+
+test/plotting/*
+  Tools to analyze the final level ntuple and produces plots.
+
+TagAndProbe
+-----------
+
+
