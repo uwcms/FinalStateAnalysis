@@ -1,6 +1,6 @@
-==========================
-FinalStateAnalysis Package
-==========================
+======================================
+FinalStateAnalysis Package Description
+======================================
 
 The Final State Analysis (FSA) package is a CMSSW analysis framework.  Common
 utilities are organized as subpackages.  Each analysis (Higgs to tau, SSDL, etc)
@@ -41,6 +41,17 @@ to analyze PATFinalStates, as well as the python definitions of common cuts to
 be applied.  New selections and plots should be defined in
 ``Selectors/python/selectors`` and ``Selectors/python/plotting``, respectively.
 
+Utilities
+---------
+
+Contains various command--line tools and C++ functionality.  
+
+docs and recipe
+---------------
+
+The recipe section contains scripts which automate installation of related
+packages.  The docs folder just contains all the documentation.
+
 ==========================
 Analysis Specific Packages
 ==========================
@@ -49,7 +60,7 @@ Each analysis, which uses the above packages, is configued in a separate
 sub--package.  In general, an analysis can/should have some variation of following content:
 
 python/selection.py 
-  Defines the selections and plots (from the Selectors package) used in the
+  Defines the selections and plots (from the Selectors_ package) used in the
   analysis.  
  
 test/analyze_cfg.py
@@ -65,4 +76,10 @@ test/plotting/*
 TagAndProbe
 -----------
 
+Tools for generating Tag and Probe like analysis for muons and taus.
 
+
+VHiggs
+------
+
+Associated Higgs to tau analysis.
