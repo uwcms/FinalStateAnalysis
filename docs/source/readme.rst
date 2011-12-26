@@ -41,6 +41,7 @@ to analyze PATFinalStates, as well as the python definitions of common cuts to
 be applied.  New selections and plots should be defined in
 ``Selectors/python/selectors`` and ``Selectors/python/plotting``, respectively.
 
+==========================
 Analysis Specific Packages
 ==========================
 
