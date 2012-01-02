@@ -158,10 +158,12 @@ for region in templates.regions:
             label.Draw()
             canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result.pdf")
             canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result.png")
+            canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result.C")
             canvas.SetLogy(True)
             frame.SetMaximum(5*frame.GetMaximum())
             canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result_log.pdf")
             canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result_log.png")
+            canvas.SaveAs("final_fit_" + var.GetName() + "_" + region + "_result_log.C")
             canvas.SetLogy(False)
 
 # Get truth
