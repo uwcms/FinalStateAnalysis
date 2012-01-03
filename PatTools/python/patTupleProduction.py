@@ -78,7 +78,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patMuons.embedTrack = True
     process.patMuons.pvSrc = cms.InputTag("selectedPrimaryVertex")
     # Do extra electron ID
-    process.load("FinalStateAnalysis.PatTools.electronID_cff")
+    process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
     process.tuplize += process.recoElectronID
     #output_commands.append('*_particleFlow_*_*')
     #print repr(process.pfPostSequence)
