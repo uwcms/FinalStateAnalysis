@@ -1,0 +1,14 @@
+*.pyc
+CVS
+*.pdf
+*.png
+__init__.py
+*.root
+do_*.txt
+*.log
+*.txt
+*.tgz
+*card.*json
+*\.card
+recipe/external/*
+docs/build/*

@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
-from FinalStateAnalysis.RecoTools.electronIDMVAConfiguration_cfi import \
-        electronMVAIDNOIPcfg
+from FinalStateAnalysis.PatTools.electrons.electronIDMVAConfiguration_cfi \
+        import electronMVAIDNOIPcfg
 
 patElectronMVAIDEmbedder = cms.EDProducer(
     "PATElectronMVAIDEmbedder",

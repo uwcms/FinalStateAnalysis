@@ -3,8 +3,22 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+==================================
 The Final State Analysis Framework
 ==================================
+
+
+About this documentation
+------------------------
+
+An online version of this documentation is available at
+http://readthedocs.org/docs/final-state-analysis/en/latest/.  This manual uses
+the Sphinx_ documentation engine.  The source can be found in ``docs/source``
+directory.  You can re-build the documentation by installing sphinx and then
+running ``make html`` in the ``docs`` directory.
+
+.. _Sphinx: http://sphinx.pocoo.org/
+
 
 Philosophy
 ----------
@@ -18,23 +32,16 @@ in the event.  Thus you can compose complex observables using only a single
 object, enabling many tasks to use the string cut parser.  This allows new cuts
 to be implemented quickly, and without writing any C++ code.
 
-Contents:
+Contents
+========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    intro
+   readme
    install
    pat_tuple
    tools
    version_control
 
-
-Building this documentation
----------------------------
-
-This documentation is contained in the FinalStateAnalysis/docs/source folder.
-It's built using Sphinx.  The doc files are formatted as 
-`Restructured Text <http://docutils.sourceforge.net/rst.html>`_.   To build
-the documentation, run ``make html`` in FinalStateAnalysis/docs, and open 
-``FinalStateAnalysis/docs/build/html/index.html`` in your web browser.
