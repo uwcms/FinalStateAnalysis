@@ -21,6 +21,7 @@ cfg = {
             'TauJetPt' : ('TauJetPt', 'p_{T}', [100, 0, 200], 5),
             'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDF', [100, 0, 30], 5),
             'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
+            'count' : ('1', 'Count', [1, 0, 1], 1),
         },
         'baseline' : [
             'MuPt > 18',
@@ -57,7 +58,7 @@ cfg = {
                             'VisFinalState_Ht > 80',
                             'vtxChi2/vtxNDOF < 10',
                         ],
-                        'vars' : ['ETauMass', 'EJetPt', 'HT'],
+                        'vars' : ['ETauMass', 'EJetPt', 'HT', 'count'],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
@@ -105,7 +106,7 @@ cfg = {
                             'VisFinalState_Ht > 80',
                             'vtxChi2/vtxNDOF < 10',
                         ],
-                        'vars' : ['ETauMass', 'EJetPt', 'TauJetPt', 'HT'],
+                        'vars' : ['ETauMass', 'EJetPt', 'TauJetPt', 'HT', 'count'],
                     }
                 },
                 'object1' : {
@@ -186,7 +187,7 @@ cfg = {
                             'VisFinalState_Ht > 80',
                             'vtxChi2/vtxNDOF < 10',
                         ],
-                        'vars' : ['MuTauMass', 'HT'],
+                        'vars' : ['MuTauMass', 'HT', 'count'],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
@@ -268,7 +269,7 @@ cfg = {
                             'VisFinalState_Ht > 80',
                             'vtxChi2/vtxNDOF < 10',
                         ],
-                        'vars' : ['MuElecMass', 'HT'],
+                        'vars' : ['MuElecMass', 'HT', 'count'],
                     }
                 },
                 'object1' : {
