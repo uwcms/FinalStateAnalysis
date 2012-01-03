@@ -16,7 +16,7 @@
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 
 #include "DataFormats/PatCandidates/interface/Electron.h"
-#include "FinalStateAnalysis/RecoTools/interface/ElectronIDMVA.h"
+#include "FinalStateAnalysis/PatTools/interface/ElectronIDMVA.h"
 
 class PATElectronMVAIDEmbedder : public edm::EDProducer {
   public:
