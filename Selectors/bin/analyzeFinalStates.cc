@@ -13,33 +13,23 @@
 #include <TFile.h>
 #include <TSystem.h>
 
+#include "FWCore/Utilities/interface/UnixSignalHandlers.h"
+
 #include <boost/ptr_container/ptr_vector.hpp>
 
-#include <signal.h>
+int main(int argc, char* argv[]) {
 
-// Keyboard interrupt handler so we can Ctrl-C gracefully
-bool sigint_detected = false;
-
-void int_handler(int x) {
-  std::cout << "Ctrl-C detected" << std::endl;
-  sigint_detected = true;
-}
-
-int main(int argc, char* argv[])
-{
-  // load framework libraries
-  gSystem->Load( "libFWCoreFWLite" );
-  AutoLibraryLoader::enable();
-
-  // only allow one argument for this simple example which should be the
-  // the python cfg file
+  // only allow one argument for this which should be the python cfg file
   if ( argc < 2 ) {
     std::cout << "Usage : " << argv[0] << " [parameters.py]" << std::endl;
     return 0;
   }
 
-  // Register interrupt handler
-  signal(SIGINT,int_handler);
+  // load framework libraries
+  gSystem->Load( "libFWCoreFWLite" );
+  AutoLibraryLoader::enable();
+
+  edm::installCustomHandler(SIGINT, edm::ep_sigusr2);
 
   // Get the python configuration
   PythonProcessDesc builder(argv[1], argc, argv);
@@ -84,35 +74,42 @@ int main(int argc, char* argv[])
   const vstring& inputFiles = inputHandler.files();
   // loop the vector of input files
   fwlite::ChainEvent event( inputFiles );
-  for(event.toBegin(); !event.atEnd(); ++event, ++ievt){
-    // Check if we are in a new lumi.  If so we gotta call the appropriate
-    // function in the wrapped class.
-    edm::EventID id = event.id();
-    if (id.luminosityBlock() != lastLumi || id.run() != lastRun) {
-      lastLumi = id.luminosityBlock();
-      lastRun = id.run();
-      // We have started a new lumi block
-      const fwlite::LuminosityBlock& ls = event.getLuminosityBlock();
+
+  // watch for shutdown signal
+  {
+    boost::mutex::scoped_lock sl(edm::usr2_lock);
+
+    for(event.toBegin(); !event.atEnd(); ++event, ++ievt){
+      // Check if we are in a new lumi.  If so we gotta call the appropriate
+      // function in the wrapped class.
+      edm::EventID id = event.id();
+      if (id.luminosityBlock() != lastLumi || id.run() != lastRun) {
+        lastLumi = id.luminosityBlock();
+        lastRun = id.run();
+        // We have started a new lumi block
+        const fwlite::LuminosityBlock& ls = event.getLuminosityBlock();
+        for (size_t i = 0; i < analyzers.size(); ++i) {
+          analyzers[i].beginLuminosityBlock(ls);
+        }
+      }
+
+      // break loop if maximal number of events is reached
+      if(maxEvents>0 ? ievt+1>maxEvents : false) break;
+      // simple event counter
+      if(reportAfter!=0 ? (ievt>0 && ievt%reportAfter==0) : false)
+        std::cout << "  processing event: " << ievt << std::endl;
+      // analyze event
       for (size_t i = 0; i < analyzers.size(); ++i) {
-        analyzers[i].beginLuminosityBlock(ls);
+        analyzers[i].analyze(event);
+      }
+
+      if (edm::shutdown_flag) {
+        std::cerr << "Signal " << edm::getSigNum() << " detected, quitting after " << ievt << " events."
+          << std::endl;
+        break;
       }
     }
 
-    // break loop if maximal number of events is reached
-    if(maxEvents>0 ? ievt+1>maxEvents : false) break;
-    // simple event counter
-    if(reportAfter!=0 ? (ievt>0 && ievt%reportAfter==0) : false)
-      std::cout << "  processing event: " << ievt << std::endl;
-    // analyze event
-    for (size_t i = 0; i < analyzers.size(); ++i) {
-      analyzers[i].analyze(event);
-    }
-
-    if (sigint_detected) {
-      std::cerr << "SIGINT detected, quitting after " << ievt << " events."
-        << std::endl;
-      break;
-    }
   }
   for (size_t i = 0; i < analyzers.size(); ++i) {
     analyzers[i].endJob();
