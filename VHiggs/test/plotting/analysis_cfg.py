@@ -1,5 +1,16 @@
 import json
 
+'''
+
+Define top-level configuration for WH analysis.
+
+'''
+
+# Data source parameters
+INT_LUMI = 4600
+#JOBID = '2011-12-10-v1-WHAnalyze'
+JOBID = '2012-01-02-v1-WHAnalyze'
+
 # Setup function which retrieves fake rate weights
 fake_rates_file = open('fake_rates.json')
 fake_rates_info = json.load(fake_rates_file)
@@ -10,6 +21,7 @@ def get_fr(label, variable):
     fake_rate_fun = fake_rate_fun.replace('VAR', variable)
     weight = '((%s)/(1-%s))' % (fake_rate_fun, fake_rate_fun)
     return weight
+
 
 cfg = {
     'emt' : {
@@ -23,6 +35,7 @@ cfg = {
             'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
             'count' : ('1', 'Count', [1, 0, 1], 1),
         },
+        # The common cuts
         'baseline' : [
             'MuPt > 18',
             'ElecPt > 10',
@@ -47,7 +60,9 @@ cfg = {
             'Tau_TauBtag < 3.3',
             'Tau_ElectronMVA > 0.5',
         ],
+        # Samples not applicable to this analysis
         'exclude' : ['*DoubleMu*', '*DoubleEl*'],
+        # Different sub-categories w/ their charge requirements
         'charge_categories' : {
             'emu' : {
                 'cat_baseline' : ['ElecCharge*MuCharge > 0'],

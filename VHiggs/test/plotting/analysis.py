@@ -18,7 +18,7 @@ import math
 import FinalStateAnalysis.PatTools.data as data_tool
 from FinalStateAnalysis.Utilities.AnalysisPlotter import styling,samplestyles
 from FinalStateAnalysis.Utilities.Histo import Histo
-from analysis_cfg import cfg
+import analysis_cfg
 
 # Setup logging
 logging.basicConfig(
@@ -80,10 +80,10 @@ if __name__ == "__main__":
     ############################################################################
     ### Load the data ##########################################################
     ############################################################################
-    int_lumi = 4600
+    int_lumi = analysis_cfg.INT_LUMI
     skips = ['DoubleEl', 'EM']
     samples, plotter = data_tool.build_data(
-        'VH', '2011-12-10-v1-WHAnalyze', 'scratch_results',
+        'VH', analysis_cfg.JOBID, 'scratch_results',
         int_lumi, skips, count='emt/skimCounter')
 
     canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     ############################################################################
     ### Loop over all channels to analyze  #####################################
     ############################################################################
-    for channel, channel_cfg in cfg.iteritems():
+    for channel, channel_cfg in analysis_cfg.cfg.iteritems():
         log.info("Analyzing channel: %s", channel)
         # Unpack the configuration
         ntuple = channel_cfg['ntuple']
