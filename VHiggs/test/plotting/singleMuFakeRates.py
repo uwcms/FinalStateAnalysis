@@ -4,11 +4,13 @@ Measure jet->lepton fake rates in single muon events
 
 '''
 
+import copy
+import logging
+import os
+import re
+import sys
 
 import ROOT
-import os
-import sys
-import logging
 import FinalStateAnalysis.PatTools.data as data_tool
 
 # Logging options
@@ -429,6 +431,24 @@ fakerates = {
         ]
     }
 }
+
+# Hack to split by eta
+varname_extractor = re.compile('(?P<var>\w+)AbsEta\s*<\s*[0-9\.]+')
+for fr in list(fakerates.keys()):
+    info = fakerates[fr]
+    barrel_info_clone = copy.deepcopy(info)
+    endcap_info_clone = copy.deepcopy(info)
+    # Figure out variable name
+    varname = None
+    for cut in info['denom']:
+        match = varname_extractor.match(cut)
+        if match:
+            varname = match.group('var')
+    assert(varname)
+    barrel_info_clone['denom'].append('%sAbsEta <= 1.48' % varname)
+    endcap_info_clone['denom'].append('%sAbsEta > 1.48' % varname)
+    fakerates[fr + '_endcap'] = endcap_info_clone
+    fakerates[fr + '_barrel'] = barrel_info_clone
 
 output_file = ROOT.TFile("results_singleMuFakeRates.root", "RECREATE")
 for data_set, skips, int_lumi, puTag in [

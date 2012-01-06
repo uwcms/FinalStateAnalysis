@@ -4,10 +4,13 @@ Measure jet->mu, jet->e, and jet->tau fake rates in trilepton event topologies.
 
 '''
 
-import ROOT
-import os
-import sys
+import copy
 import logging
+import os
+import re
+import sys
+
+import ROOT
 import FinalStateAnalysis.PatTools.data as data_tool
 
 # Logging options
@@ -278,6 +281,8 @@ fakerates = {
         'denom' : [
             'Muon2_InnerNPixHits > 0.5',
             'Muon2_MuBtag < 3.3',
+            'Muon2AbsEta < 2.5',
+            'Muon2Pt > 9',
             'METPt < 20',
         ],
         'num' : [
@@ -475,6 +480,24 @@ fakerates = {
     },
 }
 
+# Hack to split by eta
+varname_extractor = re.compile('(?P<var>\w+)AbsEta\s*<\s*[0-9\.]+')
+for fr in list(fakerates.keys()):
+    info = fakerates[fr]
+    barrel_info_clone = copy.deepcopy(info)
+    endcap_info_clone = copy.deepcopy(info)
+    # Figure out variable name
+    varname = None
+    for cut in info['denom']:
+        match = varname_extractor.match(cut)
+        if match:
+            varname = match.group('var')
+    assert(varname)
+    barrel_info_clone['denom'].append('%sAbsEta <= 1.48' % varname)
+    endcap_info_clone['denom'].append('%sAbsEta > 1.48' % varname)
+    fakerates[fr + '_endcap'] = endcap_info_clone
+    fakerates[fr + '_barrel'] = barrel_info_clone
+
 output_file = ROOT.TFile("results_fakeRates.root", "RECREATE")
 for data_set, skips, int_lumi in [
     ('2011A', ['2011B', 'EM'], 2170),
@@ -483,7 +506,7 @@ for data_set, skips, int_lumi in [
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'VH', '2011-12-10-v1-WHAnalyze', 'scratch_results',
+        'VH', '2012-01-04-v1-WHAnalyze', 'scratch_results',
         int_lumi, skips, count='emt/skimCounter')
 
     legend = plotter.build_legend(
