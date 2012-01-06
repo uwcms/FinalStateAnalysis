@@ -27,10 +27,10 @@ class CppKinematicBinning(object):
     ...   ('eta', 1.4, None, 7),
     ... ])
     >>> print str(bins)
-    if (eta > 0 && eta < 1.4) {
+    if (eta >= 0 && eta < 1.4) {
        return 6;
     }
-    if (eta > 1.4) {
+    if (eta >= 1.4) {
        return 7;
     }
     <BLANKLINE>
@@ -41,11 +41,11 @@ class CppKinematicBinning(object):
     ...      ('pt', 20, 60, 7)]))
     ... ])
     >>> print str(bins)
-    if (eta > 0 && eta < 1.4) {
-       if (pt > 0 && pt < 20) {
+    if (eta >= 0 && eta < 1.4) {
+       if (pt >= 0 && pt < 20) {
           return 6;
        }
-       if (pt > 20 && pt < 60) {
+       if (pt >= 20 && pt < 60) {
           return 7;
        }
     }
@@ -54,7 +54,7 @@ class CppKinematicBinning(object):
 
     def __init__(self, bins):
         self.bins = [CppKinematicBin(*bin) for bin in bins]
-        self.indent = None
+        self.indent = 0
     def __str__(self):
         if self.indent:
             for bin in self.bins:
@@ -69,11 +69,13 @@ class CppKinematicBin(object):
     The __str__ method of this returns a C++ string that applies the appropriate
     selection and returns the correct value.
 
+    The "greater than" is always inclusive.
+
     Example:
 
     >>> bin = CppKinematicBin('eta', 0, 1.4, 6)
     >>> print str(bin)
-    if (eta > 0 && eta < 1.4) {
+    if (eta >= 0 && eta < 1.4) {
        return 6;
     }
     <BLANKLINE>
@@ -86,7 +88,7 @@ class CppKinematicBin(object):
     <BLANKLINE>
     >>> bin = CppKinematicBin('eta', 1.4, None, 6)
     >>> print str(bin)
-    if (eta > 1.4) {
+    if (eta >= 1.4) {
        return 6;
     }
     <BLANKLINE>
@@ -112,10 +114,10 @@ class CppKinematicBin(object):
             output += 'if ({label} < {max}) {{\n'.format(
                 label=self.label, max=self.max)
         elif self.max is None:
-            output += 'if ({label} > {min}) {{\n'.format(
+            output += 'if ({label} >= {min}) {{\n'.format(
                 label=self.label, min=self.min)
         else:
-            output += 'if ({label} > {min} && {label} < {max}) {{\n'.format(
+            output += 'if ({label} >= {min} && {label} < {max}) {{\n'.format(
                 label=self.label, min=self.min, max=self.max)
         # Add the meat
         if hasattr(self.val, 'indent'):
@@ -141,10 +143,12 @@ class CppFunctionWrapper(object):
     }
     <BLANKLINE>
     '''
-    def __init__(self, name, meat, *vars):
+    def __init__(self, name, meat, *vars, **kwargs):
         self.name = name
         self.meat = meat
         self.vars = vars
+        self.default = kwargs.get('default')
+        self.warn = kwargs.get('warn')
         if hasattr(self.meat, 'indent'):
             self.meat.indent = self.meat.indent + 1
 
@@ -153,5 +157,11 @@ class CppFunctionWrapper(object):
         output += ', '.join('float %s' % x for x in self.vars)
         output += ') {\n'
         output += str(self.meat)
+        if self.warn is not None:
+            output += CppKinematicBin.tab + self.warn.format(
+                name = self.name
+            )
+        if self.default is not None:
+            output += CppKinematicBin.tab + 'return %s;\n' % self.default
         output += '}\n'
         return output
