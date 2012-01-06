@@ -9,7 +9,7 @@ Define top-level configuration for WH analysis.
 # Data source parameters
 INT_LUMI = 4600
 #JOBID = '2011-12-10-v1-WHAnalyze'
-JOBID = '2012-01-02-v1-WHAnalyze'
+JOBID = '2012-01-04-v1-WHAnalyze'
 
 # Setup function which retrieves fake rate weights
 fake_rates_file = open('fake_rates.json')
@@ -30,6 +30,7 @@ cfg = {
         'variables' : {
             'ETauMass' : ('Elec_Tau_Mass', 'M_{e#tau}', [60, 0, 300], 5),
             'EJetPt' : ('Elec_JetPt', 'p_{T}', [100, 0, 200], 5),
+            'MuPt' : ('MuPt', 'p_{T}', [100, 0, 200], 5),
             'TauJetPt' : ('TauJetPt', 'p_{T}', [100, 0, 200], 5),
             'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDF', [100, 0, 30], 5),
             'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
@@ -59,6 +60,13 @@ cfg = {
             'TauDZ < 0.2',
             'Tau_TauBtag < 3.3',
             'Tau_ElectronMVA > 0.5',
+            'Tau_MuonOverlap < 0.5',
+            'Tau_ElectronOverlap < 0.5',
+        ],
+        'corrections' : [
+            'MuIso(MuPt, MuAbsEta, run)',
+            'MuID(MuPt, MuAbsEta, run)',
+            'MuHLT8(MuPt, MuAbsEta, run)',
         ],
         # Samples not applicable to this analysis
         'exclude' : ['*DoubleMu*', '*DoubleEl*'],
@@ -73,7 +81,8 @@ cfg = {
                             'VisFinalState_Ht > 80',
                             'vtxChi2/vtxNDOF < 10',
                         ],
-                        'vars' : ['ETauMass', 'EJetPt', 'HT', 'count'],
+                        #'vars' : ['ETauMass', 'EJetPt', 'HT', 'count', 'MuPt'],
+                        'vars' : ['ETauMass', 'count',],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
@@ -121,7 +130,8 @@ cfg = {
                             'VisFinalState_Ht > 80',
                             'vtxChi2/vtxNDOF < 10',
                         ],
-                        'vars' : ['ETauMass', 'EJetPt', 'TauJetPt', 'HT', 'count'],
+                        #'vars' : ['ETauMass', 'EJetPt', 'TauJetPt', 'HT', 'count'],
+                        'vars' : ['ETauMass', 'count'],
                     }
                 },
                 'object1' : {
@@ -190,6 +200,17 @@ cfg = {
             'Muon1DZ < 0.2',
             'Muon2DZ < 0.2',
             'TauDZ < 0.2',
+
+            'Tau_MuonOverlap < 0.5',
+            'Tau_ElectronOverlap < 0.5',
+        ],
+        'corrections' : [
+            'MuIso(Muon1Pt, Muon1AbsEta, run)',
+            'MuID(Muon1Pt, Muon1AbsEta, run)',
+            'MuHLT8(Muon1Pt, Muon1AbsEta, run)',
+            'MuIso(Muon2Pt, Muon2AbsEta, run)',
+            'MuID(Muon2Pt, Muon2AbsEta, run)',
+            'MuHLT8(Muon2Pt, Muon2AbsEta, run)',
         ],
         'exclude' : ['*MuEG*', '*DoubleEl*'],
         'charge_categories' : {
@@ -272,6 +293,14 @@ cfg = {
             'Mu1DZ < 0.2',
             'Mu2DZ < 0.2',
             'ElecDZ < 0.2',
+        ],
+        'corrections' : [
+            'MuIso(Mu1Pt, Mu1AbsEta, run)',
+            'MuID(Mu1Pt, Mu1AbsEta, run)',
+            'MuHLT8(Mu1Pt, Mu1AbsEta, run)',
+            'MuIso(Mu2Pt, Mu2AbsEta, run)',
+            'MuID(Mu2Pt, Mu2AbsEta, run)',
+            'MuHLT8(Mu2Pt, Mu2AbsEta, run)',
         ],
         'exclude' : ['*MuEG*', '*DoubleEl*'],
         'charge_categories' : {

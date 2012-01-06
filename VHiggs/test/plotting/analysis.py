@@ -27,6 +27,10 @@ log = logging.getLogger("analysis")
 stderr_log = logging.StreamHandler()
 log.addHandler(stderr_log)
 
+# Load the MC-DATA correction functions
+log.info("Loading MC-DATA corrections")
+ROOT.gROOT.ProcessLine('.L corrections.C++')
+
 def estimate_fake_sum(fr1, fr2, fr12s, fr12en):
     '''
     Estimate the total fake rate sum, with proper errors.
@@ -109,6 +113,9 @@ if __name__ == "__main__":
         exclude = channel_cfg['exclude']
         # Get primary dataset
         primds = channel_cfg['primds']
+
+        # Get the MC-data correction
+        correction = '*'.join(['(pu2011AB)'] + channel_cfg['corrections'])
 
         ########################################################################
         ### Loop over all charge configurations ################################
@@ -196,7 +203,7 @@ if __name__ == "__main__":
                     # Make the loose selection
                     log.info("------ running loose selection...")
                     loose_selection = baseline + extra_selections + extra_cuts
-                    register_tree('loose', loose_selection, '(pu2011AB)')
+                    register_tree('loose', loose_selection, correction)
 
                     log.info("------ running ultimate selection...")
                     # Make the ultimate selection
@@ -204,7 +211,7 @@ if __name__ == "__main__":
                             + object1_cfg['pass'] \
                             + object2_cfg['pass'] \
                             + object3_cfg['pass']
-                    register_tree('ult', ult_selection, '(pu2011AB)')
+                    register_tree('ult', ult_selection, correction)
 
                     ############################################################
                     ### Compute fake rate estimates ############################
@@ -216,16 +223,16 @@ if __name__ == "__main__":
                             + object1_cfg['fail'] \
                             + object2_cfg['pass'] \
                             + object3_cfg['pass']
-                    register_tree('fr1en', fr1en_selection, '(pu2011AB)')
+                    register_tree('fr1en', fr1en_selection, correction)
 
                     log.info("------ apply fake object #1 EWK weights...")
                     # Extrapolate the fake1 enriched into the signal using ewk
                     # and qcd fake rates
                     register_tree('fr1s_ewk', fr1en_selection,
-                                  '(pu2011AB)*(%s)' % object1_cfg['ewk_fr'])
+                                  correction + '*(%s)' % object1_cfg['ewk_fr'])
                     log.info("------ apply fake object #1 QCD weights...")
                     register_tree('fr1s_qcd', fr1en_selection,
-                                  '(pu2011AB)*(%s)' % object1_cfg['qcd_fr'])
+                                  correction + '*(%s)' % object1_cfg['qcd_fr'])
 
                     # Make the fake2 enriched
                     log.info("------ running fake object #2 enriched selection...")
@@ -233,15 +240,15 @@ if __name__ == "__main__":
                             + object1_cfg['pass'] \
                             + object2_cfg['fail'] \
                             + object3_cfg['pass']
-                    register_tree('fr2en', fr2en_selection, '(pu2011AB)')
+                    register_tree('fr2en', fr2en_selection, correction)
                     # Extrapolate the fake2 enriched into the signal using ewk
                     # and qcd fake rates
                     log.info("------ apply fake object #2 EWK weights...")
                     register_tree('fr2s_ewk', fr2en_selection,
-                                  '(pu2011AB)*(%s)' % object2_cfg['ewk_fr'])
+                                  correction + '*(%s)' % object2_cfg['ewk_fr'])
                     log.info("------ apply fake object #2 QCD weights...")
                     register_tree('fr2s_qcd', fr2en_selection,
-                                  '(pu2011AB)*(%s)' % object2_cfg['qcd_fr'])
+                                  correction + '*(%s)' % object2_cfg['qcd_fr'])
 
                     # Make the double fake rate estimate
                     # Make the fake2 enriched
@@ -250,18 +257,18 @@ if __name__ == "__main__":
                             + object1_cfg['fail'] \
                             + object2_cfg['fail'] \
                             + object3_cfg['pass']
-                    register_tree('fr12en', fr12en_selection, '(pu2011AB)')
+                    register_tree('fr12en', fr12en_selection, correction)
                     # Extrapolate the fake2 enriched into the signal using ewk
                     # and qcd fake rates
                     log.info("------ applying double EWK weights...")
                     register_tree('fr12s_ewk', fr12en_selection,
-                                  '(pu2011AB)*(%s)*(%s)' % (
+                                  correction + '*(%s)*(%s)' % (
                                       object1_cfg['ewk_fr'],
                                       object2_cfg['ewk_fr']
                                   ))
                     log.info("------ applying double QCD weights...")
                     register_tree('fr12s_qcd', fr12en_selection,
-                                  '(pu2011AB)*(%s)*(%s)' % (
+                                  correction + '*(%s)*(%s)' % (
                                       object1_cfg['qcd_fr'],
                                       object2_cfg['qcd_fr']
                                   ))
@@ -275,43 +282,43 @@ if __name__ == "__main__":
                             + object3_cfg['fail']
                     # Extrapolate the fake2 enriched into the signal using ewk
                     # and qcd fake rates
-                    register_tree('fr123en', fr123en_selection, '(pu2011AB)')
+                    register_tree('fr123en', fr123en_selection, correction)
 
                     # Extrapolate from triple fakes into fake1 enriched region
                     log.info("------ extrapolating (EWK) triple fakes into fake #1 region")
                     register_tree('fr123en1_ewk', fr123en_selection,
-                                  '(pu2011AB)*(%s)*(%s)' % (
+                                  correction + '*(%s)*(%s)' % (
                                       object2_cfg['ewk_fr'],
                                       object3_cfg['ewk_fr']
                                   ))
                     log.info("------ extrapolating (QCD) triple fakes into fake #1 region")
                     register_tree('fr123en1_qcd', fr123en_selection,
-                                  '(pu2011AB)*(%s)*(%s)' % (
+                                  correction + '*(%s)*(%s)' % (
                                       object2_cfg['qcd_fr'],
                                       object3_cfg['qcd_fr']
                                   ))
                     log.info("------ extrapolating (EWK) triple fakes into fake #2 region")
                     # Extrapolate from triple fakes into fake2 enriched region
                     register_tree('fr123en2_ewk', fr123en_selection,
-                                  '(pu2011AB)*(%s)*(%s)' % (
+                                  correction + '*(%s)*(%s)' % (
                                       object1_cfg['ewk_fr'],
                                       object3_cfg['ewk_fr']
                                   ))
                     log.info("------ extrapolating (QCD) triple fakes into fake #2 region")
                     register_tree('fr123en2_qcd', fr123en_selection,
-                                  '(pu2011AB)*(%s)*(%s)' % (
+                                  correction + '*(%s)*(%s)' % (
                                       object1_cfg['qcd_fr'],
                                       object3_cfg['qcd_fr']
                                   ))
 
                     log.info("------ extrapolating (EWK) triple fakes into double fake 2 region")
                     register_tree('fr123en12_ewk', fr123en_selection,
-                                  '(pu2011AB)*(%s)' % (
+                                  correction + '*(%s)' % (
                                       object3_cfg['ewk_fr']
                                   ))
                     log.info("------ extrapolating (QCD) triple fakes into double fake 2 region")
                     register_tree('fr123en12_qcd', fr123en_selection,
-                                  '(pu2011AB)*(%s)' % (
+                                  correction + '*(%s)' % (
                                       object3_cfg['qcd_fr']
                                   ))
 
