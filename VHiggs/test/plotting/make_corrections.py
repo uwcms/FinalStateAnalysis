@@ -15,7 +15,6 @@ Author: Evan K. Friis, UW Madison
 import FinalStateAnalysis.Utilities.CppTools as cpp
 
 # Make the class name easier to write
-
 Bins = cpp.CppKinematicBinning
 Func = cpp.CppFunctionWrapper
 

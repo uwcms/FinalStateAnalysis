@@ -59,9 +59,9 @@ emt_shape = 'ETauMass'
 emm_shape = 'MuElecMass'
 
 # Counting experiment only
-#mmt_shape = 'count'
-#emt_shape = 'count'
-#emm_shape = 'count'
+mmt_shape = 'count'
+emt_shape = 'count'
+emm_shape = 'count'
 
 for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
     mmt_folder = "mmt_mumu_final_%i_%s" % (mass, mmt_shape)

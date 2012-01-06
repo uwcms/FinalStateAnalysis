@@ -15,6 +15,7 @@ import ROOT
 ROOT.gStyle.SetOptFit(0)
 from FinalStateAnalysis.Utilities.Histo import Histo
 
+# Define the ROOT files that store the results
 trilepton_fr_file = ROOT.TFile("results_fakeRates.root", "READ")
 singlemu_fr_file = ROOT.TFile("results_singleMuFakeRates.root", "READ")
 
@@ -46,33 +47,36 @@ object_config = {
         'scenarios' : {
             'SingleMu_Wjets' : {
                 'title' : 'W+jet_{#mu} (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'mu'),
+                'file' : singlemu_fr_file,
+                'histo' : 'mu',
                 'rebin' : 5,
             },
             'SingleMu_QCD' : {
                 'title' : 'QCD (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muQCD'),
+                'file' : singlemu_fr_file,
+                'histo' : 'muQCD',
                 'rebin' : 1,
                 'exclude' : True,
             },
             'TriLep_ZMM' : {
                 'title' : 'Z#mu #mu + jet_{#mu} (Double Mu)',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'mu'),
+                'file' : trilepton_fr_file,
+                'histo' : 'mu',
                 'rebin' : 5,
             },
             #'TriLep_ZEE' : {
                 #'title' : 'Zee + jet_{#mu} (Double Elec)',
-                #'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muZEE'),
+                #'histo' : 'muZEE',
                 #'rebin' : 5,
             #},
             ##'Trilep_TT' : {
                 ##'title' : 'ttbar + jet_{#mu} (Double Mu)',
-                ##'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muTTbar'),
+                ##'histo' : 'muTTbar',
                 ##'rebin' : 5,
             ##},
             #'Trilep_QCD' : {
                 #'title' : 'QCD (Double Mu)',
-                #'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muQCD'),
+                #'histo' : 'muQCD',
                 #'rebin' : 5,
                 #'exclude' : True,
             #},
@@ -86,36 +90,41 @@ object_config = {
         'scenarios' : {
             'SingleMu_Wjets' : {
                 'title' : 'W+jet_{#mu} (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'mu'),
+                'file' : singlemu_fr_file,
+                'histo' : 'mu',
                 'rebin' : 5,
                 'exclude' : True,
             },
             'SingleMu_QCD' : {
                 'title' : 'QCD (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muQCD'),
+                'file' : singlemu_fr_file,
+                'histo' : 'muQCD',
                 'rebin' : 1,
             },
             'TriLep_ZMM' : {
                 'title' : 'Z#mu #mu + jet_{#mu} (Double Mu)',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'mu'),
+                'file' : trilepton_fr_file,
+                'histo' : 'mu',
                 'rebin' : 5,
                 'exclude' : True,
             },
             'TriLep_ZEE' : {
                 'title' : 'Zee + jet_{#mu} (Double Elec)',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muZEE'),
+                'file' : trilepton_fr_file,
+                'histo' : 'muZEE',
                 'exclude' : True,
                 'rebin' : 5,
             },
             #'Trilep_TT' : {
                 #'title' : 'ttbar + jet_{#mu} (Double Mu)',
-                #'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muTTbar'),
+                #'histo' : 'muTTbar',
                 #'rebin' : 5,
                 #'exclude' : True,
             #},
             'Trilep_QCD' : {
                 'title' : 'QCD (Double Mu)',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'muQCD'),
+                'file' : trilepton_fr_file,
+                'histo' : 'muQCD',
                 'rebin' : 5,
             },
         },
@@ -128,12 +137,14 @@ object_config = {
         'scenarios' : {
             'SingleMu_Wjets' : {
                 'title' : 'W+jet_{#mu} (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muTight'),
+                'file' : singlemu_fr_file,
+                'histo' : 'muTight',
                 'rebin' : 5,
             },
             'SingleMu_QCD' : {
                 'title' : 'QCD (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muQCDTight'),
+                'file' : singlemu_fr_file,
+                'histo' : 'muQCDTight',
                 'rebin' : 1,
                 'exclude' : True,
             },
@@ -147,13 +158,15 @@ object_config = {
         'scenarios' : {
             'SingleMu_Wjets' : {
                 'title' : 'W+jet_{#mu} (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muTight'),
+                'file' : singlemu_fr_file,
+                'histo' : 'muTight',
                 'rebin' : 5,
                 'exclude' : True,
             },
             'SingleMu_QCD' : {
                 'title' : 'QCD (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muQCDTight'),
+                'file' : singlemu_fr_file,
+                'histo' : 'muQCDTight',
                 'rebin' : 1,
             },
         },
@@ -166,12 +179,14 @@ object_config = {
         'scenarios' : {
             'SingleMu_Wjets' : {
                 'title' : 'W+jet_{#mu} (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muHighPt'),
+                'file' : singlemu_fr_file,
+                'histo' : 'muHighPt',
                 'rebin' : 5,
             },
             'SingleMu_QCD' : {
                 'title' : 'QCD (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muQCDHighPt'),
+                'file' : singlemu_fr_file,
+                'histo' : 'muQCDHighPt',
                 'rebin' : 5,
                 'exclude' : True,
             },
@@ -185,7 +200,8 @@ object_config = {
         'scenarios' : {
             'SingleMu_QCD' : {
                 'title' : 'QCD (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'muQCDHighPt'),
+                'file' : singlemu_fr_file,
+                'histo' : 'muQCDHighPt',
                 'rebin' : 5,
                 'exclude' : False,
             },
@@ -199,12 +215,14 @@ object_config = {
         'scenarios' : {
             'SingleMu_Wjets' : {
                 'title' : 'W+jet_{#mu} (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'e'),
+                'file' : singlemu_fr_file,
+                'histo' : 'e',
                 'rebin' : 5,
             },
             'SingleMu_QCD' : {
                 'title' : 'QCD (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'eQCD'),
+                'file' : singlemu_fr_file,
+                'histo' : 'eQCD',
                 'rebin' : 1,
                 'exclude' : True,
             },
@@ -218,18 +236,21 @@ object_config = {
         'scenarios' : {
             'SingleMu_Wjets' : {
                 'title' : 'W+jet_{#mu} (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'eMIT'),
+                'file' : singlemu_fr_file,
+                'histo' : 'eMIT',
                 'rebin' : 5,
             },
             'SingleMu_QCD' : {
                 'title' : 'QCD (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'eQCDMIT'),
+                'file' : singlemu_fr_file,
+                'histo' : 'eQCDMIT',
                 'rebin' : 1,
                 'exclude' : True,
             },
             'TriLep_ZMM' : {
                 'title' : 'Z#mu#mu + jet_{e}',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'eMuEG'),
+                'file' : trilepton_fr_file,
+                'histo' : 'eMuEG',
                 'rebin' : 10,
                 'exclude' : False,
             },
@@ -243,7 +264,8 @@ object_config = {
         'scenarios' : {
             'SingleMu_QCD' : {
                 'title' : 'QCD (Single Mu)',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'eQCDMIT'),
+                'file' : singlemu_fr_file,
+                'histo' : 'eQCDMIT',
                 'rebin' : 1,
                 'exclude' : False,
             },
@@ -257,19 +279,22 @@ object_config = {
         'scenarios' : {
             'TriLep_ZMM' : {
                 'title' : 'Z#mu#mu + jet_{#tau}',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'tau'),
+                'file' : trilepton_fr_file,
+                'histo' : 'tau',
                 'rebin' : 1,
                 'exclude' : False,
             },
             'TriLep_AntiIsoMM' : {
                 'title' : 'QCD + jet_{#tau}',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'tauQCD'),
+                'file' : trilepton_fr_file,
+                'histo' : 'tauQCD',
                 'rebin' : 2,
                 'exclude' : True,
             },
             'SingleMu_Wjets' : {
                 'title' : 'W #mu #nu + jet_{#tau}',
-                'histos' : get_histograms(singlemu_fr_file, '2011AB', 'tau'),
+                'file' : singlemu_fr_file,
+                'histo' : 'tau',
                 'rebin' : 2,
                 'exclude' : True,
             },
@@ -283,13 +308,15 @@ object_config = {
         'scenarios' : {
             'TriLep_AntiIsoMM' : {
                 'title' : 'QCD + jet_{#tau}',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'tauQCD'),
+                'file' : trilepton_fr_file,
+                'histo' : 'tauQCD',
                 'rebin' : 1,
                 'exclude' : False,
             },
             'TriLep_ZMM' : {
                 'title' : 'Z#mu#mu + jet_{#tau}',
-                'histos' : get_histograms(trilepton_fr_file, '2011AB', 'tau'),
+                'file' : trilepton_fr_file,
+                'histo' : 'tau',
                 'rebin' : 1,
                 'exclude' : True,
             },
@@ -320,7 +347,7 @@ for object, object_info in object_config.iteritems():
 
     for type, type_info in scenarios.iteritems():
         log.info("Getting fake rates for object: %s type: %s", object, type)
-        num, denom = type_info['histos']
+        num, denom = get_histograms(type_info['file'], '2011AB', type_info['histo'])
 
         n_non_empty = len(list(bin.value() for bin in num.bins() if
                                bin.value() > 0))
