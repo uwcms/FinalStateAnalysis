@@ -98,5 +98,3 @@ for event_info in events:
     print "- has %i e-mu-tau candidates which pass all cuts" % good_cands
 
 print "After all cuts %i/%i events remain" % (good_events, len(events))
-
-
