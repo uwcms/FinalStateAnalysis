@@ -80,3 +80,17 @@ Usage:
 
   trimJSON.py -i json_in -o json_out [-firstRun X] [-lastRun Y]
 
+
+compareEventLists.py
+--------------------
+
+Location: Utilities/scripts
+
+Compare to event lists and find the differences.
+
+The file can be almost any format.
+
+Usage:
+
+  compareEventLists.py file1 file2
+
