@@ -118,7 +118,8 @@ muonOverlap = cms.PSet(
     nbins = cms.untracked.int32(2),
     name = cms.untracked.string("${name}_MuonOverlap"),
     description = cms.untracked.string("${nicename} muon overlap"),
-    plotquantity = cms.untracked.string('${getter}hasOverlaps("muons")'),
+    plotquantity = cms.untracked.string(
+        'filteredOverlaps(${index}, "muons", "pt > 5 & abs(eta) < 2.1 & userInt(\'WWID\') > 0.5").size()'),
     lazyParsing = cms.untracked.bool(True),
 )
 
@@ -128,7 +129,8 @@ electronOverlap = cms.PSet(
     nbins = cms.untracked.int32(2),
     name = cms.untracked.string("${name}_ElectronOverlap"),
     description = cms.untracked.string("${nicename} electron overlap"),
-    plotquantity = cms.untracked.string('${getter}hasOverlaps("electrons")'),
+    plotquantity = cms.untracked.string(
+        'filteredOverlaps(${index}, "electrons", "pt > 10 & abs(eta) < 2.5 & userFloat(\'MITID\') > 0.5").size()'),
     lazyParsing = cms.untracked.bool(True),
 )
 
