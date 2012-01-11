@@ -430,6 +430,20 @@ std::vector<reco::CandidatePtr> PATFinalState::extras(
   return output;
 }
 
+std::vector<reco::CandidatePtr> PATFinalState::filteredOverlaps(
+    int i, const std::string& label, const std::string& filter) const {
+  // maybe this needs to be optimized
+  StringCutObjectSelector<reco::Candidate> cut(filter, true);
+  const reco::CandidatePtrVector& unfiltered = daughterOverlaps(i, label);
+  std::vector<reco::CandidatePtr> output;
+  for (size_t i = 0; i < unfiltered.size(); ++i) {
+    const reco::CandidatePtr& cand = unfiltered[i];
+    if (cut(*cand))
+      output.push_back(cand);
+  }
+  return output;
+}
+
 PATFinalStateProxy
 PATFinalState::subcand(int i, int j, int x, int y, int z) const {
   std::vector<reco::CandidatePtr> output;

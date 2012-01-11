@@ -49,3 +49,10 @@ reco::CandidatePtr PATMultiCandFinalState::daughterUserCandUnsafe(size_t i,
     "The daughterUserCand functionality is not implemented for instances of" <<
     " PATMultiCandFinalState." << std::endl;
 }
+
+const reco::CandidatePtrVector& PATMultiCandFinalState::daughterOverlaps(
+    size_t i, const std::string& label) const {
+  throw cms::Exception("NotImplemented") <<
+    "The daughterOverlaps functionality is not implemented for instances of" <<
+    " PATMultiCandFinalState." << std::endl;
+}

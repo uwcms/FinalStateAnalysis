@@ -63,6 +63,19 @@ class PATTripletFinalStateT : public PATFinalState {
         return reco::CandidatePtr();
     }
 
+    virtual const reco::CandidatePtrVector& daughterOverlaps(
+        size_t i, const std::string& label) const {
+      if (i == 0)
+        return p1_->overlaps(label);
+      else if (i == 1)
+        return p2_->overlaps(label);
+      else if (i == 2)
+        return p3_->overlaps(label);
+      throw cms::Exception("NullOverlaps") <<
+        "PATTripletFinalState::daughterOverlaps(" << i << "," << label
+        << ") is null!" << std::endl;
+    }
+
   private:
     edm::Ptr<T1> p1_;
     edm::Ptr<T2> p2_;

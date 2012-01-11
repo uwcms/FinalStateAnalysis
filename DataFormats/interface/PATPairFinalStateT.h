@@ -54,6 +54,17 @@ class PATPairFinalStateT : public PATFinalState {
       return output;
     }
 
+    virtual const reco::CandidatePtrVector& daughterOverlaps(
+        size_t i, const std::string& label) const {
+      if (i == 0)
+        return p1_->overlaps(label);
+      else if (i == 1)
+        return p2_->overlaps(label);
+      throw cms::Exception("NullOverlaps") <<
+        "PATPairFinalState::daughterOverlaps(" << i << "," << label
+        << ") is null!" << std::endl;
+    }
+
   private:
     edm::Ptr<T1> p1_;
     edm::Ptr<T2> p2_;

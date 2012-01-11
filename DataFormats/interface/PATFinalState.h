@@ -154,6 +154,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     std::vector<reco::CandidatePtr> extras(
         const std::string& label, const std::string& filter="") const;
 
+    /// Check if a daughter has overlaps subject to a filter
+    std::vector<reco::CandidatePtr> filteredOverlaps(
+        int i, const std::string& label, const std::string& filter="") const;
+
     /// Build a subcandidate
     PATFinalStateProxy subcand(int i, int j,
         int x=-1, int y=-1, int z=-1) const;
@@ -171,6 +175,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     virtual const reco::CandidatePtr daughterPtrUnsafe(size_t i) const = 0;
     virtual reco::CandidatePtr daughterUserCandUnsafe(size_t i,
         const std::string& tag) const = 0;
+
+    /// Get the specified overlaps for the ith daughter
+    virtual const reco::CandidatePtrVector& daughterOverlaps(
+        size_t i, const std::string& label) const = 0;
 
   private:
     edm::Ptr<pat::MET> met_;

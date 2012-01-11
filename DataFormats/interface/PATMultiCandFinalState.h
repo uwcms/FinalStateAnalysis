@@ -22,11 +22,14 @@ class PATMultiCandFinalState : public PATFinalState {
 
     size_t numberOfDaughters() const;
 
-    /// This function is not implemented (we don't have the concrete type of
+    /// These functions are not implemented (we don't have the concrete type of
     /// the daughters, so this will just throw an exception if used.)
     /// Perhaps in the future some reflex trickery could make it work.
     virtual reco::CandidatePtr daughterUserCandUnsafe(size_t i,
         const std::string& tag) const;
+
+    virtual const reco::CandidatePtrVector& daughterOverlaps(
+        size_t i, const std::string& label) const;
 
   private:
     std::vector<reco::CandidatePtr> cands_;
