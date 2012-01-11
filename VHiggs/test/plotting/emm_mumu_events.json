@@ -1,0 +1,38 @@
+{
+    "data_DoubleMu_Run2011A_PromptReco_v4": [], 
+    "data_DoubleMu_Run2011A_PromptReco_v6_1409": [
+        [
+            172949, 
+            374, 
+            552826697
+        ], 
+        [
+            172822, 
+            1179, 
+            1600495010
+        ]
+    ], 
+    "data_DoubleMu_Run2011A_05Aug2011_v1": [], 
+    "data_DoubleMu_Run2011B_PromptReco_v1_a": [
+        [
+            175921, 
+            325, 
+            459873359
+        ], 
+        [
+            176201, 
+            142, 
+            187590149
+        ]
+    ], 
+    "data_DoubleMu_Run2011B_PromptReco_v1_c": [], 
+    "data_DoubleMu_Run2011B_PromptReco_v1_b": [
+        [
+            177184, 
+            10, 
+            12646620
+        ]
+    ], 
+    "data_DoubleMu_Run2011B_PromptReco_v1_d": [], 
+    "data_DoubleMu_Run2011A_May10ReReco_v1": []
+}

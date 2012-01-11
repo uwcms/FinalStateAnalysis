@@ -1,0 +1,22 @@
+{
+    "data_DoubleMu_Run2011A_PromptReco_v4": [], 
+    "data_DoubleMu_Run2011A_PromptReco_v6_1409": [], 
+    "data_DoubleMu_Run2011A_05Aug2011_v1": [], 
+    "data_DoubleMu_Run2011B_PromptReco_v1_a": [
+        [
+            176201, 
+            201, 
+            295602695
+        ]
+    ], 
+    "data_DoubleMu_Run2011B_PromptReco_v1_c": [], 
+    "data_DoubleMu_Run2011B_PromptReco_v1_b": [], 
+    "data_DoubleMu_Run2011B_PromptReco_v1_d": [
+        [
+            179452, 
+            153, 
+            229004663
+        ]
+    ], 
+    "data_DoubleMu_Run2011A_May10ReReco_v1": []
+}
