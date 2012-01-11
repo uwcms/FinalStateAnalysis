@@ -3,25 +3,34 @@
 Combine fake rates from many channels.
 
 '''
-import sys
+import copy
 import json
 import logging
+import sys
+
+import ROOT
+from FinalStateAnalysis.Utilities.Histo import Histo
+
 log = logging.getLogger("combineFR")
 ch = logging.StreamHandler()
 log.setLevel(logging.DEBUG)
 log.addHandler(ch)
 
-import ROOT
 ROOT.gStyle.SetOptFit(0)
-from FinalStateAnalysis.Utilities.Histo import Histo
 
 # Define the ROOT files that store the results
-trilepton_fr_file = ROOT.TFile("results_fakeRates.root", "READ")
-singlemu_fr_file = ROOT.TFile("results_singleMuFakeRates.root", "READ")
+#trilepton_fr_file = ROOT.TFile("results_fakeRates.root", "READ")
+#singlemu_fr_file = ROOT.TFile("results_singleMuFakeRates.root", "READ")
+trilepton_fr_file = "results_fakeRates.root"
+singlemu_fr_file = "results_singleMuFakeRates.root"
 
 def get_histograms(file, data_set, fr_type):
+    log.info("Getting %s:%s", data_set, fr_type)
+    file = ROOT.TFile(file, "READ")
     denom = file.Get("_".join([data_set, fr_type, 'data_denom']))
     num = file.Get("_".join([data_set, fr_type, 'data_num']))
+    log.info("Got numerator: %s", num)
+    log.info("Got denominator: %s", denom)
     return Histo(num), Histo(denom)
 
 # Muon fit function
@@ -328,6 +337,18 @@ object_config = {
     },
 }
 
+# Hack to split by eta
+for object in list(object_config.keys()):
+    log.info("Modifying %s to split in eta", object)
+    for type in ['barrel', 'endcap']:
+        copy_object_info = copy.deepcopy(object_config[object])
+        #copy_object_info['scenarios'] = copy_object_info['scenarios'].copy()
+        scenarios = copy_object_info['scenarios']
+        for scenario, scenario_info in scenarios.iteritems():
+            scenario_info['histo'] = scenario_info['histo']  + '_' + type
+        object_config[object + '_' + type] = copy_object_info
+        log.info("Added %s", object + '_' + type)
+
 # Store the fit results so we can put them in a json at the end
 fit_results = {}
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
@@ -338,6 +359,7 @@ frame.SetMaximum(1.0)
 
 for object, object_info in object_config.iteritems():
     object_result = {}
+    object_result['types'] = {}
     fit_results[object] = object_result
     log.info("Computing fake rates for object: %s", object)
     scenarios = object_info['scenarios']
@@ -348,6 +370,10 @@ for object, object_info in object_config.iteritems():
     for type, type_info in scenarios.iteritems():
         log.info("Getting fake rates for object: %s type: %s", object, type)
         num, denom = get_histograms(type_info['file'], '2011AB', type_info['histo'])
+        object_result['types'][type] = {
+            'num' : num.Integral(),
+            'denom' : denom.Integral(),
+        }
 
         n_non_empty = len(list(bin.value() for bin in num.bins() if
                                bin.value() > 0))
