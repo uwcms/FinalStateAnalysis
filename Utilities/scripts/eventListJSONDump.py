@@ -14,6 +14,8 @@ import sys
 if __name__ == "__main__":
     json_file = open(sys.argv[1], 'r')
     info = json.load(json_file)
+    all_events = []
     for data_set, events in info.iteritems():
-        for event in sorted(events):
-            sys.stdout.write('(%i, %i, %i)\n' % tuple(event))
+        all_events.extend(events)
+    for event in sorted(tuple(x) for x in all_events):
+        sys.stdout.write('(%i, %i, %i),\n' % event)
