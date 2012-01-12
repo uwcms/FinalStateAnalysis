@@ -166,6 +166,17 @@ cicHyperTight = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+muonoverlap = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(0.5),
+    nbins = cms.untracked.int32(2),
+    name = cms.untracked.string("${name}_MuonOverlap"),
+    description = cms.untracked.string("${nicename} muon overlap"),
+    plotquantity = cms.untracked.string(
+        'filteredOverlaps(${index}, "muons", "pt > 5 & abs(eta) < 2.1 & userInt(\'WWID\') > 0.5").size()'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 # Add all the interesting electron trigger filter matchings
 hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter = get_trigger_matching(
     'hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter')
@@ -181,7 +192,7 @@ hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter = get_trigger_matching(
 
 all = [
     reliso, wwid, mitid, jetPt, rawJetPt, btag, btagmuon, missingHits,
-    hasConversion,
+    hasConversion, muonoverlap,
     cicLoose, cicMedium, cicTight, cicHyperTight,
     hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter,
     hltMu17Ele8CaloIdTPixelMatchFilter,
