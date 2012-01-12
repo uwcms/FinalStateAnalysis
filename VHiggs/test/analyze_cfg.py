@@ -33,14 +33,14 @@ process.TFileService = cms.Service(
 process.steering = cms.PSet(
     analyzers = cms.vstring(
         #'eee',
-        'eem',
-        'eet',
+        #'eem',
+        #'eet',
         'emm',
         'emt',
         #'ett',
         'mmm',
         'mmt',
-        'mtt'
+        #'mtt'
     ),
     reportAfter = cms.uint32(1000),
     ignored_cuts = cms.vstring()
