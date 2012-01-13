@@ -3,4 +3,5 @@
   <use   name="PhysicsTools/Utilities"/>
   <use   name="FWCore/Framework"/>
   <use   name="DataFormats/Candidate"/>
+  <use   name="CommonTools/Utils"/>
 </library>

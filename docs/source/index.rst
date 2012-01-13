@@ -43,5 +43,6 @@ Contents
    install
    pat_tuple
    tools
+   edmplugins
    version_control
 
