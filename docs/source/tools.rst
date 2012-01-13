@@ -94,3 +94,17 @@ Usage:
 
   compareEventLists.py file1 file2
 
+
+eventListJSONDump.py
+____________________
+
+Location: Utilities/scripts
+
+Dump a event list json file to a simple format.
+
+[format] can be python (list of tuples) or colons (for edmCopyPickMerge)
+
+Usage:
+  
+  eventListJSONDump.py json_file [format]
+  
