@@ -150,6 +150,15 @@ if __name__ == "__main__":
             with open(run_event_filename, 'w') as run_evt_file:
                 run_evt_file.write(json.dumps(run_evts, indent=4))
 
+            # Select events in high stat signal sample for cross check
+            log.info("---- selecting final events in VH_120...")
+            signal_run_evts = plotter.get_run_lumi_evt(
+                ntuple, ' && '.join(ultimate_selection),
+                include='VH120', exclude=None)
+            run_event_filename = 'vh120_%s_%s_events.json' % (channel, charge_cat)
+            with open(run_event_filename, 'w') as run_evt_file:
+                run_evt_file.write(json.dumps(signal_run_evts, indent=4))
+
             ####################################################################
             ### Now, loop over each selection type  ############################
             ####################################################################
