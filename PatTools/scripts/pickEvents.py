@@ -51,6 +51,7 @@ if __name__ == "__main__":
         real_dataset = datadefs[dataset]['datasetpath']
         command = ['edmPickEvents.py']
         command.append('--output=%s' % (dataset + label))
+        command.append('--printInteractive')
         command.append(real_dataset)
         sys.stderr.write('Picking events for dataset: %s = %s '
                          % (dataset, real_dataset))
