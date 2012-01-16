@@ -220,6 +220,9 @@ process.mtt = cms.PSet(
 # Build the filter selectors for skimming events.
 for channel in process.steering.analyzers:
     module = getattr(process, channel)
+    print "Removing unused histograms"
+    del module.analysis.final.plot.OS
+    del module.analysis.final.plot.SS
     if options.isMC:
         scenario = options.puScenario
         print "Configuring %s ntuple for %s PU re-weighting" % (
