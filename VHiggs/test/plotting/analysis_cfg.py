@@ -14,13 +14,19 @@ JOBID = '2012-01-04-v1-WHAnalyze'
 # Setup function which retrieves fake rate weights
 fake_rates_file = open('fake_rates.json')
 fake_rates_info = json.load(fake_rates_file)
-def get_fr(label, variable):
+def get_fr_old(label, pt, eta):
+    # Note eta is unused, only for interface
     # Load the appropriate function from the json file and use the correct
     # dependent variable
     fake_rate_fun = fake_rates_info[label]['fitted_func']
-    fake_rate_fun = fake_rate_fun.replace('VAR', variable)
+    fake_rate_fun = fake_rate_fun.replace('VAR', pt)
     weight = '((%s)/(1-%s))' % (fake_rate_fun, fake_rate_fun)
     return weight
+
+## New method where fake rates live in a macro file - see make_fakerates.py
+## and fake_rates.C
+def get_fr(label, pt, eta):
+    return 'weight_%s(%s, %s)' % (label, pt, eta)
 
 # List of channels to skip
 skip = [ 'emm' ]
@@ -104,8 +110,8 @@ cfg = {
                         'Elec_ERelIso < 0.3',
                     ],
                     'fail' : ['(Elec_EID_MITID < 0.5 || Elec_ERelIso > 0.3)'],
-                    'ewk_fr' : get_fr('eMIT', 'Elec_JetPt'),
-                    'qcd_fr' : get_fr('eMITQCD', 'Elec_JetPt'),
+                    'ewk_fr' : get_fr('eMIT', 'Elec_JetPt', 'ElecAbsEta'),
+                    'qcd_fr' : get_fr('eMITQCD', 'Elec_JetPt', 'ElecAbsEta'),
                 },
                 'object2' : {
                     'name' : '#mu',
@@ -114,15 +120,15 @@ cfg = {
                         'Mu_MuID_WWID > 0.5',
                     ],
                     'fail' : ['(Mu_MuRelIso > 0.3 || Mu_MuID_WWID < 0.5)'],
-                    'ewk_fr' : get_fr('muHighPt', 'Mu_JetPt'),
-                    'qcd_fr' : get_fr('muHighPtQCDOnly', 'Mu_JetPt'),
+                    'ewk_fr' : get_fr('muHighPt', 'Mu_JetPt', 'MuAbsEta'),
+                    'qcd_fr' : get_fr('muHighPtQCDOnly', 'Mu_JetPt', 'MuAbsEta'),
                 },
                 'object3' : {
                     'name' : '#tau',
                     'pass' : ['Tau_LooseHPS > 0.5'],
                     'fail' : ['Tau_LooseHPS < 0.5'],
-                    'ewk_fr' : get_fr('tau', 'TauJetPt'),
-                    'qcd_fr' : get_fr('tau', 'TauJetPt'), # FIXME
+                    'ewk_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'),
+                    'qcd_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'), # FIXME
                 },
             },
             'mutau' : {
@@ -142,8 +148,8 @@ cfg = {
                     'name' : '#tau',
                     'pass' : ['Tau_LooseHPS > 0.5'],
                     'fail' : ['Tau_LooseHPS < 0.5'],
-                    'ewk_fr' : get_fr('tau', 'TauJetPt'),
-                    'qcd_fr' : get_fr('tau', 'TauJetPt'), # FIXME
+                    'ewk_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'),
+                    'qcd_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'), # FIXME
                 },
                 'object2' : {
                     'name' : '#mu',
@@ -152,8 +158,8 @@ cfg = {
                         'Mu_MuID_WWID > 0.5',
                     ],
                     'fail' : ['(Mu_MuRelIso > 0.3 || Mu_MuID_WWID < 0.5)'],
-                    'ewk_fr' : get_fr('muHighPt', 'Mu_JetPt'),
-                    'qcd_fr' : get_fr('muHighPtQCDOnly', 'Mu_JetPt'),
+                    'ewk_fr' : get_fr('muHighPt', 'Mu_JetPt', 'MuAbsEta'),
+                    'qcd_fr' : get_fr('muHighPtQCDOnly', 'Mu_JetPt', 'MuAbsEta'),
                 },
                 'object3' : {
                     'name' : 'e',
@@ -162,8 +168,8 @@ cfg = {
                         'Elec_ERelIso < 0.3',
                     ],
                     'fail' : ['(Elec_EID_MITID < 0.5 || Elec_ERelIso > 0.3)'],
-                    'ewk_fr' : get_fr('eMIT', 'Elec_JetPt'),
-                    'qcd_fr' : get_fr('eMITQCD', 'Elec_JetPt'),
+                    'ewk_fr' : get_fr('eMIT', 'Elec_JetPt', 'ElecAbsEta'),
+                    'qcd_fr' : get_fr('eMITQCD', 'Elec_JetPt', 'ElecAbsEta'),
                 },
             },
 
@@ -245,8 +251,8 @@ cfg = {
                         'Muon2_MuID_WWID > 0.5',
                     ],
                     'fail' : ['(Muon2_MuID_WWID < 0.5 || Muon2_MuRelIso > 0.3)'],
-                    'ewk_fr' : get_fr('mu', 'Muon2_JetPt'),
-                    'qcd_fr' : get_fr('muQCD', 'Muon2_JetPt'),
+                    'ewk_fr' : get_fr('mu', 'Muon2_JetPt', 'Muon2AbsEta'),
+                    'qcd_fr' : get_fr('muQCD', 'Muon2_JetPt', 'Muon2AbsEta'),
                 },
                 'object2' : {
                     'name' : '#mu_{1}',
@@ -255,15 +261,15 @@ cfg = {
                         'Muon1_MuID_WWID > 0.5',
                     ],
                     'fail' : ['(Muon1_MuID_WWID < 0.5 || Muon1_MuRelIso > 0.3)'],
-                    'ewk_fr' : get_fr('muHighPt', 'Muon1_JetPt'),
-                    'qcd_fr' : get_fr('muHighPtQCDOnly', 'Muon1_JetPt'),
+                    'ewk_fr' : get_fr('muHighPt', 'Muon1_JetPt', 'Muon1AbsEta'),
+                    'qcd_fr' : get_fr('muHighPtQCDOnly', 'Muon1_JetPt', 'Muon1AbsEta'),
                 },
                 'object3' : {
                     'name' : '#tau',
                     'pass' : ['Tau_LooseHPS > 0.5'],
                     'fail' : ['Tau_LooseHPS < 0.5'],
-                    'ewk_fr' : get_fr('tau', 'TauJetPt'),
-                    'qcd_fr' : get_fr('tau', 'TauJetPt'), # FIXME
+                    'ewk_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'),
+                    'qcd_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'), # FIXME
                 },
             },
         },
@@ -328,8 +334,8 @@ cfg = {
                         'Mu2_MuID_WWID > 0.5',
                     ],
                     'fail' : ['(Mu2_MuID_WWID < 0.5 || Mu2_MuRelIso > 0.1)'],
-                    'ewk_fr' : get_fr('muTight', 'Mu2_JetPt'),
-                    'qcd_fr' : get_fr('muQCDTight', 'Mu2_JetPt'),
+                    'ewk_fr' : get_fr('muTight', 'Mu2_JetPt', 'Mu2AbsEta'),
+                    'qcd_fr' : get_fr('muQCDTight', 'Mu2_JetPt', 'Mu2AbsEta'),
                 },
                 'object2' : {
                     'name' : '#mu_{1}',
@@ -338,8 +344,8 @@ cfg = {
                         'Mu1_MuID_WWID > 0.5',
                     ],
                     'fail' : ['(Mu1_MuID_WWID < 0.5 || Mu1_MuRelIso > 0.3)'],
-                    'ewk_fr' : get_fr('muHighPt', 'Mu1_JetPt'),
-                    'qcd_fr' : get_fr('muHighPtQCDOnly', 'Mu1_JetPt'),
+                    'ewk_fr' : get_fr('muHighPt', 'Mu1_JetPt', 'Mu1AbsEta'),
+                    'qcd_fr' : get_fr('muHighPtQCDOnly', 'Mu1_JetPt', 'Mu1AbsEta'),
                 },
                 'object3' : {
                     'name' : '#tau',
@@ -348,23 +354,10 @@ cfg = {
                         'Elec_ERelIso < 0.3',
                     ],
                     'fail' : ['(Elec_EID_MITID < 0.5 || Elec_ERelIso > 0.3)'],
-                    'ewk_fr' : get_fr('eMIT', 'Elec_JetPt'),
-                    'qcd_fr' : get_fr('eMITQCD', 'Elec_JetPt'),
+                    'ewk_fr' : get_fr('eMIT', 'Elec_JetPt', 'ElecAbsEta'),
+                    'qcd_fr' : get_fr('eMITQCD', 'Elec_JetPt', 'ElecAbsEta'),
                 },
             },
         },
     },
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
