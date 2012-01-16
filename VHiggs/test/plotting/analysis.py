@@ -85,7 +85,7 @@ if __name__ == "__main__":
     ### Load the data ##########################################################
     ############################################################################
     int_lumi = analysis_cfg.INT_LUMI
-    skips = ['DoubleEl', 'EM']
+    skips = ['DoubleEl', 'EM', 'HWW']
     samples, plotter = data_tool.build_data(
         'VH', analysis_cfg.JOBID, 'scratch_results',
         int_lumi, skips, count='emt/skimCounter')
@@ -103,6 +103,9 @@ if __name__ == "__main__":
     ############################################################################
     for channel, channel_cfg in analysis_cfg.cfg.iteritems():
         log.info("Analyzing channel: %s", channel)
+        if channel in analysis_cfg.skip:
+            log.warning("Skipping channel %s!!", channel)
+            continue
         # Unpack the configuration
         ntuple = channel_cfg['ntuple']
         # A dictionary describing how to plot variables
