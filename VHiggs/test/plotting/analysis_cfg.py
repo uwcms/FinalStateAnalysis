@@ -9,7 +9,7 @@ Define top-level configuration for WH analysis.
 # Data source parameters
 INT_LUMI = 4600
 #JOBID = '2011-12-10-v1-WHAnalyze'
-JOBID = '2012-01-04-v1-WHAnalyze'
+JOBID = '2012-01-13-v2-WHAnalyze'
 
 # Setup function which retrieves fake rate weights
 fake_rates_file = open('fake_rates.json')
@@ -22,6 +22,8 @@ def get_fr(label, variable):
     weight = '((%s)/(1-%s))' % (fake_rate_fun, fake_rate_fun)
     return weight
 
+# List of channels to skip
+skip = [ 'emm' ]
 
 cfg = {
     'emt' : {
@@ -38,6 +40,7 @@ cfg = {
         },
         # The common cuts
         'baseline' : [
+            'Elec_MuonOverlap < 0.5',
             'MuPt > 18',
             'ElecPt > 10',
             'MuAbsEta < 2.1',
@@ -277,6 +280,7 @@ cfg = {
             'count' : ('1', 'Count', [1, 0, 1], 1),
         },
         'baseline' : [
+            'Elec_MuonOverlap < 0.5',
             'Mu1Pt > 18',
             'Mu2Pt > 9',
             'Mu1AbsEta < 2.1',
