@@ -8,8 +8,8 @@ Define top-level configuration for WH analysis.
 
 # Data source parameters
 INT_LUMI = 4600
-#JOBID = '2011-12-10-v1-WHAnalyze'
-JOBID = '2012-01-13-v2-WHAnalyze'
+#JOBID = '2012-01-13-v2-WHAnalyze'
+JOBID = '2012-01-04-v1-WHAnalyze'
 
 # Setup function which retrieves fake rate weights
 fake_rates_file = open('fake_rates.json')
@@ -31,6 +31,7 @@ cfg = {
         'primds' : 'data_MuEG',
         'variables' : {
             'ETauMass' : ('Elec_Tau_Mass', 'M_{e#tau}', [60, 0, 300], 5),
+            'MuTauMass' : ('Mu_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300], 5),
             'EJetPt' : ('Elec_JetPt', 'p_{T}', [100, 0, 200], 5),
             'MuPt' : ('MuPt', 'p_{T}', [100, 0, 200], 5),
             'TauJetPt' : ('TauJetPt', 'p_{T}', [100, 0, 200], 5),
@@ -40,7 +41,7 @@ cfg = {
         },
         # The common cuts
         'baseline' : [
-            'Elec_MuonOverlap < 0.5',
+            #'Elec_MuonOverlap < 0.5',
             'MuPt > 18',
             'ElecPt > 10',
             'MuAbsEta < 2.1',
@@ -85,7 +86,7 @@ cfg = {
                             'vtxChi2/vtxNDOF < 10',
                         ],
                         #'vars' : ['ETauMass', 'EJetPt', 'HT', 'count', 'MuPt'],
-                        'vars' : ['ETauMass', 'count',],
+                        'vars' : ['ETauMass', 'count', 'MuTauMass'],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
