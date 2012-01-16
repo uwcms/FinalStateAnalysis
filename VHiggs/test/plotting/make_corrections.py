@@ -76,33 +76,6 @@ cfg = {
             endcap(1.0),
         ])),
     ]),
-    'MuIso' : Bins([
-        ('pt', 0, 8, 1.0),
-        ('pt', 8, 10, Bins([
-            barrel(0.968),
-            endcap(0.936),
-        ])),
-        ('pt', 10, 20, Bins([
-            barrel(0.992),
-            endcap(0.990),
-        ])),
-        ('pt', 20, 30, Bins([
-            barrel(1.0),
-            endcap(0.998),
-        ])),
-        ('pt', 30, 50, Bins([
-            barrel(1.0),
-            endcap(0.998),
-        ])),
-        ('pt', 50, 100, Bins([
-            barrel(1.0),
-            endcap(1.0),
-        ])),
-        ('pt', 100, None, Bins([
-            barrel(1.0),
-            endcap(1.0),
-        ])),
-    ]),
     'MuHLT8' : Bins([
         ('pt', 0, 8, 1.0),
         ('pt', 8, 10, Bins([
