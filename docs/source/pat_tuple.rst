@@ -54,8 +54,9 @@ The following electron IDs are embedded as userFloats:
 * ``wp90``
 * ``wp95``
 * ``WWID``
+* ``MITID``
 
-The following electron IDs are embedded as as eIDs (pat defaults):
+The following RECO electron IDs are embedded as as eIDs (pat defaults):
 
 * ``cicHyperTight1 --> eidHyperTight1``
 * ``cicTight --> eidTight``
