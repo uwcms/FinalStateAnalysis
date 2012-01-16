@@ -3,11 +3,15 @@
 '''
 
 Usage:
-    crosscheck.py event_file tree_file channel charge_cat
+    crosscheck.py event_file tree_file channel charge_cat obj1 obj2 obj3
+
+    Where obj1,2,3 are the names of the objects - Mu, Elec, etc.
 
 '''
 
+import ROOT
 import rootpy.io as io
+from rootpy.utils import asrootpy
 import sys
 import re
 
@@ -19,13 +23,16 @@ event_filename = sys.argv[1]
 tree_file = sys.argv[2]
 channel = sys.argv[3]
 charge_cat = sys.argv[4]
+obj1 = sys.argv[5]
+obj2 = sys.argv[6]
+obj3 = sys.argv[7]
 
 file = io.open(tree_file)
 
 ntuple = getattr(file, channel)
 
-tree = ntuple.final.Ntuple
-print tree
+tree = asrootpy(ntuple.final.Ntuple)
+print str(tree)
 
 # Replace any nonnumeric w/ spaces
 replacer = re.compile(r'[^\d]+')
@@ -81,17 +88,44 @@ for event_info in events:
         idx_cut = ['idx == %i' % i]
         bad_cuts = 0
         good_cands = 0
+
+        object_pts = []
+        object_etas = []
+
+        for obj in [obj1, obj2, obj3]:
+            histo_name_pt = "htemp_%i_%i_%s_pt" % (event, i, obj)
+            histo_name_eta = "htemp_%i_%i_%s_eta" % (event, i, obj)
+            #print objstr
+            selector = run_evt + idx_cut
+
+            objstr_pt = '%sPt>>%s' % (obj, histo_name_pt)
+            objstr_eta = '%sEta>>%s' % (obj, histo_name_eta)
+            tree.Draw(objstr_pt, '&&'.join(selector))
+            obj_pt_hist = ROOT.gDirectory.Get(histo_name_pt)
+            tree.Draw(objstr_eta, '&&'.join(selector))
+            obj_eta_hist = ROOT.gDirectory.Get(histo_name_eta)
+            #print obj_pt_hist.GetMaximumBin()
+            #print obj_pt_hist.GetEntries(), obj_pt_hist.GetMean()
+            object_pts.append(obj_pt_hist.GetMean())
+            object_etas.append(obj_eta_hist.GetMean())
+
+        topo_str = "[%s][%s]" % (
+            ",".join("%0.1f" % x for x in object_pts),
+            ",".join("%0.1f" % x for x in object_etas)
+        )
+
         for cut in all_cuts:
             if 'MuCharge' in cut:
                 continue
             to_test = run_evt + idx_cut + [cut]
             to_test_str = ' && '.join(to_test)
+
             passes_cut = tree.GetEntries(to_test_str)
             if not passes_cut:
-                print "-- [cand %i] fails cut: %s" % (i, cut)
+                print "-- [cand %i %s] fails cut: %s" % (i, topo_str, cut)
                 bad_cuts += 1
         if not bad_cuts:
-            print "-- [cand %i] passes all cuts" % i
+            print "-- [cand %i %s] passes all cuts" % (i, topo_str)
             good_cands += 1
     if good_cands:
         good_events += 1
