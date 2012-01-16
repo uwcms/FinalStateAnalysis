@@ -15,7 +15,8 @@ mu_triggers = [
     ('IsoMu17', 'Iso Mu 17', r'HLT_IsoMu17_v\\d+'),
     ('IsoMu20', 'Iso Mu 20', r'HLT_IsoMu20_v\\d+'),
     ('IsoMu24', 'Iso Mu 24', r'HLT_IsoMu24_v\\d+'),
-    ('IsoMus', 'Iso Mu Any', r'HLT_IsoMu17_v\\d+, HLT_IsoMu20_v\\d+, HLT_IsoMu24_v\\d+'),
+    ('IsoMu24eta2p1', 'Iso Mu 24 Eta2p1', r'HLT_IsoMu24_eta2p1_v\\d+'),
+    ('IsoMus', 'Iso Mu Any', r'HLT_IsoMu17_v\\d+, HLT_IsoMu20_v\\d+, HLT_IsoMu24_v\\d+, HLT_IsoMu24_eta2p1_v\\d+'),
 ]
 
 doublemu_triggers = [
