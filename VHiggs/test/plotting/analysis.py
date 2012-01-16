@@ -31,6 +31,9 @@ log.addHandler(stderr_log)
 log.info("Loading MC-DATA corrections")
 ROOT.gROOT.ProcessLine('.L corrections.C++')
 
+log.info("Loading fake rate functions")
+ROOT.gROOT.ProcessLine('.L fake_rates.C++')
+
 def estimate_fake_sum(fr1, fr2, fr12s, fr12en):
     '''
     Estimate the total fake rate sum, with proper errors.
@@ -81,6 +84,7 @@ def estimate_fake_sum(fr1, fr2, fr12s, fr12en):
     return total_yield
 
 if __name__ == "__main__":
+    log.info("Beginning analysis")
     ############################################################################
     ### Load the data ##########################################################
     ############################################################################
