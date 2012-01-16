@@ -7,6 +7,8 @@ cmsenv
 
 export FSAHOME=$CMSSW_BASE/src/FinalStateAnalysis/
 echo "Setting variable FSAHOME=$FSAHOME"
+# easier to type
+export fsa=$FSAHOME
 
 export vpython=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/vpython
 echo "Activating python virtualenv from $vpython"
