@@ -142,6 +142,14 @@ class CppFunctionWrapper(object):
        return 999;
     }
     <BLANKLINE>
+    >>> # You can declare unused variables (to prevent compiler warnings) via:
+    >>> func = CppFunctionWrapper('myFunc', '   return 999;\\n', 'eta', 'pt',
+    ... unused=['pt'])
+    >>> print str(func)
+    float myFunc(float eta, float /*pt*/) {
+       return 999;
+    }
+    <BLANKLINE>
     '''
     def __init__(self, name, meat, *vars, **kwargs):
         self.name = name
@@ -151,6 +159,14 @@ class CppFunctionWrapper(object):
         self.warn = kwargs.get('warn')
         if hasattr(self.meat, 'indent'):
             self.meat.indent = self.meat.indent + 1
+        if 'unused' in kwargs:
+            new_vars = []
+            for var in self.vars:
+                if var in kwargs['unused']:
+                    new_vars.append('/*%s*/' % var)
+                else:
+                    new_vars.append(var)
+            self.vars = new_vars
 
     def __str__(self):
         output = 'float %s(' % self.name
