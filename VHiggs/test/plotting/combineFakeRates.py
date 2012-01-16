@@ -29,8 +29,8 @@ def get_histograms(file, data_set, fr_type):
     file = ROOT.TFile(file, "READ")
     denom = file.Get("_".join([data_set, fr_type, 'data_denom']))
     num = file.Get("_".join([data_set, fr_type, 'data_num']))
-    log.info("Got numerator: %s", num)
-    log.info("Got denominator: %s", denom)
+    log.info("Got numerator: %s", num.Integral())
+    log.info("Got denominator: %s", denom.Integral())
     return Histo(num), Histo(denom)
 
 # Muon fit function
@@ -349,6 +349,7 @@ for object in list(object_config.keys()):
         object_config[object + '_' + type] = copy_object_info
         log.info("Added %s", object + '_' + type)
 
+
 # Store the fit results so we can put them in a json at the end
 fit_results = {}
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
@@ -393,12 +394,12 @@ for object, object_info in object_config.iteritems():
         num = Histo(num.th1, rebin=type_info['rebin'])
         denom = Histo(denom.th1, rebin=type_info['rebin'])
 
-        log.debug("Numerator N=%i min=%f max=%f",
-                  num.GetNbinsX(), num.GetXaxis().GetXmin(),
-                  num.GetXaxis().GetXmax())
-        log.debug("Denominator N=%i min=%f max=%f",
-                  denom.GetNbinsX(), denom.GetXaxis().GetXmin(),
-                  denom.GetXaxis().GetXmax())
+        #log.debug("Numerator N=%i min=%f max=%f",
+                  #num.GetNbinsX(), num.GetXaxis().GetXmin(),
+                  #num.GetXaxis().GetXmax())
+        #log.debug("Denominator N=%i min=%f max=%f",
+                  #denom.GetNbinsX(), denom.GetXaxis().GetXmin(),
+                  #denom.GetXaxis().GetXmax())
 
         efficiency = ROOT.TGraphAsymmErrors(num.th1, denom.th1)
         type_info['efficiency'] = efficiency
@@ -410,12 +411,12 @@ for object, object_info in object_config.iteritems():
     combined_num = Histo(combined_num.th1, rebin=object_info['rebin'])
     combined_denom = Histo(combined_denom.th1, rebin=object_info['rebin'])
 
-    log.debug("Numerator N=%i min=%f max=%f",
-              combined_num.GetNbinsX(), combined_num.GetXaxis().GetXmin(),
-              combined_num.GetXaxis().GetXmax())
-    log.debug("Denominator N=%i min=%f max=%f",
-              combined_denom.GetNbinsX(), combined_denom.GetXaxis().GetXmin(),
-              combined_denom.GetXaxis().GetXmax())
+    #log.debug("Numerator N=%i min=%f max=%f",
+              #combined_num.GetNbinsX(), combined_num.GetXaxis().GetXmin(),
+              #combined_num.GetXaxis().GetXmax())
+    #log.debug("Denominator N=%i min=%f max=%f",
+              #combined_denom.GetNbinsX(), combined_denom.GetXaxis().GetXmin(),
+              #combined_denom.GetXaxis().GetXmax())
 
     combined_eff = ROOT.TGraphAsymmErrors(combined_num.th1, combined_denom.th1)
 
@@ -468,7 +469,7 @@ for object, object_info in object_config.iteritems():
     # Fit function parameters
     scale = ROOT.RooRealVar("scale", "Landau Scale", 0.5, 0, 10)
     mu = ROOT.RooRealVar("mu", "Landau #mu", 10, 0, 100)
-    sigma = ROOT.RooRealVar("sigma", "Landau #sigma", 1, 0, 10)
+    sigma = ROOT.RooRealVar("sigma", "Landau #sigma", 1, 0.5, 10)
     constant = ROOT.RooRealVar("offset", "constant", 1.0e-2, 0, 1)
 
     roo_fit_func = ROOT.RooFormulaVar(
@@ -509,7 +510,13 @@ for object, object_info in object_config.iteritems():
     fit_result_vars = fit_result.floatParsFinal()
     # Store the fit results for later
     object_result_vars = {}
+    object_result['combined_denom'] = combined_denom.Integral()
+    object_result['combined_num'] = combined_num.Integral()
+    object_result['combined_eff'] = object_result['combined_num']/\
+            object_result['combined_denom']
+
     object_result['vars'] = object_result_vars
+    object_result['fit_status'] = fit_result.status()
     object_result['raw_func'] = roo_fit_func_str
     fitted_fit_func = roo_fit_func_str.replace('jetPt', 'VAR')
     for var in ['scale', 'mu', 'sigma', 'offset']:
