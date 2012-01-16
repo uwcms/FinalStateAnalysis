@@ -52,9 +52,9 @@ class CppKinematicBinning(object):
     <BLANKLINE>
     '''
 
-    def __init__(self, bins):
+    def __init__(self, bins, indent=0):
         self.bins = [CppKinematicBin(*bin) for bin in bins]
-        self.indent = 0
+        self.indent = indent
     def __str__(self):
         if self.indent:
             for bin in self.bins:
