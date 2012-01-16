@@ -3,7 +3,7 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2011-01-05-v1-MuonTP'
+jobId = '2011-01-15-v1-MuonTP'
 
 patJobId = '2011-12-13-EWKPatTuple'
 patCfg = 'patTuple_cfg'
@@ -47,6 +47,7 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         #'--no-submit',
         #'--job-count=2',
         #'--input-files-per-job=%i' % (sample_info['ana_group']*2),
+        #'--output-dag-file=%s-%s.dag' % (jobId, sample),
         ' --exclude-input-files="*plots.root"',
         '--input-files-per-job=%i' % 10,
     ]
