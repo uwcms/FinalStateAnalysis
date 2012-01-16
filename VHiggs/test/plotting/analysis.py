@@ -645,6 +645,29 @@ if __name__ == "__main__":
                     saveplot(plot_base_name + '_ult_combfks')
 
                     ############################################################
+                    ### Store a nice error summary in a JSON file         ######
+                    ### Note we only do this for the 'count' variable     ######
+                    ### as it only needs to be done once                  ######
+                    ############################################################
+
+                    if var == 'count':
+                        ana_summary_filename = '%s_%s_summary.json' % (
+                            channel, charge_cat)
+                        log.info("Writing summary file: %s",
+                                 ana_summary_filename)
+                        ana_summary = {
+                            'data' : ult_data.Integral(),
+                            'zz' : corrected_mc_histos[0].Integral(),
+                            'wz' : corrected_mc_histos[1].Integral(),
+                            'fakes' : all_fakes.Integral(),
+                            'fake_error' : all_fakes.GetBinError(1),
+                            'VH120' : signal.Integral(),
+                        }
+                        with open(ana_summary_filename, 'w') as summ_file:
+                            summ_file.write(json.dumps(
+                                ana_summary, indent=3) + '\n')
+
+                    ############################################################
                     ### Now save the results in a root file for limits    ######
                     ############################################################
                     # We make a different output for each higgs mass
