@@ -7,9 +7,11 @@ Define top-level configuration for WH analysis.
 '''
 
 # Data source parameters
-INT_LUMI = 4600
+INT_LUMI = 4684
 #JOBID = '2012-01-13-v2-WHAnalyze'
-JOBID = '2012-01-04-v1-WHAnalyze'
+#JOBID = '2012-01-04-v1-WHAnalyze'
+#JOBID = '2012-01-16-v2-WHAnalyze'
+JOBID = '2012-01-17-v1-WHAnalyze'
 
 # Setup function which retrieves fake rate weights
 fake_rates_file = open('fake_rates.json')
@@ -47,16 +49,16 @@ cfg = {
         },
         # The common cuts
         'baseline' : [
-            #'Elec_MuonOverlap < 0.5',
             'MuPt > 18',
             'ElecPt > 10',
-            'MuAbsEta < 2.1',
-            'ElecAbsEta < 2.5',
             'Mu17Ele8All_HLT > 0.5',
+            'Elec_MuonOverlap < 0.5',
             # Object vetos
             'NIsoMuonsPt5_Nmuons < 0.5',
             'NIsoElecPt10_Nelectrons < 0.5',
             'NBjetsPt20_Nbjets < 0.5',
+            'MuAbsEta < 2.1',
+            'ElecAbsEta < 2.5',
 
             'Mu_InnerNPixHits > 0.5',
             'Elec_EBtag < 3.3',
@@ -70,6 +72,7 @@ cfg = {
             'TauDZ < 0.2',
             'Tau_TauBtag < 3.3',
             'Tau_ElectronMVA > 0.5',
+            'Tau_ElectronMedium > 0.5',
             'Tau_MuonOverlap < 0.5',
             'Tau_ElectronOverlap < 0.5',
         ],
@@ -77,6 +80,9 @@ cfg = {
             'MuIso(MuPt, MuAbsEta, run)',
             'MuID(MuPt, MuAbsEta, run)',
             'MuHLT8(MuPt, MuAbsEta, run)',
+            'EleIso(ElecPt, ElecAbsEta, run)',
+            'EleID(ElecPt, ElecAbsEta, run)',
+            'MuEGTrig(ElecPt, ElecAbsEta, run)',
         ],
         # Samples not applicable to this analysis
         'exclude' : ['*DoubleMu*', '*DoubleEl*'],
@@ -211,7 +217,7 @@ cfg = {
             'Muon2DZ < 0.2',
             'TauDZ < 0.2',
 
-            'Tau_MuonOverlap < 0.5',
+            'Tau_MuonOverlapGlb < 0.5',
             'Tau_ElectronOverlap < 0.5',
         ],
         'corrections' : [

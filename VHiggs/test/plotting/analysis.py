@@ -89,7 +89,7 @@ if __name__ == "__main__":
     ### Load the data ##########################################################
     ############################################################################
     int_lumi = analysis_cfg.INT_LUMI
-    skips = ['DoubleEl', 'EM', 'HWW']
+    skips = ['DoubleEl', 'EM']
     samples, plotter = data_tool.build_data(
         'VH', analysis_cfg.JOBID, 'scratch_results',
         int_lumi, skips, count='emt/skimCounter')
@@ -171,6 +171,10 @@ if __name__ == "__main__":
             ####################################################################
             selection_cfgs = charge_cat_cfg['selections']
             for selection_name, selection_cfg in selection_cfgs.iteritems():
+                if 'final' not in selection_name:
+                    log.warning("Skipping selection %s!!!!!!", selection_name)
+                    continue
+
                 log.info("---- now running selection %s", selection_name)
 
                 def saveplot(filename):
@@ -191,6 +195,9 @@ if __name__ == "__main__":
                 vars_to_draw = selection_cfg['vars']
 
                 for var in vars_to_draw:
+                    if 'count' not in var:
+                        log.warning("Skipping var %s!!!!!!", var)
+                        continue
                     log.info("------ doing variable %s", var)
                     plot_base_name = '_'.join(
                         [channel, charge_cat, selection_name, var])
@@ -355,6 +362,14 @@ if __name__ == "__main__":
                         ntuple + ':' + plot_base_name + '_ult',
                         rebin = rebin, show_overflows = True
                     )
+                    hww = plotter.get_histogram(
+                        'VH120WW',
+                        ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True
+                    )
+                    log.warning('VH125 yield: %f', signalx100.Integral())
+                    log.warning('VHWW yield: %f', hww.Integral())
+
                     signalx100 = signalx100*100
                     signalx100.SetFillStyle(0)
                     signalx100.SetLineWidth(3)
@@ -671,7 +686,8 @@ if __name__ == "__main__":
                     ### Now save the results in a root file for limits    ######
                     ############################################################
                     # We make a different output for each higgs mass
-                    for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
+                    #for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
+                    for mass in [100, 110, 115, 120, 125, 135, 140, 145]:
                         # Set the correct name for everything
                         ult_data.SetName('data_obs')
                         corrected_mc_histos[0].SetName('zz')

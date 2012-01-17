@@ -286,6 +286,7 @@ fakerates = {
             'ElectronDZ < 0.2',
             'Electron_MissingHits < 0.5',
             'Electron_hasConversion < 0.5',
+            'Electron_MuonOverlap < 0.5',
         ],
         'num' : [
             'Electron_EID_WWID > 0.5',
@@ -325,6 +326,7 @@ fakerates = {
             'ElectronDZ < 0.2',
             'Electron_MissingHits < 0.5',
             'Electron_hasConversion < 0.5',
+            'Electron_MuonOverlap < 0.5',
         ],
         'num' : [
             'Electron_EID_MITID > 0.5',
@@ -361,6 +363,7 @@ fakerates = {
             'ElectronDZ < 0.2',
             'Electron_MissingHits < 0.5',
             'Electron_hasConversion < 0.5',
+            'Electron_MuonOverlap < 0.5',
         ],
         'num' : [
             'Electron_EID_WWID > 0.5',
@@ -397,6 +400,7 @@ fakerates = {
             'ElectronDZ < 0.2',
             'Electron_MissingHits < 0.5',
             'Electron_hasConversion < 0.5',
+            'Electron_MuonOverlap < 0.5',
         ],
         'num' : [
             'Electron_EID_MITID > 0.5',
@@ -425,6 +429,10 @@ fakerates = {
             'TauAbsEta < 2.5',
             'Tau_TauBtag < 3.3',
             'TauDZ < 0.2',
+            'Tau_ElectronMVA > 0.5',
+            'Tau_ElectronMedium > 0.5',
+            'Tau_MuonOverlapGlb < 0.5',
+            'Tau_ElectronOverlapWP95 < 0.5',
         ],
         'num' : [
             'Tau_LooseHPS > 0.5',
@@ -454,11 +462,11 @@ output_file = ROOT.TFile("results_singleMuFakeRates.root", "RECREATE")
 for data_set, skips, int_lumi, puTag in [
     ('2011A', ['2011B', 'EM',], 2170, 'pu2011A'),
     #('2011B', ['2011A', 'EM'], 2170),
-    ('2011AB', ['EM',], 4600, 'pu2011AB') ]:
+    ('2011AB', ['EM',], 4684, 'pu2011AB') ]:
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'Mu', '2011-12-10-v1-MuonTP', 'scratch_results', int_lumi, skips,
+        'Mu', '2012-01-16-v1-MuonTP', 'scratch_results', int_lumi, skips,
         count = '/mm/skimCounter', unweighted = False)
 
     legend = plotter.build_legend(

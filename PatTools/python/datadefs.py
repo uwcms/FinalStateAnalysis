@@ -40,7 +40,7 @@ data_name_map = {
     'VH135' : ['VH_135'],
     'VH140' : ['VH_140'],
     'VH145' : ['VH_145'],
-    'VH160' : ['VH_160'],
+    #'VH160' : ['VH_160'],
 
     'VH120WW' : ['VH_120_HWW'],
     #'VH150' : ['VH_150'],
@@ -195,12 +195,12 @@ datadefs = {
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
-    #'VH_130' : {
-        #'datasetpath' :"",
-        #'x_sec' : (0.5008 + 0.2778 + 0.07658)*_picobarns*5.48-2,
-        #'pu' : 'S6',
-        #'analyses' : ['VH'],
-    #},
+    'VH_130' : {
+        'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-130_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.5008 + 0.2778 + 0.07658)*_picobarns*5.48-2,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
     'VH_135' : {
         'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-135_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'x_sec' : (0.4390 + 0.2453 + 0.06810)*_picobarns*4.52e-2,
@@ -239,7 +239,21 @@ datadefs = {
     'VH_120_HWW' : {
         'datasetpath' :"/WH_ZH_TTH_HToWW_M-120_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
         'x_sec' : (0.6561 + 0.3598 + 0.09756)*_picobarns*1.43E-01,
-        'pu' : 'S6',
+        'pu' : 'S4',
+        'analyses' : ['VH'],
+    },
+
+    'VH_130_HWW' : {
+        'datasetpath' :"/WH_ZH_TTH_HToWW_M-130_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
+        'x_sec' : (0.5008 + 0.2778 + 0.07658)*_picobarns*3.05E-01,
+        'pu' : 'S4',
+        'analyses' : ['VH'],
+    },
+
+    'VH_140_HWW' : {
+        'datasetpath' :"/WH_ZH_TTH_HToWW_M-140_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
+        'x_sec' : (0.3857 + 0.2172 + 0.06072)*_picobarns*5.03E-01,
+        'pu' : 'S4',
         'analyses' : ['VH'],
     },
 
