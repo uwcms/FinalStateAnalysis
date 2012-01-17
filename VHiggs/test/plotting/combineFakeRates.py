@@ -142,48 +142,6 @@ object_config = {
         'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
     },
-    'muTight' : {
-        'scenarios' : {
-            'SingleMu_Wjets' : {
-                'title' : 'W+jet_{#mu} (Single Mu)',
-                'file' : singlemu_fr_file,
-                'histo' : 'muTight',
-                'rebin' : 5,
-            },
-            'SingleMu_QCD' : {
-                'title' : 'QCD (Single Mu)',
-                'file' : singlemu_fr_file,
-                'histo' : 'muQCDTight',
-                'rebin' : 1,
-                'exclude' : True,
-            },
-        },
-        'rebin' : 1,
-        'fit_label' : 'EWK Fit',
-        'function' : fit_func,
-        'label' : 'Jet #rightarrow #mu fake rate',
-    },
-    'muQCDTight' : {
-        'scenarios' : {
-            'SingleMu_Wjets' : {
-                'title' : 'W+jet_{#mu} (Single Mu)',
-                'file' : singlemu_fr_file,
-                'histo' : 'muTight',
-                'rebin' : 5,
-                'exclude' : True,
-            },
-            'SingleMu_QCD' : {
-                'title' : 'QCD (Single Mu)',
-                'file' : singlemu_fr_file,
-                'histo' : 'muQCDTight',
-                'rebin' : 1,
-            },
-        },
-        'rebin' : 1,
-        'fit_label' : 'QCD Fit',
-        'function' : fit_func,
-        'label' : 'Jet #rightarrow #mu fake rate',
-    },
     'muHighPt' : {
         'scenarios' : {
             'SingleMu_Wjets' : {
@@ -219,27 +177,6 @@ object_config = {
         'fit_label' : 'QCD Fit',
         'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
-    },
-    'e' : {
-        'scenarios' : {
-            'SingleMu_Wjets' : {
-                'title' : 'W+jet_{#mu} (Single Mu)',
-                'file' : singlemu_fr_file,
-                'histo' : 'e',
-                'rebin' : 5,
-            },
-            'SingleMu_QCD' : {
-                'title' : 'QCD (Single Mu)',
-                'file' : singlemu_fr_file,
-                'histo' : 'eQCD',
-                'rebin' : 1,
-                'exclude' : True,
-            },
-        },
-        'rebin' : 5,
-        'fit_label' : 'Wjets Fit',
-        'function' : fit_func,
-        'label' : 'Jet #rightarrow e fake rate',
     },
     'eMIT' : {
         'scenarios' : {
