@@ -1,5 +1,6 @@
 import ROOT
 import random
+import array
 
 '''
 
@@ -84,7 +85,18 @@ class Histo(object):
     >>> transformed = histo.transform(lambda x: x+5)
     >>> transformed(5), round(transformed(10.0), 3)
     (0.0, 1.0)
-
+    >>> # Non-equal rebinning
+    >>> hist = Histo(ROOT.TH1F("t4", "t4", 10, 0, 10))
+    >>> bin = hist.Fill(0.5)
+    >>> bin = hist.Fill(6)
+    >>> bin = hist.Fill(8)
+    >>> rebinned = hist.cloneAndRebin([0, 1, 2, 3, 10])
+    >>> rebinned(0.5)
+    1.0
+    >>> rebinned(7.5)
+    2.0
+    >>> rebinned.GetNbinsX()
+    4
     '''
     def __init__(self, th1, **kwargs):
         self.th1 = th1.Clone()
@@ -109,6 +121,13 @@ class Histo(object):
 
     def __getattr__(self, attr):
         return getattr(self.th1, attr)
+
+    def cloneAndRebin(self, binning):
+        # Returns a rebinned histogram
+        bin_array = array.array('d', binning)
+        rebinned = self.th1.Rebin(len(binning)-1, self.GetName() + 'rebinned',
+                                  bin_array)
+        return Histo(rebinned)
 
     def makeRooDataHist(self, *variables):
         output =  ROOT.RooDataHist(
