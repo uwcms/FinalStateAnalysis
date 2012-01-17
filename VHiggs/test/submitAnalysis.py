@@ -50,7 +50,7 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         #'--job-count=20',
         #'--output-dag-file=%s-%s.dag' % (jobId, sample),
         ' --exclude-input-files="*plots.root"',
-        '--input-files-per-job=%i' % 10,
+        '--input-files-per-job=%i' % 5,
     ]
 
     command.extend(farmout_options)
