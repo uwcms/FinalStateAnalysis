@@ -16,8 +16,9 @@ def find_data_for_run(run, primds):
     '''
     matching_datasets = []
     for dataset, dataset_info in datadefs.iteritems():
-        if primds in dataset:
-            if run >= dataset_info['firstRun'] and run <= dataset_info['lastRun']:
+        if primds in dataset_info['datasetpath']:
+            if run == 1 or (run >= dataset_info['firstRun'] and
+                            run <= dataset_info['lastRun']):
                 matching_datasets.append(dataset)
 
     if len(matching_datasets) != 1:
