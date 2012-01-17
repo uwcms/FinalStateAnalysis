@@ -103,7 +103,7 @@ class CppKinematicBin(object):
         self.val = value
         # If the value is a simple type, make it say "return X"
         if isinstance(self.val, int) or isinstance(self.val, float) or \
-           isinstance(self.val, str):
+           isinstance(self.val, basestring):
             self.val = 'return %s;\n' % str(self.val)
 
     def __str__(self):
