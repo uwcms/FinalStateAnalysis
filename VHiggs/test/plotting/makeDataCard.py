@@ -41,15 +41,15 @@ def dump_table(file, folder, stream):
     stream.write(" \hline")
     stream.write(" Data & $%i \pm %0.1f$ \\\\\n" % (int(data), math.sqrt(data)))
     stream.write("\hline\n")
-    stream.write(" VH(115) & %0.1f \\\\\n" % signal)
+    stream.write(" VH(125) & %0.1f \\\\\n" % signal)
 
 shape_file = "wh_shapes.root"
 
 shapes = io.open(shape_file, "READ")
 
-for label, folder in [('mmt_mumu', 'mmt_mumu_final_115_MuTauMass'),
-                      ('emt_emu', 'emt_emu_final_115_ETauMass'),
-                      ('emm_mumu', 'emm_mumu_final_115_MuElecMass')]:
+for label, folder in [('mmt_mumu', 'mmt_mumu_final_125_MuTauMass'),
+                      ('emt_emu', 'emt_emu_final_125_ETauMass'),
+                      ('emm_mumu', 'emm_mumu_final_125_MuElecMass')]:
     file = open(label + '_yields.tex', 'w')
     dump_table(shapes, folder, file)
 
