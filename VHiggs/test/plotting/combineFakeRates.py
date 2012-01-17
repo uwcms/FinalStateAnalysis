@@ -19,8 +19,6 @@ log.addHandler(ch)
 ROOT.gStyle.SetOptFit(0)
 
 # Define the ROOT files that store the results
-#trilepton_fr_file = ROOT.TFile("results_fakeRates.root", "READ")
-#singlemu_fr_file = ROOT.TFile("results_singleMuFakeRates.root", "READ")
 trilepton_fr_file = "results_fakeRates.root"
 singlemu_fr_file = "results_singleMuFakeRates.root"
 
