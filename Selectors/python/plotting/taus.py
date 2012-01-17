@@ -122,6 +122,17 @@ againstElectronMedium = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+muonOverlapWWID = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(0.5),
+    nbins = cms.untracked.int32(2),
+    name = cms.untracked.string("${name}_MuonOverlapWWID"),
+    description = cms.untracked.string("${nicename} muon overlap"),
+    plotquantity = cms.untracked.string(
+        'filteredOverlaps(${index}, "muons", "pt > 5 & abs(eta) < 2.1 & userInt(\'WWID\') > 0.5").size()'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 muonOverlap = cms.PSet(
     min = cms.untracked.double(-0.5),
     max = cms.untracked.double(0.5),
@@ -129,7 +140,7 @@ muonOverlap = cms.PSet(
     name = cms.untracked.string("${name}_MuonOverlap"),
     description = cms.untracked.string("${nicename} muon overlap"),
     plotquantity = cms.untracked.string(
-        'filteredOverlaps(${index}, "muons", "pt > 5 & abs(eta) < 2.1 & userInt(\'WWID\') > 0.5").size()'),
+        'filteredOverlaps(${index}, "muons", "pt > 5 & abs(eta) < 2.1").size()'),
     lazyParsing = cms.untracked.bool(True),
 )
 
@@ -144,6 +155,17 @@ muonOverlapGlb = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+electronOverlapMIT = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(0.5),
+    nbins = cms.untracked.int32(2),
+    name = cms.untracked.string("${name}_ElectronOverlapMIT"),
+    description = cms.untracked.string("${nicename} electron overlap"),
+    plotquantity = cms.untracked.string(
+        'filteredOverlaps(${index}, "electrons", "pt > 10 & abs(eta) < 2.5 & userFloat(\'MITID\') > 0.5").size()'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 electronOverlap = cms.PSet(
     min = cms.untracked.double(-0.5),
     max = cms.untracked.double(0.5),
@@ -151,7 +173,7 @@ electronOverlap = cms.PSet(
     name = cms.untracked.string("${name}_ElectronOverlap"),
     description = cms.untracked.string("${nicename} electron overlap"),
     plotquantity = cms.untracked.string(
-        'filteredOverlaps(${index}, "electrons", "pt > 10 & abs(eta) < 2.5 & userFloat(\'MITID\') > 0.5").size()'),
+        'filteredOverlaps(${index}, "electrons", "pt > 10 & abs(eta) < 2.5").size()'),
     lazyParsing = cms.untracked.bool(True),
 )
 
@@ -179,6 +201,6 @@ electronOverlapWWID = cms.PSet(
 
 
 all = [decayMode, decayFinding, vlooseID, looseID, mediumID, rawjetpt, jetpt, btag,
-       againstElectronMedium,
-       muonOverlapGlb, electronOverlapWP95, electronOverlapWWID,
-       tnpPresel, genDecayMode, againstElectronMVA, muonOverlap, electronOverlap]
+       againstElectronMedium, muonOverlap, electronOverlap, muonOverlapWWID,
+       muonOverlapGlb, electronOverlapWP95, electronOverlapWWID, electronOverlapMIT,
+       tnpPresel, genDecayMode, againstElectronMVA,]
