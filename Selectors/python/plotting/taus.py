@@ -144,6 +144,17 @@ muonOverlap = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+muonOverlapSuperLoose = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(0.5),
+    nbins = cms.untracked.int32(2),
+    name = cms.untracked.string("${name}_MuonOverlapSuperLoose"),
+    description = cms.untracked.string("${nicename} muon overlap"),
+    plotquantity = cms.untracked.string(
+        '${getter}hasOverlaps("muons")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 muonOverlapGlb = cms.PSet(
     min = cms.untracked.double(-0.5),
     max = cms.untracked.double(0.5),
@@ -177,6 +188,17 @@ electronOverlap = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+electronOverlapSuperLoose = cms.PSet(
+    min = cms.untracked.double(-0.5),
+    max = cms.untracked.double(0.5),
+    nbins = cms.untracked.int32(2),
+    name = cms.untracked.string("${name}_ElectronOverlapSuperLoose"),
+    description = cms.untracked.string("${nicename} electron overlap"),
+    plotquantity = cms.untracked.string(
+        '${getter}hasOverlaps("electrons")'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 electronOverlapWP95 = cms.PSet(
     min = cms.untracked.double(-0.5),
     max = cms.untracked.double(0.5),
@@ -202,5 +224,6 @@ electronOverlapWWID = cms.PSet(
 
 all = [decayMode, decayFinding, vlooseID, looseID, mediumID, rawjetpt, jetpt, btag,
        againstElectronMedium, muonOverlap, electronOverlap, muonOverlapWWID,
+       muonOverlapSuperLoose, electronOverlapSuperLoose,
        muonOverlapGlb, electronOverlapWP95, electronOverlapWWID, electronOverlapMIT,
        tnpPresel, genDecayMode, againstElectronMVA,]
