@@ -6,6 +6,7 @@ Code to measure the MuEG trigger efficiency
 
 import copy
 import logging
+import json
 import os
 import re
 import sys
@@ -75,22 +76,7 @@ eta_bins = [
 
 rebin = 10
 
-def get_yields(plotter, name, samples, binning):
-    combined_histogram = None
-    for sample in samples:
-        sample_histo = plotter.get_histogram(
-            sample, name, show_overflows=True)
-        sample_histo.Sumw2()
-        if combined_histogram is None:
-            combined_histogram = Histo.Histo(sample_histo.th1)
-        else:
-            combined_histogram += sample_histo
-    rebinned_histogram = combined_histogram.cloneAndRebin(binning)
-    bin_boundaries = zip(binning[:-1], binning[1:])
-    for start, end, in bin_boundaries:
-        middle = start + (end - start)/2.
-        yield (start, end, rebinned_histogram(middle),
-               rebinned_histogram.GetBinError(rebinned_histogram.FindBin(middle)))
+summary = {}
 
 log.info("Beginning selections...")
 for eta_bin in eta_bins:
@@ -200,8 +186,9 @@ for eta_bin in eta_bins:
     mc_eff = ROOT.TGraphAsymmErrors(mc_num.th1, mc_denom.th1)
     canvas.cd(1)
 
-    data_fit_func = ROOT.TF1(
-        "data_fit_func", "[0]*0.5*(1 + TMath::Erf([2]*(x - [1])))", 2)
+    fit_func_str = "[0]*0.5*(1 + TMath::Erf([2]*(x - [1])))"
+
+    data_fit_func = ROOT.TF1("data_fit_func", fit_func_str, 2)
     data_fit_func.SetParameter(0, 0.95)
     data_fit_func.SetParLimits(0, 0, 1)
     data_fit_func.SetParameter(1, 5)
@@ -209,8 +196,7 @@ for eta_bin in eta_bins:
     data_fit_func.SetParameter(2, 0.2)
     data_fit_func.SetParLimits(2, 0.0001, 0.5)
 
-    mc_fit_func = ROOT.TF1(
-        "mc_fit_func", "[0]*0.5*(1 + TMath::Erf([2]*(x - [1])))", 2)
+    mc_fit_func = ROOT.TF1("mc_fit_func",fit_func_str, 2)
     mc_fit_func.SetParameter(0, 0.95)
     mc_fit_func.SetParLimits(0, 0, 1)
     mc_fit_func.SetParameter(1, 5)
@@ -229,3 +215,21 @@ for eta_bin in eta_bins:
     mc_eff.GetHistogram().SetMaximum(1)
     mc_eff.GetHistogram().SetMinimum(0.5)
     saveplot('efficiencies_%s' % label)
+
+    mc_fitted_func = fit_func_str
+    data_fitted_func = fit_func_str
+
+    for ipar in range(3):
+        mc_fitted_func = mc_fitted_func.replace(
+            '[%i]' % ipar, '%e' % mc_fit_func.GetParameter(ipar))
+        data_fitted_func = data_fitted_func.replace(
+            '[%i]' % ipar, '%e' % data_fit_func.GetParameter(ipar))
+
+    # Write results to summary json file
+    summary[label] = {
+        'mc' : mc_fitted_func,
+        'data' : data_fitted_func,
+    }
+
+with open('mueg_trig_correction_results.json', 'w') as summary_file:
+    summary_file.write(json.dumps(summary, indent=2) + '\n')
