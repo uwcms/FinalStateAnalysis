@@ -1,5 +1,24 @@
 import ROOT
 
+def cms_preliminary(int_lumi):
+    # Objects that shouldn't be GC'ed
+    keep = []
+    latex = ROOT.TLatex()
+    latex.SetNDC();
+    latex.SetTextSize(0.04);
+    latex.SetTextAlign(31);
+    keep.append(latex.DrawLatex(0.90,0.96,"#sqrt{s} = 7 TeV"));
+    if int_lumi > 0.:
+        latex.SetTextAlign(31);
+        keep.append(latex.DrawLatex(
+            #0.85,0.84,
+            0.18,0.84,
+            "#int #font[12]{L} dt = %.1f pb^{-1}" % int_lumi));
+    latex.SetTextAlign(11);
+    keep.append(latex.DrawLatex(0.18,0.96,"CMS preliminary 2011"));
+    #latex.DrawLatex(0.18,0.96,"CMS 2010");
+    return latex
+
 class RootColor(object):
     colors_added = {}
     def __init__(self, r, g, b):
