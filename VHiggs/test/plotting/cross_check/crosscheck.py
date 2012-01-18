@@ -27,12 +27,15 @@ obj1 = sys.argv[5]
 obj2 = sys.argv[6]
 obj3 = sys.argv[7]
 
-file = io.open(tree_file)
+#file = io.open(tree_file)
+#ntuple = getattr(file, channel)
+#tree = asrootpy(ntuple.final.Ntuple)
 
-ntuple = getattr(file, channel)
+tree = ROOT.TChain("%s/final/Ntuple" % channel)
+files_added = tree.Add(tree_file)
+print "Added %i files" % files_added
 
-tree = asrootpy(ntuple.final.Ntuple)
-print str(tree)
+print "Total %i entries" % tree.GetEntries()
 
 # Replace any nonnumeric w/ spaces
 replacer = re.compile(r'[^\d]+')
@@ -66,6 +69,7 @@ all_cuts = cfg[channel]['baseline'] + \
 
 
 good_events = 0
+exclusive_fails = {}
 for event_info in events:
     run, event, lumi = None, None, None
     if len(event_info) == 2:
@@ -84,10 +88,10 @@ for event_info in events:
         continue
     else:
         print "- has %i loose e-mu-tau candidates:" % pass_topo
+    good_cands = 0
     for i in range(pass_topo):
         idx_cut = ['idx == %i' % i]
         bad_cuts = 0
-        good_cands = 0
 
         object_pts = []
         object_etas = []
@@ -117,6 +121,8 @@ for event_info in events:
         for cut in all_cuts:
             if 'MuCharge' in cut:
                 continue
+            if 'vtx' in cut:
+                continue
             to_test = run_evt + idx_cut + [cut]
             to_test_str = ' && '.join(to_test)
 
@@ -124,6 +130,7 @@ for event_info in events:
             if not passes_cut:
                 print "-- [cand %i %s] fails cut: %s" % (i, topo_str, cut)
                 bad_cuts += 1
+
         if not bad_cuts:
             print "-- [cand %i %s] passes all cuts" % (i, topo_str)
             good_cands += 1
