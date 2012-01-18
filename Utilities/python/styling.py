@@ -13,7 +13,7 @@ def cms_preliminary(int_lumi):
         keep.append(latex.DrawLatex(
             #0.85,0.84,
             0.18,0.84,
-            "#int #font[12]{L} dt = %.1f pb^{-1}" % int_lumi));
+            "#int #font[12]{L} dt = %.1f fb^{-1}" % int_lumi/1000.));
     latex.SetTextAlign(11);
     keep.append(latex.DrawLatex(0.18,0.96,"CMS preliminary 2011"));
     #latex.DrawLatex(0.18,0.96,"CMS 2010");
