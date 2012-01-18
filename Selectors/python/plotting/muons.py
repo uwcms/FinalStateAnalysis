@@ -15,6 +15,15 @@ id = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+uncorrpt = cms.PSet(
+    min = cms.untracked.double(0),
+    max = cms.untracked.double(200),
+    nbins = cms.untracked.int32(100),
+    name = cms.untracked.string("${name}UncorrPt"),
+    description = cms.untracked.string("${nicename} p_{T}"),
+    plotquantity = cms.untracked.string("daughterUserCandP4(${index}, 'uncorr').pt"),
+)
+
 wwid = cms.PSet(
     _binary_bins,
     name = cms.untracked.string("${name}_MuID_WWID"),
@@ -181,7 +190,9 @@ hltSingleMuIsoL3IsoFiltered24  = get_trigger_matching('hltSingleMuIsoL3IsoFilter
 hltL1Mu3EG5L3Filtered8  = get_trigger_matching('hltL1Mu3EG5L3Filtered8')
 hltL1Mu3EG5L3Filtered17  = get_trigger_matching('hltL1Mu3EG5L3Filtered17')
 
-all = [wwid, reliso, relSubDetIso, ecalIso, hcalIso,
+all = [
+    uncorrpt,
+    wwid, reliso, relSubDetIso, ecalIso, hcalIso,
        jetPt, rawJetPt, btag, btagmuon,
        pixelHits, innerTrackPixHits, trkNormChi2, d0,
        hltSingleMu13L3Filtered13, hltDiMuonL3p5PreFiltered8,
