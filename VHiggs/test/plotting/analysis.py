@@ -195,7 +195,7 @@ if __name__ == "__main__":
                 vars_to_draw = selection_cfg['vars']
 
                 for var in vars_to_draw:
-                    if 'count' not in var:
+                    if 'count' not in var and 'Mass' not in var:
                         log.warning("Skipping var %s!!!!!!", var)
                         continue
                     log.info("------ doing variable %s", var)
@@ -394,6 +394,7 @@ if __name__ == "__main__":
                             data.GetMaximum()))
                         stack.GetXaxis().SetTitle(xaxis_title)
                         mc_legend.Draw()
+                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
                         canvas.Update()
                         saveplot(plot_name + '_mc')
 
@@ -401,6 +402,7 @@ if __name__ == "__main__":
                         data.Draw('same,pe,x0')
                         signalx100.Draw('same,hist')
                         mc_legend_with_signal.Draw()
+                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
                         canvas.Update()
                         saveplot(plot_name + '_mc_with_signal100')
 
@@ -439,6 +441,7 @@ if __name__ == "__main__":
                         data_plot.Draw('pe,x0')
                         data_plot.SetTitle(xaxis_title)
                         fake_plot.Draw('same')
+                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
                         legend.Draw()
                         saveplot(plot_name + data_plot_name + '_wqcd')
 
@@ -555,6 +558,7 @@ if __name__ == "__main__":
                     stack.SetMaximum(2.*max(
                         stack.GetHistogram().GetMaximum(),
                         ult_data.GetMaximum()))
+                    cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
 
                     saveplot(plot_base_name + '_ult_wfrs')
 
@@ -657,6 +661,7 @@ if __name__ == "__main__":
                     legend.AddEntry(signalx5.th1, "VH(125) #times 5 ", "lf")
                     legend.Draw()
 
+                    cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
                     saveplot(plot_base_name + '_ult_combfks')
 
                     ############################################################
