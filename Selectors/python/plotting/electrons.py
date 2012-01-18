@@ -46,6 +46,38 @@ mitid = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+#mitpreid = cms.PSet(
+    #_binary_bins,
+    #name = cms.untracked.string("${name}_EID_PreMITID"),
+    #description = cms.untracked.string("${nicename} Electron PreMITID"),
+    #plotquantity = cms.untracked.string(
+        #'('
+        #'(${getter}isEB()&& abs(${getter}deltaPhiSuperClusterTrackAtVtx())<0.15)'
+        ##'(${getter}isEB() && abs(${getter}deltaEtaSuperClusterTrackAtVtx())<0.007 && abs(${getter}deltaPhiSuperClusterTrackAtVtx())<0.15)'
+        ##'||'
+        ##'(${getter}isEE() && abs(${getter}deltaEtaSuperClusterTrackAtVtx())<0.009 && abs(${getter}deltaPhiSuperClusterTrackAtVtx())<0.10)'
+        #')'
+        ###'(abs(superCluster.eta) < 1.479 '
+        ###'  &&  sigiEtaiEta < 0.01 '
+        ###'  &&  abs(deltaEtaIn) < 0.007 '
+        ###'  &&  abs(deltaPhiIn) < 0.15'
+        ###'  &&  HoverE < 0.12'
+        ###'  &&  trkIso03/pt < 0.2'
+        ###'  &&  (max(emIso03 - 1.0, 0.0)) / pt < 0.20'
+        ###'  &&  (hadIso03) / pt < 0.20)'
+        ###' || '
+        ###'(abs(superCluster.eta) >= 1.479 '
+        ###'  &&  sigiEtaiEta < 0.03 '
+        ###'  &&  abs(deltaEtaIn) < 0.009 '
+        ###'  &&  abs(deltaPhiIn) < 0.10'
+        ###'  &&  HoverE < 0.10'
+        ###'  &&  trkIso03/pt < 0.2'
+        ###'  &&  emIso03 / pt < 0.20'
+        ###'  &&  (hadIso03) / pt < 0.20)'
+    #),
+    #lazyParsing = cms.untracked.bool(True),
+#)
+
 hasConversion = cms.PSet(
     _binary_bins,
     name = cms.untracked.string("${name}_hasConversion"),
@@ -193,6 +225,7 @@ hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter = get_trigger_matching(
 all = [
     reliso, wwid, mitid, jetPt, rawJetPt, btag, btagmuon, missingHits,
     hasConversion, muonoverlap,
+    #mitpreid,
     cicLoose, cicMedium, cicTight, cicHyperTight,
     hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter,
     hltMu17Ele8CaloIdTPixelMatchFilter,
