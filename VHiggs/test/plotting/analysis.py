@@ -692,7 +692,7 @@ if __name__ == "__main__":
                     ############################################################
                     # We make a different output for each higgs mass
                     #for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
-                    for mass in [100, 110, 115, 120, 125, 135, 140, 145]:
+                    for mass in [100, 110, 115, 120, 125, 130, 135, 140, 145]:
                         # Set the correct name for everything
                         ult_data.SetName('data_obs')
                         corrected_mc_histos[0].SetName('zz')
@@ -704,6 +704,15 @@ if __name__ == "__main__":
                             rebin = rebin, show_overflows = True
                         )
                         signal.SetName('signal')
+                        hww_signal = None
+                        if mass in [120, 130, 140]:
+                            hww_signal = plotter.get_histogram(
+                                'VH%iWW' % mass,
+                                ntuple + ':' + plot_base_name + '_ult',
+                                rebin = rebin, show_overflows = True
+                            )
+                            hww_signal.SetName('signalHWW')
+
                         # Make the output TDirectory
                         output_dir = shape_file.mkdir('_'.join(
                             [channel, charge_cat, selection_name, str(mass), var]
@@ -715,3 +724,5 @@ if __name__ == "__main__":
                         corrected_mc_histos[1].Write()
                         all_fakes.Write()
                         signal.Write()
+                        if hww_signal:
+                            hww_signal.Write()
