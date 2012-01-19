@@ -9,7 +9,8 @@ def cms_preliminary(int_lumi):
     latex.SetTextAlign(31);
     keep.append(latex.DrawLatex(0.90,0.96,"#sqrt{s} = 7 TeV"));
     if int_lumi > 0.:
-        latex.SetTextAlign(31);
+        #latex.SetTextAlign(31);
+        latex.SetTextAlign(11);
         keep.append(latex.DrawLatex(
             #0.85,0.84,
             0.18,0.84,
