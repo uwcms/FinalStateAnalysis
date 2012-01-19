@@ -105,8 +105,6 @@ if __name__ == "__main__":
 
     mc_legend = plotter.build_legend(
         '/mmt/skimCounter',
-        #exclude = ['data*', '*VH*'], drawopt='lf',
-        #exclude = ['data*', '*VH*'],
         include = ['*QCD*', '*Wjets*', '*ttjets*', '*Zjets*'],
         drawopt='lf',
         xlow = 0.6, ylow=0.5,)
