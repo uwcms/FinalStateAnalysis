@@ -204,7 +204,7 @@ datadefs = {
     },
     'VH_130' : {
         'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-130_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : (0.5008 + 0.2778 + 0.07658)*_picobarns*5.48-2,
+        'x_sec' : (0.5008 + 0.2778 + 0.07658)*_picobarns*5.48e-2,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
