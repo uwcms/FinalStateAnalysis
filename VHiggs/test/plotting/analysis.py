@@ -178,9 +178,9 @@ if __name__ == "__main__":
             ####################################################################
             selection_cfgs = charge_cat_cfg['selections']
             for selection_name, selection_cfg in selection_cfgs.iteritems():
-                if 'final' not in selection_name:
-                    log.warning("Skipping selection %s!!!!!!", selection_name)
-                    continue
+                #if 'final' not in selection_name:
+                    #log.warning("Skipping selection %s!!!!!!", selection_name)
+                    #continue
 
                 log.info("---- now running selection %s", selection_name)
 
@@ -202,9 +202,9 @@ if __name__ == "__main__":
                 vars_to_draw = selection_cfg['vars']
 
                 for var in vars_to_draw:
-                    if 'count' not in var and 'Mass' not in var:
-                        log.warning("Skipping var %s!!!!!!", var)
-                        continue
+                    #if 'count' not in var and 'Mass' not in var:
+                        #log.warning("Skipping var %s!!!!!!", var)
+                        #continue
                     log.info("------ doing variable %s", var)
                     plot_base_name = '_'.join(
                         [channel, charge_cat, selection_name, var])
@@ -365,7 +365,7 @@ if __name__ == "__main__":
                         'fr123en'
                     ]
                     signalx100 = plotter.get_histogram(
-                        'VH125',
+                        'VH120',
                         ntuple + ':' + plot_base_name + '_ult',
                         rebin = rebin, show_overflows = True
                     )
@@ -374,14 +374,14 @@ if __name__ == "__main__":
                         ntuple + ':' + plot_base_name + '_ult',
                         rebin = rebin, show_overflows = True
                     )
-                    log.warning('VH125 yield: %f', signalx100.Integral())
+                    log.warning('VH120 yield: %f', signalx100.Integral())
                     log.warning('VHWW yield: %f', hww.Integral())
 
-                    signalx100 = signalx100*100
+                    signalx100 = (signalx100 + hww)*100
                     signalx100.SetFillStyle(0)
                     signalx100.SetLineWidth(3)
                     mc_legend_with_signal = mc_legend.Clone()
-                    mc_legend_with_signal.AddEntry(signalx100.th1, "VH(125) #times 100", "l")
+                    mc_legend_with_signal.AddEntry(signalx100.th1, "VH(120) #times 100", "l")
                     for plot in mc_plots:
                         plot_name = plot_base_name + '_' + plot
                         stack = plotter.build_stack(
@@ -396,7 +396,7 @@ if __name__ == "__main__":
                         )
                         stack.Draw()
                         data.Draw('same,pe,x0')
-                        stack.SetMaximum(max(
+                        stack.SetMaximum(2*max(
                             stack.GetHistogram().GetMaximum(),
                             data.GetMaximum()))
                         stack.GetXaxis().SetTitle(xaxis_title)
@@ -443,11 +443,14 @@ if __name__ == "__main__":
                         fake_plot.SetLineColor(ROOT.EColor.kRed)
                         legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
                         legend.SetFillStyle(0)
+                        legend.SetBorderSize(0)
                         legend.AddEntry(data_plot.th1, "data", "lpe,x0")
                         legend.AddEntry(fake_plot.th1, "QCD est.", "l")
                         data_plot.Draw('pe,x0')
                         data_plot.SetTitle(xaxis_title)
                         fake_plot.Draw('same')
+                        data_plot.SetMaximum(2*max(
+                            data_plot.GetMaximum(), fake_plot.GetMaximum()))
                         cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
                         legend.Draw()
                         saveplot(plot_name + data_plot_name + '_wqcd')
@@ -535,7 +538,12 @@ if __name__ == "__main__":
                     ############################################################
 
                     signal = plotter.get_histogram(
-                        'VH125',
+                        'VH120',
+                        ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True
+                    )
+                    signalHWW = plotter.get_histogram(
+                        'VH120WW',
                         ntuple + ':' + plot_base_name + '_ult',
                         rebin = rebin, show_overflows = True
                     )
@@ -543,6 +551,7 @@ if __name__ == "__main__":
                                          "Final #mu#mu#tau selection")
                     legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
                     legend.SetFillStyle(0)
+                    legend.SetBorderSize(1)
                     for histo_name, histo in zip(corrected_mc,
                                                  corrected_mc_histos):
                         stack.Add(histo.th1, 'hist')
@@ -650,7 +659,8 @@ if __name__ == "__main__":
                     )
                     error_band_hist.SetFillStyle(1001)
                     error_band_hist.SetMarkerSize(0)
-                    legend.AddEntry(error_band_hist.th1, "Fake error", "lf")
+                    error_band_hist_copy = error_band_hist.th1.Clone()
+                    legend.AddEntry(error_band_hist_copy, "Fake error", "lf")
                     error_band_hist.DrawCopy('same,e2')
                     error_band_hist.SetFillStyle(0)
                     error_band_hist.Draw('same,hist')
@@ -659,13 +669,13 @@ if __name__ == "__main__":
                             stack.GetHistogram().GetMaximum(),
                             ult_data.GetMaximum()))
 
-                    signalx5 = signal*5
+                    signalx5 = (signal + signalHWW)*5
                     signalx5.SetLineStyle(1)
                     signalx5.SetLineWidth(2)
                     signalx5.SetLineColor(ROOT.EColor.kRed)
                     signalx5.SetFillStyle(0)
                     signalx5.Draw('same, hist')
-                    legend.AddEntry(signalx5.th1, "VH(125) #times 5 ", "lf")
+                    legend.AddEntry(signalx5.th1, "VH(120) #times 5 ", "lf")
                     legend.Draw()
 
                     cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
@@ -689,6 +699,7 @@ if __name__ == "__main__":
                             'fakes' : all_fakes.Integral(),
                             'fake_error' : all_fakes.GetBinError(1),
                             'VH120' : signal.Integral(),
+                            'VH120HWW' : signalHWW.Integral(),
                         }
                         with open(ana_summary_filename, 'w') as summ_file:
                             summ_file.write(json.dumps(
