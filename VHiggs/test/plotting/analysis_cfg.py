@@ -11,7 +11,7 @@ INT_LUMI = 4684
 #JOBID = '2012-01-13-v2-WHAnalyze'
 #JOBID = '2012-01-04-v1-WHAnalyze'
 #JOBID = '2012-01-16-v2-WHAnalyze'
-JOBID = '2012-01-17-v1-WHAnalyze'
+JOBID = '2012-01-17-v2-WHAnalyze'
 
 # Setup function which retrieves fake rate weights
 fake_rates_file = open('fake_rates.json')
@@ -73,7 +73,8 @@ cfg = {
             'Tau_TauBtag < 3.3',
             'Tau_ElectronMVA > 0.5',
             'Tau_ElectronMedium > 0.5',
-            'Tau_MuonOverlap < 0.5',
+            #'Tau_MuonOverlap < 0.5',
+            'Tau_MuonOverlapSuperLoose < 0.5',
             'Tau_ElectronOverlap < 0.5',
         ],
         'corrections' : [
@@ -217,8 +218,8 @@ cfg = {
             'Muon2DZ < 0.2',
             'TauDZ < 0.2',
 
-            'Tau_MuonOverlapGlb < 0.5',
-            'Tau_ElectronOverlap < 0.5',
+            'Tau_MuonOverlapSuperLoose < 0.5',
+            'Tau_ElectronOverlapWP95 < 0.5',
         ],
         'corrections' : [
             'MuIso(Muon1Pt, Muon1AbsEta, run)',
