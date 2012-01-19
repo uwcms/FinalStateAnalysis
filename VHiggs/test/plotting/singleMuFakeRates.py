@@ -12,6 +12,7 @@ import sys
 
 import ROOT
 import FinalStateAnalysis.PatTools.data as data_tool
+import FinalStateAnalysis.Utilities.styling as styling
 
 # Logging options
 logging.basicConfig(filename='singleMuFakeRates.log',level=logging.DEBUG, filemode='w')
@@ -593,6 +594,7 @@ for data_set, skips, int_lumi, puTag in [
             stack.GetHistogram().SetTitle(
                  xtitle + ' in ' + fr_info['evtType'] + ' events')
 
+            cms_label = styling.cms_preliminary(int_lumi)
             saveplot(fr_type + '_' + name)
 
         # Make efficiency curve
@@ -677,6 +679,7 @@ for data_set, skips, int_lumi, puTag in [
 
         data_fit_func.Draw('same')
         mc_fit_func.Draw('same')
+        cms_label = styling.cms_preliminary(int_lumi)
         saveplot(fr_type + "_fakerate")
 
         # Save non rebinned histos
