@@ -34,7 +34,7 @@ ROOT.gROOT.ProcessLine('.L corrections.C++')
 log.info("Loading fake rate functions")
 ROOT.gROOT.ProcessLine('.L fake_rates.C++')
 
-def estimate_fake_sum(fr1, fr2, fr12s, fr12en):
+def estimate_fake_sum(fr1, fr2, fr12s, fr12en, fudge=0.1):
     '''
     Estimate the total fake rate sum, with proper errors.
 
@@ -51,6 +51,8 @@ def estimate_fake_sum(fr1, fr2, fr12s, fr12en):
     * fr12s and fr12en should give signal yield and enriched count for the
       double object fake rate
 
+    * Fudge adds an error to the computed fake rate
+
     '''
     ufloat = uncertainties.ufloat
     def get_rel_counting_err(number):
@@ -63,6 +65,9 @@ def estimate_fake_sum(fr1, fr2, fr12s, fr12en):
         # Counting error due to count in enriched region
         if not fakerate['en']:
             return ufloat((0, 0))
+        # Fudged errors on the fit functions
+        ewk_fit_fudge = ufloat((1, fudge))
+        qcd_fit_fudge = ufloat((1, fudge))
         enriched_region_error = get_rel_counting_err(fakerate['en'])
         qcd_in_enriched_region_error = get_rel_counting_err(fakerate['123en'])
 
@@ -70,8 +75,8 @@ def estimate_fake_sum(fr1, fr2, fr12s, fr12en):
                         (fakerate['en']*enriched_region_error))
 
         est_yield = enriched_region_error*(
-            (1 - qcd_fraction)*fakerate['ewk_s'] +
-            qcd_fraction*fakerate['qcd_s'])
+            (1 - qcd_fraction)*fakerate['ewk_s']*ewk_fit_fudge +
+            qcd_fraction*fakerate['qcd_s']*qcd_fit_fudge)
         return est_yield
 
     fake1est = compute_errors(fr1)
@@ -99,7 +104,11 @@ if __name__ == "__main__":
     shape_file = ROOT.TFile("wh_shapes_raw.root", 'RECREATE')
 
     mc_legend = plotter.build_legend(
-        '/mmt/skimCounter', exclude = ['data*', '*VH*'], drawopt='lf',
+        '/mmt/skimCounter',
+        #exclude = ['data*', '*VH*'], drawopt='lf',
+        #exclude = ['data*', '*VH*'],
+        include = ['*QCD*', '*Wjets*', '*ttjets*', '*Zjets*'],
+        drawopt='lf',
         xlow = 0.6, ylow=0.5,)
 
     ############################################################################
