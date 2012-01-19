@@ -4,6 +4,8 @@ import glob
 import json
 import os
 import re
+import FinalStateAnalysis.Utilities.styling as styling
+
 
 mass_getter = re.compile('.*_(?P<mass>[0-9]+)\.card\.(exp|obs|asymp)\.json')
 
@@ -20,7 +22,7 @@ def make_exp_band(files):
     for i, file in enumerate(sorted(files)):
         mass = get_mass(file)
         result = json.loads(open(file, 'r').read())
-        print result
+        print mass, result
         median = result.get('exp')
         exp.SetPoint(i, mass, median)
         onesig.SetPoint(i, mass, median)
@@ -99,6 +101,7 @@ if __name__ == "__main__":
     legend.Draw()
 
     canvas.Update()
+    cms_label = styling.cms_preliminary(4684)
     canvas.SaveAs("cards/%s_limit.pdf" % prefix)
 
     tex = make_tex_table(exp_files)
