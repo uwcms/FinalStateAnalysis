@@ -59,7 +59,8 @@ def run_evt_only(fields):
 
 event_file = open(event_filename, 'r')
 
-events = list(run_evt_only(get_fields(event_file)))
+#events = list(run_evt_only(get_fields(event_file)))
+events = list(get_fields(event_file))
 
 all_cuts = cfg[channel]['baseline'] + \
         cfg[channel]['charge_categories'][charge_cat]['object1']['pass'] +\
@@ -69,7 +70,8 @@ all_cuts = cfg[channel]['baseline'] + \
 
 
 good_events = 0
-exclusive_fails = {}
+good_events_list = []
+bad_events = []
 for event_info in events:
     run, event, lumi = None, None, None
     if len(event_info) == 2:
@@ -78,16 +80,16 @@ for event_info in events:
         run, lumi, event = event_info
 
     run_evt = [
+        'evt == %i' % event,
         'run == %i' % run,
-        'evt == %i' % event
     ]
     pass_topo = tree.GetEntries(' && '.join(run_evt))
-    print "\nRUN: %i EVENT: %i" % (run, event)
+    print "\nRUN: %i LUMI: %i EVENT: %i" % (run, lumi, event)
     if not pass_topo:
-        print "- has no loose e-mu-tau candidates!"
+        print "- has no loose WH candidates!"
         continue
     else:
-        print "- has %i loose e-mu-tau candidates:" % pass_topo
+        print "- has %i loose WH candidates:" % pass_topo
     good_cands = 0
     for i in range(pass_topo):
         idx_cut = ['idx == %i' % i]
@@ -119,10 +121,12 @@ for event_info in events:
         )
 
         for cut in all_cuts:
-            if 'MuCharge' in cut:
-                continue
-            if 'vtx' in cut:
-                continue
+            #if 'MuCharge' in cut:
+                #continue
+            #if 'vtx' in cut:
+                #continue
+            #if 'DoubleMus_HLT' in cut:
+                #continue
             to_test = run_evt + idx_cut + [cut]
             to_test_str = ' && '.join(to_test)
 
@@ -136,6 +140,15 @@ for event_info in events:
             good_cands += 1
     if good_cands:
         good_events += 1
-    print "- has %i e-mu-tau candidates which pass all cuts" % good_cands
+        good_events_list.append((run, lumi, event))
+    else:
+        bad_events.append((run, lumi, event))
+    print "- has %i WH candidates which pass all cuts" % good_cands
 
 print "After all cuts %i/%i events remain" % (good_events, len(events))
+print "The following events passed:"
+for run_lumi_event in good_events_list:
+    print ' '.join(str(x) for x in run_lumi_event)
+print "The following events failed:"
+for run_lumi_event in bad_events:
+    print ' '.join(str(x) for x in run_lumi_event)
