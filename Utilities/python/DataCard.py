@@ -15,7 +15,14 @@ class DataCardChannel(object):
 
     def add_signal(self, name):
         self.signal_name = name
-        self.samples.add((0, name))
+        indices = [idx for idx, sample in self.samples]
+        min_added = None
+        if indices:
+            min_added = min(indices)
+        index = 0
+        if min_added is not None and min_added <= 0:
+            index = min_added - 1
+        self.samples.add((index, name))
 
     def add_background(self, name):
         max_added = max(idx for idx, sample in self.samples)
