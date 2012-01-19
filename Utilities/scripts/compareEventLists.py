@@ -42,8 +42,8 @@ if __name__  == "__main__":
     file1 = open(file1name)
     file2 = open(file2name)
 
-    file1evts = set(run_evt_only(get_fields(file1)))
-    file2evts = set(run_evt_only(get_fields(file2)))
+    file1evts = set(get_fields(file1))
+    file2evts = set(get_fields(file2))
 
     print "%s has %i events" % (file1name, len(file1evts))
     print "%s has %i events" % (file2name, len(file2evts))
@@ -57,11 +57,13 @@ if __name__  == "__main__":
 
     if file1only:
         print "Events in %s only:" % file1name
-        for run, evt in sorted(file1only):
-            print "run: %i evt: %i" % (run, evt)
+        for run, lumi, evt in sorted(file1only):
+            #print "run: %i lumi: %s evt: %i" % (run, lumi, evt)
+            print run, lumi, evt
 
     if file2only:
         print "Events in %s only:" % file2name
-        for run, evt in sorted(file2only):
-            print "run: %i evt: %i" % (run, evt)
+        for run, lumi, evt in sorted(file2only):
+            #print "run: %i lumi: %s evt: %i" % (run, lumi, evt)
+            print run, lumi, evt
 
