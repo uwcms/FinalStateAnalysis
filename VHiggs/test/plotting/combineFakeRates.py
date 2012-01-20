@@ -9,6 +9,7 @@ import logging
 import sys
 
 import ROOT
+import FinalStateAnalysis.Utilities.styling as styling
 from FinalStateAnalysis.Utilities.Histo import Histo
 
 log = logging.getLogger("combineFR")
