@@ -76,6 +76,7 @@ cfg = {
             #'Tau_MuonOverlap < 0.5',
             'Tau_MuonOverlapSuperLoose < 0.5',
             'Tau_ElectronOverlap < 0.5',
+            #'Tau_ElectronOverlapWWID < 0.5',
         ],
         'corrections' : [
             'MuIso(MuPt, MuAbsEta, run)',
