@@ -438,11 +438,6 @@ for object, object_info in object_config.iteritems():
 
     #fit_result.Print("v")
 
-
-    roo_frame = jet_pt.frame(ROOT.RooFit.Title("Efficiency"))
-    roo_data.plotOn(roo_frame, ROOT.RooFit.Efficiency(roo_cut))
-    roo_fit_func.plotOn(roo_frame, ROOT.RooFit.LineColor(ROOT.EColor.kRed))
-
     fit_result_vars = fit_result.floatParsFinal()
     # Store the fit results for later
     object_result_vars = {}
@@ -461,20 +456,10 @@ for object, object_info in object_config.iteritems():
         fitted_fit_func = fitted_fit_func.replace(var, '%0.4e' % value)
     object_result['fitted_func'] = fitted_fit_func
 
-    keep = []
 
-    for i in range(10):
-        break
-        log.info("Smearing parameters %i", i)
-        smeared_pars = fit_result.randomizePars()
-        # Create a non-owning list of arguments
-        non_owned = ROOT.RooArgList(smeared_pars)
-        non_owned.add(jet_pt)
-        smeared_fit = ROOT.RooFormulaVar(
-            "fake_rate_smeared_%i" % i, "Fake Rate", roo_fit_func_str,
-            non_owned)
-        smeared_fit.plotOn(roo_frame)
-        keep.append((smeared_fit, smeared_pars))
+    roo_frame = jet_pt.frame(ROOT.RooFit.Title("Efficiency"))
+    roo_data.plotOn(roo_frame, ROOT.RooFit.Efficiency(roo_cut))
+    roo_fit_func.plotOn(roo_frame, ROOT.RooFit.LineColor(ROOT.EColor.kRed))
 
     roo_frame.SetMinimum(1e-3)
     roo_frame.SetMaximum(1.0)
