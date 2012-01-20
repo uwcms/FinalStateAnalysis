@@ -624,6 +624,23 @@ if __name__ == "__main__":
                         doubles_en = get_data_fr_yield('fr12en', i)
                         total_yield = estimate_fake_sum(
                             fake1, fake2, doubles, doubles_en)
+                        # For the one bin of the "count" histogram, write
+                        # summary info to a json file
+                        if i == 1 and var == 'count':
+                            log.info("Creating fake rate summary json")
+                            with open('%s_%s_fakerate_summary.json' % (
+                                channel, charge_cat), 'w') as summ_file:
+                                fake_summary = {
+                                    'fake1' : fake1,
+                                    'fake2' : fake2,
+                                    'fr12s_qcd' : doubles,
+                                    'fr12en' : doubles_en,
+                                    'total_yield' : total_yield.nominal_value,
+                                    'total_yield_err' : total_yield.std_dev(),
+                                }
+                                summ_file.write(json.dumps(
+                                    fake_summary, indent=2) + '\n')
+
                         all_fakes.SetBinContent(
                             i, max(0, total_yield.nominal_value))
                         all_fakes.SetBinError(i, total_yield.std_dev())
