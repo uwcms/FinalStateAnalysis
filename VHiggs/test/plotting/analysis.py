@@ -626,7 +626,7 @@ if __name__ == "__main__":
                             fake1, fake2, doubles, doubles_en)
                         # For the one bin of the "count" histogram, write
                         # summary info to a json file
-                        if i == 1 and var == 'count':
+                        if i == 1 and var == 'count' and selection_name == 'final':
                             log.info("Creating fake rate summary json")
                             with open('%s_%s_fakerate_summary.json' % (
                                 channel, charge_cat), 'w') as summ_file:
@@ -704,7 +704,13 @@ if __name__ == "__main__":
                     ### as it only needs to be done once                  ######
                     ############################################################
 
-                    if var == 'count':
+                    vgamma = plotter.get_histogram(
+                        'VGamma',
+                        ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True
+                    )
+
+                    if var == 'count' and selection_name=='final':
                         ana_summary_filename = '%s_%s_summary.json' % (
                             channel, charge_cat)
                         log.info("Writing summary file: %s",
@@ -717,6 +723,7 @@ if __name__ == "__main__":
                             'fake_error' : all_fakes.GetBinError(1),
                             'VH120' : signal.Integral(),
                             'VH120HWW' : signalHWW.Integral(),
+                            'VGjets' : vgamma.Integral(),
                         }
                         with open(ana_summary_filename, 'w') as summ_file:
                             summ_file.write(json.dumps(
