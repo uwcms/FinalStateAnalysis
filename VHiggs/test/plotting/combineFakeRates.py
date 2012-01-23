@@ -330,13 +330,6 @@ for object, object_info in object_config.iteritems():
         num = Histo(num.th1, rebin=type_info['rebin'])
         denom = Histo(denom.th1, rebin=type_info['rebin'])
 
-        #log.debug("Numerator N=%i min=%f max=%f",
-                  #num.GetNbinsX(), num.GetXaxis().GetXmin(),
-                  #num.GetXaxis().GetXmax())
-        #log.debug("Denominator N=%i min=%f max=%f",
-                  #denom.GetNbinsX(), denom.GetXaxis().GetXmin(),
-                  #denom.GetXaxis().GetXmax())
-
         efficiency = ROOT.TGraphAsymmErrors(num.th1, denom.th1)
         type_info['efficiency'] = efficiency
 
@@ -346,13 +339,6 @@ for object, object_info in object_config.iteritems():
 
     combined_num = Histo(combined_num.th1, rebin=object_info['rebin'])
     combined_denom = Histo(combined_denom.th1, rebin=object_info['rebin'])
-
-    #log.debug("Numerator N=%i min=%f max=%f",
-              #combined_num.GetNbinsX(), combined_num.GetXaxis().GetXmin(),
-              #combined_num.GetXaxis().GetXmax())
-    #log.debug("Denominator N=%i min=%f max=%f",
-              #combined_denom.GetNbinsX(), combined_denom.GetXaxis().GetXmin(),
-              #combined_denom.GetXaxis().GetXmax())
 
     combined_eff = ROOT.TGraphAsymmErrors(combined_num.th1, combined_denom.th1)
 
@@ -460,6 +446,10 @@ for object, object_info in object_config.iteritems():
     roo_frame = jet_pt.frame(ROOT.RooFit.Title("Efficiency"))
     roo_data.plotOn(roo_frame, ROOT.RooFit.Efficiency(roo_cut))
     roo_fit_func.plotOn(roo_frame, ROOT.RooFit.LineColor(ROOT.EColor.kRed))
+    scale.setVal(scale.getVal()*1.1)
+    roo_fit_func.plotOn(roo_frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlue))
+    scale.setVal(scale.getVal()*0.9/1.1)
+    roo_fit_func.plotOn(roo_frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlue))
 
     roo_frame.SetMinimum(1e-3)
     roo_frame.SetMaximum(1.0)
