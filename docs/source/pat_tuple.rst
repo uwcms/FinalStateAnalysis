@@ -74,6 +74,7 @@ The following electron MVA ID related information is embedded:
 * ``missingHits`` - number of missing hits 
 * ``idDZ`` - dz used for MVA id
 * ``MVA`` - raw MVA value
+* ``MVApreID`` - pre-ID cuts used for the MVA
 * ``MITID`` - MIT MVA ID working point binary value
 
 The following IP information is embedded as userFloats: 

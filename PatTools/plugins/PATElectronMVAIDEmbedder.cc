@@ -94,6 +94,28 @@ void PATElectronMVAIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
       electron.gsfTrack()->trackerExpectedHitsInner();
     electron.addUserInt("missingHits", p_inner.numberOfHits());
 
+    // See preID definition at https://twiki.cern.ch/twiki/bin/view/CMS/HTTWorkingTwiki
+    bool passPreID = true;
+    if (electron.superCluster().isNonnull()) {
+      if (std::abs(electron.superCluster()->eta()) < 1.479) {
+        if ((std::abs(electron.deltaEtaSuperClusterTrackAtVtx()) >= 0.007)
+            || (std::abs(electron.deltaPhiSuperClusterTrackAtVtx()) >= 0.15)
+            || (electron.hadronicOverEm() >= 0.12)
+            || (electron.sigmaIetaIeta() >= 0.01)) {
+          passPreID = false;
+        }
+      } else { // forward
+        if ((std::abs(electron.deltaEtaSuperClusterTrackAtVtx()) >= 0.009)
+            || (std::abs(electron.deltaPhiSuperClusterTrackAtVtx()) >= 0.10)
+            || (electron.hadronicOverEm() >= 0.10)
+            || (electron.sigmaIetaIeta() >= 0.03)) {
+          passPreID = false;
+        }
+      }
+    } else {
+      passPreID = false;
+    }
+    electron.addUserFloat("MVApreID", passPreID);
 
     double dz = 999;
     if (vtxHandle->size())
@@ -110,6 +132,7 @@ void PATElectronMVAIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
 
     // Now apply the actual MIT ID working point
     bool passID = electron.superCluster().isNonnull();
+    passID = passID && passPreID;
     passID = passID && (!hasConversion);
     passID = passID && (p_inner.numberOfHits() == 0);
     passID = passID && (dz < maxDZ_);
