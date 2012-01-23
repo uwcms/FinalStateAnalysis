@@ -31,7 +31,7 @@ def get_fr(label, pt, eta):
     return 'weight_%s(%s, %s)' % (label, pt, eta)
 
 # List of channels to skip
-skip = [ 'emm' ]
+skip = [ 'emm', ('emt', 'mutau') ]
 
 cfg = {
     'emt' : {

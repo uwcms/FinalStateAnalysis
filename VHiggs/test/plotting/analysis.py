@@ -135,6 +135,11 @@ if __name__ == "__main__":
         ### Loop over all charge configurations ################################
         ########################################################################
         for charge_cat, charge_cat_cfg in channel_cfg['charge_categories'].iteritems():
+            if (channel, charge_cat) in analysis_cfg.skip:
+                log.warning("Skipping channel+charge_cat %s+%s!!",
+                            channel, charge_cat)
+                continue
+
             log.info("-- charge category: %s", charge_cat)
             # Any extra selections specific to this charge_cat.  The charge
             # selection should be included in this.  This is an extension of the
