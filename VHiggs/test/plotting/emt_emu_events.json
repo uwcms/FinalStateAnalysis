@@ -19,7 +19,13 @@
             181708887
         ]
     ], 
-    "data_MuEG_Run2011B_PromptReco_v1_d": [], 
+    "data_MuEG_Run2011B_PromptReco_v1_d": [
+        [
+            180241, 
+            412, 
+            731156083
+        ]
+    ], 
     "data_MuEG_Run2011A_PromptReco_v4": [
         [
             166408, 

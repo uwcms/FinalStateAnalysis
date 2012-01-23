@@ -11,7 +11,8 @@ INT_LUMI = 4684
 #JOBID = '2012-01-13-v2-WHAnalyze'
 #JOBID = '2012-01-04-v1-WHAnalyze'
 #JOBID = '2012-01-16-v2-WHAnalyze'
-JOBID = '2012-01-17-v2-WHAnalyze'
+#JOBID = '2012-01-17-v2-WHAnalyze'
+JOBID = '2012-01-22-v1-WHAnalyze'
 
 # Setup function which retrieves fake rate weights
 fake_rates_file = open('fake_rates.json')
@@ -114,10 +115,23 @@ cfg = {
                 'object1' : {
                     'name' : 'e',
                     'pass' : [
+                        '('
+                        '(ElecAbsEta < 1.479 &&  abs(Elec_EID_DeltaEta) < 0.007 && abs(Elec_EID_DeltaPhi) < 0.15)'
+                        ' || '
+                        '(ElecAbsEta >= 1.479 &&  abs(Elec_EID_DeltaEta) < 0.009 && abs(Elec_EID_DeltaPhi) < 0.10)'
+                        ')',
                         'Elec_EID_MITID > 0.5',
                         'Elec_ERelIso < 0.3',
                     ],
-                    'fail' : ['(Elec_EID_MITID < 0.5 || Elec_ERelIso > 0.3)'],
+                    'fail' : [
+                        '('
+                        '(Elec_EID_MITID < 0.5 || Elec_ERelIso > 0.3)'
+                        ' || '
+                        '(ElecAbsEta < 1.479 &&  (abs(Elec_EID_DeltaEta) > 0.007 || abs(Elec_EID_DeltaPhi) > 0.15))'
+                        ' || '
+                        '(ElecAbsEta >= 1.479 &&  (abs(Elec_EID_DeltaEta) > 0.009 || abs(Elec_EID_DeltaPhi) > 0.10))'
+                        ')'
+                    ],
                     'ewk_fr' : get_fr('eMIT', 'Elec_JetPt', 'ElecAbsEta'),
                     'qcd_fr' : get_fr('eMITQCD', 'Elec_JetPt', 'ElecAbsEta'),
                 },
