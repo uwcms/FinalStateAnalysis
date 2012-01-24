@@ -44,6 +44,22 @@ reliso = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+# Without the stupid mu pt correction
+relisoNoMuPtCorr = cms.PSet(
+    min = cms.untracked.double(0.0),
+    max = cms.untracked.double(2),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_MuRelIsoNoPt"),
+    description = cms.untracked.string("${nicename} Muon Rel. Iso"),
+    plotquantity = cms.untracked.string(
+        "(${getter}chargedHadronIso"
+        "+max(${getter}photonIso()"
+        "+${getter}neutralHadronIso()"
+        "-0.5*${getter}userIso(0),0.0))"
+        "/daughterUserCandP4(${index}, 'uncorr').pt()"),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 relSubDetIso = cms.PSet(
     min = cms.untracked.double(0.0),
     max = cms.untracked.double(2),
@@ -192,10 +208,11 @@ hltL1Mu3EG5L3Filtered17  = get_trigger_matching('hltL1Mu3EG5L3Filtered17')
 
 all = [
     uncorrpt,
-    wwid, reliso, relSubDetIso, ecalIso, hcalIso,
-       jetPt, rawJetPt, btag, btagmuon,
-       pixelHits, innerTrackPixHits, trkNormChi2, d0,
-       hltSingleMu13L3Filtered13, hltDiMuonL3p5PreFiltered8,
-       hltDiMuonL3PreFiltered7, hltSingleMu30L3Filtered30,
-       hltSingleMuIsoL3IsoFiltered24,
-       hltL1Mu3EG5L3Filtered17, hltL1Mu3EG5L3Filtered8 ]
+    wwid, reliso, relisoNoMuPtCorr,
+    jetPt, rawJetPt, btag, btagmuon,
+    pixelHits, innerTrackPixHits, trkNormChi2, d0,
+    #hltSingleMu13L3Filtered13, hltDiMuonL3p5PreFiltered8,
+    #hltDiMuonL3PreFiltered7, hltSingleMu30L3Filtered30,
+    #hltSingleMuIsoL3IsoFiltered24,
+    #hltL1Mu3EG5L3Filtered17, hltL1Mu3EG5L3Filtered8
+]
