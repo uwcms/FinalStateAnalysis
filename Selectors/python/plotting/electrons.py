@@ -66,6 +66,25 @@ deltaPhiSuperClusterTrack = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+sigmaIEta = cms.PSet(
+    _binary_bins,
+    name = cms.untracked.string("${name}_EID_SigmaIEta"),
+    description = cms.untracked.string("${nicename} Electron SigmaIEta"),
+    plotquantity = cms.untracked.string(
+        '${getter}sigmaIetaIeta'
+    ),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+hOverE = cms.PSet(
+    _binary_bins,
+    name = cms.untracked.string("${name}_EID_HOverE"),
+    description = cms.untracked.string("${nicename} Electron HOverE"),
+    plotquantity = cms.untracked.string(
+        '${getter}hadronicOverEm'
+    ),
+    lazyParsing = cms.untracked.bool(True),
+)
 
 hasConversion = cms.PSet(
     _binary_bins,
@@ -214,7 +233,7 @@ hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter = get_trigger_matching(
 all = [
     reliso, wwid, mitid, jetPt, rawJetPt, btag, btagmuon, missingHits,
     hasConversion, muonoverlap,
-    deltaEtaSuperClusterTrack, deltaPhiSuperClusterTrack,
+    deltaEtaSuperClusterTrack, deltaPhiSuperClusterTrack, sigmaIEta, hOverE,
     cicLoose, cicMedium, cicTight, cicHyperTight,
     hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter,
     hltMu17Ele8CaloIdTPixelMatchFilter,
