@@ -294,6 +294,9 @@ frame.GetXaxis().SetTitle("Jet p_{T}")
 frame.SetMinimum(1e-3)
 frame.SetMaximum(1.0)
 
+# Fit function parameters
+jet_pt = ROOT.RooRealVar("jetPt", "Jet Pt", 1, 0, 100, "GeV")
+
 for object, object_info in object_config.iteritems():
     object_result = {}
     object_result['types'] = {}
@@ -329,9 +332,15 @@ for object, object_info in object_config.iteritems():
         # Rebin
         num = Histo(num.th1, rebin=type_info['rebin'])
         denom = Histo(denom.th1, rebin=type_info['rebin'])
+        fail = denom - num
 
-        efficiency = ROOT.TGraphAsymmErrors(num.th1, denom.th1)
-        type_info['efficiency'] = efficiency
+        # Build the roo data hists
+        roo_pass = num.makeRooDataHist(jet_pt)
+        roo_fail = fail.makeRooDataHist(jet_pt)
+
+        type_info['data_pass'] = roo_pass
+        type_info['data_fail'] = roo_fail
+
 
     canvas.SetLogy(True)
 
@@ -340,29 +349,7 @@ for object, object_info in object_config.iteritems():
     combined_num = Histo(combined_num.th1, rebin=object_info['rebin'])
     combined_denom = Histo(combined_denom.th1, rebin=object_info['rebin'])
 
-    combined_eff = ROOT.TGraphAsymmErrors(combined_num.th1, combined_denom.th1)
-
-    log.debug("WTF")
-
-    data_fit_func = object_info['function']
-    setup_func_pars(data_fit_func)
-
-    data_fit_func.SetLineColor(ROOT.EColor.kRed)
-    data_fit_func.SetLineWidth(3)
-
     log.info("Fitting")
-
-    ############################################################################
-    ### Fit using regular ROOT  ################################################
-    ############################################################################
-
-    log.info("Fitting using ROOT")
-    combined_eff.Fit(data_fit_func)
-    frame.Draw()
-    combined_eff.Draw("p")
-    combined_eff.GetHistogram().SetMinimum(1e-3)
-    combined_eff.GetHistogram().SetMaximum(1.0)
-    data_fit_func.Draw("same")
 
     label = ROOT.TPaveText(0.7, 0.7, 0.9, 0.87, "NDC")
     label.SetBorderSize(1)
@@ -374,21 +361,14 @@ for object, object_info in object_config.iteritems():
     legend = ROOT.TLegend(0.7, 0.6, 0.9, 0.7, "", "NDC")
     legend.SetBorderSize(1)
     legend.SetFillColor(ROOT.EColor.kWhite)
-    legend.AddEntry(data_fit_func, object_info['fit_label'], "l")
     legend.Draw()
-
-    canvas.SetLogy(True)
-    canvas.SaveAs("plots/combineFakeRates/%s_combined_eff.pdf" % object)
-    canvas.SetLogy(False)
-    canvas.SaveAs("plots/combineFakeRates/%s_combined_eff_lin.pdf" % object)
 
     ############################################################################
     ### Fit using RooFit  ######################################################
     ############################################################################
     log.info("Fitting using RooFit")
     # following http://root.cern.ch/root/html/tutorials/roofit/rf701_efficiencyfit.C.html
-    jet_pt = ROOT.RooRealVar("jetPt", "Jet Pt", 1, 0, 100, "GeV")
-    # Fit function parameters
+
     scale = ROOT.RooRealVar("scale", "Landau Scale", 0.5, 0, 10)
     mu = ROOT.RooRealVar("mu", "Landau #mu", 10, 0, 100)
     sigma = ROOT.RooRealVar("sigma", "Landau #sigma", 1, 0.5, 10)
@@ -422,8 +402,6 @@ for object, object_info in object_config.iteritems():
         ROOT.RooFit.Save(True)
     )
 
-    #fit_result.Print("v")
-
     fit_result_vars = fit_result.floatParsFinal()
     # Store the fit results for later
     object_result_vars = {}
@@ -442,22 +420,45 @@ for object, object_info in object_config.iteritems():
         fitted_fit_func = fitted_fit_func.replace(var, '%0.4e' % value)
     object_result['fitted_func'] = fitted_fit_func
 
-
     roo_frame = jet_pt.frame(ROOT.RooFit.Title("Efficiency"))
-    roo_data.plotOn(roo_frame, ROOT.RooFit.Efficiency(roo_cut))
-    roo_fit_func.plotOn(roo_frame, ROOT.RooFit.LineColor(ROOT.EColor.kRed))
-    scale.setVal(scale.getVal()*1.1)
-    roo_fit_func.plotOn(roo_frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlue))
-    scale.setVal(scale.getVal()*0.9/1.1)
-    roo_fit_func.plotOn(roo_frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlue))
 
+    def plot_func_on(frame, func, sigmas, scale_var_sys):
+        # A stupid function to do all the plotting of bands for the function
+        func.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+                    ROOT.RooFit.VisualizeError(fit_result, sigmas),
+                    ROOT.RooFit.FillColor(ROOT.EColor.kOrange),
+                   )
+        func.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlack))
+
+        # For multiplicative systematic
+        scale_var_sys_up = 1 + scale_var_sys
+        scale_var_sys_down = 1 - scale_var_sys
+
+        scale.setVal(scale.getVal()*scale_var_sys_up)
+        constant.setVal(constant.getVal()*scale_var_sys_up)
+        roo_fit_func.plotOn(
+            roo_frame,
+            ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+            ROOT.RooFit.LineWidth(1),
+        )
+        scale.setVal(scale.getVal()*scale_var_sys_down/scale_var_sys_up)
+        constant.setVal(constant.getVal()*scale_var_sys_down/scale_var_sys_up)
+        roo_fit_func.plotOn(
+            roo_frame,
+            ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+            ROOT.RooFit.LineWidth(1),
+        )
+        # Restore state
+        scale.setVal(scale.getVal()/scale_var_sys_down)
+        constant.setVal(constant.getVal()/scale_var_sys_down)
+
+    plot_func_on(roo_frame, roo_fit_func, 2, 0.1)
+
+    roo_data.plotOn(roo_frame, ROOT.RooFit.Efficiency(roo_cut))
     roo_frame.SetMinimum(1e-3)
     roo_frame.SetMaximum(1.0)
-
     roo_frame.Draw()
-
     canvas.Update()
-
     canvas.SetLogy(True)
     canvas.SaveAs("plots/combineFakeRates/%s_combined_eff_roofit.pdf" % object)
 
@@ -466,25 +467,33 @@ for object, object_info in object_config.iteritems():
     ############################################################################
 
     for type, type_info in scenarios.iteritems():
-        eff = type_info['efficiency']
-        eff.Draw("ap")
-        eff.GetHistogram().SetMinimum(1e-3)
-        eff.GetHistogram().SetMaximum(1.0)
-        data_fit_func.Draw("same")
+
+        roo_frame = jet_pt.frame(ROOT.RooFit.Title("Efficiency"))
+        roo_data = ROOT.RooDataHist(
+            "data", "data",
+            ROOT.RooArgList(jet_pt), ROOT.RooFit.Index(roo_cut),
+            ROOT.RooFit.Import("accept", type_info['data_pass']),
+            ROOT.RooFit.Import("reject", type_info['data_fail']),
+        )
+        plot_func_on(roo_frame, roo_fit_func, 2, 0.1)
+        roo_data.plotOn(roo_frame, ROOT.RooFit.Efficiency(roo_cut))
+        roo_frame.SetMinimum(1e-3)
+        roo_frame.SetMaximum(1.0)
+        roo_frame.Draw()
 
         #label = ROOT.TPaveText(0.6, 0.6, 0.9, 0.87, "NDC")
-        label = ROOT.TPaveText(0.7, 0.7, 0.9, 0.87, "NDC")
-        label.SetBorderSize(1)
-        label.SetFillColor(ROOT.EColor.kWhite)
-        label.AddText(object_info['label'])
-        label.AddText(type_info['title'])
-        chi2 = eff.Chisquare(data_fit_func)
-        chi2 /= type_info['ndof']
-        label.AddText('#chi^{2}/NDF = %0.1f' % chi2)
-        label.Draw()
-        legend.Draw()
+        #label = ROOT.TPaveText(0.7, 0.7, 0.9, 0.87, "NDC")
+        #label.SetBorderSize(1)
+        #label.SetFillColor(ROOT.EColor.kWhite)
+        #label.AddText(object_info['label'])
+        #label.AddText(type_info['title'])
+        #chi2 = eff.Chisquare(data_fit_func)
+        #chi2 /= type_info['ndof']
+        #label.AddText('#chi^{2}/NDF = %0.1f' % chi2)
+        #label.Draw()
+        #legend.Draw()
 
-        eff.GetHistogram().GetXaxis().SetTitle("Jet p_{T}")
+        #eff.GetHistogram().GetXaxis().SetTitle("Jet p_{T}")
         canvas.SetLogy(True)
         canvas.SaveAs("plots/combineFakeRates/%s_%s_eff.pdf" % (object, type))
         canvas.SetLogy(False)
