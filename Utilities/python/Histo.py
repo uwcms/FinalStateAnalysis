@@ -97,6 +97,14 @@ class Histo(object):
     2.0
     >>> rebinned.GetNbinsX()
     4
+    >>> # Variable rebinning on construction
+    >>> rebinned = Histo(hist.th1, rebin=[0, 1, 2, 3, 10])
+    >>> rebinned(0.5)
+    1.0
+    >>> rebinned(7.5)
+    2.0
+    >>> rebinned.GetNbinsX()
+    4
     '''
     def __init__(self, th1, **kwargs):
         self.th1 = th1.Clone()
@@ -104,9 +112,13 @@ class Histo(object):
         ROOT.SetOwnership(self.th1, 0)
         # Check if we want to rebin the histogram
         if 'rebin' in kwargs:
-            clone = self.th1.Clone()
-            clone.Rebin(kwargs['rebin'])
-            self.th1 = clone
+            if isinstance(kwargs['rebin'], int):
+                clone = self.th1.Clone()
+                clone.Rebin(kwargs['rebin'])
+                self.th1 = clone
+            else:
+                cloneHisto = self.cloneAndRebin(kwargs['rebin'])
+                self.th1 = cloneHisto.th1
 
         if kwargs.get('show_overflows', False):
             underflow = self.bin(0)
