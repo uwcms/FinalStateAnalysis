@@ -66,6 +66,15 @@ emm_shape = 'MuElecMass'
 #emt_shape = 'count'
 #emm_shape = 'count'
 
+# Add a fake normalization error
+e_fake_error = 0.2
+mu_fake_error = 0.2
+high_mu_fake_error = 0.2
+
+#e_fake_error = -1
+#mu_fake_error = -1
+#high_mu_fake_error = -1
+
 #for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
 for with_HWW in [True, False]:
     for mass in [100, 110, 115, 120, 125, 130, 135, 140, 145]:
@@ -94,6 +103,10 @@ for with_HWW in [True, False]:
         mmt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + ['wz', 'zz'])
         mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), signal_datasets + ['wz', 'zz'])
         mmt.add_sys('pdf_vh', 1 + pdf_err, signal_datasets)
+        if mu_fake_error > 0:
+            mmt.add_sys('mu_fake_norm', 1 + mu_fake_error, 'fakes')
+        if high_mu_fake_error > 0:
+            mmt.add_sys('high_mu_fake_norm', 1 + high_mu_fake_error, 'fakes')
 
         bin_index_finder = re.compile('^fakes_(?P<fr_type>.*)_bin_(?P<index>[0-9]*)(Up|Down)')
         for path, subdirs, histos in shapes.walk(mmt_folder, class_pattern="TH1*"):
@@ -117,22 +130,18 @@ for with_HWW in [True, False]:
         emt.add_background('wz')
         emt.add_background('zz')
 
-        emt.add_sys('lumi', 1 + lumi_err, ['signal', 'wz', 'zz'])
-        emt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + ['wz', 'zz'])
-        emt.add_sys('wz', 1.0 + wz_err, ['wz'])
-        emt.add_sys('zz', 1.0 + zz_err, ['zz'])
-        emt.add_sys('CMS_eff_t', 1 + tau_err, ['wz', 'signal', 'zz'])
-        emt.add_sys('CMS_eff_m', 1 + mu_id_err, ['wz', 'signal', 'zz'])
-        emt.add_sys('CMS_eff_e', 1.02, ['wz', 'signal', 'zz'])
-        emt.add_sys('pdf_vh', 1 + pdf_err, ['signal'])
-
         emt.add_sys('lumi', 1 + lumi_err, signal_datasets + ['wz', 'zz'])
+        emt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + ['wz', 'zz'])
         emt.add_sys('wz', 1.0 + wz_err, ['wz'])
         emt.add_sys('zz', 1.0 + zz_err, ['zz'])
         emt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + ['wz', 'zz'])
         emt.add_sys('CMS_eff_m', 1 + mu_id_err, signal_datasets + ['wz', 'zz'])
         emt.add_sys('CMS_eff_e', 1.02, signal_datasets + ['wz', 'zz'])
         emt.add_sys('pdf_vh', 1 + pdf_err, signal_datasets)
+        if e_fake_error > 0:
+            emt.add_sys('e_fake_norm', 1 + e_fake_error, 'fakes')
+        if mu_fake_error > 0:
+            emt.add_sys('mu_fake_norm', 1 + mu_fake_error, 'fakes')
 
         for path, subdirs, histos in shapes.walk(emt_folder, class_pattern="TH1*"):
             # Set of lead fake bins which have a systematic
