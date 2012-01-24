@@ -235,6 +235,7 @@ cfg = {
 
             'Tau_MuonOverlapSuperLoose < 0.5',
             'Tau_ElectronOverlapWP95 < 0.5',
+            'Muon1_Muon2_Mass > 20',
         ],
         'corrections' : [
             'MuIso(Muon1Pt, Muon1AbsEta, run)',
