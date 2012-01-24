@@ -34,7 +34,7 @@ ROOT.gROOT.ProcessLine('.L corrections.C++')
 log.info("Loading fake rate functions")
 ROOT.gROOT.ProcessLine('.L fake_rates.C++')
 
-def estimate_fake_sum(fr1, fr2, fr12s, fr12en, fudge=0.1):
+def estimate_fake_sum(fr1, fr2, fr12s, fr12en, fudge=0.0):
     '''
     Estimate the total fake rate sum, with proper errors.
 
