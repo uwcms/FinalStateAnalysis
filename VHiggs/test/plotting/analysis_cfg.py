@@ -101,7 +101,7 @@ cfg = {
                             'vtxChi2/vtxNDOF < 10',
                         ],
                         #'vars' : ['ETauMass', 'EJetPt', 'HT', 'count', 'MuPt'],
-                        'vars' : ['ETauMass', 'count', 'MuTauMass'],
+                        'vars' : ['ETauMass', 'count', 'MuTauMass', 'HT'],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
