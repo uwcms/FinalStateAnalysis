@@ -1,16 +1,16 @@
 {
     "tau": {
-        "combined_num": 1896.0, 
-        "fitted_func": "4.0566e+00*TMath::Landau(VAR,2.5757e+01,2.4047e+00,0)+3.0056e-12", 
+        "combined_num": 10929.0, 
+        "fitted_func": "3.8078e+00*TMath::Landau(VAR,2.6454e+01,2.2608e+00,0)+1.7154e-10", 
         "vars": {
-            "mu": 25.756732592120667, 
-            "scale": 4.0566077341715445, 
-            "sigma": 2.4046543236280176, 
-            "offset": 3.0055957722652238e-12
+            "mu": 26.454419741008422, 
+            "scale": 3.8078163793859057, 
+            "sigma": 2.2607711953311713, 
+            "offset": 1.7154322407009204e-10
         }, 
-        "combined_denom": 43013.0, 
+        "combined_denom": 316843.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
-        "combined_eff": 0.044079696835840329, 
+        "combined_eff": 0.034493424188004787, 
         "fit_status": 0, 
         "types": {
             "TriLep_ZMM": {
@@ -29,12 +29,12 @@
     }, 
     "muQCD": {
         "combined_num": 2281.0, 
-        "fitted_func": "3.1725e+00*TMath::Landau(VAR,1.5090e+01,2.3827e+00,0)+1.2886e-03", 
+        "fitted_func": "3.2382e+00*TMath::Landau(VAR,1.4391e+01,2.5037e+00,0)+5.8345e-04", 
         "vars": {
-            "mu": 15.089936916747682, 
-            "scale": 3.1725285967290269, 
-            "sigma": 2.3827483208548292, 
-            "offset": 0.0012886169048371698
+            "mu": 14.391402216921023, 
+            "scale": 3.2381985383590788, 
+            "sigma": 2.5037485008582445, 
+            "offset": 0.0005834486179475129
         }, 
         "combined_denom": 41299.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
@@ -89,12 +89,12 @@
     }, 
     "eMITQCD_barrel": {
         "combined_num": 720.0, 
-        "fitted_func": "1.0617e+00*TMath::Landau(VAR,1.7734e+01,1.6594e+00,0)+3.8077e-03", 
+        "fitted_func": "5.3699e-01*TMath::Landau(VAR,2.3651e+01,1.1401e+00,0)+6.7190e-03", 
         "vars": {
-            "mu": 17.734083616547125, 
-            "scale": 1.0616708997480262, 
-            "sigma": 1.6593674573446924, 
-            "offset": 0.0038076621737080374
+            "mu": 23.650925070025835, 
+            "scale": 0.53698778829176175, 
+            "sigma": 1.1401011258102078, 
+            "offset": 0.0067189502125733491
         }, 
         "combined_denom": 61660.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
@@ -109,12 +109,12 @@
     }, 
     "mu_endcap": {
         "combined_num": 76.0, 
-        "fitted_func": "3.3604e+00*TMath::Landau(VAR,1.7484e+01,3.0058e+00,0)+1.4999e-02", 
+        "fitted_func": "3.6651e+00*TMath::Landau(VAR,1.6503e+01,2.9513e+00,0)+1.3840e-02", 
         "vars": {
-            "mu": 17.484392255827334, 
-            "scale": 3.3604235431807723, 
-            "sigma": 3.0057707791472854, 
-            "offset": 0.014999461915797485
+            "mu": 16.502544330357516, 
+            "scale": 3.6650660804354853, 
+            "sigma": 2.9513095228864423, 
+            "offset": 0.013839699748504464
         }, 
         "combined_denom": 630.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
@@ -157,12 +157,12 @@
     }, 
     "muQCD_endcap": {
         "combined_num": 654.0, 
-        "fitted_func": "3.9234e+00*TMath::Landau(VAR,1.5065e+01,2.5416e+00,0)+3.4552e-03", 
+        "fitted_func": "3.8344e+00*TMath::Landau(VAR,1.4359e+01,2.7939e+00,0)+1.8333e-03", 
         "vars": {
-            "mu": 15.065475020472475, 
-            "scale": 3.9233867705387531, 
-            "sigma": 2.5416310254508336, 
-            "offset": 0.0034552428648204625
+            "mu": 14.359434408071936, 
+            "scale": 3.8343757632431852, 
+            "sigma": 2.793887586904817, 
+            "offset": 0.0018332509619815585
         }, 
         "combined_denom": 7869.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
@@ -221,12 +221,12 @@
     }, 
     "mu": {
         "combined_num": 299.0, 
-        "fitted_func": "3.1688e+00*TMath::Landau(VAR,1.5696e+01,2.8836e+00,0)+5.0661e-03", 
+        "fitted_func": "3.1558e+00*TMath::Landau(VAR,1.4418e+01,3.0912e+00,0)+3.8900e-03", 
         "vars": {
-            "mu": 15.695848223093146, 
-            "scale": 3.1688268217162858, 
-            "sigma": 2.8836113287347254, 
-            "offset": 0.0050661036826890604
+            "mu": 14.418429628595202, 
+            "scale": 3.1558377119271199, 
+            "sigma": 3.0912435431848424, 
+            "offset": 0.0038900447275184713
         }, 
         "combined_denom": 3964.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
@@ -269,12 +269,12 @@
     }, 
     "eMITQCD_endcap": {
         "combined_num": 440.0, 
-        "fitted_func": "3.9279e-01*TMath::Landau(VAR,1.6262e+01,2.4824e+00,0)+1.9876e-02", 
+        "fitted_func": "3.5457e-01*TMath::Landau(VAR,1.7153e+01,2.3276e+00,0)+2.0351e-02", 
         "vars": {
-            "mu": 16.261772815764768, 
-            "scale": 0.39279319306811722, 
-            "sigma": 2.482433811458451, 
-            "offset": 0.01987565640713157
+            "mu": 17.153474404393869, 
+            "scale": 0.3545678200703456, 
+            "sigma": 2.327648740511461, 
+            "offset": 0.020351446175491561
         }, 
         "combined_denom": 17114.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
@@ -289,12 +289,12 @@
     }, 
     "tauQCD_barrel": {
         "combined_num": 831.0, 
-        "fitted_func": "2.3097e+00*TMath::Landau(VAR,2.6931e+01,2.2567e+00,0)+6.2403e-11", 
+        "fitted_func": "2.2929e+00*TMath::Landau(VAR,2.7250e+01,2.2867e+00,0)+5.4057e-13", 
         "vars": {
-            "mu": 26.930526937662989, 
-            "scale": 2.3096609421303747, 
-            "sigma": 2.2567322612490983, 
-            "offset": 6.2402916167769718e-11
+            "mu": 27.249747669363021, 
+            "scale": 2.2929348735032691, 
+            "sigma": 2.2866719838762055, 
+            "offset": 5.4056759068998872e-13
         }, 
         "combined_denom": 61410.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
@@ -312,17 +312,17 @@
         }
     }, 
     "tau_barrel": {
-        "combined_num": 1261.0, 
-        "fitted_func": "4.0707e+00*TMath::Landau(VAR,2.5339e+01,2.2142e+00,0)+3.9982e-10", 
+        "combined_num": 6595.0, 
+        "fitted_func": "3.7666e+00*TMath::Landau(VAR,2.6286e+01,1.9877e+00,0)+4.3590e-12", 
         "vars": {
-            "mu": 25.339069565619599, 
-            "scale": 4.0707349984386969, 
-            "sigma": 2.2141604736007325, 
-            "offset": 3.9981690180823648e-10
+            "mu": 26.285610381987478, 
+            "scale": 3.7666138440528636, 
+            "sigma": 1.9876726111405316, 
+            "offset": 4.3590131504345209e-12
         }, 
-        "combined_denom": 33454.0, 
+        "combined_denom": 238640.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
-        "combined_eff": 0.037693549351348117, 
+        "combined_eff": 0.027635769359704996, 
         "fit_status": 0, 
         "types": {
             "TriLep_ZMM": {
@@ -341,12 +341,12 @@
     }, 
     "tauQCD_endcap": {
         "combined_num": 788.0, 
-        "fitted_func": "4.9513e+00*TMath::Landau(VAR,2.7130e+01,2.3905e+00,0)+1.8048e-03", 
+        "fitted_func": "4.6289e+00*TMath::Landau(VAR,2.7913e+01,2.4486e+00,0)+1.8636e-03", 
         "vars": {
-            "mu": 27.129550991920993, 
-            "scale": 4.9512945337233099, 
-            "sigma": 2.390542214478514, 
-            "offset": 0.0018048169059252661
+            "mu": 27.912924481663094, 
+            "scale": 4.6288914150355422, 
+            "sigma": 2.4486055993861844, 
+            "offset": 0.001863587457560878
         }, 
         "combined_denom": 24770.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
@@ -364,17 +364,17 @@
         }
     }, 
     "tau_endcap": {
-        "combined_num": 635.0, 
-        "fitted_func": "4.7640e+00*TMath::Landau(VAR,2.7495e+01,2.5128e+00,0)+3.2296e-03", 
+        "combined_num": 4334.0, 
+        "fitted_func": "4.3704e+00*TMath::Landau(VAR,2.7653e+01,2.6525e+00,0)+7.8501e-04", 
         "vars": {
-            "mu": 27.494720955641828, 
-            "scale": 4.7639891033496093, 
-            "sigma": 2.5128325522936721, 
-            "offset": 0.0032295939040362653
+            "mu": 27.652725416473835, 
+            "scale": 4.3704219907668653, 
+            "sigma": 2.6524963509993067, 
+            "offset": 0.00078500833950112536
         }, 
-        "combined_denom": 9559.0, 
+        "combined_denom": 78203.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
-        "combined_eff": 0.066429542839209127, 
+        "combined_eff": 0.055419868802987098, 
         "fit_status": 0, 
         "types": {
             "TriLep_ZMM": {
@@ -393,12 +393,12 @@
     }, 
     "tauQCD": {
         "combined_num": 1619.0, 
-        "fitted_func": "2.6757e+00*TMath::Landau(VAR,2.6940e+01,2.5543e+00,0)+2.2729e-09", 
+        "fitted_func": "2.6181e+00*TMath::Landau(VAR,2.7427e+01,2.5878e+00,0)+8.1131e-11", 
         "vars": {
-            "mu": 26.940295195396391, 
-            "scale": 2.6757415041429522, 
-            "sigma": 2.5543442528958855, 
-            "offset": 2.2728553483730707e-09
+            "mu": 27.426763211914217, 
+            "scale": 2.6180689608335328, 
+            "sigma": 2.5877950256612818, 
+            "offset": 8.1130990814415327e-11
         }, 
         "combined_denom": 86180.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
@@ -473,12 +473,12 @@
     }, 
     "muQCD_barrel": {
         "combined_num": 1627.0, 
-        "fitted_func": "2.9634e+00*TMath::Landau(VAR,1.5072e+01,2.3367e+00,0)+8.0149e-04", 
+        "fitted_func": "3.0710e+00*TMath::Landau(VAR,1.4371e+01,2.4282e+00,0)+9.1210e-05", 
         "vars": {
-            "mu": 15.071973286525846, 
-            "scale": 2.9633934253100582, 
-            "sigma": 2.3367483788471999, 
-            "offset": 0.00080148920278749758
+            "mu": 14.370862699369692, 
+            "scale": 3.0709925892728962, 
+            "sigma": 2.4281534036465398, 
+            "offset": 9.12102873381615e-05
         }, 
         "combined_denom": 33430.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
@@ -533,12 +533,12 @@
     }, 
     "eMITQCD": {
         "combined_num": 1160.0, 
-        "fitted_func": "8.3328e-01*TMath::Landau(VAR,1.7652e+01,1.9007e+00,0)+6.7157e-03", 
+        "fitted_func": "7.8335e-01*TMath::Landau(VAR,1.7241e+01,2.0525e+00,0)+6.5715e-03", 
         "vars": {
-            "mu": 17.652105664561766, 
-            "scale": 0.83327589746595931, 
-            "sigma": 1.9007130202036524, 
-            "offset": 0.0067157092367390869
+            "mu": 17.240538854895792, 
+            "scale": 0.78334645354934895, 
+            "sigma": 2.0524630802357553, 
+            "offset": 0.0065715093627744525
         }, 
         "combined_denom": 78774.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
@@ -573,12 +573,12 @@
     }, 
     "mu_barrel": {
         "combined_num": 223.0, 
-        "fitted_func": "3.1470e+00*TMath::Landau(VAR,1.5365e+01,2.7749e+00,0)+4.0995e-03", 
+        "fitted_func": "3.2567e+00*TMath::Landau(VAR,1.3262e+01,3.0606e+00,0)+2.5573e-03", 
         "vars": {
-            "mu": 15.365307978803976, 
-            "scale": 3.1470141876002473, 
-            "sigma": 2.7749030220894566, 
-            "offset": 0.004099490858299526
+            "mu": 13.262029621602862, 
+            "scale": 3.2567156943284647, 
+            "sigma": 3.0605939689560331, 
+            "offset": 0.0025573144217486687
         }, 
         "combined_denom": 3334.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
