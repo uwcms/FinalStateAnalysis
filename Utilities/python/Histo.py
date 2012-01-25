@@ -136,6 +136,7 @@ class Histo(object):
 
     def cloneAndRebin(self, binning):
         # Returns a rebinned histogram
+        self.Sumw2()
         bin_array = array.array('d', binning)
         rebinned = self.th1.Rebin(len(binning)-1, self.GetName() + 'rebinned',
                                   bin_array)
