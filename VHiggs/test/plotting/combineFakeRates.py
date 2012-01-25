@@ -50,27 +50,36 @@ def setup_func_pars(func):
 
 setup_func_pars(fit_func)
 
+#small_bins = range(0, 30, 2) + range(30, 60, 5) + range(60, 110, 10)
+#med_bins = range(0, 30, 5) + range(30, 60, 10) + range(60, 120, 20)
+#big_bins = range(0, 30, 5) + range(30, 40, 10) + range(40, 120, 20)
+small_bins = 2
+med_bins = 5
+big_bins = 10
+
 object_config = {
     'mu' : {
         'scenarios' : {
             'SingleMu_Wjets' : {
-                'title' : 'W+jet_{#mu} (Single Mu)',
+                'title' : 'W',
                 'file' : singlemu_fr_file,
                 'histo' : 'mu',
-                'rebin' : 5,
+                'rebin' : med_bins,
             },
             'SingleMu_QCD' : {
-                'title' : 'QCD (Single Mu)',
+                'title' : 'QCD',
                 'file' : singlemu_fr_file,
                 'histo' : 'muQCD',
-                'rebin' : 1,
+                #'rebin' : 1,
+                'rebin' : med_bins,
                 'exclude' : True,
             },
             'TriLep_ZMM' : {
-                'title' : 'Z#mu #mu + jet_{#mu} (Double Mu)',
+                'title' : 'Z',
                 'file' : trilepton_fr_file,
                 'histo' : 'mu',
-                'rebin' : 5,
+                #'rebin' : 5,
+                'rebin' : big_bins,
             },
             #'TriLep_ZEE' : {
                 #'title' : 'Zee + jet_{#mu} (Double Elec)',
@@ -89,7 +98,9 @@ object_config = {
                 #'exclude' : True,
             #},
         },
-        'rebin' : 2,
+        #'rebin' : 2,
+        'rebin' : med_bins,
+        'comb_label' : 'W+Z',
         'fit_label' : 'EWK Fit',
         'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
@@ -97,27 +108,27 @@ object_config = {
     'muQCD' : {
         'scenarios' : {
             'SingleMu_Wjets' : {
-                'title' : 'W+jet_{#mu} (Single Mu)',
+                'title' : 'W',
                 'file' : singlemu_fr_file,
                 'histo' : 'mu',
                 'rebin' : 5,
                 'exclude' : True,
             },
             'SingleMu_QCD' : {
-                'title' : 'QCD (Single Mu)',
+                'title' : 'QCD',
                 'file' : singlemu_fr_file,
                 'histo' : 'muQCD',
-                'rebin' : 1,
+                'rebin' : med_bins,
             },
             'TriLep_ZMM' : {
-                'title' : 'Z#mu #mu + jet_{#mu} (Double Mu)',
+                'title' : 'Z',
                 'file' : trilepton_fr_file,
                 'histo' : 'mu',
                 'rebin' : 5,
                 'exclude' : True,
             },
             'TriLep_ZEE' : {
-                'title' : 'Zee + jet_{#mu} (Double Elec)',
+                'title' : 'Zee',
                 'file' : trilepton_fr_file,
                 'histo' : 'muZEE',
                 'exclude' : True,
@@ -130,27 +141,28 @@ object_config = {
                 #'exclude' : True,
             #},
             'Trilep_QCD' : {
-                'title' : 'QCD (Double Mu)',
+                'title' : 'QCD',
                 'file' : trilepton_fr_file,
                 'histo' : 'muQCD',
                 'rebin' : 5,
             },
         },
-        'rebin' : 1,
+        'rebin' : med_bins,
         'fit_label' : 'QCD Fit',
+        'comb_label' : 'QCD',
         'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
     },
     'muHighPt' : {
         'scenarios' : {
             'SingleMu_Wjets' : {
-                'title' : 'W+jet_{#mu} (Single Mu)',
+                'title' : 'W',
                 'file' : singlemu_fr_file,
                 'histo' : 'muHighPt',
                 'rebin' : 5,
             },
             'SingleMu_QCD' : {
-                'title' : 'QCD (Single Mu)',
+                'title' : 'QCD',
                 'file' : singlemu_fr_file,
                 'histo' : 'muQCDHighPt',
                 'rebin' : 5,
@@ -158,6 +170,7 @@ object_config = {
             },
         },
         'rebin' : 5,
+        'comb_label' : 'W',
         'fit_label' : 'Combined Fit',
         'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
@@ -165,7 +178,7 @@ object_config = {
     'muHighPtQCDOnly' : {
         'scenarios' : {
             'SingleMu_QCD' : {
-                'title' : 'QCD (Single Mu)',
+                'title' : 'QCD',
                 'file' : singlemu_fr_file,
                 'histo' : 'muQCDHighPt',
                 'rebin' : 5,
@@ -173,6 +186,7 @@ object_config = {
             },
         },
         'rebin' : 5,
+        'comb_label' : 'QCD',
         'fit_label' : 'QCD Fit',
         'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
@@ -180,20 +194,20 @@ object_config = {
     'eMIT' : {
         'scenarios' : {
             'SingleMu_Wjets' : {
-                'title' : 'W+jet_{#mu} (Single Mu)',
+                'title' : 'W',
                 'file' : singlemu_fr_file,
                 'histo' : 'eMIT',
                 'rebin' : 5,
             },
             'SingleMu_QCD' : {
-                'title' : 'QCD (Single Mu)',
+                'title' : 'QCD',
                 'file' : singlemu_fr_file,
                 'histo' : 'eQCDMIT',
-                'rebin' : 1,
+                'rebin' : 2,
                 'exclude' : True,
             },
             'TriLep_ZMM' : {
-                'title' : 'Z#mu#mu + jet_{e}',
+                'title' : 'Z',
                 'file' : trilepton_fr_file,
                 'histo' : 'eMuEG',
                 'rebin' : 10,
@@ -201,6 +215,7 @@ object_config = {
             },
         },
         'rebin' : 5,
+        'comb_label' : 'W',
         'fit_label' : 'Wjets Fit',
         'function' : fit_func,
         'label' : 'Jet #rightarrow e fake rate',
@@ -208,14 +223,15 @@ object_config = {
     'eMITQCD' : {
         'scenarios' : {
             'SingleMu_QCD' : {
-                'title' : 'QCD (Single Mu)',
+                'title' : 'QCD',
                 'file' : singlemu_fr_file,
                 'histo' : 'eQCDMIT',
-                'rebin' : 1,
+                'rebin' : med_bins,
                 'exclude' : False,
             },
         },
-        'rebin' : 1,
+        'rebin' : med_bins,
+        'comb_label' : 'QCD',
         'fit_label' : 'QCD Fit',
         'function' : fit_func,
         'label' : 'Jet #rightarrow e fake rate',
@@ -223,50 +239,52 @@ object_config = {
     'tau' : {
         'scenarios' : {
             'TriLep_ZMM' : {
-                'title' : 'Z#mu#mu + jet_{#tau}',
+                'title' : 'Z',
                 'file' : trilepton_fr_file,
                 'histo' : 'tau',
-                'rebin' : 1,
+                'rebin' : 2,
                 'exclude' : False,
             },
             'TriLep_AntiIsoMM' : {
-                'title' : 'QCD + jet_{#tau}',
+                'title' : 'QCD',
                 'file' : trilepton_fr_file,
                 'histo' : 'tauQCD',
                 'rebin' : 2,
                 'exclude' : True,
             },
             'SingleMu_Wjets' : {
-                'title' : 'W #mu #nu + jet_{#tau}',
+                'title' : 'W',
                 'file' : singlemu_fr_file,
                 'histo' : 'tau',
                 'rebin' : 2,
-                'exclude' : True,
+                'exclude' : False,
             },
         },
-        'rebin' : 1,
-        'fit_label' : 'Zjets Fit',
+        'rebin' : 2,
+        'comb_label' : 'W+Z',
+        'fit_label' : 'W+Z Fit',
         'function' : fit_func,
         'label' : 'Jet #rightarrow #tau fake rate',
     },
     'tauQCD' : {
         'scenarios' : {
             'TriLep_AntiIsoMM' : {
-                'title' : 'QCD + jet_{#tau}',
+                'title' : 'QCD',
                 'file' : trilepton_fr_file,
                 'histo' : 'tauQCD',
-                'rebin' : 1,
+                'rebin' : 2,
                 'exclude' : False,
             },
             'TriLep_ZMM' : {
-                'title' : 'Z#mu#mu + jet_{#tau}',
+                'title' : 'Z',
                 'file' : trilepton_fr_file,
                 'histo' : 'tau',
-                'rebin' : 1,
+                'rebin' : 2,
                 'exclude' : True,
             },
         },
-        'rebin' : 1,
+        'comb_label' : 'QCD',
+        'rebin' : 2,
         'fit_label' : 'QCD Fit',
         'function' : fit_func,
         'label' : 'Jet #rightarrow #tau fake rate',
@@ -341,27 +359,19 @@ for object, object_info in object_config.iteritems():
         type_info['data_pass'] = roo_pass
         type_info['data_fail'] = roo_fail
 
-
     canvas.SetLogy(True)
 
     log.info("Computing combined efficiency")
+
+    print combined_num.GetNbinsX()
+    print combined_num.GetXaxis().GetXmin()
+    print combined_num.GetXaxis().GetXmax()
 
     combined_num = Histo(combined_num.th1, rebin=object_info['rebin'])
     combined_denom = Histo(combined_denom.th1, rebin=object_info['rebin'])
 
     log.info("Fitting")
 
-    label = ROOT.TPaveText(0.7, 0.7, 0.9, 0.87, "NDC")
-    label.SetBorderSize(1)
-    label.SetFillColor(ROOT.EColor.kWhite)
-    label.AddText(object_info['label'])
-    label.AddText("All channels")
-    label.Draw()
-
-    legend = ROOT.TLegend(0.7, 0.6, 0.9, 0.7, "", "NDC")
-    legend.SetBorderSize(1)
-    legend.SetFillColor(ROOT.EColor.kWhite)
-    legend.Draw()
 
     ############################################################################
     ### Fit using RooFit  ######################################################
@@ -399,7 +409,8 @@ for object, object_info in object_config.iteritems():
 
     fit_result = roo_eff.fitTo(
         roo_data, ROOT.RooFit.ConditionalObservables(ROOT.RooArgSet(jet_pt)),
-        ROOT.RooFit.Save(True)
+        ROOT.RooFit.Save(True),
+        ROOT.RooFit.PrintLevel(-1)
     )
 
     fit_result_vars = fit_result.floatParsFinal()
@@ -422,13 +433,18 @@ for object, object_info in object_config.iteritems():
 
     roo_frame = jet_pt.frame(ROOT.RooFit.Title("Efficiency"))
 
-    def plot_func_on(frame, func, sigmas, scale_var_sys):
-        # A stupid function to do all the plotting of bands for the function
-        func.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
-                    ROOT.RooFit.VisualizeError(fit_result, sigmas),
-                    ROOT.RooFit.FillColor(ROOT.EColor.kOrange),
-                   )
+    def plot_func_on(frame, func, sigmas, scale_var_sys, plot_band=True):
+        ''' A stupid function to do all the plotting for the function '''
+        curves = {}
+        if plot_band:
+            func.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+                        ROOT.RooFit.VisualizeError(fit_result, sigmas),
+                        ROOT.RooFit.FillColor(styling.colors['ewk_yellow'].code),
+                       )
+        curves['band'] = frame.findObject("fake_rate_Norm[jetPt]_errorband")
         func.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlack))
+        # Get the last added curve, which is the "plain" function.
+        curves['nom'] = frame.findObject("fake_rate_Norm[jetPt]")
 
         # For multiplicative systematic
         scale_var_sys_up = 1 + scale_var_sys
@@ -436,28 +452,66 @@ for object, object_info in object_config.iteritems():
 
         scale.setVal(scale.getVal()*scale_var_sys_up)
         constant.setVal(constant.getVal()*scale_var_sys_up)
+
         roo_fit_func.plotOn(
             roo_frame,
-            ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
-            ROOT.RooFit.LineWidth(1),
+            ROOT.RooFit.LineColor(styling.colors['ewk_purple'].code),
+            ROOT.RooFit.LineStyle(ROOT.RooFit.kDashed),
+            #ROOT.RooFit.LineWidth(1),
         )
+        curves['scale'] = frame.findObject("fake_rate_Norm[jetPt]")
         scale.setVal(scale.getVal()*scale_var_sys_down/scale_var_sys_up)
         constant.setVal(constant.getVal()*scale_var_sys_down/scale_var_sys_up)
         roo_fit_func.plotOn(
             roo_frame,
-            ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
-            ROOT.RooFit.LineWidth(1),
+            ROOT.RooFit.LineColor(styling.colors['ewk_purple'].code),
+            ROOT.RooFit.LineStyle(ROOT.RooFit.kDashed),
+            #ROOT.RooFit.LineWidth(1),
         )
         # Restore state
         scale.setVal(scale.getVal()/scale_var_sys_down)
         constant.setVal(constant.getVal()/scale_var_sys_down)
 
-    plot_func_on(roo_frame, roo_fit_func, 2, 0.1)
+        # Give good title
+        frame.GetYaxis().SetTitle("Fake rate")
+        frame.GetXaxis().SetTitle("Jet p_{T}")
+
+        return curves
+
+    scale_err = 30 # percent
+
+    curves = plot_func_on(roo_frame, roo_fit_func, 1, scale_err/100.)
 
     roo_data.plotOn(roo_frame, ROOT.RooFit.Efficiency(roo_cut))
-    roo_frame.SetMinimum(1e-3)
+    curves['data'] = roo_frame.findObject('h_data_Eff[cut]')
+
+    roo_frame.SetMinimum(3e-3)
     roo_frame.SetMaximum(1.0)
     roo_frame.Draw()
+
+    left_edge = 0.60
+    bottom_edge = 0.60
+    divider = 0.88
+    right_edge = 0.95
+    top_edge = 0.95
+
+    label_pos = [left_edge, divider, right_edge, top_edge, "NDC"]
+    legend_pos = [left_edge, bottom_edge, right_edge, divider, "", "NDC"]
+
+    label = ROOT.TPaveText(*label_pos)
+    label.SetBorderSize(1)
+    label.SetFillColor(ROOT.EColor.kWhite)
+    label.AddText(object_info['label'])
+    label.Draw()
+
+    legend = ROOT.TLegend(*legend_pos)
+    legend.SetBorderSize(1)
+    legend.SetFillColor(ROOT.EColor.kWhite)
+    legend.AddEntry(curves['data'], object_info['comb_label'] + " events", "p")
+    legend.AddEntry(curves['nom'], object_info['comb_label'] + " fit", "l")
+    legend.AddEntry(curves['band'], "1#sigma fit error", "f")
+    legend.AddEntry(curves['scale'], "#pm %i%%" % scale_err, "l")
+    legend.Draw()
     canvas.Update()
     canvas.SetLogy(True)
     canvas.SaveAs("plots/combineFakeRates/%s_combined_eff_roofit.pdf" % object)
@@ -475,23 +529,26 @@ for object, object_info in object_config.iteritems():
             ROOT.RooFit.Import("accept", type_info['data_pass']),
             ROOT.RooFit.Import("reject", type_info['data_fail']),
         )
-        plot_func_on(roo_frame, roo_fit_func, 2, 0.1)
+        plot_func_on(roo_frame, roo_fit_func, 1, scale_err/100., False)
         roo_data.plotOn(roo_frame, ROOT.RooFit.Efficiency(roo_cut))
-        roo_frame.SetMinimum(1e-3)
+        roo_frame.SetMinimum(3e-3)
         roo_frame.SetMaximum(1.0)
         roo_frame.Draw()
 
-        #label = ROOT.TPaveText(0.6, 0.6, 0.9, 0.87, "NDC")
-        #label = ROOT.TPaveText(0.7, 0.7, 0.9, 0.87, "NDC")
-        #label.SetBorderSize(1)
-        #label.SetFillColor(ROOT.EColor.kWhite)
-        #label.AddText(object_info['label'])
-        #label.AddText(type_info['title'])
-        #chi2 = eff.Chisquare(data_fit_func)
-        #chi2 /= type_info['ndof']
-        #label.AddText('#chi^{2}/NDF = %0.1f' % chi2)
-        #label.Draw()
-        #legend.Draw()
+        label = ROOT.TPaveText(*label_pos)
+        label.SetBorderSize(1)
+        label.SetFillColor(ROOT.EColor.kWhite)
+        label.AddText(object_info['label'])
+        label.Draw()
+
+        legend = ROOT.TLegend(*legend_pos)
+        legend.SetBorderSize(1)
+        legend.SetFillColor(ROOT.EColor.kWhite)
+        legend.AddEntry(curves['data'], type_info['title'] + " events", "p")
+        legend.AddEntry(curves['nom'], object_info['comb_label'] + " fit", "l")
+        #legend.AddEntry(curves['band'], "1#sigma fit error", "f")
+        legend.AddEntry(curves['scale'], "#pm %i%%" % scale_err, "l")
+        legend.Draw()
 
         #eff.GetHistogram().GetXaxis().SetTitle("Jet p_{T}")
         canvas.SetLogy(True)
