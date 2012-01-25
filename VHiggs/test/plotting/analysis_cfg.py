@@ -12,7 +12,7 @@ INT_LUMI = 4684
 #JOBID = '2012-01-04-v1-WHAnalyze'
 #JOBID = '2012-01-16-v2-WHAnalyze'
 #JOBID = '2012-01-17-v2-WHAnalyze'
-JOBID = '2012-01-22-v1-WHAnalyze'
+JOBID = '2012-01-24-v1-WHAnalyze'
 
 # Setup function which retrieves fake rate weights
 fake_rates_file = open('fake_rates.json')
