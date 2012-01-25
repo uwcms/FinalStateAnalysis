@@ -32,7 +32,7 @@ def get_fr(label, pt, eta):
     return 'weight_%s(%s, %s)' % (label, pt, eta)
 
 # List of channels to skip
-skip = [ 'emm', ('emt', 'mutau') ]
+skip = [ 'emm', ('emt', 'mutau'), ('emt', 'etau') ]
 
 cfg = {
     'emt' : {
@@ -192,6 +192,47 @@ cfg = {
                     'fail' : ['(Elec_EID_MITID < 0.5 || Elec_ERelIso > 0.3)'],
                     'ewk_fr' : get_fr('eMIT', 'Elec_JetPt', 'ElecAbsEta'),
                     'qcd_fr' : get_fr('eMITQCD', 'Elec_JetPt', 'ElecAbsEta'),
+                },
+            },
+            'etau' : {
+                'cat_baseline' : ['TauCharge*ElecCharge > 0'],
+                'cuts' : [],
+                'selections' : {
+                    'final' : {
+                        'cuts' : [
+                            'VisFinalState_Ht > 80',
+                            'vtxChi2/vtxNDOF < 10',
+                        ],
+                        #'vars' : ['ETauMass', 'EJetPt', 'TauJetPt', 'HT', 'count'],
+                        'vars' : ['ETauMass', 'count'],
+                    }
+                },
+                'object1' : {
+                    'name' : 'e',
+                    'pass' : [
+                        'Elec_EID_MITID > 0.5',
+                        'Elec_ERelIso < 0.3',
+                    ],
+                    'fail' : ['(Elec_EID_MITID < 0.5 || Elec_ERelIso > 0.3)'],
+                    'ewk_fr' : get_fr('eMIT', 'Elec_JetPt', 'ElecAbsEta'),
+                    'qcd_fr' : get_fr('eMITQCD', 'Elec_JetPt', 'ElecAbsEta'),
+                },
+                'object2' : {
+                    'name' : '#tau',
+                    'pass' : ['Tau_LooseHPS > 0.5'],
+                    'fail' : ['Tau_LooseHPS < 0.5'],
+                    'ewk_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'),
+                    'qcd_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'), # FIXME
+                },
+                'object3' : {
+                    'name' : '#mu',
+                    'pass' : [
+                        'Mu_MuRelIso < 0.3',
+                        'Mu_MuID_WWID > 0.5',
+                    ],
+                    'fail' : ['(Mu_MuRelIso > 0.3 || Mu_MuID_WWID < 0.5)'],
+                    'ewk_fr' : get_fr('muHighPt', 'Mu_JetPt', 'MuAbsEta'),
+                    'qcd_fr' : get_fr('muHighPtQCDOnly', 'Mu_JetPt', 'MuAbsEta'),
                 },
             },
 
