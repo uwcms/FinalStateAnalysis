@@ -70,12 +70,10 @@ float fakerate_eMIT_flat(float /*pt*/, float /*eta*/) {
 
 float fakerate_tauQCD_eta(float pt, float eta) {
       if (eta < 1.44) {
-         return           return 2.2929e+00*TMath::Landau(pt,2.7250e+01,2.2867e+00,0)+5.4057e-13;
-;
+         return 2.2929e+00*TMath::Landau(pt,2.7250e+01,2.2867e+00,0)+5.4057e-13;
       }
       if (eta >= 1.44) {
-         return           return 4.6289e+00*TMath::Landau(pt,2.7913e+01,2.4486e+00,0)+1.8636e-03;
-;
+         return 4.6289e+00*TMath::Landau(pt,2.7913e+01,2.4486e+00,0)+1.8636e-03;
       }
    std::cerr << "Warning out of bounds in function fakerate_tauQCD_eta" << std::endl;
    return -999;
@@ -94,12 +92,10 @@ float fakerate_tauQCD_eta_flat(float /*pt*/, float eta) {
 
 float fakerate_muQCD_eta(float pt, float eta) {
       if (eta < 1.44) {
-         return           return 3.0710e+00*TMath::Landau(pt,1.4371e+01,2.4282e+00,0)+9.1210e-05;
-;
+         return 3.0710e+00*TMath::Landau(pt,1.4371e+01,2.4282e+00,0)+9.1210e-05;
       }
       if (eta >= 1.44) {
-         return           return 3.8344e+00*TMath::Landau(pt,1.4359e+01,2.7939e+00,0)+1.8333e-03;
-;
+         return 3.8344e+00*TMath::Landau(pt,1.4359e+01,2.7939e+00,0)+1.8333e-03;
       }
    std::cerr << "Warning out of bounds in function fakerate_muQCD_eta" << std::endl;
    return -999;
@@ -118,12 +114,10 @@ float fakerate_muQCD_eta_flat(float /*pt*/, float eta) {
 
 float fakerate_eMITQCD_eta(float pt, float eta) {
       if (eta < 1.44) {
-         return           return 5.3699e-01*TMath::Landau(pt,2.3651e+01,1.1401e+00,0)+6.7190e-03;
-;
+         return 5.3699e-01*TMath::Landau(pt,2.3651e+01,1.1401e+00,0)+6.7190e-03;
       }
       if (eta >= 1.44) {
-         return           return 3.5457e-01*TMath::Landau(pt,1.7153e+01,2.3276e+00,0)+2.0351e-02;
-;
+         return 3.5457e-01*TMath::Landau(pt,1.7153e+01,2.3276e+00,0)+2.0351e-02;
       }
    std::cerr << "Warning out of bounds in function fakerate_eMITQCD_eta" << std::endl;
    return -999;
@@ -142,12 +136,10 @@ float fakerate_eMITQCD_eta_flat(float /*pt*/, float eta) {
 
 float fakerate_tau_eta(float pt, float eta) {
       if (eta < 1.44) {
-         return           return 3.7666e+00*TMath::Landau(pt,2.6286e+01,1.9877e+00,0)+4.3590e-12;
-;
+         return 3.7666e+00*TMath::Landau(pt,2.6286e+01,1.9877e+00,0)+4.3590e-12;
       }
       if (eta >= 1.44) {
-         return           return 4.3704e+00*TMath::Landau(pt,2.7653e+01,2.6525e+00,0)+7.8501e-04;
-;
+         return 4.3704e+00*TMath::Landau(pt,2.7653e+01,2.6525e+00,0)+7.8501e-04;
       }
    std::cerr << "Warning out of bounds in function fakerate_tau_eta" << std::endl;
    return -999;
@@ -166,12 +158,10 @@ float fakerate_tau_eta_flat(float /*pt*/, float eta) {
 
 float fakerate_muHighPt_eta(float pt, float eta) {
       if (eta < 1.44) {
-         return           return 6.0335e+00*TMath::Landau(pt,2.6116e+01,2.6033e+00,0)+1.0075e-02;
-;
+         return 6.0335e+00*TMath::Landau(pt,2.6116e+01,2.6033e+00,0)+1.0075e-02;
       }
       if (eta >= 1.44) {
-         return           return 5.3331e+00*TMath::Landau(pt,3.2036e+01,1.6186e+00,0)+8.1497e-02;
-;
+         return 5.3331e+00*TMath::Landau(pt,3.2036e+01,1.6186e+00,0)+8.1497e-02;
       }
    std::cerr << "Warning out of bounds in function fakerate_muHighPt_eta" << std::endl;
    return -999;
@@ -190,12 +180,10 @@ float fakerate_muHighPt_eta_flat(float /*pt*/, float eta) {
 
 float fakerate_mu_eta(float pt, float eta) {
       if (eta < 1.44) {
-         return           return 3.2567e+00*TMath::Landau(pt,1.3262e+01,3.0606e+00,0)+2.5573e-03;
-;
+         return 3.2567e+00*TMath::Landau(pt,1.3262e+01,3.0606e+00,0)+2.5573e-03;
       }
       if (eta >= 1.44) {
-         return           return 3.6651e+00*TMath::Landau(pt,1.6503e+01,2.9513e+00,0)+1.3840e-02;
-;
+         return 3.6651e+00*TMath::Landau(pt,1.6503e+01,2.9513e+00,0)+1.3840e-02;
       }
    std::cerr << "Warning out of bounds in function fakerate_mu_eta" << std::endl;
    return -999;
@@ -214,12 +202,10 @@ float fakerate_mu_eta_flat(float /*pt*/, float eta) {
 
 float fakerate_muHighPtQCDOnly_eta(float pt, float eta) {
       if (eta < 1.44) {
-         return           return 4.0203e+00*TMath::Landau(pt,2.6300e+01,2.3918e+00,0)+7.2308e-03;
-;
+         return 4.0203e+00*TMath::Landau(pt,2.6300e+01,2.3918e+00,0)+7.2308e-03;
       }
       if (eta >= 1.44) {
-         return           return 3.1813e+00*TMath::Landau(pt,2.9928e+01,3.0287e+00,0)+1.2492e-02;
-;
+         return 3.1813e+00*TMath::Landau(pt,2.9928e+01,3.0287e+00,0)+1.2492e-02;
       }
    std::cerr << "Warning out of bounds in function fakerate_muHighPtQCDOnly_eta" << std::endl;
    return -999;
@@ -238,12 +224,10 @@ float fakerate_muHighPtQCDOnly_eta_flat(float /*pt*/, float eta) {
 
 float fakerate_eMIT_eta(float pt, float eta) {
       if (eta < 1.44) {
-         return           return 5.9840e-01*TMath::Landau(pt,2.3026e+01,1.4181e+00,0)+1.1596e-02;
-;
+         return 5.9840e-01*TMath::Landau(pt,2.3026e+01,1.4181e+00,0)+1.1596e-02;
       }
       if (eta >= 1.44) {
-         return           return 1.6509e-01*TMath::Landau(pt,3.2492e+01,5.0000e-01,0)+3.1743e-02;
-;
+         return 1.6509e-01*TMath::Landau(pt,3.2492e+01,5.0000e-01,0)+3.1743e-02;
       }
    std::cerr << "Warning out of bounds in function fakerate_eMIT_eta" << std::endl;
    return -999;

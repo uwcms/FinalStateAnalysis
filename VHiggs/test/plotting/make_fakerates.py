@@ -86,10 +86,8 @@ for fr in fr_to_make_eta:
     log.info("Defining endcap fake rate: %s = %s", fr, fitted_func_endcap)
     function = Func(
         'fakerate_' + fr + '_eta',
-        Bins([('eta', None, 1.44,
-               ' '*10 + 'return ' + fitted_func_barrel.replace('VAR', 'pt') + ';\n'),
-              ('eta', 1.44, None,
-               ' '*10 + 'return ' + fitted_func_endcap.replace('VAR', 'pt') + ';\n')],
+        Bins([('eta', None, 1.44, fitted_func_barrel.replace('VAR', 'pt')),
+              ('eta', 1.44, None, fitted_func_endcap.replace('VAR', 'pt'))],
             indent=1),
         'pt', 'eta',
         default=-999,
@@ -101,13 +99,9 @@ for fr in fr_to_make_eta:
     # Make the same fake rate but w/o any pt dependence
     flat_func = Func(
         'fakerate_' + fr + '_eta_flat',
-        Bins([('eta', None, 1.44,
-               #' '*10 + ('return %f;\n' % fr_info_barrel['combined_eff'])
-               fr_info_barrel['combined_eff']
+        Bins([('eta', None, 1.44, fr_info_barrel['combined_eff']
               ),
-              ('eta', 1.44, None,
-               #' '*10 + ('return %f;\n'  % fr_info_endcap['combined_eff'])
-               fr_info_endcap['combined_eff']
+              ('eta', 1.44, None, fr_info_endcap['combined_eff']
               )],
             indent=1),
         'pt', 'eta', unused=['pt'],
