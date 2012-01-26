@@ -29,7 +29,7 @@ def get_fr_old(label, pt, eta):
 ## New method where fake rates live in a macro file - see make_fakerates.py
 ## and fake_rates.C
 def get_fr(label, pt, eta):
-    return 'weight_%s_flat(%s, %s)' % (label, pt, eta)
+    return 'weight_%s(%s, %s)' % (label, pt, eta)
 
 # List of channels to skip
 skip = [ 'emm', ('emt', 'mutau'), ('emt', 'etau') ]
