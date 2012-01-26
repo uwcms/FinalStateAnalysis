@@ -116,9 +116,9 @@ cfg = {
                     'name' : 'e',
                     'pass' : [
                         '('
-                        '(ElecAbsEta < 1.479 &&  abs(Elec_EID_DeltaEta) < 0.007 && abs(Elec_EID_DeltaPhi) < 0.15)'
+                        '(ElecAbsEta < 1.479 &&  abs(Elec_EID_DeltaEta) < 0.007 && abs(Elec_EID_DeltaPhi) < 0.15 && Elec_EID_HOverE < 0.12 && Elec_EID_SigmaIEta < 0.01)'
                         ' || '
-                        '(ElecAbsEta >= 1.479 &&  abs(Elec_EID_DeltaEta) < 0.009 && abs(Elec_EID_DeltaPhi) < 0.10)'
+                        '(ElecAbsEta >= 1.479 &&  abs(Elec_EID_DeltaEta) < 0.009 && abs(Elec_EID_DeltaPhi) < 0.10 && Elec_EID_HOverE < 0.10 && Elec_EID_SigmaIEta < 0.03)'
                         ')',
                         'Elec_EID_MITID > 0.5',
                         'Elec_ERelIso < 0.3',
@@ -127,9 +127,9 @@ cfg = {
                         '('
                         '(Elec_EID_MITID < 0.5 || Elec_ERelIso > 0.3)'
                         ' || '
-                        '(ElecAbsEta < 1.479 &&  (abs(Elec_EID_DeltaEta) > 0.007 || abs(Elec_EID_DeltaPhi) > 0.15))'
+                        '(ElecAbsEta < 1.479 &&  (abs(Elec_EID_DeltaEta) > 0.007 || abs(Elec_EID_DeltaPhi) > 0.15 || Elec_EID_HOverE > 0.12 || Elec_EID_SigmaIEta > 0.01) )'
                         ' || '
-                        '(ElecAbsEta >= 1.479 &&  (abs(Elec_EID_DeltaEta) > 0.009 || abs(Elec_EID_DeltaPhi) > 0.10))'
+                        '(ElecAbsEta >= 1.479 &&  (abs(Elec_EID_DeltaEta) > 0.009 || abs(Elec_EID_DeltaPhi) > 0.10|| Elec_EID_HOverE > 0.10 || Elec_EID_SigmaIEta > 0.03 ))'
                         ')'
                     ],
                     'ewk_fr' : get_fr('eMIT', 'Elec_JetPt', 'ElecAbsEta'),
