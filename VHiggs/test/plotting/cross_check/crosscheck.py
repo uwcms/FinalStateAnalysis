@@ -125,7 +125,7 @@ for event_info in events:
                 #continue
             #if 'vtx' in cut:
                 #continue
-            #if 'DoubleMus_HLT' in cut:
+            #if 'ElectronOverl' in cut:
                 #continue
             to_test = run_evt + idx_cut + [cut]
             to_test_str = ' && '.join(to_test)
