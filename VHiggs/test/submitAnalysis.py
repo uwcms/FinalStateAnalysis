@@ -3,7 +3,7 @@ import sys
 from FinalStateAnalysis.PatTools.datadefs import datadefs
 
 cfg = 'analyze_cfg.py'
-jobId = '2012-01-24-v1-WHAnalyze'
+jobId = '2012-01-27-v1-WHAnalyze'
 
 patJobId = '2011-12-13-EWKPatTuple'
 patCfg = 'patTuple_cfg'
@@ -48,7 +48,7 @@ for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
         #'--express-queue',
         #'--no-submit',
         #'--job-count=20',
-        #'--output-dag-file=%s-%s.dag' % (jobId, sample),
+        '--output-dag-file=/scratch/efriis/dags/%s-%s.dag' % (jobId, sample),
         ' --exclude-input-files="*plots.root"',
         '--input-files-per-job=%i' % 5,
     ]
