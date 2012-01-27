@@ -6,7 +6,6 @@ Combine fake rates from many channels.
 import copy
 import json
 import logging
-import sys
 
 import ROOT
 import FinalStateAnalysis.Utilities.styling as styling
