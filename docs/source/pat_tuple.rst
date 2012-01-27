@@ -180,3 +180,18 @@ energy scale uncertainty is currently configured to be 3%
 * ``uncorr`` (no tau energy scale)
 * ``tes-`` (down 1 sigma)
 * ``tes+`` (up 1 sigma)
+
+Information regarding the tau preselection (used in the TNP measurement is
+added) - note these quantities refer to the PFJet, *not* the tau:
+
+* ``userCand("leadPFCH")`` - ref to leading PF CH in *jet* (dropped in output)
+* ``userInt("ps_ldTrk")`` - the lead PF CH exists
+* ``userFloat("ps_ldTrkPt")`` - lead PF CH pT
+* ``userFloat("ps_ldTrkQ")`` - lead PF CH charge
+* ``userFloat("ps_lsPFIsoPt")`` - loose isolation pT sum
+* ``userFloat("ps_elMVA")`` - electron MVA value for lead PFCH
+* ``userFloat("ps_drMuon")`` - Delta R to nearest pat::Muon
+* ``userFloat("numTracks")`` - number of tracks in jet
+* ``userInt("ps_crk_nom")`` - is in ECAL crack
+
+
