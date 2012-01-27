@@ -190,6 +190,44 @@ object_config = {
         'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
     },
+    'muHighPtTight' : {
+        'scenarios' : {
+            'SingleMu_Wjets' : {
+                'title' : 'W',
+                'file' : singlemu_fr_file,
+                'histo' : 'muHighPtTight',
+                'rebin' : 5,
+            },
+            'SingleMu_QCD' : {
+                'title' : 'QCD',
+                'file' : singlemu_fr_file,
+                'histo' : 'muQCDHighPtTight',
+                'rebin' : 5,
+                'exclude' : True,
+            },
+        },
+        'rebin' : 5,
+        'comb_label' : 'W',
+        'fit_label' : 'Combined Fit',
+        'function' : fit_func,
+        'label' : 'Jet #rightarrow #mu fake rate',
+    },
+    'muHighPtTightQCDOnly' : {
+        'scenarios' : {
+            'SingleMu_QCD' : {
+                'title' : 'QCD',
+                'file' : singlemu_fr_file,
+                'histo' : 'muQCDHighPtTight',
+                'rebin' : 5,
+                'exclude' : False,
+            },
+        },
+        'rebin' : 5,
+        'comb_label' : 'QCD',
+        'fit_label' : 'QCD Fit',
+        'function' : fit_func,
+        'label' : 'Jet #rightarrow #mu fake rate',
+    },
     'eMIT' : {
         'scenarios' : {
             'SingleMu_Wjets' : {
