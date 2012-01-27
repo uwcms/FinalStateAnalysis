@@ -347,7 +347,7 @@ canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 frame = ROOT.TH1F("frame", "Fake rate", 100, 0, 100)
 frame.GetXaxis().SetTitle("Jet p_{T}")
 frame.SetMinimum(1e-3)
-frame.SetMaximum(1.0)
+frame.SetMaximum(10.0)
 
 # Fit function parameters
 jet_pt = ROOT.RooRealVar("jetPt", "Jet Pt", 1, 0, 100, "GeV")
@@ -523,7 +523,7 @@ for object, object_info in object_config.iteritems():
     curves['data'] = roo_frame.findObject('h_data_Eff[cut]')
 
     roo_frame.SetMinimum(3e-3)
-    roo_frame.SetMaximum(1.0)
+    roo_frame.SetMaximum(10.0)
     roo_frame.Draw()
 
     left_edge = 0.60
@@ -551,6 +551,7 @@ for object, object_info in object_config.iteritems():
     legend.Draw()
     canvas.Update()
     canvas.SetLogy(True)
+    cms_label = styling.cms_preliminary(4684)
     canvas.SaveAs("plots/combineFakeRates/%s_combined_eff_roofit.pdf" % object)
 
     ############################################################################
@@ -588,10 +589,13 @@ for object, object_info in object_config.iteritems():
         legend.Draw()
 
         #eff.GetHistogram().GetXaxis().SetTitle("Jet p_{T}")
-        canvas.SetLogy(True)
-        canvas.SaveAs("plots/combineFakeRates/%s_%s_eff.pdf" % (object, type))
+        cms_label = styling.cms_preliminary(4684)
         canvas.SetLogy(False)
         canvas.SaveAs("plots/combineFakeRates/%s_%s_eff_lin.pdf" % (object, type))
+        roo_frame.SetMaximum(10.0)
+        canvas.SetLogy(True)
+        canvas.Update()
+        canvas.SaveAs("plots/combineFakeRates/%s_%s_eff.pdf" % (object, type))
 
 # Save the files to an output json
 with open('fake_rates.json', 'w') as json_file:
