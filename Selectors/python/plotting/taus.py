@@ -1,6 +1,4 @@
 import FWCore.ParameterSet.Config as cms
-import FinalStateAnalysis.Selectors.selectors.selectors as selectors
-import FinalStateAnalysis.Selectors.plotting.candidate as candidate
 
 decayMode = cms.PSet(
     min = cms.untracked.double(-0.5),
@@ -9,6 +7,16 @@ decayMode = cms.PSet(
     name = cms.untracked.string("${name}_DecayMode"),
     description = cms.untracked.string("${nicename} Decay Mode"),
     plotquantity = cms.untracked.string('${getter}decayMode()'),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+leadTrkPt = cms.PSet(
+    min = cms.untracked.double(0),
+    max = cms.untracked.double(200),
+    nbins = cms.untracked.int32(100),
+    name = cms.untracked.string("${name}LeadTrkPt"),
+    description = cms.untracked.string("${nicename} lead track pt"),
+    plotquantity = cms.untracked.string("${getter}userFloat('ps_ldTrkPt')"),
     lazyParsing = cms.untracked.bool(True),
 )
 
@@ -223,6 +231,7 @@ electronOverlapWWID = cms.PSet(
 
 
 all = [decayMode, decayFinding, vlooseID, looseID, mediumID, rawjetpt, jetpt, btag,
+       leadTrkPt,
        againstElectronMedium, muonOverlap, electronOverlap, muonOverlapWWID,
        muonOverlapSuperLoose, electronOverlapSuperLoose,
        muonOverlapGlb, electronOverlapWP95, electronOverlapWWID, electronOverlapMIT,
