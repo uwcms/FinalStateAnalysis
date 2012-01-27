@@ -3,39 +3,37 @@
 
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaBranchSelectionT.h"
 
-template<typename T, bool (*F)(const T&, const T&)>
+template<typename T, template <typename> class F>
 class TMegaOperatorSelectionT : public TMegaBranchSelectionT<T> {
   public:
     TMegaOperatorSelectionT(){};
     TMegaOperatorSelectionT(const std::string& branchName, const T& cut)
       :TMegaBranchSelectionT(branchName),cut_(cut){}
     Bool_t selectValue(const T& value) const {
-      return F(value, cut);
+      return functor_(value, cut_);
     }
   private:
+    const F<T> functor_;
     const T cut_;
 };
 
 namespace {
-  inline bool Int_tGT(const Int_t& value, const Int_t& cut) { return value > cut; }
-  inline bool Int_tLT(const Int_t& value, const Int_t& cut) { return value < cut; }
-  inline bool Int_tGEQ(const Int_t& value, const Int_t& cut) { return value >= cut; }
-  inline bool Int_tLEQ(const Int_t& value, const Int_t& cut) { return value <= cut; }
+  template<typename T> struct GreaterThan {
+    Bool_t operator()(const T& a, const T& b) const { return a > b; }
+  };
 
-  inline bool Float_tGT(const Float_t& value, const Float_t& cut) { return value > cut; }
-  inline bool Float_tLT(const Float_t& value, const Float_t& cut) { return value < cut; }
-  inline bool Float_tGEQ(const Float_t& value, const Float_t& cut) { return value >= cut; }
-  inline bool Float_tLEQ(const Float_t& value, const Float_t& cut) { return value <= cut; }
-}
+  template<typename T> struct GreaterEqThan {
+    Bool_t operator()(const T& a, const T& b) const { return a >= b; }
+  };
 
-typedef TMegaOperatorSelectionT<Int_t, Int_tGT> TMegaIntGT;
-typedef TMegaOperatorSelectionT<Int_t, Int_tGEQ> TMegaIntGEQ;
-typedef TMegaOperatorSelectionT<Int_t, Int_tLT> TMegaIntLT;
-typedef TMegaOperatorSelectionT<Int_t, Int_tLEQ> TMegaIntLEQ;
+  template<typename T> struct LessThan {
+    Bool_t operator()(const T& a, const T& b) const { return a < b; }
+  };
 
-typedef TMegaOperatorSelectionT<Int_t, Int_tGT> TMegaIntGT;
-typedef TMegaOperatorSelectionT<Int_t, Int_tGEQ> TMegaIntGEQ;
-typedef TMegaOperatorSelectionT<Int_t, Int_tLT> TMegaIntLT;
-typedef TMegaOperatorSelectionT<Int_t, Int_tLEQ> TMegaIntLEQ;
+  template<typename T> struct LessEqThan {
+    Bool_t operator()(const T& a, const T& b) const { return a <= b; }
+  };
+
+
 
 #endif /* end of include guard: TMEGAOPERATORSELECTIONS_QMF0NE04 */

@@ -13,8 +13,8 @@ class TTree;
 
 class TMegaSelection : public TObject {
   public:
-    TMegaSelection():lastEntry_(-1){}
     ClassDef(TMegaSelection, 1);
+    TMegaSelection():lastEntry_(-1){}
     virtual ~TMegaSelection(){}
 
     /// Analogous to TSelector::Init
