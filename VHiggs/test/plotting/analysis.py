@@ -11,7 +11,6 @@ Analysis is configured by analysis_cfg.py
 import ROOT
 import os
 import json
-import sys
 import logging
 import uncertainties
 import math
