@@ -1,5 +1,3 @@
-import FWCore.ParameterSet.Config as cms
-
 puWeights = [
     '3bx_S42011A',
     '3bx_S42011AB178078',
