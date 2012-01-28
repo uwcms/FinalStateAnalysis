@@ -211,8 +211,8 @@ all = [
     wwid, reliso, relisoNoMuPtCorr,
     jetPt, rawJetPt, btag, btagmuon,
     pixelHits, innerTrackPixHits, trkNormChi2, d0,
-    #hltSingleMu13L3Filtered13, hltDiMuonL3p5PreFiltered8,
-    #hltDiMuonL3PreFiltered7, hltSingleMu30L3Filtered30,
-    #hltSingleMuIsoL3IsoFiltered24,
-    #hltL1Mu3EG5L3Filtered17, hltL1Mu3EG5L3Filtered8
+    hltSingleMu13L3Filtered13, hltDiMuonL3p5PreFiltered8,
+    hltDiMuonL3PreFiltered7, hltSingleMu30L3Filtered30,
+    hltSingleMuIsoL3IsoFiltered24,
+    hltL1Mu3EG5L3Filtered17, hltL1Mu3EG5L3Filtered8
 ]
