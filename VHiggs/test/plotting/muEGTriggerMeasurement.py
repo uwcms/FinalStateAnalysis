@@ -4,18 +4,14 @@ Code to measure the MuEG trigger efficiency
 
 '''
 
-import copy
 import logging
 import json
 import os
-import re
 import sys
-import uncertainties
 
 import ROOT
 import FinalStateAnalysis.PatTools.data as data_tool
-import FinalStateAnalysis.Utilities.Histo as Histo
-import array
+import FinalStateAnalysis.Utilities.styling as styling
 
 # Logging options
 logging.basicConfig(filename='muEGTriggerMeasurement.log',level=logging.DEBUG, filemode='w')
@@ -23,6 +19,10 @@ log = logging.getLogger("muEG")
 h1 = logging.StreamHandler(sys.stdout)
 h1.level = logging.INFO
 log.addHandler(h1)
+
+# Load the MC-DATA correction functions
+log.info("Loading MC-DATA corrections")
+ROOT.gROOT.ProcessLine('.L corrections.C++')
 
 ROOT.gROOT.SetBatch(True)
 
@@ -74,7 +74,15 @@ eta_bins = [
     ('endcap', 1.57, 2.5),
 ]
 
-rebin = 10
+rebin = 5
+
+correction = '*'.join([
+    'pu2011AB',
+    'MuIso(Muon2Pt, Muon2AbsEta, run)',
+    'MuID(Muon2Pt, Muon2AbsEta, run)',
+    'EleIso(ElectronPt, ElectronAbsEta, run)',
+    'EleID(ElectronPt, ElectronAbsEta, run)',
+])
 
 summary = {}
 
@@ -89,7 +97,7 @@ for eta_bin in eta_bins:
         '/em/final/Ntuple',
         'ElectronPt',
         ' && '.join(selections + eta_selection),
-        w = 'pu2011AB',
+        w = correction,
         binning = [100, 0, 100],
         include = ['*'],
         #exclude = fr_info['exclude'],
@@ -100,7 +108,7 @@ for eta_bin in eta_bins:
         '/em/final/Ntuple',
         'ElectronPt',
         ' && '.join(selections + eta_selection + ['Mu17Ele8All_HLT > 0.5']),
-        w = 'pu2011AB',
+        w = correction,
         binning = [100, 0, 100],
         include = ['*'],
         #exclude = fr_info['exclude'],
@@ -124,10 +132,12 @@ for eta_bin in eta_bins:
 
     canvas.cd(1)
     stack_denom.Draw()
-    stack_denom.GetXaxis().SetTitle('Mu-E mass')
+    stack_denom.GetXaxis().SetTitle('Electron p_{T}')
     data_denom.Draw("pe, same")
     #legend.Draw()
-    stack_denom.SetMaximum(max(stack_denom.GetMaximum(), data_denom.GetMaximum())*1.5)
+    cms_label1 = styling.cms_preliminary(4684)
+    stack_denom.SetMaximum(1.5*stack_denom.GetHistogram().GetMaximum())
+    canvas.Update()
 
     stack = plotter.build_stack(
         '/em/final/Ntuple:num_' + label,
@@ -149,8 +159,10 @@ for eta_bin in eta_bins:
     stack.Draw()
     stack.GetXaxis().SetTitle('Mu-E mass')
     data.Draw("pe, same")
+    cms_label2 = styling.cms_preliminary(4684)
     #legend.Draw()
-    stack.SetMaximum(max(stack.GetMaximum(), data.GetMaximum())*1.5)
+    stack.GetHistogram().SetMaximum(stack_denom.GetHistogram().GetMaximum())
+    canvas.Update()
 
     saveplot('versus_pt_%s' % label)
 
