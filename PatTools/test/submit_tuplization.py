@@ -5,6 +5,10 @@ import sys
 cfg = 'patTuple_cfg.py'
 jobId = '2011-12-13-EWKPatTuple'
 
+dag_directory = "/scratch/efriis/dags/%s" % jobId
+if not os.path.exists(dag_directory):
+    os.mkdir(dag_directory)
+
 print 'export TERMCAP=screen'
 for sample in sorted(datadefs.keys()):
     sample_info = datadefs[sample]
@@ -42,9 +46,13 @@ for sample in sorted(datadefs.keys()):
             options.append('firstRun=%s' % sample_info['firstRun'])
             options.append('lastRun=%s' % sample_info['lastRun'])
 
+    options.append("'inputFiles=$inputFileNames'")
+    options.append("'outputFile=$outputFileName'")
+
     command = [
-        'farmoutAnalysisJobs2',
-        '--varparsing',
+        'farmoutAnalysisJobs',
+        '--infer-cmssw-path',
+        '--output-dag-file=%s/%s-%s.dag' % (dag_directory, jobId, sample),
         '--input-files-per-job=2',
     ]
 
