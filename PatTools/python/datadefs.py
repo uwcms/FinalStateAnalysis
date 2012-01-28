@@ -226,12 +226,12 @@ datadefs = {
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
-    #'VH_150' : {
-        #'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-150_7TeV-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-        #'x_sec' : (0.3011 + 0.1713 + 0.04869)*_picobarns*1.78e-2,
-        #'pu' : 'S6',
-        #'analyses' : ['VH'],
-    #},
+    'VH_150' : {
+        'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-150_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.3001 + 0.1713 + 0.04869)*_picobarns*1.78e-2,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
     'VH_160' : {
         'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-160_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'x_sec' : (0.2291 + 0.1334 + 0.03942)*_picobarns*3.96E-03,
@@ -264,7 +264,22 @@ datadefs = {
         'analyses' : ['VH'],
     },
 
-    }
+    'VH_150_HWW' : {
+        'datasetpath' :"/WH_ZH_TTH_HToWW_M-150_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM	",
+        'x_sec' : (0.3001 + 0.1713 + 0.04869)*_picobarns*6.98E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+
+    'VH_160_HWW' : {
+        'datasetpath' :"/WH_ZH_TTH_HToWW_M-150_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM	",
+        'x_sec' : (0.2291 + 0.1334 + 0.03942)*_picobarns*9.08E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+
+
+}
 
 # Add all the datasets
 def build_data_set(pd, analyses):
