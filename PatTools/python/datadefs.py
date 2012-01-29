@@ -240,7 +240,7 @@ datadefs = {
     },
 
     ############################################################################
-    #### VH -> WW dataset, for x-check      ####################################
+    #### VH -> WW dataset                   ####################################
     ############################################################################
 
     'VH_120_HWW' : {
@@ -274,6 +274,31 @@ datadefs = {
     'VH_160_HWW' : {
         'datasetpath' :"/WH_ZH_TTH_HToWW_M-150_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM	",
         'x_sec' : (0.2291 + 0.1334 + 0.03942)*_picobarns*9.08E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+
+    ############################################################################
+    #### Obscure VH backgrounds             ####################################
+    ############################################################################
+
+    'TTWToLplus' : {
+        'datasetpath' :"/TTWTo2Lplus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.006841)*_picobarns,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+
+    'TTZToLplus' : {
+        'datasetpath' :"/TTZTo2Lplus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.002024)*_picobarns,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+
+    'WWWTo2Lplus' : {
+        'datasetpath' :"/WWWTo2Lplus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.008957)*_picobarns,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
