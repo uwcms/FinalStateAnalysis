@@ -1,8 +1,6 @@
-import ROOT
 import math
 import re
 import FinalStateAnalysis.Utilities.DataCard as dc
-import FinalStateAnalysis.Utilities.Histo as Histo
 
 import rootpy.io as io
 
@@ -67,9 +65,9 @@ emm_shape = 'MuElecMass'
 #emm_shape = 'count'
 
 # Add a fake normalization error
-e_fake_error = 0.2
-mu_fake_error = 0.2
-high_mu_fake_error = 0.2
+e_fake_error = 0.0
+mu_fake_error = 0.3
+high_mu_fake_error = 0.0
 
 #e_fake_error = -1
 #mu_fake_error = -1
