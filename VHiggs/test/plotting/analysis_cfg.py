@@ -12,7 +12,7 @@ INT_LUMI = 4684
 #JOBID = '2012-01-04-v1-WHAnalyze'
 #JOBID = '2012-01-16-v2-WHAnalyze'
 #JOBID = '2012-01-17-v2-WHAnalyze'
-JOBID = '2012-01-24-v1-WHAnalyze'
+JOBID = '2012-01-28-v1-WHAnalyze'
 
 # Setup function which retrieves fake rate weights
 fake_rates_file = open('fake_rates.json')
@@ -44,6 +44,7 @@ cfg = {
             'EJetPt' : ('Elec_JetPt', 'p_{T}', [100, 0, 200], 5),
             'MuPt' : ('MuPt', 'p_{T}', [100, 0, 200], 5),
             'TauJetPt' : ('TauJetPt', 'p_{T}', [100, 0, 200], 5),
+            'TauLeadTrkPt' : ('TauLeadTrkPt', 'p_{T}', [100, 0, 50], 5),
             'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDF', [100, 0, 30], 5),
             'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
             'count' : ('1', 'Count', [1, 0, 1], 1),
@@ -101,7 +102,7 @@ cfg = {
                             'vtxChi2/vtxNDOF < 10',
                         ],
                         #'vars' : ['ETauMass', 'EJetPt', 'HT', 'count', 'MuPt'],
-                        'vars' : ['ETauMass', 'count', 'MuTauMass', 'HT'],
+                        'vars' : ['TauLeadTrkPt', 'ETauMass', 'count', 'MuTauMass', 'HT', ],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
