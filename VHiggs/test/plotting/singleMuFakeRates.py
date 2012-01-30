@@ -80,10 +80,10 @@ fakerates = {
         'evtType' : '#mu#mu',
         'base_cuts' : wjets_selection,
         'control_plots' : [
-            ('Btag', 'Muon2_MuBtag',
-             "Probe TCHE", [100, -5, 5]),
-            ('METPt', 'METPt',
-             "METPt", [100, 0, 100]),
+            #('Btag', 'Muon2_MuBtag',
+             #"Probe TCHE", [100, -5, 5]),
+            #('METPt', 'METPt',
+             #"METPt", [100, 0, 100]),
         ],
         'final_cuts' : [],
         'denom' : [
@@ -113,10 +113,10 @@ fakerates = {
         'evtType' : '#mu#mu',
         'base_cuts' : wjets_selection,
         'control_plots' : [
-            ('Btag', 'Muon2_MuBtag',
-             "Probe TCHE", [100, -5, 5]),
-            ('METPt', 'METPt',
-             "METPt", [100, 0, 100]),
+            #('Btag', 'Muon2_MuBtag',
+             #"Probe TCHE", [100, -5, 5]),
+            #('METPt', 'METPt',
+             #"METPt", [100, 0, 100]),
         ],
         'final_cuts' : [],
         'denom' : [
@@ -146,10 +146,10 @@ fakerates = {
         'evtType' : '#mu#mu',
         'base_cuts' : wjets_selection,
         'control_plots' : [
-            ('Btag', 'Muon2_MuBtag',
-             "Probe TCHE", [100, -5, 5]),
-            ('METPt', 'METPt',
-             "METPt", [100, 0, 100]),
+            #('Btag', 'Muon2_MuBtag',
+             #"Probe TCHE", [100, -5, 5]),
+            #('METPt', 'METPt',
+             #"METPt", [100, 0, 100]),
         ],
         'final_cuts' : [],
         'denom' : [
@@ -179,8 +179,8 @@ fakerates = {
         'evtType' : '#mu#mu',
         'base_cuts' : qcd_selection,
         'control_plots' : [
-            ('Btag', 'Muon2_MuBtag',
-             "Probe TCHE", [100, -5, 5]),
+            #('Btag', 'Muon2_MuBtag',
+             #"Probe TCHE", [100, -5, 5]),
         ],
         'final_cuts' : [],
         'denom' : [
@@ -238,8 +238,8 @@ fakerates = {
         'evtType' : '#mu#mu',
         'base_cuts' : qcd_selection,
         'control_plots' : [
-            ('Btag', 'Muon2_MuBtag',
-             "Probe TCHE", [100, -5, 5]),
+            #('Btag', 'Muon2_MuBtag',
+             #"Probe TCHE", [100, -5, 5]),
         ],
         'final_cuts' : [],
         'denom' : [
@@ -269,8 +269,8 @@ fakerates = {
         'evtType' : '#mu#mu',
         'base_cuts' : qcd_selection,
         'control_plots' : [
-            ('Btag', 'Muon2_MuBtag',
-             "Probe TCHE", [100, -5, 5]),
+            #('Btag', 'Muon2_MuBtag',
+             #"Probe TCHE", [100, -5, 5]),
         ],
         'final_cuts' : [],
         'denom' : [
@@ -329,14 +329,14 @@ fakerates = {
         'evtType' : 'e#mu',
         'base_cuts' : wjets_selection_emu,
         'control_plots' : [
-            ('Njets', 'NjetsPt20_Njets',
-             "Number of jets", [10, -0.5, 9.5]),
-            ('Nbjets', 'NBjetsPt20_Nbjets',
-             "Number of b-jets", [10, -0.5, 9.5]),
+            #('Njets', 'NjetsPt20_Njets',
+             #"Number of jets", [10, -0.5, 9.5]),
+            #('Nbjets', 'NBjetsPt20_Nbjets',
+             #"Number of b-jets", [10, -0.5, 9.5]),
             #('Nhits', 'Electron_MissingHits',
              #"Number of hits", [10, -0.5, 9.5]),
-            ('AbsIso', 'Electron_ERelIso*ElectronPt',
-             "Absolute Iso", [100, 0, 20]),
+            #('AbsIso', 'Electron_ERelIso*ElectronPt',
+             #"Absolute Iso", [100, 0, 20]),
         ],
         'final_cuts' : [
         ],
@@ -372,12 +372,12 @@ fakerates = {
         'evtType' : 'e#mu',
         'base_cuts' : wjets_selection_emu,
         'control_plots' : [
-            ('Njets', 'NjetsPt20_Njets',
-             "Number of jets", [10, -0.5, 9.5]),
-            ('Nbjets', 'NBjetsPt20_Nbjets',
-             "Number of b-jets", [10, -0.5, 9.5]),
-            ('AbsIso', 'Electron_ERelIso*ElectronPt',
-             "Absolute Iso", [100, 0, 20]),
+            #('Njets', 'NjetsPt20_Njets',
+             #"Number of jets", [10, -0.5, 9.5]),
+            #('Nbjets', 'NBjetsPt20_Nbjets',
+             #"Number of b-jets", [10, -0.5, 9.5]),
+            #('AbsIso', 'Electron_ERelIso*ElectronPt',
+             #"Absolute Iso", [100, 0, 20]),
         ],
         'final_cuts' : [
         ],
@@ -412,10 +412,10 @@ fakerates = {
         'evtType' : 'e#mu',
         'base_cuts' : qcd_selection_emu,
         'control_plots' : [
-            ('Nhits', 'Electron_MissingHits',
-             "Number of hits", [10, -0.5, 9.5]),
-            ('AbsIso', 'Electron_ERelIso*ElectronPt',
-             "Absolute Iso", [100, 0, 20]),
+            #('Nhits', 'Electron_MissingHits',
+             #"Number of hits", [10, -0.5, 9.5]),
+            #('AbsIso', 'Electron_ERelIso*ElectronPt',
+             #"Absolute Iso", [100, 0, 20]),
         ],
         'final_cuts' : [],
         'denom' : [
@@ -449,10 +449,10 @@ fakerates = {
         'evtType' : 'e#mu',
         'base_cuts' : qcd_selection_emu,
         'control_plots' : [
-            ('Nhits', 'Electron_MissingHits',
-             "Number of hits", [10, -0.5, 9.5]),
-            ('AbsIso', 'Electron_ERelIso*ElectronPt',
-             "Absolute Iso", [100, 0, 20]),
+            #('Nhits', 'Electron_MissingHits',
+             #"Number of hits", [10, -0.5, 9.5]),
+            #('AbsIso', 'Electron_ERelIso*ElectronPt',
+             #"Absolute Iso", [100, 0, 20]),
         ],
         'final_cuts' : [],
         'denom' : [
@@ -503,7 +503,38 @@ fakerates = {
         'num' : [
             'Tau_LooseHPS > 0.5',
         ]
-    }
+    },
+    'tauTauPt' : {
+        'ntuple' : 'mt',
+        'pd' : 'data_SingleMu',
+        'exclude' : ['*DoubleE*', '*MuEG*', '*DoubleMu*'],
+        'mc_pd' : 'Wjets',
+        'varname' : 'TauPt',
+        'vartitle' : 'Tau p_{T}',
+        'var' : 'TauPt',
+        'varbinning' : [100, 0, 100],
+        'rebin' : 5,
+        'evtType' : '#mu#tau',
+        'base_cuts' : wjets_selection_tau,
+        'control_plots' : [
+        ],
+        'final_cuts' : [],
+        'denom' : [
+            'IsoMus_HLT > 0.5',
+            'TauCharge*Muon1Charge > 0',
+            'TauPt > 20',
+            'TauAbsEta < 2.5',
+            'Tau_TauBtag < 3.3',
+            'TauDZ < 0.2',
+            'Tau_ElectronMVA > 0.5',
+            'Tau_ElectronMedium > 0.5',
+            'Tau_MuonOverlapGlb < 0.5',
+            'Tau_ElectronOverlapWP95 < 0.5',
+        ],
+        'num' : [
+            'Tau_LooseHPS > 0.5',
+        ]
+    },
 }
 
 # Hack to split by eta
@@ -532,7 +563,7 @@ for data_set, skips, int_lumi, puTag in [
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'Mu', '2012-01-16-v1-MuonTP', 'scratch_results', int_lumi, skips,
+        'Mu', '2012-01-28-v1-MuonTP', 'scratch_results', int_lumi, skips,
         count = '/mm/skimCounter', unweighted = False)
 
     legend = plotter.build_legend(
