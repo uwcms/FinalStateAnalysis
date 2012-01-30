@@ -400,9 +400,10 @@ if __name__ == "__main__":
                         )
                         stack.Draw()
                         data.Draw('same,pe,x0')
-                        stack.SetMaximum(2*max(
-                            stack.GetHistogram().GetMaximum(),
-                            data.GetMaximum()))
+                        #stack.SetMaximum(2*max(
+                            #stack.GetHistogram().GetMaximum(),
+                            #data.GetMaximum()))
+                        stack.SetMaximum(2*data.GetMaximum())
                         stack.GetXaxis().SetTitle(xaxis_title)
                         mc_legend.Draw()
                         cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
@@ -453,8 +454,11 @@ if __name__ == "__main__":
                         data_plot.Draw('pe,x0')
                         data_plot.SetTitle(xaxis_title)
                         fake_plot.Draw('same')
-                        data_plot.SetMaximum(2*max(
-                            data_plot.GetMaximum(), fake_plot.GetMaximum()))
+                        #data_plot.SetMaximum(2*max(
+                            #data_plot.GetMaximum(), fake_plot.GetMaximum()))
+                        data.SetMaximum(2*data.GetMaximum())
+                        canvas.Update()
+                        stack.GetXaxis().SetTitle(xaxis_title)
                         cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
                         legend.Draw()
                         saveplot(plot_name + data_plot_name + '_wqcd')
