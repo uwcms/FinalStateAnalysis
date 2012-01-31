@@ -32,7 +32,7 @@ def get_fr(label, pt, eta):
     return 'weight_%s(%s, %s)' % (label, pt, eta)
 
 # List of channels to skip
-skip = [ 'emm', ('emt', 'mutau'), ('emt', 'etau') ]
+skip = [ 'emt', 'emm', ('emt', 'mutau'), ('emt', 'etau') ]
 
 cfg = {
     'emt' : {
@@ -95,6 +95,7 @@ cfg = {
             'emu' : {
                 'cat_baseline' : ['ElecCharge*MuCharge > 0'],
                 'cuts' : [],
+                'selection_order' : ['final', 'htonly', 'vtxonly'],
                 'selections' : {
                     'final' : {
                         'cuts' : [
@@ -102,7 +103,7 @@ cfg = {
                             'vtxChi2/vtxNDOF < 10',
                         ],
                         #'vars' : ['ETauMass', 'EJetPt', 'HT', 'count', 'MuPt'],
-                        'vars' : ['TauLeadTrkPt', 'ETauMass', 'count', 'MuTauMass', 'HT', ],
+                        'vars' : ['count', 'TauLeadTrkPt', 'ETauMass', 'MuTauMass', 'HT', ],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
@@ -159,6 +160,7 @@ cfg = {
             'mutau' : {
                 'cat_baseline' : ['TauCharge*MuCharge > 0'],
                 'cuts' : [],
+                'selection_order' : ['final', 'htonly', 'vtxonly'],
                 'selections' : {
                     'final' : {
                         'cuts' : [
@@ -200,6 +202,7 @@ cfg = {
             'etau' : {
                 'cat_baseline' : ['TauCharge*ElecCharge > 0'],
                 'cuts' : [],
+                'selection_order' : ['final', 'htonly', 'vtxonly'],
                 'selections' : {
                     'final' : {
                         'cuts' : [
@@ -294,13 +297,14 @@ cfg = {
             'mumu' : {
                 'cat_baseline' : ['Muon1Charge*Muon2Charge > 0'],
                 'cuts' : [],
+                'selection_order' : ['final', 'htonly', 'vtxonly'],
                 'selections' : {
                     'final' : {
                         'cuts' : [
                             'VisFinalState_Ht > 80',
                             'vtxChi2/vtxNDOF < 10',
                         ],
-                        'vars' : ['MuTauMass', 'HT', 'count'],
+                        'vars' : ['count', 'MuTauMass', 'HT'],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
@@ -387,13 +391,14 @@ cfg = {
             'mumu' : {
                 'cat_baseline' : ['Mu1Charge*Mu2Charge > 0'],
                 'cuts' : [],
+                'selection_order' : ['final', 'htonly', 'vtxonly'],
                 'selections' : {
                     'final' : {
                         'cuts' : [
                             'VisFinalState_Ht > 80',
                             'vtxChi2/vtxNDOF < 10',
                         ],
-                        'vars' : ['MuElecMass', 'HT', 'count'],
+                        'vars' : ['count', 'MuElecMass', 'HT',],
                     }
                 },
                 'object1' : {

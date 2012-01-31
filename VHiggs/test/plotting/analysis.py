@@ -181,7 +181,8 @@ if __name__ == "__main__":
             ### Now, loop over each selection type  ############################
             ####################################################################
             selection_cfgs = charge_cat_cfg['selections']
-            for selection_name, selection_cfg in selection_cfgs.iteritems():
+            for selection_name in charge_cat_cfg['selection_order']:
+                selection_cfg = selection_cfgs[selection_name]
                 #if 'final' not in selection_name:
                     #log.warning("Skipping selection %s!!!!!!", selection_name)
                     #continue
