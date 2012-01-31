@@ -712,8 +712,15 @@ if __name__ == "__main__":
                     ### as it only needs to be done once                  ######
                     ############################################################
 
+                    # Check weird backgrounds
                     vgamma = plotter.get_histogram(
                         'VGamma',
+                        ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True
+                    )
+
+                    quartic = plotter.get_histogram(
+                        'Quartic',
                         ntuple + ':' + plot_base_name + '_ult',
                         rebin = rebin, show_overflows = True
                     )
@@ -732,6 +739,7 @@ if __name__ == "__main__":
                             'VH120' : signal.Integral(),
                             'VH120HWW' : signalHWW.Integral(),
                             'VGjets' : vgamma.Integral(),
+                            'Quartic' : quartic.Integral(),
                         }
                         with open(ana_summary_filename, 'w') as summ_file:
                             summ_file.write(json.dumps(
