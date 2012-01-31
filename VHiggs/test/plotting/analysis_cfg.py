@@ -150,8 +150,10 @@ cfg = {
                     'name' : '#tau',
                     'pass' : ['Tau_LooseHPS > 0.5'],
                     'fail' : ['Tau_LooseHPS < 0.5'],
-                    'ewk_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'),
-                    'qcd_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'), # FIXME
+                    #'ewk_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'),
+                    #'qcd_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'), # FIXME
+                    'ewk_fr' : get_fr('tauTauPt', 'TauPt', 'TauAbsEta'),
+                    'qcd_fr' : get_fr('tauTauPt', 'TauPt', 'TauAbsEta'), # FIXME
                 },
             },
             'mutau' : {
@@ -333,8 +335,10 @@ cfg = {
                     'name' : '#tau',
                     'pass' : ['Tau_LooseHPS > 0.5'],
                     'fail' : ['Tau_LooseHPS < 0.5'],
-                    'ewk_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'),
-                    'qcd_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'), # FIXME
+                    'ewk_fr' : get_fr('tauTauPt', 'TauPt', 'TauAbsEta'),
+                    'qcd_fr' : get_fr('tauTauPt', 'TauPt', 'TauAbsEta'), # FIXME
+                    #'ewk_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'),
+                    #'qcd_fr' : get_fr('tau', 'TauJetPt', 'TauAbsEta'), # FIXME
                 },
             },
         },
