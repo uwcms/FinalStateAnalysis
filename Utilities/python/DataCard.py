@@ -57,11 +57,13 @@ class DataCardChannel(object):
             yield output
 
 class DataCard(object):
-    def __init__(self, name, description, channels, shape_file):
+    def __init__(self, name, description, channels, shape_file,
+                 mass_in_dir=False):
         self.name = name
         self.description = description
         self.channels = channels
         self.shape_file = shape_file
+        self.mass_in_dir=mass_in_dir
 
     def n_bins(self):
         return len(self.channels)
@@ -83,9 +85,14 @@ class DataCard(object):
         #stream.write("kmax %i\n" % len(self.nuisances()))
         stream.write("kmax *\n")
         stream.write('------------\n')
-        stream.write(
-            "shapes * * %s $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC\n" %
-            self.shape_file)
+        if self.mass_in_dir:
+            stream.write(
+                "shapes * * %s $CHANNEL_$MASS/$PROCESS $CHANNEL_$MASS/$PROCESS_$SYSTEMATIC\n" %
+                self.shape_file)
+        else:
+            stream.write(
+                "shapes * * %s $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC\n" %
+                self.shape_file)
 
         obs_bin_names = []
         obs_bin_data = []
