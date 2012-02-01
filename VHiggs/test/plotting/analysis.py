@@ -720,8 +720,20 @@ if __name__ == "__main__":
                         rebin = rebin, show_overflows = True
                     )
 
-                    quartic = plotter.get_histogram(
-                        'Quartic',
+                    WWW = plotter.get_histogram(
+                        'WWW',
+                        ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True
+                    )
+
+                    TTW = plotter.get_histogram(
+                        'TTW',
+                        ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True
+                    )
+
+                    TTZ = plotter.get_histogram(
+                        'TTZ',
                         ntuple + ':' + plot_base_name + '_ult',
                         rebin = rebin, show_overflows = True
                     )
@@ -740,7 +752,9 @@ if __name__ == "__main__":
                             'VH120' : signal.Integral(),
                             'VH120HWW' : signalHWW.Integral(),
                             'VGjets' : vgamma.Integral(),
-                            'Quartic' : quartic.Integral(),
+                            'WWW' : WWW.Integral(),
+                            'TTW' : TTW.Integral(),
+                            'TTZ' : TTZ.Integral(),
                         }
                         with open(ana_summary_filename, 'w') as summ_file:
                             summ_file.write(json.dumps(
