@@ -104,7 +104,8 @@ cfg = {
                             'vtxChi2/vtxNDOF < 10',
                         ],
                         #'vars' : ['ETauMass', 'EJetPt', 'HT', 'count', 'MuPt'],
-                        'vars' : ['count', 'TauLeadTrkPt', 'ETauMass', 'MuTauMass', 'HT', ],
+                        #'vars' : ['count', 'TauLeadTrkPt', 'ETauMass', 'MuTauMass', 'HT', ],
+                        'vars' : ['count', 'ETauMass', ],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
@@ -306,7 +307,8 @@ cfg = {
                             'VisFinalState_Ht > 80',
                             'vtxChi2/vtxNDOF < 10',
                         ],
-                        'vars' : ['count', 'MuTauMass', 'HT'],
+                        'vars' : ['count', 'MuTauMass'],
+                        #'vars' : ['count', 'MuTauMass', 'HT'],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
