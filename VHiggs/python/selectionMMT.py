@@ -41,7 +41,7 @@ selections = cms.VPSet(
     PSetTemplate(selectors.candidate.eta).replace(
         threshold = '2.1', **leg2),
     # Select tau leg 3
-    PSetTemplate(selectors.candidate.pt).replace(threshold = '20', **leg3),
+    PSetTemplate(selectors.candidate.pt).replace(threshold = '17', **leg3),
     # Select tau eta
     PSetTemplate(selectors.candidate.eta).replace(threshold = '2.5', **leg3),
 

@@ -22,11 +22,8 @@ selections = cms.VPSet(
     ###########################################################################
     # Basic acceptance cuts
     ###########################################################################
-    PSetTemplate(selectors.candidate.rect_pt).replace(
-        threshold1 = '20', threshold2 = '10',
-        getter1 = leg2['getter'], getter2 = leg1['getter'],
-        name = 'ElecMuPtCut', nicename = 'Electron-Muon'
-    ),
+    PSetTemplate(selectors.candidate.pt).replace(threshold = '7', **leg1),
+    PSetTemplate(selectors.candidate.pt).replace(threshold = '15', **leg2),
 
     PSetTemplate(selectors.candidate.eta).replace(
         threshold = '2.1', **leg2),
@@ -34,7 +31,7 @@ selections = cms.VPSet(
         threshold = '2.5', **leg1),
 
     # Select tau leg 3
-    PSetTemplate(selectors.candidate.pt).replace(threshold = '20', **leg3),
+    PSetTemplate(selectors.candidate.pt).replace(threshold = '17', **leg3),
     # Select tau eta
     PSetTemplate(selectors.candidate.eta).replace(threshold = '2.5', **leg3),
 
