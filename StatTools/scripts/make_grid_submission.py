@@ -117,7 +117,7 @@ if __name__ == "__main__":
     submit_file.write(prelude_template.format(
         UID = os.geteuid(),
         executable=os.path.expandvars(
-            '$CMSSW_BASE/bin/$SCRAM_ARCH/make_grid_point.sh'),
+            '$CMSSW_BASE/bin/$SCRAM_ARCH/run_grid_point.sh'),
     ))
 
 
