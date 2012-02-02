@@ -786,11 +786,16 @@ if __name__ == "__main__":
                                 ntuple + ':' + plot_base_name + '_ult',
                                 rebin = rebin, show_overflows = True
                             )
-                            hww_signal.SetName('signalHWW')
+                        else:
+                            # Make a fake histogram with no entries
+                            hww_signal = signal.Clone()
+                            hww_signal.Scale(0.0)
+                        hww_signal.SetName('signalHWW')
 
                         # Make the output TDirectory
                         output_dir = shape_file.mkdir('_'.join(
                             [channel, charge_cat, selection_name, str(mass), var]
+                            #[channel, charge_cat, selection_name, var, str(mass)]
                         ))
                         # Write everything to the output directory
                         output_dir.cd()
@@ -799,5 +804,4 @@ if __name__ == "__main__":
                         corrected_mc_histos[1].Write()
                         all_fakes.Write()
                         signal.Write()
-                        if hww_signal:
-                            hww_signal.Write()
+                        hww_signal.Write()
