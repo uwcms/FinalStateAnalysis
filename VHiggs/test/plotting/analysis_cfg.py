@@ -60,7 +60,7 @@ cfg = {
             'NIsoMuonsPt5_Nmuons < 0.5',
             'NIsoElecPt10_Nelectrons < 0.5',
             'NBjetsPt20_Nbjets < 0.5',
-            #'NIsoTausPt20_NIsoTaus < 0.5',
+            'NIsoTausPt20_NIsoTaus < 0.5',
             'MuAbsEta < 2.1',
             'ElecAbsEta < 2.5',
 
@@ -274,7 +274,7 @@ cfg = {
             'NIsoMuonsPt5_Nmuons < 0.5',
             'NIsoElecPt10_Nelectrons < 0.5',
             'NBjetsPt20_Nbjets < 0.5',
-            #'NIsoTausPt20_NIsoTaus < 0.5',
+            'NIsoTausPt20_NIsoTaus < 0.5',
 
             'Muon2_InnerNPixHits > 0.5',
             'Muon1_InnerNPixHits > 0.5',
@@ -377,7 +377,7 @@ cfg = {
             'NIsoMuonsPt5_Nmuons < 0.5',
             'NIsoElecPt10_Nelectrons < 0.5',
             'NBjetsPt20_Nbjets < 0.5',
-            #'NIsoTausPt20_NIsoTaus < 0.5',
+            'NIsoTausPt20_NIsoTaus < 0.5',
 
             'ElecPt > 10',
             'Mu2_InnerNPixHits > 0.5',
