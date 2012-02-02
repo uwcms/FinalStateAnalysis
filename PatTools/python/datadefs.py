@@ -306,6 +306,27 @@ datadefs = {
         'analyses' : ['VH'],
     },
 
+    'TTWToLminus' : {
+        'datasetpath' :"/TTWTo2Lminus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.002705)*_picobarns,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+
+    'TTZToLminus' : {
+        'datasetpath' :"/TTZTo2Lminus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.001946)*_picobarns,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+
+    'WWWTo2Lminus' : {
+        'datasetpath' :"/WWWTo2Lminus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.004109)*_picobarns,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+
 
 }
 
