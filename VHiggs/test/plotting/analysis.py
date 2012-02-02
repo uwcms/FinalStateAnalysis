@@ -166,7 +166,8 @@ if __name__ == "__main__":
             )
             run_event_filename = '%s_%s_events.json' % (channel, charge_cat)
             with open(run_event_filename, 'w') as run_evt_file:
-                run_evt_file.write(json.dumps(run_evts, indent=4))
+                run_evt_file.write(json.dumps(run_evts, sort_keys=True,
+                                              indent=4))
 
             # Select events in high stat signal sample for cross check
             log.info("---- selecting final events in VH_120...")
@@ -175,7 +176,8 @@ if __name__ == "__main__":
                 include='VH120', exclude=None)
             run_event_filename = 'vh120_%s_%s_events.json' % (channel, charge_cat)
             with open(run_event_filename, 'w') as run_evt_file:
-                run_evt_file.write(json.dumps(signal_run_evts, indent=4))
+                run_evt_file.write(json.dumps(signal_run_evts, sort_keys=True,
+                                              indent=4))
 
             ####################################################################
             ### Now, loop over each selection type  ############################
@@ -648,7 +650,7 @@ if __name__ == "__main__":
                                     'total_yield_err' : total_yield.std_dev(),
                                 }
                                 summ_file.write(json.dumps(
-                                    fake_summary, indent=2) + '\n')
+                                    fake_summary, sort_keys=True, indent=2) + '\n')
 
                         all_fakes.SetBinContent(
                             i, max(0, total_yield.nominal_value))
@@ -758,7 +760,7 @@ if __name__ == "__main__":
                         }
                         with open(ana_summary_filename, 'w') as summ_file:
                             summ_file.write(json.dumps(
-                                ana_summary, indent=3) + '\n')
+                                ana_summary, sort_keys=True, indent=3) + '\n')
 
                     ############################################################
                     ### Now save the results in a root file for limits    ######
