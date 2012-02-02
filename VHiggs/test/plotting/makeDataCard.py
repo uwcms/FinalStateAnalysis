@@ -1,6 +1,6 @@
 import math
 import re
-import FinalStateAnalysis.Utilities.DataCard as dc
+import FinalStateAnalysis.StatTools.DataCard as dc
 
 import rootpy.io as io
 

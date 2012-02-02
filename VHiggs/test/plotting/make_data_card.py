@@ -8,7 +8,7 @@ import math
 from optparse import OptionParser
 import re
 
-import FinalStateAnalysis.Utilities.DataCard as dc
+import FinalStateAnalysis.StatTools.DataCard as dc
 
 parser = OptionParser(usage="usage: %prog [options]")
 
