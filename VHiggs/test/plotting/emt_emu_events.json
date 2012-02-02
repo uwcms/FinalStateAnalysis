@@ -1,4 +1,14 @@
 {
+    "data_MuEG_Run2011A_05Aug2011_v1": [], 
+    "data_MuEG_Run2011A_May10ReReco_v1": [], 
+    "data_MuEG_Run2011A_PromptReco_v4": [
+        [
+            166408, 
+            485, 
+            618658267
+        ]
+    ], 
+    "data_MuEG_Run2011A_PromptReco_v6_1409": [], 
     "data_MuEG_Run2011B_PromptReco_v1_a": [], 
     "data_MuEG_Run2011B_PromptReco_v1_b": [
         [
@@ -25,15 +35,5 @@
             412, 
             731156083
         ]
-    ], 
-    "data_MuEG_Run2011A_PromptReco_v4": [
-        [
-            166408, 
-            485, 
-            618658267
-        ]
-    ], 
-    "data_MuEG_Run2011A_05Aug2011_v1": [], 
-    "data_MuEG_Run2011A_May10ReReco_v1": [], 
-    "data_MuEG_Run2011A_PromptReco_v6_1409": []
+    ]
 }
