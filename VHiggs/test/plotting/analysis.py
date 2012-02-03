@@ -770,15 +770,15 @@ if __name__ == "__main__":
                     for mass in [100, 110, 115, 120, 130, 140, 150, 160]:
                         # Set the correct name for everything
                         ult_data.SetName('data_obs')
-                        corrected_mc_histos[0].SetName('zz')
-                        corrected_mc_histos[1].SetName('wz')
+                        corrected_mc_histos[0].SetName('ZZ')
+                        corrected_mc_histos[1].SetName('WZ')
                         all_fakes.SetName('fakes')
                         signal = plotter.get_histogram(
                             'VH%i' % mass,
                             ntuple + ':' + plot_base_name + '_ult',
                             rebin = rebin, show_overflows = True
                         )
-                        signal.SetName('signal')
+                        signal.SetName('VH%i' % mass)
                         hww_signal = None
                         if mass in [120, 130, 140]:
                             hww_signal = plotter.get_histogram(
@@ -790,7 +790,7 @@ if __name__ == "__main__":
                             # Make a fake histogram with no entries
                             hww_signal = signal.Clone()
                             hww_signal.Scale(0.0)
-                        hww_signal.SetName('signalHWW')
+                        hww_signal.SetName('VH%iWW' % mass)
 
                         # Make the output TDirectory
                         output_dir = shape_file.mkdir('_'.join(
