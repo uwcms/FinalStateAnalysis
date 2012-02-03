@@ -767,7 +767,7 @@ if __name__ == "__main__":
                     ############################################################
                     # We make a different output for each higgs mass
                     #for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
-                    for mass in [100, 110, 115, 120, 125, 130, 135, 140, 145]:
+                    for mass in [100, 110, 115, 120, 130, 140, 150, 160]:
                         # Set the correct name for everything
                         ult_data.SetName('data_obs')
                         corrected_mc_histos[0].SetName('zz')
