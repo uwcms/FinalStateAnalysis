@@ -2,7 +2,7 @@
 
 '''
 
-Convert a limit calculation to a JSON string
+Convert the STDOUT of a limit calculation to a JSON string
 
 Example
 
@@ -46,7 +46,10 @@ if __name__ == "__main__":
     if last_lines[-1].startswith('Done in') and 'Asymptotic' not in last_lines[-9]:
         match = obs_re.match(last_lines[-2])
         assert(match)
-        output = {'obs' : float(match.group('limit'))}
+        output = {
+            'method' : "unknown",
+            'obs' : float(match.group('limit'))
+        }
         sys.stdout.write(json.dumps(output) + '\n')
     # Detect if this is using toys
     elif last_lines[-1].strip().startswith('95'):
@@ -57,6 +60,7 @@ if __name__ == "__main__":
         assert(match68)
         assert(median)
         output = {
+            'method' : "unknown",
             'exp' : float(median.group('limit')),
             'ntoys' : int(median.group('ntoys')),
             '-1' : float(match68.group('lo68')),
@@ -82,6 +86,7 @@ if __name__ == "__main__":
         expp1 = float(ass_extractor.match(last_lines[-4]).group('value'))
         expp2 = float(ass_extractor.match(last_lines[-3]).group('value'))
         output = {
+            'method' : "asymp",
             'obs' : obs,
             'exp' : exp,
             '-1' : expm1,

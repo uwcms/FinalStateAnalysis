@@ -6,10 +6,11 @@
 
 UNIQ="CLSCOMPUTER${RANDOM}UNIQ"
 
-echo $UNIQ
-
 echo "{"
 
+echo -n '  "mass": '
+echo "$3,"
+echo '  "method": "cls",'
 echo -n '  "+2": '
 combine $1 -M HybridNew --freq  --testStat LHC \
   -n $UNIQ \
