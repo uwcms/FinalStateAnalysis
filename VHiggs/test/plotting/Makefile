@@ -5,7 +5,7 @@
 # General analysis
 # ================
 #
-#  fakes: 		build the fake rate correction functions
+#  fake_rates.C:	build the fake rate correction functions
 #
 # Limit Setting
 # =============
@@ -21,7 +21,6 @@
 #  			(requires condor jobs from cls_submits to be finished)
 #  cls: 		compute the CLs limits 
 #  			(requires condor jobs from cls_submits to be finished)
-#  
 
 # The name of the un-stat-shaped root file - output of the analysis
 no_stats_shape_file=wh_shapes_raw.root
@@ -95,7 +94,7 @@ shape_file=wh_shapes.root
 masspoints=100 115 120 130 140 150 160
 # Exclusion range to use when building CLs grid
 min_cls="0.2"
-max_cls="50"
+max_cls="70"
 
 # Define the cards we want to make
 combined_txt_cards=$(patsubst %, cards/combined_%.txt,$(masspoints))
