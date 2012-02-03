@@ -45,7 +45,7 @@ echo -n '  "-2": '
 combine $1 -M HybridNew --freq  --testStat LHC \
   -n $UNIQ \
   --grid=$2 -m $3  --expectedFromGrid=0.0275 | \
-  grep -e "^Limit: r < " | tail -n 1 | cut -d " " -f4 | sed "s|$|,|"
+  grep -e "^Limit: r < " | tail -n 1 | cut -d " " -f4 | sed "s|$||"
 echo "}"
 
 rm higgsCombine${UNIQ}*root
