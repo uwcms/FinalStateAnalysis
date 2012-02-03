@@ -59,9 +59,6 @@ if __name__ == "__main__":
     parser.add_argument('-i', dest='cardfile', action='store',
                         required=True, help='path to card file')
 
-    parser.add_argument('-o', dest='outputfile',action='store',
-                        required=True, help='output file name')
-
     parser.add_argument('-toys', dest='toys',action='store',
                         required=False, type=int,
                         default = 100, help='Number of toys per iteration')
@@ -93,7 +90,7 @@ if __name__ == "__main__":
                         help='Base random seed')
 
     parser.add_argument('-steps', dest='steps',action='store',
-                        required=True, type=int, default=20,
+                        required=False, type=int, default=20,
                         help='N exclusion points to check')
 
     parser.add_argument('-submitdir', dest='submitdir', action='store',
