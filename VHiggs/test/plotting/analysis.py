@@ -780,7 +780,7 @@ if __name__ == "__main__":
                         )
                         signal.SetName('VH%i' % mass)
                         hww_signal = None
-                        if mass in [120, 130, 140]:
+                        if mass in [120, 130, 140, 150, 160]:
                             hww_signal = plotter.get_histogram(
                                 'VH%iWW' % mass,
                                 ntuple + ':' + plot_base_name + '_ult',
