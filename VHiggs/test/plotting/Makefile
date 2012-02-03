@@ -10,17 +10,72 @@
 # Limit Setting
 # =============
 #
+#  analyze: 		run the analysis (maybe doing the fake rates to)
+#
 #  cards: 		build the ASCII and .root cards 
+#  asymp: 		compute the asymptotic limits
+#
 #  cls_submits: 	builds the submit directories (in $scratch/cls_limits) 
 #  			to submit condor jobs
 #  grids: 		hadd add together the results from the condor jobs
-#  asymp: 		compute the asymptotic limits
+#  			(requires condor jobs from cls_submits to be finished)
 #  cls: 		compute the CLs limits 
 #  			(requires condor jobs from cls_submits to be finished)
 #  
 
 # The name of the un-stat-shaped root file - output of the analysis
 no_stats_shape_file=wh_shapes_raw.root
+
+################################################################################
+##
+##         ==============
+##         Analysis Tasks 
+##         ==============
+##
+################################################################################
+
+################################################################################
+## Computing the fake rates ####################################################
+################################################################################
+
+# How to build the single muon fake rate result file
+results_singleMuFakeRates.root: singleMuFakeRates.py
+	python singleMuFakeRates.py
+
+results_fakeRates.root: fakeRates.py
+	python fakeRates.py
+
+# How to combine all the fake rate measurements
+fake_rates.json: results_singleMuFakeRates.root results_fakeRates.root combineFakeRates.py
+	python combineFakeRates.py
+
+# How to turn it into a ROOT macro
+fake_rates.C: fake_rates.json make_fakerates.py
+	python make_fakerates.py
+
+################################################################################
+## Building the correction factors #############################################
+################################################################################
+
+# Measure the MuEG trigger efficiency
+mueg_trig_correction_results.json: muEGTriggerMeasurement.py
+	python muEGTriggerMeasurement.py
+
+# Produce the corrections root macro
+corrections.C: mueg_trig_correction_results.json make_corrections.py
+	python make_corrections.py
+
+################################################################################
+## The main analysis job  ######################################################
+################################################################################
+
+# Define the files produced by the analysis
+ana_output=$(no_stats_shape_file) #mmt_mumu_events.json emt_emu_events.json mmt_mumu_fakerate_summary.json emt_emu_fakerate_summary.json emt_emu_summary.json mmt_mumu_summary.json
+
+$(ana_output): analysis.py analysis_cfg.py corrections.C fake_rates.C
+	python analysis.py
+
+analyze: $(ana_output)
 
 ################################################################################
 ##
@@ -93,9 +148,9 @@ cards/combined_%.asymp.json: cards/combined_%.root
 # The script to make the submit files is in StatTools/scripts
 $(scratch)/cls_limits/combined_%/submit: cards/combined_%.root
 	# Backup the previous submit directory
-	if [ -e $(scratch)/cls_limits ]; then
-	   mv $(scratch)/cls_limits  $(scratch)/cls_limits.`date +%m.%d.%H-%M`
-	fi
+	#if [ -e $(scratch)/cls_limits ]; then
+	   #mv $(scratch)/cls_limits  $(scratch)/cls_limits.`date +%m.%d.%H-%M`
+	#fi
 	make_grid_submission.py -submitdir `dirname $@` \
 	  -i `readlink -f $<`  -mass $* \
 	  -min $(min_cls) -max $(max_cls)
