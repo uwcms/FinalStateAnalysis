@@ -54,9 +54,9 @@ data_name_map = {
     #'VH130All' : ['VH_130_HWW', 'VH_130'],
     #'VH140All' : ['VH_140_HWW', 'VH_140'],
     #'VH150' : ['VH_150'],
-    'TTW' : ['TTWToLplus'],
-    'TTZ' : ['TTZToLplus'],
-    'WWW' : ['WWWTo2Lplus'],
+    'TTW' : ['TTWToLplus', 'TTWToLminus'],
+    'TTZ' : ['TTZToLplus', 'TTZToLminus'],
+    'WWW' : ['WWWTo2Lplus', 'WWWTo2Lminus'],
 }
 
 
