@@ -2,19 +2,43 @@
 #
 # Important targets:
 #
-#  cards: build the ASCII and .root cards 
-#  cls_submits: builds the submit directories (in $scratch/cls_limits) to 
-#  		submit condor jobs
-#  grids: hadd add together the results from the condor jobs
-#  asymp: compute the asymptotic limits
+# General analysis
+# ================
+#
+#  fakes: 		build the fake rate correction functions
+#
+# Limit Setting
+# =============
+#
+#  cards: 		build the ASCII and .root cards 
+#  cls_submits: 	builds the submit directories (in $scratch/cls_limits) 
+#  			to submit condor jobs
+#  grids: 		hadd add together the results from the condor jobs
+#  asymp: 		compute the asymptotic limits
+#  cls: 		compute the CLs limits 
+#  			(requires condor jobs from cls_submits to be finished)
 #  
+
+# The name of the un-stat-shaped root file - output of the analysis
+no_stats_shape_file=wh_shapes_raw.root
+
+################################################################################
+##
+##         =============
+##         Limit Setting
+##         =============
+##
+################################################################################
+
+################################################################################
+## Building "statistical" shape uncertainties ##################################
+################################################################################
 
 # The name of the shape root file
 shape_file=wh_shapes.root
-# The name of the un-stat-shaped root file
-no_stats_shape_file=wh_shapes_raw.bak.root
-masspoints=100 115 120 130 140
-#masspoints=120
+# Mass points to run limits on
+masspoints=100 115 120 130 140 150 160
+# Exclusion range to use when building CLs grid
 min_cls="0.2"
 max_cls="50"
 
@@ -46,7 +70,7 @@ $(shape_file): $(no_stats_shape_file)
 ################################################################################
 
 # Rule to make a combined ASCII card
-cards/combined_%.txt: $(shape_file) 
+cards/combined_%.txt: $(shape_file) make_data_card.py
 	python make_data_card.py -o $@ -m $* -f $(shape_file)
 
 # Rule to make a RooWorkspace card from an ASCII one
@@ -68,6 +92,10 @@ cards/combined_%.asymp.json: cards/combined_%.root
 # Rule to generate a submit directories
 # The script to make the submit files is in StatTools/scripts
 $(scratch)/cls_limits/combined_%/submit: cards/combined_%.root
+	# Backup the previous submit directory
+	if [ -e $(scratch)/cls_limits ]; then
+	   mv $(scratch)/cls_limits  $(scratch)/cls_limits.`date +%m.%d.%H-%M`
+	fi
 	make_grid_submission.py -submitdir `dirname $@` \
 	  -i `readlink -f $<`  -mass $* \
 	  -min $(min_cls) -max $(max_cls)
