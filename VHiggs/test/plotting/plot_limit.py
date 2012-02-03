@@ -72,8 +72,8 @@ def make_obs(files):
 
 if __name__ == "__main__":
     prefix = sys.argv[1]
-    exp_files = list(glob.glob('cards/%s*.card.asymp.json' % prefix))
-    obs_files = list(glob.glob('cards/%s*.card.asymp.json' % prefix))
+    exp_files = list(glob.glob('cards/%s*.json' % prefix))
+    obs_files = list(glob.glob('cards/%s*.json' % prefix))
     exp, onesig, twosig = make_exp_band(exp_files)
     obs = make_obs(obs_files)
 
