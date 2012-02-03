@@ -11,7 +11,7 @@ import analysis_cfg
 import logging
 import json
 from json import encoder
-encoder.FLOAT_REPR = lambda o: format(o, '.3f')
+encoder.FLOAT_REPR = lambda o: format(o, '.4f')
 
 # Setup logging
 logging.basicConfig(
@@ -21,9 +21,11 @@ stderr_log = logging.StreamHandler()
 log.addHandler(stderr_log)
 
 int_lumi = analysis_cfg.INT_LUMI
+jobid = '2012-02-01-v1-WHAnalyze'
+
 skips = ['DoubleEl', 'EM']
 samples, plotter = data_tool.build_data(
-    'VH', analysis_cfg.JOBID, 'scratch_results',
+    'VH', jobid, 'scratch_results',
     int_lumi, skips, count='emt/skimCounter')
 
 results = {}
@@ -101,7 +103,14 @@ for channel, channel_cfg in analysis_cfg.cfg.iteritems():
             ]
         }
 
-        for sample in ['VH120', 'ZZ', 'WZ']:
+        samples = ['ZZ', 'WZ']
+
+        for mass in [100, 110, 115, 120, 130, 140, 150, 160]:
+            samples.append('VH%i' % mass)
+            if mass >= 120:
+                samples.append('VH%iWW' % mass)
+
+        for sample in samples:
             channel_results[sample] = {}
 
             for systematic in ['nom', 'tau_up', 'tau_down', 'e_up', 'e_down']:
@@ -139,7 +148,7 @@ for channel, channel_cfg in analysis_cfg.cfg.iteritems():
                 value = channel_results[sample][sys]
                 if 'up' in sys or 'down' in sys:
                     nom_val = channel_results[sample]['nom']
-                    channel_results[sample][sys + '_scale'] = (1.0 - value/nom_val)
+                    channel_results[sample][sys + '_scale'] = (value/nom_val-1.)
 
 with open('scale_systematics.json', 'w') as scale_json:
     scale_json.write(json.dumps(results, sort_keys=True, indent=2) + '\n')
