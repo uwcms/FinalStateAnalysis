@@ -4,6 +4,7 @@ Make the data card for a given mass point
 
 '''
 
+import json
 import math
 from optparse import OptionParser
 import re
@@ -41,6 +42,10 @@ parser.add_option("--tau_err", type="float", default=0.06,
 
 parser.add_option("--mu_err", type="float", default=0.014,
                   help="Mu ID error")
+
+parser.add_option("--scale_file", type="string",
+                  default="scale_systematics.json",
+                  help="JSON file with scale sys information")
 
 parser.add_option("--pdf_err", type="float", default=0.04,
                   help="VH PDF error")
@@ -85,8 +90,13 @@ high_mu_fake_error = options.high_mu_fake_err
 
 mass = options.mass
 
+# Figure out what the scale systematics are
+scale_systematics = {}
+with open('scale_systematics.json') as scale_sys_file:
+    scale_systematics = json.load(scale_sys_file)
+
 # Define which histograms are signal histograms
-signal_datasets = ['signal', 'signalHWW']
+signal_datasets = ['VH%i' % mass, 'VH%iWW' % mass]
 
 #mmt_folder = "mmt_mumu_final_%s_%i" % (mmt_shape, mass)
 mmt_folder = "mmt_mumu_final_%i_%s" % (mass, mmt_shape)
@@ -95,16 +105,31 @@ for signal_dataset in signal_datasets:
     mmt.add_signal(signal_dataset)
 
 mmt.add_background('fakes')
-mmt.add_background('wz')
-mmt.add_background('zz')
+mmt.add_background('WZ')
+mmt.add_background('ZZ')
 
-mmt.add_sys('lumi', 1 + lumi_err, signal_datasets + ['wz', 'zz'])
-mmt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + ['wz', 'zz'])
-mmt.add_sys('wz', 1.0 + wz_err, ['wz'])
-mmt.add_sys('zz', 1.0 + zz_err, ['zz'])
-mmt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + ['wz', 'zz'])
-mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), signal_datasets + ['wz', 'zz'])
+mmt.add_sys('lumi', 1 + lumi_err, signal_datasets + ['WZ', 'ZZ'])
+mmt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + ['WZ', 'ZZ'])
+mmt.add_sys('wz_xsec', 1.0 + wz_err, ['WZ'])
+mmt.add_sys('zz_xsec', 1.0 + zz_err, ['ZZ'])
+mmt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + ['WZ', 'ZZ'])
+mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), signal_datasets + ['WZ', 'ZZ'])
 mmt.add_sys('pdf_vh', 1 + pdf_err, signal_datasets)
+
+# Add the relevant scale systematics
+for sample, sample_info in scale_systematics['mmt'].iteritems():
+    # Check if this sample applies in this particular card
+    if str(mass) in sample or sample=='WZ' or sample=='ZZ':
+        if 'tau_up' in sample_info:
+            avg_err = ((sample_info['tau_up'] - sample_info['tau_down'])/
+                       (2*sample_info['nom']))
+            mmt.add_sys('tau_scale', 1.0 + avg_err, [sample])
+        if 'e_up' in sample_info:
+            avg_err = ((sample_info['e_up'] - sample_info['e_down'])/
+                       (2*sample_info['nom']))
+            mmt.add_sys('e_scale', 1.0 + avg_err, [sample])
+
+
 if mu_fake_error > 0:
     mmt.add_sys('mu_fake_norm', 1 + mu_fake_error, 'fakes')
 if high_mu_fake_error > 0:
@@ -130,21 +155,33 @@ emt = dc.DataCardChannel(emt_folder, shapes)
 for signal_dataset in signal_datasets:
     emt.add_signal(signal_dataset)
 emt.add_background('fakes')
-emt.add_background('wz')
-emt.add_background('zz')
+emt.add_background('WZ')
+emt.add_background('ZZ')
 
-emt.add_sys('lumi', 1 + lumi_err, signal_datasets + ['wz', 'zz'])
-emt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + ['wz', 'zz'])
-emt.add_sys('wz', 1.0 + wz_err, ['wz'])
-emt.add_sys('zz', 1.0 + zz_err, ['zz'])
-emt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + ['wz', 'zz'])
-emt.add_sys('CMS_eff_m', 1 + mu_id_err, signal_datasets + ['wz', 'zz'])
-emt.add_sys('CMS_eff_e', 1.02, signal_datasets + ['wz', 'zz'])
+emt.add_sys('lumi', 1 + lumi_err, signal_datasets + ['WZ', 'ZZ'])
+emt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + ['WZ', 'ZZ'])
+emt.add_sys('wz_xsec', 1.0 + wz_err, ['WZ'])
+emt.add_sys('zz_xsec', 1.0 + zz_err, ['ZZ'])
+emt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + ['WZ', 'ZZ'])
+emt.add_sys('CMS_eff_m', 1 + mu_id_err, signal_datasets + ['WZ', 'ZZ'])
+emt.add_sys('CMS_eff_e', 1.02, signal_datasets + ['WZ', 'ZZ'])
 emt.add_sys('pdf_vh', 1 + pdf_err, signal_datasets)
 if e_fake_error > 0:
     emt.add_sys('e_fake_norm', 1 + e_fake_error, 'fakes')
 if mu_fake_error > 0:
     emt.add_sys('mu_fake_norm', 1 + mu_fake_error, 'fakes')
+
+for sample, sample_info in scale_systematics['emt'].iteritems():
+    # Check if this sample applies in this particular card
+    if str(mass) in sample or sample=='WZ' or sample=='ZZ':
+        if 'tau_up' in sample_info:
+            avg_err = ((sample_info['tau_up'] - sample_info['tau_down'])/
+                       (2*sample_info['nom']))
+            emt.add_sys('tau_scale', 1.0 + avg_err, [sample])
+        if 'e_up' in sample_info:
+            avg_err = ((sample_info['e_up'] - sample_info['e_down'])/
+                       (2*sample_info['nom']))
+            emt.add_sys('e_scale', 1.0 + avg_err, [sample])
 
 for path, subdirs, histos in shapes.walk(emt_folder, class_pattern="TH1*"):
     # Set of lead fake bins which have a systematic
