@@ -13,9 +13,10 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
+import json
 import sys
 import re
-import json
+from RecoLuminosity.LumiDB import argparse
 
 obs_re = re.compile(r'Limit: r < (?P<limit>[0-9\.]+) @ 95% CL')
 
@@ -36,6 +37,13 @@ ass_extractor = re.compile( # hee hee
 )
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--mass', type=int, required=True,
+                        help='Higgs mass')
+    parser.add_argument('--label', type=str, default='',
+                        nargs=1, help='Limit label to use.  Default: None')
+    args = parser.parse_args()
+
     last_lines = []
     for line in sys.stdin:
         last_lines.append(line)
@@ -48,6 +56,7 @@ if __name__ == "__main__":
         assert(match)
         output = {
             'method' : "unknown",
+            'mass' : args.mass,
             'obs' : float(match.group('limit'))
         }
         sys.stdout.write(json.dumps(output) + '\n')
@@ -61,6 +70,7 @@ if __name__ == "__main__":
         assert(median)
         output = {
             'method' : "unknown",
+            'mass' : args.mass,
             'exp' : float(median.group('limit')),
             'ntoys' : int(median.group('ntoys')),
             '-1' : float(match68.group('lo68')),
@@ -87,6 +97,7 @@ if __name__ == "__main__":
         expp2 = float(ass_extractor.match(last_lines[-3]).group('value'))
         output = {
             'method' : "asymp",
+            'mass' : args.mass,
             'obs' : obs,
             'exp' : exp,
             '-1' : expm1,

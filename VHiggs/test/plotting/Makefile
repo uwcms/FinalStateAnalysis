@@ -137,7 +137,13 @@ cards/combined_%.root: cards/combined_%.txt
 
 # Rule to compute the asymptotic limit from a given card file
 cards/combined_%.asymp.json: cards/combined_%.root
-	combine $< -M Asymptotic -H ProfileLikelihood | limit2JSON.py > $@
+	combine $< -M Asymptotic -H ProfileLikelihood \
+	  | limit2JSON.py --mass $* > $@
+
+# Rule to plot the asymptotic limits
+cards/combined.asymp.pdf: asymp
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --method asymp cards/combined_*.asymp.json -o $@
 
 ################################################################################
 ## Tools for computing the full CLs limits  ####################################
@@ -162,3 +168,8 @@ $(scratch)/cls_limits/combined_%/grid.root: $(scratch)/cls_limits/combined_%/poi
 # Given the card file and the computed grid, compute the obs and exp CLs limits
 cards/combined_%.cls.json: cards/combined_%.root $(scratch)/cls_limits/combined_%/grid.root 
 	compute_cls.sh $^ $* > $@
+
+# Rule to plot the CLs limits
+cards/combined.cls.pdf: cls
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --method cls cards/combined_*.cls.json -o $@

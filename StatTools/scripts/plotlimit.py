@@ -16,9 +16,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('data', nargs='*', help='JSON files with limit data')
     parser.add_argument('--method', type=str, default='cls',
-                        nargs=1, help='Limit method to use.  Default: cls')
+                        help='Limit method to use.  Default: cls')
     parser.add_argument('--label', type=str, default='',
-                        nargs=1, help='Limit label to use.  Default: None')
+                        help='Limit label to use.  Default: None')
     parser.add_argument('--no-obs', action='store_false',
                         help="Don't show the observed limit")
 
@@ -53,7 +53,7 @@ if __name__ == "__main__":
                       min(limit_data[key].keys()),
                       max(limit_data[key].keys()))
     frame.Draw()
-    frame.SetTitle("WH(#tau#tau) limits [4.6 fb^{-1}]")
+    #frame.SetTitle("WH(#tau#tau) limits [4.6 fb^{-1}]")
     frame.GetYaxis().SetTitle("95% CL upper limit on #sigma/#sigma_{SM}")
     frame.GetXaxis().SetTitle("M_{H} (GeV)")
 
@@ -69,4 +69,5 @@ if __name__ == "__main__":
 
     cms_label = styling.cms_preliminary(args.lumi)
 
+    canvas.RedrawAxis()
     canvas.SaveAs(args.output)
