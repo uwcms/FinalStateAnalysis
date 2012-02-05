@@ -1,55 +1,23 @@
 /*
- * Abstract base class for a cached selection on a TTree.
+ * Abstract base class for a selection on a TTree.
  *
- * Mimics the interface of a TSelector.
+ * Author: Evan K. Friis, UW Madison
  *
  */
 
 #ifndef TMEGASELECTION_M8MSCS4R
 #define TMEGASELECTION_M8MSCS4R
 
-#include "TObject.h"
-class TTree;
+#include "Rtypes.h"
 
-class TMegaSelection : public TObject {
+class TMegaSelection {
   public:
-    ClassDef(TMegaSelection, 1);
-    TMegaSelection():lastEntry_(-1){}
+    TMegaSelection(){}
     virtual ~TMegaSelection(){}
-
-    /// Analogous to TSelector::Init
-    void Init(TTree* tree) {
-      this->init(tree);
-    }
-
-    /// Analogous to TSelector::Notify
-    Bool_t Notify() {;
-      // Clear cache
-      lastEntry_ = -1;
-      return this->notify();
-    }
-
-    /// Apply the selection on this entry.  Result is cached
-    Bool_t Select(Long64_t entry) const {
-      if (entry == lastEntry_)
-        return lastResult_;
-      return this->select();
-    }
-
-    /**************************************************************************
-     * Abstract methods
-     **************************************************************************/
+    virtual TMegaSelection* Clone() const=0;
 
     /// Apply the selection implementation
-    virtual Bool_t select() const=0;
-    /// Initialize given a new Tree
-    virtual void init(TTree* tree)=0;
-    /// Update the branch address on file change
-    virtual Bool_t notify()=0;
-
-  private:
-    mutable Long64_t lastEntry_;
-    mutable bool lastResult_;
+    virtual Bool_t Select() =0;
 };
 
 #endif /* end of include guard: TMEGASELECTION_M8MSCS4R */

@@ -762,6 +762,8 @@ if __name__ == "__main__":
                             summ_file.write(json.dumps(
                                 ana_summary, sort_keys=True, indent=3) + '\n')
 
+                    tribosons = WWW + TTW + TTZ
+
                     ############################################################
                     ### Now save the results in a root file for limits    ######
                     ############################################################
@@ -770,6 +772,7 @@ if __name__ == "__main__":
                     for mass in [100, 110, 115, 120, 130, 140, 150, 160]:
                         # Set the correct name for everything
                         ult_data.SetName('data_obs')
+                        tribosons.SetName("tribosons")
                         corrected_mc_histos[0].SetName('ZZ')
                         corrected_mc_histos[1].SetName('WZ')
                         all_fakes.SetName('fakes')
@@ -800,6 +803,7 @@ if __name__ == "__main__":
                         # Write everything to the output directory
                         output_dir.cd()
                         ult_data.Write()
+                        tribosons.Write()
                         corrected_mc_histos[0].Write()
                         corrected_mc_histos[1].Write()
                         all_fakes.Write()
