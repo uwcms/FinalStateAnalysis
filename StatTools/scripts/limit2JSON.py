@@ -18,6 +18,9 @@ import sys
 import re
 from RecoLuminosity.LumiDB import argparse
 
+from json import encoder
+encoder.FLOAT_REPR = lambda o: format(o, '.3f')
+
 obs_re = re.compile(r'Limit: r < (?P<limit>[0-9\.]+) @ 95% CL')
 
 #mean   expected limit: r < 15.209 +/- 4.68417 @ 95%CL (5 toyMC)
@@ -105,5 +108,5 @@ if __name__ == "__main__":
             '+1' : expp1,
             '+2' : expp2,
         }
-        sys.stdout.write(json.dumps(output) + '\n')
+        sys.stdout.write(json.dumps(output, indent=2, sort_keys=True) + '\n')
 
