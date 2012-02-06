@@ -65,6 +65,13 @@ parser.add_option("--high_mu_fake_err", type="float", default=0.00,
 parser.add_option("--triboson_err", type="float", default=0.75,
                   help="Error on triboson cross section")
 
+parser.add_option("--channels", type="choice", default="combined",
+                  choices=["combined", "mmt", "emt"],
+                  help="Which channels to use")
+
+parser.add_option("--emt", action='store_true',
+                  help="Use e-mu-tau channel only")
+
 (options, args) = parser.parse_args()
 
 def quad(*xs):
@@ -209,5 +216,12 @@ for path, subdirs, histos in shapes.walk(emt_folder, class_pattern="TH1*"):
         emt.add_sys(fake_sys, 1.0, 'fakes', type='shape')
 
 output = open(options.out, 'w')
-card = dc.DataCard('VHtautau fit', '4.6 fb-1', [mmt, emt], options.file)
+channel_map = {
+    'combined' : [mmt, emt],
+    'emt' : [emt],
+    'mmt' : [mmt],
+}
+
+card = dc.DataCard('VHtautau fit', '4.6 fb-1',
+                   channel_map[options.channels], options.file)
 card.write(output)

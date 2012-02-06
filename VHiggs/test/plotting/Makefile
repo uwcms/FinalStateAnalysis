@@ -10,10 +10,14 @@
 # Limit Setting
 # =============
 #
+#  For the limits, the channel can be selected by:
+#  	make channel=XXX [target], where XXX is in [combined, emt, mmt]
+#
 #  analyze: 		run the analysis (maybe doing the fake rates to)
 #
 #  cards: 		build the ASCII and .root cards 
 #  asymp: 		compute the asymptotic limits
+#  asympplot: 		make the asymptotic limit plot
 #
 #  cls_submits: 	builds the submit directories (in $scratch/cls_limits) 
 #  			to submit condor jobs
@@ -95,21 +99,26 @@ masspoints=100 115 120 130 140 150 160
 # Exclusion range to use when building CLs grid
 min_cls="0.2"
 max_cls="70"
+channel=combined
 
 # Define the cards we want to make
-combined_txt_cards=$(patsubst %, cards/combined_%.txt,$(masspoints))
-combined_root_cards=$(patsubst %, cards/combined_%.root,$(masspoints))
-cls_submitters=$(patsubst %, $(scratch)/cls_limits/combined_%/submit,$(masspoints))
+txt_cards=$(patsubst %, cards/$(channel)_%.txt,$(masspoints))
+root_cards=$(patsubst %, cards/$(channel)_%.root,$(masspoints))
+cls_submitters=$(patsubst %, $(scratch)/cls_limits/$(channel)_%/submit,$(masspoints))
 
-cards: $(shape_file) $(combined_txt_cards) $(combined_root_cards)
+cards: $(shape_file) $(txt_cards) $(root_cards)
 
 cls_submits: $(cls_submitters)
 
-grids: $(patsubst %, $(scratch)/cls_limits/combined_%/grid.root,$(masspoints))
+grids: $(patsubst %, $(scratch)/cls_limits/$(channel)_%/grid.root,$(masspoints))
 
-asymp: $(patsubst %, cards/combined_%.asymp.json,$(masspoints))
+asymp: $(patsubst %, cards/$(channel)_%.asymp.json,$(masspoints))
 
-cls: $(patsubst %, cards/combined_%.cls.json,$(masspoints))
+asympplot: cards/$(channel).asymp.pdf
+
+cls: $(patsubst %, cards/$(channel)_%.cls.json,$(masspoints))
+
+clsplot: cards/$(channel).cls.pdf
 
 ################################################################################
 ## Building "statistical" shape uncertainties ##################################
@@ -123,12 +132,13 @@ $(shape_file): $(no_stats_shape_file)
 ## Building the data cards themselves  #########################################
 ################################################################################
 
-# Rule to make a combined ASCII card
-cards/combined_%.txt: $(shape_file) make_data_card.py
-	python make_data_card.py -o $@ -m $* -f $(shape_file)
+# Rule to make a $(channel) ASCII card
+cards/$(channel)_%.txt: $(shape_file) make_data_card.py
+	python make_data_card.py -o $@ -m $* -f $(shape_file) \
+	  --channels $(channel)
 
 # Rule to make a RooWorkspace card from an ASCII one
-cards/combined_%.root: cards/combined_%.txt
+cards/$(channel)_%.root: cards/$(channel)_%.txt
 	text2workspace.py $< -o $@
 
 ################################################################################
@@ -136,14 +146,10 @@ cards/combined_%.root: cards/combined_%.txt
 ################################################################################
 
 # Rule to compute the asymptotic limit from a given card file
-cards/combined_%.asymp.json: cards/combined_%.root
-	combine $< -M Asymptotic -H ProfileLikelihood \
+cards/$(channel)_%.asymp.json: cards/$(channel)_%.root
+	combine $< -M Asymptotic -H ProfileLikelihood -m $* \
 	  | limit2JSON.py --mass $* > $@
-
-# Rule to plot the asymptotic limits
-cards/combined.asymp.pdf: asymp
-	python $(fsa)/StatTools/scripts/plotlimit.py \
-	  --method asymp cards/combined_*.asymp.json -o $@
+	rm higgsCombineTest.Asymptotic.mH$*.root
 
 ################################################################################
 ## Tools for computing the full CLs limits  ####################################
@@ -151,25 +157,33 @@ cards/combined.asymp.pdf: asymp
 
 # Rule to generate a submit directories
 # The script to make the submit files is in StatTools/scripts
-$(scratch)/cls_limits/combined_%/submit: cards/combined_%.root
-	# Backup the previous submit directory
-	#if [ -e $(scratch)/cls_limits ]; then
-	   #mv $(scratch)/cls_limits  $(scratch)/cls_limits.`date +%m.%d.%H-%M`
-	#fi
+$(scratch)/cls_limits/$(channel)_%/submit: cards/$(channel)_%.root
 	make_grid_submission.py -submitdir `dirname $@` \
 	  -i `readlink -f $<`  -mass $* \
 	  -min $(min_cls) -max $(max_cls)
 
-# Now define the combined grid result - will get updated as more files show up 
+# Now define the $(channel) grid result - will get updated as more files show up 
 # This combines all the points into a "mass slice"
-$(scratch)/cls_limits/combined_%/grid.root: $(scratch)/cls_limits/combined_%/point_*root
+$(scratch)/cls_limits/$(channel)_%/grid.root: $(scratch)/cls_limits/$(channel)_%/point_*root
 	hadd -f $@ $^ 
 
 # Given the card file and the computed grid, compute the obs and exp CLs limits
-cards/combined_%.cls.json: cards/combined_%.root $(scratch)/cls_limits/combined_%/grid.root 
+cards/$(channel)_%.cls.json: cards/$(channel)_%.root $(scratch)/cls_limits/$(channel)_%/grid.root 
 	compute_cls.sh $^ $* > $@
 
+################################################################################
+## Tools for plotting the limits ###############################################
+################################################################################
+
 # Rule to plot the CLs limits
-cards/combined.cls.pdf: cls
+cards/$(channel).cls.pdf: cls
 	python $(fsa)/StatTools/scripts/plotlimit.py \
-	  --method cls cards/combined_*.cls.json -o $@
+	  --method cls cards/$(channel)_*.cls.json -o $@ \
+	  --legendpos "0.75,0.15,0.95,0.39"
+
+# Rule to plot the asymptotic limits
+cards/$(channel).asymp.pdf: asymp
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --method asymp cards/$(channel)_*.asymp.json -o $@ \
+	  --legendpos "0.75,0.15,0.95,0.39"
+
