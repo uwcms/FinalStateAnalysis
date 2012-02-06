@@ -87,6 +87,6 @@ def build_obs_line(result, key):
         mass_result = result[key][mass]
         limit = mass_result.get('obs')
         obs.SetPoint(i, mass, limit)
-    obs.SetLineWidth(2)
+    obs.SetLineWidth(3)
     return obs
 
