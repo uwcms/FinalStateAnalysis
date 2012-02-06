@@ -3,7 +3,8 @@
  *
  * Inherits from TNamed, so it can be stored in a TList
  *
- * Note that "ResetCache" must be called at the end of each entry!
+ * If SetCachePointers(...) is setup by the owning class, the result
+ * will be cached.
  *
  * Author: Evan K. Friis, UW Madison
  *
@@ -20,7 +21,7 @@ class TMegaSelectionSet : public TMegaSelection, public TNamed {
     // Named constructor
     TMegaSelectionSet(const char* name, const char* title="");
 
-    // Copy constuctor
+    // Copy constructor
     TMegaSelectionSet(const TMegaSelectionSet& tocopy);
 
     // Clone constructor
@@ -31,17 +32,16 @@ class TMegaSelectionSet : public TMegaSelection, public TNamed {
 
     virtual ~TMegaSelectionSet();
 
+    // This is overridden so the call gets dispatched to the subselections.
+    void SetCachePointers(TTree** tree, Long_t* entry);
+
     // Add a clone of a new selection to the set.  Does not take ownership.
     void AddSelection(const TMegaSelection& selector);
 
     /// Compute the selection
     Bool_t Select();
 
-    /// Reset cache
-    void ResetCache();
-
   private:
-    bool isCached_;
     bool lastResult_;
     std::vector<TMegaSelection*> subselections_;
 };

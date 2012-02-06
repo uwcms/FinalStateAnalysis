@@ -39,6 +39,15 @@ TMegaSelectionSet::TMegaSelectionSet(const TMegaSelectionSet& other) {
   }
 }
 
+void TMegaSelectionSet::SetCachePointers(TTree** tree, Long_t* entry) {
+  // Setup this class
+  TMegaSelection::SetCachePointers(tree, entry);
+  // Setup each of the sub selections
+  for (size_t i=0; i < subselections_.size(); ++i) {
+    subselections_[i]->SetCachePointers(tree, entry);
+  }
+}
+
 // Add a new selector to this list
 void TMegaSelectionSet::AddSelection(const TMegaSelection& selector) {
   TMegaSelection* ownedcopy = selector.Clone();
@@ -46,7 +55,8 @@ void TMegaSelectionSet::AddSelection(const TMegaSelection& selector) {
 }
 
 Bool_t TMegaSelectionSet::Select() {
-  if (isCached_)
+  bool isCached = !this->emitChanged();
+  if (isCached)
     return lastResult_;
 
   for (size_t i = 0; i < subselections_.size(); ++i) {
@@ -58,8 +68,4 @@ Bool_t TMegaSelectionSet::Select() {
   }
   lastResult_ = true;
   return true;
-}
-
-void TMegaSelectionSet::ResetCache() {
-  isCached_ = false;
 }
