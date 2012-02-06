@@ -62,6 +62,9 @@ parser.add_option("--mu_fake_err", type="float", default=0.3,
 parser.add_option("--high_mu_fake_err", type="float", default=0.00,
                   help="Error on high pt muon fake rate")
 
+parser.add_option("--triboson_err", type="float", default=0.75,
+                  help="Error on triboson cross section")
+
 (options, args) = parser.parse_args()
 
 def quad(*xs):
@@ -107,14 +110,20 @@ for signal_dataset in signal_datasets:
 mmt.add_background('fakes')
 mmt.add_background('WZ')
 mmt.add_background('ZZ')
+mmt.add_background('tribosons')
 
-mmt.add_sys('lumi', 1 + lumi_err, signal_datasets + ['WZ', 'ZZ'])
-mmt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + ['WZ', 'ZZ'])
+mc_samples = ['WZ', 'ZZ', 'tribosons']
+mc_samples = ['WZ', 'ZZ', ]
+
+mmt.add_sys('lumi', 1 + lumi_err, signal_datasets + mc_samples)
+mmt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + mc_samples)
 mmt.add_sys('wz_xsec', 1.0 + wz_err, ['WZ'])
 mmt.add_sys('zz_xsec', 1.0 + zz_err, ['ZZ'])
-mmt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + ['WZ', 'ZZ'])
-mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), signal_datasets + ['WZ', 'ZZ'])
+mmt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
+mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), signal_datasets + mc_samples)
 mmt.add_sys('pdf_vh', 1 + pdf_err, signal_datasets)
+if options.triboson_err > 0:
+    mmt.add_sys('tribosons_xsec', 1.0 + options.triboson_err, ['tribosons'])
 
 # Add the relevant scale systematics
 for sample, sample_info in scale_systematics['mmt'].iteritems():
@@ -157,19 +166,22 @@ for signal_dataset in signal_datasets:
 emt.add_background('fakes')
 emt.add_background('WZ')
 emt.add_background('ZZ')
+emt.add_background('tribosons')
 
-emt.add_sys('lumi', 1 + lumi_err, signal_datasets + ['WZ', 'ZZ'])
-emt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + ['WZ', 'ZZ'])
+emt.add_sys('lumi', 1 + lumi_err, signal_datasets + mc_samples)
+emt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + mc_samples)
 emt.add_sys('wz_xsec', 1.0 + wz_err, ['WZ'])
 emt.add_sys('zz_xsec', 1.0 + zz_err, ['ZZ'])
-emt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + ['WZ', 'ZZ'])
-emt.add_sys('CMS_eff_m', 1 + mu_id_err, signal_datasets + ['WZ', 'ZZ'])
-emt.add_sys('CMS_eff_e', 1.02, signal_datasets + ['WZ', 'ZZ'])
+emt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
+emt.add_sys('CMS_eff_m', 1 + mu_id_err, signal_datasets + mc_samples)
+emt.add_sys('CMS_eff_e', 1.02, signal_datasets + mc_samples)
 emt.add_sys('pdf_vh', 1 + pdf_err, signal_datasets)
 if e_fake_error > 0:
     emt.add_sys('e_fake_norm', 1 + e_fake_error, 'fakes')
 if mu_fake_error > 0:
     emt.add_sys('mu_fake_norm', 1 + mu_fake_error, 'fakes')
+if options.triboson_err > 0:
+    emt.add_sys('tribosons_xsec', 1.0 + options.triboson_err, ['tribosons'])
 
 for sample, sample_info in scale_systematics['emt'].iteritems():
     # Check if this sample applies in this particular card
