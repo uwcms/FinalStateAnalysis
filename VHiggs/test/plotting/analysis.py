@@ -554,6 +554,18 @@ if __name__ == "__main__":
                     ### Make the stacked plot showing both fake sources  #######
                     ############################################################
 
+                    # Get the crazy triboson bkgs
+                    WWW = plotter.get_histogram(
+                        'WWW', ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True)
+                    TTW = plotter.get_histogram(
+                        'TTW', ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True)
+                    TTZ = plotter.get_histogram(
+                        'TTZ', ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True)
+                    tribosons = WWW + TTW + TTZ
+
                     signal = plotter.get_histogram(
                         'VH120',
                         ntuple + ':' + plot_base_name + '_ult',
@@ -564,11 +576,19 @@ if __name__ == "__main__":
                         ntuple + ':' + plot_base_name + '_ult',
                         rebin = rebin, show_overflows = True
                     )
+
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
                     legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
                     legend.SetFillStyle(0)
                     legend.SetBorderSize(1)
+
+                    #Make the tribosons purple
+                    styling.apply_style(
+                        tribosons, **samplestyles.SAMPLE_STYLES['zll'])
+                    stack.Add(tribosons.th1, 'hist')
+                    legend.AddEntry(tribosons.th1, "WWW, ttW, ttZ", "lf")
+
                     for histo_name, histo in zip(corrected_mc,
                                                  corrected_mc_histos):
                         stack.Add(histo.th1, 'hist')
@@ -668,6 +688,8 @@ if __name__ == "__main__":
                     legend.SetBorderSize(1)
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
+                    stack.Add(tribosons.th1, 'hist')
+                    legend.AddEntry(tribosons.th1, "WWW, ttW, ttZ", "lf")
                     for histo_name, histo in zip(corrected_mc,
                                                  corrected_mc_histos):
                         stack.Add(histo.th1, 'hist')
@@ -728,23 +750,6 @@ if __name__ == "__main__":
                         rebin = rebin, show_overflows = True
                     )
 
-                    WWW = plotter.get_histogram(
-                        'WWW',
-                        ntuple + ':' + plot_base_name + '_ult',
-                        rebin = rebin, show_overflows = True
-                    )
-
-                    TTW = plotter.get_histogram(
-                        'TTW',
-                        ntuple + ':' + plot_base_name + '_ult',
-                        rebin = rebin, show_overflows = True
-                    )
-
-                    TTZ = plotter.get_histogram(
-                        'TTZ',
-                        ntuple + ':' + plot_base_name + '_ult',
-                        rebin = rebin, show_overflows = True
-                    )
 
                     if var == 'count' and selection_name=='final':
                         ana_summary_filename = '%s_%s_summary.json' % (
@@ -768,7 +773,6 @@ if __name__ == "__main__":
                             summ_file.write(json.dumps(
                                 ana_summary, sort_keys=True, indent=3) + '\n')
 
-                    tribosons = WWW + TTW + TTZ
 
                     ############################################################
                     ### Now save the results in a root file for limits    ######
