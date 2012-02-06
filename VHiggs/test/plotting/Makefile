@@ -18,6 +18,7 @@
 #  cards: 		build the ASCII and .root cards 
 #  asymp: 		compute the asymptotic limits
 #  asympplot: 		make the asymptotic limit plot
+#  clsplot: 		make the CLs limit plot
 #
 #  cls_submits: 	builds the submit directories (in $scratch/cls_limits) 
 #  			to submit condor jobs
@@ -105,6 +106,8 @@ channel=combined
 txt_cards=$(patsubst %, cards/$(channel)_%.txt,$(masspoints))
 root_cards=$(patsubst %, cards/$(channel)_%.root,$(masspoints))
 cls_submitters=$(patsubst %, $(scratch)/cls_limits/$(channel)_%/submit,$(masspoints))
+asymp_results=$(patsubst %, cards/$(channel)_%.asymp.json,$(masspoints))
+cls_results=$(patsubst %, cards/$(channel)_%.cls.json,$(masspoints))
 
 cards: $(shape_file) $(txt_cards) $(root_cards)
 
@@ -112,11 +115,11 @@ cls_submits: $(cls_submitters)
 
 grids: $(patsubst %, $(scratch)/cls_limits/$(channel)_%/grid.root,$(masspoints))
 
-asymp: $(patsubst %, cards/$(channel)_%.asymp.json,$(masspoints))
+asymp: $(asymp_results)
 
 asympplot: cards/$(channel).asymp.pdf
 
-cls: $(patsubst %, cards/$(channel)_%.cls.json,$(masspoints))
+cls: $(cls_results)
 
 clsplot: cards/$(channel).cls.pdf
 
@@ -176,14 +179,16 @@ cards/$(channel)_%.cls.json: cards/$(channel)_%.root $(scratch)/cls_limits/$(cha
 ################################################################################
 
 # Rule to plot the CLs limits
-cards/$(channel).cls.pdf: cls
+cards/$(channel).cls.pdf: $(cls_results) legendpos.py
 	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --max-y 40 \
 	  --method cls cards/$(channel)_*.cls.json -o $@ \
-	  --legendpos "0.75,0.15,0.95,0.39"
+	  --legendpos `./legendpos.py $@`
 
 # Rule to plot the asymptotic limits
-cards/$(channel).asymp.pdf: asymp
+cards/$(channel).asymp.pdf: $(asymp_results) legendpos.py
 	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --max-y 40 \
 	  --method asymp cards/$(channel)_*.asymp.json -o $@ \
-	  --legendpos "0.75,0.15,0.95,0.39"
+	  --legendpos `./legendpos.py $@`
 
