@@ -19,7 +19,7 @@ if __name__ == "__main__":
                         help='Limit method to use.  Default: cls')
     parser.add_argument('--label', type=str, default='',
                         help='Limit label to use.  Default: None')
-    parser.add_argument('--no-obs', action='store_false',
+    parser.add_argument('--no-obs', dest='noobs', action='store_true',
                         help="Don't show the observed limit")
 
     parser.add_argument('--canvas-x', dest="cx", type=int, default=800,
@@ -36,6 +36,10 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--output', dest="output",
                         type=str, default="output.pdf",
                         help="Output plot file")
+
+    parser.add_argument('--legendpos', type=str, default="0.7,0.17,0.9,0.45",
+                        help="Comma separated corners of legend."
+                        " default: %(default)s")
 
     args = parser.parse_args()
 
@@ -64,10 +68,26 @@ if __name__ == "__main__":
     onesig.Draw("3")
     exp.Draw("l")
 
-    obs = limitplot.build_obs_line(limit_data, key)
-    obs.Draw("l")
+    if not args.noobs:
+        obs = limitplot.build_obs_line(limit_data, key)
+        obs.Draw("l")
 
     cms_label = styling.cms_preliminary(args.lumi)
+
+    # Add legend
+    legend_args = [ float(x) for x in args.legendpos.split(',') ] + ["", "NDC"]
+
+    legend = ROOT.TLegend(*legend_args)
+    legend.SetBorderSize(0)
+    legend.SetFillStyle(0)
+    if not args.noobs:
+        legend.AddEntry(obs,"Observed",  'lp')
+    legend.AddEntry(exp, "Expected", 'l')
+    legend.AddEntry(onesig, "#pm 1 #sigma",  'f')
+    legend.AddEntry(twosig, "#pm 2 #sigma",  'f')
+    legend.Draw()
+
+    canvas.RedrawAxis()
 
     canvas.RedrawAxis()
     canvas.SaveAs(args.output)
