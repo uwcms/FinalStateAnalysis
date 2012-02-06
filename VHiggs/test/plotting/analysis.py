@@ -8,15 +8,21 @@ Analysis is configured by analysis_cfg.py
 
 '''
 
-import ROOT
-import os
+
 import json
+# Hack to get good float formatting
+from json import encoder
+encoder.FLOAT_REPR = lambda o: format(o, '.4f')
 import logging
-import uncertainties
 import math
+import os
+import ROOT
+import uncertainties
+
 import FinalStateAnalysis.PatTools.data as data_tool
 from FinalStateAnalysis.Utilities.AnalysisPlotter import styling,samplestyles
 from FinalStateAnalysis.Utilities.Histo import Histo
+
 import analysis_cfg
 
 # Setup logging
