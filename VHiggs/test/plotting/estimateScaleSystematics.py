@@ -79,6 +79,11 @@ for channel, channel_cfg in analysis_cfg.cfg.iteritems():
                 return x
             return mapper_fun
 
+        value_for_electrons = \
+                '((ElecAbsEta < 1.5)*0.01 + (ElecAbsEta >= 1.5)*0.025)'
+        value_for_electrons_up = '(1.0 + %s)' % value_for_electrons
+        value_for_electrons_down = '(1.0 - %s)' % value_for_electrons
+
         # Be careful about the order of these!  (prevent double replaces)
         sys_mapper = {
             'nom' : [lambda x: x],
@@ -92,14 +97,14 @@ for channel, channel_cfg in analysis_cfg.cfg.iteritems():
             ],
 
             'e_up' : [
-                make_mapper('ElecPt ', '1.01*ElecPt'),
-                make_mapper('VisFinalState_Ht ', '(VisFinalState_Ht + 0.01*ElecPt)'),
-                make_mapper('ERelIso', 'ERelIso*(1/1.01)'),
+                make_mapper('ElecPt ', '%s*ElecPt' % value_for_electrons_up),
+                make_mapper('VisFinalState_Ht ', '(VisFinalState_Ht + %s*ElecPt)' % value_for_electrons),
+                make_mapper('ERelIso', 'ERelIso*(1/%s)' % value_for_electrons_up),
             ],
             'e_down' : [
-                make_mapper('ElecPt ', '0.99*ElecPt'),
-                make_mapper('VisFinalState_Ht ', '(VisFinalState_Ht - 0.01*ElecPt)'),
-                make_mapper('ERelIso', 'ERelIso*(1/0.99)'),
+                make_mapper('ElecPt ', '%s*ElecPt' % value_for_electrons_down),
+                make_mapper('VisFinalState_Ht ', '(VisFinalState_Ht - %s*ElecPt)' % value_for_electrons),
+                make_mapper('ERelIso', 'ERelIso*(1/%s)' % value_for_electrons_down),
             ]
         }
 
