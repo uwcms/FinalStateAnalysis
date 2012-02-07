@@ -79,6 +79,10 @@ def estimate_fake_sum(fr1, fr2, fr12s, fr12en, fudge=0.0):
         qcd_fraction = (fakerate['123']*qcd_in_enriched_region_error/
                         (fakerate['en']*enriched_region_error))
 
+        # Make sure QCD never gets bigger than 1
+        if qcd_fraction.nominal_value > 1:
+            qcd_fraction /= qcd_fraction.nominal_value
+
         est_yield = enriched_region_error*(
             (1 - qcd_fraction)*fakerate['ewk_s']*ewk_fit_fudge +
             qcd_fraction*fakerate['qcd_s']*qcd_fit_fudge)
