@@ -471,6 +471,11 @@ for object, object_info in object_config.iteritems():
         "fake_rate", "Fake Rate", roo_fit_func_str,
         ROOT.RooArgList(scale, mu, sigma, constant, jet_pt))
 
+    # Add a constraint to the turn on of the fake rate.  Try and pull it down
+
+    pull_down_mu_con = ROOT.RooExponential("mu_const", "Mu constraint",
+                                           mu, ROOT.RooFit.RooConst(-1.5))
+
     roo_cut = ROOT.RooCategory("cut", "cutr")
     roo_cut.defineType("accept", 1)
     roo_cut.defineType("reject", 0)
@@ -491,7 +496,9 @@ for object, object_info in object_config.iteritems():
     )
 
     fit_result = roo_eff.fitTo(
-        roo_data, ROOT.RooFit.ConditionalObservables(ROOT.RooArgSet(jet_pt)),
+        roo_data,
+        ROOT.RooFit.ConditionalObservables(ROOT.RooArgSet(jet_pt)),
+        ROOT.RooFit.ExternalConstraints(ROOT.RooArgSet(pull_down_mu_con)),
         ROOT.RooFit.Save(True),
         ROOT.RooFit.PrintLevel(-1)
     )
