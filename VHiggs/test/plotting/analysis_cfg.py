@@ -38,7 +38,8 @@ cfg = {
         'variables' : {
             'ETauMass' : ('Elec_Tau_Mass', 'M_{e#tau}', [60, 0, 300], 5),
             'MuTauMass' : ('Mu_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300], 5),
-            'EJetPt' : ('Elec_JetPt', 'p_{T}', [100, 0, 200], 5),
+            'EJetPt' : ('Elec_JetPt', 'p_{T}', [200, 0, 200], 1),
+            'MuJetPt' : ('Mu_JetPt', 'p_{T}', [200, 0, 200], 1),
             'MuPt' : ('MuPt', 'p_{T}', [100, 0, 200], 5),
             'TauJetPt' : ('TauJetPt', 'p_{T}', [100, 0, 200], 5),
             'TauLeadTrkPt' : ('TauLeadTrkPt', 'p_{T}', [100, 0, 50], 5),
@@ -103,7 +104,7 @@ cfg = {
                         ],
                         #'vars' : ['ETauMass', 'EJetPt', 'HT', 'count', 'MuPt'],
                         #'vars' : ['count', 'TauLeadTrkPt', 'ETauMass', 'MuTauMass', 'HT', ],
-                        'vars' : ['count', 'ETauMass', ],
+                        'vars' : ['count', 'ETauMass', 'EJetPt', 'MuJetPt'],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
@@ -252,6 +253,8 @@ cfg = {
         'primds' : 'data_DoubleMu',
         'variables' : {
             'MuTauMass' : ('Muon2_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300], 5),
+            'Mu1JetPt' : ('Muon1_JetPt', "p_{T}", [200, 0, 200], 1),
+            'Mu2JetPt' : ('Muon2_JetPt', "p_{T}", [200, 0, 200], 1),
             #    'Muon2_MtToMET' : ('Muon2_MtToMET', 'M_{T} #mu(2)-#tau', [100, 0, 300],),
             'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDF', [100, 0, 30], 5),
             #    'MET' : ('METPt', 'MET', [100, 0, 200]),
@@ -306,7 +309,7 @@ cfg = {
                             'VisFinalState_Ht > 80',
                             'vtxChi2/vtxNDOF < 10',
                         ],
-                        'vars' : ['count', 'MuTauMass'],
+                        'vars' : ['count', 'MuTauMass', 'Mu2JetPt', 'Mu1JetPt'],
                         #'vars' : ['count', 'MuTauMass', 'HT'],
                     },
                     'htonly' : {
