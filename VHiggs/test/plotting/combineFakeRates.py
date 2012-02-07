@@ -347,6 +347,7 @@ object_config = {
         'comb_label' : 'W+Z',
         'fit_label' : 'W+Z Fit',
         'function' : fit_func,
+        'axis_label' : 'p_{T}',
         'label' : 'Jet #rightarrow #tau fake rate',
     },
     'tauQCDTauPt' : {
@@ -370,6 +371,7 @@ object_config = {
         'rebin' : 2,
         'fit_label' : 'QCD Fit',
         'function' : fit_func,
+        'axis_label' : 'p_{T}',
         'label' : 'Jet #rightarrow #tau fake rate',
     },
 }
@@ -390,10 +392,6 @@ for object in list(object_config.keys()):
 # Store the fit results so we can put them in a json at the end
 fit_results = {}
 canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
-frame = ROOT.TH1F("frame", "Fake rate", 100, 0, 100)
-frame.GetXaxis().SetTitle("Jet p_{T}")
-frame.SetMinimum(1e-3)
-frame.SetMaximum(10.0)
 
 # Fit function parameters
 jet_pt = ROOT.RooRealVar("jetPt", "Jet Pt", 1, 0, 100, "GeV")
@@ -564,7 +562,10 @@ for object, object_info in object_config.iteritems():
 
         # Give good title
         frame.GetYaxis().SetTitle("Fake rate")
-        frame.GetXaxis().SetTitle("Jet p_{T}")
+        if 'axis_label' not in object_info:
+            frame.GetXaxis().SetTitle("Jet p_{T}")
+        else:
+            frame.GetXaxis().SetTitle(object_info['axis_label'])
 
         return curves
 
