@@ -832,10 +832,10 @@ if __name__ == "__main__":
                                 ntuple + ':' + plot_base_name + '_ult',
                                 rebin = rebin, show_overflows = True
                             )
-                        #else:
-                            ## Make a fake histogram with no entries
-                            #hww_signal = signal.Clone()
-                            #hww_signal.Scale(0.0)
+                        else:
+                            # Make a fake histogram with no entries
+                            hww_signal = signal.Clone()
+                            hww_signal.Scale(0.0)
                         if hww_signal:
                             hww_signal.SetName('VH%iWW' % mass)
 
