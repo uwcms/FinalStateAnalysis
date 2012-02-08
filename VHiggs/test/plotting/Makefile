@@ -123,6 +123,9 @@ cls: $(cls_results)
 
 clsplot: cards/$(channel).cls.pdf
 
+vh_cards.tgz: $(root_cards)
+	tar -cvzf $@ $(root_cards)
+
 ################################################################################
 ## Building "statistical" shape uncertainties ##################################
 ################################################################################
