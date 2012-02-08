@@ -52,6 +52,7 @@ cfg = {
             'MuPt > 18',
             'ElecPt > 10',
             'TauPt > 20',
+            'TauAbsEta < 2.3',
             'Mu17Ele8All_HLT > 0.5',
             'Elec_MuonOverlap < 0.5',
             # Object vetos
@@ -266,6 +267,7 @@ cfg = {
             'Muon1Pt > 18',
             'Muon2Pt > 9',
             'TauPt > 20',
+            'TauAbsEta < 2.3',
             'Muon1AbsEta < 2.1',
             'Muon2AbsEta < 2.1',
             'DoubleMus_HLT > 0.5 ',
