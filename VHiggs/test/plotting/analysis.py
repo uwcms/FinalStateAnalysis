@@ -581,6 +581,35 @@ if __name__ == "__main__":
                         rebin = rebin, show_overflows = True
                     )
 
+                    log.info("------- Checking singal yield in fake background")
+                    # Check contribution of signal to fake rate background
+                    vh120_fake1_bkg_fr = plotter.get_histogram(
+                        'VH120',
+                        ntuple + ':' + plot_base_name + '_fr1s_ewk',
+                        rebin = rebin, show_overflows = True,
+                    )
+                    vh120ww_fake1_bkg_fr = plotter.get_histogram(
+                        'VH120WW',
+                        ntuple + ':' + plot_base_name + '_fr1s_ewk',
+                        rebin = rebin, show_overflows = True,
+                    )
+                    vh120_fake2_bkg_fr = plotter.get_histogram(
+                        'VH120',
+                        ntuple + ':' + plot_base_name + '_fr2s_ewk',
+                        rebin = rebin, show_overflows = True,
+                    )
+                    vh120ww_fake2_bkg_fr = plotter.get_histogram(
+                        'VH120WW',
+                        ntuple + ':' + plot_base_name + '_fr2s_ewk',
+                        rebin = rebin, show_overflows = True,
+                    )
+                    vh_total_fake1_bkg = vh120_fake1_bkg_fr + vh120ww_fake1_bkg_fr
+                    vh_total_fake2_bkg = vh120_fake2_bkg_fr + vh120ww_fake2_bkg_fr
+                    log.info("-------- VH(120) fake1: %f",
+                             vh_total_fake1_bkg.Integral())
+                    log.info("-------- VH(120) fake2: %f",
+                             vh_total_fake2_bkg.Integral())
+
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
                     legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
