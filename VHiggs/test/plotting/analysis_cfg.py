@@ -110,11 +110,11 @@ cfg = {
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
-                        'vars' : ['vtxChi2NODF'],
+                        'vars' : ['vtxChi2NODF', 'ETauMass'],
                     },
                     'vtxonly' : {
                         'cuts' : ['vtxChi2/vtxNDOF < 10'],
-                        'vars' : ['HT'],
+                        'vars' : ['HT', 'ETauMass'],
                     },
                 },
                 'object1' : {
@@ -318,10 +318,10 @@ cfg = {
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
-                        'vars' : ['vtxChi2NODF'],
+                        'vars' : ['vtxChi2NODF', 'MuTauMass',],
                     },
                     'vtxonly' : {
-                        'cuts' : ['vtxChi2/vtxNDOF < 10'],
+                        'cuts' : ['vtxChi2/vtxNDOF < 10', 'MuTauMass'],
                         'vars' : ['HT'],
                     },
                 },
