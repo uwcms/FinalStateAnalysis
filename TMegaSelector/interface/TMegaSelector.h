@@ -29,6 +29,9 @@ class TMegaSelector : public TSelector {
     virtual void MegaSlaveTerminate()=0;
     virtual void MegaTerminate()=0;
 
+    // Set which selection set to use for filtering
+    void SetFilterSelection(const std::string&);
+
   private:
     void Init(TTree* tree);
     Bool_t Notify();

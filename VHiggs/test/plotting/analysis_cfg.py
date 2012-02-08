@@ -49,7 +49,7 @@ cfg = {
         },
         # The common cuts
         'baseline' : [
-            'MuPt > 18',
+            'MuPt > 20',
             'ElecPt > 10',
             'TauPt > 20',
             'TauAbsEta < 2.3',
@@ -105,7 +105,8 @@ cfg = {
                         ],
                         #'vars' : ['ETauMass', 'EJetPt', 'HT', 'count', 'MuPt'],
                         #'vars' : ['count', 'TauLeadTrkPt', 'ETauMass', 'MuTauMass', 'HT', ],
-                        'vars' : ['count', 'ETauMass', 'EJetPt', 'MuJetPt'],
+                        #'vars' : ['count', 'ETauMass', 'EJetPt', 'MuJetPt'],
+                        'vars' : ['count', 'ETauMass', ],
                     },
                     'htonly' : {
                         'cuts' : [ 'VisFinalState_Ht > 80',],
@@ -264,8 +265,8 @@ cfg = {
             'count' : ('1', 'Count', [1, 0, 1], 1),
         },
         'baseline' : [
-            'Muon1Pt > 18',
-            'Muon2Pt > 9',
+            'Muon1Pt > 20',
+            'Muon2Pt > 10',
             'TauPt > 20',
             'TauAbsEta < 2.3',
             'Muon1AbsEta < 2.1',
@@ -311,7 +312,8 @@ cfg = {
                             'VisFinalState_Ht > 80',
                             'vtxChi2/vtxNDOF < 10',
                         ],
-                        'vars' : ['count', 'MuTauMass', 'Mu2JetPt', 'Mu1JetPt'],
+                        #'vars' : ['count', 'MuTauMass', 'Mu2JetPt', 'Mu1JetPt'],
+                        'vars' : ['count', 'MuTauMass', ],
                         #'vars' : ['count', 'MuTauMass', 'HT'],
                     },
                     'htonly' : {
