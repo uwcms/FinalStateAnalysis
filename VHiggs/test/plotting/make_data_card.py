@@ -69,9 +69,6 @@ parser.add_option("--channels", type="choice", default="combined",
                   choices=["combined", "mmt", "emt"],
                   help="Which channels to use")
 
-parser.add_option("--emt", action='store_true',
-                  help="Use e-mu-tau channel only")
-
 (options, args) = parser.parse_args()
 
 def quad(*xs):
