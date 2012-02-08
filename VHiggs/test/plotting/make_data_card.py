@@ -62,7 +62,7 @@ parser.add_option("--mu_fake_err", type="float", default=0.3,
 parser.add_option("--high_mu_fake_err", type="float", default=0.00,
                   help="Error on high pt muon fake rate")
 
-parser.add_option("--triboson_err", type="float", default=0.75,
+parser.add_option("--triboson_err", type="float", default=1.00,
                   help="Error on triboson cross section")
 
 parser.add_option("--channels", type="choice", default="combined",
