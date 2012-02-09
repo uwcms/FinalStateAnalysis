@@ -321,8 +321,8 @@ cfg = {
                         'vars' : ['vtxChi2NODF', 'MuTauMass',],
                     },
                     'vtxonly' : {
-                        'cuts' : ['vtxChi2/vtxNDOF < 10', 'MuTauMass'],
-                        'vars' : ['HT'],
+                        'cuts' : ['vtxChi2/vtxNDOF < 10',],
+                        'vars' : ['HT', 'MuTauMass'],
                     },
                 },
                 'object1' : {
