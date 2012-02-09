@@ -89,6 +89,9 @@ analyze: $(ana_output)
 ##
 ################################################################################
 
+clean:
+	rm -f cards/*
+
 ################################################################################
 ## Building "statistical" shape uncertainties ##################################
 ################################################################################
@@ -101,6 +104,8 @@ masspoints=100 115 120 130 140 150 160
 min_cls="0.2"
 max_cls="70"
 channel=combined
+# Optionally change which final selection is used to make the limits
+selection=final
 
 # Define the cards we want to make
 txt_cards=$(patsubst %, cards/$(channel)_%.txt,$(masspoints))
@@ -126,6 +131,9 @@ clsplot: cards/$(channel).cls.pdf
 vh_cards.tgz: $(root_cards)
 	tar -cvzf $@ $(root_cards)
 
+vh_cards_txt.tgz: $(txt_cards)
+	tar -cvzf $@ $(shape_file) $(txt_cards)
+
 ################################################################################
 ## Building "statistical" shape uncertainties ##################################
 ################################################################################
@@ -141,7 +149,7 @@ $(shape_file): $(no_stats_shape_file)
 # Rule to make a $(channel) ASCII card
 cards/$(channel)_%.txt: $(shape_file) make_data_card.py
 	python make_data_card.py -o $@ -m $* -f $(shape_file) \
-	  --channels $(channel)
+	  --channels $(channel) --selection $(selection)
 
 # Rule to make a RooWorkspace card from an ASCII one
 cards/$(channel)_%.root: cards/$(channel)_%.txt
