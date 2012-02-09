@@ -28,7 +28,7 @@
 #  			(requires condor jobs from cls_submits to be finished)
 
 # The name of the un-stat-shaped root file - output of the analysis
-no_stats_shape_file=wh_shapes_raw.root
+raw_shape_file=wh_shapes_raw.root
 
 ################################################################################
 ##
@@ -74,7 +74,7 @@ corrections.C: mueg_trig_correction_results.json make_corrections.py
 ################################################################################
 
 # Define the files produced by the analysis
-ana_output=$(no_stats_shape_file) #mmt_mumu_events.json emt_emu_events.json mmt_mumu_fakerate_summary.json emt_emu_fakerate_summary.json emt_emu_summary.json mmt_mumu_summary.json
+ana_output=$(raw_shape_file) #mmt_mumu_events.json emt_emu_events.json mmt_mumu_fakerate_summary.json emt_emu_fakerate_summary.json emt_emu_summary.json mmt_mumu_summary.json
 
 $(ana_output): analysis.py analysis_cfg.py corrections.C fake_rates.C
 	python analysis.py
@@ -96,6 +96,8 @@ clean:
 ## Building "statistical" shape uncertainties ##################################
 ################################################################################
 
+# The naem of the shape root file with interpolated histograms
+interp_shape_file=wh_shapes_interp.root
 # The name of the shape root file
 shape_file=wh_shapes.root
 # Mass points to run limits on
@@ -105,7 +107,7 @@ min_cls="0.2"
 max_cls="70"
 channel=combined
 # Optionally change which final selection is used to make the limits
-selection=final
+selection=htonly
 
 # Define the cards we want to make
 txt_cards=$(patsubst %, cards/$(channel)_%.txt,$(masspoints))
@@ -138,8 +140,13 @@ vh_cards_txt.tgz: $(txt_cards)
 ## Building "statistical" shape uncertainties ##################################
 ################################################################################
 
-$(shape_file): $(no_stats_shape_file) addStatShapes.py
-	cp $(no_stats_shape_file) $(shape_file)
+# Add missing signal mass points
+$(interp_shape_file): $(raw_shape_file) interpolateSignalHistograms.py
+	cp $(raw_shape_file) $(interp_shape_file)
+	./interpolateSignalHistograms.py $(interp_shape_file)
+
+$(shape_file): $(interp_shape_file) addStatShapes.py
+	cp $(interp_shape_file) $(shape_file)
 	./addStatShapes.py $(shape_file)
 
 ################################################################################
