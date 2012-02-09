@@ -20,7 +20,7 @@ import ROOT
 log = logging.getLogger("statshapes")
 logging.basicConfig(level=logging.INFO)
 
-from rootpy.io import open, DoesNotExist
+from rootpy.io import open
 
 fake_finder = re.compile('fakes')
 
