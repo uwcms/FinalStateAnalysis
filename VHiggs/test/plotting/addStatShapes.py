@@ -26,7 +26,7 @@ fake_finder = re.compile('fakes')
 
 def update_file(f):
     path_regex = re.compile(
-      '(?P<channel>[^_]+)_(?P<charge>[^_]+)_final_(?P<mass>\d+)_(?P<var>[^_]+)')
+      '(?P<channel>[^_]+)_(?P<charge>[^_]+)_(?P<selection>[^_]+)_(?P<mass>\d+)_(?P<var>[^_]+)')
 
     for thing in f.walk(class_pattern='TH1*'):
         path, subdirs, histos = thing
