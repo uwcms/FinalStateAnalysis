@@ -138,7 +138,7 @@ vh_cards_txt.tgz: $(txt_cards)
 ## Building "statistical" shape uncertainties ##################################
 ################################################################################
 
-$(shape_file): $(no_stats_shape_file)
+$(shape_file): $(no_stats_shape_file) addStatShapes.py
 	cp $(no_stats_shape_file) $(shape_file)
 	./addStatShapes.py $(shape_file)
 

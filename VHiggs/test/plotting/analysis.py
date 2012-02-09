@@ -810,15 +810,25 @@ if __name__ == "__main__":
                     ############################################################
                     ### Now save the results in a root file for limits    ######
                     ############################################################
+                    # Make the output TDirectory for this channel & variable
+                    output_dir =  shape_file.mkdir('_'.join(
+                        [channel, charge_cat, selection_name, var]))
+                    output_dir.cd()
+                    # Set the correct name for everything
+                    ult_data.SetName('data_obs')
+                    tribosons.SetName("tribosons")
+                    corrected_mc_histos[0].SetName('ZZ')
+                    corrected_mc_histos[1].SetName('WZ')
+                    all_fakes.SetName('fakes')
+                    ult_data.Write()
+                    tribosons.Write()
+                    corrected_mc_histos[0].Write()
+                    corrected_mc_histos[1].Write()
+                    all_fakes.Write()
+
                     # We make a different output for each higgs mass
-                    #for mass in [100, 110, 115, 120, 125, 135, 140, 145, 160]:
-                    for mass in [100, 110, 115, 120, 130, 140, 150, 160]:
-                        # Set the correct name for everything
-                        ult_data.SetName('data_obs')
-                        tribosons.SetName("tribosons")
-                        corrected_mc_histos[0].SetName('ZZ')
-                        corrected_mc_histos[1].SetName('WZ')
-                        all_fakes.SetName('fakes')
+                    for mass in [100, 110, 115, 120, 125, 130, 135, 140, 145, 160]:
+
                         signal = plotter.get_histogram(
                             'VH%i' % mass,
                             ntuple + ':' + plot_base_name + '_ult',
@@ -833,24 +843,14 @@ if __name__ == "__main__":
                                 rebin = rebin, show_overflows = True
                             )
                         else:
+                            pass
                             # Make a fake histogram with no entries
                             hww_signal = signal.Clone()
                             hww_signal.Scale(0.0)
                         if hww_signal:
                             hww_signal.SetName('VH%iWW' % mass)
 
-                        # Make the output TDirectory
-                        output_dir = shape_file.mkdir('_'.join(
-                            [channel, charge_cat, selection_name, str(mass), var]
-                            #[channel, charge_cat, selection_name, var, str(mass)]
-                        ))
                         # Write everything to the output directory
-                        output_dir.cd()
-                        ult_data.Write()
-                        tribosons.Write()
-                        corrected_mc_histos[0].Write()
-                        corrected_mc_histos[1].Write()
-                        all_fakes.Write()
                         signal.Write()
                         if hww_signal:
                             hww_signal.Write()

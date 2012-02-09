@@ -69,6 +69,10 @@ parser.add_option("--channels", type="choice", default="combined",
                   choices=["combined", "mmt", "emt"],
                   help="Which channels to use")
 
+parser.add_option("--selection", type="choice", default="final",
+                  choices=["final", "htonly", "vtxonly"],
+                  help="Which channels to use")
+
 (options, args) = parser.parse_args()
 
 def quad(*xs):
@@ -105,8 +109,7 @@ with open('scale_systematics.json') as scale_sys_file:
 # Define which histograms are signal histograms
 signal_datasets = ['VH%i' % mass, 'VH%iWW' % mass]
 
-#mmt_folder = "mmt_mumu_final_%s_%i" % (mmt_shape, mass)
-mmt_folder = "mmt_mumu_final_%i_%s" % (mass, mmt_shape)
+mmt_folder = "mmt_mumu_%s_%s" % (options.selection, mmt_shape)
 mmt = dc.DataCardChannel(mmt_folder, shapes)
 for signal_dataset in signal_datasets:
     mmt.add_signal(signal_dataset)
@@ -162,8 +165,7 @@ for path, subdirs, histos in shapes.walk(mmt_folder, class_pattern="TH1*"):
     for fake_sys in fake_sys_bins:
         mmt.add_sys(fake_sys, 1.0, 'fakes', type='shape')
 
-#emt_folder = "emt_emu_final_%s_%i" % (emt_shape, mass)
-emt_folder = "emt_emu_final_%i_%s" % (mass, emt_shape)
+emt_folder = "emt_emu_%s_%s" % (options.selection, emt_shape)
 emt = dc.DataCardChannel(emt_folder, shapes)
 for signal_dataset in signal_datasets:
     emt.add_signal(signal_dataset)
