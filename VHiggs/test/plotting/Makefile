@@ -101,7 +101,7 @@ interp_shape_file=wh_shapes_interp.root
 # The name of the shape root file
 shape_file=wh_shapes.root
 # Mass points to run limits on
-masspoints=100 115 120 130 140 150 160
+masspoints=100 $(shell seq 115 145) 150 160 
 # Exclusion range to use when building CLs grid
 min_cls="0.2"
 max_cls="70"
@@ -135,6 +135,10 @@ vh_cards.tgz: $(root_cards)
 
 vh_cards_txt.tgz: $(txt_cards)
 	tar -cvzf $@ $(shape_file) $(txt_cards)
+
+# Just show what mass points we are running
+ls_mass_points: 
+	echo $(masspoints)
 
 ################################################################################
 ## Building "statistical" shape uncertainties ##################################
