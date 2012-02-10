@@ -124,13 +124,13 @@ mc_samples = ['WZ', 'ZZ', ]
 
 mmt.add_sys('lumi', 1 + lumi_err, signal_datasets + mc_samples)
 mmt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + mc_samples)
-mmt.add_sys('wz_xsec', 1.0 + wz_err, ['WZ'])
-mmt.add_sys('zz_xsec', 1.0 + zz_err, ['ZZ'])
+mmt.add_sys('CMS_WZ_vhtt', 1.0 + wz_err, ['WZ'])
+mmt.add_sys('CMS_ZZ_vhtt', 1.0 + zz_err, ['ZZ'])
 mmt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
 mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), signal_datasets + mc_samples)
-mmt.add_sys('pdf_vh', 1 + pdf_err, signal_datasets)
+mmt.add_sys('pdf_qqbar', 1 + pdf_err, signal_datasets)
 if options.triboson_err > 0:
-    mmt.add_sys('tribosons_xsec', 1.0 + options.triboson_err, ['tribosons'])
+    mmt.add_sys('CMS_tribosons_xsec_vhtt', 1.0 + options.triboson_err, ['tribosons'])
 
 # Add the relevant scale systematics
 for sample, sample_info in scale_systematics['mmt'].iteritems():
@@ -139,17 +139,17 @@ for sample, sample_info in scale_systematics['mmt'].iteritems():
         if 'tau_up' in sample_info:
             avg_err = ((sample_info['tau_up'] - sample_info['tau_down'])/
                        (2*sample_info['nom']))
-            mmt.add_sys('tau_scale', 1.0 + avg_err, [sample])
+            mmt.add_sys('CMS_p_scale_t', 1.0 + avg_err, [sample])
         if 'e_up' in sample_info:
             avg_err = ((sample_info['e_up'] - sample_info['e_down'])/
                        (2*sample_info['nom']))
-            mmt.add_sys('e_scale', 1.0 + avg_err, [sample])
+            mmt.add_sys('CMS_p_scale_e', 1.0 + avg_err, [sample])
 
 
 if mu_fake_error > 0:
-    mmt.add_sys('mu_fake_norm', 1 + mu_fake_error, 'fakes')
+    mmt.add_sys('CMS_fake_mu_vhtt', 1 + mu_fake_error, 'fakes')
 if high_mu_fake_error > 0:
-    mmt.add_sys('high_mu_fake_norm', 1 + high_mu_fake_error, 'fakes')
+    mmt.add_sys('CMS_fake_hmu_vhtt', 1 + high_mu_fake_error, 'fakes')
 
 bin_index_finder = re.compile('^fakes_(?P<fr_type>.*)_bin_(?P<index>[0-9]*)(Up|Down)')
 for path, subdirs, histos in shapes.walk(mmt_folder, class_pattern="TH1*"):
@@ -176,18 +176,18 @@ emt.add_background('tribosons')
 
 emt.add_sys('lumi', 1 + lumi_err, signal_datasets + mc_samples)
 emt.add_sys('chi2Lt', 1 + chi2err, signal_datasets + mc_samples)
-emt.add_sys('wz_xsec', 1.0 + wz_err, ['WZ'])
-emt.add_sys('zz_xsec', 1.0 + zz_err, ['ZZ'])
+emt.add_sys('CMS_WZ_vhtt', 1.0 + wz_err, ['WZ'])
+emt.add_sys('CMS_ZZ_vhtt', 1.0 + zz_err, ['ZZ'])
 emt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
 emt.add_sys('CMS_eff_m', 1 + mu_id_err, signal_datasets + mc_samples)
 emt.add_sys('CMS_eff_e', 1.02, signal_datasets + mc_samples)
-emt.add_sys('pdf_vh', 1 + pdf_err, signal_datasets)
+emt.add_sys('pdf_qqbar', 1 + pdf_err, signal_datasets)
 if e_fake_error > 0:
-    emt.add_sys('e_fake_norm', 1 + e_fake_error, 'fakes')
+    emt.add_sys('CMS_fake_e_vhtt', 1 + e_fake_error, 'fakes')
 if mu_fake_error > 0:
-    emt.add_sys('mu_fake_norm', 1 + mu_fake_error, 'fakes')
+    emt.add_sys('CMS_fake_mu_vhtt', 1 + mu_fake_error, 'fakes')
 if options.triboson_err > 0:
-    emt.add_sys('tribosons_xsec', 1.0 + options.triboson_err, ['tribosons'])
+    emt.add_sys('CMS_tribosons_xsec_vhtt', 1.0 + options.triboson_err, ['tribosons'])
 
 for sample, sample_info in scale_systematics['emt'].iteritems():
     # Check if this sample applies in this particular card
@@ -195,11 +195,11 @@ for sample, sample_info in scale_systematics['emt'].iteritems():
         if 'tau_up' in sample_info:
             avg_err = ((sample_info['tau_up'] - sample_info['tau_down'])/
                        (2*sample_info['nom']))
-            emt.add_sys('tau_scale', 1.0 + avg_err, [sample])
+            emt.add_sys('CMS_p_scale_t', 1.0 + avg_err, [sample])
         if 'e_up' in sample_info:
             avg_err = ((sample_info['e_up'] - sample_info['e_down'])/
                        (2*sample_info['nom']))
-            emt.add_sys('e_scale', 1.0 + avg_err, [sample])
+            emt.add_sys('CMS_p_scale_e', 1.0 + avg_err, [sample])
 
 for path, subdirs, histos in shapes.walk(emt_folder, class_pattern="TH1*"):
     # Set of lead fake bins which have a systematic
