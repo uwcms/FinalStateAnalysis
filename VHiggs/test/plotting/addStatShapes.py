@@ -66,8 +66,8 @@ def update_file(f):
                     if bin_error < min_threshold:
                         continue
 
-                    shift_up = final_h.Clone(final_h.getName() + "_%s_bin_%iUp" % (type, i))
-                    shift_down = final_h.Clone(final_h.getName() + "_%s_bin_%iDown" % (type, i))
+                    shift_up = final_h.Clone(final_h.getName() + "_CMS_vhtt_%s_bin_%iUp" % (type, i))
+                    shift_down = final_h.Clone(final_h.getName() + "_CMS_vhtt_%s_bin_%iDown" % (type, i))
 
                     shift_up[i] = shift_up[i]*(1 + bin_error)
                     shift_down[i] = shift_down[i]*(1 - bin_error)
