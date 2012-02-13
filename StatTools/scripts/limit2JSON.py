@@ -9,6 +9,10 @@ Example
 >> combine cards/mmt_channels_115.card  -t 50 | limit2JSON.py
 {"ntoys": 50, "median": 13.8759, "+2": 36.808199999999999, "+1": 21.918299999999999, "-1": 10.664, "-2": 7.6471299999999998}
 
+You can pass a mass parameter to --mass and add it as metadata.
+
+Any alpha characters after the mass are added as a label.
+
 Author: Evan K. Friis, UW Madison
 
 '''
@@ -41,11 +45,14 @@ ass_extractor = re.compile( # hee hee
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mass', type=int, required=True,
+    parser.add_argument('--mass', type=str, required=True,
                         help='Higgs mass')
-    parser.add_argument('--label', type=str, default='',
-                        nargs=1, help='Limit label to use.  Default: None')
     args = parser.parse_args()
+
+    label_extractor = re.compile('(?P<mass>\d*)(?P<label>[a-zA-Z]*)')
+    label_extraction = label_extractor.match(args.mass)
+    mass = int(label_extraction.group('mass'))
+    label = label_extraction.group('label')
 
     last_lines = []
     for line in sys.stdin:
@@ -59,8 +66,9 @@ if __name__ == "__main__":
         assert(match)
         output = {
             'method' : "unknown",
-            'mass' : args.mass,
-            'obs' : float(match.group('limit'))
+            'mass' : mass,
+            'obs' : float(match.group('limit')),
+            'label' : label
         }
         sys.stdout.write(json.dumps(output) + '\n')
     # Detect if this is using toys
@@ -73,13 +81,14 @@ if __name__ == "__main__":
         assert(median)
         output = {
             'method' : "unknown",
-            'mass' : args.mass,
+            'mass' : mass,
             'exp' : float(median.group('limit')),
             'ntoys' : int(median.group('ntoys')),
             '-1' : float(match68.group('lo68')),
             '-2' : float(match95.group('lo95')),
             '+1' : float(match68.group('hi68')),
             '+2' : float(match95.group('hi95')),
+            'label' : label,
         }
         sys.stdout.write(json.dumps(output) + '\n')
     # Detect asymptotic
@@ -100,13 +109,14 @@ if __name__ == "__main__":
         expp2 = float(ass_extractor.match(last_lines[-3]).group('value'))
         output = {
             'method' : "asymp",
-            'mass' : args.mass,
+            'mass' : mass,
             'obs' : obs,
             'exp' : exp,
             '-1' : expm1,
             '-2' : expm2,
             '+1' : expp1,
             '+2' : expp2,
+            'label' : label,
         }
         sys.stdout.write(json.dumps(output, indent=2, sort_keys=True) + '\n')
 
