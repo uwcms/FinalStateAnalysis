@@ -214,3 +214,19 @@ cards/$(channel).asymp.pdf: $(asymp_results) legendpos.py
 	  --method asymp cards/$(channel)_*.asymp.json -o $@ \
 	  --legendpos `./legendpos.py $@`
 
+
+################################################################################
+## Tools for committing into combination SVN ###################################
+################################################################################
+
+combination=winter11
+combination_mass_points=$(shell seq 115 145) 
+combination_FF_mass_points=$(shell seq 120 145)
+
+combination_cards: $(patsubst %, $(combination)/%/vhtt.root, $(combination_mass_points)) $(patsubst %, $(combination)/%/FF_vhtt.root, $(combination_FF_mass_points)) 
+
+$(combination)/%/vhtt.root: cards/combined_%.root
+	cp $< $@
+
+$(combination)/%/FF_vhtt.root: cards/combined_%FF.root
+	cp $< $@

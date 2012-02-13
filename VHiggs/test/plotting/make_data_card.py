@@ -16,8 +16,8 @@ parser = OptionParser(usage="usage: %prog [options]")
 parser.add_option("-o", "--out", dest="out", default="output_card.txt",
                   type="string", help="Output card file")
 
-parser.add_option("-m", "--mass", dest="mass", default=120,
-                  type=int, help="Higgs mass")
+parser.add_option("-m", "--mass", dest="mass", default='120',
+                  type="string", help="Higgs mass - can optionally append SM4 or FF")
 
 parser.add_option("-f", "--file", dest="file", default="wh_shapes.root",
                   type="string", help="Shape file")
@@ -66,9 +66,7 @@ parser.add_option("--triboson_err", type="float", default=1.00,
                   help="Error on triboson cross section")
 
 parser.add_option("--channels", type="choice", default="combined",
-                  choices=["combined", "mmt", "emt",
-                           "fermiophobic", # combined, only HWW
-                          ],
+                  choices=["combined", "mmt", "emt"],
                   help="Which channels to use")
 
 parser.add_option("--selection", type="choice", default="final",
@@ -101,7 +99,16 @@ e_fake_error = options.e_fake_err
 mu_fake_error = options.mu_fake_err
 high_mu_fake_error = options.high_mu_fake_err
 
-mass = options.mass
+is_fermiophobic = False
+is_sm4 = False
+if 'FF' in options.mass:
+    is_fermiophobic = True
+    mass = int(options.mass.replace('FF', ''))
+elif 'SM4' in options.mass:
+    is_sm4 = True
+    mass = int(options.mass.replace('SM4', ''))
+else:
+    mass = int(options.mass)
 
 # Figure out what the scale systematics are
 scale_systematics = {}
@@ -112,7 +119,7 @@ with open('scale_systematics.json') as scale_sys_file:
 signal_datasets = ['VH%i' % mass, 'VH%iWW' % mass]
 
 # If we are fermiophobic, we only use HWW
-if 'fermiophobic' == options.channels:
+if is_fermiophobic:
     signal_datasets = ['VH%iWW' % mass]
 
 mmt_folder = "mmt_mumu_%s_%s" % (options.selection, mmt_shape)
