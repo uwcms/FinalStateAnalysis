@@ -66,7 +66,9 @@ parser.add_option("--triboson_err", type="float", default=1.00,
                   help="Error on triboson cross section")
 
 parser.add_option("--channels", type="choice", default="combined",
-                  choices=["combined", "mmt", "emt"],
+                  choices=["combined", "mmt", "emt",
+                           "fermiophobic", # combined, only HWW
+                          ],
                   help="Which channels to use")
 
 parser.add_option("--selection", type="choice", default="final",
@@ -108,6 +110,10 @@ with open('scale_systematics.json') as scale_sys_file:
 
 # Define which histograms are signal histograms
 signal_datasets = ['VH%i' % mass, 'VH%iWW' % mass]
+
+# If we are fermiophobic, we only use HWW
+if 'fermiophobic' == options.channels:
+    signal_datasets = ['VH%iWW' % mass]
 
 mmt_folder = "mmt_mumu_%s_%s" % (options.selection, mmt_shape)
 mmt = dc.DataCardChannel(mmt_folder, shapes)
@@ -217,6 +223,7 @@ for path, subdirs, histos in shapes.walk(emt_folder, class_pattern="TH1*"):
 output = open(options.out, 'w')
 channel_map = {
     'combined' : [mmt, emt],
+    'fermiophobic' : [mmt, emt],
     'emt' : [emt],
     'mmt' : [mmt],
 }
