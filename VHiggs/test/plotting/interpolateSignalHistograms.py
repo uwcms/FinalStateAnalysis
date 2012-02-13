@@ -73,7 +73,7 @@ if __name__ == "__main__":
     log.info("Updating file: %s", filename)
     f = open(filename, 'update')
     folders, vhtt_masses, vhww_masses = find_all_keys(f)
-    target_masses = set(range(110, 145+1))
+    target_masses = set([100, 150, 160] + range(110, 145+1))
 
     vhtt_target_masses = target_masses - vhtt_masses
     vhww_target_masses = target_masses - vhww_masses
