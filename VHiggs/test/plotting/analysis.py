@@ -737,7 +737,10 @@ if __name__ == "__main__":
                     ############################################################
 
                     error_band_hist = all_fakes + \
-                            corrected_mc_histos[0] + corrected_mc_histos[1]
+                            corrected_mc_histos[0] + \
+                            corrected_mc_histos[1] + \
+                            tribosons
+
                     # Copy only errors from fake rate
                     for i in range(0, data_fr2s_ewk.GetNbinsX()+2):
                         error_band_hist.SetBinError(i, all_fakes.GetBinError(i))
