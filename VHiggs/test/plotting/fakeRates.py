@@ -42,8 +42,6 @@ base_dimuon_selection = [
         #'Muon1_hltSingleMu13L3Filtered13)',
     #'(Muon2_hltDiMuonL3PreFiltered7 | Muon2_hltDiMuonL3p5PreFiltered8)',
     'Muon1Charge*Muon2Charge < 0',
-    'vtxNDOF > 0',
-    'vtxChi2/vtxNDOF < 10',
     'METPt < 30',
 ]
 
@@ -61,8 +59,6 @@ base_ttbar_selection = [
 
     'NIsoMuonsPt5_Nmuons < 1',
     'ElecCharge*Mu1Charge < 0',
-    'vtxNDOF > 0',
-    'vtxChi2/vtxNDOF < 10',
 ]
 
 base_qcd_selection = [
@@ -77,8 +73,6 @@ base_qcd_selection = [
     'DoubleMus_HLT > 0.5 ',
     'Muon1Charge*Muon2Charge > 0', # Same sign (to kill DY)
     'Tau_LooseHPS < 0.5',
-    'vtxNDOF > 0',
-    'vtxChi2/vtxNDOF < 10',
 ]
 
 base_qcd_for_taus_selection = [
@@ -91,8 +85,6 @@ base_qcd_for_taus_selection = [
     'NIsoMuonsPt5_Nmuons < 1',
     #'NBjetsPt20_Nbjets > 0', # For ttbar
     'DoubleMus_HLT > 0.5 ',
-    'vtxNDOF > 0',
-    'vtxChi2/vtxNDOF < 10',
 ]
 
 
@@ -258,59 +250,59 @@ fakerates = {
             'Tau_LooseHPS > 0.5'
         ],
     },
-    'tauLeadTrk7' : {
-        'ntuple' : 'mmt',
-        'pd' : 'data_DoubleMu',
-        'exclude' : ['*DoubleE*', '*MuEG*'],
-        'mc_pd' : 'Zjets',
-        'varname' : 'TauJetPt',
-        'vartitle' : 'Tau Jet p_{T}',
-        'var' : 'TauJetPt',
-        'varbinning' : [100, 0, 100],
-        'rebin' : 5,
-        'evtType' : '#mu#mu + jet',
-        'base_cuts' : base_dimuon_selection,
-        'control_plots' : [
-        ],
-        'final_cuts' : [],
-        'denom' : [
-            'Muon1_Muon2_Mass > 86',
-            'Muon1_Muon2_Mass < 95',
-            'Tau_MtToMET < 40',
-            'TauPt > 20',
-            'TauAbsEta < 2.5',
-            'Tau_DecayMode > 0.5',
-        ],
-        'num' : [
-            'Tau_LooseHPS > 0.5',
-            'TauLeadTrkPt > 7',
-        ],
-    },
-    'tauQCDLeadTrk7' : {
-        'ntuple' : 'mmt',
-        'pd' : 'data_DoubleMu',
-        'exclude' : ['*DoubleE*', '*MuEG*'],
-        'mc_pd' : 'Zjets',
-        'varname' : 'TauJetPt',
-        'vartitle' : 'Tau Jet p_{T}',
-        'var' : 'TauJetPt',
-        'varbinning' : [100, 0, 100],
-        'rebin' : 5,
-        'evtType' : '#mu#mu + jet',
-        'base_cuts' : base_qcd_for_taus_selection,
-        'control_plots' : [
-        ],
-        'final_cuts' : [],
-        'denom' : [
-            'TauPt > 20',
-            'TauAbsEta < 2.5',
-            'Tau_DecayMode > 0.5',
-            'METPt < 30',
-        ],
-        'num' : [
-            'Tau_LooseHPS > 0.5'
-        ],
-    },
+    #'tauLeadTrk7' : {
+        #'ntuple' : 'mmt',
+        #'pd' : 'data_DoubleMu',
+        #'exclude' : ['*DoubleE*', '*MuEG*'],
+        #'mc_pd' : 'Zjets',
+        #'varname' : 'TauJetPt',
+        #'vartitle' : 'Tau Jet p_{T}',
+        #'var' : 'TauJetPt',
+        #'varbinning' : [100, 0, 100],
+        #'rebin' : 5,
+        #'evtType' : '#mu#mu + jet',
+        #'base_cuts' : base_dimuon_selection,
+        #'control_plots' : [
+        #],
+        #'final_cuts' : [],
+        #'denom' : [
+            #'Muon1_Muon2_Mass > 86',
+            #'Muon1_Muon2_Mass < 95',
+            #'Tau_MtToMET < 40',
+            #'TauPt > 20',
+            #'TauAbsEta < 2.5',
+            #'Tau_DecayMode > 0.5',
+        #],
+        #'num' : [
+            #'Tau_LooseHPS > 0.5',
+            #'TauLeadTrkPt > 7',
+        #],
+    #},
+    #'tauQCDLeadTrk7' : {
+        #'ntuple' : 'mmt',
+        #'pd' : 'data_DoubleMu',
+        #'exclude' : ['*DoubleE*', '*MuEG*'],
+        #'mc_pd' : 'Zjets',
+        #'varname' : 'TauJetPt',
+        #'vartitle' : 'Tau Jet p_{T}',
+        #'var' : 'TauJetPt',
+        #'varbinning' : [100, 0, 100],
+        #'rebin' : 5,
+        #'evtType' : '#mu#mu + jet',
+        #'base_cuts' : base_qcd_for_taus_selection,
+        #'control_plots' : [
+        #],
+        #'final_cuts' : [],
+        #'denom' : [
+            #'TauPt > 20',
+            #'TauAbsEta < 2.5',
+            #'Tau_DecayMode > 0.5',
+            #'METPt < 30',
+        #],
+        #'num' : [
+            #'Tau_LooseHPS > 0.5'
+        #],
+    #},
     'mu' : {
         'ntuple' : 'mmm',
         'pd' : 'data_DoubleMu',
@@ -327,11 +319,10 @@ fakerates = {
         ],
         'final_cuts' : [],
         'denom' : [
-            # FIXME!!!!!!!
             'Muon3_hltDiMuonL3p5PreFiltered8 > 0.5',
             'Muon3_InnerNPixHits > 0.5',
             'Muon3_MuBtag < 3.3',
-            'Muon3Pt > 9',
+            'Muon3Pt > 10',
             'Muon3AbsEta < 2.1',
             'Muon1_Muon2_Mass > 85',
             'Muon1_Muon2_Mass < 95',
@@ -359,7 +350,7 @@ fakerates = {
         'denom' : [
             'DoubleMus_HLT > 0.5',
             'Mu1Charge*Mu2Charge > 0', # against DY
-            'Mu2Pt > 9',
+            'Mu2Pt > 10',
             'Mu2AbsEta < 2.1',
             'METPt > 20',
             'Mu2_MuBtag < 3.3',
@@ -388,7 +379,7 @@ fakerates = {
             'Muon2_InnerNPixHits > 0.5',
             'Muon2_MuBtag < 3.3',
             'Muon2AbsEta < 2.5',
-            'Muon2Pt > 9',
+            'Muon2Pt > 10',
             'METPt < 20',
         ],
         'num' : [
