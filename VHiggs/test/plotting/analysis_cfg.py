@@ -52,8 +52,8 @@ cfg = {
             'MuPt > 20',
             'ElecPt > 10',
             'TauPt > 20',
-            'TauAbsEta < 2.3',
             'Mu17Ele8All_HLT > 0.5',
+            'TauAbsEta < 2.3',
             'Elec_MuonOverlap < 0.5',
             # Object vetos
             'NIsoMuonsPt5_Nmuons < 0.5',
@@ -96,25 +96,20 @@ cfg = {
             'emu' : {
                 'cat_baseline' : ['ElecCharge*MuCharge > 0'],
                 'cuts' : [],
-                'selection_order' : ['final', 'htonly', 'vtxonly'],
+                'selection_order' : ['final', 'vtxonly'],
                 'selections' : {
                     'final' : {
                         'cuts' : [
                             'VisFinalState_Ht > 80',
-                            'vtxChi2/vtxNDOF < 10',
                         ],
                         #'vars' : ['ETauMass', 'EJetPt', 'HT', 'count', 'MuPt'],
                         #'vars' : ['count', 'TauLeadTrkPt', 'ETauMass', 'MuTauMass', 'HT', ],
                         #'vars' : ['count', 'ETauMass', 'EJetPt', 'MuJetPt'],
                         'vars' : ['count', 'ETauMass', ],
                     },
-                    'htonly' : {
-                        'cuts' : [ 'VisFinalState_Ht > 80',],
-                        'vars' : ['vtxChi2NODF', 'ETauMass'],
-                    },
                     'vtxonly' : {
-                        'cuts' : ['vtxChi2/vtxNDOF < 10'],
-                        'vars' : ['HT', 'ETauMass'],
+                        'cuts' : [],
+                        'vars' : ['HT'],
                     },
                 },
                 'object1' : {
@@ -163,12 +158,11 @@ cfg = {
             'mutau' : {
                 'cat_baseline' : ['TauCharge*MuCharge > 0'],
                 'cuts' : [],
-                'selection_order' : ['final', 'htonly', 'vtxonly'],
+                'selection_order' : ['final',],
                 'selections' : {
                     'final' : {
                         'cuts' : [
                             'VisFinalState_Ht > 80',
-                            'vtxChi2/vtxNDOF < 10',
                         ],
                         #'vars' : ['ETauMass', 'EJetPt', 'TauJetPt', 'HT', 'count'],
                         'vars' : ['ETauMass', 'count'],
@@ -205,12 +199,11 @@ cfg = {
             'etau' : {
                 'cat_baseline' : ['TauCharge*ElecCharge > 0'],
                 'cuts' : [],
-                'selection_order' : ['final', 'htonly', 'vtxonly'],
+                'selection_order' : ['final',],
                 'selections' : {
                     'final' : {
                         'cuts' : [
                             'VisFinalState_Ht > 80',
-                            'vtxChi2/vtxNDOF < 10',
                         ],
                         #'vars' : ['ETauMass', 'EJetPt', 'TauJetPt', 'HT', 'count'],
                         'vars' : ['ETauMass', 'count'],
@@ -268,9 +261,9 @@ cfg = {
             'Muon1Pt > 20',
             'Muon2Pt > 10',
             'TauPt > 20',
-            'TauAbsEta < 2.3',
             'Muon1AbsEta < 2.1',
             'Muon2AbsEta < 2.1',
+            'TauAbsEta < 2.3',
             'DoubleMus_HLT > 0.5 ',
 
             # Object vetos
@@ -305,24 +298,19 @@ cfg = {
             'mumu' : {
                 'cat_baseline' : ['Muon1Charge*Muon2Charge > 0'],
                 'cuts' : [],
-                'selection_order' : ['final', 'htonly', 'vtxonly'],
+                'selection_order' : ['final', 'vtxonly'],
                 'selections' : {
                     'final' : {
                         'cuts' : [
                             'VisFinalState_Ht > 80',
-                            'vtxChi2/vtxNDOF < 10',
                         ],
                         #'vars' : ['count', 'MuTauMass', 'Mu2JetPt', 'Mu1JetPt'],
                         'vars' : ['count', 'MuTauMass', ],
                         #'vars' : ['count', 'MuTauMass', 'HT'],
                     },
-                    'htonly' : {
-                        'cuts' : [ 'VisFinalState_Ht > 80',],
-                        'vars' : ['vtxChi2NODF', 'MuTauMass',],
-                    },
                     'vtxonly' : {
-                        'cuts' : ['vtxChi2/vtxNDOF < 10',],
-                        'vars' : ['HT', 'MuTauMass'],
+                        'cuts' : [],
+                        'vars' : ['HT'],
                     },
                 },
                 'object1' : {
@@ -402,12 +390,11 @@ cfg = {
             'mumu' : {
                 'cat_baseline' : ['Mu1Charge*Mu2Charge > 0'],
                 'cuts' : [],
-                'selection_order' : ['final', 'htonly', 'vtxonly'],
+                'selection_order' : ['final', 'vtxonly'],
                 'selections' : {
                     'final' : {
                         'cuts' : [
                             'VisFinalState_Ht > 80',
-                            'vtxChi2/vtxNDOF < 10',
                         ],
                         'vars' : ['count', 'MuElecMass', 'HT',],
                     }

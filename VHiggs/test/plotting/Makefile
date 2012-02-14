@@ -109,7 +109,7 @@ min_cls="0.2"
 max_cls="70"
 channel=combined
 # Optionally change which final selection is used to make the limits
-selection=htonly
+selection=final
 
 # Define the cards we want to make
 txt_cards=$(patsubst %, cards/$(channel)_%.txt,$(masspoints))
