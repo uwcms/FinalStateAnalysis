@@ -98,6 +98,7 @@ object_config = {
             #},
         },
         #'rebin' : 2,
+        'min_x' : 10,
         'rebin' : med_bins,
         'comb_label' : 'W+Z',
         'fit_label' : 'EWK Fit',
@@ -139,6 +140,7 @@ object_config = {
                 'rebin' : 5,
             },
         },
+        'min_x' : 10,
         'rebin' : med_bins,
         'fit_label' : 'QCD Fit',
         'comb_label' : 'QCD',
@@ -161,7 +163,9 @@ object_config = {
                 'exclude' : True,
             },
         },
+        'constraint' : -0.0,
         'rebin' : 5,
+        'min_x' : 20,
         'comb_label' : 'W',
         'fit_label' : 'Combined Fit',
         'function' : fit_func,
@@ -178,49 +182,50 @@ object_config = {
             },
         },
         'rebin' : 5,
+        'min_x' : 20,
         'comb_label' : 'QCD',
         'fit_label' : 'QCD Fit',
         'function' : fit_func,
         'label' : 'Jet #rightarrow #mu fake rate',
     },
-    'muHighPtTight' : {
-        'scenarios' : {
-            'SingleMu_Wjets' : {
-                'title' : 'W',
-                'file' : singlemu_fr_file,
-                'histo' : 'muHighPtTight',
-                'rebin' : 5,
-            },
-            'SingleMu_QCD' : {
-                'title' : 'QCD',
-                'file' : singlemu_fr_file,
-                'histo' : 'muQCDHighPtTight',
-                'rebin' : 5,
-                'exclude' : True,
-            },
-        },
-        'rebin' : 5,
-        'comb_label' : 'W',
-        'fit_label' : 'Combined Fit',
-        'function' : fit_func,
-        'label' : 'Jet #rightarrow #mu fake rate',
-    },
-    'muHighPtTightQCDOnly' : {
-        'scenarios' : {
-            'SingleMu_QCD' : {
-                'title' : 'QCD',
-                'file' : singlemu_fr_file,
-                'histo' : 'muQCDHighPtTight',
-                'rebin' : 5,
-                'exclude' : False,
-            },
-        },
-        'rebin' : 5,
-        'comb_label' : 'QCD',
-        'fit_label' : 'QCD Fit',
-        'function' : fit_func,
-        'label' : 'Jet #rightarrow #mu fake rate',
-    },
+    #'muHighPtTight' : {
+        #'scenarios' : {
+            #'SingleMu_Wjets' : {
+                #'title' : 'W',
+                #'file' : singlemu_fr_file,
+                #'histo' : 'muHighPtTight',
+                #'rebin' : 5,
+            #},
+            #'SingleMu_QCD' : {
+                #'title' : 'QCD',
+                #'file' : singlemu_fr_file,
+                #'histo' : 'muQCDHighPtTight',
+                #'rebin' : 5,
+                #'exclude' : True,
+            #},
+        #},
+        #'rebin' : 5,
+        #'comb_label' : 'W',
+        #'fit_label' : 'Combined Fit',
+        #'function' : fit_func,
+        #'label' : 'Jet #rightarrow #mu fake rate',
+    #},
+    #'muHighPtTightQCDOnly' : {
+        #'scenarios' : {
+            #'SingleMu_QCD' : {
+                #'title' : 'QCD',
+                #'file' : singlemu_fr_file,
+                #'histo' : 'muQCDHighPtTight',
+                #'rebin' : 5,
+                #'exclude' : False,
+            #},
+        #},
+        #'rebin' : 5,
+        #'comb_label' : 'QCD',
+        #'fit_label' : 'QCD Fit',
+        #'function' : fit_func,
+        #'label' : 'Jet #rightarrow #mu fake rate',
+    #},
     'eMIT' : {
         'scenarios' : {
             'SingleMu_Wjets' : {
@@ -245,6 +250,7 @@ object_config = {
             },
         },
         'rebin' : 5,
+        'min_x' : 10,
         'comb_label' : 'W',
         'fit_label' : 'Wjets Fit',
         'function' : fit_func,
@@ -261,6 +267,8 @@ object_config = {
             },
         },
         'rebin' : med_bins,
+        'constraint' : -2.0,
+        'min_x' : 10,
         'comb_label' : 'QCD',
         'fit_label' : 'QCD Fit',
         'function' : fit_func,
@@ -291,6 +299,7 @@ object_config = {
             },
         },
         'rebin' : 2,
+        'min_x' : 20,
         'comb_label' : 'W+Z',
         'fit_label' : 'W+Z Fit',
         'function' : fit_func,
@@ -315,6 +324,7 @@ object_config = {
         },
         'comb_label' : 'QCD',
         'rebin' : 2,
+        'min_x' : 20,
         'fit_label' : 'QCD Fit',
         'function' : fit_func,
         'label' : 'Jet #rightarrow #tau fake rate',
@@ -344,6 +354,7 @@ object_config = {
             #},
         },
         'rebin' : 2,
+        'min_x' : 20,
         'comb_label' : 'W+Z',
         'fit_label' : 'W+Z Fit',
         'function' : fit_func,
@@ -369,6 +380,7 @@ object_config = {
         },
         'comb_label' : 'QCD',
         'rebin' : 2,
+        'min_x' : 20,
         'fit_label' : 'QCD Fit',
         'function' : fit_func,
         'axis_label' : 'p_{T}',
@@ -378,6 +390,8 @@ object_config = {
 
 # Hack to split by eta
 for object in list(object_config.keys()):
+    # Disable hack for now
+    continue
     log.info("Modifying %s to split in eta", object)
     for type in ['barrel', 'endcap']:
         copy_object_info = copy.deepcopy(object_config[object])
@@ -470,9 +484,12 @@ for object, object_info in object_config.iteritems():
         ROOT.RooArgList(scale, mu, sigma, constant, jet_pt))
 
     # Add a constraint to the turn on of the fake rate.  Try and pull it down
-
+    # with some tension.
+    constraint = -1.0
+    if 'constraint' in object_info:
+        constraint = object_info['constraint']
     pull_down_mu_con = ROOT.RooExponential("mu_const", "Mu constraint",
-                                           mu, ROOT.RooFit.RooConst(-1.5))
+                                           mu, ROOT.RooFit.RooConst(constraint))
 
     roo_cut = ROOT.RooCategory("cut", "cutr")
     roo_cut.defineType("accept", 1)
@@ -520,6 +537,7 @@ for object, object_info in object_config.iteritems():
     object_result['fitted_func'] = fitted_fit_func
 
     roo_frame = jet_pt.frame(ROOT.RooFit.Title("Efficiency"))
+    roo_frame.SetAxisRange(object_info['min_x'], 100)
 
     def plot_func_on(frame, func, sigmas, scale_var_sys, plot_band=True):
         ''' A stupid function to do all the plotting for the function '''
@@ -615,6 +633,7 @@ for object, object_info in object_config.iteritems():
     for type, type_info in scenarios.iteritems():
 
         roo_frame = jet_pt.frame(ROOT.RooFit.Title("Efficiency"))
+        roo_frame.SetAxisRange(object_info['min_x'], 100)
         roo_data = ROOT.RooDataHist(
             "data", "data",
             ROOT.RooArgList(jet_pt), ROOT.RooFit.Index(roo_cut),

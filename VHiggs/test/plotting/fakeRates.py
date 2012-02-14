@@ -424,6 +424,8 @@ fakerates = {
 # Hack to split by eta
 varname_extractor = re.compile('(?P<var>\w+)AbsEta\s*<\s*[0-9\.]+')
 for fr in list(fakerates.keys()):
+    # For now, skip the eat split
+    continue
     info = fakerates[fr]
     barrel_info_clone = copy.deepcopy(info)
     endcap_info_clone = copy.deepcopy(info)

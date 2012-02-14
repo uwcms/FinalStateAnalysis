@@ -4,382 +4,90 @@
 #include "TMath.h"
 #include <iostream>
 
-float fakerate_muHighPtTightQCDOnly(float pt, float /*eta*/) {
-    return 6.5148e+00*TMath::Landau(pt,3.8694e-06,3.2649e+00,0)+1.2434e-04;
-}
-
-float fakerate_muHighPtTightQCDOnly_flat(float /*pt*/, float /*eta*/) {
-    return 0.024409;
-}
-
 float fakerate_tau(float pt, float /*eta*/) {
-    return 3.8581e+00*TMath::Landau(pt,2.6387e+01,2.2543e+00,0)+4.0245e-12;
+    return 3.9114e+00*TMath::Landau(pt,2.6588e+01,2.2023e+00,0)+3.6032e-13;
 }
 
 float fakerate_tau_flat(float /*pt*/, float /*eta*/) {
-    return 0.034532;
+    return 0.034837;
 }
 
 float fakerate_muQCD(float pt, float /*eta*/) {
-    return 3.2641e+00*TMath::Landau(pt,1.4326e+01,2.5006e+00,0)+5.6192e-04;
+    return 2.7847e+00*TMath::Landau(pt,1.5133e+01,2.7358e+00,0)+4.2364e-04;
 }
 
 float fakerate_muQCD_flat(float /*pt*/, float /*eta*/) {
-    return 0.055239;
+    return 0.053157;
 }
 
 float fakerate_eMITQCD(float pt, float /*eta*/) {
-    return 8.6057e-01*TMath::Landau(pt,1.6643e+01,2.0176e+00,0)+6.5238e-03;
+    return 8.9667e-01*TMath::Landau(pt,1.6503e+01,2.0758e+00,0)+7.4855e-03;
 }
 
 float fakerate_eMITQCD_flat(float /*pt*/, float /*eta*/) {
-    return 0.014726;
-}
-
-float fakerate_muHighPtTight(float pt, float /*eta*/) {
-    return 8.4000e+00*TMath::Landau(pt,7.1930e-07,4.5862e+00,0)+2.4879e-10;
-}
-
-float fakerate_muHighPtTight_flat(float /*pt*/, float /*eta*/) {
-    return 0.057650;
+    return 0.015741;
 }
 
 float fakerate_muHighPt(float pt, float /*eta*/) {
-    return 8.7213e+00*TMath::Landau(pt,2.0679e-06,5.6582e+00,0)+1.2411e-09;
+    return 4.0317e+00*TMath::Landau(pt,4.3490e-08,9.5040e+00,0)+1.7065e-10;
 }
 
 float fakerate_muHighPt_flat(float /*pt*/, float /*eta*/) {
-    return 0.088692;
+    return 0.094655;
 }
 
 float fakerate_tauQCD(float pt, float /*eta*/) {
-    return 2.9676e+00*TMath::Landau(pt,2.6647e+01,2.5017e+00,0)+1.2036e-10;
+    return 2.8065e+00*TMath::Landau(pt,2.7653e+01,2.4198e+00,0)+3.2556e-11;
 }
 
 float fakerate_tauQCD_flat(float /*pt*/, float /*eta*/) {
-    return 0.018873;
+    return 0.017839;
 }
 
 float fakerate_mu(float pt, float /*eta*/) {
-    return 4.8167e+00*TMath::Landau(pt,7.6599e+00,3.5123e+00,0)+4.3765e-09;
+    return 3.2687e+00*TMath::Landau(pt,1.4626e+01,4.1486e+00,0)+2.1439e-03;
 }
 
 float fakerate_mu_flat(float /*pt*/, float /*eta*/) {
-    return 0.075510;
+    return 0.095181;
 }
 
 float fakerate_tauQCDTauPt(float pt, float /*eta*/) {
-    return 8.0803e-01*TMath::Landau(pt,1.3284e-06,3.8975e+00,0)+4.4657e-03;
+    return 8.4078e+00*TMath::Landau(pt,4.9816e-06,1.0886e+00,0)+5.4055e-03;
 }
 
 float fakerate_tauQCDTauPt_flat(float /*pt*/, float /*eta*/) {
-    return 0.018873;
+    return 0.017839;
 }
 
 float fakerate_muHighPtQCDOnly(float pt, float /*eta*/) {
-    return 3.8113e+00*TMath::Landau(pt,2.6404e+01,2.6395e+00,0)+7.4001e-03;
+    return 3.9617e+00*TMath::Landau(pt,2.9077e+01,2.5939e+00,0)+8.6198e-03;
 }
 
 float fakerate_muHighPtQCDOnly_flat(float /*pt*/, float /*eta*/) {
-    return 0.057125;
+    return 0.054960;
 }
 
 float fakerate_tauTauPt(float pt, float /*eta*/) {
-    return 6.9938e-01*TMath::Landau(pt,1.5268e-09,7.3029e+00,0)+6.9251e-03;
+    return 8.4868e-01*TMath::Landau(pt,6.8877e-08,6.2191e+00,0)+7.5787e-03;
 }
 
 float fakerate_tauTauPt_flat(float /*pt*/, float /*eta*/) {
-    return 0.044183;
+    return 0.044513;
 }
 
 float fakerate_eMIT(float pt, float /*eta*/) {
-    return 6.6306e+00*TMath::Landau(pt,1.0578e+01,1.0949e+00,0)+9.4021e-03;
+    return 1.7189e+00*TMath::Landau(pt,1.2090e+01,1.9486e+00,0)+1.7139e-02;
 }
 
 float fakerate_eMIT_flat(float /*pt*/, float /*eta*/) {
-    return 0.016809;
-}
-
-float fakerate_muHighPtTightQCDOnly_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 9.9999e+00*TMath::Landau(pt,1.1193e+01,1.7148e+00,0)+3.8538e-03;
-      }
-      if (eta >= 1.44) {
-         return 9.9540e+00*TMath::Landau(pt,6.3770e-06,2.9297e+00,0)+4.3590e-03;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_muHighPtTightQCDOnly_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_muHighPtTightQCDOnly_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.0218706375058;
-      }
-      if (eta >= 1.44) {
-         return 0.0362844702467;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_muHighPtTightQCDOnly_eta_flat" << std::endl;
-   return -999;
-}
-
-float fakerate_tauQCD_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 2.7769e+00*TMath::Landau(pt,2.6264e+01,2.1591e+00,0)+6.3023e-10;
-      }
-      if (eta >= 1.44) {
-         return 5.0627e+00*TMath::Landau(pt,2.6748e+01,2.5152e+00,0)+7.5395e-04;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_tauQCD_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_tauQCD_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.0136206122056;
-      }
-      if (eta >= 1.44) {
-         return 0.0318912040719;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_tauQCD_eta_flat" << std::endl;
-   return -999;
-}
-
-float fakerate_muQCD_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 3.1017e+00*TMath::Landau(pt,1.4277e+01,2.4279e+00,0)+3.9805e-05;
-      }
-      if (eta >= 1.44) {
-         return 3.9460e+00*TMath::Landau(pt,1.4016e+01,2.7986e+00,0)+1.7162e-03;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_muQCD_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_muQCD_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.0486676811983;
-      }
-      if (eta >= 1.44) {
-         return 0.0831537583978;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_muQCD_eta_flat" << std::endl;
-   return -999;
-}
-
-float fakerate_eMITQCD_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 4.9402e-01*TMath::Landau(pt,2.3449e+01,1.2424e+00,0)+6.6510e-03;
-      }
-      if (eta >= 1.44) {
-         return 1.0629e+00*TMath::Landau(pt,3.0729e-06,3.5959e+00,0)+1.6544e-02;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_eMITQCD_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_eMITQCD_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.0116769380474;
-      }
-      if (eta >= 1.44) {
-         return 0.0257099450742;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_eMITQCD_eta_flat" << std::endl;
-   return -999;
-}
-
-float fakerate_tau_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 3.8330e+00*TMath::Landau(pt,2.6196e+01,1.9796e+00,0)+2.7534e-14;
-      }
-      if (eta >= 1.44) {
-         return 4.6401e+00*TMath::Landau(pt,2.7151e+01,2.6474e+00,0)+2.9831e-04;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_tau_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_tau_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.0276469341005;
-      }
-      if (eta >= 1.44) {
-         return 0.0555470951039;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_tau_eta_flat" << std::endl;
-   return -999;
-}
-
-float fakerate_muHighPtTight_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 9.4703e+00*TMath::Landau(pt,3.1443e-07,4.0819e+00,0)+2.1569e-10;
-      }
-      if (eta >= 1.44) {
-         return 1.0000e+01*TMath::Landau(pt,1.1303e-06,4.5251e+00,0)+1.6421e-02;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_muHighPtTight_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_muHighPtTight_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.0509554140127;
-      }
-      if (eta >= 1.44) {
-         return 0.0902255639098;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_muHighPtTight_eta_flat" << std::endl;
-   return -999;
-}
-
-float fakerate_muHighPt_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 9.9987e+00*TMath::Landau(pt,3.8516e-07,4.9586e+00,0)+2.7087e-10;
-      }
-      if (eta >= 1.44) {
-         return 9.9989e+00*TMath::Landau(pt,6.1034e-08,6.2929e+00,0)+6.9406e-10;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_muHighPt_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_muHighPt_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.0789808917197;
-      }
-      if (eta >= 1.44) {
-         return 0.135338345865;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_muHighPt_eta_flat" << std::endl;
-   return -999;
-}
-
-float fakerate_mu_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 6.5585e+00*TMath::Landau(pt,6.5716e+00,2.8603e+00,0)+4.8475e-10;
-      }
-      if (eta >= 1.44) {
-         return 6.8233e+00*TMath::Landau(pt,1.8266e-07,4.7941e+00,0)+8.4423e-08;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_mu_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_mu_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.0667265110712;
-      }
-      if (eta >= 1.44) {
-         return 0.122028526149;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_mu_eta_flat" << std::endl;
-   return -999;
-}
-
-float fakerate_tauQCDTauPt_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 5.2283e-01*TMath::Landau(pt,1.7295e-06,4.5748e+00,0)+1.5054e-03;
-      }
-      if (eta >= 1.44) {
-         return 6.2907e+00*TMath::Landau(pt,1.4594e-06,1.5231e+00,0)+1.3041e-02;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_tauQCDTauPt_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_tauQCDTauPt_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.0136206122056;
-      }
-      if (eta >= 1.44) {
-         return 0.0318912040719;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_tauQCDTauPt_eta_flat" << std::endl;
-   return -999;
-}
-
-float fakerate_muHighPtQCDOnly_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 4.2636e+00*TMath::Landau(pt,2.5784e+01,2.3740e+00,0)+7.0644e-03;
-      }
-      if (eta >= 1.44) {
-         return 9.8112e+00*TMath::Landau(pt,4.0537e-06,4.8402e+00,0)+2.4485e-08;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_muHighPtQCDOnly_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_muHighPtQCDOnly_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.0513417093222;
-      }
-      if (eta >= 1.44) {
-         return 0.0841799709724;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_muHighPtQCDOnly_eta_flat" << std::endl;
-   return -999;
-}
-
-float fakerate_tauTauPt_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 5.2337e-01*TMath::Landau(pt,4.1791e-07,8.7005e+00,0)+4.1528e-03;
-      }
-      if (eta >= 1.44) {
-         return 1.3414e+00*TMath::Landau(pt,3.0598e-06,5.0537e+00,0)+2.1034e-02;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_tauTauPt_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_tauTauPt_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.037786416917;
-      }
-      if (eta >= 1.44) {
-         return 0.0665636269964;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_tauTauPt_eta_flat" << std::endl;
-   return -999;
-}
-
-float fakerate_eMIT_eta(float pt, float eta) {
-      if (eta < 1.44) {
-         return 2.2456e+00*TMath::Landau(pt,1.1766e+01,1.8746e+00,0)+8.2563e-03;
-      }
-      if (eta >= 1.44) {
-         return 2.9546e+00*TMath::Landau(pt,5.9202e-07,1.9513e+00,0)+3.9929e-02;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_eMIT_eta" << std::endl;
-   return -999;
-}
-
-float fakerate_eMIT_eta_flat(float /*pt*/, float eta) {
-      if (eta < 1.44) {
-         return 0.0167278842324;
-      }
-      if (eta >= 1.44) {
-         return 0.0466064150275;
-      }
-   std::cerr << "Warning out of bounds in function fakerate_eMIT_eta_flat" << std::endl;
-   return -999;
+    return 0.025028;
 }
 
 
 // ############################################################################
 // Corresponding weight functions #############################################
 // ############################################################################
-float weight_muHighPtTightQCDOnly(float pt, float eta) {
-    float fakerate = fakerate_muHighPtTightQCDOnly(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muHighPtTightQCDOnly_flat(float pt, float eta) {
-    float fakerate = fakerate_muHighPtTightQCDOnly_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
 float weight_tau(float pt, float eta) {
     float fakerate = fakerate_tau(pt, eta);
     float result = fakerate/(1. - fakerate);
@@ -412,18 +120,6 @@ float weight_eMITQCD(float pt, float eta) {
 
 float weight_eMITQCD_flat(float pt, float eta) {
     float fakerate = fakerate_eMITQCD_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muHighPtTight(float pt, float eta) {
-    float fakerate = fakerate_muHighPtTight(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muHighPtTight_flat(float pt, float eta) {
-    float fakerate = fakerate_muHighPtTight_flat(pt, eta);
     float result = fakerate/(1. - fakerate);
     return result;
 }
@@ -508,150 +204,6 @@ float weight_eMIT(float pt, float eta) {
 
 float weight_eMIT_flat(float pt, float eta) {
     float fakerate = fakerate_eMIT_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muHighPtTightQCDOnly_eta(float pt, float eta) {
-    float fakerate = fakerate_muHighPtTightQCDOnly_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muHighPtTightQCDOnly_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_muHighPtTightQCDOnly_eta_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_tauQCD_eta(float pt, float eta) {
-    float fakerate = fakerate_tauQCD_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_tauQCD_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_tauQCD_eta_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muQCD_eta(float pt, float eta) {
-    float fakerate = fakerate_muQCD_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muQCD_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_muQCD_eta_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_eMITQCD_eta(float pt, float eta) {
-    float fakerate = fakerate_eMITQCD_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_eMITQCD_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_eMITQCD_eta_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_tau_eta(float pt, float eta) {
-    float fakerate = fakerate_tau_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_tau_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_tau_eta_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muHighPtTight_eta(float pt, float eta) {
-    float fakerate = fakerate_muHighPtTight_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muHighPtTight_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_muHighPtTight_eta_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muHighPt_eta(float pt, float eta) {
-    float fakerate = fakerate_muHighPt_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muHighPt_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_muHighPt_eta_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_mu_eta(float pt, float eta) {
-    float fakerate = fakerate_mu_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_mu_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_mu_eta_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_tauQCDTauPt_eta(float pt, float eta) {
-    float fakerate = fakerate_tauQCDTauPt_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_tauQCDTauPt_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_tauQCDTauPt_eta_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muHighPtQCDOnly_eta(float pt, float eta) {
-    float fakerate = fakerate_muHighPtQCDOnly_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_muHighPtQCDOnly_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_muHighPtQCDOnly_eta_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_tauTauPt_eta(float pt, float eta) {
-    float fakerate = fakerate_tauTauPt_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_tauTauPt_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_tauTauPt_eta_flat(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_eMIT_eta(float pt, float eta) {
-    float fakerate = fakerate_eMIT_eta(pt, eta);
-    float result = fakerate/(1. - fakerate);
-    return result;
-}
-
-float weight_eMIT_eta_flat(float pt, float eta) {
-    float fakerate = fakerate_eMIT_eta_flat(pt, eta);
     float result = fakerate/(1. - fakerate);
     return result;
 }
