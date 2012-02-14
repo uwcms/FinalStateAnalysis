@@ -166,7 +166,7 @@ fakerates = {
             'Muon1_Muon2_Mass < 95',
             'Tau_MtToMET < 40',
             'TauPt > 20',
-            'TauAbsEta < 2.5',
+            'TauAbsEta < 2.3',
             'Tau_DecayMode > 0.5',
         ],
         'num' : [
@@ -190,7 +190,7 @@ fakerates = {
         'final_cuts' : [],
         'denom' : [
             'TauPt > 20',
-            'TauAbsEta < 2.5',
+            'TauAbsEta < 2.3',
             'Tau_DecayMode > 0.5',
             'METPt < 30',
         ],
@@ -218,7 +218,7 @@ fakerates = {
             'Muon1_Muon2_Mass < 95',
             'Tau_MtToMET < 40',
             'TauPt > 20',
-            'TauAbsEta < 2.5',
+            'TauAbsEta < 2.3',
             'Tau_DecayMode > 0.5',
         ],
         'num' : [
@@ -242,7 +242,7 @@ fakerates = {
         'final_cuts' : [],
         'denom' : [
             'TauPt > 20',
-            'TauAbsEta < 2.5',
+            'TauAbsEta < 2.3',
             'Tau_DecayMode > 0.5',
             'METPt < 30',
         ],
@@ -270,7 +270,7 @@ fakerates = {
             #'Muon1_Muon2_Mass < 95',
             #'Tau_MtToMET < 40',
             #'TauPt > 20',
-            #'TauAbsEta < 2.5',
+            #'TauAbsEta < 2.3',
             #'Tau_DecayMode > 0.5',
         #],
         #'num' : [
@@ -295,7 +295,7 @@ fakerates = {
         #'final_cuts' : [],
         #'denom' : [
             #'TauPt > 20',
-            #'TauAbsEta < 2.5',
+            #'TauAbsEta < 2.3',
             #'Tau_DecayMode > 0.5',
             #'METPt < 30',
         #],
@@ -447,7 +447,7 @@ for data_set, skips, int_lumi in [
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'VH', '2012-01-28-v1-WHAnalyze', 'scratch_results',
+        'VH', '2012-02-01-v1-WHAnalyze', 'scratch_results',
         int_lumi, skips, count='emt/skimCounter')
 
     legend = plotter.build_legend(
