@@ -128,6 +128,15 @@ datadefs = {
         'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.1096,
         'analyses' : ['VH', 'SSDL'],
     },
+    'WZJetsTo3LNu_pythia' : {
+        'datasetpath' : "/WZTo3LNu_TuneZ2_7TeV_pythia6_tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'pu' : 'S6',
+        #'x_sec' : 0.7192*_picobarns, # FROM PREP
+        # 17 +- 2.4 1.1 1.0 from EWK-11-10
+        'x_sec' : 17.0*_picobarns*0.3257*0.1096,
+        'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.1096,
+        'analyses' : ['VH', 'SSDL'],
+    },
     'WWJetsTo2L2Nu' : {
         'datasetpath' : '/WWJetsTo2L2Nu_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM',
         'pu' : 'S4',
