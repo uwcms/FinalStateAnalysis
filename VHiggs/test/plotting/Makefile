@@ -98,6 +98,8 @@ clean:
 
 # The naem of the shape root file with interpolated histograms
 interp_shape_file=wh_shapes_interp.root
+# The naem of the shape root file with the FF and SM4 templates
+extensions_shape_file=wh_shapes_sm4_ff.root
 # The name of the shape root file
 shape_file=wh_shapes.root
 # Mass points to run limits on
@@ -112,11 +114,14 @@ selection=htonly
 # Define the cards we want to make
 txt_cards=$(patsubst %, cards/$(channel)_%.txt,$(masspoints))
 root_cards=$(patsubst %, cards/$(channel)_%.root,$(masspoints))
+extra_txt_cards=$(patsubst %, cards/$(channel)_%FF.txt,$(masspoints)) $(patsubst %, cards/$(channel)_%SM4.txt,$(masspoints)) 
 cls_submitters=$(patsubst %, $(scratch)/cls_limits/$(channel)_%/submit,$(masspoints))
 asymp_results=$(patsubst %, cards/$(channel)_%.asymp.json,$(masspoints))
 cls_results=$(patsubst %, cards/$(channel)_%.cls.json,$(masspoints))
 
 cards: $(shape_file) $(txt_cards) $(root_cards)
+
+extra_cards: $(extra_txt_cards)
 
 cls_submits: $(cls_submitters)
 
@@ -149,8 +154,13 @@ $(interp_shape_file): $(raw_shape_file) interpolateSignalHistograms.py
 	cp $(raw_shape_file) $(interp_shape_file)
 	./interpolateSignalHistograms.py $(interp_shape_file)
 
-$(shape_file): $(interp_shape_file) addStatShapes.py
-	cp $(interp_shape_file) $(shape_file)
+# Add Fermiphobic and SM4 corrected templates
+$(extensions_shape_file): $(interp_shape_file) addSMExtensions.py
+	cp $(interp_shape_file) $(extensions_shape_file)
+	./addSMExtensions.py $(extensions_shape_file)
+
+$(shape_file): $(extensions_shape_file) addStatShapes.py
+	cp $(extensions_shape_file) $(shape_file)
 	./addStatShapes.py $(shape_file)
 
 ################################################################################
@@ -172,9 +182,10 @@ cards/$(channel)_%.root: cards/$(channel)_%.txt
 
 # Rule to compute the asymptotic limit from a given card file
 cards/$(channel)_%.asymp.json: cards/$(channel)_%.root
-	combine $< -M Asymptotic -H ProfileLikelihood -m $* \
+	combine $< -M Asymptotic -H ProfileLikelihood \
+	  -m `echo $* | sed "s|FF||" | sed "s|SM4||"` \
 	  | limit2JSON.py --mass $* > $@
-	rm higgsCombineTest.Asymptotic.mH$*.root
+	rm higgsCombineTest.Asymptotic.mH`echo $* | sed "s|FF||" | sed "s|SM4||"`.root
 
 ################################################################################
 ## Tools for computing the full CLs limits  ####################################
@@ -223,10 +234,15 @@ combination=winter11
 combination_mass_points=$(shell seq 115 145) 
 combination_FF_mass_points=$(shell seq 120 145)
 
-combination_cards: $(patsubst %, $(combination)/%/vhtt.root, $(combination_mass_points)) $(patsubst %, $(combination)/%/FF_vhtt.root, $(combination_FF_mass_points)) 
+combination_cards: $(patsubst %, $(combination)/%/vhtt.root, $(combination_mass_points)) \
+  $(patsubst %, $(combination)/%/FF_vhtt.root, $(combination_FF_mass_points)) \
+  $(patsubst %, $(combination)/%/SM4_vhtt.root, $(combination_mass_points)) 
 
 $(combination)/%/vhtt.root: cards/combined_%.root
 	cp $< $@
 
 $(combination)/%/FF_vhtt.root: cards/combined_%FF.root
+	cp $< $@
+
+$(combination)/%/SM4_vhtt.root: cards/combined_%SM4.root
 	cp $< $@

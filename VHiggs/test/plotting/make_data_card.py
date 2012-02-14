@@ -120,7 +120,9 @@ signal_datasets = ['VH%i' % mass, 'VH%iWW' % mass]
 
 # If we are fermiophobic, we only use HWW
 if is_fermiophobic:
-    signal_datasets = ['VH%iWW' % mass]
+    signal_datasets = ['VH%iWWFF' % mass]
+if is_sm4:
+    signal_datasets = ['VH%iSM4' % mass, 'VH%iWWSM4' % mass]
 
 mmt_folder = "mmt_mumu_%s_%s" % (options.selection, mmt_shape)
 mmt = dc.DataCardChannel(mmt_folder, shapes)
