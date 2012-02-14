@@ -170,7 +170,8 @@ $(shape_file): $(extensions_shape_file) addStatShapes.py
 # Rule to make a $(channel) ASCII card
 cards/$(channel)_%.txt: $(shape_file) make_data_card.py
 	python make_data_card.py -o $@ -m $* -f $(shape_file) \
-	  --channels $(channel) --selection $(selection)
+	  --channels $(channel) --selection $(selection) \
+	  --emt_shape ETauMass
 
 # Rule to make a RooWorkspace card from an ASCII one
 cards/$(channel)_%.root: cards/$(channel)_%.txt
