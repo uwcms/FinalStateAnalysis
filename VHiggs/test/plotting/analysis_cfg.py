@@ -31,8 +31,8 @@ def get_fr(label, pt, eta):
 # List of channels to skip
 skip = [ 'emm', ('emt', 'mutau'), ('emt', 'etau') ]
 
-#mass_binning = [0, 25, 50, 75, 100, 150, 200]
-mass_binning = 5
+mass_binning = [0, 25, 50, 75, 100, 140, 180]
+#mass_binning = 5
 
 cfg = {
     'emt' : {
