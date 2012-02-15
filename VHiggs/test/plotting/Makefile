@@ -151,7 +151,6 @@ table: final_yields.tex
 final_yields.tex: $(shape_file) make_tex_tables.py
 	./make_tex_tables.py -f $(shape_file) > $@
 
-
 # Just show what mass points we are running
 ls_mass_points: 
 	echo $(masspoints)
