@@ -31,16 +31,27 @@ def get_fr(label, pt, eta):
 # List of channels to skip
 skip = [ 'emm', ('emt', 'mutau'), ('emt', 'etau') ]
 
+#mass_binning = [0, 25, 50, 75, 100, 150, 200]
+mass_binning = 5
+
 cfg = {
     'emt' : {
         'ntuple' : '/emt/final/Ntuple',
         'primds' : 'data_MuEG',
         'variables' : {
-            'ETauMass' : ('Elec_Tau_Mass', 'M_{e#tau}', [60, 0, 300], 5),
-            'MuTauMass' : ('Mu_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300], 5),
+            'ETauMass' : ('Elec_Tau_Mass', 'M_{e#tau}', [60, 0, 300],
+                          mass_binning),
+            'MuTauMass' : ('Mu_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300],
+                           mass_binning),
+            'SubleadingMass' : (
+                '((ElecPt < MuPt)*Elec_Tau_Mass + (ElecPt > MuPt)*Mu_Tau_Mass)',
+                'M_{l2 #tau}', [60, 0, 300], mass_binning),
+
             'EJetPt' : ('Elec_JetPt', 'p_{T}', [200, 0, 200], 1),
             'MuJetPt' : ('Mu_JetPt', 'p_{T}', [200, 0, 200], 1),
             'MuPt' : ('MuPt', 'p_{T}', [100, 0, 200], 5),
+            'ElecPt' : ('ElecPt', 'p_{T}', [100, 0, 200], 5),
+            'TauPt' : ('TauPt', 'p_{T}', [100, 0, 200], 5),
             'TauJetPt' : ('TauJetPt', 'p_{T}', [100, 0, 200], 5),
             'TauLeadTrkPt' : ('TauLeadTrkPt', 'p_{T}', [100, 0, 50], 5),
             'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDF', [100, 0, 30], 5),
@@ -105,11 +116,11 @@ cfg = {
                         #'vars' : ['ETauMass', 'EJetPt', 'HT', 'count', 'MuPt'],
                         #'vars' : ['count', 'TauLeadTrkPt', 'ETauMass', 'MuTauMass', 'HT', ],
                         #'vars' : ['count', 'ETauMass', 'EJetPt', 'MuJetPt'],
-                        'vars' : ['count', 'ETauMass', ],
+                        'vars' : ['count', 'ETauMass', 'SubleadingMass'],
                     },
                     'vtxonly' : {
                         'cuts' : [],
-                        'vars' : ['HT'],
+                        'vars' : ['HT', 'MuPt', 'ElecPt', 'TauPt'],
                     },
                 },
                 'object1' : {
@@ -247,7 +258,7 @@ cfg = {
         'ntuple' : '/mmt/final/Ntuple',
         'primds' : 'data_DoubleMu',
         'variables' : {
-            'MuTauMass' : ('Muon2_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300], 5),
+            'MuTauMass' : ('Muon2_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300], mass_binning),
             'Mu1JetPt' : ('Muon1_JetPt', "p_{T}", [200, 0, 200], 1),
             'Mu2JetPt' : ('Muon2_JetPt', "p_{T}", [200, 0, 200], 1),
             #    'Muon2_MtToMET' : ('Muon2_MtToMET', 'M_{T} #mu(2)-#tau', [100, 0, 300],),
@@ -256,6 +267,9 @@ cfg = {
             'Njets' : ('NjetsPt20_Njets', 'N_{jets}', [10, -0.5, 9.5], 1),
             'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
             'count' : ('1', 'Count', [1, 0, 1], 1),
+            'Muon1Pt' : ('Muon1Pt', 'p_{T}', [100, 0, 200], 5),
+            'Muon2Pt' : ('Muon2Pt', 'p_{T}', [100, 0, 200], 5),
+            'TauPt' : ('TauPt', 'p_{T}', [100, 0, 200], 5),
         },
         'baseline' : [
             'Muon1Pt > 20',
@@ -310,7 +324,7 @@ cfg = {
                     },
                     'vtxonly' : {
                         'cuts' : [],
-                        'vars' : ['HT'],
+                        'vars' : ['HT', 'TauPt', 'Muon1Pt', 'Muon2Pt'],
                     },
                 },
                 'object1' : {
