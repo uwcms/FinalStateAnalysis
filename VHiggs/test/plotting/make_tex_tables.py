@@ -95,12 +95,12 @@ if __name__ == "__main__":
     template =  '''
 Channel  & \\mmt & \\emt \\\\
 \hline
-Fakes & {mmt_fakes:0.2f} \\pm {mmt_fakes_err:0.2f} &  {emt_fakes:0.2f} \\pm {emt_fakes_err:0.2f}  \\\\
-WZ & {mmt_wz:0.2f} \\pm {mmt_wz_err:0.2f} &  {emt_wz:0.2f} \\pm {emt_wz_err:0.2f}  \\\\
-ZZ & {mmt_zz:0.2f} \\pm {mmt_zz_err:0.2f} &  {emt_zz:0.2f} \\pm {emt_zz_err:0.2f}  \\\\
-Triboson & {mmt_triboson:0.2f} \\pm {mmt_triboson_err:0.2f} &  {emt_triboson:0.2f} \\pm {emt_triboson_err:0.2f}  \\\\
+Fakes & ${mmt_fakes:0.2f} \\pm {mmt_fakes_err:0.2f}$ &  ${emt_fakes:0.2f} \\pm {emt_fakes_err:0.2f}$  \\\\
+WZ & ${mmt_wz:0.2f} \\pm {mmt_wz_err:0.2f}$ &  ${emt_wz:0.2f} \\pm {emt_wz_err:0.2f}$  \\\\
+ZZ & ${mmt_zz:0.2f} \\pm {mmt_zz_err:0.2f}$ &  ${emt_zz:0.2f} \\pm {emt_zz_err:0.2f}$  \\\\
+Triboson & ${mmt_triboson:0.2f} \\pm {mmt_triboson_err:0.2f}$ &  ${emt_triboson:0.2f} \\pm {emt_triboson_err:0.2f}$  \\\\
 \hline
-Backgrounds & {mmt_bkg:0.2f} \\pm {mmt_bkg_err:0.2f} & {emt_bkg:0.2f} \\pm {emt_bkg_err:0.2f} \\\\
+Backgrounds & ${mmt_bkg:0.2f} \\pm {mmt_bkg_err:0.2f}$ & ${emt_bkg:0.2f} \\pm {emt_bkg_err:0.2f}$ \\\\
 \hline
 Observed & {mmt_data:0.0f} & {emt_data:0.0f} \\\\
 \hline
