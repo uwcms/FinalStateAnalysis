@@ -39,6 +39,8 @@ ROOT.gROOT.ProcessLine('.L corrections.C++')
 log.info("Loading fake rate functions")
 ROOT.gROOT.ProcessLine('.L fake_rates.C++')
 
+ROOT.gStyle.SetHistTopMargin(0.0)
+
 def estimate_fake_sum(fr1, fr2, fr12s, fr12en, fudge=0.0):
     '''
     Estimate the total fake rate sum, with proper errors.
@@ -466,12 +468,12 @@ if __name__ == "__main__":
                         legend.AddEntry(fake_plot.th1, "QCD est.", "l")
                         data_plot.Draw('pe,x0')
                         data_plot.SetTitle(xaxis_title)
+                        data_plot.GetXaxis().SetTitle(xaxis_title)
                         fake_plot.Draw('same')
                         #data_plot.SetMaximum(2*max(
                             #data_plot.GetMaximum(), fake_plot.GetMaximum()))
-                        data.SetMaximum(2*data.GetMaximum())
+                        data_plot.SetMaximum(2*data_plot.GetMaximum())
                         canvas.Update()
-                        stack.GetXaxis().SetTitle(xaxis_title)
                         cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
                         legend.Draw()
                         saveplot(plot_name + data_plot_name + '_wqcd')
@@ -641,9 +643,7 @@ if __name__ == "__main__":
                     stack.GetXaxis().SetTitle(xaxis_title)
                     ult_data.Draw('same, pe,x0')
                     legend.Draw()
-                    stack.SetMaximum(2.*max(
-                        stack.GetHistogram().GetMaximum(),
-                        ult_data.GetMaximum()))
+                    stack.SetMaximum(2.*ult_data.GetMaximum())
                     cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
 
                     saveplot(plot_base_name + '_ult_wfrs')
@@ -757,9 +757,7 @@ if __name__ == "__main__":
                     error_band_hist.SetFillStyle(0)
                     error_band_hist.Draw('same,hist')
                     ult_data.Draw('pe,same,x0')
-                    stack.SetMaximum(2.*max(
-                            stack.GetHistogram().GetMaximum(),
-                            ult_data.GetMaximum()))
+                    stack.SetMaximum(2.*ult_data.GetMaximum())
 
                     signalx5 = (signal + signalHWW)*5
                     signalx5.SetLineStyle(1)
