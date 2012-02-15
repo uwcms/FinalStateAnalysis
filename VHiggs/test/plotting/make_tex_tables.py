@@ -102,7 +102,7 @@ Triboson & {mmt_triboson:0.2f} \\pm {mmt_triboson_err:0.2f} &  {emt_triboson:0.2
 \hline
 Backgrounds & {mmt_bkg:0.2f} \\pm {mmt_bkg_err:0.2f} & {emt_bkg:0.2f} \\pm {emt_bkg_err:0.2f} \\\\
 \hline
-Data & {mmt_data:0.0f} & {emt_data:0.0f} \\\\
+Observed & {mmt_data:0.0f} & {emt_data:0.0f} \\\\
 \hline
 VH({mass}) & {mmt_vh:0.2f} & {emt_vh:0.2f} \\\\
 '''
