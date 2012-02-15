@@ -77,13 +77,13 @@ class AnalysisSample(object):
     def add_to_stack(self, path, stack, drawopt=None, **kwargs):
         object = self.get(path, **kwargs)
         if drawopt is None:
-            drawopt = self.style_dict.get('draw_opt', '')
+            drawopt = self.style_dict.get('draw_opt', 'hist')
         stack.Add(object.th1, drawopt)
 
     def add_to_legend(self, path, legend, drawopt=None):
         object = self.get(path)
         if drawopt is None:
-            drawopt = self.style_dict.get('draw_opt', 'lf')
+            drawopt = self.style_dict.get('draw_opt', 'hist')
         nicename = self.style_dict.get('nicename', self.name)
         legend.AddEntry(object.th1, nicename, drawopt)
 
