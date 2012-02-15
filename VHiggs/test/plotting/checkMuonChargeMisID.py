@@ -9,6 +9,8 @@ log = logging.getLogger("checkMuonCharge")
 import analysis_cfg
 import ROOT
 import os
+import math
+import uncertainties
 import FinalStateAnalysis.PatTools.data as data_tool
 
 if __name__ == "__main__":
@@ -148,6 +150,16 @@ if __name__ == "__main__":
     print "Loose and tight rates using mumu nuple"
     print "loose", mc_loose.Integral(), "tight", mc_tight.Integral()
 
+    loose_err = uncertainties.ufloat((
+        mc_loose.Integral(),
+        math.sqrt(mc_loose.Integral())
+    ))
+    tight_err = uncertainties.ufloat((
+        mc_tight.Integral(),
+        math.sqrt(mc_tight.Integral())
+    ))
+
+    print 'mumu rate:', tight_err/loose_err
 
     lead_unweighted = plotter.get_histogram(
         'data_DoubleMu',
@@ -216,3 +228,8 @@ if __name__ == "__main__":
     print "Sublead unweighted integral", sublead_unweighted_total,\
             "sublead weighted integral", sublead_weighted_total
 
+    total = lead_weighted_total + sublead_weighted_total
+
+    print "Total: ", total
+
+    print "Total w/ suppression: ", total*tight_err/loose_err
