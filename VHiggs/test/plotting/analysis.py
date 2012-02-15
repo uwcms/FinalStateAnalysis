@@ -757,7 +757,9 @@ if __name__ == "__main__":
                     error_band_hist.SetFillStyle(0)
                     error_band_hist.Draw('same,hist')
                     ult_data.Draw('pe,same,x0')
-                    stack.SetMaximum(2.*ult_data.GetMaximum())
+                    stack.SetMaximum(2*max(
+                        ult_data.GetMaximum(),
+                        stack.GetMaximum()))
 
                     signalx5 = (signal + signalHWW)*5
                     signalx5.SetLineStyle(1)
