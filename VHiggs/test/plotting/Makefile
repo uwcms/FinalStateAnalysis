@@ -26,6 +26,8 @@
 #  			(requires condor jobs from cls_submits to be finished)
 #  cls: 		compute the CLs limits 
 #  			(requires condor jobs from cls_submits to be finished)
+#
+#  table: 		make a .tex table with the results
 
 # The name of the un-stat-shaped root file - output of the analysis
 raw_shape_file=wh_shapes_raw.root
@@ -81,6 +83,7 @@ $(ana_output): analysis.py analysis_cfg.py corrections.C fake_rates.C
 
 analyze: $(ana_output)
 
+
 ################################################################################
 ##
 ##         =============
@@ -111,6 +114,7 @@ channel=combined
 # Optionally change which final selection is used to make the limits
 selection=final
 
+
 # Define the cards we want to make
 txt_cards=$(patsubst %, cards/$(channel)_%.txt,$(masspoints))
 root_cards=$(patsubst %, cards/$(channel)_%.root,$(masspoints))
@@ -140,6 +144,13 @@ vh_cards.tgz: $(root_cards)
 
 vh_cards_txt.tgz: $(txt_cards)
 	tar -cvzf $@ $(shape_file) $(txt_cards)
+
+# Make the tex table for the note
+table: final_yields.tex
+
+final_yields.tex: $(shape_file) make_tex_tables.py
+	./make_tex_tables.py -f $(shape_file) > $@
+
 
 # Just show what mass points we are running
 ls_mass_points: 
