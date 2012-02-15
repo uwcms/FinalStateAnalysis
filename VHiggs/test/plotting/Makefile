@@ -106,7 +106,7 @@ extensions_shape_file=wh_shapes_sm4_ff.root
 # The name of the shape root file
 shape_file=wh_shapes.root
 # Mass points to run limits on
-masspoints=100 $(shell seq 115 145) 150 160 
+masspoints=100 110 115 120 130 140 150 160 
 # Exclusion range to use when building CLs grid
 min_cls="0.2"
 max_cls="70"
