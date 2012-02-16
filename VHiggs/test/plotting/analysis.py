@@ -41,6 +41,11 @@ ROOT.gROOT.ProcessLine('.L fake_rates.C++')
 
 ROOT.gStyle.SetHistTopMargin(0.0)
 
+def get_histo(canvas):
+    for obj in canvas.GetListOfPrimitives():
+        pass
+        #print obj
+
 def estimate_fake_sum(fr1, fr2, fr12s, fr12en, fudge=0.0):
     '''
     Estimate the total fake rate sum, with proper errors.
@@ -212,6 +217,7 @@ if __name__ == "__main__":
                                             filename + filetype)
                     log.info('saving %s', filename)
                     canvas.Print(filename)
+                    get_histo(canvas)
                     canvas.SetLogy(True)
                     canvas.Update()
                     canvas.Print(filename.replace(filetype, '_log' + filetype))
@@ -752,7 +758,7 @@ if __name__ == "__main__":
                     error_band_hist.SetFillStyle(1001)
                     error_band_hist.SetMarkerSize(0)
                     error_band_hist_copy = error_band_hist.th1.Clone()
-                    legend.AddEntry(error_band_hist_copy, "Fake error", "lf")
+                    legend.AddEntry(error_band_hist_copy, "Fake uncert.", "lf")
                     error_band_hist.DrawCopy('same,e2')
                     error_band_hist.SetFillStyle(0)
                     error_band_hist.Draw('same,hist')
