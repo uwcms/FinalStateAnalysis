@@ -122,7 +122,7 @@ cfg = {
                     },
                     'vtxonly' : {
                         'cuts' : [],
-                        'vars' : ['HT', 'MuPt', 'ElecPt', 'TauPt'],
+                        'vars' : ['HT', 'MuPt', 'ElecPt', 'TauPt', 'ETauMass'],
                     },
                 },
                 'object1' : {
@@ -326,7 +326,7 @@ cfg = {
                     },
                     'vtxonly' : {
                         'cuts' : [],
-                        'vars' : ['HT', 'TauPt', 'Muon1Pt', 'Muon2Pt'],
+                        'vars' : ['HT', 'TauPt', 'Muon1Pt', 'Muon2Pt', 'MuTauMass'],
                     },
                 },
                 'object1' : {
