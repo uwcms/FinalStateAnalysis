@@ -229,9 +229,13 @@ cards/$(channel).cls.pdf: $(cls_results) legendpos.py
 	  --method cls cards/$(channel)_*.cls.json -o $@ \
 	  --legendpos `./legendpos.py $@`
 
-cards/$(channel).cls.tex: $(cls_results) 
+cards/$(channel).cls.tex: $(cls_results)  
 	python $(fsa)/StatTools/scripts/texlimit.py \
 	  --method cls cards/$(channel)_*.cls.json > $@
+
+cards/$(channel).asymp.tex: $(asymp_results)  
+	python $(fsa)/StatTools/scripts/texlimit.py \
+	  --method asymp cards/$(channel)_*.asymp.json > $@
 
 # Rule to plot the asymptotic limits
 cards/$(channel).asymp.pdf: $(asymp_results) legendpos.py
