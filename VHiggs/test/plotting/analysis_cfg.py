@@ -31,7 +31,9 @@ def get_fr(label, pt, eta):
 # List of channels to skip
 skip = [ 'emm', ('emt', 'mutau'), ('emt', 'etau') ]
 
-mass_binning = [0, 25, 50, 75, 100, 140, 180]
+#mass_binning = [0, 25, 50, 75, 100, 140, 180]
+mass_binning = [0, 25, 50, 75, 100, 125, 150, 175]
+pt_binning = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 #mass_binning = 5
 
 cfg = {
@@ -49,9 +51,9 @@ cfg = {
 
             'EJetPt' : ('Elec_JetPt', 'p_{T}', [200, 0, 200], 1),
             'MuJetPt' : ('Mu_JetPt', 'p_{T}', [200, 0, 200], 1),
-            'MuPt' : ('MuPt', 'p_{T}', [100, 0, 200], 5),
-            'ElecPt' : ('ElecPt', 'p_{T}', [100, 0, 200], 5),
-            'TauPt' : ('TauPt', 'p_{T}', [100, 0, 200], 5),
+            'MuPt' : ('MuPt', 'p_{T}', [100, 0, 200], pt_binning),
+            'ElecPt' : ('ElecPt', 'p_{T}', [100, 0, 200], pt_binning),
+            'TauPt' : ('TauPt', 'p_{T}', [100, 0, 200], pt_binning),
             'TauJetPt' : ('TauJetPt', 'p_{T}', [100, 0, 200], 5),
             'TauLeadTrkPt' : ('TauLeadTrkPt', 'p_{T}', [100, 0, 50], 5),
             'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDF', [100, 0, 30], 5),
