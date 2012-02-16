@@ -78,10 +78,10 @@ corrections.C: mueg_trig_correction_results.json make_corrections.py
 # Define the files produced by the analysis
 ana_output=$(raw_shape_file) #mmt_mumu_events.json emt_emu_events.json mmt_mumu_fakerate_summary.json emt_emu_fakerate_summary.json emt_emu_summary.json mmt_mumu_summary.json
 
-$(ana_output): analysis.py analysis_cfg.py corrections.C fake_rates.C
-	python analysis.py
+#$(ana_output): analysis.py analysis_cfg.py corrections.C fake_rates.C
+	#python analysis.py
 
-analyze: $(ana_output)
+#analyze: $(ana_output)
 
 
 ################################################################################
@@ -181,7 +181,7 @@ $(shape_file): $(extensions_shape_file) addStatShapes.py
 cards/$(channel)_%.txt: $(shape_file) make_data_card.py
 	python make_data_card.py -o $@ -m $* -f $(shape_file) \
 	  --channels $(channel) --selection $(selection) \
-	  --emt_shape ETauMass
+	  --emt_shape SubleadingMass
 
 # Rule to make a RooWorkspace card from an ASCII one
 cards/$(channel)_%.root: cards/$(channel)_%.txt
@@ -227,6 +227,7 @@ cards/$(channel).cls.pdf: $(cls_results) legendpos.py
 	python $(fsa)/StatTools/scripts/plotlimit.py \
 	  --max-y 40 \
 	  --method cls cards/$(channel)_*.cls.json -o $@ \
+	  --showpoints \
 	  --legendpos `./legendpos.py $@`
 
 cards/$(channel).cls.tex: $(cls_results)  
@@ -242,6 +243,7 @@ cards/$(channel).asymp.pdf: $(asymp_results) legendpos.py
 	python $(fsa)/StatTools/scripts/plotlimit.py \
 	  --max-y 40 \
 	  --method asymp cards/$(channel)_*.asymp.json -o $@ \
+	  --showpoints \
 	  --legendpos `./legendpos.py $@`
 
 
@@ -261,7 +263,7 @@ combination_cards: $(patsubst %, $(combination)/%/vhtt.txt, $(combination_mass_p
 # Make a version of the shape file with minimal info
 $(combination)/%/vhtt_shapes.root: $(shape_file) trim_shape_file.py
 	./trim_shape_file.py --mass $* --out $@ $(shape_file) \
-	  emt_emu_final_ETauMass \
+	  emt_emu_final_SubleadingMass \
 	  mmt_mumu_final_MuTauMass
 
 $(combination)/%/vhtt.txt: cards/combined_%.txt $(combination)/%/vhtt_shapes.root
