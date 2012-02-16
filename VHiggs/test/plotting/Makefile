@@ -104,7 +104,7 @@ interp_shape_file=wh_shapes_interp.root
 # The naem of the shape root file with the FF and SM4 templates
 extensions_shape_file=wh_shapes_sm4_ff.root
 # The name of the shape root file
-shape_file=wh_shapes.root
+shape_file=vhtt_shapes.root
 # Mass points to run limits on
 masspoints=100 110 115 120 130 140 150 160 
 # Exclusion range to use when building CLs grid
@@ -249,19 +249,26 @@ cards/$(channel).asymp.pdf: $(asymp_results) legendpos.py
 ## Tools for committing into combination SVN ###################################
 ################################################################################
 
-combination=winter11
-combination_mass_points=$(shell seq 115 145) 
+combination=moriond12
+combination_mass_points=$(shell seq 110 145) 
 combination_FF_mass_points=$(shell seq 120 145)
 
-combination_cards: $(patsubst %, $(combination)/%/vhtt.root, $(combination_mass_points)) \
-  $(patsubst %, $(combination)/%/FF_vhtt.root, $(combination_FF_mass_points)) \
-  $(patsubst %, $(combination)/%/SM4_vhtt.root, $(combination_mass_points)) 
+combination_cards: $(patsubst %, $(combination)/%/vhtt.txt, $(combination_mass_points)) \
+  $(patsubst %, $(combination)/%/FF_vhtt.txt, $(combination_FF_mass_points)) \
+  $(patsubst %, $(combination)/%/SM4_vhtt.txt, $(combination_mass_points))  \
+  $(patsubst %, $(combination)/%/vhtt_shapes.root, $(combination_mass_points)) 
 
-$(combination)/%/vhtt.root: cards/combined_%.root
+# Make a version of the shape file with minimal info
+$(combination)/%/vhtt_shapes.root: $(shape_file) trim_shape_file.py
+	./trim_shape_file.py --mass $* --out $@ $(shape_file) \
+	  emt_emu_final_ETauMass \
+	  mmt_mumu_final_MuTauMass
+
+$(combination)/%/vhtt.txt: cards/combined_%.txt $(combination)/%/vhtt_shapes.root
 	cp $< $@
 
-$(combination)/%/FF_vhtt.root: cards/combined_%FF.root
+$(combination)/%/FF_vhtt.txt: cards/combined_%FF.txt $(combination)/%/vhtt_shapes.root
 	cp $< $@
 
-$(combination)/%/SM4_vhtt.root: cards/combined_%SM4.root
+$(combination)/%/SM4_vhtt.txt: cards/combined_%SM4.txt $(combination)/%/vhtt_shapes.root
 	cp $< $@

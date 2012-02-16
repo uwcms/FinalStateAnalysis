@@ -19,7 +19,7 @@ parser.add_option("-o", "--out", dest="out", default="output_card.txt",
 parser.add_option("-m", "--mass", dest="mass", default='120',
                   type="string", help="Higgs mass - can optionally append SM4 or FF")
 
-parser.add_option("-f", "--file", dest="file", default="wh_shapes.root",
+parser.add_option("-f", "--file", dest="file", default="vhtt_shapes.root",
                   type="string", help="Shape file")
 
 parser.add_option("--mmt_shape", type="string", default="MuTauMass",
