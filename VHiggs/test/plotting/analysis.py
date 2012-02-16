@@ -22,6 +22,7 @@ import uncertainties
 import FinalStateAnalysis.PatTools.data as data_tool
 from FinalStateAnalysis.Utilities.AnalysisPlotter import styling,samplestyles
 from FinalStateAnalysis.Utilities.Histo import Histo
+import FinalStateAnalysis.StatTools.poisson as poisson
 
 import analysis_cfg
 
@@ -40,11 +41,6 @@ log.info("Loading fake rate functions")
 ROOT.gROOT.ProcessLine('.L fake_rates.C++')
 
 ROOT.gStyle.SetHistTopMargin(0.0)
-
-def get_histo(canvas):
-    for obj in canvas.GetListOfPrimitives():
-        pass
-        #print obj
 
 def estimate_fake_sum(fr1, fr2, fr12s, fr12en, fudge=0.0):
     '''
@@ -208,7 +204,7 @@ if __name__ == "__main__":
 
                 log.info("---- now running selection %s", selection_name)
 
-                def saveplot(filename):
+                def saveplot(filename, histo=None):
                     # Save the current canvas
                     filetype = '.pdf'
                     canvas.SetLogy(False)
@@ -217,10 +213,13 @@ if __name__ == "__main__":
                                             filename + filetype)
                     log.info('saving %s', filename)
                     canvas.Print(filename)
-                    get_histo(canvas)
                     canvas.SetLogy(True)
+                    if histo:
+                        histo.SetMaximum(histo.GetMaximum()*10.)
                     canvas.Update()
                     canvas.Print(filename.replace(filetype, '_log' + filetype))
+                    if histo:
+                        histo.SetMaximum(histo.GetMaximum()/10.)
 
                 # Cuts in this selection
                 extra_cuts = selection_cfg['cuts']
@@ -527,6 +526,9 @@ if __name__ == "__main__":
                         primds, ntuple + ':' + plot_base_name + '_ult',
                         rebin = rebin, show_overflows=True,
                     )
+                    # Modify
+                    ult_data_poisson = poisson.convert(ult_data.th1,
+                                                       x_err=False, set_zero_bins=-1)
 
                     ############################################################
                     ### Corrected WZ and ZZ for fake rate contamination  #######
@@ -622,7 +624,7 @@ if __name__ == "__main__":
                                          "Final #mu#mu#tau selection")
                     legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
                     legend.SetFillStyle(0)
-                    legend.SetBorderSize(1)
+                    legend.SetBorderSize(0)
 
                     #Make the tribosons purple
                     styling.apply_style(
@@ -647,9 +649,13 @@ if __name__ == "__main__":
                                     "%s fakes" % object2_cfg['name'], "lf")
                     stack.Draw()
                     stack.GetXaxis().SetTitle(xaxis_title)
-                    ult_data.Draw('same, pe,x0')
+                    ult_data_poisson.Draw('p0')
                     legend.Draw()
-                    stack.SetMaximum(2.*ult_data.GetMaximum())
+                    stack.SetMaximum(max(6.5, 2*max(
+                        ult_data.GetMaximum(),
+                        stack.GetMaximum()))
+                    )
+
                     cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
 
                     saveplot(plot_base_name + '_ult_wfrs')
@@ -724,7 +730,7 @@ if __name__ == "__main__":
 
                     legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
                     legend.SetFillStyle(0)
-                    legend.SetBorderSize(1)
+                    legend.SetBorderSize(0)
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
                     stack.Add(tribosons.th1, 'hist')
@@ -762,10 +768,11 @@ if __name__ == "__main__":
                     error_band_hist.DrawCopy('same,e2')
                     error_band_hist.SetFillStyle(0)
                     error_band_hist.Draw('same,hist')
-                    ult_data.Draw('pe,same,x0')
-                    stack.SetMaximum(2*max(
+                    ult_data_poisson.Draw('p0')
+                    stack.SetMaximum( max(6.5, 2*max(
                         ult_data.GetMaximum(),
                         stack.GetMaximum()))
+                    )
 
                     signalx5 = (signal + signalHWW)*5
                     signalx5.SetLineStyle(1)
@@ -777,7 +784,7 @@ if __name__ == "__main__":
                     legend.Draw()
 
                     cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
-                    saveplot(plot_base_name + '_ult_combfks')
+                    saveplot(plot_base_name + '_ult_combfks', stack)
 
                     ############################################################
                     ### Store a nice error summary in a JSON file         ######
