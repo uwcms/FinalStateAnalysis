@@ -41,6 +41,10 @@ if __name__ == "__main__":
                         help="Comma separated corners of legend."
                         " default: %(default)s")
 
+    parser.add_argument('--showpoints', action='store_true',
+                        help="Put dots at the actual mass values where"
+                        " the limit is set")
+
     args = parser.parse_args()
 
     all_files = []
@@ -66,11 +70,19 @@ if __name__ == "__main__":
     exp, onesig, twosig = limitplot.build_expected_band(limit_data, key)
     twosig.Draw("3")
     onesig.Draw("3")
-    exp.Draw("l")
+
+    exp_draw_option = 'l'
+    if args.noobs and args.showpoints:
+        exp_draw_option += 'p'
+
+    exp.Draw(exp_draw_option)
 
     if not args.noobs:
         obs = limitplot.build_obs_line(limit_data, key)
-        obs.Draw("l")
+        obs_draw_option = 'l'
+        if args.showpoints:
+            obs_draw_option += 'p'
+        obs.Draw(obs_draw_option)
 
     cms_label = styling.cms_preliminary(args.lumi)
 
