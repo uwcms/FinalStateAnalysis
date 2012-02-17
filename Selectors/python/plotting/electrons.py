@@ -56,6 +56,36 @@ deltaEtaSuperClusterTrack = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+chargeIdTight = cms.PSet(
+    _binary_bins,
+    name = cms.untracked.string("${name}_Charge_Tight"),
+    description = cms.untracked.string("${nicename} Electron Charge tight"),
+    plotquantity = cms.untracked.string(
+        '(${getter}isGsfCtfScPixChargeConsistent)'
+    ),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+chargeIdMedium = cms.PSet(
+    _binary_bins,
+    name = cms.untracked.string("${name}_Charge_Medium"),
+    description = cms.untracked.string("${nicename} Electron Charge tight"),
+    plotquantity = cms.untracked.string(
+        '(${getter}isGsfScPixChargeConsistent())'
+    ),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+chargeIdLoose = cms.PSet(
+    _binary_bins,
+    name = cms.untracked.string("${name}_Charge_Loose"),
+    description = cms.untracked.string("${nicename} Electron Charge loose"),
+    plotquantity = cms.untracked.string(
+        '(${getter}isGsfCtfChargeConsistent())'
+    ),
+    lazyParsing = cms.untracked.bool(True),
+)
+
 deltaPhiSuperClusterTrack = cms.PSet(
     _binary_bins,
     name = cms.untracked.string("${name}_EID_DeltaPhi"),
@@ -233,6 +263,7 @@ hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter = get_trigger_matching(
 all = [
     reliso, wwid, mitid, jetPt, rawJetPt, btag, btagmuon, missingHits,
     hasConversion, muonoverlap,
+    chargeIdTight, chargeIdMedium, chargeIdLoose,
     deltaEtaSuperClusterTrack, deltaPhiSuperClusterTrack, sigmaIEta, hOverE,
     cicLoose, cicMedium, cicTight, cicHyperTight,
     hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter,
