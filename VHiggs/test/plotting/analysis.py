@@ -528,7 +528,7 @@ if __name__ == "__main__":
                     )
                     # Modify
                     ult_data_poisson = poisson.convert(ult_data.th1,
-                                                       x_err=False, set_zero_bins=-1)
+                                                       x_err=False, set_zero_bins=-100)
 
                     ############################################################
                     ### Corrected WZ and ZZ for fake rate contamination  #######
