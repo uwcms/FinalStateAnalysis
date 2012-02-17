@@ -41,6 +41,8 @@ def convert(histogram, x_err=True, set_zero_bins=None):
 
         if set_zero_bins is not None and N == 0:
             output.SetPoint(i, output.GetX()[i], set_zero_bins)
+            output.SetPointEYhigh(i, 0)
+            output.SetPointEYlow(i, 0)
 
         alpha = 1.0-0.6827
         L, U = 0, 0
