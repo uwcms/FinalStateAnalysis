@@ -55,7 +55,7 @@ class DataCardChannel(object):
                         value = affected_samples[sample]
                         # Check if the value was stored as a float
                         if not isinstance(value, basestring):
-                            value = '%0.3f' % sys_value
+                            value = '%0.3f' % value
                 output.append(value)
             yield output
 
