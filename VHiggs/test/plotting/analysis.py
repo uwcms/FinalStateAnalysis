@@ -565,6 +565,28 @@ if __name__ == "__main__":
                         corrected_mc_histos.append(mc_correct)
 
                     ############################################################
+                    ### Improve WZ shape template
+                    ############################################################
+                    # Use the efficiency of the madgraph sample
+                    log.info("------- merging pythia WZ shape")
+                    madgraph_wz_yield = corrected_mc_histos[1].Integral()
+                    log.info("--------- initial WZ yield %0.f", madgraph_wz_yield)
+                    pythia_wz = plotter.get_histogram(
+                        'WZ_pythia',
+                        ntuple + ':' + plot_base_name + '_ult',
+                        rebin = rebin, show_overflows = True
+                    )
+                    pythia_wz_yield = pythia_wz.Integral()
+                    # Scale such that pythia histogram is the same as madgraph
+                    pythia_wz = pythia_wz*(madgraph_wz_yield/pythia_wz_yield)
+                    combined_wz = pytha_wz + corrected_mc_histos[1]
+                    # Average over the two
+                    combined_wz = combined_wz*0.5
+                    # Replace corrected WZ histogram
+                    corrected_mc_histos[1] = combined_wz
+                    log.info("--------- final WZ yield %0.f", combined_wz.Integral())
+
+                    ############################################################
                     ### Make the stacked plot showing both fake sources  #######
                     ############################################################
 

@@ -9,7 +9,7 @@ Define top-level configuration for WH analysis.
 # Data source parameters
 INT_LUMI = 4684
 #JOBID = '2012-01-28-v1-WHAnalyze'
-JOBID = '2012-02-01-v1-WHAnalyze'
+JOBID = '2012-02-19-v1-WHAnalyze'
 
 # Setup function which retrieves fake rate weights
 fake_rates_file = open('fake_rates.json')
@@ -269,9 +269,9 @@ cfg = {
             'Njets' : ('NjetsPt20_Njets', 'N_{jets}', [10, -0.5, 9.5], 1),
             'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
             'count' : ('1', 'Count', [1, 0, 1], 1),
-            'Muon1Pt' : ('Muon1Pt', 'p_{T}', [100, 0, 200], 5),
-            'Muon2Pt' : ('Muon2Pt', 'p_{T}', [100, 0, 200], 5),
-            'TauPt' : ('TauPt', 'p_{T}', [100, 0, 200], 5),
+            'Muon1Pt' : ('Muon1Pt', 'p_{T}', [100, 0, 200], pt_binning),
+            'Muon2Pt' : ('Muon2Pt', 'p_{T}', [100, 0, 200], pt_binning),
+            'TauPt' : ('TauPt', 'p_{T}', [100, 0, 200], pt_binning),
         },
         'baseline' : [
             'Muon1Pt > 20',
