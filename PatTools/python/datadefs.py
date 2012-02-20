@@ -49,7 +49,7 @@ data_name_map = {
     'VH130WW' : ['VH_130_HWW'],
     'VH140WW' : ['VH_140_HWW'],
     'VH150WW' : ['VH_150_HWW'],
-    'VH160WW' : ['VH_160_HWW'],
+    'VH160WW' : ['VH_160_HWW_correct'],
 
     #'VH120All' : ['VH_120_HWW', 'VH_120'],
     #'VH130All' : ['VH_130_HWW', 'VH_130'],
