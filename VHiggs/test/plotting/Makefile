@@ -228,6 +228,8 @@ cards/$(channel).cls.pdf: $(cls_results) legendpos.py
 	  --max-y 40 \
 	  --method cls cards/$(channel)_*.cls.json -o $@ \
 	  --showpoints \
+	  --blurb "`./blurbtext.py $@`" \
+	  --blurbpos "0.5, 0.12, 0.95, 0.22" \
 	  --legendpos `./legendpos.py $@`
 
 cards/$(channel).cls.tex: $(cls_results)  
@@ -244,6 +246,8 @@ cards/$(channel).asymp.pdf: $(asymp_results) legendpos.py
 	  --max-y 40 \
 	  --method asymp cards/$(channel)_*.asymp.json -o $@ \
 	  --showpoints \
+	  --blurb "`./blurbtext.py $@`" \
+	  --blurbpos "0.5, 0.12, 0.95, 0.22" \
 	  --legendpos `./legendpos.py $@`
 
 

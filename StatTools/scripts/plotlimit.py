@@ -10,15 +10,27 @@ import glob
 from RecoLuminosity.LumiDB import argparse
 import FinalStateAnalysis.StatTools.limitplot as limitplot
 import FinalStateAnalysis.Utilities.styling as styling
-import ROOT
+import sys
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('data', nargs='*', help='JSON files with limit data')
     parser.add_argument('--method', type=str, default='cls',
                         help='Limit method to use.  Default: cls')
+
     parser.add_argument('--label', type=str, default='',
                         help='Limit label to use.  Default: None')
+
+    parser.add_argument('--blurb', type=str, default='',
+                        help='Blurb to use at [blurbpos].  Default: None')
+
+    parser.add_argument('--blurbpos', type=str, default="0.5,0.12,0.9,0.25",
+                        help='[blurb] position, separated by commas.  '
+                        ' Default: %(default)s')
+
+    parser.add_argument('--blurbalign', type=int, default="31",
+                        help='[blurb] alignment. Default: %(default)i')
+
     parser.add_argument('--no-obs', dest='noobs', action='store_true',
                         help="Don't show the observed limit")
 
@@ -45,7 +57,10 @@ if __name__ == "__main__":
                         help="Put dots at the actual mass values where"
                         " the limit is set")
 
+    print sys.argv
     args = parser.parse_args()
+
+    import ROOT
 
     all_files = []
     for file in args.data:
@@ -98,6 +113,16 @@ if __name__ == "__main__":
     legend.AddEntry(onesig, "#pm 1 #sigma",  'f')
     legend.AddEntry(twosig, "#pm 2 #sigma",  'f')
     legend.Draw()
+
+    blurb = None
+    if args.blurb:
+        blurbargs = [float(x) for x in args.blurbpos.split(',')] + ['brNDC']
+        blurb = ROOT.TPaveText(*blurbargs)
+        blurb.SetFillStyle(0)
+        blurb.SetBorderSize(0)
+        blurb.SetTextAlign(args.blurbalign)
+        blurb.AddText(args.blurb)
+        blurb.Draw()
 
     canvas.RedrawAxis()
 
