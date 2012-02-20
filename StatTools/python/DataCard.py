@@ -52,7 +52,10 @@ class DataCardChannel(object):
                 affected_samples = self.systematics.get(sys)
                 if affected_samples:
                     if sample in affected_samples:
-                        value = '%0.2f' % (affected_samples[sample])
+                        value = affected_samples[sample]
+                        # Check if the value was stored as a float
+                        if not isinstance(value, basestring):
+                            value = '%0.3f' % sys_value
                 output.append(value)
             yield output
 
