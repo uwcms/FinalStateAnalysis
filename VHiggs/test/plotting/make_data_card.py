@@ -136,7 +136,6 @@ mmt.add_background('ZZ')
 mmt.add_background('tribosons')
 
 mc_samples = ['WZ', 'ZZ', 'tribosons']
-mc_samples = ['WZ', 'ZZ', ]
 
 mmt.add_sys('lumi', 1 + lumi_err, signal_datasets + mc_samples)
 mmt.add_sys('CMS_chi2Lt_vhtt', 1 + chi2err, signal_datasets + mc_samples)
