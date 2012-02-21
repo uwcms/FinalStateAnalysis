@@ -53,7 +53,7 @@ for sample in sorted(datadefs.keys()):
         'farmoutAnalysisJobs',
         '--infer-cmssw-path',
         '--output-dag-file=%s/%s-%s.dag' % (dag_directory, jobId, sample),
-        '--input-files-per-job=2',
+        '--input-files-per-job=1',
     ]
 
     command.extend(farmout_options)
