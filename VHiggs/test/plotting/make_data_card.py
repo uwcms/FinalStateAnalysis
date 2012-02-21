@@ -98,12 +98,20 @@ high_mu_fake_error = options.high_mu_fake_err
 
 is_fermiophobic = False
 is_sm4 = False
+is_tt_only = False
+is_ww_only = False
 if 'FF' in options.mass:
     is_fermiophobic = True
     mass = int(options.mass.replace('FF', ''))
 elif 'SM4' in options.mass:
     is_sm4 = True
     mass = int(options.mass.replace('SM4', ''))
+elif 'WW' in options.mass:
+    is_ww_only = True
+    mass = int(options.mass.replace('WW', ''))
+elif 'tt' in options.mass:
+    is_tt_only = True
+    mass = int(options.mass.replace('tt', ''))
 else:
     mass = int(options.mass)
 
@@ -122,8 +130,12 @@ signal_datasets = ['VH%i' % mass, 'VH%iWW' % mass]
 # If we are fermiophobic, we only use HWW
 if is_fermiophobic:
     signal_datasets = ['VH%iWWFF' % mass]
-if is_sm4:
+elif is_sm4:
     signal_datasets = ['VH%iSM4' % mass, 'VH%iWWSM4' % mass]
+elif is_tt_only:
+    signal_datasets = ['VH%i' % mass]
+elif is_ww_only:
+    signal_datasets = ['VH%iWW' % mass]
 
 mmt_folder = "mmt_mumu_%s_%s" % (options.selection, mmt_shape)
 mmt = dc.DataCardChannel(mmt_folder, shapes)

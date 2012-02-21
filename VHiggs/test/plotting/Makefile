@@ -194,9 +194,9 @@ cards/$(channel)_%.root: cards/$(channel)_%.txt
 # Rule to compute the asymptotic limit from a given card file
 cards/$(channel)_%.asymp.json: cards/$(channel)_%.root
 	combine $< -M Asymptotic -H ProfileLikelihood \
-	  -m `echo $* | sed "s|FF||" | sed "s|SM4||"` \
+	  -m `echo $* | sed "s|FF||" | sed "s|SM4||" | sed "s|WW||" | sed "s|tt||"` \
 	  | limit2JSON.py --mass $* > $@
-	rm higgsCombineTest.Asymptotic.mH`echo $* | sed "s|FF||" | sed "s|SM4||"`.root
+	rm higgsCombineTest.Asymptotic.mH`echo $* | sed "s|FF||" | sed "s|SM4||"| sed "s|WW||" | sed "s|tt||"`.root
 
 ################################################################################
 ## Tools for computing the full CLs limits  ####################################
@@ -278,3 +278,16 @@ $(combination)/%/FF_vhtt.txt: cards/combined_%FF.txt $(combination)/%/vhtt_shape
 
 $(combination)/%/SM4_vhtt.txt: cards/combined_%SM4.txt $(combination)/%/vhtt_shapes.root
 	cp $< $@
+
+################################################################################
+## Debug cards, using only TauTau and WW contributions #########################
+################################################################################
+
+debug_points=120 130 140 150 160
+debug_cards: $(patsubst %, cards/$(channel)_%tt.txt, $(debug_points)) \
+  $(patsubst %, cards/$(channel)_%WW.txt, $(debug_points))
+
+debug_limits: $(patsubst %, cards/$(channel)_%tt.asymp.json, $(debug_points)) \
+  $(patsubst %, cards/$(channel)_%WW.asymp.json, $(debug_points))
+
+
