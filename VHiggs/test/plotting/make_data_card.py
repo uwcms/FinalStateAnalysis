@@ -64,7 +64,7 @@ parser.add_option("--triboson_err", type="float", default=1.00,
                   help="Error on triboson cross section")
 
 parser.add_option("--channels", type="choice", default="combined",
-                  choices=["combined", "mmt", "emt"],
+                  choices=["combined", "mmt", "emt", "combinedNoThSys"],
                   help="Which channels to use")
 
 parser.add_option("--selection", type="choice", default="final",
@@ -143,8 +143,12 @@ mmt.add_sys('CMS_WZ_vhtt', 1.0 + wz_err, ['WZ'])
 mmt.add_sys('CMS_ZZ_vhtt', 1.0 + zz_err, ['ZZ'])
 mmt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
 mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), signal_datasets + mc_samples)
-mmt.add_sys('pdf_vh', pdf_err, signal_datasets)
-mmt.add_sys('QCDscale_VH', scale_err, signal_datasets)
+
+# Optionally handle the case where theory errors are not used
+if 'NoThSys' not in options.channels:
+    mmt.add_sys('pdf_vh', pdf_err, signal_datasets)
+    mmt.add_sys('QCDscale_VH', scale_err, signal_datasets)
+
 if options.triboson_err > 0:
     mmt.add_sys('CMS_tribosons_xsec_vhtt', 1.0 + options.triboson_err, ['tribosons'])
 
@@ -197,8 +201,12 @@ emt.add_sys('CMS_ZZ_vhtt', 1.0 + zz_err, ['ZZ'])
 emt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
 emt.add_sys('CMS_eff_m', 1 + mu_id_err, signal_datasets + mc_samples)
 emt.add_sys('CMS_eff_e', 1.02, signal_datasets + mc_samples)
-mmt.add_sys('pdf_vh', pdf_err, signal_datasets)
-mmt.add_sys('QCDscale_VH', scale_err, signal_datasets)
+
+# Optionally handle the case where theory errors are not used
+if 'NoThSys' not in options.channels:
+    emt.add_sys('pdf_vh', pdf_err, signal_datasets)
+    emt.add_sys('QCDscale_VH', scale_err, signal_datasets)
+
 if e_fake_error > 0:
     emt.add_sys('CMS_fake_e_vhtt', 1 + e_fake_error, 'fakes')
 if mu_fake_error > 0:
@@ -234,7 +242,7 @@ for path, subdirs, histos in shapes.walk(emt_folder, class_pattern="TH1*"):
 output = open(options.out, 'w')
 channel_map = {
     'combined' : [mmt, emt],
-    'fermiophobic' : [mmt, emt],
+    'combinedNoThSys' : [mmt, emt],
     'emt' : [emt],
     'mmt' : [mmt],
 }
