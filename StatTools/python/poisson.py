@@ -28,6 +28,20 @@ Code taken from:
 
 import ROOT
 
+def poisson_errors(N, coverage=0.6827):
+    alpha = 1.0-coverage
+    L, U = 0, 0
+    if N > 0:
+        # WORKAROUND (see above)
+        #L = ROOT.Math.gamma_quantile(alpha/2, N, 1.)
+        L = ROOT.Math.gamma_quantile_c((1. - alpha/2), N, 1.)
+    if N == 0:
+        U =  ROOT.Math.gamma_quantile_c(alpha,N+1,1)
+    else:
+        U = ROOT.Math.gamma_quantile_c(alpha/2,N+1,1)
+    return L, U
+
+
 def convert(histogram, x_err=True, set_zero_bins=None):
     ''' Convert a histogram into a TGraphAsymmErrors with Poisson errors '''
     output = ROOT.TGraphAsymmErrors(histogram)
@@ -45,16 +59,7 @@ def convert(histogram, x_err=True, set_zero_bins=None):
             output.SetPointEYlow(i, 0)
 
         alpha = 1.0-0.6827
-        L, U = 0, 0
-        if N > 0:
-            # WORKAROUND (see above)
-            #L = ROOT.Math.gamma_quantile(alpha/2, N, 1.)
-            L = ROOT.Math.gamma_quantile_c((1. - alpha/2), N, 1.)
-
-        if N == 0:
-            U =  ROOT.Math.gamma_quantile_c(alpha,N+1,1)
-        else:
-            U = ROOT.Math.gamma_quantile_c(alpha/2,N+1,1)
+        L, U = poisson_errors(N)
 
         print i, N, L, U
         output.SetPointEYlow(i, N - L)
