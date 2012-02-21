@@ -18,6 +18,8 @@ import math
 import os
 import ROOT
 import uncertainties
+import sys
+from datetime import datetime, timedelta
 
 import FinalStateAnalysis.PatTools.data as data_tool
 from FinalStateAnalysis.Utilities.AnalysisPlotter import styling,samplestyles
@@ -41,6 +43,16 @@ log.info("Loading fake rate functions")
 ROOT.gROOT.ProcessLine('.L fake_rates.C++')
 
 ROOT.gStyle.SetHistTopMargin(0.0)
+
+_MAX_MINUTES=10
+_START = datetime.now()
+
+def check_time():
+    elapsed = datetime.now() - _START
+    log.info("time check-in.  elapsed=%s", elapsed)
+    if elapsed > timedelta(0, _MAX_MINUTES*60):
+        log.error("------ maximum time exceeded!")
+        sys.exit(6)
 
 def estimate_fake_sum(fr1, fr2, fr12s, fr12en, fudge=0.0):
     '''
@@ -101,7 +113,7 @@ def estimate_fake_sum(fr1, fr2, fr12s, fr12en, fudge=0.0):
     return total_yield
 
 if __name__ == "__main__":
-    log.info("Beginning analysis")
+    log.info("Beginning analysis at %s", _START)
     ############################################################################
     ### Load the data ##########################################################
     ############################################################################
@@ -230,6 +242,7 @@ if __name__ == "__main__":
                         #log.warning("Skipping var %s!!!!!!", var)
                         #continue
                     log.info("------ doing variable %s", var)
+
                     plot_base_name = '_'.join(
                         [channel, charge_cat, selection_name, var])
                     if var not in variables:
@@ -240,6 +253,9 @@ if __name__ == "__main__":
                     to_plot, xaxis_title, binning, rebin = variables[var]
 
                     def register_tree(label, the_selections, weight):
+                        # Check the time each time we do a long running
+                        # operation
+                        check_time()
                         plotter.register_tree(
                             plot_base_name + '_' + label,
                             ntuple,
