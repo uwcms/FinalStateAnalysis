@@ -159,6 +159,16 @@ datadefs = {
         'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.1096,
         'analyses' : ['VH', 'SSDL'],
     },
+    'WZJetsTo3LNu_fallJob' : {
+        'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'pu' : 'S4',
+        #'x_sec' : 0.7192*_picobarns, # FROM PREP
+        # 17 +- 2.4 1.1 1.0 from EWK-11-10
+        #'x_sec' : 17.0*_picobarns*0.3257*0.1096,
+        'x_sec' : 26.735*_picobarns*3*0.03365*(0.1075+0.1057+0.1125) ,
+        'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.1096,
+        'analyses' : ['VH', 'SSDL'],
+    },
     'WZJetsTo3LNu_pythia' : {
         'datasetpath' : "/WZTo3LNu_TuneZ2_7TeV_pythia6_tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
@@ -307,6 +317,27 @@ datadefs = {
         'datasetpath' :"/WH_ZH_TTH_HToWW_M-140_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
         'x_sec' : (0.3857 + 0.2172 + 0.06072)*_picobarns*5.03E-01,
         'pu' : 'S4',
+        'analyses' : ['VH'],
+    },
+
+    'VH_120_HWW_fallJob' : {
+        'datasetpath' :"/WH_ZH_TTH_HToWW_M-120_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.6561 + 0.3598 + 0.09756)*_picobarns*1.43E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+
+    'VH_130_HWW_fallJob' : {
+        'datasetpath' :"/WH_ZH_TTH_HToWW_M-130_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.5008 + 0.2778 + 0.07658)*_picobarns*3.05E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+
+    'VH_140_HWW_fallJob' : {
+        'datasetpath' :"/WH_ZH_TTH_HToWW_M-140_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : (0.3857 + 0.2172 + 0.06072)*_picobarns*5.03E-01,
+        'pu' : 'S6',
         'analyses' : ['VH'],
     },
 
