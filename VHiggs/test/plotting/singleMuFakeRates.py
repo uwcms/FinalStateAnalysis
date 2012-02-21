@@ -336,6 +336,7 @@ fakerates = {
         ],
         'denom' : [
             'Mu17Ele8All_HLT > 0.5',
+            'Electron_Charge_Tight > 0.5',
             'Muon2_MuBtag < 0.5',
             'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 10',
@@ -373,6 +374,7 @@ fakerates = {
         'final_cuts' : [],
         'denom' : [
             'Mu17Ele8All_HLT > 0.5',
+            'Electron_Charge_Tight > 0.5',
             'Muon2_MuBtag < 0.5',
             'ElectronCharge*Muon2Charge > 0',
             'ElectronPt > 10',
@@ -481,7 +483,7 @@ for data_set, skips, int_lumi, puTag in [
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'Mu', '2012-01-28-v1-MuonTP', 'scratch_results', int_lumi, skips,
+        'Mu', '2012-02-20-v1-MuonTP', 'scratch_results', int_lumi, skips,
         count = '/mm/skimCounter', unweighted = False)
 
     legend = plotter.build_legend(

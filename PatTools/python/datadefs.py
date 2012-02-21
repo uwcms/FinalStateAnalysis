@@ -25,8 +25,8 @@ data_name_map = {
     'Wjets' : ['WplusJets_madgraph'],
 
     'WW' : ['WWJetsTo2L2Nu'],
-    'WZ' : ['WZJetsTo3LNu'] + ['WZJetsTo3LNu_pythia'],
-    #'WZ_pythia' : ['WZJetsTo3LNu_pythia'],
+    'WZ' : ['WZJetsTo3LNu'],
+    'WZ_pythia' : ['WZJetsTo3LNu_pythia'],
     'ZZ' : ['ZZJetsTo4L'],
 
     'ttjets': ['TTplusJets_madgraph'],
@@ -125,20 +125,17 @@ datadefs = {
         'pu' : 'S4',
         #'x_sec' : 0.7192*_picobarns, # FROM PREP
         # 17 +- 2.4 1.1 1.0 from EWK-11-10
-        #'x_sec' : 17.0*_picobarns*0.3257*0.1096 * 0.5,
-        'x_sec' : 17.0*_picobarns*0.3257*0.1096 * 0.5, # FIXME !!!!!!!!
-        # This is scaled down by 50% to add to madgraph sample
+        #'x_sec' : 17.0*_picobarns*0.3257*0.1096,
+        'x_sec' : 26.735*_picobarns*3*0.03365*(0.1075+0.1057+0.1125) ,
         'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.1096,
         'analyses' : ['VH', 'SSDL'],
     },
     'WZJetsTo3LNu_pythia' : {
         'datasetpath' : "/WZTo3LNu_TuneZ2_7TeV_pythia6_tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
-        #'x_sec' : 0.7192*_picobarns, # FROM PREP
-        # 17 +- 2.4 1.1 1.0 from EWK-11-10
-        'x_sec' : 17.0*_picobarns*0.3257*0.1096 * 0.5 * 0.50, # FIXME !!!!!!!!
-        # This is scaled down by 75% to add to madgraph sample,
-        # pythia is only LO so it has a lower x-section
+        # This xsec comes from PREP and is only LO.  Different from the PREP
+        # value for the madgraph sample, as Pythia does not include gamma*
+        'x_sec' : 0.33*_picobarns, # FIXME !!!!!!!!
         'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.1096,
         'analyses' : ['VH', 'SSDL'],
     },

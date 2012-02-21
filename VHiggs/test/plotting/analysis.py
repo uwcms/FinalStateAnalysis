@@ -582,6 +582,8 @@ if __name__ == "__main__":
                     combined_wz = pythia_wz + corrected_mc_histos[1]
                     # Average over the two
                     combined_wz = combined_wz*0.5
+                    styling.apply_style(
+                        combined_wz, **samplestyles.SAMPLE_STYLES['WZ'])
                     # Replace corrected WZ histogram
                     corrected_mc_histos[1] = combined_wz
                     log.info("--------- final WZ yield %0.2f", combined_wz.Integral())
