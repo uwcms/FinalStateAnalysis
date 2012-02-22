@@ -118,11 +118,12 @@ cfg = {
                         #'vars' : ['ETauMass', 'EJetPt', 'HT', 'count', 'MuPt'],
                         #'vars' : ['count', 'TauLeadTrkPt', 'ETauMass', 'MuTauMass', 'HT', ],
                         #'vars' : ['count', 'ETauMass', 'EJetPt', 'MuJetPt'],
-                        'vars' : ['count', 'ETauMass', 'SubleadingMass'],
+                        'vars' : ['count', 'SubleadingMass'],
                     },
                     'vtxonly' : {
                         'cuts' : [],
-                        'vars' : ['HT', 'MuPt', 'ElecPt', 'TauPt', 'ETauMass'],
+                        #'vars' : ['HT', 'MuPt', 'ElecPt', 'TauPt', 'ETauMass'],
+                        'vars' : ['HT', ],
                     },
                 },
                 'object1' : {
@@ -326,7 +327,8 @@ cfg = {
                     },
                     'vtxonly' : {
                         'cuts' : [],
-                        'vars' : ['HT', 'TauPt', 'Muon1Pt', 'Muon2Pt', 'MuTauMass'],
+                        #'vars' : ['HT', 'TauPt', 'Muon1Pt', 'Muon2Pt', 'MuTauMass'],
+                        'vars' : ['HT'],
                     },
                 },
                 'object1' : {
