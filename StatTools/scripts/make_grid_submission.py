@@ -112,7 +112,7 @@ if __name__ == "__main__":
     if not os.path.exists(options.cardfile):
         raise IOError("Can't open input card file %s" % options.cardfile)
 
-    card_source = optionds.cardfile
+    card_source = options.cardfile
     card_dest = os.path.join(options.submitdir,
                              os.path.basename(options.cardfile))
     shutil.copy(card_source, card_dest)
@@ -131,7 +131,7 @@ if __name__ == "__main__":
         submit_statement = submit_template.format(
             submit_dir = options.submitdir,
             card_file_base = os.path.basename(card_dest),
-            card_file_full_path = options.card_dest,
+            card_file_full_path = card_dest,
             exclusion_point = point,
             toys = options.toys,
             iter = options.iter,
