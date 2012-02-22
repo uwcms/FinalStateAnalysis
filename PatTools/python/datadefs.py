@@ -25,9 +25,9 @@ data_name_map = {
     'Wjets' : ['WplusJets_madgraph'],
 
     'WW' : ['WWJetsTo2L2Nu'],
-    'WZ' : ['WZJetsTo3LNu'],
+    'WZ' : ['WZJetsTo3LNu_fallJob'],
     'WZ_pythia' : ['WZJetsTo3LNu_pythia'],
-    'ZZ' : ['ZZJetsTo4L'],
+    'ZZ' : ['ZZJetsTo4L_pythia'],
 
     'ttjets': ['TTplusJets_madgraph'],
 
@@ -45,9 +45,9 @@ data_name_map = {
     'VH150' : ['VH_150'],
     'VH160' : ['VH_160'],
 
-    'VH120WW' : ['VH_120_HWW'],
-    'VH130WW' : ['VH_130_HWW'],
-    'VH140WW' : ['VH_140_HWW'],
+    'VH120WW' : ['VH_120_HWW_fallJob'],
+    'VH130WW' : ['VH_130_HWW_fallJob'],
+    'VH140WW' : ['VH_140_HWW_fallJob'],
     'VH150WW' : ['VH_150_HWW'],
     'VH160WW' : ['VH_160_HWW_correct'],
 
