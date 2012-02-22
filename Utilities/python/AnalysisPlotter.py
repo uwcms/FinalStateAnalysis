@@ -40,6 +40,9 @@ class AnalysisSample(object):
         self.owned = {}
         self.computed_hists = {}
 
+    def get_weight(self):
+        return self.file.weight
+
     def get(self, path, **kwargs):
         self.check_hists('gethisto')
         owned_key = (path, tuple(kwargs.keys()))
@@ -200,6 +203,9 @@ class AnalysisMultiSample(AnalysisSample):
         self.subsamples = subsamples
         super(AnalysisMultiSample, self).__init__(None, name, **kwargs)
 
+    def get_weight(self):
+        return [x.get_weight() for x in self.subsamples]
+
     def get(self, path, **kwargs):
         owned_key = (path, tuple(kwargs.keys()))
         if owned_key not in self.owned:
@@ -332,6 +338,15 @@ class AnalysisPlotter(object):
         drawopt = self.sample_dict[sample].style_dict.get('draw_opt', '')
         histo.SetOption(drawopt)
         return histo
+
+    def get_weight(self, sample):
+        ''' Get the weight normalization for a sample '''
+        if sample not in self.sample_dict:
+            raise KeyError(
+                "I don't know anything about sample %s - only these: %s" % (
+                    sample, ", ".join(self.sample_dict.keys())))
+        return self.sample_dict[sample].get_weight()
+
 
 
 if __name__ == "__main__":
