@@ -11,6 +11,7 @@ import re
 
 import FinalStateAnalysis.StatTools.DataCard as dc
 import theory_errors
+from get_stat_errors import get_stat_error
 
 parser = OptionParser(usage="usage: %prog [options]")
 
@@ -138,6 +139,7 @@ elif is_ww_only:
     signal_datasets = ['VH%iWW' % mass]
 
 mmt_folder = "mmt_mumu_%s_%s" % (options.selection, mmt_shape)
+
 mmt = dc.DataCardChannel(mmt_folder, shapes)
 for signal_dataset in signal_datasets:
     mmt.add_signal(signal_dataset)
@@ -155,6 +157,14 @@ mmt.add_sys('CMS_WZ_vhtt', 1.0 + wz_err, ['WZ'])
 mmt.add_sys('CMS_ZZ_vhtt', 1.0 + zz_err, ['ZZ'])
 mmt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
 mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), signal_datasets + mc_samples)
+
+# Add stat errors on MC samples
+for sample in ['WZ', 'ZZ'] + signal_datasets:
+    stat_error = get_stat_error(sample, mmt.get_rate(sample))
+    if stat_error > 0.02:
+        print "ADDING STAT ERROR %f FOR SAMPLE %s" % (stat_error, sample)
+    mmt.add_sys('CMS_vhtt_stat_mmt_%s' % sample, 1 + stat_error, [sample])
+
 
 # Optionally handle the case where theory errors are not used
 if 'NoThSys' not in options.channels:
@@ -213,6 +223,13 @@ emt.add_sys('CMS_ZZ_vhtt', 1.0 + zz_err, ['ZZ'])
 emt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
 emt.add_sys('CMS_eff_m', 1 + mu_id_err, signal_datasets + mc_samples)
 emt.add_sys('CMS_eff_e', 1.02, signal_datasets + mc_samples)
+
+# Add stat errors on MC samples
+for sample in ['WZ', 'ZZ'] + signal_datasets:
+    stat_error = get_stat_error(sample, emt.get_rate(sample))
+    if stat_error > 0.02:
+        print "ADDING STAT ERROR %f FOR SAMPLE %s" % (stat_error, sample)
+    emt.add_sys('CMS_vhtt_stat_emt_%s' % sample, 1 + stat_error, [sample])
 
 # Optionally handle the case where theory errors are not used
 if 'NoThSys' not in options.channels:
