@@ -106,7 +106,7 @@ extensions_shape_file=wh_shapes_sm4_ff.root
 # The name of the shape root file
 shape_file=vhtt_shapes.root
 # Mass points to run limits on
-masspoints=100 110 115 120 130 140 150 160 
+masspoints=100 110 120 130 140 150 160 
 # Exclusion range to use when building CLs grid
 min_cls="0.2"
 max_cls="70"
@@ -181,7 +181,10 @@ $(shape_file): $(extensions_shape_file) addStatShapes.py
 cards/$(channel)_%.txt: $(shape_file) make_data_card.py
 	python make_data_card.py -o $@ -m $* -f $(shape_file) \
 	  --channels $(channel) --selection $(selection) \
-	  --emt_shape SubleadingMass
+	  --emt_shape count \
+	  --mmt_shape count 
+	  #--emt_shape SubleadingMass \
+	  #--mmt_shape MuTauMass 
 
 # Rule to make a RooWorkspace card from an ASCII one
 cards/$(channel)_%.root: cards/$(channel)_%.txt
@@ -289,5 +292,10 @@ debug_cards: $(patsubst %, cards/$(channel)_%tt.txt, $(debug_points)) \
 
 debug_limits: $(patsubst %, cards/$(channel)_%tt.asymp.json, $(debug_points)) \
   $(patsubst %, cards/$(channel)_%WW.asymp.json, $(debug_points))
+
+debug_plots: debug_limits
+	python $(fsa)/StatTools/scripts/plotlimit.py cards/$(channel)*WW.asymp.json --method asymp --label WW -o cards/$(channel)_wwOnly.pdf --max-y 70 --showpoints --blurb "$(channel) WW only"
+	python $(fsa)/StatTools/scripts/plotlimit.py cards/$(channel)*tt.asymp.json --method asymp --label tt -o cards/$(channel)_ttOnly.pdf --max-y 70 --showpoints --blurb "$(channel) tautau only"
+
 
 

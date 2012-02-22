@@ -141,7 +141,7 @@ for eta_bin in eta_bins:
         rebin = rebin,
     )
 
-    canvas.cd(1)
+    #canvas.cd(1)
     stack_denom.Draw()
     stack_denom.GetXaxis().SetTitle('Electron p_{T}')
     data_denom.Draw("pe, same")
@@ -150,6 +150,8 @@ for eta_bin in eta_bins:
     maximum = 1.5*stack_denom.GetHistogram().GetMaximum()
     stack_denom.SetMaximum(maximum)
     canvas.Update()
+
+    saveplot('denom_versus_pt_%s' % label)
 
     log.info("building num stack")
     stack = plotter.build_stack(
@@ -168,7 +170,7 @@ for eta_bin in eta_bins:
         rebin = rebin,
     )
 
-    canvas.cd(2)
+    #canvas.cd(2)
     stack.Draw()
     stack.GetXaxis().SetTitle('Electron p_{T}')
     data.Draw("pe, same")
@@ -184,7 +186,7 @@ for eta_bin in eta_bins:
     mc_legend.Draw()
     canvas.Update()
 
-    saveplot('versus_pt_%s' % label)
+    saveplot('num_versus_pt_%s' % label)
 
     continue
 
