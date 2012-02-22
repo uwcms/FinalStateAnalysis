@@ -490,7 +490,7 @@ if __name__ == "__main__":
                         data_plot.Draw('pe,x0')
                         data_plot.SetTitle(xaxis_title)
                         data_plot.GetXaxis().SetTitle(xaxis_title)
-                        fake_plot.Draw('same')
+                        fake_plot.Draw('same,hist')
                         #data_plot.SetMaximum(2*max(
                             #data_plot.GetMaximum(), fake_plot.GetMaximum()))
                         data_plot.SetMaximum(2*data_plot.GetMaximum())
