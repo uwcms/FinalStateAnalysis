@@ -10,6 +10,7 @@ Run with --help for options.
 
 import logging
 import os
+import shutil
 import sys
 
 from RecoLuminosity.LumiDB import argparse
@@ -111,6 +112,11 @@ if __name__ == "__main__":
     if not os.path.exists(options.cardfile):
         raise IOError("Can't open input card file %s" % options.cardfile)
 
+    card_source = optionds.cardfile
+    card_dest = os.path.join(options.submitdir,
+                             os.path.basename(options.cardfile))
+    shutil.copy(card_source, card_dest)
+
     submit_file.write(prelude_template.format(
         UID = os.geteuid(),
         executable=os.path.expandvars(
@@ -124,8 +130,8 @@ if __name__ == "__main__":
         point = options.min + i*(options.max - options.min)/(options.steps-1.)
         submit_statement = submit_template.format(
             submit_dir = options.submitdir,
-            card_file_base = os.path.basename(options.cardfile),
-            card_file_full_path = options.cardfile,
+            card_file_base = os.path.basename(card_dest),
+            card_file_full_path = options.card_dest,
             exclusion_point = point,
             toys = options.toys,
             iter = options.iter,
