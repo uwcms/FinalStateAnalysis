@@ -26,9 +26,12 @@ ROOT.gROOT.ProcessLine('.L corrections.C++')
 
 ROOT.gROOT.SetBatch(True)
 
+ROOT.gStyle.SetHistTopMargin(0.0)
+
 # Select Z->mu+e events
 selections = [
-    'Muon2Pt > 25',
+    'Muon2Pt > 26',
+    #'IsoMus_HLT > 0.5',
     'IsoMus_HLT > 0.5',
     'Muon2_MuRelIso < 0.1',
     'Electron_ERelIso < 0.3',
@@ -50,7 +53,7 @@ selections = [
 ]
 
 samples, plotter = data_tool.build_data(
-    'Mu', '2012-01-16-v1-MuonTP', 'scratch_results',
+    'Mu', '2012-02-20-v1-MuonTP', 'scratch_results',
     4684, ['MuEG', 'DoubleMu', 'EM'], count='em/skimCounter')
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 1200, 600)
@@ -74,7 +77,6 @@ eta_bins = [
     ('endcap', 1.57, 2.5),
 ]
 
-rebin = 5
 
 correction = '*'.join([
     'pu2011AB',
@@ -86,6 +88,14 @@ correction = '*'.join([
 
 summary = {}
 
+var = 'ElectronPt'
+binning = [100, 0, 100],
+rebin = 5
+
+#var = 'IsoMus_HLTGroup'
+#binning = [40, -1.5, 18.5],
+#rebin = 2
+
 log.info("Beginning selections...")
 for eta_bin in eta_bins:
     label, eta_low, eta_high = eta_bin
@@ -95,10 +105,10 @@ for eta_bin in eta_bins:
     plotter.register_tree(
         'denom_' + label,
         '/em/final/Ntuple',
-        'ElectronPt',
+        var,
         ' && '.join(selections + eta_selection),
         w = correction,
-        binning = [100, 0, 100],
+        binning = binning,
         include = ['*'],
         #exclude = fr_info['exclude'],
     )
@@ -106,14 +116,15 @@ for eta_bin in eta_bins:
     plotter.register_tree(
         'num_' + label,
         '/em/final/Ntuple',
-        'ElectronPt',
+        var,
         ' && '.join(selections + eta_selection + ['Mu17Ele8All_HLT > 0.5']),
         w = correction,
-        binning = [100, 0, 100],
+        binning = binning,
         include = ['*'],
         #exclude = fr_info['exclude'],
     )
 
+    log.info("building denom stack")
     stack_denom = plotter.build_stack(
         '/em/final/Ntuple:denom_' + label,
         include = ['*'],
@@ -136,9 +147,11 @@ for eta_bin in eta_bins:
     data_denom.Draw("pe, same")
     #legend.Draw()
     cms_label1 = styling.cms_preliminary(4684)
-    stack_denom.SetMaximum(1.5*stack_denom.GetHistogram().GetMaximum())
+    maximum = 1.5*stack_denom.GetHistogram().GetMaximum()
+    stack_denom.SetMaximum(maximum)
     canvas.Update()
 
+    log.info("building num stack")
     stack = plotter.build_stack(
         '/em/final/Ntuple:num_' + label,
         include = ['*'],
@@ -157,16 +170,25 @@ for eta_bin in eta_bins:
 
     canvas.cd(2)
     stack.Draw()
-    stack.GetXaxis().SetTitle('Mu-E mass')
+    stack.GetXaxis().SetTitle('Electron p_{T}')
     data.Draw("pe, same")
     cms_label2 = styling.cms_preliminary(4684)
     #legend.Draw()
-    stack.GetHistogram().SetMaximum(stack_denom.GetHistogram().GetMaximum())
+    stack.SetMaximum(maximum)
+
+    mc_legend = plotter.build_legend(
+        '/em/skimCounter',
+        include = ['*QCD*', '*Wjets*', '*ttjets*', '*Zjets*'],
+        drawopt='lf',
+        xlow = 0.6, ylow=0.5,)
+    mc_legend.Draw()
     canvas.Update()
 
     saveplot('versus_pt_%s' % label)
 
-    binning = [5, 10, 15, 20, 25, 30, 100]
+    continue
+
+    rebinning = [5, 10, 15, 20, 25, 30, 100]
 
     #data_num = list(get_yields(plotter, '/em/final/Ntuple:num_' + label,
                                #['data_SingleMu'], binning))
@@ -182,17 +204,17 @@ for eta_bin in eta_bins:
 
     data_num = plotter.get_histogram(
         'data_SingleMu', '/em/final/Ntuple:num_' + label,
-        show_overflows = True).cloneAndRebin(binning)
+        show_overflows = True).cloneAndRebin(rebinning)
     data_denom = plotter.get_histogram(
         'data_SingleMu', '/em/final/Ntuple:denom_' + label,
-        show_overflows = True).cloneAndRebin(binning)
+        show_overflows = True).cloneAndRebin(rebinning)
 
     mc_num = plotter.get_histogram(
         'Zjets', '/em/final/Ntuple:num_' + label,
-        show_overflows = True).cloneAndRebin(binning)
+        show_overflows = True).cloneAndRebin(rebinning)
     mc_denom = plotter.get_histogram(
         'Zjets', '/em/final/Ntuple:denom_' + label,
-        show_overflows = True).cloneAndRebin(binning)
+        show_overflows = True).cloneAndRebin(rebinning)
 
     data_eff = ROOT.TGraphAsymmErrors(data_num.th1, data_denom.th1)
     mc_eff = ROOT.TGraphAsymmErrors(mc_num.th1, mc_denom.th1)
