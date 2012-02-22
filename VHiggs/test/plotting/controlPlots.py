@@ -32,11 +32,11 @@ def saveplot(filename):
     canvas.Print(os.path.join(
         "plots", 'controlPlots', filename + '_log' + filetype))
 
-skips = ['EM']
-int_lumi = 4600
+skips = ['EM', 'DoubleEl']
+int_lumi = 4700
 
 samples, plotter = data_tool.build_data(
-    'VH', '2011-12-10-v1-WHAnalyze', 'scratch_results', int_lumi, skips,
+    'VH', '2012-02-19-v1-WHAnalyze', 'scratch_results', int_lumi, skips,
     count = '/mmt/skimCounter', unweighted = False)
 
 
@@ -95,7 +95,7 @@ for var, var_info in plots.iteritems():
         ' && '.join(base_dimuon_selection),
         w = '((0 < Mu15_HLTPrescale < 2)*0.985*0.982*0.995*0.994 + (Mu15_HLTPrescale > 2 || Mu15_HLTPrescale < 1)*1)',
         binning = var_info['binning'],
-        include = ['*DoubleMu*', 'Zjets'],
+        include = ['*DoubleMu*', 'Zjets', 'VH120WW'],
     )
 
     plotter.register_tree(
@@ -105,7 +105,7 @@ for var, var_info in plots.iteritems():
         ' && '.join(base_dimuon_selection),
         w = '((0 < Mu15_HLTPrescale < 2)*0.985*0.982*0.995*0.994 + (Mu15_HLTPrescale > 2 || Mu15_HLTPrescale < 1)*1)*(pu2011AB)',
         binning = var_info['binning'],
-        include = ['*DoubleMu*', 'Zjets'],
+        include = ['*DoubleMu*', 'Zjets', 'VH120WW'],
     )
 
     data_noweight = plotter.get_histogram(
@@ -120,6 +120,7 @@ for var, var_info in plots.iteritems():
         show_overflows = True
     )
 
+    #zjets_noweight = zjets_noweight*49000
 
     zjets_noweight.Draw('hist')
     data_noweight.Draw('pe, same')
@@ -146,6 +147,8 @@ for var, var_info in plots.iteritems():
         '/mmt/final/Ntuple:Weights' + var,
         show_overflows = True
     )
+
+    #zjets_weight = zjets_weight*49000
 
     zjets_weight.Draw('hist')
     data_weight.Draw('pe, same')
