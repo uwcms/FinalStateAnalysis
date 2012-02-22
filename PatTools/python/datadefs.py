@@ -124,9 +124,7 @@ datadefs = {
     'ZZJetsTo4L_pythia' : {
         'datasetpath' : "/ZZTo4L_TuneZ2_7TeV_pythia6_tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
-        #'x_sec' : 0.03906*_picobarns,
-        # 3.8 +- 1.5 0.2 0.2 from EWK-11-10
-        'x_sec' : 3.8*_picobarns*0.1096*0.1096,
+        'x_sec' : 0.106*_picobarns, # from MCFM via Ian
         'x_sec_unc' : quad(1.5, 0.2, 0.2)*0.1096*0.1096,
         'analyses' : ['VH', 'SSDL'],
     },
@@ -161,7 +159,7 @@ datadefs = {
     },
     'WZJetsTo3LNu_fallJob' : {
         'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'pu' : 'S4',
+        'pu' : 'S6',
         #'x_sec' : 0.7192*_picobarns, # FROM PREP
         # 17 +- 2.4 1.1 1.0 from EWK-11-10
         #'x_sec' : 17.0*_picobarns*0.3257*0.1096,
