@@ -35,13 +35,6 @@ log = logging.getLogger("analysis")
 stderr_log = logging.StreamHandler()
 log.addHandler(stderr_log)
 
-# Load the MC-DATA correction functions
-log.info("Loading MC-DATA corrections")
-ROOT.gROOT.ProcessLine('.L corrections.C++')
-
-log.info("Loading fake rate functions")
-ROOT.gROOT.ProcessLine('.L fake_rates.C++')
-
 ROOT.gStyle.SetHistTopMargin(0.0)
 
 _MAX_MINUTES=10
@@ -112,16 +105,26 @@ def estimate_fake_sum(fr1, fr2, fr12s, fr12en, fudge=0.0):
     total_yield = fake1est + fake2est - double_est
     return total_yield
 
+# Make these importable
+
+int_lumi = analysis_cfg.INT_LUMI
+skips = ['DoubleEl', 'EM']
+samples, plotter = data_tool.build_data(
+    'VH', analysis_cfg.JOBID, 'scratch_results',
+    int_lumi, skips, count='emt/skimCounter')
+
 if __name__ == "__main__":
+    # Load the MC-DATA correction functions
+    log.info("Loading MC-DATA corrections")
+    ROOT.gROOT.ProcessLine('.L corrections.C++')
+
+    log.info("Loading fake rate functions")
+    ROOT.gROOT.ProcessLine('.L fake_rates.C++')
+
     log.info("Beginning analysis at %s", _START)
     ############################################################################
     ### Load the data ##########################################################
     ############################################################################
-    int_lumi = analysis_cfg.INT_LUMI
-    skips = ['DoubleEl', 'EM']
-    samples, plotter = data_tool.build_data(
-        'VH', analysis_cfg.JOBID, 'scratch_results',
-        int_lumi, skips, count='emt/skimCounter')
 
     canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 
