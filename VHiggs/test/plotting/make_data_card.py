@@ -168,11 +168,11 @@ for sample in ['WZ', 'ZZ'] + signal_datasets:
 
 # Optionally handle the case where theory errors are not used
 if 'NoThSys' not in options.channels:
-    mmt.add_sys('pdf_vh', pdf_err, signal_datasets)
+    mmt.add_sys('pdf_qqbar', pdf_err, signal_datasets)
     mmt.add_sys('QCDscale_VH', scale_err, signal_datasets)
 
 if options.triboson_err > 0:
-    mmt.add_sys('CMS_tribosons_xsec_vhtt', 1.0 + options.triboson_err, ['tribosons'])
+    mmt.add_sys('QCDscale_VVV', 1.0 + options.triboson_err, ['tribosons'])
 
 # Add the relevant scale systematics
 for sample, sample_info in scale_systematics['mmt'].iteritems():
@@ -233,7 +233,7 @@ for sample in ['WZ', 'ZZ'] + signal_datasets:
 
 # Optionally handle the case where theory errors are not used
 if 'NoThSys' not in options.channels:
-    emt.add_sys('pdf_vh', pdf_err, signal_datasets)
+    emt.add_sys('pdf_qqbar', pdf_err, signal_datasets)
     emt.add_sys('QCDscale_VH', scale_err, signal_datasets)
 
 if e_fake_error > 0:
@@ -241,7 +241,7 @@ if e_fake_error > 0:
 if mu_fake_error > 0:
     emt.add_sys('CMS_fake_mu_vhtt', 1 + mu_fake_error, 'fakes')
 if options.triboson_err > 0:
-    emt.add_sys('CMS_tribosons_xsec_vhtt', 1.0 + options.triboson_err, ['tribosons'])
+    emt.add_sys('QCDscale_VVV', 1.0 + options.triboson_err, ['tribosons'])
 
 for sample, sample_info in scale_systematics['emt'].iteritems():
     # Check if this sample applies in this particular card
