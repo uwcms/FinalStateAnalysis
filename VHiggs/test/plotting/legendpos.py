@@ -14,7 +14,7 @@ if __name__ == "__main__":
     sys.stderr.write("Legend Pos: %s\n" % output_pdf_file)
     output = "ERROR"
     if 'mmt' in output_pdf_file or 'emt' in output_pdf_file:
-        output = "0.75,0.15,0.95,0.39" + "\n"
+        output = "0.75,0.15,0.95,0.35" + "\n"
     else:
         output = "0.40,0.65,0.65,0.93" + "\n"
     sys.stderr.write("Legend Pos result: %s\n" % output)
