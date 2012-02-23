@@ -26,8 +26,8 @@ log.addHandler(stderr_log)
 vh_points = [110, 115, 120, 130, 140, 150, 160]
 vhww_points = [120, 130, 140, 150, 160]
 
-vhtt_re = re.compile('VH(?P<mass>[0-9]+)$')
-vhww_re = re.compile('VH(?P<mass>[0-9]+)WW$')
+vhtt_re = re.compile('VH(?P<mass>[0-9]+)(SM4|FF|)$')
+vhww_re = re.compile('VH(?P<mass>[0-9]+)WW(SM4|FF|)$')
 
 def get_stat_error(sample, weighted_yield):
     log.info("Getting weight for %s", sample)
