@@ -331,7 +331,12 @@ datadefs = {
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
-
+    'VH_135_HWW' : {
+        'datasetpath' :"/WH_ZH_TTH_HToWW_M-135_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM	",
+        'x_sec' : (0.4390 + 0.2453 + 0.06810)*_picobarns*4.03E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
     'VH_140_HWW_fallJob' : {
         'datasetpath' :"/WH_ZH_TTH_HToWW_M-140_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'x_sec' : (0.3857 + 0.2172 + 0.06072)*_picobarns*5.03E-01,
