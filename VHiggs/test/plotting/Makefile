@@ -106,7 +106,8 @@ extensions_shape_file=wh_shapes_sm4_ff.root
 # The name of the shape root file
 shape_file=vhtt_shapes.root
 # Mass points to run limits on
-masspoints=100 110 120 130 140 150 160 
+#masspoints=100 110 120 130 140 150 160 
+masspoints=100 110 120 130 140 
 # Exclusion range to use when building CLs grid
 min_cls="0.2"
 max_cls="70"
@@ -232,7 +233,7 @@ cards/$(channel).cls.pdf: $(cls_results) legendpos.py
 	  --method cls cards/$(channel)_*.cls.json -o $@ \
 	  --showpoints \
 	  --blurb "`./blurbtext.py $@`" \
-	  --blurbpos "0.5, 0.12, 0.95, 0.22" \
+	  --blurbpos "0.15, 0.12, 0.5, 0.20" \
 	  --legendpos `./legendpos.py $@`
 
 cards/$(channel).cls.tex: $(cls_results)  
@@ -250,7 +251,8 @@ cards/$(channel).asymp.pdf: $(asymp_results) legendpos.py
 	  --method asymp cards/$(channel)_*.asymp.json -o $@ \
 	  --showpoints \
 	  --blurb "`./blurbtext.py $@`" \
-	  --blurbpos "0.5, 0.12, 0.95, 0.22" \
+	  --blurbpos "0.5, 0.15, 0.95, 0.22" \
+	  --blurbalign 11
 	  --legendpos `./legendpos.py $@`
 
 
@@ -259,19 +261,20 @@ cards/$(channel).asymp.pdf: $(asymp_results) legendpos.py
 ################################################################################
 
 combination=moriond12
-combination_mass_points=$(shell seq 110 145) 
-combination_FF_mass_points=$(shell seq 120 145)
+combination_mass_points=$(shell seq 110 140) 
+#combination_FF_mass_points=$(shell seq 120 145)
 
 combination_cards: $(patsubst %, $(combination)/%/vhtt.txt, $(combination_mass_points)) \
-  $(patsubst %, $(combination)/%/FF_vhtt.txt, $(combination_FF_mass_points)) \
   $(patsubst %, $(combination)/%/SM4_vhtt.txt, $(combination_mass_points))  \
   $(patsubst %, $(combination)/%/vhtt_shapes.root, $(combination_mass_points)) 
+
+#$(patsubst %, $(combination)/%/FF_vhtt.txt, $(combination_FF_mass_points)) \
 
 # Make a version of the shape file with minimal info
 $(combination)/%/vhtt_shapes.root: $(shape_file) trim_shape_file.py
 	./trim_shape_file.py --mass $* --out $@ $(shape_file) \
-	  emt_emu_final_SubleadingMass \
-	  mmt_mumu_final_MuTauMass
+	  emt_emu_final_count \
+	  mmt_mumu_final_count
 
 $(combination)/%/vhtt.txt: cards/combined_%.txt $(combination)/%/vhtt_shapes.root
 	cp $< $@
