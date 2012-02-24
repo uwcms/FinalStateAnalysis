@@ -802,9 +802,11 @@ if __name__ == "__main__":
 
                     error_band_hist.SetLineColor(ROOT.EColor.kBlack)
                     error_band_hist.SetFillColor(
-                        samplestyles.SAMPLE_STYLES['fake_error']['color'].code
+                        #samplestyles.SAMPLE_STYLES['fake_error']['color'].code
+                        ROOT.EColor.kBlack
                     )
-                    error_band_hist.SetFillStyle(1001)
+                    #error_band_hist.SetFillStyle(1001)
+                    error_band_hist.SetFillStyle(3004)
                     error_band_hist.SetMarkerSize(0)
                     error_band_hist_copy = error_band_hist.th1.Clone()
                     legend.AddEntry(error_band_hist_copy, "Fake uncert.", "lf")
@@ -819,7 +821,7 @@ if __name__ == "__main__":
 
                     signalx5 = (signal + signalHWW)*5
                     signalx5.SetLineStyle(1)
-                    signalx5.SetLineWidth(2)
+                    signalx5.SetLineWidth(3)
                     signalx5.SetLineColor(ROOT.EColor.kRed)
                     signalx5.SetFillStyle(0)
                     signalx5.Draw('same, hist')
