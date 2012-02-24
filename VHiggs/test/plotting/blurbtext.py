@@ -18,7 +18,8 @@ if __name__ == "__main__":
     elif 'emt' in output_pdf_file:
         output = "e #mu #tau channel"
     elif 'combined' in output_pdf_file:
-        output = "Combined limit"
+        #output = "Combined limit"
+        output = ""
 
     sys.stderr.write("Blurb text result: %s\n" % output)
     sys.stdout.write(output)

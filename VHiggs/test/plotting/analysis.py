@@ -771,9 +771,16 @@ if __name__ == "__main__":
                         all_fakes.SetBinError(i, total_yield.std_dev())
                     #all_fakes.Draw('pe')
 
-                    legend = ROOT.TLegend(0.6, 0.6, 0.9, 0.90, "", "brNDC")
+                    legend = ROOT.TLegend(0.6, 0.5, 0.9, 0.90, "", "brNDC")
                     legend.SetFillStyle(0)
                     legend.SetBorderSize(0)
+                    legend.AddEntry(ult_data.th1, "Data", "p")
+                    signalx5 = (signal + signalHWW)*5
+                    signalx5.SetLineStyle(1)
+                    signalx5.SetLineWidth(3)
+                    signalx5.SetLineColor(ROOT.EColor.kRed)
+                    signalx5.SetFillStyle(0)
+                    legend.AddEntry(signalx5.th1, "VH(120) #times 5 ", "lf")
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
                     stack.Add(tribosons.th1, 'hist')
@@ -819,13 +826,7 @@ if __name__ == "__main__":
                         stack.GetMaximum()))
                     )
 
-                    signalx5 = (signal + signalHWW)*5
-                    signalx5.SetLineStyle(1)
-                    signalx5.SetLineWidth(3)
-                    signalx5.SetLineColor(ROOT.EColor.kRed)
-                    signalx5.SetFillStyle(0)
                     signalx5.Draw('same, hist')
-                    legend.AddEntry(signalx5.th1, "VH(120) #times 5 ", "lf")
                     legend.Draw()
 
                     cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
