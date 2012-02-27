@@ -13,6 +13,7 @@
 #include "TNamed.h"
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelection.h"
 #include <vector>
+#include <memory>
 
 class TMegaSelectionSet : public TMegaSelection, public TNamed {
   public:
@@ -35,7 +36,11 @@ class TMegaSelectionSet : public TMegaSelection, public TNamed {
     // This is overridden so the call gets dispatched to the subselections.
     void SetCachePointers(TTree** tree, Long_t* entry);
 
-    // Add a clone of a new selection to the set.  Does not take ownership.
+    // Add a new selection to the set.  Takes ownership.
+    void AddSelection(std::auto_ptr<TMegaSelection> selector);
+
+    // Add a new selection to the set.  Creates a clone and does not take
+    // ownership of the passed object.
     void AddSelection(const TMegaSelection& selector);
 
     /// Compute the selection

@@ -48,10 +48,15 @@ void TMegaSelectionSet::SetCachePointers(TTree** tree, Long_t* entry) {
   }
 }
 
-// Add a new selector to this list
+// Add a new selector to this list via a clone.
 void TMegaSelectionSet::AddSelection(const TMegaSelection& selector) {
   TMegaSelection* ownedcopy = selector.Clone();
   subselections_.push_back(ownedcopy);
+}
+
+// Add a new selector to this list and take ownership
+void TMegaSelectionSet::AddSelection(std::auto_ptr<TMegaSelection> selector) {
+  subselections_.push_back(selector.get());
 }
 
 Bool_t TMegaSelectionSet::Select() {

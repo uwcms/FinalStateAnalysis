@@ -5,12 +5,16 @@
  *
  */
 
-#include "TSelector.h"
+#include <map>
+#include <memory>
+#include <string>
+
 #include <TBranchProxyDirector.h>
 #include "TBranchProxy.h"
-#include <string>
-#include <map>
+#include "TSelector.h"
 
+class TMegaSelection;
+class TMegaSelectionFactory;
 class TMegaSelectionSet;
 
 class TMegaSelector : public TSelector {
@@ -29,8 +33,30 @@ class TMegaSelector : public TSelector {
     virtual void MegaSlaveTerminate()=0;
     virtual void MegaTerminate()=0;
 
-    // Set which selection set to use for filtering
+    // Add a TMegaSelection to the named selection set.  Does not take
+    // ownership.
+    void AddToSelection(const std::string& name, const TMegaSelection& select);
+
+    // Add a TMegaSelection to the named selection set.  Takes ownershipt.
+    void AddToSelection(const std::string& name,
+        std::auto_ptr<TMegaSelection> select);
+
+    // Get the TMegaSelectionSet with the given name.  If it doesn't exists,
+    // this will return null.
+    TMegaSelectionSet* GetSelectionSet(const std::string& name) const;
+
+    // Set which selection set to use for filtering.  Any entries (rows) which
+    // do not pass this selection will not be passed to MegaProcess.
     void SetFilterSelection(const std::string&);
+
+    /// Get the total number of processed entries
+    unsigned int GetProcessedEntries() const;
+
+    /// Get the number of entries that were filtered
+    unsigned int GetFilteredEntries() const;
+
+    /// Get the factory to build TMegaSelections
+    const TMegaSelectionFactory* factory() const;
 
   private:
     void Init(TTree* tree);
@@ -41,12 +67,20 @@ class TMegaSelector : public TSelector {
     void SlaveTerminate();
     void Terminate();
 
-    ROOT::TBranchProxyDirector director_; //!Manages the proxys
+    // Keep track of entries processed
+    unsigned int filteredEntries_;
+    unsigned int allEntries_;
+
+    ROOT::TBranchProxyDirector director_; //!Manages the proxies
+
+    // Factory class to build selections
+    std::auto_ptr<TMegaSelectionFactory> factory_;
 
     // The entry and tree currently being processed
     Long64_t currentEntry_;
 
-    std::map<std::string, TMegaSelectionSet*> selections_;
+    typedef std::map<std::string, TMegaSelectionSet*> SelectionSetMap;
+    SelectionSetMap selections_;
     // The selection to use for filtering calls to MegaProcess();
     TMegaSelectionSet* filterSelection_;
 };

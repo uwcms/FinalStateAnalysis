@@ -32,7 +32,7 @@ class TMegaOperatorSelectionT : public TMegaBranchSelectionT<T> {
     T cut_;
 };
 
-namespace {
+namespace tmega {
   template<typename T> struct GreaterThan {
     Bool_t operator()(const T& a, const T& b) const { return a > b; }
   };
@@ -64,36 +64,14 @@ namespace {
   template<typename T> struct AbsLessEqThan {
     Bool_t operator()(const T& a, const T& b) const { return std::abs(a) <= b; }
   };
+
+  template<typename T> struct EqualTo {
+    Bool_t operator()(const T& a, const T& b) const { return a == b; }
+  };
+
+  template<typename T> struct AbsEqualTo {
+    Bool_t operator()(const T& a, const T& b) const { return std::abs(a) == b; }
+  };
 }
-
-typedef TMegaOperatorSelectionT<Int_t, GreaterThan> TMegaSelectGTI;
-typedef TMegaOperatorSelectionT<Int_t, LessThan> TMegaSelectLTI;
-typedef TMegaOperatorSelectionT<Int_t, GreaterEqThan> TMegaSelectGEQI;
-typedef TMegaOperatorSelectionT<Int_t, LessEqThan> TMegaSelectLEQI;
-
-typedef TMegaOperatorSelectionT<Int_t, AbsGreaterThan> TMegaSelectAbsGTI;
-typedef TMegaOperatorSelectionT<Int_t, AbsLessThan> TMegaSelectAbsLTI;
-typedef TMegaOperatorSelectionT<Int_t, AbsGreaterEqThan> TMegaSelectAbsGEQI;
-typedef TMegaOperatorSelectionT<Int_t, AbsLessEqThan> TMegaSelectAbsLEQI;
-
-typedef TMegaOperatorSelectionT<Float_t, GreaterThan> TMegaSelectGTF;
-typedef TMegaOperatorSelectionT<Float_t, LessThan> TMegaSelectLTF;
-typedef TMegaOperatorSelectionT<Float_t, GreaterEqThan> TMegaSelectGEQF;
-typedef TMegaOperatorSelectionT<Float_t, LessEqThan> TMegaSelectLEQF;
-
-typedef TMegaOperatorSelectionT<Float_t, AbsGreaterThan> TMegaSelectAbsGTF;
-typedef TMegaOperatorSelectionT<Float_t, AbsLessThan> TMegaSelectAbsLTF;
-typedef TMegaOperatorSelectionT<Float_t, AbsGreaterEqThan> TMegaSelectAbsGEQF;
-typedef TMegaOperatorSelectionT<Float_t, AbsLessEqThan> TMegaSelectAbsLEQF;
-
-typedef TMegaOperatorSelectionT<Double_t, GreaterThan> TMegaSelectGTD;
-typedef TMegaOperatorSelectionT<Double_t, LessThan> TMegaSelectLTD;
-typedef TMegaOperatorSelectionT<Double_t, GreaterEqThan> TMegaSelectGEQD;
-typedef TMegaOperatorSelectionT<Double_t, LessEqThan> TMegaSelectLEQD;
-
-typedef TMegaOperatorSelectionT<Double_t, AbsGreaterThan> TMegaSelectAbsGTD;
-typedef TMegaOperatorSelectionT<Double_t, AbsLessThan> TMegaSelectAbsLTD;
-typedef TMegaOperatorSelectionT<Double_t, AbsGreaterEqThan> TMegaSelectAbsGEQD;
-typedef TMegaOperatorSelectionT<Double_t, AbsLessEqThan> TMegaSelectAbsLEQD;
 
 #endif /* end of include guard: TMEGAOPERATORSELECTIONS_QMF0NE04 */

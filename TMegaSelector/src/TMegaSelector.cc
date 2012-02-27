@@ -1,11 +1,19 @@
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelector.h"
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionSet.h"
+#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionFactory.h"
 
 TMegaSelector::TMegaSelector(TTree* tree):
   chain(0),
-  director_(tree, -1) {}
+  director_(tree, -1),
+  factory_(new TMegaSelectionFactory(&director_)) {}
 
-TMegaSelector::~TMegaSelector(){}
+TMegaSelector::~TMegaSelector(){
+  // Cleanup selection sets
+  for (SelectionSetMap::iterator i=selections_.begin(); i != selections_.end();
+      ++i) {
+    delete i->second;
+  }
+}
 
 void TMegaSelector::Init(TTree* tree) {
   //   Set branch addresses
@@ -29,10 +37,12 @@ void TMegaSelector::SlaveBegin(TTree* /*deprecated*/) {
 }
 
 Bool_t TMegaSelector::Process(Long64_t entry) {
+  allEntries_++;
   currentEntry_ = entry;
   director_.SetReadEntry(entry);
   // Check if we are apply a filter
   if (!filterSelection_ || filterSelection_->Select()) {
+    filteredEntries_++;
     return this->MegaProcess(entry);
   }
   return true;
@@ -44,4 +54,40 @@ void TMegaSelector::SlaveTerminate() {
 
 void TMegaSelector::Terminate() {
   this->MegaTerminate();
+}
+
+void TMegaSelector::AddToSelection(const std::string& name,
+    const TMegaSelection& select) {
+  TMegaSelectionSet* set = GetSelectionSet(name);
+  if (set == NULL) {
+    // Make a new one
+    set = new TMegaSelectionSet(name.c_str(), "");
+    selections_[name] = set;
+  }
+  set->AddSelection(select);
+}
+
+TMegaSelectionSet* TMegaSelector::GetSelectionSet(const std::string& name) const
+{
+  SelectionSetMap::const_iterator iter = selections_.find(name);
+  if (iter == selections_.end()) {
+    return NULL;
+  }
+  else return iter->second;
+}
+
+void TMegaSelector::SetFilterSelection(const std::string& name) {
+  filterSelection_ = GetSelectionSet(name);
+}
+
+unsigned int TMegaSelector::GetProcessedEntries() const {
+  return allEntries_;
+}
+
+unsigned int TMegaSelector::GetFilteredEntries() const {
+  return filteredEntries_;
+}
+
+const TMegaSelectionFactory* TMegaSelector::factory() const {
+  return factory_.get();
 }
