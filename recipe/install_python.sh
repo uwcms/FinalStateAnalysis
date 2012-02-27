@@ -23,18 +23,6 @@ pip install -U yolk
 echo "Installing PyYAML"
 pip install -U PyYAML
 source bin/activate; rehash
-echo "Installing numpy"
-pip install -U numpy
-source bin/activate; rehash
-echo "Installing numexpr"
-pip install -U numexpr
-source bin/activate; rehash
-echo "Installing Cython"
-source bin/activate; rehash
-pip install -U tables
-echo "Installing tables"
-source bin/activate; rehash
-pip install -U tables
 echo "Installing matplotlib"
 source bin/activate; rehash
 pip install -U matplotlib
