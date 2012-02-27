@@ -91,6 +91,7 @@ ClassImp(TMegaPySelector)
 //- private helpers ----------------------------------------------------------
 void TMegaPySelector::SetupPySelf()
 {
+//  std::cout << "SetupPySelf" << std::endl;
    if ( fPySelf && fPySelf != Py_None )
       return;                      // already created ...
 
@@ -208,6 +209,7 @@ PyObject* TMegaPySelector::CallSelf( const char* method, PyObject* pyobject )
 //- constructors/destructor --------------------------------------------------
 TMegaPySelector::TMegaPySelector( TTree*, PyObject* self ) : fPySelf( 0 )
 {
+//  std::cout << "ctor" << std::endl;
 // Construct a TSelector derived with <self> as the underlying, which is
 // generally 0 to start out with in the current PROOF framework.
    if ( self ) {
@@ -233,6 +235,8 @@ TMegaPySelector::~TMegaPySelector()
 Int_t TMegaPySelector::Version() const {
 // Return version number of this selector. First forward; if not overridden, then
 // yield 2 (EK)
+
+//  std::cout << "version" << std::endl;
    PyObject* result = const_cast< TMegaPySelector* >( this )->CallSelf( "Version" );
    if ( result && result != Py_None ) {
       Int_t ires = (Int_t)PyLong_AsLong( result );
@@ -241,6 +245,7 @@ Int_t TMegaPySelector::Version() const {
    } else if ( result == Py_None ) {
       Py_DECREF( result );
    }
+//  std::cout << "returning 2" << std::endl;
    return 2;
 }
 
@@ -292,8 +297,9 @@ Bool_t TMegaPySelector::MegaNotify()
 }
 
 //____________________________________________________________________________
-void TMegaPySelector::MegaBegin( TTree* )
+void TMegaPySelector::MegaBegin()
 {
+//  std::cout << "MegaBegin" << std::endl;
 // First function called, and used to setup the python self; forward call.
    SetupPySelf();
 
@@ -308,21 +314,23 @@ void TMegaPySelector::MegaBegin( TTree* )
 }
 
 //____________________________________________________________________________
-void TMegaPySelector::MegaSlaveBegin( TTree* tree )
+void TMegaPySelector::MegaSlaveBegin()
 {
+//  std::cout << "MegaSlaveBegin" << std::endl;
 // First function called on worker node, needs to make sure python self is setup,
 // then store the tree to be used, initialize client, and forward call.
    SetupPySelf();
    //Init( tree );  // EK - called by base class
 
    PyObject* result = 0;
-   if ( tree ) {
-      PyObject* pytree = PyROOT::BindRootObject( (void*)tree, tree->IsA() );
-      result = CallSelf( "MegaSlaveBegin", pytree );
-      Py_DECREF( pytree );
-   } else {
+//   if ( tree ) {
+//      PyObject* pytree = PyROOT::BindRootObject( (void*)tree, tree->IsA() );
+//      result = CallSelf( "MegaSlaveBegin", pytree );
+//      Py_DECREF( pytree );
+//   } else {
+//      result = CallSelf( "MegaSlaveBegin", Py_None );
+//   }
       result = CallSelf( "MegaSlaveBegin", Py_None );
-   }
 
    if ( ! result )
       Abort( 0 );
@@ -333,6 +341,7 @@ void TMegaPySelector::MegaSlaveBegin( TTree* tree )
 //____________________________________________________________________________
 Bool_t TMegaPySelector::MegaProcess( Long64_t entry )
 {
+//  std::cout << "MegaProcess" << std::endl;
 // Actual processing; call is forwarded to python self.
    if ( ! fPySelf || fPySelf == Py_None ) {
    // would like to set a python error, but can't risk that in case of a

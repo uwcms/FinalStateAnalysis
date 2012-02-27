@@ -19,6 +19,7 @@ TMegaSelector::~TMegaSelector(){
 }
 
 void TMegaSelector::Init(TTree* tree) {
+//  std::cout << "INIT" << std::endl;
   //   Set branch addresses
   if (tree == 0) return;
   chain = tree;
@@ -32,15 +33,17 @@ Bool_t TMegaSelector::Notify() {
 }
 
 void TMegaSelector::Begin(TTree* /*deprecated*/) {
+//  std::cout << "BEGIN" << std::endl;
   this->MegaBegin();
 }
 
 void TMegaSelector::SlaveBegin(TTree* /*deprecated*/) {
+//  std::cout << "SLAVEBEGIN" << std::endl;
   this->MegaSlaveBegin();
 }
 
 Bool_t TMegaSelector::Process(Long64_t entry) {
-  //std::cout << "Process "  << entry << std::endl;
+//  std::cout << "Process "  << entry << std::endl;
   allEntries_++;
   currentEntry_ = entry;
   director_.SetReadEntry(entry);

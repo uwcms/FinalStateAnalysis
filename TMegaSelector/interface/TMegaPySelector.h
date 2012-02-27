@@ -38,8 +38,8 @@ public:
    virtual Bool_t MegaNotify();
 
    //virtual void   Init( TTree* tree );
-   virtual void   MegaBegin( TTree* tree = 0 /* not used */ );
-   virtual void   MegaSlaveBegin( TTree* tree );
+   virtual void   MegaBegin();
+   virtual void   MegaSlaveBegin();
    virtual Bool_t MegaProcess( Long64_t entry );
    virtual void   MegaSlaveTerminate();
    virtual void   MegaTerminate();
