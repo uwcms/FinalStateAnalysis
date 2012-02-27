@@ -1,3 +1,6 @@
+#ifndef TMEGASELECTOR_F965XW8K
+#define TMEGASELECTOR_F965XW8K
+
 /*
  * TMegaSelector
  *
@@ -87,3 +90,5 @@ class TMegaSelector : public TSelector {
     // The selection to use for filtering calls to MegaProcess();
     TMegaSelectionSet* filterSelection_;
 };
+
+#endif /* end of include guard: TMEGASELECTOR_F965XW8K */
