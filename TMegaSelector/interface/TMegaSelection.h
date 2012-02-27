@@ -18,7 +18,7 @@ class TTree;
 
 class TMegaSelection {
   public:
-    TMegaSelection(){}
+    TMegaSelection():currentTTree_(NULL){}
     virtual ~TMegaSelection(){}
     virtual TMegaSelection* Clone() const=0;
 
@@ -35,7 +35,7 @@ class TMegaSelection {
     /// when this happens.  Calling this function will update the values.
     Bool_t emitChanged() {
       // Check if we aren't caching at all
-      if (!currentTTree_)
+      if (currentTTree_ == NULL)
         return true;
       // Check if nothing has changed
       if (*currentTTree_ == lastTTree_ && *currentEntryPtr_ == lastEntry_)

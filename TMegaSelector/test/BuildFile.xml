@@ -1,0 +1,4 @@
+<bin   name="TestTMegaSelector" file="test_TMegaSelector.cppunit.cc">
+  <use   name="FinalStateAnalysis/TMegaSelector"/>
+  <use   name="cppunit"/>
+</bin>

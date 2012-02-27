@@ -17,7 +17,7 @@ class TMegaBranchSelectionT : public TMegaSelection {
 
     /// Normal constructor giving branch name and director
     TMegaBranchSelectionT(ROOT::TBranchProxyDirector* director,
-        const char* name):branch_(director, name){}
+        const char* name):branchName_(name),branch_(director, name){}
 
     /// Clone method
     virtual TMegaBranchSelectionT<T>* Clone() const=0;
@@ -27,6 +27,9 @@ class TMegaBranchSelectionT : public TMegaSelection {
     /// Apply the selection to the given branch
     Bool_t Select() {
       // Get the branch value
+      if (!branch_.Read())
+        throw std::runtime_error("Couldn't read " + branchName_);
+
       T value = branch_;
       return SelectValue(value);
     }
@@ -36,6 +39,7 @@ class TMegaBranchSelectionT : public TMegaSelection {
     virtual Bool_t SelectValue(const T& value) const =0;
 
   private:
+    std::string branchName_;
     ROOT::TImpProxy<T> branch_;
 };
 

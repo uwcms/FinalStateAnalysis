@@ -72,6 +72,14 @@ namespace tmega {
   template<typename T> struct AbsEqualTo {
     Bool_t operator()(const T& a, const T& b) const { return std::abs(a) == b; }
   };
+
+  template<typename T> struct NotEqualTo {
+    Bool_t operator()(const T& a, const T& b) const { return a != b; }
+  };
+
+  template<typename T> struct AbsNotEqualTo {
+    Bool_t operator()(const T& a, const T& b) const { return std::abs(a) != b; }
+  };
 }
 
 #endif /* end of include guard: TMEGAOPERATORSELECTIONS_QMF0NE04 */

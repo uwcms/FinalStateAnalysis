@@ -1,5 +1,7 @@
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionFactory.h"
 
+#include <stdexcept>
+
 #include <TBranchProxyDirector.h>
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelection.h"
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaOperatorSelections.h"
@@ -34,6 +36,8 @@ namespace {
           return buildOpCut<T, tmega::LessEqThan>(dir, branch, value);
         } else if (op == "==") {
           return buildOpCut<T, tmega::EqualTo>(dir, branch, value);
+        } else if (op == "!=") {
+          return buildOpCut<T, tmega::NotEqualTo>(dir, branch, value);
         }
       } else {
         if (op == ">") {
@@ -46,10 +50,12 @@ namespace {
           return buildOpCut<T, tmega::AbsLessEqThan>(dir, branch, value);
         } else if (op == "==") {
           return buildOpCut<T, tmega::AbsEqualTo>(dir, branch, value);
+        } else if (op == "!=") {
+          return buildOpCut<T, tmega::AbsNotEqualTo>(dir, branch, value);
         }
       }
 
-      throw "Unknown opcode " + op;
+      throw std::runtime_error("Unknown opcode: " + op);
     }
 
 }

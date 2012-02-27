@@ -1,4 +1,5 @@
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionSet.h"
+#include <iostream>
 
 // Default ctor for I/O
 TMegaSelectionSet::TMegaSelectionSet(){}
@@ -56,7 +57,7 @@ void TMegaSelectionSet::AddSelection(const TMegaSelection& selector) {
 
 // Add a new selector to this list and take ownership
 void TMegaSelectionSet::AddSelection(std::auto_ptr<TMegaSelection> selector) {
-  subselections_.push_back(selector.get());
+  subselections_.push_back(selector.release());
 }
 
 Bool_t TMegaSelectionSet::Select() {
