@@ -1,6 +1,8 @@
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionSet.h"
 #include <iostream>
 
+ClassImp(TMegaSelectionSet)
+
 // Default ctor for I/O
 TMegaSelectionSet::TMegaSelectionSet(){}
 

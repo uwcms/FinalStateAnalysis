@@ -11,6 +11,7 @@
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionSet.h"
 
 #include "TTree.h"
+#include "TFile.h"
 #include <stdexcept>
 
 class testMegaSelector: public CppUnit::TestFixture {
@@ -66,6 +67,13 @@ void testMegaSelector::setUp() {
     doubleBranch_ = i;
     testTree_->Fill();
   }
+
+  // Save the output file for later
+  TFile outfile("test_file.root", "recreate");
+  TTree* copy = testTree_->CopyTree("");
+  outfile.cd();
+  copy->Write();
+  outfile.Close();
 }
 
 void testMegaSelector::tearDown() {

@@ -16,9 +16,9 @@
 #include "TBranchProxy.h"
 #include "TSelector.h"
 
-class TMegaSelection;
-class TMegaSelectionFactory;
-class TMegaSelectionSet;
+#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelection.h"
+#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionFactory.h"
+#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionSet.h"
 
 class TMegaSelector : public TSelector {
   public:
@@ -64,7 +64,7 @@ class TMegaSelector : public TSelector {
     // Needed for ROOT to call the virtual functions correctly
     virtual Int_t Version() const { return 2; }
 
-    //ClassDef( TMegaSelector, 1 );   // Enhanced TSelector
+    ClassDef( TMegaSelector, 1 );   // Enhanced TSelector
 
   private:
     void Init(TTree* tree);

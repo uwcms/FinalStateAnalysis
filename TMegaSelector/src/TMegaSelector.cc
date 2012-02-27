@@ -2,7 +2,7 @@
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionSet.h"
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionFactory.h"
 
-//ClassImp(TMegaSelector)
+ClassImp(TMegaSelector)
 
 TMegaSelector::TMegaSelector(TTree* tree):
   chain(0),

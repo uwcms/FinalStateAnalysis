@@ -1,7 +1,7 @@
+<use   name="rootcore"/>
 <use   name="root"/>
 <use   name="rootrflx"/>
 <use   name="rootgraphics"/>
-<use   name="rootcore"/>
 <use   name="python"/>
 <lib   name="PyROOT"/>
 <export>

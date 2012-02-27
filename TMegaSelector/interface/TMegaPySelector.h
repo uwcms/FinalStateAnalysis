@@ -47,7 +47,7 @@ public:
 
    virtual void Abort( const char* why, EAbort what = kAbortProcess );
 
-   //ClassDef( TMegaPySelector, 1 );   //Python equivalent base class for PROOF
+   ClassDef( TMegaPySelector, 1 );   //Python equivalent base class for PROOF
 
 private:
 // private helpers for forwarding to python

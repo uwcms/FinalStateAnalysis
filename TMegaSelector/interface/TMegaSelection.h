@@ -45,6 +45,8 @@ class TMegaSelection {
       return true;
     }
 
+    ClassDef( TMegaSelection, 1 );
+
   private:
     TTree* lastTTree_;
     Long_t lastEntry_;

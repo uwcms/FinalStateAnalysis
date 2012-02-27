@@ -1,3 +1,5 @@
+#ifndef TMEGASELECTIONSET_D8IXOPVD
+#define TMEGASELECTIONSET_D8IXOPVD
 /*
  * A *cached* group of selections on a TTree
  *
@@ -46,7 +48,10 @@ class TMegaSelectionSet : public TMegaSelection, public TNamed {
     /// Compute the selection
     Bool_t Select();
 
+    ClassDef( TMegaSelectionSet, 1 );
+
   private:
     bool lastResult_;
     std::vector<TMegaSelection*> subselections_;
 };
+#endif /* end of include guard: TMEGASELECTIONSET_D8IXOPVD */

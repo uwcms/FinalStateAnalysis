@@ -85,7 +85,7 @@ namespace PyROOT {
 
 
 //- data ---------------------------------------------------------------------
-//ClassImp(TMegaPySelector)
+ClassImp(TMegaPySelector)
 
 
 //- private helpers ----------------------------------------------------------
