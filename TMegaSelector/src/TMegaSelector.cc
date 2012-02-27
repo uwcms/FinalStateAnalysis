@@ -5,7 +5,8 @@
 TMegaSelector::TMegaSelector(TTree* tree):
   chain(0),
   director_(tree, -1),
-  factory_(new TMegaSelectionFactory(&director_)) {}
+  factory_(new TMegaSelectionFactory(&director_)),
+  filterSelection_(NULL) {}
 
 TMegaSelector::~TMegaSelector(){
   // Cleanup selection sets
@@ -37,10 +38,14 @@ void TMegaSelector::SlaveBegin(TTree* /*deprecated*/) {
 }
 
 Bool_t TMegaSelector::Process(Long64_t entry) {
+  //std::cout << "Process "  << entry << std::endl;
   allEntries_++;
   currentEntry_ = entry;
   director_.SetReadEntry(entry);
+  //std::cout << "ReadEntry" << std::endl;
+  //chain->GetTree()->GetEntry(entry);
   // Check if we are apply a filter
+  //std::cout << "Checking Filter" << std::endl;
   if (!filterSelection_ || filterSelection_->Select()) {
     filteredEntries_++;
     return this->MegaProcess(entry);
@@ -58,6 +63,17 @@ void TMegaSelector::Terminate() {
 
 void TMegaSelector::AddToSelection(const std::string& name,
     const TMegaSelection& select) {
+  TMegaSelectionSet* set = GetSelectionSet(name);
+  if (set == NULL) {
+    // Make a new one
+    set = new TMegaSelectionSet(name.c_str(), "");
+    selections_[name] = set;
+  }
+  set->AddSelection(select);
+}
+
+void TMegaSelector::AddToSelection(const std::string& name,
+    std::auto_ptr<TMegaSelection> select) {
   TMegaSelectionSet* set = GetSelectionSet(name);
   if (set == NULL) {
     // Make a new one

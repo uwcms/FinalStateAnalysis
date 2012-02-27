@@ -25,13 +25,13 @@ class TMegaSelector : public TSelector {
     TTree *chain;
 
     // Abstract interface for derived classes
-    virtual void MegaInit(TTree* tree)=0;
-    virtual Bool_t MegaNotify()=0;
-    virtual void MegaBegin()=0;
-    virtual void MegaSlaveBegin()=0;
+    virtual void MegaInit(TTree* /*tree*/) {}
+    virtual Bool_t MegaNotify() { return true; }
+    virtual void MegaBegin() {}
+    virtual void MegaSlaveBegin() {}
     virtual Bool_t MegaProcess(Long64_t entry)=0;
-    virtual void MegaSlaveTerminate()=0;
-    virtual void MegaTerminate()=0;
+    virtual void MegaSlaveTerminate() {}
+    virtual void MegaTerminate() {}
 
     // Add a TMegaSelection to the named selection set.  Does not take
     // ownership.
@@ -58,14 +58,17 @@ class TMegaSelector : public TSelector {
     /// Get the factory to build TMegaSelections
     const TMegaSelectionFactory* factory() const;
 
+    // Needed for ROOT to call the virtual functions correctly
+    virtual Int_t Version() const { return 2; }
+
   private:
     void Init(TTree* tree);
     Bool_t Notify();
     void Begin(TTree*);
     void SlaveBegin(TTree*);
-    Bool_t Process(Long64_t entry);
     void SlaveTerminate();
     void Terminate();
+    Bool_t Process(Long64_t entry);
 
     // Keep track of entries processed
     unsigned int filteredEntries_;
