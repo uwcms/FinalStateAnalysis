@@ -64,6 +64,8 @@ class TMegaSelector : public TSelector {
     // Needed for ROOT to call the virtual functions correctly
     virtual Int_t Version() const { return 2; }
 
+    //ClassDef( TMegaSelector, 1 );   // Enhanced TSelector
+
   private:
     void Init(TTree* tree);
     Bool_t Notify();
