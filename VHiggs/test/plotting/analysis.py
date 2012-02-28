@@ -783,7 +783,7 @@ if __name__ == "__main__":
                     signalx5.SetLineWidth(3)
                     signalx5.SetLineColor(ROOT.EColor.kRed)
                     signalx5.SetFillStyle(0)
-                    legend.AddEntry(signalx5.th1, "VH(120) #times 5 ", "lf")
+                    legend.AddEntry(signalx5.th1, "VH (#times 5) m_{H}=120 GeV", "l")
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
                     stack.Add(tribosons.th1, 'hist')
