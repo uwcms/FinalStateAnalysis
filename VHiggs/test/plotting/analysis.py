@@ -224,6 +224,9 @@ if __name__ == "__main__":
                     filetype = '.pdf'
                     canvas.SetLogy(False)
                     canvas.Update()
+                    output_dir = os.path.join("plots", channel, charge_cat)
+                    if not os.path.exists(output_dir):
+                        os.makedirs(output_dir)
                     filename = os.path.join("plots", channel, charge_cat,
                                             filename + filetype)
                     log.info('saving %s', filename)
