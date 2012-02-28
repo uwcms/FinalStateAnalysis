@@ -7,16 +7,16 @@ def cms_preliminary(int_lumi):
     latex.SetNDC();
     latex.SetTextSize(0.04);
     latex.SetTextAlign(31);
-    keep.append(latex.DrawLatex(0.90,0.96,"#sqrt{s} = 7 TeV"));
-    if int_lumi > 0.:
-        #latex.SetTextAlign(31);
-        latex.SetTextAlign(11);
+    if int_lumi > 0:
         keep.append(latex.DrawLatex(
-            #0.85,0.84,
-            0.18,0.84,
-            "#int #font[12]{L} dt = %.1f fb^{-1}" % (int_lumi/1000.)));
+            0.90,0.96,
+            "%.1f fb^{-1} at #sqrt{s} = 7 TeV" % (int_lumi/1000.0)
+        ));
+    else:
+        keep.append(latex.DrawLatex(0.90,0.96, "#sqrt{s} = 7 TeV"));
+
     latex.SetTextAlign(11);
-    keep.append(latex.DrawLatex(0.18,0.96,"CMS preliminary 2011"));
+    keep.append(latex.DrawLatex(0.18,0.96,"CMS Preliminary"));
     #latex.DrawLatex(0.18,0.96,"CMS 2010");
     return latex
 
