@@ -104,7 +104,6 @@ void TMegaPySelector::SetupPySelf()
    gSystem->Setenv("PATH", path);
    //std::cout << std::endl << std::endl << "PATH after: " << gSystem->Getenv("PATH") << std::endl;
 
-
 //  std::cout << "SetupPySelf" << std::endl;
    if ( fPySelf && fPySelf != Py_None )
       return;                      // already created ...
