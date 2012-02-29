@@ -18,6 +18,8 @@
 #include "TString.h"
 #include "Rtypes.h"
 
+// Workaroudn for PATH problem
+#include "TSystem.h"
 
 // Workaround
 namespace PyROOT {
@@ -91,6 +93,18 @@ ClassImp(TMegaPySelector)
 //- private helpers ----------------------------------------------------------
 void TMegaPySelector::SetupPySelf()
 {
+  // Hack to workaround PROOF appending some dumb path ahead of the good one.
+  // Fixed in later versions:
+  // See http://root.cern.ch/viewvc/branches/v5-28-00-patches/proof/proof/src/TProofServ.cxx?view=log&pathrev=41401#rev41401
+   TString path = gSystem->Getenv("PATH");
+   //std::cout << "PATH before: " << path << std::endl;
+   path.ReplaceAll("/bin:/usr/bin:/usr/local/bin", "");
+   // put it at the end
+   path.Append(":/bin:/usr/bin:/usr/local/bin");
+   gSystem->Setenv("PATH", path);
+   //std::cout << std::endl << std::endl << "PATH after: " << gSystem->Getenv("PATH") << std::endl;
+
+
 //  std::cout << "SetupPySelf" << std::endl;
    if ( fPySelf && fPySelf != Py_None )
       return;                      // already created ...
