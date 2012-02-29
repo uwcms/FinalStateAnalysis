@@ -261,7 +261,7 @@ cfg = {
         'ntuple' : '/mmt/final/Ntuple',
         'primds' : 'data_DoubleMu',
         'variables' : {
-            'MuTauMass' : ('Muon2_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300], mass_binning),
+            'MuTauMass' : ('Muon2_Tau_Mass', 'M_{#mu_{2}#tau}', [60, 0, 300], mass_binning),
             'Mu1JetPt' : ('Muon1_JetPt', "p_{T}", [200, 0, 200], 1),
             'Mu2JetPt' : ('Muon2_JetPt', "p_{T}", [200, 0, 200], 1),
             #    'Muon2_MtToMET' : ('Muon2_MtToMET', 'M_{T} #mu(2)-#tau', [100, 0, 300],),
