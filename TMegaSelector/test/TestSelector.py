@@ -8,7 +8,8 @@ class TestSelector(TMegaPySelector):
         self.histo = ROOT.TH1F("adsf", "asdf", 100, 0, 100)
         #self.fOutput.Add(self.histo)
     def MegaProcess(self, entry):
-        print entry
+        self.chain.GetEntry(entry)
+        print self.chain.intBranch
         self.histo.Fill(entry)
         return True
     def MegaSlaveTerminate(self):
