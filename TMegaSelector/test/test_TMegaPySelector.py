@@ -16,9 +16,17 @@ print "Got tree with %i entries" % chain.GetEntries()
 dataset = ROOT.TDSet("doot", "TestTree", "/", "TTree")
 dataset.Add('file:test_file.root')
 
-#chain.Process("TMegaPySelector", "TestSelector")
+cwd = os.getcwd()
+if cwd not in os.environ.get('PYTHONPATH', ''):
+    os.environ['PYTHONPATH'] = cwd + ':' + os.environ.get('PYTHONPATH', '')
 
 print "Analyze dataset using TDSet"
 dataset.Process("TMegaPySelector", "TestSelector")
+
+results = proof.GetOutputList()
+for x in results:
+    print x
+
+print results.FindObject("adsf").Integral()
 
 print "Done"

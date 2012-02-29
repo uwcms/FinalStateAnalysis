@@ -418,3 +418,7 @@ void TMegaPySelector::Abort( const char* why, EAbort what )
    } else
       TSelector::Abort( why ? why : "", what );
 }
+
+void TMegaPySelector::AddToOutput(TObject* object) {
+  this->fOutput->Add(object);
+}

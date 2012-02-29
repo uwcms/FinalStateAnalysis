@@ -45,6 +45,9 @@ public:
    virtual void   MegaTerminate();
    virtual Int_t  Version() const;
 
+   // Add an object to the fOutput list
+   virtual void AddToOutput(TObject* object);
+
    virtual void Abort( const char* why, EAbort what = kAbortProcess );
 
    ClassDef( TMegaPySelector, 1 );   //Python equivalent base class for PROOF

@@ -12,5 +12,5 @@ class TestSelector(TMegaPySelector):
         self.histo.Fill(entry)
         return True
     def MegaSlaveTerminate(self):
-        #self.fOutput.Add(self.histo)
-        del self.histo
+        print 'Adding output'
+        self.AddToOutput(self.histo)
