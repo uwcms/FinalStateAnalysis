@@ -24,6 +24,12 @@ void TMegaSelector::Init(TTree* tree) {
   if (tree == 0) return;
   chain = tree;
   director_.SetTree(chain);
+  // Apply the branch commands to this chain
+  for (size_t i = 0; i < branchCommands_.size(); ++i) {
+    chain->SetBranchStatus(branchCommands_[i].first.c_str(),
+        branchCommands_[i].second);
+  }
+
   this->MegaInit(tree);
 }
 
@@ -111,4 +117,12 @@ unsigned int TMegaSelector::GetFilteredEntries() const {
 
 const TMegaSelectionFactory* TMegaSelector::factory() const {
   return factory_.get();
+}
+
+void TMegaSelector::DisableBranch(const std::string& branch) {
+  branchCommands_.push_back(std::make_pair(branch, 0));
+}
+
+void TMegaSelector::EnableBranch(const std::string& branch) {
+  branchCommands_.push_back(std::make_pair(branch, 1));
 }

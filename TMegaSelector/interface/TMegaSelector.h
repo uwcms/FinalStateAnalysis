@@ -11,6 +11,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <utility>
 
 #include <TBranchProxyDirector.h>
 #include "TBranchProxy.h"
@@ -61,6 +62,12 @@ class TMegaSelector : public TSelector {
     /// Get the factory to build TMegaSelections
     const TMegaSelectionFactory* factory() const;
 
+    /// Do not read branch on calls to chain->GetEntry()
+    void DisableBranch(const std::string& branch);
+
+    /// Do read branch on calls to chain->GetEntry()
+    void EnableBranch(const std::string& branch);
+
     // Needed for ROOT to call the virtual functions correctly
     virtual Int_t Version() const { return 2; }
 
@@ -91,6 +98,9 @@ class TMegaSelector : public TSelector {
     SelectionSetMap selections_;
     // The selection to use for filtering calls to MegaProcess();
     TMegaSelectionSet* filterSelection_;
+
+    // These get applied on each call to Init()
+    std::vector<std::pair<std::string, int> > branchCommands_;
 };
 
 #endif /* end of include guard: TMEGASELECTOR_F965XW8K */
