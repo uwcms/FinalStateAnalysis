@@ -37,7 +37,7 @@ public:
    virtual Int_t  GetEntry( Long64_t entry, Int_t getall = 0 );
    virtual Bool_t MegaNotify();
 
-   //virtual void   Init( TTree* tree );
+   virtual void   MegaInit( TTree* tree );
    virtual void   MegaBegin();
    virtual void   MegaSlaveBegin();
    virtual Bool_t MegaProcess( Long64_t entry );

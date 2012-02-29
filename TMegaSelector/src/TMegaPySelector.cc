@@ -271,26 +271,26 @@ Int_t TMegaPySelector::GetEntry( Long64_t entry, Int_t getall )
 
 // Disabled - done in base class EK
 //____________________________________________________________________________
-//void TMegaPySelector::Init( TTree* tree )
-//{
-//// Initialize with the current tree to be used; not forwarded (may be called
-//// multiple times, and is called from Begin() and SlaveBegin() ).
-//   if ( ! tree )
-//      return;
-//
-//// set the chain beforehand so that the python side may correct if needed
-//   chain = tree;
-//
-//// forward call
-//   PyObject* pytree = PyROOT::BindRootObject( (void*)tree, tree->IsA() );
-//   PyObject* result = CallSelf( "Init", pytree );
-//   Py_DECREF( pytree );
-//
-//   if ( ! result )
-//      Abort( 0 );
-//
-//   Py_XDECREF( result );
-//}
+void TMegaPySelector::MegaInit( TTree* tree )
+{
+// Initialize with the current tree to be used; not forwarded (may be called
+// multiple times, and is called from Begin() and SlaveBegin() ).
+   if ( ! tree )
+      return;
+
+// set the chain beforehand so that the python side may correct if needed
+   chain = tree;
+
+// forward call
+   PyObject* pytree = PyROOT::BindRootObject( (void*)tree, tree->IsA() );
+   PyObject* result = CallSelf( "MegaInit", pytree );
+   Py_DECREF( pytree );
+
+   if ( ! result )
+      Abort( 0 );
+
+   Py_XDECREF( result );
+}
 
 //____________________________________________________________________________
 Bool_t TMegaPySelector::MegaNotify()
