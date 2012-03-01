@@ -6,6 +6,8 @@
 
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATTripletFinalStateT.h"
 
 template<class FinalState>
 class PATTripletFinalStateBuilderT : public edm::EDProducer {
@@ -41,16 +43,6 @@ PATTripletFinalStateBuilderT<FinalState>::PATTripletFinalStateBuilderT(
 template<class FinalState> void
 PATTripletFinalStateBuilderT<FinalState>::produce(
     edm::Event& evt, const edm::EventSetup& es) {
-  // Get vertex & MET
-  edm::Handle<edm::View<pat::MET> > mets;
-  evt.getByLabel(metSrc_, mets);
-  edm::Ptr<pat::MET> met = mets->ptrAt(0);
-  assert(met.isNonnull());
-
-  edm::Handle<edm::View<reco::Vertex> > vertices;
-  evt.getByLabel(pvSrc_, vertices);
-  edm::Ptr<reco::Vertex> vtx = vertices->ptrAt(0);
-  assert(vtx.isNonnull());
 
   edm::Handle<edm::View<PATFinalStateEvent> > fsEvent;
   evt.getByLabel(evtSrc_, fsEvent);
@@ -90,7 +82,7 @@ PATTripletFinalStateBuilderT<FinalState>::produce(
         if (reco::CandidatePtr(leg2) == reco::CandidatePtr(leg3))
           continue;
 
-        FinalState outputCand(leg1, leg2, leg3, met, vtx, evtPtr);
+        FinalState outputCand(leg1, leg2, leg3, evtPtr);
         if (cut_(outputCand))
           output->push_back(outputCand);
       }

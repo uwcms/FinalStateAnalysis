@@ -6,6 +6,7 @@
 
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATPairFinalStateT.h"
 
 template<class FinalStatePair>
@@ -40,16 +41,6 @@ PATPairFinalStateBuilderT<FinalStatePair>::PATPairFinalStateBuilderT(
 template<class FinalStatePair> void
 PATPairFinalStateBuilderT<FinalStatePair>::produce(
     edm::Event& evt, const edm::EventSetup& es) {
-  // Get vertex & MET
-  edm::Handle<edm::View<pat::MET> > mets;
-  evt.getByLabel(metSrc_, mets);
-  edm::Ptr<pat::MET> met = mets->ptrAt(0);
-  assert(met.isNonnull());
-
-  edm::Handle<edm::View<reco::Vertex> > vertices;
-  evt.getByLabel(pvSrc_, vertices);
-  edm::Ptr<reco::Vertex> vtx = vertices->ptrAt(0);
-  assert(vtx.isNonnull());
 
   edm::Handle<edm::View<PATFinalStateEvent> > fsEvent;
   evt.getByLabel(evtSrc_, fsEvent);
@@ -75,7 +66,7 @@ PATPairFinalStateBuilderT<FinalStatePair>::produce(
       if (reco::CandidatePtr(leg1) == reco::CandidatePtr(leg2))
         continue;
 
-      FinalStatePair outputCand(leg1, leg2, met, vtx, evtPtr);
+      FinalStatePair outputCand(leg1, leg2, evtPtr);
       if (cut_(outputCand))
         output->push_back(outputCand);
     }

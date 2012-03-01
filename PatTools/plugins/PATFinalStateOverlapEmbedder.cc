@@ -21,6 +21,8 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
 
+#include "DataFormats/Math/interface/deltaR.h"
+
 class PATFinalStateOverlapEmbedder : public edm::EDProducer {
   public:
     PATFinalStateOverlapEmbedder(const edm::ParameterSet& pset);
