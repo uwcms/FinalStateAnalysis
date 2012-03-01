@@ -5,9 +5,8 @@ PATMultiCandFinalState::PATMultiCandFinalState():PATFinalState(){}
 
 PATMultiCandFinalState::PATMultiCandFinalState(
     const std::vector<reco::CandidatePtr>& cands,
-    const edm::Ptr<pat::MET>& met, const edm::Ptr<reco::Vertex>& vertex,
     const edm::Ptr<PATFinalStateEvent>& evt):
-  PATFinalState(0, reco::Candidate::LorentzVector(), met, vertex, evt),
+  PATFinalState(0, reco::Candidate::LorentzVector(), evt),
   cands_(cands) {
     // Setup p4 in base class
     int charge = 0;

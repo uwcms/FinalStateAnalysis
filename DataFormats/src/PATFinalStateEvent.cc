@@ -22,6 +22,13 @@ namespace {
 
 PATFinalStateEvent::PATFinalStateEvent() {}
 
+// testing CTOR
+PATFinalStateEvent::PATFinalStateEvent(
+    const edm::Ptr<reco::Vertex>& pv,
+    const edm::Ptr<pat::MET>& met):
+  pv_(pv),
+  met_(met) { }
+
 PATFinalStateEvent::PATFinalStateEvent(
     double rho,
     const edm::Ptr<reco::Vertex>& pv,

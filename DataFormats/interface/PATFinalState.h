@@ -4,19 +4,24 @@
 #include "DataFormats/PatCandidates/interface/PATObject.h"
 #include "DataFormats/Candidate/interface/LeafCandidate.h"
 
-#include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/Candidate/interface/CandidateFwd.h"
-
-#include "DataFormats/PatCandidates/interface/MET.h"
-#include "DataFormats/PatCandidates/interface/Muon.h"
-#include "DataFormats/PatCandidates/interface/Tau.h"
-#include "DataFormats/PatCandidates/interface/Jet.h"
-#include "DataFormats/PatCandidates/interface/Electron.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateProxy.h"
 
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
+
+// Forward delcarations
+namespace pat {
+  class Electron;
+  class Muon;
+  class Tau;
+  class MET;
+  class Jet;
+}
+
+namespace reco {
+  class Vertex;
+}
 
 typedef pat::PATObject<reco::LeafCandidate> PATLeafCandidate;
 
@@ -28,12 +33,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     PATFinalState(
         int charge, const reco::Candidate::LorentzVector& p4,
-        const edm::Ptr<pat::MET>& met,
-        const edm::Ptr<reco::Vertex>& vertex,
         const edm::Ptr<PATFinalStateEvent>& evt);
 
-    const edm::Ptr<pat::MET>& met() const { return met_; }
-    const edm::Ptr<reco::Vertex>& vertexObject() const { return vertex_; }
+    const edm::Ptr<pat::MET>& met() const;
+    const edm::Ptr<reco::Vertex>& vertexObject() const;
     const edm::Ptr<PATFinalStateEvent>& evt() const { return event_; }
 
     virtual PATFinalState* clone() const = 0;
@@ -181,8 +184,6 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         size_t i, const std::string& label) const = 0;
 
   private:
-    edm::Ptr<pat::MET> met_;
-    edm::Ptr<reco::Vertex> vertex_;
     edm::Ptr<PATFinalStateEvent> event_;
 };
 

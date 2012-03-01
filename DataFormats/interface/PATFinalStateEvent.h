@@ -32,6 +32,12 @@ class PATFinalStateEvent {
   public:
     PATFinalStateEvent();
 
+    // minimal constructor used only for unit tests
+    PATFinalStateEvent(
+        const edm::Ptr<reco::Vertex>& pv,
+        const edm::Ptr<pat::MET>& met
+    );
+
     PATFinalStateEvent(double rho,
         const edm::Ptr<reco::Vertex>& pv,
         const edm::PtrVector<reco::Vertex>& recoVertices,

@@ -6,6 +6,8 @@
 #include <Utilities/Testing/interface/CppUnit_testdriver.icpp>
 #include <vector>
 
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
+
 #include "FinalStateAnalysis/DataFormats/interface/PATDiLeptonFinalStates.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATTriLeptonFinalStates.h"
 
@@ -17,6 +19,8 @@
 
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "DataFormats/Math/interface/deltaR.h"
+
+#include "DataFormats/PatCandidates/interface/MET.h"
 
 using namespace edm;
 
@@ -56,6 +60,12 @@ class testFinalState: public CppUnit::TestFixture {
     ProductID metPID;
     std::vector<pat::MET> mockMETColl_;
     edm::Ptr<pat::MET> mockMETPtr_;
+
+    ProductID eventPID;
+    std::vector<PATFinalStateEvent> mockEventColl_;
+    edm::Ptr<PATFinalStateEvent> mockEventPtr_;
+
+    edm::Ptr<reco::Vertex> nullVtx_;
 
     ProductID jetPID;
     std::vector<reco::LeafCandidate> mockJetColl_;
@@ -113,6 +123,11 @@ void testFinalState::setUp() {
   TestHandle<std::vector<pat::MET> > metHandle(&mockMETColl_, metPID);
   mockMETPtr_ = Ptr<pat::MET>(metHandle, 0);
 
+  PATFinalStateEvent mockEvent(nullVtx_, mockMETPtr_);
+  mockEventColl_.push_back(mockEvent);
+  TestHandle<std::vector<PATFinalStateEvent> > eventHandle(&mockEventColl_, eventPID);
+  mockEventPtr_ = Ptr<PATFinalStateEvent>(eventHandle, 0);
+
   for (size_t i = 10; i < 100; i += 10) {
     reco::LeafCandidate cand;
     cand.setP4(math::PtEtaPhiMLorentzVector(i, 0, 0, 0));
@@ -163,12 +178,12 @@ void testFinalState::checkSetup() {
 }
 
 void testFinalState::testDiLepton() {
-  edm::Ptr<reco::Vertex> nullVtx;
+  edm::Ptr<reco::Vertex> nullVtx_;
 
-  edm::Ptr<PATFinalStateEvent> evt;
+
   // Explicitly check that all the methods are const
-  const PATElecMuFinalState finalState(mockElectronPtr_, mockMuonPtr1_, mockMETPtr_,
-      nullVtx, evt);
+  const PATElecMuFinalState finalState(mockElectronPtr_, mockMuonPtr1_,
+      mockEventPtr_);
 
   // Check charge defintion
   CPPUNIT_ASSERT(finalState.charge() == 0);
@@ -182,7 +197,7 @@ void testFinalState::testDiLepton() {
 
   // Check assignment of variables
   CPPUNIT_ASSERT(finalState.met() == mockMETPtr_);
-  CPPUNIT_ASSERT(finalState.vertexObject() == nullVtx);
+  CPPUNIT_ASSERT(finalState.vertexObject() == nullVtx_);
 
   // Check daughter getters via ptr
   CPPUNIT_ASSERT(finalState.daughter(0) == mockElectronPtr_.get());
@@ -345,16 +360,14 @@ void testFinalState::testDiLepton() {
 }
 
 void testFinalState::testTriLepton() {
-  edm::Ptr<reco::Vertex> nullVtx;
-  edm::Ptr<PATFinalStateEvent> evt;
   const PATElecMuMuFinalState finalState(mockElectronPtr_, mockMuonPtr1_, mockMuonPtr2_,
-      mockMETPtr_, nullVtx, evt);
+      mockEventPtr_);
 
   CPPUNIT_ASSERT(finalState.daughter(0) == mockElectronPtr_.get());
   CPPUNIT_ASSERT(finalState.daughter(1) == mockMuonPtr1_.get());
   CPPUNIT_ASSERT(finalState.daughter(2) == mockMuonPtr2_.get());
   CPPUNIT_ASSERT(finalState.met() == mockMETPtr_);
-  CPPUNIT_ASSERT(finalState.vertexObject() == nullVtx);
+  CPPUNIT_ASSERT(finalState.vertexObject() == nullVtx_);
 
   {
     PATFinalStateProxy subcand = finalState.subcand(1, 2);
@@ -385,10 +398,8 @@ void testFinalState::testTriLepton() {
 }
 
 void testFinalState::testOverlaps() {
-  edm::Ptr<reco::Vertex> nullVtx;
-  edm::Ptr<PATFinalStateEvent> evt;
   PATElecMuMuFinalState finalStateNonConst(mockElectronPtr_, mockMuonPtr1_, mockMuonPtr2_,
-      mockMETPtr_, nullVtx, evt);
+      mockEventPtr_);
   finalStateNonConst.setOverlaps("jets", mockJetEdmPtrVector_);
   const PATElecMuMuFinalState finalState(finalStateNonConst);
   CPPUNIT_ASSERT(finalState.hasOverlaps("jets"));
@@ -425,10 +436,8 @@ void testFinalState::testOverlaps() {
 }
 
 void testFinalState::testIndexGetter() {
-  edm::Ptr<reco::Vertex> nullVtx;
-  edm::Ptr<PATFinalStateEvent> evt;
   PATElecMuMuFinalState finalStateNonConst(mockElectronPtr_, mockMuonPtr1_, mockMuonPtr2_,
-      mockMETPtr_, nullVtx, evt);
+      mockEventPtr_);
   const PATElecMuMuFinalState& finalState = finalStateNonConst;
   CPPUNIT_ASSERT(mockMuonPtr2_->pt() > mockMuonPtr1_->pt());
   CPPUNIT_ASSERT(mockMuonPtr1_->pt() > mockElectronPtr_->pt());

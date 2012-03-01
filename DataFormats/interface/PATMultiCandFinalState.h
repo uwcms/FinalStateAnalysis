@@ -11,7 +11,6 @@ class PATMultiCandFinalState : public PATFinalState {
     PATMultiCandFinalState();
 
     PATMultiCandFinalState(const std::vector<reco::CandidatePtr>& cands,
-        const edm::Ptr<pat::MET>& met, const edm::Ptr<reco::Vertex>& vertex,
         const edm::Ptr<PATFinalStateEvent>& evt);
 
     virtual PATMultiCandFinalState* clone() const;

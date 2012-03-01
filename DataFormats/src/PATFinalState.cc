@@ -1,5 +1,12 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalState.h"
+
+#include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Tau.h"
+#include "DataFormats/PatCandidates/interface/MET.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
@@ -68,15 +75,17 @@ PATFinalState::PATFinalState():PATLeafCandidate(){}
 
 PATFinalState::PATFinalState(
     int charge, const reco::Candidate::LorentzVector& p4,
-    const edm::Ptr<pat::MET>& met,
-    const edm::Ptr<reco::Vertex>& vertex,
     const edm::Ptr<PATFinalStateEvent>& event):PATLeafCandidate(
       reco::LeafCandidate(charge, p4)) {
-  met_ = met;
-  vertex_ = vertex;
   event_ = event;
-  if (vertex_.isNonnull())
-    setVertex(vertex_->position());
+}
+
+const edm::Ptr<pat::MET>& PATFinalState::met() const {
+  return event_->met();
+}
+
+const edm::Ptr<reco::Vertex>& PATFinalState::vertexObject() const {
+  return event_->pv();
 }
 
 const reco::Candidate* PATFinalState::daughter(size_t i) const {
@@ -381,19 +390,19 @@ double PATFinalState::mtMET(int i, const std::string& tag,
     const std::string& metTag) const {
   if (metTag != "") {
     return transverseMass(daughterUserCandP4(i, tag),
-        met_->userCand(metTag)->p4());
+        met()->userCand(metTag)->p4());
   } else {
     return transverseMass(daughterUserCandP4(i, tag),
-        met_->p4());
+        met()->p4());
   }
 }
 
 double PATFinalState::mtMET(int i, const std::string& metTag) const {
   if (metTag != "") {
     return transverseMass(daughterUserCandP4(i, ""),
-        met_->userCand(metTag)->p4());
+        met()->userCand(metTag)->p4());
   } else {
-    return transverseMass(daughterUserCandP4(i, ""), met_->p4());
+    return transverseMass(daughterUserCandP4(i, ""), met()->p4());
   }
 }
 
@@ -456,14 +465,14 @@ PATFinalState::subcand(int i, int j, int x, int y, int z) const {
   if (z > -1)
     output.push_back(daughterPtr(z));
   return PATFinalStateProxy(
-      new PATMultiCandFinalState(output, met(), vertexObject(), evt()));
+      new PATMultiCandFinalState(output, evt()));
 }
 
 PATFinalStateProxy
 PATFinalState::subcand(const std::string& tags) const {
   const std::vector<reco::CandidatePtr> daus = daughterPtrs(tags);
   return PATFinalStateProxy(
-      new PATMultiCandFinalState(daus, met(), vertexObject(), evt()));
+      new PATMultiCandFinalState(daus, evt()));
 }
 
 PATFinalStateProxy
@@ -480,7 +489,7 @@ PATFinalState::subcand(const std::string& tags,
     toAdd.push_back(daus[i]);
   }
   return PATFinalStateProxy(
-      new PATMultiCandFinalState(toAdd, met(), vertexObject(), evt()));
+      new PATMultiCandFinalState(toAdd, evt()));
 }
 
 bool PATFinalState::likeSigned(int i, int j) const {
