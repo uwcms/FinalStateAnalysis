@@ -34,6 +34,7 @@ class PFJetViewOverlapSubtraction : public edm::EDFilter {
     edm::InputTag subtractSrc_;
     double minDeltaR_;
     bool filter_;
+    bool invert_;
 };
 
 PFJetViewOverlapSubtraction::PFJetViewOverlapSubtraction(const edm::ParameterSet& pset) {
@@ -41,6 +42,8 @@ PFJetViewOverlapSubtraction::PFJetViewOverlapSubtraction(const edm::ParameterSet
   subtractSrc_ = pset.getParameter<edm::InputTag>("subtractSrc");
   minDeltaR_ = pset.getParameter<double>("minDeltaR");
   filter_ = pset.getParameter<bool>("filter");
+  invert_ = pset.exists("invert") ? pset.getParameter<bool>("invert") : false;
+
   produces<reco::CandidateBaseRefVector>();
 }
 
@@ -67,6 +70,8 @@ bool PFJetViewOverlapSubtraction::filter(edm::Event& evt, const edm::EventSetup&
         break;
       }
     }
+    if (invert_)
+      passes = !passes;
     if (passes) {
       output->push_back(*baseRef);
     }
