@@ -13,6 +13,8 @@ export fsa=$FSAHOME
 export vpython=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/vpython
 echo "Activating python virtualenv from $vpython"
 
+export tests=$CMSSW_BASE/test/$SCRAM_ARCH/
+
 cd $vpython
 source bin/activate
 cd -
