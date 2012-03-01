@@ -7,16 +7,14 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalStateFwd.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLS.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLSFwd.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATDiLeptonFinalStates.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATDiLeptonFinalStatesFwd.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATTriLeptonFinalStates.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATTriLeptonFinalStatesFwd.h"
+
+#include "FinalStateAnalysis/DataFormats/interface/PATQuadLeptonFinalStates.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/Macros.h"
 
@@ -30,14 +28,18 @@ namespace {
     std::pair<std::string, float> dummyFloatPair;
     std::pair<std::string, int> dummyIntPair;
 
+    // shared pointer wrapper class
     PATFinalStateProxy proxyDummy;
 
+    // base classes
     FWD_ABS_CLASSDECL(PATFinalState)
     FWD_CLASSDECL(PATFinalStateEvent)
     FWD_CLASSDECL(PATFinalStateLS)
 
+    // n-cand state
     FWD_CLASSDECL(PATMultiCandFinalState)
 
+    // pair final states
     FWD_CLASSDECL(PATElecElecFinalState)
     FWD_CLASSDECL(PATElecMuFinalState)
     FWD_CLASSDECL(PATElecTauFinalState)
@@ -45,6 +47,7 @@ namespace {
     FWD_CLASSDECL(PATMuTauFinalState)
     FWD_CLASSDECL(PATTauTauFinalState)
 
+    // triplet final states
     FWD_CLASSDECL(PATElecElecElecFinalState)
     FWD_CLASSDECL(PATElecElecMuFinalState)
     FWD_CLASSDECL(PATElecElecTauFinalState)
@@ -55,5 +58,22 @@ namespace {
     FWD_CLASSDECL(PATMuMuTauFinalState)
     FWD_CLASSDECL(PATMuTauTauFinalState)
     FWD_CLASSDECL(PATTauTauTauFinalState)
+
+    // quad final states
+    FWD_CLASSDECL(PATElecElecElecElecFinalState)
+    FWD_CLASSDECL(PATElecElecElecMuFinalState)
+    FWD_CLASSDECL(PATElecElecElecTauFinalState)
+    FWD_CLASSDECL(PATElecElecMuMuFinalState)
+    FWD_CLASSDECL(PATElecElecMuTauFinalState)
+    FWD_CLASSDECL(PATElecElecTauTauFinalState)
+    FWD_CLASSDECL(PATElecMuMuMuFinalState)
+    FWD_CLASSDECL(PATElecMuMuTauFinalState)
+    FWD_CLASSDECL(PATElecMuTauTauFinalState)
+    FWD_CLASSDECL(PATElecTauTauTauFinalState)
+    FWD_CLASSDECL(PATMuMuMuMuFinalState)
+    FWD_CLASSDECL(PATMuMuMuTauFinalState)
+    FWD_CLASSDECL(PATMuMuTauTauFinalState)
+    FWD_CLASSDECL(PATMuTauTauTauFinalState)
+    FWD_CLASSDECL(PATTauTauTauTauFinalState)
   };
 }

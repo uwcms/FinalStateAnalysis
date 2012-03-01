@@ -11,6 +11,8 @@
  *      > Move MET and PV to here exclusively?
  */
 
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
+
 #include "DataFormats/Common/interface/Ptr.h"
 #include "DataFormats/Common/interface/PtrVector.h"
 

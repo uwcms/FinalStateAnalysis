@@ -13,6 +13,8 @@
 #include "DataFormats/Provenance/interface/LuminosityBlockID.h"
 #include "DataFormats/Luminosity/interface/LumiSummary.h"
 
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLSFwd.h"
+
 class PATFinalStateLS {
   public:
     PATFinalStateLS();
