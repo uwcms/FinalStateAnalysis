@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+
+'''
+
+Command Line tool to run the TMegaSelector on a set of datasets
+
+
+'''
+
+import sys
+from RecoLuminosity.LumiDB import argparse
+parser = argparse.ArgumentParser()
+
+# Don't let ROOT get at these
+args = sys.argv[:]
+sys.argv = []
+
+from FinalStateAnalysis.TMegaSelector.megaselect import TMegaPySelector
+
+if __name__ == "__main__":
+
+    parser.add_argument('dataset', metavar='dataset', type=str, nargs=1,
+                        help='Dataset to process (registered with PROOF)')
+
+    parser.add_argument('output', type=str, help='Output root file')
+
+    parser.add_argument('--workers', type=int, required=False,
+                        default = 4, help='Number of worker processes (def: 4)')
+
+
+    parser.add_argument('-d', '--dir', type=str, required=False,
+                        default='', help='Save results in [dir]')
+
+    args = parser.parse_args(args)
+
+    proof = ROOT.TProof.Open('workers=%i' % args.workers)
+    # Load the necessary libraries
+    proof.Exec('gSystem->Load("$CMSSW_BASE/lib/$SCRAM_ARCH/'
+               'libFinalStateAnalysisTMegaSelector.so")')
+
+    # Add the current WD to the python path
+    cwd = os.getcwd()
+    if cwd not in os.environ.get('PYTHONPATH', ''):
+        os.environ['PYTHONPATH'] = cwd + ':' + os.environ.get('PYTHONPATH', '')
+
+
