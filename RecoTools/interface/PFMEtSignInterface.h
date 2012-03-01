@@ -24,7 +24,7 @@
 #include "DataFormats/JetReco/interface/PFJet.h"
 #include "DataFormats/JetReco/interface/PFJetCollection.h"
 
-#include "FinalStateAnalysis/PatTools/interface/PFMEtSignInterfaceBase.h"
+#include "FinalStateAnalysis/RecoTools/interface/PFMEtSignInterfaceBase.h"
 
 #include <TMatrixD.h>
 
