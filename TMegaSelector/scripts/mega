@@ -7,40 +7,96 @@ Command Line tool to run the TMegaSelector on a set of datasets
 
 '''
 
-import sys
 from RecoLuminosity.LumiDB import argparse
-parser = argparse.ArgumentParser()
+import logging
+import os
+import sys
 
+parser = argparse.ArgumentParser()
 # Don't let ROOT get at these
 args = sys.argv[:]
 sys.argv = []
+
+# Setup log
+log = logging.getLogger("mega")
 
 from FinalStateAnalysis.TMegaSelector.megaselect import TMegaPySelector
 
 if __name__ == "__main__":
 
-    parser.add_argument('dataset', metavar='dataset', type=str, nargs=1,
+    parser.add_argument('selector', metavar='selector', type=str, 
+                        help='Path to TPySelector module')
+
+    parser.add_argument('dataset', metavar='dataset', type=str, 
                         help='Dataset to process (registered with PROOF)')
+
+    parser.add_argument('tree', metavar='tree', type=str, 
+                        help='Path to TTree in data files (Ex: /my/dir/myTree)')
 
     parser.add_argument('output', type=str, help='Output root file')
 
     parser.add_argument('--workers', type=int, required=False,
                         default = 4, help='Number of worker processes (def: 4)')
 
-
     parser.add_argument('-d', '--dir', type=str, required=False,
                         default='', help='Save results in [dir]')
 
+    parser.add_argument('-t', '--type', type=str, required=False,
+                        choices=['TMegaPySelector', 'TPySelecor', 'TSelector'],
+                        default='TMegaPySelector', help='Selector type')
+
     args = parser.parse_args(args)
 
+    log.info("Creating PROOF session with %i workers" % args.workers)
     proof = ROOT.TProof.Open('workers=%i' % args.workers)
     # Load the necessary libraries
+    log.info("Loading TMegaSelector libarary into PROOF")
     proof.Exec('gSystem->Load("$CMSSW_BASE/lib/$SCRAM_ARCH/'
                'libFinalStateAnalysisTMegaSelector.so")')
 
-    # Add the current WD to the python path
-    cwd = os.getcwd()
-    if cwd not in os.environ.get('PYTHONPATH', ''):
-        os.environ['PYTHONPATH'] = cwd + ':' + os.environ.get('PYTHONPATH', '')
+
+    log.info("Checking dataset %s exists..." % args.dataset)
+    # Get the dataset to make sure it exists
+    if not proof.ExistsDataSet(args.dataset):
+        sys.stderr.write(
+            "Error: dataset %s is not known to PROOF, you must register it.\n" %
+            args.dataset)
+        sys.exit(5)
+
+    # If we are running a PySelector
+    if args.type != 'TSelector':
+        # Add the selector directory to the python path
+        log.info("Adding " % args.dataset)
+        path_to_selector = os.path.dirname(os.path.abspath(parser.selector))
+        if path_to_selector not in os.environ.get('PYTHONPATH', ''):
+            os.environ['PYTHONPATH'] = path_to_selector + ':' + \
+                    os.environ.get('PYTHONPATH', '')
+
+        module_name = os.path.basename(parser.selector)
+        
+        # Make sure the module is OK
+        log.info("Checking module %s is importable" % module_name)
+
+        class_name = module_name.replace('.py', '')
+
+        # Make sure we can get the file
+        try:
+            __import__(class_name)
+        except ImportError:
+            sys.stderr.write(
+                "Error: can't import module %s" % class_name)
+            sys.exit(6)
+
+        # Now make sure there is a class with the same name in the file
+        try:
+            __import__(class_name, fromlist=[class_name])
+        except ImportError:
+            sys.stderr.write(
+                "Error: can't import class %s from module %s" 
+                % (class_name, class_name))
+            sys.exit(7)
 
 
+        
+
+    #proof.Process(
