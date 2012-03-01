@@ -1,4 +1,4 @@
-#include "FinalStateAnalysis/RecoTools/interface/PFMEtSignInterfaceBase.h"
+#include "FinalStateAnalysis/PatTools/interface/PFMEtSignInterfaceBase.h"
 
 #include "FWCore/Utilities/interface/Exception.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
