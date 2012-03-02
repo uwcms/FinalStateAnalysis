@@ -1,0 +1,2 @@
+root://cmsxrootd.hep.wisc.edu//store/mc/Fall11/ZZTo4L_TuneZ2_7TeV_pythia6_tauola/AODSIM/PU_S6_START42_V14B-v1/0000/FCA826B1-51F9-E011-A7E8-00261894388A.root
+root://cmsxrootd.hep.wisc.edu//store/mc/Fall11/ZZTo4L_TuneZ2_7TeV_pythia6_tauola/AODSIM/PU_S6_START42_V14B-v1/0000/FC971D8E-48F9-E011-8119-00304867BF9A.root

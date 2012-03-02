@@ -1,0 +1,4 @@
+root://cmsxrootd.hep.wisc.edu//store/data/Run2011B/DoubleMu/AOD/PromptReco-v1/000/180/252/C247948F-1705-E111-B02E-BCAEC532970B.root
+root://cmsxrootd.hep.wisc.edu//store/data/Run2011B/DoubleMu/AOD/PromptReco-v1/000/180/252/BEAC1490-1705-E111-B4E9-E0CB4E553673.root
+root://cmsxrootd.hep.wisc.edu//store/data/Run2011B/DoubleMu/AOD/PromptReco-v1/000/180/252/085F0838-4305-E111-BDD0-003048CF94A8.root
+root://cmsxrootd.hep.wisc.edu//store/data/Run2011B/DoubleMu/AOD/PromptReco-v1/000/180/250/F09E8190-1705-E111-99C4-BCAEC518FF80.root
