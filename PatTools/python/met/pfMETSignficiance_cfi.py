@@ -83,7 +83,7 @@ metSigGetPFJets = cms.EDFilter(
     src = cms.InputTag("ak5PFJets"),
     subtractSrc = cms.InputTag("metSigJetsClean"),
     minDeltaR = cms.double(0.4),
-    filter = cms.bool(False)
+    filter = cms.bool(False),
     invert = cms.bool(True),  # select AK5 PF jets that DO overlap
 )
 metSignficanceSequence += metSigGetPFJets
