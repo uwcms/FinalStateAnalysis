@@ -1,8 +1,8 @@
 # For updated lumi tools
-V03-03-07 RecoLuminosity/LumiDB 
+V03-03-12 RecoLuminosity/LumiDB 
 # Update tau POG tags
 V01-02-16 RecoTauTag/RecoTau 
-V01-02-00 RecoTauTag/TauTagTools
+V01-02-01 RecoTauTag/TauTagTools
 V01-02-12 RecoTauTag/Configuration
 # For limit tool
 V01-12-03 HiggsAnalysis/CombinedLimit

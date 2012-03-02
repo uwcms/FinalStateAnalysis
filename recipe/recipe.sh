@@ -16,7 +16,7 @@ patch -N -p0 < FinalStateAnalysis/recipe/patches/V00-04-02_CommonTools_Utils_Add
 echo "Checking out pat support for new tau discriminators"
 addpkg -z PhysicsTools/PatAlgos 
 # Add Mike's muon discriminant
-cvs co -r 1.46 PhysicsTools/PatAlgos/python/tools/tauTools.py
+cvs co -r 1.47 PhysicsTools/PatAlgos/python/tools/tauTools.py
 
 # Note you need to install virtual env
 
