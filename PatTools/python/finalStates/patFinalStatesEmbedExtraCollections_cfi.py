@@ -3,12 +3,6 @@ import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.PatTools.finalStates.patFinalStateVertexFitter_cfi import \
         patFinalStateVertexFitter
 
-patFinalStatesEmbedIdx = cms.EDProducer(
-    "PATFinalStateIdxEmbedder",
-    src = cms.InputTag('fixme'),
-    suffix = cms.string(''),
-)
-
 patFinalStatesEmbedTaus = cms.EDProducer(
     "PATFinalStateOverlapEmbedder",
     src = cms.InputTag("fixme"),
@@ -53,7 +47,6 @@ patFinalStatesEmbedElectrons = cms.EDProducer(
 )
 
 patFinalStatesEmbedObjects = cms.Sequence(
-    patFinalStatesEmbedIdx +
     patFinalStateVertexFitter +
     patFinalStatesEmbedTaus +
     patFinalStatesEmbedJets +
