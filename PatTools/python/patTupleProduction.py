@@ -114,6 +114,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
                                  doJetID = True,
                                  genJetCollection = cms.InputTag("ak5GenJets"))
     process.patJets.embedPFCandidates = False
+    process.patJets.embedCaloTowers = False
     process.patJetCorrFactors.useRho = True
     # Use PFMEt
     mettools.addPfMET(process)
@@ -124,11 +125,16 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Customize/embed all our sequences
     process.load("FinalStateAnalysis.PatTools.patJetProduction_cff")
+    # Cut all jets with pt < 5
+    process.patJetGarbageRemoval.cut = 'correctedP4("Uncorrected").pt > 10'
+
     final_jet_collection = chain_sequence(
         process.customizeJetSequence, "patJets")
     process.customizeJetSequence.insert(0, process.patJets)
     # We can't mess up the selected pat jets because the taus use them.
     process.selectedPatJets.src = final_jet_collection
+    # Apply a pt cut on the uncorrected jet to get rid of really low pt junk
+    #process.selectedPatJets.cut = 'userCand("uncorr").pt > 5'
     process.patDefaultSequence.replace(process.patJets,
                                        process.customizeJetSequence)
 
@@ -159,6 +165,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patDefaultSequence.replace(process.selectedPatTaus,
                                        process.customizeTauSequence)
     process.cleanPatTaus.src = final_tau_collection
+    # Remove muons and electrons
+    process.cleanPatTaus.checkOverlaps.muons.requireNoOverlaps = False
+    process.cleanPatTaus.checkOverlaps.electrons.requireNoOverlaps = False
 
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
@@ -192,10 +201,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
         pairCut = cms.string(""),
         requireNoOverlaps = cms.bool(False),
     )
-    process.cleanPatTaus.preselection =  cms.string('')
-    # Remove muons and electrons
-    process.cleanPatTaus.checkOverlaps.muons.requireNoOverlaps = False
-    process.cleanPatTaus.checkOverlaps.electrons.requireNoOverlaps = False
 
     output_commands.append('*_cleanPatTaus_*_*')
     output_commands.append('*_cleanPatElectrons_*_*')
@@ -205,7 +210,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     #process.load("PhysicsTools.PatAlgos.triggerLayer1.triggerMatcher_cfi")
     #trigtools.switchOnTriggerMatchEmbedding(process)
     trigtools.switchOnTrigger(process)
-    output_commands.append('*_hltTriggerSummaryAOD_*_*')
 
     # Build the PATFinalStateEventObject
     process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")
