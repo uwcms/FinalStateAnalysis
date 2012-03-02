@@ -45,6 +45,8 @@ if options.keepEverything:
 process.out = cms.OutputModule(
     "PoolOutputModule",
     fileName = cms.untracked.string(options.outputFile),
+    # Drop per-event meta data from dropped objects
+    dropMetaData = cms.untracked.string("DROPPED"),
     SelectEvents = cms.untracked.PSet(
         SelectEvents = cms.vstring('p',)
     ),
