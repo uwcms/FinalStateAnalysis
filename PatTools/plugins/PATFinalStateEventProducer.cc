@@ -19,16 +19,22 @@
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
 
+// For covariance matrix
+#include "DataFormats/Math/interface/Error.h"
+
+
 class PATFinalStateEventProducer : public edm::EDProducer {
   public:
     PATFinalStateEventProducer(const edm::ParameterSet& pset);
     virtual ~PATFinalStateEventProducer(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
+    typedef math::Error<2>::type Matrix;
     edm::InputTag rhoSrc_;
     edm::InputTag pvSrc_;
     edm::InputTag verticesSrc_;
     edm::InputTag metSrc_;
+    edm::InputTag metCovSrc_;
     edm::InputTag trgSrc_;
     edm::InputTag puInfoSrc_;
     edm::InputTag truthSrc_;
@@ -41,6 +47,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   pvSrc_ = pset.getParameter<edm::InputTag>("pvSrc");
   verticesSrc_ = pset.getParameter<edm::InputTag>("verticesSrc");
   metSrc_ = pset.getParameter<edm::InputTag>("metSrc");
+  metCovSrc_ = pset.getParameter<edm::InputTag>("metCovSrc");
   trgSrc_ = pset.getParameter<edm::InputTag>("trgSrc");
   puInfoSrc_ = pset.getParameter<edm::InputTag>("puInfoSrc");
   truthSrc_ = pset.getParameter<edm::InputTag>("genParticleSrc");
@@ -67,6 +74,16 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle<edm::View<pat::MET> > met;
   evt.getByLabel(metSrc_, met);
   edm::Ptr<pat::MET> metPtr = met->ptrAt(0);
+
+  // Get MET covariance matrix
+  edm::Handle<Matrix> metCov;
+  evt.getByLabel(metCovSrc_, metCov);
+  // Covert to TMatrixD
+  TMatrixD metCovariance(2,2);
+  metCovariance(0,0) = (*metCov)(0,0);
+  metCovariance(0,1) = (*metCov)(0,1);
+  metCovariance(1,0) = (*metCov)(1,0);
+  metCovariance(1,1) = (*metCov)(1,1);
 
   edm::Handle<pat::TriggerEvent> trig;
   evt.getByLabel(trgSrc_, trig);
@@ -102,7 +119,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   if (!evt.isRealData())
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
-  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr,
+  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
       *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo,
       evt.isRealData());
 

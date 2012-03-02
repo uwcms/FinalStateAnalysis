@@ -25,6 +25,7 @@
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "DataFormats/Provenance/interface/EventID.h"
 
+#include "TMatrixD.h"
 #include <map>
 #include <string>
 
@@ -42,6 +43,7 @@ class PATFinalStateEvent {
         const edm::Ptr<reco::Vertex>& pv,
         const edm::PtrVector<reco::Vertex>& recoVertices,
         const edm::Ptr<pat::MET>& met,
+        const TMatrixD& metCovariance,
         const pat::TriggerEvent& triggerEvent,
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
@@ -66,6 +68,8 @@ class PATFinalStateEvent {
     const pat::TriggerEvent& trig() const;
     /// Get MET
     const edm::Ptr<pat::MET>& met() const;
+    /// Get MET covariance
+    const TMatrixD& metCovariance() const;
     /// Get the event ID
     const edm::EventID& evtId() const;
 
@@ -114,6 +118,7 @@ class PATFinalStateEvent {
     edm::Ptr<reco::Vertex> pv_;
     edm::PtrVector<reco::Vertex> recoVertices_;
     edm::Ptr<pat::MET> met_;
+    TMatrixD metCovariance_;
     std::vector<PileupSummaryInfo> puInfo_;
     lhef::HEPEUP lhe_;
     reco::GenParticleRefProd genParticles_;

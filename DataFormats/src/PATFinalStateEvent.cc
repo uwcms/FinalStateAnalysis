@@ -34,6 +34,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::Ptr<reco::Vertex>& pv,
     const edm::PtrVector<reco::Vertex>& recoVertices,
     const edm::Ptr<pat::MET>& met,
+    const TMatrixD& metCovariance,
     const pat::TriggerEvent& triggerEvent,
     const std::vector<PileupSummaryInfo>& puInfo,
     const lhef::HEPEUP& hepeup,
@@ -46,6 +47,7 @@ PATFinalStateEvent::PATFinalStateEvent(
   pv_(pv),
   recoVertices_(recoVertices),
   met_(met),
+  metCovariance_(metCovariance),
   puInfo_(puInfo),
   lhe_(hepeup),
   genParticles_(genParticles),
@@ -77,6 +79,10 @@ const pat::TriggerEvent& PATFinalStateEvent::trig() const {
 
 const edm::Ptr<pat::MET>& PATFinalStateEvent::met() const {
   return met_;
+}
+
+const TMatrixD& PATFinalStateEvent::metCovariance() const {
+  return metCovariance_;
 }
 
 const edm::EventID& PATFinalStateEvent::evtId() const {

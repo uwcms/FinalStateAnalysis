@@ -6,6 +6,7 @@ patFinalStateEventProducer = cms.EDProducer(
     pvSrc = cms.InputTag("selectedPrimaryVertex"),
     verticesSrc = cms.InputTag("selectPrimaryVerticesQuality"),
     metSrc = cms.InputTag("fixme"),
+    metCovSrc = cms.InputTag("pfMEtSignCovMatrix"),
     trgSrc = cms.InputTag("patTriggerEvent"),
     puInfoSrc = cms.InputTag("addPileupInfo"),
     genParticleSrc = cms.InputTag("genParticles"),
