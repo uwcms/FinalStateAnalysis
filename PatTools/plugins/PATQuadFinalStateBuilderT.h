@@ -84,7 +84,7 @@ PATQuadFinalStateBuilderT<FinalState>::produce(
           continue;
 
         for (size_t iLeg4 = 0; iLeg4 < leg4s->size(); ++iLeg4) {
-          edm::Ptr<typename FinalState::daughter3_type> leg4 = leg3s->ptrAt(iLeg4);
+          edm::Ptr<typename FinalState::daughter4_type> leg4 = leg4s->ptrAt(iLeg4);
           assert(leg4.isNonnull());
 
           // Skip if the two objects are the same thing.
