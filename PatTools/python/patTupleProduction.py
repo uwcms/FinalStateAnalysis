@@ -317,12 +317,58 @@ def configurePatTuple(process, isMC=True, **kwargs):
         final_module.setLabel(producer_name)
         setattr(process, producer_name, final_module)
         output_commands.append("*_%s_*_*" % producer_name)
+    process.tuplize += process.buildTriLeptons
+
+    # Build 4 lepton final states
+    process.buildQuadLeptons = cms.Sequence()
+    for quadlepton in _combinatorics(lepton_types, 4):
+        # Don't build four jet states
+        if all(x[0] == 'Tau' for x in quadlepton):
+            continue
+
+        # Define some basic selections for building combinations
+        cuts = ['smallestDeltaR() > 0.3'] # basic x-cleaning
+        for dauIndex, (type, src) in enumerate(quadlepton):
+            cuts.append(finalStatePtCuts[type] % dauIndex)
+            if type in finalStateOtherCuts:
+                cuts.append(finalStateOtherCuts[type] % dauIndex)
+
+        producer = cms.EDProducer(
+            "PAT%s%s%sFinalStateProducer" %
+            (quadlepton[0][0], quadlepton[1][0], quadlepton[2][0],
+             quadlepton[3][0]),
+            evtSrc = cms.InputTag("patFinalStateEventProducer"),
+            leg1Src = trilepton[0][1],
+            leg2Src = trilepton[1][1],
+            leg3Src = trilepton[2][1],
+            leg4Src = trilepton[3][1],
+            # X-cleaning
+            cut = cms.string(' & '.join(cuts))
+        )
+        producer_name = "finalState%s%s%s" % (
+            quadlepton[0][0], quadlepton[1][0], quadlepton[2][0],
+            quadlepton[3][0]
+        )
+        #setattr(process, producer_name, producer)
+        #process.buildTriLeptons += producer
+        setattr(process, producer_name + "Raw", producer)
+        process.buildQuadLeptons += producer
+        # Embed the other collections
+        embedder_seq = helpers.cloneProcessingSnippet(process,
+            process.patFinalStatesEmbedObjects, producer_name)
+        process.buildQuadLeptons += embedder_seq
+        # Do some trickery so the final module has a nice output name
+        final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
+        final_module = getattr(process, final_module_name.value())
+        final_module.setLabel(producer_name)
+        setattr(process, producer_name, final_module)
+        output_commands.append("*_%s_*_*" % producer_name)
+    process.tuplize += process.buildQuadLeptons
 
     # Tell the framework to shut up!
     process.load("FWCore.MessageLogger.MessageLogger_cfi")
     process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
-    process.tuplize += process.buildTriLeptons
     return process.tuplize, output_commands
 
 if __name__ == "__main__":
