@@ -15,6 +15,10 @@ echo "Activating python virtualenv from $vpython"
 
 export tests=$CMSSW_BASE/test/$SCRAM_ARCH/
 
+# Define shortcuts for the relevant global tags 
+export datagt=GR_R_42_V24::All
+export mcgt=START42_V17::All
+
 cd $vpython
 source bin/activate
 cd -
