@@ -20,8 +20,6 @@ class PATPairFinalStateBuilderT : public edm::EDProducer {
   private:
     edm::InputTag leg1Src_;
     edm::InputTag leg2Src_;
-    edm::InputTag metSrc_;
-    edm::InputTag pvSrc_;
     edm::InputTag evtSrc_;
     StringCutObjectSelector<PATFinalState> cut_;
 };
@@ -32,8 +30,6 @@ PATPairFinalStateBuilderT<FinalStatePair>::PATPairFinalStateBuilderT(
   cut_(pset.getParameter<std::string>("cut"), true) {
   leg1Src_ = pset.getParameter<edm::InputTag>("leg1Src");
   leg2Src_ = pset.getParameter<edm::InputTag>("leg2Src");
-  metSrc_ = pset.getParameter<edm::InputTag>("metSrc");
-  pvSrc_ = pset.getParameter<edm::InputTag>("pvSrc");
   evtSrc_ = pset.getParameter<edm::InputTag>("evtSrc");
   produces<FinalStatePairCollection>();
 }

@@ -255,8 +255,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
         producer = cms.EDProducer(
             "PAT%s%sFinalStateProducer" % (dilepton[0][0], dilepton[1][0]),
-            metSrc = final_met_collection,
-            pvSrc = cms.InputTag("selectedPrimaryVertex"),
             evtSrc = cms.InputTag("patFinalStateEventProducer"),
             leg1Src = dilepton[0][1],
             leg2Src = dilepton[1][1],
@@ -296,8 +294,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
         producer = cms.EDProducer(
             "PAT%s%s%sFinalStateProducer" %
             (trilepton[0][0], trilepton[1][0], trilepton[2][0]),
-            metSrc = final_met_collection,
-            pvSrc = cms.InputTag("selectedPrimaryVertex"),
             evtSrc = cms.InputTag("patFinalStateEventProducer"),
             leg1Src = trilepton[0][1],
             leg2Src = trilepton[1][1],
