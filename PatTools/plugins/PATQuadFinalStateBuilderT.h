@@ -33,7 +33,7 @@ PATQuadFinalStateBuilderT<FinalState>::PATQuadFinalStateBuilderT(
   leg1Src_ = pset.getParameter<edm::InputTag>("leg1Src");
   leg2Src_ = pset.getParameter<edm::InputTag>("leg2Src");
   leg3Src_ = pset.getParameter<edm::InputTag>("leg3Src");
-  leg3Src_ = pset.getParameter<edm::InputTag>("leg4Src");
+  leg4Src_ = pset.getParameter<edm::InputTag>("leg4Src");
   evtSrc_ = pset.getParameter<edm::InputTag>("evtSrc");
   produces<FinalStateCollection>();
 }
