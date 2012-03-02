@@ -9,6 +9,7 @@ options = TauVarParsing.TauVarParsing(
     skipEvents=0, # For debugging
     keepEverything=0,
     verbose=0, # Print out summary table at end
+    reportEvery=2000,
 )
 
 files = [
@@ -79,4 +80,4 @@ process.outpath = cms.EndPath(process.out)
 
 # Tell the framework to shut up!
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = 2000
+process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
