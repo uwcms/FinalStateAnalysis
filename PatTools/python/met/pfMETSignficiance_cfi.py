@@ -19,14 +19,14 @@ metSignficanceSequence += metSigDecentMuons
 metSigDecentElectrons = cms.EDFilter(
     "CandViewRefSelector",
     src = cms.InputTag("cleanPatElectrons"),
-    cut = cms.string("!hasOverlaps('muons') & pt > 8 & dr03TkSumPt()/pt < 0.3")
+    cut = cms.string("!hasOverlaps('muons') & userFloat('wp95') > 0.5 & pt > 8 & dr03TkSumPt()/pt < 0.3")
 )
 metSignficanceSequence += metSigDecentElectrons
 
 metSigDecentTausUnclean = cms.EDFilter(
     "CandViewRefSelector",
     src = cms.InputTag("cleanPatTaus"),
-    cut = cms.string('!hasOverlaps("muons") & pt > 15 & tauID("decayModeFinding") & tauID("byLooseCombinedIsolationDeltaBetaCorr")')
+    cut = cms.string('!hasOverlaps("muons") & pt > 18 & tauID("decayModeFinding") & tauID("byLooseCombinedIsolationDeltaBetaCorr")')
 )
 metSignficanceSequence += metSigDecentTausUnclean
 
