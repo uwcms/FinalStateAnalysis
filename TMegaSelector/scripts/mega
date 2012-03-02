@@ -4,6 +4,7 @@
 
 Command Line tool to run the TMegaSelector on a set of datasets
 
+Author: Evan K. Friis, UW Madison
 
 '''
 
@@ -66,9 +67,9 @@ if __name__ == "__main__":
     # If we are running a PySelector
     if args.type != 'TSelector':
         # Add the selector directory to the python path
-        log.info("Adding " % args.dataset)
         path_to_selector = os.path.dirname(os.path.abspath(parser.selector))
         if path_to_selector not in os.environ.get('PYTHONPATH', ''):
+            log.info("Adding %s to PYTHONPATH" % path_to_selector)
             os.environ['PYTHONPATH'] = path_to_selector + ':' + \
                     os.environ.get('PYTHONPATH', '')
 
@@ -83,17 +84,34 @@ if __name__ == "__main__":
         try:
             __import__(class_name)
         except ImportError:
-            sys.stderr.write(
-                "Error: can't import module %s" % class_name)
+            log.error("Error: can't import module %s" % class_name)
             sys.exit(6)
 
         # Now make sure there is a class with the same name in the file
         try:
             __import__(class_name, fromlist=[class_name])
         except ImportError:
-            sys.stderr.write(
-                "Error: can't import class %s from module %s" 
+            log.error("Error: can't import class %s from module %s" 
                 % (class_name, class_name))
             sys.exit(7)
 
         proof.Process(args.type, module_name)
+    else:
+        # Process as ACliC TSelector macro
+        proof.Process(parser.selector + '+')
+
+    # Now get the output and put it in our ROOT file
+    log.info("Creating output file %s", args.output)
+    output_file = ROOT.TFile(args.output, "recreate")
+    output_file.cd()
+
+    if args.dir:
+        new_dir = output_file.mkdir(args.dir)
+        new_dir.cd()
+
+    results = proof.GetOutputList()
+
+    for object in results:
+        log.info("==> saving %s output '%s'", object.__class__.__name__,
+                 object.GetName())
+        object.Write()
