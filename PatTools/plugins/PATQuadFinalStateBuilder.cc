@@ -19,18 +19,18 @@ typedef PATQuadFinalStateBuilderT<PATTauTauTauTauFinalState> PATTauTauTauTauFina
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 
-DEFINE_FWK_MODULE(PATElecElecElecElecFinalState);
-DEFINE_FWK_MODULE(PATElecElecElecMuFinalState);
-DEFINE_FWK_MODULE(PATElecElecElecTauFinalState);
-DEFINE_FWK_MODULE(PATElecElecMuMuFinalState);
-DEFINE_FWK_MODULE(PATElecElecMuTauFinalState);
-DEFINE_FWK_MODULE(PATElecElecTauTauFinalState);
-DEFINE_FWK_MODULE(PATElecMuMuMuFinalState);
-DEFINE_FWK_MODULE(PATElecMuMuTauFinalState);
-DEFINE_FWK_MODULE(PATElecMuTauTauFinalState);
-DEFINE_FWK_MODULE(PATElecTauTauTauFinalState);
-DEFINE_FWK_MODULE(PATMuMuMuMuFinalState);
-DEFINE_FWK_MODULE(PATMuMuMuTauFinalState);
-DEFINE_FWK_MODULE(PATMuMuTauTauFinalState);
-DEFINE_FWK_MODULE(PATMuTauTauTauFinalState);
-DEFINE_FWK_MODULE(PATTauTauTauTauFinalState);
+DEFINE_FWK_MODULE(PATElecElecElecElecFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecElecElecMuFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecElecElecTauFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecElecMuMuFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecElecMuTauFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecElecTauTauFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecMuMuMuFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecMuMuTauFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecMuTauTauFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecTauTauTauFinalStateProducer);
+DEFINE_FWK_MODULE(PATMuMuMuMuFinalStateProducer);
+DEFINE_FWK_MODULE(PATMuMuMuTauFinalStateProducer);
+DEFINE_FWK_MODULE(PATMuMuTauTauFinalStateProducer);
+DEFINE_FWK_MODULE(PATMuTauTauTauFinalStateProducer);
+DEFINE_FWK_MODULE(PATTauTauTauTauFinalStateProducer);
