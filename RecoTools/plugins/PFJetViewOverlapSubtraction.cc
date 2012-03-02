@@ -44,7 +44,7 @@ PFJetViewOverlapSubtraction::PFJetViewOverlapSubtraction(const edm::ParameterSet
   filter_ = pset.getParameter<bool>("filter");
   invert_ = pset.exists("invert") ? pset.getParameter<bool>("invert") : false;
 
-  produces<reco::CandidateBaseRefVector>();
+  produces<reco::PFJetCollection>();
 }
 
 bool PFJetViewOverlapSubtraction::filter(edm::Event& evt, const edm::EventSetup& es) {
