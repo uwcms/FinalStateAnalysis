@@ -96,7 +96,4 @@ if __name__ == "__main__":
                 % (class_name, class_name))
             sys.exit(7)
 
-
-        
-
-    #proof.Process(
+        proof.Process(args.type, module_name)
