@@ -10,21 +10,21 @@ metSignficanceSequence = cms.Sequence()
 
 # Select decent muons
 metSigDecentMuons = cms.EDFilter(
-    "CandViewRefSelector",
+    "PATMuonRefSelector",
     src = cms.InputTag("cleanPatMuons"),
     cut = cms.string("userInt('VBTF') & pt > 5 & chargedHadronIso()/pt < 0.3")
 )
 metSignficanceSequence += metSigDecentMuons
 
 metSigDecentElectrons = cms.EDFilter(
-    "CandViewRefSelector",
+    "PATElectronRefSelector",
     src = cms.InputTag("cleanPatElectrons"),
     cut = cms.string("!hasOverlaps('muons') & userFloat('wp95') > 0.5 & pt > 8 & dr03TkSumPt()/pt < 0.3")
 )
 metSignficanceSequence += metSigDecentElectrons
 
 metSigDecentTausUnclean = cms.EDFilter(
-    "CandViewRefSelector",
+    "PATTauRefSelector",
     src = cms.InputTag("cleanPatTaus"),
     cut = cms.string('!hasOverlaps("muons") & pt > 18 & tauID("decayModeFinding") & tauID("byLooseCombinedIsolationDeltaBetaCorr")')
 )
@@ -50,7 +50,7 @@ metSignficanceSequence += metSigJetsDirty
 
 # Remove muons
 metSigJetsNoMuons = cms.EDFilter(
-    "CandViewRefSelector",
+    "CandViewOverlapSubtraction",
     src = cms.InputTag("metSigJetsDirty"),
     subtractSrc = cms.InputTag("metSigDecentMuons"),
     minDeltaR = cms.double(0.4),
@@ -59,7 +59,7 @@ metSigJetsNoMuons = cms.EDFilter(
 metSignficanceSequence += metSigJetsNoMuons
 
 metSigJetsNoElectrons = cms.EDFilter(
-    "CandViewRefSelector",
+    "CandViewOverlapSubtraction",
     src = cms.InputTag("metSigJetsNoMuons"),
     subtractSrc = cms.InputTag("metSigDecentElectrons"),
     minDeltaR = cms.double(0.4),
@@ -68,7 +68,7 @@ metSigJetsNoElectrons = cms.EDFilter(
 metSignficanceSequence += metSigJetsNoElectrons
 
 metSigJetsClean = cms.EDFilter(
-    "CandViewRefSelector",
+    "CandViewOverlapSubtraction",
     src = cms.InputTag("metSigJetsNoElectrons"),
     subtractSrc = cms.InputTag("metSigDecentTaus"),
     minDeltaR = cms.double(0.4),
