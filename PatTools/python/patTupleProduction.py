@@ -334,18 +334,18 @@ def configurePatTuple(process, isMC=True, **kwargs):
                 cuts.append(finalStateOtherCuts[type] % dauIndex)
 
         producer = cms.EDProducer(
-            "PAT%s%s%sFinalStateProducer" %
+            "PAT%s%s%s%sFinalStateProducer" %
             (quadlepton[0][0], quadlepton[1][0], quadlepton[2][0],
              quadlepton[3][0]),
             evtSrc = cms.InputTag("patFinalStateEventProducer"),
-            leg1Src = trilepton[0][1],
-            leg2Src = trilepton[1][1],
-            leg3Src = trilepton[2][1],
-            leg4Src = trilepton[3][1],
+            leg1Src = quadlepton[0][1],
+            leg2Src = quadlepton[1][1],
+            leg3Src = quadlepton[2][1],
+            leg4Src = quadlepton[3][1],
             # X-cleaning
             cut = cms.string(' & '.join(cuts))
         )
-        producer_name = "finalState%s%s%s" % (
+        producer_name = "finalState%s%s%s%s" % (
             quadlepton[0][0], quadlepton[1][0], quadlepton[2][0],
             quadlepton[3][0]
         )
