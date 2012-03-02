@@ -12,21 +12,24 @@ metSignficanceSequence = cms.Sequence()
 metSigDecentMuons = cms.EDFilter(
     "PATMuonRefSelector",
     src = cms.InputTag("cleanPatMuons"),
-    cut = cms.string("userInt('VBTF') & pt > 5 & chargedHadronIso()/pt < 0.3")
+    cut = cms.string("userInt('VBTF') & pt > 5 & chargedHadronIso()/pt < 0.3"),
+    noSeqChain = cms.bool(True), # Don't "chain" these sequence and update [src]
 )
 metSignficanceSequence += metSigDecentMuons
 
 metSigDecentElectrons = cms.EDFilter(
     "PATElectronRefSelector",
     src = cms.InputTag("cleanPatElectrons"),
-    cut = cms.string("!hasOverlaps('muons') & userFloat('wp95') > 0.5 & pt > 8 & dr03TkSumPt()/pt < 0.3")
+    cut = cms.string("!hasOverlaps('muons') & userFloat('wp95') > 0.5 & pt > 8 & dr03TkSumPt()/pt < 0.3"),
+    noSeqChain = cms.bool(True), # Don't "chain" these sequence and update [src]
 )
 metSignficanceSequence += metSigDecentElectrons
 
 metSigDecentTausUnclean = cms.EDFilter(
     "PATTauRefSelector",
     src = cms.InputTag("cleanPatTaus"),
-    cut = cms.string('!hasOverlaps("muons") & pt > 18 & tauID("decayModeFinding") & tauID("byLooseCombinedIsolationDeltaBetaCorr")')
+    cut = cms.string('!hasOverlaps("muons") & pt > 18 & tauID("decayModeFinding") & tauID("byLooseCombinedIsolationDeltaBetaCorr")'),
+    noSeqChain = cms.bool(True), # Don't "chain" these sequence and update [src]
 )
 metSignficanceSequence += metSigDecentTausUnclean
 
@@ -37,6 +40,7 @@ metSigDecentTaus = cms.EDFilter(
     subtractSrc = cms.InputTag("metSigDecentElectrons"),
     minDeltaR = cms.double(0.3),
     filter = cms.bool(False),
+    noSeqChain = cms.bool(True), # Don't "chain" these sequence and update [src]
 )
 metSignficanceSequence += metSigDecentTaus
 
@@ -45,6 +49,7 @@ metSigJetsDirty = cms.EDFilter(
     "CandViewRefSelector",
     src = cms.InputTag("patJets"),
     cut = cms.string("pt > 20"),
+    noSeqChain = cms.bool(True), # Don't "chain" these sequence and update [src]
 )
 metSignficanceSequence += metSigJetsDirty
 
@@ -54,7 +59,8 @@ metSigJetsNoMuons = cms.EDFilter(
     src = cms.InputTag("metSigJetsDirty"),
     subtractSrc = cms.InputTag("metSigDecentMuons"),
     minDeltaR = cms.double(0.4),
-    filter = cms.bool(False)
+    filter = cms.bool(False),
+    noSeqChain = cms.bool(True), # Don't "chain" these sequence and update [src]
 )
 metSignficanceSequence += metSigJetsNoMuons
 
@@ -63,7 +69,8 @@ metSigJetsNoElectrons = cms.EDFilter(
     src = cms.InputTag("metSigJetsNoMuons"),
     subtractSrc = cms.InputTag("metSigDecentElectrons"),
     minDeltaR = cms.double(0.4),
-    filter = cms.bool(False)
+    filter = cms.bool(False),
+    noSeqChain = cms.bool(True), # Don't "chain" these sequence and update [src]
 )
 metSignficanceSequence += metSigJetsNoElectrons
 
@@ -72,7 +79,8 @@ metSigJetsClean = cms.EDFilter(
     src = cms.InputTag("metSigJetsNoElectrons"),
     subtractSrc = cms.InputTag("metSigDecentTaus"),
     minDeltaR = cms.double(0.4),
-    filter = cms.bool(False)
+    filter = cms.bool(False),
+    noSeqChain = cms.bool(True), # Don't "chain" these sequence and update [src]
 )
 metSignficanceSequence += metSigJetsClean
 
@@ -85,6 +93,7 @@ metSigGetPFJets = cms.EDFilter(
     minDeltaR = cms.double(0.4),
     filter = cms.bool(False),
     invert = cms.bool(True),  # select AK5 PF jets that DO overlap
+    noSeqChain = cms.bool(True), # Don't "chain" these sequence and update [src]
 )
 metSignficanceSequence += metSigGetPFJets
 
@@ -98,8 +107,10 @@ metSignficanceSequence += pfCandsNotInSelectedJets
 
 # produce PFMET significance cov. matrix
 from RecoMET.METProducers.METSigParams_cfi import METSignificance_params
-pfMEtSignCovMatrix = cms.EDProducer("PFMEtSignCovMatrixProducer",
+pfMEtSignCovMatrix = cms.EDProducer(
+    "PFMETSignificanceProducer",
     METSignificance_params,
+    noSeqChain = cms.bool(True), # Don't "chain" these sequence and update [src]
     src = cms.VInputTag(
         'metSigDecentMuons',
         'metSigDecentElectrons',
