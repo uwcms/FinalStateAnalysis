@@ -29,7 +29,7 @@ namespace {
     } else if (electron) {
       if (electron->gsfTrack().isNonnull())
         return (builder->build(electron->gsfTrack()));
-    } else if (tau) {
+    } else if (tau && tau->signalPFChargedHadrCands().size()) {
       if (tau->signalPFChargedHadrCands()[0]->trackRef().isNonnull())
         return (builder->build(
               tau->signalPFChargedHadrCands()[0]->trackRef()));
@@ -66,6 +66,7 @@ void PATFinalStateVertexFitter::produce(edm::Event& evt, const edm::EventSetup& 
 
   for (size_t i = 0; i < finalStates->size(); ++i) {
     PATFinalState * clone = finalStates->at(i).clone();
+    assert(clone);
     std::vector<reco::TransientTrack> tracks;
     for (size_t d = 0; d < clone->numberOfDaughters(); ++d) {
       reco::TransientTrack transtrack = getTracks(clone->daughter(d),
@@ -75,7 +76,8 @@ void PATFinalStateVertexFitter::produce(edm::Event& evt, const edm::EventSetup& 
     }
     double vtxChi2 = -1;
     double vtxNDOF = -1;
-    if (tracks.size() > 1) {
+    // Make sure all legs have a track
+    if (tracks.size() >= clone->numberOfDaughters()) {
       KalmanVertexFitter kvf(true);
       TransientVertex vtx = kvf.vertex(tracks);
       vtxChi2 = vtx.totalChiSquared();
