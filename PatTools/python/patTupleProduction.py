@@ -248,20 +248,48 @@ def configurePatTuple(process, isMC=True, **kwargs):
     if isMC:
         process.finalStateLS.xSec = kwargs['xSec']
 
-    # Now build all of our DiLeptons and TriLepton final states
-    lepton_types = [('Elec', cms.InputTag("cleanPatElectrons")),
-                    ('Mu', cms.InputTag("cleanPatMuons")),
-                    ('Tau', cms.InputTag("cleanPatTaus"))]
-    process.buildDiLeptons = cms.Sequence()
+    # Apply some loose PT cuts on the objects we use to create the final states
+    # so the combinatorics don't blow up
+    process.muonsForFinalStates = cms.EDFilter(
+        "PATMuonRefSelector",
+        src = cms.InputTag("cleanPatMuons"),
+        cut = cms.string('pt > 4'),
+        filter = cms.bool(False),
+    )
 
-    finalStatePtCuts = {
-        'Elec' : 'daughter(%i).pt > 5',
-        'Mu' : 'daughter(%i).pt > 5',
-        'Tau' : 'daughter(%i).pt > 10',
-    }
-    finalStateOtherCuts = {
-        'Tau' : 'daughter(%i).tauID("decayModeFinding") > 0.5',
-    }
+    process.electronsForFinalStates = cms.EDFilter(
+        "PATElectronRefSelector",
+        src = cms.InputTag("cleanPatElectrons"),
+        cut = cms.string('abs(eta) < 2.5 & pt > 4'),
+        filter = cms.bool(False),
+    )
+
+    # Require that the PT of the jet (either corrected jet or tau)
+    # to be greater than 17
+    process.tausForFinalStates = cms.EDFilter(
+        "PATTauRefSelector",
+        src = cms.InputTag("cleanPatTaus"),
+        cut = cms.string('abs(eta) < 5.2 & (userCand("patJet").pt > 17 | pt > 17)'),
+        filter = cms.bool(False),
+    )
+
+    process.selectObjectsForFinalStates = cms.Sequence(
+        process.muonsForFinalStates
+        + process.electronsForFinalStates
+        + process.tausForFinalStates
+    )
+
+    process.tuplize += process.selectObjectsForFinalStates
+
+    # Now build all of our DiLeptons and TriLepton final states
+    lepton_types = [('Elec', cms.InputTag("electronsForFinalStates")),
+                    ('Mu', cms.InputTag("muonsForFinalStates")),
+                    ('Tau', cms.InputTag("tausForFinalStates"))]
+    #lepton_types = [('Elec', cms.InputTag("cleanPatElectrons")),
+                    #('Mu', cms.InputTag("cleanPatMuons")),
+                    #('Tau', cms.InputTag("cleanPatTaus"))]
+
+    process.buildDiLeptons = cms.Sequence()
 
     process.load(
         "FinalStateAnalysis.PatTools.finalStates.patFinalStatesEmbedExtraCollections_cfi")
@@ -274,10 +302,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3'] # basic x-cleaning
-        for dauIndex, (type, src) in enumerate(dilepton):
-            cuts.append(finalStatePtCuts[type] % dauIndex)
-            if type in finalStateOtherCuts:
-                cuts.append(finalStateOtherCuts[type] % dauIndex)
 
         producer = cms.EDProducer(
             "PAT%s%sFinalStateProducer" % (dilepton[0][0], dilepton[1][0]),
@@ -312,10 +336,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3'] # basic x-cleaning
-        for dauIndex, (type, src) in enumerate(trilepton):
-            cuts.append(finalStatePtCuts[type] % dauIndex)
-            if type in finalStateOtherCuts:
-                cuts.append(finalStateOtherCuts[type] % dauIndex)
 
         producer = cms.EDProducer(
             "PAT%s%s%sFinalStateProducer" %
@@ -354,10 +374,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3'] # basic x-cleaning
-        for dauIndex, (type, src) in enumerate(quadlepton):
-            cuts.append(finalStatePtCuts[type] % dauIndex)
-            if type in finalStateOtherCuts:
-                cuts.append(finalStateOtherCuts[type] % dauIndex)
 
         producer = cms.EDProducer(
             "PAT%s%s%s%sFinalStateProducer" %
