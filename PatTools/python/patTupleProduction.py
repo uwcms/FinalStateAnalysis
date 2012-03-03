@@ -40,13 +40,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
     # Only keep interesting genParticles
-    #process.load("FinalStateAnalysis.RecoTools.genParticleTrimmer_cfi")
-    #if isMC:
-        #process.tuplize += process.prunedGenParticles
-        #output_commands.append('*_prunedGenParticles_*_*')
+    process.load("FinalStateAnalysis.RecoTools.genParticleTrimmer_cfi")
+    process.genParticles = process.prunedGenParticles.clone()
+    if isMC:
+        process.tuplize += process.genParticles
+        output_commands.append('*_genParticles_*_%s' % process.name_())
 
-    # Temp - genparticletrimmer crashes on ttbar
-    output_commands.append('*_genParticles_*_*')
     output_commands.append('*_tauGenJetsSelectorAllHadrons_*_*')
     output_commands.append('*_tauGenJets_*_*')
     output_commands.append('*_ak5GenJets_*_*')
@@ -269,7 +268,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.tausForFinalStates = cms.EDFilter(
         "PATTauRefSelector",
         src = cms.InputTag("cleanPatTaus"),
-        cut = cms.string('abs(eta) < 5.2 & (userCand("patJet").pt > 17 | pt > 17)'),
+        cut = cms.string('abs(eta) < 2.5 & pt > 17 & tauID("decayModeFinding")'),
         filter = cms.bool(False),
     )
 
@@ -368,8 +367,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Build 4 lepton final states
     process.buildQuadLeptons = cms.Sequence()
     for quadlepton in _combinatorics(lepton_types, 4):
-        # Don't build four jet states
-        if all(x[0] == 'Tau' for x in quadlepton):
+        # Don't build states with more than 2 hadronic taus
+        if [x[0] for x in quadlepton].count('Tau') > 2:
             continue
 
         # Define some basic selections for building combinations
