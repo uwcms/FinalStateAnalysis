@@ -6,3 +6,6 @@ V01-02-01 RecoTauTag/TauTagTools
 V01-02-12 RecoTauTag/Configuration
 # For limit tool
 V01-12-03 HiggsAnalysis/CombinedLimit
+# For a fix to prevent segfaults on certain MC samples when using
+# the GenParticlePrunder
+V11-03-16 PhysicsTools/HepMCCandAlgos
