@@ -12,6 +12,8 @@ from FinalStateAnalysis.PatTools.jets.patJetEmbedSmear_cfi import \
 
 customizeJetSequence = cms.Sequence()
 
+customizeJetSequence += patJetId
+
 # Remove low pt garbage jets.  This cut is propagated to the taus - only taus
 # that have an existing jet are kept.  This cut is important, so we require
 # it is explicitly defined elsewhere.
@@ -23,7 +25,6 @@ patJetGarbageRemoval = cms.EDFilter(
 )
 customizeJetSequence += patJetGarbageRemoval
 
-customizeJetSequence += patJetId
 # We have to embed the uncorrected P4 of the jet before we start any monkey
 # business with smearing so that we can apply type 1 corrections to MET later
 customizeJetSequence += patJetUncorrectedEmbedder
