@@ -59,8 +59,11 @@ import FinalStateAnalysis.PatTools.patTupleProduction as tuplizer
 tuplize, output_commands = tuplizer.configurePatTuple(
     process, isMC=options.isMC, xSec=options.xSec, xSecErr=options.xSecErr)
 
-for keep in output_commands:
-    process.out.outputCommands.append('keep %s' % keep)
+for command in output_commands:
+    if not command.startswith('drop') and not command.startswith('keep'):
+        process.out.outputCommands.append('keep %s' % command)
+    else:
+        process.out.outputCommands.append(command)
 
 process.GlobalTag.globaltag = cms.string(options.globalTag)
 
