@@ -131,6 +131,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     final_jet_collection = chain_sequence(
         process.customizeJetSequence, "patJets")
     process.customizeJetSequence.insert(0, process.patJets)
+    # Make it a "complete" sequence
+    process.customizeJetSequence += process.selectedPatJets
     # We can't mess up the selected pat jets because the taus use them.
     process.selectedPatJets.src = final_jet_collection
     # Apply a pt cut on the uncorrected jet to get rid of really low pt junk
@@ -168,6 +170,23 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Remove muons and electrons
     process.cleanPatTaus.checkOverlaps.muons.requireNoOverlaps = False
     process.cleanPatTaus.checkOverlaps.electrons.requireNoOverlaps = False
+    # Don't apply any prselections
+    process.cleanPatTaus.preselection = ''
+
+    # Make clones of the Tau and Jet sequences w/o and pt requirement
+    process.jetsForMetSyst = helpers.cloneProcessingSnippet(
+        process, process.customizeJetSequence, 'ForMETSyst')
+    process.tausForMetSyst = helpers.cloneProcessingSnippet(
+        process, process.customizeTauSequence, 'ForMETSyst')
+    # Don't apply any cut for these
+    process.patJetGarbageRemovalForMETSyst.cut = ''
+    process.tuplize += process.jetsForMetSyst
+    process.tuplize += process.tausForMetSyst
+    # We have to make our clone of cleanPatTaus separately, since e/mu
+    # cleaning is applied - therefore it isn't in the customizeTausSequence.
+    process.cleanPatTausForMETSyst = process.cleanPatTaus.clone(
+        src = cms.InputTag(process.cleanPatTaus.src.value() + "ForMETSyst"))
+    process.tuplize += process.cleanPatTausForMETSyst
 
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
@@ -175,7 +194,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         process.customizeMETSequence, "patMETsPF")
     process.tuplize += process.customizeMETSequence
     # The MET systematics depend on all other systematics
-    process.systematicsMET.tauSrc = cms.InputTag("cleanPatTaus")
+    process.systematicsMET.tauSrc = cms.InputTag("cleanPatTausForMETSyst")
     process.systematicsMET.muonSrc = cms.InputTag("cleanPatMuons")
     process.systematicsMET.electronSrc = cms.InputTag("cleanPatElectrons")
 
