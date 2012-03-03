@@ -125,7 +125,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Customize/embed all our sequences
     process.load("FinalStateAnalysis.PatTools.patJetProduction_cff")
     # Cut all jets with pt < 5
-    process.patJetGarbageRemoval.cut = '(correctedP4("Uncorrected").pt > 10 | pt > 10) & abs(eta) < 5.2'
+    process.patJetGarbageRemoval.cut = 'correctedP4("Uncorrected").pt > 10'
 
     final_jet_collection = chain_sequence(
         process.customizeJetSequence, "patJets")
