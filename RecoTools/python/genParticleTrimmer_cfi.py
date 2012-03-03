@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 '''
-Keep only high (> 1.5) and EWK signals
+Keep only high (> 0.5) and EWK signals
 '''
 
 from SimGeneral.HepPDTESSource.pythiapdt_cfi import HepPDTESSource
@@ -13,7 +13,7 @@ prunedGenParticles = cms.EDProducer(
     src = cms.InputTag("genParticles"),
     select = cms.vstring(
         "drop  *  ", # this is the default
-        'keep pt > 1.5 & abs(eta) < 5',
+        'keep pt > 0.5 & abs(eta) < 5',
         "keep++ pdgId = {Z0}",
         "keep++ pdgId = 24", # W+
         'keep++ pdgId = 6', # top quark
