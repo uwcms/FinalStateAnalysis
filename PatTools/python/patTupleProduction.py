@@ -69,7 +69,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     kt6PFJets.doRhoFastjet = True
     process.kt6PFJets = kt6PFJets
     process.tuplize += process.kt6PFJets
-    output_commands.append('*_kt6PFJets_rho_*')
     # Run pat default sequence
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
     # Load PFNoPileup.  Make sure we do this after pat messes around w/ it
@@ -200,6 +199,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Keep all the data formats needed for the systematics
     output_commands.append('recoLeafCandidates_*_*_%s'
+                           % process.name_())
+    # We can drop to jet and tau MET specific products. They were only used for
+    # computation of the MET numbers.
+    output_commands.append('drop recoLeafCandidates_*ForMETSyst_*_%s'
                            % process.name_())
 
     # Define the default lepton cleaning
