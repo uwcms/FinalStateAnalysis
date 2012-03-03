@@ -11,5 +11,4 @@ ROOT.gSystem.Load('$CMSSW_BASE/lib/$SCRAM_ARCH/'
                   'libFinalStateAnalysisTMegaSelector.so')
 
 # Make the MegaPySelectorClass visible
-
 from ROOT import TMegaPySelector
