@@ -3,6 +3,7 @@ import FWCore.ParameterSet.Config as cms
 '''
 Keep only high (> 1.5) and EWK signals
 '''
+
 from SimGeneral.HepPDTESSource.pythiapdt_cfi import HepPDTESSource
 
 # This will
