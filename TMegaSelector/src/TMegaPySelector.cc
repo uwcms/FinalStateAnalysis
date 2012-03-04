@@ -194,15 +194,24 @@ PyObject* TMegaPySelector::CallSelf( const char* method, PyObject* pyobject )
 
    PyObject* result = 0;
 
+//   std::cout << "callself " << method <<std::endl;
+
 // get the named method and check for python side overload by not accepting the
 // binding's methodproxy
    PyObject* pymethod = PyObject_GetAttrString( fPySelf, const_cast< char* >( method ) );
    if ( ! PyROOT::MethodProxy_CheckExact( pymethod ) ) {
-      if ( pyobject )
-         result = PyObject_CallFunction( pymethod, const_cast< char* >( "O" ), pyobject );
-      else
-         result = PyObject_CallFunction( pymethod, const_cast< char* >( "" ) );
+//     std::cout << "has method " <<std::endl;
+     if ( pyobject ) {
+//       std::cout << "has pyobject " << pyobject <<std::endl;
+       result = PyObject_CallFunction( pymethod, const_cast< char* >( "O" ), pyobject );
+//       std::cout << "res = " << result << std::endl;
+     }
+     else {
+       result = PyObject_CallFunction( pymethod, const_cast< char* >( "" ) );
+//       std::cout << "res = " << result << std::endl;
+     }
    } else {
+//     std::cout << "does not have method " <<std::endl;
    // silently ignore if method not overridden (note that the above can't lead
    // to a python exception, since this (TMegaPySelector) class contains the method
    // so it is always to be found)
@@ -212,8 +221,10 @@ PyObject* TMegaPySelector::CallSelf( const char* method, PyObject* pyobject )
 
    Py_XDECREF( pymethod );
 
+   //std::cout << "done " << result <<std::endl;
+
    if ( ! result )
-      Abort( 0 );
+      Abort("Died");
 
    return result;
 }
