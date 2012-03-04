@@ -54,7 +54,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   puInfoSrc_ = pset.getParameter<edm::InputTag>("puInfoSrc");
   truthSrc_ = pset.getParameter<edm::InputTag>("genParticleSrc");
   extraWeights_ = pset.getParameterSet("extraWeights");
-  puScenario_(pset.getParameter<std::string>("puTag"));
+  puScenario_ = pset.getParameter<std::string>("puTag");
   produces<PATFinalStateEventCollection>();
 }
 
