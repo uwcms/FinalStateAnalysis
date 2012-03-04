@@ -43,9 +43,11 @@ void TMegaSelector::Begin(TTree* /*deprecated*/) {
   this->MegaBegin();
 }
 
-void TMegaSelector::SlaveBegin(TTree* /*deprecated*/) {
+void TMegaSelector::SlaveBegin(TTree* tree) {
 //  std::cout << "SLAVEBEGIN" << std::endl;
-  this->MegaSlaveBegin();
+
+  this->Init(tree);
+  this->MegaSlaveBegin(tree);
 }
 
 Bool_t TMegaSelector::Process(Long64_t entry) {

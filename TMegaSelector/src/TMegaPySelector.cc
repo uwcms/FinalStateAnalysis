@@ -270,7 +270,7 @@ Int_t TMegaPySelector::Version() const {
       Py_DECREF( result );
    }
 //  std::cout << "returning 2" << std::endl;
-   return 2;
+   return 1;
 }
 
 //____________________________________________________________________________
@@ -338,13 +338,12 @@ void TMegaPySelector::MegaBegin()
 }
 
 //____________________________________________________________________________
-void TMegaPySelector::MegaSlaveBegin()
+void TMegaPySelector::MegaSlaveBegin(TTree* tree)
 {
 //  std::cout << "MegaSlaveBegin" << std::endl;
 // First function called on worker node, needs to make sure python self is setup,
 // then store the tree to be used, initialize client, and forward call.
    SetupPySelf();
-   //Init( tree );  // EK - called by base class
 
    PyObject* result = 0;
 //   if ( tree ) {

@@ -7,6 +7,7 @@ class TestSelector(TMegaPySelector):
     def MegaSlaveBegin(self, tree):
         self.histo = ROOT.TH1F("adsf", "asdf", 100, 0, 100)
         #self.fOutput.Add(self.histo)
+        self.MakeFloatCut("Base", "MuEta", "<", 0.5, True)
     def MegaProcess(self, entry):
         self.chain.GetEntry(entry)
         print self.chain.intBranch

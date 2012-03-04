@@ -39,7 +39,7 @@ public:
 
    virtual void   MegaInit( TTree* tree );
    virtual void   MegaBegin();
-   virtual void   MegaSlaveBegin();
+   virtual void   MegaSlaveBegin(TTree* tree);
    virtual Bool_t MegaProcess( Long64_t entry );
    virtual void   MegaSlaveTerminate();
    virtual void   MegaTerminate();

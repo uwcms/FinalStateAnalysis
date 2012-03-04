@@ -32,7 +32,7 @@ class TMegaSelector : public TSelector {
     virtual void MegaInit(TTree* /*tree*/) {}
     virtual Bool_t MegaNotify() { return true; }
     virtual void MegaBegin() {}
-    virtual void MegaSlaveBegin() {}
+    virtual void MegaSlaveBegin(TTree* /* tree */) {}
     virtual Bool_t MegaProcess(Long64_t entry)=0;
     virtual void MegaSlaveTerminate() {}
     virtual void MegaTerminate() {}

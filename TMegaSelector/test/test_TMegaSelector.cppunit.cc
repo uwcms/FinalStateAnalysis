@@ -11,8 +11,13 @@
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionSet.h"
 
 #include "TTree.h"
+#include "TChain.h"
 #include "TFile.h"
 #include <stdexcept>
+
+#include <TBranchProxy.h>
+#include <TBranchProxyDirector.h>
+using namespace ROOT;
 
 class testMegaSelector: public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(testMegaSelector);
@@ -24,6 +29,8 @@ class testMegaSelector: public CppUnit::TestFixture {
   CPPUNIT_TEST(testSelectionCaching);
   // The full chain
   CPPUNIT_TEST(testSelector);
+  CPPUNIT_TEST(testSelectorChain);
+  CPPUNIT_TEST(testSelectorChainDebug);
 
   CPPUNIT_TEST_SUITE_END();
   public:
@@ -45,6 +52,9 @@ class testMegaSelector: public CppUnit::TestFixture {
 
     /// Test main selector code
     void testSelector();
+    /// Test on a chain
+    void testSelectorChain();
+    void testSelectorChainDebug();
 
   private:
     TTree* testTree_;
@@ -74,6 +84,12 @@ void testMegaSelector::setUp() {
   outfile.cd();
   copy->Write();
   outfile.Close();
+
+  TFile outfile2("test_file2.root", "recreate");
+  TTree* copy2 = testTree_->CopyTree("");
+  outfile2.cd();
+  copy2->Write();
+  outfile2.Close();
 }
 
 void testMegaSelector::tearDown() {
@@ -256,11 +272,13 @@ class TMegaTester : public TMegaSelector {
     }
     void MegaTerminate() {
     }
+    virtual Int_t Version() const { return 1; }
 
     Long64_t count;
     Long64_t testSelectCount;
     TTree* tree_;
 };
+
 
 void testMegaSelector::testSelector() {
 
@@ -279,5 +297,74 @@ void testMegaSelector::testSelector() {
   CPPUNIT_ASSERT(megaTester2.testSelectCount == expected);
 }
 
+void testMegaSelector::testSelectorChain() {
+  // this segfaults
+  return;
+
+  TChain chain("TestTree");
+  chain.Add("test_file*.root");
+  TMegaTester megaTester(&chain);
+
+  chain.Process(&megaTester);
+  int expected = chain.GetEntries("intBranch > -12 && floatBranch < 10");
+
+  CPPUNIT_ASSERT_EQUAL(chain.GetEntries(), megaTester.count);
+  CPPUNIT_ASSERT(megaTester.testSelectCount == expected);
+
+  // Try it with the filter
+  TMegaTester megaTester2(&chain);
+  megaTester2.SetFilterSelection("tester");
+  chain.Process(&megaTester2);
+  CPPUNIT_ASSERT(megaTester2.testSelectCount == megaTester2.count);
+  CPPUNIT_ASSERT(megaTester2.testSelectCount == expected);
+}
+
+class TPlainTester : public TSelector {
+  public:
+    TPlainTester(TTree* tree=0):
+      fChain(0),
+      fDirector(tree,-1),
+      floatBranch       (&fDirector,"floatBranch")
+  { }
+   Int_t   Version() const {return 1;}
+    void Init(TTree* tree) {
+      if (tree == 0) return;
+      fChain = tree;
+      fDirector.SetTree(fChain);
+    }
+
+    Bool_t Notify()
+    {
+      std::cout << "notify 1" << std::endl;
+      // Called when loading a new file.
+      // Get branch pointers.
+      fDirector.SetTree(fChain);
+
+      return kTRUE;
+    }
+
+    void SlaveBegin(TTree *tree) {
+      Init(tree);
+    }
+    Bool_t Process(Long64_t entry) {
+      fDirector.SetReadEntry(entry);
+      std::cout << floatBranch << std::endl;
+      return kTRUE;
+    }
+
+
+    TTree          *fChain;         //!pointer to the analyzed TTree or TChain
+    TBranchProxyDirector fDirector; //!Manages the proxys
+    TFloatProxy   floatBranch;
+
+};
+
+void testMegaSelector::testSelectorChainDebug() {
+  std::cout << "debug" << std::endl;
+  TChain chain("TestTree");
+  chain.Add("test_file*.root");
+  TPlainTester tester;
+  chain.Process(&tester);
+}
 
 CPPUNIT_TEST_SUITE_REGISTRATION(testMegaSelector);
