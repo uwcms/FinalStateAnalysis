@@ -6,12 +6,13 @@
 #include "FinalStateAnalysis/Utilities/interface/CutFlow.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLS.h"
 
 #include "FWCore/Common/interface/LuminosityBlockBase.h"
 #include "CommonTools/Utils/interface/TFileDirectory.h"
 #include "DataFormats/Common/interface/MergeableCounter.h"
-#include "DataFormats/Luminosity/interface/LumiSummary.h"
 #include "TH1F.h"
+#include "TTree.h"
 
 #include <sstream>
 
@@ -53,6 +54,12 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
       "skimCounter", "Original Events Processed", 1, -0.5, 0.5);
   integratedLumi_ = fs_.make<TH1F>(
       "intLumi", "Integrated Lumi", 1, -0.5, 0.5);
+  metaTree_ = fs_.make<TTree>(
+      "metaInfo", "Information about processed runs and lumis");
+  metaTree_->Branch("run", &treeRunBranch_, "run/I");
+  metaTree_->Branch("lumi", &treeLumiBranch_, "lumi/I");
+  metaTree_->Branch("nevents", &treeEventsProcessedBranch_, "nevents/I");
+  metaTree_->Branch("nevents", &treeEventsProcessedBranch_, "nevents/I");
 }
 
 PATFinalStateAnalysis::~PATFinalStateAnalysis() { }
@@ -65,13 +72,16 @@ void PATFinalStateAnalysis::beginLuminosityBlock(
   ls.getByLabel(skimCounter_, skimmedEvents);
   skimEventCounter_->Fill(0.0, skimmedEvents->value);
 
-  // Get int. lumi
-  edm::Handle<LumiSummary> lumiSummary;
+  edm::Handle<PATFinalStateLS> lumiSummary;
   ls.getByLabel(lumiProducer_, lumiSummary);
-  if (lumiSummary.isValid()) {
-    //std::cout << "RecLumi: " << lumiSummary->intgRecLumi() << std::endl;
-    integratedLumi_->Fill(0.0, lumiSummary->intgRecLumi());
-  }
+  integratedLumi_->Fill(0.0, lumiSummary->intLumi());
+  treeIntLumi_ = lumiSummary->intLumi();
+
+  // Fill the meta info tree
+  treeRunBranch_ = ls.run();
+  treeLumiBranch_ = ls.luminosityBlock();
+  treeEventsProcessedBranch_ = skimmedEvents->value;
+  metaTree_->Fill();
 }
 
 bool PATFinalStateAnalysis::filter(const edm::EventBase& evt) {
@@ -103,15 +113,9 @@ bool PATFinalStateAnalysis::filter(const edm::EventBase& evt) {
     finalStatePtrs.push_back( &( (*finalStates)[i] ) );
   }
 
-  // Hack workarounds into ntuple
-//  bool mustCleanupFinalStates = true;
-//  for (size_t i = 0; i < finalStates->size(); ++i) {
-//    PATFinalState * clone = (*finalStates)[i].clone();
-//    clone->addUserInt("evt", evt.id().event());
-//    clone->addUserInt("run", evt.id().run());
-//    clone->addUserInt("idx", i);
-//    finalStatePtrs.push_back(clone);
-//  }
+  // Hack workarounds into ntuple here
+  //  bool mustCleanupFinalStates = true;
+  //  do something
 
   // Check if we want to split by runs
   if (splitRuns_) {

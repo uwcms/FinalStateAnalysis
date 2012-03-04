@@ -21,6 +21,7 @@
 #include "PhysicsTools/UtilAlgos/interface/BasicAnalyzer.h"
 
 class TH1;
+class TTree;
 class PATFinalStateSelection;
 class TFileDirectory;
 namespace edm {
@@ -66,6 +67,13 @@ class PATFinalStateAnalysis : public edm::BasicAnalyzer {
     // For counting the luminosity
     edm::InputTag lumiProducer_;
     TH1* integratedLumi_;
+
+    // Keep track of the processed events in each lumi in a tree
+    TTree* metaTree_;
+    Int_t treeRunBranch_;
+    Int_t treeLumiBranch_;
+    Int_t treeEventsProcessedBranch_;
+    Float_t treeIntLumi_; // The estimated integrated luminosity
 
     bool filter_;
 };
