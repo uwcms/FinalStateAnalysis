@@ -3,23 +3,28 @@ import os
 import sys
 
 cfg = 'patTuple_cfg.py'
-jobId = '2011-12-13-EWKPatTuple'
-
-dag_directory = "/scratch/efriis/dags/%s" % jobId
-if not os.path.exists(dag_directory):
-    os.mkdir(dag_directory)
+jobId = '2012-03-04-EWKPatTuple'
 
 print 'export TERMCAP=screen'
 for sample in sorted(datadefs.keys()):
     sample_info = datadefs[sample]
-    if 'VH' not in sample_info['analyses'] and 'Tau' not in sample_info['analyses']:
+    if 'VH' not in sample_info['analyses']:
         continue
 
-    path_name = os.path.join(os.environ['scratch'], '-'.join(
-        [jobId, sample, cfg.replace('.py', '')]))
+    submit_dir_base = "/scratch/{logname}/{jobid}/{sample}".format(
+        logname = os.environ['LOGNAME'],
+        jobid = jobId,
+        sample = sample
+    )
+    dag_directory = os.path.join(submit_dir_base, 'dags')
+    # Create the dag directory
+    print "mkdir -p %s" % dag_directory
+
+    submit_dir = os.path.join(submit_dir_base, 'submit')
+
     sys.stderr.write('Building sample submit dir %s\n' % (sample))
-    if os.path.exists(path_name):
-        sys.stderr.write('Skipping existing submit directory for %s\n' % sample)
+    if os.path.exists(submit_dir):
+        sys.stderr.write('=> skipping existing submit directory for %s\n' % sample)
         continue
 
     options = []
@@ -29,11 +34,11 @@ for sample in sorted(datadefs.keys()):
 
     if 'data' not in sample:
         options.append('isMC=1')
-        options.append('globalTag=START42_V15B::All')
+        options.append('globalTag=$mcgt')
         options.append('xSec=%0.4f' % sample_info['x_sec'])
     else:
         options.append('isMC=0')
-        options.append('globalTag=GR_R_42_V21::All')
+        options.append('globalTag=$datagt')
         lumi_mask_fip = sample_info['lumi_mask']
         lumi_mask_path = os.path.join(
             os.environ['CMSSW_BASE'], 'src', lumi_mask_fip)
@@ -52,8 +57,10 @@ for sample in sorted(datadefs.keys()):
     command = [
         'farmoutAnalysisJobs',
         '--infer-cmssw-path',
-        '--output-dag-file=%s/%s-%s.dag' % (dag_directory, jobId, sample),
         '--input-files-per-job=1',
+        '"--output-dir=srm://cmssrm.hep.wisc.edu:8443/srm/v2/server?SFN=/hdfs/store/user/efriis/%s/%s/"' % (jobId, sample),
+        '--submit-dir=%s' % submit_dir,
+        '--output-dag-file=%s/dag.dag' % dag_directory,
     ]
 
     command.extend(farmout_options)
