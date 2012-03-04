@@ -76,7 +76,7 @@ if __name__ == "__main__":
         # Make sure that the object is in the PYTHONPATH
         path_to_selector = os.path.dirname(os.path.abspath(args.selector))
         path_is_ok = False
-        for path in os.enivron.get('PYTHONPATH', '').split(':'):
+        for path in os.environ.get('PYTHONPATH', '').split(':'):
             if not path:
                 continue
             if os.path.samefile(path_to_selector, path):
