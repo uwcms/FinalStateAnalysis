@@ -43,7 +43,7 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
   skimCounter_ = pset.getParameter<edm::InputTag>("skimCounter");
   lumiProducer_ = pset.exists("lumiProducer") ?
     pset.getParameter<edm::InputTag>("lumiProducer") :
-    edm::InputTag("lumiProducer");
+    edm::InputTag("finalStateLS");
   // Build the event counter histos.
   eventCounter_ = fs_.make<TH1F>("eventCount", "Events Processed", 1, -0.5, 0.5);
   eventCounterWeighted_ = fs_.make<TH1F>(
