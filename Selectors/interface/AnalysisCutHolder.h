@@ -28,7 +28,8 @@ template<class T>
 AnalysisCutHolder<T>::AnalysisCutHolder(const edm::ParameterSet& pset,
     TFileDirectory& fs) {
   name_ = pset.getParameter<std::string>("name");
-  description_ = pset.getParameter<std::string>("description");
+  description_ = pset.exists("description") ?
+    pset.getParameter<std::string>("description") : name_;
 
   // Make cut subdirectory
   TFileDirectory subdir = fs.mkdir(name_);
