@@ -1,0 +1,93 @@
+#!/usr/bin/env python
+
+'''
+
+A python clone of the ROOT pyq2 tool.
+
+'''
+
+from RecoLuminosity.LumiDB import argparse
+import glob
+import logging
+import os
+import sys
+import tempfile
+
+parser = argparse.ArgumentParser()
+# Don't let ROOT get at these
+args = sys.argv[:]
+sys.argv = []
+
+# Setup log
+log = logging.getLogger("pyq2")
+logging.basicConfig(level=logging.DEBUG, stream=sys.stderr)
+
+import ROOT
+
+if __name__ == "__main__":
+
+    parser.add_argument('action', type=str, choices=['put', 'ls', 'rm', 'show'],
+                        help='Action to perform')
+
+    parser.add_argument('dataset', type=str, default='', nargs='?',
+                        help='Dataset to act on')
+
+    parser.add_argument('files', type=str, nargs='*', 
+                        help = 'Files to add (if [put] is selected)')
+
+    parser.add_argument('--workers', type=int, required=False,
+                        default = 4, help='Number of worker processes (def: 4)')
+
+    args = parser.parse_args(args[1:])
+
+    log.info("Creating PROOF session")
+    proof = ROOT.TProof.Open("workers=%i" % args.workers)
+
+    if args.action != 'show' and not args.dataset:
+        log.error("You must specify a dataset for this action.")
+        sys.exit(1)
+    
+    log.info("Checking if dataset %s exists..." % args.dataset)
+    data_exists = proof.ExistsDataSet(args.dataset)
+
+    if args.action == 'put' and data_exists:
+        log.error("Dataset already exists! Delete it [rm] first.")
+        sys.exit(1)
+
+    if (args.action == 'ls' or args.action == 'rm') and not data_exists:
+        log.error("Can't execute '%s' on dataset, it doesn't exist!", 
+                  args.action)
+        log.error("Here are all the datasets:")
+        proof.ShowDataSets()
+        sys.exit(2)
+
+    if args.action == 'put':
+        files = args.files
+        all_files = []
+        # Expand all globs
+        for file in files:
+            all_files.extend(os.path.abspath(x) for x in glob.glob(file))
+        if not all_files:
+            log.error("You must specify at least one file to put!")
+            sys.exit(3)
+
+        filelist = tempfile.NamedTemporaryFile(mode='w')
+        for file in all_files:
+            filelist.write(file + '\n')
+        log.debug("Saving tmp file list at: %s", filelist.name)
+        tfc = ROOT.TFileCollection(args.dataset, args.dataset, filelist.name)
+        log.info("Registering and verifying %i files" % len(all_files))
+        proof.RegisterDataSet(args.dataset, tfc, "V")
+
+    elif args.action == 'ls':
+        dataset = proof.GetDataSet(args.dataset)
+        for file in dataset.GetList():
+            sys.stdout.write(file.GetFirstUrl().GetUrl()+ '\n')
+
+    elif args.action == 'rm':
+        res = proof.RemoveDataSet(args.dataset)
+        log.info("Removed dataset.  Return code: %i", res)
+
+    elif args.action == 'show':
+        res = proof.ShowDataSets()
+
