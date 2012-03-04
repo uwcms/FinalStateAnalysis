@@ -8,7 +8,7 @@ import PhysicsTools.PatAlgos.tools.coreTools as coreTools
 import PhysicsTools.PatAlgos.tools.helpers as helpers
 import PhysicsTools.PatAlgos.patEventContent_cff as patContent
 
-from FinalStateAnalysis.Utilities.sequencetools import chain_sequence
+from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
 from FinalStateAnalysis.PatTools.pfNoPileup import configurePFNoPileup
 from FinalStateAnalysis.PatTools.muons.pfIsolation import addMuPFIsolation
 from FinalStateAnalysis.PatTools.electrons.pfIsolation import addElecPFIsolation
