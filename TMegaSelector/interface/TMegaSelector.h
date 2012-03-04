@@ -18,7 +18,7 @@
 #include "TSelector.h"
 
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelection.h"
-#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionMaker.h"
+#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionFactory.h"
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionSet.h"
 
 class TMegaSelector : public TSelector {
@@ -37,13 +37,17 @@ class TMegaSelector : public TSelector {
     virtual void MegaSlaveTerminate() {}
     virtual void MegaTerminate() {}
 
-    // Add a TMegaSelection to the named selection set.  Does not take
-    // ownership.
-    void AddToSelection(const std::string& name, const TMegaSelection& select);
+    /// Build a cut on an integer branch and add it to [selection]
+    void MakeIntCut(const std::string& selection, const std::string& branch,
+        const std::string& op, Int_t value, bool abs=false);
 
-    // Add a TMegaSelection to the named selection set.  Takes ownershipt.
-    void AddToSelection(const std::string& name,
-        std::auto_ptr<TMegaSelection> select);
+    /// Build a cut on an float branch  and add it to [selection]
+    void MakeFloatCut(const std::string& selection, const std::string& branch,
+        const std::string& op, Float_t value, bool abs=false);
+
+    /// Build a cut on an double branch and add it to [selection]
+    void MakeDoubleCut(const std::string& selection, const std::string& branch,
+        const std::string& op, Double_t value, bool abs=false);
 
     // Get the TMegaSelectionSet with the given name.  If it doesn't exists,
     // this will return null.
@@ -59,9 +63,6 @@ class TMegaSelector : public TSelector {
     /// Get the number of entries that were filtered
     unsigned int GetFilteredEntries() const;
 
-    /// Get the factory to build TMegaSelections
-    const TMegaSelectionMaker* factory() const;
-
     /// Do not read branch on calls to chain->GetEntry()
     void DisableBranch(const std::string& branch);
 
@@ -70,6 +71,19 @@ class TMegaSelector : public TSelector {
 
     // Needed for ROOT to call the virtual functions correctly
     virtual Int_t Version() const { return 2; }
+
+    /*  Advanced selector interface */
+
+    // Add a TMegaSelection to the named selection set.  Does not take
+    // ownership.
+    void AddToSelection(const std::string& name, const TMegaSelection& select);
+
+    // Add a TMegaSelection to the named selection set.  Takes ownershipt.
+    void AddToSelection(const std::string& name,
+        std::auto_ptr<TMegaSelection> select);
+
+    /// Get the factory to build TMegaSelections
+    const TMegaSelectionFactory* factory();
 
     ClassDef( TMegaSelector, 1 );   // Enhanced TSelector
 
@@ -88,8 +102,8 @@ class TMegaSelector : public TSelector {
 
     ROOT::TBranchProxyDirector director_; //!Manages the proxies
 
-    // Maker class to build selections
-    std::auto_ptr<TMegaSelectionMaker> factory_;
+    // Factory class to build selections
+    std::auto_ptr<TMegaSelectionFactory> factory_;
 
     // The entry and tree currently being processed
     Long64_t currentEntry_;

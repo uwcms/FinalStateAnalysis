@@ -1,13 +1,13 @@
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelector.h"
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionSet.h"
-#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionMaker.h"
+#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionFactory.h"
 
 ClassImp(TMegaSelector)
 
 TMegaSelector::TMegaSelector(TTree* tree):
   chain(0),
   director_(tree, -1),
-  factory_(new TMegaSelectionMaker(this, &director_)),
+  factory_(new TMegaSelectionFactory(&director_)),
   filterSelection_(NULL) {}
 
 TMegaSelector::~TMegaSelector(){
@@ -72,6 +72,27 @@ void TMegaSelector::Terminate() {
   this->MegaTerminate();
 }
 
+void TMegaSelector::MakeIntCut(const std::string& selection,
+    const std::string& branch, const std::string& op, Int_t value, bool abs)
+  {
+    this->AddToSelection(selection, factory_->MakeIntCut(branch, op, value, abs));
+    director_.SetTree(chain);
+}
+
+void TMegaSelector::MakeFloatCut(const std::string& selection,
+    const std::string& branch, const std::string& op, Float_t value, bool abs)
+  {
+    this->AddToSelection(selection, *factory_->MakeFloatCut(branch, op, value, abs));
+    director_.SetTree(chain);
+}
+
+void TMegaSelector::MakeDoubleCut(const std::string& selection,
+    const std::string& branch, const std::string& op, Double_t value, bool abs)
+  {
+    this->AddToSelection(selection, factory_->MakeDoubleCut(branch, op, value, abs));
+    director_.SetTree(chain);
+}
+
 void TMegaSelector::AddToSelection(const std::string& name,
     const TMegaSelection& select) {
   TMegaSelectionSet* set = GetSelectionSet(name);
@@ -115,7 +136,7 @@ unsigned int TMegaSelector::GetFilteredEntries() const {
   return filteredEntries_;
 }
 
-const TMegaSelectionMaker* TMegaSelector::factory() const {
+const TMegaSelectionFactory* TMegaSelector::factory() {
   return factory_.get();
 }
 
