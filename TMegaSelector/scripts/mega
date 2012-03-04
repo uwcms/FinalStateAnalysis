@@ -20,7 +20,9 @@ sys.argv = []
 
 # Setup log
 log = logging.getLogger("mega")
+logging.basicConfig(level=logging.INFO)
 
+import ROOT
 from FinalStateAnalysis.TMegaSelector.megaselect import TMegaPySelector
 
 if __name__ == "__main__":
@@ -34,7 +36,8 @@ if __name__ == "__main__":
     parser.add_argument('tree', metavar='tree', type=str, 
                         help='Path to TTree in data files (Ex: /my/dir/myTree)')
 
-    parser.add_argument('output', type=str, help='Output root file')
+    parser.add_argument('output', metavar='output', 
+                        type=str, help='Output root file')
 
     parser.add_argument('--workers', type=int, required=False,
                         default = 4, help='Number of worker processes (def: 4)')
@@ -46,7 +49,7 @@ if __name__ == "__main__":
                         choices=['TMegaPySelector', 'TPySelecor', 'TSelector'],
                         default='TMegaPySelector', help='Selector type')
 
-    args = parser.parse_args(args)
+    args = parser.parse_args(args[1:])
 
     log.info("Creating PROOF session with %i workers" % args.workers)
     proof = ROOT.TProof.Open('workers=%i' % args.workers)
@@ -59,21 +62,25 @@ if __name__ == "__main__":
     log.info("Checking dataset %s exists..." % args.dataset)
     # Get the dataset to make sure it exists
     if not proof.ExistsDataSet(args.dataset):
-        sys.stderr.write(
+        log.error(
             "Error: dataset %s is not known to PROOF, you must register it.\n" %
             args.dataset)
         sys.exit(5)
+    dataset = proof.GetDataSet(args.dataset)
+    log.info("Dataset %s has %i files", args.dataset, dataset.GetNFiles())
+    datastring = args.dataset + "#" + args.tree
+    log.info("Dataset definition string: %s", datastring)
 
     # If we are running a PySelector
     if args.type != 'TSelector':
         # Add the selector directory to the python path
-        path_to_selector = os.path.dirname(os.path.abspath(parser.selector))
+        path_to_selector = os.path.dirname(os.path.abspath(args.selector))
         if path_to_selector not in os.environ.get('PYTHONPATH', ''):
             log.info("Adding %s to PYTHONPATH" % path_to_selector)
-            os.environ['PYTHONPATH'] = path_to_selector + ':' + \
-                    os.environ.get('PYTHONPATH', '')
+            os.putenv('PYTHONPATH', 
+                      path_to_selector + ':' + os.environ.get('PYTHONPATH', ''))
 
-        module_name = os.path.basename(parser.selector)
+        module_name = os.path.basename(args.selector)
         
         # Make sure the module is OK
         log.info("Checking module %s is importable" % module_name)
@@ -95,10 +102,10 @@ if __name__ == "__main__":
                 % (class_name, class_name))
             sys.exit(7)
 
-        proof.Process(args.type, module_name)
+        proof.Process(datastring, args.type, class_name)
     else:
         # Process as ACliC TSelector macro
-        proof.Process(parser.selector + '+')
+        proof.Process(datastring, args.selector + '+')
 
     # Now get the output and put it in our ROOT file
     log.info("Creating output file %s", args.output)
