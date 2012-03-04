@@ -234,10 +234,8 @@ void testMegaSelector::testSelectionCaching() {
 class TMegaTester : public TMegaSelector {
   public:
     TMegaTester(TTree* tree=0):TMegaSelector(tree) {
-      this->AddToSelection("tester",
-          this->factory()->MakeIntCut("intBranch", ">", -12));
-      this->AddToSelection("tester",
-          this->factory()->MakeFloatCut("floatBranch", "<", 10));
+      this->factory()->MakeIntCut("tester", "intBranch", ">", -12);
+      this->factory()->MakeFloatCut("tester", "floatBranch", "<", 10);
       count = 0;
       testSelectCount = 0;
       tree_ = tree;

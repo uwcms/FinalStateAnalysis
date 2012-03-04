@@ -18,7 +18,7 @@
 #include "TSelector.h"
 
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelection.h"
-#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionFactory.h"
+#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionMaker.h"
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionSet.h"
 
 class TMegaSelector : public TSelector {
@@ -60,7 +60,7 @@ class TMegaSelector : public TSelector {
     unsigned int GetFilteredEntries() const;
 
     /// Get the factory to build TMegaSelections
-    const TMegaSelectionFactory* factory() const;
+    const TMegaSelectionMaker* factory() const;
 
     /// Do not read branch on calls to chain->GetEntry()
     void DisableBranch(const std::string& branch);
@@ -88,8 +88,8 @@ class TMegaSelector : public TSelector {
 
     ROOT::TBranchProxyDirector director_; //!Manages the proxies
 
-    // Factory class to build selections
-    std::auto_ptr<TMegaSelectionFactory> factory_;
+    // Maker class to build selections
+    std::auto_ptr<TMegaSelectionMaker> factory_;
 
     // The entry and tree currently being processed
     Long64_t currentEntry_;

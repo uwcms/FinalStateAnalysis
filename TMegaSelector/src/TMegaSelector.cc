@@ -1,13 +1,13 @@
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelector.h"
 #include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionSet.h"
-#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionFactory.h"
+#include "FinalStateAnalysis/TMegaSelector/interface/TMegaSelectionMaker.h"
 
 ClassImp(TMegaSelector)
 
 TMegaSelector::TMegaSelector(TTree* tree):
   chain(0),
   director_(tree, -1),
-  factory_(new TMegaSelectionFactory(&director_)),
+  factory_(new TMegaSelectionMaker(this, &director_)),
   filterSelection_(NULL) {}
 
 TMegaSelector::~TMegaSelector(){
@@ -115,7 +115,7 @@ unsigned int TMegaSelector::GetFilteredEntries() const {
   return filteredEntries_;
 }
 
-const TMegaSelectionFactory* TMegaSelector::factory() const {
+const TMegaSelectionMaker* TMegaSelector::factory() const {
   return factory_.get();
 }
 
