@@ -73,12 +73,17 @@ if __name__ == "__main__":
 
     # If we are running a PySelector
     if args.type != 'TSelector':
-        # Add the selector directory to the python path
+        # Make sure that the object is in the PYTHONPATH
         path_to_selector = os.path.dirname(os.path.abspath(args.selector))
-        if path_to_selector not in os.environ.get('PYTHONPATH', ''):
-            log.info("Adding %s to PYTHONPATH" % path_to_selector)
-            os.putenv('PYTHONPATH', 
-                      path_to_selector + ':' + os.environ.get('PYTHONPATH', ''))
+        path_is_ok = False
+        for path in os.enivron.get('PYTHONPATH', '').split(':'):
+            if not path:
+                continue
+            if os.path.samefile(path_to_selector, path):
+                path_is_ok = True
+        if not path_is_ok:
+            log.error("You must add the selector directory to the PYTHONPATH")
+            sys.exit(5)
 
         module_name = os.path.basename(args.selector)
         
