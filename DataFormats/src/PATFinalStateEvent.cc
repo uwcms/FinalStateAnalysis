@@ -41,7 +41,8 @@ PATFinalStateEvent::PATFinalStateEvent(
     const reco::GenParticleRefProd& genParticles,
     const edm::EventID& evtId,
     const GenEventInfoProduct& genEventInfo,
-    bool isRealData):
+    bool isRealData,
+    const std::string& puScenario):
   rho_(rho),
   triggerEvent_(triggerEvent),
   pv_(pv),
@@ -53,7 +54,8 @@ PATFinalStateEvent::PATFinalStateEvent(
   genParticles_(genParticles),
   evtID_(evtId),
   genEventInfoProduct_(genEventInfo),
-  isRealData_(isRealData) { }
+  isRealData_(isRealData),
+  puScenario_(puScenario) { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
 
@@ -131,8 +133,20 @@ int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
   return matchCount;
 }
 
+const std::string& PATFinalStateEvent::puTag() const {
+  return puScenario_;
+}
+
+double PATFinalStateEvent::puWeight(const std::string& dataTag) const {
+  if (isRealData_)
+    return 1.;
+  return get3DPileupWeight(dataTag, puTag(), puInfo_);
+}
+
 double PATFinalStateEvent::puWeight(const std::string& dataTag,
     const std::string& mcTag) const {
+  if (isRealData_)
+    return 1.;
   return get3DPileupWeight(dataTag, mcTag, puInfo_);
 }
 

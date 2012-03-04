@@ -39,6 +39,8 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     edm::InputTag puInfoSrc_;
     edm::InputTag truthSrc_;
     edm::ParameterSet extraWeights_;
+    // The PU scenario to use
+    std::string puScenario_;
 };
 
 PATFinalStateEventProducer::PATFinalStateEventProducer(
@@ -52,6 +54,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   puInfoSrc_ = pset.getParameter<edm::InputTag>("puInfoSrc");
   truthSrc_ = pset.getParameter<edm::InputTag>("genParticleSrc");
   extraWeights_ = pset.getParameterSet("extraWeights");
+  puScenario_(pset.getParameter<std::string>("puTag"));
   produces<PATFinalStateEventCollection>();
 }
 
@@ -121,7 +124,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
 
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
       *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo,
-      evt.isRealData());
+      evt.isRealData(), puScenario_);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {

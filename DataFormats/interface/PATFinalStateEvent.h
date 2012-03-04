@@ -50,7 +50,8 @@ class PATFinalStateEvent {
         const reco::GenParticleRefProd& genParticles,
         const edm::EventID& evtId,
         const GenEventInfoProduct& genEventInfoProd,
-        bool isRealData);
+        bool isRealData,
+        const std::string& puScenario);
 
     /// Get PV
     const edm::Ptr<reco::Vertex>& pv() const;
@@ -95,6 +96,14 @@ class PATFinalStateEvent {
     int matchedToPath(const reco::Candidate& cand, const std::string& pattern,
         double maxDeltaR = 0.3) const;
 
+    /// Get the PU scenario used to generate this events (if MC)
+    const std::string& puTag() const;
+
+    /// The following allow use of the PileupWeighting feature in DataAlgos
+    /// For the available tags, see DataAlgos/src/PileupWeighting.cc
+    /// This version uses the internally stored PU tag
+    double puWeight(const std::string& dataTag) const;
+
     /// The following allow use of the PileupWeighting feature in DataAlgos
     /// For the available tags, see DataAlgos/src/PileupWeighting.cc
     double puWeight(const std::string& dataTag, const std::string& mcTag) const;
@@ -125,6 +134,7 @@ class PATFinalStateEvent {
     edm::EventID evtID_;
     GenEventInfoProduct genEventInfoProduct_;
     bool isRealData_;
+    std::string puScenario_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */
