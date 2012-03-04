@@ -1,8 +1,16 @@
 '''
 
-Tools for manipulating cms.Sequence objects.
+Tools for manipulating CMSSW python configuration objects
+=========================================================
 
 Author: Evan K. Friis UW Madison
+
+Chaining Modules in a Sequence
+------------------------------
+
+You can use [chain_sequence] to connect the inputs and outputs of objects
+in a sequence.  The output of each module is connected to the next modules
+['src'] input.
 
 >>> import FWCore.ParameterSet.Config as cms
 >>> proc = cms.Process("TEST")
@@ -40,6 +48,42 @@ cms.InputTag("pA")
 >>> end_result
 cms.InputTag("pC")
 
+Using format strings in cfg objects
+-----------------------------------
+
+Mimic the API of string.format in CMSSW cfg objects.  The object is changed in
+place.
+
+Based on code from helpers.py of PatAlgos
+
+>>> filter = cms.EDFilter(
+...     "MyFilter",
+...     src = cms.InputTag("{thesrc}"),
+...     isNotTouched = cms.string("JustAString"),
+...     psetsAreDescendedInto = cms.PSet(
+...         toFormat = cms.string('{toFormat}'),
+...         vectorsAreTo = cms.vstring('{v1}', '{v2}')
+...     ),
+...     vpsetsTo = cms.VPSet(
+...        cms.PSet(
+...             subpset = cms.string('{toFormat}')
+...        )
+...     )
+... )
+>>> to_replace = {
+...     'thesrc' : 'newsrc',
+...     'toFormat' : 'inAPSet',
+...     'v1' : 'a',
+...     'v2' : 'b',
+... }
+>>> format(filter, **to_replace)
+>>> filter.src
+cms.InputTag("newsrc")
+>>> filter.vpsetsTo[0].subpset
+cms.string('inAPSet')
+>>> filter.psetsAreDescendedInto.vectorsAreTo[1]
+'b'
+
 '''
 
 import FWCore.ParameterSet.Config as cms
@@ -59,6 +103,28 @@ def chain_sequence(sequence, input_src):
     chainer = SequenceChainer(input_src)
     sequence.visit(chainer)
     return cms.InputTag(chainer.current_src)
+
+def format(cfg_object, **replacements):
+    if isinstance(cfg_object, cms._Parameterizable):
+        # If this is a PSet like type (PSet, EDFilter, etc), recurse down
+        for par in cfg_object.parameters_().keys():
+            # Do this so we get objects, not copies
+            value = getattr(cfg_object, par)
+            # Recurse down
+            format(value, **replacements)
+    # Otherwise check if we need to update this
+    if isinstance(cfg_object, cms.string):
+        cfg_object.setValue(cfg_object.value().format(**replacements))
+    elif isinstance(cfg_object, cms.vstring):
+        formatted = []
+        for x in cfg_object:
+            formatted.append(x.format(**replacements))
+        cfg_object.setValue(formatted)
+    elif isinstance(cfg_object, cms.InputTag):
+        cfg_object.setValue(cfg_object.value().format(**replacements))
+    elif isinstance(cfg_object, cms.VPSet):
+        for subpset in cfg_object:
+            format(subpset, **replacements)
 
 if __name__ == "__main__":
     import doctest
