@@ -237,7 +237,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patFinalStateEventProducer.metSrc = final_met_collection
     process.tuplize += process.patFinalStateEventProducer
     output_commands.append('*_patFinalStateEventProducer_*_*')
-
+    process.patFinalStateEventProducer.puTag = cms.string(kwargs['puTag'])
 
     # Now build the PATFinalStateLS object, which holds LumiSection info.
     process.load(
