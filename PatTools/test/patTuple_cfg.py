@@ -10,6 +10,7 @@ options = TauVarParsing.TauVarParsing(
     keepEverything=0,
     verbose=0, # Print out summary table at end
     reportEvery=2000,
+    puTag='unknown',
 )
 
 files = [
@@ -57,7 +58,9 @@ process.out = cms.OutputModule(
 # Configure the pat tuple
 import FinalStateAnalysis.PatTools.patTupleProduction as tuplizer
 tuplize, output_commands = tuplizer.configurePatTuple(
-    process, isMC=options.isMC, xSec=options.xSec, xSecErr=options.xSecErr)
+    process, isMC=options.isMC, xSec=options.xSec, xSecErr=options.xSecErr,
+    puTag=options.puTag
+)
 
 for command in output_commands:
     if not command.startswith('drop') and not command.startswith('keep'):
