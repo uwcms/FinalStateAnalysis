@@ -20,12 +20,12 @@ data_name_map = {
 
     'QCDMu' : ['QCD_20toInf_MuPt15'],
 
-    'QCDE' : ['QCD_20to30_EM', 'QCD_30to80_EM', 'QCD_80to170_EM'],
+    #'QCDE' : ['QCD_20to30_EM', 'QCD_30to80_EM', 'QCD_80to170_EM'],
 
     'Wjets' : ['WplusJets_madgraph'],
 
     'WW' : ['WWJetsTo2L2Nu'],
-    'WZ' : ['WZJetsTo3LNu_fallJob'],
+    'WZ' : ['WZJetsTo3LNu'],
     'WZ_pythia' : ['WZJetsTo3LNu_pythia'],
     'ZZ' : ['ZZJetsTo4L_pythia'],
 
@@ -45,16 +45,12 @@ data_name_map = {
     'VH150' : ['VH_150'],
     'VH160' : ['VH_160'],
 
-    'VH120WW' : ['VH_120_HWW_fallJob'],
-    'VH130WW' : ['VH_130_HWW_fallJob'],
-    'VH140WW' : ['VH_140_HWW_fallJob'],
+    'VH120WW' : ['VH_120_HWW'],
+    'VH130WW' : ['VH_130_HWW'],
+    'VH140WW' : ['VH_140_HWW'],
     'VH150WW' : ['VH_150_HWW'],
-    'VH160WW' : ['VH_160_HWW_correct'],
+    'VH160WW' : ['VH_160_HWW'],
 
-    #'VH120All' : ['VH_120_HWW', 'VH_120'],
-    #'VH130All' : ['VH_130_HWW', 'VH_130'],
-    #'VH140All' : ['VH_140_HWW', 'VH_140'],
-    #'VH150' : ['VH_150'],
     'TTW' : ['TTWToLplus', 'TTWToLminus'],
     'TTZ' : ['TTZToLplus', 'TTZToLminus'],
     'WWW' : ['WWWTo2Lplus', 'WWWTo2Lminus'],
@@ -84,26 +80,14 @@ datadefs = {
         'pu' : 'S6',
         'analyses' : ['HTT', 'SSDL', 'VH', 'Tau', 'Mu'],
     },
-    #'Zbb_M50' : {
-        #'datasetpath' : '/ZbbToLL_M-40_PtB1-15_TuneZ2_7TeV-madgraph-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM',
-        #'x_sec' : 13.75*_picobarns,
-        #'pu' : 'S4',
-        #'analyses' : ['HTT', 'VH'],
-    #},
-    #'Zcc_M40' : {
-        #'datasetpath': '/ZccToLL_M-40_PtB1-15_TuneZ2_7TeV-madgraph-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM',
-        #'x_sec' : 18.74*_picobarns,
-        #'pu' : 'S4',
-        #'analyses' : ['HTT', 'VH'],
-    #},
 
     ############################################################################
     #### VGamma background datasets         ####################################
     ############################################################################
     'VGjets' : {
-        'datasetpath' : '/GVJets_7TeV-madgraph/Summer11-PU_S4_START42_V11-v1/AODSIM',
+        'datasetpath' : '/GVJets_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : 56.64*_picobarns,
-        'pu' : 'S4',
+        'pu' : 'S6',
         'analyses' : ['Mu', 'VH'],
     },
 
@@ -128,36 +112,7 @@ datadefs = {
         'x_sec_unc' : quad(1.5, 0.2, 0.2)*0.1096*0.1096,
         'analyses' : ['VH', 'SSDL'],
     },
-
-    'ZZJetsTo4L' : {
-        'datasetpath' : "/ZZJetsTo4L_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'pu' : 'S6',
-        #'x_sec' : 0.03906*_picobarns,
-        # 3.8 +- 1.5 0.2 0.2 from EWK-11-10
-        'x_sec' : 3.8*_picobarns*0.1096*0.1096,
-        'x_sec_unc' : quad(1.5, 0.2, 0.2)*0.1096*0.1096,
-        'analyses' : ['VH', 'SSDL'],
-    },
-    'ZZJetsTo4L' : {
-        'datasetpath' : "/ZZJetsTo4L_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'pu' : 'S6',
-        #'x_sec' : 0.03906*_picobarns,
-        # 3.8 +- 1.5 0.2 0.2 from EWK-11-10
-        'x_sec' : 3.8*_picobarns*0.1096*0.1096,
-        'x_sec_unc' : quad(1.5, 0.2, 0.2)*0.1096*0.1096,
-        'analyses' : ['VH', 'SSDL'],
-    },
     'WZJetsTo3LNu' : {
-        'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
-        'pu' : 'S4',
-        #'x_sec' : 0.7192*_picobarns, # FROM PREP
-        # 17 +- 2.4 1.1 1.0 from EWK-11-10
-        #'x_sec' : 17.0*_picobarns*0.3257*0.1096,
-        'x_sec' : 26.735*_picobarns*3*0.03365*(0.1075+0.1057+0.1125) ,
-        'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.1096,
-        'analyses' : ['VH', 'SSDL'],
-    },
-    'WZJetsTo3LNu_fallJob' : {
         'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
         #'x_sec' : 0.7192*_picobarns, # FROM PREP
@@ -177,8 +132,8 @@ datadefs = {
         'analyses' : ['VH', 'SSDL'],
     },
     'WWJetsTo2L2Nu' : {
-        'datasetpath' : '/WWJetsTo2L2Nu_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM',
-        'pu' : 'S4',
+        'datasetpath' : '/WWJetsTo2L2Nu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
+        'pu' : 'S6',
         #'x_sec' : 3.783*_picobarns, # FROM PREP
         # 55.3 +- 3.3 6.9 3.3 from EWK-11-10
         'x_sec' : 55.3*_picobarns*0.3257*0.3257, # 32.57% BR to leptons
@@ -191,31 +146,10 @@ datadefs = {
     ############################################################################
 
     'QCD_20toInf_MuPt15' : {
-        'datasetpath' : '/QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM',
-        'pu' : 'S4',
+        'datasetpath' : '/QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM',
+        'pu' : 'S6',
         'x_sec' : 2.966E8*_picobarns*2.855E-4,
         'analyses' : ['HTT', 'VH', 'Tau', 'Mu'],
-    },
-    # Electron enriched
-    #'QCD_20to30_EM' : {
-        #'datasetpath' : "/QCD_Pt-20to30_EMEnriched_TuneZ2_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        #'pu' : 'S6',
-        #'x_sec' : 2.361E8*_picobarns*0.0106,
-        #'analyses' : ['HTT', 'VH'],
-    #},
-    'QCD_30to80_EM' : {
-        'datasetpath' : "/QCD_Pt-30to80_EMEnriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
-        'pu' : 'S4',
-        # FIXME
-        'x_sec' : 5.944E7*_picobarns*0.061,
-        'analyses' : ['HTT', 'VH'],
-    },
-    'QCD_80to170_EM' : {
-        'datasetpath' : "/QCD_Pt-80to170_EMEnriched_TuneZ2_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
-        'pu' : 'S4',
-        # FIXME
-        'x_sec' : 898200.0*_picobarns*0.159,
-        'analyses' : ['HTT', 'VH'],
     },
 
     ############################################################################
@@ -298,34 +232,13 @@ datadefs = {
     ############################################################################
 
     'VH_120_HWW' : {
-        'datasetpath' :"/WH_ZH_TTH_HToWW_M-120_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
-        'x_sec' : (0.6561 + 0.3598 + 0.09756)*_picobarns*1.43E-01,
-        'pu' : 'S4',
-        'analyses' : ['VH'],
-    },
-
-    'VH_130_HWW' : {
-        'datasetpath' :"/WH_ZH_TTH_HToWW_M-130_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
-        'x_sec' : (0.5008 + 0.2778 + 0.07658)*_picobarns*3.05E-01,
-        'pu' : 'S4',
-        'analyses' : ['VH'],
-    },
-
-    'VH_140_HWW' : {
-        'datasetpath' :"/WH_ZH_TTH_HToWW_M-140_7TeV-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM",
-        'x_sec' : (0.3857 + 0.2172 + 0.06072)*_picobarns*5.03E-01,
-        'pu' : 'S4',
-        'analyses' : ['VH'],
-    },
-
-    'VH_120_HWW_fallJob' : {
         'datasetpath' :"/WH_ZH_TTH_HToWW_M-120_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'x_sec' : (0.6561 + 0.3598 + 0.09756)*_picobarns*1.43E-01,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
 
-    'VH_130_HWW_fallJob' : {
+    'VH_130_HWW' : {
         'datasetpath' :"/WH_ZH_TTH_HToWW_M-130_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'x_sec' : (0.5008 + 0.2778 + 0.07658)*_picobarns*3.05E-01,
         'pu' : 'S6',
@@ -337,7 +250,7 @@ datadefs = {
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
-    'VH_140_HWW_fallJob' : {
+    'VH_140_HWW' : {
         'datasetpath' :"/WH_ZH_TTH_HToWW_M-140_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'x_sec' : (0.3857 + 0.2172 + 0.06072)*_picobarns*5.03E-01,
         'pu' : 'S6',
@@ -352,13 +265,6 @@ datadefs = {
     },
 
     'VH_160_HWW' : {
-        'datasetpath' :"/WH_ZH_TTH_HToWW_M-150_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM	",
-        'x_sec' : (0.2291 + 0.1334 + 0.03942)*_picobarns*9.08E-01,
-        'pu' : 'S6',
-        'analyses' : ['VH'],
-    },
-
-    'VH_160_HWW_correct' : {
         'datasetpath' :"/WH_ZH_TTH_HToWW_M-160_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM	",
         'x_sec' : (0.2291 + 0.1334 + 0.03942)*_picobarns*9.08E-01,
         'pu' : 'S6',
@@ -417,32 +323,11 @@ datadefs = {
 # Add all the datasets
 def build_data_set(pd, analyses):
   subsample_dict = {
-    'data_%s_Run2011B_PromptReco_v1_d' % pd : {
+    'data_%s_Run2011B_PromptReco_v1' % pd : {
       'datasetpath' : "/%s/Run2011B-PromptReco-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-180252_7TeV_PromptReco_Collisions11_JSON.txt",
-      'firstRun' : 178678,
-      'lastRun' : 180252,
-      'analyses' : analyses,
-    },
-    'data_%s_Run2011B_PromptReco_v1_c' % pd : {
-      'datasetpath' : "/%s/Run2011B-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-178677_7TeV_PromptReco_Collisions11_JSON.txt",
-      'firstRun' : 177516,
-      'lastRun' : 178677,
-      'analyses' : analyses,
-    },
-    'data_%s_Run2011B_PromptReco_v1_b' % pd : {
-      'datasetpath' : "/%s/Run2011B-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-178677_7TeV_PromptReco_Collisions11_JSON.txt",
-      'firstRun' : 177074,
-      'lastRun' : 177515,
-      'analyses' : analyses,
-    },
-    'data_%s_Run2011B_PromptReco_v1_a' % pd : {
-      'datasetpath' : "/%s/Run2011B-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-178677_7TeV_PromptReco_Collisions11_JSON.txt",
       'firstRun' : 175832,
-      'lastRun' : 177053,
+      'lastRun' : 180252,
       'analyses' : analyses,
     },
     'data_%s_Run2011A_PromptReco_v6_1409' % pd : {
