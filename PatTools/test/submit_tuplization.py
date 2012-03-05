@@ -3,7 +3,7 @@ import os
 import sys
 
 cfg = 'patTuple_cfg.py'
-jobId = '2012-03-04-EWKPatTuple'
+jobId = '2012-03-05-EWKPatTuple'
 
 print 'export TERMCAP=screen'
 for sample in sorted(datadefs.keys()):
