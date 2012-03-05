@@ -36,9 +36,11 @@ for sample in sorted(datadefs.keys()):
         options.append('isMC=1')
         options.append('globalTag=$mcgt')
         options.append('xSec=%0.4f' % sample_info['x_sec'])
+        options.append('puTag=%s' % sample_info['pu'])
     else:
         options.append('isMC=0')
         options.append('globalTag=$datagt')
+        options.append('puTag=data')
         lumi_mask_fip = sample_info['lumi_mask']
         lumi_mask_path = os.path.join(
             os.environ['CMSSW_BASE'], 'src', lumi_mask_fip)
