@@ -217,13 +217,13 @@ def replace(cfg_object, **replacements):
             output += replace(subpset, **replacements)
         return output
 
-class TPSet(cms.PSet):
+class PSet(cms.PSet):
     def __init__(self, *args, **kwargs):
         ''' Convenient version of PSet constructor
 
         Automatically deduces the correct type of the arguments.
 
-        >>> mypset = TPSet(
+        >>> mypset = PSet(
         ...   aString = 'willBeACmsString',
         ...   aCmsString = 'willStayACmsString',
         ...   boolsWork = True,
@@ -253,32 +253,32 @@ class TPSet(cms.PSet):
             elif isinstance(value, int):
                 kwargs[key] = cms.int32(value)
 
-        super(TPSet, self).__init__(*args, **kwargs)
+        super(PSet, self).__init__(*args, **kwargs)
 
     def clone(self):
         ''' Make a copy.
 
-        >>> mytpset = TPSet(
+        >>> mytpset = PSet(
         ...     a = 'a', b = 'b'
         ... )
         >>> clone = mytpset.clone()
 
-        The clone is still a TPSet.
+        The clone is still a PSet.
 
-        >>> isinstance(clone, TPSet)
+        >>> isinstance(clone, PSet)
         True
         >>> clone.a = 'a2'
         >>> mytpset.a, clone.a
         (cms.string('a'), cms.string('a2'))
         '''
-        output = super(TPSet, self).clone()
+        output = super(PSet, self).clone()
         output.__class__ = self.__class__
         return output
 
     def replace(self, **replacements):
         ''' Apply the replacements.  Returns a modified copy.
 
-        >>> mytpset = TPSet(
+        >>> mytpset = PSet(
         ...     object = 'objectPt'
         ... )
         >>> replaced = mytpset.replace(object='muon')
@@ -290,7 +290,7 @@ class TPSet(cms.PSet):
     def format(self, **replacements):
         ''' Apply the formatting.  Returns a modified copy.
 
-        >>> mytpset = TPSet(
+        >>> mytpset = PSet(
         ...     muonPt = '{muon}.pt'
         ... )
         >>> replaced = mytpset.format(muon='daughter(0)')
