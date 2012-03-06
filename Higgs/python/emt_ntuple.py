@@ -10,6 +10,8 @@ from FinalStateAnalysis.Utilities.cfgtools import format
 # Import the templates used to make the branches
 import FinalStateAnalysis.Selectors.templates.candidates as candidates
 import FinalStateAnalysis.Selectors.templates.muons as muons
+import FinalStateAnalysis.Selectors.templates.electrons as electrons
+import FinalStateAnalysis.Selectors.templates.taus as taus
 
 _name_map = {
     'muon' : 'daughter(1)',
@@ -88,6 +90,8 @@ emutau = cms.EDFilter(
                     candidates.kinematics.replace(object='tau'),
                     candidates.vertex_info.replace(object='tau'),
                     candidates.base_jet.replace(object='tau'),
+                    taus.info.replace(object='tau'),
+                    taus.id.replace(object='tau'),
                 )
             ),
         )
