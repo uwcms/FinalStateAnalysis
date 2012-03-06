@@ -12,11 +12,15 @@ import FinalStateAnalysis.Selectors.templates.candidates as candidates
 import FinalStateAnalysis.Selectors.templates.muons as muons
 import FinalStateAnalysis.Selectors.templates.electrons as electrons
 import FinalStateAnalysis.Selectors.templates.taus as taus
+import FinalStateAnalysis.Selectors.templates.cleaning as cleaning
 
 _name_map = {
-    'muon' : 'daughter(1)',
     'electron' : 'daughter(0)',
+    'electron_idx' : '0',
+    'muon' : 'daughter(1)',
+    'muon_idx' : '1',
     'tau' : 'daughter(2)',
+    'tau_idx' : '2',
 }
 
 emutau = cms.EDFilter(
@@ -82,6 +86,8 @@ emutau = cms.EDFilter(
                     candidates.kinematics.replace(object='electron'),
                     candidates.vertex_info.replace(object='electron'),
                     candidates.base_jet.replace(object='electron'),
+                    # Cleaning
+                    cleaning.overlaps.replace(object='electron'),
                     # Electron specific
                     electrons.id.replace(object='electron'),
                     electrons.tracking.replace(object='electron'),
@@ -90,8 +96,14 @@ emutau = cms.EDFilter(
                     candidates.kinematics.replace(object='tau'),
                     candidates.vertex_info.replace(object='tau'),
                     candidates.base_jet.replace(object='tau'),
+                    # Cleaning
+                    cleaning.overlaps.replace(object='tau'),
+                    # Tau specific
                     taus.info.replace(object='tau'),
                     taus.id.replace(object='tau'),
+
+                    # Vetoes on extra objects
+                    cleaning.vetos,
                 )
             ),
         )
