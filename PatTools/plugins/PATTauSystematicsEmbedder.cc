@@ -83,15 +83,22 @@ class PATTauSystematicsEmbedder : public edm::EDProducer {
           ShiftedLorentzVectors output;
           assert(corrUncertaintyUp_.get());
           assert(corrUncertaintyDown_.get());
+          // make sure we are within the jet acceptance bounds
+          double jetEta = p4.eta();
+          if (jetEta > 5.19)
+            jetEta = 5.19;
+          else if (jetEta < -5.19)
+            jetEta = -5.19;
+
           // shift up
-          corrUncertaintyUp_->setJetEta(p4.eta());
+          corrUncertaintyUp_->setJetEta(jetEta);
           corrUncertaintyUp_->setJetPt(p4.pt());
           double uncUp = corrUncertaintyUp_->getUncertainty(true);
           double shiftUp = 1.0*sqrt(
               uncUp*uncUp + flavorUncertainty_*flavorUncertainty_);
 
           // shift down
-          corrUncertaintyDown_->setJetEta(p4.eta());
+          corrUncertaintyDown_->setJetEta(jetEta);
           corrUncertaintyDown_->setJetPt(p4.pt());
           double uncDown = corrUncertaintyDown_->getUncertainty(true);
           double shiftDown = -1.0*sqrt(
