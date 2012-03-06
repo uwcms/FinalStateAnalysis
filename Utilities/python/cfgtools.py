@@ -217,6 +217,90 @@ def replace(cfg_object, **replacements):
             output += replace(subpset, **replacements)
         return output
 
+class TPSet(cms.PSet):
+    def __init__(self, *args, **kwargs):
+        ''' Convenient version of PSet constructor
+
+        Automatically deduces the correct type of the arguments.
+
+        >>> mypset = TPSet(
+        ...   aString = 'willBeACmsString',
+        ...   aCmsString = 'willStayACmsString',
+        ...   boolsWork = True,
+        ...   soDoFloats = 0.5,
+        ...   andInts = 2,
+        ... )
+        >>> mypset.aString
+        cms.string('willBeACmsString')
+        >>> mypset.aCmsString
+        cms.string('willStayACmsString')
+        >>> mypset.boolsWork
+        cms.bool(True)
+        >>> mypset.soDoFloats
+        cms.double(0.5)
+        >>> mypset.andInts
+        cms.int32(2)
+        '''
+        # Reduce boiler plate of input arguments
+        for key in kwargs.keys():
+            value = kwargs[key]
+            if isinstance(value, str):
+                kwargs[key] = cms.string(value)
+            elif isinstance(value, float):
+                kwargs[key] = cms.double(value)
+            elif isinstance(value, bool):
+                kwargs[key] = cms.bool(value)
+            elif isinstance(value, int):
+                kwargs[key] = cms.int32(value)
+
+        super(TPSet, self).__init__(*args, **kwargs)
+
+    def clone(self):
+        ''' Make a copy.
+
+        >>> mytpset = TPSet(
+        ...     a = 'a', b = 'b'
+        ... )
+        >>> clone = mytpset.clone()
+
+        The clone is still a TPSet.
+
+        >>> isinstance(clone, TPSet)
+        True
+        >>> clone.a = 'a2'
+        >>> mytpset.a, clone.a
+        (cms.string('a'), cms.string('a2'))
+        '''
+        output = super(TPSet, self).clone()
+        output.__class__ = self.__class__
+        return output
+
+    def replace(self, **replacements):
+        ''' Apply the replacements.  Returns a modified copy.
+
+        >>> mytpset = TPSet(
+        ...     object = 'objectPt'
+        ... )
+        >>> replaced = mytpset.replace(object='muon')
+        >>> replaced.muon
+        cms.string('muonPt')
+        '''
+        return replace(self, **replacements)
+
+    def format(self, **replacements):
+        ''' Apply the formatting.  Returns a modified copy.
+
+        >>> mytpset = TPSet(
+        ...     muonPt = '{muon}.pt'
+        ... )
+        >>> replaced = mytpset.format(muon='daughter(0)')
+        >>> replaced.muonPt
+        cms.string('daughter(0).pt')
+        '''
+        clone = self.clone()
+        format(clone, **replacements)
+        return clone
+
 if __name__ == "__main__":
     import doctest
     #doctest.testmod(verbose=True)
