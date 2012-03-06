@@ -11,7 +11,6 @@ Author: Evan K. Friis
 
 '''
 
-import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 info = PSet(
