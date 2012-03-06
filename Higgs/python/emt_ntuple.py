@@ -6,7 +6,10 @@ Generate the e-mu-tau ntuple, used by the WH analysis
 
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.Utilities.cfgtools import format
+
+# Import the templates used to make the branches
 import FinalStateAnalysis.Selectors.templates.candidates as candidates
+import FinalStateAnalysis.Selectors.templates.muons as muons
 
 _name_map = {
     'muon' : 'daughter(1)',
@@ -65,9 +68,26 @@ emutau = cms.EDFilter(
                 histos = cms.VPSet(), # Don't make any final plots
                 ntuple = cms.PSet(
                     #MuPt = cms.string('{muon}.pt'),
+                    # Add muon branches
                     candidates.kinematics.replace(object='muon'),
                     candidates.vertex_info.replace(object='muon'),
                     candidates.base_jet.replace(object='muon'),
+                    # Muon specific
+                    muons.id.replace(object='muon'),
+                    muons.tracking.replace(object='muon'),
+
+                    # Add electron branches
+                    candidates.kinematics.replace(object='electron'),
+                    candidates.vertex_info.replace(object='electron'),
+                    candidates.base_jet.replace(object='electron'),
+                    # Electron specific
+                    electrons.id.replace(object='electron'),
+                    electrons.tracking.replace(object='electron'),
+
+                    # Add tau branches
+                    candidates.kinematics.replace(object='tau'),
+                    candidates.vertex_info.replace(object='tau'),
+                    candidates.base_jet.replace(object='tau'),
                 )
             ),
         )
