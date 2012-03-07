@@ -13,6 +13,7 @@ import FinalStateAnalysis.Selectors.templates.muons as muons
 import FinalStateAnalysis.Selectors.templates.electrons as electrons
 import FinalStateAnalysis.Selectors.templates.taus as taus
 import FinalStateAnalysis.Selectors.templates.cleaning as cleaning
+import FinalStateAnalysis.Selectors.templates.event as event
 
 _name_map = {
     'electron' : 'daughter(0)',
@@ -73,7 +74,10 @@ emutau = cms.EDFilter(
             plot = cms.PSet(
                 histos = cms.VPSet(), # Don't make any final plots
                 ntuple = cms.PSet(
-                    #MuPt = cms.string('{muon}.pt'),
+                    # Event num/lumi/run
+                    event.num,
+                    # Rho, ntvtx, nTruePU
+                    event.pileup,
                     # Add muon branches
                     candidates.kinematics.replace(object='muon'),
                     candidates.vertex_info.replace(object='muon'),
@@ -104,6 +108,7 @@ emutau = cms.EDFilter(
 
                     # Vetoes on extra objects
                     cleaning.vetos,
+                    #MuPt = cms.string('{muon}.pt'),
                 )
             ),
         )
