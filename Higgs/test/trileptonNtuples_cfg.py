@@ -32,10 +32,17 @@ process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(options.maxEvents))
 
 process.load("FinalStateAnalysis.Higgs.emt_ntuple")
+process.load("FinalStateAnalysis.Higgs.mmt_ntuple")
 
-process.p = cms.Path(process.emutau)
+process.emutaupath = cms.Path(process.emutau)
+process.mumutaupath = cms.Path(process.mumutau)
 
-process.schedule = cms.Schedule(process.p)
+process.schedule = cms.Schedule(
+    process.emutaupath,
+    process.mumutaupath,
+)
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
+
+process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
