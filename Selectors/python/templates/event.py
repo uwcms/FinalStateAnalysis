@@ -28,4 +28,5 @@ pileup = PSet(
 met = PSet(
     metEt = 'evt.met.et',
     metPhi = 'evt.met.phi',
+    metSignificance = 'evt.metSignificance',
 )
