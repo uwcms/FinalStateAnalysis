@@ -80,4 +80,29 @@ std::pair<double, double> pZeta( const reco::Candidate::LorentzVector& leg1,
   return std::make_pair(pZeta, pZetaVis);
 }
 
+double transverseMass(const reco::Candidate::LorentzVector& p1,
+    const reco::Candidate::LorentzVector& p2){
+  double totalEt = p1.Et() + p2.Et();
+  double totalPt = (p1 + p2).pt();
+  double mt2 = totalEt*totalEt - totalPt*totalPt;
+  if (mt2 < 0) {
+    std::cout << "P1 = " << p1 << " P2 = " << p2 << " " << mt2 << std::endl;
+  }
+  return std::sqrt(std::abs(mt2));
+}
+
+// Taken from CommonTools/CandUtils/AddFourMomenta.h
+void addFourMomenta( reco::Candidate & c ) {
+  reco::Candidate::LorentzVector p4( 0, 0, 0, 0 );
+  reco::Candidate::Charge charge = 0;
+  size_t n = c.numberOfDaughters();
+  for(size_t i = 0; i < n; ++i) {
+    const reco::Candidate * d = (const_cast<const reco::Candidate &>(c)).daughter(i);
+    p4 += d->p4();
+    charge += d->charge();
+  }
+  c.setP4( p4 );
+  c.setCharge( charge );
+}
+
 }

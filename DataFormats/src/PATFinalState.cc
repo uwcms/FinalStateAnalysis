@@ -21,30 +21,6 @@
 #include "TMath.h"
 
 namespace {
-  double transverseMass(const reco::Candidate::LorentzVector& p1,
-      const reco::Candidate::LorentzVector& p2){
-    double totalEt = p1.Et() + p2.Et();
-    double totalPt = (p1 + p2).pt();
-    double mt2 = totalEt*totalEt - totalPt*totalPt;
-    if (mt2 < 0) {
-      std::cout << "P1 = " << p1 << " P2 = " << p2 << " " << mt2 << std::endl;
-    }
-    return std::sqrt(std::abs(mt2));
-  }
-
-  // Taken from CommonTools/CandUtils/AddFourMomenta.h
-  void addFourMomenta( reco::Candidate & c ) {
-    reco::Candidate::LorentzVector p4( 0, 0, 0, 0 );
-    reco::Candidate::Charge charge = 0;
-    size_t n = c.numberOfDaughters();
-    for(size_t i = 0; i < n; ++i) {
-      const reco::Candidate * d = (const_cast<const reco::Candidate &>(c)).daughter(i);
-      p4 += d->p4();
-      charge += d->charge();
-    }
-    c.setP4( p4 );
-    c.setCharge( charge );
-  }
 
   // Predicate to sort a collection of indices, which correspond to a list of
   // candidates, by descending pt
@@ -379,7 +355,7 @@ PATFinalState::deltaPhiToMEt(int i) const {
 double
 PATFinalState::mt(int i, const std::string& sysTagI,
     int j, const std::string& sysTagJ) const {
-  return transverseMass(daughterUserCandP4(i, sysTagI),
+  return fshelpers::transverseMass(daughterUserCandP4(i, sysTagI),
       daughterUserCandP4(j, sysTagJ));
 }
 
@@ -391,20 +367,20 @@ PATFinalState::mt(int i, int j) const {
 double PATFinalState::mtMET(int i, const std::string& tag,
     const std::string& metTag) const {
   if (metTag != "") {
-    return transverseMass(daughterUserCandP4(i, tag),
+    return fshelpers::transverseMass(daughterUserCandP4(i, tag),
         met()->userCand(metTag)->p4());
   } else {
-    return transverseMass(daughterUserCandP4(i, tag),
+    return fshelpers::transverseMass(daughterUserCandP4(i, tag),
         met()->p4());
   }
 }
 
 double PATFinalState::mtMET(int i, const std::string& metTag) const {
   if (metTag != "") {
-    return transverseMass(daughterUserCandP4(i, ""),
+    return fshelpers::transverseMass(daughterUserCandP4(i, ""),
         met()->userCand(metTag)->p4());
   } else {
-    return transverseMass(daughterUserCandP4(i, ""), met()->p4());
+    return fshelpers::transverseMass(daughterUserCandP4(i, ""), met()->p4());
   }
 }
 
