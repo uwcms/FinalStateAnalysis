@@ -33,13 +33,19 @@ process.maxEvents = cms.untracked.PSet(
 
 process.load("FinalStateAnalysis.Higgs.emt_ntuple")
 process.load("FinalStateAnalysis.Higgs.mmt_ntuple")
+process.load("FinalStateAnalysis.Higgs.mmm_ntuple")
+process.load("FinalStateAnalysis.Higgs.emm_ntuple")
 
 process.emutaupath = cms.Path(process.emutau)
 process.mumutaupath = cms.Path(process.mumutau)
+process.mumumupath = cms.Path(process.mumumu)
+process.emumupath = cms.Path(process.emumu)
 
 process.schedule = cms.Schedule(
     process.emutaupath,
     process.mumutaupath,
+    process.mumumupath,
+    process.emumupath,
 )
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
