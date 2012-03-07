@@ -71,6 +71,8 @@ class PATFinalStateEvent {
     const edm::Ptr<pat::MET>& met() const;
     /// Get MET covariance
     const TMatrixD& metCovariance() const;
+    /// Get MET significance
+    double metSignificance() const;
     /// Get the event ID
     const edm::EventID& evtId() const;
 

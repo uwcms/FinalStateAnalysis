@@ -1,6 +1,7 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataAlgos/interface/SmartTrigger.h"
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
+#include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
 
@@ -85,6 +86,10 @@ const edm::Ptr<pat::MET>& PATFinalStateEvent::met() const {
 
 const TMatrixD& PATFinalStateEvent::metCovariance() const {
   return metCovariance_;
+}
+
+double PATFinalStateEvent::metSignificance() const {
+  return fshelpers::xySignficance(met_->momentum(), metCovariance_);
 }
 
 const edm::EventID& PATFinalStateEvent::evtId() const {
