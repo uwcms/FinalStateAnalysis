@@ -14,6 +14,8 @@
 #ifndef HELPERS_TAQ1PE50
 #define HELPERS_TAQ1PE50
 
+#include <utility>
+
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "TMatrixD.h"
 
@@ -22,6 +24,10 @@ namespace fshelpers {
 /// Compute the significance of a vector given the covariance
 double xySignficance(const reco::Candidate::Vector& vector,
     const TMatrixD& covariance);
+
+// By C. Veelken - returns pZeta, pZetaVis
+std::pair<double, double> pZeta(const reco::Candidate::LorentzVector& leg1,
+    const reco::Candidate::LorentzVector& leg2, double metPx, double metPy);
 
 }
 

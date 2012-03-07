@@ -2,6 +2,8 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalState.h"
 
+#include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
+
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
@@ -415,14 +417,23 @@ double PATFinalState::ht(const std::string& sysTags) const {
   return output;
 }
 
-double
-PATFinalState::ht() const {
+double PATFinalState::ht() const {
   std::vector<const reco::Candidate*> theDaughters = daughters();
   double output = 0;
   for (size_t i = 0; i < numberOfDaughters(); ++i) {
     output += theDaughters[i]->pt();
   }
   return output;
+}
+
+double PATFinalState::pZeta(int i, int j) const {
+  return fshelpers::pZeta(daughter(i)->p4(), daughter(j)->p4(),
+      met()->px(), met()->py()).first;
+}
+
+double PATFinalState::pZetaVis(int i, int j) const {
+  return fshelpers::pZeta(daughter(i)->p4(), daughter(j)->p4(),
+      met()->px(), met()->py()).second;
 }
 
 std::vector<reco::CandidatePtr> PATFinalState::extras(
