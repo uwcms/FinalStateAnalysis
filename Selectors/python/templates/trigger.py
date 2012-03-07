@@ -11,9 +11,9 @@ Author: Evan K. Friis
 from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 _trig_template = PSet(
-    namePass = 'evt.hltPath("{paths}"),
-    nameGroup = 'evt.hltGroup("{paths}"),
-    nameGroup = 'evt.hltPrescale("{paths}"),
+    namePass = 'evt.hltResult("paths")',
+    nameGroup = 'evt.hltGroup("paths")',
+    namePrescale = 'evt.hltPrescale("paths")',
 )
 
 singlemu = _trig_template.replace(
@@ -37,4 +37,3 @@ mueg = PSet(
         name='mu8ele17',
         paths=r'HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+,HLT_Mu17_Mu8_v\\d+')
 )
-
