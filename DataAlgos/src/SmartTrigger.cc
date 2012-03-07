@@ -14,6 +14,15 @@
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 #include "DataFormats/Luminosity/interface/LumiSummary.h"
 
+// Cache calls to
+// smartTrigger(const std::string& trgs, const pat::TriggerEvent& result)
+// because it is very expensive!
+namespace {
+  // Cache variables
+  static const pat::TriggerEvent * lastTrigEvent = NULL;
+  static std::map<std::string, SmartTriggerResult> cache;
+}
+
 typedef std::vector<std::string> vstring;
 
 // Internal functions
@@ -175,6 +184,17 @@ SmartTriggerResult makeDecision(
 
 SmartTriggerResult
 smartTrigger(const std::string& trgs, const pat::TriggerEvent& result) {
+  // Check if we have cached the result.
+  if (&result != lastTrigEvent) {
+    // new event, clear the cache
+    cache.clear();
+  } else {
+    // If we already have computed these triggers for this event, return it.
+    std::map<std::string, SmartTriggerResult>::iterator findit = cache.find(trgs);
+    if (findit != cache.end())
+      return findit->second;
+  }
+
   // Tokenize the trigger groups
   vstring groups = getGroups(trgs);
   VVInt prescales;
@@ -212,7 +232,12 @@ smartTrigger(const std::string& trgs, const pat::TriggerEvent& result) {
     prescales.push_back(groupPrescale);
     results.push_back(groupResult);
   }
-  return makeDecision(pathGroups, prescales, results);
+  SmartTriggerResult output = makeDecision(pathGroups, prescales, results);
+
+  // update the cache
+  lastTrigEvent = &result;
+  cache[trgs] = output;
+  return output;
 }
 
 SmartTriggerResult
