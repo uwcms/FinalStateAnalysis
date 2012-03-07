@@ -64,6 +64,11 @@ mumu = cms.EDFilter(
                     templates.topology.mtToMET.replace(object='muon1'),
                     templates.topology.mtToMET.replace(object='muon2'),
 
+                    # Triggers
+                    templates.trigger.doublemu,
+                    templates.trigger.isomu,
+                    templates.trigger.singlemu,
+
                     # templates.Mass/DR/Dphi/SS of pairs
                     templates.topology.pairs.replace(object1='muon1', object2='muon2'),
 
