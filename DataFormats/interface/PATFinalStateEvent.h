@@ -102,13 +102,17 @@ class PATFinalStateEvent {
     const std::string& puTag() const;
 
     /// The following allow use of the PileupWeighting feature in DataAlgos
-    /// For the available tags, see DataAlgos/src/PileupWeighting.cc
+    /// For the available tags, see DataAlgos/data/pileup_distributions.py
     /// This version uses the internally stored PU tag
     double puWeight(const std::string& dataTag) const;
 
-    /// The following allow use of the PileupWeighting feature in DataAlgos
-    /// For the available tags, see DataAlgos/src/PileupWeighting.cc
+    /// The following allow use of the PileupWeighting feature in DataAlgos,
+    /// manually specifying which MC tag to use.
     double puWeight(const std::string& dataTag, const std::string& mcTag) const;
+
+    /// Use 3D reweighting, for backwards compatibility.
+    double puWeight3D(const std::string& dataTag) const;
+    double puWeight3D(const std::string& dataTag, const std::string& mcTag) const;
 
     /// Get a named event weight
     float weight(const std::string& name) const;

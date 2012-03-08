@@ -1,120 +1,83 @@
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
-#include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 
-#include "FWCore/Utilities/interface/Exception.h"
 #include "FWCore/ParameterSet/interface/FileInPath.h"
-#include "TH1.h"
-#include "TH3D.h"
-#include "TFile.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/PythonParameterSet/interface/MakeParameterSets.h"
+#include "FWCore/Utilities/interface/Exception.h"
 
-#include <boost/shared_ptr.hpp>
 #include <boost/assign/list_of.hpp>
+#include <boost/shared_ptr.hpp>
 #include <map>
-#include <iostream>
 
-//typedef boost::shared_ptr<TH1> TH1Ptr;
-typedef TH1* TH1Ptr;
+#include "TFile.h"
+#include "TH1.h"
+
+typedef std::map<std::string, boost::shared_ptr<TH1> > DistMap;
 
 namespace {
 
-  TH1Ptr loadAndNormHistogram(const edm::FileInPath& path,
-      const std::string& name="pileup") {
-    TFile file(path.fullPath().c_str(), "READ");
-    TH1Ptr output(static_cast<TH1*>(file.Get(name.c_str())->Clone()));
-    std::cout << "Loading PU histogram from " << path.relativePath();
-    //if (output.get() == NULL) {
-    if (output == NULL) {
-      throw cms::Exception("BadPileupFile")
-        << "The file " << path.fullPath() << " does not contain histogram: "
-        << name << std::endl;
-    }
-    output->SetDirectory(0);
-    std::cout << "... histo normalization = " << output->Integral() << std::endl;
-    // Normalize
-    output->Scale(1.0/output->Integral());
-    return output;
+// MC and data distributions
+static DistMap mcDistributions;
+static DistMap dataDistributions;
+
+// Where we store our data
+const static edm::FileInPath puInfoFile(
+    "FinalStateAnalysis/DataAlgos/data/pileup_distributions.py");
+
+boost::shared_ptr<TH1> loadFromPSet(const std::string& name) {
+  boost::shared_ptr<edm::ParameterSet> toplevel =
+    edm::readPSetsFrom(puInfoFile.fullPath());
+
+  // ROOT file path
+  std::string path = toplevel->getParameter<edm::FileInPath>(name).fullPath();
+
+  TFile file(path.c_str(), "READ");
+
+  TH1* histo = static_cast<TH1*>(file.Get("pileup"));
+
+  if (!histo) {
+    throw cms::Exception("MissingPUHisto")
+      << "I can't read the [pileup] TH1 from " << path << std::endl;
   }
 
-  // Build the list of available MC histos
-  static std::map<std::string, TH1Ptr> mcHistos = boost::assign::map_list_of
-    ("S6", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/RecoTools/data/pu/fall11_mc_truth.3d.root")))
-    ("S4", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/RecoTools/data/pu/summer11_mc_truth.3d.root")));
+  boost::shared_ptr<TH1> owned((TH1*)histo->Clone());
 
-  // Build the list of available data histos
-  static const std::map<std::string, TH1Ptr> dataHistos = boost::assign::map_list_of
-    ("2011B", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/RecoTools/data/pu/allData_2011B_finebin.3d.root")))
-    ("2011A", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/RecoTools/data/pu/allData_2011A_finebin.3d.root")))
-    ("2011AB", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/RecoTools/data/pu/allData_2011AB_finebin.3d.root")));
+  // Make sure it's normalized.
+  owned->Scale(1./owned->Integral());
+  return owned;
+}
+
+double getValue(const boost::shared_ptr<TH1>& histo, double x) {
+  int bin = histo->FindBin(x);
+  return histo->GetBinContent(bin);
+}
 
 } // end anon. namespace
 
-double
-get3DPileupWeight(const std::string& dataTag, const std::string& mcTag,
-    const std::vector<PileupSummaryInfo>& puInfo) {
+double getPileupWeight(const std::string& dataTag, const std::string& mcTag,
+    double nTrueInteractions) {
 
-//  std::cout << "Getting PU weight for " << dataTag << " " << mcTag << std::endl;
-
-  std::map<std::string, TH1Ptr>::const_iterator mcHisto = mcHistos.find(mcTag);
-  if (mcHisto == mcHistos.end()) {
-    throw cms::Exception("WrongPUTag")
-      << "I didn't understand the MC PU tag: " << mcTag << std::endl;
+  DistMap::iterator findMC = mcDistributions.find(mcTag);
+  // load it if we haven't yet.
+  if (findMC == mcDistributions.end()) {
+    mcDistributions.insert(
+        std::make_pair(mcTag, loadFromPSet(mcTag))).second;
+    findMC = mcDistributions.find(mcTag);
   }
 
-  std::map<std::string, TH1Ptr>::const_iterator dataHisto = dataHistos.find(dataTag);
-  if (dataHisto == dataHistos.end()) {
-    throw cms::Exception("WrongPUTag")
-      << "I didn't understand the data PU tag: " << dataTag << std::endl;
+  DistMap::iterator findData = dataDistributions.find(dataTag);
+  // load it if we haven't yet.
+  if (findData == dataDistributions.end()) {
+    dataDistributions.insert(
+        std::make_pair(dataTag, loadFromPSet(dataTag))).second;
+    findData = dataDistributions.find(dataTag);
   }
 
-  int npm1=-1;
-  int np0=-1;
-  int npp1=-1;
+  double dataWeight = getValue(findData->second, nTrueInteractions);
+  double mcWeight = getValue(findMC->second, nTrueInteractions);
 
-  for(std::vector<PileupSummaryInfo>::const_iterator PVI = puInfo.begin();
-      PVI != puInfo.end(); ++PVI) {
+  if (mcWeight == 0)
+    return 0;
 
-    int BX = PVI->getBunchCrossing();
-
-    if(BX == -1) {
-      npm1 = PVI->getPU_NumInteractions();
-    }
-    if(BX == 0) {
-      np0 = PVI->getPU_NumInteractions();
-    }
-    if(BX == 1) {
-      npp1 = PVI->getPU_NumInteractions();
-    }
-
-  }
-
-  npm1 = std::min(npm1,49);
-  np0 = std::min(np0,49);
-  npp1 = std::min(npp1,49);
-
-//  std::cout << "bins: " << npm1 << " " << np0 << " " << npp1 << std::endl;
-
-  assert(npm1 != -1);
-  assert(np0 != -1);
-  assert(npp1 != -1);
-
-  assert(mcHisto->second);
-  assert(dataHisto->second);
-
-  TH3D* mcHisto3D = dynamic_cast<TH3D*>(mcHisto->second);
-  TH3D* dataHisto3D = dynamic_cast<TH3D*>(dataHisto->second);
-
-  assert(mcHisto3D);
-  assert(dataHisto3D);
-
-//  std::cout << "MC" << mcHisto3D << std::endl;
-//  std::cout << "data" << dataHisto3D << std::endl;
-
-  double mcProb = mcHisto3D->GetBinContent(npm1+1, np0+1, npp1+1);
-  double dataProb = dataHisto3D->GetBinContent(npm1+1, np0+1, npp1+1);
-
-  if (mcProb <= 0.) {
-    return 0.;
-  }
-
-  return dataProb/mcProb;
+  return dataWeight/mcWeight;
 }

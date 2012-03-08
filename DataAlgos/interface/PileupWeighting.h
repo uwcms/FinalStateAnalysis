@@ -12,11 +12,8 @@
  */
 
 #include <string>
-#include <vector>
 
-class PileupSummaryInfo;
-
-/// Get the 3D pileup weight using the given data and MC scenarios
-/// See the src file for available data and MC tags
-double get3DPileupWeight(const std::string& dataTag, const std::string& mcTag,
-    const std::vector<PileupSummaryInfo>& puInfo);
+/// See the data and MC tags must be defined in
+/// DataAlgos/data/pileup_distributions.py
+double getPileupWeight(const std::string& dataTag, const std::string& mcTag,
+    double nTrueInteractions);

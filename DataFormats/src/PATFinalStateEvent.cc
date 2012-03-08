@@ -145,15 +145,29 @@ const std::string& PATFinalStateEvent::puTag() const {
 double PATFinalStateEvent::puWeight(const std::string& dataTag) const {
   if (isRealData_)
     return 1.;
-  return get3DPileupWeight(dataTag, puTag(), puInfo_);
+  return this->puWeight(dataTag, puTag());
 }
 
 double PATFinalStateEvent::puWeight(const std::string& dataTag,
     const std::string& mcTag) const {
   if (isRealData_)
     return 1.;
-  return get3DPileupWeight(dataTag, mcTag, puInfo_);
+  return getPileupWeight(dataTag, mcTag, puInfo_[1].getTrueNumInteractions());
 }
+
+double PATFinalStateEvent::puWeight3D(const std::string& dataTag) const {
+  if (isRealData_)
+    return 1.;
+  return 1.; // todo
+}
+
+double PATFinalStateEvent::puWeight3D(const std::string& dataTag,
+    const std::string& mcTag) const {
+  if (isRealData_)
+    return 1.;
+  return 1.; // todo
+}
+
 
 float PATFinalStateEvent::weight(const std::string& name) const {
   typedef std::map<std::string, float> WeightMap;
