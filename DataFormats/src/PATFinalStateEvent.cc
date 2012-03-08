@@ -1,6 +1,7 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataAlgos/interface/SmartTrigger.h"
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
+#include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting3D.h"
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
@@ -158,14 +159,14 @@ double PATFinalStateEvent::puWeight(const std::string& dataTag,
 double PATFinalStateEvent::puWeight3D(const std::string& dataTag) const {
   if (isRealData_)
     return 1.;
-  return 1.; // todo
+  return this->puWeight3D(dataTag, puTag());
 }
 
 double PATFinalStateEvent::puWeight3D(const std::string& dataTag,
     const std::string& mcTag) const {
   if (isRealData_)
     return 1.;
-  return 1.; // todo
+  return get3DPileupWeight(dataTag, mcTag, puInfo_);
 }
 
 
