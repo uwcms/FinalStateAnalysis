@@ -11,3 +11,7 @@ hadd -f allData_2011B_pileupTruth_v2_finebin.root \
   Cert_177718_178078_7TeV_PromptReco_Collisons11_JSON.pileupTruth_v2_finebin.root \
   Cert_177878-179431_7TeV_PromptReco_Collisions11_JSON.pileupTruth_v2_finebin.root \
   Cert_178098-180252_7TeV_PromptReco_Collisions11_JSON.pileupTruth_v2_finebin.root
+
+ hadd -f allData_2011AB_pileupTruth_v2_finebin.root \
+   allData_2011A_pileupTruth_v2_finebin.root \
+   allData_2011B_pileupTruth_v2_finebin.root
