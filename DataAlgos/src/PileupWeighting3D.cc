@@ -37,14 +37,14 @@ namespace {
 
   // Build the list of available MC histos
   static std::map<std::string, TH1Ptr> mcHistos = boost::assign::map_list_of
-    ("S6", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/RecoTools/data/pu/fall11_mc_truth.3d.root")))
-    ("S4", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/RecoTools/data/pu/summer11_mc_truth.3d.root")));
+    ("S6", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/fall11_mc_truth.3d.root")))
+    ("S4", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/summer11_mc_truth.3d.root")));
 
   // Build the list of available data histos
   static const std::map<std::string, TH1Ptr> dataHistos = boost::assign::map_list_of
-    ("2011B", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/RecoTools/data/pu/allData_2011B_finebin.3d.root")))
-    ("2011A", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/RecoTools/data/pu/allData_2011A_finebin.3d.root")))
-    ("2011AB", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/RecoTools/data/pu/allData_2011AB_finebin.3d.root")));
+    ("2011B", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011B_finebin.3d.root")))
+    ("2011A", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011A_finebin.3d.root")))
+    ("2011AB", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011AB_finebin.3d.root")));
 
 } // end anon. namespace
 
