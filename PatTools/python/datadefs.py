@@ -365,6 +365,73 @@ datadefs = {
         'analyses' : ['VH'],
     },
 
+    'WH_110_HWW3l' : {
+        'datasetpath' : "/WH_HToWW_3l_M-110_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 0.8754*_picobarns*4.82E-02,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+    'WH_115_HWW3l' : {
+        'datasetpath' : "/WH_HToWW_3l_M-115_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 0.7546*_picobarns*8.67E-02,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+    'WH_120_HWW3l' : {
+        'datasetpath' : "/WH_HToWW_3l_M-120_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 0.6561*_picobarns*1.43E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+    'WH_125_HWW3l' : {
+        'datasetpath' : "/WH_HToWW_3l_M-125_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 0.5729*_picobarns*2.16E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+    'WH_130_HWW3l' : {
+        'datasetpath' : "/WH_HToWW_3l_M-130_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 0.5008*_picobarns*3.05E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+    'WH_135_HWW3l' : {
+        'datasetpath' : "/WH_HToWW_3l_M-135_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 0.4390*_picobarns*4.03E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+    'WH_140_HWW3l' : {
+        'datasetpath' : "/WH_HToWW_3l_M-140_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 0.3857*_picobarns*5.03E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+    'WH_145_HWW3l' : {
+        'datasetpath' : "/WH_HToWW_3l_M-145_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 0.3406*_picobarns*6.02E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+    'WH_150_HWW3l' : {
+        'datasetpath' : "/WH_HToWW_3l_M-150_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 0.3001*_picobarns*6.98E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+    'WH_155_HWW3l' : {
+        'datasetpath' : "/WH_HToWW_3l_M-155_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 0.2646*_picobarns*7.95E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+    'WH_160_HWW3l' : {
+        'datasetpath' : "/WH_HToWW_3l_M-160_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 0.2291*_picobarns*9.08E-01,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+
     ############################################################################
     #### Obscure VH backgrounds             ####################################
     ############################################################################
