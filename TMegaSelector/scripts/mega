@@ -49,6 +49,9 @@ if __name__ == "__main__":
                         choices=['TMegaPySelector', 'TPySelecor', 'TSelector'],
                         default='TMegaPySelector', help='Selector type')
 
+    parser.add_argument('--local', action='store_const', const=True, 
+                        default=False, help='Test locally, not on proof')
+
     args = parser.parse_args(args[1:])
 
     log.info("Creating PROOF session with %i workers" % args.workers)
@@ -107,7 +110,20 @@ if __name__ == "__main__":
                 % (class_name, class_name))
             sys.exit(7)
 
-        proof.Process(datastring, args.type, class_name)
+        if not args.local:
+            log.info("Sending Process() command to proof")
+            proof.Process(datastring, args.type, class_name)
+        else:
+            log.warning("Running locally!  I won't save any output.")
+            chain = ROOT.TChain(args.tree)
+            for file in dataset.GetList():
+                log.debug("Adding file: %s", file)
+                chain.Add(file.GetFirstUrl().GetUrl())
+            log.info("Processing chain")
+            ret = chain.Process(args.type, class_name)
+            log.info("Chain processing completed with status: %i", ret)
+            sys.exit(ret)
+
     else:
         # Process as ACliC TSelector macro
         proof.Process(datastring, args.selector + '+')
