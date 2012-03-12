@@ -15,3 +15,5 @@ do_*.txt
 *\.card
 recipe/external/*
 docs/build/*
+*.d
+*.so
