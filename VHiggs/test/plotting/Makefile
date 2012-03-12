@@ -107,7 +107,7 @@ extensions_shape_file=wh_shapes_sm4_ff.root
 shape_file=vhtt_shapes.root
 # Mass points to run limits on
 #masspoints=100 110 120 130 140 150 160 
-masspoints=100 110 120 130 140 
+masspoints=110 120 130 140 
 # Exclusion range to use when building CLs grid
 min_cls="0.2"
 max_cls="70"
