@@ -22,6 +22,7 @@ class MegaPySelector(TMegaPySelector):
         return 2
 
     def make_cut(self, selection, branch, op, value):
+        # Currently broken
         if not self.chain:
             raise RuntimeError(
                 "You can't call make_cut before Init(...),"
@@ -44,3 +45,4 @@ class MegaPySelector(TMegaPySelector):
         else:
             raise TypeError("I can't figure out the type of the branch!"
                             " The title is: " + tbranch.GetTitle())
+
