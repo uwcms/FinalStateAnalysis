@@ -20,9 +20,9 @@ ROOT.gSystem.AddIncludePath('-IHCSaW/Higgs_CS_and_Width_Fermiophobic/include')
 ROOT.gSystem.AddIncludePath('-IHCSaW/Higgs_CS_and_Width/include')
 ROOT.gSystem.AddIncludePath('-IHCSaW/Higgs_CS_and_Width_SM4/include')
 
-ROOT.gROOT.ProcessLine('.L HCSaW/Higgs_CS_and_Width_SM4/src/HiggsCSandWidthSM4.cc+')
-ROOT.gROOT.ProcessLine('.L HCSaW/Higgs_CS_and_Width/src/HiggsCSandWidth.cc+')
-ROOT.gROOT.ProcessLine('.L HCSaW/Higgs_CS_and_Width_Fermiophobic/src/HiggsCSandWidthFermi.cc+')
+ROOT.gROOT.ProcessLine('.L HCSaW/Higgs_CS_and_Width_SM4/src/HiggsCSandWidthSM4.cc++')
+ROOT.gROOT.ProcessLine('.L HCSaW/Higgs_CS_and_Width/src/HiggsCSandWidth.cc++')
+ROOT.gROOT.ProcessLine('.L HCSaW/Higgs_CS_and_Width_Fermiophobic/src/HiggsCSandWidthFermi.cc++')
 
 # Define the lookup tables
 _sm = ROOT.HiggsCSandWidth();
