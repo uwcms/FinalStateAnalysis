@@ -40,6 +40,9 @@ class MegaMerger(multiprocessing.Process):
         while proc.returncode is None:
             _, stderr = proc.communicate()
         self.log.info("Merge completed with exit code: %i", proc.returncode)
+        # Cleanup
+        for file in files:
+            os.remove(file)
         return proc.returncode
 
     def run(self):
