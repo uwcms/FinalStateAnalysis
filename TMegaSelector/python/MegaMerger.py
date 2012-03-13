@@ -47,7 +47,7 @@ class MegaMerger(multiprocessing.Process):
 
     def run(self):
         # ignore sigterm signal and let parent take care of this
-        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        #signal.signal(signal.SIGINT, signal.SIG_IGN)
         while True:
             # Check if we are done merging
             done = False
