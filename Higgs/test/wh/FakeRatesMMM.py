@@ -8,6 +8,7 @@ for the mu-fake rate in Z->mu mu events.
 import ROOT
 
 from FinalStateAnalysis.TMegaSelector.megautil import MetaTree
+from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
 
 meta = MetaTree()
 
@@ -42,14 +43,13 @@ base_selections = [
     meta.muon3DZ < 0.2,
 ]
 
-class FakeRatesMMM(object):
+class FakeRatesMMM(MegaBase):
     def __init__(self, tree, output, **kwargs):
-        self.tree = tree
-        self.output = output
-        self.opts = kwargs
-        self.output.cd()
-        self.histo = ROOT.TH1F("adsf", "adsf", 100, 0, 100)
-        self.histo.SetDirectory(self.output)
+        super(FakeRatesMMM, self).__init__(tree, output, **kwargs)
+        self.book('pass', 'Zmass', 'Mass of Z muons', 60, 60, 120)
+        self.book('pass', 'MuJetPt', 'Muon Jet Pt', 100, 0, 200)
+        self.book('all', 'Zmass', 'Mass of Z muons', 60, 60, 120)
+        self.book('all', 'MuJetPt', 'Muon Jet Pt', 100, 0, 200)
 
     def process(self, entry):
         tree = self.tree
@@ -57,9 +57,16 @@ class FakeRatesMMM(object):
         for selection in base_selections:
             if not selection(tree):
                 return True
+        histograms = self.histograms
 
-        self.histo.Fill(tree.muon1_muon2_Mass)
+        histograms['all/Zmass'].Fill(tree.muon1_muon2_Mass)
+        histograms['all/MuJetPt'].Fill(tree.muon3JetPt)
+
+        if tree.muon3WWID > 0.5 and tree.muon3RelPFIsoDB < 0.3:
+            histograms['pass/Zmass'].Fill(tree.muon1_muon2_Mass)
+            histograms['pass/MuJetPt'].Fill(tree.muon3JetPt)
 
         return True
+
     def finish(self):
-        self.histo.Write()
+        self.write_histos()
