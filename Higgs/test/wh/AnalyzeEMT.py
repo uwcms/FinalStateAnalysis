@@ -1,7 +1,7 @@
 import ROOT
 
 from FinalStateAnalysis.TMegaSelector.megautil import MetaTree
-from FinalStateAnalysis.TMegaSelector.megaselect import MegaPySelector
+from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
 
 meta = MetaTree()
 
@@ -55,34 +55,22 @@ mu_id = [
     meta.muWWID > 0.5,
 ]
 
-class AnalyzeEMT(MegaPySelector):
+class AnalyzeEMT(MegaBase):
 
-    def __init__(self):
-        super(AnalyzeEMT, self).__init__()
+    def __init__(self, tree, output, **kwargs):
+        super(AnalyzeEMT, self).__init__(tree, output, **kwargs)
+        self.book('final', 'MuPt', "Muon Pt", 100, 0, 100)
 
-    def Version(self):
-        return 1
-
-    def MegaSlaveBegin(self, tree):
-        # Book histograms
-        self.MuPt = ROOT.TH1F("MuPt", "MuPt", 200, 0, 200)
-        self.DisableBranch('*')
-        for branch in meta.active_branches():
-            self.EnableBranch(branch)
-        return True
-
-    def MegaProcess(self, entry):
-        tree = self.chain
+    def process(self, entry):
+        tree = self.tree
         read = tree.GetEntry(entry)
 
         # Check if we pass the base selection
-        for select in base_selections:
-            if not select(tree):
-                return True
+        if not all(select(tree) for select in base_selections):
+            return True
 
-        self.MuPt.Fill(tree.muonPt)
+        self.histograms['final/MuPt'].Fill(tree.muonPt)
         return True
 
-    def MegaSlaveTerminate(self):
-        self.AddToOutput(self.MuPt)
-        return True
+    def finish(self):
+        self.write_histos()
