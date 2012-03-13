@@ -1,7 +1,7 @@
 '''
 
 Analysis class for selecting the numerator and denominators
-for the mu-fake rate in Z->mu mu events.
+for the e-fake rate in Z->mu mu events.
 
 '''
 
@@ -21,10 +21,6 @@ base_selections = [
     meta.muon1WWID > 0.5,
     meta.muon2WWID > 0.5,
 
-    # Now require that the first two muons make the best Z
-    meta.muon1_muon2_Zcompat < meta.muon1_muon3_Zcompat,
-    meta.muon1_muon2_Zcompat < meta.muon2_muon3_Zcompat,
-
     # Make sure the muons are within 10 GeV of the Z
     meta.muon1_muon2_Zcompat < 10,
 
@@ -43,18 +39,18 @@ base_selections = [
     # Make sure they all come from the same vertex
     meta.muon1DZ < 0.2,
     meta.muon2DZ < 0.2,
-    meta.muon3DZ < 0.2,
+    meta.electronDZ < 0.2,
 ]
 
 variables = [
     ('Zmass', 'Mass of Z muons', 60, 60, 120),
-    ('muonJetPt', 'Mu Jet Pt', 60, 60, 120),
-    ('muonPt', 'Mu Pt', 60, 60, 120),
+    ('electronJetPt', 'Electron Jet Pt', 60, 60, 120),
+    ('electronPt', 'Electron Pt', 60, 60, 120),
 ]
 
-class FakeRatesMMM(MegaBase):
+class FakeRatesMME(MegaBase):
     def __init__(self, tree, output, **kwargs):
-        super(FakeRatesMMM, self).__init__(tree, output, **kwargs)
+        super(FakeRatesMME, self).__init__(tree, output, **kwargs)
         for var in variables:
             self.book('pass', *var)
             self.book('all', *var)
@@ -68,13 +64,13 @@ class FakeRatesMMM(MegaBase):
         histograms = self.histograms
 
         histograms['all/Zmass'].Fill(tree.muon1_muon2_Mass)
-        histograms['all/muonJetPt'].Fill(tree.muon3JetPt)
-        histograms['all/muonPt'].Fill(tree.muon3Pt)
+        histograms['all/electronJetPt'].Fill(tree.electronJetPt)
+        histograms['all/electronPt'].Fill(tree.electronPt)
 
-        if tree.muon3WWID > 0.5 and tree.muon3RelPFIsoDB < 0.3:
+        if tree.electronMITID > 0.5 and tree.electronRelPFIsoDB < 0.3:
             histograms['pass/Zmass'].Fill(tree.muon1_muon2_Mass)
-            histograms['pass/muonJetPt'].Fill(tree.muon3JetPt)
-            histograms['pass/muonPt'].Fill(tree.muon3Pt)
+            histograms['pass/electronJetPt'].Fill(tree.electronJetPt)
+            histograms['pass/electronPt'].Fill(tree.electronPt)
 
         return True
 
