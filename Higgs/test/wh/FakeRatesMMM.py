@@ -8,16 +8,15 @@ for the mu-fake rate in Z->mu mu events.
 import ROOT
 
 from FinalStateAnalysis.TMegaSelector.megautil import MetaTree
-from FinalStateAnalysis.TMegaSelector.megaselect import MegaPySelector
 
 meta = MetaTree()
 
 base_selections = [
-    meta.doubleMu > 0.5,
+    #meta.doublemu > 0.5,
     meta.muon1Pt > 20,
     meta.muon2Pt > 10,
-    meta.muon1RelIso < 0.15,
-    meta.muon2RelIso < 0.15,
+    meta.muon1RelPFIsoDB < 0.15,
+    meta.muon2RelPFIsoDB < 0.15,
     meta.muon1WWID > 0.5,
     meta.muon2WWID > 0.5,
 
@@ -43,11 +42,24 @@ base_selections = [
     meta.muon3DZ < 0.2,
 ]
 
-class FakeRatesMMM(MegaPySelector):
-    def __init__(self):
-        super(FakeRatesMMM, self).__init__()
+class FakeRatesMMM(object):
+    def __init__(self, tree, output, **kwargs):
+        self.tree = tree
+        self.output = output
+        self.opts = kwargs
+        self.output.cd()
+        self.histo = ROOT.TH1F("adsf", "adsf", 100, 0, 100)
+        self.histo.SetDirectory(self.output)
 
-    def Version(self):
-        return 1
+    def process(self, entry):
+        tree = self.tree
+        read = tree.GetEntry(entry)
+        for selection in base_selections:
+            if not selection(tree):
+                return True
 
-    def MegaSlaveBegin(self, tree):
+        self.histo.Fill(tree.muon1_muon2_Mass)
+
+        return True
+    def finish(self):
+        self.histo.Write()

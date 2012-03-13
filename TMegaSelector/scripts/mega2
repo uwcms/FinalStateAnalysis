@@ -1,0 +1,90 @@
+#!/usr/bin/env python
+
+'''
+
+Command Line tool to run a python selector on a datasets
+
+Author: Evan K. Friis, UW Madison
+
+'''
+
+from RecoLuminosity.LumiDB import argparse
+import logging
+import multiprocessing
+import os
+import sys
+from FinalStateAnalysis.TMegaSelector.Dispatcher import MegaDispatcher
+
+logger = multiprocessing.log_to_stderr()
+
+parser = argparse.ArgumentParser()
+# Don't let ROOT get at these
+args = sys.argv[:]
+sys.argv = []
+
+import ROOT
+
+# Setup log
+log = logging.getLogger("mega")
+logging.basicConfig(level=logging.INFO)
+
+
+if __name__ == "__main__":
+
+    parser.add_argument('selector', metavar='selector', type=str, 
+                        help='Path to TPySelector module')
+
+    parser.add_argument('dataset', metavar='dataset', type=str, 
+                        help='Dataset to process (registered with PROOF)')
+
+    parser.add_argument('tree', metavar='tree', type=str, 
+                        help='Path to TTree in data files (Ex: /my/dir/myTree)')
+
+    parser.add_argument('output', metavar='output', 
+                        type=str, help='Output root file')
+
+    parser.add_argument('--workers', type=int, required=False,
+                        default = 4, help='Number of worker processes (def: 4)')
+
+    parser.add_argument('-d', '--dir', type=str, required=False,
+                        default='', help='Save results in [dir]')
+
+    parser.add_argument('--verbose', action='store_const', const=True,
+                        default=False, help='Print debug output')
+
+    args = parser.parse_args(args[1:])
+
+    if args.verbose:
+        logging.info("Increasing verbosity...")
+        log.setLevel(logging.DEBUG)
+
+    log.info("Creating PROOF session with %i workers" % args.workers)
+    proof = ROOT.TProof.Open('workers=%i' % args.workers)
+
+
+    log.info("Checking dataset %s exists..." % args.dataset)
+    # Get the dataset to make sure it exists
+    if not proof.ExistsDataSet(args.dataset):
+        log.error(
+            "Error: dataset %s is not known to PROOF, you must register it.\n" %
+            args.dataset)
+        sys.exit(5)
+    dataset = proof.GetDataSet(args.dataset)
+    log.info("Dataset %s has %i files", args.dataset, dataset.GetNFiles())
+
+    path_to_selector = os.path.dirname(os.path.abspath(args.selector))
+    module_name = os.path.basename(args.selector)
+    class_name = module_name.replace('.py', '')
+    log.info("Importing class %s from %s", class_name, path_to_selector)
+
+    module = __import__(class_name, fromlist=[class_name])
+    selector = getattr(module, class_name)
+    log.info("Selector class: %s", selector)
+
+    files = []
+    for file in dataset.GetList():
+        log.debug("Adding file: %s", file)
+        files.append(file.GetFirstUrl().GetUrl())
+
+    dispatch = MegaDispatcher(files, args.tree, args.output, selector, 3)
+    dispatch.run()
