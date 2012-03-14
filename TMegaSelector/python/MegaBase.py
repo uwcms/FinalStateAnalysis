@@ -8,6 +8,17 @@ import os
 import multiprocessing
 import ROOT
 
+def make_dirs(base_dir, subdirs):
+    ''' Make the directory structure.  Subdirs is a list '''
+    if not subdirs:
+        return base_dir
+    next_folder = subdirs.pop(0)
+    if base_dir.Get(next_folder):
+        return make_dirs(base_dir.Get(next_folder), subdirs)
+    else:
+        new_dir = base_dir.mkdir(next_folder)
+        return make_dirs(new_dir, subdirs)
+
 class MegaBase(object):
     log = multiprocessing.get_logger()
     def __init__(self, tree, output, **kwargs):
@@ -29,9 +40,8 @@ class MegaBase(object):
         '''
         self.log.debug("booking %s at %s", name, location)
 
-        directory = self.output.Get(location)
-        if not directory:
-            directory = self.output.mkdir(location)
+        directory = make_dirs(self.output, location.split('/'))
+
         directory.cd()
         the_type = kwargs.get('type', ROOT.TH1F)
         object = the_type(name, *args)
