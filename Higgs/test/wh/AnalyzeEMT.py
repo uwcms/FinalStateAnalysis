@@ -1,5 +1,7 @@
 import ROOT
 
+import os
+
 from FinalStateAnalysis.TMegaSelector.megautil import MetaTree
 from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
 
@@ -8,6 +10,7 @@ meta = MetaTree()
 base_selections = [
     meta.muonPt > 20,
     meta.electronPt > 10,
+    meta.tauDecayFinding > 0.5,
     meta.tauPt > 20,
     #meta.mu17ele8 > 0.5,
     meta.tauAbsEta < 2.3,
@@ -41,7 +44,6 @@ base_selections = [
 
 
 hadronic_tau_id = [
-    meta.tauDecayFinding > 0.5,
     meta.tauLooseIso > 0.5,
 ]
 
@@ -51,15 +53,35 @@ e_id = [
 ]
 
 mu_id = [
-    meta.muonRelIso < 0.3,
-    meta.muWWID > 0.5,
+    meta.muonRelPFIsoDB < 0.3,
+    meta.muonWWID > 0.5,
 ]
+
+histograms = [
+    (lambda x: x.muonPt, 'muonPt', 'Muon pt', 100, 0, 100),
+    (lambda x: x.muonAbsEta, 'muonAbsEta', 'Muon |#eta|', 100, 0, 100),
+]
+
+def muon_fake_weight(x):
+    return 1
+def electron_fake_weight(x):
+    return 1
 
 class AnalyzeEMT(MegaBase):
 
     def __init__(self, tree, output, **kwargs):
         super(AnalyzeEMT, self).__init__(tree, output, **kwargs)
-        self.book('final', 'MuPt', "Muon Pt", 100, 0, 100)
+        for histogram in histograms:
+            self.book('muon_fakes', *histogram[1:])
+            self.book('electron_fakes', *histogram[1:])
+            self.book('double_fakes', *histogram[1:])
+            self.book('triple_fakes', *histogram[1:])
+            # Histograms w/o weights
+            self.book('muon_fakes_nowt', *histogram[1:])
+            self.book('electron_fakes_nowt', *histogram[1:])
+            self.book('double_fakes_nowt', *histogram[1:])
+            self.book('triple_fakes_nowt', *histogram[1:])
+            self.book('final', *histogram[1:])
 
     def process(self, entry):
         tree = self.tree
@@ -69,7 +91,42 @@ class AnalyzeEMT(MegaBase):
         if not all(select(tree) for select in base_selections):
             return True
 
-        self.histograms['final/MuPt'].Fill(tree.muonPt)
+        # figure out which objects pass
+        passes_tau_id = all(select(tree) for select in hadronic_tau_id)
+        passes_mu_id = all(select(tree) for select in mu_id)
+        passes_e_id = all(select(tree) for select in e_id)
+
+        category = (passes_mu_id, passes_e_id, passes_tau_id)
+
+        if category == (True, True, True):
+            for histo in histograms:
+                value = histo[0](tree)
+                self.histograms[os.path.join('final', histo[1])].Fill(value)
+        elif category == (False, True, True):
+            for histo in histograms:
+                value = histo[0](tree)
+                self.histograms[
+                    os.path.join('muon_fakes_nowt', histo[1])].Fill(value)
+                weight = muon_fake_weight(tree.muonPt)
+                self.histograms[
+                    os.path.join('muon_fakes', histo[1])].Fill(value, weight)
+        elif category == (True, False, True):
+            for histo in histograms:
+                value = histo[0](tree)
+                self.histograms[
+                    os.path.join('electron_fakes_nowt', histo[1])].Fill(value)
+                weight = electron_fake_weight(tree.electronPt)
+                self.histograms[
+                    os.path.join('electron_fakes', histo[1])].Fill(value, weight)
+        elif category == (False, False, True):
+            for histo in histograms:
+                value = histo[0](tree)
+                self.histograms[
+                    os.path.join('double_fakes_nowt', histo[1])].Fill(value)
+                weight = electron_fake_weight(tree.electronPt)*muon_fake_weight(tree.muonPt)
+                self.histograms[
+                    os.path.join('double_fakes', histo[1])].Fill(value, weight)
+
         return True
 
     def finish(self):
