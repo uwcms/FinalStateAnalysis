@@ -57,5 +57,6 @@ class MegaDispatcher(object):
         self.log.info("Waiting for merge jobs to complete")
 
         # Require the merger to finish
-        result_q.join()
+        #result_q.join()
+        merger.join()
         self.log.info("All merge jobs have completed.")
