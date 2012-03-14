@@ -32,7 +32,6 @@ class MegaWorker(multiprocessing.Process):
         signal.signal(signal.SIGINT, signal.SIG_IGN)
         while True:
             to_process = self.input.get()
-            self.input.task_done()
             # Poison pill
             if to_process is None:
                 self.log.info("Got poison pill - shutting down")

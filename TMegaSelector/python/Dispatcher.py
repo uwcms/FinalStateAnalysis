@@ -18,14 +18,14 @@ class MegaDispatcher(object):
         self.nworkers = nworkers
 
     def run(self):
-        input_q = multiprocessing.JoinableQueue()
+        input_q = multiprocessing.Queue()
         # add the files to be processed
         self.log.info("Putting %i files into the process queue",
                       len(self.files))
         for file in self.files:
             input_q.put(file)
 
-        result_q = multiprocessing.JoinableQueue()
+        result_q = multiprocessing.Queue()
 
         workers = [
             MegaWorker(input_q, result_q, self.treename, self.selector)
@@ -38,6 +38,7 @@ class MegaDispatcher(object):
             worker.start()
             # Add poison pill for this worker
             input_q.put(None)
+        input_q.close()
 
         self.log.info("Started %i workers", len(workers))
 
@@ -56,6 +57,7 @@ class MegaDispatcher(object):
 
         # Add a poison pill at the end of the results
         result_q.put(None)
+        result_q.close()
 
         self.log.info("Waiting for merge jobs to complete")
 

@@ -56,7 +56,6 @@ class MegaMerger(multiprocessing.Process):
                     self.log.debug("trying to get")
                     to_merge = self.input.get(timeout=2)
                     self.log.debug("got %s", to_merge)
-                    self.input.task_done()
                     # Check for poison pill
                     if to_merge is None:
                         self.log.info("Got poison pill - shutting down")
