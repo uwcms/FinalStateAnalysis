@@ -17,6 +17,8 @@ mkdir -p $OUTPUTDIR
 for sampledir in `ls -d $hdfs/$JOBID/*`
 do
   sample=`basename $sampledir`
-  echo "Getting data files for $sample"
+  echo -n "Getting data files for $sample - got "
   ls $sampledir/*/*root | sed "s|^|file:|" > $OUTPUTDIR/${sample}.txt
+  echo -n `cat $OUTPUTDIR/${sample}.txt | wc -l `
+  echo " files"
 done
