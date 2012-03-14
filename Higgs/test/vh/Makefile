@@ -69,9 +69,11 @@ mm_fake_jobs=$(patsubst %, results/fake_rates/mu/%.mm.root, \
 
 muon_fake_rates: $(mmm_fake_jobs) $(mm_fake_jobs)
 
-emm_fake_jobs=$(patsubst %, results/fake_rates/mu/%.mmm.root, \
+emm_fake_jobs=$(patsubst %, results/fake_rates/e/%.emm.root, \
 	$(sm_backgrounds) $(mueg_samples))
 
+em_fake_jobs=$(patsubst %, results/fake_rates/e/%.em.root, \
+	$(sm_backgrounds) $(mueg_samples))
 
-doot:
-	echo $(mmm_fake_jobs)
+electron_fake_rates: $(emm_fake_jobs) $(em_fake_jobs)
+

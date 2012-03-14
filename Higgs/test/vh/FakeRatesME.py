@@ -13,10 +13,10 @@ from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
 meta = MetaTree()
 
 base_selections = [
-    meta.mu17ele8 > 0.5,
+    #meta.mu17ele8 > 0.5,
     meta.muonPt > 25,
     meta.muonWWID > 0.5,
-    meta.muon_electron_SS > 0.5,
+    meta.electron_muon_SS > 0.5,
 
     meta.muonAbsEta < 2.1,
 
@@ -34,7 +34,7 @@ base_selections = [
 # Selections to get Wjets
 wselections = [
     meta.muonRelPFIsoDB < 0.15,
-    meta.muonMtToMET > 40,
+    #meta.muonMtToMET > 40,
 ]
 
 qcdselections = [
