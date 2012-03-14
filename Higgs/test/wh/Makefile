@@ -1,6 +1,6 @@
 
 # Job ID that produced the ntuples
-ntuple_source=2012-03-09-Test
+trilepton_source=2012-03-14-Trileptons
 
 dilepton_ntuple_source=2012-03-09-Test
 
@@ -8,15 +8,15 @@ mega=$(fsa)/TMegaSelector/scripts/mega2
 
 # Target to make EMT plots
 
-emt_analysis: results/analysis/WZ.emt.root
+emt_analysis: results/analysis/data_MuEG_Run2011B_PromptReco_v1.emt.root
 
 ################################################################################
 ## Define rules to make make things ############################################
 ################################################################################
 
 # Run the EMT analysis
-results/analysis/%.emt.root: AnalyzeEMT.py inputs/$(ntuple_source)/%.txt
-	$(mega) $^ /emutau/final/Ntuple $@
+results/analysis/%.emt.root: AnalyzeEMT.py inputs/$(trilepton_source)/%.txt
+	$(mega) $^ /emutau/final/Ntuple $@ 
 
 # Make num/denom for jet->mu fake rate in MMM events
 results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(dilepton_ntuple_source)/%.txt
