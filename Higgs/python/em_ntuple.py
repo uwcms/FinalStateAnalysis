@@ -62,6 +62,7 @@ emu = cms.EDFilter(
                     # Basic info about the final state
                     templates.topology.finalstate,
                     templates.topology.mtToMET.replace(object='electron'),
+                    templates.topology.mtToMET.replace(object='muon'),
 
                     # Triggers
                     templates.trigger.mueg,
