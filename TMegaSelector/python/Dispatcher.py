@@ -48,7 +48,10 @@ class MegaDispatcher(object):
         self.log.info("Started the merger process")
 
         # Require all the workers to finish
-        input_q.join()
+        #input_q.join()
+        for worker in workers:
+            worker.join()
+
         self.log.info("All process jobs have completed.")
 
         # Add a poison pill at the end of the results
