@@ -13,7 +13,7 @@ from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
 meta = MetaTree()
 
 base_selections = [
-    meta.doublemu > 0.5,
+    #meta.doublemu > 0.5,
     meta.muon1Pt > 20,
     meta.muon2Pt > 10,
     meta.muon1WWID > 0.5,
@@ -76,14 +76,14 @@ class FakeRatesMM(MegaBase):
         if all(selection(tree) for selection in wselections):
             histograms['wjets/all/muonJetPt'].Fill(tree.muon2JetPt)
             histograms['wjets/all/muonPt'].Fill(tree.muon2Pt)
-            if passes_eid:
+            if passes_muid:
                 histograms['wjets/all/muonJetPt'].Fill(tree.muon2JetPt)
                 histograms['wjets/all/muonPt'].Fill(tree.muon2Pt)
 
         if all(selection(tree) for selection in qcdselections):
             histograms['qcd/all/muonJetPt'].Fill(tree.muon2JetPt)
             histograms['qcd/all/muonPt'].Fill(tree.muon2Pt)
-            if passes_eid:
+            if passes_muid:
                 histograms['qcd/all/muonJetPt'].Fill(tree.muon2JetPt)
                 histograms['qcd/all/muonPt'].Fill(tree.muon2Pt)
 

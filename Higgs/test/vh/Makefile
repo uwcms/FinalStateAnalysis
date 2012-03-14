@@ -1,14 +1,37 @@
 
 # Job ID that produced the ntuples
-trilepton_source=2012-03-14-Trileptons
+trilepton_source=2012-03-14-Higgs
 
-dilepton_ntuple_source=2012-03-09-Test
+dilepton_ntuple_source=2012-03-14-Higgs
 
+# Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
 
 # Target to make EMT plots
 
 emt_analysis: results/analysis/data_MuEG_Run2011B_PromptReco_v1.emt.root
+
+################################################################################
+## Define shortcuts for different samples ######################################
+################################################################################
+
+data_sample_templates=data_PRIMD_Run2011B_PromptReco_v1 \
+		      data_PRIMD_Run2011A_PromptReco_v6_1409 \
+		      data_PRIMD_Run2011A_05Aug2011_v1 \
+		      data_PRIMD_Run2011A_PromptReco_v4 \
+		      data_PRIMD_Run2011A_May10ReReco_v1
+
+mueg_samples=$(subst PRIMD,MuEG, $(data_sample_templates))
+
+doublemu_samples=$(subst PRIMD,DoubleMu, $(data_sample_templates))
+
+doublee_samples=$(subst PRIMD,DoubleElectron, $(data_sample_templates))
+
+
+#sm_backgrounds=Zjets_M50 QCD_20toInf_MuPt15 WplusJets_madgraph ttjets
+sm_backgrounds=
+
+dibosons=WWJetsTo2L2Nu_TuneZ2_7TeV WZJetsTo3LNu_pythia ZZJetsTo4L_pythia
 
 ################################################################################
 ## Define rules to make make things ############################################
@@ -31,6 +54,24 @@ results/fake_rates/e/%.em.root: FakeRatesME.py inputs/$(dilepton_ntuple_source)/
 	$(mega) $^ /emu/final/Ntuple $@
 
 # Make num/denom for jet->mu fake rate in MM events
-results/fake_rates/e/%.mm.root: FakeRatesMM.py inputs/$(dilepton_ntuple_source)/%.txt
+results/fake_rates/mu/%.mm.root: FakeRatesMM.py inputs/$(dilepton_ntuple_source)/%.txt
 	$(mega) $^ /mumu/final/Ntuple $@
 
+################################################################################
+## Define which samples are used for what ######################################
+################################################################################
+
+mmm_fake_jobs=$(patsubst %, results/fake_rates/mu/%.mmm.root, \
+	$(sm_backgrounds) $(doublemu_samples))
+
+mm_fake_jobs=$(patsubst %, results/fake_rates/mu/%.mm.root, \
+	$(sm_backgrounds) $(doublemu_samples))
+
+muon_fake_rates: $(mmm_fake_jobs) $(mm_fake_jobs)
+
+emm_fake_jobs=$(patsubst %, results/fake_rates/mu/%.mmm.root, \
+	$(sm_backgrounds) $(mueg_samples))
+
+
+doot:
+	echo $(mmm_fake_jobs)
