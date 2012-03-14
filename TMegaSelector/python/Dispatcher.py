@@ -54,6 +54,8 @@ class MegaDispatcher(object):
         # Add a poison pill at the end of the results
         result_q.put(None)
 
+        self.log.info("Waiting for merge jobs to complete")
+
         # Require the merger to finish
         result_q.join()
         self.log.info("All merge jobs have completed.")

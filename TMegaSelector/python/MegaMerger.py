@@ -32,7 +32,6 @@ class MegaMerger(multiprocessing.Process):
         for file in files:
             command.append(file)
 
-        print command
         # Now run the command
         proc = subprocess.Popen(command, stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
@@ -54,9 +53,9 @@ class MegaMerger(multiprocessing.Process):
             # Accumulate some files to merge
             while True:
                 try:
-                    self.log.info("trying to get")
+                    self.log.debug("trying to get")
                     to_merge = self.input.get(timeout=2)
-                    self.log.info("got %s", to_merge)
+                    self.log.debug("got %s", to_merge)
                     self.input.task_done()
                     # Check for poison pill
                     if to_merge is None:
@@ -65,7 +64,7 @@ class MegaMerger(multiprocessing.Process):
                         break
                     inputs_to_merge.append(to_merge)
                 except Empty:
-                    self.log.info("empty to get")
+                    self.log.debug("empty to get")
                     # Noting to merge right now
                     break
             if inputs_to_merge:

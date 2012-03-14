@@ -27,7 +27,7 @@ class MegaBase(object):
         ROOT.TH1F
 
         '''
-        self.log.info("booking %s at %s", name, location)
+        self.log.debug("booking %s at %s", name, location)
 
         directory = self.output.Get(location)
         if not directory:

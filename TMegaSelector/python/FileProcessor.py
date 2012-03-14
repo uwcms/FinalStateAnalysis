@@ -16,7 +16,7 @@ import logging
 
 class FileProcessor(object):
     def __init__(self, filename, treename, selector, output_file, **kwargs):
-        self.file = ROOT.TFile(filename, "READ")
+        self.file = ROOT.TFile.Open(filename, "READ")
         if not self.file:
             raise IOError("Can't open ROOT file: %s" % filename)
         self.tree = self.file.Get(treename)

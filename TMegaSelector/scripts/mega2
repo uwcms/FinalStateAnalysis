@@ -15,16 +15,12 @@ import os
 import sys
 from FinalStateAnalysis.TMegaSelector.Dispatcher import MegaDispatcher
 
-logger = multiprocessing.log_to_stderr()
+log = multiprocessing.log_to_stderr()
+log.setLevel(logging.INFO)
 
 parser = argparse.ArgumentParser()
 args = sys.argv[:]
 sys.argv = []
-
-# Setup log
-log = logging.getLogger("mega")
-logging.basicConfig(level=logging.INFO)
-
 
 if __name__ == "__main__":
 
@@ -86,3 +82,4 @@ if __name__ == "__main__":
     dispatch = MegaDispatcher(file_list, args.tree, args.output, selector, 
                              args.workers)
     dispatch.run()
+    log.info("Mega2 job is complete")
