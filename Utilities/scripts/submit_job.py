@@ -75,7 +75,8 @@ if __name__ == "__main__":
     sys.stdout.write('# The command was: %s\n' % ' '.join(sys.argv))
 
     sys.stdout.write('export TERMCAP=screen\n')
-    for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
+    for sample, sample_info in reversed(
+        sorted(datadefs.iteritems(), key=lambda (x,y): x)):
         if args.analysis not in sample_info['analyses']:
             continue
         submit_dir = args.subdir.format(
@@ -111,7 +112,7 @@ if __name__ == "__main__":
             jobid = args.jobid,
             sample = sample,
             dataset = sample_info['datasetpath'],
-            myhdfs = 'srm://cmssrm.hep.wisc.edu:8443/srm/v2/server?SFN=/hdfs/store/user/%s/' % os.environ['LOGNAME']
+            myhdfs = 'root://cmsxrootd.hep.wisc.edu//store/user/%s/' % os.environ['LOGNAME']
         )
 
         command = [
@@ -128,5 +129,7 @@ if __name__ == "__main__":
         ]
 
         command.extend(args.cmsargs)
+        command.append("'inputFiles=$inputFileNames'")
+        command.append("'outputFile=$outputFileName'")
 
         sys.stdout.write(' '.join(command) + '\n')
