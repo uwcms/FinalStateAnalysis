@@ -46,7 +46,13 @@ class MegaWorker(multiprocessing.Process):
             self.log.info("Processing file %s => %s",
                           to_process, output_file_name)
 
-            processor = FileProcessor(to_process, self.tree, self.selector,
-                                      output_file_name, **self.options)
-            result = processor.process()
-            self.output.put(result)
+            try:
+                processor = FileProcessor(to_process, self.tree, self.selector,
+                                          output_file_name, **self.options)
+                result = processor.process()
+                self.output.put(result)
+            except:
+                # If we fail, put a poison pill to stop the merge job.
+                self.log.error("Caught exception in worker, killing merger")
+                self.output.put(None)
+                raise

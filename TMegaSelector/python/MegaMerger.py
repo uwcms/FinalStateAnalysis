@@ -4,7 +4,6 @@ A Process object which takes a list of files and hadd's them together.
 
 Author: Evan K. Friis, UW Madison
 
-
 '''
 
 import multiprocessing
