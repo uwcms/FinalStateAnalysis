@@ -82,6 +82,9 @@ class AnalyzeEMT(MegaBase):
             self.book('double_fakes_nowt', *histogram[1:])
             self.book('triple_fakes_nowt', *histogram[1:])
             self.book('final', *histogram[1:])
+        self.disable_branch('*')
+        for b in meta.active_branches():
+            self.enable_branch(b)
 
     def process(self, entry):
         tree = self.tree
