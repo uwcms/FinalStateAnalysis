@@ -52,8 +52,8 @@ class FakeRatesMME(MegaBase):
     def __init__(self, tree, output, **kwargs):
         super(FakeRatesMME, self).__init__(tree, output, **kwargs)
         for var in variables:
-            self.book('pass', *var)
-            self.book('all', *var)
+            self.book('zmm/pass', *var)
+            self.book('zmm/all', *var)
 
     def process(self, entry):
         tree = self.tree
@@ -63,14 +63,14 @@ class FakeRatesMME(MegaBase):
                 return True
         histograms = self.histograms
 
-        histograms['all/Zmass'].Fill(tree.muon1_muon2_Mass)
-        histograms['all/electronJetPt'].Fill(tree.electronJetPt)
-        histograms['all/electronPt'].Fill(tree.electronPt)
+        histograms['zmm/all/Zmass'].Fill(tree.muon1_muon2_Mass)
+        histograms['zmm/all/electronJetPt'].Fill(tree.electronJetPt)
+        histograms['zmm/all/electronPt'].Fill(tree.electronPt)
 
         if tree.electronMITID > 0.5 and tree.electronRelPFIsoDB < 0.3:
-            histograms['pass/Zmass'].Fill(tree.muon1_muon2_Mass)
-            histograms['pass/electronJetPt'].Fill(tree.electronJetPt)
-            histograms['pass/electronPt'].Fill(tree.electronPt)
+            histograms['zmm/pass/Zmass'].Fill(tree.muon1_muon2_Mass)
+            histograms['zmm/pass/electronJetPt'].Fill(tree.electronJetPt)
+            histograms['zmm/pass/electronPt'].Fill(tree.electronPt)
 
         return True
 

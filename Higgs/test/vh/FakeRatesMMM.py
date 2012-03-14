@@ -56,8 +56,8 @@ class FakeRatesMMM(MegaBase):
     def __init__(self, tree, output, **kwargs):
         super(FakeRatesMMM, self).__init__(tree, output, **kwargs)
         for var in variables:
-            self.book('pass', *var)
-            self.book('all', *var)
+            self.book('zmm/pass', *var)
+            self.book('zmm/all', *var)
 
     def process(self, entry):
         tree = self.tree
@@ -67,14 +67,14 @@ class FakeRatesMMM(MegaBase):
                 return True
         histograms = self.histograms
 
-        histograms['all/Zmass'].Fill(tree.muon1_muon2_Mass)
-        histograms['all/muonJetPt'].Fill(tree.muon3JetPt)
-        histograms['all/muonPt'].Fill(tree.muon3Pt)
+        histograms['zmm/all/Zmass'].Fill(tree.muon1_muon2_Mass)
+        histograms['zmm/all/muonJetPt'].Fill(tree.muon3JetPt)
+        histograms['zmm/all/muonPt'].Fill(tree.muon3Pt)
 
         if tree.muon3WWID > 0.5 and tree.muon3RelPFIsoDB < 0.3:
-            histograms['pass/Zmass'].Fill(tree.muon1_muon2_Mass)
-            histograms['pass/muonJetPt'].Fill(tree.muon3JetPt)
-            histograms['pass/muonPt'].Fill(tree.muon3Pt)
+            histograms['zmm/pass/Zmass'].Fill(tree.muon1_muon2_Mass)
+            histograms['zmm/pass/muonJetPt'].Fill(tree.muon3JetPt)
+            histograms['zmm/pass/muonPt'].Fill(tree.muon3Pt)
 
         return True
 
