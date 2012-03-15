@@ -73,6 +73,9 @@ results/fake_rates/e/%.root: results/fake_rates/e/%.em.root \
   results/fake_rates/e/%.emm.root 
 	hadd -f $@ $^
 
+# How to compile a .C file with ACLiC
+%_C.so %_C.d: %.C
+	./aclic_compile.sh $<
 
 ################################################################################
 ## Define which samples are used for what ######################################
