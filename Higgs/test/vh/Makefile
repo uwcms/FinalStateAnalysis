@@ -1,13 +1,13 @@
 
 # Job ID that produced the ntuples
+quad_source=2012-03-14-Higgs
 trilepton_source=2012-03-14-Higgs
-
 dilepton_ntuple_source=2012-03-14-Higgs
 
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
 
-.SECONDARY: %.root
+.SECONDARY: %.root fake_rates.json
 
 # Target to make EMT plots
 
@@ -29,7 +29,6 @@ doublemu_samples=$(subst PRIMD,DoubleMu, $(data_sample_templates))
 
 doublee_samples=$(subst PRIMD,DoubleElectron, $(data_sample_templates))
 
-
 sm_backgrounds=Zjets_M50 QCD_20toInf_MuPt15 WplusJets_madgraph TTplusJets_madgraph
 #sm_backgrounds=
 
@@ -39,13 +38,23 @@ dibosons=WWJetsTo2L2Nu_TuneZ2_7TeV WZJetsTo3LNu_pythia ZZJetsTo4L_pythia
 ## Recipes for analyzing data ##################################################
 ################################################################################
 
-# Run the EMT analysis
-results/analysis/%.emt.root: AnalyzeEMT.py inputs/$(trilepton_source)/%.txt
-	$(mega) $^ /emutau/final/Ntuple $@ 
+# Run the WH EMT analysis
+results/analysis/%.emt.root: AnalyzeEMT.py inputs/$(trilepton_source)/%.txt \
+  corrections_C.so fake_rates_C.so
+	$(mega) AnalyzeEMT.py inputs/$(trilepton_source)/$*.txt \
+	  /emutau/final/Ntuple $@ 
 
-# Run the MMT analysis
-results/analysis/%.mmt.root: AnalyzeMMT.py inputs/$(trilepton_source)/%.txt
-	$(mega) $^ /mumutau/final/Ntuple $@ 
+# Run the WH MMT analysis
+results/analysis/%.mmt.root: AnalyzeMMT.py inputs/$(trilepton_source)/%.txt \
+  corrections_C.so fake_rates_C.so
+	$(mega) AnalyzeMMT.py inputs/$(trilepton_source)/$*.txt \
+	  /mumutau/final/Ntuple $@ 
+
+# Run the ZH MMT analysis
+results/analysis/%.mmmt.root: AnalyzeMMMT.py inputs/$(quad_source)/%.txt \
+  corrections_C.so fake_rates_C.so
+	$(mega) AnalyzeMMMT.py inputs/$(quad_source)/$*.txt \
+	  /mmmt/final/Ntuple $@ 
 
 # Make num/denom for jet->mu fake rate in MMM events
 results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(dilepton_ntuple_source)/%.txt
@@ -78,6 +87,10 @@ results/fake_rates/e/%.root: results/fake_rates/e/%.em.root \
 	./aclic_compile.sh $<
 
 ################################################################################
+## MC to data correction functions  ############################################
+################################################################################
+
+################################################################################
 ## Define which samples are used for what ######################################
 ################################################################################
 
@@ -96,6 +109,16 @@ emt_ana_jobs=$(patsubst %, results/analysis/%.emt.root, \
 mmt_ana_jobs=$(patsubst %, results/analysis/%.mmt.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
+mmmt_ana_jobs=$(patsubst %, results/analysis/%.mmmt.root, \
+	$(sm_backgrounds) $(doublemu_samples))
+
+################################################################################
+## Fake rate functions #########################################################
+################################################################################
+
+fake_rates.C: fake_rates.json make_fakerates.py
+	python make_fakerates.py fake_rates.json
+
 ################################################################################
 ## Define analysis targets! ####################################################
 ################################################################################
@@ -109,6 +132,8 @@ fakerates: muon_fake_rates electron_fake_rates
 emt_analysis: $(emt_ana_jobs)
 
 mmt_analysis: $(mmt_ana_jobs)
+
+mmmt_analysis: $(mmmt_ana_jobs)
 
 analysis: emt_analysis mmt_analysis
 
