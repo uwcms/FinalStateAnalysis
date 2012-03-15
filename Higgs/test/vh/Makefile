@@ -1,8 +1,6 @@
 
 # Job ID that produced the ntuples
-quad_source=2012-03-14-Higgs
-trilepton_source=2012-03-14-Higgs
-dilepton_ntuple_source=2012-03-14-Higgs
+ntuple_id=2012-03-14-Higgs
 
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
@@ -32,36 +30,38 @@ doublee_samples=$(subst PRIMD,DoubleElectron, $(data_sample_templates))
 sm_backgrounds=Zjets_M50 QCD_20toInf_MuPt15 WplusJets_madgraph TTplusJets_madgraph
 #sm_backgrounds=
 
-dibosons=WWJetsTo2L2Nu_TuneZ2_7TeV WZJetsTo3LNu_pythia ZZJetsTo4L_pythia
+dibosons=WZJetsTo3LNu_pythia ZZJetsTo4L_pythia
+
+all_samples=$(mueg_samples) $(doublee_samples) $(sm_backgrounds) $(dibosons)
 
 ################################################################################
 ## Recipes for analyzing data ##################################################
 ################################################################################
 
 # Run the WH EMT analysis
-results/analysis/%.emt.root: AnalyzeEMT.py inputs/$(trilepton_source)/%.txt \
+results/analysis/%.emt.root: AnalyzeEMT.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so
-	$(mega) AnalyzeEMT.py inputs/$(trilepton_source)/$*.txt \
+	$(mega) AnalyzeEMT.py inputs/$(ntuple_id)/$*.txt \
 	  /emutau/final/Ntuple $@ 
 
 # Run the WH MMT analysis
-results/analysis/%.mmt.root: AnalyzeMMT.py inputs/$(trilepton_source)/%.txt \
+results/analysis/%.mmt.root: AnalyzeMMT.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so
-	$(mega) AnalyzeMMT.py inputs/$(trilepton_source)/$*.txt \
+	$(mega) AnalyzeMMT.py inputs/$(ntuple_id)/$*.txt \
 	  /mumutau/final/Ntuple $@ 
 
 # Run the ZH MMT analysis
-results/analysis/%.mmmt.root: AnalyzeMMMT.py inputs/$(quad_source)/%.txt \
+results/analysis/%.mmmt.root: AnalyzeMMMT.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so
-	$(mega) AnalyzeMMMT.py inputs/$(quad_source)/$*.txt \
+	$(mega) AnalyzeMMMT.py inputs/$(ntuple_id)/$*.txt \
 	  /mmmt/final/Ntuple $@ 
 
 # Make num/denom for jet->mu fake rate in MMM events
-results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(dilepton_ntuple_source)/%.txt
+results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(ntuple_id)/%.txt
 	$(mega) $^ /mumumu/final/Ntuple $@
 
 # Make num/denom for jet->mu fake rate in MM events
-results/fake_rates/mu/%.mm.root: FakeRatesMM.py inputs/$(dilepton_ntuple_source)/%.txt
+results/fake_rates/mu/%.mm.root: FakeRatesMM.py inputs/$(ntuple_id)/%.txt
 	$(mega) $^ /mumu/final/Ntuple $@
 
 # How we combine all mu fake rate sources into a single file
@@ -70,11 +70,11 @@ results/fake_rates/mu/%.root: results/fake_rates/mu/%.mm.root \
 	hadd -f $@ $^
 
 # Make num/denom for jet->e fake rate in MME events
-results/fake_rates/e/%.emm.root: FakeRatesMME.py inputs/$(dilepton_ntuple_source)/%.txt
+results/fake_rates/e/%.emm.root: FakeRatesMME.py inputs/$(ntuple_id)/%.txt
 	$(mega) $^ /emumu/final/Ntuple $@
 
 # Make num/denom for jet->e fake rate in ME events
-results/fake_rates/e/%.em.root: FakeRatesME.py inputs/$(dilepton_ntuple_source)/%.txt
+results/fake_rates/e/%.em.root: FakeRatesME.py inputs/$(ntuple_id)/%.txt
 	$(mega) $^ /emu/final/Ntuple $@
 
 # How we combine all e fake rate sources into a single file
@@ -89,12 +89,14 @@ results/fake_rates/e/%.root: results/fake_rates/e/%.em.root \
 ## Extracting meta information (number of events processed) ####################
 ################################################################################
 
-inputs/%.json: inputs/%.txt
+inputs/$(ntuple_id)/%.meta.json: inputs/$(ntuple_id)/%.txt
 	extract_meta_info.py $< /ee/metaInfo $@ 
 
-################################################################################
-## MC to data correction functions  ############################################
-################################################################################
+# List of meta files for every sample
+all_meta_info=$(patsubst %, inputs/$(ntuple_id)/%.meta.json, $(all_samples))
+
+inputs/$(ntuple_id)/all_samples.json: $(all_meta_info)
+	./merge_meta_info.py $@ $^
 
 ################################################################################
 ## Define which samples are used for what ######################################
@@ -117,6 +119,10 @@ mmt_ana_jobs=$(patsubst %, results/analysis/%.mmt.root, \
 
 mmmt_ana_jobs=$(patsubst %, results/analysis/%.mmmt.root, \
 	$(sm_backgrounds) $(doublemu_samples))
+
+################################################################################
+## MC to data correction functions  ############################################
+################################################################################
 
 ################################################################################
 ## Fake rate functions #########################################################
