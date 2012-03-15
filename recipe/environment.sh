@@ -19,6 +19,10 @@ export tests=$CMSSW_BASE/test/$SCRAM_ARCH/
 export datagt=GR_R_42_V24::All
 export mcgt=START42_V17::All
 
+# Define some shortcuts to HDFS and scratch areas
+export hdfs=/hdfs/store/user/$LOGNAME/
+export scratch=/scratch/$LOGNAME/
+
 cd $vpython
 source bin/activate
 cd -
