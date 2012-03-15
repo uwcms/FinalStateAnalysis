@@ -90,6 +90,9 @@ if __name__ == "__main__":
     parser.add_argument('tree', type=str,
                         help='Specify the path to the meta tree.')
     parser.add_argument('output', type=str, help='Output JSON file')
+    parser.add_argument('--lumimask', action='store_const',
+                        const=True, default=False,
+                        help = 'If true, include the run-lumi mask result')
 
 
     args = parser.parse_args(args[1:])
@@ -117,9 +120,10 @@ if __name__ == "__main__":
         run_lumis.append((chain.run, chain.lumi))
 
     output = {
-        'lumi_mask' : json_summary(run_lumis),
         'n_evts' : total_events,
     }
+    if args.lumimask:
+        output['lumi_mask'] = json_summary(run_lumis)
 
     with open(args.output, 'w') as output_file:
         output_file.write(json.dumps(output, indent=2, sort_keys=True) + '\n')
