@@ -16,7 +16,7 @@ import sys
 from FinalStateAnalysis.TMegaSelector.Dispatcher import MegaDispatcher
 
 log = multiprocessing.log_to_stderr()
-log.setLevel(logging.INFO)
+log.setLevel(logging.WARNING)
 
 parser = argparse.ArgumentParser()
 args = sys.argv[:]

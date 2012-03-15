@@ -27,41 +27,50 @@ class MegaDispatcher(object):
 
         result_q = multiprocessing.Queue()
 
-        workers = [
-            MegaWorker(input_q, result_q, self.treename, self.selector)
-            for x in range(self.nworkers)
-        ]
+        try:
+            workers = [
+                MegaWorker(input_q, result_q, self.treename, self.selector)
+                for x in range(self.nworkers)
+            ]
 
 
-        # Start workers
-        for worker in workers:
-            worker.start()
-            # Add poison pill for this worker
-            input_q.put(None)
-        input_q.close()
+            # Start workers
+            for worker in workers:
+                worker.start()
+                # Add poison pill for this worker
+                input_q.put(None)
+            input_q.close()
 
-        self.log.info("Started %i workers", len(workers))
+            self.log.info("Started %i workers", len(workers))
 
-        # Start the merger
-        merger = MegaMerger(result_q, self.output_file)
-        merger.start()
+            # Start the merger
+            merger = MegaMerger(result_q, self.output_file, len(self.files))
+            merger.start()
 
-        self.log.info("Started the merger process")
+            self.log.info("Started the merger process")
 
-        # Require all the workers to finish
-        #input_q.join()
-        for worker in workers:
-            worker.join()
+            # Require all the workers to finish
+            #input_q.join()
+            for worker in workers:
+                worker.join()
 
-        self.log.info("All process jobs have completed.")
+            self.log.info("All process jobs have completed.")
 
-        # Add a poison pill at the end of the results
-        result_q.put(None)
-        result_q.close()
+            # Add a poison pill at the end of the results
+            result_q.put(None)
+            result_q.close()
 
-        self.log.info("Waiting for merge jobs to complete")
+            self.log.info("Waiting for merge jobs to complete")
 
-        # Require the merger to finish
-        #result_q.join()
-        merger.join()
+            # Require the merger to finish
+            #result_q.join()
+            merger.join()
+        except KeyboardInterrupt:
+            self.log.error("Ctrl-c detected, terminating everything")
+            for i, worker in enumerate(workers):
+                self.log.error("Terminating worker %i", i)
+                worker.terminate()
+            self.log.error("Terminating merger")
+            merger.terminate()
+
         self.log.info("All merge jobs have completed.")

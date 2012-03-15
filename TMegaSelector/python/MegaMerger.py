@@ -6,6 +6,7 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
+from progressbar import ETA, ProgressBar, FormatLabel, Bar
 import multiprocessing
 from Queue import Empty
 import signal
@@ -14,11 +15,17 @@ import os
 
 class MegaMerger(multiprocessing.Process):
     log = multiprocessing.get_logger()
-    def __init__(self, input_file_queue, output_file):
+    def __init__(self, input_file_queue, output_file, ninputs):
         super(MegaMerger, self).__init__()
         self.input = input_file_queue
         self.output = output_file
         self.first_merge = True
+        self.ninputs = ninputs
+        self.processed = 0
+        self.pbar = ProgressBar(widgets=[
+            FormatLabel('Processed %(value)i/' + str(ninputs) + ' files. '),
+            ETA(), Bar('>')], maxval=ninputs).start()
+        self.pbar.update(0)
 
     def merge_into_output(self, files):
         self.log.info("Merging %i into output %s", len(files), self.output)
@@ -45,7 +52,7 @@ class MegaMerger(multiprocessing.Process):
 
     def run(self):
         # ignore sigterm signal and let parent take care of this
-        #signal.signal(signal.SIGINT, signal.SIG_IGN)
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
         while True:
             # Check if we are done merging
             done = False
@@ -62,6 +69,8 @@ class MegaMerger(multiprocessing.Process):
                         done = True
                         break
                     inputs_to_merge.append(to_merge)
+                    self.processed += 1
+                    self.pbar.update(self.processed)
                 except Empty:
                     self.log.debug("empty to get")
                     # Noting to merge right now
