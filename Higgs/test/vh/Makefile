@@ -85,6 +85,12 @@ results/fake_rates/e/%.root: results/fake_rates/e/%.em.root \
 # How to compile a .C file with ACLiC
 %_C.so %_C.d: %.C
 	./aclic_compile.sh $<
+################################################################################
+## Extracting meta information (number of events processed) ####################
+################################################################################
+
+inputs/%.json: inputs/%.txt
+	extract_meta_info.py $< /ee/metaInfo $@ 
 
 ################################################################################
 ## MC to data correction functions  ############################################
