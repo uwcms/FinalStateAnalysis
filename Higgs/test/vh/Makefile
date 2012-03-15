@@ -27,12 +27,14 @@ doublemu_samples=$(subst PRIMD,DoubleMu, $(data_sample_templates))
 
 doublee_samples=$(subst PRIMD,DoubleElectron, $(data_sample_templates))
 
+all_data_samples=$(mueg_samples) $(doublee_samples) $(doublemu_samples)
+
 sm_backgrounds=Zjets_M50 QCD_20toInf_MuPt15 WplusJets_madgraph TTplusJets_madgraph
 #sm_backgrounds=
 
 dibosons=WZJetsTo3LNu_pythia ZZJetsTo4L_pythia
 
-all_samples=$(mueg_samples) $(doublee_samples) $(sm_backgrounds) $(dibosons)
+all_samples=$(all_data_samples) $(sm_backgrounds) $(dibosons)
 
 ################################################################################
 ## Recipes for analyzing data ##################################################
@@ -65,7 +67,7 @@ results/fake_rates/mu/%.mm.root: FakeRatesMM.py inputs/$(ntuple_id)/%.txt
 	$(mega) $^ /mumu/final/Ntuple $@
 
 # How we combine all mu fake rate sources into a single file
-results/fake_rates/mu/%.root: results/fake_rates/mu/%.mm.root \
+results/fake_rates/mu/%.all.root: results/fake_rates/mu/%.mm.root \
   results/fake_rates/mu/%.mmm.root 
 	hadd -f $@ $^
 
@@ -78,7 +80,7 @@ results/fake_rates/e/%.em.root: FakeRatesME.py inputs/$(ntuple_id)/%.txt
 	$(mega) $^ /emu/final/Ntuple $@
 
 # How we combine all e fake rate sources into a single file
-results/fake_rates/e/%.root: results/fake_rates/e/%.em.root \
+results/fake_rates/e/%.all.root: results/fake_rates/e/%.em.root \
   results/fake_rates/e/%.emm.root 
 	hadd -f $@ $^
 
@@ -88,6 +90,9 @@ results/fake_rates/e/%.root: results/fake_rates/e/%.em.root \
 ################################################################################
 ## Extracting meta information (number of events processed) ####################
 ################################################################################
+
+inputs/$(ntuple_id)/data%.meta.json: inputs/$(ntuple_id)/data%.txt
+	extract_meta_info.py $< /ee/metaInfo $@  --lumimask
 
 inputs/$(ntuple_id)/%.meta.json: inputs/$(ntuple_id)/%.txt
 	extract_meta_info.py $< /ee/metaInfo $@ 
@@ -103,11 +108,11 @@ inputs/$(ntuple_id)/all_samples.json: $(all_meta_info)
 ################################################################################
 
 # fake rate jobs
-muon_fake_jobs=$(patsubst %, results/fake_rates/mu/%.root, \
+muon_fake_jobs=$(patsubst %, results/fake_rates/mu/%.all.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
 
-e_fake_jobs=$(patsubst %, results/fake_rates/e/%.root, \
+e_fake_jobs=$(patsubst %, results/fake_rates/e/%.all.root, \
 	$(sm_backgrounds) $(mueg_samples))
 
 # analysis jobs
@@ -160,4 +165,7 @@ fake_clean:
 
 inputs_clean:
 	ls -d inputs/*/ | xargs rm -r 
+
+meta_clean:
+	rm inputs/*/*json
 
