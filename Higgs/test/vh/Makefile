@@ -30,18 +30,22 @@ doublemu_samples=$(subst PRIMD,DoubleMu, $(data_sample_templates))
 doublee_samples=$(subst PRIMD,DoubleElectron, $(data_sample_templates))
 
 
-sm_backgrounds=Zjets_M50 QCD_20toInf_MuPt15 WplusJets_madgraph ttjets
+sm_backgrounds=Zjets_M50 QCD_20toInf_MuPt15 WplusJets_madgraph TTplusJets_madgraph
 #sm_backgrounds=
 
 dibosons=WWJetsTo2L2Nu_TuneZ2_7TeV WZJetsTo3LNu_pythia ZZJetsTo4L_pythia
+
+################################################################################
+## Recipes for analyzing data ##################################################
+################################################################################
 
 # Run the EMT analysis
 results/analysis/%.emt.root: AnalyzeEMT.py inputs/$(trilepton_source)/%.txt
 	$(mega) $^ /emutau/final/Ntuple $@ 
 
-################################################################################
-## Recipes for analyzing data ##################################################
-################################################################################
+# Run the MMT analysis
+results/analysis/%.mmt.root: AnalyzeMMT.py inputs/$(trilepton_source)/%.txt
+	$(mega) $^ /mumutau/final/Ntuple $@ 
 
 # Make num/denom for jet->mu fake rate in MMM events
 results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(dilepton_ntuple_source)/%.txt
@@ -74,6 +78,7 @@ results/fake_rates/e/%.root: results/fake_rates/e/%.em.root \
 ## Define which samples are used for what ######################################
 ################################################################################
 
+# fake rate jobs
 muon_fake_jobs=$(patsubst %, results/fake_rates/mu/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
@@ -81,20 +86,34 @@ muon_fake_jobs=$(patsubst %, results/fake_rates/mu/%.root, \
 e_fake_jobs=$(patsubst %, results/fake_rates/e/%.root, \
 	$(sm_backgrounds) $(mueg_samples))
 
+# analysis jobs
+emt_ana_jobs=$(patsubst %, results/analysis/%.emt.root, \
+	$(sm_backgrounds) $(mueg_samples))
+
+mmt_ana_jobs=$(patsubst %, results/analysis/%.mmt.root, \
+	$(sm_backgrounds) $(doublemu_samples))
+
 ################################################################################
-## Define which samples are used for what ######################################
+## Define analysis targets! ####################################################
 ################################################################################
 
 muon_fake_rates: $(muon_fake_jobs)
 
 electron_fake_rates: $(e_fake_jobs) 
 
+fakerates: muon_fake_rates electron_fake_rates
+
+emt_analysis: $(emt_ana_jobs)
+
+mmt_analysis: $(mmt_ana_jobs)
+
+analysis: emt_analysis mmt_analysis
 
 ################################################################################
 ## Cleanup #####################################################################
 ################################################################################
 
-.PHONY: fake_clean inputs_clean
+.PHONY: fake_clean inputs_clean fakerates muon_fake_rates electron_fake_rates
 
 fake_clean:
 	rm results/fake_rates/*/*root
