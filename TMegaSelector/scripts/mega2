@@ -68,6 +68,10 @@ if __name__ == "__main__":
             if line and not line.startswith('#'):
                 file_list.append(line)
 
+    if not file_list:
+        log.error("Dataset %s has no files!  Skipping..." % args.inputs)
+        sys.exit(1)
+
     log.info("Dataset has %i files", len(file_list))
 
     path_to_selector = os.path.dirname(os.path.abspath(args.selector))
