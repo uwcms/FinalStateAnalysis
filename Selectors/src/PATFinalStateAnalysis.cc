@@ -59,7 +59,6 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
   metaTree_->Branch("run", &treeRunBranch_, "run/I");
   metaTree_->Branch("lumi", &treeLumiBranch_, "lumi/I");
   metaTree_->Branch("nevents", &treeEventsProcessedBranch_, "nevents/I");
-  metaTree_->Branch("nevents", &treeEventsProcessedBranch_, "nevents/I");
 }
 
 PATFinalStateAnalysis::~PATFinalStateAnalysis() { }
