@@ -32,3 +32,5 @@ echo "Installing termcolor"
 pip install -U termcolor
 echo "Installing uncertainties <-- awesome error propagation"
 pip install -U uncertainties
+echo "Install progressbar"
+pip install -U progressbar
