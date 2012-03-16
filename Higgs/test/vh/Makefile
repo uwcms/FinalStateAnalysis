@@ -130,17 +130,6 @@ mmmt_ana_jobs=$(patsubst %, results/analysis/%.mmmt.root, \
 ################################################################################
 
 ################################################################################
-## Fake rate functions #########################################################
-################################################################################
-
-# Script to build the file w/ the fake rate fit functions
-fit_models.root: make_fit_models.py
-	python make_fit_models.py
-
-fake_rates.C: fake_rates.json make_fakerates.py
-	python make_fakerates.py fake_rates.json
-
-################################################################################
 ## Define analysis targets! ####################################################
 ################################################################################
 
@@ -157,6 +146,33 @@ mmt_analysis: $(mmt_ana_jobs)
 mmmt_analysis: $(mmmt_ana_jobs)
 
 analysis: emt_analysis mmt_analysis
+
+################################################################################
+## Fake rate functions #########################################################
+################################################################################
+
+# Script to build the file w/ the fake rate fit functions
+fit_models.root: make_fit_models.py
+	python make_fit_models.py
+
+# Build the RooWorkspace with the fit results for the muon fake rates
+muon_fr_fits.root: fit_models.root fit_fake_rates.py muon_fr_cfg.py \
+  inputs/$(ntuple_id)/all_samples.json muon_fake_rates
+	./fit_fake_rates.py inputs/$(ntuple_id)/all_samples.json \
+	  muon_fr_cfg.py  fit_models.root \
+	  $@ results/fake_rates/mu/*.all.root
+
+# Build the RooWorkspace with the fit results for the electron fake rates
+electron_fr_fits.root: fit_models.root fit_fake_rates.py electron_fr_cfg.py \
+  inputs/$(ntuple_id)/all_samples.json  electron_fake_rates
+	./fit_fake_rates.py inputs/$(ntuple_id)/all_samples.json \
+	  electron_fr_cfg.py  fit_models.root \
+	  $@ results/fake_rates/e/*.all.root
+
+
+fake_rates.C: fake_rates.json make_fakerates.py
+	python make_fakerates.py fake_rates.json
+
 
 ################################################################################
 ## Cleanup #####################################################################
