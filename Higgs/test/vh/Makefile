@@ -133,6 +133,10 @@ mmmt_ana_jobs=$(patsubst %, results/analysis/%.mmmt.root, \
 ## Fake rate functions #########################################################
 ################################################################################
 
+# Script to build the file w/ the fake rate fit functions
+fit_models.root: make_fit_models.py
+	python make_fit_models.py
+
 fake_rates.C: fake_rates.json make_fakerates.py
 	python make_fakerates.py fake_rates.json
 
