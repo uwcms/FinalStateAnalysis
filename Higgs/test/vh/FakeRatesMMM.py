@@ -80,11 +80,11 @@ class FakeRatesMMM(MegaBase):
                 return True
         histograms = self.histograms
 
-        jetpt = tree.muon2JetPt
-        pt = tree.muon2Pt
+        jetpt = tree.muon3JetPt
+        pt = tree.muon3Pt
         pt10 = pt > 10
         pt20 = pt > 20
-        wwid = tree.muon2WWID > 0.5
+        wwid = tree.muon3WWID > 0.5
 
         if pt10:
             histograms['zmm/pt10/iso15/all/muonJetPt'].Fill(jetpt)
@@ -92,22 +92,22 @@ class FakeRatesMMM(MegaBase):
             histograms['zmm/pt10/iso30/all/muonJetPt'].Fill(jetpt)
             histograms['zmm/pt10/iso30/all/muonPt'].Fill(pt)
             if wwid and tree.muon2RelPFIsoDB < 0.15:
-                histograms['zmm/pt10/iso15/all/muonJetPt'].Fill(jetpt)
-                histograms['zmm/pt10/iso15/all/muonPt'].Fill(pt)
+                histograms['zmm/pt10/iso15/pass/muonJetPt'].Fill(jetpt)
+                histograms['zmm/pt10/iso15/pass/muonPt'].Fill(pt)
             if wwid and tree.muon2RelPFIsoDB < 0.3:
-                histograms['zmm/pt10/iso30/all/muonJetPt'].Fill(jetpt)
-                histograms['zmm/pt10/iso30/all/muonPt'].Fill(pt)
+                histograms['zmm/pt10/iso30/pass/muonJetPt'].Fill(jetpt)
+                histograms['zmm/pt10/iso30/pass/muonPt'].Fill(pt)
         if pt20:
             histograms['zmm/pt20/iso15/all/muonJetPt'].Fill(jetpt)
             histograms['zmm/pt20/iso15/all/muonPt'].Fill(pt)
             histograms['zmm/pt20/iso30/all/muonJetPt'].Fill(jetpt)
             histograms['zmm/pt20/iso30/all/muonPt'].Fill(pt)
             if wwid and tree.muon2RelPFIsoDB < 0.15:
-                histograms['zmm/pt20/iso15/all/muonJetPt'].Fill(jetpt)
-                histograms['zmm/pt20/iso15/all/muonPt'].Fill(pt)
+                histograms['zmm/pt20/iso15/pass/muonJetPt'].Fill(jetpt)
+                histograms['zmm/pt20/iso15/pass/muonPt'].Fill(pt)
             if wwid and tree.muon2RelPFIsoDB < 0.3:
-                histograms['zmm/pt20/iso30/all/muonJetPt'].Fill(jetpt)
-                histograms['zmm/pt20/iso30/all/muonPt'].Fill(pt)
+                histograms['zmm/pt20/iso30/pass/muonJetPt'].Fill(jetpt)
+                histograms['zmm/pt20/iso30/pass/muonPt'].Fill(pt)
 
         return True
 
