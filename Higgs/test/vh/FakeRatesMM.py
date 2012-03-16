@@ -50,8 +50,8 @@ qcdselections = [
 ]
 
 variables = [
-    ('muonJetPt', 'Mu Jet Pt', 60, 60, 120),
-    ('muonPt', 'Mu Pt', 60, 60, 120),
+    ('muonJetPt', 'Mu Jet Pt', 200, 0, 200),
+    ('muonPt', 'Mu Pt', 200, 0, 200),
 ]
 
 probe_pt_cuts = [('pt10', 10), ('pt20', 20)]
