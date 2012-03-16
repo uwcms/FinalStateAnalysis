@@ -173,6 +173,14 @@ electron_fr_fits.root: fit_models.root fit_fake_rates.py electron_fr_cfg.py \
 fake_rates.C: fake_rates.json make_fakerates.py
 	python make_fakerates.py fake_rates.json
 
+################################################################################
+## Making plots  ###############################################################
+################################################################################
+
+# See http://www.cmcrossroads.com/ask-mr-make/12908-rules-with-multiple-outputs-in-gnu-make
+# for dealing w/ commands with multiple outputs 
+plots/fake_rates/muons/%.pdf: muon_fr_fits.root render_fake_rates.py
+	render_fake_rates.py muon_fr_fits.root plots/fake_rates/muons/
 
 ################################################################################
 ## Cleanup #####################################################################
