@@ -2,11 +2,21 @@ import ROOT
 import os
 import sys
 
-ROOT.gInterpreter.AddIncludePath(os.environ['ROOFITSYS']+'/include')
-_path_to_helpers = os.path.join(
-    os.environ['CMSSW_BASE'], 'src', 'FinalStateAnalysis', 'Utilities', 'python')
-ROOT.gROOT.ProcessLine(
-    '.L %s' % os.path.join(_path_to_helpers, 'RooFitTools.C+'))
+# Generate missing RooFit iterator dictionaries
+# See: http://root.cern.ch/phpBB3/viewtopic.php?f=14&t=11376
+current_path = ROOT.gROOT.GetMacroPath()
+new_path = ':'.join([
+    "$CMSSW_BASE/src/FinalStateAnalysis/Utilities/python/",
+    "$CMSSW_BASE/src/FinalStateAnalysis/Utilities/interface/",
+    current_path,
+])
+ROOT.gROOT.SetMacroPath(new_path)
+ROOT.gSystem.AddIncludePath("-I$ROOFITSYS/include")
+
+ROOT.gROOT.LoadMacro(
+    "roofit_iterators.h+"
+)
+
 
 def iter_collection(rooAbsCollection):
     ''' Create a generator over a RooAbsCollection
