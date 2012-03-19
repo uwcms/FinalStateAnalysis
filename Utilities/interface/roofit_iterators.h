@@ -5,7 +5,9 @@
  */
 #include <list>
 #include "RooAbsData.h"
+#include "TObject.h"
 
 #ifdef __CINT__
 #pragma link C++ class std::list<RooAbsData*>::iterator;
+#pragma link C++ class std::list<TObject*>::iterator;
 #endif
