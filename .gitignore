@@ -17,3 +17,5 @@ recipe/external/*
 docs/build/*
 *_C.d
 *_C.so
+*.d
+*.so
