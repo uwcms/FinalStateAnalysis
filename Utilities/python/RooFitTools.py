@@ -10,8 +10,11 @@ new_path = ':'.join([
     "$CMSSW_BASE/src/FinalStateAnalysis/Utilities/interface/",
     current_path,
 ])
+ROOT.gInterpreter.AddIncludePath(os.environ['ROOFITSYS']+'/include')
 ROOT.gROOT.SetMacroPath(new_path)
 ROOT.gSystem.AddIncludePath("-I$ROOFITSYS/include")
+ROOT.gSystem.SetDynamicPath(
+    os.environ['ROOFITSYS'] + "/lib:" + ROOT.gSystem.GetDynamicPath())
 
 ROOT.gROOT.LoadMacro(
     "roofit_iterators.h+"
