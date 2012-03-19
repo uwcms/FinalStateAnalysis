@@ -14,6 +14,7 @@ import os
 import re
 import sys
 # Need to generate dictionaries
+import FinalStateAnalysis.Utilities.styling as styling
 import FinalStateAnalysis.Utilities.RooFitTools as roofit
 # Steal the args so ROOT doesn't mess them up!
 parser = argparse.ArgumentParser()
@@ -44,7 +45,7 @@ if __name__ == "__main__":
 
     log.info("Opening input file %s", args.input)
 
-    file = open(args.input)
+    file = open(args.input, 'r')
 
     log.info("Getting workspace")
     ws = file.Get("fit_results")
@@ -75,7 +76,6 @@ if __name__ == "__main__":
 
     keeps = []
     frame = x.frame()
-    ROOT.SetOwnership(frame,False)
     for data_name, data_info in data.iteritems():
         log.info("Making %s plot", data_name)
         frame = x.frame()
@@ -84,8 +84,14 @@ if __name__ == "__main__":
         load_fit_result(result, ws)
         function = functions[data_name]
         function.plotOn(frame)
+        function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+                    ROOT.RooFit.VisualizeError(result, 1.0),
+                    ROOT.RooFit.FillColor(styling.colors['ewk_yellow'].code),
+                   )
         frame.Draw()
         canvas.SetLogy(True)
         frame.SetMinimum(1e-4)
         frame.SetMaximum(1)
         canvas.SaveAs(os.path.join(args.output, data_name + '.pdf'))
+
+    file.Close()
