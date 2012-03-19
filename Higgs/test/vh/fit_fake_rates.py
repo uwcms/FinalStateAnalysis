@@ -80,6 +80,16 @@ if __name__ == "__main__":
     x = fit_models.var('x')
     cut = fit_models.cat('cut')
 
+    # Make pass and fail views
+    def make_path_mangler(to_insert):
+        def functor(path):
+            print path
+            dir = os.path.dirname(path)
+            var = os.path.basename(path)
+            newpath = os.path.join(dir, to_insert, var)
+            return newpath
+        return functor
+
     # Wrap the views of the histograms to translate to RooDataHists
     def roodatahistizer(hist):
         ''' Turn a hist into a RooDataHist '''
@@ -87,7 +97,21 @@ if __name__ == "__main__":
                                 ROOT.RooArgList(x), hist)
     # Now a Get() will return a RooDataHist
     for type in regions.keys():
-        regions[type] = views.FunctorView(regions[type], roodatahistizer)
+        # Rebin the histograms.  Make this smarter later
+        regions[type] = views.FunctorView(regions[type], lambda x: x.Rebin(5))
+        # Make views of the numerator and denominator.
+        # For RooFit we have to split into Pass & Fail
+        # So subtract the numerator from the denominator
+        num_view = views.PathModifierView(regions[type], make_path_mangler('pass'))
+        all_view = views.PathModifierView(regions[type], make_path_mangler('all'))
+        negative_num_view = views.ScaleView(num_view, -1)
+        fail_view = views.SumView(all_view, negative_num_view)
+
+        # Now make RooDataHistViews of the numerator & denominator
+        regions[type] = (
+            views.FunctorView(num_view, roodatahistizer),
+            views.FunctorView(fail_view, roodatahistizer),
+        )
 
     log.info("Making output workspace")
     ws = ROOT.RooWorkspace("fit_results")
@@ -103,20 +127,17 @@ if __name__ == "__main__":
 
             # Path is (folder1, folder2, var)
             # need to convert this to all/pass to get num denominator
-            path_to_num = os.path.join(*(path[:-1] + ('pass', path[-1])))
-            path_to_denom = os.path.join(*(path[:-1] + ('all', path[-1])))
-            num = folder.Get(path_to_num)
-            denom = folder.Get(path_to_denom)
-            log.info("Num/denom have %f/%f entries", num.sumEntries(),
-                     denom.sumEntries())
-            log.warning("Don't do 'all', do 'fail'!")
+            num = folder[0].Get(os.path.join(*path))
+            fail = folder[1].Get(os.path.join(*path))
+            log.info("Num/fail have %f/%f entries", num.sumEntries(),
+                     fail.sumEntries())
 
             log.info("Constructing composite roo data hist")
             roo_data = ROOT.RooDataHist(
                 'data', 'data',
                 ROOT.RooArgList(x),  ROOT.RooFit.Index(cut),
                 ROOT.RooFit.Import('accept', num),
-                ROOT.RooFit.Import('reject', denom),
+                ROOT.RooFit.Import('reject', fail),
             )
             log.info("Putting fit data in workspace")
             ws_import(roo_data, ROOT.RooFit.Rename('_'.join((region,) + path)))
@@ -126,14 +147,17 @@ if __name__ == "__main__":
             log.info("Getting fit function: %s", function_name)
             function = fit_models.function(function_name)
 
+            # Clone and rename
+            function = function.Clone(
+                '_'.join(('func', region,) + path)
+            )
+
+            ws_import(function)
+
             log.info("Making RooEfficiency")
             roo_eff = ROOT.RooEfficiency(
                 '_'.join((region,) + path + ('pdf',)),
                 "Fake rate", function, cut, "accept")
-            ws_import(
-                roo_eff,
-                ROOT.RooFit.RenameConflictNodes('_'.join((region,) + path))
-            )
 
             log.info("Doing fit!")
             fit_result = roo_eff.fitTo(

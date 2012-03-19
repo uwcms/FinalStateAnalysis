@@ -7,6 +7,8 @@ mega=$(fsa)/TMegaSelector/scripts/mega2
 
 .SECONDARY: %.root fake_rates.json
 
+.PRECIOUS: %.root
+
 # Target to make EMT plots
 
 emt_analysis: results/analysis/data_MuEG_Run2011B_PromptReco_v1.emt.root

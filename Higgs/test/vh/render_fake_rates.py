@@ -11,6 +11,7 @@ Author: Evan K. Friis, UW
 from RecoLuminosity.LumiDB import argparse
 import logging
 import os
+import re
 import sys
 # Need to generate dictionaries
 import FinalStateAnalysis.Utilities.RooFitTools as roofit
@@ -49,17 +50,31 @@ if __name__ == "__main__":
         data[datum.GetName()] = datum
         print datum
 
-    pdfs = {}
-    for pdf in roofit.iter_collection(ws.allPdfs()):
-        pdfs[pdf.GetName()] = pdf
+    functions = {}
+    # We need to unmangle the function names
+    name_extractor = re.compile('func_(?P<name>.*)')
+    for function in roofit.iter_collection(ws.allFunctions()):
+        function_name = function.GetName()
+        print function_name
+        match = name_extractor.match(function_name)
+        if not match:
+            continue
+        functions[match.group('name')] = function
 
     fit_results = {}
 
     canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 
+    keeps = []
     frame = x.frame()
+    ROOT.SetOwnership(frame,False)
     for data_name, data_info in data.iteritems():
+        frame = x.frame()
         data_info.plotOn(frame, ROOT.RooFit.Efficiency(cut))
+        function = functions[data_name]
+        function.plotOn(frame)
         frame.Draw()
+        canvas.SetLogy(True)
+        frame.SetMinimum(1e-4)
+        frame.SetMaximum(1)
         canvas.SaveAs(os.path.join(args.output, data_name + '.pdf'))
-
