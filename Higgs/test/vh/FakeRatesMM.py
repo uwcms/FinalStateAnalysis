@@ -13,12 +13,12 @@ from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
 meta = MetaTree()
 
 base_selections = [
+    meta.muon1_muon2_SS > 0.5,
+
     #meta.doublemu > 0.5,
     meta.muon1Pt > 20,
     meta.muon2Pt > 10,
     meta.muon1WWID > 0.5,
-
-    meta.muon1_muon2_SS > 0.5,
 
     # Make sure we only get one candidate per event
     # we measure the subleading muon
