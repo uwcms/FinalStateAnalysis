@@ -79,7 +79,7 @@ if __name__ == "__main__":
     for data_name, data_info in data.iteritems():
         log.info("Making %s plot", data_name)
         frame = x.frame()
-        data_info.plotOn(frame, ROOT.RooFit.Efficiency(cut))
+        frame.GetYaxis().SetTitle("Fake rate")
         result = ws.genobj('result_' + data_name)
         load_fit_result(result, ws)
         function = functions[data_name]
@@ -88,6 +88,9 @@ if __name__ == "__main__":
                     ROOT.RooFit.VisualizeError(result, 1.0),
                     ROOT.RooFit.FillColor(styling.colors['ewk_yellow'].code),
                    )
+        function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kRed),
+                        ROOT.RooFit.LineStyle(2))
+        data_info.plotOn(frame, ROOT.RooFit.Efficiency(cut))
         frame.Draw()
         canvas.SetLogy(True)
         frame.SetMinimum(1e-4)
