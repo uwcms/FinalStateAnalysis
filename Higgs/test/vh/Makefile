@@ -5,8 +5,10 @@ ntuple_id=2012-03-14-Higgs
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
 
-.PRECIOUS: %.root results/fake_rates/mu/%.mmm.root \ 
-	results/fake_rates/mu/%.mm.root 
+.SECONDARY: %.root \
+  results/fake_rates/mu/%.mmm.root \
+  results/fake_rates/mu/%.mm.root \
+  results/fake_rates/mu/%.mmmt.root 
 
 # Target to make EMT plots
 
@@ -67,9 +69,13 @@ results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(ntuple_id)/%.txt
 results/fake_rates/mu/%.mm.root: FakeRatesMM.py inputs/$(ntuple_id)/%.txt
 	$(mega) $^ /mumu/final/Ntuple $@
 
+# Make num/denom for jet->mu fake rate in MMMT events
+results/fake_rates/mu/%.mmmt.root: FakeRatesMMMT.py inputs/$(ntuple_id)/%.txt
+	$(mega) $^ /mmmt/final/Ntuple $@
+
 # How we combine all mu fake rate sources into a single file
 results/fake_rates/mu/%.all.root: results/fake_rates/mu/%.mm.root \
-  results/fake_rates/mu/%.mmm.root 
+  results/fake_rates/mu/%.mmm.root results/fake_rates/mu/%.mmmt.root 
 	hadd -f $@ $^
 
 # Make num/denom for jet->e fake rate in MME events

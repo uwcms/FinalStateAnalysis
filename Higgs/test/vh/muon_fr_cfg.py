@@ -39,6 +39,7 @@ def make_regions(sample):
         'wjets' :  views.SubdirectoryView(sample, 'wjets'),
         'qcd' :  views.SubdirectoryView(sample, 'qcd'),
         'zmm' :  views.SubdirectoryView(sample, 'zmm'),
+        'zmm_tau20' :  views.SubdirectoryView(sample, 'zmm_tau20'),
     }
     # EWK is combo of wjets and ZMM
     #regions['ewk'] = views.SumView(regions['wjets'], regions['zmm']),
