@@ -6,12 +6,15 @@ Author: Evan K. Friis
 
 '''
 
-import ROOT
 import logging
+import ROOT
+import sys
 
 if __name__ == "__main__":
     log = logging.getLogger("make_fit_models")
     logging.basicConfig(level=logging.INFO)
+
+    output_file = sys.argv[1]
 
     log.info("Building RooWorkspace")
     ws = ROOT.RooWorkspace("fit_models")
@@ -59,4 +62,4 @@ if __name__ == "__main__":
     roo_cut.defineType("reject", 0)
     ws_import(roo_cut)
 
-    ws.writeToFile("fit_models.root")
+    ws.writeToFile(output_file)

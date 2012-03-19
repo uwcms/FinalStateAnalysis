@@ -152,21 +152,23 @@ analysis: emt_analysis mmt_analysis
 ################################################################################
 
 # Script to build the file w/ the fake rate fit functions
-fit_models.root: make_fit_models.py
-	python make_fit_models.py
+results/fake_rates/fit_models.root: make_fit_models.py
+	python make_fit_models.py $@
 
 # Build the RooWorkspace with the fit results for the muon fake rates
-muon_fr_fits.root: fit_models.root fit_fake_rates.py muon_fr_cfg.py \
+results/fake_rates/muon_fr_fits.root: results/fake_rates/fit_models.root \
+  fit_fake_rates.py muon_fr_cfg.py \
   inputs/$(ntuple_id)/all_samples.json muon_fake_rates
 	./fit_fake_rates.py inputs/$(ntuple_id)/all_samples.json \
-	  muon_fr_cfg.py  fit_models.root \
+	  muon_fr_cfg.py  results/fake_rates/fit_models.root \
 	  $@ results/fake_rates/mu/*.all.root
 
 # Build the RooWorkspace with the fit results for the electron fake rates
-electron_fr_fits.root: fit_models.root fit_fake_rates.py electron_fr_cfg.py \
+results/fake_rates/electron_fr_fits.root: results/fake_rates/fit_models.root \
+  fit_fake_rates.py electron_fr_cfg.py \
   inputs/$(ntuple_id)/all_samples.json  electron_fake_rates
 	./fit_fake_rates.py inputs/$(ntuple_id)/all_samples.json \
-	  electron_fr_cfg.py  fit_models.root \
+	  electron_fr_cfg.py  results/fake_rates/fit_models.root \
 	  $@ results/fake_rates/e/*.all.root
 
 
