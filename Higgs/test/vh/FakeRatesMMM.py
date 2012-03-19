@@ -31,8 +31,11 @@ base_selections = [
     # Make sure we only get one candidate per event
     meta.muon1Pt > meta.muon2Pt,
 
+    meta.muon3PixHits > 0.5,
+
     meta.muon1AbsEta < 2.1,
     meta.muon2AbsEta < 2.1,
+    meta.muon3AbsEta < 2.1,
 
     # Make sure this isn't a ZZ event
     meta.muVetoPt5 < 0.5,
