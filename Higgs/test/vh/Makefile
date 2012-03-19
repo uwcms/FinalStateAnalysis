@@ -158,7 +158,7 @@ results/fake_rates/fit_models.root: make_fit_models.py
 # Build the RooWorkspace with the fit results for the muon fake rates
 results/fake_rates/muon_fr_fits.root: results/fake_rates/fit_models.root \
   fit_fake_rates.py muon_fr_cfg.py \
-  inputs/$(ntuple_id)/all_samples.json muon_fake_rates
+  inputs/$(ntuple_id)/all_samples.json $(muon_fake_jobs)
 	./fit_fake_rates.py inputs/$(ntuple_id)/all_samples.json \
 	  muon_fr_cfg.py  results/fake_rates/fit_models.root \
 	  $@ results/fake_rates/mu/*.all.root
@@ -166,7 +166,7 @@ results/fake_rates/muon_fr_fits.root: results/fake_rates/fit_models.root \
 # Build the RooWorkspace with the fit results for the electron fake rates
 results/fake_rates/electron_fr_fits.root: results/fake_rates/fit_models.root \
   fit_fake_rates.py electron_fr_cfg.py \
-  inputs/$(ntuple_id)/all_samples.json  electron_fake_rates
+  inputs/$(ntuple_id)/all_samples.json  $(e_fake_jobs)
 	./fit_fake_rates.py inputs/$(ntuple_id)/all_samples.json \
 	  electron_fr_cfg.py  results/fake_rates/fit_models.root \
 	  $@ results/fake_rates/e/*.all.root
@@ -181,8 +181,8 @@ fake_rates.C: fake_rates.json make_fakerates.py
 
 # See http://www.cmcrossroads.com/ask-mr-make/12908-rules-with-multiple-outputs-in-gnu-make
 # for dealing w/ commands with multiple outputs 
-plots/fake_rates/muons/%.pdf: muon_fr_fits.root render_fake_rates.py
-	render_fake_rates.py muon_fr_fits.root plots/fake_rates/muons/
+plots/fake_rates/muons/a.pdf: results/fake_rates/muon_fr_fits.root render_fake_rates.py
+	./render_fake_rates.py results/fake_rates/muon_fr_fits.root plots/fake_rates/muons/
 
 ################################################################################
 ## Cleanup #####################################################################
