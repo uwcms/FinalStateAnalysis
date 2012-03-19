@@ -23,9 +23,19 @@ sys.argv = []
 from rootpy.io import open
 import ROOT
 
+log = logging.getLogger("render_fake_rates")
+logging.basicConfig(level=logging.DEBUG)
+
+def load_fit_result(fit_result, ws):
+    ''' Load the fit result values into the appropriate variables '''
+    for var in roofit.iter_collection(ws.allVars()):
+        name = var.GetName()
+        if fit_result.floatParsFinal().find(name):
+            value = fit_result.floatParsFinal().find(name).getVal()
+            var.setVal(value)
+            log.info("Setting var %s to %f", name, value)
+
 if __name__ == "__main__":
-    log = logging.getLogger("render_fake_rates")
-    logging.basicConfig(level=logging.DEBUG)
 
     parser.add_argument('input', help='Input file w/ fit results RooWorkspace')
     parser.add_argument('output', help='Output directory to store plots in')
@@ -61,16 +71,17 @@ if __name__ == "__main__":
             continue
         functions[match.group('name')] = function
 
-    fit_results = {}
-
     canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 
     keeps = []
     frame = x.frame()
     ROOT.SetOwnership(frame,False)
     for data_name, data_info in data.iteritems():
+        log.info("Making %s plot", data_name)
         frame = x.frame()
         data_info.plotOn(frame, ROOT.RooFit.Efficiency(cut))
+        result = ws.genobj('result_' + data_name)
+        load_fit_result(result, ws)
         function = functions[data_name]
         function.plotOn(frame)
         frame.Draw()

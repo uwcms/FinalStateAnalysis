@@ -7,6 +7,7 @@ Author: Evan K. Friis, UW
 
 '''
 
+
 from RecoLuminosity.LumiDB import argparse
 from FinalStateAnalysis.PatTools.data_views import get_views
 import glob
@@ -159,15 +160,17 @@ if __name__ == "__main__":
                 '_'.join((region,) + path + ('pdf',)),
                 "Fake rate", function, cut, "accept")
 
-            log.info("Doing fit!")
+            log.info("Doing fit for %s!", region +  '/'.join(path))
             fit_result = roo_eff.fitTo(
                 roo_data,
                 ROOT.RooFit.ConditionalObservables(ROOT.RooArgSet(x)),
                 ROOT.RooFit.Save(True),
-                ROOT.RooFit.PrintLevel(-1)
+                #ROOT.RooFit.PrintLevel(-1)
             )
             ws_import(
                 fit_result,
+                '_'.join(('result', region,) + path)
             )
+
 
     ws.writeToFile(args.output)
