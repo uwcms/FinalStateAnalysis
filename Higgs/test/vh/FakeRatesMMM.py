@@ -91,10 +91,10 @@ class FakeRatesMMM(MegaBase):
             histograms['zmm/pt10/iso15/all/muonPt'].Fill(pt)
             histograms['zmm/pt10/iso30/all/muonJetPt'].Fill(jetpt)
             histograms['zmm/pt10/iso30/all/muonPt'].Fill(pt)
-            if wwid and tree.muon2RelPFIsoDB < 0.15:
+            if wwid and tree.muon3RelPFIsoDB < 0.15:
                 histograms['zmm/pt10/iso15/pass/muonJetPt'].Fill(jetpt)
                 histograms['zmm/pt10/iso15/pass/muonPt'].Fill(pt)
-            if wwid and tree.muon2RelPFIsoDB < 0.3:
+            if wwid and tree.muon3RelPFIsoDB < 0.3:
                 histograms['zmm/pt10/iso30/pass/muonJetPt'].Fill(jetpt)
                 histograms['zmm/pt10/iso30/pass/muonPt'].Fill(pt)
         if pt20:
@@ -102,10 +102,10 @@ class FakeRatesMMM(MegaBase):
             histograms['zmm/pt20/iso15/all/muonPt'].Fill(pt)
             histograms['zmm/pt20/iso30/all/muonJetPt'].Fill(jetpt)
             histograms['zmm/pt20/iso30/all/muonPt'].Fill(pt)
-            if wwid and tree.muon2RelPFIsoDB < 0.15:
+            if wwid and tree.muon3RelPFIsoDB < 0.15:
                 histograms['zmm/pt20/iso15/pass/muonJetPt'].Fill(jetpt)
                 histograms['zmm/pt20/iso15/pass/muonPt'].Fill(pt)
-            if wwid and tree.muon2RelPFIsoDB < 0.3:
+            if wwid and tree.muon3RelPFIsoDB < 0.3:
                 histograms['zmm/pt20/iso30/pass/muonJetPt'].Fill(jetpt)
                 histograms['zmm/pt20/iso30/pass/muonPt'].Fill(pt)
 
