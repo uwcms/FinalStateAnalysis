@@ -5,9 +5,8 @@ ntuple_id=2012-03-14-Higgs
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
 
-.SECONDARY: %.root fake_rates.json
-
-.PRECIOUS: %.root
+.PRECIOUS: %.root results/fake_rates/mu/%.mmm.root \ 
+	results/fake_rates/mu/%.mm.root 
 
 # Target to make EMT plots
 
@@ -108,6 +107,9 @@ inputs/$(ntuple_id)/all_samples.json: $(all_meta_info)
 ################################################################################
 ## Define which samples are used for what ######################################
 ################################################################################
+
+muon_fake_samples=$(sm_backgrounds) $(doublemu_samples))
+e_fake_samples=$(sm_backgrounds) $(mueg_samples))
 
 # fake rate jobs
 muon_fake_jobs=$(patsubst %, results/fake_rates/mu/%.all.root, \
