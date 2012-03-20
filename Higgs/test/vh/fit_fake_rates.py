@@ -20,16 +20,26 @@ import rootpy.io as io
 import sys
 
 # Steal the args so ROOT doesn't mess them up!
-parser = argparse.ArgumentParser()
 args = sys.argv[:]
-sys.argv = []
+sys.argv = [sys.argv[0]]
 
 import ROOT
+
+# Functor to insert a directory at the end of a path
+# a/b/c/histo -> a/b/c/X/histo
+def make_path_mangler(to_insert):
+    def functor(path):
+        dir = os.path.dirname(path)
+        var = os.path.basename(path)
+        newpath = os.path.join(dir, to_insert, var)
+        return newpath
+    return functor
 
 if __name__ == "__main__":
     log = logging.getLogger("fit_fakerates")
     logging.basicConfig(level=logging.DEBUG)
 
+    parser = argparse.ArgumentParser()
     parser.add_argument('meta', help='File with meta information')
 
     parser.add_argument('cfg', help='Configuration python file')
@@ -81,15 +91,6 @@ if __name__ == "__main__":
     x = fit_models.var('x')
     cut = fit_models.cat('cut')
 
-    # Make pass and fail views
-    def make_path_mangler(to_insert):
-        def functor(path):
-            print path
-            dir = os.path.dirname(path)
-            var = os.path.basename(path)
-            newpath = os.path.join(dir, to_insert, var)
-            return newpath
-        return functor
 
     # Wrap the views of the histograms to translate to RooDataHists
     def roodatahistizer(hist):
