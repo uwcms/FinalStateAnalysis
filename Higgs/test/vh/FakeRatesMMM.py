@@ -28,6 +28,8 @@ base_selections = [
     # Make sure the muons are within 10 GeV of the Z
     meta.muon1_muon2_Zcompat < 10,
 
+    meta.muon3MtToMET < 30,
+
     # Make sure we only get one candidate per event
     meta.muon1Pt > meta.muon2Pt,
 

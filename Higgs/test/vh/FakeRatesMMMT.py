@@ -34,6 +34,8 @@ base_selections = [
     # Make sure we only get one candidate per event
     meta.m1Pt > meta.m2Pt,
 
+    meta.m3MtToMET < 30,
+
     meta.m3PixHits > 0.5,
 
     meta.m1AbsEta < 2.1,

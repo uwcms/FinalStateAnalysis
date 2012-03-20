@@ -80,6 +80,7 @@ if __name__ == "__main__":
         log.info("Making %s plot", data_name)
         frame = x.frame()
         frame.GetYaxis().SetTitle("Fake rate")
+        frame.GetXaxis().SetTitle("p_{T}")
         result = ws.genobj('result_' + data_name)
         load_fit_result(result, ws)
         function = functions[data_name]
@@ -93,7 +94,7 @@ if __name__ == "__main__":
         data_info.plotOn(frame, ROOT.RooFit.Efficiency(cut))
         frame.Draw()
         canvas.SetLogy(True)
-        frame.SetMinimum(1e-4)
+        frame.SetMinimum(1e-3)
         frame.SetMaximum(1)
         canvas.SaveAs(os.path.join(args.output, data_name + '.pdf'))
 

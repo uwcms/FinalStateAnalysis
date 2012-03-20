@@ -28,7 +28,7 @@ if __name__ == "__main__":
     # Landau parameters
     scale = ROOT.RooRealVar("scale", "Landau Scale", 0.5, 0, 10)
     mu = ROOT.RooRealVar("mu", "Landau #mu", 10, 0, 100)
-    sigma = ROOT.RooRealVar("sigma", "Landau #sigma", 1, 0.5, 10)
+    sigma = ROOT.RooRealVar("sigma", "Landau #sigma", 1, 1e-4, 10)
     constant = ROOT.RooRealVar("offset", "constant", 1.0e-2, 0, 1)
 
     landau_func_str = "scale*TMath::Landau(x,mu,sigma,0)+offset"
@@ -40,10 +40,10 @@ if __name__ == "__main__":
 
     log.info("Defining expo fit model")
 
-    expo_func_str = "scale*TMath::Exp(-1*x*mu)+offset"
+    expo_func_str = "scale*TMath::Exp(-1*x*sigma)+offset"
     expo_func = ROOT.RooFormulaVar(
         "expo_func", "Fake Rate (Exp.)", expo_func_str,
-        ROOT.RooArgList(scale, mu, constant, x))
+        ROOT.RooArgList(scale, sigma, constant, x))
 
     ws_import(expo_func)
 
@@ -63,3 +63,4 @@ if __name__ == "__main__":
     ws_import(roo_cut)
 
     ws.writeToFile(output_file)
+
