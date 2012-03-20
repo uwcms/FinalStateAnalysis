@@ -85,10 +85,13 @@ def get_views(files, sample_extractor, evt_counter, target_lumi):
         log.info("Constructing sum view from %i subsamples" % len(subsamples))
         sumview = views.SumView(
             *[raw_sample_infos[subsample]['view'] for subsample in subsamples])
+        unweighted_view = views.SumView(
+            *[raw_sample_infos[subsample]['file'] for subsample in subsamples])
         # TODO try and find a style
         log.warning("need to apply style")
         proper_sample_infos[name] = {
             'view' : sumview,
+            'unweighted_view' : unweighted_view,
             'subsamples' : dict(
                 (subsample, raw_sample_infos[subsample])
                 for subsample in subsamples
