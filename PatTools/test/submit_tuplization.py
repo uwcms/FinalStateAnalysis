@@ -60,6 +60,7 @@ for sample in sorted(datadefs.keys()):
         'farmoutAnalysisJobs',
         #'--no-shared-fs', # Copy libs to submit dir so we don't kill AFS
         '--infer-cmssw-path',
+        '--vsize-limit=30000',
         '--input-files-per-job=1',
         '"--output-dir=srm://cmssrm.hep.wisc.edu:8443/srm/v2/server?SFN=/hdfs/store/user/efriis/%s/%s/"' % (jobId, sample),
         '--submit-dir=%s' % submit_dir,
