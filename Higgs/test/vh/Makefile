@@ -55,6 +55,12 @@ results/analysis/%.mmt.root: AnalyzeMMT.py inputs/$(ntuple_id)/%.txt \
 	$(mega) AnalyzeMMT.py inputs/$(ntuple_id)/$*.txt \
 	  /mumutau/final/Ntuple $@ 
 
+# Run the ZMM analysis
+results/analysis/zmumu/%.root: ZMuMuControl.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so
+	$(mega) ZMuMuControl.py inputs/$(ntuple_id)/$*.txt \
+	  /mumu/final/Ntuple $@ 
+
 # Run the ZH MMT analysis
 results/analysis/%.mmmt.root: AnalyzeMMMT.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so
@@ -135,6 +141,9 @@ mmt_ana_jobs=$(patsubst %, results/analysis/%.mmt.root, \
 mmmt_ana_jobs=$(patsubst %, results/analysis/%.mmmt.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
+zmm_control_jobs=$(patsubst %, results/analysis/zmumu/%.root, \
+	$(sm_backgrounds) $(doublemu_samples))
+
 ################################################################################
 ## MC to data correction functions  ############################################
 ################################################################################
@@ -154,6 +163,8 @@ emt_analysis: $(emt_ana_jobs)
 mmt_analysis: $(mmt_ana_jobs)
 
 mmmt_analysis: $(mmmt_ana_jobs)
+
+zmm_analysis: $(zmm_control_jobs)
 
 analysis: emt_analysis mmt_analysis
 
