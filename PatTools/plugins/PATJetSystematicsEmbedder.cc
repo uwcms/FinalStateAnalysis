@@ -68,7 +68,7 @@ void PATJetSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     output->push_back(jet); // make our own copy
 
     double unc = 0;
-    if (std::abs(jet.eta()) < 5.2) {
+    if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9) {
       jecUnc->setJetEta(jet.eta());
       jecUnc->setJetPt(jet.pt()); // here you must use the CORRECTED jet pt
       unc = jecUnc->getUncertainty(true);
