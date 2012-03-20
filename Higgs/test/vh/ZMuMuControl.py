@@ -76,11 +76,11 @@ class ZMuMuControl(MegaBase):
         #print self.histograms.keys()
         histograms['plots/zMass'].Fill(tree.muon1_muon2_Mass)
 
-        if tree.muon1_muon2_Mass > 80 or tree.muon1_muon2_Mass < 100:
+        if tree.muon1_muon2_Mass < 80 or tree.muon1_muon2_Mass > 100:
             return True
 
         histograms['plots/rhoBeforeIso'].Fill(tree.rho)
-        histograms['plots/nvtxBeforeIso'].Fill(tree.ntvtx)
+        histograms['plots/nvtxBeforeIso'].Fill(tree.nvtx)
 
 
         histograms['plots/muon1RelIso'].Fill(tree.muon1RelPFIsoDB)
@@ -93,7 +93,7 @@ class ZMuMuControl(MegaBase):
             return True
 
         histograms['plots/rhoAfterIso'].Fill(tree.rho)
-        histograms['plots/nvtxAfterIso'].Fill(tree.ntvtx)
+        histograms['plots/nvtxAfterIso'].Fill(tree.nvtx)
 
         histograms['plots/muon1Pt'].Fill(tree.muon1Pt)
         histograms['plots/muon2Pt'].Fill(tree.muon2Pt)
