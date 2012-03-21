@@ -8,12 +8,20 @@ mega=$(fsa)/TMegaSelector/scripts/mega2
 .SECONDARY: %.root \
   results/fake_rates/mu/%.mmm.root \
   results/fake_rates/mu/%.mm.root \
-  results/fake_rates/mu/%.mmmt.root 
+  results/fake_rates/mu/%.mmmt.root \
+  results/analysis/emt/%.root \
+  results/analysis/mmt/%.root \
+  results/analysis/mmmt/%.root \
+  results/analysis/mmme/%.root 
 
 .PRECIOUS: %.root \
   results/fake_rates/mu/%.mmm.root \
   results/fake_rates/mu/%.mm.root \
-  results/fake_rates/mu/%.mmmt.root 
+  results/fake_rates/mu/%.mmmt.root \
+  results/analysis/emt/%.root \
+  results/analysis/mmt/%.root \
+  results/analysis/mmmt/%.root \
+  results/analysis/mmme/%.root 
 
 # Target to make EMT plots
 
@@ -66,11 +74,17 @@ results/analysis/zmumu/%.root: ZMuMuControl.py inputs/$(ntuple_id)/%.txt \
 	$(mega) ZMuMuControl.py inputs/$(ntuple_id)/$*.txt \
 	  /mumu/final/Ntuple $@ 
 
-# Run the ZH MMT analysis
+# Run the ZH MMMT analysis
 results/analysis/mmmt/%.root: AnalyzeMMMT.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so
 	$(mega) AnalyzeMMMT.py inputs/$(ntuple_id)/$*.txt \
 	  /mmmt/final/Ntuple $@ 
+
+# Run the ZH MMME analysis
+results/analysis/mmme/%.root: AnalyzeMMME.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so
+	$(mega) AnalyzeMMME.py inputs/$(ntuple_id)/$*.txt \
+	  /emmm/final/Ntuple $@ 
 
 # Make num/denom for jet->mu fake rate in MMM events
 results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(ntuple_id)/%.txt
@@ -145,6 +159,9 @@ mmt_ana_jobs=$(patsubst %, results/analysis/mmt/%.root, \
 mmmt_ana_jobs=$(patsubst %, results/analysis/mmmt/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
+mmme_ana_jobs=$(patsubst %, results/analysis/mmme/%.root, \
+	$(sm_backgrounds) $(doublemu_samples))
+
 zmm_control_jobs=$(patsubst %, results/analysis/zmumu/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
@@ -168,9 +185,11 @@ mmt_analysis: $(mmt_ana_jobs)
 
 mmmt_analysis: $(mmmt_ana_jobs)
 
+mmme_analysis: $(mmme_ana_jobs)
+
 zmm_analysis: $(zmm_control_jobs)
 
-analysis: emt_analysis mmt_analysis
+analysis: emt_analysis mmt_analysis mmmt_analysis mmme_analysis
 
 ################################################################################
 ## Fake rate functions #########################################################
