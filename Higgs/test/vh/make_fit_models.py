@@ -44,8 +44,12 @@ if __name__ == "__main__":
     expo_func = ROOT.RooFormulaVar(
         "expo_func", "Fake Rate (Exp.)", expo_func_str,
         ROOT.RooArgList(scale, sigma, constant, x))
-
     ws_import(expo_func)
+
+    log.info("Defining linear fit model")
+    ws.factory(
+        "expr::linear_func('offset + slope*x', x, {offset, slope[1e-4, 0, 1e-1]})"
+    )
 
     log.info("Defining optional constraint")
     # This pulls the fits to the left.
