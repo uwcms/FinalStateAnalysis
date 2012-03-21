@@ -7,6 +7,7 @@ Process dispatcher function for Mega framework
 import multiprocessing
 from MegaWorker import MegaWorker
 from MegaMerger import MegaMerger
+import sys
 
 class MegaDispatcher(object):
     log = multiprocessing.get_logger()
@@ -26,6 +27,8 @@ class MegaDispatcher(object):
             input_q.put(file)
 
         result_q = multiprocessing.Queue()
+
+        everything_will_turn_out_okay = True
 
         try:
             workers = [
@@ -51,8 +54,18 @@ class MegaDispatcher(object):
 
             # Require all the workers to finish
             #input_q.join()
-            for worker in workers:
+            for i, worker in enumerate(workers):
                 worker.join()
+                exit_code = worker.exitcode
+                if exit_code:
+                    everything_will_turn_out_okay = False
+                    self.log.error("Working %i exited with code: %i",
+                                   i, worker.exitcode)
+
+            if not everything_will_turn_out_okay:
+                self.log.error("A worker died.  Terminating merger and exiting")
+                merger.terminate()
+                sys.exit(2)
 
             self.log.info("All process jobs have completed.")
 
@@ -72,5 +85,6 @@ class MegaDispatcher(object):
                 worker.terminate()
             self.log.error("Terminating merger")
             merger.terminate()
+            sys.exit(1)
 
         self.log.info("All merge jobs have completed.")
