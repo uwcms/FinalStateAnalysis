@@ -8,6 +8,7 @@ Author: Evan K. Friis, UW
 '''
 
 
+import atexit
 from RecoLuminosity.LumiDB import argparse
 import logging
 import os
@@ -46,6 +47,8 @@ if __name__ == "__main__":
     log.info("Opening input file %s", args.input)
 
     file = io.open(args.input, 'r')
+    # Always close the file before exiting, otherwise RooPlot will segfault
+    atexit.register(file.Close)
 
     log.info("Getting workspace")
     ws = file.Get("fit_results")
@@ -103,7 +106,7 @@ if __name__ == "__main__":
 
         canvas.SaveAs(os.path.join(args.output, data_name + '.pdf'))
 
-    file.Close()
+    #file.Close()
 
     # Touch a "dummy" txt file file so Make knows what's up.
     # Write the list of files we just wrote.
