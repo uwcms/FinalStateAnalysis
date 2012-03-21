@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser()
 args = sys.argv[:]
 sys.argv = []
 
-from rootpy.io import open
+import rootpy.io as io
 import ROOT
 
 log = logging.getLogger("render_fake_rates")
@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     log.info("Opening input file %s", args.input)
 
-    file = open(args.input, 'r')
+    file = io.open(args.input, 'r')
 
     log.info("Getting workspace")
     ws = file.Get("fit_results")
@@ -76,6 +76,8 @@ if __name__ == "__main__":
 
     keeps = []
     frame = x.frame()
+    # Keep track of output files we write
+    output_files = []
     for data_name, data_info in data.iteritems():
         log.info("Making %s plot", data_name)
         frame = x.frame()
@@ -96,6 +98,16 @@ if __name__ == "__main__":
         canvas.SetLogy(True)
         frame.SetMinimum(1e-3)
         frame.SetMaximum(1)
+        output_files.append(os.path.abspath(
+            os.path.join(args.output, data_name + '.pdf')))
+
         canvas.SaveAs(os.path.join(args.output, data_name + '.pdf'))
 
     file.Close()
+
+    # Touch a "dummy" txt file file so Make knows what's up.
+    # Write the list of files we just wrote.
+    dummy_file = open(os.path.join(args.output, 'plot_list.txt'), 'w')
+    for output_file in output_files:
+        dummy_file.write(output_file + '\n')
+

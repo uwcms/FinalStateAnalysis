@@ -202,8 +202,9 @@ fake_rates.C: fake_rates.json make_fakerates.py
 
 # See http://www.cmcrossroads.com/ask-mr-make/12908-rules-with-multiple-outputs-in-gnu-make
 # for dealing w/ commands with multiple outputs 
-plots/fake_rates/muons/a.pdf: results/fake_rates/muon_fr_fits.root render_fake_rates.py
-	./render_fake_rates.py results/fake_rates/muon_fr_fits.root plots/fake_rates/muons/
+plots/muon_fake_fits/plot_list.txt: results/fake_rates/muon_fr_fits.root render_fake_rates.py
+	./render_fake_rates.py results/fake_rates/muon_fr_fits.root plots/muon_fake_fits/
+
 
 ################################################################################
 ## Cleanup #####################################################################
