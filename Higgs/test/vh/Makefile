@@ -10,6 +10,11 @@ mega=$(fsa)/TMegaSelector/scripts/mega2
   results/fake_rates/mu/%.mm.root \
   results/fake_rates/mu/%.mmmt.root 
 
+.PRECIOUS: %.root \
+  results/fake_rates/mu/%.mmm.root \
+  results/fake_rates/mu/%.mm.root \
+  results/fake_rates/mu/%.mmmt.root 
+
 # Target to make EMT plots
 
 emt_analysis: results/analysis/data_MuEG_Run2011B_PromptReco_v1.emt.root
@@ -126,7 +131,6 @@ e_fake_samples=$(sm_backgrounds) $(mueg_samples))
 # fake rate jobs
 muon_fake_jobs=$(patsubst %, results/fake_rates/mu/%.all.root, \
 	$(sm_backgrounds) $(doublemu_samples))
-
 
 e_fake_jobs=$(patsubst %, results/fake_rates/e/%.all.root, \
 	$(sm_backgrounds) $(mueg_samples))
