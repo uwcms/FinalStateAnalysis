@@ -59,6 +59,7 @@ variables = [
     ('Zmass', 'Mass of Z muons', 60, 60, 120),
     ('muonJetPt', 'Mu Jet Pt', 200, 0, 200),
     ('muonPt', 'Mu Pt', 200, 0, 200),
+    ('tauBtag', 'Tau BTag', 120, -6, 6),
 ]
 
 probe_pt_cuts = [('pt10', 10), ('pt20', 20)]
@@ -80,6 +81,7 @@ class FakeRatesMMMT(MegaBase):
         self.enable_branch('m3Pt')
         self.enable_branch('m3JetPt')
         self.enable_branch('m1_m2_Mass')
+        self.enable_branch('tJetBtag')
 
     def process(self, entry):
         tree = self.tree
@@ -93,19 +95,24 @@ class FakeRatesMMMT(MegaBase):
         pt = tree.m3Pt
         pt10 = pt > 10
         pt20 = pt > 20
+        btag = tree.tJetBtag
         wwid = tree.m3WWID > 0.5
 
         if pt10:
             histograms['zmm_tau20/pt10/iso15/all/muonJetPt'].Fill(jetpt)
             histograms['zmm_tau20/pt10/iso15/all/muonPt'].Fill(pt)
+            histograms['zmm_tau20/pt10/iso15/all/tauBtag'].Fill(btag)
             histograms['zmm_tau20/pt10/iso30/all/muonJetPt'].Fill(jetpt)
             histograms['zmm_tau20/pt10/iso30/all/muonPt'].Fill(pt)
+            histograms['zmm_tau20/pt10/iso30/all/tauBtag'].Fill(btag)
             if wwid and tree.m3RelPFIsoDB < 0.15:
                 histograms['zmm_tau20/pt10/iso15/pass/muonJetPt'].Fill(jetpt)
                 histograms['zmm_tau20/pt10/iso15/pass/muonPt'].Fill(pt)
+                histograms['zmm_tau20/pt10/iso15/pass/tauBtag'].Fill(btag)
             if wwid and tree.m3RelPFIsoDB < 0.3:
                 histograms['zmm_tau20/pt10/iso30/pass/muonJetPt'].Fill(jetpt)
                 histograms['zmm_tau20/pt10/iso30/pass/muonPt'].Fill(pt)
+                histograms['zmm_tau20/pt10/iso30/pass/tauBtag'].Fill(btag)
         if pt20:
             histograms['zmm_tau20/pt20/iso15/all/muonJetPt'].Fill(jetpt)
             histograms['zmm_tau20/pt20/iso15/all/muonPt'].Fill(pt)
