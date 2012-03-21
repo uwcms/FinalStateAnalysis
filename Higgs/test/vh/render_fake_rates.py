@@ -11,6 +11,7 @@ Author: Evan K. Friis, UW
 import atexit
 from RecoLuminosity.LumiDB import argparse
 import logging
+import math
 import os
 import re
 import sys
@@ -34,8 +35,12 @@ def load_fit_result(fit_result, ws):
         name = var.GetName()
         if fit_result.floatParsFinal().find(name):
             value = fit_result.floatParsFinal().find(name).getVal()
+            if math.isnan(value):
+                log.error("Var %s is NAN - returning false!", name)
+                return False
             var.setVal(value)
             log.info("Setting var %s to %f", name, value)
+    return True
 
 if __name__ == "__main__":
 
@@ -65,15 +70,18 @@ if __name__ == "__main__":
         print datum
 
     functions = {}
+    log.info("Loading functions")
     # We need to unmangle the function names
     name_extractor = re.compile('func_(?P<name>.*)')
     for function in roofit.iter_collection(ws.allFunctions()):
         function_name = function.GetName()
-        print function_name
+        log.info("Found function: %s", function_name)
         match = name_extractor.match(function_name)
         if not match:
+            log.warning("Can't find name for function, skipping!")
             continue
         functions[match.group('name')] = function
+        log.info("Added function with name %s", match.group('name'))
 
     canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 
@@ -87,15 +95,17 @@ if __name__ == "__main__":
         frame.GetYaxis().SetTitle("Fake rate")
         frame.GetXaxis().SetTitle("p_{T}")
         result = ws.genobj('result_' + data_name)
-        load_fit_result(result, ws)
-        function = functions[data_name]
-        function.plotOn(frame)
-        function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
-                    ROOT.RooFit.VisualizeError(result, 1.0),
-                    ROOT.RooFit.FillColor(styling.colors['ewk_yellow'].code),
-                   )
-        function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kRed),
-                        ROOT.RooFit.LineStyle(2))
+        fit_ok = load_fit_result(result, ws)
+        if fit_ok:
+            function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+                            ROOT.RooFit.VisualizeError(result, 1.0),
+                            ROOT.RooFit.FillColor(styling.colors['ewk_yellow'].code),
+                            ROOT.RooFit.PrintEvalErrors(-1),
+                           )
+            function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kRed),
+                            ROOT.RooFit.LineStyle(2),
+                            ROOT.RooFit.PrintEvalErrors(-1),
+                           )
         data_info.plotOn(frame, ROOT.RooFit.Efficiency(cut))
         frame.Draw()
         canvas.SetLogy(True)
@@ -105,8 +115,6 @@ if __name__ == "__main__":
             os.path.join(args.output, data_name + '.pdf')))
 
         canvas.SaveAs(os.path.join(args.output, data_name + '.pdf'))
-
-    #file.Close()
 
     # Touch a "dummy" txt file file so Make knows what's up.
     # Write the list of files we just wrote.
