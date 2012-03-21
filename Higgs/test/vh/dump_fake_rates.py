@@ -21,6 +21,7 @@ import rootpy.io as io
 from rootpy.plotting import views
 from fit_fake_rates import make_path_mangler
 from FinalStateAnalysis.PatTools.data_views import get_views
+from FinalStateAnalysis.StatTools.efficiencies import efficiency
 
 log = logging.getLogger("dump_fake_rates")
 logging.basicConfig(level=logging.DEBUG)
@@ -84,11 +85,12 @@ if __name__ == "__main__":
             num_entries = num_view.Get(path).Integral()
             all_entries = all_view.Get(path).Integral()
 
-            efficiency = 0
+            eff, eff_down, eff_up = 0, 0, 0
             if all_entries:
-                efficiency = 100*num_entries/all_entries
+                eff, eff_down, eff_up = efficiency(num_entries, all_entries)
+                eff, eff_down, eff_up = (eff*100, 100*eff_down, 100*eff_up)
 
-            sys.stdout.write("%s: %i/%i = %0.2f%%\n" % (
+            sys.stdout.write("%s: %i/%i = %0.2f%% +%0.2f -%0.2f\n" % (
                 sample, num_entries, all_entries,
-                efficiency))
+                eff, eff_up, eff_down))
 
