@@ -129,8 +129,13 @@ if __name__ == "__main__":
 
             # Path is (folder1, folder2, var)
             # need to convert this to all/pass to get num denominator
-            num = folder[0].Get(os.path.join(*path))
-            fail = folder[1].Get(os.path.join(*path))
+            try:
+                num = folder[0].Get(os.path.join(*path))
+                fail = folder[1].Get(os.path.join(*path))
+            except io.file.DoesNotExist:
+                log.error("=> the numerator of denominator don't exist, skipping!")
+                continue
+
             log.info("Num/fail have %f/%f entries", num.sumEntries(),
                      fail.sumEntries())
 
@@ -166,12 +171,11 @@ if __name__ == "__main__":
                 roo_data,
                 ROOT.RooFit.ConditionalObservables(ROOT.RooArgSet(x)),
                 ROOT.RooFit.Save(True),
-                #ROOT.RooFit.PrintLevel(-1)
+                ROOT.RooFit.PrintLevel(-1)
             )
             ws_import(
                 fit_result,
                 '_'.join(('result', region,) + path)
             )
-
 
     ws.writeToFile(args.output)
