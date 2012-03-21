@@ -16,13 +16,13 @@ base_selections = [
     meta.m1_m2_Zcompat < 10,
 
     # Require that the Higgs cand is OS
-    meta.m3_t_SS < 0.5,
+    meta.e_m3_SS < 0.5,
 
     # Order the Z muons by PT so we only have one candidate per event
     meta.m1Pt > meta.m2Pt,
 
-    meta.m3_e_Mass < 80,
-    meta.m3_e_Mass > 30,
+    meta.e_m3_Mass < 80,
+    meta.e_m3_Mass > 30,
 
     meta.m1Pt > 20,
     meta.m2Pt > 10,
@@ -35,8 +35,6 @@ base_selections = [
 
     meta.m1WWID > 0,
     meta.m2WWID > 0,
-
-    meta.tDecayFinding > 0.5,
 
     #meta.mu17ele8 > 0.5,
     meta.eAbsEta < 2.5,
@@ -53,7 +51,7 @@ base_selections = [
     meta.m3DZ < 0.2,
     meta.eDZ < 0.2,
 
-    meta.eMuOverlap < 0.5,
+    #meta.eMuOverlap < 0.5,
 ]
 
 
