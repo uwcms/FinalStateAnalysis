@@ -49,13 +49,13 @@ all_samples=$(all_data_samples) $(sm_backgrounds) $(dibosons)
 ################################################################################
 
 # Run the WH EMT analysis
-results/analysis/%.emt.root: AnalyzeEMT.py inputs/$(ntuple_id)/%.txt \
+results/analysis/emt/%.root: AnalyzeEMT.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so
 	$(mega) AnalyzeEMT.py inputs/$(ntuple_id)/$*.txt \
 	  /emutau/final/Ntuple $@ 
 
 # Run the WH MMT analysis
-results/analysis/%.mmt.root: AnalyzeMMT.py inputs/$(ntuple_id)/%.txt \
+results/analysis/mmt/%.root: AnalyzeMMT.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so
 	$(mega) AnalyzeMMT.py inputs/$(ntuple_id)/$*.txt \
 	  /mumutau/final/Ntuple $@ 
@@ -67,7 +67,7 @@ results/analysis/zmumu/%.root: ZMuMuControl.py inputs/$(ntuple_id)/%.txt \
 	  /mumu/final/Ntuple $@ 
 
 # Run the ZH MMT analysis
-results/analysis/%.mmmt.root: AnalyzeMMMT.py inputs/$(ntuple_id)/%.txt \
+results/analysis/mmmt/%.root: AnalyzeMMMT.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so
 	$(mega) AnalyzeMMMT.py inputs/$(ntuple_id)/$*.txt \
 	  /mmmt/final/Ntuple $@ 
@@ -136,13 +136,13 @@ e_fake_jobs=$(patsubst %, results/fake_rates/e/%.all.root, \
 	$(sm_backgrounds) $(mueg_samples))
 
 # analysis jobs
-emt_ana_jobs=$(patsubst %, results/analysis/%.emt.root, \
+emt_ana_jobs=$(patsubst %, results/analysis/emt/%.root, \
 	$(sm_backgrounds) $(mueg_samples))
 
-mmt_ana_jobs=$(patsubst %, results/analysis/%.mmt.root, \
+mmt_ana_jobs=$(patsubst %, results/analysis/mmt/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
-mmmt_ana_jobs=$(patsubst %, results/analysis/%.mmmt.root, \
+mmmt_ana_jobs=$(patsubst %, results/analysis/mmmt/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
 zmm_control_jobs=$(patsubst %, results/analysis/zmumu/%.root, \
