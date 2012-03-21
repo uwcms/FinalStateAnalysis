@@ -25,7 +25,14 @@ for pt_type in ['pt10', 'pt20']:
         }
         # Fit mu pt w/ an expo
         var = 'muonPt'
-        fit_func = 'expo_func'
+        fit_func = 'linear_func'
+        constraint = None,
+        things_to_fit[(pt_type, iso_type, var)] = {
+            'func' : fit_func,
+            'constraint' : constraint
+        }
+        var = 'tauBtag'
+        fit_func = 'linear_func'
         constraint = None,
         things_to_fit[(pt_type, iso_type, var)] = {
             'func' : fit_func,
