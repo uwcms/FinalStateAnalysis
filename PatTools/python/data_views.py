@@ -7,6 +7,7 @@ Applies MC normalization factors, styles, etc.
 '''
 
 from datadefs import datadefs, data_name_map
+from data_styles import data_styles
 import logging
 from rootpy.io import open
 from rootpy.plotting import views
@@ -87,8 +88,15 @@ def get_views(files, sample_extractor, evt_counter, target_lumi):
             *[raw_sample_infos[subsample]['view'] for subsample in subsamples])
         unweighted_view = views.SumView(
             *[raw_sample_infos[subsample]['file'] for subsample in subsamples])
-        # TODO try and find a style
-        log.warning("need to apply style")
+
+        style_dict = data_styles.get(name, None)
+        if style_dict:
+            log.info("Found style for %s - applying Style View", name)
+            sumview = views.StyleView(sumview, **style_dict)
+            unweighted_view = views.StyleView(unweighted_view, **style_dict)
+        else:
+            log.warning("Didn't find a style for %s", name)
+
         proper_sample_infos[name] = {
             'view' : sumview,
             'unweighted_view' : unweighted_view,
