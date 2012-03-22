@@ -18,6 +18,9 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 id = PSet(
     objectWWID = '{object}.userFloat("WWID")',
     objectMITID = '{object}.userFloat("MITID")',
+    objectCiCLoose = '{object}.electronID("cicLoose")',
+    objectCiCMedium = '{object}.electronID("cicMedium")',
+    objectCiCTight = '{object}.electronID("cicTight")',
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(
         "({object}.chargedHadronIso"
