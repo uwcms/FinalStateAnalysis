@@ -143,14 +143,25 @@ all_meta_info=$(patsubst %, inputs/$(ntuple_id)/%.meta.json, $(all_samples))
 inputs/$(ntuple_id)/all_samples.json: $(all_meta_info)
 	./merge_meta_info.py $@ $^
 
+# Parse the job report summary .xmls in the condor submit directory to get the 
+# list of processed lumis for each job.
 inputs/$(ntuple_id)/%.lumimask.json: 
 	./get_processed_lumis.sh $(ntuple_id) $(s) $*
-
 
 data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
 		    $(all_data_samples))
 
-data_lumimasks: $(data_lumimask_files)
+# Run lumi calc on the lumi masks from the above step.
+inputs/$(ntuple_id)/%.lumicalc.csv: inputs/$(ntuple_id)/%.lumimask.json
+	pixelLumiCalc.py overview -i $< -o $@
+
+data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
+		    $(all_data_samples))
+
+data_lumicalc_files=$(patsubst %, inputs/$(ntuple_id)/%.lumicalc.csv, \
+		    $(all_data_samples))
+
+data_lumimasks: $(data_lumimask_files) $(data_lumicalc_files)
 
 
 ################################################################################
@@ -215,8 +226,6 @@ zmm_analysis: $(zmm_control_jobs)
 analysis: emt_analysis mmt_analysis \
 	mmmt_analysis mmme_analysis \
 	mmet_analysis
-
-
 
 ################################################################################
 ## Fake rate functions #########################################################
