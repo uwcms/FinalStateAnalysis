@@ -155,13 +155,20 @@ data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
 inputs/$(ntuple_id)/%.lumicalc.csv: inputs/$(ntuple_id)/%.lumimask.json
 	pixelLumiCalc.py overview -i $< -o $@
 
+inputs/$(ntuple_id)/%.lumicalc.sum: inputs/$(ntuple_id)/%.lumicalc.csv
+	python $(fsa)/Utilities/python/lumicalc_parser.py $< > $@
+
 data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
 		    $(all_data_samples))
 
 data_lumicalc_files=$(patsubst %, inputs/$(ntuple_id)/%.lumicalc.csv, \
 		    $(all_data_samples))
 
-data_lumimasks: $(data_lumimask_files) $(data_lumicalc_files)
+data_lumicalc_sums=$(patsubst %, inputs/$(ntuple_id)/%.lumicalc.sum, \
+		    $(all_data_samples))
+
+data_lumimasks: $(data_lumimask_files) $(data_lumicalc_files) \
+  $(data_lumicalc_sums)
 
 
 ################################################################################
