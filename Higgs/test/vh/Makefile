@@ -1,6 +1,6 @@
 
 # Job ID that produced the ntuples
-ntuple_id=2012-03-14-Higgs
+ntuple_id=2012-03-20-Higgs
 
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
@@ -12,6 +12,7 @@ mega=$(fsa)/TMegaSelector/scripts/mega2
   results/analysis/emt/%.root \
   results/analysis/mmt/%.root \
   results/analysis/mmmt/%.root \
+  results/analysis/mmet/%.root \
   results/analysis/mmme/%.root 
 
 .PRECIOUS: %.root \
@@ -21,6 +22,7 @@ mega=$(fsa)/TMegaSelector/scripts/mega2
   results/analysis/emt/%.root \
   results/analysis/mmt/%.root \
   results/analysis/mmmt/%.root \
+  results/analysis/mmet/%.root \
   results/analysis/mmme/%.root 
 
 # Target to make EMT plots
@@ -86,6 +88,12 @@ results/analysis/mmme/%.root: AnalyzeMMME.py inputs/$(ntuple_id)/%.txt \
 	$(mega) AnalyzeMMME.py inputs/$(ntuple_id)/$*.txt \
 	  /emmm/final/Ntuple $@ 
 
+# Run the ZH MMET analysis
+results/analysis/mmet/%.root: AnalyzeMMET.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so
+	$(mega) AnalyzeMMET.py inputs/$(ntuple_id)/$*.txt \
+	  /emmt/final/Ntuple $@ 
+
 # Make num/denom for jet->mu fake rate in MMM events
 results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(ntuple_id)/%.txt
 	$(mega) $^ /mumumu/final/Ntuple $@
@@ -135,6 +143,16 @@ all_meta_info=$(patsubst %, inputs/$(ntuple_id)/%.meta.json, $(all_samples))
 inputs/$(ntuple_id)/all_samples.json: $(all_meta_info)
 	./merge_meta_info.py $@ $^
 
+inputs/$(ntuple_id)/%.lumimask.json: 
+	./get_processed_lumis.sh $(ntuple_id) $(s) $*
+
+
+data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
+		    $(all_data_samples))
+
+data_lumimasks: $(data_lumimask_files)
+
+
 ################################################################################
 ## Define which samples are used for what ######################################
 ################################################################################
@@ -162,6 +180,9 @@ mmmt_ana_jobs=$(patsubst %, results/analysis/mmmt/%.root, \
 mmme_ana_jobs=$(patsubst %, results/analysis/mmme/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
+mmet_ana_jobs=$(patsubst %, results/analysis/mmet/%.root, \
+	$(sm_backgrounds) $(doublemu_samples))
+
 zmm_control_jobs=$(patsubst %, results/analysis/zmumu/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
@@ -187,9 +208,15 @@ mmmt_analysis: $(mmmt_ana_jobs)
 
 mmme_analysis: $(mmme_ana_jobs)
 
+mmet_analysis: $(mmet_ana_jobs)
+
 zmm_analysis: $(zmm_control_jobs)
 
-analysis: emt_analysis mmt_analysis mmmt_analysis mmme_analysis
+analysis: emt_analysis mmt_analysis \
+	mmmt_analysis mmme_analysis \
+	mmet_analysis
+
+
 
 ################################################################################
 ## Fake rate functions #########################################################
@@ -228,6 +255,12 @@ fake_rates.C: fake_rates.json make_fakerates.py
 plots/muon_fake_fits/plot_list.txt: results/fake_rates/muon_fr_fits.root render_fake_rates.py
 	./render_fake_rates.py results/fake_rates/muon_fr_fits.root plots/muon_fake_fits/
 
+################################################################################
+## Packing things up ###########################################################
+################################################################################
+
+results.tgz: results/analysis/*/*.root results/fake_rates/*/*.root
+	tar cvzf $@ results
 
 ################################################################################
 ## Cleanup #####################################################################
