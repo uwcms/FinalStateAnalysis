@@ -131,8 +131,10 @@ results/fake_rates/e/%.all.root: results/fake_rates/e/%.em.root \
 ## Extracting meta information (number of events processed) ####################
 ################################################################################
 
-inputs/$(ntuple_id)/data%.meta.json: inputs/$(ntuple_id)/data%.txt
-	extract_meta_info.py $< /ee/metaInfo $@  --lumimask
+inputs/$(ntuple_id)/data%.meta.json: inputs/$(ntuple_id)/data%.txt \
+  inputs/$(ntuple_id)/data%.lumicalc.sum
+	extract_meta_info.py $< /ee/metaInfo $@  --lumimask \
+	  --lumisum inputs/$(ntuple_id)/data$*.lumicalc.sum
 
 inputs/$(ntuple_id)/%.meta.json: inputs/$(ntuple_id)/%.txt
 	extract_meta_info.py $< /ee/metaInfo $@ 
@@ -232,7 +234,7 @@ zmm_analysis: $(zmm_control_jobs)
 
 analysis: emt_analysis mmt_analysis \
 	mmmt_analysis mmme_analysis \
-	mmet_analysis
+	mmet_analysis zmm_analysis
 
 ################################################################################
 ## Fake rate functions #########################################################
@@ -258,7 +260,6 @@ results/fake_rates/electron_fr_fits.root: results/fake_rates/fit_models.root \
 	  electron_fr_cfg.py  results/fake_rates/fit_models.root \
 	  $@ results/fake_rates/e/*.all.root
 
-
 fake_rates.C: fake_rates.json make_fakerates.py
 	python make_fakerates.py fake_rates.json
 
@@ -270,6 +271,11 @@ fake_rates.C: fake_rates.json make_fakerates.py
 # for dealing w/ commands with multiple outputs 
 plots/muon_fake_fits/plot_list.txt: results/fake_rates/muon_fr_fits.root render_fake_rates.py
 	./render_fake_rates.py results/fake_rates/muon_fr_fits.root plots/muon_fake_fits/
+
+plots/muon_fake_controls/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
+  $(muon_fake_jobs) 
+	./render_fake_rate_controls.py inputs/$(ntuple_id)/all_samples.json \
+	  data_DoubleMu plots/muon_fake_controls/ $(muon_fake_jobs)
 
 ################################################################################
 ## Packing things up ###########################################################
