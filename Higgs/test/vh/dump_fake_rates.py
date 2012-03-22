@@ -41,16 +41,9 @@ if __name__ == "__main__":
     log.info("Importing configuration")
     cfg = __import__(args.cfg.replace('.py', ''))
 
-    files = []
-    for file_glob in args.files:
-        log.debug("Expanding file: %s", file_glob)
-        files.extend(glob.glob(file_glob))
-
-    log.info("Got %i data files", len(files))
-
     log.info("Building views")
     data_views = get_views(
-        files,
+        args.files,
         # How to get the sample from the file name
         lambda x: os.path.basename(x).replace('.all.root', ''),
         meta_info,
