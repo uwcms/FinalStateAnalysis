@@ -12,10 +12,11 @@ Author: Evan K. Friis, UW Madison
 
 import FWCore.ParameterSet.Config as cms
 
-# MC distributions
-fall11 = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/fall11_mc_truth.root")
-
-# Data distributions
-data2011A = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011A_pileupTruth_v2_finebin.root")
-data2011B = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011B_pileupTruth_v2_finebin.root")
-data2011AB = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011AB_pileupTruth_v2_finebin.root")
+pileup_distributions = cms.PSet(
+    # MC distributions
+    fall11 = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/fall11_mc_truth.root"),
+    # Data distributions
+    data2011A = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011A_pileupTruth_v2_finebin.root"),
+    data2011B = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011B_pileupTruth_v2_finebin.root"),
+    data2011AB = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011AB_pileupTruth_v2_finebin.root"),
+)

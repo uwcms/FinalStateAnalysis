@@ -8,6 +8,7 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/shared_ptr.hpp>
 #include <map>
+#include <iostream>
 
 #include "TFile.h"
 #include "TH1.h"
@@ -28,8 +29,24 @@ boost::shared_ptr<TH1> loadFromPSet(const std::string& name) {
   boost::shared_ptr<edm::ParameterSet> toplevel =
     edm::readPSetsFrom(puInfoFile.fullPath());
 
+  edm::ParameterSet steering = toplevel->getParameterSet(
+      "pileup_distributions");
+
   // ROOT file path
-  std::string path = toplevel->getParameter<edm::FileInPath>(name).fullPath();
+  std::string path = "";
+  try {
+    path = steering.getParameter<edm::FileInPath>(name).fullPath();
+  } catch (cms::Exception) {
+    std::cerr << "Couldn't get PU distribution corresponding to " << name
+      << std::endl;
+    std::vector<std::string> available = toplevel->getParameterNames();
+    std::cerr << "There are " << available.size() << " available PUs:"
+      << std::endl;
+    for (size_t i = 0; i < available.size(); ++i) {
+      std::cerr << i << ") " << available[i] << std::endl;
+    }
+    throw;
+  }
 
   TFile file(path.c_str(), "READ");
 
