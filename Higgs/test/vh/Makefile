@@ -131,10 +131,8 @@ results/fake_rates/e/%.all.root: results/fake_rates/e/%.em.root \
 ## Extracting meta information (number of events processed) ####################
 ################################################################################
 
-inputs/$(ntuple_id)/data%.meta.json: inputs/$(ntuple_id)/data%.txt \
-  inputs/$(ntuple_id)/data%.lumicalc.sum
-	extract_meta_info.py $< /ee/metaInfo $@  --lumimask \
-	  --lumisum inputs/$(ntuple_id)/data$*.lumicalc.sum
+inputs/$(ntuple_id)/data%.meta.json: inputs/$(ntuple_id)/data%.txt
+	extract_meta_info.py $< /ee/metaInfo $@  --lumimask
 
 inputs/$(ntuple_id)/%.meta.json: inputs/$(ntuple_id)/%.txt
 	extract_meta_info.py $< /ee/metaInfo $@ 
@@ -147,8 +145,8 @@ inputs/$(ntuple_id)/all_samples.json: $(all_meta_info)
 
 # Parse the job report summary .xmls in the condor submit directory to get the 
 # list of processed lumis for each job.
-inputs/$(ntuple_id)/%.lumimask.json: 
-	./get_processed_lumis.sh $(ntuple_id) $(s) $*
+inputs/$(ntuple_id)/data%.lumimask.json: inputs/$(ntuple_id)/data%.meta.json
+	cat $< | dump_lumimask.py > $@
 
 data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
 		    $(all_data_samples))
