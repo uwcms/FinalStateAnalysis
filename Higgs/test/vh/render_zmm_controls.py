@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 '''
 
-Render the numerator and denominators and MC comparison
+Render the Zmumu control plots
 
 Author: Evan K. Friis, UW
 
@@ -26,10 +26,13 @@ from FinalStateAnalysis.PatTools.data_views import get_views
 
 if __name__ == "__main__":
     log = logging.getLogger("render_fake_rate_controls")
+    view_builder = logging.getLogger("get_views")
+    view_builder.setLevel(logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
+
     parser = argparse.ArgumentParser()
     parser.add_argument('meta', help='File with meta information')
-    parser.add_argument('pd', help='Data primary dataset')
-    parser.add_argument('output', help='Data primary dataset')
+    parser.add_argument('output', help='Output directory')
     parser.add_argument('files', metavar='file', nargs='+',
                         help = 'Histogram files')
     args = parser.parse_args(args[1:])
@@ -43,18 +46,24 @@ if __name__ == "__main__":
     data_views = get_views(
         args.files,
         # How to get the sample from the file name
-        lambda x: os.path.basename(x).replace('.all.root', ''),
+        lambda x: os.path.basename(x).replace('.root', ''),
         meta_info,
         3326,
     )
-    data_view = views.FunctorView(data_views[args.pd]['view'],
-                                  lambda x: x.Rebin(2))
+    data_view = views.FunctorView(data_views['data_DoubleMu']['view'],
+                                  lambda x: x.Rebin(1))
 
     mc_samples_to_stack = ['Zjets', 'QCDMu', 'Wjets', 'ttjets']
     # Build the MC stack
     mc_view = views.StackView(*[
-        views.FunctorView(data_views[x]['view'], lambda x: x.Rebin(2))
+        views.FunctorView(data_views[x]['view'], lambda x: x.Rebin(1))
         for x in mc_samples_to_stack], sort=True)
+
+    log.debug("Zjets unweighted entries: %f",
+              data_views['Zjets']['unweighted_view'].Get(
+                  'plots/entry_count').Integral()
+             )
+
 
     # We just need to figure out the directory structure from any old file
     layout_filename = data_views.values()[0]['subsamples'].values()[0]['filename']
