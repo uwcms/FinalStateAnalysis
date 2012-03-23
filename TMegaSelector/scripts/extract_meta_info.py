@@ -93,8 +93,6 @@ if __name__ == "__main__":
     parser.add_argument('--lumimask', action='store_const',
                         const=True, default=False,
                         help = 'If true, include the run-lumi mask result')
-    parser.add_argument('--lumisum',  required=False, default=None,
-                        help = 'Pass a file which contains the total lumi sum.')
 
     args = parser.parse_args(args[1:])
 
@@ -125,11 +123,6 @@ if __name__ == "__main__":
     }
     if args.lumimask:
         output['lumi_mask'] = json_summary(run_lumis)
-
-    if args.lumisum:
-        lumisum_file = open(args.lumisum)
-        int_lumi = float(lumisum_file.read())
-        output['int_lumi'] = int_lumi
 
     with open(args.output, 'w') as output_file:
         output_file.write(json.dumps(output, indent=2, sort_keys=True) + '\n')
