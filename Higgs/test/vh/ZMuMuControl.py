@@ -8,6 +8,10 @@ from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
 meta = MetaTree()
 
 base_selections = [
+    meta.doubleMuPass > 0.5,
+    # Make sure we only get one solution per event
+    meta.muon2Pt > meta.muon1Pt,
+
     meta.muon1Pt > 10,
     meta.muon2Pt > 20,
 
@@ -17,7 +21,7 @@ base_selections = [
     meta.muon1WWID > 0.5,
     meta.muon2WWID > 0.5,
 
-    #meta.muVetoPt5 < 1,
+    meta.muVetoPt5 < 1,
     #meta.eVetoWP95Iso < 1,
     #meta.bjetVeto < 1,
     #meta.tauVetoPt20 < 1,
