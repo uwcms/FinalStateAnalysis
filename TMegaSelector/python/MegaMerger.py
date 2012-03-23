@@ -6,12 +6,15 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
-from progressbar import ETA, ProgressBar, FormatLabel, Bar
+import hashlib
 import multiprocessing
+import os
+from progressbar import ETA, ProgressBar, FormatLabel, Bar
 from Queue import Empty
+import shutil
 import signal
 import subprocess
-import os
+import tempfile
 
 class MegaMerger(multiprocessing.Process):
     log = multiprocessing.get_logger()
@@ -26,15 +29,27 @@ class MegaMerger(multiprocessing.Process):
             FormatLabel('Processed %(value)i/' + str(ninputs) + ' files. '),
             ETA(), Bar('>')], maxval=ninputs).start()
         self.pbar.update(0)
+        self.processed_entries = 0
 
     def merge_into_output(self, files):
         self.log.info("Merging %i into output %s", len(files), self.output)
-        command = ['hadd', '-f', self.output]
+        # Merge into a temporary output file
+        output_file_hash = hashlib.md5()
+        for file in files:
+            output_file_hash.update(file)
+
+        output_file_name = os.path.join(
+            tempfile.gettempdir(),
+            output_file_hash.hexdigest() + '.root')
+
+        command = ['hadd', output_file_name]
+
         # If we are doing a later merge, we need to include the
         # "merged-so-far"
-        if not self.first_merge:
-            command.append(self.output)
+        if self.first_merge:
             self.first_merge = False
+        else:
+            command.append(self.output)
 
         for file in files:
             command.append(file)
@@ -45,7 +60,13 @@ class MegaMerger(multiprocessing.Process):
         while proc.returncode is None:
             _, stderr = proc.communicate()
         self.log.info("Merge completed with exit code: %i", proc.returncode)
-        # Cleanup
+        self.log.info("Output file is: %s, moving to %s", output_file_name,
+                      self.output)
+        shutil.move(output_file_name, self.output)
+        self.log.info("Processed %i entries so far", self.processed_entries)
+
+        # Cleanup.  We don't need to cleanup the temporary output, since it
+        # is moved.
         for file in files:
             os.remove(file)
         return proc.returncode
@@ -61,7 +82,7 @@ class MegaMerger(multiprocessing.Process):
             while True:
                 try:
                     self.log.debug("trying to get")
-                    to_merge = self.input.get(timeout=2)
+                    to_merge = self.input.get(timeout=1)
                     self.log.debug("got %s", to_merge)
                     # Check for poison pill
                     if to_merge is None:
@@ -71,11 +92,18 @@ class MegaMerger(multiprocessing.Process):
                     inputs_to_merge.append(to_merge)
                     self.processed += 1
                     self.pbar.update(self.processed)
+                    # Make it merge the files if the queue is stacking up.
+                    if len(inputs_to_merge) > 15:
+                        break
                 except Empty:
                     self.log.debug("empty to get")
                     # Noting to merge right now
                     break
             if inputs_to_merge:
-                self.merge_into_output([x[1] for x in inputs_to_merge])
+                files_to_merge = []
+                for entries, file in inputs_to_merge:
+                    self.processed_entries  += entries
+                    files_to_merge.append(file)
+                self.merge_into_output(files_to_merge)
             if done:
                 return
