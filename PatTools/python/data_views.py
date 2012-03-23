@@ -12,9 +12,9 @@ import logging
 from rootpy.io import open
 from rootpy.plotting import views
 
-log = logging.getLogger("get_views")
 
 def get_views(files, sample_extractor, evt_counter, target_lumi):
+    log = logging.getLogger("get_views")
     ''' Builds views of files
 
     <sample_extractor>: a function which returns the sample name
