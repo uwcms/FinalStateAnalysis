@@ -1,6 +1,6 @@
 
 # Job ID that produced the ntuples
-ntuple_id=2012-03-20-Higgs
+ntuple_id=2012-03-22-Higgs
 
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
@@ -273,7 +273,7 @@ plots/muon_fake_fits/plot_list.txt: results/fake_rates/muon_fr_fits.root render_
 	./render_fake_rates.py results/fake_rates/muon_fr_fits.root plots/muon_fake_fits/
 
 plots/muon_fake_controls/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
-  $(muon_fake_jobs) 
+  $(muon_fake_jobs) render_fake_rate_controls.py
 	./render_fake_rate_controls.py inputs/$(ntuple_id)/all_samples.json \
 	  data_DoubleMu plots/muon_fake_controls/ $(muon_fake_jobs)
 
