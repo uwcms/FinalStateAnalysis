@@ -277,6 +277,11 @@ plots/muon_fake_controls/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
 	./render_fake_rate_controls.py inputs/$(ntuple_id)/all_samples.json \
 	  data_DoubleMu plots/muon_fake_controls/ $(muon_fake_jobs)
 
+plots/zmm_control/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
+  zmm_analysis render_zmm_controls.py
+	./render_zmm_controls.py inputs/$(ntuple_id)/all_samples.json \
+	  plots/zmm_control/ $(zmm_control_jobs)
+
 ################################################################################
 ## Packing things up ###########################################################
 ################################################################################
@@ -288,7 +293,8 @@ results.tgz: results/analysis/*/*.root results/fake_rates/*/*.root
 ## Cleanup #####################################################################
 ################################################################################
 
-.PHONY: fake_clean inputs_clean fakerates muon_fake_rates electron_fake_rates
+.PHONY: fake_clean inputs_clean fakerates muon_fake_rates electron_fake_rates \
+  zmm_analysis
 
 fake_clean:
 	rm results/fake_rates/*/*root

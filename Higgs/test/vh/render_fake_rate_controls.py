@@ -45,7 +45,7 @@ if __name__ == "__main__":
         # How to get the sample from the file name
         lambda x: os.path.basename(x).replace('.all.root', ''),
         meta_info,
-        4728
+        4461
     )
     data_view = views.FunctorView(data_views[args.pd]['view'],
                                   lambda x: x.Rebin(2))

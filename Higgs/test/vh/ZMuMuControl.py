@@ -8,8 +8,8 @@ from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
 meta = MetaTree()
 
 base_selections = [
-    meta.muon1Pt > 20,
-    meta.muon2Pt > 10,
+    meta.muon1Pt > 10,
+    meta.muon2Pt > 20,
 
     meta.muon1AbsEta < 2.1,
     meta.muon2AbsEta < 2.1,
@@ -31,8 +31,8 @@ class ZMuMuControl(MegaBase):
 
     def __init__(self, tree, output, **kwargs):
         super(ZMuMuControl, self).__init__(tree, output, **kwargs)
-        self.book('plots', 'muon1RelIso', "Muon 1 Rel. Iso after mass cut", 100, 0, 100)
-        self.book('plots', 'muon2RelIso', "Muon 1 Rel. Iso after mass cut", 100, 0, 100)
+        self.book('plots', 'muon1RelIso', "Muon 1 Rel. Iso after mass cut", 100, 0, 1)
+        self.book('plots', 'muon2RelIso', "Muon 1 Rel. Iso after mass cut", 100, 0, 1)
         self.book('plots', 'zMass', "Dimuon mass", 200, 0, 200)
         self.book('plots', 'zMassFinal', "Dimuon mass after all cuts", 200, 0, 200)
         self.book('plots', 'rhoBeforeIso', "Rho (before muon isolation)", 50, 0, 50)
@@ -63,16 +63,18 @@ class ZMuMuControl(MegaBase):
         self.enable_branch('nvtx')
         self.enable_branch('muon1_muon2_Mass')
         self.enable_branch('metEt')
+        self.book("plots", "entry_count", "Count", 1, -0.5, 0.5)
 
     def process(self, entry):
         tree = self.tree
         read = tree.GetEntry(entry)
+        histograms = self.histograms
+        histograms['plots/entry_count'].Fill(0)
 
         # Check if we pass the base selection
         if not all(select(tree) for select in base_selections):
             return True
 
-        histograms = self.histograms
         #print self.histograms.keys()
         histograms['plots/zMass'].Fill(tree.muon1_muon2_Mass)
 
@@ -86,10 +88,10 @@ class ZMuMuControl(MegaBase):
         histograms['plots/muon1RelIso'].Fill(tree.muon1RelPFIsoDB)
         histograms['plots/muon2RelIso'].Fill(tree.muon2RelPFIsoDB)
 
-        if tree.muon1RelPFIsoDB < 0.2:
+        if tree.muon1RelPFIsoDB > 0.2:
             return True
 
-        if tree.muon2RelPFIsoDB < 0.2:
+        if tree.muon2RelPFIsoDB > 0.2:
             return True
 
         histograms['plots/rhoAfterIso'].Fill(tree.rho)
