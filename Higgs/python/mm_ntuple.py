@@ -36,7 +36,7 @@ mumu = cms.EDFilter(
         selections = cms.VPSet(
             cms.PSet(
                 name = cms.string('Mu1Pt'),
-                cut = cms.string('{muon1}.pt > 10'),
+                cut = cms.string('{muon1}.pt > 5'),
             ),
             cms.PSet(
                 name = cms.string('Mu1Eta'),
