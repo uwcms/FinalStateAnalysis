@@ -13,7 +13,7 @@ from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
 meta = MetaTree()
 
 base_selections = [
-    #meta.doublemu > 0.5,
+    meta.doubleMuPass > 0.5,
     meta.muon1Pt > 20,
     meta.muon2Pt > 10,
     meta.muon1RelPFIsoDB < 0.15,

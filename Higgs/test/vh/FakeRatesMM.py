@@ -15,14 +15,15 @@ meta = MetaTree()
 base_selections = [
     meta.muon1_muon2_SS > 0.5,
 
-    #meta.doublemu > 0.5,
-    meta.muon1Pt > 20,
-    meta.muon2Pt > 10,
-    meta.muon1WWID > 0.5,
+    # Muon 2 is the leading muon as defined in the ntuple production.
+    meta.doubleMuPass > 0.5,
+    meta.muon1Pt > 10,
+    meta.muon2Pt > 20,
+    meta.muon2WWID > 0.5,
 
     # Make sure we only get one candidate per event
     # we measure the subleading muon
-    meta.muon1Pt > meta.muon2Pt,
+    meta.muon1Pt < meta.muon2Pt,
 
     meta.muon1AbsEta < 2.1,
     meta.muon2AbsEta < 2.1,
@@ -40,18 +41,18 @@ base_selections = [
 
 # Selections to get Wjets
 wselections = [
-    meta.muon1RelPFIsoDB < 0.15,
-    meta.muon1MtToMET > 40,
+    meta.muon2RelPFIsoDB < 0.15,
+    meta.muon2MtToMET > 50,
 ]
 
 qcdselections = [
-    meta.muon1RelPFIsoDB > 0.3,
+    meta.muon2RelPFIsoDB > 0.3,
     meta.metEt < 20,
 ]
 
 variables = [
-    ('muonJetPt', 'Mu Jet Pt', 200, 0, 200),
-    ('muonPt', 'Mu Pt', 200, 0, 200),
+    ('muonJetPt', 'Mu Jet Pt', 50, 0, 200),
+    ('muonPt', 'Mu Pt', 50, 0, 200),
 ]
 
 probe_pt_cuts = [('pt10', 10), ('pt20', 20)]
@@ -70,10 +71,10 @@ class FakeRatesMM(MegaBase):
         self.disable_branch('*')
         for b in meta.active_branches():
             self.enable_branch(b)
-        self.enable_branch('muon2WWID')
-        self.enable_branch('muon2RelPFIsoDB')
-        self.enable_branch('muon2Pt')
-        self.enable_branch('muon2JetPt')
+        self.enable_branch('muon1WWID')
+        self.enable_branch('muon1RelPFIsoDB')
+        self.enable_branch('muon1Pt')
+        self.enable_branch('muon1JetPt')
 
     def process(self, entry):
         tree = self.tree
@@ -85,11 +86,11 @@ class FakeRatesMM(MegaBase):
 
         passes_wjets = all(selection(tree) for selection in wselections)
         passes_qcd = all(selection(tree) for selection in qcdselections)
-        jetpt = tree.muon2JetPt
-        pt = tree.muon2Pt
+        jetpt = tree.muon1JetPt
+        pt = tree.muon1Pt
         pt10 = pt > 10
         pt20 = pt > 20
-        wwid = tree.muon2WWID > 0.5
+        wwid = tree.muon1WWID > 0.5
 
         # Fill histograms.  There is a lot of copy paste, but I'm not sure how
         # else to do it in a performant way
@@ -99,10 +100,10 @@ class FakeRatesMM(MegaBase):
                 histograms['wjets/pt10/iso15/all/muonPt'].Fill(pt)
                 histograms['wjets/pt10/iso30/all/muonJetPt'].Fill(jetpt)
                 histograms['wjets/pt10/iso30/all/muonPt'].Fill(pt)
-                if wwid and tree.muon2RelPFIsoDB < 0.15:
+                if wwid and tree.muon1RelPFIsoDB < 0.15:
                     histograms['wjets/pt10/iso15/pass/muonJetPt'].Fill(jetpt)
                     histograms['wjets/pt10/iso15/pass/muonPt'].Fill(pt)
-                if wwid and tree.muon2RelPFIsoDB < 0.3:
+                if wwid and tree.muon1RelPFIsoDB < 0.3:
                     histograms['wjets/pt10/iso30/pass/muonJetPt'].Fill(jetpt)
                     histograms['wjets/pt10/iso30/pass/muonPt'].Fill(pt)
             if pt20:
@@ -110,10 +111,10 @@ class FakeRatesMM(MegaBase):
                 histograms['wjets/pt20/iso15/all/muonPt'].Fill(pt)
                 histograms['wjets/pt20/iso30/all/muonJetPt'].Fill(jetpt)
                 histograms['wjets/pt20/iso30/all/muonPt'].Fill(pt)
-                if wwid and tree.muon2RelPFIsoDB < 0.15:
+                if wwid and tree.muon1RelPFIsoDB < 0.15:
                     histograms['wjets/pt20/iso15/pass/muonJetPt'].Fill(jetpt)
                     histograms['wjets/pt20/iso15/pass/muonPt'].Fill(pt)
-                if wwid and tree.muon2RelPFIsoDB < 0.3:
+                if wwid and tree.muon1RelPFIsoDB < 0.3:
                     histograms['wjets/pt20/iso30/pass/muonJetPt'].Fill(jetpt)
                     histograms['wjets/pt20/iso30/pass/muonPt'].Fill(pt)
 
@@ -123,10 +124,10 @@ class FakeRatesMM(MegaBase):
                 histograms['qcd/pt10/iso15/all/muonPt'].Fill(pt)
                 histograms['qcd/pt10/iso30/all/muonJetPt'].Fill(jetpt)
                 histograms['qcd/pt10/iso30/all/muonPt'].Fill(pt)
-                if wwid and tree.muon2RelPFIsoDB < 0.15:
+                if wwid and tree.muon1RelPFIsoDB < 0.15:
                     histograms['qcd/pt10/iso15/pass/muonJetPt'].Fill(jetpt)
                     histograms['qcd/pt10/iso15/pass/muonPt'].Fill(pt)
-                if wwid and tree.muon2RelPFIsoDB < 0.3:
+                if wwid and tree.muon1RelPFIsoDB < 0.3:
                     histograms['qcd/pt10/iso30/pass/muonJetPt'].Fill(jetpt)
                     histograms['qcd/pt10/iso30/pass/muonPt'].Fill(pt)
             if pt20:
@@ -134,10 +135,10 @@ class FakeRatesMM(MegaBase):
                 histograms['qcd/pt20/iso15/all/muonPt'].Fill(pt)
                 histograms['qcd/pt20/iso30/all/muonJetPt'].Fill(jetpt)
                 histograms['qcd/pt20/iso30/all/muonPt'].Fill(pt)
-                if wwid and tree.muon2RelPFIsoDB < 0.15:
+                if wwid and tree.muon1RelPFIsoDB < 0.15:
                     histograms['qcd/pt20/iso15/pass/muonJetPt'].Fill(jetpt)
                     histograms['qcd/pt20/iso15/pass/muonPt'].Fill(pt)
-                if wwid and tree.muon2RelPFIsoDB < 0.3:
+                if wwid and tree.muon1RelPFIsoDB < 0.3:
                     histograms['qcd/pt20/iso30/pass/muonJetPt'].Fill(jetpt)
                     histograms['qcd/pt20/iso30/pass/muonPt'].Fill(pt)
 
