@@ -57,8 +57,8 @@ base_selections = [
 
 variables = [
     ('Zmass', 'Mass of Z muons', 60, 60, 120),
-    ('muonJetPt', 'Mu Jet Pt', 200, 0, 200),
-    ('muonPt', 'Mu Pt', 200, 0, 200),
+    ('muonJetPt', 'Mu Jet Pt', 50, 0, 200),
+    ('muonPt', 'Mu Pt', 50, 0, 200),
     ('tauBtag', 'Tau BTag', 120, -6, 6),
 ]
 
