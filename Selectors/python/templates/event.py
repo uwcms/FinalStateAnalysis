@@ -24,9 +24,9 @@ pileup = PSet(
     nvtx = 'evt.recoVertices.size',
     # Number of true PU events
     nTruePU = '? evt.puInfo.size > 0 ? evt.puInfo[1].getTrueNumInteractions : -1',
-    puWeightFall11Data2011A = 'evt.puWeight("fall11", "data2011A")',
-    puWeightFall11Data2011AB = 'evt.puWeight("fall11", "data2011AB")',
-    puWeightFall11Data2011B = 'evt.puWeight("fall11", "data2011B")',
+    puWeightData2011A = 'evt.puWeight("data2011A")',
+    puWeightData2011AB = 'evt.puWeight("data2011AB")',
+    puWeightData2011B = 'evt.puWeight("data2011B")',
 )
 
 met = PSet(
