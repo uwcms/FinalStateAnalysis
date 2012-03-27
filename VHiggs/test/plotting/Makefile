@@ -310,22 +310,25 @@ debug_plots: debug_limits
 ## HIG-12-010   ################################################################
 ################################################################################
 
+#wh3l_cards=/afs/cern.ch/user/c/ceballos/public/limits/limits_wh3l/sm/
+wh3l_cards=$(combination)
+
 triletpon_mass_points=$(shell seq 115 5 160) $(shell seq 170 10 200)
 
-trilepton_cards/combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(combination)/%/vh3l_cut.txt
-	combineCards.py -S TT=cards/combined_$*.txt WWW=$(combination)/$*/vh3l_cut.txt > $@
+trilepton_cards/combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(wh3l_cards)/%/vh3l_cut.txt
+	combineCards.py -S TT=cards/combined_$*.txt WWW=$(wh3l_cards)/$*/vh3l_cut.txt > $@
 
-trilepton_cards/combined_170.txt: $(combination)/170/vh3l_cut.txt
-	combineCards.py -S WWW=$(combination)/170/vh3l_cut.txt > $@
+trilepton_cards/combined_170.txt: $(wh3l_cards)/170/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/170/vh3l_cut.txt > $@
 
-trilepton_cards/combined_180.txt: $(combination)/180/vh3l_cut.txt
-	combineCards.py -S WWW=$(combination)/180/vh3l_cut.txt > $@
+trilepton_cards/combined_180.txt: $(wh3l_cards)/180/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/180/vh3l_cut.txt > $@
 
-trilepton_cards/combined_190.txt: $(combination)/190/vh3l_cut.txt
-	combineCards.py -S WWW=$(combination)/190/vh3l_cut.txt > $@
+trilepton_cards/combined_190.txt: $(wh3l_cards)/190/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/190/vh3l_cut.txt > $@
 
-trilepton_cards/combined_200.txt: $(combination)/200/vh3l_cut.txt
-	combineCards.py -S WWW=$(combination)/200/vh3l_cut.txt > $@
+trilepton_cards/combined_200.txt: $(wh3l_cards)/200/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/200/vh3l_cut.txt > $@
 
 trilepton_cards/combined_%.asymp.json: trilepton_cards/combined_%.txt
 	combine $< -M Asymptotic -H ProfileLikelihood \
