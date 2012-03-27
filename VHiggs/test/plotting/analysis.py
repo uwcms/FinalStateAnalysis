@@ -889,7 +889,7 @@ if __name__ == "__main__":
                     all_fakes.Write()
 
                     # We make a different output for each higgs mass
-                    for mass in [100, 110, 115, 120, 125, 130, 135, 140,
+                    for mass in [110, 115, 120, 125, 130, 135, 140,
                                  145, 150, 160]:
 
                         signal = plotter.get_histogram(
@@ -899,7 +899,8 @@ if __name__ == "__main__":
                         )
                         signal.SetName('VH%i' % mass)
                         hww_signal = None
-                        if mass in [120, 130, 140, 150, 160]:
+                        #if mass in [120, 130, 140, 150, 160]:
+                        if True:
                             hww_signal = plotter.get_histogram(
                                 'VH%iWW' % mass,
                                 ntuple + ':' + plot_base_name + '_ult',
