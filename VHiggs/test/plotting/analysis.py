@@ -672,8 +672,8 @@ if __name__ == "__main__":
                     #Make the tribosons purple
                     styling.apply_style(
                         tribosons, **samplestyles.SAMPLE_STYLES['zll'])
-                    stack.Add(tribosons.th1, 'hist')
-                    legend.AddEntry(tribosons.th1, "WWW, ttW, ttZ", "lf")
+                    #stack.Add(tribosons.th1, 'hist')
+                    #legend.AddEntry(tribosons.th1, "WWW, ttW, ttZ", "lf")
 
                     for histo_name, histo in zip(corrected_mc,
                                                  corrected_mc_histos):
@@ -783,8 +783,8 @@ if __name__ == "__main__":
                     legend.AddEntry(signalx5.th1, "VH(120) #times 5 ", "lf")
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
-                    stack.Add(tribosons.th1, 'hist')
-                    legend.AddEntry(tribosons.th1, "WWW, ttW, ttZ", "lf")
+                    #stack.Add(tribosons.th1, 'hist')
+                    #legend.AddEntry(tribosons.th1, "WWW, ttW, ttZ", "lf")
                     for histo_name, histo in zip(corrected_mc,
                                                  corrected_mc_histos):
                         stack.Add(histo.th1, 'hist')
@@ -800,8 +800,8 @@ if __name__ == "__main__":
 
                     error_band_hist = all_fakes + \
                             corrected_mc_histos[0] + \
-                            corrected_mc_histos[1] + \
-                            tribosons
+                            corrected_mc_histos[1] #+ \
+                            #tribosons
 
                     # Copy only errors from fake rate
                     for i in range(0, data_fr2s_ewk.GetNbinsX()+2):
