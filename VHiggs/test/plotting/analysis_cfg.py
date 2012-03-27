@@ -7,7 +7,7 @@ Define top-level configuration for WH analysis.
 '''
 
 # Data source parameters
-INT_LUMI = 4684
+INT_LUMI = 4960
 #JOBID = '2012-01-28-v1-WHAnalyze'
 JOBID = '2012-02-19-v1-WHAnalyze'
 
