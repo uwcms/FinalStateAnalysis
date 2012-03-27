@@ -126,7 +126,7 @@ if __name__ == "__main__":
     ### Load the data ##########################################################
     ############################################################################
 
-    canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
+    canvas = ROOT.TCanvas("basdf", "aasdf", 800, 800)
 
     shape_file = ROOT.TFile("wh_shapes_raw.root", 'RECREATE')
 

@@ -102,8 +102,13 @@ ewk_colors = [
 
 def apply_style(th1, **kwargs):
     if 'color' in kwargs:
-        th1.SetFillColor(kwargs['color'].code)
-        th1.SetLineColor(kwargs['color'].code)
+        if hasattr(kwargs['color'], 'code'):
+            th1.SetFillColor(kwargs['color'].code)
+            th1.SetLineColor(kwargs['color'].code)
+        else:
+            th1.SetFillColor(kwargs['color'])
+            th1.SetLineColor(kwargs['color'])
+
         th1.SetFillStyle(1)
     if 'marker_size' in kwargs:
         th1.SetMarkerSize(kwargs['marker_size'])
@@ -114,9 +119,15 @@ def apply_style(th1, **kwargs):
     if 'line_width' in kwargs:
         th1.SetLineWidth(kwargs['line_width'])
     if 'line_color' in kwargs:
-        th1.SetLineColor(kwargs['line_color'].code)
+        if hasattr(kwargs['line_color'], 'code'):
+            th1.SetLineColor(kwargs['line_color'].code)
+        else:
+            th1.SetLineColor(kwargs['line_color'])
     if 'fill_color' in kwargs:
-        th1.SetFillColor(kwargs['fill_color'].code)
+        if hasattr(kwargs['fill_color'], 'code'):
+            th1.SetFillColor(kwargs['fill_color'].code)
+        else:
+            th1.SetFillColor(kwargs['fill_color'])
     if 'fill_style' in kwargs:
         th1.SetFillStyle(kwargs['fill_style'])
     th1.SetFillStyle(1001)
