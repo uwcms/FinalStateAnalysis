@@ -175,6 +175,10 @@ $(shape_file): $(extensions_shape_file) addStatShapes.py
 	cp $(extensions_shape_file) $(shape_file)
 	./addStatShapes.py $(shape_file)
 
+# Make a copy in the cards directory
+cards/$(shape_file): $(shape_file)
+	cp $< $@
+
 ################################################################################
 ## Building the data cards themselves  #########################################
 ################################################################################
@@ -302,4 +306,45 @@ debug_plots: debug_limits
 	python $(fsa)/StatTools/scripts/plotlimit.py cards/$(channel)*tt.asymp.json --method asymp --label tt -o cards/$(channel)_ttOnly.pdf --max-y 70 --showpoints --blurb "$(channel) tautau only"
 
 
+################################################################################
+## HIG-12-010   ################################################################
+################################################################################
+
+triletpon_mass_points=$(shell seq 115 5 160) $(shell seq 170 10 200)
+
+trilepton_cards/combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(combination)/%/vh3l_cut.txt
+	combineCards.py -S TT=cards/combined_$*.txt WWW=$(combination)/$*/vh3l_cut.txt > $@
+
+trilepton_cards/combined_170.txt: $(combination)/170/vh3l_cut.txt
+	combineCards.py -S WWW=$(combination)/170/vh3l_cut.txt > $@
+
+trilepton_cards/combined_180.txt: $(combination)/180/vh3l_cut.txt
+	combineCards.py -S WWW=$(combination)/180/vh3l_cut.txt > $@
+
+trilepton_cards/combined_190.txt: $(combination)/190/vh3l_cut.txt
+	combineCards.py -S WWW=$(combination)/190/vh3l_cut.txt > $@
+
+trilepton_cards/combined_200.txt: $(combination)/200/vh3l_cut.txt
+	combineCards.py -S WWW=$(combination)/200/vh3l_cut.txt > $@
+
+trilepton_cards/combined_%.asymp.json: trilepton_cards/combined_%.txt
+	combine $< -M Asymptotic -H ProfileLikelihood \
+	  -m `echo $* | sed "s|FF||" | sed "s|SM4||" | sed "s|WW||" | sed "s|tt||"` \
+	  | limit2JSON.py --mass $* > $@
+	rm higgsCombineTest.Asymptotic.mH`echo $* | sed "s|FF||" | sed "s|SM4||"| sed "s|WW||" | sed "s|tt||"`.root
+
+trilep_cards_jobs=$(patsubst %, trilepton_cards/combined_%.txt, $(triletpon_mass_points))
+
+trilep_asymp_jobs=$(patsubst %, trilepton_cards/combined_%.asymp.json, $(triletpon_mass_points))
+
+trilepton_limits: $(trilep_cards_jobs) $(trilep_asymp_jobs)
+
+trilepton_cards/combined.asymp.pdf: trilepton_limits
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --max-y 20 \
+	  --method asymp trilepton_cards/combined_*.asymp.json -o $@ \
+	  --showpoints \
+	  --blurb "`./blurbtext.py $@`" \
+	  --blurbpos "0.15, 0.12, 0.5, 0.20" \
+	  --legendpos `./legendpos.py $@`
 
