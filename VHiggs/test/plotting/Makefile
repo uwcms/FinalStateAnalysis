@@ -311,7 +311,7 @@ debug_plots: debug_limits
 ################################################################################
 
 #wh3l_cards=/afs/cern.ch/user/c/ceballos/public/limits/limits_wh3l/sm/
-wh3l_cards=$(combination)
+wh3l_cards=$(PWD)/3l_cards/
 
 triletpon_mass_points=$(shell seq 115 5 160) $(shell seq 170 10 200)
 
