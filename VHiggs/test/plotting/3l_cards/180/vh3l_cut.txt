@@ -1,5 +1,5 @@
 imax 1 number of channels
-jmax 4 number of background
+jmax * number of background
 kmax * number of nuisance parameters
 Observation 7
 bin 1 1 1 1 1 1
