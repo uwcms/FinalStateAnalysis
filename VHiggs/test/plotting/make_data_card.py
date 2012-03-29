@@ -30,11 +30,11 @@ parser.add_option("--mmt_shape", type="string", default="MuTauMass",
 parser.add_option("--emt_shape", type="string", default="ETauMass",
                   help="Shape to use for EMT channel")
 
-parser.add_option("--wz_err", type="float", default=0.166,
+parser.add_option("--wz_err", type="float", default=0.12,
                   help="WZ normalization error")
 
-parser.add_option("--zz_err", type="float", default=0.40,
-                  help="WZ normalization error")
+parser.add_option("--zz_err", type="float", default=0.04,
+                  help="ZZ normalization error")
 
 parser.add_option("--lumi_err", type="float", default=0.045,
                   help="Lumi normalization error")
