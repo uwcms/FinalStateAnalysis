@@ -30,13 +30,13 @@ parser.add_option("--mmt_shape", type="string", default="MuTauMass",
 parser.add_option("--emt_shape", type="string", default="ETauMass",
                   help="Shape to use for EMT channel")
 
-parser.add_option("--wz_err", type="float", default=0.12,
+parser.add_option("--wz_err", type="float", default=0.10,
                   help="WZ normalization error")
 
 parser.add_option("--zz_err", type="float", default=0.04,
                   help="ZZ normalization error")
 
-parser.add_option("--lumi_err", type="float", default=0.045,
+parser.add_option("--lumi_err", type="float", default=0.022,
                   help="Lumi normalization error")
 
 parser.add_option("--tau_err", type="float", default=0.06,
@@ -153,7 +153,7 @@ mc_samples = ['WZ', 'ZZ', 'tribosons']
 
 mmt.add_sys('lumi', 1 + lumi_err, signal_datasets + mc_samples)
 mmt.add_sys('CMS_chi2Lt_vhtt', 1 + chi2err, signal_datasets + mc_samples)
-mmt.add_sys('CMS_WZ_vhtt', 1.0 + wz_err, ['WZ'])
+mmt.add_sys('CMS_WZ_www', 1.0 + wz_err, ['WZ'])
 mmt.add_sys('CMS_ZZ_vhtt', 1.0 + zz_err, ['ZZ'])
 mmt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
 mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), signal_datasets + mc_samples)
@@ -218,7 +218,7 @@ emt.add_background('tribosons')
 
 emt.add_sys('lumi', 1 + lumi_err, signal_datasets + mc_samples)
 emt.add_sys('CMS_chi2Lt_vhtt', 1 + chi2err, signal_datasets + mc_samples)
-emt.add_sys('CMS_WZ_vhtt', 1.0 + wz_err, ['WZ'])
+emt.add_sys('CMS_WZ_www', 1.0 + wz_err, ['WZ'])
 emt.add_sys('CMS_ZZ_vhtt', 1.0 + zz_err, ['ZZ'])
 emt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
 emt.add_sys('CMS_eff_m', 1 + mu_id_err, signal_datasets + mc_samples)
