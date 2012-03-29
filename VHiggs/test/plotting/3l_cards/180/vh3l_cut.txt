@@ -1,0 +1,27 @@
+imax 1 number of channels
+jmax 4 number of background
+kmax * number of nuisance parameters
+Observation 7
+bin 1 1 1 1 1 1
+process VHtt VHww WZ ZZ Wjets Wgamma
+process -1 0 1 2 3 4
+rate  0.000  1.375   5.653   0.270   2.523   0.000
+lumi                  lnN 1.022 1.022	  -   1.022   -	1.022
+CMS_eff_m             lnN 1.040 1.040	  -   1.040   -	1.040
+CMS_eff_e             lnN 1.040 1.040	  -   1.040   -	1.040
+CMS_p_scale_m         lnN 1.015 1.015	  -   1.015   -	1.015
+CMS_p_scale_e         lnN 1.020 1.020	  -   1.020   -	1.020
+CMS_met               lnN 1.020 1.020   -   1.020   -	1.020
+CMS_jes               lnN 1.020 1.020	1.000 1.020   -	1.020
+CMS_pu                lnN 1.010 1.010	  -   1.010   -	1.010
+CMS_fake              lnN   -	  -	  -     -   1.300   -  
+UE_PS                 lnN 1.030 1.030	  -     -     -	  -  
+pdf_qqbar             lnN 1.040 1.040 1.015 1.040   -	1.300
+QCDscale_VH           lnN 1.070 1.070	  -     -     -	  -  
+CMS_WZ_www            lnN   -	  -     1.100   -     -	  -  
+CMS_stat_VHtt_www     lnN 1.000   -     -     -     -	  -  
+CMS_stat_VHww_www     lnN   -   1.071	  -     -     -	  -  
+CMS_stat_WZ_www       lnN   -	  -     1.029   -     -	  -  
+CMS_stat_ZZ_www       lnN   -	  -	  -   1.192   -	  -  
+CMS_stat_Wjets_www    lnN   -	  -	  -     -   1.363 -  
+CMS_stat_Wgamma_www   lnN   -	  -	  -     -     -	1.000
