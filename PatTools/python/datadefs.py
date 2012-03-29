@@ -172,7 +172,9 @@ datadefs = {
         #'x_sec' : 0.7192*_picobarns, # FROM PREP
         # 17 +- 2.4 1.1 1.0 from EWK-11-10
         #'x_sec' : 17.0*_picobarns*0.3257*0.1096,
-        'x_sec' : 26.735*_picobarns*3*0.03365*(0.1075+0.1057+0.1125) ,
+        #'x_sec' : 26.735*_picobarns*3*0.03365*(0.1075+0.1057+0.1125) ,
+        # Switch to Guillelmo's value
+        'x_sec' : 26.2*_picobarns*3*0.03365*(0.1075+0.1057+0.1125) ,
         'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.1096,
         'analyses' : ['VH', 'SSDL'],
     },
@@ -461,7 +463,10 @@ datadefs = {
 
     'WWWTo2Lplus' : {
         'datasetpath' :"/WWWTo2Lplus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : (0.008957)*_picobarns,
+        # These have some problems with the xsec for this sample
+        #'x_sec' : (0.008957)*_picobarns,
+        # Just basically turn it off.
+        'x_sec' : (0.017)*_picobarns*br_www_all_leptons,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
@@ -482,7 +487,10 @@ datadefs = {
 
     'WWWTo2Lminus' : {
         'datasetpath' :"/WWWTo2Lminus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : (0.004109)*_picobarns,
+        #'x_sec' : (0.004109)*_picobarns,
+        # These have some problems with the xsec for this sample
+        # Just basically turn it off.
+        'x_sec' : (0.017)*_picobarns*br_www_all_leptons,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
