@@ -2,32 +2,32 @@ Version Control
 ===============
 
 The Final State Analysis package is tracked using the 
-`Link Mercurial <http://mercurial.selenic.com/>`_
-version control system.   Mercurial is different than CVS in that it's
-distributed - each repository is local and can stand by itself.  Mercurial makes
+`Link Git <http://http://git-scm.com//>`_
+version control system.   Git is different than CVS in that it's
+distributed - each repository is local and can stand by itself.  Git makes
 it easy to pass changes to other repositories.  This means you can make commits
 offline, and without worrying about messing up the central version control
 system.
 
-Getting Mercurial
+Getting Git
 -----------------
 
-Mercurial is installed on the UW cluster.  To make it available, add this to
-your bashrc:
+Git is installed on the UW cluster.  
 
-``alias hg=/afs/hep.wisc.edu/cms/sw/python/2.7/bin/hg``
+Downloading Code
+----------------
 
+To get the code, you clone from an existing repository::
 
-Updating Code
--------------
-
-To get the updated code, you "pull" from the central repository.  Just run ``hg pull`` in your repository.
+  git clone git@github.com:ekfriis/FinalStateAnalysis.git
 
 Committing Code
 ---------------
 
-To commit a file, just run
+To commit a file, first add it to the "index" of changes to be commited::
 
-``hg commit [file] -m "[commit message]"``
+  git add file1 [file2]
 
-You can all also commit a directory - this is recursive.
+Once you're ready to commit, run::
+
+  git commit -m "my commit message"
