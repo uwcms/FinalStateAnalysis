@@ -315,7 +315,7 @@ debug_plots: debug_limits
 #wh3l_cards=/afs/cern.ch/user/c/ceballos/public/limits/limits_wh3l/sm/
 wh3l_cards=$(PWD)/3l_cards/
 
-triletpon_mass_points=$(shell seq 115 5 140) $(shell seq 150 10 200)
+trilepton_mass_points=$(shell seq 115 5 140) $(shell seq 150 10 200)
 
 trilepton_cards/combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(wh3l_cards)/%/vh3l_cut.txt
 	combineCards.py -S TT=cards/combined_$*.txt WWW=$(wh3l_cards)/$*/vh3l_cut.txt > $@
@@ -341,9 +341,9 @@ trilepton_cards/combined_%.asymp.json: trilepton_cards/combined_%.txt
 	  | limit2JSON.py --mass $* > $@
 	rm higgsCombineTest.Asymptotic.mH`echo $* | sed "s|FF||" | sed "s|SM4||"| sed "s|WW||" | sed "s|tt||"`.root
 
-trilep_cards_jobs=$(patsubst %, trilepton_cards/combined_%.txt, $(triletpon_mass_points))
+trilep_cards_jobs=$(patsubst %, trilepton_cards/combined_%.txt, $(trilepton_mass_points))
 
-trilep_asymp_jobs=$(patsubst %, trilepton_cards/combined_%.asymp.json, $(triletpon_mass_points))
+trilep_asymp_jobs=$(patsubst %, trilepton_cards/combined_%.asymp.json, $(trilepton_mass_points))
 
 trilepton_limits: $(trilep_cards_jobs) $(trilep_asymp_jobs) 
 
@@ -365,9 +365,34 @@ $(scratch)/trilep_cls_limits/combined_%/submit: trilepton_cards/combined_%.root
 	  -i `readlink -f $<`  -mass $* \
 	  -min 0.2 -max 30
 
-trilepton_cls_submitters=$(patsubst %, $(scratch)/trilep_cls_limits/combined_%/submit, $(triletpon_mass_points))
+# Now define the $(channel) grid result - will get updated as more files show up 
+# This combines all the points into a "mass slice"
+$(scratch)/trilep_cls_limits/combined_%/grid.root: $(scratch)/trilep_cls_limits/combined_%/point_*root
+	hadd -f $@ $^ 
+
+# Given the card file and the computed grid, compute the obs and exp CLs limits
+trilepton_cards/limit_%.cls.json: trilepton_cards/combined_%.txt $(scratch)/trilep_cls_limits/combined_%/grid.root
+	compute_cls.sh $^ $* > $@
+
+trilepton_cls_submitters=$(patsubst %, $(scratch)/trilep_cls_limits/combined_%/submit, $(trilepton_mass_points))
+
+trilepton_cls_results=$(patsubst %, trilepton_cards/limit_%.cls.json, $(trilepton_mass_points))
+
+trilepton_cls_grids=$(patsubst %, $(scratch)/trilep_cls_limits/combined_%/grid.root, $(trilepton_mass_points))
 
 trilepton_cls_submits: $(trilepton_cls_submitters)
+
+trilepton_cls: $(trilepton_cls_results) $(trilepton_cls_grids)
+
+trilepton_cards/combined.cls.pdf: trilepton_cls
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method cls trilepton_cards/limit_*.cls.json -o $@ \
+	  --showpoints \
+	  --blurb "`./blurbtext.py $@`" \
+	  --blurbpos "0.15, 0.12, 0.5, 0.20" \
+	  --legendpos `./legendpos.py $@`
 
 #For debugging run WWW limits only
 3l_cards/limit_%.asymp.json: 3l_cards/%/vh3l_cut.txt
@@ -376,7 +401,7 @@ trilepton_cls_submits: $(trilepton_cls_submitters)
 	  | limit2JSON.py --mass $* > $@
 	rm higgsCombineTest.Asymptotic.mH`echo $* | sed "s|FF||" | sed "s|SM4||"| sed "s|WW||" | sed "s|tt||"`.root
 
-www_asymp_jobs=$(patsubst %, 3l_cards/limit_%.asymp.json, $(triletpon_mass_points))
+www_asymp_jobs=$(patsubst %, 3l_cards/limit_%.asymp.json, $(trilepton_mass_points))
 
 3l_cards/limit.asymp.pdf: $(www_asymp_jobs)
 	python $(fsa)/StatTools/scripts/plotlimit.py \
