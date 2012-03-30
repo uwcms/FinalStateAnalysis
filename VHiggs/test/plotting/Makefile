@@ -107,7 +107,8 @@ extensions_shape_file=wh_shapes_sm4_ff.root
 shape_file=vhtt_shapes.root
 # Mass points to run limits on
 #masspoints=100 110 120 130 140 150 160 
-masspoints=110 120 130 140 
+#masspoints=110 120 130 140 
+masspoints=110 115 120 125 130 135 140 145 150 160
 # Exclusion range to use when building CLs grid
 min_cls="0.2"
 max_cls="70"
@@ -174,6 +175,10 @@ $(shape_file): $(extensions_shape_file) addStatShapes.py
 	cp $(extensions_shape_file) $(shape_file)
 	./addStatShapes.py $(shape_file)
 
+# Make a copy in the cards directory
+cards/$(shape_file): $(shape_file)
+	cp $< $@
+
 ################################################################################
 ## Building the data cards themselves  #########################################
 ################################################################################
@@ -182,10 +187,10 @@ $(shape_file): $(extensions_shape_file) addStatShapes.py
 cards/$(channel)_%.txt: $(shape_file) make_data_card.py
 	python make_data_card.py -o $@ -m $* -f $(shape_file) \
 	  --channels $(channel) --selection $(selection) \
-	  --emt_shape count \
-	  --mmt_shape count 
-	  #--emt_shape SubleadingMass \
-	  #--mmt_shape MuTauMass 
+	  --emt_shape SubleadingMass \
+	  --mmt_shape MuTauMass 
+	  #--emt_shape count \
+	  #--mmt_shape count 
 
 # Rule to make a RooWorkspace card from an ASCII one
 cards/$(channel)_%.root: cards/$(channel)_%.txt
@@ -230,6 +235,7 @@ cards/$(channel)_%.cls.json: cards/$(channel)_%.root $(scratch)/cls_limits/$(cha
 cards/$(channel).cls.pdf: $(cls_results) legendpos.py
 	python $(fsa)/StatTools/scripts/plotlimit.py \
 	  --max-y 40 \
+	  --lumi 5000 \
 	  --method cls cards/$(channel)_*.cls.json -o $@ \
 	  --showpoints \
 	  --blurb "`./blurbtext.py $@`" \
@@ -248,6 +254,7 @@ cards/$(channel).asymp.tex: $(asymp_results)
 cards/$(channel).asymp.pdf: $(asymp_results) legendpos.py
 	python $(fsa)/StatTools/scripts/plotlimit.py \
 	  --max-y 40 \
+	  --lumi 5000 \
 	  --method asymp cards/$(channel)_*.asymp.json -o $@ \
 	  --showpoints \
 	  --blurb "`./blurbtext.py $@`" \
@@ -301,4 +308,109 @@ debug_plots: debug_limits
 	python $(fsa)/StatTools/scripts/plotlimit.py cards/$(channel)*tt.asymp.json --method asymp --label tt -o cards/$(channel)_ttOnly.pdf --max-y 70 --showpoints --blurb "$(channel) tautau only"
 
 
+################################################################################
+## HIG-12-010   ################################################################
+################################################################################
 
+#wh3l_cards=/afs/cern.ch/user/c/ceballos/public/limits/limits_wh3l/sm/
+wh3l_cards=$(PWD)/3l_cards/
+
+trilepton_mass_points=$(shell seq 115 5 140) $(shell seq 150 10 200)
+
+trilepton_cards/combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(wh3l_cards)/%/vh3l_cut.txt
+	combineCards.py -S TT=cards/combined_$*.txt WWW=$(wh3l_cards)/$*/vh3l_cut.txt > $@
+
+trilepton_cards/combined_%.root: trilepton_cards/combined_%.txt
+	text2workspace.py $< -o $@
+
+trilepton_cards/combined_170.txt: $(wh3l_cards)/170/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/170/vh3l_cut.txt > $@
+
+trilepton_cards/combined_180.txt: $(wh3l_cards)/180/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/180/vh3l_cut.txt > $@
+
+trilepton_cards/combined_190.txt: $(wh3l_cards)/190/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/190/vh3l_cut.txt > $@
+
+trilepton_cards/combined_200.txt: $(wh3l_cards)/200/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/200/vh3l_cut.txt > $@
+
+trilepton_cards/combined_%.asymp.json: trilepton_cards/combined_%.txt
+	combine $< -M Asymptotic -H ProfileLikelihood \
+	  -m `echo $* | sed "s|FF||" | sed "s|SM4||" | sed "s|WW||" | sed "s|tt||"` \
+	  | limit2JSON.py --mass $* > $@
+	rm higgsCombineTest.Asymptotic.mH`echo $* | sed "s|FF||" | sed "s|SM4||"| sed "s|WW||" | sed "s|tt||"`.root
+
+trilep_cards_jobs=$(patsubst %, trilepton_cards/combined_%.txt, $(trilepton_mass_points))
+
+trilep_asymp_jobs=$(patsubst %, trilepton_cards/combined_%.asymp.json, $(trilepton_mass_points))
+
+trilepton_limits: $(trilep_cards_jobs) $(trilep_asymp_jobs) 
+
+trilepton_cards/combined.asymp.pdf: trilepton_limits
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method asymp trilepton_cards/combined_*.asymp.json -o $@ \
+	  --showpoints \
+	  --blurb "`./blurbtext.py $@`" \
+	  --blurbpos "0.15, 0.12, 0.5, 0.20" \
+	  --legendpos `./legendpos.py $@`
+
+################################################################################
+## HIG-12-010   CL_s method ####################################################
+################################################################################
+$(scratch)/trilep_cls_limits/combined_%/submit: trilepton_cards/combined_%.root
+	make_grid_submission.py -submitdir `dirname $@` \
+	  -i `readlink -f $<`  -mass $* \
+	  -min 0.2 -max 30
+
+# Now define the $(channel) grid result - will get updated as more files show up 
+# This combines all the points into a "mass slice"
+$(scratch)/trilep_cls_limits/combined_%/grid.root: $(scratch)/trilep_cls_limits/combined_%/point_*root
+	hadd -f $@ $^ 
+
+# Given the card file and the computed grid, compute the obs and exp CLs limits
+trilepton_cards/limit_%.cls.json: trilepton_cards/combined_%.txt $(scratch)/trilep_cls_limits/combined_%/grid.root
+	compute_cls.sh $^ $* > $@
+
+trilepton_cls_submitters=$(patsubst %, $(scratch)/trilep_cls_limits/combined_%/submit, $(trilepton_mass_points))
+
+trilepton_cls_results=$(patsubst %, trilepton_cards/limit_%.cls.json, $(trilepton_mass_points))
+
+trilepton_cls_grids=$(patsubst %, $(scratch)/trilep_cls_limits/combined_%/grid.root, $(trilepton_mass_points))
+
+trilepton_cls_submits: $(trilepton_cls_submitters)
+
+trilepton_cls: $(trilepton_cls_results) $(trilepton_cls_grids)
+
+trilepton_cards/combined.cls.pdf: trilepton_cls
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method cls trilepton_cards/limit_*.cls.json -o $@ \
+	  --showpoints \
+	  --blurb "`./blurbtext.py $@`" \
+	  --blurbpos "0.15, 0.12, 0.5, 0.20" \
+	  --legendpos `./legendpos.py $@`
+
+#For debugging run WWW limits only
+3l_cards/limit_%.asymp.json: 3l_cards/%/vh3l_cut.txt
+	combine $< -M Asymptotic -H ProfileLikelihood \
+	  -m `echo $* | sed "s|FF||" | sed "s|SM4||" | sed "s|WW||" | sed "s|tt||"` \
+	  | limit2JSON.py --mass $* > $@
+	rm higgsCombineTest.Asymptotic.mH`echo $* | sed "s|FF||" | sed "s|SM4||"| sed "s|WW||" | sed "s|tt||"`.root
+
+www_asymp_jobs=$(patsubst %, 3l_cards/limit_%.asymp.json, $(trilepton_mass_points))
+
+3l_cards/limit.asymp.pdf: $(www_asymp_jobs)
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method asymp $^ -o $@ \
+	  --showpoints \
+	  --blurb "`./blurbtext.py $@`" \
+	  --blurbpos "0.15, 0.12, 0.5, 0.20" \
+	  --legendpos `./legendpos.py $@`
+
+www_limits: $(www_asymp_jobs) 3l_cards/limit.asymp.pdf

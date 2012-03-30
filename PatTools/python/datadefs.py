@@ -45,17 +45,26 @@ data_name_map = {
     'VH150' : ['VH_150'],
     'VH160' : ['VH_160'],
 
-    'VH120WW' : ['VH_120_HWW'],
-    'VH130WW' : ['VH_130_HWW'],
-    'VH140WW' : ['VH_140_HWW'],
-    'VH150WW' : ['VH_150_HWW'],
-    'VH160WW' : ['VH_160_HWW'],
+    'VH110WW' : ['WH_110_HWW3l'],
+    'VH115WW' : ['WH_115_HWW3l'],
+    'VH120WW' : ['WH_120_HWW3l'],
+    'VH125WW' : ['WH_125_HWW3l'],
+    'VH130WW' : ['WH_130_HWW3l'],
+    'VH135WW' : ['WH_135_HWW3l'],
+    'VH140WW' : ['WH_140_HWW3l'],
+    'VH145WW' : ['WH_145_HWW3l'],
+    'VH150WW' : ['WH_150_HWW3l'],
+    'VH155WW' : ['WH_155_HWW3l'],
+    'VH160WW' : ['WH_160_HWW3l'],
 
     'TTW' : ['TTWToLplus', 'TTWToLminus'],
     'TTZ' : ['TTZToLplus', 'TTZToLminus'],
     'WWW' : ['WWWTo2Lplus', 'WWWTo2Lminus'],
 }
 
+# Some constants
+br_w_leptons =  0.1075+0.1057+0.1125
+br_www_all_leptons = br_w_leptons*br_w_leptons*br_w_leptons
 
 datadefs = {
     ############################################################################
@@ -115,9 +124,6 @@ datadefs = {
     'WZJetsTo3LNu' : {
         'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
-        #'x_sec' : 0.7192*_picobarns, # FROM PREP
-        # 17 +- 2.4 1.1 1.0 from EWK-11-10
-        #'x_sec' : 17.0*_picobarns*0.3257*0.1096,
         'x_sec' : 26.735*_picobarns*3*0.03365*(0.1075+0.1057+0.1125) ,
         'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.1096,
         'analyses' : ['VH', 'SSDL'],
@@ -273,67 +279,67 @@ datadefs = {
 
     'WH_110_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-110_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 0.8754*_picobarns*4.82E-02,
+        'x_sec' : 0.8754*_picobarns*br_www_all_leptons*4.82E-02,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
     'WH_115_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-115_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 0.7546*_picobarns*8.67E-02,
+        'x_sec' : 0.7546*_picobarns*br_www_all_leptons*8.67E-02,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
     'WH_120_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-120_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 0.6561*_picobarns*1.43E-01,
+        'x_sec' : 0.6561*_picobarns*br_www_all_leptons*1.43E-01,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
     'WH_125_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-125_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 0.5729*_picobarns*2.16E-01,
+        'x_sec' : 0.5729*_picobarns*br_www_all_leptons*2.16E-01,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
     'WH_130_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-130_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 0.5008*_picobarns*3.05E-01,
+        'x_sec' : 0.5008*_picobarns*br_www_all_leptons*3.05E-01,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
     'WH_135_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-135_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 0.4390*_picobarns*4.03E-01,
+        'x_sec' : 0.4390*_picobarns*br_www_all_leptons*4.03E-01,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
     'WH_140_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-140_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 0.3857*_picobarns*5.03E-01,
+        'x_sec' : 0.3857*_picobarns*br_www_all_leptons*5.03E-01,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
     'WH_145_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-145_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 0.3406*_picobarns*6.02E-01,
+        'x_sec' : 0.3406*_picobarns*br_www_all_leptons*6.02E-01,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
     'WH_150_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-150_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 0.3001*_picobarns*6.98E-01,
+        'x_sec' : 0.3001*_picobarns*br_www_all_leptons*6.98E-01,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
     'WH_155_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-155_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 0.2646*_picobarns*7.95E-01,
+        'x_sec' : 0.2646*_picobarns*br_www_all_leptons*7.95E-01,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
     'WH_160_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-160_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 0.2291*_picobarns*9.08E-01,
+        'x_sec' : 0.2291*_picobarns*br_www_all_leptons*9.08E-01,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
@@ -358,7 +364,10 @@ datadefs = {
 
     'WWWTo2Lplus' : {
         'datasetpath' :"/WWWTo2Lplus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : (0.008957)*_picobarns,
+        # These have some problems with the xsec for this sample
+        #'x_sec' : (0.008957)*_picobarns,
+        # Just basically turn it off.
+        'x_sec' : (0.017)*_picobarns*br_www_all_leptons,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },
@@ -379,7 +388,10 @@ datadefs = {
 
     'WWWTo2Lminus' : {
         'datasetpath' :"/WWWTo2Lminus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : (0.004109)*_picobarns,
+        #'x_sec' : (0.004109)*_picobarns,
+        # These have some problems with the xsec for this sample
+        # Just basically turn it off.
+        'x_sec' : (0.017)*_picobarns*br_www_all_leptons,
         'pu' : 'S6',
         'analyses' : ['VH'],
     },

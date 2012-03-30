@@ -7,7 +7,7 @@ Define top-level configuration for WH analysis.
 '''
 
 # Data source parameters
-INT_LUMI = 4684
+INT_LUMI = 4960
 #JOBID = '2012-01-28-v1-WHAnalyze'
 JOBID = '2012-02-19-v1-WHAnalyze'
 
@@ -41,13 +41,13 @@ cfg = {
         'ntuple' : '/emt/final/Ntuple',
         'primds' : 'data_MuEG',
         'variables' : {
-            'ETauMass' : ('Elec_Tau_Mass', 'M_{e#tau}', [60, 0, 300],
+            'ETauMass' : ('Elec_Tau_Mass', 'M_{e#tau} [GeV]', [60, 0, 300],
                           mass_binning),
-            'MuTauMass' : ('Mu_Tau_Mass', 'M_{#mu#tau}', [60, 0, 300],
+            'MuTauMass' : ('Mu_Tau_Mass', 'M_{#mu#tau} [GeV]', [60, 0, 300],
                            mass_binning),
             'SubleadingMass' : (
                 '((ElecPt < MuPt)*Elec_Tau_Mass + (ElecPt > MuPt)*Mu_Tau_Mass)',
-                'M_{l2 #tau}', [60, 0, 300], mass_binning),
+                'M_{l2 #tau} [GeV]', [60, 0, 300], mass_binning),
 
             'EJetPt' : ('Elec_JetPt', 'p_{T}', [200, 0, 200], 1),
             'MuJetPt' : ('Mu_JetPt', 'p_{T}', [200, 0, 200], 1),
@@ -57,7 +57,7 @@ cfg = {
             'TauJetPt' : ('TauJetPt', 'p_{T}', [100, 0, 200], 5),
             'TauLeadTrkPt' : ('TauLeadTrkPt', 'p_{T}', [100, 0, 50], 5),
             'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDF', [100, 0, 30], 5),
-            'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
+            'HT' : ('VisFinalState_Ht', 'L_{T} [GeV]', [60, 0, 300], 4),
             'count' : ('1', 'Count', [1, 0, 1], 1),
         },
         # The common cuts
@@ -268,7 +268,7 @@ cfg = {
             'vtxChi2NODF' : ('vtxChi2/vtxNDOF', 'Vertex #chi^{2}/NDF', [100, 0, 30], 5),
             #    'MET' : ('METPt', 'MET', [100, 0, 200]),
             'Njets' : ('NjetsPt20_Njets', 'N_{jets}', [10, -0.5, 9.5], 1),
-            'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
+            'HT' : ('VisFinalState_Ht', 'L_{T} [GeV]', [60, 0, 300], 4),
             'count' : ('1', 'Count', [1, 0, 1], 1),
             'Muon1Pt' : ('Muon1Pt', 'p_{T}', [100, 0, 200], pt_binning),
             'Muon2Pt' : ('Muon2Pt', 'p_{T}', [100, 0, 200], pt_binning),
@@ -372,7 +372,7 @@ cfg = {
         'variables' : {
             'MuElecMass' : ('Elec_Mu2_Mass', 'M_{e#mu}', [60, 0, 300], 5),
             'Mu1_MtToMET' : ('Mu1_MtToMET', 'M_{T} #mu(1)-#tau', [60, 0, 300], 5),
-            'HT' : ('VisFinalState_Ht', 'L_{T}', [60, 0, 300], 4),
+            'HT' : ('VisFinalState_Ht', 'L_{T} [GeV]', [60, 0, 300], 4),
             'count' : ('1', 'Count', [1, 0, 1], 1),
         },
         'baseline' : [

@@ -1,4 +1,5 @@
 import styling
+import ROOT
 
 '''
 
@@ -9,7 +10,7 @@ Define common style parameters for oft-used samples
 
 SAMPLE_STYLES = {
     'ztt' : {
-        'color' : styling.colors['ewk_yellow'],
+        'color' : ROOT.EColor.kGray+1,
         'nicename' : 'Z #rightarrow #tau #tau',
     },
     'Zjets' : {
@@ -38,11 +39,11 @@ SAMPLE_STYLES = {
         'nicename' : 'tt+jets',
     },
     'WZ' : {
-        'color' : styling.colors['grey'],
+        'color' : ROOT.EColor.kAzure-2,
         'nicename' : 'WZ',
     },
     'ZZ' : {
-        'color' : styling.colors['med_blue'],
+        'color' : ROOT.EColor.kAzure-9,
         'nicename' : 'ZZ',
     },
     'WW' : {
@@ -60,7 +61,7 @@ SAMPLE_STYLES = {
         'nicename' : 'Data',
     },
     'VH*' : {
-        'color' : styling.colors['red'],
+        'color' : ROOT.EColor.kRed+1,
         ##'draw_opt' : 'lf',
         #'line_width' : 2,
         #'line_color' : styling.colors['black'],

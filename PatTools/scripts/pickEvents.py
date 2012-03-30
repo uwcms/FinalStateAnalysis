@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     for dataset, runevts in events.iteritems():
         real_dataset = datadefs[dataset]['datasetpath']
-        command = ['edmPickEvents.py']
+        command = ['fsaPickEvents.py']
         command.append('--output=%s' % (dataset + label))
         command.append('--printInteractive')
         command.append(real_dataset)

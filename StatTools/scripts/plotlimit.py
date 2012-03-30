@@ -36,6 +36,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--canvas-x', dest="cx", type=int, default=800,
                         help="Canvas width (pixels).  Default: 800")
+
     parser.add_argument('--canvas-y', dest="cy", type=int, default=600,
                         help="Canvas height (pixels).  Default: 600")
 
@@ -56,6 +57,9 @@ if __name__ == "__main__":
     parser.add_argument('--showpoints', action='store_true',
                         help="Put dots at the actual mass values where"
                         " the limit is set")
+
+    parser.add_argument('--preliminary', action='store_true',
+                        help="Add 'preliminary' to CMS label")
 
     print sys.argv
     args = parser.parse_args()
@@ -99,7 +103,11 @@ if __name__ == "__main__":
             obs_draw_option += 'p'
         obs.Draw(obs_draw_option)
 
-    cms_label = styling.cms_preliminary(args.lumi)
+    cms_label = styling.cms_preliminary(
+        args.lumi,
+        is_preliminary=args.preliminary,
+        lumi_on_top = True,
+    )
 
     # Add legend
     legend_args = [ float(x) for x in args.legendpos.split(',') ] + ["", "NDC"]

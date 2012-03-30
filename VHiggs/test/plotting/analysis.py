@@ -126,7 +126,7 @@ if __name__ == "__main__":
     ### Load the data ##########################################################
     ############################################################################
 
-    canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
+    canvas = ROOT.TCanvas("basdf", "aasdf", 800, 800)
 
     shape_file = ROOT.TFile("wh_shapes_raw.root", 'RECREATE')
 
@@ -448,7 +448,9 @@ if __name__ == "__main__":
                         stack.SetMaximum(2*data.GetMaximum())
                         stack.GetXaxis().SetTitle(xaxis_title)
                         mc_legend.Draw()
-                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
+                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI,
+                                                            lumi_on_top = True,
+                                                           is_preliminary=False)
                         canvas.Update()
                         saveplot(plot_name + '_mc')
 
@@ -456,7 +458,9 @@ if __name__ == "__main__":
                         data.Draw('same,pe,x0')
                         signalx100.Draw('same,hist')
                         mc_legend_with_signal.Draw()
-                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
+                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI,
+                                                            lumi_on_top = True,
+                                                            is_preliminary=False)
                         canvas.Update()
                         saveplot(plot_name + '_mc_with_signal100')
 
@@ -501,7 +505,11 @@ if __name__ == "__main__":
                             #data_plot.GetMaximum(), fake_plot.GetMaximum()))
                         data_plot.SetMaximum(2*data_plot.GetMaximum())
                         canvas.Update()
-                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
+                        cms_label = styling.cms_preliminary(
+                            analysis_cfg.INT_LUMI,
+                            is_preliminary=False,
+                            lumi_on_top = True
+                        )
                         legend.Draw()
                         saveplot(plot_name + data_plot_name + '_wqcd')
 
@@ -551,6 +559,9 @@ if __name__ == "__main__":
                     # Modify
                     ult_data_poisson = poisson.convert(ult_data.th1,
                                                        x_err=False, set_zero_bins=-100)
+                    ult_data_poisson.SetMarkerSize(2)
+                    ult_data_poisson.SetMarkerStyle(20)
+                    ult_data_poisson.SetLineWidth(2)
 
                     ############################################################
                     ### Corrected WZ and ZZ for fake rate contamination  #######
@@ -675,8 +686,8 @@ if __name__ == "__main__":
                     #Make the tribosons purple
                     styling.apply_style(
                         tribosons, **samplestyles.SAMPLE_STYLES['zll'])
-                    stack.Add(tribosons.th1, 'hist')
-                    legend.AddEntry(tribosons.th1, "WWW, ttW, ttZ", "lf")
+                    #stack.Add(tribosons.th1, 'hist')
+                    #legend.AddEntry(tribosons.th1, "WWW, ttW, ttZ", "lf")
 
                     for histo_name, histo in zip(corrected_mc,
                                                  corrected_mc_histos):
@@ -702,7 +713,11 @@ if __name__ == "__main__":
                         stack.GetMaximum()))
                     )
 
-                    cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
+                    cms_label = styling.cms_preliminary(
+                        analysis_cfg.INT_LUMI,
+                        is_preliminary=False,
+                        lumi_on_top = True
+                    )
 
                     saveplot(plot_base_name + '_ult_wfrs')
 
@@ -777,23 +792,23 @@ if __name__ == "__main__":
                     legend = ROOT.TLegend(0.6, 0.5, 0.9, 0.90, "", "brNDC")
                     legend.SetFillStyle(0)
                     legend.SetBorderSize(0)
-                    legend.AddEntry(ult_data.th1, "Data", "p")
+                    legend.AddEntry(ult_data_poisson, "data", "lp")
                     signalx5 = (signal + signalHWW)*5
                     signalx5.SetLineStyle(1)
                     signalx5.SetLineWidth(3)
                     signalx5.SetLineColor(ROOT.EColor.kRed)
                     signalx5.SetFillStyle(0)
-                    legend.AddEntry(signalx5.th1, "VH (#times 5) m_{H}=120 GeV", "l")
+                    legend.AddEntry(signalx5.th1, "m_{H}=120 (#times5)", "l")
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
-                    stack.Add(tribosons.th1, 'hist')
-                    legend.AddEntry(tribosons.th1, "WWW, ttW, ttZ", "lf")
+                    #stack.Add(tribosons.th1, 'hist')
+                    #legend.AddEntry(tribosons.th1, "WWW, ttW, ttZ", "lf")
                     for histo_name, histo in zip(corrected_mc,
                                                  corrected_mc_histos):
                         stack.Add(histo.th1, 'hist')
                         legend.AddEntry(histo.th1, histo_name, 'lf')
                     stack.Add(all_fakes.th1, 'hist')
-                    legend.AddEntry(all_fakes.th1, "Fakes", "lf")
+                    legend.AddEntry(all_fakes.th1, "fake bkg.", "lf")
                     stack.Draw()
                     stack.GetXaxis().SetTitle(xaxis_title)
 
@@ -803,8 +818,8 @@ if __name__ == "__main__":
 
                     error_band_hist = all_fakes + \
                             corrected_mc_histos[0] + \
-                            corrected_mc_histos[1] + \
-                            tribosons
+                            corrected_mc_histos[1] #+ \
+                            #tribosons
 
                     # Copy only errors from fake rate
                     for i in range(0, data_fr2s_ewk.GetNbinsX()+2):
@@ -819,7 +834,7 @@ if __name__ == "__main__":
                     error_band_hist.SetFillStyle(3004)
                     error_band_hist.SetMarkerSize(0)
                     error_band_hist_copy = error_band_hist.th1.Clone()
-                    legend.AddEntry(error_band_hist_copy, "Fake uncert.", "lf")
+                    legend.AddEntry(error_band_hist_copy, "fake uncert.", "lf")
                     error_band_hist.DrawCopy('same,e2')
                     error_band_hist.SetFillStyle(0)
                     error_band_hist.Draw('same,hist')
@@ -832,7 +847,11 @@ if __name__ == "__main__":
                     signalx5.Draw('same, hist')
                     legend.Draw()
 
-                    cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
+                    cms_label = styling.cms_preliminary(
+                        analysis_cfg.INT_LUMI,
+                        is_preliminary=False,
+                        lumi_on_top = True,
+                    )
                     saveplot(plot_base_name + '_ult_combfks', stack)
 
                     ############################################################
@@ -892,7 +911,7 @@ if __name__ == "__main__":
                     all_fakes.Write()
 
                     # We make a different output for each higgs mass
-                    for mass in [100, 110, 115, 120, 125, 130, 135, 140,
+                    for mass in [110, 115, 120, 125, 130, 135, 140,
                                  145, 150, 160]:
 
                         signal = plotter.get_histogram(
@@ -902,7 +921,8 @@ if __name__ == "__main__":
                         )
                         signal.SetName('VH%i' % mass)
                         hww_signal = None
-                        if mass in [120, 130, 140, 150, 160]:
+                        #if mass in [120, 130, 140, 150, 160]:
+                        if True:
                             hww_signal = plotter.get_histogram(
                                 'VH%iWW' % mass,
                                 ntuple + ':' + plot_base_name + '_ult',
