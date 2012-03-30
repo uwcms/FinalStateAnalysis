@@ -9,7 +9,7 @@ import multiprocessing
 import ROOT
 
 def make_dirs(base_dir, subdirs):
-    ''' Make the directory structure.  Subdirs is a list '''
+    ''' Make the directory structure.  Subdirs is a list. '''
     if not subdirs:
         return base_dir
     next_folder = subdirs.pop(0)
@@ -40,7 +40,11 @@ class MegaBase(object):
         '''
         self.log.debug("booking %s at %s", name, location)
 
-        directory = make_dirs(self.output, location.split('/'))
+        directory = make_dirs(self.output, os.path.normpath(location).split('/'))
+
+        if not directory:
+            raise IOError("Couldn't create directory %s in file %s" %
+                          (location, self.output))
 
         directory.cd()
         the_type = kwargs.get('type', ROOT.TH1F)
