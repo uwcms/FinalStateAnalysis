@@ -1,6 +1,6 @@
 import ROOT
 
-def cms_preliminary(int_lumi):
+def cms_preliminary(int_lumi, is_preliminary=True):
     # Objects that shouldn't be GC'ed
     keep = []
     latex = ROOT.TLatex()
@@ -16,7 +16,10 @@ def cms_preliminary(int_lumi):
             0.18,0.84,
             "#int #font[12]{L} dt = %.1f fb^{-1}" % (int_lumi/1000.)));
     latex.SetTextAlign(11);
-    keep.append(latex.DrawLatex(0.18,0.96,"CMS preliminary 2011"));
+    label_text = "CMS preliminary 2011"
+    if not is_preliminary:
+        label_text = "CMS 2011"
+    keep.append(latex.DrawLatex(0.18,0.96, label_text));
     #latex.DrawLatex(0.18,0.96,"CMS 2010");
     return latex
 
