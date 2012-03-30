@@ -235,6 +235,7 @@ cards/$(channel)_%.cls.json: cards/$(channel)_%.root $(scratch)/cls_limits/$(cha
 cards/$(channel).cls.pdf: $(cls_results) legendpos.py
 	python $(fsa)/StatTools/scripts/plotlimit.py \
 	  --max-y 40 \
+	  --lumi 5000 \
 	  --method cls cards/$(channel)_*.cls.json -o $@ \
 	  --showpoints \
 	  --blurb "`./blurbtext.py $@`" \
@@ -253,6 +254,7 @@ cards/$(channel).asymp.tex: $(asymp_results)
 cards/$(channel).asymp.pdf: $(asymp_results) legendpos.py
 	python $(fsa)/StatTools/scripts/plotlimit.py \
 	  --max-y 40 \
+	  --lumi 5000 \
 	  --method asymp cards/$(channel)_*.asymp.json -o $@ \
 	  --showpoints \
 	  --blurb "`./blurbtext.py $@`" \
@@ -318,6 +320,9 @@ triletpon_mass_points=$(shell seq 115 5 140) $(shell seq 150 10 200)
 trilepton_cards/combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(wh3l_cards)/%/vh3l_cut.txt
 	combineCards.py -S TT=cards/combined_$*.txt WWW=$(wh3l_cards)/$*/vh3l_cut.txt > $@
 
+trilepton_cards/combined_%.root: trilepton_cards/combined_%.txt
+	text2workspace.py $< -o $@
+
 trilepton_cards/combined_170.txt: $(wh3l_cards)/170/vh3l_cut.txt
 	combineCards.py -S WWW=$(wh3l_cards)/170/vh3l_cut.txt > $@
 
@@ -345,12 +350,24 @@ trilepton_limits: $(trilep_cards_jobs) $(trilep_asymp_jobs)
 trilepton_cards/combined.asymp.pdf: trilepton_limits
 	python $(fsa)/StatTools/scripts/plotlimit.py \
 	  --max-y 20 \
+	  --lumi 5000 \
 	  --method asymp trilepton_cards/combined_*.asymp.json -o $@ \
 	  --showpoints \
 	  --blurb "`./blurbtext.py $@`" \
 	  --blurbpos "0.15, 0.12, 0.5, 0.20" \
 	  --legendpos `./legendpos.py $@`
 
+################################################################################
+## HIG-12-010   CL_s method ####################################################
+################################################################################
+$(scratch)/trilep_cls_limits/combined_%/submit: trilepton_cards/combined_%.root
+	make_grid_submission.py -submitdir `dirname $@` \
+	  -i `readlink -f $<`  -mass $* \
+	  -min 0.2 -max 30
+
+trilepton_cls_submitters=$(patsubst %, $(scratch)/trilep_cls_limits/combined_%/submit, $(triletpon_mass_points))
+
+trilepton_cls_submits: $(trilepton_cls_submitters)
 
 #For debugging run WWW limits only
 3l_cards/limit_%.asymp.json: 3l_cards/%/vh3l_cut.txt
@@ -364,6 +381,7 @@ www_asymp_jobs=$(patsubst %, 3l_cards/limit_%.asymp.json, $(triletpon_mass_point
 3l_cards/limit.asymp.pdf: $(www_asymp_jobs)
 	python $(fsa)/StatTools/scripts/plotlimit.py \
 	  --max-y 20 \
+	  --lumi 5000 \
 	  --method asymp $^ -o $@ \
 	  --showpoints \
 	  --blurb "`./blurbtext.py $@`" \
