@@ -69,8 +69,8 @@ legend.AddEntry(fakes,  'fake bkg.', "lf")
 
 # Make M_ellell
 for x_title, filenamebase in [
-    ("|m_{l^{+}l^{-}}-m_{Z}| [GeV]", 'histo_drmin_afterallothercuts'),
-    ("#Delta R_{min}", 'histo_masszmin')]:
+    ("#Delta R_{min}", 'histo_drmin_afterallothercuts'),
+    ("|m_{l^{+}l^{-}}-m_{Z}| [GeV]", 'histo_masszmin')]:
 
     mass_cut_file = io.open(filenamebase+'.root')
 
@@ -103,7 +103,7 @@ for x_title, filenamebase in [
     stack.Add(hZJets)
 
     stack.Draw()
-    stack.GetXaxis().SetTitle()
+    stack.GetXaxis().SetTitle(x_title)
     stack.SetMinimum(1e-1)
     stack.SetMaximum(110)
     hHWW.Draw('same,hist')
