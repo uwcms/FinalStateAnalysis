@@ -548,6 +548,8 @@ if __name__ == "__main__":
                     # Modify
                     ult_data_poisson = poisson.convert(ult_data.th1,
                                                        x_err=False, set_zero_bins=-100)
+                    ult_data_poisson.SetMarkerSize(2)
+                    ult_data_poisson.SetMarkerStyle(20)
 
                     ############################################################
                     ### Corrected WZ and ZZ for fake rate contamination  #######
@@ -774,13 +776,13 @@ if __name__ == "__main__":
                     legend = ROOT.TLegend(0.6, 0.5, 0.9, 0.90, "", "brNDC")
                     legend.SetFillStyle(0)
                     legend.SetBorderSize(0)
-                    legend.AddEntry(ult_data.th1, "Data", "p")
+                    legend.AddEntry(ult_data_poisson, "data", "lp")
                     signalx5 = (signal + signalHWW)*5
                     signalx5.SetLineStyle(1)
                     signalx5.SetLineWidth(3)
                     signalx5.SetLineColor(ROOT.EColor.kRed)
                     signalx5.SetFillStyle(0)
-                    legend.AddEntry(signalx5.th1, "VH(120) #times 5 ", "lf")
+                    legend.AddEntry(signalx5.th1, "m_{H}=120 (#times5)", "l")
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
                     #stack.Add(tribosons.th1, 'hist')
@@ -790,7 +792,7 @@ if __name__ == "__main__":
                         stack.Add(histo.th1, 'hist')
                         legend.AddEntry(histo.th1, histo_name, 'lf')
                     stack.Add(all_fakes.th1, 'hist')
-                    legend.AddEntry(all_fakes.th1, "Fakes", "lf")
+                    legend.AddEntry(all_fakes.th1, "fake bkg.", "lf")
                     stack.Draw()
                     stack.GetXaxis().SetTitle(xaxis_title)
 
@@ -816,7 +818,7 @@ if __name__ == "__main__":
                     error_band_hist.SetFillStyle(3004)
                     error_band_hist.SetMarkerSize(0)
                     error_band_hist_copy = error_band_hist.th1.Clone()
-                    legend.AddEntry(error_band_hist_copy, "Fake uncert.", "lf")
+                    legend.AddEntry(error_band_hist_copy, "fake uncert.", "lf")
                     error_band_hist.DrawCopy('same,e2')
                     error_band_hist.SetFillStyle(0)
                     error_band_hist.Draw('same,hist')
