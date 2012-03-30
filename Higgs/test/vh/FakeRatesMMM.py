@@ -68,6 +68,8 @@ class FakeRatesMMM(MegaBase):
                 for iso, _ in probe_iso_cuts:
                     self.book('zmm/%s/%s/all' % (pt, iso), *var)
                     self.book('zmm/%s/%s/pass' % (pt, iso), *var)
+        self.book('trigger', 'group', 'HLT group', 25, -4.5,  15.5)
+        self.book('trigger', 'prescale', 'HLT prescale', 50, -0.5,  49.5)
         self.disable_branch('*')
         for b in meta.active_branches():
             self.enable_branch(b)
@@ -76,6 +78,8 @@ class FakeRatesMMM(MegaBase):
         self.enable_branch('muon3Pt')
         self.enable_branch('muon3JetPt')
         self.enable_branch('muon1_muon2_Mass')
+        self.enable_branch('doubleMuGroup')
+        self.enable_branch('doubleMuPrescale')
 
     def process(self, entry):
         tree = self.tree
@@ -84,6 +88,8 @@ class FakeRatesMMM(MegaBase):
             if not selection(tree):
                 return True
         histograms = self.histograms
+        histograms['trigger/group'].Fill(tree.doubleMuGroup)
+        histograms['trigger/prescale'].Fill(tree.doubleMuPrescale)
 
         jetpt = tree.muon3JetPt
         pt = tree.muon3Pt
