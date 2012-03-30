@@ -445,7 +445,9 @@ if __name__ == "__main__":
                         stack.SetMaximum(2*data.GetMaximum())
                         stack.GetXaxis().SetTitle(xaxis_title)
                         mc_legend.Draw()
-                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
+                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI,
+                                                            lumi_on_top = True,
+                                                           is_preliminary=False)
                         canvas.Update()
                         saveplot(plot_name + '_mc')
 
@@ -453,7 +455,9 @@ if __name__ == "__main__":
                         data.Draw('same,pe,x0')
                         signalx100.Draw('same,hist')
                         mc_legend_with_signal.Draw()
-                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
+                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI,
+                                                            lumi_on_top = True,
+                                                            is_preliminary=False)
                         canvas.Update()
                         saveplot(plot_name + '_mc_with_signal100')
 
@@ -498,7 +502,11 @@ if __name__ == "__main__":
                             #data_plot.GetMaximum(), fake_plot.GetMaximum()))
                         data_plot.SetMaximum(2*data_plot.GetMaximum())
                         canvas.Update()
-                        cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
+                        cms_label = styling.cms_preliminary(
+                            analysis_cfg.INT_LUMI,
+                            is_preliminary=False,
+                            lumi_on_top = True
+                        )
                         legend.Draw()
                         saveplot(plot_name + data_plot_name + '_wqcd')
 
@@ -550,6 +558,7 @@ if __name__ == "__main__":
                                                        x_err=False, set_zero_bins=-100)
                     ult_data_poisson.SetMarkerSize(2)
                     ult_data_poisson.SetMarkerStyle(20)
+                    ult_data_poisson.SetLineWidth(2)
 
                     ############################################################
                     ### Corrected WZ and ZZ for fake rate contamination  #######
@@ -701,7 +710,11 @@ if __name__ == "__main__":
                         stack.GetMaximum()))
                     )
 
-                    cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
+                    cms_label = styling.cms_preliminary(
+                        analysis_cfg.INT_LUMI,
+                        is_preliminary=False,
+                        lumi_on_top = True
+                    )
 
                     saveplot(plot_base_name + '_ult_wfrs')
 
@@ -831,7 +844,11 @@ if __name__ == "__main__":
                     signalx5.Draw('same, hist')
                     legend.Draw()
 
-                    cms_label = styling.cms_preliminary(analysis_cfg.INT_LUMI)
+                    cms_label = styling.cms_preliminary(
+                        analysis_cfg.INT_LUMI,
+                        is_preliminary=False,
+                        lumi_on_top = True,
+                    )
                     saveplot(plot_base_name + '_ult_combfks', stack)
 
                     ############################################################
