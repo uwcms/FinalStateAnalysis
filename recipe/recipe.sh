@@ -1,5 +1,7 @@
 #!/bin/bash
 
+: ${CMSSW_BASE:?"CMSSW_BASE is not set!  Run cmsenv before recipe.sh"}
+
 cd $CMSSW_BASE/src
 echo "Checking out extra packages"
 addpkg -z -f FinalStateAnalysis/recipe/tags

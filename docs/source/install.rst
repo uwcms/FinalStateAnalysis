@@ -15,6 +15,9 @@ Checkout the needed CMSSW tags::
   cd FinalStateAnalysis/recipe/
   # You need to have CVS access
   kinit me@CERN.CH
+  # Make sure your CMSSW environment is set up
+  cmsenv
+  # Checkout needed packages and apply patches
   ./recipe.sh
 
 Install the custom python virtualenv and extra packages::
