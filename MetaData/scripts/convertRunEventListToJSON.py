@@ -11,7 +11,7 @@ Usage:
 
 
 import sys
-import FinalStateAnalysis.PatTools.datatools as datatools
+import FinalStateAnalysis.MetaData.datatools as datatools
 import re
 import json
 

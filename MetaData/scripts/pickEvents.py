@@ -16,7 +16,7 @@ The json file should have the following format:
 }
 
 The actual dataset corresponding to a dataset alias is mapped in
-PatTools.python.datadefs
+MetaData.python.datadefs
 
 The resulting edmPickEvents.py calls are written to stdout
 
@@ -28,7 +28,7 @@ import sys
 import os
 import json
 from subprocess import Popen, PIPE, STDOUT
-from FinalStateAnalysis.PatTools.datadefs import datadefs
+from FinalStateAnalysis.MetaData.datadefs import datadefs
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

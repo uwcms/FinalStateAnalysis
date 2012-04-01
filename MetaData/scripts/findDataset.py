@@ -10,7 +10,7 @@ Usage:
 '''
 
 import sys
-import FinalStateAnalysis.PatTools.datatools as datatools
+import FinalStateAnalysis.MetaData.datatools as datatools
 
 
 if __name__ == "__main__":

@@ -17,7 +17,7 @@ import datetime
 import logging
 import os
 import sys
-from FinalStateAnalysis.PatTools.datadefs import datadefs
+from FinalStateAnalysis.MetaData.datadefs import datadefs
 
 log = logging.getLogger("submit_job")
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
