@@ -12,11 +12,8 @@ base_selections = And(
     meta.m1_m2_Zcompat < meta.m1_m3_Zcompat,
     meta.m1_m2_Zcompat < meta.m2_m3_Zcompat,
 
-    # Require the Z candidate within 10 GeV of m_Z
-    meta.m1_m2_Zcompat < 10,
-
-    # Require that the Higgs cand is OS
-    meta.m3_t_SS < 0.5,
+    # Require the Z candidate within 15 GeV of m_Z
+    meta.m1_m2_Zcompat < 15,
 
     # Order the Z muons by PT so we only have one candidate per event
     meta.m1Pt > meta.m2Pt,
@@ -63,6 +60,8 @@ base_selections = And(
 
 hadronic_tau_id = meta.tLooseIso > 0.5
 
+os = meta.m3_t_SS < 0.5
+
 m3_id = And(
     meta.m3RelPFIsoDB < 0.15,
     meta.m3WWID > 0.5,
@@ -90,10 +89,14 @@ class AnalyzeMMMT(Analyzer):
         self.define_region('mu_pass',
                            base_selections & m3_id & ~hadronic_tau_id,
                            histograms)
-        self.define_region('mu_pass_mt_pass',
+        self.define_region('mu_pass_ss',
+                           base_selections & m3_id & ~hadronic_tau_id & ~os,
+                           histograms)
+
+        self.define_region('mu_pass_mt_fail',
                            base_selections & m3_id & ~hadronic_tau_id & mt_cut,
                            histograms)
-        self.define_region('mu_pass_mt_fail',
+        self.define_region('mu_pass_mt_pass',
                            base_selections & m3_id & ~hadronic_tau_id & ~mt_cut,
                            histograms)
         self.define_region('all_pass',
