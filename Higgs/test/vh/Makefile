@@ -100,7 +100,7 @@ results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(ntuple_id)/%.txt
 
 # Make num/denom for jet->mu fake rate in MM events
 results/fake_rates/mu/%.mm.root: FakeRatesMM.py inputs/$(ntuple_id)/%.txt
-	$(mega) $^ /mumu/final/Ntuple $@
+	$(mega) $^ /mumu/final/Ntuple $@ 
 
 # Make num/denom for jet->mu fake rate in MMMT events
 results/fake_rates/mu/%.mmmt.root: FakeRatesMMMT.py inputs/$(ntuple_id)/%.txt
@@ -279,6 +279,10 @@ plots/zmm_control/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
   zmm_analysis render_zmm_controls.py
 	./render_zmm_controls.py inputs/$(ntuple_id)/all_samples.json \
 	  plots/zmm_control/ $(zmm_control_jobs)
+
+plots: plots/zmm_control/plot_list.txt \
+  plots/muon_fake_controls/plot_list.txt \
+  plots/muon_fake_fits/plot_list.txt
 
 ################################################################################
 ## Packing things up ###########################################################

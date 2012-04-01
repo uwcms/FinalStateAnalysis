@@ -63,11 +63,11 @@ class FakeRatesMM(MegaBase):
         super(FakeRatesMM, self).__init__(tree, output, **kwargs)
         for var in variables:
             for pt, _ in probe_pt_cuts:
+                self.book('wjets/%s/denominator/' % (pt), *var)
+                self.book('qcd/%s/denominator/' % (pt), *var)
                 for iso, _ in probe_iso_cuts:
-                    self.book('wjets/%s/%s/all' % (pt, iso), *var)
-                    self.book('wjets/%s/%s/pass' % (pt, iso), *var)
-                    self.book('qcd/%s/%s/all' % (pt, iso), *var)
-                    self.book('qcd/%s/%s/pass' % (pt, iso), *var)
+                    self.book('wjets/%s/%s/' % (pt, iso), *var)
+                    self.book('qcd/%s/%s/' % (pt, iso), *var)
         self.disable_branch('*')
         for b in meta.active_branches():
             self.enable_branch(b)
@@ -96,51 +96,43 @@ class FakeRatesMM(MegaBase):
         # else to do it in a performant way
         if passes_wjets:
             if pt10:
-                histograms['wjets/pt10/iso15/all/muonJetPt'].Fill(jetpt)
-                histograms['wjets/pt10/iso15/all/muonPt'].Fill(pt)
-                histograms['wjets/pt10/iso30/all/muonJetPt'].Fill(jetpt)
-                histograms['wjets/pt10/iso30/all/muonPt'].Fill(pt)
+                histograms['wjets/pt10/denominator/muonJetPt'].Fill(jetpt)
+                histograms['wjets/pt10/denominator/muonPt'].Fill(pt)
                 if wwid and tree.muon1RelPFIsoDB < 0.15:
-                    histograms['wjets/pt10/iso15/pass/muonJetPt'].Fill(jetpt)
-                    histograms['wjets/pt10/iso15/pass/muonPt'].Fill(pt)
+                    histograms['wjets/pt10/iso15/muonJetPt'].Fill(jetpt)
+                    histograms['wjets/pt10/iso15/muonPt'].Fill(pt)
                 if wwid and tree.muon1RelPFIsoDB < 0.3:
-                    histograms['wjets/pt10/iso30/pass/muonJetPt'].Fill(jetpt)
-                    histograms['wjets/pt10/iso30/pass/muonPt'].Fill(pt)
+                    histograms['wjets/pt10/iso30/muonJetPt'].Fill(jetpt)
+                    histograms['wjets/pt10/iso30/muonPt'].Fill(pt)
             if pt20:
-                histograms['wjets/pt20/iso15/all/muonJetPt'].Fill(jetpt)
-                histograms['wjets/pt20/iso15/all/muonPt'].Fill(pt)
-                histograms['wjets/pt20/iso30/all/muonJetPt'].Fill(jetpt)
-                histograms['wjets/pt20/iso30/all/muonPt'].Fill(pt)
+                histograms['wjets/pt20/denominator/muonJetPt'].Fill(jetpt)
+                histograms['wjets/pt20/denominator/muonPt'].Fill(pt)
                 if wwid and tree.muon1RelPFIsoDB < 0.15:
-                    histograms['wjets/pt20/iso15/pass/muonJetPt'].Fill(jetpt)
-                    histograms['wjets/pt20/iso15/pass/muonPt'].Fill(pt)
+                    histograms['wjets/pt20/iso15/muonJetPt'].Fill(jetpt)
+                    histograms['wjets/pt20/iso15/muonPt'].Fill(pt)
                 if wwid and tree.muon1RelPFIsoDB < 0.3:
-                    histograms['wjets/pt20/iso30/pass/muonJetPt'].Fill(jetpt)
-                    histograms['wjets/pt20/iso30/pass/muonPt'].Fill(pt)
+                    histograms['wjets/pt20/iso30/muonJetPt'].Fill(jetpt)
+                    histograms['wjets/pt20/iso30/muonPt'].Fill(pt)
 
         if passes_qcd:
             if pt10:
-                histograms['qcd/pt10/iso15/all/muonJetPt'].Fill(jetpt)
-                histograms['qcd/pt10/iso15/all/muonPt'].Fill(pt)
-                histograms['qcd/pt10/iso30/all/muonJetPt'].Fill(jetpt)
-                histograms['qcd/pt10/iso30/all/muonPt'].Fill(pt)
+                histograms['qcd/pt10/denominator/muonJetPt'].Fill(jetpt)
+                histograms['qcd/pt10/denominator/muonPt'].Fill(pt)
                 if wwid and tree.muon1RelPFIsoDB < 0.15:
-                    histograms['qcd/pt10/iso15/pass/muonJetPt'].Fill(jetpt)
-                    histograms['qcd/pt10/iso15/pass/muonPt'].Fill(pt)
+                    histograms['qcd/pt10/iso15/muonJetPt'].Fill(jetpt)
+                    histograms['qcd/pt10/iso15/muonPt'].Fill(pt)
                 if wwid and tree.muon1RelPFIsoDB < 0.3:
-                    histograms['qcd/pt10/iso30/pass/muonJetPt'].Fill(jetpt)
-                    histograms['qcd/pt10/iso30/pass/muonPt'].Fill(pt)
+                    histograms['qcd/pt10/iso30/muonJetPt'].Fill(jetpt)
+                    histograms['qcd/pt10/iso30/muonPt'].Fill(pt)
             if pt20:
-                histograms['qcd/pt20/iso15/all/muonJetPt'].Fill(jetpt)
-                histograms['qcd/pt20/iso15/all/muonPt'].Fill(pt)
-                histograms['qcd/pt20/iso30/all/muonJetPt'].Fill(jetpt)
-                histograms['qcd/pt20/iso30/all/muonPt'].Fill(pt)
+                histograms['qcd/pt20/denominator/muonJetPt'].Fill(jetpt)
+                histograms['qcd/pt20/denominator/muonPt'].Fill(pt)
                 if wwid and tree.muon1RelPFIsoDB < 0.15:
-                    histograms['qcd/pt20/iso15/pass/muonJetPt'].Fill(jetpt)
-                    histograms['qcd/pt20/iso15/pass/muonPt'].Fill(pt)
+                    histograms['qcd/pt20/iso15/muonJetPt'].Fill(jetpt)
+                    histograms['qcd/pt20/iso15/muonPt'].Fill(pt)
                 if wwid and tree.muon1RelPFIsoDB < 0.3:
-                    histograms['qcd/pt20/iso30/pass/muonJetPt'].Fill(jetpt)
-                    histograms['qcd/pt20/iso30/pass/muonPt'].Fill(pt)
+                    histograms['qcd/pt20/iso30/muonJetPt'].Fill(jetpt)
+                    histograms['qcd/pt20/iso30/muonPt'].Fill(pt)
 
         return True
 

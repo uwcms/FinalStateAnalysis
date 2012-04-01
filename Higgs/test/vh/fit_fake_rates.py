@@ -3,6 +3,13 @@
 
 Fit the fake measured fake rates an write out a RooWorkspace
 
+The input file store histograms of numerators and denominators.
+
+The folder format is:
+
+    [region]/[denom_tag]/denominator/[histos]
+    [region]/[denom_tag]/[numerator_tag]/[histos]
+
 Author: Evan K. Friis, UW
 
 '''
@@ -34,6 +41,18 @@ def make_path_mangler(to_insert):
         newpath = os.path.join(dir, to_insert, var)
         return newpath
     return functor
+
+def denominator_path_mangler(path):
+    ''' Mangle a path to get the denominator
+
+    Example:
+    >>> denominator_path_mangler('wjets/pt20/iso15/MuPt')
+    'wjets/pt20/denominator/MuPt'
+
+    '''
+    folders = os.path.normpath(path).split('/')
+    folders[-2] = 'denominator'
+    return os.path.join(folders)
 
 if __name__ == "__main__":
     log = logging.getLogger("fit_fakerates")
@@ -104,8 +123,9 @@ if __name__ == "__main__":
         # Make views of the numerator and denominator.
         # For RooFit we have to split into Pass & Fail
         # So subtract the numerator from the denominator
-        num_view = views.PathModifierView(regions[type], make_path_mangler('pass'))
-        all_view = views.PathModifierView(regions[type], make_path_mangler('all'))
+        num_view = regions[type]
+        all_view = views.PathModifierView(
+            regions[type], denominator_path_mangler)
         negative_num_view = views.ScaleView(num_view, -1)
         fail_view = views.SumView(all_view, negative_num_view)
 
@@ -129,6 +149,8 @@ if __name__ == "__main__":
 
             # Path is (folder1, folder2, var)
             # need to convert this to all/pass to get num denominator
+            print path
+            print os.path.join(*path)
             try:
                 num = folder[0].Get(os.path.join(*path))
                 fail = folder[1].Get(os.path.join(*path))
