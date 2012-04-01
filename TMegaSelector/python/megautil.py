@@ -40,7 +40,7 @@ True
 >>> mu_is_harder(fake_tree)
 False
 
-You can OR and AND selectors:
+You can OR, AND and NOT (using ~) selectors:
 
 >>> fake_tree.elecPt = 10
 >>> mu_is_harder(fake_tree), mu_cut(fake_tree)
@@ -57,6 +57,9 @@ True
 >>> anded_cut = mu_is_harder and mu_cut
 >>> anded_cut(fake_tree)
 True
+>>> nanded_cut = ~anded_cut
+>>> nanded_cut(fake_tree)
+False
 
 For convenience, there are And and Or selectors which take a list:
 
@@ -104,6 +107,11 @@ class Selection(object):
         def either(tree):
             return self(tree) or other(tree)
         return Selection(either, "%s or %s" % (self, other))
+
+    def __invert__(self):
+        def invert_cut(tree):
+            return not self(tree)
+        return Selection(invert_cut, "!%s" % self)
 
 class And(Selection):
     def __init__(self, *selections):
