@@ -20,6 +20,15 @@ The DataAlgos package defines the algorithm implementations used by the member
 functions of the DataFormats package.  This improves code reuse, eases backward
 compatibility, and improves compilation speed.
 
+MetaData 
+--------
+
+This package holds "data about data."  It knows what samples exist, how to find
+them in DBS, and what their cross sections are.  It also holds the central
+definition of plot styles used for different data samples.  Also, reference type
+code (such as getting Higgs boson properties from lookup tables, etc, are hosted
+here).
+
 RecoTools
 ---------
 
