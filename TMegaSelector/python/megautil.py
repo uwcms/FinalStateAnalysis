@@ -13,8 +13,8 @@ Branch('muPt')
 
 Cut is a function that takes a TTree as the argument
 
->>> mu_cut.__doc__
-'branch[muPt] > 20.0'
+>>> print mu_cut
+branch[muPt] > 20.0
 
 
 Make a fake tree:
@@ -40,6 +40,30 @@ True
 >>> mu_is_harder(fake_tree)
 False
 
+You can OR and AND selectors:
+
+>>> fake_tree.elecPt = 10
+>>> mu_is_harder(fake_tree), mu_cut(fake_tree)
+(True, False)
+>>> anded_cut = mu_is_harder and mu_cut
+>>> anded_cut(fake_tree)
+False
+>>> ored_cut = mu_is_harder or mu_cut
+>>> ored_cut(fake_tree)
+True
+>>> mu_cut = tree.muPt < 30
+>>> mu_is_harder(fake_tree), mu_cut(fake_tree)
+(True, True)
+>>> anded_cut = mu_is_harder and mu_cut
+>>> anded_cut(fake_tree)
+True
+
+For convenience, there are And and Or selectors which take a list:
+
+>>> anded_cut = And(mu_is_harder, mu_cut)
+>>> anded_cut(fake_tree)
+True
+
 The MetaTree object also keeps track of which branches are accessed:
 
 >>> tree.active_branches()
@@ -57,17 +81,63 @@ _operator_names = {
     operator.le : '<=',
 }
 
-def _two_branch_op(b1, b2, op):
-    def functor(tree):
-        return op(getattr(tree, b1), getattr(tree, b2))
-    functor.__doc__ = "branch[%s] %s branch[%s]" % (b1, _operator_names[op], b2)
-    return functor
+class Selection(object):
+    def __init__(self, selection, repr="Selection"):
+        self.functor = selection
+        self.repr = repr
 
-def _one_branch_op(b1, val, op):
-    def functor(tree):
-        return op(getattr(tree, b1), val)
-    functor.__doc__ = "branch[%s] %s %s" % (b1, _operator_names[op], val)
-    return functor
+    def __call__(self, x):
+        return self.functor(x)
+
+    def __repr__(self):
+        return self.repr
+
+    def __str__(self):
+        return self.repr
+
+    def __and__(self, other):
+        def both(tree):
+            return self(tree) and other(tree)
+        return Selection(both, "%s and %s" % (self, other))
+
+    def __or__(self, other):
+        def either(tree):
+            return self(tree) or other(tree)
+        return Selection(either, "%s or %s" % (self, other))
+
+class And(Selection):
+    def __init__(self, *selections):
+        def functor(tree):
+            for selection in selections:
+                if not selection(tree):
+                    return False
+            return True
+        super(And, self).__init__(functor, "AND[%s]" % ' '.join(
+            [str(x) for x in selections]))
+
+class Or(Selection):
+    def __init__(self, *selections):
+        def functor(tree):
+            for selection in selections:
+                if selection(tree):
+                    return True
+            return False
+        super(Or, self).__init__(functor, "OR[%s]" % ' '.join(
+            [str(x) for x in selections]))
+
+class TwoBranchOp(Selection):
+    def __init__(self, b1, b2, op):
+        def functor(tree):
+            return op(getattr(tree, b1), getattr(tree, b2))
+        repr = "branch[%s] %s branch[%s]" % (b1, _operator_names[op], b2)
+        super(TwoBranchOp, self).__init__(functor, repr)
+
+class OneBranchOp(Selection):
+    def __init__(self, b1, val, op):
+        def functor(tree):
+            return op(getattr(tree, b1), val)
+        repr = "branch[%s] %s %s" % (b1, _operator_names[op], val)
+        super(OneBranchOp, self).__init__(functor, repr)
 
 class Branch(object):
     def __init__(self, branch):
@@ -75,9 +145,9 @@ class Branch(object):
 
     def handle_op(self, other, the_op):
         if isinstance(other, Branch):
-            return _two_branch_op(self.branch, other.branch, the_op)
+            return TwoBranchOp(self.branch, other.branch, the_op)
         else:
-            return _one_branch_op(self.branch, other, the_op)
+            return OneBranchOp(self.branch, other, the_op)
 
     def __lt__(self, other):
         return self.handle_op(other, operator.lt)
