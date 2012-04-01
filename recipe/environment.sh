@@ -23,6 +23,7 @@ export mcgt=START42_V17::All
 export hdfs=/hdfs/store/user/$LOGNAME/
 export scratch=/scratch/$LOGNAME/
 
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 cd $vpython
 source bin/activate
 cd -
