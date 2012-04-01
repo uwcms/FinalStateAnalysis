@@ -60,42 +60,49 @@ all_samples=$(all_data_samples) $(sm_backgrounds) $(dibosons)
 
 # Run the WH EMT analysis
 results/analysis/emt/%.root: AnalyzeEMT.py inputs/$(ntuple_id)/%.txt \
-  corrections_C.so fake_rates_C.so
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) AnalyzeEMT.py inputs/$(ntuple_id)/$*.txt \
 	  /emutau/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
 # Run the WH MMT analysis
 results/analysis/mmt/%.root: AnalyzeMMT.py inputs/$(ntuple_id)/%.txt \
-  corrections_C.so fake_rates_C.so
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) AnalyzeMMT.py inputs/$(ntuple_id)/$*.txt \
 	  /mumutau/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
 # Run the ZMM analysis
 results/analysis/zmumu/%.root: ZMuMuControl.py inputs/$(ntuple_id)/%.txt \
-  corrections_C.so fake_rates_C.so
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) ZMuMuControl.py inputs/$(ntuple_id)/$*.txt \
 	  /mumu/final/Ntuple $@ 
+	embed_label.py $@ dataset=$*
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
 # Run the ZH MMMT analysis
 results/analysis/mmmt/%.root: AnalyzeMMMT.py inputs/$(ntuple_id)/%.txt \
-  corrections_C.so fake_rates_C.so
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) AnalyzeMMMT.py inputs/$(ntuple_id)/$*.txt \
 	  /mmmt/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
 # Run the ZH MMME analysis
 results/analysis/mmme/%.root: AnalyzeMMME.py inputs/$(ntuple_id)/%.txt \
-  corrections_C.so fake_rates_C.so
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) AnalyzeMMME.py inputs/$(ntuple_id)/$*.txt \
 	  /emmm/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
 # Run the ZH MMET analysis
 results/analysis/mmet/%.root: AnalyzeMMET.py inputs/$(ntuple_id)/%.txt \
-  corrections_C.so fake_rates_C.so
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) AnalyzeMMET.py inputs/$(ntuple_id)/$*.txt \
 	  /emmt/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
 # Make num/denom for jet->mu fake rate in MMM events
-results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(ntuple_id)/%.txt
+results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(ntuple_id)/%.txt \
 	$(mega) $^ /mumumu/final/Ntuple $@
 
 # Make num/denom for jet->mu fake rate in MM events
@@ -106,10 +113,12 @@ results/fake_rates/mu/%.mm.root: FakeRatesMM.py inputs/$(ntuple_id)/%.txt
 results/fake_rates/mu/%.mmmt.root: FakeRatesMMMT.py inputs/$(ntuple_id)/%.txt
 	$(mega) $^ /mmmt/final/Ntuple $@
 
+# # FIXME we need to add the lumisum information to these some how!
 # How we combine all mu fake rate sources into a single file
 results/fake_rates/mu/%.all.root: results/fake_rates/mu/%.mm.root \
-  results/fake_rates/mu/%.mmm.root results/fake_rates/mu/%.mmmt.root 
+  results/fake_rates/mu/%.mmm.root results/fake_rates/mu/%.mmmt.root \
 	hadd -f $@ $^
+	embed_label.py $@ dataset=$*
 
 # Make num/denom for jet->e fake rate in MME events
 results/fake_rates/e/%.emm.root: FakeRatesMME.py inputs/$(ntuple_id)/%.txt
@@ -123,6 +132,7 @@ results/fake_rates/e/%.em.root: FakeRatesME.py inputs/$(ntuple_id)/%.txt
 results/fake_rates/e/%.all.root: results/fake_rates/e/%.em.root \
   results/fake_rates/e/%.emm.root 
 	hadd -f $@ $^
+	embed_label.py $@ dataset=$*
 
 # How to compile a .C file with ACLiC
 %_C.so %_C.d: %.C
@@ -143,11 +153,11 @@ all_meta_info=$(patsubst %, inputs/$(ntuple_id)/%.meta.json, $(all_samples))
 inputs/$(ntuple_id)/all_samples.json: $(all_meta_info)
 	./merge_meta_info.py $@ $^
 
-# Parse the job report summary .xmls in the condor submit directory to get the 
-# list of processed lumis for each job.
+# For data, get the lumi mask from the file so we can run lumi calc on it.
 inputs/$(ntuple_id)/data%.lumimask.json: inputs/$(ntuple_id)/data%.meta.json
 	cat $< | dump_lumimask.py > $@
 
+# Define which samples we need a data mask for
 data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
 		    $(all_data_samples))
 
@@ -155,8 +165,14 @@ data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
 inputs/$(ntuple_id)/%.lumicalc.csv: inputs/$(ntuple_id)/%.lumimask.json
 	pixelLumiCalc.py overview -i $< -o $@
 
-inputs/$(ntuple_id)/%.lumicalc.sum: inputs/$(ntuple_id)/%.lumicalc.csv
+# For data, get the actual interesting stuff from the pixelLumiCalc output barf
+inputs/$(ntuple_id)/data%.lumi.sum: inputs/$(ntuple_id)/data%.lumicalc.csv
 	python $(fsa)/Utilities/python/lumicalc_parser.py $< > $@
+
+# For MC, figure out what the effective int. lumi. is,
+# using the number of processed events and the x-section.
+inputs/$(ntuple_id)/%.lumi.sum: inputs/$(ntuple_id)/%.meta.json
+	get_mc_lumi.py $* `cat $< | extract_json.py n_evts` > $@
 
 data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
 		    $(all_data_samples))
@@ -164,7 +180,7 @@ data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
 data_lumicalc_files=$(patsubst %, inputs/$(ntuple_id)/%.lumicalc.csv, \
 		    $(all_data_samples))
 
-data_lumicalc_sums=$(patsubst %, inputs/$(ntuple_id)/%.lumicalc.sum, \
+data_lumicalc_sums=$(patsubst %, inputs/$(ntuple_id)/%.lumi.sum, \
 		    $(all_data_samples))
 
 data_lumimasks: $(data_lumimask_files) $(data_lumicalc_files) \

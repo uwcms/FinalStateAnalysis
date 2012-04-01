@@ -40,7 +40,10 @@ if __name__ == "__main__":
     file = io.open(args.rootfile, 'UPDATE')
     file.cd()
 
+    keep = []
     for label in args.labels:
         key, val = tuple(label.split('='))
         the_label = TText(0, 0, val)
         the_label.SetName(key)
+        keep.append(the_label)
+    file.Write()
