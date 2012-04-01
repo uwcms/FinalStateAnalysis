@@ -83,7 +83,8 @@ def get_views(files, sample_extractor, evt_counter, target_lumi):
                       " dependencies" % name)
             continue
         # Make a sum view of all the sub samples
-        log.info("Constructing sum view from %i subsamples" % len(subsamples))
+        log.info("Constructing proper sample %s from %i subsamples",
+                 name, len(subsamples))
         sumview = views.SumView(
             *[raw_sample_infos[subsample]['view'] for subsample in subsamples])
         unweighted_view = views.SumView(
