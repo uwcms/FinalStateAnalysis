@@ -22,7 +22,7 @@ import rootpy.io as io
 from rootpy.plotting import views
 from rootpy.plotting import Canvas
 
-from FinalStateAnalysis.PatTools.data_views import get_views
+from FinalStateAnalysis.MetaData.data_views import get_views
 
 if __name__ == "__main__":
     log = logging.getLogger("render_zh_plots")
