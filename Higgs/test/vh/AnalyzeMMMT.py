@@ -2,12 +2,12 @@ import ROOT
 
 import os
 
-from FinalStateAnalysis.TMegaSelector.megautil import MetaTree
-from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
+from Analyzer import Analyzer
+from FinalStateAnalysis.TMegaSelector.megautil import MetaTree, And, Or
 
 meta = MetaTree()
 
-base_selections = [
+base_selections = And(
     # Pick the best Z candidate in the first two positions
     meta.m1_m2_Zcompat < meta.m1_m3_Zcompat,
     meta.m1_m2_Zcompat < meta.m2_m3_Zcompat,
@@ -59,41 +59,50 @@ base_selections = [
     meta.tElecOverlap < 0.5,
     meta.tAntiMuonTight > 0.5,
     meta.tMuOverlap < 0.5,
-]
+)
 
+hadronic_tau_id = meta.tLooseIso > 0.5
 
-hadronic_tau_id = [
-    meta.tLooseIso > 0.5,
-]
-
-m3_id = [
+m3_id = And(
     meta.m3RelPFIsoDB < 0.15,
     meta.m3WWID > 0.5,
-]
+)
+
+mt_cut = meta.m3MtToMET > 50
+
+def unit_weight(x):
+    return 1.
 
 histograms = [
-    (lambda x: x.m1Pt, 'm1Pt', 'm1 pt', 100, 0, 100),
-    (lambda x: x.m1AbsEta, 'm1AbsEta', 'm1 |#eta|', 100, 0, 100),
+    (lambda x: x.m1Pt, unit_weight, '', ('m1Pt', 'm1 pt', 20, 0, 200)),
+    (lambda x: x.m1AbsEta, unit_weight, '', ('m1AbsEta', 'm1 |#eta|', 10, 0, 2.5)),
 ]
 
-def m3_fake_weight(x):
-    return 1
-def tau_fake_weight(x):
-    return 1
-
-class AnalyzeMMMT(MegaBase):
+class AnalyzeMMMT(Analyzer):
 
     def __init__(self, tree, output, **kwargs):
         super(AnalyzeMMMT, self).__init__(tree, output, **kwargs)
-        for histogram in histograms:
-            self.book('m3_fakes', *histogram[1:])
-            self.book('tau_fakes', *histogram[1:])
-            self.book('double_fakes', *histogram[1:])
-            # Histograms w/o weights
-            self.book('m3_fakes_nowt', *histogram[1:])
-            self.book('tau_fakes_nowt', *histogram[1:])
-            self.book('double_fakes_nowt', *histogram[1:])
-            self.book('final', *histogram[1:])
+
+        self.define_region('base', base_selections, histograms)
+        self.define_region('tau_pass',
+                           base_selections & hadronic_tau_id & ~m3_id,
+                           histograms)
+        self.define_region('mu_pass',
+                           base_selections & m3_id & ~hadronic_tau_id,
+                           histograms)
+        self.define_region('mu_pass_mt_pass',
+                           base_selections & m3_id & ~hadronic_tau_id & mt_cut,
+                           histograms)
+        self.define_region('mu_pass_mt_fail',
+                           base_selections & m3_id & ~hadronic_tau_id & ~mt_cut,
+                           histograms)
+        self.define_region('all_pass',
+                           base_selections & m3_id & hadronic_tau_id,
+                           histograms)
+        self.define_region('none_pass',
+                           base_selections & ~m3_id & ~hadronic_tau_id,
+                           histograms)
+
         self.disable_branch('*')
         for b in meta.active_branches():
             self.enable_branch(b)
@@ -103,47 +112,7 @@ class AnalyzeMMMT(MegaBase):
     def process(self, entry):
         tree = self.tree
         read = tree.GetEntry(entry)
-
-        # Check if we pass the base selection
-        if not all(select(tree) for select in base_selections):
-            return True
-
-        # figure out which objects pass
-        passes_tau_id = all(select(tree) for select in hadronic_tau_id)
-        passes_m3_id = all(select(tree) for select in m3_id)
-
-        category = (passes_m3_id, passes_tau_id)
-
-        if category == (True, True):
-            print tree.run, tree.evt
-            for histo in histograms:
-                value = histo[0](tree)
-                self.histograms[os.path.join('final', histo[1])].Fill(value)
-        elif category == (False, True):
-            for histo in histograms:
-                value = histo[0](tree)
-                self.histograms[
-                    os.path.join('m3_fakes_nowt', histo[1])].Fill(value)
-                weight = m3_fake_weight(tree.m3Pt)
-                self.histograms[
-                    os.path.join('m3_fakes', histo[1])].Fill(value, weight)
-        elif category == (True, False):
-            for histo in histograms:
-                value = histo[0](tree)
-                self.histograms[
-                    os.path.join('tau_fakes_nowt', histo[1])].Fill(value)
-                weight = tau_fake_weight(tree.tPt)
-                self.histograms[
-                    os.path.join('tau_fakes', histo[1])].Fill(value, weight)
-        elif category == (False, False):
-            for histo in histograms:
-                value = histo[0](tree)
-                self.histograms[
-                    os.path.join('double_fakes_nowt', histo[1])].Fill(value)
-                weight = m3_fake_weight(tree.m3Pt)*tau_fake_weight(tree.tPt)
-                self.histograms[
-                    os.path.join('double_fakes', histo[1])].Fill(value, weight)
-
+        self.analyze(tree)
         return True
 
     def finish(self):

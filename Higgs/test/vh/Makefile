@@ -193,13 +193,15 @@ mmt_ana_jobs=$(patsubst %, results/analysis/mmt/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
 mmmt_ana_jobs=$(patsubst %, results/analysis/mmmt/%.root, \
-	$(sm_backgrounds) $(doublemu_samples))
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
 
 mmme_ana_jobs=$(patsubst %, results/analysis/mmme/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
 mmet_ana_jobs=$(patsubst %, results/analysis/mmet/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
+
+zh_ana_jobs=$(mmmt_ana_jobs) $(mmme_ana_jobs) $(mmet_ana_jobs)
 
 zmm_control_jobs=$(patsubst %, results/analysis/zmumu/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
@@ -228,11 +230,13 @@ mmme_analysis: $(mmme_ana_jobs)
 
 mmet_analysis: $(mmet_ana_jobs)
 
+zh_analysis: mmmt_analysis mmme_analysis mmet_analysis
+
 zmm_analysis: $(zmm_control_jobs)
 
 analysis: emt_analysis mmt_analysis \
 	mmmt_analysis mmme_analysis \
-	mmet_analysis zmm_analysis
+	mmet_analysis zmm_analysis 
 
 ################################################################################
 ## Fake rate functions #########################################################
@@ -279,6 +283,11 @@ plots/zmm_control/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
   zmm_analysis render_zmm_controls.py
 	./render_zmm_controls.py inputs/$(ntuple_id)/all_samples.json \
 	  plots/zmm_control/ $(zmm_control_jobs)
+
+plots/zh/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
+  $(mmmt_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py inputs/$(ntuple_id)/all_samples.json \
+	  plots/zh/ $(mmmt_ana_jobs)
 
 plots: plots/zmm_control/plot_list.txt \
   plots/muon_fake_controls/plot_list.txt \
