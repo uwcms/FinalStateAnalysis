@@ -5,10 +5,16 @@ Current CMSSW version: 4_2_8
 
 Steps:
 
-Checkout the repository::
+Get a supported CMSSW release area::
 
-  cd CMSSW_XXX/src
+  scram pro -n MyWorkingAreaName CMSSW CMSSW_4_2_8
+
+
+Checkout the FinalStateAnalysis repository::
+
+  cd MyWorkingAreaName/src
   git clone https://ekfriis@github.com/ekfriis/FinalStateAnalysis.git
+
 
 Checkout the needed CMSSW tags::
 
@@ -20,9 +26,11 @@ Checkout the needed CMSSW tags::
   # Checkout needed packages and apply patches
   ./recipe.sh
 
+
 Install the custom python virtualenv and extra packages::
 
   ./install_python.sh
+
 
 This might take a while - the script will download and compile the Numpy
 library.
@@ -32,9 +40,11 @@ by setting up the environment::
 
   source environment.sh
 
+
 and using the "yolk" python tool to query the installed packages::
 
   yolk -l
+
 
 It should look something like this::
 
