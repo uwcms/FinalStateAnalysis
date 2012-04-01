@@ -45,5 +45,6 @@ if __name__ == "__main__":
         key, val = tuple(label.split('='))
         the_label = TText(0, 0, val)
         the_label.SetName(key)
+        the_label.Write()
         keep.append(the_label)
     file.Write()
