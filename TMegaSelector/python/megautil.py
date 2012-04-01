@@ -40,21 +40,21 @@ True
 >>> mu_is_harder(fake_tree)
 False
 
-You can OR, AND and NOT (using ~) selectors:
+You can OR, AND and NOT (using &, |, and ~) selectors:
 
 >>> fake_tree.elecPt = 10
 >>> mu_is_harder(fake_tree), mu_cut(fake_tree)
 (True, False)
->>> anded_cut = mu_is_harder and mu_cut
+>>> anded_cut = mu_is_harder & mu_cut
 >>> anded_cut(fake_tree)
 False
->>> ored_cut = mu_is_harder or mu_cut
+>>> ored_cut = mu_is_harder | mu_cut
 >>> ored_cut(fake_tree)
 True
 >>> mu_cut = tree.muPt < 30
 >>> mu_is_harder(fake_tree), mu_cut(fake_tree)
 (True, True)
->>> anded_cut = mu_is_harder and mu_cut
+>>> anded_cut = mu_is_harder & mu_cut
 >>> anded_cut(fake_tree)
 True
 >>> nanded_cut = ~anded_cut
