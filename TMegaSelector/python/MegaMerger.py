@@ -30,8 +30,11 @@ class MegaMerger(multiprocessing.Process):
             ETA(), Bar('>')], maxval=ninputs).start()
         self.pbar.update(0)
         self.processed_entries = 0
+        self.procs_to_clean = None
+        self.files_to_clean = None
 
     def merge_into_output(self, files):
+        self.files_to_clean = list(files)
         self.log.info("Merging %i into output %s", len(files), self.output)
         # Merge into a temporary output file
         output_file_hash = hashlib.md5()
@@ -57,6 +60,8 @@ class MegaMerger(multiprocessing.Process):
         # Now run the command
         proc = subprocess.Popen(command, stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
+        self.procs_to_clean = proc
+
         while proc.returncode is None:
             _, stderr = proc.communicate()
         self.log.info("Merge completed with exit code: %i", proc.returncode)
@@ -67,9 +72,21 @@ class MegaMerger(multiprocessing.Process):
 
         # Cleanup.  We don't need to cleanup the temporary output, since it
         # is moved.
-        for file in files:
-            os.remove(file)
+        while self.files_to_clean:
+            os.remove(self.files_to_clean.pop())
         return proc.returncode
+
+    def stop(self):
+        ''' Gracefully stop, killing any child hadds '''
+        log.warning("STOPPING Merger process")
+        if self.procs_to_clean:
+            log.warning("Killing child hadd process")
+            self.procs_to_clean.kill()
+        if self.files_to_clean:
+            log.warning("Deleting temporary root files")
+            for file in files:
+                if os.path.exists(file):
+                    os.remove(file)
 
     def run(self):
         # ignore sigterm signal and let parent take care of this

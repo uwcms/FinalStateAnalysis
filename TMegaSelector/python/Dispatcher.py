@@ -64,6 +64,7 @@ class MegaDispatcher(object):
 
             if not everything_will_turn_out_okay:
                 self.log.error("A worker died.  Terminating merger and exiting")
+                merger.stop()
                 merger.terminate()
                 sys.exit(2)
 
@@ -84,6 +85,7 @@ class MegaDispatcher(object):
                 self.log.error("Terminating worker %i", i)
                 worker.terminate()
             self.log.error("Terminating merger")
+            merger.stop()
             merger.terminate()
             sys.exit(1)
 
