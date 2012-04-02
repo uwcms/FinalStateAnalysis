@@ -5,7 +5,9 @@ Define styles for the different data samples.
 The keys correspond to "logical" samples, defined in data_name_map of
 datadefs.py
 
-The values are dictionaries, which can be passed to rootpy Plottable
+The values are dictionaries, which can be passed as kwargs to objects which
+inherit from rootpy Plottable
+
 
 http://ndawe.github.com/rootpy/reference/rootpy.plotting.html#rootpy.plotting.core.Plottable
 
