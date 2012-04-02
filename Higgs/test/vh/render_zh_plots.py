@@ -53,7 +53,7 @@ if __name__ == "__main__":
     data_view = views.FunctorView(data_views['data_DoubleMu']['view'],
                                   lambda x: x.Rebin(1))
 
-    mc_samples_to_stack = ['Zjets', 'QCDMu', 'Wjets', 'ttjets', 'WZ_pythia']
+    mc_samples_to_stack = ['Zjets', 'QCDMu', 'Wjets', 'ttjets', 'WZ_pythia', 'ZZ']
     # Build the MC stack
     mc_view = views.StackView(*[
         views.FunctorView(data_views[x]['view'], lambda x: x.Rebin(1))
@@ -68,10 +68,13 @@ if __name__ == "__main__":
     plot_list = open(os.path.join(args.output, 'plot_list.txt'), 'w')
 
     with io.open(layout_filename, 'r') as layout_file:
+        log.info("Plotting all histograms")
         for path, subdirs, histos in layout_file.walk(class_pattern='TH1F'):
             for histo in histos:
+                log.info("Plotting %s in %s", histo, path)
                 data_histo = data_view.Get(os.path.join(path, histo))
                 mc_histo = mc_view.Get(os.path.join(path, histo))
+                log.info("Data histo has %f entries", data_histo.Integral())
                 mc_histo.Draw()
                 data_histo.Draw('same')
                 mc_histo.SetMaximum(1.2*max(
