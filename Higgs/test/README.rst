@@ -4,7 +4,7 @@ Higgs Analysis Software
 TTree Generation
 ----------------
 
-The file ``higgs_ntuples_cfg.py`` generated TTrees for all Higgs final states of 
+The file ``higgs_ntuples_cfg.py`` generates TTrees for all Higgs final states of 
 interest.  It can be tested in place by::
 
     cmsRun higgs_ntuples_cfg.py maxEvents=50 inputFiles=my_file.root
