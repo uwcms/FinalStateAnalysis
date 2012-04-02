@@ -16,7 +16,8 @@ to submit jobs based on the 2012-03-05-EWKPatTuple::
    # Submit the jobs
    bash < do_higgs.txt
 
-The ``do_higgs.txt`` should be committed and tagged after each job submission.
+The ``do_higgs.txt`` should be committed and tagged after each job submission (to keep track of what 
+SW was used to produce the ntuples).
 
 
 Analyses
