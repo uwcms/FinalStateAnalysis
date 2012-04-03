@@ -78,12 +78,12 @@ class MegaMerger(multiprocessing.Process):
 
     def stop(self):
         ''' Gracefully stop, killing any child hadds '''
-        log.warning("STOPPING Merger process")
+        self.log.warning("STOPPING Merger process")
         if self.procs_to_clean:
-            log.warning("Killing child hadd process")
+            self.log.warning("Killing child hadd process")
             self.procs_to_clean.kill()
         if self.files_to_clean:
-            log.warning("Deleting temporary root files")
+            self.log.warning("Deleting temporary root files")
             for file in files:
                 if os.path.exists(file):
                     os.remove(file)
