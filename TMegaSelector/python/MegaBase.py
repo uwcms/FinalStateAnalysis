@@ -4,6 +4,7 @@ Base class with convenience functions for TMega python selectors.
 
 '''
 
+import json
 import os
 import multiprocessing
 import ROOT
@@ -61,8 +62,12 @@ class MegaBase(object):
         ''' Set the branch to NOT be read on TTree::GetEntry '''
         self.tree.SetBranchStatus(branch, 0)
 
+    def save_json(self, name, pyobject):
+        ''' Serialize pyobject into a TObjString in the output file using JSON '''
+        json_str = json.dumps(pyobject)
+        text = ROOT.TObjString(json_str)
+        self.output.WriteTObject(text, name)
+
     def write_histos(self):
         ''' Write all histograms to the file. '''
         self.output.Write()
-        #for histo in self.histograms.values():
-            #histo.Write()
