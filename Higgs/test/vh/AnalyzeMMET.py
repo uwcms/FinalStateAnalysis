@@ -14,7 +14,7 @@ base_selections = And(
 
     # Subleading muon selection
     meta.ePt > 10,
-    meta.eAbsEta < 2.4,
+    meta.eAbsEta < 2.5,
 
     meta.tPt > 20,
     meta.tAbsEta < 2.3,
@@ -46,8 +46,8 @@ base_selections = And(
 hadronic_tau_id = meta.tLooseIso > 0.5
 
 e_id = And(
-    meta.eRelPFIsoDB < 0.15,
-    meta.eWWID > 0.5,
+    meta.eRelPFIsoDB < 0.10,
+    meta.eCiCTight > 14.5,
 )
 
 mt_cut = meta.eMtToMET < 50
@@ -78,22 +78,22 @@ class AnalyzeMMET(Analyzer):
     def __init__(self, tree, output, **kwargs):
         super(AnalyzeMMET, self).__init__(tree, output, **kwargs)
 
-        self.define_region('mu_pass_tau_pass',
+        self.define_region('e_pass_tau_pass',
                            base_selections & e_id & hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
-        self.define_region('mu_fail_tau_pass',
+        self.define_region('e_fail_tau_pass',
                            base_selections & ~e_id & hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
-        self.define_region('mu_pass_tau_fail',
+        self.define_region('e_pass_tau_fail',
                            base_selections & e_id & ~hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
-        self.define_region('mu_fail_tau_fail',
+        self.define_region('e_fail_tau_fail',
                            base_selections & ~e_id & ~hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
