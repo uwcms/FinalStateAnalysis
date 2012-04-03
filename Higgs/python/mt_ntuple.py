@@ -40,7 +40,7 @@ mutau = cms.EDFilter(
             ),
             cms.PSet(
                 name = cms.string('MuEta'),
-                cut = cms.string('abs({muon}.eta) < 2.1'),
+                cut = cms.string('abs({muon}.eta) < 2.5'),
             ),
             cms.PSet(
                 name = cms.string('TauPt'),

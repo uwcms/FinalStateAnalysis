@@ -40,7 +40,7 @@ ee = cms.EDFilter(
             ),
             cms.PSet(
                 name = cms.string('Elec1Eta'),
-                cut = cms.string('abs({electron1}.eta) < 2.1'),
+                cut = cms.string('abs({electron1}.eta) < 2.5'),
             ),
             cms.PSet(
                 name = cms.string('Elec2Pt'),

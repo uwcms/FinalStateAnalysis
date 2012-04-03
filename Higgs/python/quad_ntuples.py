@@ -74,9 +74,9 @@ _pt_cuts = {
 }
 
 _eta_cuts = {
-    'm' : '2.1',
+    'm' : '2.5',
     'e' : '2.5',
-    't' : '2.3',
+    't' : '2.5',
 }
 
 # How to get from a leg name to "finalStateElecMuMuMu" etc

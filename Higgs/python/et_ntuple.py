@@ -40,7 +40,7 @@ etau = cms.EDFilter(
             ),
             cms.PSet(
                 name = cms.string('ElecEta'),
-                cut = cms.string('abs({electron}.eta) < 2.1'),
+                cut = cms.string('abs({electron}.eta) < 2.5'),
             ),
             cms.PSet(
                 name = cms.string('TauPt'),

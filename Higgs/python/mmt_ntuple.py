@@ -42,7 +42,7 @@ mumutau = cms.EDFilter(
             ),
             cms.PSet(
                 name = cms.string('Mu1Eta'),
-                cut = cms.string('abs({muon1}.eta) < 2.1'),
+                cut = cms.string('abs({muon1}.eta) < 2.5'),
             ),
             cms.PSet(
                 name = cms.string('Mu2Pt'),
@@ -50,7 +50,7 @@ mumutau = cms.EDFilter(
             ),
             cms.PSet(
                 name = cms.string('Mu2Eta'),
-                cut = cms.string('abs({muon2}.eta) < 2.1'),
+                cut = cms.string('abs({muon2}.eta) < 2.5'),
             ),
             cms.PSet(
                 name = cms.string('TauPt'),
