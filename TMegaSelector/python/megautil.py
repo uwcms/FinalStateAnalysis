@@ -25,6 +25,9 @@ Make a fake tree:
 >>> fake_tree.muPt = 25
 >>> fake_tree.elecPt = 20
 
+Creating selectors
+------------------
+
 >>> mu_cut(fake_tree)
 True
 >>> mu_cut = tree.muPt < 20
@@ -39,6 +42,9 @@ True
 >>> fake_tree.elecPt = 50
 >>> mu_is_harder(fake_tree)
 False
+
+Combining Selectors
+-------------------
 
 You can OR, AND and NOT (using &, |, and ~) selectors:
 
@@ -66,6 +72,9 @@ For convenience, there are And and Or selectors which take a list:
 >>> anded_cut = And(mu_is_harder, mu_cut)
 >>> anded_cut(fake_tree)
 True
+
+Debugging Analysis
+------------------
 
 The MetaTree object also keeps track of which branches are accessed:
 
