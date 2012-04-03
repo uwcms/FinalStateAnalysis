@@ -4,6 +4,9 @@ Tool for building tree selection functors using syntactic sugar.
 
 Author: Evan K. Friis, UW Madison
 
+MetaTree Object
+===============
+
 The MetaTree object can be used to construct arbitrary cuts strings.
 
 >>> tree = MetaTree()
@@ -11,7 +14,7 @@ The MetaTree object can be used to construct arbitrary cuts strings.
 Branch('muPt')
 >>> mu_cut = tree.muPt > 20.0
 
-Cut is a function that takes a TTree as the argument
+mu_cut is a function that takes a TTree as the argument
 
 >>> print mu_cut
 Branch('muPt') > 20.0
@@ -118,15 +121,11 @@ class Selection(object):
 
     def __and__(self, other):
         ''' Bitwise & operator - AND the cuts '''
-        def both(tree):
-            return self(tree) and other(tree)
-        return Selection(both, "%s and %s" % (self, other))
+        return And(self, other)
 
     def __or__(self, other):
         ''' Bitwise | operator - OR the cuts '''
-        def either(tree):
-            return self(tree) or other(tree)
-        return Selection(either, "%s or %s" % (self, other))
+        return Or(self, other)
 
     def __invert__(self):
         ''' Bitwise ~ operator - invert the cuts '''
@@ -136,6 +135,7 @@ class Selection(object):
 
 class And(Selection):
     def __init__(self, *selections):
+        self.selections = selections
         def functor(tree):
             for selection in selections:
                 if not selection(tree):
