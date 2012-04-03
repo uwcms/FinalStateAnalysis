@@ -326,6 +326,9 @@ plots/zmm_control/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
 plots/zh/mmmt/plot_list.txt: $(mmmt_ana_jobs) render_zh_plots.py
 	./render_zh_plots.py plots/zh/mmmt/ data_DoubleMu $(mmmt_ana_jobs) 
 
+plots/zh/eemt/plot_list.txt: $(eemt_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/eemt/ data_DoubleElectron $(eemt_ana_jobs) 
+
 plots/zh/mmet/plot_list.txt: $(mmet_ana_jobs) render_zh_plots.py
 	./render_zh_plots.py plots/zh/mmet/ data_DoubleMu $(mmet_ana_jobs) 
 
