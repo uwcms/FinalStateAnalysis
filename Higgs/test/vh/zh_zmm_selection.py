@@ -12,9 +12,6 @@ def build_zmm_selection(meta_tree):
     selection = And(
         # Trigger selection
         meta.doubleMuPass > 0.5,
-        # Pick the best Z candidate in the first two positions
-        meta.m1_m2_Zcompat < meta.m1_m3_Zcompat,
-        meta.m1_m2_Zcompat < meta.m2_m3_Zcompat,
 
         # Leading muon selection
         meta.m1_m2_SS < 0.5,
