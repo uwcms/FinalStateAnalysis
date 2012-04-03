@@ -87,6 +87,13 @@ results/analysis/mmmt/%.root: AnalyzeMMMT.py zh_zmm_selection.py inputs/$(ntuple
 	  /mmmt/final/Ntuple $@ 
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
+# Run the ZH EEMT analysis
+results/analysis/eemt/%.root: AnalyzeEEMT.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeEEMT.py inputs/$(ntuple_id)/$*.txt \
+	  /eemt/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
 # Run the ZH MMME analysis
 results/analysis/mmme/%.root: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
@@ -218,6 +225,9 @@ mmt_ana_jobs=$(patsubst %, results/analysis/mmt/%.root, \
 mmmt_ana_jobs=$(patsubst %, results/analysis/mmmt/%.root, \
 	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
 
+eemt_ana_jobs=$(patsubst %, results/analysis/eemt/%.root, \
+	$(sm_backgrounds) $(doublee_samples) $(dibosons))
+
 mmme_ana_jobs=$(patsubst %, results/analysis/mmme/%.root, \
 	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
 
@@ -227,7 +237,8 @@ mmet_ana_jobs=$(patsubst %, results/analysis/mmet/%.root, \
 mmtt_ana_jobs=$(patsubst %, results/analysis/mmtt/%.root, \
 	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
 
-zh_ana_jobs=$(mmmt_ana_jobs) $(mmme_ana_jobs) $(mmet_ana_jobs) $(mmtt_ana_jobs)
+zh_ana_jobs=$(mmmt_ana_jobs) $(mmme_ana_jobs) $(mmet_ana_jobs) $(mmtt_ana_jobs) \
+	    $(eemt_ana_jobs)
 
 zmm_control_jobs=$(patsubst %, results/analysis/zmumu/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
@@ -251,6 +262,8 @@ emt_analysis: $(emt_ana_jobs)
 mmt_analysis: $(mmt_ana_jobs)
 
 mmmt_analysis: $(mmmt_ana_jobs)
+
+eemt_analysis: $(eemt_ana_jobs)
 
 mmme_analysis: $(mmme_ana_jobs)
 
