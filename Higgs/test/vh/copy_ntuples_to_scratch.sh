@@ -5,7 +5,7 @@
 
 JOBID=$1
 
-OUTPUTDIR=$scratch/$JOBID
+OUTPUTDIR=$scratch/data/$JOBID
 
 mkdir -p $OUTPUTDIR
 
