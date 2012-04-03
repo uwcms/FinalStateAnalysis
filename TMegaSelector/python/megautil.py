@@ -14,7 +14,7 @@ Branch('muPt')
 Cut is a function that takes a TTree as the argument
 
 >>> print mu_cut
-branch[muPt] > 20.0
+Branch('muPt') > 20.0
 
 
 Make a fake tree:
@@ -73,7 +73,23 @@ For convenience, there are And and Or selectors which take a list:
 >>> anded_cut(fake_tree)
 True
 
-Debugging Analysis
+Mathematical Operations
+-----------------------
+
+Extracting bit information:
+
+>>> fake_tree.elecPt = 10 #(0b1010)
+>>> fourth_bit = tree.elecPt.bit(4)
+>>> second_bit = tree.elecPt.bit(2)
+>>> first_bit = tree.elecPt.bit(1)
+>>> second_bit(fake_tree)
+2
+>>> first_bit(fake_tree)
+0
+>>> fourth_bit(fake_tree)
+8
+
+Branch Bookkeeping
 ------------------
 
 The MetaTree object also keeps track of which branches are accessed:
@@ -85,13 +101,6 @@ The MetaTree object also keeps track of which branches are accessed:
 
 
 import operator
-
-_operator_names = {
-    operator.lt : '<',
-    operator.gt : '>',
-    operator.ge : '>=',
-    operator.le : '<=',
-}
 
 class Selection(object):
     def __init__(self, selection, repr="Selection"):
@@ -108,16 +117,19 @@ class Selection(object):
         return self.repr
 
     def __and__(self, other):
+        ''' Bitwise & operator - AND the cuts '''
         def both(tree):
             return self(tree) and other(tree)
         return Selection(both, "%s and %s" % (self, other))
 
     def __or__(self, other):
+        ''' Bitwise | operator - OR the cuts '''
         def either(tree):
             return self(tree) or other(tree)
         return Selection(either, "%s or %s" % (self, other))
 
     def __invert__(self):
+        ''' Bitwise ~ operator - invert the cuts '''
         def invert_cut(tree):
             return not self(tree)
         return Selection(invert_cut, "!%s" % self)
@@ -142,29 +154,41 @@ class Or(Selection):
         super(Or, self).__init__(functor, "OR[%s]" % ' '.join(
             [str(x) for x in selections]))
 
-class TwoBranchOp(Selection):
-    def __init__(self, b1, b2, op):
-        def functor(tree):
-            return op(getattr(tree, b1), getattr(tree, b2))
-        repr = "branch[%s] %s branch[%s]" % (b1, _operator_names[op], b2)
-        super(TwoBranchOp, self).__init__(functor, repr)
+_operator_names = {
+    operator.lt : '<',
+    operator.gt : '>',
+    operator.ge : '>=',
+    operator.le : '<=',
+}
 
-class OneBranchOp(Selection):
-    def __init__(self, b1, val, op):
+class TwoValueOp(Selection):
+    def __init__(self, val1, val2, op):
+        getter1 = val1.getter
+        getter2 = val2.getter
         def functor(tree):
-            return op(getattr(tree, b1), val)
-        repr = "branch[%s] %s %s" % (b1, _operator_names[op], val)
-        super(OneBranchOp, self).__init__(functor, repr)
+            return op(getter1(tree), getter2(tree))
+        repr = "%s %s %s" % (val1, _operator_names[op], val2)
+        super(TwoValueOp, self).__init__(functor, repr)
 
-class Branch(object):
-    def __init__(self, branch):
-        self.branch = branch
+class OneValueOp(Selection):
+    def __init__(self, val1, val2, op):
+        getter = val1.getter
+        def functor(tree):
+            return op(getter(tree), val2)
+        repr = "%s %s %s" % (val1, _operator_names[op], str(val2))
+        super(OneValueOp, self).__init__(functor, repr)
+
+class Value(object):
+    ''' An object which can get a real value from a tree '''
+    def __init__(self, getter):
+        # Initialize w/ functor to get value
+        self.getter = getter
 
     def handle_op(self, other, the_op):
-        if isinstance(other, Branch):
-            return TwoBranchOp(self.branch, other.branch, the_op)
+        if isinstance(other, Value):
+            return TwoValueOp(self, other, the_op)
         else:
-            return OneBranchOp(self.branch, other, the_op)
+            return OneValueOp(self, other, the_op)
 
     def __lt__(self, other):
         return self.handle_op(other, operator.lt)
@@ -178,6 +202,19 @@ class Branch(object):
     def __gt__(self, other):
         return self.handle_op(other, operator.gt)
 
+    def bit(self, n):
+        # Get the nth bit of the value
+        def bit_getter(tree):
+            value = int(self.getter(tree))
+            return value & (1 << (n-1))
+        return bit_getter
+
+class Branch(Value):
+    def __init__(self, branch):
+        self.branch = branch
+        def getter(tree):
+            return getattr(tree, branch)
+        super(Branch, self).__init__(getter)
     def __repr__(self):
         return "Branch('%s')" % self.branch
 
