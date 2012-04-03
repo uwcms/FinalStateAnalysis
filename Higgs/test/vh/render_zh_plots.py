@@ -31,36 +31,33 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('meta', help='File with meta information')
     parser.add_argument('output', help='Output directory')
-    parser.add_argument('files', metavar='file', nargs='+',
-                        help = 'Histogram files')
+    parser.add_argument('pd', help='Primary dataset')
+    parser.add_argument('files', metavar='file',
+                        nargs='+', help = 'Histogram files')
     args = parser.parse_args(args[1:])
 
-    meta_info = None
-    log.info("Opening meta file: %s", args.meta)
-    with open(args.meta) as meta_file:
-        meta_info = json.load(meta_file)
-
     log.info("Building views")
-    data_views = data_views(
-        args.files,
-        'data_DoubleMu'
-    )
-    data_view = views.FunctorView(data_views['data_DoubleMu']['view'],
-                                  lambda x: x.Rebin(1))
+    data_views = data_views(args.files,args.pd)
 
-    mc_samples_to_stack = ['Zjets', 'QCDMu', 'Wjets', 'ttjets', 'WZ_pythia', 'ZZ']
+    data_view = data_views[args.pd]['view']
+
+    mc_samples_to_stack = ['Zjets', 'QCDMu', 'Wjets',
+                           'ttjets', 'WZ_pythia', 'ZZ']
+
     # Build the MC stack
-    mc_view = views.StackView(*[
-        views.FunctorView(data_views[x]['view'], lambda x: x.Rebin(1))
-        for x in mc_samples_to_stack], sort=True)
+    mc_view = views.StackView(
+        *[data_views[x]['view'] for x in mc_samples_to_stack], sort=True)
 
     # We just need to figure out the directory structure from any old file
     layout_filename = data_views.values()[0]['subsamples'].values()[0]['filename']
     log.info("Getting file layout from %s", layout_filename)
 
     canvas = Canvas()
+
+    if not os.path.exists(args.output):
+        log.info("Creating output directory: %s", args.output)
+        os.makedirs(args.output)
 
     plot_list = open(os.path.join(args.output, 'plot_list.txt'), 'w')
 
