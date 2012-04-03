@@ -43,7 +43,7 @@ base_selections = And(
 
 e_id = And(
     meta.eRelPFIsoDB < 0.25,
-    meta.eCiCTight > 14.5,
+    meta.eCiCTight.bit(1),
 )
 
 
@@ -83,7 +83,7 @@ class AnalyzeMMME(Analyzer):
 
         self.define_region('mu_pass_e_pass',
                            base_selections & m3_id & e_id,
-                           build_histo_list(pu_weight)
+                           build_histo_list(pu_weight),
                           )
 
         self.define_region('mu_fail_e_pass',
@@ -105,6 +105,7 @@ class AnalyzeMMME(Analyzer):
         for b in meta.active_branches():
             self.enable_branch(b)
         self.enable_branch('run')
+        self.enable_branch('lumi')
         self.enable_branch('evt')
         self.enable_branch('puWeightData2011AB')
 

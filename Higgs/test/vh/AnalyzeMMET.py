@@ -47,7 +47,7 @@ hadronic_tau_id = meta.tLooseIso > 0.5
 
 e_id = And(
     meta.eRelPFIsoDB < 0.10,
-    meta.eCiCTight > 14.5,
+    meta.eCiCTight.bit(1),
 )
 
 mt_cut = meta.eMtToMET < 50

@@ -22,13 +22,15 @@ class Analyzer(MegaBase):
             # Book the histogram in region/desired/path/
             histo = self.book(os.path.normpath(region_name + '/' +  folder), *ctor)
             booked_histograms.append((getter, weight, histo))
-        self.regions[region_name] = (selection, booked_histograms)
+        events = set([])
+        self.regions[region_name] = (selection, booked_histograms, events)
 
     def analyze(self, tree):
-        for region, (selection, histograms) in self.regions.iteritems():
+        for region, (selection, histograms, events) in self.regions.iteritems():
             # Check if it passes the selection
             if not selection(tree):
                 continue
+            events.add((tree.run, tree.lumi, tree.evt))
             # It passed, fill the histograms
             for histogram in histograms:
                 # Unpack
