@@ -6,6 +6,7 @@ Applies MC normalization factors, styles, etc.
 
 '''
 
+import copy
 from datadefs import datadefs, data_name_map
 from data_styles import data_styles
 import logging
@@ -106,8 +107,16 @@ def data_views(files, normalize_to_dataset):
         style_dict = data_styles.get(name, None)
         if style_dict:
             log.info("Found style for %s - applying Style View", name)
-            sumview = views.StyleView(sumview, **style_dict)
-            unweighted_view = views.StyleView(unweighted_view, **style_dict)
+            # Set the title as the name of the sample, rootpy Legend uses this.
+            nicename = copy.copy(style_dict['name'])
+
+            sumview = views.TitleView(
+                views.StyleView(sumview, **style_dict), nicename
+            )
+            unweighted_view = views.TitleView(
+                views.StyleView(unweighted_view, **style_dict),
+                nicename
+            )
         else:
             log.warning("Didn't find a style for logical sample %s", name)
 

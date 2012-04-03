@@ -20,34 +20,47 @@ data_styles = {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' :colors['yellow'],
+        'name' : "Z + jets",
     },
     'Wjets' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' : colors['green'],
+        'name' : "W + jets",
     },
     'QCDMu' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' : colors['magenta'],
+        'name' : "QCD",
     },
     'ttjets' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' : colors['orange'],
+        'name' : "ttbar",
     },
     'WZ_pythia' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' : colors['blue'],
+        'name' : "WZ",
     },
     'ZZ' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' : colors['cyan'],
+        'name' : "ZZ",
     },
     'data_DoubleMu' : {
         'legendstyle' : 'pe',
         'format' : 'pe',
+        'name' : "data",
+    },
+    'data_DoubleElectron' : {
+        'legendstyle' : 'pe',
+        'format' : 'pe',
+        'name' : "data",
     },
 }
+
