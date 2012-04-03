@@ -20,7 +20,7 @@ sys.argv = [sys.argv[0]]
 
 import rootpy.io as io
 from rootpy.plotting import views
-from rootpy.plotting import Canvas
+from rootpy.plotting import Canvas, Legend
 
 from FinalStateAnalysis.MetaData.data_views import data_views
 
@@ -71,6 +71,11 @@ if __name__ == "__main__":
                 log.info("Data histo has %f entries", data_histo.Integral())
                 mc_histo.Draw()
                 data_histo.Draw('same')
+                legend = Legend(7, leftmargin=0.5)
+                legend.AddEntry(mc_histo)
+                legend.AddEntry(data_histo)
+                legend.SetBorderSize(0)
+                legend.Draw()
                 mc_histo.SetMaximum(1.2*max(
                     mc_histo.GetMaximum(), data_histo.GetMaximum()))
 
