@@ -81,21 +81,21 @@ results/analysis/zmumu/%.root: ZMuMuControl.py inputs/$(ntuple_id)/%.txt \
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
 # Run the ZH MMMT analysis
-results/analysis/mmmt/%.root: AnalyzeMMMT.py inputs/$(ntuple_id)/%.txt \
+results/analysis/mmmt/%.root: AnalyzeMMMT.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) AnalyzeMMMT.py inputs/$(ntuple_id)/$*.txt \
 	  /mmmt/final/Ntuple $@ 
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
 # Run the ZH MMME analysis
-results/analysis/mmme/%.root: AnalyzeMMME.py inputs/$(ntuple_id)/%.txt \
+results/analysis/mmme/%.root: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) AnalyzeMMME.py inputs/$(ntuple_id)/$*.txt \
 	  /emmm/final/Ntuple $@ 
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
 # Run the ZH MMET analysis
-results/analysis/mmet/%.root: AnalyzeMMET.py inputs/$(ntuple_id)/%.txt \
+results/analysis/mmet/%.root: AnalyzeMMET.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) AnalyzeMMET.py inputs/$(ntuple_id)/$*.txt \
 	  /emmt/final/Ntuple $@ 
