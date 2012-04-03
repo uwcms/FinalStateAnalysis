@@ -6,7 +6,8 @@ Common definition of Zmumu selection used in ZH analysis
 
 from FinalStateAnalysis.TMegaSelector.megautil import And
 
-def build_selection(meta_tree):
+def build_zmm_selection(meta_tree):
+    ''' Build the Zmumu selection '''
     meta = meta_tree
     selection = And(
         # Trigger selection
@@ -35,3 +36,4 @@ def build_selection(meta_tree):
         # Order the leading Z muons by PT so we only have one candidate per event
         meta.m1Pt > meta.m2Pt,
     )
+    return selection
