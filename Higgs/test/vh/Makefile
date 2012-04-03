@@ -101,6 +101,13 @@ results/analysis/mmet/%.root: AnalyzeMMET.py zh_zmm_selection.py inputs/$(ntuple
 	  /emmt/final/Ntuple $@ 
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
+# Run the ZH MMTT analysis
+results/analysis/mmtt/%.root: AnalyzeMMTT.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeMMTT.py inputs/$(ntuple_id)/$*.txt \
+	  /mmtt/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
 # Make num/denom for jet->mu fake rate in MMM events
 results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(ntuple_id)/%.txt \
 	$(mega) $^ /mumumu/final/Ntuple $@
@@ -217,7 +224,10 @@ mmme_ana_jobs=$(patsubst %, results/analysis/mmme/%.root, \
 mmet_ana_jobs=$(patsubst %, results/analysis/mmet/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
-zh_ana_jobs=$(mmmt_ana_jobs) $(mmme_ana_jobs) $(mmet_ana_jobs)
+mmtt_ana_jobs=$(patsubst %, results/analysis/mmtt/%.root, \
+	$(sm_backgrounds) $(doublemu_samples))
+
+zh_ana_jobs=$(mmmt_ana_jobs) $(mmme_ana_jobs) $(mmet_ana_jobs) $(mmtt_ana_jobs)
 
 zmm_control_jobs=$(patsubst %, results/analysis/zmumu/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
@@ -246,13 +256,13 @@ mmme_analysis: $(mmme_ana_jobs)
 
 mmet_analysis: $(mmet_ana_jobs)
 
-zh_analysis: mmmt_analysis mmme_analysis mmet_analysis
+mmtt_analysis: $(mmtt_ana_jobs)
+
+zh_analysis: mmmt_analysis mmme_analysis mmet_analysis mmtt_ana_jobs
 
 zmm_analysis: $(zmm_control_jobs)
 
-analysis: emt_analysis mmt_analysis \
-	mmmt_analysis mmme_analysis \
-	mmet_analysis zmm_analysis 
+analysis: emt_analysis mmt_analysis zh_analysis zmm_analysis
 
 ################################################################################
 ## Fake rate functions #########################################################
