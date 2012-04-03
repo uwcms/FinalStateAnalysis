@@ -1,143 +1,117 @@
-import ROOT
+'''
 
-import os
+Implementation of ZH search in the mu-mu-mu-e channel
 
-from FinalStateAnalysis.TMegaSelector.megautil import MetaTree
-from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
+'''
+
+from Analyzer import Analyzer
+from FinalStateAnalysis.TMegaSelector.megautil import MetaTree, And, Or
+from zh_zmm_selection import build_zmm_selection
 
 meta = MetaTree()
 
-base_selections = [
+base_selections = And(
     # Pick the best Z candidate in the first two positions
     meta.m1_m2_Zcompat < meta.m1_m3_Zcompat,
     meta.m1_m2_Zcompat < meta.m2_m3_Zcompat,
 
-    # Require the Z candidate within 10 GeV of m_Z
-    meta.m1_m2_Zcompat < 10,
+    # Build the leading ZMM selection
+    build_zmm_selection(meta),
 
-    # Require that the Higgs cand is OS
-    meta.e_m3_SS < 0.5,
-
-    # Order the Z muons by PT so we only have one candidate per event
-    meta.m1Pt > meta.m2Pt,
-
-    meta.e_m3_Mass < 80,
-    meta.e_m3_Mass > 30,
-
-    meta.m1Pt > 20,
-    meta.m2Pt > 10,
+    # Subleading muon selection
     meta.m3Pt > 10,
-
-    meta.m1RelPFIsoDB < 0.25,
-    meta.m2RelPFIsoDB < 0.25,
+    meta.m3AbsEta < 2.4,
 
     meta.ePt > 10,
-
-    meta.m1WWID > 0,
-    meta.m2WWID > 0,
-
-    #meta.mu17ele8 > 0.5,
     meta.eAbsEta < 2.5,
-    meta.m1AbsEta < 2.4,
-    meta.m2AbsEta < 2.4,
 
+    meta.e_m3_SS < 0.5,
+    meta.e_m3_Mass < 150,
+
+    # Vetoes
     meta.muVetoPt5 < 1,
     meta.eVetoWP95Iso < 1,
     meta.bjetVeto < 1,
     meta.tauVetoPt20 < 1,
 
+    # DZ cuts
     meta.m1DZ < 0.2,
     meta.m2DZ < 0.2,
     meta.m3DZ < 0.2,
     meta.eDZ < 0.2,
+)
 
-    #meta.eMuOverlap < 0.5,
-]
+e_id = And(
+    meta.eRelPFIsoDB < 0.25,
+    meta.eCiCTight > 14.5,
+)
 
 
-e_id = [
-    meta.eMITID > 0.15,
-    meta.eRelPFIsoDB < 0.15,
-]
-
-m3_id = [
-    meta.m3RelPFIsoDB < 0.15,
+m3_id = And(
+    meta.m3RelPFIsoDB < 0.25,
+    # FIXME -> VBTFID
     meta.m3WWID > 0.5,
+)
+
+mt_cut = meta.m3MtToMET < 50
+
+def pu_weight(x):
+    return x.puWeightData2011AB
+
+basic_histograms = [
+    (lambda x: x.m1Pt, '', ('m1Pt', '#mu_{1} p_{T}', 20, 0, 200)),
+    (lambda x: x.m1AbsEta, '', ('m1AbsEta', '#mu_{1} |#eta|', 10, 0, 2.5)),
+    (lambda x: x.m1_m2_Mass, '', ('z1Mass', 'Z_{1} Mass', 20, 60, 120)),
+    (lambda x: x.e_m3_Mass, '', ('z2Mass', 'Z_{2} Mass', 20, 30, 150)),
 ]
 
-histograms = [
-    (lambda x: x.m1Pt, 'm1Pt', 'm1 pt', 100, 0, 100),
-    (lambda x: x.m1AbsEta, 'm1AbsEta', 'm1 |#eta|', 100, 0, 100),
-]
+def build_histo_list(weight_function, name_suffix=""):
+    # Function to take list of generic histograms and apply a weight function
+    output = []
+    for functor, location, ctor in basic_histograms:
+        ctor_list = list(ctor)
+        ctor_list[0] += name_suffix
+        output.append(
+            (functor, weight_function, location, tuple(ctor_list))
+        )
+    return output
 
-def m3_fake_weight(x):
-    return 1
-def e_fake_weight(x):
-    return 1
-
-class AnalyzeMMME(MegaBase):
+class AnalyzeMMME(Analyzer):
 
     def __init__(self, tree, output, **kwargs):
         super(AnalyzeMMME, self).__init__(tree, output, **kwargs)
-        for histogram in histograms:
-            self.book('m3_fakes', *histogram[1:])
-            self.book('e_fakes', *histogram[1:])
-            self.book('double_fakes', *histogram[1:])
-            # Histograms w/o weights
-            self.book('m3_fakes_nowt', *histogram[1:])
-            self.book('e_fakes_nowt', *histogram[1:])
-            self.book('double_fakes_nowt', *histogram[1:])
-            self.book('final', *histogram[1:])
+
+        self.define_region('mu_pass_e_pass',
+                           base_selections & m3_id & e_id,
+                           build_histo_list(pu_weight)
+                          )
+
+        self.define_region('mu_fail_e_pass',
+                           base_selections & ~m3_id & e_id,
+                           build_histo_list(pu_weight)
+                          )
+
+        self.define_region('mu_pass_e_fail',
+                           base_selections & m3_id & ~e_id,
+                           build_histo_list(pu_weight)
+                          )
+
+        self.define_region('mu_fail_e_fail',
+                           base_selections & ~m3_id & ~e_id,
+                           build_histo_list(pu_weight)
+                          )
+
         self.disable_branch('*')
         for b in meta.active_branches():
             self.enable_branch(b)
         self.enable_branch('run')
         self.enable_branch('evt')
+        self.enable_branch('puWeightData2011AB')
 
     def process(self, entry):
         tree = self.tree
         read = tree.GetEntry(entry)
-
-        # Check if we pass the base selection
-        if not all(select(tree) for select in base_selections):
-            return True
-
-        # figure out which objects pass
-        passes_e_id = all(select(tree) for select in e_id)
-        passes_m3_id = all(select(tree) for select in m3_id)
-
-        category = (passes_m3_id, passes_e_id)
-
-        if category == (True, True):
-            print tree.run, tree.evt
-            for histo in histograms:
-                value = histo[0](tree)
-                self.histograms[os.path.join('final', histo[1])].Fill(value)
-        elif category == (False, True):
-            for histo in histograms:
-                value = histo[0](tree)
-                self.histograms[
-                    os.path.join('m3_fakes_nowt', histo[1])].Fill(value)
-                weight = m3_fake_weight(tree.m3Pt)
-                self.histograms[
-                    os.path.join('m3_fakes', histo[1])].Fill(value, weight)
-        elif category == (True, False):
-            for histo in histograms:
-                value = histo[0](tree)
-                self.histograms[
-                    os.path.join('e_fakes_nowt', histo[1])].Fill(value)
-                weight = e_fake_weight(tree.ePt)
-                self.histograms[
-                    os.path.join('e_fakes', histo[1])].Fill(value, weight)
-        elif category == (False, False):
-            for histo in histograms:
-                value = histo[0](tree)
-                self.histograms[
-                    os.path.join('double_fakes_nowt', histo[1])].Fill(value)
-                weight = m3_fake_weight(tree.m3Pt)*e_fake_weight(tree.ePt)
-                self.histograms[
-                    os.path.join('double_fakes', histo[1])].Fill(value, weight)
-
+        self.analyze(tree)
         return True
 
     def finish(self):
