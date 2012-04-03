@@ -219,13 +219,13 @@ mmmt_ana_jobs=$(patsubst %, results/analysis/mmmt/%.root, \
 	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
 
 mmme_ana_jobs=$(patsubst %, results/analysis/mmme/%.root, \
-	$(sm_backgrounds) $(doublemu_samples))
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
 
 mmet_ana_jobs=$(patsubst %, results/analysis/mmet/%.root, \
-	$(sm_backgrounds) $(doublemu_samples))
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
 
 mmtt_ana_jobs=$(patsubst %, results/analysis/mmtt/%.root, \
-	$(sm_backgrounds) $(doublemu_samples))
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
 
 zh_ana_jobs=$(mmmt_ana_jobs) $(mmme_ana_jobs) $(mmet_ana_jobs) $(mmtt_ana_jobs)
 
@@ -310,10 +310,23 @@ plots/zmm_control/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
 	./render_zmm_controls.py inputs/$(ntuple_id)/all_samples.json \
 	  plots/zmm_control/ $(zmm_control_jobs)
 
-plots/zh/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
-  $(mmmt_ana_jobs) render_zh_plots.py
-	./render_zh_plots.py inputs/$(ntuple_id)/all_samples.json \
-	  plots/zh/ $(mmmt_ana_jobs)
+plots/zh/mmmt/plot_list.txt: $(mmmt_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/mmmt/ data_DoubleMu $(mmmt_ana_jobs) 
+
+plots/zh/mmet/plot_list.txt: $(mmet_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/mmet/ data_DoubleMu $(mmet_ana_jobs) 
+
+plots/zh/mmtt/plot_list.txt: $(mmtt_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/mmtt/ data_DoubleMu $(mmtt_ana_jobs) 
+
+plots/zh/mmme/plot_list.txt: $(mmme_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/mmme/ data_DoubleMu $(mmme_ana_jobs) 
+
+zh_plots: \
+  plots/zh/mmmt/plot_list.txt \
+  plots/zh/mmme/plot_list.txt \
+  plots/zh/mmtt/plot_list.txt \
+  plots/zh/mmet/plot_list.txt 
 
 plots: plots/zmm_control/plot_list.txt \
   plots/muon_fake_controls/plot_list.txt \
