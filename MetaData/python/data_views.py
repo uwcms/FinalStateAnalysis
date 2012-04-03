@@ -12,99 +12,111 @@ import logging
 from rootpy.io import open
 from rootpy.plotting import views
 
+def data_views(files, normalize_to_dataset):
+    ''' Builds views of files.
 
-def get_views(files, sample_extractor, evt_counter, target_lumi):
-    log = logging.getLogger("get_views")
-    ''' Builds views of files
+    <files> gives an iterator of file names to build.
 
-    <sample_extractor>: a function which returns the sample name
-                        from the file name.
+    Each file must contain (in the base directory) two TTexts:
 
-    <evt_counter>:      a dictionary which maps sample name to number of
-                        processed events.
-                        Should have the following form:
-                            evt_counter[sample]['n_evts']
+        TText("dataset", "[name of dataset"]),
+        TText("intlumi", "[effective/real int. lumi of dataset"]),
 
-    <target_lumi>:      desired expected integrated luminosity for MC samples.
+    You must pass the name of a logical sample to normalize the data too.
 
-    the sample name from the filenames
+    Example: "data_DoubleMu"
+
     '''
-
-    log.info("Making views for %i files", len(files))
-
-    # A "raw" sample corresponds to a key in datadefs.  These may have nicer,
-    # "proper" names, provided by the data_name_map.  A "proper" sample can
-    # contain several raw sample.
-    # For example, WWW includes ['WWWTo2Lplus', 'WWWTo2Lminus']
-    raw_sample_infos = {}
-
+    log = logging.getLogger("data_views")
+    # Figure out the dataset for each file, and the int lumi.
+    # Key = dataset name
+    # Value = {intlumi, rootpy file, file path}
+    raw_samples = {}
     for file in files:
-        sample = sample_extractor(file)
-        if sample in raw_sample_infos:
-            raise KeyError("Sample %s appears more than once!" % sample)
-
-        log.debug("Extracted samples %s from file %s", sample, file)
-        n_events = evt_counter[sample]['n_evts']
-        log.debug("NumEvents = %i", n_events)
-        weight = 1.0
-        eff_lumi = -1
-        if 'data' not in sample:
-            xsec = datadefs[sample]['x_sec']
-            log.debug("xsec = %f", xsec)
-            log.debug("target_lumi = %f", target_lumi)
-            eff_lumi = n_events/xsec
-            log.debug("eff. int. lumi. = %f", eff_lumi)
-            weight = target_lumi/eff_lumi
-        log.debug("weight = %f", weight)
-
-        # Build weighted view
+        log.info("Extracting meta data from file %s", file)
         raw_file = open(file, 'read')
-        view = raw_file
-        # Check if we need to apply a weight
-        if weight != 1.:
-            view = views.ScaleView(raw_file, weight)
-
-        raw_sample_infos[sample] = {
-            'filename' : file,
+        dataset_ttext = raw_file.Get("dataset")
+        if not dataset_ttext:
+            raise IOError(
+                "Input file %s does not have required TText 'dataset'", file)
+        dataset = dataset_ttext.GetTitle()
+        log.info("=> dataset name: %s", dataset)
+        intlumi_ttext = raw_file.Get("intlumi")
+        if not intlumi_ttext:
+            raise IOError(
+                "Input file %s does not have required TText 'intlumi'", file)
+        intlumi = float(intlumi_ttext.GetTitle())
+        log.info("=> int lumi: %0.f pb-1", intlumi)
+        raw_samples[dataset] = {
+            'intlumi': intlumi,
             'file' : raw_file,
-            'nevts' : n_events,
-            'weight' : weight,
-            'eff_lumi' : eff_lumi,
-            'view' : view,
+            'filename' : file
         }
 
-    proper_sample_infos = {}
+    log.info("Determining total int lumi for sample %s", normalize_to_dataset)
+    if not normalize_to_dataset in data_name_map:
+        raise KeyError(
+            "Normalization dataset %s is not a proper dataset "
+            "defined in datadefs.py!" % normalize_to_dataset)
+    subsamples = data_name_map[normalize_to_dataset]
+    # Make sure we have all the subsamples
+    target_int_lumi = 0
+    for subsample in subsamples:
+        if subsample not in raw_samples:
+            raise KeyError(
+                "Normalization dataset %s need subsample %s, "
+                "but it isn't provided in the list of input files!" %
+                (normalize_to_dataset, subsample))
+        sub_int_lumi = raw_samples[subsample]['intlumi']
+        log.info("Subsample %s has int lumi: %0.f pb-1",
+                 subsample, sub_int_lumi)
+        target_int_lumi += sub_int_lumi
+    log.info("Target int lumi: %0.f pb-1", target_int_lumi)
 
-    # Now build the composite samples
+    log.info("Scaling samples to integrated luminosity")
+    for sample, sample_info in raw_samples.iteritems():
+        weight = 1.0
+        if 'data' in sample:
+            log.info("Setting sample %s [DATA] weight to 1.0", sample)
+        else:
+            weight = target_int_lumi/sample_info['intlumi']
+            log.info("Setting sample %s [MC] weight to %0.1f/%0.1f = %0.3g",
+                     sample, target_int_lumi, sample_info['intlumi'], weight)
+        sample_info['weight'] = weight
+        log.info("Building weighted view")
+        sample_info['view'] = views.ScaleView(sample_info['file'], weight)
+
+    logical_samples = {}
+
+    # Logical samples are combinations of several subsamples
+    log.info("Building logical samples")
     for name, subsamples in data_name_map.iteritems():
         # Check sure we have all the dependent samples
-        if not all(subsample in raw_sample_infos for subsample in subsamples):
-            log.debug("Skipping proper sample %s, we don't have all it's"
+        if not all(subsample in raw_samples for subsample in subsamples):
+            log.debug("Skipping logical sample %s, we don't have all it's"
                       " dependencies" % name)
             continue
         # Make a sum view of all the sub samples
-        log.info("Constructing proper sample %s from %i subsamples",
+        log.info("Constructing logical sample %s from %i subsamples",
                  name, len(subsamples))
         sumview = views.SumView(
-            *[raw_sample_infos[subsample]['view'] for subsample in subsamples])
+            *[raw_samples[subsample]['view'] for subsample in subsamples])
         unweighted_view = views.SumView(
-            *[raw_sample_infos[subsample]['file'] for subsample in subsamples])
-
+            *[raw_samples[subsample]['file'] for subsample in subsamples])
         style_dict = data_styles.get(name, None)
         if style_dict:
             log.info("Found style for %s - applying Style View", name)
             sumview = views.StyleView(sumview, **style_dict)
             unweighted_view = views.StyleView(unweighted_view, **style_dict)
         else:
-            log.warning("Didn't find a style for %s", name)
+            log.warning("Didn't find a style for logical sample %s", name)
 
-        proper_sample_infos[name] = {
+        logical_samples[name] = {
             'view' : sumview,
             'unweighted_view' : unweighted_view,
             'subsamples' : dict(
-                (subsample, raw_sample_infos[subsample])
+                (subsample, raw_samples[subsample])
                 for subsample in subsamples
             )
         }
-
-    return proper_sample_infos
+    return logical_samples

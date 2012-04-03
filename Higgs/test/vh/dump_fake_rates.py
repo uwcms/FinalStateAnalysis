@@ -20,7 +20,7 @@ sys.argv = [sys.argv[0]]
 import rootpy.io as io
 from rootpy.plotting import views
 from fit_fake_rates import make_path_mangler
-from FinalStateAnalysis.PatTools.data_views import get_views
+import FinalStateAnalysis.PatTools.data_views as data_views
 from FinalStateAnalysis.StatTools.efficiencies import efficiency
 
 log = logging.getLogger("dump_fake_rates")
@@ -42,13 +42,7 @@ if __name__ == "__main__":
     cfg = __import__(args.cfg.replace('.py', ''))
 
     log.info("Building views")
-    data_views = get_views(
-        args.files,
-        # How to get the sample from the file name
-        lambda x: os.path.basename(x).replace('.all.root', ''),
-        meta_info,
-        4700
-    )
+    data_views = data_views.data_views( args.files, cfg.data_sample)
 
     # We just need to figure out the directory structure from any old file
     layout_filename = data_views.values()[0]['subsamples'].values()[0]['filename']

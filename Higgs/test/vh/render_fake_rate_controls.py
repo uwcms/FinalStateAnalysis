@@ -22,7 +22,7 @@ import rootpy.io as io
 from rootpy.plotting import views
 from rootpy.plotting import Canvas
 
-from FinalStateAnalysis.MetaData.data_views import get_views
+import FinalStateAnalysis.MetaData.data_views as data_views
 
 if __name__ == "__main__":
     log = logging.getLogger("render_fake_rate_controls")
@@ -40,13 +40,7 @@ if __name__ == "__main__":
         meta_info = json.load(meta_file)
 
     log.info("Building views")
-    data_views = get_views(
-        args.files,
-        # How to get the sample from the file name
-        lambda x: os.path.basename(x).replace('.all.root', ''),
-        meta_info,
-        4767,
-    )
+    data_views = data_views.data_views(args.files, args.pd)
     data_view = views.FunctorView(data_views[args.pd]['view'],
                                   lambda x: x.Rebin(2))
 

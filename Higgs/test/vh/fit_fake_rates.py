@@ -16,7 +16,7 @@ Author: Evan K. Friis, UW
 
 
 from RecoLuminosity.LumiDB import argparse
-from FinalStateAnalysis.PatTools.data_views import get_views
+from FinalStateAnalysis.PatTools.data_views import data_views
 import glob
 import json
 import logging
@@ -87,13 +87,7 @@ if __name__ == "__main__":
     cfg = __import__(args.cfg.replace('.py', ''))
 
     log.info("Building views")
-    mu_fr_views = get_views(
-        files,
-        # How to get the sample from the file name
-        lambda x: os.path.basename(x).replace('.all.root', ''),
-        meta_info,
-        4700
-    )
+    mu_fr_views = data_views(files, cfg.data_sample)
 
     # Get view of double muon data
     data = mu_fr_views[cfg.data_sample]['view']
