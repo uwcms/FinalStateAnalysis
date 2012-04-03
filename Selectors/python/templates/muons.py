@@ -16,6 +16,7 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 # ID and isolation
 id = PSet(
+    objectVBTFID = '{object}.userInt("VBTF")',
     objectWWID = '{object}.userInt("WWID")',
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(
