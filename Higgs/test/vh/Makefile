@@ -1,6 +1,6 @@
 
 # Job ID that produced the ntuples
-ntuple_id=2012-03-24-Higgs
+ntuple_id=2012-04-03-Higgs-v2
 
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2

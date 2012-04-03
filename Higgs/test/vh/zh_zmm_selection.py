@@ -26,9 +26,8 @@ def build_zmm_selection(meta_tree):
 
         meta.m1AbsEta < 2.4,
         meta.m2AbsEta < 2.4,
-        # FIXME -> use VBTF ID
-        meta.m1WWID > 0.5,
-        meta.m2WWID > 0.5,
+        meta.m1VBTFID > 0.5,
+        meta.m2VBTFID > 0.5,
 
         # Order the leading Z muons by PT so we only have one candidate per event
         meta.m1Pt > meta.m2Pt,

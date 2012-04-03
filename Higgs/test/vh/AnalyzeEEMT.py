@@ -50,8 +50,7 @@ hadronic_tau_id = meta.tLooseIso > 0.5
 
 m_id = And(
     meta.mRelPFIsoDB < 0.15,
-    # FIXME -> VBTFID
-    meta.mWWID > 0.5,
+    meta.mVBTFID > 0.5,
 )
 
 mt_cut = meta.mMtToMET < 50
