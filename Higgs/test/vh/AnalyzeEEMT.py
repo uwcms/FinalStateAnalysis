@@ -10,6 +10,8 @@ from zh_zee_selection import build_zee_selection
 
 meta = MetaTree()
 
+unique = meta.e1Pt > meta.e2Pt
+
 base_selections = And(
 
     # Build the leading ZMM selection
@@ -82,22 +84,22 @@ class AnalyzeEEMT(Analyzer):
         super(AnalyzeEEMT, self).__init__(tree, output, **kwargs)
 
         self.define_region('mu_pass_tau_pass',
-                           base_selections & m_id & hadronic_tau_id,
+                           unique & base_selections & m_id & hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('mu_fail_tau_pass',
-                           base_selections & ~m_id & hadronic_tau_id,
+                           unique & base_selections & ~m_id & hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('mu_pass_tau_fail',
-                           base_selections & m_id & ~hadronic_tau_id,
+                           unique &base_selections & m_id & ~hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('mu_fail_tau_fail',
-                           base_selections & ~m_id & ~hadronic_tau_id,
+                           unique &base_selections & ~m_id & ~hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 

@@ -19,9 +19,6 @@ def build_zee_selection(meta_tree):
         meta.e1_e2_Mass < 120,
         meta.e1_e2_Mass > 60,
 
-        # Order the leading Z muons by PT so we only have one candidate per event
-        meta.e1Pt > meta.e2Pt,
-
         meta.e1Pt > 20,
         meta.e2Pt > 10,
 

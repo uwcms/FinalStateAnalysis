@@ -9,6 +9,8 @@ from zh_zmm_selection import build_zmm_selection
 
 meta = MetaTree()
 
+unique = meta.m1Pt > meta.m2Pt
+
 base_selections = And(
     build_zmm_selection(meta),
 
@@ -79,22 +81,22 @@ class AnalyzeMMET(Analyzer):
         super(AnalyzeMMET, self).__init__(tree, output, **kwargs)
 
         self.define_region('e_pass_tau_pass',
-                           base_selections & e_id & hadronic_tau_id,
+                           unique & base_selections & e_id & hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('e_fail_tau_pass',
-                           base_selections & ~e_id & hadronic_tau_id,
+                           unique & base_selections & ~e_id & hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('e_pass_tau_fail',
-                           base_selections & e_id & ~hadronic_tau_id,
+                           unique & base_selections & e_id & ~hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('e_fail_tau_fail',
-                           base_selections & ~e_id & ~hadronic_tau_id,
+                           unique & base_selections & ~e_id & ~hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 

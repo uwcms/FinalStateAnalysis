@@ -10,10 +10,14 @@ from zh_zmm_selection import build_zmm_selection
 
 meta = MetaTree()
 
-base_selections = And(
+unique = And(
     # Pick the best Z candidate in the first two positions
     meta.m1_m2_Zcompat < meta.m1_m3_Zcompat,
     meta.m1_m2_Zcompat < meta.m2_m3_Zcompat,
+    meta.m1Pt > meta.m2Pt
+)
+
+base_selections = And(
 
     # Build the leading ZMM selection
     build_zmm_selection(meta),
@@ -26,7 +30,6 @@ base_selections = And(
     meta.eAbsEta < 2.5,
 
     meta.e_m3_SS < 0.5,
-    meta.e_m3_Mass < 150,
 
     # Vetoes
     meta.muVetoPt5 < 1,

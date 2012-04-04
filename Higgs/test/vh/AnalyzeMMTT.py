@@ -10,6 +10,11 @@ from zh_zmm_selection import build_zmm_selection
 
 meta = MetaTree()
 
+unique = And(
+    meta.m1Pt > meta.m2Pt,
+    meta.t1Pt > meta.t2Pt,
+)
+
 base_selections = And(
     # Build the leading ZMM selection
     build_zmm_selection(meta),
@@ -22,9 +27,6 @@ base_selections = And(
     meta.t2Pt > 20,
     meta.t2AbsEta < 2.3,
     meta.t2DecayFinding > 0.5,
-
-    meta.t1_t2_Mass < 150,
-    meta.t1_t2_Mass > 30,
 
     # Vetoes
     meta.muVetoPt5 < 1,
@@ -81,22 +83,22 @@ class AnalyzeMMTT(Analyzer):
         super(AnalyzeMMTT, self).__init__(tree, output, **kwargs)
 
         self.define_region('t1_pass_t2_pass',
-                           base_selections & t1_id & t2_id,
+                           unique & base_selections & t1_id & t2_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('t1_fail_t2_pass',
-                           base_selections & ~t1_id & t2_id,
+                           unique & base_selections & ~t1_id & t2_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('t1_pass_t2_fail',
-                           base_selections & t1_id & ~t2_id,
+                           unique & base_selections & t1_id & ~t2_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('t1_fail_t2_fail',
-                           base_selections & ~t1_id & ~t2_id,
+                           unique & base_selections & ~t1_id & ~t2_id,
                            build_histo_list(pu_weight)
                           )
 
