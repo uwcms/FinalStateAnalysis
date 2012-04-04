@@ -34,3 +34,5 @@ echo "Debugging EEET"
 $megadebug AnalyzeEEET.py zh_events_ntuple.txt /eeet/final/Ntuple \
   unique- base_selections+  e3_id  hadronic_tau_id \
   --events 172252,40,47105541 177718,469,736335702
+
+# Don't need to do MMTT
