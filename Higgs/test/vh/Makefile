@@ -103,6 +103,17 @@ results/analysis/eemt/%.events: AnalyzeEEMT.py zh_zee_selection.py inputs/$(ntup
 	$(megaevents) AnalyzeEEMT.py inputs/$(ntuple_id)/$*.txt  \
 	  /eemt/final/Ntuple $@ final --branches e1_e2_Mass m_t_Mass
 
+# Run the ZH EEET analysis
+results/analysis/eeet/%.root: AnalyzeEEET.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeEEET.py inputs/$(ntuple_id)/$*.txt \
+	  /eeet/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/eeet/%.events: AnalyzeEEET.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeEEET.py inputs/$(ntuple_id)/$*.txt  \
+	  /eeet/final/Ntuple $@ final --branches e1_e2_Mass e_t_Mass
+
 # Run the ZH MMME analysis
 results/analysis/mmme/%.root: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
@@ -258,6 +269,10 @@ eemt_ana_jobs=$(patsubst %, results/analysis/eemt/%.root, \
 	$(sm_backgrounds) $(doublee_samples) $(dibosons)) \
 	$(patsubst %, results/analysis/eemt/%.events, $(doublee_samples))
 
+eeet_ana_jobs=$(patsubst %, results/analysis/eeet/%.root, \
+	$(sm_backgrounds) $(doublee_samples) $(dibosons)) \
+	$(patsubst %, results/analysis/eeet/%.events, $(doublee_samples))
+
 mmme_ana_jobs=$(patsubst %, results/analysis/mmme/%.root, \
 	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) \
 	$(patsubst %, results/analysis/mmme/%.events, $(doublemu_samples))
@@ -275,7 +290,7 @@ eett_ana_jobs=$(patsubst %, results/analysis/eett/%.root, \
 	$(patsubst %, results/analysis/eett/%.events, $(doublee_samples))
 
 zh_ana_jobs=$(mmmt_ana_jobs) $(mmme_ana_jobs) $(mmet_ana_jobs) $(mmtt_ana_jobs) \
-	    $(eemt_ana_jobs) $(eett_ana_jobs)
+	    $(eemt_ana_jobs) $(eett_ana_jobs) $(eeet_ana_jobs)
 
 zmm_control_jobs=$(patsubst %, results/analysis/zmumu/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
@@ -301,6 +316,8 @@ mmt_analysis: $(mmt_ana_jobs)
 mmmt_analysis: $(mmmt_ana_jobs)
 
 eemt_analysis: $(eemt_ana_jobs)
+
+eeet_analysis: $(eeet_ana_jobs)
 
 mmme_analysis: $(mmme_ana_jobs)
 
