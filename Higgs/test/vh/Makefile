@@ -428,32 +428,41 @@ plots/zmm_control/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
 plots/zh/mmmt/plot_list.txt: $(mmmt_ana_jobs) render_zh_plots.py
 	./render_zh_plots.py plots/zh/mmmt/ data_DoubleMu $(mmmt_ana_jobs) 
 
-plots/zh/eemt/plot_list.txt: $(eemt_ana_jobs) render_zh_plots.py
-	./render_zh_plots.py plots/zh/eemt/ data_DoubleElectron $(eemt_ana_jobs) 
-
 plots/zh/mmet/plot_list.txt: $(mmet_ana_jobs) render_zh_plots.py
 	./render_zh_plots.py plots/zh/mmet/ data_DoubleMu $(mmet_ana_jobs) 
 
 plots/zh/mmtt/plot_list.txt: $(mmtt_ana_jobs) render_zh_plots.py
 	./render_zh_plots.py plots/zh/mmtt/ data_DoubleMu $(mmtt_ana_jobs) 
 
-plots/zh/eett/plot_list.txt: $(eett_ana_jobs) render_zh_plots.py
-	./render_zh_plots.py plots/zh/eett/ data_DoubleElectron $(eett_ana_jobs) 
-
 plots/zh/mmme/plot_list.txt: $(mmme_ana_jobs) render_zh_plots.py
 	./render_zh_plots.py plots/zh/mmme/ data_DoubleMu $(mmme_ana_jobs) 
+
+plots/zh/eemt/plot_list.txt: $(eemt_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/eemt/ data_DoubleElectron $(eemt_ana_jobs) 
+
+plots/zh/eeet/plot_list.txt: $(eeet_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/eeet/ data_DoubleElectron $(eeet_ana_jobs) 
+
+plots/zh/eeem/plot_list.txt: $(eeem_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/eeem/ data_DoubleElectron $(eeem_ana_jobs) 
+
+plots/zh/eett/plot_list.txt: $(eett_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/eett/ data_DoubleElectron $(eett_ana_jobs) 
 
 zh_plots: \
   plots/zh/mmmt/plot_list.txt \
   plots/zh/mmme/plot_list.txt \
   plots/zh/mmtt/plot_list.txt \
+  plots/zh/mmet/plot_list.txt \
   plots/zh/eett/plot_list.txt \
   plots/zh/eeet/plot_list.txt \
-  plots/zh/mmet/plot_list.txt 
+  plots/zh/eeem/plot_list.txt \
+  plots/zh/eemt/plot_list.txt 
 
 plots: plots/zmm_control/plot_list.txt \
   plots/muon_fake_controls/plot_list.txt \
   plots/muon_fake_fits/plot_list.txt
+
 
 ################################################################################
 ## Packing things up ###########################################################
