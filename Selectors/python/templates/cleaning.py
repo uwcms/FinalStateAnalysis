@@ -24,4 +24,5 @@ vetos = PSet(
 overlaps = PSet(
     objectMuOverlap = 'filteredOverlaps({object_idx}, "muons", "pt > 5").size()',
     objectElecOverlap = 'filteredOverlaps({object_idx}, "electrons", "pt > 10").size()',
+    objectCiCTightElecOverlap = 'filteredOverlaps({object_idx}, "electrons", "pt > 10 & test_bit(electronID(\'cicTight\'), 0)").size()',
 )
