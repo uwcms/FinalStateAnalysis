@@ -44,13 +44,13 @@ base_selections = And(
     #meta.tElecOverlap < 0.5,
     meta.tAntiMuonTight > 0.5,
     meta.tMuOverlap < 0.5,
+    meta.mVBTFID > 0.5,
 )
 
 hadronic_tau_id = meta.tLooseIso > 0.5
 
 m_id = And(
     meta.mRelPFIsoDB < 0.15,
-    meta.mVBTFID > 0.5,
 )
 
 final = unique & base_selections & m_id & hadronic_tau_id

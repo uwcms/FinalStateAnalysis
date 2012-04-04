@@ -42,17 +42,17 @@ base_selections = And(
     meta.e2DZ < 0.2,
     meta.e3DZ < 0.2,
     meta.mDZ < 0.2,
+    meta.e3CiCTight.bit(1) > 0.5,
+    meta.mVBTFID > 0.5,
 )
 
 m_id = And(
     meta.mRelPFIsoDB < 0.25,
-    meta.mVBTFID > 0.5,
 )
 
 
 e3_id = And(
     meta.e3RelPFIsoDB < 0.25,
-    meta.e3CiCTight.bit(1) > 0.5,
 )
 
 final = unique & base_selections & e3_id & m_id
