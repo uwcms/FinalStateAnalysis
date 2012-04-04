@@ -42,11 +42,11 @@ base_selections = And(
     meta.t2DZ < 0.2,
 
     # Tau cleaning
-    meta.t1AntiElectronLoose > 0.5,
+    meta.t1AntiElectronMedium > 0.5,
     #meta.t1ElecOverlap < 0.5,
     meta.t1AntiMuonTight > 0.5,
     meta.t1MuOverlap < 0.5,
-    meta.t2AntiElectronLoose > 0.5,
+    meta.t2AntiElectronMedium > 0.5,
     #meta.t2ElecOverlap < 0.5,
     meta.t2AntiMuonTight > 0.5,
     meta.t2MuOverlap < 0.5,
