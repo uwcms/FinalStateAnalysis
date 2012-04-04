@@ -114,6 +114,17 @@ results/analysis/eeet/%.events: AnalyzeEEET.py zh_zee_selection.py inputs/$(ntup
 	$(megaevents) AnalyzeEEET.py inputs/$(ntuple_id)/$*.txt  \
 	  /eeet/final/Ntuple $@ final --branches e1_e2_Mass e3_t_Mass
 
+# Run the ZH EEEM analysis
+results/analysis/eeem/%.root: AnalyzeEEEM.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeEEEM.py inputs/$(ntuple_id)/$*.txt \
+	  /eeem/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/eeem/%.events: AnalyzeEEEM.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeEEEM.py inputs/$(ntuple_id)/$*.txt  \
+	  /eeem/final/Ntuple $@ final --branches e1_e2_Mass e3_m_Mass
+
 # Run the ZH MMME analysis
 results/analysis/mmme/%.root: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
@@ -143,12 +154,20 @@ results/analysis/mmtt/%.root: AnalyzeMMTT.py zh_zmm_selection.py inputs/$(ntuple
 	  /mmtt/final/Ntuple $@ 
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
+results/analysis/mmtt/%.events: AnalyzeMMTT.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeMMTT.py inputs/$(ntuple_id)/$*.txt  \
+	  /mmtt/final/Ntuple $@ final --branches m1_m2_Mass t1_t2_Mass
+
 # Run the ZH EETT analysis
 results/analysis/eett/%.root: AnalyzeEETT.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) AnalyzeEETT.py inputs/$(ntuple_id)/$*.txt \
 	  /eett/final/Ntuple $@ 
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/eett/%.events: AnalyzeEETT.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeEETT.py inputs/$(ntuple_id)/$*.txt  \
+	  /eett/final/Ntuple $@ final --branches e1_e2_Mass t1_t2_Mass
 
 # Make num/denom for jet->mu fake rate in MMM events
 results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(ntuple_id)/%.txt \
@@ -272,8 +291,14 @@ eemt_ana_jobs=$(patsubst %, results/analysis/eemt/%.root, \
 eemt_events_jobs=$(patsubst %, results/analysis/eemt/%.events, $(doublee_samples))
 
 eeet_ana_jobs=$(patsubst %, results/analysis/eeet/%.root, \
-	$(sm_backgrounds) $(doublee_samples) $(dibosons)) \
-	$(patsubst %, results/analysis/eeet/%.events, $(doublee_samples))
+	$(sm_backgrounds) $(doublee_samples) $(dibosons)) 
+
+eeet_events_jobs=$(patsubst %, results/analysis/eeet/%.events, $(doublee_samples))
+
+eeem_ana_jobs=$(patsubst %, results/analysis/eeem/%.root, \
+	$(sm_backgrounds) $(doublee_samples) $(dibosons)) 
+
+eeem_events_jobs=$(patsubst %, results/analysis/eeem/%.events, $(doublee_samples))
 
 mmme_ana_jobs=$(patsubst %, results/analysis/mmme/%.root, \
 	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) 
@@ -282,15 +307,18 @@ mmme_events_jobs=$(patsubst %, results/analysis/mmme/%.events, $(doublemu_sample
 
 mmet_ana_jobs=$(patsubst %, results/analysis/mmet/%.root, \
 	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) \
-	$(patsubst %, results/analysis/mmet/%.events, $(doublemu_samples))
+
+mmet_events_jobs=$(patsubst %, results/analysis/mmet/%.events, $(doublemu_samples))
 
 mmtt_ana_jobs=$(patsubst %, results/analysis/mmtt/%.root, \
-	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) \
-	$(patsubst %, results/analysis/mmtt/%.events, $(doublemu_samples))
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) 
+
+mmtt_events_jobs=$(patsubst %, results/analysis/mmtt/%.events, $(doublemu_samples))
 
 eett_ana_jobs=$(patsubst %, results/analysis/eett/%.root, \
-	$(sm_backgrounds) $(doublee_samples) $(dibosons)) \
-	$(patsubst %, results/analysis/eett/%.events, $(doublee_samples))
+	$(sm_backgrounds) $(doublee_samples) $(dibosons)) 
+
+eett_events_jobs=$(patsubst %, results/analysis/eett/%.events, $(doublee_samples))
 
 zh_ana_jobs=$(mmmt_ana_jobs) $(mmme_ana_jobs) $(mmet_ana_jobs) $(mmtt_ana_jobs) \
 	    $(eemt_ana_jobs) $(eett_ana_jobs) $(eeet_ana_jobs)
@@ -320,15 +348,29 @@ mmmt_analysis: $(mmmt_ana_jobs)
 
 eemt_analysis: $(eemt_ana_jobs)
 
+eemt_events: $(eemt_events_jobs)
+
 eeet_analysis: $(eeet_ana_jobs)
+
+eeet_events: $(eeet_events_jobs)
+
+eeem_analysis: $(eeem_ana_jobs)
+
+eeem_events: $(eeem_events_jobs)
 
 mmme_analysis: $(mmme_ana_jobs)
 
 mmet_analysis: $(mmet_ana_jobs)
 
+mmet_events: $(mmet_events_jobs)
+
 mmtt_analysis: $(mmtt_ana_jobs)
 
+mmtt_events: $(mmtt_events_jobs)
+
 eett_analysis: $(eett_ana_jobs)
+
+eett_events: $(eett_events_jobs)
 
 zh_analysis: mmmt_analysis mmme_analysis mmet_analysis mmtt_ana_jobs \
   eett_ana_jobs
