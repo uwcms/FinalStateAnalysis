@@ -73,7 +73,7 @@ if __name__ == "__main__":
             event_tuple = tuple(int(x) for x in event.split(':'))
             if len(event_tuple) != 3:
                 raise InputError("I don't understand the event: %s" % event)
-        event_list.add(event_tuple)
+            event_list.add(event_tuple)
 
     log.info("Building TChain")
     chain = ROOT.TChain(args.tree)
