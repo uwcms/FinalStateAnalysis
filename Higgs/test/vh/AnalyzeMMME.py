@@ -86,22 +86,22 @@ class AnalyzeMMME(Analyzer):
         super(AnalyzeMMME, self).__init__(tree, output, **kwargs)
 
         self.define_region('mu_pass_e_pass',
-                           base_selections & m3_id & e_id,
+                           unique & base_selections & m3_id & e_id,
                            build_histo_list(pu_weight),
                           )
 
         self.define_region('mu_fail_e_pass',
-                           base_selections & ~m3_id & e_id,
+                           unique & base_selections & ~m3_id & e_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('mu_pass_e_fail',
-                           base_selections & m3_id & ~e_id,
+                           unique & base_selections & m3_id & ~e_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('mu_fail_e_fail',
-                           base_selections & ~m3_id & ~e_id,
+                           unique & base_selections & ~m3_id & ~e_id,
                            build_histo_list(pu_weight)
                           )
 
