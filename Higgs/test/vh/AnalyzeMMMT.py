@@ -10,11 +10,16 @@ from zh_zmm_selection import build_zmm_selection
 
 meta = MetaTree()
 
-base_selections = And(
+# Selection to ensure there is only one candidate per final state
+unique = And(
     # Pick the best Z candidate in the first two positions
     meta.m1_m2_Zcompat < meta.m1_m3_Zcompat,
     meta.m1_m2_Zcompat < meta.m2_m3_Zcompat,
+    meta.m1Pt > meta.m2Pt
+)
 
+base_selections = And(
+    unique,
     # Build the leading ZMM selection
     build_zmm_selection(meta),
 
@@ -83,6 +88,11 @@ class AnalyzeMMMT(Analyzer):
 
     def __init__(self, tree, output, **kwargs):
         super(AnalyzeMMMT, self).__init__(tree, output, **kwargs)
+
+        self.define_region('unique',
+                           unique,
+                           build_histo_list(pu_weight)
+                          )
 
         self.define_region('mu_pass_tau_pass',
                            base_selections & m3_id & hadronic_tau_id,
