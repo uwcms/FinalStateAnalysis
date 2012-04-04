@@ -29,6 +29,7 @@ _common_template = PSet(
     # We only need to worry about lepton triggers
     templates.trigger.mueg,
     templates.trigger.doublemu,
+    templates.trigger.doublee,
     templates.trigger.isomu,
     templates.trigger.singlemu,
 )
