@@ -55,6 +55,7 @@ base_selections = And(
 hadronic_t1_id = meta.t1MediumIso > 0.5
 hadronic_t2_id = meta.t2MediumIso > 0.5
 
+final = unique & base_selections & hadronic_t1_id & hadronic_t2_id
 
 #mt_cut = meta.t1MtToMET < 50
 

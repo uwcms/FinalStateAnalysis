@@ -57,6 +57,8 @@ t1_id = meta.t1MediumIso > 0.5
 
 t2_id = meta.t2MediumIso > 0.5
 
+final = unique & base_selections & t1_id & t2_id
+
 def pu_weight(x):
     return x.puWeightData2011AB
 

@@ -50,6 +50,8 @@ e_id = And(
     meta.eCiCTight.bit(1),
 )
 
+final = unique & base_selections & e_id & hadronic_tau_id
+
 mt_cut = meta.eMtToMET < 50
 
 def pu_weight(x):

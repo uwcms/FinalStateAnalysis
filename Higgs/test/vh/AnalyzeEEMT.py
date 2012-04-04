@@ -53,6 +53,8 @@ m_id = And(
     meta.mVBTFID > 0.5,
 )
 
+final = unique & base_selections & m_id & hadronic_tau_id
+
 mt_cut = meta.mMtToMET < 50
 
 def pu_weight(x):

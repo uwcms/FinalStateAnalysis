@@ -55,6 +55,8 @@ m3_id = And(
     meta.m3VBTFID > 0.5,
 )
 
+final = unique & base_selections & m3_id & e_id
+
 mt_cut = meta.m3MtToMET < 50
 
 def pu_weight(x):
