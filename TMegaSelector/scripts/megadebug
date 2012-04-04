@@ -2,7 +2,7 @@
 
 '''
 
-Command Line tool to run a python selector on a datasets
+Command Line tool to check the status of each cut on specific events
 
 Author: Evan K. Friis, UW Madison
 
