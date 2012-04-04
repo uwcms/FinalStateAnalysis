@@ -19,7 +19,7 @@ for sampledir in `ls -d $SOURCE/$JOBID/*`
 do
   sample=`basename $sampledir`
   echo -n "Getting data files for $sample - got "
-  ls $sampledir/*/*root | sed "s|^|file:|" > $OUTPUTDIR/${sample}.txt
+  ls $sampledir/*/*root | sed "s|^|file:|" | root_file_check.py > $OUTPUTDIR/${sample}.txt
   echo -n `cat $OUTPUTDIR/${sample}.txt | wc -l `
   echo " files"
 done
