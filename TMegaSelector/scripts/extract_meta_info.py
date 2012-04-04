@@ -108,7 +108,9 @@ if __name__ == "__main__":
     chain = ROOT.TChain(args.tree)
 
     for file in files:
-        chain.Add(file)
+        # Skip commented lines
+        if file.strip()[0] != '#':
+            chain.Add(file)
 
     run_lumis = []
     total_events = 0
