@@ -27,6 +27,7 @@ id = PSet(
     objectMediumIso = '{object}.tauID("byMediumCombinedIsolationDeltaBetaCorr")',
     objectAntiElectronLoose = '{object}.tauID("againstElectronLoose")',
     objectAntiElectronMedium = '{object}.tauID("againstElectronMedium")',
+    objectAntiElectronTight = '{object}.tauID("againstElectronTight")',
     objectAntiElectronMVA = '{object}.tauID("againstElectronMVA")',
     objectAntiMuonLoose = '{object}.tauID("againstMuonLoose")',
     objectAntiMuonTight = '{object}.tauID("againstMuonTight")',
