@@ -153,4 +153,7 @@ if __name__ == "__main__":
                 pass # Don't print, just apply the selection
             if not passed:
                 break
-
+        if all_passed:
+            print colored("** R/L/E (%i, %i, %i) #%i passes all cuts **" % 
+                          (chain.run, chain.lumi, chain.evt, fsa_index),
+                          color='yellow')
