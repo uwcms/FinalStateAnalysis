@@ -258,9 +258,10 @@ class OneValueOp(Selection):
 
 class Value(object):
     ''' An object which can get a real value from a tree '''
-    def __init__(self, getter):
+    def __init__(self, getter, repr=""):
         # Initialize w/ functor to get value
         self.getter = getter
+        self.repr = repr
 
     def handle_op(self, other, the_op):
         if isinstance(other, Value):
@@ -285,16 +286,24 @@ class Value(object):
         def bit_getter(tree):
             value = int(self.getter(tree))
             return value & (1 << (n-1))
-        return bit_getter
+        return Value(bit_getter, "%s.bit(%i)" % (repr(self), n))
+
+    def __call__(self, tree):
+        return self.getter(tree)
+
+    def __repr__(self):
+        return self.repr
+
+    def explain(self, tree):
+        ''' Just print out the value of ourself '''
+        return "[%s = %0.2f]" % (repr(self), self.getter(tree))
 
 class Branch(Value):
     def __init__(self, branch):
         self.branch = branch
         def getter(tree):
             return getattr(tree, branch)
-        super(Branch, self).__init__(getter)
-    def __repr__(self):
-        return "Branch('%s')" % self.branch
+        super(Branch, self).__init__(getter, repr="Branch('%s')" % self.branch)
 
 class MetaTree(object):
     def __init__(self):
