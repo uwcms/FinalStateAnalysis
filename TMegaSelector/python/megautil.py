@@ -92,6 +92,27 @@ Extracting bit information:
 >>> fourth_bit(fake_tree)
 8
 
+Iterating over selections
+-------------------------
+
+And(...) selections support iteration over the subselections.
+Nested And(...) selections are expanded.
+
+>>> cut_1 = tree.muPt < 30
+>>> cut_2a = tree.muPt > 10
+>>> cut_2b = tree.elecPt > 10
+>>> cut_3 = tree.elecPt < 20
+>>> anded_cut = And(cut_1, And(cut_2a, cut_2b), cut_3)
+
+Note that cuts 2a and 2b are nested in a sub-And(...) object.
+
+>>> for cut in anded_cut:
+...     print cut
+Branch('muPt') < 30
+Branch('muPt') > 10
+Branch('elecPt') > 10
+Branch('elecPt') < 20
+
 Branch Bookkeeping
 ------------------
 
@@ -143,6 +164,18 @@ class And(Selection):
             return True
         super(And, self).__init__(functor, "AND[%s]" % ' '.join(
             [str(x) for x in selections]))
+
+    def __iter__(self):
+        ''' Iterator over selections.
+
+        Subselections where are "ANDs" are expanded.
+        '''
+        for selection in self.selections:
+            if isinstance(selection, And):
+                for subselection in selection:
+                    yield subselection
+            else:
+                yield selection
 
 class Or(Selection):
     def __init__(self, *selections):
