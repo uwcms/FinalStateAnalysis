@@ -112,7 +112,7 @@ results/analysis/eeet/%.root: AnalyzeEEET.py zh_zee_selection.py inputs/$(ntuple
 
 results/analysis/eeet/%.events: AnalyzeEEET.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt 
 	$(megaevents) AnalyzeEEET.py inputs/$(ntuple_id)/$*.txt  \
-	  /eeet/final/Ntuple $@ final --branches e1_e2_Mass e_t_Mass
+	  /eeet/final/Ntuple $@ final --branches e1_e2_Mass e3_t_Mass
 
 # Run the ZH MMME analysis
 results/analysis/mmme/%.root: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
@@ -406,6 +406,7 @@ zh_plots: \
   plots/zh/mmme/plot_list.txt \
   plots/zh/mmtt/plot_list.txt \
   plots/zh/eett/plot_list.txt \
+  plots/zh/eeet/plot_list.txt \
   plots/zh/mmet/plot_list.txt 
 
 plots: plots/zmm_control/plot_list.txt \
