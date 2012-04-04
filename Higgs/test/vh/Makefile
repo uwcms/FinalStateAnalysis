@@ -4,6 +4,7 @@ ntuple_id=2012-04-03-v2-Higgs
 
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
+megaevents=$(fsa)/TMegaSelector/scripts/megaevents.py
 
 .SECONDARY: %.root \
   results/fake_rates/mu/%.mmm.root \
@@ -87,12 +88,20 @@ results/analysis/mmmt/%.root: AnalyzeMMMT.py zh_zmm_selection.py inputs/$(ntuple
 	  /mmmt/final/Ntuple $@ 
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
+results/analysis/mmmt/%.events: AnalyzeMMMT.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeMMMT.py inputs/$(ntuple_id)/$*.txt  \
+	  /mmmt/final/Ntuple $@ final --branches m1_m2_Mass m3_t_Mass
+
 # Run the ZH EEMT analysis
 results/analysis/eemt/%.root: AnalyzeEEMT.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) AnalyzeEEMT.py inputs/$(ntuple_id)/$*.txt \
 	  /eemt/final/Ntuple $@ 
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/eemt/%.events: AnalyzeEEMT.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeEEMT.py inputs/$(ntuple_id)/$*.txt  \
+	  /eemt/final/Ntuple $@ final --branches e1_e2_Mass m_t_Mass
 
 # Run the ZH MMME analysis
 results/analysis/mmme/%.root: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
@@ -101,12 +110,20 @@ results/analysis/mmme/%.root: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple
 	  /emmm/final/Ntuple $@ 
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
+results/analysis/mmme/%.events: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeMMME.py inputs/$(ntuple_id)/$*.txt  \
+	  /mmme/final/Ntuple $@ final
+
 # Run the ZH MMET analysis
 results/analysis/mmet/%.root: AnalyzeMMET.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
   corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
 	$(mega) AnalyzeMMET.py inputs/$(ntuple_id)/$*.txt \
 	  /emmt/final/Ntuple $@ 
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/mmet/%.events: AnalyzeMMET.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeMMET.py inputs/$(ntuple_id)/$*.txt  \
+	  /emmt/final/Ntuple $@ final --branches m1_m2_Mass e_t_Mass
 
 # Run the ZH MMTT analysis
 results/analysis/mmtt/%.root: AnalyzeMMTT.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
@@ -234,22 +251,28 @@ mmt_ana_jobs=$(patsubst %, results/analysis/mmt/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
 mmmt_ana_jobs=$(patsubst %, results/analysis/mmmt/%.root, \
-	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) \
+	$(patsubst %, results/analysis/mmmt/%.events, $(doublemu_samples))
 
 eemt_ana_jobs=$(patsubst %, results/analysis/eemt/%.root, \
-	$(sm_backgrounds) $(doublee_samples) $(dibosons))
+	$(sm_backgrounds) $(doublee_samples) $(dibosons)) \
+	$(patsubst %, results/analysis/eemt/%.events, $(doublee_samples))
 
 mmme_ana_jobs=$(patsubst %, results/analysis/mmme/%.root, \
-	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) \
+	$(patsubst %, results/analysis/mmme/%.events, $(doublemu_samples))
 
 mmet_ana_jobs=$(patsubst %, results/analysis/mmet/%.root, \
-	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) \
+	$(patsubst %, results/analysis/mmet/%.events, $(doublemu_samples))
 
 mmtt_ana_jobs=$(patsubst %, results/analysis/mmtt/%.root, \
-	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) \
+	$(patsubst %, results/analysis/mmtt/%.events, $(doublemu_samples))
 
 eett_ana_jobs=$(patsubst %, results/analysis/eett/%.root, \
-	$(sm_backgrounds) $(doublee_samples) $(dibosons))
+	$(sm_backgrounds) $(doublee_samples) $(dibosons)) \
+	$(patsubst %, results/analysis/eett/%.events, $(doublee_samples))
 
 zh_ana_jobs=$(mmmt_ana_jobs) $(mmme_ana_jobs) $(mmet_ana_jobs) $(mmtt_ana_jobs) \
 	    $(eemt_ana_jobs) $(eett_ana_jobs)
