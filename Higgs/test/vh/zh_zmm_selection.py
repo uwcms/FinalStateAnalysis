@@ -26,7 +26,7 @@ def build_zmm_selection(meta_tree):
 
         meta.m1AbsEta < 2.4,
         meta.m2AbsEta < 2.4,
-        meta.m1VBTFID > 0.5,
-        meta.m2VBTFID > 0.5,
+        #meta.m1VBTFID > 0.5,
+        #meta.m2VBTFID > 0.5,
     )
     return selection
