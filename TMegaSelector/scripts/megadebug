@@ -68,6 +68,8 @@ if __name__ == "__main__":
     log.info("Building event list")
     if args.events:
         for event in args.events:
+            # optional delimeters
+            event = event.replace(',', ':')
             event_tuple = tuple(int(x) for x in event.split(':'))
             if len(event_tuple) != 3:
                 raise InputError("I don't understand the event: %s" % event)
