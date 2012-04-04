@@ -115,6 +115,13 @@ results/analysis/mmtt/%.root: AnalyzeMMTT.py zh_zmm_selection.py inputs/$(ntuple
 	  /mmtt/final/Ntuple $@ 
 	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
 
+# Run the ZH EETT analysis
+results/analysis/eett/%.root: AnalyzeEETT.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeEETT.py inputs/$(ntuple_id)/$*.txt \
+	  /eett/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
 # Make num/denom for jet->mu fake rate in MMM events
 results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(ntuple_id)/%.txt \
 	$(mega) $^ /mumumu/final/Ntuple $@
@@ -241,8 +248,11 @@ mmet_ana_jobs=$(patsubst %, results/analysis/mmet/%.root, \
 mmtt_ana_jobs=$(patsubst %, results/analysis/mmtt/%.root, \
 	$(sm_backgrounds) $(doublemu_samples) $(dibosons))
 
+eett_ana_jobs=$(patsubst %, results/analysis/eett/%.root, \
+	$(sm_backgrounds) $(doublee_samples) $(dibosons))
+
 zh_ana_jobs=$(mmmt_ana_jobs) $(mmme_ana_jobs) $(mmet_ana_jobs) $(mmtt_ana_jobs) \
-	    $(eemt_ana_jobs)
+	    $(eemt_ana_jobs) $(eett_ana_jobs)
 
 zmm_control_jobs=$(patsubst %, results/analysis/zmumu/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
@@ -275,7 +285,10 @@ mmet_analysis: $(mmet_ana_jobs)
 
 mmtt_analysis: $(mmtt_ana_jobs)
 
-zh_analysis: mmmt_analysis mmme_analysis mmet_analysis mmtt_ana_jobs
+eett_analysis: $(eett_ana_jobs)
+
+zh_analysis: mmmt_analysis mmme_analysis mmet_analysis mmtt_ana_jobs \
+  eett_ana_jobs
 
 zmm_analysis: $(zmm_control_jobs)
 
@@ -339,6 +352,9 @@ plots/zh/mmet/plot_list.txt: $(mmet_ana_jobs) render_zh_plots.py
 plots/zh/mmtt/plot_list.txt: $(mmtt_ana_jobs) render_zh_plots.py
 	./render_zh_plots.py plots/zh/mmtt/ data_DoubleMu $(mmtt_ana_jobs) 
 
+plots/zh/eett/plot_list.txt: $(eett_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/eett/ data_DoubleElectron $(eett_ana_jobs) 
+
 plots/zh/mmme/plot_list.txt: $(mmme_ana_jobs) render_zh_plots.py
 	./render_zh_plots.py plots/zh/mmme/ data_DoubleMu $(mmme_ana_jobs) 
 
@@ -346,6 +362,7 @@ zh_plots: \
   plots/zh/mmmt/plot_list.txt \
   plots/zh/mmme/plot_list.txt \
   plots/zh/mmtt/plot_list.txt \
+  plots/zh/eett/plot_list.txt \
   plots/zh/mmet/plot_list.txt 
 
 plots: plots/zmm_control/plot_list.txt \
