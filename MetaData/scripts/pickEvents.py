@@ -30,8 +30,11 @@ import os
 import json
 from subprocess import Popen, PIPE, STDOUT
 from FinalStateAnalysis.MetaData.datadefs import datadefs
+import warning
 
 if __name__ == "__main__":
+    warnings.warn("This script is deprecated, using pick.py instead",
+                  DeprecationWarning)
     parser = argparse.ArgumentParser()
     parser.add_argument('json_file', help="JSON run-lumi-event file")
     parser.add_argument('--output', default = "{dataset}",
