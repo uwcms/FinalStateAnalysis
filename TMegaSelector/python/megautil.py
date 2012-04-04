@@ -81,10 +81,10 @@ Mathematical Operations
 
 Extracting bit information:
 
->>> fake_tree.elecPt = 10 #(0b1010)
->>> fourth_bit = tree.elecPt.bit(4)
->>> second_bit = tree.elecPt.bit(2)
->>> first_bit = tree.elecPt.bit(1)
+>>> fake_tree.elecId = 10 #(0b1010)
+>>> fourth_bit = tree.elecId.bit(4)
+>>> second_bit = tree.elecId.bit(2)
+>>> first_bit = tree.elecId.bit(1)
 >>> second_bit(fake_tree)
 2
 >>> first_bit(fake_tree)
@@ -113,13 +113,24 @@ Branch('muPt') > 10
 Branch('elecPt') > 10
 Branch('elecPt') < 20
 
+Explaining what happened
+------------------------
+
+You cane make a cut "explain" itself.
+
+>>> cut_2a.explain(fake_tree)
+'[25.00 > 10.00]'
+>>> fake_tree.elecPt = 50
+>>> anded_cut.explain(fake_tree)
+"[Branch('elecPt') < 20 failed]"
+
 Branch Bookkeeping
 ------------------
 
 The MetaTree object also keeps track of which branches are accessed:
 
 >>> tree.active_branches()
-['elecPt', 'muPt']
+['elecId', 'elecPt', 'muPt']
 
 '''
 
@@ -154,6 +165,10 @@ class Selection(object):
             return not self(tree)
         return Selection(invert_cut, "!%s" % self)
 
+    def explain(self, tree):
+        ''' Explain what this cut does, given the TTree '''
+        return "NotImplemented"
+
 class And(Selection):
     def __init__(self, *selections):
         self.selections = selections
@@ -164,6 +179,19 @@ class And(Selection):
             return True
         super(And, self).__init__(functor, "AND[%s]" % ' '.join(
             [str(x) for x in selections]))
+
+    def explain(self, tree):
+        ''' Figure out which cut caused the And to fail '''
+        passed = True
+        first_to_fail = None
+        for subselection in self:
+            if not subselection(tree):
+                first_to_fail = subselection
+                passed = False
+                break
+        if passed:
+            return "[PASSED]"
+        return "[%s failed]" % first_to_fail
 
     def __iter__(self):
         ''' Iterator over selections.
@@ -198,18 +226,35 @@ class TwoValueOp(Selection):
     def __init__(self, val1, val2, op):
         getter1 = val1.getter
         getter2 = val2.getter
+        self.getter1 = getter1
+        self.getter2 = getter2
+        self.op = op
         def functor(tree):
             return op(getter1(tree), getter2(tree))
         repr = "%s %s %s" % (val1, _operator_names[op], val2)
         super(TwoValueOp, self).__init__(functor, repr)
 
+    def explain(self, tree):
+        ''' Explain the result of this cut '''
+        return "[%0.2f %s %0.2f]" % (
+            self.getter1(tree), _operator_names[self.op], self.getter2(tree))
+
+
 class OneValueOp(Selection):
     def __init__(self, val1, val2, op):
         getter = val1.getter
+        self.getter = getter
+        self.val = val2
+        self.op = op
         def functor(tree):
             return op(getter(tree), val2)
         repr = "%s %s %s" % (val1, _operator_names[op], str(val2))
         super(OneValueOp, self).__init__(functor, repr)
+
+    def explain(self, tree):
+        ''' Explain the result of this cut '''
+        return "[%0.2f %s %0.2f]" % (
+            self.getter(tree), _operator_names[self.op], self.val)
 
 class Value(object):
     ''' An object which can get a real value from a tree '''
