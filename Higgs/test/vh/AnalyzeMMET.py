@@ -23,8 +23,6 @@ base_selections = And(
     meta.tDecayFinding > 0.5,
 
     meta.e_t_SS < 0.5,
-    meta.e_t_Mass < 150,
-    meta.e_t_Mass > 30,
 
     # Vetoes
     meta.muVetoPt5 < 1,
@@ -39,7 +37,7 @@ base_selections = And(
     meta.tDZ < 0.2,
 
     # Tau cleaning
-    meta.tAntiElectronLoose > 0.5,
+    meta.tAntiElectronMVA > 0.5,
     #meta.tElecOverlap < 0.5,
     meta.tAntiMuonTight > 0.5,
     meta.tMuOverlap < 0.5,

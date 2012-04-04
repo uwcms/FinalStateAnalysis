@@ -26,8 +26,6 @@ base_selections = And(
     meta.tDecayFinding > 0.5,
 
     meta.m_t_SS < 0.5,
-    meta.m_t_Mass < 150,
-    meta.m_t_Mass > 30,
 
     # Vetoes
     meta.muVetoPt5 < 1,
