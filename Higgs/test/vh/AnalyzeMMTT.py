@@ -20,6 +20,7 @@ base_selections = And(
     build_zmm_selection(meta),
 
     # Subleading Z selection
+    meta.t1_t2_SS < 0.5,
     meta.t1Pt > 20,
     meta.t1AbsEta < 2.3,
     meta.t1DecayFinding > 0.5,
