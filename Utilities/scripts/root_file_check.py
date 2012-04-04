@@ -4,7 +4,7 @@
 
 Returns 1 if a ROOT file is missing/corrupt
 
-Usage: root_file_check.py file
+Usage: cat list_of_files.txt | root_file_check.py > clean_list_of_files.txt
 
 '''
 
@@ -12,13 +12,18 @@ import os
 import sys
 import ROOT
 
-if __name__ == "__main__":
-    file = sys.argv[1]
-    if not os.path.exists(file):
-        sys.exit(1)
+def is_gud(file):
     file = ROOT.TFile.Open(file, "READ")
     if not file:
-        sys.exit(2)
+        return False
     if file.TestBit(ROOT.TFile.kRecovered):
-        sys.exit(3)
-    sys.exit(0)
+        return False
+    return True
+
+if __name__ == "__main__":
+    for line in sys.stdin:
+        line = line.strip()
+        if is_gud(line.strip()):
+            sys.stdout.write(line + "\n")
+        else:
+            sys.stdout.write("# " + line + "\n")
