@@ -1,6 +1,6 @@
 
 # Job ID that produced the ntuples
-ntuple_id=2012-04-03-Higgs-v2
+ntuple_id=2012-04-03-v2-Higgs
 
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
@@ -197,8 +197,12 @@ data_lumicalc_files=$(patsubst %, inputs/$(ntuple_id)/%.lumicalc.csv, \
 data_lumicalc_sums=$(patsubst %, inputs/$(ntuple_id)/%.lumi.sum, \
 		    $(all_data_samples))
 
+all_lumicalc_sums=$(patsubst %, inputs/$(ntuple_id)/%.lumi.sum, $(all_samples))
+
 data_lumimasks: $(data_lumimask_files) $(data_lumicalc_files) \
   $(data_lumicalc_sums)
+
+meta_data: data_lumimasks $(all_lumicalc_sums)
 
 
 ################################################################################
@@ -368,6 +372,5 @@ fake_clean:
 inputs_clean:
 	ls -d inputs/*/ | xargs rm -r 
 
-meta_clean:
-	rm inputs/*/*json
-
+meta_clean: 
+	rm -f inputs/$(ntuple_id)/*.lumi* inputs/$(ntuple_id)/*json
