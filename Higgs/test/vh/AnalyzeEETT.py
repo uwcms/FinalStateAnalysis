@@ -56,7 +56,7 @@ hadronic_t1_id = meta.t1MediumIso > 0.5
 hadronic_t2_id = meta.t2MediumIso > 0.5
 
 
-mt_cut = meta.mMtToMET < 50
+#mt_cut = meta.t1MtToMET < 50
 
 def pu_weight(x):
     return x.puWeightData2011AB
@@ -79,10 +79,10 @@ def build_histo_list(weight_function, name_suffix=""):
         )
     return output
 
-class AnalyzeEEMT(Analyzer):
+class AnalyzeEETT(Analyzer):
 
     def __init__(self, tree, output, **kwargs):
-        super(AnalyzeEEMT, self).__init__(tree, output, **kwargs)
+        super(AnalyzeEETT, self).__init__(tree, output, **kwargs)
 
         self.define_region('tau1_pass_tau2_pass',
                            unique & base_selections & hadronic_t1_id & hadronic_t2_id,
