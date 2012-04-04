@@ -19,7 +19,6 @@ unique = And(
 )
 
 base_selections = And(
-    unique,
     # Build the leading ZMM selection
     build_zmm_selection(meta),
 
@@ -95,22 +94,22 @@ class AnalyzeMMMT(Analyzer):
                           )
 
         self.define_region('mu_pass_tau_pass',
-                           base_selections & m3_id & hadronic_tau_id,
+                           unique & base_selections & m3_id & hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('mu_fail_tau_pass',
-                           base_selections & ~m3_id & hadronic_tau_id,
+                           unique & base_selections & ~m3_id & hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('mu_pass_tau_fail',
-                           base_selections & m3_id & ~hadronic_tau_id,
+                           unique & base_selections & m3_id & ~hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
         self.define_region('mu_fail_tau_fail',
-                           base_selections & ~m3_id & ~hadronic_tau_id,
+                           unique & base_selections & ~m3_id & ~hadronic_tau_id,
                            build_histo_list(pu_weight)
                           )
 
