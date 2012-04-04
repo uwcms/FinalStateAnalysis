@@ -110,6 +110,8 @@ if __name__ == "__main__":
                       color='magenta')
         print colored('*' * 80, color='magenta')
 
+    summary = {}
+
     for row in xrange(chain.GetEntries()):
         chain.GetEntry(row)
         this_event = (chain.run, chain.lumi, chain.evt)
@@ -157,3 +159,23 @@ if __name__ == "__main__":
             print colored("** R/L/E (%i, %i, %i) #%i passes all cuts **" % 
                           (chain.run, chain.lumi, chain.evt, fsa_index),
                           color='yellow')
+            summary[this_event] = 1 + summary.get(this_event, 0)
+
+    print ""
+    print colored("  **  Summary **  ", color='blue')
+
+    color_map = {
+        0 : 'red',
+        1 : 'green',
+    }
+
+    for event, passed_count in summary.iteritems():
+        color = color_map.get(passed_count, 'yellow')
+        run_label = "R/L/E  (%i, %i, %i) " % event
+        count_label = "has %i candidate(s) passing"  % passed_count
+        # Warn if we are doubling counting events!
+        if passed_count > 1:
+            count_label = colored(count_label,  attrs=['reverse', 'underline'])
+        print colored(run_label + count_label, color=color)
+
+
