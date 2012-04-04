@@ -43,6 +43,7 @@ base_selections = And(
     meta.m3DZ < 0.2,
     meta.eDZ < 0.2,
     meta.eCiCTight.bit(1),
+    meta.eMissingHits < 1.5,
     meta.m3VBTFID > 0.5,
 )
 

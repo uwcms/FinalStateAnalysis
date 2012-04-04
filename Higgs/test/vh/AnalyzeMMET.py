@@ -42,6 +42,7 @@ base_selections = And(
     meta.tAntiMuonTight > 0.5,
     meta.tMuOverlap < 0.5,
     meta.eCiCTight.bit(1),
+    meta.eMissingHits < 0.5,
 )
 
 hadronic_tau_id = meta.tLooseIso > 0.5
