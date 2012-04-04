@@ -123,7 +123,7 @@ results/analysis/mmme/%.root: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple
 
 results/analysis/mmme/%.events: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt 
 	$(megaevents) AnalyzeMMME.py inputs/$(ntuple_id)/$*.txt  \
-	  /mmme/final/Ntuple $@ final
+	  /emmm/final/Ntuple $@ final --branches m1_m2_Mass e_m3_Mass
 
 # Run the ZH MMET analysis
 results/analysis/mmet/%.root: AnalyzeMMET.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
@@ -262,20 +262,23 @@ mmt_ana_jobs=$(patsubst %, results/analysis/mmt/%.root, \
 	$(sm_backgrounds) $(doublemu_samples))
 
 mmmt_ana_jobs=$(patsubst %, results/analysis/mmmt/%.root, \
-	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) \
-	$(patsubst %, results/analysis/mmmt/%.events, $(doublemu_samples))
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) 
+
+mmmt_events_jobs=$(patsubst %, results/analysis/mmmt/%.events, $(doublemu_samples))
 
 eemt_ana_jobs=$(patsubst %, results/analysis/eemt/%.root, \
-	$(sm_backgrounds) $(doublee_samples) $(dibosons)) \
-	$(patsubst %, results/analysis/eemt/%.events, $(doublee_samples))
+	$(sm_backgrounds) $(doublee_samples) $(dibosons)) 
+
+eemt_events_jobs=$(patsubst %, results/analysis/eemt/%.events, $(doublee_samples))
 
 eeet_ana_jobs=$(patsubst %, results/analysis/eeet/%.root, \
 	$(sm_backgrounds) $(doublee_samples) $(dibosons)) \
 	$(patsubst %, results/analysis/eeet/%.events, $(doublee_samples))
 
 mmme_ana_jobs=$(patsubst %, results/analysis/mmme/%.root, \
-	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) \
-	$(patsubst %, results/analysis/mmme/%.events, $(doublemu_samples))
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) 
+
+mmme_events_jobs=$(patsubst %, results/analysis/mmme/%.events, $(doublemu_samples))
 
 mmet_ana_jobs=$(patsubst %, results/analysis/mmet/%.root, \
 	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) \
