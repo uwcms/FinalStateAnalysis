@@ -27,7 +27,7 @@ base_selections = And(
     meta.t2AbsEta < 2.3,
     meta.t2DecayFinding > 0.5,
 
-    meta.t1_t2_SS < 0.5,
+
 
     # Vetoes
     meta.muGlbIsoVetoPt10 < 1,
@@ -51,6 +51,8 @@ base_selections = And(
     meta.t2AntiMuonTight > 0.5,
     meta.t2MuOverlap < 0.5,
 )
+
+os = meta.t1_t2_SS < 0.5
 
 hadronic_t1_id = meta.t1MediumIso > 0.5
 hadronic_t2_id = meta.t2MediumIso > 0.5
@@ -85,25 +87,18 @@ class AnalyzeEETT(Analyzer):
     def __init__(self, tree, output, **kwargs):
         super(AnalyzeEETT, self).__init__(tree, output, **kwargs)
 
-        self.define_region('tau1_pass_tau2_pass',
-                           unique & base_selections & hadronic_t1_id & hadronic_t2_id,
-                           build_histo_list(pu_weight)
-                          )
+        l1_name, l1_id = 'mu', m3_id
+        l2_name, l2_id = 'tau', hadronic_tau_id
 
-        self.define_region('tau1_fail_tau2_pass',
-                           unique & base_selections & ~hadronic_t1_id & hadronic_t2_id,
-                           build_histo_list(pu_weight)
-                          )
-
-        self.define_region('tau1_pass_tau2_fail',
-                           unique & base_selections & hadronic_t1_id & ~hadronic_t2_id,
-                           build_histo_list(pu_weight)
-                          )
-
-        self.define_region('tau1_fail_tau2_fail',
-                           unique & base_selections & ~hadronic_t1_id & ~hadronic_t2_id,
-                           build_histo_list(pu_weight)
-                          )
+        # Our categories - all combos of OS/SS, and Z2 leptons pass/fail
+        for sign_type, sign_cut in [ ('os', os), ('ss', ~os) ]:
+            for l1_label, l1_cut in [('pass', l1_id), ('fail', ~l1_id)]:
+                for l2_label, l2_cut in [('pass', l2_id), ('fail', ~l2_id)]:
+                    self.define_region(
+                        '_'.join(
+                            [sign_type, l1_name, l1_label, l2_name, l2_label]),
+                        unique & sign_cut & base_selections & l1_cut & l2_cut,
+                        build_histo_list(pu_weight)
 
         self.disable_branch('*')
         for b in meta.active_branches():
@@ -115,7 +110,7 @@ class AnalyzeEETT(Analyzer):
     def process(self, entry):
         tree = self.tree
         read = tree.GetEntry(entry)
-        self.analyze(tree)
+        self.analyze(tree, entry)
         return True
 
     def finish(self):

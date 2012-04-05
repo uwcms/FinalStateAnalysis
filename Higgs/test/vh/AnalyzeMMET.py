@@ -22,8 +22,6 @@ base_selections = And(
     meta.tAbsEta < 2.3,
     meta.tDecayFinding > 0.5,
 
-    meta.e_t_SS < 0.5,
-
     # Vetoes
     meta.muGlbIsoVetoPt10 < 1,
     meta.eVetoCicTightIso < 1,
@@ -38,12 +36,14 @@ base_selections = And(
 
     # Tau cleaning
     meta.tAntiElectronMVA > 0.5,
-    #meta.tElecOverlap < 0.5,
+    meta.tCiCTightElecOverlap < 0.5,
     meta.tAntiMuonTight > 0.5,
     meta.tMuOverlap < 0.5,
     meta.eCiCTight.bit(1),
     meta.eMissingHits < 0.5,
 )
+
+os = meta.e_t_SS < 0.5
 
 hadronic_tau_id = meta.tLooseIso > 0.5
 
@@ -51,7 +51,7 @@ e_id = And(
     meta.eRelPFIsoDB < 0.10,
 )
 
-final = unique & base_selections & e_id & hadronic_tau_id
+final = unique & os & base_selections & e_id & hadronic_tau_id
 
 mt_cut = meta.eMtToMET < 50
 
@@ -81,25 +81,19 @@ class AnalyzeMMET(Analyzer):
     def __init__(self, tree, output, **kwargs):
         super(AnalyzeMMET, self).__init__(tree, output, **kwargs)
 
-        self.define_region('e_pass_tau_pass',
-                           unique & base_selections & e_id & hadronic_tau_id,
-                           build_histo_list(pu_weight)
-                          )
+        l1_name, l1_id = 'e', e_id
+        l2_name, l2_id = 'tau', hadronic_tau_id
 
-        self.define_region('e_fail_tau_pass',
-                           unique & base_selections & ~e_id & hadronic_tau_id,
-                           build_histo_list(pu_weight)
-                          )
-
-        self.define_region('e_pass_tau_fail',
-                           unique & base_selections & e_id & ~hadronic_tau_id,
-                           build_histo_list(pu_weight)
-                          )
-
-        self.define_region('e_fail_tau_fail',
-                           unique & base_selections & ~e_id & ~hadronic_tau_id,
-                           build_histo_list(pu_weight)
-                          )
+        # Our categories - all combos of OS/SS, and Z2 leptons pass/fail
+        for sign_type, sign_cut in [ ('os', os), ('ss', ~os) ]:
+            for l1_label, l1_cut in [('pass', l1_id), ('fail', ~l1_id)]:
+                for l2_label, l2_cut in [('pass', l2_id), ('fail', ~l2_id)]:
+                    self.define_region(
+                        '_'.join(
+                            [sign_type, l1_name, l1_label, l2_name, l2_label]),
+                        unique & sign_cut & base_selections & l1_cut & l2_cut,
+                        build_histo_list(pu_weight)
+                    )
 
         self.disable_branch('*')
         for b in meta.active_branches():
@@ -111,7 +105,7 @@ class AnalyzeMMET(Analyzer):
     def process(self, entry):
         tree = self.tree
         read = tree.GetEntry(entry)
-        self.analyze(tree)
+        self.analyze(tree, entry)
         return True
 
     def finish(self):

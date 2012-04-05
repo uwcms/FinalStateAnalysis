@@ -20,7 +20,6 @@ base_selections = And(
     build_zmm_selection(meta),
 
     # Subleading Z selection
-    meta.t1_t2_SS < 0.5,
     meta.t1Pt > 20,
     meta.t1AbsEta < 2.3,
     meta.t1DecayFinding > 0.5,
@@ -53,11 +52,13 @@ base_selections = And(
     meta.t2MuOverlap < 0.5,
 )
 
+os = meta.t1_t2_SS < 0.5
+
 t1_id = meta.t1MediumIso > 0.5
 
 t2_id = meta.t2MediumIso > 0.5
 
-final = unique & base_selections & t1_id & t2_id
+final = unique & os & base_selections & t1_id & t2_id
 
 def pu_weight(x):
     return x.puWeightData2011AB
@@ -85,25 +86,19 @@ class AnalyzeMMTT(Analyzer):
     def __init__(self, tree, output, **kwargs):
         super(AnalyzeMMTT, self).__init__(tree, output, **kwargs)
 
-        self.define_region('t1_pass_t2_pass',
-                           unique & base_selections & t1_id & t2_id,
-                           build_histo_list(pu_weight)
-                          )
+        l1_name, l1_id = 't1', t1_id
+        l2_name, l2_id = 't2', t2_id
 
-        self.define_region('t1_fail_t2_pass',
-                           unique & base_selections & ~t1_id & t2_id,
-                           build_histo_list(pu_weight)
-                          )
-
-        self.define_region('t1_pass_t2_fail',
-                           unique & base_selections & t1_id & ~t2_id,
-                           build_histo_list(pu_weight)
-                          )
-
-        self.define_region('t1_fail_t2_fail',
-                           unique & base_selections & ~t1_id & ~t2_id,
-                           build_histo_list(pu_weight)
-                          )
+        # Our categories - all combos of OS/SS, and Z2 leptons pass/fail
+        for sign_type, sign_cut in [ ('os', os), ('ss', ~os) ]:
+            for l1_label, l1_cut in [('pass', l1_id), ('fail', ~l1_id)]:
+                for l2_label, l2_cut in [('pass', l2_id), ('fail', ~l2_id)]:
+                    self.define_region(
+                        '_'.join(
+                            [sign_type, l1_name, l1_label, l2_name, l2_label]),
+                        unique & sign_cut & base_selections & l1_cut & l2_cut,
+                        build_histo_list(pu_weight)
+                    )
 
         self.disable_branch('*')
         for b in meta.active_branches():
@@ -115,7 +110,7 @@ class AnalyzeMMTT(Analyzer):
     def process(self, entry):
         tree = self.tree
         read = tree.GetEntry(entry)
-        self.analyze(tree)
+        self.analyze(tree, entry)
         return True
 
     def finish(self):
