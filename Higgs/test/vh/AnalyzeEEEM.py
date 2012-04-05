@@ -42,7 +42,10 @@ base_selections = And(
     meta.mDZ < 0.2,
     meta.e3CiCTight.bit(1) > 0.5,
     meta.e3MissingHits < 1.5,
-    meta.mVBTFID > 0.5,
+    #meta.mVBTFID > 0.5,
+    meta.mIsGlobal > 0.5,
+    meta.mIsTracker > 0.5,
+    meta.mGlbTrkHits > 10.5,
 )
 
 os = meta.e3_m_SS < 0.5
@@ -84,7 +87,7 @@ class AnalyzeEEEM(Analyzer):
     def __init__(self, tree, output, **kwargs):
         super(AnalyzeEEEM, self).__init__(tree, output, **kwargs)
 
-        l1_name, l1_id = 'mu', mu_id
+        l1_name, l1_id = 'mu', m_id
         l2_name, l2_id = 'e', e3_id
 
         # Our categories - all combos of OS/SS, and Z2 leptons pass/fail

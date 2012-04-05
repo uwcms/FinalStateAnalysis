@@ -25,7 +25,7 @@ base_selections = And(
     # Vetoes
     meta.muGlbIsoVetoPt10 < 1,
     meta.eVetoCicTightIso < 1,
-    meta.bjetVeto < 1,
+    #meta.bjetVeto < 1,
     meta.tauVetoPt20 < 1,
 
     # DZ cuts

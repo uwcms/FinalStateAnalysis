@@ -29,7 +29,7 @@ base_selections = And(
     # Vetoes
     meta.muGlbIsoVetoPt10 < 1,
     meta.eVetoCicTightIso < 1,
-    meta.bjetVeto < 1,
+    #meta.bjetVeto < 1,
     meta.tauVetoPt20 < 1,
 
     # DZ cuts
@@ -43,7 +43,10 @@ base_selections = And(
     #meta.tElecOverlap < 0.5,
     meta.tAntiMuonTight > 0.5,
     meta.tMuOverlap < 0.5,
-    meta.mVBTFID > 0.5,
+    #meta.mVBTFID > 0.5,
+    meta.mIsGlobal > 0.5,
+    meta.mIsTracker > 0.5,
+    meta.mGlbTrkHits > 10.5,
 )
 
 os = meta.m_t_SS < 0.5

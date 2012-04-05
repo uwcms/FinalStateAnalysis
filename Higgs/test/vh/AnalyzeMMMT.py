@@ -33,7 +33,7 @@ base_selections = And(
     # Vetoes
     meta.muGlbIsoVetoPt10 < 1,
     meta.eVetoCicTightIso < 1,
-    meta.bjetVeto < 1,
+    #meta.bjetVeto < 1,
     meta.tauVetoPt20 < 1,
 
     # DZ cuts
@@ -47,7 +47,10 @@ base_selections = And(
     #meta.tElecOverlap < 0.5,
     meta.tAntiMuonTight > 0.5,
     #meta.tMuOverlap < 0.5,
-    meta.m3VBTFID > 0.5,
+    #meta.m3VBTFID > 0.5,
+    meta.m3IsGlobal > 0.5,
+    meta.m3IsTracker > 0.5,
+    meta.m3GlbTrkHits > 10.5,
 )
 
 hadronic_tau_id = meta.tLooseIso > 0.5
@@ -55,6 +58,8 @@ hadronic_tau_id = meta.tLooseIso > 0.5
 m3_id = And(
     meta.m3RelPFIsoDB < 0.15,
 )
+
+not_m3_id = ~m3_id
 
 os = meta.m3_t_SS < 0.5
 
