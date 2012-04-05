@@ -59,7 +59,7 @@ if __name__ == "__main__":
         log.info("Creating output directory: %s", args.output)
         os.makedirs(args.output)
 
-    plot_list = open(os.path.join(args.output, 'plot_list.txt'), 'w')
+    plots_written = []
 
     with io.open(layout_filename, 'r') as layout_file:
         log.info("Plotting all histograms")
@@ -83,5 +83,9 @@ if __name__ == "__main__":
                     args.output,
                     path.replace('/', '_') + '_' + histo + '.pdf'
                 )
-                plot_list.write(plot_filename + '\n')
+                plots_written.append(plot_filename)
                 canvas.SaveAs(plot_filename)
+
+    with open(os.path.join(args.output, 'plot_list.txt'), 'w') as plot_list:
+        for plot_filename in plots_written:
+            plot_list.write(plot_filename + '\n')
