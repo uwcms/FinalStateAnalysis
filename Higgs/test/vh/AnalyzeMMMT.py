@@ -30,8 +30,6 @@ base_selections = And(
     meta.tAbsEta < 2.3,
     meta.tDecayFinding > 0.5,
 
-    meta.m3_t_SS < 0.5,
-
     # Vetoes
     meta.muVetoPt5 < 1,
     meta.eVetoWP95Iso < 1,
@@ -58,7 +56,9 @@ m3_id = And(
     meta.m3RelPFIsoDB < 0.15,
 )
 
-final = unique & base_selections & m3_id & hadronic_tau_id
+os = meta.m3_t_SS < 0.5
+
+final = unique & base_selections & os & m3_id & hadronic_tau_id
 
 mt_cut = meta.m3MtToMET < 50
 
@@ -88,30 +88,19 @@ class AnalyzeMMMT(Analyzer):
     def __init__(self, tree, output, **kwargs):
         super(AnalyzeMMMT, self).__init__(tree, output, **kwargs)
 
-        self.define_region('unique',
-                           unique,
-                           build_histo_list(pu_weight)
-                          )
+        l1_name, l1_id = 'mu', m3_id
+        l2_name, l2_id = 'tau', hadronic_tau_id
 
-        self.define_region('mu_pass_tau_pass',
-                           unique & base_selections & m3_id & hadronic_tau_id,
-                           build_histo_list(pu_weight)
-                          )
-
-        self.define_region('mu_fail_tau_pass',
-                           unique & base_selections & ~m3_id & hadronic_tau_id,
-                           build_histo_list(pu_weight)
-                          )
-
-        self.define_region('mu_pass_tau_fail',
-                           unique & base_selections & m3_id & ~hadronic_tau_id,
-                           build_histo_list(pu_weight)
-                          )
-
-        self.define_region('mu_fail_tau_fail',
-                           unique & base_selections & ~m3_id & ~hadronic_tau_id,
-                           build_histo_list(pu_weight)
-                          )
+        # Our categories - all combos of OS/SS, and Z2 leptons pass/fail
+        for sign_type, sign_cut in [ ('os', os), ('ss', ~os) ]:
+            for l1_label, l1_cut in [('pass', l1_id), ('fail', ~l1_id)]:
+                for l2_label, l2_cut in [('pass', l2_id), ('fail', ~l2_id)]:
+                    self.define_region(
+                        '_'.join(
+                            [sign_type, l1_name, l1_label, l2_name, l2_label]),
+                        unique & sign_cut & base_selections & l1_cut & l2_cut,
+                        build_histo_list(pu_weight)
+                    )
 
         self.disable_branch('*')
         for b in meta.active_branches():
@@ -123,7 +112,7 @@ class AnalyzeMMMT(Analyzer):
     def process(self, entry):
         tree = self.tree
         read = tree.GetEntry(entry)
-        self.analyze(tree)
+        self.analyze(tree, entry)
         return True
 
     def finish(self):
