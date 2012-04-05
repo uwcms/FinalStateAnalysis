@@ -57,7 +57,7 @@ os = meta.t1_t2_SS < 0.5
 hadronic_t1_id = meta.t1MediumIso > 0.5
 hadronic_t2_id = meta.t2MediumIso > 0.5
 
-final = unique & base_selections & hadronic_t1_id & hadronic_t2_id
+final = unique & os & base_selections & hadronic_t1_id & hadronic_t2_id
 
 #mt_cut = meta.t1MtToMET < 50
 
@@ -87,8 +87,8 @@ class AnalyzeEETT(Analyzer):
     def __init__(self, tree, output, **kwargs):
         super(AnalyzeEETT, self).__init__(tree, output, **kwargs)
 
-        l1_name, l1_id = 'mu', m3_id
-        l2_name, l2_id = 'tau', hadronic_tau_id
+        l1_name, l1_id = 't1', hadronic_t1_id
+        l2_name, l2_id = 't2', hadronic_t2_id
 
         # Our categories - all combos of OS/SS, and Z2 leptons pass/fail
         for sign_type, sign_cut in [ ('os', os), ('ss', ~os) ]:
