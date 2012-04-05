@@ -99,6 +99,7 @@ class AnalyzeEETT(Analyzer):
                             [sign_type, l1_name, l1_label, l2_name, l2_label]),
                         unique & sign_cut & base_selections & l1_cut & l2_cut,
                         build_histo_list(pu_weight)
+                    )
 
         self.disable_branch('*')
         for b in meta.active_branches():
