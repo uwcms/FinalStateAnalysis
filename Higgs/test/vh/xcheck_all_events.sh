@@ -27,12 +27,12 @@ echo "Debugging EETT"
 
 $megadebug AnalyzeEETT.py zh_events_ntuple.txt /eett/final/Ntuple \
   unique- base_selections+  hadronic_t1_id hadronic_t2_id  \
-  --events 178100,335,455090581
+  --events 178100,335,455090581 178871,535,721402028
 
 echo "Debugging EEET"
 
 $megadebug AnalyzeEEET.py zh_events_ntuple.txt /eeet/final/Ntuple \
   unique- base_selections+  e3_id  hadronic_tau_id \
-  --events 172252,40,47105541 177718,469,736335702
+  --events 172252,40,47105541 177718,469,736335702 163659,355,269046597
 
 # Don't need to do MMTT
