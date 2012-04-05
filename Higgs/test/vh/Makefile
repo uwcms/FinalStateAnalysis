@@ -1,6 +1,6 @@
 
 # Job ID that produced the ntuples
-ntuple_id=2012-04-03-v2-Higgs
+ntuple_id=2012-04-04-Higgs
 
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
@@ -123,7 +123,8 @@ results/analysis/eeem/%.root: AnalyzeEEEM.py zh_zee_selection.py inputs/$(ntuple
 
 results/analysis/eeem/%.events: AnalyzeEEEM.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt 
 	$(megaevents) AnalyzeEEEM.py inputs/$(ntuple_id)/$*.txt  \
-	  /eeem/final/Ntuple $@ final --branches e1_e2_Mass e3_m_Mass
+	  /eeem/final/Ntuple $@ final --branches e1_e2_Mass e3_m_Mass eVetoWP95Iso  \
+	  muVetoPt5 
 
 # Run the ZH MMME analysis
 results/analysis/mmme/%.root: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
