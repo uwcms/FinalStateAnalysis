@@ -63,6 +63,7 @@ if __name__ == "__main__":
             for histo in histos:
                 data_histo = data_view.Get(os.path.join(path, histo))
                 mc_histo = mc_view.Get(os.path.join(path, histo))
+                mc_histo.SetTitle("data events = %i" % data_histo.Integral())
                 mc_histo.Draw()
                 data_histo.Draw('same')
                 mc_histo.SetMaximum(1.2*max(
