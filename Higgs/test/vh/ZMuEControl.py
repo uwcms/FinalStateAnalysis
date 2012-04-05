@@ -17,8 +17,8 @@ base_selections = [
     meta.muonWWID > 0.5,
     meta.electronMITID > 0.5,
 
-    #meta.muVetoPt5 < 1,
-    #meta.eVetoWP95Iso < 1,
+    #meta.muGlbIsoVetoPt10 < 1,
+    #meta.eVetoCicTightIso < 1,
     #meta.bjetVeto < 1,
     #meta.tauVetoPt20 < 1,
     meta.muon_electron_SS < 0.5,

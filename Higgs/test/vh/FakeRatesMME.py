@@ -31,8 +31,8 @@ base_selections = [
     meta.muon2AbsEta < 2.1,
 
     # Make sure this isn't a ZZ event
-    meta.muVetoPt5 < 0.5,
-    meta.eVetoWP95Iso < 1,
+    meta.muGlbIsoVetoPt10 < 0.5,
+    meta.eVetoCicTightIso < 1,
     meta.bjetVeto < 1,
     meta.tauVetoPt20 < 1,
 

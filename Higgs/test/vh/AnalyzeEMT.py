@@ -18,8 +18,8 @@ base_selections = [
     meta.electronAbsEta < 2.5,
 
     meta.electronMuOverlap < 1,
-    meta.muVetoPt5 < 1,
-    meta.eVetoWP95Iso < 1,
+    meta.muGlbIsoVetoPt10 < 1,
+    meta.eVetoCicTightIso < 1,
     meta.bjetVeto < 1,
     meta.tauVetoPt20 < 1,
 

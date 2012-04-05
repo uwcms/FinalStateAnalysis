@@ -21,8 +21,8 @@ base_selections = [
     meta.muonAbsEta < 2.1,
 
     # Make sure this isn't a ZZ event
-    meta.muVetoPt5 < 0.5,
-    meta.eVetoWP95Iso < 1,
+    meta.muGlbIsoVetoPt10 < 0.5,
+    meta.eVetoCicTightIso < 1,
     meta.bjetVeto < 1,
     meta.tauVetoPt20 < 1,
 
@@ -47,14 +47,17 @@ variables = [
     ('electronPt', 'Electron Pt', 60, 60, 120),
 ]
 
+
 class FakeRatesME(MegaBase):
     def __init__(self, tree, output, **kwargs):
         super(FakeRatesME, self).__init__(tree, output, **kwargs)
         for var in variables:
-            self.book('wjets/pass', *var)
-            self.book('wjets/all', *var)
-            self.book('qcd/pass', *var)
-            self.book('qcd/all', *var)
+            for pt in ['pt10', 'pt20']:
+                for id_type = ['cic_iso15', 'mit_iso15']:
+                    self.book('wjets/%s/%s/pass', *var)
+                    self.book('wjets/%s/all', *var)
+                    self.book('qcd/%s/%s/pass', *var)
+                    self.book('qcd/%s/%s/all', *var)
 
     def process(self, entry):
         tree = self.tree
