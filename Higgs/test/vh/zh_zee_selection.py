@@ -31,8 +31,8 @@ def build_zee_selection(meta_tree):
         meta.e2CiCTight.bit(1),
 
         # Missing hits
-        meta.e1MissingHits < 0.5,
-        meta.e2MissingHits < 0.5,
+        meta.e1MissingHits < 1.5,
+        meta.e2MissingHits < 1.5,
 
         meta.e1AbsEta < 2.5,
         meta.e2AbsEta < 2.5,
