@@ -141,9 +141,21 @@ class Selection(object):
     def __init__(self, selection, repr="Selection"):
         self.functor = selection
         self.repr = repr
+        self.last_result = None
+        self.last_entry = None
 
     def __call__(self, x):
         return self.functor(x)
+
+    def cached_select(self, tree, entry):
+        ''' Same as call, but caches the result from the last entry '''
+        if entry == self.last_entry:
+            return self.last_result
+        else:
+            result = self(tree)
+            self.last_entry = entry
+            self.last_result = result
+            return result
 
     def __repr__(self):
         return self.repr

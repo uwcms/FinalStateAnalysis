@@ -25,10 +25,10 @@ class Analyzer(MegaBase):
         events = set([])
         self.regions[region_name] = (selection, booked_histograms, events)
 
-    def analyze(self, tree):
+    def analyze(self, tree, entry):
         for region, (selection, histograms, events) in self.regions.iteritems():
             # Check if it passes the selection
-            if not selection(tree):
+            if not selection.cached_select(tree, entry):
                 continue
             events.add((tree.run, tree.lumi, tree.evt))
             # It passed, fill the histograms
