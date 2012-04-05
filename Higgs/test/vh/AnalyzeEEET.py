@@ -124,7 +124,7 @@ class AnalyzeEEET(Analyzer):
     def process(self, entry):
         tree = self.tree
         read = tree.GetEntry(entry)
-        self.analyze(tree)
+        self.analyze(tree, entry)
         return True
 
     def finish(self):
