@@ -17,7 +17,11 @@ def is_gud(file):
     if not file:
         return False
     if file.TestBit(ROOT.TFile.kRecovered):
+        file.Close()
+        file.Delete()
         return False
+    file.Close()
+    file.Delete()
     return True
 
 if __name__ == "__main__":
