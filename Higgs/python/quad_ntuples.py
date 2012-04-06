@@ -42,6 +42,7 @@ _tau_template = PSet(
     templates.cleaning.overlaps,
     templates.taus.info,
     templates.taus.id,
+    templates.topology.mtToMET,
 )
 
 _muon_template = PSet(
