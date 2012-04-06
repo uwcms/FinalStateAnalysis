@@ -22,6 +22,8 @@ pairs = PSet(
     object1_object2_DR = 'dR({object1_idx}, {object2_idx})',
     object1_object2_DPhi = 'dPhi({object1_idx}, {object2_idx})',
     object1_object2_SS = 'likeSigned({object1_idx}, {object2_idx})',
+    object1_object2_PZeta = 'pZeta({object1_idx}, {object2_idx})',
+    object1_object2_PZetaVis = 'pZetaVis({object1_idx}, {object2_idx})',
 )
 
 finalstate = PSet(
