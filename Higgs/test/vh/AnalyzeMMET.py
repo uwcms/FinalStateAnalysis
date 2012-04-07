@@ -100,6 +100,7 @@ class AnalyzeMMET(Analyzer):
             self.enable_branch(b)
         self.enable_branch('run')
         self.enable_branch('evt')
+        self.enable_branch('e_t_Mass')
         self.enable_branch('puWeightData2011AB')
 
     def process(self, entry):

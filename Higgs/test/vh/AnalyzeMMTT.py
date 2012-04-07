@@ -105,6 +105,7 @@ class AnalyzeMMTT(Analyzer):
             self.enable_branch(b)
         self.enable_branch('run')
         self.enable_branch('evt')
+        self.enable_branch('t1_t2_Mass')
         self.enable_branch('puWeightData2011AB')
 
     def process(self, entry):
