@@ -32,6 +32,7 @@ _common_template = PSet(
     templates.trigger.doublee,
     templates.trigger.isomu,
     templates.trigger.singlemu,
+    rapidityGap = 'abs(subcand(0, 1).get.eta - subcand(2, 3).get.eta)',
 )
 
 # Define the branch templates for different object types.
