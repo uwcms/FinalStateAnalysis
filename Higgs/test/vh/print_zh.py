@@ -73,21 +73,23 @@ if __name__ == "__main__":
             total_zz += zz
             total_zj += zjets
             total_obs += data
+            total_bkg = zjets + wz + zz
             table.add_row([
                 channel,
-                data,
-                wz + zz + zjets,
-                zjets,
-                wz,
-                zz
+                '%0.f' % data,
+                '%0.2f +/- %0.2f' % (total_bkg.nominal_value, total_bkg.std_dev()),
+                '%0.2f +/- %0.2f' % (zjets.nominal_value, zjets.std_dev()),
+                '%0.2f' % wz,
+                '%0.2f' % zz
             ])
+        total_bkg = total_zj + total_wz + total_zz
         table.add_row([
             'all',
-            total_obs,
-            total_zj + total_wz + total_zz,
-            total_zj,
-            total_wz,
-            total_zz
+            '%0.f' % total_obs,
+            '%0.2f +/- %0.2f' % (total_bkg.nominal_value, total_bkg.std_dev()),
+            '%0.2f +/- %0.2f' % (total_zj.nominal_value, total_zj.std_dev()),
+            '%0.2f' % total_wz,
+            '%0.2f' % total_zz
         ])
 
         print table
