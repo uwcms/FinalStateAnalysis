@@ -73,11 +73,12 @@ if __name__ == "__main__":
 
     log.info("Building info about region yields for all samples")
     for sample in [args.pd, 'Zjets', 'WZ_pythia', 'ZZ']:
-        if sample == args.pd:
-            sample = 'data'
+        sample_name = sample
+        if sample_name == args.pd:
+            sample_name = 'data'
         log.info("Getting yields for %s", sample)
         sample_info = {}
-        yields[sample] = sample_info
+        yields[sample_name] = sample_info
         for is_os in ['os', 'ss']:
             for l1_pass in ['pass', 'fail']:
                 for l2_pass in ['pass', 'fail']:
