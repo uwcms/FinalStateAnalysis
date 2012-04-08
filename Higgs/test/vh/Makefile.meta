@@ -1,0 +1,57 @@
+ntuple_id=REPLACE
+
+include Makefile.inc
+
+################################################################################
+## Extracting meta information (number of events processed) ####################
+################################################################################
+
+inputs/$(ntuple_id)/data%.meta.json: inputs/$(ntuple_id)/data%.txt
+	extract_meta_info.py $< /ee/metaInfo $@  --lumimask
+
+inputs/$(ntuple_id)/%.meta.json: inputs/$(ntuple_id)/%.txt
+	extract_meta_info.py $< /ee/metaInfo $@ 
+
+# List of meta files for every sample
+all_meta_info=$(patsubst %, inputs/$(ntuple_id)/%.meta.json, $(all_samples))
+
+inputs/$(ntuple_id)/all_samples.json: $(all_meta_info)
+	./merge_meta_info.py $@ $^
+
+# For data, get the lumi mask from the file so we can run lumi calc on it.
+inputs/$(ntuple_id)/data%.lumimask.json: inputs/$(ntuple_id)/data%.meta.json
+	cat $< | dump_lumimask.py > $@
+
+# Define which samples we need a data mask for
+data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
+		    $(all_data_samples))
+
+# Run lumi calc on the lumi masks from the above step.
+inputs/$(ntuple_id)/%.lumicalc.csv: inputs/$(ntuple_id)/%.lumimask.json
+	pixelLumiCalc.py overview -i $< -o $@
+
+# For data, get the actual interesting stuff from the pixelLumiCalc output barf
+inputs/$(ntuple_id)/data%.lumi.sum: inputs/$(ntuple_id)/data%.lumicalc.csv
+	python $(fsa)/Utilities/python/lumicalc_parser.py $< > $@
+
+# For MC, figure out what the effective int. lumi. is,
+# using the number of processed events and the x-section.
+inputs/$(ntuple_id)/%.lumi.sum: inputs/$(ntuple_id)/%.meta.json
+	get_mc_lumi.py $* `cat $< | extract_json.py n_evts` > $@
+
+data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
+		    $(all_data_samples))
+
+data_lumicalc_files=$(patsubst %, inputs/$(ntuple_id)/%.lumicalc.csv, \
+		    $(all_data_samples))
+
+data_lumicalc_sums=$(patsubst %, inputs/$(ntuple_id)/%.lumi.sum, \
+		    $(all_data_samples))
+
+all_lumicalc_sums=$(patsubst %, inputs/$(ntuple_id)/%.lumi.sum, $(all_samples))
+
+data_lumimasks: $(data_lumimask_files) $(data_lumicalc_files) \
+  $(data_lumicalc_sums)
+
+meta_data: data_lumimasks $(all_lumicalc_sums)
+
