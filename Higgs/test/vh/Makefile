@@ -15,85 +15,101 @@ meta_data:
 
 # Z->mumu + X
 zh_mmmt: 
-	export channel=mmmt
-	export ntuple_path=mmmt
-	export analyzer=AnalyzeMMMT.py
-	export leading_z_selector=zh_zmm_selection.py
-	export primd=DoubleMu
-	# Monitoring branches
-	export branches=m1_m2_Mass m3_t_Mass
-	make -f Makefile.zh histograms plots
+	make -f Makefile.zh \
+	  channel=mmmt \
+	  ntuple_path=mmmt \
+	  analyzer=AnalyzeMMMT.py \
+	  leading_z_selector=zh_zmm_selection.py \
+	  primd=DoubleMu \
+	  l1name=mu \
+	  l2name=tau \
+	  branches="m1_m2_Mass m3_t_Mass" \
+	  histograms plots
 
 zh_mmet: 
-	export channel=mmet
-	export ntuple_path=emmt
-	export analyzer=AnalyzeMMET.py
-	export leading_z_selector=zh_zmm_selection.py
-	export primd=DoubleMu
-	# Monitoring branches
-	export branches=m1_m2_Mass e_t_Mass
-	make -f Makefile.zh histograms plots events
+	make -f Makefile.zh \
+	  channel=mmet \
+	  ntuple_path=emmt \
+	  analyzer=AnalyzeMMET.py \
+	  leading_z_selector=zh_zmm_selection.py \
+	  primd=DoubleMu \
+	  l1name=e \
+	  l2name=tau \
+	  branches="m1_m2_Mass e_t_Mass" \
+	  histograms plots events
 
 zh_mmme: 
-	export channel=mmme
-	export ntuple_path=emmm
-	export analyzer=AnalyzeMMME.py
-	export leading_z_selector=zh_zmm_selection.py
-	export primd=DoubleMu
-	# Monitoring branches
-	export branches=m1_m2_Mass e_m3_Mass
-	make -f Makefile.zh histograms plots events
+	make -f Makefile.zh \
+	  channel=mmme \
+	  ntuple_path=emmm \
+	  analyzer=AnalyzeMMME.py \
+	  leading_z_selector=zh_zmm_selection.py \
+	  primd=DoubleMu \
+	  l1name=mu \
+	  l2name=e \
+	  branches="m1_m2_Mass e_m3_Mass" \
+	  histograms plots events
 
 zh_mmtt: 
-	export channel=mmtt
-	export ntuple_path=mmtt
-	export analyzer=AnalyzeMMTT.py
-	export leading_z_selector=zh_zmm_selection.py
-	export primd=DoubleMu
-	# Monitoring branches
-	export branches=m1_m2_Mass t1_t2_Mass
-	make -f Makefile.zh histograms plots events
+	make -f Makefile.zh \
+	  channel=mmtt \
+	  ntuple_path=mmtt \
+	  analyzer=AnalyzeMMTT.py \
+	  leading_z_selector=zh_zmm_selection.py \
+	  primd=DoubleMu \
+	  l1name=t1 \
+	  l2name=t2 \
+	  branches="m1_m2_Mass t1_t2_Mass" \
+	  histograms plots events
 
 # Z->ee + X
 zh_eemt: 
-	export channel=eemt
-	export ntuple_path=eemt
-	export analyzer=AnalyzeEEMT.py
-	export leading_z_selector=zh_zee_selection.py
-	export primd=DoubleElectron
-	# Monitoring branches
-	export branches=e1_e2_Mass m_t_Mass
-	make -f Makefile.zh histograms plots
+	make -f Makefile.zh \
+	  channel=eemt \
+	  ntuple_path=eemt \
+	  analyzer=AnalyzeEEMT.py \
+	  leading_z_selector=zh_zee_selection.py \
+	  primd=DoubleElectron \
+	  l1name=mu \
+	  l2name=tau \
+	  branches="e1_e2_Mass m_t_Mass" \
+	  histograms plots
 
 zh_eeet: 
-	export channel=eeet
-	export ntuple_path=emmt
-	export analyzer=AnalyzeEEET.py
-	export leading_z_selector=zh_zee_selection.py
-	export primd=DoubleElectron
-	# Monitoring branches
-	export branches=e1_e2_Mass e3_t_Mass
-	make -f Makefile.zh histograms plots events
+	make -f Makefile.zh \
+	  channel=eeet \
+	  ntuple_path=eeet \
+	  analyzer=AnalyzeEEET.py \
+	  leading_z_selector=zh_zee_selection.py \
+	  primd=DoubleElectron \
+	  l1name=e \
+	  l2name=tau \
+	  branches=""e1_e2_Mass e3_t_Mass"" \
+	  histograms plots events
 
 zh_eeem: 
-	export channel=eeem
-	export ntuple_path=eeem
-	export analyzer=AnalyzeEEEM.py
-	export leading_z_selector=zh_zee_selection.py
-	export primd=DoubleElectron
-	# Monitoring branches
-	export branches=e1_e2_Mass e3_m_Mass
-	make -f Makefile.zh histograms plots events
+	make -f Makefile.zh \
+	  channel=eeem \
+	  ntuple_path=eeem \
+	  analyzer=AnalyzeEEEM.py \
+	  leading_z_selector=zh_zee_selection.py \
+	  primd=DoubleElectron \
+	  l1name=mu \
+	  l2name=e \
+	  branches="e1_e2_Mass e3_m_Mass" \
+	  histograms plots events
 
 zh_eett: 
-	export channel=eett
-	export ntuple_path=mmtt
-	export analyzer=AnalyzeEETT.py
-	export leading_z_selector=zh_zee_selection.py
-	export primd=DoubleElectron
-	# Monitoring branches
-	export branches=e1_e2_Mass t1_t2_Mass
-	make -f Makefile.zh histograms plots events
+	make -f Makefile.zh \
+	  channel=eett \
+	  ntuple_path=eett \
+	  analyzer=AnalyzeEETT.py \
+	  leading_z_selector=zh_zee_selection.py \
+	  primd=DoubleElectron \
+	  l1name=t1 \
+	  l2name=t2 \
+	  branches="e1_e2_Mass t1_t2_Mass" \
+	  histograms plots events
 
 # Do all ZH analysis
 zh: zh_mmtt zh_mmet zh_mmme zh_mmmt zh_eett zh_eeet zh_eeem zh_eemt 

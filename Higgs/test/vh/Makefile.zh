@@ -6,25 +6,25 @@
 # Common definitions of data samples, analyzer locations.
 include Makefile.inc
 
-channel=mmmt
+#channel?=mmmt
 
-ntuple_path=mmmt
+#ntuple_path?=mmmt
 
-analyzer=AnalyzeMMMT.py
+#analyzer?=AnalyzeMMMT.py
 
-leading_z_selector=zh_zmm_selection.py
+#leading_z_selector?=zh_zmm_selection.py
 
-primd=DoubleMu
+#primd?=DoubleMu
 
-# Names of leptons used in histogram output
-l1name=mu
-l2name=tau
+## Names of leptons used in histogram output
+#l1name?=mu
+#l2name?=tau
 
-# Monitoring branches
-branches=m1_m2_Mass m3_t_Mass
+## Monitoring branches
+#branches?=m1_m2_Mass m3_t_Mass
 
 # Weight function files needed to produce histograms
-macro_weight_files=corrections_C.so fake_rates_C.so
+macro_weight_files?=corrections_C.so fake_rates_C.so
 
 ################################################################################
 #### Which samples are needed for this channel #################################
@@ -82,7 +82,7 @@ results/analysis/$(channel)/zjet_bkgs.json: estimate_zh_zjets_bkg.py $(histogram
 #### Rule to make generic plots ################################################
 ################################################################################
 
-plots/zh/$(channel)/plot_list.txt: $(histogram_jobs) render_zh_plots.py
+plots/zh/$(channel)/plot_list.txt: $(histogram_jobs) render_zh_plots.py results/analysis/$(channel)/zjet_bkgs.json
 	./render_zh_plots.py plots/zh/$(channel)/ data_$(primd) $(histogram_jobs)
 
 ################################################################################
@@ -92,9 +92,9 @@ plots/zh/$(channel)/plot_list.txt: $(histogram_jobs) render_zh_plots.py
 
 events: $(events_jobs)
 
-histograms: $(histogram_jobs)
+histograms: $(histogram_jobs) 
 
-plots: plots/zh/$(channel)/plot_list.txt
+plots: plots/zh/$(channel)/plot_list.txt results/analysis/$(channel)/zjet_bkgs.json
 
 # Cleaning up
 
