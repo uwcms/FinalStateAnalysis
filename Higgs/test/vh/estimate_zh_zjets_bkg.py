@@ -35,6 +35,8 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('channel',
+                        help='Name of channel - embedded into output')
     parser.add_argument('pd', help='Primary dataset')
     parser.add_argument('l1name', help='Name of first lepton')
     parser.add_argument('l2name', help='Name of first lepton')
@@ -63,7 +65,11 @@ if __name__ == "__main__":
 
         return data_views[sample]['view'].Get(output).Integral()
 
-    yields = {}
+    yields = {
+        'channel' : args.channel,
+        'l1name' : args.l1name,
+        'l2name' : args.l2name,
+    }
 
     log.info("Building info about region yields for all samples")
     for sample in [args.pd, 'Zjets', 'WZ_pythia', 'ZZ']:

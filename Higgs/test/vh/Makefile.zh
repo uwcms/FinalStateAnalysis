@@ -74,8 +74,10 @@ events_jobs=$(patsubst %, results/analysis/$(channel)/%.events, \
 #### Rule to get estimate Z+2jet background ####################################
 ################################################################################
 
-results/analysis/$(channel)/zjet_bkgs.json: estimate_zh_zjets_bkg.py $(histogram_jobs) 
-	./estimate_zh_zjets_bkg.py data_$(primd) $(l1name) $(l2name) \
+results/analysis/$(channel)/zjet_bkgs.json: estimate_zh_zjets_bkg.py \
+  $(histogram_jobs) 
+	./estimate_zh_zjets_bkg.py $(channel) data_$(primd) \
+	  $(l1name) $(l2name) \
 	  $(histogram_jobs) > $@
 
 ################################################################################
@@ -90,7 +92,9 @@ plots/zh/$(channel)/plot_list.txt: $(histogram_jobs) render_zh_plots.py results/
 ################################################################################
 
 
-events: $(events_jobs)
+#events: $(events_jobs)
+events: 
+	echo 'fixme'
 
 histograms: $(histogram_jobs) 
 
