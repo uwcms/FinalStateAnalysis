@@ -84,7 +84,7 @@ zh_eeet:
 	  primd=DoubleElectron \
 	  l1name=e \
 	  l2name=tau \
-	  branches=""e1_e2_Mass e3_t_Mass"" \
+	  branches="e1_e2_Mass e3_t_Mass" \
 	  histograms plots events
 
 zh_eeem: 
