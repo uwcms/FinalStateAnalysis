@@ -117,7 +117,7 @@ if __name__ == "__main__":
         data_yields['total_fr']
     )
     data_yields['ss_zj_estimate'] = (
-        uint(data_yields['os_fail_fail'])*
+        uint(data_yields['ss_fail_fail'])*
         data_yields['total_fr']
     )
 
