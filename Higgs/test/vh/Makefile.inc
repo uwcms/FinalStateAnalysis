@@ -1,5 +1,8 @@
 # Common definitions for Makefiles
 
+# Which ntuple to use
+ntuple_id=2012-04-04-Higgs
+
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
 megaevents=$(fsa)/TMegaSelector/scripts/megaevents.py
@@ -26,5 +29,7 @@ sm_backgrounds=Zjets_M50 QCD_20toInf_MuPt15 WplusJets_madgraph TTplusJets_madgra
 #sm_backgrounds=
 
 dibosons=WZJetsTo3LNu_pythia ZZJetsTo4L_pythia
+
+all_mc_samples=$(sm_backgrounds) $(dibosons)
 
 all_samples=$(all_data_samples) $(sm_backgrounds) $(dibosons)
