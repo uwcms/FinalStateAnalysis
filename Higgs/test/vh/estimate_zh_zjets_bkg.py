@@ -73,6 +73,8 @@ if __name__ == "__main__":
 
     log.info("Building info about region yields for all samples")
     for sample in [args.pd, 'Zjets', 'WZ_pythia', 'ZZ']:
+        if sample == args.pd:
+            sample = 'data'
         log.info("Getting yields for %s", sample)
         sample_info = {}
         yields[sample] = sample_info
@@ -91,7 +93,7 @@ if __name__ == "__main__":
         return ufloat( (x, err*x) )
 
     log.info("Computing %s fake rate for data", args.l1name)
-    data_yields = yields[args.pd]
+    data_yields = yields['data']
     data_yields["ss_fr1"] = ((
         uint(data_yields["ss_pass_fail"]) -
         ufloat_rel(yields['WZ_pythia']["ss_pass_fail"], 0.3)) /
