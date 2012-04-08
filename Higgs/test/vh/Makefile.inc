@@ -1,7 +1,7 @@
 # Common definitions for Makefiles
 
 # Which ntuple to use
-ntuple_id=2012-04-04-Higgs
+ntuple_id=2012-04-06-Higgs
 
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
