@@ -114,6 +114,10 @@ zh_eett:
 # Do all ZH analysis
 zh: zh_mmtt zh_mmet zh_mmme zh_mmmt zh_eett zh_eeet zh_eeem zh_eemt 
 
+results/analysis/zh_yields.txt: zh print_zh.py
+	./print_zh.py results/analysis/*/zjet_bkgs.json > $@
+
+
 .PHONY: meta_data \
   zh \
   zh_mmtt zh_mmet zh_mmme zh_mmmt \
