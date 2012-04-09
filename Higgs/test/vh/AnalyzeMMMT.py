@@ -75,7 +75,7 @@ basic_histograms = [
     (lambda x: x.m1AbsEta, '', ('m1AbsEta', '#mu_{1} |#eta|', 10, 0, 2.5)),
     (lambda x: x.m1_m2_Mass, '', ('z1Mass', 'Z_{1} Mass', 20, 60, 120)),
     (lambda x: x.m3_t_Mass, '', ('z2Mass', 'Z_{2} Mass', 20, 30, 150)),
-    (lambda x: (x.m3_t_PZeta - 1.85*x.m3_t_PZetaVis), '', ('pZeta', 'PZeta', 25, 50, -50)),
+    (lambda x: (x.m3_t_PZeta - 1.85*x.m3_t_PZetaVis), '', ('pZeta', 'PZeta', 10, -150, 50)),
 ]
 
 def build_histo_list(weight_function, name_suffix=""):
