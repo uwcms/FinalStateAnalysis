@@ -97,7 +97,7 @@ fixme)
 Jets
 ----
 
-The following jet IDs are embedded into the PFJets.
+The following jet IDs are embedded into the PFJets as userFloats.
 They correspond to the official PFJet IDs listed on the `JetMET twiki`_.
 
 .. _JetMET twiki: https://twiki.cern.ch/twiki/bin/view/CMS/JetID
