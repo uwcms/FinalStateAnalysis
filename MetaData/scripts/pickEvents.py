@@ -30,7 +30,7 @@ import os
 import json
 from subprocess import Popen, PIPE, STDOUT
 from FinalStateAnalysis.MetaData.datadefs import datadefs
-import warning
+import warnings
 
 if __name__ == "__main__":
     warnings.warn("This script is deprecated, using pick.py instead",
