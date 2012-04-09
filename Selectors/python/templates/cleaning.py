@@ -21,6 +21,8 @@ vetos = PSet(
     eVetoWP95Iso = 'extras("extElecs", "pt > 10 & abs(eta) < 2.5 & userFloat(\'wp95\') > 0.5 & (chargedHadronIso + max(photonIso + neutralHadronIso - 0.5*userIso(0), 0))/pt < 0.3").size()',
     eVetoCicTightIso = 'extras("extElecs", "pt > 10 & abs(eta) < 2.5 &  test_bit(electronID(\'cicTight\'), 0) > 0.5 & (chargedHadronIso + max(photonIso + neutralHadronIso - 0.5*userIso(0), 0))/pt < 0.25").size()',
     bjetVeto = 'extras("extJets", "pt > 20 & abs(eta) < 2.5 & bDiscriminator(\'\') > 3.3").size()',
+    jetVeto20 = 'extras("extJets", "pt > 20 & abs(eta) < 5.0 & userFloat(\'idLoose\')").size()',
+    jetVeto40 = 'extras("extJets", "pt > 40 & abs(eta) < 5.0 & userFloat(\'idLoose\')").size()',
 )
 
 overlaps = PSet(
