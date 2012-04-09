@@ -13,7 +13,7 @@ mkdir -p $OUTPUTDIR
 read -p "Copy everything in $hdfs/$JOBID/ to $OUTPUTDIR? <y/N> " prompt
 if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
 then
-  find $hdfs/$JOBID/* -name "*.root" | xargs -n 1 -P 3 -I {} cp -r -u -v {} $OUTPUTDIR
+  cp -r -u -v $hdfs/$JOBID/* $OUTPUTDIR
 else
   exit 0
 fi
