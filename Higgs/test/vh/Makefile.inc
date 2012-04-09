@@ -3,6 +3,8 @@
 # Which ntuple to use
 ntuple_id=2012-04-06-Higgs
 
+workers=20
+
 # Analyzer location
 mega=$(fsa)/TMegaSelector/scripts/mega2
 megaevents=$(fsa)/TMegaSelector/scripts/megaevents.py
@@ -26,9 +28,10 @@ doublee_samples=$(subst PRIMD,DoubleElectron, $(data_sample_templates))
 all_data_samples=$(mueg_samples) $(doublee_samples) $(doublemu_samples)
 
 sm_backgrounds=Zjets_M50 QCD_20toInf_MuPt15 WplusJets_madgraph TTplusJets_madgraph
-#sm_backgrounds=
 
 dibosons=WZJetsTo3LNu_pythia ZZJetsTo4L_pythia
+
+vh120 = VH_120 VH_120_HWW
 
 all_mc_samples=$(sm_backgrounds) $(dibosons)
 

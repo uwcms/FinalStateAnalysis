@@ -40,7 +40,7 @@ results/analysis/$(channel)/%.raw.root: $(analyzer) $(leading_z_selector) \
   inputs/$(ntuple_id)/%.txt  $(macro_weight_files) 
 	echo "Computing histograms for channel $(channel)" 
 	$(mega) $(analyzer) inputs/$(ntuple_id)/$*.txt \
-	  /$(ntuple_path)/final/Ntuple $@
+	  /$(ntuple_path)/final/Ntuple $@ --workers $(workers)
 
 # How to make the lumi sum
 inputs/$(ntuple_id)/%.lumi.sum: 
@@ -55,7 +55,7 @@ results/analysis/$(channel)/%.root: results/analysis/$(channel)/%.raw.root \
 
 # Rule to build all histograms
 histogram_jobs=$(patsubst %, results/analysis/$(channel)/%.root, \
-	       $(all_mc_samples) $(my_data_samples))
+	       $(all_mc_samples) $(my_data_samples) $(vh120)) 
 
 ################################################################################
 #### Rule to get passed event numbers ##########################################
