@@ -12,7 +12,9 @@ def efficiency(passed, total, conf=0.682689492137):
 
     '''
 
-    eff = passed*1./total
+    eff = 0
+    if total:
+       eff = passed*1./total
 
     total = ROOT.TMath.Nint(total)
     passed = ROOT.TMath.Nint(passed)
