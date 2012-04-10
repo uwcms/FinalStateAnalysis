@@ -32,6 +32,7 @@ id = PSet(
 
 # Information about the associated track
 tracking = PSet(
+    objectPtUncorr = '{object}.userCand('uncorr').pt',
     objectPixHits = '? {object}.combinedMuon.isNonnull ? '
         '{object}.combinedMuon.hitPattern.numberOfValidPixelHits :-1',
     objectGlbTrkHits = '? {object}.globalTrack.isNonnull ? '
