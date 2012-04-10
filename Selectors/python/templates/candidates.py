@@ -19,6 +19,7 @@ kinematics = PSet(
 
 vertex_info = PSet(
     objectDZ = '{object}.userFloat("dz")',
+    objectVZ = '{object}.vz',
     objectIP3DS = '{object}.userFloat("ip3DS")',
 )
 
