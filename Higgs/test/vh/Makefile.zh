@@ -66,9 +66,26 @@ results/analysis/$(channel)/%.events: $(analyzer) $(leading_z_selector) \
 	$(megaevents) $(analyzer) inputs/$(ntuple_id)/$*.txt \
 	  /$(ntuple_path)/final/Ntuple $@ final  --branches $(branches)
 
+results/analysis/$(channel)/%.l1anti.events: $(analyzer) $(leading_z_selector) \
+  inputs/$(ntuple_id)/%.txt  
+	$(megaevents) $(analyzer) inputs/$(ntuple_id)/$*.txt \
+	  /$(ntuple_path)/final/Ntuple $@ l1_anti_iso  --branches $(branches)
+
+results/analysis/$(channel)/%.l2anti.events: $(analyzer) $(leading_z_selector) \
+  inputs/$(ntuple_id)/%.txt  
+	$(megaevents) $(analyzer) inputs/$(ntuple_id)/$*.txt \
+	  /$(ntuple_path)/final/Ntuple $@ l2_anti_iso  --branches $(branches)
+
 # Rules to get selected events
 events_jobs=$(patsubst %, results/analysis/$(channel)/%.events, \
 	    $(my_data_samples))
+
+# Rules to get selected events in anti-iso regions
+anti1_events_jobs=$(patsubst %, results/analysis/$(channel)/%.l1anti.events, \
+		 $(my_data_samples))
+
+anti2_events_jobs=$(patsubst %, results/analysis/$(channel)/%.l2anti.events, \
+		 $(my_data_samples))
 
 ################################################################################
 #### Rule to get estimate Z+2jet background ####################################
@@ -93,8 +110,7 @@ plots/zh/$(channel)/plot_list.txt: $(histogram_jobs) render_zh_plots.py results/
 
 
 #events: $(events_jobs)
-events: 
-	echo 'fixme'
+events:  $(anti1_events_jobs) $(anti2_events_jobs)
 
 histograms: $(histogram_jobs) 
 
