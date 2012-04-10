@@ -102,7 +102,7 @@ if __name__ == "__main__":
 
     log.info("Beginning loop over %i TChain entries", chain.GetEntries())
 
-    current_event = (None, None, None)
+    current_event = None
 
     def print_event_header(current_event):
         print colored('*' * 80, color='magenta')
@@ -118,8 +118,13 @@ if __name__ == "__main__":
         if event_list and this_event not in event_list:
             continue
         if this_event != current_event:
+            if current_event:
+                # Print summary from previous event
+                print colored(" -> events has %i events passing" % summary[current_event], 
+                              color='yellow')
             print_event_header(this_event)
             current_event = this_event
+            summary[this_event] = 0
         # The current FSA we are examining
         fsa_index = chain.idx
         all_passed = True
@@ -159,7 +164,7 @@ if __name__ == "__main__":
             print colored("** R/L/E (%i, %i, %i) #%i passes all cuts **" % 
                           (chain.run, chain.lumi, chain.evt, fsa_index),
                           color='yellow')
-            summary[this_event] = 1 + summary.get(this_event, 0)
+            summary[this_event] += 1 
 
     print ""
     print colored("  **  Summary **  ", color='blue')
@@ -169,13 +174,23 @@ if __name__ == "__main__":
         1 : 'green',
     }
 
+    total_events = 0 
+    total_events_with_one_cand = 0 
+    total_cands = 0
     for event, passed_count in summary.iteritems():
         color = color_map.get(passed_count, 'yellow')
         run_label = "R/L/E  (%i, %i, %i) " % event
         count_label = "has %i candidate(s) passing"  % passed_count
+        total_events += 1
+        total_cands += passed_count
+        if passed_count:
+            total_events_with_one_cand += 1
         # Warn if we are doubling counting events!
         if passed_count > 1:
             count_label = colored(count_label,  attrs=['reverse', 'underline'])
         print colored(run_label + count_label, color=color)
 
-
+    print colored("%i/%i events have at least one cand passing.  There are "
+                  "%i total candidates" % (total_events_with_one_cand, 
+                                           total_events, total_cands),
+                  color = 'yellow')
