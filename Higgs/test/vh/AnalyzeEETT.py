@@ -44,9 +44,11 @@ base_selections = And(
     # Tau cleaning
     meta.t1AntiElectronMedium > 0.5,
     #meta.t1ElecOverlap < 0.5,
+    meta.t1CiCTightElecOverlap < 0.5,
     meta.t1AntiMuonTight > 0.5,
     meta.t1MuOverlap < 0.5,
     meta.t2AntiElectronMedium > 0.5,
+    meta.t1CiCTightElecOverlap < 0.5,
     #meta.t2ElecOverlap < 0.5,
     meta.t2AntiMuonTight > 0.5,
     meta.t2MuOverlap < 0.5,
@@ -58,6 +60,9 @@ hadronic_t1_id = meta.t1MediumIso > 0.5
 hadronic_t2_id = meta.t2MediumIso > 0.5
 
 final = unique & os & base_selections & hadronic_t1_id & hadronic_t2_id
+
+l1_anti_iso = unique & os & base_selections & ~hadronic_t1_id & hadronic_t2_id
+l2_anti_iso = unique & os & base_selections & hadronic_t1_id & ~hadronic_t2_id
 
 #mt_cut = meta.t1MtToMET < 50
 

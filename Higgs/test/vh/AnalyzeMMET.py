@@ -51,7 +51,14 @@ e_id = And(
     meta.eRelPFIsoDB < 0.10,
 )
 
+not_e_id = ~e_id
+
+not_tau_id = ~hadronic_tau_id
+
 final = unique & os & base_selections & e_id & hadronic_tau_id
+
+l1_anti_iso = unique & os & base_selections & ~e_id & hadronic_tau_id
+l2_anti_iso = unique & os & base_selections & e_id & ~hadronic_tau_id
 
 mt_cut = meta.eMtToMET < 50
 

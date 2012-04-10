@@ -61,6 +61,10 @@ e3_id = And(
 
 final = unique & os & base_selections & e3_id & m_id
 
+l1_anti_iso = unique & os & base_selections & ~m_id & e3_id
+
+l2_anti_iso = unique & os & base_selections & m_id & ~e3_id
+
 def pu_weight(x):
     return x.puWeightData2011AB
 

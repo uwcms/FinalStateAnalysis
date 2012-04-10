@@ -45,6 +45,7 @@ base_selections = And(
 
     # Tau cleaning
     meta.tAntiElectronMVA > 0.5,
+    meta.tCiCTightElecOverlap < 0.5,
     #meta.tElecOverlap < 0.5,
     meta.tAntiMuonTight > 0.5,
     #meta.tMuOverlap < 0.5,

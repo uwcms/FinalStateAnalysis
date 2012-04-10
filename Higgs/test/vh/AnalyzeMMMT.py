@@ -46,6 +46,7 @@ base_selections = And(
     meta.tAntiElectronLoose > 0.5,
     #meta.tElecOverlap < 0.5,
     meta.tAntiMuonTight > 0.5,
+    meta.tCiCTightElecOverlap < 0.5,
     #meta.tMuOverlap < 0.5,
     #meta.m3VBTFID > 0.5,
     meta.m3IsGlobal > 0.5,
@@ -65,6 +66,9 @@ os = meta.m3_t_SS < 0.5
 
 final = unique & base_selections & os & m3_id & hadronic_tau_id
 
+l1_anti_iso = unique & base_selections & os & ~m3_id & hadronic_tau_id
+l2_anti_iso = unique & base_selections & os & m3_id & ~hadronic_tau_id
+
 mt_cut = meta.m3MtToMET < 50
 
 def pu_weight(x):
@@ -76,6 +80,7 @@ basic_histograms = [
     (lambda x: x.m1_m2_Mass, '', ('z1Mass', 'Z_{1} Mass', 20, 60, 120)),
     (lambda x: x.m3_t_Mass, '', ('z2Mass', 'Z_{2} Mass', 20, 30, 150)),
     (lambda x: (x.m3_t_PZeta - 1.85*x.m3_t_PZetaVis), '', ('pZeta', 'PZeta', 10, -150, 50)),
+    (lambda x: x.rapidityGap, '', ('rapidityGap', 'Rapidity Gap', 10, 0, 5)),
 ]
 
 def build_histo_list(weight_function, name_suffix=""):
@@ -116,6 +121,7 @@ class AnalyzeMMMT(Analyzer):
         self.enable_branch('m3_t_Mass')
         self.enable_branch('m3_t_PZetaVis')
         self.enable_branch('m3_t_PZeta')
+        self.enable_branch('rapidityGap')
         self.enable_branch('puWeightData2011AB')
 
     def process(self, entry):
