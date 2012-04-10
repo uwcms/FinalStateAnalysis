@@ -24,7 +24,7 @@ zh_mmmt:
 	  l1name=mu \
 	  l2name=tau \
 	  branches="m1_m2_Mass m3_t_Mass" \
-	  histograms plots
+	  histograms plots events
 
 zh_mmet: 
 	make -f Makefile.zh \
@@ -73,7 +73,7 @@ zh_eemt:
 	  l1name=mu \
 	  l2name=tau \
 	  branches="e1_e2_Mass m_t_Mass" \
-	  histograms plots
+	  histograms plots events
 
 zh_eeet: 
 	make -f Makefile.zh \
