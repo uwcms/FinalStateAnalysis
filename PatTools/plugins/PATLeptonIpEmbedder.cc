@@ -70,6 +70,7 @@ void PATLeptonIpEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup& es)
     const reco::Track* track = tracks.size() ? tracks.at(0) : NULL;
     double ip = -1;
     double dz = -1;
+    double vz = -999;
     double ip3D = -1;
     double ip3DS = -1;
     double tip = -1;
@@ -80,6 +81,7 @@ void PATLeptonIpEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup& es)
       // Linearized functions
       ip = track->dxy(thePV.position());
       dz = track->dz(thePV.position());
+      vz = track->vz();
       IPResult ip3DRes = IPTools::absoluteImpactParameter3D(ttrack, thePV);
       if (ip3DRes.first) {
         ip3D = ip3DRes.second.value();
@@ -94,6 +96,7 @@ void PATLeptonIpEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup& es)
     T newObject = object;
     newObject.addUserFloat("ipDXY", ip);
     newObject.addUserFloat("dz", dz);
+    newObject.addUserFloat("vz", vz);
     newObject.addUserFloat("ip3D", ip3D);
     newObject.addUserFloat("ip3DS", ip3DS);
     newObject.addUserFloat("tip", tip);
