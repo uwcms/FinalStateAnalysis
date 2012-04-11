@@ -46,7 +46,7 @@ base_selections = And(
     meta.tAntiElectronMVA > 0.5,
     meta.tCiCTightElecOverlap < 0.5,
     #meta.tElecOverlap < 0.5,
-    meta.tAntiMuonTight > 0.5,
+    meta.tAntiMuonLoose > 0.5,
     #meta.tMuOverlap < 0.5,
     meta.e3CiCTight.bit(1),
     meta.e3MissingHits < 0.5,
