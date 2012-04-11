@@ -38,10 +38,9 @@ base_selections = And(
     meta.tauVetoPt20 < 1,
 
     # DZ cuts
-    meta.e1DZ < 0.2,
-    meta.e2DZ < 0.2,
-    meta.e3DZ < 0.2,
-    meta.tDZ < 0.2,
+    abs(meta.e1DZ - meta.e2DZ) < 0.1,
+    abs(meta.e1DZ - meta.e3DZ) < 0.1,
+    abs(meta.e1DZ - meta.tDZ) < 0.1,
 
     # Tau cleaning
     meta.tAntiElectronMVA > 0.5,
@@ -61,8 +60,9 @@ e3_id = And(
     meta.e3RelPFIsoDB < 0.10,
 )
 
-l1_anti_iso = unique & os & base_selections & ~e3_id and hadronic_tau_id
-l2_anti_iso = unique & os & base_selections & e3_id and ~hadronic_tau_id
+l1_anti_iso = unique & os & base_selections & ~e3_id & hadronic_tau_id
+l2_anti_iso = unique & os & base_selections & e3_id & ~hadronic_tau_id
+both_anti_iso = unique & os & base_selections & ~e3_id & ~hadronic_tau_id
 
 final = unique & os & base_selections & e3_id & hadronic_tau_id
 

@@ -35,10 +35,9 @@ base_selections = And(
     meta.tauVetoPt20 < 1,
 
     # DZ cuts
-    meta.m1DZ < 0.2,
-    meta.m2DZ < 0.2,
-    meta.t1DZ < 0.2,
-    meta.t2DZ < 0.2,
+    abs(meta.m1DZ - meta.m2DZ) < 0.1,
+    abs(meta.m1DZ - meta.t1DZ) < 0.1,
+    abs(meta.m1DZ - meta.t2DZ) < 0.1,
 
     # Tau cleaning
     meta.t1AntiElectronMedium > 0.5,
@@ -64,6 +63,7 @@ final = unique & os & base_selections & t1_id & t2_id
 
 l1_anti_iso = unique & os & base_selections & ~t1_id & t2_id
 l2_anti_iso = unique & os & base_selections & t1_id & ~t2_id
+both_anti_iso = unique & os & base_selections & ~t1_id & ~t2_id
 
 def pu_weight(x):
     return x.puWeightData2011AB

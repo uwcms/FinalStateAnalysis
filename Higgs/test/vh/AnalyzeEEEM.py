@@ -36,10 +36,9 @@ base_selections = And(
     meta.tauVetoPt20 < 1,
 
     # DZ cuts
-    meta.e1DZ < 0.2,
-    meta.e2DZ < 0.2,
-    meta.e3DZ < 0.2,
-    meta.mDZ < 0.2,
+    abs(meta.e1DZ - meta.e2DZ) < 0.1,
+    abs(meta.e1DZ - meta.e3DZ) < 0.1,
+    abs(meta.e1DZ - meta.mDZ) < 0.1,
     meta.e3CiCTight.bit(1) > 0.5,
     meta.e3MissingHits < 1.5,
     #meta.mVBTFID > 0.5,
@@ -64,6 +63,8 @@ final = unique & os & base_selections & e3_id & m_id
 l1_anti_iso = unique & os & base_selections & ~m_id & e3_id
 
 l2_anti_iso = unique & os & base_selections & m_id & ~e3_id
+
+both_anti_iso = unique & os & base_selections & ~m_id & ~e3_id
 
 def pu_weight(x):
     return x.puWeightData2011AB

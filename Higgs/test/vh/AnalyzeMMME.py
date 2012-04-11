@@ -36,10 +36,10 @@ base_selections = And(
     meta.tauVetoPt20 < 1,
 
     # DZ cuts
-    meta.m1DZ < 0.2,
-    meta.m2DZ < 0.2,
-    meta.m3DZ < 0.2,
-    meta.eDZ < 0.2,
+    abs(meta.m1DZ - meta.m2DZ) < 0.1,
+    abs(meta.m1DZ - meta.m3DZ) < 0.1,
+    abs(meta.m1DZ - meta.eDZ) < 0.1,
+
     meta.eCiCTight.bit(1),
     meta.eMissingHits < 1.5,
     #meta.m3VBTFID > 0.5,
@@ -61,7 +61,8 @@ m3_id = And(
 final = unique & os & base_selections & m3_id & e_id
 
 l1_anti_iso = unique & os & base_selections & ~m3_id & e_id
-l2_anti_iso = unique & os & base_selections & ~m3_id & ~e_id
+l2_anti_iso = unique & os & base_selections & m3_id & ~e_id
+both_anti_iso = unique & os & base_selections & ~m3_id & ~e_id
 
 mt_cut = meta.m3MtToMET < 50
 
