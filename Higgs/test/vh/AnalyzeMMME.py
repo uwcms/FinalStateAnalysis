@@ -60,8 +60,8 @@ m3_id = And(
 
 final = unique & os & base_selections & m3_id & e_id
 
-l1_anti_iso = unique & os & base_selections & ~m3_id & e_id
-l2_anti_iso = unique & os & base_selections & m3_id & ~e_id
+l1_anti_iso = unique & os & base_selections & m3_id & ~e_id
+l2_anti_iso = unique & os & base_selections & ~m3_id & e_id
 both_anti_iso = unique & os & base_selections & ~m3_id & ~e_id
 
 mt_cut = meta.m3MtToMET < 50

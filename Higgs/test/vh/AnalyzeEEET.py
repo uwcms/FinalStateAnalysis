@@ -58,8 +58,8 @@ hadronic_tau_id = meta.tLooseIso > 0.5
 
 e3_id = And(
     meta.e3RelPFIsoDB < 0.10,
-)
 
+)
 l1_anti_iso = unique & os & base_selections & ~e3_id & hadronic_tau_id
 l2_anti_iso = unique & os & base_selections & e3_id & ~hadronic_tau_id
 both_anti_iso = unique & os & base_selections & ~e3_id & ~hadronic_tau_id

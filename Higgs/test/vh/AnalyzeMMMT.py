@@ -65,8 +65,8 @@ os = meta.m3_t_SS < 0.5
 
 final = unique & base_selections & os & m3_id & hadronic_tau_id
 
-l1_anti_iso = unique & base_selections & os & ~m3_id & hadronic_tau_id
-l2_anti_iso = unique & base_selections & os & m3_id & ~hadronic_tau_id
+l1_anti_iso = unique & base_selections & os & m3_id & ~hadronic_tau_id
+l2_anti_iso = unique & base_selections & os & ~m3_id & hadronic_tau_id
 both_anti_iso = unique & os & base_selections & ~m3_id & ~hadronic_tau_id
 
 mt_cut = meta.m3MtToMET < 50
