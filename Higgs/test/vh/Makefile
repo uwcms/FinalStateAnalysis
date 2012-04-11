@@ -11,6 +11,8 @@ include Makefile.inc
 meta_data: 
 	make -f Makefile.meta meta_data
 
+targets = histograms plots events
+
 # Rules for building ZH subchannels
 
 # Z->mumu + X
@@ -24,7 +26,7 @@ zh_mmmt:
 	  l1name=mu \
 	  l2name=tau \
 	  branches="m1_m2_Mass m3_t_Mass" \
-	  histograms plots events
+	  $(targets)
 
 zh_mmet: 
 	make -f Makefile.zh \
@@ -36,7 +38,7 @@ zh_mmet:
 	  l1name=e \
 	  l2name=tau \
 	  branches="m1_m2_Mass e_t_Mass" \
-	  histograms plots events
+	  $(targets)
 
 zh_mmme: 
 	make -f Makefile.zh \
@@ -48,7 +50,7 @@ zh_mmme:
 	  l1name=mu \
 	  l2name=e \
 	  branches="m1_m2_Mass e_m3_Mass" \
-	  histograms plots events
+	  $(targets)
 
 zh_mmtt: 
 	make -f Makefile.zh \
@@ -60,7 +62,7 @@ zh_mmtt:
 	  l1name=t1 \
 	  l2name=t2 \
 	  branches="m1_m2_Mass t1_t2_Mass" \
-	  histograms plots events
+	  $(targets)
 
 # Z->ee + X
 zh_eemt: 
@@ -73,7 +75,7 @@ zh_eemt:
 	  l1name=mu \
 	  l2name=tau \
 	  branches="e1_e2_Mass m_t_Mass" \
-	  histograms plots events
+	  $(targets)
 
 zh_eeet: 
 	make -f Makefile.zh \
@@ -85,7 +87,7 @@ zh_eeet:
 	  l1name=e \
 	  l2name=tau \
 	  branches="e1_e2_Mass e3_t_Mass" \
-	  histograms plots events
+	  $(targets)
 
 zh_eeem: 
 	make -f Makefile.zh \
@@ -97,7 +99,7 @@ zh_eeem:
 	  l1name=mu \
 	  l2name=e \
 	  branches="e1_e2_Mass e3_m_Mass" \
-	  histograms plots events
+	  $(targets)
 
 zh_eett: 
 	make -f Makefile.zh \
@@ -109,7 +111,7 @@ zh_eett:
 	  l1name=t1 \
 	  l2name=t2 \
 	  branches="e1_e2_Mass t1_t2_Mass" \
-	  histograms plots events
+	  $(targets)
 
 # Do all ZH analysis
 zh: zh_mmtt zh_mmet zh_mmme zh_mmmt zh_eett zh_eeet zh_eeem zh_eemt 
