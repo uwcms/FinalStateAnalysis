@@ -92,6 +92,33 @@ Extracting bit information:
 >>> fourth_bit(fake_tree)
 8
 
+Applying absolute value:
+
+>>> fake_tree.negativeNumber = -50
+>>> absolute_cut = abs(tree.negativeNumber) > 30
+>>> absolute_cut(fake_tree)
+True
+>>> absolute_cut = abs(tree.negativeNumber) < -30
+>>> absolute_cut(fake_tree)
+False
+
+Adding and subtracting:
+
+>>> fake_tree.elecId
+10
+>>> plussed_cut = tree.elecId + 6 > 15
+>>> plussed_cut(fake_tree)
+True
+>>> plussed_cut = tree.elecId + 4 > 15
+>>> plussed_cut(fake_tree)
+False
+>>> minused_cut = tree.elecId - 6 > 3
+>>> minused_cut(fake_tree)
+True
+>>> minused_cut = tree.elecId - 6 > 5
+>>> minused_cut(fake_tree)
+False
+
 Iterating over selections
 -------------------------
 
@@ -130,7 +157,7 @@ Branch Bookkeeping
 The MetaTree object also keeps track of which branches are accessed:
 
 >>> tree.active_branches()
-['elecId', 'elecPt', 'muPt']
+['elecId', 'elecPt', 'muPt', 'negativeNumber']
 
 '''
 
@@ -299,6 +326,38 @@ class Value(object):
             value = int(self.getter(tree))
             return value & (1 << (n-1))
         return Value(bit_getter, "%s.bit(%i)" % (repr(self), n))
+
+    def __abs__(self):
+        # Apply absolute value
+        def abs_applyer(tree):
+            return abs(self.getter(tree))
+        return Value(abs_applyer, "|%s|" % repr(self))
+
+    def __sub__(self, other):
+        # Subtract some other value
+        def subtractor_value(tree):
+            return self.getter(tree) - other.getter(tree)
+        # Used if the other value is just a plain type like a float
+        def subtractor_plain(tree):
+            return self.getter(tree) - other
+        if isinstance(other, Value):
+            return Value(subtractor_value,
+                         "%s - %s" % (repr(self), repr(other)))
+        else:
+            return Value(subtractor_plain,
+                         "%s - %s" % (repr(self), repr(other)))
+
+    def __add__(self, other):
+        # Subtract some other value
+        def adder_value(tree):
+            return self.getter(tree) + other.getter(tree)
+        # Used if the other value is just a plain type like a float
+        def adder_plain(tree):
+            return self.getter(tree) + other
+        if isinstance(other, Value):
+            return Value(adder_value, "%s + %s" % (repr(self), repr(other)))
+        else:
+            return Value(adder_plain, "%s + %s" % (repr(self), repr(other)))
 
     def __call__(self, tree):
         return self.getter(tree)
