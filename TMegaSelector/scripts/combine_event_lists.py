@@ -30,4 +30,6 @@ if __name__ == "__main__":
 
     if not args.count:
         json.dump(full_event_list, sys.stdout, indent=2, sort_keys=True)
-    sys.stderr.write('Combined %i events\n' % len(full_event_list))
+        sys.stderr.write('Combined %i events\n' % len(full_event_list))
+    else:
+        sys.stderr.write('%i\n' % len(full_event_list))
