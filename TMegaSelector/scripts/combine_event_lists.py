@@ -22,14 +22,21 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     full_event_list = []
+    unique_events = set([])
 
     for filename in args.files:
         with open(filename) as file:
             event_list = json.load(file)
             full_event_list.extend(event_list)
+            for event in event_list:
+                unique_events.add(tuple(event['evt']))
 
     if not args.count:
         json.dump(full_event_list, sys.stdout, indent=2, sort_keys=True)
-        sys.stderr.write('Combined %i events\n' % len(full_event_list))
+        sys.stderr.write(
+            'Combined %i events [%i unique]\n'
+            % (len(full_event_list), len(unique_events))
+        )
     else:
-        sys.stderr.write('%i\n' % len(full_event_list))
+        sys.stderr.write(
+            '%i[%i unique]' % (len(full_event_list), len(unique_events)) )
