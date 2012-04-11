@@ -16,6 +16,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('files', metavar='file', nargs='+',
                         help = 'Event list json files')
+    parser.add_argument('--count', default=False, action='store_true',
+                        help = 'If supplied, just count the events.')
 
     args = parser.parse_args()
 
@@ -26,5 +28,6 @@ if __name__ == "__main__":
             event_list = json.load(file)
             full_event_list.extend(event_list)
 
+    if not args.count:
+        json.dump(full_event_list, sys.stdout, indent=2, sort_keys=True)
     sys.stderr.write('Combined %i events\n' % len(full_event_list))
-    json.dump(full_event_list, sys.stdout, indent=2, sort_keys=True)
