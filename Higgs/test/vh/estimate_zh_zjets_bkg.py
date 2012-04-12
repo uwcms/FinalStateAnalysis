@@ -95,21 +95,18 @@ if __name__ == "__main__":
 
     log.info("Computing %s fake rate for data", args.l1name)
     data_yields = yields['data']
+
+    data_ss_denominator = uint(data_yields["ss_fail_fail"])
+    wz_ss_denominator = ufloat_rel(yields['WZ_pythia']['ss_fail_fail'], 0.3)
     data_yields["ss_fr1"] = ((
         uint(data_yields["ss_pass_fail"]) -
         ufloat_rel(yields['WZ_pythia']["ss_pass_fail"], 0.3)) /
-        (
-            uint(data_yields["ss_fail_fail"]) -
-            ufloat_rel(yields['WZ_pythia']["_".join(('ss', 'fail', 'fail'))], 0.3)
-        )
+        (data_ss_denominator - wz_ss_denominator)
     )
     data_yields["ss_fr2"] = ((
         uint(data_yields["ss_fail_pass"]) -
         ufloat_rel(yields['WZ_pythia']["ss_fail_pass"], 0.3)) /
-        (
-            uint(data_yields["ss_fail_fail"]) -
-            ufloat_rel(yields['WZ_pythia']["ss_fail_fail"], 0.3)
-        )
+        (data_ss_denominator - wz_ss_denominator)
     )
     data_yields['total_fr'] = data_yields["ss_fr2"]*data_yields["ss_fr1"]
     data_yields['os_zj_estimate'] = (
@@ -117,8 +114,68 @@ if __name__ == "__main__":
         data_yields['total_fr']
     )
     data_yields['ss_zj_estimate'] = (
-        uint(data_yields['ss_fail_fail'])*
+        data_ss_denominator*
         data_yields['total_fr']
+    )
+
+    log.info("Computing correction factors using Zjets MC")
+    # Use the integer number of MC events to get correct uncertainty
+    zjets_weight = 1./data_views['Zjets']['subsamples']['Zjets_M50']['weight']
+    zjets_yields = yields['Zjets']
+    zj_ss_denominator = uint(zjets_yields['ss_fail_fail']*zjets_weight)
+    zjets_yields['ss_fr1'] = (
+        uint(zjets_yields['ss_pass_fail']*zjets_weight) /
+        zj_ss_denominator
+    )
+    zjets_yields['ss_fr2'] = (
+        uint(zjets_yields['ss_fail_pass']*zjets_weight) /
+        zj_ss_denominator
+    )
+    os_zj_denominator = uint(zjets_yields['os_fail_fail']*zjets_weight)
+    zjets_yields['os_fr1'] = (
+        uint(zjets_yields['os_pass_fail']*zjets_weight) /
+        os_zj_denominator
+    )
+    zjets_yields['os_fr2'] = (
+        uint(zjets_yields['os_fail_pass']*zjets_weight) /
+        os_zj_denominator
+    )
+
+    zjets_yields['os_ss_fr1_corr'] = zjets_yields['os_fr1']/zjets_yields['ss_fr1']
+    zjets_yields['os_ss_fr2_corr'] = zjets_yields['os_fr2']/zjets_yields['ss_fr2']
+    zjets_yields['os_ss_fr_corr'] = zjets_yields['os_ss_fr1_corr']*zjets_yields['os_ss_fr2_corr']
+
+    data_yields['total_fr_corr'] = data_yields['total_fr']*zjets_yields['os_ss_fr_corr']
+    data_yields['os_zj_estimate_corr'] = data_yields['os_zj_estimate']*zjets_yields['os_ss_fr_corr']
+
+    log.info("Using the 1+2-0 method")
+
+    data_yields['os_type_1_est'] = (
+        uint(data_yields['os_pass_fail'])*data_yields['ss_fr2']
+    )
+    data_yields['os_type_2_est'] = (
+        uint(data_yields['os_fail_pass'])*data_yields['ss_fr1']
+    )
+    data_yields['os_type_0_est'] = (
+        uint(data_yields['os_fail_fail'])*data_yields['ss_fr1']*data_yields['ss_fr2']
+    )
+    data_yields['os_type120_est'] = (
+        data_yields['os_type_1_est'] + data_yields['os_type_2_est']
+        - data_yields['os_type_0_est']
+    )
+
+    data_yields['ss_type_1_est'] = (
+        uint(data_yields['ss_pass_fail'])*data_yields['ss_fr2']
+    )
+    data_yields['ss_type_2_est'] = (
+        uint(data_yields['ss_fail_pass'])*data_yields['ss_fr1']
+    )
+    data_yields['ss_type_0_est'] = (
+        uint(data_yields['ss_fail_fail'])*data_yields['ss_fr1']*data_yields['ss_fr2']
+    )
+    data_yields['ss_type120_est'] = (
+        data_yields['ss_type_1_est'] + data_yields['ss_type_2_est']
+        - data_yields['ss_type_0_est']
     )
 
     json.dump(yields, sys.stdout, indent=2, sort_keys=True, default=repr)

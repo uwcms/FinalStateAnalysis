@@ -52,44 +52,105 @@ if __name__ == "__main__":
          "Z+jets est.",
          "WZ",
          "ZZ",
+         "Region 1",
+         "Region 2",
+         "Region 0",
+         "1+2-0",
         ]
 
     for region in ['os', 'ss']:
-        print "%s region" % region
-        # Print out regions in the OS
-        table = tabulartext.PrettyTable(columns)
+        for use_corr in [True, False]:
+            print "%s region" % region
+            if use_corr:
+                print "With SS FR correction"
+            else:
+                print "NO SS FR correction"
+            # Print out regions in the OS
+            table = tabulartext.PrettyTable(columns)
 
-        total_obs = 0
-        total_zj = 0
-        total_wz = 0
-        total_zz = 0
+            total_obs = 0
+            total_zj = 0
+            total_wz = 0
+            total_zz = 0
+            total_1 = 0
+            total_2 = 0
+            total_0 = 0
+            total_120 = 0
 
-        for channel, channel_info in channels.iteritems():
-            wz = channel_info['WZ_pythia']['%s_pass_pass' % region]
-            zz = channel_info['ZZ']['%s_pass_pass' % region]
-            zjets = ufloat(channel_info['data']['%s_zj_estimate' % region])
-            data = channel_info['data']['%s_pass_pass' % region]
-            total_wz += wz
-            total_zz += zz
-            total_zj += zjets
-            total_obs += data
-            total_bkg = zjets + wz + zz
+            def rel_float(x, err):
+                return ufloat( (x, x*err) )
+
+            for channel, channel_info in channels.iteritems():
+                wz = rel_float(channel_info['WZ_pythia']['%s_pass_pass' % region], 0.25)
+                zz = rel_float(channel_info['ZZ']['%s_pass_pass' % region], 0.1)
+                zjets = ufloat(channel_info['data']['%s_zj_estimate' % region])
+                est120 = ufloat(channel_info['data']['%s_type120_est' % region])
+                est1 = ufloat(channel_info['data']['%s_type_1_est' % region])
+                est2 = ufloat(channel_info['data']['%s_type_2_est' % region])
+                est0 = ufloat(channel_info['data']['%s_type_0_est' % region])
+
+                if region == 'os' and use_corr:
+                    zjets = ufloat(channel_info['data']['%s_zj_estimate_corr' % region])
+
+                def make_positive(x):
+                    if x.nominal_value < 0:
+                        return ufloat( (0, x.std_dev()) )
+                    return x
+
+                zjets = make_positive(zjets)
+                est1 = make_positive(est1)
+                est2 = make_positive(est2)
+                est0 = make_positive(est0)
+                est120 = make_positive(est120)
+
+                data = channel_info['data']['%s_pass_pass' % region]
+                total_wz += wz
+                total_zz += zz
+                total_zj += zjets
+                total_obs += data
+                total_bkg = zjets + wz + zz
+                total_120 += est120
+                total_1 += est1
+                total_2 += est2
+                total_0 += est0
+                table.add_row([
+                    channel,
+                    '%0.f' % data,
+                    '%0.2f +/- %0.2f' % (total_bkg.nominal_value, total_bkg.std_dev()),
+                    '%0.2f +/- %0.2f' % (zjets.nominal_value, zjets.std_dev()),
+                    '%0.2f +/- %0.2f' % (wz.nominal_value, wz.std_dev()),
+                    '%0.2f +/- %0.2f' % (zz.nominal_value, zz.std_dev()),
+                    '%0.2f +/- %0.2f' % (est1.nominal_value, est1.std_dev()),
+                    '%0.2f +/- %0.2f' % (est2.nominal_value, est2.std_dev()),
+                    '%0.2f +/- %0.2f' % (est0.nominal_value, est0.std_dev()),
+                    '%0.2f +/- %0.2f' % (est120.nominal_value, est120.std_dev()),
+                ])
+            total_bkg = total_zj + total_wz + total_zz
             table.add_row([
-                channel,
-                '%0.f' % data,
+                'all',
+                '%0.f' % total_obs,
                 '%0.2f +/- %0.2f' % (total_bkg.nominal_value, total_bkg.std_dev()),
-                '%0.2f +/- %0.2f' % (zjets.nominal_value, zjets.std_dev()),
-                '%0.2f' % wz,
-                '%0.2f' % zz
+                '%0.2f +/- %0.2f' % (total_zj.nominal_value, total_zj.std_dev()),
+                '%0.2f +/- %0.2f' % (total_wz.nominal_value, total_wz.std_dev()),
+                '%0.2f +/- %0.2f' % (total_zz.nominal_value, total_zz.std_dev()),
+                '%0.2f +/- %0.2f' % (total_1.nominal_value, total_1.std_dev()),
+                '%0.2f +/- %0.2f' % (total_2.nominal_value, total_2.std_dev()),
+                '%0.2f +/- %0.2f' % (total_0.nominal_value, total_0.std_dev()),
+                '%0.2f +/- %0.2f' % (total_120.nominal_value, total_120.std_dev()),
             ])
-        total_bkg = total_zj + total_wz + total_zz
-        table.add_row([
-            'all',
-            '%0.f' % total_obs,
-            '%0.2f +/- %0.2f' % (total_bkg.nominal_value, total_bkg.std_dev()),
-            '%0.2f +/- %0.2f' % (total_zj.nominal_value, total_zj.std_dev()),
-            '%0.2f' % total_wz,
-            '%0.2f' % total_zz
-        ])
 
-        print table
+            print table
+
+            print "Channel & Data & Type 1 & Type 2 & Type 0 & 1 + 2 - 0 \\\\"
+            for row in table._rows:
+                def texify(x):
+                    return '$' + x.replace('+/-', '\pm') + '$'
+                print " & ".join( [
+                    row[0],
+                    row[1],
+                    texify(row[6]),
+                    texify(row[7]),
+                    texify(row[8]),
+                    texify(row[9]),
+                ]) + "\\\\"
+
