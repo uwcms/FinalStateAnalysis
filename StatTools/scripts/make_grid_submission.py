@@ -149,4 +149,5 @@ if __name__ == "__main__":
              options.steps*options.jobs*options.iter)
     log.info("Toys per call: %i", options.toys)
 
-    print "Now run condor_submit %s/submit" % options.submitdir
+    print "Now run:"
+    print "condor_submit %s/submit" % options.submitdir
