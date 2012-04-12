@@ -7,6 +7,7 @@ Implementation of ZH search in the e-e-mu-tau channel
 from Analyzer import Analyzer
 from FinalStateAnalysis.TMegaSelector.megautil import MetaTree, And, Or
 from zh_zee_selection import build_zee_selection
+import ROOT
 
 meta = MetaTree()
 
@@ -72,6 +73,15 @@ mt_cut = meta.mMtToMET < 50
 def pu_weight(x):
     return x.puWeightData2011AB
 
+def fake_weight(x):
+    return x*(1.-x)
+
+def exp(x, p0, p1, p2):
+    return p0 + p1*ROOT.TMath.Exp(p2*x)
+
+def tau_fake(x):
+    return fake_weight(exp(x.tPt, 0.0131, 0.280, -0.110))
+
 basic_histograms = [
     (lambda x: x.e1Pt, '', ('e1Pt', '#mu_{1} p_{T}', 20, 0, 200)),
     (lambda x: x.e1AbsEta, '', ('e1AbsEta', '#mu_{1} |#eta|', 10, 0, 2.5)),
@@ -102,11 +112,13 @@ class AnalyzeEEMT(Analyzer):
         for sign_type, sign_cut in [ ('os', os), ('ss', ~os) ]:
             for l1_label, l1_cut in [('pass', l1_id), ('fail', ~l1_id)]:
                 for l2_label, l2_cut in [('pass', l2_id), ('fail', ~l2_id)]:
+                    histos = build_histo_list(pu_weight)
                     self.define_region(
                         '_'.join(
                             [sign_type, l1_name, l1_label, l2_name, l2_label]),
                         unique & sign_cut & base_selections & l1_cut & l2_cut,
-                        build_histo_list(pu_weight)
+                        build_histo_list(pu_weight) +
+                        build_histo_list(tau_fake, "tau_fake")
                     )
 
         self.disable_branch('*')
