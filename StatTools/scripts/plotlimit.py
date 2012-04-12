@@ -76,9 +76,11 @@ if __name__ == "__main__":
 
     canvas = ROOT.TCanvas("c", "c", args.cx, args.cy)
 
-    frame = ROOT.TH1F("frame", "frame", 1,
-                      min(limit_data[key].keys()),
-                      max(limit_data[key].keys()))
+    xmin = min(limit_data[key].keys())
+    xmax = max(limit_data[key].keys())
+
+    frame = ROOT.TH1F("frame", "frame", 1, xmin, xmax)
+
     frame.Draw()
     #frame.SetTitle("WH(#tau#tau) limits [4.6 fb^{-1}]")
     frame.GetYaxis().SetTitle("95% CL upper limit on #sigma/#sigma_{SM}")
@@ -135,4 +137,23 @@ if __name__ == "__main__":
     canvas.RedrawAxis()
 
     canvas.RedrawAxis()
+
+    # Add some extra lines on the border to make it look nice
+    top_frame_line = ROOT.TLine(xmin, args.maxy, xmax, args.maxy)
+    top_frame_line.SetLineWidth(2)
+    top_frame_line.Draw()
+
+    right_frame_line = ROOT.TLine(xmax, 0, xmax, args.maxy)
+    right_frame_line.SetLineWidth(2)
+    right_frame_line.Draw()
+
+    left_frame_line = ROOT.TLine(xmin, 0, xmin, args.maxy)
+    left_frame_line.SetLineWidth(2)
+    left_frame_line.Draw()
+
+    bottom_frame_line = ROOT.TLine(xmin, 0, xmax, 0)
+    bottom_frame_line.SetLineWidth(2)
+    bottom_frame_line.Draw()
+
+
     canvas.SaveAs(args.output)
