@@ -15,7 +15,7 @@ def get_dir(sample):
 
 dag_directory = "/scratch/efriis/%s/dags" % jobId
 if not os.path.exists(dag_directory):
-    os.mkdir(dag_directory)
+    os.makedirs(dag_directory)
 
 print "export TERMCAP=screen"
 for sample, sample_info in sorted(datadefs.iteritems(), key=lambda (x,y): x):
