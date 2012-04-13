@@ -22,11 +22,12 @@ id = PSet(
     objectCiCMedium = '{object}.electronID("cicMedium")',
     objectCiCTight = '{object}.electronID("cicTight")',
     # Use cms.string so we get the parentheses formatting bonus
+    # NB that the Beta PU deposit is put in particleIso
     objectRelPFIsoDB = cms.string(
         "({object}.chargedHadronIso"
         "+max({object}.photonIso()"
         "+{object}.neutralHadronIso()"
-        "-0.5*{object}.userIso(0),0.0))"
+        "-0.5*{object}.particleIso(),0.0))"
         "/{object}.pt()"
     ),
     objectRelIso = cms.string("({object}.dr03TkSumPt()"
