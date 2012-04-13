@@ -89,7 +89,7 @@ correction = '*'.join([
 summary = {}
 
 var = 'ElectronPt'
-binning = [100, 0, 100],
+binning = [100, 0, 100]
 rebin = 5
 
 #var = 'IsoMus_HLTGroup'
@@ -134,6 +134,7 @@ for eta_bin in eta_bins:
         rebin = rebin,
     )
 
+    log.info("getting data histogram")
     data_denom = plotter.get_histogram(
         'data_SingleMu',
         '/em/final/Ntuple:denom_' + label,
@@ -142,6 +143,7 @@ for eta_bin in eta_bins:
     )
 
     #canvas.cd(1)
+    log.info("drawing stack")
     stack_denom.Draw()
     stack_denom.GetXaxis().SetTitle('Electron p_{T}')
     data_denom.Draw("pe, same")
@@ -187,8 +189,6 @@ for eta_bin in eta_bins:
     canvas.Update()
 
     saveplot('num_versus_pt_%s' % label)
-
-    continue
 
     rebinning = [5, 10, 15, 20, 25, 30, 100]
 
