@@ -39,6 +39,8 @@ class PATFinalStateEvent {
         const edm::Ptr<pat::MET>& met
     );
 
+    // This constructor should only be used in the initial production!
+    // It automatically sets the version() to the current one.
     PATFinalStateEvent(double rho,
         const edm::Ptr<reco::Vertex>& pv,
         const edm::PtrVector<reco::Vertex>& recoVertices,
@@ -125,6 +127,13 @@ class PATFinalStateEvent {
     /// Is real data
     bool isRealData() const { return isRealData_; }
 
+    /// Get the version of the FinalState data formats API
+    /// This allows you to detect which version of the software was used
+    /// So that the methods can be update.
+    /// The FSA_DATA_FORMAT_VERSION def at the top of the .cc file should be
+    /// incremented after each change to the data format.
+    char version() const { return fsaDataFormatVersion_; }
+
   private:
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;
@@ -141,6 +150,7 @@ class PATFinalStateEvent {
     GenEventInfoProduct genEventInfoProduct_;
     bool isRealData_;
     std::string puScenario_;
+    char fsaDataFormatVersion_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */

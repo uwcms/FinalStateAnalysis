@@ -6,6 +6,8 @@
 
 #include "DataFormats/Math/interface/deltaR.h"
 
+#define FSA_DATA_FORMAT_VERSION 1
+
 namespace {
   int matchedToAnObject(const pat::TriggerObjectRefVector& trgObjects,
       const reco::Candidate& cand, double maxDeltaR) {
@@ -57,7 +59,8 @@ PATFinalStateEvent::PATFinalStateEvent(
   evtID_(evtId),
   genEventInfoProduct_(genEventInfo),
   isRealData_(isRealData),
-  puScenario_(puScenario) { }
+  puScenario_(puScenario),
+  fsaDataFormatVersion_(FSA_DATA_FORMAT_VERSION) { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
 
