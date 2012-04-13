@@ -43,6 +43,8 @@ base_dimuon_selection = [
     #'(Muon2_hltDiMuonL3PreFiltered7 | Muon2_hltDiMuonL3p5PreFiltered8)',
     'Muon1Charge*Muon2Charge < 0',
     'METPt < 30',
+    'abs(Muon1DZ) < 0.2',
+    'abs(Muon2DZ) < 0.2',
 ]
 
 # We also look at E-Mu OS + probe
@@ -72,7 +74,12 @@ base_qcd_selection = [
     #'NBjetsPt20_Nbjets > 0', # For ttbar
     'DoubleMus_HLT > 0.5 ',
     'Muon1Charge*Muon2Charge > 0', # Same sign (to kill DY)
+    'abs(Muon1DZ) < 0.2',
+    'abs(Muon2DZ) < 0.2',
     'Tau_LooseHPS < 0.5',
+    'abs(Muon1DZ) < 0.2',
+    'abs(Muon2DZ) < 0.2',
+    'abs(TauDZ) < 0.2',
 ]
 
 base_qcd_for_taus_selection = [
@@ -85,33 +92,12 @@ base_qcd_for_taus_selection = [
     'NIsoMuonsPt5_Nmuons < 1',
     #'NBjetsPt20_Nbjets > 0', # For ttbar
     'DoubleMus_HLT > 0.5 ',
-]
-
-
-# For e fake rate measurement
-base_qcd_emm_selection = [
-    'Mu1Pt > 18',
-    'Mu2Pt > 9',
-    'Mu1AbsEta < 2.1',
-    'Mu2AbsEta < 2.1',
-    'Mu1_MuRelIso > 0.5',
-    'Mu1_MuID_WWID > 0.5',
-    'Mu2_MuRelIso > 0.5',
-    'Mu2_MuID_WWID > 0.5',
-    'NIsoMuonsPt5_Nmuons < 1',
-    #'NBjetsPt20_Nbjets < 0.5', # For ttbar
-    'Mu1Charge*Mu2Charge > 0', # Same sign (to kill DY)
-    'vtxNDOF > 0',
-    'vtxChi2/vtxNDOF < 10',
+    'abs(Muon1DZ) < 0.2',
+    'abs(Muon2DZ) < 0.2',
 ]
 
 # Stupid names are different, fix this
 base_dimuon_emm = [
-    x.replace('Muon1', 'Mu1').replace('Muon2', 'Mu2')
-    for x in base_dimuon_selection
-]
-
-base_ttbar_eem = [
     x.replace('Muon1', 'Mu1').replace('Muon2', 'Mu2')
     for x in base_dimuon_selection
 ]
@@ -121,29 +107,6 @@ base_dimuon_emm_MuEG = [
     x.replace('DoubleMus_HLT', 'Mu17Ele8All_HLT') for x in base_dimuon_emm
 ]
 
-base_qcd_emm_selection_MuEG = [
-    x.replace('DoubleMus_HLT', 'Mu17Ele8All_HLT') for x in base_qcd_emm_selection
-]
-
-
-# Selecting Z->ee events
-base_dielectron_selection = [
-    'Elec1Pt > 15',
-    'Elec2Pt > 10',
-    'Elec1AbsEta < 2.5',
-    'Elec2AbsEta < 2.5',
-    'Elec1_ERelIso < 0.15',
-    'Elec2_ERelIso < 0.15',
-    'Elec1_EID_WWID > 0.5',
-    'Elec2_EID_WWID > 0.5',
-    'NIsoMuonsPt5_Nmuons < 1',
-    'NBjetsPt20_Nbjets < 1', # Against ttbar
-    #'DoubleMuTriggers_HLT > 0.5 ',
-    'Elec1Charge*Elec2Charge < 0',
-    'vtxNDOF > 0',
-    'vtxChi2/vtxNDOF < 10',
-    'METPt < 20',
-]
 
 fakerates = {
     'tau' : {
@@ -168,6 +131,7 @@ fakerates = {
             'TauPt > 20',
             'TauAbsEta < 2.3',
             'Tau_DecayMode > 0.5',
+            'abs(TauDZ) < 0.2',
         ],
         'num' : [
             'Tau_LooseHPS > 0.5'
@@ -193,6 +157,7 @@ fakerates = {
             'TauAbsEta < 2.3',
             'Tau_DecayMode > 0.5',
             'METPt < 30',
+            'abs(TauDZ) < 0.2',
         ],
         'num' : [
             'Tau_LooseHPS > 0.5'
@@ -220,6 +185,7 @@ fakerates = {
             'TauPt > 20',
             'TauAbsEta < 2.3',
             'Tau_DecayMode > 0.5',
+            'abs(TauDZ) < 0.2',
         ],
         'num' : [
             'Tau_LooseHPS > 0.5'
@@ -245,64 +211,12 @@ fakerates = {
             'TauAbsEta < 2.3',
             'Tau_DecayMode > 0.5',
             'METPt < 30',
+            'abs(TauDZ) < 0.2',
         ],
         'num' : [
             'Tau_LooseHPS > 0.5'
         ],
     },
-    #'tauLeadTrk7' : {
-        #'ntuple' : 'mmt',
-        #'pd' : 'data_DoubleMu',
-        #'exclude' : ['*DoubleE*', '*MuEG*'],
-        #'mc_pd' : 'Zjets',
-        #'varname' : 'TauJetPt',
-        #'vartitle' : 'Tau Jet p_{T}',
-        #'var' : 'TauJetPt',
-        #'varbinning' : [100, 0, 100],
-        #'rebin' : 5,
-        #'evtType' : '#mu#mu + jet',
-        #'base_cuts' : base_dimuon_selection,
-        #'control_plots' : [
-        #],
-        #'final_cuts' : [],
-        #'denom' : [
-            #'Muon1_Muon2_Mass > 86',
-            #'Muon1_Muon2_Mass < 95',
-            #'Tau_MtToMET < 40',
-            #'TauPt > 20',
-            #'TauAbsEta < 2.3',
-            #'Tau_DecayMode > 0.5',
-        #],
-        #'num' : [
-            #'Tau_LooseHPS > 0.5',
-            #'TauLeadTrkPt > 7',
-        #],
-    #},
-    #'tauQCDLeadTrk7' : {
-        #'ntuple' : 'mmt',
-        #'pd' : 'data_DoubleMu',
-        #'exclude' : ['*DoubleE*', '*MuEG*'],
-        #'mc_pd' : 'Zjets',
-        #'varname' : 'TauJetPt',
-        #'vartitle' : 'Tau Jet p_{T}',
-        #'var' : 'TauJetPt',
-        #'varbinning' : [100, 0, 100],
-        #'rebin' : 5,
-        #'evtType' : '#mu#mu + jet',
-        #'base_cuts' : base_qcd_for_taus_selection,
-        #'control_plots' : [
-        #],
-        #'final_cuts' : [],
-        #'denom' : [
-            #'TauPt > 20',
-            #'TauAbsEta < 2.3',
-            #'Tau_DecayMode > 0.5',
-            #'METPt < 30',
-        #],
-        #'num' : [
-            #'Tau_LooseHPS > 0.5'
-        #],
-    #},
     'mu' : {
         'ntuple' : 'mmm',
         'pd' : 'data_DoubleMu',
@@ -327,6 +241,7 @@ fakerates = {
             'Muon1_Muon2_Mass > 85',
             'Muon1_Muon2_Mass < 95',
             'Muon3_MtToMET < 20',
+            'abs(Muon3DZ) < 0.2',
         ],
         'num' : [
             'Muon3_MuID_WWID > 0.5',
@@ -355,6 +270,7 @@ fakerates = {
             'METPt > 20',
             'Mu2_MuBtag < 3.3',
             'Mu2_InnerNPixHits > 0.5',
+            'abs(Mu2DZ) < 0.2',
         ],
         'num' : [
             'Mu2_MuID_WWID > 0.5',
@@ -381,6 +297,7 @@ fakerates = {
             'Muon2AbsEta < 2.5',
             'Muon2Pt > 10',
             'METPt < 20',
+            'abs(Muon2DZ) < 0.2',
         ],
         'num' : [
             'Muon2_MuID_WWID > 0.5',
@@ -411,7 +328,7 @@ fakerates = {
             'Elec_EBtag < 3.3',
             'Elec_MissingHits < 0.5',
             'Elec_hasConversion < 0.5',
-            'ElecDZ < 0.2',
+            'abs(ElecDZ) < 0.2',
             'NIsoElecPt10_Nelectrons < 0.5',
         ],
         'num' : [
@@ -449,7 +366,7 @@ for data_set, skips, int_lumi in [
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'VH', '2012-02-01-v1-WHAnalyze', 'scratch_results',
+        'VH', '2012-02-19-v1-WHAnalyze', 'scratch_results',
         int_lumi, skips, count='emt/skimCounter')
 
     legend = plotter.build_legend(

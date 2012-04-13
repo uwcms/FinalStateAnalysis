@@ -40,8 +40,9 @@ selections = [
 
     'ElectronCharge*Muon2Charge < 0',
     'Electron_EBtag < 3.3',
-    'Muon2DZ < 0.2',
-    'ElectronDZ < 0.2',
+    'abs(Muon2DZ) < 0.2',
+    'abs(ElectronDZ) < 0.2',
+
     'Electron_MissingHits < 0.5',
     'Electron_hasConversion < 0.5',
 

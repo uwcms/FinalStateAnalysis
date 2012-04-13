@@ -83,9 +83,9 @@ cfg = {
 
             'Mu_MuBtag < 3.3',
 
-            'MuDZ < 0.2',
-            'ElecDZ < 0.2',
-            'TauDZ < 0.2',
+            'abs(MuDZ) < 0.2',
+            'abs(ElecDZ) < 0.2',
+            'abs(TauDZ) < 0.2',
             'Tau_TauBtag < 3.3',
             'Tau_ElectronMVA > 0.5',
             'Tau_ElectronMedium > 0.5',
@@ -294,9 +294,9 @@ cfg = {
             'Muon2_MuBtag < 3.3',
             'Muon1_MuBtag < 3.3',
 
-            'Muon1DZ < 0.2',
-            'Muon2DZ < 0.2',
-            'TauDZ < 0.2',
+            'abs(Muon1DZ) < 0.2',
+            'abs(Muon2DZ) < 0.2',
+            'abs(TauDZ) < 0.2',
 
             'Tau_MuonOverlapSuperLoose < 0.5',
             'Tau_ElectronOverlapWP95 < 0.5',
@@ -391,9 +391,9 @@ cfg = {
 
             'ElecPt > 10',
             'Mu2_InnerNPixHits > 0.5',
-            'Mu1DZ < 0.2',
-            'Mu2DZ < 0.2',
-            'ElecDZ < 0.2',
+            'abs(Mu1DZ) < 0.2',
+            'abs(Mu2DZ) < 0.2',
+            'abs(ElecDZ) < 0.2',
         ],
         'corrections' : [
             'MuIso(Mu1Pt, Mu1AbsEta, run)',
