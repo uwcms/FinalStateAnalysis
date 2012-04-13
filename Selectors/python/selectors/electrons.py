@@ -21,6 +21,9 @@ reliso = cms.PSet(
     invert = cms.bool(False)
 )
 
+# Watchout, the above ISO IS BUGGED!  Just using the one in plotting,
+# this code is dead now anyway.
+
 # For  HLT_Mu17_Ele8_CaloIdL_v*
 hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter = cms.PSet(
     name = cms.string("${name}_hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter"),

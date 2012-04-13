@@ -124,14 +124,30 @@ hasConversion = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+# This is not DB corrected, or PF!
 reliso = cms.PSet(
+    min = cms.untracked.double(0.0),
+    max = cms.untracked.double(2),
+    nbins = cms.untracked.int32(200),
+    name = cms.untracked.string("${name}_ERelIsoBad"),
+    description = cms.untracked.string("${nicename} Electron Rel. Iso"),
+    plotquantity = cms.untracked.string(
+        selectors.electrons.reliso.plottable.value()),
+    lazyParsing = cms.untracked.bool(True),
+)
+
+relpfiso = cms.PSet(
     min = cms.untracked.double(0.0),
     max = cms.untracked.double(2),
     nbins = cms.untracked.int32(200),
     name = cms.untracked.string("${name}_ERelIso"),
     description = cms.untracked.string("${nicename} Electron Rel. Iso"),
     plotquantity = cms.untracked.string(
-        selectors.electrons.reliso.plottable.value()),
+        "({getter}chargedHadronIso"
+        "+max({getter}photonIso()"
+        "+{getter}neutralHadronIso()"
+        "-0.5*{getter}particleIso(),0.0))"
+        "/{getter}pt()"
     lazyParsing = cms.untracked.bool(True),
 )
 
@@ -261,7 +277,7 @@ hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter = get_trigger_matching(
     'hltMu8Ele17CaloIdTCaloIsoVLPixelMatchFilter')
 
 all = [
-    reliso, wwid, mitid, jetPt, rawJetPt, btag, btagmuon, missingHits,
+    reliso, relpfiso, wwid, mitid, jetPt, rawJetPt, btag, btagmuon, missingHits,
     hasConversion, muonoverlap,
     chargeIdTight, chargeIdMedium, chargeIdLoose,
     deltaEtaSuperClusterTrack, deltaPhiSuperClusterTrack, sigmaIEta, hOverE,
