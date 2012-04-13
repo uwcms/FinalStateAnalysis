@@ -320,6 +320,9 @@ trilepton_mass_points=$(shell seq 115 5 140) $(shell seq 150 10 200)
 trilepton_cards/combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(wh3l_cards)/%/vh3l_cut.txt
 	combineCards.py -S TT=cards/combined_$*.txt WWW=$(wh3l_cards)/$*/vh3l_cut.txt > $@
 
+trilepton_cards/zh_combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(wh3l_cards)/%/vh3l_cut.txt
+	combineCards.py -S TT=cards/combined_$*.txt WWW=$(wh3l_cards)/$*/vh3l_cut.txt ZH=/afs/cern.ch/user/a/abdollah/public/For_Evan/hzz2l2t_130.txt > $@
+
 trilepton_cards/combined_%.root: trilepton_cards/combined_%.txt
 	text2workspace.py $< -o $@
 
