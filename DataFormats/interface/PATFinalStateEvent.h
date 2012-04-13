@@ -7,8 +7,6 @@
  *
  *   Author: Evan K. Friis, UW Madison
  *
- *   In the future:
- *      > Move MET and PV to here exclusively?
  */
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
