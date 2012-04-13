@@ -87,12 +87,26 @@ def addElecPFIsolation(process, patSequence):
             )
         )
     )
+    process.elePFIsoValuePULow = cms.EDProducer(
+        "CandIsolatorFromDeposits",
+        deposits = cms.VPSet(
+            cms.PSet(
+                src = cms.InputTag("elePFIsoDepositPU"),
+                deltaR = cms.double(0.4),
+                weight = cms.string('1'),
+                vetos = cms.vstring('0.0','Threshold(0.0)'),
+                skipDefaultVeto = cms.bool(True),
+                mode = cms.string('sum')
+            )
+        )
+    )
     process.elePFIsoValues =  cms.Sequence(
         process.elePFIsoValueAll
         * process.elePFIsoValueCharged
         * process.elePFIsoValueNeutral
         * process.elePFIsoValueGamma
         * process.elePFIsoValuePU
+        * process.elePFIsoValuePULow
     )
     #
     #KLUDGE : Since PAT electron does not support custom iso deposits
@@ -109,7 +123,11 @@ def addElecPFIsolation(process, patSequence):
         pfAllParticles   = cms.InputTag("elePFIsoValuePU"),
         pfChargedHadrons = cms.InputTag("elePFIsoValueCharged"),
         pfNeutralHadrons = cms.InputTag("elePFIsoValueNeutral"),
-        pfPhotons        = cms.InputTag("elePFIsoValueGamma")
+        pfPhotons        = cms.InputTag("elePFIsoValueGamma"),
+        user = cms.VInputTag(
+            cms.InputTag("elePFIsoValuePU"),
+            cms.InputTag("elePFIsoValuePULow")
+        )
     )
     # Inject into sequence
     process.eleisolationSequence = cms.Sequence(
