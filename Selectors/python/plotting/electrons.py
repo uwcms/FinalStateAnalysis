@@ -148,6 +148,7 @@ relpfiso = cms.PSet(
         "+{getter}neutralHadronIso()"
         "-0.5*{getter}particleIso(),0.0))"
         "/{getter}pt()"
+    ),
     lazyParsing = cms.untracked.bool(True),
 )
 
