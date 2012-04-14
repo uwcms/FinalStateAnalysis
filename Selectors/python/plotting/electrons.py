@@ -143,11 +143,11 @@ relpfiso = cms.PSet(
     name = cms.untracked.string("${name}_ERelIso"),
     description = cms.untracked.string("${nicename} Electron Rel. Iso"),
     plotquantity = cms.untracked.string(
-        "({getter}chargedHadronIso"
-        "+max({getter}photonIso()"
-        "+{getter}neutralHadronIso()"
-        "-0.5*{getter}particleIso(),0.0))"
-        "/{getter}pt()"
+        "(${getter}chargedHadronIso"
+        "+max(${getter}photonIso()"
+        "+${getter}neutralHadronIso()"
+        "-0.5*${getter}particleIso(),0.0))"
+        "/${getter}pt()"
     ),
     lazyParsing = cms.untracked.bool(True),
 )
