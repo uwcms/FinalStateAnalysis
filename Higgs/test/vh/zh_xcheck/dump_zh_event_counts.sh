@@ -12,13 +12,13 @@ do
   echo  -n "l1 anti: " 
   combine_event_lists.py results/analysis/$channel/*l1*events --count
   echo -n "/" 
-  python abdollahs_counts.py $channel 1
+  python zh_xcheck/abdollahs_counts.py $channel 1
   echo  -n "l2 anti: " 
   combine_event_lists.py results/analysis/$channel/*l2*events --count
   echo -n "/" 
-  python abdollahs_counts.py $channel 2
+  python zh_xcheck/abdollahs_counts.py $channel 2
   echo  -n "both anti: " 
   combine_event_lists.py results/analysis/$channel/*both*events --count
   echo -n "/" 
-  python abdollahs_counts.py $channel 0
+  python zh_xcheck/abdollahs_counts.py $channel 0
 done
