@@ -24,7 +24,7 @@ do
   echo -n " files, "
   # Only update the file if it's changed
   cmp -s $OUTPUTDIR/${sample}.tmp.txt $OUTPUTDIR/${sample}.txt 
-  if [ $? -eq 1 ]; then
+  if [ $? -ne 0 ]; then
     echo "new files found."
     mv $OUTPUTDIR/${sample}.tmp.txt $OUTPUTDIR/${sample}.txt 
   else
