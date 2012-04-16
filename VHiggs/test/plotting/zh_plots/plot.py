@@ -133,7 +133,7 @@ stack.Add(hZZ)
 
 stack.Draw()
 print stack
-#stack.GetXaxis().SetTitle("Mass [GeV]")
+stack.GetXaxis().SetTitle("Mass [GeV]")
 stack.SetMinimum(1e-1)
 stack.SetMaximum(7)
 hHWW.Draw('same,hist')
