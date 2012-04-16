@@ -485,7 +485,7 @@ for data_set, skips, int_lumi, puTag in [
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'Mu', '2012-02-20-v1-MuonTP', 'scratch_results', int_lumi, skips,
+        'Mu', '2012-04-14-v1-MuonTP', 'scratch_results', int_lumi, skips,
         count = '/mm/skimCounter', unweighted = False)
 
     legend = plotter.build_legend(

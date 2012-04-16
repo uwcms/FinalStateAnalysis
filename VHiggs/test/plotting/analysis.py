@@ -231,6 +231,7 @@ if __name__ == "__main__":
                     canvas.SetLogy(True)
                     if histo:
                         histo.SetMaximum(histo.GetMaximum()*10.)
+                    canvas.Print(filename.replace('.pdf', '.root'))
                     canvas.Update()
                     canvas.Print(filename.replace(filetype, '_log' + filetype))
                     if histo:

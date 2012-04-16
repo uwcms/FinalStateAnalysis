@@ -43,6 +43,12 @@ class AnalysisSample(object):
     def get_weight(self):
         return self.file.weight
 
+    def get_event_count(self):
+        return self.file.event_count
+
+    def get_skim_eff(self):
+        return self.file.skim_eff
+
     def get(self, path, **kwargs):
         self.check_hists('gethisto')
         owned_key = (path, tuple(kwargs.keys()))
@@ -206,6 +212,12 @@ class AnalysisMultiSample(AnalysisSample):
     def get_weight(self):
         return [x.get_weight() for x in self.subsamples]
 
+    def get_event_count(self):
+        return [x.get_event_count() for x in self.subsamples]
+
+    def get_skim_eff(self):
+        return [x.get_skim_eff() for x in self.subsamples]
+
     def get(self, path, **kwargs):
         owned_key = (path, tuple(kwargs.keys()))
         if owned_key not in self.owned:
@@ -347,6 +359,21 @@ class AnalysisPlotter(object):
                     sample, ", ".join(self.sample_dict.keys())))
         return self.sample_dict[sample].get_weight()
 
+    def get_skim_eff(self, sample):
+        ''' Get the skim eff for a sample '''
+        if sample not in self.sample_dict:
+            raise KeyError(
+                "I don't know anything about sample %s - only these: %s" % (
+                    sample, ", ".join(self.sample_dict.keys())))
+        return self.sample_dict[sample].get_skim_eff()
+
+    def get_event_count(self, sample):
+        ''' Get the event count for a sample '''
+        if sample not in self.sample_dict:
+            raise KeyError(
+                "I don't know anything about sample %s - only these: %s" % (
+                    sample, ", ".join(self.sample_dict.keys())))
+        return self.sample_dict[sample].get_event_count()
 
 
 if __name__ == "__main__":

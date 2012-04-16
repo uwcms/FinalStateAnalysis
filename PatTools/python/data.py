@@ -36,6 +36,7 @@ def skip_sample(sample, skips):
 
 def get_result_dir(jobid, source, sample):
     result_dir = "-".join([jobid, sample, 'analyze*'])
+    result_dir = os.path.join(jobid, sample)
     return os.path.join(os.environ[source], result_dir, '*', '*.root')
 
 def build_data(analysis, jobid, source, target_lumi,

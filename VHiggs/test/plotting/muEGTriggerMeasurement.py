@@ -54,7 +54,7 @@ selections = [
 ]
 
 samples, plotter = data_tool.build_data(
-    'Mu', '2012-02-20-v1-MuonTP', 'scratch_results',
+    'Mu', '2012-04-14-v1-MuonTP', 'scratch_results',
     4684, ['MuEG', 'DoubleMu', 'EM'], count='em/skimCounter')
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 1200, 600)

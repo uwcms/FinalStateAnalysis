@@ -1,16 +1,16 @@
 {
     "tau": {
-        "combined_num": 7910.0, 
-        "fitted_func": "4.0899e+00*TMath::Landau(VAR,2.6072e+01,2.1624e+00,0)+2.4847e-10", 
+        "combined_num": 10357.0, 
+        "fitted_func": "3.7960e+00*TMath::Landau(VAR,2.6477e+01,2.1977e+00,0)+3.7587e-10", 
         "vars": {
-            "mu": 26.071635638902201, 
-            "scale": 4.0899339551992471, 
-            "sigma": 2.1624071831836145, 
-            "offset": 2.4847107704673022e-10
+            "mu": 26.476792187033904, 
+            "scale": 3.79600958961659, 
+            "sigma": 2.1977240265078315, 
+            "offset": 3.7586844747750092e-10
         }, 
-        "combined_denom": 238744.0, 
+        "combined_denom": 316117.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
-        "combined_eff": 0.033131722682035986, 
+        "combined_eff": 0.032763185782479269, 
         "fit_status": 0, 
         "types": {
             "TriLep_ZMM": {
@@ -22,23 +22,23 @@
                 "num": 2968.0
             }, 
             "SingleMu_Wjets": {
-                "denom": 191532.0, 
-                "num": 6051.0
+                "denom": 268905.0, 
+                "num": 8498.0
             }
         }
     }, 
     "muQCD": {
-        "combined_num": 1904.0, 
-        "fitted_func": "2.8788e+00*TMath::Landau(VAR,1.4800e+01,2.6021e+00,0)+2.9508e-04", 
+        "combined_num": 2473.0, 
+        "fitted_func": "2.8794e+00*TMath::Landau(VAR,1.4775e+01,2.6034e+00,0)+5.5947e-04", 
         "vars": {
-            "mu": 14.799812179014737, 
-            "scale": 2.878843308207478, 
-            "sigma": 2.6021495880509193, 
-            "offset": 0.00029507826269142834
+            "mu": 14.775167798643807, 
+            "scale": 2.8793911965787222, 
+            "sigma": 2.603420962994941, 
+            "offset": 0.00055946724489108757
         }, 
-        "combined_denom": 38762.0, 
+        "combined_denom": 49793.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
-        "combined_eff": 0.049120272431763069, 
+        "combined_eff": 0.049665615648785973, 
         "fit_status": 0, 
         "types": {
             "TriLep_ZMM": {
@@ -46,12 +46,12 @@
                 "num": 32.0
             }, 
             "SingleMu_Wjets": {
-                "denom": 2431.0, 
-                "num": 172.0
+                "denom": 3348.0, 
+                "num": 232.0
             }, 
             "SingleMu_QCD": {
-                "denom": 28202.0, 
-                "num": 1417.0
+                "denom": 39233.0, 
+                "num": 1986.0
             }, 
             "Trilep_QCD": {
                 "denom": 10560.0, 
@@ -60,22 +60,22 @@
         }
     }, 
     "eMITQCD": {
-        "combined_num": 585.0, 
-        "fitted_func": "1.3455e+00*TMath::Landau(VAR,1.4992e+01,1.8292e+00,0)+6.9968e-03", 
+        "combined_num": 545.0, 
+        "fitted_func": "9.9815e-01*TMath::Landau(VAR,1.2856e+01,2.0200e+00,0)+5.4339e-03", 
         "vars": {
-            "mu": 14.991989537790019, 
-            "scale": 1.3454779478776402, 
-            "sigma": 1.8292377780423543, 
-            "offset": 0.0069968271147892169
+            "mu": 12.856197606994197, 
+            "scale": 0.99815492439645992, 
+            "sigma": 2.0200377436090342, 
+            "offset": 0.0054339461954693302
         }, 
-        "combined_denom": 35343.0, 
+        "combined_denom": 44729.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
-        "combined_eff": 0.016552075375604786, 
+        "combined_eff": 0.012184488810391469, 
         "fit_status": 0, 
         "types": {
             "SingleMu_QCD": {
-                "denom": 35343.0, 
-                "num": 585.0
+                "denom": 44729.0, 
+                "num": 545.0
             }
         }
     }, 
@@ -104,41 +104,41 @@
         }
     }, 
     "muHighPt": {
-        "combined_num": 56.0, 
-        "fitted_func": "4.6983e+00*TMath::Landau(VAR,2.8177e+01,3.5932e+00,0)+8.6458e-03", 
+        "combined_num": 73.0, 
+        "fitted_func": "4.8473e+00*TMath::Landau(VAR,2.8234e+01,3.4505e+00,0)+8.8033e-03", 
         "vars": {
-            "mu": 28.176815139599888, 
-            "scale": 4.6983000298398174, 
-            "sigma": 3.5931599557611209, 
-            "offset": 0.0086458260424188138
+            "mu": 28.233889396822232, 
+            "scale": 4.8472755136320735, 
+            "sigma": 3.4505437447258274, 
+            "offset": 0.0088032889073110798
         }, 
-        "combined_denom": 619.0, 
+        "combined_denom": 856.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
-        "combined_eff": 0.090468497576736667, 
+        "combined_eff": 0.085280373831775697, 
         "fit_status": 0, 
         "types": {
             "SingleMu_Wjets": {
-                "denom": 619.0, 
-                "num": 56.0
+                "denom": 856.0, 
+                "num": 73.0
             }, 
             "SingleMu_QCD": {
-                "denom": 5603.0, 
-                "num": 299.0
+                "denom": 7702.0, 
+                "num": 420.0
             }
         }
     }, 
     "mu": {
-        "combined_num": 204.0, 
-        "fitted_func": "4.4345e+00*TMath::Landau(VAR,9.5483e+00,3.6307e+00,0)+4.2790e-10", 
+        "combined_num": 264.0, 
+        "fitted_func": "3.4347e+00*TMath::Landau(VAR,1.4873e+01,3.0515e+00,0)+3.9810e-03", 
         "vars": {
-            "mu": 9.5483324154923661, 
-            "scale": 4.4345284012603399, 
-            "sigma": 3.6306532991853393, 
-            "offset": 4.2790021526073474e-10
+            "mu": 14.872662951744797, 
+            "scale": 3.434735141393066, 
+            "sigma": 3.0515189633099484, 
+            "offset": 0.003980954900154432
         }, 
-        "combined_denom": 2887.0, 
+        "combined_denom": 3804.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
-        "combined_eff": 0.070661586421891243, 
+        "combined_eff": 0.069400630914826497, 
         "fit_status": 0, 
         "types": {
             "TriLep_ZMM": {
@@ -146,12 +146,12 @@
                 "num": 32.0
             }, 
             "SingleMu_Wjets": {
-                "denom": 2431.0, 
-                "num": 172.0
+                "denom": 3348.0, 
+                "num": 232.0
             }, 
             "SingleMu_QCD": {
-                "denom": 28202.0, 
-                "num": 1417.0
+                "denom": 39233.0, 
+                "num": 1986.0
             }
         }
     }, 
@@ -180,22 +180,22 @@
         }
     }, 
     "muHighPtQCDOnly": {
-        "combined_num": 299.0, 
-        "fitted_func": "3.6670e+00*TMath::Landau(VAR,2.8927e+01,2.8765e+00,0)+4.7947e-03", 
+        "combined_num": 420.0, 
+        "fitted_func": "3.9300e+00*TMath::Landau(VAR,2.9480e+01,2.5117e+00,0)+9.2607e-03", 
         "vars": {
-            "mu": 28.92698293001753, 
-            "scale": 3.6669935854203222, 
-            "sigma": 2.8764922772401729, 
-            "offset": 0.004794662572457864
+            "mu": 29.479861058456823, 
+            "scale": 3.9300456076630139, 
+            "sigma": 2.5117230391640248, 
+            "offset": 0.0092607065612196338
         }, 
-        "combined_denom": 5603.0, 
+        "combined_denom": 7702.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
-        "combined_eff": 0.05336426914153132, 
+        "combined_eff": 0.054531290573876914, 
         "fit_status": 0, 
         "types": {
             "SingleMu_QCD": {
-                "denom": 5603.0, 
-                "num": 299.0
+                "denom": 7702.0, 
+                "num": 420.0
             }
         }
     }, 
@@ -224,30 +224,30 @@
         }
     }, 
     "eMIT": {
-        "combined_num": 410.0, 
-        "fitted_func": "1.7043e+00*TMath::Landau(VAR,1.2355e+01,1.9980e+00,0)+1.4866e-02", 
+        "combined_num": 423.0, 
+        "fitted_func": "1.6996e+00*TMath::Landau(VAR,1.1788e+01,1.7977e+00,0)+1.3375e-02", 
         "vars": {
-            "mu": 12.355184589096362, 
-            "scale": 1.7042911442478696, 
-            "sigma": 1.9980445325909866, 
-            "offset": 0.014865946609356862
+            "mu": 11.78832338467709, 
+            "scale": 1.6995646660027415, 
+            "sigma": 1.7977328391091874, 
+            "offset": 0.01337541758261207
         }, 
-        "combined_denom": 16814.0, 
+        "combined_denom": 20424.0, 
         "raw_func": "scale*TMath::Landau(jetPt,mu,sigma,0)+offset", 
-        "combined_eff": 0.024384441536814558, 
+        "combined_eff": 0.020710928319623973, 
         "fit_status": 0, 
         "types": {
             "TriLep_ZMM": {
-                "denom": 3490.0, 
-                "num": 70.0
+                "denom": 3502.0, 
+                "num": 51.0
             }, 
             "SingleMu_Wjets": {
-                "denom": 13324.0, 
-                "num": 340.0
+                "denom": 16922.0, 
+                "num": 372.0
             }, 
             "SingleMu_QCD": {
-                "denom": 35343.0, 
-                "num": 585.0
+                "denom": 44729.0, 
+                "num": 545.0
             }
         }
     }

@@ -366,7 +366,7 @@ for data_set, skips, int_lumi in [
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'VH', '2012-02-19-v1-WHAnalyze', 'scratch_results',
+        'VH', '2012-04-14-v1-WHAnalyze', 'scratch_results',
         int_lumi, skips, count='emt/skimCounter')
 
     legend = plotter.build_legend(
