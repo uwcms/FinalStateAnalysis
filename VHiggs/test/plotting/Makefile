@@ -315,13 +315,10 @@ debug_plots: debug_limits
 #wh3l_cards=/afs/cern.ch/user/c/ceballos/public/limits/limits_wh3l/sm/
 wh3l_cards=$(PWD)/3l_cards/
 
-trilepton_mass_points=$(shell seq 115 5 140) $(shell seq 150 10 200)
+trilepton_mass_points=$(shell seq 110 10 140) $(shell seq 150 10 200)
 
-trilepton_cards/combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(wh3l_cards)/%/vh3l_cut.txt
-	combineCards.py -S TT=cards/combined_$*.txt WWW=$(wh3l_cards)/$*/vh3l_cut.txt > $@
-
-trilepton_cards/zh_combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(wh3l_cards)/%/vh3l_cut.txt
-	combineCards.py -S TT=cards/combined_$*.txt WWW=$(wh3l_cards)/$*/vh3l_cut.txt ZH=/afs/cern.ch/user/a/abdollah/public/For_Evan/hzz2l2t_130.txt > $@
+trilepton_cards/combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(wh3l_cards)/%/vh3l_cut.txt  zh_cards/hzz2l2t_%.txt zh_cards/*.root
+	combineCards.py -S TT=cards/combined_$*.txt WWW=$(wh3l_cards)/$*/vh3l_cut.txt ZH=zh_cards/hzz2l2t_$*.txt > $@
 
 trilepton_cards/combined_%.root: trilepton_cards/combined_%.txt
 	text2workspace.py $< -o $@
