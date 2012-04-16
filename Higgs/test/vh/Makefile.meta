@@ -5,10 +5,10 @@ include Makefile.inc
 ################################################################################
 
 inputs/$(ntuple_id)/data%.meta.json: inputs/$(ntuple_id)/data%.txt
-	extract_meta_info.py $< /ee/metaInfo $@  --lumimask
+	extract_meta_info.py $< /eemt/metaInfo $@  --lumimask
 
 inputs/$(ntuple_id)/%.meta.json: inputs/$(ntuple_id)/%.txt
-	extract_meta_info.py $< /ee/metaInfo $@ 
+	extract_meta_info.py $< /eemt/metaInfo $@ 
 
 # List of meta files for every sample
 all_meta_info=$(patsubst %, inputs/$(ntuple_id)/%.meta.json, $(all_samples))
@@ -53,3 +53,6 @@ data_lumimasks: $(data_lumimask_files) $(data_lumicalc_files) \
 
 meta_data: data_lumimasks $(all_lumicalc_sums)
 
+meta_clean:
+	rm -f $(all_lumicalc_sums)
+	rm -f $(all_meta_info)
