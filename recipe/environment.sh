@@ -28,6 +28,9 @@ cd $vpython
 source bin/activate
 cd -
 
+# Put the PWD into the PYTHONPATH
+export PYTHONPATH=.:$PYTHONPATH
+
 # Don't require a scram build to get updated scripts
 export PATH=$fsa/Utilities/scripts:$PATH
 export PATH=$fsa/StatTools/scripts:$PATH
