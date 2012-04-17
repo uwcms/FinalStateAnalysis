@@ -109,7 +109,10 @@ stack.Add(hZZ)
 
 stack.Draw()
 print stack
-stack.GetXaxis().SetTitle("Mass [GeV]")
+stack.GetXaxis().SetTitle("Visible Mass [GeV]")
+bin_width = stack.GetXaxis().GetBinWidth(1)
+stack.GetYaxis().SetTitle("Events/%0.0f GeV" % bin_width)
+stack.GetYaxis().SetTitleOffset(0.8)
 stack.SetMinimum(1e-1)
 stack.SetMaximum(10)
 hHWW.Draw('same,hist')

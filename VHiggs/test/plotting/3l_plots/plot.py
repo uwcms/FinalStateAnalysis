@@ -11,7 +11,7 @@ import FinalStateAnalysis.PatTools.data as data_tool
 int_lumi = 5000
 skips = ['DoubleEl', 'EM']
 samples, plotter = data_tool.build_data(
-    'VH',  '2012-02-19-v1-WHAnalyze', 'scratch_results',
+    'VH',  '2012-04-14-v1-WHAnalyze', 'scratch_results',
     int_lumi, skips, count='emt/skimCounter')
 
 # Get stupid templates to build the styles automatically
@@ -68,9 +68,9 @@ legend.AddEntry(zz, 'ZZ', 'lf')
 legend.AddEntry(fakes,  'fake bkg.', "lf")
 
 # Make M_ellell
-for x_title, filenamebase in [
-    ("#Delta R_{min}", 'histo_drmin_afterallothercuts'),
-    ("|m_{l^{+}l^{-}}-m_{Z}| [GeV]", 'histo_masszmin')]:
+for x_title, filenamebase, units in [
+    ("#Delta R_{min}", 'histo_drmin_afterallothercuts', None),
+    ("|m_{l^{+}l^{-}}-m_{Z}| [GeV]", 'histo_masszmin', 'GeV')]:
 
     mass_cut_file = io.open(filenamebase+'.root')
 
@@ -104,6 +104,13 @@ for x_title, filenamebase in [
 
     stack.Draw()
     stack.GetXaxis().SetTitle(x_title)
+    bin_width = stack.GetXaxis().GetBinWidth(1)
+    if units:
+        stack.GetYaxis().SetTitle("Events/%0.0f %s" % (bin_width, units))
+    else:
+        stack.GetYaxis().SetTitle("Events")
+
+    stack.GetYaxis().SetTitleOffset(1.05)
     stack.SetMinimum(1e-1)
     stack.SetMaximum(110)
     hHWW.Draw('same,hist')
