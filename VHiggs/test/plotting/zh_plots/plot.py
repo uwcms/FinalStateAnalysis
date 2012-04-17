@@ -120,9 +120,8 @@ hHWW.SetLineWidth(2)
 for hist in [hZZ, hZJets]:
     hist.format = 'hist'
 
-for hist in [hZZ, hZJets, hData]:
-    pass
-    #hist.Rebin(5)
+for hist in [hZZ, hZJets, hData, hHWW]:
+    hist.Rebin(2)
 
 hData_poisson = poisson.convert(hData, x_err=False, set_zero_bins=-100)
 hData_poisson.SetMarkerSize(2)
@@ -138,7 +137,7 @@ bin_width = stack.GetXaxis().GetBinWidth(1)
 stack.GetYaxis().SetTitle("Events/%0.0f GeV" % bin_width)
 stack.GetYaxis().SetTitleOffset(0.8)
 stack.SetMinimum(1e-1)
-stack.SetMaximum(7)
+stack.SetMaximum(10)
 hHWW.Draw('same,hist')
 hData_poisson.Draw('p0')
 
