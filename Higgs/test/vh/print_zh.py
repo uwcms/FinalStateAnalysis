@@ -49,8 +49,8 @@ if __name__ == "__main__":
     columns = ["Channel",
          "Data",
          "All bkg.",
-         "Z+jets est.",
-         "WZ",
+         #"Z+jets est.",
+         #"WZ",
          "ZZ",
          "Region 1",
          "Region 2",
@@ -59,7 +59,7 @@ if __name__ == "__main__":
         ]
 
     for region in ['os', 'ss']:
-        for use_corr in [True, False]:
+        for use_corr in [False]:
             print "%s region" % region
             if use_corr:
                 print "With SS FR correction"
@@ -108,7 +108,8 @@ if __name__ == "__main__":
                 total_zz += zz
                 total_zj += zjets
                 total_obs += data
-                total_bkg = zjets + wz + zz
+                #total_bkg = zjets + wz + zz
+                total_bkg = est120 + zz
                 total_120 += est120
                 total_1 += est1
                 total_2 += est2
@@ -117,21 +118,21 @@ if __name__ == "__main__":
                     channel,
                     '%0.f' % data,
                     '%0.2f +/- %0.2f' % (total_bkg.nominal_value, total_bkg.std_dev()),
-                    '%0.2f +/- %0.2f' % (zjets.nominal_value, zjets.std_dev()),
-                    '%0.2f +/- %0.2f' % (wz.nominal_value, wz.std_dev()),
+                #    '%0.2f +/- %0.2f' % (zjets.nominal_value, zjets.std_dev()),
+                #    '%0.2f +/- %0.2f' % (wz.nominal_value, wz.std_dev()),
                     '%0.2f +/- %0.2f' % (zz.nominal_value, zz.std_dev()),
                     '%0.2f +/- %0.2f' % (est1.nominal_value, est1.std_dev()),
                     '%0.2f +/- %0.2f' % (est2.nominal_value, est2.std_dev()),
                     '%0.2f +/- %0.2f' % (est0.nominal_value, est0.std_dev()),
                     '%0.2f +/- %0.2f' % (est120.nominal_value, est120.std_dev()),
                 ])
-            total_bkg = total_zj + total_wz + total_zz
+            total_bkg = total_120 + total_zz
             table.add_row([
                 'all',
                 '%0.f' % total_obs,
                 '%0.2f +/- %0.2f' % (total_bkg.nominal_value, total_bkg.std_dev()),
-                '%0.2f +/- %0.2f' % (total_zj.nominal_value, total_zj.std_dev()),
-                '%0.2f +/- %0.2f' % (total_wz.nominal_value, total_wz.std_dev()),
+                #'%0.2f +/- %0.2f' % (total_zj.nominal_value, total_zj.std_dev()),
+                #'%0.2f +/- %0.2f' % (total_wz.nominal_value, total_wz.std_dev()),
                 '%0.2f +/- %0.2f' % (total_zz.nominal_value, total_zz.std_dev()),
                 '%0.2f +/- %0.2f' % (total_1.nominal_value, total_1.std_dev()),
                 '%0.2f +/- %0.2f' % (total_2.nominal_value, total_2.std_dev()),
@@ -141,16 +142,16 @@ if __name__ == "__main__":
 
             print table
 
-            print "Channel & Data & Type 1 & Type 2 & Type 0 & 1 + 2 - 0 \\\\"
-            for row in table._rows:
-                def texify(x):
-                    return '$' + x.replace('+/-', '\pm') + '$'
-                print " & ".join( [
-                    row[0],
-                    row[1],
-                    texify(row[6]),
-                    texify(row[7]),
-                    texify(row[8]),
-                    texify(row[9]),
-                ]) + "\\\\"
+            #print "Channel & Data & Type 1 & Type 2 & Type 0 & 1 + 2 - 0 \\\\"
+            #for row in table._rows:
+                #def texify(x):
+                    #return '$' + x.replace('+/-', '\pm') + '$'
+                #print " & ".join( [
+                    #row[0],
+                    #row[1],
+                    #texify(row[6]),
+                    #texify(row[7]),
+                    #texify(row[8]),
+                    #texify(row[9]),
+                #]) + "\\\\"
 
