@@ -8,7 +8,7 @@ Snippet to add quad ntuple production to the process
 
 from FinalStateAnalysis.Higgs.quad_ntuples import make_ntuple
 
-final_states = [
+zh_final_states = [
     'eeem',
     'eeet',
     'eemm',
@@ -20,7 +20,19 @@ final_states = [
     'mmtt',
 ]
 
-def add_quad_ntuples(process, schedule):
+zz_final_states = [
+    'eeee',
+    'eemm',
+    'mmmm',
+]
+
+def add_quad_ntuples(process, schedule, do_zh=True, do_zz=True):
+    final_states = []
+    if do_zh:
+        final_states.extend(zh_final_states)
+    if do_zz:
+        final_states.extend(zz_final_states)
+
     for final_state in final_states:
         print "Building %s final state" % final_state
         # build ntuplizer
