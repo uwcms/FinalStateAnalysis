@@ -12,7 +12,7 @@ def build_zee_selection(meta_tree):
     selection = And(
         # Trigger selection
         # FIXME!!
-        #meta.doubleMuPass > 0.5,
+        meta.doubleEPass > 0.5,
 
         # Leading muon selection
         meta.e1_e2_SS < 0.5,

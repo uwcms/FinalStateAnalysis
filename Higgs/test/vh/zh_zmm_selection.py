@@ -11,7 +11,7 @@ def build_zmm_selection(meta_tree):
     meta = meta_tree
     selection = And(
         # Trigger selection
-        #meta.doubleMuPass > 0.5,
+        meta.doubleMuPass > 0.5,
 
         # Leading muon selection
         meta.m1_m2_SS < 0.5,
