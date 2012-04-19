@@ -29,7 +29,7 @@ doublemu = _trig_template.replace(
 
 doublee = _trig_template.replace(
     name='doubleE',
-    paths=r'HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v\\d+,HLT_Ele17_CaloIdT_CaloIsoVL_TrIdVL_TrIsoVL_Ele8_CaloIdT_CaloIsoVL_TrIdVL_TrIsoVL_v\\d+',
+    paths=r'HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v\\d+,HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+',
 )
 
 mueg = PSet(
