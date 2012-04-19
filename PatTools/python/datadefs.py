@@ -54,6 +54,8 @@ data_name_map = {
     'TTW' : ['TTWToLplus', 'TTWToLminus'],
     'TTZ' : ['TTZToLplus', 'TTZToLminus'],
     'WWW' : ['WWWTo2Lplus', 'WWWTo2Lminus'],
+
+    'ggH_ZZ_4l_120' : ['ggH_ZZ_4l_120'],
 }
 
 
@@ -384,7 +386,16 @@ datadefs = {
         'analyses' : ['VH'],
     },
 
+    ############################################################################
+    #### H->ZZ->4L signal samples           ####################################
+    ############################################################################
 
+    'ggH_ZZ_4l_120' : {
+        'datasetpath' : "/GluGluToHToZZTo4L_M-180_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 6.739*_picobarns*6.02e-2*3*0.03365*3*0.03365,
+        'pu' : 'S6',
+        'analyses' : ['4L'],
+    },
 }
 
 # Add all the datasets
