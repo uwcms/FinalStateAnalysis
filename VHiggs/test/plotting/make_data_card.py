@@ -160,7 +160,7 @@ mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), signal_datasets + mc_sa
 
 # Add stat errors on MC samples
 for sample in ['WZ', 'ZZ'] + signal_datasets:
-    stat_error = get_stat_error(sample, mmt.get_rate(sample))
+    stat_error, _ = get_stat_error(sample, mmt.get_rate(sample))
     if stat_error > 0.02:
         print "ADDING STAT ERROR %f FOR SAMPLE %s" % (stat_error, sample)
     mmt.add_sys('CMS_vhtt_stat_mmt_%s' % sample, 1 + stat_error, [sample])
@@ -226,7 +226,7 @@ emt.add_sys('CMS_eff_e', 1.02, signal_datasets + mc_samples)
 
 # Add stat errors on MC samples
 for sample in ['WZ', 'ZZ'] + signal_datasets:
-    stat_error = get_stat_error(sample, emt.get_rate(sample))
+    stat_error, _ = get_stat_error(sample, emt.get_rate(sample))
     if stat_error > 0.02:
         print "ADDING STAT ERROR %f FOR SAMPLE %s" % (stat_error, sample)
     emt.add_sys('CMS_vhtt_stat_emt_%s' % sample, 1 + stat_error, [sample])
