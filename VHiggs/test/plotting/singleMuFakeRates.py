@@ -36,6 +36,7 @@ wjets_selection = [
     'NIsoMuonsPt5_Nmuons < 0.5',
     'NIsoElecPt10_Nelectrons < 0.5',
     'NIsoTausPt20_NIsoTaus < 0.5',
+    'abs(Muon1DZ) < 0.2'
 ]
 
 qcd_selection = [
@@ -48,6 +49,7 @@ qcd_selection = [
     'METPt < 20',
     'NIsoTausPt20_NIsoTaus < 0.5',
     'NIsoElecPt10_Nelectrons < 0.5',
+    'abs(Muon1DZ) < 0.2'
 ]
 
 # In the emu channels, the muon is the second leg.
@@ -88,8 +90,8 @@ fakerates = {
             'DoubleMus_HLT > 0.5',
             'Muon2Pt > 10',
             'Muon2AbsEta < 2.1',
-            'Muon1DZ < 0.2',
-            'Muon2DZ < 0.2',
+            'abs(Muon1DZ) < 0.2',
+            'abs(Muon2DZ) < 0.2',
         ],
         'num' : [
             'Muon2_MuID_WWID > 0.5',
@@ -121,8 +123,8 @@ fakerates = {
             'DoubleMus_HLT > 0.5',
             'Muon2Pt > 20',
             'Muon2AbsEta < 2.1',
-            'Muon1DZ < 0.2',
-            'Muon2DZ < 0.2',
+            'abs(Muon1DZ) < 0.2',
+            'abs(Muon2DZ) < 0.2',
         ],
         'num' : [
             'Muon2_MuID_WWID > 0.5',
@@ -154,8 +156,8 @@ fakerates = {
             #'DoubleMus_HLT > 0.5',
             #'Muon2Pt > 20',
             #'Muon2AbsEta < 2.1',
-            #'Muon1DZ < 0.2',
-            #'Muon2DZ < 0.2',
+            #'abs(Muon1DZ) < 0.2',
+            #'abs(Muon2DZ) < 0.2',
         #],
         #'num' : [
             #'Muon2_MuID_WWID > 0.5',
@@ -185,8 +187,8 @@ fakerates = {
             'DoubleMus_HLT > 0.5',
             'Muon2Pt > 9',
             'Muon2AbsEta < 2.1',
-            'Muon1DZ < 0.2',
-            'Muon2DZ < 0.2',
+            'abs(Muon1DZ) < 0.2',
+            'abs(Muon2DZ) < 0.2',
         ],
         'num' : [
             'Muon2_MuID_WWID > 0.5',
@@ -213,8 +215,8 @@ fakerates = {
             #'DoubleMus_HLT > 0.5',
             #'Muon2Pt > 9',
             #'Muon2AbsEta < 2.1',
-            #'Muon1DZ < 0.2',
-            #'Muon2DZ < 0.2',
+            #'abs(Muon1DZ) < 0.2',
+            #'abs(Muon2DZ) < 0.2',
         #],
         #'num' : [
             #'Muon2_MuID_WWID > 0.5',
@@ -244,8 +246,8 @@ fakerates = {
             'DoubleMus_HLT > 0.5',
             'Muon2Pt > 20',
             'Muon2AbsEta < 2.1',
-            'Muon1DZ < 0.2',
-            'Muon2DZ < 0.2',
+            'abs(Muon1DZ) < 0.2',
+            'abs(Muon2DZ) < 0.2',
         ],
         'num' : [
             'Muon2_MuID_WWID > 0.5',
@@ -275,8 +277,8 @@ fakerates = {
             #'DoubleMus_HLT > 0.5',
             #'Muon2Pt > 20',
             #'Muon2AbsEta < 2.1',
-            #'Muon1DZ < 0.2',
-            #'Muon2DZ < 0.2',
+            #'abs(Muon1DZ) < 0.2',
+            #'abs(Muon2DZ) < 0.2',
         #],
         #'num' : [
             #'Muon2_MuID_WWID > 0.5',
@@ -304,8 +306,8 @@ fakerates = {
             #'DoubleMus_HLT > 0.5',
             #'Muon2Pt > 10',
             #'Muon2AbsEta < 2.1',
-            #'Muon1DZ < 0.2',
-            #'Muon2DZ < 0.2',
+            #'abs(Muon1DZ) < 0.2',
+            #'abs(Muon2DZ) < 0.2',
         #],
         #'num' : [
             #'Muon2_MuID_WWID > 0.5',
@@ -342,8 +344,8 @@ fakerates = {
             'ElectronPt > 10',
             'ElectronAbsEta < 2.5',
             'Electron_EBtag < 3.3',
-            'Muon2DZ < 0.2',
-            'ElectronDZ < 0.2',
+            'abs(Muon2DZ) < 0.2',
+            'abs(ElectronDZ) < 0.2',
             'Electron_MissingHits < 0.5',
             'Electron_hasConversion < 0.5',
             'Electron_MuonOverlap < 0.5',
@@ -380,8 +382,8 @@ fakerates = {
             'ElectronPt > 10',
             'ElectronAbsEta < 2.5',
             'Electron_EBtag < 3.3',
-            'Muon2DZ < 0.2',
-            'ElectronDZ < 0.2',
+            'abs(Muon2DZ) < 0.2',
+            'abs(ElectronDZ) < 0.2',
             'Electron_MissingHits < 0.5',
             'Electron_hasConversion < 0.5',
             'Electron_MuonOverlap < 0.5',
@@ -412,7 +414,7 @@ fakerates = {
             'TauPt > 20',
             'TauAbsEta < 2.3',
             'Tau_TauBtag < 3.3',
-            'TauDZ < 0.2',
+            'abs(TauDZ) < 0.2',
             'Tau_ElectronMVA > 0.5',
             'Tau_ElectronMedium > 0.5',
             'Tau_MuonOverlapGlb < 0.5',
@@ -443,7 +445,7 @@ fakerates = {
             'TauPt > 20',
             'TauAbsEta < 2.3',
             'Tau_TauBtag < 3.3',
-            'TauDZ < 0.2',
+            'abs(TauDZ) < 0.2',
             'Tau_ElectronMVA > 0.5',
             'Tau_ElectronMedium > 0.5',
             'Tau_MuonOverlapGlb < 0.5',
@@ -483,7 +485,7 @@ for data_set, skips, int_lumi, puTag in [
     log.info("Plotting dataset: %s", data_set)
 
     samples, plotter = data_tool.build_data(
-        'Mu', '2012-02-20-v1-MuonTP', 'scratch_results', int_lumi, skips,
+        'Mu', '2012-04-14-v1-MuonTP', 'scratch_results', int_lumi, skips,
         count = '/mm/skimCounter', unweighted = False)
 
     legend = plotter.build_legend(

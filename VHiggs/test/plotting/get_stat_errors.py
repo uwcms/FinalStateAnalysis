@@ -15,6 +15,7 @@ import logging
 import json
 import math
 import re
+import uncertainties
 from analysis import plotter
 
 logging.basicConfig(
@@ -66,7 +67,15 @@ def get_stat_error(sample, weighted_yield):
     if total_yield > 0:
         stat_error = math.sqrt(total_yield)/total_yield
     log.info("Stat error is %f", stat_error)
-    return stat_error
+
+    total_events = plotter.get_event_count(sample)[0]
+    skim_eff = plotter.get_skim_eff(sample)[0]
+
+    efficiency = skim_eff*(
+        uncertainties.ufloat((total_yield, math.sqrt(total_yield)))/
+        uncertainties.ufloat((total_events, math.sqrt(total_events))))
+
+    return stat_error, efficiency
 
 if __name__ == "__main__":
     print get_stat_error('VH121', 0.2)

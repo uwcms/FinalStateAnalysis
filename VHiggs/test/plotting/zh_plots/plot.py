@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import ROOT
 from rootpy.utils import asrootpy
@@ -63,62 +64,87 @@ wz.SetTitle('WZ')
 zz.SetTitle('ZZ')
 fakes.SetTitle("fake bkg.")
 legend.AddEntry(signal, signal.GetTitle(), "l")
-legend.AddEntry(wz, 'WZ', 'lf')
+#legend.AddEntry(wz, 'WZ', 'lf')
 legend.AddEntry(zz, 'ZZ', 'lf')
 legend.AddEntry(fakes,  'fake bkg.', "lf")
 
-# Make M_ellell
-for x_title, filenamebase, units in [
-    ("#Delta R_{min}", 'histo_drmin_afterallothercuts', None),
-    ("|m_{l^{+}l^{-}}-m_{Z}| [GeV]", 'histo_masszmin', 'GeV')]:
+zz_file = io.open('file_ZZ.root')
+signal_file = io.open('file_Signal.root')
+data_file = io.open('file_Data.root')
+fake_file = io.open('file_Fake.root')
 
-    mass_cut_file = io.open(filenamebase+'.root')
+hZZ   = zz_file.Get('zz')
+hZJets   = fake_file.Get('fake')
+hData = data_file.Get('data')
+hSignal = signal_file.Get('signal')
+hHWW   = hSignal
 
-    hZZ   = mass_cut_file.Get("histo2");
-    hWZ    = mass_cut_file.Get("histo3");
-    hZJets = mass_cut_file.Get("histo4");
-    hData = mass_cut_file.Get("histo5");
-    hHWW   = mass_cut_file.Get("histos");
+canvas.cd()
 
-    hHWW = hHWW*5.0
+hHWW = hHWW*5.0
 
-    hZZ.decorate(zz)
-    hWZ.decorate(wz)
-    hZJets.decorate(fakes)
-    hData.decorate(data)
-    hHWW.decorate(signal)
+#print hZZ, hZJets
+# make ZZ not a stack
+hZZ_plain = hZJets.Clone()
+hZZ_plain.Reset()
+for bin in range(hZZ.GetNbinsX()+1):
+    hZZ_plain.SetBinContent(
+        bin,
+        hZZ.GetBinContent(bin)
+    )
 
-    for hist in [hZZ, hWZ, hZJets]:
-        hist.format = 'hist'
+#hZZ.Draw()
+#print hZZ.GetNbinsX()
 
-    for hist in [hZZ, hWZ, hZJets, hData, hHWW]:
-        hist.Rebin(5)
+#canvas.SaveAs('wtf.pdf')
 
-    hData_poisson = poisson.convert(hData, x_err=False, set_zero_bins=-100)
-    hData_poisson.SetMarkerSize(2)
+#hData.Draw()
+#print hData.GetNbinsX()
+#canvas.SaveAs('data.pdf')
 
-    stack = HistStack()
-    stack.Add(hWZ)
-    stack.Add(hZZ)
-    stack.Add(hZJets)
+#hZJets.Draw()
+#print hZJets.GetNbinsX()
+#canvas.SaveAs('zj.pdf')
 
-    stack.Draw()
-    stack.GetXaxis().SetTitle(x_title)
-    bin_width = stack.GetXaxis().GetBinWidth(1)
-    if units:
-        stack.GetYaxis().SetTitle("Events/%0.0f %s" % (bin_width, units))
-    else:
-        stack.GetYaxis().SetTitle("Events")
 
-    stack.GetYaxis().SetTitleOffset(1.05)
-    stack.SetMinimum(1e-1)
-    stack.SetMaximum(110)
-    hHWW.Draw('same,hist')
-    hData_poisson.Draw('p0')
+hZZ = hZZ_plain
 
-    cms_label = styling.cms_preliminary(5000, is_preliminary=False,
-                                        lumi_on_top=True)
-    canvas.SetLogy(True)
-    legend.Draw()
+print hData
+hZZ.decorate(zz)
+#hWZ.decorate(wz)
+hZJets.decorate(fakes)
+hData.decorate(data)
+hHWW.decorate(signal)
+hHWW.SetLineWidth(2)
 
-    canvas.SaveAs(filenamebase + '.pdf')
+for hist in [hZZ, hZJets]:
+    hist.format = 'hist'
+
+for hist in [hZZ, hZJets, hData, hHWW]:
+    hist.Rebin(2)
+
+hData_poisson = poisson.convert(hData, x_err=False, set_zero_bins=-100)
+hData_poisson.SetMarkerSize(2)
+
+stack = HistStack()
+stack.Add(hZJets)
+stack.Add(hZZ)
+
+stack.Draw()
+print stack
+stack.GetXaxis().SetTitle("Visible Mass [GeV]")
+bin_width = stack.GetXaxis().GetBinWidth(1)
+stack.GetYaxis().SetTitle("Events/%0.0f GeV" % bin_width)
+stack.GetYaxis().SetTitleOffset(0.8)
+stack.SetMinimum(1e-1)
+stack.SetMaximum(10)
+hHWW.Draw('same,hist')
+hData_poisson.Draw('p0')
+
+cms_label = styling.cms_preliminary(5000, is_preliminary=False,
+                                    lumi_on_top=True)
+#canvas.SetLogy(True)
+legend.Draw()
+
+canvas.Update()
+canvas.SaveAs('zh_result.pdf')

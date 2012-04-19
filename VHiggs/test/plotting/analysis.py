@@ -234,6 +234,7 @@ if __name__ == "__main__":
                     canvas.SetLogy(True)
                     if histo:
                         histo.SetMaximum(histo.GetMaximum()*10.)
+                    canvas.Print(filename.replace('.pdf', '.root'))
                     canvas.Update()
                     canvas.Print(filename.replace(filetype, '_log' + filetype))
                     if histo:
@@ -811,6 +812,9 @@ if __name__ == "__main__":
                     legend.AddEntry(all_fakes.th1, "fake bkg.", "lf")
                     stack.Draw()
                     stack.GetXaxis().SetTitle(xaxis_title)
+                    bin_width = stack.GetXaxis().GetBinWidth(1)
+                    stack.GetYaxis().SetTitle("Events/%0.0f GeV" % bin_width)
+                    stack.GetYaxis().SetTitleOffset(0.8)
 
                     ############################################################
                     ### Make a nice error band of the fake estimate       ######

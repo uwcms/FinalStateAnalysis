@@ -40,8 +40,9 @@ selections = [
 
     'ElectronCharge*Muon2Charge < 0',
     'Electron_EBtag < 3.3',
-    'Muon2DZ < 0.2',
-    'ElectronDZ < 0.2',
+    'abs(Muon2DZ) < 0.2',
+    'abs(ElectronDZ) < 0.2',
+
     'Electron_MissingHits < 0.5',
     'Electron_hasConversion < 0.5',
 
@@ -53,7 +54,7 @@ selections = [
 ]
 
 samples, plotter = data_tool.build_data(
-    'Mu', '2012-02-20-v1-MuonTP', 'scratch_results',
+    'Mu', '2012-04-14-v1-MuonTP', 'scratch_results',
     4684, ['MuEG', 'DoubleMu', 'EM'], count='em/skimCounter')
 
 canvas = ROOT.TCanvas("basdf", "aasdf", 1200, 600)
@@ -89,7 +90,7 @@ correction = '*'.join([
 summary = {}
 
 var = 'ElectronPt'
-binning = [100, 0, 100],
+binning = [100, 0, 100]
 rebin = 5
 
 #var = 'IsoMus_HLTGroup'
@@ -134,6 +135,7 @@ for eta_bin in eta_bins:
         rebin = rebin,
     )
 
+    log.info("getting data histogram")
     data_denom = plotter.get_histogram(
         'data_SingleMu',
         '/em/final/Ntuple:denom_' + label,
@@ -142,6 +144,7 @@ for eta_bin in eta_bins:
     )
 
     #canvas.cd(1)
+    log.info("drawing stack")
     stack_denom.Draw()
     stack_denom.GetXaxis().SetTitle('Electron p_{T}')
     data_denom.Draw("pe, same")
@@ -187,8 +190,6 @@ for eta_bin in eta_bins:
     canvas.Update()
 
     saveplot('num_versus_pt_%s' % label)
-
-    continue
 
     rebinning = [5, 10, 15, 20, 25, 30, 100]
 
