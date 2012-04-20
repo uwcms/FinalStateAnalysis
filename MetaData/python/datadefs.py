@@ -121,7 +121,7 @@ datadefs = {
         'pu' : 'S6',
         'x_sec' : 0.106*_picobarns, # from MCFM via Ian
         'x_sec_unc' : quad(1.5, 0.2, 0.2)*0.1096*0.1096,
-        'analyses' : ['VH', 'SSDL'],
+        'analyses' : ['VH', 'SSDL', '4L'],
     },
     'WZJetsTo3LNu' : {
         'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
