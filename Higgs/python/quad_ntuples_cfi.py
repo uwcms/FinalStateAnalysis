@@ -26,7 +26,7 @@ zz_final_states = [
     'mmmm',
 ]
 
-def add_quad_ntuples(process, schedule, do_zh=True, do_zz=True):
+def add_quad_ntuples(process, schedule, do_zh=True, do_zz=False):
     final_states = []
     if do_zh:
         final_states.extend(zh_final_states)
