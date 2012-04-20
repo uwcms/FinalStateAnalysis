@@ -11,7 +11,6 @@ from FinalStateAnalysis.Higgs.quad_ntuples import make_ntuple
 zh_final_states = [
     'eeem',
     'eeet',
-    'eemm',
     'eemt',
     'eett',
     'emmm',

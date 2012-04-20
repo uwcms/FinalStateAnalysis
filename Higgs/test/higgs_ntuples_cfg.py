@@ -7,7 +7,8 @@ You can turn off different ntuples by passing option=0 using one of:
     makeH2Tau (em, et, and mt)
     makeTNP (ee & mm)
     makeTrilepton (emt, mmt, eet, emm, mmm)
-    makeQuad (a bunch)
+    makeQuad (a bunch for 2l2tau)
+    make4L (eeee, eemm, mmmm)
 
 '''
 
@@ -25,6 +26,7 @@ options = TauVarParsing.TauVarParsing(
     makeTNP=1,
     makeTrilepton=1,
     makeQuad=1,
+    make4L=1,
 )
 
 options.outputFile="higgs.root"
@@ -66,7 +68,10 @@ if options.makeTrilepton:
     add_trilepton_ntuples(process, process.schedule)
 
 if options.makeQuad:
-    add_quad_ntuples(process, process.schedule)
+    add_quad_ntuples(process, process.schedule, do_zz=False, do_zh=True)
+
+if options.make4L:
+    add_quad_ntuples(process, process.schedule, do_zh=False, do_zz=True)
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery

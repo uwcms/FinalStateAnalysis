@@ -196,3 +196,8 @@ def make_ntuple(*legs):
     format(output, **format_labels)
 
     return output
+
+if __name__ == "__main__":
+    # Some quick tests
+    #print repr(make_ntuple(*'emmt'))
+    print repr(make_ntuple(*'mmmm'))
