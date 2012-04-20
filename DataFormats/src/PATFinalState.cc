@@ -487,6 +487,17 @@ bool PATFinalState::likeFlavor(int i, int j) const {
   return std::abs(daughter(i)->pdgId()) == std::abs(daughter(j)->pdgId());
 }
 
+double PATFinalState::zCompatibility(int i, int j) const {
+  if (likeSigned(i, j)) {
+    return 1000;
+  }
+  return std::abs(subcand(i, j)->mass() - 91.2);
+}
+
+bool PATFinalState::orderedInPt(int i, int j) const {
+  return daughter(i)->pt() > daughter(j)->pt();
+}
+
 edm::Ptr<pat::Tau> PATFinalState::daughterAsTau(size_t i) const {
   return daughterAs<pat::Tau>(i);
 }

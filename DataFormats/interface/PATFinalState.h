@@ -159,6 +159,17 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Check if the ith and jth daughters are like flavored
     bool likeFlavor(int i, int j) const;
 
+    /// Check how far in mass the subcandidate made by the ith and jth objects
+    /// is from the Z mass.  If they are same sign, it will return 1000.
+    /// = |M_i_j - 91.2|
+    double zCompatibility(int i, int j) const;
+
+    /// Check if two daughters are ordered in PT.
+    /// This is equivalent to (daughter(i).pt > daughter(j).pt)
+    /// Useful when ensuring a unique candidate is selected from many
+    /// combinations.
+    bool orderedInPt(int i, int j) const;
+
     /// Get a collection of embedded extras
     std::vector<reco::CandidatePtr> extras(
         const std::string& label, const std::string& filter="") const;
