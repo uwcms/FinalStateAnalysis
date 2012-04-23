@@ -182,8 +182,8 @@ SmartTriggerResult makeDecision(
   return output;
 }
 
-SmartTriggerResult
-smartTrigger(const std::string& trgs, const pat::TriggerEvent& result) {
+SmartTriggerResult smartTrigger(const std::string& trgs,
+    const pat::TriggerEvent& result, bool ez) {
   // Check if we have cached the result.
   if (&result != lastTrigEvent) {
     // new event, clear the cache
@@ -211,7 +211,7 @@ smartTrigger(const std::string& trgs, const pat::TriggerEvent& result) {
       // only one.  The point of the smart trigger is that each path type is a
       // separate group.
       std::vector<const pat::TriggerPath*> matching =
-        matchingTriggerPaths(result, path);
+        matchingTriggerPaths(result, path, ez);
       if (matching.size() > 1) {
         std::stringstream err;
         err << "Error: more than one"
@@ -240,8 +240,8 @@ smartTrigger(const std::string& trgs, const pat::TriggerEvent& result) {
   return output;
 }
 
-SmartTriggerResult
-smartTrigger(const std::string& trgs, const LumiSummary& result) {
+SmartTriggerResult smartTrigger(const std::string& trgs,
+    const LumiSummary& result, bool ez) {
   // Tokenize the trigger groups
   vstring groups = getGroups(trgs);
   VVInt prescales;
@@ -255,7 +255,7 @@ smartTrigger(const std::string& trgs, const LumiSummary& result) {
     for (size_t p = 0; p < paths.size(); ++p) {
       const std::string& path = paths[p];
       std::vector<LumiSummary::HLT> matching =
-        matchingTriggerPathsLumi(result, path, false);
+        matchingTriggerPathsLumi(result, path, ez);
       if (matching.size() > 1) {
         std::stringstream err;
         err << "Error: more than one"
