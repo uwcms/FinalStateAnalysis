@@ -118,36 +118,6 @@ if __name__ == "__main__":
         data_yields['total_fr']
     )
 
-    log.info("Computing correction factors using Zjets MC")
-    # Use the integer number of MC events to get correct uncertainty
-    zjets_weight = 1./data_views['Zjets']['subsamples']['Zjets_M50']['weight']
-    zjets_yields = yields['Zjets']
-    zj_ss_denominator = uint(zjets_yields['ss_fail_fail']*zjets_weight)
-    zjets_yields['ss_fr1'] = (
-        uint(zjets_yields['ss_pass_fail']*zjets_weight) /
-        zj_ss_denominator
-    )
-    zjets_yields['ss_fr2'] = (
-        uint(zjets_yields['ss_fail_pass']*zjets_weight) /
-        zj_ss_denominator
-    )
-    os_zj_denominator = uint(zjets_yields['os_fail_fail']*zjets_weight)
-    zjets_yields['os_fr1'] = (
-        uint(zjets_yields['os_pass_fail']*zjets_weight) /
-        os_zj_denominator
-    )
-    zjets_yields['os_fr2'] = (
-        uint(zjets_yields['os_fail_pass']*zjets_weight) /
-        os_zj_denominator
-    )
-
-    zjets_yields['os_ss_fr1_corr'] = zjets_yields['os_fr1']/zjets_yields['ss_fr1']
-    zjets_yields['os_ss_fr2_corr'] = zjets_yields['os_fr2']/zjets_yields['ss_fr2']
-    zjets_yields['os_ss_fr_corr'] = zjets_yields['os_ss_fr1_corr']*zjets_yields['os_ss_fr2_corr']
-
-    data_yields['total_fr_corr'] = data_yields['total_fr']*zjets_yields['os_ss_fr_corr']
-    data_yields['os_zj_estimate_corr'] = data_yields['os_zj_estimate']*zjets_yields['os_ss_fr_corr']
-
     log.info("Using the 1+2-0 method")
 
     data_yields['os_type_1_est'] = (
