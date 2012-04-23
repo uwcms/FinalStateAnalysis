@@ -76,6 +76,8 @@ basic_histograms = [
     (lambda x: x.e1AbsEta, '', ('e1AbsEta', '#e_{1} |#eta|', 10, 0, 2.5)),
     (lambda x: x.e1_e2_Mass, '', ('z1Mass', 'Z_{1} Mass', 20, 60, 120)),
     (lambda x: x.e3_t_Mass, '', ('z2Mass', 'Z_{2} Mass', 20, 30, 150)),
+    (lambda x: x.doubleEGroup, '', ('hltGroup', 'hltGroup', 5, -1.5, 3.5)),
+    (lambda x: x.doubleEPrescale, '', ('hltPrescale', 'hltPrescale', 50, -1.5, 48.5)),
 ]
 
 def build_histo_list(weight_function, name_suffix=""):
@@ -115,6 +117,8 @@ class AnalyzeEEET(Analyzer):
         self.enable_branch('evt')
         self.enable_branch('e3_t_Mass')
         self.enable_branch('puWeightData2011AB')
+        self.enable_branch('doubleEPrescale')
+        self.enable_branch('doubleEGroup')
 
     def process(self, entry):
         tree = self.tree
