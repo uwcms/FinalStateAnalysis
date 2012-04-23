@@ -27,6 +27,7 @@ options = TauVarParsing.TauVarParsing(
     makeTrilepton=1,
     makeQuad=1,
     make4L=1,
+    dump=0, # If one, dump process python to stdout
 )
 
 options.outputFile="higgs.root"
@@ -77,3 +78,6 @@ process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
 
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+
+if options.dump:
+    print process.dumpPython()
