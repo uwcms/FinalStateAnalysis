@@ -6,7 +6,7 @@ Snippet to add quad ntuple production to the process
 
 '''
 
-from FinalStateAnalysis.Higgs.quad_ntuples import make_ntuple
+from ntuple_builder import make_ntuple, add_ntuple
 
 zh_final_states = [
     'eeem',
@@ -25,6 +25,10 @@ zz_final_states = [
     'mmmm',
 ]
 
+branches = {
+    'rapidityGap' : 'abs(subcand(0, 1).get.eta - subcand(2, 3).get.eta)',
+}
+
 def add_quad_ntuples(process, schedule, do_zh=True, do_zz=False):
     final_states = []
     if do_zh:
@@ -34,12 +38,5 @@ def add_quad_ntuples(process, schedule, do_zh=True, do_zz=False):
 
     for final_state in final_states:
         print "Building %s final state" % final_state
-        # build ntuplizer
-        analyzer = make_ntuple(final_state[0], final_state[1], final_state[2],
-                               final_state[3])
-        # Add to process
-        setattr(process, final_state, analyzer)
-        # Make a path
-        p = cms.Path(analyzer)
-        setattr(process, final_state + 'path', p)
-        schedule.append(p)
+        analyzer = make_ntuple(*final_state, branches=branches)
+        add_ntuple(final_state, analyzer, process, schedule)

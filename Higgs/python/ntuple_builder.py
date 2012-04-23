@@ -32,7 +32,6 @@ _common_template = PSet(
     templates.trigger.doublee,
     templates.trigger.isomu,
     templates.trigger.singlemu,
-    rapidityGap = 'abs(subcand(0, 1).get.eta - subcand(2, 3).get.eta)',
 )
 
 # Define the branch templates for different object types.
@@ -89,13 +88,28 @@ _producer_translation = {
     't' : 'Tau'
 }
 
-def make_ntuple(*legs):
-    assert(len(legs)==4)
+def add_ntuple(name, analyzer, process, schedule):
+    ''' Add an ntuple to the process with given name and schedule it
 
+    A path for the ntuple will be created.
+    '''
+    assert(not hasattr(process, name))
+    setattr(process, name, analyzer)
+    # Make a path for this ntuple
+    p = cms.Path(analyzer)
+    setattr(process, name + 'path', p)
+    schedule.append(p)
+
+def make_ntuple(*legs, **kwargs):
+    ''' Build an ntuple for a set of input legs.
+
+    You can passes extra branches by passing a dict of branch:strings using the
+    keyword argument: branches
+
+    '''
     # Make sure we only use allowed leg types
     allowed = set(['m', 'e', 't'])
     assert(all(x in allowed for x in legs))
-
     # Make object labels
     object_labels = []
     format_labels = {
@@ -109,6 +123,11 @@ def make_ntuple(*legs):
     }
 
     ntuple_config = _common_template.clone()
+
+    # Optionally apply extra branches in kwargs
+    if 'branches' in kwargs:
+        for branch, value in kwargs['branches'].iteritems():
+            setattr(ntuple_config, branch, cms.string(value))
 
     for i, leg in enumerate(legs):
         counts[leg] += 1
@@ -138,7 +157,7 @@ def make_ntuple(*legs):
             templates.topology.zboson.replace(object1=leg_a, object2=leg_b),
         )
 
-    # Now build our analyzer EDFilter
+    # Now build our analyzer EDFilter skeleton
     output = cms.EDFilter(
         "PATFinalStateAnalysisFilter",
         weights = cms.vstring(),
@@ -147,42 +166,9 @@ def make_ntuple(*legs):
         evtSrc = cms.InputTag("patFinalStateEventProducer"),
         skimCounter = cms.InputTag("eventCount", "", "TUPLE"),
         analysis = cms.PSet(
-            selections = cms.VPSet(
-                cms.PSet(
-                    name = cms.string('Leg0Pt'),
-                    cut = cms.string('daughter(0).pt>%s' % _pt_cuts[legs[0]]),
-                ),
-                cms.PSet(
-                    name = cms.string('Leg0Eta'),
-                    cut = cms.string('abs(daughter(0).eta) < %s' % _eta_cuts[legs[0]])
-                ),
-                cms.PSet(
-                    name = cms.string('Leg1Pt'),
-                    cut = cms.string('daughter(1).pt>%s' % _pt_cuts[legs[1]]),
-                ),
-                cms.PSet(
-                    name = cms.string('Leg1Eta'),
-                    cut = cms.string('abs(daughter(1).eta) < %s' % _eta_cuts[legs[1]])
-                ),
-                cms.PSet(
-                    name = cms.string('Leg2Pt'),
-                    cut = cms.string('daughter(2).pt>%s' % _pt_cuts[legs[2]]),
-                ),
-                cms.PSet(
-                    name = cms.string('Leg2Eta'),
-                    cut = cms.string('abs(daughter(2).eta) < %s' % _eta_cuts[legs[2]])
-                ),
-                cms.PSet(
-                    name = cms.string('Leg3Pt'),
-                    cut = cms.string('daughter(3).pt>%s' % _pt_cuts[legs[3]]),
-                ),
-                cms.PSet(
-                    name = cms.string('Leg3Eta'),
-                    cut = cms.string('abs(daughter(3).eta) < %s' % _eta_cuts[legs[3]])
-                ),
-            ),
+            selections = cms.VPSet(),
             final = cms.PSet(
-                sort = cms.string('daughter(3).pt'), # Doesn't really matter
+                sort = cms.string('daughter(0).pt'), # Doesn't really matter
                 take = cms.uint32(50),
                 plot = cms.PSet(
                     histos = cms.VPSet(), # Don't make any final plots
@@ -191,6 +177,24 @@ def make_ntuple(*legs):
             ),
         )
     )
+
+    # Apply the basic selection to each leg
+    for i, leg in enumerate(legs):
+        output.analysis.selections.append(
+            cms.PSet(
+                name = cms.string('Leg%iPt' % i),
+                cut = cms.string('daughter(%i).pt>%s' % (
+                    i, _pt_cuts[legs[i]]),
+                )
+            )
+        )
+        output.analysis.selections.append(
+            cms.PSet(
+                name = cms.string('Leg%iEta' % i),
+                cut = cms.string('abs(daughter(%i).eta) < %s' % (
+                    i, _eta_cuts[legs[i]]))
+            ),
+        )
 
     # Apply "uniqueness requirements" to reduce final processing/storage.
     # This make sure there is only one ntuple entry per-final state.  The
@@ -209,7 +213,7 @@ def make_ntuple(*legs):
             leg1_idx = format_labels['%s1_idx' % type]
             leg2_idx = format_labels['%s2_idx' % type]
             output.analysis.selections.append(cms.PSet(
-                name = cms.string('UniqueByPt'),
+                name = cms.string('%s_UniqueByPt' % type),
                 cut = cms.string('orderedInPt(%s, %s)' % (leg1_idx, leg2_idx))
             ))
         if count == 3:
@@ -238,7 +242,7 @@ def make_ntuple(*legs):
 
             # Require first two leptons are ordered in PT
             output.analysis.selections.append(cms.PSet(
-                name = cms.string('UniqueByPt'),
+                name = cms.string('%s_UniqueByPt' % type),
                 cut = cms.string('orderedInPt(%s, %s)' %
                                  (leg1_idx_label, leg2_idx_label))
             ))
@@ -296,13 +300,13 @@ def make_ntuple(*legs):
 
             # Require first two leptons are ordered in PT
             output.analysis.selections.append(cms.PSet(
-                name = cms.string('UniqueByPt12'),
+                name = cms.string('%s_UniqueByPt12' % type),
                 cut = cms.string('orderedInPt(%s, %s)' %
                                  (leg1_idx_label, leg2_idx_label))
             ))
             # Require last two leptons are ordered in PT
             output.analysis.selections.append(cms.PSet(
-                name = cms.string('UniqueByPt34'),
+                name = cms.string('%s_UniqueByPt34' % type),
                 cut = cms.string('orderedInPt(%s, %s)' %
                                  (leg3_idx_label, leg4_idx_label))
             ))
