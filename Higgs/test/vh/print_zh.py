@@ -39,7 +39,12 @@ if __name__ == "__main__":
     for yield_filenames in args.yields:
         for yield_filename in glob.glob(yield_filenames):
             with open(yield_filename) as yield_file:
-                yield_dict = json.load(yield_file)
+                try:
+                    yield_dict = json.load(yield_file)
+                except ValueError:
+                    sys.stderr.write("Couldn't decode JSON from file: %s\n" %
+                                     yield_filename)
+                    sys.exit(2)
                 channels[yield_dict['channel']] = yield_dict
 
     def write(to_stdout):
