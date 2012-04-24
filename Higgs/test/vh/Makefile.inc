@@ -1,7 +1,7 @@
 # Common definitions for Makefiles
 
 # Which ntuple to use
-ntuple_id=2012-04-20-Higgs
+ntuple_id=2012-04-23-Higgs
 
 workers=20
 
