@@ -15,8 +15,8 @@ def build_zmm_selection(meta_tree):
 
         # Leading muon selection
         meta.m1_m2_SS < 0.5,
-        meta.m1_m2_Mass < 120,
-        meta.m1_m2_Mass > 60,
+        meta.m1_m2_Mass < 111.2,
+        meta.m1_m2_Mass > 71.2,
 
         meta.m1Pt > 20,
         meta.m2Pt > 10,
