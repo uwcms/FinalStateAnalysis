@@ -37,3 +37,4 @@ export PATH=$fsa/StatTools/scripts:$PATH
 export PATH=$fsa/TMegaSelector/scripts:$PATH
 export PATH=$fsa/MetaData/scripts:$PATH
 export PATH=$fsa/PatTools/scripts:$PATH
+export PATH=$fsa/RecoTools/scripts:$PATH
