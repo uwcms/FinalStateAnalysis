@@ -20,7 +20,7 @@ $megadebug AnalyzeMMET.py zh_events_ntuple.txt /emmt/final/Ntuple \
 echo "Debugging MMME"
 
 $megadebug AnalyzeMMME.py zh_events_ntuple.txt /emmm/final/Ntuple \
-  unique+ base_selections+  e_id m3_id  \
+  unique- base_selections+  e_id m3_id  \
   --events 179889,195,291267852 177184,10,12646620
 
 echo "Debugging EETT"
@@ -33,6 +33,13 @@ echo "Debugging EEET"
 
 $megadebug AnalyzeEEET.py zh_events_ntuple.txt /eeet/final/Ntuple \
   unique- base_selections+  e3_id  hadronic_tau_id \
-  --events 172252,40,47105541 177718,469,736335702 163659,355,269046597
+  --events 172252,40,47105541 \
+  177718,469,736335702 \
+  163659,355,269046597
+
+echo "Debugging EEEM"
+$megadebug AnalyzeEEEM.py zh_events_ntuple.txt /eeem/final/Ntuple \
+  unique- base_selections+  m_id  e3_id \
+  --events 173198,738,1053695987
 
 # Don't need to do MMTT
