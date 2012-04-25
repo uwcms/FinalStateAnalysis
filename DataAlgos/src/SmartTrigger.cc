@@ -14,12 +14,14 @@
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 #include "DataFormats/Luminosity/interface/LumiSummary.h"
 
+#include "DataFormats/Provenance/interface/EventID.h"
+
 // Cache calls to
 // smartTrigger(const std::string& trgs, const pat::TriggerEvent& result)
 // because it is very expensive!
 namespace {
   // Cache variables
-  static const pat::TriggerEvent * lastTrigEvent = NULL;
+  static edm::EventID lastTrigEvent; // last processed event
   static std::map<std::string, SmartTriggerResult> cache;
 }
 
@@ -182,19 +184,9 @@ SmartTriggerResult makeDecision(
   return output;
 }
 
+// Non-cached version
 SmartTriggerResult smartTrigger(const std::string& trgs,
     const pat::TriggerEvent& result, bool ez) {
-  // Check if we have cached the result.
-  if (&result != lastTrigEvent) {
-    // new event, clear the cache
-    cache.clear();
-  } else {
-    // If we already have computed these triggers for this event, return it.
-    std::map<std::string, SmartTriggerResult>::iterator findit = cache.find(trgs);
-    if (findit != cache.end())
-      return findit->second;
-  }
-
   // Tokenize the trigger groups
   vstring groups = getGroups(trgs);
   VVInt prescales;
@@ -234,8 +226,27 @@ SmartTriggerResult smartTrigger(const std::string& trgs,
   }
   SmartTriggerResult output = makeDecision(pathGroups, prescales, results);
 
-  // update the cache
-  lastTrigEvent = &result;
+  return output;
+}
+
+// Cached version
+SmartTriggerResult smartTrigger(const std::string& trgs,
+    const pat::TriggerEvent& result, const edm::EventID& evt, bool ez) {
+  // Check if we have cached the result.
+  if (evt != lastTrigEvent) {
+    // new event, clear the cache
+    cache.clear();
+  } else {
+    // If we already have computed these triggers for this event, return it.
+    std::map<std::string, SmartTriggerResult>::iterator findit = cache.find(trgs);
+    if (findit != cache.end())
+      return findit->second;
+  }
+
+  SmartTriggerResult output = smartTrigger(trgs, result, ez);
+
+  // If we are here, we just computed the new value bu need to update the cache
+  lastTrigEvent = evt;
   cache[trgs] = output;
   return output;
 }

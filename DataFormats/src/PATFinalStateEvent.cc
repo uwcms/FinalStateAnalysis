@@ -102,17 +102,17 @@ const edm::EventID& PATFinalStateEvent::evtId() const {
 
 // Superseded by the smart trigger
 int PATFinalStateEvent::hltResult(const std::string& pattern) const {
-  SmartTriggerResult result = smartTrigger(pattern, trig());
+  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
   return result.passed;
 }
 
 int PATFinalStateEvent::hltPrescale(const std::string& pattern) const {
-  SmartTriggerResult result = smartTrigger(pattern, trig());
+  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
   return result.prescale;
 }
 
 int PATFinalStateEvent::hltGroup(const std::string& pattern) const {
-  SmartTriggerResult result = smartTrigger(pattern, trig());
+  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
   return result.group;
 }
 
@@ -128,7 +128,7 @@ int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
 
 int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
-  SmartTriggerResult result = smartTrigger(pattern, trig());
+  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
   // Loop over all the paths that fired and see if any matched this object.
   if (!result.paths.size())
     return -1;

@@ -40,6 +40,9 @@ namespace pat {
   class TriggerPath;
   class TriggerFilter;
 }
+namespace edm {
+  class EventID;
+}
 class LumiSummary;
 
 struct SmartTriggerResult {
@@ -53,6 +56,11 @@ struct SmartTriggerResult {
 SmartTriggerResult smartTrigger(
     const std::string& trgs, const pat::TriggerEvent& trgResult,
     bool ez=false);
+
+/// This version caches the results across events to speed things up.
+SmartTriggerResult smartTrigger(
+    const std::string& trgs, const pat::TriggerEvent& trgResult,
+    const edm::EventID& event, bool ez=false);
 
 /// Get the result for a whole lumi section.
 SmartTriggerResult smartTrigger(
