@@ -31,7 +31,7 @@ from FinalStateAnalysis.MetaData.data_views import data_views
 if __name__ == "__main__":
     log = logging.getLogger("render_zh_plots")
     view_builder = logging.getLogger("data_views")
-    view_builder.setLevel(logging.WARNING)
+    view_builder.setLevel(logging.DEBUG)
     logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 
     parser = argparse.ArgumentParser()
