@@ -142,5 +142,5 @@ for mass in [110, 120, 130, 140, 150, 160]:
         render_tex(ek_vhww_eff),
         render_tex(zh_vhtt_eff),
         render_tex(zh_vhww_eff),
-    ])
+    ]) + '\\\\'
 
