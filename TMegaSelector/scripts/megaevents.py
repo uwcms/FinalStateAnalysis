@@ -33,8 +33,9 @@ if __name__ == "__main__":
                         help='Path to TPySelector module')
 
     parser.add_argument('inputs', metavar='inputs', type=str,
-                        help='Text file with input files.  '
-                        'One job will be created for each input file.')
+                        help='.txt file with input files.  '
+                        'One job will be created for each input file.'
+                        ' If the file name ends in .root, it will be used.')
 
     parser.add_argument('tree', metavar='tree', type=str,
                         help='Path to TTree in data files (Ex: /my/dir/myTree)')
@@ -57,12 +58,16 @@ if __name__ == "__main__":
         log.error(
             "Error: inputs %s input file does not exist", args.inputs)
         sys.exit(5)
+
     file_list = []
-    with open(args.inputs) as inputs_file:
-        for line in inputs_file:
-            line = line.strip()
-            if line and not line.startswith('#'):
-                file_list.append(line)
+    if args.inputs.endswith('.root'):
+        file_list.append(args.inputs)
+    else:
+        with open(args.inputs) as inputs_file:
+            for line in inputs_file:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    file_list.append(line)
 
     if not file_list:
         log.error("Dataset %s has no files!  Skipping..." % args.inputs)
