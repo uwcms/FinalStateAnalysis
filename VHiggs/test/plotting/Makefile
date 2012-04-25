@@ -307,7 +307,33 @@ debug_plots: debug_limits
 	python $(fsa)/StatTools/scripts/plotlimit.py cards/$(channel)*WW.asymp.json --method asymp --label WW -o cards/$(channel)_wwOnly.pdf --max-y 70 --showpoints --blurb "$(channel) WW only"
 	python $(fsa)/StatTools/scripts/plotlimit.py cards/$(channel)*tt.asymp.json --method asymp --label tt -o cards/$(channel)_ttOnly.pdf --max-y 70 --showpoints --blurb "$(channel) tautau only"
 
+################################################################################
+## AN-12-076 (ZH only cards) ###################################################
+################################################################################
 
+zh_mass_points=$(shell seq 110 10 160) 
+
+zh_cards/card_%.root: zh_cards/hzz2l2t_%.txt 
+	text2workspace.py $< -o $@
+
+zh_cards/card_%.asymp.json: zh_cards/card_%.root
+	combine $< -M Asymptotic -H ProfileLikelihood \
+	  -m `echo $* | sed "s|FF||" | sed "s|SM4||" | sed "s|WW||" | sed "s|tt||"` \
+	  | limit2JSON.py --mass $* > $@
+	rm higgsCombineTest.Asymptotic.mH`echo $* | sed "s|FF||" | sed "s|SM4||"| sed "s|WW||" | sed "s|tt||"`.root
+
+zh_asymp: $(patsubst %, zh_cards/card_%.asymp.json, $(zh_mass_points)) $(patsubst %, zh_cards/card_%.root, $(zh_mass_points))
+
+zh_cards/zh_asymp.pdf: zh_asymp
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --max-y 35 \
+	  --lumi 5000 \
+	  --method asymp zh_cards/card*asymp.json -o $@ \
+	  --showpoints \
+	  --blurb "" \
+	  --blurbpos "0.15, 0.12, 0.5, 0.20" \
+	  --legendpos "0.2,0.68,0.45,0.92"
+	
 ################################################################################
 ## HIG-12-010   ################################################################
 ################################################################################
