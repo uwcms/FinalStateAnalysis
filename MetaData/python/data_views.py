@@ -13,6 +13,8 @@ import logging
 from rootpy.io import open
 from rootpy.plotting import views
 
+log = logging.getLogger("data_views")
+
 def data_views(files, normalize_to_dataset):
     ''' Builds views of files.
 
@@ -28,7 +30,6 @@ def data_views(files, normalize_to_dataset):
     Example: "data_DoubleMu"
 
     '''
-    log = logging.getLogger("data_views")
     # Figure out the dataset for each file, and the int lumi.
     # Key = dataset name
     # Value = {intlumi, rootpy file, file path}
