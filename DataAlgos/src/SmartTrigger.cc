@@ -230,7 +230,7 @@ SmartTriggerResult smartTrigger(const std::string& trgs,
 }
 
 // Cached version
-SmartTriggerResult smartTrigger(const std::string& trgs,
+const SmartTriggerResult& smartTrigger(const std::string& trgs,
     const pat::TriggerEvent& result, const edm::EventID& evt, bool ez) {
   // Check if we have cached the result.
   if (evt != lastTrigEvent) {
@@ -243,12 +243,10 @@ SmartTriggerResult smartTrigger(const std::string& trgs,
       return findit->second;
   }
 
-  SmartTriggerResult output = smartTrigger(trgs, result, ez);
-
   // If we are here, we just computed the new value bu need to update the cache
   lastTrigEvent = evt;
-  cache[trgs] = output;
-  return output;
+  cache[trgs] = smartTrigger(trgs, result, ez);
+  return cache[trgs];
 }
 
 SmartTriggerResult smartTrigger(const std::string& trgs,

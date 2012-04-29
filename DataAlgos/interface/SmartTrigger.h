@@ -58,7 +58,7 @@ SmartTriggerResult smartTrigger(
     bool ez=false);
 
 /// This version caches the results across events to speed things up.
-SmartTriggerResult smartTrigger(
+const SmartTriggerResult& smartTrigger(
     const std::string& trgs, const pat::TriggerEvent& trgResult,
     const edm::EventID& event, bool ez=false);
 
