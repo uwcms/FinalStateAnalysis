@@ -16,8 +16,8 @@ def build_zee_selection(meta_tree):
 
         # Leading muon selection
         meta.e1_e2_SS < 0.5,
-        meta.e1_e2_Mass < 120,
-        meta.e1_e2_Mass > 60,
+        meta.e1_e2_Mass < 111.2,
+        meta.e1_e2_Mass > 71.2,
 
         meta.e1Pt > 20,
         meta.e2Pt > 10,

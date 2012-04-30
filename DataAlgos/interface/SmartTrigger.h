@@ -10,6 +10,8 @@
  *
  *      example: "A|B, B_v*, C_v*"
  *
+ * If [ez] is true, use the friendly '*' syntax.  Otherwise use boost::regexp.
+ *
  * This example has three trigger groups,
  *
  * 1) A OR B
@@ -38,6 +40,9 @@ namespace pat {
   class TriggerPath;
   class TriggerFilter;
 }
+namespace edm {
+  class EventID;
+}
 class LumiSummary;
 
 struct SmartTriggerResult {
@@ -49,11 +54,18 @@ struct SmartTriggerResult {
 
 /// Get the result for a single event using the pat::TriggerEvent
 SmartTriggerResult smartTrigger(
-    const std::string& trgs, const pat::TriggerEvent& trgResult);
+    const std::string& trgs, const pat::TriggerEvent& trgResult,
+    bool ez=false);
+
+/// This version caches the results across events to speed things up.
+SmartTriggerResult smartTrigger(
+    const std::string& trgs, const pat::TriggerEvent& trgResult,
+    const edm::EventID& event, bool ez=false);
 
 /// Get the result for a whole lumi section.
 SmartTriggerResult smartTrigger(
-    const std::string& trgs, const LumiSummary& lumiSummary);
+    const std::string& trgs, const LumiSummary& lumiSummary,
+    bool ez=false);
 
 /// Get the list of trigger paths matching a given pattern.  If [ez] is
 // true, use the friendly '*' syntax.  Otherwise use boost::regexp.
@@ -61,8 +73,7 @@ std::vector<const pat::TriggerPath*> matchingTriggerPaths(
     const pat::TriggerEvent& result,
     const std::string& pattern, bool ez=false);
 
-/// Get the list of trigger filters matching a given pattern.  If [ez] is
-// true, use the friendly '*' syntax.  Otherwise use boost::regexp.
+/// Get the list of trigger filters matching a given pattern.
 std::vector<const pat::TriggerFilter*> matchingTriggerFilters(
     const pat::TriggerEvent& result,
     const std::string& pattern, bool ez=false);

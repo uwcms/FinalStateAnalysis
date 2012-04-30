@@ -37,6 +37,11 @@ if not options.isMC and options.lumiMask:
     print "Applying LumiMask from", options.lumiMask
     process.source.lumisToProcess = options.buildPoolSourceLumiMask()
 
+# Check if we only want to process a few events
+if options.eventsToProcess:
+    process.source.eventsToProcess = \
+            cms.untracked.VEventRange(options.eventsToProcess)
+
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(options.maxEvents))
 

@@ -39,7 +39,12 @@ if __name__ == "__main__":
     for yield_filenames in args.yields:
         for yield_filename in glob.glob(yield_filenames):
             with open(yield_filename) as yield_file:
-                yield_dict = json.load(yield_file)
+                try:
+                    yield_dict = json.load(yield_file)
+                except ValueError:
+                    sys.stderr.write("Couldn't decode JSON from file: %s\n" %
+                                     yield_filename)
+                    sys.exit(2)
                 channels[yield_dict['channel']] = yield_dict
 
     def write(to_stdout):
@@ -77,6 +82,30 @@ if __name__ == "__main__":
             total_0 = 0
             total_120 = 0
 
+            fr_error = 0.05
+
+            fr_errors = {
+                'm' : ufloat((1.0, fr_error), 'mu fr'),
+                'e' : ufloat((1.0, fr_error), 'e fr'),
+                't' : ufloat((1.0, fr_error), 'tau fr'),
+            }
+
+            l1_type = {
+                'me' : fr_errors['e'],
+                'em' : fr_errors['e'],
+                'et' : fr_errors['t'],
+                'mt' : fr_errors['t'],
+                'tt' : fr_errors['t'],
+            }
+
+            l2_type = {
+                'me' : fr_errors['m'],
+                'em' : fr_errors['m'],
+                'et' : fr_errors['e'],
+                'mt' : fr_errors['m'],
+                'tt' : fr_errors['t'],
+            }
+
             def rel_float(x, err):
                 return ufloat( (x, x*err) )
 
@@ -85,9 +114,12 @@ if __name__ == "__main__":
                 zz = rel_float(channel_info['ZZ']['%s_pass_pass' % region], 0.1)
                 zjets = ufloat(channel_info['data']['%s_zj_estimate' % region])
                 est120 = ufloat(channel_info['data']['%s_type120_est' % region])
-                est1 = ufloat(channel_info['data']['%s_type_1_est' % region])
-                est2 = ufloat(channel_info['data']['%s_type_2_est' % region])
-                est0 = ufloat(channel_info['data']['%s_type_0_est' % region])
+
+                est1 = ufloat(channel_info['data']['%s_type_1_est' % region])*l1_type[channel[2:]]
+                est2 = ufloat(channel_info['data']['%s_type_2_est' % region])*l2_type[channel[2:]]
+                est0 = ufloat(channel_info['data']['%s_type_0_est' % region])*l1_type[channel[2:]]*l2_type[channel[2:]]
+
+                est120 = est1 + est2 - est0
 
                 if region == 'os' and use_corr:
                     zjets = ufloat(channel_info['data']['%s_zj_estimate_corr' % region])
@@ -141,6 +173,17 @@ if __name__ == "__main__":
             ])
 
             print table
+
+            print "The total error on all bkgs is: %0.2f" % total_bkg.std_dev()
+            print "The input uncertainties on the fake rates values were: %0.f%%" % (fr_error*100)
+
+            print "Propagated through, these fake rate errors are responsible for:"
+            for var, error in total_bkg.error_components().items():
+                if var.tag and 'fr' in var.tag:
+                    print "%s = %0.2f, (%0.f%%)" % (
+                        var.tag, error, 100*error/total_bkg.std_dev())
+
+            print "of the final error"
 
             #print "Channel & Data & Type 1 & Type 2 & Type 0 & 1 + 2 - 0 \\\\"
             #for row in table._rows:
