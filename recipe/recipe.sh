@@ -20,6 +20,10 @@ addpkg -z PhysicsTools/PatAlgos
 # Add Mike's muon discriminant
 cvs co -r 1.47 PhysicsTools/PatAlgos/python/tools/tauTools.py
 
+# Add support for PU Jet ID
+# See https://twiki.cern.ch/twiki/bin/view/CMS/PileupJetID
+cvs co -r V00-00-09 -d CMGTools/External UserCode/CMG/CMGTools/External
+
 # Note you need to install virtual env
 
 echo "Now run ./install_python.sh to install python"
