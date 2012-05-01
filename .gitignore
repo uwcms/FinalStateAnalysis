@@ -19,3 +19,4 @@ docs/build/*
 *_C.so
 *.d
 *.so
+.__afs*
