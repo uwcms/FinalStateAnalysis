@@ -2,6 +2,9 @@ import FWCore.ParameterSet.Config as cms
 
 from FinalStateAnalysis.PatTools.jets.patJetEmbedId_cfi import patJetId
 
+from FinalStateAnalysis.PatTools.jets.patJetPUId_cfi import \
+        puJetIdSqeuence, puJetId, puJetMva, patJetsPUID
+
 from FinalStateAnalysis.PatTools.jets.patJetUncorrectedEmbedder_cfi import \
         patJetUncorrectedEmbedder
 
@@ -13,6 +16,14 @@ from FinalStateAnalysis.PatTools.jets.patJetEmbedSmear_cfi import \
 customizeJetSequence = cms.Sequence()
 
 customizeJetSequence += patJetId
+
+# Add in the PAT Jet PU ID
+customizeJetSequence += puJetIdSqeuence # sic
+# Fix the input tags of the PU JET ID value map producers
+puJetId.jets = cms.InputTag("patJetId")
+puJetMva.jets = cms.InputTag("patJetId")
+# Embed the PU IDs
+customizeJetSequence += patJetsPUID
 
 # Remove low pt garbage jets.  This cut is propagated to the taus - only taus
 # that have an existing jet are kept.  This cut is important, so we require
