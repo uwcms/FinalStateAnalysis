@@ -8,7 +8,9 @@ jobId = '2012-03-05-EWKPatTuple'
 print 'export TERMCAP=screen'
 for sample in sorted(datadefs.keys()):
     sample_info = datadefs[sample]
-    if '4L' not in sample_info['analyses']:
+    if 'VH' not in sample_info['analyses']:
+        continue
+    if 'ZH' not in sample:
         continue
 
     submit_dir_base = "/scratch/{logname}/{jobid}/{sample}".format(
