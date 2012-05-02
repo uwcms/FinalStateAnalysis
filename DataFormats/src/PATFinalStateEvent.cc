@@ -6,7 +6,7 @@
 
 #include "DataFormats/Math/interface/deltaR.h"
 
-#define FSA_DATA_FORMAT_VERSION 1
+#define FSA_DATA_FORMAT_VERSION 2
 
 namespace {
   int matchedToAnObject(const pat::TriggerObjectRefVector& trgObjects,
@@ -46,7 +46,12 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::EventID& evtId,
     const GenEventInfoProduct& genEventInfo,
     bool isRealData,
-    const std::string& puScenario):
+    const std::string& puScenario,
+    const edm::RefProd<pat::ElectronCollection>& electronRefProd,
+    const edm::RefProd<pat::MuonCollection>& muonRefProd,
+    const edm::RefProd<pat::TauCollection>& tauRefProd,
+    const edm::RefProd<pat::JetCollection>& jetRefProd
+    ):
   rho_(rho),
   triggerEvent_(triggerEvent),
   pv_(pv),
@@ -60,7 +65,12 @@ PATFinalStateEvent::PATFinalStateEvent(
   genEventInfoProduct_(genEventInfo),
   isRealData_(isRealData),
   puScenario_(puScenario),
-  fsaDataFormatVersion_(FSA_DATA_FORMAT_VERSION) { }
+  fsaDataFormatVersion_(FSA_DATA_FORMAT_VERSION),
+  electronRefProd_(electronRefProd),
+  muonRefProd_(muonRefProd),
+  tauRefProd_(tauRefProd),
+  jetRefProd_(jetRefProd)
+{ }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
 
@@ -196,3 +206,32 @@ int PATFinalStateEvent::flag(const std::string& name) const {
 void PATFinalStateEvent::addFlag(const std::string& name, int flag) {
   flags_[name] = flag;
 }
+
+const pat::ElectronCollection& PATFinalStateEvent::electrons() const {
+  if (!electronRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The electron RefProd is null!" << std::endl;
+  return *electronRefProd_;
+}
+
+const pat::MuonCollection& PATFinalStateEvent::muons() const {
+  if (!muonRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The muon RefProd is null!" << std::endl;
+  return *muonRefProd_;
+}
+
+const pat::TauCollection& PATFinalStateEvent::taus() const {
+  if (!tauRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The tau RefProd is null!" << std::endl;
+  return *tauRefProd_;
+}
+
+const pat::JetCollection& PATFinalStateEvent::jets() const {
+  if (!jetRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The jet RefProd is null!" << std::endl;
+  return *jetRefProd_;
+}
+

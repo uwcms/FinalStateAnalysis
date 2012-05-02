@@ -2,6 +2,12 @@
 <selection>
   <class name="edm::Ptr<reco::Vertex >"/>
   <class name="edm::PtrVector<reco::Vertex >"/>
+
+  <class name="edm::RefProd<pat::ElectronCollection>"/>
+  <class name="edm::RefProd<pat::MuonCollection>"/>
+  <class name="edm::RefProd<pat::TauCollection>"/>
+  <class name="edm::RefProd<pat::JetCollection>"/>
+
   <class name="std::map<std::string, float>"/>
   <class name="std::pair<std::string, float>"/>
   <class name="std::map<std::string, int>"/>

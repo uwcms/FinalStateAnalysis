@@ -17,6 +17,10 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
+#include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Tau.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
@@ -51,7 +55,12 @@ class PATFinalStateEvent {
         const edm::EventID& evtId,
         const GenEventInfoProduct& genEventInfoProd,
         bool isRealData,
-        const std::string& puScenario);
+        const std::string& puScenario,
+        const edm::RefProd<pat::ElectronCollection>& electronRefProd,
+        const edm::RefProd<pat::MuonCollection>& muonRefProd,
+        const edm::RefProd<pat::TauCollection>& tauRefProd,
+        const edm::RefProd<pat::JetCollection>& jetRefProd
+    );
 
     /// Get PV
     const edm::Ptr<reco::Vertex>& pv() const;
@@ -125,6 +134,12 @@ class PATFinalStateEvent {
     /// Is real data
     bool isRealData() const { return isRealData_; }
 
+    /// Access to object collections in the event
+    const pat::ElectronCollection& electrons() const;
+    const pat::MuonCollection& muons() const;
+    const pat::JetCollection& jets() const;
+    const pat::TauCollection& taus() const;
+
     /// Get the version of the FinalState data formats API
     /// This allows you to detect which version of the software was used
     /// So that the methods can be update.
@@ -149,6 +164,11 @@ class PATFinalStateEvent {
     bool isRealData_;
     std::string puScenario_;
     char fsaDataFormatVersion_;
+    // Pointers to object collections in the event
+    edm::RefProd<pat::ElectronCollection> electronRefProd_;
+    edm::RefProd<pat::MuonCollection> muonRefProd_;
+    edm::RefProd<pat::TauCollection> tauRefProd_;
+    edm::RefProd<pat::JetCollection> jetRefProd_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */

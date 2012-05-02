@@ -234,6 +234,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Build the PATFinalStateEventObject
     process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")
+    process.patFinalStateEventProducer.electronSrc = final_electron_collection
+    process.patFinalStateEventProducer.muonSrc = final_muon_collection
+    process.patFinalStateEventProducer.tauSrc = final_tau_collection
+    process.patFinalStateEventProducer.jetSrc = final_jet_collection
     process.patFinalStateEventProducer.metSrc = final_met_collection
     process.tuplize += process.patFinalStateEventProducer
     output_commands.append('*_patFinalStateEventProducer_*_*')
