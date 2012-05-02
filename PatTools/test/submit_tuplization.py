@@ -32,6 +32,12 @@ for sample in sorted(datadefs.keys()):
     farmout_options.append(
         '--input-dbs-path=%s' % sample_info['datasetpath'])
 
+    # Check if we need to use a different DBS
+    if 'dbs' in sample_info:
+        farmout_options.append(
+            '--dbs-service-url=http://cmsdbsprod.cern.ch/%s/servlet/DBSServlet' % sample_info['dbs']
+        )
+
     if 'data' not in sample:
         options.append('isMC=1')
         options.append('globalTag=$mcgt')
