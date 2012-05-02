@@ -33,14 +33,14 @@ combo/whgg_%.txt: post-moriond12/%/hgglep.mH*.0.txt
 combo/whbb_%.txt: moriond12/%/vhbb_DC_ALL_BDT.*.0.txt
 	combineCards.py -S WHBB=$< > $@
 
-combo/leptons_%.txt: zh_cards/hzz2l2t_%.txt cards/combined_%.txt 3l_cards/%/vh3l_cut.txt
-	combineCards.py -S $< > $@
+combo/leptons_%.txt: zh_carms/hzz2l2t_%.txt cards/combined_%.txt 3l_cards/%/vh3l_cut.txt
+	combineCards.py -S $^ > $@
 
-combo/leptons_gg_%.txt: zh_cards/hzz2l2t_%.txt cards/combined_%.txt 3l_cards/%/vh3l_cut.txt post-moriond12/%/hgglep.mH*.0.txt
-	combineCards.py -S $< > $@
+combo/with_gg_%.txt: zh_cards/hzz2l2t_%.txt cards/combined_%.txt 3l_cards/%/vh3l_cut.txt post-moriond12/%/hgglep.mH*.0.txt
+	combineCards.py -S $^ > $@
 
-combo/leptons_all_%.txt: zh_cards/hzz2l2t_%.txt cards/combined_%.txt 3l_cards/%/vh3l_cut.txt post-moriond12/%/hgglep.mH*.0.txt moriond12/%/vhbb_DC_ALL_BDT.*.0.txt
-	combineCards.py -S $< > $@
+combo/with_all_%.txt: zh_cards/hzz2l2t_%.txt cards/combined_%.txt 3l_cards/%/vh3l_cut.txt post-moriond12/%/hgglep.mH*.0.txt moriond12/%/vhbb_DC_ALL_BDT.*.0.txt
+	combineCards.py -S $^ > $@
 
 whtt_limits: $(patsubst %, combo/whtt_%.asymp.json, $(low_mass)) 
 
@@ -54,8 +54,22 @@ whbb_limits: $(patsubst %, combo/whbb_%.asymp.json, $(bb_mass))
 
 leptons_limits: $(patsubst %, combo/leptons_%.asymp.json, $(low_mass)) 
 
-leptons_gg_limits: $(patsubst %, combo/leptons_gg_%.asymp.json, $(low_mass)) 
+leptons_gg_limits: $(patsubst %, combo/with_gg_%.asymp.json, $(low_mass)) 
 
-leptons_all_limits: $(patsubst %, combo/leptons_all_%.asymp.json, $(bb_mass)) 
+leptons_all_limits: $(patsubst %, combo/with_all_%.asymp.json, $(bb_mass)) 
 
-all: whtt_limits zh_limits whww_limits whgg_limits leptons_limits leptons_gg_limits leptons_all_limits
+all: whbb_limits whtt_limits zh_limits whww_limits whgg_limits leptons_limits leptons_gg_limits leptons_all_limits
+
+combo/%_asymp.pdf: paper_blurb.py
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method asymp combo/$**.asymp.json -o $@ \
+	  --showpoints \
+	  --blurb "`./paper_blurb.py $@`" \
+	  --blurbalign 13 \
+	  --blurbpos "0.15, 0.8, 0.7, 0.95" \
+	  --legendpos "0,0,0,0"
+
+plots: combo/whww_asymp.pdf combo/whtt_asymp.pdf combo/whgg_asymp.pdf combo/whbb_asymp.pdf combo/zh_asymp.pdf combo/leptons_asymp.pdf combo/with_gg_asymp.pdf combo/with_all_asymp.pdf
+

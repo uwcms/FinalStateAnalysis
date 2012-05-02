@@ -420,6 +420,91 @@ trilepton_cards/combined.cls.pdf: trilepton_cls
 	  --blurbpos "0.15, 0.12, 0.5, 0.20" \
 	  --legendpos `./legendpos.py $@`
 
+################################################################################
+## Now the versions with HBB, etc ##############################################
+################################################################################
+
+paper_mass_points=$(shell seq 110 10 140) $(shell seq 150 10 200)
+
+paper_cards/combined_%.txt: cards/vhtt_shapes.root cards/combined_%.txt $(wh3l_cards)/%/vh3l_cut.txt zh_cards/hzz2l2t_%.txt zh_cards/*.root  post-moriond12/%/hgglep.mH*.0.txt
+	combineCards.py -S TT=cards/combined_$*.txt WWW=$(wh3l_cards)/$*/vh3l_cut.txt ZH=zh_cards/hzz2l2t_$*.txt GG=post-moriond12/$*/hgglep.mH$*.0.txt > $@
+
+paper_cards/combined_%.root: paper_cards/combined_%.txt
+	text2workspace.py $< -o $@
+
+# No BB for 160
+paper_cards/combined_160.txt: cards/vhtt_shapes.root cards/combined_160.txt $(wh3l_cards)/160/vh3l_cut.txt zh_cards/hzz2l2t_160.txt zh_cards/*.root  
+	combineCards.py -S TT=cards/combined_160.txt WWW=$(wh3l_cards)/160/vh3l_cut.txt ZH=zh_cards/hzz2l2t_160.txt > $@
+
+paper_cards/combined_170.txt: $(wh3l_cards)/170/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/170/vh3l_cut.txt > $@
+
+paper_cards/combined_180.txt: $(wh3l_cards)/180/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/180/vh3l_cut.txt > $@
+
+paper_cards/combined_190.txt: $(wh3l_cards)/190/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/190/vh3l_cut.txt > $@
+
+paper_cards/combined_200.txt: $(wh3l_cards)/200/vh3l_cut.txt
+	combineCards.py -S WWW=$(wh3l_cards)/200/vh3l_cut.txt > $@
+
+paper_cards/combined_%.asymp.json: paper_cards/combined_%.txt
+	combine $< -M Asymptotic -H ProfileLikelihood \
+	  -m `echo $* | sed "s|FF||" | sed "s|SM4||" | sed "s|WW||" | sed "s|tt||"` \
+	  | limit2JSON.py --mass $* > $@
+	rm higgsCombineTest.Asymptotic.mH`echo $* | sed "s|FF||" | sed "s|SM4||"| sed "s|WW||" | sed "s|tt||"`.root
+
+paper_cards_jobs=$(patsubst %, paper_cards/combined_%.txt, $(paper_mass_points))
+
+paper_asymp_jobs=$(patsubst %, paper_cards/combined_%.asymp.json, $(paper_mass_points))
+
+paper_limits: $(paper_cards_jobs) $(paper_asymp_jobs) 
+
+paper_cards/combined.asymp.pdf: paper_limits
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method asymp paper_cards/combined_*.asymp.json -o $@ \
+	  --showpoints \
+	  --blurb "`./blurbtext.py $@`" \
+	  --blurbpos "0.15, 0.12, 0.5, 0.20" \
+	  --legendpos `./legendpos.py $@`
+
+$(scratch)/paper_cls_limits/combined_%/submit: paper_cards/combined_%.root
+	make_grid_submission.py -submitdir `dirname $@` \
+	  -i `readlink -f $<`  -mass $* \
+	  -min 0.2 -max 30
+
+# Now define the $(channel) grid result - will get updated as more files show up 
+# This combines all the points into a "mass slice"
+$(scratch)/paper_cls_limits/combined_%/grid.root: $(scratch)/paper_cls_limits/combined_%/point_*root
+	hadd -f $@ $^ 
+
+# Given the card file and the computed grid, compute the obs and exp CLs limits
+paper_cards/limit_%.cls.json: paper_cards/combined_%.txt $(scratch)/paper_cls_limits/combined_%/grid.root
+	compute_cls.sh $^ $* > $@
+
+paper_cls_submitters=$(patsubst %, $(scratch)/paper_cls_limits/combined_%/submit, $(paper_mass_points))
+
+paper_cls_results=$(patsubst %, paper_cards/limit_%.cls.json, $(paper_mass_points))
+
+paper_cls_grids=$(patsubst %, $(scratch)/paper_cls_limits/combined_%/grid.root, $(paper_mass_points))
+
+paper_cls_submits: $(paper_cls_submitters)
+
+paper_cls: $(paper_cls_results) $(paper_cls_grids)
+
+paper_cards/combined.cls.pdf: paper_cls
+	python $(fsa)/StatTools/scripts/plotlimit.py \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method cls paper_cards/limit_*.cls.json -o $@ \
+	  --showpoints \
+	  --blurb "`./blurbtext.py $@`" \
+	  --blurbpos "0.15, 0.12, 0.5, 0.20" \
+	  --legendpos `./legendpos.py $@`
+
+
 #For debugging run WWW limits only
 3l_cards/limit_%.asymp.json: 3l_cards/%/vh3l_cut.txt
 	combine $< -M Asymptotic -H ProfileLikelihood \
@@ -440,3 +525,4 @@ www_asymp_jobs=$(patsubst %, 3l_cards/limit_%.asymp.json, $(trilepton_mass_point
 	  --legendpos `./legendpos.py $@`
 
 www_limits: $(www_asymp_jobs) 3l_cards/limit.asymp.pdf
+
