@@ -24,7 +24,15 @@ cvs co -r 1.47 PhysicsTools/PatAlgos/python/tools/tauTools.py
 # See https://twiki.cern.ch/twiki/bin/view/CMS/PileupJetID
 cvs co -r V00-00-09 -d CMGTools/External UserCode/CMG/CMGTools/External
 
-# Note you need to install virtual env
+# Add MVA MET
+# See https://twiki.cern.ch/twiki/bin/view/CMS/MVAMet
+cvs co -r V00-00 -d  pharris/MVAMet UserCode/pharris/MVAMet
+cvs co -D "05/02/2012" CondFormats/EgammaObjects
+rm pharris/MVAMet/src/GBRTree.cxx
+rm pharris/MVAMet/src/GBRForest.cxx
+rm pharris/MVAMet/src/PHMetAnalysisLinkDef.h
+
+# Note you now need to install virtual env
 
 echo "Now run ./install_python.sh to install python"
 
