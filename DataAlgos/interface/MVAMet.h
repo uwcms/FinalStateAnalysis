@@ -14,22 +14,34 @@
 #ifndef MVAMET_Y9S1R0EK
 #define MVAMET_Y9S1R0EK
 
-#include "DataFormats/Candidate/interface/Candidate.h"
-#include "TMatrixD.h"
 #include <utility>
 #include <vector>
-class PATFinalStateEvent;
+
+#include "DataFormats/Math/interface/LorentzVector.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
+#include "TMatrixD.h"
 
 // The output format
-typedef std::pair<reco::Candidate::LorentzVector, TMatrixD> MVAMetResult;
+typedef std::pair<math::XYZTLorentzVector, TMatrixD> MVAMetResult;
 
-// The input formats
-typedef std::vector<std::pair<math::XYZTLorentzVector,double> > PFInfo;
-typedef std::vector<math::XYZVector> VertexInfo;
+namespace edm {
+  class EventID;
+}
 
-// Main method
-MVAMetResult computeMVAMet(const PATFinalStateEvent* evt,
-    std::vector<const reco::Candidate*> hardScatter,
-    double minPt = 0, double minDZ = 0.1);
+namespace reco {
+  class Vertex;
+}
+
+// Minimal input-output of MVA MET algorithm
+// Internal computation of event-invariant quantities are cached.
+MVAMetResult computeMVAMet(
+    const edm::EventID& evt,
+    const std::vector<math::XYZTLorentzVector>& hardScatter,
+    const reco::PFCandidateCollection& pflow,
+    const reco::Vertex& pv,
+    const pat::JetCollection& jets,
+    const double& rho,
+    const edm::PtrVector<reco::Vertex>& vertices);
 
 #endif /* end of include guard: MVAMET_Y9S1R0EK */

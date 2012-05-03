@@ -153,10 +153,21 @@ const mvametvertices::VertexInfo& extractVertices(
 }
 
 // Minimal input-output of MVA MET algorithm
-//MVAMetResult computeMVAMet(
-//    const std::vector<reco::Candidate::LorentzVector>& hardScatter,
-//    const std::vector<MetUtilities::JetInfo>& jetInfos,
-//    const std::vector<std::pair<LorentzVector,double> >& candidates,
-//    const std::vector<reco::Candidate::Vector>& vertices) {
-//  MVAMet* mva = getMVA();
-//}
+MVAMetResult computeMVAMet(
+    const edm::EventID& evt,
+    const std::vector<math::XYZTLorentzVector>& hardScatter,
+    const reco::PFCandidateCollection& pflow,
+    const reco::Vertex& pv,
+    const pat::JetCollection& jets,
+    const double& rho,
+    const edm::PtrVector<reco::Vertex>& vertices) {
+  // Initialize inputs - we have to copy these (sigh) since the MVA
+  // cleans them
+  std::vector<math::XYZTLorentzVector> hardScatterOwned = hardScatter;
+  mvametvertices::VertexInfo vertexInfo = extractVertices(vertices, evt);
+  mvametpf::PFInfo pfInfo = extractPF(pflow, pv, evt);
+  std::vector<MetUtilities::JetInfo> jetInfo = extractJets(jets, rho, evt);
+  // Get MVA
+  MVAMet* mva = getMVA();
+  return mva->GetMet(hardScatterOwned, jetInfo, pfInfo, vertexInfo, false);
+}
