@@ -34,6 +34,8 @@
 
 class PATFinalStateEvent {
   public:
+    typedef std::pair<math::XYZTLorentzVector, TMatrixD> MVAMetResult;
+
     PATFinalStateEvent();
 
     // minimal constructor used only for unit tests
@@ -145,6 +147,9 @@ class PATFinalStateEvent {
     /// Access to particle flow collections
     const reco::PFCandidateCollection& pflow() const;
 
+    /// Access to MVAMetResult.  The input hardScatter is modified in place.
+    const MVAMetResult& mvaMET(std::vector<reco::CandidatePtr>& hardScatter) const;
+
     /// Get the version of the FinalState data formats API
     /// This allows you to detect which version of the software was used
     /// So that the methods can be update.
@@ -175,6 +180,10 @@ class PATFinalStateEvent {
     edm::RefProd<pat::TauCollection> tauRefProd_;
     edm::RefProd<pat::JetCollection> jetRefProd_;
     reco::PFCandidateRefProd pfRefProd_;
+    // This data member maps a hash of a set of candidates (the hard scatter)
+    // to an MVAMet result for this event.  It is mutable so it can be updated
+    // when building TTrees, etc.
+    mutable std::map<size_t, MVAMetResult> mvaMetCache_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */

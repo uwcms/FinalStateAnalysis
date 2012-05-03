@@ -3,6 +3,8 @@
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting3D.h"
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
+#include "FinalStateAnalysis/DataAlgos/interface/Hash.h"
+#include "FinalStateAnalysis/DataAlgos/interface/MVAMet.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
 
@@ -243,5 +245,38 @@ const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
     throw cms::Exception("PATFSAEventNullRefs")
       << "The PFLOW RefProd is null!" << std::endl;
   return *pfRefProd_;
+}
+
+// Interface to MVAMet algorithm
+const PATFinalStateEvent::MVAMetResult& PATFinalStateEvent::mvaMET(
+    std::vector<reco::CandidatePtr>& hardScatter) const {
+  typedef std::map<size_t, MVAMetResult> MVACache;
+
+  // Get hash of cand content
+  size_t hash = hashCandsByContent(hardScatter);
+
+  MVACache::iterator cachePos = mvaMetCache_.find(hash);
+  // Already computed
+  if (cachePos != mvaMetCache_.end()) {
+    return cachePos->second;
+  }
+
+  // Otherwise we need to recompute it.
+  std::vector<math::XYZTLorentzVector> hardScatterP4;
+  for (size_t i = 0; i < hardScatter.size(); ++i) {
+    hardScatterP4.push_back(hardScatter[i]->p4());
+  }
+  MVAMetResult mvamet = computeMVAMet(
+      evtID_, // passed so the MVAMET computer can cache a bunch of junk
+      hardScatterP4,
+      pflow(),
+      *pv_,
+      jets(),
+      rho_,
+      recoVertices_
+  );
+  std::pair<MVACache::iterator, bool> insertResult = mvaMetCache_.insert(
+      std::make_pair(hash, mvamet));
+  return insertResult.first->second;
 }
 
