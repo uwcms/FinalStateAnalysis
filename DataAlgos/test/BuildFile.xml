@@ -7,3 +7,8 @@
   <use   name="FinalStateAnalysis/DataAlgos"/>
   <use   name="cppunit"/>
 </bin>
+
+<bin   name="TestHashing" file="test_Hash.cppunit.cc">
+  <use   name="FinalStateAnalysis/DataAlgos"/>
+  <use   name="cppunit"/>
+</bin>
