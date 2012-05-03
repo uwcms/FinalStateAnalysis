@@ -13,6 +13,7 @@ cvs co -r V01-04-14 RecoTauTag/RecoTau
 cvs co -r V01-04-01 RecoTauTag/Configuration
 cvs co -r V00-04-01 CondFormats/EgammaObjects
 addpkg -z PhysicsTools/PatAlgos 
+addpkg -z PhysicsTools/IsolationAlgos 
 cvs up -r 1.53 PhysicsTools/PatAlgos/python/tools/tauTools.py
 
 # Add and patch to way speed up trigger matching
