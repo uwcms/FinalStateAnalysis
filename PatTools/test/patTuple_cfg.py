@@ -9,6 +9,7 @@ options = TauVarParsing.TauVarParsing(
     skipEvents=0, # For debugging
     keepEverything=0,
     verbose=0, # Print out summary table at end
+    profile=0, # Enabling profiling
     reportEvery=2000,
     puTag='unknown',
 )
@@ -84,10 +85,21 @@ process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
 tuplize.insert(0, process.eventCount)
 
 process.p = cms.Path(tuplize)
+process.outpath = cms.EndPath(process.out)
 
 if options.verbose:
     process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-process.outpath = cms.EndPath(process.out)
+
+if options.profile:
+    # From https://twiki.cern.ch/twiki/bin/viewauth/CMS/MemoUnixPatrick#Timing_profiling_avec_valgrind
+    # Use with maxEvents=10 or so
+    # And  valgrind --tool=callgrind --combine-dumps=yes --instr-atstart=no --dump-instr=yes --separate-recs=1 cmsRun ...
+    process.ProfilerService = cms.Service (
+        "ProfilerService",
+        firstEvent = cms.untracked.int32(3),
+        lastEvent = cms.untracked.int32(12),
+        paths = cms.untracked.vstring('p')
+    )
 
 # Tell the framework to shut up!
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
