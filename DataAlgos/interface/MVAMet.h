@@ -22,9 +22,6 @@
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "TMatrixD.h"
 
-// The output format
-typedef std::pair<math::XYZTLorentzVector, TMatrixD> MVAMetResult;
-
 namespace edm {
   class EventID;
 }
@@ -35,7 +32,7 @@ namespace reco {
 
 // Minimal input-output of MVA MET algorithm
 // Internal computation of event-invariant quantities are cached.
-MVAMetResult computeMVAMet(
+std::pair<math::XYZTLorentzVector, TMatrixD> computeMVAMet(
     const edm::EventID& evt,
     const std::vector<math::XYZTLorentzVector>& hardScatter,
     const reco::PFCandidateCollection& pflow,

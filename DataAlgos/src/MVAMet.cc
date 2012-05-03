@@ -153,7 +153,7 @@ const mvametvertices::VertexInfo& extractVertices(
 }
 
 // Minimal input-output of MVA MET algorithm
-MVAMetResult computeMVAMet(
+std::pair<math::XYZTLorentzVector, TMatrixD> computeMVAMet(
     const edm::EventID& evt,
     const std::vector<math::XYZTLorentzVector>& hardScatter,
     const reco::PFCandidateCollection& pflow,
