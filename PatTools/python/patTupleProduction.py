@@ -69,6 +69,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     kt6PFJets.doRhoFastjet = True
     process.kt6PFJets = kt6PFJets
     process.tuplize += process.kt6PFJets
+
     # Run pat default sequence
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
     # Load PFNoPileup.  Make sure we do this after pat messes around w/ it
