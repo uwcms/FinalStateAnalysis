@@ -36,6 +36,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_addPileupInfo_*_*',
         'edmMergeableCounter_*_*_*',
         '*_lumiProducer_*_*',
+        '*_particleFlow_*_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()

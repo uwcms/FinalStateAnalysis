@@ -50,7 +50,8 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::RefProd<pat::ElectronCollection>& electronRefProd,
     const edm::RefProd<pat::MuonCollection>& muonRefProd,
     const edm::RefProd<pat::TauCollection>& tauRefProd,
-    const edm::RefProd<pat::JetCollection>& jetRefProd
+    const edm::RefProd<pat::JetCollection>& jetRefProd,
+    const reco::PFCandidateRefProd& pfRefProd
     ):
   rho_(rho),
   triggerEvent_(triggerEvent),
@@ -69,13 +70,15 @@ PATFinalStateEvent::PATFinalStateEvent(
   electronRefProd_(electronRefProd),
   muonRefProd_(muonRefProd),
   tauRefProd_(tauRefProd),
-  jetRefProd_(jetRefProd)
+  jetRefProd_(jetRefProd),
+  pfRefProd_(pfRefProd)
 { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
 
 const edm::PtrVector<reco::Vertex>& PATFinalStateEvent::recoVertices() const {
-  return recoVertices_; }
+  return recoVertices_;
+}
 
 const std::vector<PileupSummaryInfo>& PATFinalStateEvent::puInfo() const {
   return puInfo_;
@@ -233,5 +236,12 @@ const pat::JetCollection& PATFinalStateEvent::jets() const {
     throw cms::Exception("PATFSAEventNullRefs")
       << "The jet RefProd is null!" << std::endl;
   return *jetRefProd_;
+}
+
+const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
+  if (!pfRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The PFLOW RefProd is null!" << std::endl;
+  return *pfRefProd_;
 }
 

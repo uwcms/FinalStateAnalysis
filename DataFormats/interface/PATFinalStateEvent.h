@@ -2,7 +2,7 @@
 #define PATFINALSTATEEVENT_MB433KP6
 
 /*
- *   A simple container for holder quantities that are defined across the whole
+ *   A simple container for holding quantities that are defined across the whole
  *   event.
  *
  *   Author: Evan K. Friis, UW Madison
@@ -21,6 +21,7 @@
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
@@ -59,7 +60,8 @@ class PATFinalStateEvent {
         const edm::RefProd<pat::ElectronCollection>& electronRefProd,
         const edm::RefProd<pat::MuonCollection>& muonRefProd,
         const edm::RefProd<pat::TauCollection>& tauRefProd,
-        const edm::RefProd<pat::JetCollection>& jetRefProd
+        const edm::RefProd<pat::JetCollection>& jetRefProd,
+        const reco::PFCandidateRefProd& pfRefProd
     );
 
     /// Get PV
@@ -140,6 +142,9 @@ class PATFinalStateEvent {
     const pat::JetCollection& jets() const;
     const pat::TauCollection& taus() const;
 
+    /// Access to particle flow collections
+    const reco::PFCandidateCollection& pflow() const;
+
     /// Get the version of the FinalState data formats API
     /// This allows you to detect which version of the software was used
     /// So that the methods can be update.
@@ -169,6 +174,7 @@ class PATFinalStateEvent {
     edm::RefProd<pat::MuonCollection> muonRefProd_;
     edm::RefProd<pat::TauCollection> tauRefProd_;
     edm::RefProd<pat::JetCollection> jetRefProd_;
+    reco::PFCandidateRefProd pfRefProd_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */

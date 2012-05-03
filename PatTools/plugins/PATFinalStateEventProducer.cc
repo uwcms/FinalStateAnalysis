@@ -41,6 +41,9 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     edm::InputTag muonSrc_;
     edm::InputTag tauSrc_;
 
+    // Information about PFLOW
+    edm::InputTag pfSrc_;
+
     // Information about the MET
     edm::InputTag metSrc_;
     edm::InputTag metCovSrc_;
@@ -68,6 +71,8 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   muonSrc_ = pset.getParameter<edm::InputTag>("muonSrc");
   tauSrc_ = pset.getParameter<edm::InputTag>("tauSrc");
   jetSrc_ = pset.getParameter<edm::InputTag>("jetSrc");
+
+  pfSrc_ = pset.getParameter<edm::InputTag>("pfSrc");
 
   metSrc_ = pset.getParameter<edm::InputTag>("metSrc");
   metCovSrc_ = pset.getParameter<edm::InputTag>("metCovSrc");
@@ -111,6 +116,10 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle<pat::TauCollection> taus;
   evt.getByLabel(tauSrc_, taus);
   edm::RefProd<pat::TauCollection> tauRefProd(taus);
+
+  edm::Handle<reco::PFCandidateCollection> pf;
+  evt.getByLabel(pfSrc_, pf);
+  reco::PFCandidateRefProd pfRefProd(pf);
 
   edm::Handle<edm::View<pat::MET> > met;
   evt.getByLabel(metSrc_, met);
@@ -163,7 +172,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
       *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo,
       evt.isRealData(), puScenario_,
-      electronRefProd, muonRefProd, tauRefProd, jetRefProd);
+      electronRefProd, muonRefProd, tauRefProd, jetRefProd, pfRefProd);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
