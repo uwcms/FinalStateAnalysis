@@ -29,6 +29,9 @@ namespace {
     edm::RefProd<pat::TauCollection> dummyTauRefProd;
     edm::RefProd<pat::JetCollection> dummyJetRefProd;
 
+    PATFinalStateEvent::MVAMetResult dummyMVAResult;
+    std::map<size_t, PATFinalStateEvent::MVAMetResult> dummyMVACache;
+
     std::map<std::string, float> dummyFloatMap;
     std::map<std::string, int> dummyIntMap;
     std::pair<std::string, float> dummyFloatPair;
