@@ -22,7 +22,7 @@ recoElectronID = cms.Sequence(
 	eidVeryLoose + eidLoose + eidMedium + eidTight +
 	eidSuperTight + eidHyperTight1 + eidHyperTight2 +
     eidHyperTight3 + eidHyperTight4
-    #+ mvaTrigV0 + mvaNonTrigV0
+    + mvaTrigV0 + mvaNonTrigV0
 )
 
 # For PAT
@@ -36,6 +36,6 @@ electronIDSources = cms.PSet(
 	cicHyperTight2 = cms.InputTag("eidHyperTight2"),
 	cicHyperTight3 = cms.InputTag("eidHyperTight3"),
 	cicHyperTight4 = cms.InputTag("eidHyperTight4"),
-    #mvaTrigV0 = cms.InputTag("mvaTrigV0"),
-    #mvaNonTrigV0 = cms.InputTag("mvaNonTrigV0"),
+    mvaTrigV0 = cms.InputTag("mvaTrigV0"),
+    mvaNonTrigV0 = cms.InputTag("mvaNonTrigV0"),
 )

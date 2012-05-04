@@ -41,6 +41,9 @@ rm pharris/MVAMet/src/PHMetAnalysisLinkDef.h
 
 # Add Electron ID MVA
 cvs co -r V00-00-08 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
+pushd EGamma/EGammaAnalysisTools/data
+cat download.url | xargs wget
+popd
 
 echo "Now run ./install_python.sh to install python"
 
