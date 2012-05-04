@@ -2,6 +2,9 @@ import FWCore.ParameterSet.Config as cms
 
 customizeMuonSequence = cms.Sequence()
 
+from FinalStateAnalysis.PatTools.muons.muTrackCandidates_cfi import trackCandidates
+customizeMuonSequence += trackCandidates
+
 from FinalStateAnalysis.PatTools.muons.patMuonPFIsoEmbedding_cff import \
         patMuonsLoosePFIsoEmbedded03,\
         patMuonsLoosePFIsoEmbedded04,\

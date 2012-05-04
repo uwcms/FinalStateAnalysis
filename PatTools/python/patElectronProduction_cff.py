@@ -19,7 +19,11 @@ from FinalStateAnalysis.PatTools.electrons.patElectronEmbedJetInfo_cfi import \
 from FinalStateAnalysis.PatTools.electrons.patElectronsIpEmbedding_cfi import \
         patElectronsEmbedIp
 
+from FinalStateAnalysis.PatTools.electrons.eTrackCandidates_cfi import \
+        gsfTrackCandidates
+
 customizeElectronSequence = cms.Sequence()
+customizeElectronSequence += gsfTrackCandidates
 customizeElectronSequence += electronsWWID
 customizeElectronSequence += electronsVBTFId
 customizeElectronSequence += patElectronsEmbedJetInfo

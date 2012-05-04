@@ -38,6 +38,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_lumiProducer_*_*',
         '*_particleFlow_*_*',
         '*_offlineBeamSpot_*_*',
+        '*_trackCandidates_*_*',
+        '*_gsfTrackCandidates_*_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
