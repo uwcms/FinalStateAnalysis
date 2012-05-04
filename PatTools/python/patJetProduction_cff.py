@@ -13,6 +13,12 @@ from FinalStateAnalysis.PatTools.jets.patJetEmbedSystematics_cfi import \
 from FinalStateAnalysis.PatTools.jets.patJetEmbedSmear_cfi import \
         patJetEmbedSmear
 
+from FinalStateAnalysis.PatTools.jets.patMuonInJetEmbedder_cfi import \
+        patMuonInJetEmbedder
+
+from FinalStateAnalysis.PatTools.jets.patSSVJetEmbedder_cfi import \
+        patSSVJetEmbedder
+
 customizeJetSequence = cms.Sequence()
 
 customizeJetSequence += patJetId
@@ -24,6 +30,10 @@ puJetId.jets = cms.InputTag("patJetId")
 puJetMva.jets = cms.InputTag("patJetId")
 # Embed the PU IDs
 customizeJetSequence += patJetsPUID
+
+# Embed Maria's information about jets
+customizeJetSequence += patMuonInJetEmbedder
+customizeJetSequence += patSSVJetEmbedder
 
 # Remove low pt garbage jets.  This cut is propagated to the taus - only taus
 # that have an existing jet are kept.  This cut is important, so we require

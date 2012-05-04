@@ -125,8 +125,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Customize/embed all our sequences
     process.load("FinalStateAnalysis.PatTools.patJetProduction_cff")
-    # Cut all jets with pt < 5
-    process.patJetGarbageRemoval.cut = 'pt > 17 | correctedP4("Uncorrected").pt > 17'
+    # We have to keep all jets (for the MVA MET...)
+    process.patJetGarbageRemoval.cut = 'pt > 0'
 
     final_jet_collection = chain_sequence(
         process.customizeJetSequence, "patJets")
@@ -207,7 +207,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
                            % process.name_())
 
     # Define the default lepton cleaning
-    process.cleanPatElectrons.preselection = cms.string('pt > 8')
+    process.cleanPatElectrons.preselection = cms.string('pt > 5')
     process.cleanPatElectrons.checkOverlaps.muons.requireNoOverlaps = False
     # Make sure we don't kill any good taus by calling them electrons
     process.cleanPatElectrons.checkOverlaps.taus = cms.PSet(
