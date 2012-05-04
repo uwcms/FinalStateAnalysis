@@ -24,6 +24,10 @@ from FinalStateAnalysis.PatTools.muons.patMuonEmbedJetInfo_cfi import \
         patMuonsEmbedJetInfo
 customizeMuonSequence += patMuonsEmbedJetInfo
 
+from FinalStateAnalysis.PatTools.muons.patMuonMVAIdIsoEmbedding_cfi import \
+        patMuonMVAIdIsoEmbedding
+customizeMuonSequence += patMuonMVAIdIsoEmbedding
+
 from FinalStateAnalysis.PatTools.muons.muonSystematics_cfi import \
         poolDBESSourceMuScleFitCentralValue, \
         poolDBESSourceMuScleFitShiftUp, \

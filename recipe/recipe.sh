@@ -45,6 +45,9 @@ pushd EGamma/EGammaAnalysisTools/data
 cat download.url | xargs wget
 popd
 
+# Add muon MVA
+cvs co -r V00-00-10 -d Muon/MuonAnalysisTools UserCode/sixie/Muon/MuonAnalysisTools 
+
 echo "Now run ./install_python.sh to install python"
 
 echo "To compile: scram b -j 4"
