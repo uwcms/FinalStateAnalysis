@@ -40,7 +40,7 @@ rm pharris/MVAMet/src/PHMetAnalysisLinkDef.h
 # Note you now need to install virtual env
 
 # Add Electron ID MVA
-cvs co -r V00-00-06 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
+cvs co -r V00-00-08 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
 
 echo "Now run ./install_python.sh to install python"
 
