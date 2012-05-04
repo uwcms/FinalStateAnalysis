@@ -210,6 +210,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.cleanPatElectrons.preselection = cms.string('pt > 5')
     process.cleanPatElectrons.checkOverlaps.muons.requireNoOverlaps = False
     # Make sure we don't kill any good taus by calling them electrons
+    # Note that we don't actually remove these overlaps.
     process.cleanPatElectrons.checkOverlaps.taus = cms.PSet(
         src = final_tau_collection,
         algorithm = cms.string("byDeltaR"),
