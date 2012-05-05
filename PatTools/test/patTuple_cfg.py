@@ -96,8 +96,8 @@ if options.profile:
     # And  valgrind --tool=callgrind --combine-dumps=yes --instr-atstart=no --dump-instr=yes --separate-recs=1 cmsRun ...
     process.ProfilerService = cms.Service (
         "ProfilerService",
-        firstEvent = cms.untracked.int32(3),
-        lastEvent = cms.untracked.int32(12),
+        firstEvent = cms.untracked.int32(15),
+        lastEvent = cms.untracked.int32(100),
         paths = cms.untracked.vstring('p')
     )
 
