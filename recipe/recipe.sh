@@ -50,6 +50,9 @@ pushd EGamma/EGammaAnalysisTools/data
 cat download.url | xargs wget
 popd
 
+# Get Electron ISO MVA weights
+cvs co -r V00-00-00 UserCode/sixie/EGamma/EGammaAnalysisTools/data/
+
 # Add muon MVA
 cvs co -r V00-00-10 -d Muon/MuonAnalysisTools UserCode/sixie/Muon/MuonAnalysisTools 
 
