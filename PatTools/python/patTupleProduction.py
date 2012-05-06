@@ -39,7 +39,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_trackCandidates_*_*',
         '*_gsfTrackCandidates_*_*',
         '*_generalTracks_*_*',
-        '*_gsfTracks_*_*',
+        '*_electronGsfTracks_*_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
