@@ -66,6 +66,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load('Configuration/StandardSequences/MagneticField_cff')
     process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
     process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+
+    # Optimization - remove PFTauTagInfo compatibility layer
+    process.recoTauClassicHPSSequence.remove(process.pfRecoTauTagInfoProducer)
+    assert(process.combinatoricRecoTaus.modifiers[3].name.value() == 'TTIworkaround')
+    del process.combinatoricRecoTaus.modifiers[3]
+
     process.tuplize += process.recoTauClassicHPSSequence
     # Run rho computation
     from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
