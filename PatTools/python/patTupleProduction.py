@@ -93,6 +93,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Use HPS taus
     tautools.switchToPFTauHPS(process)
     # Disable tau IsoDeposits
+    process.patDefaultSequence.remove(process.patPFTauIsolation)
     process.patTaus.isoDeposits = cms.PSet()
     process.patTaus.userIsolation = cms.PSet()
 
