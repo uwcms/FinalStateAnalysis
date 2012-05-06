@@ -8,10 +8,11 @@ options = TauVarParsing.TauVarParsing(
     xSecErr = 0.0,
     skipEvents=0, # For debugging
     keepEverything=0,
-    verbose=0, # Print out summary table at end
-    profile=0, # Enabling profiling
     reportEvery=2000,
     puTag='unknown',
+    verbose=0, # Print out summary table at end
+    profile=0, # Enabling profiling
+    keepAll=0, # Don't drop any event content
 )
 
 files = [
@@ -87,6 +88,14 @@ tuplize.insert(0, process.eventCount)
 process.p = cms.Path(tuplize)
 process.outpath = cms.EndPath(process.out)
 
+# Tell the framework to shut up!
+process.load("FWCore.MessageLogger.MessageLogger_cfi")
+process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
+
+################################################################################
+### DEBUG options ##############################################################
+################################################################################
+
 if options.verbose:
     process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 
@@ -101,6 +110,7 @@ if options.profile:
         paths = cms.untracked.vstring('p')
     )
 
-# Tell the framework to shut up!
-process.load("FWCore.MessageLogger.MessageLogger_cfi")
-process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
+if options.keepAll:
+    # Optionally keep all output
+    process.out.outputCommands.append('keep *')
+
