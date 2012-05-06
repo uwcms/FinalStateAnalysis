@@ -177,37 +177,18 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Don't apply any prselections
     process.cleanPatTaus.preselection = ''
 
-    # Make clones of the Tau and Jet sequences w/o and pt requirement
-    process.jetsForMetSyst = helpers.cloneProcessingSnippet(
-        process, process.customizeJetSequence, 'ForMETSyst')
-    process.tausForMetSyst = helpers.cloneProcessingSnippet(
-        process, process.customizeTauSequence, 'ForMETSyst')
-    # Don't apply any cut for these
-    process.patJetGarbageRemovalForMETSyst.cut = ''
-    process.tuplize += process.jetsForMetSyst
-    process.tuplize += process.tausForMetSyst
-    # We have to make our clone of cleanPatTaus separately, since e/mu
-    # cleaning is applied - therefore it isn't in the customizeTausSequence.
-    process.cleanPatTausForMETSyst = process.cleanPatTaus.clone(
-        src = cms.InputTag(process.cleanPatTaus.src.value() + "ForMETSyst"))
-    process.tuplize += process.cleanPatTausForMETSyst
-
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
     final_met_collection = chain_sequence(
         process.customizeMETSequence, "patMETsPF")
     process.tuplize += process.customizeMETSequence
     # The MET systematics depend on all other systematics
-    process.systematicsMET.tauSrc = cms.InputTag("cleanPatTausForMETSyst")
+    process.systematicsMET.tauSrc = cms.InputTag("cleanPatTaus")
     process.systematicsMET.muonSrc = cms.InputTag("cleanPatMuons")
     process.systematicsMET.electronSrc = cms.InputTag("cleanPatElectrons")
 
     # Keep all the data formats needed for the systematics
     output_commands.append('recoLeafCandidates_*_*_%s'
-                           % process.name_())
-    # We can drop to jet and tau MET specific products. They were only used for
-    # computation of the MET numbers.
-    output_commands.append('drop recoLeafCandidates_*ForMETSyst_*_%s'
                            % process.name_())
 
     # Define the default lepton cleaning
