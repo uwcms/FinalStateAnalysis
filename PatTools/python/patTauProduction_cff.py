@@ -13,19 +13,8 @@ embedGenTaus = cms.EDProducer(
     src = cms.InputTag("systematicsTaus")
 )
 
-# We reduce the size of the tau collection by reducing the size of the seed jet
-# collection.  The taus without jets need to be removed here, because some of
-# the later modules assume every tau has a jet.
-patTausThatHaveJets = cms.EDFilter(
-    "PATTauSelector",
-    src = cms.InputTag("fixme"),
-    cut = cms.string('userCand("patJet").isNonnull'),
-    filter = cms.bool(False),
-)
-
 customizeTauSequence += embedGenTaus
 customizeTauSequence += patTausEmbedJetInfo
-customizeTauSequence += patTausThatHaveJets
 customizeTauSequence += triggeredPatTaus
 customizeTauSequence += systematicsTaus
 customizeTauSequence += patTauEmbedPresel # this has to come after the systematics
