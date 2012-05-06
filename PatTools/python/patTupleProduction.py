@@ -6,12 +6,10 @@ import PhysicsTools.PatAlgos.tools.metTools as mettools
 import PhysicsTools.PatAlgos.tools.tauTools as tautools
 import PhysicsTools.PatAlgos.tools.coreTools as coreTools
 import PhysicsTools.PatAlgos.tools.helpers as helpers
+import PhysicsTools.PatAlgos.tools.pfTools as pfTools
 import PhysicsTools.PatAlgos.patEventContent_cff as patContent
 
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
-from FinalStateAnalysis.PatTools.pfNoPileup import configurePFNoPileup
-from FinalStateAnalysis.PatTools.muons.pfIsolation import addMuPFIsolation
-from FinalStateAnalysis.PatTools.electrons.pfIsolation import addElecPFIsolation
 
 import itertools
 
@@ -41,6 +39,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_trackCandidates_*_*',
         '*_gsfTrackCandidates_*_*',
         '*_generalTracks_*_*',
+        '*_gsfTracks_*_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
@@ -82,20 +81,17 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Run pat default sequence
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
-    # Load PFNoPileup.  Make sure we do this after pat messes around w/ it
-    process.tuplize += configurePFNoPileup(process)
+    # Embed PF Isolation in electrons & muons
+    pfTools.usePFIso(process)
+
     # Embed muon tracks
     process.patMuons.embedTrack = True
     process.patMuons.pvSrc = cms.InputTag("selectedPrimaryVertex")
     # Do extra electron ID
     process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
     process.tuplize += process.recoElectronID
-    #output_commands.append('*_particleFlow_*_*')
-    #print repr(process.pfPostSequence)
     process.tuplize += process.patDefaultSequence
-    # Embed PF Isolation in electrons & muons
-    addMuPFIsolation(process, process.patDefaultSequence)
-    addElecPFIsolation(process, process.patDefaultSequence)
+
     process.patElectrons.electronIDSources = process.electronIDSources
     # Use HPS taus
     tautools.switchToPFTauHPS(process)
