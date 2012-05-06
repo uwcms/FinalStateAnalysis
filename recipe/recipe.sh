@@ -6,19 +6,24 @@ cd $CMSSW_BASE/src
 echo "Checking out extra packages"
 addpkg -z -f FinalStateAnalysis/recipe/tags
 
+# PAT RECIPE V08-06-55
+addpkg DataFormats/PatCandidates  V06-04-19-04
+addpkg PhysicsTools/PatAlgos      V08-06-55
+addpkg PhysicsTools/PatUtils      V03-09-18
+addpkg CommonTools/ParticleFlow   B4_2_X_V00-03-04
+addpkg PhysicsTools/SelectorUtils V00-03-24
+addpkg PhysicsTools/UtilAlgos     V08-02-14
+
 echo "Checking out Tau POG recipe"
 addpkg DataFormats/TauReco CMSSW_5_2_4 # yes, this is correct
 addpkg RecoTauTag/TauTagTools CMSSW_5_2_4
 cvs co -r V01-04-17 RecoTauTag/RecoTau
 cvs co -r V01-04-01 RecoTauTag/Configuration
 cvs co -r V00-04-01 CondFormats/EgammaObjects
-addpkg -z PhysicsTools/PatAlgos 
-addpkg -z PhysicsTools/IsolationAlgos 
 cvs up -r 1.53 PhysicsTools/PatAlgos/python/tools/tauTools.py
 
 # Add and patch to way speed up trigger matching
 echo "Applying pat trigger matching speedup"
-addpkg -z DataFormats/PatCandidates 
 patch -N -p0 < FinalStateAnalysis/recipe/patches/V06-04-16_DataFormats_PatCandidates_PassStrByRef.patch
 
 echo "Adding 2D expression histogram feature"
