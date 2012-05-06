@@ -36,6 +36,7 @@ class PATMuonMVAEmbedder : public edm::EDProducer {
     MuonMVAEstimator fMuonIsoRingsRadMVA;
 };
 
+namespace {
 std::string getFullPath(const std::string& fileInPath) {
   return edm::FileInPath(fileInPath).fullPath();
 }
@@ -45,6 +46,7 @@ void updatePaths(std::vector<std::string>& paths) {
   for (size_t i = 0; i < paths.size(); ++i) {
     paths[i] = getFullPath(paths[i]);
   }
+}
 }
 
 PATMuonMVAEmbedder::PATMuonMVAEmbedder(const edm::ParameterSet& pset) {
