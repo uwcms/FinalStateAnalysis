@@ -43,6 +43,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_offlinePrimaryVertices*_*_*',
         '*_ak5PFJets_*_*',
         '*_hltTriggerSummaryAOD_*_*',
+        '*_MEtoEDMConverter*_*_%s' % process.name_(),
+        'LHEEventProduct_*_*_*',
+        'GenEventInfoProduct_generator_*_*',
+        '*_kt6PFJetsForRhoComputationVoronoi_rho_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
