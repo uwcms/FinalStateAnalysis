@@ -87,6 +87,15 @@ extras_jetbtag = pt.clone(
     plotquantity = " extras('extTaus', '')[0].userCand(\'patJet\').bDiscriminator(\'\') "
 )
 
+jetbtag = pt.clone(
+    min = -5,
+    max = 5,
+    nbins = 100,
+    description = "CSV Jet Btag",
+    name = "csvJet",
+    plotquantity = " extras('extJets', '')[0].bDiscriminator(\'combinedSecondaryVertexBJetTags\') "
+)
+
 hltPass = pt.clone(
     min = -5,
     max = 5,
@@ -143,6 +152,7 @@ process.mt = cms.EDAnalyzer(
         muon_reljetpt,
         hasTaus,
         extras_jetbtag,
+        jetbtag,
         extras_jetpt,
         lhe_info,
         hltPass,
