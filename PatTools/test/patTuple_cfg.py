@@ -83,7 +83,9 @@ if options.ewkSkim:
 
 # Count events at the beginning of the pat tuplization
 process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
+process.load("FinalStateAnalysis.RecoTools.dqmEventCount_cfi")
 tuplize.insert(0, process.eventCount)
+tuplize.insert(0, process.dqmEventCount)
 
 process.p = cms.Path(tuplize)
 process.outpath = cms.EndPath(process.out)
