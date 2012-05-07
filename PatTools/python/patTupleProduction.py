@@ -41,6 +41,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_generalTracks_*_*',
         '*_electronGsfTracks_*_*',
         '*_offlinePrimaryVertices*_*_*',
+        '*_ak5PFJets_*_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
@@ -90,6 +91,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patMuons.embedTcMETMuonCorrs = False
     process.patMuons.embedTrack = False
     process.patMuons.pvSrc = cms.InputTag("selectedPrimaryVertex")
+
     # Do extra electron ID
     process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
     process.tuplize += process.recoElectronID
