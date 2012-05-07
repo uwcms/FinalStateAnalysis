@@ -17,5 +17,5 @@ patElectronMVAIsoEmbedding = cms.EDProducer(
     eeRecHits = cms.InputTag("reducedEcalRecHitsEE"),
     vertexSrc = cms.InputTag("selectedPrimaryVertex"),
     pfSrc = cms.InputTag("particleFlow"),
-    rhoSrc = cms.InputTag("kt6PFJets", "rho"),
+    rhoSrc = cms.InputTag("kt6PFJetsForRhoComputationVoronoi", "rho")
 )

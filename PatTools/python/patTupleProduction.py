@@ -74,12 +74,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
     del process.combinatoricRecoTaus.modifiers[3]
 
     process.tuplize += process.recoTauClassicHPSSequence
-    # Run rho computation
-    from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
-    kt6PFJets.Rho_EtaMax = cms.double(2.5)
-    kt6PFJets.doRhoFastjet = True
-    process.kt6PFJets = kt6PFJets
-    process.tuplize += process.kt6PFJets
+    ## Run rho computation
+    #from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
+    #kt6PFJets.Rho_EtaMax = cms.double(2.5)
+    #kt6PFJets.doRhoFastjet = True
+    #process.kt6PFJets = kt6PFJets
+    #process.tuplize += process.kt6PFJets
 
     # Run pat default sequence
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
@@ -128,6 +128,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patJets.embedPFCandidates = False
     process.patJets.embedCaloTowers = False
     process.patJetCorrFactors.useRho = True
+    # Let's use the same rho as in the TauID, so we don't need to do it twice.
+    process.patJetCorrFactors.rho = cms.InputTag(
+        "kt6PFJetsForRhoComputationVoronoi", "rho")
+
     # Use PFMEt
     mettools.addPfMET(process)
     if not isMC:

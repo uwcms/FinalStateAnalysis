@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 patFinalStateEventProducer = cms.EDProducer(
     "PATFinalStateEventProducer",
-    rhoSrc = cms.InputTag("kt6PFJets", "rho"),
+    rhoSrc = cms.InputTag("kt6PFJetsForRhoComputationVoronoi", "rho"),
     pvSrc = cms.InputTag("selectedPrimaryVertex"),
     verticesSrc = cms.InputTag("selectPrimaryVerticesQuality"),
     electronSrc = cms.InputTag("fixme"),
