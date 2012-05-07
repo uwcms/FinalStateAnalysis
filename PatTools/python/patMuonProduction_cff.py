@@ -5,6 +5,10 @@ customizeMuonSequence = cms.Sequence()
 from FinalStateAnalysis.PatTools.muons.muTrackCandidates_cfi import trackCandidates
 customizeMuonSequence += trackCandidates
 
+from FinalStateAnalysis.PatTools.muons.patMuonRhoEmbedding_cfi import \
+        patMuonRhoEmbedding
+customizeMuonSequence += patMuonRhoEmbedding
+
 from FinalStateAnalysis.PatTools.muons.patMuonIdEmbedding_cfi import \
         patMuonsEmbedWWId, patVBTFMuonMatch
 customizeMuonSequence += patMuonsEmbedWWId

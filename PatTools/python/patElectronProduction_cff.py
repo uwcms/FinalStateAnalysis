@@ -5,6 +5,9 @@ from FinalStateAnalysis.PatTools.electrons.patConversionRejection_cfi import \
 from FinalStateAnalysis.PatTools.electrons.patElectronVBTFEmbedding_cff import \
         electronsWP80, electronsWP90, electronsWP95, electronsVBTFId
 
+from FinalStateAnalysis.PatTools.electrons.patElectronRhoEmbedding_cfi import \
+        patElectronRhoEmbedding
+
 from FinalStateAnalysis.PatTools.electrons.electronSystematics_cfi import \
         electronSystematics
 
@@ -29,6 +32,7 @@ from FinalStateAnalysis.PatTools.electrons.eTrackCandidates_cfi import \
 
 customizeElectronSequence = cms.Sequence()
 customizeElectronSequence += gsfTrackCandidates
+customizeElectronSequence += patElectronRhoEmbedding
 customizeElectronSequence += electronsWWID
 customizeElectronSequence += electronsVBTFId
 customizeElectronSequence += patElectronsEmbedJetInfo

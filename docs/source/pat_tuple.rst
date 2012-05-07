@@ -45,6 +45,10 @@ The closest PF patJet is available via the ``userCand('patJet')`` function.
 This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.  If the 
 jet doesn't exist, the "jet pt" is equal to the muon Pt.
 
+The fastjet energy is embedding in electrons and muons:
+
+* ``userFloat('rho')`` 
+
 Electrons
 ---------
 
