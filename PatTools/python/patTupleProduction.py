@@ -42,6 +42,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_electronGsfTracks_*_*',
         '*_offlinePrimaryVertices*_*_*',
         '*_ak5PFJets_*_*',
+        '*_hltTriggerSummaryAOD_*_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
