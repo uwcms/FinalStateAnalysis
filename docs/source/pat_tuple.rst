@@ -48,9 +48,6 @@ jet doesn't exist, the "jet pt" is equal to the muon Pt.
 Electrons
 ---------
 
-The ``cleanPatElectrons`` collection is defined as electrons
-which have ``pt > 8``. 
-
 The following electron IDs are embedded as userFloats:
 
 * ``wp80``
