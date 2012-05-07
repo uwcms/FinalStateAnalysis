@@ -69,6 +69,11 @@ tau_disc = pt.clone(
     plotquantity = "daughter(1).tauID('byVLooseCombinedIsolationDeltaBetaCorr')"
 )
 
+tau_trigger = pt.clone(
+    name = "TauIso",
+    plotquantity = "daughter(1).tauID('byVLooseCombinedIsolationDeltaBetaCorr')"
+)
+
 muon_reljetpt = pt.clone(
     min = 0,
     max = 5,
@@ -80,7 +85,7 @@ muon_reljetpt = pt.clone(
 extras_jetpt = pt.clone(
     description = "Ext Jet Pt",
     name = "extJetPt",
-    plotquantity = " extras('extTaus', '')[0].userCand(\'patJet\').pt "
+    plotquantity = "? extras('extTaus', '').size() ? extras('extTaus', '')[0].userCand(\'patJet\').pt : -1"
 )
 
 extras_jetbtag = pt.clone(
@@ -89,7 +94,7 @@ extras_jetbtag = pt.clone(
     nbins = 100,
     description = "Ext Jet Btag",
     name = "extBtag",
-    plotquantity = " extras('extTaus', '')[0].userCand(\'patJet\').bDiscriminator(\'\') "
+    plotquantity = "? extras('extTaus', '').size() ? extras('extTaus', '')[0].userCand(\'patJet\').bDiscriminator(\'\') : -1"
 )
 
 jetbtag = pt.clone(
@@ -98,7 +103,7 @@ jetbtag = pt.clone(
     nbins = 100,
     description = "CSV Jet Btag",
     name = "csvJet",
-    plotquantity = " extras('extJets', '')[0].bDiscriminator(\'combinedSecondaryVertexBJetTags\') "
+    plotquantity = "? extras('extTaus', '').size() ? extras('extJets', '')[0].bDiscriminator(\'combinedSecondaryVertexBJetTags\') : -5 "
 )
 
 hltPass = pt.clone(
@@ -168,4 +173,21 @@ process.mt = cms.EDAnalyzer(
     )
 )
 
-process.p = cms.Path(process.mt)
+calib_pt_diff = pt.clone(
+    min = -10,
+    max = 10,
+    nbins = 100,
+    description = "Diff between calib and uncalib energy",
+    name = "CalibPtDiff",
+    plotquantity = 'daughter(0).pt - daughter(0).userCand("calibrated").pt'
+)
+
+process.et = cms.EDAnalyzer(
+    "CandViewHistoAnalyzer",
+    src = cms.InputTag("finalStateElecTau"),
+    histograms = cms.VPSet(
+        calib_pt_diff
+    )
+)
+
+process.p = cms.Path(process.mt*process.et)

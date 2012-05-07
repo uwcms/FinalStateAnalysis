@@ -32,6 +32,17 @@ for sample in sorted(datadefs.keys()):
     farmout_options.append(
         '--input-dbs-path=%s' % sample_info['datasetpath'])
 
+    # Figure out dataset - the EGamma electron calibrator needs to know
+    # if we are using a ReReco, etc.
+    dataset=None
+    for tag in ['Fall11', 'Summer11', 'Prompt', 'ReReco', 'Jan16ReReco']:
+        if tag in sample_info['datasetpath']:
+            dataset = tag
+    if not dataset:
+        raise ValueError("Couldn't determine dataset for sample: "
+                        + sample_info['datasetpath'])
+    options.append('dataset=%s' % dataset)
+
     if 'data' not in sample:
         options.append('isMC=1')
         options.append('globalTag=$mcgt')

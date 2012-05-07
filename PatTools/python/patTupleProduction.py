@@ -100,9 +100,31 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Do extra electron ID
     process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
     process.tuplize += process.recoElectronID
+    process.patElectrons.electronIDSources = process.electronIDSources
+
+    # Run EGamma electron energy calibration
+    process.load("EgammaCalibratedGsfElectrons.CalibratedElectronProducers.calibratedGsfElectrons_cfi")
+    process.RandomNumberGeneratorService.calibratedGsfElectrons = cms.PSet(
+        initialSeed = cms.untracked.uint32(1), # A frickin billion
+        engineName = cms.untracked.string('TRandom3')
+    )
+    process.calibratedGsfElectrons.inputDataset = kwargs['dataset']
+    process.calibratedGsfElectrons.isMC = bool(isMC)
+    process.calibratedGsfElectrons.isAOD = True
+    process.calibratedGsfElectrons.updateEnergyError = cms.bool(True)
+    # Run a sanity check on the calibration configuration.
+    from FinalStateAnalysis.PatTools.electrons.patElectronEmbedCalibratedGsf_cfi \
+            import validate_egamma_calib_config
+    validate_egamma_calib_config(process)
+
+    process.tuplize += process.calibratedGsfElectrons
+    # Keep the calibratedGsfElectrons - we embed refs to this into the
+    # pat::Electrons
+    output_commands.append('*_calibratedGsfElectrons_*_*')
+
+    # Now run PAT
     process.tuplize += process.patDefaultSequence
 
-    process.patElectrons.electronIDSources = process.electronIDSources
     # Use HPS taus
     tautools.switchToPFTauHPS(process)
     # Disable tau IsoDeposits

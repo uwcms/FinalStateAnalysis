@@ -13,6 +13,9 @@ options = TauVarParsing.TauVarParsing(
     verbose=0, # Print out summary table at end
     profile=0, # Enabling profiling
     keepAll=0, # Don't drop any event content
+    # Used for the EGamma electron calibration
+    # See https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaElectronEnergyScale
+    dataset='Fall11',
 )
 
 files = [
@@ -66,7 +69,7 @@ process.out = cms.OutputModule(
 import FinalStateAnalysis.PatTools.patTupleProduction as tuplizer
 tuplize, output_commands = tuplizer.configurePatTuple(
     process, isMC=options.isMC, xSec=options.xSec, xSecErr=options.xSecErr,
-    puTag=options.puTag
+    puTag=options.puTag, dataset=options.dataset,
 )
 
 for command in output_commands:

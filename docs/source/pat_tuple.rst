@@ -112,6 +112,12 @@ fixme)
 * ``ees-`` (down 1 sigma)
 * ``ees+`` (up 1 sigma)
 
+References to the calibrated GSF electrons are embedded as user cands:  
+
+* ``userCand("calibrated")``
+
+returns a reco::CandidatePtr pointing to a reco::GsfElectron.
+
 Jets
 ----
 
