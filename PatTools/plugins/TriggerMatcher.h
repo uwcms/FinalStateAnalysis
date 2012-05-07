@@ -70,7 +70,7 @@ class MyTriggerMatcher : public edm::EDProducer {
               }
 
             // only embed if there are trigger objects
-            if (trigObjects.size()) {
+            if (true || trigObjects.size()) {
               if(match)
                 obj.addUserFloat(filters_[i].label(),1.0);
               else
