@@ -8,5 +8,5 @@ import FWCore.ParameterSet.Config as cms
 
 dqmEventCount = cms.EDProducer(
     "DQMEventCounter",
-    name = cms.InputTag("processedEvents")
+    name = cms.string("processedEvents")
 )
