@@ -64,6 +64,11 @@ muon_jetpt = pt.clone(
     plotquantity = "daughter(0).userFloat('jetPt')"
 )
 
+tau_disc = pt.clone(
+    name = "TauIso",
+    plotquantity = "daughter(1).tauID('byVLooseCombinedIsolationDeltaBetaCorr')"
+)
+
 muon_reljetpt = pt.clone(
     min = 0,
     max = 5,
@@ -149,6 +154,7 @@ process.mt = cms.EDAnalyzer(
         hasMuons,
         hasElectrons,
         muon_jetpt,
+        tau_disc,
         muon_reljetpt,
         hasTaus,
         extras_jetbtag,
