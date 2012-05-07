@@ -152,11 +152,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.customizeJetSequence += process.selectedPatJets
     # We can't mess up the selected pat jets because the taus use them.
     process.selectedPatJets.src = final_jet_collection
-    # Apply a pt cut on the uncorrected jet to get rid of really low pt junk
-    #process.selectedPatJets.cut = 'userCand("uncorr").pt > 5'
     process.patDefaultSequence.replace(process.patJets,
                                        process.customizeJetSequence)
 
+    # Produce the electron collections
     process.load("FinalStateAnalysis.PatTools.patElectronProduction_cff")
     final_electron_collection = chain_sequence(
         process.customizeElectronSequence, "selectedPatElectrons")
