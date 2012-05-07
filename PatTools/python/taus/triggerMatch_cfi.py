@@ -22,7 +22,6 @@ triggeredPatTaus = cms.EDProducer(
         cms.InputTag('hltOverlapFilterIsoMu15TightIsoPFTau20'),
         cms.InputTag('hltOverlapFilterMu15IsoPFTau20'),
         cms.InputTag('hltOverlapFilterIsoMu12IsoPFTau10'),
-        cms.InputTag('hltOverlapFilterIsoMu15IsoPFTau20'),
         cms.InputTag('hltOverlapFilterIsoEle15IsoPFTau20'),
         cms.InputTag('hltOverlapFilterIsoEle15IsoPFTau15'),
         cms.InputTag('hltOverlapFilterIsoEle15TightIsoPFTau20'),
