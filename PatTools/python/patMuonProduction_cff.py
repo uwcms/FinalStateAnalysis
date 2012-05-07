@@ -32,5 +32,5 @@ from FinalStateAnalysis.PatTools.muons.muonSystematics_cfi import \
         patMuonsEmbedSystematics
 customizeMuonSequence += patMuonsEmbedSystematics
 
-from FinalStateAnalysis.PatTools.muons.triggerMatch_cfi import triggeredPatMuons
-customizeMuonSequence += triggeredPatMuons
+#from FinalStateAnalysis.PatTools.muons.triggerMatch_cfi import triggeredPatMuons
+#customizeMuonSequence += triggeredPatMuons
