@@ -85,8 +85,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Embed PF Isolation in electrons & muons
     pfTools.usePFIso(process)
 
-    # Embed muon tracks
-    process.patMuons.embedTrack = True
+    # Unembed junks
+    process.patMuons.embedCaloMETMuonCorrs = False
+    process.patMuons.embedTcMETMuonCorrs = False
+    process.patMuons.embedTrack = False
     process.patMuons.pvSrc = cms.InputTag("selectedPrimaryVertex")
     # Do extra electron ID
     process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
