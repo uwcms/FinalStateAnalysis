@@ -88,7 +88,20 @@ tuplize.insert(0, process.eventCount)
 tuplize.insert(0, process.dqmEventCount)
 
 process.p = cms.Path(tuplize)
-process.outpath = cms.EndPath(process.out)
+
+# Save DQM stuff created during pat tuplization
+process.MEtoEDMConverter = cms.EDProducer(
+    "MEtoEDMConverter",
+    Name = cms.untracked.string('MEtoEDMConverter'),
+    Verbosity = cms.untracked.int32(0), # 0 provides no output
+    # 1 provides basic output
+    # 2 provide more detailed output
+    Frequency = cms.untracked.int32(50),
+    MEPathToSave = cms.untracked.string(''),
+    deleteAfterCopy = cms.untracked.bool(True)
+)
+
+process.outpath = cms.EndPath(process.MEtoEDMConverter*process.out)
 
 # Tell the framework to shut up!
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
