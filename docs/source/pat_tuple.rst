@@ -4,19 +4,25 @@ PAT Tuple Content
 Muons
 -----
 
-The ``cleanPatElectrons`` collection is defined as electrons
-which have ``pt > 8``. 
-
-The following muon IDs are embedded:
+The following cut-based muon IDs are embedded:
 
 * ``userInt('WWID')``
 * ``userInt('VBTF')``
 
-The following isolation quantities are embedded as userFloats (no DB correction)
+and the following MVA IDs (see the `MuonId twiki`_).
 
-* ``pfLooseIsoPt03``
-* ``pfLooseIsoPt04``
-* ``pfLooseIsoPt06``
+.. _MuonId twiki: https://twiki.cern.ch/twiki/bin/viewauth/CMS/MultivariateMuonSelection
+
+
+* ``userFloat('isomva')``
+* ``userFloat('idmva')``
+* ``userFloat('isoringsradmva')``
+
+You can get a ref to to the associated PFMuon via:
+
+* ``pfCandidateRef()``,
+
+if this ref ``isNull()``, there is no muon ID'd by PF.
 
 The following IP information is embedded as userFloats: 
 
@@ -30,13 +36,14 @@ The following IP information is embedded as userFloats:
 The following systematics candidates are embedded (as userCands).  The energy
 scale uncertainty is taken from the muon MuscleFit.
 
-* ``uncorr`` (no muon energy scale)
-* ``nom`` (nominal ES correction, same as pat::Muon p4)
+* ``uncorr`` (no muon energy scale, same as pat::Muon p4)
+* ``corr`` (nominal ES correction)
 * ``mes-`` (down 1 sigma)
 * ``mes+`` (up 1 sigma)
 
 The closest PF patJet is available via the ``userCand('patJet')`` function.
-This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.
+This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.  If the 
+jet doesn't exist, the "jet pt" is equal to the muon Pt.
 
 Electrons
 ---------
@@ -44,17 +51,13 @@ Electrons
 The ``cleanPatElectrons`` collection is defined as electrons
 which have ``pt > 8``. 
 
-Electrons which overlap a ``cleanPatMuon``, or overlap 
-a tau candidate which has ``pt > 15``, passes decay mode
-finding, loose combined isolation, and ``againstElectronTight`` are removed.
-
 The following electron IDs are embedded as userFloats:
 
 * ``wp80``
 * ``wp90``
 * ``wp95``
 * ``WWID``
-* ``MITID``
+* ``MITID`` - the 2011 MVA ID by the MIT people
 
 The following RECO electron IDs are embedded as as eIDs (pat defaults):
 
@@ -68,7 +71,7 @@ The following RECO electron IDs are embedded as as eIDs (pat defaults):
 * ``cicSuperTight --> eidSuperTight``
 * ``cicMedium --> eidMedium``
 
-The following electron MVA ID related information is embedded:
+The following 2011 electron MVA ID related information is embedded:
 
 * ``hasConversion``
 * ``missingHits`` - number of missing hits 
@@ -76,6 +79,20 @@ The following electron MVA ID related information is embedded:
 * ``MVA`` - raw MVA value
 * ``MVApreID`` - pre-ID cuts used for the MVA
 * ``MITID`` - MIT MVA ID working point binary value
+
+The following 2012 electron MVA IDs (see `EGamma ID Recipe`_.) are
+available:
+
+.. _EGamma ID Recipe: https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentification
+
+* ``electronID('mvaNonTrigV0')``
+* ``electronID('mvaTrigV0')``
+
+The following 2012 electron MVA ISOs (see `EGamma Iso Recipe`_) are available:
+
+.. _EGamma Iso Recipe: https://twiki.cern.ch/twiki/bin/view/CMS/EgammaMultivariateIsoElectrons
+
+* ``userFloat('isomva')``
 
 The following IP information is embedded as userFloats: 
 
@@ -105,6 +122,23 @@ They correspond to the official PFJet IDs listed on the `JetMET twiki`_.
 * ``idLoose``
 * ``idMedium``
 * ``idTight``
+
+The raw MVA-based PU jet IDs (see `MVAMet`_) are embedded as:
+
+.. _MVAMet: https://twiki.cern.ch/twiki/bin/view/CMS/MVAMet
+
+* ``userFloat('fullDiscriminant')``
+* ``userFloat('philv1Discriminant')``
+* ``userFloat('simpleDiscriminant')``
+
+and the integer working points as:
+
+* ``userFloat('fullIdXXX')``
+* ``userFloat('philv1IdXXX')``
+* ``userFloat('simpleIdXXX')``
+
+where XXX is Loose, Medium or Tight.
+
 
 Corrections
 '''''''''''
