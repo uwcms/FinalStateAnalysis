@@ -42,7 +42,8 @@ rm pharris/MVAMet/src/GBRTree.cxx
 rm pharris/MVAMet/src/GBRForest.cxx
 rm pharris/MVAMet/src/PHMetAnalysisLinkDef.h
 
-# Note you now need to install virtual env
+# Add Marias patch for negative SSV 
+patch -p0 < FinalStateAnalysis/recipe/marias_negativeSSV.patch
 
 # Add Electron ID MVA
 cvs co -r V00-00-08 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
@@ -61,6 +62,7 @@ cvs co -r V00-00-10 -d Muon/MuonAnalysisTools UserCode/sixie/Muon/MuonAnalysisTo
 # :( no tag is provided on the twiki
 cvs co -D "07/05/2012" -d EgammaCalibratedGsfElectrons UserCode/EGamma/EgammaCalibratedGsfElectrons
 
+# Note you now need to install virtual env
 echo "Now run ./install_python.sh to install python"
 
 echo "To compile: scram b -j 4"
