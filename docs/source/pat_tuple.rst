@@ -154,9 +154,9 @@ The raw MVA-based PU jet IDs (see `MVAMet`_) are embedded as:
 
 and the integer working points as:
 
-* ``userFloat('fullIdXXX')``
-* ``userFloat('philv1IdXXX')``
-* ``userFloat('simpleIdXXX')``
+* ``userInt('fullIdXXX')``
+* ``userInt('philv1IdXXX')``
+* ``userInt('simpleIdXXX')``
 
 where XXX is Loose, Medium or Tight.
 
