@@ -1,6 +1,20 @@
 PAT Tuple Content
 =================
 
+PF Isolation
+------------
+
+The PF isolation values (0.4) are available for electrons and muons via:
+
+* ``chargedHadronIso()``
+* ``neutralHadronIso()``
+* ``photonIso()``
+* ``pfPUChargedHadrons()`` - for applying the Delta Beta correction
+
+Note that you probably need to update your `PAT tags in 42X`_.
+
+.. _PAT tags in 42X: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePATReleaseNotes42X#V08_06_55
+
 Muons
 -----
 
