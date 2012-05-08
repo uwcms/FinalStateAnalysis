@@ -42,6 +42,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_electronGsfTracks_*_*',
         '*_offlinePrimaryVertices*_*_*',
         '*_ak5PFJets_*_*',
+        '*_ak5GenJets_*_*',
         '*_hltTriggerSummaryAOD_*_*',
         '*_MEtoEDMConverter*_*_%s' % process.name_(),
         'LHEEventProduct_*_*_*',
