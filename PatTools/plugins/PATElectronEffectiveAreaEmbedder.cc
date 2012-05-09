@@ -5,7 +5,8 @@
  *
  *    Description:  Embed "effective area" into PAT electrons.
  *                  The effective area depends on run/MC type, and
- *                  eta.
+ *                  eta. See:
+ *                  https://twiki.cern.ch/twiki/bin/view/CMS/EgammaEARhoCorrection
  *
  *         Author:  Evan Friis, evan.friis@cern.ch
  *        Company:  UW Madison

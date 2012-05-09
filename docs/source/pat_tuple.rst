@@ -109,6 +109,16 @@ The following 2012 electron MVA ISOs (see `EGamma Iso Recipe`_) are available:
 
 * ``userFloat('isomva')``
 
+The "effective area" for different isolation types is available:
+
+* ``userFloat("EAGamma04")``
+* ``userFloat("EANeuHadron04")``
+* ``userFloat("EAGammaNeuHadron04")``
+
+The `EGamma rho correction`_ is then: ``chargedHadronIso + max(photonIso + neutralHadronIso - userFloat('EAGammaNeuHadron04')*userFloat('rho'), 0)``
+
+.. _EGamma rho correction: https://twiki.cern.ch/twiki/bin/view/CMS/EgammaEARhoCorrection
+
 The following IP information is embedded as userFloats: 
 
 * ``ipDXY``
