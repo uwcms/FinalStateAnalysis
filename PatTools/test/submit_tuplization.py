@@ -8,7 +8,9 @@ jobId = '2012-03-05-EWKPatTuple'
 print 'export TERMCAP=screen'
 for sample in sorted(datadefs.keys()):
     sample_info = datadefs[sample]
-    if '4L' not in sample_info['analyses']:
+    if 'VH' not in sample_info['analyses']:
+        continue
+    if 'ZH' not in sample:
         continue
 
     submit_dir_base = "/scratch/{logname}/{jobid}/{sample}".format(
@@ -42,6 +44,11 @@ for sample in sorted(datadefs.keys()):
         raise ValueError("Couldn't determine dataset for sample: "
                         + sample_info['datasetpath'])
     options.append('dataset=%s' % dataset)
+    # Check if we need to use a different DBS
+    if 'dbs' in sample_info:
+        farmout_options.append(
+            '--dbs-service-url=http://cmsdbsprod.cern.ch/%s/servlet/DBSServlet' % sample_info['dbs']
+        )
 
     if 'data' not in sample:
         options.append('isMC=1')

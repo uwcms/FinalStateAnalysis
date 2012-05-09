@@ -137,7 +137,7 @@ bin_width = stack.GetXaxis().GetBinWidth(1)
 stack.GetYaxis().SetTitle("Events/%0.0f GeV" % bin_width)
 stack.GetYaxis().SetTitleOffset(0.8)
 stack.SetMinimum(1e-1)
-stack.SetMaximum(10)
+stack.SetMaximum(13)
 hHWW.Draw('same,hist')
 hData_poisson.Draw('p0')
 
