@@ -31,6 +31,9 @@ if __name__ == "__main__":
     parser.add_argument('--blurbalign', type=int, default="31",
                         help='[blurb] alignment. Default: %(default)i')
 
+    parser.add_argument('--blurbsize', type=float, default="0.05",
+                        help='[blurb] text size. Default: %(default)i')
+
     parser.add_argument('--no-obs', dest='noobs', action='store_true',
                         help="Don't show the observed limit")
 
@@ -42,6 +45,9 @@ if __name__ == "__main__":
 
     parser.add_argument('--max-y', dest="maxy", type=float, default=30,
                         help="Max on the y axis")
+
+    parser.add_argument('--max-x', dest="maxx", type=float, default=-1,
+                        help="Max on the x axis, if less than 0 take from max limits")
 
     parser.add_argument('--lumi', dest="lumi", type=int, default=4684,
                         help="Integrated lumi: picobarns")
@@ -78,6 +84,9 @@ if __name__ == "__main__":
 
     xmin = min(limit_data[key].keys())
     xmax = max(limit_data[key].keys())
+
+    if args.maxx > 0:
+        xmax = args.maxx
 
     frame = ROOT.TH1F("frame", "frame", 1, xmin, xmax)
 
@@ -132,6 +141,7 @@ if __name__ == "__main__":
         blurb.SetBorderSize(0)
         blurb.SetTextAlign(args.blurbalign)
         blurb.AddText(args.blurb)
+        blurb.SetTextSize(args.blurbsize)
         blurb.Draw()
 
     canvas.RedrawAxis()
