@@ -55,8 +55,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load("FinalStateAnalysis.RecoTools.genParticleTrimmer_cfi")
     process.genParticles = process.prunedGenParticles.clone()
     if isMC:
-        process.tuplize += process.genParticles
+        #process.tuplize += process.genParticles
         output_commands.append('*_genParticles_*_%s' % process.name_())
+        output_commands.append('*_genParticles_*_*')
 
     output_commands.append('*_tauGenJetsSelectorAllHadrons_*_*')
     output_commands.append('*_tauGenJets_*_*')
