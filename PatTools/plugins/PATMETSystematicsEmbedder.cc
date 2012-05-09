@@ -60,6 +60,7 @@ PATMETSystematicsEmbedder::PATMETSystematicsEmbedder(
     metSrc_ = pset.getParameter<edm::InputTag>("src");
 
     produces<ShiftedCandCollection>("metsRaw");
+    produces<ShiftedCandCollection>("metType1");
     produces<ShiftedCandCollection>("metsMESUp");
     produces<ShiftedCandCollection>("metsMESDown");
     produces<ShiftedCandCollection>("metsTESUp");
