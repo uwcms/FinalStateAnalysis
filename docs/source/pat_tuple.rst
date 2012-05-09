@@ -11,7 +11,8 @@ The PF isolation values (0.4) are available for electrons and muons via:
 * ``photonIso()``
 * ``pfPUChargedHadrons()`` - for applying the Delta Beta correction
 
-Note that you probably need to update your `PAT tags in 42X`_.
+Note that you probably need to update your `PAT tags in 42X`_ to get the
+required version of DataFormats/PatCandidates.
 
 .. _PAT tags in 42X: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePATReleaseNotes42X#V08_06_55
 
