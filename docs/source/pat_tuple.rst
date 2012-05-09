@@ -250,3 +250,16 @@ added) - note these quantities refer to the PFJet, *not* the tau:
 * ``userInt("ps_crk_nom")`` - is in ECAL crack
 
 
+MET
+---
+
+The following four-vector systematics are embedded as userCands:
+
+* ``userCand("type1")`` - Type 1 correct MET (jets only)
+* ``userCand("mes+")`` - Muon scale uncertainty
+* ``userCand("tes+")`` - Tau scale uncertainty
+* ``userCand("jes+")`` - Jet scale uncertainty
+* ``userCand("ues+")`` - Unclustered energy scale uncertainty
+
+Charge conjugation is implied.
+
