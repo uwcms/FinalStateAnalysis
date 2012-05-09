@@ -16,6 +16,7 @@ options = TauVarParsing.TauVarParsing(
     # Used for the EGamma electron calibration
     # See https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaElectronEnergyScale
     dataset='Fall11',
+    target='Fall11MC', # Used for electron and muon effective areas
 )
 
 files = [
@@ -70,6 +71,7 @@ import FinalStateAnalysis.PatTools.patTupleProduction as tuplizer
 tuplize, output_commands = tuplizer.configurePatTuple(
     process, isMC=options.isMC, xSec=options.xSec, xSecErr=options.xSecErr,
     puTag=options.puTag, dataset=options.dataset,
+    target=options.target,
 )
 
 for command in output_commands:

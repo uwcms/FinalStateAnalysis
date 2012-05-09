@@ -194,6 +194,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # We have to do the pat Jets before the pat electrons since we embed them
     process.customizeElectronSequence.insert(0, process.selectedPatJets)
     process.cleanPatElectrons.src = final_electron_collection
+    # The "effective area" calculation needs to know if it is data/mc, etc.
+    process.patElectronEffectiveAreaEmbedder.target = kwargs['target']
 
     process.load("FinalStateAnalysis.PatTools.patMuonProduction_cff")
     final_muon_collection = chain_sequence(

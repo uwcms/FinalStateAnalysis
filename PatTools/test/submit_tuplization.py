@@ -44,6 +44,23 @@ for sample in sorted(datadefs.keys()):
         raise ValueError("Couldn't determine dataset for sample: "
                         + sample_info['datasetpath'])
     options.append('dataset=%s' % dataset)
+
+    # Figure out which target - the EGamma/Muon effective areas need to know
+    # this
+    target=None
+    if 'Fall11' in sample_info['datasetpath']:
+        target = 'Fall11MC'
+    else if 'Summer11' in sample_info['datasetpath']:
+        target = 'Summer11MC'
+    else if 'data' in sample and '2011' in sample_info['datasetpath']:
+        target = '2011Data'
+    else if 'data' in sample and '2012' in sample_info['datasetpath']:
+        target = '2012Data'
+    if not target:
+        raise ValueError("Couldn't determine target for sample: "
+                         + sample_info['datasetpath'])
+    options.append('target=%s' % target)
+
     # Check if we need to use a different DBS
     if 'dbs' in sample_info:
         farmout_options.append(

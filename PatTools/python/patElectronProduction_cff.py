@@ -33,6 +33,9 @@ from FinalStateAnalysis.PatTools.electrons.eTrackCandidates_cfi import \
 from FinalStateAnalysis.PatTools.electrons.patElectronEmbedCalibratedGsf_cfi import \
         patElectronEmbedCalibratedGsf
 
+from FinalStateAnalysis.PatTools.electrons.patElectronEffectiveAreaEmbedder_cfi import \
+        patElectronEffectiveAreaEmbedder
+
 customizeElectronSequence = cms.Sequence()
 customizeElectronSequence += gsfTrackCandidates
 customizeElectronSequence += patElectronRhoEmbedding
@@ -46,3 +49,4 @@ customizeElectronSequence += patElectronMVAIDEmbedder
 customizeElectronSequence += patElectronMVAIsoEmbedding
 customizeElectronSequence += patElectronsEmbedIp
 customizeElectronSequence += patElectronEmbedCalibratedGsf
+customizeElectronSequence += patElectronEffectiveAreaEmbedder
