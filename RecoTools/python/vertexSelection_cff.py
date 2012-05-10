@@ -2,8 +2,8 @@ import FWCore.ParameterSet.Config as cms
 
 selectPrimaryVerticesQuality = cms.EDFilter(
     "VertexSelector",
-    src = cms.InputTag('offlinePrimaryVerticesWithBS'),
-    cut = cms.string("isValid & ndof >= 7 && abs(z) < 24 && position.Rho < 2.0"),
+    src = cms.InputTag('offlinePrimaryVertices'),
+    cut = cms.string("isValid & ndof >= 4 && abs(z) < 24 && position.Rho < 2.0"),
     filter = cms.bool(False),
 )
 

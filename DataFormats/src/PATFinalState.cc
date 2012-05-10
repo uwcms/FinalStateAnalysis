@@ -146,6 +146,15 @@ PATFinalState::daughterPtrs(const std::string& tags) const {
   return output;
 }
 
+std::vector<reco::CandidatePtr>
+PATFinalState::daughterPtrs() const {
+  std::vector<reco::CandidatePtr> output;
+  for (size_t i = 0; i < numberOfDaughters(); ++i) {
+    output.push_back(daughterPtr(i));
+  }
+  return output;
+}
+
 std::vector<const reco::Candidate*>
 PATFinalState::daughters(const std::string& tags) const {
   if (tags == "")
@@ -281,6 +290,16 @@ PATFinalState::LorentzVector PATFinalState::totalP4(
 
 PATFinalState::LorentzVector PATFinalState::totalP4() const {
   return visP4() + met()->p4();
+}
+
+const PATFinalState::LorentzVector&
+PATFinalState::mvaMET(const std::string& tags) const {
+  std::vector<reco::CandidatePtr> daughters = (
+      tags == "" ?  daughterPtrs() : daughterPtrs(tags));
+  if (tags == "")
+    return evt()->mvaMET(daughters).first;
+  else
+    return evt()->mvaMET(daughters).first;
 }
 
 double

@@ -6,12 +6,10 @@ import PhysicsTools.PatAlgos.tools.metTools as mettools
 import PhysicsTools.PatAlgos.tools.tauTools as tautools
 import PhysicsTools.PatAlgos.tools.coreTools as coreTools
 import PhysicsTools.PatAlgos.tools.helpers as helpers
+import PhysicsTools.PatAlgos.tools.pfTools as pfTools
 import PhysicsTools.PatAlgos.patEventContent_cff as patContent
 
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
-from FinalStateAnalysis.PatTools.pfNoPileup import configurePFNoPileup
-from FinalStateAnalysis.PatTools.muons.pfIsolation import addMuPFIsolation
-from FinalStateAnalysis.PatTools.electrons.pfIsolation import addElecPFIsolation
 
 import itertools
 
@@ -36,6 +34,21 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_addPileupInfo_*_*',
         'edmMergeableCounter_*_*_*',
         '*_lumiProducer_*_*',
+        '*_particleFlow_*_*',
+        '*_offlineBeamSpot_*_*',
+        '*_trackCandidates_*_*',
+        '*_gsfTrackCandidates_*_*',
+        '*_generalTracks_*_*',
+        '*_electronGsfTracks_*_*',
+        '*_offlinePrimaryVertices*_*_*',
+        '*_ak5PFJets_*_*',
+        '*_ak5GenJets_*_*',
+        '*_hltTriggerSummaryAOD_*_*',
+        '*_MEtoEDMConverter*_*_%s' % process.name_(),
+        'LHEEventProduct_*_*_*',
+        'GenEventInfoProduct_generator_*_*',
+        '*_kt6PFJetsForRhoComputationVoronoi_rho_*',
+        '*_kt6PFJetsForIso_rho_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
@@ -43,8 +56,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load("FinalStateAnalysis.RecoTools.genParticleTrimmer_cfi")
     process.genParticles = process.prunedGenParticles.clone()
     if isMC:
-        process.tuplize += process.genParticles
+        #process.tuplize += process.genParticles
         output_commands.append('*_genParticles_*_%s' % process.name_())
+        output_commands.append('*_genParticles_*_*')
 
     output_commands.append('*_tauGenJetsSelectorAllHadrons_*_*')
     output_commands.append('*_tauGenJets_*_*')
@@ -55,39 +69,81 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*_selectPrimaryVerticesQuality_*_*')
     process.tuplize += process.selectPrimaryVertices
 
+    # Run the ZZ recipe for rho
+    from RecoJets.JetProducers.kt4PFJets_cfi import kt4PFJets \
+            as zzCantDoAnythingRight
+    process.kt6PFJetsForIso = zzCantDoAnythingRight.clone(
+        rParam = cms.double(0.6),
+        doAreaFastjet = cms.bool(True),
+        doRhoFastjet = cms.bool(True),
+        Rho_EtaMax = cms.double(2.5),
+        Ghost_EtaMax = cms.double(2.5),
+    )
+    process.tuplize += process.kt6PFJetsForIso
+
     # Rerun tau-ID
     process.load('Configuration/StandardSequences/Services_cff')
     process.load('Configuration/StandardSequences/GeometryIdeal_cff')
     process.load('Configuration/StandardSequences/MagneticField_cff')
     process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
     process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+
+    # Optimization - remove PFTauTagInfo compatibility layer
+    process.recoTauClassicHPSSequence.remove(process.pfRecoTauTagInfoProducer)
+    assert(process.combinatoricRecoTaus.modifiers[3].name.value() == 'TTIworkaround')
+    del process.combinatoricRecoTaus.modifiers[3]
+
     process.tuplize += process.recoTauClassicHPSSequence
-    # Run rho computation
-    from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
-    kt6PFJets.Rho_EtaMax = cms.double(2.5)
-    kt6PFJets.doRhoFastjet = True
-    process.kt6PFJets = kt6PFJets
-    process.tuplize += process.kt6PFJets
+    ## Run rho computation
+    #from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
+    #kt6PFJets.Rho_EtaMax = cms.double(2.5)
+    #kt6PFJets.doRhoFastjet = True
+    #process.kt6PFJets = kt6PFJets
+    #process.tuplize += process.kt6PFJets
+
     # Run pat default sequence
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
-    # Load PFNoPileup.  Make sure we do this after pat messes around w/ it
-    process.tuplize += configurePFNoPileup(process)
-    # Embed muon tracks
-    process.patMuons.embedTrack = True
+    # Embed PF Isolation in electrons & muons
+    pfTools.usePFIso(process)
+
+    # Unembed junks
+    process.patMuons.embedCaloMETMuonCorrs = False
+    process.patMuons.embedTcMETMuonCorrs = False
+    process.patMuons.embedTrack = False
     process.patMuons.pvSrc = cms.InputTag("selectedPrimaryVertex")
+
     # Do extra electron ID
     process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
     process.tuplize += process.recoElectronID
-    #output_commands.append('*_particleFlow_*_*')
-    #print repr(process.pfPostSequence)
-    process.tuplize += process.patDefaultSequence
-    # Embed PF Isolation in electrons & muons
-    addMuPFIsolation(process, process.patDefaultSequence)
-    addElecPFIsolation(process, process.patDefaultSequence)
     process.patElectrons.electronIDSources = process.electronIDSources
+
+    # Run EGamma electron energy calibration
+    process.load("EgammaCalibratedGsfElectrons.CalibratedElectronProducers.calibratedGsfElectrons_cfi")
+    process.RandomNumberGeneratorService.calibratedGsfElectrons = cms.PSet(
+        initialSeed = cms.untracked.uint32(1), # A frickin billion
+        engineName = cms.untracked.string('TRandom3')
+    )
+    process.calibratedGsfElectrons.inputDataset = kwargs['dataset']
+    process.calibratedGsfElectrons.isMC = bool(isMC)
+    process.calibratedGsfElectrons.isAOD = True
+    process.calibratedGsfElectrons.updateEnergyError = cms.bool(True)
+    # Run a sanity check on the calibration configuration.
+    from FinalStateAnalysis.PatTools.electrons.patElectronEmbedCalibratedGsf_cfi \
+            import validate_egamma_calib_config
+    validate_egamma_calib_config(process)
+
+    process.tuplize += process.calibratedGsfElectrons
+    # Keep the calibratedGsfElectrons - we embed refs to this into the
+    # pat::Electrons
+    output_commands.append('*_calibratedGsfElectrons_*_*')
+
+    # Now run PAT
+    process.tuplize += process.patDefaultSequence
+
     # Use HPS taus
     tautools.switchToPFTauHPS(process)
     # Disable tau IsoDeposits
+    process.patDefaultSequence.remove(process.patPFTauIsolation)
     process.patTaus.isoDeposits = cms.PSet()
     process.patTaus.userIsolation = cms.PSet()
 
@@ -114,6 +170,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patJets.embedPFCandidates = False
     process.patJets.embedCaloTowers = False
     process.patJetCorrFactors.useRho = True
+    # Let's use the same rho as in the TauID, so we don't need to do it twice.
+    process.patJetCorrFactors.rho = cms.InputTag(
+        "kt6PFJetsForRhoComputationVoronoi", "rho")
+
     # Use PFMEt
     mettools.addPfMET(process)
     if not isMC:
@@ -123,8 +183,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Customize/embed all our sequences
     process.load("FinalStateAnalysis.PatTools.patJetProduction_cff")
-    # Cut all jets with pt < 5
-    process.patJetGarbageRemoval.cut = 'pt > 17 | correctedP4("Uncorrected").pt > 17'
+    # We have to keep all jets (for the MVA MET...)
+    process.patJetGarbageRemoval.cut = 'pt > 0'
 
     final_jet_collection = chain_sequence(
         process.customizeJetSequence, "patJets")
@@ -133,11 +193,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.customizeJetSequence += process.selectedPatJets
     # We can't mess up the selected pat jets because the taus use them.
     process.selectedPatJets.src = final_jet_collection
-    # Apply a pt cut on the uncorrected jet to get rid of really low pt junk
-    #process.selectedPatJets.cut = 'userCand("uncorr").pt > 5'
     process.patDefaultSequence.replace(process.patJets,
                                        process.customizeJetSequence)
 
+    # Produce the electron collections
     process.load("FinalStateAnalysis.PatTools.patElectronProduction_cff")
     final_electron_collection = chain_sequence(
         process.customizeElectronSequence, "selectedPatElectrons")
@@ -148,6 +207,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # We have to do the pat Jets before the pat electrons since we embed them
     process.customizeElectronSequence.insert(0, process.selectedPatJets)
     process.cleanPatElectrons.src = final_electron_collection
+    # The "effective area" calculation needs to know if it is data/mc, etc.
+    process.patElectronMVAIsoEmbedding.target = kwargs['target']
+    process.patElectronEffectiveAreaEmbedder.target = kwargs['target']
 
     process.load("FinalStateAnalysis.PatTools.patMuonProduction_cff")
     final_muon_collection = chain_sequence(
@@ -156,6 +218,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patDefaultSequence.replace(process.selectedPatMuons,
                                        process.customizeMuonSequence)
     process.cleanPatMuons.src = final_muon_collection
+    # The "effective area" calculation needs to know if it is data/mc, etc.
+    process.patMuonMVAIdIsoEmbedding.target = kwargs['target']
+    process.patMuonEffectiveAreaEmbedder.target = kwargs['target']
 
     process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
     final_tau_collection = chain_sequence(
@@ -171,43 +236,25 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Don't apply any prselections
     process.cleanPatTaus.preselection = ''
 
-    # Make clones of the Tau and Jet sequences w/o and pt requirement
-    process.jetsForMetSyst = helpers.cloneProcessingSnippet(
-        process, process.customizeJetSequence, 'ForMETSyst')
-    process.tausForMetSyst = helpers.cloneProcessingSnippet(
-        process, process.customizeTauSequence, 'ForMETSyst')
-    # Don't apply any cut for these
-    process.patJetGarbageRemovalForMETSyst.cut = ''
-    process.tuplize += process.jetsForMetSyst
-    process.tuplize += process.tausForMetSyst
-    # We have to make our clone of cleanPatTaus separately, since e/mu
-    # cleaning is applied - therefore it isn't in the customizeTausSequence.
-    process.cleanPatTausForMETSyst = process.cleanPatTaus.clone(
-        src = cms.InputTag(process.cleanPatTaus.src.value() + "ForMETSyst"))
-    process.tuplize += process.cleanPatTausForMETSyst
-
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
     final_met_collection = chain_sequence(
         process.customizeMETSequence, "patMETsPF")
     process.tuplize += process.customizeMETSequence
     # The MET systematics depend on all other systematics
-    process.systematicsMET.tauSrc = cms.InputTag("cleanPatTausForMETSyst")
+    process.systematicsMET.tauSrc = cms.InputTag("cleanPatTaus")
     process.systematicsMET.muonSrc = cms.InputTag("cleanPatMuons")
     process.systematicsMET.electronSrc = cms.InputTag("cleanPatElectrons")
 
     # Keep all the data formats needed for the systematics
     output_commands.append('recoLeafCandidates_*_*_%s'
                            % process.name_())
-    # We can drop to jet and tau MET specific products. They were only used for
-    # computation of the MET numbers.
-    output_commands.append('drop recoLeafCandidates_*ForMETSyst_*_%s'
-                           % process.name_())
 
     # Define the default lepton cleaning
-    process.cleanPatElectrons.preselection = cms.string('pt > 8')
+    process.cleanPatElectrons.preselection = cms.string('pt > 5')
     process.cleanPatElectrons.checkOverlaps.muons.requireNoOverlaps = False
     # Make sure we don't kill any good taus by calling them electrons
+    # Note that we don't actually remove these overlaps.
     process.cleanPatElectrons.checkOverlaps.taus = cms.PSet(
         src = final_tau_collection,
         algorithm = cms.string("byDeltaR"),
@@ -234,6 +281,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Build the PATFinalStateEventObject
     process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")
+    process.patFinalStateEventProducer.electronSrc = final_electron_collection
+    process.patFinalStateEventProducer.muonSrc = cms.InputTag("cleanPatMuons")
+    process.patFinalStateEventProducer.tauSrc = cms.InputTag("cleanPatTaus")
+    process.patFinalStateEventProducer.jetSrc = cms.InputTag("selectedPatJets")
     process.patFinalStateEventProducer.metSrc = final_met_collection
     process.tuplize += process.patFinalStateEventProducer
     output_commands.append('*_patFinalStateEventProducer_*_*')

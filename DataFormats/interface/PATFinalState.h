@@ -55,6 +55,8 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     std::vector<const reco::Candidate*> daughters(
         const std::string& tags) const;
     std::vector<reco::CandidatePtr> daughterPtrs(const std::string& tags) const;
+    // Get all daughters, w/o systematics
+    std::vector<reco::CandidatePtr> daughterPtrs() const;
 
     /// Check if the ith daughter has given user cand
     bool daughterHasUserCand(size_t i, const std::string& tag) const;
@@ -111,6 +113,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         const std::string& metTag) const;
     /// Using raw four vectors
     LorentzVector totalP4() const;
+
+    /// Get the MVA regession MET
+    const LorentzVector& mvaMET(const std::string& tags="") const;
 
     /// Get DeltaPhi between two objects
     double dPhi(int i, const std::string& tagI,

@@ -88,8 +88,9 @@ void PATObjectJetInfoEmbedder<T>::produce(
     for (size_t j = 0; j < jets->size(); ++j) {
       JetPtr jet = jets->ptrAt(j);
       // Use the uncorrected P4. Embedded in the UncorrectedEmbedder module.
-      assert(jet->userCand("uncorr").isNonnull());
-      reco::Candidate::LorentzVector jetP4 = jet->userCand("uncorr")->p4();
+      reco::CandidatePtr uncorrected = jet->userCand("uncorr");
+      assert(uncorrected.isNonnull());
+      reco::Candidate::LorentzVector jetP4 = uncorrected->p4();
       double deltaR = reco::deltaR(objectP4, jetP4);
       if (deltaR < closestDeltaR) {
         closestDeltaR = deltaR;

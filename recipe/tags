@@ -1,9 +1,5 @@
 # For updated lumi tools
-V03-04-02 RecoLuminosity/LumiDB 
-# Update tau POG tags
-V01-02-16 RecoTauTag/RecoTau 
-V01-02-01 RecoTauTag/TauTagTools
-V01-02-12 RecoTauTag/Configuration
+V03-05-05 RecoLuminosity/LumiDB 
 # For limit tool
 V01-12-03 HiggsAnalysis/CombinedLimit
 # For a fix to prevent segfaults on certain MC samples when using

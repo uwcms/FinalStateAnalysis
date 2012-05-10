@@ -20,8 +20,17 @@
 
 namespace {
   struct FinalStateAnalysis_DataFormats_dicts {
+    // General missing dictionaries
     edm::Ptr<reco::Vertex> dummyVertexPtr;
     edm::PtrVector<reco::Vertex> dummyVertexPtrVector;
+
+    edm::RefProd<pat::ElectronCollection> dummyElectronRefProd;
+    edm::RefProd<pat::MuonCollection> dummyMuonRefProd;
+    edm::RefProd<pat::TauCollection> dummyTauRefProd;
+    edm::RefProd<pat::JetCollection> dummyJetRefProd;
+
+    PATFinalStateEvent::MVAMetResult dummyMVAResult;
+    std::map<size_t, PATFinalStateEvent::MVAMetResult> dummyMVACache;
 
     std::map<std::string, float> dummyFloatMap;
     std::map<std::string, int> dummyIntMap;

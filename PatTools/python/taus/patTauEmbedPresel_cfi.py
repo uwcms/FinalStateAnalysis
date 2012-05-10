@@ -40,7 +40,7 @@ patTauEmbedPresel = cms.EDFilter(
         )
     ),
     maxPFIsoPt = cms.double(2.5),
-    srcPFIsoCandidates = cms.InputTag('pfNoPileUp'),
+    srcPFIsoCandidates = cms.InputTag('pfNoPileUpIso'),
     srcBeamSpot = cms.InputTag('offlineBeamSpot'),
     srcVertex = cms.InputTag('offlinePrimaryVertices'),
     filter = cms.bool(False)

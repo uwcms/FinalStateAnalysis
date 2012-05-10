@@ -1,0 +1,74 @@
+? PhysicsTools/PatAlgos/python/__init__.py
+? PhysicsTools/PatAlgos/python/cleaningLayer1/__init__.py
+? PhysicsTools/PatAlgos/python/mcMatchLayer0/__init__.py
+? PhysicsTools/PatAlgos/python/producersHeavyIons/__init__.py
+? PhysicsTools/PatAlgos/python/producersLayer1/__init__.py
+? PhysicsTools/PatAlgos/python/recoLayer0/__init__.py
+? PhysicsTools/PatAlgos/python/selectionLayer1/__init__.py
+? PhysicsTools/PatAlgos/python/tools/__init__.py
+? PhysicsTools/PatAlgos/python/triggerLayer1/__init__.py
+Index: PhysicsTools/PatAlgos/python/producersLayer1/jetProducer_cff.py
+===================================================================
+RCS file: /cvs_server/repositories/CMSSW/CMSSW/PhysicsTools/PatAlgos/python/producersLayer1/jetProducer_cff.py,v
+retrieving revision 1.13
+diff -r1.13 jetProducer_cff.py
+14a15
+> from RecoBTag.ImpactParameter.impactParameter_cfi import *
+20,21c21,23
+<    #secondaryVertexNegativeTagInfos *
+<    #simpleSecondaryVertexNegativeBJetTags *
+---
+>     impactParameterTagInfos *
+>     secondaryVertexNegativeTagInfos *
+>     simpleSecondaryVertexNegativeBJetTags *
+Index: PhysicsTools/PatAlgos/python/producersLayer1/jetProducer_cfi.py
+===================================================================
+RCS file: /cvs_server/repositories/CMSSW/CMSSW/PhysicsTools/PatAlgos/python/producersLayer1/jetProducer_cfi.py,v
+retrieving revision 1.33
+diff -r1.33 jetProducer_cfi.py
+59,60c59,64
+<     addTagInfos     = cms.bool(False),
+<     tagInfoSources  = cms.VInputTag(),
+---
+>     addTagInfos     = cms.bool(True),
+>     tagInfoSources  = cms.VInputTag(
+>             cms.InputTag("impactParameterTagInfos"),
+>             cms.InputTag("secondaryVertexTagInfos"),
+>             cms.InputTag("secondaryNegativeVertexTagInfos")
+>     ),
+Index: PhysicsTools/PatAlgos/python/tools/jetTools.py
+===================================================================
+RCS file: /cvs_server/repositories/CMSSW/CMSSW/PhysicsTools/PatAlgos/python/tools/jetTools.py,v
+retrieving revision 1.64.2.4
+diff -r1.64.2.4 jetTools.py
+91c91
+<         #nvTILabel = 'secondaryVertexNegativeTagInfos'     + label + postfix
+---
+>         nvTILabel = 'secondaryVertexNegativeTagInfos'     + label + postfix
+98c98
+<         #setattr( process, nvTILabel, nbtag.secondaryVertexNegativeTagInfos.clone(trackIPTagInfos = cms.InputTag(ipTILabel)) )
+---
+>         setattr( process, nvTILabel, nbtag.secondaryVertexNegativeTagInfos.clone(trackIPTagInfos = cms.InputTag(ipTILabel)) )
+112c112
+<         #setattr( process, 'simpleSecondaryVertexNegativeBJetTags'+label+postfix, nbtag.simpleSecondaryVertexNegativeBJetTags.clone(tagInfos = vit(nvTILabel)) )
+---
+>         setattr( process, 'simpleSecondaryVertexNegativeBJetTags'+label+postfix, nbtag.simpleSecondaryVertexNegativeBJetTags.clone(tagInfos = vit(nvTILabel)) )
+124c124,125
+<                    'tagInfos' : (ipTILabel,svTILabel,smTILabel), 
+---
+>                    #'tagInfos' : (ipTILabel,svTILabel,smTILabel), 
+>                    'tagInfos' : (ipTILabel,svTILabel,nvTILabel,smTILabel), 
+129c130
+<                                                                 #'simpleSecondaryVertexNegativeBJetTags',
+---
+>                                                                 'simpleSecondaryVertexNegativeBJetTags',
+589,590c590,591
+<             removeIfInSequence(process,  "secondaryVertexNegativeTagInfos",  "patDefaultSequence", postfix)
+<             removeIfInSequence(process,  "simpleSecondaryVertexNegativeBJetTags",  "patDefaultSequence", postfix)
+---
+>             #removeIfInSequence(process,  "secondaryVertexNegativeTagInfos",  "patDefaultSequence", postfix)
+>             #removeIfInSequence(process,  "simpleSecondaryVertexNegativeBJetTags",  "patDefaultSequence", postfix)
+593c594
+<             applyPostfix(process, "patJets", postfix).addBTagInfo = False
+---
+>             applyPostfix(process, "patJets", postfix).addBTagInfo = True

@@ -528,6 +528,17 @@ datadefs = {
     },
 
     ############################################################################
+    #### H2Tau samples                      ####################################
+    ############################################################################
+
+    'VBF_H2Tau_M-120' : {
+        'datasetpath' : '/VBF_HToTauTau_M-120_7TeV-powheg-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
+        'x_sec' : -999*_picobarns,
+        'pu' : 'S6',
+        'analyses' : ['HTT'],
+    },
+
+    ############################################################################
     #### Obscure VH backgrounds             ####################################
     ############################################################################
 
@@ -656,9 +667,9 @@ data_TauPlusX, list_TauPlusX = build_data_set('TauPlusX', ['HTT', 'SSDL'])
 datadefs.update(data_TauPlusX)
 data_name_map.update(list_TauPlusX)
 
-data_MuHad, list_MuHad = build_data_set('MuHad', ['SSDL'])
-datadefs.update(data_MuHad)
-data_name_map.update(list_MuHad)
+#data_MuHad, list_MuHad = build_data_set('MuHad', ['SSDL'])
+#datadefs.update(data_MuHad)
+#data_name_map.update(list_MuHad)
 
 if __name__ == "__main__":
     # Print a latex table of the samples

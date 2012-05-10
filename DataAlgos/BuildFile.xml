@@ -2,7 +2,11 @@
 <use   name="FWCore/ParameterSet"/>
 <use   name="FWCore/PythonParameterSet"/>
 <use   name="DataFormats/Luminosity"/>
+<use   name="DataFormats/ParticleFlowCandidate"/>
+<use   name="DataFormats/Candidate"/>
+<use   name="pharris/MVAMet"/>
 <use   name="root"/>
+<use   name="clhep"/>
 <export>
   <lib   name="1"/>
 </export>

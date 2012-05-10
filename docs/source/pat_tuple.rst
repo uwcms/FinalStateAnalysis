@@ -1,22 +1,59 @@
 PAT Tuple Content
 =================
 
+PF Isolation
+------------
+
+The PF isolation values (0.4) are available for electrons and muons via:
+
+* ``chargedHadronIso()``
+* ``neutralHadronIso()``
+* ``photonIso()``
+* ``pfPUChargedHadrons()`` - for applying the Delta Beta correction
+
+Note that you probably need to update your `PAT tags in 42X`_ to get the
+required version of DataFormats/PatCandidates.
+
+.. _PAT tags in 42X: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePATReleaseNotes42X#V08_06_55
+
+For convenience, the fastjet energy is embedded in electrons and muons:
+
+* ``userFloat('rho')``  - uses determinstic Voronoi rho produced during tau ID
+* ``userFloat('zzRho')`` - uses ZZ recipe
+
 Muons
 -----
 
-The ``cleanPatElectrons`` collection is defined as electrons
-which have ``pt > 8``. 
-
-The following muon IDs are embedded:
+The following cut-based muon IDs are embedded:
 
 * ``userInt('WWID')``
+* ``userInt('WWID2011')``
 * ``userInt('VBTF')``
 
-The following isolation quantities are embedded as userFloats (no DB correction)
+The WWID2011 is the same as defined in the UWAnalysis packages.  The following
+MVA IDs (see the `MuonId twiki`_).
 
-* ``pfLooseIsoPt03``
-* ``pfLooseIsoPt04``
-* ``pfLooseIsoPt06``
+.. _MuonId twiki: https://twiki.cern.ch/twiki/bin/viewauth/CMS/MultivariateMuonSelection
+
+
+* ``userFloat('isomva')``
+* ``userFloat('idmva')`` - just rings
+* ``userFloat('isoringsradmva')`` - rings + radial
+
+Three isolation (rings) MVA working points are embedded, from the `H2Tau 2012
+twiki`_.  Note that WP2 is the loosest. :|
+
+.. _H2Tau 2012 twiki: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012#Object_ID_AN1
+
+* ``userInt('mvaisowp1')``
+* ``userInt('mvaisowp2')``
+* ``userInt('mvaisowp3')``
+
+You can get a ref to to the associated PFMuon via:
+
+* ``pfCandidateRef()``,
+
+if this ref ``isNull()``, there is no muon ID'd by PF.
 
 The following IP information is embedded as userFloats: 
 
@@ -30,23 +67,23 @@ The following IP information is embedded as userFloats:
 The following systematics candidates are embedded (as userCands).  The energy
 scale uncertainty is taken from the muon MuscleFit.
 
-* ``uncorr`` (no muon energy scale)
-* ``nom`` (nominal ES correction, same as pat::Muon p4)
+* ``uncorr`` (no muon energy scale, same as pat::Muon p4)
+* ``corr`` (nominal ES correction)
 * ``mes-`` (down 1 sigma)
 * ``mes+`` (up 1 sigma)
 
 The closest PF patJet is available via the ``userCand('patJet')`` function.
-This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.
+This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.  If the 
+jet doesn't exist, the "jet pt" is equal to the muon Pt.
+
+The "effective area" for different isolation types is available:
+
+* ``userFloat("EAGamma04")``
+* ``userFloat("EANeuHadron04")``
+* ``userFloat("EAGammaNeuHadron04")``
 
 Electrons
 ---------
-
-The ``cleanPatElectrons`` collection is defined as electrons
-which have ``pt > 8``. 
-
-Electrons which overlap a ``cleanPatMuon``, or overlap 
-a tau candidate which has ``pt > 15``, passes decay mode
-finding, loose combined isolation, and ``againstElectronTight`` are removed.
 
 The following electron IDs are embedded as userFloats:
 
@@ -54,7 +91,7 @@ The following electron IDs are embedded as userFloats:
 * ``wp90``
 * ``wp95``
 * ``WWID``
-* ``MITID``
+* ``MITID`` - the 2011 MVA ID by the MIT people
 
 The following RECO electron IDs are embedded as as eIDs (pat defaults):
 
@@ -68,7 +105,7 @@ The following RECO electron IDs are embedded as as eIDs (pat defaults):
 * ``cicSuperTight --> eidSuperTight``
 * ``cicMedium --> eidMedium``
 
-The following electron MVA ID related information is embedded:
+The following 2011 electron MVA ID related information is embedded:
 
 * ``hasConversion``
 * ``missingHits`` - number of missing hits 
@@ -76,6 +113,38 @@ The following electron MVA ID related information is embedded:
 * ``MVA`` - raw MVA value
 * ``MVApreID`` - pre-ID cuts used for the MVA
 * ``MITID`` - MIT MVA ID working point binary value
+
+The following 2012 electron MVA IDs (see `EGamma ID Recipe`_.) are
+available:
+
+.. _EGamma ID Recipe: https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentification
+
+* ``electronID('mvaNonTrigV0')``
+* ``electronID('mvaTrigV0')``
+
+The following 2012 electron MVA ISOs (see `EGamma Iso Recipe`_) are available:
+
+.. _EGamma Iso Recipe: https://twiki.cern.ch/twiki/bin/view/CMS/EgammaMultivariateIsoElectrons
+
+* ``userFloat('isomva')``
+
+An MVA working point for the electron ID and Iso are embedded, again from the `H2Tau 2012
+twiki`_.   The ID working point is based on the "NonTrig" MVA.
+
+.. _H2Tau 2012 twiki: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012#Object_ID_AN1
+
+* ``userInt('mvaidwp')``
+* ``userInt('mvaisowp')``
+
+The "effective area" for different isolation types is available:
+
+* ``userFloat("EAGamma04")``
+* ``userFloat("EANeuHadron04")``
+* ``userFloat("EAGammaNeuHadron04")``
+
+The `EGamma rho correction`_ is then: ``chargedHadronIso + max(photonIso + neutralHadronIso - userFloat('EAGammaNeuHadron04')*userFloat('rho'), 0)``
+
+.. _EGamma rho correction: https://twiki.cern.ch/twiki/bin/view/CMS/EgammaEARhoCorrection
 
 The following IP information is embedded as userFloats: 
 
@@ -94,6 +163,12 @@ fixme)
 * ``ees-`` (down 1 sigma)
 * ``ees+`` (up 1 sigma)
 
+References to the calibrated GSF electrons are embedded as user cands:  
+
+* ``userCand("calibrated")``
+
+returns a reco::CandidatePtr pointing to a reco::GsfElectron.
+
 Jets
 ----
 
@@ -105,6 +180,23 @@ They correspond to the official PFJet IDs listed on the `JetMET twiki`_.
 * ``idLoose``
 * ``idMedium``
 * ``idTight``
+
+The raw MVA-based PU jet IDs (see `MVAMet`_) are embedded as:
+
+.. _MVAMet: https://twiki.cern.ch/twiki/bin/view/CMS/MVAMet
+
+* ``userFloat('fullDiscriminant')``
+* ``userFloat('philv1Discriminant')``
+* ``userFloat('simpleDiscriminant')``
+
+and the integer working points as:
+
+* ``userInt('fullIdXXX')``
+* ``userInt('philv1IdXXX')``
+* ``userInt('simpleIdXXX')``
+
+where XXX is Loose, Medium or Tight.
+
 
 Corrections
 '''''''''''
@@ -194,4 +286,17 @@ added) - note these quantities refer to the PFJet, *not* the tau:
 * ``userFloat("numTracks")`` - number of tracks in jet
 * ``userInt("ps_crk_nom")`` - is in ECAL crack
 
+
+MET
+---
+
+The following four-vector systematics are embedded as userCands:
+
+* ``userCand("type1")`` - Type 1 correct MET (jets only)
+* ``userCand("mes+")`` - Muon scale uncertainty
+* ``userCand("tes+")`` - Tau scale uncertainty
+* ``userCand("jes+")`` - Jet scale uncertainty
+* ``userCand("ues+")`` - Unclustered energy scale uncertainty
+
+Charge conjugation is implied.
 

@@ -69,10 +69,13 @@ class MyTriggerMatcher : public edm::EDProducer {
                 break;
               }
 
-            if(match)
-              obj.addUserFloat(filters_[i].label(),1.0);
-            else
-              obj.addUserFloat(filters_[i].label(),0.0);
+            // only embed if there are trigger objects
+            if (true || trigObjects.size()) {
+              if(match)
+                obj.addUserFloat(filters_[i].label(),1.0);
+              else
+                obj.addUserFloat(filters_[i].label(),0.0);
+            }
           }
 
           out->push_back(obj);

@@ -3,10 +3,12 @@
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting3D.h"
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
+#include "FinalStateAnalysis/DataAlgos/interface/Hash.h"
+#include "FinalStateAnalysis/DataAlgos/interface/MVAMet.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
 
-#define FSA_DATA_FORMAT_VERSION 1
+#define FSA_DATA_FORMAT_VERSION 2
 
 namespace {
   int matchedToAnObject(const pat::TriggerObjectRefVector& trgObjects,
@@ -46,7 +48,13 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::EventID& evtId,
     const GenEventInfoProduct& genEventInfo,
     bool isRealData,
-    const std::string& puScenario):
+    const std::string& puScenario,
+    const edm::RefProd<pat::ElectronCollection>& electronRefProd,
+    const edm::RefProd<pat::MuonCollection>& muonRefProd,
+    const edm::RefProd<pat::TauCollection>& tauRefProd,
+    const edm::RefProd<pat::JetCollection>& jetRefProd,
+    const reco::PFCandidateRefProd& pfRefProd
+    ):
   rho_(rho),
   triggerEvent_(triggerEvent),
   pv_(pv),
@@ -60,12 +68,19 @@ PATFinalStateEvent::PATFinalStateEvent(
   genEventInfoProduct_(genEventInfo),
   isRealData_(isRealData),
   puScenario_(puScenario),
-  fsaDataFormatVersion_(FSA_DATA_FORMAT_VERSION) { }
+  fsaDataFormatVersion_(FSA_DATA_FORMAT_VERSION),
+  electronRefProd_(electronRefProd),
+  muonRefProd_(muonRefProd),
+  tauRefProd_(tauRefProd),
+  jetRefProd_(jetRefProd),
+  pfRefProd_(pfRefProd)
+{ }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
 
 const edm::PtrVector<reco::Vertex>& PATFinalStateEvent::recoVertices() const {
-  return recoVertices_; }
+  return recoVertices_;
+}
 
 const std::vector<PileupSummaryInfo>& PATFinalStateEvent::puInfo() const {
   return puInfo_;
@@ -196,3 +211,72 @@ int PATFinalStateEvent::flag(const std::string& name) const {
 void PATFinalStateEvent::addFlag(const std::string& name, int flag) {
   flags_[name] = flag;
 }
+
+const pat::ElectronCollection& PATFinalStateEvent::electrons() const {
+  if (!electronRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The electron RefProd is null!" << std::endl;
+  return *electronRefProd_;
+}
+
+const pat::MuonCollection& PATFinalStateEvent::muons() const {
+  if (!muonRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The muon RefProd is null!" << std::endl;
+  return *muonRefProd_;
+}
+
+const pat::TauCollection& PATFinalStateEvent::taus() const {
+  if (!tauRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The tau RefProd is null!" << std::endl;
+  return *tauRefProd_;
+}
+
+const pat::JetCollection& PATFinalStateEvent::jets() const {
+  if (!jetRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The jet RefProd is null!" << std::endl;
+  return *jetRefProd_;
+}
+
+const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
+  if (!pfRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The PFLOW RefProd is null!" << std::endl;
+  return *pfRefProd_;
+}
+
+// Interface to MVAMet algorithm
+const PATFinalStateEvent::MVAMetResult& PATFinalStateEvent::mvaMET(
+    std::vector<reco::CandidatePtr>& hardScatter) const {
+  typedef std::map<size_t, MVAMetResult> MVACache;
+
+  // Get hash of cand content
+  size_t hash = hashCandsByContent(hardScatter);
+
+  MVACache::iterator cachePos = mvaMetCache_.find(hash);
+  // Already computed
+  if (cachePos != mvaMetCache_.end()) {
+    return cachePos->second;
+  }
+
+  // Otherwise we need to recompute it.
+  std::vector<math::XYZTLorentzVector> hardScatterP4;
+  for (size_t i = 0; i < hardScatter.size(); ++i) {
+    hardScatterP4.push_back(hardScatter[i]->p4());
+  }
+  MVAMetResult mvamet = computeMVAMet(
+      evtID_, // passed so the MVAMET computer can cache a bunch of junk
+      hardScatterP4,
+      pflow(),
+      *pv_,
+      jets(),
+      rho_,
+      recoVertices_
+  );
+  std::pair<MVACache::iterator, bool> insertResult = mvaMetCache_.insert(
+      std::make_pair(hash, mvamet));
+  return insertResult.first->second;
+}
+

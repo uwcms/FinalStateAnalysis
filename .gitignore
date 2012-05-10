@@ -20,3 +20,4 @@ docs/build/*
 *.d
 *.so
 .__afs*
+callgrind.out.*
