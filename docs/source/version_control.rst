@@ -9,17 +9,33 @@ it easy to pass changes to other repositories.  This means you can make commits
 offline, and without worrying about messing up the central version control
 system.
 
-Getting Git
------------------
-
-Git is installed on the UW cluster.  
-
 Downloading Code
 ----------------
 
-To get the code, you clone from an existing repository::
+To get the code, you can clone from the master repository::
 
   git clone git@github.com:ekfriis/FinalStateAnalysis.git
+
+Setting up your own online repo
+-------------------------------
+
+Go to github.com and set up an account.  Then "fork" the master repository.
+Now you have your own version at::
+
+  https://github.com/YOURNAME/FinalStateAnalysis
+
+now get a local copy of your remote version::
+
+  git clone git@github.com:YOURNAME/FinalStateAnalysis.git
+
+You can now edit the code, and commit it as often as you like (see below).  You
+can't ever mess anyone else up with conflicts like in CVS so do it often. When
+you want to share it, "push" it to your github account::
+
+  git push origin master
+
+Now you can request that this gets "pulled" into the master repository by going
+to your github.com site and clicking "Pull Request".
 
 Committing Code
 ---------------
