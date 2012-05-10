@@ -73,8 +73,10 @@ scale uncertainty is taken from the muon MuscleFit.
 * ``mes+`` (up 1 sigma)
 
 The closest PF patJet is available via the ``userCand('patJet')`` function.
-This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.  If the 
-jet doesn't exist, the "jet pt" is equal to the muon Pt.
+This ref may be null if the closest jet is farther than DR=0.5!  
+The jet pt is stored as ``userFloat('jetPt')``.  If the 
+jet doesn't exist, the "jet pt" is equal to the muon Pt.  
+The distance to the jet is ``userFloat('jetDR')``.
 
 The "effective area" for different isolation types is available:
 
@@ -222,7 +224,10 @@ The uncorrected, and 1 sigma uncertainties on the JEC are available from the
 * ``userCand("ues-")`` - using the UES uncertainty of 10%
 
 The closest PF patJet is available via the ``userCand('patJet')`` function.
-This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.
+This ref may be null if the closest jet is farther than DR=0.5!  
+The jet pt is stored as ``userFloat('jetPt')``.  If the 
+jet doesn't exist, the "jet pt" is equal to the muon Pt.  
+The distance to the jet is ``userFloat('jetDR')``.
 
 Taus
 ----
@@ -255,7 +260,8 @@ The standard complement of discriminators are available.
 * ``againstMuonTight``
 
 The seed jets are available via the ``userCand('patJet')`` function.
-The corrected jet pt is stored as ``userFloat('jetPt')``.
+The corrected jet pt is stored as ``userFloat('jetPt')``.  This always exists,
+as taus are seeded by jets.
 
 The following IP information is embedded as userFloats: 
 
