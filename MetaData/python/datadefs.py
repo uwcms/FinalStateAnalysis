@@ -667,9 +667,9 @@ data_TauPlusX, list_TauPlusX = build_data_set('TauPlusX', ['HTT', 'SSDL'])
 datadefs.update(data_TauPlusX)
 data_name_map.update(list_TauPlusX)
 
-data_MuHad, list_MuHad = build_data_set('MuHad', ['SSDL'])
-datadefs.update(data_MuHad)
-data_name_map.update(list_MuHad)
+#data_MuHad, list_MuHad = build_data_set('MuHad', ['SSDL'])
+#datadefs.update(data_MuHad)
+#data_name_map.update(list_MuHad)
 
 if __name__ == "__main__":
     # Print a latex table of the samples
