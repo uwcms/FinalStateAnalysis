@@ -143,7 +143,6 @@ class PATJetSmearEmbedder : public edm::EDProducer
 
       T smearedJet = (*jet);
 
-      reco::Candidate::LorentzVector unsmearedP4 = jetP4;
       reco::Candidate::LorentzVector smearedP4 = jetP4;
       reco::Candidate::LorentzVector smearUpP4 = jetP4;
       reco::Candidate::LorentzVector smearDownP4 = jetP4;
