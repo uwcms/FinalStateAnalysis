@@ -34,6 +34,7 @@ zjets_tau1_pt = ROOT.TH1F("zjets_tau1_pt", "Invariant #tau_{1} #tau_{2} Mass in 
  #                      25, -100, 100,25,0,100)
 #signal_tau1_pt = ROOT.TH2F("signal_tau1_pt", "PZeta and PZetaVis",
  #                          25, -100, 100, 25, 0, 100)
+
 #meta.m_t1_PZetaVis > 20
 # Loop over Wjets events
 print "looping over Wjets events"
@@ -47,9 +48,9 @@ for event_num, event in enumerate(wjets):
     #wjets_tau1_pt.Fill(event.m2_t_PZeta,event.m2_t_PZetaVis)
     #wjets_tau1_pt.Fill(event.tLooseIso)
     if (event.t1Pt > 20 and  event.t2Pt>20 and event.mPt > 15 and event.t1LooseIso != 0 and event.t2LooseIso != 0 and event.t1DecayFinding > 0.5 and event.t2DecayFinding > 0.5 and event.t1_t2_SS < 0.5 and event.mRelPFIsoDB < 0.3 and event.t1_t2_SS < 0.5):
- 
+
     	wjets_tau1_pt.Fill(event.t1_t2_Mass)
-    			
+
 print "looping over signal events"
 for event_num, event in enumerate(signal_120):
     if event_num % 1000 == 0:
@@ -57,27 +58,20 @@ for event_num, event in enumerate(signal_120):
 #    if event_num > 100000:
         # Don't process everything
  #       break
-    #signal_tau1_pt.Fill(event.tLooseIso)	
+    #signal_tau1_pt.Fill(event.tLooseIso)
   #  signal_tau1_pt.Fill(event.tPt)
   #  signal_tau1_pt.Fill(event.m2_t_PZeta,event.m2_t_PZetaVis)
     if (event.t1Pt > 20 and  event.t2Pt>20 and event.mPt > 15 and event.t1LooseIso != 0 and event.t2LooseIso != 0 and event.t1DecayFinding > 0.5 and event.t2DecayFinding > 0.5 and event.t1_t2_SS < 0.5 and event.mRelPFIsoDB < 0.3 and event.t1_t2_SS < 0.5):
 
-	    signal_tau1_pt.Fill(event.t1_t2_Mass)	
+	    signal_tau1_pt.Fill(event.t1_t2_Mass)
 
 
 print "looping over zjet events"
 for event_num, event in enumerate(zjets):
     if event_num % 1000 == 0:
         print "processing event %i" % event_num
-  #  if event_num > 100000:
-        # Don't process everything
-   #     break
-    #signal_tau1_pt.Fill(event.tLooseIso)       
-  #  signal_tau1_pt.Fill(event.tPt)
-  #  signal_tau1_pt.Fill(event.m2_t_PZeta,event.m2_t_PZetaVis)
     if (event.t1Pt > 20 and  event.t2Pt>20 and event.mPt > 15 and event.t1LooseIso != 0 and event.t2LooseIso != 0 and event.t1DecayFinding > 0.5 and event.t2DecayFinding > 0.5 and event.t1_t2_SS < 0.5 and event.mRelPFIsoDB < 0.3 and event.t1_t2_SS < 0.5):
-
-            signal_tau1_pt.Fill(event.t1_t2_Mass)
+        zjets_tau1_pt.Fill(event.t1_t2_Mass)
 
 
 # Plot the histograms
