@@ -32,8 +32,17 @@ MVA IDs (see the `MuonId twiki`_).
 
 
 * ``userFloat('isomva')``
-* ``userFloat('idmva')``
-* ``userFloat('isoringsradmva')``
+* ``userFloat('idmva')`` - just rings
+* ``userFloat('isoringsradmva')`` - rings + radial
+
+Three isolation (rings) MVA working points are embedded, from the `H2Tau 2012
+twiki`_.  Note that WP2 is the loosest. :|
+
+.. _H2Tau 2012 twiki: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012#Object_ID_AN1
+
+* ``userInt('mvaisowp1')``
+* ``userInt('mvaisowp2')``
+* ``userInt('mvaisowp3')``
 
 You can get a ref to to the associated PFMuon via:
 
@@ -117,6 +126,14 @@ The following 2012 electron MVA ISOs (see `EGamma Iso Recipe`_) are available:
 .. _EGamma Iso Recipe: https://twiki.cern.ch/twiki/bin/view/CMS/EgammaMultivariateIsoElectrons
 
 * ``userFloat('isomva')``
+
+An MVA working point for the electron ID and Iso are embedded, again from the `H2Tau 2012
+twiki`_.   The ID working point is based on the "NonTrig" MVA.
+
+.. _H2Tau 2012 twiki: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012#Object_ID_AN1
+
+* ``userInt('mvaidwp')``
+* ``userInt('mvaisowp')``
 
 The "effective area" for different isolation types is available:
 
