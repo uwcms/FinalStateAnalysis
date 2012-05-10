@@ -20,6 +20,3 @@ def plot_fit(workspace, fit_results):
     failPdf = workspace.pdf('pdfFail')
     dataPass = workspace.data('pass_binned')
     dataPass = workspace.data('pass_binned')
-
-def plot_binned_fit_results(name, binned_results):
-    ''' Plot each bin 
