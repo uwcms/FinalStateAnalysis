@@ -204,6 +204,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patDefaultSequence.replace(process.selectedPatMuons,
                                        process.customizeMuonSequence)
     process.cleanPatMuons.src = final_muon_collection
+    # The "effective area" calculation needs to know if it is data/mc, etc.
+    process.patMuonEffectiveAreaEmbedder.target = kwargs['target']
 
     process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
     final_tau_collection = chain_sequence(

@@ -30,6 +30,10 @@ from FinalStateAnalysis.PatTools.muons.patMuonMVAIdIsoEmbedding_cfi import \
         patMuonMVAIdIsoEmbedding
 customizeMuonSequence += patMuonMVAIdIsoEmbedding
 
+from FinalStateAnalysis.PatTools.muons.patMuonEffectiveAreaEmbedder_cfi import \
+        patMuonEffectiveAreaEmbedder
+customizeMuonSequence += patMuonEffectiveAreaEmbedder
+
 from FinalStateAnalysis.PatTools.muons.muonSystematics_cfi import \
         poolDBESSourceMuScleFitCentralValue, \
         poolDBESSourceMuScleFitShiftUp, \
