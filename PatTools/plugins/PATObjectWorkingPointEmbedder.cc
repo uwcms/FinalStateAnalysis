@@ -1,0 +1,100 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  PATObjectWorkingPointEmbedder.cc
+ *
+ *    Description:  Embed a binary working point into a PAT object.
+ *
+ *         Author:  Evan Friis, evan.friis@cern.ch
+ *        Company:  UW Madison
+ *
+ * =====================================================================================
+ */
+
+#include "FWCore/Framework/interface/Frameworkfwd.h"
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/Framework/interface/EventSetup.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/Framework/interface/EDProducer.h"
+
+#include "CommonTools/Utils/interface/StringCutObjectSelector.h"
+
+template<typename T>
+class PATObjectWorkingPointEmbedder : public edm::EDProducer {
+  public:
+    typedef std::vector<T> OutputCollection;
+    typedef StringCutObjectSelector<T, true>  StrCut;
+    typedef boost::shared_ptr<StrCut> StrCutPtr;
+
+    struct Category {
+      std::string categoryStr;
+      std::string cutStr;
+      StrCutPtr category;
+      StrCutPtr cut;
+    };
+
+    PATObjectWorkingPointEmbedder(const edm::ParameterSet& pset);
+    virtual ~PATObjectWorkingPointEmbedder(){}
+    void produce(edm::Event& evt, const edm::EventSetup& es);
+  private:
+    edm::InputTag src_;
+    std::string userIntLabel_;
+    std::vector<Category> categories_;
+};
+
+template<typename T>
+PATObjectWorkingPointEmbedder<T>::PATObjectWorkingPointEmbedder(const edm::ParameterSet& pset) {
+  src_ = pset.getParameter<edm::InputTag>("src");
+  userIntLabel_ = pset.getParameter<std::string>("userIntLabel");
+
+  typedef std::vector<edm::ParameterSet> VPSet;
+
+  VPSet categories = pset.getParameter<VPSet>("categories");
+
+  for (size_t i = 0; i < categories.size(); ++i) {
+    Category cat;
+    cat.categoryStr = categories[i].getParameter<std::string>("category");
+    cat.cutStr = categories[i].getParameter<std::string>("cut");
+    cat.category.reset(new StrCut(cat.categoryStr));
+    cat.cut.reset(new StrCut(cat.cutStr));
+  }
+
+  produces<OutputCollection>();
+}
+
+template<typename T>
+void PATObjectWorkingPointEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup& es) {
+  std::auto_ptr<OutputCollection> output(new OutputCollection);
+
+  edm::Handle<edm::View<T> > input;
+  evt.getByLabel(src_, input);
+
+  output->reserve(input->size());
+
+  for (size_t i = 0; i < input->size(); ++i) {
+    T owned = input->at(i);
+    for (size_t j = 0; j < categories_.size(); ++j) {
+      // Find the first category the object is in
+      if ( (*categories_[j].category)(owned) ) {
+        // Apply the cut for this category and exit
+        bool passes =  (*categories_[j].cut)(owned);
+        owned.addUserInt(userIntLabel_, passes);
+        break;
+      }
+    }
+    output->push_back(owned);
+  }
+  evt.put(output);
+}
+
+#include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Tau.h"
+#include "FWCore/Framework/interface/MakerMacros.h"
+
+typedef PATObjectWorkingPointEmbedder<pat::Tau> PATTauWorkingPointEmbedder;
+DEFINE_FWK_MODULE(PATTauWorkingPointEmbedder);
+typedef PATObjectWorkingPointEmbedder<pat::Muon> PATMuonWorkingPointEmbedder;
+DEFINE_FWK_MODULE(PATMuonWorkingPointEmbedder);
+typedef PATObjectWorkingPointEmbedder<pat::Electron> PATElectronWorkingPointEmbedder;
+DEFINE_FWK_MODULE(PATElectronWorkingPointEmbedder);

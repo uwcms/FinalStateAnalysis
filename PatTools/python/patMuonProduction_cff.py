@@ -30,6 +30,12 @@ from FinalStateAnalysis.PatTools.muons.patMuonMVAIdIsoEmbedding_cfi import \
         patMuonMVAIdIsoEmbedding
 customizeMuonSequence += patMuonMVAIdIsoEmbedding
 
+from FinalStateAnalysis.PatTools.muons.patMuonMVAWPEmbedding_cfi import \
+        patMuonMVAIsoWP1Embedding, patMuonMVAIsoWP2Embedding, patMuonMVAIsoWP3Embedding
+customizeMuonSequence += patMuonMVAIsoWP1Embedding
+customizeMuonSequence += patMuonMVAIsoWP2Embedding
+customizeMuonSequence += patMuonMVAIsoWP3Embedding
+
 from FinalStateAnalysis.PatTools.muons.patMuonEffectiveAreaEmbedder_cfi import \
         patMuonEffectiveAreaEmbedder
 customizeMuonSequence += patMuonEffectiveAreaEmbedder
