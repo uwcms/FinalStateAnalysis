@@ -532,9 +532,9 @@ datadefs = {
     ############################################################################
 
     'VBF_H2Tau_M-120' : {
-        'datasetpath' : '/VBF_HToTauTau_M-120_7TeV-powheg-pythia6-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM',
+        'datasetpath' : '/VBF_HToTauTau_M-120_7TeV-powheg-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
-        'pu' : 'S4',
+        'pu' : 'S6',
         'analyses' : ['HTT'],
     },
 
