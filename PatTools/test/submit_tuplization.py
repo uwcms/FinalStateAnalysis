@@ -1,17 +1,13 @@
-from FinalStateAnalysis.PatTools.datadefs import datadefs
+from FinalStateAnalysis.MetaData.datadefs import datadefs
 import os
 import sys
 
 cfg = 'patTuple_cfg.py'
-jobId = '2012-03-05-EWKPatTuple'
+jobId = '2012-05-10-PatTuple'
 
 print 'export TERMCAP=screen'
 for sample in sorted(datadefs.keys()):
     sample_info = datadefs[sample]
-    if 'VH' not in sample_info['analyses']:
-        continue
-    if 'ZH' not in sample:
-        continue
 
     submit_dir_base = "/scratch/{logname}/{jobid}/{sample}".format(
         logname = os.environ['LOGNAME'],
@@ -40,6 +36,10 @@ for sample in sorted(datadefs.keys()):
     for tag in ['Fall11', 'Summer11', 'Prompt', 'ReReco', 'Jan16ReReco']:
         if tag in sample_info['datasetpath']:
             dataset = tag
+    if dataset is None and '05Aug2011' in sample_info['datasetpath']:
+        dataset = 'ReReco'
+    if dataset is None and 'crab_reco' in sample_info['datasetpath']:
+        dataset = 'Fall11'
     if not dataset:
         raise ValueError("Couldn't determine dataset for sample: "
                         + sample_info['datasetpath'])
@@ -50,11 +50,13 @@ for sample in sorted(datadefs.keys()):
     target=None
     if 'Fall11' in sample_info['datasetpath']:
         target = 'Fall11MC'
-    else if 'Summer11' in sample_info['datasetpath']:
+    elif 'crab_reco' in sample_info['datasetpath']: # special case, private prod
+        target = 'Fall11MC'
+    elif 'Summer11' in sample_info['datasetpath']:
         target = 'Summer11MC'
-    else if 'data' in sample and '2011' in sample_info['datasetpath']:
+    elif 'data' in sample and '2011' in sample_info['datasetpath']:
         target = '2011Data'
-    else if 'data' in sample and '2012' in sample_info['datasetpath']:
+    elif 'data' in sample and '2012' in sample_info['datasetpath']:
         target = '2012Data'
     if not target:
         raise ValueError("Couldn't determine target for sample: "
