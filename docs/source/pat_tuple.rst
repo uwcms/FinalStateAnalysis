@@ -22,9 +22,11 @@ Muons
 The following cut-based muon IDs are embedded:
 
 * ``userInt('WWID')``
+* ``userInt('WWID2011')``
 * ``userInt('VBTF')``
 
-and the following MVA IDs (see the `MuonId twiki`_).
+The WWID2011 is the same as defined in the UWAnalysis packages.  The following
+MVA IDs (see the `MuonId twiki`_).
 
 .. _MuonId twiki: https://twiki.cern.ch/twiki/bin/viewauth/CMS/MultivariateMuonSelection
 

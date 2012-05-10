@@ -10,8 +10,9 @@ from FinalStateAnalysis.PatTools.muons.patMuonRhoEmbedding_cfi import \
 customizeMuonSequence += patMuonRhoEmbedding
 
 from FinalStateAnalysis.PatTools.muons.patMuonIdEmbedding_cfi import \
-        patMuonsEmbedWWId, patVBTFMuonMatch
+        patMuonsEmbedWWId, patMuonsEmbedWWId2011, patVBTFMuonMatch
 customizeMuonSequence += patMuonsEmbedWWId
+customizeMuonSequence += patMuonsEmbedWWId2011
 customizeMuonSequence += patVBTFMuonMatch
 
 from FinalStateAnalysis.PatTools.muons.patMuonPFMuonEmbedding_cfi import \

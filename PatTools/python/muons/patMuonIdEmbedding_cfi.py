@@ -9,6 +9,18 @@ patMuonsEmbedWWId = cms.EDProducer(
     vertexSource = cms.InputTag("selectedPrimaryVertex"),
 )
 
+# Embed Mike's version of the WWID cuts
+patMuonsEmbedWWId2011 = cms.EDProducer(
+    "PATMuonIdEmbedder",
+    src = cms.InputTag("patMuonsLoosePFIsoEmbedded06"),
+    userIntLabel = cms.string("WWID2011"),
+    beamSpotSource = cms.InputTag("offlineBeamSpot"),
+    vertexSource = cms.InputTag("selectedPrimaryVertex"),
+    maxIPxy = cms.double(0.045),
+    minTrackerHits = cms.uint32(11),
+    maxIPz = cms.double(0.2),
+)
+
 patVBTFMuonMatch = cms.EDProducer(
     "PATVBTFMuonEmbedder", #Saves the case where muon is matched to a PF Muon
     src = cms.InputTag("fixme"),
