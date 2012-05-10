@@ -48,6 +48,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         'LHEEventProduct_*_*_*',
         'GenEventInfoProduct_generator_*_*',
         '*_kt6PFJetsForRhoComputationVoronoi_rho_*',
+        '*_kt6PFJetsForIso_rho_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
@@ -67,6 +68,18 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*_selectedPrimaryVertex_*_*')
     output_commands.append('*_selectPrimaryVerticesQuality_*_*')
     process.tuplize += process.selectPrimaryVertices
+
+    # Run the ZZ recipe for rho
+    from RecoJets.JetProducers.kt4PFJets_cfi import kt4PFJets \
+            as zzCantDoAnythingRight
+    process.kt6PFJetsForIso = zzCantDoAnythingRight.clone(
+        rParam = cms.double(0.6),
+        doAreaFastjet = cms.bool(True),
+        doRhoFastjet = cms.bool(True),
+        Rho_EtaMax = cms.double(2.5),
+        Ghost_EtaMax = cms.double(2.5),
+    )
+    process.tuplize += process.kt6PFJetsForIso
 
     # Rerun tau-ID
     process.load('Configuration/StandardSequences/Services_cff')

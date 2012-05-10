@@ -16,6 +16,11 @@ required version of DataFormats/PatCandidates.
 
 .. _PAT tags in 42X: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePATReleaseNotes42X#V08_06_55
 
+For convenience, the fastjet energy is embedded in electrons and muons:
+
+* ``userFloat('rho')``  - uses determinstic Voronoi rho produced during tau ID
+* ``userFloat('zzRho')`` - uses ZZ recipe
+
 Muons
 -----
 
@@ -70,10 +75,6 @@ scale uncertainty is taken from the muon MuscleFit.
 The closest PF patJet is available via the ``userCand('patJet')`` function.
 This ref may be null!  The jet pt is stored as ``userFloat('jetPt')``.  If the 
 jet doesn't exist, the "jet pt" is equal to the muon Pt.
-
-The fastjet energy is embedding in electrons and muons:
-
-* ``userFloat('rho')`` 
 
 The "effective area" for different isolation types is available:
 

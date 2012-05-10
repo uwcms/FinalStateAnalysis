@@ -6,8 +6,9 @@ from FinalStateAnalysis.PatTools.muons.muTrackCandidates_cfi import trackCandida
 customizeMuonSequence += trackCandidates
 
 from FinalStateAnalysis.PatTools.muons.patMuonRhoEmbedding_cfi import \
-        patMuonRhoEmbedding
+        patMuonRhoEmbedding, patMuonZZRhoEmbedding
 customizeMuonSequence += patMuonRhoEmbedding
+customizeMuonSequence += patMuonZZRhoEmbedding
 
 from FinalStateAnalysis.PatTools.muons.patMuonIdEmbedding_cfi import \
         patMuonsEmbedWWId, patMuonsEmbedWWId2011, patVBTFMuonMatch
