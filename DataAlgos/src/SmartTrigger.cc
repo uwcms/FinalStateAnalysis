@@ -12,7 +12,6 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
-#include "DataFormats/Luminosity/interface/LumiSummary.h"
 
 #include "DataFormats/Provenance/interface/EventID.h"
 
@@ -58,16 +57,6 @@ getFullName(const std::string& glob, const vstring& paths) {
     }
   }
   return result;
-}
-
-unsigned int
-getPrescale(const std::string& path, const pat::TriggerEvent& trgResult) {
-  return 999;
-}
-
-unsigned int
-getPrescale(const std::string& path, const LumiSummary& trgResult) {
-  return 999;
 }
 
 typedef std::vector<unsigned int>  VInt;
@@ -139,22 +128,6 @@ matchingTriggerFilters(const pat::TriggerEvent& result,
   for (size_t i = 0; i < filters->size(); ++i) {
     if (boost::regex_match(filters->at(i).label(), matcher))
       output.push_back(&filters->at(i));
-  }
-  return output;
-}
-
-std::vector<LumiSummary::HLT> matchingTriggerPathsLumi(
-    const LumiSummary& result, const std::string& pattern, bool ez) {
-  std::vector<LumiSummary::HLT> output;
-  boost::regex matcher(ez ? edm::glob2reg(pattern) : pattern);
-  std::vector<std::string> paths = result.HLTPaths();
-  for (size_t i = 0; i < paths.size(); ++i) {
-    //std::cout << " path: " << paths->at(i).name() << " " << pattern;
-    if (boost::regex_match(paths[i], matcher)) {
-      output.push_back(result.hltinfo(i));
-      //std::cout << " match!";
-    }
-    //std::cout << std::endl;
   }
   return output;
 }
@@ -247,42 +220,4 @@ const SmartTriggerResult& smartTrigger(const std::string& trgs,
   lastTrigEvent = evt;
   cache[trgs] = smartTrigger(trgs, result, ez);
   return cache[trgs];
-}
-
-SmartTriggerResult smartTrigger(const std::string& trgs,
-    const LumiSummary& result, bool ez) {
-  // Tokenize the trigger groups
-  vstring groups = getGroups(trgs);
-  VVInt prescales;
-  VVInt results;
-  VVString pathGroups;
-  for (size_t i = 0; i < groups.size(); ++i) {
-    // Get the paths in this group
-    VInt groupPrescale;
-    VInt groupResult;
-    vstring paths = getPaths(groups[i]);
-    for (size_t p = 0; p < paths.size(); ++p) {
-      const std::string& path = paths[p];
-      std::vector<LumiSummary::HLT> matching =
-        matchingTriggerPathsLumi(result, path, ez);
-      if (matching.size() > 1) {
-        std::stringstream err;
-        err << "Error: more than one"
-          << " paths match pattern: " << path << ", taking first!" << std::endl
-          << " Matches: " << std::endl;
-        for (size_t i = 0; i < matching.size(); ++i) {
-          err << i << ": " << matching[i].pathname << std::endl;
-        }
-        edm::LogError("SmartTriggerMultiMatchLumi") << err.str();
-      }
-      int thePrescale = (matching.size()) ? matching[0].prescale : 0;
-      int theResult = (matching.size()) ? matching[0].ratecount : -1;
-      groupPrescale.push_back(thePrescale);
-      groupResult.push_back(theResult);
-    }
-    pathGroups.push_back(paths);
-    prescales.push_back(groupPrescale);
-    results.push_back(groupResult);
-  }
-  return makeDecision(pathGroups, prescales, results);
 }

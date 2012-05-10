@@ -43,7 +43,6 @@ namespace pat {
 namespace edm {
   class EventID;
 }
-class LumiSummary;
 
 struct SmartTriggerResult {
   unsigned int group;
@@ -61,11 +60,6 @@ SmartTriggerResult smartTrigger(
 const SmartTriggerResult& smartTrigger(
     const std::string& trgs, const pat::TriggerEvent& trgResult,
     const edm::EventID& event, bool ez=false);
-
-/// Get the result for a whole lumi section.
-SmartTriggerResult smartTrigger(
-    const std::string& trgs, const LumiSummary& lumiSummary,
-    bool ez=false);
 
 /// Get the list of trigger paths matching a given pattern.  If [ez] is
 // true, use the friendly '*' syntax.  Otherwise use boost::regexp.
