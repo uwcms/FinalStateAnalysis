@@ -195,6 +195,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.customizeElectronSequence.insert(0, process.selectedPatJets)
     process.cleanPatElectrons.src = final_electron_collection
     # The "effective area" calculation needs to know if it is data/mc, etc.
+    process.patElectronMVAIsoEmbedding.target = kwargs['target']
     process.patElectronEffectiveAreaEmbedder.target = kwargs['target']
 
     process.load("FinalStateAnalysis.PatTools.patMuonProduction_cff")
@@ -205,6 +206,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
                                        process.customizeMuonSequence)
     process.cleanPatMuons.src = final_muon_collection
     # The "effective area" calculation needs to know if it is data/mc, etc.
+    process.patMuonMVAIdIsoEmbedding.target = kwargs['target']
     process.patMuonEffectiveAreaEmbedder.target = kwargs['target']
 
     process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")

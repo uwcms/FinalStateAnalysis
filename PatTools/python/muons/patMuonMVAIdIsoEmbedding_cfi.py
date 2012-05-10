@@ -13,6 +13,7 @@ import FWCore.ParameterSet.Config as cms
 patMuonMVAIdIsoEmbedding = cms.EDProducer(
     "PATMuonMVAEmbedder",
     src = cms.InputTag("fixme"),
+    target = cms.string('fixme'),
     vertexSrc = cms.InputTag("selectedPrimaryVertex"),
     pfSrc = cms.InputTag("particleFlow"),
     rhoSrc = cms.InputTag("kt6PFJetsForRhoComputationVoronoi", "rho"),

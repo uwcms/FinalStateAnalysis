@@ -45,6 +45,7 @@ class PATElectronMVAIsoEmbedding : public edm::EDProducer {
     edm::InputTag vertexSrc_;
     edm::InputTag rhoSrc_;
 
+    ElectronEffectiveArea::ElectronEffectiveAreaTarget target_;
     EGammaMvaEleEstimator fElectronIsoMVA;
 };
 
@@ -77,6 +78,21 @@ PATElectronMVAIsoEmbedding::PATElectronMVAIsoEmbedding(const edm::ParameterSet& 
   eleiso_weightfiles.push_back("UserCode/sixie/EGamma/EGammaAnalysisTools/data/ElectronIso_BDTG_V0_EndcapPt10ToInf.weights.xml");
   eleiso_weightfiles.push_back("UserCode/sixie/EGamma/EGammaAnalysisTools/data/ElectronIso_BDTG_V0_EndcapPt10ToInf.weights.xml");
   updatePaths(eleiso_weightfiles);
+
+  std::string target = pset.getParameter<std::string>("target");
+  if (target == "2011Data") {
+    target_ = ElectronEffectiveArea::kEleEAData2011;
+  } else if (target == "2012Data") {
+    target_ = ElectronEffectiveArea::kEleEAData2012;
+  } else if (target == "Fall11MC") {
+    target_ = ElectronEffectiveArea::kEleEAFall11MC;
+  } else if (target == "Summer11MC") {
+    target_ = ElectronEffectiveArea::kEleEASummer11MC;
+  } else {
+    throw cms::Exception("UnknownTarget")
+      << "Bad eff. area option for electrons: " << target
+      << " options are: 2011Data, Fall11MC, Summer11MC" << std::endl;
+  }
 
   fElectronIsoMVA.initialize("EleIso_BDTG_IsoRings",
       EGammaMvaEleEstimator::kIsoRings,
@@ -123,8 +139,7 @@ void PATElectronMVAIsoEmbedding::produce(edm::Event& evt, const edm::EventSetup&
         *ttrackBuilder,
         lazyTools,
         inPfCands, Rho,
-        //ElectronEffectiveArea::kEleEAFall11MC,
-        ElectronEffectiveArea::kEleEAData2011,
+        target_,
         IdentifiedElectrons, IdentifiedMuons);
     ele.addUserFloat("isomva", isomva);
     output->push_back(ele);

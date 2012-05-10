@@ -34,6 +34,7 @@ class PATMuonMVAEmbedder : public edm::EDProducer {
     MuonMVAEstimator fMuonIsoMVA;
     MuonMVAEstimator fMuonIDMVA;
     MuonMVAEstimator fMuonIsoRingsRadMVA;
+    MuonEffectiveArea::MuonEffectiveAreaTarget target_;
 };
 
 namespace {
@@ -101,6 +102,20 @@ PATMuonMVAEmbedder::PATMuonMVAEmbedder(const edm::ParameterSet& pset) {
                    kTRUE,
                    muonisoRingsRad_weightfiles);
   //fMuonIsoRingsRadMVA->SetPrintMVADebug(kTRUE);
+  std::string target = pset.getParameter<std::string>("target");
+  if (target == "2011Data") {
+    target_ = MuonEffectiveArea::kMuEAData2011;
+  } else if (target == "2012Data") {
+    target_ = MuonEffectiveArea::kMuEAData2012;
+  } else if (target == "Fall11MC") {
+    target_ = MuonEffectiveArea::kMuEAFall11MC;
+  } else if (target == "Summer11MC") {
+    target_ = MuonEffectiveArea::kMuEASummer11MC;
+  } else {
+    throw cms::Exception("UnknownTarget")
+      << "Bad eff. area option for muons: " << target
+      << " options are: 2011Data, 2012Data, Fall11MC, Summer11MC" << std::endl;
+  }
 }
 
 void PATMuonMVAEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
@@ -134,17 +149,17 @@ void PATMuonMVAEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 
     double isomva = fMuonIsoMVA.mvaValue( *iM, pvCol->at(0),
         inPfCands, Rho,
-        MuonEffectiveArea::kMuEAFall11MC,
+        target_,
         IdentifiedElectrons, IdentifiedMuons);
 
     double idmva = fMuonIDMVA.mvaValue( *iM, pvCol->at(0),
         inPfCands, Rho,
-        MuonEffectiveArea::kMuEAFall11MC,
+        target_,
         IdentifiedElectrons, IdentifiedMuons);
 
     double isoringsradmva = fMuonIsoRingsRadMVA.mvaValue( *iM, pvCol->at(0),
         inPfCands, Rho,
-        MuonEffectiveArea::kMuEAFall11MC,
+        target_,
         IdentifiedElectrons, IdentifiedMuons);
 
     muon.addUserFloat("isomva", isomva);
