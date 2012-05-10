@@ -66,6 +66,12 @@ The fastjet energy is embedding in electrons and muons:
 
 * ``userFloat('rho')`` 
 
+The "effective area" for different isolation types is available:
+
+* ``userFloat("EAGamma04")``
+* ``userFloat("EANeuHadron04")``
+* ``userFloat("EAGammaNeuHadron04")``
+
 Electrons
 ---------
 
