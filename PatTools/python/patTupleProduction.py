@@ -170,6 +170,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
                                  genJetCollection = cms.InputTag("ak5GenJets"))
     process.patJets.embedPFCandidates = False
     process.patJets.embedCaloTowers = False
+    process.patJets.embedGenJetMatch = False
+    process.patJets.addAssociatedTracks = False
+    process.patJets.embedGenPartonMatch = False
     process.patJetCorrFactors.useRho = True
     # Let's use the same rho as in the TauID, so we don't need to do it twice.
     process.patJetCorrFactors.rho = cms.InputTag(
