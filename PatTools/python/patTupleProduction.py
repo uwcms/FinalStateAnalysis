@@ -38,7 +38,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_offlineBeamSpot_*_*',
         '*_trackCandidates_*_*',
         '*_gsfTrackCandidates_*_*',
-        '*_generalTracks_*_*',
+        #'*_generalTracks_*_*',
         '*_electronGsfTracks_*_*',
         '*_offlinePrimaryVertices*_*_*',
         '*_ak5PFJets_*_*',
@@ -109,13 +109,14 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Unembed junks
     process.patMuons.embedCaloMETMuonCorrs = False
     process.patMuons.embedTcMETMuonCorrs = False
-    process.patMuons.embedTrack = False
+    process.patMuons.embedTrack = True
     process.patMuons.pvSrc = cms.InputTag("selectedPrimaryVertex")
 
     # Do extra electron ID
     process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
     process.tuplize += process.recoElectronID
     process.patElectrons.electronIDSources = process.electronIDSources
+    process.patElectrons.embedTrack = True
 
     # Run EGamma electron energy calibration
     process.load("EgammaCalibratedGsfElectrons.CalibratedElectronProducers.calibratedGsfElectrons_cfi")
