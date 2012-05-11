@@ -235,7 +235,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.cleanPatTaus.checkOverlaps.muons.requireNoOverlaps = False
     process.cleanPatTaus.checkOverlaps.electrons.requireNoOverlaps = False
     # Don't apply any prselections
-    process.cleanPatTaus.preselection = ''
+    process.cleanPatTaus.preselection = 'abs(eta) < 2.5 & (pt > 18 | userFloat("jetPt") > 18)'
 
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
