@@ -3,7 +3,6 @@ import FWCore.ParameterSet.Config as cms
 
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
-    ewkSkim=1,    # Apply EWK skim conditions
     xSec = -999.0,
     xSecErr = 0.0,
     skipEvents=0, # For debugging
@@ -61,7 +60,7 @@ process.out = cms.OutputModule(
     # Drop per-event meta data from dropped objects
     dropMetaData = cms.untracked.string("ALL"),
     SelectEvents = cms.untracked.PSet(
-        SelectEvents = cms.vstring('p',)
+        SelectEvents = cms.vstring('fixme')
     ),
     outputCommands = cms.untracked.vstring(output_command)
 )
@@ -82,17 +81,23 @@ for command in output_commands:
 
 process.GlobalTag.globaltag = cms.string(options.globalTag)
 
-if options.ewkSkim:
-    process.load("FinalStateAnalysis.RecoTools.ewkSkim_cfi")
-    tuplize.insert(0, process.ewkSkimSequence)
-
 # Count events at the beginning of the pat tuplization
 process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
 process.load("FinalStateAnalysis.RecoTools.dqmEventCount_cfi")
 tuplize.insert(0, process.eventCount)
 tuplize.insert(0, process.dqmEventCount)
 
-process.p = cms.Path(tuplize)
+process.schedule = cms.Schedule()
+
+# Load all of our skim paths
+process.load("FinalStateAnalysis.RecoTools.uwSkims_cfi")
+# PAT tuplize all skim paths
+for skim_path in process.skimConfig.paths:
+    print "Building skim path:", skim_path
+    the_path = getattr(process, skim_path)
+    the_path += process.tuplize
+    process.schedule.append(the_path)
+process.out.SelectEvents.SelectEvents = process.skimConfig.paths
 
 # Save DQM stuff created during pat tuplization
 process.MEtoEDMConverter = cms.EDProducer(
@@ -107,6 +112,7 @@ process.MEtoEDMConverter = cms.EDProducer(
 )
 
 process.outpath = cms.EndPath(process.MEtoEDMConverter*process.out)
+process.schedule.append(process.outpath)
 
 # Tell the framework to shut up!
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
@@ -127,7 +133,7 @@ if options.profile:
         "ProfilerService",
         firstEvent = cms.untracked.int32(15),
         lastEvent = cms.untracked.int32(100),
-        paths = cms.untracked.vstring('p')
+        paths = cms.untracked.vstring('muTauPath')
     )
 
 if options.keepAll:
