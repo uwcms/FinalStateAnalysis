@@ -28,9 +28,8 @@ class PATObjectWorkingPointEmbedder : public edm::EDProducer {
 
     struct Category {
       std::string categoryStr;
-      std::string cutStr;
       StrCutPtr category;
-      StrCutPtr cut;
+      std::vector<StrCutPtr> cuts;
     };
 
     PATObjectWorkingPointEmbedder(const edm::ParameterSet& pset);
@@ -54,9 +53,17 @@ PATObjectWorkingPointEmbedder<T>::PATObjectWorkingPointEmbedder(const edm::Param
   for (size_t i = 0; i < categories.size(); ++i) {
     Category cat;
     cat.categoryStr = categories[i].getParameter<std::string>("category");
-    cat.cutStr = categories[i].getParameter<std::string>("cut");
     cat.category.reset(new StrCut(cat.categoryStr));
-    cat.cut.reset(new StrCut(cat.cutStr));
+    if (categories[i].existsAs<std::string>("cut")) {
+      std::string cut = categories[i].getParameter<std::string>("cut");
+      cat.cuts.push_back(StrCutPtr(new StrCut(cut)));
+    } else {
+      std::vector<std::string> cuts =
+        categories[i].getParameter<std::vector<std::string> >("cut");
+      for (size_t j = 0; j < cuts.size(); ++j) {
+        cat.cuts.push_back(StrCutPtr(new StrCut(cuts[j])));
+      }
+    }
   }
 
   produces<OutputCollection>();
@@ -77,7 +84,13 @@ void PATObjectWorkingPointEmbedder<T>::produce(edm::Event& evt, const edm::Event
       // Find the first category the object is in
       if ( (*categories_[j].category)(owned) ) {
         // Apply the cut for this category and exit
-        bool passes =  (*categories_[j].cut)(owned);
+        bool passes = true;
+        for (size_t k = 0; k < categories_[j].cuts.size(); ++k) {
+          if (!(*categories_[j].cuts[k])(owned)) {
+            passes = false;
+            break;
+          }
+        }
         owned.addUserInt(userIntLabel_, passes);
         break;
       }

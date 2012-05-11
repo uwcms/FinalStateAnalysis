@@ -1,6 +1,18 @@
 PAT Tuple Content
 =================
 
+Skim
+----
+
+Before tuplization, the events are skimmed at the AOD level.  The OR of the
+following requirements is applied:
+
+* One global muon with pt > 20 and eta < 2.4
+* One electron with pt > 20 and eta < 2.5
+* One global muon with pt > 14, eta < 2.4 and one tau pt > 18, eta < 2.3
+* One electron with pt > 17, eta < 2.5 and one tau pt > 18, eta < 2.3
+* One electron with pt > 17, eta < 2.5 and one tau pt > 18, eta < 2.3
+
 PF Isolation
 ------------
 
@@ -29,6 +41,7 @@ The following cut-based muon IDs are embedded:
 * ``userInt('WWID')``
 * ``userInt('WWID2011')``
 * ``userInt('VBTF')``
+* ``userInt('tightID')`` - 2012 Muon POG recommendation
 
 The WWID2011 is the same as defined in the UWAnalysis packages.  The following
 MVA IDs (see the `MuonId twiki`_).
@@ -109,12 +122,12 @@ The following RECO electron IDs are embedded as as eIDs (pat defaults):
 
 The following 2011 electron MVA ID related information is embedded:
 
-* ``userFloat("hasConversion")``
-* ``userInt("missingHits")`` - number of missing hits 
-* ``userFloat("idDZ")`` - dz used for MVA id
-* ``userFloat("MVA")`` - raw MVA value
-* ``userFloat("MVApreID")`` - pre-ID cuts used for the MVA
-* ``userFloat("MITID")`` - MIT MVA ID working point binary value
+* ``hasConversion``
+* ``missingHits`` - number of missing hits 
+* ``idDZ`` - dz used for MVA id
+* ``MVA`` - raw MVA value
+* ``MVApreID`` - pre-ID cuts used for the MVA
+* ``MITID`` - MIT MVA ID working point binary value
 
 The following 2012 electron MVA IDs (see `EGamma ID Recipe`_.) are
 available:
