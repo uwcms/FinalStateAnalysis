@@ -23,7 +23,7 @@ def validate_egamma_calib_config(process):
 
     '''
     dataset = process.calibratedGsfElectrons.inputDataset.value()
-    isMC = bool(process.calibratedGsfElectrons.isMC)
+    isMC = bool(process.calibratedGsfElectrons.isMC.value())
 
     data_datasets = set(['Prompt', 'ReReco', 'Jan16ReReco'])
     mc_datasets = set(['Summer11', 'Fall11'])
