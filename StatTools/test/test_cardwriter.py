@@ -14,7 +14,7 @@ import unittest
 
 class TestCardParsring(unittest.TestCase):
     def test_closure(self):
-        www_card_orig = read_card('vh3l_cut.txt')
+        www_card_orig = read_card('vh3l_120.txt')
         www_card_file = open('vh3l_cut_rewritten.txt', 'w')
         write_card(www_card_file, www_card_orig)
         www_card_file.close()
@@ -42,4 +42,5 @@ class TestCardParsring(unittest.TestCase):
             )
 
 if __name__ == '__main__':
+    card = read_card('vh3l_cut.txt')
     unittest.main()
