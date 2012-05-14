@@ -122,12 +122,12 @@ The following RECO electron IDs are embedded as as eIDs (pat defaults):
 
 The following 2011 electron MVA ID related information is embedded:
 
-* ``hasConversion``
-* ``missingHits`` - number of missing hits 
-* ``idDZ`` - dz used for MVA id
-* ``MVA`` - raw MVA value
-* ``MVApreID`` - pre-ID cuts used for the MVA
-* ``MITID`` - MIT MVA ID working point binary value
+* ``userFloat("hasConversion")``
+* ``userInt("missingHits")`` - number of missing hits 
+* ``userFloat("idDZ")`` - dz used for MVA id
+* ``userFloat("MVA")`` - raw MVA value
+* ``userFloat("MVApreID")`` - pre-ID cuts used for the MVA
+* ``userFloat("MITID")`` - MIT MVA ID working point binary value
 
 The following 2012 electron MVA IDs (see `EGamma ID Recipe`_.) are
 available:
