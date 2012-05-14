@@ -72,6 +72,7 @@ The following IP information is embedded as userFloats:
 
 * ``ipDXY``
 * ``dz``
+* ``vz``
 * ``ip3D``
 * ``ip3DS`` - significance
 * ``tip`` 
@@ -165,6 +166,7 @@ The following IP information is embedded as userFloats:
 
 * ``ipDXY``
 * ``dz``
+* ``vz``
 * ``ip3D``
 * ``ip3DS`` - significance
 * ``tip`` 
@@ -280,6 +282,7 @@ The following IP information is embedded as userFloats:
 
 * ``ipDXY``
 * ``dz``
+* ``vz``
 * ``ip3D``
 * ``ip3DS`` - significance
 * ``tip`` 
