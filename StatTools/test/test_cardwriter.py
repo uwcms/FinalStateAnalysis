@@ -42,5 +42,5 @@ class TestCardParsring(unittest.TestCase):
             )
 
 if __name__ == '__main__':
-    card = read_card('vh3l_cut.txt')
+    card = read_card('vh3l_120.txt')
     unittest.main()
