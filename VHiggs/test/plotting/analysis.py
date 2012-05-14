@@ -840,7 +840,7 @@ if __name__ == "__main__":
                     error_band_hist.SetFillStyle(0)
                     error_band_hist.Draw('same,hist')
                     ult_data_poisson.Draw('p0')
-                    stack.SetMaximum( max(6.5, 2*max(
+                    stack.SetMaximum( max(7.5, 2*max(
                         ult_data.GetMaximum(),
                         stack.GetMaximum()))
                     )
