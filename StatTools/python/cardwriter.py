@@ -93,6 +93,8 @@ def write_card(stream, *args, **kwargs):
                 p2sMap  = DC.shapeMap[b]   if DC.shapeMap.has_key(b)   else {}
                 p2sMapD = DC.shapeMap['*'] if DC.shapeMap.has_key('*') else {}
                 for p, x in p2sMap.items():
+                    # FIXME
+                    dirname = ''
                     xrep = [xi.replace("$CHANNEL",b) for xi in x]
                     if xrep[0] != 'FAKE' and dirname != '': xrep[0] = dirname+"/"+xrep[0]
                     shapeLines.append((p,bout,xrep))
