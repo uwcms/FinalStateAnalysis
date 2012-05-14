@@ -663,6 +663,10 @@ data_SingleMu, list_SingleMu = build_data_set('SingleMu', ['Tau', 'Mu'])
 datadefs.update(data_SingleMu)
 data_name_map.update(list_SingleMu)
 
+data_SingleElectron, list_SingleElectron = build_data_set('SingleElectron', ['Tau', 'E', 'Wjets'])
+datadefs.update(data_SingleElectron)
+data_name_map.update(list_SingleElectron)
+
 data_TauPlusX, list_TauPlusX = build_data_set('TauPlusX', ['HTT', 'SSDL'])
 datadefs.update(data_TauPlusX)
 data_name_map.update(list_TauPlusX)
