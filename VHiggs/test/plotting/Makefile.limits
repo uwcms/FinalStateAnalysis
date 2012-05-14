@@ -11,7 +11,7 @@ combo/%.asymp.json: combo/%.txt
 	  -m `echo $* | sed "s|.*_||g"` | limit2JSON.py --mass `echo $* | sed "s|.*_||g"` > $@
 	rm higgsCombine$**.root
 
-low_mass=$(shell seq 110 10 150) 
+low_mass=$(shell seq 110 10 140) 
 
 tt_mass=$(shell seq 110 10 160)
 
@@ -41,6 +41,14 @@ combo/whbb_%.txt: moriond12/%/vhbb_DC_ALL_BDT.*.0.txt
 combo/leptons_%.txt: zh_cards/hzz2l2t_%.txt cards/combined_%.txt 3l_cards/%/vh3l_cut.txt
 	combineCards.py -S $^ > $@
 
+# Combination of all tau
+combo/taus_%.txt: zh_cards/hzz2l2t_%.txt cards/combined_%.txt moriond12/%/htt_*txt 
+	combineCards.py -S $^ > $@
+
+# Combination of just H2Tau
+combo/h2tau_%.txt: moriond12/%/htt_*.txt
+	combineCards.py -S $^ > $@
+
 # Combo with gg
 combo/with_gg_%.txt: zh_cards/hzz2l2t_%.txt cards/combined_%.txt 3l_cards/%/vh3l_cut.txt post-moriond12/%/hgglep.mH*.0.txt
 	combineCards.py -S $^ > $@
@@ -64,12 +72,16 @@ whbb_limits: $(patsubst %, combo/whbb_%.asymp.json, $(bb_mass))
 
 leptons_limits: $(patsubst %, combo/leptons_%.asymp.json, $(tt_mass)) 
 
+taus_limits: $(patsubst %, combo/taus_%.asymp.json, $(low_mass)) 
+
+h2tau_limits: $(patsubst %, combo/h2tau_%.asymp.json, $(low_mass)) 
+
 leptons_gg_limits: $(patsubst %, combo/with_gg_%.asymp.json, $(low_mass)) 
 
 leptons_all_limits: $(patsubst %, combo/with_all_%.asymp.json, $(bb_mass)) 
 
 # Asymptotic limits
-all: whbb_limits whtt_limits zh_limits whww_limits whgg_limits leptons_limits leptons_gg_limits leptons_all_limits
+all: whbb_limits whtt_limits zh_limits whww_limits whgg_limits leptons_limits leptons_gg_limits leptons_all_limits taus_limits
 
 combo/%_asymp.pdf: paper_blurb.py
 	python $(fsa)/StatTools/scripts/plotlimit.py \
@@ -82,7 +94,10 @@ combo/%_asymp.pdf: paper_blurb.py
 	  --blurbpos "0.15, 0.8, 0.7, 0.95" \
 	  --legendpos "0,0,0,0"
 
-plots: combo/whww_asymp.pdf combo/whtt_asymp.pdf combo/whgg_asymp.pdf combo/whbb_asymp.pdf combo/zh_asymp.pdf combo/leptons_asymp.pdf combo/with_gg_asymp.pdf combo/with_all_asymp.pdf
+plots: combo/whww_asymp.pdf combo/whtt_asymp.pdf combo/whgg_asymp.pdf \
+  combo/whbb_asymp.pdf combo/zh_asymp.pdf combo/leptons_asymp.pdf \
+  combo/taus_asymp.pdf \
+  combo/with_gg_asymp.pdf combo/with_all_asymp.pdf
 
 
 # Computing CLs grids
@@ -109,6 +124,12 @@ whgg_cls_submits=$(patsubst %, /scratch/efriis/paper_combo/whgg_%_cls/submit, $(
 whbb_cls_submits=$(patsubst %, /scratch/efriis/paper_combo/whbb_%_cls/submit, $(bb_mass))
 
 leptons_cls_submits=$(patsubst %, /scratch/efriis/paper_combo/leptons_%_cls/submit, $(tt_mass))
+
+taus_cls_submits=$(patsubst %, /scratch/efriis/paper_combo/taus_%_cls/submit, $(low_mass))
+
+h2tau_cls_submits=$(patsubst %, /scratch/efriis/paper_combo/h2tau_%_cls/submit, $(low_mass))
+
+buh: $(taus_cls_submits) $(h2tau_cls_submits)
 
 with_gg_cls_submits=$(patsubst %, /scratch/efriis/paper_combo/with_gg_%_cls/submit, $(low_mass))
 
