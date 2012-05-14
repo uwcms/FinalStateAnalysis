@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''
 
 Apply horizontal morphing to .txt DataCards
