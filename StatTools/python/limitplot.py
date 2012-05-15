@@ -58,8 +58,13 @@ def build_expected_band(result, key):
 
     given a <key> into result (i.e. (<method1>, <label1>) above)
     '''
-    mass_points = sorted(result[key].keys())
-    exp = ROOT.TGraph(len(mass_points))
+    try:
+        mass_points = sorted(result[key].keys())
+    except KeyErrror:
+        print "Couldn't find key: %s" % key
+        print "Available keys: %s" % result.keys()
+        raise
+    exp = ROOT.TGraphAsymmErrors(len(mass_points))
     onesig = ROOT.TGraphAsymmErrors(len(mass_points))
     twosig = ROOT.TGraphAsymmErrors(len(mass_points))
     for i, mass in enumerate(mass_points):
@@ -79,14 +84,24 @@ def build_expected_band(result, key):
     twosig.SetFillColor(ROOT.EColor.kYellow)
     return (exp, onesig, twosig)
 
-def build_obs_line(result, key):
-    ''' Build the observed limit TGraph '''
-    mass_points = sorted(result[key].keys())
-    obs = ROOT.TGraph(len(mass_points))
+def build_line(result, key, type, linewidth=3):
+    ''' Build the limit TGraph '''
+    try:
+        mass_points = sorted(result[key].keys())
+    except KeyError:
+        print "Couldn't find key: %s" % repr(key)
+        print "Available keys: %s" % repr(result.keys())
+        raise
+    obs = ROOT.TGraphAsymmErrors(len(mass_points))
     for i, mass in enumerate(mass_points):
         mass_result = result[key][mass]
-        limit = mass_result.get('obs')
+        limit = mass_result.get(type)
         obs.SetPoint(i, mass, limit)
-    obs.SetLineWidth(3)
+    obs.SetLineWidth(linewidth)
     return obs
 
+def build_obs_line(result, key):
+    return build_line(result, key, 'obs', 3)
+
+def build_exp_line(result, key):
+    return build_line(result, key, 'exp', 2)
