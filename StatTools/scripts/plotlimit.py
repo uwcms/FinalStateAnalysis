@@ -67,6 +67,9 @@ if __name__ == "__main__":
     parser.add_argument('--preliminary', action='store_true',
                         help="Add 'preliminary' to CMS label")
 
+    parser.add_argument('--show-sm', dest='showsm', action='store_true',
+                        help="Draw a dashed line at Y=1")
+
     print sys.argv
     args = parser.parse_args()
 
@@ -145,8 +148,14 @@ if __name__ == "__main__":
         blurb.Draw()
 
     canvas.RedrawAxis()
-
     canvas.RedrawAxis()
+
+    sm_line = None
+    if args.showsm:
+        sm_line = ROOT.TLine(xmin, 1.0, xmax, 1.0)
+        sm_line.SetLineStyle(2)
+        sm_line.SetLineWidth(1)
+        sm_line.Draw()
 
     # Add some extra lines on the border to make it look nice
     top_frame_line = ROOT.TLine(xmin, args.maxy, xmax, args.maxy)
