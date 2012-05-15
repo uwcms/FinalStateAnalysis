@@ -15,7 +15,7 @@ options = TauVarParsing.TauVarParsing(
     # Used for the EGamma electron calibration
     # See https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaElectronEnergyScale
     dataset='Fall11',
-    target='Fall11MC', # Used for electron and muon effective areas
+    target='2011Data', # Used for electron and muon effective areas
 )
 
 files = [
