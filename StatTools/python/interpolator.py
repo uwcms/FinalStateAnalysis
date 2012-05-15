@@ -11,6 +11,7 @@ import logging
 import FinalStateAnalysis.StatTools.morph as morph
 from FinalStateAnalysis.StatTools.cardreader import read_card
 from FinalStateAnalysis.StatTools.cardwriter import write_card
+import sys
 
 log = logging.getLogger('interpolate')
 
@@ -43,8 +44,20 @@ def interpolate_card(output_stream,
 
         # Check the yield for this process in each bin
         for bin in lowcard.bins:
-            low_yield = lowcard.exp[bin][lowlabel]
-            high_yield = highcard.exp[bin][highlabel]
+            try:
+                low_yield = lowcard.exp[bin][lowlabel]
+            except KeyError:
+                log.error("Error reading bin: %s process: %s from file: %s",
+                          bin, lowlabel, lowcardfile)
+                raise
+
+            try:
+                high_yield = highcard.exp[bin][highlabel]
+            except KeyError:
+                log.error("Error reading bin: %s process: %s from file: %s",
+                          bin, highlabel, highcardfile)
+                raise
+
             target_yield = morph.interpolate(
                 lowmass, low_yield,
                 highmass, high_yield,
