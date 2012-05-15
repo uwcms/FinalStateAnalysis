@@ -16,13 +16,14 @@ customizeMuonSequence += patMuonsEmbedWWId
 customizeMuonSequence += patMuonsEmbedWWId2011
 customizeMuonSequence += patVBTFMuonMatch
 
-from FinalStateAnalysis.PatTools.muons.patMuonTightIdEmbedding_cfi import \
-        patMuonTightIDEmbedding
-customizeMuonSequence += patMuonTightIDEmbedding
-
 from FinalStateAnalysis.PatTools.muons.patMuonPFMuonEmbedding_cfi import \
         patMuonPFMuonEmbedding
 customizeMuonSequence += patMuonPFMuonEmbedding
+
+# This depends on the PFMuon being embedded!
+from FinalStateAnalysis.PatTools.muons.patMuonTightIdEmbedding_cfi import \
+        patMuonTightIDEmbedding
+customizeMuonSequence += patMuonTightIDEmbedding
 
 from FinalStateAnalysis.PatTools.muons.patMuonIpEmbedding_cfi import patMuonsEmbedIp
 customizeMuonSequence += patMuonsEmbedIp
