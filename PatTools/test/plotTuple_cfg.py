@@ -37,6 +37,46 @@ pt = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
+hasMuTightID = pt.clone(
+    min = -0.5,
+    max = 1.5,
+    nbins = 2,
+    name = "hasMuTightID",
+    plotquantity = "daughter(0).hasUserInt('tightID')"
+)
+
+muTightID = pt.clone(
+    min = -0.5,
+    max = 1.5,
+    nbins = 2,
+    name = "muTightID",
+    plotquantity = "daughter(0).userInt('tightID')"
+)
+
+muWWID = pt.clone(
+    min = -0.5,
+    max = 1.5,
+    nbins = 2,
+    name = "muWWID",
+    plotquantity = "daughter(0).userInt('WWID')"
+)
+
+hasMVAIsoWP = pt.clone(
+    min = -0.5,
+    max = 1.5,
+    nbins = 2,
+    name = "mvaIsoWP1",
+    plotquantity = "daughter(0).userInt('mvaisowp1')"
+)
+
+isPF = pt.clone(
+    min = -0.5,
+    max = 1.5,
+    nbins = 2,
+    name = "isPF",
+    plotquantity = "daughter(0).pfCandidateRef.isNonnull"
+)
+
 hasMuons = cms.PSet(
     min = cms.untracked.double(-0.5),
     max = cms.untracked.double(1.5),
@@ -157,6 +197,11 @@ process.mt = cms.EDAnalyzer(
     histograms = cms.VPSet(
         pt,
         hasMuons,
+        hasMVAIsoWP,
+        isPF,
+        hasMuTightID,
+        muTightID,
+        muWWID,
         hasElectrons,
         muon_jetpt,
         tau_disc,
