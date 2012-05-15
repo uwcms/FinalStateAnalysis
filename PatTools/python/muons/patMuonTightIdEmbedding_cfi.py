@@ -21,7 +21,7 @@ patMuonTightIDEmbedding = cms.EDProducer(
                 'globalTrack.hitPattern.numberOfValidMuonHits > 0',
                 'numberOfMatchedStations > 1',
                 'dB < 0.2',
-                'userFloat("dz") < 0.5',
+                'abs(userFloat("dz")) < 0.5',
                 'innerTrack.hitPattern.numberOfValidPixelHits > 0',
                 'track().hitPattern().trackerLayersWithMeasurement() > 5'
             )
