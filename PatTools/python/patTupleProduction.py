@@ -44,6 +44,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_ak5PFJets_*_*',
         '*_ak5GenJets_*_*',
         '*_hltTriggerSummaryAOD_*_*',
+        'edmTriggerResults_TriggerResults_*_%s' % process.name_(),
         '*_MEtoEDMConverter*_*_%s' % process.name_(),
         'LHEEventProduct_*_*_*',
         'GenEventInfoProduct_generator_*_*',
