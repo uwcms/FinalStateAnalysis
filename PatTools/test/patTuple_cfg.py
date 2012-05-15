@@ -79,6 +79,9 @@ for command in output_commands:
     else:
         process.out.outputCommands.append(command)
 
+if options.globalTag == "":
+    raise RuntimeError("Global tag not specified!  Try sourcing environment.sh\n")
+
 process.GlobalTag.globaltag = cms.string(options.globalTag)
 
 # Count events at the beginning of the pat tuplization
