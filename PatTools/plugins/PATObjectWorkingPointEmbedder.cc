@@ -30,6 +30,8 @@ class PATObjectWorkingPointEmbedder : public edm::EDProducer {
       std::string categoryStr;
       StrCutPtr category;
       std::vector<StrCutPtr> cuts;
+      // The string values of the cuts
+      std::vector<std::string> cutStrs;
     };
 
     PATObjectWorkingPointEmbedder(const edm::ParameterSet& pset);
@@ -39,12 +41,14 @@ class PATObjectWorkingPointEmbedder : public edm::EDProducer {
     edm::InputTag src_;
     std::string userIntLabel_;
     std::vector<Category> categories_;
+    std::string moduleName_;
 };
 
 template<typename T>
 PATObjectWorkingPointEmbedder<T>::PATObjectWorkingPointEmbedder(const edm::ParameterSet& pset) {
   src_ = pset.getParameter<edm::InputTag>("src");
   userIntLabel_ = pset.getParameter<std::string>("userIntLabel");
+  moduleName_ = pset.getParameter<std::string>("@module_label");
 
   typedef std::vector<edm::ParameterSet> VPSet;
 
@@ -57,13 +61,16 @@ PATObjectWorkingPointEmbedder<T>::PATObjectWorkingPointEmbedder(const edm::Param
     if (categories[i].existsAs<std::string>("cut")) {
       std::string cut = categories[i].getParameter<std::string>("cut");
       cat.cuts.push_back(StrCutPtr(new StrCut(cut)));
+      cat.cutStrs.push_back(cut);
     } else {
       std::vector<std::string> cuts =
         categories[i].getParameter<std::vector<std::string> >("cut");
       for (size_t j = 0; j < cuts.size(); ++j) {
         cat.cuts.push_back(StrCutPtr(new StrCut(cuts[j])));
+        cat.cutStrs.push_back(cuts[j]);
       }
     }
+    categories_.push_back(cat);
   }
 
   produces<OutputCollection>();
@@ -86,7 +93,10 @@ void PATObjectWorkingPointEmbedder<T>::produce(edm::Event& evt, const edm::Event
         // Apply the cut for this category and exit
         bool passes = true;
         for (size_t k = 0; k < categories_[j].cuts.size(); ++k) {
-          if (!(*categories_[j].cuts[k])(owned)) {
+          bool result = (*categories_[j].cuts[k])(owned);
+          //std::cout << moduleName_ << " " << i << " " << j <<
+            //" " << k << categories_[j].cutStrs[k]  << " " << result << std::endl;
+          if (!result) {
             passes = false;
             break;
           }
@@ -95,6 +105,10 @@ void PATObjectWorkingPointEmbedder<T>::produce(edm::Event& evt, const edm::Event
         break;
       }
     }
+    //for (size_t q = 0; q < owned.userIntNames().size(); ++q) {
+      //std::cout << q << " " << owned.userIntNames()[q] << std::endl;
+    //}
+    //std::cout << "wtf: " << owned.hasUserInt(userIntLabel_) << std::endl;
     output->push_back(owned);
   }
   evt.put(output);
