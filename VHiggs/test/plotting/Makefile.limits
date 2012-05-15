@@ -6,7 +6,7 @@
 
 # Get the asymptotic limit
 combo/%.asymp.json: combo/%.txt
-	combine $< -M Asymptotic -H ProfileLikelihood \
+	combine $< -M Asymptotic -H ProfileLikelihood --minosAlgo stepping \
 	  -n $* \
 	  -m `echo $* | sed "s|.*_||g"` | limit2JSON.py --mass `echo $* | sed "s|.*_||g"` > $@
 	rm higgsCombine$**.root
