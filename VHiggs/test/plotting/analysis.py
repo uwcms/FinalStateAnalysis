@@ -127,6 +127,7 @@ if __name__ == "__main__":
     ############################################################################
 
     canvas = ROOT.TCanvas("basdf", "aasdf", 800, 800)
+    canvas.SetRightMargin(0.05)
 
     shape_file = ROOT.TFile("wh_shapes_raw.root", 'RECREATE')
 
@@ -787,10 +788,10 @@ if __name__ == "__main__":
                         all_fakes.SetBinError(i, total_yield.std_dev())
                     #all_fakes.Draw('pe')
 
-                    legend = ROOT.TLegend(0.6, 0.5, 0.9, 0.90, "", "brNDC")
+                    legend = ROOT.TLegend(0.55, 0.60, 0.9, 0.90, "", "brNDC")
                     legend.SetFillStyle(0)
                     legend.SetBorderSize(0)
-                    legend.AddEntry(ult_data_poisson, "data", "lp")
+                    legend.AddEntry(ult_data_poisson, "Observed", "lp")
                     signalx5 = (signal + signalHWW)*5
                     signalx5.SetLineStyle(1)
                     signalx5.SetLineWidth(3)
@@ -806,12 +807,12 @@ if __name__ == "__main__":
                         stack.Add(histo.th1, 'hist')
                         legend.AddEntry(histo.th1, histo_name, 'lf')
                     stack.Add(all_fakes.th1, 'hist')
-                    legend.AddEntry(all_fakes.th1, "fake bkg.", "lf")
+                    legend.AddEntry(all_fakes.th1, "Non-prompt", "lf")
                     stack.Draw()
                     stack.GetXaxis().SetTitle(xaxis_title)
                     bin_width = stack.GetXaxis().GetBinWidth(1)
                     stack.GetYaxis().SetTitle("Events/%0.0f GeV" % bin_width)
-                    stack.GetYaxis().SetTitleOffset(0.8)
+                    stack.GetYaxis().SetTitleOffset(0.9)
 
                     ############################################################
                     ### Make a nice error band of the fake estimate       ######
