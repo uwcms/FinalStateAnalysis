@@ -124,7 +124,8 @@ for hist in [hZZ, hZJets]:
     hist.format = 'hist'
 
 for hist in [hZZ, hZJets, hData, hHWW]:
-    hist.Rebin(2)
+    pass
+    #hist.Rebin(2)
 
 hData_poisson = poisson.convert(hData, x_err=False, set_zero_bins=-100)
 hData_poisson.SetMarkerSize(2)
