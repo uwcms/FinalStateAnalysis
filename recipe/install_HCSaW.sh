@@ -13,6 +13,8 @@ cp -v HCSaW/*/include/*.h FinalStateAnalysis/MetaData/interface/
 cp -v HCSaW/*/src/*.cc FinalStateAnalysis/MetaData/src/
 cp -v HCSaW/*/txtFiles/*txt FinalStateAnalysis/MetaData/data/HCSaW
 
+rm -r HCSaW
+
 pushd FinalStateAnalysis/MetaData/
 patch -p0 < ../recipe/patches/HCSaW_sanity.patch
 popd
