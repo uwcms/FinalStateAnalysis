@@ -76,7 +76,7 @@ twoElectronsAbove8 = cms.EDFilter(
     minNumber = cms.uint32(2)
 )
 doubleEPath = cms.Path(e17Selector + e8Selector + twoElectronsAbove8)
-#skimConfig.paths.append("doubleEPath")
+skimConfig.paths.append("doubleEPath")
 
 # DoubleMu for ZZ and VH
 mu17Selector = cms.EDFilter(
