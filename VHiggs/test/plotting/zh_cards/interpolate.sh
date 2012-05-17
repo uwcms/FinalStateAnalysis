@@ -19,3 +19,8 @@ for mass in `seq 141 149`
 do
   interpolate_card.py hzz2l2t_140.txt 140 hzz2l2t_150.txt 150 $mass "zh_tt{mass}" "zh_ww{mass}" > hzz2l2t_$mass.txt
 done
+
+for mass in `seq 151 159`
+do
+  interpolate_card.py hzz2l2t_150.txt 150 hzz2l2t_160.txt 160 $mass "zh_tt{mass}" "zh_ww{mass}" > hzz2l2t_$mass.txt
+done
