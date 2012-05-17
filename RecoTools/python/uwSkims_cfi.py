@@ -15,14 +15,6 @@ skimConfig = cms.PSet(
 from FinalStateAnalysis.RecoTools.zzSkim_cff import muons4skim,electrons4skim,leptons4skim,dileptons4skim,skim2010,skim40NoOF,skimNoOS,zzSkim 
 skimConfig.paths.append("zzSkim")
 
-passThrough = cms.EDFilter(
-    "CandViewCountFilter",
-    src = cms.InputTag("gsfElectrons"),
-    minNumber = cms.uint32(0)
-	)
-passPath = cms.Path(passThrough)
-skimConfig.paths.append("passPath")
-
 # Single muon for Wjets
 singleMuSelector = cms.EDFilter(
     "MuonSelector",
