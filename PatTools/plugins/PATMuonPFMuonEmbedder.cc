@@ -21,7 +21,7 @@
 #include "DataFormats/MuonReco/interface/MuonFwd.h"
 #include "DataFormats/MuonReco/interface/Muon.h"
 
-#include "DataFormats/Math/interface/deltaR.h"
+#include "DataFormats/Common/interface/RefToPtr.h"
 
 class PATMuonPFMuonEmbedder : public edm::EDProducer {
   public:
@@ -31,13 +31,11 @@ class PATMuonPFMuonEmbedder : public edm::EDProducer {
   private:
     edm::InputTag src_;
     edm::InputTag pfSrc_;
-    double maxDeltaR_;
 };
 
 PATMuonPFMuonEmbedder::PATMuonPFMuonEmbedder(const edm::ParameterSet& pset) {
   src_ = pset.getParameter<edm::InputTag>("src");
   pfSrc_ = pset.getParameter<edm::InputTag>("pfSrc");
-  maxDeltaR_ = pset.getParameter<double>("maxDeltaR");
 
   produces<pat::MuonCollection>();
 }
@@ -63,14 +61,14 @@ void PATMuonPFMuonEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) 
 
   for (size_t i = 0; i < muons->size(); ++i) {
     pat::Muon muon = muons->at(i); // make a local copy
-    double bestDeltaR = 1e9;
+    reco::CandidatePtr srcRef = muon.originalObjectRef();
     reco::PFCandidateRef bestCand;
     // Find the best matching muon
     for(size_t iPF = 0; iPF < pfMuons.size(); ++iPF) {
-      double deltaR = reco::deltaR(pfMuons[iPF]->muonRef()->p4(), muon.p4());
-      if (deltaR < maxDeltaR_ && deltaR < bestDeltaR) {
-        bestDeltaR = deltaR;
+      reco::CandidatePtr pfMuonRef(edm::refToPtr(pfMuons[iPF]->muonRef()));
+      if (pfMuonRef == srcRef) {
         bestCand = pfMuons[iPF];
+        break;
       }
     }
     muon.setPFCandidateRef(bestCand);
