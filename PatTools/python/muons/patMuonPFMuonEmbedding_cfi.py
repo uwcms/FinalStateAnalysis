@@ -1,6 +1,6 @@
 '''
 
-Embed a reference to the PF Muon into the pat::Muon
+Embed a reference to the PF Muon into the pat::Muon, if it exists.
 
 (the pat::Muon is seeded by default using reco::Muons)
 
@@ -15,5 +15,4 @@ patMuonPFMuonEmbedding = cms.EDProducer(
     "PATMuonPFMuonEmbedder",
     src = cms.InputTag("fixme"),
     pfSrc = cms.InputTag("particleFlow"),
-    maxDeltaR = cms.double(0.05)
 )
