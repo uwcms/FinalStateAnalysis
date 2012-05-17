@@ -12,13 +12,7 @@ skimConfig = cms.PSet(
     paths = cms.vstring()
 )
 
-# Import the ZZ skim criteria
-#from FinalStateAnalysis.RecoTools.PDWG_HZZSkim_cff import *
-#print HZZPaths
-#for path in HZZPaths:
-#	skimConfig.paths.append(path)
-
-from FinalStateAnalysis.RecoTools.zzSkim_cff import *
+from FinalStateAnalysis.RecoTools.zzSkim_cff import muons4skim,electrons4skim,leptons4skim,dileptons4skim,skim2010,skim40NoOF,skimNoOS,zzSkim 
 skimConfig.paths.append("zzSkim")
 
 passThrough = cms.EDFilter(
