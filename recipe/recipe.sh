@@ -18,6 +18,11 @@ addpkg -z PhysicsTools/PatAlgos
 # Add Mike's muon discriminant
 cvs co -r 1.47 PhysicsTools/PatAlgos/python/tools/tauTools.py
 
+pushd $CMSSW_BASE/src/recipe/
+echo "Installing Higgs xsec lookup tables"
+./install_HCSaW.sh
+popd
+
 # Note you need to install virtual env
 
 echo "Now run ./install_python.sh to install python"
