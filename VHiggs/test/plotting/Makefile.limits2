@@ -1,0 +1,89 @@
+# Another round of makefileing
+
+# Making the WHtt cards
+cards/combined_%.txt: vhtt_shapes.root make_data_card.py
+	python make_data_card.py -o $@ -m $* -f vhtt_shapes.root \
+	  --channels combined --selection final \
+	  --emt_shape SubleadingMass \
+	  --mmt_shape MuTauMass 
+
+
+# Get the asymptotic limit
+combo/%.asymp.json: combo/%.txt
+	combine $< -M Asymptotic -H ProfileLikelihood --minosAlgo stepping \
+	  -n $* \
+	  -m `echo $* | sed "s|.*_||g"` | limit2JSON.py --mass `echo $* | sed "s|.*_||g"` > $@
+	rm higgsCombine$**.root
+
+# Standardize cards
+
+combo/ind_leptonic_zh_%.txt: zh_cards/hzz2l2t_%.txt 
+	combineCards.py -S $^ > $@
+
+combo/cards/vhtt_shapes.root: cards/vhtt_shapes.root
+	mkdir -p combo/cards
+	cp $< $@
+
+combo/ind_leptonic_tt_%.txt: cards/combined_%.txt combo/cards/vhtt_shapes.root
+	combineCards.py -S cards/combined_$*.txt  > $@
+
+combo/ind_leptonic_ww_%.txt: 3l_cards/%/vh3l_cut.txt
+	combineCards.py -S $^ > $@
+
+combo/comb_leptonic_%.txt: combo/ind_leptonic_*_%.txt
+	combineCards.py -S combo/ind_leptonic_*_$*.txt > $@
+
+combo/ind_bb_%.txt: moriond12/%/vhbb_DC_ALL_BDT.*.0.txt
+	combineCards.py -S $^ > $@
+
+combo/ind_gg_%.txt: post-moriond12/%/hgglep.mH*.0.txt
+	combineCards.py -S $^ > $@
+
+combo/comb_all_%.txt: combo/ind_*_%.txt
+	combineCards.py combo/ind_*_$*.txt > $@
+
+combo/comb_noth_all_%.txt: combo/comb_all_%.txt
+	remove_systematics.py $^ pdf_* QCDscale* > $@
+
+tt_mass_points = $(shell seq 110 1 150) 160
+ww_mass_points = $(shell seq 110 1 150) 160 $(shell seq 170 10 200)
+bb_mass_points = $(shell seq 110 1 135) 
+gg_mass_points = $(shell seq 110 1 150) 
+
+zh_cards = $(patsubst %, combo/ind_leptonic_zh_%.txt, $(tt_mass_points))
+tt_cards = $(patsubst %, combo/ind_leptonic_tt_%.txt, $(tt_mass_points))
+ww_cards = $(patsubst %, combo/ind_leptonic_ww_%.txt, $(ww_mass_points))
+combined_leptonic_cards = $(patsubst %, combo/comb_leptonic_%.txt, $(ww_mass_points))
+bb_cards = $(patsubst %, combo/ind_bb_%.txt, $(bb_mass_points))
+gg_cards = $(patsubst %, combo/ind_gg_%.txt, $(gg_mass_points))
+comb_cards = $(patsubst %, combo/comb_all_%.txt, $(ww_mass_points))
+comb_noth_cards = $(patsubst %, combo/comb_noth_all_%.txt, $(ww_mass_points))
+
+course_cards = $(zh_cards) $(tt_cards) $(ww_cards) $(bb_cards) $(combined_leptonic_cards)
+fine_cards = $(gg_cards) $(comb_cards) $(comb_noth_cards)
+all_cards = $(course_cards) $(fine_cards)
+
+# NOTE THAT THIS SHOULD NOT BE RUN WITH -j > 1!
+cards: $(all_cards)
+
+course_limit_points_low = $(shell seq 110 5 150) 160
+course_limit_points_high = $(shell seq 170 10 200)
+fine_limit_points = $(shell seq 110 1 150)
+
+zh_limits: $(patsubst %, combo/ind_leptonic_zh_%.asymp.json, $(course_limit_points_low))
+
+tt_limits: $(patsubst %, combo/ind_leptonic_tt_%.asymp.json, $(course_limit_points_low))
+
+ww_limits: $(patsubst %, combo/ind_leptonic_ww_%.asymp.json, $(course_limit_points_low) $(course_limit_points_high))
+
+lep_limits: $(patsubst %, combo/comb_leptonic_%.asymp.json, $(course_limit_points_low) $(course_limit_points_high))
+
+bb_limits: $(patsubst %, combo/ind_bb_%.asymp.json, $(shell seq 110 5 135))
+
+gg_limits: $(patsubst %, combo/ind_gg_%.asymp.json, $(fine_limit_points))
+
+comb_limits: $(patsubst %, combo/comb_all_%.asymp.json, $(fine_limit_points) 160 $(course_limit_points_high))
+
+comb_noth_limits: $(patsubst %, combo/comb_noth_all_%.asymp.json, $(fine_limit_points) 160 $(course_limit_points_high))
+
+all_limits: zh_limits tt_limits ww_limits lep_limits bb_limits gg_limits comb_limits comb_noth_limits
