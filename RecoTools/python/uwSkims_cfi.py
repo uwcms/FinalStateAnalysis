@@ -21,7 +21,7 @@ passThrough = cms.EDFilter(
     minNumber = cms.uint32(0)
 	)
 passPath = cms.Path(passThrough)
-#skimConfig.paths.append("passPath")
+skimConfig.paths.append("passPath")
 
 # Single muon for Wjets
 singleMuSelector = cms.EDFilter(
@@ -32,7 +32,7 @@ singleMuSelector = cms.EDFilter(
     filter = cms.bool(True)
 )
 singleMuPath = cms.Path(singleMuSelector)
-#skimConfig.paths.append("singleMuPath")
+skimConfig.paths.append("singleMuPath")
 
 singleElecSelector = cms.EDFilter(
     "GsfElectronSelector",
@@ -42,7 +42,7 @@ singleElecSelector = cms.EDFilter(
     filter = cms.bool(True)
 )
 singleElecPath = cms.Path(singleElecSelector)
-#skimConfig.paths.append("singleElecPath")
+skimConfig.paths.append("singleElecPath")
 
 # Mu+Tau for H2Tau
 mu14MuSelector = cms.EDFilter(
@@ -59,7 +59,7 @@ tau18JetSelector = cms.EDFilter(
     filter = cms.bool(True)
 )
 muTauPath = cms.Path(mu14MuSelector + tau18JetSelector)
-#skimConfig.paths.append("muTauPath")
+skimConfig.paths.append("muTauPath")
 
 # E+Tau for H2Tau
 e17Selector = cms.EDFilter(
@@ -69,7 +69,7 @@ e17Selector = cms.EDFilter(
     filter = cms.bool(True),
 )
 eTauPath = cms.Path(e17Selector + tau18JetSelector)
-#skimConfig.paths.append("eTauPath")
+skimConfig.paths.append("eTauPath")
 
 # DoubleE for ZZ and VH
 e8Selector = cms.EDFilter(
@@ -105,14 +105,14 @@ twoMuonsAbove8 = cms.EDFilter(
     minNumber = cms.uint32(2)
 )
 doubleMuPath = cms.Path(mu17Selector + mu8Selector + twoMuonsAbove8)
-#skimConfig.paths.append("doubleMuPath")
+skimConfig.paths.append("doubleMuPath")
 
 # MuEG 17-8
 oneElectronAbove8 = twoElectronsAbove8.clone(minNumber = cms.uint32(1))
 mu17e8Path = cms.Path(mu17Selector + e8Selector + oneElectronAbove8)
-#skimConfig.paths.append("mu17e8Path")
+skimConfig.paths.append("mu17e8Path")
 
 # MuEG 8-17
 oneMuonAbove8 = twoMuonsAbove8.clone(minNumber = cms.uint32(1))
 mu8e17Path = cms.Path(e17Selector + mu8Selector + oneMuonAbove8)
-#skimConfig.paths.append("mu8e17Path")
+skimConfig.paths.append("mu8e17Path")
