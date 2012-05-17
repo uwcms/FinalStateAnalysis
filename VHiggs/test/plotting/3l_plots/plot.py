@@ -45,15 +45,16 @@ data = asrootpy(plotter.get_histogram(
 
 
 canvas = Canvas(800, 800)
+canvas.SetRightMargin(0.05)
 
-legend = ROOT.TLegend(0.6, 0.65, 0.9, 0.90, "", "brNDC")
+legend = ROOT.TLegend(0.55, 0.60, 0.9, 0.90, "", "brNDC")
 legend.SetFillStyle(0)
 legend.SetBorderSize(0)
 
 data.SetMarkerSize(2)
 data.SetTitle("data")
 data.SetLineWidth(2)
-legend.AddEntry(data,  "data", "lp")
+legend.AddEntry(data,  "Observed", "lp")
 signal.SetLineStyle(1)
 signal.SetLineWidth(3)
 signal.SetTitle("m_{H}=120 (#times 5)")
@@ -61,11 +62,11 @@ signal.SetLineColor(ROOT.EColor.kRed)
 signal.SetFillStyle(0)
 wz.SetTitle('WZ')
 zz.SetTitle('ZZ')
-fakes.SetTitle("fake bkg.")
+fakes.SetTitle("Non-prompt")
 legend.AddEntry(signal, signal.GetTitle(), "l")
-legend.AddEntry(wz, 'WZ', 'lf')
 legend.AddEntry(zz, 'ZZ', 'lf')
-legend.AddEntry(fakes,  'fake bkg.', "lf")
+legend.AddEntry(wz, 'WZ', 'lf')
+legend.AddEntry(fakes,  'Non-prompt', "lf")
 
 # Make M_ellell
 for x_title, filenamebase, units in [
@@ -110,7 +111,7 @@ for x_title, filenamebase, units in [
     else:
         stack.GetYaxis().SetTitle("Events")
 
-    stack.GetYaxis().SetTitleOffset(1.05)
+    stack.GetYaxis().SetTitleOffset(1.06)
     stack.SetMinimum(1e-1)
     stack.SetMaximum(110)
     hHWW.Draw('same,hist')
