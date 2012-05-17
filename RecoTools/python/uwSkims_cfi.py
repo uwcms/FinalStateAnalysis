@@ -12,6 +12,9 @@ skimConfig = cms.PSet(
     paths = cms.vstring()
 )
 
+from FinalStateAnalysis.RecoTools.zzSkim_cff import muons4skim,electrons4skim,leptons4skim,dileptons4skim,skim2010,skim40NoOF,skimNoOS,zzSkim 
+skimConfig.paths.append("zzSkim")
+
 # Single muon for Wjets
 singleMuSelector = cms.EDFilter(
     "MuonSelector",
