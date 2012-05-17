@@ -17,7 +17,7 @@ diff -wrupN src_orig/HiggsCSandWidth.cc src/HiggsCSandWidth.cc
   
    // Read Widths into memory
 -  FileLoc = "../txtFiles/HiggsBR_7TeV_Official.txt"; //directory of input file
-+  FileLoc = edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggsBR_7TeV_Official.txt").fullPath().c_str(); //directory of input file
++  FileLoc = edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/HiggsBR_7TeV_Official.txt").fullPath().c_str(); //directory of input file
    const char* BranchRatioFileLoc = FileLoc.c_str(); 
    file.open(BranchRatioFileLoc);
    for(int k = 0; k < N_BR; k++){
@@ -26,7 +26,7 @@ diff -wrupN src_orig/HiggsCSandWidth.cc src/HiggsCSandWidth.cc
  
    // Read CS into memory                                                                                                                                                  
 -  file.open("../txtFiles/HiggsCS_Official.txt");//directory of input file
-+  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggsCS_Official.txt").fullPath().c_str());//directory of input file
++  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/HiggsCS_Official.txt").fullPath().c_str());//directory of input file
    for(int k = 0; k < N_CS; k++){
  
      file >> mass_XS[k] >> CS[ID_ggToH][k] >> CS[ID_VBF][k] >> CS[ID_WH][k] >> CS[ID_ZH][k] >> CS[ID_ttH][k] >> CS[ID_Total][k];
@@ -35,7 +35,7 @@ diff -wrupN src_orig/HiggsCSandWidth.cc src/HiggsCSandWidth.cc
    file.close();
  
 -  file.open("../txtFiles/HiggsCS_ErrorPlus_Official.txt");//directory of input file                       
-+  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggsCS_ErrorPlus_Official.txt").fullPath().c_str());//directory of input file
++  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/HiggsCS_ErrorPlus_Official.txt").fullPath().c_str());//directory of input file
    for(int k = 0; k < N_CS; k++){
  
      file >> scratchMass >> CSerrPlus[ID_ggToH][k] >> CSerrPlus[ID_VBF][k] >> CSerrPlus[ID_WH][k] >> CSerrPlus[ID_ZH][k] >> CSerrPlus[ID_ttH][k];
@@ -44,7 +44,7 @@ diff -wrupN src_orig/HiggsCSandWidth.cc src/HiggsCSandWidth.cc
    file.close();
  
 -  file.open("../txtFiles/HiggsCS_ErrorMinus_Official.txt");//directory of input file                                                
-+  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggsCS_ErrorMinus_Official.txt").fullPath().c_str());//directory of input file
++  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/HiggsCS_ErrorMinus_Official.txt").fullPath().c_str());//directory of input file
    for(int k = 0; k < N_CS; k++){
  
      file >> scratchMass >> CSerrMinus[ID_ggToH][k] >> CSerrMinus[ID_VBF][k] >> CSerrMinus[ID_WH][k] >> CSerrMinus[ID_ZH][k] >> CSerrMinus[ID_ttH][k];
@@ -53,7 +53,7 @@ diff -wrupN src_orig/HiggsCSandWidth.cc src/HiggsCSandWidth.cc
    file.close();
  
 -  file.open("../txtFiles/HiggsCS_ScaleErrorPlus_Official.txt");//directory of input file                                                
-+  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggsCS_ScaleErrorPlus_Official.txt").fullPath().c_str());//directory of input file
++  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/HiggsCS_ScaleErrorPlus_Official.txt").fullPath().c_str());//directory of input file
    for(int k = 0; k < N_CS; k++){
  
      file >> scratchMass >> CSscaleErrPlus[ID_ggToH][k] >> CSscaleErrPlus[ID_VBF][k] >> CSscaleErrPlus[ID_WH][k] >> CSscaleErrPlus[ID_ZH][k] >> CSscaleErrPlus[ID_ttH][k];
@@ -62,7 +62,7 @@ diff -wrupN src_orig/HiggsCSandWidth.cc src/HiggsCSandWidth.cc
    file.close();
  
 -  file.open("../txtFiles/HiggsCS_ScaleErrorMinus_Official.txt");//directory of input file                                     
-+  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggsCS_ScaleErrorMinus_Official.txt").fullPath().c_str());//directory of input file
++  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/HiggsCS_ScaleErrorMinus_Official.txt").fullPath().c_str());//directory of input file
    for(int k = 0; k < N_CS; k++){
  
      file >> scratchMass >> CSscaleErrMinus[ID_ggToH][k] >> CSscaleErrMinus[ID_VBF][k] >> CSscaleErrMinus[ID_WH][k] >> CSscaleErrMinus[ID_ZH][k] >> CSscaleErrMinus[ID_ttH][k];
@@ -71,7 +71,7 @@ diff -wrupN src_orig/HiggsCSandWidth.cc src/HiggsCSandWidth.cc
    file.close();
  
 -  file.open("../txtFiles/HiggsCS_PdfErrorPlus_Official.txt");//directory of input file                  
-+  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggsCS_PdfErrorPlus_Official.txt").fullPath().c_str());//directory of input file
++  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/HiggsCS_PdfErrorPlus_Official.txt").fullPath().c_str());//directory of input file
    for(int k = 0; k < N_CS; k++){
  
      file >> scratchMass >> CSpdfErrPlus[ID_ggToH][k] >> CSpdfErrPlus[ID_VBF][k] >> CSpdfErrPlus[ID_WH][k] >> CSpdfErrPlus[ID_ZH][k] >> CSpdfErrPlus[ID_ttH][k];
@@ -80,7 +80,7 @@ diff -wrupN src_orig/HiggsCSandWidth.cc src/HiggsCSandWidth.cc
    file.close();
  
 -  file.open("../txtFiles/HiggsCS_PdfErrorMinus_Official.txt");//directory of input file                           
-+  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggsCS_PdfErrorMinus_Official.txt").fullPath().c_str());//directory of input file
++  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/HiggsCS_PdfErrorMinus_Official.txt").fullPath().c_str());//directory of input file
    for(int k = 0; k < N_CS; k++){
  
      file >> scratchMass >> CSpdfErrMinus[ID_ggToH][k] >> CSpdfErrMinus[ID_VBF][k] >> CSpdfErrMinus[ID_WH][k] >> CSpdfErrMinus[ID_ZH][k] >> CSpdfErrMinus[ID_ttH][k];
@@ -148,7 +148,7 @@ diff -wrupN src_orig/HiggsCSandWidthFermi.cc src/HiggsCSandWidthFermi.cc
   
    // Read Widths into memory
 -  FileLoc = "../txtFiles/Higgs_BR_Fermiophobic.txt"; //directory of input file
-+  FileLoc = edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggs_BR_Fermiophobic.txt").fullPath().c_str(); //directory of input file
++  FileLoc = edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/Higgs_BR_Fermiophobic.txt").fullPath().c_str(); //directory of input file
    const char* BranchRatioFileLoc = FileLoc.c_str(); 
    file.open(BranchRatioFileLoc);
    for(int k = 0; k < N_BR; k++){
@@ -207,7 +207,7 @@ diff -wrupN src_orig/HiggsCSandWidthSM4.cc src/HiggsCSandWidthSM4.cc
    double scratchHgg;
    // Read Widths into memory
 -  file.open("../txtFiles/Higgs_BR_SM4.txt");
-+  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggs_BR_SM4.txt").fullPath().c_str());
++  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/Higgs_BR_SM4.txt").fullPath().c_str());
    for(int k = 0; k < N_BR; k++){
  
      file >> mass_BR[k] >> BR[0][k] >> BR[1][k] >> BR[2][k] >> BR[3][k] >> BR[4][k] >> BR[5][k] >> BR[6][k] >> BR[7][k] >> scratchHgg >> BR[9][k]
@@ -216,7 +216,7 @@ diff -wrupN src_orig/HiggsCSandWidthSM4.cc src/HiggsCSandWidthSM4.cc
  
    // Read Widths into memory
 -  file.open("../txtFiles/Higgs_BR_SM4_Hgg.txt");
-+  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggs_BR_SM4_Hgg.txt").fullPath().c_str());
++  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/Higgs_BR_SM4_Hgg.txt").fullPath().c_str());
    for(int k = 0; k < N_BR_gg; k++){
  
      file >> mass_BR_gg[k] >> BR[8][k];
@@ -225,7 +225,7 @@ diff -wrupN src_orig/HiggsCSandWidthSM4.cc src/HiggsCSandWidthSM4.cc
  
    // Read CS into memory
 -  file.open("../txtFiles/HiggsCS_Official_SM4.txt");//directory of input file
-+  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggsCS_Official_SM4.txt").fullPath().c_str());//directory of input file
++  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/HiggsCS_Official_SM4.txt").fullPath().c_str());//directory of input file
    for(int k = 0; k < N_CS; k++){
  
      file >> mass_XS[k] >> CS[ID_ggToH][k];// >> CS[ID_VBF][k] >> CS[ID_WH][k] >> CS[ID_ZH][k] >> CS[ID_ttH][k] >> CS[ID_Total][k];
@@ -234,7 +234,7 @@ diff -wrupN src_orig/HiggsCSandWidthSM4.cc src/HiggsCSandWidthSM4.cc
    file.close();
  
 -  file.open("../txtFiles/HiggsCS_Error_Official_SM4.txt");//directory of input file                       
-+  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaWHiggsCS_Error_Official_SM4.txt").fullPath().c_str());//directory of input file
++  file.open(edm::FileInPath("FinalStateAnalysis/MetaData/data/HCSaW/HiggsCS_Error_Official_SM4.txt").fullPath().c_str());//directory of input file
    for(int k = 0; k < N_CSE; k++){
  
      file >> scratchMass >> CSerrPlus[ID_ggToH][k] >> CSerrMinus[ID_ggToH][k] >> CSscaleErrPlus[ID_ggToH][k] >> CSscaleErrMinus[ID_ggToH][k]
