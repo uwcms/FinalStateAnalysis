@@ -80,7 +80,7 @@ cvs co -r V00-00-10 -d Muon/MuonAnalysisTools UserCode/sixie/Muon/MuonAnalysisTo
 # :( no tag is provided on the twiki
 cvs co -D "07/05/2012" -d EgammaCalibratedGsfElectrons UserCode/EGamma/EgammaCalibratedGsfElectrons
 
-pushd $CMSSW_BASE/src/recipe/
+pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
 echo "Installing Higgs xsec lookup tables"
 ./install_HCSaW.sh
 popd
