@@ -1,4 +1,9 @@
 # Another round of makefileing
+#
+# Targets: 	cards - build all cards, use -j 1
+# 		all_limits - build all asymp limits
+# 		xsec_limits - make all combo limit in pb
+# 		cls_submits - make CLs submit dirs
 
 # Making the WHtt cards
 cards/combined_%.txt: vhtt_shapes.root make_data_card.py
@@ -88,6 +93,99 @@ comb_noth_limits= $(patsubst %, combo/comb_noth_all_%.asymp.json, $(fine_limit_p
 all_limits_files= $(zh_limits) $(tt_limits) $(ww_limits) $(lep_limits) $(bb_limits) $(gg_limits) $(comb_limits) $(comb_noth_limits)
 
 all_limits: $(all_limits_files)
+
+combo/%_asymp.tex: combo/%*.asymp.json
+	texlimit.py combo/$**.asymp.json --method asymp > $@
+
+asymp_tables: combo/ind_leptonic_zh_asymp.tex combo/ind_leptonic_tt_asymp.tex \
+  combo/ind_leptonic_ww_asymp.tex combo/ind_leptonic_ww_asymp.tex \
+  combo/ind_bb_asymp.tex combo/ind_gg_asymp.tex \
+  combo/comb_all_asymp.tex 
+
+combo/ind_leptonic_zh_asymp.pdf: $(zh_limits)
+	plotlimit.py $^ \
+	  --max-y 10 \
+	  --lumi 5000 \
+	  --method asymp\
+	  --showpoints \
+	  --show-sm \
+	  --blurb "Four lepton channels" \
+	  --blurbalign 13 \
+	  --blurbpos "0.15, 0.8, 0.7, 0.95" \
+	  --legendpos "0,0,0,0"
+
+combo/ind_leptonic_tt_asymp.pdf: $(tt_limits)
+	plotlimit.py $^ \
+	  --max-y 10 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --show-sm \
+	  --blurb "e#mu#tau and #mu#mu#tau channels" \
+	  --blurbalign 13 \
+	  --blurbpos "0.15, 0.8, 0.7, 0.95" \
+	  --legendpos "0,0,0,0"
+
+combo/ind_leptonic_ww_asymp.pdf: $(ww_limits)
+	plotlimit.py $^ \
+	  --max-y 10 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --show-sm \
+	  --blurb "Three lepton channels" \
+	  --blurbalign 13 \
+	  --blurbpos "0.15, 0.8, 0.7, 0.95" \
+	  --legendpos "0,0,0,0"
+
+combo/comb_leptonic_asymp.pdf: $(lep_limits)
+	plotlimit.py $^ \
+	  --max-y 10 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --show-sm \
+	  --blurb "Combined leptonic" \
+	  --blurbalign 13 \
+	  --blurbpos "0.15, 0.8, 0.7, 0.95" \
+	  --legendpos "0,0,0,0"
+
+combo/ind_bb_asymp.pdf: $(bb_limits)
+	plotlimit.py $^ \
+	  --max-y 10 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --show-sm \
+	  --blurb "H#to bb channels" \
+	  --blurbalign 13 \
+	  --blurbpos "0.15, 0.8, 0.7, 0.95" \
+	  --legendpos "0,0,0,0"
+
+combo/ind_gg_asymp.pdf: $(gg_limits)
+	plotlimit.py $^ \
+	  --max-y 10 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --show-sm \
+	  --blurb "H#to #gamma #gamma channels" \
+	  --blurbalign 13 \
+	  --blurbpos "0.15, 0.8, 0.7, 0.95" \
+	  --legendpos "0,0,0,0"
+
+combo/comb_all_asymp.pdf: $(gg_limits)
+	plotlimit.py $^ \
+	  --max-y 10 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --show-sm \
+	  --blurb "CMS AP combination" \
+	  --blurbalign 13 \
+	  --blurbpos "0.15, 0.8, 0.7, 0.95" \
+	  --legendpos "0,0,0,0"
+
 
 # Converting to picobarns
 combo/%.xsec.json: combo/%.json
