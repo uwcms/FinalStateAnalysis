@@ -50,6 +50,9 @@ if __name__ == "__main__":
     style_grp.add_argument('--legendpos', type=str, default="0.7,0.17,0.9,0.45",
                         help="Comma separated corners of legend."
                         " default: %(default)s")
+    style_grp.add_argument('--legendnudge', type=str, default="0,0",
+                           help="Translate the legend by X,Y in NDC")
+
     style_grp.add_argument('--showpoints', action='store_true',
                         help="Put dots at the actual mass values where"
                         " the limit is set")
@@ -57,6 +60,8 @@ if __name__ == "__main__":
                         help="Don't show the observed limit")
     style_grp.add_argument('--show-sm', dest='showsm', action='store_true',
                         help="Draw a dashed line at Y=1")
+    style_grp.add_argument('--debug', action='store_true',
+                        help="Draw boxes around the Paves")
 
     label_grp = parser.add_argument_group('labeling')
     label_grp.add_argument('--lumi', dest="lumi", type=int, default=4684,
@@ -86,6 +91,8 @@ if __name__ == "__main__":
     key = (args.method, args.label)
 
     canvas = ROOT.TCanvas("c", "c", args.cx, args.cy)
+    canvas.SetRightMargin(0.05)
+    canvas.SetLeftMargin(1.1*canvas.GetLeftMargin())
 
     xmin = min(limit_data[key].keys())
     xmax = max(limit_data[key].keys())
@@ -128,14 +135,22 @@ if __name__ == "__main__":
     # Add legend
     legend_args = [ float(x) for x in args.legendpos.split(',') ] + ["", "NDC"]
 
+    # Translate the legend in X,Y, if desired.
+    nudge = [ float(x) for x in args.legendnudge.split(',') ]
+    legend_args[0] += nudge[0]
+    legend_args[2] += nudge[0]
+    legend_args[1] += nudge[1]
+    legend_args[3] += nudge[1]
+
     legend = ROOT.TLegend(*legend_args)
-    legend.SetBorderSize(0)
-    legend.SetFillStyle(0)
+    legend.SetBorderSize(1)
+    legend.SetFillStyle(1001)
+    legend.SetFillColor(0)
     if not args.noobs:
         legend.AddEntry(obs,"Observed",  'lp')
-    legend.AddEntry(exp, "Expected", 'l')
-    legend.AddEntry(onesig, "#pm 1 #sigma",  'f')
-    legend.AddEntry(twosig, "#pm 2 #sigma",  'f')
+    legend.AddEntry(exp, "Median Expected", 'l')
+    legend.AddEntry(onesig, "#pm 1#sigma Expected",  'f')
+    legend.AddEntry(twosig, "#pm 2#sigma Expected",  'f')
     legend.Draw()
 
     blurb = None
@@ -143,7 +158,8 @@ if __name__ == "__main__":
         blurbargs = [float(x) for x in args.blurbpos.split(',')] + ['brNDC']
         blurb = ROOT.TPaveText(*blurbargs)
         blurb.SetFillStyle(0)
-        blurb.SetBorderSize(0)
+        if not args.debug:
+            blurb.SetBorderSize(0)
         blurb.SetTextAlign(args.blurbalign)
         blurb.AddText(args.blurb)
         blurb.SetTextSize(args.blurbsize)
@@ -151,6 +167,8 @@ if __name__ == "__main__":
 
     canvas.RedrawAxis()
     canvas.RedrawAxis()
+
+    legend.Draw()
 
     sm_line = None
     if args.showsm:
@@ -162,7 +180,7 @@ if __name__ == "__main__":
 
     # Add some extra lines on the border to make it look nice
     top_frame_line = ROOT.TLine(xmin, args.maxy, xmax, args.maxy)
-    top_frame_line.SetLineWidth(2)
+    top_frame_line.SetLineWidth(3)
     top_frame_line.Draw()
 
     right_frame_line = ROOT.TLine(xmax, 0, xmax, args.maxy)
@@ -170,12 +188,11 @@ if __name__ == "__main__":
     right_frame_line.Draw()
 
     left_frame_line = ROOT.TLine(xmin, 0, xmin, args.maxy)
-    left_frame_line.SetLineWidth(2)
+    left_frame_line.SetLineWidth(3)
     left_frame_line.Draw()
 
     bottom_frame_line = ROOT.TLine(xmin, 0, xmax, 0)
-    bottom_frame_line.SetLineWidth(2)
+    bottom_frame_line.SetLineWidth(3)
     bottom_frame_line.Draw()
-
 
     canvas.SaveAs(args.output)
