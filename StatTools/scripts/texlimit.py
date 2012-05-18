@@ -14,7 +14,7 @@ import sys
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('data', nargs='*', help='JSON files with limit data')
+    parser.add_argument('data', nargs='+', help='JSON files with limit data')
     parser.add_argument('--method', type=str, default='cls',
                         help='Limit method to use.  Default: cls')
     parser.add_argument('--label', type=str, default='',
@@ -38,8 +38,9 @@ if __name__ == "__main__":
     sys.stdout.write('\hline\n')
 
     template = ' & '.join([
-            '{mass:0.0f} \\GeV', '{-2:0.1f}', '{-1:0.1f}', '{exp:0.1f}', '{+1:0.1f}',
-            '{+2:0.1f}', '{obs:0.1f}']) + '\\\\\n'
+        '{mass:0.0f} \\GeV',
+        '{-2:0.1f}', '{-1:0.1f}', '{exp:0.1f}', '{+1:0.1f}',
+        '{+2:0.1f}', '{obs:0.1f}']) + '\\\\\n'
 
 
     for mass in sorted(limit_data[key].keys()):
