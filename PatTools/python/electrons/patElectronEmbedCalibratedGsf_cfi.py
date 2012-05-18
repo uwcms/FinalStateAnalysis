@@ -28,8 +28,12 @@ def validate_egamma_calib_config(process):
     data_datasets = set(['Prompt', 'ReReco', 'Jan16ReReco'])
     mc_datasets = set(['Summer11', 'Fall11'])
 
-    if isMC:
-        assert(dataset in mc_datasets)
-    else:
-        assert(dataset in data_datasets)
+    if isMC and dataset not in mc_datasets:
+        raise ValueError(
+            "Dataset %s is not in the list of valid MC datasets: %s" %
+            (dataset, repr(mc_datasets)))
+    elif dataset not in data_datasets:
+        raise ValueError(
+            "Dataset %s is not in the list of valid data datasets: %s" %
+            (dataset, repr(data_datasets)))
 
