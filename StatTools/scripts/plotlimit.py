@@ -70,7 +70,6 @@ if __name__ == "__main__":
     parser.add_argument('--show-sm', dest='showsm', action='store_true',
                         help="Draw a dashed line at Y=1")
 
-    print sys.argv
     args = parser.parse_args()
 
     import ROOT
