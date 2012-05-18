@@ -16,7 +16,6 @@ combo/%.asymp.json: combo/%.txt
 	rm higgsCombine$**.root
 
 # Standardize cards
-
 combo/ind_leptonic_zh_%.txt: zh_cards/hzz2l2t_%.txt 
 	combineCards.py -S $^ > $@
 
@@ -33,7 +32,7 @@ combo/ind_leptonic_ww_%.txt: 3l_cards/%/vh3l_cut.txt
 combo/comb_leptonic_%.txt: combo/ind_leptonic_*_%.txt
 	combineCards.py -S combo/ind_leptonic_*_$*.txt > $@
 
-combo/ind_bb_%.txt: moriond12/%/vhbb_DC_ALL_BDT.*.0.txt
+combo/ind_bb_%.txt: bb_card/vhbb_DC_ALL_BDT.%.0.txt
 	combineCards.py -S $^ > $@
 
 combo/ind_gg_%.txt: post-moriond12/%/hgglep.mH*.0.txt
@@ -70,20 +69,45 @@ course_limit_points_low = $(shell seq 110 5 150) 160
 course_limit_points_high = $(shell seq 170 10 200)
 fine_limit_points = $(shell seq 110 1 150)
 
-zh_limits: $(patsubst %, combo/ind_leptonic_zh_%.asymp.json, $(course_limit_points_low))
+zh_limits= $(patsubst %, combo/ind_leptonic_zh_%.asymp.json, $(course_limit_points_low))
 
-tt_limits: $(patsubst %, combo/ind_leptonic_tt_%.asymp.json, $(course_limit_points_low))
+tt_limits= $(patsubst %, combo/ind_leptonic_tt_%.asymp.json, $(course_limit_points_low))
 
-ww_limits: $(patsubst %, combo/ind_leptonic_ww_%.asymp.json, $(course_limit_points_low) $(course_limit_points_high))
+ww_limits= $(patsubst %, combo/ind_leptonic_ww_%.asymp.json, $(course_limit_points_low) $(course_limit_points_high))
 
-lep_limits: $(patsubst %, combo/comb_leptonic_%.asymp.json, $(course_limit_points_low) $(course_limit_points_high))
+lep_limits= $(patsubst %, combo/comb_leptonic_%.asymp.json, $(course_limit_points_low) $(course_limit_points_high))
 
-bb_limits: $(patsubst %, combo/ind_bb_%.asymp.json, $(shell seq 110 5 135))
+bb_limits= $(patsubst %, combo/ind_bb_%.asymp.json, $(shell seq 110 5 135))
 
-gg_limits: $(patsubst %, combo/ind_gg_%.asymp.json, $(fine_limit_points))
+gg_limits= $(patsubst %, combo/ind_gg_%.asymp.json, $(fine_limit_points))
 
-comb_limits: $(patsubst %, combo/comb_all_%.asymp.json, $(fine_limit_points) 160 $(course_limit_points_high))
+comb_limits= $(patsubst %, combo/comb_all_%.asymp.json, $(fine_limit_points) 160 $(course_limit_points_high))
 
-comb_noth_limits: $(patsubst %, combo/comb_noth_all_%.asymp.json, $(fine_limit_points) 160 $(course_limit_points_high))
+comb_noth_limits= $(patsubst %, combo/comb_noth_all_%.asymp.json, $(fine_limit_points) 160 $(course_limit_points_high))
 
-all_limits: zh_limits tt_limits ww_limits lep_limits bb_limits gg_limits comb_limits comb_noth_limits
+all_limits_files= $(zh_limits) $(tt_limits) $(ww_limits) $(lep_limits) $(bb_limits) $(gg_limits) $(comb_limits) $(comb_noth_limits)
+
+all_limits: $(all_limits_files)
+
+# Converting to picobarns
+combo/%.xsec.json: combo/%.json
+	signal_strength_to_xsec.py $< ZH WH > $@
+
+xsec_limit_jsons=$(subst .json,.xsec.json,$(comb_noth_limits))
+
+xsec_limits: $(xsec_limit_jsons)
+
+# Tools for submitting CLs
+# Pattern to convert to a .root workspace
+combo/%.root: combo/%.txt
+	text2workspace.py $< -o $@
+
+/scratch/efriis/paper_combo/%/submit: combo/%.root
+	mkdir -p `dirname $@` 
+	make_grid_submission.py -submitdir `dirname $@` \
+	  -i `readlink -f $<` -mass `echo $* | sed "s|.*_||g"` \
+	  -min 0.2 -max 30
+
+all_limit_dirs= $(subst combo/,/scratch/efriis/paper_combo/,$(subst .asymp.json,/submit,$(all_limits_files)))
+
+cls_submits: $(all_limit_dirs)
