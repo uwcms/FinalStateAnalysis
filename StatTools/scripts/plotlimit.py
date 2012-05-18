@@ -41,8 +41,8 @@ if __name__ == "__main__":
     style_grp = parser.add_argument_group('style')
     style_grp.add_argument('--canvas-x', dest="cx", type=int, default=800,
                         help="Canvas width (pixels).  Default: 800")
-    style_grp.add_argument('--canvas-y', dest="cy", type=int, default=600,
-                        help="Canvas height (pixels).  Default: 600")
+    style_grp.add_argument('--canvas-y', dest="cy", type=int, default=800,
+                        help="Canvas height (pixels).  Default: 800")
     style_grp.add_argument('--max-y', dest="maxy", type=float, default=30,
                         help="Max on the y axis")
     style_grp.add_argument('--max-x', dest="maxx", type=float, default=-1,
