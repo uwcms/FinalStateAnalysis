@@ -22,7 +22,7 @@ if __name__ == "__main__":
                         help='Limit label to use.  Default: None')
 
     input_grp.add_argument('-o', '--output', dest="output",
-                        type=str, default="output.pdf",
+                        type=str, required=True,
                         help="Output plot file")
 
     blurb_grp = parser.add_argument_group('blurb')
@@ -63,6 +63,12 @@ if __name__ == "__main__":
                            help="Integrated lumi: picobarns")
     label_grp.add_argument('--preliminary', action='store_true',
                            help="Add 'preliminary' to CMS label")
+    label_grp.add_argument('--ytitle', type=str,
+                           default="95% CL upper limit on #sigma/#sigma_{SM}",
+                           help="y-axis title.  Default: '%(default)s'")
+    label_grp.add_argument('--xtitle', type=str,
+                           default="m_{H} (GeV)",
+                           help="x-axis title.  Default: '%(default)s'")
 
 
     args = parser.parse_args()
@@ -91,8 +97,8 @@ if __name__ == "__main__":
 
     frame.Draw()
     #frame.SetTitle("WH(#tau#tau) limits [4.6 fb^{-1}]")
-    frame.GetYaxis().SetTitle("95% CL upper limit on #sigma/#sigma_{SM}")
-    frame.GetXaxis().SetTitle("M_{H} (GeV)")
+    frame.GetYaxis().SetTitle(args.ytitle)
+    frame.GetXaxis().SetTitle(args.xtitle)
 
     frame.SetMaximum(args.maxy)
 
@@ -149,7 +155,8 @@ if __name__ == "__main__":
     sm_line = None
     if args.showsm:
         sm_line = ROOT.TLine(xmin, 1.0, xmax, 1.0)
-        sm_line.SetLineStyle(2)
+        sm_line.SetLineStyle(1)
+        sm_line.SetLineColor(ROOT.EColor.kRed)
         sm_line.SetLineWidth(1)
         sm_line.Draw()
 
