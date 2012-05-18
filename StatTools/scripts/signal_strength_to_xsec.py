@@ -26,6 +26,7 @@ if __name__ == "__main__":
     parser.add_argument('--sqrts', type=float, default=7.,
                         help='Collission energy')
 
+
     args = parser.parse_args()
 
     input_file = open(args.input, 'r')
