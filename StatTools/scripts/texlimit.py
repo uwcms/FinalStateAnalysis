@@ -39,8 +39,8 @@ if __name__ == "__main__":
 
     template = ' & '.join([
         '{mass:0.0f} \\GeV',
-        '{-2:0.1f}', '{-1:0.1f}', '{exp:0.1f}', '{+1:0.1f}',
-        '{+2:0.1f}', '{obs:0.1f}']) + '\\\\\n'
+        '{-2:5.1f}', '{-1:5.1f}', '{exp:5.1f}', '{+1:5.1f}',
+        '{+2:5.1f}', '{obs:5.1f}']) + '\\\\\n'
 
 
     for mass in sorted(limit_data[key].keys()):
