@@ -106,8 +106,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
     # Embed PF Isolation in electrons & muons
     pfTools.usePFIso(process)
+    # Custom veto cones
+    process.elPFIsoValuePU04PFIdPFIso.deposits.vetos = cms.vstring()
+    process.elPFIsoValueChargedAll04PFIdPFIso.deposits.vetos = cms.vstring(
+        'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.015)')
 
-    # Unembed junks
+    # Unembed junk
     process.patMuons.embedCaloMETMuonCorrs = False
     process.patMuons.embedTcMETMuonCorrs = False
     process.patMuons.embedTrack = True
