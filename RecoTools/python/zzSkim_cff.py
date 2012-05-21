@@ -1,5 +1,11 @@
 import FWCore.ParameterSet.Config as cms
 
+goodVertex = cms.EDFilter("VertexSelector",
+    src = cms.InputTag("offlinePrimaryVertices"),
+    cut = cms.string('!isFake && ndof > 4 && abs(z) <= 24 && position.Rho <= 2'),
+    filter = cms.bool(True),
+)
+
 muons4skim = cms.EDFilter("MuonSelector",
 		   src = cms.InputTag("muons"),
 		      cut = cms.string("(isTrackerMuon||isGlobalMuon) && abs(eta) < 2.4"),
@@ -30,6 +36,6 @@ skim40NoOF  = cms.EDFilter("CandViewSelector",
 			     filter = cms.bool(True),
 				 )
 
-skimNoOS = cms.Sequence(muons4skim + electrons4skim + leptons4skim + dileptons4skim + skim2010 + skim40NoOF)
+skimNoOS = cms.Sequence(goodVertex + muons4skim + electrons4skim + leptons4skim + dileptons4skim + skim2010 + skim40NoOF)
 
 zzSkim = cms.Path(skimNoOS) 
