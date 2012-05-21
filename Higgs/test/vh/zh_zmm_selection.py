@@ -32,5 +32,6 @@ def build_zmm_selection(meta_tree):
         meta.m2IsGlobal > 0.5,
         meta.m2IsTracker > 0.5,
         meta.m2GlbTrkHits > 10.5,
+        meta.bjetVeto < 1,
     )
     return selection
