@@ -136,8 +136,8 @@ datadefs = {
         'pu' : 'S6',
         #'x_sec' : 0.03906*_picobarns,
         # 3.8 +- 1.5 0.2 0.2 from EWK-11-10
-        'x_sec' : 3.8*_picobarns*0.1096*0.1096,
-        'x_sec_unc' : quad(1.5, 0.2, 0.2)*0.1096*0.1096,
+        'x_sec' : 3.8*_picobarns*0.10096*0.10096,
+        'x_sec_unc' : quad(1.5, 0.2, 0.2)*0.10096*0.10096,
         'analyses' : ['VH', 'SSDL'],
     },
 
@@ -145,14 +145,14 @@ datadefs = {
         'datasetpath' : "/ZZTo4L_TuneZ2_7TeV_pythia6_tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
         'x_sec' : 0.106*_picobarns, # from MCFM via Ian
-        'x_sec_unc' : quad(1.5, 0.2, 0.2)*0.1096*0.1096,
+        'x_sec_unc' : quad(1.5, 0.2, 0.2)*0.10096*0.10096,
         'analyses' : ['VH', 'SSDL', '4L', 'HTT'],
     },
     'WZJetsTo3LNu' : {
         'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
         'x_sec' : 26.735*_picobarns*3*0.03365*(0.1075+0.1057+0.1125) ,
-        'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.1096,
+        'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.10096,
         'analyses' : ['VH', 'SSDL'],
     },
     'WZJetsTo2L2Q' : {
@@ -167,7 +167,7 @@ datadefs = {
         # This xsec comes from PREP and is only LO.  Different from the PREP
         # value for the madgraph sample, as Pythia does not include gamma*
         'x_sec' : 0.33*_picobarns, # FIXME !!!!!!!!
-        'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.1096,
+        'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.10096,
         'analyses' : ['VH', 'SSDL', 'HTT'],
     },
     'WWJetsTo2L2Nu' : {
@@ -561,7 +561,7 @@ datadefs = {
     ############################################################################
     #### H2Tau samples                      ####################################
     ############################################################################
-    
+
     ######################### VBF H-->tau+tau ##################################
     'VBF_H2Tau_M-100' : {
         'datasetpath' : '/VBF_HToTauTau_M-100_7TeV-powheg-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
@@ -574,19 +574,19 @@ datadefs = {
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },    
+    },
     'VBF_H2Tau_M-110' : {
         'datasetpath' : '/VBF_HToTauTau_M-110_7TeV-powheg-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },    
+    },
     'VBF_H2Tau_M-115' : {
         'datasetpath' : '/VBF_HToTauTau_M-115_7TeV-powheg-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },    
+    },
     'VBF_H2Tau_M-120' : {
         'datasetpath' : '/VBF_HToTauTau_M-120_7TeV-powheg-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
@@ -629,7 +629,7 @@ datadefs = {
         'pu' : 'S6',
         'analyses' : ['HTT'],
     },
-    
+
     ######################### GGH SM H-->tau+tau ##################################
 
     'GGH_H2Tau_M-100' : {
@@ -637,302 +637,302 @@ datadefs = {
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },    
+    },
     'GGH_H2Tau_M-105' : {
         'datasetpath' : '/GluGluToHToTauTau_M-105_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },    
+    },
     'GGH_H2Tau_M-110' : {
         'datasetpath' : '/GluGluToHToTauTau_M-110_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },   
+    },
     'GGH_H2Tau_M-115' : {
         'datasetpath' : '/GluGluToHToTauTau_M-115_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },   
+    },
     'GGH_H2Tau_M-120' : {
         'datasetpath' : '/GluGluToHToTauTau_M-120_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },   
+    },
     'GGH_H2Tau_M-125' : {
         'datasetpath' : '/GluGluToHToTauTau_M-125_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  
+    },
     'GGH_H2Tau_M-130' : {
         'datasetpath' : '/GluGluToHToTauTau_M-130_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  
+    },
     'GGH_H2Tau_M-135' : {
         'datasetpath' : '/GluGluToHToTauTau_M-135_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  
+    },
     'GGH_H2Tau_M-140' : {
         'datasetpath' : '/GluGluToHToTauTau_M-140_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },    
+    },
     'GGH_H2Tau_M-145' : {
         'datasetpath' : '/GluGluToHToTauTau_M-145_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },   
+    },
     'GGH_H2Tau_M-150' : {
         'datasetpath' : '/GluGluToHToTauTau_M-150_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
     },
-    
+
     ######################### GGH MSSM H-->tau+tau ##################################
-    
+
     'GGHMSSM_H2Tau_M-90' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-90_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  
+    },
     'GGHMSSM_H2Tau_M-100' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },              
+    },
     'GGHMSSM_H2Tau_M-120' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-120_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },          
+    },
     'GGHMSSM_H2Tau_M-130' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-130_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
+    },
     'GGHMSSM_H2Tau_M-140' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-140_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
+    },
     'GGHMSSM_H2Tau_M-160' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-160_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
+    },
     'GGHMSSM_H2Tau_M-180' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-180_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
+    },
     'GGHMSSM_H2Tau_M-200' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-200_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
+    },
     'GGHMSSM_H2Tau_M-250' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-250_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
+    },
     'GGHMSSM_H2Tau_M-300' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-300_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
+    },
     'GGHMSSM_H2Tau_M-350' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-350_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },          
+    },
     'GGHMSSM_H2Tau_M-400' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-400_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },          
+    },
     'GGHMSSM_H2Tau_M-450' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-450_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },          
+    },
     'GGHMSSM_H2Tau_M-500' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-500_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
+    },
     'GGHMSSM_H2Tau_M-600' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-600_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },          
+    },
     'GGHMSSM_H2Tau_M-700' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-700_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
+    },
     'GGHMSSM_H2Tau_M-800' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-800_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
+    },
     'GGHMSSM_H2Tau_M-900' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-900_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
+    },
     'GGHMSSM_H2Tau_M-1000' : {
         'datasetpath' : '/SUSYGluGluToHToTauTau_M-1000_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },         
-    
+    },
+
 	######################### BBH MSSM H-->tau+tau ##################################
-	
+
     'BBH_H2Tau_M-90' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-90_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  
+    },
     'BBH_H2Tau_M-100' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-120' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-130' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-140' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-160' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-180' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-200' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-250' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-300' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-350' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-400' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-450' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-500' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-600' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-700' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-800' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-900' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  	
+    },
     'BBH_H2Tau_M-1000' : {
         'datasetpath' : '/SUSYBBHToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999*_picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
-    },  
-	
+    },
+
     ############################################################################
     #### Obscure VH backgrounds             ####################################
     ############################################################################
