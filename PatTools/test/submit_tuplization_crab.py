@@ -25,7 +25,7 @@ f.close()
 #make multicrab.cfg
 f=open('multicrab.cfg','w')
 f.write('[MULTICRAB]\ncfg = crab.cfg\n')
-f.write('[COMMON]\nCMSSW.total_number_of_lumis = 1\nCMSSW.lumis_per_job = 40\nCMSSW.get_edm_out = 1\n\n')
+f.write('[COMMON]\nCMSSW.total_number_of_lumis = 1\nCMSSW.lumis_per_job = 40\nCMSSW.get_edm_output = 1\n\n')
 for sample in sorted(datadefs.keys()):
     if sample.find("uf") == -1:
         continue
@@ -106,6 +106,7 @@ for sample in sorted(datadefs.keys()):
     f.write('CMSSW.pycfg_params = ')
     for i in range(1,len(options)):
         f.write(options[i]+",")
+    f.write('\n')
 #    f.write(str(options)+'\n')
     if 'dbs' in sample_info:
         f.write('CMSSW.dbs_url =http://cmsdbsprod.cern.ch/'+sample_info['dbs']+'/servlet/DBSServlet\n') 
