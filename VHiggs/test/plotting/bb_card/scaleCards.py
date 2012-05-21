@@ -29,7 +29,7 @@ mass = float(args[0])
 if options.refmass == 0:
     options.refmass = refmasses[0]
     for m in refmasses[1:]:
-        if abs(mass-m) < abs(mass-options.refmass): 
+        if abs(mass-m) < abs(mass-options.refmass):
             options.refmass = m
 
 if mass in refmasses and options.postfix == "": raise RuntimeError, "Will not overwrite the reference masses"
@@ -37,21 +37,21 @@ if mass in refmasses and options.postfix == "": raise RuntimeError, "Will not ov
 xsbrR = { 'WH':1.0, 'ZH':1.0 }
 xsbr  = { 'WH':1.0, 'ZH':1.0 }
 if options.xsbr:
-    def file2map(x): 
+    def file2map(x):
         ret = {}; headers = []
         for x in open(x,"r"):
             cols = x.split()
             if len(cols) < 2: continue
-            if "mH" in x: 
+            if "mH" in x:
                 headers = [i.strip() for i in cols[1:]]
             else:
                 fields = [ float(i) for i in cols ]
                 ret[fields[0]] = dict(zip(headers,fields[1:]))
         return ret
-    path = os.environ['CMSSW_BASE']+"/src/HiggsAnalysis/CombinedLimit/data/";   
-    whXS = file2map(path+"YR-XS-WH.txt")
-    zhXS = file2map(path+"YR-XS-ZH.txt")
-    br   = file2map(path+"YR-BR1.txt")
+    path = os.environ['CMSSW_BASE']+"/src/HiggsAnalysis/CombinedLimit/data/lhc-hxswg/";
+    whXS = file2map(path+"sm/xs/7TeV/7TeV-WH.txt")
+    zhXS = file2map(path+"sm/xs/7TeV/7TeV-ZH.txt")
+    br   = file2map(path+"sm/br/BR1.txt")
     xsbrR['WH'] = whXS[options.refmass]['XS_pb'] * br[options.refmass]['H_bb']
     xsbr ['WH'] = whXS[mass           ]['XS_pb'] * br[mass           ]['H_bb']
     xsbrR['ZH'] = zhXS[options.refmass]['XS_pb'] * br[options.refmass]['H_bb']
@@ -60,15 +60,15 @@ if options.xsbr:
 else:
     print "Will copy %g from %g" % (mass, options.refmass)
 
-fileR = options.ddir+"/%g/vhbb_DC_ALL_%s.%.1f.txt" % (options.refmass, options.flavour, options.refmass)
+fileR = options.ddir+"/vhbb_DC_ALL_%s.%.1f.txt" % (options.flavour, options.refmass)
 options.fileName = fileR; options.mass = options.refmass;
 DCR = parseCard(open(fileR,"r"), options)
 
-obskeyline = DCR.bins; 
-obsline    = [str(DCR.obs[b]) for b in DCR.bins]; 
+obskeyline = DCR.bins;
+obsline    = [str(DCR.obs[b]) for b in DCR.bins];
 cmax = 5;
 keyline = []; expline = []; systlines = {}; systlines2 = {}
-signals = []; backgrounds = []; shapeLines = []; 
+signals = []; backgrounds = []; shapeLines = [];
 paramSysts = {}; flatParamNuisances = {}
 for (name,nf,pdf,args,errline) in DCR.systs:
     systlines[name] = [ pdf, args, errline, nf ]
@@ -81,7 +81,7 @@ for b,p,sig in DCR.keyline:
     keyline.append( (b, p, DCR.isSignal[p]) )
     expline.append( "%.4f" % rate )
 
-xfile = open(options.ddir+"/%g/vhbb_DC_ALL_%s%s.%.1f.txt" % (mass, options.flavour, options.postfix, mass), "w")
+xfile = open(options.ddir+"/vhbb_DC_ALL_%s%s.%.1f.txt" % (options.flavour, options.postfix, mass), "w")
 xfile.write(" ".join(["imax %d number of bins" % len(DCR.bins)])+"\n")
 xfile.write(" ".join(["jmax *  number of processes minus 1"])+"\n")
 xfile.write(" ".join(["kmax *  number of nuisance parameters"])+"\n")
