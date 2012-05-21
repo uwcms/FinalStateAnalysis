@@ -46,15 +46,16 @@ data = asrootpy(plotter.get_histogram(
 
 
 canvas = Canvas(800, 800)
+canvas.SetRightMargin(0.05)
 
-legend = ROOT.TLegend(0.6, 0.65, 0.9, 0.90, "", "brNDC")
+legend = ROOT.TLegend(0.55, 0.60, 0.9, 0.90, "", "brNDC")
 legend.SetFillStyle(0)
 legend.SetBorderSize(0)
 
 data.SetMarkerSize(2)
 data.SetTitle("data")
 data.SetLineWidth(2)
-legend.AddEntry(data,  "data", "lp")
+legend.AddEntry(data,  "Observed", "lp")
 signal.SetLineStyle(1)
 signal.SetLineWidth(3)
 signal.SetTitle("m_{H}=120 (#times 5)")
@@ -62,14 +63,13 @@ signal.SetLineColor(ROOT.EColor.kRed)
 signal.SetFillStyle(0)
 wz.SetTitle('WZ')
 zz.SetTitle('ZZ')
-fakes.SetTitle("fake bkg.")
+fakes.SetTitle("Non-prompt")
 legend.AddEntry(signal, signal.GetTitle(), "l")
 legend.AddEntry(wz, 'WZ', 'lf')
 legend.AddEntry(zz, 'ZZ', 'lf')
-legend.AddEntry(fakes,  'fake bkg.', "lf")
+legend.AddEntry(fakes,  'Non-prompt', "lf")
 
 whtt_file = io.open('../vhtt_shapes.root')
-
 def get_total(histo):
     return whtt_file.Get('mmt_mumu_final_MuTauMass/%s' % histo) +  \
             whtt_file.Get('emt_emu_final_SubleadingMass/%s' % histo)
@@ -109,12 +109,14 @@ stack.Add(hZZ)
 
 stack.Draw()
 print stack
-stack.GetXaxis().SetTitle("Visible Mass [GeV]")
+stack.GetXaxis().SetTitle("Visible Mass (GeV)")
 bin_width = stack.GetXaxis().GetBinWidth(1)
 stack.GetYaxis().SetTitle("Events/%0.0f GeV" % bin_width)
-stack.GetYaxis().SetTitleOffset(0.8)
+stack.GetYaxis().SetTitleOffset(0.9)
+#stack.GetYaxis().SetTitleSize(0.05)
+#stack.GetXaxis().SetTitleSize(0.05)
 stack.SetMinimum(1e-1)
-stack.SetMaximum(10)
+stack.SetMaximum(13)
 hHWW.Draw('same,hist')
 hData_poisson.Draw('p0')
 
