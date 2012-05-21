@@ -8,7 +8,7 @@ from uncertainties import ufloat
 lumi = 5000
 
 w_to_any_lepton = 0.1075+0.1057+0.1125
-z_to_any_lepton = 0.1096
+z_to_any_lepton = 0.10096
 
 def cube(x):
     return x*x*x
