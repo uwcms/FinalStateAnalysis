@@ -111,7 +111,7 @@ combo/%_asymp.tex: combo/%*.asymp.json
 asymp_tables: combo/ind_leptonic_zh_asymp.tex combo/ind_leptonic_tt_asymp.tex \
   combo/ind_leptonic_ww_asymp.tex combo/ind_leptonic_ww_asymp.tex \
   combo/ind_bb_asymp.tex combo/ind_gg_asymp.tex \
-  combo/comb_all_asymp.tex 
+  combo/comb_all_asymp.tex combo/comb_leptonic_asymp.tex
 
 blurbpos="0.5,0.14,0.93,0.22"
 legendpos="0.20,0.15,0.6,0.37" # this gets nudged around
@@ -178,8 +178,7 @@ combo/ind_bb_asymp.pdf: $(bb_limits)
 	  --lumi 5000 \
 	  --method asymp \
 	  --showpoints \
-	  --show-sm \
-	  --blurb "H #rightarrow bb" \
+	  --blurb "VH #rightarrow bb" \
 	  --blurbalign 32 \
 	  --blurbsize 0.05 \
 	  --blurbpos $(blurbpos) \
@@ -193,7 +192,7 @@ combo/ind_gg_asymp.pdf: $(gg_limits)
 	  --lumi 5000 \
 	  --method asymp \
 	  --showpoints \
-	  --blurb "H #rightarrow #gamma#gamma" \
+	  --blurb "VH #rightarrow #gamma#gamma" \
 	  --blurbalign 32 \
 	  --blurbsize 0.05 \
 	  --blurbpos $(blurbpos) \
