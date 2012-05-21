@@ -34,3 +34,8 @@ met = PSet(
     metPhi = 'evt.met.phi',
     metSignificance = 'evt.metSignificance',
 )
+
+gen = PSet(
+    # Process ID used to simulate in Pythia
+    processID = 'evt.genEventInfo.signalProcessID',
+)
