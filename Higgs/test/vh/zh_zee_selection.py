@@ -36,5 +36,6 @@ def build_zee_selection(meta_tree):
 
         meta.e1AbsEta < 2.5,
         meta.e2AbsEta < 2.5,
+        meta.bjetVeto < 1,
     )
     return selection
