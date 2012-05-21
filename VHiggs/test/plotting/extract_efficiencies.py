@@ -45,10 +45,17 @@ for mass in range(110, 165, 10):
     zh_zww_yield = zh_yield * branching_ratio('WW', mass)
 
 
+
     wh_www_yield_leptons = wh_www_yield*cube(w_to_any_lepton)
     wh_wtt_yield_leptons = wh_wtt_yield*w_to_any_lepton
     zh_zww_yield_leptons = zh_zww_yield*square(w_to_any_lepton)*z_to_any_lepton
     zh_ztt_yield_leptons = zh_ztt_yield*z_to_any_lepton
+
+    #print "Mass: ", mass
+    #print "WH->WWW->leptons 5fb event yield: %0.2f" % wh_www_yield_leptons
+    #print "WH->Wtt->leptons 5fb event yield: %0.2f" % wh_wtt_yield_leptons
+    #print "ZH->ZWW->leptons 5fb event yield: %0.2f" % zh_zww_yield_leptons
+    #print "ZH->Ztt->leptons 5fb event yield: %0.2f" % zh_ztt_yield_leptons
 
     # Build list of systematics
     all_systematics = {}
@@ -94,12 +101,12 @@ for mass in range(110, 165, 10):
 
     template = ' & '.join([
         '{mass:0.0f} \\GeV',
-        '{www_wtt:0.1f}\\pm{www_wtt_err:0.1f}',
-        '{www_www:0.1f}\\pm{www_www_err:0.1f}',
-        '{wtt_wtt:0.1f}\\pm{wtt_wtt_err:0.1f}',
-        '{wtt_www:0.1f}\\pm{wtt_wtt_err:0.1f}',
-        '{zh_ztt:0.1f}\\pm{zh_ztt_err:0.1f}',
-        '{zh_zww:0.1f}\\pm{zh_zww_err:0.1f}',
+        '{www_wtt:0.1f}%%\\pm{www_wtt_err:0.1f}%%',
+        '{www_www:0.1f}%%\\pm{www_www_err:0.1f}%%',
+        '{wtt_wtt:0.1f}%%\\pm{wtt_wtt_err:0.1f}%%',
+        '{wtt_www:0.1f}%%\\pm{wtt_wtt_err:0.1f}%%',
+        '{zh_ztt:0.1f}%%\\pm{zh_ztt_err:0.1f}%%',
+        '{zh_zww:0.1f}%%\\pm{zh_zww_err:0.1f}%%',
     ]) + '\\\\\n'
 
     # Convert to percent
