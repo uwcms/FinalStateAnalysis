@@ -986,6 +986,53 @@ datadefs = {
     },
 
     ############################################################################
+    #### UF ZZ private production (M_ll>4)  ####################################
+    ############################################################################
+
+    'uf_zz2e2m' : {
+        'datasetpath' : "/Summer11/zz2e2m_powheg_GENSIMRECO_v2/USER",
+        'x_sec' : (0.1525)*_picobarns,
+		'pu' : 'S6', #todo: check this
+        'analyses' : ['4L'],
+        'dbs' : "cms_dbs_ph_analysis_02",
+    },
+    'uf_zz2e2t' : {
+        'datasetpath' : "/Summer11/zz2e2tau_powheg_GENSIMRECO_v2/USER",
+        'x_sec' : (0.1523)*_picobarns,
+		'pu' : 'S6', #todo: check this
+        'analyses' : ['4L'],
+        'dbs' : "cms_dbs_ph_analysis_02",
+    },
+    'uf_zz2m2t' : {
+        'datasetpath' : "/Summer11/zz2mu2tau_powheg_GENSIMRECO_v2/USER",
+        'x_sec' : (0.1517)*_picobarns,
+		'pu' : 'S6', #todo: check this
+        'analyses' : ['4L'],
+        'dbs' : "cms_dbs_ph_analysis_02",
+    },
+    'uf_zz4e' : {
+        'datasetpath' : "/Summer11/zz4e_powheg_GENSIMRECO_v2/USER",
+        'x_sec' : (0.0664)*_picobarns,
+		'pu' : 'S6', #todo: check this
+        'analyses' : ['4L'],
+        'dbs' : "cms_dbs_ph_analysis_02",
+    },
+    'uf_zz4m' : {
+        'datasetpath' : "/Summer11/zz4mu_powheg_GENSIMRECO_v2/USER",
+        'x_sec' : (0.0661)*_picobarns,
+		'pu' : 'S6', #todo: check this
+        'analyses' : ['4L'],
+        'dbs' : "cms_dbs_ph_analysis_02",
+    },
+    'uf_zz4t' : {
+        'datasetpath' : "/Summer11/zz4tau_powheg_GENSIMRECO_v2/USER",
+        'x_sec' : (0.0659)*_picobarns,
+		'pu' : 'S6', #todo: check this
+        'analyses' : ['4L'],
+        'dbs' : "cms_dbs_ph_analysis_02",
+
+    },
+    ############################################################################
     #### H->ZZ->4L signal samples           ####################################
     ############################################################################
 
