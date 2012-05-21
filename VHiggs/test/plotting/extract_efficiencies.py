@@ -101,13 +101,13 @@ for mass in range(110, 165, 10):
 
     template = ' & '.join([
         '{mass:0.0f} \\GeV',
-        '{www_wtt:0.1f}%%\\pm{www_wtt_err:0.1f}%%',
-        '{www_www:0.1f}%%\\pm{www_www_err:0.1f}%%',
-        '{wtt_wtt:0.1f}%%\\pm{wtt_wtt_err:0.1f}%%',
-        '{wtt_www:0.1f}%%\\pm{wtt_wtt_err:0.1f}%%',
-        '{zh_ztt:0.1f}%%\\pm{zh_ztt_err:0.1f}%%',
-        '{zh_zww:0.1f}%%\\pm{zh_zww_err:0.1f}%%',
-    ]) + '\\\\\n'
+        '{www_wtt:0.1f}\\%\\pm{www_wtt_err:0.1f}\\%',
+        '{www_www:0.1f}\\%\\pm{www_www_err:0.1f}\\%',
+        '{wtt_wtt:0.1f}\\%\\pm{wtt_wtt_err:0.1f}\\%',
+        '{wtt_www:0.1f}\\%\\pm{wtt_wtt_err:0.1f}\\%',
+        '{zh_ztt:0.1f}\\%\\pm{zh_ztt_err:0.1f}\\%',
+        '{zh_zww:0.1f}\\%\\pm{zh_zww_err:0.1f}\\%',
+    ]) + ' \\\\'
 
     # Convert to percent
     # WWW is the only one where we don't convert the error to absolute already
