@@ -20,11 +20,6 @@ from FinalStateAnalysis.PatTools.muons.patMuonPFMuonEmbedding_cfi import \
         patMuonPFMuonEmbedding
 customizeMuonSequence += patMuonPFMuonEmbedding
 
-# This depends on the PFMuon being embedded!
-from FinalStateAnalysis.PatTools.muons.patMuonTightIdEmbedding_cfi import \
-        patMuonTightIDEmbedding
-customizeMuonSequence += patMuonTightIDEmbedding
-
 from FinalStateAnalysis.PatTools.muons.patMuonIpEmbedding_cfi import patMuonsEmbedIp
 customizeMuonSequence += patMuonsEmbedIp
 
@@ -45,6 +40,11 @@ customizeMuonSequence += patMuonMVAIsoWP3Embedding
 from FinalStateAnalysis.PatTools.muons.patMuonEffectiveAreaEmbedder_cfi import \
         patMuonEffectiveAreaEmbedder
 customizeMuonSequence += patMuonEffectiveAreaEmbedder
+
+# This depends on a lot of stuff, so it should go last.
+from FinalStateAnalysis.PatTools.muons.patMuonTightIdEmbedding_cfi import \
+        patMuonTightIDEmbedding
+customizeMuonSequence += patMuonTightIDEmbedding
 
 from FinalStateAnalysis.PatTools.muons.muonSystematics_cfi import \
         poolDBESSourceMuScleFitCentralValue, \
