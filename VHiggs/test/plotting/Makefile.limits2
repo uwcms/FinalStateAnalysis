@@ -56,7 +56,7 @@ ww_mass_points = $(shell seq 110 1 150) 160 $(shell seq 170 10 200)
 bb_mass_points = $(shell seq 110 1 135) 
 gg_mass_points = $(shell seq 110 1 150) 
 
-zh_cards = $(patsubst %, combo/ind_leptonic_zh_%.txt, $(tt_mass_points))
+zh_cards = $(patsubst %, combo/ind_leptonic_zh_%.txt, $(ww_mass_points) )
 tt_cards = $(patsubst %, combo/ind_leptonic_tt_%.txt, $(tt_mass_points))
 ww_cards = $(patsubst %, combo/ind_leptonic_ww_%.txt, $(ww_mass_points))
 combined_leptonic_cards = $(patsubst %, combo/comb_leptonic_%.txt, $(ww_mass_points))
@@ -76,7 +76,7 @@ course_limit_points_low = $(shell seq 110 5 150) 160
 course_limit_points_high = $(shell seq 170 10 200)
 fine_limit_points = $(shell seq 110 1 150)
 
-zh_limits= $(patsubst %, combo/ind_leptonic_zh_%.asymp.json, $(course_limit_points_low))
+zh_limits= $(patsubst %, combo/ind_leptonic_zh_%.asymp.json, $(course_limit_points_low) $(course_limit_points_high))
 
 tt_limits= $(patsubst %, combo/ind_leptonic_tt_%.asymp.json, $(course_limit_points_low))
 
