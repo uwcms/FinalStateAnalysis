@@ -19,6 +19,7 @@ patMuonTightIDEmbedding = cms.EDProducer(
                 'isGlobalMuon',
                 'pfCandidateRef.isNonnull',
                 'globalTrack.hitPattern.numberOfValidMuonHits > 0',
+                'globalTrack.normalizedChi2 < 10.',
                 'numberOfMatchedStations > 1',
                 'dB < 0.2',
                 'abs(userFloat("dz")) < 0.5',
