@@ -35,6 +35,7 @@ class CandComparator : public edm::EDAnalyzer {
       boost::shared_ptr<StringObjectFunction<reco::Candidate> > func_;
       std::string funcStr_;
       TH2F* histo_;
+      TH1F* diff_;
     };
 
     CandComparator(const edm::ParameterSet& pset);
@@ -74,6 +75,12 @@ CandComparator::CandComparator(const edm::ParameterSet& pset) {
         titles[i].c_str(),
         nbins, min, max, nbins, min, max);
     comp.histo_ = histo;
+    std::string diffTitle = titles[i] + "_diff";
+    TH1F* diffHisto_ = directory.make<TH1F>(
+        diffTitle.c_str(),
+        diffTitle.c_str(),
+        nbins, min, max);
+    comp.diff_ = diffHisto_;
     comparisons_.push_back(comp);
   }
 }
@@ -93,9 +100,11 @@ void CandComparator::analyze(const edm::Event& evt, const edm::EventSetup& es) {
     for (size_t i = 0; i < cands1->size(); ++i) {
       const reco::Candidate& cand1 = (*cands1)[i];
       const reco::Candidate& cand2 = (*cands2)[i];
-      comp.histo_->Fill(
-          (*comp.func_)(cand1),
-          (*comp.func_)(cand2));
+      double val1 = (*comp.func_)(cand1);
+      double val2 = (*comp.func_)(cand2);
+      std::cout << cand1.pt() << std::endl;
+      comp.histo_->Fill(val1, val2);
+      comp.diff_->Fill(val1 - val2);
     }
   }
 }
