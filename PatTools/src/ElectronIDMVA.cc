@@ -10,8 +10,10 @@
 #include "RecoEcal/EgammaCoreTools/interface/EcalClusterLazyTools.h"
 #include "TMVA/Tools.h"
 #include "TMVA/Reader.h"
+#include "RecoTauTag/RecoTau/interface/TMVAZipReader.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
+
 
 using namespace reco;
 
@@ -95,12 +97,12 @@ void ElectronIDMVA::Initialize( std::string methodName,
       fTMVAReader[i]->AddVariable( "IP3dSig",               &fMVAVar_EleIP3dSig               );
     }
 
-    if (i==0) fTMVAReader[i]->BookMVA(fMethodname , Subdet0Pt10To20Weights );
-    if (i==1) fTMVAReader[i]->BookMVA(fMethodname , Subdet1Pt10To20Weights );
-    if (i==2) fTMVAReader[i]->BookMVA(fMethodname , Subdet2Pt10To20Weights );
-    if (i==3) fTMVAReader[i]->BookMVA(fMethodname , Subdet0Pt20ToInfWeights );
-    if (i==4) fTMVAReader[i]->BookMVA(fMethodname , Subdet1Pt20ToInfWeights );
-    if (i==5) fTMVAReader[i]->BookMVA(fMethodname , Subdet2Pt20ToInfWeights );
+    if (i==0) loadTMVAWeights(fTMVAReader[i], fMethodname , Subdet0Pt10To20Weights );
+    if (i==1) loadTMVAWeights(fTMVAReader[i], fMethodname , Subdet1Pt10To20Weights );
+    if (i==2) loadTMVAWeights(fTMVAReader[i], fMethodname , Subdet2Pt10To20Weights );
+    if (i==3) loadTMVAWeights(fTMVAReader[i], fMethodname , Subdet0Pt20ToInfWeights );
+    if (i==4) loadTMVAWeights(fTMVAReader[i], fMethodname , Subdet1Pt20ToInfWeights );
+    if (i==5) loadTMVAWeights(fTMVAReader[i], fMethodname , Subdet2Pt20ToInfWeights );
 
   }
 
