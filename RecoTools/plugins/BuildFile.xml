@@ -6,4 +6,5 @@
   <use   name="DataFormats/JetReco"/>
   <use   name="CommonTools/Utils"/>
   <use   name="DQMServices/Core"/>
+  <use   name="CommonTools/UtilAlgos"/>
 </library>
