@@ -3,7 +3,7 @@ import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.PatTools.electrons.patConversionRejection_cfi import \
         electronsWWID
 from FinalStateAnalysis.PatTools.electrons.patElectronVBTFEmbedding_cff import \
-        electronsWP80, electronsWP90, electronsWP95, electronsVBTFId
+        electronsWP80, electronsWP90, electronsWP95, electronsWP95V, electronsVBTFId
 
 from FinalStateAnalysis.PatTools.electrons.patElectronRhoEmbedding_cfi import \
         patElectronRhoEmbedding, patElectronZZRhoEmbedding

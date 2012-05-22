@@ -37,8 +37,20 @@ electronsWP95 = cms.EDProducer(
     id              = cms.string("wp95")
 )
 
+# An extra loose WP95 with no H/E cut in the endcap
+electronsWP95V = cms.EDProducer(
+    'PATElectronVBTFEmbedder',
+    src             = cms.InputTag("electronsWP90"),
+    sigmaEtaEta     = cms.vdouble(0.01,0.03),
+    deltaEta        = cms.vdouble(0.007,0.01),
+    deltaPhi        = cms.vdouble(0.8,0.7),
+    hoE             = cms.vdouble(0.15,999),
+    id              = cms.string("wp95V")
+)
+
 electronsVBTFId = cms.Sequence(
     electronsWP80
     + electronsWP90
     + electronsWP95
+    + electronsWP95V
 )
