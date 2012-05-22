@@ -31,7 +31,7 @@ f.close()
 #make multicrab.cfg
 f=open('multicrab.cfg','w')
 f.write('[MULTICRAB]\ncfg = crab.cfg\n')
-f.write('[COMMON]\nCMSSW.total_number_of_lumis = 1\nCMSSW.lumis_per_job = 40\nCMSSW.get_edm_output = 1\n\n')
+f.write('[COMMON]\nCMSSW.total_number_of_lumis = -1\nCMSSW.lumis_per_job = 40\nCMSSW.get_edm_output = 1\n\n')
 for sample in sorted(datadefs.keys()):
     if sample.find(searchTerm) == -1:
         continue
