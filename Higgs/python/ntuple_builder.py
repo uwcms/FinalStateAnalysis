@@ -24,6 +24,8 @@ _common_template = PSet(
     templates.event.pileup,
     # templates.Info about the MET
     templates.event.met,
+    # templates.Info about the generator
+    templates.event.gen,
     # templates.Vetoes on extra objects
     templates.cleaning.vetos,
     # We only need to worry about lepton triggers

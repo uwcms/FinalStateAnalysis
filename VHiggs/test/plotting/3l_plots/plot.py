@@ -71,7 +71,7 @@ legend.AddEntry(fakes,  'Non-prompt', "lf")
 # Make M_ellell
 for x_title, filenamebase, units in [
     ("#Delta R_{min}", 'histo_drmin_afterallothercuts', None),
-    ("|m_{l^{+}l^{-}}-m_{Z}| [GeV]", 'histo_masszmin', 'GeV')]:
+    ("|m_{l^{+}l^{-}}-m_{Z}| (GeV)", 'histo_masszmin', 'GeV')]:
 
     mass_cut_file = io.open(filenamebase+'.root')
 

@@ -144,6 +144,16 @@ class TauVarParsing(VarParsing.VarParsing):
         lumisToProcess.extend(lumiList.getCMSSWString().split(','))
         return lumisToProcess
 
+    # Override the default argument parse command, with better error reporting
+    def parseArguments(self):
+        try:
+            super(TauVarParsing, self).parseArguments()
+        except:
+            sys.stderr.write("Caught an exception parsing cmdline arguments,"
+                             " the input arguments are: "
+                             + " ".join(sys.argv) + "\n")
+            raise
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()

@@ -1,0 +1,255 @@
+# Another round of makefileing
+#
+# Targets: 	cards - build all cards, use -j 1
+# 		all_limits - build all asymp limits
+# 		xsec_limits - make all combo limit in pb
+# 		cls_submits - make CLs submit dirs
+# 		asymp_tables - make tex tables
+# 		asymp_plots - make asymp plots
+
+# Making the WHtt cards
+cards/combined_%.txt: vhtt_shapes.root make_data_card.py
+	python make_data_card.py -o $@ -m $* -f vhtt_shapes.root \
+	  --channels combined --selection final \
+	  --emt_shape SubleadingMass \
+	  --mmt_shape MuTauMass 
+
+
+# Get the asymptotic limit
+combo/%.asymp.json: combo/%.txt
+	combine $< -M Asymptotic -H ProfileLikelihood --minosAlgo stepping \
+	  -n $* \
+	  -m `echo $* | sed "s|.*_||g"` | limit2JSON.py --mass `echo $* | sed "s|.*_||g"` > $@
+	rm higgsCombine$**.root
+
+# Standardize cards
+combo/ind_leptonic_zh_%.txt: zh_cards/hzz2l2t_%.txt 
+	combineCards.py -S $^ > $@
+
+combo/cards/vhtt_shapes.root: cards/vhtt_shapes.root
+	mkdir -p combo/cards
+	cp $< $@
+
+combo/ind_leptonic_tt_%.txt: cards/combined_%.txt combo/cards/vhtt_shapes.root
+	combineCards.py -S cards/combined_$*.txt  > $@
+
+combo/ind_leptonic_ww_%.txt: 3l_cards/%/vh3l_cut.txt
+	combineCards.py -S $^ > $@
+
+combo/comb_leptonic_%.txt: combo/ind_leptonic_*_%.txt
+	combineCards.py -S combo/ind_leptonic_*_$*.txt > $@
+
+combo/ind_bb_%.txt: bb_card/vhbb_DC_ALL_BDT.%.0.txt
+	combineCards.py -S $^ > $@
+
+combo/ind_gg_%.txt: post-moriond12/%/hgglep.mH*.0.txt
+	combineCards.py -S $^ > $@
+
+combo/comb_all_%.txt: combo/ind_*_%.txt
+	combineCards.py combo/ind_*_$*.txt > $@
+
+combo/comb_noth_all_%.txt: combo/comb_all_%.txt
+	remove_systematics.py $^ pdf_* QCDscale* > $@
+
+tt_mass_points = $(shell seq 110 1 150) 160
+ww_mass_points = $(shell seq 110 1 150) 160 $(shell seq 170 10 200)
+bb_mass_points = $(shell seq 110 1 135) 
+gg_mass_points = $(shell seq 110 1 150) 
+
+zh_cards = $(patsubst %, combo/ind_leptonic_zh_%.txt, $(ww_mass_points) )
+tt_cards = $(patsubst %, combo/ind_leptonic_tt_%.txt, $(tt_mass_points))
+ww_cards = $(patsubst %, combo/ind_leptonic_ww_%.txt, $(ww_mass_points))
+combined_leptonic_cards = $(patsubst %, combo/comb_leptonic_%.txt, $(ww_mass_points))
+bb_cards = $(patsubst %, combo/ind_bb_%.txt, $(bb_mass_points))
+gg_cards = $(patsubst %, combo/ind_gg_%.txt, $(gg_mass_points))
+comb_cards = $(patsubst %, combo/comb_all_%.txt, $(ww_mass_points))
+comb_noth_cards = $(patsubst %, combo/comb_noth_all_%.txt, $(ww_mass_points))
+
+course_cards = $(zh_cards) $(tt_cards) $(ww_cards) $(bb_cards) $(combined_leptonic_cards)
+fine_cards = $(gg_cards) $(comb_cards) $(comb_noth_cards)
+all_cards = $(course_cards) $(fine_cards)
+
+# NOTE THAT THIS SHOULD NOT BE RUN WITH -j > 1!
+cards: $(all_cards)
+
+course_limit_points_low = $(shell seq 110 5 150) 160
+course_limit_points_high = $(shell seq 170 10 200)
+fine_limit_points = $(shell seq 110 1 150)
+
+zh_limits= $(patsubst %, combo/ind_leptonic_zh_%.asymp.json, $(course_limit_points_low) $(course_limit_points_high))
+
+tt_limits= $(patsubst %, combo/ind_leptonic_tt_%.asymp.json, $(course_limit_points_low))
+
+ww_limits= $(patsubst %, combo/ind_leptonic_ww_%.asymp.json, $(course_limit_points_low) $(course_limit_points_high))
+
+lep_limits= $(patsubst %, combo/comb_leptonic_%.asymp.json, $(course_limit_points_low) $(course_limit_points_high))
+
+bb_limits= $(patsubst %, combo/ind_bb_%.asymp.json, $(shell seq 110 5 135))
+
+gg_limits= $(patsubst %, combo/ind_gg_%.asymp.json, $(fine_limit_points))
+
+comb_limits= $(patsubst %, combo/comb_all_%.asymp.json, $(fine_limit_points) 160 $(course_limit_points_high))
+
+comb_noth_limits= $(patsubst %, combo/comb_noth_all_%.asymp.json, $(fine_limit_points) 160 $(course_limit_points_high))
+
+all_limits_files= $(zh_limits) $(tt_limits) $(ww_limits) $(lep_limits) $(bb_limits) $(gg_limits) $(comb_limits) $(comb_noth_limits)
+
+all_limits: $(all_limits_files)
+
+# Converting to picobarns
+combo/%.xsec.json: combo/%.json
+	signal_strength_to_xsec.py $< ZH WH > $@
+
+xsec_limit_jsons=$(subst .json,.xsec.json,$(comb_noth_limits))
+
+xsec_limits: $(xsec_limit_jsons)
+
+# Making tables
+combo/%_asymp.tex: combo/%*.asymp.json
+	texlimit.py combo/$**.asymp.json --method asymp > $@
+
+asymp_tables: combo/ind_leptonic_zh_asymp.tex combo/ind_leptonic_tt_asymp.tex \
+  combo/ind_leptonic_ww_asymp.tex combo/ind_leptonic_ww_asymp.tex \
+  combo/ind_bb_asymp.tex combo/ind_gg_asymp.tex \
+  combo/comb_all_asymp.tex combo/comb_leptonic_asymp.tex
+
+blurbpos="0.5,0.14,0.93,0.22"
+legendpos="0.20,0.15,0.6,0.37" # this gets nudged around
+
+combo/ind_leptonic_zh_asymp.pdf: $(zh_limits)
+	plotlimit.py $^ \
+	  -o $@ \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method asymp\
+	  --showpoints \
+	  --blurb "Four leptons" \
+	  --blurbalign 32 \
+	  --blurbsize 0.05 \
+	  --blurbpos $(blurbpos) \
+	  --legendpos $(legendpos)
+
+combo/ind_leptonic_tt_asymp.pdf: $(tt_limits)
+	plotlimit.py $^ \
+	  -o $@ \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --blurb "e#mu#tau and #mu#mu#tau" \
+	  --blurbalign 32 \
+	  --blurbsize 0.05 \
+	  --blurbpos $(blurbpos) \
+	  --legendpos $(legendpos) \
+	  --legendnudge "0.31,0.07"
+
+combo/ind_leptonic_ww_asymp.pdf: $(ww_limits)
+	plotlimit.py $^ \
+	  -o $@ \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --blurb "Three light leptons" \
+	  --blurbalign 32 \
+	  --blurbsize 0.05 \
+	  --blurbpos $(blurbpos) \
+	  --legendpos $(legendpos) \
+	  --legendnudge "0.17,0.50"
+
+combo/comb_leptonic_asymp.pdf: $(lep_limits)
+	plotlimit.py $^ \
+	  -o $@ \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --blurb "Combined leptonic" \
+	  --blurbalign 32 \
+	  --blurbsize 0.05 \
+	  --blurbpos $(blurbpos) \
+	  --legendpos $(legendpos) \
+	  --legendnudge "0,0.55"
+
+combo/ind_bb_asymp.pdf: $(bb_limits)
+	plotlimit.py $^ \
+	  -o $@ \
+	  --max-y 10 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --blurb "VH #rightarrow bb" \
+	  --blurbalign 32 \
+	  --blurbsize 0.05 \
+	  --blurbpos $(blurbpos) \
+	  --legendpos $(legendpos) \
+	  --legendnudge "0,0.55"
+
+combo/ind_gg_asymp.pdf: $(gg_limits)
+	plotlimit.py $^ \
+	  -o $@ \
+	  --max-y 20 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --blurb "VH #rightarrow #gamma#gamma" \
+	  --blurbalign 32 \
+	  --blurbsize 0.05 \
+	  --blurbpos $(blurbpos) \
+	  --legendpos $(legendpos) \
+	  --legendnudge "0,0.55"
+
+combo/comb_all_asymp.pdf: $(comb_limits)
+	plotlimit.py $^ \
+	  -o $@ \
+	  --max-y 10 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --show-sm \
+	  --blurb "CMS AP combination" \
+	  --blurbalign 32 \
+	  --blurbsize 0.05 \
+	  --blurbpos $(blurbpos) \
+	  --legendpos $(legendpos) \
+	  --legendnudge "0,0.55"
+
+combo/comb_all_xsec_asymp.pdf: $(xsec_limit_jsons)
+	plotlimit.py $^ \
+	  -o $@ \
+	  --max-y 5 \
+	  --lumi 5000 \
+	  --method asymp \
+	  --showpoints \
+	  --blurb "CMS AP combination" \
+	  --ytitle "95% CL upper limit on #sigma(VH) (pb)" \
+	  --blurbalign 32 \
+	  --blurbsize 0.05 \
+	  --blurbpos $(blurbpos) \
+	  --legendpos $(legendpos) \
+	  --legendnudge "0.31,0.55"
+
+asymp_plots: combo/ind_leptonic_zh_asymp.pdf \
+  combo/ind_leptonic_tt_asymp.pdf \
+  combo/ind_leptonic_ww_asymp.pdf \
+  combo/comb_leptonic_asymp.pdf \
+  combo/ind_bb_asymp.pdf \
+  combo/ind_gg_asymp.pdf \
+  combo/comb_all_asymp.pdf \
+  combo/comb_all_xsec_asymp.pdf 
+
+
+# Tools for submitting CLs
+# Pattern to convert to a .root workspace
+combo/%.root: combo/%.txt
+	text2workspace.py $< -o $@
+
+/scratch/efriis/paper_combo/%/submit: combo/%.root
+	mkdir -p `dirname $@` 
+	make_grid_submission.py -submitdir `dirname $@` \
+	  -i `readlink -f $<` -mass `echo $* | sed "s|.*_||g"` \
+	  -min 0.2 -max 30
+
+all_limit_dirs= $(subst combo/,/scratch/efriis/paper_combo/,$(subst .asymp.json,/submit,$(all_limits_files)))
+
+cls_submits: $(all_limit_dirs)

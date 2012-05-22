@@ -85,6 +85,9 @@ results/analysis/$(channel)/%.bothanti.events: $(analyzer) $(leading_z_selector)
 events_jobs=$(patsubst %, results/analysis/$(channel)/%.events, \
 	    $(my_data_samples))
 
+sig120_events: $(patsubst %, results/analysis/$(channel)/%.events, \
+	    $(vh120))
+
 # Rules to get selected events in anti-iso regions
 anti1_events_jobs=$(patsubst %, results/analysis/$(channel)/%.l1anti.events, \
 		 $(my_data_samples))
@@ -119,6 +122,8 @@ plots/zh/$(channel)/plot_list.txt: $(histogram_jobs) render_zh_plots.py results/
 
 #events: $(events_jobs)
 events:  $(events_jobs) $(anti1_events_jobs) $(anti2_events_jobs) $(both_anti_events_jobs)
+
+sigevents: $(sig120_events)
 
 histograms: $(histogram_jobs) 
 

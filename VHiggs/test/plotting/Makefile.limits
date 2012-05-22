@@ -67,6 +67,10 @@ combo/with_gg_%.txt: zh_cards/hzz2l2t_%.txt cards/combined_%.txt 3l_cards/%/vh3l
 combo/with_all_%.txt: zh_cards/hzz2l2t_%.txt cards/combined_%.txt 3l_cards/%/vh3l_cut.txt post-moriond12/%/hgglep.mH*.0.txt moriond12/%/vhbb_DC_ALL_BDT.*.0.txt
 	combineCards.py -S $^ > $@
 
+# Combination of everything we got, excluding theory errors
+combo/with_all_noth_%.txt: combo/with_all_%.txt
+	remove_systematics.py $^ pdf_* QCDscale* > $@
+
 combo/%.root: combo/%.txt
 	text2workspace.py $< -o $@
 
