@@ -109,17 +109,16 @@ The following electron IDs are embedded as userFloats:
 * ``WWID``
 * ``MITID`` - the 2011 MVA ID by the MIT people
 
-The following RECO electron IDs are embedded as as eIDs (pat defaults):
+The following 2012 electron MVA IDs (see `EGamma ID Recipe`_.) and RECO IDs
+ are embedded as as eIDs:
 
-* ``cicHyperTight1 --> eidHyperTight1``
+.. _EGamma ID Recipe: https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentification
+
 * ``cicTight --> eidTight``
-* ``cicHyperTight3 --> eidHyperTight3``
-* ``cicHyperTight2 --> eidHyperTight2``
-* ``cicHyperTight4 --> eidHyperTight4``
-* ``cicVeryLoose --> eidVeryLoose``
 * ``cicLoose --> eidLoose``
-* ``cicSuperTight --> eidSuperTight``
 * ``cicMedium --> eidMedium``
+* ``electronID('mvaNonTrigV0')``
+* ``electronID('mvaTrigV0')``
 
 The following 2011 electron MVA ID related information is embedded:
 
@@ -129,14 +128,6 @@ The following 2011 electron MVA ID related information is embedded:
 * ``userFloat("MVA")`` - raw MVA value
 * ``userFloat("MVApreID")`` - pre-ID cuts used for the MVA
 * ``userFloat("MITID")`` - MIT MVA ID working point binary value
-
-The following 2012 electron MVA IDs (see `EGamma ID Recipe`_.) are
-available:
-
-.. _EGamma ID Recipe: https://twiki.cern.ch/twiki/bin/view/CMS/MultivariateElectronIdentification
-
-* ``electronID('mvaNonTrigV0')``
-* ``electronID('mvaTrigV0')``
 
 The following 2012 electron MVA ISOs (see `EGamma Iso Recipe`_) are available:
 
