@@ -11,6 +11,7 @@ See: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideAboutPythonConfigFile
 
 '''
 import os
+import sys
 
 import FWCore.ParameterSet.VarParsing as VarParsing
 import Configuration.PyReleaseValidation.autoCond as autoCond
