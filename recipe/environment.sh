@@ -16,17 +16,36 @@ echo "Activating python virtualenv from $vpython"
 export tests=$CMSSW_BASE/test/$SCRAM_ARCH/
 
 # Define shortcuts for the relevant global tags 
-export datagt=GR_R_42_V24::All
-export mcgt=START42_V17::All
+
+# Check CMSSW version
+MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
+
+if [ "$MAJOR_VERSION" -eq "4" ]; then
+  echo "Setting up CMSSW 4 global tags"
+  export datagt=GR_R_42_V24::All
+  export mcgt=START42_V17::All
+fi
+
+if [ "$MAJOR_VERSION" -eq "5" ]; then
+  echo "Setting up CMSSW 5 global tags"
+  export datagt=GR_P_V32::All
+  export mcgt=START52_V9::All
+fi
+
+echo "Data global tag: $datagt"
+echo "MC global tag: $mcgt"
 
 # Define some shortcuts to HDFS and scratch areas
 export hdfs=/hdfs/store/user/$LOGNAME/
 export scratch=/scratch/$LOGNAME/
 
-export VIRTUAL_ENV_DISABLE_PROMPT=1
-cd $vpython
-source bin/activate
-cd -
+if [ -d "$vpython" ]; then
+  echo "Activating python virtual environment"
+  export VIRTUAL_ENV_DISABLE_PROMPT=1
+  cd $vpython
+  source bin/activate
+  cd -
+fi
 
 # Put the PWD into the PYTHONPATH
 export PYTHONPATH=.:$PYTHONPATH
