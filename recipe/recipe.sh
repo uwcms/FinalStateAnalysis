@@ -2,8 +2,6 @@
 
 : ${CMSSW_BASE:?"CMSSW_BASE is not set!  Run cmsenv before recipe.sh"}
 
-cd $CMSSW_BASE/src
-
 # Check CMSSW version
 MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
 

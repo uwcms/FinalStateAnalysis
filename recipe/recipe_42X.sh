@@ -1,3 +1,4 @@
+pushd $CMSSW_BASE/src
 
 # For updated lumi tools
 cvs co -r V03-05-05 RecoLuminosity/LumiDB 
@@ -33,3 +34,4 @@ cvs co -r V00-02 -d  pharris/MVAMet UserCode/pharris/MVAMet
 tar xvzf /afs/cern.ch/user/f/friis/public/mvaMETRefactor.tgz 
 cvs up -r 1.22 PhysicsTools/SelectorUtils/interface/PFJetIDSelectionFunctor.h
 
+popd

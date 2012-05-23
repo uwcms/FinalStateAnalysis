@@ -1,3 +1,5 @@
+pushd $CMSSW_BASE
+
 # Tags that work in any release
 
 # Add and patch to way speed up trigger matching
@@ -37,3 +39,4 @@ echo "Installing Higgs xsec lookup tables"
 ./install_HCSaW.sh
 popd
 
+popd
