@@ -260,13 +260,24 @@ asymp_plots: combo/ind_leptonic_zh_asymp.pdf \
 /scratch/efriis/paper_combo/%/grid.root: /scratch/efriis/paper_combo/%/point*.root
 	hadd -f $@ $^
 
+/scratch/efriis/paper_combo_crab/crab_%.cfg: $(PWD)/combo/%.root
+	mkdir -p /scratch/efriis/paper_combo_crab
+	cd /scratch/efriis/paper_combo_crab && \
+	 $(CMSSW_BASE)/src/HiggsAnalysis/CombinedLimit/test/makeGridUsingCrab.py \
+	   $^ 0.2 30 -T 100 -t 10000 --glidein -o crab_$* -u crab_$*
+
 all_limit_dirs= $(subst combo/,/scratch/efriis/paper_combo/,$(subst .asymp.json,/submit,$(all_limits_files)))
 
 all_limit_grids= $(subst combo/,/scratch/efriis/paper_combo/,$(subst .asymp.json,/grid.root,$(all_limits_files)))
 
+all_limit_crab_grids= $(subst combo/,/scratch/efriis/paper_combo_crab/crab_,$(subst .asymp.json,.cfg,$(all_limits_files)))
+
 cls_submits: $(all_limit_dirs)
 
+cls_crabs: $(all_limit_crab_grids)
+
 cls_grids: $(all_limit_grids)
+
 
 # Making CLs results
 #
