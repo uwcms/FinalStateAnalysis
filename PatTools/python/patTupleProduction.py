@@ -50,6 +50,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         'GenEventInfoProduct_generator_*_*',
         '*_kt6PFJetsForRhoComputationVoronoi_rho_*',
         '*_kt6PFJetsForIso_rho_*',
+        '*_kt6PFJets_rho_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
@@ -73,6 +74,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Run the ZZ recipe for rho
     from RecoJets.JetProducers.kt4PFJets_cfi import kt4PFJets \
             as zzCantDoAnythingRight
+
     process.kt6PFJetsForIso = zzCantDoAnythingRight.clone(
         rParam = cms.double(0.6),
         doAreaFastjet = cms.bool(True),
@@ -81,6 +83,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
         Ghost_EtaMax = cms.double(2.5),
     )
     process.tuplize += process.kt6PFJetsForIso
+    process.load("RecoJets.Configuration.RecoPFJets_cff")
+    process.kt6PFJets.doRhoFastjet = True
+    process.kt6PFJets.doAreaFastjet = True
+    process.tuplize += process.kt6PFJets
 
     # Rerun tau-ID
     process.load('Configuration/StandardSequences/Services_cff')
@@ -287,6 +293,20 @@ def configurePatTuple(process, isMC=True, **kwargs):
     #process.load("PhysicsTools.PatAlgos.triggerLayer1.triggerMatcher_cfi")
     #trigtools.switchOnTriggerMatchEmbedding(process)
     trigtools.switchOnTrigger(process)
+
+    # Build the MVA regression PFMET
+    process.load("RecoMET.METProducers.mvaPFMET_cff")
+    process.tuplize += process.calibratedAK5PFJetsForPFMEtMVA
+    process.tuplize += process.pfMEtMVAData
+    # Products for future computation of MVAMET
+    output_commands.append('*_pfMEtMVAData_*_*')
+    # Debugging
+    #process.tuplize += process.pfMEtMVAsequence
+    #process.tuplize += process.pfMEtMVA2sequence
+    #process.pfMEtMVA.srcLeptons = cms.VInputTag('cleanPatMuons')
+    #process.pfMEtMVA2.srcLeptons = cms.VInputTag('cleanPatMuons')
+    #output_commands.append('*_pfMEtMVA2_*_*')
+    #output_commands.append('*_pfMEtMVA_*_*')
 
     # Build the PATFinalStateEventObject
     process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")

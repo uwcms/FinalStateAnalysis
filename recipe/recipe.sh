@@ -37,26 +37,10 @@ cvs co -r V00-00-09 -d CMGTools/External UserCode/CMG/CMGTools/External
 # Add MVA MET
 # See https://twiki.cern.ch/twiki/bin/view/CMS/MVAMet
 #cvs co -r V00-00-09 -d CMGTools/External UserCode/CMG/CMGTools/External
-cvs co -r CMSSW_4_2_8_patch7 RecoMET/METAlgorithms
-cvs up -r b5_2_X_cvMEtCorr_2012May04 RecoMET/METAlgorithms/interface/PFMETAlgorithmMVA.h
-cvs up -r b5_2_X_cvMEtCorr_2012May04 RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
-cvs up -r b5_2_X_cvMEtCorr_2012May04 RecoMET/METAlgorithms/src/PFMETAlgorithmMVA.cc
-cvs up -r b5_2_X_cvMEtCorr_2012May04 RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
-cvs up -r b5_2_X_cvMEtCorr_2012May04 RecoMET/METAlgorithms/BuildFile.xml
-cvs co -r CMSSW_4_2_8_patch7 RecoMET/METProducers
-cvs up -r b5_2_X_cvMEtCorr_2012May04 RecoMET/METProducers/interface/PFMETProducerMVA.h
-cvs up -r b5_2_X_cvMEtCorr_2012May04 RecoMET/METProducers/src/PFMETProducerMVA.cc
-cvs up -r b5_2_X_cvMEtCorr_2012May04 RecoMET/METProducers/src/SealModule.cc
-cvs up -r b5_2_X_cvMEtCorr_2012May04 RecoMET/METProducers/python/mvaPFMET_cff.py
-cvs up -r b5_2_X_cvMEtCorr_2012May04 RecoMET/METProducers/BuildFile.xml
-cp /afs/cern.ch/user/b/bianchi/public/SealModule.cc  RecoMET/METProducers/src/
-#cvs co -r V00-04-01 CondFormats/EgammaObjects 
-#cvs co -r CMSSW_5_2_3_patch3 PhysicsTools/SelectorUtils
 cvs co -r V00-02 -d  pharris/MVAMet UserCode/pharris/MVAMet
+# Evan's patches on the MVA MET (will hopefully be official soon)
+tar xvzf /afs/cern.ch/user/f/friis/public/mvaMETRefactor.tgz 
 cvs up -r 1.22 PhysicsTools/SelectorUtils/interface/PFJetIDSelectionFunctor.h
-
-# My shit for MVAMet
-addpkg DataFormats/METReco
 
 # Add Marias patch for negative SSV 
 patch -p0 < FinalStateAnalysis/recipe/marias_negativeSSV.patch

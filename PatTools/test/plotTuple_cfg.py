@@ -235,4 +235,50 @@ process.et = cms.EDAnalyzer(
     )
 )
 
-process.p = cms.Path(process.mt*process.et)
+# MVA MET debugging tools - to eventually be deleted
+process.wtf = cms.EDAnalyzer(
+    "CandViewHistoAnalyzer",
+    src = cms.InputTag("pfMEtMVA"),
+    histograms = cms.VPSet(
+        pt
+    )
+)
+
+process.checkMET = cms.EDAnalyzer(
+    "CandComparator",
+    src1 = cms.InputTag("pfMEtMVA2"),
+    src2 = cms.InputTag("pfMEtMVA"),
+    comparisons = cms.PSet(
+        px = cms.PSet(
+            nbins = cms.uint32(100),
+            min = cms.double(-50),
+            max = cms.double(50),
+            func = cms.string('px'),
+        ),
+        py = cms.PSet(
+            nbins = cms.uint32(100),
+            min = cms.double(-50),
+            max = cms.double(50),
+            func = cms.string('py'),
+        ),
+        pt = cms.PSet(
+            nbins = cms.uint32(100),
+            min = cms.double(0),
+            max = cms.double(100),
+            func = cms.string('pt'),
+        ),
+        phi = cms.PSet(
+            nbins = cms.uint32(100),
+            min = cms.double(0),
+            max = cms.double(3.14),
+            func = cms.string('phi'),
+        ),
+    )
+)
+
+process.p = cms.Path(
+    process.mt*
+    process.et*
+    #process.checkMET*
+    #process.wtf
+)
