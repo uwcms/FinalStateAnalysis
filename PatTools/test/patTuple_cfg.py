@@ -16,6 +16,7 @@ options = TauVarParsing.TauVarParsing(
     # See https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaElectronEnergyScale
     dataset='Prompt',
     target='2011Data', # Used for electron and muon effective areas
+	dumpCfg='', #used for crab
 )
 
 files = [
@@ -120,6 +121,10 @@ process.schedule.append(process.outpath)
 # Tell the framework to shut up!
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
+
+if options.dumpCfg:
+	dump_cfg=open(options.dumpCfg,'w')
+	dump_cfg.write(process.dumpPython())
 
 ################################################################################
 ### DEBUG options ##############################################################
