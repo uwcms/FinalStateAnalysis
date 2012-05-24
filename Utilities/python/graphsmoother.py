@@ -46,6 +46,7 @@ def smooth_graph(tgraph, width):
         return ROOT.smooth(tgraph, width)
 
 # Version which uses band utils smoother
+# NB this smooths with a 2nd order poly over the WHOLE range
 def smooth_graph_bandutils(tgraph, order):
     if isinstance(tgraph, ROOT.TGraphAsymmErrors):
         return ROOT.smoothBandUtilsWithErrors(tgraph, order)
