@@ -24,15 +24,13 @@ std::vector<TGraph> splitTGraphAsymmErrors(const TGraphAsymmErrors& graph) {
   return output;
 }
 
-TGraphAsymmErrors mergeTGraphAsymmErrors(
+void mergeTGraphAsymmErrors(TGraphAsymmErrors& graph,
     const TGraph& errup, const TGraph& nom, const TGraph& errdown) {
-  TGraphAsymmErrors output(nom.GetN());
   for (int i = 0; i < nom.GetN(); ++i) {
-    output.SetPoint(i, nom.GetX()[i], nom.GetY()[i]);
-    output.SetPointEYhigh(i, errup.GetY()[i] - nom.GetY()[i]);
-    output.SetPointEYlow(i, nom.GetY()[i] - errdown.GetY()[i]);
+    graph.SetPoint(i, nom.GetX()[i], nom.GetY()[i]);
+    graph.SetPointEYhigh(i, errup.GetY()[i] - nom.GetY()[i]);
+    graph.SetPointEYlow(i, nom.GetY()[i] - errdown.GetY()[i]);
   }
-  return output;
 }
 
 double smoothWithPolyFit(TGraph& graph, double x0, double width,
@@ -65,5 +63,8 @@ TGraphAsymmErrors smoothWithErrors(const TGraphAsymmErrors& graph, double width)
     TGraph smoothy = smooth(input[i], width);
     smoothed.push_back(smoothy);
   }
-  return mergeTGraphAsymmErrors(smoothed[0], smoothed[1], smoothed[2]);
+  TGraphAsymmErrors output(graph);
+
+  mergeTGraphAsymmErrors(output, smoothed[0], smoothed[1], smoothed[2]);
+  return output;
 }
