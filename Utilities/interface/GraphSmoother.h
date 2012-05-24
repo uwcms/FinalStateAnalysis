@@ -27,5 +27,10 @@ TGraph smooth(const TGraph& graph, double width);
 TGraphAsymmErrors smoothWithErrors(const TGraphAsymmErrors& graph,
     double width);
 
+// HiggsAnalysis BandUtils.cxx version
+TGraph smoothBandUtils(const TGraph& graph, int npar);
+
+TGraphAsymmErrors smoothBandUtilsWithErrors(const TGraphAsymmErrors& graph,
+    int npar);
 
 #endif /* end of include guard: GRAPHSMOOTHER_2GUEYRBN */

@@ -1,6 +1,11 @@
 #include "FinalStateAnalysis/Utilities/interface/GraphSmoother.h"
 #include "TGraphSmooth.h"
 #include "TF1.h"
+#include "TVectorD.h"
+#include "TDecompBK.h"
+#include <cmath>
+
+namespace {
 
 std::vector<TGraph> splitTGraphAsymmErrors(const TGraphAsymmErrors& graph) {
   std::vector<TGraph>  output;
@@ -33,11 +38,43 @@ void mergeTGraphAsymmErrors(TGraphAsymmErrors& graph,
   }
 }
 
-double smoothWithPolyFit(TGraph& graph, double x0, double width,
+// Evans version
+double smoothWithPolyFitEK(TGraph& graph, double x0, double width,
     const std::string& formula) {
   graph.Fit(formula.c_str(), "Q", "", x0 - width, x0 + width);
   return graph.GetFunction(formula.c_str())->Eval(x0);
 }
+
+// BandUtils version
+TVectorD polyFit(double x0, double y0, int npar, int n, double *xi, double *yi) {
+    //std::cout << "smoothWithPolyFit(x = " << x <<", npar = " << npar << ", n = " << n << ", xi = {" << xi[0] << ", " << xi[1] << ", ...}, yi = {" << yi[0] << ", " << yi[1] << ", ...})" << std::endl;
+    TMatrixDSym mat(npar);
+    TVectorD    vec(npar);
+    for (int j = 0; j < npar; ++j) {
+        for (int j2 = j; j2 < npar; ++j2) {
+            mat(j,j2) = 0;
+        }
+        vec(j) = 0;
+    }
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < npar; ++j) {
+            for (int j2 = j; j2 < npar; ++j2) {
+                mat(j,j2) += std::pow(xi[i]-x0, j+j2);
+            }
+            vec(j) += (yi[i]-y0)*std::pow(xi[i]-x0, j);
+        }
+    }
+    TDecompBK bk(mat);
+    bk.Solve(vec);
+    return vec;
+}
+
+double smoothWithPolyFit(double x, int npar, int n, double *xi, double *yi) {
+    TVectorD fitRes = polyFit(x, yi[n/2], npar, n, xi, yi);
+    return fitRes(0)+yi[n/2];
+}
+
+} // end anon namespace
 
 
 TGraph smooth(const TGraph& graph, double width) {
@@ -46,8 +83,7 @@ TGraph smooth(const TGraph& graph, double width) {
   TGraph output(graph); // don't leak memory
 
   for (int i = 0; i < graph.GetN(); ++i) {
-    //double origy = temp.GetY()[i];
-    double y = smoothWithPolyFit(temp, temp.GetX()[i], width, "pol2");
+    double y = smoothWithPolyFitEK(temp, temp.GetX()[i], width, "pol2");
     double x = temp.GetX()[i];
     output.SetPoint(i, x, y);
   }
@@ -61,6 +97,37 @@ TGraphAsymmErrors smoothWithErrors(const TGraphAsymmErrors& graph, double width)
   std::vector<TGraph> smoothed;
   for (size_t i = 0; i < input.size(); ++i) {
     TGraph smoothy = smooth(input[i], width);
+    smoothed.push_back(smoothy);
+  }
+  TGraphAsymmErrors output(graph);
+
+  mergeTGraphAsymmErrors(output, smoothed[0], smoothed[1], smoothed[2]);
+  return output;
+}
+
+
+TGraph smoothBandUtils(const TGraph& graph, int order) {
+  TGraphSmooth smoother;
+  TGraph temp(graph); // not const
+  TGraph output(graph); // don't leak memory
+
+  for (int i = 0; i < graph.GetN(); ++i) {
+    double x = temp.GetX()[i];
+    double y = smoothWithPolyFit(x, order, graph.GetN(),
+        graph.GetX(), graph.GetY());
+    output.SetPoint(i, x, y);
+  }
+
+  //delete smoothed;
+  return output;
+}
+
+TGraphAsymmErrors smoothBandUtilsWithErrors(const TGraphAsymmErrors& graph,
+    int order) {
+  std::vector<TGraph> input = splitTGraphAsymmErrors(graph);
+  std::vector<TGraph> smoothed;
+  for (size_t i = 0; i < input.size(); ++i) {
+    TGraph smoothy = smoothBandUtils(input[i], order);
     smoothed.push_back(smoothy);
   }
   TGraphAsymmErrors output(graph);

@@ -23,6 +23,15 @@ True
 >>> "%0.2f" % smoothed_y
 '4.46'
 
+The smoother used by the HCG is also provided:
+
+>>> smoothed2 = smooth_graph_bandutils(graph, 2)
+>>> smoothed_y = smoothed2.GetY()[2]
+>>> 3 < smoothed_y < 6
+True
+>>> "%0.2f" % smoothed_y
+'3.60'
+
 '''
 
 
@@ -35,6 +44,13 @@ def smooth_graph(tgraph, width):
         return ROOT.smoothWithErrors(tgraph, width)
     else:
         return ROOT.smooth(tgraph, width)
+
+# Version which uses band utils smoother
+def smooth_graph_bandutils(tgraph, order):
+    if isinstance(tgraph, ROOT.TGraphAsymmErrors):
+        return ROOT.smoothBandUtilsWithErrors(tgraph, order)
+    else:
+        return ROOT.smoothBandUtils(tgraph, order)
 
 if __name__ == "__main__":
     import doctest; doctest.testmod()
