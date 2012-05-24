@@ -41,8 +41,20 @@ void mergeTGraphAsymmErrors(TGraphAsymmErrors& graph,
 // Evans version
 double smoothWithPolyFitEK(TGraph& graph, double x0, double width,
     const std::string& formula) {
-  graph.Fit(formula.c_str(), "Q", "", x0 - width, x0 + width);
-  return graph.GetFunction(formula.c_str())->Eval(x0);
+  size_t pointsInFit = 0;
+  double min = x0 - width;
+  double max = x0 + width;
+  for (int i = 0; i < graph.GetN(); ++i) {
+    if (graph.GetX()[i] > min && graph.GetX()[i] < max) {
+      pointsInFit++;
+    }
+  }
+  if (pointsInFit > 2) {
+    graph.Fit(formula.c_str(), "Q", "", x0 - width, x0 + width);
+    return graph.GetFunction(formula.c_str())->Eval(x0);
+  }
+  // if we don't have enough points to fit, just return y
+  return graph.Eval(x0);
 }
 
 // BandUtils version
