@@ -113,7 +113,7 @@ TGraph smoothBandUtils(const TGraph& graph, int order) {
 
   for (int i = 0; i < graph.GetN(); ++i) {
     double x = temp.GetX()[i];
-    double y = smoothWithPolyFit(x, order, graph.GetN(),
+    double y = smoothWithPolyFit(x, order+1, graph.GetN(),
         graph.GetX(), graph.GetY());
     output.SetPoint(i, x, y);
   }

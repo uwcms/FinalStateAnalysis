@@ -30,7 +30,7 @@ The smoother used by the HCG is also provided:
 >>> 3 < smoothed_y < 6
 True
 >>> "%0.2f" % smoothed_y
-'3.60'
+'4.46'
 
 '''
 
