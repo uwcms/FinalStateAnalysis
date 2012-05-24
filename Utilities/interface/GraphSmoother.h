@@ -18,7 +18,9 @@
 #include "TGraph.h"
 #include "TGraphAsymmErrors.h"
 
-// Smooth a graph
+// Smooth a graph over an interval of width.  At each data point,
+// fit a 2nd order polynomial in the range x +- width.  The new x0 value is
+// the fitted poly evaluated at x0
 TGraph smooth(const TGraph& graph, double width);
 
 // Smooth a graph and its error band
