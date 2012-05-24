@@ -10,6 +10,7 @@ import PhysicsTools.PatAlgos.tools.pfTools as pfTools
 import PhysicsTools.PatAlgos.patEventContent_cff as patContent
 
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
+from FinalStateAnalysis.Utilities.version import cmssw_major_version
 
 import itertools
 
@@ -113,9 +114,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Embed PF Isolation in electrons & muons
     pfTools.usePFIso(process)
     # Custom veto cones
-    process.elPFIsoValuePU04PFIdPFIso.deposits.vetos = cms.vstring()
-    process.elPFIsoValueChargedAll04PFIdPFIso.deposits.vetos = cms.vstring(
-        'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.015)')
+    #process.elPFIsoValuePU04PFIdPFIso.deposits.vetos = cms.vstring()
+    #process.elPFIsoValueChargedAll04PFIdPFIso.deposits.vetos = cms.vstring(
+        #'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.015)')
 
     # Unembed junk
     process.patMuons.embedCaloMETMuonCorrs = False
@@ -174,6 +175,14 @@ def configurePatTuple(process, isMC=True, **kwargs):
                                  cms.InputTag('ak5PFJets'),
                                  doJTA = False,
                                  doBTagging = True,
+                                 btagInfo = ['impactParameterTagInfos',
+                                             'secondaryVertexTagInfos',
+                                             'softMuonTagInfos',
+                                             'secondaryVertexNegativeTagInfos'],
+                                 btagdiscriminators = [
+                                     'trackCountingHighEffBJetTags',
+                                     # Fixme
+                                 ],
                                  jetCorrLabel = ('AK5PF', jec),
                                  #jetCorrLabel = None,
                                  doType1MET = False,
