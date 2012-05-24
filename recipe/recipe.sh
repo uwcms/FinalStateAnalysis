@@ -9,7 +9,7 @@ echo "Detected CMSSW version: $MAJOR_VERSION"
 
 if [ "$MAJOR_VERSION" -eq "4" ]; then
   echo "Applying recipe for CMSSW 4_2_8"
-  ./recipe_52X.sh
+  ./recipe_42X.sh
 fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
