@@ -14,6 +14,8 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
+import copy
+from FinalStateAnalysis.Utilities.graphsmoother import smooth_graph
 import json
 import ROOT
 
@@ -53,7 +55,7 @@ def get_limit_info(json_files):
                     mass_result[key] = file_result[key]
     return result
 
-def build_expected_band(result, key):
+def build_expected_band(result, key, smooth=-1):
     ''' Build a set of TGraphs giving the "brazilian flag",
 
     given a <key> into result (i.e. (<method1>, <label1>) above)
@@ -82,6 +84,10 @@ def build_expected_band(result, key):
     exp.SetLineColor(ROOT.EColor.kBlack)
     onesig.SetFillColor(ROOT.EColor.kGreen)
     twosig.SetFillColor(ROOT.EColor.kYellow)
+    if smooth > 0:
+        exp = smooth_graph(exp, smooth)
+        onesig = smooth_graph(onesig, smooth)
+        twosig = smooth_graph(twosig, smooth)
     return (exp, onesig, twosig)
 
 def build_line(result, key, type, linewidth=3):
