@@ -198,7 +198,7 @@ combo/ind_gg_asymp.pdf: $(gg_limits)
 	  -o $@ \
 	  --max-y 20 \
 	  --lumi 5000 \
-	  --smooth \
+	  --smooth 3 \
 	  --method asymp \
 	  --showpoints \
 	  --blurb "VH #rightarrow #gamma#gamma" \
@@ -259,7 +259,7 @@ asymp_plots: combo/ind_leptonic_zh_asymp.pdf \
 	  -i `readlink -f combo/$*.root` -mass `echo $* | sed "s|.*_||g"` \
 	  -g combo/$*.asymp.json
 
-/scratch/efriis/paper_combo/%/grid.root: /scratch/efriis/paper_combo/%/point*.root /scratch/efriis/paper_combo.bak/%/point*.root
+/scratch/efriis/paper_combo/%/grid.root: /scratch/efriis/paper_combo/%/point*.root 
 	hadd -f $@ $^
 
 /scratch/efriis/paper_combo_crab/crab_%.cfg: $(PWD)/combo/%.root
@@ -396,10 +396,10 @@ combo/ind_gg_cls.pdf: $(gg_cls_limits)
 	  -o $@ \
 	  --max-y 20 \
 	  --lumi 5000 \
-	  --smooth 3 \
+	  --smooth 5 \
 	  --method cls \
 	  --showpoints \
-	  --blurb "VH #rightarrow #gamma#gamma" \
+	  --blurb "H #rightarrow #gamma#gamma + lepton" \
 	  --blurbalign 32 \
 	  --blurbsize 0.05 \
 	  --blurbpos $(blurbpos) \
@@ -412,6 +412,7 @@ combo/comb_all_cls.pdf: $(comb_cls_limits)
 	  --max-y 10 \
 	  --lumi 5000 \
 	  --method cls \
+	  --smooth 5 \
 	  --showpoints \
 	  --show-sm \
 	  --blurb "CMS AP combination" \

@@ -15,7 +15,8 @@ Author: Evan K. Friis, UW Madison
 '''
 
 import copy
-from FinalStateAnalysis.Utilities.graphsmoother import smooth_graph
+from FinalStateAnalysis.Utilities.graphsmoother import \
+        smooth_graph as smoother
 import json
 import ROOT
 
@@ -85,9 +86,9 @@ def build_expected_band(result, key, smooth=-1):
     onesig.SetFillColor(ROOT.EColor.kGreen)
     twosig.SetFillColor(ROOT.EColor.kYellow)
     if smooth > 0:
-        exp = smooth_graph(exp, smooth)
-        onesig = smooth_graph(onesig, smooth)
-        twosig = smooth_graph(twosig, smooth)
+        exp = smoother(exp, smooth)
+        onesig = smoother(onesig, smooth)
+        twosig = smoother(twosig, smooth)
     return (exp, onesig, twosig)
 
 def build_line(result, key, type, linewidth=3):
