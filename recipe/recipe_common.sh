@@ -1,4 +1,4 @@
-pushd $CMSSW_BASE
+pushd $CMSSW_BASE/src
 
 # Tags that work in any release
 
