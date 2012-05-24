@@ -14,7 +14,11 @@ import os
 import sys
 
 import FWCore.ParameterSet.VarParsing as VarParsing
-import Configuration.PyReleaseValidation.autoCond as autoCond
+try:
+    import Configuration.PyReleaseValidation.autoCond as autoCond
+except ImportError:
+    # Moved in 52X
+    import Configuration.AlCa.autoCond as autoCond
 import FWCore.PythonUtilities.LumiList as LumiList
 import FWCore.ParameterSet.Types as CfgTypes
 
