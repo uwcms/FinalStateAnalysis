@@ -66,7 +66,7 @@ comb_cards = $(patsubst %, combo/comb_all_%.txt, $(ww_mass_points))
 comb_noth_cards = $(patsubst %, combo/comb_noth_all_%.txt, $(ww_mass_points))
 
 course_cards = $(zh_cards) $(tt_cards) $(ww_cards) $(bb_cards) $(combined_leptonic_cards)
-fine_cards = $(gg_cards) $(comb_cards) $(comb_noth_cards)
+fine_cards = $(gg_cards) $(comb_cards) 
 all_cards = $(course_cards) $(fine_cards)
 
 # Pattern to convert to a .root workspace
@@ -100,7 +100,7 @@ comb_limits= $(patsubst %, combo/comb_all_%.asymp.json, $(fine_limit_points) 160
 
 comb_noth_limits= $(patsubst %, combo/comb_noth_all_%.asymp.json, $(fine_limit_points) 160 $(course_limit_points_high))
 
-all_limits_files= $(zh_limits) $(tt_limits) $(ww_limits) $(lep_limits) $(bb_limits) $(gg_limits) $(comb_limits) $(comb_noth_limits)
+all_limits_files= $(zh_limits) $(tt_limits) $(ww_limits) $(lep_limits) $(bb_limits) $(gg_limits) $(comb_limits) 
 
 all_limits: $(all_limits_files)
 
@@ -198,6 +198,7 @@ combo/ind_gg_asymp.pdf: $(gg_limits)
 	  -o $@ \
 	  --max-y 20 \
 	  --lumi 5000 \
+	  --smooth \
 	  --method asymp \
 	  --showpoints \
 	  --blurb "VH #rightarrow #gamma#gamma" \
@@ -243,21 +244,22 @@ asymp_plots: combo/ind_leptonic_zh_asymp.pdf \
   combo/comb_leptonic_asymp.pdf \
   combo/ind_bb_asymp.pdf \
   combo/ind_gg_asymp.pdf \
-  combo/comb_all_asymp.pdf \
-  combo/comb_all_xsec_asymp.pdf 
+  combo/comb_all_asymp.pdf 
 
 
 # Tools for submitting CLs
-/scratch/efriis/paper_combo/%/submit: combo/%.root
+/scratch/efriis/paper_combo/%/submit: combo/%.root combo/%.asymp.json
 	mkdir -p `dirname $@` 
 	make_grid_submission.py -submitdir `dirname $@` \
+	  -log \
+	  -steps 25 \
 	  -jobs 10 \
-	  -toys 250 \
+	  -toys 100 \
 	  -seed 99999 \
-	  -i `readlink -f $<` -mass `echo $* | sed "s|.*_||g"` \
-	  -min 0.2 -max 30
+	  -i `readlink -f combo/$*.root` -mass `echo $* | sed "s|.*_||g"` \
+	  -g combo/$*.asymp.json
 
-/scratch/efriis/paper_combo/%/grid.root: /scratch/efriis/paper_combo/%/point*.root
+/scratch/efriis/paper_combo/%/grid.root: /scratch/efriis/paper_combo/%/point*.root /scratch/efriis/paper_combo.bak/%/point*.root
 	hadd -f $@ $^
 
 /scratch/efriis/paper_combo_crab/crab_%.cfg: $(PWD)/combo/%.root
@@ -297,7 +299,7 @@ comb_cls_limits= $(patsubst %, combo/comb_all_%.cls.json, $(fine_limit_points) 1
 
 comb_noth_cls_limits= $(patsubst %, combo/comb_noth_all_%.cls.json, $(fine_limit_points) 160 $(course_limit_points_high))
 
-all_cls_limits_files= $(zh_cls_limits) $(tt_cls_limits) $(ww_cls_limits) $(lep_cls_limits) $(bb_cls_limits) $(gg_cls_limits) $(comb_cls_limits) $(comb_noth_cls_limits)
+all_cls_limits_files= $(zh_cls_limits) $(tt_cls_limits) $(ww_cls_limits) $(lep_cls_limits) $(bb_cls_limits) $(gg_cls_limits) $(comb_cls_limits) 
 
 all_cls_limits: $(all_cls_limits_files)
 
@@ -394,6 +396,7 @@ combo/ind_gg_cls.pdf: $(gg_cls_limits)
 	  -o $@ \
 	  --max-y 20 \
 	  --lumi 5000 \
+	  --smooth 3 \
 	  --method cls \
 	  --showpoints \
 	  --blurb "VH #rightarrow #gamma#gamma" \
@@ -439,6 +442,5 @@ cls_plots: combo/ind_leptonic_zh_cls.pdf \
   combo/comb_leptonic_cls.pdf \
   combo/ind_bb_cls.pdf \
   combo/ind_gg_cls.pdf \
-  combo/comb_all_cls.pdf \
-  combo/comb_all_xsec_cls.pdf 
+  combo/comb_all_cls.pdf 
 

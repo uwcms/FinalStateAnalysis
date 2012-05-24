@@ -96,7 +96,7 @@ if [ "$OUTPUT" = "" ]; then
   die "You must provide an output file."
 fi
 
-OPTIONS="--freq --fork 0 --testStat LHC --clsAcc 0 --optimizeSim=1  --newToyMC=1"
+OPTIONS="--freq --fork 0 --testStat LHC --clsAcc 0"
 
 let BASESEED=(SEED + 10000*JOB - 10000)
 COMBINE=${CMSSW_BASE}/bin/${SCRAM_ARCH}/combine
@@ -113,7 +113,7 @@ do
   logerror2 "Doing iter=$iteration, with seed: $FINALSEED"
   logerror2 "========================================================================"
   $COMBINE $WORKSPACE -M HybridNew -s $FINALSEED --singlePoint $POINT \
-    --saveToys --saveHybridResult -T $TOYS -m $MASS $OPTIONS
+    --fullBToys --saveToys --saveHybridResult -T $TOYS -m $MASS $OPTIONS
 done
 
 hadd $OUTPUT higgsCombine*.root 
