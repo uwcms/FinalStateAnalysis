@@ -16,6 +16,6 @@ cp -v HCSaW/*/txtFiles/*txt FinalStateAnalysis/MetaData/data/HCSaW
 rm -r HCSaW
 
 pushd FinalStateAnalysis/MetaData/
-patch -p0 < ../recipe/patches/HCSaW_sanity.patch
+patch -N -p0 < ../recipe/patches/HCSaW_sanity.patch
 popd
 popd
