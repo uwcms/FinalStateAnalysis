@@ -23,6 +23,15 @@ The PF isolation values (0.4) are available for electrons and muons via:
 * ``photonIso()``
 * ``pfPUChargedHadrons()`` - for applying the Delta Beta correction
 
+The H2Tau analysis uses custom veto cones, defined at the `H2Tau working twiki`_.  
+You can get the H2Tau isolations by:
+
+.. _H2Tau working twiki: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012 
+
+* ``userIso(pat::User1Iso)`` - all PF charged particles 
+* ``userIso(pat::User2Iso)`` - PF photon isolation
+* ``userIso(pat::User3Iso)`` - PF PU isolation
+
 Note that you probably need to update your `PAT tags in 42X`_ to get the
 required version of DataFormats/PatCandidates.
 
