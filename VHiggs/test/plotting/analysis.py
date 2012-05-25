@@ -806,6 +806,7 @@ if __name__ == "__main__":
                                                  corrected_mc_histos):
                         stack.Add(histo.th1, 'hist')
                         legend.AddEntry(histo.th1, histo_name, 'lf')
+                    all_fakes.SetLineWidth(0)
                     stack.Add(all_fakes.th1, 'hist')
                     legend.AddEntry(all_fakes.th1, "Non-prompt", "lf")
                     stack.Draw()
@@ -854,6 +855,16 @@ if __name__ == "__main__":
                         is_preliminary=False,
                         lumi_on_top = True,
                     )
+                    blurb = ROOT.TPaveText(0.18, 0.85, 0.4, 0.89, "brNDC")
+                    blurb.SetFillStyle(0)
+                    blurb.SetBorderSize(0)
+                    blurb.SetTextSize(0.05)
+                    blurb.SetTextAlign(11)
+                    if 'e' in channel:
+                        blurb.AddText("e#mu#tau")
+                    else:
+                        blurb.AddText("#mu#mu#tau")
+                    blurb.Draw()
                     saveplot(plot_base_name + '_ult_combfks', stack)
 
                     ############################################################

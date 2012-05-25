@@ -122,4 +122,12 @@ for x_title, filenamebase, units in [
     canvas.SetLogy(True)
     legend.Draw()
 
+    blurb = ROOT.TPaveText(0.18, 0.85, 0.4, 0.89, "brNDC")
+    blurb.SetFillStyle(0)
+    blurb.SetBorderSize(0)
+    blurb.SetTextSize(0.05)
+    blurb.SetTextAlign(11)
+    blurb.AddText("Three leptons")
+    blurb.Draw()
+
     canvas.SaveAs(filenamebase + '.pdf')

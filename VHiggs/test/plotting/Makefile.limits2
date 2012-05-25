@@ -384,7 +384,7 @@ combo/ind_bb_cls.pdf: $(bb_cls_limits)
 	  --lumi 5000 \
 	  --method cls \
 	  --showpoints \
-	  --blurb "VH #rightarrow bb" \
+	  --blurb "bbl + bb E_{T}^{miss}" \
 	  --blurbalign 32 \
 	  --blurbsize 0.05 \
 	  --blurbpos $(blurbpos) \
@@ -399,7 +399,7 @@ combo/ind_gg_cls.pdf: $(gg_cls_limits)
 	  --smooth 5 \
 	  --method cls \
 	  --showpoints \
-	  --blurb "H #rightarrow #gamma#gamma + lepton" \
+	  --blurb "#gamma#gamma + lepton" \
 	  --blurbalign 32 \
 	  --blurbsize 0.05 \
 	  --blurbpos $(blurbpos) \
