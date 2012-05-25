@@ -4,8 +4,11 @@ pushd $CMSSW_BASE/src
 
 echo "Checking out PAT tags"
 addpkg DataFormats/PatCandidates   V06-05-01
-addpkg PhysicsTools/PatAlgos       V08-09-05
+addpkg PhysicsTools/PatAlgos       V08-09-10
 addpkg CommonTools/ParticleFlow    V00-03-11
+addpkg JetMETCorrections/Type1MET  V04-06-05
+addpkg PhysicsTools/PatUtils V03-09-22
+addpkg CommonTools/RecoUtils V00-00-08
 
 echo "Checking out Tau POG recipe"
 cvs co -r V01-04-17 RecoTauTag/RecoTau #equivalent to 04-14
