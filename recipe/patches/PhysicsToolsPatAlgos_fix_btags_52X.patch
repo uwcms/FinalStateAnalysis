@@ -1,0 +1,54 @@
+? PhysicsTools/PatAlgos/python/__init__.py
+? PhysicsTools/PatAlgos/python/cleaningLayer1/__init__.py
+? PhysicsTools/PatAlgos/python/mcMatchLayer0/__init__.py
+? PhysicsTools/PatAlgos/python/producersHeavyIons/__init__.py
+? PhysicsTools/PatAlgos/python/producersLayer1/__init__.py
+? PhysicsTools/PatAlgos/python/recoLayer0/__init__.py
+? PhysicsTools/PatAlgos/python/selectionLayer1/__init__.py
+? PhysicsTools/PatAlgos/python/tools/__init__.py
+? PhysicsTools/PatAlgos/python/triggerLayer1/__init__.py
+Index: PhysicsTools/PatAlgos/python/producersLayer1/jetProducer_cff.py
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/PhysicsTools/PatAlgos/python/producersLayer1/jetProducer_cff.py,v
+retrieving revision 1.13
+diff -w -r1.13 jetProducer_cff.py
+14a15,17
+> from RecoBTag.ImpactParameter.impactParameter_cfi import *
+> from RecoBTag.SecondaryVertex.secondaryVertexNegativeTagInfos_cfi import *
+> from RecoBTag.SecondaryVertex.simpleSecondaryVertexNegativeBJetTags_cfi import *
+20,21c23,25
+<    #secondaryVertexNegativeTagInfos *
+<    #simpleSecondaryVertexNegativeBJetTags *
+---
+>     impactParameterTagInfos *
+>     secondaryVertexNegativeTagInfos *
+>     simpleSecondaryVertexNegativeBJetTags *
+Index: PhysicsTools/PatAlgos/python/producersLayer1/jetProducer_cfi.py
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/PhysicsTools/PatAlgos/python/producersLayer1/jetProducer_cfi.py,v
+retrieving revision 1.33
+diff -w -r1.33 jetProducer_cfi.py
+59,60c59,64
+<     addTagInfos     = cms.bool(False),
+<     tagInfoSources  = cms.VInputTag(),
+---
+>     addTagInfos     = cms.bool(True),
+>     tagInfoSources  = cms.VInputTag(
+>         cms.InputTag("impactParameterTagInfos"),
+>         cms.InputTag("secondaryVertexTagInfos"),
+>         cms.InputTag("secondaryNegativeVertexTagInfos")
+>     ),
+Index: PhysicsTools/PatAlgos/python/tools/jetTools.py
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/PhysicsTools/PatAlgos/python/tools/jetTools.py,v
+retrieving revision 1.76
+diff -w -r1.76 jetTools.py
+141c141
+<                         setattr( process, nvTILabel, btag.secondaryVertexNegativeTagInfos.clone(trackIPTagInfos = cms.InputTag(ipTILabel)) )
+---
+>                         setattr( process, nvTILabel, nbtag.secondaryVertexNegativeTagInfos.clone(trackIPTagInfos = cms.InputTag(ipTILabel)) )
+166c166,167
+<                         tagInfo=getattr(btag,tag).clone(tagInfos = vit(nvTILabel))
+---
+>                         print dir(nbtag)
+>                         tagInfo=getattr(nbtag,tag).clone(tagInfos = vit(nvTILabel))
