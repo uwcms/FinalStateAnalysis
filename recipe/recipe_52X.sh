@@ -21,6 +21,8 @@ cvs up -r 1.15 PhysicsTools/PatAlgos/python/recoLayer0/tauDiscriminators_cff.py
 patch -N -p0 < FinalStateAnalysis/recipe/patches/PhysicsToolsPatAlgos_fix_btags_52X.patch
 
 echo "Building MVA MET recipe"
+rm -rf RecoMET/METAlgorithms
+rm -rf RecoMET/METProducers
 cvs co -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms 
 cvs co -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers
 cvs co -r V00-04-01 CondFormats/EgammaObjects 
@@ -42,8 +44,9 @@ cvs up -r 1.6 RecoMET/METProducers/python/mvaPFMET_cff.py
 # One forgotten fix from Christian
 patch -N -p0 < FinalStateAnalysis/recipe/patches/little_fix_for_MVAMETData.patch
 # Christian forgot to commit these
-tar xvzf /afs/cern.ch/user/f/friis/public/mvaMETRefactor.tgz RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
-tar xvzf /afs/cern.ch/user/f/friis/public/mvaMETRefactor.tgz RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
-tar xvzf /afs/cern.ch/user/f/friis/public/mvaMETRefactor.tgz RecoMET/METProducers/src/SealModule.cc
+cvs co -r 
+cvs co -r 1.6 RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
+cvs co -r 1.7 RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
+cvs co -r 1.14 RecoMET/METProducers/src/SealModule.cc
 
 popd
