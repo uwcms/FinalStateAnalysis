@@ -152,4 +152,4 @@ def setup_h2tau_iso(process):
     # We have to put this at the end since it depends on the IsoDeposits
     # Lets replace some stupid thing we don't use
     replace_result = process.patDefaultSequence.replace(
-        process.muPFIsoValueGammaHighThreshold03PFIso, process.h2TauIsoSequence)
+        process.muPFIsoValueGamma03PFIso, process.h2TauIsoSequence)
