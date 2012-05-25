@@ -94,6 +94,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Optimization - remove PFTauTagInfo compatibility layer
     process.recoTauClassicHPSSequence.remove(process.pfRecoTauTagInfoProducer)
+    process.recoTauClassicHPSSequence.remove(process.ak5PFJetTracksAssociatorAtVertex)
     assert(process.combinatoricRecoTaus.modifiers[3].name.value() == 'TTIworkaround')
     del process.combinatoricRecoTaus.modifiers[3]
 
