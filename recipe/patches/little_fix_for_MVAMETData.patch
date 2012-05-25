@@ -1,0 +1,17 @@
+Index: RecoMET/METProducers/python/mvaPFMET_cff.py
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/RecoMET/METProducers/python/mvaPFMET_cff.py,v
+retrieving revision 1.6
+diff -r1.6 mvaPFMET_cff.py
+34c34
+<     cutBased = cms.bool(False),                      
+---
+>     cutBased = cms.bool(False),
+68c68
+<     srcRho = cms.InputTag('kt6PFJetsForRhoComputationVoronoi','rho'),
+---
+>     srcRho = cms.InputTag('kt6PFJets','rho'),
+75c75
+<     label = cms.string("philV1"),
+---
+>     cutBased = cms.bool(False),

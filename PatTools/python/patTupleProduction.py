@@ -327,8 +327,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Build the MVA regression PFMET
     process.load("RecoMET.METProducers.mvaPFMET_cff")
     process.tuplize += process.calibratedAK5PFJetsForPFMEtMVA
-    # FIXME
-    #process.tuplize += process.pfMEtMVAData
+    process.tuplize += process.pfMEtMVAData
     # Products for future computation of MVAMET
     output_commands.append('*_pfMEtMVAData_*_*')
     output_commands.append('*_calibratedAK5PFJetsForPFMEtMVA_*_*')
