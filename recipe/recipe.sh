@@ -21,6 +21,8 @@ echo "Applying common recipe"
 ./recipe_common.sh
 
 # Note you now need to install virtual env
-echo "Now run ./install_python.sh to install python"
+echo "Now run recipe/install_python.sh to install python"
+
+cd $CMSSW_BASE/src
 
 echo "To compile: scram b -j 4"
