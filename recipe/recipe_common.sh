@@ -13,7 +13,7 @@ patch -N -p0 < FinalStateAnalysis/recipe/patches/V00-04-02_CommonTools_Utils_Add
 # Add support for PU Jet ID
 # See https://twiki.cern.ch/twiki/bin/view/CMS/PileupJetID
 cvs co -r V00-04-01 CondFormats/EgammaObjects
-cvs co -r V00-02-05 -d CMGTools/External UserCode/CMG/CMGTools/External
+cvs co -r V00-00-09 -d CMGTools/External UserCode/CMG/CMGTools/External
 
 # Add Electron ID MVA
 cvs co -r V00-00-08 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
