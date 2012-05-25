@@ -196,6 +196,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         ]
         btag_options['btagdiscriminators'] = [
             'trackCountingHighEffBJetTags',
+            'simpleSecondaryVertexHighEffBJetTags'
         ]
 
     # Use AK5 PFJets
