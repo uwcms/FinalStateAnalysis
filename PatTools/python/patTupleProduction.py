@@ -334,6 +334,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         process.tuplize += process.pfMEtMVAData
         # Products for future computation of MVAMET
         output_commands.append('*_pfMEtMVAData_*_*')
+        output_commands.append('*_calibratedAK5PFJetsForPFMEtMVA_*_*')
 
     # Build the PATFinalStateEventObject
     process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")
