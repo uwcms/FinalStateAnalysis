@@ -11,6 +11,7 @@ import PhysicsTools.PatAlgos.patEventContent_cff as patContent
 
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
 from FinalStateAnalysis.Utilities.version import cmssw_major_version
+from FinalStateAnalysis.PatTools.pfIsolationTools import setup_h2tau_iso
 
 import itertools
 
@@ -110,27 +111,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Run pat default sequence
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
     # Embed PF Isolation in electrons & muons
-    #import pdb; pdb.set_trace()
     pfTools.usePFIso(process)
-    #import pdb; pdb.set_trace()
-
-
-    if cmssw_major_version() == 5:
-        del process.patElectrons.isolationValuesNoPFId
-        #import pdb; pdb.set_trace()
-        fixed_iso_values = cms.PSet()
-        for name, tag in process.patElectrons.isolationValues.parameters_().iteritems():
-            setattr(fixed_iso_values, name, cms.InputTag(
-                tag.value().replace('PFId', '')))
-        process.patElectrons.isolationValues = fixed_iso_values
-        #import pdb; pdb.set_trace()
-        # THIS IS THE PROBLEM
-        process.patElectrons.isolationValues = cms.PSet()
-    else:
-        # Custom veto cones
-        process.elPFIsoValuePU04PFIdPFIso.deposits.vetos = cms.vstring()
-        process.elPFIsoValueChargedAll04PFIdPFIso.deposits.vetos = cms.vstring(
-            'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.015)')
+    # Setup H2Tau custom iso definitions
+    setup_h2tau_iso(process)
 
     # Unembed junk
     process.patMuons.embedCaloMETMuonCorrs = False
