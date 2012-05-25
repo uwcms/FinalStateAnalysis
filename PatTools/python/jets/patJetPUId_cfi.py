@@ -18,18 +18,19 @@ import FWCore.ParameterSet.Config as cms
 from CMGTools.External.pujetidsequence_cff import \
         puJetIdSqeuence, puJetId, puJetMva # sic
 
+
 # Module to embed the IDs
 patJetsPUID = cms.EDProducer(
     "PATJetPUIDEmbedder",
     src = cms.InputTag('fixme'),
     discriminants = cms.VInputTag(
         cms.InputTag("puJetMva", "fullDiscriminant"),
-        cms.InputTag("puJetMva", "philv1Discriminant"),
+        cms.InputTag("puJetMva", "cutbasedDiscriminant"),
         cms.InputTag("puJetMva", "simpleDiscriminant"),
     ),
     ids = cms.VInputTag(
         cms.InputTag("puJetMva", "fullId"),
-        cms.InputTag("puJetMva", "philv1Id"),
+        cms.InputTag("puJetMva", "cutbasedId"),
         cms.InputTag("puJetMva", "simpleId"),
     )
 )
