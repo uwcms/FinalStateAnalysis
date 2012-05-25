@@ -84,10 +84,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
         Ghost_EtaMax = cms.double(2.5),
     )
     process.tuplize += process.kt6PFJetsForIso
-    #process.load("RecoJets.Configuration.RecoPFJets_cff")
-    #process.kt6PFJets.doRhoFastjet = True
-    #process.kt6PFJets.doAreaFastjet = True
-    #process.tuplize += process.kt6PFJets
 
     # Rerun tau-ID
     process.load('Configuration/StandardSequences/Services_cff')
@@ -102,12 +98,13 @@ def configurePatTuple(process, isMC=True, **kwargs):
     del process.combinatoricRecoTaus.modifiers[3]
 
     process.tuplize += process.recoTauClassicHPSSequence
-    ## Run rho computation
-    #from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
-    #kt6PFJets.Rho_EtaMax = cms.double(2.5)
-    #kt6PFJets.doRhoFastjet = True
-    #process.kt6PFJets = kt6PFJets
-    #process.tuplize += process.kt6PFJets
+    ## Run rho computation.  Only necessary in 42X
+    if cmssw_major_version() == 4:
+        from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
+        kt6PFJets.Rho_EtaMax = cms.double(2.5)
+        kt6PFJets.doRhoFastjet = True
+        process.kt6PFJets = kt6PFJets
+        process.tuplize += process.kt6PFJets
 
     # Run pat default sequence
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
