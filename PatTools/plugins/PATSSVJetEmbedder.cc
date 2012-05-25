@@ -46,6 +46,8 @@ class PATSSVJetEmbedder : public edm::EDProducer {
           double btagSSVHENEG[5]={-777,-777,-777,-777,-777};
           double btagSSVHPNEG[5]={-777,-777,-777,-777,-777};
           double massSSV=-777;
+          double massSSVNEG=-777;
+
           unsigned int nSSVPOS=0;
           unsigned int nSSVNEG=0;
           unsigned int nTracks_SSVPOS[5]={0,0,0,0,0}; // Up to 5 just to be safe
@@ -55,6 +57,11 @@ class PATSSVJetEmbedder : public edm::EDProducer {
           double flightDistanceNEG[5]={-777,-777,-777,-777,-777};
           double errorFlightDistanceNEG[5]={-777,-777,-777,-777,-777};
 
+          int chargeSSV=0;
+          int chargeSSVNEG=0;
+
+
+
 
           const reco::SecondaryVertexTagInfo* secInfo = jet.tagInfoSecondaryVertex("secondaryVertex");
           if (secInfo && secInfo->vertexTracks().size()>0) {
@@ -63,7 +70,9 @@ class PATSSVJetEmbedder : public edm::EDProducer {
             double pxall = 0.;
             double pyall = 0.;
             double pzall = 0.;
+            int charge=0;
             for (unsigned int it=0; it<secInfo->vertexTracks().size(); ++it) {
+              charge+=secInfo->vertexTracks()[it]->charge();
               double px = secInfo->vertexTracks()[it]->px();
               double py = secInfo->vertexTracks()[it]->py();
               double pz = secInfo->vertexTracks()[it]->pz();
@@ -74,6 +83,8 @@ class PATSSVJetEmbedder : public edm::EDProducer {
             }
             double mass2 = enall*enall-pxall*pxall-pyall*pyall-pzall*pzall;
             if (mass2>0.) massSSV = sqrt(mass2);
+            chargeSSV=charge;
+
             nSSVPOS=secInfo->nVertices();
             for (unsigned int isv=0; isv<secInfo->nVertices(); ++isv) {
               nTracks_SSVPOS[isv]=(secInfo->nVertexTracks(isv));
@@ -85,6 +96,28 @@ class PATSSVJetEmbedder : public edm::EDProducer {
           const reco::SecondaryVertexTagInfo* secNegInfo = jet.tagInfoSecondaryVertex("secondaryVertexNegative");
 
           if (secNegInfo && secNegInfo->vertexTracks().size()>0) {
+
+            // Loop on all tracks of all secondary vertices to determine the mass
+            double enall = 0.;
+            double pxall = 0.;
+            double pyall = 0.;
+            double pzall = 0.;
+            int charge =0.;
+            for (unsigned int it=0; it<secInfo->vertexTracks().size(); ++it) {
+              charge+=secInfo->vertexTracks()[it]->charge();
+              double px = secInfo->vertexTracks()[it]->px();
+              double py = secInfo->vertexTracks()[it]->py();
+              double pz = secInfo->vertexTracks()[it]->pz();
+              enall += sqrt(px*px+py*py+pz*pz+0.1396*0.1396);
+              pxall += px;
+              pyall += py;
+              pzall += pz;
+            }
+            double mass2 = enall*enall-pxall*pxall-pyall*pyall-pzall*pzall;
+            if (mass2>0.) massSSVNEG = sqrt(mass2);
+            chargeSSVNEG=charge;
+
+
             nSSVNEG=secNegInfo->nVertices();
             for (unsigned int isv=0; isv<secNegInfo->nVertices(); ++isv) {
               nTracks_SSVNEG[isv]=(secNegInfo->nVertexTracks(isv));
@@ -126,6 +159,11 @@ class PATSSVJetEmbedder : public edm::EDProducer {
           jet.addUserFloat("nSSV",nSSVNEG);
           jet.addUserFloat("nNegativeSSV",nSSVPOS);
           jet.addUserFloat("massSSV",massSSV);
+          jet.addUserFloat("massSSVNEG",massSSVNEG);
+
+          jet.addUserFloat("chargeSSV",chargeSSV);
+          jet.addUserFloat("chargeSSVNEG",chargeSSVNEG);
+
           jet.addUserFloat("btagSSVHE",btagSSVHEPOS[0]);
           jet.addUserFloat("btagSSVHP",btagSSVHPPOS[0]);
           jet.addUserFloat("nTracksSSV",nTracks_SSVPOS[0]);
