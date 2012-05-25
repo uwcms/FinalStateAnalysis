@@ -44,7 +44,6 @@ cvs up -r 1.6 RecoMET/METProducers/python/mvaPFMET_cff.py
 # One forgotten fix from Christian
 patch -N -p0 < FinalStateAnalysis/recipe/patches/little_fix_for_MVAMETData.patch
 # Christian forgot to commit these
-cvs co -r 
 cvs co -r 1.6 RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
 cvs co -r 1.7 RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
 cvs co -r 1.14 RecoMET/METProducers/src/SealModule.cc
