@@ -111,7 +111,7 @@ class PATJetSmearEmbedder : public edm::EDProducer
     smearBy_ = ( cfg.exists("smearBy") ) ? cfg.getParameter<double>("smearBy") : 1.0;
 
 
-    produces<ShiftedCandCollection>("unsmearedCands");
+    produces<ShiftedCandCollection>("smearedCands");
     produces<ShiftedCandCollection>("smearUpCands");
     produces<ShiftedCandCollection>("smearDownCands");
     produces<JetCollection>();
@@ -128,9 +128,9 @@ class PATJetSmearEmbedder : public edm::EDProducer
     //std::cout << "<SmearedJetProducer::produce>:" << std::endl;
     //std::cout << " moduleLabel = " << moduleLabel_ << std::endl;
 
-    std::auto_ptr<JetCollection> smearedJets(new JetCollection);
+    std::auto_ptr<JetCollection> outputJets(new JetCollection);
 
-    std::auto_ptr<ShiftedCandCollection> unsmearedCands(new ShiftedCandCollection);
+    std::auto_ptr<ShiftedCandCollection> smearedCands(new ShiftedCandCollection);
     std::auto_ptr<ShiftedCandCollection> smearUpCands(new ShiftedCandCollection);
     std::auto_ptr<ShiftedCandCollection> smearDownCands(new ShiftedCandCollection);
 
@@ -141,15 +141,15 @@ class PATJetSmearEmbedder : public edm::EDProducer
 	  jet != jets->end(); ++jet ) {
       reco::Candidate::LorentzVector jetP4 = jet->p4();
 
-      T smearedJet = (*jet);
+      T outputJet = (*jet);
 
       reco::Candidate::LorentzVector smearedP4 = jetP4;
       reco::Candidate::LorentzVector smearUpP4 = jetP4;
       reco::Candidate::LorentzVector smearDownP4 = jetP4;
 
-      ShiftedCand unsmearedCand(smearedJet);
-      ShiftedCand smearUpCand(smearedJet);
-      ShiftedCand smearDownCand(smearedJet);
+      ShiftedCand smearedCand(outputJet);
+      ShiftedCand smearUpCand(outputJet);
+      ShiftedCand smearDownCand(outputJet);
 
       // Only smear MC
       if (!evt.isRealData()) {
@@ -177,30 +177,30 @@ class PATJetSmearEmbedder : public edm::EDProducer
 
         }
       }
-      smearedJet.setP4(smearDownP4);
-      smearedJets->push_back(smearedJet);
+      outputJets->push_back(outputJet);
 
+      smearedCand.setP4(smearedP4);
       smearUpCand.setP4(smearUpP4);
       smearDownCand.setP4(smearDownP4);
 
-      unsmearedCands->push_back(unsmearedCand);
+      smearedCands->push_back(smearedCand);
       smearUpCands->push_back(smearUpCand);
       smearDownCands->push_back(smearDownCand);
     }
 
     typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
-    PutHandle unsmearedCandsH = evt.put(unsmearedCands, "unsmearedCands");
+    PutHandle smearedCandsH = evt.put(smearedCands, "smearedCands");
     PutHandle smearUpCandsH = evt.put(smearUpCands, "smearUpCands");
     PutHandle smearDownCandsH = evt.put(smearDownCands, "smearDownCands");
 
     //--- add collection of "smeared" jets to the event
-    for (size_t i = 0; i < smearedJets->size(); ++i) {
-      pat::Jet& jet = smearedJets->at(i);
-      jet.addUserCand("unsmeared", CandidatePtr(unsmearedCandsH, i));
+    for (size_t i = 0; i < outputJets->size(); ++i) {
+      pat::Jet& jet = outputJets->at(i);
+      jet.addUserCand("smeared", CandidatePtr(smearedCandsH, i));
       jet.addUserCand("smear+", CandidatePtr(smearUpCandsH, i));
       jet.addUserCand("smear-", CandidatePtr(smearDownCandsH, i));
     }
-    evt.put(smearedJets);
+    evt.put(outputJets);
   }
 
   std::string moduleLabel_;
