@@ -327,14 +327,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
     trigtools.switchOnTrigger(process)
 
     # Build the MVA regression PFMET
-    if cmssw_major_version() == 4:
-        # Temp HACK! for 52
-        process.load("RecoMET.METProducers.mvaPFMET_cff")
-        process.tuplize += process.calibratedAK5PFJetsForPFMEtMVA
-        process.tuplize += process.pfMEtMVAData
-        # Products for future computation of MVAMET
-        output_commands.append('*_pfMEtMVAData_*_*')
-        output_commands.append('*_calibratedAK5PFJetsForPFMEtMVA_*_*')
+    process.load("RecoMET.METProducers.mvaPFMET_cff")
+    process.tuplize += process.calibratedAK5PFJetsForPFMEtMVA
+    process.tuplize += process.pfMEtMVAData
+    # Products for future computation of MVAMET
+    output_commands.append('*_pfMEtMVAData_*_*')
+    output_commands.append('*_calibratedAK5PFJetsForPFMEtMVA_*_*')
 
     # Build the PATFinalStateEventObject
     process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")

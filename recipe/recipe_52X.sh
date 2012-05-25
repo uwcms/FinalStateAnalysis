@@ -18,6 +18,29 @@ cvs up -r 1.53 PhysicsTools/PatAlgos/python/tools/tauTools.py
 cvs up -r 1.12 PhysicsTools/PatAlgos/python/producersLayer1/tauProducer_cff.py
 cvs up -r 1.15 PhysicsTools/PatAlgos/python/recoLayer0/tauDiscriminators_cff.py
 
-patch -p0 < FinalStateAnalysis/recipe/patches/PhysicsToolsPatAlgos_fix_btags_52X.patch
+patch -N -p0 < FinalStateAnalysis/recipe/patches/PhysicsToolsPatAlgos_fix_btags_52X.patch
+
+echo "Building MVA MET recipe"
+cvs co -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms 
+cvs co -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers
+cvs co -r V00-04-01 CondFormats/EgammaObjects 
+cvs co -r CMSSW_5_2_3_patch3 PhysicsTools/SelectorUtils
+cvs up -r 1.22 PhysicsTools/SelectorUtils/interface/PFJetIDSelectionFunctor.h
+echo "Adding packages from EK"
+cvs co -r 1.1  RecoMET/METProducers/interface/PFMETProducerMVA2.h
+cvs co -r 1.1  RecoMET/METProducers/interface/PFMETProducerMVAData.h
+cvs co -r 1.1  RecoMET/METProducers/src/PFMETProducerMVA2.cc
+cvs co -r 1.1  RecoMET/METProducers/src/PFMETProducerMVAData.cc
+cvs co -r 1.4  RecoMET/METProducers/python/mvaPFMET_cff.py
+addpkg DataFormats/METReco
+cvs co -r 1.1 DataFormats/METReco/interface/MVAMETData.h
+cvs co -r 1.1 DataFormats/METReco/interface/MVAMETDataFwd.h
+cvs co -r 1.1 DataFormats/METReco/src/MVAMETData.cc
+cvs co -r 1.30 DataFormats/METReco/src/classes.h
+cvs co -r 1.29 DataFormats/METReco/src/classes_def.xml
+# Christian forgot to commit these
+tar xvzf /afs/cern.ch/user/f/friis/public/mvaMETRefactor.tgz RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
+tar xvzf /afs/cern.ch/user/f/friis/public/mvaMETRefactor.tgz RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
+tar xvzf /afs/cern.ch/user/f/friis/public/mvaMETRefactor.tgz RecoMET/METProducers/src/SealModule.cc
 
 popd
