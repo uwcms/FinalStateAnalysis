@@ -33,17 +33,15 @@ cvs co -r 1.1  RecoMET/METProducers/interface/PFMETProducerMVA2.h
 cvs co -r 1.1  RecoMET/METProducers/interface/PFMETProducerMVAData.h
 cvs co -r 1.1  RecoMET/METProducers/src/PFMETProducerMVA2.cc
 cvs co -r 1.1  RecoMET/METProducers/src/PFMETProducerMVAData.cc
-cvs co -r 1.5  RecoMET/METProducers/python/mvaPFMET_cff.py
+cvs co -r 1.6  RecoMET/METProducers/python/mvaPFMET_cff.py
 addpkg DataFormats/METReco
 cvs co -r 1.1 DataFormats/METReco/interface/MVAMETData.h
 cvs co -r 1.1 DataFormats/METReco/interface/MVAMETDataFwd.h
 cvs co -r 1.1 DataFormats/METReco/src/MVAMETData.cc
 cvs co -r 1.30 DataFormats/METReco/src/classes.h
 cvs co -r 1.29 DataFormats/METReco/src/classes_def.xml
-cvs up -r 1.6 RecoMET/METProducers/python/mvaPFMET_cff.py
 # One forgotten fix from Christian
 patch -N -p0 < FinalStateAnalysis/recipe/patches/little_fix_for_MVAMETData.patch
-# Christian forgot to commit these
 cvs co -r 1.6 RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
 cvs co -r 1.7 RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
 cvs co -r 1.14 RecoMET/METProducers/src/SealModule.cc
