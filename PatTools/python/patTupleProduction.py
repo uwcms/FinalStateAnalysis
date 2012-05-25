@@ -184,24 +184,32 @@ def configurePatTuple(process, isMC=True, **kwargs):
     jec = [ 'L1FastJet', 'L2Relative', 'L3Absolute' ]
     if not isMC:
         jec.extend([ 'L2L3Residual' ])
+
+    # Define options for BTagging - these are release dependent.
+    btag_options = {'doBTagging' : True}
+    if cmssw_major_version() == 5:
+        btag_options['btagInfo'] = [
+            'impactParameterTagInfos',
+            'secondaryVertexTagInfos',
+            'softMuonTagInfos',
+            'secondaryVertexNegativeTagInfos'
+        ]
+        btag_options['btagdiscriminators'] = [
+            'trackCountingHighEffBJetTags',
+        ]
+
     # Use AK5 PFJets
-    jettools.switchJetCollection(process,
-                                 cms.InputTag('ak5PFJets'),
-                                 doJTA = False,
-                                 doBTagging = True,
-                                 btagInfo = ['impactParameterTagInfos',
-                                             'secondaryVertexTagInfos',
-                                             'softMuonTagInfos',
-                                             'secondaryVertexNegativeTagInfos'],
-                                 btagdiscriminators = [
-                                     'trackCountingHighEffBJetTags',
-                                     # Fixme
-                                 ],
-                                 jetCorrLabel = ('AK5PF', jec),
-                                 #jetCorrLabel = None,
-                                 doType1MET = False,
-                                 doJetID = True,
-                                 genJetCollection = cms.InputTag("ak5GenJets"))
+    jettools.switchJetCollection(
+        process,
+        cms.InputTag('ak5PFJets'),
+        doJTA = False,
+        jetCorrLabel = ('AK5PF', jec),
+        #jetCorrLabel = None,
+        doType1MET = False,
+        doJetID = True,
+        genJetCollection = cms.InputTag("ak5GenJets"),
+        **btag_options
+    )
     process.patJets.embedPFCandidates = False
     process.patJets.embedCaloTowers = False
     process.patJets.embedGenJetMatch = False
