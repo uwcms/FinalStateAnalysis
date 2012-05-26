@@ -15,6 +15,7 @@ patFinalStateEventProducer = cms.EDProducer(
     trgSrc = cms.InputTag("patTriggerEvent"),
     puInfoSrc = cms.InputTag("addPileupInfo"),
     genParticleSrc = cms.InputTag("genParticles"),
+    mvaDataSrc = cms.InputTag("pfMEtMVAData"),
     extraWeights = cms.PSet(
         #anyOldThing = cms.double(9999), # just an example
         #puAvg = cms.InputTag("lumiWeights", "3bx"),

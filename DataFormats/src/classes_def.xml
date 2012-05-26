@@ -12,6 +12,10 @@
 
   <class name="std::map<size_t, PATFinalStateEvent::MVAMetResult>"/> 
 
+  <class name="edm::RefProd<edm::ValueMap<float> >"/>
+  <class name="edm::RefProd<reco::JetInfoCollection>"/>
+  <class name="edm::RefProd<std::vector<reco::Vertex::Point> >"/>
+
   <class name="std::map<std::string, float>"/>
   <class name="std::pair<std::string, float>"/>
   <class name="std::map<std::string, int>"/>

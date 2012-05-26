@@ -27,6 +27,8 @@
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "DataFormats/Provenance/interface/EventID.h"
+#include "DataFormats/METReco/interface/MVAMETData.h"
+#include "DataFormats/METReco/interface/MVAMETDataFwd.h"
 
 #include "TMatrixD.h"
 #include <map>
@@ -63,7 +65,11 @@ class PATFinalStateEvent {
         const edm::RefProd<pat::MuonCollection>& muonRefProd,
         const edm::RefProd<pat::TauCollection>& tauRefProd,
         const edm::RefProd<pat::JetCollection>& jetRefProd,
-        const reco::PFCandidateRefProd& pfRefProd
+        const reco::PFCandidateRefProd& pfRefProd,
+        // MVA MET data
+        const edm::RefProd<edm::ValueMap<float> >& pfCandDZs,
+        const edm::RefProd<reco::JetInfoCollection>& jetInfos,
+        const edm::RefProd<std::vector<reco::Vertex::Point> >& vertices
     );
 
     /// Get PV
@@ -184,6 +190,9 @@ class PATFinalStateEvent {
     // to an MVAMet result for this event.  It is mutable so it can be updated
     // when building TTrees, etc.
     mutable std::map<size_t, MVAMetResult> mvaMetCache_;
+    edm::RefProd<edm::ValueMap<float> > pfCandDZs_;
+    edm::RefProd<reco::JetInfoCollection> jetInfos_;
+    edm::RefProd<std::vector<reco::Vertex::Point> > vertices_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */

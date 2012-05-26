@@ -24,7 +24,7 @@ print 'export TERMCAP=screen'
 #Write a simple crab.cfg
 f=open('crab.cfg','w')
 f.write('[CRAB]\njobtype = cmssw\nscheduler = glidein\nuse_server = 1\n')
-f.write('[USER]\nreturn_data = 0\ncopy_data = 1\nstorage_element = T2_US_Wisconsin\n')
+f.write('[USER]\nreturn_data = 0\ncopy_data = 1\nstorage_element = T2_US_Wisconsin\npublish_data = 1\ndbs_url_for_publication = https://cmsdbsprod.cern.ch:8443/cms_dbs_ph_analysis_01_writer/servlet/DBSServlet')
 f.write('[GRID]\nrb = CERN\nmaxtarballsize = 250\n')
 f.close()
 
@@ -112,6 +112,7 @@ for sample in sorted(datadefs.keys()):
 
     if 'dbs' in sample_info:
         f.write('CMSSW.dbs_url =http://cmsdbsprod.cern.ch/'+sample_info['dbs']+'/servlet/DBSServlet\n') 
+	f.write('USER.publish_data_name = ',sample+"_TUPLE\n")
 
 f.write('\n\n')
 f.close()
