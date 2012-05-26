@@ -43,7 +43,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
         #'*_generalTracks_*_*',
         '*_electronGsfTracks_*_*',
         '*_offlinePrimaryVertices*_*_*',
-        '*_ak5PFJets_*_*',
         '*_ak5GenJets_*_*',
         '*_hltTriggerSummaryAOD_*_*',
         'edmTriggerResults_TriggerResults_*_%s' % process.name_(),
@@ -103,10 +102,21 @@ def configurePatTuple(process, isMC=True, **kwargs):
     ## Run rho computation.  Only necessary in 42X
     if cmssw_major_version() == 4:
         from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
-        kt6PFJets.Rho_EtaMax = cms.double(2.5)
+        kt6PFJets.Rho_EtaMax = cms.double(4.4)
         kt6PFJets.doRhoFastjet = True
         process.kt6PFJets = kt6PFJets
         process.tuplize += process.kt6PFJets
+
+    # In 4_X we have to rerun ak5PFJets with area computation enabled.
+    if cmssw_major_version() == 4:
+        process.load("RecoJets.Configuration.RecoPFJets_cff")
+        process.ak5PFJets.doAreaFastjet = True
+        process.tuplize += process.ak5PFJets
+        # Only keep the new ak5PFJets
+        output_commands.append('*_ak5PFJets_*_%s' % process.name_())
+    else:
+        # Just keep the normal ones
+        output_commands.append('*_ak5PFJets_*_*')
 
     # Run pat default sequence
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
@@ -199,10 +209,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patJets.embedGenJetMatch = False
     process.patJets.addAssociatedTracks = False
     process.patJets.embedGenPartonMatch = False
-    process.patJetCorrFactors.useRho = True
-    # Let's use the same rho as in the TauID, so we don't need to do it twice.
-    process.patJetCorrFactors.rho = cms.InputTag(
-        "kt6PFJetsForRhoComputationVoronoi", "rho")
+    #process.patJetCorrFactors.useRho = True
+    ## Let's use the same rho as in the TauID, so we don't need to do it twice.
+    #process.patJetCorrFactors.rho = cms.InputTag(
+        #"kt6PFJetsForRhoComputationVoronoi", "rho")
 
     # Use PFMEt
     mettools.addPfMET(process)
