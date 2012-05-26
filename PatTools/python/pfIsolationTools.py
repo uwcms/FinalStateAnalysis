@@ -44,7 +44,7 @@ def setup_h2tau_iso(process):
     # Electron charged isolation
     process.elPFIsoValueChargedAll04PFIdPFIsoH2Tau = \
             process.elPFIsoValueChargedAll04PFIdPFIso.clone()
-    process.elPFIsoValueChargedAll04PFIdPFIsoH2Tau.deposits.vetos = \
+    process.elPFIsoValueChargedAll04PFIdPFIsoH2Tau.deposits[0].vetos = \
             cms.vstring(
                 'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.015)',
                 'Threshold(0)'
@@ -57,7 +57,7 @@ def setup_h2tau_iso(process):
     # from spoiling the reco electron isolation
     process.elPFIsoValueGamma04PFIdPFIsoH2Tau = \
             process.elPFIsoValueGamma04PFIdPFIso.clone()
-    process.elPFIsoValueGamma04PFIdPFIsoH2Tau.deposits.vetos = \
+    process.elPFIsoValueGamma04PFIdPFIsoH2Tau.deposits[0].vetos = \
             cms.vstring(
                 'EcalBarrel:ConeVeto(0.08)','EcalEndcaps:ConeVeto(0.08)',
                 'Threshold(0)'
@@ -69,7 +69,7 @@ def setup_h2tau_iso(process):
     # No veto for PU
     process.elPFIsoValuePU04PFIdPFIsoH2Tau = \
             process.elPFIsoValuePU04PFIdPFIso.clone()
-    process.elPFIsoValuePU04PFIdPFIsoH2Tau.deposits.vetos = cms.vstring(
+    process.elPFIsoValuePU04PFIdPFIsoH2Tau.deposits[0].vetos = cms.vstring(
                 'Threshold(0)'
     )
     process.h2TauIsoSequence += process.elPFIsoValuePU04PFIdPFIsoH2Tau
@@ -80,7 +80,7 @@ def setup_h2tau_iso(process):
     # Electron charged isolation
     process.elPFIsoValueChargedAll04NoPFIdPFIsoH2Tau = \
             process.elPFIsoValueChargedAll04NoPFIdPFIso.clone()
-    process.elPFIsoValueChargedAll04NoPFIdPFIsoH2Tau.deposits.vetos = \
+    process.elPFIsoValueChargedAll04NoPFIdPFIsoH2Tau.deposits[0].vetos = \
             cms.vstring(
                 'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.015)',
                 'Threshold(0)'
@@ -93,7 +93,7 @@ def setup_h2tau_iso(process):
     # from spoiling the reco electron isolation
     process.elPFIsoValueGamma04NoPFIdPFIsoH2Tau = \
             process.elPFIsoValueGamma04NoPFIdPFIso.clone()
-    process.elPFIsoValueGamma04NoPFIdPFIsoH2Tau.deposits.vetos = \
+    process.elPFIsoValueGamma04NoPFIdPFIsoH2Tau.deposits[0].vetos = \
             cms.vstring(
                 'EcalBarrel:ConeVeto(0.08)','EcalEndcaps:ConeVeto(0.08)',
                 'Threshold(0)'
@@ -105,7 +105,7 @@ def setup_h2tau_iso(process):
     # No veto for PU
     process.elPFIsoValuePU04NoPFIdPFIsoH2Tau = \
             process.elPFIsoValuePU04NoPFIdPFIso.clone()
-    process.elPFIsoValuePU04NoPFIdPFIsoH2Tau.deposits.vetos = cms.vstring(
+    process.elPFIsoValuePU04NoPFIdPFIsoH2Tau.deposits[0].vetos = cms.vstring(
                 'Threshold(0)'
     )
     process.h2TauIsoSequence += process.elPFIsoValuePU04NoPFIdPFIsoH2Tau
@@ -119,7 +119,7 @@ def setup_h2tau_iso(process):
     # Electron charged isolation
     process.muPFIsoValueChargedAll04PFIsoH2Tau = \
             process.muPFIsoValueChargedAll04PFIso.clone()
-    process.muPFIsoValueChargedAll04PFIsoH2Tau.deposits.vetos = \
+    process.muPFIsoValueChargedAll04PFIsoH2Tau.deposits[0].vetos = \
             cms.vstring(
                 'EcalBarrel:ConeVeto(0.0001)','EcalEndcaps:ConeVeto(0.0001)',
                 'Threshold(0)'
@@ -132,7 +132,7 @@ def setup_h2tau_iso(process):
     # from spoiling the reco electron isolation
     process.muPFIsoValueGamma04PFIsoH2Tau = \
             process.muPFIsoValueGamma04PFIso.clone()
-    process.muPFIsoValueGamma04PFIsoH2Tau.deposits.vetos = \
+    process.muPFIsoValueGamma04PFIsoH2Tau.deposits[0].vetos = \
             cms.vstring(
                 'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.01)',
                 'Threshold(0.5)'
@@ -144,7 +144,7 @@ def setup_h2tau_iso(process):
     # No veto for PU
     process.muPFIsoValuePU04PFIsoH2Tau = \
             process.muPFIsoValuePU04PFIso.clone()
-    process.muPFIsoValuePU04PFIsoH2Tau.deposits.vetos = cms.vstring(
+    process.muPFIsoValuePU04PFIsoH2Tau.deposits[0].vetos = cms.vstring(
                 'Threshold(0)'
     )
     process.h2TauIsoSequence += process.muPFIsoValuePU04PFIsoH2Tau
