@@ -88,8 +88,6 @@ process.GlobalTag.globaltag = cms.string(options.globalTag)
 # Count events at the beginning of the pat tuplization
 process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
 process.load("FinalStateAnalysis.RecoTools.dqmEventCount_cfi")
-tuplize.insert(0, process.eventCount)
-tuplize.insert(0, process.dqmEventCount)
 
 process.schedule = cms.Schedule()
 
@@ -99,6 +97,9 @@ process.load("FinalStateAnalysis.RecoTools.uwSkims_cfi")
 for skim_path in process.skimConfig.paths:
     print "Building skim path:", skim_path
     the_path = getattr(process, skim_path)
+    # Count every event, even the ones that fail the skim
+    the_path.insert(0, process.eventCount)
+    the_path.insert(0, process.dqmEventCount)
     the_path += process.tuplize
     process.schedule.append(the_path)
 process.out.SelectEvents.SelectEvents = process.skimConfig.paths
