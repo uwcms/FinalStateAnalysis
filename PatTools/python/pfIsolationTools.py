@@ -110,7 +110,7 @@ def setup_h2tau_iso(process):
     ### Muon isolation  ##################################################
     ######################################################################
 
-    # Electron charged isolation
+    # All charged particle isolation
     process.muPFIsoValueChargedAll04PFIsoH2Tau = \
             process.muPFIsoValueChargedAll04PFIso.clone()
     process.muPFIsoValueChargedAll04PFIsoH2Tau.deposits[0].vetos = \
@@ -120,27 +120,6 @@ def setup_h2tau_iso(process):
     process.h2TauIsoSequence += process.muPFIsoValueChargedAll04PFIsoH2Tau
     process.patMuons.isolationValues.user.append(
         cms.InputTag("muPFIsoValueChargedAll04PFIsoH2Tau"))
-
-    # Gamma isolation - larger cone to prevent badly reco'd PF Electrons
-    # from spoiling the reco electron isolation
-    process.muPFIsoValueGamma04PFIsoH2Tau = \
-            process.muPFIsoValueGamma04PFIso.clone()
-    process.muPFIsoValueGamma04PFIsoH2Tau.deposits[0].vetos = \
-            cms.vstring(
-                'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.01)',
-            )
-    process.h2TauIsoSequence += process.muPFIsoValueGamma04PFIsoH2Tau
-    process.patMuons.isolationValues.user.append(
-        cms.InputTag("muPFIsoValueGamma04PFIsoH2Tau"))
-
-    # No veto for PU
-    process.muPFIsoValuePU04PFIsoH2Tau = \
-            process.muPFIsoValuePU04PFIso.clone()
-    process.muPFIsoValuePU04PFIsoH2Tau.deposits[0].vetos = cms.vstring(
-    )
-    process.h2TauIsoSequence += process.muPFIsoValuePU04PFIsoH2Tau
-    process.patMuons.isolationValues.user.append(
-        cms.InputTag("muPFIsoValuePU04PFIsoH2Tau"))
 
     # Insert into PAT default sequence, after all the other iso stuff is run.
     # We have to put this at the end since it depends on the IsoDeposits
