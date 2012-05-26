@@ -40,7 +40,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_offlineBeamSpot_*_*',
         '*_trackCandidates_*_*',
         '*_gsfTrackCandidates_*_*',
+        # Debug
         #'*_generalTracks_*_*',
+        #'*_offlinePrimaryVertices_*_*',
+
         '*_electronGsfTracks_*_*',
         '*_offlinePrimaryVertices*_*_*',
         '*_ak5GenJets_*_*',
@@ -190,6 +193,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
         btag_options['btagdiscriminators'] = [
             'trackCountingHighEffBJetTags',
             'simpleSecondaryVertexHighEffBJetTags'
+            'combinedSecondaryVertexMVABJetTags',
+            'combinedSecondaryVertexBJetTags',
         ]
 
     # Use AK5 PFJets
