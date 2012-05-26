@@ -37,6 +37,11 @@ namespace {
     std::pair<std::string, float> dummyFloatPair;
     std::pair<std::string, int> dummyIntPair;
 
+    // For the MVA MET
+    edm::RefProd<edm::ValueMap<float> > pfCandDZs_;
+    edm::RefProd<reco::JetInfoCollection> jetInfos_;
+    edm::RefProd<std::vector<reco::Vertex::Point> > vertices_;
+
     // shared pointer wrapper class
     PATFinalStateProxy proxyDummy;
 
