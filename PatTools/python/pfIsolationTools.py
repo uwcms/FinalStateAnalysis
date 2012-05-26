@@ -43,11 +43,11 @@ def setup_h2tau_iso(process):
 
     # Electron charged isolation
     process.elPFIsoValueChargedAll04PFIdPFIsoH2Tau = \
-            process.elPFIsoValueChargedAll04PFIdPFIso.clone(
-                vetos = cms.vstring(
-                    'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.015)',
-                    'Threshold(0)'
-                )
+            process.elPFIsoValueChargedAll04PFIdPFIso.clone()
+    process.elPFIsoValueChargedAll04PFIdPFIsoH2Tau.deposits.vetos = \
+            cms.vstring(
+                'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.015)',
+                'Threshold(0)'
             )
     process.h2TauIsoSequence += process.elPFIsoValueChargedAll04PFIdPFIsoH2Tau
     process.patElectrons.isolationValues.user.append(
@@ -56,11 +56,11 @@ def setup_h2tau_iso(process):
     # Gamma isolation - larger cone to prevent badly reco'd PF Electrons
     # from spoiling the reco electron isolation
     process.elPFIsoValueGamma04PFIdPFIsoH2Tau = \
-            process.elPFIsoValueGamma04PFIdPFIso.clone(
-                vetos = cms.vstring(
-                    'EcalBarrel:ConeVeto(0.08)','EcalEndcaps:ConeVeto(0.08)',
-                    'Threshold(0)'
-                )
+            process.elPFIsoValueGamma04PFIdPFIso.clone()
+    process.elPFIsoValueGamma04PFIdPFIsoH2Tau.deposits.vetos = \
+            cms.vstring(
+                'EcalBarrel:ConeVeto(0.08)','EcalEndcaps:ConeVeto(0.08)',
+                'Threshold(0)'
             )
     process.h2TauIsoSequence += process.elPFIsoValueGamma04PFIdPFIsoH2Tau
     process.patElectrons.isolationValues.user.append(
@@ -68,9 +68,10 @@ def setup_h2tau_iso(process):
 
     # No veto for PU
     process.elPFIsoValuePU04PFIdPFIsoH2Tau = \
-            process.elPFIsoValuePU04PFIdPFIso.clone(vetos = cms.vstring(
+            process.elPFIsoValuePU04PFIdPFIso.clone()
+    process.elPFIsoValuePU04PFIdPFIsoH2Tau.deposits.vetos = cms.vstring(
                 'Threshold(0)'
-            ))
+    )
     process.h2TauIsoSequence += process.elPFIsoValuePU04PFIdPFIsoH2Tau
     process.patElectrons.isolationValues.user.append(
         cms.InputTag("elPFIsoValuePU04PFIdPFIsoH2Tau"))
@@ -78,11 +79,11 @@ def setup_h2tau_iso(process):
     # Now we need to do the same thing for the NoPFId case...
     # Electron charged isolation
     process.elPFIsoValueChargedAll04NoPFIdPFIsoH2Tau = \
-            process.elPFIsoValueChargedAll04NoPFIdPFIso.clone(
-                vetos = cms.vstring(
-                    'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.015)',
-                    'Threshold(0)'
-                )
+            process.elPFIsoValueChargedAll04NoPFIdPFIso.clone()
+    process.elPFIsoValueChargedAll04NoPFIdPFIsoH2Tau.deposits.vetos = \
+            cms.vstring(
+                'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.015)',
+                'Threshold(0)'
             )
     process.h2TauIsoSequence += process.elPFIsoValueChargedAll04NoPFIdPFIsoH2Tau
     process.patElectrons.isolationValuesNoPFId.user.append(
@@ -91,11 +92,11 @@ def setup_h2tau_iso(process):
     # Gamma isolation - larger cone to prevent badly reco'd PF Electrons
     # from spoiling the reco electron isolation
     process.elPFIsoValueGamma04NoPFIdPFIsoH2Tau = \
-            process.elPFIsoValueGamma04NoPFIdPFIso.clone(
-                vetos = cms.vstring(
-                    'EcalBarrel:ConeVeto(0.08)','EcalEndcaps:ConeVeto(0.08)',
-                    'Threshold(0)'
-                )
+            process.elPFIsoValueGamma04NoPFIdPFIso.clone()
+    process.elPFIsoValueGamma04NoPFIdPFIsoH2Tau.deposits.vetos = \
+            cms.vstring(
+                'EcalBarrel:ConeVeto(0.08)','EcalEndcaps:ConeVeto(0.08)',
+                'Threshold(0)'
             )
     process.h2TauIsoSequence += process.elPFIsoValueGamma04NoPFIdPFIsoH2Tau
     process.patElectrons.isolationValuesNoPFId.user.append(
@@ -103,9 +104,10 @@ def setup_h2tau_iso(process):
 
     # No veto for PU
     process.elPFIsoValuePU04NoPFIdPFIsoH2Tau = \
-            process.elPFIsoValuePU04NoPFIdPFIso.clone(vetos = cms.vstring(
+            process.elPFIsoValuePU04NoPFIdPFIso.clone()
+    process.elPFIsoValuePU04NoPFIdPFIsoH2Tau.deposits.vetos = cms.vstring(
                 'Threshold(0)'
-            ))
+    )
     process.h2TauIsoSequence += process.elPFIsoValuePU04NoPFIdPFIsoH2Tau
     process.patElectrons.isolationValuesNoPFId.user.append(
         cms.InputTag("elPFIsoValuePU04NoPFIdPFIsoH2Tau"))
@@ -116,11 +118,11 @@ def setup_h2tau_iso(process):
 
     # Electron charged isolation
     process.muPFIsoValueChargedAll04PFIsoH2Tau = \
-            process.muPFIsoValueChargedAll04PFIso.clone(
-                vetos = cms.vstring(
-                    'EcalBarrel:ConeVeto(0.0001)','EcalEndcaps:ConeVeto(0.0001)',
-                    'Threshold(0)'
-                )
+            process.muPFIsoValueChargedAll04PFIso.clone()
+    process.muPFIsoValueChargedAll04PFIsoH2Tau.deposits.vetos = \
+            cms.vstring(
+                'EcalBarrel:ConeVeto(0.0001)','EcalEndcaps:ConeVeto(0.0001)',
+                'Threshold(0)'
             )
     process.h2TauIsoSequence += process.muPFIsoValueChargedAll04PFIsoH2Tau
     process.patMuons.isolationValues.user.append(
@@ -129,11 +131,11 @@ def setup_h2tau_iso(process):
     # Gamma isolation - larger cone to prevent badly reco'd PF Electrons
     # from spoiling the reco electron isolation
     process.muPFIsoValueGamma04PFIsoH2Tau = \
-            process.muPFIsoValueGamma04PFIso.clone(
-                vetos = cms.vstring(
-                    'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.01)',
-                    'Threshold(0.5)'
-                )
+            process.muPFIsoValueGamma04PFIso.clone()
+    process.muPFIsoValueGamma04PFIsoH2Tau.deposits.vetos = \
+            cms.vstring(
+                'EcalBarrel:ConeVeto(0.01)','EcalEndcaps:ConeVeto(0.01)',
+                'Threshold(0.5)'
             )
     process.h2TauIsoSequence += process.muPFIsoValueGamma04PFIsoH2Tau
     process.patMuons.isolationValues.user.append(
@@ -141,9 +143,10 @@ def setup_h2tau_iso(process):
 
     # No veto for PU
     process.muPFIsoValuePU04PFIsoH2Tau = \
-            process.muPFIsoValuePU04PFIso.clone(vetos = cms.vstring(
+            process.muPFIsoValuePU04PFIso.clone()
+    process.muPFIsoValuePU04PFIsoH2Tau.deposits.vetos = cms.vstring(
                 'Threshold(0)'
-            ))
+    )
     process.h2TauIsoSequence += process.muPFIsoValuePU04PFIsoH2Tau
     process.patMuons.isolationValues.user.append(
         cms.InputTag("muPFIsoValuePU04PFIsoH2Tau"))
