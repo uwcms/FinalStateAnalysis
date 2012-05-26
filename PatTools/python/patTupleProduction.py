@@ -192,7 +192,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         ]
         btag_options['btagdiscriminators'] = [
             'trackCountingHighEffBJetTags',
-            'simpleSecondaryVertexHighEffBJetTags'
+            'simpleSecondaryVertexHighEffBJetTags',
             'combinedSecondaryVertexMVABJetTags',
             'combinedSecondaryVertexBJetTags',
         ]
