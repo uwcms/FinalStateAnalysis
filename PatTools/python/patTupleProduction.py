@@ -88,20 +88,26 @@ def configurePatTuple(process, isMC=True, **kwargs):
     )
     process.tuplize += process.kt6PFJetsForIso
 
-    # Rerun tau-ID
+    # Standard services
     process.load('Configuration/StandardSequences/Services_cff')
     process.load('Configuration/StandardSequences/GeometryIdeal_cff')
     process.load('Configuration/StandardSequences/MagneticField_cff')
     process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
-    process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
 
-    # Optimization - remove PFTauTagInfo compatibility layer
-    process.recoTauClassicHPSSequence.remove(process.pfRecoTauTagInfoProducer)
-    process.recoTauClassicHPSSequence.remove(process.ak5PFJetTracksAssociatorAtVertex)
-    assert(process.combinatoricRecoTaus.modifiers[3].name.value() == 'TTIworkaround')
-    del process.combinatoricRecoTaus.modifiers[3]
+    # Rerun tau ID
+    if cmssw_major_version() == 4:
+        process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+        # Optimization - remove PFTauTagInfo compatibility layer
+        process.recoTauClassicHPSSequence.remove(process.pfRecoTauTagInfoProducer)
+        process.recoTauClassicHPSSequence.remove(process.ak5PFJetTracksAssociatorAtVertex)
+        assert(process.combinatoricRecoTaus.modifiers[3].name.value() == 'TTIworkaround')
+        del process.combinatoricRecoTaus.modifiers[3]
+        process.tuplize += process.recoTauClassicHPSSequence
+    else:
+        # We can run less tau stuff in 52, since HPS taus already built.
+        process.load("RecoTauTag.Configuration.updateHPSPFTaus_cff")
+        process.tuplize += process.updateHPSPFTaus
 
-    process.tuplize += process.recoTauClassicHPSSequence
     ## Run rho computation.  Only necessary in 42X
     if cmssw_major_version() == 4:
         from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
