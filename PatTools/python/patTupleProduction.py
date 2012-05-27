@@ -421,8 +421,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
         process.buildDiLeptons += embedder_seq
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
-        final_module = getattr(process, final_module_name.value())
-        final_module.setLabel(producer_name)
+        final_module = cms.EDProducer(
+            "PATFinalStateCopier",
+            src = final_module_name
+        )
+        setattr(process, producer_name, final_module)
+        process.buildDiLeptons += final_module
         setattr(process, producer_name, final_module)
         output_commands.append("*_%s_*_*" % producer_name)
 
@@ -460,9 +464,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
         process.buildTriLeptons += embedder_seq
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
-        final_module = getattr(process, final_module_name.value())
-        final_module.setLabel(producer_name)
+        final_module = cms.EDProducer(
+            "PATFinalStateCopier",
+            src = final_module_name
+        )
         setattr(process, producer_name, final_module)
+        process.buildTriLeptons += final_module
         output_commands.append("*_%s_*_*" % producer_name)
     process.tuplize += process.buildTriLeptons
 
@@ -502,9 +509,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
         process.buildQuadLeptons += embedder_seq
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
-        final_module = getattr(process, final_module_name.value())
-        final_module.setLabel(producer_name)
+        final_module = cms.EDProducer(
+            "PATFinalStateCopier",
+            src = final_module_name
+        )
         setattr(process, producer_name, final_module)
+        process.buildQuadLeptons += final_module
         output_commands.append("*_%s_*_*" % producer_name)
     process.tuplize += process.buildQuadLeptons
 
