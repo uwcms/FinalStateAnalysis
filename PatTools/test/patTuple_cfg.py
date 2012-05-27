@@ -1,6 +1,7 @@
 #!/usr/bin/env cmsRun
 import FWCore.ParameterSet.Config as cms
 
+import FinalStateAnalysis.Utilities.cfgcleaner as cfgcleaner
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
     xSec = -999.0,
@@ -17,6 +18,7 @@ options = TauVarParsing.TauVarParsing(
     dataset='Prompt',
     target='2011Data', # Used for electron and muon effective areas
 	dumpCfg='', #used for crab
+    clean = 1,
 )
 
 files = [
@@ -74,12 +76,6 @@ tuplize, output_commands = tuplizer.configurePatTuple(
     target=options.target,
 )
 
-for command in output_commands:
-    if not command.startswith('drop') and not command.startswith('keep'):
-        process.out.outputCommands.append('keep %s' % command)
-    else:
-        process.out.outputCommands.append(command)
-
 if options.globalTag == "":
     raise RuntimeError("Global tag not specified!  Try sourcing environment.sh\n")
 
@@ -103,6 +99,16 @@ for skim_path in process.skimConfig.paths:
     the_path += process.tuplize
     process.schedule.append(the_path)
 process.out.SelectEvents.SelectEvents = process.skimConfig.paths
+output_commands.append('*_dqmEventCount_*_*')
+output_commands.append('*_eventCount_*_*')
+output_commands.append('*_MEtoEDMConverter_*_*')
+
+# Setup keep/drops
+for command in output_commands:
+    if not command.startswith('drop') and not command.startswith('keep'):
+        process.out.outputCommands.append('keep %s' % command)
+    else:
+        process.out.outputCommands.append(command)
 
 # Save DQM stuff created during pat tuplization
 process.MEtoEDMConverter = cms.EDProducer(
@@ -123,9 +129,19 @@ process.schedule.append(process.outpath)
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
 
-if options.dumpCfg:
-	dump_cfg=open(options.dumpCfg,'w')
-	dump_cfg.write(process.dumpPython())
+if options.keepAll:
+    # Optionally keep all output
+    process.out.outputCommands.append('keep *')
+
+if options.clean:
+    print "Cleaning up the cruft!"
+    unrun, unused, killed = cfgcleaner.clean_cruft(
+        process, process.out.outputCommands.value())
+    #print unused
+    #print killed
+    #print unused - killed
+    #print killed - unused
+    print "Removed %i unrun and %i unused modules!" % (len(unrun), len(unused))
 
 ################################################################################
 ### DEBUG options ##############################################################
@@ -145,7 +161,7 @@ if options.profile:
         paths = cms.untracked.vstring('muTauPath')
     )
 
-if options.keepAll:
-    # Optionally keep all output
-    process.out.outputCommands.append('keep *')
+if options.dumpCfg:
+	dump_cfg=open(options.dumpCfg,'w')
+	dump_cfg.write(process.dumpPython())
 
