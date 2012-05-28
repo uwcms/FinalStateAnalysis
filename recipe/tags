@@ -1,7 +1,0 @@
-# For updated lumi tools
-V03-05-05 RecoLuminosity/LumiDB 
-# For limit tool
-V01-12-03 HiggsAnalysis/CombinedLimit
-# For a fix to prevent segfaults on certain MC samples when using
-# the GenParticlePrunder
-V11-03-16 PhysicsTools/HepMCCandAlgos
