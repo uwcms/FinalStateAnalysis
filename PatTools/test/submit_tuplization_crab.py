@@ -13,6 +13,7 @@ submit_tuplization.py
 from RecoLuminosity.LumiDB import argparse
 import fnmatch
 from FinalStateAnalysis.MetaData.datadefs import datadefs
+from FinalStateAnalysis.Utilities.version import fsa_version
 from FinalStateAnalysis.PatTools.pattuple_option_configurator import \
         configure_pat_tuple
 import os
@@ -30,8 +31,8 @@ cfg = 'patTuple_cfg.py'
 jobId = args.jobid
 
 if len(sys.argv)==1:
-	print "Hey, I need some help. What datasets do you want to look for?"
-	sys.exit()
+    print "Hey, I need some help. What datasets do you want to look for?"
+    sys.exit()
 searchTerm = sys.argv[1]
 
 os.system('mkdir -p '+jobId)
@@ -81,9 +82,10 @@ for sample in sorted(datadefs.keys()):
     print "python patTuple_cfg.py "+opts
     os.system("python patTuple_cfg.py "+opts)
 
+    f.write('USER.publish_data_name = '+sample+"_%s-%s\n" % (jobId, fsa_version()))
+
     if 'dbs' in sample_info:
         f.write('CMSSW.dbs_url =http://cmsdbsprod.cern.ch/'+sample_info['dbs']+'/servlet/DBSServlet\n')
-	f.write('USER.publish_data_name = ',sample+"_%s\n" % jobId)
 
 f.write('\n\n')
 f.close()
