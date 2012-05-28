@@ -20,6 +20,6 @@ if cmssw_major_version() == 5:
 elif cmssw_major_version() == 4:
     import data7TeV
     data_name_map = data7TeV.data_name_map
-    datadefs = data.TeV.datadefs
+    datadefs = data7TeV.datadefs
 else:
     raise ValueError("I can't figure out which release to use!")
