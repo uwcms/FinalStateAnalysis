@@ -7,6 +7,14 @@ MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
 
 echo "Detected CMSSW version: $MAJOR_VERSION"
 
+echo "Checking for CERN CVS kerberos ticket"
+HAS_TICKET=`klist 2>&1 | grep CERN.CH`
+
+if [ -z "$HAS_TICKET" ]; then
+  echo "ERROR: You need to kinit yourname@CERN.CH to enable CVS checkouts"
+  exit 1
+fi
+
 if [ "$MAJOR_VERSION" -eq "4" ]; then
   echo "Applying recipe for CMSSW 4_2_8"
   ./recipe_42X.sh
