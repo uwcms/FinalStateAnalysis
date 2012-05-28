@@ -10,14 +10,24 @@ submit_tuplization.py
 '''
 
 
+from RecoLuminosity.LumiDB import argparse
+import fnmatch
 from FinalStateAnalysis.MetaData.datadefs import datadefs
 from FinalStateAnalysis.PatTools.pattuple_option_configurator import \
         configure_pat_tuple
 import os
 import sys
 
+parser = argparse.ArgumentParser(description='Build PAT Tuple CRAB submission')
+parser.add_argument('jobid', help='Job ID identifier')
+parser.add_argument('--responsible', type=str, required=False, default='',
+                    help='Filter on responsibility')
+parser.add_argument('--samples', nargs='+', type=str, required=False,
+                    help='Filter samples using list of patterns (shell style)')
+args = parser.parse_args()
+
 cfg = 'patTuple_cfg.py'
-jobId = '2012-05-15-PatTuple'
+jobId = args.jobid
 
 if len(sys.argv)==1:
 	print "Hey, I need some help. What datasets do you want to look for?"
@@ -27,31 +37,45 @@ searchTerm = sys.argv[1]
 os.system('mkdir -p '+jobId)
 
 #Write a simple crab.cfg
-f=open('crab.cfg','w')
+f=open('%s/crab.cfg' % jobId, 'w')
 f.write('[CRAB]\njobtype = cmssw\nscheduler = glidein\nuse_server = 1\n')
-f.write('[USER]\nreturn_data = 0\ncopy_data = 1\nstorage_element = T2_US_Wisconsin\npublish_data = 1\ndbs_url_for_publication = https://cmsdbsprod.cern.ch:8443/cms_dbs_ph_analysis_01_writer/servlet/DBSServlet')
+f.write('[USER]\nreturn_data = 0\ncopy_data = 1\nstorage_element = T2_US_Wisconsin\n')
+f.write('publish_data = 1\ndbs_url_for_publication = https://cmsdbsprod.cern.ch:8443/cms_dbs_ph_analysis_01_writer/servlet/DBSServlet')
 f.write('[GRID]\nrb = CERN\nmaxtarballsize = 250\n')
 f.close()
 
 #make multicrab.cfg
-f=open('multicrab.cfg','w')
+f=open('%s/multicrab.cfg' % jobId, 'w')
 f.write('[MULTICRAB]\ncfg = crab.cfg\n')
 f.write('[COMMON]\nCMSSW.total_number_of_lumis = -1\nCMSSW.lumis_per_job = 40\nCMSSW.get_edm_output = 1\n\n')
+
+# Loop over samples
 for sample in sorted(datadefs.keys()):
-    if sample.find(searchTerm) == -1:
-        continue
+    sample_info = datadefs[sample]
+    # Filter by responsibility
+    if args.responsible:
+        if sample_info['responsible'] != args.responsible:
+            continue
+    # Filter by sample wildcards
+    if args.samples:
+        is_matched = False
+        for pattern in args.samples:
+            if fnmatch.fnmatchcase(sample, pattern):
+                is_matched = True
+                break
+        if not is_matched:
+            continue
 
     f.write('[')
     f.write(sample)
     f.write(']\n')
-    sample_info = datadefs[sample]
 
     #cmsRun parameters
     options = configure_pat_tuple(sample, sample_info)
 
     f.write('CMSSW.datasetpath = '+sample_info['datasetpath']+'\n')
     f.write('CMSSW.pset = ')
-    f.write(jobId+'/'+sample+'_cfg.py\n')
+    f.write(sample+'_cfg.py\n')
     options.append('dumpCfg='+jobId+'/'+sample+'_cfg.py')
     opts= ' '.join(options)
     print "python patTuple_cfg.py "+opts
@@ -59,7 +83,7 @@ for sample in sorted(datadefs.keys()):
 
     if 'dbs' in sample_info:
         f.write('CMSSW.dbs_url =http://cmsdbsprod.cern.ch/'+sample_info['dbs']+'/servlet/DBSServlet\n')
-	f.write('USER.publish_data_name = ',sample+"_TUPLE\n")
+	f.write('USER.publish_data_name = ',sample+"_%s\n" % jobId)
 
 f.write('\n\n')
 f.close()
