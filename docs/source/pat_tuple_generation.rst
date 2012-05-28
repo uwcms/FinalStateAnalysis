@@ -32,6 +32,8 @@ Build the crab submitters::
   cd PatTools/test
   python submit_tuplization_crab.py JOB_ID  --responsible YOUR_NAME
 
+YOUR_NAME should be either "Maria", "Josh", "Ian", or "Evan"
+
 This will create a directory ``JOB_ID`` with a multicrab.cfg in it.  Move it to
 scratch, then symlink it back to AFS to prevent AFS quota issues.::
 
