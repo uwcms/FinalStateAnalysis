@@ -15,9 +15,9 @@ Get the code::
   cd FinalStateAnalysis
   git checkout JOB_ID_TAG
 
-Add all the dependencies and compile them (takes forever)::
+You can ignore messages about a "detached head."  Now add all the dependencies and compile (takes forever)::
 
-  cd FinalStateAnalysis/recipe
+  cd recipe
   ./recipe.sh
   cd ../..
   scram b -j 8 
