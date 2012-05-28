@@ -1,4 +1,6 @@
 from FinalStateAnalysis.MetaData.datadefs import datadefs
+from FinalStateAnalysis.PatTools.pattuple_option_configurator import \
+        configure_pat_tuple
 import os
 import sys
 
@@ -25,73 +27,26 @@ for sample in sorted(datadefs.keys()):
         sys.stderr.write('=> skipping existing submit directory for %s\n' % sample)
         continue
 
-    options = []
+    options = configure_pat_tuple(sample, sample_info)
+    options.append("'inputFiles=$inputFileNames'")
+    options.append("'outputFile=$outputFileName'")
+
     farmout_options = []
     farmout_options.append(
         '--input-dbs-path=%s' % sample_info['datasetpath'])
 
-    # Figure out dataset - the EGamma electron calibrator needs to know
-    # if we are using a ReReco, etc.
-    dataset=None
-    for tag in ['Fall11', 'Summer11', 'Prompt', 'ReReco', 'Jan16ReReco']:
-        if tag in sample_info['datasetpath']:
-            dataset = tag
-    if dataset is None and '05Aug2011' in sample_info['datasetpath']:
-        dataset = 'ReReco'
-    if dataset is None and 'crab_reco' in sample_info['datasetpath']:
-        dataset = 'Fall11'
-    if not dataset:
-        raise ValueError("Couldn't determine dataset for sample: "
-                        + sample_info['datasetpath'])
-    options.append('dataset=%s' % dataset)
-
-    # Figure out which target - the EGamma/Muon effective areas need to know
-    # this
-    target=None
-    if 'Fall11' in sample_info['datasetpath']:
-        target = 'Fall11MC'
-    elif 'crab_reco' in sample_info['datasetpath']: # special case, private prod
-        target = 'Fall11MC'
-    elif 'Summer11' in sample_info['datasetpath']:
-        target = 'Summer11MC'
-    elif 'data' in sample and '2011' in sample_info['datasetpath']:
-        target = '2011Data'
-    elif 'data' in sample and '2012' in sample_info['datasetpath']:
-        target = '2012Data'
-    if not target:
-        raise ValueError("Couldn't determine target for sample: "
-                         + sample_info['datasetpath'])
-    options.append('target=%s' % target)
-
-    # Check if we need to use a different DBS
-    if 'dbs' in sample_info:
-        farmout_options.append(
-            '--dbs-service-url=http://cmsdbsprod.cern.ch/%s/servlet/DBSServlet' % sample_info['dbs']
-        )
-
-    if 'data' not in sample:
-        options.append('isMC=1')
-        options.append('globalTag=$mcgt')
-        options.append('xSec=%0.4f' % sample_info['x_sec'])
-        options.append('puTag=%s' % sample_info['pu'])
-    else:
-        options.append('isMC=0')
-        options.append('globalTag=$datagt')
-        options.append('puTag=data')
-        lumi_mask_fip = sample_info['lumi_mask']
-        lumi_mask_path = os.path.join(
-            os.environ['CMSSW_BASE'], 'src', lumi_mask_fip)
-        options.append('lumiMask=%s' % lumi_mask_path)
+    if 'data' in sample:
         farmout_options.append('--lumi-mask=%s' % lumi_mask_path)
         if 'firstRun' in sample_info:
             farmout_options.append(
                 '--input-runs=%i-%i' %
                 (sample_info['firstRun'], sample_info['lastRun']))
-            options.append('firstRun=%s' % sample_info['firstRun'])
-            options.append('lastRun=%s' % sample_info['lastRun'])
-
-    options.append("'inputFiles=$inputFileNames'")
-    options.append("'outputFile=$outputFileName'")
+    # Check if we need to use a different DBS
+    if 'dbs' in sample_info:
+        farmout_options.append(
+            '--dbs-service-url=http://cmsdbsprod.cern.ch/%s/servlet/DBSServlet'
+            % sample_info['dbs']
+        )
 
     command = [
         'farmoutAnalysisJobs',
