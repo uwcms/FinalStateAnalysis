@@ -11,7 +11,7 @@ JOB_ID_TAG used for checkout omits the "XTeV" part.
 
 Get the code::
 
-  git clone git@github.com:ekfriis/FinalStateAnalysis.git
+  git clone git://github.com/ekfriis/FinalStateAnalysis.git
   cd FinalStateAnalysis
   git checkout JOB_ID_TAG
 
