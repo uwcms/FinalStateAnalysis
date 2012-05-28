@@ -23,6 +23,8 @@ cvs co -r V01-04-17 RecoTauTag/RecoTau
 cvs co -r V01-04-01 RecoTauTag/Configuration
 cvs co -r V00-04-01 CondFormats/EgammaObjects
 cvs up -r 1.53 PhysicsTools/PatAlgos/python/tools/tauTools.py
+# Apply an optimization - don't build taus w/ pt < 19
+patch -N -p0 < FinalStateAnalysis/recipe/patches/speedupRecoTauCombBuilder.patch
 
 # Add Marias patch for negative SSV 
 patch -N -p0 < FinalStateAnalysis/recipe/marias_negativeSSV.patch

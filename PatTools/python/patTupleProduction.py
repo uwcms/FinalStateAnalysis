@@ -102,6 +102,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
         process.recoTauClassicHPSSequence.remove(process.ak5PFJetTracksAssociatorAtVertex)
         assert(process.combinatoricRecoTaus.modifiers[3].name.value() == 'TTIworkaround')
         del process.combinatoricRecoTaus.modifiers[3]
+        # Don't build junky taus below 19 GeV
+        process.combinatoricRecoTaus.builders[0].minPtToBuild = cms.double(19)
         process.tuplize += process.recoTauClassicHPSSequence
     else:
         # We can run less tau stuff in 52, since HPS taus already built.
