@@ -8,11 +8,11 @@ goodVertex = cms.EDFilter("VertexSelector",
 
 muons4skim = cms.EDFilter("MuonSelector",
 		   src = cms.InputTag("muons"),
-		      cut = cms.string("(isTrackerMuon||isGlobalMuon) && abs(eta) < 2.4"),
+		      cut = cms.string("pt>3 && (isTrackerMuon||isGlobalMuon) && abs(eta) < 2.4"),
 			  )
 electrons4skim = cms.EDFilter("GsfElectronSelector",
 		   src = cms.InputTag("gsfElectrons"),
-		      cut = cms.string("abs(eta) < 2.5"),
+		      cut = cms.string("pt>5 && abs(eta) < 2.5"),
 			  )
 leptons4skim = cms.EDProducer("CandViewMerger",
 		   src = cms.VInputTag( cms.InputTag("muons4skim"),
