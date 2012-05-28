@@ -136,7 +136,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     pfTools.usePFIso(process)
     # Setup H2Tau custom iso definitions
     setup_h2tau_iso(process)
-    #temp, don't apply vetos in photon iso, please
+    #temp, redefine vetos for ZZ summer12 sync
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring()
     process.elPFIsoValueGamma04NoPFIdPFIso.deposits[0].vetos = cms.vstring()
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
