@@ -41,6 +41,9 @@ def configure_pat_tuple(sample, sample_info):
         target = '2011Data'
     elif 'data' in sample and '2012' in sample_info['datasetpath']:
         target = '2012Data'
+    elif 'Summer12' in sample_info['datasetpath']:
+        target = '2011Data'
+
     if not target:
         raise ValueError("Couldn't determine target for sample: "
                          + sample_info['datasetpath'])
