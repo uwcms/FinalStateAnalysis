@@ -23,6 +23,9 @@ def configure_pat_tuple(sample, sample_info):
         dataset = 'ReReco'
     if dataset is None and 'crab_reco' in sample_info['datasetpath']:
         dataset = 'Fall11'
+    if dataset is None and 'Summer12' in sample_info['datasetpath']:
+        # Not determined yet
+        dataset = 'Fall11'
     if not dataset:
         raise ValueError("Couldn't determine dataset for sample: "
                         + sample_info['datasetpath'])
@@ -52,7 +55,10 @@ def configure_pat_tuple(sample, sample_info):
     if 'data' not in sample:
         options.append('isMC=1')
         options.append('globalTag=%s' % os.environ['mcgt'])
-        options.append('xSec=%0.4f' % sample_info['x_sec'])
+        if 'x_sec' in sample_info:
+            options.append('xSec=%0.4f' % sample_info['x_sec'])
+        else:
+            options.append('xSec=0')
         options.append('puTag=%s' % sample_info['pu'])
     else:
         options.append('isMC=0')
