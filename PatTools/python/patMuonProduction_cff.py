@@ -1,4 +1,5 @@
 import FWCore.ParameterSet.Config as cms
+from FinalStateAnalysis.Utilities.version import cmssw_major_version
 
 customizeMuonSequence = cms.Sequence()
 
@@ -6,9 +7,12 @@ from FinalStateAnalysis.PatTools.muons.muTrackCandidates_cfi import trackCandida
 customizeMuonSequence += trackCandidates
 
 from FinalStateAnalysis.PatTools.muons.patMuonRhoEmbedding_cfi import \
-        patMuonRhoEmbedding, patMuonZZRhoEmbedding
+        patMuonRhoEmbedding, patMuonZZRhoEmbedding, patMuonZZ2012RhoEmbedding
+
 customizeMuonSequence += patMuonRhoEmbedding
 customizeMuonSequence += patMuonZZRhoEmbedding
+if cmssw_major_version() == 5:
+	customizeMuonSequence += patMuonZZ2012RhoEmbedding
 
 from FinalStateAnalysis.PatTools.muons.patMuonIdEmbedding_cfi import \
         patMuonsEmbedWWId, patMuonsEmbedWWId2011, patVBTFMuonMatch
