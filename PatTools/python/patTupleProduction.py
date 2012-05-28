@@ -136,6 +136,13 @@ def configurePatTuple(process, isMC=True, **kwargs):
     pfTools.usePFIso(process)
     # Setup H2Tau custom iso definitions
     setup_h2tau_iso(process)
+    #temp, redefine vetos for ZZ summer12 sync
+    process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring()
+    process.elPFIsoValueGamma04NoPFIdPFIso.deposits[0].vetos = cms.vstring()
+    process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
+    process.elPFIsoValueGamma04NoPFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
+    process.elPFIsoValueCharged04PFIdPFIso.deposits[0].vetos = cms.vstring('0.015')
+    process.elPFIsoValueCharged04NoPFIdPFIso.deposits[0].vetos = cms.vstring('0.015')
 
     # Unembed junk
     process.patMuons.embedCaloMETMuonCorrs = False
