@@ -3,12 +3,16 @@ Generating PAT Tuples
 
 Setup a 4_2_8_patch7 and/or 5_2_5 area:
 
-In each area run ``cmsenv``.
+First run ``cmsenv``.
+
+JOB_ID should be agreed upon before hand, and a tag will be prepared.  In
+general, it is formatted as "YYYY-MM-DD-XTeV-PatTuple".  The JOB_ID_TAG used for
+checkout omits the "XTeV" part.
 
 Get the code::
 
   git clone git@github.com:ekfriis/FinalStateAnalysis.git
-  git checkout 2012-05-28-PatTuple
+  git checkout JOB_ID_TAG
 
 Add all the dependencies and compile them (takes forever)::
 
@@ -26,9 +30,6 @@ Build the crab submitters::
 
   cd PatTools/test
   python submit_tuplization_crab.py JOB_ID  --responsible YOUR_NAME
-
-JOB_ID should be agreed upon before hand.  In general, it is formatted as 
-YYYY-MM-DD-XTeV-PatTuple.
 
 This will create a directory ``JOB_ID`` with a multicrab.cfg in it::
 
