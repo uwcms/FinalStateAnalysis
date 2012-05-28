@@ -21,3 +21,11 @@ patMuonZZRhoEmbedding = cms.EDProducer(
     # Used as userFloat label
     userLabel = cms.string("zzRho")
 )
+
+patMuonZZ2012RhoEmbedding = cms.EDProducer(
+    "MuonRhoOverloader",
+    src = cms.InputTag("fixme"),
+    srcRho = cms.InputTag("kt6PFJetsCentralNeutral", "rho"),
+    # Used as userFloat label
+    userLabel = cms.string("zzRho2012")
+)
