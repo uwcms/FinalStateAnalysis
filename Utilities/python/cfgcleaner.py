@@ -292,9 +292,12 @@ def clean_cruft(process, output_commands):
     Returns a tuple of deleted (set(un-run), set(un-used)) modules.
     '''
     # This is always complete on the first run.
-    unrun = clean_unrun_modules(process)
+    #unrun = clean_unrun_modules(process)
+    # HACK - don't clena this, it can leave process.Nones in sequences
+    unrun = set([])
     unused = kill_unused(process, output_commands)
-    killed = clean_unrun_modules(process)
+    killed = set([])
+    #killed = clean_unrun_modules(process)
     #unrun = None
     #unused = run_but_unused(process)
     return unrun, unused, killed
