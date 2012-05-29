@@ -49,7 +49,7 @@ f.close()
 #make multicrab.cfg
 f=open('%s/multicrab.cfg' % jobId, 'w')
 f.write('[MULTICRAB]\ncfg = crab.cfg\n')
-f.write('[COMMON]\nCMSSW.total_number_of_events = -1\nCMSSW.events_per_job = 5000\nCMSSW.get_edm_output = 1\n\n')
+f.write('[COMMON]CMSSW.get_edm_output = 1\n\n')
 
 # Loop over samples
 for sample in sorted(datadefs.keys()):
@@ -77,6 +77,11 @@ for sample in sorted(datadefs.keys()):
     f.write('CMSSW.datasetpath = '+sample_info['datasetpath']+'\n')
     f.write('CMSSW.pset = ')
     f.write(sample+'_cfg.py\n')
+    if 'data' not in sample:
+        f.write('CMSSW.total_number_of_events = -1\nCMSSW.events_per_job = 5000\n')
+    else:
+        f.write('CMSSW.total_number_of_lumis = -1\nCMSSW.lumis_per_job = 30\n')
+
     options.append('dumpCfg='+jobId+'/'+sample+'_cfg.py')
     opts= ' '.join(options)
     print "python patTuple_cfg.py "+opts
