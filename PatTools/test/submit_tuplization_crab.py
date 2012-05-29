@@ -48,7 +48,7 @@ f.close()
 #make multicrab.cfg
 f=open('%s/multicrab.cfg' % jobId, 'w')
 f.write('[MULTICRAB]\ncfg = crab.cfg\n')
-f.write('[COMMON]\nCMSSW.total_number_of_events = -1\nCMSSW.events_per_job = 2000\nCMSSW.get_edm_output = 1\n\n')
+f.write('[COMMON]\nCMSSW.total_number_of_events = -1\nCMSSW.events_per_job = 5000\nCMSSW.get_edm_output = 1\n\n')
 
 # Loop over samples
 for sample in sorted(datadefs.keys()):
