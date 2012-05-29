@@ -46,13 +46,23 @@ void PFMETSignificanceProducer::produce(edm::Event& evt, const edm::EventSetup& 
     }
   }
 
-  TMatrixD result_tm = pfMEtSignInterface_(particles);
-
   std::auto_ptr<Matrix> output(new Matrix());
-  (*output)(0,0) = result_tm(0, 0);
-  (*output)(1,0) = result_tm(1, 0);
-  (*output)(0,1) = result_tm(0, 1);
-  (*output)(1,1) = result_tm(1, 1);
+
+  // Very rarely there can be a singularity error which throws
+  // and exception.
+  try {
+    TMatrixD result_tm = pfMEtSignInterface_(particles);
+
+    (*output)(0,0) = result_tm(0, 0);
+    (*output)(1,0) = result_tm(1, 0);
+    (*output)(0,1) = result_tm(0, 1);
+    (*output)(1,1) = result_tm(1, 1);
+  } catch (...) {
+    (*output)(0,0) = -999;
+    (*output)(1,0) = -999;
+    (*output)(0,1) = -999;
+    (*output)(1,1) = -999;
+  }
 
   evt.put(output);
 }
