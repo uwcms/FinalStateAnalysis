@@ -49,7 +49,7 @@ f.close()
 #make multicrab.cfg
 f=open('%s/multicrab.cfg' % jobId, 'w')
 f.write('[MULTICRAB]\ncfg = crab.cfg\n')
-f.write('[COMMON]CMSSW.get_edm_output = 1\n\n')
+f.write('[COMMON]\nCMSSW.get_edm_output = 1\n\n')
 
 # Loop over samples
 for sample in sorted(datadefs.keys()):
