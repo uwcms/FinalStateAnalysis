@@ -81,6 +81,10 @@ for sample in sorted(datadefs.keys()):
         f.write('CMSSW.total_number_of_events = -1\nCMSSW.events_per_job = 5000\n')
     else:
         f.write('CMSSW.total_number_of_lumis = -1\nCMSSW.lumis_per_job = 30\n')
+        lumi_mask_fip = sample_info['lumi_mask']
+        lumi_mask_path = os.path.join(os.environ['CMSSW_BASE'],
+                                      'src', lumi_mask_fip)
+        f.write('CMSSW.lumi_mask = %s\n' % lumi_mask_path)
 
     options.append('dumpCfg='+jobId+'/'+sample+'_cfg.py')
     opts= ' '.join(options)
