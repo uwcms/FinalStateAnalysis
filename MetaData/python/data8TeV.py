@@ -90,7 +90,7 @@ for mass in [115, 120, 125, 130, 140, 145, 150, 155, 160]:
 def build_data_set(pd, analyses, who):
     subsample_dict = {
         'data_%s_Run2012A_PromptReco_v1' % pd : {
-            'datasetpath' : "/%s/Run2012A-PromptReco-v1/AODSIM" % pd,
+            'datasetpath' : "/%s/Run2012A-PromptReco-v1/AOD" % pd,
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-194479_8TeV_PromptReco_Collisions12_JSON.txt",
             'firstRun' : 190450,
             'lastRun' : 193686,
@@ -98,7 +98,7 @@ def build_data_set(pd, analyses, who):
             'responsible' : who,
         },
         'data_%s_Run2012B_PromptReco_v1_a' % pd : {
-            'datasetpath' : "/%s/Run2012B-PromptReco-v1/AODSIM" % pd,
+            'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-194479_8TeV_PromptReco_Collisions12_JSON.txt",
             'firstRun' : 193752,
             'lastRun' : 194479,
