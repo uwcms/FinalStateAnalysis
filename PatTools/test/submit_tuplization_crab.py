@@ -49,24 +49,23 @@ f.close()
 #make multicrab.cfg
 f=open('%s/multicrab.cfg' % jobId, 'w')
 f.write('[MULTICRAB]\ncfg = crab.cfg\n')
-f.write('[COMMON]\nCMSSW.total_number_of_lumis = -1\nCMSSW.lumis_per_job = 40\nCMSSW.get_edm_output = 1\n\n')
+f.write('[COMMON]\nCMSSW.total_number_of_events = -1\nCMSSW.events_per_job = 5000\nCMSSW.get_edm_output = 1\n\n')
 
 # Loop over samples
 for sample in sorted(datadefs.keys()):
     sample_info = datadefs[sample]
+    passes_filter = False
     # Filter by responsibility
     if args.responsible:
-        if sample_info['responsible'] != args.responsible:
-            continue
+        if sample_info['responsible'] == args.responsible:
+            passes_filter = True
     # Filter by sample wildcards
     if args.samples:
-        is_matched = False
         for pattern in args.samples:
             if fnmatch.fnmatchcase(sample, pattern):
-                is_matched = True
-                break
-        if not is_matched:
-            continue
+                passes_filter = True
+    if not passes_filter:
+        continue
 
     f.write('[')
     f.write(sample)

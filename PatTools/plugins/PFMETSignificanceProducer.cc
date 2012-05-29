@@ -58,6 +58,9 @@ void PFMETSignificanceProducer::produce(edm::Event& evt, const edm::EventSetup& 
     (*output)(0,1) = result_tm(0, 1);
     (*output)(1,1) = result_tm(1, 1);
   } catch (...) {
+    edm::LogError("BadPFMETMatrix")
+      << "Caught an exception computing PFMET signif. matrix"
+      << ", will fix matrix with -999s";
     (*output)(0,0) = -999;
     (*output)(1,0) = -999;
     (*output)(0,1) = -999;
