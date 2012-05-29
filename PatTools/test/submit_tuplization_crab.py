@@ -53,19 +53,18 @@ f.write('[COMMON]\nCMSSW.total_number_of_events = -1\nCMSSW.events_per_job = 200
 # Loop over samples
 for sample in sorted(datadefs.keys()):
     sample_info = datadefs[sample]
+    passes_filter = False
     # Filter by responsibility
     if args.responsible:
-        if sample_info['responsible'] != args.responsible:
-            continue
+        if sample_info['responsible'] == args.responsible:
+            passes_filter = True
     # Filter by sample wildcards
     if args.samples:
-        is_matched = False
         for pattern in args.samples:
             if fnmatch.fnmatchcase(sample, pattern):
-                is_matched = True
-                break
-        if not is_matched:
-            continue
+                passes_filter = True
+    if not passes_filter:
+        continue
 
     f.write('[')
     f.write(sample)
