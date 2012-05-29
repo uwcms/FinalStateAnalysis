@@ -43,6 +43,7 @@ f.write('[CRAB]\njobtype = cmssw\nscheduler = glidein\nuse_server = 1\n')
 f.write('[USER]\nreturn_data = 0\ncopy_data = 1\nstorage_element = T2_US_Wisconsin\n')
 f.write('publish_data = 1\ndbs_url_for_publication = https://cmsdbsprod.cern.ch:8443/cms_dbs_ph_analysis_01_writer/servlet/DBSServlet')
 f.write('[GRID]\nrb = CERN\nmaxtarballsize = 250\n')
+f.write('ce_white_list=T2_US\nse_white_list=T2_US\n')
 f.close()
 
 #make multicrab.cfg
