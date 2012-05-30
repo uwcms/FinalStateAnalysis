@@ -1,8 +1,10 @@
 Published PAT Tuples
 ====================
 
-.. toctree::
+May 5th, 2012
+-------------
 
-    tuples/2012-05-29-8TeV-PatTuples
+8 TeV
+'''''
 
-
+..include:: tuples/2012-05-29-8TeV-PatTuples.rst
