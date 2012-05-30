@@ -30,12 +30,11 @@ args = parser.parse_args()
 cfg = 'patTuple_cfg.py'
 jobId = args.jobid
 
-if len(sys.argv)==1:
-    print "Hey, I need some help. What datasets do you want to look for?"
-    sys.exit()
-searchTerm = sys.argv[1]
-
-os.system('mkdir -p '+jobId)
+# Put in scratch then symlink it to the CWD
+scratch_dir = os.path.join('/scratch', os.environ['LOGNAME'], jobId)
+os.system('mkdir -p '+ scratch_dir)
+if not os.path.exists(jobId):
+    os.symlink(scratch_dir, jobId)
 
 #Write a simple crab.cfg
 f=open('%s/crab.cfg' % jobId, 'w')
@@ -54,16 +53,19 @@ f.write('[COMMON]\nCMSSW.get_edm_output = 1\n\n')
 # Loop over samples
 for sample in sorted(datadefs.keys()):
     sample_info = datadefs[sample]
-    passes_filter = False
+    passes_filter = True
     # Filter by responsibility
     if args.responsible:
-        if sample_info['responsible'] == args.responsible:
-            passes_filter = True
+        passes_resp = sample_info['responsible'] == args.responsible
+        passes_filter = passes_filter and passes_resp
+
     # Filter by sample wildcards
     if args.samples:
+        passes_wildcard = False
         for pattern in args.samples:
             if fnmatch.fnmatchcase(sample, pattern):
-                passes_filter = True
+                passes_wildcard = True
+        passes_filter = passes_wildcard and passes_filter
     if not passes_filter:
         continue
 
