@@ -55,3 +55,36 @@ def query_das(dataset):
     }
 
     return output
+
+def query_pattuple(dataset):
+    ''' Get information about a pat tuple dataset from DAS
+
+    Returns a dictionary with nfiles, nevents, nlumis
+
+    '''
+    output = {}
+    pat_result = get_data(
+        'https://cmsweb.cern.ch',
+        'file dataset=%s  instance=cms_dbs_ph_analysis_01 | count(file), sum(file.nevents)' % dataset,
+        0, #idx
+        0, #limit
+        False
+    )
+    pat_result = json.loads(pat_result)
+    output['nfiles'] = pat_result['data'][0]['result']['value']
+    output['nevents'] = pat_result['data'][1]['result']['value']
+
+    parent_result = get_data(
+        'https://cmsweb.cern.ch',
+        'parent dataset=%s  instance=cms_dbs_ph_analysis_01' % dataset,
+        0, #idx
+        0, #limit
+        False
+    )
+    parent_result = json.loads(parent_result)
+    output['parent'] = parent_result['data'][0]['parent'][0]['name']
+
+    return output
+
+if __name__ == "__main__":
+    print query_pattuple('/WH_ZH_TTH_HToTauTau_M-115_8TeV-pythia6-tauola/friis-VH_H2Tau_M-115_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER')
