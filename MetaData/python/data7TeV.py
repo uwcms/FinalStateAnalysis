@@ -86,26 +86,49 @@ datadefs = {
         'analyses' : ['HTT',  'VH', 'Tau', 'Mu'],
         'responsible' : 'Ian',
     },
+    # Single top samples
     'T_tW_Powheg' : {
         'datasetpath' : "/T_TuneZ2_tW-channel-DS_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 10.6*picobarns,
+        'x_sec' : 7.87*picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
         'responsible' : 'Maria',
     },
     'T_t_Powheg' : {
         'datasetpath' : "/T_TuneZ2_t-channel_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 64.6*picobarns,
+        'x_sec' : 41.92*picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
         'responsible' : 'Maria',
     },
     'T_s_Powheg' : {
         'datasetpath' : "/T_TuneZ2_s-channel_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 4.21*picobarns,
+        'x_sec' : 3.19*picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
         'responsible' : 'Maria',
+    },
+    # Single anti-top samples
+    'Tbar_tW_Powheg' : {
+        'datasetpath' : "/Tbar_TuneZ2_tW-channel-DS_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v2/AODSIM",
+        'x_sec' : 7.87*picobarns,
+        'pu' : 'S6',
+        'analyses' : ['HTT'],
+        'responsible' : 'Evan',
+    },
+    'Tbar_t_Powheg' : {
+        'datasetpath' : "/Tbar_TuneZ2_t-channel_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 22.65*picobarns,
+        'pu' : 'S6',
+        'analyses' : ['HTT'],
+        'responsible' : 'Evan',
+    },
+    'Tbar_s_Powheg' : {
+        'datasetpath' : "/Tbar_TuneZ2_s-channel_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 1.44*picobarns,
+        'pu' : 'S6',
+        'analyses' : ['HTT'],
+        'responsible' : 'Evan',
     },
     'Wplus3Jets_madgraph' : {
         'datasetpath' : "/W3Jets_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
