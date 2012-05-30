@@ -197,6 +197,20 @@ datadefs = {
         'analyses' : ['VH', 'HTT'],
         'responsible' : 'Ian',
     },
+    'WZinclusive' : {
+        'datasetpath' : "/WZ_TuneZ2_7TeV_pythia6_tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'pu' : 'S6',
+        'x_sec' : 18*picobarns,
+        'analyses' : ['VH',  'HTT'],
+        'responsible' : 'Evan',
+    },
+    'WWinclusive' : {
+        'datasetpath' : '/WW_TuneZ2_7TeV_pythia6_tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
+        'pu' : 'S6',
+        'x_sec' : 47*picobarns,
+        'analyses' : ['VH', 'HTT'],
+        'responsible' : 'Evan',
+    },
 
     ############################################################################
     #### QCD datasets                       ####################################
