@@ -43,6 +43,7 @@ Contents
    install
    pat_tuple
    pat_tuple_generation
+   pat_tuple_list
    tools
    edmplugins
    version_control
