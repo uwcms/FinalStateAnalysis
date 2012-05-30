@@ -88,7 +88,7 @@ datadefs = {
     },
     # Single top samples
     'T_tW_Powheg' : {
-        'datasetpath' : "/T_TuneZ2_tW-channel-DS_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'datasetpath' : "/T_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'x_sec' : 7.87*picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
@@ -110,7 +110,7 @@ datadefs = {
     },
     # Single anti-top samples
     'Tbar_tW_Powheg' : {
-        'datasetpath' : "/Tbar_TuneZ2_tW-channel-DS_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v2/AODSIM",
+        'datasetpath' : "/Tbar_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v2/AODSIM",
         'x_sec' : 7.87*picobarns,
         'pu' : 'S6',
         'analyses' : ['HTT'],
