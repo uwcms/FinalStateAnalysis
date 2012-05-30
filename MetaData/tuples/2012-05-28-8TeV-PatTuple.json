@@ -1,0 +1,42 @@
+{
+  "/TTJets_TuneZ2star_8TeV-madgraph-tauola/friis-TTplusJets_madgraph_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
+    "nevents": 732172, 
+    "nfiles": 242, 
+    "parent": "/TTJets_TuneZ2star_8TeV-madgraph-tauola/Summer12-PU_S7_START52_V5-v1/AODSIM"
+  }, 
+  "/TTWTo2Lminus2Nu_7TeV-madgraph/friis-TTWToLminus_2012-05-29-7TeV-PatTuple-b08cf9d-dd1feeb0a3375874dc340230eea9d8b5/USER": {
+    "nevents": 46450, 
+    "nfiles": 10, 
+    "parent": "/TTWTo2Lminus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM"
+  }, 
+  "/TTWTo2Lplus2Nu_7TeV-madgraph/friis-TTWToLplus_2012-05-29-7TeV-PatTuple-b08cf9d-acbd9a21605cbde1a512707497c9276f/USER": {
+    "nevents": 40780, 
+    "nfiles": 9, 
+    "parent": "/TTWTo2Lplus2Nu_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM"
+  }, 
+  "/WH_ZH_TTH_HToTauTau_M-115_8TeV-pythia6-tauola/friis-VH_H2Tau_M-115_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
+    "nevents": 213848, 
+    "nfiles": 78, 
+    "parent": "/WH_ZH_TTH_HToTauTau_M-115_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM"
+  }, 
+  "/WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola/friis-VH_H2Tau_M-125_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
+    "nevents": 115937, 
+    "nfiles": 41, 
+    "parent": "/WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM"
+  }, 
+  "/WH_ZH_TTH_HToTauTau_M-130_8TeV-pythia6-tauola/friis-VH_H2Tau_M-130_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
+    "nevents": 94267, 
+    "nfiles": 33, 
+    "parent": "/WH_ZH_TTH_HToTauTau_M-130_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM"
+  }, 
+  "/WH_ZH_TTH_HToTauTau_M-140_8TeV-pythia6-tauola/friis-VH_H2Tau_M-140_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
+    "nevents": 118185, 
+    "nfiles": 40, 
+    "parent": "/WH_ZH_TTH_HToTauTau_M-140_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM"
+  }, 
+  "/WH_ZH_TTH_HToTauTau_M-145_8TeV-pythia6-tauola/friis-VH_H2Tau_M-145_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
+    "nevents": 79825, 
+    "nfiles": 26, 
+    "parent": "/WH_ZH_TTH_HToTauTau_M-145_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM"
+  }
+}
