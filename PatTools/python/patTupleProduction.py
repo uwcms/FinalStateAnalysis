@@ -133,6 +133,15 @@ def configurePatTuple(process, isMC=True, **kwargs):
         # Just keep the normal ones
         output_commands.append('*_ak5PFJets_*_*')
 
+    # In the embedded samples, we need to re-run the b-tagging
+    if kwargs['embedded']:
+       process.load('RecoBTag/Configuration/RecoBTag_cff')
+       process.load('RecoJets/JetAssociationProducers/ak5JTA_cff')
+       process.ak5JetTracksAssociatorAtVertex.jets   = cms.InputTag("ak5PFJets")
+       process.ak5JetTracksAssociatorAtVertex.tracks = cms.InputTag("tmfTracks")
+       process.tuplize += process.ak5JetTracksAssociatorAtVertex
+       process.tuplize += process.btagging
+
     # Run pat default sequence
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
     # Embed PF Isolation in electrons & muons
