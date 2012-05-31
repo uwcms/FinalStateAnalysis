@@ -1,8 +1,18 @@
 {
+  "/DoubleElectron/iross-data_DoubleElectron_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER": {
+    "nevents": 4217381, 
+    "nfiles": 609, 
+    "parent": "/DoubleElectron/Run2012A-PromptReco-v1/AOD"
+  }, 
   "/DoubleElectron/iross-data_DoubleElectron_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER": {
     "nevents": 5567014, 
     "nfiles": 576, 
     "parent": "/DoubleElectron/Run2012B-PromptReco-v1/AOD"
+  }, 
+  "/MuEG/friis-data_MuEG_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-v1-ca4f4cf-a7f10efca7dd683ad59c7e946715fa59/USER": {
+    "nevents": 2173989, 
+    "nfiles": 204, 
+    "parent": "/MuEG/Run2012B-PromptReco-v1/AOD"
   }, 
   "/TTJets_TuneZ2star_8TeV-madgraph-tauola/friis-TTplusJets_madgraph_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
     "nevents": 732172, 
