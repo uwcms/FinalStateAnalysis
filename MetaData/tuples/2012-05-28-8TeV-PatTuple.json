@@ -24,6 +24,11 @@
     "nfiles": 750, 
     "parent": "/SingleMu/Run2012A-PromptReco-v1/AOD"
   }, 
+  "/SingleMu/cepeda-data_SingleMu_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER": {
+    "nevents": 17285840, 
+    "nfiles": 668, 
+    "parent": "/SingleMu/Run2012B-PromptReco-v1/AOD"
+  }, 
   "/TTJets_TuneZ2star_8TeV-madgraph-tauola/friis-TTplusJets_madgraph_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
     "nevents": 732172, 
     "nfiles": 242, 
