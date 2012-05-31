@@ -21,6 +21,8 @@ def configure_pat_tuple(sample, sample_info):
             dataset = tag
     if dataset is None and '05Aug2011' in sample_info['datasetpath']:
         dataset = 'ReReco'
+    if dataset is None and '16Jan2012' in sample_info['datasetpath']:
+        dataset = 'Jan16ReReco'
     if dataset is None and 'crab_reco' in sample_info['datasetpath']:
         dataset = 'Fall11'
     if dataset is None and 'Summer12' in sample_info['datasetpath']:
