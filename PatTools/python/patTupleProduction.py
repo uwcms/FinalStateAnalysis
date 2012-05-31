@@ -56,6 +56,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_kt6PFJetsForIso_rho_*',
         '*_kt6PFJets_rho_*',
         '*_kt6PFJetsCentralNeutral_rho_*', #for zz muons
+        # for Zmumu -> embedded samples
+        '*_generator_weight_*',
+        '*_genDaughters_*_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
