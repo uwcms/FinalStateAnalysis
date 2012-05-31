@@ -77,7 +77,7 @@ datadefs = {
 	},   
 	'ZZ2E2M_powheg' : {
 		'analyses': ['4L'],
-		'datasetpath': '/ZZTo2e2tau_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM',
+		'datasetpath': '/ZZTo2e2mu_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM',
 		'pu': 'S7',
 		'xsec': 0.1767,
 		'responsible' : 'Ian',
