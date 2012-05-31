@@ -24,6 +24,21 @@
     "nfiles": 214, 
     "parent": "/GVJets_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM"
   }, 
+  "/MuEG/friis-data_MuEG_Run2011A_05Aug2011_v1_2012-05-29-7TeV-PatTuple-b08cf9d-973b9115830997e23767170efbb5c224/USER": {
+    "nevents": 2660573, 
+    "nfiles": 217, 
+    "parent": "/MuEG/Run2011A-05Aug2011-v1/AOD"
+  }, 
+  "/MuEG/friis-data_MuEG_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-b08cf9d-973b9115830997e23767170efbb5c224/USER": {
+    "nevents": 2487723, 
+    "nfiles": 281, 
+    "parent": "/MuEG/Run2011A-May10ReReco-v1/AOD"
+  }, 
+  "/MuEG/friis-data_MuEG_Run2011A_PromptReco_v6_1409_2012-05-29-7TeV-PatTuple-b08cf9d-fa6d9233416d07023dc202376bb19f23/USER": {
+    "nevents": 4725556, 
+    "nfiles": 365, 
+    "parent": "/MuEG/Run2011A-PromptReco-v6/AOD"
+  }, 
   "/SingleMu/cepeda-data_SingleMu_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-67c1f94-973b9115830997e23767170efbb5c224/USER": {
     "nevents": 1056614, 
     "nfiles": 235, 
@@ -53,6 +68,11 @@
     "nevents": 102228, 
     "nfiles": 53, 
     "parent": "/T_TuneZ2_s-channel_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM"
+  }, 
+  "/T_TuneZ2_t-channel_7TeV-powheg-tauola/cepeda-T_t_Powheg_2012-05-29-7TeV-PatTuple-67c1f94-5112c7af8b9b76ce11f7741050a95cb0/USER": {
+    "nevents": 1433351, 
+    "nfiles": 782, 
+    "parent": "/T_TuneZ2_t-channel_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM"
   }, 
   "/WH_HToWW_3l_M-110_7TeV-pythia6/friis-WH_110_HWW3l_2012-05-29-7TeV-PatTuple-b08cf9d-69073709ca8a2ae74014346071e01e07/USER": {
     "nevents": 168416, 
