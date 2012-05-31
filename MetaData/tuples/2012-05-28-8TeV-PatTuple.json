@@ -1,4 +1,34 @@
 {
+  "/DoubleElectron/iross-data_DoubleElectron_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER": {
+    "nevents": 4217381, 
+    "nfiles": 609, 
+    "parent": "/DoubleElectron/Run2012A-PromptReco-v1/AOD"
+  }, 
+  "/DoubleElectron/iross-data_DoubleElectron_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER": {
+    "nevents": 5567014, 
+    "nfiles": 576, 
+    "parent": "/DoubleElectron/Run2012B-PromptReco-v1/AOD"
+  }, 
+  "/MuEG/friis-data_MuEG_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-v1-ca4f4cf-a7f10efca7dd683ad59c7e946715fa59/USER": {
+    "nevents": 1293101, 
+    "nfiles": 134, 
+    "parent": "/MuEG/Run2012A-PromptReco-v1/AOD"
+  }, 
+  "/MuEG/friis-data_MuEG_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-v1-ca4f4cf-a7f10efca7dd683ad59c7e946715fa59/USER": {
+    "nevents": 2173989, 
+    "nfiles": 204, 
+    "parent": "/MuEG/Run2012B-PromptReco-v1/AOD"
+  }, 
+  "/SingleMu/cepeda-data_SingleMu_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER": {
+    "nevents": 10545029, 
+    "nfiles": 750, 
+    "parent": "/SingleMu/Run2012A-PromptReco-v1/AOD"
+  }, 
+  "/SingleMu/cepeda-data_SingleMu_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER": {
+    "nevents": 17285840, 
+    "nfiles": 668, 
+    "parent": "/SingleMu/Run2012B-PromptReco-v1/AOD"
+  }, 
   "/TTJets_TuneZ2star_8TeV-madgraph-tauola/friis-TTplusJets_madgraph_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
     "nevents": 732172, 
     "nfiles": 242, 
@@ -38,5 +68,30 @@
     "nevents": 79825, 
     "nfiles": 26, 
     "parent": "/WH_ZH_TTH_HToTauTau_M-145_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM"
+  }, 
+  "/WH_ZH_TTH_HToTauTau_M-150_8TeV-pythia6-tauola/friis-VH_H2Tau_M-150_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
+    "nevents": "N/A", 
+    "nfiles": 41, 
+    "parent": "/WH_ZH_TTH_HToTauTau_M-150_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM"
+  }, 
+  "/WH_ZH_TTH_HToTauTau_M-155_8TeV-pythia6-tauola/friis-VH_H2Tau_M-155_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
+    "nevents": 116731, 
+    "nfiles": 38, 
+    "parent": "/WH_ZH_TTH_HToTauTau_M-155_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM"
+  }, 
+  "/WH_ZH_TTH_HToTauTau_M-160_8TeV-pythia6-tauola/friis-VH_H2Tau_M-160_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
+    "nevents": 127092, 
+    "nfiles": 41, 
+    "parent": "/WH_ZH_TTH_HToTauTau_M-160_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM"
+  }, 
+  "/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/cepeda-WplusJets_madgraph_2012-05-28-8TeV-PatTuple-8a107b9-4729152ae17d7e4009729a1d0d9e952d/USER": {
+    "nevents": 8149913, 
+    "nfiles": 1668, 
+    "parent": "/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9-v1/AODSIM"
+  }, 
+  "/WZTo3LNu_TuneZ2star_8TeV_pythia6_tauola/friis-WZJetsTo3LNu_pythia_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER": {
+    "nevents": 2403794, 
+    "nfiles": 559, 
+    "parent": "/WZTo3LNu_TuneZ2star_8TeV_pythia6_tauola/Summer12-PU_S7_START52_V9-v1/AODSIM"
   }
 }

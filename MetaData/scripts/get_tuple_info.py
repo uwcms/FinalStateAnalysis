@@ -29,13 +29,15 @@ if __name__ == "__main__":
         with open(args.output, 'r') as existing:
             tuple_info = json.load(existing)
 
-    with open(args.tuple_list, 'r') as input:
-        for line in input.readlines():
-            dataset = line.strip()
-            if dataset not in tuple_info:
-                print "Querying DAS for %s" % dataset
-                info = query_pattuple(dataset)
-                tuple_info[dataset] = info
-
-    with open(args.output, 'w') as output:
-        json.dump(tuple_info, output, indent=2, sort_keys=True)
+    try:
+        with open(args.tuple_list, 'r') as input:
+            for line in input.readlines():
+                dataset = line.strip()
+                if dataset not in tuple_info:
+                    print "Querying DAS for %s" % dataset
+                    info = query_pattuple(dataset)
+                    tuple_info[dataset] = info
+    finally:
+        # Always clean up and write what we wrote at the end
+        with open(args.output, 'w') as output:
+            json.dump(tuple_info, output, indent=2, sort_keys=True)

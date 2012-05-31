@@ -19,6 +19,7 @@ options = TauVarParsing.TauVarParsing(
     target='2011Data', # Used for electron and muon effective areas
 	dumpCfg='', #used for crab
     clean = 1,
+    embedded=0, # If running on embedded samples, set to 1
 )
 
 files = [
@@ -74,6 +75,7 @@ tuplize, output_commands = tuplizer.configurePatTuple(
     process, isMC=options.isMC, xSec=options.xSec, xSecErr=options.xSecErr,
     puTag=options.puTag, dataset=options.dataset,
     target=options.target,
+    embedded=options.embedded,
 )
 
 if options.globalTag == "":
