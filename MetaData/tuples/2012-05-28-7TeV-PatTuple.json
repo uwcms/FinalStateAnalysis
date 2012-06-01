@@ -19,6 +19,16 @@
     "nfiles": 389, 
     "parent": "/DoubleElectron/Run2011A-PromptReco-v6/AOD"
   }, 
+  "/DoubleElectron/iross-data_DoubleElectron_Run2011B_PromptReco_v1_2012-05-29-7TeV-PatTuple-data-v3-67c1f94-fa6d9233416d07023dc202376bb19f23/USER": {
+    "nevents": 51443, 
+    "nfiles": 7, 
+    "parent": "/DoubleElectron/Run2011B-PromptReco-v1/AOD"
+  }, 
+  "/DoubleMu/iross-data_DoubleMu_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-67c1f94-973b9115830997e23767170efbb5c224/USER": {
+    "nevents": 1711807, 
+    "nfiles": 499, 
+    "parent": "/DoubleMu/Run2011A-May10ReReco-v1/AOD"
+  }, 
   "/GVJets_7TeV-madgraph/friis-VGjets_2012-05-29-7TeV-PatTuple-b08cf9d-00ed33b493cb94577066c1fbe4d8175b/USER": {
     "nevents": "N/A", 
     "nfiles": 214, 
@@ -34,10 +44,20 @@
     "nfiles": 281, 
     "parent": "/MuEG/Run2011A-May10ReReco-v1/AOD"
   }, 
+  "/MuEG/friis-data_MuEG_Run2011A_PromptReco_v4_2012-05-29-7TeV-PatTuple-b08cf9d-fa6d9233416d07023dc202376bb19f23/USER": {
+    "nevents": 8835360, 
+    "nfiles": 692, 
+    "parent": "/MuEG/Run2011A-PromptReco-v4/AOD"
+  }, 
   "/MuEG/friis-data_MuEG_Run2011A_PromptReco_v6_1409_2012-05-29-7TeV-PatTuple-b08cf9d-fa6d9233416d07023dc202376bb19f23/USER": {
     "nevents": 4725556, 
     "nfiles": 365, 
     "parent": "/MuEG/Run2011A-PromptReco-v6/AOD"
+  }, 
+  "/MuEG/friis-data_MuEG_Run2011B_PromptReco_v1_2012-05-29-7TeV-PatTuple-b08cf9d-fa6d9233416d07023dc202376bb19f23/USER": {
+    "nevents": 10150546, 
+    "nfiles": 805, 
+    "parent": "/MuEG/Run2011B-PromptReco-v1/AOD"
   }, 
   "/SingleMu/cepeda-data_SingleMu_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-67c1f94-973b9115830997e23767170efbb5c224/USER": {
     "nevents": 1056614, 
