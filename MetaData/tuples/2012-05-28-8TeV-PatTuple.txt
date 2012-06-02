@@ -16,6 +16,8 @@
 /GluGluToHToTauTau_M-160_8TeV-powheg-pythia6/swanson-GGH_H2Tau_M-160_2012-05-28-8TeV-PatTuple-8a107b9-4729152ae17d7e4009729a1d0d9e952d/USER
 /MuEG/friis-data_MuEG_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-v1-ca4f4cf-a7f10efca7dd683ad59c7e946715fa59/USER
 /MuEG/friis-data_MuEG_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-v1-ca4f4cf-a7f10efca7dd683ad59c7e946715fa59/USER
+/SingleElectron/cepeda-data_SingleElectron_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER
+/SingleElectron/cepeda-data_SingleElectron_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER
 /SingleMu/cepeda-data_SingleMu_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER
 /SingleMu/cepeda-data_SingleMu_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER
 /TTJets_TuneZ2star_8TeV-madgraph-tauola/friis-TTplusJets_madgraph_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER
@@ -32,3 +34,4 @@
 /WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/cepeda-WplusJets_madgraph_2012-05-28-8TeV-PatTuple-8a107b9-4729152ae17d7e4009729a1d0d9e952d/USER
 /WWTo2L2Nu_TuneZ2star_8TeV_pythia6_tauola/swanson-WWJetsTo2L2Nu_TuneZ2_7TeV_2012-05-28-8TeV-PatTuple-8a107b9-4729152ae17d7e4009729a1d0d9e952d/USER
 /WZTo3LNu_TuneZ2star_8TeV_pythia6_tauola/friis-WZJetsTo3LNu_pythia_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER
+/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola/iross-ZZ4LJetsTo4L_madgraph_2012-05-29-8TeV-PatTuple-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER

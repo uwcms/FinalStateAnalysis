@@ -89,6 +89,16 @@
     "nfiles": 204, 
     "parent": "/MuEG/Run2012B-PromptReco-v1/AOD"
   }, 
+  "/SingleElectron/cepeda-data_SingleElectron_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER": {
+    "nevents": 2334335, 
+    "nfiles": 201, 
+    "parent": "/SingleElectron/Run2012A-PromptReco-v1/AOD"
+  }, 
+  "/SingleElectron/cepeda-data_SingleElectron_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER": {
+    "nevents": 15340693, 
+    "nfiles": 527, 
+    "parent": "/SingleElectron/Run2012B-PromptReco-v1/AOD"
+  }, 
   "/SingleMu/cepeda-data_SingleMu_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER": {
     "nevents": 10545029, 
     "nfiles": 750, 
@@ -178,5 +188,10 @@
     "nevents": 2403794, 
     "nfiles": 559, 
     "parent": "/WZTo3LNu_TuneZ2star_8TeV_pythia6_tauola/Summer12-PU_S7_START52_V9-v1/AODSIM"
+  }, 
+  "/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola/iross-ZZ4LJetsTo4L_madgraph_2012-05-29-8TeV-PatTuple-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER": {
+    "nevents": 3718035, 
+    "nfiles": 953, 
+    "parent": "/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola/Summer12-PU_S7_START52_V9-v3/AODSIM"
   }
 }
