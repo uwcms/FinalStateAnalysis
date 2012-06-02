@@ -3,7 +3,7 @@
 # Installs the HCSaW package into MetaData
 
 pushd $CMSSW_BASE/src
-cvs co -P -d HCSaW UserCode/Snowball/Higgs
+cvs co -D "5/25/2012 09:00" -P -d HCSaW UserCode/Snowball/Higgs
 
 mkdir -p FinalStateAnalysis/MetaData/interface/
 mkdir -p FinalStateAnalysis/MetaData/src/
