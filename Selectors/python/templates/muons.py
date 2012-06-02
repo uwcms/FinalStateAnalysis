@@ -18,9 +18,11 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 id = PSet(
     objectVBTFID = '{object}.userInt("VBTF")',
     objectWWID = '{object}.userInt("WWID")',
-    # Use cms.string so we get the parentheses formatting bonus
+    objectPFIDTight = '{object}.userInt("tightID")',
+
+    # For charged, we use ALL charged particles
     objectRelPFIsoDB = cms.string(
-        "({object}.chargedHadronIso"
+        "({object}.userIso(0)"
         "+max({object}.photonIso()"
         "+{object}.neutralHadronIso()"
         "-0.5*{object}.userIso(0),0.0))"

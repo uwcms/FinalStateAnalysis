@@ -18,16 +18,17 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 id = PSet(
     objectWWID = '{object}.userFloat("WWID")',
     objectMITID = '{object}.userFloat("MITID")',
-    objectCiCLoose = '{object}.electronID("cicLoose")',
-    objectCiCMedium = '{object}.electronID("cicMedium")',
+    objectMVANonTrig = '{object}.electronID("mvaNonTrigV0")',
+    objectMVATrig = '{object}.electronID("mvaTrigV0")',
+    objectMVAIDH2TauWP = '{object}.userInt("mvaidwp")',
+
     objectCiCTight = '{object}.electronID("cicTight")',
     # Use cms.string so we get the parentheses formatting bonus
-    # NB that the Beta PU deposit is put in particleIso
     objectRelPFIsoDB = cms.string(
-        "({object}.chargedHadronIso"
-        "+max({object}.photonIso()"
+        "({object}.userIso(0)"
+        "+max({object}.userIso(1)"
         "+{object}.neutralHadronIso()"
-        "-0.5*{object}.particleIso(),0.0))"
+        "-0.5*{object}.userIso(2),0.0))"
         "/{object}.pt()"
     ),
     objectRelIso = cms.string("({object}.dr03TkSumPt()"
