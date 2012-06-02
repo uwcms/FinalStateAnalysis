@@ -35,8 +35,8 @@ std::vector<const reco::Candidate*> ptrizeCollection(const C& collection) {
 // Get objects at least [minDeltaR] away from [hardScatter] objects
 // that pass [filter]
 std::vector<const reco::Candidate*> getVetoObjects(
-    const std::vector<reco::Candidate*>& hardScatter,
-    const std::vector<reco::Candidate*>& vetoCollection,
+    const std::vector<const reco::Candidate*>& hardScatter,
+    const std::vector<const reco::Candidate*>& vetoCollection,
     double minDeltaR,
     const std::string& filter
 );
@@ -45,7 +45,7 @@ std::vector<const reco::Candidate*> getVetoObjects(
 // that pass [filter]
 std::vector<const reco::Candidate*> getOverlapObjects(
     const reco::Candidate& candidate,
-    const std::vector<reco::Candidate*>& overlapCollection,
+    const std::vector<const reco::Candidate*>& overlapCollection,
     double minDeltaR,
     const std::string& filter
 );

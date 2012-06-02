@@ -183,6 +183,33 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     std::vector<reco::CandidatePtr> filteredOverlaps(
         int i, const std::string& label, const std::string& filter="") const;
 
+    /// Get veto objects at least dR away from any object, passing filter
+    std::vector<const reco::Candidate*> vetoMuons(
+        double dR=0.1, const std::string& filter="") const;
+
+    std::vector<const reco::Candidate*> vetoElectrons(
+        double dR=0.1, const std::string& filter="") const;
+
+    std::vector<const reco::Candidate*> vetoTaus(
+        double dR=0.1, const std::string& filter="") const;
+
+    std::vector<const reco::Candidate*> vetoJets(
+        double dR=0.1, const std::string& filter="") const;
+
+    /// Get overlap objects at least dR within from the ith object, passing
+    /// filter.
+    std::vector<const reco::Candidate*> overlapMuons(
+        int i, double dR=0.1, const std::string& filter="") const;
+
+    std::vector<const reco::Candidate*> overlapElectrons(
+        int i, double dR=0.1, const std::string& filter="") const;
+
+    std::vector<const reco::Candidate*> overlapTaus(
+        int i, double dR=0.1, const std::string& filter="") const;
+
+    std::vector<const reco::Candidate*> overlapJets(
+        int i, double dR=0.1, const std::string& filter="") const;
+
     /// Build a subcandidate
     PATFinalStateProxy subcand(int i, int j,
         int x=-1, int y=-1, int z=-1) const;

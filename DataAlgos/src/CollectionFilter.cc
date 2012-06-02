@@ -24,8 +24,8 @@ const CandFunc& getFunction(const std::string& function) {
 
 // Get objects at least [minDeltaR] away from hardScatter objects
 std::vector<const reco::Candidate*> getVetoObjects(
-    const std::vector<reco::Candidate*>& hardScatter,
-    const std::vector<reco::Candidate*>& vetoCollection,
+    const std::vector<const reco::Candidate*>& hardScatter,
+    const std::vector<const reco::Candidate*>& vetoCollection,
     double minDeltaR,
     const std::string& filter) {
   std::vector<const reco::Candidate*> output;
@@ -48,8 +48,8 @@ std::vector<const reco::Candidate*> getVetoObjects(
 
 // Get objects within [minDeltaR] from [object] passing [filter]
 std::vector<const reco::Candidate*> getOverlapObjects(
-    const reco::Candidate* candidate,
-    const std::vector<reco::Candidate*>& overlapCollection,
+    const reco::Candidate& candidate,
+    const std::vector<const reco::Candidate*>& overlapCollection,
     double minDeltaR,
     const std::string& filter) {
   std::vector<const reco::Candidate*> output;
@@ -58,7 +58,7 @@ std::vector<const reco::Candidate*> getOverlapObjects(
 
   for (size_t i = 0; i < overlapCollection.size(); ++i) {
     const reco::Candidate* ptr = overlapCollection[i];
-    double deltaR = reco::deltaR(ptr->p4(), candidate->p4());
+    double deltaR = reco::deltaR(ptr->p4(), candidate.p4());
     if (deltaR < minDeltaR) {
       if ((filterFunc)(*ptr)) {
         output.push_back(ptr);
