@@ -25,7 +25,7 @@ id = PSet(
         "({object}.userIso(0)"
         "+max({object}.photonIso()"
         "+{object}.neutralHadronIso()"
-        "-0.5*{object}.userIso(0),0.0))"
+        "-0.5*{object}.puChargedHadronIso,0.0))"
         "/{object}.pt()"
     ),
     objectIsGlobal = '{object}.isGlobalMuon',
