@@ -193,5 +193,30 @@
     "nevents": 3718035, 
     "nfiles": 953, 
     "parent": "/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola/Summer12-PU_S7_START52_V9-v3/AODSIM"
+  }, 
+  "/ZZTo2e2tau_8TeV-powheg-pythia6/iross-ZZ2E2T_powheg_2012-05-29-8TeV-PatTuple-v2-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER": {
+    "nevents": 343857, 
+    "nfiles": 166, 
+    "parent": "/ZZTo2e2tau_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM"
+  }, 
+  "/ZZTo2mu2tau_8TeV-powheg-pythia6/iross-ZZ2M2T_powheg_2012-05-29-8TeV-PatTuple-v2-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER": {
+    "nevents": 373739, 
+    "nfiles": 165, 
+    "parent": "/ZZTo2mu2tau_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM"
+  }, 
+  "/ZZTo4e_8TeV-powheg-pythia6/iross-ZZ4E_powheg_2012-05-29-8TeV-PatTuple-v2-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER": {
+    "nevents": 985243, 
+    "nfiles": 299, 
+    "parent": "/ZZTo4e_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM"
+  }, 
+  "/ZZTo4mu_8TeV-powheg-pythia6/iross-ZZ4M_powheg_2012-05-29-8TeV-PatTuple-v2-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER": {
+    "nevents": "N/A", 
+    "nfiles": 299, 
+    "parent": "/ZZTo4mu_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM"
+  }, 
+  "/ZZTo4tau_8TeV-powheg-pythia6/iross-ZZ4T_powheg_2012-05-29-8TeV-PatTuple-v2-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER": {
+    "nevents": "N/A", 
+    "nfiles": 165, 
+    "parent": "/ZZTo4tau_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM"
   }
 }
