@@ -360,7 +360,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Build the PATFinalStateEventObject
     process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")
-    process.patFinalStateEventProducer.electronSrc = final_electron_collection
+    process.patFinalStateEventProducer.electronSrc = cms.InputTag("cleanPatElectrons")
     process.patFinalStateEventProducer.muonSrc = cms.InputTag("cleanPatMuons")
     process.patFinalStateEventProducer.tauSrc = cms.InputTag("cleanPatTaus")
     process.patFinalStateEventProducer.jetSrc = cms.InputTag("selectedPatJets")
