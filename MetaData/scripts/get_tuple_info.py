@@ -12,6 +12,7 @@ from FinalStateAnalysis.MetaData.datadefs import datadefs
 import json
 import os
 from FinalStateAnalysis.MetaData.datatools import query_pattuple
+from FinalStateAnalysis.MetaData.datatools import query_lumis_in_dataset
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -37,6 +38,10 @@ if __name__ == "__main__":
                     print "Querying DAS for %s" % dataset
                     info = query_pattuple(dataset)
                     tuple_info[dataset] = info
+                    if 'data' in dataset:
+                        print "Querying lumis"
+                        lumis = query_lumis_in_dataset(
+
     finally:
         # Always clean up and write what we wrote at the end
         with open(args.output, 'w') as output:
