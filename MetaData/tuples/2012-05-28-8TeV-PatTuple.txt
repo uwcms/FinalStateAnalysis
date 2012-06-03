@@ -35,3 +35,8 @@
 /WWTo2L2Nu_TuneZ2star_8TeV_pythia6_tauola/swanson-WWJetsTo2L2Nu_TuneZ2_7TeV_2012-05-28-8TeV-PatTuple-8a107b9-4729152ae17d7e4009729a1d0d9e952d/USER
 /WZTo3LNu_TuneZ2star_8TeV_pythia6_tauola/friis-WZJetsTo3LNu_pythia_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER
 /ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola/iross-ZZ4LJetsTo4L_madgraph_2012-05-29-8TeV-PatTuple-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER
+/ZZTo2e2tau_8TeV-powheg-pythia6/iross-ZZ2E2T_powheg_2012-05-29-8TeV-PatTuple-v2-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER
+/ZZTo2mu2tau_8TeV-powheg-pythia6/iross-ZZ2M2T_powheg_2012-05-29-8TeV-PatTuple-v2-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER
+/ZZTo4e_8TeV-powheg-pythia6/iross-ZZ4E_powheg_2012-05-29-8TeV-PatTuple-v2-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER
+/ZZTo4mu_8TeV-powheg-pythia6/iross-ZZ4M_powheg_2012-05-29-8TeV-PatTuple-v2-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER
+/ZZTo4tau_8TeV-powheg-pythia6/iross-ZZ4T_powheg_2012-05-29-8TeV-PatTuple-v2-67c1f94-c8fc7c2ff4112a438286838f75d59cdb/USER
