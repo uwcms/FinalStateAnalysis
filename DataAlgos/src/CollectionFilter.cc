@@ -34,13 +34,16 @@ std::vector<const reco::Candidate*> getVetoObjects(
 
   for (size_t i = 0; i < vetoCollection.size(); ++i) {
     const reco::Candidate* ptr = vetoCollection[i];
+    bool awayFromEverything = true;
     for (size_t j = 0; j < hardScatter.size(); ++j) {
       double deltaR = reco::deltaR(ptr->p4(), hardScatter[j]->p4());
-      if (deltaR > minDeltaR) {
-        if ((filterFunc)(*ptr)) {
-          output.push_back(ptr);
-        }
+      if (deltaR < minDeltaR) {
+        awayFromEverything = false;
+        break;
       }
+    }
+    if (awayFromEverything && (filterFunc)(*ptr)) {
+      output.push_back(ptr);
     }
   }
   return output;
