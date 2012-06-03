@@ -107,7 +107,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         assert(process.combinatoricRecoTaus.modifiers[3].name.value() == 'TTIworkaround')
         del process.combinatoricRecoTaus.modifiers[3]
         # Don't build junky taus below 19 GeV
-        process.combinatoricRecoTaus.builders[0].minPtToBuild = cms.double(19)
+        process.combinatoricRecoTaus.builders[0].minPtToBuild = cms.double(17)
         process.tuplize += process.recoTauClassicHPSSequence
     else:
         # We can run less tau stuff in 52, since HPS taus already built.
@@ -304,8 +304,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Remove muons and electrons
     process.cleanPatTaus.checkOverlaps.muons.requireNoOverlaps = False
     process.cleanPatTaus.checkOverlaps.electrons.requireNoOverlaps = False
-    # Don't apply any prselections
-    process.cleanPatTaus.preselection = 'abs(eta) < 2.5 & (pt > 18 | userFloat("jetPt") > 18)'
+    # Apply a loose preselection
+    process.cleanPatTaus.preselection = 'abs(eta) < 2.5 & pt > 17'
+    # Don't apply any "final" cut
+    process.cleanPatTaus.finalCut = ''
 
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
@@ -358,7 +360,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Build the PATFinalStateEventObject
     process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")
-    process.patFinalStateEventProducer.electronSrc = final_electron_collection
+    process.patFinalStateEventProducer.electronSrc = cms.InputTag("cleanPatElectrons")
     process.patFinalStateEventProducer.muonSrc = cms.InputTag("cleanPatMuons")
     process.patFinalStateEventProducer.tauSrc = cms.InputTag("cleanPatTaus")
     process.patFinalStateEventProducer.jetSrc = cms.InputTag("selectedPatJets")

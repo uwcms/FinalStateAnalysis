@@ -28,9 +28,15 @@ You can get the H2Tau isolations by:
 
 .. _H2Tau working twiki: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012 
 
-* ``userIso('pat::User1Iso')`` - all PF charged particles 
-* ``userIso('pat::User2Iso')`` - PF photon isolation
-* ``userIso('pat::User3Iso')`` - PF PU isolation
+Electrons:
+
+* ``userIso(0)`` - all PF charged particles vetos: EB 0.01, EE 0.01 
+* ``userIso(1)`` - PF photon isolation vetos: EE + EB 0.08 
+* ``userIso(2)`` - PF PU isolation vetos: none (maybe this isn't right??)
+
+Muons:
+
+* ``userIso(0)`` - all PF charged particles vetos: EB 0.001, EE 0.001 
 
 Note that you probably need to update your `PAT tags in 42X`_ to get the
 required version of DataFormats/PatCandidates.
@@ -214,6 +220,20 @@ and the integer working points as:
 
 where XXX is Loose, Medium or Tight.
 
+Available b-tag discriminators:
+
+* ``jetBProbabilityBJetTagsAOD``
+* ``jetProbabilityBJetTagsAOD``
+* ``trackCountingHighPurBJetTagsAOD``
+* ``trackCountingHighEffBJetTagsAOD``
+* ``simpleSecondaryVertexNegativeBJetTagsAOD``
+* ``simpleSecondaryVertexHighEffBJetTagsAOD``
+* ``simpleSecondaryVertexHighPurBJetTagsAOD``
+* ``combinedSecondaryVertexBJetTagsAOD``
+* ``combinedSecondaryVertexMVABJetTagsAOD``
+* ``softMuonBJetTagsAOD``
+* ``softMuonByPtBJetTagsAOD``
+* ``softMuonByIP3dBJetTagsAOD``
 
 Corrections
 '''''''''''
@@ -262,10 +282,19 @@ The standard complement of discriminators are available.
 * ``byLooseCombinedIsolationDeltaBetaCorr``
 * ``byMediumCombinedIsolationDeltaBetaCorr``
 * ``byTightCombinedIsolationDeltaBetaCorr``
+* ``byIsolationMVAraw``
+* ``byLooseIsolationMVA``
+* ``byMediumIsolationMVA``
+* ``byTightIsolationMVA``
 * ``againstElectronLoose``
 * ``againstElectronMedium``
 * ``againstElectronTight``
 * ``againstElectronMVA``
+* ``againstElectronMVA2raw``
+* ``againstElectronVLooseMVA2``
+* ``againstElectronLooseMVA2``
+* ``againstElectronMediumMVA2``
+* ``againstElectronTightMVA2``
 * ``againstMuonLoose``
 * ``againstMuonMedium``
 * ``againstMuonTight``
@@ -290,20 +319,6 @@ energy scale uncertainty is currently configured to be 3%
 * ``uncorr`` (no tau energy scale)
 * ``tes-`` (down 1 sigma)
 * ``tes+`` (up 1 sigma)
-
-Information regarding the tau preselection (used in the TNP measurement is
-added) - note these quantities refer to the PFJet, *not* the tau:
-
-* ``userCand("leadPFCH")`` - ref to leading PF CH in *jet* (dropped in output)
-* ``userInt("ps_ldTrk")`` - the lead PF CH exists
-* ``userFloat("ps_ldTrkPt")`` - lead PF CH pT
-* ``userFloat("ps_ldTrkQ")`` - lead PF CH charge
-* ``userFloat("ps_lsPFIsoPt")`` - loose isolation pT sum
-* ``userFloat("ps_elMVA")`` - electron MVA value for lead PFCH
-* ``userFloat("ps_drMuon")`` - Delta R to nearest pat::Muon
-* ``userFloat("numTracks")`` - number of tracks in jet
-* ``userInt("ps_crk_nom")`` - is in ECAL crack
-
 
 MET
 ---

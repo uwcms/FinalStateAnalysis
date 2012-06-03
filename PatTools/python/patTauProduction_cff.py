@@ -18,5 +18,5 @@ customizeTauSequence += patTausEmbedJetInfo
 #customizeTauSequence += preTriggeredPatTaus
 #customizeTauSequence += triggeredPatTaus
 customizeTauSequence += systematicsTaus
-customizeTauSequence += patTauEmbedPresel # this has to come after the systematics
+#customizeTauSequence += patTauEmbedPresel # this has to come after the systematics
 customizeTauSequence += patTausEmbedIp

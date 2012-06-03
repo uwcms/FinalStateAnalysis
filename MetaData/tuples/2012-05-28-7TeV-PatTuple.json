@@ -1,4 +1,9 @@
 {
+  "/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/cepeda-Zjets_M50_2012-05-29-7TeV-PatTuple-67c1f94-e7c083b3facfba2612ce8e9d30894d70/USER": {
+    "nevents": 22392119, 
+    "nfiles": 1825, 
+    "parent": "/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM"
+  }, 
   "/DoubleElectron/iross-data_DoubleElectron_Run2011A_05Aug2011_v1_2012-05-29-7TeV-PatTuple-67c1f94-973b9115830997e23767170efbb5c224/USER": {
     "nevents": 4339803, 
     "nfiles": 283, 
@@ -19,10 +24,40 @@
     "nfiles": 389, 
     "parent": "/DoubleElectron/Run2011A-PromptReco-v6/AOD"
   }, 
+  "/DoubleElectron/iross-data_DoubleElectron_Run2011B_PromptReco_v1_2012-05-29-7TeV-PatTuple-data-v3-67c1f94-fa6d9233416d07023dc202376bb19f23/USER": {
+    "nevents": 51443, 
+    "nfiles": 7, 
+    "parent": "/DoubleElectron/Run2011B-PromptReco-v1/AOD"
+  }, 
+  "/DoubleMu/iross-data_DoubleMu_Run2011A_05Aug2011_v1_2012-05-29-7TeV-PatTuple-67c1f94-973b9115830997e23767170efbb5c224/USER": {
+    "nevents": 1547803, 
+    "nfiles": 241, 
+    "parent": "/DoubleMu/Run2011A-05Aug2011-v1/AOD"
+  }, 
+  "/DoubleMu/iross-data_DoubleMu_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-67c1f94-973b9115830997e23767170efbb5c224/USER": {
+    "nevents": 1711807, 
+    "nfiles": 499, 
+    "parent": "/DoubleMu/Run2011A-May10ReReco-v1/AOD"
+  }, 
+  "/DoubleMu/iross-data_DoubleMu_Run2011A_PromptReco_v4_2012-05-29-7TeV-PatTuple-67c1f94-fa6d9233416d07023dc202376bb19f23/USER": {
+    "nevents": 3581589, 
+    "nfiles": 823, 
+    "parent": "/DoubleMu/Run2011A-PromptReco-v4/AOD"
+  }, 
+  "/DoubleMu/iross-data_DoubleMu_Run2011A_PromptReco_v6_1409_2012-05-29-7TeV-PatTuple-67c1f94-fa6d9233416d07023dc202376bb19f23/USER": {
+    "nevents": 1971336, 
+    "nfiles": 338, 
+    "parent": "/DoubleMu/Run2011A-PromptReco-v6/AOD"
+  }, 
   "/GVJets_7TeV-madgraph/friis-VGjets_2012-05-29-7TeV-PatTuple-b08cf9d-00ed33b493cb94577066c1fbe4d8175b/USER": {
     "nevents": "N/A", 
     "nfiles": 214, 
     "parent": "/GVJets_7TeV-madgraph/Fall11-PU_S6_START42_V14B-v1/AODSIM"
+  }, 
+  "/GluGluToZZTo2L2L_7TeV-gg2zz-pythia6/iross-GluGluToZZTo2L2L_2012-05-29-7TeV-PatTuple-v2-67c1f94-176e583a8e67baccd947cdb137187516/USER": {
+    "nevents": 133576, 
+    "nfiles": 31, 
+    "parent": "/GluGluToZZTo2L2L_7TeV-gg2zz-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM"
   }, 
   "/MuEG/friis-data_MuEG_Run2011A_05Aug2011_v1_2012-05-29-7TeV-PatTuple-b08cf9d-973b9115830997e23767170efbb5c224/USER": {
     "nevents": 2660573, 
@@ -34,15 +69,45 @@
     "nfiles": 281, 
     "parent": "/MuEG/Run2011A-May10ReReco-v1/AOD"
   }, 
+  "/MuEG/friis-data_MuEG_Run2011A_PromptReco_v4_2012-05-29-7TeV-PatTuple-b08cf9d-fa6d9233416d07023dc202376bb19f23/USER": {
+    "nevents": 8835360, 
+    "nfiles": 692, 
+    "parent": "/MuEG/Run2011A-PromptReco-v4/AOD"
+  }, 
   "/MuEG/friis-data_MuEG_Run2011A_PromptReco_v6_1409_2012-05-29-7TeV-PatTuple-b08cf9d-fa6d9233416d07023dc202376bb19f23/USER": {
     "nevents": 4725556, 
     "nfiles": 365, 
     "parent": "/MuEG/Run2011A-PromptReco-v6/AOD"
   }, 
+  "/MuEG/friis-data_MuEG_Run2011B_PromptReco_v1_2012-05-29-7TeV-PatTuple-b08cf9d-fa6d9233416d07023dc202376bb19f23/USER": {
+    "nevents": 10150546, 
+    "nfiles": 805, 
+    "parent": "/MuEG/Run2011B-PromptReco-v1/AOD"
+  }, 
+  "/SingleElectron/cepeda-data_SingleElectron_Run2011A_05Aug2011_v1_2012-05-29-7TeV-PatTuple-67c1f94-973b9115830997e23767170efbb5c224/USER": {
+    "nevents": 4453139, 
+    "nfiles": 211, 
+    "parent": "/SingleElectron/Run2011A-05Aug2011-v1/AOD"
+  }, 
+  "/SingleElectron/cepeda-data_SingleElectron_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-67c1f94-973b9115830997e23767170efbb5c224/USER": {
+    "nevents": 7060471, 
+    "nfiles": 427, 
+    "parent": "/SingleElectron/Run2011A-May10ReReco-v1/AOD"
+  }, 
+  "/SingleElectron/cepeda-data_SingleElectron_Run2011A_PromptReco_v4_2012-05-29-7TeV-PatTuple-67c1f94-fa6d9233416d07023dc202376bb19f23/USER": {
+    "nevents": 17426498, 
+    "nfiles": 1011, 
+    "parent": "/SingleElectron/Run2011A-PromptReco-v4/AOD"
+  }, 
   "/SingleMu/cepeda-data_SingleMu_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-67c1f94-973b9115830997e23767170efbb5c224/USER": {
     "nevents": 1056614, 
     "nfiles": 235, 
     "parent": "/SingleMu/Run2011A-May10ReReco-v1/AOD"
+  }, 
+  "/TTJets_TuneZ2_7TeV-madgraph-tauola/iross-TTplusJets_madgraph_2012-05-29-7TeV-PatTuple-a-67c1f94-c6f177514202379f3acea419c647ad63/USER": {
+    "nevents": 2190649, 
+    "nfiles": 724, 
+    "parent": "/TTJets_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM"
   }, 
   "/TTWTo2Lminus2Nu_7TeV-madgraph/friis-TTWToLminus_2012-05-29-7TeV-PatTuple-b08cf9d-dd1feeb0a3375874dc340230eea9d8b5/USER": {
     "nevents": 46450, 
@@ -209,6 +274,16 @@
     "nfiles": 44, 
     "parent": "/WH_ZH_TTH_HToWW_M-160_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM"
   }, 
+  "/WJetsToLNu_TuneZ2_7TeV-madgraph-tauola/cepeda-WplusJets_madgraph_2012-05-29-7TeV-PatTuple-67c1f94-98f6272e3f90a8dc5047059cf7088f10/USER": {
+    "nevents": 36566265, 
+    "nfiles": 2032, 
+    "parent": "/WJetsToLNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM"
+  }, 
+  "/WWJetsTo2L2Nu_TuneZ2_7TeV-madgraph-tauola/iross-WWJetsTo2L2Nu_2012-05-29-7TeV-PatTuple-a-67c1f94-643d46e1c664471f35d0e9f7a4185e5f/USER": {
+    "nevents": 960187, 
+    "nfiles": 240, 
+    "parent": "/WWJetsTo2L2Nu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM"
+  }, 
   "/WWWTo2Lminus2Nu_7TeV-madgraph/friis-WWWTo2Lminus_2012-05-29-7TeV-PatTuple-b08cf9d-398111018f9ab5ad8635865068d6232b/USER": {
     "nevents": "N/A", 
     "nfiles": 3, 
@@ -224,6 +299,11 @@
     "nfiles": 238, 
     "parent": "/WW_TuneZ2_7TeV_pythia6_tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM"
   }, 
+  "/WZJetsTo2L2Q_TuneZ2_7TeV-madgraph-tauola/iross-WZJetsTo2L2Q_2012-05-29-7TeV-PatTuple-a-67c1f94-b666c4dcf1a9f7d4a54dcbe51102f0a1/USER": {
+    "nevents": "N/A", 
+    "nfiles": 192, 
+    "parent": "/WZJetsTo2L2Q_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM"
+  }, 
   "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/friis-WZJetsTo3LNu_2012-05-29-7TeV-PatTuple-b08cf9d-04a8686048c5859e072c67509272ee3c/USER": {
     "nevents": 952465, 
     "nfiles": 243, 
@@ -238,5 +318,35 @@
     "nevents": 1378471, 
     "nfiles": 857, 
     "parent": "/WZ_TuneZ2_7TeV_pythia6_tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM"
+  }, 
+  "/ZZTo2e2mu_7TeV-powheg-pythia6/iross-ZZTo2e2mu_powheg_v2_2012-05-29-7TeV-PatTuple-v2-67c1f94-e0dd06ee56c1f7e58ee9681561265904/USER": {
+    "nevents": 332789, 
+    "nfiles": 75, 
+    "parent": "/ZZTo2e2mu_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM"
+  }, 
+  "/ZZTo2e2tau_7TeV-powheg-pythia6/iross-ZZTo2e2tau_powheg_v2_2012-05-29-7TeV-PatTuple-v2-67c1f94-e0dd06ee56c1f7e58ee9681561265904/USER": {
+    "nevents": 367992, 
+    "nfiles": 99, 
+    "parent": "/ZZTo2e2tau_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM"
+  }, 
+  "/ZZTo2mu2tau_7TeV-powheg-pythia6/iross-ZZTo2mu2tau_powheg_v2_2012-05-29-7TeV-PatTuple-v2-67c1f94-e0dd06ee56c1f7e58ee9681561265904/USER": {
+    "nevents": 393322, 
+    "nfiles": 100, 
+    "parent": "/ZZTo2mu2tau_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM"
+  }, 
+  "/ZZTo4e_7TeV-powheg-pythia6/iross-ZZTo4e_powheg_v2_2012-05-29-7TeV-PatTuple-v2-67c1f94-37fbe59dab9a7313bfc2342346bc9e10/USER": {
+    "nevents": 448957, 
+    "nfiles": 101, 
+    "parent": "/ZZTo4e_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM"
+  }, 
+  "/ZZTo4mu_7TeV-powheg-pythia6/iross-ZZTo4mu_powheg_v2_2012-05-29-7TeV-PatTuple-v2-67c1f94-37fbe59dab9a7313bfc2342346bc9e10/USER": {
+    "nevents": "N/A", 
+    "nfiles": 97, 
+    "parent": "/ZZTo4mu_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM"
+  }, 
+  "/ZZTo4tau_7TeV-powheg-pythia6/iross-ZZTo4tau_powheg_v2_2012-05-29-7TeV-PatTuple-v2-67c1f94-37fbe59dab9a7313bfc2342346bc9e10/USER": {
+    "nevents": 184053, 
+    "nfiles": 100, 
+    "parent": "/ZZTo4tau_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM"
   }
 }

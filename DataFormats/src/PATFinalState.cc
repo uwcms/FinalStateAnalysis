@@ -3,6 +3,7 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalState.h"
 
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
+#include "FinalStateAnalysis/DataAlgos/interface/CollectionFilter.h"
 
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
@@ -457,6 +458,70 @@ std::vector<reco::CandidatePtr> PATFinalState::filteredOverlaps(
       output.push_back(cand);
   }
   return output;
+}
+
+std::vector<const reco::Candidate*> PATFinalState::vetoMuons(
+    double dR, const std::string& filter) const {
+  return getVetoObjects(
+      daughters(),
+      ptrizeCollection(evt()->muons()),
+      dR, filter);
+}
+
+std::vector<const reco::Candidate*> PATFinalState::vetoElectrons(
+    double dR, const std::string& filter) const {
+  return getVetoObjects(
+      daughters(),
+      ptrizeCollection(evt()->electrons()),
+      dR, filter);
+}
+
+std::vector<const reco::Candidate*> PATFinalState::vetoTaus(
+    double dR, const std::string& filter) const {
+  return getVetoObjects(
+      daughters(),
+      ptrizeCollection(evt()->taus()),
+      dR, filter);
+}
+
+std::vector<const reco::Candidate*> PATFinalState::vetoJets(
+    double dR, const std::string& filter) const {
+  return getVetoObjects(
+      daughters(),
+      ptrizeCollection(evt()->jets()),
+      dR, filter);
+}
+
+std::vector<const reco::Candidate*> PATFinalState::overlapMuons(
+    int i, double dR, const std::string& filter) const {
+  return getOverlapObjects(
+      *daughter(i),
+      ptrizeCollection(evt()->muons()),
+      dR, filter);
+}
+
+std::vector<const reco::Candidate*> PATFinalState::overlapElectrons(
+    int i, double dR, const std::string& filter) const {
+  return getOverlapObjects(
+      *daughter(i),
+      ptrizeCollection(evt()->electrons()),
+      dR, filter);
+}
+
+std::vector<const reco::Candidate*> PATFinalState::overlapTaus(
+    int i, double dR, const std::string& filter) const {
+  return getOverlapObjects(
+      *daughter(i),
+      ptrizeCollection(evt()->taus()),
+      dR, filter);
+}
+
+std::vector<const reco::Candidate*> PATFinalState::overlapJets(
+    int i, double dR, const std::string& filter) const {
+  return getOverlapObjects(
+      *daughter(i),
+      ptrizeCollection(evt()->jets()),
+      dR, filter);
 }
 
 PATFinalStateProxy
