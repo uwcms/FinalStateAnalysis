@@ -60,49 +60,49 @@ datadefs = {
         'pu': 'S7',
         'xsec': -999,
         'responsible' : 'Ian',
-    },   
+    },
 	'ZZ4M_powheg' : {
 		'analyses': ['4L'],
 		'datasetpath': '/ZZTo4mu_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM',
 		'pu': 'S7',
 		'xsec': 0.07691,
 		'responsible' : 'Ian',
-	},   
+	},
 	'ZZ4E_powheg' : {
 		'analyses': ['4L'],
 		'datasetpath': '/ZZTo4e_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM',
 		'pu': 'S7',
 		'xsec': 0.07691,
 		'responsible' : 'Ian',
-	},   
+	},
 	'ZZ2E2M_powheg' : {
 		'analyses': ['4L'],
 		'datasetpath': '/ZZTo2e2mu_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM',
 		'pu': 'S7',
 		'xsec': 0.1767,
 		'responsible' : 'Ian',
-	},   
+	},
 	'ZZ4T_powheg' : {
 		'analyses': ['4L'],
 		'datasetpath': '/ZZTo4tau_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM',
 		'pu': 'S7',
 		'xsec': 0.07691,
 		'responsible' : 'Ian',
-	},   
+	},
 	'ZZ2M2T_powheg' : {
 		'analyses': ['4L'],
 		'datasetpath': '/ZZTo2mu2tau_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM',
 		'pu': 'S7',
 		'xsec': 0.1767,
 		'responsible' : 'Ian',
-	},   
+	},
 	'ZZ2E2T_powheg' : {
 		'analyses': ['4L'],
 		'datasetpath': '/ZZTo2e2tau_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM',
 		'pu': 'S7',
 		'xsec': 0.1767,
 		'responsible' : 'Ian',
-	},   
+	},
 }
 
 # Add GGH H2Tau samples
@@ -150,7 +150,7 @@ for mass in[115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128
         }
 
 # Add WH TauTau signal samples
-for mass in [115, 120, 125, 130, 140, 145, 150, 155, 160]:
+for mass in [110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160]:
     datadefs['VH_H2Tau_M-%i' % mass] = {
         'analyses': ['HTT', 'VH'],
         'datasetpath': '/WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM' % mass,
