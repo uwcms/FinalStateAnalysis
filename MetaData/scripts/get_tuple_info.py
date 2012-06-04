@@ -9,10 +9,14 @@ Author: Evan K. Friis, UW Madison
 
 from RecoLuminosity.LumiDB import argparse
 from FinalStateAnalysis.MetaData.datadefs import datadefs
+import logging
 import json
 import os
 from FinalStateAnalysis.MetaData.datatools import query_pattuple
-from FinalStateAnalysis.MetaData.datatools import query_lumis_in_dataset
+from FinalStateAnalysis.MetaData.dbslumis import query_lumis_in_dataset
+import sys
+
+log = logging.getLogger("get_tuple_info")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -21,8 +25,15 @@ if __name__ == "__main__":
     parser.add_argument('output', help='Output json file')
     parser.add_argument('--update-all', dest='update', action='store_true',
                         help='Rebuild the output json from scratch')
+    parser.add_argument('--verbose', default=False, action='store_true',
+                        help='Increase verbosity')
 
     args = parser.parse_args()
+
+    level = logging.INFO
+    if args.verbose:
+        level = logging.DEBUG
+    logging.basicConfig(level=level, stream=sys.stderr)
 
     tuple_info = {}
     # If desired, don't repeat calls
@@ -35,12 +46,17 @@ if __name__ == "__main__":
             for line in input.readlines():
                 dataset = line.strip()
                 if dataset not in tuple_info:
-                    print "Querying DAS for %s" % dataset
+                    log.info("Querying DAS for %s" % dataset)
                     info = query_pattuple(dataset)
                     tuple_info[dataset] = info
-                    if 'data' in dataset:
-                        print "Querying lumis"
-                        lumis = query_lumis_in_dataset(
+
+        log.info("Checking if we need to compute lumi results")
+        for sample, sample_info in tuple_info.iteritems():
+            if sample_info['parent'].endswith('AOD'):
+                if 'lumimask' not in sample_info:
+                    log.info("Getting lumis for sample %s", sample)
+                    lumis = query_lumis_in_dataset(sample)
+                    sample_info['lumimask'] = lumis
 
     finally:
         # Always clean up and write what we wrote at the end
