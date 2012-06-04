@@ -25,86 +25,70 @@ canvas = ROOT.TCanvas("basdf", "aasdf", 800, 600)
 
 # Dimuon selection
 base_dimuon_selection = [
-    #'(run < 5 && Muon1Pt > 13.5 || Muon1Pt > 13.365)',
-    #'(run < 5 && Muon2Pt > 9 || Muon2Pt > 8.91)',
-    'Muon1Pt > 18',
-    'Muon2Pt > 9',
-    'Muon1AbsEta < 2.1',
-    'Muon2AbsEta < 2.1',
-    'Muon1_MuRelIso < 0.15',
-    'Muon2_MuRelIso < 0.15',
-    'Muon1_MuID_WWID > 0.5',
-    'Muon2_MuID_WWID > 0.5',
-    'NIsoMuonsPt5_Nmuons < 0.5',
-    'NBjetsPt20_Nbjets < 1', # Against ttbar
-    'DoubleMus_HLT > 0.5 ',
-    #'(Muon1_hltDiMuonL3PreFiltered7 | Muon2_hltDiMuonL3p5PreFiltered8 |'
-        #'Muon1_hltSingleMu13L3Filtered13)',
-    #'(Muon2_hltDiMuonL3PreFiltered7 | Muon2_hltDiMuonL3p5PreFiltered8)',
-    'Muon1Charge*Muon2Charge < 0',
-    'METPt < 30',
-    'abs(Muon1DZ) < 0.2',
-    'abs(Muon2DZ) < 0.2',
-]
-
-# We also look at E-Mu OS + probe
-base_ttbar_selection = [
-    'Mu1Pt > 18',
-    'ElecPt > 10',
-    'Mu1AbsEta < 2.1',
-    'Mu1_MuRelIso < 0.1',
-    'Mu1_MuID_WWID > 0.5',
-
-    'Elec_ERelIso < 0.15',
-    'Elec_EID_MITID > 0.5',
-    'NBjetsPt20_Nbjets > 0.5', # For ttbar
-
-    'NIsoMuonsPt5_Nmuons < 1',
-    'ElecCharge*Mu1Charge < 0',
+    #'(run < 5 && m1Pt > 13.5 || m1Pt > 13.365)',
+    #'(run < 5 && m2Pt > 9 || m2Pt > 8.91)',
+    'm1Pt > 18',
+    'm2Pt > 9',
+    'm1AbsEta < 2.1',
+    'm2AbsEta < 2.1',
+    'm1RelPFIsoDB < 0.15',
+    'm2RelPFIsoDB < 0.15',
+    'm1PFIDTight > 0.5',
+    'm2PFIDTight > 0.5',
+    'muVetoPt5 < 0.5',
+    'bjetCSVVeto < 1', # Against ttbar
+    'doubleMuPass > 0.5 ',
+    #'(m1_hltDiMuonL3PreFiltered7 | m2_hltDiMuonL3p5PreFiltered8 |'
+        #'m1_hltSingleMu13L3Filtered13)',
+    #'(m2_hltDiMuonL3PreFiltered7 | m2_hltDiMuonL3p5PreFiltered8)',
+    'm1Charge*m2Charge < 0',
+    'metEt < 30',
+    'abs(m1DZ) < 0.2',
+    'abs(m2DZ) < 0.2',
 ]
 
 base_qcd_selection = [
-    'Muon1Pt > 18',
-    'Muon2Pt > 9',
-    'Muon1AbsEta < 2.1',
-    'Muon2AbsEta < 2.1',
-    'Muon1_MuRelIso > 0.5',
-    'Muon1_MuID_WWID > 0.5',
-    'NIsoMuonsPt5_Nmuons < 1',
-    #'NBjetsPt20_Nbjets > 0', # For ttbar
-    'DoubleMus_HLT > 0.5 ',
-    'Muon1Charge*Muon2Charge > 0', # Same sign (to kill DY)
-    'abs(Muon1DZ) < 0.2',
-    'abs(Muon2DZ) < 0.2',
-    'Tau_LooseHPS < 0.5',
-    'abs(Muon1DZ) < 0.2',
-    'abs(Muon2DZ) < 0.2',
-    'abs(TauDZ) < 0.2',
+    'm1Pt > 18',
+    'm2Pt > 9',
+    'm1AbsEta < 2.1',
+    'm2AbsEta < 2.1',
+    'm1RelPFIsoDB > 0.5',
+    'm1PFIDTight > 0.5',
+    'muVetoPt5 < 1',
+    #'bjetCSVVeto > 0', # For ttbar
+    'doubleMuPass > 0.5 ',
+    'm1Charge*m2Charge > 0', # Same sign (to kill DY)
+    'abs(m1DZ) < 0.2',
+    'abs(m2DZ) < 0.2',
+    'tLooseMVAIso < 0.5',
+    'abs(m1DZ) < 0.2',
+    'abs(m2DZ) < 0.2',
+    'abs(tDZ) < 0.2',
 ]
 
 base_qcd_for_taus_selection = [
-    'Muon1Pt > 18',
-    'Muon2Pt > 9',
-    'Muon1AbsEta < 2.1',
-    'Muon2AbsEta < 2.1',
-    'Muon1_MuRelIso > 0.5',
-    'Muon2_MuRelIso > 0.5',
-    'NIsoMuonsPt5_Nmuons < 1',
-    #'NBjetsPt20_Nbjets > 0', # For ttbar
-    'DoubleMus_HLT > 0.5 ',
-    'abs(Muon1DZ) < 0.2',
-    'abs(Muon2DZ) < 0.2',
+    'm1Pt > 18',
+    'm2Pt > 9',
+    'm1AbsEta < 2.1',
+    'm2AbsEta < 2.1',
+    'm1RelPFIsoDB > 0.5',
+    'm2RelPFIsoDB > 0.5',
+    'muVetoPt5 < 1',
+    #'bjetCSVVeto > 0', # For ttbar
+    'doubleMuPass > 0.5 ',
+    'abs(m1DZ) < 0.2',
+    'abs(m2DZ) < 0.2',
 ]
 
 # Stupid names are different, fix this
 base_dimuon_emm = [
-    x.replace('Muon1', 'Mu1').replace('Muon2', 'Mu2')
+    x.replace('m1', 'Mu1').replace('m2', 'Mu2')
     for x in base_dimuon_selection
 ]
 
 # Version where we trigger on the MuEG
 base_dimuon_emm_MuEG = [
-    x.replace('DoubleMus_HLT', 'Mu17Ele8All_HLT') for x in base_dimuon_emm
+    x.replace('doubleMuPass', 'Mu17Ele8All_HLT') for x in base_dimuon_emm
 ]
 
 
@@ -114,9 +98,9 @@ fakerates = {
         'pd' : 'data_DoubleMu',
         'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'Zjets',
-        'varname' : 'TauJetPt',
-        'vartitle' : 'Tau Jet p_{T}',
-        'var' : 'TauJetPt',
+        'varname' : 'tJetPt',
+        'vartitle' : 't Jet p_{T}',
+        'var' : 'tJetPt',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
         'evtType' : '#mu#mu + jet',
@@ -125,16 +109,16 @@ fakerates = {
         ],
         'final_cuts' : [],
         'denom' : [
-            'Muon1_Muon2_Mass > 86',
-            'Muon1_Muon2_Mass < 95',
-            'Tau_MtToMET < 40',
-            'TauPt > 20',
-            'TauAbsEta < 2.3',
-            'Tau_DecayMode > 0.5',
-            'abs(TauDZ) < 0.2',
+            'm1_m2_Mass > 86',
+            'm1_m2_Mass < 95',
+            't_MtToMET < 40',
+            'tPt > 20',
+            'tAbsEta < 2.3',
+            'tDecayFinding > 0.5',
+            'abs(tDZ) < 0.2',
         ],
         'num' : [
-            'Tau_LooseHPS > 0.5'
+            'tLooseMVAIso > 0.5'
         ],
     },
     'tauQCD' : {
@@ -142,9 +126,9 @@ fakerates = {
         'pd' : 'data_DoubleMu',
         'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'Zjets',
-        'varname' : 'TauJetPt',
-        'vartitle' : 'Tau Jet p_{T}',
-        'var' : 'TauJetPt',
+        'varname' : 'tJetPt',
+        'vartitle' : 't Jet p_{T}',
+        'var' : 'tJetPt',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
         'evtType' : '#mu#mu + jet',
@@ -153,14 +137,14 @@ fakerates = {
         ],
         'final_cuts' : [],
         'denom' : [
-            'TauPt > 20',
-            'TauAbsEta < 2.3',
-            'Tau_DecayMode > 0.5',
-            'METPt < 30',
-            'abs(TauDZ) < 0.2',
+            'tPt > 20',
+            'tAbsEta < 2.3',
+            'tDecayFinding > 0.5',
+            'metEt < 30',
+            'abs(tDZ) < 0.2',
         ],
         'num' : [
-            'Tau_LooseHPS > 0.5'
+            'tLooseMVAIso > 0.5'
         ],
     },
     'tauTauPt' : {
@@ -168,9 +152,9 @@ fakerates = {
         'pd' : 'data_DoubleMu',
         'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'Zjets',
-        'varname' : 'TauPt',
-        'vartitle' : 'Tau p_{T}',
-        'var' : 'TauPt',
+        'varname' : 'tPt',
+        'vartitle' : 't p_{T}',
+        'var' : 'tPt',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
         'evtType' : '#mu#mu + jet',
@@ -179,16 +163,16 @@ fakerates = {
         ],
         'final_cuts' : [],
         'denom' : [
-            'Muon1_Muon2_Mass > 86',
-            'Muon1_Muon2_Mass < 95',
-            'Tau_MtToMET < 40',
-            'TauPt > 20',
-            'TauAbsEta < 2.3',
-            'Tau_DecayMode > 0.5',
-            'abs(TauDZ) < 0.2',
+            'm1_m2_Mass > 86',
+            'm1_m2_Mass < 95',
+            't_MtToMET < 40',
+            'tPt > 20',
+            'tAbsEta < 2.3',
+            'tDecayFinding > 0.5',
+            'abs(tDZ) < 0.2',
         ],
         'num' : [
-            'Tau_LooseHPS > 0.5'
+            'tLooseMVAIso > 0.5'
         ],
     },
     'tauQCDTauPt' : {
@@ -196,9 +180,9 @@ fakerates = {
         'pd' : 'data_DoubleMu',
         'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'Zjets',
-        'varname' : 'TauPt',
-        'vartitle' : 'Tau p_{T}',
-        'var' : 'TauPt',
+        'varname' : 'tPt',
+        'vartitle' : 't p_{T}',
+        'var' : 'tPt',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
         'evtType' : '#mu#mu + jet',
@@ -207,14 +191,14 @@ fakerates = {
         ],
         'final_cuts' : [],
         'denom' : [
-            'TauPt > 20',
-            'TauAbsEta < 2.3',
-            'Tau_DecayMode > 0.5',
-            'METPt < 30',
-            'abs(TauDZ) < 0.2',
+            'tPt > 20',
+            'tAbsEta < 2.3',
+            'tDecayFinding > 0.5',
+            'metEt < 30',
+            'abs(tDZ) < 0.2',
         ],
         'num' : [
-            'Tau_LooseHPS > 0.5'
+            'tLooseMVAIso > 0.5'
         ],
     },
     'mu' : {
@@ -223,7 +207,7 @@ fakerates = {
         'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'Zjets',
         'varname' : 'MuJetPt',
-        'var' : 'Muon3_JetPt',
+        'var' : 'm3_JetPt',
         'vartitle' : 'Mu Jet p_{T}',
         'varbinning' : [100, 0, 100],
         'rebin' : 5,
@@ -233,48 +217,19 @@ fakerates = {
         ],
         'final_cuts' : [],
         'denom' : [
-            'Muon3_hltDiMuonL3p5PreFiltered8 > 0.5',
-            'Muon3_InnerNPixHits > 0.5',
-            'Muon3_MuBtag < 3.3',
-            'Muon3Pt > 10',
-            'Muon3AbsEta < 2.1',
-            'Muon1_Muon2_Mass > 85',
-            'Muon1_Muon2_Mass < 95',
-            'Muon3_MtToMET < 20',
-            'abs(Muon3DZ) < 0.2',
+            'm3_hltDiMuonL3p5PreFiltered8 > 0.5',
+            'm3PixHits > 0.5',
+            'm3JetBtag < 3.3',
+            'm3Pt > 10',
+            'm3AbsEta < 2.1',
+            'm1_m2_Mass > 85',
+            'm1_m2_Mass < 95',
+            'm3_MtToMET < 20',
+            'abs(m3DZ) < 0.2',
         ],
         'num' : [
-            'Muon3_MuID_WWID > 0.5',
-            'Muon3_MuRelIso < 0.3',
-        ]
-    },
-    'muTTbar' : {
-        'ntuple' : 'emm',
-        'pd' : 'data_DoubleMu',
-        'exclude' : ['*DoubleE*', '*MuEG*'],
-        'mc_pd' : 'ttjets',
-        'varname' : 'MuJetPt',
-        'var' : 'Mu2_JetPt',
-        'vartitle' : 'Mu Jet p_{T}',
-        'varbinning' : [100, 0, 100],
-        'rebin' : 5,
-        'evtType' : '#mu#mu + jet',
-        'base_cuts' : base_ttbar_selection,
-        'control_plots' : [],
-        'final_cuts' : [],
-        'denom' : [
-            'DoubleMus_HLT > 0.5',
-            'Mu1Charge*Mu2Charge > 0', # against DY
-            'Mu2Pt > 10',
-            'Mu2AbsEta < 2.1',
-            'METPt > 20',
-            'Mu2_MuBtag < 3.3',
-            'Mu2_InnerNPixHits > 0.5',
-            'abs(Mu2DZ) < 0.2',
-        ],
-        'num' : [
-            'Mu2_MuID_WWID > 0.5',
-            'Mu2_MuRelIso < 0.3',
+            'm3PFIDTight > 0.5',
+            'm3RelPFIsoDB < 0.3',
         ]
     },
     'muQCD' : {
@@ -283,7 +238,7 @@ fakerates = {
         'exclude' : ['*DoubleE*', '*MuEG*'],
         'mc_pd' : 'QCDMu',
         'varname' : 'MuJetPt',
-        'var' : 'Muon2_JetPt',
+        'var' : 'm2_JetPt',
         'vartitle' : 'Mu Jet p_{T}',
         'varbinning' : [100, 0, 100],
         'rebin' : 10,
@@ -292,16 +247,16 @@ fakerates = {
         'control_plots' : [],
         'final_cuts' : [],
         'denom' : [
-            'Muon2_InnerNPixHits > 0.5',
-            'Muon2_MuBtag < 3.3',
-            'Muon2AbsEta < 2.5',
-            'Muon2Pt > 10',
-            'METPt < 20',
-            'abs(Muon2DZ) < 0.2',
+            'm2PixHits > 0.5',
+            'm2JetBtag < 3.3',
+            'm2AbsEta < 2.5',
+            'm2Pt > 10',
+            'metEt < 20',
+            'abs(m2DZ) < 0.2',
         ],
         'num' : [
-            'Muon2_MuID_WWID > 0.5',
-            'Muon2_MuRelIso < 0.3',
+            'm2PFIDTight > 0.5',
+            'm2RelPFIsoDB < 0.3',
         ]
     },
     'eMuEG' : {
