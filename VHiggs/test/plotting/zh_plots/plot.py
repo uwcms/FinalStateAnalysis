@@ -152,5 +152,13 @@ cms_label = styling.cms_preliminary(5000, is_preliminary=False,
 #canvas.SetLogy(True)
 legend.Draw()
 
+blurb = ROOT.TPaveText(0.18, 0.85, 0.4, 0.89, "brNDC")
+blurb.SetFillStyle(0)
+blurb.SetBorderSize(0)
+blurb.SetTextSize(0.05)
+blurb.SetTextAlign(11)
+blurb.AddText("Four leptons")
+blurb.Draw()
+
 canvas.Update()
 canvas.SaveAs('zh_result.pdf')

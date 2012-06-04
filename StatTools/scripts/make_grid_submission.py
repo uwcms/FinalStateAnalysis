@@ -8,7 +8,9 @@ Run with --help for options.
 
 '''
 
+import json
 import logging
+import math
 import os
 import shutil
 import sys
@@ -73,13 +75,15 @@ if __name__ == "__main__":
                         default = 25,
                         help='Number of jobs to queue for each point')
 
-    parser.add_argument('-min', dest='min',action='store',
-                        required=True, type=float,
-                        help='Min exclusion to scan')
+    range_grp = parser.add_mutually_exclusive_group( required=True)
 
-    parser.add_argument('-max', dest='max',action='store',
-                        required=True, type=float,
-                        help='Max exclusion to scan')
+    range_grp.add_argument('-r', '--range', nargs=2, dest='range',action='store',
+                        type=float,
+                        help='Min and max exclusion to scan')
+
+    range_grp.add_argument('-g', '--guess-limits', dest='guess', type=str,
+                           required=False, default='',
+                           help='An asymptotic CLs file to get the min and max')
 
     parser.add_argument('-mass', dest='mass',action='store',
                         required=True, type=int,
@@ -93,6 +97,10 @@ if __name__ == "__main__":
     parser.add_argument('-steps', dest='steps',action='store',
                         required=False, type=int, default=20,
                         help='N exclusion points to check')
+
+    parser.add_argument('-log', dest='log',action='store_true',
+                        required=False, default=False,
+                        help='If true, step logarithmically')
 
     parser.add_argument('-submitdir', dest='submitdir', action='store',
                         required=True, type=str,
@@ -123,11 +131,34 @@ if __name__ == "__main__":
             '$CMSSW_BASE/bin/$SCRAM_ARCH/run_grid_point.sh'),
     ))
 
+    # Figure out max and min
+    min = None
+    max = None
+    if options.range:
+        min = options.range[0]
+        max = options.range[1]
+        assert(max > min)
+    elif options.guess:
+        log.info("Getting asymptotic range")
+        with open(options.guess, 'r') as asymp_guess:
+            asymp = json.load(asymp_guess)
+            min = asymp['-2']*0.3
+            max = asymp['+2']*1.3
+        log.info("Got asymptotic range: [%0.2f, %0.2f]", min, max)
+    else:
+        raise ValueError("Must specify either guess or range!")
+
+    # Build signal strength points to scan
+    points = None
+    if options.log:
+        dx = math.log(max/min)/(options.steps-1)
+        points = [ min * math.exp(dx*i) for i in range(options.steps) ]
+    else:
+        points = [ min + i*(max - min)/(options.steps-1) for i in range(options.steps) ]
 
     # Run along grid points
-    for i in range(options.steps):
+    for i, point in enumerate(points):
         seed = options.mass*options.seed + i
-        point = options.min + i*(options.max - options.min)/(options.steps-1.)
         submit_statement = submit_template.format(
             submit_dir = options.submitdir,
             card_file_base = os.path.basename(card_dest),
@@ -142,12 +173,11 @@ if __name__ == "__main__":
             njobs = options.jobs,
         )
         submit_file.write(submit_statement + '\n')
-    log.info("Generated %i x %i jobs = %i",
+    log.info("Generated %i points x %i jobs/point = %i condor jobs",
              options.steps, options.jobs, options.steps*options.jobs)
-    log.info("Total combine calls: %i x %i x %i = %i",
-             options.steps, options.jobs, options.iter,
-             options.steps*options.jobs*options.iter)
-    log.info("Toys per call: %i", options.toys)
+    log.info("At each point, %i jobs x %i iterations x %i toys per call: %i toys/point",
+             options.jobs, options.iter, options.toys,
+             options.jobs*options.iter*options.toys)
 
     print "Now run:"
     print "condor_submit %s/submit" % options.submitdir
