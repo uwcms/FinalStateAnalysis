@@ -158,6 +158,11 @@ for mass in [110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160]:
         'xsec': -999,
         'responsible' : 'Evan',
     }
+    if mass == 110:
+        # Special case use v3 instead of v2, which doesn't exist
+        datadefs['VH_H2Tau_M-110']['datasetpath'] = datadefs['VH_H2Tau_M-110']['datasetpath'].replace(
+            'V9-v2', 'V9-v3')
+
 
 # Add data files
 def build_data_set(pd, analyses, who):
