@@ -20,6 +20,8 @@ if __name__ == "__main__":
                         help='Limit method to use.  Default: cls')
     input_grp.add_argument('--label', type=str, default='',
                         help='Limit label to use.  Default: None')
+    input_grp.add_argument('--smooth', default = -1, type = int,
+                           help="Smooth using N order poly. -1 => no smoothing")
 
     input_grp.add_argument('-o', '--output', dest="output",
                         type=str, required=True,
@@ -109,7 +111,8 @@ if __name__ == "__main__":
 
     frame.SetMaximum(args.maxy)
 
-    exp, onesig, twosig = limitplot.build_expected_band(limit_data, key)
+    exp, onesig, twosig = limitplot.build_expected_band(limit_data, key,
+                                                       args.smooth)
     twosig.Draw("3")
     onesig.Draw("3")
 
