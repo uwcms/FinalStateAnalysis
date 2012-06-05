@@ -48,15 +48,28 @@ def configure_pat_tuple(sample, sample_info):
         target = '2012Data'
     elif 'Summer12' in sample_info['datasetpath']:
         target = '2011Data'
+    elif 'embedded' in sample and '2011' in sample_info['datasetpath']:
+        target = '2011Data'
+    elif 'embedded' in sample and '2012' in sample_info['datasetpath']:
+        target = '2012Data'
 
     if not target:
         raise ValueError("Couldn't determine target for sample: "
                          + sample_info['datasetpath'])
     options.append('target=%s' % target)
 
-    if 'data' not in sample:
+    if 'data' not in sample and 'embedded' not in sample:
         options.append('isMC=1')
         options.append('globalTag=%s' % os.environ['mcgt'])
+        if 'x_sec' in sample_info:
+            options.append('xSec=%0.4f' % sample_info['x_sec'])
+        else:
+            options.append('xSec=0')
+        options.append('puTag=%s' % sample_info['pu'])
+    elif 'embedded' in sample:
+        options.append('isMC=1')
+        options.append('embedded=1')
+        options.append('globalTag=%s' % os.environ['datagt'])
         if 'x_sec' in sample_info:
             options.append('xSec=%0.4f' % sample_info['x_sec'])
         else:
