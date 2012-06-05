@@ -12,8 +12,11 @@ dataFile=/store/data/Run2012A/TauPlusX/AOD/PromptReco-v1/000/191/226/CEF49C35-04
 #./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=$vbfFile reportEvery=100 \
   #outputFile=/scratch/$LOGNAME/h2tau_vbf_8TeV_xcheck.$label.root dataset=Fall11 &> vbf_8TeV_tuplization.log &
 
+outputData=/scratch/$LOGNAME/h2tau_data_8TeV_xcheck.$label.root 
+
 echo "Tuplizing data sample - will write log to data_8TeV_tuplization.log"
+echo "Output root file: $outputData"
 ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=$dataFile reportEvery=100 \
-  outputFile=/scratch/$LOGNAME/h2tau_data_8TeV_xcheck.$label.root dataset=Prompt &> data_8TeV_tuplization.log &
+  outputFile=$outputData dataset=Prompt &> data_8TeV_tuplization.log &
 
 wait
