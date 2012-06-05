@@ -97,7 +97,7 @@ for skim_path in process.skimConfig.paths:
     the_path = getattr(process, skim_path)
     # Count every event, even the ones that fail the skim
     the_path.insert(0, process.eventCount)
-    if options.isMC:
+    if options.isMC and not options.embedded:
         the_path.insert(0, process.dqmEventCount)
     the_path += process.tuplize
     process.schedule.append(the_path)
