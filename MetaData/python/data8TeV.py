@@ -103,6 +103,34 @@ datadefs = {
 		'xsec': 0.1767,
 		'responsible' : 'Ian',
 	},
+    'embedded_2012A_mutau' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/DoubleMu/StoreResults-DoubleMu_2012A_PromptReco_v1_embedded_trans1_tau116_ptmu1_13had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER',
+        'xsec' : -999,
+        'pu' : 'data',
+        'responsible' : 'Evan',
+    },
+    'embedded_2012A_etau' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/DoubleMu/StoreResults-DoubleMu_2012A_PromptReco_v1_embedded_trans1_tau115_ptelec1_17had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER',
+        'xsec' : -999,
+        'pu' : 'data',
+        'responsible' : 'Evan',
+    },
+    'embedded_2012B_mutau_193752_195135' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/DoubleMu/StoreResults-DoubleMu_2012B_PromptReco_v1_Run193752to195135_embedded_trans1_tau116_ptmu1_13had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER',
+        'xsec' : -999,
+        'pu' : 'data',
+        'responsible' : 'Evan',
+    },
+    'embedded_2012B_etau_193752_195135' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/DoubleMu/StoreResults-DoubleMu_2012B_PromptReco_v1_Run193752to195135_embedded_trans1_tau115_ptelec1_17had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER',
+        'xsec' : -999,
+        'pu' : 'data',
+        'responsible' : 'Evan',
+    },
 }
 
 # Add GGH H2Tau samples
