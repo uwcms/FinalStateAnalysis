@@ -25,6 +25,9 @@ parser.add_argument('--responsible', type=str, required=False, default='',
                     help='Filter on responsibility')
 parser.add_argument('--samples', nargs='+', type=str, required=False,
                     help='Filter samples using list of patterns (shell style)')
+parser.add_argument('--no-whitelist', dest='nowhitelist', default=False,
+                    action='store_true',
+                    help='Disable the default T2_US, T3_US whitelist')
 args = parser.parse_args()
 
 cfg = 'patTuple_cfg.py'
@@ -42,7 +45,8 @@ f.write('[CRAB]\njobtype = cmssw\nscheduler = glidein\nuse_server = 1\n')
 f.write('[USER]\nreturn_data = 0\ncopy_data = 1\nstorage_element = T2_US_Wisconsin\n')
 f.write('publish_data = 1\ndbs_url_for_publication = https://cmsdbsprod.cern.ch:8443/cms_dbs_ph_analysis_01_writer/servlet/DBSServlet\n')
 f.write('[GRID]\nrb = CERN\nmaxtarballsize = 250\n')
-f.write('se_white_list = T2_US, T3_US\n')
+if not args.nowhitelist:
+    f.write('se_white_list = T2_US, T3_US\n')
 f.close()
 
 #make multicrab.cfg
