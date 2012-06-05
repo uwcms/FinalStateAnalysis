@@ -9,6 +9,7 @@ Author: Evan K. Friis, UW Madison
 '''
 
 from RecoLuminosity.LumiDB import argparse
+import fnmatch
 import ROOT
 
 def walk_and_copy(inputdir, outputdir, matchers, threshold):
@@ -43,11 +44,11 @@ def walk_and_copy(inputdir, outputdir, matchers, threshold):
                         # Check if we are above threshold
                         if error/val > threshold:
                             err_up = th1.Clone(
-                                th1.GetName() + "_ss_bin_%i_up")
+                                th1.GetName() + "_ss_bin_%i_up" % ibin)
                             err_down = th1.Clone(
-                                th1.GetName() + "_ss_bin_%i_down")
-                            err_up.SetBinContent(val + error)
-                            err_down.SetBinContent(val - error)
+                                th1.GetName() + "_ss_bin_%i_down" % ibin)
+                            err_up.SetBinContent(ibin, val + error)
+                            err_down.SetBinContent(ibin, val - error)
                             outputdir.cd()
                             err_up.Write()
                             err_down.Write()
@@ -59,7 +60,6 @@ def walk_and_copy(inputdir, outputdir, matchers, threshold):
             walk_and_copy(
                 inputdir.Get(subdir), output_subdir,
                 matchers, threshold)
-
 
 def main(inputfilename, outputfilename, matchers, threshold):
     input = ROOT.TFile(inputfilename, 'READ')
