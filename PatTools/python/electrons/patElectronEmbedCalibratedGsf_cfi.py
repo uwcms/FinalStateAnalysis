@@ -25,6 +25,9 @@ def validate_egamma_calib_config(process):
     dataset = process.calibratedGsfElectrons.inputDataset.value()
     isMC = bool(process.calibratedGsfElectrons.isMC.value())
 
+    # If the sample is embedded, use the data calibrations
+    isMC = isMC and not bool(process.calibratedGsfElectrons.isEmbedded.value())
+
     data_datasets = set(['Prompt', 'ReReco', 'Jan16ReReco'])
     mc_datasets = set(['Summer11', 'Fall11'])
 
