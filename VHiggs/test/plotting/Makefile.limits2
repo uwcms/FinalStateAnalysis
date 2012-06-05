@@ -445,3 +445,25 @@ cls_plots: combo/ind_leptonic_zh_cls.pdf \
   combo/ind_gg_cls.pdf \
   combo/comb_all_cls.pdf 
 
+# Making WH cards for ROGER
+
+combination=wh_cards
+combination_mass_points=$(shell seq 110 140) 
+
+combination_cards: $(patsubst %, $(combination)/%/vhtt.txt, $(combination_mass_points)) \
+  $(patsubst %, $(combination)/%/vhtt_shapes.root, $(combination_mass_points)) 
+
+shape_file=vhtt_shapes.root
+
+$(combination)/common/vhtt_shapes.root: $(shape_file)
+	mkdir -p $(combination)/common/
+	cp $< $@
+
+# Make a version of the shape file with minimal info
+$(combination)/%/vhtt_shapes.root: $(combination)/common/vhtt_shapes.root
+	mkdir -p $(combination)/$*
+	cd $(combination)/$* && ln -s ../common/vhtt_shapes.root
+
+$(combination)/%/vhtt.txt: cards/combined_%.txt $(combination)/%/vhtt_shapes.root
+	cp $< $@
+
