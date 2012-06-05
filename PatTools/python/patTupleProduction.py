@@ -175,6 +175,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.calibratedGsfElectrons.inputDataset = kwargs['dataset']
     process.calibratedGsfElectrons.isMC = bool(isMC)
     process.calibratedGsfElectrons.isEmbedded = cms.bool(bool(kwargs['embedded']))
+    if kwargs['embedded']:
+        process.calibratedGsfElectrons.isMC = False
     process.calibratedGsfElectrons.isAOD = True
     process.calibratedGsfElectrons.updateEnergyError = cms.bool(True)
     # Run a sanity check on the calibration configuration.
