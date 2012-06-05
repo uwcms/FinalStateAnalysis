@@ -83,8 +83,8 @@ for sample in sorted(datadefs.keys()):
     f.write('CMSSW.datasetpath = '+sample_info['datasetpath']+'\n')
     f.write('CMSSW.pset = ')
     f.write(sample+'_cfg.py\n')
-    if 'data' not in sample:
-        f.write('CMSSW.total_number_of_events = -1\nCMSSW.events_per_job = 5000\n')
+    if 'data' not in sample and 'embedded' not in sample:
+        f.write('CMSSW.total_number_of_events = -1\nCMSSW.events_per_job = 7000\n')
     else:
         f.write('CMSSW.total_number_of_lumis = -1\nCMSSW.lumis_per_job = 30\n')
         lumi_mask_fip = sample_info['lumi_mask']
