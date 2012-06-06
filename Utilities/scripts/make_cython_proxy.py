@@ -155,19 +155,33 @@ def make_pyx(name, tree):
     setbranchesblock = cStringIO.StringIO()
     getbranchesblock = cStringIO.StringIO()
 
+    # Declare data members & methods for each branch.
     for branch_name, branch_type in get_branches(tree):
+        # We need both a pointer to the TBranch, and
+        # an owned C++ type (int, float, etc) that the TBranch
+        # will point too.
         branchblock.write(
 '''
     cdef TBranch* {branchname}_branch
     cdef {branchtype} {branchname}_value
 '''.format(branchname=branch_name, branchtype=branch_type)
         )
+
+        # Initialize the branch members.  The branch pointer
+        # is loaded from the tree, and the branch address
+        # is set to the owned value object.
         setbranchesblock.write(
 '''
         self.{branchname}_branch = self.tree.GetBranch("{branchname}")
         self.{branchname}_branch.SetAddress(<void*>&self.{branchname}_value)
 '''.format(branchname=branch_name, branchtype=branch_type)
         )
+        # Define a property for each branch.
+        # When the attribute is gotten, it will call
+        # GetEntry on the branch to load the information
+        # into the value, and then return the value.
+        # Note that the entry number is available/set via
+        # the class member ientry.
         getbranchesblock.write(
 '''
     property {branchname}:
