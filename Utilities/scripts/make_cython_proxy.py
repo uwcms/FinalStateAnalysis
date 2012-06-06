@@ -30,6 +30,7 @@ cdef extern from "TTree.h":
     cdef cppclass TTree:
         TTree()
         int GetEntry(long, int)
+        long LoadTree(long)
         long GetEntries()
         TBranch* GetBranch(char*)
 
@@ -37,6 +38,12 @@ cdef extern from "TFile.h":
     cdef cppclass TFile:
         TFile(char*, char*, char*, int)
         TObject* Get(char*)
+
+# Used for filtering with a string
+cdef extern from "TTreeFormula.h":
+    cdef cppclass TTreeFormula:
+        TTreeFormula(char*, char*, TTree*)
+        double EvalInstance(int, char**)
 
 from cpython cimport PyCObject_AsVoidPtr
 
@@ -63,6 +70,18 @@ cdef class {TreeName}:
             yield self
             self.ientry += 1
 
+    # Iterate over rows which pass the filter
+    def where(self, filter):
+        cdef TTreeFormula* formula = new TTreeFormula(
+            "cyiter", filter, self.tree)
+        self.ientry = 0
+        while self.ientry < self.tree.GetEntries():
+            self.tree.LoadTree(self.ientry)
+            if formula.EvalInstance(0, NULL):
+                yield self
+            self.ientry += 1
+        del formula
+
     # Getting/setting the Tree entry number
     property entry:
         def __get__(self):
@@ -86,7 +105,7 @@ setup(ext_modules=[Extension(
     ["{classname}.pyx"], #  our Cython source
     include_dirs=['{incdir}'],
     library_dirs=['{libdir}'],
-    libraries=['Tree', 'Core'],
+    libraries=['Tree', 'Core', 'TreePlayer'],
     language="c++")],  # causes Cython to create C++ source
     cmdclass={{'build_ext': build_ext}})
 '''
