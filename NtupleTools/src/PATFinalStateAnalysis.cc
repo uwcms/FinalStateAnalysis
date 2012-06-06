@@ -1,8 +1,8 @@
-#include "FinalStateAnalysis/Selectors/interface/PATFinalStateAnalysis.h"
+#include "FinalStateAnalysis/NtupleTools/interface/PATFinalStateAnalysis.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateFwd.h"
-#include "FinalStateAnalysis/Selectors/interface/PATFinalStateSelection.h"
+#include "FinalStateAnalysis/NtupleTools/interface/PATFinalStateSelection.h"
 #include "FinalStateAnalysis/Utilities/interface/CutFlow.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"

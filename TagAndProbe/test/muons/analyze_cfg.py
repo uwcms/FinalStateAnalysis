@@ -8,9 +8,9 @@ Construction of Ntuples for quantities measured with SingleMu dataset
 import FWCore.ParameterSet.Config as cms
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
-from FinalStateAnalysis.Selectors.selectors import selectors
-from FinalStateAnalysis.Selectors.plotting import plotting
-from FinalStateAnalysis.Selectors.plotBuilder import makePlots
+from FinalStateAnalysis.NtupleTools.selectors import selectors
+from FinalStateAnalysis.NtupleTools.plotting import plotting
+from FinalStateAnalysis.NtupleTools.plotBuilder import makePlots
 
 options = TauVarParsing.TauVarParsing(
     skipEvents=0, # For debugging

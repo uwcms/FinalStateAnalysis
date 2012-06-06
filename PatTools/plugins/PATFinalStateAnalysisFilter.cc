@@ -15,7 +15,7 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 
-#include "FinalStateAnalysis/Selectors/interface/PATFinalStateAnalysis.h"
+#include "FinalStateAnalysis/NtupleTools/interface/PATFinalStateAnalysis.h"
 
 class PATFinalStateAnalysisFilter : public edm::EDFilter {
   public:

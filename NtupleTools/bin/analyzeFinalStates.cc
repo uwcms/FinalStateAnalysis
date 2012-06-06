@@ -1,4 +1,4 @@
-#include "FinalStateAnalysis/Selectors/interface/PATFinalStateAnalysis.h"
+#include "FinalStateAnalysis/NtupleTools/interface/PATFinalStateAnalysis.h"
 #include "FWCore/PythonParameterSet/interface/MakeParameterSets.h"
 
 #include "DataFormats/FWLite/interface/ChainEvent.h"

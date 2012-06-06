@@ -4,7 +4,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include "PhysicsTools/SelectorUtils/interface/Selector.h"
-#include "FinalStateAnalysis/Selectors/interface/AnalysisCutHolderT.h"
+#include "FinalStateAnalysis/NtupleTools/interface/AnalysisCutHolderT.h"
 
 #include "FinalStateAnalysis/Utilities/interface/StringObjectSorter.h"
 

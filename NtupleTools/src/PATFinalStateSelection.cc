@@ -1,4 +1,4 @@
-#include "FinalStateAnalysis/Selectors/interface/PATFinalStateSelection.h"
+#include "FinalStateAnalysis/NtupleTools/interface/PATFinalStateSelection.h"
 #include "CommonTools/Utils/interface/TFileDirectory.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/Utilities/interface/CutFlow.h"
