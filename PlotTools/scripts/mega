@@ -13,7 +13,7 @@ import logging
 import multiprocessing
 import os
 import sys
-from FinalStateAnalysis.TMegaSelector.Dispatcher import MegaDispatcher
+from FinalStateAnalysis.PlotTools.Dispatcher import MegaDispatcher
 
 log = multiprocessing.log_to_stderr()
 log.setLevel(logging.WARNING)
