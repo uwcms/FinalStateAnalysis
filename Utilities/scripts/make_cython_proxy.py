@@ -1,9 +1,21 @@
 #!/usr/bin/env python
 '''
 
-Generate a Cython .pyx TTree wrapper
+Generate a Cython .pyx TTree proxy and its associated
+setup.py build file.
 
 Currently only simple, single types (I, F) are supported.
+
+usage::
+    make_cython_proxy.py [-h] template_file.root tree_path ClassName
+
+This will generate ClassName.pyx and ClassName_setup.py based
+on the tree found at [tree_path] in [template_file.root]
+
+The proxy is built by running::
+    python ClassName_setup.py build_ext --inplace
+this will create a ClassName.so which can be imported in a regular
+python session.  The wrapper is instantiated by passing it a ROOT.TTree.
 
 Author: Evan K. Friis, UW Madison
 
