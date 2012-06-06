@@ -9,7 +9,12 @@ Author: Evan K. Friis, UW Madison
 '''
 
 from RecoLuminosity.LumiDB import argparse
+import fnmatch
+import logging
 import ROOT
+import sys
+
+log = logging.getLogger('stat_shapes')
 
 def walk_and_copy(inputdir, outputdir, matchers, threshold):
     ''' Recursive function which copies from inputdir to outputdir '''
@@ -36,6 +41,7 @@ def walk_and_copy(inputdir, outputdir, matchers, threshold):
                     break
             if do_shapes:
                 # check all bins to see if they need to be shape-errored
+                log.info("Building stat shapes for %s", histo)
                 for ibin in range(1, th1.GetNbinsX()+1):
                     if th1.GetBinContent(ibin):
                         error = th1.GetBinError(ibin)
@@ -43,14 +49,15 @@ def walk_and_copy(inputdir, outputdir, matchers, threshold):
                         # Check if we are above threshold
                         if error/val > threshold:
                             err_up = th1.Clone(
-                                th1.GetName() + "_ss_bin_%i_up")
+                                th1.GetName() + "_ss_bin_%i_up" % ibin)
                             err_down = th1.Clone(
-                                th1.GetName() + "_ss_bin_%i_down")
-                            err_up.SetBinContent(val + error)
-                            err_down.SetBinContent(val - error)
+                                th1.GetName() + "_ss_bin_%i_down" % ibin)
+                            err_up.SetBinContent(ibin, val + error)
+                            err_down.SetBinContent(ibin, val - error)
                             outputdir.cd()
                             err_up.Write()
                             err_down.Write()
+                            log.info("==> built shape for %s bin %i", histo, ibin)
 
         # Now copy and recurse into subdirectories
         for subdir in directories:
@@ -59,7 +66,6 @@ def walk_and_copy(inputdir, outputdir, matchers, threshold):
             walk_and_copy(
                 inputdir.Get(subdir), output_subdir,
                 matchers, threshold)
-
 
 def main(inputfilename, outputfilename, matchers, threshold):
     input = ROOT.TFile(inputfilename, 'READ')
@@ -76,5 +82,10 @@ if __name__ == "__main__":
                         help='Minimum error for systematic creation,'
                         'default %(default)0.2f')
 
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+
     args = parser.parse_args()
+
+    log.info("Building shape systematics. input: %s output: %s",
+             args.input, args.output)
     main(args.input, args.output, args.filter, args.threshold)
