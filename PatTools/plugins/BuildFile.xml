@@ -6,7 +6,7 @@
 
   <use   name="FinalStateAnalysis/DataFormats"/>
   <use   name="FinalStateAnalysis/PatTools"/>
-  <use   name="FinalStateAnalysis/Selectors"/>
+  <use   name="FinalStateAnalysis/NtupleTools"/>
 
   <use   name="RecoTauTag/RecoTau"/>
   <use   name="CommonTools/Utils"/>
