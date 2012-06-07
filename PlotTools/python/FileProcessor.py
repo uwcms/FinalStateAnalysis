@@ -23,6 +23,9 @@ class FileProcessor(object):
         if not self.tree:
             raise IOError("Can't get tree: %s from file: %s" %
                           (treename, filename))
+        # Setup cache
+        ROOT.TTreeCache.SetLearnEntries(10)
+        self.tree.SetCacheSize(10000000)
         self.outfilename = output_file
         self.out = ROOT.TFile(output_file, "RECREATE")
         if not self.file:
