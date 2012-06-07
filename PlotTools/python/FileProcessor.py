@@ -32,11 +32,7 @@ class FileProcessor(object):
         self.selector = selector(self.tree, self.out, **kwargs)
 
     def process(self):
-        nentries = self.tree.GetEntries()
-        selector = self.selector
-        for x in xrange(nentries):
-            selector.process(x)
-        # Tell the selector to clean up
-        if hasattr(selector, 'finish'):
-            selector.finish()
-        return (nentries, self.outfilename)
+        self.selector.begin()
+        self.selector.process()
+        self.selector.finish()
+        return (1, self.outfilename)
