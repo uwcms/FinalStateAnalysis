@@ -11,7 +11,7 @@ Run::
 
 where SOURCE is the location where to find the JOB_ID directory.  For example::
 
-   rake "getinputs[2012-06-03-7TeV-Higgs, /hdfs/store/user/efriis]"
+   rake "getinputs[2012-06-03-7TeV-Higgs, /scratch/efriis/data]"
 
 The input .root files are stored in inputs/JOB_ID/sample1.txt,
 inputs/JOB_ID/sample2.txt, etc
@@ -35,4 +35,4 @@ You can run a job by::
 
 for example::
   
-  rake "analyze[2012-06-03-7TeV-Higgs,FakeRatesMMT,WZinclusive]"
+  rake "analyze[2012-06-03-7TeV-Higgs,FakeRatesMMT,Zjets_M50]"
