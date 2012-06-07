@@ -20,7 +20,7 @@ rule ".root" => [
   proc {|targ| targ.sub(%r{results/(.*)/.*/(.*).root}, "inputs/\\1/\\2.txt")} ] do |t|
   # Make the output directory
   sh "mkdir -p `dirname #{t.name}`"
-  sh "mega #{t.prerequisites[0]} #{t.prerequisites[1]} mmt/final/Ntuple #{t.name}"
+  sh "mega #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name}"
 end
 
 # Rule to build cython wrappers for the ntuples
@@ -33,9 +33,6 @@ task :analyze, [:jobid, :analyzer, :sample] do |t, args|
    Rake::Task["results/#{args.jobid}/#{args.analyzer}/#{args.sample}.root"].invoke
 end
 
-
 ################################################################################
 ### Analysis targets ###########################################################
 ################################################################################
-
-task :FakeRatesMMT => ["results/2012-06-03-7TeV-Higgs/FakeRatesMMT/Zjets_M50.root"]

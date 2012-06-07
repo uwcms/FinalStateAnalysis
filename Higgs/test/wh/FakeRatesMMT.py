@@ -10,6 +10,7 @@ import MMTTree
 from FinalStateAnalysis.PlotTools.MegaBase import MegaBase
 
 class FakeRatesMMT(MegaBase):
+    tree = 'mmt/final/Ntuple'
     def __init__(self, tree, outfile, **kwargs):
         super(FakeRatesMMT, self).__init__(tree, outfile, **kwargs)
         # Use the cython wrapper

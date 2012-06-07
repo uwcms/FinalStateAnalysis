@@ -31,11 +31,11 @@ if __name__ == "__main__":
                         help='Text file with input files.  '
                         'One job will be created for each input file.')
 
-    parser.add_argument('tree', metavar='tree', type=str, 
-                        help='Path to TTree in data files (Ex: /my/dir/myTree)')
-
     parser.add_argument('output', metavar='output', 
                         type=str, help='Output root file')
+
+    parser.add_argument('--tree', metavar='tree', type=str, default='',
+                        help='Override path to TTree in data files (Ex: /my/dir/myTree)')
 
     parser.add_argument('--workers', type=int, required=False,
                         default = 4, help='Number of worker processes (def: 4)')
@@ -83,7 +83,14 @@ if __name__ == "__main__":
     selector = getattr(module, class_name)
     log.info("Selector class: %s", selector)
 
-    dispatch = MegaDispatcher(file_list, args.tree, args.output, selector, 
+    tree_name = None
+    if args.tree:
+        tree_name = args.tree
+    else:
+        log.info("Getting tree name from selector module")
+        tree_name = selector.tree
+
+    dispatch = MegaDispatcher(file_list, tree_name, args.output, selector, 
                              args.workers)
     dispatch.run()
     log.info("Mega2 job is complete")
