@@ -1,17 +1,22 @@
 #!/bin/bash
 
 # A stupid script for discovering the input ntuple files.
-# Usage: ./get_inputs.sh jobid $hdfs
-# Generates inputs/[jobid]/[sample1].txt
-#           inputs/[jobid]/[sample2].txt
+# Usage: discover_ntuples.sh jobid $hdfs output_dir
+# Generates output_dir/[sample1].txt
+#           output_dir/[sample2].txt
 #           etc
 
 JOBID=$1 
 SOURCE=$2
+OUTPUTDIR=$3
+
+if [ $# -ne 3 ] 
+then
+  echo "Usage: `basename $0` jobid inputdir outputdir"
+  exit 1
+fi
 
 echo "Finding input files for job: $JOBID in $SOURCE"
-
-OUTPUTDIR=inputs/$JOBID
 
 mkdir -p $OUTPUTDIR
 
