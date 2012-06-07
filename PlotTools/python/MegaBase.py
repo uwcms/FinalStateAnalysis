@@ -1,6 +1,6 @@
 '''
 
-Base class with convenience functions for TMega python selectors.
+Base class with convenience functions for python selectors.
 
 '''
 
