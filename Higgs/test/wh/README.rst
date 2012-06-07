@@ -28,3 +28,11 @@ The analysis outputs are stored in::
 
 where [Analyzer] is something like FakeRatesMMT and [sample] is something like
 Zjets_M50.txt
+
+You can run a job by::
+
+  rake "analyze[JOB_ID, ANALYZER, sample]"
+
+for example::
+  
+  rake "analyze[2012-06-03-7TeV-Higgs,FakeRatesMMT,WZinclusive]"
