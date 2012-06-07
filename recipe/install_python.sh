@@ -34,3 +34,6 @@ echo "Installing uncertainties <-- awesome error propagation"
 pip install -U uncertainties
 echo "Install progressbar"
 pip install -U progressbar
+echo "Install cython"
+pip install -U cython
+
