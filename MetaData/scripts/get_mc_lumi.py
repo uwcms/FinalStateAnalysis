@@ -14,6 +14,7 @@ Author: Evan K. Friis, UW Madison
 '''
 
 from RecoLuminosity.LumiDB import argparse
+from FinalStateAnalysis.MetaData.datacommon import picobarns
 import FinalStateAnalysis.MetaData.datadefs as datadefs
 import sys
 
@@ -23,6 +24,6 @@ if __name__ == "__main__":
     parser.add_argument('nevts', type=int, help="Number of processed events")
     args = parser.parse_args()
 
-    sample_xsec = datadefs.datadefs[args.sample]['x_sec']/datadefs.datadefs.picobarns
+    sample_xsec = datadefs.datadefs[args.sample]['x_sec']/picobarns
 
     print args.nevts/sample_xsec
