@@ -151,8 +151,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
     process.elPFIsoValueGamma04NoPFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
-    process.elPFIsoValueCharged04PFIdPFIso.deposits[0].vetos = cms.vstring('0.015')
-    process.elPFIsoValueCharged04NoPFIdPFIso.deposits[0].vetos = cms.vstring('0.015')
+    process.elPFIsoValueCharged04PFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.015)')
+    process.elPFIsoValueCharged04NoPFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.015)')
 
     # Unembed junk
     process.patMuons.embedCaloMETMuonCorrs = False
