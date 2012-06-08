@@ -23,6 +23,6 @@ if __name__ == "__main__":
     parser.add_argument('nevts', type=int, help="Number of processed events")
     args = parser.parse_args()
 
-    sample_xsec = datadefs.datadefs[args.sample]['x_sec']/datadefs.picobarns
+    sample_xsec = datadefs.datadefs[args.sample]['x_sec']/datadefs.datadefs.picobarns
 
     print args.nevts/sample_xsec
