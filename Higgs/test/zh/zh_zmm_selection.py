@@ -4,7 +4,7 @@ Common definition of Zmumu selection used in ZH analysis
 
 '''
 
-from FinalStateAnalysis.TMegaSelector.megautil import And
+from FinalStateAnalysis.PlotTools.megautil import And
 
 def build_zmm_selection(meta_tree):
     ''' Build the Zmumu selection '''

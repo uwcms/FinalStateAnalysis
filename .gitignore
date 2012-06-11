@@ -21,3 +21,5 @@ docs/build/*
 *.so
 .__afs*
 callgrind.out.*
+*.orig
+*.rej

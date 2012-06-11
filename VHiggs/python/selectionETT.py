@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-import FinalStateAnalysis.Selectors.selectors.selectors as selectors
+import FinalStateAnalysis.NtupleTools.selectors.selectors as selectors
 from FinalStateAnalysis.VHiggs.selectionCommon import common
 from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
 
@@ -110,5 +110,5 @@ selections = cms.VPSet(
 # Define plots
 ###########################################################################
 
-from FinalStateAnalysis.Selectors.plotBuilder import makePlots
+from FinalStateAnalysis.NtupleTools.plotBuilder import makePlots
 plots, ntuple = makePlots(leg1, leg2, leg3)

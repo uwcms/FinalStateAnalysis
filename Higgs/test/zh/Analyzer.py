@@ -7,7 +7,7 @@ histograms.
 
 '''
 
-from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
+from FinalStateAnalysis.PlotTools.MegaBase import MegaBase
 import os
 
 class Analyzer(MegaBase):

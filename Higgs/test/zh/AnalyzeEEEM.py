@@ -5,7 +5,7 @@ Implementation of ZH search in the mu-mu-mu-e channel
 '''
 
 from Analyzer import Analyzer
-from FinalStateAnalysis.TMegaSelector.megautil import MetaTree, And, Or
+from FinalStateAnalysis.PlotTools.megautil import MetaTree, And, Or
 from zh_zee_selection import build_zee_selection
 
 meta = MetaTree()

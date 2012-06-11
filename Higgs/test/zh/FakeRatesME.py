@@ -7,8 +7,8 @@ for the e-fake rate in W->mu nu and QCD (anti-iso mu events)
 
 import ROOT
 
-from FinalStateAnalysis.TMegaSelector.megautil import MetaTree
-from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
+from FinalStateAnalysis.PlotTools.megautil import MetaTree
+from FinalStateAnalysis.PlotTools.MegaBase import MegaBase
 
 meta = MetaTree()
 

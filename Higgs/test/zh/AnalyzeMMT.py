@@ -2,8 +2,8 @@ import ROOT
 
 import os
 
-from FinalStateAnalysis.TMegaSelector.megautil import MetaTree
-from FinalStateAnalysis.TMegaSelector.MegaBase import MegaBase
+from FinalStateAnalysis.PlotTools.megautil import MetaTree
+from FinalStateAnalysis.PlotTools.MegaBase import MegaBase
 
 meta = MetaTree()
 

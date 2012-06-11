@@ -12,7 +12,7 @@ import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.Utilities.cfgtools import format, PSet
 
 # Import the templates used to make the branches
-import FinalStateAnalysis.Selectors.templates as templates
+import FinalStateAnalysis.NtupleTools.templates as templates
 
 # Define the branches that go in all ntuples
 _common_template = PSet(

@@ -4,7 +4,7 @@ Common definition of Zee selection used in ZH analysis
 
 '''
 
-from FinalStateAnalysis.TMegaSelector.megautil import And
+from FinalStateAnalysis.PlotTools.megautil import And
 
 def build_zee_selection(meta_tree):
     ''' Build the Zee selection '''

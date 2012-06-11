@@ -8,7 +8,7 @@ import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.Utilities.cfgtools import format
 
 # Import the templates used to make the branches
-import FinalStateAnalysis.Selectors.templates as templates
+import FinalStateAnalysis.NtupleTools.templates as templates
 
 _name_map = {
     'electron' : 'daughter(0)',
