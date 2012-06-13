@@ -1,15 +1,54 @@
+#!/usr/bin/env python
+
+'''
+File: submit_tuplization.py
+
+Author: Evan Friis, UW Madison
+
+Description: submit UW pattuple jobs via condor.
+
+'''
+
+from RecoLuminosity.LumiDB import argparse
+import fnmatch
 from FinalStateAnalysis.MetaData.datadefs import datadefs
+from FinalStateAnalysis.Utilities.version import fsa_version
 from FinalStateAnalysis.PatTools.pattuple_option_configurator import \
         configure_pat_tuple
 import os
 import sys
 
-cfg = 'patTuple_cfg.py'
-jobId = '2012-05-15-PatTuple'
+parser = argparse.ArgumentParser(description='Build PAT Tuple CRAB submission')
+parser.add_argument('jobid', help='Job ID identifier')
+parser.add_argument('--responsible', type=str, required=False, default='',
+                    help='Filter on responsibility')
+parser.add_argument('--samples', nargs='+', type=str, required=False,
+                    help='Filter samples using list of patterns (shell style)')
+args = parser.parse_args()
 
+cfg = 'patTuple_cfg.py'
+jobId = args.jobid
+
+print " # Job ID: %s Version: %s" % (jobId, fsa_version())
 print 'export TERMCAP=screen'
 for sample in sorted(datadefs.keys()):
     sample_info = datadefs[sample]
+
+    passes_filter = True
+    # Filter by responsibility
+    if args.responsible:
+        passes_resp = sample_info['responsible'] == args.responsible
+        passes_filter = passes_filter and passes_resp
+
+    # Filter by sample wildcards
+    if args.samples:
+        passes_wildcard = False
+        for pattern in args.samples:
+            if fnmatch.fnmatchcase(sample, pattern):
+                passes_wildcard = True
+        passes_filter = passes_wildcard and passes_filter
+    if not passes_filter:
+        continue
 
     submit_dir_base = "/scratch/{logname}/{jobid}/{sample}".format(
         logname = os.environ['LOGNAME'],
@@ -35,7 +74,7 @@ for sample in sorted(datadefs.keys()):
     farmout_options.append(
         '--input-dbs-path=%s' % sample_info['datasetpath'])
 
-    if 'data' in sample:
+    if 'lumi_mask' in sample_info:
         lumi_mask_fip = sample_info['lumi_mask']
         lumi_mask_path = os.path.join(
             os.environ['CMSSW_BASE'], 'src', lumi_mask_fip)
