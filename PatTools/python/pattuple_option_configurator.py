@@ -28,6 +28,8 @@ def configure_pat_tuple(sample, sample_info):
     if dataset is None and 'Summer12' in sample_info['datasetpath']:
         # Not determined yet
         dataset = 'Fall11'
+    if dataset is None and 'embedded' in sample:
+        dataset = 'Prompt'
     if not dataset:
         raise ValueError("Couldn't determine dataset for sample: "
                         + sample_info['datasetpath'])
