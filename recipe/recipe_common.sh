@@ -38,6 +38,10 @@ cvs co -r V00-00-10 -d Muon/MuonAnalysisTools UserCode/sixie/Muon/MuonAnalysisTo
 # :( no tag is provided on the twiki
 cvs co -D "07/05/2012" -d EgammaCalibratedGsfElectrons UserCode/EGamma/EgammaCalibratedGsfElectrons
 
+# Get the VBF MVA weight files
+# https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2012#VBF_selection_Matthew
+cvs co -r 1.2 UserCode/MitHtt/data/VBFMVA/MuTau/VBFMVA_BDTG.weights.xml
+
 pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
 echo "Installing Higgs xsec lookup tables"
 ./install_HCSaW.sh

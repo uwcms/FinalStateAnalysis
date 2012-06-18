@@ -6,6 +6,7 @@
 <use   name="DataFormats/Candidate"/>
 <use   name="CommonTools/Utils"/>
 <use   name="root"/>
+<use   name="roottmva"/>
 <use   name="clhep"/>
 <export>
   <lib   name="1"/>
