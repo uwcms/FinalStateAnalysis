@@ -21,6 +21,8 @@
   <class name="std::map<std::string, int>"/>
   <class name="std::pair<std::string, int>"/>
 
+  <class name="VBFVariables"/>
+
   <class name="PATFinalState"/>
   <class name="std::vector<PATFinalState*>"/>
   <class name="PATFinalStateCollection"/>
