@@ -33,7 +33,7 @@ namespace reco {
 
 struct VBFVariables {
   const reco::Candidate* leadJet;
-  const reco::Candidate* suleadJet;
+  const reco::Candidate* subleadJet;
   double mass;
   double deta;
   double dphi;
@@ -49,6 +49,7 @@ struct VBFVariables {
   double mva;
   unsigned int jets20;
   unsigned int jets30;
+  unsigned int nJets; // Number of jets in event passing cut
 };
 
 #endif /* end of include guard: VBFVARIABLES_ZNC5J0I */

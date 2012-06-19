@@ -28,10 +28,19 @@ VBFVariables computeVBFInfo(
     const std::vector<const reco::Candidate*>& jets) {
   VBFVariables output;
 
-  assert(jets.size() > 1);
+  // number of initial jets
+  output.nJets = jets.size();
+
+  // Not enough jets
+  if (output.nJets < 2)
+    return output;
+
   assert(jets[0]->pt() > jets[1]->pt());
 
-  // Get two highest jets
+  output.leadJet = jets[0];
+  output.subleadJet = jets[1];
+
+  // Get 4vectors of two highest jets
   reco::Candidate::LorentzVector leadJet(jets[0]->p4());
   reco::Candidate::LorentzVector subleadJet(jets[1]->p4());
 
