@@ -53,10 +53,11 @@ if __name__ == "__main__":
         log.info("Checking if we need to compute lumi results")
         for sample, sample_info in tuple_info.iteritems():
             if sample_info['parent'].endswith('AOD'):
-                if 'lumimask' not in sample_info:
-                    log.info("Getting lumis for sample %s", sample)
-                    lumis = query_lumis_in_dataset(sample)
-                    sample_info['lumimask'] = lumis
+                log.info("Getting lumis for sample %s", sample)
+                # Ony update the files we don't have
+                current_lumimask = sample_info.setdefault('lumimask', {})
+                lumis = query_lumis_in_dataset(sample, current_lumimask)
+                sample_info['lumimask'] = lumis
 
     finally:
         # Always clean up and write what we wrote at the end

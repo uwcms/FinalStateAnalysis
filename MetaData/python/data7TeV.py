@@ -9,6 +9,7 @@ Author: Evan K. Friis, UW Madison
 '''
 
 from datacommon import square, cube, quad, picobarns, br_w_leptons
+import re
 
 # Define a mapping between a "nice" name and a set of datasets.
 # This is so you can make an update to the underlying data sample pythia/powheg
@@ -1613,6 +1614,7 @@ datadefs = {
         'analyses' : ['4L'],
         'responsible' : 'Ian',
     },
+
 }
 
 # Add all the datasets
@@ -1722,3 +1724,29 @@ data_name_map.update(list_SingleElectron)
 data_TauPlusX, list_TauPlusX = build_data_set('TauPlusX', ['HTT', ], 'Josh')
 datadefs.update(data_TauPlusX)
 data_name_map.update(list_TauPlusX)
+
+    # Add all the embedded samples
+embedded_samples = [
+    "/DoubleMu/StoreResults-DoubleMu_2011B_PR_v1_embedded_trans1_tau116_ptmu1_13had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER",
+    "/DoubleMu/StoreResults-DoubleMu_2011B_PR_v1_embedded_trans1_tau115_ptelec1_17had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER",
+    "/DoubleMu/StoreResults-DoubleMu_2011A_PR_v4_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+    "/DoubleMu/StoreResults-DoubleMu_2011A_PR_v4_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+    "/DoubleMu/StoreResults-DoubleMu_2011A_May10thRR_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+    "/DoubleMu/StoreResults-DoubleMu_2011A_May10thRR_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+    "/DoubleMu/StoreResults-DoubleMu_2011A_Aug05thRR_v1_embedded_trans1_tau116_ptmu1_13had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER",
+    "/DoubleMu/StoreResults-DoubleMu_2011A_Aug05thRR_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+    "/DoubleMu/StoreResults-DoubleMu_2011A_03Oct2011_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+    "/DoubleMu/StoreResults-DoubleMu_2011A_03Oct2011_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+]
+_embed_matcher = re.compile('.*(?P<name>2011.*)_v\d-f4.*')
+for embedded_sample in embedded_samples:
+    match = _embed_matcher.match(embedded_sample)
+    assert(match)
+    name = match.group('name')
+    datadefs[name] = {
+        'datasetpath' : embedded_sample,
+        'analyses' : ['HTT'],
+        'responsible' : 'Evan',
+        'xsec' : -999,
+        'pu' : 'data',
+    }

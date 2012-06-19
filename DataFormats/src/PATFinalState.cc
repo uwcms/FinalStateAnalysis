@@ -578,6 +578,14 @@ double PATFinalState::zCompatibility(int i, int j) const {
   return std::abs(subcand(i, j)->mass() - 91.2);
 }
 
+VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts) const {
+  std::vector<const reco::Candidate*> hardScatter = this->daughters();
+  std::vector<const reco::Candidate*> jets = this->vetoJets(0.3, jetCuts);
+  const reco::Candidate::LorentzVector& metp4 = met()->p4();
+  // todo cache this
+  return computeVBFInfo(hardScatter, metp4, jets);
+}
+
 bool PATFinalState::orderedInPt(int i, int j) const {
   return daughter(i)->pt() > daughter(j)->pt();
 }

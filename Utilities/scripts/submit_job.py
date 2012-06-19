@@ -14,6 +14,7 @@ Example to make submit script for VH analysis:
 
 from RecoLuminosity.LumiDB import argparse
 import datetime
+import fnmatch
 import json
 import logging
 import os
@@ -27,10 +28,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     cmsrun_group = parser.add_argument_group('Analysis and cmsRun options')
-
-    cmsrun_group.add_argument('analysis', type=str,
-                        help='Which analysis to use - this determines'
-                        ' which samples in datadefs to run over.')
 
     cmsrun_group.add_argument('jobid', type=str,
                         help='String description of job')
@@ -55,6 +52,14 @@ if __name__ == "__main__":
         help = 'JSON file mapping datasets to DBS paths.'
         ' Generally kept in MetaData/tuples'
     )
+
+    filter_group = parser.add_argument_group('Sample Filters')
+    filter_group.add_argument('--analysis', type=str, default='',
+                              help='Which analysis to use - this determines'
+                              ' which samples in datadefs to run over.')
+
+    filter_group.add_argument('--samples', nargs='+', type=str, required=False,
+                        help='Filter samples using list of patterns (shell style)')
 
     farmout_group = parser.add_argument_group("farmout",
                                               description="Farmout options")
@@ -82,7 +87,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    log.info("Getting samples for analysis %s", args.analysis)
     sys.stdout.write('# Condor submission script\n')
     sys.stdout.write('# Generated with submit_job.py at %s\n'
                      % datetime.datetime.now())
@@ -91,8 +95,22 @@ if __name__ == "__main__":
     sys.stdout.write('export TERMCAP=screen\n')
     for sample, sample_info in reversed(
         sorted(datadefs.iteritems(), key=lambda (x,y): x)):
-        if args.analysis not in sample_info['analyses']:
+
+        passes_filter = True
+        # Filter by analysis
+        if args.analysis:
+            passes_ana = sample_info['analysis'] == args.analysis
+            passes_filter = passes_filter and passes_ana
+        # Filter by sample wildcards
+        if args.samples:
+            passes_wildcard = False
+            for pattern in args.samples:
+                if fnmatch.fnmatchcase(sample, pattern):
+                    passes_wildcard = True
+            passes_filter = passes_wildcard and passes_filter
+        if not passes_filter:
             continue
+
         submit_dir = args.subdir.format(
             user = os.environ['LOGNAME'],
             jobid = args.jobid,
@@ -136,16 +154,21 @@ if __name__ == "__main__":
             with open(args.tuplelist) as tuple_file:
                 # Parse info about PAT tuples
                 tuple_info = json.load(tuple_file)
-                # Remap from tuple DBS -> parent DBS to parent DBS -> tuple
-                reversed = {}
-                for k, v in tuple_info.iteritems():
-                    reversed[v['parent']] = k
-                if sample_info['datasetpath'] not in reversed:
-                    log.warning("Dataset %s not found in %s, skipping!",
-                                sample_info['datasetpath'], args.tuplelist)
+                # Find the matching pat tuple DBS name
+                #import pdb; pdb.set_trace();
+                matching_datasets = []
+                for pat_tuple, pat_tuple_info in tuple_info.iteritems():
+                    if sample in pat_tuple:
+                        matching_datasets.append(pat_tuple)
+                if len(matching_datasets) != 1:
+                    log.error("No or multiple matching datasets found "
+                              " for sample %s, matches: [%s]",
+                              sample, ", ".join(matching_datasets))
                     continue
-                input_commands.append('--input-dbs-path=%s' %
-                                     reversed[sample_info['datasetpath']])
+                datasetpath = matching_datasets[0]
+
+                input_commands.append(
+                    '--input-dbs-path=%s' % datasetpath)
                 input_commands.append(
                     '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet'
                 )

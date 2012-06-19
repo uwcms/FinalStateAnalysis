@@ -16,6 +16,8 @@
 
 #include "FinalStateAnalysis/DataFormats/interface/PATQuadLeptonFinalStates.h"
 
+#include "FinalStateAnalysis/DataAlgos/interface/VBFVariables.h"
+
 #include "FinalStateAnalysis/DataFormats/interface/Macros.h"
 
 namespace {
@@ -36,6 +38,9 @@ namespace {
     std::map<std::string, int> dummyIntMap;
     std::pair<std::string, float> dummyFloatPair;
     std::pair<std::string, int> dummyIntPair;
+
+    // For the VBF variables
+    VBFVariables dummyVBFVars;
 
     // For the MVA MET
     edm::RefProd<edm::ValueMap<float> > pfCandDZs_;

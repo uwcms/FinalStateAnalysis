@@ -128,7 +128,7 @@ def query_lumis(file):
             lumi_result['lumi'][0]['run_number'],
             lumi_result['lumi'][0]['id'],
         ))
-    log.info("Found %i lumis", len(lumi_result))
+    log.info("Found %i lumis", len(lumis))
     return lumis
 
 def query_lumis_in_dataset(dataset):

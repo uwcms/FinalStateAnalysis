@@ -10,6 +10,9 @@
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
 
+#include "FinalStateAnalysis/DataAlgos/interface/VBFVariables.h"
+#include "FinalStateAnalysis/DataAlgos/interface/VBFSelections.h"
+
 // Forward delcarations
 namespace pat {
   class Electron;
@@ -168,6 +171,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// is from the Z mass.  If they are same sign, it will return 1000.
     /// = |M_i_j - 91.2|
     double zCompatibility(int i, int j) const;
+
+    /// Get the VBF selection variables.  The jet cuts are applied to the veto
+    /// jets using dR of 0.3 away from the members.
+    VBFVariables vbfVariables(const std::string& jetCuts) const;
 
     /// Check if two daughters are ordered in PT.
     /// This is equivalent to (daughter(i).pt > daughter(j).pt)

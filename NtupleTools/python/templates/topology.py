@@ -39,3 +39,13 @@ zboson = PSet(
     # "Z like"
     object1_object2_Zcompat = 'zCompatibility({object1_idx}, {object2_idx})'
 )
+
+vbf = PSet(
+    # If nJets < 2, none of these other branches are valid
+    vbfNJets = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").jets20',
+    vbfJetVeto30 = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").jets30',
+    vbfJetVeto20 = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").jets20',
+    vbfMVA = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").mva',
+    vbfMass = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").mass',
+    vbfDeta = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").deta',
+)

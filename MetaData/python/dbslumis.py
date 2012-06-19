@@ -6,6 +6,7 @@ Author: Evan K. Friis, UW
 
 '''
 
+import copy
 from FinalStateAnalysis.Utilities.lumitools import json_summary
 import logging
 from datatools import query_files, query_lumis
@@ -20,16 +21,19 @@ def query_lumi_from_queue(input, output):
         file = input.get()
         lumis = query_lumis(file)
         log.debug("Got lumis from %s", file)
-        output.put(lumis)
+        output.put((file, lumis))
         input.task_done()
 
-def query_lumis_in_dataset(dataset, threads=7):
+def query_lumis_in_dataset(dataset, current, threads=7):
     files = query_files(dataset)
     to_query = Queue()
+    count = 0
     for file in files:
-        to_query.put(file)
+        if file not in current:
+            count += 1
+            to_query.put(file)
 
-    log.info("Getting lumis from %i files", len(files))
+    log.info("Getting lumis from %i files", count)
 
     results = Queue()
     workers = []
@@ -40,13 +44,14 @@ def query_lumis_in_dataset(dataset, threads=7):
         workers.append(worker)
 
     # Wait for everything to be processed
-    to_query.join()
+    try:
+        to_query.join()
+    except KeyboardInterrupt:
+        log.error("Caught Ctrl-C, quitting")
 
     log.info("Finished getting lumis")
-
-    mega_set = set([])
-
+    output = copy.deepcopy(current)
     while not results.empty():
-        subset = results.get()
-        mega_set |= subset
-    return json_summary(mega_set)
+        file, lumis = results.get()
+        output[file] = json_summary(lumis)
+    return output

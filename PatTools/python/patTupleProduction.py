@@ -43,7 +43,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
         # Debug
         #'*_generalTracks_*_*',
         #'*_offlinePrimaryVertices_*_*',
-
         '*_electronGsfTracks_*_*',
         '*_offlinePrimaryVertices*_*_*',
         '*_ak5GenJets_*_*',
@@ -57,7 +56,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_kt6PFJets_rho_*',
         '*_kt6PFJetsCentralNeutral_rho_*', #for zz muons
         # for Zmumu -> embedded samples
-        '*_generator_weight_*',
+        '*_generator_weight_*', # 2k11
+        "GenFilterInfo_generator_minVisPtFilter_*", #2k12
         '*_genDaughters_*_*',
     ]
     # Define our patTuple production sequence
@@ -151,8 +151,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
     process.elPFIsoValueGamma04NoPFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
-    process.elPFIsoValueCharged04PFIdPFIso.deposits[0].vetos = cms.vstring('0.015')
-    process.elPFIsoValueCharged04NoPFIdPFIso.deposits[0].vetos = cms.vstring('0.015')
+    process.elPFIsoValueCharged04PFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.015)')
+    process.elPFIsoValueCharged04NoPFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.015)')
 
     # Unembed junk
     process.patMuons.embedCaloMETMuonCorrs = False

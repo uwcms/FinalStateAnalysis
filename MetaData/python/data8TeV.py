@@ -215,6 +215,22 @@ def build_data_set(pd, analyses, who):
             'analyses' : analyses,
             'responsible' : who,
         },
+        'data_%s_Run2012B_PromptReco_v1_b' % pd : {
+            'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
+            'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-195396_8TeV_PromptReco_Collisions12_JSON_v2.txt",
+            'firstRun' : 194478,
+            'lastRun' : 195396,
+            'analyses' : analyses,
+            'responsible' : who,
+        },
+        'data_%s_Run2012B_PromptReco_v1_c' % pd : {
+            'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
+            'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-195947_8TeV_PromptReco_Collisions12_JSON_v2.txt",
+            'firstRun' : 195397,
+            'lastRun' : 195947,
+            'analyses' : analyses,
+            'responsible' : who,
+        },
     }
     sample_dict = {
         'data_%s' % pd : subsample_dict.keys()

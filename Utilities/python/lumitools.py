@@ -6,6 +6,8 @@ Author: Evan K. Friis, UW
 
 '''
 
+import json
+
 def group_by_run(sorted_run_lumis):
     '''
     Generate a list of lists run-lumi tuples, grouped by run
@@ -45,7 +47,6 @@ def collapse_ranges_in_list(xs):
             output = [x, x]
     yield output
 
-
 def json_summary(run_lumi_set):
     '''
     Compute a crab -report like json summary for a set of runs and lumis.
@@ -62,6 +63,40 @@ def json_summary(run_lumi_set):
     for run, lumis_in_run in group_by_run(run_lumis):
         output[str(run)] = list(collapse_ranges_in_list(lumis_in_run))
     return output
+
+def lumi_list(lumimask, first=None, last=None):
+    '''
+    Convert a json-style lumimask to a plain set of (run, lumi)s.
+    '''
+    output = set([])
+    for run, lumis in lumimask.iteritems():
+        run = int(run)
+        if first is not None and run < first:
+            continue
+        if last is not None and run > last:
+            continue
+        for lumirange in lumis:
+            for lumi in range(lumirange[0], lumirange[1] + 1):
+                output.add( (run, lumi) )
+    return output
+
+def lumi_list_from_file(filepath):
+    '''
+    Read a lumi mask from a json file and convert to to a set of run, lumis.
+    If filepath is of the form file:first:last then only take runs between first
+    and last.
+    '''
+    path = filepath
+    first = None
+    last = None
+    if ':' in filepath:
+        path, first, last = tuple(filepath.split(':'))
+        first = int(first)
+        last = int(last)
+    result = None
+    with open(path, 'r') as file:
+        result = lumi_list(json.load(file), first, last)
+    return result
 
 if __name__ == "__main__":
     import doctest; doctest.testmod()
