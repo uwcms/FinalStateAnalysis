@@ -27,6 +27,9 @@ pileup = PSet(
     puWeightData2011A = 'evt.puWeight("data2011A")',
     puWeightData2011AB = 'evt.puWeight("data2011AB")',
     puWeightData2011B = 'evt.puWeight("data2011B")',
+    puWeightData2012A = 'evt.puWeight("data2012A")',
+    puWeightData2012B = 'evt.puWeight("data2012B")',
+    puWeightData2012AB = 'evt.puWeight("data2012AB")',
 )
 
 met = PSet(
