@@ -9,9 +9,8 @@ Snippet to add TNP dilepton ntuple production to the process
 from ntuple_builder import make_ntuple, add_ntuple
 
 final_states = [
-    'em',
-    'et',
-    'mt',
+    'mm',
+    'ee',
 ]
 
 def add_tnp_ntuples(process, schedule):

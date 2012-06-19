@@ -95,7 +95,9 @@ def add_ntuple(name, analyzer, process, schedule):
 
     A path for the ntuple will be created.
     '''
-    assert(not hasattr(process, name))
+    if hasattr(process, name):
+        raise ValueError("An ntuple builder module named %s has already"
+                         " been attached to the process!" % name)
     setattr(process, name, analyzer)
     # Make a path for this ntuple
     p = cms.Path(analyzer)
