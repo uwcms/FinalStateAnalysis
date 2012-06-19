@@ -85,6 +85,10 @@ if __name__ == "__main__":
     farmout_group.add_argument('--input-files-per-job', type=int, dest='filesperjob',
                         default=1, help='Files per job')
 
+    farmout_group.add_argument('--clean-crab-dupes', action='store_true',
+                               default=False, dest='cleancrab',
+                               help='Clean crab dupes')
+
     args = parser.parse_args()
 
     sys.stdout.write('# Condor submission script\n')
@@ -181,6 +185,8 @@ if __name__ == "__main__":
             '"--output-dir=%s"' % output_dir,
             '--input-files-per-job=%i' % args.filesperjob,
         ]
+        if args.cleancrab:
+            command.append('--clean-crab-dupes')
         command.extend(input_commands)
         command.extend([
             # The job ID
