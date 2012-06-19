@@ -165,7 +165,7 @@ if __name__ == "__main__":
                               " for sample %s, matches: [%s]",
                               sample, ", ".join(matching_datasets))
                     continue
-                datasetpath = tuple_info[matching_datasets[0]]
+                datasetpath = matching_datasets[0]
 
                 input_commands.append(
                     '--input-dbs-path=%s' % datasetpath)
