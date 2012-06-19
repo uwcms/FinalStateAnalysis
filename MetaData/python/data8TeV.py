@@ -122,7 +122,7 @@ datadefs = {
     'embedded_2012B_mutau_193752_195135' : {
         'analyses': ['HTT'],
         'datasetpath': '/DoubleMu/StoreResults-DoubleMu_2012B_PromptReco_v1_Run193752to195135_embedded_trans1_tau116_ptmu1_13had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER',
-        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-194479_8TeV_PromptReco_Collisions12_JSON.txt",
+        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-195947_8TeV_PromptReco_Collisions12_JSON_v2.txt",
         'xsec' : -999,
         'pu' : 'data',
         'responsible' : 'Evan',
@@ -130,16 +130,33 @@ datadefs = {
     'embedded_2012B_etau_193752_195135' : {
         'analyses': ['HTT'],
         'datasetpath': '/DoubleMu/StoreResults-DoubleMu_2012B_PromptReco_v1_Run193752to195135_embedded_trans1_tau115_ptelec1_17had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER',
-        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-194479_8TeV_PromptReco_Collisions12_JSON.txt",
+        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-195947_8TeV_PromptReco_Collisions12_JSON_v2.txt",
         'xsec' : -999,
         'pu' : 'data',
         'responsible' : 'Evan',
     },
+    'embedded_2012B_etau_195147_196070' : {
+        'analyses': ['HTT'],
+        'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_2012B_PromptReco_v1_Run195147to196070_embedded_trans1_tau115_ptelec1_17had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER",
+        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-195947_8TeV_PromptReco_Collisions12_JSON_v2.txt",
+        'xsec' : -999,
+        'pu' : 'data',
+        'responsible' : 'Evan',
+    },
+    'embedded_2012B_mutau_195147_196070' : {
+        'analyses': ['HTT'],
+        'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_2012B_PromptReco_v1_Run195147to196070_embedded_trans1_tau116_ptmu1_13had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER",
+        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-195947_8TeV_PromptReco_Collisions12_JSON_v2.txt",
+        'xsec' : -999,
+        'pu' : 'data',
+        'responsible' : 'Evan',
+    },
+
 }
 
 # Add GGH H2Tau samples
 for mass in range(110, 165, 5):
-    datadefs['GGH_H2Tau_M-%i' % mass] = {
+   datadefs['GGH_H2Tau_M-%i' % mass] = {
         'analyses': ['HTT'],
         'datasetpath': '/GluGluToHToTauTau_M-%i_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM' % mass,
         'pu': 'S7',
