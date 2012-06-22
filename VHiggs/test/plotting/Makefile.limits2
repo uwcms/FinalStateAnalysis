@@ -329,11 +329,12 @@ combo/ind_leptonic_zh_cls.pdf: $(zh_cls_limits)
 	  --lumi 5000 \
 	  --method cls\
 	  --showpoints \
-	  --blurb "Four leptons" \
+	  --blurb "4L channels" \
 	  --blurbalign 32 \
 	  --blurbsize 0.05 \
 	  --blurbpos $(blurbpos) \
-	  --legendpos $(legendpos)
+	  --legendpos $(legendpos)\
+	  --legendnudge "0,0"
 
 combo/ind_leptonic_tt_cls.pdf: $(tt_cls_limits)
 	plotlimit.py $^ \
@@ -342,7 +343,7 @@ combo/ind_leptonic_tt_cls.pdf: $(tt_cls_limits)
 	  --lumi 5000 \
 	  --method cls \
 	  --showpoints \
-	  --blurb "e#mu#tau and #mu#mu#tau" \
+	  --blurb "2l #tau_{h} channels" \
 	  --blurbalign 32 \
 	  --blurbsize 0.05 \
 	  --blurbpos $(blurbpos) \
@@ -356,7 +357,7 @@ combo/ind_leptonic_ww_cls.pdf: $(ww_cls_limits)
 	  --lumi 5000 \
 	  --method cls \
 	  --showpoints \
-	  --blurb "Three light leptons" \
+	  --blurb "3l channels" \
 	  --blurbalign 32 \
 	  --blurbsize 0.05 \
 	  --blurbpos $(blurbpos) \
