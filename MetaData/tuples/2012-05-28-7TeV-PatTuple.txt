@@ -79,6 +79,7 @@
 /VBF_ToHToZZTo4L_M-375_7TeV-powheg-pythia6/iross-VBF_ZZ_4l_375_2012-05-29-7TeV-PatTuple-v2-67c1f94-47f52eb0994cfecb200fccbfede1d8be/USER
 /VBF_ToHToZZTo4L_M-400_7TeV-powheg-pythia6/iross-VBF_ZZ_4l_400_2012-05-29-7TeV-PatTuple-v2-67c1f94-47f52eb0994cfecb200fccbfede1d8be/USER
 /VBF_ToHToZZTo4L_M-425_7TeV-powheg-pythia6/iross-VBF_ZZ_4l_425_2012-05-29-7TeV-PatTuple-v2-67c1f94-47f52eb0994cfecb200fccbfede1d8be/USER
+/W3Jets_TuneZ2_7TeV-madgraph-tauola/cepeda-Wplus3Jets_madgraph_2012-05-29-7TeV-PatTuple-67c1f94-7379fedc58fcfa186719ea6b0a00c3b2/USER
 /WH_HToWW_3l_M-110_7TeV-pythia6/friis-WH_110_HWW3l_2012-05-29-7TeV-PatTuple-b08cf9d-69073709ca8a2ae74014346071e01e07/USER
 /WH_HToWW_3l_M-115_7TeV-pythia6/friis-WH_115_HWW3l_2012-05-29-7TeV-PatTuple-b08cf9d-72455ad9fee18a2c5324f1a5e9463961/USER
 /WH_HToWW_3l_M-120_7TeV-pythia6/friis-WH_120_HWW3l_2012-05-29-7TeV-PatTuple-b08cf9d-3534a0a77eb98cf3ca7cf7a4cc16285e/USER
