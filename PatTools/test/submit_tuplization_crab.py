@@ -91,6 +91,10 @@ for sample in sorted(datadefs.keys()):
         lumi_mask_path = os.path.join(os.environ['CMSSW_BASE'],
                                       'src', lumi_mask_fip)
         f.write('CMSSW.lumi_mask = %s\n' % lumi_mask_path)
+        # Apply a run selection
+        if 'firstRun' in sample_info:
+            f.write('CMSSW.runselection = %i-%i\n' %
+                    (sample_info['firstRun'], sample_info['lastRun']))
 
     options.append('dumpCfg='+jobId+'/'+sample+'_cfg.py')
     opts= ' '.join(options)
