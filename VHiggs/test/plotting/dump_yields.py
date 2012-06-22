@@ -58,6 +58,8 @@ analyses = {
 
 #pprint.pprint(dc.systs)
 
+mega_bkg = 0
+
 for analysis, ana_info in analyses.iteritems():
     print '===================='
     print analysis
@@ -87,3 +89,8 @@ for analysis, ana_info in analyses.iteritems():
     print "all bkg: "
     print "%0.2f +- %0.2f" % (all_bkg.nominal_value,
                               all_bkg.std_dev())
+    mega_bkg += all_bkg
+
+print "mega bkg"
+print "%0.2f +- %0.2f" % (mega_bkg.nominal_value,
+                          mega_bkg.std_dev())
