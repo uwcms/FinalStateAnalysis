@@ -1,22 +1,17 @@
-from optparse import OptionParser
 import pprint
 import uncertainties
-from HiggsAnalysis.CombinedLimit.DatacardParser import parseCard, addDatacardParserOptions
+import FinalStateAnalysis.StatTools.cardreader as cardreader
 
-
-parser = OptionParser(usage="usage: %prog [options] datacard.txt -o output \nrun with --help to get list of options")
-
-addDatacardParserOptions(parser)
-
-(options, args) = parser.parse_args()
-
-dc =  parseCard(open('trilepton_cards/combined_120.txt'), options)
+card = cardreader.read_card("combo/comb_leptonic_120.txt")
+systs = cardreader.create_uncertainties(card)
 
 analyses = {
     'TT' : {
         'channels' : [
-            'TT_mmt_mumu_final_MuTauMass',
-            'TT_emt_emu_final_SubleadingMass',
+            'ch1_ch1_' + x for x in [
+                'mmt_mumu_final_MuTauMass',
+                'emt_emu_final_SubleadingMass',
+            ]
         ],
         'names' : {
             'tt_signal' : 'VH120',
@@ -28,7 +23,7 @@ analyses = {
     },
     'WW' : {
         'channels' : [
-            'WWW'
+            'ch2'
         ],
         'names' : {
             'tt_signal' : 'VHtt',
@@ -40,14 +35,16 @@ analyses = {
     },
     'ZH' : {
         'channels' : [
-            'ZH_mmem',
-            'ZH_mmet',
-            'ZH_mmmt',
-            'ZH_mmtt',
-            'ZH_eeem',
-            'ZH_eeet',
-            'ZH_eemt',
-            'ZH_eett',
+            'ch3_ch1_' + x for x in [
+                'mmem',
+                'mmet',
+                'mmmt',
+                'mmtt',
+                'eeem',
+                'eeet',
+                'eemt',
+                'eett',
+            ]
         ],
         'names' : {
             'tt_signal' : 'zh_tt120',
@@ -65,11 +62,28 @@ for analysis, ana_info in analyses.iteritems():
     print '===================='
     print analysis
     print '===================='
-    for subchannel in ana_info['channels']:
-
-
+    all_bkg = 0
     for process, real_process_name in ana_info['names'].iteritems():
+        if real_process_name is None:
+            continue
+        print process
         process_total = 0.0
         for channel in ana_info['channels']:
-            process_total
+            exp, total_err = cardreader.get_exp_with_error(
+                card, channel, real_process_name, systs,
+                exclude=['pdf_qqbar', 'QCDscale_VH'],
+            )
+            exp_with_err = exp*total_err
+            #print channel, exp_with_err
+            process_total += exp_with_err
+        print "%0.2f +- %0.2f" % (process_total.nominal_value,
+                                  process_total.std_dev())
+        for (var, error) in process_total.error_components().items():
+            break
+            print "%s: %f" % (var.tag, error)
 
+        if process in ['WZ', 'ZZ', 'fakes']:
+            all_bkg += process_total
+    print "all bkg: "
+    print "%0.2f +- %0.2f" % (all_bkg.nominal_value,
+                              all_bkg.std_dev())
