@@ -27,8 +27,8 @@ if __name__ == "__main__":
     parser.add_argument('output', metavar='output.root', help='Output root file')
     parser.add_argument('num', metavar='/path/to/num',
                         help='Path to numerator object')
-    parser.add_argument('denom', metavar='/path/to/num',
-                        help='Path to numerator object')
+    parser.add_argument('denom', metavar='/path/to/denom',
+                        help='Path to denominator object')
     parser.add_argument('efficiency',
                         help='RooFactory command to build eff. function')
     parser.add_argument('parameters',
