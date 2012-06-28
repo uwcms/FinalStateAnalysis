@@ -16,11 +16,9 @@ import logging
 import sys
 args = sys.argv[:]
 sys.argv = [sys.argv[0]]
-from rootpy.plotting import views
-import rootpy.io as io
-import ROOT
 
 log = logging.getLogger("fit_efficiency")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -30,22 +28,38 @@ if __name__ == "__main__":
     parser.add_argument('denom', metavar='/path/to/denom',
                         help='Path to denominator object')
     parser.add_argument('efficiency',
-                        help='RooFactory command to build eff. function')
+                        help='RooFactory command to build eff. function'
+                        ' (see: http://root.cern.ch/root/html/RooFactoryWSTool.html#RooFactoryWSTool:process)')
     parser.add_argument('parameters',
                         help='RooFactory command to build eff. parameters')
 
     parser.add_argument('input', nargs='+', metavar='input.root',
                         help='Input root files - will be summed')
 
+    parser.add_argument('--verbose', action='store_true',
+                        help='More log output')
+
+    parser.add_argument('--plot', action='store_true',
+                        help='Optionally plot the result in [output].png')
+
     args = parser.parse_args(args[1:])
+
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG, stream=sys.stderr)
+    else:
+        logging.basicConfig(level=logging.INFO, stream=sys.stderr)
+
+    from rootpy.plotting import views
+    import rootpy.io as io
+    import ROOT
 
     # Build view of input histograms
     log.info("Merging input files")
     input_view = views.SumView(*[io.open(x) for x in args.input])
 
     log.info("Getting histograms")
-    pass_histo = input_view.Get(args.input)
-    all_histo = input_view.Get(args.output)
+    pass_histo = input_view.Get(args.num)
+    all_histo = input_view.Get(args.denom)
     log.info("pass/all = %0.0f/%0.0f = %0.2f%%", pass_histo.Integral(),
              all_histo.Integral(), pass_histo.Integral()/all_histo.Integral())
     fail_histo = all_histo - pass_histo
@@ -94,3 +108,29 @@ if __name__ == "__main__":
         ROOT.RooFit.Save(True),
         ROOT.RooFit.PrintLevel(-1)
     )
+    log.info("Fit result status: %i", fit_result.status())
+
+    fit_result.Print()
+
+    keep = []
+    if args.plot:
+        canvas = ROOT.TCanvas("asdf", "asdf", 800, 600)
+        frame = x.frame(ROOT.RooFit.Title("Efficiency"))
+        function.plotOn(
+            frame,
+            ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+            ROOT.RooFit.VisualizeError(fit_result, 1.0),
+            ROOT.RooFit.FillColor(ROOT.EColor.kCyan)
+        )
+        function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlack))
+        combined_data.plotOn(frame, ROOT.RooFit.Efficiency(cut))
+        frame.SetMinimum(1e-4)
+        frame.SetMaximum(1)
+        frame.Draw()
+        canvas.SetLogy(True)
+        canvas.Draw()
+        plot_name = args.output.replace('.root', '.pdf')
+        log.info("Saving fit plot in %s", plot_name)
+        canvas.SaveAs(plot_name)
+        frame.Delete()
+
