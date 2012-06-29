@@ -109,28 +109,33 @@ if __name__ == "__main__":
         ROOT.RooFit.PrintLevel(-1)
     )
     log.info("Fit result status: %i", fit_result.status())
-
     fit_result.Print()
+    ws_import(fit_result)
+    log.info("Saving workspace in %s", args.output)
+    ws.writeToFile(args.output)
 
-    keep = []
     if args.plot:
         canvas = ROOT.TCanvas("asdf", "asdf", 800, 600)
-        frame = x.frame(ROOT.RooFit.Title("Efficiency"))
-        function.plotOn(
-            frame,
-            ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
-            ROOT.RooFit.VisualizeError(fit_result, 1.0),
-            ROOT.RooFit.FillColor(ROOT.EColor.kCyan)
-        )
-        function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kBlack))
-        combined_data.plotOn(frame, ROOT.RooFit.Efficiency(cut))
-        frame.SetMinimum(1e-4)
-        frame.SetMaximum(1)
-        frame.Draw()
-        canvas.SetLogy(True)
-        canvas.Draw()
-        plot_name = args.output.replace('.root', '.pdf')
-        log.info("Saving fit plot in %s", plot_name)
-        canvas.SaveAs(plot_name)
-        frame.Delete()
-
+        try:
+            frame = x.frame(ROOT.RooFit.Title("Efficiency"))
+            function.plotOn(
+                frame,
+                ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+                ROOT.RooFit.VisualizeError(fit_result, 1.0),
+                ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
+            )
+            function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kAzure))
+            combined_data.plotOn(frame, ROOT.RooFit.Efficiency(cut))
+            frame.SetMinimum(1e-4)
+            frame.SetMaximum(1)
+            frame.GetYaxis().SetTitle("Efficiency")
+            frame.GetXaxis().SetTitle(pass_histo.GetTitle())
+            frame.Draw()
+            canvas.SetLogy(True)
+            canvas.Draw()
+            plot_name = args.output.replace('.root', '.pdf')
+            log.info("Saving fit plot in %s", plot_name)
+            canvas.SaveAs(plot_name)
+        finally:
+            # If we don't explicitly delete this, we get a segfault in the dtor
+            frame.Delete()
