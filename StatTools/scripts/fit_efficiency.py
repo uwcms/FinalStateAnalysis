@@ -39,8 +39,12 @@ if __name__ == "__main__":
     parser.add_argument('--verbose', action='store_true',
                         help='More log output')
 
-    parser.add_argument('--plot', action='store_true',
-                        help='Optionally plot the result in [output].png')
+    parser.add_argument('--rebin', metavar='N', type=int, required=False,
+                        help='Rebin histograms before fitting')
+
+    plot_grp = parser.add_argument_group('plotting')
+    plot_grp.add_argument('--plot', action='store_true',
+                          help='Optionally plot the result in [output].png')
 
     args = parser.parse_args(args[1:])
 
@@ -56,6 +60,10 @@ if __name__ == "__main__":
     # Build view of input histograms
     log.info("Merging input files")
     input_view = views.SumView(*[io.open(x) for x in args.input])
+
+    if args.rebin:
+        rebinner = lambda x: x.Rebin(args.rebin)
+        input_view = views.FunctorView(input_view, rebinner)
 
     log.info("Getting histograms")
     pass_histo = input_view.Get(args.num)
