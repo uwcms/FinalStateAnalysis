@@ -1,4 +1,33 @@
+# Get common recipes
 recipes = ENV['fsa'] + '/PlotTools/rake/recipes.rake'
 import recipes
 
+################################################################################
+## Sample names ################################################################
+################################################################################
+
+samples = Hash[
+  "ewk" => Array['Zjets_M50', 'WplusJets_madgraph', 'WZJetsTo3LNu', 'TTplusJets'],
+  "data_mm" => Array[
+    "data_DoubleMu_Run2011A_05Aug2011_v1",
+    "data_DoubleMu_Run2011A_May10ReReco_v1",
+    "data_DoubleMu_Run2011A_PromptReco_v4",
+    "data_DoubleMu_Run2011A_PromptReco_v6_1409"],
+  "data_em" => Array[
+    "data_MuEG_Run2011A_05Aug2011_v1",
+    "data_MuEG_Run2011A_May10ReReco_v1",
+    "data_MuEG_Run2011A_PromptReco_v4",
+    "data_MuEG_Run2011A_PromptReco_v6_1409"],
+]
+
+################################################################################
+## Recipes to measure fake rates ###############################################
+################################################################################
+
+# Map which samples need to be analyzed by which analyzer
+fr_analyzer_sample_map = Hash[
+  "FakeRatesMM.py" => samples['ewk'] + samples['data_mm'],
+  "FakeRatesEM.py" => samples['ewk'] + samples['data_em'],
+  "FakeRatesMMT.py" => samples['ewk'] + samples['data_mm'],
+]
 
