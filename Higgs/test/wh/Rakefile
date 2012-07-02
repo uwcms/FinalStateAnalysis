@@ -7,7 +7,8 @@ import recipes
 ################################################################################
 
 samples = Hash[
-  "ewk" => Array['Zjets_M50', 'WplusJets_madgraph', 'WZJetsTo3LNu', 'TTplusJets'],
+  "ewk" => Array['Zjets_M50', 'WplusJets_madgraph', 
+    'WZJetsTo3LNu', 'TTplusJets_madgraph'],
   "data_mm" => Array[
     "data_DoubleMu_Run2011A_05Aug2011_v1",
     "data_DoubleMu_Run2011A_May10ReReco_v1",
@@ -21,7 +22,9 @@ samples = Hash[
 ]
 
 ################################################################################
-## Recipes to measure fake rates ###############################################
+## Recipes to measure fake rates 
+##  targets:
+##     fakerates - measure all fakerates
 ################################################################################
 
 # Map which samples need to be analyzed by which analyzer
@@ -31,3 +34,17 @@ fr_analyzer_sample_map = Hash[
   "FakeRatesMMT.py" => samples['ewk'] + samples['data_mm'],
 ]
 
+# Create an empty placeholder to enable tab-completion
+task :fakerates => []
+
+# Create tasks for each sample + analyzer
+fr_analyzer_sample_map.each do |analyzer, samples|
+  puts "Creating tasks for analyzer: #{analyzer}"
+  samples.each do |sample|
+    #puts "#{sample}"
+    analyzer_base = analyzer.sub('.py', '')
+    result = "results/2012-06-03-7TeV-Higgs/#{analyzer_base}/#{sample}.root"
+    #puts result
+    task :fakerates => result
+  end
+end
