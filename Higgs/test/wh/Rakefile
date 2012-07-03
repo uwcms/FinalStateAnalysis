@@ -25,6 +25,17 @@ samples = Hash[
     "data_MuEG_Run2011A_PromptReco_v6_1409"],
 ]
 
+# Function to get the .root files for an analyzer and samples
+def get_analyzer_results(analyzer, the_samples)
+  output = Array.new
+  analyzer_base = analyzer.sub('.py', '')
+  the_samples.each do |sample|
+    output << "results/#{$jobid}/#{analyzer_base}/#{sample}.root"
+  end
+  return output
+end
+
+
 ################################################################################
 ## Recipes to measure fake rates 
 ##  targets:
@@ -38,23 +49,13 @@ fr_analyzer_sample_map = Hash[
   "FakeRatesMMT.py" => samples['ewk'] + samples['data_mm'],
 ]
 
-# Function to get the .root files for an analyzer and samples
-def get_fakerate_results(analyzer, the_samples)
-  output = Array.new
-  analyzer_base = analyzer.sub('.py', '')
-  the_samples.each do |sample|
-    output << "results/#{$jobid}/#{analyzer_base}/#{sample}.root"
-  end
-  return output
-end
-
 # Create an empty placeholder to enable tab-completion
 task :fakerates => []
 
 # Create tasks for each sample + analyzer
 fr_analyzer_sample_map.each do |analyzer, the_samples|
   puts "Creating tasks for analyzer: #{analyzer}"
-  get_fakerate_results(analyzer, the_samples).each do |result|
+  get_analyzer_results(analyzer, the_samples).each do |result|
     task :fakerates => result
   end
 end
@@ -90,9 +91,17 @@ fr_fits = Hash[
     "variables" => exponential_vars,
     "rebin" => 5,
   ],
+  "m_wjets_pt10_pfidiso03_muonJetPt" => Hash[
+    "samples" => Array["wjets", "data_em"],
+    "analyzer" => "FakeRatesMM",
+    "function" => exponential,
+    "variables" => exponential_vars,
+    "rebin" => 5,
+  ],
 
 ]
 
+# Placeholder
 task :fits => []
 
 # Create tasks for all the fr_fits
@@ -118,3 +127,14 @@ fr_fits.each do |fit, fit_info|
   end
 end
 
+################################################################################
+## Recipes to analyze WH
+##  targets:
+##     mmt
+################################################################################
+
+analysis_sample_map = Hash[
+  "WHAnalyzeMMT.py" => samples['ewk'] + samples['data_mm'],
+]
+
+task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['data_mm'])

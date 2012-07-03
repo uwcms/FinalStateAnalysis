@@ -60,6 +60,7 @@ class FakeRatesMM(MegaBase):
                             region, denom, numerator), name, *args)
 
                     book_histo('muonPt', 'Muon Pt', 100, 0, 100)
+                    book_histo('muonJetPt', 'Muon Jet Pt', 100, 0, 100)
                     book_histo('muonAbsEta', 'Muon Abs Eta', 100, -2.5, 2.5)
                     book_histo('metSignificance', 'MET sig.', 100, 0, 10)
                     book_histo('muon1MtToMET', 'Muon 1 MT', 100, 0, 200)
@@ -79,6 +80,7 @@ class FakeRatesMM(MegaBase):
 
         def fill(the_histos, row):
             the_histos['muonPt'].Fill(row.muon2Pt)
+            the_histos['muonJetPt'].Fill(row.muon2JetPt)
             the_histos['muonAbsEta'].Fill(row.muon2AbsEta)
             the_histos['metSignificance'].Fill(row.metSignificance)
             the_histos['muon1MtToMET'].Fill(row.muon1MtToMET)
