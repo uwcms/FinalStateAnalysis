@@ -2,7 +2,7 @@
 recipes = ENV['fsa'] + '/PlotTools/rake/recipes.rake'
 import recipes
 
-$jobid = "2012-06-03-7TeV-Higgs"
+$jobid = ENV['jobid']
 
 ################################################################################
 ## Sample names ################################################################
