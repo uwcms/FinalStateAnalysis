@@ -73,6 +73,7 @@ class FakeRatesEM(MegaBase):
             'muonAbsEta < 2.4',
             'electronAbsEta < 2.5',
             '!muVetoPt5',
+            '!tauVetoPt20',
             '!electronHasConversion',
             '!electronMissingHits',
         ])
