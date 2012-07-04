@@ -47,22 +47,24 @@ if __name__ == "__main__":
             if input_file:
                 files.append(input_file.strip())
 
+    logging.basicConfig(stream=sys.stderr)
+
     log.info("Extracting meta info from %i files", len(files))
 
-    chain = ROOT.TChain(args.tree)
+    total_events = 0
+    run_lumis = {}
 
     for file in files:
-        # Skip commented lines
-        if file.strip()[0] != '#':
-            chain.Add(file)
-
-    run_lumis = []
-    total_events = 0
-
-    for entry in xrange(chain.GetEntries()):
-        chain.GetEntry(entry)
-        total_events += chain.nevents
-        run_lumis.append((chain.run, chain.lumi))
+        tfile = ROOT.TFile.Open(file, "READ")
+        tree = tfile.Get(args.tree)
+        for entry in xrange(tree.GetEntries()):
+            tree.GetEntry(entry)
+            total_events += tree.nevents
+            run_lumi = (tree.run, tree.lumi)
+            if run_lumi in run_lumis:
+                log.error("Run-lumi %s found in file \n%s \nand %s!",
+                          run_lumi, file, run_lumis[run_lumi])
+            run_lumis[run_lumi] = file
 
     output = {
         'n_evts' : total_events,
