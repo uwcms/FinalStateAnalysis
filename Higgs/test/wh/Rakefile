@@ -134,6 +134,9 @@ end
 
 analysis_sample_map = Hash[
   "WHAnalyzeMMT.py" => samples['ewk'] + samples['data_mm'],
+  "WHAnalyzeEMT.py" => samples['ewk'] + samples['data_em'],
 ]
 
 task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['data_mm'])
+
+task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['data_em'])
