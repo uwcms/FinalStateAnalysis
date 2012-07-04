@@ -134,14 +134,12 @@ if __name__ == "__main__":
             continue
 
         log.info("Building submit files for sample %s", sample)
-        sys.stdout.write('# Submit file for sample %s\n' % sample)
 
         dag_dir = args.dagdir.format(
             user = os.environ['LOGNAME'],
             jobid = args.jobid,
             sample = sample
         )
-        sys.stdout.write('mkdir -p %s\n' % os.path.dirname(dag_dir))
 
         output_dir = args.outdir.format(
             user = os.environ['LOGNAME'],
@@ -214,4 +212,6 @@ if __name__ == "__main__":
         command.append("'inputFiles=$inputFileNames'")
         command.append("'outputFile=$outputFileName'")
 
+        sys.stdout.write('# Submit file for sample %s\n' % sample)
+        sys.stdout.write('mkdir -p %s\n' % os.path.dirname(dag_dir))
         sys.stdout.write(' '.join(command) + '\n')
