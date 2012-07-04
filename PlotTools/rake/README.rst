@@ -27,7 +27,7 @@ To add it to your analysis rakefile, add this to the top::
 
 To compute the meta information, you can then run::
 
-    rake meta:get[path/to/ntuple_file_lists/]
+    rake meta:getmeta[path/to/ntuple_file_lists/]
 
 inputs.rake
 -----------
