@@ -48,8 +48,14 @@ if __name__ == "__main__":
     )
 
     input_group.add_argument(
-        '--tuple-file', dest='tuplelist',
+        '--tuple-dbs', dest='tuplelist',
         help = 'JSON file mapping datasets to DBS paths.'
+        ' Generally kept in MetaData/tuples'
+    )
+
+    input_group.add_argument(
+        '--tuple-dirs', dest='tupledirlist',
+        help = 'JSON file mapping datasets to HDFS directories'
         ' Generally kept in MetaData/tuples'
     )
 
@@ -150,7 +156,7 @@ if __name__ == "__main__":
                 myhdfs = 'root://cmsxrootd.hep.wisc.edu//store/user/%s/' % os.environ['LOGNAME']
             )
             input_commands.append('"--input-dir=%s"' % input_dir)
-        else:
+        elif args.tuplelist:
             with open(args.tuplelist) as tuple_file:
                 # Parse info about PAT tuples
                 tuple_info = json.load(tuple_file)
@@ -172,6 +178,16 @@ if __name__ == "__main__":
                 input_commands.append(
                     '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet'
                 )
+        elif args.tupledirlist:
+            with open(args.tupledirlist) as tuple_file:
+                # Parse info about PAT tuples
+                tuple_info = json.load(tuple_file)
+                if sample not in tuple_info:
+                    log.warning("No data directory for %s specified, skipping",
+                                sample)
+                    continue
+                input_dir = tuple_info[sample]
+                input_commands.append('"--input-dir=%s"' % input_dir)
 
         command = [
             'farmoutAnalysisJobs',
