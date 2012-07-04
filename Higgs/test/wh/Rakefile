@@ -1,40 +1,140 @@
-metarake = ENV['fsa'] + '/PlotTools/rake/meta.rake'
-import metarake
+# Get common recipes
+recipes = ENV['fsa'] + '/PlotTools/rake/recipes.rake'
+import recipes
+
+$jobid = ENV['jobid']
 
 ################################################################################
-### General rules ##############################################################
+## Sample names ################################################################
 ################################################################################
 
-# How to generate the inputs
-desc "Query lists of ntuple .root files"
-task :getinputs, [:jobid, :source] do |t, args|
-  sh "discover_ntuples.sh #{args.jobid} #{args.source} inputs/#{args.jobid}"
+samples = Hash[
+  "ewk" => Array['Zjets_M50', 'WplusJets_madgraph', 
+    'WZJetsTo3LNu', 'TTplusJets_madgraph'],
+  "wjets" => Array['WplusJets_madgraph'],
+  "zjets" => Array['Zjets_M50'],
+  "data_mm" => Array[
+    "data_DoubleMu_Run2011A_05Aug2011_v1",
+    "data_DoubleMu_Run2011A_May10ReReco_v1",
+    "data_DoubleMu_Run2011A_PromptReco_v4",
+    "data_DoubleMu_Run2011A_PromptReco_v6_1409"],
+  "data_em" => Array[
+    "data_MuEG_Run2011A_05Aug2011_v1",
+    "data_MuEG_Run2011A_May10ReReco_v1",
+    "data_MuEG_Run2011A_PromptReco_v4",
+    "data_MuEG_Run2011A_PromptReco_v6_1409"],
+]
+
+# Function to get the .root files for an analyzer and samples
+def get_analyzer_results(analyzer, the_samples)
+  output = Array.new
+  analyzer_base = analyzer.sub('.py', '')
+  the_samples.each do |sample|
+    output << "results/#{$jobid}/#{analyzer_base}/#{sample}.root"
+  end
+  return output
 end
 
-# Rule to map an analyzer + an MC input to a results .root file
-# inputs/jobid/sample.txt => results/jobid/analyzer/sample.root
-desc "Analyze a sample, producing a .root file"
-#rule /^results\/.*\/.*\/.*.root$/ => [ 
-rule ".root" => [ 
-  # The analyzer .py file
-  proc {|targ| targ.sub(%r{results/.*/(.*)/.*root}, "\\1.py")},
-  # The sample file list .txt file
-  proc {|targ| targ.sub(%r{results/(.*)/.*/(.*).root}, "inputs/\\1/\\2.txt")} ] do |t|
-  # Make the output directory
-  sh "mkdir -p `dirname #{t.name}`"
-  sh "mega #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name}"
-end
 
-# Rule to build cython wrappers for the ntuples
-desc "Compile a cython proxy wrapper"
-rule ".so" => [proc { |targ| targ.sub('.so', '_setup.py') }] do |t|
-  sh "python #{t.source} build_ext --inplace"
-end
+################################################################################
+## Recipes to measure fake rates 
+##  targets:
+##     fakerates - measure all fakerates
+################################################################################
 
-task :analyze, [:jobid, :analyzer, :sample] do |t, args|
-   Rake::Task["results/#{args.jobid}/#{args.analyzer}/#{args.sample}.root"].invoke
+# Map which samples need to be analyzed by which analyzer
+fr_analyzer_sample_map = Hash[
+  "FakeRatesMM.py" => samples['ewk'] + samples['data_mm'],
+  "FakeRatesEM.py" => samples['ewk'] + samples['data_em'],
+  "FakeRatesMMT.py" => samples['ewk'] + samples['data_mm'],
+]
+
+# Create an empty placeholder to enable tab-completion
+task :fakerates => []
+
+# Create tasks for each sample + analyzer
+fr_analyzer_sample_map.each do |analyzer, the_samples|
+  puts "Creating tasks for analyzer: #{analyzer}"
+  get_analyzer_results(analyzer, the_samples).each do |result|
+    task :fakerates => result
+  end
 end
 
 ################################################################################
-### Analysis targets ###########################################################
+## Recipes to fit fake rates
+##  targets:
+##     fits
 ################################################################################
+
+# Output directory
+$frfit_dir = "results/#{$jobid}/fakerate_fits"
+directory $frfit_dir
+
+# Common fit functions
+exponential = "scale*TMath::Exp(x*decay)+offset"
+exponential_vars =  "scale[0.5, 0, 5],decay[-1e-2, -1, -1e-4],offset[1e-2, 0, 0.5]"
+
+# Fake rate fit configurations
+fr_fits = Hash[
+  # Format is type_region_denom_num_variable
+  "e_wjets_pt10_mvaidiso03_electronJetPt" => Hash[
+    "samples" => Array["wjets", "data_em"],
+    "analyzer" => "FakeRatesEM",
+    "function" => exponential,
+    "variables" => exponential_vars,
+    "rebin" => 5,
+  ],
+  "e_wjets_pt10_mvaidiso01_electronJetPt" => Hash[
+    "samples" => Array["wjets", "data_em"],
+    "analyzer" => "FakeRatesEM",
+    "function" => exponential,
+    "variables" => exponential_vars,
+    "rebin" => 5,
+  ],
+  "m_wjets_pt10_pfidiso03_muonJetPt" => Hash[
+    "samples" => Array["wjets", "data_em"],
+    "analyzer" => "FakeRatesMM",
+    "function" => exponential,
+    "variables" => exponential_vars,
+    "rebin" => 5,
+  ],
+
+]
+
+# Placeholder
+task :fits => []
+
+# Create tasks for all the fr_fits
+fr_fits.each do |fit, fit_info|
+  fit_configuration = fit.split("_")
+  region = fit_configuration[1]
+  denom = fit_configuration[2]
+  num = fit_configuration[3]
+  var = fit_configuration[4]
+  fit_info['samples'].each do |sample|
+    fit_output = $frfit_dir + "/#{fit}-#{sample}.root"
+    subsamples_inputs = samples[sample].map{|x|  "results/#{$jobid}/#{fit_info['analyzer']}/#{x}.root"}
+    subsample_input_list = subsamples_inputs.join(" ")
+
+    # Path to histograms in root files
+    denom_path = Array[region, denom, var].join("/")
+    num_path = Array[region, denom, num, var].join("/")
+
+    task fit_output => subsamples_inputs + [fit_info['analyzer'] + '.py', $frfit_dir] do |t|
+      sh "fit_efficiency.py #{fit_output} #{num_path} #{denom_path} \'#{fit_info['function']}\' \'#{fit_info['variables']}\' #{subsample_input_list} --plot --rebin #{fit_info['rebin']}"
+    end
+    task :fits => fit_output
+  end
+end
+
+################################################################################
+## Recipes to analyze WH
+##  targets:
+##     mmt
+################################################################################
+
+analysis_sample_map = Hash[
+  "WHAnalyzeMMT.py" => samples['ewk'] + samples['data_mm'],
+]
+
+task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['data_mm'])

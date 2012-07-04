@@ -1,6 +1,12 @@
 # Rules for extracting meta information (#events, lumis) from ntuples
 
 namespace :meta do
+  # How to generate the inputs
+  desc "Query lists of ntuple .root files"
+  task :getinputs, [:jobid, :source] do |t, args|
+    sh "discover_ntuples.sh #{args.jobid} #{args.source} inputs/#{args.jobid}"
+  end
+
   def make_meta_tasks(sample, ntuple)
     # Getting meta information from ntpule
     task sample + '.meta.json' => sample + '.txt' do |t|
