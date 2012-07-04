@@ -1,28 +1,28 @@
 '''
 
-Analyze MMT events for the WH analysis
+Analyze EMT events for the WH analysis
 
 '''
 
 import WHAnalyzerBase
-from MuMuTauTree import MuMuTauTree
+from EMuTauTree import EMuTauTree
 
-class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
-    tree = 'mmt/final/Ntuple'
+class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
+    tree = 'emt/final/Ntuple'
     def __init__(self, tree, outfile, **kwargs):
-        super(WHAnalyzeMMT, self).__init__(tree, outfile, MuMuTauTree, **kwargs)
+        super(WHAnalyzeEMT, self).__init__(tree, outfile, EMuTauTree, **kwargs)
 
     def book_histos(self, folder):
-        self.book(folder, "m1Pt", "Muon 1 Pt", 100, 0, 100)
-        self.book(folder, "m2Pt", "Muon 2 Pt", 100, 0, 100)
-        self.book(folder, "m1m2Mass", "Muon 1-2 Mass", 120, 0, 120)
+        self.book(folder, "mPt", "Muon Pt", 100, 0, 100)
+        self.book(folder, "ePt", "Electron Pt", 100, 0, 100)
+        self.book(folder, "emMass", "Electron-Muon Mass", 120, 0, 120)
 
     def fill_histos(self, histos, folder, row, weight):
         def fill(name, value):
             histos['/'.join(folder + (name,))].Fill(value, weight)
-        fill('m1Pt', row.m1Pt)
-        fill('m2Pt', row.m2Pt)
-        fill('m1m2Mass', row.m1_m2_Mass)
+        fill('mPt', row.mPt)
+        fill('ePt', row.ePt)
+        fill('emMass', row.e_m_Mass)
 
     def preselection(self, row):
         ''' Preselection applied to events.
@@ -31,38 +31,38 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         '''
         if not row.doubleMuPass:
             return False
-        if row.m1Pt < 20:
+        if row.mPt < 20:
             return False
-        if row.m2Pt < 10:
+        if row.ePt < 10:
             return False
         if row.tPt < 20:
             return False
-        if row.m1AbsEta > 2.4:
+        if row.mAbsEta > 2.4:
             return False
-        if row.m2AbsEta > 2.4:
+        if row.eAbsEta > 2.5:
             return False
         if row.tAbsEta > 2.3:
             return False
         if not row.muVetoPt5:
             return False
-        if row.m1_m2_Mass < 20:
-            return False
         if not row.bjetCSVVeto:
             return False
         if not row.tauVetoPt20:
             return False
-        if not row.m1PixHits:
+        if not row.mPixHits:
             return False
-        if not row.m2PixHits:
+        if not row.eMissingHits > 0.5:
+            return False
+        if not row.eHasConversion > 0.5:
             return False
         # Fixme use CSV
-        if row.m1JetBtag > 3.3:
+        if row.mJetBtag > 3.3:
             return False
-        if row.m2JetBtag > 3.3:
+        if row.eJetBtag > 3.3:
             return False
-        if abs(row.m1DZ) > 0.2:
+        if abs(row.mDZ) > 0.2:
             return False
-        if abs(row.m2DZ) > 0.2:
+        if abs(row.eDZ) > 0.2:
             return False
         if abs(row.tDZ) > 0.2:
             return False
@@ -74,13 +74,13 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
 
     def sign_cut(self, row):
         ''' Returns true if muons are SS '''
-        return bool(row.m1_m2_SS)
+        return bool(row.e_m_SS)
 
     def obj1_id(self, row):
-        return bool(row.m1PFIDTight) and bool(row.m1RelPFIsoDB < 0.3)
+        return bool(row.mPFIDTight) and bool(row.mRelPFIsoDB < 0.3)
 
     def obj2_id(self, row):
-        return bool(row.m2PFIDTight) and bool(row.m2RelPFIsoDB < 0.3)
+        return bool(row.eMVAIDH2TauWP) and bool(row.eRelPFIsoDB < 0.3)
 
     def obj3_id(self, row):
         return bool(row.tLooseMVAIso)

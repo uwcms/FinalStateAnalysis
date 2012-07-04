@@ -98,7 +98,6 @@ fr_fits = Hash[
     "variables" => exponential_vars,
     "rebin" => 5,
   ],
-
 ]
 
 # Placeholder
