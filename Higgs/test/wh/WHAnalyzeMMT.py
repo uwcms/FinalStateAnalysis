@@ -43,13 +43,14 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.tAbsEta > 2.3:
             return False
-        if not row.muVetoPt5:
+        if row.muVetoPt5:
             return False
         if row.m1_m2_Mass < 20:
             return False
-        if not row.bjetCSVVeto:
+
+        if row.bjetCSVVeto:
             return False
-        if not row.tauVetoPt20:
+        if row.tauVetoPt20:
             return False
         if not row.m1PixHits:
             return False
@@ -86,7 +87,8 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.tLooseMVAIso)
 
     def event_weight(self, row):
-        return row.puWeightData2012AB
+        #fixme
+        return row.puWeightData2011AB
 
     def obj1_weight(self, row):
         #fixme
