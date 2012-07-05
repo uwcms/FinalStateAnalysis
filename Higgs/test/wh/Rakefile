@@ -5,24 +5,31 @@ import recipes
 $jobid = ENV['jobid']
 
 ################################################################################
+## Refreshing cython proxies ###################################################
+################################################################################
+
+################################################################################
 ## Sample names ################################################################
 ################################################################################
+#
+# Get sample names containing a substring
+def get_sample_names(substring)
+  inputs = Dir.glob("inputs/#{$jobid}/*.txt").select {|x| x.include? substring}
+  inputs = inputs.map{|x| File.basename(x).sub(".txt", "")}
+  return inputs
+end
+
+puts get_sample_names('data_DoubleMu')
 
 samples = Hash[
   "ewk" => Array['Zjets_M50', 'WplusJets_madgraph', 
-    'WZJetsTo3LNu', 'TTplusJets_madgraph'],
+    #'WZJetsTo3LNu', 
+    'TTplusJets_madgraph'],
   "wjets" => Array['WplusJets_madgraph'],
   "zjets" => Array['Zjets_M50'],
-  "data_mm" => Array[
-    "data_DoubleMu_Run2011A_05Aug2011_v1",
-    "data_DoubleMu_Run2011A_May10ReReco_v1",
-    "data_DoubleMu_Run2011A_PromptReco_v4",
-    "data_DoubleMu_Run2011A_PromptReco_v6_1409"],
-  "data_em" => Array[
-    "data_MuEG_Run2011A_05Aug2011_v1",
-    "data_MuEG_Run2011A_May10ReReco_v1",
-    "data_MuEG_Run2011A_PromptReco_v4",
-    "data_MuEG_Run2011A_PromptReco_v6_1409"],
+  # Automagically figure out what data samples we have
+  "data_mm" =>  get_sample_names("data_DoubleMu"),
+  "data_em" => get_sample_names("data_DoubleElectron"),
 ]
 
 # Function to get the .root files for an analyzer and samples
@@ -35,7 +42,6 @@ def get_analyzer_results(analyzer, the_samples)
   return output
 end
 
-
 ################################################################################
 ## Recipes to measure fake rates 
 ##  targets:
@@ -45,7 +51,7 @@ end
 # Map which samples need to be analyzed by which analyzer
 fr_analyzer_sample_map = Hash[
   "FakeRatesMM.py" => samples['ewk'] + samples['data_mm'],
-  "FakeRatesEM.py" => samples['ewk'] + samples['data_em'],
+  #"FakeRatesEM.py" => samples['ewk'] + samples['data_em'],
   "FakeRatesMMT.py" => samples['ewk'] + samples['data_mm'],
 ]
 
@@ -74,26 +80,63 @@ directory $frfit_dir
 exponential = "scale*TMath::Exp(x*decay)+offset"
 exponential_vars =  "scale[0.5, 0, 5],decay[-1e-2, -1, -1e-4],offset[1e-2, 0, 0.5]"
 
+landau = "scale*TMath::Landau(x,mu,sigma,0)+offset"
+landau_vars =  "scale[0.5, 0, 5],mu[20, 5, 100],sigma[1.9, 0.1, 20],offset[1e-2, 0, 0.5]"
+
 # Fake rate fit configurations
 fr_fits = Hash[
   # Format is type_region_denom_num_variable
-  "e_wjets_pt10_mvaidiso03_electronJetPt" => Hash[
-    "samples" => Array["wjets", "data_em"],
-    "analyzer" => "FakeRatesEM",
-    "function" => exponential,
-    "variables" => exponential_vars,
-    "rebin" => 5,
-  ],
-  "e_wjets_pt10_mvaidiso01_electronJetPt" => Hash[
-    "samples" => Array["wjets", "data_em"],
-    "analyzer" => "FakeRatesEM",
-    "function" => exponential,
-    "variables" => exponential_vars,
+  #"e_wjets_pt10_mvaidiso03_electronJetPt" => Hash[
+    #"samples" => Array["wjets", "data_em"],
+    #"analyzer" => "FakeRatesEM",
+    #"function" => exponential,
+    #"variables" => exponential_vars,
+    #"rebin" => 5,
+  #],
+  #"e_wjets_pt10_mvaidiso01_electronJetPt" => Hash[
+    #"samples" => Array["wjets", "data_em"],
+    #"analyzer" => "FakeRatesEM",
+    #"function" => exponential,
+    #"variables" => exponential_vars,
+    #"rebin" => 5,
+  #],
+  "m_wjets_pt10_pfidiso01_muonJetPt" => Hash[
+    "samples" => Array["wjets", "data_mm"],
+    "analyzer" => "FakeRatesMM",
+    #"function" => exponential,
+    #"variables" => exponential_vars,
+    "function" => landau,
+    "variables" => landau_vars,
     "rebin" => 5,
   ],
   "m_wjets_pt10_pfidiso03_muonJetPt" => Hash[
-    "samples" => Array["wjets", "data_em"],
+    "samples" => Array["wjets", "data_mm"],
     "analyzer" => "FakeRatesMM",
+    #"function" => exponential,
+    #"variables" => exponential_vars,
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
+  "m_wjets_pt20_pfidiso03_muonJetPt" => Hash[
+    "samples" => Array["wjets", "data_mm"],
+    "analyzer" => "FakeRatesMM",
+    #"function" => exponential,
+    #"variables" => exponential_vars,
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
+  "t_ztt_pt20_mvaloose_tauPt" => Hash[
+    "samples" => Array["zjets", "data_mm"],
+    "analyzer" => "FakeRatesMMT",
+    "function" => exponential,
+    "variables" => exponential_vars,
+    "rebin" => 5,
+  ],
+  "t_ztt_pt20_hpsloose_tauPt" => Hash[
+    "samples" => Array["zjets", "data_mm"],
+    "analyzer" => "FakeRatesMMT",
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 5,
