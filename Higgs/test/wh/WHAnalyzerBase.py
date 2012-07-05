@@ -60,7 +60,7 @@ class WHAnalyzerBase(MegaBase):
         #folders = []
         flag_map = {}
         for sign in ['ss', 'os']:
-            for failing_objs in [(), (1,), (2,), (1,2), (1,2,3)]:
+            for failing_objs in [(), (1,), (2,), (3,), (1,2), (1,2,3)]:
                 cut_key = [sign == 'ss']
                 region_label = ''
                 for i in range(1,4):
