@@ -4,6 +4,8 @@ RooFunctorFromWS
 
 Builds a functor from a function in a RooWorkspace.
 
+This could be improved with cython.
+
 Author: Evan K. Friis, UW Madison
 
 >>> import ROOT
