@@ -13,7 +13,7 @@ The layout of output is:
 
 '''
 
-import MMTTree
+import MuMuTauTree
 from FinalStateAnalysis.PlotTools.MegaBase import MegaBase
 import os
 
@@ -22,7 +22,7 @@ class FakeRatesMMT(MegaBase):
     def __init__(self, tree, outfile, **kwargs):
         super(FakeRatesMMT, self).__init__(tree, outfile, **kwargs)
         # Use the cython wrapper
-        self.tree = MMTTree.MMTTree(tree)
+        self.tree = MuMuTauTree.MuMuTauTree(tree)
         self.out = outfile
         # Histograms for each category
         self.histograms = {}
