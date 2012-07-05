@@ -47,7 +47,7 @@ namespace :meta do
       FileList["*.txt"].each do |txtfile|
         sample = txtfile.sub('.txt', '')
         target = make_meta_tasks(sample, args.ntuple)
-        multitask :computemeta => target
+        task :computemeta => target
       end
       #puts Rake::Task['computemeta'].timestamp
       #puts Rake::Task['computemeta'].investigation
