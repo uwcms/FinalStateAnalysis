@@ -2,7 +2,7 @@
   "Zjets_M50" : "/hdfs/store/user/swanson/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/Zjets_M50_2012-06-02-8TeV-078e4bc/ea74c25a04048a8dd7df6542c03c7a9b/",
   "WplusJets_madgraph" : "/hdfs/store/user/cepeda/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/WplusJets_madgraph_2012-06-03-8TeV-40bf417/4bae4b458a2ca6a872dfccd34b84cd42/",
   "TTplusJets_madgraph" : "/hdfs/store/user/friis/TTJets_TuneZ2star_8TeV-madgraph-tauola/TTplusJets_madgraph_2012-05-28-8TeV-PatTuple-8a107b9/4729152ae17d7e4009729a1d0d9e952d/",
-  "WZJetsTo3LNu" : "/hdfs/store/user/friis/WZTo3LNu_TuneZ2star_8TeV_pythia6_tauola/WZJetsTo3LNu_pythia_2012-05-28-8TeV-PatTuple-8a107b9/4729152ae17d7e4009729a1d0d9e952d/",
+  "WZJetsTo3LNu_pythia" : "/hdfs/store/user/friis/WZTo3LNu_TuneZ2star_8TeV_pythia6_tauola/WZJetsTo3LNu_pythia_2012-05-28-8TeV-PatTuple-8a107b9/4729152ae17d7e4009729a1d0d9e952d/",
   "ZZJetsTo4L_pythia" : "/hdfs/store/user/iross/ZZTo4L_TuneZ2star_8TeV_pythia6_tauola/ZZJetsTo4L_pythia_2012-06-05-8TeV-PatTuple-077b195/4a10b6ece30e0bec2ece1a35ded7d8c9/",
   "VH_120" : " /hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-120_8TeV-pythia6-tauola/VH_H2Tau_M-120_2012-05-29-8TeV-PatTuple-v3-5d58598/4bae4b458a2ca6a872dfccd34b84cd42/",
 
