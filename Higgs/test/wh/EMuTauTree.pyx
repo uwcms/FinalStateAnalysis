@@ -374,14 +374,14 @@ cdef class EMuTauTree:
     cdef TBranch* processID_branch
     cdef float processID_value
 
-    cdef TBranch* puWeightData2011A_branch
-    cdef float puWeightData2011A_value
-
     cdef TBranch* puWeightData2011AB_branch
     cdef float puWeightData2011AB_value
 
-    cdef TBranch* puWeightData2011B_branch
-    cdef float puWeightData2011B_value
+    cdef TBranch* puWeightData2012A_branch
+    cdef float puWeightData2012A_value
+
+    cdef TBranch* puWeightData2012AB_branch
+    cdef float puWeightData2012AB_value
 
     cdef TBranch* rho_branch
     cdef float rho_value
@@ -832,14 +832,14 @@ cdef class EMuTauTree:
         self.processID_branch = self.tree.GetBranch("processID")
         self.processID_branch.SetAddress(<void*>&self.processID_value)
 
-        self.puWeightData2011A_branch = self.tree.GetBranch("puWeightData2011A")
-        self.puWeightData2011A_branch.SetAddress(<void*>&self.puWeightData2011A_value)
-
         self.puWeightData2011AB_branch = self.tree.GetBranch("puWeightData2011AB")
         self.puWeightData2011AB_branch.SetAddress(<void*>&self.puWeightData2011AB_value)
 
-        self.puWeightData2011B_branch = self.tree.GetBranch("puWeightData2011B")
-        self.puWeightData2011B_branch.SetAddress(<void*>&self.puWeightData2011B_value)
+        self.puWeightData2012A_branch = self.tree.GetBranch("puWeightData2012A")
+        self.puWeightData2012A_branch.SetAddress(<void*>&self.puWeightData2012A_value)
+
+        self.puWeightData2012AB_branch = self.tree.GetBranch("puWeightData2012AB")
+        self.puWeightData2012AB_branch.SetAddress(<void*>&self.puWeightData2012AB_value)
 
         self.rho_branch = self.tree.GetBranch("rho")
         self.rho_branch.SetAddress(<void*>&self.rho_value)
@@ -1535,20 +1535,20 @@ cdef class EMuTauTree:
             self.processID_branch.GetEntry(self.ientry, 0)
             return self.processID_value
 
-    property puWeightData2011A:
-        def __get__(self):
-            self.puWeightData2011A_branch.GetEntry(self.ientry, 0)
-            return self.puWeightData2011A_value
-
     property puWeightData2011AB:
         def __get__(self):
             self.puWeightData2011AB_branch.GetEntry(self.ientry, 0)
             return self.puWeightData2011AB_value
 
-    property puWeightData2011B:
+    property puWeightData2012A:
         def __get__(self):
-            self.puWeightData2011B_branch.GetEntry(self.ientry, 0)
-            return self.puWeightData2011B_value
+            self.puWeightData2012A_branch.GetEntry(self.ientry, 0)
+            return self.puWeightData2012A_value
+
+    property puWeightData2012AB:
+        def __get__(self):
+            self.puWeightData2012AB_branch.GetEntry(self.ientry, 0)
+            return self.puWeightData2012AB_value
 
     property rho:
         def __get__(self):
