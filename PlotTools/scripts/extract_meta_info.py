@@ -60,11 +60,13 @@ if __name__ == "__main__":
         for entry in xrange(tree.GetEntries()):
             tree.GetEntry(entry)
             total_events += tree.nevents
-            run_lumi = (tree.run, tree.lumi)
-            if run_lumi in run_lumis:
-                log.error("Run-lumi %s found in file \n%s \nand %s!",
-                          run_lumi, file, run_lumis[run_lumi])
-            run_lumis[run_lumi] = file
+            # We only care about this if we are building the lumimask
+            if args.lumimask:
+                run_lumi = (tree.run, tree.lumi)
+                if run_lumi in run_lumis:
+                    log.error("Run-lumi %s found in file \n%s \nand %s!",
+                              run_lumi, file, run_lumis[run_lumi])
+                run_lumis[run_lumi] = file
 
     output = {
         'n_evts' : total_events,
