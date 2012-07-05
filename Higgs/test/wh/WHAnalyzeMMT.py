@@ -6,6 +6,26 @@ Analyze MMT events for the WH analysis
 
 import WHAnalyzerBase
 from MuMuTauTree import MuMuTauTree
+import os
+from FinalStateAnalysis.StatTools.RooFunctorFromWS import build_roofunctor
+
+# Get fitted fake rate functions
+frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
+highpt_mu_fr = build_roofunctor(
+    frfit_dir + '/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root',
+    'fit_efficiency', # workspace name
+    'efficiency'
+)
+lowpt_mu_fr = build_roofunctor(
+    frfit_dir + '/m_wjets_pt10_pfidiso03_muonJetPt-data_mm.root',
+    'fit_efficiency', # workspace name
+    'efficiency'
+)
+tau_fr = build_roofunctor(
+    frfit_dir + '/t_ztt_pt20_mvaloose_tauPt-data_mm.root',
+    'fit_efficiency', # workspace name
+    'efficiency'
+)
 
 class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
     tree = 'mmt/final/Ntuple'
@@ -91,13 +111,10 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return row.puWeightData2011AB
 
     def obj1_weight(self, row):
-        #fixme
-        return 1e-2
+        return highpt_mu_fr(row.m1JetPt)
 
     def obj2_weight(self, row):
-        #fixme
-        return 1e-2
+        return lowpt_mu_fr(row.m2JetPt)
 
     def obj3_weight(self, row):
-        #fixme
-        return 1e-2
+        return tau_fr(row.tPt)
