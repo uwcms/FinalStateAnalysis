@@ -34,8 +34,8 @@ class RooFunctorFromWS(ROOT.RooFunctor):
         self.x = x
         return self.function.getVal()
 
-def build_roofunctor(filename, wsname, functionname, var='x')
-    ''' Build a fucntor from a filename '''
+def build_roofunctor(filename, wsname, functionname, var='x'):
+    ''' Build a functor from a filename '''
     file = ROOT.TFile.Open(filename)
     ws = file.Get(wsname)
     return RooFunctorFromWS(ws, functionname, var)
