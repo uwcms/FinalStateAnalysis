@@ -26,6 +26,7 @@ class FakeRatesMMT(MegaBase):
         self.out = outfile
         # Histograms for each category
         self.histograms = {}
+        self.is7TeV = '7TeV' in os.environ['jobid']
 
     def begin(self):
         # Book histograms
@@ -56,9 +57,10 @@ class FakeRatesMMT(MegaBase):
     def process(self):
         # Generic filler function to fill plots after selection
         def fill(the_histos, row):
-            the_histos['tauPt'].Fill(row.tPt)
-            the_histos['tauJetPt'].Fill(row.tJetPt)
-            the_histos['tauAbsEta'].Fill(row.tAbsEta)
+            weight = row.puWeightData2011AB if self.is7TeV else row.puWeightData2012AB
+            the_histos['tauPt'].Fill(row.tPt, weight)
+            the_histos['tauJetPt'].Fill(row.tJetPt, weight)
+            the_histos['tauAbsEta'].Fill(row.tAbsEta, weight)
 
         base_selection = ' && '.join([
             'm1RelPFIsoDB < 0.25',
@@ -68,6 +70,7 @@ class FakeRatesMMT(MegaBase):
             'abs(m1_m2_Mass-91.2) < 10',
             'tPt > 20',
             'tAntiMuonTight',
+            'tMtToMET < 20',
         ])
 
         histos = self.histograms
