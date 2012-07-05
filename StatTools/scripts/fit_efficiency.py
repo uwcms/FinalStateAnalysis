@@ -19,7 +19,6 @@ sys.argv = [sys.argv[0]]
 
 log = logging.getLogger("fit_efficiency")
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('output', metavar='output.root', help='Output root file')
@@ -44,7 +43,18 @@ if __name__ == "__main__":
 
     plot_grp = parser.add_argument_group('plotting')
     plot_grp.add_argument('--plot', action='store_true',
-                          help='Optionally plot the result in [output].png')
+                          help='Plot fit result')
+
+    plot_grp.add_argument('--minx', type=float, default=5e-3,
+                          help='x-axis minimum')
+
+    plot_grp.add_argument('--maxx', type=float, default=5e-3,
+                          help='x-axis maximum')
+
+    plot_grp.add_argument('--min', type=float, default=5e-3,
+                          help='y-axis minimum')
+    plot_grp.add_argument('--max', type=float, default=1,
+                          help='y-axis maximum')
 
     args = parser.parse_args(args[1:])
 
@@ -134,8 +144,8 @@ if __name__ == "__main__":
             )
             function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kAzure))
             combined_data.plotOn(frame, ROOT.RooFit.Efficiency(cut))
-            frame.SetMinimum(1e-4)
-            frame.SetMaximum(1)
+            frame.SetMinimum(args.min)
+            frame.SetMaximum(args.max)
             frame.GetYaxis().SetTitle("Efficiency")
             frame.GetXaxis().SetTitle(pass_histo.GetTitle())
             frame.Draw()
