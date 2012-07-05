@@ -51,6 +51,7 @@ if __name__ == "__main__":
     if args.verbose:
         logging.info("Increasing verbosity...")
         log.setLevel(logging.DEBUG)
+        multiprocessing.get_logger().setLevel(logging.DEBUG)
 
     log.info("Creating PROOF session with %i workers" % args.workers)
 

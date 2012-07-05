@@ -12,10 +12,11 @@ Objects are written to an output file.
 
 
 import ROOT
-import logging
 
 class FileProcessor(object):
-    def __init__(self, filename, treename, selector, output_file, **kwargs):
+    def __init__(self, filename, treename, selector, output_file, log, **kwargs):
+        self.log = log
+        self.log.debug("FileProcessor opening %s", filename)
         self.file = ROOT.TFile.Open(filename, "READ")
         if not self.file:
             raise IOError("Can't open ROOT file: %s" % filename)
@@ -23,6 +24,7 @@ class FileProcessor(object):
         if not self.tree:
             raise IOError("Can't get tree: %s from file: %s" %
                           (treename, filename))
+        self.log.debug("FileProcessor got tree: %s", self.tree)
         # Setup cache
         ROOT.TTreeCache.SetLearnEntries(10)
         self.tree.SetCacheSize(10000000)
@@ -31,6 +33,7 @@ class FileProcessor(object):
         if not self.file:
             raise IOError("Can't open output ROOT file %s for writing"
                           % output_file)
+        self.log.debug("FileProcessor creating selector")
         # Create our selector instance
         self.selector = selector(self.tree, self.out, **kwargs)
 
