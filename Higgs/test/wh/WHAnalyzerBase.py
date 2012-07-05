@@ -162,7 +162,8 @@ class WHAnalyzerBase(MegaBase):
                 fr_weight = event_weight
                 # Figure out which object weight functions to apply
                 for subweight in weight_map[weight_folder]:
-                    fr_weight *= subweight(row)
+                    fr = subweight(row)
+                    fr_weight *= fr/(1.-fr)
 
                 # Now fill the histos for this weight folder
                 fill_histos(histos, base_folder + (weight_folder,), row, fr_weight)
