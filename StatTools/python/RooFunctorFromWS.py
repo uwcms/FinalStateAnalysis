@@ -12,8 +12,10 @@ Author: Evan K. Friis, UW Madison
 >>> file = ROOT.TFile('../test/test_RooFunctorFromWS.root')
 >>> ws = file.Get('fit_efficiency')
 >>> functor = RooFunctorFromWS(ws, 'efficiency')
->>> '%0.2f' % functor(120)
-'0.02'
+>>> '%0.4f' % functor(60)
+'0.0244'
+>>> '%0.4f' % functor(140)
+'0.0138'
 
 '''
 
@@ -24,14 +26,12 @@ class RooFunctorFromWS(ROOT.RooFunctor):
         # Get the RooFormulaVar
         self.function = workspace.function(functionname)
         # Get the ind. var and the parameters
-        self.x = workspace.var(var)
-        #parameters = workspace.allVars()
-        #parameters.remove(x)
-        #parameters.Print('v')
-        #self.functor = self.function.functor(ROOT.RooArgList(x), ROOT.RooArgList(parameters))
+        #self.x = workspace.var(var)
+        self.x = self.function.getParameter(var)
+        self.x.setRange(0, 1e99)
 
     def __call__(self, x):
-        self.x = x
+        self.x.setVal(x)
         return self.function.getVal()
 
 def build_roofunctor(filename, wsname, functionname, var='x'):
