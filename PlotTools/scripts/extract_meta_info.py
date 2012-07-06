@@ -47,7 +47,7 @@ if __name__ == "__main__":
     with open(args.input) as input_files:
         for input_file in input_files:
             input_file = input_file.strip()
-            if input_file:
+            if input_file and '#' not in input_file:
                 files.append(input_file.strip())
 
     level = logging.INFO
