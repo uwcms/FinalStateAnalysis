@@ -38,6 +38,7 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
 
     def book_histos(self, folder):
         self.book(folder, "weight", "Event weight", 100, 0, 5)
+        self.book(folder, "weight_nopu", "Event weight without PU", 100, 0, 5)
         self.book(folder, "rho", "Fastjet #rho", 100, 0, 25)
         self.book(folder, "nvtx", "Number of vertices", 31, -0.5, 30.5)
         self.book(folder, "prescale", "HLT prescale", 21, -0.5, 20.5)
@@ -49,6 +50,9 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         def fill(name, value):
             histos['/'.join(folder + (name,))].Fill(value, weight)
         histos['/'.join(folder + ('weight',))].Fill(weight)
+        histos['/'.join(folder + ('weight_nopu',))].Fill(
+            weight/row.puWeightData2011AB if row.puWeightData2011AB else 0)
+
         fill('prescale', row.doubleMuPrescale)
         fill('rho', row.rho)
         fill('nvtx', row.nvtx)
@@ -124,7 +128,7 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
 
     def event_weight(self, row):
         weight = row.puWeightData2011AB
-        if row.run == 1:
+        if row.run < 10:
             weight *= ROOT.Cor_Total_Mu_Lead(row.m1Pt, row.m1AbsEta)
             weight *= ROOT.Cor_Total_Mu_SubLead(row.m2Pt, row.m2AbsEta)
         return weight
