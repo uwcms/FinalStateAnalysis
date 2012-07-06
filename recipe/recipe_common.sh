@@ -38,8 +38,8 @@ cvs co -r V00-00-10 -d Muon/MuonAnalysisTools UserCode/sixie/Muon/MuonAnalysisTo
 
 # Get electron energy calibrations
 # See https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaElectronEnergyScale
-# :( no tag is provided on the twiki
-cvs co -D "05/07/2012" -d EgammaCalibratedGsfElectrons UserCode/EGamma/EgammaCalibratedGsfElectrons
+# Update to ICHEP tag IAR 17.Jun.2012
+cvs co -r Shervin13062012_2012Prompt_and_Summer12MC_smearing_V00 -d EgammaCalibratedGsfElectrons UserCode/EGamma/EgammaCalibratedGsfElectrons
 
 # Get the VBF MVA weight files
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2012#VBF_selection_Matthew
