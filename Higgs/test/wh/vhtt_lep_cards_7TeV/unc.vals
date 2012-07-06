@@ -1,0 +1,10 @@
+###########################################################################
+# unc.vals: specification of uncertainty values by category, sample, and uncertainty name
+# Example:
+# emu_vbf,emu_novbf,emu_boost     signal,EWK              lumi            1.045
+
+mmt,emt simulated lumi      1.022
+emt     simulated cms_eff_e 1.02
+emt     simulated cms_eff_m 1.01
+mmt     simulated cms_eff_m 1.02
+mmt,emt simulated cms_eff_t 1.06

@@ -1,0 +1,12 @@
+imax    1     number of categories 
+jmax    1     number of samples minus one 
+kmax    *     number of nuisance parameters 
+------------------------------------------------------------------------------- 
+shapes * * ../mmt_shapes.root $CHANNEL/$PROCESS 
+shapes VH * ../mmt_shapes.root $CHANNEL/$PROCESS$MASS 
+------------------------------------------------------------------------------- 
+bin                              mmt          
+observation                      0            
+------------------------------------------------------------------------------- 
+bin                              mmt         mmt          
+process                          0           1            
