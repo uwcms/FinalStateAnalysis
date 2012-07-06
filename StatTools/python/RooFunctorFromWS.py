@@ -37,6 +37,8 @@ class RooFunctorFromWS(ROOT.RooFunctor):
 def build_roofunctor(filename, wsname, functionname, var='x'):
     ''' Build a functor from a filename '''
     file = ROOT.TFile.Open(filename)
+    if not file:
+        raise IOError("Can't open file: %s" % filename)
     ws = file.Get(wsname)
     return RooFunctorFromWS(ws, functionname, var)
 
