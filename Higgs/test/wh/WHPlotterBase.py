@@ -70,12 +70,20 @@ class WHPlotterBase(object):
     def plot_mc_vs_data(self, folder, variable, rebin=1, xaxis=''):
         path = os.path.join(folder, variable)
         mc_stack = self.make_stack(rebin).Get(path)
-        data = rebin_view(self.data, rebin).Get(path)
         mc_stack.Draw()
-        mc_stack.GetXaxis().SetTitle(xaxis)
+        mc_stack.GetHistogram().GetXaxis().SetTitle(xaxis)
         self.keep.append(mc_stack)
+        # Draw data
+        data = rebin_view(self.data, rebin).Get(path)
         data.Draw('same')
         self.keep.append(data)
+        # Add legend
+        legend = plotting.Legend(4, leftmargin=0.65)
+        legend.AddEntry(mc_stack)
+        legend.AddEntry(data)
+        legend.Draw()
+        self.keep.append(legend)
+
 
     def make_signal_views(self, rebin):
         ''' Make signal views with FR background estimation '''
@@ -133,7 +141,7 @@ class WHPlotterBase(object):
         zz.SetName('zz')
         obs.SetName('data_obs')
         fakes.SetName('fakes')
-        vh120.SetName('VH')
+        vh120.SetName('VH120')
 
         wz.Write()
         zz.Write()
@@ -150,10 +158,11 @@ class WHPlotterBase(object):
         )
         histo = stack.Get(variable)
         histo.Draw()
-        histo.GetXaxis().SetTitle(xaxis)
+        histo.GetHistogram().GetXaxis().SetTitle(xaxis)
         self.keep.append(histo)
 
         sig_histo = sig_view['vh120'].Get(variable)
+        sig_histo = sig_histo*10
         sig_histo.Draw('same')
         self.keep.append(sig_histo)
 

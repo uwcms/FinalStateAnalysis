@@ -1,5 +1,5 @@
 imax    1     number of categories 
-jmax    1     number of samples minus one 
+jmax    3     number of samples minus one 
 kmax    *     number of nuisance parameters 
 ------------------------------------------------------------------------------- 
 shapes * * ../mmt_shapes.root $CHANNEL/$PROCESS 
@@ -8,5 +8,13 @@ shapes VH * ../mmt_shapes.root $CHANNEL/$PROCESS$MASS
 bin                              mmt          
 observation                      0            
 ------------------------------------------------------------------------------- 
-bin                              mmt         mmt          
-process                          0           1            
+bin                              mmt         mmt         mmt         mmt          
+process                          0           1           2           3            
+process                          VH          wz          zz          fakes        
+rate                             0.43315     2.61902     0.176466    5.91205      
+------------------------------------------------------------------------------- 
+lumi lnN                         1.022       1.022       1.022       -            
+CMS_eff_e lnN                    -           -           -           -            
+CMS_eff_m lnN                    1.02        1.020       1.020       -            
+CMS_eff_t lnN                    1.06        1.060       1.060       -            
+CMS_vhtt_ZZ lnN                  -           -           -           -            
