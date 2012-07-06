@@ -6,6 +6,30 @@ Analyze EMT events for the WH analysis
 
 import WHAnalyzerBase
 from EMuTauTree import EMuTauTree
+import os
+from FinalStateAnalysis.StatTools.RooFunctorFromWS import build_roofunctor
+import ROOT
+
+# Get fitted fake rate functions
+frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
+highpt_mu_fr = build_roofunctor(
+    frfit_dir + '/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root',
+    'fit_efficiency', # workspace name
+    'efficiency'
+)
+lowpt_e_fr = build_roofunctor(
+    frfit_dir + '/e_wjets_pt10_mvaidiso03_eJetPt-data_em.root',
+    'fit_efficiency', # workspace name
+    'efficiency'
+)
+tau_fr = build_roofunctor(
+    frfit_dir + '/t_ztt_pt20_mvaloose_tauPt-data_mm.root',
+    'fit_efficiency', # workspace name
+    'efficiency'
+)
+
+# Get correction functions
+ROOT.gSystem.Load("Corrector_C")
 
 class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
     tree = 'emt/final/Ntuple'
@@ -86,16 +110,17 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.tLooseMVAIso)
 
     def event_weight(self, row):
-        return row.puWeightData2012AB
+        weight = row.puWeightData2011AB
+        if row.run < 10:
+            weight *= ROOT.Cor_Total_Mu_Lead(row.mPt, row.mAbsEta)
+            weight *= ROOT.Cor_Total_Ele_SubLead(row.ePt, row.eAbsEta)
+        return weight
 
     def obj1_weight(self, row):
-        #fixme
-        return 1e-2
+        return highpt_mu_fr(row.mJetPt)
 
     def obj2_weight(self, row):
-        #fixme
-        return 1e-2
+        return lowpt_e_fr(row.eJetPt)
 
     def obj3_weight(self, row):
-        #fixme
-        return 1e-2
+        return tau_fr(row.tPt)
