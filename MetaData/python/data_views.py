@@ -8,6 +8,7 @@ Applies MC normalization factors, styles, etc.
 
 import copy
 from data_styles import data_styles
+import fnmatch
 import logging
 import os
 import rootpy.io as io
@@ -71,7 +72,7 @@ def data_views(files, lumifiles):
     for sample in histo_files.keys():
         raw_file = histo_files[sample]
         intlumi = lumi_files[sample]
-        log.debug("Building sample: %s => int lumi: %0.f pb-1", sample, intlumi)
+        log.info("Building sample: %s => int lumi: %0.f pb-1", sample, intlumi)
         weight = datalumi/intlumi
         if 'data' in sample:
             weight = 1
@@ -80,9 +81,18 @@ def data_views(files, lumifiles):
         view = views.ScaleView(raw_file, weight)
         unweighted_view = raw_file
 
-        # Add the style view
-        style_dict = data_styles.get(sample, None)
-        if style_dict:
+        # Find the longest (i.e. most specific) matching style pattern
+        best_pattern = ''
+        for pattern, style_dict in data_styles.iteritems():
+            log.debug("Checking pattern: %s against %s", pattern, sample)
+            if fnmatch.fnmatch(sample, pattern):
+                log.debug("-> it matches!")
+                if len(pattern) > len(best_pattern):
+                    best_pattern = pattern
+                    log.info("Found new best style for %s: %s",
+                             sample, pattern)
+        if best_pattern:
+            style_dict = data_styles[best_pattern]
             log.info("Found style for %s - applying Style View", sample)
 
             # Set style and title

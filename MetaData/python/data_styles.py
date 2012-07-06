@@ -16,13 +16,13 @@ http://ndawe.github.com/rootpy/reference/rootpy.plotting.html#rootpy.plotting.co
 from FinalStateAnalysis.Utilities.solarized import colors
 
 data_styles = {
-    'Zjets' : {
+    'Zjets*' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
-        'fillcolor' :colors['yellow'],
+        'fillcolor' :colors['red'],
         'name' : "Z + jets",
     },
-    'Wjets' : {
+    'Wjets*' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' : colors['green'],
@@ -34,30 +34,25 @@ data_styles = {
         'fillcolor' : colors['magenta'],
         'name' : "QCD",
     },
-    'ttjets' : {
+    'TT*' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' : colors['orange'],
         'name' : "ttbar",
     },
-    'WZ_pythia' : {
+    'WZ*' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' : colors['blue'],
         'name' : "WZ",
     },
-    'ZZ' : {
+    'ZZ*' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' : colors['cyan'],
         'name' : "ZZ",
     },
-    'data_DoubleMu' : {
-        'legendstyle' : 'pe',
-        'format' : 'pe',
-        'name' : "data",
-    },
-    'data_DoubleElectron' : {
+    'data*' : {
         'legendstyle' : 'pe',
         'format' : 'pe',
         'name' : "data",
