@@ -40,6 +40,14 @@ data_styles = {
         'fillcolor' : colors['orange'],
         'name' : "ttbar",
     },
+    'VH*' : {
+        'legendstyle' : 'lf',
+        'format' : 'hist',
+        'fillcolor' : 0,
+        'linestyle' : 2,
+        'linecolor' : colors['green'],
+        'name' : "VH",
+    },
     'WZ*' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
