@@ -21,10 +21,7 @@ if __name__ == "__main__":
         'Zjets_M50', 'WplusJets_madgraph',
         'WZJetsTo3LNu',
         'TTplusJets_madgraph',
-        "data_DoubleMu_Run2011A_05Aug2011_v1",
-        "data_DoubleMu_Run2011A_May10ReReco_v1",
-        "data_DoubleMu_Run2011A_PromptReco_v4",
-        "data_DoubleMu_Run2011A_PromptReco_v6_1409"
+        "data_DoubleMu*",
     ]
 
     files = []
@@ -43,14 +40,22 @@ if __name__ == "__main__":
     plotter.plot_mc_vs_data('os/p1f2p3', 'm1m2Mass')
     plotter.save('mcdata-os-p1f2p3-m1m2Mass')
 
-    def make_styler(color):
+    plotter.plot_mc_vs_data('os/p1p2f3', 'rho')
+    plotter.save('mcdata-os-p1p2f3-rho')
+
+    plotter.plot_mc_vs_data('os/p1p2f3', 'nvtx')
+    plotter.save('mcdata-os-p1p2f3-nvtx')
+
+    def make_styler(color, format=None):
         def unsuck(x):
             x.SetFillStyle(0)
             x.SetLineColor(color)
+            if format:
+                x.format = format
         return unsuck
 
-    plotter.plot('data', 'os/p1p2f3/w3/m1m2Mass',  'hist', styler=make_styler(2))
-    plotter.plot('data', 'os/p1p2p3/m1m2Mass', 'hist,same', styler=make_styler(1))
+    plotter.plot('data', 'os/p1p2f3/w3/m1m2Mass',  'hist', styler=make_styler(2, 'hist'))
+    plotter.plot('data', 'os/p1p2p3/m1m2Mass', 'same', styler=make_styler(1))
     plotter.save('zmm-os-fr-control')
     plotter.plot('Zjets_M50', 'os/p1p2f3/weight')
     plotter.save('zmm-mc-event-weights')
