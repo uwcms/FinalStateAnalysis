@@ -75,8 +75,13 @@ class FakeRatesMM(MegaBase):
             'm2Pt > 10',
             'm1AbsEta < 2.4',
             'm2AbsEta < 2.4',
+            'm2JetBtag < 3.3',
             'm2PixHits',
             '!muVetoPt5',
+            '!bjetCSVVeto',
+            '!tauVetoPt20',
+            'abs(m1DZ) < 0.2',
+            'abs(m2DZ) < 0.2',
         ])
 
         def fill(the_histos, row):
