@@ -8,6 +8,7 @@ import WHAnalyzerBase
 from MuMuTauTree import MuMuTauTree
 import os
 from FinalStateAnalysis.StatTools.RooFunctorFromWS import build_roofunctor
+import ROOT
 
 # Get fitted fake rate functions
 frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
@@ -27,6 +28,9 @@ tau_fr = build_roofunctor(
     'efficiency'
 )
 
+# Get correction functions
+ROOT.gSystem.Load("Corrector_C")
+
 class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
     tree = 'mmt/final/Ntuple'
     def __init__(self, tree, outfile, **kwargs):
@@ -34,6 +38,9 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
 
     def book_histos(self, folder):
         self.book(folder, "weight", "Event weight", 100, 0, 5)
+        self.book(folder, "rho", "Fastjet #rho", 100, 0, 25)
+        self.book(folder, "nvtx", "Number of vertices", 31, -0.5, 30.5)
+        self.book(folder, "prescale", "HLT prescale", 21, -0.5, 20.5)
         self.book(folder, "m1Pt", "Muon 1 Pt", 100, 0, 100)
         self.book(folder, "m2Pt", "Muon 2 Pt", 100, 0, 100)
         self.book(folder, "m1m2Mass", "Muon 1-2 Mass", 120, 0, 120)
@@ -42,6 +49,9 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         def fill(name, value):
             histos['/'.join(folder + (name,))].Fill(value, weight)
         histos['/'.join(folder + ('weight',))].Fill(weight)
+        fill('prescale', row.doubleMuPrescale)
+        fill('rho', row.rho)
+        fill('nvtx', row.nvtx)
         fill('m1Pt', row.m1Pt)
         fill('m2Pt', row.m2Pt)
         fill('m1m2Mass', row.m1_m2_Mass)
@@ -113,8 +123,11 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.tLooseMVAIso)
 
     def event_weight(self, row):
-        #fixme
-        return row.puWeightData2011AB
+        weight = row.puWeightData2011AB
+        if row.run == 1:
+            weight *= ROOT.Cor_Total_Mu_Lead(row.m1Pt, row.m1AbsEta)
+            weight *= ROOT.Cor_Total_Mu_SubLead(row.m2Pt, row.m2AbsEta)
+        return weight
 
     def obj1_weight(self, row):
         return highpt_mu_fr(row.m1JetPt)
