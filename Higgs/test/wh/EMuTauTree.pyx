@@ -1109,7 +1109,7 @@ cdef class EMuTauTree:
             self.ientry += 1
 
     # Iterate over rows which pass the filter
-    def whera(self, filter):
+    def where(self, filter):
         cdef TTreeFormula* formula = new TTreeFormula(
             "cyiter", filter, self.tree)
         self.ientry = 0
