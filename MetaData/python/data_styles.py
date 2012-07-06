@@ -22,7 +22,7 @@ data_styles = {
         'fillcolor' :colors['red'],
         'name' : "Z + jets",
     },
-    'Wjets*' : {
+    'WplusJets*' : {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' : colors['green'],
@@ -44,7 +44,9 @@ data_styles = {
         'legendstyle' : 'lf',
         'format' : 'hist',
         'fillcolor' : 0,
+        'fillstyle' : 0,
         'linestyle' : 2,
+        'linewidth' : 4,
         'linecolor' : colors['green'],
         'name' : "VH",
     },
