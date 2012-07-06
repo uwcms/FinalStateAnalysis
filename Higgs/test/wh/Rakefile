@@ -8,6 +8,7 @@ $jobid = ENV['jobid']
 ## Refreshing cython proxies ###################################################
 ################################################################################
 
+
 ################################################################################
 ## Sample names ################################################################
 ################################################################################
@@ -23,13 +24,15 @@ puts get_sample_names('data_DoubleMu')
 
 samples = Hash[
   "ewk" => Array['Zjets_M50', 'WplusJets_madgraph', 
-    'WZJetsTo3LNu', 
+    'WZJetsTo3LNu', 'ZZJetsTo4L_pythia',
     'TTplusJets_madgraph'],
   "wjets" => Array['WplusJets_madgraph'],
   "zjets" => Array['Zjets_M50'],
+  "signal" => Array['VH_120'],
   # Automagically figure out what data samples we have
   "data_mm" =>  get_sample_names("data_DoubleMu"),
-  "data_em" => get_sample_names("data_DoubleElectron"),
+  "data_em" => get_sample_names("data_MuEG"),
+  "data_ee" => get_sample_names("data_DoubleElectron"),
 ]
 
 # Function to get the .root files for an analyzer and samples
@@ -50,9 +53,9 @@ end
 
 # Map which samples need to be analyzed by which analyzer
 fr_analyzer_sample_map = Hash[
-  "FakeRatesMM.py" => samples['ewk'] + samples['data_mm'],
-  #"FakeRatesEM.py" => samples['ewk'] + samples['data_em'],
-  "FakeRatesMMT.py" => samples['ewk'] + samples['data_mm'],
+  "FakeRatesMM.py" => samples['wjets'] + samples['data_mm'],
+  "FakeRatesEM.py" => samples['wjets'] + samples['data_em'],
+  "FakeRatesMMT.py" => samples['zjets'] + samples['data_mm'],
 ]
 
 # Create an empty placeholder to enable tab-completion
@@ -86,20 +89,20 @@ landau_vars =  "scale[0.5, 0, 5],mu[20, 5, 100],sigma[1.9, 0.1, 20],offset[1e-2,
 # Fake rate fit configurations
 fr_fits = Hash[
   # Format is type_region_denom_num_variable
-  #"e_wjets_pt10_mvaidiso03_electronJetPt" => Hash[
-    #"samples" => Array["wjets", "data_em"],
-    #"analyzer" => "FakeRatesEM",
-    #"function" => exponential,
-    #"variables" => exponential_vars,
-    #"rebin" => 5,
-  #],
-  #"e_wjets_pt10_mvaidiso01_electronJetPt" => Hash[
-    #"samples" => Array["wjets", "data_em"],
-    #"analyzer" => "FakeRatesEM",
-    #"function" => exponential,
-    #"variables" => exponential_vars,
-    #"rebin" => 5,
-  #],
+  "e_wjets_pt10_mvaidiso03_eJetPt" => Hash[
+    "samples" => Array["wjets", "data_em"],
+    "analyzer" => "FakeRatesEM",
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
+  "e_wjets_pt10_mvaidiso01_eJetPt" => Hash[
+    "samples" => Array["wjets", "data_em"],
+    "analyzer" => "FakeRatesEM",
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
   "m_wjets_pt10_pfidiso01_muonJetPt" => Hash[
     "samples" => Array["wjets", "data_mm"],
     "analyzer" => "FakeRatesMM",
@@ -176,10 +179,10 @@ end
 ################################################################################
 
 analysis_sample_map = Hash[
-  "WHAnalyzeMMT.py" => samples['ewk'] + samples['data_mm'],
-  "WHAnalyzeEMT.py" => samples['ewk'] + samples['data_em'],
+  "WHAnalyzeMMT.py" => samples['ewk'] + samples['data_mm'] + samples['signal'],
+  "WHAnalyzeEMT.py" => samples['ewk'] + samples['data_em'] + samples['signal'],
 ]
 
-task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['data_mm'])
+task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['data_mm'] + samples['signal'])
 
-task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['data_em'])
+task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['data_em'] + samples['signal'])

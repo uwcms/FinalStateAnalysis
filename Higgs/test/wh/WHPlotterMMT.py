@@ -23,6 +23,7 @@ if __name__ == "__main__":
         'WplusJets_madgraph',
         'WZJetsTo3LNu',
         'ZZ*',
+        'VH*',
         'TTplusJets_madgraph',
         "data_DoubleMu*",
     ]
@@ -92,16 +93,16 @@ if __name__ == "__main__":
     ##  FR sideband MC-vs-Data ################################################
     ###########################################################################
 
-    plotter.plot_mc_vs_data('ss/p1f2p3', 'm1Pt', 5)
+    plotter.plot_mc_vs_data('ss/p1f2p3', 'm1Pt', 5, '#mu_{1} p_{T}')
     plotter.save('mcdata-ss-p1f2p3-m1Pt')
 
-    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'm1Pt', 5)
+    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'm1Pt', 5, '#mu_{1} p_{T}')
     plotter.save('mcdata-ss-p1f2p3-w2-m1Pt')
 
-    plotter.plot_mc_vs_data('ss/p1f2p3', 'm1Pt', 5)
+    plotter.plot_mc_vs_data('ss/p1f2p3', 'm1Pt', 5, '#mu_{1} p_{T}')
     plotter.save('mcdata-ss-p1f2p3-m1Pt')
 
-    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'm1Pt', 5)
+    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'm1Pt', 5, '#mu_{1} p_{T}')
     plotter.save('mcdata-ss-p1f2p3-w2-m1Pt')
 
 
