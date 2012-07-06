@@ -40,6 +40,7 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         self.book(folder, "mPt", "Muon Pt", 100, 0, 100)
         self.book(folder, "ePt", "Electron Pt", 100, 0, 100)
         self.book(folder, "emMass", "Electron-Muon Mass", 120, 0, 120)
+        self.book(folder, "subMass", "Subleading Mass", 200, 0, 200)
 
     def fill_histos(self, histos, folder, row, weight):
         def fill(name, value):
@@ -47,6 +48,10 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         fill('mPt', row.mPt)
         fill('ePt', row.ePt)
         fill('emMass', row.e_m_Mass)
+        if row.ePt < row.mPt:
+            fill('subMass', row.e_t_Mass)
+        else:
+            fill('subMass', row.m_t_Mass)
 
     def preselection(self, row):
         ''' Preselection applied to events.
@@ -78,6 +83,8 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         if not row.eMissingHits > 0.5:
             return False
         if not row.eHasConversion > 0.5:
+            return False
+        if row.LT < 80:
             return False
         # Fixme use CSV
         if row.mJetBtag > 3.3:
