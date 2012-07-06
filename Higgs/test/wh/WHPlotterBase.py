@@ -22,19 +22,32 @@ class WHPlotterBase(object):
             #self.views['ZZJetsTo4L_pythia']['view'],
         )
         self.data = self.views['data']['view']
+        self.keep = []
 
-    def save_plot(self, filename):
+    def save(self, filename):
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.png')
+        # Reset keeps
+        self.keep = []
 
-    def plot_mc_vs_data(self, folder, variable, filename):
+    # Plot a single sample
+    def plot(self, sample, path, drawopt='', styler=None):
+        view = self.views[sample]['view']
+        histo = view.Get(path)
+        if styler:
+            styler(histo)
+
+        histo.Draw(drawopt)
+        self.keep.append(histo)
+
+    def plot_mc_vs_data(self, folder, variable):
         path = os.path.join(folder, variable)
         mc_stack = self.all_mc_stack.Get(path)
         data = self.data.Get(path)
         print data.Integral()
         mc_stack.Draw()
         data.Draw('same')
-        self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.png')
-        #self.save_plot(filename)
+        self.keep.append(mc_stack)
+        self.keep.append(data)
 
     def make_plots(self):
         ''' Generic function to draw all plots '''
