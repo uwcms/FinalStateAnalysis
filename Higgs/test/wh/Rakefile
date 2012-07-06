@@ -23,7 +23,7 @@ puts get_sample_names('data_DoubleMu')
 
 samples = Hash[
   "ewk" => Array['Zjets_M50', 'WplusJets_madgraph', 
-    #'WZJetsTo3LNu', 
+    'WZJetsTo3LNu', 
     'TTplusJets_madgraph'],
   "wjets" => Array['WplusJets_madgraph'],
   "zjets" => Array['Zjets_M50'],
