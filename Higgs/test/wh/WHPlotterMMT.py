@@ -65,7 +65,6 @@ if __name__ == "__main__":
     plotter.plot_mc_vs_data('os/p1p2p3', 'nvtx')
     plotter.save('mcdata-os-p1p2p3-nvtx')
 
-
     # Make Z->mumu + tau jet control
     def make_styler(color, format=None):
         def unsuck(x):
@@ -116,6 +115,12 @@ if __name__ == "__main__":
     plotter.plot_final('m2Pt', 10)
     plotter.save('final-m2Pt')
 
+    plotter.plot_final('subMass', 10)
+    plotter.save('final-subMass')
+
+    plotter.plot_final('m2Iso', 10)
+    plotter.save('final-m2Iso')
+
 
     ###########################################################################
     ##  Making shape file     #################################################
@@ -123,7 +128,7 @@ if __name__ == "__main__":
 
     shape_file = ROOT.TFile('mmt_shapes.root', 'RECREATE')
     shape_dir = shape_file.mkdir('mmt')
-    plotter.write_shapes('m1Pt', 10, shape_dir)
+    plotter.write_shapes('subMass', 10, shape_dir)
     shape_file.Close()
 
 
