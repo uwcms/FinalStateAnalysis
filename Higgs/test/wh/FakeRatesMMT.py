@@ -69,8 +69,9 @@ class FakeRatesMMT(MegaBase):
             'm2PFIDTight',
             'abs(m1_m2_Mass-91.2) < 10',
             'tPt > 20',
+            'tAntiElectronMVA',
             'tAntiMuonTight',
-            'tMtToMET < 20',
+            'tMtToMET < 30',
         ])
 
         histos = self.histograms

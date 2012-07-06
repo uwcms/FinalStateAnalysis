@@ -33,6 +33,7 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         super(WHAnalyzeMMT, self).__init__(tree, outfile, MuMuTauTree, **kwargs)
 
     def book_histos(self, folder):
+        self.book(folder, "weight", "Event weight", 100, 0, 5)
         self.book(folder, "m1Pt", "Muon 1 Pt", 100, 0, 100)
         self.book(folder, "m2Pt", "Muon 2 Pt", 100, 0, 100)
         self.book(folder, "m1m2Mass", "Muon 1-2 Mass", 120, 0, 120)
@@ -40,6 +41,7 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
     def fill_histos(self, histos, folder, row, weight):
         def fill(name, value):
             histos['/'.join(folder + (name,))].Fill(value, weight)
+        histos['/'.join(folder + ('weight',))].Fill(weight)
         fill('m1Pt', row.m1Pt)
         fill('m2Pt', row.m2Pt)
         fill('m1m2Mass', row.m1_m2_Mass)
@@ -86,6 +88,10 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         if abs(row.m2DZ) > 0.2:
             return False
         if abs(row.tDZ) > 0.2:
+            return False
+        if not row.tAntiElectronMVA:
+            return False
+        if not row.tAntiMuonTight:
             return False
         if row.tMuOverlap:
             return False
