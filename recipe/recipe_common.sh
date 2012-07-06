@@ -2,6 +2,9 @@ pushd $CMSSW_BASE/src
 
 # Tags that work in any release
 
+# For updated lumi tools
+cvs co -r V03-05-12  RecoLuminosity/LumiDB 
+
 # Add and patch to way speed up trigger matching
 echo "Applying pat trigger matching speedup"
 patch -N -p0 < FinalStateAnalysis/recipe/patches/V06-04-16_DataFormats_PatCandidates_PassStrByRef.patch
@@ -36,7 +39,11 @@ cvs co -r V00-00-10 -d Muon/MuonAnalysisTools UserCode/sixie/Muon/MuonAnalysisTo
 # Get electron energy calibrations
 # See https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaElectronEnergyScale
 # :( no tag is provided on the twiki
-cvs co -D "07/05/2012" -d EgammaCalibratedGsfElectrons UserCode/EGamma/EgammaCalibratedGsfElectrons
+cvs co -D "05/07/2012" -d EgammaCalibratedGsfElectrons UserCode/EGamma/EgammaCalibratedGsfElectrons
+
+# Get the VBF MVA weight files
+# https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2012#VBF_selection_Matthew
+cvs co -r 1.2 UserCode/MitHtt/data/VBFMVA/MuTau/VBFMVA_BDTG.weights.xml
 
 pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
 echo "Installing Higgs xsec lookup tables"

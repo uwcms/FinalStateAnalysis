@@ -47,7 +47,8 @@ class MegaWorker(multiprocessing.Process):
 
             try:
                 processor = FileProcessor(to_process, self.tree, self.selector,
-                                          output_file_name, **self.options)
+                                          output_file_name, self.log,
+                                          **self.options)
                 result = processor.process()
                 self.output.put(result)
             except:

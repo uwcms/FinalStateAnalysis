@@ -1,7 +1,5 @@
 pushd $CMSSW_BASE/src
 
-# For updated lumi tools
-cvs co -r V03-05-05 RecoLuminosity/LumiDB 
 # For limit tool
 cvs co -r V01-12-03 HiggsAnalysis/CombinedLimit
 # For a fix to prevent segfaults on certain MC samples when using

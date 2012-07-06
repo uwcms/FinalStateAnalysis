@@ -68,11 +68,15 @@ cdef class {TreeName}:
 {branchblock}
 
     def __cinit__(self, ttree):
+        #print "cinit"
         # Constructor from a ROOT.TTree
         from ROOT import AsCObject
         self.tree = <TTree*>PyCObject_AsVoidPtr(AsCObject(ttree))
         self.ientry = 0
         # Now set all the branch address
+        self.setup_branches()
+
+    def setup_branches(self):
 {setbranchesblock}
 
     # Iterating over the tree
@@ -83,7 +87,7 @@ cdef class {TreeName}:
             self.ientry += 1
 
     # Iterate over rows which pass the filter
-    def where(self, filter):
+    def whera(self, filter):
         cdef TTreeFormula* formula = new TTreeFormula(
             "cyiter", filter, self.tree)
         self.ientry = 0
@@ -172,6 +176,7 @@ def make_pyx(name, tree):
         # is set to the owned value object.
         setbranchesblock.write(
 '''
+        #print "making {branchname}"
         self.{branchname}_branch = self.tree.GetBranch("{branchname}")
         self.{branchname}_branch.SetAddress(<void*>&self.{branchname}_value)
 '''.format(branchname=branch_name, branchtype=branch_type)

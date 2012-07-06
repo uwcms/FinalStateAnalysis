@@ -5,7 +5,6 @@ Measure fake rates in the E+Mu channel
 We measure in QCD (anti-iso mu) and W+jet (iso mu) control regions.
 
 The layout of output is:
-
     region/denom_tag/var1
     region/denom_tag/var2
     region/denom_tag/num_tag/var1
@@ -60,6 +59,7 @@ class FakeRatesEM(MegaBase):
                             region, denom, numerator), name, *args)
 
                     book_histo('electronPt', 'Electron Pt', 100, 0, 100)
+                    book_histo('electronJetPt', 'Electron Jet Pt', 100, 0, 100)
                     book_histo('electronAbsEta', 'Electron Abs Eta', 100, -2.5, 2.5)
                     book_histo('metSignificance', 'MET sig.', 100, 0, 10)
                     book_histo('muonMtToMET', 'Muon MT', 100, 0, 200)
@@ -73,12 +73,14 @@ class FakeRatesEM(MegaBase):
             'muonAbsEta < 2.4',
             'electronAbsEta < 2.5',
             '!muVetoPt5',
+            '!tauVetoPt20',
             '!electronHasConversion',
             '!electronMissingHits',
         ])
 
         def fill(the_histos, row):
             the_histos['electronPt'].Fill(row.electronPt)
+            the_histos['electronJetPt'].Fill(row.electronJetPt)
             the_histos['electronAbsEta'].Fill(row.electronAbsEta)
             the_histos['metSignificance'].Fill(row.metSignificance)
             the_histos['muonMtToMET'].Fill(row.muonMtToMET)

@@ -42,7 +42,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_trackCandidates_*_*',
         '*_gsfTrackCandidates_*_*',
         # Debug
-        #'*_generalTracks_*_*',
+        '*_generalTracks_*_*',
         #'*_offlinePrimaryVertices_*_*',
         '*_electronGsfTracks_*_*',
         '*_offlinePrimaryVertices*_*_*',

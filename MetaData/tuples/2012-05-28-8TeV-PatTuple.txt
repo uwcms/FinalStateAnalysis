@@ -1,6 +1,14 @@
 /DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/swanson-Zjets_M50_2012-05-28-8TeV-PatTuple-8a107b9-4729152ae17d7e4009729a1d0d9e952d/USER
 /DoubleElectron/iross-data_DoubleElectron_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER
 /DoubleElectron/iross-data_DoubleElectron_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER
+/DoubleMu/friis-embedded_2012A_etau_2012-05-29-8TeV-PatTuple-v4-76e4f96-ab605c5433bf222e080add18912a32ee/USER
+/DoubleMu/friis-embedded_2012A_mutau_2012-05-29-8TeV-PatTuple-v4-76e4f96-ab605c5433bf222e080add18912a32ee/USER
+/DoubleMu/friis-embedded_2012A_mutau_2012-05-29-8TeV-PatTuple-v5-c9b7dbb-8abec6319d88c45f391ca5c79f24387e/USER
+/DoubleMu/friis-embedded_2012B_etau_193752_195135_2012-05-29-8TeV-PatTuple-v11-afde45e-8abec6319d88c45f391ca5c79f24387e/USER
+/DoubleMu/friis-embedded_2012B_etau_195147_196070_2012-05-29-8TeV-PatTuple-v11-afde45e-8abec6319d88c45f391ca5c79f24387e/USER
+/DoubleMu/friis-embedded_2012B_mutau_193752_195135_2012-05-29-8TeV-PatTuple-v11-afde45e-8abec6319d88c45f391ca5c79f24387e/USER
+/DoubleMu/friis-embedded_2012B_mutau_193752_195135_2012-05-29-8TeV-PatTuple-v4-76e4f96-ab605c5433bf222e080add18912a32ee/USER
+/DoubleMu/friis-embedded_2012B_mutau_195147_196070_2012-05-29-8TeV-PatTuple-v11-afde45e-8abec6319d88c45f391ca5c79f24387e/USER
 /DoubleMu/iross-data_DoubleMu_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER
 /DoubleMu/iross-data_DoubleMu_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-67c1f94-a7f10efca7dd683ad59c7e946715fa59/USER
 /GluGluToHToTauTau_M-110_8TeV-powheg-pythia6/swanson-GGH_H2Tau_M-110_2012-05-28-8TeV-PatTuple-8a107b9-4729152ae17d7e4009729a1d0d9e952d/USER
@@ -26,6 +34,7 @@
 /WH_ZH_TTH_HToTauTau_M-115_8TeV-pythia6-tauola/friis-VH_H2Tau_M-115_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER
 /WH_ZH_TTH_HToTauTau_M-125_8TeV-pythia6-tauola/friis-VH_H2Tau_M-125_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER
 /WH_ZH_TTH_HToTauTau_M-130_8TeV-pythia6-tauola/friis-VH_H2Tau_M-130_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER
+/WH_ZH_TTH_HToTauTau_M-135_8TeV-pythia6-tauola/friis-VH_H2Tau_M-135_2012-05-29-8TeV-PatTuple-v2-49823f0-4bae4b458a2ca6a872dfccd34b84cd42/USER
 /WH_ZH_TTH_HToTauTau_M-140_8TeV-pythia6-tauola/friis-VH_H2Tau_M-140_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER
 /WH_ZH_TTH_HToTauTau_M-145_8TeV-pythia6-tauola/friis-VH_H2Tau_M-145_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER
 /WH_ZH_TTH_HToTauTau_M-150_8TeV-pythia6-tauola/friis-VH_H2Tau_M-150_2012-05-29-8TeV-PatTuple-67c1f94-4729152ae17d7e4009729a1d0d9e952d/USER

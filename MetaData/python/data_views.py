@@ -7,126 +7,110 @@ Applies MC normalization factors, styles, etc.
 '''
 
 import copy
-from datadefs import datadefs, data_name_map
 from data_styles import data_styles
 import logging
-from rootpy.io import open
+import os
+import rootpy.io as io
 from rootpy.plotting import views
 
 log = logging.getLogger("data_views")
 
-def data_views(files, normalize_to_dataset):
+def extract_sample(filename):
+    ''' Get sample name from a path
+
+    >>> extract_sample('path/to/Zjets_M50.root')
+    Zjets_M50
+    '''
+    sample = os.path.basename(filename)
+    sample = sample.replace('.root', '').replace('.lumicalc.sum', '')
+    return sample
+
+def read_lumi(filename):
+    ''' Read lumi stored in a file
+
+    The lumi is stored as a single float value.
+    '''
+    with open(filename) as lumifile:
+        return float(lumifile.readline().strip())
+
+def data_views(files, lumifiles):
     ''' Builds views of files.
 
-    <files> gives an iterator of file names to build.
+    [files] gives an iterator of .root files with histograms to build.
 
-    Each file must contain (in the base directory) two TTexts:
+    [lumifiles] gives the correspond list of .lumisum files which contain
+    the effective integrated luminosity of the samples.
 
-        TText("dataset", "[name of dataset"]),
-        TText("intlumi", "[effective/real int. lumi of dataset"]),
-
-    You must pass the name of a logical sample to normalize the data too.
-
-    Example: "data_DoubleMu"
+    The lumi to normalize to is taken as the sum of the data file int. lumis.
 
     '''
+
+    files = list(files)
+
+    log.info("Creating views from %i files", len(files))
+
+    # Map sample_name => root file
+    histo_files = dict((extract_sample(x), io.open(x)) for x in files)
+
+    # Map sample_name => lumi file
+    lumi_files = dict((extract_sample(x), read_lumi(x)) for x in lumifiles)
+
+    # Identify data files
+    datafiles = set([name for name in histo_files.keys() if 'data' in name])
+
+    log.info("Found the following data samples:")
+    log.info(" ".join(datafiles))
+    datalumi = sum(lumi_files[x] for x in datafiles)
+    log.info("-> total int. lumi = %0.0fpb-1", datalumi)
+
     # Figure out the dataset for each file, and the int lumi.
     # Key = dataset name
-    # Value = {intlumi, rootpy file, file path}
-    raw_samples = {}
-    for file in files:
-        log.info("Extracting meta data from file %s", file)
-        raw_file = open(file, 'read')
-        dataset_ttext = raw_file.Get("dataset")
-        if not dataset_ttext:
-            raise IOError(
-                "Input file %s does not have required TText 'dataset'", file)
-        dataset = dataset_ttext.GetTitle()
-        log.info("=> dataset name: %s", dataset)
-        intlumi_ttext = raw_file.Get("intlumi")
-        if not intlumi_ttext:
-            raise IOError(
-                "Input file %s does not have required TText 'intlumi'", file)
-        intlumi = float(intlumi_ttext.GetTitle())
-        log.info("=> int lumi: %0.f pb-1", intlumi)
-        raw_samples[dataset] = {
-            'intlumi': intlumi,
-            'file' : raw_file,
-            'filename' : file
-        }
+    # Value = {intlumi, rootpy file, weight, weighted view}
+    output = {}
 
-    log.info("Determining total int lumi for sample %s", normalize_to_dataset)
-    if not normalize_to_dataset in data_name_map:
-        raise KeyError(
-            "Normalization dataset %s is not a proper dataset "
-            "defined in datadefs.py!" % normalize_to_dataset)
-    subsamples = data_name_map[normalize_to_dataset]
-    # Make sure we have all the subsamples
-    target_int_lumi = 0
-    for subsample in subsamples:
-        if subsample not in raw_samples:
-            raise KeyError(
-                "Normalization dataset %s need subsample %s, "
-                "but it isn't provided in the list of input files!" %
-                (normalize_to_dataset, subsample))
-        sub_int_lumi = raw_samples[subsample]['intlumi']
-        log.info("Subsample %s has int lumi: %0.f pb-1",
-                 subsample, sub_int_lumi)
-        target_int_lumi += sub_int_lumi
-    log.info("Target int lumi: %0.f pb-1", target_int_lumi)
-
-    log.info("Scaling samples to integrated luminosity")
-    for sample, sample_info in raw_samples.iteritems():
-        weight = 1.0
+    for sample in histo_files.keys():
+        raw_file = histo_files[sample]
+        intlumi = lumi_files[sample]
+        log.debug("Building sample: %s => int lumi: %0.f pb-1", sample, intlumi)
+        weight = datalumi/intlumi
         if 'data' in sample:
-            log.info("Setting sample %s [DATA] weight to 1.0", sample)
-        else:
-            weight = target_int_lumi/sample_info['intlumi']
-            log.info("Setting sample %s [MC] weight to %0.1f/%0.1f = %0.3g",
-                     sample, target_int_lumi, sample_info['intlumi'], weight)
-        sample_info['weight'] = weight
-        log.info("Building weighted view")
-        sample_info['view'] = views.ScaleView(sample_info['file'], weight)
+            weight = 1
+        log.debug("Weight: %0.2f", weight)
 
-    logical_samples = {}
+        view = views.ScaleView(raw_file, weight)
+        unweighted_view = raw_file
 
-    # Logical samples are combinations of several subsamples
-    log.info("Building logical samples")
-    for name, subsamples in data_name_map.iteritems():
-        # Check sure we have all the dependent samples
-        if not all(subsample in raw_samples for subsample in subsamples):
-            log.debug("Skipping logical sample %s, we don't have all it's"
-                      " dependencies" % name)
-            continue
-        # Make a sum view of all the sub samples
-        log.info("Constructing logical sample %s from %i subsamples",
-                 name, len(subsamples))
-        sumview = views.SumView(
-            *[raw_samples[subsample]['view'] for subsample in subsamples])
-        unweighted_view = views.SumView(
-            *[raw_samples[subsample]['file'] for subsample in subsamples])
-        style_dict = data_styles.get(name, None)
+        # Add the style view
+        style_dict = data_styles.get(sample, None)
         if style_dict:
-            log.info("Found style for %s - applying Style View", name)
-            # Set the title as the name of the sample, rootpy Legend uses this.
-            nicename = copy.copy(style_dict['name'])
+            log.info("Found style for %s - applying Style View", sample)
 
-            sumview = views.TitleView(
-                views.StyleView(sumview, **style_dict), nicename
+            # Set style and title
+            # title = the name of the sample, rootpy Legend uses this.
+            nicename = copy.copy(style_dict['name'])
+            view = views.TitleView(
+                views.StyleView(view, **style_dict), nicename
             )
             unweighted_view = views.TitleView(
-                views.StyleView(unweighted_view, **style_dict),
-                nicename
+                views.StyleView(unweighted_view, **style_dict), nicename
             )
-        else:
-            log.warning("Didn't find a style for logical sample %s", name)
 
-        logical_samples[name] = {
-            'view' : sumview,
-            'unweighted_view' : unweighted_view,
-            'subsamples' : dict(
-                (subsample, raw_samples[subsample])
-                for subsample in subsamples
-            )
+        output[sample] = {
+            'intlumi': intlumi,
+            'file' : raw_file,
+            'weight' : weight,
+            'view' : view,
+            'unweighted_view' : unweighted_view
         }
-    return logical_samples
+
+    # Merge the data into just 'data'
+    log.info("Merging data together")
+    output['data'] = {
+        'intlumi' : datalumi,
+        'weight' : 1,
+        'view' : views.SumView(*[output[x]['view'] for x in datafiles]),
+        'unweighted_view' : views.SumView(*[output[x]['unweighted_view']
+                                            for x in datafiles]),
+    }
+
+    return output

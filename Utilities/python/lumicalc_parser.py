@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''
 
 Parses the CSV output of lumi calc to get the total luminosity.

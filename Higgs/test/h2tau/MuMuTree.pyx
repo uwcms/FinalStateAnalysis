@@ -31,7 +31,7 @@ cdef extern from "TTreeFormula.h":
 
 from cpython cimport PyCObject_AsVoidPtr
 
-cdef class MMTTree:
+cdef class MuMuTree:
     # Pointers to tree and current entry
     cdef TTree* tree
     cdef long ientry
@@ -209,30 +209,6 @@ cdef class MMTTree:
     cdef TBranch* m1_m2_Zcompat_branch
     cdef float m1_m2_Zcompat_value
 
-    cdef TBranch* m1_t_DPhi_branch
-    cdef float m1_t_DPhi_value
-
-    cdef TBranch* m1_t_DR_branch
-    cdef float m1_t_DR_value
-
-    cdef TBranch* m1_t_Mass_branch
-    cdef float m1_t_Mass_value
-
-    cdef TBranch* m1_t_PZeta_branch
-    cdef float m1_t_PZeta_value
-
-    cdef TBranch* m1_t_PZetaVis_branch
-    cdef float m1_t_PZetaVis_value
-
-    cdef TBranch* m1_t_Pt_branch
-    cdef float m1_t_Pt_value
-
-    cdef TBranch* m1_t_SS_branch
-    cdef float m1_t_SS_value
-
-    cdef TBranch* m1_t_Zcompat_branch
-    cdef float m1_t_Zcompat_value
-
     cdef TBranch* m2AbsEta_branch
     cdef float m2AbsEta_value
 
@@ -302,30 +278,6 @@ cdef class MMTTree:
     cdef TBranch* m2WWID_branch
     cdef float m2WWID_value
 
-    cdef TBranch* m2_t_DPhi_branch
-    cdef float m2_t_DPhi_value
-
-    cdef TBranch* m2_t_DR_branch
-    cdef float m2_t_DR_value
-
-    cdef TBranch* m2_t_Mass_branch
-    cdef float m2_t_Mass_value
-
-    cdef TBranch* m2_t_PZeta_branch
-    cdef float m2_t_PZeta_value
-
-    cdef TBranch* m2_t_PZetaVis_branch
-    cdef float m2_t_PZetaVis_value
-
-    cdef TBranch* m2_t_Pt_branch
-    cdef float m2_t_Pt_value
-
-    cdef TBranch* m2_t_SS_branch
-    cdef float m2_t_SS_value
-
-    cdef TBranch* m2_t_Zcompat_branch
-    cdef float m2_t_Zcompat_value
-
     cdef TBranch* metEt_branch
     cdef float metEt_value
 
@@ -368,14 +320,14 @@ cdef class MMTTree:
     cdef TBranch* processID_branch
     cdef float processID_value
 
-    cdef TBranch* puWeightData2011A_branch
-    cdef float puWeightData2011A_value
-
     cdef TBranch* puWeightData2011AB_branch
     cdef float puWeightData2011AB_value
 
-    cdef TBranch* puWeightData2011B_branch
-    cdef float puWeightData2011B_value
+    cdef TBranch* puWeightData2012A_branch
+    cdef float puWeightData2012A_value
+
+    cdef TBranch* puWeightData2012AB_branch
+    cdef float puWeightData2012AB_value
 
     cdef TBranch* rho_branch
     cdef float rho_value
@@ -392,92 +344,26 @@ cdef class MMTTree:
     cdef TBranch* singleMuPrescale_branch
     cdef float singleMuPrescale_value
 
-    cdef TBranch* tAbsEta_branch
-    cdef float tAbsEta_value
-
-    cdef TBranch* tAntiElectronLoose_branch
-    cdef float tAntiElectronLoose_value
-
-    cdef TBranch* tAntiElectronMVA_branch
-    cdef float tAntiElectronMVA_value
-
-    cdef TBranch* tAntiElectronMedium_branch
-    cdef float tAntiElectronMedium_value
-
-    cdef TBranch* tAntiElectronTight_branch
-    cdef float tAntiElectronTight_value
-
-    cdef TBranch* tAntiMuonLoose_branch
-    cdef float tAntiMuonLoose_value
-
-    cdef TBranch* tAntiMuonTight_branch
-    cdef float tAntiMuonTight_value
-
-    cdef TBranch* tCharge_branch
-    cdef float tCharge_value
-
-    cdef TBranch* tDZ_branch
-    cdef float tDZ_value
-
-    cdef TBranch* tDecayFinding_branch
-    cdef float tDecayFinding_value
-
-    cdef TBranch* tDecayMode_branch
-    cdef float tDecayMode_value
-
-    cdef TBranch* tEta_branch
-    cdef float tEta_value
-
-    cdef TBranch* tGenDecayMode_branch
-    cdef float tGenDecayMode_value
-
-    cdef TBranch* tIP3DS_branch
-    cdef float tIP3DS_value
-
-    cdef TBranch* tJetBtag_branch
-    cdef float tJetBtag_value
-
-    cdef TBranch* tJetPt_branch
-    cdef float tJetPt_value
-
-    cdef TBranch* tLeadTrackPt_branch
-    cdef float tLeadTrackPt_value
-
-    cdef TBranch* tLooseIso_branch
-    cdef float tLooseIso_value
-
-    cdef TBranch* tLooseMVAIso_branch
-    cdef float tLooseMVAIso_value
-
-    cdef TBranch* tMass_branch
-    cdef float tMass_value
-
-    cdef TBranch* tMediumIso_branch
-    cdef float tMediumIso_value
-
-    cdef TBranch* tMediumMVAIso_branch
-    cdef float tMediumMVAIso_value
-
-    cdef TBranch* tMtToMET_branch
-    cdef float tMtToMET_value
-
-    cdef TBranch* tMuOverlap_branch
-    cdef float tMuOverlap_value
-
-    cdef TBranch* tPhi_branch
-    cdef float tPhi_value
-
-    cdef TBranch* tPt_branch
-    cdef float tPt_value
-
-    cdef TBranch* tTNPId_branch
-    cdef float tTNPId_value
-
-    cdef TBranch* tVZ_branch
-    cdef float tVZ_value
-
     cdef TBranch* tauVetoPt20_branch
     cdef float tauVetoPt20_value
+
+    cdef TBranch* vbfDeta_branch
+    cdef float vbfDeta_value
+
+    cdef TBranch* vbfJetVeto20_branch
+    cdef float vbfJetVeto20_value
+
+    cdef TBranch* vbfJetVeto30_branch
+    cdef float vbfJetVeto30_value
+
+    cdef TBranch* vbfMVA_branch
+    cdef float vbfMVA_value
+
+    cdef TBranch* vbfMass_branch
+    cdef float vbfMass_value
+
+    cdef TBranch* vbfNJets_branch
+    cdef float vbfNJets_value
 
     cdef TBranch* idx_branch
     cdef int idx_value
@@ -661,30 +547,6 @@ cdef class MMTTree:
         self.m1_m2_Zcompat_branch = self.tree.GetBranch("m1_m2_Zcompat")
         self.m1_m2_Zcompat_branch.SetAddress(<void*>&self.m1_m2_Zcompat_value)
 
-        self.m1_t_DPhi_branch = self.tree.GetBranch("m1_t_DPhi")
-        self.m1_t_DPhi_branch.SetAddress(<void*>&self.m1_t_DPhi_value)
-
-        self.m1_t_DR_branch = self.tree.GetBranch("m1_t_DR")
-        self.m1_t_DR_branch.SetAddress(<void*>&self.m1_t_DR_value)
-
-        self.m1_t_Mass_branch = self.tree.GetBranch("m1_t_Mass")
-        self.m1_t_Mass_branch.SetAddress(<void*>&self.m1_t_Mass_value)
-
-        self.m1_t_PZeta_branch = self.tree.GetBranch("m1_t_PZeta")
-        self.m1_t_PZeta_branch.SetAddress(<void*>&self.m1_t_PZeta_value)
-
-        self.m1_t_PZetaVis_branch = self.tree.GetBranch("m1_t_PZetaVis")
-        self.m1_t_PZetaVis_branch.SetAddress(<void*>&self.m1_t_PZetaVis_value)
-
-        self.m1_t_Pt_branch = self.tree.GetBranch("m1_t_Pt")
-        self.m1_t_Pt_branch.SetAddress(<void*>&self.m1_t_Pt_value)
-
-        self.m1_t_SS_branch = self.tree.GetBranch("m1_t_SS")
-        self.m1_t_SS_branch.SetAddress(<void*>&self.m1_t_SS_value)
-
-        self.m1_t_Zcompat_branch = self.tree.GetBranch("m1_t_Zcompat")
-        self.m1_t_Zcompat_branch.SetAddress(<void*>&self.m1_t_Zcompat_value)
-
         self.m2AbsEta_branch = self.tree.GetBranch("m2AbsEta")
         self.m2AbsEta_branch.SetAddress(<void*>&self.m2AbsEta_value)
 
@@ -754,30 +616,6 @@ cdef class MMTTree:
         self.m2WWID_branch = self.tree.GetBranch("m2WWID")
         self.m2WWID_branch.SetAddress(<void*>&self.m2WWID_value)
 
-        self.m2_t_DPhi_branch = self.tree.GetBranch("m2_t_DPhi")
-        self.m2_t_DPhi_branch.SetAddress(<void*>&self.m2_t_DPhi_value)
-
-        self.m2_t_DR_branch = self.tree.GetBranch("m2_t_DR")
-        self.m2_t_DR_branch.SetAddress(<void*>&self.m2_t_DR_value)
-
-        self.m2_t_Mass_branch = self.tree.GetBranch("m2_t_Mass")
-        self.m2_t_Mass_branch.SetAddress(<void*>&self.m2_t_Mass_value)
-
-        self.m2_t_PZeta_branch = self.tree.GetBranch("m2_t_PZeta")
-        self.m2_t_PZeta_branch.SetAddress(<void*>&self.m2_t_PZeta_value)
-
-        self.m2_t_PZetaVis_branch = self.tree.GetBranch("m2_t_PZetaVis")
-        self.m2_t_PZetaVis_branch.SetAddress(<void*>&self.m2_t_PZetaVis_value)
-
-        self.m2_t_Pt_branch = self.tree.GetBranch("m2_t_Pt")
-        self.m2_t_Pt_branch.SetAddress(<void*>&self.m2_t_Pt_value)
-
-        self.m2_t_SS_branch = self.tree.GetBranch("m2_t_SS")
-        self.m2_t_SS_branch.SetAddress(<void*>&self.m2_t_SS_value)
-
-        self.m2_t_Zcompat_branch = self.tree.GetBranch("m2_t_Zcompat")
-        self.m2_t_Zcompat_branch.SetAddress(<void*>&self.m2_t_Zcompat_value)
-
         self.metEt_branch = self.tree.GetBranch("metEt")
         self.metEt_branch.SetAddress(<void*>&self.metEt_value)
 
@@ -820,14 +658,14 @@ cdef class MMTTree:
         self.processID_branch = self.tree.GetBranch("processID")
         self.processID_branch.SetAddress(<void*>&self.processID_value)
 
-        self.puWeightData2011A_branch = self.tree.GetBranch("puWeightData2011A")
-        self.puWeightData2011A_branch.SetAddress(<void*>&self.puWeightData2011A_value)
-
         self.puWeightData2011AB_branch = self.tree.GetBranch("puWeightData2011AB")
         self.puWeightData2011AB_branch.SetAddress(<void*>&self.puWeightData2011AB_value)
 
-        self.puWeightData2011B_branch = self.tree.GetBranch("puWeightData2011B")
-        self.puWeightData2011B_branch.SetAddress(<void*>&self.puWeightData2011B_value)
+        self.puWeightData2012A_branch = self.tree.GetBranch("puWeightData2012A")
+        self.puWeightData2012A_branch.SetAddress(<void*>&self.puWeightData2012A_value)
+
+        self.puWeightData2012AB_branch = self.tree.GetBranch("puWeightData2012AB")
+        self.puWeightData2012AB_branch.SetAddress(<void*>&self.puWeightData2012AB_value)
 
         self.rho_branch = self.tree.GetBranch("rho")
         self.rho_branch.SetAddress(<void*>&self.rho_value)
@@ -844,92 +682,26 @@ cdef class MMTTree:
         self.singleMuPrescale_branch = self.tree.GetBranch("singleMuPrescale")
         self.singleMuPrescale_branch.SetAddress(<void*>&self.singleMuPrescale_value)
 
-        self.tAbsEta_branch = self.tree.GetBranch("tAbsEta")
-        self.tAbsEta_branch.SetAddress(<void*>&self.tAbsEta_value)
-
-        self.tAntiElectronLoose_branch = self.tree.GetBranch("tAntiElectronLoose")
-        self.tAntiElectronLoose_branch.SetAddress(<void*>&self.tAntiElectronLoose_value)
-
-        self.tAntiElectronMVA_branch = self.tree.GetBranch("tAntiElectronMVA")
-        self.tAntiElectronMVA_branch.SetAddress(<void*>&self.tAntiElectronMVA_value)
-
-        self.tAntiElectronMedium_branch = self.tree.GetBranch("tAntiElectronMedium")
-        self.tAntiElectronMedium_branch.SetAddress(<void*>&self.tAntiElectronMedium_value)
-
-        self.tAntiElectronTight_branch = self.tree.GetBranch("tAntiElectronTight")
-        self.tAntiElectronTight_branch.SetAddress(<void*>&self.tAntiElectronTight_value)
-
-        self.tAntiMuonLoose_branch = self.tree.GetBranch("tAntiMuonLoose")
-        self.tAntiMuonLoose_branch.SetAddress(<void*>&self.tAntiMuonLoose_value)
-
-        self.tAntiMuonTight_branch = self.tree.GetBranch("tAntiMuonTight")
-        self.tAntiMuonTight_branch.SetAddress(<void*>&self.tAntiMuonTight_value)
-
-        self.tCharge_branch = self.tree.GetBranch("tCharge")
-        self.tCharge_branch.SetAddress(<void*>&self.tCharge_value)
-
-        self.tDZ_branch = self.tree.GetBranch("tDZ")
-        self.tDZ_branch.SetAddress(<void*>&self.tDZ_value)
-
-        self.tDecayFinding_branch = self.tree.GetBranch("tDecayFinding")
-        self.tDecayFinding_branch.SetAddress(<void*>&self.tDecayFinding_value)
-
-        self.tDecayMode_branch = self.tree.GetBranch("tDecayMode")
-        self.tDecayMode_branch.SetAddress(<void*>&self.tDecayMode_value)
-
-        self.tEta_branch = self.tree.GetBranch("tEta")
-        self.tEta_branch.SetAddress(<void*>&self.tEta_value)
-
-        self.tGenDecayMode_branch = self.tree.GetBranch("tGenDecayMode")
-        self.tGenDecayMode_branch.SetAddress(<void*>&self.tGenDecayMode_value)
-
-        self.tIP3DS_branch = self.tree.GetBranch("tIP3DS")
-        self.tIP3DS_branch.SetAddress(<void*>&self.tIP3DS_value)
-
-        self.tJetBtag_branch = self.tree.GetBranch("tJetBtag")
-        self.tJetBtag_branch.SetAddress(<void*>&self.tJetBtag_value)
-
-        self.tJetPt_branch = self.tree.GetBranch("tJetPt")
-        self.tJetPt_branch.SetAddress(<void*>&self.tJetPt_value)
-
-        self.tLeadTrackPt_branch = self.tree.GetBranch("tLeadTrackPt")
-        self.tLeadTrackPt_branch.SetAddress(<void*>&self.tLeadTrackPt_value)
-
-        self.tLooseIso_branch = self.tree.GetBranch("tLooseIso")
-        self.tLooseIso_branch.SetAddress(<void*>&self.tLooseIso_value)
-
-        self.tLooseMVAIso_branch = self.tree.GetBranch("tLooseMVAIso")
-        self.tLooseMVAIso_branch.SetAddress(<void*>&self.tLooseMVAIso_value)
-
-        self.tMass_branch = self.tree.GetBranch("tMass")
-        self.tMass_branch.SetAddress(<void*>&self.tMass_value)
-
-        self.tMediumIso_branch = self.tree.GetBranch("tMediumIso")
-        self.tMediumIso_branch.SetAddress(<void*>&self.tMediumIso_value)
-
-        self.tMediumMVAIso_branch = self.tree.GetBranch("tMediumMVAIso")
-        self.tMediumMVAIso_branch.SetAddress(<void*>&self.tMediumMVAIso_value)
-
-        self.tMtToMET_branch = self.tree.GetBranch("tMtToMET")
-        self.tMtToMET_branch.SetAddress(<void*>&self.tMtToMET_value)
-
-        self.tMuOverlap_branch = self.tree.GetBranch("tMuOverlap")
-        self.tMuOverlap_branch.SetAddress(<void*>&self.tMuOverlap_value)
-
-        self.tPhi_branch = self.tree.GetBranch("tPhi")
-        self.tPhi_branch.SetAddress(<void*>&self.tPhi_value)
-
-        self.tPt_branch = self.tree.GetBranch("tPt")
-        self.tPt_branch.SetAddress(<void*>&self.tPt_value)
-
-        self.tTNPId_branch = self.tree.GetBranch("tTNPId")
-        self.tTNPId_branch.SetAddress(<void*>&self.tTNPId_value)
-
-        self.tVZ_branch = self.tree.GetBranch("tVZ")
-        self.tVZ_branch.SetAddress(<void*>&self.tVZ_value)
-
         self.tauVetoPt20_branch = self.tree.GetBranch("tauVetoPt20")
         self.tauVetoPt20_branch.SetAddress(<void*>&self.tauVetoPt20_value)
+
+        self.vbfDeta_branch = self.tree.GetBranch("vbfDeta")
+        self.vbfDeta_branch.SetAddress(<void*>&self.vbfDeta_value)
+
+        self.vbfJetVeto20_branch = self.tree.GetBranch("vbfJetVeto20")
+        self.vbfJetVeto20_branch.SetAddress(<void*>&self.vbfJetVeto20_value)
+
+        self.vbfJetVeto30_branch = self.tree.GetBranch("vbfJetVeto30")
+        self.vbfJetVeto30_branch.SetAddress(<void*>&self.vbfJetVeto30_value)
+
+        self.vbfMVA_branch = self.tree.GetBranch("vbfMVA")
+        self.vbfMVA_branch.SetAddress(<void*>&self.vbfMVA_value)
+
+        self.vbfMass_branch = self.tree.GetBranch("vbfMass")
+        self.vbfMass_branch.SetAddress(<void*>&self.vbfMass_value)
+
+        self.vbfNJets_branch = self.tree.GetBranch("vbfNJets")
+        self.vbfNJets_branch.SetAddress(<void*>&self.vbfNJets_value)
 
         self.idx_branch = self.tree.GetBranch("idx")
         self.idx_branch.SetAddress(<void*>&self.idx_value)
@@ -1248,46 +1020,6 @@ cdef class MMTTree:
             self.m1_m2_Zcompat_branch.GetEntry(self.ientry, 0)
             return self.m1_m2_Zcompat_value
 
-    property m1_t_DPhi:
-        def __get__(self):
-            self.m1_t_DPhi_branch.GetEntry(self.ientry, 0)
-            return self.m1_t_DPhi_value
-
-    property m1_t_DR:
-        def __get__(self):
-            self.m1_t_DR_branch.GetEntry(self.ientry, 0)
-            return self.m1_t_DR_value
-
-    property m1_t_Mass:
-        def __get__(self):
-            self.m1_t_Mass_branch.GetEntry(self.ientry, 0)
-            return self.m1_t_Mass_value
-
-    property m1_t_PZeta:
-        def __get__(self):
-            self.m1_t_PZeta_branch.GetEntry(self.ientry, 0)
-            return self.m1_t_PZeta_value
-
-    property m1_t_PZetaVis:
-        def __get__(self):
-            self.m1_t_PZetaVis_branch.GetEntry(self.ientry, 0)
-            return self.m1_t_PZetaVis_value
-
-    property m1_t_Pt:
-        def __get__(self):
-            self.m1_t_Pt_branch.GetEntry(self.ientry, 0)
-            return self.m1_t_Pt_value
-
-    property m1_t_SS:
-        def __get__(self):
-            self.m1_t_SS_branch.GetEntry(self.ientry, 0)
-            return self.m1_t_SS_value
-
-    property m1_t_Zcompat:
-        def __get__(self):
-            self.m1_t_Zcompat_branch.GetEntry(self.ientry, 0)
-            return self.m1_t_Zcompat_value
-
     property m2AbsEta:
         def __get__(self):
             self.m2AbsEta_branch.GetEntry(self.ientry, 0)
@@ -1403,46 +1135,6 @@ cdef class MMTTree:
             self.m2WWID_branch.GetEntry(self.ientry, 0)
             return self.m2WWID_value
 
-    property m2_t_DPhi:
-        def __get__(self):
-            self.m2_t_DPhi_branch.GetEntry(self.ientry, 0)
-            return self.m2_t_DPhi_value
-
-    property m2_t_DR:
-        def __get__(self):
-            self.m2_t_DR_branch.GetEntry(self.ientry, 0)
-            return self.m2_t_DR_value
-
-    property m2_t_Mass:
-        def __get__(self):
-            self.m2_t_Mass_branch.GetEntry(self.ientry, 0)
-            return self.m2_t_Mass_value
-
-    property m2_t_PZeta:
-        def __get__(self):
-            self.m2_t_PZeta_branch.GetEntry(self.ientry, 0)
-            return self.m2_t_PZeta_value
-
-    property m2_t_PZetaVis:
-        def __get__(self):
-            self.m2_t_PZetaVis_branch.GetEntry(self.ientry, 0)
-            return self.m2_t_PZetaVis_value
-
-    property m2_t_Pt:
-        def __get__(self):
-            self.m2_t_Pt_branch.GetEntry(self.ientry, 0)
-            return self.m2_t_Pt_value
-
-    property m2_t_SS:
-        def __get__(self):
-            self.m2_t_SS_branch.GetEntry(self.ientry, 0)
-            return self.m2_t_SS_value
-
-    property m2_t_Zcompat:
-        def __get__(self):
-            self.m2_t_Zcompat_branch.GetEntry(self.ientry, 0)
-            return self.m2_t_Zcompat_value
-
     property metEt:
         def __get__(self):
             self.metEt_branch.GetEntry(self.ientry, 0)
@@ -1513,20 +1205,20 @@ cdef class MMTTree:
             self.processID_branch.GetEntry(self.ientry, 0)
             return self.processID_value
 
-    property puWeightData2011A:
-        def __get__(self):
-            self.puWeightData2011A_branch.GetEntry(self.ientry, 0)
-            return self.puWeightData2011A_value
-
     property puWeightData2011AB:
         def __get__(self):
             self.puWeightData2011AB_branch.GetEntry(self.ientry, 0)
             return self.puWeightData2011AB_value
 
-    property puWeightData2011B:
+    property puWeightData2012A:
         def __get__(self):
-            self.puWeightData2011B_branch.GetEntry(self.ientry, 0)
-            return self.puWeightData2011B_value
+            self.puWeightData2012A_branch.GetEntry(self.ientry, 0)
+            return self.puWeightData2012A_value
+
+    property puWeightData2012AB:
+        def __get__(self):
+            self.puWeightData2012AB_branch.GetEntry(self.ientry, 0)
+            return self.puWeightData2012AB_value
 
     property rho:
         def __get__(self):
@@ -1553,150 +1245,40 @@ cdef class MMTTree:
             self.singleMuPrescale_branch.GetEntry(self.ientry, 0)
             return self.singleMuPrescale_value
 
-    property tAbsEta:
-        def __get__(self):
-            self.tAbsEta_branch.GetEntry(self.ientry, 0)
-            return self.tAbsEta_value
-
-    property tAntiElectronLoose:
-        def __get__(self):
-            self.tAntiElectronLoose_branch.GetEntry(self.ientry, 0)
-            return self.tAntiElectronLoose_value
-
-    property tAntiElectronMVA:
-        def __get__(self):
-            self.tAntiElectronMVA_branch.GetEntry(self.ientry, 0)
-            return self.tAntiElectronMVA_value
-
-    property tAntiElectronMedium:
-        def __get__(self):
-            self.tAntiElectronMedium_branch.GetEntry(self.ientry, 0)
-            return self.tAntiElectronMedium_value
-
-    property tAntiElectronTight:
-        def __get__(self):
-            self.tAntiElectronTight_branch.GetEntry(self.ientry, 0)
-            return self.tAntiElectronTight_value
-
-    property tAntiMuonLoose:
-        def __get__(self):
-            self.tAntiMuonLoose_branch.GetEntry(self.ientry, 0)
-            return self.tAntiMuonLoose_value
-
-    property tAntiMuonTight:
-        def __get__(self):
-            self.tAntiMuonTight_branch.GetEntry(self.ientry, 0)
-            return self.tAntiMuonTight_value
-
-    property tCharge:
-        def __get__(self):
-            self.tCharge_branch.GetEntry(self.ientry, 0)
-            return self.tCharge_value
-
-    property tDZ:
-        def __get__(self):
-            self.tDZ_branch.GetEntry(self.ientry, 0)
-            return self.tDZ_value
-
-    property tDecayFinding:
-        def __get__(self):
-            self.tDecayFinding_branch.GetEntry(self.ientry, 0)
-            return self.tDecayFinding_value
-
-    property tDecayMode:
-        def __get__(self):
-            self.tDecayMode_branch.GetEntry(self.ientry, 0)
-            return self.tDecayMode_value
-
-    property tEta:
-        def __get__(self):
-            self.tEta_branch.GetEntry(self.ientry, 0)
-            return self.tEta_value
-
-    property tGenDecayMode:
-        def __get__(self):
-            self.tGenDecayMode_branch.GetEntry(self.ientry, 0)
-            return self.tGenDecayMode_value
-
-    property tIP3DS:
-        def __get__(self):
-            self.tIP3DS_branch.GetEntry(self.ientry, 0)
-            return self.tIP3DS_value
-
-    property tJetBtag:
-        def __get__(self):
-            self.tJetBtag_branch.GetEntry(self.ientry, 0)
-            return self.tJetBtag_value
-
-    property tJetPt:
-        def __get__(self):
-            self.tJetPt_branch.GetEntry(self.ientry, 0)
-            return self.tJetPt_value
-
-    property tLeadTrackPt:
-        def __get__(self):
-            self.tLeadTrackPt_branch.GetEntry(self.ientry, 0)
-            return self.tLeadTrackPt_value
-
-    property tLooseIso:
-        def __get__(self):
-            self.tLooseIso_branch.GetEntry(self.ientry, 0)
-            return self.tLooseIso_value
-
-    property tLooseMVAIso:
-        def __get__(self):
-            self.tLooseMVAIso_branch.GetEntry(self.ientry, 0)
-            return self.tLooseMVAIso_value
-
-    property tMass:
-        def __get__(self):
-            self.tMass_branch.GetEntry(self.ientry, 0)
-            return self.tMass_value
-
-    property tMediumIso:
-        def __get__(self):
-            self.tMediumIso_branch.GetEntry(self.ientry, 0)
-            return self.tMediumIso_value
-
-    property tMediumMVAIso:
-        def __get__(self):
-            self.tMediumMVAIso_branch.GetEntry(self.ientry, 0)
-            return self.tMediumMVAIso_value
-
-    property tMtToMET:
-        def __get__(self):
-            self.tMtToMET_branch.GetEntry(self.ientry, 0)
-            return self.tMtToMET_value
-
-    property tMuOverlap:
-        def __get__(self):
-            self.tMuOverlap_branch.GetEntry(self.ientry, 0)
-            return self.tMuOverlap_value
-
-    property tPhi:
-        def __get__(self):
-            self.tPhi_branch.GetEntry(self.ientry, 0)
-            return self.tPhi_value
-
-    property tPt:
-        def __get__(self):
-            self.tPt_branch.GetEntry(self.ientry, 0)
-            return self.tPt_value
-
-    property tTNPId:
-        def __get__(self):
-            self.tTNPId_branch.GetEntry(self.ientry, 0)
-            return self.tTNPId_value
-
-    property tVZ:
-        def __get__(self):
-            self.tVZ_branch.GetEntry(self.ientry, 0)
-            return self.tVZ_value
-
     property tauVetoPt20:
         def __get__(self):
             self.tauVetoPt20_branch.GetEntry(self.ientry, 0)
             return self.tauVetoPt20_value
+
+    property vbfDeta:
+        def __get__(self):
+            self.vbfDeta_branch.GetEntry(self.ientry, 0)
+            return self.vbfDeta_value
+
+    property vbfJetVeto20:
+        def __get__(self):
+            self.vbfJetVeto20_branch.GetEntry(self.ientry, 0)
+            return self.vbfJetVeto20_value
+
+    property vbfJetVeto30:
+        def __get__(self):
+            self.vbfJetVeto30_branch.GetEntry(self.ientry, 0)
+            return self.vbfJetVeto30_value
+
+    property vbfMVA:
+        def __get__(self):
+            self.vbfMVA_branch.GetEntry(self.ientry, 0)
+            return self.vbfMVA_value
+
+    property vbfMass:
+        def __get__(self):
+            self.vbfMass_branch.GetEntry(self.ientry, 0)
+            return self.vbfMass_value
+
+    property vbfNJets:
+        def __get__(self):
+            self.vbfNJets_branch.GetEntry(self.ientry, 0)
+            return self.vbfNJets_value
 
     property idx:
         def __get__(self):

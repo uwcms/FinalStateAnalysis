@@ -1,14 +1,15 @@
 Installation
 ============
 
-Current CMSSW version: 4_2_8
+Current CMSSW versions: **4_2_8** or **5_2_5**.  
+The installation instructions are the same for both.  
+NB CMSSW_5_2_4 is not supported.
 
 Steps:
 
 Get a supported CMSSW release area::
 
-  scram pro -n MyWorkingAreaName CMSSW CMSSW_4_2_8
-
+  scram pro -n MyWorkingAreaName CMSSW CMSSW_VERSION
 
 Checkout the FinalStateAnalysis repository::
 
