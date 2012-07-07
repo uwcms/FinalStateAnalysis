@@ -61,6 +61,7 @@ end
 fr_analyzer_sample_map = Hash[
   "FakeRatesMM.py" => samples['wjets'] + samples['data_mm'],
   "FakeRatesEM.py" => samples['wjets'] + samples['data_em'],
+  "FakeRatesEE.py" => samples['wjets'] + samples['zjets'] + samples['data_ee'],
   "FakeRatesMMT.py" => samples['zjets'] + samples['data_mm'],
 ]
 
@@ -220,13 +221,13 @@ def add_fake_errors(input_file, prefix)
 end
 
 # The .root files with the shapes
-file "#{$mmtdir}/mmt_shapes_#{$period}.root" => [:mmt, 'WHPlotterMMT.py',$mmtdir] do |t|
+file "#{$mmtdir}/mmt_shapes_#{$period}.root" => [:mmt, 'WHPlotterMMT.py', 'WHPlotterBase.py', $mmtdir] do |t|
   sh "python WHPlotterMMT.py"
 end
 add_fake_errors("#{$mmtdir}/mmt_shapes_#{$period}.root", "mmt")
 task :mmt_shapes => ["#{$mmtdir}/mmt_shapes_#{$period}_statshapes.root" ]
 
-file "#{$emtdir}/emt_shapes_#{$period}.root" => [:emt, 'WHPlotterEMT.py',$emtdir] do |t|
+file "#{$emtdir}/emt_shapes_#{$period}.root" => [:emt, 'WHPlotterEMT.py', 'WHPlotterBase.py', $emtdir] do |t|
   sh "python WHPlotterEMT.py"
 end
 add_fake_errors("#{$emtdir}/emt_shapes_#{$period}.root", "emt")
@@ -274,6 +275,7 @@ def make_datacard_task(mass)
   file card => ["#{$carddir}/shapes.root", "#{$carddir}/unc.conf", "#{$carddir}/unc.vals", "#{$carddir}/cgs.conf"] do |t|
     chdir($carddir) do
       sh "create-datacard.py -i shapes.root -o vhtt_0_#{mass}.txt #{mass}"
+      # text2workspace.py  -m 125.5 vhtt_0_7TeV.txt -P HiggsAnalysis.CombinedLimit.PhysicsModel:strictSMLikeHiggs -o tmp.root
     end
   end
   return card
