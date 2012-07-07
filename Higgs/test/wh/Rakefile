@@ -194,11 +194,13 @@ task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['d
 task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['data_em'] + samples['signal'])
 
 ################################################################################
-## Recipes to make cards and plots
-##  targets:
-##     mmt_shapes
-##     emt_shapes
+# Recipes to make data cards (plots come for free)
+#  targets:
+#      mmt_shapes
+#      emt_shapes
+#      cards
 ################################################################################
+
 
 # Output directories
 $mmtdir = "results/#{$jobid}/plots/mmt/"
@@ -230,8 +232,56 @@ end
 add_fake_errors("#{$emtdir}/emt_shapes_#{$period}.root", "emt")
 task :emt_shapes => ["#{$emtdir}/emt_shapes_#{$period}_statshapes.root" ]
 
-# Combine all category shape files
-file "all_shapes_#{$period}.root" => ["mmt_shapes_#{$period}.root", "emt_shapes_#{$period}.root"] do |t|
-  sh "hadd #{t.name} #{t.sources}"
+$carddir = "vhtt_lep_cards_#{$period}"
+
+# Combine all category shape files into the datacard project
+file "#{$carddir}/shapes.root" => ["#{$mmtdir}/mmt_shapes_#{$period}_statshapes.root", "#{$emtdir}/emt_shapes_#{$period}_statshapes.root"] do |t|
+  sh "hadd #{t.name} #{t.prerequisites.join(' ')}"
+end
+
+stat_shape_lists = Dir.glob("results/#{$jobid}/plots/*/*_statshapes.txt")
+# We make these the dependency, since they are always rpoduced w/ the .txt lists
+stat_shapes = Dir.glob("results/#{$jobid}/plots/*/*_statshapes.root")
+
+# We need to build the unc.conf and unc.vals with our stat shapes
+file "#{$carddir}/unc.conf" => ["#{$carddir}/unc.conf.base"] + stat_shapes do |t|
+  # Copy the basic template
+  sh "cp #{t.prerequisites[0]} #{t.name}"
+  # Append all the stat shape types
+  sh "echo '' >> #{t.name}"
+  sh "echo '# Stat shape uncertainties' >> #{t.name}"
+  stat_shape_lists.each do |list|
+    sh "cat #{list} | xargs -n 1 -I {} echo '{} shape' >> #{t.name}"
+  end
+end
+
+file "#{$carddir}/unc.vals" => ["#{$carddir}/unc.vals.base"] + stat_shapes do |t|
+  # Copy the basic template
+  sh "cp #{t.prerequisites[0]} #{t.name}"
+  # Append all the stat shape types
+  sh "echo '' >> #{t.name}"
+  sh "echo '# Stat shape uncertainties' >> #{t.name}"
+  stat_shape_lists.each do |list|
+    sh "cat #{list} | grep mmt | xargs -n 1 -I {} echo 'mmt fakes {} 1.0' >> #{t.name}"
+    sh "cat #{list} | grep emt | xargs -n 1 -I {} echo 'emt fakes {} 1.0' >> #{t.name}"
+  end
+end
+
+cardmasses = Array[120]
+
+def make_datacard_task(mass)
+  card = "#{$carddir}/vhtt_0_#{mass}.txt"  
+  file card => ["#{$carddir}/shapes.root", "#{$carddir}/unc.conf", "#{$carddir}/unc.vals", "#{$carddir}/cgs.conf"] do |t|
+    chdir($carddir) do
+      sh "create-datacard.py -i shapes.root -o vhtt_0_#{mass}.txt #{mass}"
+    end
+  end
+  return card
+end
+
+task :cards => []
+
+cardmasses.each do |mass|
+  task :cards => make_datacard_task(mass)
 end
 
