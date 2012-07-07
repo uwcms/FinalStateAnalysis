@@ -24,10 +24,12 @@ import os
 
 def control_region(row):
     # Figure out what control region we are in.
-    if row.e1RelPFIsoDB < 0.10 and row.e1MtToMET > 50:
+    if row.e1_e2_SS and row.e1RelPFIsoDB < 0.15 and row.e1MtToMET > 50 and row.metSignificance > 3:
         return 'wjets'
-    elif row.e1RelPFIsoDB > 0.3 and row.metSignificance < 3:
+    elif row.e1_e2_SS and row.e1RelPFIsoDB > 0.3 and row.metSignificance < 3:
         return 'qcd'
+    elif row.e1RelPFIsoDB < 0.3 and row.e2RelPFIsoDB < 0.3 and row.e2MVAIDH2TauWP:
+        return 'zee'
     else:
         return None
 
@@ -68,17 +70,21 @@ class FakeRatesEE(MegaBase):
                     book_histo('e2AbsEta', 'e Abs Eta', 100, -2.5, 2.5)
                     book_histo('metSignificance', 'MET sig.', 100, 0, 10)
                     book_histo('e1MtToMET', 'm MT', 100, 0, 200)
+                    book_histo('e1e2Mass', 'DiElectron Mass', 100, 0, 200)
                     book_histo('doubleEPrescale', 'prescale', 10, -0.5, 9.5)
+        # Charge mis-ID measurements
+        self.book('charge', 'e1e2MassOS', 'DiEle mass OS', 60, 60, 120)
+        self.book('charge', 'e1e2MassSS', 'DiEle mass SS', 60, 60, 120)
 
     def process(self):
         base_selection = ' && '.join([
-            'e1_e2_SS',
             'doubleEPass',
             'e1Pt > 20',
             'e1MVAIDH2TauWP',
             'e2Pt > 10',
             'e1AbsEta < 2.5',
             'e2AbsEta < 2.5',
+            'e1JetBtag < 3.3',
             'e2JetBtag < 3.3',
 
             'e1ChargeIdTight',
@@ -103,6 +109,7 @@ class FakeRatesEE(MegaBase):
             the_histos['e2AbsEta'].Fill(row.e2AbsEta)
             the_histos['metSignificance'].Fill(row.metSignificance)
             the_histos['e1MtToMET'].Fill(row.e1MtToMET)
+            the_histos['e1e2Mass'].Fill(row.e1_e2_Mass)
             the_histos['doubleEPrescale'].Fill(row.doubleEPrescale)
 
         histos = self.histograms
@@ -110,6 +117,14 @@ class FakeRatesEE(MegaBase):
             region = control_region(row)
             if region is None:
                 continue
+
+            if region == 'zee':
+                if row.e1_e2_SS:
+                    histos['charge/e1e2MassSS'].Fill(row.e1_e2_Mass)
+                else:
+                    histos['charge/e1e2MassOS'].Fill(row.e1_e2_Mass)
+                continue
+
             # This is a QCD or Wjets
             fill(histos[(region, 'pt10')], row)
 
