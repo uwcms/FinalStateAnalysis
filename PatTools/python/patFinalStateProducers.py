@@ -113,6 +113,9 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
 
     process.load(
         "FinalStateAnalysis.PatTools.finalStates.patFinalStatesEmbedExtraCollections_cfi")
+    # If we don't have tracks, don't fit the FS vertices
+    if noTracks:
+        process.patFinalStateVertexFitter.enable = False
 
     # Build di-lepton pairs
     for dilepton in _combinatorics(lepton_types, 2):

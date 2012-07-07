@@ -49,10 +49,12 @@ class PATFinalStateVertexFitter : public edm::EDProducer {
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
     edm::InputTag src_;
+    bool enable_;
 };
 
 PATFinalStateVertexFitter::PATFinalStateVertexFitter(const edm::ParameterSet& pset) {
   src_ = pset.getParameter<edm::InputTag>("src");
+  enable_ = pset.getParameter<bool>("enable");
   produces<PATFinalStateCollection>();
 }
 void PATFinalStateVertexFitter::produce(edm::Event& evt, const edm::EventSetup& es) {
@@ -62,29 +64,33 @@ void PATFinalStateVertexFitter::produce(edm::Event& evt, const edm::EventSetup& 
   evt.getByLabel(src_, finalStates);
 
   edm::ESHandle<TransientTrackBuilder> trackBuilderHandle;
-  es.get<TransientTrackRecord>().get("TransientTrackBuilder", trackBuilderHandle);
+  if (enable_) {
+    es.get<TransientTrackRecord>().get("TransientTrackBuilder", trackBuilderHandle);
+  }
 
   for (size_t i = 0; i < finalStates->size(); ++i) {
     PATFinalState * clone = finalStates->at(i).clone();
     assert(clone);
-    std::vector<reco::TransientTrack> tracks;
-    for (size_t d = 0; d < clone->numberOfDaughters(); ++d) {
-      reco::TransientTrack transtrack = getTracks(clone->daughter(d),
-            trackBuilderHandle.product());
-      if (transtrack.isValid())
-        tracks.push_back(transtrack);
+    if (enable_) {
+      std::vector<reco::TransientTrack> tracks;
+      for (size_t d = 0; d < clone->numberOfDaughters(); ++d) {
+	reco::TransientTrack transtrack = getTracks(clone->daughter(d),
+	      trackBuilderHandle.product());
+	if (transtrack.isValid())
+	  tracks.push_back(transtrack);
+      }
+      double vtxChi2 = -1;
+      double vtxNDOF = -1;
+      // Make sure all legs have a track
+      if (tracks.size() >= clone->numberOfDaughters()) {
+	KalmanVertexFitter kvf(true);
+	TransientVertex vtx = kvf.vertex(tracks);
+	vtxChi2 = vtx.totalChiSquared();
+	vtxNDOF = vtx.degreesOfFreedom();
+      }
+      clone->addUserFloat("vtxChi2", vtxChi2);
+      clone->addUserFloat("vtxNDOF", vtxNDOF);
     }
-    double vtxChi2 = -1;
-    double vtxNDOF = -1;
-    // Make sure all legs have a track
-    if (tracks.size() >= clone->numberOfDaughters()) {
-      KalmanVertexFitter kvf(true);
-      TransientVertex vtx = kvf.vertex(tracks);
-      vtxChi2 = vtx.totalChiSquared();
-      vtxNDOF = vtx.degreesOfFreedom();
-    }
-    clone->addUserFloat("vtxChi2", vtxChi2);
-    clone->addUserFloat("vtxNDOF", vtxNDOF);
     output->push_back(clone);
   }
   evt.put(output);
