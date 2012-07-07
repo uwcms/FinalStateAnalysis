@@ -77,6 +77,11 @@ class WHPlotterBase(object):
         data = rebin_view(self.data, rebin).Get(path)
         data.Draw('same')
         self.keep.append(data)
+
+        # Make sure we can see everything
+        if data.GetMaximum() > mc_stack.GetHistogram().GetMaximum():
+            mc_stack.SetMaximum(data.GetMaximum())
+
         # Add legend
         legend = plotting.Legend(4, leftmargin=0.65)
         legend.AddEntry(mc_stack)
@@ -109,6 +114,7 @@ class WHPlotterBase(object):
         obj2_view = views.SubdirectoryView(all_data_view, 'ss/p1f2p3/w2')
         # View of weighted obj1&2-fails data
         obj12_view = views.SubdirectoryView(all_data_view, 'ss/f1f2p3/w12')
+
         subtract_obj12_view = views.ScaleView(obj12_view, -1)
         # Corrected fake view
         fakes_view = views.SumView(obj1_view, obj2_view, subtract_obj12_view)
