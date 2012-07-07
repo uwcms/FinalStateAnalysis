@@ -50,13 +50,13 @@ if __name__ == "__main__":
     ###########################################################################
 
     # Control Z->tautau + jet region
-    plotter.plot_mc_vs_data('os/p1p2f3', 'emMass')
+    plotter.plot_mc_vs_data('os/p1p2f3', 'emMass', 10)
     plotter.save('mcdata-os-p1p2f3-emMass')
 
-    plotter.plot_mc_vs_data('os/p1p2f3/w3', 'emMass')
+    plotter.plot_mc_vs_data('os/p1p2f3/w3', 'emMass', 10)
     plotter.save('mcdata-os-p1p2f3-w3-emMass')
 
-    plotter.plot_mc_vs_data('os/p1f2p3', 'emMass')
+    plotter.plot_mc_vs_data('os/p1f2p3', 'emMass', 10)
     plotter.save('mcdata-os-p1f2p3-emMass')
 
     # Check PU variables
