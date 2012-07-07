@@ -5,30 +5,13 @@ import PhysicsTools.PatAlgos.tools.jetTools as jettools
 import PhysicsTools.PatAlgos.tools.metTools as mettools
 import PhysicsTools.PatAlgos.tools.tauTools as tautools
 import PhysicsTools.PatAlgos.tools.coreTools as coreTools
-import PhysicsTools.PatAlgos.tools.helpers as helpers
 import PhysicsTools.PatAlgos.tools.pfTools as pfTools
 import PhysicsTools.PatAlgos.patEventContent_cff as patContent
 
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
 from FinalStateAnalysis.Utilities.version import cmssw_major_version
 from FinalStateAnalysis.PatTools.pfIsolationTools import setup_h2tau_iso
-
-import itertools
-
-def _subsort(iterables):
-    for iterable in iterables:
-        yield tuple(sorted(iterable))
-
-def _combinatorics(items, n):
-    ''' Build unique combination of items
-    >>> items = ['Ananas', 'Abricot', 'Bouef']
-    >>> list(_combinatorics(items, 2))
-    [('Ananas', 'Ananas'), ('Ananas', 'Abricot'), ('Ananas', 'Bouef'), ('Abricot', 'Abricot'), ('Abricot', 'Bouef'), ('Bouef', 'Bouef')]
-    '''
-    indices = range(len(items))
-    combinatorics = set(_subsort(itertools.product(indices, repeat=n)))
-    for index_set in sorted(combinatorics):
-        yield tuple(items[x] for x in index_set)
+from FinalStateAnalysis.PatTools.patFinalStateProducers import produce_final_states
 
 def configurePatTuple(process, isMC=True, **kwargs):
     # Stuff we always keep
@@ -361,17 +344,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*_pfMEtMVAData_*_*')
     output_commands.append('*_calibratedAK5PFJetsForPFMEtMVA_*_*')
 
-    # Build the PATFinalStateEventObject
-    process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")
-    process.patFinalStateEventProducer.electronSrc = cms.InputTag("cleanPatElectrons")
-    process.patFinalStateEventProducer.muonSrc = cms.InputTag("cleanPatMuons")
-    process.patFinalStateEventProducer.tauSrc = cms.InputTag("cleanPatTaus")
-    process.patFinalStateEventProducer.jetSrc = cms.InputTag("selectedPatJets")
-    process.patFinalStateEventProducer.metSrc = final_met_collection
-    process.tuplize += process.patFinalStateEventProducer
-    output_commands.append('*_patFinalStateEventProducer_*_*')
-    process.patFinalStateEventProducer.puTag = cms.string(kwargs['puTag'])
-
     # Now build the PATFinalStateLS object, which holds LumiSection info.
     process.load(
         "FinalStateAnalysis.PatTools.finalStates.patFinalStateLSProducer_cfi")
@@ -380,178 +352,22 @@ def configurePatTuple(process, isMC=True, **kwargs):
     if isMC:
         process.finalStateLS.xSec = kwargs['xSec']
 
-    # Apply some loose PT cuts on the objects we use to create the final states
-    # so the combinatorics don't blow up
-    process.muonsForFinalStates = cms.EDFilter(
-        "PATMuonRefSelector",
-        src = cms.InputTag("cleanPatMuons"),
-        cut = cms.string('pt > 4'),
-        filter = cms.bool(False),
-    )
-
-    process.electronsForFinalStates = cms.EDFilter(
-        "PATElectronRefSelector",
-        src = cms.InputTag("cleanPatElectrons"),
-        cut = cms.string('abs(eta) < 2.5 & pt > 4'),
-        filter = cms.bool(False),
-    )
-
-    # Require that the PT of the jet (either corrected jet or tau)
-    # to be greater than 17
-    process.tausForFinalStates = cms.EDFilter(
-        "PATTauRefSelector",
-        src = cms.InputTag("cleanPatTaus"),
-        cut = cms.string('abs(eta) < 2.5 & pt > 17 & tauID("decayModeFinding")'),
-        filter = cms.bool(False),
-    )
-
-    process.selectObjectsForFinalStates = cms.Sequence(
-        process.muonsForFinalStates
-        + process.electronsForFinalStates
-        + process.tausForFinalStates
-    )
-
-    process.tuplize += process.selectObjectsForFinalStates
-
-    # Now build all of our DiLeptons and TriLepton final states
-    lepton_types = [('Elec', cms.InputTag("electronsForFinalStates")),
-                    ('Mu', cms.InputTag("muonsForFinalStates")),
-                    ('Tau', cms.InputTag("tausForFinalStates"))]
-    #lepton_types = [('Elec', cms.InputTag("cleanPatElectrons")),
-                    #('Mu', cms.InputTag("cleanPatMuons")),
-                    #('Tau', cms.InputTag("cleanPatTaus"))]
-
-    process.buildDiLeptons = cms.Sequence()
-
-    process.load(
-        "FinalStateAnalysis.PatTools.finalStates.patFinalStatesEmbedExtraCollections_cfi")
-
-    # Build di-lepton pairs
-    for dilepton in _combinatorics(lepton_types, 2):
-        # Don't build two jet states
-        if (dilepton[0][0], dilepton[1][0]) == ('Tau', 'Tau'):
-            continue
-
-        # Define some basic selections for building combinations
-        cuts = ['smallestDeltaR() > 0.3'] # basic x-cleaning
-
-        producer = cms.EDProducer(
-            "PAT%s%sFinalStateProducer" % (dilepton[0][0], dilepton[1][0]),
-            evtSrc = cms.InputTag("patFinalStateEventProducer"),
-            leg1Src = dilepton[0][1],
-            leg2Src = dilepton[1][1],
-            # X-cleaning
-            cut = cms.string(' & '.join(cuts))
-        )
-        producer_name = "finalState%s%s" % (dilepton[0][0], dilepton[1][0])
-        setattr(process, producer_name + "Raw", producer)
-        process.buildDiLeptons += producer
-        # Embed the other collections
-        embedder_seq = helpers.cloneProcessingSnippet(process,
-            process.patFinalStatesEmbedObjects, producer_name)
-        process.buildDiLeptons += embedder_seq
-        # Do some trickery so the final module has a nice output name
-        final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
-        final_module = cms.EDProducer(
-            "PATFinalStateCopier",
-            src = final_module_name
-        )
-        setattr(process, producer_name, final_module)
-        process.buildDiLeptons += final_module
-        setattr(process, producer_name, final_module)
-        output_commands.append("*_%s_*_*" % producer_name)
-
-    process.tuplize += process.buildDiLeptons
-    # Build tri-lepton pairs
-    process.buildTriLeptons = cms.Sequence()
-    for trilepton in _combinatorics(lepton_types, 3):
-        # Don't build three jet states
-        if (trilepton[0][0], trilepton[1][0], trilepton[2][0]) == \
-           ('Tau', 'Tau', 'Tau'):
-            continue
-
-        # Define some basic selections for building combinations
-        cuts = ['smallestDeltaR() > 0.3'] # basic x-cleaning
-
-        producer = cms.EDProducer(
-            "PAT%s%s%sFinalStateProducer" %
-            (trilepton[0][0], trilepton[1][0], trilepton[2][0]),
-            evtSrc = cms.InputTag("patFinalStateEventProducer"),
-            leg1Src = trilepton[0][1],
-            leg2Src = trilepton[1][1],
-            leg3Src = trilepton[2][1],
-            # X-cleaning
-            cut = cms.string(' & '.join(cuts))
-        )
-        producer_name = "finalState%s%s%s" % (
-            trilepton[0][0], trilepton[1][0], trilepton[2][0])
-        #setattr(process, producer_name, producer)
-        #process.buildTriLeptons += producer
-        setattr(process, producer_name + "Raw", producer)
-        process.buildTriLeptons += producer
-        # Embed the other collections
-        embedder_seq = helpers.cloneProcessingSnippet(process,
-            process.patFinalStatesEmbedObjects, producer_name)
-        process.buildTriLeptons += embedder_seq
-        # Do some trickery so the final module has a nice output name
-        final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
-        final_module = cms.EDProducer(
-            "PATFinalStateCopier",
-            src = final_module_name
-        )
-        setattr(process, producer_name, final_module)
-        process.buildTriLeptons += final_module
-        output_commands.append("*_%s_*_*" % producer_name)
-    process.tuplize += process.buildTriLeptons
-
-    # Build 4 lepton final states
-    process.buildQuadLeptons = cms.Sequence()
-    for quadlepton in _combinatorics(lepton_types, 4):
-        # Don't build states with more than 2 hadronic taus
-        if [x[0] for x in quadlepton].count('Tau') > 2:
-            continue
-
-        # Define some basic selections for building combinations
-        cuts = ['smallestDeltaR() > 0.3'] # basic x-cleaning
-
-        producer = cms.EDProducer(
-            "PAT%s%s%s%sFinalStateProducer" %
-            (quadlepton[0][0], quadlepton[1][0], quadlepton[2][0],
-             quadlepton[3][0]),
-            evtSrc = cms.InputTag("patFinalStateEventProducer"),
-            leg1Src = quadlepton[0][1],
-            leg2Src = quadlepton[1][1],
-            leg3Src = quadlepton[2][1],
-            leg4Src = quadlepton[3][1],
-            # X-cleaning
-            cut = cms.string(' & '.join(cuts))
-        )
-        producer_name = "finalState%s%s%s%s" % (
-            quadlepton[0][0], quadlepton[1][0], quadlepton[2][0],
-            quadlepton[3][0]
-        )
-        #setattr(process, producer_name, producer)
-        #process.buildTriLeptons += producer
-        setattr(process, producer_name + "Raw", producer)
-        process.buildQuadLeptons += producer
-        # Embed the other collections
-        embedder_seq = helpers.cloneProcessingSnippet(process,
-            process.patFinalStatesEmbedObjects, producer_name)
-        process.buildQuadLeptons += embedder_seq
-        # Do some trickery so the final module has a nice output name
-        final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
-        final_module = cms.EDProducer(
-            "PATFinalStateCopier",
-            src = final_module_name
-        )
-        setattr(process, producer_name, final_module)
-        process.buildQuadLeptons += final_module
-        output_commands.append("*_%s_*_*" % producer_name)
-    process.tuplize += process.buildQuadLeptons
-
     # Tell the framework to shut up!
     process.load("FWCore.MessageLogger.MessageLogger_cfi")
     process.MessageLogger.cerr.FwkReport.reportEvery = 1000
+
+    # Which collections are used to build the final states
+    fs_daughter_inputs = {
+        'electrons' : 'cleanPatElectrons',
+        'muons' : 'cleanPatMuons',
+        'taus' : 'cleanPatTaus',
+        'jets' : 'selectedPatJets',
+        'met' : final_met_collection,
+    }
+
+    # Setup all the PATFinalState objects
+    produce_final_states(process, fs_daughter_inputs, output_commands,
+                         process.tuplize, kwargs['puTag'])
 
     return process.tuplize, output_commands
 
