@@ -20,6 +20,10 @@ class WHPlotterMMT(WHPlotterBase.WHPlotterBase):
 
 if __name__ == "__main__":
     jobid = '2012-07-05-7TeV-Higgs'
+
+    # Figure out if we are 7 or 8 TeV
+    period = '7TeV' if '7TeV' in jobid else '8TeV'
+
     samples = [
         'Zjets_M50',
         'WplusJets_madgraph',
@@ -128,7 +132,7 @@ if __name__ == "__main__":
     ##  Making shape file     #################################################
     ###########################################################################
 
-    shape_file = ROOT.TFile('mmt_shapes.root', 'RECREATE')
+    shape_file = ROOT.TFile('mmt_shapes_%s.root' % period, 'RECREATE')
     shape_dir = shape_file.mkdir('mmt')
     plotter.write_shapes('subMass', 10, shape_dir)
     shape_file.Close()
