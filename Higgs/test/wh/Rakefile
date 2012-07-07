@@ -236,7 +236,7 @@ $carddir = "vhtt_lep_cards_#{$period}"
 
 # Combine all category shape files into the datacard project
 file "#{$carddir}/shapes.root" => ["#{$mmtdir}/mmt_shapes_#{$period}_statshapes.root", "#{$emtdir}/emt_shapes_#{$period}_statshapes.root"] do |t|
-  sh "hadd #{t.name} #{t.prerequisites.join(' ')}"
+  sh "hadd -f #{t.name} #{t.prerequisites.join(' ')}"
 end
 
 stat_shape_lists = Dir.glob("results/#{$jobid}/plots/*/*_statshapes.txt")
