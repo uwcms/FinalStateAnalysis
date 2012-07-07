@@ -18,6 +18,13 @@ from FinalStateAnalysis.MetaData.data_views import data_views
 from FinalStateAnalysis.MetaData.data_styles import data_styles
 from FinalStateAnalysis.PlotTools.BlindView import BlindView
 
+original_draw = plotting.Legend.Draw
+# Make legends not have crappy border
+def monkey_patch_legend_draw(self, *args, **kwargs):
+    ''' Make a plotting.legend look nice '''
+    self.SetBorderSize(0)
+    original_draw(self, *args, **kwargs)
+plotting.Legend.Draw = monkey_patch_legend_draw
 
 def rebin_view(x, rebin):
     ''' Make a view which rebins histograms '''
