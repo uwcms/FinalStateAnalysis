@@ -110,6 +110,20 @@ fr_fits = Hash[
     "variables" => landau_vars,
     "rebin" => 5,
   ],
+  "ee_wjets_pt20_mvaidiso03_e2JetPt" => Hash[
+    "samples" => Array["wjets", "data_ee"],
+    "analyzer" => "FakeRatesEE",
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
+  "ee_wjets_pt10_mvaidiso03_e2JetPt" => Hash[
+    "samples" => Array["wjets", "data_ee"],
+    "analyzer" => "FakeRatesEE",
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
   "m_wjets_pt10_pfidiso01_muonJetPt" => Hash[
     "samples" => Array["wjets", "data_mm"],
     "analyzer" => "FakeRatesMM",
