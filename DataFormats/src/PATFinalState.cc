@@ -524,6 +524,13 @@ std::vector<const reco::Candidate*> PATFinalState::overlapJets(
       dR, filter);
 }
 
+//double PATFinalState::massUsingSuperCluster(
+//    int electronIndex, int j, int x, int y, int z) const {
+//  reco::Candidate::LorentzVector total;
+//  total += daughterAsElectron(electronIndex);
+//  total += daughter(j)->p4();
+//}
+
 PATFinalStateProxy
 PATFinalState::subcand(int i, int j, int x, int y, int z) const {
   std::vector<reco::CandidatePtr> output;
