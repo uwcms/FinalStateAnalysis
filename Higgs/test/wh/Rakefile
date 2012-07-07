@@ -4,6 +4,12 @@ import recipes
 
 $jobid = ENV['jobid']
 
+# Figure out what run period we are in
+$period = '7TeV'
+if $period.include? '8TeV'
+  $period = '8TeV'
+end
+
 ################################################################################
 ## Refreshing cython proxies ###################################################
 ################################################################################
@@ -186,3 +192,46 @@ analysis_sample_map = Hash[
 task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['data_mm'] + samples['signal'])
 
 task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['data_em'] + samples['signal'])
+
+################################################################################
+## Recipes to make cards and plots
+##  targets:
+##     mmt_shapes
+##     emt_shapes
+################################################################################
+
+# Output directories
+$mmtdir = "results/#{$jobid}/plots/mmt/"
+$emtdir = "results/#{$jobid}/plots/emt/"
+
+directory $mmtdir
+directory $emtdir
+
+# Recipes for adding stat. error shapes.  Makes a new file task:
+# input_file_stat_errors.root => input_file.root
+def add_fake_errors(input_file, prefix)
+  output_file = input_file.sub('.root', '_statshapes.root')
+  output_sys_list = input_file.sub('.root', '_statshapes.txt')
+  file output_file => [input_file] do |t|
+    sh "$CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/scripts/add_stat_shapes.py #{input_file} #{output_file} --filter '*fakes' --prefix CMS_vhtt_#{prefix}_fakeshape > #{output_sys_list}"
+  end
+end
+
+# The .root files with the shapes
+file "#{$mmtdir}/mmt_shapes_#{$period}.root" => [:mmt, 'WHPlotterMMT.py',$mmtdir] do |t|
+  sh "python WHPlotterMMT.py"
+end
+add_fake_errors("#{$mmtdir}/mmt_shapes_#{$period}.root", "mmt")
+task :mmt_shapes => ["#{$mmtdir}/mmt_shapes_#{$period}_statshapes.root" ]
+
+file "#{$emtdir}/emt_shapes_#{$period}.root" => [:emt, 'WHPlotterEMT.py',$emtdir] do |t|
+  sh "python WHPlotterEMT.py"
+end
+add_fake_errors("#{$emtdir}/emt_shapes_#{$period}.root", "emt")
+task :emt_shapes => ["#{$emtdir}/emt_shapes_#{$period}_statshapes.root" ]
+
+# Combine all category shape files
+file "all_shapes_#{$period}.root" => ["mmt_shapes_#{$period}.root", "emt_shapes_#{$period}.root"] do |t|
+  sh "hadd #{t.name} #{t.sources}"
+end
+

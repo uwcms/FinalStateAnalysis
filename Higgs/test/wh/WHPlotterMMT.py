@@ -8,9 +8,10 @@ Usage: python WHPlotterMMT.py
 
 import glob
 import logging
-import WHPlotterBase
+import os
 import ROOT
 import sys
+import WHPlotterBase
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
@@ -41,7 +42,8 @@ if __name__ == "__main__":
         files.extend(glob.glob('results/%s/WHAnalyzeMMT/%s.root' % (jobid, x)))
         lumifiles.extend(glob.glob('inputs/%s/%s.lumicalc.sum' % (jobid, x)))
 
-    plotter = WHPlotterMMT(files, lumifiles, 'results/plots/mmt')
+    outputdir = 'results/%s/plots/mmt' % jobid
+    plotter = WHPlotterMMT(files, lumifiles, outputdir)
 
     ###########################################################################
     ##  Zmm control plots #####################################################
@@ -132,7 +134,8 @@ if __name__ == "__main__":
     ##  Making shape file     #################################################
     ###########################################################################
 
-    shape_file = ROOT.TFile('mmt_shapes_%s.root' % period, 'RECREATE')
+    shape_file = ROOT.TFile(
+        os.path.join(outputdir, 'mmt_shapes_%s.root' % period), 'RECREATE')
     shape_dir = shape_file.mkdir('mmt')
     plotter.write_shapes('subMass', 10, shape_dir)
     shape_file.Close()

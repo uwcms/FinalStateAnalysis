@@ -8,9 +8,10 @@ Usage: python WHPlotterEMT.py
 
 import glob
 import logging
-import WHPlotterBase
+import os
 import ROOT
 import sys
+import WHPlotterBase
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
@@ -20,6 +21,10 @@ class WHPlotterEMT(WHPlotterBase.WHPlotterBase):
 
 if __name__ == "__main__":
     jobid = '2012-07-05-7TeV-Higgs'
+
+    # Figure out if we are 7 or 8 TeV
+    period = '7TeV' if '7TeV' in jobid else '8TeV'
+
     samples = [
         'Zjets_M50',
         'WplusJets_madgraph',
@@ -27,7 +32,7 @@ if __name__ == "__main__":
         'ZZ*',
         'VH*',
         'TTplusJets_madgraph',
-        "data_DoubleMu*",
+        "data_MuEG*",
     ]
 
     files = []
@@ -37,7 +42,8 @@ if __name__ == "__main__":
         files.extend(glob.glob('results/%s/WHAnalyzeEMT/%s.root' % (jobid, x)))
         lumifiles.extend(glob.glob('inputs/%s/%s.lumicalc.sum' % (jobid, x)))
 
-    plotter = WHPlotterEMT(files, lumifiles, 'results/plots/emt')
+    outputdir = 'results/%s/plots/emt' % jobid
+    plotter = WHPlotterEMT(files, lumifiles, outputdir)
 
     ###########################################################################
     ##  Zmm control plots #####################################################
@@ -54,18 +60,18 @@ if __name__ == "__main__":
     plotter.save('mcdata-os-p1f2p3-emMass')
 
     # Check PU variables
-    plotter.plot_mc_vs_data('os/p1p2f3', 'rho')
-    plotter.save('mcdata-os-p1p2f3-rho')
+    #plotter.plot_mc_vs_data('os/p1p2f3', 'rho')
+    #plotter.save('mcdata-os-p1p2f3-rho')
 
-    plotter.plot_mc_vs_data('os/p1p2f3', 'nvtx')
-    plotter.save('mcdata-os-p1p2f3-nvtx')
+    #plotter.plot_mc_vs_data('os/p1p2f3', 'nvtx')
+    #plotter.save('mcdata-os-p1p2f3-nvtx')
 
     # Lower stat but closer to signal region
-    plotter.plot_mc_vs_data('os/p1p2p3', 'rho')
-    plotter.save('mcdata-os-p1p2p3-rho')
+    #plotter.plot_mc_vs_data('os/p1p2p3', 'rho')
+    #plotter.save('mcdata-os-p1p2p3-rho')
 
-    plotter.plot_mc_vs_data('os/p1p2p3', 'nvtx')
-    plotter.save('mcdata-os-p1p2p3-nvtx')
+    #plotter.plot_mc_vs_data('os/p1p2p3', 'nvtx')
+    #plotter.save('mcdata-os-p1p2p3-nvtx')
 
     # Make Z->mumu + tau jet control
     def make_styler(color, format=None):
@@ -80,14 +86,14 @@ if __name__ == "__main__":
     plotter.plot('data', 'os/p1p2p3/emMass', 'same', styler=make_styler(1))
     plotter.save('ztt-os-fr-control')
 
-    plotter.plot('data', 'os/p1p2p3/prescale', styler=make_styler(1))
-    plotter.save('ztt-os-prescale-check')
+    #plotter.plot('data', 'os/p1p2p3/prescale', styler=make_styler(1))
+    #plotter.save('ztt-os-prescale-check')
 
-    plotter.plot('Zjets_M50', 'os/p1p2f3/weight')
-    plotter.save('ztt-mc-event-weights')
-    # Check MC weights
-    plotter.plot('Zjets_M50', 'os/p1p2f3/weight_nopu')
-    plotter.save('ztt-mc-event-weight_nopu')
+    #plotter.plot('Zjets_M50', 'os/p1p2f3/weight')
+    #plotter.save('ztt-mc-event-weights')
+    ## Check MC weights
+    #plotter.plot('Zjets_M50', 'os/p1p2f3/weight_nopu')
+    #plotter.save('ztt-mc-event-weight_nopu')
 
 
     ###########################################################################
@@ -124,7 +130,8 @@ if __name__ == "__main__":
     ##  Making shape file     #################################################
     ###########################################################################
 
-    shape_file = ROOT.TFile('emt_shapes.root', 'RECREATE')
+    shape_file = ROOT.TFile(
+        os.path.join(outputdir, 'emt_shapes_%s.root' % period), 'RECREATE')
     shape_dir = shape_file.mkdir('emt')
     plotter.write_shapes('subMass', 10, shape_dir)
     shape_file.Close()
