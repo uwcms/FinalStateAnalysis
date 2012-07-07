@@ -40,6 +40,7 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         self.book(folder, "mPt", "Muon Pt", 100, 0, 100)
         self.book(folder, "ePt", "Electron Pt", 100, 0, 100)
         self.book(folder, "emMass", "Electron-Muon Mass", 120, 0, 120)
+        self.book(folder, "etMass", "Electron-Tau Mass", 120, 0, 120)
         self.book(folder, "subMass", "Subleading Mass", 200, 0, 200)
 
     def fill_histos(self, histos, folder, row, weight):
@@ -48,6 +49,7 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         fill('mPt', row.mPt)
         fill('ePt', row.ePt)
         fill('emMass', row.e_m_Mass)
+        fill('etMass', row.e_t_Mass)
         if row.ePt < row.mPt:
             fill('subMass', row.e_t_Mass)
         else:
@@ -58,7 +60,7 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
 
         Excludes FR object IDs and sign cut.
         '''
-        if not row.doubleMuPass:
+        if not row.mu17ele8Pass:
             return False
         if row.mPt < 20:
             return False
@@ -72,17 +74,17 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.tAbsEta > 2.3:
             return False
-        if not row.muVetoPt5:
+        if row.muVetoPt5:
             return False
-        if not row.bjetCSVVeto:
+        if row.bjetCSVVeto:
             return False
-        if not row.tauVetoPt20:
+        if row.tauVetoPt20:
             return False
         if not row.mPixHits:
             return False
-        if not row.eMissingHits > 0.5:
+        if row.eMissingHits:
             return False
-        if not row.eHasConversion > 0.5:
+        if row.eHasConversion:
             return False
         if row.LT < 80:
             return False
