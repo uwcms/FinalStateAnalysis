@@ -57,11 +57,16 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
         process.patFinalStateEventProducer.jetSrc = cms.InputTag(jetsrc)
         process.patFinalStateEventProducer.metSrc = metsrc
         process.patFinalStateEventProducer.puTag = cms.string(puTag)
+        sequence += process.patFinalStateEventProducer
     elif buildFSAEvent == 'eFix':
-        # fixme
-        pass
-
-    sequence += process.patFinalStateEventProducer
+        # Temporary workaround for the 2012-05-28 PAT tuples
+        # Copy the existing FS Event, but update the electron collection ref.
+        process.patFinalStateEventProducer = cms.EDProducer(
+            "PATFinalStateElectronFixer",
+            fseSrc = cms.InputTag("patFinalStateEventProducer"),
+            electronSrc = cms.InputTag(esrc)
+        )
+        sequence += process.patFinalStateEventProducer
 
     # Always keep
     output_commands.append('*_patFinalStateEventProducer_*_*')
