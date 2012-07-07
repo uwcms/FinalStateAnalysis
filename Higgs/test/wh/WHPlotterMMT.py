@@ -2,6 +2,8 @@
 
 Plot the MMT channel
 
+Usage: python WHPlotterMMT.py
+
 '''
 
 import glob
