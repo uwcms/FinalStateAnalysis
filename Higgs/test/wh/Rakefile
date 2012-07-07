@@ -199,20 +199,18 @@ end
 ##     mmt
 ################################################################################
 
-analysis_sample_map = Hash[
-  "WHAnalyzeMMT.py" => samples['ewk'] + samples['data_mm'] + samples['signal'],
-  "WHAnalyzeEMT.py" => samples['ewk'] + samples['data_em'] + samples['signal'],
-]
-
 task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['data_mm'] + samples['signal'])
 
 task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['data_em'] + samples['signal'])
+
+task :eet => get_analyzer_results("WHAnalyzeEET.py", samples['ewk'] + samples['data_ee'] + samples['signal'])
 
 ################################################################################
 # Recipes to make data cards (plots come for free)
 #  targets:
 #      mmt_shapes
 #      emt_shapes
+#      eet_shapes
 #      cards
 ################################################################################
 
@@ -220,9 +218,10 @@ task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['d
 # Output directories
 $mmtdir = "results/#{$jobid}/plots/mmt/"
 $emtdir = "results/#{$jobid}/plots/emt/"
+$eetdir = "results/#{$jobid}/plots/eet/"
 
 directory $mmtdir
-directory $emtdir
+directory $eetdir
 
 # Recipes for adding stat. error shapes.  Makes a new file task:
 # input_file_stat_errors.root => input_file.root
