@@ -13,6 +13,12 @@
   "data_DoubleMu_Run2011A_May10ReReco_v1" : "/hdfs/store/user/iross/DoubleMu/data_DoubleMu_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-67c1f94/973b9115830997e23767170efbb5c224/",
   "data_DoubleMu_Run2011A_PromptReco_v4" : "/hdfs/store/user/iross/DoubleMu/data_DoubleMu_Run2011A_PromptReco_v4_2012-05-29-7TeV-PatTuple-67c1f94/fa6d9233416d07023dc202376bb19f23",
 
+  "data_SingleMu_Run2011B_PromptReco_v1" : "/hdfs/store/user/cepeda/SingleMu/data_SingleMu_Run2011B_PromptReco_v1_2012-05-29-7TeV-PatTuple-67c1f94/fa6d9233416d07023dc202376bb19f23/",
+  "data_SingleMu_Run2011A_PromptReco_v6_1409" : "/hdfs/store/user/cepeda/SingleMu/data_SingleMu_Run2011A_PromptReco_v6_1409_2012-05-29-7TeV-PatTuple-67c1f94/fa6d9233416d07023dc202376bb19f23/",
+  "data_SingleMu_Run2011A_05Aug2011_v1" : "/hdfs/store/user/cepeda/SingleMu/data_SingleMu_Run2011A_05Aug2011_v1_2012-05-29-7TeV-PatTuple-67c1f94/973b9115830997e23767170efbb5c224/",
+  "data_SingleMu_Run2011A_May10ReReco_v1" : "/hdfs/store/user/cepeda/SingleMu/data_SingleMu_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-67c1f94/973b9115830997e23767170efbb5c224/",
+  "data_SingleMu_Run2011A_PromptReco_v4" : "/hdfs/store/user/cepeda/SingleMu/data_SingleMu_Run2011A_PromptReco_v4_2012-05-29-7TeV-PatTuple-67c1f94/fa6d9233416d07023dc202376bb19f23/",
+
   "data_DoubleElectron_Run2011B_PromptReco_v1" : "/hdfs/store/user/iross/DoubleElectron/data_DoubleElectron_Run2011B_PromptReco_v1_2012-05-29-7TeV-PatTuple-data-v3-67c1f94/fa6d9233416d07023dc202376bb19f23/",
   "data_DoubleElectron_Run2011A_PromptReco_v6_1409" : "/hdfs/store/user/iross/DoubleElectron/data_DoubleElectron_Run2011A_PromptReco_v6_1409_2012-05-29-7TeV-PatTuple-67c1f94/fa6d9233416d07023dc202376bb19f23/",
   "data_DoubleElectron_Run2011A_05Aug2011_v1" : "/hdfs/store/user/iross/DoubleElectron/data_DoubleElectron_Run2011A_05Aug2011_v1_2012-05-29-7TeV-PatTuple-67c1f94/973b9115830997e23767170efbb5c224/",
