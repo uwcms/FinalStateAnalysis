@@ -12,13 +12,20 @@ Author: Evan K. Friis, UW
 '''
 
 from RecoLuminosity.LumiDB import argparse
+from hashlib import sha1
 import logging
 import glob
 import os
+import shutil
 import sys
 
 log = logging.getLogger("discover_ntuples")
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+
+# From http://stackoverflow.com/questions/6963610/how-in-python-check-if-two-files-string-and-file-have-same-content
+def shafile(filename):
+    with open(filename, "rb") as f:
+        return sha1(f.read()).hexdigest()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -46,8 +53,10 @@ if __name__ == "__main__":
 
         run_lumis = set([])
 
-        with open(os.path.join(
-            args.outputdir, sample_name + '.txt'), 'w') as flist:
+        output_txt = os.path.join(args.outputdir, sample_name + '.txt')
+        output_tmp = output_txt.replace('.txt', '.tmp')
+
+        with open(output_tmp, 'w') as flist:
             for file in glob.glob(os.path.join(sample_dir, '*', '*.root')):
                 tfile = ROOT.TFile.Open(file)
                 if not tfile:
@@ -80,3 +89,17 @@ if __name__ == "__main__":
                 # Made it!
                 flist.write(file + '\n')
                 tfile.Close()
+
+        # Check if we found anything new in the .txt file
+        # Don't update if we didn't, so rake knows nothing has changed
+        if not os.path.exists(output_txt):
+            shutil.move(output_tmp, output_txt)
+            log.info("Completed sample")
+        elif shafile(output_txt) != shafile(output_tmp):
+            # content has changed
+            shutil.move(output_tmp, output_txt)
+            log.info("Completed sample - new files found")
+        else:
+            # Nothing has changed, remove the tmp
+            log.info("Completed sample - no new files found")
+            os.remove(output_tmp)
