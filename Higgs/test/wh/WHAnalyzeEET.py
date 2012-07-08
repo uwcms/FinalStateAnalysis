@@ -91,10 +91,13 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
         if row.e1_e2_Mass < 20:
             return False
 
-        #if row.e1_e2_Zcompat < 10:
-            #return False
-        #if row.e1_t_Zcompat < 10:
-            #return False
+        if not row.e1ChargeIdTight:
+            return False
+        if not row.e2ChargeIdTight:
+            return False
+
+        if row.e1_e2_Mass > 81 and row.e1_e2_Mass < 101:
+            return False
 
         if row.LT < 80:
             return False
