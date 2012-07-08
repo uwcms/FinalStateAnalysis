@@ -11,6 +11,7 @@ If [blind] is true, data in the p1p2p3 region will not be plotted.
 
 '''
 
+import fnmatch
 import os
 import rootpy.plotting.views as views
 import rootpy.plotting as plotting
@@ -46,14 +47,21 @@ class WHPlotterBase(object):
         self.data = self.views['data']['view']
         self.keep = []
 
+    def get_view(self, sample_pattern):
+        for sample, sample_info in self.views.iteritems():
+            if fnmatch.fnmatch(sample, sample_pattern):
+                return sample_info['view']
+        raise KeyError("I can't find a view that matches %s, I have: %s" % (
+            sample_pattern, " ".join(self.views.keys())))
+
     def make_stack(self, rebin=1):
         ''' Make a stack of the MC histograms '''
         all_mc_stack = views.StackView(
-            rebin_view(self.views['Zjets_M50']['view'], rebin),
-            rebin_view(self.views['WplusJets_madgraph']['view'], rebin),
-            rebin_view(self.views['TTplusJets_madgraph']['view'], rebin),
-            rebin_view(self.views['WZJetsTo3LNu']['view'], rebin),
-            rebin_view(self.views['ZZJetsTo4L_pythia']['view'], rebin),
+            rebin_view(self.get_view('Zjets_M50'), rebin),
+            rebin_view(self.get_view('WplusJets_madgraph'), rebin),
+            rebin_view(self.get_view('TTplusJets_madgraph'), rebin),
+            rebin_view(self.get_view('WZJetsTo3LNu*'), rebin),
+            rebin_view(self.get_view('ZZJetsTo4L*'), rebin),
         )
         return all_mc_stack
 
@@ -91,18 +99,22 @@ class WHPlotterBase(object):
 
     def save(self, filename):
         ''' Save the current canvas contents to [filename] '''
+        if not os.path.exists(self.outputdir):
+            os.makedirs(self.outputdir)
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.png')
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.pdf')
         # Reset keeps
         self.keep = []
 
-    def plot(self, sample, path, drawopt='', styler=None, xaxis='', xrange=None):
+    def plot(self, sample, path, drawopt='', rebin=None, styler=None, xaxis='', xrange=None):
         ''' Plot a single histogram from a single sample.
 
         Returns a reference to the histogram.
 
         '''
         view = self.views[sample]['view']
+        if rebin:
+            view = rebin_view(view, rebin)
         histo = view.Get(path)
         if xrange:
             histo.GetXaxis().SetRange(xrange[0], xrange[1])
@@ -137,18 +149,18 @@ class WHPlotterBase(object):
         ''' Make signal views with FR background estimation '''
 
         vh120_view = views.SubdirectoryView(
-            rebin_view(self.views['VH_120']['view'], rebin),
+            rebin_view(self.get_view('VH_*120'), rebin),
             'ss/p1p2p3/'
         )
         wz_view = views.SubdirectoryView(
-            rebin_view(self.views['WZJetsTo3LNu']['view'], rebin),
+            rebin_view(self.get_view('WZJetsTo3LNu*'), rebin),
             'ss/p1p2p3/'
         )
         zz_view = views.SubdirectoryView(
-            rebin_view(self.views['ZZJetsTo4L_pythia']['view'], rebin),
+            rebin_view(self.get_view('ZZJetsTo4L*'), rebin),
             'ss/p1p2p3/'
         )
-        all_data_view = rebin_view(self.views['data']['view'], rebin)
+        all_data_view = rebin_view(self.get_view('data'), rebin)
         data_view = views.SubdirectoryView(all_data_view, 'ss/p1p2p3/')
 
         # View of weighted obj1-fails data

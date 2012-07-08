@@ -20,7 +20,9 @@ class WHPlotterMMT(WHPlotterBase.WHPlotterBase):
         super(WHPlotterMMT, self).__init__(files, lumifiles, outputdir)
 
 if __name__ == "__main__":
-    jobid = '2012-07-05-7TeV-Higgs'
+    jobid = os.environ['jobid']
+
+    print "Plotting MMT for %s" % jobid
 
     # Figure out if we are 7 or 8 TeV
     period = '7TeV' if '7TeV' in jobid else '8TeV'
@@ -29,7 +31,7 @@ if __name__ == "__main__":
     samples = [
         'Zjets_M50',
         'WplusJets_madgraph',
-        'WZJetsTo3LNu',
+        'WZJetsTo3LNu*',
         'ZZ*',
         'VH*',
         'TTplusJets_madgraph',
@@ -118,12 +120,18 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-p1f2p3-m1Pt')
 
-    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'm1Pt', 5, '#mu_{1} p_{T}')
+    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'm1Pt', rebin=10, xaxis='#mu_{1} p_{T}')
+    plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-p1f2p3-w2-m1Pt')
 
     plotter.plot_mc_vs_data('ss/f1p2p3', 'subMass', rebin=20, xaxis='m_{#mu2#tau} (GeV)')
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-f1p2p3-subMass')
+
+    plotter.plot_mc_vs_data('ss/f1p2p3/w1', 'subMass', rebin=20, xaxis='m_{#mu2#tau} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-ss-f1p2p3-w1-subMass')
+
 
 
     ###########################################################################
@@ -154,7 +162,7 @@ if __name__ == "__main__":
     shape_file = ROOT.TFile(
         os.path.join(outputdir, 'mmt_shapes_%s.root' % period), 'RECREATE')
     shape_dir = shape_file.mkdir('mmt')
-    plotter.write_shapes('subMass', 10, shape_dir)
+    plotter.write_shapes('subMass', 20, shape_dir)
     shape_file.Close()
 
 
