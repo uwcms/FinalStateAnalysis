@@ -214,7 +214,7 @@ for mass in [110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160]:
             'V9-v2', 'V9-v3')
 
 # Add the only one we are currently interested int
-datadefs['VH_H2Tau_M-120']['xsec'] = (0.7966 + 0.4483 + 0.1470)*7.04E-02
+datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966 + 0.4483 + 0.1470)*7.04E-02
 
 
 # Add data files
