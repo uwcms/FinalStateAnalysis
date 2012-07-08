@@ -3,17 +3,18 @@
 # Example:
 # emu_vbf,emu_novbf,emu_boost     signal,EWK              lumi            1.045
 
-mmt,emt simulated lumi      1.022
+mmt,emt,eet simulated lumi      1.022
 
 # Efficiency uncertainties
-emt     simulated CMS_eff_e 1.02
-emt     simulated CMS_eff_m 1.01
-mmt     simulated CMS_eff_m 1.02
-mmt,emt simulated CMS_eff_t 1.06
+emt         simulated CMS_eff_e 1.02
+emt,eet     simulated CMS_eff_e 1.03
+emt         simulated CMS_eff_m 1.01
+mmt         simulated CMS_eff_m 1.02
+mmt,emt,eet simulated CMS_eff_t 1.06
 
 # Scale uncertainties
-mmt,emt simulated CMS_scale_t 1.03
+mmt,emt,eet simulated CMS_scale_t 1.03
 
 # Background uncertainties
-mmt,emt zz CMS_vhtt_ZZ 1.04
-mmt,emt wz CMS_vhtt_WZ 1.10
+mmt,emt,eet zz CMS_vhtt_ZZ 1.04
+mmt,emt,eet wz CMS_vhtt_WZ 1.10
