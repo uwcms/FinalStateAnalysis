@@ -19,15 +19,14 @@ data_styles = {
     'Zjets*' : {
         'legendstyle' : 'f',
         'format' : 'hist',
-        'fillcolor' :colors['red'],
-        'linecolor' :colors['red'],
+        'fillcolor' : '#FFCC66',
+        'linecolor' : '#000000',
         'name' : "Z + jets",
     },
     'WplusJets*' : {
         'legendstyle' : 'f',
         'format' : 'hist',
-        'fillcolor' : colors['green'],
-        'linecolor' :colors['green'],
+        'fillcolor' : '#990000',
         'name' : "W + jets",
     },
     'QCDMu' : {
@@ -40,8 +39,8 @@ data_styles = {
     'TT*' : {
         'legendstyle' : 'f',
         'format' : 'hist',
-        'fillcolor' : colors['orange'],
-        'linecolor' :colors['orange'],
+        'fillcolor' : '#9999CC',
+        'linecolor' : '#9999CC',
         'name' : "ttbar",
     },
     'VH*' : {
@@ -51,7 +50,7 @@ data_styles = {
         'fillstyle' : 0,
         'linestyle' : 2,
         'linewidth' : 4,
-        'linecolor' : colors['green'],
+        'linecolor' : '#1C1C76',
         'name' : "VH",
     },
     'WZ*' : {
@@ -64,8 +63,8 @@ data_styles = {
     'ZZ*' : {
         'legendstyle' : 'f',
         'format' : 'hist',
-        'linecolor' : colors['cyan'],
-        'fillcolor' : colors['cyan'],
+        'linecolor' : '#50A634',
+        'fillcolor' : '#50A634',
         'name' : "ZZ",
     },
     'data*' : {
