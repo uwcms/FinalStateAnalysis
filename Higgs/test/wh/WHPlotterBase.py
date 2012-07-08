@@ -17,6 +17,7 @@ import rootpy.plotting as plotting
 from FinalStateAnalysis.MetaData.data_views import data_views
 from FinalStateAnalysis.MetaData.data_styles import data_styles
 from FinalStateAnalysis.PlotTools.BlindView import BlindView
+import ROOT
 
 original_draw = plotting.Legend.Draw
 # Make legends not have crappy border
@@ -56,25 +57,62 @@ class WHPlotterBase(object):
         )
         return all_mc_stack
 
+    def add_legend(self, samples, leftside=True, entries=None):
+        ''' Build a legend using samples.
+
+        If entries is None it will be taken from len(samples)
+
+        '''
+        nentries = entries if entries is not None else len(samples)
+        legend = None
+        if leftside:
+            legend = plotting.Legend(nentries, leftmargin=0.03, topmargin=0.05, rightmargin=0.65)
+        else:
+            legend = plotting.Legend(nentries, rightmargin=0.03, topmargin=0.05, leftmargin=0.65)
+        for sample in samples:
+            legend.AddEntry(sample)
+        legend.SetEntrySeparation(0.0)
+        legend.SetMargin(0.35)
+        legend.Draw()
+        self.keep.append(legend)
+
+    def add_cms_blurb(self, sqrts, preliminary=True):
+        latex = ROOT.TLatex()
+        latex.SetNDC();
+        latex.SetTextSize(0.04);
+        latex.SetTextAlign(31);
+        latex.SetTextAlign(11);
+        label_text = "CMS"
+        if preliminary:
+            label_text += " Preliminary"
+        label_text += " %i TeV" % sqrts
+        label_text += " %0.1f fb^{-1}" % (self.views['data']['intlumi']/1000.)
+        self.keep.append(latex.DrawLatex(0.18,0.96, label_text));
 
     def save(self, filename):
+        ''' Save the current canvas contents to [filename] '''
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.png')
         # Reset keeps
         self.keep = []
 
-    # Plot a single sample
-    def plot(self, sample, path, drawopt='', styler=None, xaxis=''):
+    def plot(self, sample, path, drawopt='', styler=None, xaxis='', xrange=None):
+        ''' Plot a single histogram from a single sample.
 
+        Returns a reference to the histogram.
+
+        '''
         view = self.views[sample]['view']
         histo = view.Get(path)
+        if xrange:
+            histo.GetXaxis().SetRange(xrange[0], xrange[1])
         if styler:
             styler(histo)
         histo.Draw(drawopt)
         histo.GetXaxis().SetTitle(xaxis)
         self.keep.append(histo)
-        return True
+        return histo
 
-    def plot_mc_vs_data(self, folder, variable, rebin=1, xaxis=''):
+    def plot_mc_vs_data(self, folder, variable, rebin=1, xaxis='', leftside=True):
         path = os.path.join(folder, variable)
         mc_stack = self.make_stack(rebin).Get(path)
         mc_stack.Draw()
@@ -84,18 +122,11 @@ class WHPlotterBase(object):
         data = rebin_view(self.data, rebin).Get(path)
         data.Draw('same')
         self.keep.append(data)
-
         # Make sure we can see everything
         if data.GetMaximum() > mc_stack.GetHistogram().GetMaximum():
             mc_stack.SetMaximum(data.GetMaximum())
-
         # Add legend
-        legend = plotting.Legend(4, leftmargin=0.65)
-        legend.AddEntry(mc_stack)
-        legend.AddEntry(data)
-        legend.Draw()
-        self.keep.append(legend)
-
+        self.add_legend([data, mc_stack], leftside, entries=5)
 
     def make_signal_views(self, rebin):
         ''' Make signal views with FR background estimation '''
@@ -163,6 +194,7 @@ class WHPlotterBase(object):
         vh120.Write()
 
     def plot_final(self, variable, rebin=1, xaxis=''):
+        ''' Plot the final output - with bkg. estimation '''
         sig_view = self.make_signal_views(rebin)
         stack = views.StackView(
             sig_view['wz'],

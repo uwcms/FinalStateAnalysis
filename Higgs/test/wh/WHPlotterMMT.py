@@ -24,6 +24,7 @@ if __name__ == "__main__":
 
     # Figure out if we are 7 or 8 TeV
     period = '7TeV' if '7TeV' in jobid else '8TeV'
+    sqrts = 7 if '7TeV' in jobid else 8
 
     samples = [
         'Zjets_M50',
@@ -78,12 +79,23 @@ if __name__ == "__main__":
         def unsuck(x):
             x.SetFillStyle(0)
             x.SetLineColor(color)
+            x.SetLineWidth(2)
             if format:
                 x.format = format
         return unsuck
 
-    plotter.plot('data', 'os/p1p2f3/w3/m1m2Mass',  'hist', styler=make_styler(2, 'hist'))
-    plotter.plot('data', 'os/p1p2p3/m1m2Mass', 'same', styler=make_styler(1))
+    zmm_weighted = plotter.plot('data', 'os/p1p2f3/w3/m1m2Mass',  'hist', styler=make_styler(2, 'hist'), xrange=(60, 120))
+    zmm_weighted.SetTitle("Z#mu#mu + fake #tau_{h} est.")
+    zmm_weighted.legendstyle='l'
+    zmm_weighted.GetXaxis().SetTitle("m_{#mu#mu} (GeV)")
+
+    zmm_unweighted = plotter.plot('data', 'os/p1p2p3/m1m2Mass', 'same', styler=make_styler(1), xrange=(60, 120))
+    zmm_unweighted.SetTitle("Z#mu#mu observed")
+    zmm_unweighted.SetTitle("Z#mu#mu + fake #tau_{h} obs.")
+    zmm_unweighted.legendstyle='pe'
+
+    plotter.add_legend([zmm_weighted, zmm_unweighted])
+    plotter.add_cms_blurb(sqrts)
     plotter.save('zmm-os-fr-control')
 
     plotter.plot('data', 'os/p1p2p3/prescale', styler=make_styler(1))
