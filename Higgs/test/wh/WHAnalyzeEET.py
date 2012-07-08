@@ -19,7 +19,7 @@ highpt_ee_fr = build_roofunctor(
     'efficiency'
 )
 lowpt_ee_fr = build_roofunctor(
-    frfit_dir + '/ee_wjets_pt10_mvaidiso03_e2JetPt-data_ee.root',
+    frfit_dir + '/ee_wjets_pt10_mvaidiso01_e2JetPt-data_ee.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
@@ -142,7 +142,7 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.e1MVAIDH2TauWP) and bool(row.e1RelPFIsoDB < 0.3)
 
     def obj2_id(self, row):
-        return bool(row.e2MVAIDH2TauWP) and bool(row.e2RelPFIsoDB < 0.3)
+        return bool(row.e2MVAIDH2TauWP) and bool(row.e2RelPFIsoDB < 0.1)
 
     def obj3_id(self, row):
         return bool(row.tLooseMVAIso)

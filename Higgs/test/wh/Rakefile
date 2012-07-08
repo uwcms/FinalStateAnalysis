@@ -131,6 +131,13 @@ fr_fits = Hash[
     "variables" => landau_vars,
     "rebin" => 5,
   ],
+  "ee_wjets_pt10_mvaidiso01_e2JetPt" => Hash[
+    "samples" => Array["wjets", "data_ee"],
+    "analyzer" => "FakeRatesEE",
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
   "m_wjets_pt10_pfidiso01_muonJetPt" => Hash[
     "samples" => Array["wjets", "data_mm"],
     "analyzer" => "FakeRatesMM",
@@ -223,7 +230,7 @@ task :emt => [
 task :eet => get_analyzer_results("WHAnalyzeEET.py", samples['ewk'] + samples['data_ee'] + samples['signal'])
 task :eet => [ 
   "#{$frfit_dir}/ee_wjets_pt20_mvaidiso03_e2JetPt-data_ee.root",
-  "#{$frfit_dir}/ee_wjets_pt10_mvaidiso03_e2JetPt-data_ee.root",
+  "#{$frfit_dir}/ee_wjets_pt10_mvaidiso01_e2JetPt-data_ee.root",
   "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",
 ]
 
