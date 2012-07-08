@@ -17,7 +17,7 @@
   "data_MuEG_Run2012B_PromptReco_v1_c" : "/hdfs/store/user/friis/MuEG/data_MuEG_Run2012B_PromptReco_v1_c_2012-05-29-8TeV-PatTuple-v9-7ff92b3/c7a1c2223886075833473549ad1960ce/",
   "data_MuEG_Run2012B_PromptReco_v1_b" : "/hdfs/store/user/friis/MuEG/data_MuEG_Run2012B_PromptReco_v1_b_2012-05-29-8TeV-PatTuple-v9-7ff92b3/c7a1c2223886075833473549ad1960ce/",
   "data_MuEG_Run2012B_PromptReco_v1_a" : "/hdfs/store/user/friis/MuEG/data_MuEG_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-v1-ca4f4cf/a7f10efca7dd683ad59c7e946715fa59/",
-  "data_MuEG_Run2012A_PromptReco_v1" : "/hdfs/store/user/friis/MuEG/data_MuEG_Run2012A_PromptReco_v1_2012-05-28-8TeV-PatTuple-8a107b9/6226636fdf4a031896b635c8a9dea68b/"
+  "data_MuEG_Run2012A_PromptReco_v1" : "/hdfs/store/user/friis/MuEG/data_MuEG_Run2012A_PromptReco_v1_2012-05-28-8TeV-PatTuple-8a107b9/6226636fdf4a031896b635c8a9dea68b/",
 
   "data_SingleMu_Run2012B_PromptReco_v1_a" : "/hdfs/store/user/cepeda/SingleMu/data_SingleMu_Run2012B_PromptReco_v1_a_2012-05-29-8TeV-PatTuple-67c1f94/a7f10efca7dd683ad59c7e946715fa59/",
   "data_SingleMu_Run2012A_PromptReco_v1" : "/hdfs/store/user/cepeda/SingleMu/data_SingleMu_Run2012A_PromptReco_v1_2012-05-29-8TeV-PatTuple-67c1f94/a7f10efca7dd683ad59c7e946715fa59/"
