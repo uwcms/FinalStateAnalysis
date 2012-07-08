@@ -17,31 +17,35 @@ from FinalStateAnalysis.Utilities.solarized import colors
 
 data_styles = {
     'Zjets*' : {
-        'legendstyle' : 'lf',
+        'legendstyle' : 'f',
         'format' : 'hist',
         'fillcolor' :colors['red'],
+        'linecolor' :colors['red'],
         'name' : "Z + jets",
     },
     'WplusJets*' : {
-        'legendstyle' : 'lf',
+        'legendstyle' : 'f',
         'format' : 'hist',
         'fillcolor' : colors['green'],
+        'linecolor' :colors['green'],
         'name' : "W + jets",
     },
     'QCDMu' : {
-        'legendstyle' : 'lf',
+        'legendstyle' : 'f',
         'format' : 'hist',
         'fillcolor' : colors['magenta'],
+        'linecolor' :colors['magenta'],
         'name' : "QCD",
     },
     'TT*' : {
-        'legendstyle' : 'lf',
+        'legendstyle' : 'f',
         'format' : 'hist',
         'fillcolor' : colors['orange'],
+        'linecolor' :colors['orange'],
         'name' : "ttbar",
     },
     'VH*' : {
-        'legendstyle' : 'lf',
+        'legendstyle' : 'l',
         'format' : 'hist',
         'fillcolor' : 0,
         'fillstyle' : 0,
@@ -51,21 +55,23 @@ data_styles = {
         'name' : "VH",
     },
     'WZ*' : {
-        'legendstyle' : 'lf',
+        'legendstyle' : 'f',
         'format' : 'hist',
         'fillcolor' : colors['blue'],
+        'linecolor' : colors['blue'],
         'name' : "WZ",
     },
     'ZZ*' : {
-        'legendstyle' : 'lf',
+        'legendstyle' : 'f',
         'format' : 'hist',
+        'linecolor' : colors['cyan'],
         'fillcolor' : colors['cyan'],
         'name' : "ZZ",
     },
     'data*' : {
         'legendstyle' : 'pe',
         'format' : 'pe',
-        'name' : "data",
+        'name' : "Observed",
     },
 }
 
