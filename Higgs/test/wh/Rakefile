@@ -256,13 +256,13 @@ def add_fake_errors(input_file, prefix)
 end
 
 # The .root files with the shapes
-file "#{$mmtdir}/mmt_shapes_#{$period}.root" => [:mmt, 'WHPlotterMMT.py', 'WHPlotterBase.py', $mmtdir] do |t|
+file "#{$mmtdir}/mmt_shapes_#{$period}.root" => ['WHPlotterMMT.py', 'WHPlotterBase.py'] do |t|
   sh "python WHPlotterMMT.py"
 end
 add_fake_errors("#{$mmtdir}/mmt_shapes_#{$period}.root", "mmt")
 task :mmt_shapes => ["#{$mmtdir}/mmt_shapes_#{$period}_statshapes.root" ]
 
-file "#{$emtdir}/emt_shapes_#{$period}.root" => [:emt, 'WHPlotterEMT.py', 'WHPlotterBase.py', $emtdir] do |t|
+file "#{$emtdir}/emt_shapes_#{$period}.root" => ['WHPlotterEMT.py', 'WHPlotterBase.py'] do |t|
   sh "python WHPlotterEMT.py"
 end
 add_fake_errors("#{$emtdir}/emt_shapes_#{$period}.root", "emt")
@@ -291,7 +291,7 @@ file "#{$carddir}/unc.conf" => ["#{$carddir}/unc.conf.base"] + stat_shapes do |t
   end
 end
 
-file "#{$carddir}/unc.vals" => ["#{$carddir}/unc.vals.base"] + stat_shapes do |t|
+file "#{$carddir}/unc.vals" => ["#{$carddir}/unc.vals.base"] + stat_shape_lists do |t|
   # Copy the basic template
   sh "cp #{t.prerequisites[0]} #{t.name}"
   # Append all the stat shape types
