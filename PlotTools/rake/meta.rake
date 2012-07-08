@@ -4,10 +4,10 @@ namespace :meta do
   # How to generate the inputs
   desc "Query lists of ntuple .root files"
   task :getinputs, [:jobid, :source] do |t, args|
-    sh "discover_ntuples.sh #{args.jobid} #{args.source} inputs/#{args.jobid}"
+    sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid}"
   end
 
-  def make_meta_tasks(sample, ntuple)
+  def make_meta_tasks(sample, ntuple, sqrts)
     # Getting meta information from ntpule
     task sample + '.meta.json' => sample + '.txt' do |t|
       if t.name.include? 'data'
@@ -34,19 +34,19 @@ namespace :meta do
     else
       # In MC, we can get the effective lumi from xsec and #events.
       task sample + '.lumicalc.sum' => sample + '.meta.json' do |t|
-        sh "get_mc_lumi.py #{sample} `cat #{t.prerequisites} | extract_json.py n_evts` > #{t.name}"
+        sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} `cat #{t.prerequisites} | extract_json.py n_evts` > #{t.name}"
       end
     end
     # Return the final target
     return sample + '.lumicalc.sum'
   end
 
-  task :getmeta, [:directory, :ntuple] do |t, args|
-    puts "Computing meta information in #{args.directory}" 
+  task :getmeta, [:directory, :ntuple, :sqrts] do |t, args|
+    puts "Computing meta information for #{args.sqrts} TeV in #{args.directory}" 
     chdir(args.directory) do
       FileList["*.txt"].each do |txtfile|
         sample = txtfile.sub('.txt', '')
-        target = make_meta_tasks(sample, args.ntuple)
+        target = make_meta_tasks(sample, args.ntuple, args.sqrts)
         task :computemeta => target
       end
       #puts Rake::Task['computemeta'].timestamp
