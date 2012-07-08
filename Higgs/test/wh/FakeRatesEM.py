@@ -36,6 +36,7 @@ class FakeRatesEM(MegaBase):
         self.out = outfile
         # Histograms for each category
         self.histograms = {}
+        self.is7TeV = '7TeV' in os.environ['jobid']
 
     def begin(self):
         for region in ['wjets', 'qcd']:
@@ -67,7 +68,6 @@ class FakeRatesEM(MegaBase):
     def process(self):
         base_selection = ' && '.join([
             'e_m_SS',
-            'mu17ele8Pass',
             'mPt > 20',
             'ePt > 10',
             'mAbsEta < 2.4',
@@ -80,6 +80,8 @@ class FakeRatesEM(MegaBase):
             'abs(mDZ) < 0.2',
             'abs(eDZ) < 0.2',
         ])
+        if self.is7TeV:
+            base_selection = 'mu17ele8Pass && ' + base_selection
 
         def fill(the_histos, row):
             the_histos['ePt'].Fill(row.ePt)

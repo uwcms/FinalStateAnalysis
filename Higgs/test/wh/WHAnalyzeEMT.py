@@ -7,6 +7,7 @@ Analyze EMT events for the WH analysis
 import WHAnalyzerBase
 from EMuTauTree import EMuTauTree
 import os
+from PUWeighting import pu_weight
 from FinalStateAnalysis.StatTools.RooFunctorFromWS import build_roofunctor
 import ROOT
 
@@ -35,13 +36,15 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
     tree = 'emt/final/Ntuple'
     def __init__(self, tree, outfile, **kwargs):
         super(WHAnalyzeEMT, self).__init__(tree, outfile, EMuTauTree, **kwargs)
+        self.is7TeV = '7TeV' in os.environ['jobid']
 
     def book_histos(self, folder):
         self.book(folder, "mPt", "Muon Pt", 100, 0, 100)
         self.book(folder, "ePt", "Electron Pt", 100, 0, 100)
-        self.book(folder, "emMass", "Electron-Muon Mass", 120, 0, 120)
-        self.book(folder, "etMass", "Electron-Tau Mass", 120, 0, 120)
+        self.book(folder, "emMass", "Electron-Muon Mass", 200, 0, 200)
+        self.book(folder, "etMass", "Electron-Tau Mass", 200, 0, 200)
         self.book(folder, "subMass", "Subleading Mass", 200, 0, 200)
+        self.book(folder, "bCSVVeto", "BjetCSV", 10, -0.5, 9.5)
 
     def fill_histos(self, histos, folder, row, weight):
         def fill(name, value):
@@ -50,6 +53,7 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         fill('ePt', row.ePt)
         fill('emMass', row.e_m_Mass)
         fill('etMass', row.e_t_Mass)
+        fill('bCSVVeto', row.bjetCSVVeto)
         if row.ePt < row.mPt:
             fill('subMass', row.e_t_Mass)
         else:
@@ -60,8 +64,6 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
 
         Excludes FR object IDs and sign cut.
         '''
-        if not row.mu17ele8Pass:
-            return False
         if row.mPt < 20:
             return False
         if row.ePt < 10:
@@ -76,7 +78,7 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.muVetoPt5:
             return False
-        if row.bjetCSVVeto:
+        if row.bjetVeto:
             return False
         if row.tauVetoPt20:
             return False
@@ -101,6 +103,12 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.tMuOverlap:
             return False
+        if not row.tAntiElectronMVA:
+            return False
+        if not row.tAntiMuonTight:
+            return False
+        if self.is7TeV and not row.mu17ele8Pass:
+            return False
         #'t_ElectronOverlapWP95 < 0.5',
 
         return True
@@ -119,7 +127,8 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.tLooseMVAIso)
 
     def event_weight(self, row):
-        weight = row.puWeightData2011AB
+        # fixme
+        weight = pu_weight(row)
         if row.run < 10:
             weight *= ROOT.Cor_Total_Mu_Lead(row.mPt, row.mAbsEta)
             weight *= ROOT.Cor_Total_Ele_SubLead(row.ePt, row.eAbsEta)

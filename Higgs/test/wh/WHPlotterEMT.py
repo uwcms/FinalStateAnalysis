@@ -20,15 +20,19 @@ class WHPlotterEMT(WHPlotterBase.WHPlotterBase):
         super(WHPlotterEMT, self).__init__(files, lumifiles, outputdir)
 
 if __name__ == "__main__":
-    jobid = '2012-07-05-7TeV-Higgs'
+    jobid = os.environ['jobid']
+
+    print "Plotting EMT for %s" % jobid
 
     # Figure out if we are 7 or 8 TeV
     period = '7TeV' if '7TeV' in jobid else '8TeV'
 
+    sqrts = 7 if '7TeV' in jobid else 8
+
     samples = [
         'Zjets_M50',
         'WplusJets_madgraph',
-        'WZJetsTo3LNu',
+        'WZJetsTo3LNu*',
         'ZZ*',
         'VH*',
         'TTplusJets_madgraph',
@@ -50,13 +54,18 @@ if __name__ == "__main__":
     ###########################################################################
 
     # Control Z->tautau + jet region
-    plotter.plot_mc_vs_data('os/p1p2f3', 'emMass')
+    plotter.plot_mc_vs_data('os/p1p2f3', 'emMass', rebin=10, xaxis='m_{e#mu} (GeV)')
+    plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-os-p1p2f3-emMass')
 
-    plotter.plot_mc_vs_data('os/p1p2f3/w3', 'emMass')
+    plotter.plot_mc_vs_data('os/p1p2f3', 'bCSVVeto', rebin=1, xaxis='bveto')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-os-p1p2f3-bveto')
+
+    plotter.plot_mc_vs_data('os/p1p2f3/w3', 'emMass', 10)
     plotter.save('mcdata-os-p1p2f3-w3-emMass')
 
-    plotter.plot_mc_vs_data('os/p1f2p3', 'emMass')
+    plotter.plot_mc_vs_data('os/p1f2p3', 'emMass', 10)
     plotter.save('mcdata-os-p1f2p3-emMass')
 
     # Check PU variables
@@ -78,12 +87,20 @@ if __name__ == "__main__":
         def unsuck(x):
             x.SetFillStyle(0)
             x.SetLineColor(color)
+            x.SetLineWidth(2)
+            x.SetMaximum(1.5*x.GetMaximum())
             if format:
                 x.format = format
         return unsuck
 
-    plotter.plot('data', 'os/p1p2f3/w3/emMass',  'hist', styler=make_styler(2, 'hist'))
-    plotter.plot('data', 'os/p1p2p3/emMass', 'same', styler=make_styler(1))
+    weighted = plotter.plot('data', 'os/p1p2f3/w3/emMass',  'hist', rebin=20, styler=make_styler(2, 'hist'), xaxis='m_{e#mu} (GeV)')
+    unweighted = plotter.plot('data', 'os/p1p2p3/emMass', 'same', rebin=20, styler=make_styler(1), xaxis='m_{e#mu} (GeV)')
+    weighted.SetTitle('e^{+}#mu^{-} + fake #tau_{h} est.')
+    weighted.legendstyle = 'l'
+    unweighted.SetTitle('e^{+}#mu^{-} + fake #tau_{h} obs.')
+    unweighted.legendstyle = 'pe'
+    plotter.add_legend([weighted, unweighted])
+    plotter.add_cms_blurb(sqrts)
     plotter.save('ztt-os-fr-control')
 
     #plotter.plot('data', 'os/p1p2p3/prescale', styler=make_styler(1))
@@ -100,18 +117,23 @@ if __name__ == "__main__":
     ##  FR sideband MC-vs-Data ################################################
     ###########################################################################
 
-    plotter.plot_mc_vs_data('ss/p1f2p3', 'mPt', 5, '#mu_{1} p_{T}')
+    plotter.plot_mc_vs_data('ss/p1f2p3', 'mPt', 5, '#mu_{1} p_{T}', leftside=False)
     plotter.save('mcdata-ss-p1f2p3-mPt')
 
-    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'mPt', 5, '#mu_{1} p_{T}')
+    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'mPt', 5, '#mu_{1} p_{T}', leftside=False)
     plotter.save('mcdata-ss-p1f2p3-w2-mPt')
 
-    plotter.plot_mc_vs_data('ss/p1f2p3', 'ePt', 5, 'Electron p_{T}')
+    plotter.plot_mc_vs_data('ss/p1f2p3', 'ePt', 5, 'Electron p_{T}', leftside=False)
     plotter.save('mcdata-ss-p1f2p3-ePt')
 
-    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'ePt', 5, 'Electron p_{T}')
+    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'ePt', 5, 'Electron p_{T}', leftside=False)
     plotter.save('mcdata-ss-p1f2p3-w2-ePt')
 
+    plotter.plot_mc_vs_data('ss/f1p2p3', 'ePt', 5, 'Electron p_{T}', leftside=False)
+    plotter.save('mcdata-ss-f1p2p3-ePt')
+
+    plotter.plot_mc_vs_data('ss/f1p2p3/w1', 'ePt', 5, 'Electron p_{T}', leftside=False)
+    plotter.save('mcdata-ss-f1p2p3-w2-ePt')
 
     ###########################################################################
     ##  Signal region plots    ################################################
@@ -123,8 +145,12 @@ if __name__ == "__main__":
     plotter.plot_final('ePt', 10)
     plotter.save('final-ePt')
 
-    plotter.plot_final('subMass', 10)
+    plotter.plot_final('subMass', 20, xaxis='m_{#mu_{2}#tau} (GeV)')
+    plotter.add_cms_blurb(sqrts)
     plotter.save('final-subMass')
+
+    plotter.plot_final('etMass', 10)
+    plotter.save('final-etMass')
 
     ###########################################################################
     ##  Making shape file     #################################################
@@ -133,7 +159,7 @@ if __name__ == "__main__":
     shape_file = ROOT.TFile(
         os.path.join(outputdir, 'emt_shapes_%s.root' % period), 'RECREATE')
     shape_dir = shape_file.mkdir('emt')
-    plotter.write_shapes('subMass', 10, shape_dir)
+    plotter.write_shapes('subMass', 20, shape_dir)
     shape_file.Close()
 
 

@@ -26,15 +26,15 @@ def get_sample_names(substring)
   return inputs
 end
 
-puts get_sample_names('data_DoubleMu')
+#puts get_sample_names('data_DoubleMu')
 
 samples = Hash[
   "ewk" => Array['Zjets_M50', 'WplusJets_madgraph', 
-    'WZJetsTo3LNu', 'ZZJetsTo4L_pythia',
-    'TTplusJets_madgraph'],
+    'ZZJetsTo4L_pythia',
+    'TTplusJets_madgraph'] + get_sample_names('WZ'),
   "wjets" => Array['WplusJets_madgraph'],
   "zjets" => Array['Zjets_M50'],
-  "signal" => Array['VH_120'],
+  "signal" => get_sample_names('VH'),
   # Automagically figure out what data samples we have
   "data_mm" =>  get_sample_names("data_DoubleMu"),
   "data_em" => get_sample_names("data_MuEG"),
@@ -61,6 +61,7 @@ end
 fr_analyzer_sample_map = Hash[
   "FakeRatesMM.py" => samples['wjets'] + samples['data_mm'],
   "FakeRatesEM.py" => samples['wjets'] + samples['data_em'],
+  "FakeRatesEE.py" => samples['wjets'] + samples['zjets'] + samples['data_ee'],
   "FakeRatesMMT.py" => samples['zjets'] + samples['data_mm'],
 ]
 
@@ -90,7 +91,7 @@ exponential = "scale*TMath::Exp(x*decay)+offset"
 exponential_vars =  "scale[0.5, 0, 5],decay[-1e-2, -1, -1e-4],offset[1e-2, 0, 0.5]"
 
 landau = "scale*TMath::Landau(x,mu,sigma,0)+offset"
-landau_vars =  "scale[0.5, 0, 5],mu[20, 5, 100],sigma[1.9, 0.1, 20],offset[1e-2, 0, 0.5]"
+landau_vars =  "scale[0.5, 0, 5],mu[5, 0, 100],sigma[1.9, 0.1, 20],offset[1e-2, 0, 0.5]"
 
 # Fake rate fit configurations
 fr_fits = Hash[
@@ -105,6 +106,27 @@ fr_fits = Hash[
   "e_wjets_pt10_mvaidiso01_eJetPt" => Hash[
     "samples" => Array["wjets", "data_em"],
     "analyzer" => "FakeRatesEM",
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
+  "ee_wjets_pt20_mvaidiso03_e2JetPt" => Hash[
+    "samples" => Array["wjets", "data_ee"],
+    "analyzer" => "FakeRatesEE",
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
+  "ee_wjets_pt20_mvaidiso01_e2JetPt" => Hash[
+    "samples" => Array["wjets", "data_ee"],
+    "analyzer" => "FakeRatesEE",
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
+  "ee_wjets_pt10_mvaidiso03_e2JetPt" => Hash[
+    "samples" => Array["wjets", "data_ee"],
+    "analyzer" => "FakeRatesEE",
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
@@ -171,7 +193,7 @@ fr_fits.each do |fit, fit_info|
     denom_path = Array[region, denom, var].join("/")
     num_path = Array[region, denom, num, var].join("/")
 
-    task fit_output => subsamples_inputs + [fit_info['analyzer'] + '.py', $frfit_dir] do |t|
+    file fit_output => subsamples_inputs + [fit_info['analyzer'] + '.py', $frfit_dir] do |t|
       sh "fit_efficiency.py #{fit_output} #{num_path} #{denom_path} \'#{fit_info['function']}\' \'#{fit_info['variables']}\' #{subsample_input_list} --plot --rebin #{fit_info['rebin']}"
     end
     task :fits => fit_output
@@ -184,20 +206,33 @@ end
 ##     mmt
 ################################################################################
 
-analysis_sample_map = Hash[
-  "WHAnalyzeMMT.py" => samples['ewk'] + samples['data_mm'] + samples['signal'],
-  "WHAnalyzeEMT.py" => samples['ewk'] + samples['data_em'] + samples['signal'],
+task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['data_mm'] + samples['signal'])
+task :mmt => [ 
+  "#{$frfit_dir}/m_wjets_pt10_pfidiso03_muonJetPt-data_mm.root",
+  "#{$frfit_dir}/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root",
+  "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",
 ]
 
-task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['data_mm'] + samples['signal'])
-
 task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['data_em'] + samples['signal'])
+task :emt => [ 
+  "#{$frfit_dir}/e_wjets_pt10_mvaidiso03_eJetPt-data_em.root",
+  "#{$frfit_dir}/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root",
+  "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",
+]
+
+task :eet => get_analyzer_results("WHAnalyzeEET.py", samples['ewk'] + samples['data_ee'] + samples['signal'])
+task :eet => [ 
+  "#{$frfit_dir}/ee_wjets_pt20_mvaidiso03_e2JetPt-data_ee.root",
+  "#{$frfit_dir}/ee_wjets_pt10_mvaidiso03_e2JetPt-data_ee.root",
+  "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",
+]
 
 ################################################################################
 # Recipes to make data cards (plots come for free)
 #  targets:
 #      mmt_shapes
 #      emt_shapes
+#      eet_shapes
 #      cards
 ################################################################################
 
@@ -205,9 +240,10 @@ task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['d
 # Output directories
 $mmtdir = "results/#{$jobid}/plots/mmt/"
 $emtdir = "results/#{$jobid}/plots/emt/"
+$eetdir = "results/#{$jobid}/plots/eet/"
 
 directory $mmtdir
-directory $emtdir
+directory $eetdir
 
 # Recipes for adding stat. error shapes.  Makes a new file task:
 # input_file_stat_errors.root => input_file.root
@@ -220,13 +256,13 @@ def add_fake_errors(input_file, prefix)
 end
 
 # The .root files with the shapes
-file "#{$mmtdir}/mmt_shapes_#{$period}.root" => [:mmt, 'WHPlotterMMT.py',$mmtdir] do |t|
+file "#{$mmtdir}/mmt_shapes_#{$period}.root" => ['WHPlotterMMT.py', 'WHPlotterBase.py'] do |t|
   sh "python WHPlotterMMT.py"
 end
 add_fake_errors("#{$mmtdir}/mmt_shapes_#{$period}.root", "mmt")
 task :mmt_shapes => ["#{$mmtdir}/mmt_shapes_#{$period}_statshapes.root" ]
 
-file "#{$emtdir}/emt_shapes_#{$period}.root" => [:emt, 'WHPlotterEMT.py',$emtdir] do |t|
+file "#{$emtdir}/emt_shapes_#{$period}.root" => ['WHPlotterEMT.py', 'WHPlotterBase.py'] do |t|
   sh "python WHPlotterEMT.py"
 end
 add_fake_errors("#{$emtdir}/emt_shapes_#{$period}.root", "emt")
@@ -236,7 +272,7 @@ $carddir = "vhtt_lep_cards_#{$period}"
 
 # Combine all category shape files into the datacard project
 file "#{$carddir}/shapes.root" => ["#{$mmtdir}/mmt_shapes_#{$period}_statshapes.root", "#{$emtdir}/emt_shapes_#{$period}_statshapes.root"] do |t|
-  sh "hadd #{t.name} #{t.prerequisites.join(' ')}"
+  sh "hadd -f #{t.name} #{t.prerequisites.join(' ')}"
 end
 
 stat_shape_lists = Dir.glob("results/#{$jobid}/plots/*/*_statshapes.txt")
@@ -255,7 +291,7 @@ file "#{$carddir}/unc.conf" => ["#{$carddir}/unc.conf.base"] + stat_shapes do |t
   end
 end
 
-file "#{$carddir}/unc.vals" => ["#{$carddir}/unc.vals.base"] + stat_shapes do |t|
+file "#{$carddir}/unc.vals" => ["#{$carddir}/unc.vals.base"] + stat_shape_lists do |t|
   # Copy the basic template
   sh "cp #{t.prerequisites[0]} #{t.name}"
   # Append all the stat shape types
@@ -274,6 +310,7 @@ def make_datacard_task(mass)
   file card => ["#{$carddir}/shapes.root", "#{$carddir}/unc.conf", "#{$carddir}/unc.vals", "#{$carddir}/cgs.conf"] do |t|
     chdir($carddir) do
       sh "create-datacard.py -i shapes.root -o vhtt_0_#{mass}.txt #{mass}"
+      # text2workspace.py  -m 125.5 vhtt_0_7TeV.txt -P HiggsAnalysis.CombinedLimit.PhysicsModel:strictSMLikeHiggs -o tmp.root
     end
   end
   return card
