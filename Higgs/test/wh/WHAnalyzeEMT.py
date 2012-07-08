@@ -36,6 +36,7 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
     tree = 'emt/final/Ntuple'
     def __init__(self, tree, outfile, **kwargs):
         super(WHAnalyzeEMT, self).__init__(tree, outfile, EMuTauTree, **kwargs)
+        self.is7TeV = '7TeV' in os.environ['jobid']
 
     def book_histos(self, folder):
         self.book(folder, "mPt", "Muon Pt", 100, 0, 100)
@@ -63,8 +64,6 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
 
         Excludes FR object IDs and sign cut.
         '''
-        #if not row.mu17ele8Pass:
-            #return False
         if row.mPt < 20:
             return False
         if row.ePt < 10:
@@ -107,6 +106,8 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         if not row.tAntiElectronMVA:
             return False
         if not row.tAntiMuonTight:
+            return False
+        if self.is7TeV and not row.mu17ele8Pass:
             return False
         #'t_ElectronOverlapWP95 < 0.5',
 
