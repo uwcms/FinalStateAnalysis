@@ -4,11 +4,12 @@ Analyze EET events for the WH analysis
 
 '''
 
-import WHAnalyzerBase
 from EETauTree import EETauTree
-import os
 from FinalStateAnalysis.StatTools.RooFunctorFromWS import build_roofunctor
+import os
+from PUWeighting import pu_weight
 import ROOT
+import WHAnalyzerBase
 
 # Get fitted fake rate functions
 frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
@@ -144,7 +145,7 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.tLooseMVAIso)
 
     def event_weight(self, row):
-        weight = row.puWeightData2011AB
+        weight = pu_weight(row)
         if row.run < 10:
             weight *= ROOT.Cor_Total_Ele_Lead(row.e1Pt, row.e1AbsEta)
             weight *= ROOT.Cor_Total_Ele_SubLead(row.e2Pt, row.e2AbsEta)
