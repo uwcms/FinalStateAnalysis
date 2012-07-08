@@ -120,6 +120,10 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-p1f2p3-m1Pt')
 
+    plotter.plot_mc_vs_data('ss/p1f2p3', 'subMass', rebin=10, xaxis='m_{#mu2#tau} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-ss-p1f2p3-subMass')
+
     plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'm1Pt', rebin=10, xaxis='#mu_{1} p_{T}')
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-p1f2p3-w2-m1Pt')

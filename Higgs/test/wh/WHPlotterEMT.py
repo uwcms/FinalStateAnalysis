@@ -68,6 +68,9 @@ if __name__ == "__main__":
     plotter.plot_mc_vs_data('os/p1f2p3', 'emMass', 10)
     plotter.save('mcdata-os-p1f2p3-emMass')
 
+    plotter.plot_mc_vs_data('os/f1p2p3', 'emMass', 10)
+    plotter.save('mcdata-os-p1f2p3-emMass')
+
     # Check PU variables
     #plotter.plot_mc_vs_data('os/p1p2f3', 'rho')
     #plotter.save('mcdata-os-p1p2f3-rho')
@@ -119,6 +122,12 @@ if __name__ == "__main__":
 
     plotter.plot_mc_vs_data('ss/p1f2p3', 'mPt', 5, '#mu_{1} p_{T}', leftside=False)
     plotter.save('mcdata-ss-p1f2p3-mPt')
+
+    plotter.plot_mc_vs_data('ss/p1f2p3', 'subMass', 20, 'Subleading mass (GeV)', leftside=False)
+    plotter.save('mcdata-ss-p1f2p3-subMass')
+
+    plotter.plot_mc_vs_data('ss/f1p2p3', 'subMass', 20, 'Subleading mass (GeV)', leftside=False)
+    plotter.save('mcdata-ss-f1p2p3-subMass')
 
     plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'mPt', 5, '#mu_{1} p_{T}', leftside=False)
     plotter.save('mcdata-ss-p1f2p3-w2-mPt')
