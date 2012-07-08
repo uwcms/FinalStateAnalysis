@@ -4,10 +4,11 @@ Analyze MMT events for the WH analysis
 
 '''
 
-import WHAnalyzerBase
+from FinalStateAnalysis.StatTools.RooFunctorFromWS import build_roofunctor
 from MuMuTauTree import MuMuTauTree
 import os
-from FinalStateAnalysis.StatTools.RooFunctorFromWS import build_roofunctor
+from PUWeighting import pu_weight
+import WHAnalyzerBase
 import ROOT
 
 # Get fitted fake rate functions
@@ -133,7 +134,8 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.tLooseMVAIso)
 
     def event_weight(self, row):
-        weight = row.puWeightData2011AB
+        # fixme
+        weight = pu_weight(row)
         if row.run < 10:
             weight *= ROOT.Cor_Total_Mu_Lead(row.m1Pt, row.m1AbsEta)
             weight *= ROOT.Cor_Total_Mu_SubLead(row.m2Pt, row.m2AbsEta)
