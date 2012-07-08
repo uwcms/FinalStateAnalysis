@@ -68,7 +68,7 @@ class WHPlotterBase(object):
         if leftside:
             legend = plotting.Legend(nentries, leftmargin=0.03, topmargin=0.05, rightmargin=0.65)
         else:
-            legend = plotting.Legend(nentries, rightmargin=0.03, topmargin=0.05, leftmargin=0.65)
+            legend = plotting.Legend(nentries, rightmargin=0.07, topmargin=0.05, leftmargin=0.45)
         for sample in samples:
             legend.AddEntry(sample)
         legend.SetEntrySeparation(0.0)
@@ -92,6 +92,7 @@ class WHPlotterBase(object):
     def save(self, filename):
         ''' Save the current canvas contents to [filename] '''
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.png')
+        self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.pdf')
         # Reset keeps
         self.keep = []
 
@@ -112,11 +113,15 @@ class WHPlotterBase(object):
         self.keep.append(histo)
         return histo
 
-    def plot_mc_vs_data(self, folder, variable, rebin=1, xaxis='', leftside=True):
+    def plot_mc_vs_data(self, folder, variable, rebin=1, xaxis='',
+                        leftside=True, xrange=None):
         path = os.path.join(folder, variable)
         mc_stack = self.make_stack(rebin).Get(path)
         mc_stack.Draw()
         mc_stack.GetHistogram().GetXaxis().SetTitle(xaxis)
+        if xrange:
+            mc_stack.GetXaxis().SetRange(xrange[0], xrange[1])
+            mc_stack.Draw()
         self.keep.append(mc_stack)
         # Draw data
         data = rebin_view(self.data, rebin).Get(path)
@@ -124,7 +129,7 @@ class WHPlotterBase(object):
         self.keep.append(data)
         # Make sure we can see everything
         if data.GetMaximum() > mc_stack.GetHistogram().GetMaximum():
-            mc_stack.SetMaximum(data.GetMaximum())
+            mc_stack.SetMaximum(2*data.GetMaximum())
         # Add legend
         self.add_legend([data, mc_stack], leftside, entries=5)
 
@@ -157,7 +162,7 @@ class WHPlotterBase(object):
         # Corrected fake view
         fakes_view = views.SumView(obj1_view, obj2_view, subtract_obj12_view)
         fakes_view = views.TitleView(
-            views.StyleView(fakes_view, **data_styles['Zjets*']), 'fakes')
+            views.StyleView(fakes_view, **data_styles['Zjets*']), 'Non-prompt bkg.')
 
         output = {
             'vh120' : vh120_view,
@@ -196,25 +201,22 @@ class WHPlotterBase(object):
     def plot_final(self, variable, rebin=1, xaxis=''):
         ''' Plot the final output - with bkg. estimation '''
         sig_view = self.make_signal_views(rebin)
+        vh_10x = views.TitleView(
+            views.ScaleView(sig_view['vh120'], 5),
+            "(5#times) m_{H} = 120"
+        )
+
         stack = views.StackView(
             sig_view['wz'],
             sig_view['zz'],
             sig_view['fakes'],
+            vh_10x,
         )
         histo = stack.Get(variable)
         histo.Draw()
         histo.GetHistogram().GetXaxis().SetTitle(xaxis)
+        histo.SetMaximum(2*histo.GetMaximum())
         self.keep.append(histo)
 
-        sig_histo = sig_view['vh120'].Get(variable)
-        sig_histo = sig_histo*10
-        sig_histo.Draw('same')
-        self.keep.append(sig_histo)
-
         # Add legend
-        legend = plotting.Legend(4, leftmargin=0.65)
-        legend.AddEntry(histo)
-        legend.AddEntry(sig_histo)
-        legend.Draw()
-
-        self.keep.append(legend)
+        self.add_legend(histo, leftside=False, entries=4)

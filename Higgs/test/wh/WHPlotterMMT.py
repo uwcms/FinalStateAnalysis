@@ -51,13 +51,15 @@ if __name__ == "__main__":
     ###########################################################################
 
     # Control Z->mumu + jet region
-    plotter.plot_mc_vs_data('os/p1p2f3', 'm1m2Mass')
+    plotter.plot_mc_vs_data('os/p1p2f3', 'm1m2Mass', xaxis='m_{#mu#mu} (GeV)', xrange=(60, 120))
+    plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-os-p1p2f3-m1m2Mass')
 
     plotter.plot_mc_vs_data('os/p1p2f3/w3', 'm1m2Mass')
     plotter.save('mcdata-os-p1p2f3-w3-m1m2Mass')
 
-    plotter.plot_mc_vs_data('os/p1f2p3', 'm1m2Mass')
+    plotter.plot_mc_vs_data('os/p1f2p3', 'm1m2Mass', xaxis='m_{#mu#mu} (GeV)', xrange=(60, 120))
+    plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-os-p1f2p3-m1m2Mass')
 
     # Check PU variables
@@ -112,17 +114,16 @@ if __name__ == "__main__":
     ##  FR sideband MC-vs-Data ################################################
     ###########################################################################
 
-    plotter.plot_mc_vs_data('ss/p1f2p3', 'm1Pt', 5, '#mu_{1} p_{T}')
+    plotter.plot_mc_vs_data('ss/p1f2p3', 'm1Pt', rebin=10, xaxis='#mu_{1} p_{T} (GeV)')
+    plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-p1f2p3-m1Pt')
 
     plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'm1Pt', 5, '#mu_{1} p_{T}')
     plotter.save('mcdata-ss-p1f2p3-w2-m1Pt')
 
-    plotter.plot_mc_vs_data('ss/p1f2p3', 'm1Pt', 5, '#mu_{1} p_{T}')
-    plotter.save('mcdata-ss-p1f2p3-m1Pt')
-
-    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'm1Pt', 5, '#mu_{1} p_{T}')
-    plotter.save('mcdata-ss-p1f2p3-w2-m1Pt')
+    plotter.plot_mc_vs_data('ss/f1p2p3', 'subMass', rebin=20, xaxis='m_{#mu2#tau} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-ss-f1p2p3-subMass')
 
 
     ###########################################################################
@@ -130,15 +131,19 @@ if __name__ == "__main__":
     ###########################################################################
 
     plotter.plot_final('m1Pt', 10)
+    plotter.add_cms_blurb(sqrts)
     plotter.save('final-m1Pt')
 
     plotter.plot_final('m2Pt', 10)
+    plotter.add_cms_blurb(sqrts)
     plotter.save('final-m2Pt')
 
-    plotter.plot_final('subMass', 10)
+    plotter.plot_final('subMass', 20, xaxis='m_{#mu_{2}#tau} (GeV)')
+    plotter.add_cms_blurb(sqrts)
     plotter.save('final-subMass')
 
     plotter.plot_final('m2Iso', 10)
+    plotter.add_cms_blurb(sqrts)
     plotter.save('final-m2Iso')
 
 
