@@ -92,6 +92,12 @@ cdef class MuMuTauTree:
     cdef TBranch* doubleMuTrkPrescale_branch
     cdef float doubleMuTrkPrescale_value
 
+    cdef TBranch* eVetoCicTightIso_branch
+    cdef float eVetoCicTightIso_value
+
+    cdef TBranch* eVetoMVAIso_branch
+    cdef float eVetoMVAIso_value
+
     cdef TBranch* evt_branch
     cdef int evt_value
 
@@ -416,6 +422,9 @@ cdef class MuMuTauTree:
     cdef TBranch* tCharge_branch
     cdef float tCharge_value
 
+    cdef TBranch* tCiCTightElecOverlap_branch
+    cdef float tCiCTightElecOverlap_value
+
     cdef TBranch* tDZ_branch
     cdef float tDZ_value
 
@@ -424,6 +433,9 @@ cdef class MuMuTauTree:
 
     cdef TBranch* tDecayMode_branch
     cdef float tDecayMode_value
+
+    cdef TBranch* tElecOverlap_branch
+    cdef float tElecOverlap_value
 
     cdef TBranch* tEta_branch
     cdef float tEta_value
@@ -565,6 +577,14 @@ cdef class MuMuTauTree:
         #print "making doubleMuTrkPrescale"
         self.doubleMuTrkPrescale_branch = self.tree.GetBranch("doubleMuTrkPrescale")
         self.doubleMuTrkPrescale_branch.SetAddress(<void*>&self.doubleMuTrkPrescale_value)
+
+        #print "making eVetoCicTightIso"
+        self.eVetoCicTightIso_branch = self.tree.GetBranch("eVetoCicTightIso")
+        self.eVetoCicTightIso_branch.SetAddress(<void*>&self.eVetoCicTightIso_value)
+
+        #print "making eVetoMVAIso"
+        self.eVetoMVAIso_branch = self.tree.GetBranch("eVetoMVAIso")
+        self.eVetoMVAIso_branch.SetAddress(<void*>&self.eVetoMVAIso_value)
 
         #print "making evt"
         self.evt_branch = self.tree.GetBranch("evt")
@@ -998,6 +1018,10 @@ cdef class MuMuTauTree:
         self.tCharge_branch = self.tree.GetBranch("tCharge")
         self.tCharge_branch.SetAddress(<void*>&self.tCharge_value)
 
+        #print "making tCiCTightElecOverlap"
+        self.tCiCTightElecOverlap_branch = self.tree.GetBranch("tCiCTightElecOverlap")
+        self.tCiCTightElecOverlap_branch.SetAddress(<void*>&self.tCiCTightElecOverlap_value)
+
         #print "making tDZ"
         self.tDZ_branch = self.tree.GetBranch("tDZ")
         self.tDZ_branch.SetAddress(<void*>&self.tDZ_value)
@@ -1009,6 +1033,10 @@ cdef class MuMuTauTree:
         #print "making tDecayMode"
         self.tDecayMode_branch = self.tree.GetBranch("tDecayMode")
         self.tDecayMode_branch.SetAddress(<void*>&self.tDecayMode_value)
+
+        #print "making tElecOverlap"
+        self.tElecOverlap_branch = self.tree.GetBranch("tElecOverlap")
+        self.tElecOverlap_branch.SetAddress(<void*>&self.tElecOverlap_value)
 
         #print "making tEta"
         self.tEta_branch = self.tree.GetBranch("tEta")
@@ -1204,6 +1232,16 @@ cdef class MuMuTauTree:
         def __get__(self):
             self.doubleMuTrkPrescale_branch.GetEntry(self.ientry, 0)
             return self.doubleMuTrkPrescale_value
+
+    property eVetoCicTightIso:
+        def __get__(self):
+            self.eVetoCicTightIso_branch.GetEntry(self.ientry, 0)
+            return self.eVetoCicTightIso_value
+
+    property eVetoMVAIso:
+        def __get__(self):
+            self.eVetoMVAIso_branch.GetEntry(self.ientry, 0)
+            return self.eVetoMVAIso_value
 
     property evt:
         def __get__(self):
@@ -1745,6 +1783,11 @@ cdef class MuMuTauTree:
             self.tCharge_branch.GetEntry(self.ientry, 0)
             return self.tCharge_value
 
+    property tCiCTightElecOverlap:
+        def __get__(self):
+            self.tCiCTightElecOverlap_branch.GetEntry(self.ientry, 0)
+            return self.tCiCTightElecOverlap_value
+
     property tDZ:
         def __get__(self):
             self.tDZ_branch.GetEntry(self.ientry, 0)
@@ -1759,6 +1802,11 @@ cdef class MuMuTauTree:
         def __get__(self):
             self.tDecayMode_branch.GetEntry(self.ientry, 0)
             return self.tDecayMode_value
+
+    property tElecOverlap:
+        def __get__(self):
+            self.tElecOverlap_branch.GetEntry(self.ientry, 0)
+            return self.tElecOverlap_value
 
     property tEta:
         def __get__(self):

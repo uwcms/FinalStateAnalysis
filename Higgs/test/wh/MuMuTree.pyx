@@ -92,6 +92,12 @@ cdef class MuMuTree:
     cdef TBranch* doubleMuTrkPrescale_branch
     cdef float doubleMuTrkPrescale_value
 
+    cdef TBranch* eVetoCicTightIso_branch
+    cdef float eVetoCicTightIso_value
+
+    cdef TBranch* eVetoMVAIso_branch
+    cdef float eVetoMVAIso_value
+
     cdef TBranch* evt_branch
     cdef int evt_value
 
@@ -451,6 +457,14 @@ cdef class MuMuTree:
         #print "making doubleMuTrkPrescale"
         self.doubleMuTrkPrescale_branch = self.tree.GetBranch("doubleMuTrkPrescale")
         self.doubleMuTrkPrescale_branch.SetAddress(<void*>&self.doubleMuTrkPrescale_value)
+
+        #print "making eVetoCicTightIso"
+        self.eVetoCicTightIso_branch = self.tree.GetBranch("eVetoCicTightIso")
+        self.eVetoCicTightIso_branch.SetAddress(<void*>&self.eVetoCicTightIso_value)
+
+        #print "making eVetoMVAIso"
+        self.eVetoMVAIso_branch = self.tree.GetBranch("eVetoMVAIso")
+        self.eVetoMVAIso_branch.SetAddress(<void*>&self.eVetoMVAIso_value)
 
         #print "making evt"
         self.evt_branch = self.tree.GetBranch("evt")
@@ -938,6 +952,16 @@ cdef class MuMuTree:
         def __get__(self):
             self.doubleMuTrkPrescale_branch.GetEntry(self.ientry, 0)
             return self.doubleMuTrkPrescale_value
+
+    property eVetoCicTightIso:
+        def __get__(self):
+            self.eVetoCicTightIso_branch.GetEntry(self.ientry, 0)
+            return self.eVetoCicTightIso_value
+
+    property eVetoMVAIso:
+        def __get__(self):
+            self.eVetoMVAIso_branch.GetEntry(self.ientry, 0)
+            return self.eVetoMVAIso_value
 
     property evt:
         def __get__(self):

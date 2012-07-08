@@ -161,8 +161,23 @@ cdef class EMuTree:
     cdef TBranch* eRelPFIsoDB_branch
     cdef float eRelPFIsoDB_value
 
+    cdef TBranch* eSCEnergy_branch
+    cdef float eSCEnergy_value
+
+    cdef TBranch* eSCEta_branch
+    cdef float eSCEta_value
+
+    cdef TBranch* eSCPhi_branch
+    cdef float eSCPhi_value
+
     cdef TBranch* eVZ_branch
     cdef float eVZ_value
+
+    cdef TBranch* eVetoCicTightIso_branch
+    cdef float eVetoCicTightIso_value
+
+    cdef TBranch* eVetoMVAIso_branch
+    cdef float eVetoMVAIso_value
 
     cdef TBranch* eWWID_branch
     cdef float eWWID_value
@@ -550,9 +565,29 @@ cdef class EMuTree:
         self.eRelPFIsoDB_branch = self.tree.GetBranch("eRelPFIsoDB")
         self.eRelPFIsoDB_branch.SetAddress(<void*>&self.eRelPFIsoDB_value)
 
+        #print "making eSCEnergy"
+        self.eSCEnergy_branch = self.tree.GetBranch("eSCEnergy")
+        self.eSCEnergy_branch.SetAddress(<void*>&self.eSCEnergy_value)
+
+        #print "making eSCEta"
+        self.eSCEta_branch = self.tree.GetBranch("eSCEta")
+        self.eSCEta_branch.SetAddress(<void*>&self.eSCEta_value)
+
+        #print "making eSCPhi"
+        self.eSCPhi_branch = self.tree.GetBranch("eSCPhi")
+        self.eSCPhi_branch.SetAddress(<void*>&self.eSCPhi_value)
+
         #print "making eVZ"
         self.eVZ_branch = self.tree.GetBranch("eVZ")
         self.eVZ_branch.SetAddress(<void*>&self.eVZ_value)
+
+        #print "making eVetoCicTightIso"
+        self.eVetoCicTightIso_branch = self.tree.GetBranch("eVetoCicTightIso")
+        self.eVetoCicTightIso_branch.SetAddress(<void*>&self.eVetoCicTightIso_value)
+
+        #print "making eVetoMVAIso"
+        self.eVetoMVAIso_branch = self.tree.GetBranch("eVetoMVAIso")
+        self.eVetoMVAIso_branch.SetAddress(<void*>&self.eVetoMVAIso_value)
 
         #print "making eWWID"
         self.eWWID_branch = self.tree.GetBranch("eWWID")
@@ -1068,10 +1103,35 @@ cdef class EMuTree:
             self.eRelPFIsoDB_branch.GetEntry(self.ientry, 0)
             return self.eRelPFIsoDB_value
 
+    property eSCEnergy:
+        def __get__(self):
+            self.eSCEnergy_branch.GetEntry(self.ientry, 0)
+            return self.eSCEnergy_value
+
+    property eSCEta:
+        def __get__(self):
+            self.eSCEta_branch.GetEntry(self.ientry, 0)
+            return self.eSCEta_value
+
+    property eSCPhi:
+        def __get__(self):
+            self.eSCPhi_branch.GetEntry(self.ientry, 0)
+            return self.eSCPhi_value
+
     property eVZ:
         def __get__(self):
             self.eVZ_branch.GetEntry(self.ientry, 0)
             return self.eVZ_value
+
+    property eVetoCicTightIso:
+        def __get__(self):
+            self.eVetoCicTightIso_branch.GetEntry(self.ientry, 0)
+            return self.eVetoCicTightIso_value
+
+    property eVetoMVAIso:
+        def __get__(self):
+            self.eVetoMVAIso_branch.GetEntry(self.ientry, 0)
+            return self.eVetoMVAIso_value
 
     property eWWID:
         def __get__(self):

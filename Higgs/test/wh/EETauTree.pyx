@@ -161,6 +161,15 @@ cdef class EETauTree:
     cdef TBranch* e1RelPFIsoDB_branch
     cdef float e1RelPFIsoDB_value
 
+    cdef TBranch* e1SCEnergy_branch
+    cdef float e1SCEnergy_value
+
+    cdef TBranch* e1SCEta_branch
+    cdef float e1SCEta_value
+
+    cdef TBranch* e1SCPhi_branch
+    cdef float e1SCPhi_value
+
     cdef TBranch* e1VZ_branch
     cdef float e1VZ_value
 
@@ -284,6 +293,15 @@ cdef class EETauTree:
     cdef TBranch* e2RelPFIsoDB_branch
     cdef float e2RelPFIsoDB_value
 
+    cdef TBranch* e2SCEnergy_branch
+    cdef float e2SCEnergy_value
+
+    cdef TBranch* e2SCEta_branch
+    cdef float e2SCEta_value
+
+    cdef TBranch* e2SCPhi_branch
+    cdef float e2SCPhi_value
+
     cdef TBranch* e2VZ_branch
     cdef float e2VZ_value
 
@@ -313,6 +331,12 @@ cdef class EETauTree:
 
     cdef TBranch* e2_t_Zcompat_branch
     cdef float e2_t_Zcompat_value
+
+    cdef TBranch* eVetoCicTightIso_branch
+    cdef float eVetoCicTightIso_value
+
+    cdef TBranch* eVetoMVAIso_branch
+    cdef float eVetoMVAIso_value
 
     cdef TBranch* evt_branch
     cdef int evt_value
@@ -428,6 +452,9 @@ cdef class EETauTree:
     cdef TBranch* tCharge_branch
     cdef float tCharge_value
 
+    cdef TBranch* tCiCTightElecOverlap_branch
+    cdef float tCiCTightElecOverlap_value
+
     cdef TBranch* tDZ_branch
     cdef float tDZ_value
 
@@ -436,6 +463,9 @@ cdef class EETauTree:
 
     cdef TBranch* tDecayMode_branch
     cdef float tDecayMode_value
+
+    cdef TBranch* tElecOverlap_branch
+    cdef float tElecOverlap_value
 
     cdef TBranch* tEta_branch
     cdef float tEta_value
@@ -670,6 +700,18 @@ cdef class EETauTree:
         self.e1RelPFIsoDB_branch = self.tree.GetBranch("e1RelPFIsoDB")
         self.e1RelPFIsoDB_branch.SetAddress(<void*>&self.e1RelPFIsoDB_value)
 
+        #print "making e1SCEnergy"
+        self.e1SCEnergy_branch = self.tree.GetBranch("e1SCEnergy")
+        self.e1SCEnergy_branch.SetAddress(<void*>&self.e1SCEnergy_value)
+
+        #print "making e1SCEta"
+        self.e1SCEta_branch = self.tree.GetBranch("e1SCEta")
+        self.e1SCEta_branch.SetAddress(<void*>&self.e1SCEta_value)
+
+        #print "making e1SCPhi"
+        self.e1SCPhi_branch = self.tree.GetBranch("e1SCPhi")
+        self.e1SCPhi_branch.SetAddress(<void*>&self.e1SCPhi_value)
+
         #print "making e1VZ"
         self.e1VZ_branch = self.tree.GetBranch("e1VZ")
         self.e1VZ_branch.SetAddress(<void*>&self.e1VZ_value)
@@ -834,6 +876,18 @@ cdef class EETauTree:
         self.e2RelPFIsoDB_branch = self.tree.GetBranch("e2RelPFIsoDB")
         self.e2RelPFIsoDB_branch.SetAddress(<void*>&self.e2RelPFIsoDB_value)
 
+        #print "making e2SCEnergy"
+        self.e2SCEnergy_branch = self.tree.GetBranch("e2SCEnergy")
+        self.e2SCEnergy_branch.SetAddress(<void*>&self.e2SCEnergy_value)
+
+        #print "making e2SCEta"
+        self.e2SCEta_branch = self.tree.GetBranch("e2SCEta")
+        self.e2SCEta_branch.SetAddress(<void*>&self.e2SCEta_value)
+
+        #print "making e2SCPhi"
+        self.e2SCPhi_branch = self.tree.GetBranch("e2SCPhi")
+        self.e2SCPhi_branch.SetAddress(<void*>&self.e2SCPhi_value)
+
         #print "making e2VZ"
         self.e2VZ_branch = self.tree.GetBranch("e2VZ")
         self.e2VZ_branch.SetAddress(<void*>&self.e2VZ_value)
@@ -873,6 +927,14 @@ cdef class EETauTree:
         #print "making e2_t_Zcompat"
         self.e2_t_Zcompat_branch = self.tree.GetBranch("e2_t_Zcompat")
         self.e2_t_Zcompat_branch.SetAddress(<void*>&self.e2_t_Zcompat_value)
+
+        #print "making eVetoCicTightIso"
+        self.eVetoCicTightIso_branch = self.tree.GetBranch("eVetoCicTightIso")
+        self.eVetoCicTightIso_branch.SetAddress(<void*>&self.eVetoCicTightIso_value)
+
+        #print "making eVetoMVAIso"
+        self.eVetoMVAIso_branch = self.tree.GetBranch("eVetoMVAIso")
+        self.eVetoMVAIso_branch.SetAddress(<void*>&self.eVetoMVAIso_value)
 
         #print "making evt"
         self.evt_branch = self.tree.GetBranch("evt")
@@ -1026,6 +1088,10 @@ cdef class EETauTree:
         self.tCharge_branch = self.tree.GetBranch("tCharge")
         self.tCharge_branch.SetAddress(<void*>&self.tCharge_value)
 
+        #print "making tCiCTightElecOverlap"
+        self.tCiCTightElecOverlap_branch = self.tree.GetBranch("tCiCTightElecOverlap")
+        self.tCiCTightElecOverlap_branch.SetAddress(<void*>&self.tCiCTightElecOverlap_value)
+
         #print "making tDZ"
         self.tDZ_branch = self.tree.GetBranch("tDZ")
         self.tDZ_branch.SetAddress(<void*>&self.tDZ_value)
@@ -1037,6 +1103,10 @@ cdef class EETauTree:
         #print "making tDecayMode"
         self.tDecayMode_branch = self.tree.GetBranch("tDecayMode")
         self.tDecayMode_branch.SetAddress(<void*>&self.tDecayMode_value)
+
+        #print "making tElecOverlap"
+        self.tElecOverlap_branch = self.tree.GetBranch("tElecOverlap")
+        self.tElecOverlap_branch.SetAddress(<void*>&self.tElecOverlap_value)
 
         #print "making tEta"
         self.tEta_branch = self.tree.GetBranch("tEta")
@@ -1348,6 +1418,21 @@ cdef class EETauTree:
             self.e1RelPFIsoDB_branch.GetEntry(self.ientry, 0)
             return self.e1RelPFIsoDB_value
 
+    property e1SCEnergy:
+        def __get__(self):
+            self.e1SCEnergy_branch.GetEntry(self.ientry, 0)
+            return self.e1SCEnergy_value
+
+    property e1SCEta:
+        def __get__(self):
+            self.e1SCEta_branch.GetEntry(self.ientry, 0)
+            return self.e1SCEta_value
+
+    property e1SCPhi:
+        def __get__(self):
+            self.e1SCPhi_branch.GetEntry(self.ientry, 0)
+            return self.e1SCPhi_value
+
     property e1VZ:
         def __get__(self):
             self.e1VZ_branch.GetEntry(self.ientry, 0)
@@ -1553,6 +1638,21 @@ cdef class EETauTree:
             self.e2RelPFIsoDB_branch.GetEntry(self.ientry, 0)
             return self.e2RelPFIsoDB_value
 
+    property e2SCEnergy:
+        def __get__(self):
+            self.e2SCEnergy_branch.GetEntry(self.ientry, 0)
+            return self.e2SCEnergy_value
+
+    property e2SCEta:
+        def __get__(self):
+            self.e2SCEta_branch.GetEntry(self.ientry, 0)
+            return self.e2SCEta_value
+
+    property e2SCPhi:
+        def __get__(self):
+            self.e2SCPhi_branch.GetEntry(self.ientry, 0)
+            return self.e2SCPhi_value
+
     property e2VZ:
         def __get__(self):
             self.e2VZ_branch.GetEntry(self.ientry, 0)
@@ -1602,6 +1702,16 @@ cdef class EETauTree:
         def __get__(self):
             self.e2_t_Zcompat_branch.GetEntry(self.ientry, 0)
             return self.e2_t_Zcompat_value
+
+    property eVetoCicTightIso:
+        def __get__(self):
+            self.eVetoCicTightIso_branch.GetEntry(self.ientry, 0)
+            return self.eVetoCicTightIso_value
+
+    property eVetoMVAIso:
+        def __get__(self):
+            self.eVetoMVAIso_branch.GetEntry(self.ientry, 0)
+            return self.eVetoMVAIso_value
 
     property evt:
         def __get__(self):
@@ -1793,6 +1903,11 @@ cdef class EETauTree:
             self.tCharge_branch.GetEntry(self.ientry, 0)
             return self.tCharge_value
 
+    property tCiCTightElecOverlap:
+        def __get__(self):
+            self.tCiCTightElecOverlap_branch.GetEntry(self.ientry, 0)
+            return self.tCiCTightElecOverlap_value
+
     property tDZ:
         def __get__(self):
             self.tDZ_branch.GetEntry(self.ientry, 0)
@@ -1807,6 +1922,11 @@ cdef class EETauTree:
         def __get__(self):
             self.tDecayMode_branch.GetEntry(self.ientry, 0)
             return self.tDecayMode_value
+
+    property tElecOverlap:
+        def __get__(self):
+            self.tElecOverlap_branch.GetEntry(self.ientry, 0)
+            return self.tElecOverlap_value
 
     property tEta:
         def __get__(self):
