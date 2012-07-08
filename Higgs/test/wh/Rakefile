@@ -6,7 +6,7 @@ $jobid = ENV['jobid']
 
 # Figure out what run period we are in
 $period = '7TeV'
-if $period.include? '8TeV'
+if $jobid.include? '8TeV'
   $period = '8TeV'
 end
 
@@ -259,7 +259,7 @@ def add_fake_errors(input_file, prefix)
   output_file = input_file.sub('.root', '_statshapes.root')
   output_sys_list = input_file.sub('.root', '_statshapes.txt')
   file output_file => [input_file] do |t|
-    sh "$CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/scripts/add_stat_shapes.py #{input_file} #{output_file} --filter '*fakes' --prefix CMS_vhtt_#{prefix}_fakeshape > #{output_sys_list}"
+    sh "$CMSSW_BASE/src/HiggsAnalysis/HiggsToTauTau/scripts/add_stat_shapes.py #{input_file} #{output_file} --filter '*fakes' --prefix CMS_vhtt_#{$period}_#{prefix}_fakeshape > #{output_sys_list}"
   end
 end
 
@@ -310,6 +310,7 @@ end
 
 file "#{$carddir}/unc.vals" => ["#{$carddir}/unc.vals.base"] + stat_shape_lists do |t|
   # Copy the basic template
+  puts t.investigation
   sh "cp #{t.prerequisites[0]} #{t.name}"
   # Append all the stat shape types
   sh "echo '' >> #{t.name}"
