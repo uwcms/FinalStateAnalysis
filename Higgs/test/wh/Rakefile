@@ -175,7 +175,7 @@ fr_fits = Hash[
 ]
 
 # Placeholder
-multitask :fits => []
+task :fits => []
 
 # Create tasks for all the fr_fits
 fr_fits.each do |fit, fit_info|
@@ -193,10 +193,10 @@ fr_fits.each do |fit, fit_info|
     denom_path = Array[region, denom, var].join("/")
     num_path = Array[region, denom, num, var].join("/")
 
-    task fit_output => subsamples_inputs + [fit_info['analyzer'] + '.py', $frfit_dir] do |t|
+    file fit_output => subsamples_inputs + [fit_info['analyzer'] + '.py', $frfit_dir] do |t|
       sh "fit_efficiency.py #{fit_output} #{num_path} #{denom_path} \'#{fit_info['function']}\' \'#{fit_info['variables']}\' #{subsample_input_list} --plot --rebin #{fit_info['rebin']}"
     end
-    multitask :fits => fit_output
+    task :fits => fit_output
   end
 end
 
@@ -207,10 +207,25 @@ end
 ################################################################################
 
 task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['data_mm'] + samples['signal'])
+task :mmt => [ 
+  "#{$frfit_dir}/m_wjets_pt10_pfidiso03_muonJetPt-data_mm.root",
+  "#{$frfit_dir}/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root",
+  "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",
+]
 
 task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['data_em'] + samples['signal'])
+task :emt => [ 
+  "#{$frfit_dir}/e_wjets_pt10_mvaidiso03_eJetPt-data_em.root",
+  "#{$frfit_dir}/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root",
+  "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",
+]
 
 task :eet => get_analyzer_results("WHAnalyzeEET.py", samples['ewk'] + samples['data_ee'] + samples['signal'])
+task :eet => [ 
+  "#{$frfit_dir}/ee_wjets_pt20_mvaidiso03_e2JetPt-data_ee.root",
+  "#{$frfit_dir}/ee_wjets_pt10_mvaidiso03_e2JetPt-data_ee.root",
+  "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",
+]
 
 ################################################################################
 # Recipes to make data cards (plots come for free)
