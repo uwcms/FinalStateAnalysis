@@ -78,8 +78,12 @@ if __name__ == "__main__":
     log.info("Getting histograms")
     pass_histo = input_view.Get(args.num)
     all_histo = input_view.Get(args.denom)
-    log.info("pass/all = %0.0f/%0.0f = %0.2f%%", pass_histo.Integral(),
-             all_histo.Integral(), pass_histo.Integral()/all_histo.Integral())
+    if not all_histo.Integral():
+        log.info("no entries in denominator!")
+    else:
+        log.info("pass/all = %0.0f/%0.0f = %0.2f%%",
+                 pass_histo.Integral(), all_histo.Integral(),
+                 pass_histo.Integral()/all_histo.Integral())
     fail_histo = all_histo - pass_histo
 
     log.info("Converting data to RooFit format")
