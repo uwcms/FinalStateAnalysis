@@ -244,6 +244,7 @@ $eetdir = "results/#{$jobid}/plots/eet/"
 
 directory $mmtdir
 directory $eetdir
+directory $emtdir
 
 # Recipes for adding stat. error shapes.  Makes a new file task:
 # input_file_stat_errors.root => input_file.root
@@ -268,10 +269,19 @@ end
 add_fake_errors("#{$emtdir}/emt_shapes_#{$period}.root", "emt")
 task :emt_shapes => ["#{$emtdir}/emt_shapes_#{$period}_statshapes.root" ]
 
+file "#{$eetdir}/eet_shapes_#{$period}.root" => ['WHPlotterEET.py', 'WHPlotterBase.py'] do |t|
+  sh "python WHPlotterEET.py"
+end
+add_fake_errors("#{$eetdir}/eet_shapes_#{$period}.root", "eet")
+task :eet_shapes => ["#{$eetdir}/eet_shapes_#{$period}_statshapes.root" ]
+
 $carddir = "vhtt_lep_cards_#{$period}"
 
 # Combine all category shape files into the datacard project
-file "#{$carddir}/shapes.root" => ["#{$mmtdir}/mmt_shapes_#{$period}_statshapes.root", "#{$emtdir}/emt_shapes_#{$period}_statshapes.root"] do |t|
+file "#{$carddir}/shapes.root" => [
+  "#{$mmtdir}/mmt_shapes_#{$period}_statshapes.root", 
+  "#{$eetdir}/eet_shapes_#{$period}_statshapes.root", 
+  "#{$emtdir}/emt_shapes_#{$period}_statshapes.root"] do |t|
   sh "hadd -f #{t.name} #{t.prerequisites.join(' ')}"
 end
 
@@ -300,6 +310,7 @@ file "#{$carddir}/unc.vals" => ["#{$carddir}/unc.vals.base"] + stat_shape_lists 
   stat_shape_lists.each do |list|
     sh "cat #{list} | grep mmt | xargs -n 1 -I {} echo 'mmt fakes {} 1.0' >> #{t.name}"
     sh "cat #{list} | grep emt | xargs -n 1 -I {} echo 'emt fakes {} 1.0' >> #{t.name}"
+    sh "cat #{list} | grep eet | xargs -n 1 -I {} echo 'eet fakes {} 1.0' >> #{t.name}"
   end
 end
 
