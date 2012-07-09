@@ -169,6 +169,10 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-e1e2Mass')
 
+    plotter.plot_final('tAbsEta', 5, xaxis='|#eta_#tau|')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-tAbsEta')
+
     plotter.plot_final('e2Iso', 10)
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-e2Iso')
