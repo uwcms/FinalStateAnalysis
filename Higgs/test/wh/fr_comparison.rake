@@ -1,7 +1,7 @@
 # Rakefile to compare fake rates between DATA/MC and 7 and 8TeV
 
-$dir7TeV = 'results/2012-07-04-7TeV-Higgs/fakerate_fits/'
-$dir8TeV = 'results/2012-07-04-8TeV-Higgs/fakerate_fits/'
+$dir7TeV = 'results/2012-07-05-7TeV-Higgs/fakerate_fits/'
+$dir8TeV = 'results/2012-07-05-8TeV-Higgs/fakerate_fits/'
 
 $plotdir = 'results/plots/fr_comp'
 directory $plotdir
