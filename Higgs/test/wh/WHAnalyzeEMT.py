@@ -64,6 +64,8 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
 
         Excludes FR object IDs and sign cut.
         '''
+        if not row.mu17ele8Pass:
+            return False
         if row.mPt < 20:
             return False
         if row.ePt < 10:
@@ -106,8 +108,6 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         if not row.tAntiElectronMVA:
             return False
         if not row.tAntiMuonTight:
-            return False
-        if self.is7TeV and not row.mu17ele8Pass:
             return False
         #'t_ElectronOverlapWP95 < 0.5',
 

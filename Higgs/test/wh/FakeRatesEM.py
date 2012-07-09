@@ -67,6 +67,7 @@ class FakeRatesEM(MegaBase):
 
     def process(self):
         base_selection = ' && '.join([
+            'mu17ele8Pass',
             'e_m_SS',
             'mPt > 20',
             'ePt > 10',
@@ -80,8 +81,8 @@ class FakeRatesEM(MegaBase):
             'abs(mDZ) < 0.2',
             'abs(eDZ) < 0.2',
         ])
-        if self.is7TeV:
-            base_selection = 'mu17ele8Pass && ' + base_selection
+        #if self.is7TeV:
+            #base_selection = 'mu17ele8Pass && ' + base_selection
 
         def fill(the_histos, row):
             the_histos['ePt'].Fill(row.ePt)
