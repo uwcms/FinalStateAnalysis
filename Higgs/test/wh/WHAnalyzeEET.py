@@ -49,6 +49,7 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
         self.book(folder, "e1tMass", "E 1-2 Mass", 120, 0, 120)
         self.book(folder, "subMass", "subleadingMass", 200, 0, 200)
         self.book(folder, "e2Iso", "e2Iso", 100, 0, 0.3)
+        self.book(folder, "tPt", "tPt", 100, 0,100)
         self.book(folder, "tAbsEta", "tAbsEta", 100, 0, 2.3)
 
     def fill_histos(self, histos, folder, row, weight):
@@ -67,6 +68,7 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
         fill('e1tMass', row.e1_t_Mass)
         fill('subMass', row.e2_t_Mass)
         fill('e2Iso', row.e2RelPFIsoDB)
+        fill('tPt', row.tPt)
         fill('tAbsEta', row.tAbsEta)
 
     def preselection(self, row):

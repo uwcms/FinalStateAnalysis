@@ -45,9 +45,13 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         self.book(folder, "prescale", "HLT prescale", 21, -0.5, 20.5)
         self.book(folder, "m1Pt", "Muon 1 Pt", 100, 0, 100)
         self.book(folder, "m2Pt", "Muon 2 Pt", 100, 0, 100)
+        self.book(folder, "m1AbsEta", "Muon 1 AbsEta", 100, 0, 2.4)
+        self.book(folder, "m2AbsEta", "Muon 2 AbsEta", 100, 0, 2.4)
         self.book(folder, "m1m2Mass", "Muon 1-2 Mass", 120, 0, 120)
         self.book(folder, "subMass", "subleadingMass", 200, 0, 200)
         self.book(folder, "m2Iso", "m2Iso", 100, 0, 0.3)
+        self.book(folder, "tPt", "Tau Pt", 100, 0, 100)
+        self.book(folder, "tAbsEta", "Tau AbsEta", 100, 0, 2.3)
 
     def fill_histos(self, histos, folder, row, weight):
         def fill(name, value):
@@ -61,9 +65,13 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         fill('nvtx', row.nvtx)
         fill('m1Pt', row.m1Pt)
         fill('m2Pt', row.m2Pt)
+        fill('m1AbsEta', row.m1AbsEta)
+        fill('m2AbsEta', row.m2AbsEta)
         fill('m1m2Mass', row.m1_m2_Mass)
         fill('subMass', row.m2_t_Mass)
         fill('m2Iso', row.m2RelPFIsoDB)
+        fill('tPt', row.tPt)
+        fill('tAbsEta', row.tAbsEta)
 
     def preselection(self, row):
         ''' Preselection applied to events.
