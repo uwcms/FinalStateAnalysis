@@ -119,27 +119,27 @@ if __name__ == "__main__":
     ##  FR sideband MC-vs-Data ################################################
     ###########################################################################
 
-    plotter.plot_mc_vs_data('ss/p1f2p3', 'e1Pt', rebin=10, xaxis='e_{1} p_{T} (GeV)')
+    plotter.plot_mc_vs_data('ss/p1f2p3', 'e1Pt', rebin=10, xaxis='e_{1} p_{T} (GeV)', leftside=False)
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-p1f2p3-e1Pt')
 
-    plotter.plot_mc_vs_data('ss/p1f2p3', 'subMass', rebin=10, xaxis='m_{e2#tau} (GeV)')
+    plotter.plot_mc_vs_data('ss/p1f2p3', 'subMass', rebin=10, xaxis='m_{e2#tau} (GeV)', leftside=False)
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-p1f2p3-subMass')
 
-    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'e1Pt', rebin=10, xaxis='e_{1} p_{T}')
+    plotter.plot_mc_vs_data('ss/p1f2p3/w2', 'e1Pt', rebin=10, xaxis='e_{1} p_{T}', leftside=False)
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-p1f2p3-w2-e1Pt')
 
-    plotter.plot_mc_vs_data('ss/f1p2p3', 'subMass', rebin=20, xaxis='m_{e2#tau} (GeV)')
+    plotter.plot_mc_vs_data('ss/f1p2p3', 'subMass', rebin=20, xaxis='m_{e2#tau} (GeV)', leftside=False)
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-f1p2p3-subMass')
 
-    plotter.plot_mc_vs_data('ss/f1p2p3/w1', 'subMass', rebin=20, xaxis='m_{e2#tau} (GeV)')
+    plotter.plot_mc_vs_data('ss/f1p2p3/w1', 'subMass', rebin=20, xaxis='m_{e2#tau} (GeV)', leftside=False)
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-f1p2p3-w1-subMass')
 
-    plotter.plot_mc_vs_data('ss/p1p2f3', 'e1e2Mass', rebin=10, xaxis='m_{ee} (GeV)')
+    plotter.plot_mc_vs_data('ss/p1p2f3', 'e1e2Mass', rebin=10, xaxis='m_{ee} (GeV)', leftside=False)
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-ss-p1p2f3-e1e2Mass')
 

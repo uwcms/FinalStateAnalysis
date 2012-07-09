@@ -174,7 +174,7 @@ class WHPlotterBase(object):
         # Corrected fake view
         fakes_view = views.SumView(obj1_view, obj2_view, subtract_obj12_view)
         fakes_view = views.TitleView(
-            views.StyleView(fakes_view, **data_styles['Zjets*']), 'Non-prompt bkg.')
+            views.StyleView(fakes_view, **data_styles['Zjets*']), 'Non-prompt')
 
         output = {
             'vh120' : vh120_view,
