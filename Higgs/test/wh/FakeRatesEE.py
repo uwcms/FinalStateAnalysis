@@ -90,10 +90,11 @@ class FakeRatesEE(MegaBase):
             'e1ChargeIdTight',
             'e2ChargeIdTight',
 
-            # NEEDS E VETO!
+            '!eVetoCicTightIso',
             '!muVetoPt5',
             '!bjetCSVVeto',
             '!tauVetoPt20',
+
             '!e2HasConversion',
             '!e2MissingHits',
             '!e1HasConversion',

@@ -84,6 +84,8 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.tauVetoPt20:
             return False
+        if row.eVetoCicTightIso:
+            return False
         if not row.mPixHits:
             return False
         if row.eMissingHits:
@@ -104,6 +106,8 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         if abs(row.tDZ) > 0.2:
             return False
         if row.tMuOverlap:
+            return False
+        if row.tCiCTightElecOverlap:
             return False
         if not row.tAntiElectronMVA:
             return False

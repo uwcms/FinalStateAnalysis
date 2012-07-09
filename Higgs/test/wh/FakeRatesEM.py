@@ -75,6 +75,7 @@ class FakeRatesEM(MegaBase):
             'eAbsEta < 2.5',
             '!muVetoPt5',
             '!bjetCSVVeto',
+            '!eVetoCicTightIso',
             '!tauVetoPt20',
             '!eHasConversion',
             '!eMissingHits',

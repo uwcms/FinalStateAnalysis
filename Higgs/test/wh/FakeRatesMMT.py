@@ -70,8 +70,10 @@ class FakeRatesMMT(MegaBase):
             'abs(m1_m2_Mass-91.2) < 10',
             'tPt > 20',
             'tAbsEta < 2.3',
-            'tAntiElectronMVA',
+            '!tMuOverlap',
+            '!tCiCTightElecOverlap',
             'tAntiMuonTight',
+            'tAntiElectronMVA',
             'tMtToMET < 30',
         ])
 

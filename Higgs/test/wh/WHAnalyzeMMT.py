@@ -95,6 +95,8 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.tauVetoPt20:
             return False
+        if row.eVetoCicTightIso:
+            return False
         if not row.m1PixHits:
             return False
         if not row.m2PixHits:
@@ -113,6 +115,8 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         if not row.tAntiElectronMVA:
             return False
         if not row.tAntiMuonTight:
+            return False
+        if row.tCiCTightElecOverlap:
             return False
         if row.tMuOverlap:
             return False
