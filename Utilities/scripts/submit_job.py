@@ -40,6 +40,12 @@ if __name__ == "__main__":
         ' Note that inputFiles and outputFiles are always passed.'
     )
 
+    cmsrun_group.add_argument(
+        '--apply-cmsRun-lumimask', dest='apply_cms_lumimask',
+        action='store_true', help = 'If specified, pass the appropriate '
+        'lumiMask=XXX.json and firstRun etc to cmsRun'
+    )
+
     input_group = parser.add_mutually_exclusive_group(required=True)
 
     input_group.add_argument(
@@ -211,6 +217,17 @@ if __name__ == "__main__":
         command.extend(args.cmsargs)
         command.append("'inputFiles=$inputFileNames'")
         command.append("'outputFile=$outputFileName'")
+
+        if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
+            lumi_mask_path = os.path.join(
+                os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
+            command.append('lumiMask=%s' % lumi_mask_path)
+            firstRun = sample_info.get('firstRun', -1)
+            if firstRun > 0:
+                command.append('firstRun=%i' % firstRun)
+            lastRun = sample_info.get('lastRun', -1)
+            if lastRun > 0:
+                command.append('lastRun=%i' % lastRun)
 
         sys.stdout.write('# Submit file for sample %s\n' % sample)
         sys.stdout.write('mkdir -p %s\n' % os.path.dirname(dag_dir))
