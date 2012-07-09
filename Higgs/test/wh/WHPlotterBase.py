@@ -210,7 +210,7 @@ class WHPlotterBase(object):
         fakes.Write()
         vh120.Write()
 
-    def plot_final(self, variable, rebin=1, xaxis=''):
+    def plot_final(self, variable, rebin=1, xaxis='', maxy=10):
         ''' Plot the final output - with bkg. estimation '''
         sig_view = self.make_signal_views(rebin)
         vh_10x = views.TitleView(
@@ -227,7 +227,7 @@ class WHPlotterBase(object):
         histo = stack.Get(variable)
         histo.Draw()
         histo.GetHistogram().GetXaxis().SetTitle(xaxis)
-        histo.SetMaximum(2*histo.GetMaximum())
+        histo.SetMaximum(maxy)
         self.keep.append(histo)
 
         # Add legend
