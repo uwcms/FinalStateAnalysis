@@ -161,6 +161,10 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-subMass')
 
+    plotter.plot_final('e1tMass', 20, xaxis='m_{e_{1}#tau} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-e1tMass')
+
     plotter.plot_final('e1e2Mass', 20, xaxis='m_{ee} (GeV)')
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-e1e2Mass')
