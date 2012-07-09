@@ -324,11 +324,13 @@ def make_datacard_task(mass, channel, categories)
   card = "#{$carddir}/#{mass}/vhtt_#{channel}.txt"  
   file card => ["#{$carddir}/shapes.root", "#{$carddir}/unc.conf", "#{$carddir}/unc.vals", "#{$carddir}/cgs.conf"] do |t|
     chdir($carddir) do
-      sh "mkdir -p #{mass}"
+      sh "mkdir -p #{channel}/#{mass}"
+      sh "rm -f #{channel}/#{mass}/shapes.root"
+      sh "ln -s shapes.root #{channel}/#{mass}/shapes.root"
       if categories == ''
-        sh "create-datacard.py -i shapes.root -o #{mass}/vhtt_#{channel}.txt #{mass}"
+        sh "create-datacard.py -i shapes.root -o #{channel}/#{mass}/vhtt_#{channel}.txt #{mass}"
       else
-        sh "create-datacard.py -i shapes.root -o #{mass}/vhtt_#{channel}.txt #{mass} --categories '#{categories}'"
+        sh "create-datacard.py -i shapes.root -o #{channel}/#{mass}/vhtt_#{channel}.txt #{mass} --categories '#{categories}'"
       end
     end
   end
