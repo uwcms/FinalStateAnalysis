@@ -6,10 +6,10 @@
 mmt,emt,eet simulated lumi      1.022
 
 # Efficiency uncertainties
-emt     simulated CMS_eff_e 1.02
+emt         simulated CMS_eff_e 1.02
 emt,eet     simulated CMS_eff_e 1.03
-emt     simulated CMS_eff_m 1.01
-mmt     simulated CMS_eff_m 1.02
+emt         simulated CMS_eff_m 1.01
+mmt         simulated CMS_eff_m 1.02
 mmt,emt,eet simulated CMS_eff_t 1.06
 
 # Scale uncertainties
