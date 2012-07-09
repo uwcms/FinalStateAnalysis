@@ -9,7 +9,8 @@ rule ".root" => [
   proc {|targ| targ.sub(%r{results/(.*)/.*/(.*).root}, "inputs/\\1/\\2.txt")} ] do |t|
   # Make the output directory
   sh "mkdir -p `dirname #{t.name}`"
-  sh "time mega #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name}"
+  workers = ENV.fetch('megaworkers', 2)
+  sh "time mega #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name} --workers #{workers}"
 end
 
 task :analyze, [:jobid, :analyzer, :sample] do |t, args|
