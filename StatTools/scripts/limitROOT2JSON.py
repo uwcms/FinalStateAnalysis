@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 '''
 
-Extract the limit information from a Higgs combine result and write it to a JSON.
+Extract the limit information from a Higgs combine result(s) and write it to a JSON.
 
 '''
 
@@ -11,14 +11,14 @@ import sys
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('rootfile')
+    parser.add_argument('rootfiles', nargs='+')
     args = parser.parse_args()
 
     import ROOT
 
-    input = ROOT.TFile.Open(args.rootfile)
-
-    tree = input.Get('limit')
+    tree = ROOT.TChain('limit')
+    for file in args.rootfiles:
+        tree.Add(file)
 
     def get_quantile(x):
         # Convert a float value to a string label
@@ -42,5 +42,6 @@ if __name__ == "__main__":
         quantile = get_quantile(row.quantileExpected)
         limit = row.limit
         output[quantile] = limit
+        output['mass'] = row.mh
 
     json.dump(output, sys.stdout, indent=2)
