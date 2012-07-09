@@ -46,6 +46,11 @@ if options.eventsToProcess:
     process.source.eventsToProcess = cms.untracked.VEventRange(
         options.eventsToProcess)
 
+# If desired, apply a luminosity mask
+if options.lumiMask:
+    print "Applying LumiMask from", options.lumiMask
+    process.source.lumisToProcess = options.buildPoolSourceLumiMask()
+
 process.TFileService = cms.Service(
     "TFileService", fileName = cms.string(options.outputFile)
 )
