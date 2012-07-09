@@ -41,4 +41,7 @@ class FileProcessor(object):
         self.selector.begin()
         self.selector.process()
         self.selector.finish()
+        # Cleanup files
+        self.file.Close()
+        self.out.Close()
         return (1, self.outfilename)
