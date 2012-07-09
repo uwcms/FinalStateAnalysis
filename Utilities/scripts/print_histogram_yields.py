@@ -2,13 +2,14 @@
 
 '''
 
-Print all histogram yields in a file.
+Print all histogram yields in a file to stdout.
 
-Author: Evan K. friis
+Author: Evan K. Friis
 
 '''
 
 from RecoLuminosity.LumiDB import argparse
+import json
 import os
 import sys
 
@@ -25,6 +26,8 @@ if __name__ == "__main__":
         "The under- and over-flow bins are included")
 
     parser.add_argument('file', help="ROOT file")
+    parser.add_argument('--json', action='store_true',
+                        help="Write output in JSON format")
 
     args = parser.parse_args()
 
@@ -33,12 +36,23 @@ if __name__ == "__main__":
 
     file = io.open(args.file)
 
+    results = {}
+
     for path, dirs, histonames in file.walk(class_pattern='TH1*'):
         for histoname in histonames:
             full_path = os.path.join(path, histoname)
             histo = file.Get(full_path)
             int, err = get_integral(histo)
+            results[full_path] = (int, err)
+
+
+    if not args.json:
+        for full_path, (int, err) in results.iteritems():
             sys.stdout.write(" : ".join(
                 [full_path, "%0.5g" % int, "%0.5g" % err]))
             sys.stdout.write('\n')
+    else:
+        json.dump(results, sys.stdout, indent=2)
+        sys.stdout.write('\n')
+
 
