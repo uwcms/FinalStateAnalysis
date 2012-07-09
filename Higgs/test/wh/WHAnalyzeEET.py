@@ -14,7 +14,7 @@ import WHAnalyzerBase
 # Get fitted fake rate functions
 frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
 highpt_ee_fr = build_roofunctor(
-    frfit_dir + '/ee_wjets_pt20_mvaidiso03_e2JetPt-data_ee.root',
+    frfit_dir + '/ee_wjets_pt20_mvaidiso01_e2JetPt-data_ee.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
@@ -139,7 +139,7 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.e1_e2_SS)
 
     def obj1_id(self, row):
-        return bool(row.e1MVAIDH2TauWP) and bool(row.e1RelPFIsoDB < 0.3)
+        return bool(row.e1MVAIDH2TauWP) and bool(row.e1RelPFIsoDB < 0.1)
 
     def obj2_id(self, row):
         return bool(row.e2MVAIDH2TauWP) and bool(row.e2RelPFIsoDB < 0.1)

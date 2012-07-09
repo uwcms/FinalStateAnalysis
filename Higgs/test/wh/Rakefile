@@ -214,25 +214,21 @@ end
 ################################################################################
 
 task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['data_mm'] + samples['signal'])
-task :mmt => [ 
-  "#{$frfit_dir}/m_wjets_pt10_pfidiso03_muonJetPt-data_mm.root",
-  "#{$frfit_dir}/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root",
-  "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",
-]
 
 task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['data_em'] + samples['signal'])
-task :emt => [ 
-  "#{$frfit_dir}/e_wjets_pt10_mvaidiso03_eJetPt-data_em.root",
-  "#{$frfit_dir}/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root",
-  "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",
-]
 
 task :eet => get_analyzer_results("WHAnalyzeEET.py", samples['ewk'] + samples['data_ee'] + samples['signal'])
-task :eet => [ 
-  "#{$frfit_dir}/ee_wjets_pt20_mvaidiso03_e2JetPt-data_ee.root",
-  "#{$frfit_dir}/ee_wjets_pt10_mvaidiso01_e2JetPt-data_ee.root",
-  "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",
-]
+
+# IF the FR fits change, make sure we re-run the analyses
+file "WHAnalyzeEMT.py" => [ "#{$frfit_dir}/e_wjets_pt10_mvaidiso03_eJetPt-data_em.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
+  sh "touch #{t.name}"
+end
+file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso03_muonJetPt-data_mm.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
+  sh "touch #{t.name}"
+end
+file "WHAnalyzeEET.py" => [ "#{$frfit_dir}/ee_wjets_pt20_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/ee_wjets_pt10_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root"] do |t|
+  sh "touch #{t.name}"
+end
 
 ################################################################################
 # Recipes to make data cards (plots come for free)
