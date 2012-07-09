@@ -3,7 +3,7 @@
 # Example:
 # emu_vbf,emu_novbf,emu_boost     signal,EWK              lumi            1.045
 
-mmt,emt,eet simulated lumi      1.022
+mmt,emt,eet simulated lumi      1.05
 
 # Efficiency uncertainties
 emt         simulated CMS_eff_e 1.02
