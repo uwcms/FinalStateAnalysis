@@ -45,7 +45,6 @@ if __name__ == "__main__":
             int, err = get_integral(histo)
             results[full_path] = (int, err)
 
-
     if not args.json:
         for full_path, (int, err) in results.iteritems():
             sys.stdout.write(" : ".join(
@@ -54,5 +53,3 @@ if __name__ == "__main__":
     else:
         json.dump(results, sys.stdout, indent=2)
         sys.stdout.write('\n')
-
-
