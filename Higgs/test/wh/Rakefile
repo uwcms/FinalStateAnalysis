@@ -320,12 +320,16 @@ end
 
 cardmasses = Array[120]
 
-def make_datacard_task(mass)
-  card = "#{$carddir}/vhtt_0_#{mass}.txt"  
+def make_datacard_task(mass, channel, categories)
+  card = "#{$carddir}/#{mass}/vhtt_#{channel}.txt"  
   file card => ["#{$carddir}/shapes.root", "#{$carddir}/unc.conf", "#{$carddir}/unc.vals", "#{$carddir}/cgs.conf"] do |t|
     chdir($carddir) do
-      sh "create-datacard.py -i shapes.root -o vhtt_0_#{mass}.txt #{mass}"
-      # text2workspace.py  -m 125.5 vhtt_0_7TeV.txt -P HiggsAnalysis.CombinedLimit.PhysicsModel:strictSMLikeHiggs -o tmp.root
+      sh "mkdir -p #{mass}"
+      if categories == ''
+        sh "create-datacard.py -i shapes.root -o #{mass}/vhtt_#{channel}.txt #{mass}"
+      else
+        sh "create-datacard.py -i shapes.root -o #{mass}/vhtt_#{channel}.txt #{mass} --categories '#{categories}'"
+      end
     end
   end
   return card
@@ -334,6 +338,9 @@ end
 task :cards => []
 
 cardmasses.each do |mass|
-  task :cards => make_datacard_task(mass)
+  task :cards => make_datacard_task(mass, '2lt', '')
+  task :cards => make_datacard_task(mass, 'emt', 'emt')
+  task :cards => make_datacard_task(mass, 'mmt', 'mmt')
+  task :cards => make_datacard_task(mass, 'eet', 'eet')
 end
 
