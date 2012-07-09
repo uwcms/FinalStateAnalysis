@@ -1,7 +1,7 @@
 pushd $CMSSW_BASE/src
 
 # For limit tool
-cvs co -r V01-12-03 HiggsAnalysis/CombinedLimit
+cvs co -r V01-13-02 HiggsAnalysis/CombinedLimit
 # For a fix to prevent segfaults on certain MC samples when using
 # the GenParticlePrunder
 cvs co -r V11-03-16 PhysicsTools/HepMCCandAlgos
