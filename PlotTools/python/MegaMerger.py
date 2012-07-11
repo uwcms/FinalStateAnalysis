@@ -50,7 +50,7 @@ class MegaMerger(multiprocessing.Process):
         if self.first_merge:
             self.first_merge = False
         else:
-            to_merge.append(file)
+            to_merge.append(self.output)
 
         merger = ROOT.TFileMerger()
         merger.OutputFile(output_file_name)
