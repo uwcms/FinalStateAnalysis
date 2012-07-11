@@ -154,6 +154,18 @@ if __name__ == "__main__":
     plotter.plot_final('ePt', 10)
     plotter.save('final-ePt')
 
+    plotter.plot_final('tPt', 10)
+    plotter.save('final-tPt')
+
+    plotter.plot_final('mAbsEta', 10)
+    plotter.save('final-mAbsEta')
+
+    plotter.plot_final('eAbsEta', 10)
+    plotter.save('final-eAbsEta')
+
+    plotter.plot_final('tAbsEta', 10)
+    plotter.save('final-tAbsEta')
+
     plotter.plot_final('subMass', 20, xaxis='m_{#mu_{2}#tau} (GeV)')
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-subMass')

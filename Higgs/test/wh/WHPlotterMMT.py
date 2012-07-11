@@ -150,6 +150,22 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-m2Pt')
 
+    plotter.plot_final('m2Pt', 10)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-m2Pt')
+
+    plotter.plot_final('m1AbsEta', 10)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-m1AbsEta')
+
+    plotter.plot_final('m2AbsEta', 10)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-m2AbsEta')
+
+    plotter.plot_final('m2AbsEta', 10)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-m2AbsEta')
+
     plotter.plot_final('subMass', 20, xaxis='m_{#mu_{2}#tau} (GeV)')
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-subMass')
