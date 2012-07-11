@@ -165,6 +165,15 @@ fr_fits = Hash[
     "variables" => landau_vars,
     "rebin" => 5,
   ],
+  "m_wjets_pt20_pfidiso01_muonJetPt" => Hash[
+    "samples" => Array["wjets", "data_mm"],
+    "analyzer" => "FakeRatesMM",
+    #"function" => exponential,
+    #"variables" => exponential_vars,
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
   "t_ztt_pt20_mvaloose_tauPt" => Hash[
     "samples" => Array["zjets", "data_mm"],
     "analyzer" => "FakeRatesMMT",
