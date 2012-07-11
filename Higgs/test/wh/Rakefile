@@ -325,8 +325,11 @@ def make_datacard_task(mass, channel, categories)
   file card => ["#{$carddir}/shapes.root", "#{$carddir}/unc.conf", "#{$carddir}/unc.vals", "#{$carddir}/cgs.conf"] do |t|
     chdir($carddir) do
       sh "mkdir -p #{channel}/#{mass}"
-      sh "rm -f #{channel}/#{mass}/shapes.root"
-      sh "ln -s shapes.root #{channel}/#{mass}/shapes.root"
+      # Link the shape file in the card directory so combine can run from anywhere
+      chdir("#{channel}/#{mass}") do
+        sh "rm shapes.root"
+        sh "ln -s ../../shapes.root"
+      end
       if categories == ''
         sh "create-datacard.py -i shapes.root -o #{channel}/#{mass}/vhtt_#{channel}.txt #{mass}"
       else
