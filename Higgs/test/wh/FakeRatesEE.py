@@ -79,16 +79,16 @@ class FakeRatesEE(MegaBase):
     def process(self):
 
         def preselection(row):
-            if row.doubleEPass: return False
-            if row.e1Pt > 20: return False
-            if row.e1MVAIDH2TauWP: return False
-            if row.e2Pt > 10: return False
-            if row.e1AbsEta < 2.5: return False
-            if row.e2AbsEta < 2.5: return False
-            if row.e1JetBtag < 3.3: return False
-            if row.e2JetBtag < 3.3: return False
-            if row.e1ChargeIdTight: return False
-            if row.e2ChargeIdTight: return False
+            if not row.doubleEPass: return False
+            if not row.e1Pt > 20: return False
+            if not row.e1MVAIDH2TauWP: return False
+            if not row.e2Pt > 10: return False
+            if not row.e1AbsEta < 2.5: return False
+            if not row.e2AbsEta < 2.5: return False
+            if not row.e1JetBtag < 3.3: return False
+            if not row.e2JetBtag < 3.3: return False
+            if not row.e1ChargeIdTight: return False
+            if not row.e2ChargeIdTight: return False
             if row.eVetoCicTightIso: return False
             if row.muVetoPt5: return False
             if row.bjetCSVVeto: return False
@@ -97,8 +97,8 @@ class FakeRatesEE(MegaBase):
             if row.e2MissingHits: return False
             if row.e1HasConversion: return False
             if row.e1MissingHits: return False
-            if row.abs(e1DZ) < 0.2: return False
-            if row.abs(e2DZ) < 0.2: return False
+            if not abs(row.e1DZ) < 0.2: return False
+            if not abs(row.e2DZ) < 0.2: return False
             return True
 
         def fill(the_histos, row):
@@ -113,7 +113,8 @@ class FakeRatesEE(MegaBase):
         histos = self.histograms
         for row in self.tree:
             if not preselection(row):
-                return False
+                continue
+
             region = control_region(row)
             if region is None:
                 continue

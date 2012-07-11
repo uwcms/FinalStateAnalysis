@@ -99,7 +99,7 @@ class FakeRatesMM(MegaBase):
         histos = self.histograms
         for row in self.tree:
             if not preselection(row):
-                return False
+                continue
             region = control_region(row)
             if region is None:
                 continue
