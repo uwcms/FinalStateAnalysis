@@ -73,7 +73,9 @@ def data_views(files, lumifiles):
         raw_file = histo_files[sample]
         intlumi = lumi_files[sample]
         log.info("Building sample: %s => int lumi: %0.f pb-1", sample, intlumi)
-        weight = datalumi/intlumi
+        weight = 1
+        if intlumi:
+            weight = datalumi/intlumi
         if 'data' in sample:
             weight = 1
         log.debug("Weight: %0.2f", weight)
