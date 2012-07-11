@@ -327,7 +327,7 @@ file "#{$carddir}/unc.vals" => ["#{$carddir}/unc.vals.base"] + stat_shape_lists 
   end
 end
 
-cardmasses = Array[120]
+cardmasses = Array[120, 130, 140]
 
 def make_datacard_task(mass, channel, categories)
   card = "#{$carddir}/#{mass}/vhtt_#{channel}.txt"  
@@ -336,7 +336,7 @@ def make_datacard_task(mass, channel, categories)
       sh "mkdir -p #{channel}/#{mass}"
       # Link the shape file in the card directory so combine can run from anywhere
       chdir("#{channel}/#{mass}") do
-        sh "rm shapes.root"
+        sh "rm -f shapes.root"
         sh "ln -s ../../shapes.root"
       end
       if categories == ''

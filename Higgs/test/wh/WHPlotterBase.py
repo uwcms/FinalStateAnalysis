@@ -148,10 +148,6 @@ class WHPlotterBase(object):
     def make_signal_views(self, rebin):
         ''' Make signal views with FR background estimation '''
 
-        vh120_view = views.SubdirectoryView(
-            rebin_view(self.get_view('VH_*120'), rebin),
-            'ss/p1p2p3/'
-        )
         wz_view = views.SubdirectoryView(
             rebin_view(self.get_view('WZJetsTo3LNu*'), rebin),
             'ss/p1p2p3/'
@@ -177,7 +173,6 @@ class WHPlotterBase(object):
             views.StyleView(fakes_view, **data_styles['Zjets*']), 'Non-prompt')
 
         output = {
-            'vh120' : vh120_view,
             'wz' : wz_view,
             'zz' : zz_view,
             'data' : data_view,
@@ -185,6 +180,14 @@ class WHPlotterBase(object):
             'obj2' : obj2_view,
             'fakes' : fakes_view
         }
+
+        # Add signal
+        for mass in [120, 130, 140]:
+            vh_view = views.SubdirectoryView(
+                rebin_view(self.get_view('VH_*%i' % mass), rebin),
+                'ss/p1p2p3/'
+            )
+            output['vh%i' % mass] = vh_view
 
         return output
 
@@ -196,19 +199,21 @@ class WHPlotterBase(object):
         zz = sig_view['zz'].Get(variable)
         obs = sig_view['data'].Get(variable)
         fakes = sig_view['fakes'].Get(variable)
-        vh120 = sig_view['vh120'].Get(variable)
 
         wz.SetName('wz')
         zz.SetName('zz')
         obs.SetName('data_obs')
         fakes.SetName('fakes')
-        vh120.SetName('VH120')
+
+        for mass in [120, 130, 140]:
+            vh = sig_view['vh%i' % mass].Get(variable)
+            vh.SetName('VH%i' % mass)
+            vh.Write()
 
         wz.Write()
         zz.Write()
         obs.Write()
         fakes.Write()
-        vh120.Write()
 
     def plot_final(self, variable, rebin=1, xaxis='', maxy=10):
         ''' Plot the final output - with bkg. estimation '''
