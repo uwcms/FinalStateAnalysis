@@ -16,6 +16,7 @@ cdef extern from "TTree.h":
         int GetEntry(long, int)
         long LoadTree(long)
         long GetEntries()
+        TTree* GetTree()
         TBranch* GetBranch(char*)
 
 cdef extern from "TFile.h":
@@ -28,12 +29,15 @@ cdef extern from "TTreeFormula.h":
     cdef cppclass TTreeFormula:
         TTreeFormula(char*, char*, TTree*)
         double EvalInstance(int, char**)
+        void UpdateFormulaLeaves()
+        void SetTree(TTree*)
 
 from cpython cimport PyCObject_AsVoidPtr
 
 cdef class EETree:
-    # Pointers to tree and current entry
+    # Pointers to tree (may be a chain), current active tree, and current entry
     cdef TTree* tree
+    cdef TTree* currentTree
     cdef long ientry
 
     # Branches and address for all
@@ -406,502 +410,511 @@ cdef class EETree:
 
 
     def __cinit__(self, ttree):
-        #print "cinit"
+        print "cinit"
         # Constructor from a ROOT.TTree
         from ROOT import AsCObject
         self.tree = <TTree*>PyCObject_AsVoidPtr(AsCObject(ttree))
         self.ientry = 0
-        # Now set all the branch address
-        self.setup_branches()
+        self.load_entry(0)
 
-    def setup_branches(self):
+    cdef load_entry(self, long i):
+        print "load", i
+        # Load the correct tree and setup the branches
+        self.tree.LoadTree(i)
+        new_tree = self.tree.GetTree()
+        if new_tree != self.currentTree:
+            self.currentTree = new_tree
+            self.setup_branches(new_tree)
+
+    cdef setup_branches(self, TTree* the_tree):
+        print "setup"
 
         #print "making LT"
-        self.LT_branch = self.tree.GetBranch("LT")
+        self.LT_branch = the_tree.GetBranch("LT")
         self.LT_branch.SetAddress(<void*>&self.LT_value)
 
         #print "making Mass"
-        self.Mass_branch = self.tree.GetBranch("Mass")
+        self.Mass_branch = the_tree.GetBranch("Mass")
         self.Mass_branch.SetAddress(<void*>&self.Mass_value)
 
         #print "making Pt"
-        self.Pt_branch = self.tree.GetBranch("Pt")
+        self.Pt_branch = the_tree.GetBranch("Pt")
         self.Pt_branch.SetAddress(<void*>&self.Pt_value)
 
         #print "making bjetCSVVeto"
-        self.bjetCSVVeto_branch = self.tree.GetBranch("bjetCSVVeto")
+        self.bjetCSVVeto_branch = the_tree.GetBranch("bjetCSVVeto")
         self.bjetCSVVeto_branch.SetAddress(<void*>&self.bjetCSVVeto_value)
 
         #print "making bjetVeto"
-        self.bjetVeto_branch = self.tree.GetBranch("bjetVeto")
+        self.bjetVeto_branch = the_tree.GetBranch("bjetVeto")
         self.bjetVeto_branch.SetAddress(<void*>&self.bjetVeto_value)
 
         #print "making charge"
-        self.charge_branch = self.tree.GetBranch("charge")
+        self.charge_branch = the_tree.GetBranch("charge")
         self.charge_branch.SetAddress(<void*>&self.charge_value)
 
         #print "making doubleEExtraGroup"
-        self.doubleEExtraGroup_branch = self.tree.GetBranch("doubleEExtraGroup")
+        self.doubleEExtraGroup_branch = the_tree.GetBranch("doubleEExtraGroup")
         self.doubleEExtraGroup_branch.SetAddress(<void*>&self.doubleEExtraGroup_value)
 
         #print "making doubleEExtraPass"
-        self.doubleEExtraPass_branch = self.tree.GetBranch("doubleEExtraPass")
+        self.doubleEExtraPass_branch = the_tree.GetBranch("doubleEExtraPass")
         self.doubleEExtraPass_branch.SetAddress(<void*>&self.doubleEExtraPass_value)
 
         #print "making doubleEExtraPrescale"
-        self.doubleEExtraPrescale_branch = self.tree.GetBranch("doubleEExtraPrescale")
+        self.doubleEExtraPrescale_branch = the_tree.GetBranch("doubleEExtraPrescale")
         self.doubleEExtraPrescale_branch.SetAddress(<void*>&self.doubleEExtraPrescale_value)
 
         #print "making doubleEGroup"
-        self.doubleEGroup_branch = self.tree.GetBranch("doubleEGroup")
+        self.doubleEGroup_branch = the_tree.GetBranch("doubleEGroup")
         self.doubleEGroup_branch.SetAddress(<void*>&self.doubleEGroup_value)
 
         #print "making doubleEPass"
-        self.doubleEPass_branch = self.tree.GetBranch("doubleEPass")
+        self.doubleEPass_branch = the_tree.GetBranch("doubleEPass")
         self.doubleEPass_branch.SetAddress(<void*>&self.doubleEPass_value)
 
         #print "making doubleEPrescale"
-        self.doubleEPrescale_branch = self.tree.GetBranch("doubleEPrescale")
+        self.doubleEPrescale_branch = the_tree.GetBranch("doubleEPrescale")
         self.doubleEPrescale_branch.SetAddress(<void*>&self.doubleEPrescale_value)
 
         #print "making doubleMuGroup"
-        self.doubleMuGroup_branch = self.tree.GetBranch("doubleMuGroup")
+        self.doubleMuGroup_branch = the_tree.GetBranch("doubleMuGroup")
         self.doubleMuGroup_branch.SetAddress(<void*>&self.doubleMuGroup_value)
 
         #print "making doubleMuPass"
-        self.doubleMuPass_branch = self.tree.GetBranch("doubleMuPass")
+        self.doubleMuPass_branch = the_tree.GetBranch("doubleMuPass")
         self.doubleMuPass_branch.SetAddress(<void*>&self.doubleMuPass_value)
 
         #print "making doubleMuPrescale"
-        self.doubleMuPrescale_branch = self.tree.GetBranch("doubleMuPrescale")
+        self.doubleMuPrescale_branch = the_tree.GetBranch("doubleMuPrescale")
         self.doubleMuPrescale_branch.SetAddress(<void*>&self.doubleMuPrescale_value)
 
         #print "making doubleMuTrkGroup"
-        self.doubleMuTrkGroup_branch = self.tree.GetBranch("doubleMuTrkGroup")
+        self.doubleMuTrkGroup_branch = the_tree.GetBranch("doubleMuTrkGroup")
         self.doubleMuTrkGroup_branch.SetAddress(<void*>&self.doubleMuTrkGroup_value)
 
         #print "making doubleMuTrkPass"
-        self.doubleMuTrkPass_branch = self.tree.GetBranch("doubleMuTrkPass")
+        self.doubleMuTrkPass_branch = the_tree.GetBranch("doubleMuTrkPass")
         self.doubleMuTrkPass_branch.SetAddress(<void*>&self.doubleMuTrkPass_value)
 
         #print "making doubleMuTrkPrescale"
-        self.doubleMuTrkPrescale_branch = self.tree.GetBranch("doubleMuTrkPrescale")
+        self.doubleMuTrkPrescale_branch = the_tree.GetBranch("doubleMuTrkPrescale")
         self.doubleMuTrkPrescale_branch.SetAddress(<void*>&self.doubleMuTrkPrescale_value)
 
         #print "making e1AbsEta"
-        self.e1AbsEta_branch = self.tree.GetBranch("e1AbsEta")
+        self.e1AbsEta_branch = the_tree.GetBranch("e1AbsEta")
         self.e1AbsEta_branch.SetAddress(<void*>&self.e1AbsEta_value)
 
         #print "making e1Charge"
-        self.e1Charge_branch = self.tree.GetBranch("e1Charge")
+        self.e1Charge_branch = the_tree.GetBranch("e1Charge")
         self.e1Charge_branch.SetAddress(<void*>&self.e1Charge_value)
 
         #print "making e1ChargeIdLoose"
-        self.e1ChargeIdLoose_branch = self.tree.GetBranch("e1ChargeIdLoose")
+        self.e1ChargeIdLoose_branch = the_tree.GetBranch("e1ChargeIdLoose")
         self.e1ChargeIdLoose_branch.SetAddress(<void*>&self.e1ChargeIdLoose_value)
 
         #print "making e1ChargeIdMed"
-        self.e1ChargeIdMed_branch = self.tree.GetBranch("e1ChargeIdMed")
+        self.e1ChargeIdMed_branch = the_tree.GetBranch("e1ChargeIdMed")
         self.e1ChargeIdMed_branch.SetAddress(<void*>&self.e1ChargeIdMed_value)
 
         #print "making e1ChargeIdTight"
-        self.e1ChargeIdTight_branch = self.tree.GetBranch("e1ChargeIdTight")
+        self.e1ChargeIdTight_branch = the_tree.GetBranch("e1ChargeIdTight")
         self.e1ChargeIdTight_branch.SetAddress(<void*>&self.e1ChargeIdTight_value)
 
         #print "making e1CiCTight"
-        self.e1CiCTight_branch = self.tree.GetBranch("e1CiCTight")
+        self.e1CiCTight_branch = the_tree.GetBranch("e1CiCTight")
         self.e1CiCTight_branch.SetAddress(<void*>&self.e1CiCTight_value)
 
         #print "making e1DZ"
-        self.e1DZ_branch = self.tree.GetBranch("e1DZ")
+        self.e1DZ_branch = the_tree.GetBranch("e1DZ")
         self.e1DZ_branch.SetAddress(<void*>&self.e1DZ_value)
 
         #print "making e1Eta"
-        self.e1Eta_branch = self.tree.GetBranch("e1Eta")
+        self.e1Eta_branch = the_tree.GetBranch("e1Eta")
         self.e1Eta_branch.SetAddress(<void*>&self.e1Eta_value)
 
         #print "making e1HasConversion"
-        self.e1HasConversion_branch = self.tree.GetBranch("e1HasConversion")
+        self.e1HasConversion_branch = the_tree.GetBranch("e1HasConversion")
         self.e1HasConversion_branch.SetAddress(<void*>&self.e1HasConversion_value)
 
         #print "making e1IP3DS"
-        self.e1IP3DS_branch = self.tree.GetBranch("e1IP3DS")
+        self.e1IP3DS_branch = the_tree.GetBranch("e1IP3DS")
         self.e1IP3DS_branch.SetAddress(<void*>&self.e1IP3DS_value)
 
         #print "making e1JetBtag"
-        self.e1JetBtag_branch = self.tree.GetBranch("e1JetBtag")
+        self.e1JetBtag_branch = the_tree.GetBranch("e1JetBtag")
         self.e1JetBtag_branch.SetAddress(<void*>&self.e1JetBtag_value)
 
         #print "making e1JetPt"
-        self.e1JetPt_branch = self.tree.GetBranch("e1JetPt")
+        self.e1JetPt_branch = the_tree.GetBranch("e1JetPt")
         self.e1JetPt_branch.SetAddress(<void*>&self.e1JetPt_value)
 
         #print "making e1MITID"
-        self.e1MITID_branch = self.tree.GetBranch("e1MITID")
+        self.e1MITID_branch = the_tree.GetBranch("e1MITID")
         self.e1MITID_branch.SetAddress(<void*>&self.e1MITID_value)
 
         #print "making e1MVAIDH2TauWP"
-        self.e1MVAIDH2TauWP_branch = self.tree.GetBranch("e1MVAIDH2TauWP")
+        self.e1MVAIDH2TauWP_branch = the_tree.GetBranch("e1MVAIDH2TauWP")
         self.e1MVAIDH2TauWP_branch.SetAddress(<void*>&self.e1MVAIDH2TauWP_value)
 
         #print "making e1MVANonTrig"
-        self.e1MVANonTrig_branch = self.tree.GetBranch("e1MVANonTrig")
+        self.e1MVANonTrig_branch = the_tree.GetBranch("e1MVANonTrig")
         self.e1MVANonTrig_branch.SetAddress(<void*>&self.e1MVANonTrig_value)
 
         #print "making e1MVATrig"
-        self.e1MVATrig_branch = self.tree.GetBranch("e1MVATrig")
+        self.e1MVATrig_branch = the_tree.GetBranch("e1MVATrig")
         self.e1MVATrig_branch.SetAddress(<void*>&self.e1MVATrig_value)
 
         #print "making e1Mass"
-        self.e1Mass_branch = self.tree.GetBranch("e1Mass")
+        self.e1Mass_branch = the_tree.GetBranch("e1Mass")
         self.e1Mass_branch.SetAddress(<void*>&self.e1Mass_value)
 
         #print "making e1MissingHits"
-        self.e1MissingHits_branch = self.tree.GetBranch("e1MissingHits")
+        self.e1MissingHits_branch = the_tree.GetBranch("e1MissingHits")
         self.e1MissingHits_branch.SetAddress(<void*>&self.e1MissingHits_value)
 
         #print "making e1MtToMET"
-        self.e1MtToMET_branch = self.tree.GetBranch("e1MtToMET")
+        self.e1MtToMET_branch = the_tree.GetBranch("e1MtToMET")
         self.e1MtToMET_branch.SetAddress(<void*>&self.e1MtToMET_value)
 
         #print "making e1Phi"
-        self.e1Phi_branch = self.tree.GetBranch("e1Phi")
+        self.e1Phi_branch = the_tree.GetBranch("e1Phi")
         self.e1Phi_branch.SetAddress(<void*>&self.e1Phi_value)
 
         #print "making e1Pt"
-        self.e1Pt_branch = self.tree.GetBranch("e1Pt")
+        self.e1Pt_branch = the_tree.GetBranch("e1Pt")
         self.e1Pt_branch.SetAddress(<void*>&self.e1Pt_value)
 
         #print "making e1RelIso"
-        self.e1RelIso_branch = self.tree.GetBranch("e1RelIso")
+        self.e1RelIso_branch = the_tree.GetBranch("e1RelIso")
         self.e1RelIso_branch.SetAddress(<void*>&self.e1RelIso_value)
 
         #print "making e1RelPFIsoDB"
-        self.e1RelPFIsoDB_branch = self.tree.GetBranch("e1RelPFIsoDB")
+        self.e1RelPFIsoDB_branch = the_tree.GetBranch("e1RelPFIsoDB")
         self.e1RelPFIsoDB_branch.SetAddress(<void*>&self.e1RelPFIsoDB_value)
 
         #print "making e1SCEnergy"
-        self.e1SCEnergy_branch = self.tree.GetBranch("e1SCEnergy")
+        self.e1SCEnergy_branch = the_tree.GetBranch("e1SCEnergy")
         self.e1SCEnergy_branch.SetAddress(<void*>&self.e1SCEnergy_value)
 
         #print "making e1SCEta"
-        self.e1SCEta_branch = self.tree.GetBranch("e1SCEta")
+        self.e1SCEta_branch = the_tree.GetBranch("e1SCEta")
         self.e1SCEta_branch.SetAddress(<void*>&self.e1SCEta_value)
 
         #print "making e1SCPhi"
-        self.e1SCPhi_branch = self.tree.GetBranch("e1SCPhi")
+        self.e1SCPhi_branch = the_tree.GetBranch("e1SCPhi")
         self.e1SCPhi_branch.SetAddress(<void*>&self.e1SCPhi_value)
 
         #print "making e1VZ"
-        self.e1VZ_branch = self.tree.GetBranch("e1VZ")
+        self.e1VZ_branch = the_tree.GetBranch("e1VZ")
         self.e1VZ_branch.SetAddress(<void*>&self.e1VZ_value)
 
         #print "making e1WWID"
-        self.e1WWID_branch = self.tree.GetBranch("e1WWID")
+        self.e1WWID_branch = the_tree.GetBranch("e1WWID")
         self.e1WWID_branch.SetAddress(<void*>&self.e1WWID_value)
 
         #print "making e1_e2_DPhi"
-        self.e1_e2_DPhi_branch = self.tree.GetBranch("e1_e2_DPhi")
+        self.e1_e2_DPhi_branch = the_tree.GetBranch("e1_e2_DPhi")
         self.e1_e2_DPhi_branch.SetAddress(<void*>&self.e1_e2_DPhi_value)
 
         #print "making e1_e2_DR"
-        self.e1_e2_DR_branch = self.tree.GetBranch("e1_e2_DR")
+        self.e1_e2_DR_branch = the_tree.GetBranch("e1_e2_DR")
         self.e1_e2_DR_branch.SetAddress(<void*>&self.e1_e2_DR_value)
 
         #print "making e1_e2_Mass"
-        self.e1_e2_Mass_branch = self.tree.GetBranch("e1_e2_Mass")
+        self.e1_e2_Mass_branch = the_tree.GetBranch("e1_e2_Mass")
         self.e1_e2_Mass_branch.SetAddress(<void*>&self.e1_e2_Mass_value)
 
         #print "making e1_e2_PZeta"
-        self.e1_e2_PZeta_branch = self.tree.GetBranch("e1_e2_PZeta")
+        self.e1_e2_PZeta_branch = the_tree.GetBranch("e1_e2_PZeta")
         self.e1_e2_PZeta_branch.SetAddress(<void*>&self.e1_e2_PZeta_value)
 
         #print "making e1_e2_PZetaVis"
-        self.e1_e2_PZetaVis_branch = self.tree.GetBranch("e1_e2_PZetaVis")
+        self.e1_e2_PZetaVis_branch = the_tree.GetBranch("e1_e2_PZetaVis")
         self.e1_e2_PZetaVis_branch.SetAddress(<void*>&self.e1_e2_PZetaVis_value)
 
         #print "making e1_e2_Pt"
-        self.e1_e2_Pt_branch = self.tree.GetBranch("e1_e2_Pt")
+        self.e1_e2_Pt_branch = the_tree.GetBranch("e1_e2_Pt")
         self.e1_e2_Pt_branch.SetAddress(<void*>&self.e1_e2_Pt_value)
 
         #print "making e1_e2_SS"
-        self.e1_e2_SS_branch = self.tree.GetBranch("e1_e2_SS")
+        self.e1_e2_SS_branch = the_tree.GetBranch("e1_e2_SS")
         self.e1_e2_SS_branch.SetAddress(<void*>&self.e1_e2_SS_value)
 
         #print "making e1_e2_Zcompat"
-        self.e1_e2_Zcompat_branch = self.tree.GetBranch("e1_e2_Zcompat")
+        self.e1_e2_Zcompat_branch = the_tree.GetBranch("e1_e2_Zcompat")
         self.e1_e2_Zcompat_branch.SetAddress(<void*>&self.e1_e2_Zcompat_value)
 
         #print "making e2AbsEta"
-        self.e2AbsEta_branch = self.tree.GetBranch("e2AbsEta")
+        self.e2AbsEta_branch = the_tree.GetBranch("e2AbsEta")
         self.e2AbsEta_branch.SetAddress(<void*>&self.e2AbsEta_value)
 
         #print "making e2Charge"
-        self.e2Charge_branch = self.tree.GetBranch("e2Charge")
+        self.e2Charge_branch = the_tree.GetBranch("e2Charge")
         self.e2Charge_branch.SetAddress(<void*>&self.e2Charge_value)
 
         #print "making e2ChargeIdLoose"
-        self.e2ChargeIdLoose_branch = self.tree.GetBranch("e2ChargeIdLoose")
+        self.e2ChargeIdLoose_branch = the_tree.GetBranch("e2ChargeIdLoose")
         self.e2ChargeIdLoose_branch.SetAddress(<void*>&self.e2ChargeIdLoose_value)
 
         #print "making e2ChargeIdMed"
-        self.e2ChargeIdMed_branch = self.tree.GetBranch("e2ChargeIdMed")
+        self.e2ChargeIdMed_branch = the_tree.GetBranch("e2ChargeIdMed")
         self.e2ChargeIdMed_branch.SetAddress(<void*>&self.e2ChargeIdMed_value)
 
         #print "making e2ChargeIdTight"
-        self.e2ChargeIdTight_branch = self.tree.GetBranch("e2ChargeIdTight")
+        self.e2ChargeIdTight_branch = the_tree.GetBranch("e2ChargeIdTight")
         self.e2ChargeIdTight_branch.SetAddress(<void*>&self.e2ChargeIdTight_value)
 
         #print "making e2CiCTight"
-        self.e2CiCTight_branch = self.tree.GetBranch("e2CiCTight")
+        self.e2CiCTight_branch = the_tree.GetBranch("e2CiCTight")
         self.e2CiCTight_branch.SetAddress(<void*>&self.e2CiCTight_value)
 
         #print "making e2DZ"
-        self.e2DZ_branch = self.tree.GetBranch("e2DZ")
+        self.e2DZ_branch = the_tree.GetBranch("e2DZ")
         self.e2DZ_branch.SetAddress(<void*>&self.e2DZ_value)
 
         #print "making e2Eta"
-        self.e2Eta_branch = self.tree.GetBranch("e2Eta")
+        self.e2Eta_branch = the_tree.GetBranch("e2Eta")
         self.e2Eta_branch.SetAddress(<void*>&self.e2Eta_value)
 
         #print "making e2HasConversion"
-        self.e2HasConversion_branch = self.tree.GetBranch("e2HasConversion")
+        self.e2HasConversion_branch = the_tree.GetBranch("e2HasConversion")
         self.e2HasConversion_branch.SetAddress(<void*>&self.e2HasConversion_value)
 
         #print "making e2IP3DS"
-        self.e2IP3DS_branch = self.tree.GetBranch("e2IP3DS")
+        self.e2IP3DS_branch = the_tree.GetBranch("e2IP3DS")
         self.e2IP3DS_branch.SetAddress(<void*>&self.e2IP3DS_value)
 
         #print "making e2JetBtag"
-        self.e2JetBtag_branch = self.tree.GetBranch("e2JetBtag")
+        self.e2JetBtag_branch = the_tree.GetBranch("e2JetBtag")
         self.e2JetBtag_branch.SetAddress(<void*>&self.e2JetBtag_value)
 
         #print "making e2JetPt"
-        self.e2JetPt_branch = self.tree.GetBranch("e2JetPt")
+        self.e2JetPt_branch = the_tree.GetBranch("e2JetPt")
         self.e2JetPt_branch.SetAddress(<void*>&self.e2JetPt_value)
 
         #print "making e2MITID"
-        self.e2MITID_branch = self.tree.GetBranch("e2MITID")
+        self.e2MITID_branch = the_tree.GetBranch("e2MITID")
         self.e2MITID_branch.SetAddress(<void*>&self.e2MITID_value)
 
         #print "making e2MVAIDH2TauWP"
-        self.e2MVAIDH2TauWP_branch = self.tree.GetBranch("e2MVAIDH2TauWP")
+        self.e2MVAIDH2TauWP_branch = the_tree.GetBranch("e2MVAIDH2TauWP")
         self.e2MVAIDH2TauWP_branch.SetAddress(<void*>&self.e2MVAIDH2TauWP_value)
 
         #print "making e2MVANonTrig"
-        self.e2MVANonTrig_branch = self.tree.GetBranch("e2MVANonTrig")
+        self.e2MVANonTrig_branch = the_tree.GetBranch("e2MVANonTrig")
         self.e2MVANonTrig_branch.SetAddress(<void*>&self.e2MVANonTrig_value)
 
         #print "making e2MVATrig"
-        self.e2MVATrig_branch = self.tree.GetBranch("e2MVATrig")
+        self.e2MVATrig_branch = the_tree.GetBranch("e2MVATrig")
         self.e2MVATrig_branch.SetAddress(<void*>&self.e2MVATrig_value)
 
         #print "making e2Mass"
-        self.e2Mass_branch = self.tree.GetBranch("e2Mass")
+        self.e2Mass_branch = the_tree.GetBranch("e2Mass")
         self.e2Mass_branch.SetAddress(<void*>&self.e2Mass_value)
 
         #print "making e2MissingHits"
-        self.e2MissingHits_branch = self.tree.GetBranch("e2MissingHits")
+        self.e2MissingHits_branch = the_tree.GetBranch("e2MissingHits")
         self.e2MissingHits_branch.SetAddress(<void*>&self.e2MissingHits_value)
 
         #print "making e2MtToMET"
-        self.e2MtToMET_branch = self.tree.GetBranch("e2MtToMET")
+        self.e2MtToMET_branch = the_tree.GetBranch("e2MtToMET")
         self.e2MtToMET_branch.SetAddress(<void*>&self.e2MtToMET_value)
 
         #print "making e2Phi"
-        self.e2Phi_branch = self.tree.GetBranch("e2Phi")
+        self.e2Phi_branch = the_tree.GetBranch("e2Phi")
         self.e2Phi_branch.SetAddress(<void*>&self.e2Phi_value)
 
         #print "making e2Pt"
-        self.e2Pt_branch = self.tree.GetBranch("e2Pt")
+        self.e2Pt_branch = the_tree.GetBranch("e2Pt")
         self.e2Pt_branch.SetAddress(<void*>&self.e2Pt_value)
 
         #print "making e2RelIso"
-        self.e2RelIso_branch = self.tree.GetBranch("e2RelIso")
+        self.e2RelIso_branch = the_tree.GetBranch("e2RelIso")
         self.e2RelIso_branch.SetAddress(<void*>&self.e2RelIso_value)
 
         #print "making e2RelPFIsoDB"
-        self.e2RelPFIsoDB_branch = self.tree.GetBranch("e2RelPFIsoDB")
+        self.e2RelPFIsoDB_branch = the_tree.GetBranch("e2RelPFIsoDB")
         self.e2RelPFIsoDB_branch.SetAddress(<void*>&self.e2RelPFIsoDB_value)
 
         #print "making e2SCEnergy"
-        self.e2SCEnergy_branch = self.tree.GetBranch("e2SCEnergy")
+        self.e2SCEnergy_branch = the_tree.GetBranch("e2SCEnergy")
         self.e2SCEnergy_branch.SetAddress(<void*>&self.e2SCEnergy_value)
 
         #print "making e2SCEta"
-        self.e2SCEta_branch = self.tree.GetBranch("e2SCEta")
+        self.e2SCEta_branch = the_tree.GetBranch("e2SCEta")
         self.e2SCEta_branch.SetAddress(<void*>&self.e2SCEta_value)
 
         #print "making e2SCPhi"
-        self.e2SCPhi_branch = self.tree.GetBranch("e2SCPhi")
+        self.e2SCPhi_branch = the_tree.GetBranch("e2SCPhi")
         self.e2SCPhi_branch.SetAddress(<void*>&self.e2SCPhi_value)
 
         #print "making e2VZ"
-        self.e2VZ_branch = self.tree.GetBranch("e2VZ")
+        self.e2VZ_branch = the_tree.GetBranch("e2VZ")
         self.e2VZ_branch.SetAddress(<void*>&self.e2VZ_value)
 
         #print "making e2WWID"
-        self.e2WWID_branch = self.tree.GetBranch("e2WWID")
+        self.e2WWID_branch = the_tree.GetBranch("e2WWID")
         self.e2WWID_branch.SetAddress(<void*>&self.e2WWID_value)
 
         #print "making eVetoCicTightIso"
-        self.eVetoCicTightIso_branch = self.tree.GetBranch("eVetoCicTightIso")
+        self.eVetoCicTightIso_branch = the_tree.GetBranch("eVetoCicTightIso")
         self.eVetoCicTightIso_branch.SetAddress(<void*>&self.eVetoCicTightIso_value)
 
         #print "making eVetoMVAIso"
-        self.eVetoMVAIso_branch = self.tree.GetBranch("eVetoMVAIso")
+        self.eVetoMVAIso_branch = the_tree.GetBranch("eVetoMVAIso")
         self.eVetoMVAIso_branch.SetAddress(<void*>&self.eVetoMVAIso_value)
 
         #print "making evt"
-        self.evt_branch = self.tree.GetBranch("evt")
+        self.evt_branch = the_tree.GetBranch("evt")
         self.evt_branch.SetAddress(<void*>&self.evt_value)
 
         #print "making isdata"
-        self.isdata_branch = self.tree.GetBranch("isdata")
+        self.isdata_branch = the_tree.GetBranch("isdata")
         self.isdata_branch.SetAddress(<void*>&self.isdata_value)
 
         #print "making isoMuGroup"
-        self.isoMuGroup_branch = self.tree.GetBranch("isoMuGroup")
+        self.isoMuGroup_branch = the_tree.GetBranch("isoMuGroup")
         self.isoMuGroup_branch.SetAddress(<void*>&self.isoMuGroup_value)
 
         #print "making isoMuPass"
-        self.isoMuPass_branch = self.tree.GetBranch("isoMuPass")
+        self.isoMuPass_branch = the_tree.GetBranch("isoMuPass")
         self.isoMuPass_branch.SetAddress(<void*>&self.isoMuPass_value)
 
         #print "making isoMuPrescale"
-        self.isoMuPrescale_branch = self.tree.GetBranch("isoMuPrescale")
+        self.isoMuPrescale_branch = the_tree.GetBranch("isoMuPrescale")
         self.isoMuPrescale_branch.SetAddress(<void*>&self.isoMuPrescale_value)
 
         #print "making jetVeto20"
-        self.jetVeto20_branch = self.tree.GetBranch("jetVeto20")
+        self.jetVeto20_branch = the_tree.GetBranch("jetVeto20")
         self.jetVeto20_branch.SetAddress(<void*>&self.jetVeto20_value)
 
         #print "making jetVeto40"
-        self.jetVeto40_branch = self.tree.GetBranch("jetVeto40")
+        self.jetVeto40_branch = the_tree.GetBranch("jetVeto40")
         self.jetVeto40_branch.SetAddress(<void*>&self.jetVeto40_value)
 
         #print "making lumi"
-        self.lumi_branch = self.tree.GetBranch("lumi")
+        self.lumi_branch = the_tree.GetBranch("lumi")
         self.lumi_branch.SetAddress(<void*>&self.lumi_value)
 
         #print "making metEt"
-        self.metEt_branch = self.tree.GetBranch("metEt")
+        self.metEt_branch = the_tree.GetBranch("metEt")
         self.metEt_branch.SetAddress(<void*>&self.metEt_value)
 
         #print "making metPhi"
-        self.metPhi_branch = self.tree.GetBranch("metPhi")
+        self.metPhi_branch = the_tree.GetBranch("metPhi")
         self.metPhi_branch.SetAddress(<void*>&self.metPhi_value)
 
         #print "making metSignificance"
-        self.metSignificance_branch = self.tree.GetBranch("metSignificance")
+        self.metSignificance_branch = the_tree.GetBranch("metSignificance")
         self.metSignificance_branch.SetAddress(<void*>&self.metSignificance_value)
 
         #print "making mu17ele8Group"
-        self.mu17ele8Group_branch = self.tree.GetBranch("mu17ele8Group")
+        self.mu17ele8Group_branch = the_tree.GetBranch("mu17ele8Group")
         self.mu17ele8Group_branch.SetAddress(<void*>&self.mu17ele8Group_value)
 
         #print "making mu17ele8Pass"
-        self.mu17ele8Pass_branch = self.tree.GetBranch("mu17ele8Pass")
+        self.mu17ele8Pass_branch = the_tree.GetBranch("mu17ele8Pass")
         self.mu17ele8Pass_branch.SetAddress(<void*>&self.mu17ele8Pass_value)
 
         #print "making mu17ele8Prescale"
-        self.mu17ele8Prescale_branch = self.tree.GetBranch("mu17ele8Prescale")
+        self.mu17ele8Prescale_branch = the_tree.GetBranch("mu17ele8Prescale")
         self.mu17ele8Prescale_branch.SetAddress(<void*>&self.mu17ele8Prescale_value)
 
         #print "making mu8ele17Group"
-        self.mu8ele17Group_branch = self.tree.GetBranch("mu8ele17Group")
+        self.mu8ele17Group_branch = the_tree.GetBranch("mu8ele17Group")
         self.mu8ele17Group_branch.SetAddress(<void*>&self.mu8ele17Group_value)
 
         #print "making mu8ele17Pass"
-        self.mu8ele17Pass_branch = self.tree.GetBranch("mu8ele17Pass")
+        self.mu8ele17Pass_branch = the_tree.GetBranch("mu8ele17Pass")
         self.mu8ele17Pass_branch.SetAddress(<void*>&self.mu8ele17Pass_value)
 
         #print "making mu8ele17Prescale"
-        self.mu8ele17Prescale_branch = self.tree.GetBranch("mu8ele17Prescale")
+        self.mu8ele17Prescale_branch = the_tree.GetBranch("mu8ele17Prescale")
         self.mu8ele17Prescale_branch.SetAddress(<void*>&self.mu8ele17Prescale_value)
 
         #print "making muGlbIsoVetoPt10"
-        self.muGlbIsoVetoPt10_branch = self.tree.GetBranch("muGlbIsoVetoPt10")
+        self.muGlbIsoVetoPt10_branch = the_tree.GetBranch("muGlbIsoVetoPt10")
         self.muGlbIsoVetoPt10_branch.SetAddress(<void*>&self.muGlbIsoVetoPt10_value)
 
         #print "making muVetoPt5"
-        self.muVetoPt5_branch = self.tree.GetBranch("muVetoPt5")
+        self.muVetoPt5_branch = the_tree.GetBranch("muVetoPt5")
         self.muVetoPt5_branch.SetAddress(<void*>&self.muVetoPt5_value)
 
         #print "making nTruePU"
-        self.nTruePU_branch = self.tree.GetBranch("nTruePU")
+        self.nTruePU_branch = the_tree.GetBranch("nTruePU")
         self.nTruePU_branch.SetAddress(<void*>&self.nTruePU_value)
 
         #print "making nvtx"
-        self.nvtx_branch = self.tree.GetBranch("nvtx")
+        self.nvtx_branch = the_tree.GetBranch("nvtx")
         self.nvtx_branch.SetAddress(<void*>&self.nvtx_value)
 
         #print "making processID"
-        self.processID_branch = self.tree.GetBranch("processID")
+        self.processID_branch = the_tree.GetBranch("processID")
         self.processID_branch.SetAddress(<void*>&self.processID_value)
 
         #print "making puWeightData2011AB"
-        self.puWeightData2011AB_branch = self.tree.GetBranch("puWeightData2011AB")
+        self.puWeightData2011AB_branch = the_tree.GetBranch("puWeightData2011AB")
         self.puWeightData2011AB_branch.SetAddress(<void*>&self.puWeightData2011AB_value)
 
         #print "making puWeightData2012A"
-        self.puWeightData2012A_branch = self.tree.GetBranch("puWeightData2012A")
+        self.puWeightData2012A_branch = the_tree.GetBranch("puWeightData2012A")
         self.puWeightData2012A_branch.SetAddress(<void*>&self.puWeightData2012A_value)
 
         #print "making puWeightData2012AB"
-        self.puWeightData2012AB_branch = self.tree.GetBranch("puWeightData2012AB")
+        self.puWeightData2012AB_branch = the_tree.GetBranch("puWeightData2012AB")
         self.puWeightData2012AB_branch.SetAddress(<void*>&self.puWeightData2012AB_value)
 
         #print "making rho"
-        self.rho_branch = self.tree.GetBranch("rho")
+        self.rho_branch = the_tree.GetBranch("rho")
         self.rho_branch.SetAddress(<void*>&self.rho_value)
 
         #print "making run"
-        self.run_branch = self.tree.GetBranch("run")
+        self.run_branch = the_tree.GetBranch("run")
         self.run_branch.SetAddress(<void*>&self.run_value)
 
         #print "making singleMuGroup"
-        self.singleMuGroup_branch = self.tree.GetBranch("singleMuGroup")
+        self.singleMuGroup_branch = the_tree.GetBranch("singleMuGroup")
         self.singleMuGroup_branch.SetAddress(<void*>&self.singleMuGroup_value)
 
         #print "making singleMuPass"
-        self.singleMuPass_branch = self.tree.GetBranch("singleMuPass")
+        self.singleMuPass_branch = the_tree.GetBranch("singleMuPass")
         self.singleMuPass_branch.SetAddress(<void*>&self.singleMuPass_value)
 
         #print "making singleMuPrescale"
-        self.singleMuPrescale_branch = self.tree.GetBranch("singleMuPrescale")
+        self.singleMuPrescale_branch = the_tree.GetBranch("singleMuPrescale")
         self.singleMuPrescale_branch.SetAddress(<void*>&self.singleMuPrescale_value)
 
         #print "making tauVetoPt20"
-        self.tauVetoPt20_branch = self.tree.GetBranch("tauVetoPt20")
+        self.tauVetoPt20_branch = the_tree.GetBranch("tauVetoPt20")
         self.tauVetoPt20_branch.SetAddress(<void*>&self.tauVetoPt20_value)
 
         #print "making vbfDeta"
-        self.vbfDeta_branch = self.tree.GetBranch("vbfDeta")
+        self.vbfDeta_branch = the_tree.GetBranch("vbfDeta")
         self.vbfDeta_branch.SetAddress(<void*>&self.vbfDeta_value)
 
         #print "making vbfJetVeto20"
-        self.vbfJetVeto20_branch = self.tree.GetBranch("vbfJetVeto20")
+        self.vbfJetVeto20_branch = the_tree.GetBranch("vbfJetVeto20")
         self.vbfJetVeto20_branch.SetAddress(<void*>&self.vbfJetVeto20_value)
 
         #print "making vbfJetVeto30"
-        self.vbfJetVeto30_branch = self.tree.GetBranch("vbfJetVeto30")
+        self.vbfJetVeto30_branch = the_tree.GetBranch("vbfJetVeto30")
         self.vbfJetVeto30_branch.SetAddress(<void*>&self.vbfJetVeto30_value)
 
         #print "making vbfMVA"
-        self.vbfMVA_branch = self.tree.GetBranch("vbfMVA")
+        self.vbfMVA_branch = the_tree.GetBranch("vbfMVA")
         self.vbfMVA_branch.SetAddress(<void*>&self.vbfMVA_value)
 
         #print "making vbfMass"
-        self.vbfMass_branch = self.tree.GetBranch("vbfMass")
+        self.vbfMass_branch = the_tree.GetBranch("vbfMass")
         self.vbfMass_branch.SetAddress(<void*>&self.vbfMass_value)
 
         #print "making vbfNJets"
-        self.vbfNJets_branch = self.tree.GetBranch("vbfNJets")
+        self.vbfNJets_branch = the_tree.GetBranch("vbfNJets")
         self.vbfNJets_branch.SetAddress(<void*>&self.vbfNJets_value)
 
         #print "making idx"
-        self.idx_branch = self.tree.GetBranch("idx")
+        self.idx_branch = the_tree.GetBranch("idx")
         self.idx_branch.SetAddress(<void*>&self.idx_value)
 
 
@@ -909,16 +922,23 @@ cdef class EETree:
     def __iter__(self):
         self.ientry = 0
         while self.ientry < self.tree.GetEntries():
+            self.load_entry(self.ientry)
             yield self
             self.ientry += 1
 
     # Iterate over rows which pass the filter
     def where(self, filter):
+        print "where"
         cdef TTreeFormula* formula = new TTreeFormula(
             "cyiter", filter, self.tree)
         self.ientry = 0
+        cdef TTree* currentTree = self.tree.GetTree()
         while self.ientry < self.tree.GetEntries():
             self.tree.LoadTree(self.ientry)
+            if currentTree != self.tree.GetTree():
+                currentTree = self.tree.GetTree()
+                formula.SetTree(currentTree)
+                formula.UpdateFormulaLeaves()
             if formula.EvalInstance(0, NULL):
                 yield self
             self.ientry += 1
@@ -929,7 +949,9 @@ cdef class EETree:
         def __get__(self):
             return self.ientry
         def __set__(self, int i):
+            print i
             self.ientry = i
+            self.load_entry(i)
 
     # Access to the current branch values
 
