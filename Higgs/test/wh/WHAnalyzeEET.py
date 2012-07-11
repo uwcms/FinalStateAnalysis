@@ -52,6 +52,7 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
         self.book(folder, "tPt", "tPt", 100, 0,100)
         self.book(folder, "tAbsEta", "tAbsEta", 100, 0, 2.3)
         self.book(folder, "metSig", "MET significance", 100, 0, 15)
+        self.book(folder, "LT", "L_T", 100, 0, 300)
 
     def fill_histos(self, histos, folder, row, weight):
         def fill(name, value):
@@ -72,6 +73,7 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
         fill('e2Iso', row.e2RelPFIsoDB)
         fill('tPt', row.tPt)
         fill('tAbsEta', row.tAbsEta)
+        fill('LT', row.LT)
 
     def preselection(self, row):
         ''' Preselection applied to events.
@@ -97,6 +99,9 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
         if row.e1_e2_Mass < 20:
             return False
 
+        if row.metSignificance < 2.5:
+            return False
+
         if not row.e1ChargeIdTight:
             return False
         if not row.e2ChargeIdTight:
@@ -105,7 +110,7 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
         if row.e1_e2_Mass > 81 and row.e1_e2_Mass < 101:
             return False
 
-        if row.LT < 80:
+        if row.LT < 100:
             return False
 
         if row.bjetCSVVeto:
