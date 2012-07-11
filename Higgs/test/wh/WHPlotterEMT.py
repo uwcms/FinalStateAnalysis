@@ -170,8 +170,8 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-subMass')
 
-    #plotter.plot_final('metSig', 10)
-    #plotter.save('final-metSig')
+    plotter.plot_final('metSig', 5)
+    plotter.save('final-metSig')
     #plotter.plot_final('tLeadDR', 10)
     #plotter.save('final-tLeadDR')
     #plotter.plot_final('tSubDR', 10)
