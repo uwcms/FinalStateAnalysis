@@ -29,8 +29,6 @@ class MegaMerger(multiprocessing.Process):
             FormatLabel('Processed %(value)i/' + str(ninputs) + ' files. '),
             ETA(), Bar('>')], maxval=ninputs).start()
         self.pbar.update(0)
-        self.processed_entries = 0
-        self.procs_to_clean = None
         self.files_to_clean = None
 
     def merge_into_output(self, files):
@@ -64,7 +62,6 @@ class MegaMerger(multiprocessing.Process):
         self.log.info("Output file is: %s, moving to %s", output_file_name,
                       self.output)
         shutil.move(output_file_name, self.output)
-        self.log.info("Processed %i entries so far", self.processed_entries)
 
         # Cleanup.  We don't need to cleanup the temporary output, since it
         # is moved.
@@ -91,7 +88,7 @@ class MegaMerger(multiprocessing.Process):
                         done = True
                         break
                     inputs_to_merge.append(to_merge)
-                    self.processed += 1
+                    self.processed += to_merge[0]
                     self.pbar.update(self.processed)
                     # Make it merge the files if the queue is stacking up.
                     if len(inputs_to_merge) > 15:
@@ -103,7 +100,6 @@ class MegaMerger(multiprocessing.Process):
             if inputs_to_merge:
                 files_to_merge = []
                 for entries, file in inputs_to_merge:
-                    self.processed_entries  += entries
                     files_to_merge.append(file)
                 self.merge_into_output(files_to_merge)
             if done:
