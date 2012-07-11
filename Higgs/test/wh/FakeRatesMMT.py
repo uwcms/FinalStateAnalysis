@@ -67,7 +67,7 @@ class FakeRatesMMT(MegaBase):
             if not row.m2RelPFIsoDB < 0.25: return False
             if not row.m1PFIDTight: return False
             if not row.m2PFIDTight: return False
-            if not row.abs(m1_m2_Mass-91.2) < 10: return False
+            if not abs(row.m1_m2_Mass-91.2) < 10: return False
             if not row.tPt > 20: return False
             if not row.tAbsEta < 2.3: return False
             if row.tMuOverlap: return False

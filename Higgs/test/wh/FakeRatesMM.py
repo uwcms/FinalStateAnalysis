@@ -82,8 +82,8 @@ class FakeRatesMM(MegaBase):
             if row.muVetoPt5: return False
             if row.bjetCSVVeto: return False
             if row.tauVetoPt20: return False
-            if not row.abs(m1DZ) < 0.2: return False
-            if not row.abs(m2DZ) < 0.2: return False
+            if not abs(row.m1DZ) < 0.2: return False
+            if not abs(row.m2DZ) < 0.2: return False
             return True
 
         def fill(the_histos, row):

@@ -68,20 +68,20 @@ class FakeRatesEM(MegaBase):
     def process(self):
 
         def preselection(row):
-            if not mu17ele8Pass: return False
-            if not e_m_SS: return False
-            if not mPt > 20: return False
-            if not ePt > 10: return False
-            if not mAbsEta < 2.4: return False
-            if not eAbsEta < 2.5: return False
-            if muVetoPt5: return False
-            if bjetCSVVeto: return False
-            if eVetoCicTightIso: return False
-            if tauVetoPt20: return False
-            if eHasConversion: return False
-            if eMissingHits: return False
-            if not abs(mDZ) < 0.2: return False
-            if not abs(eDZ) < 0.2: return False
+            if not row.mu17ele8Pass: return False
+            if not row.e_m_SS: return False
+            if not row.mPt > 20: return False
+            if not row.ePt > 10: return False
+            if not row.mAbsEta < 2.4: return False
+            if not row.eAbsEta < 2.5: return False
+            if row.muVetoPt5: return False
+            if row.bjetCSVVeto: return False
+            if row.eVetoCicTightIso: return False
+            if row.tauVetoPt20: return False
+            if row.eHasConversion: return False
+            if row.eMissingHits: return False
+            if not abs(row.mDZ) < 0.2: return False
+            if not abs(row.eDZ) < 0.2: return False
             return True
         #if self.is7TeV:
             #base_selection = 'mu17ele8Pass && ' + base_selection
