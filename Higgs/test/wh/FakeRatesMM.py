@@ -66,23 +66,25 @@ class FakeRatesMM(MegaBase):
                     book_histo('metSignificance', 'MET sig.', 100, 0, 10)
                     book_histo('m1MtToMET', 'Muon 1 MT', 100, 0, 200)
 
+
     def process(self):
-        base_selection = ' && '.join([
-            'm1_m2_SS',
-            'doubleMuPass',
-            'm1Pt > 20',
-            'm1PFIDTight',
-            'm2Pt > 10',
-            'm1AbsEta < 2.4',
-            'm2AbsEta < 2.4',
-            'm2JetBtag < 3.3',
-            'm2PixHits',
-            '!muVetoPt5',
-            '!bjetCSVVeto',
-            '!tauVetoPt20',
-            'abs(m1DZ) < 0.2',
-            'abs(m2DZ) < 0.2',
-        ])
+
+        def preselection(row):
+            if not row.m1_m2_SS: return False
+            if not row.doubleMuPass: return False
+            if not row.m1Pt > 20: return False
+            if not row.m1PFIDTight: return False
+            if not row.m2Pt > 10: return False
+            if not row.m1AbsEta < 2.4: return False
+            if not row.m2AbsEta < 2.4: return False
+            if not row.m2JetBtag < 3.3: return False
+            if not row.m2PixHits: return False
+            if row.muVetoPt5: return False
+            if row.bjetCSVVeto: return False
+            if row.tauVetoPt20: return False
+            if not row.abs(m1DZ) < 0.2: return False
+            if not row.abs(m2DZ) < 0.2: return False
+            return True
 
         def fill(the_histos, row):
             # Get PU weight
@@ -95,7 +97,9 @@ class FakeRatesMM(MegaBase):
             the_histos['m1MtToMET'].Fill(row.m1MtToMET, weight)
 
         histos = self.histograms
-        for row in self.tree.where(base_selection):
+        for row in self.tree:
+            if not preselection(row):
+                return False
             region = control_region(row)
             if region is None:
                 continue

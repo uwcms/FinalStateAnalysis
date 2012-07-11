@@ -66,22 +66,23 @@ class FakeRatesEM(MegaBase):
                     book_histo('mMtToMET', 'm MT', 100, 0, 200)
 
     def process(self):
-        base_selection = ' && '.join([
-            'mu17ele8Pass',
-            'e_m_SS',
-            'mPt > 20',
-            'ePt > 10',
-            'mAbsEta < 2.4',
-            'eAbsEta < 2.5',
-            '!muVetoPt5',
-            '!bjetCSVVeto',
-            '!eVetoCicTightIso',
-            '!tauVetoPt20',
-            '!eHasConversion',
-            '!eMissingHits',
-            'abs(mDZ) < 0.2',
-            'abs(eDZ) < 0.2',
-        ])
+
+        def preselection(row):
+            if not mu17ele8Pass: return False
+            if not e_m_SS: return False
+            if not mPt > 20: return False
+            if not ePt > 10: return False
+            if not mAbsEta < 2.4: return False
+            if not eAbsEta < 2.5: return False
+            if muVetoPt5: return False
+            if bjetCSVVeto: return False
+            if eVetoCicTightIso: return False
+            if tauVetoPt20: return False
+            if eHasConversion: return False
+            if eMissingHits: return False
+            if not abs(mDZ) < 0.2: return False
+            if not abs(eDZ) < 0.2: return False
+            return True
         #if self.is7TeV:
             #base_selection = 'mu17ele8Pass && ' + base_selection
 
@@ -93,7 +94,9 @@ class FakeRatesEM(MegaBase):
             the_histos['mMtToMET'].Fill(row.mMtToMET)
 
         histos = self.histograms
-        for row in self.tree.where(base_selection):
+        for row in self.tree:
+            if not preselection(row):
+                continue
             region = control_region(row)
             if region is None:
                 continue

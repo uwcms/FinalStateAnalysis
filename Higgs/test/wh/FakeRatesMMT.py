@@ -62,20 +62,20 @@ class FakeRatesMMT(MegaBase):
             the_histos['tauJetPt'].Fill(row.tJetPt, weight)
             the_histos['tauAbsEta'].Fill(row.tAbsEta, weight)
 
-        base_selection = ' && '.join([
-            'm1RelPFIsoDB < 0.25',
-            'm2RelPFIsoDB < 0.25',
-            'm1PFIDTight',
-            'm2PFIDTight',
-            'abs(m1_m2_Mass-91.2) < 10',
-            'tPt > 20',
-            'tAbsEta < 2.3',
-            '!tMuOverlap',
-            '!tCiCTightElecOverlap',
-            'tAntiMuonTight',
-            'tAntiElectronMVA',
-            'tMtToMET < 30',
-        ])
+        def preselection(row):
+            if not row.m1RelPFIsoDB < 0.25: return False
+            if not row.m2RelPFIsoDB < 0.25: return False
+            if not row.m1PFIDTight: return False
+            if not row.m2PFIDTight: return False
+            if not row.abs(m1_m2_Mass-91.2) < 10: return False
+            if not row.tPt > 20: return False
+            if not row.tAbsEta < 2.3: return False
+            if row.tMuOverlap: return False
+            if row.tCiCTightElecOverlap: return False
+            if not row.tAntiMuonTight: return False
+            if not row.tAntiElectronMVA: return False
+            if not row.tMtToMET < 30: return False
+            return True
 
         histos = self.histograms
 
@@ -83,7 +83,9 @@ class FakeRatesMMT(MegaBase):
         pt20 = histos[('ztt', 'pt20')]
 
         # Analyze data.  Select events with a good Z.
-        for row in self.tree.where(base_selection):
+        for row in self.tree:
+            if not preselection(row):
+                continue
 
             # Fill denominator
             fill(pt20, row)

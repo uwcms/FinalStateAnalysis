@@ -77,32 +77,29 @@ class FakeRatesEE(MegaBase):
         self.book('charge', 'e1e2MassSS', 'DiEle mass SS', 60, 60, 120)
 
     def process(self):
-        base_selection = ' && '.join([
-            'doubleEPass',
-            'e1Pt > 20',
-            'e1MVAIDH2TauWP',
-            'e2Pt > 10',
-            'e1AbsEta < 2.5',
-            'e2AbsEta < 2.5',
-            'e1JetBtag < 3.3',
-            'e2JetBtag < 3.3',
 
-            'e1ChargeIdTight',
-            'e2ChargeIdTight',
-
-            '!eVetoCicTightIso',
-            '!muVetoPt5',
-            '!bjetCSVVeto',
-            '!tauVetoPt20',
-
-            '!e2HasConversion',
-            '!e2MissingHits',
-            '!e1HasConversion',
-            '!e1MissingHits',
-
-            'abs(e1DZ) < 0.2',
-            'abs(e2DZ) < 0.2',
-        ])
+        def preselection(row):
+            if row.doubleEPass: return False
+            if row.e1Pt > 20: return False
+            if row.e1MVAIDH2TauWP: return False
+            if row.e2Pt > 10: return False
+            if row.e1AbsEta < 2.5: return False
+            if row.e2AbsEta < 2.5: return False
+            if row.e1JetBtag < 3.3: return False
+            if row.e2JetBtag < 3.3: return False
+            if row.e1ChargeIdTight: return False
+            if row.e2ChargeIdTight: return False
+            if row.eVetoCicTightIso: return False
+            if row.muVetoPt5: return False
+            if row.bjetCSVVeto: return False
+            if row.tauVetoPt20: return False
+            if row.e2HasConversion: return False
+            if row.e2MissingHits: return False
+            if row.e1HasConversion: return False
+            if row.e1MissingHits: return False
+            if row.abs(e1DZ) < 0.2: return False
+            if row.abs(e2DZ) < 0.2: return False
+            return True
 
         def fill(the_histos, row):
             the_histos['e2Pt'].Fill(row.e2Pt)
@@ -114,7 +111,9 @@ class FakeRatesEE(MegaBase):
             the_histos['doubleEPrescale'].Fill(row.doubleEPrescale)
 
         histos = self.histograms
-        for row in self.tree.where(base_selection):
+        for row in self.tree:
+            if not preselection(row):
+                return False
             region = control_region(row)
             if region is None:
                 continue
