@@ -120,7 +120,7 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if abs(row.tDZ) > 0.2:
             return False
-        if not row.tAntiElectronMVA:
+        if not row.tAntiElectronLoose:
             return False
         if not row.tAntiMuonTight:
             return False
