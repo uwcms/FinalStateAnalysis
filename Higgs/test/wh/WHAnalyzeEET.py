@@ -51,6 +51,7 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
         self.book(folder, "e2Iso", "e2Iso", 100, 0, 0.3)
         self.book(folder, "tPt", "tPt", 100, 0,100)
         self.book(folder, "tAbsEta", "tAbsEta", 100, 0, 2.3)
+        self.book(folder, "metSig", "MET significance", 100, 0, 15)
 
     def fill_histos(self, histos, folder, row, weight):
         def fill(name, value):
@@ -60,6 +61,7 @@ class WHAnalyzeEET(WHAnalyzerBase.WHAnalyzerBase):
             weight/row.puWeightData2011AB if row.puWeightData2011AB else 0)
 
         fill('prescale', row.doubleEPrescale)
+        fill('metSig', row.metSignificance)
         fill('rho', row.rho)
         fill('nvtx', row.nvtx)
         fill('e1Pt', row.e1Pt)

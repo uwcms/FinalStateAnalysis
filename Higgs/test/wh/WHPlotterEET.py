@@ -193,6 +193,10 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-e2Iso')
 
+    plotter.plot_final('metSig', 10)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-metSig')
+
 
     ###########################################################################
     ##  Making shape file     #################################################

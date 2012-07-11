@@ -50,6 +50,11 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         self.book(folder, "etMass", "Electron-Tau Mass", 200, 0, 200)
         self.book(folder, "subMass", "Subleading Mass", 200, 0, 200)
         self.book(folder, "bCSVVeto", "BjetCSV", 10, -0.5, 9.5)
+        self.book(folder, "metSig", "MET significance", 100, 0, 15)
+        self.book(folder, "tLeadDR", "DR between leading lepton and tau",
+                  100, 0, 5)
+        self.book(folder, "tSubDR", "DR between subleading lepton and tau",
+                  100, 0, 5)
 
     def fill_histos(self, histos, folder, row, weight):
         def fill(name, value):
@@ -64,10 +69,15 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         fill('emMass', row.e_m_Mass)
         fill('etMass', row.e_t_Mass)
         fill('bCSVVeto', row.bjetCSVVeto)
+        fill('metSig', row.metSignificance)
         if row.ePt < row.mPt:
             fill('subMass', row.e_t_Mass)
+            fill('tLeadDR', row.m_t_DR)
+            fill('tSubDR', row.e_t_DR)
         else:
             fill('subMass', row.m_t_Mass)
+            fill('tLeadDR', row.e_t_DR)
+            fill('tSubDR', row.m_t_DR)
 
     def preselection(self, row):
         ''' Preselection applied to events.
