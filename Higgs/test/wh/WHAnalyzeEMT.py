@@ -129,12 +129,14 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.tCiCTightElecOverlap:
             return False
-        if not row.tAntiElectronMVA:
-            return False
         if not row.tAntiMuonTight:
             return False
         #'t_ElectronOverlapWP95 < 0.5',
-
+        if row.e_t_Zcompat < 20:
+            if not row.tAntiElectronMVA:
+                return False
+        elif not row.tAntiElectronLoose:
+            return False
         return True
 
     def sign_cut(self, row):
