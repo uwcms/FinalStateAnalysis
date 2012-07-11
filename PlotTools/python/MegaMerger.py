@@ -1,6 +1,6 @@
 '''
 
-A Process object which takes a list of files and hadd's them together.
+A Process object which takes a list of files and TFileMerger's them together.
 
 Author: Evan K. Friis, UW Madison
 
@@ -11,9 +11,9 @@ import multiprocessing
 import os
 from progressbar import ETA, ProgressBar, FormatLabel, Bar
 from Queue import Empty
+import ROOT
 import shutil
 import signal
-import subprocess
 import tempfile
 
 class MegaMerger(multiprocessing.Process):
@@ -38,33 +38,29 @@ class MegaMerger(multiprocessing.Process):
         self.log.info("Merging %i into output %s", len(files), self.output)
         # Merge into a temporary output file
         output_file_hash = hashlib.md5()
+        to_merge = []
         for file in files:
+            to_merge.append(file)
             output_file_hash.update(file)
 
         output_file_name = os.path.join(
             tempfile.gettempdir(),
             output_file_hash.hexdigest() + '.root')
 
-        command = ['hadd', output_file_name]
-
         # If we are doing a later merge, we need to include the
         # "merged-so-far"
         if self.first_merge:
             self.first_merge = False
         else:
-            command.append(self.output)
+            to_merge.append(file)
 
-        for file in files:
-            command.append(file)
+        merger = ROOT.TFileMerger()
+        merger.OutputFile(output_file_name)
+        for file in to_merge:
+            merger.AddFile(file, False)
+        result = merger.Merge()
 
-        # Now run the command
-        proc = subprocess.Popen(command, stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE)
-        self.procs_to_clean = proc
-
-        while proc.returncode is None:
-            _, stderr = proc.communicate()
-        self.log.info("Merge completed with exit code: %i", proc.returncode)
+        self.log.info("Merge completed with result: %s" % result)
         self.log.info("Output file is: %s, moving to %s", output_file_name,
                       self.output)
         shutil.move(output_file_name, self.output)
@@ -74,19 +70,7 @@ class MegaMerger(multiprocessing.Process):
         # is moved.
         while self.files_to_clean:
             os.remove(self.files_to_clean.pop())
-        return proc.returncode
-
-    def stop(self):
-        ''' Gracefully stop, killing any child hadds '''
-        self.log.warning("STOPPING Merger process")
-        if self.procs_to_clean:
-            self.log.warning("Killing child hadd process")
-            self.procs_to_clean.kill()
-        if self.files_to_clean:
-            self.log.warning("Deleting temporary root files")
-            for file in files:
-                if os.path.exists(file):
-                    os.remove(file)
+        return result
 
     def run(self):
         # ignore sigterm signal and let parent take care of this
