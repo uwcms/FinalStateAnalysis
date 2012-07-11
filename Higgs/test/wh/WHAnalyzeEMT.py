@@ -14,12 +14,12 @@ import ROOT
 # Get fitted fake rate functions
 frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
 highpt_mu_fr = build_roofunctor(
-    frfit_dir + '/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root',
+    frfit_dir + '/m_wjets_pt20_pfidiso01_muonJetPt-data_mm.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
 lowpt_e_fr = build_roofunctor(
-    frfit_dir + '/e_wjets_pt10_mvaidiso03_eJetPt-data_em.root',
+    frfit_dir + '/e_wjets_pt10_mvaidiso01_eJetPt-data_em.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
@@ -144,10 +144,10 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.e_m_SS)
 
     def obj1_id(self, row):
-        return bool(row.mPFIDTight) and bool(row.mRelPFIsoDB < 0.3)
+        return bool(row.mPFIDTight) and bool(row.mRelPFIsoDB < 0.1)
 
     def obj2_id(self, row):
-        return bool(row.eMVAIDH2TauWP) and bool(row.eRelPFIsoDB < 0.3)
+        return bool(row.eMVAIDH2TauWP) and bool(row.eRelPFIsoDB < 0.1)
 
     def obj3_id(self, row):
         return bool(row.tLooseMVAIso)
