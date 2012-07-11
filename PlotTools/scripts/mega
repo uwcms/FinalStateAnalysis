@@ -40,6 +40,9 @@ if __name__ == "__main__":
     parser.add_argument('--workers', type=int, required=False,
                         default = 4, help='Number of worker processes (def: 4)')
 
+    parser.add_argument('--chain', type=int, required=False,
+                        default = 1, help='Number of files to chain together')
+
     parser.add_argument('-d', '--dir', type=str, required=False,
                         default='', help='Save results in [dir]')
 
@@ -92,6 +95,6 @@ if __name__ == "__main__":
         tree_name = selector.tree
 
     dispatch = MegaDispatcher(file_list, tree_name, args.output, selector, 
-                             args.workers)
+                             args.workers, nchain=args.chain)
     dispatch.run()
     log.info("Mega2 job is complete")

@@ -26,7 +26,7 @@ class FileProcessor(object):
                           (treename, filename))
         self.log.debug("FileProcessor got tree: %s", self.tree)
         # Setup cache
-        ROOT.TTreeCache.SetLearnEntries(10)
+        ROOT.TTreeCache.SetLearnEntries(200)
         self.tree.SetCacheSize(10000000)
         self.outfilename = output_file
         self.out = ROOT.TFile(output_file, "RECREATE")

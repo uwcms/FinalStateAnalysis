@@ -6,6 +6,7 @@ analyzes, them, and stores the results in output ROOT files.
 '''
 
 from FileProcessor import FileProcessor
+from ChainProcessor import ChainProcessor
 import hashlib
 import multiprocessing
 import os
@@ -51,17 +52,20 @@ class MegaWorker(multiprocessing.Process):
             output_file_name = os.path.join(
                 self.output_dir, make_hashed_filename(to_process))
 
+            # Do we need to chain the files or not?
+            processor_class = FileProcessor
             if isinstance(to_process, basestring):
                 self.log.info("Processing file %s => %s",
                               to_process, output_file_name)
             else:
+                processor_class = ChainProcessor
                 self.log.info("Processing %i files => %s",
                               len(to_process), output_file_name)
 
             try:
-                processor = FileProcessor(to_process, self.tree, self.selector,
-                                          output_file_name, self.log,
-                                          **self.options)
+                processor = processor_class(
+                    to_process, self.tree, self.selector,
+                    output_file_name, self.log, **self.options)
                 result = processor.process()
                 self.output.put(result)
             except:
