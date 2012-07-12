@@ -290,11 +290,21 @@ task :eet_shapes => ["#{$eetdir}/eet_shapes_#{$period}_statshapes.root" ]
 $carddir = "vhtt_lep_cards_#{$period}"
 
 # Combine all category shape files into the datacard project
-file "#{$carddir}/shapes.root" => [
+file "#{$carddir}/shapes_unmorphed.root" => [
   "#{$mmtdir}/mmt_shapes_#{$period}_statshapes.root", 
   "#{$eetdir}/eet_shapes_#{$period}_statshapes.root", 
   "#{$emtdir}/emt_shapes_#{$period}_statshapes.root"] do |t|
   sh "hadd -f #{t.name} #{t.prerequisites.join(' ')}"
+end
+
+# Masses where actually have signal samples
+pivot_masses = "120,130,140"
+
+# Now do the horizontal morphing
+file "#{$carddir}/shapes.root" => ["#{$carddir}/shapes_unmorphed.root"] do |t|
+  puts "Doing horizontal morphing"
+  sh "cp #{t.prerequisites[0]} #{t.name}"
+  sh "horizontal-morphing.py --categories='emt,eet,mmt' --samples='VH{MASS}' --uncerts='' --masses='120,130,140' --step-size=1 -i #{t.name}"
 end
 
 stat_shape_lists = Dir.glob("results/#{$jobid}/plots/*/*_statshapes.txt")
@@ -327,7 +337,6 @@ file "#{$carddir}/unc.vals" => ["#{$carddir}/unc.vals.base"] + stat_shape_lists 
   end
 end
 
-cardmasses = Array[120, 130, 140]
 
 def make_datacard_task(mass, channel, categories)
   card = "#{$carddir}/#{mass}/vhtt_#{channel}.txt"  
@@ -350,6 +359,8 @@ def make_datacard_task(mass, channel, categories)
 end
 
 task :cards => []
+
+cardmasses = Array[120, 125, 130, 135, 140]
 
 cardmasses.each do |mass|
   task :cards => make_datacard_task(mass, '2lt', '')

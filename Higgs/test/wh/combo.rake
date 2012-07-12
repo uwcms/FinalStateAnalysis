@@ -41,7 +41,7 @@ def make_combo_card(channel, mass)
   return outcard
 end
 
-cardmasses = Array[120]
+cardmasses = Array[120, 125, 130, 135, 140]
 channels = Array["emt", "mmt", "eet", "2lt"]
 
 task :cards => []
