@@ -246,6 +246,7 @@ end
 #      emt_shapes
 #      eet_shapes
 #      cards
+#      copycards -> move cards to official HTT CVS area
 ################################################################################
 
 
@@ -369,3 +370,31 @@ cardmasses.each do |mass|
   task :cards => make_datacard_task(mass, 'eet', 'eet')
 end
 
+################################################################################
+### Copying card configuration to official place ###############################
+################################################################################
+
+$httcombodir="#{ENV['CMSSW_BASE']}/src/HiggsAnalysis/HiggsToTauTau/setup/vhtt"
+
+file "#{$httcombodir}/cgs-sm-#{$period}-00.conf" => ["#{$carddir}/cgs.conf"] do |t|
+  sh "cp -v #{t.prerequisites[0]} #{t.name}"
+end
+
+file "#{$httcombodir}/unc-sm-#{$period}-00.conf" => ["#{$carddir}/unc.conf"] do |t|
+  sh "cp -v #{t.prerequisites[0]} #{t.name}"
+end
+
+file "#{$httcombodir}/unc-sm-#{$period}-00.vals" => ["#{$carddir}/unc.vals"] do |t|
+  sh "cp -v #{t.prerequisites[0]} #{t.name}"
+end
+
+file "#{$httcombodir}/vhtt_llt.inputs-sm-#{$period}.root" => ["#{$carddir}/shapes.root"] do |t|
+  sh "cp -v #{t.prerequisites[0]} #{t.name}"
+end
+
+task :copycards => [
+  "#{$httcombodir}/cgs-sm-#{$period}-00.conf",
+  "#{$httcombodir}/unc-sm-#{$period}-00.conf",
+  "#{$httcombodir}/unc-sm-#{$period}-00.vals",
+  "#{$httcombodir}/vhtt_llt.inputs-sm-#{$period}.root",
+]
