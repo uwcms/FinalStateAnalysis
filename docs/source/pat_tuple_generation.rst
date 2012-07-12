@@ -5,7 +5,7 @@ Setup a 4_2_8_patch7 and/or 5_2_5 area:
 
 First run ``cmsenv``.
 
-JOB_ID should be agreed upon before hand, and a JOB_ID_TAG will be prepared.  In
+The JOB_ID label should be agreed upon before hand.  In
 general, the JOB_ID is formatted as "YYYY-MM-DD-XTeV-PatTuple".  
 
 Get the code::
