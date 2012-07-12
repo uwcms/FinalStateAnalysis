@@ -18,3 +18,6 @@ mmt,emt,eet simulated CMS_scale_t 1.03
 # Background uncertainties
 mmt,emt,eet zz CMS_vhtt_ZZ 1.04
 mmt,emt,eet wz CMS_vhtt_WZ 1.10
+
+# Fake uncertainty
+mmt,emt,eet fakes CMS_vhtt_llt_fakes 1.3
