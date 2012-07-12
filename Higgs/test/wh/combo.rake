@@ -35,7 +35,7 @@ def make_combo_card(channel, mass)
   file outcard => [card7, card8] do |t|
     sh "mkdir -p #{File.dirname(outcard)}"
     chdir($carddir) do
-      sh "combineCards.py -S 7TeV=../#{card7} 8TeV=../#{card8} > #{channel}/#{mass}/vhtt_#{channel}.txt"
+      sh "combineCards.py -S s7TeV=../#{card7} s8TeV=../#{card8} > #{channel}/#{mass}/vhtt_#{channel}.txt"
     end
   end
   return outcard
