@@ -34,6 +34,7 @@ You can pass wildcards to --samples to submit only some samples.  The wildcard
 matches the key name in MetaData/python/data{7,8}TeV.py
 
 Example::
+
    python submit_tuplization_crab.py JOB_ID  --samples "Zjets*" "WplusJets*"
 
 Will create submissions for Zjets and WplusJets only.
