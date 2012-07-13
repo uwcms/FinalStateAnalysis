@@ -8,7 +8,6 @@ Make a limit plot given a set of json limit data files.
 
 import glob
 from RecoLuminosity.LumiDB import argparse
-import FinalStateAnalysis.StatTools.limitplot as limitplot
 import sys
 
 if __name__ == "__main__":
@@ -82,6 +81,7 @@ if __name__ == "__main__":
 
     import FinalStateAnalysis.Utilities.styling as styling
 
+    import FinalStateAnalysis.StatTools.limitplot as limitplot
     import ROOT
 
     all_files = []
