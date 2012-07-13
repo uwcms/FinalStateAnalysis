@@ -21,25 +21,25 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500) )
 ##       that's easy with PAT muons but not RECO/AOD ones, so we won't do it here
 ##       (the J/Psi example shows it)
 process.tagMuons = cms.EDFilter("PATMuonRefSelector",
-    src = cms.InputTag("cleanPATMuons"),
+    src = cms.InputTag("cleanPatMuons"),
     cut = cms.string("isGlobalMuon && pt > 20 && abs(eta) < 2"), 
 )
 ## Probes. Now we just use Tracker Muons as probes
 process.probeMuons = cms.EDFilter("PATMuonRefSelector",
-    src = cms.InputTag("cleanPATMuons"),
+    src = cms.InputTag("cleanPatMuons"),
     cut = cms.string("isTrackerMuon && pt > 10"), 
 )
 
 ## Here we show how to define passing probes with a selector
 ## although for this case a string cut in the TagProbeFitTreeProducer would be enough
 process.probesPassingCal = cms.EDFilter("PATMuonRefSelector",
-    src = cms.InputTag("cleanPATMuons"),
+    src = cms.InputTag("cleanPatMuons"),
     cut = cms.string(process.probeMuons.cut.value() + " && caloCompatibility > 0.6"),
 )
 
 ## Here we show how to use a module to compute an external variable
 process.drToNearestJet = cms.EDProducer("DeltaRNearestJetComputer",
-    probes = cms.InputTag("cleanPATMuons"),
+    probes = cms.InputTag("cleanPatMuons"),
        # ^^--- NOTA BENE: if probes are defined by ref, as in this case, 
        #       this must be the full collection, not the subset by refs.
     objects = cms.InputTag("ak5CaloJets"),
@@ -55,7 +55,7 @@ process.tpPairs = cms.EDProducer("CandViewShallowCloneCombiner",
 ## Match muons to MC
 process.muMcMatch = cms.EDProducer("MCTruthDeltaRMatcherNew",
     pdgId = cms.vint32(13),
-    src = cms.InputTag("cleanPATMuons"),
+    src = cms.InputTag("cleanPatMuons"),
     distMin = cms.double(0.3),
     matched = cms.InputTag("genParticles")
 )
