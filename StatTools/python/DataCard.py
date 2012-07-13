@@ -1,139 +1,106 @@
-import functools
-import operator
+'''
 
-class DataCardChannel(object):
-    def __init__(self, name, file):
-        self.name = name
-        self.signal_name = None
-        self.samples = set([])
-        self.systematics = {}
-        self.systematics_types = {}
-        self.dir = file.Get(self.name)
+DataCard.py
 
-    def get_rate(self, name):
-        return self.dir.Get(name).Integral()
+Class which wraps a .txt limit datacard.  Offers convenience methods
+to get the total yields combining bins, with the correctly calculated errors.
 
-    def add_signal(self, name):
-        self.signal_name = name
-        indices = [idx for idx, sample in self.samples]
-        min_added = None
-        if indices:
-            min_added = min(indices)
-        index = 0
-        if min_added is not None and min_added <= 0:
-            index = min_added - 1
-        self.samples.add((index, name))
+Author: Evan K. Friis, UW
 
-    def add_background(self, name):
-        max_added = max(idx for idx, sample in self.samples)
-        self.samples.add((max_added + 1, name))
+'''
 
-    def obs_data(self):
-        return self.dir.Get('data_obs').Integral()
+from HiggsAnalysis.CombinedLimit.DatacardParser import \
+        parseCard, addDatacardParserOptions
+import math
+from optparse import OptionParser
+import os
+from uncertainties import ufloat
 
-    def add_sys(self, name, value, sample, type='lnN'):
-        sys_dict = self.systematics.setdefault(name, {})
-        self.systematics_types[name] = type
-        if isinstance(sample, basestring):
-            sys_dict[sample] = value
-        else:
-            for sample_item in sample:
-                sys_dict[sample_item] = value
+# The DatacardParser takes some wacky arguments
+_parser = OptionParser()
+addDatacardParserOptions(_parser)
+(_options, _args) = _parser.parse_args([])
+_options.bin = True # fake that is a binary output, so that we parse shape lines
 
-    def get_process_columns(self, systematics):
-        for idx, sample in self.samples:
-            bin_name = self.name
-            process_name = sample
-            process_code = idx
-            rate = "%0.3f" % self.get_rate(sample)
-            output = [bin_name, process_name, process_code, rate]
-            for sys in systematics:
-                value = '-'
-                affected_samples = self.systematics.get(sys)
-                if affected_samples:
-                    if sample in affected_samples:
-                        value = affected_samples[sample]
-                        # Check if the value was stored as a float
-                        if not isinstance(value, basestring):
-                            value = '%0.3f' % value
-                output.append(value)
-            yield output
+def quad(*xs):
+    return math.sqrt(sum(x*x for x in xs))
 
 class DataCard(object):
-    def __init__(self, name, description, channels, shape_file,
-                 mass_in_dir=False):
-        self.name = name
-        self.description = description
-        self.channels = channels
-        self.shape_file = shape_file
-        self.mass_in_dir=mass_in_dir
+    def __init__(self, filename):
+        self.file = open(os.path.expandvars(filename), 'r')
+        # Read the card into a set of dictionaries
+        self.card = parseCard(self.file, _options)
 
-    def n_bins(self):
-        return len(self.channels)
+        # Create a dictionary of named systematics in the card.
+        # Each one has an uncertainty centered at zero, with sigma=1
+        self.systematics = {}
+        for syst in self.card.systs:
+            self.systematics[syst[0]] = ufloat((0, 1), syst[0])
 
-    def nuisances(self):
-        all_systematics = set([])
-        for channel in self.channels:
-            for sys in channel.systematics.keys():
-                sys_type = channel.systematics_types[sys]
-                all_systematics.add((sys, sys_type))
-        return all_systematics
+    def get_rate(self, bins, process, exclude=None):
+        ''' Get the total yield for [process] in the sum of bins
 
-    def write(self, stream):
-        stream.write("# " + self.name + '\n')
-        stream.write("# " + self.description + '\n')
-        stream.write("imax %i\n" % self.n_bins())
-        #stream.write("jmax %i\n" % self.n_backgrounds())
-        stream.write("jmax *\n")
-        #stream.write("kmax %i\n" % len(self.nuisances()))
-        stream.write("kmax *\n")
-        stream.write('------------\n')
-        if self.mass_in_dir:
-            stream.write(
-                "shapes * * %s $CHANNEL_$MASS/$PROCESS $CHANNEL_$MASS/$PROCESS_$SYSTEMATIC\n" %
-                self.shape_file)
-        else:
-            stream.write(
-                "shapes * * %s $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC\n" %
-                self.shape_file)
+        Includes all systematic error.  Optionally, pass a list
+        of patterns to exclude.
 
-        obs_bin_names = []
-        obs_bin_data = []
-        for channel in self.channels:
-            obs_bin_names.append(channel.name)
-            obs_bin_data.append(channel.obs_data())
+        Returns a ufloat object.
 
-        stream.write('bin ' + ' '.join('%s' % x for x in obs_bin_names))
-        stream.write('\n')
-        stream.write('observation ' + ' '.join('%s' % x for x in obs_bin_data))
-        stream.write('\n')
-        stream.write('------------\n')
+        >>> dc = DataCard("$fsa/StatTools/test/vh3l_120.txt")
+        >>> rate = dc.get_rate('1', 'ZZ').nominal_value
+        >>> rate
+        0.254
+        >>> exp_error = quad(0.045, 0.04, 0.04, 0.015, 0.02, 0.02, 0.02, 0.01,
+        ...                  0.04, 0.192)
+        >>> abs(dc.get_rate('1', 'ZZ').std_dev() - rate*exp_error) < 1e-6
+        True
 
-        columns = []
+        '''
+        if isinstance(bins, basestring):
+            bins = [bins]
 
-        row_labels = [
-            'bin',
-            'process',
-            'process',
-            'rate',
-        ]
-        nuisances = sorted(list(self.nuisances()))
-        row_labels.extend(x[0] for x in nuisances)
-        columns.append(row_labels)
+        total_expected = 0
 
-        # A column giving the type of systematics.  We have to skip the first
-        # few rows
-        sys_type_labels = [ '', '', '', '', ]
-        sys_type_labels.extend(x[1] for x in nuisances)
-        columns.append(sys_type_labels)
+        for bin in bins:
+            total_relative_error = 1
+            bin = 'bin' + bin
+            if bin not in self.card.exp:
+                raise KeyError("Can't find bin %s in card, I have: %s" %
+                               (bin, " ".join(self.card.exp.keys())))
+            the_bin = self.card.exp[bin]
+            expected = the_bin[process]
+            for syst in self.card.systs:
+                if exclude and syst[0] in exclude:
+                    continue
+                error_object = self.systematics[syst[0]]
+                error = syst[4][bin][process]
+                if error and error != 1:
+                    if isinstance(error, list): # up/down format
+                        error = error[1]
+                    percent_error = error - 1
+                    multiplier = 1 + percent_error*error_object
+                    total_relative_error = total_relative_error*multiplier
+                #print syst[0], error, total_relative_error
+            total_expected += expected*total_relative_error
+        return total_expected
 
-        # Add data
-        for channel in self.channels:
-            columns.extend(channel.get_process_columns([x[0] for x in nuisances]))
+    def get_systematic_effect(self, bins, process, systematic):
+        ''' Get the total relative effect of a systematic on a process yield
 
-        # Write the columns
-        for irow in xrange(len(row_labels)):
-            for column in columns:
-                stream.write('  ' + '%20s' % column[irow])
-            stream.write('\n')
+        >>> dc = DataCard("$fsa/StatTools/test/vh3l_120.txt")
+        >>> dc.get_systematic_effect('1', 'WZ', 'lumi')
+        0
+        >>> abs(dc.get_systematic_effect('1', 'ZZ', 'lumi') - 0.045) < 1e-6
+        True
+
+        '''
+
+        rate = self.get_rate(bins, process)
+        for var, error in rate.error_components().items():
+            if var.tag == systematic:
+                return error/rate.nominal_value
+        return 0
+
+
+if __name__ == "__main__":
+    import doctest; doctest.testmod()
 
