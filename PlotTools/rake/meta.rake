@@ -9,7 +9,7 @@ namespace :meta do
 
   def make_meta_tasks(sample, ntuple, sqrts)
     # Getting meta information from ntpule
-    task sample + '.meta.json' => sample + '.txt' do |t|
+    file sample + '.meta.json' => sample + '.txt' do |t|
       if t.name.include? 'data'
         sh "extract_meta_info.py #{t.prerequisites} #{ntuple} #{t.name} --lumimask"
       else
@@ -20,20 +20,20 @@ namespace :meta do
     # For data, we need a computed lumi mask 
     if sample.include? 'data' 
       # Get lumi mask in plain format.
-      task sample + '.lumimask.json' => sample + '.meta.json' do |t|
+      file sample + '.lumimask.json' => sample + '.meta.json' do |t|
         sh "cat #{t.prerequisites} | dump_lumimask.py > #{t.name}"
       end
       # Run lumicalc on the mask
-      task sample + '.lumicalc.csv' => sample + '.lumimask.json' do |t|
+      file sample + '.lumicalc.csv' => sample + '.lumimask.json' do |t|
         sh "pixelLumiCalc.py overview -i #{t.prerequisites} -o #{t.name}"
       end
       # Put the lumicalc result in a readable format
-      task sample + '.lumicalc.sum' => sample + '.lumicalc.csv' do |t|
+      file sample + '.lumicalc.sum' => sample + '.lumicalc.csv' do |t|
         sh "lumicalc_parser.py #{t.prerequisites} > #{t.name}"
       end
     else
       # In MC, we can get the effective lumi from xsec and #events.
-      task sample + '.lumicalc.sum' => sample + '.meta.json' do |t|
+      file sample + '.lumicalc.sum' => sample + '.meta.json' do |t|
         sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} `cat #{t.prerequisites} | extract_json.py n_evts` > #{t.name}"
       end
     end
