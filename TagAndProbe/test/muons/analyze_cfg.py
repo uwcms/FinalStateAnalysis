@@ -1,213 +1,110 @@
-'''
-
-Construction of Ntuples for quantities measured with SingleMu dataset
-
-
-'''
-
 import FWCore.ParameterSet.Config as cms
-import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
-from FinalStateAnalysis.Utilities.PSetTemplate import PSetTemplate
-from FinalStateAnalysis.NtupleTools.selectors import selectors
-from FinalStateAnalysis.NtupleTools.plotting import plotting
-from FinalStateAnalysis.NtupleTools.plotBuilder import makePlots
 
-options = TauVarParsing.TauVarParsing(
-    skipEvents=0, # For debugging
-    puScenario='S4',
-)
+process = cms.Process("TagProbe")
 
-options.outputFile="muon_tp.root"
-options.parseArguments()
+######### EXAMPLE CFG 
+###  A simple test of runnning T&P on Zmumu to determine muon isolation and identification efficiencies
+###  More a showcase of the tool than an actual physics example
 
-process = cms.Process("MuonTP")
+process.load('FWCore.MessageService.MessageLogger_cfi')
+process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
+process.MessageLogger.cerr.FwkReport.reportEvery = 100
 
-# Input in FWLITE mode
-process.fwliteInput = cms.PSet(fileNames = cms.vstring(options.inputFiles))
+process.source = cms.Source("PoolSource", 
+    fileNames = cms.untracked.vstring('file:/hdfs/store/user/cepeda/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/Zjets_M50_2012-05-29-7TeV-PatTuple-67c1f94/e7c083b3facfba2612ce8e9d30894d70/output_981_1_bA2.root'
 
-process.fwliteOutput = cms.PSet(fileName = cms.string(options.outputFile))
-
-process.steering = cms.PSet(
-    analyzers = cms.vstring(
-        'mm',
-        'em',
-        'mt',
-    ),
-    reportAfter = cms.uint32(1000),
-    ignored_cuts = cms.vstring()
-)
-
-process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(options.maxEvents))
-
-# Common among all analyzers
-process.common = cms.PSet(
-    weights = cms.vstring(
-        'weight("3bx_S42011A")'
-    ),
-    evtSrc = cms.InputTag("patFinalStateEventProducer"),
-    skimCounter = cms.InputTag("eventCount", "", "TUPLE"),
-)
-
-process.steering.ignored_cuts = cms.vstring()
-
-# Define the configuration for each leg.
-mu_leg1 = {
-    'name' : 'Muon1', 'getter' :'daughter(0).', 'nicename' : 'Muon (1)',
-    'index' : 0,
-}
-mu_leg2 = {
-    'name' : 'Muon2', 'getter' :'daughter(1).', 'nicename' : 'Muon (2)',
-    'index' : 1,
-}
-
-e_leg1 = {
-    'name' : 'Electron', 'getter' :'daughter(0).', 'nicename' : 'Electron',
-    'index' : 0,
-}
-
-tau_leg2 = {
-    'name' : 'Tau', 'getter' :'daughter(1).', 'nicename' : 'Tau',
-    'index' : 1,
-}
-
-
-# Define the selections
-mm_selections = cms.VPSet(
-    # Take the best unprescaled SingleMu trigger
-    #PSetTemplate(selectors.trigger.hlt).replace(
-        #name = 'HLTSingleMu', nicename = 'Single Mu (no iso)',
-        #hlt_path = r'HLT_Mu15_v\\d+, HLT_Mu24_v\\d+, HLT_Mu30_v\\d+',
-    #),
-    ###########################################################################
-    # Uniqueness cut
-    ###########################################################################
-
-    # Initially, there is double counting in the FinalStates. i.e. for muons A
-    # and B, there is an AB final state and a BA final state.  Here, we select
-    # only those where A.phi < B.phi, which insures we select a random tag
-    # object.
-    PSetTemplate(selectors.topology.descending_phi).replace(
-        name = 'TagMuonID', nicename = 'Muon 1 is TagMuon',
-        getter1 = mu_leg1['getter'], getter2 = mu_leg2['getter']
-    ),
-
-    # Offline cuts on tag muon
-    PSetTemplate(selectors.candidate.eta).replace(
-        threshold = '2.1', **mu_leg1),
-    PSetTemplate(selectors.candidate.pt).replace(
-        threshold = '15', **mu_leg1),
-    # Require WWID on the tag muon
-    PSetTemplate(selectors.muons.id).replace(
-        muID = 'WWID', **mu_leg1),
-)
-
-mm_plots, mm_ntuple = makePlots(mu_leg1, mu_leg2)
-
-# Analyze MuMu states
-process.mm = cms.PSet(
-    process.common,
-    src = cms.InputTag('finalStateMuMu'),
-    analysis = cms.PSet(
-        ignore = process.steering.ignored_cuts,
-        final = cms.PSet(
-            sort = cms.string('daughter(2).pt'),
-            take = cms.uint32(1),
-            plot = cms.PSet(histos = cms.VPSet(), ntuple = mm_ntuple)
-        ),
-        selections = mm_selections
     )
 )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(500) )    
 
-# Define selections for emu selections
-em_selections = cms.VPSet(
-    # Take the best unprescaled SingleMu trigger
-    #PSetTemplate(selectors.trigger.hlt).replace(
-        #name = 'HLTSingleMu', nicename = 'Single Mu (no iso)',
-        #hlt_path = r'HLT_Mu15_v\\d+, HLT_Mu24_v\\d+, HLT_Mu30_v\\d+',
-    #),
-    # We don't need to worry about double counting here
-    # Offline cuts on tag muon
-    PSetTemplate(selectors.candidate.eta).replace(
-        threshold = '2.1', **mu_leg2),
-    PSetTemplate(selectors.candidate.pt).replace(
-        threshold = '15', **mu_leg2),
-    # Require WWID on the tag muon
-    PSetTemplate(selectors.muons.id).replace(
-        muID = 'WWID', **mu_leg2),
+## Tags. In a real analysis we should require that the tag muon fires the trigger, 
+##       that's easy with PAT muons but not RECO/AOD ones, so we won't do it here
+##       (the J/Psi example shows it)
+process.tagMuons = cms.EDFilter("PATMuonRefSelector",
+    src = cms.InputTag("cleanPATMuons"),
+    cut = cms.string("isGlobalMuon && pt > 20 && abs(eta) < 2"), 
+)
+## Probes. Now we just use Tracker Muons as probes
+process.probeMuons = cms.EDFilter("PATMuonRefSelector",
+    src = cms.InputTag("cleanPATMuons"),
+    cut = cms.string("isTrackerMuon && pt > 10"), 
 )
 
-em_plots, em_ntuple = makePlots(mu_leg2, e_leg1)
-
-# Analyze MuMu states
-process.em = cms.PSet(
-    process.common,
-    src = cms.InputTag('finalStateElecMu'),
-    analysis = cms.PSet(
-        ignore = process.steering.ignored_cuts,
-        final = cms.PSet(
-            sort = cms.string('daughter(2).pt'),
-            take = cms.uint32(1),
-            plot = cms.PSet(histos = cms.VPSet(), ntuple = em_ntuple)
-        ),
-        selections = em_selections
-    )
+## Here we show how to define passing probes with a selector
+## although for this case a string cut in the TagProbeFitTreeProducer would be enough
+process.probesPassingCal = cms.EDFilter("PATMuonRefSelector",
+    src = cms.InputTag("cleanPATMuons"),
+    cut = cms.string(process.probeMuons.cut.value() + " && caloCompatibility > 0.6"),
 )
 
-mt_plots, mt_ntuple = makePlots(mu_leg1, tau_leg2)
-
-mt_selections = cms.VPSet(
-    # Take the best unprescaled SingleMu trigger
-    #PSetTemplate(selectors.trigger.hlt).replace(
-        #name = 'HLTSingleMu', nicename = 'Single Mu (no iso)',
-        #hlt_path = r'HLT_Mu15_v\\d+, HLT_Mu24_v\\d+, HLT_Mu30_v\\d+',
-    #),
-    # We don't need to worry about double counting here
-    # Offline cuts on tag muon
-    PSetTemplate(selectors.candidate.eta).replace(
-        threshold = '2.1', **mu_leg1),
-    PSetTemplate(selectors.candidate.pt).replace(
-        threshold = '15', **mu_leg1),
-    # Require WWID on the tag muon
-    PSetTemplate(selectors.muons.id).replace(
-        muID = 'WWID', **mu_leg1),
+## Here we show how to use a module to compute an external variable
+process.drToNearestJet = cms.EDProducer("DeltaRNearestJetComputer",
+    probes = cms.InputTag("cleanPATMuons"),
+       # ^^--- NOTA BENE: if probes are defined by ref, as in this case, 
+       #       this must be the full collection, not the subset by refs.
+    objects = cms.InputTag("ak5CaloJets"),
+    objectSelection = cms.InputTag("et > 20 && abs(eta) < 3 && n60 > 3 && (.05 < emEnergyFraction < .95)"),
 )
 
-em_plots, em_ntuple = makePlots(mu_leg2, e_leg1)
-
-# Analyze MuMu states
-process.mt = cms.PSet(
-    process.common,
-    src = cms.InputTag('finalStateMuTau'),
-    analysis = cms.PSet(
-        ignore = process.steering.ignored_cuts,
-        final = cms.PSet(
-            sort = cms.string('daughter(2).pt'),
-            take = cms.uint32(1),
-            plot = cms.PSet(histos = cms.VPSet(), ntuple = mt_ntuple)
-        ),
-        selections = mt_selections
-    )
+## Combine Tags and Probes into Z candidates, applying a mass cut
+process.tpPairs = cms.EDProducer("CandViewShallowCloneCombiner",
+    decay = cms.string("tagMuons@+ probeMuons@-"), # charge coniugate states are implied
+    cut   = cms.string("40 < mass < 200"),
 )
 
+## Match muons to MC
+process.muMcMatch = cms.EDProducer("MCTruthDeltaRMatcherNew",
+    pdgId = cms.vint32(13),
+    src = cms.InputTag("cleanPATMuons"),
+    distMin = cms.double(0.3),
+    matched = cms.InputTag("genParticles")
+)
 
-# Build the filter selectors for skimming events.
-for channel in process.steering.analyzers:
-    module = getattr(process, channel)
-    if options.isMC:
-        scenario = options.puScenario
-        print "Configuring %s ntuple for %s PU re-weighting" % (
-            channel, scenario)
-        module.analysis.final.plot.ntuple.pu2011A = cms.string(
-            "evt.puWeight('2011A', '%s')" % scenario
-        )
-        module.analysis.final.plot.ntuple.pu2011B = cms.string(
-            "evt.puWeight('2011B', '%s')" % scenario
-        )
-        module.analysis.final.plot.ntuple.pu2011AB = cms.string(
-            "evt.puWeight('2011AB', '%s')" % scenario
-        )
-    else:
-        module.analysis.final.plot.ntuple.pu2011A = cms.string("1.0")
-        module.analysis.final.plot.ntuple.pu2011B = cms.string("1.0")
-        module.analysis.final.plot.ntuple.pu2011AB = cms.string("1.0")
+## Make the tree
+process.muonEffs = cms.EDAnalyzer("TagProbeFitTreeProducer",
+    # pairs
+    tagProbePairs = cms.InputTag("tpPairs"),
+    arbitration   = cms.string("OneProbe"),
+    # variables to use
+    variables = cms.PSet(
+        ## methods of reco::Candidate
+        eta = cms.string("eta"),
+        pt  = cms.string("pt"),
+        ## a method of the reco::Muon object (thanks to the 3.4.X StringParser)
+        nsegm = cms.string("numberOfMatches"), 
+        ## this one is an external variable
+        drj = cms.InputTag("drToNearestJet"),
+    ),
+    # choice of what defines a 'passing' probe
+    flags = cms.PSet(
+        ## one defined by an external collection of passing probes
+        passingCal = cms.InputTag("probesPassingCal"), 
+        ## two defined by simple string cuts
+        passingGlb = cms.string("isGlobalMuon"),
+        passingIso = cms.string("(isolationR03.hadEt+isolationR03.emEt+isolationR03.sumPt) < 0.1 * pt"),
+    ),
+    # mc-truth info
+    isMC = cms.bool(True),
+    motherPdgId = cms.vint32(22,23),
+    makeMCUnbiasTree = cms.bool(True),
+    checkMotherInUnbiasEff = cms.bool(True),
+    tagMatches = cms.InputTag("muMcMatch"),
+    probeMatches  = cms.InputTag("muMcMatch"),
+    allProbes     = cms.InputTag("probeMuons"),
+)
+##    ____       _   _     
+##   |  _ \ __ _| |_| |__  
+##   | |_) / _` | __| '_ \ 
+##   |  __/ (_| | |_| | | |
+##   |_|   \__,_|\__|_| |_|
+##                         
+process.tagAndProbe = cms.Path( 
+    (process.tagMuons + process.probeMuons) *   # 'A*B' means 'B needs output of A'; 
+    (process.probesPassingCal +                 # 'A+B' means 'if you want you can re-arrange the order'
+     process.drToNearestJet   +
+     process.tpPairs +
+     process.muMcMatch) *
+    process.muonEffs
+)
+
+process.TFileService = cms.Service("TFileService", fileName = cms.string("testTagProbeFitTreeProducer_ZMuMu.root"))
