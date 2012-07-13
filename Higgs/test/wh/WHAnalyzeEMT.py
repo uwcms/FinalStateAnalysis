@@ -46,6 +46,7 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         self.book(folder, "eAbsEta", "Electron AbsEta", 100, 0, 2.5)
         self.book(folder, "tAbsEta", "Tau AbsEta", 100, 0, 2.3)
 
+        self.book(folder, "nTruePU", "NPU", 62, -1.5, 60.5)
         self.book(folder, "emMass", "Electron-Muon Mass", 200, 0, 200)
         self.book(folder, "etMass", "Electron-Tau Mass", 200, 0, 200)
         self.book(folder, "subMass", "Subleading Mass", 200, 0, 200)
@@ -57,6 +58,7 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
                   100, 0, 5)
 
     def fill_histos(self, histos, folder, row, weight):
+        histos['/'.join(folder + ('nTruePU',))].Fill(row.nTruePU)
         def fill(name, value):
             histos['/'.join(folder + (name,))].Fill(value, weight)
         fill('mPt', row.mPt)

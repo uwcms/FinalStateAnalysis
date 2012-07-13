@@ -52,8 +52,10 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         self.book(folder, "m2Iso", "m2Iso", 100, 0, 0.3)
         self.book(folder, "tPt", "Tau Pt", 100, 0, 100)
         self.book(folder, "tAbsEta", "Tau AbsEta", 100, 0, 2.3)
+        self.book(folder, "nTruePU", "NPU", 62, -1.5, 60.5)
 
     def fill_histos(self, histos, folder, row, weight):
+        histos['/'.join(folder + ('nTruePU',))].Fill(row.nTruePU)
         def fill(name, value):
             histos['/'.join(folder + (name,))].Fill(value, weight)
         histos['/'.join(folder + ('weight',))].Fill(weight)
