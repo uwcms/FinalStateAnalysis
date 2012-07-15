@@ -69,38 +69,39 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer(
             UnbinnedVariables = cms.vstring("mass"),
             #specifies the binning of parameters
             BinnedVariables = cms.PSet(
-                pt = cms.vdouble(3.5, 4.5, 6.0, 8.0, 50.0)
+                # Only two bins for now so we get good stats, later go to many
+                pt = cms.vdouble(10, 40, 100)
             ),
             #first string is the default followed by binRegExp - PDFname pairs
             BinToPDFmap = cms.vstring("gaussPlusLinear", "*pt_bin0*", "gaussPlusQuadratic")
         ),
-        pt_mcTrue = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("passingPFIDTight","pass"),
-            UnbinnedVariables = cms.vstring("mass"),
-            BinnedVariables = cms.PSet(
-                mcTrue = cms.vstring("true"),
-                pt = cms.vdouble(3.5, 4.5, 6.0, 8.0, 50.0)
-            )
-            #unspecified binToPDFmap means no fitting
-        ),
-        pt_eta = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("passingPFIDTight","pass"),
-            UnbinnedVariables = cms.vstring("mass"),
-            BinnedVariables = cms.PSet(
-                pt = cms.vdouble(3.5, 4.5, 6.0, 8.0, 50.0),
-                eta = cms.vdouble(-2.1, -1.2, 0.0, 1.2, 2.1)
-            ),
-            BinToPDFmap = cms.vstring("gaussPlusLinear", "*pt_bin0*", "gaussPlusQuadratic")
-        ),
-        pt_eta_mcTrue = cms.PSet(
-            EfficiencyCategoryAndState = cms.vstring("passingPFIDTight","pass"),
-            UnbinnedVariables = cms.vstring("mass"),
-            BinnedVariables = cms.PSet(
-                mcTrue = cms.vstring("true"),
-                pt = cms.vdouble(3.5, 4.5, 6.0, 8.0, 50.0),
-                eta = cms.vdouble(-2.1, -1.2, 0.0, 1.2, 2.1)
-            )
-        )
+        #pt_mcTrue = cms.PSet(
+            #EfficiencyCategoryAndState = cms.vstring("passingPFIDTight","pass"),
+            #UnbinnedVariables = cms.vstring("mass"),
+            #BinnedVariables = cms.PSet(
+                #mcTrue = cms.vstring("true"),
+                #pt = cms.vdouble(3.5, 4.5, 6.0, 8.0, 50.0)
+            #)
+            ##unspecified binToPDFmap means no fitting
+        #),
+        #pt_eta = cms.PSet(
+            #EfficiencyCategoryAndState = cms.vstring("passingPFIDTight","pass"),
+            #UnbinnedVariables = cms.vstring("mass"),
+            #BinnedVariables = cms.PSet(
+                #pt = cms.vdouble(3.5, 4.5, 6.0, 8.0, 50.0),
+                #eta = cms.vdouble(-2.1, -1.2, 0.0, 1.2, 2.1)
+            #),
+            #BinToPDFmap = cms.vstring("gaussPlusLinear", "*pt_bin0*", "gaussPlusQuadratic")
+        #),
+        #pt_eta_mcTrue = cms.PSet(
+            #EfficiencyCategoryAndState = cms.vstring("passingPFIDTight","pass"),
+            #UnbinnedVariables = cms.vstring("mass"),
+            #BinnedVariables = cms.PSet(
+                #mcTrue = cms.vstring("true"),
+                #pt = cms.vdouble(3.5, 4.5, 6.0, 8.0, 50.0),
+                #eta = cms.vdouble(-2.1, -1.2, 0.0, 1.2, 2.1)
+            #)
+        #)
     )
 )
 
