@@ -72,3 +72,7 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
   export dataAODFile=/hdfs/store/data/Run2012B/SingleMu/AOD/PromptReco-v1/000/193/752/B66332A3-789B-E111-939C-5404A63886B2.root
   export patTupleFile=/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-130_8TeV-pythia6-tauola/VH_H2Tau_M-130_2012-05-28-8TeV-PatTuple-8a107b9/4729152ae17d7e4009729a1d0d9e952d/output_1_3_47m.root
 fi
+
+# Define the current most-informative PU information JSONs
+export pu2011JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/PileUp/pileup_2011_JSON_pixelLumi.txt
+export pu2012JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/pileup_JSON_DCSONLY_190389-196531_patch2.txt

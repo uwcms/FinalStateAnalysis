@@ -27,9 +27,22 @@ namespace :meta do
       file sample + '.lumicalc.csv' => sample + '.lumimask.json' do |t|
         sh "pixelLumiCalc.py overview -i #{t.prerequisites} -o #{t.name}"
       end
-      # Put the lumicalc result in a readable format
-      file sample + '.lumicalc.sum' => sample + '.lumicalc.csv' do |t|
-        sh "lumicalc_parser.py #{t.prerequisites} > #{t.name}"
+      # Get the PU distribution
+      file sample + '.pu.root' => sample + '.lumimask.json' do |t| 
+        pu_file = ''
+        if sqrts == "8" then 
+          pu_file = ENV['pu2012JSON']
+        end
+        if sqrts == "7" then
+          pu_file = ENV["pu2011JSON"]
+        end
+        # Find the newest PU json file
+        sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec 69300 --maxPileupBin 300 --numPileupBins 300 #{t.name}"
+      end
+      # Put the lumicalc result in a readable format.  Make it dependent 
+      # on the PU .root file as well, so it gets built.
+      file sample + '.lumicalc.sum' => [sample + '.lumicalc.csv', sample + '.pu.root'] do |t|
+        sh "lumicalc_parser.py #{t.prerequisites[0]} > #{t.name}"
       end
     else
       # In MC, we can get the effective lumi from xsec and #events.
