@@ -5,7 +5,7 @@ directory 'combo_results'
 ################################################################################
 # Recipes to make data cards and tables (plots come for free)
 #  targets:
-#      cards
+#      cards - makes 2lt combo cards
 ################################################################################
 
 file  'vhtt_lep_cards_8TeV/shapes.json' => ['vhtt_lep_cards_8TeV/shapes.root'] do |t|
@@ -21,13 +21,13 @@ file 'combo_results/vhtt_2lt_yields.tex' => ['tex_yields_table.py', 'vhtt_lep_ca
   sh "./tex_yields_table.py vhtt_lep_cards_7TeV/shapes.json vhtt_lep_cards_8TeV/shapes.json > #{t.name}"
 end
 
-$carddir = "vhtt_2lt_combo_cards"
+$carddir = "combo"
 directory $carddir
 
 $source7 = "vhtt_lep_cards_7TeV"
 $source8 = "vhtt_lep_cards_8TeV"
 
-def make_combo_card(channel, mass)
+def make_2lt_combo_card(channel, mass)
   outcard = "#{$carddir}/#{channel}/#{mass}/vhtt_#{channel}.txt"
   # Combine 7 and 8 TeV
   card7 = "#{$source7}/#{channel}/#{mass}/vhtt_#{channel}.txt"
@@ -48,6 +48,6 @@ task :cards => []
 
 cardmasses.each do |mass|
   channels.each do |channel|
-    task :cards => make_combo_card(channel, mass)
+    task :cards => make_2lt_combo_card(channel, mass)
   end
 end
