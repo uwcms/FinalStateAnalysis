@@ -5,12 +5,13 @@ DataCard.py
 Class which wraps a .txt limit datacard.  Offers convenience methods
 to get the total yields combining bins, with the correctly calculated errors.
 
-Author: Evan K. Friis, UW
+Author: Evan K. Friis, UW Madison
 
 '''
 
 from HiggsAnalysis.CombinedLimit.DatacardParser import \
         parseCard, addDatacardParserOptions
+import fnmatch
 import math
 from optparse import OptionParser
 import os
@@ -43,26 +44,40 @@ class DataCard(object):
         Includes all systematic error.  Optionally, pass a list
         of patterns to exclude.
 
+        Bins can include wildcards.
+
         Returns a ufloat object.
 
         >>> dc = DataCard("$fsa/StatTools/test/vh3l_120.txt")
-        >>> rate = dc.get_rate('1', 'ZZ').nominal_value
+        >>> rate = dc.get_rate('*', 'ZZ').nominal_value
         >>> rate
         0.254
         >>> exp_error = quad(0.045, 0.04, 0.04, 0.015, 0.02, 0.02, 0.02, 0.01,
         ...                  0.04, 0.192)
-        >>> abs(dc.get_rate('1', 'ZZ').std_dev() - rate*exp_error) < 1e-6
+        >>> abs(dc.get_rate('*', 'ZZ').std_dev() - rate*exp_error) < 1e-6
         True
 
         '''
         if isinstance(bins, basestring):
             bins = [bins]
 
+        matching_bins = set([])
+
+        for binpattern in bins:
+            if not binpattern.startswith('bin'):
+                binpattern = 'bin' + binpattern
+            for realbin in self.card.exp.keys():
+                if fnmatch.fnmatch(realbin, binpattern):
+                    matching_bins.add(realbin)
+
+        if not matching_bins:
+            raise KeyError("No bins match patterns: %s \n\n Available: %s" % (
+                " ".join(bins), " ".join(self.card.exp.keys())))
+
         total_expected = 0
 
-        for bin in bins:
+        for bin in matching_bins:
             total_relative_error = 1
-            bin = 'bin' + bin
             if bin not in self.card.exp:
                 raise KeyError("Can't find bin %s in card, I have: %s" %
                                (bin, " ".join(self.card.exp.keys())))
@@ -83,22 +98,28 @@ class DataCard(object):
             total_expected += expected*total_relative_error
         return total_expected
 
-    def get_systematic_effect(self, bins, process, systematic):
+    def get_systematic_effect(self, bins, process, systematics):
         ''' Get the total relative effect of a systematic on a process yield
 
         >>> dc = DataCard("$fsa/StatTools/test/vh3l_120.txt")
         >>> dc.get_systematic_effect('1', 'WZ', 'lumi')
-        0
+        0.0
         >>> abs(dc.get_systematic_effect('1', 'ZZ', 'lumi') - 0.045) < 1e-6
         True
 
         '''
 
+        if isinstance(systematics, basestring):
+            systematics = [systematics]
+
+        errors = [0]
+
         rate = self.get_rate(bins, process)
-        for var, error in rate.error_components().items():
-            if var.tag == systematic:
-                return error/rate.nominal_value
-        return 0
+        for systematic in systematics:
+            for var, error in rate.error_components().items():
+                if var.tag == systematic:
+                    errors.append(error)
+        return quad(*errors)/rate.nominal_value
 
 
 if __name__ == "__main__":
