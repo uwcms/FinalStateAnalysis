@@ -111,6 +111,9 @@ if __name__ == "__main__":
     plotter.plot('Zjets_M50', 'os/p1p2f3/weight_nopu')
     plotter.save('zmm-mc-event-weight_nopu')
 
+    plotter.plot('Zjets_M50', 'os/p1p2f3/nTruePU', 'nTruePU', rebin=1, xaxis='True PU')
+    plotter.save('zjets-os-p1p2f3-nTruePU')
+
 
     ###########################################################################
     ##  FR sideband MC-vs-Data ################################################

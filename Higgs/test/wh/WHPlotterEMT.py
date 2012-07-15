@@ -58,6 +58,14 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-os-p1p2f3-emMass')
 
+    plotter.plot_mc_vs_data('os/p1p2f3', 'nTruePU', rebin=1, xaxis='True PU')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-os-p1p2f3-nTruePU')
+
+    plotter.plot('Zjets_M50', 'os/p1p2f3/nTruePU', 'nTruePU', rebin=1, xaxis='True PU')
+    plotter.save('zjets-os-p1p2f3-nTruePU')
+
+
     plotter.plot_mc_vs_data('os/p1p2f3', 'bCSVVeto', rebin=1, xaxis='bveto')
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-os-p1p2f3-bveto')
