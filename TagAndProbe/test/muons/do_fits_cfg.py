@@ -24,7 +24,7 @@ process.TagProbeFitTreeAnalyzer = cms.EDAnalyzer(
     # defines all the real variables of the probes available in the input tree
     # and intended for use in the efficiencies
     Variables = cms.PSet(
-        mass = cms.vstring("Tag-Probe Mass", "2.5", "3.8", "GeV/c^{2}"),
+        mass = cms.vstring("Tag-Probe Mass", "60", "120", "GeV/c^{2}"),
         pt = cms.vstring("Probe p_{T}", "0", "1000", "GeV/c"),
         eta = cms.vstring("Probe #eta", "-2.5", "2.5", "")
     ),
