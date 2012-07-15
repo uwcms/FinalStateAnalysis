@@ -32,7 +32,11 @@ def read_lumi(filename):
     The lumi is stored as a single float value.
     '''
     with open(filename) as lumifile:
-        return float(lumifile.readline().strip())
+        try:
+            return float(lumifile.readline().strip())
+        except ValueError:
+            print "I couldn't extract a float from %s" % filename
+            raise
 
 def data_views(files, lumifiles):
     ''' Builds views of files.
