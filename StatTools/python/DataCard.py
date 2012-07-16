@@ -38,7 +38,7 @@ class DataCard(object):
         for syst in self.card.systs:
             self.systematics[syst[0]] = ufloat((0, 1), syst[0])
 
-    def get_rate(self, bins, process, exclude=None):
+    def get_rate(self, bins, process, excludesys=None, excludebin=None):
         ''' Get the total yield for [process] in the sum of bins
 
         Includes all systematic error.  Optionally, pass a list
@@ -60,11 +60,23 @@ class DataCard(object):
         '''
         if isinstance(bins, basestring):
             bins = [bins]
+        if isinstance(excludebin, basestring):
+            excludebin = [excludebin]
 
         matching_bins = set([])
 
         for binpattern in bins:
             for realbin in self.card.exp.keys():
+                # First check if we explicitly exclude it
+                excluded = False
+                if excludebin is not None:
+                    for excludepattern in excludebin:
+                        if fnmatch.fnmatch(realbin, excludepattern):
+                            excluded = True
+                            break
+                if excluded:
+                    continue
+                # otherwise check if it matches a desired bin
                 if fnmatch.fnmatch(realbin, binpattern) or fnmatch.fnmatch(realbin, 'bin' + binpattern):
                     matching_bins.add(realbin)
 
@@ -86,7 +98,7 @@ class DataCard(object):
 
             expected = the_bin[process]
             for syst in self.card.systs:
-                if exclude and syst[0] in exclude:
+                if excludesys and syst[0] in excludesys:
                     continue
                 error_object = self.systematics[syst[0]]
                 error = syst[4][bin][process]
