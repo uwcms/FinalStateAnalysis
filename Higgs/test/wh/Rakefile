@@ -361,7 +361,7 @@ end
 
 task :cards => []
 
-cardmasses = Array[120, 125, 130, 135, 140]
+cardmasses = Array[110, 120, 125, 130, 135, 140]
 
 cardmasses.each do |mass|
   task :cards => make_datacard_task(mass, '2lt', '')

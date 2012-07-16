@@ -182,7 +182,7 @@ class WHPlotterBase(object):
         }
 
         # Add signal
-        for mass in [120, 130, 140]:
+        for mass in [110, 120, 130, 140]:
             vh_view = views.SubdirectoryView(
                 rebin_view(self.get_view('VH_*%i' % mass), rebin),
                 'ss/p1p2p3/'
@@ -205,7 +205,7 @@ class WHPlotterBase(object):
         obs.SetName('data_obs')
         fakes.SetName('fakes')
 
-        for mass in [120, 130, 140]:
+        for mass in [110, 120, 130, 140]:
             vh = sig_view['vh%i' % mass].Get(variable)
             vh.SetName('VH%i' % mass)
             vh.Write()
