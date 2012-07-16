@@ -64,10 +64,8 @@ class DataCard(object):
         matching_bins = set([])
 
         for binpattern in bins:
-            if not binpattern.startswith('bin'):
-                binpattern = 'bin' + binpattern
             for realbin in self.card.exp.keys():
-                if fnmatch.fnmatch(realbin, binpattern):
+                if fnmatch.fnmatch(realbin, binpattern) or fnmatch.fnmatch(realbin, 'bin' + binpattern):
                     matching_bins.add(realbin)
 
         if not matching_bins:
