@@ -80,6 +80,10 @@ class DataCard(object):
                 raise KeyError("Can't find bin %s in card, I have: %s" %
                                (bin, " ".join(self.card.exp.keys())))
             the_bin = self.card.exp[bin]
+            if not process in the_bin:
+                raise KeyError("Can't find process %s in bin %s, I have: %s" %
+                               (process, bin, " ".join(the_bin.keys())))
+
             expected = the_bin[process]
             for syst in self.card.systs:
                 if exclude and syst[0] in exclude:
