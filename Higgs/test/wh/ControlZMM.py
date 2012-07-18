@@ -8,10 +8,68 @@ Author: Evan K. Friis, UW
 
 import MuMuTree
 from FinalStateAnalysis.PlotTools.MegaBase import MegaBase
+import glob
 import os
-
+import FinalStateAnalysis.TagAndProbe.MuonPOGCorrections as MuonPOGCorrections
+import FinalStateAnalysis.TagAndProbe.PileupWeight as PileupWeight
 import ROOT
-ROOT.gSystem.Load("Corrector_C")
+
+################################################################################
+#### MC-DATA and PU corrections ################################################
+################################################################################
+
+# Determine MC-DATA corrections
+is7TeV = bool('7TeV' in os.environ['jobid'])
+print "Is 7TeV:", is7TeV
+
+# Make PU corrector from expected data PU distribution
+# PU corrections .root files from pileupCalc.py
+pu_distributions = glob.glob(os.path.join(
+    'inputs', os.environ['jobid'], 'data_DoubleMu*pu.root'))
+pu_corrector = PileupWeight.PileupWeight(
+    'S6' if is7TeV else 'S7', *pu_distributions)
+
+muon_pog_PFTight_2011 = MuonPOGCorrections.make_muon_pog_PFTight_2011()
+muon_pog_PFTight_2012 = MuonPOGCorrections.make_muon_pog_PFTight_2012()
+
+muon_pog_PFRelIsoDB012_2011 = MuonPOGCorrections.make_muon_pog_PFRelIsoDB012_2011()
+muon_pog_PFRelIsoDB012_2012 = MuonPOGCorrections.make_muon_pog_PFRelIsoDB012_2012()
+
+muon_pog_Mu17Mu8_Mu17_2012 = MuonPOGCorrections.make_muon_pog_Mu17Mu8_Mu17_2012()
+muon_pog_Mu17Mu8_Mu8_2012 = MuonPOGCorrections.make_muon_pog_Mu17Mu8_Mu8_2012()
+
+# takes etas of muons
+muon_pog_Mu17Mu8_2011 = MuonPOGCorrections.muon_pog_Mu17Mu8_eta_eta_2011
+
+# Get object ID and trigger corrector functions
+def mc_corrector_2011(row):
+    if row.run > 2:
+        return 1
+    pu = pu_corrector(row.nTruePU)
+    #pu = 1
+    m1id = muon_pog_PFTight_2011(row.m1Pt, row.m1Eta)
+    m2id = muon_pog_PFTight_2011(row.m2Pt, row.m2Eta)
+    m1iso = muon_pog_PFRelIsoDB012_2011(row.m1Pt, row.m1Eta)
+    m2iso = muon_pog_PFRelIsoDB012_2011(row.m2Pt, row.m2Eta)
+    trigger = muon_pog_Mu17Mu8_2011(row.m1Eta, row.m2Eta)
+    return pu*m1id*m2id*m1iso*m2iso*trigger
+
+def mc_corrector_2012(row):
+    if row.run > 2:
+        return 1
+    pu = pu_corrector(row.nTruePU)
+    m1id = muon_pog_PFTight_2012(row.m1Pt, row.m1Eta)
+    m2id = muon_pog_PFTight_2012(row.m2Pt, row.m2Eta)
+    m1iso = muon_pog_PFRelIsoDB012_2012(row.m1Pt, row.m1Eta)
+    m2iso = muon_pog_PFRelIsoDB012_2012(row.m2Pt, row.m2Eta)
+    m1Trig = muon_pog_Mu17Mu8_Mu17_2012(row.m1Pt, row.m1Eta)
+    m2Trig = muon_pog_Mu17Mu8_Mu8_2012(row.m2Pt, row.m2Eta)
+    return pu*m1id*m2id*m1iso*m2iso*m1Trig*m2Trig
+
+# Determine which set of corrections to use
+mc_corrector = mc_corrector_2011
+if not is7TeV:
+    mc_corrector = mc_corrector_2012
 
 class ControlZMM(MegaBase):
     tree = 'mm/final/Ntuple'
@@ -45,19 +103,11 @@ class ControlZMM(MegaBase):
         self.book('zmm', 'm2JetBtag', 'Mu 2 JetBtag', 100, -5.5, 9.5)
 
     def correction(self, row):
-        weight = 1.0
-        if row.run < 10:
-            weight *= ROOT.Cor_Total_Mu_Lead(row.m1Pt, row.m1AbsEta)
-            weight *= ROOT.Cor_Total_Mu_SubLead(row.m2Pt, row.m2AbsEta)
-        return weight
-
-    def pu_weight(self, row):
-        #fixme
-        return row.puWeightData2011AB
+        return mc_corrector(row)
 
     def fill_histos(self, row):
         histos = self.histograms
-        weight = self.correction(row)*self.pu_weight(row)
+        weight = self.correction(row)
         histos['zmm/weight'].Fill(weight)
         histos['zmm/weight_nopu'].Fill(self.correction(row))
         histos['zmm/rho'].Fill(row.rho)
@@ -88,29 +138,10 @@ class ControlZMM(MegaBase):
             return False
         if row.m2AbsEta > 2.4:
             return False
-        if row.muVetoPt5:
-            return False
-        if row.m1_m2_Mass < 20:
-            return False
-
-        if row.bjetCSVVeto:
-            return False
-        if row.tauVetoPt20:
-            return False
-        #if not row.m1PixHits:
-            #return False
-        #if not row.m2PixHits:
-            #return False
-        # Fixme use CSV
-        #if row.m1JetBtag > 3.3:
-            #return False
-        #if row.m2JetBtag > 3.3:
-            #return False
         if abs(row.m1DZ) > 0.2:
             return False
         if abs(row.m2DZ) > 0.2:
             return False
-
         return True
 
     def obj1_id(self, row):

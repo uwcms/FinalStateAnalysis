@@ -228,6 +228,8 @@ task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['d
 
 task :eet => get_analyzer_results("WHAnalyzeEET.py", samples['ewk'] + samples['data_ee'] + samples['signal'])
 
+task :mmcontrol => get_analyzer_results("ControlZMM.py", samples['zjets'] + samples['data_mm'])
+
 # IF the FR fits change, make sure we re-run the analyses
 file "WHAnalyzeEMT.py" => [ "#{$frfit_dir}/e_wjets_pt10_mvaidiso01_eJetPt-data_em.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso01_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
   sh "touch #{t.name}"
