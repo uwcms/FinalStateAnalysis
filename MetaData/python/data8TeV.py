@@ -311,23 +311,23 @@ def build_data_set(pd, analyses, who):
             'firstRun' : 190456,
             'lastRun' : 193683,
             'analyses' : analyses,
-            'responsible' : tapas,
+            'responsible' : who,
         },
-        'data_%s_Run2012B_PromptReco_v1_Run193752_194479_ICHEP' % pd : {
+        'data_%s_Run2012B_PromptReco_v1_Run193752_194479' % pd : {
             'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
             'firstRun' : 193752,
             'lastRun' : 194479,
             'analyses' : analyses,
-            'responsible' : tapas,
+            'responsible' : who,
         },
-        'data_%s_Run2012B_PromptReco_v1_Run194480_197044_ICHEP' % pd : {
+        'data_%s_Run2012B_PromptReco_v1_Run194480_197044' % pd : {
             'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
             'firstRun' : 194480,
             'lastRun' : 197044,
             'analyses' : analyses,
-            'responsible' : tapas,
+            'responsible' : who,
         },
     }
     sample_dict = {
@@ -336,11 +336,11 @@ def build_data_set(pd, analyses, who):
     return subsample_dict, sample_dict
 
 # Build all the PDs we use
-data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu','4L'], 'Ian')
+data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu','4L'], 'tapas')
 datadefs.update(data_DoubleMu)
 data_name_map.update(list_DoubleMu)
 
-data_MuEG, list_MuEG = build_data_set('MuEG', ['VH', 'HTT', 'Mu'], 'Evan')
+data_MuEG, list_MuEG = build_data_set('MuEG', ['VH', 'HTT', 'Mu'], 'tapas')
 datadefs.update(data_MuEG)
 data_name_map.update(list_MuEG)
 
@@ -348,7 +348,7 @@ data_DoubleE, list_DoubleE = build_data_set('DoubleElectron', ['VH','4L'], 'Ian'
 datadefs.update(data_DoubleE)
 data_name_map.update(list_DoubleE)
 
-data_SingleMu, list_SingleMu = build_data_set('SingleMu', ['Tau', 'Mu'], 'Maria')
+data_SingleMu, list_SingleMu = build_data_set('SingleMu', ['Tau', 'Mu'], 'tapas')
 datadefs.update(data_SingleMu)
 data_name_map.update(list_SingleMu)
 
