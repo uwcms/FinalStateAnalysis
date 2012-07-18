@@ -63,13 +63,13 @@ class FSRPhotonProducer : public edm::EDProducer {
           // todo: look at nearest leptons, apply iso?
           if (it->pdgId() == 22 && it->charge()==0 && it->pt()>2 && fabs(it->eta())<2.4){
             out->push_back(*it);
-            std::cout << "Adding: " << it->pt() << " (eta, phi): " << it->eta() << " " << it->phi() << std::endl;
+            //std::cout << "Adding: " << it->pt() << " (eta, phi): " << it->eta() << " " << it->phi() << std::endl;
           }
           if (abs(it->pdgId())==13 && fabs(it->eta())<2.4){
             reco::Particle::PolarLorentzVector p4(it->ecalEnergy()*it->pt()/it->p(),it->eta(),it->phi(),0.0);
             if (p4.pt() > 2.0) {
               out->push_back( reco::PFCandidate(0,reco::Particle::LorentzVector(p4), reco::PFCandidate::gamma) );
-              std::cout << "Adding: " << p4.pt() << " (eta, phi): " << p4.eta() << " " << p4.phi() << std::endl;
+              //std::cout << "Adding: " << p4.pt() << " (eta, phi): " << p4.eta() << " " << p4.phi() << std::endl;
             }
           }
         }
