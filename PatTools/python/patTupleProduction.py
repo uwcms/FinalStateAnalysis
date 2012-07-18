@@ -177,7 +177,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Now run PAT
     process.tuplize += process.patDefaultSequence
 
-    #temp add fsrPhoton junk IAR 25.Jun.2012
+    # Add FSR photons for ZZ analysis
     process.load("FinalStateAnalysis.PatTools.fsrPhotons_cff")
     process.tuplize += process.fsrPhotonSequence
 
