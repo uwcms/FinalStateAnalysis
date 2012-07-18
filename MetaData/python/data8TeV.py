@@ -16,7 +16,7 @@ datadefs = {
         'analyses': ['HTT'],
         'datasetpath': '/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9-v1/AODSIM',
         'pu': 'S7',
-        'x_sec': -999,
+        'x_sec': 36257.2,
         'responsible' : 'Maria',
     },
     'Zjets_M50' : {
@@ -31,14 +31,14 @@ datadefs = {
         'analyses': ['HTT'],
         'datasetpath': '/TTJets_TuneZ2star_8TeV-madgraph-tauola/Summer12-PU_S7_START52_V5-v1/AODSIM',
         'pu': 'S7',
-        'x_sec': -999,
+        'x_sec': 225.197,
         'responsible' : 'Evan',
     },
     'WZJetsTo3LNu_pythia' : {
         'analyses': ['HTT'],
         'datasetpath': '/WZTo3LNu_TuneZ2star_8TeV_pythia6_tauola/Summer12-PU_S7_START52_V9-v1/AODSIM',
         'pu': 'S7',
-        'x_sec': -999,
+        'x_sec': 32.3161*3*0.03365*(0.1075+0.1057+0.1125) ,
         'responsible' : 'Evan',
     },
     'WWJetsTo2L2Nu_TuneZ2_7TeV' : {
@@ -52,7 +52,7 @@ datadefs = {
         'analyses': ['HTT'],
         'datasetpath': '/ZZTo4L_TuneZ2star_8TeV_pythia6_tauola/Summer12-PU_S7_START52_V9-v1/AODSIM',
         'pu': 'S7',
-        'x_sec': -999,
+        'x_sec': 17.890*0.10096*0.10096,
         'responsible' : 'Ian',
     },
     'ZZ4LJetsTo4L_madgraph' : {
@@ -248,6 +248,11 @@ for mass in [110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160]:
         datadefs['VH_H2Tau_M-110']['datasetpath'] = datadefs['VH_H2Tau_M-110']['datasetpath'].replace(
             'V9-v2', 'V9-v3')
 
+# Add the only one we are currently interested int
+datadefs['VH_H2Tau_M-110']['x_sec'] = (1.060 + 0.5869 + 0.1887)*7.95E-02
+datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966 + 0.4483 + 0.1470)*7.04E-02
+datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095 + 0.3473 + 0.1157)*5.48E-02
+datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713 + 0.2728 + 0.09207)*3.54E-02
 
 # Add data files
 def build_data_set(pd, analyses, who):
@@ -289,6 +294,14 @@ def build_data_set(pd, analyses, who):
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196509_8TeV_PromptReco_Collisions12_JSON.txt",
             'firstRun' : 195948,
             'lastRun' : 196509,
+            'analyses' : analyses,
+            'responsible' : who,
+        },
+        'data_%s_Run2012B_PromptReco_v1_e' % pd : {
+            'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
+            'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_PromptReco_Collisions12_JSON.txt",
+            'firstRun' : 196510,
+            'lastRun' : 196531,
             'analyses' : analyses,
             'responsible' : who,
         },

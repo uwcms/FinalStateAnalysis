@@ -6,9 +6,10 @@ import ROOT
 ROOT.gROOT.SetStyle("Plain")
 
 zjets = ROOT.TChain('mtt/final/Ntuple')
-
 print zjets.Add('/hdfs/store/user/efriis/2012-04-23-Higgs/Zjets_M50/2/*')
-
+plot_particle = "#tau_{1} #tau_{2}"
+#plot_event ='event.m_t1_Mass'
+plot_save = "zjets_t1_t2_Mass_tightcuts.png"
 print "Making wjets chain"
 wjets = ROOT.TChain('mtt/final/Ntuple') # mtt/.. is the path to the ntpule of interest
 # Add all the data files
@@ -22,11 +23,11 @@ print signal_120.Add('/hdfs/store/user/efriis/2012-04-23-Higgs/VH_120/1/*')
 
 
 # Make a histogram of leading tau PT
-wjets_tau1_pt = ROOT.TH1F("wjets_tau1_pt", "Invariant #tau_{1} #tau_{2} Mass in W+jets",
+wjets_tau1_pt = ROOT.TH1F("wjets_tau1_pt", "Invariant " +plot_particle+" Mass in W+jets",
                           20, 0, 200)
-signal_tau1_pt = ROOT.TH1F("signal_tau1_pt", "Invariant #tau_{1} #tau_{2} Mass in W+jets",
+signal_tau1_pt = ROOT.TH1F("signal_tau1_pt", "Invariant " +plot_particle+" Mass in W+jets",
                            20, 0, 200)
-zjets_tau1_pt = ROOT.TH1F("zjets_tau1_pt", "Invariant #tau_{1} #tau_{2} Mass in W+jets",
+zjets_tau1_pt = ROOT.TH1F("zjets_tau1_pt", "Invariant " + plot_particle+ " Mass in W+jets",
                            20, 0, 200)
 
 
@@ -47,7 +48,7 @@ for event_num, event in enumerate(wjets):
     #wjets_tau1_pt.Fill(event.tPt)
     #wjets_tau1_pt.Fill(event.m2_t_PZeta,event.m2_t_PZetaVis)
     #wjets_tau1_pt.Fill(event.tLooseIso)
-    if (event.t1Pt > 20 and  event.t2Pt>20 and event.mPt > 15 and event.t1LooseIso != 0 and event.t2LooseIso != 0 and event.t1DecayFinding > 0.5 and event.t2DecayFinding > 0.5 and event.t1_t2_SS < 0.5 and event.mRelPFIsoDB < 0.3 and event.t1_t2_SS < 0.5):
+    if (event.t1Pt > 20 and  event.t2Pt>20 and event.mPt > 15 and event.t1LooseIso != 0 and event.t2LooseIso != 0 and event.t1DecayFinding > 0.5 and event.t2DecayFinding > 0.5 and event.t1_t2_SS < 0.5 and event.mRelPFIsoDB < 0.3 and event.t1_t2_SS < 0.5 and event.t1AntiMuonTight > 0.5 and event.t1AntiElectronMVA > 0.5 and event.t2AntiMuonTight > 0.5 and event.t2AntiElectronMVA > 0.5):
 
     	wjets_tau1_pt.Fill(event.t1_t2_Mass)
 
@@ -61,7 +62,7 @@ for event_num, event in enumerate(signal_120):
     #signal_tau1_pt.Fill(event.tLooseIso)
   #  signal_tau1_pt.Fill(event.tPt)
   #  signal_tau1_pt.Fill(event.m2_t_PZeta,event.m2_t_PZetaVis)
-    if (event.t1Pt > 20 and  event.t2Pt>20 and event.mPt > 15 and event.t1LooseIso != 0 and event.t2LooseIso != 0 and event.t1DecayFinding > 0.5 and event.t2DecayFinding > 0.5 and event.t1_t2_SS < 0.5 and event.mRelPFIsoDB < 0.3 and event.t1_t2_SS < 0.5):
+    if (event.t1Pt > 20 and  event.t2Pt>20 and event.mPt > 15 and event.t1LooseIso != 0 and event.t2LooseIso != 0 and event.t1DecayFinding > 0.5 and event.t2DecayFinding > 0.5 and event.t1_t2_SS < 0.5 and event.mRelPFIsoDB < 0.3 and event.t1_t2_SS < 0.5 and event.t1AntiMuonTight > 0.5 and event.t1AntiElectronMVA > 0.5 and event.t2AntiMuonTight > 0.5 and event.t2AntiElectronMVA > 0.5):
 
 	    signal_tau1_pt.Fill(event.t1_t2_Mass)
 
@@ -70,7 +71,7 @@ print "looping over zjet events"
 for event_num, event in enumerate(zjets):
     if event_num % 1000 == 0:
         print "processing event %i" % event_num
-    if (event.t1Pt > 20 and  event.t2Pt>20 and event.mPt > 15 and event.t1LooseIso != 0 and event.t2LooseIso != 0 and event.t1DecayFinding > 0.5 and event.t2DecayFinding > 0.5 and event.t1_t2_SS < 0.5 and event.mRelPFIsoDB < 0.3 and event.t1_t2_SS < 0.5):
+    if (event.t1Pt > 20 and  event.t2Pt>20 and event.mPt > 15 and event.t1LooseIso != 0 and event.t2LooseIso != 0 and event.t1DecayFinding > 0.5 and event.t2DecayFinding > 0.5 and event.t1_t2_SS < 0.5 and event.mRelPFIsoDB < 0.3 and event.t1_t2_SS < 0.5 and event.t1AntiMuonTight > 0.5 and event.t1AntiElectronMVA > 0.5 and event.t2AntiMuonTight > 0.5 and event.t2AntiElectronMVA > 0.5):
         zjets_tau1_pt.Fill(event.t1_t2_Mass)
 
 
@@ -87,12 +88,12 @@ if signal_tau1_pt.Integral():
 	signal_tau1_pt.Scale(1.0/signal_tau1_pt.Integral())
 
 wjets_tau1_pt.SetLineColor(ROOT.EColor.kBlue)
-zjets_tau1_pt.SetLineColor(ROOT.EColor.kOrange)
+zjets_tau1_pt.SetLineColor(ROOT.EColor.kViolet)
 signal_tau1_pt.SetLineColor(ROOT.EColor.kRed)
 
 # GOOD PLOTSPERSONSHIP
 #wjets_tau1_pt.GetXaxis().SetTitle("Leading #tau p_{T} (GeV)")
-wjets_tau1_pt.GetXaxis().SetTitle(" #tau_{1} #tau_{2} Invariant Mass (GeV)")
+wjets_tau1_pt.GetXaxis().SetTitle( plot_particle+ " Invariant Mass (GeV)")
 
 
 # Arbitrary units (since both are normalized to 1)
@@ -108,5 +109,5 @@ zjets_tau1_pt.Draw('same')
 signal_tau1_pt.Draw('same')
 
 legend.Draw()
-
-canvas.SaveAs("zjets_tau1_tau2_Mass.png")
+legend.SetFillColor(0)
+canvas.SaveAs(plot_save)

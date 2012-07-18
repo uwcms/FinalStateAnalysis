@@ -21,15 +21,15 @@ import os
 
 def control_region(row):
     # Figure out what control region we are in.
-    if row.muon1RelPFIsoDB < 0.15 and row.muon1MtToMET > 50:
+    if row.m1RelPFIsoDB < 0.15 and row.m1MtToMET > 50:
         return 'wjets'
-    elif row.muon1RelPFIsoDB > 0.3 and row.metSignificance < 3:
+    elif row.m1RelPFIsoDB > 0.3 and row.metSignificance < 3:
         return 'qcd'
     else:
         return None
 
 class FakeRatesMM(MegaBase):
-    tree = 'mumu/final/Ntuple'
+    tree = 'mm/final/Ntuple'
     def __init__(self, tree, outfile, **kwargs):
         super(FakeRatesMM, self).__init__(tree, outfile, **kwargs)
         # Use the cython wrapper
@@ -37,6 +37,7 @@ class FakeRatesMM(MegaBase):
         self.out = outfile
         # Histograms for each category
         self.histograms = {}
+        self.is7TeV = '7TeV' in os.environ['jobid']
 
     def begin(self):
         for region in ['wjets', 'qcd']:
@@ -63,60 +64,72 @@ class FakeRatesMM(MegaBase):
                     book_histo('muonJetPt', 'Muon Jet Pt', 100, 0, 100)
                     book_histo('muonAbsEta', 'Muon Abs Eta', 100, -2.5, 2.5)
                     book_histo('metSignificance', 'MET sig.', 100, 0, 10)
-                    book_histo('muon1MtToMET', 'Muon 1 MT', 100, 0, 200)
+                    book_histo('m1MtToMET', 'Muon 1 MT', 100, 0, 200)
+
 
     def process(self):
-        base_selection = ' && '.join([
-            'muon1_muon2_SS',
-            'doubleMuPass',
-            'muon1Pt > 20',
-            'muon1PFIDTight',
-            'muon2Pt > 10',
-            'muon1AbsEta < 2.4',
-            'muon2AbsEta < 2.4',
-            'muon2PixHits',
-            '!muVetoPt5',
-        ])
+
+        def preselection(row):
+            if not row.m1_m2_SS: return False
+            if not row.doubleMuPass: return False
+            if not row.m1Pt > 20: return False
+            if not row.m1PFIDTight: return False
+            if not row.m2Pt > 10: return False
+            if not row.m1AbsEta < 2.4: return False
+            if not row.m2AbsEta < 2.4: return False
+            if not row.m2JetBtag < 3.3: return False
+            if not row.m2PixHits: return False
+            if row.muVetoPt5: return False
+            if row.bjetCSVVeto: return False
+            if row.tauVetoPt20: return False
+            if not abs(row.m1DZ) < 0.2: return False
+            if not abs(row.m2DZ) < 0.2: return False
+            return True
 
         def fill(the_histos, row):
-            the_histos['muonPt'].Fill(row.muon2Pt)
-            the_histos['muonJetPt'].Fill(row.muon2JetPt)
-            the_histos['muonAbsEta'].Fill(row.muon2AbsEta)
-            the_histos['metSignificance'].Fill(row.metSignificance)
-            the_histos['muon1MtToMET'].Fill(row.muon1MtToMET)
+            # Get PU weight
+            #weight = row.puWeightData2011AB
+            weight = row.puWeightData2011AB if self.is7TeV else row.puWeightData2012AB
+            the_histos['muonPt'].Fill(row.m2Pt, weight)
+            the_histos['muonJetPt'].Fill(row.m2JetPt, weight)
+            the_histos['muonAbsEta'].Fill(row.m2AbsEta, weight)
+            the_histos['metSignificance'].Fill(row.metSignificance, weight)
+            the_histos['m1MtToMET'].Fill(row.m1MtToMET, weight)
 
         histos = self.histograms
-        for row in self.tree.where(base_selection):
+        for row in self.tree:
+            if not preselection(row):
+                continue
             region = control_region(row)
             if region is None:
                 continue
             # This is a QCD or Wjets
             fill(histos[(region, 'pt10')], row)
 
-            if row.muon2PFIDTight:
+            if row.m2PFIDTight:
                 fill(histos[(region, 'pt10', 'pfid')], row)
 
-            if row.muon2RelPFIsoDB < 0.3:
+            if row.m2RelPFIsoDB < 0.3:
                 fill(histos[(region, 'pt10', 'iso03')], row)
 
-            if row.muon2PFIDTight and row.muon2RelPFIsoDB < 0.3:
+            if row.m2PFIDTight and row.m2RelPFIsoDB < 0.3:
                 fill(histos[(region, 'pt10', 'pfidiso03')], row)
 
-            if row.muon2PFIDTight and row.muon2RelPFIsoDB < 0.1:
+            if row.m2PFIDTight and row.m2RelPFIsoDB < 0.1:
                 fill(histos[(region, 'pt10', 'pfidiso01')], row)
 
-            if row.muon2Pt > 20:
+            if row.m2Pt > 20:
                 fill(histos[(region, 'pt20')], row)
-                if row.muon2PFIDTight:
+                if row.m2PFIDTight:
                     fill(histos[(region, 'pt20', 'pfid')], row)
 
-                if row.muon2RelPFIsoDB < 0.3:
+                if row.m2RelPFIsoDB < 0.3:
                     fill(histos[(region, 'pt20', 'iso03')], row)
 
-                if row.muon2PFIDTight and row.muon2RelPFIsoDB < 0.3:
+                if row.m2PFIDTight and row.m2RelPFIsoDB < 0.3:
                     fill(histos[(region, 'pt20', 'pfidiso03')], row)
 
-                if row.muon2PFIDTight and row.muon2RelPFIsoDB < 0.1:
+                if row.m2PFIDTight and row.m2RelPFIsoDB < 0.1:
                     fill(histos[(region, 'pt20', 'pfidiso01')], row)
 
     def finish(self):

@@ -37,7 +37,6 @@ id = PSet(
     objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
     objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
     objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
-
 )
 
 tracking = PSet(
@@ -45,4 +44,11 @@ tracking = PSet(
     objectMissingHits = cms.string(
         '? {object}.gsfTrack.isNonnull? '
         '{object}.gsfTrack.trackerExpectedHitsInner.numberOfHits() : 10'),
+)
+
+# Information about the matched supercluster
+supercluster = PSet(
+    objectSCEta = '{object}.superCluster().eta',
+    objectSCPhi = '{object}.superCluster().phi',
+    objectSCEnergy = '{object}.superCluster().energy',
 )

@@ -60,7 +60,7 @@ class WHAnalyzerBase(MegaBase):
         #folders = []
         flag_map = {}
         for sign in ['ss', 'os']:
-            for failing_objs in [(), (1,), (2,), (1,2), (1,2,3)]:
+            for failing_objs in [(), (1,), (2,), (3,), (1,2), (1,2,3)]:
                 cut_key = [sign == 'ss']
                 region_label = ''
                 for i in range(1,4):
@@ -162,7 +162,8 @@ class WHAnalyzerBase(MegaBase):
                 fr_weight = event_weight
                 # Figure out which object weight functions to apply
                 for subweight in weight_map[weight_folder]:
-                    fr_weight *= subweight(row)
+                    fr = subweight(row)
+                    fr_weight *= fr/(1.-fr)
 
                 # Now fill the histos for this weight folder
                 fill_histos(histos, base_folder + (weight_folder,), row, fr_weight)

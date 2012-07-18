@@ -4,8 +4,33 @@ Analyze MMT events for the WH analysis
 
 '''
 
-import WHAnalyzerBase
+from FinalStateAnalysis.StatTools.RooFunctorFromWS import build_roofunctor
 from MuMuTauTree import MuMuTauTree
+import os
+from PUWeighting import pu_weight
+import WHAnalyzerBase
+import ROOT
+
+# Get fitted fake rate functions
+frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
+highpt_mu_fr = build_roofunctor(
+    frfit_dir + '/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root',
+    'fit_efficiency', # workspace name
+    'efficiency'
+)
+lowpt_mu_fr = build_roofunctor(
+    frfit_dir + '/m_wjets_pt10_pfidiso03_muonJetPt-data_mm.root',
+    'fit_efficiency', # workspace name
+    'efficiency'
+)
+tau_fr = build_roofunctor(
+    frfit_dir + '/t_ztt_pt20_mvaloose_tauPt-data_mm.root',
+    'fit_efficiency', # workspace name
+    'efficiency'
+)
+
+# Get correction functions
+ROOT.gSystem.Load("Corrector_C")
 
 class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
     tree = 'mmt/final/Ntuple'
@@ -13,16 +38,42 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         super(WHAnalyzeMMT, self).__init__(tree, outfile, MuMuTauTree, **kwargs)
 
     def book_histos(self, folder):
+        self.book(folder, "weight", "Event weight", 100, 0, 5)
+        self.book(folder, "weight_nopu", "Event weight without PU", 100, 0, 5)
+        self.book(folder, "rho", "Fastjet #rho", 100, 0, 25)
+        self.book(folder, "nvtx", "Number of vertices", 31, -0.5, 30.5)
+        self.book(folder, "prescale", "HLT prescale", 21, -0.5, 20.5)
         self.book(folder, "m1Pt", "Muon 1 Pt", 100, 0, 100)
         self.book(folder, "m2Pt", "Muon 2 Pt", 100, 0, 100)
+        self.book(folder, "m1AbsEta", "Muon 1 AbsEta", 100, 0, 2.4)
+        self.book(folder, "m2AbsEta", "Muon 2 AbsEta", 100, 0, 2.4)
         self.book(folder, "m1m2Mass", "Muon 1-2 Mass", 120, 0, 120)
+        self.book(folder, "subMass", "subleadingMass", 200, 0, 200)
+        self.book(folder, "m2Iso", "m2Iso", 100, 0, 0.3)
+        self.book(folder, "tPt", "Tau Pt", 100, 0, 100)
+        self.book(folder, "tAbsEta", "Tau AbsEta", 100, 0, 2.3)
+        self.book(folder, "nTruePU", "NPU", 62, -1.5, 60.5)
 
     def fill_histos(self, histos, folder, row, weight):
+        histos['/'.join(folder + ('nTruePU',))].Fill(row.nTruePU)
         def fill(name, value):
             histos['/'.join(folder + (name,))].Fill(value, weight)
+        histos['/'.join(folder + ('weight',))].Fill(weight)
+        histos['/'.join(folder + ('weight_nopu',))].Fill(
+            weight/row.puWeightData2011AB if row.puWeightData2011AB else 0)
+
+        fill('prescale', row.doubleMuPrescale)
+        fill('rho', row.rho)
+        fill('nvtx', row.nvtx)
         fill('m1Pt', row.m1Pt)
         fill('m2Pt', row.m2Pt)
+        fill('m1AbsEta', row.m1AbsEta)
+        fill('m2AbsEta', row.m2AbsEta)
         fill('m1m2Mass', row.m1_m2_Mass)
+        fill('subMass', row.m2_t_Mass)
+        fill('m2Iso', row.m2RelPFIsoDB)
+        fill('tPt', row.tPt)
+        fill('tAbsEta', row.tAbsEta)
 
     def preselection(self, row):
         ''' Preselection applied to events.
@@ -47,10 +98,14 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.m1_m2_Mass < 20:
             return False
+        if row.LT < 80:
+            return False
 
         if row.bjetCSVVeto:
             return False
         if row.tauVetoPt20:
+            return False
+        if row.eVetoCicTightIso:
             return False
         if not row.m1PixHits:
             return False
@@ -66,6 +121,12 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         if abs(row.m2DZ) > 0.2:
             return False
         if abs(row.tDZ) > 0.2:
+            return False
+        if not row.tAntiElectronLoose:
+            return False
+        if not row.tAntiMuonTight:
+            return False
+        if row.tCiCTightElecOverlap:
             return False
         if row.tMuOverlap:
             return False
@@ -87,17 +148,18 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.tLooseMVAIso)
 
     def event_weight(self, row):
-        #fixme
-        return row.puWeightData2011AB
+        # fixme
+        weight = pu_weight(row)
+        if row.run < 10:
+            weight *= ROOT.Cor_Total_Mu_Lead(row.m1Pt, row.m1AbsEta)
+            weight *= ROOT.Cor_Total_Mu_SubLead(row.m2Pt, row.m2AbsEta)
+        return weight
 
     def obj1_weight(self, row):
-        #fixme
-        return 1e-2
+        return highpt_mu_fr(row.m1JetPt)
 
     def obj2_weight(self, row):
-        #fixme
-        return 1e-2
+        return lowpt_mu_fr(row.m2JetPt)
 
     def obj3_weight(self, row):
-        #fixme
-        return 1e-2
+        return tau_fr(row.tPt)

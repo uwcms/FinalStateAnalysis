@@ -2,6 +2,9 @@ pushd $CMSSW_BASE/src
 
 # Tags that work in any release
 
+# For updated lumi tools
+cvs co -r V03-05-12  RecoLuminosity/LumiDB 
+
 # Add and patch to way speed up trigger matching
 echo "Applying pat trigger matching speedup"
 patch -N -p0 < FinalStateAnalysis/recipe/patches/V06-04-16_DataFormats_PatCandidates_PassStrByRef.patch

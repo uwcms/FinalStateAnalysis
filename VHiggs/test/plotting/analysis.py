@@ -800,7 +800,7 @@ if __name__ == "__main__":
                     signalx5.SetLineWidth(3)
                     signalx5.SetLineColor(ROOT.EColor.kRed)
                     signalx5.SetFillStyle(0)
-                    legend.AddEntry(signalx5.th1, "m_{H}=120 (#times5)", "l")
+                    legend.AddEntry(signalx5.th1, "(5#times) m_{H}=120 GeV", "l")
                     stack = ROOT.THStack("FR_FINAL",
                                          "Final #mu#mu#tau selection")
                     #stack.Add(tribosons.th1, 'hist')
@@ -810,6 +810,8 @@ if __name__ == "__main__":
                         stack.Add(histo.th1, 'hist')
                         legend.AddEntry(histo.th1, histo_name, 'lf')
                     all_fakes.SetLineWidth(0)
+                    all_fakes.SetLineColor(all_fakes.GetFillColor())
+                    all_fakes.SetLineStyle(0)
                     stack.Add(all_fakes.th1, 'hist')
                     legend.AddEntry(all_fakes.th1, "Non-prompt", "lf")
                     stack.Draw()
@@ -864,9 +866,9 @@ if __name__ == "__main__":
                     blurb.SetTextSize(0.05)
                     blurb.SetTextAlign(11)
                     if 'e' in channel:
-                        blurb.AddText("e#mu#tau")
+                        blurb.AddText("e#mu#tau_{h}")
                     else:
-                        blurb.AddText("#mu#mu#tau")
+                        blurb.AddText("#mu#mu#tau_{h}")
                     blurb.Draw()
                     saveplot(plot_base_name + '_ult_combfks', stack)
 

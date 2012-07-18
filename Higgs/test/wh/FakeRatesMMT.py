@@ -13,7 +13,7 @@ The layout of output is:
 
 '''
 
-import MMTTree
+import MuMuTauTree
 from FinalStateAnalysis.PlotTools.MegaBase import MegaBase
 import os
 
@@ -22,10 +22,11 @@ class FakeRatesMMT(MegaBase):
     def __init__(self, tree, outfile, **kwargs):
         super(FakeRatesMMT, self).__init__(tree, outfile, **kwargs)
         # Use the cython wrapper
-        self.tree = MMTTree.MMTTree(tree)
+        self.tree = MuMuTauTree.MuMuTauTree(tree)
         self.out = outfile
         # Histograms for each category
         self.histograms = {}
+        self.is7TeV = '7TeV' in os.environ['jobid']
 
     def begin(self):
         # Book histograms
@@ -56,19 +57,25 @@ class FakeRatesMMT(MegaBase):
     def process(self):
         # Generic filler function to fill plots after selection
         def fill(the_histos, row):
-            the_histos['tauPt'].Fill(row.tPt)
-            the_histos['tauJetPt'].Fill(row.tJetPt)
-            the_histos['tauAbsEta'].Fill(row.tAbsEta)
+            weight = row.puWeightData2011AB if self.is7TeV else row.puWeightData2012AB
+            the_histos['tauPt'].Fill(row.tPt, weight)
+            the_histos['tauJetPt'].Fill(row.tJetPt, weight)
+            the_histos['tauAbsEta'].Fill(row.tAbsEta, weight)
 
-        base_selection = ' && '.join([
-            'm1RelPFIsoDB < 0.25',
-            'm2RelPFIsoDB < 0.25',
-            'm1PFIDTight',
-            'm2PFIDTight',
-            'abs(m1_m2_Mass-91.2) < 10',
-            'tPt > 20',
-            'tAntiMuonTight',
-        ])
+        def preselection(row):
+            if not row.m1RelPFIsoDB < 0.25: return False
+            if not row.m2RelPFIsoDB < 0.25: return False
+            if not row.m1PFIDTight: return False
+            if not row.m2PFIDTight: return False
+            if not abs(row.m1_m2_Mass-91.2) < 10: return False
+            if not row.tPt > 20: return False
+            if not row.tAbsEta < 2.3: return False
+            if row.tMuOverlap: return False
+            if row.tCiCTightElecOverlap: return False
+            if not row.tAntiMuonTight: return False
+            if not row.tAntiElectronMVA: return False
+            if not row.tMtToMET < 30: return False
+            return True
 
         histos = self.histograms
 
@@ -76,7 +83,9 @@ class FakeRatesMMT(MegaBase):
         pt20 = histos[('ztt', 'pt20')]
 
         # Analyze data.  Select events with a good Z.
-        for row in self.tree.where(base_selection):
+        for row in self.tree:
+            if not preselection(row):
+                continue
 
             # Fill denominator
             fill(pt20, row)

@@ -27,6 +27,9 @@ class MegaBase(object):
         self.output = output
         self.opts = kwargs
         self.histograms = {}
+        # Always store sum of weights for histograms, so the errors make sense
+        # later.
+        ROOT.TH1.SetDefaultSumw2(True)
 
     def book(self, location, name, *args, **kwargs):
         ''' Book an object at location
