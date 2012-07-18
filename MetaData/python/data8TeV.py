@@ -340,7 +340,7 @@ data_DoubleE, list_DoubleE = build_data_set('DoubleElectron', ['VH','4L'], 'Ian'
 datadefs.update(data_DoubleE)
 data_name_map.update(list_DoubleE)
 
-data_SingleMu, list_SingleMu = build_data_set('SingleMu', ['Tau', 'Mu'], 'tapas')
+data_SingleMu, list_SingleMu = build_data_set('SingleMu', ['Tau', 'Mu', 'Wbb'], 'tapas')
 datadefs.update(data_SingleMu)
 data_name_map.update(list_SingleMu)
 
