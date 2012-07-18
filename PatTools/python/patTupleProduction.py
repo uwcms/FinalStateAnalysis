@@ -16,6 +16,7 @@ from FinalStateAnalysis.PatTools.patFinalStateProducers import produce_final_sta
 def configurePatTuple(process, isMC=True, **kwargs):
     # Stuff we always keep
     output_commands = [
+#        '*',
         '*_addPileupInfo_*_*',
         'edmMergeableCounter_*_*_*',
         '*_lumiProducer_*_*',
@@ -42,6 +43,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_generator_weight_*', # 2k11
         "GenFilterInfo_generator_minVisPtFilter_*", #2k12
         '*_genDaughters_*_*',
+        '*_boosted*_*_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
@@ -174,6 +176,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Now run PAT
     process.tuplize += process.patDefaultSequence
+
+    #temp add fsrPhoton junk IAR 25.Jun.2012
+    process.load("FinalStateAnalysis.PatTools.fsrPhotons_cff")
+    process.tuplize += process.fsrPhotonSequence
 
     # Use HPS taus
     tautools.switchToPFTauHPS(process)
