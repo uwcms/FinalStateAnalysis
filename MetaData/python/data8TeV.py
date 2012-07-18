@@ -104,6 +104,41 @@ datadefs = {
 		'x_sec': 0.1767,
 		'responsible' : 'Ian',
 	},
+    'WW_pythi6_tauola' :{
+   'analyses': [''],
+   'datasetpath': '/WW_TuneZ2star_8TeV_pythia6_tauola/Summer12-PU_S8_START52_V9-v1/AODSIM',
+   'pu':'S7',
+   'x_sec':-999,
+   'responsible': 'Isobel',
+   },
+    'T_t_powheg_tauola' :{
+   'analyses': [''],
+   'datasetpath': '/T_t-channel_TuneZ2star_8TeV-powheg-tauola/Summer12-START50_V13-v3/GEN',
+   'pu':'S7',
+   'x_sec':-999,
+   'responsible': 'Isobel',
+   },
+    'T_s_powheg_tauola' :{
+   'analyses': [''],
+   'datasetpath': '/T_s-channel_TuneZ2star_8TeV-powheg-tauola/Summer12-START50_V13-v4/GEN',
+   'pu':'S7',
+   'x_sec':-999,
+   'responsible': 'Isobel',
+   },
+    'Tbar_t_powheg_tauola' :{
+   'analyses': [''],
+   'datasetpath': '/Tbar_t-channel_TuneZ2star_8TeV-powheg-tauola/Summer12-START50_V13-v1/GEN',
+   'pu':'S7',
+   'x_sec':-999,
+   'responsible': 'Isobel',
+   },
+    'Tbar_s_powheg_tauola' :{
+   'analyses': [''],
+   'datasetpath': '/Tbar_s-channel_TuneZ2star_8TeV-powheg-tauola/Summer12-START50_V13-v4/GEN',
+   'pu':'S7',
+   'x_sec':-999,
+   'responsible': 'Isobel',
+   },
     'embedded_2012A_mutau' : {
         'analyses': ['HTT'],
         'datasetpath': '/DoubleMu/StoreResults-DoubleMu_2012A_PromptReco_v1_embedded_trans1_tau116_ptmu1_13had1_17_v2-f456bdbb960236e5c696adfe9b04eaae/USER',
@@ -270,6 +305,22 @@ def build_data_set(pd, analyses, who):
             'analyses' : analyses,
             'responsible' : who,
         },
+        'data_%s_Run2012A_PromptReco_v1_Run190456_193683' % pd : {
+            'datasetpath' : "/%s/Run2012A-PromptReco-v1/AOD" % pd,
+            'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
+            'firstRun' : 190456,
+            'lastRun' : 193683,
+            'analyses' : analyses,
+            'responsible' : who,
+        },
+        'data_%s_Run2012B_PromptReco_v1_Run193752_196531' % pd : {
+            'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
+            'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
+            'firstRun' : 193752,
+            'lastRun' : 196531,
+            'analyses' : analyses,
+            'responsible' : who,
+        },
     }
     sample_dict = {
         'data_%s' % pd : subsample_dict.keys()
@@ -277,11 +328,11 @@ def build_data_set(pd, analyses, who):
     return subsample_dict, sample_dict
 
 # Build all the PDs we use
-data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu','4L'], 'Ian')
+data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu','4L'], 'tapas')
 datadefs.update(data_DoubleMu)
 data_name_map.update(list_DoubleMu)
 
-data_MuEG, list_MuEG = build_data_set('MuEG', ['VH', 'HTT', 'Mu'], 'Evan')
+data_MuEG, list_MuEG = build_data_set('MuEG', ['VH', 'HTT', 'Mu'], 'tapas')
 datadefs.update(data_MuEG)
 data_name_map.update(list_MuEG)
 
@@ -289,7 +340,7 @@ data_DoubleE, list_DoubleE = build_data_set('DoubleElectron', ['VH','4L'], 'Ian'
 datadefs.update(data_DoubleE)
 data_name_map.update(list_DoubleE)
 
-data_SingleMu, list_SingleMu = build_data_set('SingleMu', ['Tau', 'Mu'], 'Maria')
+data_SingleMu, list_SingleMu = build_data_set('SingleMu', ['Tau', 'Mu', 'Wbb'], 'tapas')
 datadefs.update(data_SingleMu)
 data_name_map.update(list_SingleMu)
 
