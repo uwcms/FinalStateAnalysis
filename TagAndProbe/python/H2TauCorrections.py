@@ -8,7 +8,6 @@ See: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012
 
 '''
 
-
 def correct_mueg_mu_2011(pt, abseta):
     ''' Get DATA-MC correction factor mu leg of MuEG trigger '''
     if abseta < 1.2:
