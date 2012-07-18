@@ -305,7 +305,7 @@ def build_data_set(pd, analyses, who):
             'analyses' : analyses,
             'responsible' : who,
         },
-        'data_%s_Run2012A_PromptReco_v1_Run190456_193683_ICHEP' % pd : {
+        'data_%s_Run2012A_PromptReco_v1_Run190456_193683' % pd : {
             'datasetpath' : "/%s/Run2012A-PromptReco-v1/AOD" % pd,
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
             'firstRun' : 190456,
@@ -313,11 +313,11 @@ def build_data_set(pd, analyses, who):
             'analyses' : analyses,
             'responsible' : who,
         },
-        'data_%s_Run2012B_PromptReco_v1_Run193752_196509_ICHEP' % pd : {
+        'data_%s_Run2012B_PromptReco_v1_Run193752_196531' % pd : {
             'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
             'firstRun' : 193752,
-            'lastRun' : 196509,
+            'lastRun' : 196531,
             'analyses' : analyses,
             'responsible' : who,
         },
