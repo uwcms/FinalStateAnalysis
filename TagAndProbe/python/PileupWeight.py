@@ -35,6 +35,7 @@ class PileupWeight(object):
             pu = file.Get('pileup')
             if self.data is None:
                 self.data = pu.Clone()
+                self.data.SetDirectory(0)
             else:
                 self.data.Add(pu)
             file.Close()
@@ -50,7 +51,7 @@ class PileupWeight(object):
         self.mc = self.data.Clone()
         # Clear bins
         self.mc.Reset()
-        for i, bin in _MC_PU_DISTRIBUTIONS[mctag]:
+        for i, bin in enumerate(_MC_PU_DISTRIBUTIONS[mctag]):
             self.mc.SetBinContent(i+1, bin)
 
         # Normalize MC
