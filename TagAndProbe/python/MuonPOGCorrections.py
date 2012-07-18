@@ -157,7 +157,7 @@ class MuonPOGCorrection(object):
         # Map the functions to the appropriate TGraphAsymmErrors
         self.correct_by_pt_barrel = self.load_graph_eval_func(pt_barrel)
         self.correct_by_pt_endcap = self.load_graph_eval_func(pt_endcap)
-        self.corrector_by_eta_pt20 = self.load_graph_eval_func(eta_pt20)
+        self.correct_by_eta_pt20 = self.load_graph_eval_func(eta_pt20)
 
     def load_graph_eval_func(self, name):
         ''' Load a graph with a given name form the file '''
