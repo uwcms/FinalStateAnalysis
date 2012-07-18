@@ -1,13 +1,16 @@
 '''
 
-Interface to official corrections from the muon POG.
+Interface to official corrections from the muon POG
+===================================================
+
+Interface: Evan K. Friis, UW Madison
 
 https://twiki.cern.ch/twiki/bin/viewauth/CMS/MuonReferenceEffs
 
 In general, there is a eta dependent correction for pt > 20, and a pt dependent
 correction otherwise.
 
-Available correctors:
+Available correctors::
 
     make_muon_pog_PFTight_2011()
     make_muon_pog_PFTight_2012()
@@ -22,15 +25,13 @@ which do what they say on the tin.  Each of these returns a corrector object
 that has a method "correction(pt, eta)".  Note that the Mu17_Mu8 corrections are
 only available for 2012.
 
-The trigger efficiencies for 2011 are encoded in a C++ file:
+The trigger efficiencies for 2011 are encoded in a C++ file::
     interface/MuonPOG2011HLTEfficiencies.h
 
-They are available as python functions (taking the eta of both muons) as:
+They are available as python functions (taking the eta of both muons) as::
 
     muon_pog_Mu17Mu8_eta_eta_2011(eta1, eta2)
     muon_pog_Mu13Mu8_eta_eta_2011(eta1, eta2)
-
-Interface: Evan K. Friis, UW Madison
 
 '''
 
