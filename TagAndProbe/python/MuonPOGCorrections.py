@@ -18,8 +18,17 @@ Available correctors:
     make_muon_pog_Mu17Mu8_Mu17_2012()
     make_muon_pog_Mu17Mu8_Mu8_2012()
 
-which do what they say on the tin.  Note that the Mu17_Mu8 corrections
-are only available for 2012.
+which do what they say on the tin.  Each of these returns a corrector object
+that has a method "correction(pt, eta)".  Note that the Mu17_Mu8 corrections are
+only available for 2012.
+
+The trigger efficiencies for 2011 are encoded in a C++ file:
+    interface/MuonPOG2011HLTEfficiencies.h
+
+They are available as python functions (taking the eta of both muons) as:
+
+    muon_pog_Mu17Mu8_eta_eta_2011(eta1, eta2)
+    muon_pog_Mu13Mu8_eta_eta_2011(eta1, eta2)
 
 Interface: Evan K. Friis, UW Madison
 
@@ -35,6 +44,11 @@ _DATA_FILES = {
     '2011' : os.path.join(_DATA_DIR, 'MuonEfficiencies2011_42X_DataMC.root'),
     '2012' : os.path.join(_DATA_DIR, 'MuonEfficiencies_11June2012_52X.root')
 }
+
+# Load the 2011 muon HLT corrections and give the function a consistent name
+ROOT.gSystem.Load("libFinalStateAnalysisTagAndProbe")
+muon_pog_Mu13Mu8_eta_eta_2011 = ROOT.Eff_HLT_Mu13_Mu8_2011_TPfit_RunAB_EtaEta_DATAoverMC
+muon_pog_Mu17Mu8_eta_eta_2011 = ROOT.Eff_HLT_Mu17_Mu8_2011_TPfit_RunAB_EtaEta_DATAoverMC
 
 def make_muon_pog_PFTight_2011():
     ''' Make PFTight DATA/MC corrector for 2011 '''
