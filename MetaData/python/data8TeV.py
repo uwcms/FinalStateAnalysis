@@ -305,6 +305,30 @@ def build_data_set(pd, analyses, who):
             'analyses' : analyses,
             'responsible' : who,
         },
+        'data_%s_Run2012A_PromptReco_v1_Run190456_193683' % pd : {
+            'datasetpath' : "/%s/Run2012A-PromptReco-v1/AOD" % pd,
+            'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
+            'firstRun' : 190456,
+            'lastRun' : 193683,
+            'analyses' : analyses,
+            'responsible' : tapas,
+        },
+        'data_%s_Run2012B_PromptReco_v1_Run193752_194479_ICHEP' % pd : {
+            'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
+            'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
+            'firstRun' : 193752,
+            'lastRun' : 194479,
+            'analyses' : analyses,
+            'responsible' : tapas,
+        },
+        'data_%s_Run2012B_PromptReco_v1_Run194480_197044_ICHEP' % pd : {
+            'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
+            'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
+            'firstRun' : 194480,
+            'lastRun' : 197044,
+            'analyses' : analyses,
+            'responsible' : tapas,
+        },
     }
     sample_dict = {
         'data_%s' % pd : subsample_dict.keys()
