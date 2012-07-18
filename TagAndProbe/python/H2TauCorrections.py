@@ -2,7 +2,7 @@
 
 Compilation of MC-DATA corrections provided by the H2Tau group.
 
-For now just the and electron ID & ISO measured by Valentina.
+For now just the trigger and electron ID & ISO measured by Valentina.
 
 See: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012
 
