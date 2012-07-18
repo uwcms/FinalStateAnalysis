@@ -305,7 +305,7 @@ def build_data_set(pd, analyses, who):
             'analyses' : analyses,
             'responsible' : who,
         },
-        'data_%s_Run2012A_PromptReco_v1_Run190456_193683' % pd : {
+        'data_%s_Run2012A_PromptReco_v1_Run190456_193683_ICHEP' % pd : {
             'datasetpath' : "/%s/Run2012A-PromptReco-v1/AOD" % pd,
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
             'firstRun' : 190456,
@@ -313,19 +313,11 @@ def build_data_set(pd, analyses, who):
             'analyses' : analyses,
             'responsible' : who,
         },
-        'data_%s_Run2012B_PromptReco_v1_Run193752_194479' % pd : {
+        'data_%s_Run2012B_PromptReco_v1_Run193752_196509_ICHEP' % pd : {
             'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
             'firstRun' : 193752,
-            'lastRun' : 194479,
-            'analyses' : analyses,
-            'responsible' : who,
-        },
-        'data_%s_Run2012B_PromptReco_v1_Run194480_197044' % pd : {
-            'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
-            'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-198485_8TeV_PromptReco_Collisions12_JSON.txt",
-            'firstRun' : 194480,
-            'lastRun' : 197044,
+            'lastRun' : 196509,
             'analyses' : analyses,
             'responsible' : who,
         },
