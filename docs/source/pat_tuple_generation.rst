@@ -50,3 +50,21 @@ Now setup your grid stuff, submit the jobs, and say goodbye to your quota::
   multicrab -create 
   multicrab -submit 
 
+Note on JSON lumi masks
+-----------------------
+
+The JSON lumi masks are stored in RecoTools/data/masks.  To get the latest lumi
+masks::
+
+  cd $fsa/RecoTools/data/masks
+  ./update.sh
+
+this will copy all the new lumi masks from the official AFS area.  Now add and
+commit the golden (excluding Muon physics) ones to the repository and commit::
+
+  ls *txt | grep -v MuonPhys | xargs git add -f
+  git commit -m "Adding new JSON lumimasks"
+
+
+
+
