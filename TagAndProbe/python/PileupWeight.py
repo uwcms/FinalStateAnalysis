@@ -57,7 +57,7 @@ class PileupWeight(object):
         # Normalize MC
         self.mc.Scale(1./self.mc.Integral())
 
-    def weight(self, ntruepu):
+    def __call__(self, ntruepu):
         '''
         Get the PU weight given the true number of interactions
         '''

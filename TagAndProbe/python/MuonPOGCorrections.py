@@ -170,7 +170,7 @@ class MuonPOGCorrection(object):
             raise IOError("Object with key name %s d.n.e. can't be read" % name)
         return obj.Eval
 
-    def correction(self, pt, eta):
+    def __call__(self, pt, eta):
         if pt < 20:
             if abs(eta) < 1.2:
                 return self.correct_by_pt_barrel(pt)
@@ -188,10 +188,10 @@ class MuonPOG2011Combiner(object):
         self.corrA = corrector2011A
         self.corrB = corrector2011B
 
-    def correction(self, pt, eta):
+    def __call__(self, pt, eta):
         # Weighted average, by int. lumi
-        return self.corrA.correction(pt, eta)*(2.1/4.6) + \
-                self.corrB.correction(pt, eta)*(2.5/4.6)
+        return self.corrA(pt, eta)*(2.1/4.6) + \
+                self.corrB(pt, eta)*(2.5/4.6)
 
 
 if __name__ == "__main__":
