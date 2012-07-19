@@ -26,6 +26,8 @@ class PATFinalStateAnalysisFilter : public edm::EDFilter {
     bool filter(edm::Event& evt, const edm::EventSetup& es);
     bool beginLuminosityBlock(
         edm::LuminosityBlock& ls, const edm::EventSetup & es);
+    bool endLuminosityBlock(
+        edm::LuminosityBlock& ls, const edm::EventSetup & es);
   private:
     std::auto_ptr<PATFinalStateAnalysis> analysis_;
 };
@@ -46,6 +48,13 @@ bool PATFinalStateAnalysisFilter::beginLuminosityBlock(
     edm::LuminosityBlock& ls, const edm::EventSetup& es) {
   const edm::LuminosityBlockBase& lsBase = ls;
   analysis_->beginLuminosityBlock(lsBase);
+  return true;
+}
+
+bool PATFinalStateAnalysisFilter::endLuminosityBlock(
+    edm::LuminosityBlock& ls, const edm::EventSetup& es) {
+  const edm::LuminosityBlockBase& lsBase = ls;
+  analysis_->endLuminosityBlock(lsBase);
   return true;
 }
 

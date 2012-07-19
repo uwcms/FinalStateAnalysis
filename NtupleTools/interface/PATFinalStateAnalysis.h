@@ -37,7 +37,9 @@ class PATFinalStateAnalysis : public edm::BasicAnalyzer {
     // Alias for filter with no return value
     void analyze(const edm::EventBase& evt);
     bool filter(const edm::EventBase& evt);
-    void beginLuminosityBlock(const edm::LuminosityBlockBase& ls);
+    // Do nothing at beginning
+    void beginLuminosityBlock(const edm::LuminosityBlockBase& ls){};
+    void endLuminosityBlock(const edm::LuminosityBlockBase& ls);
 
   private:
     edm::InputTag src_;
