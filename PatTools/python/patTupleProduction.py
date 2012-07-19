@@ -157,7 +157,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         initialSeed = cms.untracked.uint32(1), # A frickin billion
         engineName = cms.untracked.string('TRandom3')
     )
-    process.calibratedGsfElectrons.inputDataset = kwargs['dataset']
+    process.calibratedGsfElectrons.inputDataset = cms.string(kwargs['dataset'])
     process.calibratedGsfElectrons.isMC = bool(isMC)
     process.calibratedGsfElectrons.isEmbedded = cms.bool(bool(kwargs['embedded']))
     if kwargs['embedded']:
