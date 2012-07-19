@@ -28,4 +28,6 @@ base_jet = PSet(
     objectJetPt = '{object}.userFloat("jetPt")',
     objectJetBtag = '? {object}.userCand("patJet").isNonnull ? '
         '{object}.userCand("patJet").bDiscriminator("") : -5',
+    objectJetCSVBtag = '? {object}.userCand("patJet").isNonnull ? '
+        '{object}.userCand("patJet").bDiscriminator("combinedSecondaryVertexBJetTags") : -5',
 )
