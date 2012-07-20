@@ -32,8 +32,8 @@ pu_corrector = PileupWeight.PileupWeight(
 muon_pog_PFTight_2011 = MuonPOGCorrections.make_muon_pog_PFTight_2011()
 muon_pog_PFTight_2012 = MuonPOGCorrections.make_muon_pog_PFTight_2012()
 
-muon_pog_PFRelIsoDB012_2011 = MuonPOGCorrections.make_muon_pog_PFRelIsoDB012_2011()
-muon_pog_PFRelIsoDB012_2012 = MuonPOGCorrections.make_muon_pog_PFRelIsoDB012_2012()
+muon_pog_PFRelIsoDB02_2011 = MuonPOGCorrections.make_muon_pog_PFRelIsoDB02_2011()
+muon_pog_PFRelIsoDB02_2012 = MuonPOGCorrections.make_muon_pog_PFRelIsoDB02_2012()
 
 muon_pog_Mu17Mu8_Mu17_2012 = MuonPOGCorrections.make_muon_pog_Mu17Mu8_Mu17_2012()
 muon_pog_Mu17Mu8_Mu8_2012 = MuonPOGCorrections.make_muon_pog_Mu17Mu8_Mu8_2012()
@@ -49,8 +49,8 @@ def mc_corrector_2011(row):
     #pu = 1
     m1id = muon_pog_PFTight_2011(row.m1Pt, row.m1Eta)
     m2id = muon_pog_PFTight_2011(row.m2Pt, row.m2Eta)
-    m1iso = muon_pog_PFRelIsoDB012_2011(row.m1Pt, row.m1Eta)
-    m2iso = muon_pog_PFRelIsoDB012_2011(row.m2Pt, row.m2Eta)
+    m1iso = muon_pog_PFRelIsoDB02_2011(row.m1Pt, row.m1Eta)
+    m2iso = muon_pog_PFRelIsoDB02_2011(row.m2Pt, row.m2Eta)
     trigger = muon_pog_Mu17Mu8_2011(row.m1Eta, row.m2Eta)
     return pu*m1id*m2id*m1iso*m2iso*trigger
 
@@ -60,8 +60,8 @@ def mc_corrector_2012(row):
     pu = pu_corrector(row.nTruePU)
     m1id = muon_pog_PFTight_2012(row.m1Pt, row.m1Eta)
     m2id = muon_pog_PFTight_2012(row.m2Pt, row.m2Eta)
-    m1iso = muon_pog_PFRelIsoDB012_2012(row.m1Pt, row.m1Eta)
-    m2iso = muon_pog_PFRelIsoDB012_2012(row.m2Pt, row.m2Eta)
+    m1iso = muon_pog_PFRelIsoDB02_2012(row.m1Pt, row.m1Eta)
+    m2iso = muon_pog_PFRelIsoDB02_2012(row.m2Pt, row.m2Eta)
     m1Trig = muon_pog_Mu17Mu8_Mu17_2012(row.m1Pt, row.m1Eta)
     m2Trig = muon_pog_Mu17Mu8_Mu8_2012(row.m2Pt, row.m2Eta)
     return pu*m1id*m2id*m1iso*m2iso*m1Trig*m2Trig
@@ -102,6 +102,13 @@ class ControlZMM(MegaBase):
         self.book('zmm', 'm1JetBtag', 'Mu 1 JetBtag', 100, -5.5, 9.5)
         self.book('zmm', 'm2JetBtag', 'Mu 2 JetBtag', 100, -5.5, 9.5)
 
+        # Vetoes
+        self.book('zmm', 'bjetVeto', 'Number of b-jets', 5, -0.5, 4.5)
+        self.book('zmm', 'bjetCSVVeto', 'Number of b-jets', 5, -0.5, 4.5)
+        self.book('zmm', 'muVetoPt5', 'Number of extra muons', 5, -0.5, 4.5)
+        self.book('zmm', 'tauVetoPt20', 'Number of extra taus', 5, -0.5, 4.5)
+        self.book('zmm', 'eVetoCicTightIso', 'Number of extra CiC tight electrons', 5, -0.5, 4.5)
+
     def correction(self, row):
         return mc_corrector(row)
 
@@ -110,18 +117,24 @@ class ControlZMM(MegaBase):
         weight = self.correction(row)
         histos['zmm/weight'].Fill(weight)
         histos['zmm/weight_nopu'].Fill(self.correction(row))
-        histos['zmm/rho'].Fill(row.rho)
-        histos['zmm/nvtx'].Fill(row.nvtx)
-        histos['zmm/prescale'].Fill(row.doubleMuPrescale)
-        histos['zmm/m1Pt'].Fill(row.m1Pt)
-        histos['zmm/m2Pt'].Fill(row.m2Pt)
-        histos['zmm/m1AbsEta'].Fill(row.m1AbsEta)
-        histos['zmm/m2AbsEta'].Fill(row.m2AbsEta)
-        histos['zmm/m1PixHits'].Fill(row.m1PixHits)
-        histos['zmm/m2PixHits'].Fill(row.m2PixHits)
-        histos['zmm/m1JetBtag'].Fill(row.m1JetBtag)
-        histos['zmm/m2JetBtag'].Fill(row.m2JetBtag)
-        histos['zmm/m1m2Mass'].Fill(row.m1_m2_Mass)
+        histos['zmm/rho'].Fill(row.rho, weight)
+        histos['zmm/nvtx'].Fill(row.nvtx, weight)
+        histos['zmm/prescale'].Fill(row.doubleMuPrescale, weight)
+        histos['zmm/m1Pt'].Fill(row.m1Pt, weight)
+        histos['zmm/m2Pt'].Fill(row.m2Pt, weight)
+        histos['zmm/m1AbsEta'].Fill(row.m1AbsEta, weight)
+        histos['zmm/m2AbsEta'].Fill(row.m2AbsEta, weight)
+        histos['zmm/m1PixHits'].Fill(row.m1PixHits, weight)
+        histos['zmm/m2PixHits'].Fill(row.m2PixHits, weight)
+        histos['zmm/m1JetBtag'].Fill(row.m1JetBtag, weight)
+        histos['zmm/m2JetBtag'].Fill(row.m2JetBtag, weight)
+        histos['zmm/m1m2Mass'].Fill(row.m1_m2_Mass, weight)
+
+        histos['zmm/bjetVeto'].Fill(row.bjetVeto, weight)
+        histos['zmm/bjetCSVVeto'].Fill(row.bjetCSVVeto, weight)
+        histos['zmm/muVetoPt5'].Fill(row.muVetoPt5, weight)
+        histos['zmm/tauVetoPt20'].Fill(row.tauVetoPt20, weight)
+        histos['zmm/eVetoCicTightIso'].Fill(row.eVetoCicTightIso, weight)
 
     def preselection(self, row):
         ''' Preselection applied to events.
@@ -129,6 +142,12 @@ class ControlZMM(MegaBase):
         Excludes FR object IDs and sign cut.
         '''
         if not row.doubleMuPass:
+            return False
+        if row.m1_m2_SS:
+            return False
+        if row.m1Pt < row.m2Pt:
+            return False
+        if row.m1_m2_Zcompat > 15:
             return False
         if row.m1Pt < 20:
             return False
@@ -145,10 +164,10 @@ class ControlZMM(MegaBase):
         return True
 
     def obj1_id(self, row):
-        return bool(row.m1PFIDTight) and bool(row.m1RelPFIsoDB < 0.3)
+        return bool(row.m1PFIDTight) and bool(row.m1RelPFIsoDB < 0.1)
 
     def obj2_id(self, row):
-        return bool(row.m2PFIDTight) and bool(row.m2RelPFIsoDB < 0.3)
+        return bool(row.m2PFIDTight) and bool(row.m2RelPFIsoDB < 0.1)
 
     def process(self):
         for row in self.tree:
