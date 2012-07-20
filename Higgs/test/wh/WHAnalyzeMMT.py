@@ -205,10 +205,10 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.m1_m2_SS)
 
     def obj1_id(self, row):
-        return bool(row.m1PFIDTight) and bool(row.m1RelPFIsoDB < 0.3)
+        return bool(row.m1PFIDTight) and bool(row.m1RelPFIsoDB < 0.2)
 
     def obj2_id(self, row):
-        return bool(row.m2PFIDTight) and bool(row.m2RelPFIsoDB < 0.3)
+        return bool(row.m2PFIDTight) and bool(row.m2RelPFIsoDB < 0.2)
 
     def obj3_id(self, row):
         return bool(row.tLooseMVAIso)
