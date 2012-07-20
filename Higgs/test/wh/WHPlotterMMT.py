@@ -57,6 +57,11 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-os-p1p2f3-m1m2Mass')
 
+    plotter.compare_shapes('Zjets_M50', 'data', 'os/p1p2f3/nvtx')
+    plotter.save('z-vs-data-nvtx-shape')
+    plotter.compare_shapes('Zjets_M50', 'data', 'os/p1p2f3/rho')
+    plotter.save('z-vs-data-rho-shape')
+
     plotter.plot_mc_vs_data('os/p1p2f3/w3', 'm1m2Mass')
     plotter.save('mcdata-os-p1p2f3-w3-m1m2Mass')
 
