@@ -104,6 +104,12 @@ class WHAnalyzerBase(MegaBase):
             for weight_folder in weight_folders:
                 self.book_histos("/".join(base_folder + (weight_folder,)))
 
+        # Add WZ control region
+        self.book_histos('ss/p1p2p3_enhance_wz')
+        # Where second light lepton fails
+        self.book_histos('ss/p1f2p3_enhance_wz')
+        self.book_histos('ss/p1f2p3_enhance_wz/w2')
+
     def process(self):
         # For speed, map the result of the region cuts to a folder path
         # string using a dictionary
@@ -118,6 +124,7 @@ class WHAnalyzerBase(MegaBase):
         obj2_id = self.obj2_id
         obj3_id = self.obj3_id
         fill_histos = self.fill_histos
+        anti_wz_cut = self.anti_wz
 
         weight_func = self.event_weight
 
@@ -142,6 +149,7 @@ class WHAnalyzerBase(MegaBase):
             obj1_id_result = obj1_id(row)
             obj2_id_result = obj2_id(row)
             obj3_id_result = obj3_id(row)
+            anti_wz = anti_wz_cut(row)
 
             # Figure out which folder/region we are in
             region_result = cut_region_map.get(
@@ -151,22 +159,34 @@ class WHAnalyzerBase(MegaBase):
             if region_result is None:
                 continue
 
-            base_folder, weights = region_result
+            if anti_wz:
+                base_folder, weights = region_result
 
-            # Fill the un-fr-weighted histograms
-            fill_histos(histos, base_folder, row, event_weight)
+                # Fill the un-fr-weighted histograms
+                fill_histos(histos, base_folder, row, event_weight)
 
-            # Now loop over all necessary weighted regions and compute & fill
-            for weight_folder in weights:
-                # Compute product of all weights
-                fr_weight = event_weight
-                # Figure out which object weight functions to apply
-                for subweight in weight_map[weight_folder]:
-                    fr = subweight(row)
-                    fr_weight *= fr/(1.-fr)
+                # Now loop over all necessary weighted regions and compute & fill
+                for weight_folder in weights:
+                    # Compute product of all weights
+                    fr_weight = event_weight
+                    # Figure out which object weight functions to apply
+                    for subweight in weight_map[weight_folder]:
+                        fr = subweight(row)
+                        fr_weight *= fr/(1.-fr)
 
-                # Now fill the histos for this weight folder
-                fill_histos(histos, base_folder + (weight_folder,), row, fr_weight)
+                    # Now fill the histos for this weight folder
+                    fill_histos(histos, base_folder + (weight_folder,), row, fr_weight)
+            elif sign_result and obj1_id_result and obj3_id_result:
+                # WZ object topology fails. Check if we are in signal region.
+                if self.enhance_wz(row):
+                    # Signal region
+                    if obj2_id_result:
+                        fill_histos(histos, ('ss/p1p2p3_enhance_wz',), row, event_weight)
+                    else:
+                        fill_histos(histos, ('ss/p1f2p3_enhance_wz',), row, event_weight)
+                        fake_rate_obj2 = self.obj2_weight(row)
+                        fake_weight = fake_rate_obj2/(1.-fake_rate_obj2)
+                        fill_histos(histos, ('ss/p1f2p3_enhance_wz/w2',), row, event_weight*fake_weight)
 
     def finish(self):
         self.write_histos()

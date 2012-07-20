@@ -57,6 +57,34 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-os-p1p2f3-m1m2Mass')
 
+    plotter.plot_mc_vs_data('os/p1p2p3', 'm1m2Mass', xaxis='m_{#mu#mu} (GeV)', xrange=(60, 120))
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-os-p1p2p3-m1m2Mass')
+
+    plotter.plot_mc_vs_data('ss/p1p2p3_enhance_wz', 'subMass', xaxis='m_{#mu#mu} (GeV)', xrange=(0, 120), rebin=10)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-ss-p1p2p3-enhance_wz-subMass')
+
+    plotter.plot_mc_vs_data('ss/p1p2p3_enhance_wz', 'leadMass', xaxis='m_{#mu#mu} (GeV)', xrange=(0, 120), rebin=10)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-ss-p1p2p3-enhance_wz-leadMass')
+
+    plotter.plot_mc_vs_data('ss/p1f2p3_enhance_wz', 'leadMass', xaxis='m_{#mu#mu} (GeV)', xrange=(0, 120), rebin=10)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-ss-p1f2p3-enhance_wz-leadMass')
+
+    plotter.plot_mc_vs_data('ss/p1f2p3_enhance_wz/w2', 'leadMass', xaxis='m_{#mu#mu} (GeV)', xrange=(0, 120), rebin=10)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-ss-p1f2p3-w2-enhance_wz-leadMass')
+
+    plotter.plot_mc_vs_data('ss/p1p2p3_enhance_wz', 'subMTMass', xaxis='m_{#mu#mu} (GeV)', xrange=(0, 120), rebin=10)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-ss-p1p2p3-enhance_wz-subMTMass')
+
+    plotter.plot_mc_vs_data('ss/p1p2p3_enhance_wz', 'm2Pt', xaxis='m_{#mu#mu} (GeV)', xrange=(0, 120), rebin=5)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('mcdata-ss-p1p2p3-enhance_wz-m2Pt')
+
     plotter.compare_shapes('Zjets_M50', 'data', 'os/p1p2f3/nvtx')
     plotter.save('z-vs-data-nvtx-shape')
     plotter.compare_shapes('Zjets_M50', 'data', 'os/p1p2f3/rho')
@@ -181,6 +209,18 @@ if __name__ == "__main__":
     plotter.plot_final('m2Iso', 10)
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-m2Iso')
+
+    plotter.plot_final_wz('leadMass', 10, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-wz-leadMass')
+
+    plotter.plot_final_wz('m2Pt', 2, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-wz-m2Pt')
+
+    plotter.plot_final_wz('m2JetPt', 5, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-wz-m2JetPt')
 
 
     ###########################################################################

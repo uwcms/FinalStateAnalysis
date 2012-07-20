@@ -20,12 +20,18 @@ import ROOT
 # Get fitted fake rate functions
 frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
 highpt_mu_fr = build_roofunctor(
-    frfit_dir + '/m_wjets_pt20_pfidiso02_muonJetPt-data_mm.root',
+    #frfit_dir + '/m_wjets_pt10_pfidiso02_muonPt-data_mm.root',
+    frfit_dir + '/m_zmm_pt10_pfidiso02_muonPt-data_mm.root',
+    #frfit_dir + '/m_wjets_pt20_pfidiso02_muonJetPt-data_mm.root',
+    #frfit_dir + '/m_zmm_pt20_pfidiso02_muonJetPt-data_mm.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
 lowpt_mu_fr = build_roofunctor(
-    frfit_dir + '/m_wjets_pt10_pfidiso02_muonJetPt-data_mm.root',
+    #frfit_dir + '/m_wjets_pt10_pfidiso02_muonPt-data_mm.root',
+    frfit_dir + '/m_zmm_pt10_pfidiso02_muonPt-data_mm.root',
+    #frfit_dir + '/m_wjets_pt10_pfidiso02_muonJetPt-data_mm.root',
+    #frfit_dir + '/m_zmm_pt10_pfidiso02_muonJetPt-data_mm.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
@@ -109,10 +115,14 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         self.book(folder, "prescale", "HLT prescale", 26, -5.5, 20.5)
         self.book(folder, "m1Pt", "Muon 1 Pt", 100, 0, 100)
         self.book(folder, "m2Pt", "Muon 2 Pt", 100, 0, 100)
+        self.book(folder, "m2JetPt", "Muon 2 Pt", 100, 0, 200)
         self.book(folder, "m1AbsEta", "Muon 1 AbsEta", 100, 0, 2.4)
         self.book(folder, "m2AbsEta", "Muon 2 AbsEta", 100, 0, 2.4)
         self.book(folder, "m1m2Mass", "Muon 1-2 Mass", 120, 0, 120)
         self.book(folder, "subMass", "subleadingMass", 200, 0, 200)
+        self.book(folder, "leadMass", "leadingMass", 200, 0, 200)
+        # Rank muons by less MT to MET, for WZ control region
+        self.book(folder, "subMTMass", "subMTMass", 200, 0, 200)
         self.book(folder, "m2Iso", "m2Iso", 100, 0, 0.3)
         self.book(folder, "tPt", "Tau Pt", 100, 0, 100)
         self.book(folder, "tAbsEta", "Tau AbsEta", 100, 0, 2.3)
@@ -131,13 +141,19 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         fill('nvtx', row.nvtx)
         fill('m1Pt', row.m1Pt)
         fill('m2Pt', row.m2Pt)
+        fill('m2JetPt', row.m2JetPt)
         fill('m1AbsEta', row.m1AbsEta)
         fill('m2AbsEta', row.m2AbsEta)
         fill('m1m2Mass', row.m1_m2_Mass)
         fill('subMass', row.m2_t_Mass)
+        fill('leadMass', row.m1_t_Mass)
         fill('m2Iso', row.m2RelPFIsoDB)
         fill('tPt', row.tPt)
         fill('tAbsEta', row.tAbsEta)
+        if row.m1MtToMET > row.m2MtToMET:
+            fill('subMTMass', row.m2_t_Mass)
+        else:
+            fill('subMTMass', row.m1_t_Mass)
 
     def preselection(self, row):
         ''' Preselection applied to events.
@@ -195,12 +211,12 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
 
         if not row.tAntiElectronLoose:
             return False
-        if not row.tAntiMuonTight:
-            return False
+        #if not row.tAntiMuonTight:
+            #return False
         if row.tCiCTightElecOverlap:
             return False
-        if row.tMuOverlap:
-            return False
+        #if row.tMuOverlap:
+            #return False
         #'t_ElectronOverlapWP95 < 0.5',
 
         return True
@@ -218,14 +234,28 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
     def obj3_id(self, row):
         return bool(row.tLooseMVAIso)
 
+    def anti_wz(self, row):
+        return row.tAntiMuonTight and not row.tMuOverlap
+
+    def enhance_wz(self, row):
+        # Require the "tau" to be a muon, and require the third muon
+        # to have M_Z +- 20
+        if row.tAntiMuonTight or not row.tMuOverlap:
+            return False
+        # Make sure any Z is from m1
+        m2_good_Z = bool(71 < row.m2_t_Mass < 111)
+        return not m2_good_Z
+
     def event_weight(self, row):
         return mc_corrector(row)
 
     def obj1_weight(self, row):
-        return highpt_mu_fr(row.m1JetPt)
+        #return highpt_mu_fr(row.m1JetPt)
+        return highpt_mu_fr(row.m1Pt)
 
     def obj2_weight(self, row):
-        return lowpt_mu_fr(row.m2JetPt)
+        #return lowpt_mu_fr(row.m2JetPt)
+        return lowpt_mu_fr(row.m2Pt)
 
     def obj3_weight(self, row):
         return tau_fr(row.tPt)

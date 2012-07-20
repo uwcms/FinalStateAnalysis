@@ -61,10 +61,11 @@ end
 
 # Map which samples need to be analyzed by which analyzer
 fr_analyzer_sample_map = Hash[
-  "FakeRatesMM.py" => samples['wjets'] + samples['data_mm'],
-  "FakeRatesEM.py" => samples['wjets'] + samples['data_em'],
-  "FakeRatesEE.py" => samples['wjets'] + samples['zjets'] + samples['data_ee'],
-  "FakeRatesMMT.py" => samples['zjets'] + samples['data_mm'],
+  "FakeRatesMM.py" => samples['ewk'] + samples['data_mm'],
+  "FakeRatesEM.py" => samples['ewk'] + samples['data_em'],
+  "FakeRatesEE.py" => samples['ewk'] + samples['ewk'] + samples['data_ee'],
+  "FakeRatesMMT.py" => samples['ewk'] + samples['data_mm'],
+  "FakeRatesMMM.py" => samples['ewk'] + samples['data_mm'],
 ]
 
 # Create an empty placeholder to enable tab-completion
@@ -98,48 +99,48 @@ landau_vars =  "scale[0.5, 0, 5],mu[5, 0, 100],sigma[1.9, 0.1, 20],offset[1e-2, 
 # Fake rate fit configurations
 fr_fits = Hash[
   # Format is type_region_denom_num_variable
-  "e_wjets_pt10_mvaidiso03_eJetPt" => Hash[
-    "samples" => Array["wjets", "data_em"],
-    "analyzer" => "FakeRatesEM",
-    "function" => landau,
-    "variables" => landau_vars,
-    "rebin" => 5,
-  ],
-  "e_wjets_pt10_mvaidiso01_eJetPt" => Hash[
-    "samples" => Array["wjets", "data_em"],
-    "analyzer" => "FakeRatesEM",
-    "function" => landau,
-    "variables" => landau_vars,
-    "rebin" => 5,
-  ],
-  "ee_wjets_pt20_mvaidiso03_e2JetPt" => Hash[
-    "samples" => Array["wjets", "data_ee"],
-    "analyzer" => "FakeRatesEE",
-    "function" => landau,
-    "variables" => landau_vars,
-    "rebin" => 5,
-  ],
-  "ee_wjets_pt20_mvaidiso01_e2JetPt" => Hash[
-    "samples" => Array["wjets", "data_ee"],
-    "analyzer" => "FakeRatesEE",
-    "function" => landau,
-    "variables" => landau_vars,
-    "rebin" => 5,
-  ],
-  "ee_wjets_pt10_mvaidiso03_e2JetPt" => Hash[
-    "samples" => Array["wjets", "data_ee"],
-    "analyzer" => "FakeRatesEE",
-    "function" => landau,
-    "variables" => landau_vars,
-    "rebin" => 5,
-  ],
-  "ee_wjets_pt10_mvaidiso01_e2JetPt" => Hash[
-    "samples" => Array["wjets", "data_ee"],
-    "analyzer" => "FakeRatesEE",
-    "function" => landau,
-    "variables" => landau_vars,
-    "rebin" => 5,
-  ],
+  #"e_wjets_pt10_mvaidiso03_eJetPt" => Hash[
+    #"samples" => Array["wjets", "data_em"],
+    #"analyzer" => "FakeRatesEM",
+    #"function" => landau,
+    #"variables" => landau_vars,
+    #"rebin" => 5,
+  #],
+  #"e_wjets_pt10_mvaidiso01_eJetPt" => Hash[
+    #"samples" => Array["wjets", "data_em"],
+    #"analyzer" => "FakeRatesEM",
+    #"function" => landau,
+    #"variables" => landau_vars,
+    #"rebin" => 5,
+  #],
+  #"ee_wjets_pt20_mvaidiso03_e2JetPt" => Hash[
+    #"samples" => Array["wjets", "data_ee"],
+    #"analyzer" => "FakeRatesEE",
+    #"function" => landau,
+    #"variables" => landau_vars,
+    #"rebin" => 5,
+  #],
+  #"ee_wjets_pt20_mvaidiso01_e2JetPt" => Hash[
+    #"samples" => Array["wjets", "data_ee"],
+    #"analyzer" => "FakeRatesEE",
+    #"function" => landau,
+    #"variables" => landau_vars,
+    #"rebin" => 5,
+  #],
+  #"ee_wjets_pt10_mvaidiso03_e2JetPt" => Hash[
+    #"samples" => Array["wjets", "data_ee"],
+    #"analyzer" => "FakeRatesEE",
+    #"function" => landau,
+    #"variables" => landau_vars,
+    #"rebin" => 5,
+  #],
+  #"ee_wjets_pt10_mvaidiso01_e2JetPt" => Hash[
+    #"samples" => Array["wjets", "data_ee"],
+    #"analyzer" => "FakeRatesEE",
+    #"function" => landau,
+    #"variables" => landau_vars,
+    #"rebin" => 5,
+  #],
   "m_wjets_pt10_pfidiso01_muonJetPt" => Hash[
     "samples" => Array["wjets", "data_mm"],
     "analyzer" => "FakeRatesMM",
@@ -176,6 +177,20 @@ fr_fits = Hash[
     "variables" => landau_vars,
     "rebin" => 5,
   ],
+  "m_zmm_pt10_pfidiso02_muonJetPt" => Hash[
+    "samples" => Array["zjets", "data_mm"],
+    "analyzer" => "FakeRatesMMM",
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
+  "m_zmm_pt20_pfidiso02_muonJetPt" => Hash[
+    "samples" => Array["zjets", "data_mm"],
+    "analyzer" => "FakeRatesMMM",
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
   "m_wjets_pt20_pfidiso02_muonJetPt" => Hash[
     "samples" => Array["wjets", "data_mm"],
     "analyzer" => "FakeRatesMM",
@@ -192,6 +207,21 @@ fr_fits = Hash[
     #"variables" => exponential_vars,
     "function" => landau,
     "variables" => landau_vars,
+    "rebin" => 5,
+  ],
+  # Versus regular pt
+  "m_zmm_pt10_pfidiso02_muonPt" => Hash[
+    "samples" => Array["wjets", "data_mm"],
+    "analyzer" => "FakeRatesMMM",
+    "function" => exponential,
+    "variables" => exponential_vars,
+    "rebin" => 5,
+  ],
+  "m_wjets_pt10_pfidiso02_muonPt" => Hash[
+    "samples" => Array["wjets", "data_mm"],
+    "analyzer" => "FakeRatesMM",
+    "function" => exponential,
+    "variables" => exponential_vars,
     "rebin" => 5,
   ],
   "t_ztt_pt20_mvaloose_tauPt" => Hash[
@@ -254,9 +284,18 @@ task :mmcontrol => get_analyzer_results("ControlZMM.py", samples['zjets'] + samp
 file "WHAnalyzeEMT.py" => [ "#{$frfit_dir}/e_wjets_pt10_mvaidiso01_eJetPt-data_em.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso01_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
   sh "touch #{t.name}"
 end
-file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
+#file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
+  #sh "touch #{t.name}"
+#end
+#file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
+  #sh "touch #{t.name}"
+#end
+file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_zmm_pt10_pfidiso02_muonPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
   sh "touch #{t.name}"
 end
+#file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_zmm_pt10_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/m_zmm_pt20_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
+  #sh "touch #{t.name}"
+#end
 file "WHAnalyzeEET.py" => [ "#{$frfit_dir}/ee_wjets_pt20_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/ee_wjets_pt10_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root"] do |t|
   sh "touch #{t.name}"
 end
