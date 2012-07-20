@@ -125,6 +125,22 @@ class WHPlotterBase(object):
         self.keep.append(histo)
         return histo
 
+    def compare_shapes(self, sample1, sample2, path, rebin=None):
+        view1 = views.NormalizeView(self.views[sample1]['view'])
+        if rebin:
+            view1 = rebin_view(view1, rebin)
+        histo1 = view1.Get(path)
+        view2 = views.NormalizeView(self.views[sample2]['view'])
+        if rebin:
+            view2 = rebin_view(view2, rebin)
+        histo2 = view2.Get(path)
+        histo1.Draw('pe')
+        histo2.SetMarkerColor(ROOT.EColor.kRed)
+        histo2.Draw('pe,same')
+        histo1.SetMaximum(
+            1.2*max(histo1.GetMaximum(), histo2.GetMaximum()))
+        self.keep.append( (histo1, histo2) )
+
     def plot_mc_vs_data(self, folder, variable, rebin=1, xaxis='',
                         leftside=True, xrange=None):
         path = os.path.join(folder, variable)
