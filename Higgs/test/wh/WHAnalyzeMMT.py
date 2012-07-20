@@ -160,34 +160,39 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.tAbsEta > 2.3:
             return False
-        if row.muVetoPt5:
-            return False
-        if row.m1_m2_Mass < 20:
-            return False
-        if row.LT < 80:
-            return False
 
-        if row.bjetCSVVeto:
-            return False
-        if row.tauVetoPt20:
-            return False
-        if row.eVetoCicTightIso:
-            return False
-        if not row.m1PixHits:
-            return False
-        if not row.m2PixHits:
-            return False
-        # Fixme use CSV
-        if row.m1JetBtag > 3.3:
-            return False
-        if row.m2JetBtag > 3.3:
-            return False
         if abs(row.m1DZ) > 0.2:
             return False
         if abs(row.m2DZ) > 0.2:
             return False
         if abs(row.tDZ) > 0.2:
             return False
+
+        if row.m1_m2_Mass < 20:
+            return False
+        if row.LT < 80:
+            return False
+
+        if row.muVetoPt5:
+            return False
+        if row.bjetCSVVeto:
+            return False
+        if row.tauVetoPt20:
+            return False
+        if row.eVetoCicTightIso:
+            return False
+
+        if not row.m1PixHits:
+            return False
+        if not row.m2PixHits:
+            return False
+
+        ## Fixme use CSV
+        if row.m1JetBtag > 3.3:
+            return False
+        if row.m2JetBtag > 3.3:
+            return False
+
         if not row.tAntiElectronLoose:
             return False
         if not row.tAntiMuonTight:
