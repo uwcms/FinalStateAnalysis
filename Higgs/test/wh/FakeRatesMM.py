@@ -47,7 +47,7 @@ class FakeRatesMM(MegaBase):
                 self.histograms[denom_key] = denom_histos
 
                 for numerator in ['pfid', 'iso03', 'pfidiso03',
-                                  'pfidiso01']:
+                                  'pfidiso02', 'pfidiso01']:
                     num_key = (region, denom, numerator)
                     num_histos = {}
                     self.histograms[num_key] = num_histos
@@ -115,6 +115,9 @@ class FakeRatesMM(MegaBase):
             if row.m2PFIDTight and row.m2RelPFIsoDB < 0.3:
                 fill(histos[(region, 'pt10', 'pfidiso03')], row)
 
+            if row.m2PFIDTight and row.m2RelPFIsoDB < 0.2:
+                fill(histos[(region, 'pt10', 'pfidiso02')], row)
+
             if row.m2PFIDTight and row.m2RelPFIsoDB < 0.1:
                 fill(histos[(region, 'pt10', 'pfidiso01')], row)
 
@@ -128,6 +131,9 @@ class FakeRatesMM(MegaBase):
 
                 if row.m2PFIDTight and row.m2RelPFIsoDB < 0.3:
                     fill(histos[(region, 'pt20', 'pfidiso03')], row)
+
+                if row.m2PFIDTight and row.m2RelPFIsoDB < 0.2:
+                    fill(histos[(region, 'pt20', 'pfidiso02')], row)
 
                 if row.m2PFIDTight and row.m2RelPFIsoDB < 0.1:
                     fill(histos[(region, 'pt20', 'pfidiso01')], row)

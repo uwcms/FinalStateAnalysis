@@ -20,12 +20,12 @@ import ROOT
 # Get fitted fake rate functions
 frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
 highpt_mu_fr = build_roofunctor(
-    frfit_dir + '/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root',
+    frfit_dir + '/m_wjets_pt20_pfidiso02_muonJetPt-data_mm.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
 lowpt_mu_fr = build_roofunctor(
-    frfit_dir + '/m_wjets_pt10_pfidiso03_muonJetPt-data_mm.root',
+    frfit_dir + '/m_wjets_pt10_pfidiso02_muonJetPt-data_mm.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )

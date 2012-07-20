@@ -167,6 +167,24 @@ fr_fits = Hash[
     "variables" => landau_vars,
     "rebin" => 5,
   ],
+  "m_wjets_pt10_pfidiso02_muonJetPt" => Hash[
+    "samples" => Array["wjets", "data_mm"],
+    "analyzer" => "FakeRatesMM",
+    #"function" => exponential,
+    #"variables" => exponential_vars,
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
+  "m_wjets_pt20_pfidiso02_muonJetPt" => Hash[
+    "samples" => Array["wjets", "data_mm"],
+    "analyzer" => "FakeRatesMM",
+    #"function" => exponential,
+    #"variables" => exponential_vars,
+    "function" => landau,
+    "variables" => landau_vars,
+    "rebin" => 5,
+  ],
   "m_wjets_pt20_pfidiso01_muonJetPt" => Hash[
     "samples" => Array["wjets", "data_mm"],
     "analyzer" => "FakeRatesMM",
@@ -236,7 +254,7 @@ task :mmcontrol => get_analyzer_results("ControlZMM.py", samples['zjets'] + samp
 file "WHAnalyzeEMT.py" => [ "#{$frfit_dir}/e_wjets_pt10_mvaidiso01_eJetPt-data_em.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso01_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
   sh "touch #{t.name}"
 end
-file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso03_muonJetPt-data_mm.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso03_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
+file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
   sh "touch #{t.name}"
 end
 file "WHAnalyzeEET.py" => [ "#{$frfit_dir}/ee_wjets_pt20_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/ee_wjets_pt10_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root"] do |t|
