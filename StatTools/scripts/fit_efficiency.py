@@ -155,7 +155,7 @@ if __name__ == "__main__":
             frame.Draw()
             canvas.SetLogy(True)
             canvas.Draw()
-            plot_name = args.output.replace('.root', '.pdf')
+            plot_name = args.output.replace('.root', '.png')
             log.info("Saving fit plot in %s", plot_name)
             canvas.SaveAs(plot_name)
         finally:
