@@ -21,8 +21,9 @@ import os
 
 def control_region(row):
     # Figure out what control region we are in.
-    if row.m1RelPFIsoDB < 0.15 and row.m2RelPFIsoDB < 0.15 \
-       and row.m1_m2_Zcompat < 10 and row.metSignificance < 2.5:
+    if row.m1RelPFIsoDB < 0.25 and row.m2RelPFIsoDB < 0.25 \
+       and row.m1_m2_Zcompat < 20 and row.metSignificance < 3\
+       and row.m3MtToMET < 20:
         return 'zmm'
     else:
         return None
@@ -64,6 +65,7 @@ class FakeRatesMMM(MegaBase):
                     book_histo('muonAbsEta', 'Muon Abs Eta', 100, -2.5, 2.5)
                     book_histo('metSignificance', 'MET sig.', 100, 0, 10)
                     book_histo('m1MtToMET', 'Muon 1 MT', 100, 0, 200)
+                    book_histo('m3MtToMET', 'Muon 3 MT', 100, 0, 200)
 
 
     def process(self):
@@ -99,6 +101,7 @@ class FakeRatesMMM(MegaBase):
             the_histos['muonAbsEta'].Fill(row.m3AbsEta, weight)
             the_histos['metSignificance'].Fill(row.metSignificance, weight)
             the_histos['m1MtToMET'].Fill(row.m1MtToMET, weight)
+            the_histos['m3MtToMET'].Fill(row.m3MtToMET, weight)
 
         histos = self.histograms
         for row in self.tree:
