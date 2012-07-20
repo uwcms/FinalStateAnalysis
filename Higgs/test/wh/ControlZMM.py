@@ -94,7 +94,7 @@ class ControlZMM(MegaBase):
         self.book('zmm', "m2Pt", "Muon 2 Pt", 100, 0, 100)
         self.book('zmm', "m1AbsEta", "Muon 1 eta", 100, -2.5, 2.5)
         self.book('zmm', "m2AbsEta", "Muon 2 eta", 100, -2.5, 2.5)
-        self.book('zmm', "m1m2Mass", "Muon 1-2 Mass", 120, 0, 120)
+        self.book('zmm', "m1m2Mass", "Muon 1-2 Mass", 240, 60, 120)
 
         self.book('zmm', 'm1PixHits', 'Mu 1 pix hits', 10, -0.5, 9.5)
         self.book('zmm', 'm2PixHits', 'Mu 2 pix hits', 10, -0.5, 9.5)
@@ -147,7 +147,9 @@ class ControlZMM(MegaBase):
             return False
         if row.m1Pt < row.m2Pt:
             return False
-        if row.m1_m2_Zcompat > 15:
+        if row.m1_m2_Mass < 60:
+            return False
+        if row.m1_m2_Mass > 120:
             return False
         if row.m1Pt < 20:
             return False
@@ -164,10 +166,10 @@ class ControlZMM(MegaBase):
         return True
 
     def obj1_id(self, row):
-        return bool(row.m1PFIDTight) and bool(row.m1RelPFIsoDB < 0.1)
+        return bool(row.m1PFIDTight) and bool(row.m1RelPFIsoDB < 0.2)
 
     def obj2_id(self, row):
-        return bool(row.m2PFIDTight) and bool(row.m2RelPFIsoDB < 0.1)
+        return bool(row.m2PFIDTight) and bool(row.m2RelPFIsoDB < 0.2)
 
     def process(self):
         for row in self.tree:

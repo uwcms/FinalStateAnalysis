@@ -26,7 +26,7 @@ samples = [
     'Zjets_M50',
     "data_DoubleMu*",
     #"data_SingleMu*",
-    'VH_120',
+    #'VH_120',
 ]
 
 files = []
@@ -43,6 +43,12 @@ canvas.cd()
 
 keep = []
 
+def rebin_view(x, rebin):
+    ''' Make a view which rebins histograms '''
+    rebinner = lambda x: x.Rebin(rebin)
+    output = views.FunctorView(x, rebinner)
+    return output
+
 def save(name):
     canvas.SetLogy(False)
     canvas.SaveAs(os.path.join(output_dir, name) + '.png')
@@ -50,9 +56,9 @@ def save(name):
     canvas.SaveAs(os.path.join(output_dir, name) + '.log.png')
     keep = []
 
-def compare(path):
-    mc = data_views['Zjets_M50']['view'].Get(path)
-    data = data_views['data']['view'].Get(path)
+def compare(path, rebin=1):
+    mc = rebin_view(data_views['Zjets_M50']['view'], rebin).Get(path)
+    data = rebin_view(data_views['data']['view'], rebin).Get(path)
     mc.Draw()
     data.Draw('same')
     keep.append( (mc, data) )
@@ -62,7 +68,7 @@ def veto_eff(histo):
     vetoed = histo.Integral(2, histo.GetNbinsX()+2)
     return 1 - vetoed/all
 
-def compare_shapes(path, xaxis=''):
+def compare_shapes_hack(path, xaxis=''):
     mc = views.TitleView(views.NormalizeView(data_views['Zjets_M50']['view']), 'MC Z#mu#mu').Get(path)
     data = views.TitleView(views.NormalizeView(data_views['data']['view']), 'Obs. Z#mu#mu').Get(path)
     wh = views.TitleView(views.SubdirectoryView(views.NormalizeView(data_views['VH_120']['view']), 'ss/p1p2p3'), 'WH120').Get(path.replace('zmm/', ''))
@@ -86,7 +92,7 @@ def compare_shapes(path, xaxis=''):
     keep.append(latex.DrawLatex(0.90,0.96,"Z-MC eff. %0.4f Z-DATA eff: %0.4f WH eff: %0.4f" % (mc_eff, data_eff, wh_eff)))
     keep.append( (mc, data, legend) )
 
-def compare_shapes_good(path, xaxis=''):
+def compare_shapes(path, xaxis=''):
     mc = views.NormalizeView(data_views['Zjets_M50']['view']).Get(path)
     data = views.NormalizeView(data_views['data']['view']).Get(path)
     mc.Draw()
@@ -106,7 +112,7 @@ def compare_shapes_good(path, xaxis=''):
     keep.append(latex.DrawLatex(0.90,0.96,"MC eff. %0.3f DATA eff: %0.3f" % (mc_eff, data_eff)))
     keep.append( (mc, data, legend) )
 
-compare('zmm/m1m2Mass')
+compare('zmm/m1m2Mass', rebin=4)
 save('mass')
 
 compare('zmm/m1Pt')
