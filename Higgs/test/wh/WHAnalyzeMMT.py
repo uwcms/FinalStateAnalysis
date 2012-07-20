@@ -5,11 +5,17 @@ Analyze MMT events for the WH analysis
 '''
 
 from FinalStateAnalysis.StatTools.RooFunctorFromWS import build_roofunctor
+import glob
 from MuMuTauTree import MuMuTauTree
 import os
-from PUWeighting import pu_weight
+import FinalStateAnalysis.TagAndProbe.MuonPOGCorrections as MuonPOGCorrections
+import FinalStateAnalysis.TagAndProbe.PileupWeight as PileupWeight
 import WHAnalyzerBase
 import ROOT
+
+################################################################################
+#### Fitted fake rate functions ################################################
+################################################################################
 
 # Get fitted fake rate functions
 frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
@@ -29,8 +35,66 @@ tau_fr = build_roofunctor(
     'efficiency'
 )
 
-# Get correction functions
-ROOT.gSystem.Load("Corrector_C")
+################################################################################
+#### MC-DATA and PU corrections ################################################
+################################################################################
+
+# Determine MC-DATA corrections
+is7TeV = bool('7TeV' in os.environ['jobid'])
+print "Is 7TeV:", is7TeV
+
+# Make PU corrector from expected data PU distribution
+# PU corrections .root files from pileupCalc.py
+pu_distributions = glob.glob(os.path.join(
+    'inputs', os.environ['jobid'], 'data_DoubleMu*pu.root'))
+pu_corrector = PileupWeight.PileupWeight(
+    'S6' if is7TeV else 'S7', *pu_distributions)
+
+muon_pog_PFTight_2011 = MuonPOGCorrections.make_muon_pog_PFTight_2011()
+muon_pog_PFTight_2012 = MuonPOGCorrections.make_muon_pog_PFTight_2012()
+
+muon_pog_PFRelIsoDB02_2011 = MuonPOGCorrections.make_muon_pog_PFRelIsoDB02_2011()
+muon_pog_PFRelIsoDB02_2012 = MuonPOGCorrections.make_muon_pog_PFRelIsoDB02_2012()
+
+muon_pog_Mu17Mu8_Mu17_2012 = MuonPOGCorrections.make_muon_pog_Mu17Mu8_Mu17_2012()
+muon_pog_Mu17Mu8_Mu8_2012 = MuonPOGCorrections.make_muon_pog_Mu17Mu8_Mu8_2012()
+
+# takes etas of muons
+muon_pog_Mu17Mu8_2011 = MuonPOGCorrections.muon_pog_Mu17Mu8_eta_eta_2011
+
+# Get object ID and trigger corrector functions
+def mc_corrector_2011(row):
+    if row.run > 2:
+        return 1
+    pu = pu_corrector(row.nTruePU)
+    #pu = 1
+    m1id = muon_pog_PFTight_2011(row.m1Pt, row.m1Eta)
+    m2id = muon_pog_PFTight_2011(row.m2Pt, row.m2Eta)
+    m1iso = muon_pog_PFRelIsoDB02_2011(row.m1Pt, row.m1Eta)
+    m2iso = muon_pog_PFRelIsoDB02_2011(row.m2Pt, row.m2Eta)
+    trigger = muon_pog_Mu17Mu8_2011(row.m1Eta, row.m2Eta)
+    return pu*m1id*m2id*m1iso*m2iso*trigger
+
+def mc_corrector_2012(row):
+    if row.run > 2:
+        return 1
+    pu = pu_corrector(row.nTruePU)
+    m1id = muon_pog_PFTight_2012(row.m1Pt, row.m1Eta)
+    m2id = muon_pog_PFTight_2012(row.m2Pt, row.m2Eta)
+    m1iso = muon_pog_PFRelIsoDB02_2012(row.m1Pt, row.m1Eta)
+    m2iso = muon_pog_PFRelIsoDB02_2012(row.m2Pt, row.m2Eta)
+    m1Trig = muon_pog_Mu17Mu8_Mu17_2012(row.m1Pt, row.m1Eta)
+    m2Trig = muon_pog_Mu17Mu8_Mu8_2012(row.m2Pt, row.m2Eta)
+    return pu*m1id*m2id*m1iso*m2iso*m1Trig*m2Trig
+
+# Determine which set of corrections to use
+mc_corrector = mc_corrector_2011
+if not is7TeV:
+    mc_corrector = mc_corrector_2012
+
+################################################################################
+#### Analysis logic ############################################################
+################################################################################
 
 class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
     tree = 'mmt/final/Ntuple'
@@ -42,7 +106,7 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         self.book(folder, "weight_nopu", "Event weight without PU", 100, 0, 5)
         self.book(folder, "rho", "Fastjet #rho", 100, 0, 25)
         self.book(folder, "nvtx", "Number of vertices", 31, -0.5, 30.5)
-        self.book(folder, "prescale", "HLT prescale", 21, -0.5, 20.5)
+        self.book(folder, "prescale", "HLT prescale", 26, -5.5, 20.5)
         self.book(folder, "m1Pt", "Muon 1 Pt", 100, 0, 100)
         self.book(folder, "m2Pt", "Muon 2 Pt", 100, 0, 100)
         self.book(folder, "m1AbsEta", "Muon 1 AbsEta", 100, 0, 2.4)
@@ -81,6 +145,8 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         Excludes FR object IDs and sign cut.
         '''
         if not row.doubleMuPass:
+            return False
+        if row.m1Pt < row.m2Pt:
             return False
         if row.m1Pt < 20:
             return False
@@ -148,12 +214,7 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.tLooseMVAIso)
 
     def event_weight(self, row):
-        # fixme
-        weight = pu_weight(row)
-        if row.run < 10:
-            weight *= ROOT.Cor_Total_Mu_Lead(row.m1Pt, row.m1AbsEta)
-            weight *= ROOT.Cor_Total_Mu_SubLead(row.m2Pt, row.m2AbsEta)
-        return weight
+        return mc_corrector(row)
 
     def obj1_weight(self, row):
         return highpt_mu_fr(row.m1JetPt)
