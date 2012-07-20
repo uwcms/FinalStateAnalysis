@@ -34,8 +34,10 @@ samples = Hash[
     'TTplusJets_madgraph'] + get_sample_names('WZ'),
   "wjets" => Array['WplusJets_madgraph'],
   "zjets" => Array['Zjets_M50'],
+  "diboson" => Array['ZZJetsTo4L_pythia'] + get_sample_names('WZ'),
   "signal" => get_sample_names('VH'),
   # Automagically figure out what data samples we have
+  "data_m" =>  get_sample_names("data_SingleMu"),
   "data_mm" =>  get_sample_names("data_DoubleMu"),
   "data_em" => get_sample_names("data_MuEG"),
   "data_ee" => get_sample_names("data_DoubleElectron"),
