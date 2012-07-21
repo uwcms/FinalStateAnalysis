@@ -8,6 +8,8 @@ import MuTauTree
 from FinalStateAnalysis.PlotTools.MegaBase import MegaBase
 import os
 
+isVH = os.environ['isVH'] == 'True'
+
 class AnalyzeTTHSignal(MegaBase):
     tree = 'mt/final/Ntuple'
     def __init__(self, tree, outfile, **kwargs):
@@ -32,8 +34,8 @@ class AnalyzeTTHSignal(MegaBase):
         for event in self.tree:
             # Skip event if a cut fails
             # PT cut
-            # Select only gg->ttH and qq->ttH processes
-            if event.processID < 100:
+            # Select only gg->ttH and qq->ttH processes, when analyzing VH
+            if (isVH and event.processID < 100):
                 continue
             if event.mPt < 15:
                 continue
