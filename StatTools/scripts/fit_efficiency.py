@@ -11,6 +11,7 @@ Where [efficiency] is a RooFit factory command.
 
 '''
 
+import array
 from RecoLuminosity.LumiDB import argparse
 import logging
 import sys
@@ -18,6 +19,12 @@ args = sys.argv[:]
 sys.argv = [sys.argv[0]]
 
 log = logging.getLogger("fit_efficiency")
+
+def get_th1f_binning(histo):
+    bin_edges = []
+    for i in range(histo.GetNbinsX()+1):
+        bin_edges.append(histo.GetBinLowEdge(i+1))
+    return array.array('d', bin_edges)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -51,7 +58,7 @@ if __name__ == "__main__":
     plot_grp.add_argument('--maxx', type=float, default=5e-3,
                           help='x-axis maximum')
 
-    plot_grp.add_argument('--min', type=float, default=5e-3,
+    plot_grp.add_argument('--min', type=float, default=5e-5,
                           help='y-axis minimum')
     plot_grp.add_argument('--max', type=float, default=1,
                           help='y-axis maximum')
@@ -66,12 +73,13 @@ if __name__ == "__main__":
     from rootpy.plotting import views
     import rootpy.io as io
     import ROOT
+    ROOT.gSystem.Load("libFinalStateAnalysisStatTools")
 
     # Build view of input histograms
     log.info("Merging input files")
     input_view = views.SumView(*[io.open(x) for x in args.input])
 
-    if args.rebin:
+    if args.rebin and args.rebin > 1:
         rebinner = lambda x: x.Rebin(args.rebin)
         input_view = views.FunctorView(input_view, rebinner)
 
@@ -89,6 +97,9 @@ if __name__ == "__main__":
     log.info("Converting data to RooFit format")
     # Build the X variable
     x = ROOT.RooRealVar('x', 'x', 0)
+    x_bins = get_th1f_binning(fail_histo)
+    x_binning = ROOT.RooBinning(len(x_bins)-1, x_bins)
+    x.setBinning(x_binning)
     cut = ROOT.RooCategory("cut", "cutr")
     cut.defineType("accept", 1)
     cut.defineType("reject", 0)
@@ -98,14 +109,39 @@ if __name__ == "__main__":
         return ROOT.RooDataHist(hist.GetName(), hist.GetTitle(),
                                 ROOT.RooArgList(x), hist)
 
+    print pass_histo.GetBinLowEdge(1)
+    print pass_histo.GetBinLowEdge(2)
+    print get_th1f_binning(pass_histo)
+
     pass_data = roodatahistizer(pass_histo)
     fail_data = roodatahistizer(fail_histo)
-    combined_data = ROOT.RooDataHist(
-        'data', 'data',
-        ROOT.RooArgList(x),  ROOT.RooFit.Index(cut),
-        ROOT.RooFit.Import('accept', pass_data),
-        ROOT.RooFit.Import('reject', fail_data),
+
+    canvas = ROOT.TCanvas("asdf", "asdf", 800, 600)
+
+    log.info("Building combined data")
+    combined_data_factory = ROOT.RooDataHistEffBuilder(
+        'data', 'data', ROOT.RooArgList(x), cut
     )
+    log.info("Adding pass histo")
+    combined_data_factory.addHist('accept', pass_histo)
+    log.info("Adding fail histo")
+    combined_data_factory.addHist('reject', fail_histo)
+
+    #combined_data = ROOT.RooDataHist(
+        #'data', 'data',
+        #ROOT.RooArgList(x),  ROOT.RooFit.Index(cut),
+        #ROOT.RooFit.Import('accept', pass_data),
+        #ROOT.RooFit.Import('reject', fail_data),
+    #)
+    log.info("Calling build()")
+    combined_data = combined_data_factory.build()
+
+    #comb_frame = x.frame(ROOT.RooFit.Title("Efficiency"))
+    #combined_data.plotOn(comb_frame, ROOT.RooFit.Efficiency(cut))
+    #comb_frame.Draw()
+    #plot_name = args.output.replace('.root', '.debug_comb.png')
+    #log.info("Saving fit plot in %s", plot_name)
+    #canvas.SaveAs(plot_name)
 
     log.info("Creating workspace and importing data")
     ws = ROOT.RooWorkspace("fit_efficiency")
@@ -128,7 +164,8 @@ if __name__ == "__main__":
         combined_data,
         ROOT.RooFit.ConditionalObservables(ROOT.RooArgSet(x)),
         ROOT.RooFit.Save(True),
-        ROOT.RooFit.PrintLevel(-1)
+        ROOT.RooFit.PrintLevel(-1),
+        ROOT.RooFit.SumW2Error(False)
     )
     log.info("Fit result status: %i", fit_result.status())
     fit_result.Print()
@@ -137,7 +174,6 @@ if __name__ == "__main__":
     ws.writeToFile(args.output)
 
     if args.plot:
-        canvas = ROOT.TCanvas("asdf", "asdf", 800, 600)
         try:
             frame = x.frame(ROOT.RooFit.Title("Efficiency"))
             function.plotOn(
