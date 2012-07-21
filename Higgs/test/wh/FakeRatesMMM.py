@@ -15,6 +15,7 @@ Author: Evan K. Friis, UW
 
 '''
 
+import array
 import MuMuMuTree
 from FinalStateAnalysis.PlotTools.MegaBase import MegaBase
 import os
@@ -60,7 +61,11 @@ class FakeRatesMMM(MegaBase):
                         num_histos[name] = self.book(os.path.join(
                             region, denom, numerator), name, *args)
 
-                    book_histo('muonPt', 'Muon Pt', 100, 0, 100)
+                    #pt_bins = array.array('d', [10, 12.5, 15, 17.5, 20, 30, 50, 100])
+
+                    #book_histo('muonPt', 'Muon Pt', 100, 0, 100)
+                    book_histo('muonPt', 'Muon Pt', 8, 10, 50)
+                    #book_histo('muonPt', 'Muon Pt', len(pt_bins)-1, pt_bins)
                     book_histo('muonJetPt', 'Muon Jet Pt', 100, 0, 100)
                     book_histo('muonAbsEta', 'Muon Abs Eta', 100, -2.5, 2.5)
                     book_histo('metSignificance', 'MET sig.', 100, 0, 10)
