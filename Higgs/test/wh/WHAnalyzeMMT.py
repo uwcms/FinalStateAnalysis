@@ -250,10 +250,12 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return mc_corrector(row)
 
     def obj1_weight(self, row):
+        return 0.018
         #return highpt_mu_fr(row.m1JetPt)
         return highpt_mu_fr(row.m1Pt)
 
     def obj2_weight(self, row):
+        return 0.018
         #return lowpt_mu_fr(row.m2JetPt)
         return lowpt_mu_fr(row.m2Pt)
 
