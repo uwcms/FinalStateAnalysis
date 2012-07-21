@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     outputdir = args.outputdir
 
-    if not os.path.exists(outputdir):
+    if len(outputdir) and not os.path.exists(outputdir):
         os.makedirs(outputdir)
 
     def rebin_view(x, rebin):
