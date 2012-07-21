@@ -53,6 +53,7 @@ _muon_template = PSet(
     templates.candidates.vertex_info,
     templates.muons.id,
     templates.muons.tracking,
+    templates.muons.trigger,
     templates.topology.mtToMET,
 )
 
