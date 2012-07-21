@@ -73,15 +73,15 @@ _leg_templates = {
 }
 
 _pt_cuts = {
-    'm' : '4',
-    'e' : '5',
-    't' : '15',
+    'm' : '9',
+    'e' : '9',
+    't' : '18',
 }
 
 _eta_cuts = {
     'm' : '2.5',
     'e' : '2.5',
-    't' : '2.5',
+    't' : '2.3',
 }
 
 # How to get from a leg name to "finalStateElecMuMuMu" etc
