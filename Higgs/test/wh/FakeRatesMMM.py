@@ -64,7 +64,7 @@ class FakeRatesMMM(MegaBase):
                     #pt_bins = array.array('d', [10, 12.5, 15, 17.5, 20, 30, 50, 100])
 
                     #book_histo('muonPt', 'Muon Pt', 100, 0, 100)
-                    book_histo('muonPt', 'Muon Pt', 8, 10, 50)
+                    book_histo('muonPt', 'Muon Pt', 16, 10, 50)
                     #book_histo('muonPt', 'Muon Pt', len(pt_bins)-1, pt_bins)
                     book_histo('muonJetPt', 'Muon Jet Pt', 100, 0, 100)
                     book_histo('muonAbsEta', 'Muon Abs Eta', 100, -2.5, 2.5)
