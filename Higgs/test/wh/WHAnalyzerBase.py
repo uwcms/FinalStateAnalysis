@@ -60,7 +60,7 @@ class WHAnalyzerBase(MegaBase):
         #folders = []
         flag_map = {}
         for sign in ['ss', 'os']:
-            for failing_objs in [(), (1,), (2,), (3,), (1,2), (1,2,3)]:
+            for failing_objs in [(), (1,), (2,), (3,), (1,3), (2, 3), (1,2), (1,2,3)]:
                 cut_key = [sign == 'ss']
                 region_label = ''
                 for i in range(1,4):
@@ -77,10 +77,19 @@ class WHAnalyzerBase(MegaBase):
                     weights_to_apply.append(
                         (failing_objs, "w%i" % failing_objs))
                 if len(failing_objs) == 2:
-                    weights_to_apply.append(
-                        (failing_objs, "w%i%i" % failing_objs))
+                    # in the 1-2 case, apply both.  Otherwise, just apply the
+                    # first (a light lepton)
+                    if 3 not in failing_objs:
+                        weights_to_apply.append(
+                            (failing_objs, "w%i%i" % failing_objs))
+                    else:
+                        weights_to_apply.append(
+                            (failing_objs, "w%i" % failing_objs[0]))
+
                 if len(failing_objs) == 3:
                     weights_to_apply.append( ((3,), "w3") )
+                    # Needed for f3 CR
+                    weights_to_apply.append( ((1,2), "w12"))
 
                 #folders_to_add = [ (sign, region_label) ]
                 # Which objects to weight for each region

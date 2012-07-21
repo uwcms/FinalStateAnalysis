@@ -242,6 +242,9 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         # to have M_Z +- 20
         if row.tAntiMuonTight or not row.tMuOverlap:
             return False
+        # Cut on m2 PT > 20
+        if row.m2Pt < 20:
+            return False
         # Make sure any Z is from m1
         m2_good_Z = bool(71 < row.m2_t_Mass < 111)
         return not m2_good_Z

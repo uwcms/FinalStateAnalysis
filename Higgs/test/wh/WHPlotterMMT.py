@@ -222,6 +222,22 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-wz-m2JetPt')
 
+    plotter.plot_final_f3('leadMass', 10, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-f3-leadMass')
+
+    plotter.plot_final_f3('subMass', 10, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-f3-subMass')
+
+    plotter.plot_final_f3('m2Pt', 2, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-f3-m2Pt')
+
+    plotter.plot_final_f3('m2JetPt', 5, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-f3-m2JetPt')
+
 
     ###########################################################################
     ##  Making shape file     #################################################

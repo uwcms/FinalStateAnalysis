@@ -207,6 +207,45 @@ class WHPlotterBase(object):
 
         return output
 
+    def make_obj3_fail_cr_views(self, rebin):
+        ''' Make views when obj3 fails, estimating the bkg in obj1 pass using
+            f1p2f3 '''
+        wz_view = views.SubdirectoryView(
+            rebin_view(self.get_view('WZJetsTo3LNu*'), rebin),
+            'ss/p1p2f3/'
+        )
+        zz_view = views.SubdirectoryView(
+            rebin_view(self.get_view('ZZJetsTo4L*'), rebin),
+            'ss/p1p2f3/'
+        )
+        all_data_view = rebin_view(self.get_view('data'), rebin)
+        data_view = views.SubdirectoryView(all_data_view, 'ss/p1p2f3/')
+
+        # View of weighted obj1-fails data
+        obj1_view = views.SubdirectoryView(all_data_view, 'ss/f1p2f3/w1')
+        # View of weighted obj2-fails data
+        obj2_view = views.SubdirectoryView(all_data_view, 'ss/p1f2f3/w2')
+        # View of weighted obj1&2-fails data
+        obj12_view = views.SubdirectoryView(all_data_view, 'ss/f1f2f3/w12')
+
+        subtract_obj12_view = views.ScaleView(obj12_view, -1)
+        # Corrected fake view
+        fakes_view = views.SumView(obj1_view, obj2_view, subtract_obj12_view)
+        fakes_view = views.TitleView(
+            views.StyleView(fakes_view, **data_styles['Zjets*']), 'Non-prompt')
+
+        output = {
+            'wz' : wz_view,
+            'zz' : zz_view,
+            'data' : data_view,
+            'obj1' : obj1_view,
+            'obj2' : obj2_view,
+            'fakes' : fakes_view
+        }
+
+        return output
+
+
     def make_wz_cr_views(self, rebin):
         ''' Make WZ control region views with FR background estimation '''
 
@@ -309,6 +348,27 @@ class WHPlotterBase(object):
     def plot_final_wz(self, variable, rebin=1, xaxis='', maxy=85):
         ''' Plot the final WZ control region - with bkg. estimation '''
         sig_view = self.make_wz_cr_views(rebin)
+
+        stack = views.StackView(
+            sig_view['fakes'],
+            sig_view['wz'],
+            sig_view['zz'],
+        )
+        histo = stack.Get(variable)
+        histo.Draw()
+        histo.GetHistogram().GetXaxis().SetTitle(xaxis)
+        histo.SetMaximum(maxy)
+        data = sig_view['data'].Get(variable)
+        data.Draw('same')
+        self.keep.append(data)
+        self.keep.append(histo)
+
+        # Add legend
+        self.add_legend(histo, leftside=False, entries=4)
+
+    def plot_final_f3(self, variable, rebin=1, xaxis='', maxy=20):
+        ''' Plot the final F3 control region - with bkg. estimation '''
+        sig_view = self.make_obj3_fail_cr_views(rebin)
 
         stack = views.StackView(
             sig_view['fakes'],
