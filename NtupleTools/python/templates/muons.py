@@ -52,7 +52,7 @@ trigger = PSet(
     objectSingleMu13L3Filtered17 = 'matchToHLTFilter({object_idx}, "hltSingleMu13L3Filtered17")',
     objectDiMuonMu17Mu8DzFiltered0p2 = 'matchToHLTFilter({object_idx}, "hltDiMuonMu17Mu8DzFiltered0p2")',
     objectL1Mu3EG5L3Filtered17 = 'matchToHLTFilter({object_idx}, "hltL1Mu3EG5L3Filtered17")',
-    objectMu17Ele8dZFilter  = 'matchToHLTFilter({object_idx}, "hltMu17Ele8dZFilter ")',
+    objectMu17Ele8dZFilter  = 'matchToHLTFilter({object_idx}, "hltMu17Ele8dZFilter")',
 )
 
 

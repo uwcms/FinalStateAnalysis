@@ -52,3 +52,9 @@ supercluster = PSet(
     objectSCPhi = '{object}.superCluster().phi',
     objectSCEnergy = '{object}.superCluster().energy',
 )
+
+trigger = PSet(
+    objectMu17Ele8dZFilter  = 'matchToHLTFilter({object_idx}, "hltMu17Ele8dZFilter")',
+    objectMu17Ele8CaloIdTPixelMatchFilter  = 'matchToHLTFilter({object_idx}, "hltMu17Ele8CaloIdTPixelMatchFilter")',
+    objectL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter  = 'matchToHLTFilter({object_idx}, "hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter")',
+)
