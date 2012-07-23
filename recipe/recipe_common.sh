@@ -10,12 +10,15 @@ pushd $CMSSW_BASE/src
 cvs co -r V03-05-12  RecoLuminosity/LumiDB 
 
 # Add and patch to way speed up trigger matching
+# Don't crash if patch already appliede
+set +o errexit 
 echo "Applying pat trigger matching speedup"
 patch -N -p0 < FinalStateAnalysis/recipe/patches/V06-04-16_DataFormats_PatCandidates_PassStrByRef.patch
 
 echo "Adding 2D expression histogram feature"
 addpkg -z CommonTools/Utils 
 patch -N -p0 < FinalStateAnalysis/recipe/patches/V00-04-02_CommonTools_Utils_Add2DHistoFeature.patch
+set -o errexit
 
 # Add support for PU Jet ID
 # See https://twiki.cern.ch/twiki/bin/view/CMS/PileupJetID
