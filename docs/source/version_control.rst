@@ -2,12 +2,18 @@ Version Control
 ===============
 
 The Final State Analysis package is tracked using the 
-`Link Git <http://http://git-scm.com//>`_
+`Link Git <http://git-scm.com//>`_
 version control system.   Git is different than CVS in that it's
 distributed - each repository is local and can stand by itself.  Git makes
 it easy to pass changes to other repositories.  This means you can make commits
 offline, and without worrying about messing up the central version control
 system.
+
+Links
+-----
+
+   * `Link Git For Scientists <http://smash.psych.nyu.edu/pages/GitTutorial/>`_
+   * `The "central" repo <https://github.com/ekfriis/FinalStateAnalysis>`_
 
 Downloading Code
 ----------------
