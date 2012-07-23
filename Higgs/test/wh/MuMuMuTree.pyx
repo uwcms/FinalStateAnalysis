@@ -142,6 +142,15 @@ cdef class MuMuMuTree:
     cdef TBranch* m1DZ_branch
     cdef float m1DZ_value
 
+    cdef TBranch* m1DiMuonL3PreFiltered7_branch
+    cdef float m1DiMuonL3PreFiltered7_value
+
+    cdef TBranch* m1DiMuonL3p5PreFiltered8_branch
+    cdef float m1DiMuonL3p5PreFiltered8_value
+
+    cdef TBranch* m1DiMuonMu17Mu8DzFiltered0p2_branch
+    cdef float m1DiMuonMu17Mu8DzFiltered0p2_value
+
     cdef TBranch* m1Eta_branch
     cdef float m1Eta_value
 
@@ -166,11 +175,17 @@ cdef class MuMuMuTree:
     cdef TBranch* m1JetPt_branch
     cdef float m1JetPt_value
 
+    cdef TBranch* m1L1Mu3EG5L3Filtered17_branch
+    cdef float m1L1Mu3EG5L3Filtered17_value
+
     cdef TBranch* m1Mass_branch
     cdef float m1Mass_value
 
     cdef TBranch* m1MtToMET_branch
     cdef float m1MtToMET_value
+
+    cdef TBranch* m1Mu17Ele8dZFilter_branch
+    cdef float m1Mu17Ele8dZFilter_value
 
     cdef TBranch* m1NormTrkChi2_branch
     cdef float m1NormTrkChi2_value
@@ -192,6 +207,12 @@ cdef class MuMuMuTree:
 
     cdef TBranch* m1RelPFIsoDB_branch
     cdef float m1RelPFIsoDB_value
+
+    cdef TBranch* m1SingleMu13L3Filtered13_branch
+    cdef float m1SingleMu13L3Filtered13_value
+
+    cdef TBranch* m1SingleMu13L3Filtered17_branch
+    cdef float m1SingleMu13L3Filtered17_value
 
     cdef TBranch* m1VBTFID_branch
     cdef float m1VBTFID_value
@@ -262,6 +283,15 @@ cdef class MuMuMuTree:
     cdef TBranch* m2DZ_branch
     cdef float m2DZ_value
 
+    cdef TBranch* m2DiMuonL3PreFiltered7_branch
+    cdef float m2DiMuonL3PreFiltered7_value
+
+    cdef TBranch* m2DiMuonL3p5PreFiltered8_branch
+    cdef float m2DiMuonL3p5PreFiltered8_value
+
+    cdef TBranch* m2DiMuonMu17Mu8DzFiltered0p2_branch
+    cdef float m2DiMuonMu17Mu8DzFiltered0p2_value
+
     cdef TBranch* m2Eta_branch
     cdef float m2Eta_value
 
@@ -286,11 +316,17 @@ cdef class MuMuMuTree:
     cdef TBranch* m2JetPt_branch
     cdef float m2JetPt_value
 
+    cdef TBranch* m2L1Mu3EG5L3Filtered17_branch
+    cdef float m2L1Mu3EG5L3Filtered17_value
+
     cdef TBranch* m2Mass_branch
     cdef float m2Mass_value
 
     cdef TBranch* m2MtToMET_branch
     cdef float m2MtToMET_value
+
+    cdef TBranch* m2Mu17Ele8dZFilter_branch
+    cdef float m2Mu17Ele8dZFilter_value
 
     cdef TBranch* m2NormTrkChi2_branch
     cdef float m2NormTrkChi2_value
@@ -312,6 +348,12 @@ cdef class MuMuMuTree:
 
     cdef TBranch* m2RelPFIsoDB_branch
     cdef float m2RelPFIsoDB_value
+
+    cdef TBranch* m2SingleMu13L3Filtered13_branch
+    cdef float m2SingleMu13L3Filtered13_value
+
+    cdef TBranch* m2SingleMu13L3Filtered17_branch
+    cdef float m2SingleMu13L3Filtered17_value
 
     cdef TBranch* m2VBTFID_branch
     cdef float m2VBTFID_value
@@ -358,6 +400,15 @@ cdef class MuMuMuTree:
     cdef TBranch* m3DZ_branch
     cdef float m3DZ_value
 
+    cdef TBranch* m3DiMuonL3PreFiltered7_branch
+    cdef float m3DiMuonL3PreFiltered7_value
+
+    cdef TBranch* m3DiMuonL3p5PreFiltered8_branch
+    cdef float m3DiMuonL3p5PreFiltered8_value
+
+    cdef TBranch* m3DiMuonMu17Mu8DzFiltered0p2_branch
+    cdef float m3DiMuonMu17Mu8DzFiltered0p2_value
+
     cdef TBranch* m3Eta_branch
     cdef float m3Eta_value
 
@@ -382,11 +433,17 @@ cdef class MuMuMuTree:
     cdef TBranch* m3JetPt_branch
     cdef float m3JetPt_value
 
+    cdef TBranch* m3L1Mu3EG5L3Filtered17_branch
+    cdef float m3L1Mu3EG5L3Filtered17_value
+
     cdef TBranch* m3Mass_branch
     cdef float m3Mass_value
 
     cdef TBranch* m3MtToMET_branch
     cdef float m3MtToMET_value
+
+    cdef TBranch* m3Mu17Ele8dZFilter_branch
+    cdef float m3Mu17Ele8dZFilter_value
 
     cdef TBranch* m3NormTrkChi2_branch
     cdef float m3NormTrkChi2_value
@@ -408,6 +465,12 @@ cdef class MuMuMuTree:
 
     cdef TBranch* m3RelPFIsoDB_branch
     cdef float m3RelPFIsoDB_value
+
+    cdef TBranch* m3SingleMu13L3Filtered13_branch
+    cdef float m3SingleMu13L3Filtered13_value
+
+    cdef TBranch* m3SingleMu13L3Filtered17_branch
+    cdef float m3SingleMu13L3Filtered17_value
 
     cdef TBranch* m3VBTFID_branch
     cdef float m3VBTFID_value
@@ -459,15 +522,6 @@ cdef class MuMuMuTree:
 
     cdef TBranch* processID_branch
     cdef float processID_value
-
-    cdef TBranch* puWeightData2011AB_branch
-    cdef float puWeightData2011AB_value
-
-    cdef TBranch* puWeightData2012A_branch
-    cdef float puWeightData2012A_value
-
-    cdef TBranch* puWeightData2012AB_branch
-    cdef float puWeightData2012AB_value
 
     cdef TBranch* rho_branch
     cdef float rho_value
@@ -647,6 +701,18 @@ cdef class MuMuMuTree:
         self.m1DZ_branch = the_tree.GetBranch("m1DZ")
         self.m1DZ_branch.SetAddress(<void*>&self.m1DZ_value)
 
+        #print "making m1DiMuonL3PreFiltered7"
+        self.m1DiMuonL3PreFiltered7_branch = the_tree.GetBranch("m1DiMuonL3PreFiltered7")
+        self.m1DiMuonL3PreFiltered7_branch.SetAddress(<void*>&self.m1DiMuonL3PreFiltered7_value)
+
+        #print "making m1DiMuonL3p5PreFiltered8"
+        self.m1DiMuonL3p5PreFiltered8_branch = the_tree.GetBranch("m1DiMuonL3p5PreFiltered8")
+        self.m1DiMuonL3p5PreFiltered8_branch.SetAddress(<void*>&self.m1DiMuonL3p5PreFiltered8_value)
+
+        #print "making m1DiMuonMu17Mu8DzFiltered0p2"
+        self.m1DiMuonMu17Mu8DzFiltered0p2_branch = the_tree.GetBranch("m1DiMuonMu17Mu8DzFiltered0p2")
+        self.m1DiMuonMu17Mu8DzFiltered0p2_branch.SetAddress(<void*>&self.m1DiMuonMu17Mu8DzFiltered0p2_value)
+
         #print "making m1Eta"
         self.m1Eta_branch = the_tree.GetBranch("m1Eta")
         self.m1Eta_branch.SetAddress(<void*>&self.m1Eta_value)
@@ -679,6 +745,10 @@ cdef class MuMuMuTree:
         self.m1JetPt_branch = the_tree.GetBranch("m1JetPt")
         self.m1JetPt_branch.SetAddress(<void*>&self.m1JetPt_value)
 
+        #print "making m1L1Mu3EG5L3Filtered17"
+        self.m1L1Mu3EG5L3Filtered17_branch = the_tree.GetBranch("m1L1Mu3EG5L3Filtered17")
+        self.m1L1Mu3EG5L3Filtered17_branch.SetAddress(<void*>&self.m1L1Mu3EG5L3Filtered17_value)
+
         #print "making m1Mass"
         self.m1Mass_branch = the_tree.GetBranch("m1Mass")
         self.m1Mass_branch.SetAddress(<void*>&self.m1Mass_value)
@@ -686,6 +756,10 @@ cdef class MuMuMuTree:
         #print "making m1MtToMET"
         self.m1MtToMET_branch = the_tree.GetBranch("m1MtToMET")
         self.m1MtToMET_branch.SetAddress(<void*>&self.m1MtToMET_value)
+
+        #print "making m1Mu17Ele8dZFilter"
+        self.m1Mu17Ele8dZFilter_branch = the_tree.GetBranch("m1Mu17Ele8dZFilter")
+        self.m1Mu17Ele8dZFilter_branch.SetAddress(<void*>&self.m1Mu17Ele8dZFilter_value)
 
         #print "making m1NormTrkChi2"
         self.m1NormTrkChi2_branch = the_tree.GetBranch("m1NormTrkChi2")
@@ -714,6 +788,14 @@ cdef class MuMuMuTree:
         #print "making m1RelPFIsoDB"
         self.m1RelPFIsoDB_branch = the_tree.GetBranch("m1RelPFIsoDB")
         self.m1RelPFIsoDB_branch.SetAddress(<void*>&self.m1RelPFIsoDB_value)
+
+        #print "making m1SingleMu13L3Filtered13"
+        self.m1SingleMu13L3Filtered13_branch = the_tree.GetBranch("m1SingleMu13L3Filtered13")
+        self.m1SingleMu13L3Filtered13_branch.SetAddress(<void*>&self.m1SingleMu13L3Filtered13_value)
+
+        #print "making m1SingleMu13L3Filtered17"
+        self.m1SingleMu13L3Filtered17_branch = the_tree.GetBranch("m1SingleMu13L3Filtered17")
+        self.m1SingleMu13L3Filtered17_branch.SetAddress(<void*>&self.m1SingleMu13L3Filtered17_value)
 
         #print "making m1VBTFID"
         self.m1VBTFID_branch = the_tree.GetBranch("m1VBTFID")
@@ -807,6 +889,18 @@ cdef class MuMuMuTree:
         self.m2DZ_branch = the_tree.GetBranch("m2DZ")
         self.m2DZ_branch.SetAddress(<void*>&self.m2DZ_value)
 
+        #print "making m2DiMuonL3PreFiltered7"
+        self.m2DiMuonL3PreFiltered7_branch = the_tree.GetBranch("m2DiMuonL3PreFiltered7")
+        self.m2DiMuonL3PreFiltered7_branch.SetAddress(<void*>&self.m2DiMuonL3PreFiltered7_value)
+
+        #print "making m2DiMuonL3p5PreFiltered8"
+        self.m2DiMuonL3p5PreFiltered8_branch = the_tree.GetBranch("m2DiMuonL3p5PreFiltered8")
+        self.m2DiMuonL3p5PreFiltered8_branch.SetAddress(<void*>&self.m2DiMuonL3p5PreFiltered8_value)
+
+        #print "making m2DiMuonMu17Mu8DzFiltered0p2"
+        self.m2DiMuonMu17Mu8DzFiltered0p2_branch = the_tree.GetBranch("m2DiMuonMu17Mu8DzFiltered0p2")
+        self.m2DiMuonMu17Mu8DzFiltered0p2_branch.SetAddress(<void*>&self.m2DiMuonMu17Mu8DzFiltered0p2_value)
+
         #print "making m2Eta"
         self.m2Eta_branch = the_tree.GetBranch("m2Eta")
         self.m2Eta_branch.SetAddress(<void*>&self.m2Eta_value)
@@ -839,6 +933,10 @@ cdef class MuMuMuTree:
         self.m2JetPt_branch = the_tree.GetBranch("m2JetPt")
         self.m2JetPt_branch.SetAddress(<void*>&self.m2JetPt_value)
 
+        #print "making m2L1Mu3EG5L3Filtered17"
+        self.m2L1Mu3EG5L3Filtered17_branch = the_tree.GetBranch("m2L1Mu3EG5L3Filtered17")
+        self.m2L1Mu3EG5L3Filtered17_branch.SetAddress(<void*>&self.m2L1Mu3EG5L3Filtered17_value)
+
         #print "making m2Mass"
         self.m2Mass_branch = the_tree.GetBranch("m2Mass")
         self.m2Mass_branch.SetAddress(<void*>&self.m2Mass_value)
@@ -846,6 +944,10 @@ cdef class MuMuMuTree:
         #print "making m2MtToMET"
         self.m2MtToMET_branch = the_tree.GetBranch("m2MtToMET")
         self.m2MtToMET_branch.SetAddress(<void*>&self.m2MtToMET_value)
+
+        #print "making m2Mu17Ele8dZFilter"
+        self.m2Mu17Ele8dZFilter_branch = the_tree.GetBranch("m2Mu17Ele8dZFilter")
+        self.m2Mu17Ele8dZFilter_branch.SetAddress(<void*>&self.m2Mu17Ele8dZFilter_value)
 
         #print "making m2NormTrkChi2"
         self.m2NormTrkChi2_branch = the_tree.GetBranch("m2NormTrkChi2")
@@ -874,6 +976,14 @@ cdef class MuMuMuTree:
         #print "making m2RelPFIsoDB"
         self.m2RelPFIsoDB_branch = the_tree.GetBranch("m2RelPFIsoDB")
         self.m2RelPFIsoDB_branch.SetAddress(<void*>&self.m2RelPFIsoDB_value)
+
+        #print "making m2SingleMu13L3Filtered13"
+        self.m2SingleMu13L3Filtered13_branch = the_tree.GetBranch("m2SingleMu13L3Filtered13")
+        self.m2SingleMu13L3Filtered13_branch.SetAddress(<void*>&self.m2SingleMu13L3Filtered13_value)
+
+        #print "making m2SingleMu13L3Filtered17"
+        self.m2SingleMu13L3Filtered17_branch = the_tree.GetBranch("m2SingleMu13L3Filtered17")
+        self.m2SingleMu13L3Filtered17_branch.SetAddress(<void*>&self.m2SingleMu13L3Filtered17_value)
 
         #print "making m2VBTFID"
         self.m2VBTFID_branch = the_tree.GetBranch("m2VBTFID")
@@ -935,6 +1045,18 @@ cdef class MuMuMuTree:
         self.m3DZ_branch = the_tree.GetBranch("m3DZ")
         self.m3DZ_branch.SetAddress(<void*>&self.m3DZ_value)
 
+        #print "making m3DiMuonL3PreFiltered7"
+        self.m3DiMuonL3PreFiltered7_branch = the_tree.GetBranch("m3DiMuonL3PreFiltered7")
+        self.m3DiMuonL3PreFiltered7_branch.SetAddress(<void*>&self.m3DiMuonL3PreFiltered7_value)
+
+        #print "making m3DiMuonL3p5PreFiltered8"
+        self.m3DiMuonL3p5PreFiltered8_branch = the_tree.GetBranch("m3DiMuonL3p5PreFiltered8")
+        self.m3DiMuonL3p5PreFiltered8_branch.SetAddress(<void*>&self.m3DiMuonL3p5PreFiltered8_value)
+
+        #print "making m3DiMuonMu17Mu8DzFiltered0p2"
+        self.m3DiMuonMu17Mu8DzFiltered0p2_branch = the_tree.GetBranch("m3DiMuonMu17Mu8DzFiltered0p2")
+        self.m3DiMuonMu17Mu8DzFiltered0p2_branch.SetAddress(<void*>&self.m3DiMuonMu17Mu8DzFiltered0p2_value)
+
         #print "making m3Eta"
         self.m3Eta_branch = the_tree.GetBranch("m3Eta")
         self.m3Eta_branch.SetAddress(<void*>&self.m3Eta_value)
@@ -967,6 +1089,10 @@ cdef class MuMuMuTree:
         self.m3JetPt_branch = the_tree.GetBranch("m3JetPt")
         self.m3JetPt_branch.SetAddress(<void*>&self.m3JetPt_value)
 
+        #print "making m3L1Mu3EG5L3Filtered17"
+        self.m3L1Mu3EG5L3Filtered17_branch = the_tree.GetBranch("m3L1Mu3EG5L3Filtered17")
+        self.m3L1Mu3EG5L3Filtered17_branch.SetAddress(<void*>&self.m3L1Mu3EG5L3Filtered17_value)
+
         #print "making m3Mass"
         self.m3Mass_branch = the_tree.GetBranch("m3Mass")
         self.m3Mass_branch.SetAddress(<void*>&self.m3Mass_value)
@@ -974,6 +1100,10 @@ cdef class MuMuMuTree:
         #print "making m3MtToMET"
         self.m3MtToMET_branch = the_tree.GetBranch("m3MtToMET")
         self.m3MtToMET_branch.SetAddress(<void*>&self.m3MtToMET_value)
+
+        #print "making m3Mu17Ele8dZFilter"
+        self.m3Mu17Ele8dZFilter_branch = the_tree.GetBranch("m3Mu17Ele8dZFilter")
+        self.m3Mu17Ele8dZFilter_branch.SetAddress(<void*>&self.m3Mu17Ele8dZFilter_value)
 
         #print "making m3NormTrkChi2"
         self.m3NormTrkChi2_branch = the_tree.GetBranch("m3NormTrkChi2")
@@ -1002,6 +1132,14 @@ cdef class MuMuMuTree:
         #print "making m3RelPFIsoDB"
         self.m3RelPFIsoDB_branch = the_tree.GetBranch("m3RelPFIsoDB")
         self.m3RelPFIsoDB_branch.SetAddress(<void*>&self.m3RelPFIsoDB_value)
+
+        #print "making m3SingleMu13L3Filtered13"
+        self.m3SingleMu13L3Filtered13_branch = the_tree.GetBranch("m3SingleMu13L3Filtered13")
+        self.m3SingleMu13L3Filtered13_branch.SetAddress(<void*>&self.m3SingleMu13L3Filtered13_value)
+
+        #print "making m3SingleMu13L3Filtered17"
+        self.m3SingleMu13L3Filtered17_branch = the_tree.GetBranch("m3SingleMu13L3Filtered17")
+        self.m3SingleMu13L3Filtered17_branch.SetAddress(<void*>&self.m3SingleMu13L3Filtered17_value)
 
         #print "making m3VBTFID"
         self.m3VBTFID_branch = the_tree.GetBranch("m3VBTFID")
@@ -1070,18 +1208,6 @@ cdef class MuMuMuTree:
         #print "making processID"
         self.processID_branch = the_tree.GetBranch("processID")
         self.processID_branch.SetAddress(<void*>&self.processID_value)
-
-        #print "making puWeightData2011AB"
-        self.puWeightData2011AB_branch = the_tree.GetBranch("puWeightData2011AB")
-        self.puWeightData2011AB_branch.SetAddress(<void*>&self.puWeightData2011AB_value)
-
-        #print "making puWeightData2012A"
-        self.puWeightData2012A_branch = the_tree.GetBranch("puWeightData2012A")
-        self.puWeightData2012A_branch.SetAddress(<void*>&self.puWeightData2012A_value)
-
-        #print "making puWeightData2012AB"
-        self.puWeightData2012AB_branch = the_tree.GetBranch("puWeightData2012AB")
-        self.puWeightData2012AB_branch.SetAddress(<void*>&self.puWeightData2012AB_value)
 
         #print "making rho"
         self.rho_branch = the_tree.GetBranch("rho")
@@ -1309,6 +1435,21 @@ cdef class MuMuMuTree:
             self.m1DZ_branch.GetEntry(self.localentry, 0)
             return self.m1DZ_value
 
+    property m1DiMuonL3PreFiltered7:
+        def __get__(self):
+            self.m1DiMuonL3PreFiltered7_branch.GetEntry(self.localentry, 0)
+            return self.m1DiMuonL3PreFiltered7_value
+
+    property m1DiMuonL3p5PreFiltered8:
+        def __get__(self):
+            self.m1DiMuonL3p5PreFiltered8_branch.GetEntry(self.localentry, 0)
+            return self.m1DiMuonL3p5PreFiltered8_value
+
+    property m1DiMuonMu17Mu8DzFiltered0p2:
+        def __get__(self):
+            self.m1DiMuonMu17Mu8DzFiltered0p2_branch.GetEntry(self.localentry, 0)
+            return self.m1DiMuonMu17Mu8DzFiltered0p2_value
+
     property m1Eta:
         def __get__(self):
             self.m1Eta_branch.GetEntry(self.localentry, 0)
@@ -1349,6 +1490,11 @@ cdef class MuMuMuTree:
             self.m1JetPt_branch.GetEntry(self.localentry, 0)
             return self.m1JetPt_value
 
+    property m1L1Mu3EG5L3Filtered17:
+        def __get__(self):
+            self.m1L1Mu3EG5L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.m1L1Mu3EG5L3Filtered17_value
+
     property m1Mass:
         def __get__(self):
             self.m1Mass_branch.GetEntry(self.localentry, 0)
@@ -1358,6 +1504,11 @@ cdef class MuMuMuTree:
         def __get__(self):
             self.m1MtToMET_branch.GetEntry(self.localentry, 0)
             return self.m1MtToMET_value
+
+    property m1Mu17Ele8dZFilter:
+        def __get__(self):
+            self.m1Mu17Ele8dZFilter_branch.GetEntry(self.localentry, 0)
+            return self.m1Mu17Ele8dZFilter_value
 
     property m1NormTrkChi2:
         def __get__(self):
@@ -1393,6 +1544,16 @@ cdef class MuMuMuTree:
         def __get__(self):
             self.m1RelPFIsoDB_branch.GetEntry(self.localentry, 0)
             return self.m1RelPFIsoDB_value
+
+    property m1SingleMu13L3Filtered13:
+        def __get__(self):
+            self.m1SingleMu13L3Filtered13_branch.GetEntry(self.localentry, 0)
+            return self.m1SingleMu13L3Filtered13_value
+
+    property m1SingleMu13L3Filtered17:
+        def __get__(self):
+            self.m1SingleMu13L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.m1SingleMu13L3Filtered17_value
 
     property m1VBTFID:
         def __get__(self):
@@ -1509,6 +1670,21 @@ cdef class MuMuMuTree:
             self.m2DZ_branch.GetEntry(self.localentry, 0)
             return self.m2DZ_value
 
+    property m2DiMuonL3PreFiltered7:
+        def __get__(self):
+            self.m2DiMuonL3PreFiltered7_branch.GetEntry(self.localentry, 0)
+            return self.m2DiMuonL3PreFiltered7_value
+
+    property m2DiMuonL3p5PreFiltered8:
+        def __get__(self):
+            self.m2DiMuonL3p5PreFiltered8_branch.GetEntry(self.localentry, 0)
+            return self.m2DiMuonL3p5PreFiltered8_value
+
+    property m2DiMuonMu17Mu8DzFiltered0p2:
+        def __get__(self):
+            self.m2DiMuonMu17Mu8DzFiltered0p2_branch.GetEntry(self.localentry, 0)
+            return self.m2DiMuonMu17Mu8DzFiltered0p2_value
+
     property m2Eta:
         def __get__(self):
             self.m2Eta_branch.GetEntry(self.localentry, 0)
@@ -1549,6 +1725,11 @@ cdef class MuMuMuTree:
             self.m2JetPt_branch.GetEntry(self.localentry, 0)
             return self.m2JetPt_value
 
+    property m2L1Mu3EG5L3Filtered17:
+        def __get__(self):
+            self.m2L1Mu3EG5L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.m2L1Mu3EG5L3Filtered17_value
+
     property m2Mass:
         def __get__(self):
             self.m2Mass_branch.GetEntry(self.localentry, 0)
@@ -1558,6 +1739,11 @@ cdef class MuMuMuTree:
         def __get__(self):
             self.m2MtToMET_branch.GetEntry(self.localentry, 0)
             return self.m2MtToMET_value
+
+    property m2Mu17Ele8dZFilter:
+        def __get__(self):
+            self.m2Mu17Ele8dZFilter_branch.GetEntry(self.localentry, 0)
+            return self.m2Mu17Ele8dZFilter_value
 
     property m2NormTrkChi2:
         def __get__(self):
@@ -1593,6 +1779,16 @@ cdef class MuMuMuTree:
         def __get__(self):
             self.m2RelPFIsoDB_branch.GetEntry(self.localentry, 0)
             return self.m2RelPFIsoDB_value
+
+    property m2SingleMu13L3Filtered13:
+        def __get__(self):
+            self.m2SingleMu13L3Filtered13_branch.GetEntry(self.localentry, 0)
+            return self.m2SingleMu13L3Filtered13_value
+
+    property m2SingleMu13L3Filtered17:
+        def __get__(self):
+            self.m2SingleMu13L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.m2SingleMu13L3Filtered17_value
 
     property m2VBTFID:
         def __get__(self):
@@ -1669,6 +1865,21 @@ cdef class MuMuMuTree:
             self.m3DZ_branch.GetEntry(self.localentry, 0)
             return self.m3DZ_value
 
+    property m3DiMuonL3PreFiltered7:
+        def __get__(self):
+            self.m3DiMuonL3PreFiltered7_branch.GetEntry(self.localentry, 0)
+            return self.m3DiMuonL3PreFiltered7_value
+
+    property m3DiMuonL3p5PreFiltered8:
+        def __get__(self):
+            self.m3DiMuonL3p5PreFiltered8_branch.GetEntry(self.localentry, 0)
+            return self.m3DiMuonL3p5PreFiltered8_value
+
+    property m3DiMuonMu17Mu8DzFiltered0p2:
+        def __get__(self):
+            self.m3DiMuonMu17Mu8DzFiltered0p2_branch.GetEntry(self.localentry, 0)
+            return self.m3DiMuonMu17Mu8DzFiltered0p2_value
+
     property m3Eta:
         def __get__(self):
             self.m3Eta_branch.GetEntry(self.localentry, 0)
@@ -1709,6 +1920,11 @@ cdef class MuMuMuTree:
             self.m3JetPt_branch.GetEntry(self.localentry, 0)
             return self.m3JetPt_value
 
+    property m3L1Mu3EG5L3Filtered17:
+        def __get__(self):
+            self.m3L1Mu3EG5L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.m3L1Mu3EG5L3Filtered17_value
+
     property m3Mass:
         def __get__(self):
             self.m3Mass_branch.GetEntry(self.localentry, 0)
@@ -1718,6 +1934,11 @@ cdef class MuMuMuTree:
         def __get__(self):
             self.m3MtToMET_branch.GetEntry(self.localentry, 0)
             return self.m3MtToMET_value
+
+    property m3Mu17Ele8dZFilter:
+        def __get__(self):
+            self.m3Mu17Ele8dZFilter_branch.GetEntry(self.localentry, 0)
+            return self.m3Mu17Ele8dZFilter_value
 
     property m3NormTrkChi2:
         def __get__(self):
@@ -1753,6 +1974,16 @@ cdef class MuMuMuTree:
         def __get__(self):
             self.m3RelPFIsoDB_branch.GetEntry(self.localentry, 0)
             return self.m3RelPFIsoDB_value
+
+    property m3SingleMu13L3Filtered13:
+        def __get__(self):
+            self.m3SingleMu13L3Filtered13_branch.GetEntry(self.localentry, 0)
+            return self.m3SingleMu13L3Filtered13_value
+
+    property m3SingleMu13L3Filtered17:
+        def __get__(self):
+            self.m3SingleMu13L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.m3SingleMu13L3Filtered17_value
 
     property m3VBTFID:
         def __get__(self):
@@ -1838,21 +2069,6 @@ cdef class MuMuMuTree:
         def __get__(self):
             self.processID_branch.GetEntry(self.localentry, 0)
             return self.processID_value
-
-    property puWeightData2011AB:
-        def __get__(self):
-            self.puWeightData2011AB_branch.GetEntry(self.localentry, 0)
-            return self.puWeightData2011AB_value
-
-    property puWeightData2012A:
-        def __get__(self):
-            self.puWeightData2012A_branch.GetEntry(self.localentry, 0)
-            return self.puWeightData2012A_value
-
-    property puWeightData2012AB:
-        def __get__(self):
-            self.puWeightData2012AB_branch.GetEntry(self.localentry, 0)
-            return self.puWeightData2012AB_value
 
     property rho:
         def __get__(self):

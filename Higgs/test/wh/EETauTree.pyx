@@ -133,6 +133,9 @@ cdef class EETauTree:
     cdef TBranch* e1JetBtag_branch
     cdef float e1JetBtag_value
 
+    cdef TBranch* e1JetCSVBtag_branch
+    cdef float e1JetCSVBtag_value
+
     cdef TBranch* e1JetPt_branch
     cdef float e1JetPt_value
 
@@ -264,6 +267,9 @@ cdef class EETauTree:
 
     cdef TBranch* e2JetBtag_branch
     cdef float e2JetBtag_value
+
+    cdef TBranch* e2JetCSVBtag_branch
+    cdef float e2JetCSVBtag_value
 
     cdef TBranch* e2JetPt_branch
     cdef float e2JetPt_value
@@ -412,15 +418,6 @@ cdef class EETauTree:
     cdef TBranch* processID_branch
     cdef float processID_value
 
-    cdef TBranch* puWeightData2011AB_branch
-    cdef float puWeightData2011AB_value
-
-    cdef TBranch* puWeightData2012A_branch
-    cdef float puWeightData2012A_value
-
-    cdef TBranch* puWeightData2012AB_branch
-    cdef float puWeightData2012AB_value
-
     cdef TBranch* rho_branch
     cdef float rho_value
 
@@ -486,6 +483,9 @@ cdef class EETauTree:
 
     cdef TBranch* tJetBtag_branch
     cdef float tJetBtag_value
+
+    cdef TBranch* tJetCSVBtag_branch
+    cdef float tJetCSVBtag_value
 
     cdef TBranch* tJetPt_branch
     cdef float tJetPt_value
@@ -677,6 +677,10 @@ cdef class EETauTree:
         self.e1JetBtag_branch = the_tree.GetBranch("e1JetBtag")
         self.e1JetBtag_branch.SetAddress(<void*>&self.e1JetBtag_value)
 
+        #print "making e1JetCSVBtag"
+        self.e1JetCSVBtag_branch = the_tree.GetBranch("e1JetCSVBtag")
+        self.e1JetCSVBtag_branch.SetAddress(<void*>&self.e1JetCSVBtag_value)
+
         #print "making e1JetPt"
         self.e1JetPt_branch = the_tree.GetBranch("e1JetPt")
         self.e1JetPt_branch.SetAddress(<void*>&self.e1JetPt_value)
@@ -852,6 +856,10 @@ cdef class EETauTree:
         #print "making e2JetBtag"
         self.e2JetBtag_branch = the_tree.GetBranch("e2JetBtag")
         self.e2JetBtag_branch.SetAddress(<void*>&self.e2JetBtag_value)
+
+        #print "making e2JetCSVBtag"
+        self.e2JetCSVBtag_branch = the_tree.GetBranch("e2JetCSVBtag")
+        self.e2JetCSVBtag_branch.SetAddress(<void*>&self.e2JetCSVBtag_value)
 
         #print "making e2JetPt"
         self.e2JetPt_branch = the_tree.GetBranch("e2JetPt")
@@ -1049,18 +1057,6 @@ cdef class EETauTree:
         self.processID_branch = the_tree.GetBranch("processID")
         self.processID_branch.SetAddress(<void*>&self.processID_value)
 
-        #print "making puWeightData2011AB"
-        self.puWeightData2011AB_branch = the_tree.GetBranch("puWeightData2011AB")
-        self.puWeightData2011AB_branch.SetAddress(<void*>&self.puWeightData2011AB_value)
-
-        #print "making puWeightData2012A"
-        self.puWeightData2012A_branch = the_tree.GetBranch("puWeightData2012A")
-        self.puWeightData2012A_branch.SetAddress(<void*>&self.puWeightData2012A_value)
-
-        #print "making puWeightData2012AB"
-        self.puWeightData2012AB_branch = the_tree.GetBranch("puWeightData2012AB")
-        self.puWeightData2012AB_branch.SetAddress(<void*>&self.puWeightData2012AB_value)
-
         #print "making rho"
         self.rho_branch = the_tree.GetBranch("rho")
         self.rho_branch.SetAddress(<void*>&self.rho_value)
@@ -1148,6 +1144,10 @@ cdef class EETauTree:
         #print "making tJetBtag"
         self.tJetBtag_branch = the_tree.GetBranch("tJetBtag")
         self.tJetBtag_branch.SetAddress(<void*>&self.tJetBtag_value)
+
+        #print "making tJetCSVBtag"
+        self.tJetCSVBtag_branch = the_tree.GetBranch("tJetCSVBtag")
+        self.tJetCSVBtag_branch.SetAddress(<void*>&self.tJetCSVBtag_value)
 
         #print "making tJetPt"
         self.tJetPt_branch = the_tree.GetBranch("tJetPt")
@@ -1392,6 +1392,11 @@ cdef class EETauTree:
             self.e1JetBtag_branch.GetEntry(self.localentry, 0)
             return self.e1JetBtag_value
 
+    property e1JetCSVBtag:
+        def __get__(self):
+            self.e1JetCSVBtag_branch.GetEntry(self.localentry, 0)
+            return self.e1JetCSVBtag_value
+
     property e1JetPt:
         def __get__(self):
             self.e1JetPt_branch.GetEntry(self.localentry, 0)
@@ -1611,6 +1616,11 @@ cdef class EETauTree:
         def __get__(self):
             self.e2JetBtag_branch.GetEntry(self.localentry, 0)
             return self.e2JetBtag_value
+
+    property e2JetCSVBtag:
+        def __get__(self):
+            self.e2JetCSVBtag_branch.GetEntry(self.localentry, 0)
+            return self.e2JetCSVBtag_value
 
     property e2JetPt:
         def __get__(self):
@@ -1857,21 +1867,6 @@ cdef class EETauTree:
             self.processID_branch.GetEntry(self.localentry, 0)
             return self.processID_value
 
-    property puWeightData2011AB:
-        def __get__(self):
-            self.puWeightData2011AB_branch.GetEntry(self.localentry, 0)
-            return self.puWeightData2011AB_value
-
-    property puWeightData2012A:
-        def __get__(self):
-            self.puWeightData2012A_branch.GetEntry(self.localentry, 0)
-            return self.puWeightData2012A_value
-
-    property puWeightData2012AB:
-        def __get__(self):
-            self.puWeightData2012AB_branch.GetEntry(self.localentry, 0)
-            return self.puWeightData2012AB_value
-
     property rho:
         def __get__(self):
             self.rho_branch.GetEntry(self.localentry, 0)
@@ -1981,6 +1976,11 @@ cdef class EETauTree:
         def __get__(self):
             self.tJetBtag_branch.GetEntry(self.localentry, 0)
             return self.tJetBtag_value
+
+    property tJetCSVBtag:
+        def __get__(self):
+            self.tJetCSVBtag_branch.GetEntry(self.localentry, 0)
+            return self.tJetCSVBtag_value
 
     property tJetPt:
         def __get__(self):
