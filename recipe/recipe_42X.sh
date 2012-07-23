@@ -28,6 +28,8 @@ cvs up -r 1.53 PhysicsTools/PatAlgos/python/tools/tauTools.py
 # Apply an optimization - don't build taus w/ pt < 19
 # Don't crash if patch already appliede
 set +o errexit 
+# Make sure we have a clean copy.  
+cvs up -C RecoTauTag/RecoTau
 patch -N -p0 < FinalStateAnalysis/recipe/patches/speedupRecoTauCombBuilder.patch
 # Add Marias patch for negative SSV 
 patch -N -p0 < FinalStateAnalysis/recipe/marias_negativeSSV.patch
