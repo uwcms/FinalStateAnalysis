@@ -89,9 +89,8 @@ class FakeRatesMM(MegaBase):
             return True
 
         def fill(the_histos, row):
-            # Get PU weight
-            #weight = row.puWeightData2011AB
-            weight = row.puWeightData2011AB if self.is7TeV else row.puWeightData2012AB
+            # Get PU weight - fix me
+            weight = 1
             the_histos['muonPt'].Fill(row.m2Pt, weight)
             the_histos['muonJetPt'].Fill(row.m2JetPt, weight)
             the_histos['muonAbsEta'].Fill(row.m2AbsEta, weight)
