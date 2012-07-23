@@ -1,4 +1,6 @@
 #!/bin/bash
+set -o errexit
+set -o nounset
 
 : ${CMSSW_BASE:?"CMSSW_BASE is not set!  Run cmsenv before recipe.sh"}
 

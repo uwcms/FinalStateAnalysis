@@ -1,3 +1,7 @@
+#!/bin/bash
+set -o errexit
+set -o nounset
+
 pushd $CMSSW_BASE/src
 
 # Tags that work in any release

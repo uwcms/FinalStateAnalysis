@@ -1,3 +1,7 @@
+#!/bin/bash
+set -o errexit
+set -o nounset
+
 # Tags for 52X
 
 pushd $CMSSW_BASE/src
