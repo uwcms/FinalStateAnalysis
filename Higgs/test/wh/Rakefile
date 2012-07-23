@@ -96,115 +96,106 @@ exponential_vars =  "scale[0.5, 0, 5],decay[-1e-2, -1, -1e-4],offset[1e-2, 0, 0.
 landau = "scale*TMath::Landau(x,mu,sigma,0)+offset"
 landau_vars =  "scale[0.5, 0, 5],mu[5, 0, 100],sigma[1.9, 0.1, 20],offset[1e-2, 0, 0.5]"
 
+flat = "offset"
+flat_vars =  "offset[1e-2, 0, 0.5]"
+
 # Fake rate fit configurations
 fr_fits = Hash[
   # Format is type_region_denom_num_variable
   "e_wjets_pt10_mvaidiso03_eJetPt" => Hash[
-    "samples" => Array["wjets", "data_em"],
+    "samples" => Array["ewk", "data_em"],
     "analyzer" => "FakeRatesEM",
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
   ],
   "e_wjets_pt10_mvaidiso01_eJetPt" => Hash[
-    "samples" => Array["wjets", "data_em"],
+    "samples" => Array["ewk", "data_em"],
     "analyzer" => "FakeRatesEM",
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
   ],
   "m_wjets_pt10_pfidiso01_muonJetPt" => Hash[
-    "samples" => Array["wjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMM",
-    #"function" => exponential,
-    #"variables" => exponential_vars,
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
   ],
   "m_wjets_pt10_pfidiso03_muonJetPt" => Hash[
-    "samples" => Array["wjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMM",
-    #"function" => exponential,
-    #"variables" => exponential_vars,
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
   ],
   "m_wjets_pt20_pfidiso03_muonJetPt" => Hash[
-    "samples" => Array["wjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMM",
-    #"function" => exponential,
-    #"variables" => exponential_vars,
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
   ],
   "m_wjets_pt10_pfidiso02_muonJetPt" => Hash[
-    "samples" => Array["wjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMM",
-    #"function" => exponential,
-    #"variables" => exponential_vars,
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
   ],
   "m_zmm_pt10_pfidiso02_muonJetPt" => Hash[
-    "samples" => Array["zjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMMM",
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
   ],
   "m_zmm_pt20_pfidiso02_muonJetPt" => Hash[
-    "samples" => Array["zjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMMM",
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
   ],
   "m_wjets_pt20_pfidiso02_muonJetPt" => Hash[
-    "samples" => Array["wjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMM",
-    #"function" => exponential,
-    #"variables" => exponential_vars,
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
   ],
   "m_wjets_pt20_pfidiso01_muonJetPt" => Hash[
-    "samples" => Array["wjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMM",
-    #"function" => exponential,
-    #"variables" => exponential_vars,
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
   ],
   # Versus regular pt
   "m_zmm_pt10_pfidiso02_muonPt" => Hash[
-    "samples" => Array["wjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMMM",
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 1,
   ],
   "m_wjets_pt10_pfidiso02_muonPt" => Hash[
-    "samples" => Array["wjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMM",
     "function" => exponential,
     "variables" => exponential_vars,
-    "rebin" => 5,
+    "rebin" => 1,
   ],
   "t_ztt_pt20_mvaloose_tauPt" => Hash[
-    "samples" => Array["zjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMMT",
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 5,
   ],
   "t_ztt_pt20_hpsloose_tauPt" => Hash[
-    "samples" => Array["zjets", "data_mm"],
+    "samples" => Array["ewk", "data_mm"],
     "analyzer" => "FakeRatesMMT",
     "function" => exponential,
     "variables" => exponential_vars,
@@ -222,20 +213,34 @@ fr_fits.each do |fit, fit_info|
   denom = fit_configuration[2]
   num = fit_configuration[3]
   var = fit_configuration[4]
+
+  # Expand sample list
+  subsample_inputs = []
   fit_info['samples'].each do |sample|
-    fit_output = $frfit_dir + "/#{fit}-#{sample}.root"
-    subsamples_inputs = samples[sample].map{|x|  "results/#{$jobid}/#{fit_info['analyzer']}/#{x}.root"}
-    subsample_input_list = subsamples_inputs.join(" ")
-
-    # Path to histograms in root files
-    denom_path = Array[region, denom, var].join("/")
-    num_path = Array[region, denom, num, var].join("/")
-
-    file fit_output => subsamples_inputs + [fit_info['analyzer'] + '.py', $frfit_dir] do |t|
-      sh "fit_efficiency.py #{fit_output} #{num_path} #{denom_path} \'#{fit_info['function']}\' \'#{fit_info['variables']}\' #{subsample_input_list} --plot --rebin #{fit_info['rebin']}"
-    end
-    task :fits => fit_output
+    subsample_inputs += samples[sample]
   end
+
+  fit_output = $frfit_dir + "/#{fit}.root"
+  subsamples_inputs_result_list = subsample_inputs.map{|x|  "results/#{$jobid}/#{fit_info['analyzer']}/#{x}.root"}
+  subsample_input_list = subsamples_inputs_result_list.join(" ")
+
+  # Path to histograms in root files
+  denom_path = Array[region, denom, var].join("/")
+  num_path = Array[region, denom, num, var].join("/")
+
+  # Correct the numerator and denominator for WZ + ZZ contamination
+  # The output is stored in "numerator" and "denominator"
+  corrected_file = fit_output.sub('.root', '.corrected_inputs.root')
+  file corrected_file => subsamples_inputs_result_list + [fit_info['analyzer'] + '.py', "CorrectFakeRateData.py"] do |t|
+    sh "mkdir -p #{$frfit_dir}"
+    sh "python CorrectFakeRateData.py --files #{subsample_input_list} --lumifiles inputs/#{$jobid}/*sum --outputfile #{t.name} --numerator '#{num_path}' --denom '#{denom_path}' --rebin #{fit_info['rebin']}"
+  end
+
+  file fit_output => corrected_file do |t|
+    sh "fit_efficiency.py #{fit_output} numerator denominator \'#{fit_info['function']}\' \'#{fit_info['variables']}\' #{corrected_file} --plot"
+  end
+  task :fits => fit_output
+
 end
 
 ################################################################################
@@ -253,18 +258,18 @@ task :eet => get_analyzer_results("WHAnalyzeEET.py", samples['ewk'] + samples['d
 task :mmcontrol => get_analyzer_results("ControlZMM.py", samples['zjets'] + samples['data_mm'])
 
 # IF the FR fits change, make sure we re-run the analyses
-file "WHAnalyzeEMT.py" => [ "#{$frfit_dir}/e_wjets_pt10_mvaidiso01_eJetPt-data_em.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso01_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
+file "WHAnalyzeEMT.py" => [ "#{$frfit_dir}/e_wjets_pt10_mvaidiso01_eJetPt.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso01_muonJetPt.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt.root",] do |t|
   sh "touch #{t.name}"
 end
 #file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
   #sh "touch #{t.name}"
 #end
-#file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
-  #sh "touch #{t.name}"
-#end
-file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_zmm_pt10_pfidiso02_muonPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
+file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonPt.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt.root",] do |t|
   sh "touch #{t.name}"
 end
+#file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_zmm_pt10_pfidiso02_muonPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
+  #sh "touch #{t.name}"
+#end
 #file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_zmm_pt10_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/m_zmm_pt20_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
   #sh "touch #{t.name}"
 #end
