@@ -77,6 +77,7 @@ class FakeRatesEM(MegaBase):
             if row.muVetoPt5: return False
             if row.bjetCSVVeto: return False
             if row.eVetoCicTightIso: return False
+            if not row.eChargeIdTight: return False
             if row.tauVetoPt20: return False
             if row.eHasConversion: return False
             if row.eMissingHits: return False
