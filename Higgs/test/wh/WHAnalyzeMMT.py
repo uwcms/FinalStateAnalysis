@@ -20,25 +20,19 @@ import ROOT
 # Get fitted fake rate functions
 frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
 highpt_mu_fr = build_roofunctor(
-    #frfit_dir + '/m_wjets_pt10_pfidiso02_muonPt-data_mm.root',
-    frfit_dir + '/m_zmm_pt10_pfidiso02_muonPt-data_mm.root',
-    #frfit_dir + '/m_wjets_pt20_pfidiso02_muonJetPt-data_mm.root',
-    #frfit_dir + '/m_zmm_pt20_pfidiso02_muonJetPt-data_mm.root',
+    frfit_dir + '/m_wjets_pt20_pfidiso02_muonJetPt.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
 lowpt_mu_fr = build_roofunctor(
-    #frfit_dir + '/m_wjets_pt10_pfidiso02_muonPt-data_mm.root',
-    frfit_dir + '/m_zmm_pt10_pfidiso02_muonPt-data_mm.root',
-    #frfit_dir + '/m_wjets_pt10_pfidiso02_muonJetPt-data_mm.root',
-    #frfit_dir + '/m_zmm_pt10_pfidiso02_muonJetPt-data_mm.root',
+    frfit_dir + '/m_wjets_pt10_pfidiso02_muonJetPt.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
 
 
 tau_fr = build_roofunctor(
-    frfit_dir + '/t_ztt_pt20_mvaloose_tauPt-data_mm.root',
+    frfit_dir + '/t_ztt_pt20_mvaloose_tauPt.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
@@ -50,8 +44,6 @@ tau_fr = build_roofunctor(
 # Determine MC-DATA corrections
 is7TeV = bool('7TeV' in os.environ['jobid'])
 print "Is 7TeV:", is7TeV
-
-mu_fr = 0.0149 if is7TeV else 0.01646
 
 # Make PU corrector from expected data PU distribution
 # PU corrections .root files from pileupCalc.py
@@ -275,14 +267,12 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return mc_corrector(row)
 
     def obj1_weight(self, row):
-        return mu_fr
-        #return highpt_mu_fr(row.m1JetPt)
-        return highpt_mu_fr(row.m1Pt)
+        return highpt_mu_fr(row.m1JetPt)
+        #return highpt_mu_fr(row.m1Pt)
 
     def obj2_weight(self, row):
-        return mu_fr
-        #return lowpt_mu_fr(row.m2JetPt)
-        return lowpt_mu_fr(row.m2Pt)
+        return lowpt_mu_fr(row.m2JetPt)
+        #return lowpt_mu_fr(row.m2Pt)
 
     def obj3_weight(self, row):
         return tau_fr(row.tPt)
