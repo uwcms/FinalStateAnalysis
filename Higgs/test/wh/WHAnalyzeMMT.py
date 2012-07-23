@@ -35,6 +35,8 @@ lowpt_mu_fr = build_roofunctor(
     'fit_efficiency', # workspace name
     'efficiency'
 )
+
+
 tau_fr = build_roofunctor(
     frfit_dir + '/t_ztt_pt20_mvaloose_tauPt-data_mm.root',
     'fit_efficiency', # workspace name
@@ -243,8 +245,8 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         if row.tAntiMuonTight or not row.tMuOverlap:
             return False
         # Cut on m2 PT > 20
-        if row.m2Pt < 20:
-            return False
+        #if row.m2Pt < 20:
+            #return False
         # Make sure any Z is from m1
         m2_good_Z = bool(71 < row.m2_t_Mass < 111)
         return not m2_good_Z
