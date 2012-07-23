@@ -129,16 +129,9 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.tMuOverlap:
             return False
-        if row.tCiCTightElecOverlap:
-            return False
         if not row.tAntiMuonTight:
             return False
         #'t_ElectronOverlapWP95 < 0.5',
-        if row.e_t_Zcompat < 20:
-            if not row.tAntiElectronMVA:
-                return False
-        elif not row.tAntiElectronLoose:
-            return False
         return True
 
     def sign_cut(self, row):
@@ -153,6 +146,19 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
 
     def obj3_id(self, row):
         return bool(row.tLooseMVAIso)
+
+    def anti_wz(self, row):
+        if row.tCiCTightElecOverlap:
+            return False
+        if row.e_t_Zcompat < 20:
+            if not row.tAntiElectronMVA:
+                return False
+        elif not row.tAntiElectronLoose:
+            return False
+
+    def enhance_wz(self, row):
+        if row.e_t_Zcompat < 15 and not row.tAntiElectronMVA:
+            return True
 
     def event_weight(self, row):
         # fixme
