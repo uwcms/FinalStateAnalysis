@@ -121,6 +121,18 @@ if __name__ == "__main__":
                 x.format = format
         return unsuck
 
+    antiiso_m2JetPt = plotter.plot('data', 'ss/p1f2p3/m2JetPt',  'hist', styler=make_styler(2, 'hist'), xrange=(0, 120))
+    antiiso_m2JetPt.SetTitle("Anti-iso CR yield")
+    antiiso_m2JetPt.legendstyle='l'
+    antiiso_m2JetPt.GetXaxis().SetTitle("#mu_{2} Jet Pt")
+    plotter.save('data-p1f2p3-m2JetPt')
+
+    antiiso_m1JetPt = plotter.plot('data', 'ss/f1p2p3/m1JetPt',  'hist', styler=make_styler(2, 'hist'), xrange=(0, 120))
+    antiiso_m1JetPt.SetTitle("Anti-iso CR yield")
+    antiiso_m1JetPt.legendstyle='l'
+    antiiso_m1JetPt.GetXaxis().SetTitle("#mu_{1} Jet Pt")
+    plotter.save('data-f1p2p3-m1JetPt')
+
     zmm_weighted = plotter.plot('data', 'os/p1p2f3/w3/m1m2Mass',  'hist', styler=make_styler(2, 'hist'), xrange=(60, 120))
     zmm_weighted.SetTitle("Z#mu#mu + fake #tau_{h} est.")
     zmm_weighted.legendstyle='l'
