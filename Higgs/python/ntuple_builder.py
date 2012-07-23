@@ -64,6 +64,7 @@ _electron_template = PSet(
     templates.electrons.id,
     templates.electrons.tracking,
     templates.electrons.supercluster,
+    templates.electrons.trigger,
     templates.topology.mtToMET,
 )
 
