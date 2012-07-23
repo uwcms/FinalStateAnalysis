@@ -24,7 +24,7 @@ cvs co -r V00-02-05 -d CMGTools/External UserCode/CMG/CMGTools/External
 cvs co -r V00-02 -d  pharris/MVAMet UserCode/pharris/MVAMet
 rm pharris/MVAMet/data/gbrmet.root
 rm pharris/MVAMet/data/*unityresponse*root
-cvs up -r 1.24 UserCode/CMG/CMGTools/External/src/PileupJetIdAlgo.cc
+cvs up -r 1.24 CMGTools/External/src/PileupJetIdAlgo.cc
 
 # Add Electron ID MVA
 cvs co -r V00-00-08 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
