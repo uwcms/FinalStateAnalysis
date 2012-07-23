@@ -135,8 +135,6 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         def fill(name, value):
             histos['/'.join(folder + (name,))].Fill(value, weight)
         histos['/'.join(folder + ('weight',))].Fill(weight)
-        histos['/'.join(folder + ('weight_nopu',))].Fill(
-            weight/row.puWeightData2011AB if row.puWeightData2011AB else 0)
 
         fill('prescale', row.doubleMuPrescale)
         fill('rho', row.rho)
