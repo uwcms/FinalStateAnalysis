@@ -60,7 +60,7 @@ class FakeRatesMM(MegaBase):
                         num_histos[name] = self.book(os.path.join(
                             region, denom, numerator), name, *args)
 
-                    book_histo('muonPt', 'Muon Pt', 100, 0, 100)
+                    book_histo('muonPt', 'Muon Pt', 16, 10, 50)
                     book_histo('muonJetPt', 'Muon Jet Pt', 100, 0, 100)
                     book_histo('muonAbsEta', 'Muon Abs Eta', 100, -2.5, 2.5)
                     book_histo('metSignificance', 'MET sig.', 100, 0, 10)
