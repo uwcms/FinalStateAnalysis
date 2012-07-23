@@ -366,7 +366,7 @@ class WHPlotterBase(object):
         # Add legend
         self.add_legend(histo, leftside=False, entries=4)
 
-    def plot_final_f3(self, variable, rebin=1, xaxis='', maxy=20):
+    def plot_final_f3(self, variable, rebin=1, xaxis='', maxy=None):
         ''' Plot the final F3 control region - with bkg. estimation '''
         sig_view = self.make_obj3_fail_cr_views(rebin)
 
@@ -378,9 +378,13 @@ class WHPlotterBase(object):
         histo = stack.Get(variable)
         histo.Draw()
         histo.GetHistogram().GetXaxis().SetTitle(xaxis)
-        histo.SetMaximum(maxy)
         data = sig_view['data'].Get(variable)
         data.Draw('same')
+        if maxy:
+            histo.SetMaximum(maxy)
+        else:
+            histo.SetMaximum(
+                1.2*max(histo.GetHistogram().GetMaximum(), data.GetMaximum()))
         self.keep.append(data)
         self.keep.append(histo)
 
