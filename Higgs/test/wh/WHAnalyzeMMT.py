@@ -51,6 +51,8 @@ tau_fr = build_roofunctor(
 is7TeV = bool('7TeV' in os.environ['jobid'])
 print "Is 7TeV:", is7TeV
 
+mu_fr = 0.0149 if is7TeV else 0.01646
+
 # Make PU corrector from expected data PU distribution
 # PU corrections .root files from pileupCalc.py
 pu_distributions = glob.glob(os.path.join(
@@ -211,15 +213,33 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
 
         if not row.tAntiElectronLoose:
             return False
-        #if not row.tAntiMuonTight:
-            #return False
         if row.tCiCTightElecOverlap:
             return False
-        #if row.tMuOverlap:
-            #return False
-        #'t_ElectronOverlapWP95 < 0.5',
+
+        if not self.trigger_match_m1(row):
+            return False
+        if not self.trigger_match_m2(row):
+            return False
 
         return True
+
+    @staticmethod
+    def trigger_match_m1(row):
+        if row.m1DiMuonL3p5PreFiltered8  > 0 or \
+           row.m1DiMuonL3PreFiltered7  > 0 or \
+           row.m1SingleMu13L3Filtered13  > 0 or \
+           row.m1SingleMu13L3Filtered17  > 0 or \
+           row.m1DiMuonMu17Mu8DzFiltered0p2  > 0:
+            return True
+
+    @staticmethod
+    def trigger_match_m2(row):
+        if row.m2DiMuonL3p5PreFiltered8  > 0 or \
+           row.m2DiMuonL3PreFiltered7  > 0 or \
+           row.m2SingleMu13L3Filtered13  > 0 or \
+           row.m2SingleMu13L3Filtered17  > 0 or \
+           row.m2DiMuonMu17Mu8DzFiltered0p2  > 0:
+            return True
 
     def sign_cut(self, row):
         ''' Returns true if muons are SS '''
@@ -253,12 +273,12 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return mc_corrector(row)
 
     def obj1_weight(self, row):
-        return 0.018
+        return mu_fr
         #return highpt_mu_fr(row.m1JetPt)
         return highpt_mu_fr(row.m1Pt)
 
     def obj2_weight(self, row):
-        return 0.018
+        return mu_fr
         #return lowpt_mu_fr(row.m2JetPt)
         return lowpt_mu_fr(row.m2Pt)
 
