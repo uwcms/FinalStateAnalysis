@@ -97,6 +97,14 @@ class FakeRatesMMM(MegaBase):
             if not abs(row.m3DZ) < 0.2: return False
             return True
 
+        def trigger_match(row):
+            if row.m3DiMuonL3p5PreFiltered8  > 0 or \
+               row.m3DiMuonL3PreFiltered7  > 0 or \
+               row.m3SingleMu13L3Filtered13  > 0 or \
+               row.m3SingleMu13L3Filtered17  > 0 or \
+               row.m3DiMuonMu17Mu8DzFiltered0p2  > 0:
+                return True
+
         def fill(the_histos, row):
             # Get PU weight - FIXME
             weight = 1
@@ -110,6 +118,8 @@ class FakeRatesMMM(MegaBase):
         histos = self.histograms
         for row in self.tree:
             if not preselection(row):
+                continue
+            if not trigger_match(row):
                 continue
             region = control_region(row)
             if region is None:
