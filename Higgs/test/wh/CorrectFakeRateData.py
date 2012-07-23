@@ -8,8 +8,12 @@ Author: Evan K. Frii
 
 from RecoLuminosity.LumiDB import argparse
 import fnmatch
+import logging
 import glob
 import os
+import sys
+
+log = logging.getLogger("CorrectFakeRateData")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -27,9 +31,13 @@ if __name__ == "__main__":
     import rootpy.plotting as plotting
     from FinalStateAnalysis.MetaData.data_views import data_views
 
+    logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+
     files = []
     for pattern in args.files:
         files.extend(glob.glob(pattern))
+
+    log.info("Loading data from %i files", len(files))
 
     lumifiles = []
     for pattern in args.lumifiles:
@@ -41,7 +49,7 @@ if __name__ == "__main__":
     if outputdir and not os.path.exists(outputdir):
         os.makedirs(outputdir)
 
-
+    log.info("Rebinning with factor %i", args.rebin)
     def rebin_view(x, rebin):
         ''' Make a view which rebins histograms '''
         if rebin > 1:
@@ -79,11 +87,26 @@ if __name__ == "__main__":
 
     output = io.open(args.outputfile, 'RECREATE')
     output.cd()
+
     corr_numerator = corrected_view.Get(args.numerator)
     corr_denominator = corrected_view.Get(args.denom)
 
+    log.info("Corrected:   %0.2f/%0.2f = %0.1f%%",
+             corr_numerator.Integral(),
+             corr_denominator.Integral(),
+             100*corr_numerator.Integral()/corr_denominator.Integral()
+             if corr_denominator.Integral() else 0
+            )
+
     uncorr_numerator = data.Get(args.numerator)
     uncorr_denominator = data.Get(args.denom)
+
+    log.info("Uncorrected: %0.2f/%0.2f = %0.1f%%",
+             uncorr_numerator.Integral(),
+             uncorr_denominator.Integral(),
+             100*uncorr_numerator.Integral()/uncorr_denominator.Integral()
+             if uncorr_denominator.Integral() else 0
+            )
 
     corr_numerator.SetName('numerator')
     corr_denominator.SetName('denominator')
