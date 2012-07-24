@@ -223,7 +223,8 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
            row.m1DiMuonL3PreFiltered7  > 0 or \
            row.m1SingleMu13L3Filtered13  > 0 or \
            row.m1SingleMu13L3Filtered17  > 0 or \
-           row.m1DiMuonMu17Mu8DzFiltered0p2  > 0:
+           row.m1DiMuonMu17Mu8DzFiltered0p2  > 0 or \
+           row.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17:
             return True
 
     @staticmethod
@@ -232,7 +233,8 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
            row.m2DiMuonL3PreFiltered7  > 0 or \
            row.m2SingleMu13L3Filtered13  > 0 or \
            row.m2SingleMu13L3Filtered17  > 0 or \
-           row.m2DiMuonMu17Mu8DzFiltered0p2  > 0:
+           row.m2DiMuonMu17Mu8DzFiltered0p2  > 0 or \
+           row.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17:
             return True
 
     def sign_cut(self, row):
