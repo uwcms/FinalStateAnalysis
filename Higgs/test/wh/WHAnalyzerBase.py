@@ -119,6 +119,11 @@ class WHAnalyzerBase(MegaBase):
         self.book_histos('ss/p1f2p3_enhance_wz')
         self.book_histos('ss/p1f2p3_enhance_wz/w2')
 
+        # Add charge-fake control region - probability that obj1 will flip into
+        # ss/p1p2p3
+        self.book_histos('os/p1p2p3/c1')
+        self.book_histos('os/p1p2f3/c1')
+
     def process(self):
         # For speed, map the result of the region cuts to a folder path
         # string using a dictionary
@@ -185,6 +190,19 @@ class WHAnalyzerBase(MegaBase):
 
                     # Now fill the histos for this weight folder
                     fill_histos(histos, base_folder + (weight_folder,), row, fr_weight)
+
+                if not sign_result and obj1_id_result and obj2_id_result:
+                    # Object 1 can only flip if it is OS with the tau
+                    if self.obj1_obj3_SS(row):
+                        charge_flip_prob = self.obj1_charge_flip(row)
+                        if charge_flip_prob:
+                            charge_flip_prob = charge_flip_prob/(1. - charge_flip_prob)
+
+                        if obj3_id_result:
+                            fill_histos(histos, ('os/p1p2p3/c1',), row, event_weight*charge_flip_prob)
+                        else:
+                            fill_histos(histos, ('os/p1p2f3/c1',), row, event_weight*charge_flip_prob)
+
             elif sign_result and obj1_id_result and obj3_id_result:
                 # WZ object topology fails. Check if we are in signal region.
                 if self.enhance_wz(row):

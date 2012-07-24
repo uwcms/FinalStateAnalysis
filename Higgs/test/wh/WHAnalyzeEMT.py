@@ -232,3 +232,13 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
 
     def obj3_weight(self, row):
         return tau_fr(row.tPt)
+
+    # For measuring charge flip probability
+    # Not really used in this channel
+    def obj1_obj3_SS(self, row):
+        return not row.e_t_SS
+
+    def obj1_charge_flip(self, row):
+        if row.eAbsEta < 1.5:
+            return 0.003
+        return 0.02

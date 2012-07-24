@@ -188,13 +188,19 @@ class WHPlotterBase(object):
         fakes_view = views.TitleView(
             views.StyleView(fakes_view, **data_styles['Zjets*']), 'Non-prompt')
 
+        charge_fakes = views.TitleView(
+            views.StyleView(
+                views.SubdirectoryView(all_data_view, 'os/p1p2p3/c1'),
+                **data_styles['TT*']), 'Charge mis-id')
+
         output = {
             'wz' : wz_view,
             'zz' : zz_view,
             'data' : data_view,
             'obj1' : obj1_view,
             'obj2' : obj2_view,
-            'fakes' : fakes_view
+            'fakes' : fakes_view,
+            'charge_fakes' : charge_fakes,
         }
 
         # Add signal
@@ -234,13 +240,19 @@ class WHPlotterBase(object):
         fakes_view = views.TitleView(
             views.StyleView(fakes_view, **data_styles['Zjets*']), 'Non-prompt')
 
+        charge_fakes = views.TitleView(
+            views.StyleView(
+                views.SubdirectoryView(all_data_view, 'os/p1p2f3/c1'),
+                **data_styles['TT*']), 'Charge mis-id')
+
         output = {
             'wz' : wz_view,
             'zz' : zz_view,
             'data' : data_view,
             'obj1' : obj1_view,
             'obj2' : obj2_view,
-            'fakes' : fakes_view
+            'fakes' : fakes_view,
+            'charge_fakes' : charge_fakes,
         }
 
         return output
@@ -371,6 +383,7 @@ class WHPlotterBase(object):
         sig_view = self.make_obj3_fail_cr_views(rebin)
 
         stack = views.StackView(
+            sig_view['charge_fakes'],
             sig_view['fakes'],
             sig_view['wz'],
             sig_view['zz'],
