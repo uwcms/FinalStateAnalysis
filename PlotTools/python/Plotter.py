@@ -41,6 +41,14 @@ class Plotter(object):
             self.views['data']['view'] = blinder(self.views['data']['view'])
         self.data = self.views['data']['view']
         self.keep = []
+        # List of MC sample names to use.  Can be overridden.
+        self.mc_samples = [
+            'Zjets_M50',
+            'WplusJets_madgraph',
+            'TTplusJets_madgraph',
+            'WZJetsTo3LNu*',
+            'ZZJetsTo4L*',
+        ]
 
     @staticmethod
     def rebin_view(x, rebin):
@@ -60,11 +68,7 @@ class Plotter(object):
     def make_stack(self, rebin=1):
         ''' Make a stack of the MC histograms '''
         all_mc_stack = views.StackView(
-            self.rebin_view(self.get_view('Zjets_M50'), rebin),
-            self.rebin_view(self.get_view('WplusJets_madgraph'), rebin),
-            self.rebin_view(self.get_view('TTplusJets_madgraph'), rebin),
-            self.rebin_view(self.get_view('WZJetsTo3LNu*'), rebin),
-            self.rebin_view(self.get_view('ZZJetsTo4L*'), rebin),
+            *[self.rebin_view(self.get_view(x), rebin) for x in self.mc_samples]
         )
         return all_mc_stack
 
@@ -103,6 +107,7 @@ class Plotter(object):
 
     def save(self, filename):
         ''' Save the current canvas contents to [filename] '''
+        self.canvas.Update()
         if not os.path.exists(self.outputdir):
             os.makedirs(self.outputdir)
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.png')
@@ -162,7 +167,7 @@ class Plotter(object):
         data.Draw('same')
         self.keep.append(data)
         # Make sure we can see everything
-        if data.GetMaximum() > mc_stack.GetHistogram().GetMaximum():
-            mc_stack.SetMaximum(2*data.GetMaximum())
+        if data.GetMaximum() > mc_stack.GetMaximum():
+            mc_stack.SetMaximum(1.2*data.GetMaximum())
         # Add legend
         self.add_legend([data, mc_stack], leftside, entries=5)
