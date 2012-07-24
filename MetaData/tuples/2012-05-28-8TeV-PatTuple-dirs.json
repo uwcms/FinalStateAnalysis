@@ -4,6 +4,7 @@
   "TTplusJets_madgraph" : "/hdfs/store/user/friis/TTJets_TuneZ2star_8TeV-madgraph-tauola/TTplusJets_madgraph_2012-05-29-8TeV-PatTuple-67c1f94/4729152ae17d7e4009729a1d0d9e952d/",
   "WZJetsTo3LNu_pythia" : "/hdfs/store/user/friis/WZTo3LNu_TuneZ2star_8TeV_pythia6_tauola/WZJetsTo3LNu_pythia_2012-05-29-8TeV-PatTuple-67c1f94/4729152ae17d7e4009729a1d0d9e952d/",
   "ZZJetsTo4L_pythia" : "/hdfs/store/user/iross/ZZTo4L_TuneZ2star_8TeV_pythia6_tauola/ZZJetsTo4L_pythia_2012-06-05-8TeV-PatTuple-077b195/4a10b6ece30e0bec2ece1a35ded7d8c9/",
+  "WWJetsTo2L2Nu_TuneZ2_7TeV" : "!/WWJetsTo2L2Nu_TuneZ2_7TeV-madgraph-tauola/iross-WWJetsTo2L2Nu_2012-05-29-7TeV-PatTuple-a-67c1f94-643d46e1c664471f35d0e9f7a4185e5f/USER",
   "VH_H2Tau_M-110" : "/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-110_8TeV-pythia6-tauola/VH_H2Tau_M-110_2012-05-29-8TeV-PatTuple-v8-52a1458/0651de2bb07022ffcd3866fd2307fdf9/",
   "VH_H2Tau_M-120" : "/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-120_8TeV-pythia6-tauola/VH_H2Tau_M-120_2012-05-29-8TeV-PatTuple-v3-5d58598/4bae4b458a2ca6a872dfccd34b84cd42/",
   "VH_H2Tau_M-130" : "/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-130_8TeV-pythia6-tauola/VH_H2Tau_M-130_2012-05-29-8TeV-PatTuple-67c1f94/4729152ae17d7e4009729a1d0d9e952d/",
