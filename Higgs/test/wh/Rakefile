@@ -252,7 +252,7 @@ task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['d
 
 task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['data_em'] + samples['signal'])
 
-task :mmcontrol => get_analyzer_results("ControlZMM.py", samples['zjets'] + samples['data_mm'])
+task :mmcontrol => get_analyzer_results("ControlZMM.py", samples['ewk'] + samples['data_mm'])
 
 task :emcontrol => get_analyzer_results("ControlEM.py", samples['ewk'] + samples['data_em'])
 

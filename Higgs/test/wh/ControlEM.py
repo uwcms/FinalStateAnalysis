@@ -88,7 +88,7 @@ class ControlEM(MegaBase):
         self.book('em', "ePt", "Muon 2 Pt", 100, 0, 100)
         self.book('em', "mAbsEta", "Muon 1 eta", 100, -2.5, 2.5)
         self.book('em', "eAbsEta", "Muon 2 eta", 100, -2.5, 2.5)
-        self.book('em', "emMass", "Muon 1-2 Mass", 240, 60, 120)
+        self.book('em', "emMass", "m_{e#mu} (GeV)", 240, 0, 120)
 
         self.book('em', 'mPixHits', 'Mu 1 pix hits', 10, -0.5, 9.5)
 
