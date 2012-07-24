@@ -178,6 +178,9 @@ cdef class MuMuMuTree:
     cdef TBranch* m1L1Mu3EG5L3Filtered17_branch
     cdef float m1L1Mu3EG5L3Filtered17_value
 
+    cdef TBranch* m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch
+    cdef float m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
+
     cdef TBranch* m1Mass_branch
     cdef float m1Mass_value
 
@@ -319,6 +322,9 @@ cdef class MuMuMuTree:
     cdef TBranch* m2L1Mu3EG5L3Filtered17_branch
     cdef float m2L1Mu3EG5L3Filtered17_value
 
+    cdef TBranch* m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch
+    cdef float m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
+
     cdef TBranch* m2Mass_branch
     cdef float m2Mass_value
 
@@ -435,6 +441,9 @@ cdef class MuMuMuTree:
 
     cdef TBranch* m3L1Mu3EG5L3Filtered17_branch
     cdef float m3L1Mu3EG5L3Filtered17_value
+
+    cdef TBranch* m3L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch
+    cdef float m3L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
 
     cdef TBranch* m3Mass_branch
     cdef float m3Mass_value
@@ -749,6 +758,10 @@ cdef class MuMuMuTree:
         self.m1L1Mu3EG5L3Filtered17_branch = the_tree.GetBranch("m1L1Mu3EG5L3Filtered17")
         self.m1L1Mu3EG5L3Filtered17_branch.SetAddress(<void*>&self.m1L1Mu3EG5L3Filtered17_value)
 
+        #print "making m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17"
+        self.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch = the_tree.GetBranch("m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17")
+        self.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.SetAddress(<void*>&self.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value)
+
         #print "making m1Mass"
         self.m1Mass_branch = the_tree.GetBranch("m1Mass")
         self.m1Mass_branch.SetAddress(<void*>&self.m1Mass_value)
@@ -937,6 +950,10 @@ cdef class MuMuMuTree:
         self.m2L1Mu3EG5L3Filtered17_branch = the_tree.GetBranch("m2L1Mu3EG5L3Filtered17")
         self.m2L1Mu3EG5L3Filtered17_branch.SetAddress(<void*>&self.m2L1Mu3EG5L3Filtered17_value)
 
+        #print "making m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17"
+        self.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch = the_tree.GetBranch("m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17")
+        self.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.SetAddress(<void*>&self.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value)
+
         #print "making m2Mass"
         self.m2Mass_branch = the_tree.GetBranch("m2Mass")
         self.m2Mass_branch.SetAddress(<void*>&self.m2Mass_value)
@@ -1092,6 +1109,10 @@ cdef class MuMuMuTree:
         #print "making m3L1Mu3EG5L3Filtered17"
         self.m3L1Mu3EG5L3Filtered17_branch = the_tree.GetBranch("m3L1Mu3EG5L3Filtered17")
         self.m3L1Mu3EG5L3Filtered17_branch.SetAddress(<void*>&self.m3L1Mu3EG5L3Filtered17_value)
+
+        #print "making m3L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17"
+        self.m3L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch = the_tree.GetBranch("m3L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17")
+        self.m3L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.SetAddress(<void*>&self.m3L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value)
 
         #print "making m3Mass"
         self.m3Mass_branch = the_tree.GetBranch("m3Mass")
@@ -1495,6 +1516,11 @@ cdef class MuMuMuTree:
             self.m1L1Mu3EG5L3Filtered17_branch.GetEntry(self.localentry, 0)
             return self.m1L1Mu3EG5L3Filtered17_value
 
+    property m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17:
+        def __get__(self):
+            self.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
+
     property m1Mass:
         def __get__(self):
             self.m1Mass_branch.GetEntry(self.localentry, 0)
@@ -1730,6 +1756,11 @@ cdef class MuMuMuTree:
             self.m2L1Mu3EG5L3Filtered17_branch.GetEntry(self.localentry, 0)
             return self.m2L1Mu3EG5L3Filtered17_value
 
+    property m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17:
+        def __get__(self):
+            self.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
+
     property m2Mass:
         def __get__(self):
             self.m2Mass_branch.GetEntry(self.localentry, 0)
@@ -1924,6 +1955,11 @@ cdef class MuMuMuTree:
         def __get__(self):
             self.m3L1Mu3EG5L3Filtered17_branch.GetEntry(self.localentry, 0)
             return self.m3L1Mu3EG5L3Filtered17_value
+
+    property m3L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17:
+        def __get__(self):
+            self.m3L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.m3L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
 
     property m3Mass:
         def __get__(self):
