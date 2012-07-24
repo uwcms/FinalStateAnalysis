@@ -44,6 +44,8 @@ cdef extern from "TTree.h":
         int GetEntry(long, int)
         long LoadTree(long)
         long GetEntries()
+        TTree* GetTree()
+        int GetTreeNumber()
         TBranch* GetBranch(char*)
 
 cdef extern from "TFile.h":
@@ -56,39 +58,73 @@ cdef extern from "TTreeFormula.h":
     cdef cppclass TTreeFormula:
         TTreeFormula(char*, char*, TTree*)
         double EvalInstance(int, char**)
+        void UpdateFormulaLeaves()
+        void SetTree(TTree*)
 
 from cpython cimport PyCObject_AsVoidPtr
 
 cdef class {TreeName}:
-    # Pointers to tree and current entry
+    # Pointers to tree (may be a chain), current active tree, and current entry
+    # localentry is the entry in the current tree of the chain
     cdef TTree* tree
+    cdef TTree* currentTree
+    cdef int currentTreeNumber
     cdef long ientry
+    cdef long localentry
 
     # Branches and address for all
 {branchblock}
 
     def __cinit__(self, ttree):
+        #print "cinit"
         # Constructor from a ROOT.TTree
         from ROOT import AsCObject
         self.tree = <TTree*>PyCObject_AsVoidPtr(AsCObject(ttree))
         self.ientry = 0
-        # Now set all the branch address
+        self.currentTreeNumber = -1
+        #print self.tree.GetEntries()
+        #self.load_entry(0)
+
+    cdef load_entry(self, long i):
+        #print "load", i
+        # Load the correct tree and setup the branches
+        self.localentry = self.tree.LoadTree(i)
+        #print "local", self.localentry
+        new_tree = self.tree.GetTree()
+        #print "tree", <long>(new_tree)
+        treenum = self.tree.GetTreeNumber()
+        #print "num", treenum
+        if treenum != self.currentTreeNumber or new_tree != self.currentTree:
+            #print "New tree!"
+            self.currentTree = new_tree
+            self.currentTreeNumber = treenum
+            self.setup_branches(new_tree)
+
+    cdef setup_branches(self, TTree* the_tree):
+        #print "setup"
 {setbranchesblock}
 
     # Iterating over the tree
     def __iter__(self):
         self.ientry = 0
         while self.ientry < self.tree.GetEntries():
+            self.load_entry(self.ientry)
             yield self
             self.ientry += 1
 
     # Iterate over rows which pass the filter
     def where(self, filter):
+        print "where"
         cdef TTreeFormula* formula = new TTreeFormula(
             "cyiter", filter, self.tree)
         self.ientry = 0
+        cdef TTree* currentTree = self.tree.GetTree()
         while self.ientry < self.tree.GetEntries():
             self.tree.LoadTree(self.ientry)
+            if currentTree != self.tree.GetTree():
+                currentTree = self.tree.GetTree()
+                formula.SetTree(currentTree)
+                formula.UpdateFormulaLeaves()
             if formula.EvalInstance(0, NULL):
                 yield self
             self.ientry += 1
@@ -99,7 +135,9 @@ cdef class {TreeName}:
         def __get__(self):
             return self.ientry
         def __set__(self, int i):
+            print i
             self.ientry = i
+            self.load_entry(i)
 
     # Access to the current branch values
 {getbranchesblock}
@@ -172,7 +210,8 @@ def make_pyx(name, tree):
         # is set to the owned value object.
         setbranchesblock.write(
 '''
-        self.{branchname}_branch = self.tree.GetBranch("{branchname}")
+        #print "making {branchname}"
+        self.{branchname}_branch = the_tree.GetBranch("{branchname}")
         self.{branchname}_branch.SetAddress(<void*>&self.{branchname}_value)
 '''.format(branchname=branch_name, branchtype=branch_type)
         )
@@ -186,7 +225,7 @@ def make_pyx(name, tree):
 '''
     property {branchname}:
         def __get__(self):
-            self.{branchname}_branch.GetEntry(self.ientry, 0)
+            self.{branchname}_branch.GetEntry(self.localentry, 0)
             return self.{branchname}_value
 '''.format(branchname=branch_name, branchtype=branch_type)
         )

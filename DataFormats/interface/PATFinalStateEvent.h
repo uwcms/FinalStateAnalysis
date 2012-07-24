@@ -146,6 +146,11 @@ class PATFinalStateEvent {
 
     /// Access to object collections in the event
     const pat::ElectronCollection& electrons() const;
+    /// Workaround - in the 2012-05-28 tuples, the electrons are set wrong,
+    /// so we need to update them on the fly.  FIXME eventually remove this.
+    void setElectrons(const edm::RefProd<pat::ElectronCollection>& elecs) {
+      electronRefProd_ = elecs;
+    }
     const pat::MuonCollection& muons() const;
     const pat::JetCollection& jets() const;
     const pat::TauCollection& taus() const;

@@ -1,3 +1,7 @@
+#!/bin/bash
+set -o errexit
+set -o nounset
+
 # Tags for 52X
 
 pushd $CMSSW_BASE/src
@@ -18,7 +22,9 @@ cvs up -r 1.53 PhysicsTools/PatAlgos/python/tools/tauTools.py
 cvs up -r 1.12 PhysicsTools/PatAlgos/python/producersLayer1/tauProducer_cff.py
 cvs up -r 1.15 PhysicsTools/PatAlgos/python/recoLayer0/tauDiscriminators_cff.py
 
+set +o errexit 
 patch -N -p0 < FinalStateAnalysis/recipe/patches/PhysicsToolsPatAlgos_fix_btags_52X.patch
+set -o errexit
 
 echo "Building MVA MET recipe"
 rm -rf RecoMET/METAlgorithms
@@ -41,7 +47,9 @@ cvs co -r 1.1 DataFormats/METReco/src/MVAMETData.cc
 cvs co -r 1.30 DataFormats/METReco/src/classes.h
 cvs co -r 1.29 DataFormats/METReco/src/classes_def.xml
 # One forgotten fix from Christian
+set +o errexit 
 patch -N -p0 < FinalStateAnalysis/recipe/patches/little_fix_for_MVAMETData.patch
+set -o errexit
 cvs co -r 1.6 RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
 cvs co -r 1.7 RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
 cvs co -r 1.14 RecoMET/METProducers/src/SealModule.cc

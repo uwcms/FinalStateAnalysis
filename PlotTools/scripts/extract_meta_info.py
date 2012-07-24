@@ -37,6 +37,9 @@ if __name__ == "__main__":
     parser.add_argument('--lumimask', action='store_const',
                         const=True, default=False,
                         help = 'If true, include the run-lumi mask result')
+    parser.add_argument('--debug', action='store_const',
+                        const=True, default=False,
+                        help = 'Print debug output')
 
     args = parser.parse_args(args[1:])
 
@@ -44,25 +47,35 @@ if __name__ == "__main__":
     with open(args.input) as input_files:
         for input_file in input_files:
             input_file = input_file.strip()
-            if input_file:
+            if input_file and '#' not in input_file:
                 files.append(input_file.strip())
+
+    level = logging.INFO
+    if args.debug:
+        level = logging.DEBUG
+    logging.basicConfig(stream=sys.stderr, level=level)
 
     log.info("Extracting meta info from %i files", len(files))
 
-    chain = ROOT.TChain(args.tree)
+    total_events = 0
+    run_lumis = {}
 
     for file in files:
-        # Skip commented lines
-        if file.strip()[0] != '#':
-            chain.Add(file)
-
-    run_lumis = []
-    total_events = 0
-
-    for entry in xrange(chain.GetEntries()):
-        chain.GetEntry(entry)
-        total_events += chain.nevents
-        run_lumis.append((chain.run, chain.lumi))
+        log.debug("OPEN file %s", file)
+        tfile = ROOT.TFile.Open(file, "READ")
+        tree = tfile.Get(args.tree)
+        for entry in xrange(tree.GetEntries()):
+            tree.GetEntry(entry)
+            total_events += tree.nevents
+            # We only care about this if we are building the lumimask
+            if args.lumimask:
+                run_lumi = (tree.run, tree.lumi)
+                log.debug("R-L %s %s", repr(run_lumi), file)
+                if run_lumi in run_lumis:
+                    log.error("Run-lumi %s found in file \n%s \nand %s!",
+                              run_lumi, file, run_lumis[run_lumi])
+                run_lumis[run_lumi] = file
+        tfile.Close()
 
     output = {
         'n_evts' : total_events,

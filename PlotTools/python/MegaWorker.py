@@ -6,11 +6,22 @@ analyzes, them, and stores the results in output ROOT files.
 '''
 
 from FileProcessor import FileProcessor
+from ChainProcessor import ChainProcessor
 import hashlib
 import multiprocessing
 import os
 import signal
 import tempfile
+
+def make_hashed_filename(to_process):
+    ''' Make an output file from the hash of the file(s) to process '''
+    if isinstance(to_process, basestring):
+        return hashlib.md5(to_process).hexdigest() + '.root'
+    else:
+        hash = hashlib.md5()
+        for input_file in to_process:
+            hash.update(input_file)
+        return hash.hexdigest() + '.root'
 
 class MegaWorker(multiprocessing.Process):
     log = multiprocessing.get_logger()
@@ -39,15 +50,22 @@ class MegaWorker(multiprocessing.Process):
 
             # Make a unique output file name
             output_file_name = os.path.join(
-                self.output_dir,
-                hashlib.md5(to_process).hexdigest() + '.root')
+                self.output_dir, make_hashed_filename(to_process))
 
-            self.log.info("Processing file %s => %s",
-                          to_process, output_file_name)
+            # Do we need to chain the files or not?
+            processor_class = FileProcessor
+            if isinstance(to_process, basestring):
+                self.log.info("Processing file %s => %s",
+                              to_process, output_file_name)
+            else:
+                processor_class = ChainProcessor
+                self.log.info("Processing %i files => %s",
+                              len(to_process), output_file_name)
 
             try:
-                processor = FileProcessor(to_process, self.tree, self.selector,
-                                          output_file_name, **self.options)
+                processor = processor_class(
+                    to_process, self.tree, self.selector,
+                    output_file_name, self.log, **self.options)
                 result = processor.process()
                 self.output.put(result)
             except:

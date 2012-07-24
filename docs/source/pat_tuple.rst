@@ -51,6 +51,8 @@ For convenience, the fastjet energy is embedded in electrons and muons:
 Muons
 -----
 
+Collection: *cleanPatMuons*
+
 The following cut-based muon IDs are embedded:
 
 * ``userInt('WWID')``
@@ -115,6 +117,8 @@ The "effective area" for different isolation types is available:
 
 Electrons
 ---------
+
+Collection: *cleanPatElectrons*
 
 The following electron IDs are embedded as userFloats:
 
@@ -195,6 +199,8 @@ returns a reco::CandidatePtr pointing to a reco::GsfElectron.
 Jets
 ----
 
+Collection: *selectedPatJets*
+
 The following jet IDs are embedded into the PFJets as userFloats.
 They correspond to the official PFJet IDs listed on the `JetMET twiki`_.
 
@@ -263,6 +269,8 @@ The uncorrected, and 1 sigma uncertainties on the JEC are available from the
 Taus
 ----
 
+Collection: *cleanPatTaus*
+
 The taus are HPS PFTaus.
 
 Discriminators
@@ -322,6 +330,8 @@ energy scale uncertainty is currently configured to be 3%
 
 MET
 ---
+
+Collection: *systematicsMET*
 
 The following four-vector systematics are embedded as userCands:
 

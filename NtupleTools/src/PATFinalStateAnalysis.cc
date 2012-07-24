@@ -63,7 +63,7 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
 
 PATFinalStateAnalysis::~PATFinalStateAnalysis() { }
 
-void PATFinalStateAnalysis::beginLuminosityBlock(
+void PATFinalStateAnalysis::endLuminosityBlock(
     const edm::LuminosityBlockBase& ls) {
   //std::cout << "Analyzing lumisec: " << ls.id() << std::endl;
 

@@ -40,6 +40,12 @@ if __name__ == "__main__":
         ' Note that inputFiles and outputFiles are always passed.'
     )
 
+    cmsrun_group.add_argument(
+        '--apply-cmsRun-lumimask', dest='apply_cms_lumimask',
+        action='store_true', help = 'If specified, pass the appropriate '
+        'lumiMask=XXX.json and firstRun etc to cmsRun'
+    )
+
     input_group = parser.add_mutually_exclusive_group(required=True)
 
     input_group.add_argument(
@@ -48,8 +54,14 @@ if __name__ == "__main__":
     )
 
     input_group.add_argument(
-        '--tuple-file', dest='tuplelist',
+        '--tuple-dbs', dest='tuplelist',
         help = 'JSON file mapping datasets to DBS paths.'
+        ' Generally kept in MetaData/tuples'
+    )
+
+    input_group.add_argument(
+        '--tuple-dirs', dest='tupledirlist',
+        help = 'JSON file mapping datasets to HDFS directories'
         ' Generally kept in MetaData/tuples'
     )
 
@@ -84,6 +96,10 @@ if __name__ == "__main__":
 
     farmout_group.add_argument('--input-files-per-job', type=int, dest='filesperjob',
                         default=1, help='Files per job')
+
+    farmout_group.add_argument('--clean-crab-dupes', action='store_true',
+                               default=False, dest='cleancrab',
+                               help='Clean crab dupes')
 
     args = parser.parse_args()
 
@@ -124,14 +140,12 @@ if __name__ == "__main__":
             continue
 
         log.info("Building submit files for sample %s", sample)
-        sys.stdout.write('# Submit file for sample %s\n' % sample)
 
         dag_dir = args.dagdir.format(
             user = os.environ['LOGNAME'],
             jobid = args.jobid,
             sample = sample
         )
-        sys.stdout.write('mkdir -p %s\n' % os.path.dirname(dag_dir))
 
         output_dir = args.outdir.format(
             user = os.environ['LOGNAME'],
@@ -150,7 +164,9 @@ if __name__ == "__main__":
                 myhdfs = 'root://cmsxrootd.hep.wisc.edu//store/user/%s/' % os.environ['LOGNAME']
             )
             input_commands.append('"--input-dir=%s"' % input_dir)
-        else:
+            if args.cleancrab:
+                input_commands.append('--clean-crab-dupes')
+        elif args.tuplelist:
             with open(args.tuplelist) as tuple_file:
                 # Parse info about PAT tuples
                 tuple_info = json.load(tuple_file)
@@ -172,6 +188,26 @@ if __name__ == "__main__":
                 input_commands.append(
                     '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet'
                 )
+        elif args.tupledirlist:
+            with open(args.tupledirlist) as tuple_file:
+                # Parse info about PAT tuples
+                tuple_info = json.load(tuple_file)
+                if sample not in tuple_info:
+                    log.warning("No data directory for %s specified, skipping",
+                                sample)
+                    continue
+                input_dir = tuple_info[sample]
+                if '!' in input_dir:
+                    # ! means it a DBS path
+                    input_commands.append(
+                        '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet'
+                    )
+                    input_commands.append(
+                        '--input-dbs-path=%s' % input_dir.replace('!', ''))
+                else:
+                    input_commands.append('"--input-dir=%s"' % input_dir)
+                    if args.cleancrab:
+                        input_commands.append('--clean-crab-dupes')
 
         command = [
             'farmoutAnalysisJobs',
@@ -192,4 +228,17 @@ if __name__ == "__main__":
         command.append("'inputFiles=$inputFileNames'")
         command.append("'outputFile=$outputFileName'")
 
+        if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
+            lumi_mask_path = os.path.join(
+                os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
+            command.append('lumiMask=%s' % lumi_mask_path)
+            firstRun = sample_info.get('firstRun', -1)
+            if firstRun > 0:
+                command.append('firstRun=%i' % firstRun)
+            lastRun = sample_info.get('lastRun', -1)
+            if lastRun > 0:
+                command.append('lastRun=%i' % lastRun)
+
+        sys.stdout.write('# Submit file for sample %s\n' % sample)
+        sys.stdout.write('mkdir -p %s\n' % os.path.dirname(dag_dir))
         sys.stdout.write(' '.join(command) + '\n')

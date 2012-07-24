@@ -16,51 +16,61 @@ http://ndawe.github.com/rootpy/reference/rootpy.plotting.html#rootpy.plotting.co
 from FinalStateAnalysis.Utilities.solarized import colors
 
 data_styles = {
-    'Zjets' : {
-        'legendstyle' : 'lf',
+    'Zjets*' : {
+        'legendstyle' : 'f',
         'format' : 'hist',
-        'fillcolor' :colors['yellow'],
+        'fillcolor' : '#FFCC66',
+        'linecolor' : '#000000',
         'name' : "Z + jets",
     },
-    'Wjets' : {
-        'legendstyle' : 'lf',
+    'WplusJets*' : {
+        'legendstyle' : 'f',
         'format' : 'hist',
-        'fillcolor' : colors['green'],
+        'fillcolor' : '#990000',
         'name' : "W + jets",
     },
     'QCDMu' : {
-        'legendstyle' : 'lf',
+        'legendstyle' : 'f',
         'format' : 'hist',
         'fillcolor' : colors['magenta'],
+        'linecolor' :colors['magenta'],
         'name' : "QCD",
     },
-    'ttjets' : {
-        'legendstyle' : 'lf',
+    'TT*' : {
+        'legendstyle' : 'f',
         'format' : 'hist',
-        'fillcolor' : colors['orange'],
+        'fillcolor' : '#9999CC',
+        'linecolor' : '#9999CC',
         'name' : "ttbar",
     },
-    'WZ_pythia' : {
-        'legendstyle' : 'lf',
+    'VH*' : {
+        'legendstyle' : 'l',
+        'format' : 'hist',
+        'fillcolor' : 0,
+        'fillstyle' : 0,
+        'linestyle' : 2,
+        'linewidth' : 4,
+        'linecolor' : '#1C1C76',
+        'name' : "VH",
+    },
+    'WZ*' : {
+        'legendstyle' : 'f',
         'format' : 'hist',
         'fillcolor' : colors['blue'],
+        'linecolor' : colors['blue'],
         'name' : "WZ",
     },
-    'ZZ' : {
-        'legendstyle' : 'lf',
+    'ZZ*' : {
+        'legendstyle' : 'f',
         'format' : 'hist',
-        'fillcolor' : colors['cyan'],
+        'linecolor' : '#50A634',
+        'fillcolor' : '#50A634',
         'name' : "ZZ",
     },
-    'data_DoubleMu' : {
+    'data*' : {
         'legendstyle' : 'pe',
         'format' : 'pe',
-        'name' : "data",
-    },
-    'data_DoubleElectron' : {
-        'legendstyle' : 'pe',
-        'format' : 'pe',
-        'name' : "data",
+        'name' : "Observed",
     },
 }
 

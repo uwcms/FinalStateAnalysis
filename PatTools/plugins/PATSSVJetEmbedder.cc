@@ -45,11 +45,16 @@ class PATSSVJetEmbedder : public edm::EDProducer {
           double btagSSVHPPOS[5]={-777,-777,-777,-777,-777};
           double btagSSVHENEG[5]={-777,-777,-777,-777,-777};
           double btagSSVHPNEG[5]={-777,-777,-777,-777,-777};
-          double massSSV=-777;
-          double massSSVNEG=-777;
+          double mass_SSV=-777;
+          double mass_SSVNEG=-777;
 
-          unsigned int nSSVPOS=0;
-          unsigned int nSSVNEG=0;
+          double massD_SSV=-777;
+          double massD_SSVNEG=-777;
+
+          double massD0_SSV=-777;
+          double massD0_SSVNEG=-777;
+
+          unsigned int nSSVNEG=0, nSSVPOS=0;
           unsigned int nTracks_SSVPOS[5]={0,0,0,0,0}; // Up to 5 just to be safe
           double flightDistancePOS[5]={-777,-777,-777,-777,-777};
           double errorFlightDistancePOS[5]={-777,-777,-777,-777,-777};
@@ -60,7 +65,16 @@ class PATSSVJetEmbedder : public edm::EDProducer {
           int chargeSSV=0;
           int chargeSSVNEG=0;
 
+          double track1_px=-777, track1_py=-777, track1_pz=-777;    // Seriously, this has to be redone and coded as a vector. Is there a userVector thing?
+          double track2_px=-777, track2_py=-777, track2_pz=-777;
+          double track3_px=-777, track3_py=-777, track3_pz=-777;
 
+          double trackNeg1_px=-777, trackNeg1_py=-777, trackNeg1_pz=-777;
+          double trackNeg2_px=-777, trackNeg2_py=-777, trackNeg2_pz=-777;
+          double trackNeg3_px=-777, trackNeg3_py=-777, trackNeg3_pz=-777;
+
+          int track1_charge=-777, track2_charge=-777, track3_charge=-777;
+          int trackNeg1_charge=-777, trackNeg2_charge=-777, trackNeg3_charge=-777;
 
 
           const reco::SecondaryVertexTagInfo* secInfo = jet.tagInfoSecondaryVertex("secondaryVertex");
@@ -70,20 +84,60 @@ class PATSSVJetEmbedder : public edm::EDProducer {
             double pxall = 0.;
             double pyall = 0.;
             double pzall = 0.;
-            int charge=0;
+            double enD = 0.;
+            double enD0_1 = 0.;
+            double enD0_2 = 0.;
+
+            int chargeSSV=0;   // first find charge of vertex (to see if it is D+ or D-)
+
             for (unsigned int it=0; it<secInfo->vertexTracks().size(); ++it) {
-              charge+=secInfo->vertexTracks()[it]->charge();
+              chargeSSV+=secInfo->vertexTracks()[it]->charge();
+            }
+
+            for (unsigned int it=0; it<secInfo->vertexTracks().size(); ++it) {
               double px = secInfo->vertexTracks()[it]->px();
               double py = secInfo->vertexTracks()[it]->py();
               double pz = secInfo->vertexTracks()[it]->pz();
-              enall += sqrt(px*px+py*py+pz*pz+0.1396*0.1396);
+              enall += sqrt(px*px+py*py+pz*pz+0.1396*0.1396);    // mass v1: everything is a pion
               pxall += px;
               pyall += py;
               pzall += pz;
+
+              if(secInfo->vertexTracks().size()==3 && abs(chargeSSV)==1){  // check if this is a 3 track decay with global charge -1 or +1
+                double mass_hadron=0.1396;
+                if(secInfo->vertexTracks()[it]->charge()*chargeSSV<0) mass_hadron=0.1396;  // (pi-,pi-,ka+) or (pi+,pi+,k-)
+                enD += sqrt(px*px+py*py+pz*pz+mass_hadron*mass_hadron);    // mass v2:  2 pions and a kaon
+              }
+
+              if(secInfo->vertexTracks().size()==2) { // Look for D0. This is more complicated (kpi, which is k and which is pi?)
+                double mass_pi=0.1396, mass_k=0.1396;
+                if(it==0){
+                  enD0_1 += sqrt(px*px+py*py+pz*pz+mass_pi*mass_pi);    // mass v3: pi +ka
+                  enD0_2 += sqrt(px*px+py*py+pz*pz+mass_k*mass_k);
+                } else if(it==1){
+                  enD0_1 += sqrt(px*px+py*py+pz*pz+mass_k*mass_k);    // mass v3: pi + ka
+                  enD0_2 += sqrt(px*px+py*py+pz*pz+mass_pi*mass_pi);
+                }
+              }
+
+              if(it==0) {track1_px=px; track1_py=py; track1_pz=pz; track1_charge=secInfo->vertexTracks()[it]->charge();}
+              else if (it==1) {track2_px=px; track2_py=py; track2_pz=pz; track2_charge=secInfo->vertexTracks()[it]->charge();}
+              else if (it==2) {track3_px=px; track3_py=py; track3_pz=pz; track3_charge=secInfo->vertexTracks()[it]->charge();}
             }
             double mass2 = enall*enall-pxall*pxall-pyall*pyall-pzall*pzall;
-            if (mass2>0.) massSSV = sqrt(mass2);
-            chargeSSV=charge;
+            if (mass2>0.) mass_SSV = sqrt(mass2);
+
+            double mass2D = enD*enD-pxall*pxall-pyall*pyall-pzall*pzall;
+            if (mass2D>0.) massD_SSV = sqrt(mass2D);
+
+            double mass2D0_1 = enD0_1*enD0_1-pxall*pxall-pyall*pyall-pzall*pzall;
+            if (mass2D0_1>0.) mass2D0_1 = sqrt(mass2D0_1);
+
+            double mass2D0_2 = enD0_2*enD0_2-pxall*pxall-pyall*pyall-pzall*pzall;
+            if (mass2D0_2>0.) mass2D0_2 = sqrt(mass2D0_2);
+
+            if( fabs(mass2D0_1-1.87)<0.05 && fabs(mass2D0_2-1.87)>0.05)  massD0_SSV=mass2D0_1;
+            else if ( fabs(mass2D0_2-1.87)<0.05 && fabs(mass2D0_1-1.87)>0.05)  massD0_SSV=mass2D0_2;
 
             nSSVPOS=secInfo->nVertices();
             for (unsigned int isv=0; isv<secInfo->nVertices(); ++isv) {
@@ -96,27 +150,65 @@ class PATSSVJetEmbedder : public edm::EDProducer {
           const reco::SecondaryVertexTagInfo* secNegInfo = jet.tagInfoSecondaryVertex("secondaryVertexNegative");
 
           if (secNegInfo && secNegInfo->vertexTracks().size()>0) {
-
             // Loop on all tracks of all secondary vertices to determine the mass
             double enall = 0.;
             double pxall = 0.;
             double pyall = 0.;
             double pzall = 0.;
-            int charge =0.;
-            for (unsigned int it=0; it<secInfo->vertexTracks().size(); ++it) {
-              charge+=secInfo->vertexTracks()[it]->charge();
-              double px = secInfo->vertexTracks()[it]->px();
-              double py = secInfo->vertexTracks()[it]->py();
-              double pz = secInfo->vertexTracks()[it]->pz();
-              enall += sqrt(px*px+py*py+pz*pz+0.1396*0.1396);
+            double enD = 0.;
+            double enD0_1 = 0.;
+            double enD0_2 = 0.;
+
+            int chargeSSVNEG=0;   // first find charge of vertex (to see if it is D+ or D-)
+
+            for (unsigned int it=0; it<secNegInfo->vertexTracks().size(); ++it) {
+              chargeSSVNEG+=secNegInfo->vertexTracks()[it]->charge();
+            }
+
+            for (unsigned int it=0; it<secNegInfo->vertexTracks().size(); ++it) {
+              double px = secNegInfo->vertexTracks()[it]->px();
+              double py = secNegInfo->vertexTracks()[it]->py();
+              double pz = secNegInfo->vertexTracks()[it]->pz();
+              enall += sqrt(px*px+py*py+pz*pz+0.1396*0.1396);    // mass v1: everything is a pion
               pxall += px;
               pyall += py;
               pzall += pz;
+
+              if(secNegInfo->vertexTracks().size()==3 && abs(chargeSSVNEG)==1){  // check if this is a 3 track decay with global charge -1 or +1
+                double mass_hadron=0.1396;
+                if(secNegInfo->vertexTracks()[it]->charge()*chargeSSVNEG<0) mass_hadron=0.1396;  // (pi-,pi-,ka+) or (pi+,pi+,k-)
+                enD += sqrt(px*px+py*py+pz*pz+mass_hadron*mass_hadron);    // mass v2:  2 pions and a kaon
+              }
+
+              if(secNegInfo->vertexTracks().size()==2) { // Look for D0. This is more complicated (kpi, which is k and which is pi?)
+                double mass_pi=0.1396, mass_k=0.1396;
+                if(it==0){
+                  enD0_1 += sqrt(px*px+py*py+pz*pz+mass_pi*mass_pi);    // mass v3: pi +ka
+                  enD0_2 += sqrt(px*px+py*py+pz*pz+mass_k*mass_k);
+                } else if(it==1){
+                  enD0_1 += sqrt(px*px+py*py+pz*pz+mass_k*mass_k);    // mass v3: pi + ka
+                  enD0_2 += sqrt(px*px+py*py+pz*pz+mass_pi*mass_pi);
+                }
+              }
+
+              if(it==0) {track1_px=px; track1_py=py; track1_pz=pz; track1_charge=secNegInfo->vertexTracks()[it]->charge();}
+              else if (it==1) {track2_px=px; track2_py=py; track2_pz=pz; track2_charge=secNegInfo->vertexTracks()[it]->charge();}
+              else if (it==2) {track3_px=px; track3_py=py; track3_pz=pz; track3_charge=secNegInfo->vertexTracks()[it]->charge();}
             }
             double mass2 = enall*enall-pxall*pxall-pyall*pyall-pzall*pzall;
-            if (mass2>0.) massSSVNEG = sqrt(mass2);
-            chargeSSVNEG=charge;
+            if (mass2>0.) mass_SSVNEG = sqrt(mass2);
 
+            double mass2D = enD*enD-pxall*pxall-pyall*pyall-pzall*pzall;
+            if (mass2D>0.) massD_SSVNEG = sqrt(mass2D);
+
+            double mass2D0_1 = enD0_1*enD0_1-pxall*pxall-pyall*pyall-pzall*pzall;
+            if (mass2D0_1>0.) mass2D0_1 = sqrt(mass2D0_1);
+
+            double mass2D0_2 = enD0_2*enD0_2-pxall*pxall-pyall*pyall-pzall*pzall;
+            if (mass2D0_2>0.) mass2D0_2 = sqrt(mass2D0_2);
+
+            if( fabs(mass2D0_1-1.87)<0.05 && fabs(mass2D0_2-1.87)>0.05)  massD0_SSVNEG=mass2D0_1;
+            else if ( fabs(mass2D0_2-1.87)<0.05 && fabs(mass2D0_1-1.87)>0.05)  massD0_SSVNEG=mass2D0_2;
 
             nSSVNEG=secNegInfo->nVertices();
             for (unsigned int isv=0; isv<secNegInfo->nVertices(); ++isv) {
@@ -158,11 +250,46 @@ class PATSSVJetEmbedder : public edm::EDProducer {
           }
           jet.addUserFloat("nSSV",nSSVNEG);
           jet.addUserFloat("nNegativeSSV",nSSVPOS);
-          jet.addUserFloat("massSSV",massSSV);
-          jet.addUserFloat("massSSVNEG",massSSVNEG);
+          jet.addUserFloat("mass_SSV",mass_SSV);
+          jet.addUserFloat("mass_SSVNEG",mass_SSVNEG);
+          jet.addUserFloat("massD_SSV",massD_SSV);
+          jet.addUserFloat("massD_SSVNEG",massD_SSVNEG);
 
           jet.addUserFloat("chargeSSV",chargeSSV);
           jet.addUserFloat("chargeSSVNEG",chargeSSVNEG);
+
+          jet.addUserFloat("massD0_SSV",massD0_SSV);
+          jet.addUserFloat("massD0_SSVNEG",massD0_SSVNEG);
+
+          jet.addUserFloat("SSVNeg_track1_px",trackNeg1_px);
+          jet.addUserFloat("SSVNeg_track1_py",trackNeg1_py);
+          jet.addUserFloat("SSVNeg_track1_pz",trackNeg1_pz);
+          jet.addUserFloat("SSVNeg_track1_charge",trackNeg1_charge);
+
+          jet.addUserFloat("SSV_track1_px",track1_px);
+          jet.addUserFloat("SSV_track1_py",track1_py);
+          jet.addUserFloat("SSV_track1_pz",track1_pz);
+          jet.addUserFloat("SSV_track1_charge",track1_charge);
+
+          jet.addUserFloat("SSVNeg_track2_px",trackNeg2_px);
+          jet.addUserFloat("SSVNeg_track2_py",trackNeg2_py);
+          jet.addUserFloat("SSVNeg_track2_pz",trackNeg2_pz);
+          jet.addUserFloat("SSVNeg_track2_charge",trackNeg2_charge);
+
+          jet.addUserFloat("SSV_track2_px",track2_px);
+          jet.addUserFloat("SSV_track2_py",track2_py);
+          jet.addUserFloat("SSV_track2_pz",track2_pz);
+          jet.addUserFloat("SSV_track2_charge",track2_charge);
+
+          jet.addUserFloat("SSVNeg_track3_px",trackNeg3_px);
+          jet.addUserFloat("SSVNeg_track3_py",trackNeg3_py);
+          jet.addUserFloat("SSVNeg_track3_pz",trackNeg3_pz);
+          jet.addUserFloat("SSVNeg_track3_charge",trackNeg3_charge);
+
+          jet.addUserFloat("SSV_track3_px",track3_px);
+          jet.addUserFloat("SSV_track3_py",track3_py);
+          jet.addUserFloat("SSV_track3_pz",track3_pz);
+          jet.addUserFloat("SSV_track3_charge",track3_charge);
 
           jet.addUserFloat("btagSSVHE",btagSSVHEPOS[0]);
           jet.addUserFloat("btagSSVHP",btagSSVHPPOS[0]);

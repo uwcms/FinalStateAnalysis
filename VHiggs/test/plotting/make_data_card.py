@@ -152,9 +152,9 @@ mmt.add_background('tribosons')
 mc_samples = ['WZ', 'ZZ', 'tribosons']
 
 mmt.add_sys('lumi', 1 + lumi_err, signal_datasets + mc_samples)
-mmt.add_sys('CMS_chi2Lt_vhtt', 1 + chi2err, signal_datasets + mc_samples)
+mmt.add_sys('CMS_vhtt_chi2Lt', 1 + chi2err, signal_datasets + mc_samples)
 mmt.add_sys('CMS_WZ_www', 1.0 + wz_err, ['WZ'])
-mmt.add_sys('CMS_ZZ_vhtt', 1.0 + zz_err, ['ZZ'])
+mmt.add_sys('CMS_vhtt_ZZxsec', 1.0 + zz_err, ['ZZ'])
 mmt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
 mmt.add_sys('CMS_eff_m', 1 + quad(mu_id_err, mu_id_err), signal_datasets + mc_samples)
 
@@ -189,9 +189,9 @@ for sample, sample_info in scale_systematics['mmt'].iteritems():
 
 
 if mu_fake_error > 0:
-    mmt.add_sys('CMS_fake_mu_vhtt', 1 + mu_fake_error, 'fakes')
+    mmt.add_sys('CMS_vhtt_fakemu', 1 + mu_fake_error, 'fakes')
 if high_mu_fake_error > 0:
-    mmt.add_sys('CMS_fake_hmu_vhtt', 1 + high_mu_fake_error, 'fakes')
+    mmt.add_sys('CMS_vhtt_fake_hmu', 1 + high_mu_fake_error, 'fakes')
 
 bin_index_finder = re.compile('^fakes_(?P<fr_type>.*)_bin_(?P<index>[0-9]*)(Up|Down)')
 for path, subdirs, histos in shapes.walk(mmt_folder, class_pattern="TH1*"):
@@ -217,9 +217,9 @@ emt.add_background('ZZ')
 emt.add_background('tribosons')
 
 emt.add_sys('lumi', 1 + lumi_err, signal_datasets + mc_samples)
-emt.add_sys('CMS_chi2Lt_vhtt', 1 + chi2err, signal_datasets + mc_samples)
+emt.add_sys('CMS_vhtt_chi2Lt', 1 + chi2err, signal_datasets + mc_samples)
 emt.add_sys('CMS_WZ_www', 1.0 + wz_err, ['WZ'])
-emt.add_sys('CMS_ZZ_vhtt', 1.0 + zz_err, ['ZZ'])
+emt.add_sys('CMS_vhtt_ZZxsec', 1.0 + zz_err, ['ZZ'])
 emt.add_sys('CMS_eff_t', 1+ tau_err, signal_datasets + mc_samples)
 emt.add_sys('CMS_eff_m', 1 + mu_id_err, signal_datasets + mc_samples)
 emt.add_sys('CMS_eff_e', 1.02, signal_datasets + mc_samples)
@@ -237,9 +237,9 @@ if 'NoThSys' not in options.channels:
     emt.add_sys('QCDscale_VH', scale_err, signal_datasets)
 
 if e_fake_error > 0:
-    emt.add_sys('CMS_fake_e_vhtt', 1 + e_fake_error, 'fakes')
+    emt.add_sys('CMS_vhtt_fake_e', 1 + e_fake_error, 'fakes')
 if mu_fake_error > 0:
-    emt.add_sys('CMS_fake_mu_vhtt', 1 + mu_fake_error, 'fakes')
+    emt.add_sys('CMS_vhtt_fakemu', 1 + mu_fake_error, 'fakes')
 if options.triboson_err > 0:
     emt.add_sys('QCDscale_VVV', 1.0 + options.triboson_err, ['tribosons'])
 
