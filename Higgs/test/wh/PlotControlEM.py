@@ -30,7 +30,20 @@ for x in samples:
 
 plotter = Plotter(files, lumifiles, output_dir)
 
-plotter.plot_mc_vs_data('em', 'emMass', rebin=4)
+# Override ordering
+plotter.mc_samples = [
+    'TTplusJets_madgraph',
+    'WplusJets_madgraph',
+    'Zjets_M50',
+    'WZJetsTo3LNu*',
+    'ZZJetsTo4L*',
+]
+
+sqrts = 7 if '7TeV' in jobid else 8
+
+plotter.plot_mc_vs_data('em', 'emMass', rebin=10, leftside=False,
+                        xaxis='m_{e#mu} (GeV)')
+plotter.add_cms_blurb(sqrts)
 plotter.save('mass')
 
 plotter.plot_mc_vs_data('em', 'mPt')

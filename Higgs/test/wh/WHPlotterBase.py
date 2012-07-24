@@ -220,7 +220,7 @@ class WHPlotterBase(Plotter):
         # Add legend
         self.add_legend(histo, leftside=False, entries=4)
 
-    def plot_final_wz(self, variable, rebin=1, xaxis='', maxy=85):
+    def plot_final_wz(self, variable, rebin=1, xaxis='', maxy=None):
         ''' Plot the final WZ control region - with bkg. estimation '''
         sig_view = self.make_wz_cr_views(rebin)
 
@@ -232,9 +232,12 @@ class WHPlotterBase(Plotter):
         histo = stack.Get(variable)
         histo.Draw()
         histo.GetHistogram().GetXaxis().SetTitle(xaxis)
-        histo.SetMaximum(maxy)
         data = sig_view['data'].Get(variable)
         data.Draw('same')
+        if maxy is not None:
+            histo.SetMaximum(float(maxy))
+        else:
+            histo.SetMaximum(1.2*max(histo.GetMaximum(), data.GetMaximum()))
         self.keep.append(data)
         self.keep.append(histo)
 
