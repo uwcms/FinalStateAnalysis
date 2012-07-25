@@ -24,7 +24,7 @@ class WHPlotterBase(Plotter):
             blinder = lambda x: BlindView(x, "ss/p1p2p3/.*")
         super(WHPlotterBase, self).__init__(files, lumifiles, outputdir, blinder)
 
-    def make_signal_views(self, rebin):
+    def make_signal_views(self, rebin, unblinded=False):
         ''' Make signal views with FR background estimation '''
 
         wz_view = views.SubdirectoryView(
@@ -36,6 +36,10 @@ class WHPlotterBase(Plotter):
             'ss/p1p2p3/'
         )
         all_data_view =self.rebin_view(self.get_view('data'), rebin)
+        if unblinded:
+            all_data_view =self.rebin_view(
+                self.get_view('data', 'unblinded_view'), rebin)
+
         data_view = views.SubdirectoryView(all_data_view, 'ss/p1p2p3/')
 
         # View of weighted obj1-fails data
@@ -173,9 +177,9 @@ class WHPlotterBase(Plotter):
 
         return output
 
-    def write_shapes(self, variable, rebin, outdir):
+    def write_shapes(self, variable, rebin, outdir, unblinded=False):
         ''' Write final shape histos for [variable] into a TDirectory [outputdir] '''
-        sig_view = self.make_signal_views(rebin)
+        sig_view = self.make_signal_views(rebin, unblinded)
         outdir.cd()
         wz = sig_view['wz'].Get(variable)
         zz = sig_view['zz'].Get(variable)

@@ -258,7 +258,7 @@ if __name__ == "__main__":
     shape_file = ROOT.TFile(
         os.path.join(outputdir, 'mmt_shapes_%s.root' % period), 'RECREATE')
     shape_dir = shape_file.mkdir('mmt')
-    plotter.write_shapes('subMass', 20, shape_dir)
+    plotter.write_shapes('subMass', 20, shape_dir, unblinded=True)
     shape_file.Close()
 
 
