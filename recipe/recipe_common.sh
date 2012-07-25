@@ -7,7 +7,7 @@ pushd $CMSSW_BASE/src
 # Tags that work in any release
 
 # For updated lumi tools
-cvs co -r V03-05-12  RecoLuminosity/LumiDB 
+cvs co -r V04-00-10 RecoLuminosity/LumiDB 
 
 # Add and patch to way speed up trigger matching
 # Don't crash if patch already appliede
