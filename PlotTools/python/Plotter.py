@@ -37,7 +37,9 @@ class Plotter(object):
         self.canvas = plotting.Canvas(name='adsf', title='asdf')
         self.canvas.cd()
         if blinder:
-            # Don't look at the SS all pass region
+            # Keep the unblinded data around if desired.
+            self.views['data']['unblinded_view'] = self.views['data']['view']
+            # Apply a blinding function
             self.views['data']['view'] = blinder(self.views['data']['view'])
         self.data = self.views['data']['view']
         self.keep = []
