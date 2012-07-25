@@ -1,3 +1,5 @@
+#!/bin/bash
+
 export jobid=2012-07-24-7TeV-Higgs
 export afile=`find $s/data/$jobid | grep root | head -n 1`
 
