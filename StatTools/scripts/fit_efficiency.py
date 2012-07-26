@@ -194,6 +194,7 @@ if __name__ == "__main__":
             plot_name = args.output.replace('.root', '.png')
             log.info("Saving fit plot in %s", plot_name)
             canvas.SaveAs(plot_name)
+            canvas.SaveAs(plot_name.replace('.png', '.pdf'))
         finally:
             # If we don't explicitly delete this, we get a segfault in the dtor
             frame.Delete()
