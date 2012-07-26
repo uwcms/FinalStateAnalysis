@@ -178,6 +178,9 @@ cdef class MuMuTauTree:
     cdef TBranch* m1L1Mu3EG5L3Filtered17_branch
     cdef float m1L1Mu3EG5L3Filtered17_value
 
+    cdef TBranch* m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch
+    cdef float m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
+
     cdef TBranch* m1Mass_branch
     cdef float m1Mass_value
 
@@ -318,6 +321,9 @@ cdef class MuMuTauTree:
 
     cdef TBranch* m2L1Mu3EG5L3Filtered17_branch
     cdef float m2L1Mu3EG5L3Filtered17_value
+
+    cdef TBranch* m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch
+    cdef float m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
 
     cdef TBranch* m2Mass_branch
     cdef float m2Mass_value
@@ -749,6 +755,10 @@ cdef class MuMuTauTree:
         self.m1L1Mu3EG5L3Filtered17_branch = the_tree.GetBranch("m1L1Mu3EG5L3Filtered17")
         self.m1L1Mu3EG5L3Filtered17_branch.SetAddress(<void*>&self.m1L1Mu3EG5L3Filtered17_value)
 
+        #print "making m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17"
+        self.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch = the_tree.GetBranch("m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17")
+        self.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.SetAddress(<void*>&self.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value)
+
         #print "making m1Mass"
         self.m1Mass_branch = the_tree.GetBranch("m1Mass")
         self.m1Mass_branch.SetAddress(<void*>&self.m1Mass_value)
@@ -936,6 +946,10 @@ cdef class MuMuTauTree:
         #print "making m2L1Mu3EG5L3Filtered17"
         self.m2L1Mu3EG5L3Filtered17_branch = the_tree.GetBranch("m2L1Mu3EG5L3Filtered17")
         self.m2L1Mu3EG5L3Filtered17_branch.SetAddress(<void*>&self.m2L1Mu3EG5L3Filtered17_value)
+
+        #print "making m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17"
+        self.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch = the_tree.GetBranch("m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17")
+        self.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.SetAddress(<void*>&self.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value)
 
         #print "making m2Mass"
         self.m2Mass_branch = the_tree.GetBranch("m2Mass")
@@ -1495,6 +1509,11 @@ cdef class MuMuTauTree:
             self.m1L1Mu3EG5L3Filtered17_branch.GetEntry(self.localentry, 0)
             return self.m1L1Mu3EG5L3Filtered17_value
 
+    property m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17:
+        def __get__(self):
+            self.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
+
     property m1Mass:
         def __get__(self):
             self.m1Mass_branch.GetEntry(self.localentry, 0)
@@ -1729,6 +1748,11 @@ cdef class MuMuTauTree:
         def __get__(self):
             self.m2L1Mu3EG5L3Filtered17_branch.GetEntry(self.localentry, 0)
             return self.m2L1Mu3EG5L3Filtered17_value
+
+    property m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17:
+        def __get__(self):
+            self.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
 
     property m2Mass:
         def __get__(self):

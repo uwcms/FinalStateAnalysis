@@ -54,7 +54,7 @@ if __name__ == "__main__":
     ###########################################################################
 
     # Control Z->tautau + jet region
-    plotter.plot_mc_vs_data('os/p1p2f3', 'emMass', rebin=10, xaxis='m_{e#mu} (GeV)')
+    plotter.plot_mc_vs_data('os/p1p2f3', 'emMass', rebin=10, xaxis='m_{e#mu} (GeV)', leftside=False)
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-os-p1p2f3-emMass')
 
