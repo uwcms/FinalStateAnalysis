@@ -52,13 +52,9 @@ if __name__ == "__main__":
     plot_grp.add_argument('--plot', action='store_true',
                           help='Plot fit result')
 
-    plot_grp.add_argument('--minx', type=float, default=5e-3,
-                          help='x-axis minimum')
+    plot_grp.add_argument('--xrange', nargs=2, type=float, help='x-axis range')
 
-    plot_grp.add_argument('--maxx', type=float, default=5e-3,
-                          help='x-axis maximum')
-
-    plot_grp.add_argument('--min', type=float, default=5e-5,
+    plot_grp.add_argument('--min', type=float, default=1e-3,
                           help='y-axis minimum')
     plot_grp.add_argument('--max', type=float, default=1,
                           help='y-axis maximum')
@@ -108,10 +104,6 @@ if __name__ == "__main__":
         ''' Turn a hist into a RooDataHist '''
         return ROOT.RooDataHist(hist.GetName(), hist.GetTitle(),
                                 ROOT.RooArgList(x), hist)
-
-    print pass_histo.GetBinLowEdge(1)
-    print pass_histo.GetBinLowEdge(2)
-    print get_th1f_binning(pass_histo)
 
     pass_data = roodatahistizer(pass_histo)
     fail_data = roodatahistizer(fail_histo)
@@ -175,7 +167,13 @@ if __name__ == "__main__":
 
     if args.plot:
         try:
-            frame = x.frame(ROOT.RooFit.Title("Efficiency"))
+            frame = None
+            if args.xrange:
+                frame = x.frame(ROOT.RooFit.Title("Efficiency"),
+                                ROOT.RooFit.Range(args.xrange[0], args.xrange[1]))
+            else:
+                frame = x.frame(ROOT.RooFit.Title("Efficiency"))
+
             function.plotOn(
                 frame,
                 ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
