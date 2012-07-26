@@ -270,7 +270,6 @@ file "WHAnalyzeEMT.py" => [ "#{$frfit_dir}/e_wjets_pt10_mvaidiso03_eJetPt.root",
   sh "touch #{t.name}"
 end
 file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonPt.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt.root",] do |t|
-  puts t.investiation
   sh "touch #{t.name}"
 end
 file "WHAnalyzeEET.py" => [ "#{$frfit_dir}/ee_wjets_pt20_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/ee_wjets_pt10_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root"] do |t|
