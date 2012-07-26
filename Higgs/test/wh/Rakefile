@@ -109,6 +109,7 @@ fr_fits = Hash[
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "e_wjets_pt10_mvaidiso02_eJetPt" => Hash[
     "samples" => Array["ewk", "data_em"],
@@ -116,6 +117,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "e_wjets_pt10_mvaidiso01_eJetPt" => Hash[
     "samples" => Array["ewk", "data_em"],
@@ -123,6 +125,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_wjets_pt10_pfidiso01_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -130,6 +133,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_wjets_pt10_pfidiso03_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -137,6 +141,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_wjets_pt20_pfidiso03_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -144,6 +149,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_wjets_pt10_pfidiso02_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -151,6 +157,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_zmm_pt10_pfidiso02_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -158,6 +165,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_zmm_pt20_pfidiso02_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -165,6 +173,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "20 100",
   ],
   "m_wjets_pt20_pfidiso02_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -172,6 +181,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "20 100",
   ],
   "m_wjets_pt20_pfidiso01_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -179,6 +189,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "20 100",
   ],
   # Versus regular pt
   "m_zmm_pt10_pfidiso02_muonPt" => Hash[
@@ -187,6 +198,7 @@ fr_fits = Hash[
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 1,
+    "range" => "20 100",
   ],
   "m_wjets_pt10_pfidiso02_muonPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -194,6 +206,7 @@ fr_fits = Hash[
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 1,
+    "range" => "10 100",
   ],
   "t_ztt_pt20_mvaloose_tauPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -201,6 +214,7 @@ fr_fits = Hash[
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 5,
+    "range" => "20 100",
   ],
   "t_ztt_pt20_hpsloose_tauPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -208,6 +222,7 @@ fr_fits = Hash[
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 5,
+    "range" => "20 100",
   ],
 ]
 
@@ -245,7 +260,7 @@ fr_fits.each do |fit, fit_info|
   end
 
   file fit_output => corrected_file do |t|
-    sh "fit_efficiency.py #{fit_output} numerator denominator \'#{fit_info['function']}\' \'#{fit_info['variables']}\' #{corrected_file} --plot"
+    sh "fit_efficiency.py #{fit_output} numerator denominator \'#{fit_info['function']}\' \'#{fit_info['variables']}\' #{corrected_file} --plot --xrange #{fit_info['range']}"
   end
   task :fits => fit_output
 
