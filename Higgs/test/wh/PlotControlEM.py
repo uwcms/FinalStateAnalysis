@@ -15,6 +15,7 @@ output_dir = os.path.join('results', jobid, 'plots', 'em')
 samples = [
     'Zjets_M50',
     'WZ*',
+    'WW*',
     'ZZ*',
     'TT*',
     'WplusJets*',
@@ -36,6 +37,7 @@ plotter.mc_samples = [
     'WplusJets_madgraph',
     'Zjets_M50',
     'WZJetsTo3LNu*',
+    'WW*',
     'ZZJetsTo4L*',
 ]
 
