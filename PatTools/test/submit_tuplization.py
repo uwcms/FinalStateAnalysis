@@ -96,7 +96,7 @@ for sample in sorted(datadefs.keys()):
         '--infer-cmssw-path',
         '--vsize-limit=30000',
         '--input-files-per-job=1',
-        '"--output-dir=srm://cmssrm.hep.wisc.edu:8443/srm/v2/server?SFN=/hdfs/store/user/tapas/%s/%s/"' % (jobId, sample),
+        '"--output-dir=srm://cmssrm.hep.wisc.edu:8443/srm/v2/server?SFN=/hdfs/store/user/%s/%s/%s/"' % (os.environ['LOGNAME'], jobId, sample),
         '--submit-dir=%s' % submit_dir,
         '--output-dag-file=%s/dag.dag' % dag_directory,
     ]
