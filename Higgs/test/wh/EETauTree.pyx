@@ -58,6 +58,9 @@ cdef class EETauTree:
     cdef TBranch* bjetCSVVeto_branch
     cdef float bjetCSVVeto_value
 
+    cdef TBranch* bjetCSVVeto30_branch
+    cdef float bjetCSVVeto30_value
+
     cdef TBranch* bjetVeto_branch
     cdef float bjetVeto_value
 
@@ -394,6 +397,9 @@ cdef class EETauTree:
     cdef TBranch* jetVeto20_branch
     cdef float jetVeto20_value
 
+    cdef TBranch* jetVeto30_branch
+    cdef float jetVeto30_value
+
     cdef TBranch* jetVeto40_branch
     cdef float jetVeto40_value
 
@@ -600,6 +606,10 @@ cdef class EETauTree:
         #print "making bjetCSVVeto"
         self.bjetCSVVeto_branch = the_tree.GetBranch("bjetCSVVeto")
         self.bjetCSVVeto_branch.SetAddress(<void*>&self.bjetCSVVeto_value)
+
+        #print "making bjetCSVVeto30"
+        self.bjetCSVVeto30_branch = the_tree.GetBranch("bjetCSVVeto30")
+        self.bjetCSVVeto30_branch.SetAddress(<void*>&self.bjetCSVVeto30_value)
 
         #print "making bjetVeto"
         self.bjetVeto_branch = the_tree.GetBranch("bjetVeto")
@@ -1049,6 +1059,10 @@ cdef class EETauTree:
         self.jetVeto20_branch = the_tree.GetBranch("jetVeto20")
         self.jetVeto20_branch.SetAddress(<void*>&self.jetVeto20_value)
 
+        #print "making jetVeto30"
+        self.jetVeto30_branch = the_tree.GetBranch("jetVeto30")
+        self.jetVeto30_branch.SetAddress(<void*>&self.jetVeto30_value)
+
         #print "making jetVeto40"
         self.jetVeto40_branch = the_tree.GetBranch("jetVeto40")
         self.jetVeto40_branch.SetAddress(<void*>&self.jetVeto40_value)
@@ -1322,6 +1336,11 @@ cdef class EETauTree:
         def __get__(self):
             self.bjetCSVVeto_branch.GetEntry(self.localentry, 0)
             return self.bjetCSVVeto_value
+
+    property bjetCSVVeto30:
+        def __get__(self):
+            self.bjetCSVVeto30_branch.GetEntry(self.localentry, 0)
+            return self.bjetCSVVeto30_value
 
     property bjetVeto:
         def __get__(self):
@@ -1882,6 +1901,11 @@ cdef class EETauTree:
         def __get__(self):
             self.jetVeto20_branch.GetEntry(self.localentry, 0)
             return self.jetVeto20_value
+
+    property jetVeto30:
+        def __get__(self):
+            self.jetVeto30_branch.GetEntry(self.localentry, 0)
+            return self.jetVeto30_value
 
     property jetVeto40:
         def __get__(self):
