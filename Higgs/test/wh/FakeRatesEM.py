@@ -89,7 +89,7 @@ class FakeRatesEM(MegaBase):
 
         def fill(the_histos, row):
             the_histos['ePt'].Fill(row.ePt)
-            the_histos['eJetPt'].Fill(row.eJetPt)
+            the_histos['eJetPt'].Fill(max(row.eJetPt, row.ePt))
             the_histos['eAbsEta'].Fill(row.eAbsEta)
             the_histos['metSignificance'].Fill(row.metSignificance)
             the_histos['mMtToMET'].Fill(row.mMtToMET)

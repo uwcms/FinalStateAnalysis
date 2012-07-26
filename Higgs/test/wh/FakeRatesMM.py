@@ -92,7 +92,7 @@ class FakeRatesMM(MegaBase):
             # Get PU weight - fix me
             weight = 1
             the_histos['muonPt'].Fill(row.m2Pt, weight)
-            the_histos['muonJetPt'].Fill(row.m2JetPt, weight)
+            the_histos['muonJetPt'].Fill(max(row.m2JetPt, row.m2Pt), weight)
             the_histos['muonAbsEta'].Fill(row.m2AbsEta, weight)
             the_histos['metSignificance'].Fill(row.metSignificance, weight)
             the_histos['m1MtToMET'].Fill(row.m1MtToMET, weight)

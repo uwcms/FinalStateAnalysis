@@ -225,10 +225,10 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         return mc_corrector(row)
 
     def obj1_weight(self, row):
-        return highpt_mu_fr(row.mJetPt)
+        return highpt_mu_fr(max(row.mJetPt, row.mPt))
 
     def obj2_weight(self, row):
-        return lowpt_e_fr(row.eJetPt)
+        return lowpt_e_fr(max(row.eJetPt, row.ePt))
 
     def obj3_weight(self, row):
         return tau_fr(row.tPt)
