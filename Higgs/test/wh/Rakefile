@@ -31,10 +31,10 @@ end
 samples = Hash[
   "ewk" => Array['Zjets_M50', 'WplusJets_madgraph', 
     'ZZJetsTo4L_pythia',
-    'TTplusJets_madgraph'] + get_sample_names('WZ'),
+    'TTplusJets_madgraph'] + get_sample_names('WZ') + get_sample_names('WW'),
   "wjets" => Array['WplusJets_madgraph'],
   "zjets" => Array['Zjets_M50'],
-  "diboson" => Array['ZZJetsTo4L_pythia'] + get_sample_names('WZ'),
+  "diboson" => Array['ZZJetsTo4L_pythia'] + get_sample_names('WZ') + get_sample_names('WW'),
   "signal" => get_sample_names('VH'),
   # Automagically figure out what data samples we have
   "data_m" =>  get_sample_names("data_SingleMu"),
@@ -102,6 +102,15 @@ flat_vars =  "offset[1e-2, 0, 0.5]"
 fr_fits = Hash[
   # Format is type_region_denom_num_variable
   "e_wjets_pt10_mvaidiso03_eJetPt" => Hash[
+    "samples" => Array["ewk", "data_em"],
+    "analyzer" => "FakeRatesEM",
+    #"function" => landau,
+    #"variables" => landau_vars,
+    "function" => exponential,
+    "variables" => exponential_vars,
+    "rebin" => 5,
+  ],
+  "e_wjets_pt10_mvaidiso02_eJetPt" => Hash[
     "samples" => Array["ewk", "data_em"],
     "analyzer" => "FakeRatesEM",
     "function" => landau,
@@ -257,10 +266,11 @@ task :mmcontrol => get_analyzer_results("ControlZMM.py", samples['ewk'] + sample
 task :emcontrol => get_analyzer_results("ControlEM.py", samples['ewk'] + samples['data_em'])
 
 # IF the FR fits change, make sure we re-run the analyses
-file "WHAnalyzeEMT.py" => [ "#{$frfit_dir}/e_wjets_pt10_mvaidiso01_eJetPt.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso01_muonJetPt.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt.root",] do |t|
+file "WHAnalyzeEMT.py" => [ "#{$frfit_dir}/e_wjets_pt10_mvaidiso03_eJetPt.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso02_muonJetPt.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt.root",] do |t|
   sh "touch #{t.name}"
 end
 file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonPt.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt.root",] do |t|
+  puts t.investiation
   sh "touch #{t.name}"
 end
 file "WHAnalyzeEET.py" => [ "#{$frfit_dir}/ee_wjets_pt20_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/ee_wjets_pt10_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root"] do |t|
