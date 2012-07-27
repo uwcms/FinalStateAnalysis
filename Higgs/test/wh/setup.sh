@@ -1,4 +1,6 @@
-export jobid=2012-07-23-7TeV-Higgs
+#!/bin/bash
+
+export jobid=2012-07-24-7TeV-Higgs
 export afile=`find $s/data/$jobid | grep root | head -n 1`
 
 rake "make_wrapper[$afile, eet/final/Ntuple, EETauTree]"
@@ -15,6 +17,6 @@ ls *pyx | sed "s|pyx|so|" | xargs rake
 rake "meta:getinputs[$jobid, $s/data]"
 rake "meta:getmeta[inputs/$jobid, mm/metaInfo, 7]"
 
-export jobid=2012-07-23-8TeV-Higgs
+export jobid=2012-07-24-8TeV-Higgs
 rake "meta:getinputs[$jobid, $s/data]"
 rake "meta:getmeta[inputs/$jobid, mm/metaInfo, 8]"

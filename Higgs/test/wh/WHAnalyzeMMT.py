@@ -219,6 +219,7 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
 
     @staticmethod
     def trigger_match_m1(row):
+        return True
         if row.m1DiMuonL3p5PreFiltered8  > 0 or \
            row.m1DiMuonL3PreFiltered7  > 0 or \
            row.m1SingleMu13L3Filtered13  > 0 or \
@@ -229,6 +230,7 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
 
     @staticmethod
     def trigger_match_m2(row):
+        return True
         if row.m2DiMuonL3p5PreFiltered8  > 0 or \
            row.m2DiMuonL3PreFiltered7  > 0 or \
            row.m2SingleMu13L3Filtered13  > 0 or \
@@ -269,11 +271,11 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return mc_corrector(row)
 
     def obj1_weight(self, row):
-        return highpt_mu_fr(row.m1JetPt)
+        return highpt_mu_fr(max(row.m1JetPt, row.m1Pt))
         #return highpt_mu_fr(row.m1Pt)
 
     def obj2_weight(self, row):
-        return lowpt_mu_fr(row.m2JetPt)
+        return lowpt_mu_fr(max(row.m2JetPt, row.m2Pt))
         #return lowpt_mu_fr(row.m2Pt)
 
     def obj3_weight(self, row):

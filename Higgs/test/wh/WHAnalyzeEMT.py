@@ -25,7 +25,7 @@ highpt_mu_fr = build_roofunctor(
     'efficiency'
 )
 lowpt_e_fr = build_roofunctor(
-    frfit_dir + '/e_wjets_pt10_mvaidiso01_eJetPt.root',
+    frfit_dir + '/e_wjets_pt10_mvaidiso03_eJetPt.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
@@ -201,7 +201,7 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.mPFIDTight) and bool(row.mRelPFIsoDB < 0.2)
 
     def obj2_id(self, row):
-        return bool(row.eMVAIDH2TauWP) and bool(row.eRelPFIsoDB < 0.1)
+        return bool(row.eMVAIDH2TauWP) and bool(row.eRelPFIsoDB < 0.3)
 
     def obj3_id(self, row):
         return bool(row.tLooseMVAIso)
@@ -225,10 +225,10 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         return mc_corrector(row)
 
     def obj1_weight(self, row):
-        return highpt_mu_fr(row.mJetPt)
+        return highpt_mu_fr(max(row.mJetPt, row.mPt))
 
     def obj2_weight(self, row):
-        return lowpt_e_fr(row.eJetPt)
+        return lowpt_e_fr(max(row.eJetPt, row.ePt))
 
     def obj3_weight(self, row):
         return tau_fr(row.tPt)

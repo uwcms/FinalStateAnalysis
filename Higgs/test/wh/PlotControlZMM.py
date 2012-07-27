@@ -16,6 +16,7 @@ samples = [
     'Zjets_M50',
     'WZ*',
     'ZZ*',
+    'WW*',
     'TT*',
     'WplusJets*',
     "data_DoubleMu*",

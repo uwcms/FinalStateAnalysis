@@ -37,7 +37,9 @@ class Plotter(object):
         self.canvas = plotting.Canvas(name='adsf', title='asdf')
         self.canvas.cd()
         if blinder:
-            # Don't look at the SS all pass region
+            # Keep the unblinded data around if desired.
+            self.views['data']['unblinded_view'] = self.views['data']['view']
+            # Apply a blinding function
             self.views['data']['view'] = blinder(self.views['data']['view'])
         self.data = self.views['data']['view']
         self.keep = []
@@ -48,6 +50,7 @@ class Plotter(object):
             'TTplusJets_madgraph',
             'WZJetsTo3LNu*',
             'ZZJetsTo4L*',
+            'WW*',
         ]
 
     @staticmethod
@@ -57,11 +60,16 @@ class Plotter(object):
         output = views.FunctorView(x, rebinner)
         return output
 
-    def get_view(self, sample_pattern):
-        ''' Get a view which matches a pattern like "Zjets*" '''
+    def get_view(self, sample_pattern, key_name='view'):
+        ''' Get a view which matches a pattern like "Zjets*"
+
+        Generally key_name does not need to be modified, unless getting
+        unblinded data via "unblinded_view"
+
+        '''
         for sample, sample_info in self.views.iteritems():
             if fnmatch.fnmatch(sample, sample_pattern):
-                return sample_info['view']
+                return sample_info[key_name]
         raise KeyError("I can't find a view that matches %s, I have: %s" % (
             sample_pattern, " ".join(self.views.keys())))
 
