@@ -14,11 +14,11 @@
   "VH_140" : "/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-140_7TeV-pythia6-tauola/VH_140_2012-05-29-7TeV-PatTuple-b08cf9d/56ab502025294ab6bf9a34ba9120377b/",
   "WH_140_HWW3l" : "!/WH_HToWW_3l_M-140_7TeV-pythia6/friis-WH_140_HWW3l_2012-05-29-7TeV-PatTuple-b08cf9d-2b5748ff685f03c3a281599f793ad0c8/USER",
 
-  "data_DoubleMu_Run2011B_PromptReco_v1" : "!/DoubleMu/iross-data_DoubleMu_Run2011B_PromptReco_v1_2012-05-29-7TeV-PatTuple-data-v3-67c1f94-fa6d9233416d07023dc202376bb19f23/USER",
-  "data_DoubleMu_Run2011A_PromptReco_v6_1409" : "!/DoubleMu/iross-data_DoubleMu_Run2011A_PromptReco_v6_1409_2012-05-29-7TeV-PatTuple-67c1f94-fa6d9233416d07023dc202376bb19f23/USER",
-  "data_DoubleMu_Run2011A_05Aug2011_v1" : "!/DoubleMu/iross-data_DoubleMu_Run2011A_05Aug2011_v1_2012-05-29-7TeV-PatTuple-67c1f94-973b9115830997e23767170efbb5c224/USER",
-  "data_DoubleMu_Run2011A_May10ReReco_v1" : "!/DoubleMu/iross-data_DoubleMu_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-67c1f94-973b9115830997e23767170efbb5c224/USER",
-  "data_DoubleMu_Run2011A_PromptReco_v4" : "!/DoubleMu/iross-data_DoubleMu_Run2011A_PromptReco_v4_2012-05-29-7TeV-PatTuple-67c1f94-fa6d9233416d07023dc202376bb19f23/USER",
+  "data_DoubleMu_Run2011B_PromptReco_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011B_PromptReco_v1/",
+  "data_DoubleMu_Run2011A_PromptReco_v6_1409" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_PromptReco_v6_1409/",
+  "data_DoubleMu_Run2011A_05Aug2011_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_05Aug2011_v1/",
+  "data_DoubleMu_Run2011A_May10ReReco_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_May10ReReco_v1/",
+  "data_DoubleMu_Run2011A_PromptReco_v4" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_PromptReco_v4/",
 
   "data_SingleMu_Run2011B_PromptReco_v1" : "/hdfs/store/user/cepeda/SingleMu/data_SingleMu_Run2011B_PromptReco_v1_2012-05-29-7TeV-PatTuple-67c1f94/fa6d9233416d07023dc202376bb19f23/",
   "data_SingleMu_Run2011A_PromptReco_v6_1409" : "/hdfs/store/user/cepeda/SingleMu/data_SingleMu_Run2011A_PromptReco_v6_1409_2012-05-29-7TeV-PatTuple-67c1f94/fa6d9233416d07023dc202376bb19f23/",
@@ -32,9 +32,9 @@
   "data_DoubleElectron_Run2011A_May10ReReco_v1" : "/hdfs/store/user/iross/DoubleElectron/data_DoubleElectron_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-67c1f94/973b9115830997e23767170efbb5c224/",
   "data_DoubleElectron_Run2011A_PromptReco_v4" : "/hdfs/store/user/iross/DoubleElectron/data_DoubleElectron_Run2011A_PromptReco_v4_2012-05-29-7TeV-PatTuple-67c1f94/fa6d9233416d07023dc202376bb19f23/",
 
-  "data_MuEG_Run2011B_PromptReco_v1" : "/hdfs/store/user/friis/MuEG/data_MuEG_Run2011B_PromptReco_v1_2012-05-29-7TeV-PatTuple-b08cf9d/fa6d9233416d07023dc202376bb19f23/",
-  "data_MuEG_Run2011A_PromptReco_v6_1409" : "/hdfs/store/user/friis/MuEG/data_MuEG_Run2011A_PromptReco_v6_1409_2012-05-29-7TeV-PatTuple-b08cf9d/fa6d9233416d07023dc202376bb19f23/",
-  "data_MuEG_Run2011A_05Aug2011_v1" : "/hdfs/store/user/friis/MuEG/data_MuEG_Run2011A_05Aug2011_v1_2012-05-29-7TeV-PatTuple-b08cf9d/973b9115830997e23767170efbb5c224/",
-  "data_MuEG_Run2011A_May10ReReco_v1" : "/hdfs/store/user/friis/MuEG/data_MuEG_Run2011A_May10ReReco_v1_2012-05-29-7TeV-PatTuple-b08cf9d/973b9115830997e23767170efbb5c224/",
-  "data_MuEG_Run2011A_PromptReco_v4" : "/hdfs/store/user/friis/MuEG/data_MuEG_Run2011A_PromptReco_v4_2012-05-29-7TeV-PatTuple-b08cf9d/fa6d9233416d07023dc202376bb19f23"
+  "data_MuEG_Run2011B_PromptReco_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011B_PromptReco_v1/",
+  "data_MuEG_Run2011A_PromptReco_v6_1409" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011A_PromptReco_v6_1409/",
+  "data_MuEG_Run2011A_05Aug2011_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011A_05Aug2011_v1/",
+  "data_MuEG_Run2011A_May10ReReco_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011A_May10ReReco_v1/",
+  "data_MuEG_Run2011A_PromptReco_v4" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011A_PromptReco_v4/"
 }
