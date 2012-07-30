@@ -42,7 +42,7 @@ datadefs = {
         'x_sec': 32.3161*3*0.03365*(0.1075+0.1057+0.1125) ,
         'responsible' : 'Evan',
     },
-    'WWJetsTo2L2Nu_TuneZ2_7TeV' : {
+    'WWJetsTo2L2Nu_TuneZ2_8TeV' : {
         'analyses': ['HTT'],
         'datasetpath': '/WWTo2L2Nu_TuneZ2star_8TeV_pythia6_tauola/Summer12-PU_S7_START52_V9-v1/AODSIM',
         'pu': 'S7',
