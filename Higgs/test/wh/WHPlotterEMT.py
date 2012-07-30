@@ -36,6 +36,7 @@ if __name__ == "__main__":
         'ZZ*',
         'WW*',
         'VH*',
+        'WH*',
         'TTplusJets_madgraph',
         "data_MuEG*",
     ]
