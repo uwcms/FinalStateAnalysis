@@ -257,6 +257,13 @@ datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966 + 0.4483 + 0.1470)*7.04E-02
 datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095 + 0.3473 + 0.1157)*5.48E-02
 datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713 + 0.2728 + 0.09207)*3.54E-02
 
+# Add the cross sections for WH->HWW samples.  We use the 7TeV ones here,
+# and then just change the xsec.
+datadefs['WH_110_HWW3l'] = { 'x_sec' : 1.060*cube(br_w_leptons)*4.82E-02 }
+datadefs['WH_120_HWW3l'] = { 'x_sec' : 0.7966*cube(br_w_leptons)*1.43E-01 }
+datadefs['WH_130_HWW3l'] = { 'x_sec' : 0.6095*cube(br_w_leptons)*3.05E-01 }
+datadefs['WH_140_HWW3l'] = { 'x_sec' : 0.4713*cube(br_w_leptons)*5.03E-01 }
+
 # Add data files
 def build_data_set(pd, analyses, who):
     subsample_dict = {
