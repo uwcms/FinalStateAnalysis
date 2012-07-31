@@ -1,7 +1,7 @@
 Troubleshooting
 ===============
 
-A summary of frequently encountered errors and there solutions.
+A summary of frequently encountered errors and their solutions.
 
 General CMSSW problems
 ----------------------
