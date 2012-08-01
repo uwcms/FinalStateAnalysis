@@ -3,6 +3,10 @@ Troubleshooting
 
 A summary of frequently encountered errors and their solutions.
 
+*Step ZERO*
+
+If something doesn't work, try running ``cmsenv``, and ``source FinalStateAnalysis/environment.sh`` and then try again.
+
 General CMSSW problems
 ----------------------
 
