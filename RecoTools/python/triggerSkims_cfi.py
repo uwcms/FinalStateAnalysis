@@ -22,7 +22,7 @@ tightMuons = cms.EDFilter(
     "MuonRefSelector",
     src = cms.InputTag("muons"),
     cut = cms.string(
-        "pt>20 && isGlobalMuon && isTrackerMuon && abs(eta)<2.5"
+        "pt>25 && isGlobalMuon && isTrackerMuon && abs(eta)<2.5"
         " && globalTrack().normalizedChi2<10"
         " && globalTrack().hitPattern().numberOfValidMuonHits>0"
         " && globalTrack().hitPattern().numberOfValidPixelHits>0"
