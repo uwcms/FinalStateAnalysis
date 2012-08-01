@@ -202,7 +202,7 @@ class WHPlotterBase(Plotter):
             vh.SetName('VH%i' % mass)
             vh.Write()
             ww = sig_view['vh%i_hww' % mass].Get(variable)
-            ww.SetName('VH%i_hww' % mass)
+            ww.SetName('VH_hww%i' % mass)
             ww.Write()
 
         wz.Write()
