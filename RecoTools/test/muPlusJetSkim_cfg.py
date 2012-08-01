@@ -16,7 +16,7 @@ process.maxEvents = cms.untracked.PSet(
 process.source = cms.Source(
     "PoolSource",
     fileNames = cms.untracked.vstring(
-        '/store/data/Run2012B/SingleMu/AOD/PromptReco-v1/000/193/840/5693C530-1E9C-E111-9230-002481E0D646.root'
+        '/store/data/Run2012B/SingleMu/AOD/PromptReco-v1/000/193/998/0A72BF21-599D-E111-B877-BCAEC518FF41.root '
     )
 )
 
@@ -37,3 +37,8 @@ process.out = cms.OutputModule(
 process.e = cms.EndPath(process.out)
 
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+
+
+# Tell the framework to shut up!
+process.load("FWCore.MessageLogger.MessageLogger_cfi")
+process.MessageLogger.cerr.FwkReport.reportEvery = 300
