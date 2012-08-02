@@ -292,6 +292,13 @@ datadefs = {
     #### Signal datasets                    ####################################
     ############################################################################
 
+    'WH_WToLNu_HToBB_M-125' : {
+    'datasetpath' :"/WH_WToLNu_HToBB_M-125_7TeV-powheg-herwigpp/Fall11-PU_S6_START42_V14B-v4/AODSIM",
+    'pu' : 'S6',
+    'x_sec' : 999,
+    'analyses' : ['VH', 'HBB'],
+    'responsible' : 'Tapas',
+    },
     'VH_100' : {
         'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',

@@ -186,8 +186,17 @@ datadefs = {
         'xsec' : -999,
         'pu' : 'data',
         'responsible' : 'Evan',
-    },
-
+        },
+    ############################################################################
+    #### Signal datasets                    ####################################
+    ############################################################################
+    'WH_WToLNu_HToBB_M-125' : {
+   'datasetpath' :"/WH_WToLNu_HToBB_M-125_8TeV-powheg-herwigpp/Summer12-PU_S7_START52_V9-v1/AODSIM",
+   'pu' : 'S7',
+   'x_sec' : 999,
+   'analyses' : ['VH', 'HBB'],
+   'responsible' : 'Isobel',
+   },       
 }
 
 # Add GGH H2Tau samples
