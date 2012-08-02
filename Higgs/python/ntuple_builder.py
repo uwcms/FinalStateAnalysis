@@ -53,6 +53,7 @@ _muon_template = PSet(
     templates.candidates.vertex_info,
     templates.muons.id,
     templates.muons.tracking,
+    templates.muons.trigger,
     templates.topology.mtToMET,
 )
 
@@ -63,6 +64,7 @@ _electron_template = PSet(
     templates.electrons.id,
     templates.electrons.tracking,
     templates.electrons.supercluster,
+    templates.electrons.trigger,
     templates.topology.mtToMET,
 )
 
@@ -73,15 +75,15 @@ _leg_templates = {
 }
 
 _pt_cuts = {
-    'm' : '4',
-    'e' : '5',
-    't' : '15',
+    'm' : '9',
+    'e' : '9',
+    't' : '18',
 }
 
 _eta_cuts = {
     'm' : '2.5',
     'e' : '2.5',
-    't' : '2.5',
+    't' : '2.3',
 }
 
 # How to get from a leg name to "finalStateElecMuMuMu" etc

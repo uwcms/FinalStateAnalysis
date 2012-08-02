@@ -164,6 +164,8 @@ if __name__ == "__main__":
                 myhdfs = 'root://cmsxrootd.hep.wisc.edu//store/user/%s/' % os.environ['LOGNAME']
             )
             input_commands.append('"--input-dir=%s"' % input_dir)
+            if args.cleancrab:
+                input_commands.append('--clean-crab-dupes')
         elif args.tuplelist:
             with open(args.tuplelist) as tuple_file:
                 # Parse info about PAT tuples
@@ -195,7 +197,17 @@ if __name__ == "__main__":
                                 sample)
                     continue
                 input_dir = tuple_info[sample]
-                input_commands.append('"--input-dir=%s"' % input_dir)
+                if '!' in input_dir:
+                    # ! means it a DBS path
+                    input_commands.append(
+                        '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet'
+                    )
+                    input_commands.append(
+                        '--input-dbs-path=%s' % input_dir.replace('!', ''))
+                else:
+                    input_commands.append('"--input-dir=%s"' % input_dir)
+                    if args.cleancrab:
+                        input_commands.append('--clean-crab-dupes')
 
         command = [
             'farmoutAnalysisJobs',
@@ -205,8 +217,6 @@ if __name__ == "__main__":
             '"--output-dir=%s"' % output_dir,
             '--input-files-per-job=%i' % args.filesperjob,
         ]
-        if args.cleancrab:
-            command.append('--clean-crab-dupes')
         command.extend(input_commands)
         command.extend([
             # The job ID

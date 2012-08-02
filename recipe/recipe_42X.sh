@@ -1,3 +1,7 @@
+#!/bin/bash
+set -o errexit
+set -o nounset
+
 pushd $CMSSW_BASE/src
 
 # For limit tool
@@ -22,10 +26,14 @@ cvs co -r V01-04-01 RecoTauTag/Configuration
 cvs co -r V00-04-01 CondFormats/EgammaObjects
 cvs up -r 1.53 PhysicsTools/PatAlgos/python/tools/tauTools.py
 # Apply an optimization - don't build taus w/ pt < 19
+# Don't crash if patch already appliede
+set +o errexit 
+# Make sure we have a clean copy.  
+cvs up -C RecoTauTag/RecoTau
 patch -N -p0 < FinalStateAnalysis/recipe/patches/speedupRecoTauCombBuilder.patch
-
 # Add Marias patch for negative SSV 
 patch -N -p0 < FinalStateAnalysis/recipe/marias_negativeSSV.patch
+set -o errexit 
 
 # Add MVA MET
 # See https://twiki.cern.ch/twiki/bin/view/CMS/MVAMet
@@ -60,8 +68,11 @@ addpkg DataFormats/METReco
 cvs co -r 1.1 DataFormats/METReco/interface/MVAMETData.h
 cvs co -r 1.1 DataFormats/METReco/interface/MVAMETDataFwd.h
 cvs co -r 1.1 DataFormats/METReco/src/MVAMETData.cc
+# Don't crash if patch already appliede
+set +o errexit 
 patch -N -p0 < FinalStateAnalysis/recipe/patches/mvaMET_classesdef_42x.patch
 patch -N -p0 < FinalStateAnalysis/recipe/patches/little_fix_for_MVAMETData.patch
+set -o errexit 
 cvs co -r 1.6 RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
 cvs co -r 1.7 RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
 cvs co -j 1.13 -j 1.14 RecoMET/METProducers/src/SealModule.cc

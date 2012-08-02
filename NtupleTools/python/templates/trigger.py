@@ -53,5 +53,5 @@ mueg = PSet(
     # Mu8Ele17 paths
     _trig_template.replace(
         name='mu8ele17',
-        paths=r'HLT_Mu8_Ele17_.*')
+        paths=r'HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+')
 )

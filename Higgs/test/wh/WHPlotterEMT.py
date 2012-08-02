@@ -34,7 +34,9 @@ if __name__ == "__main__":
         'WplusJets_madgraph',
         'WZJetsTo3LNu*',
         'ZZ*',
+        'WW*',
         'VH*',
+        'WH*',
         'TTplusJets_madgraph',
         "data_MuEG*",
     ]
@@ -54,7 +56,7 @@ if __name__ == "__main__":
     ###########################################################################
 
     # Control Z->tautau + jet region
-    plotter.plot_mc_vs_data('os/p1p2f3', 'emMass', rebin=10, xaxis='m_{e#mu} (GeV)')
+    plotter.plot_mc_vs_data('os/p1p2f3', 'emMass', rebin=10, xaxis='m_{e#mu} (GeV)', leftside=False)
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-os-p1p2f3-emMass')
 
@@ -134,6 +136,9 @@ if __name__ == "__main__":
     plotter.plot_mc_vs_data('ss/p1f2p3', 'subMass', 20, 'Subleading mass (GeV)', leftside=False)
     plotter.save('mcdata-ss-p1f2p3-subMass')
 
+    plotter.plot_mc_vs_data('ss/p1p2f3', 'subMass', 20, 'Subleading mass (GeV)', leftside=False)
+    plotter.save('mcdata-ss-p1p2f3-subMass')
+
     plotter.plot_mc_vs_data('ss/f1p2p3', 'subMass', 20, 'Subleading mass (GeV)', leftside=False)
     plotter.save('mcdata-ss-f1p2p3-subMass')
 
@@ -185,9 +190,44 @@ if __name__ == "__main__":
     plotter.plot_final('tSubDR', 10)
     plotter.save('final-tSubDR')
 
-
     plotter.plot_final('etMass', 10)
     plotter.save('final-etMass')
+
+    plotter.plot_final_wz('etMass', 10, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-wz-etMass')
+
+    plotter.plot_final_wz('mPt', 5, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)', maxy=20)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-wz-mPt')
+
+    #plotter.plot_final_wz('mJetPt', 5, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    #plotter.add_cms_blurb(sqrts)
+    #plotter.save('final-wz-mJetPt')
+
+    plotter.plot_final_f3('subMass', 10, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-f3-subMass')
+
+    plotter.plot_final_f3('mPt', 10, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-f3-mPt')
+
+    plotter.plot_final_f3('ePt', 10, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-f3-ePt')
+
+    plotter.plot_final_f3('eChargeIdMedium', 1, xaxis='Charge ID Med', maxy=None)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-f3-eChargeIdMedium')
+
+    plotter.plot_final_f3('eChargeIdTight', 1, xaxis='Charge ID Tight', maxy=None)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-f3-eChargeIdTight')
+
+    #plotter.plot_final_f3('mJetPt', 5, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
+    #plotter.add_cms_blurb(sqrts)
+    #plotter.save('final-f3-mJetPt')
 
     ###########################################################################
     ##  Making shape file     #################################################
@@ -196,7 +236,7 @@ if __name__ == "__main__":
     shape_file = ROOT.TFile(
         os.path.join(outputdir, 'emt_shapes_%s.root' % period), 'RECREATE')
     shape_dir = shape_file.mkdir('emt')
-    plotter.write_shapes('subMass', 20, shape_dir)
+    plotter.write_shapes('subMass', 20, shape_dir, unblinded=True)
     shape_file.Close()
 
 

@@ -21,7 +21,7 @@ import os
 
 def control_region(row):
     # Figure out what control region we are in.
-    if row.m1RelPFIsoDB < 0.15 and row.m1MtToMET > 50:
+    if row.m1RelPFIsoDB < 0.15 and row.m1MtToMET > 40 and row.m2MtToMET < 30:
         return 'wjets'
     elif row.m1RelPFIsoDB > 0.3 and row.metSignificance < 3:
         return 'qcd'
@@ -47,7 +47,7 @@ class FakeRatesMM(MegaBase):
                 self.histograms[denom_key] = denom_histos
 
                 for numerator in ['pfid', 'iso03', 'pfidiso03',
-                                  'pfidiso01']:
+                                  'pfidiso02', 'pfidiso01']:
                     num_key = (region, denom, numerator)
                     num_histos = {}
                     self.histograms[num_key] = num_histos
@@ -60,7 +60,7 @@ class FakeRatesMM(MegaBase):
                         num_histos[name] = self.book(os.path.join(
                             region, denom, numerator), name, *args)
 
-                    book_histo('muonPt', 'Muon Pt', 100, 0, 100)
+                    book_histo('muonPt', 'Muon Pt', 16, 10, 50)
                     book_histo('muonJetPt', 'Muon Jet Pt', 100, 0, 100)
                     book_histo('muonAbsEta', 'Muon Abs Eta', 100, -2.5, 2.5)
                     book_histo('metSignificance', 'MET sig.', 100, 0, 10)
@@ -72,6 +72,7 @@ class FakeRatesMM(MegaBase):
         def preselection(row):
             if not row.m1_m2_SS: return False
             if not row.doubleMuPass: return False
+            if row.m1Pt < row.m2Pt: return False
             if not row.m1Pt > 20: return False
             if not row.m1PFIDTight: return False
             if not row.m2Pt > 10: return False
@@ -79,6 +80,7 @@ class FakeRatesMM(MegaBase):
             if not row.m2AbsEta < 2.4: return False
             if not row.m2JetBtag < 3.3: return False
             if not row.m2PixHits: return False
+            if row.eVetoCicTightIso: return False
             if row.muVetoPt5: return False
             if row.bjetCSVVeto: return False
             if row.tauVetoPt20: return False
@@ -87,11 +89,10 @@ class FakeRatesMM(MegaBase):
             return True
 
         def fill(the_histos, row):
-            # Get PU weight
-            #weight = row.puWeightData2011AB
-            weight = row.puWeightData2011AB if self.is7TeV else row.puWeightData2012AB
+            # Get PU weight - fix me
+            weight = 1
             the_histos['muonPt'].Fill(row.m2Pt, weight)
-            the_histos['muonJetPt'].Fill(row.m2JetPt, weight)
+            the_histos['muonJetPt'].Fill(max(row.m2JetPt, row.m2Pt), weight)
             the_histos['muonAbsEta'].Fill(row.m2AbsEta, weight)
             the_histos['metSignificance'].Fill(row.metSignificance, weight)
             the_histos['m1MtToMET'].Fill(row.m1MtToMET, weight)
@@ -115,6 +116,9 @@ class FakeRatesMM(MegaBase):
             if row.m2PFIDTight and row.m2RelPFIsoDB < 0.3:
                 fill(histos[(region, 'pt10', 'pfidiso03')], row)
 
+            if row.m2PFIDTight and row.m2RelPFIsoDB < 0.2:
+                fill(histos[(region, 'pt10', 'pfidiso02')], row)
+
             if row.m2PFIDTight and row.m2RelPFIsoDB < 0.1:
                 fill(histos[(region, 'pt10', 'pfidiso01')], row)
 
@@ -128,6 +132,9 @@ class FakeRatesMM(MegaBase):
 
                 if row.m2PFIDTight and row.m2RelPFIsoDB < 0.3:
                     fill(histos[(region, 'pt20', 'pfidiso03')], row)
+
+                if row.m2PFIDTight and row.m2RelPFIsoDB < 0.2:
+                    fill(histos[(region, 'pt20', 'pfidiso02')], row)
 
                 if row.m2PFIDTight and row.m2RelPFIsoDB < 0.1:
                     fill(histos[(region, 'pt20', 'pfidiso01')], row)

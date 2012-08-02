@@ -60,6 +60,13 @@ data_styles = {
         'linecolor' : colors['blue'],
         'name' : "WZ",
     },
+    'WW*' : {
+        'legendstyle' : 'f',
+        'format' : 'hist',
+        'fillcolor' : colors['red'],
+        'linecolor' : colors['red'],
+        'name' : "WW",
+    },
     'ZZ*' : {
         'legendstyle' : 'f',
         'format' : 'hist',

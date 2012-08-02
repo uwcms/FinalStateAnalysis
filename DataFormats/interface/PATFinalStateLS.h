@@ -31,6 +31,13 @@ class PATFinalStateLS {
     /// Get the recorded int. luminosity in this lumi
     double intLumi() const;
 
+    /// Merge this with another product
+    bool mergeProduct(PATFinalStateLS const& other) {
+      integratedLumi_ += other.intLumi();
+      instaneousLumi_ += other.instantaneousLumi();
+      return true;
+    }
+
   private:
     edm::LuminosityBlockID id_;
     double integratedLumi_;

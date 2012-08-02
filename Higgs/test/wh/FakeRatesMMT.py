@@ -57,7 +57,7 @@ class FakeRatesMMT(MegaBase):
     def process(self):
         # Generic filler function to fill plots after selection
         def fill(the_histos, row):
-            weight = row.puWeightData2011AB if self.is7TeV else row.puWeightData2012AB
+            weight = 1.0
             the_histos['tauPt'].Fill(row.tPt, weight)
             the_histos['tauJetPt'].Fill(row.tJetPt, weight)
             the_histos['tauAbsEta'].Fill(row.tAbsEta, weight)

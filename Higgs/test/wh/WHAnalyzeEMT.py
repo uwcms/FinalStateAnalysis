@@ -6,31 +6,84 @@ Analyze EMT events for the WH analysis
 
 import WHAnalyzerBase
 from EMuTauTree import EMuTauTree
+import glob
 import os
-from PUWeighting import pu_weight
+import FinalStateAnalysis.TagAndProbe.MuonPOGCorrections as MuonPOGCorrections
+import FinalStateAnalysis.TagAndProbe.H2TauCorrections as H2TauCorrections
+import FinalStateAnalysis.TagAndProbe.PileupWeight as PileupWeight
 from FinalStateAnalysis.StatTools.RooFunctorFromWS import build_roofunctor
 import ROOT
 
-# Get fitted fake rate functions
+################################################################################
+#### Fitted fake rate functions ################################################
+################################################################################
+
 frfit_dir = os.path.join('results', os.environ['jobid'], 'fakerate_fits')
 highpt_mu_fr = build_roofunctor(
-    frfit_dir + '/m_wjets_pt20_pfidiso01_muonJetPt-data_mm.root',
+    frfit_dir + '/m_wjets_pt20_pfidiso02_muonJetPt.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
 lowpt_e_fr = build_roofunctor(
-    frfit_dir + '/e_wjets_pt10_mvaidiso01_eJetPt-data_em.root',
+    frfit_dir + '/e_wjets_pt10_mvaidiso03_eJetPt.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
 tau_fr = build_roofunctor(
-    frfit_dir + '/t_ztt_pt20_mvaloose_tauPt-data_mm.root',
+    frfit_dir + '/t_ztt_pt20_mvaloose_tauPt.root',
     'fit_efficiency', # workspace name
     'efficiency'
 )
 
-# Get correction functions
-ROOT.gSystem.Load("Corrector_C")
+################################################################################
+#### MC-DATA and PU corrections ################################################
+################################################################################
+
+# Determine MC-DATA corrections
+is7TeV = bool('7TeV' in os.environ['jobid'])
+print "Is 7TeV:", is7TeV
+
+# Make PU corrector from expected data PU distribution
+# PU corrections .root files from pileupCalc.py
+pu_distributions = glob.glob(os.path.join(
+    'inputs', os.environ['jobid'], 'data_MuEG*pu.root'))
+pu_corrector = PileupWeight.PileupWeight(
+    'S6' if is7TeV else 'S7', *pu_distributions)
+
+muon_pog_PFTight_2011 = MuonPOGCorrections.make_muon_pog_PFTight_2011()
+muon_pog_PFTight_2012 = MuonPOGCorrections.make_muon_pog_PFTight_2012()
+
+muon_pog_PFRelIsoDB02_2011 = MuonPOGCorrections.make_muon_pog_PFRelIsoDB02_2011()
+muon_pog_PFRelIsoDB02_2012 = MuonPOGCorrections.make_muon_pog_PFRelIsoDB02_2012()
+
+# Get object ID and trigger corrector functions
+def mc_corrector_2011(row):
+    if row.run > 2:
+        return 1
+    pu = pu_corrector(row.nTruePU)
+    #pu = 1
+    m1id = muon_pog_PFTight_2011(row.mPt, row.mEta)
+    m1iso = muon_pog_PFRelIsoDB02_2011(row.mPt, row.mEta)
+    e2idiso = H2TauCorrections.correct_e_idiso_2011(row.ePt, row.eAbsEta)
+    m_trg = H2TauCorrections.correct_mueg_mu_2011(row.mPt, row.mAbsEta)
+    e_trg = H2TauCorrections.correct_mueg_e_2011(row.ePt, row.eAbsEta)
+    return pu*m1id*m1iso*e2idiso*m_trg*e_trg
+
+def mc_corrector_2012(row):
+    if row.run > 2:
+        return 1
+    pu = pu_corrector(row.nTruePU)
+    m1id = muon_pog_PFTight_2012(row.mPt, row.mEta)
+    m1iso = muon_pog_PFRelIsoDB02_2012(row.mPt, row.mEta)
+    e2idiso = H2TauCorrections.correct_e_idiso_2012(row.ePt, row.eAbsEta)
+    m_trg = H2TauCorrections.correct_mueg_mu_2012(row.mPt, row.mAbsEta)
+    e_trg = H2TauCorrections.correct_mueg_e_2012(row.ePt, row.eAbsEta)
+    return pu*m1id*m1iso*e2idiso*m_trg*e_trg
+
+# Determine which set of corrections to use
+mc_corrector = mc_corrector_2011
+if not is7TeV:
+    mc_corrector = mc_corrector_2012
 
 class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
     tree = 'emt/final/Ntuple'
@@ -48,6 +101,8 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
 
         self.book(folder, "nTruePU", "NPU", 62, -1.5, 60.5)
         self.book(folder, "emMass", "Electron-Muon Mass", 200, 0, 200)
+        self.book(folder, "eChargeIdTight", "Elec charge ID tight", 2, -0.5, 1.5)
+        self.book(folder, "eChargeIdMedium", "Elec charge ID medium", 2, -0.5, 1.5)
         self.book(folder, "etMass", "Electron-Tau Mass", 200, 0, 200)
         self.book(folder, "subMass", "Subleading Mass", 200, 0, 200)
         self.book(folder, "bCSVVeto", "BjetCSV", 10, -0.5, 9.5)
@@ -63,10 +118,13 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
             histos['/'.join(folder + (name,))].Fill(value, weight)
         fill('mPt', row.mPt)
         fill('ePt', row.ePt)
-        fill('mPt', row.mPt)
+        fill('tPt', row.tPt)
         fill('eAbsEta', row.eAbsEta)
         fill('mAbsEta', row.mAbsEta)
         fill('tAbsEta', row.tAbsEta)
+
+        fill('eChargeIdTight', row.eChargeIdTight)
+        fill('eChargeIdMedium', row.eChargeIdMed)
 
         fill('emMass', row.e_m_Mass)
         fill('etMass', row.e_t_Mass)
@@ -114,6 +172,8 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.eHasConversion:
             return False
+        if not row.eChargeIdTight:
+            return False
         if row.LT < 80:
             return False
         # Fixme use CSV
@@ -129,16 +189,9 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
             return False
         if row.tMuOverlap:
             return False
-        if row.tCiCTightElecOverlap:
-            return False
         if not row.tAntiMuonTight:
             return False
         #'t_ElectronOverlapWP95 < 0.5',
-        if row.e_t_Zcompat < 20:
-            if not row.tAntiElectronMVA:
-                return False
-        elif not row.tAntiElectronLoose:
-            return False
         return True
 
     def sign_cut(self, row):
@@ -146,27 +199,47 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
         return bool(row.e_m_SS)
 
     def obj1_id(self, row):
-        return bool(row.mPFIDTight) and bool(row.mRelPFIsoDB < 0.1)
+        return bool(row.mPFIDTight) and bool(row.mRelPFIsoDB < 0.2)
 
     def obj2_id(self, row):
-        return bool(row.eMVAIDH2TauWP) and bool(row.eRelPFIsoDB < 0.1)
+        return bool(row.eMVAIDH2TauWP) and bool(row.eRelPFIsoDB < 0.3)
 
     def obj3_id(self, row):
         return bool(row.tLooseMVAIso)
 
+    def anti_wz(self, row):
+        if row.tCiCTightElecOverlap:
+            return False
+        if row.e_t_Zcompat < 20:
+            if not row.tAntiElectronMVA:
+                return False
+        elif not row.tAntiElectronLoose:
+            return False
+        return True
+
+    def enhance_wz(self, row):
+        if row.e_t_Zcompat < 15 and not row.tAntiElectronMVA:
+            return True
+        return False
+
     def event_weight(self, row):
-        # fixme
-        weight = pu_weight(row)
-        if row.run < 10:
-            weight *= ROOT.Cor_Total_Mu_Lead(row.mPt, row.mAbsEta)
-            weight *= ROOT.Cor_Total_Ele_SubLead(row.ePt, row.eAbsEta)
-        return weight
+        return mc_corrector(row)
 
     def obj1_weight(self, row):
-        return highpt_mu_fr(row.mJetPt)
+        return highpt_mu_fr(max(row.mJetPt, row.mPt))
 
     def obj2_weight(self, row):
-        return lowpt_e_fr(row.eJetPt)
+        return lowpt_e_fr(max(row.eJetPt, row.ePt))
 
     def obj3_weight(self, row):
         return tau_fr(row.tPt)
+
+    # For measuring charge flip probability
+    # Not really used in this channel
+    def obj1_obj3_SS(self, row):
+        return not row.e_t_SS
+
+    def obj1_charge_flip(self, row):
+        if row.eAbsEta < 1.5:
+            return 0.003
+        return 0.02
