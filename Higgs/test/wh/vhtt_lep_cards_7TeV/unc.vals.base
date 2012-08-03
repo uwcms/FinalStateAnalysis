@@ -15,6 +15,9 @@ mmt,emt simulated CMS_eff_t 1.06
 # Scale uncertainties
 mmt,emt simulated CMS_scale_t 1.03
 
+# Efficiency of b-jet veto
+mmt,emt simulated CMS_fake_b 1.01
+
 # Background uncertainties - due to the theoretical unc. on the xsection
 mmt,emt zz pdf_qqbar 1.033
 mmt,emt zz QCDscale_VV 1.023
