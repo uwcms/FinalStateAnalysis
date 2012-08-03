@@ -292,13 +292,6 @@ datadefs = {
     #### Signal datasets                    ####################################
     ############################################################################
 
-    'WH_WToLNu_HToBB_M-125' : {
-    'datasetpath' :"/WH_WToLNu_HToBB_M-125_7TeV-powheg-herwigpp/Fall11-PU_S6_START42_V14B-v4/AODSIM",
-    'pu' : 'S6',
-    'x_sec' : 999,
-    'analyses' : ['VH', 'HBB'],
-    'responsible' : 'Tapas',
-    },
     'VH_100' : {
         'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
@@ -1630,6 +1623,20 @@ datadefs = {
     },
 
 }
+
+# Add HToBB
+for mass in range(100, 150, 5):
+  ver=4
+  if mass>135 :
+    ver=1
+  datadefs['WH_WToLNu_HToBB_M-%i' % mass]= {
+    'datasetpath' :'/WH_WToLNu_HToBB_M-%i_7TeV-powheg-herwigpp/Fall11-PU_S6_START42_V14B-v%i/AODSIM' % (mass, ver),
+    'pu' : 'S6',
+    'x_sec' : -999,
+    'analyses' : ['VH', 'HBB'],
+    'responsible' : 'Tapas',
+    }
+  
 
 # Add all the datasets
 # Following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Collisions2011Analysis
