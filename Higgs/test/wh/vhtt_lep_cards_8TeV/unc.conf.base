@@ -10,6 +10,8 @@ CMS_eff_e                 lnN
 CMS_eff_m                 lnN      
 CMS_eff_t                 lnN      
 
+CMS_fake_b                lnN
+
 CMS_scale_t               lnN
 
 CMS_vhtt_llt_fakes        lnN
