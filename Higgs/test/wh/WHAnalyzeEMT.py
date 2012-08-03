@@ -118,6 +118,7 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
             histos['/'.join(folder + (name,))].Fill(value, weight)
         fill('mPt', row.mPt)
         fill('ePt', row.ePt)
+        fill('tPt', row.tPt)
         fill('eAbsEta', row.eAbsEta)
         fill('mAbsEta', row.mAbsEta)
         fill('tAbsEta', row.tAbsEta)

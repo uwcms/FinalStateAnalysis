@@ -202,7 +202,7 @@ class WHPlotterBase(Plotter):
             vh.SetName('VH%i' % mass)
             vh.Write()
             ww = sig_view['vh%i_hww' % mass].Get(variable)
-            ww.SetName('VH%i_hww' % mass)
+            ww.SetName('VH_hww%i' % mass)
             ww.Write()
 
         wz.Write()
@@ -214,7 +214,10 @@ class WHPlotterBase(Plotter):
         ''' Plot the final output - with bkg. estimation '''
         sig_view = self.make_signal_views(rebin)
         vh_10x = views.TitleView(
-            views.ScaleView(sig_view['signal120'], 5),
+            views.StyleView(
+                views.ScaleView(sig_view['signal120'], 5),
+                **data_styles['VH*']
+            ),
             "(5#times) m_{H} = 120"
         )
 

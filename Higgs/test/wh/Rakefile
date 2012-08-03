@@ -356,7 +356,7 @@ pivot_masses = "120,130,140"
 file "#{$carddir}/shapes.root" => ["#{$carddir}/shapes_unmorphed.root"] do |t|
   puts "Doing horizontal morphing"
   sh "cp #{t.prerequisites[0]} #{t.name}"
-  sh "horizontal-morphing.py --categories='emt,mmt' --samples='VH{MASS}' --uncerts='' --masses='120,130,140' --step-size=1 -i #{t.name}"
+  sh "horizontal-morphing.py --categories='emt,mmt' --samples='VH{MASS},VH_hww{MASS}' --uncerts='' --masses='110,120,130,140' --step-size=1 -i #{t.name}"
 end
 
 stat_shape_lists = Dir.glob("results/#{$jobid}/plots/*/*_statshapes.txt")
