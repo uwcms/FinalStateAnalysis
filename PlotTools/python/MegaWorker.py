@@ -15,10 +15,11 @@ import tempfile
 
 def make_hashed_filename(to_process):
     ''' Make an output file from the hash of the file(s) to process '''
+    hash = hashlib.md5(os.environ['LOGNAME']) # so users don't collide
     if isinstance(to_process, basestring):
-        return hashlib.md5(to_process).hexdigest() + '.root'
+        hash.update(to_process)
+        return hash.hexdigest() + '.root'
     else:
-        hash = hashlib.md5()
         for input_file in to_process:
             hash.update(input_file)
         return hash.hexdigest() + '.root'
