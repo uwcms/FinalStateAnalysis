@@ -18,4 +18,9 @@ To analyze the different samples in the e-mu channels, execute::
 this will only run things if the output is out-of-date with respect to the 
 analyzer.
 
-To change cuts/make new histograms, edit the AnalyzeEM.py analyzer file.
+To make some plots, run::
+
+  ./plot.sh
+
+To change cuts/make new histograms, edit the AnalyzeEM.py analyzer file, then
+re-run (but not setup) and plot.
