@@ -22,7 +22,7 @@ tightMuons = cms.EDFilter(
     "MuonRefSelector",
     src = cms.InputTag("muons"),
     cut = cms.string(
-        "pt>25 && isGlobalMuon && isTrackerMuon && abs(eta)<2.5"
+        "pt>20 && isGlobalMuon && isTrackerMuon && abs(eta)<2.5"
         " && globalTrack().normalizedChi2<10"
         " && globalTrack().hitPattern().numberOfValidMuonHits>0"
         " && globalTrack().hitPattern().numberOfValidPixelHits>0"
@@ -36,7 +36,7 @@ tightMuons = cms.EDFilter(
 ak5PFJetsPt15 = cms.EDFilter(
     "PFJetSelector",
     src = cms.InputTag("ak5PFJets"),
-    cut = cms.string("pt > 15"),
+    cut = cms.string("pt > 18"),
     filter = cms.bool(True),
 )
 
