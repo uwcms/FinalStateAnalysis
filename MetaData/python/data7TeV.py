@@ -1690,8 +1690,8 @@ def build_data_set(pd, analyses, who):
           'analyses' : analyses,
           'responsible' : who,
       },
-      'data_%s_Run2011A_16Jan2012_v1' % pd : {
-          'datasetpath' : "/%s/Run2011A-16Jan2012-v1/AOD" % pd,
+      'data_%s_Run2011B_16Jan2012_v1' % pd : {
+          'datasetpath' : "/%s/Run2011B-16Jan2012-v1/AOD" % pd,
           'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-180252_7TeV_ReRecoNov08_Collisions11_JSON_v2.txt",
           'firstRun' : 160431,
           'lastRun' : 180252,
