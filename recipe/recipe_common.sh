@@ -52,9 +52,4 @@ cvs co -r Shervin13062012_2012Prompt_and_Summer12MC_smearing_V00 -d EgammaCalibr
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2012#VBF_selection_Matthew
 cvs co -r 1.2 UserCode/MitHtt/data/VBFMVA/MuTau/VBFMVA_BDTG.weights.xml
 
-pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
-echo "Installing Higgs xsec lookup tables"
-./install_HCSaW.sh
-popd
-
 popd
