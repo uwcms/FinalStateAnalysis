@@ -12,6 +12,9 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
 
+#include "DataFormats/TrackReco/interface/Track.h"
+#include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
+
 #include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
@@ -44,6 +47,10 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     // Information about PFLOW
     edm::InputTag pfSrc_;
 
+    // Information about tracks
+    edm::InputTag trackSrc_;
+    edm::InputTag gsfTrackSrc_;
+
     // Information about the MET
     edm::InputTag metSrc_;
     edm::InputTag metCovSrc_;
@@ -73,6 +80,9 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   jetSrc_ = pset.getParameter<edm::InputTag>("jetSrc");
 
   pfSrc_ = pset.getParameter<edm::InputTag>("pfSrc");
+
+  trackSrc_ = pset.getParameter<edm::InputTag>("trackSrc");
+  gsfTrackSrc_ = pset.getParameter<edm::InputTag>("gsfTrackSrc");
 
   metSrc_ = pset.getParameter<edm::InputTag>("metSrc");
   metCovSrc_ = pset.getParameter<edm::InputTag>("metCovSrc");
@@ -121,6 +131,14 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle<reco::PFCandidateCollection> pf;
   evt.getByLabel(pfSrc_, pf);
   reco::PFCandidateRefProd pfRefProd(pf);
+
+  edm::Handle<reco::TrackCollection> tracks;
+  evt.getByLabel(trackSrc_, tracks);
+  reco::TrackRefProd trackRefProd(tracks);
+
+  edm::Handle<reco::GsfTrackCollection> gsftracks;
+  evt.getByLabel(gsfTrackSrc_, gsftracks);
+  reco::GsfTrackRefProd gsftrackRefProd(gsftracks);
 
   edm::Handle<edm::View<pat::MET> > met;
   evt.getByLabel(metSrc_, met);
@@ -173,7 +191,8 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
       *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo,
       evt.isRealData(), puScenario_,
-      electronRefProd, muonRefProd, tauRefProd, jetRefProd, pfRefProd);
+      electronRefProd, muonRefProd, tauRefProd, jetRefProd, pfRefProd,
+      trackRefProd, gsftrackRefProd);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {

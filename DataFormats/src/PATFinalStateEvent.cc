@@ -52,7 +52,9 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::RefProd<pat::MuonCollection>& muonRefProd,
     const edm::RefProd<pat::TauCollection>& tauRefProd,
     const edm::RefProd<pat::JetCollection>& jetRefProd,
-    const reco::PFCandidateRefProd& pfRefProd
+    const reco::PFCandidateRefProd& pfRefProd,
+    const reco::TrackRefProd& tracks,
+    const reco::GsfTrackRefProd& gsfTracks
     ):
   rho_(rho),
   triggerEvent_(triggerEvent),
@@ -72,7 +74,9 @@ PATFinalStateEvent::PATFinalStateEvent(
   muonRefProd_(muonRefProd),
   tauRefProd_(tauRefProd),
   jetRefProd_(jetRefProd),
-  pfRefProd_(pfRefProd)
+  pfRefProd_(pfRefProd),
+  tracks_(tracks),
+  gsfTracks_(gsfTracks)
 { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }

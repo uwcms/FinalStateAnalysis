@@ -22,6 +22,8 @@
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
+#include "DataFormats/TrackReco/interface/TrackFwd.h"
+#include "DataFormats/GsfTrackReco/interface/GsfTrackFwd.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
@@ -62,7 +64,9 @@ class PATFinalStateEvent {
         const edm::RefProd<pat::MuonCollection>& muonRefProd,
         const edm::RefProd<pat::TauCollection>& tauRefProd,
         const edm::RefProd<pat::JetCollection>& jetRefProd,
-        const reco::PFCandidateRefProd& pfRefProd
+        const reco::PFCandidateRefProd& pfRefProd,
+        const reco::TrackRefProd& tracks,
+        const reco::GsfTrackRefProd& gsfTracks
     );
 
     /// Get PV
@@ -181,6 +185,8 @@ class PATFinalStateEvent {
     edm::RefProd<pat::TauCollection> tauRefProd_;
     edm::RefProd<pat::JetCollection> jetRefProd_;
     reco::PFCandidateRefProd pfRefProd_;
+    reco::TrackRefProd tracks_;
+    reco::GsfTrackRefProd gsfTracks_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */
