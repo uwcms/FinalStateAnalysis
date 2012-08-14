@@ -7,12 +7,16 @@ set -o nounset
 pushd $CMSSW_BASE/src
 
 echo "Checking out PAT tags"
-addpkg DataFormats/PatCandidates   V06-05-01
-addpkg PhysicsTools/PatAlgos       V08-09-10
-addpkg CommonTools/ParticleFlow    V00-03-11
-addpkg JetMETCorrections/Type1MET  V04-06-05
-addpkg PhysicsTools/PatUtils V03-09-22
-addpkg CommonTools/RecoUtils V00-00-08
+addpkg DataFormats/PatCandidates       V06-05-01
+addpkg PhysicsTools/PatAlgos           V08-09-23
+addpkg PhysicsTools/PatUtils           V03-09-23
+addpkg CommonTools/ParticleFlow        V00-03-16
+addpkg CommonTools/RecoUtils           V00-00-12
+cvs up -r 1.4 CommonTools/RecoUtils/BuildFile.xml
+addpkg DataFormats/HLTReco             V02-06-05
+addpkg JetMETCorrections/Type1MET      V04-06-09
+addpkg RecoBTag/SecondaryVertex        V01-08-00
+addpkg RecoVertex/AdaptiveVertexFinder V02-02-00
 
 echo "Checking out Tau POG recipe"
 cvs co -r V01-04-17 RecoTauTag/RecoTau #equivalent to 04-14
