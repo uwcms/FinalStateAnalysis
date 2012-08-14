@@ -24,7 +24,7 @@ class WHPlotterBase(Plotter):
             blinder = lambda x: BlindView(x, "ss/p1p2p3/.*")
         super(WHPlotterBase, self).__init__(files, lumifiles, outputdir, blinder)
 
-    def make_signal_views(self, rebin, unblinded=False):
+    def make_signal_views(self, rebin, unblinded=True):
         ''' Make signal views with FR background estimation '''
 
         wz_view = views.SubdirectoryView(
@@ -232,6 +232,9 @@ class WHPlotterBase(Plotter):
         histo.GetHistogram().GetXaxis().SetTitle(xaxis)
         histo.SetMaximum(maxy)
         self.keep.append(histo)
+        data = sig_view['data'].Get(variable)
+        data.Draw('same')
+        self.keep.append(data)
 
         # Add legend
         self.add_legend(histo, leftside=False, entries=4)
