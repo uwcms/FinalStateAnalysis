@@ -54,9 +54,6 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     // PU information
     edm::InputTag puInfoSrc_;
 
-    // MVA MET data
-    edm::InputTag srcMVAData_;
-
     // MC information
     edm::InputTag truthSrc_;
     edm::ParameterSet extraWeights_;
@@ -84,8 +81,6 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   truthSrc_ = pset.getParameter<edm::InputTag>("genParticleSrc");
   extraWeights_ = pset.getParameterSet("extraWeights");
   puScenario_ = pset.getParameter<std::string>("puTag");
-
-  srcMVAData_ = pset.getParameter<edm::InputTag>("mvaDataSrc");
 
   produces<PATFinalStateEventCollection>();
 }
@@ -141,24 +136,6 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   metCovariance(1,0) = (*metCov)(1,0);
   metCovariance(1,1) = (*metCov)(1,1);
 
-  // MVA MET data
-  // Get pre-computed data about the event.
-  edm::Handle<reco::JetInfoCollection> jetInfo;
-  evt.getByLabel(srcMVAData_, jetInfo);
-
-  // Get the DZs of all the PFCandidates to the PV
-  edm::Handle<edm::ValueMap<float> > pfCandidateDZs;
-  evt.getByLabel(srcMVAData_, pfCandidateDZs);
-
-  edm::Handle<std::vector<reco::Vertex::Point> > vertexInfo;
-  evt.getByLabel(srcMVAData_, vertexInfo);
-
-  edm::RefProd<edm::ValueMap<float> > pfCandDZs(pfCandidateDZs);
-  edm::RefProd<reco::JetInfoCollection> jetInfos(jetInfo);
-  edm::RefProd<std::vector<reco::Vertex::Point> > theVertices(vertexInfo);
-
-  // end MVA MET
-
   edm::Handle<pat::TriggerEvent> trig;
   evt.getByLabel(trgSrc_, trig);
 
@@ -196,8 +173,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
       *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo,
       evt.isRealData(), puScenario_,
-      electronRefProd, muonRefProd, tauRefProd, jetRefProd, pfRefProd,
-      pfCandDZs, jetInfos, theVertices);
+      electronRefProd, muonRefProd, tauRefProd, jetRefProd, pfRefProd);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
