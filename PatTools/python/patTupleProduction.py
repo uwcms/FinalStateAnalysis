@@ -74,10 +74,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.tuplize += process.kt6PFJetsForIso
 
     # Standard services
-    process.load('Configuration/StandardSequences/Services_cff')
-    process.load('Configuration/StandardSequences/GeometryIdeal_cff')
-    process.load('Configuration/StandardSequences/MagneticField_cff')
-    process.load('Configuration/StandardSequences/FrontierConditions_GlobalTag_cff')
+    process.load('Configuration.StandardSequences.Services_cff')
+    process.load('Configuration.Geometry.GeometryIdeal_cff')
+    process.load('Configuration.StandardSequences.MagneticField_cff')
+    process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
     # Rerun tau ID
     if cmssw_major_version() == 4:
