@@ -338,14 +338,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     trigtools.switchOnTrigger(process)
 
-    # Build the MVA regression PFMET
-    process.load("RecoMET.METProducers.mvaPFMET_cff")
-    process.tuplize += process.calibratedAK5PFJetsForPFMEtMVA
-    process.tuplize += process.pfMEtMVAData
-    # Products for future computation of MVAMET
-    output_commands.append('*_pfMEtMVAData_*_*')
-    output_commands.append('*_calibratedAK5PFJetsForPFMEtMVA_*_*')
-
     # Now build the PATFinalStateLS object, which holds LumiSection info.
     process.load(
         "FinalStateAnalysis.PatTools.finalStates.patFinalStateLSProducer_cfi")
