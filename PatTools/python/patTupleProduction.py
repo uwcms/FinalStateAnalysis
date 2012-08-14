@@ -22,11 +22,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_lumiProducer_*_*',
         '*_particleFlow_*_*',
         '*_offlineBeamSpot_*_*',
-        '*_trackCandidates_*_*',
-        '*_gsfTrackCandidates_*_*',
-        # Debug
         '*_generalTracks_*_*',
-        #'*_offlinePrimaryVertices_*_*',
         '*_electronGsfTracks_*_*',
         '*_offlinePrimaryVertices*_*_*',
         '*_ak5GenJets_*_*',
