@@ -38,6 +38,36 @@ class DataCard(object):
         for syst in self.card.systs:
             self.systematics[syst[0]] = ufloat((0, 1), syst[0])
 
+    def get_obs(self, bins, excludebin=None):
+
+        if isinstance(bins, basestring):
+            bins = [bins]
+        if isinstance(excludebin, basestring):
+            excludebin = [excludebin]
+
+        matching_bins = set([])
+
+        for binpattern in bins:
+            for realbin in self.card.exp.keys():
+                # First check if we explicitly exclude it
+                excluded = False
+                if excludebin is not None:
+                    for excludepattern in excludebin:
+                        if fnmatch.fnmatch(realbin, excludepattern):
+                            excluded = True
+                            break
+                if excluded:
+                    continue
+                # otherwise check if it matches a desired bin
+                if fnmatch.fnmatch(realbin, binpattern) or fnmatch.fnmatch(realbin, 'bin' + binpattern):
+                    matching_bins.add(realbin)
+
+        obs = 0
+        for bin in matching_bins:
+            obs += self.card.obs[bin]
+        return obs
+
+
     def get_rate(self, bins, process, excludesys=None, excludebin=None):
         ''' Get the total yield for [process] in the sum of bins
 

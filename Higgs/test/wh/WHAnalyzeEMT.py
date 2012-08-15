@@ -90,6 +90,12 @@ class WHAnalyzeEMT(WHAnalyzerBase.WHAnalyzerBase):
     def __init__(self, tree, outfile, **kwargs):
         super(WHAnalyzeEMT, self).__init__(tree, outfile, EMuTauTree, **kwargs)
         self.is7TeV = '7TeV' in os.environ['jobid']
+        # Hack to use S6 weights for the one 7TeV sample we use in 8TeV
+        target = os.environ['megatarget']
+        if 'HWW3l' in target:
+            print "HACK using S6 PU weights for HWW3l"
+            global pu_corrector
+            pu_corrector =  PileupWeight.PileupWeight('S6', *pu_distributions)
 
     def book_histos(self, folder):
         self.book(folder, "mPt", "Muon Pt", 100, 0, 100)

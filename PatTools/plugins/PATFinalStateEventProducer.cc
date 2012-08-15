@@ -12,6 +12,9 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
 
+#include "DataFormats/TrackReco/interface/Track.h"
+#include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
+
 #include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
@@ -44,6 +47,10 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     // Information about PFLOW
     edm::InputTag pfSrc_;
 
+    // Information about tracks
+    edm::InputTag trackSrc_;
+    edm::InputTag gsfTrackSrc_;
+
     // Information about the MET
     edm::InputTag metSrc_;
     edm::InputTag metCovSrc_;
@@ -53,9 +60,6 @@ class PATFinalStateEventProducer : public edm::EDProducer {
 
     // PU information
     edm::InputTag puInfoSrc_;
-
-    // MVA MET data
-    edm::InputTag srcMVAData_;
 
     // MC information
     edm::InputTag truthSrc_;
@@ -77,6 +81,9 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
 
   pfSrc_ = pset.getParameter<edm::InputTag>("pfSrc");
 
+  trackSrc_ = pset.getParameter<edm::InputTag>("trackSrc");
+  gsfTrackSrc_ = pset.getParameter<edm::InputTag>("gsfTrackSrc");
+
   metSrc_ = pset.getParameter<edm::InputTag>("metSrc");
   metCovSrc_ = pset.getParameter<edm::InputTag>("metCovSrc");
   trgSrc_ = pset.getParameter<edm::InputTag>("trgSrc");
@@ -84,8 +91,6 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   truthSrc_ = pset.getParameter<edm::InputTag>("genParticleSrc");
   extraWeights_ = pset.getParameterSet("extraWeights");
   puScenario_ = pset.getParameter<std::string>("puTag");
-
-  srcMVAData_ = pset.getParameter<edm::InputTag>("mvaDataSrc");
 
   produces<PATFinalStateEventCollection>();
 }
@@ -127,6 +132,14 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   evt.getByLabel(pfSrc_, pf);
   reco::PFCandidateRefProd pfRefProd(pf);
 
+  edm::Handle<reco::TrackCollection> tracks;
+  evt.getByLabel(trackSrc_, tracks);
+  reco::TrackRefProd trackRefProd(tracks);
+
+  edm::Handle<reco::GsfTrackCollection> gsftracks;
+  evt.getByLabel(gsfTrackSrc_, gsftracks);
+  reco::GsfTrackRefProd gsftrackRefProd(gsftracks);
+
   edm::Handle<edm::View<pat::MET> > met;
   evt.getByLabel(metSrc_, met);
   edm::Ptr<pat::MET> metPtr = met->ptrAt(0);
@@ -140,24 +153,6 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   metCovariance(0,1) = (*metCov)(0,1);
   metCovariance(1,0) = (*metCov)(1,0);
   metCovariance(1,1) = (*metCov)(1,1);
-
-  // MVA MET data
-  // Get pre-computed data about the event.
-  edm::Handle<reco::JetInfoCollection> jetInfo;
-  evt.getByLabel(srcMVAData_, jetInfo);
-
-  // Get the DZs of all the PFCandidates to the PV
-  edm::Handle<edm::ValueMap<float> > pfCandidateDZs;
-  evt.getByLabel(srcMVAData_, pfCandidateDZs);
-
-  edm::Handle<std::vector<reco::Vertex::Point> > vertexInfo;
-  evt.getByLabel(srcMVAData_, vertexInfo);
-
-  edm::RefProd<edm::ValueMap<float> > pfCandDZs(pfCandidateDZs);
-  edm::RefProd<reco::JetInfoCollection> jetInfos(jetInfo);
-  edm::RefProd<std::vector<reco::Vertex::Point> > theVertices(vertexInfo);
-
-  // end MVA MET
 
   edm::Handle<pat::TriggerEvent> trig;
   evt.getByLabel(trgSrc_, trig);
@@ -197,7 +192,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
       *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo,
       evt.isRealData(), puScenario_,
       electronRefProd, muonRefProd, tauRefProd, jetRefProd, pfRefProd,
-      pfCandDZs, jetInfos, theVertices);
+      trackRefProd, gsftrackRefProd);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {

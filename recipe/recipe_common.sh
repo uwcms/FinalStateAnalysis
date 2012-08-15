@@ -37,11 +37,10 @@ pushd EGamma/EGammaAnalysisTools/data
 cat download.url | xargs wget
 popd
 
-# Get Electron ISO MVA weights
-cvs co -r V00-00-00 UserCode/sixie/EGamma/EGammaAnalysisTools/data/
-
-# Add muon MVA
+# Add muon effective area code
 cvs co -r V00-00-10 -d Muon/MuonAnalysisTools UserCode/sixie/Muon/MuonAnalysisTools 
+# Remove trainings we don't use
+rm Muon/MuonAnalysisTools/data/*xml
 
 # Get electron energy calibrations
 # See https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaElectronEnergyScale
@@ -51,10 +50,5 @@ cvs co -r Shervin13062012_2012Prompt_and_Summer12MC_smearing_V00 -d EgammaCalibr
 # Get the VBF MVA weight files
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2012#VBF_selection_Matthew
 cvs co -r 1.2 UserCode/MitHtt/data/VBFMVA/MuTau/VBFMVA_BDTG.weights.xml
-
-pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
-echo "Installing Higgs xsec lookup tables"
-./install_HCSaW.sh
-popd
 
 popd

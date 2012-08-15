@@ -31,9 +31,6 @@ namespace {
     edm::RefProd<pat::TauCollection> dummyTauRefProd;
     edm::RefProd<pat::JetCollection> dummyJetRefProd;
 
-    PATFinalStateEvent::MVAMetResult dummyMVAResult;
-    std::map<size_t, PATFinalStateEvent::MVAMetResult> dummyMVACache;
-
     std::map<std::string, float> dummyFloatMap;
     std::map<std::string, int> dummyIntMap;
     std::pair<std::string, float> dummyFloatPair;
@@ -41,11 +38,6 @@ namespace {
 
     // For the VBF variables
     VBFVariables dummyVBFVars;
-
-    // For the MVA MET
-    edm::RefProd<edm::ValueMap<float> > pfCandDZs_;
-    edm::RefProd<reco::JetInfoCollection> jetInfos_;
-    edm::RefProd<std::vector<reco::Vertex::Point> > vertices_;
 
     // shared pointer wrapper class
     PATFinalStateProxy proxyDummy;

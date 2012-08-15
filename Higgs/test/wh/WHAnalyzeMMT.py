@@ -102,6 +102,12 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
     tree = 'mmt/final/Ntuple'
     def __init__(self, tree, outfile, **kwargs):
         super(WHAnalyzeMMT, self).__init__(tree, outfile, MuMuTauTree, **kwargs)
+        # Hack to use S6 weights for the one 7TeV sample we use in 8TeV
+        target = os.environ['megatarget']
+        if 'HWW3l' in target:
+            print "HACK using S6 PU weights for HWW3l"
+            global pu_corrector
+            pu_corrector =  PileupWeight.PileupWeight('S6', *pu_distributions)
 
     def book_histos(self, folder):
         self.book(folder, "weight", "Event weight", 100, 0, 5)

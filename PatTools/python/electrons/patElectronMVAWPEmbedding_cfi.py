@@ -38,35 +38,3 @@ patElectronMVAIDWPEmbedding = cms.EDProducer(
         ),
     )
 )
-
-patElectronMVAIsoWPEmbedding = cms.EDProducer(
-    "PATElectronWorkingPointEmbedder",
-    src = cms.InputTag("fixme"),
-    userIntLabel = cms.string('mvaisowp'),
-    categories = cms.VPSet(
-        cms.PSet(
-            category = cms.string('pt < 20 & abs(eta) < 0.8'),
-            cut = cms.string('userFloat("isomva") > 0.815')
-        ),
-        cms.PSet(
-            category = cms.string('pt < 20 & abs(eta) >= 0.8 & abs(eta) < 1.479'),
-            cut = cms.string('userFloat("isomva") > 0.785')
-        ),
-        cms.PSet(
-            category = cms.string('pt < 20 & abs(eta) >= 1.479'),
-            cut = cms.string('userFloat("isomva") > 0.825')
-        ),
-        cms.PSet(
-            category = cms.string('pt >= 20 & abs(eta) < 0.8'),
-            cut = cms.string('userFloat("isomva") > 0.805')
-        ),
-        cms.PSet(
-            category = cms.string('pt >= 20 & abs(eta) >= 0.8 & abs(eta) < 1.479'),
-            cut = cms.string('userFloat("isomva") > 0.815')
-        ),
-        cms.PSet(
-            category = cms.string('pt >= 20 & abs(eta) >= 1.479'),
-            cut = cms.string('userFloat("isomva") > 0.705')
-        ),
-    )
-)
