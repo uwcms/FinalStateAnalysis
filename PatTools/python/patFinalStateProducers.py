@@ -76,14 +76,14 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
     process.muonsForFinalStates = cms.EDFilter(
         "PATMuonRefSelector",
         src = cms.InputTag(muonsrc),
-        cut = cms.string('pt > 4'),
+        cut = cms.string('pt > 4 & (isGlobalMuon | isTrackerMuon)'),
         filter = cms.bool(False),
     )
 
     process.electronsForFinalStates = cms.EDFilter(
         "PATElectronRefSelector",
         src = cms.InputTag(esrc),
-        cut = cms.string('abs(eta) < 2.5 & pt > 4'),
+        cut = cms.string('abs(eta) < 2.5 & pt > 7'),
         filter = cms.bool(False),
     )
 
