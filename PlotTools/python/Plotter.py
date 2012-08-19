@@ -11,7 +11,6 @@ import os
 import rootpy.plotting.views as views
 import rootpy.plotting as plotting
 from FinalStateAnalysis.MetaData.data_views import data_views
-from FinalStateAnalysis.MetaData.data_styles import data_styles
 import ROOT
 
 _original_draw = plotting.Legend.Draw
