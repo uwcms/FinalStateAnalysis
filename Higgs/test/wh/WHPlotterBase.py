@@ -210,6 +210,15 @@ class WHPlotterBase(Plotter):
         obs.Write()
         fakes.Write()
 
+    def write_cut_and_count(self, variable, outdir, unblinded=False):
+        ''' Version of write_shapes(...) with only one bin.
+
+        Equivalent to a cut & count analysis.
+        '''
+        sig_view = self.make_signal_views(1, unblinded)
+        nbins = sig_view['wz'].Get(variable).GetNbinsX()
+        return self.write_shapes(variable, nbins, outdir, unblinded)
+
     def plot_final(self, variable, rebin=1, xaxis='', maxy=10):
         ''' Plot the final output - with bkg. estimation '''
         sig_view = self.make_signal_views(rebin)
