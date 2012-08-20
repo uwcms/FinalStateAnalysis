@@ -237,6 +237,5 @@ if __name__ == "__main__":
         os.path.join(outputdir, 'emt_shapes_%s.root' % period), 'RECREATE')
     shape_dir = shape_file.mkdir('emt')
     plotter.write_shapes('subMass', 20, shape_dir, unblinded=True)
+    #plotter.write_cut_and_count('subMass', shape_dir, unblinded=True)
     shape_file.Close()
-
-
