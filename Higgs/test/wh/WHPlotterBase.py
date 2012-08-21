@@ -14,6 +14,7 @@ If [blind] is true, data in the p1p2p3 region will not be plotted.
 import rootpy.plotting.views as views
 from FinalStateAnalysis.PlotTools.Plotter import Plotter
 from FinalStateAnalysis.PlotTools.BlindView import BlindView
+from FinalStateAnalysis.PlotTools.PoissonView import PoissonView
 from FinalStateAnalysis.MetaData.data_styles import data_styles
 
 import math
@@ -295,8 +296,11 @@ class WHPlotterBase(Plotter):
             self.keep.append(bkg_error)
             bkg_error.Draw('pe2,same')
 
+        # Use poisson error bars on the data
+        sig_view['data'] = PoissonView(sig_view['data'], x_err=False)
+
         data = sig_view['data'].Get(variable)
-        data.Draw('same')
+        data.Draw('pe,same')
         self.keep.append(data)
 
         # Add legend
