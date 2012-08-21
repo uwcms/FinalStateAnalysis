@@ -183,6 +183,10 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-subMass')
 
+    plotter.plot_final('subMass', 20, xaxis='m_{#mu_{2}#tau} (GeV)', show_error=True)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-subMass-werror')
+
     plotter.plot_final('metSig', 5)
     plotter.save('final-metSig')
     plotter.plot_final('tLeadDR', 10)
