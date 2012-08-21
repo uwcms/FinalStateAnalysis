@@ -33,11 +33,24 @@ Author: Evan K. Friis
 
 import math
 
-def find_nth_sig_fig(x, n):
+def find_nth_sig_fig(x, n, min_sig_fig=-999):
     ''' Get the decimal place of the nth significant figure
+
+    If n is less than min_sig_fig, only give one significant figure.
 
     >>> find_nth_sig_fig(0.52, 2)
     -2
+
+    Specify a minimum sig fig.
+
+    >>> find_nth_sig_fig(0.52, 2, -1)
+    -1
+
+    At least one sig. fig. is always given.
+
+    >>> find_nth_sig_fig(0.0052, 2, -1)
+    -3
+
     >>> find_nth_sig_fig(152, 2)
     1
     >>> find_nth_sig_fig(152, 1)
@@ -47,9 +60,13 @@ def find_nth_sig_fig(x, n):
     '''
 
     log10 = math.log10(x)
-    return int(math.floor(log10) - (n-1))
+    sigfig = int(math.floor(log10) - (n-1))
+    # Only give 1 sigfig if below threshold
+    if sigfig < min_sig_fig:
+        sigfig += (n-1)
+    return sigfig
 
-def sigfigs(x, err, n_error=2):
+def sigfigs(x, err, n_error=2, min_sig_fig=-999):
     ''' Round x and err to their appropriate representations.
 
     The n_error parameter controls how many significant figures of the error
@@ -63,11 +80,18 @@ def sigfigs(x, err, n_error=2):
     ('0.1', '0.1')
     >>> sigfigs(0.067, 0.0264, 2)
     ('0.067', '0.026')
+
+    Provided a minimum sigfig.  Values lower than this will be rounded to only
+    one signficant figure.
+
+    >>> sigfigs(0.067, 0.0264, 2, -1)
+    ('0.07', '0.03')
+
     >>> sigfigs(0.067, 0.0267, 2)
     ('0.067', '0.027')
 
     '''
-    power = find_nth_sig_fig(err, n_error)
+    power = find_nth_sig_fig(err, n_error, min_sig_fig)
     x = round(x, -power)
     err = round(err, -power)
 
