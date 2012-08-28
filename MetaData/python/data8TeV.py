@@ -389,7 +389,7 @@ def build_data_set(pd, analyses, who):
             'responsible' : who,
         },
         'data_%s_Run2012C_PromptReco_v2_Run198934_201264' % pd : {
-            'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
+            'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-200601_8TeV_PromptReco_Collisions12_JSON_v2.txt",
             'firstRun' : 198934,
             'lastRun' : 201264,
