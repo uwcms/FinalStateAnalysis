@@ -147,29 +147,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patElectrons.electronIDSources = process.electronIDSources
     process.patElectrons.embedTrack = True
 
-    # Run EGamma electron energy calibration
-    process.load("EgammaCalibratedGsfElectrons.CalibratedElectronProducers.calibratedGsfElectrons_cfi")
-    process.RandomNumberGeneratorService.calibratedGsfElectrons = cms.PSet(
-        initialSeed = cms.untracked.uint32(1), # A frickin billion
-        engineName = cms.untracked.string('TRandom3')
-    )
-    process.calibratedGsfElectrons.inputDataset = cms.string(kwargs['dataset'])
-    process.calibratedGsfElectrons.isMC = bool(isMC)
-    process.calibratedGsfElectrons.isEmbedded = cms.bool(bool(kwargs['embedded']))
-    if kwargs['embedded']:
-        process.calibratedGsfElectrons.isMC = False
-    process.calibratedGsfElectrons.isAOD = True
-    process.calibratedGsfElectrons.updateEnergyError = cms.bool(True)
-    # Run a sanity check on the calibration configuration.
-    from FinalStateAnalysis.PatTools.electrons.patElectronEmbedCalibratedGsf_cfi \
-            import validate_egamma_calib_config
-    validate_egamma_calib_config(process)
-
-    process.tuplize += process.calibratedGsfElectrons
-    # Keep the calibratedGsfElectrons - we embed refs to this into the
-    # pat::Electrons
-    output_commands.append('*_calibratedGsfElectrons_*_*')
-
     # Now run PAT
     process.tuplize += process.patDefaultSequence
 

@@ -31,9 +31,6 @@ from FinalStateAnalysis.PatTools.electrons.patElectronsIpEmbedding_cfi import \
 from FinalStateAnalysis.PatTools.electrons.eTrackCandidates_cfi import \
         gsfTrackCandidates
 
-from FinalStateAnalysis.PatTools.electrons.patElectronEmbedCalibratedGsf_cfi import \
-        patElectronEmbedCalibratedGsf
-
 from FinalStateAnalysis.PatTools.electrons.patElectronEffectiveAreaEmbedder_cfi import \
         patElectronEffectiveAreaEmbedder
 
@@ -52,5 +49,4 @@ customizeElectronSequence += electronSystematics
 customizeElectronSequence += patElectronMVAIDEmbedder
 customizeElectronSequence += patElectronMVAIDWPEmbedding
 customizeElectronSequence += patElectronsEmbedIp
-customizeElectronSequence += patElectronEmbedCalibratedGsf
 customizeElectronSequence += patElectronEffectiveAreaEmbedder
