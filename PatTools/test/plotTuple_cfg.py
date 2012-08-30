@@ -218,15 +218,6 @@ process.mt = cms.EDAnalyzer(
     )
 )
 
-calib_pt_diff = pt.clone(
-    min = -10,
-    max = 10,
-    nbins = 100,
-    description = "Diff between calib and uncalib energy",
-    name = "CalibPtDiff",
-    plotquantity = 'daughter(0).pt - daughter(0).userCand("calibrated").pt'
-)
-
 process.et = cms.EDAnalyzer(
     "CandViewHistoAnalyzer",
     src = cms.InputTag("finalStateElecTau"),
