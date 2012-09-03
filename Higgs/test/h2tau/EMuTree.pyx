@@ -16,6 +16,8 @@ cdef extern from "TTree.h":
         int GetEntry(long, int)
         long LoadTree(long)
         long GetEntries()
+        TTree* GetTree()
+        int GetTreeNumber()
         TBranch* GetBranch(char*)
 
 cdef extern from "TFile.h":
@@ -28,13 +30,19 @@ cdef extern from "TTreeFormula.h":
     cdef cppclass TTreeFormula:
         TTreeFormula(char*, char*, TTree*)
         double EvalInstance(int, char**)
+        void UpdateFormulaLeaves()
+        void SetTree(TTree*)
 
 from cpython cimport PyCObject_AsVoidPtr
 
 cdef class EMuTree:
-    # Pointers to tree and current entry
+    # Pointers to tree (may be a chain), current active tree, and current entry
+    # localentry is the entry in the current tree of the chain
     cdef TTree* tree
+    cdef TTree* currentTree
+    cdef int currentTreeNumber
     cdef long ientry
+    cdef long localentry
 
     # Branches and address for all
 
@@ -50,110 +58,179 @@ cdef class EMuTree:
     cdef TBranch* bjetCSVVeto_branch
     cdef float bjetCSVVeto_value
 
+    cdef TBranch* bjetCSVVeto30_branch
+    cdef float bjetCSVVeto30_value
+
     cdef TBranch* bjetVeto_branch
     cdef float bjetVeto_value
 
     cdef TBranch* charge_branch
     cdef float charge_value
 
-    cdef TBranch* electronAbsEta_branch
-    cdef float electronAbsEta_value
+    cdef TBranch* doubleEExtraGroup_branch
+    cdef float doubleEExtraGroup_value
 
-    cdef TBranch* electronCharge_branch
-    cdef float electronCharge_value
+    cdef TBranch* doubleEExtraPass_branch
+    cdef float doubleEExtraPass_value
 
-    cdef TBranch* electronChargeIdLoose_branch
-    cdef float electronChargeIdLoose_value
+    cdef TBranch* doubleEExtraPrescale_branch
+    cdef float doubleEExtraPrescale_value
 
-    cdef TBranch* electronChargeIdMed_branch
-    cdef float electronChargeIdMed_value
+    cdef TBranch* doubleEGroup_branch
+    cdef float doubleEGroup_value
 
-    cdef TBranch* electronChargeIdTight_branch
-    cdef float electronChargeIdTight_value
+    cdef TBranch* doubleEPass_branch
+    cdef float doubleEPass_value
 
-    cdef TBranch* electronCiCTight_branch
-    cdef float electronCiCTight_value
+    cdef TBranch* doubleEPrescale_branch
+    cdef float doubleEPrescale_value
 
-    cdef TBranch* electronDZ_branch
-    cdef float electronDZ_value
+    cdef TBranch* doubleMuGroup_branch
+    cdef float doubleMuGroup_value
 
-    cdef TBranch* electronEta_branch
-    cdef float electronEta_value
+    cdef TBranch* doubleMuPass_branch
+    cdef float doubleMuPass_value
 
-    cdef TBranch* electronHasConversion_branch
-    cdef float electronHasConversion_value
+    cdef TBranch* doubleMuPrescale_branch
+    cdef float doubleMuPrescale_value
 
-    cdef TBranch* electronIP3DS_branch
-    cdef float electronIP3DS_value
+    cdef TBranch* doubleMuTrkGroup_branch
+    cdef float doubleMuTrkGroup_value
 
-    cdef TBranch* electronJetBtag_branch
-    cdef float electronJetBtag_value
+    cdef TBranch* doubleMuTrkPass_branch
+    cdef float doubleMuTrkPass_value
 
-    cdef TBranch* electronJetPt_branch
-    cdef float electronJetPt_value
+    cdef TBranch* doubleMuTrkPrescale_branch
+    cdef float doubleMuTrkPrescale_value
 
-    cdef TBranch* electronMITID_branch
-    cdef float electronMITID_value
+    cdef TBranch* eAbsEta_branch
+    cdef float eAbsEta_value
 
-    cdef TBranch* electronMVAIDH2TauWP_branch
-    cdef float electronMVAIDH2TauWP_value
+    cdef TBranch* eCharge_branch
+    cdef float eCharge_value
 
-    cdef TBranch* electronMVANonTrig_branch
-    cdef float electronMVANonTrig_value
+    cdef TBranch* eChargeIdLoose_branch
+    cdef float eChargeIdLoose_value
 
-    cdef TBranch* electronMVATrig_branch
-    cdef float electronMVATrig_value
+    cdef TBranch* eChargeIdMed_branch
+    cdef float eChargeIdMed_value
 
-    cdef TBranch* electronMass_branch
-    cdef float electronMass_value
+    cdef TBranch* eChargeIdTight_branch
+    cdef float eChargeIdTight_value
 
-    cdef TBranch* electronMissingHits_branch
-    cdef float electronMissingHits_value
+    cdef TBranch* eCiCTight_branch
+    cdef float eCiCTight_value
 
-    cdef TBranch* electronMtToMET_branch
-    cdef float electronMtToMET_value
+    cdef TBranch* eDZ_branch
+    cdef float eDZ_value
 
-    cdef TBranch* electronMuOverlap_branch
-    cdef float electronMuOverlap_value
+    cdef TBranch* eEta_branch
+    cdef float eEta_value
 
-    cdef TBranch* electronPhi_branch
-    cdef float electronPhi_value
+    cdef TBranch* eHasConversion_branch
+    cdef float eHasConversion_value
 
-    cdef TBranch* electronPt_branch
-    cdef float electronPt_value
+    cdef TBranch* eIP3DS_branch
+    cdef float eIP3DS_value
 
-    cdef TBranch* electronRelIso_branch
-    cdef float electronRelIso_value
+    cdef TBranch* eJetBtag_branch
+    cdef float eJetBtag_value
 
-    cdef TBranch* electronRelPFIsoDB_branch
-    cdef float electronRelPFIsoDB_value
+    cdef TBranch* eJetCSVBtag_branch
+    cdef float eJetCSVBtag_value
 
-    cdef TBranch* electronVZ_branch
-    cdef float electronVZ_value
+    cdef TBranch* eJetPt_branch
+    cdef float eJetPt_value
 
-    cdef TBranch* electronWWID_branch
-    cdef float electronWWID_value
+    cdef TBranch* eL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch
+    cdef float eL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_value
 
-    cdef TBranch* electron_muon_DPhi_branch
-    cdef float electron_muon_DPhi_value
+    cdef TBranch* eMITID_branch
+    cdef float eMITID_value
 
-    cdef TBranch* electron_muon_DR_branch
-    cdef float electron_muon_DR_value
+    cdef TBranch* eMVAIDH2TauWP_branch
+    cdef float eMVAIDH2TauWP_value
 
-    cdef TBranch* electron_muon_Mass_branch
-    cdef float electron_muon_Mass_value
+    cdef TBranch* eMVANonTrig_branch
+    cdef float eMVANonTrig_value
 
-    cdef TBranch* electron_muon_PZeta_branch
-    cdef float electron_muon_PZeta_value
+    cdef TBranch* eMVATrig_branch
+    cdef float eMVATrig_value
 
-    cdef TBranch* electron_muon_PZetaVis_branch
-    cdef float electron_muon_PZetaVis_value
+    cdef TBranch* eMass_branch
+    cdef float eMass_value
 
-    cdef TBranch* electron_muon_Pt_branch
-    cdef float electron_muon_Pt_value
+    cdef TBranch* eMissingHits_branch
+    cdef float eMissingHits_value
 
-    cdef TBranch* electron_muon_SS_branch
-    cdef float electron_muon_SS_value
+    cdef TBranch* eMtToMET_branch
+    cdef float eMtToMET_value
+
+    cdef TBranch* eMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch
+    cdef float eMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_value
+
+    cdef TBranch* eMu17Ele8CaloIdTPixelMatchFilter_branch
+    cdef float eMu17Ele8CaloIdTPixelMatchFilter_value
+
+    cdef TBranch* eMu17Ele8dZFilter_branch
+    cdef float eMu17Ele8dZFilter_value
+
+    cdef TBranch* ePhi_branch
+    cdef float ePhi_value
+
+    cdef TBranch* ePt_branch
+    cdef float ePt_value
+
+    cdef TBranch* eRelIso_branch
+    cdef float eRelIso_value
+
+    cdef TBranch* eRelPFIsoDB_branch
+    cdef float eRelPFIsoDB_value
+
+    cdef TBranch* eSCEnergy_branch
+    cdef float eSCEnergy_value
+
+    cdef TBranch* eSCEta_branch
+    cdef float eSCEta_value
+
+    cdef TBranch* eSCPhi_branch
+    cdef float eSCPhi_value
+
+    cdef TBranch* eVZ_branch
+    cdef float eVZ_value
+
+    cdef TBranch* eVetoCicTightIso_branch
+    cdef float eVetoCicTightIso_value
+
+    cdef TBranch* eVetoMVAIso_branch
+    cdef float eVetoMVAIso_value
+
+    cdef TBranch* eWWID_branch
+    cdef float eWWID_value
+
+    cdef TBranch* e_m_DPhi_branch
+    cdef float e_m_DPhi_value
+
+    cdef TBranch* e_m_DR_branch
+    cdef float e_m_DR_value
+
+    cdef TBranch* e_m_Mass_branch
+    cdef float e_m_Mass_value
+
+    cdef TBranch* e_m_PZeta_branch
+    cdef float e_m_PZeta_value
+
+    cdef TBranch* e_m_PZetaVis_branch
+    cdef float e_m_PZetaVis_value
+
+    cdef TBranch* e_m_Pt_branch
+    cdef float e_m_Pt_value
+
+    cdef TBranch* e_m_SS_branch
+    cdef float e_m_SS_value
+
+    cdef TBranch* e_m_Zcompat_branch
+    cdef float e_m_Zcompat_value
 
     cdef TBranch* evt_branch
     cdef int evt_value
@@ -173,11 +250,110 @@ cdef class EMuTree:
     cdef TBranch* jetVeto20_branch
     cdef float jetVeto20_value
 
+    cdef TBranch* jetVeto30_branch
+    cdef float jetVeto30_value
+
     cdef TBranch* jetVeto40_branch
     cdef float jetVeto40_value
 
     cdef TBranch* lumi_branch
     cdef int lumi_value
+
+    cdef TBranch* mAbsEta_branch
+    cdef float mAbsEta_value
+
+    cdef TBranch* mCharge_branch
+    cdef float mCharge_value
+
+    cdef TBranch* mD0_branch
+    cdef float mD0_value
+
+    cdef TBranch* mDZ_branch
+    cdef float mDZ_value
+
+    cdef TBranch* mDiMuonL3PreFiltered7_branch
+    cdef float mDiMuonL3PreFiltered7_value
+
+    cdef TBranch* mDiMuonL3p5PreFiltered8_branch
+    cdef float mDiMuonL3p5PreFiltered8_value
+
+    cdef TBranch* mDiMuonMu17Mu8DzFiltered0p2_branch
+    cdef float mDiMuonMu17Mu8DzFiltered0p2_value
+
+    cdef TBranch* mEta_branch
+    cdef float mEta_value
+
+    cdef TBranch* mGlbTrkHits_branch
+    cdef float mGlbTrkHits_value
+
+    cdef TBranch* mIP3DS_branch
+    cdef float mIP3DS_value
+
+    cdef TBranch* mIsGlobal_branch
+    cdef float mIsGlobal_value
+
+    cdef TBranch* mIsTracker_branch
+    cdef float mIsTracker_value
+
+    cdef TBranch* mJetBtag_branch
+    cdef float mJetBtag_value
+
+    cdef TBranch* mJetCSVBtag_branch
+    cdef float mJetCSVBtag_value
+
+    cdef TBranch* mJetPt_branch
+    cdef float mJetPt_value
+
+    cdef TBranch* mL1Mu3EG5L3Filtered17_branch
+    cdef float mL1Mu3EG5L3Filtered17_value
+
+    cdef TBranch* mL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch
+    cdef float mL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
+
+    cdef TBranch* mMass_branch
+    cdef float mMass_value
+
+    cdef TBranch* mMtToMET_branch
+    cdef float mMtToMET_value
+
+    cdef TBranch* mMu17Ele8dZFilter_branch
+    cdef float mMu17Ele8dZFilter_value
+
+    cdef TBranch* mNormTrkChi2_branch
+    cdef float mNormTrkChi2_value
+
+    cdef TBranch* mPFIDTight_branch
+    cdef float mPFIDTight_value
+
+    cdef TBranch* mPhi_branch
+    cdef float mPhi_value
+
+    cdef TBranch* mPixHits_branch
+    cdef float mPixHits_value
+
+    cdef TBranch* mPt_branch
+    cdef float mPt_value
+
+    cdef TBranch* mPtUncorr_branch
+    cdef float mPtUncorr_value
+
+    cdef TBranch* mRelPFIsoDB_branch
+    cdef float mRelPFIsoDB_value
+
+    cdef TBranch* mSingleMu13L3Filtered13_branch
+    cdef float mSingleMu13L3Filtered13_value
+
+    cdef TBranch* mSingleMu13L3Filtered17_branch
+    cdef float mSingleMu13L3Filtered17_value
+
+    cdef TBranch* mVBTFID_branch
+    cdef float mVBTFID_value
+
+    cdef TBranch* mVZ_branch
+    cdef float mVZ_value
+
+    cdef TBranch* mWWID_branch
+    cdef float mWWID_value
 
     cdef TBranch* metEt_branch
     cdef float metEt_value
@@ -212,89 +388,14 @@ cdef class EMuTree:
     cdef TBranch* muVetoPt5_branch
     cdef float muVetoPt5_value
 
-    cdef TBranch* muonAbsEta_branch
-    cdef float muonAbsEta_value
-
-    cdef TBranch* muonCharge_branch
-    cdef float muonCharge_value
-
-    cdef TBranch* muonD0_branch
-    cdef float muonD0_value
-
-    cdef TBranch* muonDZ_branch
-    cdef float muonDZ_value
-
-    cdef TBranch* muonEta_branch
-    cdef float muonEta_value
-
-    cdef TBranch* muonGlbTrkHits_branch
-    cdef float muonGlbTrkHits_value
-
-    cdef TBranch* muonIP3DS_branch
-    cdef float muonIP3DS_value
-
-    cdef TBranch* muonIsGlobal_branch
-    cdef float muonIsGlobal_value
-
-    cdef TBranch* muonIsTracker_branch
-    cdef float muonIsTracker_value
-
-    cdef TBranch* muonJetBtag_branch
-    cdef float muonJetBtag_value
-
-    cdef TBranch* muonJetPt_branch
-    cdef float muonJetPt_value
-
-    cdef TBranch* muonMass_branch
-    cdef float muonMass_value
-
-    cdef TBranch* muonMtToMET_branch
-    cdef float muonMtToMET_value
-
-    cdef TBranch* muonNormTrkChi2_branch
-    cdef float muonNormTrkChi2_value
-
-    cdef TBranch* muonPFIDTight_branch
-    cdef float muonPFIDTight_value
-
-    cdef TBranch* muonPhi_branch
-    cdef float muonPhi_value
-
-    cdef TBranch* muonPixHits_branch
-    cdef float muonPixHits_value
-
-    cdef TBranch* muonPt_branch
-    cdef float muonPt_value
-
-    cdef TBranch* muonPtUncorr_branch
-    cdef float muonPtUncorr_value
-
-    cdef TBranch* muonRelPFIsoDB_branch
-    cdef float muonRelPFIsoDB_value
-
-    cdef TBranch* muonVBTFID_branch
-    cdef float muonVBTFID_value
-
-    cdef TBranch* muonVZ_branch
-    cdef float muonVZ_value
-
-    cdef TBranch* muonWWID_branch
-    cdef float muonWWID_value
-
     cdef TBranch* nTruePU_branch
     cdef float nTruePU_value
 
     cdef TBranch* nvtx_branch
     cdef float nvtx_value
 
-    cdef TBranch* puWeightData2011A_branch
-    cdef float puWeightData2011A_value
-
-    cdef TBranch* puWeightData2011AB_branch
-    cdef float puWeightData2011AB_value
-
-    cdef TBranch* puWeightData2011B_branch
-    cdef float puWeightData2011B_value
+    cdef TBranch* processID_branch
+    cdef float processID_value
 
     cdef TBranch* rho_branch
     cdef float rho_value
@@ -314,294 +415,574 @@ cdef class EMuTree:
     cdef TBranch* tauVetoPt20_branch
     cdef float tauVetoPt20_value
 
+    cdef TBranch* vbfDeta_branch
+    cdef float vbfDeta_value
+
+    cdef TBranch* vbfJetVeto20_branch
+    cdef float vbfJetVeto20_value
+
+    cdef TBranch* vbfJetVeto30_branch
+    cdef float vbfJetVeto30_value
+
+    cdef TBranch* vbfMVA_branch
+    cdef float vbfMVA_value
+
+    cdef TBranch* vbfMass_branch
+    cdef float vbfMass_value
+
+    cdef TBranch* vbfNJets_branch
+    cdef float vbfNJets_value
+
     cdef TBranch* idx_branch
     cdef int idx_value
 
 
     def __cinit__(self, ttree):
+        #print "cinit"
         # Constructor from a ROOT.TTree
         from ROOT import AsCObject
         self.tree = <TTree*>PyCObject_AsVoidPtr(AsCObject(ttree))
         self.ientry = 0
-        # Now set all the branch address
+        self.currentTreeNumber = -1
+        #print self.tree.GetEntries()
+        #self.load_entry(0)
 
-        self.LT_branch = self.tree.GetBranch("LT")
+    cdef load_entry(self, long i):
+        #print "load", i
+        # Load the correct tree and setup the branches
+        self.localentry = self.tree.LoadTree(i)
+        #print "local", self.localentry
+        new_tree = self.tree.GetTree()
+        #print "tree", <long>(new_tree)
+        treenum = self.tree.GetTreeNumber()
+        #print "num", treenum
+        if treenum != self.currentTreeNumber or new_tree != self.currentTree:
+            #print "New tree!"
+            self.currentTree = new_tree
+            self.currentTreeNumber = treenum
+            self.setup_branches(new_tree)
+
+    cdef setup_branches(self, TTree* the_tree):
+        #print "setup"
+
+        #print "making LT"
+        self.LT_branch = the_tree.GetBranch("LT")
         self.LT_branch.SetAddress(<void*>&self.LT_value)
 
-        self.Mass_branch = self.tree.GetBranch("Mass")
+        #print "making Mass"
+        self.Mass_branch = the_tree.GetBranch("Mass")
         self.Mass_branch.SetAddress(<void*>&self.Mass_value)
 
-        self.Pt_branch = self.tree.GetBranch("Pt")
+        #print "making Pt"
+        self.Pt_branch = the_tree.GetBranch("Pt")
         self.Pt_branch.SetAddress(<void*>&self.Pt_value)
 
-        self.bjetCSVVeto_branch = self.tree.GetBranch("bjetCSVVeto")
+        #print "making bjetCSVVeto"
+        self.bjetCSVVeto_branch = the_tree.GetBranch("bjetCSVVeto")
         self.bjetCSVVeto_branch.SetAddress(<void*>&self.bjetCSVVeto_value)
 
-        self.bjetVeto_branch = self.tree.GetBranch("bjetVeto")
+        #print "making bjetCSVVeto30"
+        self.bjetCSVVeto30_branch = the_tree.GetBranch("bjetCSVVeto30")
+        self.bjetCSVVeto30_branch.SetAddress(<void*>&self.bjetCSVVeto30_value)
+
+        #print "making bjetVeto"
+        self.bjetVeto_branch = the_tree.GetBranch("bjetVeto")
         self.bjetVeto_branch.SetAddress(<void*>&self.bjetVeto_value)
 
-        self.charge_branch = self.tree.GetBranch("charge")
+        #print "making charge"
+        self.charge_branch = the_tree.GetBranch("charge")
         self.charge_branch.SetAddress(<void*>&self.charge_value)
 
-        self.electronAbsEta_branch = self.tree.GetBranch("electronAbsEta")
-        self.electronAbsEta_branch.SetAddress(<void*>&self.electronAbsEta_value)
+        #print "making doubleEExtraGroup"
+        self.doubleEExtraGroup_branch = the_tree.GetBranch("doubleEExtraGroup")
+        self.doubleEExtraGroup_branch.SetAddress(<void*>&self.doubleEExtraGroup_value)
 
-        self.electronCharge_branch = self.tree.GetBranch("electronCharge")
-        self.electronCharge_branch.SetAddress(<void*>&self.electronCharge_value)
+        #print "making doubleEExtraPass"
+        self.doubleEExtraPass_branch = the_tree.GetBranch("doubleEExtraPass")
+        self.doubleEExtraPass_branch.SetAddress(<void*>&self.doubleEExtraPass_value)
 
-        self.electronChargeIdLoose_branch = self.tree.GetBranch("electronChargeIdLoose")
-        self.electronChargeIdLoose_branch.SetAddress(<void*>&self.electronChargeIdLoose_value)
+        #print "making doubleEExtraPrescale"
+        self.doubleEExtraPrescale_branch = the_tree.GetBranch("doubleEExtraPrescale")
+        self.doubleEExtraPrescale_branch.SetAddress(<void*>&self.doubleEExtraPrescale_value)
 
-        self.electronChargeIdMed_branch = self.tree.GetBranch("electronChargeIdMed")
-        self.electronChargeIdMed_branch.SetAddress(<void*>&self.electronChargeIdMed_value)
+        #print "making doubleEGroup"
+        self.doubleEGroup_branch = the_tree.GetBranch("doubleEGroup")
+        self.doubleEGroup_branch.SetAddress(<void*>&self.doubleEGroup_value)
 
-        self.electronChargeIdTight_branch = self.tree.GetBranch("electronChargeIdTight")
-        self.electronChargeIdTight_branch.SetAddress(<void*>&self.electronChargeIdTight_value)
+        #print "making doubleEPass"
+        self.doubleEPass_branch = the_tree.GetBranch("doubleEPass")
+        self.doubleEPass_branch.SetAddress(<void*>&self.doubleEPass_value)
 
-        self.electronCiCTight_branch = self.tree.GetBranch("electronCiCTight")
-        self.electronCiCTight_branch.SetAddress(<void*>&self.electronCiCTight_value)
+        #print "making doubleEPrescale"
+        self.doubleEPrescale_branch = the_tree.GetBranch("doubleEPrescale")
+        self.doubleEPrescale_branch.SetAddress(<void*>&self.doubleEPrescale_value)
 
-        self.electronDZ_branch = self.tree.GetBranch("electronDZ")
-        self.electronDZ_branch.SetAddress(<void*>&self.electronDZ_value)
+        #print "making doubleMuGroup"
+        self.doubleMuGroup_branch = the_tree.GetBranch("doubleMuGroup")
+        self.doubleMuGroup_branch.SetAddress(<void*>&self.doubleMuGroup_value)
 
-        self.electronEta_branch = self.tree.GetBranch("electronEta")
-        self.electronEta_branch.SetAddress(<void*>&self.electronEta_value)
+        #print "making doubleMuPass"
+        self.doubleMuPass_branch = the_tree.GetBranch("doubleMuPass")
+        self.doubleMuPass_branch.SetAddress(<void*>&self.doubleMuPass_value)
 
-        self.electronHasConversion_branch = self.tree.GetBranch("electronHasConversion")
-        self.electronHasConversion_branch.SetAddress(<void*>&self.electronHasConversion_value)
+        #print "making doubleMuPrescale"
+        self.doubleMuPrescale_branch = the_tree.GetBranch("doubleMuPrescale")
+        self.doubleMuPrescale_branch.SetAddress(<void*>&self.doubleMuPrescale_value)
 
-        self.electronIP3DS_branch = self.tree.GetBranch("electronIP3DS")
-        self.electronIP3DS_branch.SetAddress(<void*>&self.electronIP3DS_value)
+        #print "making doubleMuTrkGroup"
+        self.doubleMuTrkGroup_branch = the_tree.GetBranch("doubleMuTrkGroup")
+        self.doubleMuTrkGroup_branch.SetAddress(<void*>&self.doubleMuTrkGroup_value)
 
-        self.electronJetBtag_branch = self.tree.GetBranch("electronJetBtag")
-        self.electronJetBtag_branch.SetAddress(<void*>&self.electronJetBtag_value)
+        #print "making doubleMuTrkPass"
+        self.doubleMuTrkPass_branch = the_tree.GetBranch("doubleMuTrkPass")
+        self.doubleMuTrkPass_branch.SetAddress(<void*>&self.doubleMuTrkPass_value)
 
-        self.electronJetPt_branch = self.tree.GetBranch("electronJetPt")
-        self.electronJetPt_branch.SetAddress(<void*>&self.electronJetPt_value)
+        #print "making doubleMuTrkPrescale"
+        self.doubleMuTrkPrescale_branch = the_tree.GetBranch("doubleMuTrkPrescale")
+        self.doubleMuTrkPrescale_branch.SetAddress(<void*>&self.doubleMuTrkPrescale_value)
 
-        self.electronMITID_branch = self.tree.GetBranch("electronMITID")
-        self.electronMITID_branch.SetAddress(<void*>&self.electronMITID_value)
+        #print "making eAbsEta"
+        self.eAbsEta_branch = the_tree.GetBranch("eAbsEta")
+        self.eAbsEta_branch.SetAddress(<void*>&self.eAbsEta_value)
 
-        self.electronMVAIDH2TauWP_branch = self.tree.GetBranch("electronMVAIDH2TauWP")
-        self.electronMVAIDH2TauWP_branch.SetAddress(<void*>&self.electronMVAIDH2TauWP_value)
+        #print "making eCharge"
+        self.eCharge_branch = the_tree.GetBranch("eCharge")
+        self.eCharge_branch.SetAddress(<void*>&self.eCharge_value)
 
-        self.electronMVANonTrig_branch = self.tree.GetBranch("electronMVANonTrig")
-        self.electronMVANonTrig_branch.SetAddress(<void*>&self.electronMVANonTrig_value)
+        #print "making eChargeIdLoose"
+        self.eChargeIdLoose_branch = the_tree.GetBranch("eChargeIdLoose")
+        self.eChargeIdLoose_branch.SetAddress(<void*>&self.eChargeIdLoose_value)
 
-        self.electronMVATrig_branch = self.tree.GetBranch("electronMVATrig")
-        self.electronMVATrig_branch.SetAddress(<void*>&self.electronMVATrig_value)
+        #print "making eChargeIdMed"
+        self.eChargeIdMed_branch = the_tree.GetBranch("eChargeIdMed")
+        self.eChargeIdMed_branch.SetAddress(<void*>&self.eChargeIdMed_value)
 
-        self.electronMass_branch = self.tree.GetBranch("electronMass")
-        self.electronMass_branch.SetAddress(<void*>&self.electronMass_value)
+        #print "making eChargeIdTight"
+        self.eChargeIdTight_branch = the_tree.GetBranch("eChargeIdTight")
+        self.eChargeIdTight_branch.SetAddress(<void*>&self.eChargeIdTight_value)
 
-        self.electronMissingHits_branch = self.tree.GetBranch("electronMissingHits")
-        self.electronMissingHits_branch.SetAddress(<void*>&self.electronMissingHits_value)
+        #print "making eCiCTight"
+        self.eCiCTight_branch = the_tree.GetBranch("eCiCTight")
+        self.eCiCTight_branch.SetAddress(<void*>&self.eCiCTight_value)
 
-        self.electronMtToMET_branch = self.tree.GetBranch("electronMtToMET")
-        self.electronMtToMET_branch.SetAddress(<void*>&self.electronMtToMET_value)
+        #print "making eDZ"
+        self.eDZ_branch = the_tree.GetBranch("eDZ")
+        self.eDZ_branch.SetAddress(<void*>&self.eDZ_value)
 
-        self.electronMuOverlap_branch = self.tree.GetBranch("electronMuOverlap")
-        self.electronMuOverlap_branch.SetAddress(<void*>&self.electronMuOverlap_value)
+        #print "making eEta"
+        self.eEta_branch = the_tree.GetBranch("eEta")
+        self.eEta_branch.SetAddress(<void*>&self.eEta_value)
 
-        self.electronPhi_branch = self.tree.GetBranch("electronPhi")
-        self.electronPhi_branch.SetAddress(<void*>&self.electronPhi_value)
+        #print "making eHasConversion"
+        self.eHasConversion_branch = the_tree.GetBranch("eHasConversion")
+        self.eHasConversion_branch.SetAddress(<void*>&self.eHasConversion_value)
 
-        self.electronPt_branch = self.tree.GetBranch("electronPt")
-        self.electronPt_branch.SetAddress(<void*>&self.electronPt_value)
+        #print "making eIP3DS"
+        self.eIP3DS_branch = the_tree.GetBranch("eIP3DS")
+        self.eIP3DS_branch.SetAddress(<void*>&self.eIP3DS_value)
 
-        self.electronRelIso_branch = self.tree.GetBranch("electronRelIso")
-        self.electronRelIso_branch.SetAddress(<void*>&self.electronRelIso_value)
+        #print "making eJetBtag"
+        self.eJetBtag_branch = the_tree.GetBranch("eJetBtag")
+        self.eJetBtag_branch.SetAddress(<void*>&self.eJetBtag_value)
 
-        self.electronRelPFIsoDB_branch = self.tree.GetBranch("electronRelPFIsoDB")
-        self.electronRelPFIsoDB_branch.SetAddress(<void*>&self.electronRelPFIsoDB_value)
+        #print "making eJetCSVBtag"
+        self.eJetCSVBtag_branch = the_tree.GetBranch("eJetCSVBtag")
+        self.eJetCSVBtag_branch.SetAddress(<void*>&self.eJetCSVBtag_value)
 
-        self.electronVZ_branch = self.tree.GetBranch("electronVZ")
-        self.electronVZ_branch.SetAddress(<void*>&self.electronVZ_value)
+        #print "making eJetPt"
+        self.eJetPt_branch = the_tree.GetBranch("eJetPt")
+        self.eJetPt_branch.SetAddress(<void*>&self.eJetPt_value)
 
-        self.electronWWID_branch = self.tree.GetBranch("electronWWID")
-        self.electronWWID_branch.SetAddress(<void*>&self.electronWWID_value)
+        #print "making eL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter"
+        self.eL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch = the_tree.GetBranch("eL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter")
+        self.eL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch.SetAddress(<void*>&self.eL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_value)
 
-        self.electron_muon_DPhi_branch = self.tree.GetBranch("electron_muon_DPhi")
-        self.electron_muon_DPhi_branch.SetAddress(<void*>&self.electron_muon_DPhi_value)
+        #print "making eMITID"
+        self.eMITID_branch = the_tree.GetBranch("eMITID")
+        self.eMITID_branch.SetAddress(<void*>&self.eMITID_value)
 
-        self.electron_muon_DR_branch = self.tree.GetBranch("electron_muon_DR")
-        self.electron_muon_DR_branch.SetAddress(<void*>&self.electron_muon_DR_value)
+        #print "making eMVAIDH2TauWP"
+        self.eMVAIDH2TauWP_branch = the_tree.GetBranch("eMVAIDH2TauWP")
+        self.eMVAIDH2TauWP_branch.SetAddress(<void*>&self.eMVAIDH2TauWP_value)
 
-        self.electron_muon_Mass_branch = self.tree.GetBranch("electron_muon_Mass")
-        self.electron_muon_Mass_branch.SetAddress(<void*>&self.electron_muon_Mass_value)
+        #print "making eMVANonTrig"
+        self.eMVANonTrig_branch = the_tree.GetBranch("eMVANonTrig")
+        self.eMVANonTrig_branch.SetAddress(<void*>&self.eMVANonTrig_value)
 
-        self.electron_muon_PZeta_branch = self.tree.GetBranch("electron_muon_PZeta")
-        self.electron_muon_PZeta_branch.SetAddress(<void*>&self.electron_muon_PZeta_value)
+        #print "making eMVATrig"
+        self.eMVATrig_branch = the_tree.GetBranch("eMVATrig")
+        self.eMVATrig_branch.SetAddress(<void*>&self.eMVATrig_value)
 
-        self.electron_muon_PZetaVis_branch = self.tree.GetBranch("electron_muon_PZetaVis")
-        self.electron_muon_PZetaVis_branch.SetAddress(<void*>&self.electron_muon_PZetaVis_value)
+        #print "making eMass"
+        self.eMass_branch = the_tree.GetBranch("eMass")
+        self.eMass_branch.SetAddress(<void*>&self.eMass_value)
 
-        self.electron_muon_Pt_branch = self.tree.GetBranch("electron_muon_Pt")
-        self.electron_muon_Pt_branch.SetAddress(<void*>&self.electron_muon_Pt_value)
+        #print "making eMissingHits"
+        self.eMissingHits_branch = the_tree.GetBranch("eMissingHits")
+        self.eMissingHits_branch.SetAddress(<void*>&self.eMissingHits_value)
 
-        self.electron_muon_SS_branch = self.tree.GetBranch("electron_muon_SS")
-        self.electron_muon_SS_branch.SetAddress(<void*>&self.electron_muon_SS_value)
+        #print "making eMtToMET"
+        self.eMtToMET_branch = the_tree.GetBranch("eMtToMET")
+        self.eMtToMET_branch.SetAddress(<void*>&self.eMtToMET_value)
 
-        self.evt_branch = self.tree.GetBranch("evt")
+        #print "making eMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter"
+        self.eMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch = the_tree.GetBranch("eMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter")
+        self.eMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch.SetAddress(<void*>&self.eMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_value)
+
+        #print "making eMu17Ele8CaloIdTPixelMatchFilter"
+        self.eMu17Ele8CaloIdTPixelMatchFilter_branch = the_tree.GetBranch("eMu17Ele8CaloIdTPixelMatchFilter")
+        self.eMu17Ele8CaloIdTPixelMatchFilter_branch.SetAddress(<void*>&self.eMu17Ele8CaloIdTPixelMatchFilter_value)
+
+        #print "making eMu17Ele8dZFilter"
+        self.eMu17Ele8dZFilter_branch = the_tree.GetBranch("eMu17Ele8dZFilter")
+        self.eMu17Ele8dZFilter_branch.SetAddress(<void*>&self.eMu17Ele8dZFilter_value)
+
+        #print "making ePhi"
+        self.ePhi_branch = the_tree.GetBranch("ePhi")
+        self.ePhi_branch.SetAddress(<void*>&self.ePhi_value)
+
+        #print "making ePt"
+        self.ePt_branch = the_tree.GetBranch("ePt")
+        self.ePt_branch.SetAddress(<void*>&self.ePt_value)
+
+        #print "making eRelIso"
+        self.eRelIso_branch = the_tree.GetBranch("eRelIso")
+        self.eRelIso_branch.SetAddress(<void*>&self.eRelIso_value)
+
+        #print "making eRelPFIsoDB"
+        self.eRelPFIsoDB_branch = the_tree.GetBranch("eRelPFIsoDB")
+        self.eRelPFIsoDB_branch.SetAddress(<void*>&self.eRelPFIsoDB_value)
+
+        #print "making eSCEnergy"
+        self.eSCEnergy_branch = the_tree.GetBranch("eSCEnergy")
+        self.eSCEnergy_branch.SetAddress(<void*>&self.eSCEnergy_value)
+
+        #print "making eSCEta"
+        self.eSCEta_branch = the_tree.GetBranch("eSCEta")
+        self.eSCEta_branch.SetAddress(<void*>&self.eSCEta_value)
+
+        #print "making eSCPhi"
+        self.eSCPhi_branch = the_tree.GetBranch("eSCPhi")
+        self.eSCPhi_branch.SetAddress(<void*>&self.eSCPhi_value)
+
+        #print "making eVZ"
+        self.eVZ_branch = the_tree.GetBranch("eVZ")
+        self.eVZ_branch.SetAddress(<void*>&self.eVZ_value)
+
+        #print "making eVetoCicTightIso"
+        self.eVetoCicTightIso_branch = the_tree.GetBranch("eVetoCicTightIso")
+        self.eVetoCicTightIso_branch.SetAddress(<void*>&self.eVetoCicTightIso_value)
+
+        #print "making eVetoMVAIso"
+        self.eVetoMVAIso_branch = the_tree.GetBranch("eVetoMVAIso")
+        self.eVetoMVAIso_branch.SetAddress(<void*>&self.eVetoMVAIso_value)
+
+        #print "making eWWID"
+        self.eWWID_branch = the_tree.GetBranch("eWWID")
+        self.eWWID_branch.SetAddress(<void*>&self.eWWID_value)
+
+        #print "making e_m_DPhi"
+        self.e_m_DPhi_branch = the_tree.GetBranch("e_m_DPhi")
+        self.e_m_DPhi_branch.SetAddress(<void*>&self.e_m_DPhi_value)
+
+        #print "making e_m_DR"
+        self.e_m_DR_branch = the_tree.GetBranch("e_m_DR")
+        self.e_m_DR_branch.SetAddress(<void*>&self.e_m_DR_value)
+
+        #print "making e_m_Mass"
+        self.e_m_Mass_branch = the_tree.GetBranch("e_m_Mass")
+        self.e_m_Mass_branch.SetAddress(<void*>&self.e_m_Mass_value)
+
+        #print "making e_m_PZeta"
+        self.e_m_PZeta_branch = the_tree.GetBranch("e_m_PZeta")
+        self.e_m_PZeta_branch.SetAddress(<void*>&self.e_m_PZeta_value)
+
+        #print "making e_m_PZetaVis"
+        self.e_m_PZetaVis_branch = the_tree.GetBranch("e_m_PZetaVis")
+        self.e_m_PZetaVis_branch.SetAddress(<void*>&self.e_m_PZetaVis_value)
+
+        #print "making e_m_Pt"
+        self.e_m_Pt_branch = the_tree.GetBranch("e_m_Pt")
+        self.e_m_Pt_branch.SetAddress(<void*>&self.e_m_Pt_value)
+
+        #print "making e_m_SS"
+        self.e_m_SS_branch = the_tree.GetBranch("e_m_SS")
+        self.e_m_SS_branch.SetAddress(<void*>&self.e_m_SS_value)
+
+        #print "making e_m_Zcompat"
+        self.e_m_Zcompat_branch = the_tree.GetBranch("e_m_Zcompat")
+        self.e_m_Zcompat_branch.SetAddress(<void*>&self.e_m_Zcompat_value)
+
+        #print "making evt"
+        self.evt_branch = the_tree.GetBranch("evt")
         self.evt_branch.SetAddress(<void*>&self.evt_value)
 
-        self.isdata_branch = self.tree.GetBranch("isdata")
+        #print "making isdata"
+        self.isdata_branch = the_tree.GetBranch("isdata")
         self.isdata_branch.SetAddress(<void*>&self.isdata_value)
 
-        self.isoMuGroup_branch = self.tree.GetBranch("isoMuGroup")
+        #print "making isoMuGroup"
+        self.isoMuGroup_branch = the_tree.GetBranch("isoMuGroup")
         self.isoMuGroup_branch.SetAddress(<void*>&self.isoMuGroup_value)
 
-        self.isoMuPass_branch = self.tree.GetBranch("isoMuPass")
+        #print "making isoMuPass"
+        self.isoMuPass_branch = the_tree.GetBranch("isoMuPass")
         self.isoMuPass_branch.SetAddress(<void*>&self.isoMuPass_value)
 
-        self.isoMuPrescale_branch = self.tree.GetBranch("isoMuPrescale")
+        #print "making isoMuPrescale"
+        self.isoMuPrescale_branch = the_tree.GetBranch("isoMuPrescale")
         self.isoMuPrescale_branch.SetAddress(<void*>&self.isoMuPrescale_value)
 
-        self.jetVeto20_branch = self.tree.GetBranch("jetVeto20")
+        #print "making jetVeto20"
+        self.jetVeto20_branch = the_tree.GetBranch("jetVeto20")
         self.jetVeto20_branch.SetAddress(<void*>&self.jetVeto20_value)
 
-        self.jetVeto40_branch = self.tree.GetBranch("jetVeto40")
+        #print "making jetVeto30"
+        self.jetVeto30_branch = the_tree.GetBranch("jetVeto30")
+        self.jetVeto30_branch.SetAddress(<void*>&self.jetVeto30_value)
+
+        #print "making jetVeto40"
+        self.jetVeto40_branch = the_tree.GetBranch("jetVeto40")
         self.jetVeto40_branch.SetAddress(<void*>&self.jetVeto40_value)
 
-        self.lumi_branch = self.tree.GetBranch("lumi")
+        #print "making lumi"
+        self.lumi_branch = the_tree.GetBranch("lumi")
         self.lumi_branch.SetAddress(<void*>&self.lumi_value)
 
-        self.metEt_branch = self.tree.GetBranch("metEt")
+        #print "making mAbsEta"
+        self.mAbsEta_branch = the_tree.GetBranch("mAbsEta")
+        self.mAbsEta_branch.SetAddress(<void*>&self.mAbsEta_value)
+
+        #print "making mCharge"
+        self.mCharge_branch = the_tree.GetBranch("mCharge")
+        self.mCharge_branch.SetAddress(<void*>&self.mCharge_value)
+
+        #print "making mD0"
+        self.mD0_branch = the_tree.GetBranch("mD0")
+        self.mD0_branch.SetAddress(<void*>&self.mD0_value)
+
+        #print "making mDZ"
+        self.mDZ_branch = the_tree.GetBranch("mDZ")
+        self.mDZ_branch.SetAddress(<void*>&self.mDZ_value)
+
+        #print "making mDiMuonL3PreFiltered7"
+        self.mDiMuonL3PreFiltered7_branch = the_tree.GetBranch("mDiMuonL3PreFiltered7")
+        self.mDiMuonL3PreFiltered7_branch.SetAddress(<void*>&self.mDiMuonL3PreFiltered7_value)
+
+        #print "making mDiMuonL3p5PreFiltered8"
+        self.mDiMuonL3p5PreFiltered8_branch = the_tree.GetBranch("mDiMuonL3p5PreFiltered8")
+        self.mDiMuonL3p5PreFiltered8_branch.SetAddress(<void*>&self.mDiMuonL3p5PreFiltered8_value)
+
+        #print "making mDiMuonMu17Mu8DzFiltered0p2"
+        self.mDiMuonMu17Mu8DzFiltered0p2_branch = the_tree.GetBranch("mDiMuonMu17Mu8DzFiltered0p2")
+        self.mDiMuonMu17Mu8DzFiltered0p2_branch.SetAddress(<void*>&self.mDiMuonMu17Mu8DzFiltered0p2_value)
+
+        #print "making mEta"
+        self.mEta_branch = the_tree.GetBranch("mEta")
+        self.mEta_branch.SetAddress(<void*>&self.mEta_value)
+
+        #print "making mGlbTrkHits"
+        self.mGlbTrkHits_branch = the_tree.GetBranch("mGlbTrkHits")
+        self.mGlbTrkHits_branch.SetAddress(<void*>&self.mGlbTrkHits_value)
+
+        #print "making mIP3DS"
+        self.mIP3DS_branch = the_tree.GetBranch("mIP3DS")
+        self.mIP3DS_branch.SetAddress(<void*>&self.mIP3DS_value)
+
+        #print "making mIsGlobal"
+        self.mIsGlobal_branch = the_tree.GetBranch("mIsGlobal")
+        self.mIsGlobal_branch.SetAddress(<void*>&self.mIsGlobal_value)
+
+        #print "making mIsTracker"
+        self.mIsTracker_branch = the_tree.GetBranch("mIsTracker")
+        self.mIsTracker_branch.SetAddress(<void*>&self.mIsTracker_value)
+
+        #print "making mJetBtag"
+        self.mJetBtag_branch = the_tree.GetBranch("mJetBtag")
+        self.mJetBtag_branch.SetAddress(<void*>&self.mJetBtag_value)
+
+        #print "making mJetCSVBtag"
+        self.mJetCSVBtag_branch = the_tree.GetBranch("mJetCSVBtag")
+        self.mJetCSVBtag_branch.SetAddress(<void*>&self.mJetCSVBtag_value)
+
+        #print "making mJetPt"
+        self.mJetPt_branch = the_tree.GetBranch("mJetPt")
+        self.mJetPt_branch.SetAddress(<void*>&self.mJetPt_value)
+
+        #print "making mL1Mu3EG5L3Filtered17"
+        self.mL1Mu3EG5L3Filtered17_branch = the_tree.GetBranch("mL1Mu3EG5L3Filtered17")
+        self.mL1Mu3EG5L3Filtered17_branch.SetAddress(<void*>&self.mL1Mu3EG5L3Filtered17_value)
+
+        #print "making mL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17"
+        self.mL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch = the_tree.GetBranch("mL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17")
+        self.mL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.SetAddress(<void*>&self.mL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value)
+
+        #print "making mMass"
+        self.mMass_branch = the_tree.GetBranch("mMass")
+        self.mMass_branch.SetAddress(<void*>&self.mMass_value)
+
+        #print "making mMtToMET"
+        self.mMtToMET_branch = the_tree.GetBranch("mMtToMET")
+        self.mMtToMET_branch.SetAddress(<void*>&self.mMtToMET_value)
+
+        #print "making mMu17Ele8dZFilter"
+        self.mMu17Ele8dZFilter_branch = the_tree.GetBranch("mMu17Ele8dZFilter")
+        self.mMu17Ele8dZFilter_branch.SetAddress(<void*>&self.mMu17Ele8dZFilter_value)
+
+        #print "making mNormTrkChi2"
+        self.mNormTrkChi2_branch = the_tree.GetBranch("mNormTrkChi2")
+        self.mNormTrkChi2_branch.SetAddress(<void*>&self.mNormTrkChi2_value)
+
+        #print "making mPFIDTight"
+        self.mPFIDTight_branch = the_tree.GetBranch("mPFIDTight")
+        self.mPFIDTight_branch.SetAddress(<void*>&self.mPFIDTight_value)
+
+        #print "making mPhi"
+        self.mPhi_branch = the_tree.GetBranch("mPhi")
+        self.mPhi_branch.SetAddress(<void*>&self.mPhi_value)
+
+        #print "making mPixHits"
+        self.mPixHits_branch = the_tree.GetBranch("mPixHits")
+        self.mPixHits_branch.SetAddress(<void*>&self.mPixHits_value)
+
+        #print "making mPt"
+        self.mPt_branch = the_tree.GetBranch("mPt")
+        self.mPt_branch.SetAddress(<void*>&self.mPt_value)
+
+        #print "making mPtUncorr"
+        self.mPtUncorr_branch = the_tree.GetBranch("mPtUncorr")
+        self.mPtUncorr_branch.SetAddress(<void*>&self.mPtUncorr_value)
+
+        #print "making mRelPFIsoDB"
+        self.mRelPFIsoDB_branch = the_tree.GetBranch("mRelPFIsoDB")
+        self.mRelPFIsoDB_branch.SetAddress(<void*>&self.mRelPFIsoDB_value)
+
+        #print "making mSingleMu13L3Filtered13"
+        self.mSingleMu13L3Filtered13_branch = the_tree.GetBranch("mSingleMu13L3Filtered13")
+        self.mSingleMu13L3Filtered13_branch.SetAddress(<void*>&self.mSingleMu13L3Filtered13_value)
+
+        #print "making mSingleMu13L3Filtered17"
+        self.mSingleMu13L3Filtered17_branch = the_tree.GetBranch("mSingleMu13L3Filtered17")
+        self.mSingleMu13L3Filtered17_branch.SetAddress(<void*>&self.mSingleMu13L3Filtered17_value)
+
+        #print "making mVBTFID"
+        self.mVBTFID_branch = the_tree.GetBranch("mVBTFID")
+        self.mVBTFID_branch.SetAddress(<void*>&self.mVBTFID_value)
+
+        #print "making mVZ"
+        self.mVZ_branch = the_tree.GetBranch("mVZ")
+        self.mVZ_branch.SetAddress(<void*>&self.mVZ_value)
+
+        #print "making mWWID"
+        self.mWWID_branch = the_tree.GetBranch("mWWID")
+        self.mWWID_branch.SetAddress(<void*>&self.mWWID_value)
+
+        #print "making metEt"
+        self.metEt_branch = the_tree.GetBranch("metEt")
         self.metEt_branch.SetAddress(<void*>&self.metEt_value)
 
-        self.metPhi_branch = self.tree.GetBranch("metPhi")
+        #print "making metPhi"
+        self.metPhi_branch = the_tree.GetBranch("metPhi")
         self.metPhi_branch.SetAddress(<void*>&self.metPhi_value)
 
-        self.metSignificance_branch = self.tree.GetBranch("metSignificance")
+        #print "making metSignificance"
+        self.metSignificance_branch = the_tree.GetBranch("metSignificance")
         self.metSignificance_branch.SetAddress(<void*>&self.metSignificance_value)
 
-        self.mu17ele8Group_branch = self.tree.GetBranch("mu17ele8Group")
+        #print "making mu17ele8Group"
+        self.mu17ele8Group_branch = the_tree.GetBranch("mu17ele8Group")
         self.mu17ele8Group_branch.SetAddress(<void*>&self.mu17ele8Group_value)
 
-        self.mu17ele8Pass_branch = self.tree.GetBranch("mu17ele8Pass")
+        #print "making mu17ele8Pass"
+        self.mu17ele8Pass_branch = the_tree.GetBranch("mu17ele8Pass")
         self.mu17ele8Pass_branch.SetAddress(<void*>&self.mu17ele8Pass_value)
 
-        self.mu17ele8Prescale_branch = self.tree.GetBranch("mu17ele8Prescale")
+        #print "making mu17ele8Prescale"
+        self.mu17ele8Prescale_branch = the_tree.GetBranch("mu17ele8Prescale")
         self.mu17ele8Prescale_branch.SetAddress(<void*>&self.mu17ele8Prescale_value)
 
-        self.mu8ele17Group_branch = self.tree.GetBranch("mu8ele17Group")
+        #print "making mu8ele17Group"
+        self.mu8ele17Group_branch = the_tree.GetBranch("mu8ele17Group")
         self.mu8ele17Group_branch.SetAddress(<void*>&self.mu8ele17Group_value)
 
-        self.mu8ele17Pass_branch = self.tree.GetBranch("mu8ele17Pass")
+        #print "making mu8ele17Pass"
+        self.mu8ele17Pass_branch = the_tree.GetBranch("mu8ele17Pass")
         self.mu8ele17Pass_branch.SetAddress(<void*>&self.mu8ele17Pass_value)
 
-        self.mu8ele17Prescale_branch = self.tree.GetBranch("mu8ele17Prescale")
+        #print "making mu8ele17Prescale"
+        self.mu8ele17Prescale_branch = the_tree.GetBranch("mu8ele17Prescale")
         self.mu8ele17Prescale_branch.SetAddress(<void*>&self.mu8ele17Prescale_value)
 
-        self.muGlbIsoVetoPt10_branch = self.tree.GetBranch("muGlbIsoVetoPt10")
+        #print "making muGlbIsoVetoPt10"
+        self.muGlbIsoVetoPt10_branch = the_tree.GetBranch("muGlbIsoVetoPt10")
         self.muGlbIsoVetoPt10_branch.SetAddress(<void*>&self.muGlbIsoVetoPt10_value)
 
-        self.muVetoPt5_branch = self.tree.GetBranch("muVetoPt5")
+        #print "making muVetoPt5"
+        self.muVetoPt5_branch = the_tree.GetBranch("muVetoPt5")
         self.muVetoPt5_branch.SetAddress(<void*>&self.muVetoPt5_value)
 
-        self.muonAbsEta_branch = self.tree.GetBranch("muonAbsEta")
-        self.muonAbsEta_branch.SetAddress(<void*>&self.muonAbsEta_value)
-
-        self.muonCharge_branch = self.tree.GetBranch("muonCharge")
-        self.muonCharge_branch.SetAddress(<void*>&self.muonCharge_value)
-
-        self.muonD0_branch = self.tree.GetBranch("muonD0")
-        self.muonD0_branch.SetAddress(<void*>&self.muonD0_value)
-
-        self.muonDZ_branch = self.tree.GetBranch("muonDZ")
-        self.muonDZ_branch.SetAddress(<void*>&self.muonDZ_value)
-
-        self.muonEta_branch = self.tree.GetBranch("muonEta")
-        self.muonEta_branch.SetAddress(<void*>&self.muonEta_value)
-
-        self.muonGlbTrkHits_branch = self.tree.GetBranch("muonGlbTrkHits")
-        self.muonGlbTrkHits_branch.SetAddress(<void*>&self.muonGlbTrkHits_value)
-
-        self.muonIP3DS_branch = self.tree.GetBranch("muonIP3DS")
-        self.muonIP3DS_branch.SetAddress(<void*>&self.muonIP3DS_value)
-
-        self.muonIsGlobal_branch = self.tree.GetBranch("muonIsGlobal")
-        self.muonIsGlobal_branch.SetAddress(<void*>&self.muonIsGlobal_value)
-
-        self.muonIsTracker_branch = self.tree.GetBranch("muonIsTracker")
-        self.muonIsTracker_branch.SetAddress(<void*>&self.muonIsTracker_value)
-
-        self.muonJetBtag_branch = self.tree.GetBranch("muonJetBtag")
-        self.muonJetBtag_branch.SetAddress(<void*>&self.muonJetBtag_value)
-
-        self.muonJetPt_branch = self.tree.GetBranch("muonJetPt")
-        self.muonJetPt_branch.SetAddress(<void*>&self.muonJetPt_value)
-
-        self.muonMass_branch = self.tree.GetBranch("muonMass")
-        self.muonMass_branch.SetAddress(<void*>&self.muonMass_value)
-
-        self.muonMtToMET_branch = self.tree.GetBranch("muonMtToMET")
-        self.muonMtToMET_branch.SetAddress(<void*>&self.muonMtToMET_value)
-
-        self.muonNormTrkChi2_branch = self.tree.GetBranch("muonNormTrkChi2")
-        self.muonNormTrkChi2_branch.SetAddress(<void*>&self.muonNormTrkChi2_value)
-
-        self.muonPFIDTight_branch = self.tree.GetBranch("muonPFIDTight")
-        self.muonPFIDTight_branch.SetAddress(<void*>&self.muonPFIDTight_value)
-
-        self.muonPhi_branch = self.tree.GetBranch("muonPhi")
-        self.muonPhi_branch.SetAddress(<void*>&self.muonPhi_value)
-
-        self.muonPixHits_branch = self.tree.GetBranch("muonPixHits")
-        self.muonPixHits_branch.SetAddress(<void*>&self.muonPixHits_value)
-
-        self.muonPt_branch = self.tree.GetBranch("muonPt")
-        self.muonPt_branch.SetAddress(<void*>&self.muonPt_value)
-
-        self.muonPtUncorr_branch = self.tree.GetBranch("muonPtUncorr")
-        self.muonPtUncorr_branch.SetAddress(<void*>&self.muonPtUncorr_value)
-
-        self.muonRelPFIsoDB_branch = self.tree.GetBranch("muonRelPFIsoDB")
-        self.muonRelPFIsoDB_branch.SetAddress(<void*>&self.muonRelPFIsoDB_value)
-
-        self.muonVBTFID_branch = self.tree.GetBranch("muonVBTFID")
-        self.muonVBTFID_branch.SetAddress(<void*>&self.muonVBTFID_value)
-
-        self.muonVZ_branch = self.tree.GetBranch("muonVZ")
-        self.muonVZ_branch.SetAddress(<void*>&self.muonVZ_value)
-
-        self.muonWWID_branch = self.tree.GetBranch("muonWWID")
-        self.muonWWID_branch.SetAddress(<void*>&self.muonWWID_value)
-
-        self.nTruePU_branch = self.tree.GetBranch("nTruePU")
+        #print "making nTruePU"
+        self.nTruePU_branch = the_tree.GetBranch("nTruePU")
         self.nTruePU_branch.SetAddress(<void*>&self.nTruePU_value)
 
-        self.nvtx_branch = self.tree.GetBranch("nvtx")
+        #print "making nvtx"
+        self.nvtx_branch = the_tree.GetBranch("nvtx")
         self.nvtx_branch.SetAddress(<void*>&self.nvtx_value)
 
-        self.puWeightData2011A_branch = self.tree.GetBranch("puWeightData2011A")
-        self.puWeightData2011A_branch.SetAddress(<void*>&self.puWeightData2011A_value)
+        #print "making processID"
+        self.processID_branch = the_tree.GetBranch("processID")
+        self.processID_branch.SetAddress(<void*>&self.processID_value)
 
-        self.puWeightData2011AB_branch = self.tree.GetBranch("puWeightData2011AB")
-        self.puWeightData2011AB_branch.SetAddress(<void*>&self.puWeightData2011AB_value)
-
-        self.puWeightData2011B_branch = self.tree.GetBranch("puWeightData2011B")
-        self.puWeightData2011B_branch.SetAddress(<void*>&self.puWeightData2011B_value)
-
-        self.rho_branch = self.tree.GetBranch("rho")
+        #print "making rho"
+        self.rho_branch = the_tree.GetBranch("rho")
         self.rho_branch.SetAddress(<void*>&self.rho_value)
 
-        self.run_branch = self.tree.GetBranch("run")
+        #print "making run"
+        self.run_branch = the_tree.GetBranch("run")
         self.run_branch.SetAddress(<void*>&self.run_value)
 
-        self.singleMuGroup_branch = self.tree.GetBranch("singleMuGroup")
+        #print "making singleMuGroup"
+        self.singleMuGroup_branch = the_tree.GetBranch("singleMuGroup")
         self.singleMuGroup_branch.SetAddress(<void*>&self.singleMuGroup_value)
 
-        self.singleMuPass_branch = self.tree.GetBranch("singleMuPass")
+        #print "making singleMuPass"
+        self.singleMuPass_branch = the_tree.GetBranch("singleMuPass")
         self.singleMuPass_branch.SetAddress(<void*>&self.singleMuPass_value)
 
-        self.singleMuPrescale_branch = self.tree.GetBranch("singleMuPrescale")
+        #print "making singleMuPrescale"
+        self.singleMuPrescale_branch = the_tree.GetBranch("singleMuPrescale")
         self.singleMuPrescale_branch.SetAddress(<void*>&self.singleMuPrescale_value)
 
-        self.tauVetoPt20_branch = self.tree.GetBranch("tauVetoPt20")
+        #print "making tauVetoPt20"
+        self.tauVetoPt20_branch = the_tree.GetBranch("tauVetoPt20")
         self.tauVetoPt20_branch.SetAddress(<void*>&self.tauVetoPt20_value)
 
-        self.idx_branch = self.tree.GetBranch("idx")
+        #print "making vbfDeta"
+        self.vbfDeta_branch = the_tree.GetBranch("vbfDeta")
+        self.vbfDeta_branch.SetAddress(<void*>&self.vbfDeta_value)
+
+        #print "making vbfJetVeto20"
+        self.vbfJetVeto20_branch = the_tree.GetBranch("vbfJetVeto20")
+        self.vbfJetVeto20_branch.SetAddress(<void*>&self.vbfJetVeto20_value)
+
+        #print "making vbfJetVeto30"
+        self.vbfJetVeto30_branch = the_tree.GetBranch("vbfJetVeto30")
+        self.vbfJetVeto30_branch.SetAddress(<void*>&self.vbfJetVeto30_value)
+
+        #print "making vbfMVA"
+        self.vbfMVA_branch = the_tree.GetBranch("vbfMVA")
+        self.vbfMVA_branch.SetAddress(<void*>&self.vbfMVA_value)
+
+        #print "making vbfMass"
+        self.vbfMass_branch = the_tree.GetBranch("vbfMass")
+        self.vbfMass_branch.SetAddress(<void*>&self.vbfMass_value)
+
+        #print "making vbfNJets"
+        self.vbfNJets_branch = the_tree.GetBranch("vbfNJets")
+        self.vbfNJets_branch.SetAddress(<void*>&self.vbfNJets_value)
+
+        #print "making idx"
+        self.idx_branch = the_tree.GetBranch("idx")
         self.idx_branch.SetAddress(<void*>&self.idx_value)
 
 
@@ -609,16 +990,23 @@ cdef class EMuTree:
     def __iter__(self):
         self.ientry = 0
         while self.ientry < self.tree.GetEntries():
+            self.load_entry(self.ientry)
             yield self
             self.ientry += 1
 
     # Iterate over rows which pass the filter
     def where(self, filter):
+        print "where"
         cdef TTreeFormula* formula = new TTreeFormula(
             "cyiter", filter, self.tree)
         self.ientry = 0
+        cdef TTree* currentTree = self.tree.GetTree()
         while self.ientry < self.tree.GetEntries():
             self.tree.LoadTree(self.ientry)
+            if currentTree != self.tree.GetTree():
+                currentTree = self.tree.GetTree()
+                formula.SetTree(currentTree)
+                formula.UpdateFormulaLeaves()
             if formula.EvalInstance(0, NULL):
                 yield self
             self.ientry += 1
@@ -629,473 +1017,660 @@ cdef class EMuTree:
         def __get__(self):
             return self.ientry
         def __set__(self, int i):
+            print i
             self.ientry = i
+            self.load_entry(i)
 
     # Access to the current branch values
 
     property LT:
         def __get__(self):
-            self.LT_branch.GetEntry(self.ientry, 0)
+            self.LT_branch.GetEntry(self.localentry, 0)
             return self.LT_value
 
     property Mass:
         def __get__(self):
-            self.Mass_branch.GetEntry(self.ientry, 0)
+            self.Mass_branch.GetEntry(self.localentry, 0)
             return self.Mass_value
 
     property Pt:
         def __get__(self):
-            self.Pt_branch.GetEntry(self.ientry, 0)
+            self.Pt_branch.GetEntry(self.localentry, 0)
             return self.Pt_value
 
     property bjetCSVVeto:
         def __get__(self):
-            self.bjetCSVVeto_branch.GetEntry(self.ientry, 0)
+            self.bjetCSVVeto_branch.GetEntry(self.localentry, 0)
             return self.bjetCSVVeto_value
+
+    property bjetCSVVeto30:
+        def __get__(self):
+            self.bjetCSVVeto30_branch.GetEntry(self.localentry, 0)
+            return self.bjetCSVVeto30_value
 
     property bjetVeto:
         def __get__(self):
-            self.bjetVeto_branch.GetEntry(self.ientry, 0)
+            self.bjetVeto_branch.GetEntry(self.localentry, 0)
             return self.bjetVeto_value
 
     property charge:
         def __get__(self):
-            self.charge_branch.GetEntry(self.ientry, 0)
+            self.charge_branch.GetEntry(self.localentry, 0)
             return self.charge_value
 
-    property electronAbsEta:
+    property doubleEExtraGroup:
         def __get__(self):
-            self.electronAbsEta_branch.GetEntry(self.ientry, 0)
-            return self.electronAbsEta_value
+            self.doubleEExtraGroup_branch.GetEntry(self.localentry, 0)
+            return self.doubleEExtraGroup_value
 
-    property electronCharge:
+    property doubleEExtraPass:
         def __get__(self):
-            self.electronCharge_branch.GetEntry(self.ientry, 0)
-            return self.electronCharge_value
+            self.doubleEExtraPass_branch.GetEntry(self.localentry, 0)
+            return self.doubleEExtraPass_value
 
-    property electronChargeIdLoose:
+    property doubleEExtraPrescale:
         def __get__(self):
-            self.electronChargeIdLoose_branch.GetEntry(self.ientry, 0)
-            return self.electronChargeIdLoose_value
+            self.doubleEExtraPrescale_branch.GetEntry(self.localentry, 0)
+            return self.doubleEExtraPrescale_value
 
-    property electronChargeIdMed:
+    property doubleEGroup:
         def __get__(self):
-            self.electronChargeIdMed_branch.GetEntry(self.ientry, 0)
-            return self.electronChargeIdMed_value
+            self.doubleEGroup_branch.GetEntry(self.localentry, 0)
+            return self.doubleEGroup_value
 
-    property electronChargeIdTight:
+    property doubleEPass:
         def __get__(self):
-            self.electronChargeIdTight_branch.GetEntry(self.ientry, 0)
-            return self.electronChargeIdTight_value
+            self.doubleEPass_branch.GetEntry(self.localentry, 0)
+            return self.doubleEPass_value
 
-    property electronCiCTight:
+    property doubleEPrescale:
         def __get__(self):
-            self.electronCiCTight_branch.GetEntry(self.ientry, 0)
-            return self.electronCiCTight_value
+            self.doubleEPrescale_branch.GetEntry(self.localentry, 0)
+            return self.doubleEPrescale_value
 
-    property electronDZ:
+    property doubleMuGroup:
         def __get__(self):
-            self.electronDZ_branch.GetEntry(self.ientry, 0)
-            return self.electronDZ_value
+            self.doubleMuGroup_branch.GetEntry(self.localentry, 0)
+            return self.doubleMuGroup_value
 
-    property electronEta:
+    property doubleMuPass:
         def __get__(self):
-            self.electronEta_branch.GetEntry(self.ientry, 0)
-            return self.electronEta_value
+            self.doubleMuPass_branch.GetEntry(self.localentry, 0)
+            return self.doubleMuPass_value
 
-    property electronHasConversion:
+    property doubleMuPrescale:
         def __get__(self):
-            self.electronHasConversion_branch.GetEntry(self.ientry, 0)
-            return self.electronHasConversion_value
+            self.doubleMuPrescale_branch.GetEntry(self.localentry, 0)
+            return self.doubleMuPrescale_value
 
-    property electronIP3DS:
+    property doubleMuTrkGroup:
         def __get__(self):
-            self.electronIP3DS_branch.GetEntry(self.ientry, 0)
-            return self.electronIP3DS_value
+            self.doubleMuTrkGroup_branch.GetEntry(self.localentry, 0)
+            return self.doubleMuTrkGroup_value
 
-    property electronJetBtag:
+    property doubleMuTrkPass:
         def __get__(self):
-            self.electronJetBtag_branch.GetEntry(self.ientry, 0)
-            return self.electronJetBtag_value
+            self.doubleMuTrkPass_branch.GetEntry(self.localentry, 0)
+            return self.doubleMuTrkPass_value
 
-    property electronJetPt:
+    property doubleMuTrkPrescale:
         def __get__(self):
-            self.electronJetPt_branch.GetEntry(self.ientry, 0)
-            return self.electronJetPt_value
+            self.doubleMuTrkPrescale_branch.GetEntry(self.localentry, 0)
+            return self.doubleMuTrkPrescale_value
 
-    property electronMITID:
+    property eAbsEta:
         def __get__(self):
-            self.electronMITID_branch.GetEntry(self.ientry, 0)
-            return self.electronMITID_value
+            self.eAbsEta_branch.GetEntry(self.localentry, 0)
+            return self.eAbsEta_value
 
-    property electronMVAIDH2TauWP:
+    property eCharge:
         def __get__(self):
-            self.electronMVAIDH2TauWP_branch.GetEntry(self.ientry, 0)
-            return self.electronMVAIDH2TauWP_value
+            self.eCharge_branch.GetEntry(self.localentry, 0)
+            return self.eCharge_value
 
-    property electronMVANonTrig:
+    property eChargeIdLoose:
         def __get__(self):
-            self.electronMVANonTrig_branch.GetEntry(self.ientry, 0)
-            return self.electronMVANonTrig_value
+            self.eChargeIdLoose_branch.GetEntry(self.localentry, 0)
+            return self.eChargeIdLoose_value
 
-    property electronMVATrig:
+    property eChargeIdMed:
         def __get__(self):
-            self.electronMVATrig_branch.GetEntry(self.ientry, 0)
-            return self.electronMVATrig_value
+            self.eChargeIdMed_branch.GetEntry(self.localentry, 0)
+            return self.eChargeIdMed_value
 
-    property electronMass:
+    property eChargeIdTight:
         def __get__(self):
-            self.electronMass_branch.GetEntry(self.ientry, 0)
-            return self.electronMass_value
+            self.eChargeIdTight_branch.GetEntry(self.localentry, 0)
+            return self.eChargeIdTight_value
 
-    property electronMissingHits:
+    property eCiCTight:
         def __get__(self):
-            self.electronMissingHits_branch.GetEntry(self.ientry, 0)
-            return self.electronMissingHits_value
+            self.eCiCTight_branch.GetEntry(self.localentry, 0)
+            return self.eCiCTight_value
 
-    property electronMtToMET:
+    property eDZ:
         def __get__(self):
-            self.electronMtToMET_branch.GetEntry(self.ientry, 0)
-            return self.electronMtToMET_value
+            self.eDZ_branch.GetEntry(self.localentry, 0)
+            return self.eDZ_value
 
-    property electronMuOverlap:
+    property eEta:
         def __get__(self):
-            self.electronMuOverlap_branch.GetEntry(self.ientry, 0)
-            return self.electronMuOverlap_value
+            self.eEta_branch.GetEntry(self.localentry, 0)
+            return self.eEta_value
 
-    property electronPhi:
+    property eHasConversion:
         def __get__(self):
-            self.electronPhi_branch.GetEntry(self.ientry, 0)
-            return self.electronPhi_value
+            self.eHasConversion_branch.GetEntry(self.localentry, 0)
+            return self.eHasConversion_value
 
-    property electronPt:
+    property eIP3DS:
         def __get__(self):
-            self.electronPt_branch.GetEntry(self.ientry, 0)
-            return self.electronPt_value
+            self.eIP3DS_branch.GetEntry(self.localentry, 0)
+            return self.eIP3DS_value
 
-    property electronRelIso:
+    property eJetBtag:
         def __get__(self):
-            self.electronRelIso_branch.GetEntry(self.ientry, 0)
-            return self.electronRelIso_value
+            self.eJetBtag_branch.GetEntry(self.localentry, 0)
+            return self.eJetBtag_value
 
-    property electronRelPFIsoDB:
+    property eJetCSVBtag:
         def __get__(self):
-            self.electronRelPFIsoDB_branch.GetEntry(self.ientry, 0)
-            return self.electronRelPFIsoDB_value
+            self.eJetCSVBtag_branch.GetEntry(self.localentry, 0)
+            return self.eJetCSVBtag_value
 
-    property electronVZ:
+    property eJetPt:
         def __get__(self):
-            self.electronVZ_branch.GetEntry(self.ientry, 0)
-            return self.electronVZ_value
+            self.eJetPt_branch.GetEntry(self.localentry, 0)
+            return self.eJetPt_value
 
-    property electronWWID:
+    property eL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter:
         def __get__(self):
-            self.electronWWID_branch.GetEntry(self.ientry, 0)
-            return self.electronWWID_value
+            self.eL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch.GetEntry(self.localentry, 0)
+            return self.eL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_value
 
-    property electron_muon_DPhi:
+    property eMITID:
         def __get__(self):
-            self.electron_muon_DPhi_branch.GetEntry(self.ientry, 0)
-            return self.electron_muon_DPhi_value
+            self.eMITID_branch.GetEntry(self.localentry, 0)
+            return self.eMITID_value
 
-    property electron_muon_DR:
+    property eMVAIDH2TauWP:
         def __get__(self):
-            self.electron_muon_DR_branch.GetEntry(self.ientry, 0)
-            return self.electron_muon_DR_value
+            self.eMVAIDH2TauWP_branch.GetEntry(self.localentry, 0)
+            return self.eMVAIDH2TauWP_value
 
-    property electron_muon_Mass:
+    property eMVANonTrig:
         def __get__(self):
-            self.electron_muon_Mass_branch.GetEntry(self.ientry, 0)
-            return self.electron_muon_Mass_value
+            self.eMVANonTrig_branch.GetEntry(self.localentry, 0)
+            return self.eMVANonTrig_value
 
-    property electron_muon_PZeta:
+    property eMVATrig:
         def __get__(self):
-            self.electron_muon_PZeta_branch.GetEntry(self.ientry, 0)
-            return self.electron_muon_PZeta_value
+            self.eMVATrig_branch.GetEntry(self.localentry, 0)
+            return self.eMVATrig_value
 
-    property electron_muon_PZetaVis:
+    property eMass:
         def __get__(self):
-            self.electron_muon_PZetaVis_branch.GetEntry(self.ientry, 0)
-            return self.electron_muon_PZetaVis_value
+            self.eMass_branch.GetEntry(self.localentry, 0)
+            return self.eMass_value
 
-    property electron_muon_Pt:
+    property eMissingHits:
         def __get__(self):
-            self.electron_muon_Pt_branch.GetEntry(self.ientry, 0)
-            return self.electron_muon_Pt_value
+            self.eMissingHits_branch.GetEntry(self.localentry, 0)
+            return self.eMissingHits_value
 
-    property electron_muon_SS:
+    property eMtToMET:
         def __get__(self):
-            self.electron_muon_SS_branch.GetEntry(self.ientry, 0)
-            return self.electron_muon_SS_value
+            self.eMtToMET_branch.GetEntry(self.localentry, 0)
+            return self.eMtToMET_value
+
+    property eMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter:
+        def __get__(self):
+            self.eMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch.GetEntry(self.localentry, 0)
+            return self.eMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_value
+
+    property eMu17Ele8CaloIdTPixelMatchFilter:
+        def __get__(self):
+            self.eMu17Ele8CaloIdTPixelMatchFilter_branch.GetEntry(self.localentry, 0)
+            return self.eMu17Ele8CaloIdTPixelMatchFilter_value
+
+    property eMu17Ele8dZFilter:
+        def __get__(self):
+            self.eMu17Ele8dZFilter_branch.GetEntry(self.localentry, 0)
+            return self.eMu17Ele8dZFilter_value
+
+    property ePhi:
+        def __get__(self):
+            self.ePhi_branch.GetEntry(self.localentry, 0)
+            return self.ePhi_value
+
+    property ePt:
+        def __get__(self):
+            self.ePt_branch.GetEntry(self.localentry, 0)
+            return self.ePt_value
+
+    property eRelIso:
+        def __get__(self):
+            self.eRelIso_branch.GetEntry(self.localentry, 0)
+            return self.eRelIso_value
+
+    property eRelPFIsoDB:
+        def __get__(self):
+            self.eRelPFIsoDB_branch.GetEntry(self.localentry, 0)
+            return self.eRelPFIsoDB_value
+
+    property eSCEnergy:
+        def __get__(self):
+            self.eSCEnergy_branch.GetEntry(self.localentry, 0)
+            return self.eSCEnergy_value
+
+    property eSCEta:
+        def __get__(self):
+            self.eSCEta_branch.GetEntry(self.localentry, 0)
+            return self.eSCEta_value
+
+    property eSCPhi:
+        def __get__(self):
+            self.eSCPhi_branch.GetEntry(self.localentry, 0)
+            return self.eSCPhi_value
+
+    property eVZ:
+        def __get__(self):
+            self.eVZ_branch.GetEntry(self.localentry, 0)
+            return self.eVZ_value
+
+    property eVetoCicTightIso:
+        def __get__(self):
+            self.eVetoCicTightIso_branch.GetEntry(self.localentry, 0)
+            return self.eVetoCicTightIso_value
+
+    property eVetoMVAIso:
+        def __get__(self):
+            self.eVetoMVAIso_branch.GetEntry(self.localentry, 0)
+            return self.eVetoMVAIso_value
+
+    property eWWID:
+        def __get__(self):
+            self.eWWID_branch.GetEntry(self.localentry, 0)
+            return self.eWWID_value
+
+    property e_m_DPhi:
+        def __get__(self):
+            self.e_m_DPhi_branch.GetEntry(self.localentry, 0)
+            return self.e_m_DPhi_value
+
+    property e_m_DR:
+        def __get__(self):
+            self.e_m_DR_branch.GetEntry(self.localentry, 0)
+            return self.e_m_DR_value
+
+    property e_m_Mass:
+        def __get__(self):
+            self.e_m_Mass_branch.GetEntry(self.localentry, 0)
+            return self.e_m_Mass_value
+
+    property e_m_PZeta:
+        def __get__(self):
+            self.e_m_PZeta_branch.GetEntry(self.localentry, 0)
+            return self.e_m_PZeta_value
+
+    property e_m_PZetaVis:
+        def __get__(self):
+            self.e_m_PZetaVis_branch.GetEntry(self.localentry, 0)
+            return self.e_m_PZetaVis_value
+
+    property e_m_Pt:
+        def __get__(self):
+            self.e_m_Pt_branch.GetEntry(self.localentry, 0)
+            return self.e_m_Pt_value
+
+    property e_m_SS:
+        def __get__(self):
+            self.e_m_SS_branch.GetEntry(self.localentry, 0)
+            return self.e_m_SS_value
+
+    property e_m_Zcompat:
+        def __get__(self):
+            self.e_m_Zcompat_branch.GetEntry(self.localentry, 0)
+            return self.e_m_Zcompat_value
 
     property evt:
         def __get__(self):
-            self.evt_branch.GetEntry(self.ientry, 0)
+            self.evt_branch.GetEntry(self.localentry, 0)
             return self.evt_value
 
     property isdata:
         def __get__(self):
-            self.isdata_branch.GetEntry(self.ientry, 0)
+            self.isdata_branch.GetEntry(self.localentry, 0)
             return self.isdata_value
 
     property isoMuGroup:
         def __get__(self):
-            self.isoMuGroup_branch.GetEntry(self.ientry, 0)
+            self.isoMuGroup_branch.GetEntry(self.localentry, 0)
             return self.isoMuGroup_value
 
     property isoMuPass:
         def __get__(self):
-            self.isoMuPass_branch.GetEntry(self.ientry, 0)
+            self.isoMuPass_branch.GetEntry(self.localentry, 0)
             return self.isoMuPass_value
 
     property isoMuPrescale:
         def __get__(self):
-            self.isoMuPrescale_branch.GetEntry(self.ientry, 0)
+            self.isoMuPrescale_branch.GetEntry(self.localentry, 0)
             return self.isoMuPrescale_value
 
     property jetVeto20:
         def __get__(self):
-            self.jetVeto20_branch.GetEntry(self.ientry, 0)
+            self.jetVeto20_branch.GetEntry(self.localentry, 0)
             return self.jetVeto20_value
+
+    property jetVeto30:
+        def __get__(self):
+            self.jetVeto30_branch.GetEntry(self.localentry, 0)
+            return self.jetVeto30_value
 
     property jetVeto40:
         def __get__(self):
-            self.jetVeto40_branch.GetEntry(self.ientry, 0)
+            self.jetVeto40_branch.GetEntry(self.localentry, 0)
             return self.jetVeto40_value
 
     property lumi:
         def __get__(self):
-            self.lumi_branch.GetEntry(self.ientry, 0)
+            self.lumi_branch.GetEntry(self.localentry, 0)
             return self.lumi_value
+
+    property mAbsEta:
+        def __get__(self):
+            self.mAbsEta_branch.GetEntry(self.localentry, 0)
+            return self.mAbsEta_value
+
+    property mCharge:
+        def __get__(self):
+            self.mCharge_branch.GetEntry(self.localentry, 0)
+            return self.mCharge_value
+
+    property mD0:
+        def __get__(self):
+            self.mD0_branch.GetEntry(self.localentry, 0)
+            return self.mD0_value
+
+    property mDZ:
+        def __get__(self):
+            self.mDZ_branch.GetEntry(self.localentry, 0)
+            return self.mDZ_value
+
+    property mDiMuonL3PreFiltered7:
+        def __get__(self):
+            self.mDiMuonL3PreFiltered7_branch.GetEntry(self.localentry, 0)
+            return self.mDiMuonL3PreFiltered7_value
+
+    property mDiMuonL3p5PreFiltered8:
+        def __get__(self):
+            self.mDiMuonL3p5PreFiltered8_branch.GetEntry(self.localentry, 0)
+            return self.mDiMuonL3p5PreFiltered8_value
+
+    property mDiMuonMu17Mu8DzFiltered0p2:
+        def __get__(self):
+            self.mDiMuonMu17Mu8DzFiltered0p2_branch.GetEntry(self.localentry, 0)
+            return self.mDiMuonMu17Mu8DzFiltered0p2_value
+
+    property mEta:
+        def __get__(self):
+            self.mEta_branch.GetEntry(self.localentry, 0)
+            return self.mEta_value
+
+    property mGlbTrkHits:
+        def __get__(self):
+            self.mGlbTrkHits_branch.GetEntry(self.localentry, 0)
+            return self.mGlbTrkHits_value
+
+    property mIP3DS:
+        def __get__(self):
+            self.mIP3DS_branch.GetEntry(self.localentry, 0)
+            return self.mIP3DS_value
+
+    property mIsGlobal:
+        def __get__(self):
+            self.mIsGlobal_branch.GetEntry(self.localentry, 0)
+            return self.mIsGlobal_value
+
+    property mIsTracker:
+        def __get__(self):
+            self.mIsTracker_branch.GetEntry(self.localentry, 0)
+            return self.mIsTracker_value
+
+    property mJetBtag:
+        def __get__(self):
+            self.mJetBtag_branch.GetEntry(self.localentry, 0)
+            return self.mJetBtag_value
+
+    property mJetCSVBtag:
+        def __get__(self):
+            self.mJetCSVBtag_branch.GetEntry(self.localentry, 0)
+            return self.mJetCSVBtag_value
+
+    property mJetPt:
+        def __get__(self):
+            self.mJetPt_branch.GetEntry(self.localentry, 0)
+            return self.mJetPt_value
+
+    property mL1Mu3EG5L3Filtered17:
+        def __get__(self):
+            self.mL1Mu3EG5L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.mL1Mu3EG5L3Filtered17_value
+
+    property mL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17:
+        def __get__(self):
+            self.mL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.mL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17_value
+
+    property mMass:
+        def __get__(self):
+            self.mMass_branch.GetEntry(self.localentry, 0)
+            return self.mMass_value
+
+    property mMtToMET:
+        def __get__(self):
+            self.mMtToMET_branch.GetEntry(self.localentry, 0)
+            return self.mMtToMET_value
+
+    property mMu17Ele8dZFilter:
+        def __get__(self):
+            self.mMu17Ele8dZFilter_branch.GetEntry(self.localentry, 0)
+            return self.mMu17Ele8dZFilter_value
+
+    property mNormTrkChi2:
+        def __get__(self):
+            self.mNormTrkChi2_branch.GetEntry(self.localentry, 0)
+            return self.mNormTrkChi2_value
+
+    property mPFIDTight:
+        def __get__(self):
+            self.mPFIDTight_branch.GetEntry(self.localentry, 0)
+            return self.mPFIDTight_value
+
+    property mPhi:
+        def __get__(self):
+            self.mPhi_branch.GetEntry(self.localentry, 0)
+            return self.mPhi_value
+
+    property mPixHits:
+        def __get__(self):
+            self.mPixHits_branch.GetEntry(self.localentry, 0)
+            return self.mPixHits_value
+
+    property mPt:
+        def __get__(self):
+            self.mPt_branch.GetEntry(self.localentry, 0)
+            return self.mPt_value
+
+    property mPtUncorr:
+        def __get__(self):
+            self.mPtUncorr_branch.GetEntry(self.localentry, 0)
+            return self.mPtUncorr_value
+
+    property mRelPFIsoDB:
+        def __get__(self):
+            self.mRelPFIsoDB_branch.GetEntry(self.localentry, 0)
+            return self.mRelPFIsoDB_value
+
+    property mSingleMu13L3Filtered13:
+        def __get__(self):
+            self.mSingleMu13L3Filtered13_branch.GetEntry(self.localentry, 0)
+            return self.mSingleMu13L3Filtered13_value
+
+    property mSingleMu13L3Filtered17:
+        def __get__(self):
+            self.mSingleMu13L3Filtered17_branch.GetEntry(self.localentry, 0)
+            return self.mSingleMu13L3Filtered17_value
+
+    property mVBTFID:
+        def __get__(self):
+            self.mVBTFID_branch.GetEntry(self.localentry, 0)
+            return self.mVBTFID_value
+
+    property mVZ:
+        def __get__(self):
+            self.mVZ_branch.GetEntry(self.localentry, 0)
+            return self.mVZ_value
+
+    property mWWID:
+        def __get__(self):
+            self.mWWID_branch.GetEntry(self.localentry, 0)
+            return self.mWWID_value
 
     property metEt:
         def __get__(self):
-            self.metEt_branch.GetEntry(self.ientry, 0)
+            self.metEt_branch.GetEntry(self.localentry, 0)
             return self.metEt_value
 
     property metPhi:
         def __get__(self):
-            self.metPhi_branch.GetEntry(self.ientry, 0)
+            self.metPhi_branch.GetEntry(self.localentry, 0)
             return self.metPhi_value
 
     property metSignificance:
         def __get__(self):
-            self.metSignificance_branch.GetEntry(self.ientry, 0)
+            self.metSignificance_branch.GetEntry(self.localentry, 0)
             return self.metSignificance_value
 
     property mu17ele8Group:
         def __get__(self):
-            self.mu17ele8Group_branch.GetEntry(self.ientry, 0)
+            self.mu17ele8Group_branch.GetEntry(self.localentry, 0)
             return self.mu17ele8Group_value
 
     property mu17ele8Pass:
         def __get__(self):
-            self.mu17ele8Pass_branch.GetEntry(self.ientry, 0)
+            self.mu17ele8Pass_branch.GetEntry(self.localentry, 0)
             return self.mu17ele8Pass_value
 
     property mu17ele8Prescale:
         def __get__(self):
-            self.mu17ele8Prescale_branch.GetEntry(self.ientry, 0)
+            self.mu17ele8Prescale_branch.GetEntry(self.localentry, 0)
             return self.mu17ele8Prescale_value
 
     property mu8ele17Group:
         def __get__(self):
-            self.mu8ele17Group_branch.GetEntry(self.ientry, 0)
+            self.mu8ele17Group_branch.GetEntry(self.localentry, 0)
             return self.mu8ele17Group_value
 
     property mu8ele17Pass:
         def __get__(self):
-            self.mu8ele17Pass_branch.GetEntry(self.ientry, 0)
+            self.mu8ele17Pass_branch.GetEntry(self.localentry, 0)
             return self.mu8ele17Pass_value
 
     property mu8ele17Prescale:
         def __get__(self):
-            self.mu8ele17Prescale_branch.GetEntry(self.ientry, 0)
+            self.mu8ele17Prescale_branch.GetEntry(self.localentry, 0)
             return self.mu8ele17Prescale_value
 
     property muGlbIsoVetoPt10:
         def __get__(self):
-            self.muGlbIsoVetoPt10_branch.GetEntry(self.ientry, 0)
+            self.muGlbIsoVetoPt10_branch.GetEntry(self.localentry, 0)
             return self.muGlbIsoVetoPt10_value
 
     property muVetoPt5:
         def __get__(self):
-            self.muVetoPt5_branch.GetEntry(self.ientry, 0)
+            self.muVetoPt5_branch.GetEntry(self.localentry, 0)
             return self.muVetoPt5_value
-
-    property muonAbsEta:
-        def __get__(self):
-            self.muonAbsEta_branch.GetEntry(self.ientry, 0)
-            return self.muonAbsEta_value
-
-    property muonCharge:
-        def __get__(self):
-            self.muonCharge_branch.GetEntry(self.ientry, 0)
-            return self.muonCharge_value
-
-    property muonD0:
-        def __get__(self):
-            self.muonD0_branch.GetEntry(self.ientry, 0)
-            return self.muonD0_value
-
-    property muonDZ:
-        def __get__(self):
-            self.muonDZ_branch.GetEntry(self.ientry, 0)
-            return self.muonDZ_value
-
-    property muonEta:
-        def __get__(self):
-            self.muonEta_branch.GetEntry(self.ientry, 0)
-            return self.muonEta_value
-
-    property muonGlbTrkHits:
-        def __get__(self):
-            self.muonGlbTrkHits_branch.GetEntry(self.ientry, 0)
-            return self.muonGlbTrkHits_value
-
-    property muonIP3DS:
-        def __get__(self):
-            self.muonIP3DS_branch.GetEntry(self.ientry, 0)
-            return self.muonIP3DS_value
-
-    property muonIsGlobal:
-        def __get__(self):
-            self.muonIsGlobal_branch.GetEntry(self.ientry, 0)
-            return self.muonIsGlobal_value
-
-    property muonIsTracker:
-        def __get__(self):
-            self.muonIsTracker_branch.GetEntry(self.ientry, 0)
-            return self.muonIsTracker_value
-
-    property muonJetBtag:
-        def __get__(self):
-            self.muonJetBtag_branch.GetEntry(self.ientry, 0)
-            return self.muonJetBtag_value
-
-    property muonJetPt:
-        def __get__(self):
-            self.muonJetPt_branch.GetEntry(self.ientry, 0)
-            return self.muonJetPt_value
-
-    property muonMass:
-        def __get__(self):
-            self.muonMass_branch.GetEntry(self.ientry, 0)
-            return self.muonMass_value
-
-    property muonMtToMET:
-        def __get__(self):
-            self.muonMtToMET_branch.GetEntry(self.ientry, 0)
-            return self.muonMtToMET_value
-
-    property muonNormTrkChi2:
-        def __get__(self):
-            self.muonNormTrkChi2_branch.GetEntry(self.ientry, 0)
-            return self.muonNormTrkChi2_value
-
-    property muonPFIDTight:
-        def __get__(self):
-            self.muonPFIDTight_branch.GetEntry(self.ientry, 0)
-            return self.muonPFIDTight_value
-
-    property muonPhi:
-        def __get__(self):
-            self.muonPhi_branch.GetEntry(self.ientry, 0)
-            return self.muonPhi_value
-
-    property muonPixHits:
-        def __get__(self):
-            self.muonPixHits_branch.GetEntry(self.ientry, 0)
-            return self.muonPixHits_value
-
-    property muonPt:
-        def __get__(self):
-            self.muonPt_branch.GetEntry(self.ientry, 0)
-            return self.muonPt_value
-
-    property muonPtUncorr:
-        def __get__(self):
-            self.muonPtUncorr_branch.GetEntry(self.ientry, 0)
-            return self.muonPtUncorr_value
-
-    property muonRelPFIsoDB:
-        def __get__(self):
-            self.muonRelPFIsoDB_branch.GetEntry(self.ientry, 0)
-            return self.muonRelPFIsoDB_value
-
-    property muonVBTFID:
-        def __get__(self):
-            self.muonVBTFID_branch.GetEntry(self.ientry, 0)
-            return self.muonVBTFID_value
-
-    property muonVZ:
-        def __get__(self):
-            self.muonVZ_branch.GetEntry(self.ientry, 0)
-            return self.muonVZ_value
-
-    property muonWWID:
-        def __get__(self):
-            self.muonWWID_branch.GetEntry(self.ientry, 0)
-            return self.muonWWID_value
 
     property nTruePU:
         def __get__(self):
-            self.nTruePU_branch.GetEntry(self.ientry, 0)
+            self.nTruePU_branch.GetEntry(self.localentry, 0)
             return self.nTruePU_value
 
     property nvtx:
         def __get__(self):
-            self.nvtx_branch.GetEntry(self.ientry, 0)
+            self.nvtx_branch.GetEntry(self.localentry, 0)
             return self.nvtx_value
 
-    property puWeightData2011A:
+    property processID:
         def __get__(self):
-            self.puWeightData2011A_branch.GetEntry(self.ientry, 0)
-            return self.puWeightData2011A_value
-
-    property puWeightData2011AB:
-        def __get__(self):
-            self.puWeightData2011AB_branch.GetEntry(self.ientry, 0)
-            return self.puWeightData2011AB_value
-
-    property puWeightData2011B:
-        def __get__(self):
-            self.puWeightData2011B_branch.GetEntry(self.ientry, 0)
-            return self.puWeightData2011B_value
+            self.processID_branch.GetEntry(self.localentry, 0)
+            return self.processID_value
 
     property rho:
         def __get__(self):
-            self.rho_branch.GetEntry(self.ientry, 0)
+            self.rho_branch.GetEntry(self.localentry, 0)
             return self.rho_value
 
     property run:
         def __get__(self):
-            self.run_branch.GetEntry(self.ientry, 0)
+            self.run_branch.GetEntry(self.localentry, 0)
             return self.run_value
 
     property singleMuGroup:
         def __get__(self):
-            self.singleMuGroup_branch.GetEntry(self.ientry, 0)
+            self.singleMuGroup_branch.GetEntry(self.localentry, 0)
             return self.singleMuGroup_value
 
     property singleMuPass:
         def __get__(self):
-            self.singleMuPass_branch.GetEntry(self.ientry, 0)
+            self.singleMuPass_branch.GetEntry(self.localentry, 0)
             return self.singleMuPass_value
 
     property singleMuPrescale:
         def __get__(self):
-            self.singleMuPrescale_branch.GetEntry(self.ientry, 0)
+            self.singleMuPrescale_branch.GetEntry(self.localentry, 0)
             return self.singleMuPrescale_value
 
     property tauVetoPt20:
         def __get__(self):
-            self.tauVetoPt20_branch.GetEntry(self.ientry, 0)
+            self.tauVetoPt20_branch.GetEntry(self.localentry, 0)
             return self.tauVetoPt20_value
+
+    property vbfDeta:
+        def __get__(self):
+            self.vbfDeta_branch.GetEntry(self.localentry, 0)
+            return self.vbfDeta_value
+
+    property vbfJetVeto20:
+        def __get__(self):
+            self.vbfJetVeto20_branch.GetEntry(self.localentry, 0)
+            return self.vbfJetVeto20_value
+
+    property vbfJetVeto30:
+        def __get__(self):
+            self.vbfJetVeto30_branch.GetEntry(self.localentry, 0)
+            return self.vbfJetVeto30_value
+
+    property vbfMVA:
+        def __get__(self):
+            self.vbfMVA_branch.GetEntry(self.localentry, 0)
+            return self.vbfMVA_value
+
+    property vbfMass:
+        def __get__(self):
+            self.vbfMass_branch.GetEntry(self.localentry, 0)
+            return self.vbfMass_value
+
+    property vbfNJets:
+        def __get__(self):
+            self.vbfNJets_branch.GetEntry(self.localentry, 0)
+            return self.vbfNJets_value
 
     property idx:
         def __get__(self):
-            self.idx_branch.GetEntry(self.ientry, 0)
+            self.idx_branch.GetEntry(self.localentry, 0)
             return self.idx_value
 
 

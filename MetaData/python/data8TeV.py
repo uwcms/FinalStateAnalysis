@@ -19,6 +19,13 @@ datadefs = {
         'x_sec': 36257.2,
         'responsible' : 'Maria',
     },
+    'WplusJets_madgraph_Extension' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
+        'pu': 'S7',
+        'x_sec': 36257.2,
+        'responsible' : 'Josh',
+    },
     'Zjets_M50' : {
         'analyses': ['HTT'],
         'datasetpath': '/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9-v2/AODSIM',
@@ -27,11 +34,47 @@ datadefs = {
         'x_sec': 3503.71,
         'responsible' : 'Josh',
     },
+    'TBartW_powheg' : {
+   'analyses': ['HTT'],
+   'datasetpath': '/Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12-PU_S7_START52_V9-v1/AODSIM',
+   'pu': 'S7',
+   'xsec': -999,
+   'responsible' : 'Evan',
+       },
+    'TtW_powheg' : {
+   'analyses': ['HTT'],
+   'datasetpath': '/T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12-PU_S7_START52_V9-v1/AODSIM',
+   'pu': 'S7',
+   'xsec': -999,
+   'responsible' : 'Evan',
+       },
+    'WZJetsTo2L2Q_madgraph' : {
+   'analyses': ['HTT'],
+   'datasetpath': '/WZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola/Summer12-PU_S7_START52_V9-v1/AODSIM',
+   'pu': 'S7',
+   'xsec': -999,
+   'responsible' : 'Josh',
+       },
+    'ZZJetsTo2L2Nu_TuneZ2' : {
+   'analyses': ['HTT'],
+   'datasetpath': '/ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola/Summer12-PU_S7_START52_V9-v3/AODSIM',
+   'pu': 'S7',
+   'xsec': -999,
+   'responsible' : 'Josh',
+       },
+    'ZZJetsTo2L2Q_TuneZ2' : {
+   'analyses': ['HTT'],
+   'datasetpath': '/ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola/Summer12-PU_S7_START52_V9-v3/AODSIM',
+   'pu': 'S7',
+   'xsec': -999,
+   'responsible' : 'Josh',
+       },
     'TTplusJets_madgraph' : {
         'analyses': ['HTT'],
         'datasetpath': '/TTJets_TuneZ2star_8TeV-madgraph-tauola/Summer12-PU_S7_START52_V5-v1/AODSIM',
         'pu': 'S7',
         'x_sec': 225.197,
+        #'x_sec': 136.3, # prep
         'responsible' : 'Evan',
     },
     'WZJetsTo3LNu_pythia' : {
@@ -41,11 +84,13 @@ datadefs = {
         'x_sec': 32.3161*3*0.03365*(0.1075+0.1057+0.1125) ,
         'responsible' : 'Evan',
     },
-    'WWJetsTo2L2Nu_TuneZ2_7TeV' : {
+    'WWJetsTo2L2Nu_TuneZ2_8TeV' : {
         'analyses': ['HTT'],
         'datasetpath': '/WWTo2L2Nu_TuneZ2star_8TeV_pythia6_tauola/Summer12-PU_S7_START52_V9-v1/AODSIM',
         'pu': 'S7',
-        'x_sec': -999,
+        # seems too high..
+        'x_sec': 54.838*(0.1075+0.1057+0.1125)*(0.1075+0.1057+0.1125),
+        #'x_sec': 3.53, # prep
         'responsible' : 'Josh',
     },
     'ZZJetsTo4L_pythia' : {
@@ -186,9 +231,24 @@ datadefs = {
         'xsec' : -999,
         'pu' : 'data',
         'responsible' : 'Evan',
-    },
-
+        },
 }
+
+############################################################################
+#### Signal datasets                    ####################################
+############################################################################
+# Add HToBB
+for mass in range(110, 140, 5):
+   ver=1
+   if mass==120 :
+      ver=2
+   datadefs['WH_WToLNu_HToBB_M-%i' % mass]= {
+      'datasetpath' :'/WH_WToLNu_HToBB_M-%i_8TeV-powheg-herwigpp/Summer12-PU_S7_START52_V9-v%i/AODSIM' % (mass, ver), 
+      'pu' : 'S7',
+      'x_sec' : -999,
+      'analyses' : ['VH', 'HBB'],
+      'responsible' : 'Tapas',
+   }       
 
 # Add GGH H2Tau samples
 for mass in range(110, 165, 5):
@@ -253,6 +313,13 @@ datadefs['VH_H2Tau_M-110']['x_sec'] = (1.060 + 0.5869 + 0.1887)*7.95E-02
 datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966 + 0.4483 + 0.1470)*7.04E-02
 datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095 + 0.3473 + 0.1157)*5.48E-02
 datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713 + 0.2728 + 0.09207)*3.54E-02
+
+# Add the cross sections for WH->HWW samples.  We use the 7TeV ones here,
+# and then just change the xsec.
+datadefs['WH_110_HWW3l'] = { 'x_sec' : 1.060*cube(br_w_leptons)*4.82E-02 }
+datadefs['WH_120_HWW3l'] = { 'x_sec' : 0.7966*cube(br_w_leptons)*1.43E-01 }
+datadefs['WH_130_HWW3l'] = { 'x_sec' : 0.6095*cube(br_w_leptons)*3.05E-01 }
+datadefs['WH_140_HWW3l'] = { 'x_sec' : 0.4713*cube(br_w_leptons)*5.03E-01 }
 
 # Add data files
 def build_data_set(pd, analyses, who):

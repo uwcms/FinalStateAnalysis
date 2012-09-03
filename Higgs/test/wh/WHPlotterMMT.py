@@ -33,7 +33,9 @@ if __name__ == "__main__":
         'WplusJets_madgraph',
         'WZJetsTo3LNu*',
         'ZZ*',
+        'WW*',
         'VH*',
+        'WH*',
         'TTplusJets_madgraph',
         "data_DoubleMu*",
     ]
@@ -226,7 +228,7 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-wz-leadMass')
 
-    plotter.plot_final_wz('m2Pt', 5, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)', maxy=20)
+    plotter.plot_final_wz('m2Pt', 5, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-wz-m2Pt')
 
@@ -258,7 +260,7 @@ if __name__ == "__main__":
     shape_file = ROOT.TFile(
         os.path.join(outputdir, 'mmt_shapes_%s.root' % period), 'RECREATE')
     shape_dir = shape_file.mkdir('mmt')
-    plotter.write_shapes('subMass', 20, shape_dir)
+    plotter.write_shapes('subMass', 20, shape_dir, unblinded=True)
     shape_file.Close()
 
 

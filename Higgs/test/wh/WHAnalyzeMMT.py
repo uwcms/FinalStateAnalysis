@@ -102,6 +102,12 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
     tree = 'mmt/final/Ntuple'
     def __init__(self, tree, outfile, **kwargs):
         super(WHAnalyzeMMT, self).__init__(tree, outfile, MuMuTauTree, **kwargs)
+        # Hack to use S6 weights for the one 7TeV sample we use in 8TeV
+        target = os.environ['megatarget']
+        if 'HWW3l' in target:
+            print "HACK using S6 PU weights for HWW3l"
+            global pu_corrector
+            pu_corrector =  PileupWeight.PileupWeight('S6', *pu_distributions)
 
     def book_histos(self, folder):
         self.book(folder, "weight", "Event weight", 100, 0, 5)
@@ -219,20 +225,24 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
 
     @staticmethod
     def trigger_match_m1(row):
+        return True
         if row.m1DiMuonL3p5PreFiltered8  > 0 or \
            row.m1DiMuonL3PreFiltered7  > 0 or \
            row.m1SingleMu13L3Filtered13  > 0 or \
            row.m1SingleMu13L3Filtered17  > 0 or \
-           row.m1DiMuonMu17Mu8DzFiltered0p2  > 0:
+           row.m1DiMuonMu17Mu8DzFiltered0p2  > 0 or \
+           row.m1L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17:
             return True
 
     @staticmethod
     def trigger_match_m2(row):
+        return True
         if row.m2DiMuonL3p5PreFiltered8  > 0 or \
            row.m2DiMuonL3PreFiltered7  > 0 or \
            row.m2SingleMu13L3Filtered13  > 0 or \
            row.m2SingleMu13L3Filtered17  > 0 or \
-           row.m2DiMuonMu17Mu8DzFiltered0p2  > 0:
+           row.m2DiMuonMu17Mu8DzFiltered0p2  > 0 or \
+           row.m2L3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17:
             return True
 
     def sign_cut(self, row):
@@ -267,12 +277,20 @@ class WHAnalyzeMMT(WHAnalyzerBase.WHAnalyzerBase):
         return mc_corrector(row)
 
     def obj1_weight(self, row):
-        return highpt_mu_fr(row.m1JetPt)
+        return highpt_mu_fr(max(row.m1JetPt, row.m1Pt))
         #return highpt_mu_fr(row.m1Pt)
 
     def obj2_weight(self, row):
-        return lowpt_mu_fr(row.m2JetPt)
+        return lowpt_mu_fr(max(row.m2JetPt, row.m2Pt))
         #return lowpt_mu_fr(row.m2Pt)
 
     def obj3_weight(self, row):
         return tau_fr(row.tPt)
+
+    # For measuring charge flip probability
+    # Not really used in this channel
+    def obj1_obj3_SS(self, row):
+        return not row.m1_t_SS
+
+    def obj1_charge_flip(self, row):
+        return 0

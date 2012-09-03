@@ -58,6 +58,9 @@ cdef class EETauTree:
     cdef TBranch* bjetCSVVeto_branch
     cdef float bjetCSVVeto_value
 
+    cdef TBranch* bjetCSVVeto30_branch
+    cdef float bjetCSVVeto30_value
+
     cdef TBranch* bjetVeto_branch
     cdef float bjetVeto_value
 
@@ -139,6 +142,9 @@ cdef class EETauTree:
     cdef TBranch* e1JetPt_branch
     cdef float e1JetPt_value
 
+    cdef TBranch* e1L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch
+    cdef float e1L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_value
+
     cdef TBranch* e1MITID_branch
     cdef float e1MITID_value
 
@@ -159,6 +165,15 @@ cdef class EETauTree:
 
     cdef TBranch* e1MtToMET_branch
     cdef float e1MtToMET_value
+
+    cdef TBranch* e1Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch
+    cdef float e1Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_value
+
+    cdef TBranch* e1Mu17Ele8CaloIdTPixelMatchFilter_branch
+    cdef float e1Mu17Ele8CaloIdTPixelMatchFilter_value
+
+    cdef TBranch* e1Mu17Ele8dZFilter_branch
+    cdef float e1Mu17Ele8dZFilter_value
 
     cdef TBranch* e1Phi_branch
     cdef float e1Phi_value
@@ -274,6 +289,9 @@ cdef class EETauTree:
     cdef TBranch* e2JetPt_branch
     cdef float e2JetPt_value
 
+    cdef TBranch* e2L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch
+    cdef float e2L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_value
+
     cdef TBranch* e2MITID_branch
     cdef float e2MITID_value
 
@@ -294,6 +312,15 @@ cdef class EETauTree:
 
     cdef TBranch* e2MtToMET_branch
     cdef float e2MtToMET_value
+
+    cdef TBranch* e2Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch
+    cdef float e2Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_value
+
+    cdef TBranch* e2Mu17Ele8CaloIdTPixelMatchFilter_branch
+    cdef float e2Mu17Ele8CaloIdTPixelMatchFilter_value
+
+    cdef TBranch* e2Mu17Ele8dZFilter_branch
+    cdef float e2Mu17Ele8dZFilter_value
 
     cdef TBranch* e2Phi_branch
     cdef float e2Phi_value
@@ -369,6 +396,9 @@ cdef class EETauTree:
 
     cdef TBranch* jetVeto20_branch
     cdef float jetVeto20_value
+
+    cdef TBranch* jetVeto30_branch
+    cdef float jetVeto30_value
 
     cdef TBranch* jetVeto40_branch
     cdef float jetVeto40_value
@@ -577,6 +607,10 @@ cdef class EETauTree:
         self.bjetCSVVeto_branch = the_tree.GetBranch("bjetCSVVeto")
         self.bjetCSVVeto_branch.SetAddress(<void*>&self.bjetCSVVeto_value)
 
+        #print "making bjetCSVVeto30"
+        self.bjetCSVVeto30_branch = the_tree.GetBranch("bjetCSVVeto30")
+        self.bjetCSVVeto30_branch.SetAddress(<void*>&self.bjetCSVVeto30_value)
+
         #print "making bjetVeto"
         self.bjetVeto_branch = the_tree.GetBranch("bjetVeto")
         self.bjetVeto_branch.SetAddress(<void*>&self.bjetVeto_value)
@@ -685,6 +719,10 @@ cdef class EETauTree:
         self.e1JetPt_branch = the_tree.GetBranch("e1JetPt")
         self.e1JetPt_branch.SetAddress(<void*>&self.e1JetPt_value)
 
+        #print "making e1L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter"
+        self.e1L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch = the_tree.GetBranch("e1L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter")
+        self.e1L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch.SetAddress(<void*>&self.e1L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_value)
+
         #print "making e1MITID"
         self.e1MITID_branch = the_tree.GetBranch("e1MITID")
         self.e1MITID_branch.SetAddress(<void*>&self.e1MITID_value)
@@ -712,6 +750,18 @@ cdef class EETauTree:
         #print "making e1MtToMET"
         self.e1MtToMET_branch = the_tree.GetBranch("e1MtToMET")
         self.e1MtToMET_branch.SetAddress(<void*>&self.e1MtToMET_value)
+
+        #print "making e1Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter"
+        self.e1Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch = the_tree.GetBranch("e1Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter")
+        self.e1Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch.SetAddress(<void*>&self.e1Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_value)
+
+        #print "making e1Mu17Ele8CaloIdTPixelMatchFilter"
+        self.e1Mu17Ele8CaloIdTPixelMatchFilter_branch = the_tree.GetBranch("e1Mu17Ele8CaloIdTPixelMatchFilter")
+        self.e1Mu17Ele8CaloIdTPixelMatchFilter_branch.SetAddress(<void*>&self.e1Mu17Ele8CaloIdTPixelMatchFilter_value)
+
+        #print "making e1Mu17Ele8dZFilter"
+        self.e1Mu17Ele8dZFilter_branch = the_tree.GetBranch("e1Mu17Ele8dZFilter")
+        self.e1Mu17Ele8dZFilter_branch.SetAddress(<void*>&self.e1Mu17Ele8dZFilter_value)
 
         #print "making e1Phi"
         self.e1Phi_branch = the_tree.GetBranch("e1Phi")
@@ -865,6 +915,10 @@ cdef class EETauTree:
         self.e2JetPt_branch = the_tree.GetBranch("e2JetPt")
         self.e2JetPt_branch.SetAddress(<void*>&self.e2JetPt_value)
 
+        #print "making e2L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter"
+        self.e2L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch = the_tree.GetBranch("e2L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter")
+        self.e2L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch.SetAddress(<void*>&self.e2L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_value)
+
         #print "making e2MITID"
         self.e2MITID_branch = the_tree.GetBranch("e2MITID")
         self.e2MITID_branch.SetAddress(<void*>&self.e2MITID_value)
@@ -892,6 +946,18 @@ cdef class EETauTree:
         #print "making e2MtToMET"
         self.e2MtToMET_branch = the_tree.GetBranch("e2MtToMET")
         self.e2MtToMET_branch.SetAddress(<void*>&self.e2MtToMET_value)
+
+        #print "making e2Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter"
+        self.e2Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch = the_tree.GetBranch("e2Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter")
+        self.e2Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch.SetAddress(<void*>&self.e2Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_value)
+
+        #print "making e2Mu17Ele8CaloIdTPixelMatchFilter"
+        self.e2Mu17Ele8CaloIdTPixelMatchFilter_branch = the_tree.GetBranch("e2Mu17Ele8CaloIdTPixelMatchFilter")
+        self.e2Mu17Ele8CaloIdTPixelMatchFilter_branch.SetAddress(<void*>&self.e2Mu17Ele8CaloIdTPixelMatchFilter_value)
+
+        #print "making e2Mu17Ele8dZFilter"
+        self.e2Mu17Ele8dZFilter_branch = the_tree.GetBranch("e2Mu17Ele8dZFilter")
+        self.e2Mu17Ele8dZFilter_branch.SetAddress(<void*>&self.e2Mu17Ele8dZFilter_value)
 
         #print "making e2Phi"
         self.e2Phi_branch = the_tree.GetBranch("e2Phi")
@@ -992,6 +1058,10 @@ cdef class EETauTree:
         #print "making jetVeto20"
         self.jetVeto20_branch = the_tree.GetBranch("jetVeto20")
         self.jetVeto20_branch.SetAddress(<void*>&self.jetVeto20_value)
+
+        #print "making jetVeto30"
+        self.jetVeto30_branch = the_tree.GetBranch("jetVeto30")
+        self.jetVeto30_branch.SetAddress(<void*>&self.jetVeto30_value)
 
         #print "making jetVeto40"
         self.jetVeto40_branch = the_tree.GetBranch("jetVeto40")
@@ -1267,6 +1337,11 @@ cdef class EETauTree:
             self.bjetCSVVeto_branch.GetEntry(self.localentry, 0)
             return self.bjetCSVVeto_value
 
+    property bjetCSVVeto30:
+        def __get__(self):
+            self.bjetCSVVeto30_branch.GetEntry(self.localentry, 0)
+            return self.bjetCSVVeto30_value
+
     property bjetVeto:
         def __get__(self):
             self.bjetVeto_branch.GetEntry(self.localentry, 0)
@@ -1402,6 +1477,11 @@ cdef class EETauTree:
             self.e1JetPt_branch.GetEntry(self.localentry, 0)
             return self.e1JetPt_value
 
+    property e1L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter:
+        def __get__(self):
+            self.e1L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch.GetEntry(self.localentry, 0)
+            return self.e1L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_value
+
     property e1MITID:
         def __get__(self):
             self.e1MITID_branch.GetEntry(self.localentry, 0)
@@ -1436,6 +1516,21 @@ cdef class EETauTree:
         def __get__(self):
             self.e1MtToMET_branch.GetEntry(self.localentry, 0)
             return self.e1MtToMET_value
+
+    property e1Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter:
+        def __get__(self):
+            self.e1Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch.GetEntry(self.localentry, 0)
+            return self.e1Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_value
+
+    property e1Mu17Ele8CaloIdTPixelMatchFilter:
+        def __get__(self):
+            self.e1Mu17Ele8CaloIdTPixelMatchFilter_branch.GetEntry(self.localentry, 0)
+            return self.e1Mu17Ele8CaloIdTPixelMatchFilter_value
+
+    property e1Mu17Ele8dZFilter:
+        def __get__(self):
+            self.e1Mu17Ele8dZFilter_branch.GetEntry(self.localentry, 0)
+            return self.e1Mu17Ele8dZFilter_value
 
     property e1Phi:
         def __get__(self):
@@ -1627,6 +1722,11 @@ cdef class EETauTree:
             self.e2JetPt_branch.GetEntry(self.localentry, 0)
             return self.e2JetPt_value
 
+    property e2L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter:
+        def __get__(self):
+            self.e2L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_branch.GetEntry(self.localentry, 0)
+            return self.e2L1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter_value
+
     property e2MITID:
         def __get__(self):
             self.e2MITID_branch.GetEntry(self.localentry, 0)
@@ -1661,6 +1761,21 @@ cdef class EETauTree:
         def __get__(self):
             self.e2MtToMET_branch.GetEntry(self.localentry, 0)
             return self.e2MtToMET_value
+
+    property e2Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter:
+        def __get__(self):
+            self.e2Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_branch.GetEntry(self.localentry, 0)
+            return self.e2Mu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter_value
+
+    property e2Mu17Ele8CaloIdTPixelMatchFilter:
+        def __get__(self):
+            self.e2Mu17Ele8CaloIdTPixelMatchFilter_branch.GetEntry(self.localentry, 0)
+            return self.e2Mu17Ele8CaloIdTPixelMatchFilter_value
+
+    property e2Mu17Ele8dZFilter:
+        def __get__(self):
+            self.e2Mu17Ele8dZFilter_branch.GetEntry(self.localentry, 0)
+            return self.e2Mu17Ele8dZFilter_value
 
     property e2Phi:
         def __get__(self):
@@ -1786,6 +1901,11 @@ cdef class EETauTree:
         def __get__(self):
             self.jetVeto20_branch.GetEntry(self.localentry, 0)
             return self.jetVeto20_value
+
+    property jetVeto30:
+        def __get__(self):
+            self.jetVeto30_branch.GetEntry(self.localentry, 0)
+            return self.jetVeto30_value
 
     property jetVeto40:
         def __get__(self):

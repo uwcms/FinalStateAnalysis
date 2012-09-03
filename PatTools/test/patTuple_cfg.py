@@ -23,11 +23,7 @@ options = TauVarParsing.TauVarParsing(
 )
 
 files = [
-    "root://cmsxrootd.hep.wisc.edu//store/mc/Summer11/TTJets_TuneZ2_7TeV-madgraph-tauola/AODSIM/PU_S4_START42_V11-v1/0000/FEEE3638-F297-E011-AAF8-00304867BEC0.root",
-    "root://cmsxrootd.hep.wisc.edu//store/mc/Summer11/TTJets_TuneZ2_7TeV-madgraph-tauola/AODSIM/PU_S4_START42_V11-v1/0000/FCFD87D7-9E98-E011-BDA2-0018F3D09642.root",
-    "root://cmsxrootd.hep.wisc.edu//store/mc/Summer11/TTJets_TuneZ2_7TeV-madgraph-tauola/AODSIM/PU_S4_START42_V11-v1/0000/FCFB9DE1-8598-E011-BE64-003048679076.root",
-    "root://cmsxrootd.hep.wisc.edu//store/mc/Summer11/TTJets_TuneZ2_7TeV-madgraph-tauola/AODSIM/PU_S4_START42_V11-v1/0000/FAD1CEE7-7A98-E011-89A0-001A92971B7E.root",
-    "root://cmsxrootd.hep.wisc.edu//store/mc/Summer11/TTJets_TuneZ2_7TeV-madgraph-tauola/AODSIM/PU_S4_START42_V11-v1/0000/FAA9FD72-E497-E011-A542-001A92971BC8.root",
+    "root://cmsxrootd.hep.wisc.edu//store/data/Run2012A/DoubleMu/AOD/PromptReco-v1/000/190/456/D0478E94-0681-E111-82A4-0019B9F72F97.root"
 ]
 for file in files:
     options.inputFiles = file

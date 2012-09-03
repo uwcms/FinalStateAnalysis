@@ -34,7 +34,9 @@ if __name__ == "__main__":
         'WplusJets_madgraph',
         'WZJetsTo3LNu*',
         'ZZ*',
+        'WW*',
         'VH*',
+        'WH*',
         'TTplusJets_madgraph',
         "data_MuEG*",
     ]
@@ -54,7 +56,7 @@ if __name__ == "__main__":
     ###########################################################################
 
     # Control Z->tautau + jet region
-    plotter.plot_mc_vs_data('os/p1p2f3', 'emMass', rebin=10, xaxis='m_{e#mu} (GeV)')
+    plotter.plot_mc_vs_data('os/p1p2f3', 'emMass', rebin=10, xaxis='m_{e#mu} (GeV)', leftside=False)
     plotter.add_cms_blurb(sqrts)
     plotter.save('mcdata-os-p1p2f3-emMass')
 
@@ -234,7 +236,7 @@ if __name__ == "__main__":
     shape_file = ROOT.TFile(
         os.path.join(outputdir, 'emt_shapes_%s.root' % period), 'RECREATE')
     shape_dir = shape_file.mkdir('emt')
-    plotter.write_shapes('subMass', 20, shape_dir)
+    plotter.write_shapes('subMass', 20, shape_dir, unblinded=True)
     shape_file.Close()
 
 

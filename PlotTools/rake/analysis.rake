@@ -10,6 +10,7 @@ rule ".root" => [
   # Make the output directory
   sh "mkdir -p `dirname #{t.name}`"
   workers = ENV.fetch('megaworkers', 2)
+  ENV['megatarget'] = t.name
   sh "time mega #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name} --workers #{workers} --chain 10"
 end
 

@@ -8,22 +8,18 @@
   <class name="edm::RefProd<pat::TauCollection>"/>
   <class name="edm::RefProd<pat::JetCollection>"/>
 
-  <class name="PATFinalStateEvent::MVAMetResult"/>
-
-  <class name="std::map<size_t, PATFinalStateEvent::MVAMetResult>"/> 
-
-  <class name="edm::RefProd<edm::ValueMap<float> >"/>
-  <class name="edm::RefProd<reco::JetInfoCollection>"/>
-  <class name="edm::RefProd<std::vector<reco::Vertex::Point> >"/>
-
   <class name="std::map<std::string, float>"/>
   <class name="std::pair<std::string, float>"/>
   <class name="std::map<std::string, int>"/>
   <class name="std::pair<std::string, int>"/>
 
-  <class name="VBFVariables"/>
+  <class name="VBFVariables" ClassVersion="10">
+   <version ClassVersion="10" checksum="2474259455"/>
+  </class>
 
-  <class name="PATFinalState"/>
+  <class name="PATFinalState" ClassVersion="10">
+   <version ClassVersion="10" checksum="2840789346"/>
+  </class>
   <class name="std::vector<PATFinalState*>"/>
   <class name="PATFinalStateCollection"/>
   <class name="edm::Wrapper<PATFinalStateCollection>"/>
@@ -32,9 +28,15 @@
   <class name="edm::RefProd<PATFinalStateCollection>"/>
   <class name="edm::Ptr<PATFinalState>"/>
 
-  <class name="PATFinalStateProxy"/>
+  <class name="PATFinalStateProxy" ClassVersion="10">
+   <version ClassVersion="10" checksum="4038526841"/>
+  </class>
 
-  <class name="PATFinalStateEvent"/>
+  <class name="PATFinalStateEvent" ClassVersion="12">
+   <version ClassVersion="12" checksum="4160196554"/>
+   <version ClassVersion="11" checksum="525405272"/>
+   <version ClassVersion="10" checksum="3218457501"/>
+  </class>
   <class name="PATFinalStateEventCollection"/>
   <class name="edm::Wrapper<PATFinalStateEvent>"/>
   <class name="edm::Wrapper<PATFinalStateEventCollection>"/>
@@ -43,7 +45,9 @@
   <class name="edm::RefProd<PATFinalStateEventCollection>"/>
   <class name="edm::Ptr<PATFinalStateEvent>"/>
 
-  <class name="PATFinalStateLS"/>
+  <class name="PATFinalStateLS" ClassVersion="10">
+   <version ClassVersion="10" checksum="3002000688"/>
+  </class>
   <class name="PATFinalStateLSCollection"/>
   <class name="edm::Wrapper<PATFinalStateLS>"/>
   <class name="edm::Wrapper<PATFinalStateLSCollection>"/>
@@ -52,7 +56,9 @@
   <class name="edm::RefProd<PATFinalStateLSCollection>"/>
   <class name="edm::Ptr<PATFinalStateLS>"/>
 
-  <class name="PATMultiCandFinalState"/>
+  <class name="PATMultiCandFinalState" ClassVersion="10">
+   <version ClassVersion="10" checksum="3774322392"/>
+  </class>
   <class name="PATMultiCandFinalStateCollection"/>
   <class name="edm::Wrapper<PATMultiCandFinalState>"/>
   <class name="edm::Wrapper<PATMultiCandFinalStateCollection>"/>

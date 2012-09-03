@@ -293,16 +293,6 @@ PATFinalState::LorentzVector PATFinalState::totalP4() const {
   return visP4() + met()->p4();
 }
 
-const PATFinalState::LorentzVector&
-PATFinalState::mvaMET(const std::string& tags) const {
-  std::vector<reco::CandidatePtr> daughters = (
-      tags == "" ?  daughterPtrs() : daughterPtrs(tags));
-  if (tags == "")
-    return evt()->mvaMET(daughters).first;
-  else
-    return evt()->mvaMET(daughters).first;
-}
-
 double
 PATFinalState::dPhi(int i, const std::string& sysTagI,
     int j, const std::string& sysTagJ) const {

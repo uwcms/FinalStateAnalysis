@@ -31,11 +31,11 @@ end
 samples = Hash[
   "ewk" => Array['Zjets_M50', 'WplusJets_madgraph', 
     'ZZJetsTo4L_pythia',
-    'TTplusJets_madgraph'] + get_sample_names('WZ'),
+    'TTplusJets_madgraph'] + get_sample_names('WZ') + get_sample_names('WW'),
   "wjets" => Array['WplusJets_madgraph'],
   "zjets" => Array['Zjets_M50'],
-  "diboson" => Array['ZZJetsTo4L_pythia'] + get_sample_names('WZ'),
-  "signal" => get_sample_names('VH'),
+  "diboson" => Array['ZZJetsTo4L_pythia'] + get_sample_names('WZ') + get_sample_names('WW'),
+  "signal" => get_sample_names('VH') + get_sample_names('WH'),
   # Automagically figure out what data samples we have
   "data_m" =>  get_sample_names("data_SingleMu"),
   "data_mm" =>  get_sample_names("data_DoubleMu"),
@@ -63,7 +63,6 @@ end
 fr_analyzer_sample_map = Hash[
   "FakeRatesMM.py" => samples['ewk'] + samples['data_mm'],
   "FakeRatesEM.py" => samples['ewk'] + samples['data_em'],
-  "FakeRatesEE.py" => samples['ewk'] + samples['ewk'] + samples['data_ee'],
   "FakeRatesMMT.py" => samples['ewk'] + samples['data_mm'],
   "FakeRatesMMM.py" => samples['ewk'] + samples['data_mm'],
 ]
@@ -105,9 +104,20 @@ fr_fits = Hash[
   "e_wjets_pt10_mvaidiso03_eJetPt" => Hash[
     "samples" => Array["ewk", "data_em"],
     "analyzer" => "FakeRatesEM",
+    #"function" => landau,
+    #"variables" => landau_vars,
+    "function" => exponential,
+    "variables" => exponential_vars,
+    "rebin" => 5,
+    "range" => "10 100",
+  ],
+  "e_wjets_pt10_mvaidiso02_eJetPt" => Hash[
+    "samples" => Array["ewk", "data_em"],
+    "analyzer" => "FakeRatesEM",
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "e_wjets_pt10_mvaidiso01_eJetPt" => Hash[
     "samples" => Array["ewk", "data_em"],
@@ -115,6 +125,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_wjets_pt10_pfidiso01_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -122,6 +133,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_wjets_pt10_pfidiso03_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -129,6 +141,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_wjets_pt20_pfidiso03_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -136,6 +149,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_wjets_pt10_pfidiso02_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -143,6 +157,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_zmm_pt10_pfidiso02_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -150,6 +165,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "10 100",
   ],
   "m_zmm_pt20_pfidiso02_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -157,6 +173,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "20 100",
   ],
   "m_wjets_pt20_pfidiso02_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -164,6 +181,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "20 100",
   ],
   "m_wjets_pt20_pfidiso01_muonJetPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -171,6 +189,7 @@ fr_fits = Hash[
     "function" => landau,
     "variables" => landau_vars,
     "rebin" => 5,
+    "range" => "20 100",
   ],
   # Versus regular pt
   "m_zmm_pt10_pfidiso02_muonPt" => Hash[
@@ -179,6 +198,7 @@ fr_fits = Hash[
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 1,
+    "range" => "20 100",
   ],
   "m_wjets_pt10_pfidiso02_muonPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -186,6 +206,7 @@ fr_fits = Hash[
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 1,
+    "range" => "10 100",
   ],
   "t_ztt_pt20_mvaloose_tauPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -193,6 +214,7 @@ fr_fits = Hash[
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 5,
+    "range" => "20 100",
   ],
   "t_ztt_pt20_hpsloose_tauPt" => Hash[
     "samples" => Array["ewk", "data_mm"],
@@ -200,6 +222,7 @@ fr_fits = Hash[
     "function" => exponential,
     "variables" => exponential_vars,
     "rebin" => 5,
+    "range" => "20 100",
   ],
 ]
 
@@ -237,7 +260,7 @@ fr_fits.each do |fit, fit_info|
   end
 
   file fit_output => corrected_file do |t|
-    sh "fit_efficiency.py #{fit_output} numerator denominator \'#{fit_info['function']}\' \'#{fit_info['variables']}\' #{corrected_file} --plot"
+    sh "fit_efficiency.py #{fit_output} numerator denominator \'#{fit_info['function']}\' \'#{fit_info['variables']}\' #{corrected_file} --plot --xrange #{fit_info['range']}"
   end
   task :fits => fit_output
 
@@ -253,26 +276,17 @@ task :mmt => get_analyzer_results("WHAnalyzeMMT.py", samples['ewk'] + samples['d
 
 task :emt => get_analyzer_results("WHAnalyzeEMT.py", samples['ewk'] + samples['data_em'] + samples['signal'])
 
-task :eet => get_analyzer_results("WHAnalyzeEET.py", samples['ewk'] + samples['data_ee'] + samples['signal'])
+task :mmcontrol => get_analyzer_results("ControlZMM.py", samples['ewk'] + samples['data_mm'])
 
-task :mmcontrol => get_analyzer_results("ControlZMM.py", samples['zjets'] + samples['data_mm'])
+task :emcontrol => get_analyzer_results("ControlEM.py", samples['ewk'] + samples['data_em'])
 
 # IF the FR fits change, make sure we re-run the analyses
-file "WHAnalyzeEMT.py" => [ "#{$frfit_dir}/e_wjets_pt10_mvaidiso01_eJetPt.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso01_muonJetPt.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt.root",] do |t|
+file "WHAnalyzeEMT.py" => [ "#{$frfit_dir}/e_wjets_pt10_mvaidiso03_eJetPt.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso02_muonJetPt.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt.root",] do |t|
   sh "touch #{t.name}"
 end
-#file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/m_wjets_pt20_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
-  #sh "touch #{t.name}"
-#end
-file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonPt.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt.root",] do |t|
+file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_wjets_pt20_pfidiso02_muonJetPt.root", "#{$frfit_dir}/m_wjets_pt10_pfidiso02_muonJetPt.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt.root",] do |t|
   sh "touch #{t.name}"
 end
-#file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_zmm_pt10_pfidiso02_muonPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
-  #sh "touch #{t.name}"
-#end
-#file "WHAnalyzeMMT.py" => [ "#{$frfit_dir}/m_zmm_pt10_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/m_zmm_pt20_pfidiso02_muonJetPt-data_mm.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root",] do |t|
-  #sh "touch #{t.name}"
-#end
 file "WHAnalyzeEET.py" => [ "#{$frfit_dir}/ee_wjets_pt20_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/ee_wjets_pt10_mvaidiso01_e2JetPt-data_ee.root", "#{$frfit_dir}/t_ztt_pt20_mvaloose_tauPt-data_mm.root"] do |t|
   sh "touch #{t.name}"
 end
@@ -331,7 +345,6 @@ $carddir = "vhtt_lep_cards_#{$period}"
 # Combine all category shape files into the datacard project
 file "#{$carddir}/shapes_unmorphed.root" => [
   "#{$mmtdir}/mmt_shapes_#{$period}_statshapes.root", 
-  "#{$eetdir}/eet_shapes_#{$period}_statshapes.root", 
   "#{$emtdir}/emt_shapes_#{$period}_statshapes.root"] do |t|
   sh "hadd -f #{t.name} #{t.prerequisites.join(' ')}"
 end
@@ -343,7 +356,7 @@ pivot_masses = "120,130,140"
 file "#{$carddir}/shapes.root" => ["#{$carddir}/shapes_unmorphed.root"] do |t|
   puts "Doing horizontal morphing"
   sh "cp #{t.prerequisites[0]} #{t.name}"
-  sh "horizontal-morphing.py --categories='emt,eet,mmt' --samples='VH{MASS}' --uncerts='' --masses='120,130,140' --step-size=1 -i #{t.name}"
+  sh "horizontal-morphing.py --categories='emt,mmt' --samples='VH{MASS},VH_hww{MASS}' --uncerts='' --masses='110,120,130,140' --step-size=1 -i #{t.name}"
 end
 
 stat_shape_lists = Dir.glob("results/#{$jobid}/plots/*/*_statshapes.txt")
@@ -372,7 +385,6 @@ file "#{$carddir}/unc.vals" => ["#{$carddir}/unc.vals.base"] + stat_shape_lists 
   stat_shape_lists.each do |list|
     sh "cat #{list} | grep mmt | xargs -n 1 -I {} echo 'mmt fakes {} 1.0' >> #{t.name}"
     sh "cat #{list} | grep emt | xargs -n 1 -I {} echo 'emt fakes {} 1.0' >> #{t.name}"
-    sh "cat #{list} | grep eet | xargs -n 1 -I {} echo 'eet fakes {} 1.0' >> #{t.name}"
   end
 end
 
@@ -405,7 +417,6 @@ cardmasses.each do |mass|
   task :cards => make_datacard_task(mass, '2lt', '')
   task :cards => make_datacard_task(mass, 'emt', 'emt')
   task :cards => make_datacard_task(mass, 'mmt', 'mmt')
-  task :cards => make_datacard_task(mass, 'eet', 'eet')
 end
 
 ################################################################################

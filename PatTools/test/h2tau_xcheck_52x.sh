@@ -4,9 +4,9 @@ label=$1
 
 echo $label
 
-vbfFile=/store/mc/Summer12/VBF_HToTauTau_M-125_8TeV-powheg-pythia6/AODSIM/PU_S7_START52_V9-v1/0000/CE37860C-6196-E111-B574-002481A60370.root
+vbfFile=/store/data/Run2012A/DoubleMu/AOD/PromptReco-v1/000/190/456/D0478E94-0681-E111-82A4-0019B9F72F97.root
 
-dataFile=/store/data/Run2012A/TauPlusX/AOD/PromptReco-v1/000/191/226/CEF49C35-0488-E111-91DD-0025901D6288.root 
+dataFile=/store/data/Run2012A/DoubleMu/AOD/PromptReco-v1/000/190/456/D0478E94-0681-E111-82A4-0019B9F72F97.root
 
 #echo "Tuplizing VBF sample - will write log to vbf_8TeV_tuplization.log"
 #./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=$vbfFile reportEvery=100 \

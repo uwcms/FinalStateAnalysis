@@ -1634,8 +1634,14 @@ for mass in range(100, 150, 5):
     'x_sec' : -999,
     'analyses' : ['VH', 'HBB'],
     'responsible' : 'Tapas',
+<<<<<<< HEAD
     } 
   
+=======
+    }
+  
+
+>>>>>>> c2068f069b5ecf1bd4f2ad15ab1328642be6d482
 # Add all the datasets
 # Following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Collisions2011Analysis
 def build_data_set(pd, analyses, who):
