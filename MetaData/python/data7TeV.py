@@ -291,7 +291,6 @@ datadefs = {
     ############################################################################
     #### Signal datasets                    ####################################
     ############################################################################
-
     'VH_100' : {
         'datasetpath' :"/WH_ZH_TTH_HToTauTau_M-100_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
@@ -1624,6 +1623,19 @@ datadefs = {
 
 }
 
+# Add HToBB
+for mass in range(100, 150, 5):
+  ver=4
+  if mass>135 :
+    ver=1
+  datadefs['WH_WToLNu_HToBB_M-%i' % mass]= {
+    'datasetpath' :'/WH_WToLNu_HToBB_M-%i_7TeV-powheg-herwigpp/Fall11-PU_S6_START42_V14B-v%i/AODSIM' % (mass, ver),
+    'pu' : 'S6',
+    'x_sec' : -999,
+    'analyses' : ['VH', 'HBB'],
+    'responsible' : 'Tapas',
+    } 
+  
 # Add all the datasets
 # Following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Collisions2011Analysis
 def build_data_set(pd, analyses, who):
@@ -1636,7 +1648,7 @@ def build_data_set(pd, analyses, who):
           'analyses' : analyses,
           'responsible' : who,
       },
-      'data_%s_Run2011A_PromptReco_v6_1409' % pd : {
+      'data_%s_Run2011A_PromptReco_v6' % pd : {
           'datasetpath' : "/%s/Run2011A-PromptReco-v6/AOD" % pd,
           'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-180252_7TeV_PromptReco_Collisions11_JSON.txt",
           'firstRun' : 172620,
@@ -1676,8 +1688,8 @@ def build_data_set(pd, analyses, who):
           'analyses' : analyses,
           'responsible' : who,
       },
-      'data_%s_Run2011A_16Jan2012_v1' % pd : {
-          'datasetpath' : "/%s/Run2011A-16Jan2012-v1/AOD" % pd,
+      'data_%s_Run2011B_16Jan2012_v1' % pd : {
+          'datasetpath' : "/%s/Run2011B-16Jan2012-v1/AOD" % pd,
           'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-180252_7TeV_ReRecoNov08_Collisions11_JSON_v2.txt",
           'firstRun' : 160431,
           'lastRun' : 180252,
