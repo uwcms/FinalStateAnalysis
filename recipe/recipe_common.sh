@@ -31,16 +31,9 @@ cvs up -r 1.24 CMGTools/External/src/PileupJetIdAlgo.cc
 
 # Add Electron ID MVA
 cvs co -r V00-00-08 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
-# Get updated effective areas
-cvs up -r 1.3 EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h
 pushd EGamma/EGammaAnalysisTools/data
 cat download.url | xargs wget
 popd
-
-# Add muon effective area code
-cvs co -r V00-00-10 -d Muon/MuonAnalysisTools UserCode/sixie/Muon/MuonAnalysisTools 
-# Remove trainings we don't use
-rm Muon/MuonAnalysisTools/data/*xml
 
 # Get the VBF MVA weight files
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2012#VBF_selection_Matthew
