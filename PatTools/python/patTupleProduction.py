@@ -14,6 +14,7 @@ from FinalStateAnalysis.PatTools.pfIsolationTools import setup_h2tau_iso
 from FinalStateAnalysis.PatTools.patFinalStateProducers import produce_final_states
 
 def configurePatTuple(process, isMC=True, **kwargs):
+
     # Stuff we always keep
     output_commands = [
 #        '*',
@@ -75,7 +76,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Standard services
     process.load('Configuration.StandardSequences.Services_cff')
-    process.load('Configuration.Geometry.GeometryIdeal_cff')
+    process.load('Configuration.StandardSequences.GeometryIdeal_cff')
     process.load('Configuration.StandardSequences.MagneticField_cff')
     process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
@@ -146,29 +147,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.tuplize += process.recoElectronID
     process.patElectrons.electronIDSources = process.electronIDSources
     process.patElectrons.embedTrack = True
-
-    # Run EGamma electron energy calibration
-    process.load("EgammaCalibratedGsfElectrons.CalibratedElectronProducers.calibratedGsfElectrons_cfi")
-    process.RandomNumberGeneratorService.calibratedGsfElectrons = cms.PSet(
-        initialSeed = cms.untracked.uint32(1), # A frickin billion
-        engineName = cms.untracked.string('TRandom3')
-    )
-    process.calibratedGsfElectrons.inputDataset = cms.string(kwargs['dataset'])
-    process.calibratedGsfElectrons.isMC = bool(isMC)
-    process.calibratedGsfElectrons.isEmbedded = cms.bool(bool(kwargs['embedded']))
-    if kwargs['embedded']:
-        process.calibratedGsfElectrons.isMC = False
-    process.calibratedGsfElectrons.isAOD = True
-    process.calibratedGsfElectrons.updateEnergyError = cms.bool(True)
-    # Run a sanity check on the calibration configuration.
-    from FinalStateAnalysis.PatTools.electrons.patElectronEmbedCalibratedGsf_cfi \
-            import validate_egamma_calib_config
-    validate_egamma_calib_config(process)
-
-    process.tuplize += process.calibratedGsfElectrons
-    # Keep the calibratedGsfElectrons - we embed refs to this into the
-    # pat::Electrons
-    output_commands.append('*_calibratedGsfElectrons_*_*')
 
     # Now run PAT
     process.tuplize += process.patDefaultSequence
@@ -266,8 +244,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # We have to do the pat Jets before the pat electrons since we embed them
     process.customizeElectronSequence.insert(0, process.selectedPatJets)
     process.cleanPatElectrons.src = final_electron_collection
-    # The "effective area" calculation needs to know if it is data/mc, etc.
-    process.patElectronEffectiveAreaEmbedder.target = kwargs['target']
 
     process.load("FinalStateAnalysis.PatTools.patMuonProduction_cff")
     final_muon_collection = chain_sequence(
@@ -276,7 +252,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patDefaultSequence.replace(process.selectedPatMuons,
                                        process.customizeMuonSequence)
     process.cleanPatMuons.src = final_muon_collection
-    process.patMuonEffectiveAreaEmbedder.target = kwargs['target']
 
     process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
     final_tau_collection = chain_sequence(
