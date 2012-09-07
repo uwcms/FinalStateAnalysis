@@ -286,6 +286,9 @@ class WHPlotterBase(Plotter):
         histo.SetMaximum(maxy)
         self.keep.append(histo)
 
+        # Add legend
+        legend = self.add_legend(histo, leftside=False, entries=4)
+
         if show_error:
             bkg_error_view = BackgroundErrorView(
                 sig_view['fakes'],
@@ -295,6 +298,7 @@ class WHPlotterBase(Plotter):
             bkg_error = bkg_error_view.Get(variable)
             self.keep.append(bkg_error)
             bkg_error.Draw('pe2,same')
+            legend.AddEntry(bkg_error)
 
         # Use poisson error bars on the data
         sig_view['data'] = PoissonView(sig_view['data'], x_err=False)
@@ -303,8 +307,8 @@ class WHPlotterBase(Plotter):
         data.Draw('pe,same')
         self.keep.append(data)
 
-        # Add legend
-        self.add_legend(histo, leftside=False, entries=4)
+        #legend.AddEntry(data)
+        legend.Draw()
 
     def plot_final_wz(self, variable, rebin=1, xaxis='', maxy=None):
         ''' Plot the final WZ control region - with bkg. estimation '''
@@ -330,7 +334,7 @@ class WHPlotterBase(Plotter):
         # Add legend
         self.add_legend(histo, leftside=False, entries=4)
 
-    def plot_final_f3(self, variable, rebin=1, xaxis='', maxy=None):
+    def plot_final_f3(self, variable, rebin=1, xaxis='', maxy=None, show_error=False):
         ''' Plot the final F3 control region - with bkg. estimation '''
         sig_view = self.make_obj3_fail_cr_views(rebin)
 
@@ -343,6 +347,21 @@ class WHPlotterBase(Plotter):
         histo = stack.Get(variable)
         histo.Draw()
         histo.GetHistogram().GetXaxis().SetTitle(xaxis)
+
+        # Add legend
+        legend = self.add_legend(histo, leftside=False, entries=4)
+
+        if show_error:
+            bkg_error_view = BackgroundErrorView(
+                views.SumView(sig_view['fakes'], sig_view['charge_fakes']),
+                sig_view['wz'],
+                sig_view['zz'],
+            )
+            bkg_error = bkg_error_view.Get(variable)
+            self.keep.append(bkg_error)
+            bkg_error.Draw('pe2,same')
+            legend.AddEntry(bkg_error)
+
         data = sig_view['data'].Get(variable)
         data.Draw('same')
         if maxy:
@@ -353,5 +372,5 @@ class WHPlotterBase(Plotter):
         self.keep.append(data)
         self.keep.append(histo)
 
-        # Add legend
-        self.add_legend(histo, leftside=False, entries=4)
+        #legend.AddEntry(data)
+        legend.Draw()
