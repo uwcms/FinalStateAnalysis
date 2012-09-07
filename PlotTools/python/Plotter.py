@@ -97,6 +97,7 @@ class Plotter(object):
         legend.SetMargin(0.35)
         legend.Draw()
         self.keep.append(legend)
+        return legend
 
     def add_cms_blurb(self, sqrts, preliminary=True):
         ''' Add the CMS blurb '''
