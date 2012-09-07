@@ -1,3 +1,0 @@
-# Get common recipes
-recipes = ENV['fsa'] + '/PlotTools/rake/recipes.rake'
-import recipes
