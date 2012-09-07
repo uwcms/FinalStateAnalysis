@@ -117,9 +117,6 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Using raw four vectors
     LorentzVector totalP4() const;
 
-    /// Get the MVA regession MET
-    const LorentzVector& mvaMET(const std::string& tags="") const;
-
     /// Get DeltaPhi between two objects
     double dPhi(int i, const std::string& tagI,
         int j, const std::string& tagJ) const;

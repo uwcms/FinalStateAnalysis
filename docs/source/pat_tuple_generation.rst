@@ -10,7 +10,7 @@ general, the JOB_ID is formatted as "YYYY-MM-DD-XTeV-PatTuple".
 
 Get the code::
 
-  git clone git://github.com/ekfriis/FinalStateAnalysis.git
+  git clone git://github.com/uwcms/FinalStateAnalysis.git
   cd FinalStateAnalysis
 
 Now add all the dependencies and compile (takes forever)::
@@ -64,6 +64,36 @@ commit the golden (excluding Muon physics) ones to the repository and commit::
 
   ls *txt | grep -v MuonPhys | xargs git add -f
   git commit -m "Adding new JSON lumimasks"
+
+Computing the processed luminosity
+----------------------------------
+
+If using farmout
+''''''''''''''''
+
+Get the processed runs/lumis for a data sample::
+
+  export PATH= /afs/hep.wisc.edu/cms/cmsprod/farmoutCmsJobs/:$PATH
+  jobReportSummary.py /path/to/sample/submit/dir/*xml --json-out my_lumis.json
+
+If using CRAB
+'''''''''''''
+
+Get the processed lumi JSON file via::
+
+  crab -report
+
+Query the lumi database
+'''''''''''''''''''''''
+
+Once you have the processed luminosity, check the recorded integrated luminosity of those run-lumis::
+
+  lumiCalc2.py -i my_lumis.json recorded
+
+See the LumiCalc twiki for more details. 
+
+.. _LumiCalc: https://twiki.cern.ch/twiki/bin/viewauth/CMS/LumiCalc
+
 
 
 

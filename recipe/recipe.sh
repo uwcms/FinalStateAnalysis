@@ -6,6 +6,7 @@ set -o nounset
 
 # Check CMSSW version
 MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
+MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
 
 echo "Detected CMSSW version: $MAJOR_VERSION"
 
@@ -23,7 +24,7 @@ if [ "$MAJOR_VERSION" -eq "4" ]; then
 fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
-  echo "Applying recipe for CMSSW 5_2_4"
+  echo "Applying recipe for CMSSW 5_X_X"
   ./recipe_52X.sh
 fi
 

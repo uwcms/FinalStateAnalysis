@@ -22,13 +22,13 @@
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
+#include "DataFormats/TrackReco/interface/TrackFwd.h"
+#include "DataFormats/GsfTrackReco/interface/GsfTrackFwd.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "DataFormats/Provenance/interface/EventID.h"
-#include "DataFormats/METReco/interface/MVAMETData.h"
-#include "DataFormats/METReco/interface/MVAMETDataFwd.h"
 
 #include "TMatrixD.h"
 #include <map>
@@ -36,7 +36,6 @@
 
 class PATFinalStateEvent {
   public:
-    typedef std::pair<math::XYZTLorentzVector, TMatrixD> MVAMetResult;
 
     PATFinalStateEvent();
 
@@ -66,10 +65,8 @@ class PATFinalStateEvent {
         const edm::RefProd<pat::TauCollection>& tauRefProd,
         const edm::RefProd<pat::JetCollection>& jetRefProd,
         const reco::PFCandidateRefProd& pfRefProd,
-        // MVA MET data
-        const edm::RefProd<edm::ValueMap<float> >& pfCandDZs,
-        const edm::RefProd<reco::JetInfoCollection>& jetInfos,
-        const edm::RefProd<std::vector<reco::Vertex::Point> >& vertices
+        const reco::TrackRefProd& tracks,
+        const reco::GsfTrackRefProd& gsfTracks
     );
 
     /// Get PV
@@ -158,9 +155,6 @@ class PATFinalStateEvent {
     /// Access to particle flow collections
     const reco::PFCandidateCollection& pflow() const;
 
-    /// Access to MVAMetResult.  The input hardScatter is modified in place.
-    const MVAMetResult& mvaMET(std::vector<reco::CandidatePtr>& hardScatter) const;
-
     /// Get the version of the FinalState data formats API
     /// This allows you to detect which version of the software was used
     /// So that the methods can be update.
@@ -191,13 +185,8 @@ class PATFinalStateEvent {
     edm::RefProd<pat::TauCollection> tauRefProd_;
     edm::RefProd<pat::JetCollection> jetRefProd_;
     reco::PFCandidateRefProd pfRefProd_;
-    // This data member maps a hash of a set of candidates (the hard scatter)
-    // to an MVAMet result for this event.  It is mutable so it can be updated
-    // when building TTrees, etc.
-    mutable std::map<size_t, MVAMetResult> mvaMetCache_;
-    edm::RefProd<edm::ValueMap<float> > pfCandDZs_;
-    edm::RefProd<reco::JetInfoCollection> jetInfos_;
-    edm::RefProd<std::vector<reco::Vertex::Point> > vertices_;
+    reco::TrackRefProd tracks_;
+    reco::GsfTrackRefProd gsfTracks_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */
