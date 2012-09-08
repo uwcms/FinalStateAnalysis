@@ -85,10 +85,10 @@ if options.rerunFSA:
     process.buildFSAPath = cms.Path(process.buildFSASeq)
     process.schedule.append(process.buildFSAPath)
 
-from FinalStateAnalysis.Higgs.tnp_ntuples_cfi import add_tnp_ntuples
-from FinalStateAnalysis.Higgs.h2tau_ntuples_cfi import add_h2tau_ntuples
-from FinalStateAnalysis.Higgs.trilepton_ntuples_cfi import add_trilepton_ntuples
-from FinalStateAnalysis.Higgs.quad_ntuples_cfi import add_quad_ntuples
+from FinalStateAnalysis.NtupleTools.tnp_ntuples_cfi import add_tnp_ntuples
+from FinalStateAnalysis.NtupleTools.h2tau_ntuples_cfi import add_h2tau_ntuples
+from FinalStateAnalysis.NtupleTools.trilepton_ntuples_cfi import add_trilepton_ntuples
+from FinalStateAnalysis.NtupleTools.quad_ntuples_cfi import add_quad_ntuples
 
 if options.makeH2Tau:
     add_h2tau_ntuples(process, process.schedule)
