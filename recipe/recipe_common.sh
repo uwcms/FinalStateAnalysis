@@ -43,6 +43,12 @@ EOF
   pushd EGamma/EGammaAnalysisTools/data
   cat download.url | xargs wget
   popd
+
+else
+  cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF 
+//#define ENABLE_PAT_PROD
+EOF
+
 fi
 
 # Get the VBF MVA weight files
