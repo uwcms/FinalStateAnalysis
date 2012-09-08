@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# Set default values for the options
+LIMITS=${LIMITS:-0}
+PATPROD=${PATPROD:-0}
+
 set -o errexit
 set -o nounset
 
@@ -18,18 +23,31 @@ if [ -z "$HAS_TICKET" ]; then
   exit 1
 fi
 
+echo "I'm going to install the FinalStateAnalysis with the following options:"
+echo " Limit setting (\$LIMITS): $LIMITS"
+echo " PAT tuple production (\$PATPROD): $PATPROD"
+
+while true; do
+    read -p "Do you wish continue? " yn
+    case $yn in
+        [Yy]* ) echo "sounds good dude"; break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
+
 if [ "$MAJOR_VERSION" -eq "4" ]; then
   echo "Applying recipe for CMSSW 4_2_8"
-  ./recipe_42X.sh
+  LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_42X.sh
 fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   echo "Applying recipe for CMSSW 5_X_X"
-  ./recipe_52X.sh
+  LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_52X.sh
 fi
 
 echo "Applying common recipe"
-./recipe_common.sh
+LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_common.sh
 
 # Note you now need to install virtual env
 echo "Now run recipe/install_python.sh to install python"
