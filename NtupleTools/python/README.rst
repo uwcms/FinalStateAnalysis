@@ -1,5 +1,5 @@
-Higgs TTree Definitions
------------------------
+TTree Definitions
+-----------------
 
 This directory contains the definitions of the Higgs ntuple content.
 Each final state (e-mu = em, e-mu-tau = emt) of interest has a .py file
