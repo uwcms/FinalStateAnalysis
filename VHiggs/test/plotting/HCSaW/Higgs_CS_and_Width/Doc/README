@@ -1,0 +1,132 @@
+###########################################################
+#                                                         #
+#              Higgs Cross Section and Width              #
+#                                                         #
+#  This is a simple class that takes in numbers for       #
+#  cross section and branching ratios produced by         #
+#  the Higgs XS working group and linearly                #
+#  interpolates between them.                             #
+#                                                         #
+#                                                         #
+#      Author:                                            #
+#              Matt Snowball                              #
+#              University of Florida                      #
+#              snowball@phys.ufl.edu                      #
+#                                                         #
+###########################################################
+
+
+All XS are in pb.
+All Widths are in GeV.
+
+To use the class, you must include it into your C++ program
+and compile with it.
+
+e.g. 
+
+#include "HiggsCSandWidth.cc"
+
+and then to compile
+
+g++ -O2 -Wall -I<path to class>/Higgs_CS_and_Width/include -I<path to class>/Higgs_CS_and_Width/src -c <program name>.cc
+g++ -o <program name>.exe <program name>.o 
+
+
+There are functions for Higgs width, cross sections, and cross section errors (combined, scale, pdf).
+To use in your program simple declare 
+
+e.g.   HiggsCSandWidth *myCSW = new HiggsCSandWidth();
+
+Then call the function you want
+
+e.g.   double TotalWidth = myCSW->HiggsWidth(0,<mH>);
+
+The following function are included:
+
+  For cross section
+	 double HiggsCS(int ID, double mH, double sqrts);
+
+  For cross section errors
+	double HiggsCSErrPlus(int ID, double mH, double sqrts);
+	double HiggsCSErrMinus(int ID, double mH, double sqrts);
+ 	double HiggsCSscaleErrPlus(int ID, double mH, double sqrts);
+  	double HiggsCSscaleErrMinus(int ID, double mH, double sqrts);
+  	double HiggsCSpdfErrPlus(int ID, double mH, double sqrts);
+  	double HiggsCSpdfErrMinus(int ID, double mH, double sqrts); 
+
+
+ID's for CS functions are
+
+  /**********IDs***********/
+  /*     ggToH = 1        */
+  /*       VBF = 2        */
+  /*        WH = 3        */
+  /*        ZH = 4        */
+  /*       ttH = 5        */
+  /*     Total = 0        */
+  /************************/
+
+  For width
+        double HiggsWidth(int ID,double mH);
+
+ID's for Width are 
+
+  /***********************IDs************************/
+  /*                       Total = 0                */
+  /*                       H->bb = 1                */
+  /*                   H->tautau = 2                */
+  /*                     H->mumu = 3                */
+  /*                       H->ss = 4                */
+  /*                       H->cc = 5                */
+  /*                       H->tt = 6                */
+  /*                       H->gg = 7                */
+  /*                   H->gamgam = 8                */
+  /*                     H->gamZ = 9                */
+  /*                       H->WW = 10               */
+  /*                       H->ZZ = 11               */
+  /*                       H->4e = 12               */
+  /*                    H->2e2mu = 13               */
+  /*              H->4lep (e,mu) = 14               */
+  /*          H->4lep (e,mu,tau) = 15               */
+  /*                H->e+nu e-nu = 16               */
+  /*               H->e+nu mu-nu = 17               */
+  /*    H->2l2nu(l=e,mu)(nu=any) = 18               */
+  /* H->2l2nu(l=e,mu,tau)(nu=any) = 19              */
+  /*    H->2l2q (l=e,mu)(q=udcsb) = 20              */
+  /* H->2l2q(l=e,mu,tau)(q=udcsb) = 21              */
+  /* H->l+nu qq(*) (l=e,mu)(q=udcsb) = 22           */
+  /*  H->2nu2q (nu=any)(q=udcsb) = 23               */
+  /*            H->4q (q=udcsb) = 24                */
+  /*      H->4f (f=any fermion) = 25                */
+  /**************************************************/
+
+
+NOTE: Error on *total* cross section is not given as it requires more 
+      complicated calculation. All errors returned by error functions
+      are relative. i.e. for 10.0% error, 0.1 is returned.
+      Plus error functions return *positive*.
+      Minus error functions return *negative*.
+      
+
+In this way if one wanted the upper and lower values of errors they would do
+
+double CS = myCSW->HiggsCS(<ID>,<mH>,<sqrts>);
+double CSErrPlus = CS + myCSW->HiggsCSErrPlus(<ID>,<mH>,<sqrts>)*CS;
+double CSErrMinus = CS + myCSW->HiggsCSErrMinus(<ID>,<mH>,<sqrts>)*CS;
+
+In keeping to this, we make this class the most flexible for the user.
+
+Only numbers for sqrts = 7 are given in this version.
+
+NOTE: The HiggsWidth function returns width in GeV. 
+      If one wants the BR, they would use
+
+double Width = myCSW->HiggsWidth(0,<mH>);
+double BR = myCSW->HiggsWidth(<ID>,<mH>)/Width;
+         
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+# unc.config: Specification of uncertainty parameter names and types
+# Example:
+# lumi                    lnN
+# some_sb_parameter       gmN 1000
+# some_shape_parameter    shape
+
+lumi                      lnN
+
+CMS_eff_e                 lnN      
+CMS_eff_m                 lnN      
+CMS_eff_t                 lnN      
+
+CMS_fake_b                lnN
+
+CMS_scale_t               lnN
+
+CMS_vhtt_llt_fakes        lnN
+
+pdf_qqbar                 lnN
+QCDscale_VH               lnN
+QCDscale_VV               lnN

@@ -1,0 +1,463 @@
+
+# Job ID that produced the ntuples
+ntuple_id=2012-04-04-Higgs
+
+# Common definitions of data samples, analyzer locations.
+include Makefle.inc
+
+.SECONDARY: %.root \
+  results/fake_rates/mu/%.mmm.root \
+  results/fake_rates/mu/%.mm.root \
+  results/fake_rates/mu/%.mmmt.root \
+  results/analysis/emt/%.root \
+  results/analysis/mmt/%.root \
+  results/analysis/mmmt/%.root \
+  results/analysis/mmet/%.root \
+  results/analysis/mmme/%.root 
+
+.PRECIOUS: %.root \
+  results/fake_rates/mu/%.mmm.root \
+  results/fake_rates/mu/%.mm.root \
+  results/fake_rates/mu/%.mmmt.root \
+  results/analysis/emt/%.root \
+  results/analysis/mmt/%.root \
+  results/analysis/mmmt/%.root \
+  results/analysis/mmet/%.root \
+  results/analysis/mmme/%.root 
+
+# Target to make EMT plots
+
+emt_analysis: results/analysis/data_MuEG_Run2011B_PromptReco_v1.emt.root
+
+################################################################################
+## Recipes for analyzing data ##################################################
+################################################################################
+
+# Run the WH EMT analysis
+results/analysis/emt/%.root: AnalyzeEMT.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeEMT.py inputs/$(ntuple_id)/$*.txt \
+	  /emutau/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+# Run the WH MMT analysis
+results/analysis/mmt/%.root: AnalyzeMMT.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeMMT.py inputs/$(ntuple_id)/$*.txt \
+	  /mumutau/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+# Run the ZMM analysis
+results/analysis/zmumu/%.root: ZMuMuControl.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) ZMuMuControl.py inputs/$(ntuple_id)/$*.txt \
+	  /mumu/final/Ntuple $@ 
+	embed_label.py $@ dataset=$*
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+# Run the ZH MMMT analysis
+results/analysis/mmmt/%.root: AnalyzeMMMT.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeMMMT.py inputs/$(ntuple_id)/$*.txt \
+	  /mmmt/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/mmmt/%.events: AnalyzeMMMT.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeMMMT.py inputs/$(ntuple_id)/$*.txt  \
+	  /mmmt/final/Ntuple $@ final --branches m1_m2_Mass m3_t_Mass
+
+# Run the ZH EEMT analysis
+results/analysis/eemt/%.root: AnalyzeEEMT.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeEEMT.py inputs/$(ntuple_id)/$*.txt \
+	  /eemt/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/eemt/%.events: AnalyzeEEMT.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeEEMT.py inputs/$(ntuple_id)/$*.txt  \
+	  /eemt/final/Ntuple $@ final --branches e1_e2_Mass m_t_Mass
+
+# Run the ZH EEET analysis
+results/analysis/eeet/%.root: AnalyzeEEET.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeEEET.py inputs/$(ntuple_id)/$*.txt \
+	  /eeet/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/eeet/%.events: AnalyzeEEET.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeEEET.py inputs/$(ntuple_id)/$*.txt  \
+	  /eeet/final/Ntuple $@ final --branches e1_e2_Mass e3_t_Mass
+
+# Run the ZH EEEM analysis
+results/analysis/eeem/%.root: AnalyzeEEEM.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeEEEM.py inputs/$(ntuple_id)/$*.txt \
+	  /eeem/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/eeem/%.events: AnalyzeEEEM.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeEEEM.py inputs/$(ntuple_id)/$*.txt  \
+	  /eeem/final/Ntuple $@ final --branches e1_e2_Mass e3_m_Mass eVetoWP95Iso  \
+	  muVetoPt5 
+
+# Run the ZH MMME analysis
+results/analysis/mmme/%.root: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeMMME.py inputs/$(ntuple_id)/$*.txt \
+	  /emmm/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/mmme/%.events: AnalyzeMMME.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeMMME.py inputs/$(ntuple_id)/$*.txt  \
+	  /emmm/final/Ntuple $@ final --branches m1_m2_Mass e_m3_Mass
+
+# Run the ZH MMET analysis
+results/analysis/mmet/%.root: AnalyzeMMET.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeMMET.py inputs/$(ntuple_id)/$*.txt \
+	  /emmt/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/mmet/%.events: AnalyzeMMET.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeMMET.py inputs/$(ntuple_id)/$*.txt  \
+	  /emmt/final/Ntuple $@ final --branches m1_m2_Mass e_t_Mass
+
+# Run the ZH MMTT analysis
+results/analysis/mmtt/%.root: AnalyzeMMTT.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeMMTT.py inputs/$(ntuple_id)/$*.txt \
+	  /mmtt/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/mmtt/%.events: AnalyzeMMTT.py zh_zmm_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeMMTT.py inputs/$(ntuple_id)/$*.txt  \
+	  /mmtt/final/Ntuple $@ final --branches m1_m2_Mass t1_t2_Mass
+
+# Run the ZH EETT analysis
+results/analysis/eett/%.root: AnalyzeEETT.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt \
+  corrections_C.so fake_rates_C.so inputs/$(ntuple_id)/%.lumi.sum
+	$(mega) AnalyzeEETT.py inputs/$(ntuple_id)/$*.txt \
+	  /eett/final/Ntuple $@ 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+results/analysis/eett/%.events: AnalyzeEETT.py zh_zee_selection.py inputs/$(ntuple_id)/%.txt 
+	$(megaevents) AnalyzeEETT.py inputs/$(ntuple_id)/$*.txt  \
+	  /eett/final/Ntuple $@ final --branches e1_e2_Mass t1_t2_Mass
+
+# Make num/denom for jet->mu fake rate in MMM events
+results/fake_rates/mu/%.mmm.root: FakeRatesMMM.py inputs/$(ntuple_id)/%.txt \
+	$(mega) $^ /mumumu/final/Ntuple $@
+
+# Make num/denom for jet->mu fake rate in MM events
+results/fake_rates/mu/%.mm.root: FakeRatesMM.py inputs/$(ntuple_id)/%.txt
+	$(mega) $^ /mumu/final/Ntuple $@ 
+
+# Make num/denom for jet->mu fake rate in MMMT events
+results/fake_rates/mu/%.mmmt.root: FakeRatesMMMT.py inputs/$(ntuple_id)/%.txt
+	$(mega) $^ /mmmt/final/Ntuple $@
+
+# # FIXME we need to add the lumisum information to these some how!
+# How we combine all mu fake rate sources into a single file
+results/fake_rates/mu/%.all.root: results/fake_rates/mu/%.mm.root \
+  results/fake_rates/mu/%.mmm.root results/fake_rates/mu/%.mmmt.root \
+	hadd -f $@ $^
+	embed_label.py $@ dataset=$*
+
+# Make num/denom for jet->e fake rate in MME events
+results/fake_rates/e/%.emm.root: FakeRatesMME.py inputs/$(ntuple_id)/%.txt
+	$(mega) $^ /emumu/final/Ntuple $@
+
+# Make num/denom for jet->e fake rate in ME events
+results/fake_rates/e/%.em.root: FakeRatesME.py inputs/$(ntuple_id)/%.txt
+	$(mega) $^ /emu/final/Ntuple $@
+
+# How we combine all e fake rate sources into a single file
+results/fake_rates/e/%.all.root: results/fake_rates/e/%.em.root \
+  results/fake_rates/e/%.emm.root 
+	hadd -f $@ $^
+	embed_label.py $@ dataset=$*
+
+# How to compile a .C file with ACLiC
+%_C.so %_C.d: %.C
+	./aclic_compile.sh $<
+################################################################################
+## Extracting meta information (number of events processed) ####################
+################################################################################
+
+inputs/$(ntuple_id)/data%.meta.json: inputs/$(ntuple_id)/data%.txt
+	extract_meta_info.py $< /ee/metaInfo $@  --lumimask
+
+inputs/$(ntuple_id)/%.meta.json: inputs/$(ntuple_id)/%.txt
+	extract_meta_info.py $< /ee/metaInfo $@ 
+
+# List of meta files for every sample
+all_meta_info=$(patsubst %, inputs/$(ntuple_id)/%.meta.json, $(all_samples))
+
+inputs/$(ntuple_id)/all_samples.json: $(all_meta_info)
+	./merge_meta_info.py $@ $^
+
+# For data, get the lumi mask from the file so we can run lumi calc on it.
+inputs/$(ntuple_id)/data%.lumimask.json: inputs/$(ntuple_id)/data%.meta.json
+	cat $< | dump_lumimask.py > $@
+
+# Define which samples we need a data mask for
+data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
+		    $(all_data_samples))
+
+# Run lumi calc on the lumi masks from the above step.
+inputs/$(ntuple_id)/%.lumicalc.csv: inputs/$(ntuple_id)/%.lumimask.json
+	pixelLumiCalc.py overview -i $< -o $@
+
+# For data, get the actual interesting stuff from the pixelLumiCalc output barf
+inputs/$(ntuple_id)/data%.lumi.sum: inputs/$(ntuple_id)/data%.lumicalc.csv
+	python $(fsa)/Utilities/python/lumicalc_parser.py $< > $@
+
+# For MC, figure out what the effective int. lumi. is,
+# using the number of processed events and the x-section.
+inputs/$(ntuple_id)/%.lumi.sum: inputs/$(ntuple_id)/%.meta.json
+	get_mc_lumi.py $* `cat $< | extract_json.py n_evts` > $@
+
+data_lumimask_files=$(patsubst %, inputs/$(ntuple_id)/%.lumimask.json, \
+		    $(all_data_samples))
+
+data_lumicalc_files=$(patsubst %, inputs/$(ntuple_id)/%.lumicalc.csv, \
+		    $(all_data_samples))
+
+data_lumicalc_sums=$(patsubst %, inputs/$(ntuple_id)/%.lumi.sum, \
+		    $(all_data_samples))
+
+all_lumicalc_sums=$(patsubst %, inputs/$(ntuple_id)/%.lumi.sum, $(all_samples))
+
+data_lumimasks: $(data_lumimask_files) $(data_lumicalc_files) \
+  $(data_lumicalc_sums)
+
+meta_data: data_lumimasks $(all_lumicalc_sums)
+
+
+################################################################################
+## Define which samples are used for what ######################################
+################################################################################
+
+muon_fake_samples=$(sm_backgrounds) $(doublemu_samples))
+e_fake_samples=$(sm_backgrounds) $(mueg_samples))
+
+# fake rate jobs
+muon_fake_jobs=$(patsubst %, results/fake_rates/mu/%.all.root, \
+	$(sm_backgrounds) $(doublemu_samples))
+
+e_fake_jobs=$(patsubst %, results/fake_rates/e/%.all.root, \
+	$(sm_backgrounds) $(mueg_samples))
+
+# analysis jobs
+emt_ana_jobs=$(patsubst %, results/analysis/emt/%.root, \
+	$(sm_backgrounds) $(mueg_samples))
+
+mmt_ana_jobs=$(patsubst %, results/analysis/mmt/%.root, \
+	$(sm_backgrounds) $(doublemu_samples))
+
+mmmt_ana_jobs=$(patsubst %, results/analysis/mmmt/%.root, \
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) 
+
+mmmt_events_jobs=$(patsubst %, results/analysis/mmmt/%.events, $(doublemu_samples))
+
+eemt_ana_jobs=$(patsubst %, results/analysis/eemt/%.root, \
+	$(sm_backgrounds) $(doublee_samples) $(dibosons)) 
+
+eemt_events_jobs=$(patsubst %, results/analysis/eemt/%.events, $(doublee_samples))
+
+eeet_ana_jobs=$(patsubst %, results/analysis/eeet/%.root, \
+	$(sm_backgrounds) $(doublee_samples) $(dibosons)) 
+
+eeet_events_jobs=$(patsubst %, results/analysis/eeet/%.events, $(doublee_samples))
+
+eeem_ana_jobs=$(patsubst %, results/analysis/eeem/%.root, \
+	$(sm_backgrounds) $(doublee_samples) $(dibosons)) 
+
+eeem_events_jobs=$(patsubst %, results/analysis/eeem/%.events, $(doublee_samples))
+
+mmme_ana_jobs=$(patsubst %, results/analysis/mmme/%.root, \
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) 
+
+mmme_events_jobs=$(patsubst %, results/analysis/mmme/%.events, $(doublemu_samples))
+
+mmet_ana_jobs=$(patsubst %, results/analysis/mmet/%.root, \
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) \
+
+mmet_events_jobs=$(patsubst %, results/analysis/mmet/%.events, $(doublemu_samples))
+
+mmtt_ana_jobs=$(patsubst %, results/analysis/mmtt/%.root, \
+	$(sm_backgrounds) $(doublemu_samples) $(dibosons)) 
+
+mmtt_events_jobs=$(patsubst %, results/analysis/mmtt/%.events, $(doublemu_samples))
+
+eett_ana_jobs=$(patsubst %, results/analysis/eett/%.root, \
+	$(sm_backgrounds) $(doublee_samples) $(dibosons)) 
+
+eett_events_jobs=$(patsubst %, results/analysis/eett/%.events, $(doublee_samples))
+
+zh_ana_jobs=$(mmmt_ana_jobs) $(mmme_ana_jobs) $(mmet_ana_jobs) $(mmtt_ana_jobs) \
+	    $(eemt_ana_jobs) $(eett_ana_jobs) $(eeet_ana_jobs)
+
+zmm_control_jobs=$(patsubst %, results/analysis/zmumu/%.root, \
+	$(sm_backgrounds) $(doublemu_samples))
+
+################################################################################
+## MC to data correction functions  ############################################
+################################################################################
+
+################################################################################
+## Define analysis targets! ####################################################
+################################################################################
+
+muon_fake_rates: $(muon_fake_jobs)
+
+electron_fake_rates: $(e_fake_jobs) 
+
+fakerates: muon_fake_rates electron_fake_rates
+
+emt_analysis: $(emt_ana_jobs)
+
+mmt_analysis: $(mmt_ana_jobs)
+
+mmmt_analysis: $(mmmt_ana_jobs)
+
+eemt_analysis: $(eemt_ana_jobs)
+
+eemt_events: $(eemt_events_jobs)
+
+eeet_analysis: $(eeet_ana_jobs)
+
+eeet_events: $(eeet_events_jobs)
+
+eeem_analysis: $(eeem_ana_jobs)
+
+eeem_events: $(eeem_events_jobs)
+
+mmme_analysis: $(mmme_ana_jobs)
+
+mmet_analysis: $(mmet_ana_jobs)
+
+mmet_events: $(mmet_events_jobs)
+
+mmtt_analysis: $(mmtt_ana_jobs)
+
+mmtt_events: $(mmtt_events_jobs)
+
+eett_analysis: $(eett_ana_jobs)
+
+eett_events: $(eett_events_jobs)
+
+zh_analysis: mmmt_analysis mmme_analysis mmet_analysis mmtt_ana_jobs \
+  eett_ana_jobs
+
+zmm_analysis: $(zmm_control_jobs)
+
+analysis: emt_analysis mmt_analysis zh_analysis zmm_analysis
+
+################################################################################
+## Fake rate functions #########################################################
+################################################################################
+
+# Script to build the file w/ the fake rate fit functions
+results/fake_rates/fit_models.root: make_fit_models.py
+	python make_fit_models.py $@
+
+# Build the RooWorkspace with the fit results for the muon fake rates
+results/fake_rates/muon_fr_fits.root: results/fake_rates/fit_models.root \
+  fit_fake_rates.py muon_fr_cfg.py \
+  inputs/$(ntuple_id)/all_samples.json $(muon_fake_jobs)
+	./fit_fake_rates.py inputs/$(ntuple_id)/all_samples.json \
+	  muon_fr_cfg.py  results/fake_rates/fit_models.root \
+	  $@ results/fake_rates/mu/*.all.root
+
+# Build the RooWorkspace with the fit results for the electron fake rates
+results/fake_rates/electron_fr_fits.root: results/fake_rates/fit_models.root \
+  fit_fake_rates.py electron_fr_cfg.py \
+  inputs/$(ntuple_id)/all_samples.json  $(e_fake_jobs)
+	./fit_fake_rates.py inputs/$(ntuple_id)/all_samples.json \
+	  electron_fr_cfg.py  results/fake_rates/fit_models.root \
+	  $@ results/fake_rates/e/*.all.root
+
+fake_rates.C: fake_rates.json make_fakerates.py
+	python make_fakerates.py fake_rates.json
+
+################################################################################
+## Making plots  ###############################################################
+################################################################################
+
+# See http://www.cmcrossroads.com/ask-mr-make/12908-rules-with-multiple-outputs-in-gnu-make
+# for dealing w/ commands with multiple outputs 
+plots/muon_fake_fits/plot_list.txt: results/fake_rates/muon_fr_fits.root render_fake_rates.py
+	./render_fake_rates.py results/fake_rates/muon_fr_fits.root plots/muon_fake_fits/
+
+plots/muon_fake_controls/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
+  $(muon_fake_jobs) render_fake_rate_controls.py
+	./render_fake_rate_controls.py inputs/$(ntuple_id)/all_samples.json \
+	  data_DoubleMu plots/muon_fake_controls/ $(muon_fake_jobs)
+
+plots/zmm_control/plot_list.txt: inputs/$(ntuple_id)/all_samples.json \
+  zmm_analysis render_zmm_controls.py
+	./render_zmm_controls.py inputs/$(ntuple_id)/all_samples.json \
+	  plots/zmm_control/ $(zmm_control_jobs)
+
+plots/zh/mmmt/plot_list.txt: $(mmmt_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/mmmt/ data_DoubleMu $(mmmt_ana_jobs) 
+
+plots/zh/mmet/plot_list.txt: $(mmet_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/mmet/ data_DoubleMu $(mmet_ana_jobs) 
+
+plots/zh/mmtt/plot_list.txt: $(mmtt_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/mmtt/ data_DoubleMu $(mmtt_ana_jobs) 
+
+plots/zh/mmme/plot_list.txt: $(mmme_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/mmme/ data_DoubleMu $(mmme_ana_jobs) 
+
+plots/zh/eemt/plot_list.txt: $(eemt_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/eemt/ data_DoubleElectron $(eemt_ana_jobs) 
+
+plots/zh/eeet/plot_list.txt: $(eeet_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/eeet/ data_DoubleElectron $(eeet_ana_jobs) 
+
+plots/zh/eeem/plot_list.txt: $(eeem_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/eeem/ data_DoubleElectron $(eeem_ana_jobs) 
+
+plots/zh/eett/plot_list.txt: $(eett_ana_jobs) render_zh_plots.py
+	./render_zh_plots.py plots/zh/eett/ data_DoubleElectron $(eett_ana_jobs) 
+
+zh_plots: \
+  plots/zh/mmmt/plot_list.txt \
+  plots/zh/mmme/plot_list.txt \
+  plots/zh/mmtt/plot_list.txt \
+  plots/zh/mmet/plot_list.txt \
+  plots/zh/eett/plot_list.txt \
+  plots/zh/eeet/plot_list.txt \
+  plots/zh/eeem/plot_list.txt \
+  plots/zh/eemt/plot_list.txt 
+
+plots: plots/zmm_control/plot_list.txt \
+  plots/muon_fake_controls/plot_list.txt \
+  plots/muon_fake_fits/plot_list.txt
+
+
+################################################################################
+## Packing things up ###########################################################
+################################################################################
+
+results.tgz: results/analysis/*/*.root results/fake_rates/*/*.root
+	tar cvzf $@ results
+
+################################################################################
+## Cleanup #####################################################################
+################################################################################
+
+.PHONY: fake_clean inputs_clean fakerates muon_fake_rates electron_fake_rates \
+  zmm_analysis
+
+fake_clean:
+	rm results/fake_rates/*/*root
+
+inputs_clean:
+	ls -d inputs/*/ | xargs rm -r 
+
+meta_clean: 
+	rm -f inputs/$(ntuple_id)/*.lumi* inputs/$(ntuple_id)/*json

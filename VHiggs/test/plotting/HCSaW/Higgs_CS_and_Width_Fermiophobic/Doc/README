@@ -1,0 +1,81 @@
+###########################################################
+#                                                         #
+#              Higgs Cross Section and Width SM4          #
+#                                                         #
+#  This is a simple class that takes in numbers for       #
+#  cross section and branching ratios produced by         #
+#  the Higgs XS working group and linearly                #
+#  interpolates between them.                             #
+#                                                         #
+#                                                         #
+#      Author:                                            #
+#              Matt Snowball                              #
+#              University of Florida                      #
+#              snowball@phys.ufl.edu                      #
+#                                                         #
+###########################################################
+
+*********IMPORTANT*********
+This FF version of the original HCSaW only contains the difference 
+with respect to SM.  In this case, it means that only the widths
+of H->bosons are available.  All other requests will return -1.
+You must use the SM version of HCSaW if you need cross sections
+(don't forget there is not gg->H in FF).
+
+
+
+All XS are in pb.
+All Widths are in GeV.
+
+To use the class, you must include it into your C++ program
+and compile with it.
+
+e.g. 
+
+#include "HiggsCSandWidthFermi.cc"
+
+and then to compile
+
+g++ -O2 -Wall -I<path to class>/Higgs_CS_and_Width_Fermiophobic/include -I<path to class>/Higgs_CS_and_Width_Fermiophobic/src -c <program name>.cc
+g++ -o <program name>.exe <program name>.o 
+
+
+There are functions for Higgs width, cross sections, and cross section errors (combined, scale, pdf).
+To use in your program simple declare 
+
+e.g.   HiggsCSandWidthFF *myCSWFF = new HiggsCSandWidthFF();
+
+Then call the function you want
+
+e.g.   double TotalWidth = myCSWFF->HiggsWidth(0,<mH>);
+
+The following function are included:
+
+  For width
+        double HiggsWidth(int ID,double mH);
+
+ID's for Width are 
+
+  /***********************IDs************************/
+  /*                       Total = 0                */
+  /*                   H->gamgam = 8                */
+  /*                     H->gamZ = 9                */
+  /*                       H->WW = 10               */
+  /*                       H->ZZ = 11               */
+  /**************************************************/
+
+
+Only numbers for sqrts = 7 are given in this version.
+
+NOTE: The HiggsWidth function returns width in GeV. 
+      If one wants the BR, they would use
+
+double Width = myCSWFF->HiggsWidth(0,<mH>);
+double BR = myCSWFF->HiggsWidth(<ID>,<mH>)/Width;
+         
+
+
+
+
+
+
