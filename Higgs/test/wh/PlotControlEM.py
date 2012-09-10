@@ -7,6 +7,7 @@ Make inclusive e-mu (Z + ttbar) control plots
 import os
 import glob
 from FinalStateAnalysis.PlotTools.Plotter import Plotter
+from FinalStateAnalysis.MetaData.data_styles import data_styles
 
 jobid = os.environ['jobid']
 
@@ -31,14 +32,41 @@ for x in samples:
 
 plotter = Plotter(files, lumifiles, output_dir)
 
+# Define how we estimate QCD - just take SS data.
+import rootpy.plotting.views as views
+def get_ss(x):
+    return x.replace('em/', 'em/ss/')
+
+mc_view = views.SumView(
+    *[views.PathModifierView(plotter.get_view(x), get_ss) for x in [
+        'WZJetsTo3LNu*',
+        'ZZJetsTo4L*',
+        'WW*',
+        'WplusJets_madgraph',
+        'TTplusJets_madgraph',
+        'Zjets_M50',
+    ]]
+)
+
+mc_inverted = views.ScaleView(mc_view, -1)
+
+qcd_view = views.StyleView(
+    views.TitleView(
+        views.SumView(views.PathModifierView(plotter.data, get_ss), mc_inverted),
+        'QCD'),
+    **data_styles['QCD*'])
+
+plotter.views['QCD'] = { 'view': qcd_view }
+
 # Override ordering
 plotter.mc_samples = [
-    'TTplusJets_madgraph',
-    'WplusJets_madgraph',
-    'Zjets_M50',
     'WZJetsTo3LNu*',
-    'WW*',
     'ZZJetsTo4L*',
+    'QCD',
+    'WW*',
+    'WplusJets_madgraph',
+    'TTplusJets_madgraph',
+    'Zjets_M50',
 ]
 
 sqrts = 7 if '7TeV' in jobid else 8
@@ -50,12 +78,12 @@ plotter.save('mass')
 
 plotter.plot_mc_vs_data('em', 'mPt')
 plotter.save('mPt')
-plotter.plot_mc_vs_data('em', 'ePt')
+plotter.plot_mc_vs_data('em', 'ePt', rebin=10)
 plotter.save('ePt')
 
 plotter.plot_mc_vs_data('em', 'mAbsEta')
 plotter.save('mAbsEta')
-plotter.plot_mc_vs_data('em', 'eAbsEta')
+plotter.plot_mc_vs_data('em', 'eAbsEta', rebin=5)
 plotter.save('eAbsEta')
 
 plotter.plot_mc_vs_data('em', 'nvtx')

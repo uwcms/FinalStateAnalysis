@@ -423,9 +423,11 @@ end
 ### Copying card configuration to official place ###############################
 ################################################################################
 
-$httcombodir="#{ENV['CMSSW_BASE']}/src/HiggsAnalysis/HiggsToTauTau/setup/vhtt"
+#$httcombodir="#{ENV['CMSSW_BASE']}/src/HiggsAnalysis/HiggsToTauTau/setup/vhtt"
+$httcombodir="/afs/hep.wisc.edu/cms/efriis/Limits2/src/HiggsAnalysis/HiggsToTauTau/setup/vhtt"
 
 file "#{$httcombodir}/cgs-sm-#{$period}-00.conf" => ["#{$carddir}/cgs.conf"] do |t|
+    puts t.investigation
   sh "cp -v #{t.prerequisites[0]} #{t.name}"
 end
 
@@ -445,5 +447,6 @@ task :copycards => [
   "#{$httcombodir}/cgs-sm-#{$period}-00.conf",
   "#{$httcombodir}/unc-sm-#{$period}-00.conf",
   "#{$httcombodir}/unc-sm-#{$period}-00.vals",
-  "#{$httcombodir}/vhtt_llt.inputs-sm-#{$period}.root",
-]
+  "#{$httcombodir}/vhtt_llt.inputs-sm-#{$period}.root"]  do |t|
+    puts t.investigation
+  end

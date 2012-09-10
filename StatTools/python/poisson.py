@@ -61,7 +61,6 @@ def convert(histogram, x_err=True, set_zero_bins=None):
         alpha = 1.0-0.6827
         L, U = poisson_errors(N)
 
-        print i, N, L, U
         output.SetPointEYlow(i, N - L)
         output.SetPointEYhigh(i, U - N)
         if not x_err:
