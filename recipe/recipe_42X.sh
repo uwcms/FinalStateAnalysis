@@ -41,7 +41,7 @@ then
   cvs up -C RecoTauTag/RecoTau
   patch -N -p0 < FinalStateAnalysis/recipe/patches/speedupRecoTauCombBuilder.patch
   # Add Marias patch for negative SSV 
-  patch -N -p0 < FinalStateAnalysis/recipe/marias_negativeSSV.patch
+  patch -N -p0 < FinalStateAnalysis/recipe/patches/marias_negativeSSV.patch
   set -o errexit 
 
   # Add MVA MET
