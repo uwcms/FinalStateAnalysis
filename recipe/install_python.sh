@@ -21,7 +21,11 @@ export vpython=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/vpython
 cd $recipe/external/src/virtualenv
 
 echo "Creating virtual python environment in $vpython"
-python virtualenv.py --distribute $vpython
+if [ ! -d "$vpython" ]; then
+  python virtualenv.py --distribute $vpython
+else
+  echo "...virtual environment already setup."
+fi
 
 echo "Activating virtual python environment"
 cd $vpython
@@ -41,6 +45,8 @@ echo "Install cython"
 pip install -U cython
 echo "Installing argparse"
 pip install -U argparse
+echo "Installing pudb <-- interactive debugging"
+pip install -U pudb
 
 echo "Installing rootpy"
 pip install -e $recipe/external/src/rootpy
