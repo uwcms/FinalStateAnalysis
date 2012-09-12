@@ -12,6 +12,13 @@ from datacommon import square, cube, quad, picobarns, br_w_leptons
 data_name_map = {}
 
 datadefs = {
+   'WJetsToLNu_PtW-100_TuneZ2star_8TeV-madgraph' : {
+        'analyses': ['Wbb'],
+        'datasetpath': '/WJetsToLNu_PtW-100_TuneZ2star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S7',
+        'x_sec': -999,
+        'responsible' : 'Isobel',
+    },
     'WplusJets_madgraph' : {
         'analyses': ['HTT'],
         'datasetpath': '/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9-v1/AODSIM',
@@ -393,14 +400,6 @@ def build_data_set(pd, analyses, who):
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON.txt",
             'firstRun' : 193752,
             'lastRun' : 196531,
-            'analyses' : analyses,
-            'responsible' : who,
-        },
-        'data_%s_Run2012C_PromptReco_v1_Run198934_201264' % pd : {
-            'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
-            'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
-            'firstRun' : 198934,
-            'lastRun' : 201264,
             'analyses' : analyses,
             'responsible' : who,
         },
