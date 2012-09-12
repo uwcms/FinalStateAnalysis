@@ -66,6 +66,13 @@ datadefs = {
     #### EWK background datasets            ####################################
     ############################################################################
 
+  'WJetsToLNu_Pt-100_7TeV-herwigpp' : {
+  'datasetpath' : '/WJetsToLNu_Pt-100_7TeV-herwigpp/Fall11-PU_S6_START42_V14B-v1/AODSIM',
+  'x_sec' : 'S6',
+  'analyses' : [ 'Wbb' ],
+  'responsible' : 'Isobel',
+  },
+
     'WbbToLNu_TuneZ2_7TeV-madgraph-pythia6-tauola' : {
         'datasetpath' : '/WbbToLNu_TuneZ2_7TeV-madgraph-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : 999, #NNLO
@@ -138,6 +145,20 @@ datadefs = {
         'analyses' : ['HTT'],
         'responsible' : 'Evan',
     },
+    'Wplus1Jets_madgraph' : {
+        'datasetpath' : "/W1Jet_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : -999,
+        'pu' : 'S6',
+        'analyses' : ['HTT'],
+        'responsible' : 'Maria',
+    },
+    'Wplus2Jets_madgraph' : {
+        'datasetpath' : "/W2Jets_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : -999,
+        'pu' : 'S6',
+        'analyses' : ['HTT'],
+        'responsible' : 'Maria',
+    },
     'Wplus3Jets_madgraph' : {
         'datasetpath' : "/W3Jets_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'x_sec' : 304.2*picobarns,
@@ -209,6 +230,13 @@ datadefs = {
         'datasetpath' : "/WZ_TuneZ2_7TeV_pythia6_tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
         'x_sec' : 18*picobarns,
+        'analyses' : ['VH',  'HTT'],
+        'responsible' : 'Evan',
+    },
+    'ZZinclusive' : {
+        'datasetpath' : "/ZZ_TuneZ2_7TeV_pythia6_tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'pu' : 'S6',
+        'x_sec' : -999,
         'analyses' : ['VH',  'HTT'],
         'responsible' : 'Evan',
     },
