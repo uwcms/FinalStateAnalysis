@@ -68,14 +68,15 @@ datadefs = {
 
   'WJetsToLNu_Pt-100_7TeV-herwigpp' : {
   'datasetpath' : '/WJetsToLNu_Pt-100_7TeV-herwigpp/Fall11-PU_S6_START42_V14B-v1/AODSIM',
-  'x_sec' : 'S6',
+  'x_sec' : -999,
+  'pu' : 'S6',
   'analyses' : [ 'Wbb' ],
   'responsible' : 'Isobel',
   },
 
     'WbbToLNu_TuneZ2_7TeV-madgraph-pythia6-tauola' : {
         'datasetpath' : '/WbbToLNu_TuneZ2_7TeV-madgraph-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
-        'x_sec' : 999, #NNLO
+        'x_sec' : -999, #NNLO
         'pu' : 'S6',
         'analyses' : ['Wbb',  'VH', 'Mu'],
         'responsible' : 'Tapas',
