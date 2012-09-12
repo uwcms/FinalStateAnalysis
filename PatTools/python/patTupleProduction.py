@@ -216,7 +216,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     if not isMC:
         coreTools.runOnData(process)
         process.patMETsPF.addGenMET = False
-    output_commands.append('patJets_selectedPatJets_*_*')
+    output_commands.append('*_selectedPatJets_*_*')
 
     # Customize/embed all our sequences
     process.load("FinalStateAnalysis.PatTools.patJetProduction_cff")

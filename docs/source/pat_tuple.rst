@@ -92,11 +92,6 @@ The jet pt is stored as ``userFloat('jetPt')``.  If the
 jet doesn't exist, the "jet pt" is equal to the muon Pt.  
 The distance to the jet is ``userFloat('jetDR')``.
 
-The "effective area" for different isolation types is available:
-
-* ``userFloat("EAGamma04")``
-* ``userFloat("EANeuHadron04")``
-* ``userFloat("EAGammaNeuHadron04")``
 
 Electrons
 ---------
@@ -138,16 +133,6 @@ twiki`_.   The ID working point is based on the "NonTrig" MVA.
 
 * ``userInt('mvaidwp')``
 
-The "effective area" for different isolation types is available:
-
-* ``userFloat("EAGamma04")``
-* ``userFloat("EANeuHadron04")``
-* ``userFloat("EAGammaNeuHadron04")``
-
-The `EGamma rho correction`_ is then: ``chargedHadronIso + max(photonIso + neutralHadronIso - userFloat('EAGammaNeuHadron04')*userFloat('rho'), 0)``
-
-.. _EGamma rho correction: https://twiki.cern.ch/twiki/bin/view/CMS/EgammaEARhoCorrection
-
 The following IP information is embedded as userFloats: 
 
 * ``ipDXY``
@@ -166,9 +151,6 @@ fixme)
 * ``ees-`` (down 1 sigma)
 * ``ees+`` (up 1 sigma)
 
-References to the calibrated GSF electrons are embedded as user cands:  
-
-* ``userCand("calibrated")``
 
 returns a reco::CandidatePtr pointing to a reco::GsfElectron.
 
