@@ -10,6 +10,15 @@ You can turn off different ntuples by passing option=0 using one of:
     makeQuad (a bunch for 2l2tau)
     make4L (eeee, eemm, mmmm)
 
+Example to submit it to condor at the UW T2:
+
+    submit_job.py A_JOB_LABEL higgs_ntuples_cfg.py \
+            makeQuad=1 makeTNP=1 makeH2Tau=1 makeTrilepton=1 make4L=0 \
+            rerunFSA=1 \
+            --tuple-dirs=$fsa/MetaData/tuples/2012-05-28-7TeV-PatTuple-dirs.json \
+            --input-files-per-job=1 > do_higgs.txt
+    bash < do_higgs.txt
+
 '''
 
 import FWCore.ParameterSet.Config as cms
