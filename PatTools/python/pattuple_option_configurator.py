@@ -7,7 +7,6 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
-from FinalStateAnalysis.MetaData.datadefs import datadefs
 import os
 
 def configure_pat_tuple(sample, sample_info):
