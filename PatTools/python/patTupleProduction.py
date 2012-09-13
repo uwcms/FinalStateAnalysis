@@ -6,7 +6,6 @@ import PhysicsTools.PatAlgos.tools.metTools as mettools
 import PhysicsTools.PatAlgos.tools.tauTools as tautools
 import PhysicsTools.PatAlgos.tools.coreTools as coreTools
 import PhysicsTools.PatAlgos.tools.pfTools as pfTools
-import PhysicsTools.PatAlgos.patEventContent_cff as patContent
 
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
 from FinalStateAnalysis.Utilities.version import cmssw_major_version
