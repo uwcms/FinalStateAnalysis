@@ -6,7 +6,6 @@ import PhysicsTools.PatAlgos.tools.metTools as mettools
 import PhysicsTools.PatAlgos.tools.tauTools as tautools
 import PhysicsTools.PatAlgos.tools.coreTools as coreTools
 import PhysicsTools.PatAlgos.tools.pfTools as pfTools
-import PhysicsTools.PatAlgos.patEventContent_cff as patContent
 
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
 from FinalStateAnalysis.Utilities.version import cmssw_major_version
@@ -170,7 +169,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Use PFJets and turn on JEC
     jec = [ 'L1FastJet', 'L2Relative', 'L3Absolute' ]
-    if not isMC:
+    # If we are running on data (not MC), or embedded sample,
+    # apply the MC-DATA residual correction.
+    if not isMC or kwargs['embedded']:
         jec.extend([ 'L2L3Residual' ])
 
     # Define options for BTagging - these are release dependent.
