@@ -10,7 +10,7 @@ general, the JOB_ID is formatted as "YYYY-MM-DD-XTeV-PatTuple".
 
 Get the code::
 
-  git clone git://github.com/ekfriis/FinalStateAnalysis.git
+  git clone git://github.com/uwcms/FinalStateAnalysis.git
   cd FinalStateAnalysis
 
 Now add all the dependencies and compile (takes forever)::

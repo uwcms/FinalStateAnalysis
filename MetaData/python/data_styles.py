@@ -29,7 +29,7 @@ data_styles = {
         'fillcolor' : '#990000',
         'name' : "W + jets",
     },
-    'QCDMu' : {
+    'QCD*' : {
         'legendstyle' : 'f',
         'format' : 'hist',
         'fillcolor' : colors['magenta'],

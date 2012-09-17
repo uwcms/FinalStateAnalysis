@@ -19,5 +19,4 @@
   <use   name="RecoVertex/KinematicFitPrimitives"/>
   <use   name="RecoEgamma/EgammaTools"/>
   <use   name="EGamma/EGammaAnalysisTools"/>
-  <use   name="Muon/MuonAnalysisTools"/>
 </library>

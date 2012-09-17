@@ -31,10 +31,6 @@ from FinalStateAnalysis.PatTools.muons.patMuonEmbedJetInfo_cfi import \
         patMuonsEmbedJetInfo
 customizeMuonSequence += patMuonsEmbedJetInfo
 
-from FinalStateAnalysis.PatTools.muons.patMuonEffectiveAreaEmbedder_cfi import \
-        patMuonEffectiveAreaEmbedder
-customizeMuonSequence += patMuonEffectiveAreaEmbedder
-
 # This depends on a lot of stuff, so it should go last.
 from FinalStateAnalysis.PatTools.muons.patMuonTightIdEmbedding_cfi import \
         patMuonTightIDEmbedding

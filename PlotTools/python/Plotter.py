@@ -11,7 +11,6 @@ import os
 import rootpy.plotting.views as views
 import rootpy.plotting as plotting
 from FinalStateAnalysis.MetaData.data_views import data_views
-from FinalStateAnalysis.MetaData.data_styles import data_styles
 import ROOT
 
 _original_draw = plotting.Legend.Draw
@@ -98,6 +97,7 @@ class Plotter(object):
         legend.SetMargin(0.35)
         legend.Draw()
         self.keep.append(legend)
+        return legend
 
     def add_cms_blurb(self, sqrts, preliminary=True):
         ''' Add the CMS blurb '''

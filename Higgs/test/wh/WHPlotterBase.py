@@ -14,7 +14,51 @@ If [blind] is true, data in the p1p2p3 region will not be plotted.
 import rootpy.plotting.views as views
 from FinalStateAnalysis.PlotTools.Plotter import Plotter
 from FinalStateAnalysis.PlotTools.BlindView import BlindView
+from FinalStateAnalysis.PlotTools.PoissonView import PoissonView
 from FinalStateAnalysis.MetaData.data_styles import data_styles
+
+import math
+
+def quad(*xs):
+    return math.sqrt(sum(x*x for x in xs))
+
+class BackgroundErrorView(object):
+    ''' Compute the total background error in each bin. '''
+    def __init__(self, fakes, wz, zz, wz_error=0.1, zz_error=0.04, fake_error=0.3):
+        self.fakes = fakes
+        self.wz = wz
+        self.zz = zz
+        self.fake_error = fake_error
+        self.wz_error = wz_error
+        self.zz_error = zz_error
+
+    def Get(self, path):
+        fakes = self.fakes.Get(path)
+        wz = self.wz.Get(path)
+        zz = self.zz.Get(path)
+
+        bkg_error = wz.Clone()
+        bkg_error.SetTitle("Bkg. Unc.")
+        bkg_error.Reset()
+        for bin in range(1, bkg_error.GetNbinsX() + 1):
+            error = quad(
+                fakes.GetBinError(bin),
+                fakes.GetBinContent(bin)*self.fake_error,
+                wz.GetBinContent(bin)*self.wz_error,
+                zz.GetBinContent(bin)*self.zz_error
+            )
+            total = (
+                fakes.GetBinContent(bin) +
+                wz.GetBinContent(bin) +
+                zz.GetBinContent(bin)
+            )
+            bkg_error.SetBinContent(bin, total)
+            bkg_error.SetBinError(bin, error)
+        bkg_error.SetMarkerSize(0)
+        bkg_error.SetFillColor(1)
+        bkg_error.SetFillStyle(3013)
+        bkg_error.legendstyle = 'f'
+        return bkg_error
 
 class WHPlotterBase(Plotter):
     def __init__(self, files, lumifiles, outputdir, blind=True):
@@ -210,7 +254,16 @@ class WHPlotterBase(Plotter):
         obs.Write()
         fakes.Write()
 
-    def plot_final(self, variable, rebin=1, xaxis='', maxy=10):
+    def write_cut_and_count(self, variable, outdir, unblinded=False):
+        ''' Version of write_shapes(...) with only one bin.
+
+        Equivalent to a cut & count analysis.
+        '''
+        sig_view = self.make_signal_views(1, unblinded)
+        nbins = sig_view['wz'].Get(variable).GetNbinsX()
+        return self.write_shapes(variable, nbins, outdir, unblinded)
+
+    def plot_final(self, variable, rebin=1, xaxis='', maxy=10, show_error=False):
         ''' Plot the final output - with bkg. estimation '''
         sig_view = self.make_signal_views(rebin)
         vh_10x = views.TitleView(
@@ -232,12 +285,30 @@ class WHPlotterBase(Plotter):
         histo.GetHistogram().GetXaxis().SetTitle(xaxis)
         histo.SetMaximum(maxy)
         self.keep.append(histo)
-        data = sig_view['data'].Get(variable)
-        data.Draw('same')
-        self.keep.append(data)
 
         # Add legend
-        self.add_legend(histo, leftside=False, entries=4)
+        legend = self.add_legend(histo, leftside=False, entries=4)
+
+        if show_error:
+            bkg_error_view = BackgroundErrorView(
+                sig_view['fakes'],
+                sig_view['wz'],
+                sig_view['zz'],
+            )
+            bkg_error = bkg_error_view.Get(variable)
+            self.keep.append(bkg_error)
+            bkg_error.Draw('pe2,same')
+            legend.AddEntry(bkg_error)
+
+        # Use poisson error bars on the data
+        sig_view['data'] = PoissonView(sig_view['data'], x_err=False)
+
+        data = sig_view['data'].Get(variable)
+        data.Draw('pe,same')
+        self.keep.append(data)
+
+        #legend.AddEntry(data)
+        legend.Draw()
 
     def plot_final_wz(self, variable, rebin=1, xaxis='', maxy=None):
         ''' Plot the final WZ control region - with bkg. estimation '''
@@ -263,7 +334,7 @@ class WHPlotterBase(Plotter):
         # Add legend
         self.add_legend(histo, leftside=False, entries=4)
 
-    def plot_final_f3(self, variable, rebin=1, xaxis='', maxy=None):
+    def plot_final_f3(self, variable, rebin=1, xaxis='', maxy=None, show_error=False):
         ''' Plot the final F3 control region - with bkg. estimation '''
         sig_view = self.make_obj3_fail_cr_views(rebin)
 
@@ -276,6 +347,21 @@ class WHPlotterBase(Plotter):
         histo = stack.Get(variable)
         histo.Draw()
         histo.GetHistogram().GetXaxis().SetTitle(xaxis)
+
+        # Add legend
+        legend = self.add_legend(histo, leftside=False, entries=4)
+
+        if show_error:
+            bkg_error_view = BackgroundErrorView(
+                views.SumView(sig_view['fakes'], sig_view['charge_fakes']),
+                sig_view['wz'],
+                sig_view['zz'],
+            )
+            bkg_error = bkg_error_view.Get(variable)
+            self.keep.append(bkg_error)
+            bkg_error.Draw('pe2,same')
+            legend.AddEntry(bkg_error)
+
         data = sig_view['data'].Get(variable)
         data.Draw('same')
         if maxy:
@@ -286,5 +372,5 @@ class WHPlotterBase(Plotter):
         self.keep.append(data)
         self.keep.append(histo)
 
-        # Add legend
-        self.add_legend(histo, leftside=False, entries=4)
+        #legend.AddEntry(data)
+        legend.Draw()

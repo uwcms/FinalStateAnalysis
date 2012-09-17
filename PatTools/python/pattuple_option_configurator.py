@@ -7,7 +7,6 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
-from FinalStateAnalysis.MetaData.datadefs import datadefs
 import os
 
 def configure_pat_tuple(sample, sample_info):
@@ -34,31 +33,6 @@ def configure_pat_tuple(sample, sample_info):
         raise ValueError("Couldn't determine dataset for sample: "
                         + sample_info['datasetpath'])
     options.append('dataset=%s' % dataset)
-
-    # Figure out which target - the EGamma/Muon effective areas need to know
-    # this
-    target=None
-    if 'Fall11' in sample_info['datasetpath']:
-        target = 'Fall11MC'
-    elif 'crab_reco' in sample_info['datasetpath']: # special case, private prod
-        target = 'Fall11MC'
-    elif 'Summer11' in sample_info['datasetpath']:
-        target = 'Summer11MC'
-    elif 'data' in sample and '2011' in sample_info['datasetpath']:
-        target = '2011Data'
-    elif 'data' in sample and '2012' in sample_info['datasetpath']:
-        target = '2012Data'
-    elif 'Summer12' in sample_info['datasetpath']:
-        target = '2011Data'
-    elif 'embedded' in sample and '2011' in sample_info['datasetpath']:
-        target = '2011Data'
-    elif 'embedded' in sample and '2012' in sample_info['datasetpath']:
-        target = '2012Data'
-
-    if not target:
-        raise ValueError("Couldn't determine target for sample: "
-                         + sample_info['datasetpath'])
-    options.append('target=%s' % target)
 
     if 'data' not in sample and 'embedded' not in sample:
         options.append('isMC=1')

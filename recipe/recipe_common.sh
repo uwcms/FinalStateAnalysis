@@ -31,8 +31,6 @@ cvs up -r 1.24 CMGTools/External/src/PileupJetIdAlgo.cc
 
 # Add Electron ID MVA
 cvs co -r V00-00-08 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
-# Get updated effective areas
-cvs up -r 1.3 EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h
 pushd EGamma/EGammaAnalysisTools/data
 cat download.url | xargs wget
 popd

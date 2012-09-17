@@ -77,30 +77,31 @@ class ControlEM(MegaBase):
         self.is7TeV = '7TeV' in os.environ['jobid']
 
     def begin(self):
-        self.book('em', "weight", "Event weight", 100, 0, 5)
-        self.book('em', "weight_nopu", "Event weight without PU", 100, 0, 5)
+        for folder in ['', '/ss']:
+            self.book('em' + folder, "weight", "Event weight", 100, 0, 5)
+            self.book('em' + folder, "weight_nopu", "Event weight without PU", 100, 0, 5)
 
-        self.book('em', "rho", "Fastjet #rho", 100, 0, 25)
-        self.book('em', "nvtx", "Number of vertices", 31, -0.5, 30.5)
-        self.book('em', "prescale", "HLT prescale", 21, -0.5, 20.5)
+            self.book('em' + folder, "rho", "Fastjet #rho", 100, 0, 25)
+            self.book('em' + folder, "nvtx", "Number of vertices", 31, -0.5, 30.5)
+            self.book('em' + folder, "prescale", "HLT prescale", 21, -0.5, 20.5)
 
-        self.book('em', "mPt", "Muon 1 Pt", 100, 0, 100)
-        self.book('em', "ePt", "Muon 2 Pt", 100, 0, 100)
-        self.book('em', "mAbsEta", "Muon 1 eta", 100, -2.5, 2.5)
-        self.book('em', "eAbsEta", "Muon 2 eta", 100, -2.5, 2.5)
-        self.book('em', "emMass", "m_{e#mu} (GeV)", 240, 0, 240)
+            self.book('em' + folder, "mPt", "Muon 1 Pt", 100, 0, 100)
+            self.book('em' + folder, "ePt", "Muon 2 Pt", 100, 0, 100)
+            self.book('em' + folder, "mAbsEta", "Muon 1 eta", 100, -2.5, 2.5)
+            self.book('em' + folder, "eAbsEta", "Muon 2 eta", 100, -2.5, 2.5)
+            self.book('em' + folder, "emMass", "m_{e#mu} (GeV)", 240, 0, 240)
 
-        self.book('em', 'mPixHits', 'Mu 1 pix hits', 10, -0.5, 9.5)
+            self.book('em' + folder, 'mPixHits', 'Mu 1 pix hits', 10, -0.5, 9.5)
 
-        self.book('em', 'mJetBtag', 'Mu 1 JetBtag', 100, -5.5, 9.5)
-        self.book('em', 'eJetBtag', 'Mu 2 JetBtag', 100, -5.5, 9.5)
+            self.book('em' + folder,'mJetBtag', 'Mu 1 JetBtag', 100, -5.5, 9.5)
+            self.book('em' + folder,'eJetBtag', 'Mu 2 JetBtag', 100, -5.5, 9.5)
 
-        # Vetoes
-        self.book('em', 'bjetVeto', 'Number of b-jets', 5, -0.5, 4.5)
-        self.book('em', 'bjetCSVVeto', 'Number of b-jets', 5, -0.5, 4.5)
-        self.book('em', 'muVetoPt5', 'Number of extra muons', 5, -0.5, 4.5)
-        self.book('em', 'tauVetoPt20', 'Number of extra taus', 5, -0.5, 4.5)
-        self.book('em', 'eVetoCicTightIso', 'Number of extra CiC tight electrons', 5, -0.5, 4.5)
+            # Vetoes
+            self.book('em' + folder,'bjetVeto', 'Number of b-jets', 5, -0.5, 4.5)
+            self.book('em' + folder,'bjetCSVVeto', 'Number of b-jets', 5, -0.5, 4.5)
+            self.book('em' + folder,'muVetoPt5', 'Number of extra muons', 5, -0.5, 4.5)
+            self.book('em' + folder,'tauVetoPt20', 'Number of extra taus', 5, -0.5, 4.5)
+            self.book('em' + folder,'eVetoCicTightIso', 'Number of extra CiC tight electrons', 5, -0.5, 4.5)
 
     def correction(self, row):
         return mc_corrector(row)
@@ -108,25 +109,31 @@ class ControlEM(MegaBase):
     def fill_histos(self, row):
         histos = self.histograms
         weight = self.correction(row)
-        histos['em/weight'].Fill(weight)
-        histos['em/weight_nopu'].Fill(self.correction(row))
-        histos['em/rho'].Fill(row.rho, weight)
-        histos['em/nvtx'].Fill(row.nvtx, weight)
-        histos['em/prescale'].Fill(row.doubleMuPrescale, weight)
-        histos['em/ePt'].Fill(row.ePt, weight)
-        histos['em/mPt'].Fill(row.mPt, weight)
-        histos['em/eAbsEta'].Fill(row.eAbsEta, weight)
-        histos['em/mAbsEta'].Fill(row.mAbsEta, weight)
-        histos['em/mPixHits'].Fill(row.mPixHits, weight)
-        histos['em/eJetBtag'].Fill(row.eJetBtag, weight)
-        histos['em/mJetBtag'].Fill(row.mJetBtag, weight)
-        histos['em/emMass'].Fill(row.e_m_Mass, weight)
+        def fill_folder(x):
+            histos[x + '/weight'].Fill(weight)
+            histos[x + '/weight_nopu'].Fill(self.correction(row))
+            histos[x + '/rho'].Fill(row.rho, weight)
+            histos[x + '/nvtx'].Fill(row.nvtx, weight)
+            histos[x + '/prescale'].Fill(row.doubleMuPrescale, weight)
+            histos[x + '/ePt'].Fill(row.ePt, weight)
+            histos[x + '/mPt'].Fill(row.mPt, weight)
+            histos[x + '/eAbsEta'].Fill(row.eAbsEta, weight)
+            histos[x + '/mAbsEta'].Fill(row.mAbsEta, weight)
+            histos[x + '/mPixHits'].Fill(row.mPixHits, weight)
+            histos[x + '/eJetBtag'].Fill(row.eJetBtag, weight)
+            histos[x + '/mJetBtag'].Fill(row.mJetBtag, weight)
+            histos[x + '/emMass'].Fill(row.e_m_Mass, weight)
 
-        histos['em/bjetVeto'].Fill(row.bjetVeto, weight)
-        histos['em/bjetCSVVeto'].Fill(row.bjetCSVVeto, weight)
-        histos['em/muVetoPt5'].Fill(row.muVetoPt5, weight)
-        histos['em/tauVetoPt20'].Fill(row.tauVetoPt20, weight)
-        histos['em/eVetoCicTightIso'].Fill(row.eVetoCicTightIso, weight)
+            histos[x + '/bjetVeto'].Fill(row.bjetVeto, weight)
+            histos[x + '/bjetCSVVeto'].Fill(row.bjetCSVVeto, weight)
+            histos[x + '/muVetoPt5'].Fill(row.muVetoPt5, weight)
+            histos[x + '/tauVetoPt20'].Fill(row.tauVetoPt20, weight)
+            histos[x + '/eVetoCicTightIso'].Fill(row.eVetoCicTightIso, weight)
+
+        if row.e_m_SS:
+            fill_folder('em/ss')
+        else:
+            fill_folder('em')
 
     def preselection(self, row):
         ''' Preselection applied to events.
@@ -134,8 +141,6 @@ class ControlEM(MegaBase):
         Excludes FR object IDs and sign cut.
         '''
         if not row.mu17ele8Pass:
-            return False
-        if row.e_m_SS:
             return False
         if row.mPt < 20:
             return False
@@ -155,7 +160,7 @@ class ControlEM(MegaBase):
         return bool(row.mPFIDTight) and bool(row.mRelPFIsoDB < 0.2)
 
     def obj2_id(self, row):
-        return bool(row.eMVAIDH2TauWP) and bool(row.eRelPFIsoDB < 0.1)
+        return bool(row.eMVAIDH2TauWP) and bool(row.eRelPFIsoDB < 0.3)
 
     def process(self):
         for row in self.tree:
