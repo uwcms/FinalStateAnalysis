@@ -150,10 +150,6 @@ if options.clean:
     print "Cleaning up the cruft!"
     unrun, unused, killed = cfgcleaner.clean_cruft(
         process, process.out.outputCommands.value())
-    #print unused
-    #print killed
-    #print unused - killed
-    #print killed - unused
     print "Removed %i unrun and %i unused modules!" % (len(unrun), len(unused))
 
 ################################################################################
