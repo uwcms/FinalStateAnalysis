@@ -6,6 +6,7 @@ Stupid library to get CMSSW version
 
 import os
 import subprocess
+import re
 
 _fsa_directory = os.path.join(
     os.environ['CMSSW_BASE'], 'src', 'FinalStateAnalysis')
@@ -15,6 +16,9 @@ def cmssw_version():
 
 def cmssw_major_version():
     return int(os.getenv('CMSSW_VERSION').split('_')[1])
+
+def cmssw_minor_version():
+    return int(os.getenv('CMSSW_VERSION').split('_')[2])
 
 def fsa_version():
     ''' Get commit hash of FSA '''
