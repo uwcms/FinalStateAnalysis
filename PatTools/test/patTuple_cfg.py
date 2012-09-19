@@ -88,8 +88,6 @@ process.load("FinalStateAnalysis.RecoTools.dqmEventCount_cfi")
 process.eventCount.uwMeta = cms.PSet(
     # The git commit
     commit = cms.string(fsa_version()),
-    # If there are any un-checked-in modifications
-    repostatus = cms.string(repo_status()),
     user = cms.string(os.environ['LOGNAME']),
     date = cms.string(time.strftime("%d %b %Y %H:%M:%S +0000", time.gmtime())),
 )
