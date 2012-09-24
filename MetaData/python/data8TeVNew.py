@@ -28,6 +28,14 @@ datadefs = {
    'responsible' : 'Josh',
    },
 
+   'ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v3/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   'responsible' : 'Josh',
+   },
+
    'WZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola' : {
    'analyses': ['HTT'],
    'datasetpath' : "/WZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
