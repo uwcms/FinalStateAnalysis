@@ -152,6 +152,16 @@ for mass in range(110, 165, 5) :
       'responsible' : 'Josh',
       }
 
+for mass in range(115, 131) + range(145, 155, 5) + range(180, 220, 20) + range(250, 300, 50) + range(300, 375, 25) + range(400, 650, 50) :
+   datadefs['GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
+      'analyses': ['HZZ'],
+      'datasetpath': "/GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM" % mass,
+      'pu' : 'S7',
+      'x_sec' : -999,
+      'responsible' : 'Austin',
+      }
+
+
 # Add data files
 def build_data_set(pd, analyses, who):
    subsample_dict = {
