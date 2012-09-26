@@ -105,12 +105,12 @@ class PATSSVJetEmbedder : public edm::EDProducer {
 
               if(secInfo->vertexTracks().size()==3 && abs(chargeSSV)==1){  // check if this is a 3 track decay with global charge -1 or +1
                 double mass_hadron=0.1396;
-                if(secInfo->vertexTracks()[it]->charge()*chargeSSV<0) mass_hadron=0.1396;  // (pi-,pi-,ka+) or (pi+,pi+,k-)
+                if(secInfo->vertexTracks()[it]->charge()*chargeSSV<0) mass_hadron=0.493677;  // (pi-,pi-,ka+) or (pi+,pi+,k-)
                 enD += sqrt(px*px+py*py+pz*pz+mass_hadron*mass_hadron);    // mass v2:  2 pions and a kaon
               }
 
               if(secInfo->vertexTracks().size()==2) { // Look for D0. This is more complicated (kpi, which is k and which is pi?)
-                double mass_pi=0.1396, mass_k=0.1396;
+                double mass_pi=0.1396, mass_k=0.493677;
                 if(it==0){
                   enD0_1 += sqrt(px*px+py*py+pz*pz+mass_pi*mass_pi);    // mass v3: pi +ka
                   enD0_2 += sqrt(px*px+py*py+pz*pz+mass_k*mass_k);
@@ -176,12 +176,12 @@ class PATSSVJetEmbedder : public edm::EDProducer {
 
               if(secNegInfo->vertexTracks().size()==3 && abs(chargeSSVNEG)==1){  // check if this is a 3 track decay with global charge -1 or +1
                 double mass_hadron=0.1396;
-                if(secNegInfo->vertexTracks()[it]->charge()*chargeSSVNEG<0) mass_hadron=0.1396;  // (pi-,pi-,ka+) or (pi+,pi+,k-)
+                if(secNegInfo->vertexTracks()[it]->charge()*chargeSSVNEG<0) mass_hadron=0.493677;  // (pi-,pi-,ka+) or (pi+,pi+,k-)
                 enD += sqrt(px*px+py*py+pz*pz+mass_hadron*mass_hadron);    // mass v2:  2 pions and a kaon
               }
 
               if(secNegInfo->vertexTracks().size()==2) { // Look for D0. This is more complicated (kpi, which is k and which is pi?)
-                double mass_pi=0.1396, mass_k=0.1396;
+                double mass_pi=0.1396, mass_k=0.493677;
                 if(it==0){
                   enD0_1 += sqrt(px*px+py*py+pz*pz+mass_pi*mass_pi);    // mass v3: pi +ka
                   enD0_2 += sqrt(px*px+py*py+pz*pz+mass_k*mass_k);
@@ -248,8 +248,8 @@ class PATSSVJetEmbedder : public edm::EDProducer {
             if (flightDistanceNEG[isv]>0.) continue;
             btagSSVHPNEG[isv]=-log(1.-flightDistanceNEG[isv]/errorFlightDistanceNEG[isv]);
           }
-          jet.addUserFloat("nSSV",nSSVNEG);
-          jet.addUserFloat("nNegativeSSV",nSSVPOS);
+          jet.addUserFloat("nSSV",nSSVPOS);
+          jet.addUserFloat("nNegativeSSV",nSSVNEG);
           jet.addUserFloat("mass_SSV",mass_SSV);
           jet.addUserFloat("mass_SSVNEG",mass_SSVNEG);
           jet.addUserFloat("massD_SSV",massD_SSV);

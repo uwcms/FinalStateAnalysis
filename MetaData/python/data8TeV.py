@@ -12,6 +12,13 @@ from datacommon import square, cube, quad, picobarns, br_w_leptons
 data_name_map = {}
 
 datadefs = {
+   'WJetsToLNu_PtW-100_TuneZ2star_8TeV-madgraph' : {
+        'analyses': ['Wbb'],
+        'datasetpath': '/WJetsToLNu_PtW-100_TuneZ2star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S7',
+        'x_sec': -999,
+        'responsible' : 'Isobel',
+    },
     'WplusJets_madgraph' : {
         'analyses': ['HTT'],
         'datasetpath': '/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9-v1/AODSIM',
@@ -243,12 +250,12 @@ for mass in range(110, 140, 5):
    if mass==120 :
       ver=2
    datadefs['WH_WToLNu_HToBB_M-%i' % mass]= {
-      'datasetpath' :'/WH_WToLNu_HToBB_M-%i_8TeV-powheg-herwigpp/Summer12-PU_S7_START52_V9-v%i/AODSIM' % (mass, ver), 
+      'datasetpath' :'/WH_WToLNu_HToBB_M-%i_8TeV-powheg-herwigpp/Summer12-PU_S7_START52_V9-v%i/AODSIM' % (mass, ver),
       'pu' : 'S7',
       'x_sec' : -999,
       'analyses' : ['VH', 'HBB'],
       'responsible' : 'Tapas',
-   }       
+   }
 
 # Add GGH H2Tau samples
 for mass in range(110, 165, 5):

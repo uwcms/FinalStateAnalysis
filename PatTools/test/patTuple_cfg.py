@@ -1,8 +1,11 @@
 #!/usr/bin/env cmsRun
 import FWCore.ParameterSet.Config as cms
-
 import FinalStateAnalysis.Utilities.cfgcleaner as cfgcleaner
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
+from FinalStateAnalysis.Utilities.version import fsa_version, repo_status
+import os
+import time
+
 options = TauVarParsing.TauVarParsing(
     xSec = -999.0,
     xSecErr = 0.0,
@@ -81,6 +84,15 @@ process.GlobalTag.globaltag = cms.string(options.globalTag)
 process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
 process.load("FinalStateAnalysis.RecoTools.dqmEventCount_cfi")
 
+# Hack meta information about this PAT tuple in the provenance.
+process.eventCount.uwMeta = cms.PSet(
+    # The git commit
+    commit = cms.string(fsa_version()),
+    user = cms.string(os.environ['LOGNAME']),
+    date = cms.string(time.strftime("%d %b %Y %H:%M:%S +0000", time.gmtime())),
+)
+
+
 process.schedule = cms.Schedule()
 
 # Load all of our skim paths
@@ -119,7 +131,9 @@ process.MEtoEDMConverter = cms.EDProducer(
     deleteAfterCopy = cms.untracked.bool(True)
 )
 
-process.outpath = cms.EndPath(process.MEtoEDMConverter*process.out)
+process.outpath = cms.EndPath(
+    process.MEtoEDMConverter*
+    process.out)
 process.schedule.append(process.outpath)
 
 # Tell the framework to shut up!
@@ -134,10 +148,6 @@ if options.clean:
     print "Cleaning up the cruft!"
     unrun, unused, killed = cfgcleaner.clean_cruft(
         process, process.out.outputCommands.value())
-    #print unused
-    #print killed
-    #print unused - killed
-    #print killed - unused
     print "Removed %i unrun and %i unused modules!" % (len(unrun), len(unused))
 
 ################################################################################

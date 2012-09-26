@@ -29,9 +29,11 @@ fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   echo "Setting up CMSSW 5 global tags"
-  export datagt=GR_R_52_V8::All
-  export mcgt=START52_V10::All
+  export datagt=GR_P_V41_AN1::All
+  export mcgt=START53_V10::All
 fi
+#  export datagt=GR_R_52_V8::All
+#  export mcgt=START52_V10::All
 
 echo "Data global tag: $datagt"
 echo "MC global tag: $mcgt"
