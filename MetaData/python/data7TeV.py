@@ -1484,6 +1484,23 @@ for mass in range(100, 150, 5):
     'responsible' : 'Tapas',
     }
 
+# Add leptonic decay only VH samples
+for mass in range(110, 145, 5):
+    datadefs['VHtautau_lepdecay_%i' % mass] = {
+        'analyses': ['VH'],
+        'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM" % mass,
+        'pu' : 'S6',
+        'x_sec' : -999,
+    }
+
+for mass in range(110, 150, 10):
+    datadefs['VHWW_lepdecay_%i' % mass] = {
+        'analyses': ['VH'],
+        'datasetpath': "/WH_ZH_TTH_HToWW_M-%i_lepdecay_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM" % mass,
+        'pu' : 'S6',
+        'x_sec' : -999,
+    }
+
 # Add all the datasets
 # Following https://twiki.cern.ch/twiki/bin/viewauth/CMS/Collisions2011Analysis
 def build_data_set(pd, analyses, who):

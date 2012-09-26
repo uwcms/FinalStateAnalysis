@@ -75,7 +75,7 @@ datadefs = {
    'pu' : 'S10',
    'responsible' : 'Josh',
    },
-   
+
    'WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_v2' : {
    'analyses': ['HTT'],
    'datasetpath' : "/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM",
@@ -161,6 +161,22 @@ for mass in range(115, 131) + range(145, 155, 5) + range(180, 220, 20) + range(2
       'responsible' : 'Austin',
       }
 
+# Add VH files
+for mass in range(110, 145, 5):
+   datadefs['VHtautau_lepdecay_%i' % mass] = {
+      'analyses': ['VH'],
+      'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+      'pu' : 'S10',
+      'x_sec' : -999,
+      }
+
+for mass in range(110, 150, 10):
+   datadefs['VHWW_lepdecay_%i' % mass] = {
+      'analyses': ['VH'],
+      'datasetpath': "/WH_ZH_TTH_HToWW_M-%i_lepdecay_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+      'pu' : 'S10',
+      'x_sec' : -999,
+      }
 
 # Add data files
 def build_data_set(pd, analyses, who):
