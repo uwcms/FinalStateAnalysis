@@ -20,8 +20,6 @@ import sys
 
 parser = argparse.ArgumentParser(description='Build PAT Tuple CRAB submission')
 parser.add_argument('jobid', help='Job ID identifier')
-parser.add_argument('--responsible', type=str, required=False, default='',
-                    help='Filter on responsibility')
 parser.add_argument('--samples', nargs='+', type=str, required=False,
                     help='Filter samples using list of patterns (shell style)')
 args = parser.parse_args()
@@ -35,10 +33,6 @@ for sample in sorted(datadefs.keys()):
     sample_info = datadefs[sample]
 
     passes_filter = True
-    # Filter by responsibility
-    if args.responsible:
-        passes_resp = sample_info['responsible'] == args.responsible
-        passes_filter = passes_filter and passes_resp
 
     # Filter by sample wildcards
     if args.samples:

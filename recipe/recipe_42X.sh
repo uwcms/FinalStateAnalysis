@@ -20,12 +20,13 @@ then
   # the GenParticlePrunder
   cvs co -r V11-03-16 PhysicsTools/HepMCCandAlgos
 
-  # PAT RECIPE V08-06-55
-  addpkg PhysicsTools/PatAlgos      V08-06-55
-  addpkg PhysicsTools/PatUtils      V03-09-18
-  addpkg CommonTools/ParticleFlow   B4_2_X_V00-03-04
+  # PAT RECIPE V08-06-58 IAR 27.Sep.2012
+  addpkg DataFormats/PatCandidates  V06-04-19-05
+  addpkg PhysicsTools/PatAlgos V08-06-58
+  addpkg PhysicsTools/PatUtils V03-09-18
+  addpkg CommonTools/ParticleFlow B4_2_X_V00-03-05
   addpkg PhysicsTools/SelectorUtils V00-03-24
-  addpkg PhysicsTools/UtilAlgos     V08-02-14
+  addpkg PhysicsTools/UtilAlgos V08-02-14 
 
   echo "Checking out Tau POG recipe"
   addpkg DataFormats/TauReco CMSSW_5_2_4 # yes, this is correct
