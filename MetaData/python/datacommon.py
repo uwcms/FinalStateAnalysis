@@ -6,7 +6,11 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
+import fnmatch
 import math
+from RecoLuminosity.LumiDB import argparse
+from FinalStateAnalysis.Utilities.prettytable import PrettyTable
+import sys
 
 # Conversions to pico barns
 millibarns = 1.0e+9
@@ -27,3 +31,54 @@ def cube(x):
 def quad(*xs):
     # Add stuff in quadrature
     return math.sqrt(sum(x*x for x in xs))
+
+def query_cli(datadefs, argv=None):
+    if argv is None:
+        argv = sys.argv
+    parser = argparse.ArgumentParser(description='Query datasets')
+    query_group = parser.add_argument_group(
+        title='query', description="Query parameters (ORed)")
+    query_group.add_argument(
+        '--name', required=False, type=str,
+        help='"Nice" dataset name (ex: Zjets_M50)')
+    query_group.add_argument(
+        '--dataset', required=False, type=str,
+        help='DBS dataset name (ex: '
+        '/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/*')
+    output_group = parser.add_argument_group(
+        title='output', description="Output parameters")
+    output_group.add_argument(
+        '--columns', nargs='+',  help='Output columns',
+        default=['name', 'datasetpath'],
+        choices=['name', 'datasetpath', 'pu', 'xsec', 'lumi_mask',
+                 'firstRun', 'lastRun'])
+    output_group.add_argument(
+        '--sort', default='name', help='Column to sort by')
+    output_group.add_argument(
+        '--noborder', action='store_false', default=True, help='Show border')
+
+    args = parser.parse_args(argv[1:])
+
+    if not args.name and not args.dataset:
+        print "Must specify either --name or --dataset.  Did you forget to quote a '*'?"
+        sys.exit(1)
+
+    table = PrettyTable(args.columns)
+
+    for key in sorted(datadefs.keys()):
+        value = datadefs[key]
+        matched = False
+        if args.name and fnmatch.fnmatch(key, args.name):
+            matched = True
+        if args.dataset and fnmatch.fnmatch(value['datasetpath'], args.dataset):
+            matched = True
+        if matched:
+            row = []
+            for column in args.columns:
+                if column == 'name':
+                    row.append(key)
+                else:
+                    row.append(value.get(column, '-'))
+            table.add_row(row)
+
+    table.printt(sortby=args.sort, border=(args.noborder))

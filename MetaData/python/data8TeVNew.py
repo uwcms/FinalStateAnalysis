@@ -2,11 +2,19 @@
 
 Dataset definitions for 8TeV
 
+You can query the information in this file at the command line.
+
+Run
+
+python data8TeVNew.py --help
+
+for more information.
+
 Author: Evan K. Friis, UW Madison
 
 '''
 
-from datacommon import square, cube, quad, picobarns, br_w_leptons
+from datacommon import square, cube, quad, picobarns, br_w_leptons, query_cli
 
 # Figure this out later.
 data_name_map = {}
@@ -221,3 +229,7 @@ data_name_map.update(list_SingleElectron)
 data_TauPlusX, list_TauPlusX = build_data_set('TauPlusX', ['HTT', ])
 datadefs.update(data_TauPlusX)
 data_name_map.update(list_TauPlusX)
+
+if __name__=="__main__":
+    query_cli(datadefs)
+
