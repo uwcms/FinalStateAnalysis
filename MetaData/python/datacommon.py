@@ -65,6 +65,9 @@ def query_cli(datadefs, argv=None):
 
     table = PrettyTable(args.columns)
 
+    for col in args.columns:
+        table.set_field_align(col, 'l')
+
     for key in sorted(datadefs.keys()):
         value = datadefs[key]
         matched = False
