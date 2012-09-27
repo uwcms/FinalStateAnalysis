@@ -371,7 +371,6 @@ def build_data_set(pd, analyses):
             'firstRun' : 198934,
             'lastRun' : 201264,
             'analyses' : analyses,
-            'responsible' : who,
         },
         'data_%s_Run2012C_PromptReco_v2_Run198934_201264' % pd : {
             'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
