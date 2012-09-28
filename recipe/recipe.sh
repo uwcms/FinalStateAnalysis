@@ -16,7 +16,9 @@ MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
 echo "Detected CMSSW version: $MAJOR_VERSION"
 
 echo "Checking for CERN CVS kerberos ticket"
+set +o errexit
 HAS_TICKET=`klist 2>&1 | grep CERN.CH`
+set -o errexit
 
 if [ -z "$HAS_TICKET" ]; then
   echo "ERROR: You need to kinit yourname@CERN.CH to enable CVS checkouts"
@@ -31,7 +33,7 @@ while true; do
     read -p "Do you wish continue? " yn
     case $yn in
         [Yy]* ) echo "sounds good dude"; break;;
-        [Nn]* ) exit;;
+        [Nn]* ) exit 2;;
         * ) echo "Please answer yes or no.";;
     esac
 done
