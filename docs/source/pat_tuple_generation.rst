@@ -1,7 +1,7 @@
 Generating PAT Tuples
 =====================
 
-Setup a 4_2_8_patch7 and/or 5_2_5 area:
+Setup a 4_2_8_patch7 and/or 5_3_3 area:
 
 First run ``cmsenv``.
 
