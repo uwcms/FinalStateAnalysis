@@ -13,7 +13,9 @@ do
     mkdir -p FinalStateAnalysis
     touch FinalStateAnalysis/__init__.py
     package=`basename $subdir`
-    echo "\$CMSSW_BASE/python/FinalStateAnalysis/$package => $subdir/python"
-    ln -f -s ../$subdir/python FinalStateAnalysis/$package
+    if ! [ -L FinalStateAnalysis/$package ]; then
+      echo "\$CMSSW_BASE/python/FinalStateAnalysis/$package => $subdir/python"
+      ln -f -s ../$subdir/python FinalStateAnalysis/$package
+    fi
   fi
 done
