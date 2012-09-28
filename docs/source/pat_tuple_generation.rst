@@ -1,6 +1,9 @@
 Generating PAT Tuples
 =====================
 
+Installation
+------------
+
 Setup a 4_2_8_patch7 and/or 5_3_3 area:
 
 First run ``cmsenv``.
@@ -24,6 +27,22 @@ Setup your environment variables::
 
   cd FinalStateAnalysis/
   source environment.sh
+
+Testing locally
+---------------
+
+You can run on a local file by doing::
+
+   cd FinalStateAnalysis/PatTools/test
+   ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=file:$dataAODFile maxEvents=1000 outputFile=myTestFile.root
+
+The critical options you need to pass are ``globalTag`` and ``isMC``, which should be either ``$datagt`` or ``$mcgt``, 
+and 0 or 1, respectively.  The AOD file to process must be set as ``inputFiles``.  Note that the global tag environment
+variables are setup automatically in the ``environment.sh`` file.  Also, for quick test convenience, working AOD files
+for data and MC are set in the ``$dataAODFile`` and ``$mcAODFile`` variables.
+
+Batch submission
+----------------
 
 Build the crab submitters::
 
