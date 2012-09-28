@@ -97,12 +97,62 @@ datadefs = {
    'pu' : 'S10',
    },
 
+   'DYJetsToLL_M-10To50filter_8TeV-madgraph' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/DYJetsToLL_M-10To50filter_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   },
+
    'TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola' : {
    'analyses': ['HTT'],
    'datasetpath' : "/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
    },
+
+   'ZZTo2e2tau_8TeV-powheg-pythia6' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZTo2e2tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   },
+
+   'ZZTo2e2mu_8TeV-powheg-pythia6' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZTo2e2mu_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   },
+
+   'ZZTo2mu2tau_8TeV-powheg-pythia6' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZTo2mu2tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM ",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   },
+
+   'ZZTo4mu_8TeV-powheg-pythia6' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZTo4mu_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   },
+
+   'ZZTo4e_8TeV-powheg-pythia6' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZTo4e_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   },
+
+   'ZZTo4tau_8TeV-powheg-pythia6' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZTo4tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   },
+
 
 }
 
@@ -190,6 +240,13 @@ def build_data_set(pd, analyses):
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
       'firstRun' : 198934,
       'lastRun' : 201264,
+      'analyses' : analyses,
+      },
+      'data_%s_Run2012A-recover-06Aug2012-v1' % pd : {
+      'datasetpath' : "/%s/Run2012A-recover-06Aug2012-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'firstRun' : 190456, #Not 100% sure about these.. IAR 28.Sep.2012
+      'lastRun' : 193621,
       'analyses' : analyses,
       },
       'data_%s_Run2012C_24Aug2012_v1' % pd : {
