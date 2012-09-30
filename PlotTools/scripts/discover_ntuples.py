@@ -5,8 +5,6 @@
 Given an input directory, find the input ntuple files and put them in one
 .txt filelist for each discovered sample.
 
-Filter out duplicate run-lumis in data, optionally in MC as well.
-
 Author: Evan K. Friis, UW
 
 '''
@@ -34,11 +32,17 @@ if __name__ == "__main__":
     parser.add_argument('outputdir', help='Output directory')
     parser.add_argument('--meta', default='mm/metaInfo',
                         help='Path to a meta tree, default: mm/metaInfo')
-    parser.add_argument('--filtermc', default=False,
-                        help='If true, skip MC files with run-lumis that exist'
-                        ' in other files.  Might not be correct...')
+    parser.add_argument('--force', default=False, action='store_true',
+                        help='If specified, check files even if they '
+                        ' have an older timestamp than previously output')
+    parser.add_argument('--verbose', default=False, action='store_true',
+                        help='More output')
 
     args = parser.parse_args()
+
+    if args.verbose:
+        log.setLevel(logging.DEBUG)
+
     import ROOT
 
     if not os.path.exists(args.outputdir):
@@ -49,57 +53,52 @@ if __name__ == "__main__":
 
     for sample_dir in glob.glob(os.path.join(args.directory, args.jobid, '*')):
         sample_name = os.path.basename(sample_dir)
-        log.info("Finding files for sample %s" % sample_name)
-
-        run_lumis = set([])
+        log.debug("Finding files for sample %s" % sample_name)
 
         output_txt = os.path.join(args.outputdir, sample_name + '.txt')
+        # Do work in a temporary directory
         output_tmp = output_txt.replace('.txt', '.tmp')
 
+        previous_files = set([])
+        if os.path.exists(output_txt):
+            log.debug("-- Output already exists - finding new and re-checking broken.")
+            with open(output_txt, 'r') as current:
+                for line in current.readlines():
+                    if '#' not in line:
+                        previous_files.add(line.strip())
+
         with open(output_tmp, 'w') as flist:
-            for file in glob.glob(os.path.join(sample_dir, '*', '*.root')):
-                tfile = ROOT.TFile.Open(file)
-                if not tfile:
-                    log.warning("Can't open file: %s" % file)
-                    flist.write('# corrupt %s\n' % file)
-                    continue
-                ntuple = tfile.Get(args.meta)
-                if not ntuple:
-                    log.warning("Can't read ntuple in file: %s" % file)
-                    flist.write('# corrupt %s\n' % file)
-                    tfile.Close()
-                    continue
-
-                # Check to make sure this file doesn't have any lumi dupes
-                has_dupes = None
-                if 'data' in sample_name or args.filtermc:
-                    for row in ntuple:
-                        run_lumi = (int(row.run), int(row.lumi))
-                        if run_lumi in run_lumis:
-                            has_dupes = run_lumi
-                            break
-                        run_lumis.add(run_lumi)
-
-                if has_dupes:
-                    log.error("Duplicate run lumi %s found in file: %s",
-                              repr(has_dupes), file)
-                    #flist.write('# dupe %s\n' % file)
-                    #tfile.Close()
-                    #continue
+            all_files = glob.glob(os.path.join(sample_dir, '*', '*.root')) + \
+                    glob.glob(os.path.join(sample_dir, '*.root'))
+            for file in all_files:
+                # Always write if we have found + checked it OK before
+                if args.force or file not in previous_files:
+                    import pdb; pdb.set_trace()
+                    tfile = ROOT.TFile.Open(file)
+                    if not tfile:
+                        log.warning("-- Can't open file: %s" % file)
+                        flist.write('# corrupt %s\n' % file)
+                        tfile.Close()
+                        continue
+                    ntuple = tfile.Get(args.meta)
+                    if not ntuple:
+                        log.warning("-- Can't read ntuple in file: %s" % file)
+                        flist.write('# corrupt %s\n' % file)
+                        tfile.Close()
+                        continue
                 # Made it!
                 flist.write(file + '\n')
-                tfile.Close()
 
         # Check if we found anything new in the .txt file
         # Don't update if we didn't, so rake knows nothing has changed
         if not os.path.exists(output_txt):
             shutil.move(output_tmp, output_txt)
-            log.info("Completed sample")
+            log.debug("-- Completed sample %s", sample_dir)
         elif shafile(output_txt) != shafile(output_tmp):
             # content has changed
             shutil.move(output_tmp, output_txt)
-            log.info("Completed sample - new files found")
+            log.debug("-- Completed sample %s - new files found", sample_dir)
         else:
             # Nothing has changed, remove the tmp
-            log.info("Completed sample - no new files found")
+            log.debug("-- Completed sample %s - no new files found", sample_dir)
             os.remove(output_tmp)
