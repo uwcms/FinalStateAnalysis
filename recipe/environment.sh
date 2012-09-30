@@ -5,10 +5,9 @@
 echo "Setting up CMSSW runtime environment"
 cmsenv
 
-export FSAHOME=$CMSSW_BASE/src/FinalStateAnalysis/
-echo "Setting variable FSAHOME=$FSAHOME"
-# easier to type
-export fsa=$FSAHOME
+export fsa=$CMSSW_BASE/src/FinalStateAnalysis/
+echo "Setting variable \$fsa=$FSAHOME"
+
 export base=$CMSSW_BASE/src
 
 export vpython=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/vpython
@@ -78,4 +77,5 @@ fi
 
 # Define the current most-informative PU information JSONs
 export pu2011JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/PileUp/pileup_2011_JSON_pixelLumi.txt
-export pu2012JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/pileup_JSON_DCSONLY_190389-196531_patch2.txt
+# Valid up to the September 12 technical stop, see https://hypernews.cern.ch/HyperNews/CMS/get/physics-validation/1882.html
+export pu2012JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/pileup_JSON_DCSONLY_190389-203002_corr.txt
