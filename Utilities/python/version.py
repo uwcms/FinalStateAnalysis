@@ -7,6 +7,7 @@ Stupid library to get CMSSW version
 import os
 import subprocess
 import re
+import warning
 
 _fsa_directory = os.path.join(
     os.environ['CMSSW_BASE'], 'src', 'FinalStateAnalysis')
@@ -35,6 +36,8 @@ def fsa_version():
     '''
     HEAD_file = os.path.join(
         _fsa_directory, '.git', 'HEAD')
+    if not os.path.exists(HEAD_file):
+        warning.warn("Could not extract git commit information!")
     # Get current HEAD ref
     with open(HEAD_file, 'r') as head:
         head_ref = head.readline().split(':')[1].strip()
