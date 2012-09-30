@@ -6,8 +6,11 @@ pushd $CMSSW_BASE/src
 
 # Tags that work in any release
 
-# For updated lumi tools - we always want this.
-cvs co -r V04-00-10 RecoLuminosity/LumiDB 
+# To install lumiCalc.py
+if [ "$LUMI" = "1" ] 
+then
+  cvs co -r V04-01-06 RecoLuminosity/LumiDB 
+fi
 
 # Add and patch to way speed up trigger matching
 # Don't crash if patch already applied.
