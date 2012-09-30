@@ -38,6 +38,7 @@ def fsa_version():
         _fsa_directory, '.git', 'HEAD')
     if not os.path.exists(HEAD_file):
         warning.warn("Could not extract git commit information!")
+        return 'NO_IDEA'
     # Get current HEAD ref
     with open(HEAD_file, 'r') as head:
         head_ref = head.readline().split(':')[1].strip()
