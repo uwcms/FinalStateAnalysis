@@ -1,4 +1,7 @@
-# Rules for extracting meta information (#events, lumis) from ntuples
+# meta.rake
+# 
+# Finds lists of datafiles (starting from a directory)
+# and computes meta data: # of events, effective/real int. lumi
 
 namespace :meta do
   # How to generate the inputs
@@ -25,7 +28,8 @@ namespace :meta do
       end
       # Run lumicalc on the mask
       file sample + '.lumicalc.csv' => sample + '.lumimask.json' do |t|
-        sh "pixelLumiCalc.py overview -i #{t.prerequisites} -o #{t.name}"
+        #sh "pixelLumiCalc.py overview -i #{t.prerequisites} -o #{t.name}"
+        sh "lumiCalc2.py overview -i #{t.prerequisites} -o #{t.name}"
       end
       # Get the PU distribution
       file sample + '.pu.root' => sample + '.lumimask.json' do |t| 
