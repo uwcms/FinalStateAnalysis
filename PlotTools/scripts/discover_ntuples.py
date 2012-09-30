@@ -73,7 +73,6 @@ if __name__ == "__main__":
             for file in all_files:
                 # Always write if we have found + checked it OK before
                 if args.force or file not in previous_files:
-                    import pdb; pdb.set_trace()
                     tfile = ROOT.TFile.Open(file)
                     if not tfile:
                         log.warning("-- Can't open file: %s" % file)
