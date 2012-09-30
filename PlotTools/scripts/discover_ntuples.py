@@ -77,14 +77,13 @@ if __name__ == "__main__":
                     if not tfile:
                         log.warning("-- Can't open file: %s" % file)
                         flist.write('# corrupt %s\n' % file)
-                        tfile.Close()
                         continue
                     ntuple = tfile.Get(args.meta)
                     if not ntuple:
                         log.warning("-- Can't read ntuple in file: %s" % file)
                         flist.write('# corrupt %s\n' % file)
-                        tfile.Close()
                         continue
+                    tfile.Close()
                 # Made it!
                 flist.write(file + '\n')
 
