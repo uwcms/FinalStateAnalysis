@@ -41,7 +41,14 @@ process.source = cms.Source(
 )
 # If data, apply a luminosity mask
 if not options.isMC and options.lumiMask:
-    print "Applying LumiMask from", options.lumiMask
+    # Figure out what the absolute PATH is
+    full_path = options.lumiMask
+    if not os.path.isabs(options.lumiMask):
+        # Make it relative to CMSSW_BASE
+        full_path = os.path.join(
+            os.environ['CMSSW_BASE'], 'src', options.lumiMask)
+    print "Applying LumiMask from %s => %s" % (options.lumiMask, full_path)
+    options.lumiMask = full_path
     process.source.lumisToProcess = options.buildPoolSourceLumiMask()
 
 # Check if we only want to process a few events
