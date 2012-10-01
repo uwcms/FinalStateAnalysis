@@ -2,7 +2,7 @@
 import FWCore.ParameterSet.Config as cms
 import FinalStateAnalysis.Utilities.cfgcleaner as cfgcleaner
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
-from FinalStateAnalysis.Utilities.version import fsa_version, repo_status
+from FinalStateAnalysis.Utilities.version import fsa_version, get_user
 import os
 import time
 
@@ -41,7 +41,14 @@ process.source = cms.Source(
 )
 # If data, apply a luminosity mask
 if not options.isMC and options.lumiMask:
-    print "Applying LumiMask from", options.lumiMask
+    # Figure out what the absolute PATH is
+    full_path = options.lumiMask
+    if not os.path.isabs(options.lumiMask):
+        # Make it relative to CMSSW_BASE
+        full_path = os.path.join(
+            os.environ['CMSSW_BASE'], 'src', options.lumiMask)
+    print "Applying LumiMask from %s => %s" % (options.lumiMask, full_path)
+    options.lumiMask = full_path
     process.source.lumisToProcess = options.buildPoolSourceLumiMask()
 
 # Check if we only want to process a few events
@@ -88,10 +95,9 @@ process.load("FinalStateAnalysis.RecoTools.dqmEventCount_cfi")
 process.eventCount.uwMeta = cms.PSet(
     # The git commit
     commit = cms.string(fsa_version()),
-    user = cms.string(os.environ['LOGNAME']),
+    user = cms.string(get_user()),
     date = cms.string(time.strftime("%d %b %Y %H:%M:%S +0000", time.gmtime())),
 )
-
 
 process.schedule = cms.Schedule()
 
