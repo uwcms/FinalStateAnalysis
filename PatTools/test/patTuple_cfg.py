@@ -2,7 +2,7 @@
 import FWCore.ParameterSet.Config as cms
 import FinalStateAnalysis.Utilities.cfgcleaner as cfgcleaner
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
-from FinalStateAnalysis.Utilities.version import fsa_version, repo_status
+from FinalStateAnalysis.Utilities.version import fsa_version, get_user
 import os
 import time
 
@@ -95,10 +95,9 @@ process.load("FinalStateAnalysis.RecoTools.dqmEventCount_cfi")
 process.eventCount.uwMeta = cms.PSet(
     # The git commit
     commit = cms.string(fsa_version()),
-    user = cms.string(os.environ['LOGNAME']),
+    user = cms.string(get_user()),
     date = cms.string(time.strftime("%d %b %Y %H:%M:%S +0000", time.gmtime())),
 )
-
 
 process.schedule = cms.Schedule()
 
