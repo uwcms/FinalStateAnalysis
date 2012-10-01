@@ -69,6 +69,7 @@ for sample in sorted(datadefs.keys()):
         '--input-dbs-path=%s' % sample_info['datasetpath'])
 
     if 'lumi_mask' in sample_info:
+        lumi_mask_fip = sample_info['lumi_mask']
         farmout_options.append('--lumi-mask=%s' % lumi_mask_fip)
         if 'firstRun' in sample_info:
             farmout_options.append(
