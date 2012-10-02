@@ -241,7 +241,7 @@ datadefs['data_DoubleMu_Run2012B_13Jul2012_v4'] = {
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'firstRun' : 193834,
    'lastRun' : 196531,
-   'analyses' : analyses,
+   'analyses' : ['HZZ'],
    }
 
 def build_data_set(pd, analyses):
