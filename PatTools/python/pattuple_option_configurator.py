@@ -33,10 +33,10 @@ def configure_pat_tuple(sample, sample_info):
         options.append('isMC=0')
         options.append('globalTag=%s' % os.environ['datagt'])
         options.append('puTag=data')
+        # This path goes to cmsRun, and should be relative (i.e.
+        # edm::FileInPath)
         lumi_mask_fip = sample_info['lumi_mask']
-        lumi_mask_path = os.path.join(
-            os.environ['CMSSW_BASE'], 'src', lumi_mask_fip)
-        options.append('lumiMask=%s' % lumi_mask_path)
+        options.append('lumiMask=%s' % lumi_mask_fip)
         if 'firstRun' in sample_info:
             options.append('firstRun=%s' % sample_info['firstRun'])
             options.append('lastRun=%s' % sample_info['lastRun'])
