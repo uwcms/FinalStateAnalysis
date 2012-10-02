@@ -281,6 +281,13 @@ def build_data_set(pd, analyses):
       'lastRun' : 193621,
       'analyses' : analyses,
       },
+      'data_%s_Run2012C_PromptReco_v1' % pd : {
+      'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'firstRun' : 19770,
+      'lastRun' : 198913,
+      'analyses' : analyses,
+      },
       'data_%s_Run2012C_24Aug2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012C-24Aug2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
