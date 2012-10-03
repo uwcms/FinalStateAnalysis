@@ -10,10 +10,11 @@ Author: Evan K. Friis, UW
 '''
 
 from RecoLuminosity.LumiDB import argparse
+import glob
 from hashlib import sha1
 import logging
-import glob
 import os
+from progressbar import ETA, ProgressBar, FormatLabel, Bar
 import shutil
 import sys
 
@@ -53,7 +54,8 @@ if __name__ == "__main__":
 
     for sample_dir in glob.glob(os.path.join(args.directory, args.jobid, '*')):
         sample_name = os.path.basename(sample_dir)
-        log.debug("Finding files for sample %s" % sample_name)
+        log.info("Finding files for sample %s" % sample_name)
+
 
         output_txt = os.path.join(args.outputdir, sample_name + '.txt')
         # Do work in a temporary directory
@@ -70,7 +72,12 @@ if __name__ == "__main__":
         with open(output_tmp, 'w') as flist:
             all_files = glob.glob(os.path.join(sample_dir, '*', '*.root')) + \
                     glob.glob(os.path.join(sample_dir, '*.root'))
-            for file in all_files:
+            pbar = ProgressBar(widgets=[FormatLabel(
+                'Checked %(value)i/' + str(len(all_files)) + ' files. '),
+                ETA(), Bar('>')], maxval=len(all_files)).start()
+
+            for i, file in enumerate(all_files):
+                pbar.update(i)
                 # Always write if we have found + checked it OK before
                 if args.force or file not in previous_files:
                     tfile = ROOT.TFile.Open(file)
