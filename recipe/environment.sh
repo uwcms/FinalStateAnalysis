@@ -29,9 +29,11 @@ fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   echo "Setting up CMSSW 5 global tags"
-  export datagt=GR_R_52_V8::All
-  export mcgt=START52_V10::All
+  export datagt=GR_P_V41_AN1::All
+  export mcgt=START53_V10::All
 fi
+#  export datagt=GR_R_52_V8::All
+#  export mcgt=START52_V10::All
 
 echo "Data global tag: $datagt"
 echo "MC global tag: $mcgt"
@@ -69,9 +71,9 @@ if [ "$MAJOR_VERSION" -eq "4" ]; then
 fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
-  export mcAODFile=/hdfs/store/mc/Summer12/WH_ZH_TTH_HToTauTau_M-130_8TeV-pythia6-tauola/AODSIM/PU_S7_START52_V9-v2/0000/04BF9EBD-D19E-E111-86A3-00215E221FDA.root
-  export dataAODFile=/hdfs/store/data/Run2012B/SingleMu/AOD/PromptReco-v1/000/193/752/B66332A3-789B-E111-939C-5404A63886B2.root
-  export patTupleFile=/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-130_8TeV-pythia6-tauola/VH_H2Tau_M-130_2012-05-28-8TeV-PatTuple-8a107b9/4729152ae17d7e4009729a1d0d9e952d/output_1_3_47m.root
+  export mcAODFile=/hdfs/store/mc/Summer12_DR53X/WH_ZH_TTH_HToTauTau_M-125_lepdecay_8TeV-pythia6-tauola/AODSIM/PU_S10_START53_V7A-v1/0000/04E2F0AA-09E1-E111-B2BC-0018F3D096C8.root
+  export dataAODFile=/hdfs/store/data/Run2012B/DoubleMu/AOD/13Jul2012-v4/00000/FC8B75AE-A6DD-E111-B81F-20CF3027A611.root
+  export patTupleFile=/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/data_TauPlusX_Run2012C_PromptReco_v2_Run198934_201264/patTuple_cfg-0001908A-8BE3-E111-9C6D-BCAEC53296F3.root
 fi
 
 # Define the current most-informative PU information JSONs

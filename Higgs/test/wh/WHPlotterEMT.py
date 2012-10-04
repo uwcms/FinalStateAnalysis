@@ -183,6 +183,10 @@ if __name__ == "__main__":
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-subMass')
 
+    plotter.plot_final('subMass', 20, xaxis='m_{#mu_{2}#tau} (GeV)', show_error=True)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-subMass-werror')
+
     plotter.plot_final('metSig', 5)
     plotter.save('final-metSig')
     plotter.plot_final('tLeadDR', 10)
@@ -208,6 +212,10 @@ if __name__ == "__main__":
     plotter.plot_final_f3('subMass', 10, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
     plotter.add_cms_blurb(sqrts)
     plotter.save('final-f3-subMass')
+
+    plotter.plot_final_f3('subMass', 10, xaxis='m_{#l_{1}#tau_{#mu}} (GeV)', show_error=True)
+    plotter.add_cms_blurb(sqrts)
+    plotter.save('final-f3-subMass-werror')
 
     plotter.plot_final_f3('mPt', 10, xaxis='m_{#mu_{1}#tau_{#mu}} (GeV)')
     plotter.add_cms_blurb(sqrts)
@@ -237,6 +245,5 @@ if __name__ == "__main__":
         os.path.join(outputdir, 'emt_shapes_%s.root' % period), 'RECREATE')
     shape_dir = shape_file.mkdir('emt')
     plotter.write_shapes('subMass', 20, shape_dir, unblinded=True)
+    #plotter.write_cut_and_count('subMass', shape_dir, unblinded=True)
     shape_file.Close()
-
-

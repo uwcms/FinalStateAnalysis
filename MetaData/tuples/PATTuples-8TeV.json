@@ -1,0 +1,21 @@
+{
+  "Zjets_M50" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball",
+  "WplusJets_madgraph" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_v2",
+  "TTplusJets_madgraph" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola",
+  "WZJetsTo3LNu_pythia" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/WZJetsTo3LNu_TuneZ2_8TeV-madgraph-tauola",
+  "ZZJetsTo4L_pythia" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola",
+  "WWJetsTo2L2Nu_TuneZ2_8TeV" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola",
+
+  "VH_H2Tau_M-110" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/VHtautau_lepdecay_110/",
+  "VH_H2Tau_M-120" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/VHtautau_lepdecay_120/",
+  "VH_H2Tau_M-130" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/VHtautau_lepdecay_130/",
+  "VH_H2Tau_M-140" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/VHtautau_lepdecay_140/",
+
+  "data_DoubleMu_Run2012A_PromptReco_v1_Run190456_193683" : "/hdfs/store/user/tapas/2012-07-18-8TeV-PatTuple/data_DoubleMu_Run2012A_PromptReco_v1_Run190456_193683/",
+  "data_DoubleMu_Run2012B_PromptReco_v1_Run193752_196531" : "/hdfs/store/user/tapas/2012-07-18-8TeV-PatTuple/data_DoubleMu_Run2012B_PromptReco_v1_Run193752_196531/",
+  "data_DoubleMu_Run2012C_PromptReco_v2_Run198934_201264" : "/hdfs/store/user/tapas/2012-08-30-8TeV-PatTuple/data_DoubleMu_Run2012C_PromptReco_v2_Run198934_201264",
+
+  "data_MuEG_Run2012A_PromptReco_v1_Run190456_193683" : "/hdfs/store/user/tapas/2012-07-18-8TeV-PatTuple/data_MuEG_Run2012A_PromptReco_v1_Run190456_193683/",
+  "data_MuEG_Run2012B_PromptReco_v1_Run193752_196531" : "/hdfs/store/user/tapas/2012-07-18-8TeV-PatTuple/data_MuEG_Run2012B_PromptReco_v1_Run193752_196531/",
+  "data_MuEG_Run2012C_PromptReco_v2_Run198934_201264" : "/hdfs/store/user/tapas/2012-08-30-8TeV-PatTuple/data_MuEG_Run2012C_PromptReco_v2_Run198934_201264"
+}

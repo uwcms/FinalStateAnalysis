@@ -83,9 +83,9 @@ if __name__ == "__main__":
                 if has_dupes:
                     log.error("Duplicate run lumi %s found in file: %s",
                               repr(has_dupes), file)
-                    flist.write('# dupe %s\n' % file)
-                    tfile.Close()
-                    continue
+                    #flist.write('# dupe %s\n' % file)
+                    #tfile.Close()
+                    #continue
                 # Made it!
                 flist.write(file + '\n')
                 tfile.Close()

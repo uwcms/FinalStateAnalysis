@@ -42,6 +42,7 @@ process.source = cms.Source(
     #lumisToProcess = options.buildPoolSourceLumiMask()
 )
 
+
 if options.eventsToProcess:
     process.source.eventsToProcess = cms.untracked.VEventRange(
         options.eventsToProcess)
@@ -80,10 +81,16 @@ if options.rerunFSA:
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
     produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
-                         'puTagDoesntMatter', buildFSAEvent='eFix',
+                         'puTagDoesntMatter', buildFSAEvent=True,
                          noTracks=True)
     process.buildFSAPath = cms.Path(process.buildFSASeq)
     process.schedule.append(process.buildFSAPath)
+    # Drop the old stuff.
+    process.source.inputCommands=cms.untracked.vstring(
+        'keep *',
+        'drop PATFinalStatesOwned_finalState*_*_*',
+        'drop *_patFinalStateEvent*_*_*'
+    )
 
 from FinalStateAnalysis.Higgs.tnp_ntuples_cfi import add_tnp_ntuples
 from FinalStateAnalysis.Higgs.h2tau_ntuples_cfi import add_h2tau_ntuples
