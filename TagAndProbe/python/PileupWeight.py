@@ -51,7 +51,11 @@ class PileupWeight(object):
             raise KeyError("Unknown PU distribution %s, allowed: %s" %
                            (mctag, " ".join(_MC_PU_DISTRIBUTIONS.keys())))
 
-        mc_base = ROOT.TFile.Open(_MC_PU_DISTRIBUTIONS[mctag]).Get('pileup')
+        mc_file = ROOT.TFile.Open(_MC_PU_DISTRIBUTIONS[mctag])
+        if not mc_file:
+            raise IOError("Can't open %s MC file: %s" % (mctag, _MC_PU_DISTRIBUTIONS[mctag]))
+
+        mc_base = mc_file.Get('pileup')
         self.mc = mc_base.Clone()
 
         # Make sure bins are consistent
@@ -74,6 +78,8 @@ class PileupWeight(object):
         else:
             return 1.0
 
-_MC_PU_DISTRIBUTIONS['S10'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_Summer12_PU_S10-600bins.root")
-_MC_PU_DISTRIBUTIONS['S7'] = None
-_MC_PU_DISTRIBUTIONS['S6'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_Fall11_PU_S6-500bins.root")
+_MC_PU_DISTRIBUTIONS['S10'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_Summer12_PU_S10-600bins.root").full_path()
+_MC_PU_DISTRIBUTIONS['S7'] = 'fixme'
+_MC_PU_DISTRIBUTIONS['S6'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_Fall11_PU_S6-500bins.root").full_path()
+# Version of the S6 with 600 bins, for compatibility
+_MC_PU_DISTRIBUTIONS['S6_600bins'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_Fall11_PU_S6-600bins.root").full_path()
