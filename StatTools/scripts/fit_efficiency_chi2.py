@@ -62,6 +62,7 @@ if __name__ == "__main__":
                           help='y-axis minimum')
     plot_grp.add_argument('--max', type=float, default=1,
                           help='y-axis maximum')
+    plot_grp.add_argument('--grid', action='store_true', help="Draw grid")
 
     args = parser.parse_args(args[1:])
 
@@ -185,6 +186,8 @@ if __name__ == "__main__":
             frame.GetXaxis().SetTitle(pass_histo.GetTitle())
             frame.Draw()
             canvas.SetLogy(True)
+            if args.grid:
+                canvas.SetGrid()
             canvas.Draw()
             plot_name = args.output.replace('.root', '.png')
             log.info("Saving fit plot in %s", plot_name)
