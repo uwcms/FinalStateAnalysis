@@ -60,8 +60,15 @@ class PileupWeight(object):
 
         # Make sure bins are consistent
         if not ROOT.TEfficiency.CheckBinning(self.mc, self.data):
-            raise ValueError("Data and MC PU histograms "
-                             "do not have the same binning!")
+            error = "Data and MC PU histograms do not have the same binning!\n"
+            def print_bins(tag, x):
+                return "%s: (%i, %0.1f, %0.1f)" % (
+                    tag, x.GetNbinsX(), x.GetXaxis().GetXmin(),
+                    x.GetXaxis().GetXmax())
+            error += print_bins(mctag, self.mc)
+            error += "\n"
+            error += print_bins('data', self.data)
+            raise ValueError(error)
 
         # Normalize MC
         self.mc.Scale(1./self.mc.Integral())
