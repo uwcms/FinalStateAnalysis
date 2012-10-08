@@ -147,12 +147,14 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   // Get MET covariance matrix
   edm::Handle<Matrix> metCov;
   evt.getByLabel(metCovSrc_, metCov);
-  // Covert to TMatrixD
   TMatrixD metCovariance(2,2);
-  metCovariance(0,0) = (*metCov)(0,0);
-  metCovariance(0,1) = (*metCov)(0,1);
-  metCovariance(1,0) = (*metCov)(1,0);
-  metCovariance(1,1) = (*metCov)(1,1);
+  if (metCov.isValid()) {
+    // Covert to TMatrixD
+    metCovariance(0,0) = (*metCov)(0,0);
+    metCovariance(0,1) = (*metCov)(0,1);
+    metCovariance(1,0) = (*metCov)(1,0);
+    metCovariance(1,1) = (*metCov)(1,1);
+  }
 
   edm::Handle<pat::TriggerEvent> trig;
   evt.getByLabel(trgSrc_, trig);
