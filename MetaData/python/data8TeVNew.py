@@ -245,15 +245,15 @@ for mass in range(110, 165, 5) :
       }
 
 for mass in range(115,130) + range(130,150,5) + range(150,200,10) + [200,220] + range(250,600,25) + range(600,1001,50) :
-   datadefs['GluGluToHToZZTo4L_M-%_8TeV-powheg-pythia6' % mass] = {
+   datadefs['GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
       'analyses': ['HTT'],
-      'datasetpath': "/GluGluToHToZZTo4L_M-%_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+      'datasetpath': "/GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
       'x_sec' : -999,
       }
-   datadefs['VBF_HToZZTo4L_M-%_8TeV-powheg-pythia6' % mass] = {
+   datadefs['VBF_HToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
       'analyses': ['HTT'],
-      'datasetpath': "/VBF_HToZZTo4L_M-%_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+      'datasetpath': "/VBF_HToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
       'x_sec' : -999,
       }
