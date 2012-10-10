@@ -272,14 +272,6 @@ for mass in range(110, 165, 5) :
       'x_sec' : -999,
       }
 
-for mass in range(115, 131) + range(145, 155, 5) + range(180, 220, 20) + range(250, 300, 50) + range(300, 375, 25) + range(400, 650, 50) :
-   datadefs['GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
-      'analyses': ['HZZ'],
-      'datasetpath': "/GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM" % mass,
-      'pu' : 'S7',
-      'x_sec' : -999,
-      }
-
 # Add VH files
 for mass in range(110, 145, 5):
    datadefs['VHtautau_lepdecay_%i' % mass] = {
