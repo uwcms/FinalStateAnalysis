@@ -153,6 +153,54 @@ datadefs = {
    'pu' : 'S10',
    },
 
+   'DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
+
+   'DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
+
+   'DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
+
+   'DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
+
+   'DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
+
+   'DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
+
+   'DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
 }
 
 for n in range(1,5) :
@@ -162,6 +210,7 @@ for n in range(1,5) :
       'pu' : 'S10',
       'x_sec' : -999,
       }
+
 
 
 ############################################################################
@@ -233,6 +282,7 @@ for mass in range(110, 150, 10):
       'pu' : 'S10',
       'x_sec' : -999,
       }
+
 
 # Add data files
 
