@@ -213,14 +213,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     #process.patJetCorrFactors.rho = cms.InputTag(
         #"kt6PFJetsForRhoComputationVoronoi", "rho")
 
-    # pat::Photons for Forward Supercluster
-    process.patPhotons.embedSuperCluster = True
-    process.patPhotons.addPhotonID = False
-    process.patPhotons.embedGenMatch = False
-
-    output_commands.append('patPhotons_selectedPatPhotons_*_*')
-
-
     # Use PFMEt
     mettools.addPfMET(process)
     if not isMC:
