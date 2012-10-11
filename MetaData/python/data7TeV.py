@@ -245,40 +245,40 @@ datadefs = {
         'x_sec' : 0.00348*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
         'analyses' : ['VH',  '4L', 'HTT'],
     },
-    'ZZTo4mu_powheg_v2' : { #v1 samples had a bug where the Z->4l peak weighting screwed the overall cross-section IAR 31.May.2012
-        'datasetpath' : "/ZZTo4mu_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM",
+    'ZZTo4mu_powheg' : { #now using official samples with mll>4 IAR 11.Oct.2012
+        'datasetpath' : "/ZZTo4mu_mll4_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
-        'x_sec' : 0.03067*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
+        'x_sec' : 0.06609*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
         'analyses' : ['VH',  '4L', 'HTT'],
     },
-    'ZZTo4e_powheg_v2' : { #v1 samples had a bug where the Z->4l peak weighting screwed the overall cross-section IAR 31.May.2012
-        'datasetpath' : "/ZZTo4e_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM",
+    'ZZTo4e_powheg' : { #now using official samples with mll>4 IAR 11.Oct.2012
+        'datasetpath' : "/ZZTo4e_mll4_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
-        'x_sec' : 0.03067*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
+        'x_sec' : 0.06609*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
         'analyses' : ['VH',  '4L', 'HTT'],
     },
-    'ZZTo4tau_powheg_v2' : { #v1 samples had a bug where the Z->4l peak weighting screwed the overall cross-section IAR 31.May.2012
-        'datasetpath' : "/ZZTo4tau_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM",
+    'ZZTo4tau_powheg' : { #now using official samples with mll>4 IAR 11.Oct.2012 
+        'datasetpath' : "/ZZTo4tau_mll4_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
-        'x_sec' : 0.03067*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
+        'x_sec' : 0.06609*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
         'analyses' : ['VH',  '4L', 'HTT'],
     },
-    'ZZTo2e2tau_powheg_v2' : { #v1 samples had a bug where the Z->4l peak weighting screwed the overall cross-section IAR 31.May.2012
-        'datasetpath' : "/ZZTo2e2tau_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM",
+    'ZZTo2e2tau_powheg' : { #now using official samples with mll>4 IAR 11.Oct.2012
+        'datasetpath' : "/ZZTo2e2tau_mll4_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
-        'x_sec' : 0.01386*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
+        'x_sec' : 0.152*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
         'analyses' : ['VH',  '4L', 'HTT'],
     },
-    'ZZTo2e2mu_powheg_v2' : { #v1 samples had a bug where the Z->4l peak weighting screwed the overall cross-section IAR 31.May.2012
-        'datasetpath' : "/ZZTo2e2mu_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM",
+    'ZZTo2e2mu_powheg' : { #now using official samples with mll>4 IAR 11.Oct.2012
+        'datasetpath' : "/ZZTo2e2mu_mll4_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
-        'x_sec' : 0.01386*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
+        'x_sec' : 0.152*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
         'analyses' : ['VH',  '4L', 'HTT'],
     },
-    'ZZTo2mu2tau_powheg_v2' : { #v1 samples had a bug where the Z->4l peak weighting screwed the overall cross-section IAR 31.May.2012
-        'datasetpath' : "/ZZTo2mu2tau_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v2/AODSIM",
+    'ZZTo2mu2tau_powheg' : { #now using official samples with mll>4 IAR 11.Oct.2012
+        'datasetpath' : "/ZZTo2mu2tau_mll4_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
-        'x_sec' : 0.01386*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
+        'x_sec' : 0.152*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
         'analyses' : ['VH',  '4L', 'HTT'],
     },
 
