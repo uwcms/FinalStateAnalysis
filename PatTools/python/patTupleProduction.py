@@ -40,6 +40,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         "GenFilterInfo_generator_minVisPtFilter_*", #2k12
         '*_genDaughters_*_*',
         '*_boosted*_*_*',
+        '*_tmfTracks_*_*',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()

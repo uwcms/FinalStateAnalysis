@@ -45,6 +45,13 @@ datadefs = {
         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat8TeV
         'x_sec': 3503.71,
     },
+    'Z2jets_M50' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12-PU_S7_START52_V9-v1/AODSIM',
+        'pu': 'S7',
+        'xsec': -999,
+        'responsible' : 'Austin',
+    },
     'TBartW_powheg' : {
    'analyses': ['HTT'],
    'datasetpath': '/Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12-PU_S7_START52_V9-v1/AODSIM',

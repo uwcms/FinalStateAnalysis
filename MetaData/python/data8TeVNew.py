@@ -156,8 +156,65 @@ datadefs = {
    'pu' : 'S10',
    },
 
+   'DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
 
+   'DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
+
+   'DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
+
+   'DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
+
+   'DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
+
+   'DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
+
+   'DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   },
 }
+
+for n in range(1,5) :
+   datadefs['W%iJetsToLNu_TuneZ2Star_8TeV-madgraph' % n] = {
+      'analyses': ['HTT','Wbb'],
+      'datasetpath': "/W%iJetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % n,
+      'pu' : 'S10',
+      'x_sec' : -999,
+      }
+
+
 
 ############################################################################
 #### Signal datasets                    ####################################
@@ -189,18 +246,32 @@ for mass in range(110, 165, 5) :
       'pu' : 'S10',
       'x_sec' : -999,
       }
-   datadefs['WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
+
+for mass in range(115,130) + range(130,150,5) + range(150,200,10) + [200,220] + range(250,600,25) + range(600,1001,50) :
+   datadefs['GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
       'analyses': ['HTT'],
-      'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+      'datasetpath': "/GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+      'pu' : 'S10',
+      'x_sec' : -999,
+      }
+   datadefs['VBF_HToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
+      'analyses': ['HTT'],
+      'datasetpath': "/VBF_HToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
       'x_sec' : -999,
       }
 
-for mass in range(115, 131) + range(145, 155, 5) + range(180, 220, 20) + range(250, 300, 50) + range(300, 375, 25) + range(400, 650, 50) :
-   datadefs['GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
-      'analyses': ['HZZ'],
-      'datasetpath': "/GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM" % mass,
-      'pu' : 'S7',
+
+for mass in range(110, 165, 5) :
+   if mass==135 :
+      ver=2
+   else :
+      ver=1
+
+   datadefs['WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
+      'analyses': ['HTT'],
+      'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v%i/AODSIM" % (mass,ver),
+      'pu' : 'S10',
       'x_sec' : -999,
       }
 
@@ -232,20 +303,28 @@ datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966*br_w_leptons + 0.4483*br_z_leptons
 datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095*br_w_leptons + 0.3473*br_z_leptons + 0.1157*square(br_w_leptons))*5.48E-02
 datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713*br_w_leptons + 0.2728*br_z_leptons + 0.09207*square(br_w_leptons))*3.54E-02
 
-
 # Add data files
+
+datadefs['data_DoubleMu_Run2012B_13Jul2012_v4'] = {
+   'datasetpath' : "/DoubleMu/Run2012B-13Jul2012-v4/AOD",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'firstRun' : 193834,
+   'lastRun' : 196531,
+   'analyses' : ['HZZ'],
+   }
+
 def build_data_set(pd, analyses):
    subsample_dict = {
       'data_%s_Run2012A_13Jul2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012A-13Jul2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
       'firstRun' : 190456,
       'lastRun' : 193621,
       'analyses' : analyses,
       },
       'data_%s_Run2012B_13Jul2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-13Jul2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
       'firstRun' : 193834,
       'lastRun' : 196531,
       'analyses' : analyses,
@@ -257,11 +336,25 @@ def build_data_set(pd, analyses):
       'lastRun' : 201264,
       'analyses' : analyses,
       },
-      'data_%s_Run2012A-recover-06Aug2012-v1' % pd : {
+      'data_%s_Run2012C_PromptReco_v2_Run201265_203755' % pd : {
+      'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'firstRun' : 201265,
+      'lastRun' : 203755,
+      'analyses' : analyses,
+      },
+      'data_%s_Run2012A_recover_06Aug2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012A-recover-06Aug2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
       'firstRun' : 190456, #Not 100% sure about these.. IAR 28.Sep.2012
       'lastRun' : 193621,
+      'analyses' : analyses,
+      },
+      'data_%s_Run2012C_PromptReco_v1' % pd : {
+      'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'firstRun' : 19770,
+      'lastRun' : 198913,
       'analyses' : analyses,
       },
       'data_%s_Run2012C_24Aug2012_v1' % pd : {

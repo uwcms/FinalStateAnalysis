@@ -69,7 +69,11 @@ for sample in sorted(datadefs.keys()):
         '--input-dbs-path=%s' % sample_info['datasetpath'])
 
     if 'lumi_mask' in sample_info:
-        farmout_options.append('--lumi-mask=%s' % lumi_mask_fip)
+        # This path goes to farmout, and should be absolute.
+        lumi_mask_fip = sample_info['lumi_mask']
+        lumi_mask_path = os.path.join(
+            os.environ['CMSSW_BASE'], 'src', lumi_mask_fip)
+        farmout_options.append('--lumi-mask=%s' % lumi_mask_path)
         if 'firstRun' in sample_info:
             farmout_options.append(
                 '--input-runs=%i-%i' %
