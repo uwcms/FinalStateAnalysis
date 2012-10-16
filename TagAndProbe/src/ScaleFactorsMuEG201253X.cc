@@ -6,7 +6,7 @@ using namespace std;
 
 Double_t muTrigScale_MuEG_2012_53X(Double_t mupt, Double_t mueta)
 {
-  if((fabs(mueta) > 2.1) || (mupt < 10)) { cout << "mu kinematics out of range" << endl; assert(0); }
+  //if((fabs(mueta) > 2.1) || (mupt < 10)) { cout << "mu kinematics out of range" << endl; assert(0); }
   if(mupt > 30) {
     if(fabs(mueta) < 0.8)        return 0.9956;
     else if(fabs(mueta) < 1.2)   return 0.9644;
@@ -36,7 +36,7 @@ Double_t muTrigScale_MuEG_2012_53X(Double_t mupt, Double_t mueta)
 
 Double_t eleTrigScale_MuEG_2012_53X(Double_t elept, Double_t eleeta)
 {
-  if((fabs(eleeta) > 2.3) || (elept < 10)) { cout << "ele kinematics out of range" << endl; assert(0); }
+  //if((fabs(eleeta) > 2.3) || (elept < 10)) { cout << "ele kinematics out of range" << endl; assert(0); }
   if(elept > 30) {
     if(fabs(eleeta) < 0.8)        return 1.0035;
     else if(fabs(eleeta) < 1.479) return 0.9977;
@@ -66,7 +66,7 @@ Double_t eleTrigScale_MuEG_2012_53X(Double_t elept, Double_t eleeta)
 
 Double_t muTrigEff_MuEG_2012_53X(Double_t mupt, Double_t mueta)
 {
-  if((fabs(mueta) > 2.1) || (mupt < 10)) { cout << "mu kinematics out of range" << endl; assert(0); }
+  //if((fabs(mueta) > 2.1) || (mupt < 10)) { cout << "mu kinematics out of range" << endl; assert(0); }
   if(mupt > 30) {
     if(fabs(mueta) < 0.8)        return 0.9704;
     else if(fabs(mueta) < 1.2)   return 0.9326;
@@ -96,7 +96,7 @@ Double_t muTrigEff_MuEG_2012_53X(Double_t mupt, Double_t mueta)
 
 Double_t eleTrigEff_MuEG_2012_53X(Double_t elept, Double_t eleeta)
 {
-  if((fabs(eleeta) > 2.3) || (elept < 10)) { cout << "ele kinematics out of range" << endl; assert(0); }
+  //if((fabs(eleeta) > 2.3) || (elept < 10)) { cout << "ele kinematics out of range" << endl; assert(0); }
   if(elept > 30) {
     if(fabs(eleeta) < 0.8)        return 0.9643;
     else if(fabs(eleeta) < 1.479) return 0.9778;

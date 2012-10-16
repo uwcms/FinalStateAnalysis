@@ -8,6 +8,9 @@ See: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012
 
 '''
 
+import ROOT
+ROOT.gSystem.Load("libFinalStateAnalysisTagAndProbe")
+
 def correct_mueg_mu_2011(pt, abseta):
     ''' Get DATA-MC correction factor mu leg of MuEG trigger '''
     if abseta < 1.2:
@@ -48,69 +51,11 @@ def correct_mueg_e_2011(pt, abseta):
 
 def correct_mueg_mu_2012(pt, abseta):
     ''' Get DATA-MC correction factor muon leg of MuEG trigger '''
-    if abseta < 0.8:
-        if pt < 15:
-            return 1.0
-        if pt < 20:
-            return 1.0
-        if pt < 25:
-            return 1.01
-        if pt < 30:
-            return 1.0
-        return 1.07
-    elif abseta < 1.2:
-        if pt < 15:
-            return 0.99
-        if pt < 20:
-            return 1.04
-        if pt < 25:
-            return 0.98
-        if pt < 30:
-            return 1.06
-        return 1.12
-    else:
-        if pt < 15:
-            return 0.98
-        if pt < 20:
-            return 1.02
-        if pt < 25:
-            return 0.96
-        if pt < 30:
-            return 1.02
-        return 1.12
+    return ROOT.muTrigEff_MuEG_2012_53X(pt, abseta)
 
 def correct_mueg_e_2012(pt, abseta):
     ''' Get DATA-MC correction factor electron leg of MuEG trigger '''
-    if abseta < 0.8:
-        if pt < 15:
-            return 0.99
-        if pt < 20:
-            return 0.99
-        if pt < 25:
-            return 0.98
-        if pt < 30:
-            return 1.0
-        return 1.00
-    elif abseta < 1.479:
-        if pt < 15:
-            return 0.82
-        if pt < 20:
-            return 1.00
-        if pt < 25:
-            return 0.96
-        if pt < 30:
-            return 0.98
-        return 0.99
-    else:
-        if pt < 15:
-            return 0.96
-        if pt < 20:
-            return 1.07
-        if pt < 25:
-            return 1.01
-        if pt < 30:
-            return 1.01
-        return 0.97
+    return ROOT.eleTrigEff_MuEG_2012_53X(pt, abseta)
 
 def correct_e_idiso_2011(pt, abseta):
     ''' Get DATA-MC correction factor electron ID and Iso '''
