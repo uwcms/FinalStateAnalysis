@@ -67,7 +67,28 @@ class MegaWorker(multiprocessing.Process):
                 processor = processor_class(
                     to_process, self.tree, self.selector,
                     output_file_name, self.log, **self.options)
-                result = processor.process()
+
+                # Check if we want to profile the script
+                profile_dir_base = os.environ.get('megaprofile', None)
+                result = None
+                if profile_dir_base is None:
+                    result = processor.process()
+                else:
+                    import cProfile
+                    profile_dir = os.path.join(
+                        profile_dir_base,
+                        self.selector.__name__,
+                    )
+                    if not os.path.exists(profile_dir):
+                        os.makedirs(profile_dir)
+                    profile_output = os.path.join(
+                        profile_dir,
+                        make_hashed_filename(to_process).replace('.root', '.prf')
+                    )
+                    cProfile.runctx('result = processor.process()',
+                                    globals(), locals(), profile_output)
+                    # Fake this.
+                    result = (len(to_process), output_file_name)
                 self.output.put(result)
             except:
                 # If we fail, put a poison pill to stop the merge job.
