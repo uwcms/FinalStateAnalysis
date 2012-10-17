@@ -51,11 +51,11 @@ def correct_mueg_e_2011(pt, abseta):
 
 def correct_mueg_mu_2012(pt, abseta):
     ''' Get DATA-MC correction factor muon leg of MuEG trigger '''
-    return ROOT.muTrigEff_MuEG_2012_53X(pt, abseta)
+    return ROOT.muTrigScale_MuEG_2012_53X(pt, abseta)
 
 def correct_mueg_e_2012(pt, abseta):
     ''' Get DATA-MC correction factor electron leg of MuEG trigger '''
-    return ROOT.eleTrigEff_MuEG_2012_53X(pt, abseta)
+    return ROOT.eleTrigScale_MuEG_2012_53X(pt, abseta)
 
 def correct_e_idiso_2011(pt, abseta):
     ''' Get DATA-MC correction factor electron ID and Iso '''
