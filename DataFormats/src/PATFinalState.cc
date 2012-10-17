@@ -599,3 +599,28 @@ edm::Ptr<pat::Electron> PATFinalState::daughterAsElectron(size_t i) const {
 edm::Ptr<pat::Jet> PATFinalState::daughterAsJet(size_t i) const {
   return daughterAs<pat::Jet>(i);
 }
+
+const reco::GenParticleRef PATFinalState::getDaughterGenParticle(size_t i) const
+{
+  return fshelpers::getGenParticle( daughter(i) );
+}
+
+const reco::GenParticleRef PATFinalState::getDaughterGenParticleMotherSmart(size_t i) const
+{
+  const reco::GenParticleRef genp = getDaughterGenParticle(i);
+  if( genp.isAvailable() && genp.isNonnull()  )
+    return fshelpers::getMotherSmart(genp, genp->pdgId());
+  else
+    return genp;
+}
+
+const bool PATFinalState::comesFromHiggs(size_t i) const
+{
+  const reco::GenParticleRef genp = getDaughterGenParticle(i);
+  if( genp.isAvailable() && genp.isNonnull()  )
+    return fshelpers::comesFromHiggs(genp);
+  else
+    return false;
+}
+
+
