@@ -1,3 +1,4 @@
+
 '''
 
 Ntuple branch template sets for topological variables (MT, etc)
@@ -13,6 +14,7 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 mtToMET = PSet(
     # Raw means no MET corrections
     objectMtToMET = 'mtMET({object_idx}, "raw")',
+    objectToMETDPhi = 'deltaPhi({object}.phi, met().phi())',
 )
 
 # Variables based on pairs of objects

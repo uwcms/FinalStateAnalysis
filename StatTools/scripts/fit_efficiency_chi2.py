@@ -183,7 +183,7 @@ if __name__ == "__main__":
             frame.SetMinimum(args.min)
             frame.SetMaximum(args.max)
             frame.GetYaxis().SetTitle("Efficiency")
-            frame.GetXaxis().SetTitle(pass_histo.GetTitle())
+            frame.GetXaxis().SetTitle(pass_histo.GetXaxis().GetTitle())
             frame.Draw()
             canvas.SetLogy(True)
             if args.grid:
