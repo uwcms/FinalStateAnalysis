@@ -237,6 +237,13 @@ for mass in range(80,150, 10) + range(160, 220, 20) + range(250, 550, 50) + rang
       'x_sec' : -999,
       }
 
+datadefs['SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola'] = {
+   'analyses': ['HTT'],
+   'datasetpath': "/SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM",
+   'pu' : 'S10',
+   'x_sec' : -999,
+   }
+
 for mass in range(110, 165, 5) :
    datadefs['GluGluToHToTauTau_M-%i_8TeV-powheg-pythia6' % mass] = {
       'analyses': ['HTT'],
