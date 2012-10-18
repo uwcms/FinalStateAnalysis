@@ -14,8 +14,8 @@ final_states = [
     'eet',
     'mmm',
     'emm',
-    'mtt',
-    'ett',
+    'eee',
+    'eem',
 ]
 
 def add_trilepton_ntuples(process, schedule):
