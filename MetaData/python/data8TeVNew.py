@@ -278,7 +278,7 @@ for mass in range(110, 165, 5) :
       ver=2
    else :
       ver=1
-   
+
    datadefs['WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
       'analyses': ['HTT'],
       'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v%i/AODSIM" % (mass,ver),
