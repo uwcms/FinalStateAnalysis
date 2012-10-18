@@ -123,3 +123,42 @@ Double_t eleTrigEff_MuEG_2012_53X(Double_t elept, Double_t eleeta)
     else                          return 0.7010;
   }
 }
+
+
+Double_t eleIDscale_MuEG_2012_53X(Double_t elept, Double_t eleeta)
+{
+  if(elept > 20) {
+    if(fabs(eleeta) < 0.8)        return 0.9534;
+    else if(fabs(eleeta) < 1.479) return 0.9481;
+    else                          return 0.9378;
+  }
+  else if(elept > 15) {
+    if(fabs(eleeta) < 0.8)        return 0.8506;
+    else if(fabs(eleeta) < 1.479) return 0.8661;
+    else                          return 0.7816;
+  }
+  else {
+    if(fabs(eleeta) < 0.8)        return 0.7893;
+    else if(fabs(eleeta) < 1.479) return 0.7952;
+    else                          return 0.6519;
+  }
+}
+
+Double_t muIDscale_MuEG_2012_53X(Double_t mupt, Double_t mueta)
+{
+  if(mupt > 20) {
+    if(fabs(mueta) < 0.8)   return 0.9884;
+    else if(fabs(mueta) < 1.2)   return 0.9884;
+    else                    return 0.9941;
+  }
+  else if(mupt > 15) {
+    if(fabs(mueta) < 0.8)   return 0.9644;
+    else if(fabs(mueta) < 1.2)   return 0.9800;
+    else                    return 0.9961;
+  }
+  else {
+    if(fabs(mueta) < 0.8)   return 0.9845;
+    else if(fabs(mueta) < 1.2)   return 0.9869;
+    else                    return 0.9927;
+  }
+}

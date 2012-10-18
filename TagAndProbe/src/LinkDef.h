@@ -29,5 +29,7 @@
 #pragma link C++ function eleTrigScale_MuEG_2012_53X;
 #pragma link C++ function muTrigEff_MuEG_2012_53X;
 #pragma link C++ function eleTrigEff_MuEG_2012_53X;
+#pragma link C++ function muIDscale_MuEG_2012_53X;
+#pragma link C++ function eleIDscale_MuEG_2012_53X;
 
 #endif

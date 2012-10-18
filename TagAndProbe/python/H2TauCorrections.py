@@ -78,46 +78,11 @@ def correct_e_idiso_2012(pt, abseta):
     https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingHCP2012#Electron_ID_Isolation_EMu_Channe
 
     '''
-    if abseta < 0.8:
-        if pt < 15:
-            return 0.7893
-        if pt < 20:
-            return 0.8506
-        return 0.9534
-    elif abseta < 1.479:
-        if pt < 15:
-            return 0.7952
-        if pt < 20:
-            return 0.8661
-        return 0.9481
-    else:
-        if pt < 15:
-            return 0.6519
-        if pt < 20:
-            return 0.7816
-        return 0.9378
+    return ROOT.eleIDscale_MuEG_2012_53X(pt, abseta)
 
 def correct_mu_idiso_2012(pt, abseta):
     ''' Get DATA-MC correction for 53X data from inclusive E-Mu
 
     https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingHCP2012#Muon_ID_Isolation_EMu_Channel
     '''
-    if abseta < 0.8:
-        if pt < 15:
-            return 0.9845
-        if pt < 20:
-            return 0.9644
-        return 0.9884
-    elif abseta < 1.2:
-        if pt < 15:
-            return 0.9869
-        if pt < 20:
-            return 0.9800
-        return 0.9884
-    else:
-        if pt < 15:
-            return 0.9927
-        if pt < 20:
-            return 0.9961
-        return 0.9941
-
+    return ROOT.muIDscale_MuEG_2012_53X(pt, abseta)
