@@ -11,6 +11,9 @@ addpkg DataFormats/PatCandidates       V06-05-01
 addpkg PhysicsTools/PatAlgos           V08-09-23
 addpkg PhysicsTools/PatUtils           V03-09-23
 addpkg CommonTools/ParticleFlow        V00-03-16
+#20/10/2012 LAG -- PF Isolation for Photons
+#https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPFBasedIsolation#Alternate_code_to_calculate_PF_I
+addpkg RecoParticleFlow/PFProducer     V15-01-08
 addpkg CommonTools/RecoUtils           V00-00-12
 cvs up -r 1.4 CommonTools/RecoUtils/BuildFile.xml
 addpkg DataFormats/HLTReco             V02-06-05
