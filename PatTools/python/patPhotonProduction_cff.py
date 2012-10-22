@@ -6,7 +6,5 @@ from FinalStateAnalysis.Utilities.version import cmssw_major_version
 from FinalStateAnalysis.PatTools.photons.patPhotonPFIsolationEmbedding_cfi import \
         patPhotonPFIsolation
 
-
 customizePhotonSequence = cms.Sequence()
 customizePhotonSequence += patPhotonPFIsolation
-

@@ -271,6 +271,16 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Don't apply any "final" cut
     process.cleanPatTaus.finalCut = ''
 
+    # Setup pat::Photon Production
+    process.load("FinalStateAnalysis.patTools.patMETProduction_cff")
+    final_photon_collection = chain_sequence(process.customizePhotonSequence,
+                                             "selectedPatPhotons")
+    #inject photons into pat sequence
+    process.customizePhotonSequence.insert(0,process.selectedPatPhotons)
+    process.patDefaultSequence.replace(process.selectedPatPhotons,
+                                       process.customizePhotonSequence)
+    process.clearPatPhotons.src = final_photon_collection
+
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
     final_met_collection = chain_sequence(
