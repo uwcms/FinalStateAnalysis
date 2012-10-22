@@ -78,7 +78,7 @@ void PATPhotonPFIsolationEmbedder::produce(Event& evt,
    
     pfisolation the_iso = _iso(currentPhoton,pfparts.product(),the_pv,vtxs);
    
-    pat::Photon newPhoton = *currentPhoton;
+    Photon newPhoton = *currentPhoton;
     newPhoton.addUserFloat(_userFloatPrefix+_i_chad, the_iso.iso_chg_had);
     newPhoton.addUserFloat(_userFloatPrefix+_i_nhad, the_iso.iso_neut_had);
     newPhoton.addUserFloat(_userFloatPrefix+_i_pho,  the_iso.iso_photon);

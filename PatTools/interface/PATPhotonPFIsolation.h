@@ -15,7 +15,7 @@ namespace reco {
 
 namespace pattools {
 
-  struct pfisolation{
+  struct pfisolation {
     double iso_chg_had;
     double iso_neut_had;
     double iso_photon;
@@ -23,7 +23,7 @@ namespace pattools {
   };
 
   // PFIsolationEstimator callable class wrapper
-  class PATPhotonPFIsolation{
+  class PATPhotonPFIsolation {
   private:
     PFIsolationEstimator * const _iso;
     const float _cone_size;
