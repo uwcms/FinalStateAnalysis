@@ -35,7 +35,7 @@ namespace pattools {
 			    const reco::PFCandidateCollection*,
 			    reco::VertexRef,
 			    edm::Handle< reco::VertexCollection >);
-    
+    const std::string i_chad,i_nhad,i_pho;
   };
 
 }
