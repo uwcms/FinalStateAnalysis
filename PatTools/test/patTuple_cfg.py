@@ -25,7 +25,7 @@ options = TauVarParsing.TauVarParsing(
 )
 
 files = [
-    "root://cmsxrootd.hep.wisc.edu//store/data/Run2012A/DoubleMu/AOD/PromptReco-v1/000/190/456/D0478E94-0681-E111-82A4-0019B9F72F97.root"
+    "root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/13Jul2012-v4/00001/0A1D8490-DEDE-E111-A48C-20CF3027A62E.root"
 ]
 for file in files:
     options.inputFiles = file

@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 patPhotonPFIsolation = cms.EDProducer(
-    "PATPhotonIsolationEmbedder",
+    "PATPhotonPFIsolationEmbedder",
     src = cms.InputTag("fixme"),
     pfCollectionSrc = cms.InputTag("particleFlow"),
     vtxSrc = cms.InputTag("offlinePrimaryVertices"),

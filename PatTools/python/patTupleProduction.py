@@ -76,7 +76,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Standard services
     process.load('Configuration.StandardSequences.Services_cff')
-    process.load('Configuration.StandardSequences.GeometryIdeal_cff')
+    process.load('Configuration.Geometry.GeometryIdeal_cff')
     process.load('Configuration.StandardSequences.MagneticField_cff')
     process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
@@ -272,14 +272,14 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.cleanPatTaus.finalCut = ''
 
     # Setup pat::Photon Production
-    process.load("FinalStateAnalysis.patTools.patMETProduction_cff")
+    process.load("FinalStateAnalysis.PatTools.patPhotonProduction_cff")
     final_photon_collection = chain_sequence(process.customizePhotonSequence,
                                              "selectedPatPhotons")
     #inject photons into pat sequence
     process.customizePhotonSequence.insert(0,process.selectedPatPhotons)
     process.patDefaultSequence.replace(process.selectedPatPhotons,
                                        process.customizePhotonSequence)
-    process.clearPatPhotons.src = final_photon_collection
+    process.cleanPatPhotons.src = final_photon_collection
 
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
@@ -318,6 +318,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*_cleanPatTaus_*_*')
     output_commands.append('*_cleanPatElectrons_*_*')
     output_commands.append('*_cleanPatMuons_*_*')
+    output_commands.append('*_cleanPatPhotons_*_*')
     output_commands.append('*_%s_*_*' % final_met_collection.value())
 
     trigtools.switchOnTrigger(process)
