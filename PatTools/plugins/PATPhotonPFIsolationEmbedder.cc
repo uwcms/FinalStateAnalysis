@@ -35,7 +35,7 @@ class PATPhotonPFIsolationEmbedder : public EDProducer {
 public:
   PATPhotonPFIsolationEmbedder(const ParameterSet& pset);
   virtual ~PATPhotonPFIsolationEmbedder(){}
-  void produce(edm::Event& evt, const EventSetup& es);
+  void produce(Event& evt, const EventSetup& es);
 private:
   InputTag _src,_pfcollsrc,_vtxsrc;
   std::string _userFloatPrefix;
@@ -50,9 +50,9 @@ PATPhotonPFIsolationEmbedder::PATPhotonPFIsolationEmbedder(const
    _i_nhad("_neutral_hadron_iso"),
    _i_pho ("_photon_iso"),
    _cone("_cone") {
-  _src = pset.getParameter<edm::InputTag>("src");
-  _pfcollsrc = pset.getParameter<edm::InputTag>("pfCollectionSrc");
-  _vtxsrc = pset.getParameter<edm::InputTag>("vtxSrc"); 
+  _src = pset.getParameter<InputTag>("src");
+  _pfcollsrc = pset.getParameter<InputTag>("pfCollectionSrc");
+  _vtxsrc = pset.getParameter<InputTag>("vtxSrc"); 
   _userFloatPrefix = pset.getParameter<std::string>("userFloatPrefix");
   produces<PhotonCollection>();
 }

@@ -1,5 +1,5 @@
-#ifndef __PATPHOTON_PF_ISOATION_H__
-#define __PATPHOTON_PF_ISOATION_H__
+#ifndef __PATPHOTON_PF_ISOLATION_H__
+#define __PATPHOTON_PF_ISOLATION_H__
 
 
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
@@ -35,7 +35,7 @@ namespace pattools {
 			    const reco::PFCandidateCollection*,
 			    reco::VertexRef,
 			    edm::Handle< reco::VertexCollection >);
-    const std::string i_chad,i_nhad,i_pho;
+    
   };
 
 }
