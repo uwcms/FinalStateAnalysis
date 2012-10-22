@@ -78,7 +78,7 @@ void PATPhotonPFIsolationEmbedder::produce(Event& evt,
   // Check if our inputs are in our outputs
   for (size_t iPho = 0; iPho < handle->size(); ++iPho) {
     const Photon* currentPhoton = &(handle->at(iPho));   
-    Photon newPhoton = *currentPhoton;
+    Photon newPhoton = *currentPhoton;    
 
     for (size_t iVtx = 0; iVtx < vtxs->size(); ++iVtx) {
       memset(buf,0,20*sizeof(char));
@@ -94,9 +94,10 @@ void PATPhotonPFIsolationEmbedder::produce(Event& evt,
 			     the_iso.iso_neut_had);
       newPhoton.addUserFloat(_userFloatPrefix+_i_pho+postfix,  
 			     the_iso.iso_photon);
-      newPhoton.addUserFloat(_userFloatPrefix+_cone+postfix,   
+      newPhoton.addUserFloat(_userFloatPrefix+_cone+postfix,
 			     the_iso.cone_size);
-    }
+      
+    }    
     output->push_back(newPhoton);
   }
 
