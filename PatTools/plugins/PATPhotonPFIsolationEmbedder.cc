@@ -15,6 +15,8 @@
 
 #include "DataFormats/PatCandidates/interface/Photon.h"
 
+#include <stdio.h>
+
 //extract necessary pieces of namespaces
 using edm::EDProducer;
 using edm::ParameterSet;
@@ -41,6 +43,7 @@ private:
   std::string _userFloatPrefix;
   PATPhotonPFIsolation _iso;
   const std::string _i_chad,_i_nhad,_i_pho,_cone;  
+  char buf[20];
 };
 
 PATPhotonPFIsolationEmbedder::PATPhotonPFIsolationEmbedder(const 
@@ -59,6 +62,8 @@ PATPhotonPFIsolationEmbedder::PATPhotonPFIsolationEmbedder(const
 
 void PATPhotonPFIsolationEmbedder::produce(Event& evt, 
 					   const EventSetup& es) {
+  
+
   std::auto_ptr<PhotonCollection> output(new PhotonCollection());
 
   edm::Handle<PhotonCollection> handle;
@@ -70,19 +75,28 @@ void PATPhotonPFIsolationEmbedder::produce(Event& evt,
   edm::Handle<reco::PFCandidateCollection> pfparts;
   evt.getByLabel(_pfcollsrc,pfparts);
   
-  VertexRef the_pv = VertexRef(vtxs,0);
-
   // Check if our inputs are in our outputs
   for (size_t iPho = 0; iPho < handle->size(); ++iPho) {
-    const Photon* currentPhoton = &(handle->at(iPho));
-   
-    pfisolation the_iso = _iso(currentPhoton,pfparts.product(),the_pv,vtxs);
-   
+    const Photon* currentPhoton = &(handle->at(iPho));   
     Photon newPhoton = *currentPhoton;
-    newPhoton.addUserFloat(_userFloatPrefix+_i_chad, the_iso.iso_chg_had);
-    newPhoton.addUserFloat(_userFloatPrefix+_i_nhad, the_iso.iso_neut_had);
-    newPhoton.addUserFloat(_userFloatPrefix+_i_pho,  the_iso.iso_photon);
-    newPhoton.addUserFloat(_userFloatPrefix+_cone,   the_iso.cone_size);
+
+    for (size_t iVtx = 0; iVtx < vtxs->size(); ++iVtx) {
+      memset(buf,0,20*sizeof(char));
+      sprintf(buf,"_vtx%lu",iVtx);
+      std::string postfix(buf);
+
+      VertexRef the_pv = VertexRef(vtxs,iVtx);
+      pfisolation the_iso = _iso(currentPhoton,pfparts.product(),the_pv,vtxs);
+      
+      newPhoton.addUserFloat(_userFloatPrefix+_i_chad+postfix, 
+			     the_iso.iso_chg_had);
+      newPhoton.addUserFloat(_userFloatPrefix+_i_nhad+postfix, 
+			     the_iso.iso_neut_had);
+      newPhoton.addUserFloat(_userFloatPrefix+_i_pho+postfix,  
+			     the_iso.iso_photon);
+      newPhoton.addUserFloat(_userFloatPrefix+_cone+postfix,   
+			     the_iso.cone_size);
+    }
     output->push_back(newPhoton);
   }
 
