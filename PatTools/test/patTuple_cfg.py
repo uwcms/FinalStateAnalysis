@@ -27,8 +27,7 @@ options = TauVarParsing.TauVarParsing(
 files = [
     "root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/13Jul2012-v4/00001/0A1D8490-DEDE-E111-A48C-20CF3027A62E.root"
 ]
-for file in files:
-    options.inputFiles = file
+options.inputFiles = cms.vstring(files)
 
 options.parseArguments()
 
@@ -84,6 +83,8 @@ tuplize, output_commands = tuplizer.configurePatTuple(
 
 if options.globalTag == "":
     raise RuntimeError("Global tag not specified!  Try sourcing environment.sh\n")
+else:
+    print 'Using globalTag: %s'%options.globalTag
 
 process.GlobalTag.globaltag = cms.string(options.globalTag)
 
