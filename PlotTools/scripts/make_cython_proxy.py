@@ -71,6 +71,8 @@ cdef class {TreeName}:
     cdef int currentTreeNumber
     cdef long ientry
     cdef long localentry
+    # Keep track of missing branches we have complained about.
+    missing_complained = set([])
 
     # Branches and address for all
 {branchblock}
@@ -84,8 +86,6 @@ cdef class {TreeName}:
         self.currentTreeNumber = -1
         #print self.tree.GetEntries()
         #self.load_entry(0)
-        # Keep track of missing branches we have complained about.
-        self.missing_complained = set([])
 
     cdef load_entry(self, long i):
         #print "load", i
