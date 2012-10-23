@@ -7,7 +7,11 @@ namespace :meta do
   # How to generate the inputs
   desc "Query lists of ntuple .root files"
   task :getinputs, [:jobid, :source] do |t, args|
-    sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid}"
+    if ENV.fetch('discovercheck', "0") == "1"
+      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --force"
+    else
+      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid}"
+    end
   end
 
   def make_meta_tasks(sample, ntuple, sqrts)
