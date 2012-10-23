@@ -212,8 +212,11 @@ def make_pyx(name, tree):
 '''
         #print "making {branchname}"
         self.{branchname}_branch = the_tree.GetBranch("{branchname}")
-        self.{branchname}_branch.SetAddress(<void*>&self.{branchname}_value)
-'''.format(branchname=branch_name, branchtype=branch_type)
+        if not self.{branchname}_branch:
+            print "{TreeName}: Expected branch {branchname} does not exist! It will crash if you try and use it."
+        else:
+            self.{branchname}_branch.SetAddress(<void*>&self.{branchname}_value)
+'''.format(branchname=branch_name, branchtype=branch_type, TreeName=name)
         )
         # Define a property for each branch.
         # When the attribute is gotten, it will call
