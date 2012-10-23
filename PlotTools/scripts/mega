@@ -24,24 +24,25 @@ sys.argv = []
 
 if __name__ == "__main__":
 
-    parser.add_argument('selector', metavar='selector', type=str, 
+    parser.add_argument('selector', metavar='selector', type=str,
                         help='Path to TPySelector module')
 
-    parser.add_argument('inputs', metavar='inputs', type=str, 
+    parser.add_argument('inputs', metavar='inputs', type=str,
                         help='Text file with input files.  '
                         'One job will be created for each input file.')
 
-    parser.add_argument('output', metavar='output', 
+    parser.add_argument('output', metavar='output',
                         type=str, help='Output root file')
 
     parser.add_argument('--tree', metavar='tree', type=str, default='',
-                        help='Override path to TTree in data files (Ex: /my/dir/myTree)')
+                        help='Override path to TTree in data files'
+                        ' (Ex: /my/dir/myTree)')
 
-    parser.add_argument('--workers', type=int, required=False,
-                        default = 4, help='Number of worker processes (def: 4)')
+    parser.add_argument('--workers', type=int, required=False, default=4,
+                        help='Number of worker processes (def: 4)')
 
     parser.add_argument('--chain', type=int, required=False,
-                        default = 1, help='Number of files to chain together')
+                        default=1, help='Number of files to chain together')
 
     parser.add_argument('-d', '--dir', type=str, required=False,
                         default='', help='Save results in [dir]')
@@ -56,8 +57,7 @@ if __name__ == "__main__":
         log.setLevel(logging.DEBUG)
         multiprocessing.get_logger().setLevel(logging.DEBUG)
 
-    log.info("Creating PROOF session with %i workers" % args.workers)
-
+    log.info("Creating mega session with %i workers" % args.workers)
 
     log.info("Checking inputs file %s exists..." % args.inputs)
     # Get the inputs to make sure it exists
@@ -94,7 +94,7 @@ if __name__ == "__main__":
         log.info("Getting tree name from selector module")
         tree_name = selector.tree
 
-    dispatch = MegaDispatcher(file_list, tree_name, args.output, selector, 
-                             args.workers, nchain=args.chain)
+    dispatch = MegaDispatcher(file_list, tree_name, args.output, selector,
+                              args.workers, nchain=args.chain)
     dispatch.run()
     log.info("Mega2 job is complete")
