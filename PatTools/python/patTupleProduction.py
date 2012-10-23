@@ -8,7 +8,8 @@ import PhysicsTools.PatAlgos.tools.coreTools as coreTools
 import PhysicsTools.PatAlgos.tools.pfTools as pfTools
 
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
-from FinalStateAnalysis.Utilities.version import cmssw_major_version
+from FinalStateAnalysis.Utilities.version import cmssw_major_version,\
+     cmssw_minor_version
 from FinalStateAnalysis.PatTools.pfIsolationTools import setup_h2tau_iso
 from FinalStateAnalysis.PatTools.patFinalStateProducers import produce_final_states
 
@@ -76,7 +77,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Standard services
     process.load('Configuration.StandardSequences.Services_cff')
-    process.load('Configuration.Geometry.GeometryIdeal_cff')
+    
+    if cmssw_major_version() == 5 and cmssw_minor_version() >= 3: 
+        process.load('Configuration.Geometry.GeometryIdeal_cff')
+    else:
+        process.load('Configuration.StandardSequences.GeometryIdeal_cff')
+        
     process.load('Configuration.StandardSequences.MagneticField_cff')
     process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
