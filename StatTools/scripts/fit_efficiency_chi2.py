@@ -57,12 +57,16 @@ if __name__ == "__main__":
                           help='Plot fit result')
 
     plot_grp.add_argument('--xrange', nargs=2, type=float, help='x-axis range')
+    plot_grp.add_argument('--xtitle', type=str, help='Override x-axis range')
 
     plot_grp.add_argument('--min', type=float, default=1e-3,
                           help='y-axis minimum')
     plot_grp.add_argument('--max', type=float, default=1,
                           help='y-axis maximum')
     plot_grp.add_argument('--grid', action='store_true', help="Draw grid")
+
+    plot_grp.add_argument('--show-error', dest='showerror',
+                          action='store_true', help='Plot fit error band')
 
     args = parser.parse_args(args[1:])
 
@@ -164,17 +168,19 @@ if __name__ == "__main__":
         try:
             frame = None
             if args.xrange:
-                frame = x.frame(ROOT.RooFit.Title("Efficiency"),
-                                ROOT.RooFit.Range(args.xrange[0], args.xrange[1]))
+                frame = x.frame(
+                    ROOT.RooFit.Title("Efficiency"),
+                    ROOT.RooFit.Range(args.xrange[0], args.xrange[1]))
             else:
                 frame = x.frame(ROOT.RooFit.Title("Efficiency"))
 
-            function.plotOn(
-                frame,
-                ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
-                ROOT.RooFit.VisualizeError(fit_result, 1.0),
-                ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
-            )
+            if args.showerror:
+                function.plotOn(
+                    frame,
+                    ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+                    ROOT.RooFit.VisualizeError(fit_result, 1.0),
+                    ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
+                )
             function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kAzure))
             xy_data.plotOnXY(
                 frame,
@@ -183,7 +189,10 @@ if __name__ == "__main__":
             frame.SetMinimum(args.min)
             frame.SetMaximum(args.max)
             frame.GetYaxis().SetTitle("Efficiency")
-            frame.GetXaxis().SetTitle(pass_histo.GetXaxis().GetTitle())
+            if not args.xtitle:
+                frame.GetXaxis().SetTitle(pass_histo.GetXaxis().GetTitle())
+            else:
+                frame.GetXaxis().SetTitle(args.xtitle)
             frame.Draw()
             canvas.SetLogy(True)
             if args.grid:
