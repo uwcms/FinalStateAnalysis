@@ -27,9 +27,13 @@ options = TauVarParsing.TauVarParsing(
 files = [
     "root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/13Jul2012-v4/00001/0A1D8490-DEDE-E111-A48C-20CF3027A62E.root"
 ]
-options.inputFiles = cms.vstring(files)
+
+options.inputFiles = files
 
 options.parseArguments()
+
+if not isinstance(options.inputFiles,list):
+    options.inputFiles = options.inputFiles.split(',')
 
 process = cms.Process("TUPLE")
 
