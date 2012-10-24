@@ -5,7 +5,7 @@
 #include "EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h"
 #include "EgammaAnalysis/ElectronTools/interface/SuperClusterHelper.h"
 
-#include "EGamma/StandAloneCorrections/interface/LeptonScaleCorrections.hh"
+//#include "EGamma/StandAloneCorrections/interface/LeptonScaleCorrections.hh"
 
 #include "FWCore/Framework/interface/ESHandle.h"
 #include <stdio.h>

@@ -30,6 +30,7 @@ cvs up -r 1.12 PhysicsTools/PatAlgos/python/producersLayer1/tauProducer_cff.py
 cvs up -r 1.15 PhysicsTools/PatAlgos/python/recoLayer0/tauDiscriminators_cff.py
 
 echo "Checking out EGamma POG recipe for electron corrections"
+addpkg RecoEgamma/EgammaTools V08-11-10-02
 cvs co -r HCP2012_V03-02 EgammaAnalysis/ElectronTools
 
 set +o errexit

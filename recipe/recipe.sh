@@ -8,7 +8,7 @@ set -o nounset
 MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
 MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 
-echo "Detected CMSSW version: $MAJOR_VERSION"
+echo "Detected CMSSW version: $MAJOR_VERSION $MINOR_VERSION"
 
 echo "Checking for CERN CVS kerberos ticket"
 HAS_TICKET=`klist 2>&1 | grep CERN.CH`
@@ -30,6 +30,7 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
     else
 	echo "Applying recipe for CMSSW 5_3_X"
 	./recipe_53X.sh
+    fi
 fi
 
 echo "Applying common recipe"
