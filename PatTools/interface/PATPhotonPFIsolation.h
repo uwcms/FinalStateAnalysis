@@ -1,3 +1,15 @@
+/** \class PATPhotonPFIsolation
+ *
+ * Auxiliary class to encapsulate the prescription 
+ * for PF isolation for photons in 42X and 5YX.
+ * Provides a clean interface to the PFIsolationEstimator. 
+ *
+ * \author Lindsey Gray, UW Madison
+ *
+
+ *
+ */
+
 #ifndef __PATPHOTON_PF_ISOLATION_H__
 #define __PATPHOTON_PF_ISOLATION_H__
 

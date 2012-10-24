@@ -6,6 +6,7 @@
 <use   name="FinalStateAnalysis/DataFormats"/>
 <use   name="FinalStateAnalysis/RecoTools"/>
 <use   name="EGamma/EGammaAnalysisTools"/>
+<use   name="EgammaAnalysis/ElectronTools"/>
 <use   name="RecoMET/METAlgorithms"/>
 <use   name="RecoTauTag/RecoTau"/>
 <use   name="rootrflx"/>
