@@ -12,15 +12,15 @@
 
 namespace pattools { 
 
-  //namespace { // hide a bunch of convenient typedefs
-  typedef PATElectronEnergyCorrection::key_type key_type_eec;
-  typedef std::vector<key_type_eec> vkey_type_eec;
-  typedef std::auto_ptr<pat::Electron> pelectron;
-  typedef pat::ElectronRef eRef;
-  
-  typedef edm::ESHandle<CaloTopology> topo_hdl;
-  typedef edm::ESHandle<CaloGeometry> geom_hdl;
-  //}
+  namespace { // hide a bunch of convenient typedefs
+    typedef PATElectronEnergyCorrection::key_type key_type_eec;
+    typedef std::vector<key_type_eec> vkey_type_eec;
+    typedef std::auto_ptr<pat::Electron> pelectron;
+    typedef pat::ElectronRef eRef;
+    
+    typedef edm::ESHandle<CaloTopology> topo_hdl;
+    typedef edm::ESHandle<CaloGeometry> geom_hdl;
+  }
 
   PATElectronEnergyCorrection::PATElectronEnergyCorrection(const vkey_type_eec&
 							   init_list,

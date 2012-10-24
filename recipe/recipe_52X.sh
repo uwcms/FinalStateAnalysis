@@ -31,6 +31,7 @@ cvs up -r 1.15 PhysicsTools/PatAlgos/python/recoLayer0/tauDiscriminators_cff.py
 
 echo "Checking out EGamma POG recipe for electron corrections"
 addpkg RecoEgamma/EgammaTools V08-11-10-02
+cvs co -r V00-00-30 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
 cvs co -r HCP2012_V03-02 EgammaAnalysis/ElectronTools
 
 set +o errexit

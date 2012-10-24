@@ -29,11 +29,13 @@ rm pharris/MVAMet/data/gbrmet.root
 rm pharris/MVAMet/data/*unityresponse*root
 cvs up -r 1.24 CMGTools/External/src/PileupJetIdAlgo.cc
 
-# Add Electron ID MVA, Photon and Electron PFIsolation Estimators
-cvs co -r V00-00-21 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
+## MOVED TO VERSION SPECIFIC
+#Add Electron ID MVA, Photon and Electron PFIsolation Estimators
+#cvs co -r V00-00-21 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
 #individual file tweaks a'la: https://twiki.cern.ch/twiki/bin/view/CMS/HtoZgPhotonID
-cvs up -r 1.13 EGamma/EGammaAnalysisTools/interface/PFIsolationEstimator.h
-cvs up -r 1.22 EGamma/EGammaAnalysisTools/src/PFIsolationEstimator.cc
+#cvs up -r 1.13 EGamma/EGammaAnalysisTools/interface/PFIsolationEstimator.h
+#cvs up -r 1.22 EGamma/EGammaAnalysisTools/src/PFIsolationEstimator.cc
+## MOVED TO VERSION SPECFIC
 pushd EGamma/EGammaAnalysisTools/data
 cat download.url | xargs wget
 popd
