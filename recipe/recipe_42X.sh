@@ -36,7 +36,7 @@ patch -N -p0 < FinalStateAnalysis/recipe/marias_negativeSSV.patch
 set -o errexit 
 
 echo "Checking out EGamma POG recipe for electron corrections"
-cvs co -r HCP2012_V04-44X EgammaAnalysis/ElectronTools
+cvs co -r FB_23Oct2012-44X EgammaAnalysis/ElectronTools
 
 # Add MVA MET
 # See https://twiki.cern.ch/twiki/bin/view/CMS/MVAMet
