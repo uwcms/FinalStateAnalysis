@@ -38,7 +38,8 @@ namespace pattools {
 
   PATElectronEnergyCorrection::PATElectronEnergyCorrection(const PSet& conf,
 							   const bool isAOD,
-							   const bool isMC) {
+							   const bool isMC):
+    _errPostfix("_error") {
     
     _userP4Prefix = conf.getParameter<std::string>("userP4Prefix");
 
@@ -163,9 +164,13 @@ namespace pattools {
       if( thisCalib && temp->core()->ecalDrivenSeed() )
 	thisCalib->correct(*(temp.get()),*_event,*_esetup);
 
-      out->addUserData<math::XYZTLorentzVector>(_userP4Prefix+_dataset+
-						app->first+app->second,
-						temp->p4());
+      out->addUserData<math::XYZTLorentzVector>(_userP4Prefix+
+						_dataset+app->first,
+				 temp->p4(reco::GsfElectron::P4_COMBINATION));
+      out->addUserFloat(_userP4Prefix+
+			_dataset+app->first+
+			_errPostfix,
+			temp->p4Error(reco::GsfElectron::P4_COMBINATION));
     }
 
     return out;

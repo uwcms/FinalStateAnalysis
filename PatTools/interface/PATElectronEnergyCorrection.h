@@ -52,10 +52,12 @@ namespace pattools {
     typedef std::auto_ptr<pat::Electron> value_type;
     
   private:
+    const std::string _errPostfix;
+
     const CaloTopology* _topo;
     const CaloGeometry* _geom;
     const edm::Event* _event;
-    const edm::EventSetup* _esetup;
+    const edm::EventSetup* _esetup;    
     
     edm::InputTag _vtxsrc, _rhosrc;
     std::string _dataset, _userP4Prefix;

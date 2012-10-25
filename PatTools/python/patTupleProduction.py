@@ -252,6 +252,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # We have to do the pat Jets before the pat electrons since we embed them
     process.customizeElectronSequence.insert(0, process.selectedPatJets)
     process.cleanPatElectrons.src = final_electron_collection
+    #setup the energy regression for the specific dataset
+    process.patElectronEnergyCorrections.isMC  = isMC
+    process.patElectronEnergyCorrections.isAOD = kwargs['isAOD']
+    process.patElectronEnergyCorrections.dataSet = kwargs['calibrationTarget']
 
     process.load("FinalStateAnalysis.PatTools.patMuonProduction_cff")
     final_muon_collection = chain_sequence(

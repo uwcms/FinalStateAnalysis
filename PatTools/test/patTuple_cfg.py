@@ -13,6 +13,8 @@ options = TauVarParsing.TauVarParsing(
     keepEverything=0,
     reportEvery=2000,
     puTag='unknown',
+    isAOD=True,
+    calibrationTarget='2012Jul13ReReco'
     verbose=0, # Print out summary table at end
     profile=0, # Enabling profiling
     keepAll=0, # Don't drop any event content
@@ -80,9 +82,11 @@ process.out = cms.OutputModule(
 # Configure the pat tuple
 import FinalStateAnalysis.PatTools.patTupleProduction as tuplizer
 tuplize, output_commands = tuplizer.configurePatTuple(
-    process, isMC=options.isMC, xSec=options.xSec, xSecErr=options.xSecErr,
+    process, isMC=options.isMC, xSec=options.xSec,
+    isAOD=options.isAOD, xSecErr=options.xSecErr,
     puTag=options.puTag, dataset=options.dataset,
     embedded=options.embedded,
+    calibrationTarget=options.calibrationTarget
 )
 
 if options.globalTag == "":
