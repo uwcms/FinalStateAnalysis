@@ -78,6 +78,22 @@ def correct_e_idiso_2011(pt, abseta):
         return 1.012
 
 
+def correct_mu_idiso_2011(pt, abseta):
+    ''' Get DATA-MC correction factor muon ID and Iso '''
+    if abseta < 1.5:
+        if pt < 15:
+            return 0.99
+        if pt < 20:
+            return 1.02
+        return 1.01
+    else:
+        if pt < 15:
+            return 1.03
+        if pt < 20:
+            return 1.025
+        return 1.01
+
+
 def correct_e_idiso_2012(pt, abseta):
     ''' Get DATA-MC correction factor electron ID and Iso
 
