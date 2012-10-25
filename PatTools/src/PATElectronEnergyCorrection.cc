@@ -3,80 +3,196 @@
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 
 #include "EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h"
+#include "EGamma/EGammaAnalysisTools/interface/ElectronEnergyRegressionEvaluate.h"
+
+#include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"
+#include "Geometry/Records/interface/CaloGeometryRecord.h"
+
 #include "EgammaAnalysis/ElectronTools/interface/SuperClusterHelper.h"
+#include "RecoEcal/EgammaCoreTools/interface/EcalClusterLazyTools.h"
 
-//#include "EGamma/StandAloneCorrections/interface/LeptonScaleCorrections.hh"
-
+#include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/ESHandle.h"
+#include "FWCore/Utilities/interface/InputTag.h"
+
+#include "DataFormats/VertexReco/interface/VertexFwd.h"
+#include "DataFormats/VertexReco/interface/Vertex.h"
+
 #include <stdio.h>
 
 namespace pattools { 
 
   namespace { // hide a bunch of convenient typedefs
-    typedef PATElectronEnergyCorrection::key_type key_type_eec;
-    typedef std::vector<key_type_eec> vkey_type_eec;
+    typedef edm::ParameterSet PSet;
+    typedef edm::VParameterSet VPSet;
+        
     typedef std::auto_ptr<pat::Electron> pelectron;
+    typedef std::vector<pelectron> vpelectron;
     typedef pat::ElectronRef eRef;
     
     typedef edm::ESHandle<CaloTopology> topo_hdl;
     typedef edm::ESHandle<CaloGeometry> geom_hdl;
+
+    typedef std::vector<std::string> vstring;
   }
 
-  PATElectronEnergyCorrection::PATElectronEnergyCorrection(const vkey_type_eec&
-							   init_list,
+  PATElectronEnergyCorrection::PATElectronEnergyCorrection(const PSet& conf,
 							   const bool isAOD,
 							   const bool isMC) {
-    vkey_type_eec::const_iterator i = init_list.begin();
-    vkey_type_eec::const_iterator e = init_list.end();    
-    for( ; i != e; ++i) {
-      _corrs[formIdent(*i)] = new eCalib(i->first,isAOD,
-					 isMC,true,
-					 i->second,false);
+    
+    _userP4Prefix = conf.getParameter<std::string>("userP4Prefix");
+
+    _vtxsrc = conf.getParameter<edm::InputTag>("vtxSrc");
+    _rhosrc = conf.getParameter<edm::InputTag>("rhoSrc");
+
+    _recHitsEB = conf.getParameter<edm::InputTag>("recHitsEB");
+    _recHitsEE = conf.getParameter<edm::InputTag>("recHitsEE");    
+    
+    // setup regression pool
+    VPSet available_regressions = 
+      conf.getParameterSetVector("available_regressions");
+    
+    { // make iterators descope
+      VPSet::const_iterator i = available_regressions.begin();
+      VPSet::const_iterator e = available_regressions.end();
+      
+      for( ; i != e; ++i) {
+	std::string type     = i->getParameter<std::string>("type");
+	std::string fWeights = i->getParameter<std::string>("weightsFile");
+	int version          = i->getParameter<int>("version");
+	int index            = i->getParameter<int>("index");
+
+	if( index >= 0 ) {
+	  _regs[type] = std::make_pair(version,new regCalc());
+	  _regs[type].second->initialize(fWeights,
+				(regCalc::ElectronEnergyRegressionType)index);
+	}	
+	else 
+	  _regs[type] = std::make_pair(-1,new regCalc());
+      }
     }
+    
+    // setup calibration pool
+    VPSet available_calibrations = 
+      conf.getParameterSetVector("available_calibrations");  
+    // get applied calibrations
+    vstring applyCalibrations = 
+      conf.getParameter<vstring>("applyCalibrations");
+    _dataset = conf.getParameter<std::string>("dataSet");
+    
+    { // make iterators descope
+      VPSet::const_iterator i = available_calibrations.begin();
+      VPSet::const_iterator e = available_calibrations.end();
+
+      vstring::const_iterator iapp = applyCalibrations.begin();
+      vstring::const_iterator eapp = applyCalibrations.end();
+
+      for( ; i != e; ++i) {
+	std::string type     = i->getParameter<std::string>("type");
+	std::string regType  = i->getParameter<std::string>("regression");
+	int applyCorrections = i->getParameter<int>("applyCorrections");
+
+	if( index >= 0 ) {
+	  _calibs[type] = 
+	    new eCalib(_dataset,isAOD,isMC,true,applyCorrections,false);
+	  if( std::find(iapp,eapp,type) != eapp)
+	    _apply[type] = regType;
+	}	
+	else 
+	  _calibs[type] = NULL;
+      }      
+    }    
+    
   }
  
   PATElectronEnergyCorrection::~PATElectronEnergyCorrection() {
-    map_type::iterator i = _corrs.begin();
-    map_type::iterator e = _corrs.end();
+    calib_map::iterator i = _calibs.begin();
+    calib_map::iterator e = _calibs.end();
     for(; i != e; ++i) delete i->second;
+
+    reg_map::iterator ii = _regs.begin();
+    reg_map::iterator ee = _regs.end();
+    for(; ii != ee; ++ii) delete ii->second.second;
   }
 
-  pelectron 
-  PATElectronEnergyCorrection::operator() (const key_type_eec& key,
-					   const eRef& ele) {    
-    pelectron out(new pelectron::element_type(*ele));
+  PATElectronEnergyCorrection::value_type
+  PATElectronEnergyCorrection::operator() (const eRef& ele) {    
+    value_type out = value_type(new value_type::element_type(*ele));
 
-    _corrs[formIdent(key)]->correct(*(out.get()),*_event,*_esetup);
+    apply_map::const_iterator app = _apply.begin();
+    apply_map::const_iterator end = _apply.end();
+
+    EcalClusterLazyTools clustools(*_event,*_esetup,
+				   _recHitsEB,_recHitsEE);
+
+    for( ; app != end; ++app ) {
+      value_type temp = value_type(new value_type::element_type(*ele));
+
+      reg_map::mapped_type thisReg = _regs[app->second];
+      if( thisReg.second ) {
+	double en =
+	  thisReg.second->calculateRegressionEnergy(temp.get(),clustools,
+						    *_esetup,_rho,_nvtx);
+	double en_err =
+	  thisReg.second->calculateRegressionEnergyUncertainty(temp.get(),
+							       clustools,
+							       *_esetup,
+							       _rho,_nvtx);
+
+	math::XYZTLorentzVector oldP4,newP4;
+	// recalculate then propagate the regression energy and errors
+	switch( thisReg.first ) {
+	case 1: // V1 regression (just ecal energy)
+	  temp->setEcalRegressionEnergy(en,en_err);
+	  break;
+	case 2: // V2 regression (including track variables)
+	  oldP4 = temp->p4();
+	  newP4 = math::XYZTLorentzVector(oldP4.x()*en/oldP4.t(),
+					  oldP4.y()*en/oldP4.t(),
+					  oldP4.z()*en/oldP4.t(),
+					  en);
+	  temp->correctMomentum(newP4,temp->trackMomentumError(),en_err);
+	  temp->correctEcalEnergy(en,en_err);	  
+	  break;
+	default:
+	  break;
+	}
+      }
+
+      pCalib thisCalib = _calibs[app->first];
+      if( thisCalib && temp->core()->ecalDrivenSeed() )
+	thisCalib->correct(*(temp.get()),*_event,*_esetup);
+
+      out->addUserData<math::XYZTLorentzVector>(_userP4Prefix+_dataset+
+						app->first+app->second,
+						temp->p4());
+    }
 
     return out;
+  }  
+
+  void PATElectronEnergyCorrection::setES(const edm::EventSetup& es) { 
+    _esetup = &es; 
+    
+    edm::ESHandle<CaloTopology> topo;
+    _esetup->get<CaloTopologyRecord>().get(topo);
+
+    edm::ESHandle<CaloGeometry> geom;
+    _esetup->get<CaloGeometryRecord>().get(geom);
+
+    _topo = topo.product();
+    _geom = geom.product();
   }
 
-  pelectron 
-  PATElectronEnergyCorrection::operator() (const std::string& dset,
-					   const int corrtype,
-					   const eRef& ele) {
-    return this->operator()(std::make_pair(dset,corrtype),ele);
-  }
+  void PATElectronEnergyCorrection::setEvent(const edm::Event& ev) { 
+    _event  = &ev;
 
-  void PATElectronEnergyCorrection::update_topo_geo(topo_hdl topo,
-						    geom_hdl geom) {
-    topo = topo.product();
-    geom = geom.product();
-  }
+    edm::Handle<double> rho;
+    _event->getByLabel(_rhosrc,rho);
+    _rho = *rho;
 
-  vkey_type_eec 
-  PATElectronEnergyCorrection::corrections() const {
-    return vkey_type_eec();
-  }
-
-  // ethis is very very slow, but I'm sure 
-  // everything else being run is slower...
-  std::string 
-  PATElectronEnergyCorrection::formIdent(const key_type_eec& key) const {
-    char buf[50];
-    memset(buf,0,50*sizeof(char));
-    sprintf(buf,"%s_%i",key.first.c_str(),key.second);
-    return std::string(buf);
-  }
-
+    edm::Handle<reco::VertexCollection> vtxs;
+    _event->getByLabel(_vtxsrc,vtxs);
+    _nvtx = vtxs->size();
+  }  
 }

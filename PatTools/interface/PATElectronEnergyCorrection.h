@@ -26,10 +26,13 @@
 class ElectronEnergyCalibrator;
 class CaloTopology;
 class CaloGeometry;
+class ElectronEnergyRegressionEvaluate;
 #include "DataFormats/PatCandidates/interface/Electron.h"
 namespace edm {
+  class ParameterSet;
   class Event;
   class EventSetup;
+  class InputTag;
   template<typename T> class ESHandle;
 }
 
@@ -38,41 +41,45 @@ namespace pattools {
   
   class PATElectronEnergyCorrection {
   public:
+    typedef ElectronEnergyRegressionEvaluate regCalc;
+    typedef regCalc* pRegCalc;
     typedef ElectronEnergyCalibrator eCalib;
-    typedef ElectronEnergyCalibrator* pcalib;
-    typedef std::map<std::string,pcalib> map_type;
-    typedef std::pair<std::string,int> key_type; // external key type
-    typedef std::map<std::string,pcalib>::value_type value_type;
+    typedef eCalib* pCalib;
+    typedef std::map<std::string,pCalib>      calib_map;    
+    typedef std::map<std::string,std::pair<int,pRegCalc> > reg_map;
+    // calib : regression
+    typedef std::map<std::string,std::string> apply_map; 
+    typedef std::auto_ptr<pat::Electron> value_type;
+    
   private:
-    std::string formIdent(const key_type&) const;
-
     const CaloTopology* _topo;
     const CaloGeometry* _geom;
     const edm::Event* _event;
     const edm::EventSetup* _esetup;
     
-    map_type _corrs;
+    edm::InputTag _vtxsrc, _rhosrc;
+    std::string _dataset, _userP4Prefix;
+
+    double _rho;
+    int    _nvtx;
+    
+    edm::InputTag _recHitsEB,_recHitsEE;    
+
+    apply_map _apply;
+    calib_map _calibs;
+    reg_map   _regs;
     
   public:
-    PATElectronEnergyCorrection(const std::vector<key_type>&,
-				const bool,
-				const bool);
+    PATElectronEnergyCorrection(const edm::ParameterSet&,
+				const bool isAOD,
+				const bool isMC);
     ~PATElectronEnergyCorrection();
     
-    std::auto_ptr<pat::Electron> operator() (const key_type&,
-					     const pat::ElectronRef&);
+    value_type operator() (const pat::ElectronRef&);    
+
+    void setES(const edm::EventSetup& es);
+    void setEvent(const edm::Event& ev);    
     
-    std::auto_ptr<pat::Electron> operator() (const std::string&,
-					     const int,
-					     const pat::ElectronRef&);
-
-    void setES(const edm::EventSetup& es) { _esetup = &es; }
-    void setEvent(const edm::Event& ev)   { _event  = &ev; }
-
-    void update_topo_geo(edm::ESHandle<CaloTopology>,
-			 edm::ESHandle<CaloGeometry>);
-
-    std::vector<key_type> corrections() const;    
   };
 
 }
