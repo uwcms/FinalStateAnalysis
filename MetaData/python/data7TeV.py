@@ -1,3 +1,4 @@
+# flake8: noqa
 '''
 
 Definition of 7TeV samples and data.
@@ -101,7 +102,8 @@ datadefs = {
     },
     'TTplusJets_madgraph' : {
         'datasetpath' : "/TTJets_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : 157.5*picobarns, # NLO cross-section from https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSections
+        #'x_sec' : 157.5*picobarns, # NLO cross-section from https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSections
+        'x_sec' : 164.4, # From H2Tau
         'pu' : 'S6',
         'analyses' : ['HTT',  'VH', 'Tau', 'Mu'],
     },
@@ -187,7 +189,8 @@ datadefs = {
     'WZJetsTo3LNu' : {
         'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
-        'x_sec' : 26.735*picobarns*3*0.03365*(0.1075+0.1057+0.1125) ,
+        'x_sec' : 26.735*picobarns*3*0.03365*(0.1075+0.1057+0.1125),
+        'x_sec' : 0.857369, #H2Tau
         'x_sec_unc' : quad(2.4, 1.1, 1.0)*0.3257*0.10096,
         'analyses' : ['VH', ],
     },
@@ -211,7 +214,8 @@ datadefs = {
         'pu' : 'S6',
         #'x_sec' : 3.783*picobarns, # FROM PREP
         # 55.3 +- 3.3 6.9 3.3 from EWK-11-10
-        'x_sec' : 55.3*picobarns*0.3257*0.3257, # 32.57% BR to leptons
+        #'x_sec' : 55.3*picobarns*0.3257*0.3257, # 32.57% BR to leptons
+        'x_sec' : 4.783389, # From H2Tau twiki
         'x_sec_unc' : quad(3.3, 6.9, 3.3)*0.3257*0.3257,
         'analyses' : ['VH', 'HTT'],
     },
@@ -257,7 +261,7 @@ datadefs = {
         'x_sec' : 0.06609*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
         'analyses' : ['VH',  '4L', 'HTT'],
     },
-    'ZZTo4tau_powheg' : { #now using official samples with mll>4 IAR 11.Oct.2012 
+    'ZZTo4tau_powheg' : { #now using official samples with mll>4 IAR 11.Oct.2012
         'datasetpath' : "/ZZTo4tau_mll4_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'pu' : 'S6',
         'x_sec' : 0.06609*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
