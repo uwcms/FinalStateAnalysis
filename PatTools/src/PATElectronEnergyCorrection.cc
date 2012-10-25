@@ -67,9 +67,16 @@ namespace pattools {
 	  _regs[type] = std::make_pair(version,new regCalc());
 	  _regs[type].second->initialize(fWeights,
 				(regCalc::ElectronEnergyRegressionType)index);
+	  if( _regs[type].second->isInitialized() ) 
+	    std::cout << type << " is init!" << std::endl;
 	}	
-	else 
+	else {
 	  _regs[type] = std::make_pair(-1,new regCalc());
+	  // compiler yells at me if I try to instantiate to NULL
+	  delete _regs[type].second;
+	  _regs[type].second = NULL;
+	}
+	
       }
     }
     
@@ -109,11 +116,15 @@ namespace pattools {
   PATElectronEnergyCorrection::~PATElectronEnergyCorrection() {
     calib_map::iterator i = _calibs.begin();
     calib_map::iterator e = _calibs.end();
-    for(; i != e; ++i) delete i->second;
+    for(; i != e; ++i) 
+      if(i->second) 
+	delete i->second;
 
     reg_map::iterator ii = _regs.begin();
     reg_map::iterator ee = _regs.end();
-    for(; ii != ee; ++ii) delete ii->second.second;
+    for(; ii != ee; ++ii) 
+      if(ii->second.second)
+	delete ii->second.second;
   }
 
   PATElectronEnergyCorrection::value_type

@@ -14,7 +14,7 @@ options = TauVarParsing.TauVarParsing(
     reportEvery=2000,
     puTag='unknown',
     isAOD=True,
-    calibrationTarget='2012Jul13ReReco'
+    calibrationTarget='2012Jul13ReReco',
     verbose=0, # Print out summary table at end
     profile=0, # Enabling profiling
     keepAll=0, # Don't drop any event content
@@ -27,7 +27,7 @@ options = TauVarParsing.TauVarParsing(
 )
 
 files = [
-    "root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/13Jul2012-v4/00001/0A1D8490-DEDE-E111-A48C-20CF3027A62E.root"
+    "root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/29Jun2012-v1/0001/C46FD2A9-3FC3-E111-A1A8-485B39800C00.root"
 ]
 
 options.inputFiles = files

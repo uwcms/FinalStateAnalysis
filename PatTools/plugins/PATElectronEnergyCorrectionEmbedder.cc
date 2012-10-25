@@ -26,10 +26,8 @@ using edm::EventSetup;
 using edm::Event;
 using edm::InputTag;
 
-using reco::VertexCollection;
-using reco::VertexRef;
-
 using pat::Electron;
+using pat::ElectronRef;
 using pat::ElectronCollection;
 
 using pattools::PATElectronEnergyCorrection;
@@ -51,7 +49,8 @@ PATElectronEnergyCorrectionEmbedder(const
 				    pset.getParameter<bool>("isAOD"),
 				    pset.getParameter<bool>("isMC"))) {
 
-  _src = pset.getParameter<edm::InputTag>("src");  
+  _src = pset.getParameter<InputTag>("src");  
+  produces<ElectronCollection>();
 }
 
 void PATElectronEnergyCorrectionEmbedder::produce(Event& evt, 
@@ -60,17 +59,17 @@ void PATElectronEnergyCorrectionEmbedder::produce(Event& evt,
   _corr.setES(es);
   _corr.setEvent(evt);
 
-  std::auto_ptr<pat::ElectronCollection> out(new pat::ElectronCollection);
+  std::auto_ptr<ElectronCollection> out(new ElectronCollection);
 
-  edm::Handle<pat::ElectronCollection> eles;
+  edm::Handle<ElectronCollection> eles;
   evt.getByLabel(_src,eles);
 
-  pat::ElectronCollection::const_iterator b = eles->begin();
-  pat::ElectronCollection::const_iterator i = b;
-  pat::ElectronCollection::const_iterator e = eles->end();
+  ElectronCollection::const_iterator b = eles->begin();
+  ElectronCollection::const_iterator i = b;
+  ElectronCollection::const_iterator e = eles->end();
 
   for( ; i != e; ++i ) {
-    pat::ElectronRef ref(eles,i - b);
+    ElectronRef ref(eles,i - b);
     std::auto_ptr<pat::Electron> cEle = _corr(ref);
 
     out->push_back(*cEle);
