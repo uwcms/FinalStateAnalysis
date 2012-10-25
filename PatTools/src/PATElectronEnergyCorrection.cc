@@ -137,6 +137,7 @@ namespace pattools {
     EcalClusterLazyTools clustools(*_event,*_esetup,
 				   _recHitsEB,_recHitsEE);
 
+    
     for( ; app != end; ++app ) {
       value_type temp = value_type(new value_type::element_type(*ele));
 
@@ -182,6 +183,7 @@ namespace pattools {
 			_dataset+app->first+
 			_errPostfix,
 			temp->p4Error(reco::GsfElectron::P4_COMBINATION));
+      
     }
 
     return out;
