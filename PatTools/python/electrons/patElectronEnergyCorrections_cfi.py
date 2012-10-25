@@ -51,6 +51,6 @@ patElectronEnergyCorrections = cms.EDProducer(
     isAOD = cms.bool(True),
     isMC = cms.bool(True),
     vtxSrc = cms.InputTag("selectPrimaryVerticesQuality"),
-    rhoSrc = cms.InputTag("kt6PFJets:rho:RECO"),
+    rhoSrc = cms.InputTag("kt6PFJets","rho"),
     userP4Prefix = cms.string("EGCorr_")
 )

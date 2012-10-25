@@ -12,6 +12,9 @@ cvs co -r V11-03-16 PhysicsTools/HepMCCandAlgos
 
 # PAT RECIPE V08-06-58 IAR 27.Sep.2012
 addpkg DataFormats/PatCandidates  V06-04-19-05
+# patch in 44X electrons so regression BS works
+cvs up -r 1.44 DataFormats/PatCandidates/interface/Electron.h
+cvs up -r 1.33 DataFormats/PatCandidates/src/Electron.cc
 addpkg PhysicsTools/PatAlgos V08-06-58
 addpkg PhysicsTools/PatUtils V03-09-18
 addpkg CommonTools/ParticleFlow B4_2_X_V00-03-05
@@ -36,6 +39,7 @@ patch -N -p0 < FinalStateAnalysis/recipe/marias_negativeSSV.patch
 set -o errexit 
 
 echo "Checking out EGamma POG recipe for electron corrections"
+addpkg RecoEgamma/EgammaTools V08-11-10-02
 cvs co -r V00-00-30-BP42X -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
 cvs co -r HCP2012_V04-44X EgammaAnalysis/ElectronTools
 

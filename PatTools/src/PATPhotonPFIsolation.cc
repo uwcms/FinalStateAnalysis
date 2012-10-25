@@ -7,7 +7,7 @@
 
 namespace pattools {
   typedef reco::PFCandidateCollection PFCandColl;
-  typedef edm::Handle< reco::VertexCollection> VtxHandle;
+  typedef edm::Handle<reco::VertexCollection> VtxHandle;
 
   PATPhotonPFIsolation::PATPhotonPFIsolation(const float cone_size):
     _iso(new PFIsolationEstimator()),
