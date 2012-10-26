@@ -15,6 +15,10 @@ namespace {
 enum { kInnerTrack, kGlobalTrack };
 enum { kBeamSpot, kVertex };
 
+// magic number from muon header file, only exists in 52x, 
+// causes 42x to barf if I ask for isPFMuon()
+enum { kPFMuonType 1<<5 }; // so that this compiles in 42x and 52x
+
 template<typename T>
 bool isValidRef(const edm::Ref<T>& ref)
 {
@@ -153,7 +157,7 @@ void PATMuonIdSelectorImp::select(const edm::Handle<collection>& patMuonCollecti
 
     if ( !patMuon->isGlobalMuon()                                                                ) continue;
     if ( !use2012IDVariables_ && !patMuon->isTrackerMuon()                                       ) continue;
-    if (  use2012IDVariables_  && ( usePFMuonReq_ && !patMuon->isPFMuon() )                      ) continue;
+    if (  use2012IDVariables_  && ( usePFMuonReq_ && !(patMuon->type() & kPFMuonType) )          ) continue;
     if ( !isValidRef(patMuon->globalTrack())                                                     ) continue;
     if ( !isValidRef(patMuon->innerTrack())                                                      ) continue;
 
