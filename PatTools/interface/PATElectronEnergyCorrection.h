@@ -1,4 +1,4 @@
-/** \class PATPhotonPFIsolation
+/** \class PATElectronEnergyCorrection
  *
  * Auxiliary class to encapsulate the prescription
  * for applying the regression-based electron energy
