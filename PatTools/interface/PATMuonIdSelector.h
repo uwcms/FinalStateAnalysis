@@ -48,8 +48,9 @@ class PATMuonIdSelectorImp
   edm::InputTag srcVertex_;
 
   bool     applyGlobalMuonPromptTight_;
-  bool     applyAllArbitrated_;
+  bool     applyAllArbitrated_;  
   bool     use2012IDVariables_; // use the 2012 ID variables from the Muon POG
+  bool     usePFMuonReq_;
 
   double   maxIPxy_;                    // max. transverse   impact parameter of muon track
   double   maxIPz_;                     // max. longitudinal impact parameter of muon track

@@ -26,7 +26,8 @@ bool isValidRef(const edm::Ref<T>& ref)
 //   (to be used in case selection criteria are not specified explicitely)
 bool     defaultApplyGlobalMuonPromptTight_ = true;
 bool     defaultApplyAllArbitrated_         = true;
-bool     defaultUse2012IDVariables_         = true;
+bool     defaultUse2012IDVariables_         = false;
+bool     defaultUsePFMuonReq_               = true;
 double   defaultMaxIPxy_                    =  0.02;  // cm
 double   defaultMaxIPz_                     =  1.e+3; // cm
 int      defaultIPtrackType_                = kInnerTrack;
@@ -55,6 +56,7 @@ PATMuonIdSelectorImp::PATMuonIdSelectorImp(const edm::ParameterSet& cfg)
   applyGlobalMuonPromptTight_ = getConfigurationParameter<bool>    (cfg, "applyGlobalMuonPromptTight", &defaultApplyGlobalMuonPromptTight_);
   applyAllArbitrated_         = getConfigurationParameter<bool>    (cfg, "applyAllArbitrated",         &defaultApplyAllArbitrated_);
   use2012IDVariables_         = getConfigurationParameter<bool>    (cfg, "use2012IDVariables",         &defaultUse2012IDVariables_);
+  usePFMuonReq_               = getConfigurationParameter<bool>    (cfg, "usePFMuonReq",               &defaultUsePFMuonReq_);
   maxIPxy_                    = getConfigurationParameter<double>  (cfg, "maxIPxy",                    &defaultMaxIPxy_);
   maxIPz_                     = getConfigurationParameter<double>  (cfg, "maxIPz",                     &defaultMaxIPz_);
   maxChi2red_                 = getConfigurationParameter<double>  (cfg, "maxChi2red",                 &defaultMaxChi2red_);
@@ -63,7 +65,7 @@ PATMuonIdSelectorImp::PATMuonIdSelectorImp(const edm::ParameterSet& cfg)
   minPixelHits_               = getConfigurationParameter<unsigned>(cfg, "minPixelHits",               &defaultMinPixelHits_);
   minMuonStations_            = getConfigurationParameter<unsigned>(cfg, "minMuonStations",            &defaultMinMuonStations_);
   minMatchedSegments_         = getConfigurationParameter<unsigned>(cfg, "minMatchedSegments",         &defaultMinMatchedSegments_);
-  minLayersWithMeasurement_   = getConfigurationParameter<unsigned>(cfg, "minTkLayersWithMeasurement", &defaultMinTkLayersWithMeasurement_);  
+  minTkLayersWithMeasurement_ = getConfigurationParameter<unsigned>(cfg, "minTkLayersWithMeasurement", &defaultMinTkLayersWithMeasurement_);  
 
   if ( cfg.exists("IPtrackType") ) {
     std::string IPtrackType_string = cfg.getParameter<std::string>("IPtrackType");
@@ -151,7 +153,7 @@ void PATMuonIdSelectorImp::select(const edm::Handle<collection>& patMuonCollecti
 
     if ( !patMuon->isGlobalMuon()                                                                ) continue;
     if ( !use2012IDVariables_ && !patMuon->isTrackerMuon()                                       ) continue;
-    if ( use2012IDVariables_  && !patMuon->isPFMuon()                                            ) continue;
+    if (  use2012IDVariables_  && ( usePFMuonReq_ && !patMuon->isPFMuon() )                      ) continue;
     if ( !isValidRef(patMuon->globalTrack())                                                     ) continue;
     if ( !isValidRef(patMuon->innerTrack())                                                      ) continue;
 
@@ -166,14 +168,14 @@ void PATMuonIdSelectorImp::select(const edm::Handle<collection>& patMuonCollecti
     if ( !(TMath::Abs(muonTrack->dz(IPrefPoint)) < maxIPz_)                                      ) continue;
 
     if ( !(patMuon->globalTrack()->normalizedChi2() < maxChi2red_)                               ) continue;
-    if ( !(!use2012IDVariables && 
+    if ( !(!use2012IDVariables_ && 
 	   patMuon->innerTrack()->ptError() < (maxDptOverPt_*patMuon->innerTrack()->pt()))       ) continue;
 
     const reco::HitPattern& innerTrackHitPattern = patMuon->innerTrack()->hitPattern();
     if ( !( (!use2012IDVariables_ && 
-	     innerTrackHitPattern.numberOfValidTrackerHits() >= (int)minTrackerHits_) ||
+	      innerTrackHitPattern.numberOfValidTrackerHits() >= (int)minTrackerHits_) ||
 	    ( use2012IDVariables_ && 
-	      innerTrackHitPatter.trackerLayersWithMeasurement() >= (int) minTkLayersWithMeasurement_) ) continue;
+	      innerTrackHitPattern.trackerLayersWithMeasurement() >= (int)minTkLayersWithMeasurement_) ) ) continue;
     if ( !(innerTrackHitPattern.numberOfValidPixelHits() >= (int)minPixelHits_)                  ) continue;
 
     //---------------------------------------------------------------------------
