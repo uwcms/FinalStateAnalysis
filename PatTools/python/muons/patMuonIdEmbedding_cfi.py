@@ -23,7 +23,7 @@ patMuonsEmbedHZG2011 = cms.EDProducer(
     IPtrackType = cms.string("innerTrack"),
     IPrefType = cms.string("vertex"),
     maxIPxy = cms.double(0.2),
-    maxIPz  = cms.double(0.5),
+    maxIPz  = cms.double(1e3),
     minTkLayersWithMeasurement = cms.uint32(6)
 )
 
