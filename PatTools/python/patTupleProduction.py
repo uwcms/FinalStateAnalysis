@@ -10,7 +10,8 @@ import PhysicsTools.PatAlgos.tools.pfTools as pfTools
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
 from FinalStateAnalysis.Utilities.version import cmssw_major_version,\
      cmssw_minor_version
-from FinalStateAnalysis.PatTools.pfIsolationTools import setup_h2tau_iso
+from FinalStateAnalysis.PatTools.pfIsolationTools import setup_h2tau_iso,\
+     add_hZg_muon_iso_needs
 from FinalStateAnalysis.PatTools.patFinalStateProducers import produce_final_states
 
 def configurePatTuple(process, isMC=True, **kwargs):
@@ -35,6 +36,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_kt6PFJetsForRhoComputationVoronoi_rho_*',
         '*_kt6PFJetsForIso_rho_*',
         '*_kt6PFJets_rho_*',
+        '*_kt6PFJetsCentral_rho_*',
         '*_kt6PFJetsCentralNeutral_rho_*', #for zz muons
         # for Zmumu -> embedded samples
         '*_generator_weight_*', # 2k11
@@ -136,6 +138,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
     pfTools.usePFIso(process)
     # Setup H2Tau custom iso definitions
     setup_h2tau_iso(process)
+    # Setup hZg custom iso definitions
+    add_hZg_muon_iso_needs(process)
+
+    
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
     process.elPFIsoValueGamma04NoPFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')

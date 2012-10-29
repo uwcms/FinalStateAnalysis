@@ -23,10 +23,10 @@ hzg_list=`dbs lsf --path=/GluGluToHToZG_M-125_8TeV-powheg-pythia6/Summer12-PU_S7
 
 sync_52X=()
 sync_52X+=('DataMuon;root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/29Jun2012-v1/0001/C46FD2A9-3FC3-E111-A1A8-485B39800C00.root')
-sync_52X+=('DataElectron;root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleElectron/AOD/29Jun2012-v1/0000/00507372-79C2-E111-B41C-003048FFCB6A.root')
-sync_52X+=("MCSignalEle;${hzg_list}")
-sync_52X+=('MCBkgMuo;root://cmsdca0.fnal.gov//store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root')
-sync_52X+=('MCBkgEle;root://cmsdca0.fnal.gov///store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0002/002C5B35-519B-E111-862D-001E67398025.root')
+#sync_52X+=('DataElectron;root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleElectron/AOD/29Jun2012-v1/0000/00507372-79C2-E111-B41C-003048FFCB6A.root')
+#sync_52X+=("MCSignalEle;${hzg_list}")
+#sync_52X+=('MCBkgMuo;root://cmsdca0.fnal.gov//store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root')
+#sync_52X+=('MCBkgEle;root://cmsdca0.fnal.gov///store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0002/002C5B35-519B-E111-862D-001E67398025.root')
 
 for sync_test in ${sync_52X[@]}
 do
@@ -35,7 +35,7 @@ do
 
   if [[ "${parts[0]}" == *Data* ]]
       then
-      ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
+      ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=100\
 	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=ReReco #&> ${part[0]}_sync.log  & 
       else
       ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
