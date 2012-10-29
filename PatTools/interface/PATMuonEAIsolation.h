@@ -36,7 +36,7 @@ namespace pattools {
       double eta_max,eta_min;      
       double eff_area;
       double cone_size;
-    }
+    };
     typedef std::map<std::string,std::vector<ea_info> > map_type;
     map_type _eamap;
     std::string _eatype;

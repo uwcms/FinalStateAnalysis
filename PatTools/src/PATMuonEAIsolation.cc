@@ -38,7 +38,7 @@ namespace pattools {
 	temp.needs_pfneut = needs_neuts;
 	temp.needs_pfpho  = needs_phos;
 
-	_eamap[name] = temp;
+	_eamap[name].push_back(temp);
       }
     }
   }
@@ -48,7 +48,7 @@ namespace pattools {
       throw cms::Exception("PATMuonEAIsolation::()") << "_eatype not set!\n";
     double result = 0.0;
 
-    _eatype ea = _eamap[_eatype];
+    map_type::mapped_type eas = _eamap[_eatype];
 
     std::vector<ea_info>::const_iterator i = eas.begin();
     std::vector<ea_info>::const_iterator e = eas.end();
@@ -59,10 +59,10 @@ namespace pattools {
     double neu_iso = mu.userIsolation(pat::PfNeutralHadronIso);
     double pho_iso = mu.userIsolation(pat::PfGammaIso);
 
-    result = (chg_iso + 
-	      i->needs_pfneut*neu_iso + 
-	      i->needs_pfpho*pho_iso - 
-	      rho*i->eff_area);
+    result = (  chg_iso 
+	      + neu_iso * (i->needs_pfneut)
+	      + pho_iso * (i->needs_pfpho)
+	      - rho * (i->eff_area)         );
 
     return result;
   }  

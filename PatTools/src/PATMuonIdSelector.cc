@@ -17,7 +17,7 @@ enum { kBeamSpot, kVertex };
 
 // magic number from muon header file, only exists in 52x, 
 // causes 42x to barf if I ask for isPFMuon()
-enum { kPFMuonType 1<<5 }; // so that this compiles in 42x and 52x
+enum { kPFMuonType=1<<5 }; // so that this compiles in 42x and 52x
 
 template<typename T>
 bool isValidRef(const edm::Ref<T>& ref)
