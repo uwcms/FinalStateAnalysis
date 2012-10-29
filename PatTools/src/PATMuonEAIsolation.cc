@@ -20,6 +20,8 @@ namespace pattools {
       double cone_size = i->getParameter<double>("cone_size");
       vdouble etas     = i->getParameter<vdouble>("eta_boundaries");
       vdouble eas      = i->getParameter<vdouble>("effective_areas");
+      bool needs_neuts = i->getParameter<bool>("needs_pfneutral");
+      bool needs_phos  = i->getParameter<bool>("needs_pfphoton");
       
       if( etas.size() != eas.size()+1 ) 
 	throw cms::Exception("PATMuonEAIsolation") << "eta_boundaries size"
@@ -32,6 +34,9 @@ namespace pattools {
 	temp.eta_min  = etas[k-1];
 	temp.eff_area = eas[k-1];
 	temp.cone_size = cone_size;
+
+	temp.needs_pfneut = needs_neuts;
+	temp.needs_pfpho  = needs_phos;
 
 	_eamap[name] = temp;
       }
@@ -48,11 +53,16 @@ namespace pattools {
     std::vector<ea_info>::const_iterator i = eas.begin();
     std::vector<ea_info>::const_iterator e = eas.end();
 
-    double chg_iso = (mu.pfIsolationDR
+    while(fabs(mu.eta()) < i->eta_max && i != e) ++i;    
 
-    for( ; i != e; ++i ) 
-      
-    }
+    double chg_iso = mu.userIsolation(pat::PfChargedHadronIso);
+    double neu_iso = mu.userIsolation(pat::PfNeutralHadronIso);
+    double pho_iso = mu.userIsolation(pat::PfGammaIso);
+
+    result = (chg_iso + 
+	      i->needs_pfneut*neu_iso + 
+	      i->needs_pfpho*pho_iso - 
+	      rho*i->eff_area);
 
     return result;
   }  

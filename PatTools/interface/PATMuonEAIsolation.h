@@ -31,7 +31,8 @@ namespace pat {
 namespace pattools {
   class PATMuonEAIsolation {    
   private:    
-    struct ea_info {      
+    struct ea_info {  
+      bool   needs_pfneut,needs_pfpho;
       double eta_max,eta_min;      
       double eff_area;
       double cone_size;
