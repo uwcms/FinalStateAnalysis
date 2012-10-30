@@ -7,7 +7,8 @@ available_wps = cms.VPSet(cms.PSet(name=cms.string("CBID_VETO"),
                           cms.PSet(name=cms.string("CBID_MEDIUM"),
                                    index=cms.int32(2)),
                           cms.PSet(name=cms.string("CBID_TIGHT"),
-                                   index=cms.int32(3)),
+                                   index=cms.int32(3))
+                          )
                           
 
 patElectronCutBasedIdEmbedder = cms.EDProducer(
