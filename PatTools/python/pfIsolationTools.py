@@ -124,5 +124,51 @@ def setup_h2tau_iso(process):
     # Insert into PAT default sequence, after all the other iso stuff is run.
     # We have to put this at the end since it depends on the IsoDeposits
     # Lets replace some stupid thing we don't use
+    process.h2TauIsoSequence += process.muPFIsoValueGamma03PFIso    
     replace_result = process.patDefaultSequence.replace(
-        process.muPFIsoValueGamma03PFIso, process.h2TauIsoSequence)
+        process.muPFIsoValueGamma03PFIso,        
+        process.h2TauIsoSequence
+        )
+
+def add_hZg_muon_iso_needs(process):
+    print "Adding rhos and collections needs for 2011 data in hZg"
+
+    process.load("RecoJets.JetProducers.kt4PFJets_cfi")
+
+    process.pfAllNeutralHadronsAndPhotons = cms.EDProducer(
+        "CandViewMerger",
+        src = cms.VInputTag(cms.InputTag("pfAllNeutralHadrons"),
+                            cms.InputTag("pfAllPhotons"))
+        )
+
+    
+    process.kt6PFJetsCentralNeutral = process.kt4PFJets.clone(
+        rParam        = cms.double(0.6),
+        src           = cms.InputTag("pfAllNeutralHadronsAndPhotons"),
+        Ghost_EtaMax  = cms.double(3.1),
+        Rho_EtaMax    = cms.double(2.5),
+        inputEtMin    = cms.double(0.5),
+        doAreaFastjet = cms.bool(True),
+        doRhoFastjet  = cms.bool(True)
+        )
+
+    process.kt6PFJetsCentral = process.kt4PFJets.clone(
+        rParam = cms.double(0.6),
+        Ghost_EtaMax = cms.double(2.5),
+        Rho_EtaMax = cms.double(2.5),
+        doAreaFastjet = cms.bool(True),
+        doRhoFastjet  = cms.bool(True)
+        )
+
+    process.rhos_for_hZg_muons = cms.Sequence(
+        process.pfAllNeutralHadronsAndPhotons+
+        process.kt6PFJetsCentralNeutral+
+        process.kt6PFJetsCentral)
+
+
+    process.rhos_for_hZg_muons += process.muPFIsoValueGamma03PFIso    
+    
+    replace_result = process.patDefaultSequence.replace(
+        process.muPFIsoValueGamma03PFIso,        
+        process.rhos_for_hZg_muons
+        )

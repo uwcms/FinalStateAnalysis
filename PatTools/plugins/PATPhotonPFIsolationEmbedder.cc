@@ -17,6 +17,7 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 
 #include "DataFormats/PatCandidates/interface/Photon.h"
+#include "DataFormats/PatCandidates/interface/Isolation.h"
 
 #include <stdio.h>
 
@@ -44,6 +45,7 @@ public:
 private:
   InputTag _src,_pfcollsrc,_vtxsrc;
   std::string _userFloatPrefix;
+  unsigned _defaultVertex;
   PATPhotonPFIsolation _iso;
   const std::string _i_chad,_i_nhad,_i_pho,_cone;  
   char buf[20];
@@ -59,6 +61,7 @@ PATPhotonPFIsolationEmbedder::PATPhotonPFIsolationEmbedder(const
   _src = pset.getParameter<InputTag>("src");
   _pfcollsrc = pset.getParameter<InputTag>("pfCollectionSrc");
   _vtxsrc = pset.getParameter<InputTag>("vtxSrc"); 
+  _defaultVertex = pset.getParameter<unsigned>("defaultVertex");
   _userFloatPrefix = pset.getParameter<std::string>("userFloatPrefix");
   produces<PhotonCollection>();
 }
@@ -91,15 +94,26 @@ void PATPhotonPFIsolationEmbedder::produce(Event& evt,
       VertexRef the_pv = VertexRef(vtxs,iVtx);
       pfisolation the_iso = _iso(currentPhoton,pfparts.product(),the_pv,vtxs);
       
-      newPhoton.addUserFloat(_userFloatPrefix+_i_chad+postfix, 
+      if (iVtx == _defaultVertex) {
+	newPhoton.addUserFloat(_userFloatPrefix+_cone+postfix,
+			       the_iso.cone_size);
+	newPhoton.setIsolation(pat::PfAllParticleIso,
+			       the_iso.iso_chg_had  +
+			       the_iso.iso_neut_had +
+			       the_iso.iso_photon     );
+	newPhoton.setIsolation(pat::PfChargedHadronIso,the_iso.iso_chg_had);
+	newPhoton.setIsolation(pat::PfNeutralHadronIso,the_iso.iso_neut_had);
+	newPhoton.setIsolation(pat::PfGammaIso,the_iso.iso_photon);
+      } else {
+	newPhoton.addUserFloat(_userFloatPrefix+_i_chad+postfix, 
 			     the_iso.iso_chg_had);
-      newPhoton.addUserFloat(_userFloatPrefix+_i_nhad+postfix, 
+	newPhoton.addUserFloat(_userFloatPrefix+_i_nhad+postfix, 
 			     the_iso.iso_neut_had);
-      newPhoton.addUserFloat(_userFloatPrefix+_i_pho+postfix,  
-			     the_iso.iso_photon);
-      newPhoton.addUserFloat(_userFloatPrefix+_cone+postfix,
-			     the_iso.cone_size);
-      
+	newPhoton.addUserFloat(_userFloatPrefix+_i_pho+postfix,  
+			       the_iso.iso_photon);
+	newPhoton.addUserFloat(_userFloatPrefix+_cone+postfix,
+			       the_iso.cone_size);
+      }
     }    
     output->push_back(newPhoton);
   }

@@ -10,7 +10,8 @@ import PhysicsTools.PatAlgos.tools.pfTools as pfTools
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
 from FinalStateAnalysis.Utilities.version import cmssw_major_version,\
      cmssw_minor_version
-from FinalStateAnalysis.PatTools.pfIsolationTools import setup_h2tau_iso, add_hZg_muon_iso_needs
+from FinalStateAnalysis.PatTools.pfIsolationTools import setup_h2tau_iso,\
+     add_hZg_muon_iso_needs
 from FinalStateAnalysis.PatTools.patFinalStateProducers import produce_final_states
 
 def configurePatTuple(process, isMC=True, **kwargs):
@@ -137,8 +138,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     pfTools.usePFIso(process)
     # Setup H2Tau custom iso definitions
     setup_h2tau_iso(process)
-    
-    #setup hZg isolation necessities
+    # Setup hZg custom iso definitions
     add_hZg_muon_iso_needs(process)
     
     # Use POG recommendations for (these) electron Isos
