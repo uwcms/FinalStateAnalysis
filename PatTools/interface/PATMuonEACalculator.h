@@ -1,10 +1,10 @@
-/** \class PATMuonEAIsolation
+/** \class PATMuonEACalculator
  *
  * values from:
  * https://indico.cern.ch/getFile.py/access?contribId=1&resId=0&materialId=slides&confId=188494
  * page 9
  *
- * Calculates the muon combined PF isolation based on effective areas.
+ * Returns the PAT Muon effective area for PF isolation.
  *
  * \author Lindsey Gray, UW Madison
  *
@@ -25,11 +25,11 @@ namespace edm {
 }
 
 namespace pat {
-  class Muon;
+  class Muon;  
 }
 
 namespace pattools {
-  class PATMuonEAIsolation {    
+  class PATMuonEACalculator {    
   private:    
     struct ea_info {  
       bool   needs_pfneut,needs_pfpho;
@@ -41,9 +41,9 @@ namespace pattools {
     map_type _eamap;
     std::string _eatype;
   public:
-    PATMuonEAIsolation(const edm::VParameterSet&);    
+    PATMuonEACalculator(const edm::VParameterSet&);    
 
-    double operator() (const pat::Muon&, double rho);
+    double operator() (const pat::Muon&);
 
     void setEAType(const std::string& type) { _eatype = type; }
   };

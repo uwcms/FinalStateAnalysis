@@ -1,4 +1,4 @@
-#include "FinalStateAnalysis/PatTools/interface/PATMuonEAIsolation.h"
+#include "FinalStateAnalysis/PatTools/interface/PATMuonEACalculator.h"
 
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
@@ -11,7 +11,7 @@ namespace pattools {
     typedef std::vector<double> vdouble;    
   }
 
-  PATMuonEAIsolation::PATMuonEAIsolation(const VPSet& areas){
+  PATMuonEACalculator::PATMuonEACalculator(const VPSet& areas){
     VPSet::const_iterator i = areas.begin();
     VPSet::const_iterator e = areas.end();
 
@@ -24,7 +24,7 @@ namespace pattools {
       bool needs_phos  = i->getParameter<bool>("needs_pfphoton");
       
       if( etas.size() != eas.size()+1 ) 
-	throw cms::Exception("PATMuonEAIsolation") << "eta_boundaries size"
+	throw cms::Exception("PATMuonEACalculator") << "eta_boundaries size"
 						   << " must be one greater"
 						   << " than effective_areas"
 						   << "!\n";
@@ -43,28 +43,18 @@ namespace pattools {
     }
   }
 
-  double PATMuonEAIsolation::operator() (const pat::Muon& mu, double rho) {
+  double PATMuonEACalculator::operator() (const pat::Muon& mu) {
     if( _eatype == "" ) 
-      throw cms::Exception("PATMuonEAIsolation::()") << "_eatype not set!\n";
-    double result = 0.0;
-
+      throw cms::Exception("PATMuonEACalculator::()") << "_eatype not set!\n";
+    
     map_type::mapped_type eas = _eamap[_eatype];
 
     std::vector<ea_info>::const_iterator i = eas.begin();
     std::vector<ea_info>::const_iterator e = eas.end();
 
     while(fabs(mu.eta()) < i->eta_max && i != e) ++i;    
-
-    double chg_iso = mu.userIsolation(pat::PfChargedHadronIso);
-    double neu_iso = mu.userIsolation(pat::PfNeutralHadronIso);
-    double pho_iso = mu.userIsolation(pat::PfGammaIso);
-
-    result = (  chg_iso 
-	      + neu_iso * (i->needs_pfneut)
-	      + pho_iso * (i->needs_pfpho)
-	      - rho * (i->eff_area)         );
-
-    return result;
+    
+    return i->eff_area;
   }  
 
 }

@@ -24,6 +24,11 @@ customizeMuonSequence += patVBTFMuonMatch
 customizeMuonSequence += patMuonsEmbedHZG2011
 customizeMuonSequence += patMuonsEmbedHZG2012
 
+from FinalStateAnalysis.PatTools.muons.patMuonEAEmbedding_cfi import \
+     patMuonEAEmbedder
+
+customizeMuonSequence += patMuonEAEmbedder
+
 from FinalStateAnalysis.PatTools.muons.patMuonPFMuonEmbedding_cfi import \
         patMuonPFMuonEmbedding
 customizeMuonSequence += patMuonPFMuonEmbedding
