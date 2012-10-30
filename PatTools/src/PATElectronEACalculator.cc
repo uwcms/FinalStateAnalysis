@@ -1,6 +1,6 @@
 #include "FinalStateAnalysis/PatTools/interface/PATElectronEACalculator.h"
 
-#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Electron.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include "EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h"
@@ -8,6 +8,7 @@
 namespace pattools {
 
   namespace {
+    typedef ElectronEffectiveArea eea;
     typedef edm::ParameterSet PSet;
     typedef edm::VParameterSet VPSet;
     typedef std::vector<double> vdouble;  
@@ -43,7 +44,9 @@ namespace pattools {
     EATYPE   type   = (EATYPE)ea.ea_type;
     EATARGET target = (EATARGET)ea.ea_target;
         
-    return GetElectronEffectiveArea(type,ele.superCluster().eta(),target);
+    return eea::GetElectronEffectiveArea(type,
+					 ele.superCluster()->eta(),
+					 target);
   }  
 
 }

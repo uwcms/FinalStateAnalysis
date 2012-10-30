@@ -167,7 +167,7 @@ def add_hZg_iso_needs(process):
 
     process.hZg_muons = cms.Sequence(
         process.pfAllNeutralHadronsAndPhotons+
-        process.kt6PFJetsCentralHZGEle
+        process.kt6PFJetsCentralHZGEle+
         process.kt6PFJetsCentralNeutralHZGMu+
         process.kt6PFJetsCentralHZGMu)
 

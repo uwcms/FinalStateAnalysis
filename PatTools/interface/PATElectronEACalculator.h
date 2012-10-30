@@ -36,13 +36,13 @@ namespace pattools {
       int ea_type;
       int ea_target;      
     };
-    typedef std::map<std::string,std::vector<ea_info> > map_type;
+    typedef std::map<std::string,ea_info> map_type;
     map_type _eamap;
     std::string _eatype;
   public:
     PATElectronEACalculator(const edm::VParameterSet&);    
 
-    double operator() (const pat::Muon&);
+    double operator() (const pat::Electron&);
 
     void setEAType(const std::string& type) { _eatype = type; }
   };
