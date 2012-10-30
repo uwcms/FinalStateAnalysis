@@ -22,6 +22,9 @@ from FinalStateAnalysis.PatTools.electrons.patElectronMVAIDEmbedding_cfi import\
 from FinalStateAnalysis.PatTools.electrons.patElectronMVAWPEmbedding_cfi import\
         patElectronMVAIDWPEmbedding
 
+from FinalStateAnalysis.PatTools.electrons.electronCutBasedID_cfi import \
+     patElectronCutBasedIdEmbedder
+
 from FinalStateAnalysis.PatTools.electrons.patElectronEmbedJetInfo_cfi import \
         patElectronsEmbedJetInfo
 
@@ -47,6 +50,7 @@ customizeElectronSequence += patElectronsEmbedJetInfo
 customizeElectronSequence += electronSystematics
 #customizeElectronSequence += triggeredPatElectrons
 #customizeElectronSequence += triggeredPatElectronsL
+customizeElectronSequence += patElectronCutBasedIdEmbedder
 customizeElectronSequence += patElectronMVAIDEmbedder
 customizeElectronSequence += patElectronMVAIDWPEmbedding
 customizeElectronSequence += patElectronsEmbedIp

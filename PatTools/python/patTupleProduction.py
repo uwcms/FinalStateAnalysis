@@ -36,6 +36,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_kt6PFJetsForRhoComputationVoronoi_rho_*',
         '*_kt6PFJetsForIso_rho_*',
         '*_kt6PFJets_rho_*',
+        '*_kt6PFJetsCentralHZGEle_rho_*',
+        '*_kt6PFJetsCentralHZGMu_rho_*',
+        '*_kt6PFJetsCentralNeutralHZGMu_rho_*',
         '*_kt6PFJetsCentral_rho_*',
         '*_kt6PFJetsCentralNeutral_rho_*', #for zz muons
         # for Zmumu -> embedded samples

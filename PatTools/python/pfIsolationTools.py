@@ -130,7 +130,7 @@ def setup_h2tau_iso(process):
         process.h2TauIsoSequence
         )
 
-def add_hZg_muon_iso_needs(process):
+def add_hZg_iso_needs(process):
     print "Adding rhos and collections needs for 2011 data in hZg"
 
     process.load("RecoJets.JetProducers.kt4PFJets_cfi")
@@ -141,8 +141,13 @@ def add_hZg_muon_iso_needs(process):
                             cms.InputTag("pfAllPhotons"))
         )
 
+    process.kt6PFJetsCentralHZGEle = process.kt4PFJets.clone(
+        rParam       = cms.double(0.6),
+        Rho_EtaMax   = cms.double(2.5),
+        doRhoFastjet = cms.bool(True)        
+        )
     
-    process.kt6PFJetsCentralNeutral = process.kt4PFJets.clone(
+    process.kt6PFJetsCentralNeutralHZGMu = process.kt4PFJets.clone(
         rParam        = cms.double(0.6),
         src           = cms.InputTag("pfAllNeutralHadronsAndPhotons"),
         Ghost_EtaMax  = cms.double(3.1),
@@ -152,7 +157,7 @@ def add_hZg_muon_iso_needs(process):
         doRhoFastjet  = cms.bool(True)
         )
 
-    process.kt6PFJetsCentral = process.kt4PFJets.clone(
+    process.kt6PFJetsCentralHZGMu = process.kt4PFJets.clone(
         rParam = cms.double(0.6),
         Ghost_EtaMax = cms.double(2.5),
         Rho_EtaMax = cms.double(2.5),
@@ -162,13 +167,11 @@ def add_hZg_muon_iso_needs(process):
 
     process.hZg_muons = cms.Sequence(
         process.pfAllNeutralHadronsAndPhotons+
-        process.kt6PFJetsCentralNeutral+
-        process.kt6PFJetsCentral)
+        process.kt6PFJetsCentralHZGEle+
+        process.kt6PFJetsCentralNeutralHZGMu+
+        process.kt6PFJetsCentralHZGMu)
 
-
-    
-
-    #add in isolations with the wrong vetos because Stoyan is retarded
+    #add in isolations with the wrong vetos in case some people are using them
     
     # Charged particle isolation
     process.muPFIsoValueCharged04PFIsoHZGWrongVeto = \
