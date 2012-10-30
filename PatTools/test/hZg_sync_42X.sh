@@ -33,7 +33,7 @@ do
 
   if [[ "${parts[0]}" == *Data* ]]
       then
-      ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=10\
+      ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=100\
 	  outputFile=/scratch/$LOGNAME/hZg_sync42X.$label.${parts[0]}.root dataset=ReReco calibrationTarget=Jan16ReReco #&> ggH_tuplization.log & 
       else
       ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=500\

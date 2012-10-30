@@ -168,9 +168,6 @@ if options.clean:
         process, process.out.outputCommands.value())
     print "Removed %i unrun and %i unused modules!" % (len(unrun), len(unused))
 
-ana = cms.EDAnalyzer("EventContentAnalyzer")
-process.outpath += ana
-
 ################################################################################
 ### DEBUG options ##############################################################
 ################################################################################
