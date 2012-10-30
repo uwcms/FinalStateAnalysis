@@ -13,7 +13,7 @@ from FinalStateAnalysis.PatTools.muons.effective_areas_cff import \
      eas_kt6PFJetsCentralNeutral_th05, eas_kt6PFJetsCentral_th05
 
 ea_list = deepcopy(eas_kt6PFJetsCentralNeutral_th05)
-ea_list.append(deepcopy(eas_kt6PFJetsCentral_th05))
+ea_list += eas_kt6PFJetsCentral_th05
 
 
 patMuonEAEmbedder = cms.EDProducer(
