@@ -160,15 +160,42 @@ def add_hZg_muon_iso_needs(process):
         doRhoFastjet  = cms.bool(True)
         )
 
-    process.rhos_for_hZg_muons = cms.Sequence(
+    process.hZg_muons = cms.Sequence(
         process.pfAllNeutralHadronsAndPhotons+
         process.kt6PFJetsCentralNeutral+
         process.kt6PFJetsCentral)
 
 
-    process.rhos_for_hZg_muons += process.muPFIsoValueGamma03PFIso    
+    
+
+    #add in isolations with the wrong vetos because Stoyan is retarded
+    
+    # Charged particle isolation
+    process.muPFIsoValueCharged04PFIsoHZGWrongVeto = \
+            process.muPFIsoValueChargedAll04PFIso.clone()
+    process.muPFIsoValueNeutral04PFIsoHZGWrongVeto = \
+            process.muPFIsoValueNeutral04PFIso.clone()
+    process.muPFIsoValueGamma04PFIsoHZGWrongVeto = \
+            process.muPFIsoValueGamma04PFIso.clone()
+
+    process.muPFIsoValueCharged04PFIsoHZGWrongVeto.deposits[0].vetos = cms.vstring('')
+    process.muPFIsoValueNeutral04PFIsoHZGWrongVeto.deposits[0].vetos = cms.vstring('Threshold(0.5)')
+    process.muPFIsoValueGamma04PFIsoHZGWrongVeto.deposits[0].vetos = cms.vstring('Threshold(0.5)')
+
+    process.hZg_muons += process.muPFIsoValueCharged04PFIsoHZGWrongVeto
+    process.hZg_muons += process.muPFIsoValueNeutral04PFIsoHZGWrongVeto
+    process.hZg_muons += process.muPFIsoValueGamma04PFIsoHZGWrongVeto
+        
+    process.patMuons.isolationValues.user.append(
+        cms.InputTag("muPFIsoValueCharged04PFIsoHZGWrongVeto"))
+    process.patMuons.isolationValues.user.append(
+        cms.InputTag("muPFIsoValueNeutral04PFIsoHZGWrongVeto"))
+    process.patMuons.isolationValues.user.append(
+        cms.InputTag("muPFIsoValueGamma04PFIsoHZGWrongVeto"))
+
+    process.hZg_muons += process.muPFIsoValueGamma03PFIso    
     
     replace_result = process.patDefaultSequence.replace(
         process.muPFIsoValueGamma03PFIso,        
-        process.rhos_for_hZg_muons
+        process.hZg_muons
         )
