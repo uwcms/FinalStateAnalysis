@@ -146,8 +146,10 @@ process.MEtoEDMConverter = cms.EDProducer(
     deleteAfterCopy = cms.untracked.bool(True)
 )
 
-process.outpath = cms.EndPath(
-    process.MEtoEDMConverter*
+
+
+process.outpath = cms.EndPath(    
+    process.MEtoEDMConverter*    
     process.out)
 process.schedule.append(process.outpath)
 
@@ -164,6 +166,9 @@ if options.clean:
     unrun, unused, killed = cfgcleaner.clean_cruft(
         process, process.out.outputCommands.value())
     print "Removed %i unrun and %i unused modules!" % (len(unrun), len(unused))
+
+ana = cms.EDAnalyzer("EventContentAnalyzer")
+process.outpath += ana
 
 ################################################################################
 ### DEBUG options ##############################################################

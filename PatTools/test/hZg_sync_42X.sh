@@ -20,8 +20,8 @@ echo $label
 #Sum12 Sig : /GluGluToHToZG_M-125_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM
 
 sync_42X=()
-#sync_42X+=('DataMuon;root://cmsxrootd.hep.wisc.edu//store/data/Run2011A/DoubleMu/AOD/16Jan2012-v1/0001/E8EFCAFA-3F44-E111-A9DF-0026189438BC.root')
-sync_42X+=('DataElectron;root://cmsxrootd.hep.wisc.edu//store/data/Run2011A/DoubleElectron/AOD/16Jan2012-v1/0000/FC8A17E2-1644-E111-9276-0018F3D096D4.root')
+sync_42X+=('DataMuon;root://cmsxrootd.hep.wisc.edu//store/data/Run2011A/DoubleMu/AOD/16Jan2012-v1/0001/E8EFCAFA-3F44-E111-A9DF-0026189438BC.root')
+#sync_42X+=('DataElectron;root://cmsxrootd.hep.wisc.edu//store/data/Run2011A/DoubleElectron/AOD/16Jan2012-v1/0000/FC8A17E2-1644-E111-9276-0018F3D096D4.root')
 #sync_42X+=('MCSignalMuo;root://cmsxrootd.hep.wisc.edu//store/mc/Fall11/GluGluToHToZG_M-125_7TeV-powheg-pythia6/AODSIM/PU_S6_START42_V14B-v1/0000/4E7D0288-43BA-E111-B933-0026189438F7.root')
 #sync_42X+=('MCSignalEle;root://cmsxrootd.hep.wisc.edu//store/mc/Fall11/GluGluToHToZG_M-125_7TeV-powheg-pythia6/AODSIM/PU_S6_START42_V14B-v1/0000/4E7D0288-43BA-E111-B933-0026189438F7.root')
 #42X_sync[3]='MCBackground;/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root'
@@ -33,8 +33,8 @@ do
 
   if [[ "${parts[0]}" == *Data* ]]
       then
-      ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=500\
-	  outputFile=/scratch/$LOGNAME/hZg_sync42X.$label.${parts[0]}.root dataset=ReReco calibrationTarget=Jan16ReReco #&> ggH_tuplization.log &     
+      ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=10\
+	  outputFile=/scratch/$LOGNAME/hZg_sync42X.$label.${parts[0]}.root dataset=ReReco calibrationTarget=Jan16ReReco #&> ggH_tuplization.log & 
       else
       ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=500\
 	  outputFile=/scratch/$LOGNAME/hZg_sync42X.$label.${parts[0]}.root dataset=Fall11 #&> ggH_tuplization.log &
