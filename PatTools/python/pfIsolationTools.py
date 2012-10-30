@@ -142,9 +142,9 @@ def add_hZg_iso_needs(process):
         )
 
     process.kt6PFJetsCentralHZGEle = process.kt4PFJets.clone(
-        rParam       = cms.double(0.6),
-        Rho_EtaMax   = cms.double(2.5),
-        doRhoFastjet = cms.bool(True)        
+        rParam = cms.double(0.6),
+        Rho_EtaMax = cms.double(2.5),        
+        doRhoFastjet  = cms.bool(True)
         )
     
     process.kt6PFJetsCentralNeutralHZGMu = process.kt4PFJets.clone(
@@ -167,7 +167,7 @@ def add_hZg_iso_needs(process):
 
     process.hZg_muons = cms.Sequence(
         process.pfAllNeutralHadronsAndPhotons+
-        process.kt6PFJetsCentralHZGEle+
+        process.kt6PFJetsCentralHZGEle
         process.kt6PFJetsCentralNeutralHZGMu+
         process.kt6PFJetsCentralHZGMu)
 
