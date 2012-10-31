@@ -26,9 +26,12 @@ namespace {
     edm::Ptr<reco::Vertex> dummyVertexPtr;
     edm::PtrVector<reco::Vertex> dummyVertexPtrVector;
 
+    edm::Ptr<pat::Photon> dummyPhotonPtr;
+
     edm::RefProd<pat::ElectronCollection> dummyElectronRefProd;
     edm::RefProd<pat::MuonCollection> dummyMuonRefProd;
     edm::RefProd<pat::TauCollection> dummyTauRefProd;
+    edm::RefProd<pat::PhotonCollection> dummyPhotonRefProd;
     edm::RefProd<pat::JetCollection> dummyJetRefProd;
 
     std::map<std::string, float> dummyFloatMap;

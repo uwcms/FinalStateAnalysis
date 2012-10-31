@@ -91,7 +91,7 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
 
     process.photonsForFinalStates = cms.EDFilter(
         "PATPhotonRefSelector",
-        src = cms.InputTag(esrc),
+        src = cms.InputTag(phosrc),
         cut = cms.string('abs(eta) < 2.5 & pt > 10'),
         filter = cms.bool(False),
     )

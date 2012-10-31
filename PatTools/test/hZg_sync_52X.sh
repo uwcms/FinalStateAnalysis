@@ -35,7 +35,7 @@ do
 
   if [[ "${parts[0]}" == *Data* ]]
       then
-      ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
+      ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=100\
 	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=ReReco\
 	  calibrationTarget=2012Jul13ReReco #&> ${part[0]}_sync.log  & 
       else

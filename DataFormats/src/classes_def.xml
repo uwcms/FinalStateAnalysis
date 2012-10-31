@@ -3,9 +3,12 @@
   <class name="edm::Ptr<reco::Vertex >"/>
   <class name="edm::PtrVector<reco::Vertex >"/>
 
+  <class name="edm::Ptr<pat::Photon>"/>
+
   <class name="edm::RefProd<pat::ElectronCollection>"/>
   <class name="edm::RefProd<pat::MuonCollection>"/>
   <class name="edm::RefProd<pat::TauCollection>"/>
+  <class name="edm::RefProd<pat::PhotonCollection>"/>
   <class name="edm::RefProd<pat::JetCollection>"/>
 
   <class name="std::map<std::string, float>"/>
