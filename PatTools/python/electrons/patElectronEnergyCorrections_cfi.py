@@ -37,6 +37,15 @@ calibration_versions = cms.VPSet(
              )
     )
 
+# available calibration targets:
+# 2012 Data : 2012Jul13ReReco, Summer12_DR53X_HCP2012,
+#             Prompt, ReReco, ICHEP2012
+# 2012 MC   : Summer12, Summer12_DR53X_HCP2012
+#
+# 2011 Data : Jan16ReReco
+# 2011 MC   : Summer11, Fall11
+
+
 patElectronEnergyCorrections = cms.EDProducer(
     "PATElectronEnergyCorrectionEmbedder",
     available_regressions  = regression_versions,
