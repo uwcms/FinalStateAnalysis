@@ -23,8 +23,8 @@ namespace pattools {
 
     for( ; i != e; ++i) {
       std::string name = i->getParameter<std::string>("name");
-      int ea_target    = i->getParameter<int>("effective_area_target");
-      int ea_type      = i->getParameter<int>("effective_area_type");
+      int ea_target    = i->getParameter<int>("ea_target");
+      int ea_type      = i->getParameter<int>("ea_type");
             
       ea_info temp;
       temp.ea_target = ea_target;
