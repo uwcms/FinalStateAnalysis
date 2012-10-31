@@ -360,7 +360,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
         'electrons' : 'cleanPatElectrons',
         'muons' : 'cleanPatMuons',
         'taus' : 'cleanPatTaus',
-        'jets' : 'selectedPatJets',
+        'photons' : 'cleanPatPhotons',
+        'jets' : 'selectedPatJets',        
         'met' : final_met_collection,
     }
 

@@ -199,8 +199,8 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
       *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo,
       evt.isRealData(), puScenario_,
-      electronRefProd, muonRefProd, tauRefProd, jetRefProd, pfRefProd,
-      trackRefProd, gsftrackRefProd);
+      electronRefProd, muonRefProd, tauRefProd, jetRefProd,
+      phoRefProd, pfRefProd, trackRefProd, gsftrackRefProd);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
