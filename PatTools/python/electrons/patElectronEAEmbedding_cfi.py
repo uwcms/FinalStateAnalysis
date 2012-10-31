@@ -9,7 +9,7 @@
 import FWCore.ParameterSet.Config as cms
 from copy import deepcopy
 
-from FinalStateAnalysis.PatTools.electron.effective_areas_cff import \
+from FinalStateAnalysis.PatTools.electrons.effective_areas_cff import \
      available_eas
 
 ea_list = deepcopy(available_eas)

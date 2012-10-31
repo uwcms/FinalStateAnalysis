@@ -29,6 +29,8 @@ DeltaBeta	 pfPileUpAllChargedParticles	 0.01	 0.5
 
 import FWCore.ParameterSet.Config as cms
 
+from CommonTools.ParticleFlow.Tools.pfIsolation import setupPFElectronIso
+
 def setup_h2tau_iso(process):
     print "Building H2Tau custom lepton isolations"
 
@@ -165,7 +167,7 @@ def add_hZg_iso_needs(process):
         doRhoFastjet  = cms.bool(True)
         )
 
-    process.hZg_muons = cms.Sequence(
+    process.hzg_isolations = cms.Sequence(
         process.pfAllNeutralHadronsAndPhotons+
         process.kt6PFJetsCentralHZGEle+
         process.kt6PFJetsCentralNeutralHZGMu+
@@ -181,13 +183,16 @@ def add_hZg_iso_needs(process):
     process.muPFIsoValueGamma04PFIsoHZGWrongVeto = \
             process.muPFIsoValueGamma04PFIso.clone()
 
-    process.muPFIsoValueCharged04PFIsoHZGWrongVeto.deposits[0].vetos = cms.vstring('')
-    process.muPFIsoValueNeutral04PFIsoHZGWrongVeto.deposits[0].vetos = cms.vstring('Threshold(0.5)')
-    process.muPFIsoValueGamma04PFIsoHZGWrongVeto.deposits[0].vetos = cms.vstring('Threshold(0.5)')
+    process.muPFIsoValueCharged04PFIsoHZGWrongVeto.deposits[0].vetos = \
+            cms.vstring()
+    process.muPFIsoValueNeutral04PFIsoHZGWrongVeto.deposits[0].vetos = \
+            cms.vstring('Threshold(0.5)')
+    process.muPFIsoValueGamma04PFIsoHZGWrongVeto.deposits[0].vetos = \
+            cms.vstring('Threshold(0.5)')
 
-    process.hZg_muons += process.muPFIsoValueCharged04PFIsoHZGWrongVeto
-    process.hZg_muons += process.muPFIsoValueNeutral04PFIsoHZGWrongVeto
-    process.hZg_muons += process.muPFIsoValueGamma04PFIsoHZGWrongVeto
+    process.hzg_isolations += process.muPFIsoValueCharged04PFIsoHZGWrongVeto
+    process.hzg_isolations += process.muPFIsoValueNeutral04PFIsoHZGWrongVeto
+    process.hzg_isolations += process.muPFIsoValueGamma04PFIsoHZGWrongVeto
         
     process.patMuons.isolationValues.user.append(
         cms.InputTag("muPFIsoValueCharged04PFIsoHZGWrongVeto"))
@@ -196,9 +201,41 @@ def add_hZg_iso_needs(process):
     process.patMuons.isolationValues.user.append(
         cms.InputTag("muPFIsoValueGamma04PFIsoHZGWrongVeto"))
 
-    process.hZg_muons += process.muPFIsoValueGamma03PFIso    
+    process.hzg_isolations += process.muPFIsoValueGamma03PFIso    
+
+    #take Egamma POG recipe 
+    process.eleIsoSequenceHZG = setupPFElectronIso(process,
+                                                   'gsfElectrons',
+                                                   'PFIsoEGTwiki')
+    process.eleIsoSequenceHZG += process.patElectrons
+
+    #stick iso sequence infront of patElectron producer
+    process.patDefaultSequence.replace(process.patElectrons,
+                                       process.eleIsoSequenceHZG)
+
+    process.patElectrons.isoDeposits.pfChargedHadrons = \
+        cms.InputTag('elPFIsoDepositChargedPFIsoEGTwiki')
+    process.patElectrons.isoDeposits.pfNeutralHadrons = \
+        cms.InputTag('elPFIsoDepositNeutralPFIsoEGTwiki')
+    process.patElectrons.isoDeposits.pfPhotons = \
+        cms.InputTag('elPFIsoDepositGammaPFIsoEGTwiki')
+
+    process.patElectrons.isolationValues.pfChargedHadrons = \
+        cms.InputTag('elPFIsoValueCharged04PFIdPFIsoEGTwiki')
+    process.patElectrons.isolationValues.pfNeutralHadrons = \
+        cms.InputTag('elPFIsoValueNeutral04PFIdPFIsoEGTwiki')
+    process.patElectrons.isolationValues.pfPhotons = \
+        cms.InputTag('elPFIsoValueGamma04PFIdPFIsoEGTwiki')
+
+    process.patElectrons.isolationValuesNoPFId.pfChargedHadrons = \
+        cms.InputTag('elPFIsoValueCharged04NoPFIdPFIsoEGTwiki')
+    process.patElectrons.isolationValuesNoPFId.pfNeutralHadrons = \
+        cms.InputTag('elPFIsoValueNeutral04NoPFIdPFIsoEGTwiki')
+    process.patElectrons.isolationValuesNoPFId.pfPhotons = \
+        cms.InputTag('elPFIsoValueGamma04NoPFIdPFIsoEGTwiki')
+    
     
     replace_result = process.patDefaultSequence.replace(
         process.muPFIsoValueGamma03PFIso,        
-        process.hZg_muons
+        process.hzg_isolations
         )
