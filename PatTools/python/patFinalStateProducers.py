@@ -47,6 +47,7 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
     tausrc = collections['taus']
     jetsrc = collections['jets']
     metsrc = collections['met']
+    phosrc = collections['photons']
 
     # Build the PATFinalStateEventObject
     if buildFSAEvent == True:
@@ -55,6 +56,7 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
         process.patFinalStateEventProducer.muonSrc = cms.InputTag(muonsrc)
         process.patFinalStateEventProducer.tauSrc = cms.InputTag(tausrc)
         process.patFinalStateEventProducer.jetSrc = cms.InputTag(jetsrc)
+        process.patFinalStateEventProducer.phoSrc = cms.InputTag(phosrc)
         process.patFinalStateEventProducer.metSrc = metsrc
         process.patFinalStateEventProducer.puTag = cms.string(puTag)
         sequence += process.patFinalStateEventProducer
