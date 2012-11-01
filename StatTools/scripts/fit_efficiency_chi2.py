@@ -52,6 +52,8 @@ if __name__ == "__main__":
                         ' If variable binning is used, the numbers should '
                         ' be specified as a comma separated list w/o spaces.')
 
+    parser.add_argument('--xaxisname', metavar='variable', type=str, default='', help='axis name (variable used for fitting)')
+
     plot_grp = parser.add_argument_group('plotting')
     plot_grp.add_argument('--plot', action='store_true',
                           help='Plot fit result')
@@ -63,6 +65,7 @@ if __name__ == "__main__":
     plot_grp.add_argument('--max', type=float, default=1,
                           help='y-axis maximum')
     plot_grp.add_argument('--grid', action='store_true', help="Draw grid")
+    plot_grp.add_argument('--noFit', action='store_true', help="Does not perform fitting")
 
     args = parser.parse_args(args[1:])
 
@@ -123,7 +126,7 @@ if __name__ == "__main__":
         y.setVal(yval)
         x.setError(xup)
         #x.setError(1)
-        y.setAsymError(-ydown, yup)
+        y.setAsymError(-ydown, yup) 
         xy_data.add(ROOT.RooArgSet(x, y))
 
 
@@ -142,20 +145,22 @@ if __name__ == "__main__":
     #import pdb; pdb.set_trace()
 
     log.info("Doing fit!")
-    fit_result = function.chi2FitTo(
-        xy_data,
-        ROOT.RooFit.YVar(y),
-        # Integrate fit function across x-error width, don't just use center
-        # This doesn't work... I don't know why.
-        ROOT.RooFit.Integrate(False),
-        #ROOT.RooFit.Integrate(True),
-        ROOT.RooFit.Save(True),
-        ROOT.RooFit.PrintLevel(-1),
-    )
+    print function
+    if not args.noFit:
+        fit_result = function.chi2FitTo(
+            xy_data,
+            ROOT.RooFit.YVar(y),
+            # Integrate fit function across x-error width, don't just use center
+            # This doesn't work... I don't know why.
+            ROOT.RooFit.Integrate(False),
+            #ROOT.RooFit.Integrate(True),
+            ROOT.RooFit.Save(True),
+            ROOT.RooFit.PrintLevel(-1),
+            )
 
-    log.info("Fit result status: %i", fit_result.status())
-    fit_result.Print()
-    ws_import(fit_result)
+        log.info("Fit result status: %i", fit_result.status())
+        fit_result.Print()
+        ws_import(fit_result)
     log.info("Saving workspace in %s", args.output)
     ws.writeToFile(args.output)
 
@@ -165,16 +170,24 @@ if __name__ == "__main__":
             frame = None
             if args.xrange:
                 frame = x.frame(ROOT.RooFit.Title("Efficiency"),
-                                ROOT.RooFit.Range(args.xrange[0], args.xrange[1]))
+                                ROOT.RooFit.Range(args.xrange[0], x.getMax()))
             else:
                 frame = x.frame(ROOT.RooFit.Title("Efficiency"))
 
-            function.plotOn(
-                frame,
-                ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
-                ROOT.RooFit.VisualizeError(fit_result, 1.0),
-                ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
-            )
+            if not args.noFit:
+                function.plotOn(
+                    frame,
+                    ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+                    ROOT.RooFit.VisualizeError(fit_result, 1.0),
+                    ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
+                    )
+            else:
+                function.plotOn(
+                    frame,
+                    ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+                    ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
+                    )
+                
             function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kAzure))
             xy_data.plotOnXY(
                 frame,
@@ -183,7 +196,7 @@ if __name__ == "__main__":
             frame.SetMinimum(args.min)
             frame.SetMaximum(args.max)
             frame.GetYaxis().SetTitle("Efficiency")
-            frame.GetXaxis().SetTitle(pass_histo.GetTitle())
+            frame.GetXaxis().SetTitle(args.xaxisname if args.xaxisname else pass_histo.GetTitle())
             frame.Draw()
             canvas.SetLogy(True)
             if args.grid:
