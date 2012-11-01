@@ -482,6 +482,14 @@ std::vector<const reco::Candidate*> PATFinalState::vetoJets(
       dR, filter);
 }
 
+std::vector<const reco::Candidate*> PATFinalState::vetoPhotons(
+    double dR, const std::string& filter) const {
+  return getVetoObjects(
+      daughters(),
+      ptrizeCollection(evt()->photons()),
+      dR, filter);
+}
+
 std::vector<const reco::Candidate*> PATFinalState::overlapMuons(
     int i, double dR, const std::string& filter) const {
   return getOverlapObjects(
@@ -511,6 +519,14 @@ std::vector<const reco::Candidate*> PATFinalState::overlapJets(
   return getOverlapObjects(
       *daughter(i),
       ptrizeCollection(evt()->jets()),
+      dR, filter);
+}
+
+std::vector<const reco::Candidate*> PATFinalState::overlapPhotons(
+    int i, double dR, const std::string& filter) const {
+  return getOverlapObjects(
+      *daughter(i),
+      ptrizeCollection(evt()->photons()),
       dR, filter);
 }
 
@@ -598,4 +614,8 @@ edm::Ptr<pat::Electron> PATFinalState::daughterAsElectron(size_t i) const {
 }
 edm::Ptr<pat::Jet> PATFinalState::daughterAsJet(size_t i) const {
   return daughterAs<pat::Jet>(i);
+}
+
+edm::Ptr<pat::Photon> PATFinalState::daughterAsPhoton(size_t i) const {
+  return daughterAs<pat::Photon>(i);
 }

@@ -8,9 +8,12 @@ import PhysicsTools.PatAlgos.tools.coreTools as coreTools
 import PhysicsTools.PatAlgos.tools.pfTools as pfTools
 
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
-from FinalStateAnalysis.Utilities.version import cmssw_major_version
-from FinalStateAnalysis.PatTools.pfIsolationTools import setup_h2tau_iso
+from FinalStateAnalysis.Utilities.version import cmssw_major_version,\
+     cmssw_minor_version
+from FinalStateAnalysis.PatTools.pfIsolationTools import setup_h2tau_iso,\
+     add_hZg_iso_needs
 from FinalStateAnalysis.PatTools.patFinalStateProducers import produce_final_states
+from FinalStateAnalysis.PatTools.fsaRandomSeeds import add_fsa_random_seeds
 
 def configurePatTuple(process, isMC=True, **kwargs):
 
@@ -34,6 +37,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_kt6PFJetsForRhoComputationVoronoi_rho_*',
         '*_kt6PFJetsForIso_rho_*',
         '*_kt6PFJets_rho_*',
+        '*_kt6PFJetsCentralHZGEle_rho_*',
+        '*_kt6PFJetsCentralHZGMu_rho_*',
+        '*_kt6PFJetsCentralNeutralHZGMu_rho_*',
+        '*_kt6PFJetsCentral_rho_*',
         '*_kt6PFJetsCentralNeutral_rho_*', #for zz muons
         # for Zmumu -> embedded samples
         '*_generator_weight_*', # 2k11
@@ -76,7 +83,15 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Standard services
     process.load('Configuration.StandardSequences.Services_cff')
-    process.load('Configuration.StandardSequences.GeometryIdeal_cff')
+    # tack on seeds for FSA PATTuple modules
+    add_fsa_random_seeds(process)
+    
+    
+    if cmssw_major_version() == 5 and cmssw_minor_version() >= 3: 
+        process.load('Configuration.Geometry.GeometryIdeal_cff')
+    else:
+        process.load('Configuration.StandardSequences.GeometryIdeal_cff')
+        
     process.load('Configuration.StandardSequences.MagneticField_cff')
     process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
@@ -130,6 +145,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     pfTools.usePFIso(process)
     # Setup H2Tau custom iso definitions
     setup_h2tau_iso(process)
+    # Setup hZg custom iso definitions
+    add_hZg_iso_needs(process)
+    
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
     process.elPFIsoValueGamma04NoPFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
@@ -246,6 +264,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # We have to do the pat Jets before the pat electrons since we embed them
     process.customizeElectronSequence.insert(0, process.selectedPatJets)
     process.cleanPatElectrons.src = final_electron_collection
+    #setup the energy regression for the specific dataset
+    process.patElectronEnergyCorrections.isMC  = cms.bool(bool(isMC))
+    process.patElectronEnergyCorrections.isAOD = \
+                                               cms.bool(bool(kwargs['isAOD']))
+    process.patElectronEnergyCorrections.dataSet = \
+                                     cms.string(kwargs['calibrationTarget'])
 
     process.load("FinalStateAnalysis.PatTools.patMuonProduction_cff")
     final_muon_collection = chain_sequence(
@@ -270,6 +294,16 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.cleanPatTaus.preselection = 'abs(eta) < 2.5 & pt > 17'
     # Don't apply any "final" cut
     process.cleanPatTaus.finalCut = ''
+
+    # Setup pat::Photon Production
+    process.load("FinalStateAnalysis.PatTools.patPhotonProduction_cff")
+    final_photon_collection = chain_sequence(process.customizePhotonSequence,
+                                             "selectedPatPhotons")
+    #inject photons into pat sequence
+    process.customizePhotonSequence.insert(0,process.selectedPatPhotons)
+    process.patDefaultSequence.replace(process.selectedPatPhotons,
+                                       process.customizePhotonSequence)
+    process.cleanPatPhotons.src = final_photon_collection
 
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
@@ -308,6 +342,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*_cleanPatTaus_*_*')
     output_commands.append('*_cleanPatElectrons_*_*')
     output_commands.append('*_cleanPatMuons_*_*')
+    output_commands.append('*_cleanPatPhotons_*_*')
     output_commands.append('*_%s_*_*' % final_met_collection.value())
 
     trigtools.switchOnTrigger(process)
@@ -329,7 +364,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
         'electrons' : 'cleanPatElectrons',
         'muons' : 'cleanPatMuons',
         'taus' : 'cleanPatTaus',
-        'jets' : 'selectedPatJets',
+        'photons' : 'cleanPatPhotons',
+        'jets' : 'selectedPatJets',        
         'met' : final_met_collection,
     }
 

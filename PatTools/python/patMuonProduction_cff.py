@@ -15,10 +15,19 @@ if cmssw_major_version() == 5:
 	customizeMuonSequence += patMuonZZ2012RhoEmbedding
 
 from FinalStateAnalysis.PatTools.muons.patMuonIdEmbedding_cfi import \
-        patMuonsEmbedWWId, patMuonsEmbedWWId2011, patVBTFMuonMatch
+        patMuonsEmbedWWId, patMuonsEmbedWWId2011, patVBTFMuonMatch, \
+	patMuonsEmbedHZG2011, patMuonsEmbedHZG2012
+
 customizeMuonSequence += patMuonsEmbedWWId
 customizeMuonSequence += patMuonsEmbedWWId2011
 customizeMuonSequence += patVBTFMuonMatch
+customizeMuonSequence += patMuonsEmbedHZG2011
+customizeMuonSequence += patMuonsEmbedHZG2012
+
+from FinalStateAnalysis.PatTools.muons.patMuonEAEmbedding_cfi import \
+     patMuonEAEmbedder
+
+customizeMuonSequence += patMuonEAEmbedder
 
 from FinalStateAnalysis.PatTools.muons.patMuonPFMuonEmbedding_cfi import \
         patMuonPFMuonEmbedding

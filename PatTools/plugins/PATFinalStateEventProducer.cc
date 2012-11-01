@@ -43,6 +43,7 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     edm::InputTag jetSrc_;
     edm::InputTag muonSrc_;
     edm::InputTag tauSrc_;
+    edm::InputTag phoSrc_;
 
     // Information about PFLOW
     edm::InputTag pfSrc_;
@@ -78,6 +79,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   muonSrc_ = pset.getParameter<edm::InputTag>("muonSrc");
   tauSrc_ = pset.getParameter<edm::InputTag>("tauSrc");
   jetSrc_ = pset.getParameter<edm::InputTag>("jetSrc");
+  phoSrc_ = pset.getParameter<edm::InputTag>("phoSrc");
 
   pfSrc_ = pset.getParameter<edm::InputTag>("pfSrc");
 
@@ -123,6 +125,10 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle<pat::JetCollection> jets;
   evt.getByLabel(jetSrc_, jets);
   edm::RefProd<pat::JetCollection> jetRefProd(jets);
+
+  edm::Handle<pat::PhotonCollection> phos;
+  evt.getByLabel(phoSrc_, phos);
+  edm::RefProd<pat::PhotonCollection> phoRefProd(phos);
 
   edm::Handle<pat::TauCollection> taus;
   evt.getByLabel(tauSrc_, taus);
@@ -193,8 +199,8 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
       *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo,
       evt.isRealData(), puScenario_,
-      electronRefProd, muonRefProd, tauRefProd, jetRefProd, pfRefProd,
-      trackRefProd, gsftrackRefProd);
+      electronRefProd, muonRefProd, tauRefProd, jetRefProd,
+      phoRefProd, pfRefProd, trackRefProd, gsftrackRefProd);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
