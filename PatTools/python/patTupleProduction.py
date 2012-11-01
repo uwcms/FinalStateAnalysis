@@ -13,6 +13,7 @@ from FinalStateAnalysis.Utilities.version import cmssw_major_version,\
 from FinalStateAnalysis.PatTools.pfIsolationTools import setup_h2tau_iso,\
      add_hZg_iso_needs
 from FinalStateAnalysis.PatTools.patFinalStateProducers import produce_final_states
+from FinalStateAnalysis.PatTools.fsaRandomSeeds import add_fsa_random_seeds
 
 def configurePatTuple(process, isMC=True, **kwargs):
 
@@ -82,6 +83,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Standard services
     process.load('Configuration.StandardSequences.Services_cff')
+    # tack on seeds for FSA PATTuple modules
+    add_fsa_random_seeds(process)
+    
     
     if cmssw_major_version() == 5 and cmssw_minor_version() >= 3: 
         process.load('Configuration.Geometry.GeometryIdeal_cff')
