@@ -1,5 +1,5 @@
 /*
- * Embed PF Isolation for photons into the pat::Photon object
+ * Embed the rochester corrections and associated errors in pat::Muons
  *
  * Author: Lindsey A. Gray, UW Madison
  *

@@ -1,21 +1,15 @@
-/** \class PATElectronEnergyCorrection
+/** \class PATMuonRochesterCorrection
  *
- * Auxiliary class to encapsulate the prescription
- * for applying the regression-based electron energy
- * corrections.
- * Constructed by giving a list of datasets and 
- * correction types defined in 
- * https://twiki.cern.ch/twiki/bin/view/CMS/EgammaElectronEnergyScale.
- * The user may then apply any one of the given 
- * corrections to an input electron.
+ * This class wrangles the Rochester Corrections
+ * into a usable state within CMSSW for embedding.
  *
  * \author Lindsey Gray, UW Madison
  *
  *
  */
 
-#ifndef __PATELECTRONENERGYCORRECTION_H__
-#define __PATELECTRONENERGYCORRECTION_H__
+#ifndef __PATMUONROCHESTERCORRECTION_H__
+#define __PATMUONROCHESTERCORRECTION_H__
 
 #include <map>
 #include <string>
