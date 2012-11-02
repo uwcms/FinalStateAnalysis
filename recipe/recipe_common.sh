@@ -51,8 +51,7 @@ EOF
   # apply patch so we can configure the passing mask for the PassWP function
   patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaAnalysisTools_configpatch.patch
 
-  # Add Electron ID MVA
-  cvs co -r V00-00-08 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
+  # Add Electron ID MVA  
   pushd EGamma/EGammaAnalysisTools/data
   cat download.url | xargs wget
   popd
