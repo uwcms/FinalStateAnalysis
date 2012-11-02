@@ -1,10 +1,17 @@
-# Rules for extracting meta information (#events, lumis) from ntuples
+# meta.rake
+# 
+# Finds lists of datafiles (starting from a directory)
+# and computes meta data: # of events, effective/real int. lumi
 
 namespace :meta do
   # How to generate the inputs
   desc "Query lists of ntuple .root files"
   task :getinputs, [:jobid, :source] do |t, args|
-    sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid}"
+    if ENV.fetch('discovercheck', "0") == "1"
+      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --force"
+    else
+      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid}"
+    end
   end
 
   def make_meta_tasks(sample, ntuple, sqrts)
@@ -25,19 +32,27 @@ namespace :meta do
       end
       # Run lumicalc on the mask
       file sample + '.lumicalc.csv' => sample + '.lumimask.json' do |t|
-        sh "pixelLumiCalc.py overview -i #{t.prerequisites} -o #{t.name}"
+        #sh "pixelLumiCalc.py overview -i #{t.prerequisites} -o #{t.name}"
+        sh "lumiCalc2.py overview -i #{t.prerequisites} -o #{t.name}"
       end
       # Get the PU distribution
       file sample + '.pu.root' => sample + '.lumimask.json' do |t| 
         pu_file = ''
+        maxbin = 50
+        nbins = 500
+        # Minbias xsection
+        minbias = 68000
         if sqrts == "8" then 
           pu_file = ENV['pu2012JSON']
+          maxbin = 60
+          nbins = 600
+          minbias = 69400
         end
         if sqrts == "7" then
           pu_file = ENV["pu2011JSON"]
         end
         # Find the newest PU json file
-        sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec 69300 --maxPileupBin 300 --numPileupBins 300 #{t.name}"
+        sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t.name}"
       end
       # Put the lumicalc result in a readable format.  Make it dependent 
       # on the PU .root file as well, so it gets built.

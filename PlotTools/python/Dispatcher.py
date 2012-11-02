@@ -37,6 +37,13 @@ class MegaDispatcher(object):
         # Figure out how many inputs to chain together
         self.nchain=nchain
 
+    def build_workers(self, input_q, result_q):
+        workers = [
+            MegaWorker(input_q, result_q, self.treename, self.selector)
+            for x in range(self.nworkers)
+        ]
+        return workers
+
     def run(self):
         input_q = multiprocessing.Queue()
         # add the files to be processed
@@ -51,11 +58,7 @@ class MegaDispatcher(object):
         everything_will_turn_out_okay = True
 
         try:
-            workers = [
-                MegaWorker(input_q, result_q, self.treename, self.selector)
-                for x in range(self.nworkers)
-            ]
-
+            workers = self.build_workers(input_q, result_q)
 
             # Start workers
             for worker in workers:

@@ -14,10 +14,14 @@ The embedded pat::Jets are produced w/ label: patJetsPUID
 '''
 
 import FWCore.ParameterSet.Config as cms
+import sys
 
-from CMGTools.External.pujetidsequence_cff import \
-        puJetIdSqeuence, puJetId, puJetMva # sic
-
+try:
+    from CMGTools.External.pujetidsequence_cff import \
+            puJetIdSqeuence, puJetId, puJetMva # sic
+except ImportError:
+    sys.stderr.write(__file__ +
+                     ": PU Jet ID dependency not installed, will not be run!\n")
 
 # Module to embed the IDs
 patJetsPUID = cms.EDProducer(

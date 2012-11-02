@@ -160,6 +160,7 @@ setup(ext_modules=[Extension(
     cmdclass={{'build_ext': build_ext}})
 '''
 
+
 def get_branches(tree):
     ''' Get the list of branches in a tree
 
@@ -171,9 +172,9 @@ def get_branches(tree):
 
     '''
     type_map = {
-        'F' : 'float',
-        'I' : 'int',
-        'D' : 'double'
+        'F': 'float',
+        'I': 'int',
+        'D': 'double'
     }
 
     for branch in tree.GetListOfBranches():
@@ -186,6 +187,7 @@ def get_branches(tree):
             raise TypeError(
                 "I don't understand branch type: %s" % type)
         yield name, type_map[type]
+
 
 def make_pyx(name, tree):
     ''' Generate the content of a pyx file for this Tree '''
@@ -212,8 +214,12 @@ def make_pyx(name, tree):
 '''
         #print "making {branchname}"
         self.{branchname}_branch = the_tree.GetBranch("{branchname}")
-        self.{branchname}_branch.SetAddress(<void*>&self.{branchname}_value)
-'''.format(branchname=branch_name, branchtype=branch_type)
+        if not self.{branchname}_branch:
+            print "{TreeName}: Expected branch {branchname} does not exist!" \
+               " It will crash if you try and use it!"
+        else:
+            self.{branchname}_branch.SetAddress(<void*>&self.{branchname}_value)
+'''.format(branchname=branch_name, branchtype=branch_type, TreeName=name)
         )
         # Define a property for each branch.
         # When the attribute is gotten, it will call
@@ -230,10 +236,10 @@ def make_pyx(name, tree):
 '''.format(branchname=branch_name, branchtype=branch_type)
         )
     return _pyx_template.format(
-        TreeName = name,
-        branchblock = branchblock.getvalue(),
-        setbranchesblock = setbranchesblock.getvalue(),
-        getbranchesblock = getbranchesblock.getvalue()
+        TreeName=name,
+        branchblock=branchblock.getvalue(),
+        setbranchesblock=setbranchesblock.getvalue(),
+        getbranchesblock=getbranchesblock.getvalue()
     )
 
 if __name__ == "__main__":
@@ -261,5 +267,4 @@ if __name__ == "__main__":
 
     with open('%s_setup.py' % args.ClassName, 'w') as setup_file:
         setup_file.write(_setup_template.format(
-            incdir=incdir, libdir=libdir, classname = args.ClassName))
-
+            incdir=incdir, libdir=libdir, classname=args.ClassName))

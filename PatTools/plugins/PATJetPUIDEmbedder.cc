@@ -12,6 +12,10 @@
  * =====================================================================================
  */
 
+// Check if PAT tuple production is enabled - we can skip otherwise.
+#include "FinalStateAnalysis/PatTools/interface/PATProductionFlag.h"
+#ifdef ENABLE_PAT_PROD
+
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
@@ -103,3 +107,5 @@ void PATJetPUIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 DEFINE_FWK_MODULE(PATJetPUIDEmbedder);
+
+#endif // PAT Production flag

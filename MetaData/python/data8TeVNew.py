@@ -14,7 +14,10 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
-from datacommon import square, cube, quad, picobarns, br_w_leptons, query_cli
+from datacommon import square, cube, quad, picobarns, \
+        br_w_leptons, br_z_leptons, query_cli
+
+from data8TeV import datadefs as datadefs52
 
 # Figure this out later.
 data_name_map = {}
@@ -310,6 +313,16 @@ for mass in range(110, 150, 10):
       'x_sec' : -999,
       }
 
+# We use the same name for the 53X lepdecay only samples (sigh)
+datadefs['VH_H2Tau_M-110'] = {}
+datadefs['VH_H2Tau_M-120'] = {}
+datadefs['VH_H2Tau_M-130'] = {}
+datadefs['VH_H2Tau_M-140'] = {}
+
+datadefs['VH_H2Tau_M-110']['x_sec'] = (1.060*br_w_leptons + 0.5869*br_z_leptons + 0.1887*square(br_w_leptons))*7.95E-02
+datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966*br_w_leptons + 0.4483*br_z_leptons + 0.1470*square(br_w_leptons))*7.04E-02
+datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095*br_w_leptons + 0.3473*br_z_leptons + 0.1157*square(br_w_leptons))*5.48E-02
+datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713*br_w_leptons + 0.2728*br_z_leptons + 0.09207*square(br_w_leptons))*3.54E-02
 
 # Add data files
 
@@ -325,49 +338,49 @@ def build_data_set(pd, analyses):
    subsample_dict = {
       'data_%s_Run2012A_13Jul2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012A-13Jul2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
       'firstRun' : 190456,
       'lastRun' : 193621,
       'analyses' : analyses,
       },
       'data_%s_Run2012B_13Jul2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-13Jul2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
       'firstRun' : 193834,
       'lastRun' : 196531,
       'analyses' : analyses,
       },
       'data_%s_Run2012C_PromptReco_v2_Run198934_201264' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-203002_8TeV_PromptReco_Collisions12_JSON_v2.txt",
       'firstRun' : 198934,
       'lastRun' : 201264,
       'analyses' : analyses,
       },
       'data_%s_Run2012C_PromptReco_v2_Run201265_203755' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-203002_8TeV_PromptReco_Collisions12_JSON_v2.txt",
       'firstRun' : 201265,
       'lastRun' : 203755,
       'analyses' : analyses,
       },
       'data_%s_Run2012A_recover_06Aug2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012A-recover-06Aug2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190782-190949_8TeV_06Aug2012ReReco_Collisions12_JSON.txt",
       'firstRun' : 190456, #Not 100% sure about these.. IAR 28.Sep.2012
       'lastRun' : 193621,
       'analyses' : analyses,
       },
       'data_%s_Run2012C_PromptReco_v1' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-203002_8TeV_PromptReco_Collisions12_JSON_v2.txt",
       'firstRun' : 19770,
       'lastRun' : 198913,
       'analyses' : analyses,
       },
       'data_%s_Run2012C_24Aug2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012C-24Aug2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_198022-198523_8TeV_24Aug2012ReReco_Collisions12_JSON.txt",
       'firstRun' : 198022,
       'lastRun' : 198523,
       'analyses' : analyses,

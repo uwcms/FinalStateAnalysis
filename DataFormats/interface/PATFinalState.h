@@ -25,6 +25,7 @@ namespace pat {
 
 namespace reco {
   class Vertex;
+  class GenParticle;
 }
 
 typedef pat::PATObject<reco::LeafCandidate> PATLeafCandidate;
@@ -250,6 +251,11 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Get the specified overlaps for the ith daughter
     virtual const reco::CandidatePtrVector& daughterOverlaps(
         size_t i, const std::string& label) const = 0;
+
+    /// Get the specified overlaps for the ith daughter
+    const reco::GenParticleRef getDaughterGenParticle(size_t i) const;
+    const reco::GenParticleRef getDaughterGenParticleMotherSmart(size_t i) const;
+    const bool comesFromHiggs(size_t i) const;
 
   private:
     edm::Ptr<PATFinalStateEvent> event_;

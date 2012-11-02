@@ -11,6 +11,7 @@ import os
 import rootpy.plotting.views as views
 import rootpy.plotting as plotting
 from FinalStateAnalysis.MetaData.data_views import data_views
+from FinalStateAnalysis.PlotTools.RebinView import RebinView
 import ROOT
 
 _original_draw = plotting.Legend.Draw
@@ -55,8 +56,7 @@ class Plotter(object):
     @staticmethod
     def rebin_view(x, rebin):
         ''' Make a view which rebins histograms '''
-        rebinner = lambda x: x.Rebin(rebin)
-        output = views.FunctorView(x, rebinner)
+        output = RebinView(x, rebin)
         return output
 
     def get_view(self, sample_pattern, key_name='view'):

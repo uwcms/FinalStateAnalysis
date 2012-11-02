@@ -14,7 +14,7 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
-from datacommon import square, cube, quad, picobarns, br_w_leptons, query_cli
+from datacommon import square, cube, quad, picobarns, br_w_leptons, br_z_leptons, query_cli
 
 # Figure this out later.
 data_name_map = {}
@@ -293,11 +293,16 @@ for mass in [110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160]:
         datadefs['VH_H2Tau_M-110']['datasetpath'] = datadefs['VH_H2Tau_M-110']['datasetpath'].replace(
             'V9-v2', 'V9-v3')
 
+datadefs['VH_H2Tau_M-110']['x_sec'] = (1.060*br_w_leptons + 0.5869*br_z_leptons + 0.1887*square(br_w_leptons))*7.95E-02
+datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966*br_w_leptons + 0.4483*br_z_leptons + 0.1470*square(br_w_leptons))*7.04E-02
+datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095*br_w_leptons + 0.3473*br_z_leptons + 0.1157*square(br_w_leptons))*5.48E-02
+datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713*br_w_leptons + 0.2728*br_z_leptons + 0.09207*square(br_w_leptons))*3.54E-02
+
 # Add the only one we are currently interested int
-datadefs['VH_H2Tau_M-110']['x_sec'] = (1.060 + 0.5869 + 0.1887)*7.95E-02
-datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966 + 0.4483 + 0.1470)*7.04E-02
-datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095 + 0.3473 + 0.1157)*5.48E-02
-datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713 + 0.2728 + 0.09207)*3.54E-02
+#datadefs['VH_H2Tau_M-110']['x_sec'] = (1.060 + 0.5869 + 0.1887)*7.95E-02
+#datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966 + 0.4483 + 0.1470)*7.04E-02
+#datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095 + 0.3473 + 0.1157)*5.48E-02
+#datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713 + 0.2728 + 0.09207)*3.54E-02
 
 # Add the cross sections for WH->HWW samples.  We use the 7TeV ones here,
 # and then just change the xsec.
@@ -370,6 +375,13 @@ def build_data_set(pd, analyses):
             'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON.txt",
             'firstRun' : 193752,
             'lastRun' : 196531,
+            'analyses' : analyses,
+        },
+        'data_%s_Run2012C_PromptReco_v1_Run198934_201264' % pd : {
+            'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
+            'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+            'firstRun' : 198934,
+            'lastRun' : 201264,
             'analyses' : analyses,
         },
         'data_%s_Run2012C_PromptReco_v2_Run198934_201264' % pd : {
