@@ -24,7 +24,7 @@ sync_42X+=('DataMuon;root://cmsxrootd.hep.wisc.edu//store/data/Run2011A/DoubleMu
 sync_42X+=('DataElectron;root://cmsxrootd.hep.wisc.edu//store/data/Run2011A/DoubleElectron/AOD/16Jan2012-v1/0000/FC8A17E2-1644-E111-9276-0018F3D096D4.root')
 sync_42X+=('MCSignalMuo;root://cmsxrootd.hep.wisc.edu//store/mc/Fall11/GluGluToHToZG_M-125_7TeV-powheg-pythia6/AODSIM/PU_S6_START42_V14B-v1/0000/4E7D0288-43BA-E111-B933-0026189438F7.root')
 sync_42X+=('MCSignalEle;root://cmsxrootd.hep.wisc.edu//store/mc/Fall11/GluGluToHToZG_M-125_7TeV-powheg-pythia6/AODSIM/PU_S6_START42_V14B-v1/0000/4E7D0288-43BA-E111-B933-0026189438F7.root')
-sync_42X+=('MCBackground;/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root')
+#sync_42X+=('MCBackground;/store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root')
 
 for sync_test in ${sync_42X[@]}
 do
