@@ -13,6 +13,8 @@ options = TauVarParsing.TauVarParsing(
     keepEverything=0,
     reportEvery=2000,
     puTag='unknown',
+    isAOD=True,
+    calibrationTarget='2012Jul13ReReco',
     verbose=0, # Print out summary table at end
     profile=0, # Enabling profiling
     keepAll=0, # Don't drop any event content
@@ -25,12 +27,16 @@ options = TauVarParsing.TauVarParsing(
 )
 
 files = [
-    "root://cmsxrootd.hep.wisc.edu//store/data/Run2012A/DoubleMu/AOD/PromptReco-v1/000/190/456/D0478E94-0681-E111-82A4-0019B9F72F97.root"
+    
+    #"root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/29Jun2012-v1/0001/C46FD2A9-3FC3-E111-A1A8-485B39800C00.root"
 ]
-for file in files:
-    options.inputFiles = file
+
+options.inputFiles = files
 
 options.parseArguments()
+
+if not isinstance(options.inputFiles,list):
+    options.inputFiles = options.inputFiles.split(',')
 
 process = cms.Process("TUPLE")
 
@@ -77,13 +83,17 @@ process.out = cms.OutputModule(
 # Configure the pat tuple
 import FinalStateAnalysis.PatTools.patTupleProduction as tuplizer
 tuplize, output_commands = tuplizer.configurePatTuple(
-    process, isMC=options.isMC, xSec=options.xSec, xSecErr=options.xSecErr,
+    process, isMC=options.isMC, xSec=options.xSec,
+    isAOD=options.isAOD, xSecErr=options.xSecErr,
     puTag=options.puTag, dataset=options.dataset,
     embedded=options.embedded,
+    calibrationTarget=options.calibrationTarget
 )
 
 if options.globalTag == "":
     raise RuntimeError("Global tag not specified!  Try sourcing environment.sh\n")
+else:
+    print 'Using globalTag: %s'%options.globalTag
 
 process.GlobalTag.globaltag = cms.string(options.globalTag)
 
@@ -137,8 +147,10 @@ process.MEtoEDMConverter = cms.EDProducer(
     deleteAfterCopy = cms.untracked.bool(True)
 )
 
-process.outpath = cms.EndPath(
-    process.MEtoEDMConverter*
+
+
+process.outpath = cms.EndPath(    
+    process.MEtoEDMConverter*    
     process.out)
 process.schedule.append(process.outpath)
 

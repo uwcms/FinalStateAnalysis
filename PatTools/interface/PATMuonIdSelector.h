@@ -48,16 +48,19 @@ class PATMuonIdSelectorImp
   edm::InputTag srcVertex_;
 
   bool     applyGlobalMuonPromptTight_;
-  bool     applyAllArbitrated_;
+  bool     applyAllArbitrated_;  
+  bool     use2012IDVariables_; // use the 2012 ID variables from the Muon POG
+  bool     usePFMuonReq_;
 
-  double   maxIPxy_;            // max. transverse   impact parameter of muon track
-  double   maxIPz_;             // max. longitudinal impact parameter of muon track
-  int      IPtrackType_;        // compute impact parameters for inner/global track of muon
-  int      IPrefType_;          // compute impact parameters wrt. beam spot/reconstructed event vertex
-  double   maxChi2red_;         // max. (normalized) chi^2 of global muon track fit per degree of freedom
-  double   maxDptOverPt_;       // max. relative error on muon momentum (computed for inner track)
-  unsigned minTrackerHits_;     // min. number of hits in SiStrip + Pixel detectors
-  unsigned minPixelHits_;       // min. number of hits in Pixel detector
-  unsigned minMuonStations_;    // min. number of hits in Muon chambers
-  unsigned minMatchedSegments_; // min. number of segments in Muon stations matched to inner track
+  double   maxIPxy_;                    // max. transverse   impact parameter of muon track
+  double   maxIPz_;                     // max. longitudinal impact parameter of muon track
+  int      IPtrackType_;                // compute impact parameters for inner/global track of muon
+  int      IPrefType_;                  // compute impact parameters wrt. beam spot/reconstructed event vertex
+  double   maxChi2red_;                 // max. (normalized) chi^2 of global muon track fit per degree of freedom
+  double   maxDptOverPt_;               // max. relative error on muon momentum (computed for inner track)
+  unsigned minTrackerHits_;             // min. number of hits in SiStrip + Pixel detectors
+  unsigned minTkLayersWithMeasurement_; // min. number of TkLayers with a valid measurement (2012 ID)
+  unsigned minPixelHits_;               // min. number of hits in Pixel detector
+  unsigned minMuonStations_;            // min. number of hits in Muon chambers
+  unsigned minMatchedSegments_;         // min. number of segments in Muon stations matched to inner track
 };

@@ -52,6 +52,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::RefProd<pat::MuonCollection>& muonRefProd,
     const edm::RefProd<pat::TauCollection>& tauRefProd,
     const edm::RefProd<pat::JetCollection>& jetRefProd,
+    const edm::RefProd<pat::PhotonCollection>& phoRefProd,
     const reco::PFCandidateRefProd& pfRefProd,
     const reco::TrackRefProd& tracks,
     const reco::GsfTrackRefProd& gsfTracks
@@ -74,6 +75,7 @@ PATFinalStateEvent::PATFinalStateEvent(
   muonRefProd_(muonRefProd),
   tauRefProd_(tauRefProd),
   jetRefProd_(jetRefProd),
+  phoRefProd_(phoRefProd),
   pfRefProd_(pfRefProd),
   tracks_(tracks),
   gsfTracks_(gsfTracks)
@@ -241,6 +243,13 @@ const pat::JetCollection& PATFinalStateEvent::jets() const {
     throw cms::Exception("PATFSAEventNullRefs")
       << "The jet RefProd is null!" << std::endl;
   return *jetRefProd_;
+}
+
+const pat::PhotonCollection& PATFinalStateEvent::photons() const {
+  if (!phoRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The photon RefProd is null!" << std::endl;
+  return *phoRefProd_;
 }
 
 const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
