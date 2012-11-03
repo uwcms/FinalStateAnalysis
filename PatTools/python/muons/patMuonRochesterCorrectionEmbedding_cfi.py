@@ -11,7 +11,7 @@ correction_versions = cms.VPSet(
              ),
     cms.PSet(name    = cms.string("RochCor2012"),
              dataSet = cms.string("2012"),
-             syst    = cms.int32(0.0012) ##this is a fake value, not yet calculated
+             syst    = cms.double(0.0012) ##this is a fake value, not yet calculated
              )
     )
 

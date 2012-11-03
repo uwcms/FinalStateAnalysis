@@ -278,6 +278,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patDefaultSequence.replace(process.selectedPatMuons,
                                        process.customizeMuonSequence)
     process.cleanPatMuons.src = final_muon_collection
+    process.patMuonRochesterCorrectionEmbedder.isMC = cms.bool(bool(isMC))
+    
 
     process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
     final_tau_collection = chain_sequence(
