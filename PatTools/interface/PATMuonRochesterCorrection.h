@@ -43,9 +43,10 @@ namespace pattools {
       CorrectionBase() {}
       virtual ~CorrectionBase() {}
 
-      virtual TLorentzVector operator() (const TLorentzVector& pin,
-					 float charge,
-					 float sysdev ) = 0;
+      virtual math::XYZTLorentzVector correct( 
+				     const math::XYZTLorentzVector& pin,
+				     float charge,
+				     float sysdev ) = 0;
     };
 
     // define a wrapper class to make the corrs not suck
@@ -59,19 +60,22 @@ namespace pattools {
       Correction(bool isMC): _corr(new T(doSyst)), _isMC(isMC) {}
       virtual ~Correction() { delete _corr;}
 
-      virtual TLorentzVector operator() ( const TLorentzVector& pin,
-					  float charge,
-					  float sysdev ) {
-	TLorentzVector result = pin;
-	
-	if( doSyst ){
-	  if( _isMC ) _corr->momcor_mc(result,charge,sysdev,runopt);
-	  else        _corr->momcor_data(result,charge,sysdev,runopt);
-	} else {
-	  if( _isMC ) _corr->momcor_mc(result,charge,0.0,runopt);
-	  else        _corr->momcor_data(result,charge,0.0,runopt);
-	}
+      virtual math::XYZTLorentzVector correct( 
+				     const math::XYZTLorentzVector& pin,
+				     float charge,
+				     float sysdev ) {
+	math::XYZTLorentzVector result = pin;
+	TLorentzVector input(pin.x(),pin.y(),pin.z(),pin.t());
 
+	if( doSyst ){
+	  if( _isMC ) _corr->momcor_mc(input,charge,sysdev,runopt);
+	  else        _corr->momcor_data(input,charge,sysdev,runopt);
+	} else {
+	  if( _isMC ) _corr->momcor_mc(input,charge,0.0,runopt);
+	  else        _corr->momcor_data(input,charge,0.0,runopt);
+	}
+	
+	result.SetXYZT(input.X(),input.Y(),input.Z(),input.T());
 	return result;
       }
 	

@@ -82,9 +82,34 @@ namespace pattools {
     vstring::const_iterator end = _apply.end();
     
     for( ; app != end; ++app ) {
-      
-    }
+      math::XYZTLorentzVector corr_p4 = mu->p4();
+      math::XYZTLorentzVector errup_p4 = mu->p4();
+      math::XYZTLorentzVector errdown_p4 = mu->p4();
+      float syst = _calibs[*app].syst_err;
 
+      _calibs[*app].central_value->correct(corr_p4,
+					   mu->charge(),
+					   syst);
+      _calibs[*app].syst_smear->correct(errup_p4,
+					mu->charge(),
+					syst);
+      _calibs[*app].syst_smear->correct(errdown_p4,
+					mu->charge(),
+					-syst);
+
+      out.addUserData<math::XYZTLorentzVector>(_userP4Prefix+
+					       *app,
+					       corr_p4);
+      out.addUserData<math::XYZTLorentzVector>(_userP4Prefix+
+					       *app+
+					       _errupPostfix,
+					       errup_p4);
+      out.addUserData<math::XYZTLorentzVector>(_userP4Prefix+
+					       *app+
+					       _errdownPostfix,
+					       errdown_p4);
+    }
+    
     return out;
   }  
   

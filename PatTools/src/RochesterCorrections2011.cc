@@ -370,7 +370,7 @@ namespace rochcor {
     
     CLHEP::RandGaussQ smear(rng->getEngine(), 1.0, sf + sysdev*sfer);
 
-    float tune = 1.0/(1.0 + (delta + sysdev*deltaer)*sqrt(px*px + py*py));
+    float tune = 1.0/(1.0 + (delta + sysdev*deltaer)*sqrt(px*px + py*py)*smear.fire());
     
     px *= (tune); 
     py *= (tune);  
