@@ -3,10 +3,9 @@
 // Package:    PATElectronVBTFEmbedder
 // Class:      PATElectronVBTFEmbedder
 //
-//  Description: Embeds VBTF ID in pat::Electrons
+//  Description: Embeds 2012 Cut Based ID for electrons
 //
-// Original Author:  Michail Bachtis
-// Modified: Evan Friis
+// Original Author:  L. Gray
 //
 //
 

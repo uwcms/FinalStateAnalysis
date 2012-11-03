@@ -8,3 +8,5 @@ from FinalStateAnalysis.PatTools.photons.patPhotonPFIsolationEmbedding_cfi impor
 
 customizePhotonSequence = cms.Sequence()
 customizePhotonSequence += patPhotonPFIsolation
+
+# calculated photon ID
