@@ -1,17 +1,17 @@
 import FWCore.ParameterSet.Config as cms
 
 correction_versions = cms.VPSet(
-    cms.PSet(name    = cms.string('RochCor2011A'),
-             dataSet = cms.string('2011A'),
-             syst    = cms.double(0.0012)
+    cms.PSet(name             = cms.string('RochCor2011A'),
+             dataSet          = cms.string('2011A'),
+             systematic_error = cms.double(0.0012)
              ),
-    cms.PSet(name    = cms.string("RochCor2011B"),
-             dataSet = cms.string("2011B"),
-             syst    = cms.double(0.0012)
+    cms.PSet(name             = cms.string("RochCor2011B"),
+             dataSet          = cms.string("2011B"),
+             systematic_error = cms.double(0.0012)
              ),
-    cms.PSet(name    = cms.string("RochCor2012"),
-             dataSet = cms.string("2012"),
-             syst    = cms.double(0.0012) ##this is a fake value, not yet calculated
+    cms.PSet(name             = cms.string("RochCor2012"),
+             dataSet          = cms.string("2012"),
+             systematic_error = cms.double(0.0012) ##this is a fake value, not yet calculated
              )
     )
 
