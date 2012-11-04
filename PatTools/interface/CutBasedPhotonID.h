@@ -69,24 +69,17 @@ namespace photontools {
     CutSet(const edm::ParameterSet&);
     
     //apply ID with option to apply an extra mask
-    bool operator() (const pat::Photon&, const unsigned short mask=0xffffffff);
+    bool operator() (const pat::Photon&, const unsigned mask=0xffffffff);
   };
 
   class CutBasedPhotonID {
-    typedef std::map<std::string, CutSet> cut_map;
+    typedef std::map<std::string, const CutSet> cut_map;
   private:
-    const edm::Event* _event;
-    const edm::EventSetup* _eventSetup;
     cut_map _passesID;
-    ElectronHcalHelper* _hcalHelper;
   public:    
-    
     CutBasedPhotonID(const std::vector<edm::ParameterSet>&);
 
-    bool operator() (const pat::Photon&, working_point);
-
-    void setEvent(const edm::Event& ev)   { _event      = &ev; }
-    void setES(const edm::EventSetup& es) { _eventSetup = &es; }
+    bool operator() (const pat::Photon&, const std::string&);
   };
 
 }

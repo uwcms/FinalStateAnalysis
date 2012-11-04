@@ -15,22 +15,22 @@ namespace photontools {
 
   namespace {
     typedef edm::ParameterSet  PSet;
-    typedef edm::VParameterSet VPset;
+    typedef edm::VParameterSet VPSet;
     typedef std::vector<double> vdouble;
   }
   
 
   CutSet::CutSet( const PSet& conf ) {
     id_params setup;
-    unsigned short themask=0,theveto=0;
+    unsigned themask=0,theveto=0;
 
     // setup electron veto, masks and veto
     if( conf.existsAs<bool>("ElectronVeto") ) {
       setup.electronVeto = conf.getParameter<bool>("ElectronVeto");
       bool mask = conf.getParameter<bool>("Mask_ElectronVeto");
       bool veto = conf.getParameter<bool>("Veto_ElectronVeto");
-      themask += mask*(1 << kElectronVeto);
-      theveto += veto*(1 << kElectronVeto);
+      themask += mask*kElectronVeto;
+      theveto += veto*kElectronVeto;
     } else {
       throw cms::Exception("CutSet::CutSet()") 
 	<< "Did not define ElectronVeto requirement!";
@@ -38,7 +38,7 @@ namespace photontools {
     
     // setup single tower H/E masks and veto
     if( conf.existsAs<vdouble>("SingleTowerHoverE") ) {
-      vdouble theParams = conf.getParameter<double>("SingleTowerHoverE");
+      vdouble theParams = conf.getParameter<vdouble>("SingleTowerHoverE");
       setup.singleTowerHoE_min_eb = theParams[0];
       setup.singleTowerHoE_max_eb = theParams[1];
       
@@ -47,8 +47,8 @@ namespace photontools {
       
       bool mask = conf.getParameter<bool>("Mask_SingleTowerHoverE");
       bool veto = conf.getParameter<bool>("Veto_SingleTowerHoverE");
-      themask += mask*(1 << kSingleTowerHoE);
-      theveto += veto*(1 << kSingleTowerHoE);
+      themask += mask*kSingleTowerHoE;
+      theveto += veto*kSingleTowerHoE;
     } else {
       throw cms::Exception("CutSet::CutSet()") 
 	<< "Did not define SingleTowerHoverE requirement!";
@@ -56,7 +56,7 @@ namespace photontools {
 
     // setup SigmaIEtaIEta masks and veto
     if( conf.existsAs<vdouble>("SigmaIEtaIEta") ) {
-      vdouble theParams = conf.getParameter<double>("SigmaIEtaIEta");
+      vdouble theParams = conf.getParameter<vdouble>("SigmaIEtaIEta");
       setup.sihih_min_eb = theParams[0];
       setup.sihih_max_eb = theParams[1];
       
@@ -65,8 +65,8 @@ namespace photontools {
       
       bool mask = conf.getParameter<bool>("Mask_SigmaIEtaIEta");
       bool veto = conf.getParameter<bool>("Veto_SigmaIEtaIEta");
-      themask += mask*(1 << kSihih);
-      theveto += veto*(1 << kSihih);
+      themask += mask*kSihih;
+      theveto += veto*kSihih;
     } else {
       throw cms::Exception("CutSet::CutSet()") 
 	<< "Did not define SigmaIEtaIEta requirement!";
@@ -87,8 +87,8 @@ namespace photontools {
       
       bool mask = conf.getParameter<bool>("Mask_PFChargedIso");
       bool veto = conf.getParameter<bool>("Veto_PFChargedIso");
-      themask += mask*(1 << kPFChargedIso);
-      theveto += veto*(1 << kPFChargedIso);
+      themask += mask*kPFChargedIso;
+      theveto += veto*kPFChargedIso;
     } else {
       throw cms::Exception("CutSet::CutSet()") 
 	<< "Did not define PFChargedIso requirement!";
@@ -109,8 +109,8 @@ namespace photontools {
       
       bool mask = conf.getParameter<bool>("Mask_PFNeutralIso");
       bool veto = conf.getParameter<bool>("Veto_PFNeutralIso");
-      themask += mask*(1 << kPFNeutralIso);
-      theveto += veto*(1 << kPFNeutralIso);
+      themask += mask*kPFNeutralIso;
+      theveto += veto*kPFNeutralIso;
     } else {
       throw cms::Exception("CutSet::CutSet()") 
 	<< "Did not define PFNeutralIso requirement!";
@@ -119,20 +119,20 @@ namespace photontools {
     // setup PFPhotonIso masks and veto
     if( conf.existsAs<vdouble>("PFPhotonIso") ) {
       vdouble theParams = conf.getParameter<vdouble>("PFPhotonIso");
-      setup.pfNeutralIso_min_eb = theParams[0];
-      setup.pfNeutralIso_max_eb = theParams[1];
+      setup.pfPhotonIso_min_eb = theParams[0];
+      setup.pfPhotonIso_max_eb = theParams[1];
       
-      setup.pfNeutralIso_min_ee = theParams[2];
-      setup.pfNeutralIso_max_ee = theParams[3];
+      setup.pfPhotonIso_min_ee = theParams[2];
+      setup.pfPhotonIso_max_ee = theParams[3];
 
       vdouble slopeParams = conf.getParameter<vdouble>("PFPhotonIsoPtSlope");
-      setup.pfNeutralIso_pt_slope_eb = slopeParams[0];
-      setup.pfNeutralIso_pt_slope_ee = slopeParams[1];
+      setup.pfPhotonIso_pt_slope_eb = slopeParams[0];
+      setup.pfPhotonIso_pt_slope_ee = slopeParams[1];
       
       bool mask = conf.getParameter<bool>("Mask_PFPhotonIso");
       bool veto = conf.getParameter<bool>("Veto_PFPhotonIso");
-      themask += mask*(1 << kPFPhotonIso);
-      theveto += veto*(1 << kPFPhotonIso);
+      themask += mask*kPFPhotonIso;
+      theveto += veto*kPFPhotonIso;
     } else {
       throw cms::Exception("CutSet::CutSet()") 
 	<< "Did not define PFPhotonIso requirement!";
@@ -145,54 +145,54 @@ namespace photontools {
   } // CutSet::CutSet()
   
   bool CutSet::operator() (const pat::Photon& thePho,
-			   const unsigned short mask) {
-    unsigned short eval = 0x0;
+			   const unsigned mask) {
+    unsigned eval = 0x0;
     
     // PUT EACH CUT INSIDE { } SO THAT VARIABLES DESCOPE AND 
     // YOU DON'T FUCK UP AND MAKE A BUG
     { 
       // ElectronVeto    
-      bool passesVeto = (thePho.getUserInt("ConvSafeElectronVeto") 
-			 == _theID.electronVeto);
-      eval += passesVeto*(1<<kElectronVeto);
+      bool passesVeto = (thePho.userInt("ConvSafeElectronVeto") 
+			 == _theid.electronVeto);
+      eval += passesVeto*kElectronVeto;
     }
 
     {
       //SingleTowerHoverE
       bool passesHoE = false;
-      if( fabs(thePho.superCluster().eta()) < 1.566 ) { // EB
+      if( fabs(thePho.superCluster()->eta()) < 1.566 ) { // EB
 	passesHoE = 
-	(thePho.getUserFloat("SingleTowerHoE") < _theid.singleTowerHoE_max_eb&&
-	 thePho.getUserFloat("SingleTowerHoE") > _theid.singleTowerHoE_min_eb);
+	(thePho.userFloat("SingleTowerHoE") < _theid.singleTowerHoE_max_eb&&
+	 thePho.userFloat("SingleTowerHoE") > _theid.singleTowerHoE_min_eb);
       } else {
 	passesHoE = 
-	(thePho.getUserFloat("SingleTowerHoE") < _theid.singleTowerHoE_max_ee&&
-	 thePho.getUserFloat("SingleTowerHoE") > _theid.singleTowerHoE_min_ee);
+	(thePho.userFloat("SingleTowerHoE") < _theid.singleTowerHoE_max_ee&&
+	 thePho.userFloat("SingleTowerHoE") > _theid.singleTowerHoE_min_ee);
       }
-      eval += passesHoE*(1<<kSingleTowerHoE);
+      eval += passesHoE*kSingleTowerHoE;
     }
 
     {
       //SigmaIEtaIEta
       bool passesSihih = false;
-      if( fabs(thePho.superCluster().eta()) < 1.566 ) { // EB
+      if( fabs(thePho.superCluster()->eta()) < 1.566 ) { // EB
 	passesSihih = (thePho.sigmaIetaIeta() < _theid.sihih_max_eb &&
 		       thePho.sigmaIetaIeta() > _theid.sihih_min_eb    );
       } else {
 	passesSihih = (thePho.sigmaIetaIeta() < _theid.sihih_max_ee &&
 		       thePho.sigmaIetaIeta() > _theid.sihih_min_ee    );
       }
-      eval += passesSihih*(1<<kSihih);
+      eval += passesSihih*kSihih;
     }
 
     {
       //PFCharged Iso -- depends on kt6PFJetsRho_Photon, PhotonEA_chg
       bool passesPFChargedIso = false;
       double ea_charged_iso = 
-	std::max( thePho.userIso(pat::PfChargedIsolation) - 
+	std::max( thePho.userIso(pat::PfChargedHadronIso) - 
 		  (thePho.userFloat("PhotonEA_chg")*
-		   thePho.userFloat("kt6PFJetsRho_Photon")), 0.0 );
-      if( fabs(thePho.superCluster().eta()) < 1.566 ) { // EB
+		   thePho.userFloat("kt6PFJetsRho_Photon")), 0.0f );
+      if( fabs(thePho.superCluster()->eta()) < 1.566 ) { // EB
 	double iso_shift = _theid.pfChargedIso_pt_slope_eb*thePho.pt();
 	double the_max   = _theid.pfChargedIso_max_eb + iso_shift; 
 	double the_min   = _theid.pfChargedIso_min_eb + iso_shift;
@@ -205,17 +205,17 @@ namespace photontools {
 	passesPFChargedIso = (thePho.sigmaIetaIeta() < the_max &&
 			      thePho.sigmaIetaIeta() > the_min    );
       }
-      eval += passesPFChargedIso*(1<<kPFChargedIso);
+      eval += passesPFChargedIso*kPFChargedIso;
     }
     
     {
       //PFNeutral Iso -- depends on kt6PFJetsRho_Photon, PhotonEA_neut
       bool passesPFNeutralIso = false;
       double ea_neutral_iso = 
-	std::max( thePho.userIso(pat::PfNeutralIsolation) - 
+	std::max( thePho.userIso(pat::PfNeutralHadronIso) - 
 		  (thePho.userFloat("PhotonEA_neut")*
-		   thePho.userFloat("kt6PFJetsRho_Photon")), 0.0 );
-      if( fabs(thePho.superCluster().eta()) < 1.566 ) { // EB
+		   thePho.userFloat("kt6PFJetsRho_Photon")), 0.0f );
+      if( fabs(thePho.superCluster()->eta()) < 1.566 ) { // EB
 	double iso_shift = _theid.pfNeutralIso_pt_slope_eb*thePho.pt();
 	double the_max   = _theid.pfNeutralIso_max_eb + iso_shift; 
 	double the_min   = _theid.pfNeutralIso_min_eb + iso_shift;
@@ -228,17 +228,17 @@ namespace photontools {
 	passesPFNeutralIso = (ea_neutral_iso < the_max &&
 			      ea_neutral_iso > the_min    );
       }
-      eval += passesPFNeutralIso*(1<<kPFNeutralIso);
+      eval += passesPFNeutralIso*kPFNeutralIso;
     }
 
     {
       //PFPhoton Iso -- depends on kt6PFJetsRho_Photon, PhotonEA_pho
       bool passesPFPhotonIso = false;
       double ea_photon_iso = 
-	std::max( thePho.userIso(pat::PfPhotonIsolation) - 
+	std::max( thePho.userIso(pat::PfGammaIso) - 
 		  (thePho.userFloat("PhotonEA_pho")*
-		   thePho.userFloat("kt6PFJetsRho_Photon")), 0.0 );
-      if( fabs(thePho.superCluster().eta()) < 1.566 ) { // EB
+		   thePho.userFloat("kt6PFJetsRho_Photon")), 0.0f );
+      if( fabs(thePho.superCluster()->eta()) < 1.566 ) { // EB
 	double iso_shift = _theid.pfPhotonIso_pt_slope_eb*thePho.pt();
 	double the_max   = _theid.pfPhotonIso_max_eb + iso_shift; 
 	double the_min   = _theid.pfPhotonIso_min_eb + iso_shift;
@@ -251,15 +251,27 @@ namespace photontools {
 	passesPFPhotonIso = (ea_photon_iso < the_max &&
 			     ea_photon_iso > the_min    );
       }
-      eval += passesPFPhotonIso*(1<<kPFPhotonIso);
+      eval += passesPFPhotonIso*kPFPhotonIso;
     }
     
     // yeah various bitwise nots are annoying but it makes the 
     // math easier...
-    unsigned mask_tot = ~(~_mask + ~(_passAll&mask))
-    unsigned pass     = _passAll & _veto & masktot;
+    unsigned mask_tot = ~(~_mask + ~(_passAll&mask));
+    unsigned pass     = _passAll & _veto & mask_tot;
     unsigned result   = eval     & mask_tot;
 
     return ( result == pass );
   }
+  
+  CutBasedPhotonID::
+  CutBasedPhotonID(const VPSet& /*conf*/ ) {
+  }
+
+  bool 
+  CutBasedPhotonID::
+  operator() (const pat::Photon& /*pho*/, 
+		   const std::string& /*thewp*/) {        
+    return true;
+  }
+
 }
