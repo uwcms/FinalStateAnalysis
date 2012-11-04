@@ -292,10 +292,10 @@ namespace rochcor {
     
     for(int i=0; i<8; ++i){
       for(int j=0; j<8; ++j){
-	mptsys_mc_dm[i][j]=(central_value)*init.fire();
-	mptsys_mc_da[i][j]=(central_value)*init.fire();
-	mptsys_da_dm[i][j]=(central_value)*init.fire();
-	mptsys_da_da[i][j]=(central_value)*init.fire();
+	mptsys_mc_dm[i][j]=(!central_value)*init.fire();
+	mptsys_mc_da[i][j]=(!central_value)*init.fire();
+	mptsys_da_dm[i][j]=(!central_value)*init.fire();
+	mptsys_da_da[i][j]=(!central_value)*init.fire();
       }
     }
   }

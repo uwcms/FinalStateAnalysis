@@ -4,7 +4,6 @@
 #ifndef __ROCHESTER_CORRECTIONS_2012_H__
 #define __ROCHESTER_CORRECTIONS_2012_H__
 
-
 #include <iostream>
 #include <TChain.h>
 #include <TClonesArray.h>
@@ -21,14 +20,14 @@
 #include <TRandom3.h>
 
 namespace rochcor {
-
+  
   class RochesterCorrections2012 {
   public:
     RochesterCorrections2012(bool central_value);
     ~RochesterCorrections2012();
     
-    void momcor_mc(TLorentzVector&, float, float, int);
-    void momcor_data(TLorentzVector&, float, float, int);
+    void momcor_mc(TLorentzVector&, float, float, int/*, float&*/);
+    void momcor_data(TLorentzVector&, float, float, int/*, float&*/);
     
     void musclefit_data(TLorentzVector& , TLorentzVector&);
     
@@ -38,29 +37,29 @@ namespace rochcor {
     
   private:
     
-    edm::Service<edm::RandomNumberGenerator> rng;    
+    edm::Service<edm::RandomNumberGenerator> rng;  
     
     //  static float netabin[9] = {-2.4,-2.1,-1.4,-0.7,0.0,0.7,1.4,2.1,2.4};
     static constexpr double pi = 3.14159265358979323846;
     static const float netabin[9];
     
-    static constexpr float genm_smr = 9.09915e+01; //gen mass peak with eta dependent gaussian smearing => better match in Z mass profile vs. eta/phi
+    static constexpr float genm_smr = 9.09956e+01; //gen mass peak with eta dependent gaussian smearing => better match in Z mass profile vs. eta/phi
     static constexpr float genm = 91.06; //gen mass peak without smearing => Z mass profile vs. eta/phi in CMS note
     
-    static constexpr float mrecm = 90.8177; //rec mass peak in MC (2011A)
-    static constexpr float drecm = 90.5332; //rec mass peak in data (2011A)
+    static constexpr float mrecm = 90.9836; //rec mass peak in MC (2011A)
+    static constexpr float drecm = 90.8838; //rec mass peak in data (2011A)
     static constexpr float mgscl_stat = 0.0001; //stat. error of global factor for mass peak in MC (2011A)  
     static constexpr float mgscl_syst = 0.0006; //syst. error of global factor for mass peak in MC (2011A)  
     static constexpr float dgscl_stat = 0.0001; //stat. error of global factor for mass peak in data (2011A)
     static constexpr float dgscl_syst = 0.0008; //syst. error of global factor for mass peak in data (2011A)
     
     //iteration2 after FSR : after Z Pt correction
-    static constexpr float delta = -5.48477e-06;
-    static constexpr float delta_stat = 4.38582e-07;
+    static constexpr float delta = 1.41853e-06;
+    static constexpr float delta_stat = 3.55191e-07;
     static constexpr float delta_syst = 6.992e-07;
     
-    static constexpr float sf = 33.4956;
-    static constexpr float sf_stat = 0.312614;
+    static constexpr float sf = 124.024;
+    static constexpr float sf_stat = 1.05701;
     static constexpr float sf_syst = 9.29;
     
     static constexpr float apar = 1.0; //+- 0.002
@@ -72,7 +71,7 @@ namespace rochcor {
     static constexpr float e1par = -0.364823; //+- 0.17896
     static constexpr float d2par = 0.000152032; //+- 5.68386e-06
     static constexpr float e2par = 0.410195; //+- 0.0431732
- 
+    
     //---------------------------------------------------------------------------------------------
     
     static const float dcor_bf[8][8];  
@@ -110,5 +109,4 @@ namespace rochcor {
 
 } // namespace rochcor
 
-#endif
-  
+#endif  

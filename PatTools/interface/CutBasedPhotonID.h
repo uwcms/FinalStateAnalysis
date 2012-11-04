@@ -12,16 +12,22 @@
 #define __CUTBASEDPHOTONID_H__
 
 #include <vector>
+#include <map>
 
 #include "DataFormats/PatCandidates/interface/Photon.h"
 
 //forward decls
 namespace edm{
   class ParameterSet;  
+  class Event;
+  class EventSetup;
+  class InputTag;
 }
 
+class ElectronHcalHelper;
+
 namespace photontools {
-  class PhotonID {
+  class CutSet {
   private:
     enum selector_bits{ kElectronVeto   = 1 << 0,
                         kSingleTowerHoE = 1 << 1,
@@ -29,7 +35,8 @@ namespace photontools {
                         kPFChargedIso   = 1 << 3,
                         kPFNeutralIso   = 1 << 4,
                         kPFPhotonIso    = 1 << 5,
-                        kHighestBit     = 1 << 6 };
+			// if you add cuts remember to increment this bit
+                        kHighestBit     = 1 << 6 }; 
 
 
     // trying to be maximally covering here... may save us later
@@ -49,33 +56,37 @@ namespace photontools {
       double pfPhotonIso_min_eb, pfPhotonIso_max_eb;
       double pfPhotonIso_min_ee, pfPhotonIso_max_ee;      
     };
-
+    
+    // active bits mask
+    static constexpr unsigned _passAll = kHighestBit - 1;
     //bitsets allowing us to mask out or veto part of the ID
-    //This is defined per-cut in the ParameterSet. 
-    static constexpr unsigned short _passAll = kHighestBit - 1;
-    unsigned short _mask;
-    unsigned short _veto;
+    //This is defined per-cut in the ParameterSet.     
+    unsigned _mask;
+    unsigned _veto;    
 
-    id_params _theid;
+    id_params _theid;    
   public:
-    PhotonID(const edm::ParameterSet&);
+    CutSet(const edm::ParameterSet&);
     
     //apply ID with option to apply an extra mask
-    bool operator() (const pat::Photon&, const unsigned short mask=0xffff);
+    bool operator() (const pat::Photon&, const unsigned short mask=0xffffffff);
   };
 
   class CutBasedPhotonID {
+    typedef std::map<std::string, CutSet> cut_map;
   private:
-    std::vector<PhotonID> _theIDs;
-  public:
-    enum working_point{LOOSE,MEDIUM,TIGHT,kNWorkingPoints};
+    const edm::Event* _event;
+    const edm::EventSetup* _eventSetup;
+    cut_map _passesID;
+    ElectronHcalHelper* _hcalHelper;
+  public:    
     
     CutBasedPhotonID(const std::vector<edm::ParameterSet>&);
 
     bool operator() (const pat::Photon&, working_point);
 
-    void setElectronHandle();
-
+    void setEvent(const edm::Event& ev)   { _event      = &ev; }
+    void setES(const edm::EventSetup& es) { _eventSetup = &es; }
   };
 
 }
