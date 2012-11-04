@@ -17,6 +17,7 @@ namespace photontools {
     typedef edm::ParameterSet  PSet;
     typedef edm::VParameterSet VPSet;
     typedef std::vector<double> vdouble;
+    typedef std::vector<std::string> vstring;
   }
   
 
@@ -145,7 +146,7 @@ namespace photontools {
   } // CutSet::CutSet()
   
   bool CutSet::operator() (const pat::Photon& thePho,
-			   const unsigned mask) {
+			   const unsigned mask) const {
     unsigned eval = 0x0;
     
     // PUT EACH CUT INSIDE { } SO THAT VARIABLES DESCOPE AND 
@@ -202,8 +203,8 @@ namespace photontools {
 	double iso_shift = _theid.pfChargedIso_pt_slope_ee*thePho.pt();
 	double the_max   = _theid.pfChargedIso_max_ee + iso_shift; 
 	double the_min   = _theid.pfChargedIso_min_ee + iso_shift;
-	passesPFChargedIso = (thePho.sigmaIetaIeta() < the_max &&
-			      thePho.sigmaIetaIeta() > the_min    );
+	passesPFChargedIso = (ea_charged_iso < the_max &&
+			      ea_charged_iso > the_min    );
       }
       eval += passesPFChargedIso*kPFChargedIso;
     }
@@ -264,14 +265,21 @@ namespace photontools {
   }
   
   CutBasedPhotonID::
-  CutBasedPhotonID(const VPSet& /*conf*/ ) {
+  CutBasedPhotonID( const PSet& conf ) {
+    vstring ids = conf.getParameterNamesForType<PSet>();
+    vstring::const_iterator i = ids.begin();
+    vstring::const_iterator e = ids.end();
+
+    for( ; i != e; ++i)
+      _passesID.insert(
+	   std::make_pair(*i,CutSet(conf.getParameter<PSet>(*i))));
   }
 
   bool 
   CutBasedPhotonID::
-  operator() (const pat::Photon& /*pho*/, 
-		   const std::string& /*thewp*/) {        
-    return true;
+  operator() (const pat::Photon& pho, 
+	      const std::string& thewp) {
+    return _passesID[thewp](pho);
   }
 
 }

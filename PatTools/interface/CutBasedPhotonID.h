@@ -66,18 +66,24 @@ namespace photontools {
 
     id_params _theid;    
   public:
+    CutSet() {}
     CutSet(const edm::ParameterSet&);
+    CutSet(const CutSet& o) { this->operator=(o); }
+
+    void operator=(const CutSet& o) { this->_mask=o._mask;
+                                      this->_veto=o._veto;
+				      this->_theid=o._theid; }
     
     //apply ID with option to apply an extra mask
-    bool operator() (const pat::Photon&, const unsigned mask=0xffffffff);
+    bool operator() (const pat::Photon&, const unsigned mask=0xffffffff) const;
   };
 
   class CutBasedPhotonID {
-    typedef std::map<std::string, const CutSet> cut_map;
   private:
+    typedef std::map<std::string, const CutSet> cut_map;
     cut_map _passesID;
   public:    
-    CutBasedPhotonID(const std::vector<edm::ParameterSet>&);
+    CutBasedPhotonID(const edm::ParameterSet&);
 
     bool operator() (const pat::Photon&, const std::string&);
   };
