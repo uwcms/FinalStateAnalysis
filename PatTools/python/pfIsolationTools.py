@@ -133,14 +133,28 @@ def setup_h2tau_iso(process):
         )
 
 def add_hZg_iso_needs(process):
-    print "Adding rhos and collections needs for 2011 data in hZg"
+    print "Adding rhos and collections needs for hZg"
 
     process.load("RecoJets.JetProducers.kt4PFJets_cfi")
+
+    # for photon H/E
+    process.CaloTowerConstituentsMapBuilder = cms.ESProducer(
+        "CaloTowerConstituentsMapBuilder",
+        MapFile =
+ cms.untracked.string('Geometry/CaloTopology/data/CaloTowerEEGeometric.map.gz')
+        )
 
     process.pfAllNeutralHadronsAndPhotons = cms.EDProducer(
         "CandViewMerger",
         src = cms.VInputTag(cms.InputTag("pfAllNeutralHadrons"),
                             cms.InputTag("pfAllPhotons"))
+        )
+
+    process.kt6PFJetsHZGPho = process.kt4PFJets.clone(
+        rParam = cms.double(0.6),
+        doRhoFastjet = cms.bool(True),
+        doAreaFastjet = cms.bool(True),
+        voronoiRfact = cms.double(0.9)
         )
 
     process.kt6PFJetsCentralHZGEle = process.kt4PFJets.clone(

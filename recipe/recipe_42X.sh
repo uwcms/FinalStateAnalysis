@@ -30,6 +30,13 @@ then
   addpkg PhysicsTools/SelectorUtils V00-03-24
   addpkg PhysicsTools/UtilAlgos V08-02-14 
 
+  #Update to calculate Single Tower H/E in 42X
+  #https://twiki.cern.ch/twiki/bin/view/CMS/HoverE2012
+  cvs co -r CMSSW_4_2_8_patch7 RecoEgamma/EgammaElectronAlgos
+  cvs co -r CMSSW_5_2_2 RecoEgamma/EgammaElectronAlgos/src/ElectronHcalHelper.cc
+  cvs co -r CMSSW_5_2_2 RecoEgamma/EgammaElectronAlgos/interface/ElectronHcalHelper.h
+  cvs co -r CMSSW_5_2_2 RecoEgamma/EgammaIsolationAlgos
+
   # For a fix to prevent segfaults on certain MC samples when using
   # the GenParticlePrunder
   cvs co -r V11-03-16 PhysicsTools/HepMCCandAlgos
