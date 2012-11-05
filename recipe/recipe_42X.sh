@@ -9,6 +9,7 @@ addpkg DataFormats/PatCandidates  V06-04-19-05
 
 set +o errexit
 patch -N -p0 < FinalStateAnalysis/recipe/patches/ExpressionNtupleColumn_42X.patch
+patch -N -p0 < FinalStateAnalysis/recipe/patches/DataAlgos_helpers_cc_42X.patch
 set -o errexit
 
 if [ "$LIMITS" = "1" ]
