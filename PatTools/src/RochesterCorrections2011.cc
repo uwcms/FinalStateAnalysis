@@ -7,9 +7,56 @@
 
 #include "FWCore/Utilities/interface/Exception.h"
 
+#define rochcor_f const float RochesterCorrections2011::
+#define rochcor_d const double RochesterCorrections2011::
+
 
 namespace rochcor {
   
+  rochcor_d pi = 3.14159265358979323846;
+  rochcor_f genm_smr = 9.09956e+01; //gen mass peak with eta dependent gaussian smearing => better match in Z mass profile vs. eta/phi
+  rochcor_f genm = 91.06; //gen mass peak without smearing => Z mass profile vs. eta/phi in CMS note
+  
+  rochcor_f recmA = 9.10062e+01; //rec mass peak in MC (2011A)
+  rochcor_f drecmA = 9.09285e+01; //rec mass peak in data (2011A)
+  rochcor_f mgsclA_stat = 0.0001; //stat. error of global factor for mass peak in MC (2011A)  
+  rochcor_f mgsclA_syst = 0.0006; //syst. error of global factor for mass peak in MC (2011A)  
+  rochcor_f dgsclA_stat = 0.0001; //stat. error of global factor for mass peak in data (2011A)
+  rochcor_f dgsclA_syst = 0.0008; //syst. error of global factor for mass peak in data (2011A)
+  rochcor_f recmB = 9.10210e+01; //rec mass peak in MC (2011B)
+  rochcor_f drecmB = 9.09469e+01; //rec mass peak in data (2011B)
+  rochcor_f mgsclB_stat = 0.0001; //stat. error of global factor for mass peak in MC (2011B)  
+  rochcor_f mgsclB_syst = 0.0006; //syst. error of global factor for mass peak in MC (2011B)  
+  rochcor_f dgsclB_stat = 0.0001; //stat. error of global factor for mass peak in data (2011B)
+  rochcor_f dgsclB_syst = 0.0008; //syst. error of global factor for mass peak in data (2011B)
+      
+  //iteration2 after FSR : after Z Pt correction
+  rochcor_f deltaA = -2.85242e-06;
+  rochcor_f deltaA_stat = 7.74389e-07;
+  rochcor_f deltaA_syst = 6.992e-07;
+  
+  rochcor_f sfA = 44.6463;
+  rochcor_f sfA_stat = 1.92224;
+  rochcor_f sfA_syst = 9.29;
+  
+  rochcor_f deltaB = -5.68463e-06;
+  rochcor_f deltaB_stat = 8.21406e-07;
+  rochcor_f deltaB_syst = 1.4268e-06;
+  
+  rochcor_f sfB = 23.8652;
+  rochcor_f sfB_stat = 0.941748;
+  rochcor_f sfB_syst = 4.86;
+  
+  rochcor_f apar = 1.0; //+- 0.002
+  rochcor_f bpar = -5.03313e-06; //+- 1.57968e-06
+  rochcor_f cpar = -4.41463e-05; //+- 1.92775e-06
+  rochcor_f d0par = -0.000148871; //+- 3.16301e-06
+  rochcor_f e0par = 1.59501; //+- 0.0249021
+  rochcor_f d1par = 7.95495e-05; //+- 1.12386e-05
+  rochcor_f e1par = -0.364823; //+- 0.17896
+  rochcor_f d2par = 0.000152032; //+- 5.68386e-06
+  rochcor_f e2par = 0.410195; //+- 0.0431732
+
   const float RochesterCorrections2011::netabin[9] = {-2.4,-2.1,-1.4,-0.7,0.0,0.7,1.4,2.1,2.4};
   
   const float RochesterCorrections2011::dcor_bfA[8][8]={{-0.000102967,-0.000025046,-0.000000182,-0.000031720,-0.000004638,-0.000013151,-0.000073829,-0.000021362},
