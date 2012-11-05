@@ -58,7 +58,7 @@ namespace photontools {
     };
     
     // active bits mask
-    static constexpr unsigned _passAll = kHighestBit - 1;
+    static const unsigned _passAll = kHighestBit - 1;
     //bitsets allowing us to mask out or veto part of the ID
     //This is defined per-cut in the ParameterSet.     
     unsigned _mask;

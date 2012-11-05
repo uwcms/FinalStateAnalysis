@@ -6,7 +6,41 @@
 
 #include "FWCore/Utilities/interface/Exception.h"
 
+#define rochcor_f const float RochesterCorrections2012::
+#define rochcor_d const double RochesterCorrections2012::
+
 namespace rochcor {
+
+  rochcor_d pi = 3.14159265358979323846;  
+  
+  rochcor_f genm_smr = 9.09956e+01; //gen mass peak with eta dependent gaussian smearing => better match in Z mass profile vs. eta/phi
+  rochcor_f genm = 91.06; //gen mass peak without smearing => Z mass profile vs. eta/phi in CMS note
+  
+  rochcor_f mrecm = 90.9836; //rec mass peak in MC (2011A)
+  rochcor_f drecm = 90.8838; //rec mass peak in data (2011A)
+  rochcor_f mgscl_stat = 0.0001; //stat. error of global factor for mass peak in MC (2011A)  
+  rochcor_f mgscl_syst = 0.0006; //syst. error of global factor for mass peak in MC (2011A)  
+  rochcor_f dgscl_stat = 0.0001; //stat. error of global factor for mass peak in data (2011A)
+  rochcor_f dgscl_syst = 0.0008; //syst. error of global factor for mass peak in data (2011A)
+  
+  //iteration2 after FSR : after Z Pt correction
+  rochcor_f delta = 1.41853e-06;
+  rochcor_f delta_stat = 3.55191e-07;
+  rochcor_f delta_syst = 6.992e-07;
+  
+  rochcor_f sf = 124.024;
+  rochcor_f sf_stat = 1.05701;
+  rochcor_f sf_syst = 9.29;
+  
+  rochcor_f apar = 1.0; //+- 0.002
+  rochcor_f bpar = -5.03313e-06; //+- 1.57968e-06
+  rochcor_f cpar = -4.41463e-05; //+- 1.92775e-06
+  rochcor_f d0par = -0.000148871; //+- 3.16301e-06
+  rochcor_f e0par = 1.59501; //+- 0.0249021
+  rochcor_f d1par = 7.95495e-05; //+- 1.12386e-05
+  rochcor_f e1par = -0.364823; //+- 0.17896
+  rochcor_f d2par = 0.000152032; //+- 5.68386e-06
+  rochcor_f e2par = 0.410195; //+- 0.0431732
 
 const float RochesterCorrections2012::netabin[9] = {-2.4,-2.1,-1.4,-0.7,0.0,0.7,1.4,2.1,2.4};
 
