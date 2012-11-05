@@ -19,6 +19,6 @@ patPhotonEAEmbedder = cms.EDProducer(
     src = cms.InputTag("fixme"),
     effective_areas = ea_list,
     applied_effective_areas = cms.vstring('PhotonEA_pfchg',
-                                          'PhotonEA_pfneut'
+                                          'PhotonEA_pfneut',
                                           'PhotonEA_pfpho')
     )

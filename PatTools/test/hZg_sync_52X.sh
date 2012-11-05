@@ -39,7 +39,7 @@ do
 	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=ReReco\
 	  calibrationTarget=2012Jul13ReReco #&> ${part[0]}_sync.log  & 
       else
-      ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
+      ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=500\
 	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=Summer12\
 	  calibrationTarget=Summer12_DR53X_HCP2012 #&> ${part[0]}_sync.log  &
   fi  
