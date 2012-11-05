@@ -22,7 +22,7 @@ from FinalStateAnalysis.PatTools.photons.patPhotonEAEmbedder_cfi import \
 customizePhotonSequence += patPhotonEAEmbedder
 
 # calculated photon ID
-from FinalStateAnalysis.PatTools.photons.patPhotonCutBasedIdEmbedding import \
+from FinalStateAnalysis.PatTools.photons.patPhotonCutBasedIdEmbedding_cfi import \
      patPhotonCutBasedIdEmbedder
 
 customizePhotonSequence += patPhotonCutBasedIdEmbedder
