@@ -5,6 +5,7 @@
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/Photon.h"
 #include "FWCore/Utilities/interface/Exception.h"
 
 #include "TMatrixD.h"
@@ -135,10 +136,15 @@ const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter)
   if( dauJet){
     return dauJet->genParticleRef();
   }
+
+  const pat::Photon* dauPho = dynamic_cast<const pat::Photon*>(daughter);
+  if( dauPho){
+    return dauPho->genParticleRef();
+  }
   else{
     cms::Exception ex("ImplementationMissing");
     ex.addContext("No implementation was found to get gen particle from a requested daughter, please consider either fixing the configuration or adding the implementation in FinalStateAnalysis/DataAlgos/src/helpers.cc");
-    ex.addAdditionalInfo("Available objects are pat::Tau, pat::Muon, pat::Electron, pat::Jet");
+    ex.addAdditionalInfo("Available objects are pat::Tau, pat::Muon, pat::Electron, pat::Jet, pat::Photon");
     throw ex;
   }
 }
