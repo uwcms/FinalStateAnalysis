@@ -48,8 +48,8 @@ class Plotter(object):
             'Zjets_M50',
             'WplusJets_madgraph',
             'TTplusJets_madgraph',
-            'WZJetsTo3LNu*',
-            'ZZJetsTo4L*',
+            'WZ*',
+            'ZZ*',
             'WW*',
         ]
 

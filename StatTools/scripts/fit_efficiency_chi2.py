@@ -64,6 +64,7 @@ if __name__ == "__main__":
     plot_grp.add_argument('--max', type=float, default=1,
                           help='y-axis maximum')
     plot_grp.add_argument('--grid', action='store_true', help="Draw grid")
+    plot_grp.add_argument('--noFit', action='store_true', help="Does not perform fitting")
 
     plot_grp.add_argument('--show-error', dest='showerror',
                           action='store_true', help='Plot fit error band')
@@ -146,20 +147,22 @@ if __name__ == "__main__":
     #import pdb; pdb.set_trace()
 
     log.info("Doing fit!")
-    fit_result = function.chi2FitTo(
-        xy_data,
-        ROOT.RooFit.YVar(y),
-        # Integrate fit function across x-error width, don't just use center
-        # This doesn't work... I don't know why.
-        ROOT.RooFit.Integrate(False),
-        #ROOT.RooFit.Integrate(True),
-        ROOT.RooFit.Save(True),
-        ROOT.RooFit.PrintLevel(-1),
-    )
+    print function
+    if not args.noFit:
+        fit_result = function.chi2FitTo(
+            xy_data,
+            ROOT.RooFit.YVar(y),
+            # Integrate fit function across x-error width, don't just use center
+            # This doesn't work... I don't know why.
+            ROOT.RooFit.Integrate(False),
+            #ROOT.RooFit.Integrate(True),
+            ROOT.RooFit.Save(True),
+            ROOT.RooFit.PrintLevel(-1),
+            )
 
-    log.info("Fit result status: %i", fit_result.status())
-    fit_result.Print()
-    ws_import(fit_result)
+        log.info("Fit result status: %i", fit_result.status())
+        fit_result.Print()
+        ws_import(fit_result)
     log.info("Saving workspace in %s", args.output)
     ws.writeToFile(args.output)
 
@@ -168,19 +171,25 @@ if __name__ == "__main__":
         try:
             frame = None
             if args.xrange:
-                frame = x.frame(
-                    ROOT.RooFit.Title("Efficiency"),
-                    ROOT.RooFit.Range(args.xrange[0], args.xrange[1]))
+                frame = x.frame(ROOT.RooFit.Title("Efficiency"),
+                                ROOT.RooFit.Range(args.xrange[0], x.getMax()))
             else:
                 frame = x.frame(ROOT.RooFit.Title("Efficiency"))
 
-            if args.showerror:
+            if not args.noFit and args.showerror:
                 function.plotOn(
                     frame,
                     ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
                     ROOT.RooFit.VisualizeError(fit_result, 1.0),
                     ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
                 )
+            else:
+                function.plotOn(
+                    frame,
+                    ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+                    ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
+                )
+
             function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kAzure))
             xy_data.plotOnXY(
                 frame,
