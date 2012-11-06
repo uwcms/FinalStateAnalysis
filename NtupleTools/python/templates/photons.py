@@ -21,7 +21,7 @@ id = PSet(
     objectCBIDTIGHT = '{object}.userInt("CBID_TIGHT")',
     # isolations
     objectPFChargedIso  = 'getPhotonUserIsolation({object_idx},"PfChargedHadronIso")',
-    objectPFNeutralIso  = 'getPhotonUserIsolation({object_idx},"PfNeutralHadronIso")'
+    objectPFNeutralIso  = 'getPhotonUserIsolation({object_idx},"PfNeutralHadronIso")',
     objectPFPhotonIso   = 'getPhotonUserIsolation({object_idx},"PfGammaIso")',
     objectEffectiveAreaCHad = '{object}.userFloat("PhotonEA_pfchg")',
     objectEffectiveAreaNHad = '{object}.userFloat("PhotonEA_pfneut")',

@@ -52,7 +52,6 @@ id = PSet(
     objectHadronicDepth2OverEm = '{object}.hadronicDepth2OverEcal',
     objectSigmaIEtaIEta = '{object}.sigmaIetaIeta',
     objectE1x5 = '{object}.scE1x5',
-    objectE2x5 = '{object}.scE2x5',
     objectE2x5Max = '{object}.scE2x5Max',
     objectE5x5 = '{object}.scE5x5',
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
