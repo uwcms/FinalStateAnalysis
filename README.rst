@@ -2,6 +2,8 @@
 FinalStateAnalysis Package Description
 ======================================
 
+Documentation: https://github.com/uwcms/FinalStateAnalysis/wiki
+
 The Final State Analysis (FSA) package is a CMSSW analysis framework.  Common
 utilities are organized as subpackages.  
 
