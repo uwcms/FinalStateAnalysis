@@ -3,10 +3,7 @@ FinalStateAnalysis Package Description
 ======================================
 
 The Final State Analysis (FSA) package is a CMSSW analysis framework.  Common
-utilities are organized as subpackages.  Each analysis (Higgs to tau, SSDL, etc)
-should exists as a separate subpackage.
-
-The full documentation is available at http://readthedocs.org/docs/final-state-analysis/en/latest/. 
+utilities are organized as subpackages.  
 
 DataFormats
 -----------
@@ -29,66 +26,51 @@ definition of plot styles used for different data samples.  Also, reference type
 code (such as getting Higgs boson properties from lookup tables, etc, are hosted
 here).
 
-RecoTools
----------
+NtupleTools
+-----------
 
-The RecoTools package contains plugin modules and utilities for dealing with
-RECO and AOD content.  This package is **not** FWKLITE compatible.
+The NtupleTools package defines the "analyzeFinalStates" binary, which is
+the final analysis builder, used to build flat TTrees from PATFinalState
+objects in the PAT tuple.  New selections and ntuple columns should be defined
+in
+``NtupleTools/python/templates.``  Ntuples designed for Higgs multi-lepton final 
+states can be produced by make_ntuples_cfg.py, in test/.
 
 PatTools
 --------
 
-The PAT tools package contains everything needed to build the FSA pat tuple.  It
-is standalone.  
+The PAT tools package contains everything needed to build the FSA pat tuple.  
 
-Selectors
+PlotTools
+--------
+
+Tools and helpers for making plots from ntuples created by NtupleTools.
+
+RecoTools
 ---------
 
-The Selectors package defines the "analyzeFinalStates" FWKLITE binary, which is
-the final analysis builder.  It additionally contains additional helper classes
-to analyze PATFinalStates, as well as the python definitions of common cuts to
-be applied.  New selections and plots should be defined in
-``Selectors/python/selectors`` and ``Selectors/python/plotting``, respectively.
+The RecoTools package contains plugin modules and utilities for dealing with
+RECO and AOD content.  
+
+StatTools
+---------
+
+Various statistical/limit setting tools.
 
 Utilities
 ---------
 
 Contains various command--line tools and C++ functionality.  
 
-docs and recipe
----------------
-
-The recipe section contains scripts which automate installation of related
-packages.  The docs folder just contains all the documentation.
-
-==========================
-Analysis Specific Packages
-==========================
-
-Each analysis, which uses the above packages, is configued in a separate
-sub--package.  In general, an analysis can/should have some variation of following content:
-
-python/selection.py 
-  Defines the selections and plots (from the Selectors_ package) used in the
-  analysis.  
- 
-test/analyze_cfg.py
-  Defines the final ntuple production cfg.  This is the steering file for the
-  analyzeFinalStatesBinary.
- 
-test/submit_analysis.py
-  Submits the analyze_cfg.py jobs to condor/GRID/etc.
-
-test/plotting/*
-  Tools to analyze the final level ntuple and produces plots.
-
 TagAndProbe
 -----------
 
-Tools for generating Tag and Probe like analysis for muons and taus.
+Tools for generating Tag and Probe studies.  Classes for querying Tag and Probe
+results provided by other groups (eg Muon POG) are kept here as well.
 
+recipe
+---------------
 
-VHiggs
-------
+The recipe section contains scripts which automate installation of related
+packages.  
 
-Associated Higgs to tau analysis.
