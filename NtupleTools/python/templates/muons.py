@@ -24,9 +24,9 @@ id = PSet(
     # For charged, we use ALL charged particles
     objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
     objectEffectiveArea2011 = '{object}.userFloat("ea_comb_iso04_kt6PFJCth05")',
-    objectPFChargedIso = cms.string('{object}.userIsolation(4)'),
-    objectPFNeutralIso = cms.string('{object}.userIsolation(5)'),
-    objectPFPhotonIso  = cms.string('{object}.userIsolation(6)'),
+    objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
+    objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
+    objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
     objectRelPFIsoDB = cms.string(
         "({object}.userIso(0)"
         "+max({object}.photonIso()"

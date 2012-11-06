@@ -262,6 +262,11 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     const math::XYZTLorentzVector getUserLorentzVector(size_t i,
 						   const std::string&) const;
 
+    //a hot fix for the fact that no one cares about pat photons.
+    const float getPhotonUserIsolation(size_t i,
+				       const std::string& key) const;
+
+
   private:
     edm::Ptr<PATFinalStateEvent> event_;
 };

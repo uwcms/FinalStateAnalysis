@@ -34,9 +34,9 @@ id = PSet(
         "-0.5*{object}.userIso(2),0.0))"
         "/{object}.pt()"
     ),
-    objectPFChargedIso = cms.string('{object}.userIsolation(4)'),
-    objectPFNeutralIso = cms.string('{object}.userIsolation(5)'),
-    objectPFPhotonIso  = cms.string('{object}.userIsolation(6)'),
+    objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
+    objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
+    objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
     objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
     objectEffectiveArea2011Data = cms.string('{object}.userFloat("ea_comb_Data2011_iso04_kt6PFJ")'),
     objectEffectiveAreaFall11MC = cms.string('{object}.userFloat("ea_comb_Fall11MC_iso04_kt6PFJ")'),

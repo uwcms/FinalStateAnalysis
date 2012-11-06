@@ -673,3 +673,30 @@ PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const
 
   return *result;
 }
+
+const float PATFinalState::getPhotonUserIsolation(size_t i, 
+						  const std::string& key) const {
+  edm::Ptr<pat::Photon> d = daughterAsPhoton(i);
+  // remove leading namespace specifier
+  std::string prunedKey = ( key.find("pat::") == 0 ) ? std::string(key, 5) : key;
+  if ( prunedKey == "TrackIso" ) return d->userIsolation(pat::TrackIso);
+  if ( prunedKey == "EcalIso" ) return d->userIsolation(pat::EcalIso);
+  if ( prunedKey == "HcalIso" ) return d->userIsolation(pat::HcalIso);
+  if ( prunedKey == "PfAllParticleIso" ) return d->userIsolation(pat::PfAllParticleIso);
+  if ( prunedKey == "PfChargedHadronIso" ) return d->userIsolation(pat::PfChargedHadronIso);
+  if ( prunedKey == "PfNeutralHadronIso" ) return d->userIsolation(pat::PfNeutralHadronIso);
+  if ( prunedKey == "PfGammaIso" ) return d->userIsolation(pat::PfGammaIso);
+  if ( prunedKey == "User1Iso" ) return d->userIsolation(pat::User1Iso);
+  if ( prunedKey == "User2Iso" ) return d->userIsolation(pat::User2Iso);
+  if ( prunedKey == "User3Iso" ) return d->userIsolation(pat::User3Iso);
+  if ( prunedKey == "User4Iso" ) return d->userIsolation(pat::User4Iso);
+  if ( prunedKey == "User5Iso" ) return d->userIsolation(pat::User5Iso);
+  if ( prunedKey == "UserBaseIso" ) return d->userIsolation(pat::UserBaseIso);
+  if ( prunedKey == "CaloIso" ) return d->userIsolation(pat::CaloIso);
+  if ( prunedKey == "PfPUChargedHadronIso" ) 
+    return d->userIsolation(pat::PfPUChargedHadronIso);
+  //throw cms::Excepton("Missing Data")
+  //<< "Isolation corresponding to key " 
+  //<< key << " was not stored for this particle.";
+  return -1.0;
+}

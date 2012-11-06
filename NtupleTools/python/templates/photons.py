@@ -20,9 +20,9 @@ id = PSet(
     objectCBIDMEDIUM = '{object}.userInt("CBID_MEDIUM")',
     objectCBIDTIGHT = '{object}.userInt("CBID_TIGHT")',
     # isolations
-    objectPFChargedIso  = '{object}.userIsolation(4)',
-    objectPFNeutralIso  = '{object}.userIsolation(5)',
-    objectPFPhotonIso   = '{object}.userIsolation(6)',
+    objectPFChargedIso  = 'getPhotonUserIsolation({object_idx},"PfChargedHadronIso")',
+    objectPFNeutralIso  = 'getPhotonUserIsolation({object_idx},"PfNeutralHadronIso")'
+    objectPFPhotonIso   = 'getPhotonUserIsolation({object_idx},"PfGammaIso")',
     objectEffectiveAreaCHad = '{object}.userFloat("PhotonEA_pfchg")',
     objectEffectiveAreaNHad = '{object}.userFloat("PhotonEA_pfneut")',
     objectEffectiveAreaPho  = '{object}.userFloat("PhotonEA_pfpho")',    
