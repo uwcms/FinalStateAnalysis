@@ -21,8 +21,11 @@ id = PSet(
     objectMVANonTrig = '{object}.electronID("mvaNonTrigV0")',
     objectMVATrig = '{object}.electronID("mvaTrigV0")',
     objectMVAIDH2TauWP = '{object}.userInt("mvaidwp")',
-
     objectCiCTight = '{object}.electronID("cicTight")',
+    objectCBID_VETO = '{object}.userInt("CBID_VETO")',
+    objectCBID_LOOSE = '{object}.userInt("CBID_LOOSE")',
+    objectCBID_MEDIUM = '{object}.userInt("CBID_MEDIUM")',
+    objectCBID_TIGHT = '{object}.userInt("CBID_TIGHT")',
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(
         "({object}.userIso(0)"
@@ -31,6 +34,12 @@ id = PSet(
         "-0.5*{object}.userIso(2),0.0))"
         "/{object}.pt()"
     ),
+    objectPFChargedIso = cms.string('{object}.userIsolation(4)'),
+    objectPFNeutralIso = cms.string('{object}.userIsolation(5)'),
+    objectPFPhotonIso  = cms.string('{object}.userIsolation(6)'),
+    objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
+    objectEffectiveArea2011Data = cms.string('{object}.userFloat("ea_comb_Data2011_iso04_kt6PFJ")'),
+    objectEffectiveAreaFall11MC = cms.string('{object}.userFloat("ea_comb_Fall11MC_iso04_kt6PFJ")'),
     objectRelIso = cms.string("({object}.dr03TkSumPt()"
                "+max({object}.dr03EcalRecHitSumEt()-1.0,0.0)"
                "+{object}.dr03HcalTowerSumEt())/{object}.pt()"),
@@ -53,6 +62,10 @@ supercluster = PSet(
     objectSCEta = '{object}.superCluster().eta',
     objectSCPhi = '{object}.superCluster().phi',
     objectSCEnergy = '{object}.superCluster().energy',
+    objectSCRawEnergy = '{object}.superCluster().rawEnergy',
+    objectSCPreshowerEnergy = '{object}.superCluster().preshowerEnergy',
+    objectSCPhiWidth = '{object}.superCluster().phiWidth',
+    objectSCEtaWidth = '{object}.superCluster().etaWidth'   
 )
 
 trigger = PSet(

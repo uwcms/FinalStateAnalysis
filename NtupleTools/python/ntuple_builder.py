@@ -28,12 +28,15 @@ _common_template = PSet(
     templates.event.gen,
     # templates.Vetoes on extra objects
     templates.cleaning.vetos,
-    # We only need to worry about lepton triggers
+    # Need to fill out photon triggers
     templates.trigger.mueg,
     templates.trigger.doublemu,
     templates.trigger.doublee,
     templates.trigger.isomu,
     templates.trigger.singlemu,
+    templates.trigger.singlee,
+    templates.trigger.singlePho,
+    templates.trigger.doublePho
 )
 
 # Define the branch templates for different object types.
@@ -75,7 +78,7 @@ _photon_template = PSet(
     templates.photons.id,
     templates.photons.tracking,
     templates.photons.supercluster,
-    templates.photons.trigger,
+    #templates.photons.trigger, #add photons later
     templates.topology.mtToMET,
 )
 
@@ -87,8 +90,8 @@ _leg_templates = {
 }
 
 _pt_cuts = {
-    'm' : '9',
-    'e' : '9',
+    'm' : '7',
+    'e' : '7',
     't' : '18',
     'g' : '10'
 }
@@ -145,7 +148,8 @@ def make_ntuple(*legs, **kwargs):
     counts = {
         't' : 0,
         'm' : 0,
-        'e' : 0
+        'e' : 0,
+        'g' : 0
     }
 
     ntuple_config = _common_template.clone()
