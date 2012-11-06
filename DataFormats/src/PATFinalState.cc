@@ -651,17 +651,24 @@ PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const
   edm::Ptr<pat::Photon> pho = daughterAsPhoton(i);
   edm::Ptr<pat::Jet> jet = daughterAsJet(i);
   edm::Ptr<pat::Tau> tau = daughterAsTau(i);
+  std::vector<std::string> udNames;
 
   const math::XYZTLorentzVector* result = NULL;
 
-  if(ele.isNonnull() && ele.isAvailable()) 
+  if(ele.isNonnull() && ele.isAvailable()) {
     result = ele->userData<math::XYZTLorentzVector>(name);
+    udNames = ele->userDataNames();
+  }
 
-  if(mu.isNonnull() && mu.isAvailable()) 
+  if(mu.isNonnull() && mu.isAvailable()) {
     result = mu->userData<math::XYZTLorentzVector>(name);
+    udNames = mu->userDataNames();
+  }
 
-  if(pho.isNonnull() && pho.isAvailable()) 
+  if(pho.isNonnull() && pho.isAvailable()) {
     result = pho->userData<math::XYZTLorentzVector>(name);
+    udNames = pho->userDataNames();
+  }
 
   if(jet.isNonnull() && jet.isAvailable()) 
     result = jet->userData<math::XYZTLorentzVector>(name);
@@ -669,6 +676,11 @@ PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const
   if(tau.isNonnull() && tau.isAvailable()) 
     result = tau->userData<math::XYZTLorentzVector>(name);
 
+  std::cout << i << ' ' << name << std::endl;
+  for(std::vector<std::string>::const_iterator i = udNames.begin();
+      i != udNames.end(); ++i ) {
+    std::cout << *i << std::endl;
+  }
   assert(result && "The LorentzVector you requested does not exist!\n");
 
   return *result;

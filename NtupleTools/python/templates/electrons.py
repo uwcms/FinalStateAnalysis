@@ -59,33 +59,33 @@ id = PSet(
 )
 
 energyCorrections = PSet(
-    objectECorrSmearedNoReg_2012Jul13ReReco = 'getUserLorentzVector({object_idx},"EGCorr_SmearedNoRegression_2012Jul13ReReco").t',
-    objectdECorrSmearedNoReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_SmearedNoRegression_2012Jul13ReReco_error")',
-    objectECorrSmearedReg_2012Jul13ReReco = 'getUserLorentzVector({object_idx},"EGCorr_SmearedRegression_2012Jul13ReReco").t',
-    objectdECorrSmearedReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_SmearedRegression_2012Jul13ReReco_error")',
-    objectECorrReg_2012Jul13ReReco = 'getUserLorentzVector({object_idx},"EGCorr_RegressionOnly_2012Jul13ReReco").t',
-    objectdECorrReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_RegressionOnly_2012Jul13ReReco_error")',
+    objectECorrSmearedNoReg_2012Jul13ReReco = 'getUserLorentzVector({object_idx},"EGCorr_2012Jul13ReRecoSmearedNoRegression").t',
+    objectdECorrSmearedNoReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_2012Jul13ReRecoSmearedNoRegression_error")',
+    objectECorrSmearedReg_2012Jul13ReReco = 'getUserLorentzVector({object_idx},"EGCorr_2012Jul13ReRecoSmearedRegression").t',
+    objectdECorrSmearedReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_2012Jul13ReRecoSmearedRegression_error")',
+    objectECorrReg_2012Jul13ReReco = 'getUserLorentzVector({object_idx},"EGCorr_2012Jul13ReRecoRegressionOnly").t',
+    objectdECorrReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_2012Jul13ReRecoRegressionOnly_error")',
 
-    objectECorrSmearedNoReg_Summer12_DR53X_HCP2012 = 'getUserLorentzVector({object_idx},"EGCorr_SmearedNoRegression_Summer12_DR53X_HCP2012").t',
-    objectdECorrSmearedNoReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_SmearedNoRegression_Summer12_DR53X_HCP2012_error")',
-    objectECorrSmearedReg_Summer12_DR53X_HCP2012 = 'getUserLorentzVector({object_idx},"EGCorr_SmearedRegression_Summer12_DR53X_HCP2012").t',
-    objectdECorrSmearedReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_SmearedRegression_Summer12_DR53X_HCP2012_error")',
-    objectECorrReg_Summer12_DR53X_HCP2012 = 'getUserLorentzVector({object_idx},"EGCorr_RegressionOnly_Summer12_DR53X_HCP2012").t',
-    objectdECorrReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_RegressionOnly_Summer12_DR53X_HCP2012_error")',
+    objectECorrSmearedNoReg_Summer12_DR53X_HCP2012 = 'getUserLorentzVector({object_idx},"EGCorr_Summer12_DR53X_HCP2012SmearedNoRegression").t',
+    objectdECorrSmearedNoReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_Summer12_DR53X_HCP2012SmearedNoRegression_error")',
+    objectECorrSmearedReg_Summer12_DR53X_HCP2012 = 'getUserLorentzVector({object_idx},"EGCorr_Summer12_DR53X_HCP2012SmearedRegression").t',
+    objectdECorrSmearedReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_Summer12_DR53X_HCP2012SmearedRegression_error")',
+    objectECorrReg_Summer12_DR53X_HCP2012 = 'getUserLorentzVector({object_idx},"EGCorr_Summer12_DR53X_HCP2012RegressionOnly").t',
+    objectdECorrReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_Summer12_DR53X_HCP2012RegressionOnly_error")',
 
-    objectECorrSmearedNoReg_Jan16ReReco = 'getUserLorentzVector({object_idx},"EGCorr_SmearedNoRegression_Jan16ReReco").t',
-    objectdECorrSmearedNoReg_Jan16ReReco = '{object}.userFloat("EGCorr_SmearedNoRegression_Jan16ReReco_error")',
-    objectECorrSmearedReg_Jan16ReReco = 'getUserLorentzVector({object_idx},"EGCorr_SmearedRegression_Jan16ReReco").t',
-    objectdECorrSmearedReg_Jan16ReReco = '{object}.userFloat("EGCorr_SmearedRegression_Jan16ReReco_error")',
-    objectECorrReg_Jan16ReReco = 'getUserLorentzVector({object_idx},"EGCorr_RegressionOnly_Jan16ReReco").t',
-    objectdECorrReg_Jan16ReReco = '{object}.userFloat("EGCorr_RegressionOnly_Jan16ReReco_error")',
+    objectECorrSmearedNoReg_Jan16ReReco = 'getUserLorentzVector({object_idx},"EGCorr_Jan16ReRecoSmearedNoRegression").t',
+    objectdECorrSmearedNoReg_Jan16ReReco = '{object}.userFloat("EGCorr_Jan16ReRecoSmearedNoRegression_error")',
+    objectECorrSmearedReg_Jan16ReReco = 'getUserLorentzVector({object_idx},"EGCorr_Jan16ReRecoSmearedRegression").t',
+    objectdECorrSmearedReg_Jan16ReReco = '{object}.userFloat("EGCorr_Jan16ReRecoSmearedRegression_error")',
+    objectECorrReg_Jan16ReReco = 'getUserLorentzVector({object_idx},"EGCorr_Jan16ReRecoRegressionOnly").t',
+    objectdECorrReg_Jan16ReReco = '{object}.userFloat("EGCorr_Jan16ReRecoRegressionOnly_error")',
 
-    objectECorrSmearedNoReg_Fall11 = 'getUserLorentzVector({object_idx},"EGCorr_SmearedNoRegression_Fall11").t',
-    objectdECorrSmearedNoReg_Fall11 = '{object}.userFloat("EGCorr_SmearedNoRegression_Fall11_error")',
-    objectECorrSmearedReg_Fall11 = 'getUserLorentzVector({object_idx},"EGCorr_SmearedRegression_Fall11").t',
-    objectdECorrSmearedReg_Fall11 = '{object}.userFloat("EGCorr_SmearedRegression_Fall11_error")',
-    objectECorrReg_Fall11 = 'getUserLorentzVector({object_idx},"EGCorr_RegressionOnly_Fall11").t',
-    objectdECorrReg_Fall11 = '{object}.userFloat("EGCorr_RegressionOnly_Fall11_error")'
+    objectECorrSmearedNoReg_Fall11 = 'getUserLorentzVector({object_idx},"EGCorr_Fall11SmearedNoRegression").t',
+    objectdECorrSmearedNoReg_Fall11 = '{object}.userFloat("EGCorr_Fall11SmearedNoRegression_error")',
+    objectECorrSmearedReg_Fall11 = 'getUserLorentzVector({object_idx},"EGCorr_Fall11SmearedRegression").t',
+    objectdECorrSmearedReg_Fall11 = '{object}.userFloat("EGCorr_Fall11SmearedRegression_error")',
+    objectECorrReg_Fall11 = 'getUserLorentzVector({object_idx},"EGCorr_Fall11RegressionOnly").t',
+    objectdECorrReg_Fall11 = '{object}.userFloat("EGCorr_Fall11RegressionOnly_error")'
 )
 
 tracking = PSet(
