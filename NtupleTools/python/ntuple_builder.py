@@ -68,29 +68,44 @@ _electron_template = PSet(
     templates.topology.mtToMET,
 )
 
+_photon_template = PSet(
+    templates.candidates.base_jet,
+    templates.candidates.kinematics,
+    #templates.candidates.vertex_info, #photons have no tracking info
+    templates.photons.id,
+    templates.photons.tracking,
+    templates.photons.supercluster,
+    templates.photons.trigger,
+    templates.topology.mtToMET,
+)
+
 _leg_templates = {
     't' : _tau_template,
     'm' : _muon_template,
     'e' : _electron_template,
+    'g' : _photon_template
 }
 
 _pt_cuts = {
     'm' : '9',
     'e' : '9',
     't' : '18',
+    'g' : '10'
 }
 
 _eta_cuts = {
     'm' : '2.5',
     'e' : '2.5',
     't' : '2.3',
+    'g' : '3.0'
 }
 
 # How to get from a leg name to "finalStateElecMuMuMu" etc
 _producer_translation = {
     'm' : 'Mu',
     'e' : 'Elec',
-    't' : 'Tau'
+    't' : 'Tau',
+    'g' : 'Pho'
 }
 
 def add_ntuple(name, analyzer, process, schedule):
