@@ -8,6 +8,10 @@ See: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012
 
 '''
 
+import ROOT
+ROOT.gSystem.Load("libFinalStateAnalysisTagAndProbe")
+
+
 def correct_mueg_mu_2011(pt, abseta):
     ''' Get DATA-MC correction factor mu leg of MuEG trigger '''
     if abseta < 1.2:
@@ -26,6 +30,7 @@ def correct_mueg_mu_2011(pt, abseta):
         if pt < 30:
             return 1.04
         return 1.06
+
 
 def correct_mueg_e_2011(pt, abseta):
     ''' Get DATA-MC correction factor electron leg of MuEG trigger '''
@@ -46,71 +51,16 @@ def correct_mueg_e_2011(pt, abseta):
             return 1.00
         return 1.008
 
+
 def correct_mueg_mu_2012(pt, abseta):
     ''' Get DATA-MC correction factor muon leg of MuEG trigger '''
-    if abseta < 0.8:
-        if pt < 15:
-            return 1.0
-        if pt < 20:
-            return 1.0
-        if pt < 25:
-            return 1.01
-        if pt < 30:
-            return 1.0
-        return 1.07
-    elif abseta < 1.2:
-        if pt < 15:
-            return 0.99
-        if pt < 20:
-            return 1.04
-        if pt < 25:
-            return 0.98
-        if pt < 30:
-            return 1.06
-        return 1.12
-    else:
-        if pt < 15:
-            return 0.98
-        if pt < 20:
-            return 1.02
-        if pt < 25:
-            return 0.96
-        if pt < 30:
-            return 1.02
-        return 1.12
+    return ROOT.muTrigScale_MuEG_2012_53X(pt, abseta)
+
 
 def correct_mueg_e_2012(pt, abseta):
     ''' Get DATA-MC correction factor electron leg of MuEG trigger '''
-    if abseta < 0.8:
-        if pt < 15:
-            return 0.99
-        if pt < 20:
-            return 0.99
-        if pt < 25:
-            return 0.98
-        if pt < 30:
-            return 1.0
-        return 1.00
-    elif abseta < 1.479:
-        if pt < 15:
-            return 0.82
-        if pt < 20:
-            return 1.00
-        if pt < 25:
-            return 0.96
-        if pt < 30:
-            return 0.98
-        return 0.99
-    else:
-        if pt < 15:
-            return 0.96
-        if pt < 20:
-            return 1.07
-        if pt < 25:
-            return 1.01
-        if pt < 30:
-            return 1.01
-        return 0.97
+    return ROOT.eleTrigScale_MuEG_2012_53X(pt, abseta)
+
 
 def correct_e_idiso_2011(pt, abseta):
     ''' Get DATA-MC correction factor electron ID and Iso '''
@@ -127,24 +77,61 @@ def correct_e_idiso_2011(pt, abseta):
             return 1.148
         return 1.012
 
-def correct_e_idiso_2012(pt, abseta):
-    ''' Get DATA-MC correction factor electron ID and Iso '''
-    if abseta < 0.8:
+
+def correct_mu_idiso_2011(pt, abseta):
+    ''' Get DATA-MC correction factor muon ID and Iso '''
+    if abseta < 1.5:
         if pt < 15:
-            return 0.84
+            return 0.99
         if pt < 20:
-            return 0.926
-        return 0.959
-    elif abseta < 1.479:
-        if pt < 15:
-            return 0.837
-        if pt < 20:
-            return 0.853
-        return 0.954
+            return 1.02
+        return 1.01
     else:
         if pt < 15:
-            return 0.722
+            return 1.03
         if pt < 20:
-            return 0.838
-        return 0.968
+            return 1.025
+        return 1.01
 
+
+def correct_e_idiso_2012(pt, abseta):
+    ''' Get DATA-MC correction factor electron ID and Iso
+
+    Twiki: HiggsToTauTauWorkingHCP2012#Electron_ID_Isolation_EMu_Channe
+
+    '''
+    return ROOT.eleIDscale_MuEG_2012_53X(pt, abseta)
+
+
+def correct_mu_idiso_2012(pt, abseta):
+    ''' Get DATA-MC correction for 53X data from inclusive E-Mu
+
+    Twiki: HiggsToTauTauWorkingHCP2012#Muon_ID_Isolation_EMu_Channel
+    '''
+    return ROOT.muIDscale_MuEG_2012_53X(pt, abseta)
+
+
+def correct_mu_trg_2012(pt, abseta):
+    ''' Get DATA-MC correction for 53X data from inclusive E-Mu
+
+    Twiki: HiggsToTauTauWorkingHCP2012#Muon_ID_Isolation_EMu_Channel
+
+    Remarks from Alexei R:
+
+        The muon legs in these electron-muon cross triggers are identical to
+        the HLT_Mu17_Mu8 trigger.
+
+        To be in synchronization with the e-mu channel we just used the numbers
+        obtained by Valentina.
+
+        If one requires simulation of HLT_Mu17_Mu8 (and we do require now
+        simulation of HLT_Mu17_Mu8 trigger), then one has to apply the
+        following trigger weight to MC event :
+
+        trigger_weight = SF(pt2,eta2)*SF(pt1,eta),
+
+        where SF(pt,eta) - are pt and eta dependent scale factors
+        derived by Valentina.
+
+    '''
+    return correct_mueg_mu_2012(pt, abseta)

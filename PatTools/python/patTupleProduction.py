@@ -37,6 +37,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_kt6PFJetsForRhoComputationVoronoi_rho_*',
         '*_kt6PFJetsForIso_rho_*',
         '*_kt6PFJets_rho_*',
+        '*_kt6PFJetsCentralHZGPho_rho_*',
         '*_kt6PFJetsCentralHZGEle_rho_*',
         '*_kt6PFJetsCentralHZGMu_rho_*',
         '*_kt6PFJetsCentralNeutralHZGMu_rho_*',
@@ -278,6 +279,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patDefaultSequence.replace(process.selectedPatMuons,
                                        process.customizeMuonSequence)
     process.cleanPatMuons.src = final_muon_collection
+    process.patMuonRochesterCorrectionEmbedder.isMC = cms.bool(bool(isMC))
+    
 
     process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
     final_tau_collection = chain_sequence(

@@ -14,3 +14,8 @@ def add_fsa_random_seeds(process):
         initialSeed = cms.untracked.uint32(1234556789),
         engineName = cms.untracked.string('TRandom3')
         )
+
+    process.RandomNumberGeneratorService.patMuonRochesterCorrectionEmbedder = cms.PSet(
+        initialSeed = cms.untracked.uint32(987654321),
+        engineName = cms.untracked.string('TRandom3')
+        )

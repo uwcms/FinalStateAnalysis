@@ -1,31 +1,38 @@
 #!/bin/bash
-cmsenv
+# 
+# This script sets up a python "virtualenv" [1], allowing us to install some 
+# useful python modules.
+# 
+# Author: Evan K. Friis, UW Madison
+# 
+# Installed modules:
+#   > yolk - tools for managing installed packages
+#   > ipython - better interactive python
+#   > termcolor - utility for coloring the consol
+#   > uncertainties - awesome error propagation
+#   > progressbar - cool progress bars
+#   > cython - used for mixing C and python
+#   > argparse - improved argument parsing
+#   > rootpy - pythonic bindings for PyROOT 
 
 export recipe=$CMSSW_BASE/src/FinalStateAnalysis/recipe
 export vpython=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/vpython
 
-cd $recipe/external/src/virtualenv-1.6.4
+cd $recipe/external/src/virtualenv
 
 echo "Creating virtual python environment in $vpython"
-python virtualenv.py --distribute $vpython
+if [ ! -d "$vpython" ]; then
+  python virtualenv.py --distribute $vpython
+else
+  echo "...virtual environment already setup."
+fi
 
 echo "Activating virtual python environment"
 cd $vpython
 source bin/activate
 
-echo "Installing rootpy"
-cd $recipe/external/src/rootpy
-python setup.py install
-cd $vpython
-source bin/activate; rehash
 echo "Installing yolk"
 pip install -U yolk
-echo "Installing PyYAML"
-pip install -U PyYAML
-source bin/activate; rehash
-echo "Installing matplotlib"
-source bin/activate; rehash
-pip install -U matplotlib
 echo "Installing ipython"
 pip install -U ipython
 echo "Installing termcolor"
@@ -36,4 +43,11 @@ echo "Install progressbar"
 pip install -U progressbar
 echo "Install cython"
 pip install -U cython
+echo "Installing argparse"
+pip install -U argparse
+echo "Installing pudb <-- interactive debugging"
+pip install -U pudb
+
+echo "Installing rootpy"
+pip install -e $recipe/external/src/rootpy
 

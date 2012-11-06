@@ -18,6 +18,7 @@
 
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "TMatrixD.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 
 namespace fshelpers {
 
@@ -36,6 +37,14 @@ double transverseMass(const reco::Candidate::LorentzVector& p1,
 // makes sure the composite objects P4 = sum of daughters
 void addFourMomenta(reco::Candidate & c);
 
+/// Helper function to get the matched gen particle 
+const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter);
+
+/// Helper function to get the first interesting mother particle 
+const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, int idNOTtoMatch = -999);
+
+/// Helper function to get if the gen particle associated comes from higgs 
+const bool comesFromHiggs(const reco::GenParticleRef genPart);
 }
 
 #endif /* end of include guard: HELPERS_TAQ1PE50 */

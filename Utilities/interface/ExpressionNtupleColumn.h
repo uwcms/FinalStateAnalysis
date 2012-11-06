@@ -20,26 +20,27 @@
 
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
 #include <TMath.h>
+#include <iostream>
 
 template<typename ObjType>
 class ExpressionNtupleColumn {
-  public:
-    ExpressionNtupleColumn(const std::string& name, const std::string& func);
+public:
     /// Compute the column function and store result in branch variable
-    void compute(const ObjType& obj);
-  protected:
-    /// Abstract function which takes the result from the compute and fills the
-    /// branch
-    virtual void setValue(double value) = 0;
-  private:
-    std::string name_;
-    StringObjectFunction<ObjType> func_;
+  void compute(const ObjType& obj);
+protected:
+  /// Abstract function which takes the result from the compute and fills the
+  /// branch
+  virtual void setValue(double value) = 0;
+  ExpressionNtupleColumn(const std::string& name, const std::string& func);
+private:
+  std::string name_;
+  StringObjectFunction<ObjType> func_;
 };
 
 template<typename T>
 ExpressionNtupleColumn<T>::ExpressionNtupleColumn(
     const std::string& name, const std::string& func):
-  name_(name), func_(func, true) {}
+  name_(name), func_(func, true) {}  
 
 template<typename T> void ExpressionNtupleColumn<T>::compute(const T& obj) {
   this->setValue(func_(obj));
@@ -61,10 +62,23 @@ namespace {
 template<typename ObjType, typename ColType>
 class ExpressionNtupleColumnT : public ExpressionNtupleColumn<ObjType> {
   public:
-    ExpressionNtupleColumnT(const std::string& name, const std::string& func,
-        TTree* tree);
+
+  static ExpressionNtupleColumnT* makeExpression(const std::string& name, const std::string& func, TTree* tree)
+  {
+    try{
+      return new ExpressionNtupleColumnT(name, func, tree);
+    }
+    catch(cms::Exception& iException){
+      iException.addContext("Cought exception in building branch: " + name + " with formula: " + func);
+      throw;
+    }
+  }
+
   protected:
     /// Abstract function
+    ExpressionNtupleColumnT(const std::string& name, const std::string& func,
+			  TTree* tree);
+ 
     void setValue(double value);
   private:
     boost::shared_ptr<ColType> branch_;
@@ -96,7 +110,7 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
 
   // In the default case (no type specifier) default to float
   if (pset.existsAs<std::string>(name)) {
-    output.reset(new ExpressionNtupleColumnT<T, Float_t>(name,
+    output.reset( ExpressionNtupleColumnT<T, Float_t>::makeExpression(name,
           pset.getParameter<std::string>(name), tree));
   } else if (pset.existsAs<vstring>(name)){
     vstring command = pset.getParameter<vstring>(name);
@@ -108,15 +122,15 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
     }
     if (command[1] == "I" || command[1] == "i") {
       // Make a integer column
-      output.reset(new ExpressionNtupleColumnT<T, Int_t>(name,
+      output.reset( ExpressionNtupleColumnT<T, Int_t>::makeExpression(name,
             command[0], tree));
     } else if (command[1] == "F" || command[1] == "f") {
       // Make a float column
-      output.reset(new ExpressionNtupleColumnT<T, Int_t>(name,
+      output.reset( ExpressionNtupleColumnT<T, Int_t>::makeExpression(name,
             command[0], tree));
     } else if (command[1] == "D" || command[1] == "d") {
       // Make a double column
-      output.reset(new ExpressionNtupleColumnT<T, Double_t>(name,
+      output.reset( ExpressionNtupleColumnT<T, Double_t>::makeExpression(name,
             command[0], tree));
     } else {
       throw cms::Exception("BadTypeSpecifier")

@@ -19,14 +19,22 @@ echo $label
 #Sum12 Bkg : 
 #Sum12 Sig : 
 
-hzg_list=`dbs lsf --path=/GluGluToHToZG_M-125_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM | head -20 | tail -17 | tr -d ' ' | sed 's/\/store/root\:\/\/cmsxrootd\.hep\.wisc\.edu\/\/store/' | tr '\n' ',' | head -c -1`
+hzg_list=`dbs lsf --path=/GluGluToHToZG_M-125_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM | head -20 | tail -17 | tr -d ' ' | sed 's/\/store/root\:\/\/cmsxrootd\.hep\.wisc\.edu\/\/store/'`
+
+hzg_list_arr=()
+for item in $hzg_list
+do
+  hzg_list_arr+=($item)
+done
 
 sync_52X=()
-sync_52X+=('DataMuon;root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/29Jun2012-v1/0001/C46FD2A9-3FC3-E111-A1A8-485B39800C00.root')
-sync_52X+=('DataElectron;root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleElectron/AOD/29Jun2012-v1/0000/00507372-79C2-E111-B41C-003048FFCB6A.root')
-sync_52X+=("MCSignalEle;${hzg_list}")
-sync_52X+=('MCBkgMuo;root://cmsdca0.fnal.gov//store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0003/EAF43999-8D9B-E111-A418-003048D4610E.root')
-sync_52X+=('MCBkgEle;root://cmsdca0.fnal.gov//store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0002/002C5B35-519B-E111-862D-001E67398025.root')
+#sync_52X+=('DataMuon;root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/29Jun2012-v1/0001/C46FD2A9-3FC3-E111-A1A8-485B39800C00.root')
+#sync_52X+=('DataElectron;root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleElectron/AOD/29Jun2012-v1/0000/00507372-79C2-E111-B41C-003048FFCB6A.root')
+for idx in "${!hzg_list_arr[@]}"
+do
+  sync_52X+=("MCSignalEle${idx};${hzg_list_arr[$idx]}")
+done
+#sync_52X+=('MCBkgEle;root://cmsdca0.fnal.gov//store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0002/002C5B35-519B-E111-862D-001E67398025.root')
 
 for sync_test in ${sync_52X[@]}
 do
@@ -37,11 +45,11 @@ do
       then
       ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
 	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=ReReco\
-	  calibrationTarget=2012Jul13ReReco #&> ${part[0]}_sync.log  & 
+	  calibrationTarget=2012Jul13ReReco &> HZG_${parts[0]}_52X_sync.log  & 
       else
       ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
 	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=Summer12\
-	  calibrationTarget=Summer12_DR53X_HCP2012 #&> ${part[0]}_sync.log  &
+	  calibrationTarget=Summer12_DR53X_HCP2012 &> HZG_${parts[0]}_52X_sync.log  &
   fi  
 done
 #echo "Tuplizing ggH sample - will write log to ggH_tuplization.log"

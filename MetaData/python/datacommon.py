@@ -20,7 +20,8 @@ picobarns =  1.0
 femtobarns = 1.0e-3
 
 # Branching ratios
-br_w_leptons =  0.1075+0.1057+0.1125
+br_w_leptons = 0.1075+0.1057+0.1125
+br_z_leptons = 3*0.03365
 
 def square(x):
     return x*x

@@ -7,7 +7,8 @@ from FinalStateAnalysis.PatTools.electrons.patElectronVBTFEmbedding_cff import \
         electronsWP80, electronsWP90, electronsWP95, electronsWP95V, electronsVBTFId
 
 from FinalStateAnalysis.PatTools.electrons.patElectronRhoEmbedding_cfi import \
-        patElectronRhoEmbedding, patElectronZZRhoEmbedding, patElectronZZ2012RhoEmbedding
+        patElectronRhoEmbedding, patElectronZZRhoEmbedding, patElectronZZ2012RhoEmbedding, \
+	patElectronHZGRhoEmbedding
 
 from FinalStateAnalysis.PatTools.electrons.electronSystematics_cfi import \
         electronSystematics
@@ -45,6 +46,7 @@ customizeElectronSequence = cms.Sequence()
 customizeElectronSequence += gsfTrackCandidates
 customizeElectronSequence += patElectronRhoEmbedding
 customizeElectronSequence += patElectronZZRhoEmbedding
+customizeElectronSequence += patElectronHZGRhoEmbedding
 if cmssw_major_version() == 5:
 	customizeElectronSequence += patElectronZZ2012RhoEmbedding
 customizeElectronSequence += electronsWWID
