@@ -160,7 +160,8 @@ def add_hZg_iso_needs(process):
     process.kt6PFJetsCentralHZGEle = process.kt4PFJets.clone(
         rParam = cms.double(0.6),
         Rho_EtaMax = cms.double(2.5),        
-        doRhoFastjet  = cms.bool(True)
+        doRhoFastjet  = cms.bool(True),
+        voronoiRfact = cms.double(0.9)
         )
     
     process.kt6PFJetsCentralNeutralHZGMu = process.kt4PFJets.clone(
@@ -170,7 +171,8 @@ def add_hZg_iso_needs(process):
         Rho_EtaMax    = cms.double(2.5),
         inputEtMin    = cms.double(0.5),
         doAreaFastjet = cms.bool(True),
-        doRhoFastjet  = cms.bool(True)
+        doRhoFastjet  = cms.bool(True),
+        voronoiRfact = cms.double(0.9)
         )
 
     process.kt6PFJetsCentralHZGMu = process.kt4PFJets.clone(
@@ -178,7 +180,8 @@ def add_hZg_iso_needs(process):
         Ghost_EtaMax = cms.double(2.5),
         Rho_EtaMax = cms.double(2.5),
         doAreaFastjet = cms.bool(True),
-        doRhoFastjet  = cms.bool(True)
+        doRhoFastjet  = cms.bool(True),
+        voronoiRfact = cms.double(0.9)
         )
 
     process.hzg_isolations = cms.Sequence(

@@ -19,8 +19,14 @@ id = PSet(
     objectVBTFID = '{object}.userInt("VBTF")',
     objectWWID = '{object}.userInt("WWID")',
     objectPFIDTight = '{object}.userInt("tightID")',
-
+    objectIDHZG2011 = '{object}.userInt("HZG2011")',
+    objectIDHZG2012 = '{object}.userInt("HZG2012")',
     # For charged, we use ALL charged particles
+    objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
+    objectEffectiveArea2011 = '{object}.userFloat("ea_comb_iso04_kt6PFJCth05")',
+    objectPFChargedIso = cms.string('{object}.userIsolation(4)'),
+    objectPFNeutralIso = cms.string('{object}.userIsolation(5)'),
+    objectPFPhotonIso  = cms.string('{object}.userIsolation(6)'),
     objectRelPFIsoDB = cms.string(
         "({object}.userIso(0)"
         "+max({object}.photonIso()"
@@ -29,9 +35,26 @@ id = PSet(
         "/{object}.pt()"
     ),
     objectIsGlobal = '{object}.isGlobalMuon',
-    objectIsTracker = '{object}.isTrackerMuon',
+    objectIsTracker = '{object}.isTrackerMuon',    
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
     objectComesFromHiggs = 'comesFromHiggs({object_idx})',        
+)
+
+energyCorrections = PSet(
+    objectERochCor2011A = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011A").t',
+    objectPxRochCor2011A = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011A").x',
+    objectPyRochCor2011A = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011A").y',
+    objectPzRochCor2011A = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011A").z',
+    
+    objectERochCor2011B = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011B").t',
+    objectPxRochCor2011B = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011B").x',
+    objectPyRochCor2011B = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011B").y',
+    objectPzRochCor2011B = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011B").z',
+    
+    objectERochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").t'
+    objectPxRochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").x',
+    objectPyRochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").y',
+    objectPzRochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").z'
 )
 
 # Information about the associated track

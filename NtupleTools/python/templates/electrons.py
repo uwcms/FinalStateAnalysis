@@ -59,6 +59,36 @@ id = PSet(
     objectComesFromHiggs = 'comesFromHiggs({object_idx})',        
 )
 
+energyCorrections = PSet(
+    objectECorrSmearedNoReg_2012Jul13ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_2012Jul13ReReco").E',
+    objectdECorrSmearedNoReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_SmearedNoRegression_2012Jul13ReReco_error")',
+    objectECorrSmearedReg_2012Jul13ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_2012Jul13ReReco").E',
+    objectdECorrSmearedReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_SmearedRegression_2012Jul13ReReco_error")',
+    objectECorrReg_2012Jul13ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_2012Jul13ReReco").E',
+    objectdECorrReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_RegressionOnly_2012Jul13ReReco_error")',
+
+    objectECorrSmearedNoReg_Summer12_DR53X_HCP2012 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_Summer12_DR53X_HCP2012").E',
+    objectdECorrSmearedNoReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_SmearedNoRegression_Summer12_DR53X_HCP2012_error")',
+    objectECorrSmearedReg_Summer12_DR53X_HCP2012 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_Summer12_DR53X_HCP2012").E',
+    objectdECorrSmearedReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_SmearedRegression_Summer12_DR53X_HCP2012_error")',
+    objectECorrReg_Summer12_DR53X_HCP2012 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_Summer12_DR53X_HCP2012").E',
+    objectdECorrReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_RegressionOnly_Summer12_DR53X_HCP2012_error")',
+
+    objectECorrSmearedNoReg_Jan16ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_Jan16ReReco").E',
+    objectdECorrSmearedNoReg_Jan16ReReco = '{object}.userFloat("EGCorr_SmearedNoRegression_Jan16ReReco_error")',
+    objectECorrSmearedReg_Jan16ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_Jan16ReReco").E',
+    objectdECorrSmearedReg_Jan16ReReco = '{object}.userFloat("EGCorr_SmearedRegression_Jan16ReReco_error")',
+    objectECorrReg_Jan16ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_Jan16ReReco").E',
+    objectdECorrReg_Jan16ReReco = '{object}.userFloat("EGCorr_RegressionOnly_Jan16ReReco_error")',
+
+    objectECorrSmearedNoReg_Fall11 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_Fall11").E',
+    objectdECorrSmearedNoReg_Fall11 = '{object}.userFloat("EGCorr_SmearedNoRegression_Fall11_error")',
+    objectECorrSmearedReg_Fall11 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_Fall11").E',
+    objectdECorrSmearedReg_Fall11 = '{object}.userFloat("EGCorr_SmearedRegression_Fall11_error")',
+    objectECorrReg_Fall11 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_Fall11").E',
+    objectdECorrReg_Fall11 = '{object}.userFloat("EGCorr_RegressionOnly_Fall11_error")'
+)
+
 tracking = PSet(
     objectHasConversion = '{object}.userFloat("hasConversion")',
     objectMissingHits = cms.string(
