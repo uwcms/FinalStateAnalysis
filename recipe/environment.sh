@@ -19,17 +19,24 @@ export tests=$CMSSW_BASE/test/$SCRAM_ARCH/
 
 # Check CMSSW version
 MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
+MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 
 if [ "$MAJOR_VERSION" -eq "4" ]; then
   echo "Setting up CMSSW 4 global tags"
-  export datagt=GR_R_42_V24::All
+  export datagt=FT_R_42_V24::All
   export mcgt=START42_V17::All
 fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
-  echo "Setting up CMSSW 5 global tags"
-  export datagt=GR_P_V41_AN1::All
-  export mcgt=START53_V10::All
+  if [ "$MINOR_VERSION" -eq "2" ]; then
+      echo "Setting up CMSSW 5_2_X global tags"
+      export datagt=FT_R_52_V8D::All #reprocessing tags
+      export mcgt=START52_V9E::All #last 52X MC reprocessing
+  else
+      echo "Setting up CMSSW 5_3_X global tags"
+      export datagt=GR_P_V41_AN1::All
+      export mcgt=START53_V10::All
+  fi
 fi
 #  export datagt=GR_R_52_V8::All
 #  export mcgt=START52_V10::All

@@ -20,6 +20,7 @@ namespace pat {
   class Tau;
   class MET;
   class Jet;
+  class Photon;
 }
 
 namespace reco {
@@ -92,6 +93,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     edm::Ptr<pat::Muon> daughterAsMuon(size_t i) const;
     edm::Ptr<pat::Electron> daughterAsElectron(size_t i) const;
     edm::Ptr<pat::Jet> daughterAsJet(size_t i) const;
+    edm::Ptr<pat::Photon> daughterAsPhoton(size_t i) const;
 
     /// Check if the ith daughter is matched to a given filter.  Returns -1
     /// if filter doesn't exist.
@@ -201,6 +203,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     std::vector<const reco::Candidate*> vetoJets(
         double dR=0.1, const std::string& filter="") const;
 
+    std::vector<const reco::Candidate*> vetoPhotons(
+        double dR=0.1, const std::string& filter="") const;
+
     /// Get overlap objects at least dR within from the ith object, passing
     /// filter.
     std::vector<const reco::Candidate*> overlapMuons(
@@ -213,6 +218,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         int i, double dR=0.1, const std::string& filter="") const;
 
     std::vector<const reco::Candidate*> overlapJets(
+        int i, double dR=0.1, const std::string& filter="") const;
+
+    std::vector<const reco::Candidate*> overlapPhotons(
         int i, double dR=0.1, const std::string& filter="") const;
 
     /// Get the total mass, using the SuperCluster for one of the electrons.

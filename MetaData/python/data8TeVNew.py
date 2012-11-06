@@ -155,6 +155,13 @@ datadefs = {
    'x_sec' : -999,
    'pu' : 'S10',
    },
+   
+   'WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola' : {
+   'analyses' : ['Wbb'],
+   'datasetpath' : "/WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   },
 
    'DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
    'analyses': ['HTauTau'],
@@ -239,6 +246,13 @@ for mass in range(80,150, 10) + range(160, 220, 20) + range(250, 550, 50) + rang
       'pu' : 'S10',
       'x_sec' : -999,
       }
+
+datadefs['SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola'] = {
+   'analyses': ['HTT'],
+   'datasetpath': "/SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM",
+   'pu' : 'S10',
+   'x_sec' : -999,
+   }
 
 for mass in range(110, 165, 5) :
    datadefs['GluGluToHToTauTau_M-%i_8TeV-powheg-pythia6' % mass] = {

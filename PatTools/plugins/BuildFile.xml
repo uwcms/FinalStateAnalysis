@@ -12,6 +12,7 @@
   <use   name="CommonTools/Utils"/>
   <use   name="CommonTools/UtilAlgos"/>
   <use   name="PhysicsTools/Utilities"/>
+  <use   name="PhysicsTools/PatAlgos"/>
   
   <use   name="CondFormats/JetMETObjects"/>
   <use   name="JetMETCorrections/Objects"/>
