@@ -642,3 +642,34 @@ const bool PATFinalState::comesFromHiggs(size_t i) const
   else
     return false;
 }
+
+const math::XYZTLorentzVector 
+PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const 
+{
+  edm::Ptr<pat::Electron> ele = daughterAsElectron(i);
+  edm::Ptr<pat::Muon> mu = daughterAsMuon(i);
+  edm::Ptr<pat::Photon> pho = daughterAsPhoton(i);
+  edm::Ptr<pat::Jet> jet = daughterAsJet(i);
+  edm::Ptr<pat::Tau> tau = daughterAsTau(i);
+
+  const math::XYZTLorentzVector* result = NULL;
+
+  if(ele.isNonnull() && ele.isAvailable()) 
+    result = ele->userData<math::XYZTLorentzVector>(name);
+
+  if(mu.isNonnull() && mu.isAvailable()) 
+    result = mu->userData<math::XYZTLorentzVector>(name);
+
+  if(pho.isNonnull() && pho.isAvailable()) 
+    result = pho->userData<math::XYZTLorentzVector>(name);
+
+  if(jet.isNonnull() && jet.isAvailable()) 
+    result = jet->userData<math::XYZTLorentzVector>(name);
+
+  if(tau.isNonnull() && tau.isAvailable()) 
+    result = tau->userData<math::XYZTLorentzVector>(name);
+
+  assert(result && "The LorentzVector you requested does not exist!\n");
+
+  return *result;
+}

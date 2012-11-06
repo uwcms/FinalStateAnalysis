@@ -60,32 +60,32 @@ id = PSet(
 )
 
 energyCorrections = PSet(
-    objectECorrSmearedNoReg_2012Jul13ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_2012Jul13ReReco").E',
+    objectECorrSmearedNoReg_2012Jul13ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_2012Jul13ReReco").t',
     objectdECorrSmearedNoReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_SmearedNoRegression_2012Jul13ReReco_error")',
-    objectECorrSmearedReg_2012Jul13ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_2012Jul13ReReco").E',
+    objectECorrSmearedReg_2012Jul13ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_2012Jul13ReReco").t',
     objectdECorrSmearedReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_SmearedRegression_2012Jul13ReReco_error")',
-    objectECorrReg_2012Jul13ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_2012Jul13ReReco").E',
+    objectECorrReg_2012Jul13ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_2012Jul13ReReco").t',
     objectdECorrReg_2012Jul13ReReco = '{object}.userFloat("EGCorr_RegressionOnly_2012Jul13ReReco_error")',
 
-    objectECorrSmearedNoReg_Summer12_DR53X_HCP2012 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_Summer12_DR53X_HCP2012").E',
+    objectECorrSmearedNoReg_Summer12_DR53X_HCP2012 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_Summer12_DR53X_HCP2012").t',
     objectdECorrSmearedNoReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_SmearedNoRegression_Summer12_DR53X_HCP2012_error")',
-    objectECorrSmearedReg_Summer12_DR53X_HCP2012 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_Summer12_DR53X_HCP2012").E',
+    objectECorrSmearedReg_Summer12_DR53X_HCP2012 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_Summer12_DR53X_HCP2012").t',
     objectdECorrSmearedReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_SmearedRegression_Summer12_DR53X_HCP2012_error")',
-    objectECorrReg_Summer12_DR53X_HCP2012 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_Summer12_DR53X_HCP2012").E',
+    objectECorrReg_Summer12_DR53X_HCP2012 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_Summer12_DR53X_HCP2012").t',
     objectdECorrReg_Summer12_DR53X_HCP2012 = '{object}.userFloat("EGCorr_RegressionOnly_Summer12_DR53X_HCP2012_error")',
 
-    objectECorrSmearedNoReg_Jan16ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_Jan16ReReco").E',
+    objectECorrSmearedNoReg_Jan16ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_Jan16ReReco").t',
     objectdECorrSmearedNoReg_Jan16ReReco = '{object}.userFloat("EGCorr_SmearedNoRegression_Jan16ReReco_error")',
-    objectECorrSmearedReg_Jan16ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_Jan16ReReco").E',
+    objectECorrSmearedReg_Jan16ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_Jan16ReReco").t',
     objectdECorrSmearedReg_Jan16ReReco = '{object}.userFloat("EGCorr_SmearedRegression_Jan16ReReco_error")',
-    objectECorrReg_Jan16ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_Jan16ReReco").E',
+    objectECorrReg_Jan16ReReco = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_Jan16ReReco").t',
     objectdECorrReg_Jan16ReReco = '{object}.userFloat("EGCorr_RegressionOnly_Jan16ReReco_error")',
 
-    objectECorrSmearedNoReg_Fall11 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_Fall11").E',
+    objectECorrSmearedNoReg_Fall11 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedNoRegression_Fall11").t',
     objectdECorrSmearedNoReg_Fall11 = '{object}.userFloat("EGCorr_SmearedNoRegression_Fall11_error")',
-    objectECorrSmearedReg_Fall11 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_Fall11").E',
+    objectECorrSmearedReg_Fall11 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_SmearedRegression_Fall11").t',
     objectdECorrSmearedReg_Fall11 = '{object}.userFloat("EGCorr_SmearedRegression_Fall11_error")',
-    objectECorrReg_Fall11 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_Fall11").E',
+    objectECorrReg_Fall11 = '{object}.userData<math::XYTZLorentzVector>("EGCorr_RegressionOnly_Fall11").t',
     objectdECorrReg_Fall11 = '{object}.userFloat("EGCorr_RegressionOnly_Fall11_error")'
 )
 

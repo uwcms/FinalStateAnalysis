@@ -66,7 +66,7 @@ _electron_template = PSet(
     templates.candidates.kinematics,
     templates.candidates.vertex_info,
     templates.electrons.id,
-    templates.electron.energyCorrections,
+    templates.electrons.energyCorrections,
     templates.electrons.tracking,
     templates.electrons.supercluster,
     templates.electrons.trigger,
@@ -139,7 +139,7 @@ def make_ntuple(*legs, **kwargs):
 
     '''
     # Make sure we only use allowed leg types
-    allowed = set(['m', 'e', 't'])
+    allowed = set(['m', 'e', 't', 'g'])
     assert(all(x in allowed for x in legs))
     # Make object labels
     object_labels = []

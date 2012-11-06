@@ -51,7 +51,7 @@ energyCorrections = PSet(
     objectPyRochCor2011B = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011B").y',
     objectPzRochCor2011B = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011B").z',
     
-    objectERochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").t'
+    objectERochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").t',
     objectPxRochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").x',
     objectPyRochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").y',
     objectPzRochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").z'

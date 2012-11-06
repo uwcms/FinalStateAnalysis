@@ -257,6 +257,11 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     const reco::GenParticleRef getDaughterGenParticleMotherSmart(size_t i) const;
     const bool comesFromHiggs(size_t i) const;
 
+    // Things to get LorentzVectors and other complex datatypes
+    // out of objects
+    const math::XYZTLorentzVector getUserLorentzVector(size_t i,
+						   const std::string&) const;
+
   private:
     edm::Ptr<PATFinalStateEvent> event_;
 };
