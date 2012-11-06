@@ -41,20 +41,20 @@ id = PSet(
 )
 
 energyCorrections = PSet(
-    objectERochCor2011A = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011A").t',
-    objectPxRochCor2011A = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011A").x',
-    objectPyRochCor2011A = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011A").y',
-    objectPzRochCor2011A = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011A").z',
+    objectERochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").t',
+    objectPxRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").x',
+    objectPyRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").y',
+    objectPzRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").z',
     
-    objectERochCor2011B = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011B").t',
-    objectPxRochCor2011B = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011B").x',
-    objectPyRochCor2011B = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011B").y',
-    objectPzRochCor2011B = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2011B").z',
+    objectERochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").t',
+    objectPxRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").x',
+    objectPyRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").y',
+    objectPzRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").z',
     
-    objectERochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").t',
-    objectPxRochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").x',
-    objectPyRochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").y',
-    objectPzRochCor2012 = '{object}.userData<XYTZ::LorentzVector>("p4_RochCor2012").z'
+    objectERochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").t',
+    objectPxRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").x',
+    objectPyRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").y',
+    objectPzRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").z'
 )
 
 # Information about the associated track
