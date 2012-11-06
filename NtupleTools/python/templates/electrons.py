@@ -46,6 +46,15 @@ id = PSet(
     objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
     objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
     objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
+    # shower shape / ID variables
+    objectHadronicOverEM = '{object}.hcalOverEcal',
+    objectHadronicDepth1OverEm = '{object}.hadronicDepth1OverEcal',
+    objectHadronicDepth2OverEm = '{object}.hadronicDepth2OverEcal',
+    objectSigmaIEtaIEta = '{object}.sigmaIetaIeta',
+    objectE1x5 = '{object}.scE1x5',
+    objectE2x5 = '{object}.scE2x5',
+    objectE2x5Max = '{object}.scE2x5Max',
+    objectE5x5 = '{object}.scE5x5',
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
     objectComesFromHiggs = 'comesFromHiggs({object_idx})',        
 )
@@ -73,7 +82,12 @@ trigger = PSet(
     objectMu17Ele8CaloIdTPixelMatchFilter  = 'matchToHLTFilter({object_idx}, "hltMu17Ele8CaloIdTPixelMatchFilter")',
     objectL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter  = 'matchToHLTFilter({object_idx}, "hltL1NonIsoHLTNonIsoMu17Ele8PixelMatchFilter")',
     objectMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter  = 'matchToHLTFilter({object_idx}, "hltMu17Ele8CaloIdTCaloIsoVLTrkIdVLTrkIsoVLTrackIsoFilter")',
+    objectEle27WP80TrackIsoMatchFilter = 'matchToHLTFilter({object_idx}, "hltEle27WP80TrackIsoFilter")',
+    objectEle32WP70PFMT50PFMTFilter = 'matchToHLTFilter({object_idx},"hltEle32WP70PFMT50PFMTFilter")',
+    objectEle27WP80PFMT50PFMTFilter = 'matchToHLTFilter({object_idx},"hltEle27WP80PFMT50PFMTFilter")',
     objectMatchesDoubleEPath       = r'matchToHLTPath({object_idx}, "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v\\d+,HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
     objectMatchesMu17Ele8Path      = r'matchToHLTPath({object_idx}, "HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
     objectMatchesMu8Ele17Path      = r'matchToHLTPath({object_idx}, "HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+")',
+    objectMatchesSingleE    = r'matchToHLTPath({object_idx}, "HLT_Ele27_WP80_v\\d+,HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v\\d+,HLT_Ele32_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v\\d+")',
+    objectMatchesSingleEPlusMET = r'matchToHLTPath({object_idx},"HLT_Ele27_WP80_PFMET_MT50_v\\d+,HLT_Ele32_WP70_PFMT50_v\\d+"',
 )

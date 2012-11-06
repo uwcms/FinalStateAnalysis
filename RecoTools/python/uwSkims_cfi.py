@@ -108,3 +108,4 @@ skimConfig.paths.append("mu17e8Path")
 oneMuonAbove8 = twoMuonsAbove8.clone(minNumber = cms.uint32(1))
 mu8e17Path = cms.Path(e17Selector + mu8Selector + oneMuonAbove8)
 skimConfig.paths.append("mu8e17Path")
+
