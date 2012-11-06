@@ -72,5 +72,7 @@ mueg = PSet(
         paths=r'HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+')
 )
 
-singlePho = _trig_template.replace( name='singlePho', paths='' )
-doublePho = _trig_template.replace( name='doublePho', paths='' )
+#singlePho = _trig_template.replace( name='singlePho', paths='' )
+doublePho = _trig_template.replace(
+    name='doublePho',
+    paths=r'HLT_Photon26_CaloId10_Iso50_Photon18_CaloId10_Iso50_Mass60_v\\d+,HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass70_v\\d+,HLT_Photon36_R9Id85_OR_CaloId10_Iso50_Photon10_R9Id85_OR_CaloId10_Iso50_Mass80_v\\d+' )
