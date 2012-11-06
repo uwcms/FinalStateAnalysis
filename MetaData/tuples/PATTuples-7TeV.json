@@ -14,11 +14,18 @@
   "VH_140" : "/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-140_7TeV-pythia6-tauola/VH_140_2012-05-29-7TeV-PatTuple-b08cf9d/56ab502025294ab6bf9a34ba9120377b/",
   "WH_140_HWW3l" : "!/WH_HToWW_3l_M-140_7TeV-pythia6/friis-WH_140_HWW3l_2012-05-29-7TeV-PatTuple-b08cf9d-2b5748ff685f03c3a281599f793ad0c8/USER",
 
+  "VH_110_HWW" : "/hdfs/store/user/tapas/2012-09-27-7TeV-PatTuple/VHWW_lepdecay_110",
+  "VH_120_HWW" : "/hdfs/store/user/tapas/2012-09-27-7TeV-PatTuple/VHWW_lepdecay_120",
+  "VH_140_HWW" : "/hdfs/store/user/tapas/2012-09-27-7TeV-PatTuple/VHWW_lepdecay_140",
+
   "data_DoubleMu_Run2011B_PromptReco_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011B_PromptReco_v1/",
   "data_DoubleMu_Run2011A_PromptReco_v6_1409" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_PromptReco_v6_1409/",
   "data_DoubleMu_Run2011A_05Aug2011_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_05Aug2011_v1/",
   "data_DoubleMu_Run2011A_May10ReReco_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_May10ReReco_v1/",
   "data_DoubleMu_Run2011A_PromptReco_v4" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_PromptReco_v4/",
+
+  "data_DoubleElectron_Run2011B_16Jan2012_v1" : "/hdfs/store/user/tapas/2012-10-10-7TeV-42X-PatTuple_ShareFSFix/data_DoubleElectron_Run2011B_16Jan2012_v1",
+  "data_DoubleElectron_Run2011A_16Jan2012_v1" : "/hdfs/store/user/tapas/2012-11-04-7TeV-42X-PatTuple_HCP2012/data_DoubleElectron_Run2011A_16Jan2012_v1",
 
   "data_MuEG_Run2011B_PromptReco_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011B_PromptReco_v1/",
   "data_MuEG_Run2011A_PromptReco_v6_1409" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011A_PromptReco_v6_1409/",

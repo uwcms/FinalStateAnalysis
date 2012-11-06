@@ -71,6 +71,8 @@ cdef class {TreeName}:
     cdef int currentTreeNumber
     cdef long ientry
     cdef long localentry
+    # Keep track of missing branches we have complained about.
+    cdef public set complained
 
     # Branches and address for all
 {branchblock}
@@ -84,6 +86,7 @@ cdef class {TreeName}:
         self.currentTreeNumber = -1
         #print self.tree.GetEntries()
         #self.load_entry(0)
+        self.complained = set([])
 
     cdef load_entry(self, long i):
         #print "load", i
@@ -214,9 +217,11 @@ def make_pyx(name, tree):
 '''
         #print "making {branchname}"
         self.{branchname}_branch = the_tree.GetBranch("{branchname}")
-        if not self.{branchname}_branch:
+        #if not self.{branchname}_branch and "{branchname}" not in self.complained:
+        if not self.{branchname}_branch and "{branchname}":
             print "{TreeName}: Expected branch {branchname} does not exist!" \
                " It will crash if you try and use it!"
+            #self.complained.add("{branchname}")
         else:
             self.{branchname}_branch.SetAddress(<void*>&self.{branchname}_value)
 '''.format(branchname=branch_name, branchtype=branch_type, TreeName=name)

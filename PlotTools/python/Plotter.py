@@ -48,8 +48,8 @@ class Plotter(object):
             'Zjets_M50',
             'WplusJets_madgraph',
             'TTplusJets_madgraph',
-            'WZJetsTo3LNu*',
-            'ZZJetsTo4L*',
+            'WZ*',
+            'ZZ*',
             'WW*',
         ]
 
@@ -99,7 +99,7 @@ class Plotter(object):
         self.keep.append(legend)
         return legend
 
-    def add_cms_blurb(self, sqrts, preliminary=True):
+    def add_cms_blurb(self, sqrts, preliminary=True, lumiformat='%0.f'):
         ''' Add the CMS blurb '''
         latex = ROOT.TLatex()
         latex.SetNDC();
@@ -109,8 +109,9 @@ class Plotter(object):
         label_text = "CMS"
         if preliminary:
             label_text += " Preliminary"
-        label_text += " %i TeV" % sqrts
-        label_text += " %0.1f fb^{-1}" % (self.views['data']['intlumi']/1000.)
+        label_text += " %i TeV " % sqrts
+        label_text += (lumiformat + " fb^{-1}") % (
+            self.views['data']['intlumi']/1000.)
         self.keep.append(latex.DrawLatex(0.18,0.96, label_text));
 
     def save(self, filename):

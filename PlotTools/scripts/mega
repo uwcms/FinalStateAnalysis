@@ -13,6 +13,8 @@ import logging
 import multiprocessing
 import os
 import sys
+
+from FinalStateAnalysis.PlotTools.ChainProcessor import ChainProcessor
 from FinalStateAnalysis.PlotTools.Dispatcher import MegaDispatcher
 
 log = multiprocessing.log_to_stderr()
@@ -29,7 +31,9 @@ if __name__ == "__main__":
 
     parser.add_argument('inputs', metavar='inputs', type=str,
                         help='Text file with input files.  '
-                        'One job will be created for each input file.')
+                        'If this option does not end with ".txt", '
+                        'it will be assumed to be a comma separated list of '
+                        'files (no spaces please).')
 
     parser.add_argument('output', metavar='output',
                         type=str, help='Output root file')
@@ -44,8 +48,8 @@ if __name__ == "__main__":
     parser.add_argument('--chain', type=int, required=False,
                         default=1, help='Number of files to chain together')
 
-    parser.add_argument('-d', '--dir', type=str, required=False,
-                        default='', help='Save results in [dir]')
+    parser.add_argument('--single-mode', action='store_true', dest='single',
+                        help="Run as a single job.")
 
     parser.add_argument('--verbose', action='store_const', const=True,
                         default=False, help='Print debug output')
@@ -57,20 +61,27 @@ if __name__ == "__main__":
         log.setLevel(logging.DEBUG)
         multiprocessing.get_logger().setLevel(logging.DEBUG)
 
-    log.info("Creating mega session with %i workers" % args.workers)
+    if not args.single:
+        log.info("Creating mega session with %i workers" % args.workers)
+    else:
+        log.info("Creating mega session with 1 workers - single mode")
 
-    log.info("Checking inputs file %s exists..." % args.inputs)
-    # Get the inputs to make sure it exists
-    if not os.path.exists(args.inputs):
-        log.error(
-            "Error: inputs %s input file does not exist", args.inputs)
-        sys.exit(5)
     file_list = []
-    with open(args.inputs) as inputs_file:
-        for line in inputs_file:
-            line = line.strip()
-            if line and not line.startswith('#'):
-                file_list.append(line)
+    if '.txt' in args.inputs:
+        log.info("Checking inputs file %s exists..." % args.inputs)
+        # Get the inputs to make sure it exists
+        if not os.path.exists(args.inputs):
+            log.error(
+                "Error: inputs %s input file does not exist", args.inputs)
+            sys.exit(5)
+        with open(args.inputs) as inputs_file:
+            for line in inputs_file:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    file_list.append(line)
+    else:
+        for x in args.inputs.split(','):
+            file_list.append(x.strip())
 
     if not file_list:
         log.error("Dataset %s has no files!  Skipping..." % args.inputs)
@@ -94,7 +105,15 @@ if __name__ == "__main__":
         log.info("Getting tree name from selector module")
         tree_name = selector.tree
 
-    dispatch = MegaDispatcher(file_list, tree_name, args.output, selector,
-                              args.workers, nchain=args.chain)
-    dispatch.run()
+    if not args.single:
+        log.info("Dispatching jobs")
+        dispatch = MegaDispatcher(file_list, tree_name, args.output, selector,
+                                  args.workers, nchain=args.chain)
+        dispatch.run()
+    else:
+        log.info("Running job as single process")
+        print args.output
+        processor = ChainProcessor(file_list, tree_name, selector,
+                                   args.output, log)
+        result = processor.process()
     log.info("Mega2 job is complete")

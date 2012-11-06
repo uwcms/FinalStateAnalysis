@@ -10,6 +10,7 @@ Objects are written to an output file.
 
 import ROOT
 
+
 class ChainProcessor(object):
     def __init__(self, files, treename, selector, output_file, log, **kwargs):
         self.log = log
