@@ -1,1 +1,0 @@
-../plotting/HCSaW/Higgs_CS_and_Width_SM4/txtFiles/HiggsCS_Official_SM4.txt

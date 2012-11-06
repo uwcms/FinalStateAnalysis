@@ -106,9 +106,9 @@ void PATPhotonPFIsolationEmbedder::produce(Event& evt,
 	newPhoton.setIsolation(pat::PfGammaIso,the_iso.iso_photon);
       } else {
 	newPhoton.addUserFloat(_userFloatPrefix+_i_chad+postfix, 
-			     the_iso.iso_chg_had);
+			       the_iso.iso_chg_had);
 	newPhoton.addUserFloat(_userFloatPrefix+_i_nhad+postfix, 
-			     the_iso.iso_neut_had);
+			       the_iso.iso_neut_had);
 	newPhoton.addUserFloat(_userFloatPrefix+_i_pho+postfix,  
 			       the_iso.iso_photon);
 	newPhoton.addUserFloat(_userFloatPrefix+_cone+postfix,

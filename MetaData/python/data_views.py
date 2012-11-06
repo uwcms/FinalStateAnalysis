@@ -65,7 +65,13 @@ def data_views(files, lumifiles):
 
     log.info("Found the following data samples:")
     log.info(" ".join(datafiles))
-    datalumi = sum(lumi_files[x] for x in datafiles)
+    datalumi = 0
+    for x in datafiles:
+        if x not in lumi_files:
+            raise KeyError(
+                "Can't find a lumi file for %s - I have these ones: " % x
+                + repr(lumi_files.keys()))
+        datalumi += lumi_files[x]
     log.info("-> total int. lumi = %0.0fpb-1", datalumi)
 
     # Figure out the dataset for each file, and the int lumi.

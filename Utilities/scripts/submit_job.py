@@ -83,6 +83,11 @@ if __name__ == "__main__":
     )
 
     farmout_group.add_argument(
+        '--shared-fs', dest='sharedfs', action='store_true',
+        help = 'Use only nodes with access to AFS',
+    )
+
+    farmout_group.add_argument(
         '--submit-dir', dest='subdir',
         default='/scratch/{user}/{jobid}/{sample}/submit',
         help = 'Where to put submit files. Default: %s(default)s',
@@ -217,6 +222,8 @@ if __name__ == "__main__":
             '"--output-dir=%s"' % output_dir,
             '--input-files-per-job=%i' % args.filesperjob,
         ]
+        if args.sharedfs:
+            command.append('--shared-fs')
         command.extend(input_commands)
         command.extend([
             # The job ID
