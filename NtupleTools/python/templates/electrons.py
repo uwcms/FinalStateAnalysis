@@ -48,8 +48,8 @@ id = PSet(
     objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
     # shower shape / ID variables
     objectHadronicOverEM = '{object}.hcalOverEcal',
-    objectHadronicDepth1OverEm = '{object}.hadronicDepth1OverEcal',
-    objectHadronicDepth2OverEm = '{object}.hadronicDepth2OverEcal',
+    objectHadronicDepth1OverEm = '{object}.hcalDepth1OverEcal',
+    objectHadronicDepth2OverEm = '{object}.hcalDepth2OverEcal',
     objectSigmaIEtaIEta = '{object}.sigmaIetaIeta',
     objectE1x5 = '{object}.scE1x5',
     objectE2x5Max = '{object}.scE2x5Max',
