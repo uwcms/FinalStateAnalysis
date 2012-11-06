@@ -306,10 +306,16 @@ datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713*br_w_leptons + 0.2728*br_z_leptons
 
 # Add the cross sections for WH->HWW samples.  We use the 7TeV ones here,
 # and then just change the xsec.
-datadefs['WH_110_HWW3l'] = { 'x_sec' : 1.060*cube(br_w_leptons)*4.82E-02 }
+datadefs['WH_110_HWW3l'] = { 'x_sec' : 1.060*cube(br_w_leptons)* 4.82E-02 }
 datadefs['WH_120_HWW3l'] = { 'x_sec' : 0.7966*cube(br_w_leptons)*1.43E-01 }
 datadefs['WH_130_HWW3l'] = { 'x_sec' : 0.6095*cube(br_w_leptons)*3.05E-01 }
 datadefs['WH_140_HWW3l'] = { 'x_sec' : 0.4713*cube(br_w_leptons)*5.03E-01 }
+
+#VH->HWW xsec: WH + ZH; ZH --> totalxsec * BR(ZtoLL) * BR(HtoWW) * BR( WtoLL )^2
+datadefs['VH_110_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.5869 * br_z_leptons * 4.77E-02 * br_w_leptons**2}
+datadefs['VH_120_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.4483 * br_z_leptons * 1.41E-01 * br_w_leptons**2}
+datadefs['VH_130_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.3473 * br_z_leptons * 3.03E-01 * br_w_leptons**2}
+datadefs['VH_140_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.2728 * br_z_leptons * 5.01E-01 * br_w_leptons**2}
 
 # Add data files
 def build_data_set(pd, analyses):
