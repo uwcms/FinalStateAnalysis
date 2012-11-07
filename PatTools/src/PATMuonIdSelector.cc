@@ -157,7 +157,7 @@ void PATMuonIdSelectorImp::select(const edm::Handle<collection>& patMuonCollecti
 
     if ( !patMuon->isGlobalMuon()                                                                ) continue;
     if ( !use2012IDVariables_ && !patMuon->isTrackerMuon()                                       ) continue;
-    if (  use2012IDVariables_  && ( usePFMuonReq_ && !(patMuon->type() & kPFMuonType) )          ) continue;
+    if ( use2012IDVariables_  && usePFMuonReq_ && !(patMuon->type() & kPFMuonType)               ) continue;
     if ( !isValidRef(patMuon->globalTrack())                                                     ) continue;
     if ( !isValidRef(patMuon->innerTrack())                                                      ) continue;
 
@@ -172,14 +172,14 @@ void PATMuonIdSelectorImp::select(const edm::Handle<collection>& patMuonCollecti
     if ( !(TMath::Abs(muonTrack->dz(IPrefPoint)) < maxIPz_)                                      ) continue;
 
     if ( !(patMuon->globalTrack()->normalizedChi2() < maxChi2red_)                               ) continue;
-    if ( !(!use2012IDVariables_ && 
-	   patMuon->innerTrack()->ptError() < (maxDptOverPt_*patMuon->innerTrack()->pt()))       ) continue;
+    if ( !use2012IDVariables_ && 
+	 !(patMuon->innerTrack()->ptError() < (maxDptOverPt_*patMuon->innerTrack()->pt()))       ) continue;
 
     const reco::HitPattern& innerTrackHitPattern = patMuon->innerTrack()->hitPattern();
-    if ( !( (!use2012IDVariables_ && 
-	      innerTrackHitPattern.numberOfValidTrackerHits() >= (int)minTrackerHits_) ||
-	    ( use2012IDVariables_ && 
-	      innerTrackHitPattern.trackerLayersWithMeasurement() >= (int)minTkLayersWithMeasurement_) ) ) continue;
+    if ( !use2012IDVariables_ && 
+	 !(innerTrackHitPattern.numberOfValidTrackerHits() >= (int)minTrackerHits_) )   continue; 
+    if (  use2012IDVariables_ && 
+	 !(innerTrackHitPattern.trackerLayersWithMeasurement() >= (int)minTkLayersWithMeasurement_) ) continue;
     if ( !(innerTrackHitPattern.numberOfValidPixelHits() >= (int)minPixelHits_)                  ) continue;
 
     //---------------------------------------------------------------------------
