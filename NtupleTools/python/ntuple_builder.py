@@ -28,12 +28,15 @@ _common_template = PSet(
     templates.event.gen,
     # templates.Vetoes on extra objects
     templates.cleaning.vetos,
-    # We only need to worry about lepton triggers
+    # Need to fill out photon triggers
     templates.trigger.mueg,
     templates.trigger.doublemu,
     templates.trigger.doublee,
     templates.trigger.isomu,
     templates.trigger.singlemu,
+    templates.trigger.singlee,
+    templates.trigger.singlePho,
+    templates.trigger.doublePho
 )
 
 # Define the branch templates for different object types.
@@ -52,6 +55,7 @@ _muon_template = PSet(
     templates.candidates.kinematics,
     templates.candidates.vertex_info,
     templates.muons.id,
+    templates.muons.energyCorrections,
     templates.muons.tracking,
     templates.muons.trigger,
     templates.topology.mtToMET,
@@ -62,9 +66,21 @@ _electron_template = PSet(
     templates.candidates.kinematics,
     templates.candidates.vertex_info,
     templates.electrons.id,
+    templates.electrons.energyCorrections,
     templates.electrons.tracking,
     templates.electrons.supercluster,
     templates.electrons.trigger,
+    templates.topology.mtToMET,
+)
+
+_photon_template = PSet(
+    templates.candidates.base_jet,
+    templates.candidates.kinematics,
+    #templates.candidates.vertex_info, #photons have no tracking info
+    templates.photons.id,
+    templates.photons.tracking,
+    templates.photons.supercluster,
+    #templates.photons.trigger, #add photons later
     templates.topology.mtToMET,
 )
 
@@ -72,25 +88,29 @@ _leg_templates = {
     't' : _tau_template,
     'm' : _muon_template,
     'e' : _electron_template,
+    'g' : _photon_template
 }
 
 _pt_cuts = {
-    'm' : '9',
-    'e' : '9',
+    'm' : '7',
+    'e' : '7',
     't' : '18',
+    'g' : '10'
 }
 
 _eta_cuts = {
     'm' : '2.5',
     'e' : '2.5',
     't' : '2.3',
+    'g' : '3.0'
 }
 
 # How to get from a leg name to "finalStateElecMuMuMu" etc
 _producer_translation = {
     'm' : 'Mu',
     'e' : 'Elec',
-    't' : 'Tau'
+    't' : 'Tau',
+    'g' : 'Pho'
 }
 
 def add_ntuple(name, analyzer, process, schedule):
@@ -119,7 +139,7 @@ def make_ntuple(*legs, **kwargs):
 
     '''
     # Make sure we only use allowed leg types
-    allowed = set(['m', 'e', 't'])
+    allowed = set(['m', 'e', 't', 'g'])
     assert(all(x in allowed for x in legs))
     # Make object labels
     object_labels = []
@@ -130,7 +150,8 @@ def make_ntuple(*legs, **kwargs):
     counts = {
         't' : 0,
         'm' : 0,
-        'e' : 0
+        'e' : 0,
+        'g' : 0
     }
 
     ntuple_config = _common_template.clone()

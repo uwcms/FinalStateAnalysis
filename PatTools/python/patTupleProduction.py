@@ -43,6 +43,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_kt6PFJetsCentralNeutralHZGMu_rho_*',
         '*_kt6PFJetsCentral_rho_*',
         '*_kt6PFJetsCentralNeutral_rho_*', #for zz muons
+        '*_photonCore_*_*',
         # for Zmumu -> embedded samples
         '*_generator_weight_*', # 2k11
         "GenFilterInfo_generator_minVisPtFilter_*", #2k12
