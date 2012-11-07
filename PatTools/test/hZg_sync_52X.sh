@@ -19,7 +19,7 @@ echo $label
 #Sum12 Bkg : 
 #Sum12 Sig : 
 
-hzg_list=`dbs lsf --path=/GluGluToHToZG_M-125_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM | head -20 | tail -17 | tr -d ' ' | sed 's/\/store/root\:\/\/cmsxrootd\.hep\.wisc\.edu\/\/store/'`
+hzg_list=`dbs lsf --path=/GluGluToHToZG_M-125_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM | head -20 | tail -17 | tr -d ' ' | sed 's/\/store/root\:\/\/cmsxrootd\.hep\.wisc\.edu\/\/store/' | head -1`
 
 hzg_list_arr=()
 for item in $hzg_list
@@ -45,11 +45,11 @@ do
       then
       ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
 	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=ReReco\
-	  calibrationTarget=2012Jul13ReReco &> HZG_${parts[0]}_52X_sync.log  & 
+	  calibrationTarget=2012Jul13ReReco #&> HZG_${parts[0]}_52X_sync.log  & 
       else
-      ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
+      ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=500\
 	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=Summer12\
-	  calibrationTarget=Summer12_DR53X_HCP2012 &> HZG_${parts[0]}_52X_sync.log  &
+	  calibrationTarget=Summer12_DR53X_HCP2012 #&> HZG_${parts[0]}_52X_sync.log  &
   fi  
 done
 #echo "Tuplizing ggH sample - will write log to ggH_tuplization.log"

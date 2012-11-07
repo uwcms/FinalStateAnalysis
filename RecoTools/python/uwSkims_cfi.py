@@ -108,3 +108,22 @@ skimConfig.paths.append("mu17e8Path")
 oneMuonAbove8 = twoMuonsAbove8.clone(minNumber = cms.uint32(1))
 mu8e17Path = cms.Path(e17Selector + mu8Selector + oneMuonAbove8)
 skimConfig.paths.append("mu8e17Path")
+
+#diphoton skims ;-)
+pho15Selector = cms.EDFilter(
+    "PhotonSelector",
+    src = cms.InputTag("photons"),
+    cut = cms.string("abs(eta) < 3.0 & pt > 15"),
+    filter=cms.bool(False)
+)
+
+twoPhotonsAbove15 = cms.EDFilter(
+    "CandViewCountFilter",
+    src = cms.InputTag("pho15Selector"),
+    minNumber = cms.uint32(2)
+)
+
+diPho15Path = cms.Path(pho15Selector + twoPhotonsAbove15)
+skimConfig.paths.append("diPho15Path")
+
+

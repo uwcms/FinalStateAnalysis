@@ -17,7 +17,9 @@ patElectronCutBasedIdEmbedder = cms.EDProducer(
     conversionsSrc = cms.InputTag("allConversions"),
     beamspotSrc    = cms.InputTag("offlineBeamSpot"),
     vtxSrc         = cms.InputTag("offlinePrimaryVertices"),
-    wps_to_apply   = cms.vstring("CBID_LOOSE",
+    wps_to_apply   = cms.vstring("CBID_TIGHT",
+                                 "CBID_MEDIUM",
+                                 "CBID_LOOSE",
                                  "CBID_VETO"),                                 
     available_working_points = available_wps    
 )
