@@ -27,7 +27,7 @@ id = PSet(
     objectEffectiveAreaNHad = '{object}.userFloat("PhotonEA_pfneut")',
     objectEffectiveAreaPho  = '{object}.userFloat("PhotonEA_pfpho")',    
     # photon id variables
-    objectConvSafeElectronVeto = '{object}.userInt("ConvSaveElectronVeto")',
+    objectConvSafeElectronVeto = '{object}.userInt("ConvSafeElectronVeto")',
     objectHadronicOverEM = '{object}.hadronicOverEm',
     objectHadronicDepth1OverEm = '{object}.hadronicDepth1OverEm',
     objectHadronicDepth2OverEm = '{object}.hadronicDepth2OverEm',
