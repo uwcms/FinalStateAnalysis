@@ -7,7 +7,8 @@ from FinalStateAnalysis.PatTools.electrons.patElectronVBTFEmbedding_cff import \
         electronsWP80, electronsWP90, electronsWP95, electronsWP95V, electronsVBTFId
 
 from FinalStateAnalysis.PatTools.electrons.patElectronRhoEmbedding_cfi import \
-        patElectronRhoEmbedding, patElectronZZRhoEmbedding, patElectronZZ2012RhoEmbedding
+        patElectronRhoEmbedding, patElectronZZRhoEmbedding, patElectronZZ2012RhoEmbedding, \
+	patElectronHZGRhoEmbedding
 
 from FinalStateAnalysis.PatTools.electrons.electronSystematics_cfi import \
         electronSystematics
@@ -22,6 +23,12 @@ from FinalStateAnalysis.PatTools.electrons.patElectronMVAIDEmbedding_cfi import\
 from FinalStateAnalysis.PatTools.electrons.patElectronMVAWPEmbedding_cfi import\
         patElectronMVAIDWPEmbedding
 
+from FinalStateAnalysis.PatTools.electrons.electronCutBasedID_cfi import \
+     patElectronCutBasedIdEmbedder
+
+from FinalStateAnalysis.PatTools.electrons.patElectronEAEmbedding_cfi import \
+     patElectronEAEmbedder
+
 from FinalStateAnalysis.PatTools.electrons.patElectronEmbedJetInfo_cfi import \
         patElectronsEmbedJetInfo
 
@@ -31,10 +38,15 @@ from FinalStateAnalysis.PatTools.electrons.patElectronsIpEmbedding_cfi import \
 from FinalStateAnalysis.PatTools.electrons.eTrackCandidates_cfi import \
         gsfTrackCandidates
 
+# Electron Energy Regression and Calibrations
+from FinalStateAnalysis.PatTools.electrons.patElectronEnergyCorrections_cfi import \
+     patElectronEnergyCorrections
+
 customizeElectronSequence = cms.Sequence()
 customizeElectronSequence += gsfTrackCandidates
 customizeElectronSequence += patElectronRhoEmbedding
 customizeElectronSequence += patElectronZZRhoEmbedding
+customizeElectronSequence += patElectronHZGRhoEmbedding
 if cmssw_major_version() == 5:
 	customizeElectronSequence += patElectronZZ2012RhoEmbedding
 customizeElectronSequence += electronsWWID
@@ -43,6 +55,9 @@ customizeElectronSequence += patElectronsEmbedJetInfo
 customizeElectronSequence += electronSystematics
 #customizeElectronSequence += triggeredPatElectrons
 #customizeElectronSequence += triggeredPatElectronsL
+customizeElectronSequence += patElectronCutBasedIdEmbedder
+customizeElectronSequence += patElectronEAEmbedder
 customizeElectronSequence += patElectronMVAIDEmbedder
 customizeElectronSequence += patElectronMVAIDWPEmbedding
 customizeElectronSequence += patElectronsEmbedIp
+customizeElectronSequence += patElectronEnergyCorrections

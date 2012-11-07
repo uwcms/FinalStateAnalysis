@@ -5,8 +5,8 @@ Functions to build the PATFinalStateEvents and friends on top of the PAT tuple
 Arguments:
     process : the CMS process
     collections : a dictionary matching
-        'electrons', 'muons', 'taus', 'jets', and 'met' to the appropriate
-        collections (like cleanPatElectrons)
+        'electrons', 'muons', 'taus', 'jets', 'photons', and 'met'
+        to the appropriate collections (like cleanPatElectrons)
     output_commands : will be modified in place with new products
     sequence : analysis sequence to add to
     puTag : what PU scenario we are in
@@ -47,6 +47,7 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
     tausrc = collections['taus']
     jetsrc = collections['jets']
     metsrc = collections['met']
+    phosrc = collections['photons']
 
     # Build the PATFinalStateEventObject
     if buildFSAEvent == True:
@@ -55,6 +56,7 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
         process.patFinalStateEventProducer.muonSrc = cms.InputTag(muonsrc)
         process.patFinalStateEventProducer.tauSrc = cms.InputTag(tausrc)
         process.patFinalStateEventProducer.jetSrc = cms.InputTag(jetsrc)
+        process.patFinalStateEventProducer.phoSrc = cms.InputTag(phosrc)
         process.patFinalStateEventProducer.metSrc = metsrc
         process.patFinalStateEventProducer.puTag = cms.string(puTag)
         sequence += process.patFinalStateEventProducer
@@ -87,6 +89,13 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
         filter = cms.bool(False),
     )
 
+    process.photonsForFinalStates = cms.EDFilter(
+        "PATPhotonRefSelector",
+        src = cms.InputTag(phosrc),
+        cut = cms.string('abs(eta) < 2.5 & pt > 10'),
+        filter = cms.bool(False),
+    )
+
     # Require that the PT of the jet (either corrected jet or tau)
     # to be greater than 17
     process.tausForFinalStates = cms.EDFilter(
@@ -100,16 +109,18 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
         process.muonsForFinalStates
         + process.electronsForFinalStates
         + process.tausForFinalStates
+        + process.photonsForFinalStates
     )
 
     sequence += process.selectObjectsForFinalStates
 
-    # Now build all of our DiLeptons and TriLepton final states
-    lepton_types = [('Elec', cms.InputTag("electronsForFinalStates")),
+    # Now build all combinatorics for E/Mu/Tau/Photon
+    object_types = [('Elec', cms.InputTag("electronsForFinalStates")),
                     ('Mu', cms.InputTag("muonsForFinalStates")),
-                    ('Tau', cms.InputTag("tausForFinalStates"))]
+                    ('Tau', cms.InputTag("tausForFinalStates")),
+                    ('Pho', cms.InputTag("photonsForFinalStates"))]
 
-    process.buildDiLeptons = cms.Sequence()
+    process.buildDiObjects = cms.Sequence()
 
     process.load(
         "FinalStateAnalysis.PatTools.finalStates.patFinalStatesEmbedExtraCollections_cfi")
@@ -117,30 +128,30 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
     if noTracks:
         process.patFinalStateVertexFitter.enable = False
 
-    # Build di-lepton pairs
-    for dilepton in _combinatorics(lepton_types, 2):
+    # Build di-object pairs
+    for diobject in _combinatorics(object_types, 2):
         # Don't build two jet states
-        if (dilepton[0][0], dilepton[1][0]) == ('Tau', 'Tau'):
+        if (diobject[0][0], diobject[1][0]) == ('Tau', 'Tau'):
             continue
 
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3'] # basic x-cleaning
 
         producer = cms.EDProducer(
-            "PAT%s%sFinalStateProducer" % (dilepton[0][0], dilepton[1][0]),
+            "PAT%s%sFinalStateProducer" % (diobject[0][0], diobject[1][0]),
             evtSrc = cms.InputTag("patFinalStateEventProducer"),
-            leg1Src = dilepton[0][1],
-            leg2Src = dilepton[1][1],
+            leg1Src = diobject[0][1],
+            leg2Src = diobject[1][1],
             # X-cleaning
             cut = cms.string(' & '.join(cuts))
         )
-        producer_name = "finalState%s%s" % (dilepton[0][0], dilepton[1][0])
+        producer_name = "finalState%s%s" % (diobject[0][0], diobject[1][0])
         setattr(process, producer_name + "Raw", producer)
-        process.buildDiLeptons += producer
+        process.buildDiObjects += producer
         # Embed the other collections
         embedder_seq = helpers.cloneProcessingSnippet(process,
             process.patFinalStatesEmbedObjects, producer_name)
-        process.buildDiLeptons += embedder_seq
+        process.buildDiObjects += embedder_seq
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
         final_module = cms.EDProducer(
@@ -148,16 +159,16 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
             src = final_module_name
         )
         setattr(process, producer_name, final_module)
-        process.buildDiLeptons += final_module
+        process.buildDiObjects += final_module
         setattr(process, producer_name, final_module)
         output_commands.append("*_%s_*_*" % producer_name)
-
-    sequence += process.buildDiLeptons
+    sequence += process.buildDiObjects
+    
     # Build tri-lepton pairs
-    process.buildTriLeptons = cms.Sequence()
-    for trilepton in _combinatorics(lepton_types, 3):
+    process.buildTriObjects = cms.Sequence()
+    for triobject in _combinatorics(object_types, 3):
         # Don't build three jet states
-        if (trilepton[0][0], trilepton[1][0], trilepton[2][0]) == \
+        if (triobject[0][0], triobject[1][0], triobject[2][0]) == \
            ('Tau', 'Tau', 'Tau'):
             continue
 
@@ -166,24 +177,24 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
 
         producer = cms.EDProducer(
             "PAT%s%s%sFinalStateProducer" %
-            (trilepton[0][0], trilepton[1][0], trilepton[2][0]),
+            (triobject[0][0], triobject[1][0], triobject[2][0]),
             evtSrc = cms.InputTag("patFinalStateEventProducer"),
-            leg1Src = trilepton[0][1],
-            leg2Src = trilepton[1][1],
-            leg3Src = trilepton[2][1],
+            leg1Src = triobject[0][1],
+            leg2Src = triobject[1][1],
+            leg3Src = triobject[2][1],
             # X-cleaning
             cut = cms.string(' & '.join(cuts))
         )
         producer_name = "finalState%s%s%s" % (
-            trilepton[0][0], trilepton[1][0], trilepton[2][0])
+            triobject[0][0], triobject[1][0], triobject[2][0])
         #setattr(process, producer_name, producer)
         #process.buildTriLeptons += producer
         setattr(process, producer_name + "Raw", producer)
-        process.buildTriLeptons += producer
+        process.buildTriObjects += producer
         # Embed the other collections
         embedder_seq = helpers.cloneProcessingSnippet(process,
             process.patFinalStatesEmbedObjects, producer_name)
-        process.buildTriLeptons += embedder_seq
+        process.buildTriObjects += embedder_seq
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
         final_module = cms.EDProducer(
@@ -191,15 +202,15 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
             src = final_module_name
         )
         setattr(process, producer_name, final_module)
-        process.buildTriLeptons += final_module
+        process.buildTriObjects += final_module
         output_commands.append("*_%s_*_*" % producer_name)
-    sequence += process.buildTriLeptons
+    sequence += process.buildTriObjects
 
     # Build 4 lepton final states
-    process.buildQuadLeptons = cms.Sequence()
-    for quadlepton in _combinatorics(lepton_types, 4):
+    process.buildQuadObjects = cms.Sequence()
+    for quadobject in _combinatorics(object_types, 4):
         # Don't build states with more than 2 hadronic taus
-        if [x[0] for x in quadlepton].count('Tau') > 2:
+        if [x[0] for x in quadobject].count('Tau') > 2:
             continue
 
         # Define some basic selections for building combinations
@@ -207,28 +218,28 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
 
         producer = cms.EDProducer(
             "PAT%s%s%s%sFinalStateProducer" %
-            (quadlepton[0][0], quadlepton[1][0], quadlepton[2][0],
-             quadlepton[3][0]),
+            (quadobject[0][0], quadobject[1][0], quadobject[2][0],
+             quadobject[3][0]),
             evtSrc = cms.InputTag("patFinalStateEventProducer"),
-            leg1Src = quadlepton[0][1],
-            leg2Src = quadlepton[1][1],
-            leg3Src = quadlepton[2][1],
-            leg4Src = quadlepton[3][1],
+            leg1Src = quadobject[0][1],
+            leg2Src = quadobject[1][1],
+            leg3Src = quadobject[2][1],
+            leg4Src = quadobject[3][1],
             # X-cleaning
             cut = cms.string(' & '.join(cuts))
         )
         producer_name = "finalState%s%s%s%s" % (
-            quadlepton[0][0], quadlepton[1][0], quadlepton[2][0],
-            quadlepton[3][0]
+            quadobject[0][0], quadobject[1][0], quadobject[2][0],
+            quadobject[3][0]
         )
         #setattr(process, producer_name, producer)
         #process.buildTriLeptons += producer
         setattr(process, producer_name + "Raw", producer)
-        process.buildQuadLeptons += producer
+        process.buildQuadObjects += producer
         # Embed the other collections
         embedder_seq = helpers.cloneProcessingSnippet(process,
             process.patFinalStatesEmbedObjects, producer_name)
-        process.buildQuadLeptons += embedder_seq
+        process.buildQuadObjects += embedder_seq
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
         final_module = cms.EDProducer(
@@ -236,9 +247,9 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
             src = final_module_name
         )
         setattr(process, producer_name, final_module)
-        process.buildQuadLeptons += final_module
+        process.buildQuadObjects += final_module
         output_commands.append("*_%s_*_*" % producer_name)
-    sequence += process.buildQuadLeptons
+    sequence += process.buildQuadObjects
 
 if __name__ == "__main__":
     import doctest

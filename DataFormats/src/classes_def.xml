@@ -3,9 +3,12 @@
   <class name="edm::Ptr<reco::Vertex >"/>
   <class name="edm::PtrVector<reco::Vertex >"/>
 
+  <class name="edm::Ptr<pat::Photon>"/>
+
   <class name="edm::RefProd<pat::ElectronCollection>"/>
   <class name="edm::RefProd<pat::MuonCollection>"/>
   <class name="edm::RefProd<pat::TauCollection>"/>
+  <class name="edm::RefProd<pat::PhotonCollection>"/>
   <class name="edm::RefProd<pat::JetCollection>"/>
 
   <class name="std::map<std::string, float>"/>
@@ -32,7 +35,8 @@
    <version ClassVersion="10" checksum="4038526841"/>
   </class>
 
-  <class name="PATFinalStateEvent" ClassVersion="12">
+  <class name="PATFinalStateEvent" ClassVersion="13">
+   <version ClassVersion="13" checksum="3775954220"/>
    <version ClassVersion="12" checksum="4160196554"/>
    <version ClassVersion="11" checksum="525405272"/>
    <version ClassVersion="10" checksum="3218457501"/>
@@ -371,6 +375,346 @@
   <class name="edm::RefVector<PATTauTauTauTauFinalStateCollection,PATTauTauTauTauFinalState,edm::refhelper::FindUsingAdvance<PATTauTauTauTauFinalStateCollection,PATTauTauTauTauFinalState> >"/>
   <class name="edm::RefProd<PATTauTauTauTauFinalStateCollection>"/>
   <class name="edm::Ptr<PATTauTauTauTauFinalState>"/>
+
+
+  <class name="PATElecPhoFinalState"/>
+  <class name="PATElecPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecPhoFinalStateCollection,PATElecPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecPhoFinalStateCollection,PATElecPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecPhoFinalStateCollection,PATElecPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecPhoFinalStateCollection,PATElecPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecPhoFinalState>"/>
+
+
+  <class name="PATMuPhoFinalState"/>
+  <class name="PATMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuPhoFinalState>"/>
+  <class name="edm::Wrapper<PATMuPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATMuPhoFinalStateCollection,PATMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuPhoFinalStateCollection,PATMuPhoFinalState> >"/>
+  <class name="edm::RefVector<PATMuPhoFinalStateCollection,PATMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuPhoFinalStateCollection,PATMuPhoFinalState> >"/>
+  <class name="edm::RefProd<PATMuPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMuPhoFinalState>"/>
+
+
+  <class name="PATTauPhoFinalState"/>
+  <class name="PATTauPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauPhoFinalState>"/>
+  <class name="edm::Wrapper<PATTauPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATTauPhoFinalStateCollection,PATTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauPhoFinalStateCollection,PATTauPhoFinalState> >"/>
+  <class name="edm::RefVector<PATTauPhoFinalStateCollection,PATTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauPhoFinalStateCollection,PATTauPhoFinalState> >"/>
+  <class name="edm::RefProd<PATTauPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATTauPhoFinalState>"/>
+
+
+  <class name="PATPhoPhoFinalState"/>
+  <class name="PATPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATPhoPhoFinalStateCollection,PATPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATPhoPhoFinalStateCollection,PATPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATPhoPhoFinalStateCollection,PATPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATPhoPhoFinalStateCollection,PATPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATPhoPhoFinalState>"/>
+
+
+  <class name="PATElecElecPhoFinalState"/>
+  <class name="PATElecElecPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecElecPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecElecPhoFinalStateCollection,PATElecElecPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecElecPhoFinalStateCollection,PATElecElecPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecElecPhoFinalStateCollection,PATElecElecPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecElecPhoFinalStateCollection,PATElecElecPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecElecPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecElecPhoFinalState>"/>
+
+
+  <class name="PATElecMuPhoFinalState"/>
+  <class name="PATElecMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecMuPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecMuPhoFinalStateCollection,PATElecMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecMuPhoFinalStateCollection,PATElecMuPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecMuPhoFinalStateCollection,PATElecMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecMuPhoFinalStateCollection,PATElecMuPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecMuPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecMuPhoFinalState>"/>
+
+
+  <class name="PATElecTauPhoFinalState"/>
+  <class name="PATElecTauPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecTauPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecTauPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecTauPhoFinalStateCollection,PATElecTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecTauPhoFinalStateCollection,PATElecTauPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecTauPhoFinalStateCollection,PATElecTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecTauPhoFinalStateCollection,PATElecTauPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecTauPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecTauPhoFinalState>"/>
+
+
+  <class name="PATElecPhoPhoFinalState"/>
+  <class name="PATElecPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecPhoPhoFinalStateCollection,PATElecPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecPhoPhoFinalStateCollection,PATElecPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecPhoPhoFinalStateCollection,PATElecPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecPhoPhoFinalStateCollection,PATElecPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecPhoPhoFinalState>"/>
+
+
+  <class name="PATMuMuPhoFinalState"/>
+  <class name="PATMuMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuPhoFinalState>"/>
+  <class name="edm::Wrapper<PATMuMuPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATMuMuPhoFinalStateCollection,PATMuMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuMuPhoFinalStateCollection,PATMuMuPhoFinalState> >"/>
+  <class name="edm::RefVector<PATMuMuPhoFinalStateCollection,PATMuMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuMuPhoFinalStateCollection,PATMuMuPhoFinalState> >"/>
+  <class name="edm::RefProd<PATMuMuPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMuMuPhoFinalState>"/>
+
+
+  <class name="PATMuTauPhoFinalState"/>
+  <class name="PATMuTauPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuTauPhoFinalState>"/>
+  <class name="edm::Wrapper<PATMuTauPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATMuTauPhoFinalStateCollection,PATMuTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuTauPhoFinalStateCollection,PATMuTauPhoFinalState> >"/>
+  <class name="edm::RefVector<PATMuTauPhoFinalStateCollection,PATMuTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuTauPhoFinalStateCollection,PATMuTauPhoFinalState> >"/>
+  <class name="edm::RefProd<PATMuTauPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMuTauPhoFinalState>"/>
+
+
+  <class name="PATMuPhoPhoFinalState"/>
+  <class name="PATMuPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATMuPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATMuPhoPhoFinalStateCollection,PATMuPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuPhoPhoFinalStateCollection,PATMuPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATMuPhoPhoFinalStateCollection,PATMuPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuPhoPhoFinalStateCollection,PATMuPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATMuPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMuPhoPhoFinalState>"/>
+
+
+  <class name="PATTauTauPhoFinalState"/>
+  <class name="PATTauTauPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauTauPhoFinalState>"/>
+  <class name="edm::Wrapper<PATTauTauPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATTauTauPhoFinalStateCollection,PATTauTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauTauPhoFinalStateCollection,PATTauTauPhoFinalState> >"/>
+  <class name="edm::RefVector<PATTauTauPhoFinalStateCollection,PATTauTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauTauPhoFinalStateCollection,PATTauTauPhoFinalState> >"/>
+  <class name="edm::RefProd<PATTauTauPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATTauTauPhoFinalState>"/>
+
+
+  <class name="PATTauPhoPhoFinalState"/>
+  <class name="PATTauPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATTauPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATTauPhoPhoFinalStateCollection,PATTauPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauPhoPhoFinalStateCollection,PATTauPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATTauPhoPhoFinalStateCollection,PATTauPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauPhoPhoFinalStateCollection,PATTauPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATTauPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATTauPhoPhoFinalState>"/>
+
+
+  <class name="PATPhoPhoPhoFinalState"/>
+  <class name="PATPhoPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATPhoPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATPhoPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATPhoPhoPhoFinalStateCollection,PATPhoPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATPhoPhoPhoFinalStateCollection,PATPhoPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATPhoPhoPhoFinalStateCollection,PATPhoPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATPhoPhoPhoFinalStateCollection,PATPhoPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATPhoPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATPhoPhoPhoFinalState>"/>
+
+
+  <class name="PATElecElecElecPhoFinalState"/>
+  <class name="PATElecElecElecPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecElecPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecElecElecPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecElecElecPhoFinalStateCollection,PATElecElecElecPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecElecElecPhoFinalStateCollection,PATElecElecElecPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecElecElecPhoFinalStateCollection,PATElecElecElecPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecElecElecPhoFinalStateCollection,PATElecElecElecPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecElecElecPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecElecElecPhoFinalState>"/>
+
+
+  <class name="PATElecElecMuPhoFinalState"/>
+  <class name="PATElecElecMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecMuPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecElecMuPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecElecMuPhoFinalStateCollection,PATElecElecMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecElecMuPhoFinalStateCollection,PATElecElecMuPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecElecMuPhoFinalStateCollection,PATElecElecMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecElecMuPhoFinalStateCollection,PATElecElecMuPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecElecMuPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecElecMuPhoFinalState>"/>
+
+
+  <class name="PATElecElecTauPhoFinalState"/>
+  <class name="PATElecElecTauPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecTauPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecElecTauPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecElecTauPhoFinalStateCollection,PATElecElecTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecElecTauPhoFinalStateCollection,PATElecElecTauPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecElecTauPhoFinalStateCollection,PATElecElecTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecElecTauPhoFinalStateCollection,PATElecElecTauPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecElecTauPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecElecTauPhoFinalState>"/>
+
+
+  <class name="PATElecElecPhoPhoFinalState"/>
+  <class name="PATElecElecPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecElecPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecElecPhoPhoFinalStateCollection,PATElecElecPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecElecPhoPhoFinalStateCollection,PATElecElecPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecElecPhoPhoFinalStateCollection,PATElecElecPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecElecPhoPhoFinalStateCollection,PATElecElecPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecElecPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecElecPhoPhoFinalState>"/>
+
+
+  <class name="PATElecMuMuPhoFinalState"/>
+  <class name="PATElecMuMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuMuPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecMuMuPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecMuMuPhoFinalStateCollection,PATElecMuMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecMuMuPhoFinalStateCollection,PATElecMuMuPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecMuMuPhoFinalStateCollection,PATElecMuMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecMuMuPhoFinalStateCollection,PATElecMuMuPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecMuMuPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecMuMuPhoFinalState>"/>
+
+
+  <class name="PATElecMuTauPhoFinalState"/>
+  <class name="PATElecMuTauPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuTauPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecMuTauPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecMuTauPhoFinalStateCollection,PATElecMuTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecMuTauPhoFinalStateCollection,PATElecMuTauPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecMuTauPhoFinalStateCollection,PATElecMuTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecMuTauPhoFinalStateCollection,PATElecMuTauPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecMuTauPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecMuTauPhoFinalState>"/>
+
+
+  <class name="PATElecMuPhoPhoFinalState"/>
+  <class name="PATElecMuPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecMuPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecMuPhoPhoFinalStateCollection,PATElecMuPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecMuPhoPhoFinalStateCollection,PATElecMuPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecMuPhoPhoFinalStateCollection,PATElecMuPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecMuPhoPhoFinalStateCollection,PATElecMuPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecMuPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecMuPhoPhoFinalState>"/>
+
+
+  <class name="PATElecTauTauPhoFinalState"/>
+  <class name="PATElecTauTauPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecTauTauPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecTauTauPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecTauTauPhoFinalStateCollection,PATElecTauTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecTauTauPhoFinalStateCollection,PATElecTauTauPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecTauTauPhoFinalStateCollection,PATElecTauTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecTauTauPhoFinalStateCollection,PATElecTauTauPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecTauTauPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecTauTauPhoFinalState>"/>
+
+
+  <class name="PATElecTauPhoPhoFinalState"/>
+  <class name="PATElecTauPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecTauPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecTauPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecTauPhoPhoFinalStateCollection,PATElecTauPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecTauPhoPhoFinalStateCollection,PATElecTauPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecTauPhoPhoFinalStateCollection,PATElecTauPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecTauPhoPhoFinalStateCollection,PATElecTauPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecTauPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecTauPhoPhoFinalState>"/>
+
+
+  <class name="PATElecPhoPhoPhoFinalState"/>
+  <class name="PATElecPhoPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecPhoPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATElecPhoPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATElecPhoPhoPhoFinalStateCollection,PATElecPhoPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecPhoPhoPhoFinalStateCollection,PATElecPhoPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATElecPhoPhoPhoFinalStateCollection,PATElecPhoPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATElecPhoPhoPhoFinalStateCollection,PATElecPhoPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATElecPhoPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATElecPhoPhoPhoFinalState>"/>
+
+
+  <class name="PATMuMuMuPhoFinalState"/>
+  <class name="PATMuMuMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuMuPhoFinalState>"/>
+  <class name="edm::Wrapper<PATMuMuMuPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATMuMuMuPhoFinalStateCollection,PATMuMuMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuMuMuPhoFinalStateCollection,PATMuMuMuPhoFinalState> >"/>
+  <class name="edm::RefVector<PATMuMuMuPhoFinalStateCollection,PATMuMuMuPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuMuMuPhoFinalStateCollection,PATMuMuMuPhoFinalState> >"/>
+  <class name="edm::RefProd<PATMuMuMuPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMuMuMuPhoFinalState>"/>
+
+
+  <class name="PATMuMuTauPhoFinalState"/>
+  <class name="PATMuMuTauPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuTauPhoFinalState>"/>
+  <class name="edm::Wrapper<PATMuMuTauPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATMuMuTauPhoFinalStateCollection,PATMuMuTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuMuTauPhoFinalStateCollection,PATMuMuTauPhoFinalState> >"/>
+  <class name="edm::RefVector<PATMuMuTauPhoFinalStateCollection,PATMuMuTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuMuTauPhoFinalStateCollection,PATMuMuTauPhoFinalState> >"/>
+  <class name="edm::RefProd<PATMuMuTauPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMuMuTauPhoFinalState>"/>
+
+
+  <class name="PATMuMuPhoPhoFinalState"/>
+  <class name="PATMuMuPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATMuMuPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATMuMuPhoPhoFinalStateCollection,PATMuMuPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuMuPhoPhoFinalStateCollection,PATMuMuPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATMuMuPhoPhoFinalStateCollection,PATMuMuPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuMuPhoPhoFinalStateCollection,PATMuMuPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATMuMuPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMuMuPhoPhoFinalState>"/>
+
+
+  <class name="PATMuTauTauPhoFinalState"/>
+  <class name="PATMuTauTauPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuTauTauPhoFinalState>"/>
+  <class name="edm::Wrapper<PATMuTauTauPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATMuTauTauPhoFinalStateCollection,PATMuTauTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuTauTauPhoFinalStateCollection,PATMuTauTauPhoFinalState> >"/>
+  <class name="edm::RefVector<PATMuTauTauPhoFinalStateCollection,PATMuTauTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuTauTauPhoFinalStateCollection,PATMuTauTauPhoFinalState> >"/>
+  <class name="edm::RefProd<PATMuTauTauPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMuTauTauPhoFinalState>"/>
+
+
+  <class name="PATMuTauPhoPhoFinalState"/>
+  <class name="PATMuTauPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuTauPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATMuTauPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATMuTauPhoPhoFinalStateCollection,PATMuTauPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuTauPhoPhoFinalStateCollection,PATMuTauPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATMuTauPhoPhoFinalStateCollection,PATMuTauPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuTauPhoPhoFinalStateCollection,PATMuTauPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATMuTauPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMuTauPhoPhoFinalState>"/>
+
+
+  <class name="PATMuPhoPhoPhoFinalState"/>
+  <class name="PATMuPhoPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuPhoPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATMuPhoPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATMuPhoPhoPhoFinalStateCollection,PATMuPhoPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuPhoPhoPhoFinalStateCollection,PATMuPhoPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATMuPhoPhoPhoFinalStateCollection,PATMuPhoPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATMuPhoPhoPhoFinalStateCollection,PATMuPhoPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATMuPhoPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMuPhoPhoPhoFinalState>"/>
+
+
+  <class name="PATTauTauTauPhoFinalState"/>
+  <class name="PATTauTauTauPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauTauTauPhoFinalState>"/>
+  <class name="edm::Wrapper<PATTauTauTauPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATTauTauTauPhoFinalStateCollection,PATTauTauTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauTauTauPhoFinalStateCollection,PATTauTauTauPhoFinalState> >"/>
+  <class name="edm::RefVector<PATTauTauTauPhoFinalStateCollection,PATTauTauTauPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauTauTauPhoFinalStateCollection,PATTauTauTauPhoFinalState> >"/>
+  <class name="edm::RefProd<PATTauTauTauPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATTauTauTauPhoFinalState>"/>
+
+
+  <class name="PATTauTauPhoPhoFinalState"/>
+  <class name="PATTauTauPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauTauPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATTauTauPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATTauTauPhoPhoFinalStateCollection,PATTauTauPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauTauPhoPhoFinalStateCollection,PATTauTauPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATTauTauPhoPhoFinalStateCollection,PATTauTauPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauTauPhoPhoFinalStateCollection,PATTauTauPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATTauTauPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATTauTauPhoPhoFinalState>"/>
+
+
+  <class name="PATTauPhoPhoPhoFinalState"/>
+  <class name="PATTauPhoPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauPhoPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATTauPhoPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATTauPhoPhoPhoFinalStateCollection,PATTauPhoPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauPhoPhoPhoFinalStateCollection,PATTauPhoPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATTauPhoPhoPhoFinalStateCollection,PATTauPhoPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATTauPhoPhoPhoFinalStateCollection,PATTauPhoPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATTauPhoPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATTauPhoPhoPhoFinalState>"/>
+
+
+  <class name="PATPhoPhoPhoPhoFinalState"/>
+  <class name="PATPhoPhoPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATPhoPhoPhoPhoFinalState>"/>
+  <class name="edm::Wrapper<PATPhoPhoPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ref<PATPhoPhoPhoPhoFinalStateCollection,PATPhoPhoPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATPhoPhoPhoPhoFinalStateCollection,PATPhoPhoPhoPhoFinalState> >"/>
+  <class name="edm::RefVector<PATPhoPhoPhoPhoFinalStateCollection,PATPhoPhoPhoPhoFinalState,edm::refhelper::FindUsingAdvance<PATPhoPhoPhoPhoFinalStateCollection,PATPhoPhoPhoPhoFinalState> >"/>
+  <class name="edm::RefProd<PATPhoPhoPhoPhoFinalStateCollection>"/>
+  <class name="edm::Ptr<PATPhoPhoPhoPhoFinalState>"/>
 
 </selection>
 

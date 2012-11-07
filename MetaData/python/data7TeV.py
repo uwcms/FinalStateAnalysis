@@ -1331,6 +1331,13 @@ datadefs = {
 
 }
 
+
+#VH->HWW xsec: WH + ZH; ZH --> totalxsec * BR(ZtoLL) * BR(HtoWW) * BR( WtoLL )^2
+datadefs['VH_110_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.4721 * br_z_leptons * 4.77E-02 * br_w_leptons**2}
+datadefs['VH_120_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.3598 * br_z_leptons * 1.41E-01 * br_w_leptons**2}
+#datadefs['VH_130_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.2778 * br_z_leptons * 3.03E-01 * br_w_leptons**2}
+datadefs['VH_140_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.2172 * br_z_leptons * 5.01E-01 * br_w_leptons**2}
+
 # Add HToBB
 for mass in range(100, 150, 5):
   ver=4

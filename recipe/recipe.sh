@@ -28,9 +28,9 @@ set -o nounset
 
 # Check CMSSW version
 MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
-MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
+MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 
-echo "Detected CMSSW version: $MAJOR_VERSION"
+echo "Detected CMSSW version: $MAJOR_VERSION $MINOR_VERSION"
 
 echo "Checking for CERN CVS kerberos ticket"
 set +o errexit
@@ -62,8 +62,13 @@ if [ "$MAJOR_VERSION" -eq "4" ]; then
 fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
-  echo "Applying recipe for CMSSW 5_X_X"
-  LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_52X.sh
+    if [ "$MINOR_VERSION" -eq "2" ]; then
+	echo "Applying recipe for CMSSW 5_2_X"
+	LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_52X.sh
+    else
+	echo "Applying recipe for CMSSW 5_3_X"
+	LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_53X.sh
+    fi
 fi
 
 echo "Applying common recipe"

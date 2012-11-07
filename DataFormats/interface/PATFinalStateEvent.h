@@ -21,6 +21,7 @@
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/Photon.h"
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 #include "DataFormats/GsfTrackReco/interface/GsfTrackFwd.h"
@@ -64,6 +65,7 @@ class PATFinalStateEvent {
         const edm::RefProd<pat::MuonCollection>& muonRefProd,
         const edm::RefProd<pat::TauCollection>& tauRefProd,
         const edm::RefProd<pat::JetCollection>& jetRefProd,
+	const edm::RefProd<pat::PhotonCollection>& phoRefProd,
         const reco::PFCandidateRefProd& pfRefProd,
         const reco::TrackRefProd& tracks,
         const reco::GsfTrackRefProd& gsfTracks
@@ -151,6 +153,7 @@ class PATFinalStateEvent {
     const pat::MuonCollection& muons() const;
     const pat::JetCollection& jets() const;
     const pat::TauCollection& taus() const;
+    const pat::PhotonCollection& photons() const;
 
     /// Access to particle flow collections
     const reco::PFCandidateCollection& pflow() const;
@@ -184,6 +187,7 @@ class PATFinalStateEvent {
     edm::RefProd<pat::MuonCollection> muonRefProd_;
     edm::RefProd<pat::TauCollection> tauRefProd_;
     edm::RefProd<pat::JetCollection> jetRefProd_;
+    edm::RefProd<pat::PhotonCollection> phoRefProd_;
     reco::PFCandidateRefProd pfRefProd_;
     reco::TrackRefProd tracks_;
     reco::GsfTrackRefProd gsfTracks_;

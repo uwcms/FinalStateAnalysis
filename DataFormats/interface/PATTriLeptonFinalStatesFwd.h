@@ -8,32 +8,51 @@ namespace pat {
   class Electron;
   class Muon;
   class Tau;
+  class Photon;
 }
-
-typedef PATTripletFinalStateT<pat::Electron, pat::Electron, pat::Electron> PATElecElecElecFinalState;
-typedef PATTripletFinalStateT<pat::Electron, pat::Electron, pat::Muon> PATElecElecMuFinalState;
-typedef PATTripletFinalStateT<pat::Electron, pat::Electron, pat::Tau> PATElecElecTauFinalState;
-typedef PATTripletFinalStateT<pat::Electron, pat::Muon, pat::Muon> PATElecMuMuFinalState;
-typedef PATTripletFinalStateT<pat::Electron, pat::Muon, pat::Tau> PATElecMuTauFinalState;
-typedef PATTripletFinalStateT<pat::Electron, pat::Tau, pat::Tau> PATElecTauTauFinalState;
-typedef PATTripletFinalStateT<pat::Muon, pat::Muon, pat::Muon> PATMuMuMuFinalState;
-typedef PATTripletFinalStateT<pat::Muon, pat::Muon, pat::Tau> PATMuMuTauFinalState;
-typedef PATTripletFinalStateT<pat::Muon, pat::Tau, pat::Tau> PATMuTauTauFinalState;
-// for completeness
-typedef PATTripletFinalStateT<pat::Tau, pat::Tau, pat::Tau> PATTauTauTauFinalState;
 
 #include "FinalStateAnalysis/DataFormats/interface/FwdIncludes.h"
 #include "FinalStateAnalysis/DataFormats/interface/Macros.h"
 
+typedef PATTripletFinalStateT<pat::Electron, pat::Electron, pat::Electron> PATElecElecElecFinalState;
 FWD_TYPEDEFS(PATElecElecElecFinalState)
+typedef PATTripletFinalStateT<pat::Electron, pat::Electron, pat::Muon> PATElecElecMuFinalState;
 FWD_TYPEDEFS(PATElecElecMuFinalState)
+typedef PATTripletFinalStateT<pat::Electron, pat::Electron, pat::Tau> PATElecElecTauFinalState;
 FWD_TYPEDEFS(PATElecElecTauFinalState)
+typedef PATTripletFinalStateT<pat::Electron, pat::Electron, pat::Photon> PATElecElecPhoFinalState;
+FWD_TYPEDEFS(PATElecElecPhoFinalState)
+typedef PATTripletFinalStateT<pat::Electron, pat::Muon, pat::Muon> PATElecMuMuFinalState;
 FWD_TYPEDEFS(PATElecMuMuFinalState)
+typedef PATTripletFinalStateT<pat::Electron, pat::Muon, pat::Tau> PATElecMuTauFinalState;
 FWD_TYPEDEFS(PATElecMuTauFinalState)
+typedef PATTripletFinalStateT<pat::Electron, pat::Muon, pat::Photon> PATElecMuPhoFinalState;
+FWD_TYPEDEFS(PATElecMuPhoFinalState)
+typedef PATTripletFinalStateT<pat::Electron, pat::Tau, pat::Tau> PATElecTauTauFinalState;
 FWD_TYPEDEFS(PATElecTauTauFinalState)
+typedef PATTripletFinalStateT<pat::Electron, pat::Tau, pat::Photon> PATElecTauPhoFinalState;
+FWD_TYPEDEFS(PATElecTauPhoFinalState)
+typedef PATTripletFinalStateT<pat::Electron, pat::Photon, pat::Photon> PATElecPhoPhoFinalState;
+FWD_TYPEDEFS(PATElecPhoPhoFinalState)
+typedef PATTripletFinalStateT<pat::Muon, pat::Muon, pat::Muon> PATMuMuMuFinalState;
 FWD_TYPEDEFS(PATMuMuMuFinalState)
+typedef PATTripletFinalStateT<pat::Muon, pat::Muon, pat::Tau> PATMuMuTauFinalState;
 FWD_TYPEDEFS(PATMuMuTauFinalState)
+typedef PATTripletFinalStateT<pat::Muon, pat::Muon, pat::Photon> PATMuMuPhoFinalState;
+FWD_TYPEDEFS(PATMuMuPhoFinalState)
+typedef PATTripletFinalStateT<pat::Muon, pat::Tau, pat::Tau> PATMuTauTauFinalState;
 FWD_TYPEDEFS(PATMuTauTauFinalState)
+typedef PATTripletFinalStateT<pat::Muon, pat::Tau, pat::Photon> PATMuTauPhoFinalState;
+FWD_TYPEDEFS(PATMuTauPhoFinalState)
+typedef PATTripletFinalStateT<pat::Muon, pat::Photon, pat::Photon> PATMuPhoPhoFinalState;
+FWD_TYPEDEFS(PATMuPhoPhoFinalState)
+typedef PATTripletFinalStateT<pat::Tau, pat::Tau, pat::Tau> PATTauTauTauFinalState;
 FWD_TYPEDEFS(PATTauTauTauFinalState)
+typedef PATTripletFinalStateT<pat::Tau, pat::Tau, pat::Photon> PATTauTauPhoFinalState;
+FWD_TYPEDEFS(PATTauTauPhoFinalState)
+typedef PATTripletFinalStateT<pat::Tau, pat::Photon, pat::Photon> PATTauPhoPhoFinalState;
+FWD_TYPEDEFS(PATTauPhoPhoFinalState)
+typedef PATTripletFinalStateT<pat::Photon, pat::Photon, pat::Photon> PATPhoPhoPhoFinalState;
+FWD_TYPEDEFS(PATPhoPhoPhoFinalState)
 
 #endif

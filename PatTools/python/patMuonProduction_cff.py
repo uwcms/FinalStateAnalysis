@@ -7,18 +7,30 @@ from FinalStateAnalysis.PatTools.muons.muTrackCandidates_cfi import trackCandida
 customizeMuonSequence += trackCandidates
 
 from FinalStateAnalysis.PatTools.muons.patMuonRhoEmbedding_cfi import \
-        patMuonRhoEmbedding, patMuonZZRhoEmbedding, patMuonZZ2012RhoEmbedding
+        patMuonRhoEmbedding, patMuonZZRhoEmbedding, patMuonZZ2012RhoEmbedding,\
+	patMuonHZG2011RhoEmbedding, patMuonHZG2012RhoEmbedding
 
 customizeMuonSequence += patMuonRhoEmbedding
 customizeMuonSequence += patMuonZZRhoEmbedding
+customizeMuonSequence += patMuonHZG2011RhoEmbedding
 if cmssw_major_version() == 5:
 	customizeMuonSequence += patMuonZZ2012RhoEmbedding
+	customizeMuonSequence += patMuonHZG2012RhoEmbedding
 
 from FinalStateAnalysis.PatTools.muons.patMuonIdEmbedding_cfi import \
-        patMuonsEmbedWWId, patMuonsEmbedWWId2011, patVBTFMuonMatch
+        patMuonsEmbedWWId, patMuonsEmbedWWId2011, patVBTFMuonMatch, \
+	patMuonsEmbedHZG2011, patMuonsEmbedHZG2012
+
 customizeMuonSequence += patMuonsEmbedWWId
 customizeMuonSequence += patMuonsEmbedWWId2011
 customizeMuonSequence += patVBTFMuonMatch
+customizeMuonSequence += patMuonsEmbedHZG2011
+customizeMuonSequence += patMuonsEmbedHZG2012
+
+from FinalStateAnalysis.PatTools.muons.patMuonEAEmbedding_cfi import \
+     patMuonEAEmbedder
+
+customizeMuonSequence += patMuonEAEmbedder
 
 from FinalStateAnalysis.PatTools.muons.patMuonPFMuonEmbedding_cfi import \
         patMuonPFMuonEmbedding
@@ -42,6 +54,10 @@ from FinalStateAnalysis.PatTools.muons.muonSystematics_cfi import \
         poolDBESSourceMuScleFitShiftDown, \
         patMuonsEmbedSystematics
 customizeMuonSequence += patMuonsEmbedSystematics
+
+from FinalStateAnalysis.PatTools.muons.patMuonRochesterCorrectionEmbedding_cfi import \
+     patMuonRochesterCorrectionEmbedder
+customizeMuonSequence += patMuonRochesterCorrectionEmbedder
 
 #from FinalStateAnalysis.PatTools.muons.triggerMatch_cfi import triggeredPatMuons
 #customizeMuonSequence += triggeredPatMuons

@@ -26,9 +26,12 @@ namespace {
     edm::Ptr<reco::Vertex> dummyVertexPtr;
     edm::PtrVector<reco::Vertex> dummyVertexPtrVector;
 
+    edm::Ptr<pat::Photon> dummyPhotonPtr;
+
     edm::RefProd<pat::ElectronCollection> dummyElectronRefProd;
     edm::RefProd<pat::MuonCollection> dummyMuonRefProd;
     edm::RefProd<pat::TauCollection> dummyTauRefProd;
+    edm::RefProd<pat::PhotonCollection> dummyPhotonRefProd;
     edm::RefProd<pat::JetCollection> dummyJetRefProd;
 
     std::map<std::string, float> dummyFloatMap;
@@ -54,37 +57,72 @@ namespace {
     FWD_CLASSDECL(PATElecElecFinalState)
     FWD_CLASSDECL(PATElecMuFinalState)
     FWD_CLASSDECL(PATElecTauFinalState)
+    FWD_CLASSDECL(PATElecPhoFinalState)
     FWD_CLASSDECL(PATMuMuFinalState)
     FWD_CLASSDECL(PATMuTauFinalState)
+    FWD_CLASSDECL(PATMuPhoFinalState)
     FWD_CLASSDECL(PATTauTauFinalState)
+    FWD_CLASSDECL(PATTauPhoFinalState)
+    FWD_CLASSDECL(PATPhoPhoFinalState)
 
     // triplet final states
     FWD_CLASSDECL(PATElecElecElecFinalState)
     FWD_CLASSDECL(PATElecElecMuFinalState)
     FWD_CLASSDECL(PATElecElecTauFinalState)
+    FWD_CLASSDECL(PATElecElecPhoFinalState)      
     FWD_CLASSDECL(PATElecMuMuFinalState)
     FWD_CLASSDECL(PATElecMuTauFinalState)
+    FWD_CLASSDECL(PATElecMuPhoFinalState)
     FWD_CLASSDECL(PATElecTauTauFinalState)
+    FWD_CLASSDECL(PATElecTauPhoFinalState)
+    FWD_CLASSDECL(PATElecPhoPhoFinalState)
     FWD_CLASSDECL(PATMuMuMuFinalState)
     FWD_CLASSDECL(PATMuMuTauFinalState)
+    FWD_CLASSDECL(PATMuMuPhoFinalState)
     FWD_CLASSDECL(PATMuTauTauFinalState)
+    FWD_CLASSDECL(PATMuTauPhoFinalState)
+    FWD_CLASSDECL(PATMuPhoPhoFinalState)
     FWD_CLASSDECL(PATTauTauTauFinalState)
+    FWD_CLASSDECL(PATTauTauPhoFinalState)
+    FWD_CLASSDECL(PATTauPhoPhoFinalState)
+    FWD_CLASSDECL(PATPhoPhoPhoFinalState)
 
     // quad final states
     FWD_CLASSDECL(PATElecElecElecElecFinalState)
     FWD_CLASSDECL(PATElecElecElecMuFinalState)
     FWD_CLASSDECL(PATElecElecElecTauFinalState)
+    FWD_CLASSDECL(PATElecElecElecPhoFinalState)
     FWD_CLASSDECL(PATElecElecMuMuFinalState)
     FWD_CLASSDECL(PATElecElecMuTauFinalState)
+    FWD_CLASSDECL(PATElecElecMuPhoFinalState)
     FWD_CLASSDECL(PATElecElecTauTauFinalState)
+    FWD_CLASSDECL(PATElecElecTauPhoFinalState)
+    FWD_CLASSDECL(PATElecElecPhoPhoFinalState)
     FWD_CLASSDECL(PATElecMuMuMuFinalState)
     FWD_CLASSDECL(PATElecMuMuTauFinalState)
+    FWD_CLASSDECL(PATElecMuMuPhoFinalState)
     FWD_CLASSDECL(PATElecMuTauTauFinalState)
+    FWD_CLASSDECL(PATElecMuTauPhoFinalState)
+    FWD_CLASSDECL(PATElecMuPhoPhoFinalState)
     FWD_CLASSDECL(PATElecTauTauTauFinalState)
+    FWD_CLASSDECL(PATElecTauTauPhoFinalState)
+    FWD_CLASSDECL(PATElecTauPhoPhoFinalState)
+    FWD_CLASSDECL(PATElecPhoPhoPhoFinalState)
     FWD_CLASSDECL(PATMuMuMuMuFinalState)
     FWD_CLASSDECL(PATMuMuMuTauFinalState)
+    FWD_CLASSDECL(PATMuMuMuPhoFinalState)
     FWD_CLASSDECL(PATMuMuTauTauFinalState)
+    FWD_CLASSDECL(PATMuMuTauPhoFinalState)
+    FWD_CLASSDECL(PATMuMuPhoPhoFinalState)
     FWD_CLASSDECL(PATMuTauTauTauFinalState)
+    FWD_CLASSDECL(PATMuTauTauPhoFinalState)
+    FWD_CLASSDECL(PATMuTauPhoPhoFinalState)
+    FWD_CLASSDECL(PATMuPhoPhoPhoFinalState)
     FWD_CLASSDECL(PATTauTauTauTauFinalState)
+    FWD_CLASSDECL(PATTauTauTauPhoFinalState)
+    FWD_CLASSDECL(PATTauTauPhoPhoFinalState)
+    FWD_CLASSDECL(PATTauPhoPhoPhoFinalState)
+    FWD_CLASSDECL(PATPhoPhoPhoPhoFinalState)
+    
   };
 }

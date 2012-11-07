@@ -21,22 +21,25 @@ sys.argv = [sys.argv[0]]
 
 log = logging.getLogger("fit_efficiency")
 
+
 def get_th1f_binning(histo):
     bin_edges = []
-    for i in range(histo.GetNbinsX()+1):
-        bin_edges.append(histo.GetBinLowEdge(i+1))
+    for i in range(histo.GetNbinsX() + 1):
+        bin_edges.append(histo.GetBinLowEdge(i + 1))
     return array.array('d', bin_edges)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('output', metavar='output.root', help='Output root file')
+    parser.add_argument('output', metavar='output.root',
+                        help='Output root file')
     parser.add_argument('num', metavar='/path/to/num',
                         help='Path to numerator object')
     parser.add_argument('denom', metavar='/path/to/denom',
                         help='Path to denominator object')
     parser.add_argument('efficiency',
                         help='RooFactory command to build eff. function'
-                        ' (see: http://root.cern.ch/root/html/RooFactoryWSTool.html#RooFactoryWSTool:process)')
+                        ' (see: http://root.cern.ch/root/html/'
+                        'RooFactoryWSTool.html#RooFactoryWSTool:process)')
     parser.add_argument('parameters',
                         help='RooFactory command to build eff. parameters')
 
@@ -64,6 +67,8 @@ if __name__ == "__main__":
     plot_grp.add_argument('--max', type=float, default=1,
                           help='y-axis maximum')
     plot_grp.add_argument('--grid', action='store_true', help="Draw grid")
+    plot_grp.add_argument('--noFit', action='store_true',
+                          help="Do not perform fit")
 
     plot_grp.add_argument('--show-error', dest='showerror',
                           action='store_true', help='Plot fit error band')
@@ -100,14 +105,15 @@ if __name__ == "__main__":
     else:
         log.info("pass/all = %0.0f/%0.0f = %0.2f%%",
                  pass_histo.Integral(), all_histo.Integral(),
-                 pass_histo.Integral()/all_histo.Integral())
+                 pass_histo.Integral() / all_histo.Integral())
     # Fill the data.
     graph = ROOT.TGraphAsymmErrors(pass_histo, all_histo)
 
     log.info("Building x-y RooDataSet")
     x = ROOT.RooRealVar('x', 'x', 0)
-    x.setMin(graph.GetX()[0]-graph.GetEXlow()[0])
-    x.setMax(graph.GetX()[graph.GetN()-1]+graph.GetEXhigh()[graph.GetN()-1])
+    x.setMin(graph.GetX()[0] - graph.GetEXlow()[0])
+    x.setMax(graph.GetX()[graph.GetN() - 1]
+             + graph.GetEXhigh()[graph.GetN() - 1])
     y = ROOT.RooRealVar('y', 'y', 0)
     xy_data = ROOT.RooDataSet(
         "xy_data", "xy_data",
@@ -130,11 +136,11 @@ if __name__ == "__main__":
         y.setAsymError(-ydown, yup)
         xy_data.add(ROOT.RooArgSet(x, y))
 
-
     log.info("Creating workspace and importing data")
     ws = ROOT.RooWorkspace("fit_efficiency")
-    # Import is a reserved word
+
     def ws_import(*args):
+        # Import is a reserved word
         getattr(ws, 'import')(*args)
     ws_import(xy_data)
 
@@ -146,20 +152,22 @@ if __name__ == "__main__":
     #import pdb; pdb.set_trace()
 
     log.info("Doing fit!")
-    fit_result = function.chi2FitTo(
-        xy_data,
-        ROOT.RooFit.YVar(y),
-        # Integrate fit function across x-error width, don't just use center
-        # This doesn't work... I don't know why.
-        ROOT.RooFit.Integrate(False),
-        #ROOT.RooFit.Integrate(True),
-        ROOT.RooFit.Save(True),
-        ROOT.RooFit.PrintLevel(-1),
-    )
+    print function
+    if not args.noFit:
+        fit_result = function.chi2FitTo(
+            xy_data,
+            ROOT.RooFit.YVar(y),
+            # Integrate fit function across x-error width, don't use center
+            # This doesn't work... I don't know why.
+            ROOT.RooFit.Integrate(False),
+            #ROOT.RooFit.Integrate(True),
+            ROOT.RooFit.Save(True),
+            ROOT.RooFit.PrintLevel(-1),
+        )
 
-    log.info("Fit result status: %i", fit_result.status())
-    fit_result.Print()
-    ws_import(fit_result)
+        log.info("Fit result status: %i", fit_result.status())
+        fit_result.Print()
+        ws_import(fit_result)
     log.info("Saving workspace in %s", args.output)
     ws.writeToFile(args.output)
 
@@ -168,19 +176,25 @@ if __name__ == "__main__":
         try:
             frame = None
             if args.xrange:
-                frame = x.frame(
-                    ROOT.RooFit.Title("Efficiency"),
-                    ROOT.RooFit.Range(args.xrange[0], args.xrange[1]))
+                frame = x.frame(ROOT.RooFit.Title("Efficiency"),
+                                ROOT.RooFit.Range(args.xrange[0], x.getMax()))
             else:
                 frame = x.frame(ROOT.RooFit.Title("Efficiency"))
 
-            if args.showerror:
+            if not args.noFit and args.showerror:
                 function.plotOn(
                     frame,
                     ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
                     ROOT.RooFit.VisualizeError(fit_result, 1.0),
                     ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
                 )
+            else:
+                function.plotOn(
+                    frame,
+                    ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+                    ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
+                )
+
             function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kAzure))
             xy_data.plotOnXY(
                 frame,
