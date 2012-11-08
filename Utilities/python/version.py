@@ -4,23 +4,46 @@ Stupid library to get CMSSW version
 
 '''
 
+from functools import wraps
 import os
 import subprocess
-import re
+import sys
 import warnings
+
+
+def diaper(f):
+    # Decorator to make sure a function never crashes.
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except:
+            # Just catch all the shit.
+            print "version.py - exception caught and discarded"
+            print "Unexpected error:", str(sys.exc_info()[0])
+            return "UNKNOWN"
+    return wrapper
 
 _fsa_directory = os.path.join(
     os.environ['CMSSW_BASE'], 'src', 'FinalStateAnalysis')
 
+
+@diaper
 def cmssw_version():
     return os.getenv('CMSSW_VERSION')
 
+
+@diaper
 def cmssw_major_version():
     return int(os.getenv('CMSSW_VERSION').split('_')[1])
 
+
+@diaper
 def cmssw_minor_version():
     return int(os.getenv('CMSSW_VERSION').split('_')[2])
 
+
+@diaper
 def fsa_version_unsafe():
     ''' Get commit hash of FSA '''
     result = subprocess.Popen(
@@ -28,6 +51,8 @@ def fsa_version_unsafe():
         cwd=_fsa_directory, stdout=subprocess.PIPE).communicate()[0]
     return result.strip()
 
+
+@diaper
 def fsa_version():
     ''' Get the current commit hash of FSA, without using the git command
 
@@ -48,6 +73,8 @@ def fsa_version():
         with open(commit_file, 'r') as commit:
             return commit.readline().strip()[0:7]
 
+
+@diaper
 def get_user():
     ''' Get the user name in a safe way '''
     if 'dboard_user' in os.environ:
@@ -56,6 +83,8 @@ def get_user():
         return os.environ['LOGNAME']
     return 'UNKNOWN'
 
+
+@diaper
 def repo_status():
     ''' Get status of FSA repository '''
     result = subprocess.Popen(
@@ -70,4 +99,9 @@ if __name__ == "__main__":
     print "Commit (safe mode): %s" % fsa_version()
     print "User: %s" % get_user()
     print "Repo Status:\n%s" % repo_status()
+
+    @diaper
+    def test_diaper():
+        raise ValueError("catch me")
+    test_diaper()
 
