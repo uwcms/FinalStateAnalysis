@@ -11,7 +11,7 @@ import os
 import rootpy.plotting.views as views
 import rootpy.plotting as plotting
 from FinalStateAnalysis.MetaData.data_views import data_views
-from FinalStateAnalysis.MetaData.data_styles import data_styles
+from FinalStateAnalysis.PlotTools.RebinView import RebinView
 import ROOT
 
 _original_draw = plotting.Legend.Draw
@@ -48,16 +48,15 @@ class Plotter(object):
             'Zjets_M50',
             'WplusJets_madgraph',
             'TTplusJets_madgraph',
-            'WZJetsTo3LNu*',
-            'ZZJetsTo4L*',
+            'WZ*',
+            'ZZ*',
             'WW*',
         ]
 
     @staticmethod
     def rebin_view(x, rebin):
         ''' Make a view which rebins histograms '''
-        rebinner = lambda x: x.Rebin(rebin)
-        output = views.FunctorView(x, rebinner)
+        output = RebinView(x, rebin)
         return output
 
     def get_view(self, sample_pattern, key_name='view'):
@@ -98,8 +97,9 @@ class Plotter(object):
         legend.SetMargin(0.35)
         legend.Draw()
         self.keep.append(legend)
+        return legend
 
-    def add_cms_blurb(self, sqrts, preliminary=True):
+    def add_cms_blurb(self, sqrts, preliminary=True, lumiformat='%0.f'):
         ''' Add the CMS blurb '''
         latex = ROOT.TLatex()
         latex.SetNDC();
@@ -109,8 +109,9 @@ class Plotter(object):
         label_text = "CMS"
         if preliminary:
             label_text += " Preliminary"
-        label_text += " %i TeV" % sqrts
-        label_text += " %0.1f fb^{-1}" % (self.views['data']['intlumi']/1000.)
+        label_text += " %i TeV " % sqrts
+        label_text += (lumiformat + " fb^{-1}") % (
+            self.views['data']['intlumi']/1000.)
         self.keep.append(latex.DrawLatex(0.18,0.96, label_text));
 
     def save(self, filename):

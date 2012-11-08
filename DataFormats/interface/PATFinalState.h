@@ -20,10 +20,12 @@ namespace pat {
   class Tau;
   class MET;
   class Jet;
+  class Photon;
 }
 
 namespace reco {
   class Vertex;
+  class GenParticle;
 }
 
 typedef pat::PATObject<reco::LeafCandidate> PATLeafCandidate;
@@ -91,6 +93,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     edm::Ptr<pat::Muon> daughterAsMuon(size_t i) const;
     edm::Ptr<pat::Electron> daughterAsElectron(size_t i) const;
     edm::Ptr<pat::Jet> daughterAsJet(size_t i) const;
+    edm::Ptr<pat::Photon> daughterAsPhoton(size_t i) const;
 
     /// Check if the ith daughter is matched to a given filter.  Returns -1
     /// if filter doesn't exist.
@@ -116,9 +119,6 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         const std::string& metTag) const;
     /// Using raw four vectors
     LorentzVector totalP4() const;
-
-    /// Get the MVA regession MET
-    const LorentzVector& mvaMET(const std::string& tags="") const;
 
     /// Get DeltaPhi between two objects
     double dPhi(int i, const std::string& tagI,
@@ -203,6 +203,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     std::vector<const reco::Candidate*> vetoJets(
         double dR=0.1, const std::string& filter="") const;
 
+    std::vector<const reco::Candidate*> vetoPhotons(
+        double dR=0.1, const std::string& filter="") const;
+
     /// Get overlap objects at least dR within from the ith object, passing
     /// filter.
     std::vector<const reco::Candidate*> overlapMuons(
@@ -215,6 +218,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         int i, double dR=0.1, const std::string& filter="") const;
 
     std::vector<const reco::Candidate*> overlapJets(
+        int i, double dR=0.1, const std::string& filter="") const;
+
+    std::vector<const reco::Candidate*> overlapPhotons(
         int i, double dR=0.1, const std::string& filter="") const;
 
     /// Get the total mass, using the SuperCluster for one of the electrons.
@@ -245,6 +251,21 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Get the specified overlaps for the ith daughter
     virtual const reco::CandidatePtrVector& daughterOverlaps(
         size_t i, const std::string& label) const = 0;
+
+    /// Get the specified overlaps for the ith daughter
+    const reco::GenParticleRef getDaughterGenParticle(size_t i) const;
+    const reco::GenParticleRef getDaughterGenParticleMotherSmart(size_t i) const;
+    const bool comesFromHiggs(size_t i) const;
+
+    // Things to get LorentzVectors and other complex datatypes
+    // out of objects
+    const math::XYZTLorentzVector getUserLorentzVector(size_t i,
+						   const std::string&) const;
+
+    //a hot fix for the fact that no one cares about pat photons.
+    const float getPhotonUserIsolation(size_t i,
+				       const std::string& key) const;
+
 
   private:
     edm::Ptr<PATFinalStateEvent> event_;

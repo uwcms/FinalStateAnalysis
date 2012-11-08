@@ -53,6 +53,10 @@ class MegaBase(object):
         directory.cd()
         the_type = kwargs.get('type', ROOT.TH1F)
         object = the_type(name, *args)
+        if isinstance(the_type, ROOT.TH1):
+            # Check if we've specified an xaxis, otherwise use the title.
+            xaxis = kwargs.get('xaxis', args[1])
+            object.GetXaxis().SetTitle(xaxis)
         directory.Append(object)
         self.histograms[os.path.join(location, name)] = object
         return object

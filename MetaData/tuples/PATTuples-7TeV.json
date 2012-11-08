@@ -1,0 +1,35 @@
+{
+  "Zjets_M50" : "/hdfs/store/user/tapas/2012-08-24-8TeV-PatTuple/Zjets_M50",
+  "WplusJets_madgraph" : "/hdfs/store/user/tapas/2012-08-24-8TeV-PatTuple/WplusJets_madgraph",
+  "TTplusJets_madgraph" : "/hdfs/store/user/tapas/2012-09-10-7TeV-PatTuple/TTplusJets_madgraph",
+  "WZJetsTo3LNu" : "/hdfs/store/user/tapas/2012-08-24-8TeV-PatTuple/WZJetsTo3LNu_TuneZ2_8TeV-madgraph-tauola",
+  "ZZJetsTo4L_pythia" : "/hdfs/store/user/iross/ZZTo4L_TuneZ2_7TeV_pythia6_tauola/ZZJetsTo4L_pythia_2012-05-29-7TeV-PatTuple-a-67c1f94/470ebcb5ec1eecd30920c1de77c2978c",
+  "WWJetsTo2L2Nu" : "!/WWJetsTo2L2Nu_TuneZ2_7TeV-madgraph-tauola/iross-WWJetsTo2L2Nu_2012-05-29-7TeV-PatTuple-a-67c1f94-643d46e1c664471f35d0e9f7a4185e5f/USER",
+  "VH_110" : "/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-110_7TeV-pythia6-tauola/VH_110_2012-05-29-7TeV-PatTuple-b08cf9d/60a1ca93165177c1f9543d0ff66a04da/",
+  "WH_110_HWW3l" : "!/WH_HToWW_3l_M-110_7TeV-pythia6/friis-WH_110_HWW3l_2012-05-29-7TeV-PatTuple-b08cf9d-69073709ca8a2ae74014346071e01e07/USER",
+  "VH_120" : "/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-120_7TeV-pythia6-tauola/VH_120_2012-05-29-7TeV-PatTuple-b08cf9d/08a631a339cb5b84f82e5767f3eebfbc",
+  "WH_120_HWW3l" : "!/WH_HToWW_3l_M-120_7TeV-pythia6/friis-WH_120_HWW3l_2012-05-29-7TeV-PatTuple-b08cf9d-3534a0a77eb98cf3ca7cf7a4cc16285e/USER",
+  "VH_130" : "/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-130_7TeV-pythia6-tauola/VH_130_2012-05-29-7TeV-PatTuple-b08cf9d/c7f0540d247deade88c2d29ec1211eaf/",
+  "WH_130_HWW3l" : "!/WH_HToWW_3l_M-130_7TeV-pythia6/friis-WH_130_HWW3l_2012-05-29-7TeV-PatTuple-b08cf9d-ad313b9f128b0f23fc5379afd032523a/USER",
+  "VH_140" : "/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-140_7TeV-pythia6-tauola/VH_140_2012-05-29-7TeV-PatTuple-b08cf9d/56ab502025294ab6bf9a34ba9120377b/",
+  "WH_140_HWW3l" : "!/WH_HToWW_3l_M-140_7TeV-pythia6/friis-WH_140_HWW3l_2012-05-29-7TeV-PatTuple-b08cf9d-2b5748ff685f03c3a281599f793ad0c8/USER",
+
+  "VH_110_HWW" : "/hdfs/store/user/tapas/2012-09-27-7TeV-PatTuple/VHWW_lepdecay_110",
+  "VH_120_HWW" : "/hdfs/store/user/tapas/2012-09-27-7TeV-PatTuple/VHWW_lepdecay_120",
+  "VH_140_HWW" : "/hdfs/store/user/tapas/2012-09-27-7TeV-PatTuple/VHWW_lepdecay_140",
+
+  "data_DoubleMu_Run2011B_PromptReco_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011B_PromptReco_v1/",
+  "data_DoubleMu_Run2011A_PromptReco_v6_1409" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_PromptReco_v6_1409/",
+  "data_DoubleMu_Run2011A_05Aug2011_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_05Aug2011_v1/",
+  "data_DoubleMu_Run2011A_May10ReReco_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_May10ReReco_v1/",
+  "data_DoubleMu_Run2011A_PromptReco_v4" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_DoubleMu_Run2011A_PromptReco_v4/",
+
+  "data_DoubleElectron_Run2011B_16Jan2012_v1" : "/hdfs/store/user/tapas/2012-10-10-7TeV-42X-PatTuple_ShareFSFix/data_DoubleElectron_Run2011B_16Jan2012_v1",
+  "data_DoubleElectron_Run2011A_16Jan2012_v1" : "/hdfs/store/user/tapas/2012-11-04-7TeV-42X-PatTuple_HCP2012/data_DoubleElectron_Run2011A_16Jan2012_v1",
+
+  "data_MuEG_Run2011B_PromptReco_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011B_PromptReco_v1/",
+  "data_MuEG_Run2011A_PromptReco_v6_1409" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011A_PromptReco_v6_1409/",
+  "data_MuEG_Run2011A_05Aug2011_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011A_05Aug2011_v1/",
+  "data_MuEG_Run2011A_May10ReReco_v1" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011A_May10ReReco_v1/",
+  "data_MuEG_Run2011A_PromptReco_v4" : "/hdfs/store/user/tapas/2012-07-27-7TeV-PatTuple/data_MuEG_Run2011A_PromptReco_v4/"
+}

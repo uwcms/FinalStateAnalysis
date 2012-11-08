@@ -7,7 +7,8 @@ from FinalStateAnalysis.PatTools.electrons.patElectronVBTFEmbedding_cff import \
         electronsWP80, electronsWP90, electronsWP95, electronsWP95V, electronsVBTFId
 
 from FinalStateAnalysis.PatTools.electrons.patElectronRhoEmbedding_cfi import \
-        patElectronRhoEmbedding, patElectronZZRhoEmbedding, patElectronZZ2012RhoEmbedding
+        patElectronRhoEmbedding, patElectronZZRhoEmbedding, patElectronZZ2012RhoEmbedding, \
+	patElectronHZGRhoEmbedding
 
 from FinalStateAnalysis.PatTools.electrons.electronSystematics_cfi import \
         electronSystematics
@@ -19,11 +20,14 @@ from FinalStateAnalysis.PatTools.electrons.triggerMatch_cfi import \
 from FinalStateAnalysis.PatTools.electrons.patElectronMVAIDEmbedding_cfi import\
         patElectronMVAIDEmbedder
 
-from FinalStateAnalysis.PatTools.electrons.patElectronMVAIsoEmbedding_cfi import\
-        patElectronMVAIsoEmbedding
-
 from FinalStateAnalysis.PatTools.electrons.patElectronMVAWPEmbedding_cfi import\
-        patElectronMVAIDWPEmbedding, patElectronMVAIsoWPEmbedding
+        patElectronMVAIDWPEmbedding
+
+from FinalStateAnalysis.PatTools.electrons.electronCutBasedID_cfi import \
+     patElectronCutBasedIdEmbedder
+
+from FinalStateAnalysis.PatTools.electrons.patElectronEAEmbedding_cfi import \
+     patElectronEAEmbedder
 
 from FinalStateAnalysis.PatTools.electrons.patElectronEmbedJetInfo_cfi import \
         patElectronsEmbedJetInfo
@@ -34,16 +38,15 @@ from FinalStateAnalysis.PatTools.electrons.patElectronsIpEmbedding_cfi import \
 from FinalStateAnalysis.PatTools.electrons.eTrackCandidates_cfi import \
         gsfTrackCandidates
 
-from FinalStateAnalysis.PatTools.electrons.patElectronEmbedCalibratedGsf_cfi import \
-        patElectronEmbedCalibratedGsf
-
-from FinalStateAnalysis.PatTools.electrons.patElectronEffectiveAreaEmbedder_cfi import \
-        patElectronEffectiveAreaEmbedder
+# Electron Energy Regression and Calibrations
+from FinalStateAnalysis.PatTools.electrons.patElectronEnergyCorrections_cfi import \
+     patElectronEnergyCorrections
 
 customizeElectronSequence = cms.Sequence()
 customizeElectronSequence += gsfTrackCandidates
 customizeElectronSequence += patElectronRhoEmbedding
 customizeElectronSequence += patElectronZZRhoEmbedding
+customizeElectronSequence += patElectronHZGRhoEmbedding
 if cmssw_major_version() == 5:
 	customizeElectronSequence += patElectronZZ2012RhoEmbedding
 customizeElectronSequence += electronsWWID
@@ -52,10 +55,9 @@ customizeElectronSequence += patElectronsEmbedJetInfo
 customizeElectronSequence += electronSystematics
 #customizeElectronSequence += triggeredPatElectrons
 #customizeElectronSequence += triggeredPatElectronsL
+customizeElectronSequence += patElectronCutBasedIdEmbedder
+customizeElectronSequence += patElectronEAEmbedder
 customizeElectronSequence += patElectronMVAIDEmbedder
-customizeElectronSequence += patElectronMVAIsoEmbedding
 customizeElectronSequence += patElectronMVAIDWPEmbedding
-customizeElectronSequence += patElectronMVAIsoWPEmbedding
 customizeElectronSequence += patElectronsEmbedIp
-customizeElectronSequence += patElectronEmbedCalibratedGsf
-customizeElectronSequence += patElectronEffectiveAreaEmbedder
+customizeElectronSequence += patElectronEnergyCorrections

@@ -23,7 +23,12 @@ def blind_in_range(start, end):
         for i in range(startbin, endbin+1):
             histo.SetBinContent(i, 0)
             histo.SetBinError(i, 0)
+        return histo
     return blind
+
+def set_to_zero(histo):
+    histo.Reset()
+    return histo
 
 class BlindView(views._FolderView):
     def __init__(self, directory, regex, blinding=None):
@@ -32,7 +37,7 @@ class BlindView(views._FolderView):
         if blinding is not None:
             self.blind = blinding
         else:
-            self.blind = lambda x: x.Reset()
+            self.blind = set_to_zero
 
     def apply_view(self, thingy):
         # Set in base class
@@ -40,7 +45,6 @@ class BlindView(views._FolderView):
         if self.regex.match(path):
             # We need to blind
             clone = thingy.Clone()
-            self.blind(clone)
-            return clone
+            return self.blind(clone)
         # Not blinded
         return thingy

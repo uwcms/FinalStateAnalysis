@@ -2,9 +2,6 @@ import FWCore.ParameterSet.Config as cms
 
 from FinalStateAnalysis.PatTools.jets.patJetEmbedId_cfi import patJetId
 
-from FinalStateAnalysis.PatTools.jets.patJetPUId_cfi import \
-        puJetIdSqeuence, puJetId, puJetMva, patJetsPUID
-
 from FinalStateAnalysis.PatTools.jets.patJetUncorrectedEmbedder_cfi import \
         patJetUncorrectedEmbedder
 
@@ -18,6 +15,8 @@ from FinalStateAnalysis.PatTools.jets.patMuonInJetEmbedder_cfi import \
 
 from FinalStateAnalysis.PatTools.jets.patSSVJetEmbedder_cfi import \
         patSSVJetEmbedder
+
+import sys
 
 # Need to attach this to process to get SSV BTag production
 simpleSecondaryVertex = cms.ESProducer(
@@ -33,12 +32,19 @@ customizeJetSequence = cms.Sequence()
 customizeJetSequence += patJetId
 
 # Add in the PAT Jet PU ID
-customizeJetSequence += puJetIdSqeuence # sic
-# Fix the input tags of the PU JET ID value map producers
-puJetId.jets = cms.InputTag("patJetId")
-puJetMva.jets = cms.InputTag("patJetId")
-# Embed the PU IDs
-customizeJetSequence += patJetsPUID
+try:
+    from FinalStateAnalysis.PatTools.jets.patJetPUId_cfi import \
+            puJetIdSqeuence, puJetId, puJetMva, patJetsPUID
+
+    customizeJetSequence += puJetIdSqeuence # sic
+    # Fix the input tags of the PU JET ID value map producers
+    puJetId.jets = cms.InputTag("patJetId")
+    puJetMva.jets = cms.InputTag("patJetId")
+    # Embed the PU IDs
+    customizeJetSequence += patJetsPUID
+except ImportError:
+    sys.stderr.write(__file__ +
+                     ": PU Jet ID dependency not installed, will not be run!\n")
 
 # Embed Maria's information about jets
 customizeJetSequence += patMuonInJetEmbedder

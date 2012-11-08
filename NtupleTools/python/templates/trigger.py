@@ -21,7 +21,8 @@ singlemu = _trig_template.replace(
 
 isomu = _trig_template.replace(name='isoMu',
     paths=r'HLT_IsoMu17_v\\d+, HLT_IsoMu20_v\\d+, '
-          r'HLT_IsoMu24_v\\d+, HLT_IsoMu24_eta2p1_v\\d+')
+          r'HLT_IsoMu24_v\\d+, HLT_IsoMu24_eta2p1_v\\d+, '
+          r'HLT_IsoMu30_v\\d+, HLT_IsoMu30_eta2p1_v\\d+')
 
 doublemu = PSet(
     _trig_template.replace(
@@ -32,6 +33,18 @@ doublemu = PSet(
         paths=r'HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+,HLT_Mu17_TrkMu8_v\\d+'),
 
 )
+
+singlee = PSet(
+    _trig_template.replace(
+    name='singleE',
+    paths=r'HLT_Ele27_WP80_v\\d+,HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v\\d+,HLT_Ele32_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v\\d+'
+    ),
+    _trig_template.replace(
+    name='singleEPFMT',
+    paths=r'HLT_Ele27_WP80_PFMET_MT50_v\\d+,HLT_Ele32_WP70_PFMT50_v\\d+'
+    )
+)
+    
 
 doublee = PSet(
     _trig_template.replace(
@@ -50,8 +63,16 @@ mueg = PSet(
     _trig_template.replace(
         name='mu17ele8',
         paths=r"HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+"),
+    _trig_template.replace(
+        name='mu17ele8iso',
+        paths=r"HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+"),
     # Mu8Ele17 paths
     _trig_template.replace(
         name='mu8ele17',
         paths=r'HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+')
 )
+
+singlePho = _trig_template.replace( name='singlePho', paths='' )
+doublePho = _trig_template.replace(
+    name='doublePho',
+    paths=r'HLT_Photon26_CaloId10_Iso50_Photon18_CaloId10_Iso50_Mass60_v\\d+,HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass70_v\\d+,HLT_Photon36_R9Id85_OR_CaloId10_Iso50_Photon10_R9Id85_OR_CaloId10_Iso50_Mass80_v\\d+' )

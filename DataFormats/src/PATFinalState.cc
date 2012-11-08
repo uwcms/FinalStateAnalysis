@@ -293,16 +293,6 @@ PATFinalState::LorentzVector PATFinalState::totalP4() const {
   return visP4() + met()->p4();
 }
 
-const PATFinalState::LorentzVector&
-PATFinalState::mvaMET(const std::string& tags) const {
-  std::vector<reco::CandidatePtr> daughters = (
-      tags == "" ?  daughterPtrs() : daughterPtrs(tags));
-  if (tags == "")
-    return evt()->mvaMET(daughters).first;
-  else
-    return evt()->mvaMET(daughters).first;
-}
-
 double
 PATFinalState::dPhi(int i, const std::string& sysTagI,
     int j, const std::string& sysTagJ) const {
@@ -492,6 +482,14 @@ std::vector<const reco::Candidate*> PATFinalState::vetoJets(
       dR, filter);
 }
 
+std::vector<const reco::Candidate*> PATFinalState::vetoPhotons(
+    double dR, const std::string& filter) const {
+  return getVetoObjects(
+      daughters(),
+      ptrizeCollection(evt()->photons()),
+      dR, filter);
+}
+
 std::vector<const reco::Candidate*> PATFinalState::overlapMuons(
     int i, double dR, const std::string& filter) const {
   return getOverlapObjects(
@@ -521,6 +519,14 @@ std::vector<const reco::Candidate*> PATFinalState::overlapJets(
   return getOverlapObjects(
       *daughter(i),
       ptrizeCollection(evt()->jets()),
+      dR, filter);
+}
+
+std::vector<const reco::Candidate*> PATFinalState::overlapPhotons(
+    int i, double dR, const std::string& filter) const {
+  return getOverlapObjects(
+      *daughter(i),
+      ptrizeCollection(evt()->photons()),
       dR, filter);
 }
 
@@ -608,4 +614,89 @@ edm::Ptr<pat::Electron> PATFinalState::daughterAsElectron(size_t i) const {
 }
 edm::Ptr<pat::Jet> PATFinalState::daughterAsJet(size_t i) const {
   return daughterAs<pat::Jet>(i);
+}
+
+edm::Ptr<pat::Photon> PATFinalState::daughterAsPhoton(size_t i) const {
+  return daughterAs<pat::Photon>(i);
+}
+
+const reco::GenParticleRef PATFinalState::getDaughterGenParticle(size_t i) const
+{
+  return fshelpers::getGenParticle( daughter(i) );
+}
+
+const reco::GenParticleRef PATFinalState::getDaughterGenParticleMotherSmart(size_t i) const
+{
+  const reco::GenParticleRef genp = getDaughterGenParticle(i);
+  if( genp.isAvailable() && genp.isNonnull()  )
+    return fshelpers::getMotherSmart(genp, genp->pdgId());
+  else
+    return genp;
+}
+
+const bool PATFinalState::comesFromHiggs(size_t i) const
+{
+  const reco::GenParticleRef genp = getDaughterGenParticle(i);
+  if( genp.isAvailable() && genp.isNonnull()  )
+    return fshelpers::comesFromHiggs(genp);
+  else
+    return false;
+}
+
+const math::XYZTLorentzVector 
+PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const 
+{
+  edm::Ptr<pat::Electron> ele = daughterAsElectron(i);
+  edm::Ptr<pat::Muon> mu = daughterAsMuon(i);
+  edm::Ptr<pat::Photon> pho = daughterAsPhoton(i);
+  edm::Ptr<pat::Jet> jet = daughterAsJet(i);
+  edm::Ptr<pat::Tau> tau = daughterAsTau(i);
+
+  const math::XYZTLorentzVector* result = NULL;
+
+  if(ele.isNonnull() && ele.isAvailable())
+    result = ele->userData<math::XYZTLorentzVector>(name);
+
+  if(mu.isNonnull() && mu.isAvailable()) 
+    result = mu->userData<math::XYZTLorentzVector>(name);
+
+  if(pho.isNonnull() && pho.isAvailable()) 
+    result = pho->userData<math::XYZTLorentzVector>(name);
+
+  if(jet.isNonnull() && jet.isAvailable()) 
+    result = jet->userData<math::XYZTLorentzVector>(name);
+
+  if(tau.isNonnull() && tau.isAvailable()) 
+    result = tau->userData<math::XYZTLorentzVector>(name);
+
+  if( result ) return *result; // return the result if we have it stored
+
+  return math::XYZTLorentzVector();
+}
+
+const float PATFinalState::getPhotonUserIsolation(size_t i, 
+						  const std::string& key) const {
+  edm::Ptr<pat::Photon> d = daughterAsPhoton(i);
+  // remove leading namespace specifier
+  std::string prunedKey = ( key.find("pat::") == 0 ) ? std::string(key, 5) : key;
+  if ( prunedKey == "TrackIso" ) return d->userIsolation(pat::TrackIso);
+  if ( prunedKey == "EcalIso" ) return d->userIsolation(pat::EcalIso);
+  if ( prunedKey == "HcalIso" ) return d->userIsolation(pat::HcalIso);
+  if ( prunedKey == "PfAllParticleIso" ) return d->userIsolation(pat::PfAllParticleIso);
+  if ( prunedKey == "PfChargedHadronIso" ) return d->userIsolation(pat::PfChargedHadronIso);
+  if ( prunedKey == "PfNeutralHadronIso" ) return d->userIsolation(pat::PfNeutralHadronIso);
+  if ( prunedKey == "PfGammaIso" ) return d->userIsolation(pat::PfGammaIso);
+  if ( prunedKey == "User1Iso" ) return d->userIsolation(pat::User1Iso);
+  if ( prunedKey == "User2Iso" ) return d->userIsolation(pat::User2Iso);
+  if ( prunedKey == "User3Iso" ) return d->userIsolation(pat::User3Iso);
+  if ( prunedKey == "User4Iso" ) return d->userIsolation(pat::User4Iso);
+  if ( prunedKey == "User5Iso" ) return d->userIsolation(pat::User5Iso);
+  if ( prunedKey == "UserBaseIso" ) return d->userIsolation(pat::UserBaseIso);
+  if ( prunedKey == "CaloIso" ) return d->userIsolation(pat::CaloIso);
+  if ( prunedKey == "PfPUChargedHadronIso" ) 
+    return d->userIsolation(pat::PfPUChargedHadronIso);
+  //throw cms::Excepton("Missing Data")
+  //<< "Isolation corresponding to key " 
+  //<< key << " was not stored for this particle.";
+  return -1.0;
 }

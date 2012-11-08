@@ -12,6 +12,7 @@
  */
 
 #include "FinalStateAnalysis/TagAndProbe/interface/MuonPOG2011HLTEfficiencies.h"
+#include "FinalStateAnalysis/TagAndProbe/interface/ScaleFactorsMuEG201253X.h"
 
 #ifdef __CINT__
 #pragma link off all globals;
@@ -24,5 +25,11 @@
 #pragma link C++ function Eff_HLT_Mu17_Mu8_2011_TPfit_RunAB_EtaEta_MC;
 #pragma link C++ function Eff_HLT_Mu17_Mu8_2011_TPfit_RunAB_EtaEta_DATAoverMC;
 
-#endif
+#pragma link C++ function muTrigScale_MuEG_2012_53X;
+#pragma link C++ function eleTrigScale_MuEG_2012_53X;
+#pragma link C++ function muTrigEff_MuEG_2012_53X;
+#pragma link C++ function eleTrigEff_MuEG_2012_53X;
+#pragma link C++ function muIDscale_MuEG_2012_53X;
+#pragma link C++ function eleIDscale_MuEG_2012_53X;
 
+#endif

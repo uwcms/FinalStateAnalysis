@@ -19,8 +19,14 @@ id = PSet(
     objectVBTFID = '{object}.userInt("VBTF")',
     objectWWID = '{object}.userInt("WWID")',
     objectPFIDTight = '{object}.userInt("tightID")',
-
+    objectIDHZG2011 = '{object}.userInt("HZG2011")',
+    objectIDHZG2012 = '{object}.userInt("HZG2012")',
     # For charged, we use ALL charged particles
+    objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
+    objectEffectiveArea2011 = '{object}.userFloat("ea_comb_iso04_kt6PFJCth05")',
+    objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
+    objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
+    objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
     objectRelPFIsoDB = cms.string(
         "({object}.userIso(0)"
         "+max({object}.photonIso()"
@@ -29,7 +35,26 @@ id = PSet(
         "/{object}.pt()"
     ),
     objectIsGlobal = '{object}.isGlobalMuon',
-    objectIsTracker = '{object}.isTrackerMuon',
+    objectIsTracker = '{object}.isTrackerMuon',    
+    objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
+    objectComesFromHiggs = 'comesFromHiggs({object_idx})',        
+)
+
+energyCorrections = PSet(
+    objectERochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").t',
+    objectPxRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").x',
+    objectPyRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").y',
+    objectPzRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").z',
+    
+    objectERochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").t',
+    objectPxRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").x',
+    objectPyRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").y',
+    objectPzRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").z',
+    
+    objectERochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").t',
+    objectPxRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").x',
+    objectPyRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").y',
+    objectPzRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").z'
 )
 
 # Information about the associated track
@@ -53,8 +78,11 @@ trigger = PSet(
     objectDiMuonMu17Mu8DzFiltered0p2 = 'matchToHLTFilter({object_idx}, "hltDiMuonMu17Mu8DzFiltered0p2")',
     objectL1Mu3EG5L3Filtered17 = 'matchToHLTFilter({object_idx}, "hltL1Mu3EG5L3Filtered17")',
     objectMu17Ele8dZFilter  = 'matchToHLTFilter({object_idx}, "hltMu17Ele8dZFilter")',
-    objectL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17  = 'matchToHLTFilter({object_idx}, "hltL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17")',
-    # I *think* valid up to Mu17_Mu8 v17, (maybe v18?)
+    objectL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17  = 'matchToHLTFilter({object_idx}, "hltL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17")',# missing ) on purpose
+    objectMatchesDoubleMu2011Paths = r'matchToHLTPath({object_idx}, "HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+,HLT_Mu17_Mu8_v\\d+")', #DoubleMu7_v* Mu13_Mu8 Mu17_Mu8 wichever least prescaled
+    objectMatchesMu17TrkMu8Path    = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkMu8_v\\d+")',
+    objectMatchesMu17Ele8Path      = r'matchToHLTPath({object_idx}, "HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
+    objectMatchesMu8Ele17Path      = r'matchToHLTPath({object_idx}, "HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+")',
 )
 
 

@@ -1,7 +1,16 @@
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 
+#include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Tau.h"
+#include "DataFormats/PatCandidates/interface/MET.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/Photon.h"
+#include "FWCore/Utilities/interface/Exception.h"
+
 #include "TMatrixD.h"
 #include "TMath.h"
+//#include <iostream>
 
 namespace fshelpers {
 
@@ -103,6 +112,77 @@ void addFourMomenta( reco::Candidate & c ) {
   }
   c.setP4( p4 );
   c.setCharge( charge );
+}
+
+/// Helper function to get the matched gen particle 
+const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter)
+{
+  const pat::Tau* dauTau = dynamic_cast<const pat::Tau*>(daughter);
+  if( dauTau ){
+    return dauTau->genParticleRef();
+  }
+
+  const pat::Muon* dauMu = dynamic_cast<const pat::Muon*>(daughter);
+  if( dauMu){
+    return dauMu->genParticleRef();
+  }
+
+  const pat::Electron* dauE = dynamic_cast<const pat::Electron*>(daughter);
+  if( dauE){
+    return dauE->genParticleRef();
+  }
+
+  const pat::Jet* dauJet = dynamic_cast<const pat::Jet*>(daughter);
+  if( dauJet){
+    return dauJet->genParticleRef();
+  }
+
+  const pat::Photon* dauPho = dynamic_cast<const pat::Photon*>(daughter);
+  if( dauPho){
+    return dauPho->genParticleRef();
+  }
+  else{
+    cms::Exception ex("ImplementationMissing");
+    ex.addContext("No implementation was found to get gen particle from a requested daughter, please consider either fixing the configuration or adding the implementation in FinalStateAnalysis/DataAlgos/src/helpers.cc");
+    ex.addAdditionalInfo("Available objects are pat::Tau, pat::Muon, pat::Electron, pat::Jet, pat::Photon");
+    throw ex;
+  }
+}
+
+/// Helper function to get the first interesting mother particle 
+const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, int idNOTtoMatch)
+{
+  const reco::GenParticleRef mother = /*dynamic_cast<const reco::GenParticleRef>*/ (genPart->motherRef());
+  if( !(mother.isAvailable() && mother.isNonnull())  ) return mother;
+  if( mother.isAvailable() && mother.isNonnull() && mother->status() == 3 && mother->pdgId() != idNOTtoMatch )
+    return mother;
+  else
+    return getMotherSmart(mother, idNOTtoMatch);
+}
+
+const bool comesFromHiggs(const reco::GenParticleRef genPart)
+{
+  //std::cout << "comesFromHiggs::start" << std::endl;
+  if( genPart->numberOfMothers() >= 1 ){
+    const reco::GenParticleRef mother = /*dynamic_cast<reco::GenParticleRef>*/ (genPart->motherRef());
+    //std::cout << "comesFromHiggs::if statements" << std::endl;
+    if( !(mother.isAvailable() && mother.isNonnull()) ){
+      //std::cout << "comesFromHiggs::ret false" << std::endl;
+      return false;
+    }
+    if( mother.isAvailable() && mother.isNonnull() && (mother->pdgId() == 25 || mother->pdgId() == 35 ) ){ // h^0 or H^0
+      //std::cout << "comesFromHiggs::ret true" << std::endl;
+      return true;
+    }
+    else{
+      //std::cout << "comesFromHiggs::ret recursive" << std::endl;
+      return comesFromHiggs(mother);
+    }
+  }
+  else{
+    //std::cout << "comesFromHiggs::ret false from no mother" << std::endl;
+    return false;
+  }
 }
 
 }

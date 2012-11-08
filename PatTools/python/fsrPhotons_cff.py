@@ -46,10 +46,48 @@ fsrPhotonPFIsoChHadPU03     = fsrPhotonPFIsoChHadPU04.clone(deltaR = 0.3)
 fsrPhotonPFIsoChHadPU03pt02 = fsrPhotonPFIsoChHadPU04pt02.clone(deltaR = 0.3)
 
 
-import PhysicsTools.PatAlgos.producersLayer1.pfParticleProducer_cfi
-boostedFsrPhotons = PhysicsTools.PatAlgos.producersLayer1.pfParticleProducer_cfi.patPFParticles.clone(
-    pfCandidateSource = 'fsrPhotonCands',
-)
+boostedFsrPhotons = cms.EDProducer("PATPFParticleProducerUser",
+    # General configurables
+    pfCandidateSource = cms.InputTag("fsrPhotonCands"),
+
+    # MC matching configurables
+    addGenMatch = cms.bool(False),
+    genParticleMatch = cms.InputTag(""),   ## particles source to be used for the MC matching
+    ## must be an InputTag or VInputTag to a product of
+    ## type edm::Association<reco::GenParticleCollection>
+    embedGenMatch = cms.bool(False),       ## embed gen match inside the object instead of storing the ref
+
+    # add user data
+    userData = cms.PSet(
+        # add custom classes here
+        userClasses = cms.PSet(
+            src = cms.VInputTag('')
+            ),
+        # add doubles here
+        userFloats = cms.PSet(
+            src = cms.VInputTag('')
+            ),
+        # add ints here
+        userInts = cms.PSet(
+            src = cms.VInputTag('')
+            ),
+        # add candidate ptrs here
+        userCands = cms.PSet(
+            src = cms.VInputTag('')
+            ),
+        # add "inline" functions here
+        userFunctions = cms.vstring(),
+        userFunctionLabels = cms.vstring()
+        ),
+
+    # Efficiencies
+    addEfficiencies = cms.bool(False),
+    efficiencies    = cms.PSet(),
+
+    # resolution
+    addResolutions  = cms.bool(False),
+    resolutions     = cms.PSet(),
+    )
 boostedFsrPhotons.userData.userFloats.src = cms.VInputTag(
     cms.InputTag("fsrPhotonPFIsoChHad04"),
     cms.InputTag("fsrPhotonPFIsoChHad04pt02"),

@@ -7,7 +7,7 @@
 
 #include "DataFormats/Math/interface/deltaR.h"
 
-#define FSA_DATA_FORMAT_VERSION 2
+#define FSA_DATA_FORMAT_VERSION 3
 
 namespace {
   int matchedToAnObject(const pat::TriggerObjectRefVector& trgObjects,
@@ -52,10 +52,10 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::RefProd<pat::MuonCollection>& muonRefProd,
     const edm::RefProd<pat::TauCollection>& tauRefProd,
     const edm::RefProd<pat::JetCollection>& jetRefProd,
+    const edm::RefProd<pat::PhotonCollection>& phoRefProd,
     const reco::PFCandidateRefProd& pfRefProd,
-    const edm::RefProd<edm::ValueMap<float> >& pfCandDZs,
-    const edm::RefProd<reco::JetInfoCollection>& jetInfos,
-    const edm::RefProd<std::vector<reco::Vertex::Point> >& vertices
+    const reco::TrackRefProd& tracks,
+    const reco::GsfTrackRefProd& gsfTracks
     ):
   rho_(rho),
   triggerEvent_(triggerEvent),
@@ -75,10 +75,10 @@ PATFinalStateEvent::PATFinalStateEvent(
   muonRefProd_(muonRefProd),
   tauRefProd_(tauRefProd),
   jetRefProd_(jetRefProd),
+  phoRefProd_(phoRefProd),
   pfRefProd_(pfRefProd),
-  pfCandDZs_(pfCandDZs),
-  jetInfos_(jetInfos),
-  vertices_(vertices)
+  tracks_(tracks),
+  gsfTracks_(gsfTracks)
 { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
@@ -245,35 +245,16 @@ const pat::JetCollection& PATFinalStateEvent::jets() const {
   return *jetRefProd_;
 }
 
+const pat::PhotonCollection& PATFinalStateEvent::photons() const {
+  if (!phoRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The photon RefProd is null!" << std::endl;
+  return *phoRefProd_;
+}
+
 const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
   if (!pfRefProd_)
     throw cms::Exception("PATFSAEventNullRefs")
       << "The PFLOW RefProd is null!" << std::endl;
   return *pfRefProd_;
 }
-
-// Interface to MVAMet algorithm - currently disabled.
-const PATFinalStateEvent::MVAMetResult& PATFinalStateEvent::mvaMET(
-    std::vector<reco::CandidatePtr>& hardScatter) const {
-  typedef std::map<size_t, MVAMetResult> MVACache;
-
-  // Get hash of cand content
-  size_t hash = hashCandsByContent(hardScatter);
-
-  MVACache::iterator cachePos = mvaMetCache_.find(hash);
-  // Already computed
-  if (cachePos != mvaMetCache_.end()) {
-    return cachePos->second;
-  }
-
-  // Otherwise we need to recompute it.
-  std::vector<math::XYZTLorentzVector> hardScatterP4;
-  for (size_t i = 0; i < hardScatter.size(); ++i) {
-    hardScatterP4.push_back(hardScatter[i]->p4());
-  }
-  MVAMetResult mvamet;
-  std::pair<MVACache::iterator, bool> insertResult = mvaMetCache_.insert(
-      std::make_pair(hash, mvamet));
-  return insertResult.first->second;
-}
-

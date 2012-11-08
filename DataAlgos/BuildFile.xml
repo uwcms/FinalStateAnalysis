@@ -8,6 +8,9 @@
 <use   name="root"/>
 <use   name="roottmva"/>
 <use   name="clhep"/>
+<use   name="DataFormats/HepMCCandidate"/>
+<use   name="DataFormats/PatCandidates"/>
+<use   name="FWCore/Utilities"/>
 <export>
   <lib   name="1"/>
 </export>

@@ -1,12 +1,14 @@
 # Collection of all common recipes
 
-metarake = ENV['fsa'] + '/PlotTools/rake/meta.rake'
+fsa = ENV['CMSSW_BASE'] + '/src/FinalStateAnalysis'
+
+metarake = fsa + '/PlotTools/rake/meta.rake'
 import metarake
 
-cythonrake = ENV['fsa'] + '/PlotTools/rake/cython.rake'
+cythonrake = fsa + '/PlotTools/rake/cython.rake'
 import cythonrake
 
-analysisrake = ENV['fsa'] + '/PlotTools/rake/analysis.rake'
+analysisrake = fsa + '/PlotTools/rake/analysis.rake'
 import analysisrake
 
 # Cool debug patch from 

@@ -15,6 +15,10 @@ namespace {
 enum { kInnerTrack, kGlobalTrack };
 enum { kBeamSpot, kVertex };
 
+// magic number from muon header file, only exists in 52x, 
+// causes 42x to barf if I ask for isPFMuon()
+enum { kPFMuonType=1<<5 }; // so that this compiles in 42x and 52x
+
 template<typename T>
 bool isValidRef(const edm::Ref<T>& ref)
 {
@@ -26,8 +30,10 @@ bool isValidRef(const edm::Ref<T>& ref)
 //   (to be used in case selection criteria are not specified explicitely)
 bool     defaultApplyGlobalMuonPromptTight_ = true;
 bool     defaultApplyAllArbitrated_         = true;
-double   defaultMaxIPxy_                    =  0.02; // cm
-double   defaultMaxIPz_                     =  1.e+3;
+bool     defaultUse2012IDVariables_         = false;
+bool     defaultUsePFMuonReq_               = true;
+double   defaultMaxIPxy_                    =  0.02;  // cm
+double   defaultMaxIPz_                     =  1.e+3; // cm
 int      defaultIPtrackType_                = kInnerTrack;
 int      defaultIPrefType_                  = kVertex;
 double   defaultMaxChi2red_                 = 10.;   // chi^2/nDoF
@@ -36,6 +42,7 @@ unsigned defaultMinTrackerHits_             = 10;
 unsigned defaultMinPixelHits_               =  1;
 unsigned defaultMinMuonStations_            =  2;
 unsigned defaultMinMatchedSegments_         =  1;
+unsigned defaultMinTkLayersWithMeasurement_ =  6; // 2012 recommendation
 
 }
 
@@ -52,6 +59,8 @@ PATMuonIdSelectorImp::PATMuonIdSelectorImp(const edm::ParameterSet& cfg)
 {
   applyGlobalMuonPromptTight_ = getConfigurationParameter<bool>    (cfg, "applyGlobalMuonPromptTight", &defaultApplyGlobalMuonPromptTight_);
   applyAllArbitrated_         = getConfigurationParameter<bool>    (cfg, "applyAllArbitrated",         &defaultApplyAllArbitrated_);
+  use2012IDVariables_         = getConfigurationParameter<bool>    (cfg, "use2012IDVariables",         &defaultUse2012IDVariables_);
+  usePFMuonReq_               = getConfigurationParameter<bool>    (cfg, "usePFMuonReq",               &defaultUsePFMuonReq_);
   maxIPxy_                    = getConfigurationParameter<double>  (cfg, "maxIPxy",                    &defaultMaxIPxy_);
   maxIPz_                     = getConfigurationParameter<double>  (cfg, "maxIPz",                     &defaultMaxIPz_);
   maxChi2red_                 = getConfigurationParameter<double>  (cfg, "maxChi2red",                 &defaultMaxChi2red_);
@@ -60,6 +69,7 @@ PATMuonIdSelectorImp::PATMuonIdSelectorImp(const edm::ParameterSet& cfg)
   minPixelHits_               = getConfigurationParameter<unsigned>(cfg, "minPixelHits",               &defaultMinPixelHits_);
   minMuonStations_            = getConfigurationParameter<unsigned>(cfg, "minMuonStations",            &defaultMinMuonStations_);
   minMatchedSegments_         = getConfigurationParameter<unsigned>(cfg, "minMatchedSegments",         &defaultMinMatchedSegments_);
+  minTkLayersWithMeasurement_ = getConfigurationParameter<unsigned>(cfg, "minTkLayersWithMeasurement", &defaultMinTkLayersWithMeasurement_);  
 
   if ( cfg.exists("IPtrackType") ) {
     std::string IPtrackType_string = cfg.getParameter<std::string>("IPtrackType");
@@ -146,7 +156,8 @@ void PATMuonIdSelectorImp::select(const edm::Handle<collection>& patMuonCollecti
 	patMuon != patMuonCollection->end(); ++patMuon ) {
 
     if ( !patMuon->isGlobalMuon()                                                                ) continue;
-    if ( !patMuon->isTrackerMuon()                                                               ) continue;
+    if ( !use2012IDVariables_ && !patMuon->isTrackerMuon()                                       ) continue;
+    if ( use2012IDVariables_  && usePFMuonReq_ && !(patMuon->type() & kPFMuonType)               ) continue;
     if ( !isValidRef(patMuon->globalTrack())                                                     ) continue;
     if ( !isValidRef(patMuon->innerTrack())                                                      ) continue;
 
@@ -161,10 +172,14 @@ void PATMuonIdSelectorImp::select(const edm::Handle<collection>& patMuonCollecti
     if ( !(TMath::Abs(muonTrack->dz(IPrefPoint)) < maxIPz_)                                      ) continue;
 
     if ( !(patMuon->globalTrack()->normalizedChi2() < maxChi2red_)                               ) continue;
-    if ( !(patMuon->innerTrack()->ptError() < (maxDptOverPt_*patMuon->innerTrack()->pt()))       ) continue;
+    if ( !use2012IDVariables_ && 
+	 !(patMuon->innerTrack()->ptError() < (maxDptOverPt_*patMuon->innerTrack()->pt()))       ) continue;
 
     const reco::HitPattern& innerTrackHitPattern = patMuon->innerTrack()->hitPattern();
-    if ( !(innerTrackHitPattern.numberOfValidTrackerHits() >= (int)minTrackerHits_)              ) continue;
+    if ( !use2012IDVariables_ && 
+	 !(innerTrackHitPattern.numberOfValidTrackerHits() >= (int)minTrackerHits_) )   continue; 
+    if (  use2012IDVariables_ && 
+	 !(innerTrackHitPattern.trackerLayersWithMeasurement() >= (int)minTkLayersWithMeasurement_) ) continue;
     if ( !(innerTrackHitPattern.numberOfValidPixelHits() >= (int)minPixelHits_)                  ) continue;
 
     //---------------------------------------------------------------------------

@@ -1,8 +1,11 @@
 #!/usr/bin/env cmsRun
 import FWCore.ParameterSet.Config as cms
-
 import FinalStateAnalysis.Utilities.cfgcleaner as cfgcleaner
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
+from FinalStateAnalysis.Utilities.version import fsa_version, get_user
+import os
+import time
+
 options = TauVarParsing.TauVarParsing(
     xSec = -999.0,
     xSecErr = 0.0,
@@ -10,25 +13,30 @@ options = TauVarParsing.TauVarParsing(
     keepEverything=0,
     reportEvery=2000,
     puTag='unknown',
+    isAOD=True,
+    calibrationTarget='2012Jul13ReReco',
     verbose=0, # Print out summary table at end
     profile=0, # Enabling profiling
     keepAll=0, # Don't drop any event content
     # Used for the EGamma electron calibration
     # See https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaElectronEnergyScale
     dataset='Prompt',
-    target='2011Data', # Used for electron and muon effective areas
 	dumpCfg='', #used for crab
     clean = 1,
     embedded=0, # If running on embedded samples, set to 1
 )
 
 files = [
-    "root://cmsxrootd.hep.wisc.edu//store/data/Run2012A/DoubleMu/AOD/PromptReco-v1/000/190/456/D0478E94-0681-E111-82A4-0019B9F72F97.root"
+    
+    #"root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/29Jun2012-v1/0001/C46FD2A9-3FC3-E111-A1A8-485B39800C00.root"
 ]
-for file in files:
-    options.inputFiles = file
+
+options.inputFiles = files
 
 options.parseArguments()
+
+if not isinstance(options.inputFiles,list):
+    options.inputFiles = options.inputFiles.split(',')
 
 process = cms.Process("TUPLE")
 
@@ -39,7 +47,14 @@ process.source = cms.Source(
 )
 # If data, apply a luminosity mask
 if not options.isMC and options.lumiMask:
-    print "Applying LumiMask from", options.lumiMask
+    # Figure out what the absolute PATH is
+    full_path = options.lumiMask
+    if not os.path.isabs(options.lumiMask):
+        # Make it relative to CMSSW_BASE
+        full_path = os.path.join(
+            os.environ['CMSSW_BASE'], 'src', options.lumiMask)
+    print "Applying LumiMask from %s => %s" % (options.lumiMask, full_path)
+    options.lumiMask = full_path
     process.source.lumisToProcess = options.buildPoolSourceLumiMask()
 
 # Check if we only want to process a few events
@@ -68,20 +83,31 @@ process.out = cms.OutputModule(
 # Configure the pat tuple
 import FinalStateAnalysis.PatTools.patTupleProduction as tuplizer
 tuplize, output_commands = tuplizer.configurePatTuple(
-    process, isMC=options.isMC, xSec=options.xSec, xSecErr=options.xSecErr,
+    process, isMC=options.isMC, xSec=options.xSec,
+    isAOD=options.isAOD, xSecErr=options.xSecErr,
     puTag=options.puTag, dataset=options.dataset,
-    target=options.target,
     embedded=options.embedded,
+    calibrationTarget=options.calibrationTarget
 )
 
 if options.globalTag == "":
     raise RuntimeError("Global tag not specified!  Try sourcing environment.sh\n")
+else:
+    print 'Using globalTag: %s'%options.globalTag
 
 process.GlobalTag.globaltag = cms.string(options.globalTag)
 
 # Count events at the beginning of the pat tuplization
 process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
 process.load("FinalStateAnalysis.RecoTools.dqmEventCount_cfi")
+
+# Hack meta information about this PAT tuple in the provenance.
+process.eventCount.uwMeta = cms.PSet(
+    # The git commit
+    commit = cms.string(fsa_version()),
+    user = cms.string(get_user()),
+    date = cms.string(time.strftime("%d %b %Y %H:%M:%S +0000", time.gmtime())),
+)
 
 process.schedule = cms.Schedule()
 
@@ -121,7 +147,11 @@ process.MEtoEDMConverter = cms.EDProducer(
     deleteAfterCopy = cms.untracked.bool(True)
 )
 
-process.outpath = cms.EndPath(process.MEtoEDMConverter*process.out)
+
+
+process.outpath = cms.EndPath(    
+    process.MEtoEDMConverter*    
+    process.out)
 process.schedule.append(process.outpath)
 
 # Tell the framework to shut up!
@@ -136,10 +166,6 @@ if options.clean:
     print "Cleaning up the cruft!"
     unrun, unused, killed = cfgcleaner.clean_cruft(
         process, process.out.outputCommands.value())
-    #print unused
-    #print killed
-    #print unused - killed
-    #print killed - unused
     print "Removed %i unrun and %i unused modules!" % (len(unrun), len(unused))
 
 ################################################################################

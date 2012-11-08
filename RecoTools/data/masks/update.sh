@@ -15,3 +15,5 @@ rsync -v -a --exclude="*CMSSW*" --exclude="*/" --exclude="*/*" --include="Cert*.
 rsync -v -a --exclude="*CMSSW*" --exclude="*/" --exclude="*/*" --include="Cert*.txt" --exclude="*" $base/Collisions12/8TeV/Prompt/ .
 # Get 2012 reprocessing jsons
 rsync -v -a --exclude="*CMSSW*" --exclude="*/" --exclude="*/*" --include="Cert*.txt" --exclude="*" $base/Collisions12/8TeV/Reprocessing/ .
+# Get 2012 DCSOnly jsons
+rsync -v -a --exclude="*CMSSW*" --exclude="*/" --exclude="*/*" --include="*json*DCSONLY*.txt" --exclude="*" $base/Collisions12/8TeV/DCSOnly/ .
