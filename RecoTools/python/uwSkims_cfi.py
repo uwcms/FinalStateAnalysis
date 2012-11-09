@@ -63,7 +63,7 @@ e17Selector = cms.EDFilter(
 eTauPath = cms.Path(e17Selector + tau18JetSelector)
 skimConfig.paths.append("eTauPath")
 
-# DoubleE for ZZ and VH
+# DoubleE for ZZ, VH, and HZG
 e8Selector = cms.EDFilter(
     "GsfElectronSelector",
     src = cms.InputTag("gsfElectrons"),
@@ -78,7 +78,7 @@ twoElectronsAbove8 = cms.EDFilter(
 doubleEPath = cms.Path(e17Selector + e8Selector + twoElectronsAbove8)
 skimConfig.paths.append("doubleEPath")
 
-# DoubleMu for ZZ and VH
+# DoubleMu for ZZ, VH and HZG
 mu17Selector = cms.EDFilter(
     "MuonSelector",
     src = cms.InputTag("muons"),
@@ -116,14 +116,19 @@ pho15Selector = cms.EDFilter(
     cut = cms.string("abs(eta) < 3.0 & pt > 15"),
     filter=cms.bool(False)
 )
-
 twoPhotonsAbove15 = cms.EDFilter(
     "CandViewCountFilter",
     src = cms.InputTag("pho15Selector"),
     minNumber = cms.uint32(2)
 )
+pho20Selector = cms.EDFilter(
+    "PhotonSelector",
+    src = cms.InputTag("photons"),
+    cut = cms.string("abs(eta) < 3.0 & pt > 20"),
+    filter=cms.bool(True)
+)
 
-diPho15Path = cms.Path(pho15Selector + twoPhotonsAbove15)
-skimConfig.paths.append("diPho15Path")
+diPho15Path = cms.Path(pho20Selector + pho15Selector + twoPhotonsAbove15)
+skimConfig.paths.append("pho15Pho20Path")
 
 
