@@ -128,7 +128,7 @@ pho20Selector = cms.EDFilter(
     filter=cms.bool(True)
 )
 
-diPho15Path = cms.Path(pho20Selector + pho15Selector + twoPhotonsAbove15)
+pho15Pho20Path = cms.Path(pho20Selector + pho15Selector + twoPhotonsAbove15)
 skimConfig.paths.append("pho15Pho20Path")
 
 
