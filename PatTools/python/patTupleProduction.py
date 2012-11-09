@@ -37,7 +37,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_kt6PFJetsForRhoComputationVoronoi_rho_*',
         '*_kt6PFJetsForIso_rho_*',
         '*_kt6PFJets_rho_*',
-        '*_kt6PFJetsCentralHZGPho_rho_*',
+        '*_kt6PFJetsHZGPho_rho_*',
         '*_kt6PFJetsCentralHZGEle_rho_*',
         '*_kt6PFJetsCentralHZGMu_rho_*',
         '*_kt6PFJetsCentralNeutralHZGMu_rho_*',
