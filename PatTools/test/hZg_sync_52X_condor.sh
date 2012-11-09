@@ -29,11 +29,11 @@ done
 
 sync_52X=()
 sync_52X+=('DataMuon;root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/29Jun2012-v1/0001/C46FD2A9-3FC3-E111-A1A8-485B39800C00.root')
-#sync_52X+=('DataElectron;root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleElectron/AOD/29Jun2012-v1/0000/00507372-79C2-E111-B41C-003048FFCB6A.root')
-#for idx in "${!hzg_list_arr[@]}"
-#do
-#  sync_52X+=("MCSignalEle${idx};${hzg_list_arr[$idx]}")
-#done
+sync_52X+=('DataElectron;root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleElectron/AOD/29Jun2012-v1/0000/00507372-79C2-E111-B41C-003048FFCB6A.root')
+for idx in "${!hzg_list_arr[@]}"
+do
+  sync_52X+=("MCSignalEle${idx};${hzg_list_arr[$idx]}")
+done
 #sync_52X+=('MCBkgEle;root://cmsdca0.fnal.gov//store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0002/002C5B35-519B-E111-862D-001E67398025.root')
 
 hdfsOutDir=srm://cmssrm.hep.wisc.edu:8443/srm/v2/server?SFN=/hdfs/store/user/lgray/HZG_sync/${label}/52X 
@@ -46,9 +46,9 @@ do
 
   if [[ "${parts[0]}" == *Data* ]]
       then
-      farmoutAnalysisJobs --infer-cmssw-path --express-queue --output-dir=${hdfsOutDir} --input-dir=${parts[1]%/*} --match-input-files=${parts[1]##*/} hZg_sync_52X.${label}.${parts[0]} patTuple_cfg.py isMC=0 globalTag=$datagt reportEvery=100 maxEvents=-1 dataset=ReReco calibrationTarget=2012Jul13ReReco outputFile='$outputFileName' inputFiles='$inputFileNames' --no-shared-fs
+      farmoutAnalysisJobs --infer-cmssw-path --express-queue --output-dir=${hdfsOutDir} --input-dir=${parts[1]%/*} --match-input-files=${parts[1]##*/} hZg_sync_52X.${label}.${parts[0]} patTuple_cfg.py isMC=0 globalTag=$datagt reportEvery=100 maxEvents=-1 dataset=ReReco calibrationTarget=2012Jul13ReReco outputFile='$outputFileName' inputFiles='$inputFileNames' passThru=1
       else
-      farmoutAnalysisJobs --infer-cmssw-path --express-queue --output-dir=${hdfsOutDir} --input-dir=${parts[1]%/*} --match-input-files=${parts[1]##*/} hZg_sync_52X.${label}.${parts[0]} patTuple_cfg.py isMC=1 globalTag=$mcgt reportEvery=100 maxEvents=-1 dataset=Summer12 calibrationTarget=Summer12_DR53X_HCP2012 outputFile='$outputFileName' inputFiles='$inputFileNames' --no-shared-fs
+      farmoutAnalysisJobs --infer-cmssw-path --express-queue --output-dir=${hdfsOutDir} --input-dir=${parts[1]%/*} --match-input-files=${parts[1]##*/} hZg_sync_52X.${label}.${parts[0]} patTuple_cfg.py isMC=1 globalTag=$mcgt reportEvery=100 maxEvents=-1 dataset=Summer12 calibrationTarget=Summer12_DR53X_HCP2012 outputFile='$outputFileName' inputFiles='$inputFileNames' passThru=1
   fi  
 done
 #echo "Tuplizing ggH sample - will write log to ggH_tuplization.log"

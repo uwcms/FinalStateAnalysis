@@ -45,11 +45,11 @@ do
       then
       ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
 	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=ReReco\
-	  calibrationTarget=2012Jul13ReReco &> HZG_${parts[0]}_52X_sync.log  & 
+	  calibrationTarget=2012Jul13ReReco passThru=1 &> HZG_${parts[0]}_52X_sync.log  & 
       else
       ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=500\
 	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=Summer12\
-	  calibrationTarget=Summer12_DR53X_HCP2012 &> HZG_${parts[0]}_52X_sync.log  &
+	  calibrationTarget=Summer12_DR53X_HCP2012 passThru=1 &> HZG_${parts[0]}_52X_sync.log  &
   fi  
 done
 #echo "Tuplizing ggH sample - will write log to ggH_tuplization.log"
