@@ -55,7 +55,7 @@ namespace {
   template<typename T> T convertVal(double x);
   template<> Double_t convertVal<Double_t>(double x) { return x; }
   template<> Float_t convertVal<Float_t>(double x) { return x; }
-  template<> Int_t convertVal<Int_t>(double x) { return TMath::Nint(x); }
+  template<> Int_t convertVal<Int_t>(double x) { return TMath::Nint(x); }  
 }
 
 // Explicit typed (float, double, etc) ntuple column
@@ -63,13 +63,14 @@ template<typename ObjType, typename ColType>
 class ExpressionNtupleColumnT : public ExpressionNtupleColumn<ObjType> {
   public:
 
-  static ExpressionNtupleColumnT* makeExpression(const std::string& name, const std::string& func, TTree* tree)
-  {
-    try{
+  static ExpressionNtupleColumnT* makeExpression(const std::string& name, 
+						 const std::string& func, 
+						 TTree* tree) {
+    try{      
       return new ExpressionNtupleColumnT(name, func, tree);
-    }
-    catch(cms::Exception& iException){
-      iException.addContext("Cought exception in building branch: " + name + " with formula: " + func);
+    } catch(cms::Exception& iException) {
+      iException.addContext("Caught exception in building branch: " + 
+			    name + " with formula: " + func);
       throw;
     }
   }
@@ -77,7 +78,7 @@ class ExpressionNtupleColumnT : public ExpressionNtupleColumn<ObjType> {
   protected:
     /// Abstract function
     ExpressionNtupleColumnT(const std::string& name, const std::string& func,
-			  TTree* tree);
+			    TTree* tree);
  
     void setValue(double value);
   private:

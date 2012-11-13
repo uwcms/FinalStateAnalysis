@@ -3,6 +3,7 @@
 <use   name="CommonTools/Utils"/>
 <use   name="PhysicsTools/SelectorUtils"/>
 <use   name="DataFormats/Luminosity"/>
+<use   name="DataFormats/PatCandidates"/>
 <use   name="root"/>
 <use   name="roofit"/>
 <use name="boost"/>
