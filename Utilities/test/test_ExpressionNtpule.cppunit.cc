@@ -83,7 +83,8 @@ void testExpressionNtuple::testFilling() {
   CPPUNIT_ASSERT(nfntuple_->tree()->GetEntries() == 1);
   CPPUNIT_ASSERT(nfntuple_->tree()->Draw("pt","pt > 53","goff") == nEntriesPtGt53);
   CPPUNIT_ASSERT(nfntuple_->tree()->Draw("eta","abs(eta) > 2.0","goff") == nEntriesAbsEtaGt2);
-  CPPUNIT_ASSERT(nfntuple_->tree()->Draw("abseta","abseta > 2.0") == nEntriesAbsEtaGt2);
+  CPPUNIT_ASSERT(nfntuple_->tree()->Draw("abseta","abseta > 2.0","goff") == nEntriesAbsEtaGt2);
+  CPPUNIT_ASSERT(nfntuple_->tree()->Draw("abseta[1]","","goff") == 1);
   CPPUNIT_ASSERT(nfntuple_->tree()->GetLeaf("N_LeafCandidate")->GetValue() == 100);
   
 }
