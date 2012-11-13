@@ -12,12 +12,15 @@
  *  const std::string& name, const edm::ParameterSet& pset, TTree* tree);
  *
  * Author: Evan K. Friis, UW Madison
+ *         Lindsey Gray, UW Madison (for vector specializations)
  *
  */
 
 #ifndef EXPRESSIONNTUPLECOLUMN_VOU3DWMC
 #define EXPRESSIONNTUPLECOLUMN_VOU3DWMC
 
+#include "Reflex/Type.h"
+#include <TTree.h>
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
 #include <TMath.h>
 #include <iostream>
@@ -31,6 +34,7 @@ protected:
   /// Abstract function which takes the result from the compute and fills the
   /// branch  
   virtual void setValue(double value) = 0;
+  virtual void setValue(const std::vector<double>& value) = 0;
   ExpressionNtupleColumn(const std::string& name, const std::string& func);
 private:
   std::string name_;
@@ -46,7 +50,42 @@ template<typename T> void ExpressionNtupleColumn<T>::compute(const T& obj) {
   this->setValue(func_(obj));
 }
 
+//vector specialization for base class
+template<typename ValType>
+class ExpressionNtupleColumn<std::vector<ValType> > {
+public:
+  /// Compute the column function and store result in branch variable
+  void compute(const std::vector<ValType>& obj);  
+protected:
+  /// Abstract function which takes the result from the compute and fills the
+  /// branch  
+  virtual void setValue(double value) = 0;
+  virtual void setValue(const std::vector<double>& value) = 0;
+  ExpressionNtupleColumn(const std::string& name, const std::string& func);
+private:
+  std::string name_;
+  StringObjectFunction<ValType> func_;
+};
+
+template<class ValType>
+ExpressionNtupleColumn<std::vector<ValType> >::ExpressionNtupleColumn(
+    const std::string& name, const std::string& func):
+  name_(name), func_(func, true) {}  
+
+template<class ValType>
+void ExpressionNtupleColumn<std::vector<ValType> >::compute(
+    const std::vector<ValType>& obj) {
+  std::vector<double> result;
+  typename std::vector<ValType>::const_iterator i = obj.begin();
+  typename std::vector<ValType>::const_iterator e = obj.end();
+  for( ; i != e; ++i ) result.push_back(func_(*i));
+  this->setValue(result);
+}
+
 namespace {
+  namespace {
+    typedef std::vector<double> vdouble;
+  }
   template<typename T> std::string getTypeCmd();
   template<> std::string getTypeCmd<Float_t>() { return "/F"; }
   template<> std::string getTypeCmd<Int_t>() { return "/I"; }
@@ -55,7 +94,30 @@ namespace {
   template<typename T> T convertVal(double x);
   template<> Double_t convertVal<Double_t>(double x) { return x; }
   template<> Float_t convertVal<Float_t>(double x) { return x; }
-  template<> Int_t convertVal<Int_t>(double x) { return TMath::Nint(x); }  
+  template<> Int_t convertVal<Int_t>(double x) { return TMath::Nint(x); } 
+  //vector spec
+  template<typename T> std::vector<T> convertVal(const vdouble& x);
+  template<> std::vector<Double_t> convertVal<Double_t>(const vdouble& x) { 
+    std::vector<Double_t> result;
+    vdouble::const_iterator i = x.begin();
+    vdouble::const_iterator e = x.end();
+    for( ; i != e; ++i) result.push_back(*i);    
+    return result; 
+  }
+  template<> std::vector<Float_t> convertVal<Float_t>(const vdouble& x) { 
+    std::vector<Float_t> result;
+    vdouble::const_iterator i = x.begin();
+    vdouble::const_iterator e = x.end();
+    for( ; i != e; ++i) result.push_back(*i);    
+    return result; 
+  }
+  template<> std::vector<Int_t> convertVal<Int_t>(const vdouble& x) { 
+    std::vector<Int_t> result;
+    vdouble::const_iterator i = x.begin();
+    vdouble::const_iterator e = x.end();
+    for( ; i != e; ++i) result.push_back(TMath::Nint(*i));   
+    return result;
+  } 
 }
 
 // Explicit typed (float, double, etc) ntuple column
@@ -81,6 +143,7 @@ class ExpressionNtupleColumnT : public ExpressionNtupleColumn<ObjType> {
 			    TTree* tree);
  
     void setValue(double value);
+    void setValue(const std::vector<double>&) {}
   private:
     boost::shared_ptr<ColType> branch_;
 };
@@ -127,7 +190,7 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
             command[0], tree));
     } else if (command[1] == "F" || command[1] == "f") {
       // Make a float column
-      output.reset( ExpressionNtupleColumnT<T, Int_t>::makeExpression(name,
+      output.reset( ExpressionNtupleColumnT<T, Float_t>::makeExpression(name,
             command[0], tree));
     } else if (command[1] == "D" || command[1] == "d") {
       // Make a double column
@@ -146,11 +209,10 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
   return output;
 }
 
-
 // partial template specialization for vectors
 template<typename ValType, typename ColType>
 class ExpressionNtupleColumnT<std::vector<ValType>, ColType> : 
-     public ExpressionNtupleColumn<ValType> {
+     public ExpressionNtupleColumn<std::vector<ValType> > {
   public:
 
   static ExpressionNtupleColumnT* 
@@ -172,10 +234,9 @@ class ExpressionNtupleColumnT<std::vector<ValType>, ColType> :
   /// Abstract function
   ExpressionNtupleColumnT(const std::string& name, 
 				 const std::string& func,
-				 TTree* tree);
-  
-  void setValue(double) {}
+				 TTree* tree);    
   // template specialization for vector inputs
+  void setValue(double) {}
   void setValue(const std::vector<double>& value);
  private:
   boost::shared_ptr<ColType> branch_;
@@ -188,7 +249,7 @@ template<typename ValType, typename ColType>
 ExpressionNtupleColumnT<std::vector<ValType>, ColType>::
 ExpressionNtupleColumnT(const std::string& name,
 			       const std::string& func, TTree* tree):
-  ExpressionNtupleColumn<ValType>(name, func),
+  ExpressionNtupleColumn<std::vector<ValType> >(name, func),
   myparent_(tree),
   branchname_(name) {
   branch_.reset(new ColType[1]);    
@@ -206,10 +267,10 @@ template<typename ValType, typename ColType>
 void ExpressionNtupleColumnT<std::vector<ValType>, ColType>::
 setValue(const std::vector<double>& value) {
   delete [] branch_.get();
-  std::vector<ColType> thevals = convertVal<std::vector<ColType> >(value);
+  std::vector<ColType> thevals = convertVal<ColType>(value);
   const unsigned arrSize = thevals.size();
   branch_.reset(new ColType[arrSize]);
-  for( unsigned i = 0; i < arrSize; ++i ) (*branch_)[i] = thevals[i];
+  for( unsigned i = 0; i < arrSize; ++i ) (branch_.get())[i] = thevals[i];
   myparent_->SetBranchAddress(branchname_.c_str(),branch_.get());
 }
 

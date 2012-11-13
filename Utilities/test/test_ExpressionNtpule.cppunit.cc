@@ -9,6 +9,7 @@
 
 
 class testExpressionNtuple: public CppUnit::TestFixture {
+  typedef std::vector<reco::LeafCandidate> vLeafCandidate;
   CPPUNIT_TEST_SUITE(testExpressionNtuple);
   CPPUNIT_TEST(testBooking);
   CPPUNIT_TEST(testFilling);
@@ -20,6 +21,7 @@ class testExpressionNtuple: public CppUnit::TestFixture {
     void testFilling();
   private:
     ExpressionNtuple<reco::LeafCandidate> * ntuple_;
+    ExpressionNtuple<vLeafCandidate> * nfntuple_;
     fwlite::TFileService * fileService;
 };
 
@@ -33,6 +35,9 @@ void testExpressionNtuple::setUp() {
   fileService = new fwlite::TFileService("test_file.root");
   ntuple_ = new ExpressionNtuple<reco::LeafCandidate>(pset);
   ntuple_->initialize(*fileService);
+  
+  nfntuple_ = new ExpressionNtuple<vLeafCandidate>(pset);
+  nfntuple_->initialize(*fileService);
 }
 
 void testExpressionNtuple::testBooking() {
@@ -43,6 +48,14 @@ void testExpressionNtuple::testBooking() {
   CPPUNIT_ASSERT(ntuple_->tree()->GetBranch("charge"));
   // There is one additional branch, which is the IDX of each element.
   CPPUNIT_ASSERT(ntuple_->tree()->GetListOfBranches()->GetEntries() == 5);
+
+  CPPUNIT_ASSERT(nfntuple_);
+  CPPUNIT_ASSERT(nfntuple_->tree()->GetBranch("pt"));
+  CPPUNIT_ASSERT(nfntuple_->tree()->GetBranch("eta"));
+  CPPUNIT_ASSERT(nfntuple_->tree()->GetBranch("abseta"));
+  CPPUNIT_ASSERT(nfntuple_->tree()->GetBranch("charge"));
+  // There is one additional branch, which is the IDX of each element.
+  CPPUNIT_ASSERT(nfntuple_->tree()->GetListOfBranches()->GetEntries() == 5);
 }
 
 void testExpressionNtuple::testFilling() {
@@ -62,7 +75,7 @@ void testExpressionNtuple::testFilling() {
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("pt > 53") == nEntriesPtGt53);
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("abs(eta) > 2.0") == nEntriesAbsEtaGt2);
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("abseta > 2.0") == nEntriesAbsEtaGt2);
-  CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("idx == 1") == 1);
+  CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("idx == 1") == 1);  
 }
 
 
