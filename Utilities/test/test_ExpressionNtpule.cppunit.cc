@@ -72,7 +72,7 @@ void testExpressionNtuple::testFilling() {
     ntuple_->fill(cand, i);
     vcands.push_back(cand);
   }
-  nfntuple_->fill(vcands,-1);
+  nfntuple_->fill(vcands);
 
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries() == 100);
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("pt > 53") == nEntriesPtGt53);
