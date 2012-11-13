@@ -29,7 +29,7 @@ public:
   void compute(const ObjType& obj);
 protected:
   /// Abstract function which takes the result from the compute and fills the
-  /// branch
+  /// branch  
   virtual void setValue(double value) = 0;
   ExpressionNtupleColumn(const std::string& name, const std::string& func);
 private:
@@ -144,6 +144,73 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
         << std::endl;
   }
   return output;
+}
+
+
+// partial template specialization for vectors
+template<typename ValType, typename ColType>
+class ExpressionNtupleColumnT<std::vector<ValType>, ColType> : 
+     public ExpressionNtupleColumn<ValType> {
+  public:
+
+  static ExpressionNtupleColumnT* 
+    makeExpression(const std::string& name, 
+		   const std::string& func, 
+		   TTree* tree)
+    {
+      try{
+	return new ExpressionNtupleColumnT(name, func, tree);
+      }
+      catch(cms::Exception& iException){
+	iException.addContext("Caught exception in building branch: " + 
+			      name + " with formula: " + func);
+	throw;
+      }
+    }
+  
+ protected:
+  /// Abstract function
+  ExpressionNtupleColumnT(const std::string& name, 
+				 const std::string& func,
+				 TTree* tree);
+  
+  void setValue(double) {}
+  // template specialization for vector inputs
+  void setValue(const std::vector<double>& value);
+ private:
+  boost::shared_ptr<ColType> branch_;
+  TTree* const myparent_;
+  const std::string branchname_;
+};
+
+// Explicit typed (float, double, etc) ntuple column
+template<typename ValType, typename ColType>
+ExpressionNtupleColumnT<std::vector<ValType>, ColType>::
+ExpressionNtupleColumnT(const std::string& name,
+			       const std::string& func, TTree* tree):
+  ExpressionNtupleColumn<ValType>(name, func),
+  myparent_(tree),
+  branchname_(name) {
+  branch_.reset(new ColType[1]);    
+
+    //need to get the reflex information for this class so ROOT can eat it
+    Reflex::Type thetype = Reflex::Type::ByTypeInfo(typeid(ColType));
+    std::cout << "Making branch: "<< name 
+	      <<" of type: " << thetype.Name_c_str() 
+	      << std::endl;
+
+    tree->Branch(name.c_str(), thetype.Name_c_str(), branch_.get());
+}
+
+template<typename ValType, typename ColType>
+void ExpressionNtupleColumnT<std::vector<ValType>, ColType>::
+setValue(const std::vector<double>& value) {
+  delete [] branch_.get();
+  std::vector<ColType> thevals = convertVal<std::vector<ColType> >(value);
+  const unsigned arrSize = thevals.size();
+  branch_.reset(new ColType[arrSize]);
+  for( unsigned i = 0; i < arrSize; ++i ) (*branch_)[i] = thevals[i];
+  myparent_->SetBranchAddress(branchname_.c_str(),branch_.get());
 }
 
 #endif /* end of include guard: EXPRESSIONNTUPLECOLUMN_VOU3DWMC */
