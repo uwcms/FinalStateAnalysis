@@ -21,9 +21,11 @@
 
 #include "Reflex/Type.h"
 #include <TTree.h>
+#include <TLeaf.h>
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
 #include <TMath.h>
 #include <iostream>
+#include <sstream>
 
 template<typename ObjType>
 class ExpressionNtupleColumn {
@@ -78,7 +80,10 @@ void ExpressionNtupleColumn<std::vector<ValType> >::compute(
   std::vector<double> result;
   typename std::vector<ValType>::const_iterator i = obj.begin();
   typename std::vector<ValType>::const_iterator e = obj.end();
-  for( ; i != e; ++i ) result.push_back(func_(*i));
+  for( ; i != e; ++i ) {     
+    result.push_back(func_(*i));
+    
+  }
   this->setValue(result);
 }
 
@@ -239,6 +244,7 @@ class ExpressionNtupleColumnT<std::vector<ValType>, ColType> :
   void setValue(double) {}
   void setValue(const std::vector<double>& value);
  private:
+  TLeaf* counter_;
   boost::shared_ptr<ColType> branch_;
   TTree* const myparent_;
   const std::string branchname_;
@@ -248,19 +254,20 @@ class ExpressionNtupleColumnT<std::vector<ValType>, ColType> :
 template<typename ValType, typename ColType>
 ExpressionNtupleColumnT<std::vector<ValType>, ColType>::
 ExpressionNtupleColumnT(const std::string& name,
-			       const std::string& func, TTree* tree):
+			const std::string& func, TTree* tree):
   ExpressionNtupleColumn<std::vector<ValType> >(name, func),
   myparent_(tree),
   branchname_(name) {
-  branch_.reset(new ColType[1]);    
+  branch_.reset(new ColType[1]);
+  
+  std::stringstream idxwrap;
+  Reflex::Type theType = Reflex::Type::ByTypeInfo(typeid(ValType));
+  idxwrap << "[N_" << theType.Name() << "]";
 
-    //need to get the reflex information for this class so ROOT can eat it
-    Reflex::Type thetype = Reflex::Type::ByTypeInfo(typeid(ColType));
-    std::cout << "Making branch: "<< name 
-	      <<" of type: " << thetype.Name_c_str() 
-	      << std::endl;
+  std::string branchCmd = name + idxwrap.str() + getTypeCmd<ColType>();
+  std::string fullName = name;
 
-    tree->Branch(name.c_str(), thetype.Name_c_str(), branch_.get());
+  tree->Branch(fullName.c_str(), branch_.get(), branchCmd.c_str());
 }
 
 template<typename ValType, typename ColType>
@@ -270,8 +277,10 @@ setValue(const std::vector<double>& value) {
   std::vector<ColType> thevals = convertVal<ColType>(value);
   const unsigned arrSize = thevals.size();
   branch_.reset(new ColType[arrSize]);
-  for( unsigned i = 0; i < arrSize; ++i ) (branch_.get())[i] = thevals[i];
-  myparent_->SetBranchAddress(branchname_.c_str(),branch_.get());
+  for( unsigned i = 0; i < arrSize; ++i ) { 
+    (branch_.get())[i] = thevals[i];
+  }  
+  myparent_->GetLeaf(branchname_.c_str())->SetAddress(branch_.get());
 }
 
 #endif /* end of include guard: EXPRESSIONNTUPLECOLUMN_VOU3DWMC */

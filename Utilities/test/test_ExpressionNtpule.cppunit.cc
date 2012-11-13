@@ -7,7 +7,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <Utilities/Testing/interface/CppUnit_testdriver.icpp>
 
-
 class testExpressionNtuple: public CppUnit::TestFixture {
   typedef std::vector<reco::LeafCandidate> vLeafCandidate;
   CPPUNIT_TEST_SUITE(testExpressionNtuple);
@@ -16,7 +15,7 @@ class testExpressionNtuple: public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE_END();
   public:
     void setUp();
-    void tearDown(){}
+    void tearDown(){ delete fileService;}
     void testBooking();
     void testFilling();
   private:
@@ -62,6 +61,7 @@ void testExpressionNtuple::testFilling() {
   int nEntriesPtGt53 = 0;
   int nEntriesAbsEtaGt2 = 0;
   TRandom randy;
+  vLeafCandidate vcands;
   for (int i = 0; i < 100; ++i) {
     double eta = randy.Rndm()*5 - 2.5;
     reco::LeafCandidate cand(i, math::PtEtaPhiMLorentzVector(i, eta, 0, 0));
@@ -70,13 +70,22 @@ void testExpressionNtuple::testFilling() {
     if (std::abs(eta) > 2)
       nEntriesAbsEtaGt2++;
     ntuple_->fill(cand, i);
+    vcands.push_back(cand);
   }
+  nfntuple_->fill(vcands,-1);
+
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries() == 100);
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("pt > 53") == nEntriesPtGt53);
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("abs(eta) > 2.0") == nEntriesAbsEtaGt2);
   CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("abseta > 2.0") == nEntriesAbsEtaGt2);
-  CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("idx == 1") == 1);  
+  CPPUNIT_ASSERT(ntuple_->tree()->GetEntries("idx == 1") == 1); 
+  
+  CPPUNIT_ASSERT(nfntuple_->tree()->GetEntries() == 1);
+  CPPUNIT_ASSERT(nfntuple_->tree()->Draw("pt","pt > 53","goff") == nEntriesPtGt53);
+  CPPUNIT_ASSERT(nfntuple_->tree()->Draw("eta","abs(eta) > 2.0","goff") == nEntriesAbsEtaGt2);
+  CPPUNIT_ASSERT(nfntuple_->tree()->Draw("abseta","abseta > 2.0") == nEntriesAbsEtaGt2);
+  CPPUNIT_ASSERT(nfntuple_->tree()->GetLeaf("N_LeafCandidate")->GetValue() == 100);
+  
 }
-
 
 CPPUNIT_TEST_SUITE_REGISTRATION(testExpressionNtuple);
