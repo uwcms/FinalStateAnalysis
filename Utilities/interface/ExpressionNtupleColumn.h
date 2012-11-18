@@ -276,7 +276,10 @@ setValue(const std::vector<double>& value) {
   delete [] branch_.get();
   std::vector<ColType> thevals = convertVal<ColType>(value);
   const unsigned arrSize = thevals.size();
-  branch_.reset(new ColType[arrSize]);
+  if( arrSize )
+    branch_.reset(new ColType[arrSize]);
+  else
+    branch_.reset(new ColType[1]);
   for( unsigned i = 0; i < arrSize; ++i ) { 
     (branch_.get())[i] = thevals[i];
   }  
