@@ -270,19 +270,26 @@ ExpressionNtupleColumnT(const std::string& name,
   tree->Branch(fullName.c_str(), branch_.get(), branchCmd.c_str());
 }
 
+namespace {
+  template<typename T>
+  struct array_deleter{
+    void operator () (T* arr) { delete [] arr; }
+  };
+}
+
 template<typename T, typename ColType>
 void ExpressionNtupleColumnT<std::vector<const T*>, ColType>::
 setValue(const std::vector<double>& value) {
-  delete [] branch_.get();
+  // create a new array
   std::vector<ColType> thevals = convertVal<ColType>(value);
   const unsigned arrSize = thevals.size();
-  if( arrSize )
-    branch_.reset(new ColType[arrSize]);
-  else
-    branch_.reset(new ColType[1]);
-  for( unsigned i = 0; i < arrSize; ++i ) { 
-    (branch_.get())[i] = thevals[i];
-  }  
+  ColType * newValues = new ColType[arrSize];
+  // read in the new values   
+  for( unsigned i = 0; i < arrSize; ++i ) {
+    newValues[i] = thevals[i];
+  }
+  // replace old values        
+  branch_.reset(newValues,array_deleter<ColType>());
   myparent_->GetBranch(branchname_.c_str())->SetAddress(branch_.get());
 }
 
