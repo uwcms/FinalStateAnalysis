@@ -86,10 +86,10 @@ template<class T> void ExpressionNtuple<T>::fill(const T& element,
   if( do_commit )
     commit();
 }
-
+ 
 // vector template specialization
-template<class ValType>
-class ExpressionNtuple<std::vector<ValType> > : private boost::noncopyable {
+template<class T>
+class ExpressionNtuple<std::vector<const T*> > : private boost::noncopyable {
  public:
   ExpressionNtuple(const edm::ParameterSet& pset);
   ~ExpressionNtuple();
@@ -97,7 +97,7 @@ class ExpressionNtuple<std::vector<ValType> > : private boost::noncopyable {
   // Setup the tree in the given TFile
   void initialize(TFileDirectory& fs);
   // Fill the tree with an element with given index.
-  void fill(const std::vector<ValType>& element, int idx = -1, 
+  void fill(const std::vector<const T*>& element, int idx = -1, 
 	    bool do_commit=true);
   // Fill the held TTree based on the current branches
     void commit() { tree_->Fill(); }
@@ -107,12 +107,12 @@ class ExpressionNtuple<std::vector<ValType> > : private boost::noncopyable {
   TTree* tree_;
   std::vector<std::string> columnNames_;
   edm::ParameterSet pset_;
-  boost::ptr_vector<ExpressionNtupleColumn<std::vector<ValType> > > columns_;
+  boost::ptr_vector<ExpressionNtupleColumn<std::vector<const T*> > > columns_;
   boost::shared_ptr<Int_t> idxBranch_;  
 };
 
-template<class ValType>
-ExpressionNtuple<std::vector<ValType> >::
+template<class T>
+ExpressionNtuple<std::vector<const T*> >::
 ExpressionNtuple(const edm::ParameterSet& pset):
   pset_(pset) {
   tree_ = NULL;
@@ -132,14 +132,14 @@ ExpressionNtuple(const edm::ParameterSet& pset):
   idxBranch_.reset(new Int_t(1));
 }
 
-template<class ValType> 
-ExpressionNtuple<std::vector<ValType> >::~ExpressionNtuple() {}
+template<class T> 
+ExpressionNtuple<std::vector<const T*> >::~ExpressionNtuple() {}
 
-template<class ValType> 
-void ExpressionNtuple<std::vector<ValType> >::initialize(TFileDirectory& fs) {
+template<class T> 
+void ExpressionNtuple<std::vector<const T*> >::initialize(TFileDirectory& fs) {
   tree_ = fs.make<TTree>("Ntuple", "Expression Ntuple");
   // build the index branch
-  Reflex::Type theType = Reflex::Type::ByTypeInfo(typeid(ValType));
+  Reflex::Type theType = Reflex::Type::ByTypeInfo(typeid(T));
   std::stringstream name, leaf;
   name << "N_"  << theType.Name();
   leaf << name.str() << "/I";
@@ -149,13 +149,13 @@ void ExpressionNtuple<std::vector<ValType> >::initialize(TFileDirectory& fs) {
   tree_->Branch(name.str().c_str(), idxBranch_.get(), leaf.str().c_str());
   // Build branches
   for (size_t i = 0; i < columnNames_.size(); ++i)
-    columns_.push_back(buildColumn<std::vector<ValType> >(columnNames_[i], 
-							  pset_, tree_));
+    columns_.push_back(buildColumn<std::vector<const T*> >(columnNames_[i], 
+							   pset_, tree_));
 }
 
-template<class ValType> 
-void ExpressionNtuple<std::vector<ValType> >::
-fill(const std::vector<ValType> & element, int idx, bool do_commit) {
+template<class T> 
+void ExpressionNtuple<std::vector<const T*> >::
+fill(const std::vector<const T*> & element, int idx, bool do_commit) {
   for (size_t i = 0; i < columns_.size(); ++i) {
     // Compute the function and load the value into the column.
     columns_[i].compute(element);

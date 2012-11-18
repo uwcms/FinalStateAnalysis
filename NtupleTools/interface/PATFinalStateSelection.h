@@ -49,8 +49,7 @@ class PATFinalStateSelection : public Selector<PATFinalStatePtrs> {
     // What to do with the events that pass all selections
     std::auto_ptr<StringObjectSorter<PATFinalState> > finalSort_;
     std::auto_ptr<ek::HistoFolder<PATFinalState> > finalPlots_;
-    std::auto_ptr<ek::HistoFolder<std::vector<PATFinalState> > > 
-      finalPlotsEventView_;
+    std::auto_ptr<ek::HistoFolder<PATFinalStatePtrs> > finalPlotsEventView_;
     unsigned int take_;
 
     // Hold the cutflow for the final states that pass the various stages of

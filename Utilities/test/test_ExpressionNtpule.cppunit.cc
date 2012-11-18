@@ -8,7 +8,7 @@
 #include <Utilities/Testing/interface/CppUnit_testdriver.icpp>
 
 class testExpressionNtuple: public CppUnit::TestFixture {
-  typedef std::vector<reco::LeafCandidate> vLeafCandidate;
+  typedef std::vector<const reco::LeafCandidate*> vLeafCandidate;
   CPPUNIT_TEST_SUITE(testExpressionNtuple);
   CPPUNIT_TEST(testBooking);
   CPPUNIT_TEST(testFilling);
@@ -62,14 +62,16 @@ void testExpressionNtuple::testFilling() {
   int nEntriesAbsEtaGt2 = 0;
   TRandom randy;
   vLeafCandidate vcands;
+  reco::LeafCandidate* cand;
   for (int i = 0; i < 100; ++i) {
     double eta = randy.Rndm()*5 - 2.5;
-    reco::LeafCandidate cand(i, math::PtEtaPhiMLorentzVector(i, eta, 0, 0));
+    cand = new reco::LeafCandidate(i, 
+				   math::PtEtaPhiMLorentzVector(i, eta, 0, 0));
     if (i > 53)
       nEntriesPtGt53++;
     if (std::abs(eta) > 2)
       nEntriesAbsEtaGt2++;
-    ntuple_->fill(cand, i);
+    ntuple_->fill(*cand, i);
     vcands.push_back(cand);
   }
   nfntuple_->fill(vcands);
@@ -87,6 +89,11 @@ void testExpressionNtuple::testFilling() {
   CPPUNIT_ASSERT(nfntuple_->tree()->Draw("abseta[1]","","goff") == 1);
   CPPUNIT_ASSERT(nfntuple_->tree()->GetLeaf("N_LeafCandidate")->GetValue() == 100);
   
+  for( vLeafCandidate::iterator i = vcands.begin();
+       i != vcands.end(); ++i ) {
+    delete *i;
+  }
+
 }
 
 CPPUNIT_TEST_SUITE_REGISTRATION(testExpressionNtuple);

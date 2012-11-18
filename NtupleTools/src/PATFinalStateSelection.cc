@@ -88,7 +88,7 @@ PATFinalStateSelection::PATFinalStateSelection(
   eventView_ = pset.getParameter<bool>("EventView");
   if( eventView_ ){
     finalPlotsEventView_.reset(
-                      new ek::HistoFolder<std::vector<PATFinalState> > 
+                      new ek::HistoFolder<PATFinalStatePtrs> 
 		      (final.getParameterSet("plot"),finaldir));    
     
   } else {

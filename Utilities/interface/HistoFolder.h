@@ -133,7 +133,7 @@ void HistoFolder<T>::fill(const T& object, double weight, int idx) {
 
 // vector specialization
 template<typename T>
-class HistoFolder<std::vector<T> > {
+class HistoFolder<std::vector<const T*> > {
   typedef StringCutObjectSelector<T> Selector;
   typedef boost::shared_ptr<Selector> SelectorPtr;
   typedef ExpressionHisto<T> Histo;
@@ -154,33 +154,38 @@ class HistoFolder<std::vector<T> > {
     // Fill using the given object and weight.  Optionally you can provide the
     // object index, which will be passed to any ntuples contained in this
     // folder.
-    void fill(const std::vector<T>& object, double weight, int idx=-1);
+    void fill(const std::vector<const T*>& object, double weight, int idx=-1);
   private:
     // Initialization methods
     void bookHistograms(const edm::ParameterSet& pset, TFileDirectory& fs);
     void bookHistograms(const VPSet& psets, TFileDirectory& fs);
     SelectorPtr selector_;
-    std::vector<boost::shared_ptr<HistoFolder<std::vector<T> > > > subfolders_;
+    std::vector<boost::shared_ptr<HistoFolder<std::vector<const T*> > > > 
+      subfolders_;
     std::vector<HistoPtr> histos_;
-    boost::shared_ptr<ExpressionNtuple<std::vector<T> > > ntuple_;
+    boost::shared_ptr<ExpressionNtuple<std::vector<const T*> > > 
+      ntuple_;
 };
 
 template<typename T>
-HistoFolder<std::vector<T> >::HistoFolder(const edm::ParameterSet& pset, 
-					  TFileDirectory& fs) {
+HistoFolder<std::vector<const T*> >::
+  HistoFolder(const edm::ParameterSet& pset, 
+	      TFileDirectory& fs) {
   bookHistograms(pset, fs);
 }
 
 template<typename T>
-HistoFolder<std::vector<T> >::HistoFolder(const VPSet& psets, 
-					  TFileDirectory& fs) {
+HistoFolder<std::vector<const T*> >::
+  HistoFolder(const VPSet& psets, 
+	      TFileDirectory& fs) {
   bookHistograms(psets, fs);
 }
 
 template<typename T>
-HistoFolder<std::vector<T> >::HistoFolder(const edm::ParameterSet& motherPset,
-					  const std::string& parName, 
-					  TFileDirectory& fs) {
+HistoFolder<std::vector<const T*> >::
+  HistoFolder(const edm::ParameterSet& motherPset,
+	      const std::string& parName, 
+	      TFileDirectory& fs) {
   assert(motherPset.exists(parName));
   if (motherPset.existsAs<edm::ParameterSet>(parName))
     bookHistograms(motherPset.getParameterSet(parName), fs);
@@ -189,8 +194,9 @@ HistoFolder<std::vector<T> >::HistoFolder(const edm::ParameterSet& motherPset,
 }
 
 template<typename T> void
-HistoFolder<std::vector<T> >::bookHistograms(const edm::ParameterSet& pset,
-					     TFileDirectory& fs) {
+HistoFolder<std::vector<const T*> >::
+  bookHistograms(const edm::ParameterSet& pset,
+		 TFileDirectory& fs) {
   // Check if this folder has a selection
   if (pset.exists("SELECT")) {
     selector_.reset(new StringCutObjectSelector<T>(
@@ -203,7 +209,7 @@ HistoFolder<std::vector<T> >::bookHistograms(const edm::ParameterSet& pset,
 
   // Check if we want to make an ExpressionNtuple
   if (pset.exists("ntuple")) {
-    ntuple_.reset(new ExpressionNtuple<std::vector<T> >(
+    ntuple_.reset(new ExpressionNtuple<std::vector<const T*> >(
                           pset.getParameterSet("ntuple"))
 		  );
     ntuple_->initialize(fs);
@@ -219,16 +225,17 @@ HistoFolder<std::vector<T> >::bookHistograms(const edm::ParameterSet& pset,
       continue;
     edm::ParameterSet subFolderPSet = pset.getParameterSet(subFolderName);
     TFileDirectory subdir = fs.mkdir(subFolderName);
-    boost::shared_ptr<HistoFolder<std::vector<T> > > subfolder(
-		new HistoFolder<std::vector<T> >(subFolderPSet, subdir));
+    boost::shared_ptr<HistoFolder<std::vector<const T*> > > subfolder(
+	      new HistoFolder<std::vector<const T*> >(subFolderPSet, subdir));
     subfolders_.push_back(subfolder);
   }
 }
 
 
 template<typename T> void
-HistoFolder<std::vector<T> >::bookHistograms(const VPSet& psets, 
-					     TFileDirectory& fs) {
+HistoFolder<std::vector<const T*> >
+  ::bookHistograms(const VPSet& psets, 
+		   TFileDirectory& fs) {
   for (size_t iHisto = 0; iHisto < psets.size(); ++iHisto) {
     edm::ParameterSet histoPSet = psets[iHisto];
     // Build the histo
@@ -241,8 +248,9 @@ HistoFolder<std::vector<T> >::bookHistograms(const VPSet& psets,
 
 // Recursive filling of histograms
 template<typename T>
-void HistoFolder<std::vector<T> >::fill(const std::vector<T>& objects, 
-					double weight, int /*idx*/) {
+void HistoFolder<std::vector<const T*> >::
+  fill(const std::vector<const T*>& objects, 
+       double weight, int /*idx*/) {
   
   //loop through the objects
   for( size_t i = 0; i < objects.size(); ++i ) {
@@ -250,7 +258,7 @@ void HistoFolder<std::vector<T> >::fill(const std::vector<T>& objects,
     if (!selector_.get() || (*selector_)(objects[i])) {
       // Fill this directories histos
       for (size_t iHisto = 0; iHisto < histos_.size(); ++iHisto) {
-	histos_.at(iHisto)->fill(objects[i], weight);
+	histos_.at(iHisto)->fill(*objects[i], weight);
       }      
     }
   }
