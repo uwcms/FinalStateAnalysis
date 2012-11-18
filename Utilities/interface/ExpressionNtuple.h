@@ -161,7 +161,7 @@ fill(const std::vector<const T*> & element, int idx, bool do_commit) {
     columns_[i].compute(element);
   }
   *idxBranch_ = element.size();
-  if( do_commit )
+  if( do_commit && element.size() )
     commit();
 }
 
