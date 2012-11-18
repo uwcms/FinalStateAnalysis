@@ -122,7 +122,7 @@ def add_ntuple(name, analyzer, process, schedule, event_view=False):
         raise ValueError("An ntuple builder module named %s has already"
                          " been attached to the process!" % name)
     setattr(process, name, analyzer)
-    analyzer.analysis.EventView = cms.bool(event_view)
+    analyzer.analysis.EventView = cms.bool(bool(event_view))
     # Make a path for this ntuple
     p = cms.Path(analyzer)
     setattr(process, name + 'path', p)
