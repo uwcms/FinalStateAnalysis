@@ -41,6 +41,7 @@ class PATFinalStateSelection : public Selector<PATFinalStatePtrs> {
       throw cms::Exception("notimplemented");
     }
     boost::ptr_vector<FinalStateCut> cuts_;
+    bool eventView_;
     PATFinalStatePtrs passing_; // The passing final states
     index_type topologyCutId_;
     std::vector<pat::strbitset::index_type> cutIndices_; // for fast lookup
@@ -48,6 +49,8 @@ class PATFinalStateSelection : public Selector<PATFinalStatePtrs> {
     // What to do with the events that pass all selections
     std::auto_ptr<StringObjectSorter<PATFinalState> > finalSort_;
     std::auto_ptr<ek::HistoFolder<PATFinalState> > finalPlots_;
+    std::auto_ptr<ek::HistoFolder<std::vector<PATFinalState> > > 
+      finalPlotsEventView_;
     unsigned int take_;
 
     // Hold the cutflow for the final states that pass the various stages of

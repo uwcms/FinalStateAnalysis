@@ -280,7 +280,7 @@ setValue(const std::vector<double>& value) {
   for( unsigned i = 0; i < arrSize; ++i ) { 
     (branch_.get())[i] = thevals[i];
   }  
-  myparent_->GetLeaf(branchname_.c_str())->SetAddress(branch_.get());
+  myparent_->GetBranch(branchname_.c_str())->SetAddress(branch_.get());
 }
 
 #endif /* end of include guard: EXPRESSIONNTUPLECOLUMN_VOU3DWMC */

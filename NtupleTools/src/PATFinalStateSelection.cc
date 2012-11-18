@@ -78,14 +78,23 @@ PATFinalStateSelection::PATFinalStateSelection(
   }
 
   edm::ParameterSet final = pset.getParameterSet("final");
+
   if (final.exists("sort")) {
     finalSort_.reset(new StringObjectSorter<PATFinalState>(
           final.getParameter<std::string>("sort")));
   }
   take_ = final.getParameter<unsigned int>("take");
   TFileDirectory finaldir = fs.mkdir("final");
-  finalPlots_.reset(new ek::HistoFolder<PATFinalState>(
-        final.getParameterSet("plot"), finaldir));
+  eventView_ = pset.getParameter<bool>("EventView");
+  if( eventView_ ){
+    finalPlotsEventView_.reset(
+                      new ek::HistoFolder<std::vector<PATFinalState> > 
+		      (final.getParameterSet("plot"),finaldir));    
+    
+  } else {
+    finalPlots_.reset(new ek::HistoFolder<PATFinalState>(
+		      final.getParameterSet("plot"), finaldir));
+  }
 
   // Setup the cutflow and link it to the bitset which defines how things pass
   // our cuts.
