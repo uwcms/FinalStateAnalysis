@@ -150,6 +150,7 @@ bool PATFinalStateSelection::operator()(const PATFinalStatePtrs& input,
     if (!eventView_ && finalPlots_.get()) 
       finalPlots_->fill(*passingLocal[i], weight, i);
   }
+  // if event view fill fill variable-sized branches
   if ( eventView_ ) finalPlotsEventView_->fill(passingLocal, weight);
 
   // Check if any pass
