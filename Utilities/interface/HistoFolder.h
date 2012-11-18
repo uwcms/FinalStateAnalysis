@@ -255,7 +255,7 @@ void HistoFolder<std::vector<const T*> >::
   //loop through the objects
   for( size_t i = 0; i < objects.size(); ++i ) {
     // Check if we are selecting and if it passes
-    if (!selector_.get() || (*selector_)(objects[i])) {
+    if (!selector_.get() || (*selector_)(*objects[i])) {
       // Fill this directories histos
       for (size_t iHisto = 0; iHisto < histos_.size(); ++iHisto) {
 	histos_.at(iHisto)->fill(*objects[i], weight);

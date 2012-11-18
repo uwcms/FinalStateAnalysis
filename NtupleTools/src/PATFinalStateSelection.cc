@@ -146,9 +146,11 @@ bool PATFinalStateSelection::operator()(const PATFinalStatePtrs& input,
   passing_.clear();
   for (size_t i = 0; i < passingLocal.size() && i < take_; ++i) {
     passing_.push_back(passingLocal[i]);
-    if (finalPlots_.get())
+    // only fill the ntuple if we're not doing event view
+    if (!eventView_ && finalPlots_.get()) 
       finalPlots_->fill(*passingLocal[i], weight, i);
   }
+  if ( eventView_ ) finalPlotsEventView_->fill(passingLocal, weight);
 
   // Check if any pass
   return passing_.size();
