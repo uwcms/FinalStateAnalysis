@@ -48,7 +48,7 @@ do
   echo ${parts[0]} ${parts[1]}
 
   jobName=hZg_sync_52X.${label}.${parts[0]}
-  fajOpts="--assume-input-files-exist --infer-cmssw-path --express-queue --job-generates-output-name --output-dir=${hdfsOutDir} --input-dir=${parts[1]%/*} --input-file-list=${jobName}.input.txt"
+  fajOpts="--assume-input-files-exist --infer-cmssw-path --express-queue --job-generates-output-name --output-dir=${hdfsOutDir} --input-dir=${parts[1]%/*}/ --input-file-list=${jobName}.input.txt"
   patTupleOpts="reportEvery=100 maxEvents=-1 outputFile=${jobName}.root passThru=1"
 
   echo ${parts[1]##*/} > ${jobName}.input.txt
