@@ -36,15 +36,10 @@ EOF
   # PU Jet ID
   cvs co -r V00-02-09 -d CMGTools/External UserCode/CMG/CMGTools/External
 
-  # Add Electron ID MVA  
-  pushd EGamma/EGammaAnalysisTools/data
-  cat download.url | xargs wget
+  # MVA MET
+  pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
+  ./recipe_mvamet.sh
   popd
-
-  # Add muon effective area code
-  cvs co -r V00-00-10 -d Muon/MuonAnalysisTools UserCode/sixie/Muon/MuonAnalysisTools 
-  # Remove trainings we don't use
-  rm Muon/MuonAnalysisTools/data/*xml
 
 else
   cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF 
