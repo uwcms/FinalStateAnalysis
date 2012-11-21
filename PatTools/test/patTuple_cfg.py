@@ -112,6 +112,10 @@ process.eventCount.uwMeta = cms.PSet(
 
 process.schedule = cms.Schedule()
 
+# add the tuplizatation path to the schedule
+process.theTuplizer = cms.Path(process.tuplize)
+process.schedule.append(process.theTuplizer)
+
 # Load all of our skim paths
 process.load("FinalStateAnalysis.RecoTools.uwSkims_cfi")
 # PAT tuplize all skim paths
@@ -122,7 +126,8 @@ for skim_path in process.skimConfig.paths:
     the_path.insert(0, process.eventCount)
     if options.isMC and not options.embedded:
         the_path.insert(0, process.dqmEventCount)
-    the_path += process.tuplize
+    #do not add the ntuplization path to the skim definition
+    #the_path += process.tuplize 
     process.schedule.append(the_path)
 process.out.SelectEvents.SelectEvents = process.skimConfig.paths
 output_commands.append('*_dqmEventCount_*_*')
