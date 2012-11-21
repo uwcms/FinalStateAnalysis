@@ -33,6 +33,12 @@ then
 #define ENABLE_PAT_PROD
 EOF
 
+  # Add Electron ID MVA - the tags get checked out in 42X/52X/53X specific
+  # scripts
+  pushd $CMSSW_BASE/src/EGamma/EGammaAnalysisTools/data
+  cat download.url | xargs wget
+  popd
+
   # PU Jet ID
   cvs co -r V00-02-09 -d CMGTools/External UserCode/CMG/CMGTools/External
 
