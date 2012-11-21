@@ -49,6 +49,8 @@ then
   addpkg RecoEgamma/EgammaTools V08-11-10-02
   cvs co -r V00-00-30-BP42X -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
   cvs co -r HCP2012_V04-44X EgammaAnalysis/ElectronTools
+  # apply patch so we can configure the passing mask for the PassWP function
+  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaAnalysisTools_configpatch.patch
   
   echo "Checking out Tau POG recipe"
   addpkg DataFormats/TauReco CMSSW_5_2_4 # yes, this is correct

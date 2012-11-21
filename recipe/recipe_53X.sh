@@ -28,6 +28,8 @@ then
   addpkg RecoEgamma/EgammaTools V08-11-10-02
   cvs co -r V00-00-30 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
   cvs co -r HCP2012_V03-02 EgammaAnalysis/ElectronTools
+  # apply patch so we can configure the passing mask for the PassWP function
+  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaAnalysisTools_configpatch.patch
 
   set +o errexit
   patch -N -p0 < FinalStateAnalysis/recipe/patches/PhysicsToolsPatAlgos_fix_btags_52X.patch
