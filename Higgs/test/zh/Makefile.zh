@@ -1,0 +1,142 @@
+# Builds a given ZH channel. The parameters of the channel must be passed to the
+# Makefile.
+#
+# To be called from the other makefile.
+
+# Common definitions of data samples, analyzer locations.
+include Makefile.inc
+
+#channel?=mmmt
+
+#ntuple_path?=mmmt
+
+#analyzer?=AnalyzeMMMT.py
+
+#leading_z_selector?=zh_zmm_selection.py
+
+#primd?=DoubleMu
+
+## Names of leptons used in histogram output
+#l1name?=mu
+#l2name?=tau
+
+## Monitoring branches
+#branches?=m1_m2_Mass m3_t_Mass
+
+# Weight function files needed to produce histograms
+macro_weight_files?=corrections_C.so fake_rates_C.so
+
+################################################################################
+#### Which samples are needed for this channel #################################
+################################################################################
+
+my_data_samples=$(subst PRIMD,$(primd), $(data_sample_templates))
+
+################################################################################
+#### Rule to build histograms ##################################################
+################################################################################
+
+results/analysis/$(channel)/%.raw.root: $(analyzer) $(leading_z_selector) \
+  inputs/$(ntuple_id)/%.txt  $(macro_weight_files) 
+	echo "Computing histograms for channel $(channel)" 
+	$(mega) $(analyzer) inputs/$(ntuple_id)/$*.txt \
+	  /$(ntuple_path)/final/Ntuple $@ --workers $(workers)
+
+# How to make the lumi sum
+inputs/$(ntuple_id)/%.lumi.sum: 
+	make -f Makefile.meta $@
+
+# Embed meta information into the root file
+results/analysis/$(channel)/%.root: results/analysis/$(channel)/%.raw.root \
+  inputs/$(ntuple_id)/%.lumi.sum
+	cp $< $@
+	echo "Embedding name and int. lumi into $(channel) results" 
+	embed_label.py $@ dataset=$* intlumi=`cat inputs/$(ntuple_id)/$*.lumi.sum`
+
+# Rule to build all histograms
+histogram_jobs=$(patsubst %, results/analysis/$(channel)/%.root, \
+	       $(all_mc_samples) $(my_data_samples) $(vh120)) 
+
+################################################################################
+#### Rule to get passed event numbers ##########################################
+################################################################################
+
+results/analysis/$(channel)/%.events: $(analyzer) $(leading_z_selector) \
+  inputs/$(ntuple_id)/%.txt  
+	$(megaevents) $(analyzer) inputs/$(ntuple_id)/$*.txt \
+	  /$(ntuple_path)/final/Ntuple $@ final  --branches $(branches)
+
+results/analysis/$(channel)/%.l1anti.events: $(analyzer) $(leading_z_selector) \
+  inputs/$(ntuple_id)/%.txt  
+	$(megaevents) $(analyzer) inputs/$(ntuple_id)/$*.txt \
+	  /$(ntuple_path)/final/Ntuple $@ l1_anti_iso  --branches $(branches)
+
+results/analysis/$(channel)/%.l2anti.events: $(analyzer) $(leading_z_selector) \
+  inputs/$(ntuple_id)/%.txt  
+	$(megaevents) $(analyzer) inputs/$(ntuple_id)/$*.txt \
+	  /$(ntuple_path)/final/Ntuple $@ l2_anti_iso  --branches $(branches)
+
+results/analysis/$(channel)/%.bothanti.events: $(analyzer) $(leading_z_selector) \
+  inputs/$(ntuple_id)/%.txt  
+	$(megaevents) $(analyzer) inputs/$(ntuple_id)/$*.txt \
+	  /$(ntuple_path)/final/Ntuple $@ both_anti_iso  --branches $(branches)
+
+# Rules to get selected events
+events_jobs=$(patsubst %, results/analysis/$(channel)/%.events, \
+	    $(my_data_samples))
+
+sig120_events: $(patsubst %, results/analysis/$(channel)/%.events, \
+	    $(vh120))
+
+# Rules to get selected events in anti-iso regions
+anti1_events_jobs=$(patsubst %, results/analysis/$(channel)/%.l1anti.events, \
+		 $(my_data_samples))
+
+anti2_events_jobs=$(patsubst %, results/analysis/$(channel)/%.l2anti.events, \
+		 $(my_data_samples))
+
+both_anti_events_jobs=$(patsubst %, results/analysis/$(channel)/%.bothanti.events, \
+		 $(my_data_samples))
+
+################################################################################
+#### Rule to get estimate Z+2jet background ####################################
+################################################################################
+
+results/analysis/$(channel)/zjet_bkgs.json: estimate_zh_zjets_bkg.py \
+  $(histogram_jobs) 
+	./estimate_zh_zjets_bkg.py $(channel) data_$(primd) \
+	  $(l1name) $(l2name) \
+	  $(histogram_jobs) > $@
+
+################################################################################
+#### Rule to make generic plots ################################################
+################################################################################
+
+plots/zh/$(channel)/plot_list.txt: $(histogram_jobs) render_zh_plots.py results/analysis/$(channel)/zjet_bkgs.json
+	./render_zh_plots.py plots/zh/$(channel)/ data_$(primd) $(histogram_jobs)
+
+################################################################################
+#### Rules to run analysis #####################################################
+################################################################################
+
+
+#events: $(events_jobs)
+events:  $(events_jobs) $(anti1_events_jobs) $(anti2_events_jobs) $(both_anti_events_jobs)
+
+sigevents: $(sig120_events)
+
+histograms: $(histogram_jobs) 
+
+plots: plots/zh/$(channel)/plot_list.txt results/analysis/$(channel)/zjet_bkgs.json
+
+# Cleaning up
+
+plotclean: 
+	rm plots/zh/$(channel)/*txt plots/zh/$(channel)/*pdf
+
+histoclean:
+	rm results/analysis/$(channel)/*.root
+
+clean: plotclean histoclean
+
+.PHONY: histograms plots plotsclean histoclean clean 

@@ -1,0 +1,6 @@
+condor_submit /scratch/efriis//abdollah_cls/110/submit
+condor_submit /scratch/efriis//abdollah_cls/120/submit
+condor_submit /scratch/efriis//abdollah_cls/130/submit
+condor_submit /scratch/efriis//abdollah_cls/140/submit
+condor_submit /scratch/efriis//abdollah_cls/150/submit
+condor_submit /scratch/efriis//abdollah_cls/160/submit
