@@ -1,4 +1,5 @@
 import rootpy.plotting.views as views
+from THBin import zipBins
 
 class InflateErrorView(views._FolderView):
     ''' 

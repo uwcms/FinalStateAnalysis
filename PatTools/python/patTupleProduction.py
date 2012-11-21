@@ -27,6 +27,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_offlineBeamSpot_*_*',
         '*_generalTracks_*_*',
         '*_electronGsfTracks_*_*',
+        '*_gsfElectrons_*_*',
         '*_offlinePrimaryVertices*_*_*',
         '*_ak5GenJets_*_*',
         '*_hltTriggerSummaryAOD_*_*',
@@ -87,13 +88,13 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load('Configuration.StandardSequences.Services_cff')
     # tack on seeds for FSA PATTuple modules
     add_fsa_random_seeds(process)
-    
-    
-    if cmssw_major_version() == 5 and cmssw_minor_version() >= 3: 
+
+
+    if cmssw_major_version() == 5 and cmssw_minor_version() >= 3:
         process.load('Configuration.Geometry.GeometryIdeal_cff')
     else:
         process.load('Configuration.StandardSequences.GeometryIdeal_cff')
-        
+
     process.load('Configuration.StandardSequences.MagneticField_cff')
     process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
@@ -149,7 +150,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     setup_h2tau_iso(process)
     # Setup hZg custom iso definitions
     add_hZg_iso_needs(process)
-    
+
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
     process.elPFIsoValueGamma04NoPFIdPFIso.deposits[0].vetos = cms.vstring('EcalEndcaps:ConeVeto(0.08)')
@@ -166,7 +167,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
     process.tuplize += process.recoElectronID
     process.patElectrons.electronIDSources = process.electronIDSources
-    process.patElectrons.embedTrack = True
+    process.patElectrons.embedTrack = False
+    process.patElectrons.embedPFCandidate = False
+    process.patElectrons.embedGsfElectronCore = False
+    process.patElectrons.embedSuperCluster = True
 
     # Now run PAT
     process.tuplize += process.patDefaultSequence
@@ -281,7 +285,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
                                        process.customizeMuonSequence)
     process.cleanPatMuons.src = final_muon_collection
     process.patMuonRochesterCorrectionEmbedder.isMC = cms.bool(bool(isMC))
-    
+
 
     process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
     final_tau_collection = chain_sequence(
@@ -369,7 +373,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         'muons' : 'cleanPatMuons',
         'taus' : 'cleanPatTaus',
         'photons' : 'cleanPatPhotons',
-        'jets' : 'selectedPatJets',        
+        'jets' : 'selectedPatJets',
         'met' : final_met_collection,
     }
 
