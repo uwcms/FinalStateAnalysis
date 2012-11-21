@@ -16,7 +16,7 @@ You can turn on different ntuples by passing option=1 using one of:
 '''
 
 import FWCore.ParameterSet.Config as cms
-from UWHiggs.ntuple.hzg_sync_mod import set_passthru
+from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 
 process = cms.Process("TrileptonNtuple")
 
