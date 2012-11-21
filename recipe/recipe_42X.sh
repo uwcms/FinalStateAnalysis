@@ -50,27 +50,6 @@ then
   cvs co -r V00-00-30-BP42X -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
   cvs co -r HCP2012_V04-44X EgammaAnalysis/ElectronTools
   
-  # Add MVA MET
-  # See https://twiki.cern.ch/twiki/bin/view/CMS/MVAMet
-  rm -rf RecoMET/METProducers RecoMET/METAlgorithms/ DataFormats/METReco/
-  cvs co -r CMSSW_4_2_8_patch7 RecoMET/METAlgorithms
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms/interface/PFMETAlgorithmMVA.h
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms/src/PFMETAlgorithmMVA.cc
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms/BuildFile.xml
-  cvs co -r CMSSW_4_2_8_patch7 RecoMET/METProducers
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers/interface/PFMETProducerMVA.h
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers/src/PFMETProducerMVA.cc
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers/src/SealModule.cc
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers/python/mvaPFMET_cff.py
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers/BuildFile.xml
-  cvs up -r 1.6 RecoMET/METProducers/python/mvaPFMET_cff.py
-  pushd RecoMET/METProducers/src/
-  cp /afs/cern.ch/user/b/bianchi/public/SealModule.cc .
-  popd 
-
-
   echo "Checking out Tau POG recipe"
   addpkg DataFormats/TauReco CMSSW_5_2_4 # yes, this is correct
   addpkg RecoTauTag/TauTagTools CMSSW_5_2_4
@@ -87,48 +66,6 @@ then
   # Add Marias patch for negative SSV 
   patch -N -p0 < FinalStateAnalysis/recipe/patches/marias_negativeSSV.patch
   set -o errexit 
-
-  # Add MVA MET
-  # See https://twiki.cern.ch/twiki/bin/view/CMS/MVAMet
-  rm -rf RecoMET/METProducers RecoMET/METAlgorithms/ DataFormats/METReco/
-  cvs co -r CMSSW_4_2_8_patch7 RecoMET/METAlgorithms
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms/interface/PFMETAlgorithmMVA.h
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms/src/PFMETAlgorithmMVA.cc
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METAlgorithms/BuildFile.xml
-  cvs co -r CMSSW_4_2_8_patch7 RecoMET/METProducers
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers/interface/PFMETProducerMVA.h
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers/src/PFMETProducerMVA.cc
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers/src/SealModule.cc
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers/python/mvaPFMET_cff.py
-  cvs up -r b5_2_X_cvMEtCorr_2012May17 RecoMET/METProducers/BuildFile.xml
-  cvs up -r 1.6 RecoMET/METProducers/python/mvaPFMET_cff.py
-  pushd RecoMET/METProducers/src/
-  cp /afs/cern.ch/user/b/bianchi/public/SealModule.cc .
-  popd 
-
-  cvs co -r V00-04-01 CondFormats/EgammaObjects 
-  cvs co -r CMSSW_5_2_3_patch3 PhysicsTools/SelectorUtils
-  cvs up -r 1.22 PhysicsTools/SelectorUtils/interface/PFJetIDSelectionFunctor.h
-  # My modifications
-  echo "Adding packages from EK"
-  cvs co -r 1.1  RecoMET/METProducers/interface/PFMETProducerMVA2.h
-  cvs co -r 1.1  RecoMET/METProducers/interface/PFMETProducerMVAData.h
-  cvs co -r 1.1  RecoMET/METProducers/src/PFMETProducerMVA2.cc
-  cvs co -r 1.1  RecoMET/METProducers/src/PFMETProducerMVAData.cc
-  addpkg DataFormats/METReco
-  cvs co -r 1.1 DataFormats/METReco/interface/MVAMETData.h
-  cvs co -r 1.1 DataFormats/METReco/interface/MVAMETDataFwd.h
-  cvs co -r 1.1 DataFormats/METReco/src/MVAMETData.cc
-  # Don't crash if patch already appliede
-  set +o errexit 
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/mvaMET_classesdef_42x.patch
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/little_fix_for_MVAMETData.patch
-  set -o errexit 
-  cvs co -r 1.6 RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
-  cvs co -r 1.7 RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
-  cvs co -j 1.13 -j 1.14 RecoMET/METProducers/src/SealModule.cc
 fi
 
 popd
