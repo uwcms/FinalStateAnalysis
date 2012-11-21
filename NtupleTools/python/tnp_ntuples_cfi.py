@@ -14,8 +14,8 @@ final_states = [
     'em',
 ]
 
-def add_tnp_ntuples(process, schedule):
+def add_tnp_ntuples(process, schedule, event_view=False):
     for final_state in final_states:
         print "Building %s final state" % final_state
         analyzer = make_ntuple(*final_state, noclean=False)
-        add_ntuple(final_state, analyzer, process, schedule)
+        add_ntuple(final_state, analyzer, process, schedule, event_view)

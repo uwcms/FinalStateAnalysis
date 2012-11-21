@@ -29,7 +29,8 @@ photon_final_states = [
 
 def add_trilepton_ntuples(process, schedule,
                           do_trileptons = True,
-                          do_photons    = False):
+                          do_photons    = False,
+                          event_view    = False):
     final_states = []
     if do_trileptons:
         final_states.extend(trilepton_final_states)
@@ -38,4 +39,4 @@ def add_trilepton_ntuples(process, schedule,
     for final_state in final_states:
         print "Building %s final state" % final_state
         analyzer = make_ntuple(*final_state)
-        add_ntuple(final_state, analyzer, process, schedule)
+        add_ntuple(final_state, analyzer, process, schedule, event_view)

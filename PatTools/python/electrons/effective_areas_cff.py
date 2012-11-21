@@ -38,19 +38,19 @@ effective_area_targets = \
 dict([(name,number) for number,name in enumerate(effective_area_target_names)])
 
 available_eas = cms.VPSet(
-    cms.PSet(name      = cms.string('ea_comb_Data2012_iso04_ktPFJ'),
+    cms.PSet(name      = cms.string('ea_comb_Data2012_iso04_kt6PFJ'),
              ea_type   = cms.int32(effective_area_types['kEleGammaAndNeutralHadronIso04']),
              ea_target = cms.int32(effective_area_targets['kEleEAData2012'])),
-    cms.PSet(name      = cms.string('ea_comb_Fall11MC_iso04_ktPFJ'),
+    cms.PSet(name      = cms.string('ea_comb_Fall11MC_iso04_kt6PFJ'),
              ea_type   = cms.int32(effective_area_types['kEleGammaAndNeutralHadronIso04']),
              ea_target = cms.int32(effective_area_targets['kEleEAFall11MC'])),
-    cms.PSet(name      = cms.string('ea_comb_Summer11MC_iso04_ktPFJ'),
+    cms.PSet(name      = cms.string('ea_comb_Summer11MC_iso04_kt6PFJ'),
              ea_type   = cms.int32(effective_area_types['kEleGammaAndNeutralHadronIso04']),
              ea_target = cms.int32(effective_area_targets['kEleEASummer11MC'])),
-    cms.PSet(name      = cms.string('ea_comb_Data2011_iso04_ktPFJ'),
+    cms.PSet(name      = cms.string('ea_comb_Data2011_iso04_kt6PFJ'),
              ea_type   = cms.int32(effective_area_types['kEleGammaAndNeutralHadronIso04']),
              ea_target = cms.int32(effective_area_targets['kEleEAData2011'])),
-    cms.PSet(name      = cms.string('ea_comb_NoCorr_iso04_ktPFJ'),
+    cms.PSet(name      = cms.string('ea_comb_NoCorr_iso04_kt6PFJ'),
              ea_type   = cms.int32(effective_area_types['kEleGammaAndNeutralHadronIso04']),
              ea_target = cms.int32(effective_area_targets['kEleEANoCorr']))
     )

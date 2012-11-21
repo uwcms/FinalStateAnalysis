@@ -36,6 +36,7 @@ options = TauVarParsing.TauVarParsing(
     makeTrilepton=1,
     makeQuad=1,
     make4L=1,
+    event_view=0,
     dump=0, # If one, dump process python to stdout
     rerunFSA=0, # If one, rebuild the PAT FSA events
     verbose=0, # If one print out the TimeReport
@@ -107,19 +108,19 @@ from FinalStateAnalysis.NtupleTools.trilepton_ntuples_cfi import add_trilepton_n
 from FinalStateAnalysis.NtupleTools.quad_ntuples_cfi import add_quad_ntuples
 
 if options.makeH2Tau:
-    add_h2tau_ntuples(process, process.schedule)
+    add_h2tau_ntuples(process, process.schedule,options.event_view)
 
 if options.makeTNP:
-    add_tnp_ntuples(process, process.schedule)
+    add_tnp_ntuples(process, process.schedule,options.event_view)
 
 if options.makeTrilepton:
-    add_trilepton_ntuples(process, process.schedule)
+    add_trilepton_ntuples(process, process.schedule,options.event_view)
 
 if options.makeQuad:
-    add_quad_ntuples(process, process.schedule, do_zz=False, do_zh=True)
+    add_quad_ntuples(process, process.schedule, do_zz=False, do_zh=True,options.event_view)
 
 if options.make4L:
-    add_quad_ntuples(process, process.schedule, do_zh=False, do_zz=True)
+    add_quad_ntuples(process, process.schedule, do_zh=False, do_zz=True,options.event_view)
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery

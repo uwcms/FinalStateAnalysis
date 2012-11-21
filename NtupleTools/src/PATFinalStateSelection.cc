@@ -78,14 +78,23 @@ PATFinalStateSelection::PATFinalStateSelection(
   }
 
   edm::ParameterSet final = pset.getParameterSet("final");
+
   if (final.exists("sort")) {
     finalSort_.reset(new StringObjectSorter<PATFinalState>(
           final.getParameter<std::string>("sort")));
   }
   take_ = final.getParameter<unsigned int>("take");
   TFileDirectory finaldir = fs.mkdir("final");
-  finalPlots_.reset(new ek::HistoFolder<PATFinalState>(
-        final.getParameterSet("plot"), finaldir));
+  eventView_ = pset.getParameter<bool>("EventView");
+  if( eventView_ ){
+    finalPlotsEventView_.reset(
+                      new ek::HistoFolder<PATFinalStatePtrs> 
+		      (final.getParameterSet("plot"),finaldir));    
+    
+  } else {
+    finalPlots_.reset(new ek::HistoFolder<PATFinalState>(
+		      final.getParameterSet("plot"), finaldir));
+  }
 
   // Setup the cutflow and link it to the bitset which defines how things pass
   // our cuts.
@@ -137,9 +146,12 @@ bool PATFinalStateSelection::operator()(const PATFinalStatePtrs& input,
   passing_.clear();
   for (size_t i = 0; i < passingLocal.size() && i < take_; ++i) {
     passing_.push_back(passingLocal[i]);
-    if (finalPlots_.get())
+    // only fill the ntuple if we're not doing event view
+    if (!eventView_ && finalPlots_.get()) 
       finalPlots_->fill(*passingLocal[i], weight, i);
   }
+  // if event view fill fill variable-sized branches
+  if ( eventView_ ) finalPlotsEventView_->fill(passingLocal, weight);
 
   // Check if any pass
   return passing_.size();

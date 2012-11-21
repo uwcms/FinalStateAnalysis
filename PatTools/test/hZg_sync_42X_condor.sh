@@ -25,22 +25,32 @@ sync_42X+=('DataElectron;root://cmsxrootd.hep.wisc.edu//store/data/Run2011A/Doub
 sync_42X+=('MCSignalMuo;root://cmsxrootd.hep.wisc.edu//store/mc/Fall11/GluGluToHToZG_M-125_7TeV-powheg-pythia6/AODSIM/PU_S6_START42_V14B-v1/0000/4E7D0288-43BA-E111-B933-0026189438F7.root')
 sync_42X+=('MCSignalEle;root://cmsxrootd.hep.wisc.edu//store/mc/Fall11/GluGluToHToZG_M-125_7TeV-powheg-pythia6/AODSIM/PU_S6_START42_V14B-v1/0000/4E7D0288-43BA-E111-B933-0026189438F7.root')
 
+
+hdfsOutDir=srm://cmssrm.hep.wisc.edu:8443/srm/v2/server?SFN=/hdfs/store/user/lgray/HZG_sync/${label}/42X 
+
+mcOpts="isMC=1 globalTag=$mcgt dataset=Fall11 calibrationTarget=Fall11"
+dataOpts="isMC=0 globalTag=$datagt dataset=ReReco calibrationTarget=Jan16ReReco"
+
 for sync_test in ${sync_42X[@]}
 do
   parts=(`echo $sync_test | tr ';' ' '`)
+  echo
   echo ${parts[0]} ${parts[1]}
+
+  jobName=hZg_sync_42X.${label}.${parts[0]}
+  fajOpts="--assume-input-files-exist --infer-cmssw-path --express-queue --job-generates-output-name --output-dir=${hdfsOutDir} --input-dir=${parts[1]%/*}/ --input-file-list=${jobName}.input.txt"
+  patTupleOpts="reportEvery=100 maxEvents=-1 outputFile=${jobName}.root passThru=1"
+
+  echo ${parts[1]##*/} > ${jobName}.input.txt
 
   if [[ "${parts[0]}" == *Data* ]]
       then
-      ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
-	  outputFile=/scratch/$LOGNAME/hZg_sync42X.$label.${parts[0]}.root dataset=ReReco\
-	  calibrationTarget=Jan16ReReco passThru=1 &> HZG_${parts[0]}_42X_sync.log & 
+      farmoutAnalysisJobs $fajOpts $jobName patTuple_cfg.py inputFiles='$inputFileNames' $patTupleOpts $dataOpts
       else
-      ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
-	  outputFile=/scratch/$LOGNAME/hZg_sync42X.$label.${parts[0]}.root dataset=Fall11\
-	  calibrationTarget=Fall11 passThru=1 &> HZG_${parts[0]}_42X_sync.log &
+      farmoutAnalysisJobs $fajOpts $jobName patTuple_cfg.py inputFiles='$inputFileNames' $patTupleOpts $mcOpts
   fi  
 done
+
 #echo "Tuplizing ggH sample - will write log to ggH_tuplization.log"
 #./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=$gghFile reportEvery=100 maxEvents=500\
 #  outputFile=/scratch/$LOGNAME/h2tau_ggh_xcheck.$label.root dataset=Fall11 &> ggH_tuplization.log &
@@ -49,5 +59,3 @@ done
 #./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=$vbfFile reportEvery=100 \
   #outputFile=/scratch/$LOGNAME/h2tau_vbf_xcheck.$label.root dataset=Fall11 &> vbf_tuplization.log &
 
-echo "Waiting for ${#sync_42X[@]} jobs to finish"
-wait

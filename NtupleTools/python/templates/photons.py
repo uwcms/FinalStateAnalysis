@@ -16,9 +16,9 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 # ID and isolation
 id = PSet(
-    objectCBIDLOOSE = '{object}.userInt("CBID_LOOSE")',
-    objectCBIDMEDIUM = '{object}.userInt("CBID_MEDIUM")',
-    objectCBIDTIGHT = '{object}.userInt("CBID_TIGHT")',
+    objectCBID_LOOSE = '{object}.userInt("CBID_LOOSE")',
+    objectCBID_MEDIUM = '{object}.userInt("CBID_MEDIUM")',
+    objectCBID_TIGHT = '{object}.userInt("CBID_TIGHT")',
     # isolations
     objectPFChargedIso  = 'getPhotonUserIsolation({object_idx},"PfChargedHadronIso")',
     objectPFNeutralIso  = 'getPhotonUserIsolation({object_idx},"PfNeutralHadronIso")',
@@ -27,7 +27,7 @@ id = PSet(
     objectEffectiveAreaNHad = '{object}.userFloat("PhotonEA_pfneut")',
     objectEffectiveAreaPho  = '{object}.userFloat("PhotonEA_pfpho")',    
     # photon id variables
-    objectConvSafeElectronVeto = '{object}.userInt("ConvSaveElectronVeto")',
+    objectConvSafeElectronVeto = '{object}.userInt("ConvSafeElectronVeto")',
     objectHadronicOverEM = '{object}.hadronicOverEm',
     objectHadronicDepth1OverEm = '{object}.hadronicDepth1OverEm',
     objectHadronicDepth2OverEm = '{object}.hadronicDepth2OverEm',

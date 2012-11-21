@@ -15,6 +15,7 @@ options = TauVarParsing.TauVarParsing(
     puTag='unknown',
     isAOD=True,
     calibrationTarget='2012Jul13ReReco',
+    passThru=0,
     verbose=0, # Print out summary table at end
     profile=0, # Enabling profiling
     keepAll=0, # Don't drop any event content
@@ -168,12 +169,14 @@ if options.clean:
         process, process.out.outputCommands.value())
     print "Removed %i unrun and %i unused modules!" % (len(unrun), len(unused))
 
-################################################################################
-### DEBUG options ##############################################################
-################################################################################
+###############################################################################
+### DEBUG options #############################################################
+###############################################################################
 
 if options.verbose:
     process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+if options.passThru:
+    process.out.SelectEvents.SelectEvents = cms.vstring()
 
 if options.profile:
     # From https://twiki.cern.ch/twiki/bin/viewauth/CMS/MemoUnixPatrick#Timing_profiling_avec_valgrind
