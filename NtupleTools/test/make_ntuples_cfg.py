@@ -2,26 +2,21 @@
 
 CFG file to make all Higgs ntuples
 
-You can turn off different ntuples by passing option=0 using one of:
+You can turn on different ntuples by passing option=1 using one of:
 
     makeH2Tau (em, et, and mt)
     makeTNP (ee & mm)
     makeTrilepton (emt, mmt, eet, emm, mmm)
     makeQuad (a bunch for 2l2tau)
     make4L (eeee, eemm, mmmm)
-
-Example to submit it to condor at the UW T2:
-
-    submit_job.py A_JOB_LABEL higgs_ntuples_cfg.py \
-            makeQuad=1 makeTNP=1 makeH2Tau=1 makeTrilepton=1 make4L=0 \
-            rerunFSA=1 \
-            --tuple-dirs=$fsa/MetaData/tuples/2012-05-28-7TeV-PatTuple-dirs.json \
-            --input-files-per-job=1 > do_higgs.txt
-    bash < do_higgs.txt
+    makeHZG (eeg, mmg)
+    makeTGC (eeg, mmg, eg, mg)
+    makeQuartic ( permutations of e mu tau pho... )
 
 '''
 
 import FWCore.ParameterSet.Config as cms
+from UWHiggs.ntuple.hzg_sync_mod import set_passthru
 
 process = cms.Process("TrileptonNtuple")
 
@@ -31,18 +26,22 @@ options = TauVarParsing.TauVarParsing(
     puScenario='S4',
     saveSkim=0,
     reportEvery=100,
-    makeH2Tau=1,
-    makeTNP=1,
-    makeTrilepton=1,
-    makeQuad=1,
-    make4L=1,
-    event_view=0,
+    makeH2Tau=0,
+    makeTNP=0,
+    makeTrilepton=0,
+    makeQuad=0,
+    make4L=0,
+    makeQuartic=0,
+    makeTGC=0,
+    makeHZG=0,
+    eventView=0,
+    passThru=0,
     dump=0, # If one, dump process python to stdout
     rerunFSA=0, # If one, rebuild the PAT FSA events
     verbose=0, # If one print out the TimeReport
 )
 
-options.outputFile="higgs.root"
+options.outputFile="ntuplize.root"
 options.parseArguments()
 
 process.source = cms.Source(
@@ -85,6 +84,7 @@ if options.rerunFSA:
         'electrons' : 'cleanPatElectrons',
         'muons' : 'cleanPatMuons',
         'taus' : 'cleanPatTaus',
+        'photons' : 'cleanPatPhotons',
         'jets' : 'selectedPatJets',
         'met' : 'systematicsMET',
     }
@@ -94,6 +94,8 @@ if options.rerunFSA:
                          'puTagDoesntMatter', buildFSAEvent=True,
                          noTracks=True)
     process.buildFSAPath = cms.Path(process.buildFSASeq)
+    # Don't crash if some products are missing (like tracks)
+    process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
     process.schedule.append(process.buildFSAPath)
     # Drop the old stuff.
     process.source.inputCommands=cms.untracked.vstring(
@@ -105,28 +107,58 @@ if options.rerunFSA:
 from FinalStateAnalysis.NtupleTools.tnp_ntuples_cfi import add_tnp_ntuples
 from FinalStateAnalysis.NtupleTools.h2tau_ntuples_cfi import add_h2tau_ntuples
 from FinalStateAnalysis.NtupleTools.trilepton_ntuples_cfi import add_trilepton_ntuples
+from FinalStateAnalysis.NtupleTools.lepton_photon_ntuples_cfi import add_leptonphoton_ntuples
 from FinalStateAnalysis.NtupleTools.quad_ntuples_cfi import add_quad_ntuples
 
 if options.makeH2Tau:
-    add_h2tau_ntuples(process, process.schedule,options.event_view)
+    add_h2tau_ntuples(process, process.schedule,
+                      event_view = options.eventView)
 
 if options.makeTNP:
-    add_tnp_ntuples(process, process.schedule,options.event_view)
+    add_tnp_ntuples(process, process.schedule,
+                    event_view = options.eventView)
 
 if options.makeTrilepton:
-    add_trilepton_ntuples(process, process.schedule,options.event_view)
+    add_trilepton_ntuples(process, process.schedule,
+                          event_view = options.eventView)
 
 if options.makeQuad:
-    add_quad_ntuples(process, process.schedule, do_zz=False, do_zh=True,options.event_view)
+    add_quad_ntuples(process, process.schedule,
+                     do_zz=False, do_zh=True,
+                     oevent_view = ptions.event_view)
 
 if options.make4L:
-    add_quad_ntuples(process, process.schedule, do_zh=False, do_zz=True,options.event_view)
+    add_quad_ntuples(process, process.schedule,
+                     do_zh=False, do_zz=True,
+                     event_view = options.eventView)
+
+if options.makeHZG:
+    add_trilepton_ntuples(process, process.schedule,
+                          do_trileptons=False, do_photons = True,
+                          event_view = options.eventView)
+
+if options.makeTGC:
+    add_leptonphoton_ntuples(process, process.schedule,
+                             options.eventView)
+    add_trilepton_ntuples(process, process.schedule,
+                          do_trileptons=False, do_photons = True,
+                          event_view = options.eventView)
+if options.makeQuartic:
+    add_trilepton_ntuples(process, process.schedule,
+                          do_trileptons=True, do_photons = True,
+                          event_view = options.eventView)
+    add_quad_ntuples(process, process.schedule,
+                     do_zh=False, do_zz=False, do_zgg=True,
+                     event_view = options.eventView)
+
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
 
 if options.verbose:
     process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+if options.passThru:
+    set_passthru(process)
 
 if options.dump:
     print process.dumpPython()
