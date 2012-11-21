@@ -36,20 +36,28 @@ do
 done
 sync_52X+=('MCBkgEle;root://cmsdca0.fnal.gov//store/mc/Summer12/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/AODSIM/PU_S7_START52_V9-v2/0002/002C5B35-519B-E111-862D-001E67398025.root')
 
+hdfsOutDir=srm://cmssrm.hep.wisc.edu:8443/srm/v2/server?SFN=/hdfs/store/user/lgray/HZG_sync/${label}/52X 
+
+mcOpts="isMC=1 globalTag=$mcgt dataset=Summer12 calibrationTarget=Summer12_DR53X_HCP2012"
+dataOpts="isMC=0 globalTag=$datagt dataset=ReReco calibrationTarget=2012Jul13ReReco"
+
 for sync_test in ${sync_52X[@]}
 do
   parts=(`echo $sync_test | tr ';' ' '`)
+  echo
   echo ${parts[0]} ${parts[1]}
+
+  jobName=hZg_sync_52X.${label}.${parts[0]}
+  fajOpts="--assume-input-files-exist --infer-cmssw-path --express-queue --job-generates-output-name --output-dir=${hdfsOutDir} --input-dir=${parts[1]%/*}/ --input-file-list=${jobName}.input.txt"
+  patTupleOpts="reportEvery=100 maxEvents=-1 outputFile=${jobName}.root passThru=1"
+
+  echo ${parts[1]##*/} > ${jobName}.input.txt
 
   if [[ "${parts[0]}" == *Data* ]]
       then
-      ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
-	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=ReReco\
-	  calibrationTarget=2012Jul13ReReco passThru=1 &> HZG_${parts[0]}_52X_sync.log  & 
+      farmoutAnalysisJobs $fajOpts $jobName patTuple_cfg.py inputFiles='$inputFileNames' $patTupleOpts $dataOpts
       else
-      ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=500\
-	  outputFile=/scratch/$LOGNAME/hZg_sync52X.$label.${parts[0]}.root dataset=Summer12\
-	  calibrationTarget=Summer12_DR53X_HCP2012 passThru=1 &> HZG_${parts[0]}_52X_sync.log  &
+      farmoutAnalysisJobs $fajOpts $jobName patTuple_cfg.py inputFiles='$inputFileNames' $patTupleOpts $mcOpts
   fi  
 done
 #echo "Tuplizing ggH sample - will write log to ggH_tuplization.log"
@@ -60,5 +68,5 @@ done
 #./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=$vbfFile reportEvery=100 \
   #outputFile=/scratch/$LOGNAME/h2tau_vbf_xcheck.$label.root dataset=Fall11 &> vbf_tuplization.log &
 
-echo "Waiting for ${#sync_52X[@]} jobs to finish"
-wait
+#echo "Waiting for ${#sync_52X[@]} jobs to finish"
+#wait

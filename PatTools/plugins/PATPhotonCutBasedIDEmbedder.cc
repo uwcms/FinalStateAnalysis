@@ -103,13 +103,12 @@ void PATPhotonCutBasedIDEmbedder::produce(Event& evt,
   edm::Handle<PhotonCollection> phos;
   evt.getByLabel(_src,phos);
 
-  PhotonCollection::const_iterator b = phos->begin();
-  PhotonCollection::const_iterator i = b;
+  PhotonCollection::const_iterator i = phos->begin();
   PhotonCollection::const_iterator e = phos->end();
 
   vstring::const_iterator iapp;
   vstring::const_iterator bapp = _apply.begin();
-  vstring::const_iterator eapp = _apply.begin();
+  vstring::const_iterator eapp = _apply.end();
 
   for( ; i != e; ++i ) {
     pat::Photon aPho = *i;
@@ -139,7 +138,7 @@ void PATPhotonCutBasedIDEmbedder::produce(Event& evt,
     aPho.addUserFloat("SingleTowerHoEDepth2",hOverE2012Depth2);
 
     // apply and embed the selected IDs from the config file.
-    for( iapp=bapp; iapp != eapp; ++iapp ) {
+    for( iapp=bapp; iapp != eapp; ++iapp ) {      
       bool ipass = _theID(aPho,*iapp);
       aPho.addUserInt(_pfix+*iapp,(int32_t)ipass);
     }    

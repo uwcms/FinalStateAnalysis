@@ -113,7 +113,7 @@ _producer_translation = {
     'g' : 'Pho'
 }
 
-def add_ntuple(name, analyzer, process, schedule):
+def add_ntuple(name, analyzer, process, schedule, event_view=False):
     ''' Add an ntuple to the process with given name and schedule it
 
     A path for the ntuple will be created.
@@ -122,6 +122,7 @@ def add_ntuple(name, analyzer, process, schedule):
         raise ValueError("An ntuple builder module named %s has already"
                          " been attached to the process!" % name)
     setattr(process, name, analyzer)
+    analyzer.analysis.EventView = cms.bool(bool(event_view))
     # Make a path for this ntuple
     p = cms.Path(analyzer)
     setattr(process, name + 'path', p)
@@ -204,8 +205,9 @@ def make_ntuple(*legs, **kwargs):
             _producer_translation[x] for x in legs)),
         evtSrc = cms.InputTag("patFinalStateEventProducer"),
         skimCounter = cms.InputTag("eventCount", "", "TUPLE"),
-        analysis = cms.PSet(
+        analysis = cms.PSet(            
             selections = cms.VPSet(),
+            EventView = cms.bool(False),
             final = cms.PSet(
                 sort = cms.string('daughter(0).pt'), # Doesn't really matter
                 take = cms.uint32(50),

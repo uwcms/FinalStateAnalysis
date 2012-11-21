@@ -13,11 +13,11 @@ ellpho_final_states = [
     'mg'
 ]
 
-def add_leptonphoton_ntuples(process, schedule):
+def add_leptonphoton_ntuples(process, schedule, event_view=False):
     final_states = []    
     final_states.extend(ellpho_final_states)
     
     for final_state in final_states:
         print "Building %s final state" % final_state
         analyzer = make_ntuple(*final_state)
-        add_ntuple(final_state, analyzer, process, schedule)
+        add_ntuple(final_state, analyzer, process, schedule, event_view)

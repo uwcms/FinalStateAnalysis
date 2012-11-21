@@ -76,6 +76,8 @@ void PATElectronEAEmbedder::produce(Event& evt,
 
       double the_ea = _eacalc(*currentElectron);
 
+      //std::cout << "electron effective area = " << the_ea << std::endl;
+
       newElectron.addUserFloat(*i,the_ea);    
     }
     output->push_back(newElectron);

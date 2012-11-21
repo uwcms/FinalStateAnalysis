@@ -12,15 +12,20 @@
  *  const std::string& name, const edm::ParameterSet& pset, TTree* tree);
  *
  * Author: Evan K. Friis, UW Madison
+ *         Lindsey Gray, UW Madison (for vector specializations)
  *
  */
 
 #ifndef EXPRESSIONNTUPLECOLUMN_VOU3DWMC
 #define EXPRESSIONNTUPLECOLUMN_VOU3DWMC
 
+#include "Reflex/Type.h"
+#include <TTree.h>
+#include <TLeaf.h>
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
 #include <TMath.h>
 #include <iostream>
+#include <sstream>
 
 template<typename ObjType>
 class ExpressionNtupleColumn {
@@ -29,8 +34,9 @@ public:
   void compute(const ObjType& obj);
 protected:
   /// Abstract function which takes the result from the compute and fills the
-  /// branch
+  /// branch  
   virtual void setValue(double value) = 0;
+  virtual void setValue(const std::vector<double>& value) = 0;
   ExpressionNtupleColumn(const std::string& name, const std::string& func);
 private:
   std::string name_;
@@ -46,7 +52,45 @@ template<typename T> void ExpressionNtupleColumn<T>::compute(const T& obj) {
   this->setValue(func_(obj));
 }
 
+//vector specialization for base class
+template<typename T>
+class ExpressionNtupleColumn<std::vector<const T*> > {
+public:
+  /// Compute the column function and store result in branch variable
+  void compute(const std::vector<const T*>& obj);  
+protected:
+  /// Abstract function which takes the result from the compute and fills the
+  /// branch  
+  virtual void setValue(double value) = 0;
+  virtual void setValue(const std::vector<double>& value) = 0;
+  ExpressionNtupleColumn(const std::string& name, const std::string& func);
+private:
+  std::string name_;
+  StringObjectFunction<T> func_;
+};
+
+template<class T>
+ExpressionNtupleColumn<std::vector<const T*> >::ExpressionNtupleColumn(
+    const std::string& name, const std::string& func):
+  name_(name), func_(func, true) {}  
+
+template<class T>
+void ExpressionNtupleColumn<std::vector<const T*> >::compute(
+    const std::vector<const T*>& obj) {
+  std::vector<double> result;
+  typename std::vector<const T*>::const_iterator i = obj.begin();
+  typename std::vector<const T*>::const_iterator e = obj.end();
+  for( ; i != e; ++i ) {     
+    result.push_back(func_(*(*i)));
+    
+  }
+  this->setValue(result);
+}
+
 namespace {
+  namespace {
+    typedef std::vector<double> vdouble;
+  }
   template<typename T> std::string getTypeCmd();
   template<> std::string getTypeCmd<Float_t>() { return "/F"; }
   template<> std::string getTypeCmd<Int_t>() { return "/I"; }
@@ -55,7 +99,30 @@ namespace {
   template<typename T> T convertVal(double x);
   template<> Double_t convertVal<Double_t>(double x) { return x; }
   template<> Float_t convertVal<Float_t>(double x) { return x; }
-  template<> Int_t convertVal<Int_t>(double x) { return TMath::Nint(x); }
+  template<> Int_t convertVal<Int_t>(double x) { return TMath::Nint(x); } 
+  //vector spec
+  template<typename T> std::vector<T> convertVal(const vdouble& x);
+  template<> std::vector<Double_t> convertVal<Double_t>(const vdouble& x) { 
+    std::vector<Double_t> result;
+    vdouble::const_iterator i = x.begin();
+    vdouble::const_iterator e = x.end();
+    for( ; i != e; ++i) result.push_back(*i);    
+    return result; 
+  }
+  template<> std::vector<Float_t> convertVal<Float_t>(const vdouble& x) { 
+    std::vector<Float_t> result;
+    vdouble::const_iterator i = x.begin();
+    vdouble::const_iterator e = x.end();
+    for( ; i != e; ++i) result.push_back(*i);    
+    return result; 
+  }
+  template<> std::vector<Int_t> convertVal<Int_t>(const vdouble& x) { 
+    std::vector<Int_t> result;
+    vdouble::const_iterator i = x.begin();
+    vdouble::const_iterator e = x.end();
+    for( ; i != e; ++i) result.push_back(TMath::Nint(*i));   
+    return result;
+  } 
 }
 
 // Explicit typed (float, double, etc) ntuple column
@@ -63,13 +130,14 @@ template<typename ObjType, typename ColType>
 class ExpressionNtupleColumnT : public ExpressionNtupleColumn<ObjType> {
   public:
 
-  static ExpressionNtupleColumnT* makeExpression(const std::string& name, const std::string& func, TTree* tree)
-  {
-    try{
+  static ExpressionNtupleColumnT* makeExpression(const std::string& name, 
+						 const std::string& func, 
+						 TTree* tree) {
+    try{      
       return new ExpressionNtupleColumnT(name, func, tree);
-    }
-    catch(cms::Exception& iException){
-      iException.addContext("Cought exception in building branch: " + name + " with formula: " + func);
+    } catch(cms::Exception& iException) {
+      iException.addContext("Caught exception in building branch: " + 
+			    name + " with formula: " + func);
       throw;
     }
   }
@@ -77,9 +145,10 @@ class ExpressionNtupleColumnT : public ExpressionNtupleColumn<ObjType> {
   protected:
     /// Abstract function
     ExpressionNtupleColumnT(const std::string& name, const std::string& func,
-			  TTree* tree);
+			    TTree* tree);
  
     void setValue(double value);
+    void setValue(const std::vector<double>&) {}
   private:
     boost::shared_ptr<ColType> branch_;
 };
@@ -126,7 +195,7 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
             command[0], tree));
     } else if (command[1] == "F" || command[1] == "f") {
       // Make a float column
-      output.reset( ExpressionNtupleColumnT<T, Int_t>::makeExpression(name,
+      output.reset( ExpressionNtupleColumnT<T, Float_t>::makeExpression(name,
             command[0], tree));
     } else if (command[1] == "D" || command[1] == "d") {
       // Make a double column
@@ -143,6 +212,85 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
         << std::endl;
   }
   return output;
+}
+
+// template specialization for vectors
+template<typename T, typename ColType>
+class ExpressionNtupleColumnT<std::vector<const T*>, ColType> : 
+     public ExpressionNtupleColumn<std::vector<const T*> > {
+  public:
+
+  static ExpressionNtupleColumnT* 
+    makeExpression(const std::string& name, 
+		   const std::string& func, 
+		   TTree* tree)
+    {
+      try{
+	return new ExpressionNtupleColumnT(name, func, tree);
+      }
+      catch(cms::Exception& iException){
+	iException.addContext("Caught exception in building branch: " + 
+			      name + " with formula: " + func);
+	throw;
+      }
+    }
+  
+ protected:
+  /// Abstract function
+  ExpressionNtupleColumnT(const std::string& name, 
+				 const std::string& func,
+				 TTree* tree);    
+  // template specialization for vector inputs
+  void setValue(double) {}
+  void setValue(const std::vector<double>& value);
+ private:
+  TLeaf* counter_;
+  boost::shared_ptr<ColType> branch_;
+  TTree* const myparent_;
+  const std::string branchname_;
+};
+
+// Explicit typed (float, double, etc) ntuple column
+template<typename T, typename ColType>
+ExpressionNtupleColumnT<std::vector<const T*>, ColType>::
+ExpressionNtupleColumnT(const std::string& name,
+			const std::string& func, TTree* tree):
+  ExpressionNtupleColumn<std::vector<const T*> >(name, func),
+  myparent_(tree),
+  branchname_(name) {
+  branch_.reset(new ColType[1]);
+  
+  std::stringstream idxwrap;
+  Reflex::Type theType = Reflex::Type::ByTypeInfo(typeid(T));
+  idxwrap << "[N_" << theType.Name() << "]";
+
+  std::string branchCmd = name + idxwrap.str() + getTypeCmd<ColType>();
+  std::string fullName = name;
+
+  tree->Branch(fullName.c_str(), branch_.get(), branchCmd.c_str());
+}
+
+namespace {
+  template<typename T>
+  struct array_deleter{
+    void operator () (T* arr) { delete [] arr; }
+  };
+}
+
+template<typename T, typename ColType>
+void ExpressionNtupleColumnT<std::vector<const T*>, ColType>::
+setValue(const std::vector<double>& value) {
+  // create a new array
+  std::vector<ColType> thevals = convertVal<ColType>(value);
+  const unsigned arrSize = thevals.size();
+  ColType * newValues = new ColType[arrSize];
+  // read in the new values   
+  for( unsigned i = 0; i < arrSize; ++i ) {
+    newValues[i] = thevals[i];
+  }
+  // replace old values        
+  branch_.reset(newValues,array_deleter<ColType>());
+  myparent_->GetBranch(branchname_.c_str())->SetAddress(branch_.get());
 }
 
 #endif /* end of include guard: EXPRESSIONNTUPLECOLUMN_VOU3DWMC */

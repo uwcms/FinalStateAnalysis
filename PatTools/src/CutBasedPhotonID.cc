@@ -188,93 +188,117 @@ namespace photontools {
     {
       //PFCharged Iso -- depends on kt6PFJetsRho, PhotonEA_pfchg
       bool passesPFChargedIso = false;
+      double iso_shift = 0.0, the_min, the_max;
+
+      if( fabs(thePho.superCluster()->eta()) < 1.566 ) {
+	iso_shift = _theid.pfChargedIso_pt_slope_eb*thePho.pt();
+	the_max   = _theid.pfChargedIso_max_eb;
+	the_min   = _theid.pfChargedIso_min_eb;
+      } else {
+	iso_shift = _theid.pfChargedIso_pt_slope_ee*thePho.pt();
+	the_max   = _theid.pfChargedIso_max_ee;
+	the_min   = _theid.pfChargedIso_min_ee;
+      }
+      
       double ea_charged_iso = 
 	std::max( thePho.userIsolation(pat::PfChargedHadronIso) - 
+		  iso_shift - 
 		  (thePho.userFloat("PhotonEA_pfchg")*
-		   thePho.userFloat("kt6PFJetsRho")), 0.0f );
-      if( fabs(thePho.superCluster()->eta()) < 1.566 ) { // EB
-	double iso_shift = _theid.pfChargedIso_pt_slope_eb*thePho.pt();
-	double the_max   = _theid.pfChargedIso_max_eb + iso_shift; 
-	double the_min   = _theid.pfChargedIso_min_eb + iso_shift;
-	passesPFChargedIso = (ea_charged_iso < the_max &&
-			      ea_charged_iso >= the_min    );
-      } else {
-	double iso_shift = _theid.pfChargedIso_pt_slope_ee*thePho.pt();
-	double the_max   = _theid.pfChargedIso_max_ee + iso_shift; 
-	double the_min   = _theid.pfChargedIso_min_ee + iso_shift;
-	passesPFChargedIso = (ea_charged_iso < the_max &&
-			      ea_charged_iso >= the_min    );
-      }
+		   thePho.userFloat("kt6PFJetsRho")), 0.0 );      
+      
+      passesPFChargedIso = (ea_charged_iso < the_max &&
+			    ea_charged_iso >= the_min    );
+      
       eval += passesPFChargedIso*kPFChargedIso;
     }
     
     {
       //PFNeutral Iso -- depends on kt6PFJetsRho, PhotonEA_pfneut
       bool passesPFNeutralIso = false;
+      double iso_shift = 0.0, the_min, the_max;
+
+      if( fabs(thePho.superCluster()->eta()) < 1.566 ) {
+	iso_shift = _theid.pfNeutralIso_pt_slope_eb*thePho.pt();
+	the_max   = _theid.pfNeutralIso_max_eb;
+	the_min   = _theid.pfNeutralIso_min_eb;
+      } else {
+	iso_shift = _theid.pfNeutralIso_pt_slope_ee*thePho.pt();
+	the_max   = _theid.pfNeutralIso_max_ee;
+	the_min   = _theid.pfNeutralIso_min_ee;
+      }
+      
       double ea_neutral_iso = 
 	std::max( thePho.userIsolation(pat::PfNeutralHadronIso) - 
+		  iso_shift - 
 		  (thePho.userFloat("PhotonEA_pfneut")*
-		   thePho.userFloat("kt6PFJetsRho")), 0.0f );
-      if( fabs(thePho.superCluster()->eta()) < 1.566 ) { // EB
-	double iso_shift = _theid.pfNeutralIso_pt_slope_eb*thePho.pt();
-	double the_max   = _theid.pfNeutralIso_max_eb + iso_shift; 
-	double the_min   = _theid.pfNeutralIso_min_eb + iso_shift;
-	passesPFNeutralIso = (ea_neutral_iso < the_max &&
-			      ea_neutral_iso >= the_min    );
-      } else {
-	double iso_shift = _theid.pfNeutralIso_pt_slope_ee*thePho.pt();
-	double the_max   = _theid.pfNeutralIso_max_ee + iso_shift; 
-	double the_min   = _theid.pfNeutralIso_min_ee + iso_shift;
-	passesPFNeutralIso = (ea_neutral_iso < the_max &&
-			      ea_neutral_iso >= the_min    );
-      }
+		   thePho.userFloat("kt6PFJetsRho")), 0.0 );
+
+      passesPFNeutralIso = (ea_neutral_iso < the_max &&
+			    ea_neutral_iso >= the_min    );
+  
       eval += passesPFNeutralIso*kPFNeutralIso;
     }
 
     {
       //PFPhoton Iso -- depends on kt6PFJetsRho, PhotonEA_pfpho
       bool passesPFPhotonIso = false;
+      double iso_shift = 0.0, the_min, the_max;
+
+      if( fabs(thePho.superCluster()->eta()) < 1.566 ) {
+	iso_shift = _theid.pfPhotonIso_pt_slope_eb*thePho.pt();
+	the_max   = _theid.pfPhotonIso_max_eb;
+	the_min   = _theid.pfPhotonIso_min_eb;
+      } else {
+	iso_shift = _theid.pfPhotonIso_pt_slope_ee*thePho.pt();
+	the_max   = _theid.pfPhotonIso_max_ee;
+	the_min   = _theid.pfPhotonIso_min_ee;
+      }
+      
       double ea_photon_iso = 
 	std::max( thePho.userIsolation(pat::PfGammaIso) - 
+		  iso_shift - 
 		  (thePho.userFloat("PhotonEA_pfpho")*
-		   thePho.userFloat("kt6PFJetsRho")), 0.0f );
-      if( fabs(thePho.superCluster()->eta()) < 1.566 ) { // EB
-	double iso_shift = _theid.pfPhotonIso_pt_slope_eb*thePho.pt();
-	double the_max   = _theid.pfPhotonIso_max_eb + iso_shift; 
-	double the_min   = _theid.pfPhotonIso_min_eb + iso_shift;
-	passesPFPhotonIso = (ea_photon_iso < the_max &&
-			     ea_photon_iso >= the_min    );
-      } else {
-	double iso_shift = _theid.pfPhotonIso_pt_slope_ee*thePho.pt();
-	double the_max   = _theid.pfPhotonIso_max_ee + iso_shift; 
-	double the_min   = _theid.pfPhotonIso_min_ee + iso_shift;
-	passesPFPhotonIso = (ea_photon_iso < the_max &&
-			     ea_photon_iso >= the_min    );
-      }
+		   thePho.userFloat("kt6PFJetsRho")), 0.0 );
+
+      passesPFPhotonIso = (ea_photon_iso < the_max &&
+			   ea_photon_iso >= the_min    );
+      
       eval += passesPFPhotonIso*kPFPhotonIso;
     }
     
     // yeah various bitwise nots are annoying but it makes the 
     // math easier...
-    unsigned mask_tot = ~(~_mask + ~(_passAll&mask));
+    unsigned mask_tot = ~(~_mask + ~(mask));
     unsigned pass     = _passAll & _veto & mask_tot;
     unsigned result   = eval     & mask_tot;
+    
+    /*
+    std::cout << std::hex << mask_tot << ' ' << _mask 
+	      << ' ' << mask << std::endl;
+    std::cout << std::hex << pass << ' ' << _passAll << ' ' 
+	      << _veto << ' ' << mask_tot << std::endl;
+    std::cout << std::hex << eval << ' ' << mask_tot << std::endl;
+    std::cout << std::hex << result << " == " << pass << std::endl;
+    std::cout << std::dec;
+    */
 
     return ( result == pass );
   }
   
   CutBasedPhotonID::CutBasedPhotonID( const PSet& conf ) {
-    vstring ids = conf.getParameterNamesForType<PSet>();
+    vstring ids = conf.getParameterNamesForType<PSet>();    
     vstring::const_iterator i = ids.begin();
     vstring::const_iterator e = ids.end();
 
-    for( ; i != e; ++i)
+    for( ; i != e; ++i) {
+      //std::cout << "Constructing Photon ID: " << *i << std::endl;
       _passesID.insert(
-	   std::make_pair(*i,CutSet(conf.getParameter<PSet>(*i))));
+		       std::make_pair(*i,CutSet(conf.getParameterSet(*i))));
+    }
   }
 
   bool CutBasedPhotonID::operator() (const pat::Photon& pho, 
-	      const std::string& thewp) {
+				     const std::string& thewp) {
     return _passesID[thewp](pho);
   }
 
