@@ -1,3 +1,25 @@
+'''
+
+Main steering file for the UW PAT tuple.
+
+The important function is configurePatTuple(process),
+which adds a cms.Sequence called "tuplize" to the process.
+
+The following options should be passed as keyword arguments:
+    isMC:                   data or MC
+    embedded:               is a Zmumu embedded sample
+    isAOD:                  whether the base file is RECO or AOD
+    calibrationTarget:      the goal for the electron energy calibrations
+    puTag:                  for simulated samples, the PU scenario
+    xSec:                   for simulated samples, the sample x-section
+
+The function returns a reference to process.tuplize + the list of output
+commands which needs to be added to keep the appropriate PAT tuple products.
+
+Authors: Bucky & Friends
+
+'''
+
 import FWCore.ParameterSet.Config as cms
 
 import PhysicsTools.PatAlgos.tools.trigTools as trigtools
