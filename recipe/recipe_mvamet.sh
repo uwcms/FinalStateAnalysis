@@ -11,6 +11,8 @@ set -o nounset
 MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
 MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 
+pushd $CMSSW_BASE/src
+
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   # Add MVA MET
   cvs co -r METPU_5_3_X_v2 JetMETCorrections/METPUSubtraction
@@ -25,3 +27,5 @@ else
   popd
   cvs up -r 1.6 PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
 fi
+
+popd
