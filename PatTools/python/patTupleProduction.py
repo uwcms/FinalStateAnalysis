@@ -28,6 +28,7 @@ import PhysicsTools.PatAlgos.tools.metTools as mettools
 import PhysicsTools.PatAlgos.tools.tauTools as tautools
 import PhysicsTools.PatAlgos.tools.coreTools as coreTools
 import PhysicsTools.PatAlgos.tools.pfTools as pfTools
+import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
 from FinalStateAnalysis.Utilities.version import cmssw_major_version,\
@@ -345,13 +346,25 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
-    final_met_collection = chain_sequence(
-        process.customizeMETSequence, "patMETsPF")
-    process.tuplize += process.customizeMETSequence
     # The MET systematics depend on all other systematics
     process.systematicsMET.tauSrc = cms.InputTag("cleanPatTaus")
     process.systematicsMET.muonSrc = cms.InputTag("cleanPatMuons")
     process.systematicsMET.electronSrc = cms.InputTag("cleanPatElectrons")
+
+    final_met_collection = chain_sequence(
+        process.customizeMETSequence, "patMETsPF")
+    process.tuplize += process.customizeMETSequence
+    output_commands.append('*_%s_*_*' % final_met_collection.value())
+
+    # Make a version with the MVA MET reconstruction method
+    process.load("FinalStateAnalysis.PatTools.met.mvaMetOnPatTuple_cff")
+    process.tuplize += process.pfMEtMVAsequence
+    mva_met_sequence = helpers.cloneProcessingSnippet(
+        process, process.customizeMETSequence, "MVA")
+    final_mvamet_collection = chain_sequence(
+        mva_met_sequence, "patMEtMVA")
+    process.tuplize += mva_met_sequence
+    output_commands.append('*_%s_*_*' % final_mvamet_collection.value())
 
     # Keep all the data formats needed for the systematics
     output_commands.append('recoLeafCandidates_*_*_%s'
@@ -381,7 +394,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*_cleanPatElectrons_*_*')
     output_commands.append('*_cleanPatMuons_*_*')
     output_commands.append('*_cleanPatPhotons_*_*')
-    output_commands.append('*_%s_*_*' % final_met_collection.value())
 
     trigtools.switchOnTrigger(process)
 
