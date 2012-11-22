@@ -76,10 +76,11 @@ F depends on E depends on D
 
 Define the Path
 
->>> process.p = cms.Path(process.a*process.b*process.c*process.d*process.e*process.f)
+>>> process.p = cms.Path(
+...     process.a*process.b*process.c*process.d*process.e*process.f)
 
-Define our output commands.  We keep C, so the C->B->A chain is kept.  D,E,F are
-not kept, so the whole chain can be deleted.
+Define our output commands.  We keep C, so the C->B->A chain is kept.  D,E,F
+are not kept, so the whole chain can be deleted.
 
 >>> output_commands = ['*_c_*_*']
 >>> kill_unused(process, output_commands)
@@ -120,7 +121,10 @@ True
 
 import FWCore.ParameterSet.Config as cms
 import fnmatch
+import logging
 import itertools
+
+log = logging.getLogger("cfgcleaner")
 
 
 def get_run_modules(process):
@@ -132,11 +136,13 @@ def get_run_modules(process):
     for pathname in itertools.chain(process.paths, process.endpaths):
         path = getattr(process, pathname)
         if None in path.moduleNames():
-            import pdb; pdb.set_trace()
+            import pdb
+            pdb.set_trace()
             print "None in path", pathname
             print path.moduleNames()
         all_modules_in_a_path |= path.moduleNames()
     return all_modules_in_a_path
+
 
 def get_unrun_modules(process):
     ''' Get all modules names not attached to a Path
@@ -148,9 +154,9 @@ def get_unrun_modules(process):
     # Get list of all modules
     all_modules = set(process.analyzers.keys()
                       + process.producers.keys()
-                      + process.filters.keys()
-                     )
+                      + process.filters.keys())
     return all_modules - all_modules_in_a_path
+
 
 def clean_unrun_modules(process):
     ''' Get the unrun modules and delete them from the process
@@ -164,6 +170,7 @@ def clean_unrun_modules(process):
         delattr(process, module)
     return killed
 
+
 def get_all_input_tags(module):
     ''' Parses a module and extracts all InputTags inside.
 
@@ -172,7 +179,8 @@ def get_all_input_tags(module):
 
     '''
     input_tags = set([])
-    if isinstance(module, cms.EDProducer) and module.type_() == "CandViewShallowCloneCombiner":
+    is_producer = isinstance(module, cms.EDProducer)
+    if is_producer and module.type_() == "CandViewShallowCloneCombiner":
         input_tags |= set([x for x in module.decay.value().split()])
 
     for name in module.parameters_().keys():
@@ -196,15 +204,18 @@ def get_all_input_tags(module):
             input_tags.add(value.moduleLabel)
     return input_tags
 
+
 def get_all_used_modules(process):
-    ''' Find all modules which appear in an InputTag in the path or are an EDFilter '''
+    ''' Find modules appearing in an InputTag in the path or are an EDFilter'''
     used_input_tags = set([])
     for module_name in get_run_modules(process):
         module = getattr(process, module_name)
-        if isinstance(module, cms.EDFilter) or isinstance(module, cms.OutputModule):
+        is_filter = isinstance(module, cms.EDFilter)
+        if is_filter or isinstance(module, cms.OutputModule):
             used_input_tags.add(module_name)
         used_input_tags |= get_all_input_tags(module)
     return set([x for x in used_input_tags])
+
 
 def run_but_unused(process):
     ''' Find all modules that are run but not used.
@@ -216,13 +227,14 @@ def run_but_unused(process):
     used_input_tags = set([])
     # Keep track of all InputTags used in this process
     for module_name in run_modules:
-        #print module_name
         module = getattr(process, module_name)
         # If it is a EDFilter, it is always used, since it can affect the Path
-        if isinstance(module, cms.EDFilter) or isinstance(module, cms.OutputModule):
+        is_filter = isinstance(module, cms.EDFilter)
+        if is_filter or isinstance(module, cms.OutputModule):
             used_input_tags.add(module_name)
         used_input_tags |= get_all_input_tags(module)
     return run_modules - used_input_tags
+
 
 def filter_by_output_command(modules, output_commands):
     matching_modules = set([])
@@ -237,17 +249,17 @@ def filter_by_output_command(modules, output_commands):
                 continue
             elif command.split('_')[0] != '*' and command.split('_')[1] == '*':
                 if command not in warned:
-                    print "Warning, I can't interperet:", command, \
-                            "I might drop your product!"
+                    log.info("Warning, I can't interperet:", command,
+                             "I might drop your product!")
                     warned.add(command)
                 continue
             elif fnmatch.fnmatchcase(module, command.split('_')[1]):
-                #print module, command
                 is_kept = True
                 break
         if is_kept:
             matching_modules.add(module)
     return matching_modules
+
 
 def kill_unused(process, output_commands):
     ''' Delete run but unused modules from all Paths and the process.
@@ -262,13 +274,11 @@ def kill_unused(process, output_commands):
     while not done:
         i += 1
         suspects = run_but_unused(process)
-        #print suspects
         # Check if they are kept
         kept_suspects = filter_by_output_command(suspects, output_commands)
         guilty_suspects = suspects - kept_suspects
-        print "Discovered %i bad guys to clean in iteration %i" % (
-            len(guilty_suspects), i)
-        #print guilty_suspects
+        log.info("Discovered %i bad guys to clean in iteration %i",
+                 len(guilty_suspects), i)
         # No more guilty guys.  We are done.
         if not guilty_suspects:
             done = True
@@ -277,11 +287,11 @@ def kill_unused(process, output_commands):
             # Delete from all paths
             for pathname in itertools.chain(process.paths, process.endpaths):
                 path = getattr(process, pathname)
-                #print pathname, guilty
                 path.remove(module)
             #delattr(process, guilty)
             killed.add(guilty)
     return killed
+
 
 def clean_cruft(process, output_commands):
     ''' Clean the cruft in a CFG
@@ -303,4 +313,5 @@ def clean_cruft(process, output_commands):
     return unrun, unused, killed
 
 if __name__ == "__main__":
-    import doctest; doctest.testmod()
+    import doctest
+    doctest.testmod()
