@@ -9,6 +9,8 @@ Author: Evan K. Friis, UW Madison
 
 import FWCore.ParameterSet.Config as cms
 
+from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
+
 try:
     from JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff import \
         calibratedAK5PFJetsForPFMEtMVA, pfMEtMVA, \
@@ -25,7 +27,7 @@ try:
     # Modify electrons
     e_cut = isoelectrons.cut
     isoelectrons = cms.EDFilter(
-        "PATMuonSelector",
+        "PATElectronSelector",
         src=cms.InputTag("cleanPatElectrons"),
         cut=e_cut,
         filter=cms.bool(False)
@@ -42,10 +44,14 @@ try:
         filter=cms.bool(False)
     )
 
+    patMEtMVA = patMETs.clone(metSource=cms.InputTag("pfMEtMVA"))
+    patMEtMVA.addMuonCorrections = False
+
+    print "Built MVA MET sequence"
     pfMEtMVAsequence = cms.Sequence(
         calibratedAK5PFJetsForPFMEtMVA *
         isomuons * isoelectrons * isotaus *
-        pfMEtMVA
+        pfMEtMVA * patMEtMVA
     )
 except ImportError:
     import sys

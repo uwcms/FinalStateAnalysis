@@ -18,7 +18,7 @@ import sys
 
 try:
     from CMGTools.External.pujetidsequence_cff import \
-            puJetIdSqeuence, puJetId, puJetMva # sic
+            pileupJetIdProducer
 except ImportError:
     sys.stderr.write(__file__ +
                      ": PU Jet ID dependency not installed, will not be run!\n")

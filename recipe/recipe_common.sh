@@ -39,10 +39,7 @@ EOF
   cat download.url | xargs wget
   popd
 
-  # PU Jet ID
-  cvs co -r V00-02-09 -d CMGTools/External UserCode/CMG/CMGTools/External
-
-  # MVA MET
+  # MVA MET + PU Jet ID
   pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
   ./recipe_mvamet.sh
   popd
