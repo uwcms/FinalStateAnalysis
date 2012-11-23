@@ -115,8 +115,8 @@ PATFinalStateEventProducer::getRefProd(const edm::InputTag& src,
   // If we are being permissive, and the product doesn't exist,
   // emit an error and a null ref.
   if (!forbidMissing_ && !handle.isValid()) {
-    edm::LogWarning("MissingProduct") << "The FSA collection "
-      << src.value() << " is missing.  It will be null." << std::endl;
+    edm::LogWarning("FSAEventMissingProduct") << "The FSA collection "
+      << src.label() << " is missing.  It will be null." << std::endl;
     return edm::RefProd<T>();
   }
   return edm::RefProd<T>(handle);
