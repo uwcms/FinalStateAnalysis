@@ -60,15 +60,6 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
         process.patFinalStateEventProducer.metSrc = metsrc
         process.patFinalStateEventProducer.puTag = cms.string(puTag)
         sequence += process.patFinalStateEventProducer
-    elif buildFSAEvent == 'eFix':
-        # Temporary workaround for the 2012-05-28 PAT tuples
-        # Copy the existing FS Event, but update the electron collection ref.
-        process.patFinalStateEventProducer = cms.EDProducer(
-            "PATFinalStateElectronFixer",
-            fseSrc = cms.InputTag("patFinalStateEventProducer"),
-            electronSrc = cms.InputTag(esrc)
-        )
-        sequence += process.patFinalStateEventProducer
 
     # Always keep
     output_commands.append('*_patFinalStateEventProducer_*_*')
@@ -163,7 +154,7 @@ def produce_final_states(process, collections, output_commands, sequence, puTag,
         setattr(process, producer_name, final_module)
         output_commands.append("*_%s_*_*" % producer_name)
     sequence += process.buildDiObjects
-    
+
     # Build tri-lepton pairs
     process.buildTriObjects = cms.Sequence()
     for triobject in _combinatorics(object_types, 3):
