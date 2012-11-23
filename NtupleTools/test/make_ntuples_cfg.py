@@ -36,9 +36,10 @@ options = TauVarParsing.TauVarParsing(
     makeHZG=0,
     eventView=0,
     passThru=0,
-    dump=0, # If one, dump process python to stdout
-    rerunFSA=0, # If one, rebuild the PAT FSA events
-    verbose=0, # If one print out the TimeReport
+    dump=0,  # If one, dump process python to stdout
+    rerunFSA=0,  # If one, rebuild the PAT FSA events
+    verbose=0,  # If one print out the TimeReport
+    noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
 )
 
 options.outputFile="ntuplize.root"
@@ -92,7 +93,7 @@ if options.rerunFSA:
     # in pat tuples.
     produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
                          'puTagDoesntMatter', buildFSAEvent=True,
-                         noTracks=True)
+                         noTracks=True, noPhotons=options.noPhotons)
     process.buildFSAPath = cms.Path(process.buildFSASeq)
     # Don't crash if some products are missing (like tracks)
     process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
@@ -154,6 +155,11 @@ if options.makeQuartic:
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
+process.MessageLogger.categories.append('FSAEventMissingProduct')
+# Don't go nuts if there are a lot of missing products.
+process.MessageLogger.cerr.FSAEventMissingProduct = cms.untracked.PSet(
+    limit = cms.untracked.int32(10)
+)
 
 if options.verbose:
     process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
