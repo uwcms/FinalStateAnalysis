@@ -123,7 +123,7 @@ if options.makeTrilepton:
 if options.makeQuad:
     add_quad_ntuples(process, process.schedule,
                      do_zz=False, do_zh=True,
-                     event_view=options.event_view)
+                     event_view=options.eventView)
 
 if options.make4L:
     add_quad_ntuples(process, process.schedule,
