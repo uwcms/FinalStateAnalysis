@@ -84,5 +84,3 @@ LUMI=$LUMI LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_common.sh
 echo "Now run recipe/install_python.sh to install python"
 
 cd $CMSSW_BASE/src
-
-echo "To compile: scram b -j 4"
