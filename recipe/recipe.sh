@@ -35,11 +35,15 @@ echo "Detected CMSSW version: $MAJOR_VERSION $MINOR_VERSION"
 echo "Checking for CERN CVS kerberos ticket"
 set +o errexit
 HAS_TICKET=`klist 2>&1 | grep CERN.CH`
+# Check if we can checkout anonymously
+IS_ANON=`echo $CVSROOT | grep pserver`
 set -o errexit
 
 if [ -z "$HAS_TICKET" ]; then
-  echo "ERROR: You need to kinit yourname@CERN.CH to enable CVS checkouts"
-  exit 1
+  if [ -z "$IS_ANON" ]; then
+    echo "ERROR: You need to kinit yourname@CERN.CH to enable CVS checkouts"
+    exit 1
+  fi
 fi
 
 echo "I'm going to install the FinalStateAnalysis with the following options:"
