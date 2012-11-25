@@ -47,14 +47,16 @@ echo " Limit setting (\$LIMITS): $LIMITS"
 echo " PAT tuple production (\$PATPROD): $PATPROD"
 echo " LumiCalc (\$LUMI): $LUMI"
 
-while true; do
-    read -p "Do you wish continue? " yn
-    case $yn in
-        [Yy]* ) echo "sounds good dude"; break;;
-        [Nn]* ) exit 2;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+if [ -z "FORCERECIPE" ]; then
+   while true; do
+       read -p "Do you wish continue? " yn
+       case $yn in
+           [Yy]* ) echo "sounds good dude"; break;;
+           [Nn]* ) exit 2;;
+           * ) echo "Please answer yes or no.";;
+       esac
+   done
+fi
 
 if [ "$MAJOR_VERSION" -eq "4" ]; then
   echo "Applying recipe for CMSSW 4_2_8"
