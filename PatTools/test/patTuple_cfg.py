@@ -122,12 +122,20 @@ for skim_path in process.skimConfig.paths:
     the_path.insert(0, process.eventCount)
     if options.isMC and not options.embedded:
         the_path.insert(0, process.dqmEventCount)
-    the_path += process.tuplize
+    #do not add the ntuplization path to the skim definition
+    the_path += process.tuplize 
     process.schedule.append(the_path)
 process.out.SelectEvents.SelectEvents = process.skimConfig.paths
 output_commands.append('*_dqmEventCount_*_*')
 output_commands.append('*_eventCount_*_*')
 output_commands.append('*_MEtoEDMConverter_*_*')
+
+# add a bare tuplization path if we are using pass thru
+if options.passThru:
+    print "Adding pass-thru path"
+    process.bareTuplizer = cms.Path(process.tuplize)
+    process.schedule.append(process.bareTuplizer)
+    del process.out.SelectEvents
 
 # Setup keep/drops
 for command in output_commands:
@@ -175,8 +183,6 @@ if options.clean:
 
 if options.verbose:
     process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-if options.passThru:
-    process.out.SelectEvents.SelectEvents = cms.vstring()
 
 if options.profile:
     # From https://twiki.cern.ch/twiki/bin/viewauth/CMS/MemoUnixPatrick#Timing_profiling_avec_valgrind
