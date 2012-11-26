@@ -37,203 +37,104 @@ pt = cms.PSet(
     lazyParsing = cms.untracked.bool(True),
 )
 
-hasMuTightID = pt.clone(
-    min = -0.5,
-    max = 1.5,
-    nbins = 2,
-    name = "hasMuTightID",
-    plotquantity = "daughter(0).hasUserInt('tightID')"
-)
-
-muTightID = pt.clone(
-    min = -0.5,
-    max = 1.5,
-    nbins = 2,
-    name = "muTightID",
-    plotquantity = "daughter(0).userInt('tightID')"
-)
-
-muWWID = pt.clone(
-    min = -0.5,
-    max = 1.5,
-    nbins = 2,
-    name = "muWWID",
-    plotquantity = "daughter(0).userInt('WWID')"
-)
-
-hasMVAIsoWP = pt.clone(
-    min = -0.5,
-    max = 1.5,
-    nbins = 2,
-    name = "mvaIsoWP1",
-    plotquantity = "daughter(0).userInt('mvaisowp1')"
-)
-
-isPF = pt.clone(
-    min = -0.5,
-    max = 1.5,
-    nbins = 2,
-    name = "isPF",
-    plotquantity = "daughter(0).pfCandidateRef.isNonnull"
-)
-
-hasMuons = cms.PSet(
-    min = cms.untracked.double(-0.5),
-    max = cms.untracked.double(1.5),
-    nbins = cms.untracked.int32(2),
-    name = cms.untracked.string("hasExtMuons"),
-    description = cms.untracked.string("Has Ext Muons"),
-    plotquantity = cms.untracked.string("hasOverlaps('extMuons')"),
-    lazyParsing = cms.untracked.bool(True),
-)
-
-hasElectrons = hasMuons.clone(
-    description = "Has Ext Electrons",
-    name = "hasExtElectrons",
-    plotquantity = "hasOverlaps('extElecs')"
-)
-
-hasTaus = hasMuons.clone(
-    description = "Has Ext Taus",
-    name = "hasExtTaus",
-    plotquantity = "hasOverlaps('extTaus')",
-)
-
-muon_jetpt = pt.clone(
-    name = "MuJetPt",
-    plotquantity = "daughter(0).userFloat('jetPt')"
-)
-
-tau_disc = pt.clone(
-    name = "TauIso",
-    plotquantity = "daughter(1).tauID('byVLooseCombinedIsolationDeltaBetaCorr')"
-)
-
-tau_trigger = pt.clone(
-    name = "TauIso",
-    plotquantity = "daughter(1).tauID('byVLooseCombinedIsolationDeltaBetaCorr')"
-)
-
-muon_reljetpt = pt.clone(
-    min = 0,
-    max = 5,
-    nbins = 100,
-    name = "RelMuJetPt",
-    plotquantity = "daughter(0).pt/daughter(0).userFloat('jetPt')"
-)
-
-extras_jetpt = pt.clone(
-    description = "Ext Jet Pt",
-    name = "extJetPt",
-    plotquantity = "? extras('extTaus', '').size() ? extras('extTaus', '')[0].userCand(\'patJet\').pt : -1"
-)
-
-extras_jetbtag = pt.clone(
-    min = -5,
-    max = 5,
-    nbins = 100,
-    description = "Ext Jet Btag",
-    name = "extBtag",
-    plotquantity = "? extras('extTaus', '').size() ? extras('extTaus', '')[0].userCand(\'patJet\').bDiscriminator(\'\') : -1"
-)
-
-jetbtag = pt.clone(
-    min = -5,
-    max = 5,
-    nbins = 100,
-    description = "CSV Jet Btag",
-    name = "csvJet",
-    plotquantity = "? extras('extTaus', '').size() ? extras('extJets', '')[0].bDiscriminator(\'combinedSecondaryVertexBJetTags\') : -5 "
-)
-
-hltPass = pt.clone(
-    min = -5,
-    max = 5,
-    nbins = 100,
-    description = "HLT_15_or_30",
-    name = "hlt",
-    plotquantity = r"evt.hltResult('HLT_Mu15_v\d+,HLT_Mu30_v\d+')"
-)
-
-hltGroup = pt.clone(
-    min = -5,
-    max = 5,
-    nbins = 100,
-    description = "HLT_15_or_30",
-    name = "hltGrp",
-    plotquantity = r"evt.hltGroup('HLT_Mu15_v\\d+,HLT_Mu30_v\\d+')"
-)
-
-hltPrescale = pt.clone(
-    min = -5,
-    max = 5,
-    nbins = 100,
-    description = "HLT_15_or_30",
-    name = "hltPrescale",
-    plotquantity = r"evt.hltPrescale('HLT_Mu15_v\\d+,HLT_Mu30_v\\d+')"
-)
-
-lhe_info = pt.clone(
-    min = 0,
-    max = 100,
-    nbins = 100,
-    description = "LHE flag",
-    name = "LHEFlag",
-    plotquantity = "evt().lesHouches().NUP"
-)
-
-process_id = pt.clone(
-    min = 0,
-    max = 100,
-    nbins = 100,
-    description = "Process ID",
-    name = "ProcessID",
-    plotquantity = "evt().genEventInfo.signalProcessID()"
-)
-
 process.mt = cms.EDAnalyzer(
     "CandViewHistoAnalyzer",
-    src = cms.InputTag("finalStateMuTau"),
+    src = cms.InputTag("finalStateElecElec"),
     histograms = cms.VPSet(
         pt,
-        hasMuons,
-        hasMVAIsoWP,
-        isPF,
-        hasMuTightID,
-        muTightID,
-        muWWID,
-        hasElectrons,
-        muon_jetpt,
-        tau_disc,
-        muon_reljetpt,
-        hasTaus,
-        extras_jetbtag,
-        jetbtag,
-        extras_jetpt,
-        lhe_info,
-        hltPass,
-        hltGroup,
-        hltPrescale,
-        process_id,
+        cms.PSet(
+            min = cms.untracked.double(-1.5),
+            max = cms.untracked.double(19.5),
+            nbins = cms.untracked.int32(21),
+            name = cms.untracked.string("MatchedObjects"),
+            description = cms.untracked.string("matched objs"),
+            plotquantity = cms.untracked.string('matchToHLTPath(0, "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v15")'),
+            lazyParsing = cms.untracked.bool(True),
+        ),
+        cms.PSet(
+            min = cms.untracked.double(-1.5),
+            max = cms.untracked.double(19.5),
+            nbins = cms.untracked.int32(21),
+            name = cms.untracked.string("MatchedObjectsGrossEscaped"),
+            description = cms.untracked.string("matched objs"),
+            plotquantity = cms.untracked.string(r'matchToHLTPath(0, "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v\\d+,HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")'),
+            lazyParsing = cms.untracked.bool(True),
+        ),
+        cms.PSet(
+            min = cms.untracked.double(-1.5),
+            max = cms.untracked.double(19.5),
+            nbins = cms.untracked.int32(21),
+            name = cms.untracked.string("MatchedObjectsGross"),
+            description = cms.untracked.string("matched objs"),
+            plotquantity = cms.untracked.string('matchToHLTPath(0, "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v\\d+,HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")'),
+            lazyParsing = cms.untracked.bool(True),
+        ),
+        cms.PSet(
+            min = cms.untracked.double(-1.5),
+            max = cms.untracked.double(19.5),
+            nbins = cms.untracked.int32(21),
+            name = cms.untracked.string("MatchedObjectsGrossSecond"),
+            description = cms.untracked.string("matched objs"),
+            plotquantity = cms.untracked.string(r'matchToHLTPath(0, "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")'),
+            lazyParsing = cms.untracked.bool(True),
+        ),
+        cms.PSet(
+            min = cms.untracked.double(-1.5),
+            max = cms.untracked.double(19.5),
+            nbins = cms.untracked.int32(21),
+            name = cms.untracked.string("MatchedObjectsGrossFirst"),
+            description = cms.untracked.string("matched objs"),
+            plotquantity = cms.untracked.string(r'matchToHLTPath(0, "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v\\d+")'),
+            lazyParsing = cms.untracked.bool(True),
+        ),
+        cms.PSet(
+            min = cms.untracked.double(-1.5),
+            max = cms.untracked.double(19.5),
+            nbins = cms.untracked.int32(21),
+            name = cms.untracked.string("MatchedObjectsGrossSecondStar"),
+            description = cms.untracked.string("matched objs"),
+            plotquantity = cms.untracked.string(r'matchToHLTPath(0, "HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v.*")'),
+            lazyParsing = cms.untracked.bool(True),
+        ),
     )
 )
 
-process.et = cms.EDAnalyzer(
-    "CandViewHistoAnalyzer",
-    src = cms.InputTag("finalStateElecTau"),
+process.testTrigger = cms.EDAnalyzer(
+    "PATFinalStateEventHistoAnalyzer",
+    src = cms.InputTag("patFinalStateEventProducer"),
     histograms = cms.VPSet(
-        calib_pt_diff
+        cms.PSet(
+            min = cms.untracked.double(-1.5),
+            max = cms.untracked.double(19.5),
+            nbins = cms.untracked.int32(21),
+            name = cms.untracked.string("MatchedObjects"),
+            description = cms.untracked.string("matched objs"),
+            plotquantity = cms.untracked.string('trig().pathObjects("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v15").size()'),
+            lazyParsing = cms.untracked.bool(True),
+        ),
+        cms.PSet(
+            min = cms.untracked.double(-3.5),
+            max = cms.untracked.double(3.5),
+            nbins = cms.untracked.int32(100),
+            name = cms.untracked.string("MatchedObjectEta"),
+            description = cms.untracked.string("matched objs"),
+            #plotquantity = cms.untracked.string('trig().pathObjects("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v15").size()'),
+            plotquantity = cms.untracked.string('? trig().pathObjects("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v15").size() ? trig().pathObjects("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v15")[0].eta : -5'),
+            lazyParsing = cms.untracked.bool(True),
+        ),
+        cms.PSet(
+            min = cms.untracked.double(-3.5),
+            max = cms.untracked.double(3.5),
+            nbins = cms.untracked.int32(100),
+            name = cms.untracked.string("MatchedObjectPhi"),
+            description = cms.untracked.string("matched objs"),
+            #plotquantity = cms.untracked.string('trig().pathObjects("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v15").size()'),
+            plotquantity = cms.untracked.string('? trig().pathObjects("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v15").size() ? trig().pathObjects("HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v15")[0].phi : -5'),
+            lazyParsing = cms.untracked.bool(True),
+        )
     )
 )
 
-# MVA MET debugging tools - to eventually be deleted
-process.wtf = cms.EDAnalyzer(
-    "CandViewHistoAnalyzer",
-    src = cms.InputTag("pfMEtMVA"),
-    histograms = cms.VPSet(
-        pt
-    )
-)
 
 process.checkMET = cms.EDAnalyzer(
     "CandComparator",
@@ -268,8 +169,6 @@ process.checkMET = cms.EDAnalyzer(
 )
 
 process.p = cms.Path(
-    process.mt*
-    process.et*
-    #process.checkMET*
-    #process.wtf
+    process.mt
+    *process.testTrigger
 )

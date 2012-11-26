@@ -148,14 +148,17 @@ int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
 
 int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
+  // std::cout << "matcher: " << pattern << std::endl;
   SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
+  // std::cout << " result: " << result.group << " " << result.prescale << " " << result.passed << std::endl;
   // Loop over all the paths that fired and see if any matched this object.
-  if (!result.paths.size())
+  if (!result.passed)
     return -1;
   int matchCount = 0;
   for (size_t i = 0; i < result.paths.size(); ++i) {
     bool matched = matchedToAnObject(
       triggerEvent_.pathObjects(result.paths[i]), cand, maxDeltaR);
+    // std::cout << " - path: " << result.paths[i] << " matched: " << matched << std::endl;
     if (matched)
       matchCount += 1;
   }

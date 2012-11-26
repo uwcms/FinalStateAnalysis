@@ -3,10 +3,10 @@
 # Setup the environment for the FinalStateAnalysis software
 
 echo "Setting up CMSSW runtime environment"
-cmsenv
+eval `scramv1 ru -sh`
 
 export fsa=$CMSSW_BASE/src/FinalStateAnalysis/
-echo "Setting variable \$fsa=$FSAHOME"
+echo "Setting variable \$fsa=$fsa"
 
 export base=$CMSSW_BASE/src
 

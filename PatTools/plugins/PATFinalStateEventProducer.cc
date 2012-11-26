@@ -31,7 +31,12 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     PATFinalStateEventProducer(const edm::ParameterSet& pset);
     virtual ~PATFinalStateEventProducer(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
+
   private:
+
+    template<typename T> edm::RefProd<T> getRefProd(
+        const edm::InputTag& src, const edm::Event& evt) const;
+
     typedef math::Error<2>::type Matrix;
     // General global quantities
     edm::InputTag rhoSrc_;
@@ -67,6 +72,8 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     edm::ParameterSet extraWeights_;
     // The PU scenario to use
     std::string puScenario_;
+
+    bool forbidMissing_;
 };
 
 PATFinalStateEventProducer::PATFinalStateEventProducer(
@@ -94,7 +101,25 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   extraWeights_ = pset.getParameterSet("extraWeights");
   puScenario_ = pset.getParameter<std::string>("puTag");
 
+  forbidMissing_ = pset.exists("forbidMissing") ?
+    pset.getParameter<bool>("forbidMissing") : true;
+
   produces<PATFinalStateEventCollection>();
+}
+
+template<typename T> edm::RefProd<T>
+PATFinalStateEventProducer::getRefProd(const edm::InputTag& src,
+    const edm::Event& evt) const {
+  edm::Handle<T> handle;
+  evt.getByLabel(src, handle);
+  // If we are being permissive, and the product doesn't exist,
+  // emit an error and a null ref.
+  if (!forbidMissing_ && !handle.isValid()) {
+    edm::LogWarning("FSAEventMissingProduct") << "The FSA collection "
+      << src.label() << " is missing.  It will be null." << std::endl;
+    return edm::RefProd<T>();
+  }
+  return edm::RefProd<T>(handle);
 }
 
 void PATFinalStateEventProducer::produce(edm::Event& evt,
@@ -114,37 +139,29 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::PtrVector<reco::Vertex> verticesPtr = vertices->ptrVector();
 
   // Get refs to the objects in the event
-  edm::Handle<pat::ElectronCollection> electrons;
-  evt.getByLabel(electronSrc_, electrons);
-  edm::RefProd<pat::ElectronCollection> electronRefProd(electrons);
+  edm::RefProd<pat::ElectronCollection> electronRefProd =
+    getRefProd<pat::ElectronCollection>(electronSrc_, evt);
 
-  edm::Handle<pat::MuonCollection> muons;
-  evt.getByLabel(muonSrc_, muons);
-  edm::RefProd<pat::MuonCollection> muonRefProd(muons);
+  edm::RefProd<pat::MuonCollection> muonRefProd =
+    getRefProd<pat::MuonCollection>(muonSrc_, evt);
 
-  edm::Handle<pat::JetCollection> jets;
-  evt.getByLabel(jetSrc_, jets);
-  edm::RefProd<pat::JetCollection> jetRefProd(jets);
+  edm::RefProd<pat::JetCollection> jetRefProd =
+    getRefProd<pat::JetCollection>(jetSrc_, evt);
 
-  edm::Handle<pat::PhotonCollection> phos;
-  evt.getByLabel(phoSrc_, phos);
-  edm::RefProd<pat::PhotonCollection> phoRefProd(phos);
+  edm::RefProd<pat::PhotonCollection> phoRefProd =
+    getRefProd<pat::PhotonCollection>(phoSrc_, evt);
 
-  edm::Handle<pat::TauCollection> taus;
-  evt.getByLabel(tauSrc_, taus);
-  edm::RefProd<pat::TauCollection> tauRefProd(taus);
+  edm::RefProd<pat::TauCollection> tauRefProd =
+    getRefProd<pat::TauCollection>(tauSrc_, evt);
 
-  edm::Handle<reco::PFCandidateCollection> pf;
-  evt.getByLabel(pfSrc_, pf);
-  reco::PFCandidateRefProd pfRefProd(pf);
+  edm::RefProd<reco::PFCandidateCollection> pfRefProd =
+    getRefProd<reco::PFCandidateCollection>(pfSrc_, evt);
 
-  edm::Handle<reco::TrackCollection> tracks;
-  evt.getByLabel(trackSrc_, tracks);
-  reco::TrackRefProd trackRefProd(tracks);
+  edm::RefProd<reco::TrackCollection> trackRefProd =
+    getRefProd<reco::TrackCollection>(trackSrc_, evt);
 
-  edm::Handle<reco::GsfTrackCollection> gsftracks;
-  evt.getByLabel(gsfTrackSrc_, gsftracks);
-  reco::GsfTrackRefProd gsftrackRefProd(gsftracks);
+  edm::RefProd<reco::GsfTrackCollection> gsftrackRefProd =
+    getRefProd<reco::GsfTrackCollection>(gsfTrackSrc_, evt);
 
   edm::Handle<edm::View<pat::MET> > met;
   evt.getByLabel(metSrc_, met);
