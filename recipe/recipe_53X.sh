@@ -7,8 +7,7 @@ set -o nounset
 pushd $CMSSW_BASE/src
 
 echo "Checking out PAT tags"
-# temp - try to break build for Jenkins
-#addpkg DataFormats/PatCandidates V06-05-06-03
+addpkg DataFormats/PatCandidates V06-05-06-03
 
 if [ "$PATPROD" = "1" ]
 then
