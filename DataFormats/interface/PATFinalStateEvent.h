@@ -68,7 +68,8 @@ class PATFinalStateEvent {
 	const edm::RefProd<pat::PhotonCollection>& phoRefProd,
         const reco::PFCandidateRefProd& pfRefProd,
         const reco::TrackRefProd& tracks,
-        const reco::GsfTrackRefProd& gsfTracks
+        const reco::GsfTrackRefProd& gsfTracks,
+        const std::map<std::string, edm::Ptr<pat::MET> >& mets
     );
 
     /// Get PV
@@ -85,12 +86,18 @@ class PATFinalStateEvent {
     double rho() const;
     /// Get trigger information
     const pat::TriggerEvent& trig() const;
-    /// Get MET
+
+    /*  These methods will be deprecated! */
+    /// Get PFMET
     const edm::Ptr<pat::MET>& met() const;
     /// Get MET covariance
     const TMatrixD& metCovariance() const;
     /// Get MET significance
     double metSignificance() const;
+
+    // Get a given type of MET
+    const edm::Ptr<pat::MET>& met(const std::string& type) const;
+
     /// Get the event ID
     const edm::EventID& evtId() const;
 
@@ -145,11 +152,6 @@ class PATFinalStateEvent {
 
     /// Access to object collections in the event
     const pat::ElectronCollection& electrons() const;
-    /// Workaround - in the 2012-05-28 tuples, the electrons are set wrong,
-    /// so we need to update them on the fly.  FIXME eventually remove this.
-    void setElectrons(const edm::RefProd<pat::ElectronCollection>& elecs) {
-      electronRefProd_ = elecs;
-    }
     const pat::MuonCollection& muons() const;
     const pat::JetCollection& jets() const;
     const pat::TauCollection& taus() const;
@@ -191,6 +193,8 @@ class PATFinalStateEvent {
     reco::PFCandidateRefProd pfRefProd_;
     reco::TrackRefProd tracks_;
     reco::GsfTrackRefProd gsfTracks_;
+    // List of different MET types
+    std::map<std::string, edm::Ptr<pat::MET> > mets_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */

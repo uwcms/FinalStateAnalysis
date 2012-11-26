@@ -38,7 +38,7 @@ try:
 
     customizeJetSequence += pileupJetIdProducer
     # Fix the input tags of the PU JET ID value map producers
-    pileupJetIdProducer.jets = cms.InputTag("patJetId")
+    pileupJetIdProducer.jets = cms.InputTag("ak5PFJets")
     # Embed the PU IDs
     customizeJetSequence += patJetsPUID
 except ImportError:

@@ -38,6 +38,7 @@ namespace {
     std::map<std::string, int> dummyIntMap;
     std::pair<std::string, float> dummyFloatPair;
     std::pair<std::string, int> dummyIntPair;
+    std::map<std::string, edm::Ptr<pat::MET> > dummyMETMap;
 
     // For the VBF variables
     VBFVariables dummyVBFVars;
@@ -69,7 +70,7 @@ namespace {
     FWD_CLASSDECL(PATElecElecElecFinalState)
     FWD_CLASSDECL(PATElecElecMuFinalState)
     FWD_CLASSDECL(PATElecElecTauFinalState)
-    FWD_CLASSDECL(PATElecElecPhoFinalState)      
+    FWD_CLASSDECL(PATElecElecPhoFinalState)
     FWD_CLASSDECL(PATElecMuMuFinalState)
     FWD_CLASSDECL(PATElecMuTauFinalState)
     FWD_CLASSDECL(PATElecMuPhoFinalState)
@@ -123,6 +124,6 @@ namespace {
     FWD_CLASSDECL(PATTauTauPhoPhoFinalState)
     FWD_CLASSDECL(PATTauPhoPhoPhoFinalState)
     FWD_CLASSDECL(PATPhoPhoPhoPhoFinalState)
-    
+
   };
 }

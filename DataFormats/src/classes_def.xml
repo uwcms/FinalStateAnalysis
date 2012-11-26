@@ -15,6 +15,7 @@
   <class name="std::pair<std::string, float>"/>
   <class name="std::map<std::string, int>"/>
   <class name="std::pair<std::string, int>"/>
+  <class name ="std::map<std::string,edm::Ptr<pat::MET> >" />
 
   <class name="VBFVariables" ClassVersion="10">
    <version ClassVersion="10" checksum="2474259455"/>
@@ -35,7 +36,8 @@
    <version ClassVersion="10" checksum="4038526841"/>
   </class>
 
-  <class name="PATFinalStateEvent" ClassVersion="13">
+  <class name="PATFinalStateEvent" ClassVersion="14">
+   <version ClassVersion="14" checksum="1619979458"/>
    <version ClassVersion="13" checksum="3775954220"/>
    <version ClassVersion="12" checksum="4160196554"/>
    <version ClassVersion="11" checksum="525405272"/>
