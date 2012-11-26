@@ -6,7 +6,6 @@ set -o nounset
 
 pushd $CMSSW_BASE/src
 
-<<<<<<< HEAD
 echo "Checking out PAT dataformats"
 addpkg DataFormats/PatCandidates       V06-05-06-03
 
