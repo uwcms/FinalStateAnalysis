@@ -55,7 +55,8 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::RefProd<pat::PhotonCollection>& phoRefProd,
     const reco::PFCandidateRefProd& pfRefProd,
     const reco::TrackRefProd& tracks,
-    const reco::GsfTrackRefProd& gsfTracks
+    const reco::GsfTrackRefProd& gsfTracks,
+    const std::map<std::string, edm::Ptr<pat::MET> >& mets
     ):
   rho_(rho),
   triggerEvent_(triggerEvent),
@@ -78,7 +79,8 @@ PATFinalStateEvent::PATFinalStateEvent(
   phoRefProd_(phoRefProd),
   pfRefProd_(pfRefProd),
   tracks_(tracks),
-  gsfTracks_(gsfTracks)
+  gsfTracks_(gsfTracks),
+  mets_(mets)
 { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
@@ -114,6 +116,15 @@ const TMatrixD& PATFinalStateEvent::metCovariance() const {
 
 double PATFinalStateEvent::metSignificance() const {
   return fshelpers::xySignficance(met_->momentum(), metCovariance_);
+}
+
+const edm::Ptr<pat::MET>& PATFinalStateEvent::met(
+    const std::string& type) const {
+  std::map<std::string, edm::Ptr<pat::MET> >::const_iterator findit =
+    mets_.find(type);
+  if (findit != mets_.end())
+    return findit->second;
+  return edm::Ptr<pat::MET>();
 }
 
 const edm::EventID& PATFinalStateEvent::evtId() const {

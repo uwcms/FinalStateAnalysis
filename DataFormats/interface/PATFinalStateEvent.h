@@ -68,7 +68,8 @@ class PATFinalStateEvent {
 	const edm::RefProd<pat::PhotonCollection>& phoRefProd,
         const reco::PFCandidateRefProd& pfRefProd,
         const reco::TrackRefProd& tracks,
-        const reco::GsfTrackRefProd& gsfTracks
+        const reco::GsfTrackRefProd& gsfTracks,
+        const std::map<std::string, edm::Ptr<pat::MET> >& mets
     );
 
     /// Get PV
@@ -85,12 +86,18 @@ class PATFinalStateEvent {
     double rho() const;
     /// Get trigger information
     const pat::TriggerEvent& trig() const;
-    /// Get MET
+
+    /*  These methods will be deprecated! */
+    /// Get PFMET
     const edm::Ptr<pat::MET>& met() const;
     /// Get MET covariance
     const TMatrixD& metCovariance() const;
     /// Get MET significance
     double metSignificance() const;
+
+    // Get a given type of MET
+    const edm::Ptr<pat::MET>& met(const std::string& type) const;
+
     /// Get the event ID
     const edm::EventID& evtId() const;
 
@@ -186,6 +193,8 @@ class PATFinalStateEvent {
     reco::PFCandidateRefProd pfRefProd_;
     reco::TrackRefProd tracks_;
     reco::GsfTrackRefProd gsfTracks_;
+    // List of different MET types
+    std::map<std::string, edm::Ptr<pat::MET> > mets_;
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */

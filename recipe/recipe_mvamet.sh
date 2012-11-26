@@ -20,6 +20,8 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
   ./setup.sh
   popd
   cvs up -r 1.6 PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
+  # This is a bug in setup.sh
+  cvs up -r METPU_5_3_X_v3 RecoJets/JetProducers
 else
   cvs co -r METPU_4_2_X JetMETCorrections/METPUSubtraction
   pushd $CMSSW_BASE/src/JetMETCorrections/METPUSubtraction/test/

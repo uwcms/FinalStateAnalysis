@@ -17,6 +17,10 @@ patFinalStateEventProducer = cms.EDProducer(
     genParticleSrc = cms.InputTag("genParticles"),
     trackSrc = cms.InputTag("generalTracks"),
     gsfTrackSrc = cms.InputTag("electronGsfTracks"),
+    mets = cms.PSet(
+        pfmet = cms.InputTag("fixme"),
+        mvamet = cms.InputTag("fixme"),
+    ),
     extraWeights = cms.PSet(
         #anyOldThing = cms.double(9999), # just an example
         #puAvg = cms.InputTag("lumiWeights", "3bx"),

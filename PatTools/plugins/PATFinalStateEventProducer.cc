@@ -73,6 +73,9 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     // The PU scenario to use
     std::string puScenario_;
 
+    typedef std::pair<std::string, edm::InputTag> InputTagMap;
+    std::vector<InputTagMap> metCfg_;
+
     bool forbidMissing_;
 };
 
@@ -103,6 +106,16 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
 
   forbidMissing_ = pset.exists("forbidMissing") ?
     pset.getParameter<bool>("forbidMissing") : true;
+
+  // Get different type of METs
+  edm::ParameterSet mets = pset.getParameterSet("mets");
+  for (size_t i = 0; i < mets.getParameterNames().size(); ++i) {
+    metCfg_.push_back(
+        std::make_pair(
+          mets.getParameterNames()[i],
+          mets.getParameter<edm::InputTag>(mets.getParameterNames()[i])
+          ));
+  }
 
   produces<PATFinalStateEventCollection>();
 }
@@ -179,6 +192,17 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     metCovariance(1,1) = (*metCov)(1,1);
   }
 
+  std::map<std::string, edm::Ptr<pat::MET> > theMEts;
+  // Get different types of METs - this will be a map like
+  // "pfmet" ->
+  // "mvamet" ->
+  for (size_t i = 0; i < metCfg_.size(); ++i) {
+    edm::Handle<edm::View<pat::MET> > theMet;
+    evt.getByLabel(metCfg_[i].second, theMet);
+    edm::Ptr<pat::MET> theMetPtr = theMet->ptrAt(0);
+    theMEts[metCfg_[i].first] = theMetPtr;
+  }
+
   edm::Handle<pat::TriggerEvent> trig;
   evt.getByLabel(trgSrc_, trig);
 
@@ -217,7 +241,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
       *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo,
       evt.isRealData(), puScenario_,
       electronRefProd, muonRefProd, tauRefProd, jetRefProd,
-      phoRefProd, pfRefProd, trackRefProd, gsftrackRefProd);
+      phoRefProd, pfRefProd, trackRefProd, gsftrackRefProd, theMEts);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
