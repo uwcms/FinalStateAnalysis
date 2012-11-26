@@ -158,8 +158,8 @@ namespace pattools {
 	// recalculate then propagate the regression energy and errors
 	switch( thisReg.first ) {
 	case 1: // V1 regression (just ecal energy)
-	  temp->setEcalRegressionEnergy(en,en_err);	  
-	  //temp->correctEcalEnergy(en,en_err); // this is for later versions?
+	  temp->setEcalRegressionEnergy(en,en_err); //HCP2012_V03-02 
+	  temp->correctEcalEnergy(en,en_err); // this is for later versions?
 	  break;
 	case 2: // V2 regression (including track variables)
 	  oldP4 = temp->p4();
