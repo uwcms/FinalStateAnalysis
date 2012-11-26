@@ -3,7 +3,17 @@ FinalStateAnalysis Package Description
 
 Documentation: https://github.com/uwcms/FinalStateAnalysis/wiki
 
-53X Toolchain Test [![Build Status](http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/badge/icon)](http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/)
+**Jenkins Tests**
+<table>
+    <tr>
+        <td>53X PAT+Ntuple</td> 
+        <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/'><img src='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/badge/icon'></a></td>
+    </tr>
+    <tr>
+        <td>42X PAT+Ntuple</td> 
+        <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-42X/'><img src='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-42X/badge/icon'></a></td>
+    </tr>
+</table>
 
 The Final State Analysis (FSA) package is a CMSSW analysis framework.  Common
 utilities are organized as subpackages.  
