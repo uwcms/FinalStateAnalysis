@@ -5,6 +5,7 @@ CFG file to make all Higgs ntuples
 You can turn on different ntuples by passing option=1 using one of:
 
     makeH2Tau (em, et, and mt)
+    makeDiObject (mm, ee, gg)
     makeTNP (ee & mm)
     makeTrilepton (emt, mmt, eet, emm, mmm)
     makeQuad (a bunch for 2l2tau)
@@ -26,6 +27,7 @@ options = TauVarParsing.TauVarParsing(
     puScenario='S4',
     saveSkim=0,
     reportEvery=100,
+    makeDiObject=0,
     makeH2Tau=0,
     makeTNP=0,
     makeTrilepton=0,
@@ -34,8 +36,8 @@ options = TauVarParsing.TauVarParsing(
     makeQuartic=0,
     makeTGC=0,
     makeHZG=0,
-    eventView=0,
-    passThru=0,
+    eventView=0, #switch between final state view and event view
+    passThru=0, #turn off preselections
     dump=0, # If one, dump process python to stdout
     rerunFSA=0, # If one, rebuild the PAT FSA events
     verbose=0, # If one print out the TimeReport
@@ -106,9 +108,14 @@ if options.rerunFSA:
 
 from FinalStateAnalysis.NtupleTools.tnp_ntuples_cfi import add_tnp_ntuples
 from FinalStateAnalysis.NtupleTools.h2tau_ntuples_cfi import add_h2tau_ntuples
+from FinalStateAnalysis.NtupleTools.di_object_ntuples_cfi import add_di_object_ntuples
 from FinalStateAnalysis.NtupleTools.trilepton_ntuples_cfi import add_trilepton_ntuples
 from FinalStateAnalysis.NtupleTools.lepton_photon_ntuples_cfi import add_leptonphoton_ntuples
 from FinalStateAnalysis.NtupleTools.quad_ntuples_cfi import add_quad_ntuples
+
+if options.makeDiObject:
+    add_di_object_ntuples(process, process.schedule,
+                          event_view = options.eventView)
 
 if options.makeH2Tau:
     add_h2tau_ntuples(process, process.schedule,
