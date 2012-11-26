@@ -4,7 +4,8 @@ FinalStateAnalysis Package Description
 
 Documentation: https://github.com/uwcms/FinalStateAnalysis/wiki
 
-[![Build Status](http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/badge/icon)](http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/)
+.. image:: http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/badge/icon
+   :target: http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/
 
 The Final State Analysis (FSA) package is a CMSSW analysis framework.  Common
 utilities are organized as subpackages.  
