@@ -112,30 +112,34 @@ process.eventCount.uwMeta = cms.PSet(
 
 process.schedule = cms.Schedule()
 
-# Load all of our skim paths
-process.load("FinalStateAnalysis.RecoTools.uwSkims_cfi")
-# PAT tuplize all skim paths
-for skim_path in process.skimConfig.paths:
-    print "Building skim path:", skim_path
-    the_path = getattr(process, skim_path)
-    # Count every event, even the ones that fail the skim
-    the_path.insert(0, process.eventCount)
+# add a bare tuplization path if we are using pass thru
+if options.passThru:
+    print "Running in Pass-Thru Mode, no skim will be done"
+    process.bareTuplizer = cms.Path(process.tuplize)
+    process.bareTuplizer.insert(0, process.eventCount)
     if options.isMC and not options.embedded:
-        the_path.insert(0, process.dqmEventCount)
-    #do not add the ntuplization path to the skim definition
-    the_path += process.tuplize 
-    process.schedule.append(the_path)
-process.out.SelectEvents.SelectEvents = process.skimConfig.paths
+            process.bareTuplizer.insert(0, process.dqmEventCount)
+    process.schedule.append(process.bareTuplizer)
+    del process.out.SelectEvents
+else:
+    # Load all of our skim paths
+    process.load("FinalStateAnalysis.RecoTools.uwSkims_cfi")
+    # PAT tuplize all skim paths
+    for skim_path in process.skimConfig.paths:
+        print "Building skim path:", skim_path
+        the_path = getattr(process, skim_path)
+        # Count every event, even the ones that fail the skim
+        the_path.insert(0, process.eventCount)
+        if options.isMC and not options.embedded:
+            the_path.insert(0, process.dqmEventCount)        
+        the_path += process.tuplize 
+        process.schedule.append(the_path)
+    process.out.SelectEvents.SelectEvents = process.skimConfig.paths
 output_commands.append('*_dqmEventCount_*_*')
 output_commands.append('*_eventCount_*_*')
 output_commands.append('*_MEtoEDMConverter_*_*')
 
-# add a bare tuplization path if we are using pass thru
-if options.passThru:
-    print "Adding pass-thru path"
-    process.bareTuplizer = cms.Path(process.tuplize)
-    process.schedule.append(process.bareTuplizer)
-    del process.out.SelectEvents
+
 
 # Setup keep/drops
 for command in output_commands:
