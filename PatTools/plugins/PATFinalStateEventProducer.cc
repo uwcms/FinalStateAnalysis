@@ -41,6 +41,7 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     // General global quantities
     edm::InputTag rhoSrc_;
     edm::InputTag pvSrc_;
+    edm::InputTag pvBackSrc_;
     edm::InputTag verticesSrc_;
 
     // The final tau/jet/muon etc collections in the event
@@ -83,6 +84,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
     const edm::ParameterSet& pset) {
   rhoSrc_ = pset.getParameter<edm::InputTag>("rhoSrc");
   pvSrc_ = pset.getParameter<edm::InputTag>("pvSrc");
+  pvBackSrc_ = pset.getParameter<edm::InputTag>("pvSrcBackup");
   verticesSrc_ = pset.getParameter<edm::InputTag>("verticesSrc");
 
   electronSrc_ = pset.getParameter<edm::InputTag>("electronSrc");
@@ -145,8 +147,21 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
 
   edm::Handle<edm::View<reco::Vertex> > pv;
   evt.getByLabel(pvSrc_, pv);
-  edm::Ptr<reco::Vertex> pvPtr = pv->ptrAt(0);
 
+  edm::Handle<edm::View<reco::Vertex> > pv_back;
+  evt.getByLabel(pvBackSrc_, pv_back);
+
+  edm::Ptr<reco::Vertex> pvPtr;
+  if( pv->size() )
+    pvPtr = pv->ptrAt(0);
+  else if( pv_back->size() ) {
+    std::cout << "!!!!! There are no selected primary vertices,"
+	      << " pvPtr is set to unclean vertex!!!!!";
+    pvPtr = pv_back->ptrAt(0);
+  } else 
+    std::cout << "!!!!! There are no primary vertices,"
+	      << " pvPtr is not set !!!!!";
+ 
   edm::Handle<edm::View<reco::Vertex> > vertices;
   evt.getByLabel(verticesSrc_, vertices);
   edm::PtrVector<reco::Vertex> verticesPtr = vertices->ptrVector();
