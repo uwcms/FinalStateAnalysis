@@ -386,7 +386,6 @@ namespace rochcor {
     if(runopt==0){
       recm = recmA;
       //drecm = drecmA;
-      
       delta = deltaA;
       sf = sfA;
       
@@ -396,7 +395,6 @@ namespace rochcor {
     }else if(runopt==1){
       recm = recmB;
       //drecm = drecmB;
-      
       delta = deltaB;
       sf = sfB;
       
