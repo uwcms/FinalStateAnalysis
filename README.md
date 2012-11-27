@@ -6,11 +6,15 @@ Documentation: https://github.com/uwcms/FinalStateAnalysis/wiki
 **Jenkins Tests**
 <table>
     <tr>
-        <td>53X PAT+Ntuple</td> 
+        <td>53X PAT + Ntuple</td> 
         <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/'><img src='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/badge/icon'></a></td>
     </tr>
     <tr>
-        <td>42X PAT+Ntuple</td> 
+        <td>52X PAT + Ntuple</td> 
+        <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-52X/'><img src='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-52X/badge/icon'></a></td>
+    </tr>
+    <tr>
+        <td>42X PAT + Ntuple</td> 
         <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-42X/'><img src='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-42X/badge/icon'></a></td>
     </tr>
 </table>
