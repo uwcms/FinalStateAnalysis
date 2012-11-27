@@ -51,8 +51,4 @@ EOF
 
 fi
 
-# Get the VBF MVA weight files
-# https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2012#VBF_selection_Matthew
-cvs co -r 1.2 UserCode/MitHtt/data/VBFMVA/MuTau/VBFMVA_BDTG.weights.xml
-
 popd
