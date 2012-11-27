@@ -86,7 +86,8 @@ if options.rerunFSA:
         'taus': 'cleanPatTaus',
         'photons': 'cleanPatPhotons',
         'jets': 'selectedPatJets',
-        'met': 'systematicsMET',
+        'pfmet': 'systematicsMET',
+        'mvamet': 'systematicsMETMVA',
     }
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.

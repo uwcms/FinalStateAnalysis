@@ -49,7 +49,8 @@ def produce_final_states(process, collections, output_commands,
     esrc = collections['electrons']
     tausrc = collections['taus']
     jetsrc = collections['jets']
-    metsrc = collections['met']
+    pfmetsrc = collections['pfmet']
+    mvametsrc = collections['mvamet']
     phosrc = collections['photons']
 
     # Build the PATFinalStateEventObject
@@ -61,8 +62,10 @@ def produce_final_states(process, collections, output_commands,
         process.patFinalStateEventProducer.tauSrc = cms.InputTag(tausrc)
         process.patFinalStateEventProducer.jetSrc = cms.InputTag(jetsrc)
         process.patFinalStateEventProducer.phoSrc = cms.InputTag(phosrc)
-        process.patFinalStateEventProducer.metSrc = metsrc
+        process.patFinalStateEventProducer.metSrc = pfmetsrc
         process.patFinalStateEventProducer.puTag = cms.string(puTag)
+        process.patFinalStateEventProducer.mets.pfmet = pfmetsrc
+        process.patFinalStateEventProducer.mets.mvamet = mvametsrc
         sequence += process.patFinalStateEventProducer
 
     # Always keep

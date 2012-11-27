@@ -416,7 +416,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
         'taus':  'cleanPatTaus',
         'photons':  'cleanPatPhotons',
         'jets':  'selectedPatJets',
-        'met':  final_met_collection,
+        'pfmet':  final_met_collection,
+        'mvamet':  final_mvamet_collection,
     }
 
     # Setup all the PATFinalState objects
