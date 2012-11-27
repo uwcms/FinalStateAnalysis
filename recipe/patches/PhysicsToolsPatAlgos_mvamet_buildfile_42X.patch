@@ -1,0 +1,7 @@
+Index: PhysicsTools/PatAlgos/plugins/BuildFile.xml
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/PhysicsTools/PatAlgos/plugins/BuildFile.xml,v
+retrieving revision 1.4.6.1
+diff -r1.4.6.1 BuildFile.xml
+13a14
+>   <use   name="DataFormats/METReco"/>
