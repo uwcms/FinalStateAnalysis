@@ -10,8 +10,12 @@
 #include <TString.h>
 #include <map>
 
+//#ifdef
+
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "FWCore/Utilities/interface/RandomNumberGenerator.h"
+
+//#endif
 
 #include <TSystem.h>
 #include <TROOT.h>
@@ -26,8 +30,8 @@ namespace rochcor {
     RochesterCorrections2011(bool central_value);    
     ~RochesterCorrections2011();
     
-    void momcor_mc(TLorentzVector&, float, float, int);
-    void momcor_data(TLorentzVector&, float, float, int);
+    void momcor_mc(TLorentzVector&, float, float, int, float&);
+    void momcor_data(TLorentzVector&, float, float, int, float&);
     
     void musclefit_data(TLorentzVector& , TLorentzVector&);
     
@@ -37,10 +41,16 @@ namespace rochcor {
     
   private:
     
+    // #ifdef
+
     edm::Service<edm::RandomNumberGenerator> rng;
+
+    // #else
 
     //TRandom3 eran;
     //TRandom3 sran;
+    
+    //#endif
     
     
     //  static float netabin[9] = {-2.4,-2.1,-1.4,-0.7,0.0,0.7,1.4,2.1,2.4};
@@ -134,7 +144,9 @@ namespace rochcor {
     float mptsys_mc_da[8][8];
     float mptsys_da_dm[8][8];
     float mptsys_da_da[8][8];
-    
+
+    float gscler_mc_dev;
+    float gscler_da_dev;    
   };
 
 }// namespace rochcor

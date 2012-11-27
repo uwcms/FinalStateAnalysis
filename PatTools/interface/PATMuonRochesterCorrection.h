@@ -43,10 +43,10 @@ namespace pattools {
       CorrectionBase() {}
       virtual ~CorrectionBase() {}
 
-      virtual math::XYZTLorentzVector correct( 
-				     const math::XYZTLorentzVector& pin,
-				     float charge,
-				     float sysdev ) = 0;
+      virtual std::pair<math::XYZTLorentzVector,float> 
+	correct(const math::XYZTLorentzVector& pin,
+		float charge,
+		float sysdev ) = 0;
     };
 
     // define a wrapper class to make the corrs not suck
@@ -60,23 +60,24 @@ namespace pattools {
       Correction(bool isMC): _corr(new T(doSyst)), _isMC(isMC) {}
       virtual ~Correction() { delete _corr;}
 
-      virtual math::XYZTLorentzVector correct( 
-				     const math::XYZTLorentzVector& pin,
-				     float charge,
-				     float sysdev ) {
+      virtual std::pair<math::XYZTLorentzVector,float> 
+	correct(const math::XYZTLorentzVector& pin,
+		float charge,
+		float sysdev ) {
 	math::XYZTLorentzVector result = pin;
+	float the_err = 0.0;
 	TLorentzVector input(pin.x(),pin.y(),pin.z(),pin.t());
 
 	if( doSyst ){
-	  if( _isMC ) _corr->momcor_mc(input,charge,sysdev,runopt);
-	  else        _corr->momcor_data(input,charge,sysdev,runopt);
+	  if( _isMC ) _corr->momcor_mc(input,charge,sysdev,runopt,the_err);
+	  else        _corr->momcor_data(input,charge,sysdev,runopt,the_err);
 	} else {
-	  if( _isMC ) _corr->momcor_mc(input,charge,0.0,runopt);
-	  else        _corr->momcor_data(input,charge,0.0,runopt);
+	  if( _isMC ) _corr->momcor_mc(input,charge,0.0,runopt,the_err);
+	  else        _corr->momcor_data(input,charge,0.0,runopt,the_err);
 	}
 	
 	result.SetXYZT(input.X(),input.Y(),input.Z(),input.T());
-	return result;
+	return std::make_pair(result,the_err);
       }
 	
     };
@@ -96,7 +97,7 @@ namespace pattools {
       CorrectionBase* syst_smear;
     };
 
-    const std::string _errupPostfix,_errdownPostfix;
+    const std::string _errupPostfix,_errdownPostfix, _tkFitErr;
     typedef std::map<std::string, calib_container> calib_map;
 
     std::string _userP4Prefix;
