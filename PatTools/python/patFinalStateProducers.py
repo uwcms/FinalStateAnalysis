@@ -170,6 +170,14 @@ def produce_final_states(process, collections, output_commands,
         if (triobject[0][0], triobject[1][0], triobject[2][0]) == \
            ('Tau', 'Tau', 'Tau'):
             continue
+        n_taus = [x[0] for x in triobject].count('Tau')
+        n_phos = [x[0] for x in triobject].count('Pho')
+        if n_taus > 2:
+            continue
+        if n_phos > 2:
+            continue
+        if n_taus and n_phos:
+            continue
 
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
@@ -206,8 +214,14 @@ def produce_final_states(process, collections, output_commands,
     # Build 4 lepton final states
     process.buildQuadObjects = cms.Sequence()
     for quadobject in _combinatorics(object_types, 4):
-        # Don't build states with more than 2 hadronic taus
-        if [x[0] for x in quadobject].count('Tau') > 2:
+        # Don't build states with more than 2 hadronic taus or phos
+        n_taus = [x[0] for x in triobject].count('Tau')
+        n_phos = [x[0] for x in triobject].count('Pho')
+        if n_taus > 2:
+            continue
+        if n_phos > 2:
+            continue
+        if n_taus and n_phos:
             continue
 
         # Define some basic selections for building combinations

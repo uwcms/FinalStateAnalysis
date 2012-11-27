@@ -32,6 +32,7 @@ else
   pushd $CMSSW_BASE/src/JetMETCorrections/METPUSubtraction/test/
   ./setup42.sh
   popd
+  cp JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_42X_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cff.py
   cvs up -r 1.6 PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
   # Get forgotton dependency
   cvs co -r CMSSW_4_4_2 JetMETCorrections/Objects
