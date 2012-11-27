@@ -375,7 +375,7 @@ namespace rochcor {
     e  *= cor;
     
     float recm = 0.0;
-    float drecm = 0.0; 
+    //float drecm = 0.0; 
     float delta = 0.0;
     float sf = 0.0;
     
@@ -385,7 +385,7 @@ namespace rochcor {
     
     if(runopt==0){
       recm = recmA;
-      drecm = drecmA;
+      //drecm = drecmA;
       
       delta = deltaA;
       sf = sfA;
@@ -395,7 +395,7 @@ namespace rochcor {
       sfer = TMath::Sqrt( TMath::Power(sfA_stat,2) + TMath::Power(sfA_syst,2) );
     }else if(runopt==1){
       recm = recmB;
-      drecm = drecmB;
+      //drecm = drecmB;
       
       delta = deltaB;
       sf = sfB;
