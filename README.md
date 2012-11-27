@@ -94,5 +94,3 @@ recipe
 
 The recipe section contains scripts which automate installation of related
 packages.  
-
-Testing Jenkins pull request.
