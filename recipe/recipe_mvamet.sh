@@ -22,6 +22,11 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
   cvs up -r 1.6 PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
   # This is a bug in setup.sh
   cvs up -r METPU_5_3_X_v3 RecoJets/JetProducers
+  if [ "$MINOR_VERSION" -eq "2" ]; then
+    # Workaround a header file location change
+    cvs up -r 1.1 DataFormats/JetReco/interface/PFClusterJet.h
+    cvs up -r 1.2 RecoMET/METAlgorithms/src/PFClusterSpecificAlgo.cc
+  fi
 else
   cvs co -r METPU_4_2_X JetMETCorrections/METPUSubtraction
   pushd $CMSSW_BASE/src/JetMETCorrections/METPUSubtraction/test/
