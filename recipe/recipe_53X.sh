@@ -34,6 +34,12 @@ then
   addpkg RecoBTag/SecondaryVertex        V01-08-00
   addpkg RecoVertex/AdaptiveVertexFinder V02-02-00  
 
+  # MVA MET + PU Jet ID
+  # This must go *before* the Tau POG checkout as it fucks with it.
+  pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
+  ./recipe_mvamet.sh
+  popd
+
   echo "Checking out Tau POG recipe"
   cvs co -r V01-04-17 RecoTauTag/RecoTau #equivalent to 04-14
   cvs co -r V01-04-03 RecoTauTag/Configuration

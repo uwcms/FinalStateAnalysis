@@ -7,11 +7,6 @@ pushd $CMSSW_BASE/src
 # Always need these
 addpkg DataFormats/PatCandidates  V06-04-19-05
 
-set +o errexit
-patch -N -p0 < FinalStateAnalysis/recipe/patches/ExpressionNtupleColumn_42X.patch
-patch -N -p0 < FinalStateAnalysis/recipe/patches/DataAlgos_helpers_cc_42X.patch
-set -o errexit
-
 if [ "$LIMITS" = "1" ]
 then
   # For limit tool
@@ -51,6 +46,12 @@ then
   cvs co -r HCP2012_V04-44X EgammaAnalysis/ElectronTools
   # apply patch so we can configure the passing mask for the PassWP function
   patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaAnalysisTools_configpatch.patch
+
+  # MVA MET + PU Jet ID
+  # This must go *before* the Tau POG checkout as it fucks with it.
+  pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
+  ./recipe_mvamet.sh
+  popd
   
   echo "Checking out Tau POG recipe"
   addpkg DataFormats/TauReco CMSSW_5_2_4 # yes, this is correct

@@ -33,6 +33,13 @@ else
   ./setup42.sh
   popd
   cvs up -r 1.6 PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
+  # Get forgotton dependency
+  cvs co -r CMSSW_4_4_2 JetMETCorrections/Objects
+  cvs co -r CMSSW_4_4_2 CondFormats/JetMETObjects
+  pushd $CMSSW_BASE/src
+  # Fix link error
+  patch -N -p0 < FinalStateAnalysis/recipe/patches/PhysicsToolsPatAlgos_mvamet_buildfile_42X.patch
+  popd
 fi
 
 popd
