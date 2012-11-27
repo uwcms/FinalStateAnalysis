@@ -17,6 +17,10 @@ Documentation: https://github.com/uwcms/FinalStateAnalysis/wiki
         <td>42X PAT + Ntuple</td> 
         <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-42X/'><img src='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-42X/badge/icon'></a></td>
     </tr>
+    <tr>
+        <td>53X Ntuple Only</td> 
+        <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-NoPAT/'><img src='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-NoPAT/badge/icon'></a></td>
+    </tr>
 </table>
 
 The Final State Analysis (FSA) package is a CMSSW analysis framework.  Common
