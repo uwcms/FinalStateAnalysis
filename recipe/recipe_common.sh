@@ -39,11 +39,6 @@ EOF
   cat download.url | xargs wget
   popd
 
-  # MVA MET + PU Jet ID
-  pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
-  ./recipe_mvamet.sh
-  popd
-
 else
   cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF 
 //#define ENABLE_PAT_PROD

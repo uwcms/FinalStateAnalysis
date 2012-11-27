@@ -33,6 +33,8 @@ else
   ./setup42.sh
   popd
   cvs up -r 1.6 PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
+  # Get forgotton dependency
+  cvs co -r CMSSW_4_4_2 JetMETCorrections/Objects
 fi
 
 popd
