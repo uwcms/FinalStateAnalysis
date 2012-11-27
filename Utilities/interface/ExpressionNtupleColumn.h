@@ -34,7 +34,7 @@ public:
   void compute(const ObjType& obj);
 protected:
   /// Abstract function which takes the result from the compute and fills the
-  /// branch  
+  /// branch
   virtual void setValue(double value) = 0;
   virtual void setValue(const std::vector<double>& value) = 0;
   ExpressionNtupleColumn(const std::string& name, const std::string& func);
@@ -46,7 +46,7 @@ private:
 template<typename T>
 ExpressionNtupleColumn<T>::ExpressionNtupleColumn(
     const std::string& name, const std::string& func):
-  name_(name), func_(func, true) {}  
+  name_(name), func_(func, true) {}
 
 template<typename T> void ExpressionNtupleColumn<T>::compute(const T& obj) {
   this->setValue(func_(obj));
@@ -57,10 +57,10 @@ template<typename T>
 class ExpressionNtupleColumn<std::vector<const T*> > {
 public:
   /// Compute the column function and store result in branch variable
-  void compute(const std::vector<const T*>& obj);  
+  void compute(const std::vector<const T*>& obj);
 protected:
   /// Abstract function which takes the result from the compute and fills the
-  /// branch  
+  /// branch
   virtual void setValue(double value) = 0;
   virtual void setValue(const std::vector<double>& value) = 0;
   ExpressionNtupleColumn(const std::string& name, const std::string& func);
@@ -72,7 +72,7 @@ private:
 template<class T>
 ExpressionNtupleColumn<std::vector<const T*> >::ExpressionNtupleColumn(
     const std::string& name, const std::string& func):
-  name_(name), func_(func, true) {}  
+  name_(name), func_(func, true) {}
 
 template<class T>
 void ExpressionNtupleColumn<std::vector<const T*> >::compute(
@@ -80,9 +80,9 @@ void ExpressionNtupleColumn<std::vector<const T*> >::compute(
   std::vector<double> result;
   typename std::vector<const T*>::const_iterator i = obj.begin();
   typename std::vector<const T*>::const_iterator e = obj.end();
-  for( ; i != e; ++i ) {     
+  for( ; i != e; ++i ) {
     result.push_back(func_(*(*i)));
-    
+
   }
   this->setValue(result);
 }
@@ -99,30 +99,30 @@ namespace {
   template<typename T> T convertVal(double x);
   template<> Double_t convertVal<Double_t>(double x) { return x; }
   template<> Float_t convertVal<Float_t>(double x) { return x; }
-  template<> Int_t convertVal<Int_t>(double x) { return TMath::Nint(x); } 
+  template<> Int_t convertVal<Int_t>(double x) { return TMath::Nint(x); }
   //vector spec
   template<typename T> std::vector<T> convertVal(const vdouble& x);
-  template<> std::vector<Double_t> convertVal<Double_t>(const vdouble& x) { 
+  template<> std::vector<Double_t> convertVal<Double_t>(const vdouble& x) {
     std::vector<Double_t> result;
     vdouble::const_iterator i = x.begin();
     vdouble::const_iterator e = x.end();
-    for( ; i != e; ++i) result.push_back(*i);    
-    return result; 
+    for( ; i != e; ++i) result.push_back(*i);
+    return result;
   }
-  template<> std::vector<Float_t> convertVal<Float_t>(const vdouble& x) { 
+  template<> std::vector<Float_t> convertVal<Float_t>(const vdouble& x) {
     std::vector<Float_t> result;
     vdouble::const_iterator i = x.begin();
     vdouble::const_iterator e = x.end();
-    for( ; i != e; ++i) result.push_back(*i);    
-    return result; 
+    for( ; i != e; ++i) result.push_back(*i);
+    return result;
   }
-  template<> std::vector<Int_t> convertVal<Int_t>(const vdouble& x) { 
+  template<> std::vector<Int_t> convertVal<Int_t>(const vdouble& x) {
     std::vector<Int_t> result;
     vdouble::const_iterator i = x.begin();
     vdouble::const_iterator e = x.end();
-    for( ; i != e; ++i) result.push_back(TMath::Nint(*i));   
+    for( ; i != e; ++i) result.push_back(TMath::Nint(*i));
     return result;
-  } 
+  }
 }
 
 // Explicit typed (float, double, etc) ntuple column
@@ -130,14 +130,14 @@ template<typename ObjType, typename ColType>
 class ExpressionNtupleColumnT : public ExpressionNtupleColumn<ObjType> {
   public:
 
-  static ExpressionNtupleColumnT* makeExpression(const std::string& name, 
-						 const std::string& func, 
+  static ExpressionNtupleColumnT* makeExpression(const std::string& name,
+						 const std::string& func,
 						 TTree* tree) {
-    try{      
+    try{
       return new ExpressionNtupleColumnT(name, func, tree);
     } catch(cms::Exception& iException) {
-      iException.addContext("Caught exception in building branch: " + 
-			    name + " with formula: " + func);
+      iException << "Caught exception in building branch: "
+        << name << " with formula: " << func;
       throw;
     }
   }
@@ -146,7 +146,7 @@ class ExpressionNtupleColumnT : public ExpressionNtupleColumn<ObjType> {
     /// Abstract function
     ExpressionNtupleColumnT(const std::string& name, const std::string& func,
 			    TTree* tree);
- 
+
     void setValue(double value);
     void setValue(const std::vector<double>&) {}
   private:
@@ -216,30 +216,30 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
 
 // template specialization for vectors
 template<typename T, typename ColType>
-class ExpressionNtupleColumnT<std::vector<const T*>, ColType> : 
+class ExpressionNtupleColumnT<std::vector<const T*>, ColType> :
      public ExpressionNtupleColumn<std::vector<const T*> > {
   public:
 
-  static ExpressionNtupleColumnT* 
-    makeExpression(const std::string& name, 
-		   const std::string& func, 
+  static ExpressionNtupleColumnT*
+    makeExpression(const std::string& name,
+		   const std::string& func,
 		   TTree* tree)
     {
       try{
 	return new ExpressionNtupleColumnT(name, func, tree);
       }
       catch(cms::Exception& iException){
-	iException.addContext("Caught exception in building branch: " + 
-			      name + " with formula: " + func);
+        iException << "Caught exception in building branch: "
+          << name << " with formula: " << func;
 	throw;
       }
     }
-  
+
  protected:
   /// Abstract function
-  ExpressionNtupleColumnT(const std::string& name, 
+  ExpressionNtupleColumnT(const std::string& name,
 				 const std::string& func,
-				 TTree* tree);    
+				 TTree* tree);
   // template specialization for vector inputs
   void setValue(double) {}
   void setValue(const std::vector<double>& value);
@@ -259,7 +259,7 @@ ExpressionNtupleColumnT(const std::string& name,
   myparent_(tree),
   branchname_(name) {
   branch_.reset(new ColType[1]);
-  
+
   std::stringstream idxwrap;
   Reflex::Type theType = Reflex::Type::ByTypeInfo(typeid(T));
   idxwrap << "[N_" << theType.Name() << "]";
@@ -284,11 +284,11 @@ setValue(const std::vector<double>& value) {
   std::vector<ColType> thevals = convertVal<ColType>(value);
   const unsigned arrSize = thevals.size();
   ColType * newValues = new ColType[arrSize];
-  // read in the new values   
+  // read in the new values
   for( unsigned i = 0; i < arrSize; ++i ) {
     newValues[i] = thevals[i];
   }
-  // replace old values        
+  // replace old values
   branch_.reset(newValues,array_deleter<ColType>());
   myparent_->GetBranch(branchname_.c_str())->SetAddress(branch_.get());
 }
