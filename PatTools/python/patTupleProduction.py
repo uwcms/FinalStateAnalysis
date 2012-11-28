@@ -90,8 +90,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*_ak5GenJets_*_*')
     # Select vertices
     process.load("FinalStateAnalysis.RecoTools.vertexSelection_cff")
-    output_commands.append('*_selectedPrimaryVertex_*_*')
-    output_commands.append('*_selectPrimaryVerticesQuality_*_*')
+    output_commands.append('*_selectedPrimaryVertex*_*_*')
+    output_commands.append('*_selectPrimaryVerticesQuality*_*_*')
     process.tuplize += process.selectPrimaryVertices
 
     # Run the ZZ recipe for rho
