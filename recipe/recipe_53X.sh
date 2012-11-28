@@ -50,7 +50,7 @@ then
 
   echo "Checking out EGamma POG recipe for electron corrections"
   addpkg RecoEgamma/EgammaTools V08-11-10-02
-  cvs co -r V00-00-30 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
+  cvs co -r V00-00-31 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
   cvs co -r HCP2012_V03-02 EgammaAnalysis/ElectronTools
   
 # apply patch so we can configure the passing mask for the PassWP function
