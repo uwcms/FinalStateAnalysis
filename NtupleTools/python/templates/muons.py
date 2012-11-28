@@ -45,19 +45,19 @@ energyCorrections = PSet(
     objectPxRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").x',
     objectPyRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").y',
     objectPzRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").z',
-    objectEErrRochCor2011A = '{object}.getUserFloat("p4_RochCor2011A_tkFitErr")',
+    objectEErrRochCor2011A = '{object}.userFloat("p4_RochCor2011A_tkFitErr")',
     
     objectERochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").t',
     objectPxRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").x',
     objectPyRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").y',
     objectPzRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").z',
-    objectEErrRochCor2011B = '{object}.getUserFloat("p4_RochCor2011B_tkFitErr")',
+    objectEErrRochCor2011B = '{object}.userFloat("p4_RochCor2011B_tkFitErr")',
         
     objectERochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").t',
     objectPxRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").x',
     objectPyRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").y',
     objectPzRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").z',
-    objectEErrRochCor2012 = '{object}.getUserFloat("p4_RochCor2012_tkFitErr")'
+    objectEErrRochCor2012 = '{object}.userFloat("p4_RochCor2012_tkFitErr")'
 )
 
 # Information about the associated track

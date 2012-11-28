@@ -22,6 +22,8 @@ _common_template = PSet(
     templates.event.num,
     # templates.Rho, ntvtx, nTruePU
     templates.event.pileup,
+    # information about the selected primary vertex
+    templates.event.pv_info,
     # templates.Info about the MET
     templates.event.met,
     # templates.Info about the generator
