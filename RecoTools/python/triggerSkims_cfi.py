@@ -98,4 +98,29 @@ isoTaus18 = cms.EDFilter(
 
 eTauSkimSeq = cms.Sequence(electrons18 * isoElectrons18 * isoTaus18)
 
+###############################################################################
+# Ele + Jets skim
+# ==========
+# Require an isolated, identified electron with pt > 30, plus 1 Jet
+###############################################################################
+
+# Higher Pt Electron
+
+isoElectrons30 = cms.EDFilter(
+    "GsfElectronSelector",
+    src = cms.InputTag("isoelectrons18"),
+    cut = cms.string('pt>30'),
+    filter = cms.bool(True)
+)
+
+jetsNotOverlappingElectrons = cms.EDFilter(
+    "CandViewOverlapSubtraction",
+    src = cms.InputTag("ak5PFJetsPt15"),
+    subtractSrc = cms.InputTag("isoElectrons18"),
+    minDeltaR = cms.double(0.5),
+    filter = cms.bool(True),
+)
+
+elePlusJetSeq = cms.Sequence(electrons18 * isoElectrons18 *isoElectrons30 * ak5PFJetsPt15 * jetsNotOverlappingElectrons)
+
 
