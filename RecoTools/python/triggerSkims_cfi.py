@@ -48,7 +48,20 @@ jetsNotOverlappingMuons = cms.EDFilter(
     filter = cms.bool(True),
 )
 
-muPlusJetSeq = cms.Sequence(tightMuons * ak5PFJetsPt15 * jetsNotOverlappingMuons)
+muMetAboveMt40 = cms.EDProducer(
+    "CandViewShallowCloneCombiner",
+    checkCharge = cms.bool(False),
+    cut = cms.string('sqrt((daughter(0).pt+daughter(1).pt)*(daughter(0).pt+daughter(1).pt)-pt*pt)>40'),
+    decay = cms.string("tightMuons pfMet")
+)
+
+wToMuNuFilter = cms.EDFilter(
+    "CandViewCountFilter",
+    src = cms.InputTag("muMetAboveMt40"),
+    minNumber = cms.uint32(1)
+)
+
+muPlusJetSeq = cms.Sequence(tightMuons * ak5PFJetsPt15 * jetsNotOverlappingMuons * muMetAboveMt40 * wToMuNuFilter)
 
 ###############################################################################
 # E-Tau skim
@@ -121,6 +134,17 @@ jetsNotOverlappingElectrons = cms.EDFilter(
     filter = cms.bool(True),
 )
 
-elePlusJetSeq = cms.Sequence(electrons18 * isoElectrons18 *isoElectrons30 * ak5PFJetsPt15 * jetsNotOverlappingElectrons)
+eleMetAboveMt40 = cms.EDProducer(
+    "CandViewShallowCloneCombiner",
+    checkCharge = cms.bool(False),
+    cut = cms.string('sqrt((daughter(0).pt+daughter(1).pt)*(daughter(0).pt+daughter(1).pt)-pt*pt)>40'),
+    decay = cms.string("isoElectrons30 pfMet")
+)
 
+wToENuFilter = cms.EDFilter(
+    "CandViewCountFilter",
+    src = cms.InputTag("eleMetAboveMt40"),
+    minNumber = cms.uint32(1)
+)
 
+elePlusJetSeq = cms.Sequence(electrons18 * isoElectrons18 *isoElectrons30 * ak5PFJetsPt15 * jetsNotOverlappingElectrons * eleMetAboveMt40 * wToENuFilter)
