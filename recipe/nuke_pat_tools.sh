@@ -26,10 +26,19 @@ if [ -z "$FORCENUKE" ]; then
    done
 fi
 
-echo "Deleting all files in PatTools..."
-rm -rf $fsa/PatTools 
+pushd $fsa/PatTools
+echo "Deleting all bogus files in PatTools..."
+# We keep the ones needed for producing PATFinalStateObjects
+# The pfCandAuxFunctions is just to ensure that libFinalStateAnalysisPatTools
+# is built, since the plugins Buildfile expects it to be there.
+find .  -type f | grep -i -v finalstate | grep -v BuildFile | grep -v pfCandAuxFunctions | xargs rm  
 
 echo "Telling git to ignore changes in them..."
 git ls-files $fsa/PatTools | xargs -n 1 git update-index --assume-unchanged 
 
+# The remaining files are good (used for making FSAs)
+# Let's track them.
+find .  -type f | grep -i -v finalstate | xargs -n 1 git update-index --no-assume-unchanged 
+
+popd
 echo "done."
