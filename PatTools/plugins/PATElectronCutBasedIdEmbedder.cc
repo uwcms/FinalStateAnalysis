@@ -9,9 +9,7 @@
 //
 //
 
-// Check if we want to run PAT Production - if not 
-#include "FinalStateAnalysis/PatTools/interface/PATProductionFlag.h"
-#ifdef ENABLE_PAT_PROD
+
 // system include files
 #include <memory>
 
@@ -39,10 +37,12 @@
 
 namespace eid = EgammaCutBasedEleId;
 
+
+
 class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
   typedef std::vector<std::string> vstring;
-  typedef std::map<std::string,eid::WorkingPoint> wp_map;
-
+  typedef std::map<std::string,eid::WorkingPoint> wp_map;  
+  
   public:
     explicit PATElectronCutBasedIdEmbedder(const edm::ParameterSet& iConfig):
       _src(iConfig.getParameter<edm::InputTag>("src")),
@@ -50,8 +50,8 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
       _vtxsrc(iConfig.getParameter<edm::InputTag>("vtxSrc")),
       _convsrc(iConfig.getParameter<edm::InputTag>("conversionsSrc")),
       _wps_applied(iConfig.getParameter<vstring>("wps_to_apply")) {
-
-      edm::VParameterSet wps =
+      
+      edm::VParameterSet wps = 
 	iConfig.getParameterSetVector("available_working_points");
 
       edm::VParameterSet::const_iterator i = wps.begin();
@@ -60,12 +60,12 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
       for( ; i != e; ++i)
 	_wps[i->getParameter<std::string>("name")] =
 	  (eid::WorkingPoint)i->getParameter<int>("index");
-
+      
 
       // do not apply isolation criteria to the selection
-      eid::PassAll =
-	( eid::DETAIN | eid::DPHIIN  | eid::SIGMAIETAIETA |
-	  eid::HOE    | eid::OOEMOOP | eid::D0VTX  |
+      eid::PassAll = 
+	( eid::DETAIN | eid::DPHIIN  | eid::SIGMAIETAIETA | 
+	  eid::HOE    | eid::OOEMOOP | eid::D0VTX  | 
 	  eid::DZVTX  | eid::VTXFIT  | eid::MHITS );
 
       produces<pat::ElectronCollection>();
@@ -92,17 +92,17 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
       Handle<pat::ElectronCollection > cands;
       if(iEvent.getByLabel(_src,cands))
         for(unsigned int  i=0;i!=cands->size();++i) {
-
+          
 	  pat::Electron* electron = const_cast<pat::Electron*>(&cands->at(i));
-
+	  
 	  ii = _wps_applied.begin();
 	  for( ; ii != ee; ++ii ) {
 	    // iso applied later/differently
 	    int pass = (int)eid::PassWP(_wps[*ii],*electron,
 					the_convs,*the_bs.product(),
 					the_vtxs,
-					0.0,0.0,0.0,0.0);
-	    electron->addUserInt(*ii,pass);
+					0.0,0.0,0.0,0.0); 
+	    electron->addUserInt(*ii,pass);	    
 	  }
 
 	  out->push_back(*electron);
@@ -119,5 +119,3 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 DEFINE_FWK_MODULE(PATElectronCutBasedIdEmbedder);
-
-#endif // PAT Production enabler
