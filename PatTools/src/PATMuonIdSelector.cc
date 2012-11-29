@@ -40,6 +40,7 @@ double   defaultMaxChi2red_                 = 10.;   // chi^2/nDoF
 double   defaultMaxDptOverPt_               =  0.10;
 unsigned defaultMinTrackerHits_             = 10;
 unsigned defaultMinPixelHits_               =  1;
+unsigned defaultMinMuonHits_                =  1;
 unsigned defaultMinMuonStations_            =  2;
 unsigned defaultMinMatchedSegments_         =  1;
 unsigned defaultMinTkLayersWithMeasurement_ =  6; // 2012 recommendation
@@ -67,6 +68,7 @@ PATMuonIdSelectorImp::PATMuonIdSelectorImp(const edm::ParameterSet& cfg)
   maxDptOverPt_               = getConfigurationParameter<double>  (cfg, "maxDptOverPt",               &defaultMaxDptOverPt_);
   minTrackerHits_             = getConfigurationParameter<unsigned>(cfg, "minTrackerHits",             &defaultMinTrackerHits_);
   minPixelHits_               = getConfigurationParameter<unsigned>(cfg, "minPixelHits",               &defaultMinPixelHits_);
+  minMuonHits_                = getConfigurationParameter<unsigned>(cfg, "minMuonHits",                &defaultMinMuonHits_);
   minMuonStations_            = getConfigurationParameter<unsigned>(cfg, "minMuonStations",            &defaultMinMuonStations_);
   minMatchedSegments_         = getConfigurationParameter<unsigned>(cfg, "minMatchedSegments",         &defaultMinMatchedSegments_);
   minTkLayersWithMeasurement_ = getConfigurationParameter<unsigned>(cfg, "minTkLayersWithMeasurement", &defaultMinTkLayersWithMeasurement_);  
@@ -155,9 +157,9 @@ void PATMuonIdSelectorImp::select(const edm::Handle<collection>& patMuonCollecti
   for ( collection::const_iterator patMuon = patMuonCollection->begin();
 	patMuon != patMuonCollection->end(); ++patMuon ) {
 
-    if ( !patMuon->isGlobalMuon()                                                                ) continue;
+    if ( !patMuon->isGlobalMuon()                                                                ) continue;   
     if ( !use2012IDVariables_ && !patMuon->isTrackerMuon()                                       ) continue;
-    if ( use2012IDVariables_  && usePFMuonReq_ && !(patMuon->type() & kPFMuonType)               ) continue;
+    if ( use2012IDVariables_  && usePFMuonReq_ && !(patMuon->type() & kPFMuonType )              ) continue;
     if ( !isValidRef(patMuon->globalTrack())                                                     ) continue;
     if ( !isValidRef(patMuon->innerTrack())                                                      ) continue;
 
@@ -175,12 +177,12 @@ void PATMuonIdSelectorImp::select(const edm::Handle<collection>& patMuonCollecti
     if ( !use2012IDVariables_ && 
 	 !(patMuon->innerTrack()->ptError() < (maxDptOverPt_*patMuon->innerTrack()->pt()))       ) continue;
 
-    const reco::HitPattern& innerTrackHitPattern = patMuon->innerTrack()->hitPattern();
+    const reco::HitPattern& innerHitPattern = patMuon->innerTrack()->hitPattern();
     if ( !use2012IDVariables_ && 
-	 !(innerTrackHitPattern.numberOfValidTrackerHits() >= (int)minTrackerHits_) )   continue; 
+	 !(innerHitPattern.numberOfValidTrackerHits() >= (int)minTrackerHits_)                   ) continue; 
     if (  use2012IDVariables_ && 
-	 !(innerTrackHitPattern.trackerLayersWithMeasurement() >= (int)minTkLayersWithMeasurement_) ) continue;
-    if ( !(innerTrackHitPattern.numberOfValidPixelHits() >= (int)minPixelHits_)                  ) continue;
+	 !(innerHitPattern.trackerLayersWithMeasurement() >= (int)minTkLayersWithMeasurement_)   ) continue;
+    if ( !(innerHitPattern.numberOfValidPixelHits() >= (int)minPixelHits_)                       ) continue;
 
     //---------------------------------------------------------------------------
     // compute numbers of muon stations with matched segments
@@ -194,10 +196,14 @@ void PATMuonIdSelectorImp::select(const edm::Handle<collection>& patMuonCollecti
     for ( int i = 0; i < 8; ++i ) { // eight stations, eight bits
       if ( theStationMask & (1<<i) ) ++numMuonStations;
     }
-    //---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------    
+    
+    if ( !(patMuon->numberOfMatchedStations() >= (int)minMuonStations_)                           ) continue;
 
-    if ( !(numMuonStations >= (int)minMuonStations_)                                             ) continue;
-    if ( !(patMuon->numberOfMatches() >= (int)minMatchedSegments_)                               ) continue;
+    const reco::HitPattern& globalHitPattern = patMuon->globalTrack()->hitPattern();    
+    if ( use2012IDVariables_ && 
+	 !(globalHitPattern.numberOfValidMuonHits() >= (int)minMuonHits_)                         ) continue;
+    if ( !use2012IDVariables_ && !(patMuon->numberOfMatches() >= (int)minMatchedSegments_)        ) continue;
 
     selected_.push_back(&(*patMuon));
   }

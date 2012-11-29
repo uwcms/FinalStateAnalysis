@@ -42,7 +42,7 @@ patMuonsEmbedHZG2012 = cms.EDProducer(
     IPrefType = cms.string("vertex"),
     maxIPxy = cms.double(0.2),
     maxIPz  = cms.double(0.5),
-    minTkLayersWithMeasurement = cms.uint32(9)
+    minTkLayersWithMeasurement = cms.uint32(9)   
 )
 
 # Embed Mike's version of the WWID cuts

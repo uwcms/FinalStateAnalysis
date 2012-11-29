@@ -24,6 +24,8 @@ id = PSet(
     # For charged, we use ALL charged particles
     objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
     objectEffectiveArea2011 = '{object}.userFloat("ea_comb_iso04_kt6PFJCth05")',
+    objectRhoHZG2012 = '{object}.userFloat("hzgRho2012")',
+    objectRhoHZG2011 = '{object}.userFloat("hzgRho2011")',
     objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
@@ -35,7 +37,8 @@ id = PSet(
         "/{object}.pt()"
     ),
     objectIsGlobal = '{object}.isGlobalMuon',
-    objectIsTracker = '{object}.isTrackerMuon',    
+    objectIsTracker = '{object}.isTrackerMuon',
+    objectTypeCode = cms.vstring('{object}.type','I'),
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
     objectComesFromHiggs = 'comesFromHiggs({object_idx})',        
 )
@@ -69,7 +72,15 @@ tracking = PSet(
         '{object}.globalTrack.hitPattern.numberOfHits :-1',
     objectNormTrkChi2 = "? {object}.combinedMuon.isNonnull ? "
         "{object}.combinedMuon.chi2/{object}.combinedMuon.ndof : 1e99",
+    objectTkLayersWithMeasurement = '? {object}.innerTrack.isNonnull ? '
+        '{object}.innerTrack().hitPattern().trackerLayersWithMeasurement : -1',  
+    objectMuonHits = '? {object}.globalTrack.isNonnull ? '
+        '{object}.globalTrack().hitPattern().numberOfValidMuonHits() : -1',
+    objectMatchedStations = '{object}.numberOfMatchedStations',
     objectD0 = '{object}.dB("PV3D")',
+    objectPVDXY = '{object}.userFloat("ipDXY")',
+    objectPVDZ = '{object}.userFloat("dz")'
+    
 )
 
 # Trigger matching
