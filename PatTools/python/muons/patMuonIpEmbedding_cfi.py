@@ -2,6 +2,6 @@ import FWCore.ParameterSet.Config as cms
 
 patMuonsEmbedIp = cms.EDProducer(
     "PATMuonIpEmbedder",
-    src = cms.InputTag("patMuonsEmbedWWId"),
+    src = cms.InputTag("fixme"),
     vtxSrc = cms.InputTag("selectedPrimaryVertex"),
 )

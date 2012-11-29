@@ -183,20 +183,6 @@ void PATMuonIdSelectorImp::select(const edm::Handle<collection>& patMuonCollecti
     if (  use2012IDVariables_ && 
 	 !(innerHitPattern.trackerLayersWithMeasurement() >= (int)minTkLayersWithMeasurement_)   ) continue;
     if ( !(innerHitPattern.numberOfValidPixelHits() >= (int)minPixelHits_)                       ) continue;
-
-    //---------------------------------------------------------------------------
-    // compute numbers of muon stations with matched segments
-    //
-    // CV: code copied from version 1.41 of DataFormats/MuonReco/src/Muon.cc
-    //    (not included in CMSSW_3_8_x yet)
-    //
-    int numMuonStations = 0;
-
-    unsigned int theStationMask = (unsigned int)patMuon->stationMask(reco::Muon::SegmentAndTrackArbitration);
-    for ( int i = 0; i < 8; ++i ) { // eight stations, eight bits
-      if ( theStationMask & (1<<i) ) ++numMuonStations;
-    }
-    //---------------------------------------------------------------------------    
     
     if ( !(patMuon->numberOfMatchedStations() >= (int)minMuonStations_)                           ) continue;
 
