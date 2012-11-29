@@ -1,8 +1,8 @@
 /** \class PATPhotonPFIsolation
  *
- * Auxiliary class to encapsulate the prescription
+ * Auxiliary class to encapsulate the prescription 
  * for PF isolation for photons in 42X and 5YX.
- * Provides a clean interface to the PFIsolationEstimator.
+ * Provides a clean interface to the PFIsolationEstimator. 
  *
  * \author Lindsey Gray, UW Madison
  *
@@ -17,8 +17,6 @@
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 #include "DataFormats/Common/interface/Handle.h"
-
-#include <memory>
 
 
 // forward decls
@@ -39,7 +37,7 @@ namespace pattools {
   // PFIsolationEstimator callable class wrapper
   class PATPhotonPFIsolation {
   private:
-    std::auto_ptr<PFIsolationEstimator * const> _iso;
+    PFIsolationEstimator * const _iso;
     const float _cone_size;
   public:
     PATPhotonPFIsolation(const float cone_size);
@@ -49,7 +47,7 @@ namespace pattools {
 			    const reco::PFCandidateCollection*,
 			    reco::VertexRef,
 			    edm::Handle< reco::VertexCollection >);
-
+    
   };
 
 }
