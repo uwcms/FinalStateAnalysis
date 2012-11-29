@@ -156,11 +156,11 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     pvPtr = pv->ptrAt(0);
   else if( pv_back->size() ) {
     std::cout << "!!!!! There are no selected primary vertices,"
-	      << " pvPtr is set to unclean vertex!!!!!";
+	      << " pvPtr is set to unclean vertex !!!!!" << std::endl;
     pvPtr = pv_back->ptrAt(0);
   } else 
     std::cout << "!!!!! There are no primary vertices,"
-	      << " pvPtr is not set !!!!!";
+	      << " pvPtr is not set !!!!!" << std::endl;
  
   edm::Handle<edm::View<reco::Vertex> > vertices;
   evt.getByLabel(verticesSrc_, vertices);
