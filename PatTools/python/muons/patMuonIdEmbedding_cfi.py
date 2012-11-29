@@ -24,7 +24,7 @@ patMuonsEmbedHZG2011 = cms.EDProducer(
     IPrefType = cms.string("vertex"),
     maxIPxy = cms.double(0.2),
     maxIPz  = cms.double(1e3),
-    minTkLayersWithMeasurement = cms.uint32(6)
+    minTkLayersWithMeasurement = cms.uint32(9)
 )
 
 ## HZG Muon Id Variant for 2012 Data
@@ -42,7 +42,7 @@ patMuonsEmbedHZG2012 = cms.EDProducer(
     IPrefType = cms.string("vertex"),
     maxIPxy = cms.double(0.2),
     maxIPz  = cms.double(0.5),
-    minTkLayersWithMeasurement = cms.uint32(9)   
+    minTkLayersWithMeasurement = cms.uint32(6)   
 )
 
 # Embed Mike's version of the WWID cuts
