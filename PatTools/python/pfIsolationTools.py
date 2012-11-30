@@ -30,6 +30,7 @@ DeltaBeta	 pfPileUpAllChargedParticles	 0.01	 0.5
 import FWCore.ParameterSet.Config as cms
 
 from CommonTools.ParticleFlow.Tools.pfIsolation import setupPFElectronIso
+from FinalStateAnalysis.Utilities.version import cmssw_major_version
 
 def setup_h2tau_iso(process):
     print "Building H2Tau custom lepton isolations"
@@ -137,12 +138,17 @@ def add_hZg_iso_needs(process):
 
     process.load("RecoJets.JetProducers.kt4PFJets_cfi")
 
-    # for photon H/E
-    process.CaloTowerConstituentsMapBuilder = cms.ESProducer(
-        "CaloTowerConstituentsMapBuilder",
-        MapFile =
- cms.untracked.string('Geometry/CaloTopology/data/CaloTowerEEGeometric.map.gz')
-        )
+    # for photon H/E, point it at ideal map in 42X???
+    if cmssw_major_version < 5:
+        process.CaloTowerConstituentsMapBuilder = cms.ESProducer(
+            "CaloTowerConstituentsMapBuilder",
+            MapFile =
+            cms.untracked.string('Geometry/CaloTopology/data/CaloTowerEEGeometric.map.gz')
+            )
+    else:
+        process.CaloTowerConstituentsMapBuilder = \
+        cms.ESProducer("CaloTowerConstituentsMapBuilder")
+            
 
     process.pfAllNeutralHadronsAndPhotons = cms.EDProducer(
         "CandViewMerger",
