@@ -134,6 +134,8 @@ def produce_final_states(process, collections, output_commands,
         # Don't build two jet states
         if (diobject[0][0], diobject[1][0]) == ('Tau', 'Tau'):
             continue
+        if (diobject[0][0], diobject[1][0]) == ('Tau', 'Pho'):
+            continue
 
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
