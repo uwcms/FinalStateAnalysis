@@ -151,6 +151,10 @@
   <class name="PATMuMuTauFinalStateCollection"/>
   <class name="edm::Wrapper<PATMuMuTauFinalStateCollection>"/>
 
+  <class name="PATElecTauTauFinalState"/>
+  <class name="edm::Wrapper<PATElecTauTauFinalState>"/>
+  <class name="PATElecTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecTauTauFinalStateCollection>"/>
 
   <class name="PATMuTauTauFinalState"/>
   <class name="edm::Wrapper<PATMuTauTauFinalState>"/>
@@ -328,4 +332,3 @@
     </class>
 </exclusion>
 </lcgdict>
-
