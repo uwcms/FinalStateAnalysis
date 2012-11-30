@@ -8,37 +8,37 @@ final_states = [
     #"PATFinalState", # special case
 
     # Already generated
-    #"PATElecElecFinalState",
-    #"PATElecMuFinalState",
-    #"PATElecTauFinalState",
-    #"PATMuTauFinalState",
-    #"PATMuMuFinalState",
-    #"PATTauTauFinalState",
-    #"PATElecElecElecFinalState",
-    #"PATElecElecMuFinalState",
-    #"PATElecElecTauFinalState",
-    #"PATElecMuMuFinalState",
-    #"PATElecMuTauFinalState",
-    #"PATMuMuMuFinalState",
-    #"PATMuMuTauFinalState",
-    #"PATMuTauTauFinalState",
-    #"PATTauTauTauFinalState",
+    "PATElecElecFinalState",
+    "PATElecMuFinalState",
+    "PATElecTauFinalState",
+    "PATMuTauFinalState",
+    "PATMuMuFinalState",
+    "PATTauTauFinalState",
+    "PATElecElecElecFinalState",
+    "PATElecElecMuFinalState",
+    "PATElecElecTauFinalState",
+    "PATElecMuMuFinalState",
+    "PATElecMuTauFinalState",
+    "PATMuMuMuFinalState",
+    "PATMuMuTauFinalState",
+    "PATMuTauTauFinalState",
+    "PATTauTauTauFinalState",
 
-    #"PATElecElecElecElecFinalState",
-    #"PATElecElecElecMuFinalState",
-    #"PATElecElecElecTauFinalState",
-    #"PATElecElecMuMuFinalState",
-    #"PATElecElecMuTauFinalState",
-    #"PATElecElecTauTauFinalState",
-    #"PATElecMuMuMuFinalState",
-    #"PATElecMuMuTauFinalState",
-    #"PATElecMuTauTauFinalState",
-    #"PATElecTauTauTauFinalState",
-    #"PATMuMuMuMuFinalState",
-    #"PATMuMuMuTauFinalState",
-    #"PATMuMuTauTauFinalState",
-    #"PATMuTauTauTauFinalState",
-    #"PATTauTauTauTauFinalState",
+    "PATElecElecElecElecFinalState",
+    "PATElecElecElecMuFinalState",
+    "PATElecElecElecTauFinalState",
+    "PATElecElecMuMuFinalState",
+    "PATElecElecMuTauFinalState",
+    "PATElecElecTauTauFinalState",
+    "PATElecMuMuMuFinalState",
+    "PATElecMuMuTauFinalState",
+    "PATElecMuTauTauFinalState",
+    "PATElecTauTauTauFinalState",
+    "PATMuMuMuMuFinalState",
+    "PATMuMuMuTauFinalState",
+    "PATMuMuTauTauFinalState",
+    "PATMuTauTauTauFinalState",
+    "PATTauTauTauTauFinalState",
 
     "PATElecPhoFinalState",
     "PATMuPhoFinalState",
@@ -74,7 +74,7 @@ final_states = [
     "PATTauTauPhoPhoFinalState",
     "PATTauPhoPhoPhoFinalState",
     "PATPhoPhoPhoPhoFinalState"
-    
+
 ]
 
 template = string.Template('''
@@ -88,5 +88,17 @@ template = string.Template('''
   <class name="edm::Ptr<${TheClass}>"/>
 ''')
 
+minimal_template = string.Template('''
+  <class name="${TheClass}"/>
+  <class name="edm::Wrapper<${TheClass}>"/>
+''')
+
+
 for final_state in final_states:
-    print template.substitute(TheClass=final_state)
+    if final_state.count('Tau') > 2:
+        continue
+    if final_state.count('Pho') > 2:
+        continue
+    if final_state.count('Tau') and final_state.count('Pho'):
+        continue
+    print minimal_template.substitute(TheClass=final_state)
