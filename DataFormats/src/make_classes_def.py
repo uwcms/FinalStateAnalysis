@@ -91,6 +91,8 @@ template = string.Template('''
 minimal_template = string.Template('''
   <class name="${TheClass}"/>
   <class name="edm::Wrapper<${TheClass}>"/>
+  <class name="${TheClass}Collection"/>
+  <class name="edm::Wrapper<${TheClass}Collection>"/>
 ''')
 
 

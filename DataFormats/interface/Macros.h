@@ -90,6 +90,8 @@
 // in an OwnVector, and never in a vector<Derived>
 #define FWD_MIN_CLASSDECL(type) \
   type dummy ## type; \
-  edm::Wrapper<type> dummyW ## type;
+  edm::Wrapper<type> dummyW ## type; \
+  type ## Collection dummyColl ## type; \
+  edm::Wrapper<type ## Collection> dummyCollW ## type;
 
 #endif /* end of include guard: MACROS_ZCP45DIB */
