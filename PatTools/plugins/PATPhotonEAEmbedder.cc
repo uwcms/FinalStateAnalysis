@@ -76,8 +76,6 @@ void PATPhotonEAEmbedder::produce(Event& evt,
 
       double the_ea = _eacalc(*currentPhoton);
       
-      std::cout << *i << ' ' <<  the_ea <<std::endl;
-
       newPhoton.addUserFloat(*i,the_ea);    
     }
     output->push_back(newPhoton);
