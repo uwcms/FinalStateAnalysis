@@ -191,10 +191,11 @@ def add_hZg_iso_needs(process):
         )
 
     process.hzg_isolations = cms.Sequence(
-        process.pfAllNeutralHadronsAndPhotons+
-        process.kt6PFJetsCentralHZGEle+
-        process.kt6PFJetsCentralNeutralHZGMu+
-        process.kt6PFJetsCentralHZGMu)
+        process.kt6PFJetsHZGPho + 
+        process.pfAllNeutralHadronsAndPhotons +        
+        process.kt6PFJetsCentralHZGEle +
+        process.kt6PFJetsCentralNeutralHZGMu +
+        process.kt6PFJetsCentralHZGMu )
 
     #add in isolations with the wrong vetos in case some people are using them
     
