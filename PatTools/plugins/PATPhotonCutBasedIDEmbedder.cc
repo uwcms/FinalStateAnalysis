@@ -22,6 +22,9 @@
 // for the conversion safe electron veto
 #include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
 
+#include "RecoEgamma/EgammaIsolationAlgos/interface/EgammaHadTower.h"
+#include "DataFormats/CaloTowers/interface/CaloTowerCollection.h"
+
 // for the single tower H/E
 #include "RecoEgamma/EgammaElectronAlgos/interface/ElectronHcalHelper.h"
 
@@ -94,9 +97,16 @@ void PATPhotonCutBasedIDEmbedder::produce(Event& evt,
   edm::Handle<reco::GsfElectronCollection> eleHandle;
   evt.getByLabel(_eleSrc,eleHandle);
 
+  edm::Handle<CaloTowerCollection> hcalTowersHandle;
+  evt.getByLabel(_helperCfg.hcalTowers,hcalTowersHandle);
+
   //setup H/E for this event
   _hcalHelper->checkSetup(es);
   _hcalHelper->readEvent(evt);  
+
+  //setup EgammaHadTower for this event
+  EgammaHadTower _hadTower(es, EgammaHadTower::SingleTower);
+  _hadTower.setTowerCollection(hcalTowersHandle.product());
 
   std::auto_ptr<PhotonCollection> out(new PhotonCollection);
 
@@ -122,6 +132,15 @@ void PATPhotonCutBasedIDEmbedder::produce(Event& evt,
 
     aPho.addUserInt("ConvSafeElectronVeto",(int32_t)passelectronveto);
 
+    //calculate single tower H/E as in photon producer
+    std::vector<CaloTowerDetId> towersBehind =  // behind!?
+      _hadTower.towersOf(*(aPho.superCluster()));
+    float hcalDepth1OverEcalBc = 
+      _hadTower.getDepth1HcalESum(towersBehind)/aPho.superCluster()->energy();
+    float hcalDepth2OverEcalBc = 
+      _hadTower.getDepth2HcalESum(towersBehind)/aPho.superCluster()->energy();
+    float hcalOverEcalBc = hcalDepth1OverEcalBc + hcalDepth2OverEcalBc;
+
     //calculate the single-tower H/E
     std::vector<CaloTowerDetId> hcalTowersBehindClusters =
       _hcalHelper->hcalTowersBehindClusters(*(aPho.superCluster()));
@@ -132,6 +151,10 @@ void PATPhotonCutBasedIDEmbedder::produce(Event& evt,
     float hOverE2012 = (hcalDepth1 + hcalDepth2)/aPho.superCluster()->energy();
     float hOverE2012Depth1 = hcalDepth1/aPho.superCluster()->energy();
     float hOverE2012Depth2 = hcalDepth2/aPho.superCluster()->energy();
+
+    std::cout << "reco::Photon H/E = " << hcalOverEcalBc << ' '
+	      << "EGammaPOG H/E = " << hOverE2012 << std::endl;
+      
 
     aPho.addUserFloat("SingleTowerHoE",hOverE2012);
     aPho.addUserFloat("SingleTowerHoEDepth1",hOverE2012Depth1);
