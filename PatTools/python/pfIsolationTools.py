@@ -138,17 +138,11 @@ def add_hZg_iso_needs(process):
 
     process.load("RecoJets.JetProducers.kt4PFJets_cfi")
 
-    # for photon H/E, point it at ideal map in 42X???
-    if cmssw_major_version < 5:
-        process.CaloTowerConstituentsMapBuilder = cms.ESProducer(
-            "CaloTowerConstituentsMapBuilder",
-            MapFile =
-            cms.untracked.string('Geometry/CaloTopology/data/CaloTowerEEGeometric.map.gz')
-            )
-    else:
-        process.CaloTowerConstituentsMapBuilder = \
-        cms.ESProducer("CaloTowerConstituentsMapBuilder")
-            
+    # for photon H/E
+    process.CaloTowerConstituentsMapBuilder = cms.ESProducer(
+        "CaloTowerConstituentsMapBuilder",
+        MapFile = cms.untracked.string('Geometry/CaloTopology/data/CaloTowerEEGeometric.map.gz')
+            )            
 
     process.pfAllNeutralHadronsAndPhotons = cms.EDProducer(
         "CandViewMerger",
