@@ -34,7 +34,7 @@ echo "Deleting all bogus files in PatTools..."
 find .  -type f | grep -i -v finalstate | grep -v BuildFile | grep -v pfCandAuxFunctions | xargs rm  
 
 echo "Telling git to ignore changes in them..."
-git ls-files $fsa/PatTools | xargs -n 1 git update-index --assume-unchanged 
+git ls-files . | xargs -n 1 git update-index --assume-unchanged 
 
 # The remaining files are good (used for making FSAs)
 # Let's track them.
