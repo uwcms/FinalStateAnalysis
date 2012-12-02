@@ -76,6 +76,13 @@ datadefs = {
    'pu' : 'S10',
    },
 
+   'TTTo2L2Nu2B_8TeV-powheg-pythia6' : {
+   'analyses': ['4L'],
+   'datasetpath' : "/TTTo2L2Nu2B_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   },
+
    'WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_v2' : {
    'analyses': ['HTT'],
    'datasetpath' : "/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM",
