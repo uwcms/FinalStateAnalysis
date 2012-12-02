@@ -33,6 +33,7 @@ _common_template = PSet(
     # Need to fill out photon triggers
     templates.trigger.mueg,
     templates.trigger.doublemu,
+    templates.trigger.doublemu,
     templates.trigger.doublee,
     templates.trigger.isomu,
     templates.trigger.singlemu,
