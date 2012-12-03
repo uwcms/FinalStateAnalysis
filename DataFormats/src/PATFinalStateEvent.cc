@@ -118,7 +118,7 @@ double PATFinalStateEvent::metSignificance() const {
   return fshelpers::xySignficance(met_->momentum(), metCovariance_);
 }
 
-const edm::Ptr<pat::MET>& PATFinalStateEvent::met(
+const edm::Ptr<pat::MET> PATFinalStateEvent::met(
     const std::string& type) const {
   std::map<std::string, edm::Ptr<pat::MET> >::const_iterator findit =
     mets_.find(type);
