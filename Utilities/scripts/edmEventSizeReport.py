@@ -8,7 +8,6 @@ Author: Evan K. Friis, UW Madison
 '''
 
 from RecoLuminosity.LumiDB import argparse
-import json
 import os
 from FinalStateAnalysis.Utilities.prettytable import PrettyTable
 import subprocess
