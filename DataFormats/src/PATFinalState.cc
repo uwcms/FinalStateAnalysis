@@ -339,6 +339,7 @@ PATFinalState::SVfit(int i, int j) const {
 
 if( (i==2 && j==3) || (i==3 && j==2) ){ 
 
+  std::cout<<" -------------> event number "<< event_->evtId()<<" ----- daughters "<<numberOfDaughters()<<std::endl;
 
 
 //////////////////
@@ -390,13 +391,18 @@ measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalon
 
  reco::Candidate::LorentzVector K0; K0+=daughter(i)->p4();
  reco::Candidate::LorentzVector K1; K1+=daughter(j)->p4();
+
+
+ std::cout<<" unused daughter 0 =  "<<daughter(0)->p4()<<" "<<daughter(0)->pdgId()<<std::endl;
+ std::cout<<" unused daughter 1 =  "<<daughter(1)->p4()<<" "<<daughter(1)->pdgId()<<std::endl;
  std::cout<<" daughter i = "<<i<<" "<<daughter(i)->p4()<<" "<<daughter(i)->pdgId()<<std::endl;
  std::cout<<" daughter j = "<<j<<" "<<daughter(j)->p4()<<" "<<daughter(j)->pdgId()<<std::endl;
  std::cout<<" normal mass is  "<<(K0+K1).M()<<std::endl;
 
+
 ///////////////
 
-double SVfitMassReturn = SVfitCallerInstance.getSVfitMass(measuredTauLeptons,measuredMET,covMET, verbosity);
+double SVfitMassReturn = SVfitCallerInstance.getSVfitMass(measuredTauLeptons,measuredMET,covMET, verbosity, event_->evtId());
 
 
 return SVfitMassReturn;

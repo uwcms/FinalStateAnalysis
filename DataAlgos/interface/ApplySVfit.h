@@ -10,6 +10,8 @@
 #define APPLYSVFIT_TO_FSA
 
 #include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
+#include "DataFormats/Provenance/interface/EventID.h"
+
 
 using NSVfitStandalone::Vector;
 using NSVfitStandalone::LorentzVector;
@@ -30,7 +32,7 @@ class SVfitCaller  {
                                 std::vector<MeasuredTauLepton>,
 				Vector, 
 				const TMatrixD&, 
-				unsigned int );
+				unsigned int, const edm::EventID );
 
 			}; // class SVfitCaller
 
