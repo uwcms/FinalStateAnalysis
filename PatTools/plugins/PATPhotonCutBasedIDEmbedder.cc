@@ -116,9 +116,13 @@ void PATPhotonCutBasedIDEmbedder::produce(Event& evt,
   for( ; i != e; ++i ) {
     pat::Photon aPho = *i;
 
+    //get the original photon
+    const reco::Photon* oPho = 
+      dynamic_cast<const reco::Photon*>(aPho.originalObjectRef().get());
+
     //calculate the conversion safe electron veto
     bool passelectronveto = 
-      !ConversionTools::hasMatchedPromptElectron(aPho.superCluster(),
+      !ConversionTools::hasMatchedPromptElectron(oPho->superCluster(),
 						 eleHandle,
 						 convHandle,
 						 beamspot.position());
