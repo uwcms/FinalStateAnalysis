@@ -40,6 +40,8 @@ id = PSet(
     objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
     objectEffectiveArea2011Data = cms.string('{object}.userFloat("ea_comb_Data2011_iso04_kt6PFJ")'),
     objectEffectiveAreaFall11MC = cms.string('{object}.userFloat("ea_comb_Fall11MC_iso04_kt6PFJ")'),
+    objectRhoHZG2011 = cms.string('{object}.userFloat("hzgRho2011")'),
+    objectRhoHZG2012 = cms.string('{object}.userFloat("hzgRho2012")'),
     objectRelIso = cms.string("({object}.dr03TkSumPt()"
                "+max({object}.dr03EcalRecHitSumEt()-1.0,0.0)"
                "+{object}.dr03HcalTowerSumEt())/{object}.pt()"),
