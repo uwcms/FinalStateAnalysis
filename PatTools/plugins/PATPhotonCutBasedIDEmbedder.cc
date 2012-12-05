@@ -131,14 +131,15 @@ void PATPhotonCutBasedIDEmbedder::produce(Event& evt,
     
     //calculate the single-tower H/E
     std::vector<CaloTowerDetId> hcalTowersBehindClusters =
-      _hcalHelper->hcalTowersBehindClusters(*(aPho.superCluster()));
+      _hcalHelper->hcalTowersBehindClusters(*(oPho->superCluster()));
     float hcalDepth1 = 
       _hcalHelper->hcalESumDepth1BehindClusters(hcalTowersBehindClusters);
     float hcalDepth2 = 
       _hcalHelper->hcalESumDepth2BehindClusters(hcalTowersBehindClusters);
-    float hOverE2012 = (hcalDepth1 + hcalDepth2)/aPho.superCluster()->energy();
-    float hOverE2012Depth1 = hcalDepth1/aPho.superCluster()->energy();
-    float hOverE2012Depth2 = hcalDepth2/aPho.superCluster()->energy();
+    float hOverE2012 = 
+      (hcalDepth1 + hcalDepth2)/oPho->superCluster()->energy();
+    float hOverE2012Depth1 = hcalDepth1/oPho->superCluster()->energy();
+    float hOverE2012Depth2 = hcalDepth2/oPho->superCluster()->energy();
 
     aPho.addUserFloat("SingleTowerHoE",hOverE2012);
     aPho.addUserFloat("SingleTowerHoEDepth1",hOverE2012Depth1);
