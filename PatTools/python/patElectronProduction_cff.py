@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.Utilities.version import cmssw_major_version
 
-from FinalStateAnalysis.PatTools.electrons.patConversionRejection_cfi import \
+from FinalStateAnalysis.PatTools.electrons.patWWIDEmbedding_cfi import \
         electronsWWID
 from FinalStateAnalysis.PatTools.electrons.patElectronVBTFEmbedding_cff import \
         electronsWP80, electronsWP90, electronsWP95, electronsWP95V, electronsVBTFId
