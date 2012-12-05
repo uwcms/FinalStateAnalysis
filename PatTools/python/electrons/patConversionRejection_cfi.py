@@ -4,5 +4,5 @@ patElectronConversionMatch = cms.EDProducer(
     'PATElectronConversionEmbedder',
     src             = cms.InputTag("fixme"),
     conversionSrc   = cms.InputTag("allConversions"),
-    beamSpotSrc     = cms.InputTag("offlineBeamspot")    
+    beamSpotSrc     = cms.InputTag("offlineBeamSpot")    
 )
