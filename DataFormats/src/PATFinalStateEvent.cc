@@ -55,7 +55,8 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::RefProd<pat::PhotonCollection>& phoRefProd,
     const reco::PFCandidateRefProd& pfRefProd,
     const reco::TrackRefProd& tracks,
-    const reco::GsfTrackRefProd& gsfTracks
+    const reco::GsfTrackRefProd& gsfTracks,
+    const std::map<std::string, edm::Ptr<pat::MET> >& mets
     ):
   rho_(rho),
   triggerEvent_(triggerEvent),
@@ -78,7 +79,8 @@ PATFinalStateEvent::PATFinalStateEvent(
   phoRefProd_(phoRefProd),
   pfRefProd_(pfRefProd),
   tracks_(tracks),
-  gsfTracks_(gsfTracks)
+  gsfTracks_(gsfTracks),
+  mets_(mets)
 { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
@@ -116,6 +118,15 @@ double PATFinalStateEvent::metSignificance() const {
   return fshelpers::xySignficance(met_->momentum(), metCovariance_);
 }
 
+const edm::Ptr<pat::MET> PATFinalStateEvent::met(
+    const std::string& type) const {
+  std::map<std::string, edm::Ptr<pat::MET> >::const_iterator findit =
+    mets_.find(type);
+  if (findit != mets_.end())
+    return findit->second;
+  return edm::Ptr<pat::MET>();
+}
+
 const edm::EventID& PATFinalStateEvent::evtId() const {
   return evtID_;
 }
@@ -148,14 +159,17 @@ int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
 
 int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
+  // std::cout << "matcher: " << pattern << std::endl;
   SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
+  // std::cout << " result: " << result.group << " " << result.prescale << " " << result.passed << std::endl;
   // Loop over all the paths that fired and see if any matched this object.
-  if (!result.paths.size())
+  if (!result.passed)
     return -1;
   int matchCount = 0;
   for (size_t i = 0; i < result.paths.size(); ++i) {
     bool matched = matchedToAnObject(
       triggerEvent_.pathObjects(result.paths[i]), cand, maxDeltaR);
+    // std::cout << " - path: " << result.paths[i] << " matched: " << matched << std::endl;
     if (matched)
       matchCount += 1;
   }

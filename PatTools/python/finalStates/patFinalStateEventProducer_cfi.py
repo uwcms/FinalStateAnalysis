@@ -4,6 +4,7 @@ patFinalStateEventProducer = cms.EDProducer(
     "PATFinalStateEventProducer",
     rhoSrc = cms.InputTag("kt6PFJetsForRhoComputationVoronoi", "rho"),
     pvSrc = cms.InputTag("selectedPrimaryVertex"),
+    pvSrcBackup = cms.InputTag("selectedPrimaryVertexUnclean"),
     verticesSrc = cms.InputTag("selectPrimaryVerticesQuality"),
     electronSrc = cms.InputTag("fixme"),
     muonSrc = cms.InputTag("fixme"),
@@ -17,6 +18,10 @@ patFinalStateEventProducer = cms.EDProducer(
     genParticleSrc = cms.InputTag("genParticles"),
     trackSrc = cms.InputTag("generalTracks"),
     gsfTrackSrc = cms.InputTag("electronGsfTracks"),
+    mets = cms.PSet(
+        pfmet = cms.InputTag("fixme"),
+        mvamet = cms.InputTag("fixme"),
+    ),
     extraWeights = cms.PSet(
         #anyOldThing = cms.double(9999), # just an example
         #puAvg = cms.InputTag("lumiWeights", "3bx"),

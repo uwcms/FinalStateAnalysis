@@ -15,6 +15,7 @@ options = TauVarParsing.TauVarParsing(
     puTag='unknown',
     isAOD=True,
     calibrationTarget='2012Jul13ReReco',
+    passThru=0,
     verbose=0, # Print out summary table at end
     profile=0, # Enabling profiling
     keepAll=0, # Don't drop any event content
@@ -111,22 +112,34 @@ process.eventCount.uwMeta = cms.PSet(
 
 process.schedule = cms.Schedule()
 
-# Load all of our skim paths
-process.load("FinalStateAnalysis.RecoTools.uwSkims_cfi")
-# PAT tuplize all skim paths
-for skim_path in process.skimConfig.paths:
-    print "Building skim path:", skim_path
-    the_path = getattr(process, skim_path)
-    # Count every event, even the ones that fail the skim
-    the_path.insert(0, process.eventCount)
+# add a bare tuplization path if we are using pass thru
+if options.passThru:
+    print "Running in Pass-Thru Mode, no skim will be done"
+    process.bareTuplizer = cms.Path(process.tuplize)
+    process.bareTuplizer.insert(0, process.eventCount)
     if options.isMC and not options.embedded:
-        the_path.insert(0, process.dqmEventCount)
-    the_path += process.tuplize
-    process.schedule.append(the_path)
-process.out.SelectEvents.SelectEvents = process.skimConfig.paths
+            process.bareTuplizer.insert(0, process.dqmEventCount)
+    process.schedule.append(process.bareTuplizer)
+    del process.out.SelectEvents
+else:
+    # Load all of our skim paths
+    process.load("FinalStateAnalysis.RecoTools.uwSkims_cfi")
+    # PAT tuplize all skim paths
+    for skim_path in process.skimConfig.paths:
+        print "Building skim path:", skim_path
+        the_path = getattr(process, skim_path)
+        # Count every event, even the ones that fail the skim
+        the_path.insert(0, process.eventCount)
+        if options.isMC and not options.embedded:
+            the_path.insert(0, process.dqmEventCount)        
+        the_path += process.tuplize 
+        process.schedule.append(the_path)
+    process.out.SelectEvents.SelectEvents = process.skimConfig.paths
 output_commands.append('*_dqmEventCount_*_*')
 output_commands.append('*_eventCount_*_*')
 output_commands.append('*_MEtoEDMConverter_*_*')
+
+
 
 # Setup keep/drops
 for command in output_commands:
@@ -168,9 +181,9 @@ if options.clean:
         process, process.out.outputCommands.value())
     print "Removed %i unrun and %i unused modules!" % (len(unrun), len(unused))
 
-################################################################################
-### DEBUG options ##############################################################
-################################################################################
+###############################################################################
+### DEBUG options #############################################################
+###############################################################################
 
 if options.verbose:
     process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))

@@ -28,15 +28,16 @@ zz_final_states = [
 zgg_final_states = [
     'eegg',
     'mmgg',
-    'etgg',
-    'mtgg'
-    ]
+]
 
 branches = {
-    'rapidityGap' : 'abs(subcand(0, 1).get.eta - subcand(2, 3).get.eta)',
+    'rapidityGap': 'abs(subcand(0, 1).get.eta - subcand(2, 3).get.eta)',
 }
 
-def add_quad_ntuples(process, schedule, do_zh=True, do_zz=False, do_zgg=False):
+
+def add_quad_ntuples(process, schedule,
+                     do_zh=True, do_zz=False, do_zgg=False,
+                     event_view=False):
     final_states = []
     if do_zh:
         final_states.extend(zh_final_states)
@@ -48,4 +49,4 @@ def add_quad_ntuples(process, schedule, do_zh=True, do_zz=False, do_zgg=False):
     for final_state in final_states:
         print "Building %s final state" % final_state
         analyzer = make_ntuple(*final_state, branches=branches)
-        add_ntuple(final_state, analyzer, process, schedule)
+        add_ntuple(final_state, analyzer, process, schedule, event_view)

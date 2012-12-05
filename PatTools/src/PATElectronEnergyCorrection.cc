@@ -102,7 +102,7 @@ namespace pattools {
 	std::string regType  = i->getParameter<std::string>("regression");
 	int applyCorrections = i->getParameter<int>("applyCorrections");
 
-	if( index >= 0 ) {
+	if( applyCorrections >= 0 ) {
 	  _calibs[type] = 
 	    new eCalib(_dataset,isAOD,isMC,true,applyCorrections,false);
 	  if( std::find(iapp,eapp,type) != eapp)
@@ -158,7 +158,8 @@ namespace pattools {
 	// recalculate then propagate the regression energy and errors
 	switch( thisReg.first ) {
 	case 1: // V1 regression (just ecal energy)
-	  temp->setEcalRegressionEnergy(en,en_err);
+	  temp->setEcalRegressionEnergy(en,en_err); //HCP2012_V03-02 
+	  temp->correctEcalEnergy(en,en_err); // this is for later versions?
 	  break;
 	case 2: // V2 regression (including track variables)
 	  oldP4 = temp->p4();
@@ -166,8 +167,8 @@ namespace pattools {
 					  oldP4.y()*en/oldP4.t(),
 					  oldP4.z()*en/oldP4.t(),
 					  en);
+	  temp->correctEcalEnergy(en,en_err);
 	  temp->correctMomentum(newP4,temp->trackMomentumError(),en_err);
-	  temp->correctEcalEnergy(en,en_err);	  
 	  break;
 	default:
 	  break;

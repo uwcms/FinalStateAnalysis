@@ -4,24 +4,6 @@
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "FWCore/ParameterSet/interface/FileInPath.h"
 
-#include "FinalStateAnalysis/DataAlgos/interface/VBFMVA.h"
-
-// internal VBFMVA object
-namespace {
-
-static vbf::VBFMVA mva = vbf::VBFMVA();
-
-vbf::VBFMVA* getMVA() {
-  if (!mva.IsInitialized()) {
-    edm::FileInPath thePath(
-        "UserCode/MitHtt/data/VBFMVA/MuTau/VBFMVA_BDTG.weights.xml");
-    mva.Initialize(thePath.fullPath());
-  }
-  return &mva;
-}
-
-}
-
 VBFVariables computeVBFInfo(
     const std::vector<const reco::Candidate*>& hardScatter,
     const reco::Candidate::LorentzVector& metp4,
@@ -87,9 +69,6 @@ VBFVariables computeVBFInfo(
         output.jets30++;
     }
   }
-
-  // apply MVA
-  getMVA()->applyMVA(output);
 
   return output;
 }

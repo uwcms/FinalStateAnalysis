@@ -35,11 +35,15 @@ echo "Detected CMSSW version: $MAJOR_VERSION $MINOR_VERSION"
 echo "Checking for CERN CVS kerberos ticket"
 set +o errexit
 HAS_TICKET=`klist 2>&1 | grep CERN.CH`
+# Check if we can checkout anonymously
+IS_ANON=`echo $CVSROOT | grep pserver`
 set -o errexit
 
 if [ -z "$HAS_TICKET" ]; then
-  echo "ERROR: You need to kinit yourname@CERN.CH to enable CVS checkouts"
-  exit 1
+  if [ -z "$IS_ANON" ]; then
+    echo "ERROR: You need to kinit yourname@CERN.CH to enable CVS checkouts"
+    exit 1
+  fi
 fi
 
 echo "I'm going to install the FinalStateAnalysis with the following options:"
@@ -47,14 +51,16 @@ echo " Limit setting (\$LIMITS): $LIMITS"
 echo " PAT tuple production (\$PATPROD): $PATPROD"
 echo " LumiCalc (\$LUMI): $LUMI"
 
-while true; do
-    read -p "Do you wish continue? " yn
-    case $yn in
-        [Yy]* ) echo "sounds good dude"; break;;
-        [Nn]* ) exit 2;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+if [ -z "FORCERECIPE" ]; then
+   while true; do
+       read -p "Do you wish continue? " yn
+       case $yn in
+           [Yy]* ) echo "sounds good dude"; break;;
+           [Nn]* ) exit 2;;
+           * ) echo "Please answer yes or no.";;
+       esac
+   done
+fi
 
 if [ "$MAJOR_VERSION" -eq "4" ]; then
   echo "Applying recipe for CMSSW 4_2_8"
@@ -78,5 +84,3 @@ LUMI=$LUMI LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_common.sh
 echo "Now run recipe/install_python.sh to install python"
 
 cd $CMSSW_BASE/src
-
-echo "To compile: scram b -j 4"

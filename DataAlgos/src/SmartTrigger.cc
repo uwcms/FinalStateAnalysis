@@ -170,6 +170,8 @@ SmartTriggerResult smartTrigger(const std::string& trgs,
     VInt groupPrescale;
     VInt groupResult;
     vstring paths = getPaths(groups[i]);
+    // The real names of the matched paths.
+    vstring realpaths;
     for (size_t p = 0; p < paths.size(); ++p) {
       const std::string& path = paths[p];
       // Get all the triggers that match this path pattern.  There should be
@@ -190,10 +192,11 @@ SmartTriggerResult smartTrigger(const std::string& trgs,
       const pat::TriggerPath* trgPath = matching.size() ? matching[0] : NULL;
       int thePrescale = (trgPath != NULL) ? trgPath->prescale() : 0;
       int theResult = (trgPath != NULL) ? trgPath->wasAccept() : -1;
+      realpaths.push_back((trgPath != NULL) ? trgPath->name() : "error");
       groupPrescale.push_back(thePrescale);
       groupResult.push_back(theResult);
     }
-    pathGroups.push_back(paths);
+    pathGroups.push_back(realpaths);
     prescales.push_back(groupPrescale);
     results.push_back(groupResult);
   }

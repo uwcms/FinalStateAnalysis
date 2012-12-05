@@ -17,7 +17,7 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
-from datacommon import square, cube, quad, picobarns, br_w_leptons, query_cli
+from datacommon import square, cube, quad, picobarns, br_w_leptons, query_cli, br_z_leptons
 import re
 
 # Define a mapping between a "nice" name and a set of datasets.

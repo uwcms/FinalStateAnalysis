@@ -34,17 +34,16 @@ customizeJetSequence += patJetId
 # Add in the PAT Jet PU ID
 try:
     from FinalStateAnalysis.PatTools.jets.patJetPUId_cfi import \
-            puJetIdSqeuence, puJetId, puJetMva, patJetsPUID
+        pileupJetIdProducer, patJetsPUID
 
-    customizeJetSequence += puJetIdSqeuence # sic
+    customizeJetSequence += pileupJetIdProducer
     # Fix the input tags of the PU JET ID value map producers
-    puJetId.jets = cms.InputTag("patJetId")
-    puJetMva.jets = cms.InputTag("patJetId")
+    pileupJetIdProducer.jets = cms.InputTag("ak5PFJets")
     # Embed the PU IDs
     customizeJetSequence += patJetsPUID
 except ImportError:
-    sys.stderr.write(__file__ +
-                     ": PU Jet ID dependency not installed, will not be run!\n")
+    sys.stderr.write(
+        __file__ + ": PU Jet ID dependency not installed, will not be run!\n")
 
 # Embed Maria's information about jets
 customizeJetSequence += patMuonInJetEmbedder
