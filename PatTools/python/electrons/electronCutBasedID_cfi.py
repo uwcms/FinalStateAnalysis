@@ -16,7 +16,7 @@ patElectronCutBasedIdEmbedder = cms.EDProducer(
     src            = cms.InputTag("fixme"),
     conversionsSrc = cms.InputTag("allConversions"),
     beamspotSrc    = cms.InputTag("offlineBeamSpot"),
-    vtxSrc         = cms.InputTag("offlinePrimaryVertices"),
+    vtxSrc         = cms.InputTag("selectPrimaryVerticesQuality"),
     wps_to_apply   = cms.vstring("CBID_TIGHT",
                                  "CBID_MEDIUM",
                                  "CBID_LOOSE",

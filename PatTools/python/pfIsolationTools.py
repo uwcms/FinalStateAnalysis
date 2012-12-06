@@ -30,6 +30,7 @@ DeltaBeta	 pfPileUpAllChargedParticles	 0.01	 0.5
 import FWCore.ParameterSet.Config as cms
 
 from CommonTools.ParticleFlow.Tools.pfIsolation import setupPFElectronIso
+from FinalStateAnalysis.Utilities.version import cmssw_major_version
 
 def setup_h2tau_iso(process):
     print "Building H2Tau custom lepton isolations"
@@ -140,9 +141,8 @@ def add_hZg_iso_needs(process):
     # for photon H/E
     process.CaloTowerConstituentsMapBuilder = cms.ESProducer(
         "CaloTowerConstituentsMapBuilder",
-        MapFile =
- cms.untracked.string('Geometry/CaloTopology/data/CaloTowerEEGeometric.map.gz')
-        )
+        MapFile = cms.untracked.string('Geometry/CaloTopology/data/CaloTowerEEGeometric.map.gz')
+            )            
 
     process.pfAllNeutralHadronsAndPhotons = cms.EDProducer(
         "CandViewMerger",
@@ -185,10 +185,11 @@ def add_hZg_iso_needs(process):
         )
 
     process.hzg_isolations = cms.Sequence(
-        process.pfAllNeutralHadronsAndPhotons+
-        process.kt6PFJetsCentralHZGEle+
-        process.kt6PFJetsCentralNeutralHZGMu+
-        process.kt6PFJetsCentralHZGMu)
+        process.kt6PFJetsHZGPho + 
+        process.pfAllNeutralHadronsAndPhotons +        
+        process.kt6PFJetsCentralHZGEle +
+        process.kt6PFJetsCentralNeutralHZGMu +
+        process.kt6PFJetsCentralHZGMu )
 
     #add in isolations with the wrong vetos in case some people are using them
     

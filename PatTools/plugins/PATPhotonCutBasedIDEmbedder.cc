@@ -94,9 +94,12 @@ void PATPhotonCutBasedIDEmbedder::produce(Event& evt,
   edm::Handle<reco::GsfElectronCollection> eleHandle;
   evt.getByLabel(_eleSrc,eleHandle);
 
+  edm::Handle<CaloTowerCollection> hcalTowersHandle;
+  evt.getByLabel(_helperCfg.hcalTowers,hcalTowersHandle);
+
   //setup H/E for this event
   _hcalHelper->checkSetup(es);
-  _hcalHelper->readEvent(evt);  
+  _hcalHelper->readEvent(evt);    
 
   std::auto_ptr<PhotonCollection> out(new PhotonCollection);
 
@@ -113,25 +116,30 @@ void PATPhotonCutBasedIDEmbedder::produce(Event& evt,
   for( ; i != e; ++i ) {
     pat::Photon aPho = *i;
 
+    //get the original photon
+    const reco::Photon* oPho = 
+      dynamic_cast<const reco::Photon*>(aPho.originalObjectRef().get());
+
     //calculate the conversion safe electron veto
     bool passelectronveto = 
-      !ConversionTools::hasMatchedPromptElectron(aPho.superCluster(),
+      !ConversionTools::hasMatchedPromptElectron(oPho->superCluster(),
 						 eleHandle,
 						 convHandle,
 						 beamspot.position());
 
     aPho.addUserInt("ConvSafeElectronVeto",(int32_t)passelectronveto);
-
+    
     //calculate the single-tower H/E
     std::vector<CaloTowerDetId> hcalTowersBehindClusters =
-      _hcalHelper->hcalTowersBehindClusters(*(aPho.superCluster()));
+      _hcalHelper->hcalTowersBehindClusters(*(oPho->superCluster()));
     float hcalDepth1 = 
       _hcalHelper->hcalESumDepth1BehindClusters(hcalTowersBehindClusters);
     float hcalDepth2 = 
       _hcalHelper->hcalESumDepth2BehindClusters(hcalTowersBehindClusters);
-    float hOverE2012 = (hcalDepth1 + hcalDepth2)/aPho.superCluster()->energy();
-    float hOverE2012Depth1 = hcalDepth1/aPho.superCluster()->energy();
-    float hOverE2012Depth2 = hcalDepth2/aPho.superCluster()->energy();
+    float hOverE2012 = 
+      (hcalDepth1 + hcalDepth2)/oPho->superCluster()->energy();
+    float hOverE2012Depth1 = hcalDepth1/oPho->superCluster()->energy();
+    float hOverE2012Depth2 = hcalDepth2/oPho->superCluster()->energy();
 
     aPho.addUserFloat("SingleTowerHoE",hOverE2012);
     aPho.addUserFloat("SingleTowerHoEDepth1",hOverE2012Depth1);
