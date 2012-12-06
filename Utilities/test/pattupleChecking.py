@@ -17,7 +17,7 @@ def getPattuples(user):
     #todo: read these from hep.wisc.edu/~user/pattuples.txt
     with open(user+'.txt','r') as file:
         for line in file:
-            tuplesUsed.add(line)
+            tuplesUsed.add(line.rstrip())
     return tuplesUsed
 
 def makeTable(users):
@@ -58,9 +58,7 @@ if __name__ == '__main__':
             userSets[i]=getPattuples(i)
             userSets['in_use']=userSets['in_use'].union(userSets[i])
         else:
-            #todo: pull from hdfs/...tapas/*/* with getMaster function.. hdfs is broken, so who knows if this works IAR 06.Dec.2012
-#            userSets[i]=getMasterSet()
-            userSets[i]=getPattuples(i)
+            userSets[i]=getMasterSet()
     for user in users:
         print"User:",user.title(),"uses",len(userSets[user]),"samples"
     if args.showNonexistent is True and (userSets['in_use']-userSets['master']) != 0:
@@ -69,6 +67,9 @@ if __name__ == '__main__':
     userSets['not_in_use']=userSets['master']-userSets['in_use']
 
     makeTable(users)
+    with open("/afs/hep.wisc.edu/user/iross/www/unused_pattuples.txt",'w') as f:
+        for i in userSets['not_in_use']:
+            f.write(i)
 
     #todo: save pickle with the sets
     #todo: shove results into a webpage somewhere
