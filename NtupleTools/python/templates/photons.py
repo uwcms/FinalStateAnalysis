@@ -25,7 +25,8 @@ id = PSet(
     objectPFPhotonIso   = 'getPhotonUserIsolation({object_idx},"PfGammaIso")',
     objectEffectiveAreaCHad = '{object}.userFloat("PhotonEA_pfchg")',
     objectEffectiveAreaNHad = '{object}.userFloat("PhotonEA_pfneut")',
-    objectEffectiveAreaPho  = '{object}.userFloat("PhotonEA_pfpho")',    
+    objectEffectiveAreaPho  = '{object}.userFloat("PhotonEA_pfpho")',
+    objectRho = '{object}.userFloat("kt6PFJetsRho")',
     # photon id variables
     objectConvSafeElectronVeto = '{object}.userInt("ConvSafeElectronVeto")',
     objectHadronicOverEM = '{object}.hadronicOverEm',
