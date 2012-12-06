@@ -158,10 +158,9 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     std::cout << "!!!!! There are no selected primary vertices,"
 	      << " pvPtr is set to unclean vertex !!!!!" << std::endl;
     pvPtr = pv_back->ptrAt(0);
-  } else 
+  } else
     std::cout << "!!!!! There are no primary vertices,"
 	      << " pvPtr is not set !!!!!" << std::endl;
- 
   edm::Handle<edm::View<reco::Vertex> > vertices;
   evt.getByLabel(verticesSrc_, vertices);
   edm::PtrVector<reco::Vertex> verticesPtr = vertices->ptrVector();
@@ -214,7 +213,14 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   for (size_t i = 0; i < metCfg_.size(); ++i) {
     edm::Handle<edm::View<pat::MET> > theMet;
     evt.getByLabel(metCfg_[i].second, theMet);
-    edm::Ptr<pat::MET> theMetPtr = theMet->ptrAt(0);
+    edm::Ptr<pat::MET> theMetPtr;
+    if (!forbidMissing_ && !theMet.isValid()) {
+      edm::LogWarning("FSAEventMissingProduct")
+        << "The FSA collection " << metCfg_[i].second.label()
+        << " is missing.  It will be null." << std::endl;
+    } else {
+      theMetPtr = theMet->ptrAt(0);
+    }
     theMEts[metCfg_[i].first] = theMetPtr;
   }
 
