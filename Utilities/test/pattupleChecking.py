@@ -1,6 +1,15 @@
+#!/usr/bin/python3
+
+'''
+File: pattupleChecking.py
+Author: Ian Ross (iross@cern.ch), University of Wisconsin Madison
+Description: Scans specified users' [webhome]/tuples.txt, tallies up who is using what (and how much overlap exists between users), and spits out the list of unused samples.
+'''
+
 from prettytable import PrettyTable
 import glob
 import argparse
+import urllib2
 
 
 def getMasterSet():
@@ -11,13 +20,27 @@ def getMasterSet():
         temp.add(i)
     return temp
 
+def cleanline(line):
+    """Remove '//' and trailing / for string matching"""
+    line=line.replace("//","/")
+    line=line.rstrip("/")
+    return line
+
 def getPattuples(user):
     """Return set of pattuples in use by the specified user"""
     tuplesUsed=set()
     #todo: read these from hep.wisc.edu/~user/pattuples.txt
-    with open(user+'.txt','r') as file:
-        for line in file:
-            tuplesUsed.add(line.rstrip())
+    try:
+        response = urllib2.urlopen('http://www.hep.wisc.edu/~'+user+'/tuples.txt')
+        for line in response.readlines():
+            if line.rstrip() == "":
+                continue
+            tuplesUsed.add(cleanline(line.rstrip()))
+        print user,"has their stuff together!"
+    except urllib2.HTTPError:
+        with open(user+'.txt','r') as file:
+            for line in file:
+                tuplesUsed.add(line.rstrip())
     return tuplesUsed
 
 def makeTable(users):
@@ -35,9 +58,9 @@ def makeTable(users):
 
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description="%prog -- dump some analysis-level plots and yields")
-    parser.add_argument("--size",dest="size",nargs="1",type=bool,default=False,help="Gather size info when getting master list (slow)")
-    parser.add_argument("--showNonexistent",dest="showNonexistent",nargs="1",type=bool,default=False,help="Show samples users report as used, but don't seem to exist")
-    parser.add_argument("--users",dest="users",nargs="+",type=str,default=['ian','maria','evan','josh','isobel'],help="Specify user list")
+    parser.add_argument("--size",dest="size",type=bool,default=False,help="Gather size info when getting master list (slow)")
+    parser.add_argument("--showNonexistent",dest="showNonexistent",type=bool,default=False,help="Show samples users report as used, but don't seem to exist")
+    parser.add_argument("--users",dest="users",nargs="+",type=str,default=['iross','mcepeda','efriis','swanson','ojalvo'],help="Specify user list")
 
     args=parser.parse_args()
 
