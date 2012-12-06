@@ -40,6 +40,8 @@ id = PSet(
     objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
     objectEffectiveArea2011Data = cms.string('{object}.userFloat("ea_comb_Data2011_iso04_kt6PFJ")'),
     objectEffectiveAreaFall11MC = cms.string('{object}.userFloat("ea_comb_Fall11MC_iso04_kt6PFJ")'),
+    objectRhoHZG2011 = cms.string('{object}.userFloat("hzgRho2011")'),
+    objectRhoHZG2012 = cms.string('{object}.userFloat("hzgRho2012")'),
     objectRelIso = cms.string("({object}.dr03TkSumPt()"
                "+max({object}.dr03EcalRecHitSumEt()-1.0,0.0)"
                "+{object}.dr03HcalTowerSumEt())/{object}.pt()"),
@@ -51,9 +53,17 @@ id = PSet(
     objectHadronicDepth1OverEm = '{object}.hcalDepth1OverEcal',
     objectHadronicDepth2OverEm = '{object}.hcalDepth2OverEcal',
     objectSigmaIEtaIEta = '{object}.sigmaIetaIeta',
+    objectdeltaEtaSuperClusterTrackAtVtx = '{object}.deltaEtaSuperClusterTrackAtVtx',
+    objectdeltaPhiSuperClusterTrackAtVtx = '{object}.deltaPhiSuperClusterTrackAtVtx',
+    objectfBrem = '{object}.fbrem',
+    objecteSuperClusterOverP = '{object}.eSuperClusterOverP',
+    objectecalEnergy = '{object}.ecalEnergy',
+    objecttrackMomentumAtVtxP = '{object}.trackMomentumAtVtx.r',
+    objectHasMatchedConversion = cms.vstring('{object}.userInt("HasMatchedConversion")','I'),    
     objectE1x5 = '{object}.scE1x5',
     objectE2x5Max = '{object}.scE2x5Max',
     objectE5x5 = '{object}.scE5x5',
+    objectNearMuonVeto = 'overlapMuons({object_idx},0.05,"isGlobalMuon() & abs(eta()) < 2.4").size()',
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
     objectComesFromHiggs = 'comesFromHiggs({object_idx})',        
 )
@@ -113,6 +123,8 @@ tracking = PSet(
     objectMissingHits = cms.string(
         '? {object}.gsfTrack.isNonnull? '
         '{object}.gsfTrack.trackerExpectedHitsInner.numberOfHits() : 10'),
+    objectPVDXY = '{object}.userFloat("ipDXY")',
+    objectPVDZ = '{object}.userFloat("dz")'    
 )
 
 # Information about the matched supercluster
