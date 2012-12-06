@@ -41,7 +41,7 @@ if __name__ == '__main__':
     args=parser.parse_args()
 
     users=[]
-    users=['ian','maria','evan','josh','in_use']
+    users=['ian','maria','evan','josh','isobel','in_use']
     users.insert(0,'master')
     userSets={}
     userSets['in_use']=set()
@@ -58,7 +58,8 @@ if __name__ == '__main__':
             userSets[i]=getPattuples(i)
             userSets['in_use']=userSets['in_use'].union(userSets[i])
         else:
-            #todo: pull from hdfs/...tapas/*/*
+            #todo: pull from hdfs/...tapas/*/* with getMaster function.. hdfs is broken, so who knows if this works IAR 06.Dec.2012
+#            userSets[i]=getMasterSet()
             userSets[i]=getPattuples(i)
     for user in users:
         print"User:",user.title(),"uses",len(userSets[user]),"samples"
