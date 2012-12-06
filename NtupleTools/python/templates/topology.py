@@ -19,6 +19,7 @@ mtToMET = PSet(
 
 # Variables based on pairs of objects
 pairs = PSet(
+    object1_object2_SVfitMass = 'SVfit({object1_idx},{object2_idx})', # SVfit mass (sshalhou@CERN.CH)
     object1_object2_Mass = 'subcand({object1_idx}, {object2_idx}).get.mass',
     object1_object2_Pt = 'subcand({object1_idx}, {object2_idx}).get.pt',
     object1_object2_DR = 'dR({object1_idx}, {object2_idx})',

@@ -1,3 +1,8 @@
+// Next 2 includes needed for SVfit  Mass 
+#include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
+#include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
+
+
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalState.h"
@@ -318,6 +323,99 @@ PATFinalState::smallestDeltaPhi() const {
   }
   return smallestDeltaPhi;
 }
+
+///////////////////////
+// Call to ApplySVfit::SVfitCaller member function getSVfitMass which returns the SVfit mass
+// (szs)
+////////////////////////
+
+double
+PATFinalState::SVfit(int i, int j) const {
+
+///////////
+// call only for the 2 higgs daughters in a 4-object
+// ZH final state (indices 2 & 3)
+// there may be better ways to filter upstream, but this works for now
+
+if( (i==2 && j==3) || (i==3 && j==2) ){ 
+
+  std::cout<<" -------------> event number "<< event_->evtId()<<" ----- daughters "<<numberOfDaughters()<<std::endl;
+
+
+//////////////////
+// the 2 indices i and j indicate the daughters combined to form the SVfit mass
+
+///////////////////
+// instance of SVfitCaller
+ApplySVfit::SVfitCaller SVfitCallerInstance;
+
+
+//////////////////
+// indicates start of scope of the following using statements needed by SVfit 
+{  
+
+using NSVfitStandalone::Vector;
+using NSVfitStandalone::LorentzVector;
+using NSVfitStandalone::MeasuredTauLepton;
+
+Vector measuredMET = met()->momentum();
+std::vector<MeasuredTauLepton> measuredTauLeptons;
+const TMatrixD& covMET = event_->metCovariance();
+unsigned int verbosity = 0;
+measuredTauLeptons.clear();
+
+
+//////////////////
+// Need to check with Evan
+// that this will work for Data as well
+///////////////////
+
+if(abs(daughter(i)->pdgId()) == 11 || abs(daughter(i)->pdgId()) == 13) { 
+measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kLepDecay,daughter(i)->p4()));
+                                                                        }       
+
+if(abs(daughter(j)->pdgId()) == 11 || abs(daughter(j)->pdgId()) == 13) { 
+measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kLepDecay,daughter(j)->p4()));
+                                                                        }       
+
+if(abs(daughter(i)->pdgId()) == 15){
+measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay,daughter(i)->p4()));
+                                        }
+
+if(abs(daughter(j)->pdgId()) == 15){
+measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay,daughter(j)->p4()));
+                                        }
+
+////////////
+// can remove later , just useful for testing while it runs
+
+ reco::Candidate::LorentzVector K0; K0+=daughter(i)->p4();
+ reco::Candidate::LorentzVector K1; K1+=daughter(j)->p4();
+
+
+ std::cout<<" unused daughter 0 =  "<<daughter(0)->p4()<<" "<<daughter(0)->pdgId()<<std::endl;
+ std::cout<<" unused daughter 1 =  "<<daughter(1)->p4()<<" "<<daughter(1)->pdgId()<<std::endl;
+ std::cout<<" daughter i = "<<i<<" "<<daughter(i)->p4()<<" "<<daughter(i)->pdgId()<<std::endl;
+ std::cout<<" daughter j = "<<j<<" "<<daughter(j)->p4()<<" "<<daughter(j)->pdgId()<<std::endl;
+ std::cout<<" normal mass is  "<<(K0+K1).M()<<std::endl;
+
+
+///////////////
+
+double SVfitMassReturn = SVfitCallerInstance.getSVfitMass(measuredTauLeptons,measuredMET,covMET, verbosity, event_->evtId());
+
+
+return SVfitMassReturn;
+} // indicates end of 'using' scope 
+
+} // only call for ZH indices 2,3
+else return -999;
+
+} // SVfit(int, int)
+////////////////////////////////////////////
+
+
+
 
 double
 PATFinalState::dR(int i, const std::string& sysTagI,

@@ -4,6 +4,13 @@ set -o nounset
 
 pushd $CMSSW_BASE/src
 
+#for standalone version of svfit
+ cvs co -r V00-01-04s TauAnalysis/CandidateTools
+
+# for some reason patTuple creation fails due to lack  of plugin PFCandIsolatorFromDeposits
+# to fix
+cvs co -r V00-03-13 CommonTools/ParticleFlow
+
 # Tags that work in any release
 
 # To install lumiCalc.py
