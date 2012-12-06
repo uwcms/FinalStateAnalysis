@@ -37,19 +37,17 @@ if __name__ == '__main__':
     parser=argparse.ArgumentParser(description="%prog -- dump some analysis-level plots and yields")
     parser.add_argument("--size",dest="size",nargs="1",type=bool,default=False,help="Gather size info when getting master list (slow)")
     parser.add_argument("--showNonexistent",dest="showNonexistent",nargs="1",type=bool,default=False,help="Show samples users report as used, but don't seem to exist")
-    parser.add_argument("--users",dest="users",nargs="+",type=str,default="",help="Specify user list")
+    parser.add_argument("--users",dest="users",nargs="+",type=str,default=['ian','maria','evan','josh','isobel'],help="Specify user list")
+
     args=parser.parse_args()
 
-    users=[]
-    users=['ian','maria','evan','josh','isobel','in_use']
-    users.insert(0,'master')
+    users=args.users
     userSets={}
+
+    users.insert(0,'master')
+    users.append('in_use')
     userSets['in_use']=set()
-    if args.users:
-        users=[]
-        print args.users
-        for user in args.users:
-            users.append(user)
+
     for i in users:
         if 'in_use' in i:
             continue
@@ -60,14 +58,15 @@ if __name__ == '__main__':
         else:
             userSets[i]=getMasterSet()
     for user in users:
-        print"User:",user.title(),"uses",len(userSets[user]),"samples"
-    if args.showNonexistent is True and (userSets['in_use']-userSets['master']) != 0:
-        print "---SAMPLES 'IN USE', BUT NOT IN MASTER--"
-        print userSets[user]-userSets['master']
-    userSets['not_in_use']=userSets['master']-userSets['in_use']
+        print'User:',user.title(),'uses',len(userSets[user]),'samples'
+        if args.showNonexistent is True and (userSets['in_use']-userSets['master']) != 0:
+            print '---SAMPLES "IN USE", BUT NOT IN MASTER--'
+            print userSets[user]-userSets['master']
 
     makeTable(users)
-    with open("/afs/hep.wisc.edu/user/iross/www/unused_pattuples.txt",'w') as f:
+
+    userSets['not_in_use']=userSets['master']-userSets['in_use']
+    with open('/afs/hep.wisc.edu/user/iross/www/unused_pattuples.txt','w') as f:
         for i in userSets['not_in_use']:
             f.write(i)
 
