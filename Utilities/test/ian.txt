@@ -1,3 +1,4 @@
+/hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/data_DoubleMu_Run2012A_13Jul2012_v1
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/data_DoubleMu_Run2012A_recover_06Aug2012_v1
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/data_DoubleMu_Run2012B_13Jul2012_v4
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/data_DoubleMu_Run2012C_PromptReco_v1
@@ -43,6 +44,7 @@
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/GluGluToHToZZTo4L_M-130_8TeV-powheg-pythia6
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/GluGluToHToZZTo4L_M-135_8TeV-powheg-pythia6
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/GluGluToHToZZTo4L_M-140_8TeV-powheg-pythia6
+/hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/GluGluToHToZZTo4L_M-145_8TeV-powheg-pythia6
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/GluGluToHToZZTo4L_M-150_8TeV-powheg-pythia6
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/GluGluToHToZZTo4L_M-160_8TeV-powheg-pythia6
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/GluGluToHToZZTo4L_M-170_8TeV-powheg-pythia6
@@ -91,6 +93,7 @@
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/VBF_HToZZTo4L_M-130_8TeV-powheg-pythia6
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/VBF_HToZZTo4L_M-135_8TeV-powheg-pythia6
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/VBF_HToZZTo4L_M-140_8TeV-powheg-pythia6
+/hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/VBF_HToZZTo4L_M-145_8TeV-powheg-pythia6
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/VBF_HToZZTo4L_M-150_8TeV-powheg-pythia6
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/VBF_HToZZTo4L_M-160_8TeV-powheg-pythia6
 /hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/VBF_HToZZTo4L_M-170_8TeV-powheg-pythia6
