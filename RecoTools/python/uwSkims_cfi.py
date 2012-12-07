@@ -11,7 +11,7 @@ Author: Bucky Badger, UW Madison
 import FWCore.ParameterSet.Config as cms
 import os
 
-# So we can get the list of valid paths from the cfg.
+# The list of active paths are defined here.
 skimConfig = cms.PSet(
     paths=cms.vstring()
 )
@@ -36,7 +36,26 @@ singleMuSelector = cms.EDFilter(
     filter=cms.bool(True)
 )
 singleMuPath = cms.Path(singleMuSelector)
-skimConfig.paths.append("singleMuPath")
+# Don't run the single mu path, only single mu + jet
+#skimConfig.paths.append("singleMuPath")
+
+# Make a version which additionally requires a jet.
+jet15Selector = cms.EDFilter(
+    "CandViewRefSelector",
+    src=cms.InputTag("ak5PFJets"),
+    cut=cms.string("abs(eta) < 2.5 & pt > 15"),
+    filter=cms.bool(True),
+)
+jet15NotOverlappingSingleMu = cms.EDFilter(
+    "PFJetViewOverlapSubtraction",
+    src=cms.InputTag("jet15Selector"),
+    subtractSrc=cms.InputTag("singleMuSelector"),
+    minDeltaR=cms.double(0.3),
+    filter=cms.bool(True),
+)
+singleMuPlusJetPath = cms.Path(
+    singleMuSelector + jet15Selector + jet15NotOverlappingSingleMu)
+skimConfig.paths.append("singleMuPlusJetPath")
 
 # We use a 30 GeV for electrons in 2011 data (CMSSW 4)
 single_electron_thresh = 30 if 'CMSSW_4' in os.environ['CMSSW_VERSION'] else 25
@@ -49,7 +68,19 @@ singleElecSelector = cms.EDFilter(
     filter=cms.bool(True)
 )
 singleElecPath = cms.Path(singleElecSelector)
-skimConfig.paths.append("singleElecPath")
+# Don't run the single e path either, just single e + jet
+#skimConfig.paths.append("singleElecPath")
+
+jet15NotOverlappingSingleElec = cms.EDFilter(
+    "PFJetViewOverlapSubtraction",
+    src=cms.InputTag("jet15Selector"),
+    subtractSrc=cms.InputTag("singleElecSelector"),
+    minDeltaR=cms.double(0.3),
+    filter=cms.bool(True),
+)
+singleElecPlusJetPath = cms.Path(
+    singleElecSelector + jet15Selector + jet15NotOverlappingSingleElec)
+skimConfig.paths.append("singleElecPlusJetPath")
 
 # Mu+Tau for H2Tau
 mu14MuSelector = cms.EDFilter(
@@ -65,7 +96,16 @@ tau18JetSelector = cms.EDFilter(
     cut=cms.string("abs(eta) < 2.3 & pt > 18.0"),
     filter=cms.bool(True)
 )
-muTauPath = cms.Path(mu14MuSelector + tau18JetSelector)
+# Make sure we don't count the muon as a jet
+tau18JetsNotOverlappingMu14 = cms.EDFilter(
+    "PFJetViewOverlapSubtraction",
+    src=cms.InputTag("tau18JetSelector"),
+    subtractSrc=cms.InputTag("mu14MuSelector"),
+    minDeltaR=cms.double(0.3),
+    filter=cms.bool(True)
+)
+muTauPath = cms.Path(mu14MuSelector +
+                     tau18JetSelector + tau18JetsNotOverlappingMu14)
 skimConfig.paths.append("muTauPath")
 
 # E+Tau for H2Tau
@@ -75,7 +115,16 @@ e17Selector = cms.EDFilter(
     cut=cms.string("abs(eta) < 2.5 & pt > 17"),
     filter=cms.bool(True),
 )
-eTauPath = cms.Path(e17Selector + tau18JetSelector)
+# Make sure we don't count the electron as a jet
+tau18JetsNotOverlappingE17 = cms.EDFilter(
+    "PFJetViewOverlapSubtraction",
+    src=cms.InputTag("tau18JetSelector"),
+    subtractSrc=cms.InputTag("e17Selector"),
+    minDeltaR=cms.double(0.3),
+    filter=cms.bool(True)
+)
+eTauPath = cms.Path(e17Selector +
+                    tau18JetSelector + tau18JetsNotOverlappingE17)
 skimConfig.paths.append("eTauPath")
 
 # DoubleE for ZZ, VH, and HZG
