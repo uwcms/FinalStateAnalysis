@@ -1,5 +1,3 @@
-import FWCore.ParameterSet.Config as cms
-
 '''
 
 Skims for various UW analysis.  The OR of these skims is used when building the
@@ -9,6 +7,9 @@ Author: Bucky Badger, UW Madison
 
 
 '''
+
+import FWCore.ParameterSet.Config as cms
+import os
 
 # So we can get the list of valid paths from the cfg.
 skimConfig = cms.PSet(
@@ -37,11 +38,14 @@ singleMuSelector = cms.EDFilter(
 singleMuPath = cms.Path(singleMuSelector)
 skimConfig.paths.append("singleMuPath")
 
+# We use a 30 GeV for electrons in 2011 data (CMSSW 4)
+single_electron_thresh = 30 if 'CMSSW_4' in os.environ['CMSSW_VERSION'] else 25
+
 singleElecSelector = cms.EDFilter(
     "GsfElectronSelector",
     src=cms.InputTag('gsfElectrons'),
     cut=cms.string(
-        "abs(eta) < 2.5 & pt > 25.0"),
+        "abs(eta) < 2.5 & pt > %0.0f" % single_electron_thresh),
     filter=cms.bool(True)
 )
 singleElecPath = cms.Path(singleElecSelector)
