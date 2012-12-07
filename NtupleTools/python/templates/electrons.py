@@ -66,8 +66,7 @@ id = PSet(
     objectNearMuonVeto = 'overlapMuons({object_idx},0.05,"isGlobalMuon() & abs(eta()) < 2.4").size()',
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
     objectComesFromHiggs = 'comesFromHiggs({object_idx})',
-    objectGenCharge      = '? (getGenParticle({object_idx}).isAvailable && getGenParticle({object_idx}).isNonnull) ? getGenParticle({object_idx}).pdgId() : -999'
-    objectRecoCharge     = '{object}.charge'
+    objectGenPdgId       = '? ({object}.genParticleRef(0).isAvailable && {object}.genParticleRef(0).isNonnull) ? {object}.genParticleRef(0).pdgId() : -999',
 )
 
 energyCorrections = PSet(
