@@ -11,7 +11,7 @@ function sizeup {
    mkdir -p $outputdir
    name=$1
    echo "Creating size report $name"
-   ./patTuple_cfg.py isMC=$2 globalTag=$3 inputFiles=file:$4 maxEvents=500 \
+   $fsa/PatTools/test/patTuple_cfg.py isMC=$2 globalTag=$3 inputFiles=file:$4 maxEvents=500 \
      outputFile=/tmp/tuple_$name.root analyzeSkimEff=$outputdir/$name.root &> $outputdir/stdoutput_$name.txt
    edmEventSizeReport.py /tmp/tuple_$name.root --wrt $4 > $outputdir/sizes_$name.txt
    rm -f /tmp/tuple_$name.root 
