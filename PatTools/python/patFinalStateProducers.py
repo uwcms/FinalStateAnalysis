@@ -217,8 +217,8 @@ def produce_final_states(process, collections, output_commands,
     process.buildQuadObjects = cms.Sequence()
     for quadobject in _combinatorics(object_types, 4):
         # Don't build states with more than 2 hadronic taus or phos
-        n_taus = [x[0] for x in triobject].count('Tau')
-        n_phos = [x[0] for x in triobject].count('Pho')
+        n_taus = [x[0] for x in quadobject].count('Tau')
+        n_phos = [x[0] for x in quadobject].count('Pho')
         if n_taus > 2:
             continue
         if n_phos > 2:
