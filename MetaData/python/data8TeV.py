@@ -151,6 +151,20 @@ datadefs = {
 		'pu': 'S7',
 		'x_sec': 0.1767,
 	},
+    'ggZZ4L' : {
+        'analyses': ['4L'],
+        'datasetpath': '/GluGluToZZTo4L_8TeV-gg2zz-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM',
+        'pu': 'S7',
+        'xsec': -999,
+        'responsible' : 'Ian',
+    },   
+    'ggZZ2L2L' : {
+        'analyses': ['4L'],
+        'datasetpath': '/GluGluToZZTo2L2L_TuneZ2star_8TeV-gg2zz-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM',
+        'pu': 'S7',
+        'xsec': -999,
+        'responsible' : 'Ian',
+    },   
     'WW_pythi6_tauola' :{
    'analyses': [''],
    'datasetpath': '/WW_TuneZ2star_8TeV_pythia6_tauola/Summer12-PU_S8_START52_V9-v1/AODSIM',

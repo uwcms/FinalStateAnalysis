@@ -160,13 +160,13 @@ namespace photontools {
     {
       //SingleTowerHoverE
       bool passesHoE = false;
-      if( fabs(thePho.superCluster()->eta()) < 1.566 ) { // EB
+      if( fabs(thePho.superCluster()->eta()) < 1.5 ) { // EB
 	passesHoE = 
 	(thePho.userFloat("SingleTowerHoE") < _theid.singleTowerHoE_max_eb &&
 	 thePho.userFloat("SingleTowerHoE") >= _theid.singleTowerHoE_min_eb);
       } else {
 	passesHoE = 
-	(thePho.userFloat("SingleTowerHoE") < _theid.singleTowerHoE_max_ee&&
+	(thePho.userFloat("SingleTowerHoE") < _theid.singleTowerHoE_max_ee &&
 	 thePho.userFloat("SingleTowerHoE") >= _theid.singleTowerHoE_min_ee);
       }
       eval += passesHoE*kSingleTowerHoE;
@@ -175,7 +175,7 @@ namespace photontools {
     {
       //SigmaIEtaIEta
       bool passesSihih = false;
-      if( fabs(thePho.superCluster()->eta()) < 1.566 ) { // EB
+      if( fabs(thePho.superCluster()->eta()) < 1.5 ) { // EB
 	passesSihih = (thePho.sigmaIetaIeta() < _theid.sihih_max_eb &&
 		       thePho.sigmaIetaIeta() >= _theid.sihih_min_eb    );
       } else {
@@ -190,7 +190,7 @@ namespace photontools {
       bool passesPFChargedIso = false;
       double iso_shift = 0.0, the_min, the_max;
 
-      if( fabs(thePho.superCluster()->eta()) < 1.566 ) {
+      if( fabs(thePho.superCluster()->eta()) < 1.5 ) {
 	iso_shift = _theid.pfChargedIso_pt_slope_eb*thePho.pt();
 	the_max   = _theid.pfChargedIso_max_eb;
 	the_min   = _theid.pfChargedIso_min_eb;
@@ -217,7 +217,7 @@ namespace photontools {
       bool passesPFNeutralIso = false;
       double iso_shift = 0.0, the_min, the_max;
 
-      if( fabs(thePho.superCluster()->eta()) < 1.566 ) {
+      if( fabs(thePho.superCluster()->eta()) < 1.5 ) {
 	iso_shift = _theid.pfNeutralIso_pt_slope_eb*thePho.pt();
 	the_max   = _theid.pfNeutralIso_max_eb;
 	the_min   = _theid.pfNeutralIso_min_eb;
@@ -244,7 +244,7 @@ namespace photontools {
       bool passesPFPhotonIso = false;
       double iso_shift = 0.0, the_min, the_max;
 
-      if( fabs(thePho.superCluster()->eta()) < 1.566 ) {
+      if( fabs(thePho.superCluster()->eta()) < 1.5 ) {
 	iso_shift = _theid.pfPhotonIso_pt_slope_eb*thePho.pt();
 	the_max   = _theid.pfPhotonIso_max_eb;
 	the_min   = _theid.pfPhotonIso_min_eb;

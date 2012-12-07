@@ -95,15 +95,23 @@ void PATPhotonPFIsolationEmbedder::produce(Event& evt,
       pfisolation the_iso = _iso(currentPhoton,pfparts.product(),the_pv,vtxs);
       
       if (iVtx == _defaultVertex) {
-	newPhoton.addUserFloat(_userFloatPrefix+_cone+postfix,
-			       the_iso.cone_size);
-	newPhoton.setIsolation(pat::PfAllParticleIso,
-			       the_iso.iso_chg_had  +
-			       the_iso.iso_neut_had +
-			       the_iso.iso_photon     );
 	newPhoton.setIsolation(pat::PfChargedHadronIso,the_iso.iso_chg_had);
 	newPhoton.setIsolation(pat::PfNeutralHadronIso,the_iso.iso_neut_had);
 	newPhoton.setIsolation(pat::PfGammaIso,the_iso.iso_photon);
+	newPhoton.addUserFloat(_userFloatPrefix+_i_chad+postfix, 
+			       the_iso.iso_chg_had);
+	newPhoton.addUserFloat(_userFloatPrefix+_i_nhad+postfix, 
+			       the_iso.iso_neut_had);
+	newPhoton.addUserFloat(_userFloatPrefix+_i_pho+postfix,  
+			       the_iso.iso_photon);
+	newPhoton.addUserFloat(_userFloatPrefix+_cone+postfix,
+			       the_iso.cone_size);
+	
+	newPhoton.setIsolation(pat::PfAllParticleIso,
+			       the_iso.iso_chg_had  +
+			       the_iso.iso_neut_had +
+			       the_iso.iso_photon     );	
+	
       } else {
 	newPhoton.addUserFloat(_userFloatPrefix+_i_chad+postfix, 
 			       the_iso.iso_chg_had);

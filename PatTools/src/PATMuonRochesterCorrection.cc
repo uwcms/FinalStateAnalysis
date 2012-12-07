@@ -26,7 +26,8 @@ namespace pattools {
   PATMuonRochesterCorrection::PATMuonRochesterCorrection(const PSet& conf,
 							 const bool isMC):
     _errupPostfix("_errUp"),
-    _errdownPostfix("_errDown"){
+    _errdownPostfix("_errDown"),
+    _tkFitErr("_tkFitErr") {
     
     _userP4Prefix = conf.getParameter<std::string>("userP4Prefix");
         
@@ -82,7 +83,7 @@ namespace pattools {
     vstring::const_iterator end = _apply.end();
     
     for( ; app != end; ++app ) {
-      math::XYZTLorentzVector corr_p4, errup_p4, errdown_p4;
+      std::pair<math::XYZTLorentzVector,float> corr_p4, errup_p4, errdown_p4;
       float syst = _calibs[*app].syst_err;
 
       corr_p4    = _calibs[*app].central_value->correct(mu->p4(),
@@ -97,15 +98,18 @@ namespace pattools {
 
       out.addUserData<math::XYZTLorentzVector>(_userP4Prefix+
 					       *app,
-					       corr_p4);
+					       corr_p4.first);
+      out.addUserFloat(_userP4Prefix+
+		       *app+_tkFitErr,
+		       corr_p4.second);
       out.addUserData<math::XYZTLorentzVector>(_userP4Prefix+
 					       *app+
 					       _errupPostfix,
-					       errup_p4);
+					       errup_p4.first);
       out.addUserData<math::XYZTLorentzVector>(_userP4Prefix+
 					       *app+
 					       _errdownPostfix,
-					       errdown_p4);
+					       errdown_p4.first);
     }
     
     return out;

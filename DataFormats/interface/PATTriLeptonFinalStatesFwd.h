@@ -30,8 +30,6 @@ typedef PATTripletFinalStateT<pat::Electron, pat::Muon, pat::Photon> PATElecMuPh
 FWD_TYPEDEFS(PATElecMuPhoFinalState)
 typedef PATTripletFinalStateT<pat::Electron, pat::Tau, pat::Tau> PATElecTauTauFinalState;
 FWD_TYPEDEFS(PATElecTauTauFinalState)
-typedef PATTripletFinalStateT<pat::Electron, pat::Tau, pat::Photon> PATElecTauPhoFinalState;
-FWD_TYPEDEFS(PATElecTauPhoFinalState)
 typedef PATTripletFinalStateT<pat::Electron, pat::Photon, pat::Photon> PATElecPhoPhoFinalState;
 FWD_TYPEDEFS(PATElecPhoPhoFinalState)
 typedef PATTripletFinalStateT<pat::Muon, pat::Muon, pat::Muon> PATMuMuMuFinalState;
@@ -42,17 +40,7 @@ typedef PATTripletFinalStateT<pat::Muon, pat::Muon, pat::Photon> PATMuMuPhoFinal
 FWD_TYPEDEFS(PATMuMuPhoFinalState)
 typedef PATTripletFinalStateT<pat::Muon, pat::Tau, pat::Tau> PATMuTauTauFinalState;
 FWD_TYPEDEFS(PATMuTauTauFinalState)
-typedef PATTripletFinalStateT<pat::Muon, pat::Tau, pat::Photon> PATMuTauPhoFinalState;
-FWD_TYPEDEFS(PATMuTauPhoFinalState)
 typedef PATTripletFinalStateT<pat::Muon, pat::Photon, pat::Photon> PATMuPhoPhoFinalState;
 FWD_TYPEDEFS(PATMuPhoPhoFinalState)
-typedef PATTripletFinalStateT<pat::Tau, pat::Tau, pat::Tau> PATTauTauTauFinalState;
-FWD_TYPEDEFS(PATTauTauTauFinalState)
-typedef PATTripletFinalStateT<pat::Tau, pat::Tau, pat::Photon> PATTauTauPhoFinalState;
-FWD_TYPEDEFS(PATTauTauPhoFinalState)
-typedef PATTripletFinalStateT<pat::Tau, pat::Photon, pat::Photon> PATTauPhoPhoFinalState;
-FWD_TYPEDEFS(PATTauPhoPhoFinalState)
-typedef PATTripletFinalStateT<pat::Photon, pat::Photon, pat::Photon> PATPhoPhoPhoFinalState;
-FWD_TYPEDEFS(PATPhoPhoPhoFinalState)
 
 #endif

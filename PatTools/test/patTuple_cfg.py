@@ -22,13 +22,14 @@ options = TauVarParsing.TauVarParsing(
     # Used for the EGamma electron calibration
     # See https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaElectronEnergyScale
     dataset='Prompt',
-	dumpCfg='', #used for crab
+    dumpCfg='', #used for crab
     clean = 1,
     embedded=0, # If running on embedded samples, set to 1
+    analyzeSkimEff='', # Analyze the skim efficiency and put it in this file
 )
 
 files = [
-    
+
     #"root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/29Jun2012-v1/0001/C46FD2A9-3FC3-E111-A1A8-485B39800C00.root"
 ]
 
@@ -112,19 +113,29 @@ process.eventCount.uwMeta = cms.PSet(
 
 process.schedule = cms.Schedule()
 
-# Load all of our skim paths
-process.load("FinalStateAnalysis.RecoTools.uwSkims_cfi")
-# PAT tuplize all skim paths
-for skim_path in process.skimConfig.paths:
-    print "Building skim path:", skim_path
-    the_path = getattr(process, skim_path)
-    # Count every event, even the ones that fail the skim
-    the_path.insert(0, process.eventCount)
+# add a bare tuplization path if we are using pass thru
+if options.passThru:
+    print "Running in Pass-Thru Mode, no skim will be done"
+    process.bareTuplizer = cms.Path(process.tuplize)
+    process.bareTuplizer.insert(0, process.eventCount)
     if options.isMC and not options.embedded:
-        the_path.insert(0, process.dqmEventCount)
-    the_path += process.tuplize
-    process.schedule.append(the_path)
-process.out.SelectEvents.SelectEvents = process.skimConfig.paths
+            process.bareTuplizer.insert(0, process.dqmEventCount)
+    process.schedule.append(process.bareTuplizer)
+    del process.out.SelectEvents
+else:
+    # Load all of our skim paths
+    process.load("FinalStateAnalysis.RecoTools.uwSkims_cfi")
+    # PAT tuplize all skim paths
+    for skim_path in process.skimConfig.paths:
+        print "Building skim path:", skim_path
+        the_path = getattr(process, skim_path)
+        # Count every event, even the ones that fail the skim
+        the_path.insert(0, process.eventCount)
+        if options.isMC and not options.embedded:
+            the_path.insert(0, process.dqmEventCount)
+        the_path += process.tuplize
+        process.schedule.append(the_path)
+    process.out.SelectEvents.SelectEvents = process.skimConfig.paths
 output_commands.append('*_dqmEventCount_*_*')
 output_commands.append('*_eventCount_*_*')
 output_commands.append('*_MEtoEDMConverter_*_*')
@@ -135,6 +146,7 @@ for command in output_commands:
         process.out.outputCommands.append('keep %s' % command)
     else:
         process.out.outputCommands.append(command)
+
 
 # Save DQM stuff created during pat tuplization
 process.MEtoEDMConverter = cms.EDProducer(
@@ -148,12 +160,25 @@ process.MEtoEDMConverter = cms.EDProducer(
     deleteAfterCopy = cms.untracked.bool(True)
 )
 
-
-
-process.outpath = cms.EndPath(    
-    process.MEtoEDMConverter*    
+process.outpath = cms.EndPath(
+    process.MEtoEDMConverter *
     process.out)
+
 process.schedule.append(process.outpath)
+
+if options.analyzeSkimEff:
+    process.TFileService = cms.Service(
+        "TFileService",
+        fileName = cms.string(options.analyzeSkimEff)
+    )
+    # Track information about the efficiency of all the skim paths
+    # Must be run after all other paths.
+    process.skimEfficiency = cms.EDAnalyzer(
+        "SkimEfficiencyAnalyzer",
+        paths = process.skimConfig.paths
+    )
+    process.outpath += process.skimEfficiency
+
 
 # Tell the framework to shut up!
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
@@ -165,9 +190,9 @@ if options.keepAll:
 
 if options.clean:
     print "Cleaning up the cruft!"
-    unrun, unused, killed = cfgcleaner.clean_cruft(
-        process, process.out.outputCommands.value())
-    print "Removed %i unrun and %i unused modules!" % (len(unrun), len(unused))
+    #unrun, unused, killed = cfgcleaner.clean_cruft(
+        #process, process.out.outputCommands.value())
+    #print "Removed %i unrun and %i unused modules!" % (len(unrun), len(unused))
 
 ###############################################################################
 ### DEBUG options #############################################################
@@ -175,8 +200,6 @@ if options.clean:
 
 if options.verbose:
     process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-if options.passThru:
-    process.out.SelectEvents.SelectEvents = cms.vstring()
 
 if options.profile:
     # From https://twiki.cern.ch/twiki/bin/viewauth/CMS/MemoUnixPatrick#Timing_profiling_avec_valgrind
@@ -190,6 +213,5 @@ if options.profile:
     )
 
 if options.dumpCfg:
-	dump_cfg=open(options.dumpCfg,'w')
-	dump_cfg.write(process.dumpPython())
-
+    dump_cfg = open(options.dumpCfg, 'w')
+    dump_cfg.write(process.dumpPython())

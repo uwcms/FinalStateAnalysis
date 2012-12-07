@@ -143,8 +143,8 @@ const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter)
   }
   else{
     cms::Exception ex("ImplementationMissing");
-    ex.addContext("No implementation was found to get gen particle from a requested daughter, please consider either fixing the configuration or adding the implementation in FinalStateAnalysis/DataAlgos/src/helpers.cc");
-    ex.addAdditionalInfo("Available objects are pat::Tau, pat::Muon, pat::Electron, pat::Jet, pat::Photon");
+    ex << "No implementation was found to get gen particle from a requested daughter, please consider either fixing the configuration or adding the implementation in FinalStateAnalysis/DataAlgos/src/helpers.cc\n";
+    ex << "Available objects are pat::Tau, pat::Muon, pat::Electron, pat::Jet, pat::Photon\n";
     throw ex;
   }
 }

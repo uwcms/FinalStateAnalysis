@@ -74,7 +74,7 @@ void PATJetPUIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 
     // Embed in each pat jet
     for (size_t ijet = 0; ijet < inputs->size(); ++ijet) {
-      float mva = (*disc)[inputs->refAt(ijet)];
+      float mva = (*disc)[inputs->refAt(ijet)->originalObjectRef()];
       output->at(ijet).addUserFloat(mvaName, mva);
     }
   }
@@ -87,7 +87,7 @@ void PATJetPUIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 
     // Embed in each pat jet
     for (size_t ijet = 0; ijet < inputs->size(); ++ijet) {
-      int idflag = (*id)[inputs->refAt(ijet)];
+      int idflag = (*id)[inputs->refAt(ijet)->originalObjectRef()];
       bool passesLoose = PileupJetIdentifier::passJetId(
           idflag, PileupJetIdentifier::kLoose);
       bool passesMedium = PileupJetIdentifier::passJetId(
