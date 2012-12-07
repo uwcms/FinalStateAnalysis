@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  SkimEfficiencyDQMAnalyzer.cc
+ *       Filename:  SkimEfficiencyAnalyzer.cc
  *
  *    Description:  Track the efficiencies of different skim paths.
  *
@@ -18,35 +18,40 @@
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
-#include "DQMServices/Core/interface/MonitorElement.h"
-#include "DQMServices/Core/interface/DQMStore.h"
 
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
-#include "FWCore/ServiceRegistry/interface/Service.h"
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include "DataFormats/Common/interface/TriggerResults.h"
 #include "FWCore/Common/interface/TriggerNames.h"
 
-class SkimEfficiencyDQMAnalyzer : public edm::EDAnalyzer {
+#include "CommonTools/Utils/interface/TFileDirectory.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+
+#include <TH1F.h>
+#include <TH2F.h>
+
+class SkimEfficiencyAnalyzer : public edm::EDAnalyzer {
   public:
-    SkimEfficiencyDQMAnalyzer(const edm::ParameterSet& pset);
-    virtual ~SkimEfficiencyDQMAnalyzer(){}
+    SkimEfficiencyAnalyzer(const edm::ParameterSet& pset);
+    virtual ~SkimEfficiencyAnalyzer(){}
     void analyze(const edm::Event& evt, const edm::EventSetup& es);
+    void endJob();
   private:
     typedef std::vector<std::string> vstring;
     vstring paths_;
-    MonitorElement* passedBits_;
-    MonitorElement* exclusiveBits_;
-    MonitorElement* correlation_;
+    TH1F* passedBits_;
+    TH1F* exclusiveBits_;
+    TH2F* correlation_;
 
     // matches structure of paths - don't reallocate every event.
     std::vector<bool> results_;
 };
 
-SkimEfficiencyDQMAnalyzer::SkimEfficiencyDQMAnalyzer(const edm::ParameterSet& pset) {
+SkimEfficiencyAnalyzer::SkimEfficiencyAnalyzer(const edm::ParameterSet& pset) {
 
   paths_ = pset.getParameter<vstring>("paths");
 
@@ -55,40 +60,45 @@ SkimEfficiencyDQMAnalyzer::SkimEfficiencyDQMAnalyzer(const edm::ParameterSet& ps
     results_.push_back(false);
   }
 
-  DQMStore* store = &*edm::Service<DQMStore>();
-  passedBits_ = store->book1D(
+  edm::Service<TFileService> fs;
+
+  passedBits_ = fs->make<TH1F>(
       "passed", "Number of events in each path",
       paths_.size() + 2,  // each + total + any
       -0.5, paths_.size() + 2 - 0.5);
   // Set bin labels
-  passedBits_->setBinLabel(1, "total");
-  passedBits_->setBinLabel(2, "any");
+  passedBits_->GetXaxis()->SetBinLabel(1, "total");
+  passedBits_->GetXaxis()->SetBinLabel(2, "any");
   for (size_t i = 0; i < paths_.size(); ++i) {
-    passedBits_->setBinLabel(3+i, paths_[i]);
+    passedBits_->GetXaxis()->SetBinLabel(3+i, paths_[i].c_str());
   }
+  passedBits_->SetStats(false);
 
-  exclusiveBits_ = store->book1D(
+  exclusiveBits_ = fs->make<TH1F>(
       "pathExlcusivePass", "Number of exclusive events in each path",
       paths_.size() + 2,  // each + total
       -0.5, paths_.size() + 2 - 0.5);
   // Set bin labels
-  exclusiveBits_->setBinLabel(1, "total");
-  exclusiveBits_->setBinLabel(2, "one path only");
+  exclusiveBits_->GetXaxis()->SetBinLabel(1, "total");
+  exclusiveBits_->GetXaxis()->SetBinLabel(2, "one path only");
   for (size_t i = 0; i < paths_.size(); ++i) {
-    exclusiveBits_->setBinLabel(3+i, paths_[i]);
+    exclusiveBits_->GetXaxis()->SetBinLabel(3+i, paths_[i].c_str());
   }
+  exclusiveBits_->SetStats(false);
 
-  correlation_ = store->book2D(
+  correlation_ = fs->make<TH2F>(
       "pathCorrelation", "Correlation between paths",
       paths_.size(),  -0.5, paths_.size() - 0.5,
       paths_.size(),  -0.5, paths_.size() - 0.5);
   for (size_t i = 0; i < paths_.size(); ++i) {
-    correlation_->setBinLabel(i+1, paths_[i], 1);
-    correlation_->setBinLabel(i+1, paths_[i], 2);
+    correlation_->GetXaxis()->SetBinLabel(i+1, paths_[i].c_str());
+    correlation_->GetYaxis()->SetBinLabel(i+1, paths_[i].c_str());
   }
+  correlation_->SetDrawOption("colz");
+  correlation_->SetStats(false);
 }
 
-void SkimEfficiencyDQMAnalyzer::analyze(const edm::Event& evt, const edm::EventSetup& es) {
+void SkimEfficiencyAnalyzer::analyze(const edm::Event& evt, const edm::EventSetup& es) {
   edm::Handle<edm::TriggerResults> triggerResults;
   evt.getByLabel(edm::InputTag("TriggerResults"), triggerResults);
 
@@ -138,5 +148,18 @@ void SkimEfficiencyDQMAnalyzer::analyze(const edm::Event& evt, const edm::EventS
   }
 }
 
+void SkimEfficiencyAnalyzer::endJob() {
+  // Normalize the correlation plot by rows
+  // Reading a row: each entry is what fraciton of events passing that trigger
+  // passed the trigger in the column.
+  for(size_t i = 0; i < paths_.size(); ++i) {
+    double total_counts = correlation_->GetBinContent(i+1, i+1);
+    for (size_t j = 0; j < paths_.size(); ++j) {
+      double current = correlation_->GetBinContent(j+1, i+1);
+      correlation_->SetBinContent(j+1, i+1, current/total_counts);
+    }
+  }
+}
+
 #include "FWCore/Framework/interface/MakerMacros.h"
-DEFINE_FWK_MODULE(SkimEfficiencyDQMAnalyzer);
+DEFINE_FWK_MODULE(SkimEfficiencyAnalyzer);

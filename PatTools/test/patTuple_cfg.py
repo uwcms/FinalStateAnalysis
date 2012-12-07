@@ -25,7 +25,7 @@ options = TauVarParsing.TauVarParsing(
     dumpCfg='', #used for crab
     clean = 1,
     embedded=0, # If running on embedded samples, set to 1
-    saveDQM='', # Save DQM output into specified file
+    analyzeSkimEff='', # Analyze the skim efficiency and put it in this file
 )
 
 files = [
@@ -160,31 +160,24 @@ process.MEtoEDMConverter = cms.EDProducer(
     deleteAfterCopy = cms.untracked.bool(True)
 )
 
-# Track information about the efficiency of all the skim paths
-# Must be run after all other paths.
-process.skimEfficiency = cms.EDAnalyzer(
-    "SkimEfficiencyDQMAnalyzer",
-    paths = process.skimConfig.paths
-)
-
 process.outpath = cms.EndPath(
-    process.skimEfficiency *
     process.MEtoEDMConverter *
     process.out)
 
-if options.saveDQM:
-    #process.load("DQMServices.Components.DQMFileSaver_cfi")
-    #process.dqmSaver.saveAtJobEnd = True
-    #process.dqmSaver.forceRunNumber = 999
-    #process.dqmSaver.workflow = '/FSA/PatTuple/Skim'
-    process.dqmSaver = cms.EDAnalyzer(
-        "TauDQMSimpleFileSaver",
-         outputFileName = cms.string(options.saveDQM)
-    )
-    process.dqmSave = cms.Path(process.dqmSaver)
-    process.schedule.append(process.dqmSave)
-
 process.schedule.append(process.outpath)
+
+if options.analyzeSkimEff:
+    process.TFileService = cms.Service(
+        "TFileService",
+        fileName = cms.string(options.analyzeSkimEff)
+    )
+    # Track information about the efficiency of all the skim paths
+    # Must be run after all other paths.
+    process.skimEfficiency = cms.EDAnalyzer(
+        "SkimEfficiencyAnalyzer",
+        paths = process.skimConfig.paths
+    )
+    process.outpath += process.skimEfficiency
 
 
 # Tell the framework to shut up!
