@@ -279,7 +279,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Customize/embed all our sequences
     process.load("FinalStateAnalysis.PatTools.patJetProduction_cff")
     # We have to keep all jets (for the MVA MET...)
-    process.patJetGarbageRemoval.cut = 'pt > 0'
+    process.patJetGarbageRemoval.cut = 'pt > 12'
 
     final_jet_collection = chain_sequence(
         process.customizeJetSequence, "patJets")
