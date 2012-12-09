@@ -356,7 +356,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # We have to make our clone of cleanPatTaus separately, since e/mu
     # cleaning is applied - therefore it isn't in the customizeTausSequence.
     process.cleanPatTausForMETSyst = process.cleanPatTaus.clone(
-        src = cms.InputTag(process.cleanPatTaus.src.value() + "ForMETSyst"))
+        src=cms.InputTag(process.cleanPatTaus.src.value() + "ForMETSyst"))
+    process.cleanPatTausForMETSyst.preselection = ''
+    process.cleanPatTausForMETSyst.finalCut = ''
     process.tuplize += process.cleanPatTausForMETSyst
 
     # Setup MET production
