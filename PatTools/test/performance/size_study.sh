@@ -24,4 +24,6 @@ sizeup ttbar 1 $mcgt /hdfs/store/mc/Summer12_DR53X/TTJets_MassiveBinDECAY_TuneZ2
 
 wait
 
+size_study_report.py $label
+
 echo "done!"
