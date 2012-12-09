@@ -314,6 +314,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patMuonRochesterCorrectionEmbedder.isMC = cms.bool(bool(isMC))
 
     process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
+    # Require all taus to pass decay mode finding and have high PT
+    process.patTauGarbageRemoval.cut = cms.string(
+        "pt > 17 && abs(eta) < 2.5 && tauID('decayModeFinding')")
     final_tau_collection = chain_sequence(
         process.customizeTauSequence, "selectedPatTaus")
     # Inject into the pat sequence
@@ -324,9 +327,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Remove muons and electrons
     process.cleanPatTaus.checkOverlaps.muons.requireNoOverlaps = False
     process.cleanPatTaus.checkOverlaps.electrons.requireNoOverlaps = False
-    # Apply a loose preselection
-    process.cleanPatTaus.preselection = 'abs(eta) < 2.5 & pt > 17'
-    # Don't apply any "final" cut
+    # Cuts already applied by the garbage removal
+    process.cleanPatTaus.preselection = ''
     process.cleanPatTaus.finalCut = ''
 
     # Setup pat::Photon Production
@@ -347,6 +349,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.tausForMetSyst = helpers.cloneProcessingSnippet(
         process, process.customizeTauSequence, 'ForMETSyst')
     # Don't apply any cut for these
+    process.patTauGarbageRemovalForMETSyst.cut = ''
     process.patJetGarbageRemovalForMETSyst.cut = ''
     process.tuplize += process.jetsForMetSyst
     process.tuplize += process.tausForMetSyst
