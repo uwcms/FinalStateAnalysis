@@ -153,11 +153,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
         process.load("RecoJets.Configuration.RecoPFJets_cff")
         process.ak5PFJets.doAreaFastjet = True
         process.tuplize += process.ak5PFJets
-        # Only keep the new ak5PFJets
-        output_commands.append('*_ak5PFJets_*_%s' % process.name_())
-    else:
-        # Just keep the normal ones
-        output_commands.append('*_ak5PFJets_*_*')
 
     # In the embedded samples, we need to re-run the b-tagging
     if kwargs['embedded']:
@@ -279,7 +274,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Customize/embed all our sequences
     process.load("FinalStateAnalysis.PatTools.patJetProduction_cff")
     # We have to keep all jets (for the MVA MET...)
-    process.patJetGarbageRemoval.cut = 'pt > 0'
+    process.patJetGarbageRemoval.cut = 'pt > 12'
 
     final_jet_collection = chain_sequence(
         process.customizeJetSequence, "patJets")
@@ -319,6 +314,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patMuonRochesterCorrectionEmbedder.isMC = cms.bool(bool(isMC))
 
     process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
+    # Require all taus to pass decay mode finding and have high PT
+    process.patTauGarbageRemoval.cut = cms.string(
+        "pt > 17 && abs(eta) < 2.5 && tauID('decayModeFinding')")
     final_tau_collection = chain_sequence(
         process.customizeTauSequence, "selectedPatTaus")
     # Inject into the pat sequence
@@ -329,9 +327,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Remove muons and electrons
     process.cleanPatTaus.checkOverlaps.muons.requireNoOverlaps = False
     process.cleanPatTaus.checkOverlaps.electrons.requireNoOverlaps = False
-    # Apply a loose preselection
-    process.cleanPatTaus.preselection = 'abs(eta) < 2.5 & pt > 17'
-    # Don't apply any "final" cut
+    # Cuts already applied by the garbage removal
+    process.cleanPatTaus.preselection = ''
     process.cleanPatTaus.finalCut = ''
 
     # Setup pat::Photon Production
@@ -344,10 +341,32 @@ def configurePatTuple(process, isMC=True, **kwargs):
                                        process.customizePhotonSequence)
     process.cleanPatPhotons.src = final_photon_collection
 
+    # We cut out a lot of the junky taus and jets - but we need these
+    # to correctly apply the MET uncertainties.  So, let's make a
+    # non-cleaned version of the jet and tau sequence.
+    process.jetsForMetSyst = helpers.cloneProcessingSnippet(
+        process, process.customizeJetSequence, 'ForMETSyst')
+    process.tausForMetSyst = helpers.cloneProcessingSnippet(
+        process, process.customizeTauSequence, 'ForMETSyst')
+    # Don't apply any cut for these
+    process.patTauGarbageRemovalForMETSyst.cut = ''
+    process.patJetGarbageRemovalForMETSyst.cut = ''
+    process.tuplize += process.jetsForMetSyst
+    process.tuplize += process.tausForMetSyst
+    # We have to make our clone of cleanPatTaus separately, since e/mu
+    # cleaning is applied - therefore it isn't in the customizeTausSequence.
+    process.cleanPatTausForMETSyst = process.cleanPatTaus.clone(
+        src=cms.InputTag(process.cleanPatTaus.src.value() + "ForMETSyst"))
+    process.cleanPatTausForMETSyst.preselection = ''
+    process.cleanPatTausForMETSyst.finalCut = ''
+    process.patTausEmbedJetInfoForMETSyst.jetSrc = \
+        final_jet_collection.value() + "ForMETSyst"
+    process.tuplize += process.cleanPatTausForMETSyst
+
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
     # The MET systematics depend on all other systematics
-    process.systematicsMET.tauSrc = cms.InputTag("cleanPatTaus")
+    process.systematicsMET.tauSrc = cms.InputTag("cleanPatTausForMETSyst")
     process.systematicsMET.muonSrc = cms.InputTag("cleanPatMuons")
     process.systematicsMET.electronSrc = cms.InputTag("cleanPatElectrons")
 
@@ -368,6 +387,10 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Keep all the data formats needed for the systematics
     output_commands.append('recoLeafCandidates_*_*_%s'
+                           % process.name_())
+    # We can drop to jet and tau MET specific products. They were only used for
+    # computation of the MET numbers.
+    output_commands.append('drop recoLeafCandidates_*ForMETSyst_*_%s'
                            % process.name_())
 
     # Define the default lepton cleaning
