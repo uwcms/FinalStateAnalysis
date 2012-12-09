@@ -344,7 +344,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
                                        process.customizePhotonSequence)
     process.cleanPatPhotons.src = final_photon_collection
 
-    # Make clones of the Tau and Jet sequences w/o and pt requirement
+    # We cut out a lot of the junky taus and jets - but we need these
+    # to correctly apply the MET uncertainties.  So, let's make a
+    # non-cleaned version of the jet and tau sequence.
     process.jetsForMetSyst = helpers.cloneProcessingSnippet(
         process, process.customizeJetSequence, 'ForMETSyst')
     process.tausForMetSyst = helpers.cloneProcessingSnippet(
@@ -359,6 +361,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
         src=cms.InputTag(process.cleanPatTaus.src.value() + "ForMETSyst"))
     process.cleanPatTausForMETSyst.preselection = ''
     process.cleanPatTausForMETSyst.finalCut = ''
+    process.patTausEmbedJetInfoForMETSyst.jetSrc = \
+        final_jet_collection.value() + "ForMETSyst"
     process.tuplize += process.cleanPatTausForMETSyst
 
     # Setup MET production
