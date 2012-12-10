@@ -83,7 +83,7 @@ def produce_final_states(process, collections, output_commands,
     process.electronsForFinalStates = cms.EDFilter(
         "PATElectronRefSelector",
         src=cms.InputTag(esrc),
-        cut=cms.string('abs(eta) < 2.5 & pt > 7'),
+        cut=cms.string('abs(superCluster().eta) < 2.5 & pt > 7'),
         filter=cms.bool(False),
     )
 
