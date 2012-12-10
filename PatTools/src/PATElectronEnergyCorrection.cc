@@ -139,6 +139,7 @@ namespace pattools {
     EcalClusterLazyTools clustools(*_event,*_esetup,
 				   _recHitsEB,_recHitsEE);
 
+    float max_cor_pt = out->pt();
     
     for( ; app != end; ++app ) {
       value_type temp = value_type(new value_type::element_type(*ele));
@@ -187,7 +188,12 @@ namespace pattools {
 			_errPostfix,
 			temp->p4Error(reco::GsfElectron::P4_COMBINATION));
       
+      float this_pt = temp->p4(reco::GsfElectron::P4_COMBINATION).pt();
+      max_cor_pt = std::max(max_cor_pt, 
+			    this_pt);
     }
+
+    out->addUserFloat("corPtMax",max_cor_pt);
 
     return out;
   }  
