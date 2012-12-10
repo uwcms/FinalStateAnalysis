@@ -41,9 +41,12 @@ pv_info = PSet(
     )
 
 met = PSet(
-    metEt = 'evt.met.et',
-    metPhi = 'evt.met.phi',
+    metEt = 'evt.met("pfmet").et',
+    metPhi = 'evt.met("pfmet").phi',
     metSignificance = 'evt.metSignificance',
+    mvametEt = 'evt.met("mvamet").et',
+    mvametPhi = 'evt.met("mvamet").phi',
+    mvametSignificance = 'evt.met("mvamet").significance',
 )
 
 gen = PSet(
