@@ -82,7 +82,7 @@ namespace pattools {
     vstring::const_iterator app = _apply.begin();
     vstring::const_iterator end = _apply.end();
     
-    double max_cor_pt = out.pt();
+    float max_cor_pt = out.pt();
 
     for( ; app != end; ++app ) {
       std::pair<math::XYZTLorentzVector,float> corr_p4, errup_p4, errdown_p4;
@@ -113,11 +113,12 @@ namespace pattools {
 					       _errdownPostfix,
 					       errdown_p4.first);
 
+      float this_pt = corr_p4.first.pt();
       max_cor_pt = std::max(max_cor_pt, 
-			    corr_p4.first.pt());
+			    this_pt);
     }
     
-    out.addUserData("corPtMax",max_cor_pt);
+    out.addUserFloat("corPtMax",max_cor_pt);
 
     return out;
   }  
