@@ -393,7 +393,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
                            % process.name_())
 
     # Define the default lepton cleaning
-    process.cleanPatElectrons.preselection = cms.string('pt > 5')
+    process.cleanPatElectrons.preselection = cms.string('userFloat("maxCorPt") > 5')
     process.cleanPatElectrons.checkOverlaps.muons.requireNoOverlaps = False
     # Make sure we don't kill any good taus by calling them electrons
     # Note that we don't actually remove these overlaps.
