@@ -193,7 +193,7 @@ namespace pattools {
 			    this_pt);
     }
 
-    out->addUserFloat("corPtMax",max_cor_pt);
+    out->addUserFloat("maxCorPt",max_cor_pt);
 
     return out;
   }  
