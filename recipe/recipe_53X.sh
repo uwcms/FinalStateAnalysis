@@ -21,12 +21,12 @@ then
 
   echo "Checking out tuple production tags"
   
-  addpkg PhysicsTools/PatAlgos           V08-09-42-00
+  addpkg PhysicsTools/PatAlgos           V08-09-47
   addpkg PhysicsTools/PatUtils           V03-09-26
   addpkg CommonTools/ParticleFlow        V00-03-16
+  addpkg FWCore/GuiBrowsers              V00-00-70
   #24/10/2012 LAG -- PF Isolation for Photons
-  #latest pat recipe
-  addpkg RecoParticleFlow/PFProducer     V15-01-11
+  addpkg RecoParticleFlow/PFProducer     V15-02-06
   addpkg CommonTools/RecoUtils           V00-00-12
   cvs up -r 1.4 CommonTools/RecoUtils/BuildFile.xml
   addpkg DataFormats/HLTReco             V02-06-05
@@ -41,9 +41,9 @@ then
   popd
 
   echo "Checking out Tau POG recipe"
-  cvs co -r V01-04-17 RecoTauTag/RecoTau #equivalent to 04-14
-  cvs co -r V01-04-03 RecoTauTag/Configuration
-  cvs co -r V00-04-01 CondFormats/EgammaObjects
+  cvs co -r V01-04-20 RecoTauTag/RecoTau #equivalent to 04-14
+  cvs co -r V01-04-08 RecoTauTag/Configuration
+  cvs co -r V00-04-00 CondFormats/EgammaObjects
   cvs up -r 1.53 PhysicsTools/PatAlgos/python/tools/tauTools.py
   cvs up -r 1.12 PhysicsTools/PatAlgos/python/producersLayer1/tauProducer_cff.py
   cvs up -r 1.15 PhysicsTools/PatAlgos/python/recoLayer0/tauDiscriminators_cff.py

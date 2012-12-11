@@ -20,6 +20,7 @@
 
 
 using namespace reco;
+using namespace reco::details;
 
 //--------------------------------------------------------------------------------------------------
 ElectronIDMVA::ElectronIDMVA() :
