@@ -31,44 +31,49 @@ PATMultiCandFinalState* PATMultiCandFinalState::clone() const {
 }
 
 const reco::Candidate* PATMultiCandFinalState::daughterUnsafe(size_t i) const {
-  const reco::Candidate* output = NULL;
-  if (i < cands_.size())
-    output = cands_[i].get();
-  return output;
+  try {
+    return cands_.at(i).get();
+  } catch ( std::out_of_range &oor) {
+    std::cerr << "Daughter index out of range! : " << oor.what() << std::endl;
+    return NULL;
+  }
 }
 
 const reco::CandidatePtr
 PATMultiCandFinalState::daughterPtrUnsafe(size_t i) const {
-  reco::CandidatePtr output;
-  if (i < cands_.size())
-    output = cands_[i];
-  return output;
-}
-
-size_t PATMultiCandFinalState::numberOfDaughters() const {
-  return cands_.size();
+  try {
+    return cands_.at(i);
+  } catch ( std::out_of_range &oor) {
+    std::cerr << "Daughter index out of range! : " << oor.what() << std::endl;
+    return reco::CandidatePtr();
+  }
 }
 
 reco::CandidatePtr PATMultiCandFinalState::daughterUserCandUnsafe(size_t i,
     const std::string& tag) const {
   reco::CandidatePtr theCand = cands_.at(i); // will throw OOB exception
 
-  if( dynamic_cast<const pat::Electron*>(theCand.get()) ) {
+  if( theCand->isElectron() && 
+      dynamic_cast<const pat::Electron*>(theCand.get()) ) {
     edm::Ptr<pat::Electron> asEle(theCand);
     return asEle->userCand(tag); 
-  } else if ( dynamic_cast<const pat::Muon*>(theCand.get()) ) {
+  } else if ( theCand->isMuon() &&
+	      dynamic_cast<const pat::Muon*>(theCand.get()) ) {
     edm::Ptr<pat::Muon> asMuon(theCand);
     return asMuon->userCand(tag); 
-  } else if ( dynamic_cast<const pat::Tau*>(theCand.get()) ) {
+  } else if ( abs(theCand->pdgId()) == 15 && 
+	      dynamic_cast<const pat::Tau*>(theCand.get()) ) {
     edm::Ptr<pat::Tau> asTau(theCand);
     return asTau->userCand(tag); 
-  } else if ( dynamic_cast<const pat::Photon*>(theCand.get()) ) {
+  } else if ( theCand->isPhoton() &&
+	      dynamic_cast<const pat::Photon*>(theCand.get()) ) {
     edm::Ptr<pat::Photon> asPho(theCand);
     return asPho->userCand(tag); 
-  } else if ( dynamic_cast<const pat::Jet*>(theCand.get()) ) {
+  } else if ( theCand->isJet() &&
+	      dynamic_cast<const pat::Jet*>(theCand.get()) ) {
     edm::Ptr<pat::Jet> asJet(theCand);
     return asJet->userCand(tag); 
-  } else if ( dynamic_cast<const pat::MET*>(theCand.get()) ) {
+  } else if ( dynamic_cast<const pat::MET*>(theCand.get()) ) { //no lazy false
     edm::Ptr<pat::MET> asMET(theCand);
     return asMET->userCand(tag); 
   } else {
@@ -82,19 +87,24 @@ const reco::CandidatePtrVector& PATMultiCandFinalState::daughterOverlaps(
     size_t i, const std::string& label) const {
   reco::CandidatePtr theCand = cands_.at(i); // will throw OOB exception
 
-  if( dynamic_cast<const pat::Electron*>(theCand.get()) ) {
+  if( theCand->isElectron() &&
+      dynamic_cast<const pat::Electron*>(theCand.get()) ) {
     edm::Ptr<pat::Electron> asEle(theCand);
     return asEle->overlaps(label); 
-  } else if ( dynamic_cast<const pat::Muon*>(theCand.get()) ) {
+  } else if ( theCand->isMuon() && 
+	      dynamic_cast<const pat::Muon*>(theCand.get()) ) {
     edm::Ptr<pat::Muon> asMuon(theCand);
     return asMuon->overlaps(label); 
-  } else if ( dynamic_cast<const pat::Tau*>(theCand.get()) ) {
+  } else if ( abs(theCand->pdgId()) == 15 && 
+	      dynamic_cast<const pat::Tau*>(theCand.get()) ) {
     edm::Ptr<pat::Tau> asTau(theCand);
     return asTau->overlaps(label); 
-  } else if ( dynamic_cast<const pat::Photon*>(theCand.get()) ) {
+  } else if ( theCand->isPhoton() && 
+	      dynamic_cast<const pat::Photon*>(theCand.get()) ) {
     edm::Ptr<pat::Photon> asPho(theCand);
     return asPho->overlaps(label); 
-  } else if ( dynamic_cast<const pat::Jet*>(theCand.get()) ) {
+  } else if ( theCand->isJet() && 
+	      dynamic_cast<const pat::Jet*>(theCand.get()) ) {
     edm::Ptr<pat::Jet> asJet(theCand);
     return asJet->overlaps(label); 
   } else if ( dynamic_cast<const pat::MET*>(theCand.get()) ) {
