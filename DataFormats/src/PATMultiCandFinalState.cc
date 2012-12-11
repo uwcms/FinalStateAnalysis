@@ -51,7 +51,15 @@ PATMultiCandFinalState::daughterPtrUnsafe(size_t i) const {
 
 reco::CandidatePtr PATMultiCandFinalState::daughterUserCandUnsafe(size_t i,
     const std::string& tag) const {
-  reco::CandidatePtr theCand = cands_.at(i); // will throw OOB exception
+  reco::CandidatePtr theCand;
+
+  try {// will throw OOB exception
+    theCand = cands_.at(i)
+  } catch ( std::out_of_range &oor) {
+    throw cms::Exception("CandidateIndexOutOfRange") 
+      << "The edm::Ptr at index " << i 
+      << "is not castable to a PAT Object." << std::endl;
+  }
 
   if( theCand->isElectron() && 
       dynamic_cast<const pat::Electron*>(theCand.get()) ) {
