@@ -31,7 +31,8 @@ class PATMultiCandFinalState : public PATFinalState {
         size_t i, const std::string& label) const;
 
   private:
-    std::vector<reco::CandidatePtr> cands_;
+    //reco::CandidateBaseRefVector cands_; // try new way later
+    std::vector<reco::CandidatePtr> cands_; // old way
 };
 
 #endif /* end of include guard: FinalStateAnalysis_DataFormats_PATMultiCandFinalState_h */
