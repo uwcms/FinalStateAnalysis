@@ -145,50 +145,66 @@ namespace pattools {
       value_type temp = value_type(new value_type::element_type(*ele));
 
       reg_map::mapped_type thisReg = _regs[app->second];
-      if( thisReg.second ) {
-	double en =
-	  thisReg.second->calculateRegressionEnergy(temp.get(),clustools,
-						    *_esetup,_rho,_nvtx);
-	double en_err =
-	  thisReg.second->calculateRegressionEnergyUncertainty(temp.get(),
-							       clustools,
-							       *_esetup,
-							       _rho,_nvtx);
-
-	math::XYZTLorentzVector oldP4,newP4;
-	// recalculate then propagate the regression energy and errors
-	switch( thisReg.first ) {
-	case 1: // V1 regression (just ecal energy)
-	  temp->setEcalRegressionEnergy(en,en_err); //HCP2012_V03-02 
-	  temp->correctEcalEnergy(en,en_err); // this is for later versions?
-	  break;
-	case 2: // V2 regression (including track variables)
-	  oldP4 = temp->p4();
-	  newP4 = math::XYZTLorentzVector(oldP4.x()*en/oldP4.t(),
-					  oldP4.y()*en/oldP4.t(),
-					  oldP4.z()*en/oldP4.t(),
-					  en);
-	  temp->correctEcalEnergy(en,en_err);
-	  temp->correctMomentum(newP4,temp->trackMomentumError(),en_err);
-	  break;
-	default:
-	  break;
+      float this_pt = 0.0;
+      // only calculate regression and calibration corrections for
+      // ECAL driven electrons
+      // LAG - 11 DEC 2012
+      if( temp->core()->ecalDrivenSeed() ) {
+	if( thisReg.second ) {
+	  double en =
+	    thisReg.second->calculateRegressionEnergy(temp.get(),clustools,
+						      *_esetup,_rho,_nvtx);
+	  double en_err =
+	    thisReg.second->calculateRegressionEnergyUncertainty(temp.get(),
+								 clustools,
+								 *_esetup,
+								 _rho,_nvtx);
+	  	  
+	  math::XYZTLorentzVector oldP4,newP4;	
+	  // recalculate then propagate the regression energy and errors
+	  switch( thisReg.first ) {
+	  case 1: // V1 regression (just ecal energy)
+	    temp->setEcalRegressionEnergy(en,en_err); //HCP2012_V03-02 
+	    temp->correctEcalEnergy(en,en_err); // this is for later versions?
+	    break;
+	  case 2: // V2 regression (including track variables)
+	    oldP4 = temp->p4();
+	    newP4 = math::XYZTLorentzVector(oldP4.x()*en/oldP4.t(),
+					    oldP4.y()*en/oldP4.t(),
+					    oldP4.z()*en/oldP4.t(),
+					    en);
+	    temp->correctEcalEnergy(en,en_err);
+	    temp->correctMomentum(newP4,temp->trackMomentumError(),en_err);
+	    break;
+	  default:
+	    break;
+	  }
 	}
+	
+	pCalib thisCalib = _calibs[app->first];
+	if( thisCalib )
+	  thisCalib->correct(*(temp.get()),*_event,*_esetup);
+	
+	out->addUserData<math::XYZTLorentzVector>(_userP4Prefix+
+						  _dataset+app->first,
+				  temp->p4(reco::GsfElectron::P4_COMBINATION));
+	out->addUserFloat(_userP4Prefix+
+			  _dataset+app->first+
+			  _errPostfix,
+			  temp->p4Error(reco::GsfElectron::P4_COMBINATION));
+	this_pt = temp->p4(reco::GsfElectron::P4_COMBINATION).pt();
+      } else { // no corrections for tracker driven electrons (per ZZ analysis)
+	// add the nominal pt and ptErr values in as "corrections"
+	// for consistency
+	out->addUserData<math::XYZTLorentzVector>(_userP4Prefix+
+						  _dataset+app->first,
+				  temp->p4(temp->candidateP4Kind()));
+	out->addUserFloat(_userP4Prefix+
+			  _dataset+app->first+
+			  _errPostfix,
+			  temp->p4Error(temp->candidateP4Kind()));
+	this_pt = temp->p4(temp->candidateP4Kind()).pt();
       }
-
-      pCalib thisCalib = _calibs[app->first];
-      if( thisCalib && temp->core()->ecalDrivenSeed() )
-	thisCalib->correct(*(temp.get()),*_event,*_esetup);
-
-      out->addUserData<math::XYZTLorentzVector>(_userP4Prefix+
-						_dataset+app->first,
-				 temp->p4(reco::GsfElectron::P4_COMBINATION));
-      out->addUserFloat(_userP4Prefix+
-			_dataset+app->first+
-			_errPostfix,
-			temp->p4Error(reco::GsfElectron::P4_COMBINATION));
-      
-      float this_pt = temp->p4(reco::GsfElectron::P4_COMBINATION).pt();
       max_cor_pt = std::max(max_cor_pt, 
 			    this_pt);
     }
