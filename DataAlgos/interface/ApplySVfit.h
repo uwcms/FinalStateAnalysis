@@ -9,20 +9,21 @@
 #ifndef APPLYSVFIT_TO_FSA
 #define APPLYSVFIT_TO_FSA
 
-#include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
-#include "DataFormats/Provenance/interface/EventID.h"
+#include "DataFormats/Candidate/interface/CandidateFwd.h"
+#include <vector>
 
-using NSVfitStandalone::Vector;
-using NSVfitStandalone::LorentzVector;
-using NSVfitStandalone::MeasuredTauLepton;
+// forward declarations
+namespace pat { class MET; }
+class TMatrixD;
+namespace edm { class EventID; }
 
 namespace ApplySVfit {
-
   double getSVfitMass(
-      std::vector<MeasuredTauLepton>,
-      Vector,
-      const TMatrixD&,
-      unsigned int, const edm::EventID );
+      std::vector<reco::CandidatePtr>& cands,
+      const pat::MET& met,
+      const TMatrixD& covariance,
+      unsigned int verbosity,
+      const edm::EventID& evtId);
 }
 
 #endif // end of include guard: APPLYSVFIT_TO_FSA

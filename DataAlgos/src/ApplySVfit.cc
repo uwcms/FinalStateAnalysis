@@ -13,6 +13,7 @@
 #include "TLorentzVector.h"
 #include "DataFormats/Math/interface/Vector3D.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
+#include "FinalStateAnalysis/DataAlgos/interface/Hash.h"
 #include <iostream>
 #include <iomanip>
 #include <map>
@@ -22,104 +23,60 @@
 
 namespace ApplySVfit {
 
-  // cash a string containg 4-vecs and pdgIDs mapped to SVfit mass
+  using NSVfitStandalone::Vector;
+  using NSVfitStandalone::LorentzVector;
+  using NSVfitStandalone::MeasuredTauLepton;
 
-  static std::map<std::string, double> SVFitCache;
+  // Caching and translation layer
+  typedef std::map<size_t, double> SVFitCache;
+  static SVFitCache theCache;
   static edm::EventID lastSVfitEvent; // last processed event
 
+  double getSVfitMass(std::vector<reco::CandidatePtr>& cands,
+      const pat::MET& met, const TMatrixD& covMET, unsigned int verbosity,
+      const edm::EventID& evtId) {
 
+    // Check if this a new event
+    if (evtId != lastSVfitEvent) {
+      SVFitCache.clear();
+    }
+    lastSVfitEvent = evtId;
 
-  double getSVfitMass( std::vector<MeasuredTauLepton> measuredTauLeptons,
-      Vector measuredMET ,
-      const TMatrixD& covMET ,
-      unsigned int verbosity,
-      const edm::EventID event_x
-      ){
+    // Hash our candidates - NB cands will be sorted in place
+    size_t hash = hashCandsByContent(cands);
 
+    // Check if we've already computed it
+    SVFitCache::const_iterator lookup = theCache.find(hash);
+    if (lookup != theCache.end()) {
+      return lookup->second;
+    }
 
-    ////////////
-    // temp printouts
+    // No pain no gain
+    Vector measuredMET = met()->momentum();
+    std::vector<MeasuredTauLepton> measuredTauLeptons;
+    unsigned int verbosity = 0;
 
-    std::cout<<" mlep1 "<<measuredTauLeptons[0].p4()<<std::endl;
-    std::cout<<" mlep1 "<<measuredTauLeptons[0].decayType()<<std::endl;
-    std::cout<<" mlep2 "<<measuredTauLeptons[1].p4()<<std::endl;
-    std::cout<<" mlep2 "<<measuredTauLeptons[1].decayType()<<std::endl;
-    std::cout<<" *** "<<event_x.event()<<std::endl;
+    for (size_t dau = 0; dau < cands.size(); ++dau) {
+      int pdgId = std::abs(cands[dau]->pdgId());
+      if (pdgId == 11 || pdgId == 13)
+        measuredTauLeptons.push_back(
+            MeasuredTauLepton(NSVfitStandalone::kLepDecay,cands[dau]->p4()));
+      else if (pdgId == 15)
+        measuredTauLeptons.push_back(
+            MeasuredTauLepton(NSVfitStandalone::kHadDecay,cands[dau]->p4()));
+      else
+        throw cms::Exception("BadPdgId") << "I don't understand PDG id: "
+          << pdgId << ", sorry." << std::endl;
+    }
 
-    ///
+    NSVfitStandaloneAlgorithm algo(measuredTauLeptons,
+        measuredMET, covMET, verbosity);
+    algo.addLogM(false);
+    algo.integrate();
+    double mass = algo.getMass(); // mass uncertainty not implemented yet
 
-
-
-    //////////////
-    // clear the map if the event is new
-
-    if(event_x != lastSVfitEvent)  SVFitCache.clear();
-
-    double mass = -999;
-
-
-    /////////////////////////////
-    // form the string defining the current event
-    // format is event#, decayType(0),decayType(1), tau_0(pt,eta,phi), tau_1(pt,eta,phi)
-    // where 0 has the higher pt of the pair
-
-    char hold_arguments_to_SVfit_char[1000];
-    int order_i= 0;
-    int order_j= 1;
-
-    if(measuredTauLeptons[1].p4().pt()>measuredTauLeptons[0].p4().pt()) {order_i = 1; order_j = 0;}
-
-    sprintf(hold_arguments_to_SVfit_char,"held_%i_%i_%i_%i_%i_%f_%f_%f_%f_%f_%f",event_x.run(),event_x.luminosityBlock(),
-        event_x.event(),measuredTauLeptons[order_i].decayType(),measuredTauLeptons[order_j].decayType(),
-        measuredTauLeptons[order_i].p4().pt(), measuredTauLeptons[order_i].p4().eta(),measuredTauLeptons[order_i].p4().phi(),
-        measuredTauLeptons[order_j].p4().pt(), measuredTauLeptons[order_j].p4().eta(),measuredTauLeptons[order_j].p4().phi());
-
-    std::string hold_arguments_to_SVfit = hold_arguments_to_SVfit_char;
-
-
-    std::map <std::string, double>::iterator it;
-
-    ///////////
-    // loop over previously cached entries
-    // and check for a string match
-    // if a string match is found, set mass to the it->second
-
-    /* temp output */  std::cout<<" currently testing "<<hold_arguments_to_SVfit<<std::endl;
-
-    for (it = SVFitCache.begin(); it != SVFitCache.end(); ++it) {
-
-      /* temp output */  std::cout<<it->first<<" "<<it->second<<std::endl;
-
-      if(hold_arguments_to_SVfit.compare(it->first) == 0) {
-        mass = it->second; std::cout<<" MATCH FOUND --> "<<mass<<" "<<std::endl; break;}
-
-    } // SVFitCache iteration
-
-    /////////////////////
-    // if no match found
-    // call SVfit as usual, and cache the result
-
-    if(mass == -999){
-
-      NSVfitStandaloneAlgorithm algo(measuredTauLeptons,measuredMET,covMET,verbosity);
-      algo.addLogM(false);
-      algo.integrate();
-      mass = algo.getMass(); // mass uncertainty not implemented yet
-      std::cout<<" Computed SVfit Mass as "<<mass<<std::endl;
-
-      // cache it
-      SVFitCache[hold_arguments_to_SVfit] = mass;
-
-    } // new computation & cache
-
-
-    //////////
-    // reset the last event
-    // and return
-
-    lastSVfitEvent = event_x;
+    theCache[hash] = mass;
     return mass;
+  }
 
-
-  } // getSVfitMass
 } // namespace ApplySVfit
