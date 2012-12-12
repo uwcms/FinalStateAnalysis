@@ -1,5 +1,5 @@
 ///////////
-// SVfitCaller and member funtion getSVfitMass
+// getSVFit mass
 // based on standalone SVfit instructions
 // https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012#SVFit_Christian_Lorenzo_Aram_Rog
 //
@@ -12,32 +12,17 @@
 #include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
 #include "DataFormats/Provenance/interface/EventID.h"
 
-
 using NSVfitStandalone::Vector;
 using NSVfitStandalone::LorentzVector;
 using NSVfitStandalone::MeasuredTauLepton;
 
-
-
 namespace ApplySVfit {
 
-
-  class SVfitCaller  {
-
-    public:
-      SVfitCaller();
-      ~SVfitCaller();
-
-      double getSVfitMass(
-          std::vector<MeasuredTauLepton>,
-          Vector,
-          const TMatrixD&,
-          unsigned int, const edm::EventID );
-
-  }; // class SVfitCaller
-
-
+  double getSVfitMass(
+      std::vector<MeasuredTauLepton>,
+      Vector,
+      const TMatrixD&,
+      unsigned int, const edm::EventID );
 }
-
 
 #endif // end of include guard: APPLYSVFIT_TO_FSA

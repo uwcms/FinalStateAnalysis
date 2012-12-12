@@ -325,7 +325,7 @@ PATFinalState::smallestDeltaPhi() const {
 }
 
 ///////////////////////
-// Call to ApplySVfit::SVfitCaller member function getSVfitMass which returns the SVfit mass
+// Call to function getSVfitMass which returns the SVfit mass
 // (szs)
 ////////////////////////
 
@@ -344,11 +344,6 @@ PATFinalState::SVfit(int i, int j) const {
 
     //////////////////
     // the 2 indices i and j indicate the daughters combined to form the SVfit mass
-
-    ///////////////////
-    // instance of SVfitCaller
-    ApplySVfit::SVfitCaller SVfitCallerInstance;
-
 
     //////////////////
     // indicates start of scope of the following using statements needed by SVfit
@@ -402,7 +397,7 @@ PATFinalState::SVfit(int i, int j) const {
 
       ///////////////
 
-      double SVfitMassReturn = SVfitCallerInstance.getSVfitMass(measuredTauLeptons,measuredMET,covMET, verbosity, event_->evtId());
+      double SVfitMassReturn = getSVfitMass(measuredTauLeptons,measuredMET,covMET, verbosity, event_->evtId());
 
 
       return SVfitMassReturn;

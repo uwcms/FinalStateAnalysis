@@ -1,5 +1,5 @@
 ///////////
-// imp of class SVfitCaller and member funtion getSVfitMass
+// imp of function getSVfitMass
 // based on standalone SVfit instructions
 // https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012#SVFit_Christian_Lorenzo_Aram_Rog
 //
@@ -28,11 +28,8 @@ namespace ApplySVfit {
   static edm::EventID lastSVfitEvent; // last processed event
 
 
-  SVfitCaller::SVfitCaller(){}
 
-  SVfitCaller::~SVfitCaller(){}
-
-  double SVfitCaller::getSVfitMass( std::vector<MeasuredTauLepton> measuredTauLeptons,
+  double getSVfitMass( std::vector<MeasuredTauLepton> measuredTauLeptons,
       Vector measuredMET ,
       const TMatrixD& covMET ,
       unsigned int verbosity,
@@ -126,4 +123,3 @@ namespace ApplySVfit {
 
   } // getSVfitMass
 } // namespace ApplySVfit
-
