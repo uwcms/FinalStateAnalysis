@@ -4,7 +4,7 @@
 // https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012#SVFit_Christian_Lorenzo_Aram_Rog
 //
 // S.Z. Shalhout (sshalhou@CERN.CH) Nov 20, 2012
-///////// 
+/////////
 
 #ifndef APPLYSVFIT_TO_FSA
 #define APPLYSVFIT_TO_FSA
@@ -22,19 +22,19 @@ using NSVfitStandalone::MeasuredTauLepton;
 namespace ApplySVfit {
 
 
-class SVfitCaller  {
+  class SVfitCaller  {
 
-	public:
-		       SVfitCaller();	 
-		       ~SVfitCaller();
-		        
-		double getSVfitMass(
-                                std::vector<MeasuredTauLepton>,
-				Vector, 
-				const TMatrixD&, 
-				unsigned int, const edm::EventID );
+    public:
+      SVfitCaller();
+      ~SVfitCaller();
 
-			}; // class SVfitCaller
+      double getSVfitMass(
+          std::vector<MeasuredTauLepton>,
+          Vector,
+          const TMatrixD&,
+          unsigned int, const edm::EventID );
+
+  }; // class SVfitCaller
 
 
 }

@@ -1,4 +1,4 @@
-// Next 2 includes needed for SVfit  Mass 
+// Next 2 includes needed for SVfit  Mass
 #include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
 #include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
 
@@ -332,84 +332,84 @@ PATFinalState::smallestDeltaPhi() const {
 double
 PATFinalState::SVfit(int i, int j) const {
 
-///////////
-// call only for the 2 higgs daughters in a 4-object
-// ZH final state (indices 2 & 3)
-// there may be better ways to filter upstream, but this works for now
+  ///////////
+  // call only for the 2 higgs daughters in a 4-object
+  // ZH final state (indices 2 & 3)
+  // there may be better ways to filter upstream, but this works for now
 
-if( (i==2 && j==3) || (i==3 && j==2) ){ 
+  if( (i==2 && j==3) || (i==3 && j==2) ){
 
-  std::cout<<" -------------> event number "<< event_->evtId()<<" ----- daughters "<<numberOfDaughters()<<std::endl;
-
-
-//////////////////
-// the 2 indices i and j indicate the daughters combined to form the SVfit mass
-
-///////////////////
-// instance of SVfitCaller
-ApplySVfit::SVfitCaller SVfitCallerInstance;
+    std::cout<<" -------------> event number "<< event_->evtId()<<" ----- daughters "<<numberOfDaughters()<<std::endl;
 
 
-//////////////////
-// indicates start of scope of the following using statements needed by SVfit 
-{  
+    //////////////////
+    // the 2 indices i and j indicate the daughters combined to form the SVfit mass
 
-using NSVfitStandalone::Vector;
-using NSVfitStandalone::LorentzVector;
-using NSVfitStandalone::MeasuredTauLepton;
-
-Vector measuredMET = met()->momentum();
-std::vector<MeasuredTauLepton> measuredTauLeptons;
-const TMatrixD& covMET = event_->metCovariance();
-unsigned int verbosity = 0;
-measuredTauLeptons.clear();
+    ///////////////////
+    // instance of SVfitCaller
+    ApplySVfit::SVfitCaller SVfitCallerInstance;
 
 
-//////////////////
-// Need to check with Evan
-// that this will work for Data as well
-///////////////////
+    //////////////////
+    // indicates start of scope of the following using statements needed by SVfit
+    {
 
-if(abs(daughter(i)->pdgId()) == 11 || abs(daughter(i)->pdgId()) == 13) { 
-measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kLepDecay,daughter(i)->p4()));
-                                                                        }       
+      using NSVfitStandalone::Vector;
+      using NSVfitStandalone::LorentzVector;
+      using NSVfitStandalone::MeasuredTauLepton;
 
-if(abs(daughter(j)->pdgId()) == 11 || abs(daughter(j)->pdgId()) == 13) { 
-measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kLepDecay,daughter(j)->p4()));
-                                                                        }       
-
-if(abs(daughter(i)->pdgId()) == 15){
-measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay,daughter(i)->p4()));
-                                        }
-
-if(abs(daughter(j)->pdgId()) == 15){
-measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay,daughter(j)->p4()));
-                                        }
-
-////////////
-// can remove later , just useful for testing while it runs
-
- reco::Candidate::LorentzVector K0; K0+=daughter(i)->p4();
- reco::Candidate::LorentzVector K1; K1+=daughter(j)->p4();
+      Vector measuredMET = met()->momentum();
+      std::vector<MeasuredTauLepton> measuredTauLeptons;
+      const TMatrixD& covMET = event_->metCovariance();
+      unsigned int verbosity = 0;
+      measuredTauLeptons.clear();
 
 
- std::cout<<" unused daughter 0 =  "<<daughter(0)->p4()<<" "<<daughter(0)->pdgId()<<std::endl;
- std::cout<<" unused daughter 1 =  "<<daughter(1)->p4()<<" "<<daughter(1)->pdgId()<<std::endl;
- std::cout<<" daughter i = "<<i<<" "<<daughter(i)->p4()<<" "<<daughter(i)->pdgId()<<std::endl;
- std::cout<<" daughter j = "<<j<<" "<<daughter(j)->p4()<<" "<<daughter(j)->pdgId()<<std::endl;
- std::cout<<" normal mass is  "<<(K0+K1).M()<<std::endl;
+      //////////////////
+      // Need to check with Evan
+      // that this will work for Data as well
+      ///////////////////
+
+      if(abs(daughter(i)->pdgId()) == 11 || abs(daughter(i)->pdgId()) == 13) {
+        measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kLepDecay,daughter(i)->p4()));
+      }
+
+      if(abs(daughter(j)->pdgId()) == 11 || abs(daughter(j)->pdgId()) == 13) {
+        measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kLepDecay,daughter(j)->p4()));
+      }
+
+      if(abs(daughter(i)->pdgId()) == 15){
+        measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay,daughter(i)->p4()));
+      }
+
+      if(abs(daughter(j)->pdgId()) == 15){
+        measuredTauLeptons.push_back(NSVfitStandalone::MeasuredTauLepton(NSVfitStandalone::kHadDecay,daughter(j)->p4()));
+      }
+
+      ////////////
+      // can remove later , just useful for testing while it runs
+
+      reco::Candidate::LorentzVector K0; K0+=daughter(i)->p4();
+      reco::Candidate::LorentzVector K1; K1+=daughter(j)->p4();
 
 
-///////////////
+      std::cout<<" unused daughter 0 =  "<<daughter(0)->p4()<<" "<<daughter(0)->pdgId()<<std::endl;
+      std::cout<<" unused daughter 1 =  "<<daughter(1)->p4()<<" "<<daughter(1)->pdgId()<<std::endl;
+      std::cout<<" daughter i = "<<i<<" "<<daughter(i)->p4()<<" "<<daughter(i)->pdgId()<<std::endl;
+      std::cout<<" daughter j = "<<j<<" "<<daughter(j)->p4()<<" "<<daughter(j)->pdgId()<<std::endl;
+      std::cout<<" normal mass is  "<<(K0+K1).M()<<std::endl;
 
-double SVfitMassReturn = SVfitCallerInstance.getSVfitMass(measuredTauLeptons,measuredMET,covMET, verbosity, event_->evtId());
+
+      ///////////////
+
+      double SVfitMassReturn = SVfitCallerInstance.getSVfitMass(measuredTauLeptons,measuredMET,covMET, verbosity, event_->evtId());
 
 
-return SVfitMassReturn;
-} // indicates end of 'using' scope 
+      return SVfitMassReturn;
+    } // indicates end of 'using' scope
 
-} // only call for ZH indices 2,3
-else return -999;
+  } // only call for ZH indices 2,3
+  else return -999;
 
 } // SVfit(int, int)
 ////////////////////////////////////////////
@@ -741,8 +741,8 @@ const bool PATFinalState::comesFromHiggs(size_t i) const
     return false;
 }
 
-const math::XYZTLorentzVector 
-PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const 
+const math::XYZTLorentzVector
+PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const
 {
   edm::Ptr<pat::Electron> ele = daughterAsElectron(i);
   edm::Ptr<pat::Muon> mu = daughterAsMuon(i);
@@ -755,16 +755,16 @@ PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const
   if(ele.isNonnull() && ele.isAvailable())
     result = ele->userData<math::XYZTLorentzVector>(name);
 
-  if(mu.isNonnull() && mu.isAvailable()) 
+  if(mu.isNonnull() && mu.isAvailable())
     result = mu->userData<math::XYZTLorentzVector>(name);
 
-  if(pho.isNonnull() && pho.isAvailable()) 
+  if(pho.isNonnull() && pho.isAvailable())
     result = pho->userData<math::XYZTLorentzVector>(name);
 
-  if(jet.isNonnull() && jet.isAvailable()) 
+  if(jet.isNonnull() && jet.isAvailable())
     result = jet->userData<math::XYZTLorentzVector>(name);
 
-  if(tau.isNonnull() && tau.isAvailable()) 
+  if(tau.isNonnull() && tau.isAvailable())
     result = tau->userData<math::XYZTLorentzVector>(name);
 
   if( result ) return *result; // return the result if we have it stored
@@ -772,7 +772,7 @@ PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const
   return math::XYZTLorentzVector();
 }
 
-const float PATFinalState::getPhotonUserIsolation(size_t i, 
+const float PATFinalState::getPhotonUserIsolation(size_t i,
 						  const std::string& key) const {
   edm::Ptr<pat::Photon> d = daughterAsPhoton(i);
   // remove leading namespace specifier
@@ -791,10 +791,10 @@ const float PATFinalState::getPhotonUserIsolation(size_t i,
   if ( prunedKey == "User5Iso" ) return d->userIsolation(pat::User5Iso);
   if ( prunedKey == "UserBaseIso" ) return d->userIsolation(pat::UserBaseIso);
   if ( prunedKey == "CaloIso" ) return d->userIsolation(pat::CaloIso);
-  if ( prunedKey == "PfPUChargedHadronIso" ) 
+  if ( prunedKey == "PfPUChargedHadronIso" )
     return d->userIsolation(pat::PfPUChargedHadronIso);
   //throw cms::Excepton("Missing Data")
-  //<< "Isolation corresponding to key " 
+  //<< "Isolation corresponding to key "
   //<< key << " was not stored for this particle.";
   return -1.0;
 }
