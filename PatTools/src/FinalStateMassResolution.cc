@@ -43,7 +43,7 @@ getLeaves(const reco::Candidate &c,
 	     // Descend into composite objects
 	     !(c.pdgId() == 22 && 
 	       dynamic_cast<const reco::PFCandidate *>(&c) ) ) { 
-    std::cout << c.pdgId() << ' ' << c.numberOfDaughters() << std::endl;
+    //std::cout << c.pdgId() << ' ' << c.numberOfDaughters() << std::endl;
     // but not PF photons: altered logic to allow reco::Photons
     //std::cout << "Descending leaves of a candidate of type " 
     //	<< typeid(c).name() << " with pdgId = " << c.pdgId() 
@@ -138,7 +138,8 @@ fillP3Covariance(const reco::Candidate &c,
   } else if ((pf = dynamic_cast<const reco::PFCandidate *>(&c)) != 0 && 
 	     pf->pdgId() == 22) {
     fillP3Covariance(*pf, bigCov, offset);
-  } else if ((ph = dynamic_cast<const reco::LeafCandidate * >(&c))!= 0 ) { 
+  } else if ((ph = dynamic_cast<const reco::LeafCandidate * >(&c))!= 0 &&
+	     abs(ph->pdgId()) != 15 ) { 
     //&& ph->pdgId() == 22){
     // case of FSR photon,which is assigned as LeafCandidate
     // in the ZZ analysis  
