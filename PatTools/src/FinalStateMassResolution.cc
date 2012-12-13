@@ -43,6 +43,7 @@ getLeaves(const reco::Candidate &c,
 	     // Descend into composite objects
 	     !(c.pdgId() == 22 && 
 	       dynamic_cast<const reco::PFCandidate *>(&c) ) ) { 
+    std::cout << c.pdgId() << ' ' << c.numberOfDaughters() << std::endl;
     // but not PF photons: altered logic to allow reco::Photons
     //std::cout << "Descending leaves of a candidate of type " 
     //	<< typeid(c).name() << " with pdgId = " << c.pdgId() 
