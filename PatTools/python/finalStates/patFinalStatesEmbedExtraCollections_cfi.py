@@ -51,7 +51,7 @@ patFinalStatesEmbedElectrons = cms.EDProducer(
 
 patFinalStatesEmbedObjects = cms.Sequence(
     patFinalStateVertexFitter,
-    patFinalStateMassResolutionEmbedder
+    finalStateMassResolutionEmbedder
     # We do this on the fly now
     #+ patFinalStatesEmbedTaus
     #+ patFinalStatesEmbedJets
