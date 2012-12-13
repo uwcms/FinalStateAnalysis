@@ -1,7 +1,10 @@
 import FWCore.ParameterSet.Config as cms
 
-from FinalStateAnalysis.PatTools.finalStates.patFinalStateVertexFitter_cfi import \
-        patFinalStateVertexFitter
+from FinalStateAnalysis.PatTools.finalStates.patFinalStateVertexFitter_cfi \
+     import patFinalStateVertexFitter
+
+from FinalStateAnalysis.PatTools.finalStates.patFinalStateMassResolutionEmbedder_cfi\
+     import finalStateMassResolutionEmbedder
 
 patFinalStatesEmbedTaus = cms.EDProducer(
     "PATFinalStateOverlapEmbedder",
@@ -47,7 +50,8 @@ patFinalStatesEmbedElectrons = cms.EDProducer(
 )
 
 patFinalStatesEmbedObjects = cms.Sequence(
-    patFinalStateVertexFitter
+    patFinalStateVertexFitter,
+    patFinalStateMassResolutionEmbedder
     # We do this on the fly now
     #+ patFinalStatesEmbedTaus
     #+ patFinalStatesEmbedJets
