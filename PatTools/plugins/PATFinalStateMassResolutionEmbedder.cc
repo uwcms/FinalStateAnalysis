@@ -55,8 +55,8 @@ produce(edm::Event& evt, const edm::EventSetup& es) {
     double dM = 0;
     
     try {
-       resoCalc_->getMassResolutionWithComponents(*embedInto,
-						  components);
+      dM = resoCalc_->getMassResolutionWithComponents(*embedInto,
+						      components);
     } catch (std::bad_cast& e) {
       dM = -1;
     }
