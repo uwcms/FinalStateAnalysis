@@ -18,6 +18,8 @@ You can turn on different ntuples by passing option=1 using one of:
 
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
+from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
+    cmssw_minor_version
 
 process = cms.Process("TrileptonNtuple")
 
@@ -83,18 +85,18 @@ if options.rerunFSA:
         process.load('Configuration.Geometry.GeometryIdeal_cff')
     else:
         process.load('Configuration.StandardSequences.GeometryIdeal_cff')
-        
+
     process.load('Configuration.StandardSequences.MagneticField_cff')
     process.load(
         'Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-    
+
     #need the global tag because of the above
     if options.globalTag == "":
         raise RuntimeError("Global tag not specified!"\
                            "Try sourcing environment.sh\n")
     else:
         print 'Using globalTag: %s'%options.globalTag
-    
+
     # Drop the input ones, just to make sure we aren't screwing anything up
     process.buildFSASeq = cms.Sequence()
     from FinalStateAnalysis.PatTools.patFinalStateProducers \
