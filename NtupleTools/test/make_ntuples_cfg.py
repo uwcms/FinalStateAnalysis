@@ -96,6 +96,7 @@ if options.rerunFSA:
                            "Try sourcing environment.sh\n")
     else:
         print 'Using globalTag: %s'%options.globalTag
+    process.GlobalTag.globaltag = cms.string(options.globalTag)
 
     # Drop the input ones, just to make sure we aren't screwing anything up
     process.buildFSASeq = cms.Sequence()
