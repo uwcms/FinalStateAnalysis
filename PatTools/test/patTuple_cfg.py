@@ -93,7 +93,8 @@ tuplize, output_commands = tuplizer.configurePatTuple(
 )
 
 if options.globalTag == "":
-    raise RuntimeError("Global tag not specified!  Try sourcing environment.sh\n")
+    raise RuntimeError("Global tag not specified!"\
+                       " Try sourcing environment.sh\n")
 else:
     print 'Using globalTag: %s'%options.globalTag
 
