@@ -62,6 +62,10 @@ cdef extern from "TTreeFormula.h":
         void SetTree(TTree*)
 
 from cpython cimport PyCObject_AsVoidPtr
+import warnings
+def my_warning_format(message, category, filename, lineno, line=""):
+    return "%s:%s\\n" % (category.__name__, message)
+warnings.formatwarning = my_warning_format
 
 cdef class {TreeName}:
     # Pointers to tree (may be a chain), current active tree, and current entry
@@ -219,8 +223,8 @@ def make_pyx(name, tree):
         self.{branchname}_branch = the_tree.GetBranch("{branchname}")
         #if not self.{branchname}_branch and "{branchname}" not in self.complained:
         if not self.{branchname}_branch and "{branchname}":
-            print "{TreeName}: Expected branch {branchname} does not exist!" \
-               " It will crash if you try and use it!"
+            warnings.warn( "{TreeName}: Expected branch {branchname} does not exist!" \
+               " It will crash if you try and use it!",Warning)
             #self.complained.add("{branchname}")
         else:
             self.{branchname}_branch.SetAddress(<void*>&self.{branchname}_value)
