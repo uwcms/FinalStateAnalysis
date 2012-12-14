@@ -199,6 +199,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
     process.tuplize += process.recoElectronID
     process.patElectrons.electronIDSources = process.electronIDSources
+    process.electronMatch.checkCharge = cms.bool(False)
     process.patElectrons.embedTrack = False
     process.patElectrons.embedPFCandidate = False
     process.patElectrons.embedGsfElectronCore = False
