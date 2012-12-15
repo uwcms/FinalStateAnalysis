@@ -51,6 +51,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_generalTracks_*_*',
         '*_electronGsfTracks_*_*',
         '*_gsfElectrons_*_*',
+        '*_gsfElectronCores_*_*',
         '*_offlinePrimaryVertices*_*_*',
         '*_ak5GenJets_*_*',
         '*_hltTriggerSummaryAOD_*_*',
