@@ -123,23 +123,18 @@ def configurePatTuple(process, isMC=True, **kwargs):
         'Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
     # Rerun tau ID
-    if cmssw_major_version() == 4:
-        process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
-        # Optimization - remove PFTauTagInfo compatibility layer
-        process.recoTauClassicHPSSequence.remove(
-            process.pfRecoTauTagInfoProducer)
-        process.recoTauClassicHPSSequence.remove(
-            process.ak5PFJetTracksAssociatorAtVertex)
-        assert(process.combinatoricRecoTaus.modifiers[3].name.value() ==
-               'TTIworkaround')
-        del process.combinatoricRecoTaus.modifiers[3]
-        # Don't build junky taus below 19 GeV
-        process.combinatoricRecoTaus.builders[0].minPtToBuild = cms.double(17)
-        process.tuplize += process.recoTauClassicHPSSequence
-    else:
-        # We can run less tau stuff in 52, since HPS taus already built.
-        process.load("RecoTauTag.Configuration.updateHPSPFTaus_cff")
-        process.tuplize += process.updateHPSPFTaus
+    process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+    # Optimization - remove PFTauTagInfo compatibility layer
+    process.recoTauClassicHPSSequence.remove(
+        process.pfRecoTauTagInfoProducer)
+    process.recoTauClassicHPSSequence.remove(
+        process.ak5PFJetTracksAssociatorAtVertex)
+    assert(process.combinatoricRecoTaus.modifiers[3].name.value() ==
+           'TTIworkaround')
+    del process.combinatoricRecoTaus.modifiers[3]
+    # Don't build junky taus below 19 GeV
+    process.combinatoricRecoTaus.builders[0].minPtToBuild = cms.double(17)
+    process.tuplize += process.recoTauClassicHPSSequence
 
     ## Run rho computation.  Only necessary in 42X
     if cmssw_major_version() == 4:
@@ -395,7 +390,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
                            % process.name_())
 
     # Define the default lepton cleaning
-    process.cleanPatElectrons.preselection = cms.string('userFloat("maxCorPt") > 5')
+    process.cleanPatElectrons.preselection = cms.string(
+        'userFloat("maxCorPt") > 5')
     process.cleanPatElectrons.checkOverlaps.muons.requireNoOverlaps = False
     # Make sure we don't kill any good taus by calling them electrons
     # Note that we don't actually remove these overlaps.
