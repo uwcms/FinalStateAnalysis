@@ -28,6 +28,9 @@ then
   addpkg CommonTools/ParticleFlow B4_2_X_V00-03-05
   addpkg PhysicsTools/SelectorUtils V00-03-24
   addpkg PhysicsTools/UtilAlgos V08-02-14 
+  # Remove this junky MHT package, we don't need it and it causes
+  # link errors with the MVAMET
+  rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer*
 
   #Update to calculate Single Tower H/E in 42X
   #https://twiki.cern.ch/twiki/bin/view/CMS/HoverE2012
