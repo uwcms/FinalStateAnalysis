@@ -28,23 +28,10 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
     cvs up -r 1.2 RecoMET/METAlgorithms/src/PFClusterSpecificAlgo.cc
   fi
 else
-  cvs co -r V00-02-09 -d CMGTools/External UserCode/CMG/CMGTools/External
-  cvs co -r V00-02      -d  pharris/MVAMet UserCode/pharris/MVAMet
-  cvs co -r CMSSW_4_2_8_patch7 RecoMET/METAlgorithms
-  cvs up -r ph_52X_MVAMet_v3 RecoMET/METAlgorithms/interface/PFMETAlgorithmMVA.h
-  cvs up -r ph_52X_MVAMet_v3 RecoMET/METAlgorithms/interface/mvaMEtUtilities.h
-  cvs up -r ph_52X_MVAMet_v3 RecoMET/METAlgorithms/src/PFMETAlgorithmMVA.cc  
-  cvs up -r ph_52X_MVAMet_v3 RecoMET/METAlgorithms/src/mvaMEtUtilities.cc
-  cvs up -r ph_52X_MVAMet_v3 RecoMET/METAlgorithms/BuildFile.xml
-  cvs co -r CMSSW_4_2_8_patch7 RecoMET/METProducers
-  cvs up -r ph_52X_MVAMet_v3 RecoMET/METProducers/interface/PFMETProducerMVA.h
-  cvs up -r ph_52X_MVAMet_v3 RecoMET/METProducers/src/PFMETProducerMVA.cc
-  cvs up -r ph_52X_MVAMet_v3 RecoMET/METProducers/python/mvaPFMET_cff.py
-  cvs up -r ph_52X_MVAMet_v3 RecoMET/METProducers/python/mvaPFMET_cff_leptons.py
-  cvs up -r ph_52X_MVAMet_v3 RecoMET/METProducers/BuildFile.xml
-  cp /afs/cern.ch/user/b/bianchi/public/SealModule.cc RecoMET/METProducers/src/
-  cvs up -r ph_52X_MVAMet_v3 RecoMET/METProducers/python/mvaPFMET_leptons.py
-  cvs co -r V00-04-01 CondFormats/EgammaObjects
+  cvs co -r   METPU_4_2_X_v2 JetMETCorrections/METPUSubtraction
+  pushd $CMSSW_BASE/src/JetMETCorrections/METPUSubtraction/test/
+  ./setup42.sh
+  popd
 fi
 
 popd
