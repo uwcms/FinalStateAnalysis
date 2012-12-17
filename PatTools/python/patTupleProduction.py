@@ -21,6 +21,7 @@ Authors: Bucky & Friends
 '''
 
 import FWCore.ParameterSet.Config as cms
+import copy
 
 import PhysicsTools.PatAlgos.tools.trigTools as trigtools
 import PhysicsTools.PatAlgos.tools.jetTools as jettools
@@ -138,10 +139,14 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     ## Run rho computation.  Only necessary in 42X
     if cmssw_major_version() == 4:
-        from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
-        kt6PFJets.Rho_EtaMax = cms.double(4.4)
-        kt6PFJets.doRhoFastjet = True
-        process.kt6PFJets = kt6PFJets
+        # This function call can klobber everything if it isn't done
+        # before the other things are attached to the process, so do it now.
+        # The klobbering would occur through usePFIso->setupPFIso->_loadPFBRECO
+        from CommonTools.ParticleFlow.Tools.pfIsolation import _loadPFBRECO
+        _loadPFBRECO(process)
+        process.load("RecoJets.Configuration.RecoPFJets_cff")
+        process.kt6PFJets.Rho_EtaMax = cms.double(4.4)
+        process.kt6PFJets.doRhoFastjet = True
         process.tuplize += process.kt6PFJets
 
     # In 4_X we have to rerun ak5PFJets with area computation enabled.
