@@ -38,6 +38,8 @@ else
   pushd $CMSSW_BASE/src
     patch -p0 -N < FinalStateAnalysis/recipe/patches/mvamet-jetid-42X.patch
   popd
+  addpkg CommonTools/RecoAlgos
+  cvs co -r 1.1 CommonTools/RecoAlgos/plugins/PFJetSelector.cc
 
 fi
 
