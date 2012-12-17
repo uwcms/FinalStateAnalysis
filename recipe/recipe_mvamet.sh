@@ -32,6 +32,13 @@ else
   pushd $CMSSW_BASE/src/JetMETCorrections/METPUSubtraction/test/
   ./setup42.sh
   popd
+  touch $CMSSW_BASE/src/RecoJets/JetProducers/data/dummy.txt
+  # apply patch from Andrew Gilbert
+  # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingMoriond2013#MVA_Met_Sequence_with_predef_AN1
+  pushd $CMSSW_BASE/src
+    patch -p0 -N < FinalStateAnalysis/recipe/patches/mvamet-jetid-42X.patch
+  popd
+
 fi
 
 popd
