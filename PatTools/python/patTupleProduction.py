@@ -154,6 +154,11 @@ def configurePatTuple(process, isMC=True, **kwargs):
         process.load("RecoJets.Configuration.RecoPFJets_cff")
         process.ak5PFJets.doAreaFastjet = True
         process.tuplize += process.ak5PFJets
+        # Only keep the new ak5PFJets
+        output_commands.append('*_ak5PFJets_*_%s' % process.name_())
+    else:
+        # Just keep the normal ones
+        output_commands.append('*_ak5PFJets_*_*')
 
     # In the embedded samples, we need to re-run the b-tagging
     if kwargs['embedded']:
