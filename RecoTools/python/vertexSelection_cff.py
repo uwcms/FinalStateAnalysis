@@ -43,6 +43,21 @@ selectedPrimaryVertexUncleanWithBS = cms.EDFilter(
 )
 
 selectPrimaryVertices = cms.Sequence(
-    selectPrimaryVerticesQuality + selectPrimaryVerticesQualityWithBS + 
+    selectPrimaryVerticesQuality + selectPrimaryVerticesQualityWithBS +
     selectedPrimaryVertex + selectedPrimaryVertexWithBS +
     selectedPrimaryVertexUnclean + selectedPrimaryVertexUncleanWithBS)
+
+
+atLeastOneGoodVertex = cms.EDFilter(
+    "VertexSelector",
+    src = cms.InputTag("selectPrimaryVerticesQuality"),
+    cut = cms.string(""),  # just require one
+    filter = cms.bool(True)
+)
+
+# A sequence which ensure there is at least one good vertex
+atLeastOneGoodVertexSequence = cms.Sequence(
+    selectPrimaryVertices *
+    atLeastOneGoodVertex *
+    selectedPrimaryVertex
+)
