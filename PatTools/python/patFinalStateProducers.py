@@ -76,7 +76,7 @@ def produce_final_states(process, collections, output_commands,
     process.muonsForFinalStates = cms.EDFilter(
         "PATMuonRefSelector",
         src=cms.InputTag(muonsrc),
-        cut=cms.string('userFloat("maxCorPt") > 4 '\
+        cut=cms.string('max(pt, userFloat("maxCorPt")) > 4 '
                        '& (isGlobalMuon | isTrackerMuon)'),
         filter=cms.bool(False),
     )
@@ -84,8 +84,8 @@ def produce_final_states(process, collections, output_commands,
     process.electronsForFinalStates = cms.EDFilter(
         "PATElectronRefSelector",
         src=cms.InputTag(esrc),
-        cut=cms.string('abs(superCluster().eta) < 3.0 '\
-                       '& userFloat("maxCorPt") > 7'),
+        cut=cms.string('abs(superCluster().eta) < 3.0 '
+                       '& max(pt, userFloat("maxCorPt")) > 7'),
         filter=cms.bool(False),
     )
 
