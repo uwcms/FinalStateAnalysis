@@ -54,7 +54,20 @@ def makeTable(users):
             n=userSets[user].intersection(userSets[user2])
             userOL.append(str(len(n)))
         x.add_row(userOL)
-    print x
+    return x
+
+def unique(user):
+    """Returns the list of pattuples unique to that user"""
+    tempSet=userSets[user]
+    print len(tempSet),"before uniqueing"
+    for u in userSets:
+        if user in u or "master" in u or "in_use" in u: #don't check overlap with master, in_use lists
+            continue
+        else:
+            tempSet=tempSet.difference(userSets[u])
+        print len(tempSet),"after uniqueing",u
+
+    return tempSet
 
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description="%prog -- dump some analysis-level plots and yields")
@@ -80,13 +93,28 @@ if __name__ == '__main__':
             userSets['in_use']=userSets['in_use'].union(userSets[i])
         else:
             userSets[i]=getMasterSet()
-    for user in users:
-        print'User:',user.title(),'uses',len(userSets[user]),'samples'
-        if args.showNonexistent is True and (userSets['in_use']-userSets['master']) != 0:
-            print '---SAMPLES "IN USE", BUT NOT IN MASTER--'
-            print userSets[user]-userSets['master']
 
-    makeTable(users)
+    table = makeTable(users)
+
+    print table
+
+    with open('/afs/hep.wisc.edu/user/iross/www/unique_list.txt','w') as f:
+
+        f.write(table.get_string()+"\n\n")
+
+        for user in users:
+            print'User:',user.title(),'uses',len(userSets[user]),'samples'
+            if args.showNonexistent is True and (userSets['in_use']-userSets['master']) != 0:
+                print '---SAMPLES "IN USE", BUT NOT IN MASTER--'
+                print userSets[user]-userSets['master']
+            if 'master' not in user and 'in_use' not in user:
+                uniq=unique(user)
+                f.write('-----'+user+" Unique List ("+str(len(uniq))+")-----\n")
+                for i in sorted(uniq):
+                    f.write(i+'\n')
+                f.write('\n')
+
+
 
     userSets['not_in_use']=userSets['master']-userSets['in_use']
     with open('/afs/hep.wisc.edu/user/iross/www/unused_pattuples.txt','w') as f:
