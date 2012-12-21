@@ -37,6 +37,12 @@ id = PSet(
     objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
+    #ZH Synch iso variables
+    objectDefaultChargedIso = cms.string('{object}.chargedHadronIso()'),
+    objectDefaultNeutralIso = cms.string('{object}.neutralHadronIso()'),
+    objectDefaultPhotonIso  = cms.string('{object}.photonIso()'),
+    objectDefaultPileupIso  = cms.string('{object}.userIso(2)'),
+    
     objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
     objectEffectiveArea2011Data = cms.string('{object}.userFloat("ea_comb_Data2011_iso04_kt6PFJ")'),
     objectEffectiveAreaFall11MC = cms.string('{object}.userFloat("ea_comb_Fall11MC_iso04_kt6PFJ")'),
@@ -67,6 +73,7 @@ id = PSet(
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
     objectComesFromHiggs = 'comesFromHiggs({object_idx})',
     objectGenPdgId       = '? ({object}.genParticleRef(0).isAvailable && {object}.genParticleRef(0).isNonnull) ? {object}.genParticleRef(0).pdgId() : -999',
+    objectGenCharge      = '? ({object}.genParticleRef(0).isAvailable && {object}.genParticleRef(0).isNonnull) ? {object}.genParticleRef(0).charge() : -999',
 )
 
 energyCorrections = PSet(
