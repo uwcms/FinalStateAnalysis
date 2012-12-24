@@ -26,6 +26,7 @@ pairs = PSet(
     object1_object2_SS = 'likeSigned({object1_idx}, {object2_idx})',
     object1_object2_PZeta = 'pZeta({object1_idx}, {object2_idx})',
     object1_object2_PZetaVis = 'pZetaVis({object1_idx}, {object2_idx})',
+    
 )
 
 finalstate = PSet(
@@ -33,6 +34,11 @@ finalstate = PSet(
     charge = 'charge',
     Pt = 'pt',
     Mass = 'mass',
+    MassError = 'userFloat("cand_dM")',
+    MassErrord1 = 'userFloat("cand_dM_0")',
+    MassErrord2 = 'userFloat("cand_dM_1")',
+    MassErrord3 = 'userFloat("cand_dM_2")',
+    MassErrord4 = 'userFloat("cand_dM_3")'    
 )
 
 # Branches for identifying Z bosons using a pair of objects
