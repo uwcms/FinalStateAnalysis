@@ -21,6 +21,7 @@ Authors: Bucky & Friends
 '''
 
 import FWCore.ParameterSet.Config as cms
+import copy
 
 import PhysicsTools.PatAlgos.tools.trigTools as trigtools
 import PhysicsTools.PatAlgos.tools.jetTools as jettools
@@ -123,30 +124,29 @@ def configurePatTuple(process, isMC=True, **kwargs):
         'Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
     # Rerun tau ID
-    if cmssw_major_version() == 4:
-        process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
-        # Optimization - remove PFTauTagInfo compatibility layer
-        process.recoTauClassicHPSSequence.remove(
-            process.pfRecoTauTagInfoProducer)
-        process.recoTauClassicHPSSequence.remove(
-            process.ak5PFJetTracksAssociatorAtVertex)
-        assert(process.combinatoricRecoTaus.modifiers[3].name.value() ==
-               'TTIworkaround')
-        del process.combinatoricRecoTaus.modifiers[3]
-        # Don't build junky taus below 19 GeV
-        process.combinatoricRecoTaus.builders[0].minPtToBuild = cms.double(17)
-        process.tuplize += process.recoTauClassicHPSSequence
-    else:
-        # We can run less tau stuff in 52, since HPS taus already built.
-        process.load("RecoTauTag.Configuration.updateHPSPFTaus_cff")
-        process.tuplize += process.updateHPSPFTaus
+    process.load("RecoTauTag.Configuration.RecoPFTauTag_cff")
+    # Optimization - remove PFTauTagInfo compatibility layer
+    process.recoTauClassicHPSSequence.remove(
+        process.pfRecoTauTagInfoProducer)
+    process.recoTauClassicHPSSequence.remove(
+        process.ak5PFJetTracksAssociatorAtVertex)
+    assert(process.combinatoricRecoTaus.modifiers[3].name.value() ==
+           'TTIworkaround')
+    del process.combinatoricRecoTaus.modifiers[3]
+    # Don't build junky taus below 19 GeV
+    process.combinatoricRecoTaus.builders[0].minPtToBuild = cms.double(17)
+    process.tuplize += process.recoTauClassicHPSSequence
 
     ## Run rho computation.  Only necessary in 42X
     if cmssw_major_version() == 4:
-        from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
-        kt6PFJets.Rho_EtaMax = cms.double(4.4)
-        kt6PFJets.doRhoFastjet = True
-        process.kt6PFJets = kt6PFJets
+        # This function call can klobber everything if it isn't done
+        # before the other things are attached to the process, so do it now.
+        # The klobbering would occur through usePFIso->setupPFIso->_loadPFBRECO
+        from CommonTools.ParticleFlow.Tools.pfIsolation import _loadPFBRECO
+        _loadPFBRECO(process)
+        process.load("RecoJets.Configuration.RecoPFJets_cff")
+        process.kt6PFJets.Rho_EtaMax = cms.double(4.4)
+        process.kt6PFJets.doRhoFastjet = True
         process.tuplize += process.kt6PFJets
 
     # In 4_X we have to rerun ak5PFJets with area computation enabled.
@@ -154,6 +154,11 @@ def configurePatTuple(process, isMC=True, **kwargs):
         process.load("RecoJets.Configuration.RecoPFJets_cff")
         process.ak5PFJets.doAreaFastjet = True
         process.tuplize += process.ak5PFJets
+        # Only keep the new ak5PFJets
+        output_commands.append('*_ak5PFJets_*_%s' % process.name_())
+    else:
+        # Just keep the normal ones
+        output_commands.append('*_ak5PFJets_*_*')
 
     # In the embedded samples, we need to re-run the b-tagging
     if kwargs['embedded']:
@@ -395,7 +400,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
                            % process.name_())
 
     # Define the default lepton cleaning
-    process.cleanPatElectrons.preselection = cms.string('userFloat("maxCorPt") > 5')
+    process.cleanPatElectrons.preselection = cms.string(
+        'userFloat("maxCorPt") > 5')
     process.cleanPatElectrons.checkOverlaps.muons.requireNoOverlaps = False
     # Make sure we don't kill any good taus by calling them electrons
     # Note that we don't actually remove these overlaps.

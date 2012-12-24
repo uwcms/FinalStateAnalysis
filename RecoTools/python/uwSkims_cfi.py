@@ -25,6 +25,14 @@ from FinalStateAnalysis.RecoTools.zzSkim_cff import \
 _USED = [goodVertex, muons4skim, electrons4skim, leptons4skim, dileptons4skim,
          skim2010, skim40NoOF, skimNoOS, zzSkim]
 
+# Make sure we have at least one good vertex
+from FinalStateAnalysis.RecoTools.vertexSelection_cff import \
+        selectPrimaryVertices, atLeastOneGoodVertex, selectedPrimaryVertex, \
+        atLeastOneGoodVertexSequence
+
+_USED.extend([selectPrimaryVertices, atLeastOneGoodVertex,
+              selectedPrimaryVertex])
+
 skimConfig.paths.append("zzSkim")
 
 # Single muon for Wjets
@@ -35,7 +43,7 @@ singleMuSelector = cms.EDFilter(
         "(isGlobalMuon) & abs(eta) < 2.4 & pt > 24"),
     filter=cms.bool(True)
 )
-singleMuPath = cms.Path(singleMuSelector)
+singleMuPath = cms.Path(atLeastOneGoodVertexSequence + singleMuSelector)
 # Don't run the single mu path, only single mu + jet
 #skimConfig.paths.append("singleMuPath")
 
@@ -54,7 +62,8 @@ jet18NotOverlappingSingleMu = cms.EDFilter(
     filter=cms.bool(True),
 )
 singleMuPlusJetPath = cms.Path(
-    singleMuSelector + jet18Selector + jet18NotOverlappingSingleMu)
+    atLeastOneGoodVertexSequence + singleMuSelector +
+    jet18Selector + jet18NotOverlappingSingleMu)
 skimConfig.paths.append("singleMuPlusJetPath")
 
 # We use a 30 GeV for electrons in 2011 data (CMSSW 4)
@@ -67,7 +76,7 @@ singleElecSelector = cms.EDFilter(
         "abs(eta) < 2.5 & pt > %0.0f" % single_electron_thresh),
     filter=cms.bool(True)
 )
-singleElecPath = cms.Path(singleElecSelector)
+singleElecPath = cms.Path(atLeastOneGoodVertexSequence + singleElecSelector)
 # Don't run the single e path either, just single e + jet
 #skimConfig.paths.append("singleElecPath")
 
@@ -79,7 +88,8 @@ jet18NotOverlappingSingleElec = cms.EDFilter(
     filter=cms.bool(True),
 )
 singleElecPlusJetPath = cms.Path(
-    singleElecSelector + jet18Selector + jet18NotOverlappingSingleElec)
+    atLeastOneGoodVertexSequence + singleElecSelector +
+    jet18Selector + jet18NotOverlappingSingleElec)
 skimConfig.paths.append("singleElecPlusJetPath")
 
 # Mu+Tau for H2Tau
@@ -110,7 +120,7 @@ tau18JetsNotOverlappingMu14 = cms.EDFilter(
     minDeltaR=cms.double(0.3),
     filter=cms.bool(True)
 )
-muTauPath = cms.Path(mu16MuSelector +
+muTauPath = cms.Path(atLeastOneGoodVertexSequence + mu16MuSelector +
                      tau18JetSelector + tau18JetsNotOverlappingMu14)
 skimConfig.paths.append("muTauPath")
 
@@ -136,7 +146,7 @@ tau18JetsNotOverlappingE19 = cms.EDFilter(
     minDeltaR=cms.double(0.3),
     filter=cms.bool(True)
 )
-eTauPath = cms.Path(e17Selector + e19Selector +
+eTauPath = cms.Path(atLeastOneGoodVertexSequence + e17Selector + e19Selector +
                     tau18JetSelector + tau18JetsNotOverlappingE19)
 skimConfig.paths.append("eTauPath")
 
@@ -152,7 +162,8 @@ twoElectronsAbove8 = cms.EDFilter(
     src=cms.InputTag("e8Selector"),
     minNumber=cms.uint32(2)
 )
-doubleEPath = cms.Path(e17Selector + e8Selector + twoElectronsAbove8)
+doubleEPath = cms.Path(atLeastOneGoodVertexSequence + e17Selector +
+                       e8Selector + twoElectronsAbove8)
 skimConfig.paths.append("doubleEPath")
 
 # DoubleMu for ZZ, VH and HZG
@@ -173,17 +184,20 @@ twoMuonsAbove8 = cms.EDFilter(
     src=cms.InputTag("mu8Selector"),
     minNumber=cms.uint32(2)
 )
-doubleMuPath = cms.Path(mu17Selector + mu8Selector + twoMuonsAbove8)
+doubleMuPath = cms.Path(atLeastOneGoodVertexSequence + mu17Selector +
+                        mu8Selector + twoMuonsAbove8)
 skimConfig.paths.append("doubleMuPath")
 
 # MuEG 17-8
 oneElectronAbove8 = twoElectronsAbove8.clone(minNumber=cms.uint32(1))
-mu17e8Path = cms.Path(mu17Selector + e8Selector + oneElectronAbove8)
+mu17e8Path = cms.Path(atLeastOneGoodVertexSequence + mu17Selector +
+                      e8Selector + oneElectronAbove8)
 skimConfig.paths.append("mu17e8Path")
 
 # MuEG 8-17
 oneMuonAbove8 = twoMuonsAbove8.clone(minNumber=cms.uint32(1))
-mu8e17Path = cms.Path(e17Selector + mu8Selector + oneMuonAbove8)
+mu8e17Path = cms.Path(atLeastOneGoodVertexSequence + e17Selector +
+                      mu8Selector + oneMuonAbove8)
 skimConfig.paths.append("mu8e17Path")
 
 #diphoton skims ;-)
@@ -205,5 +219,6 @@ pho20Selector = cms.EDFilter(
     filter=cms.bool(True)
 )
 
-pho15Pho20Path = cms.Path(pho20Selector + pho15Selector + twoPhotonsAbove15)
+pho15Pho20Path = cms.Path(atLeastOneGoodVertexSequence + pho20Selector +
+                          pho15Selector + twoPhotonsAbove15)
 skimConfig.paths.append("pho15Pho20Path")
