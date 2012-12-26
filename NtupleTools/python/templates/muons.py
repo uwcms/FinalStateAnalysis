@@ -47,7 +47,7 @@ energyCorrections = PSet(
     objectERochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").t',
     objectPtRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Pt',
     objectEtaRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Eta',
-    objectPhoRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Phi',
+    objectPhiRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Phi',
     objectEErrRochCor2011A = '{object}.userFloat("p4_RochCor2011A_tkFitErr")',
     
     objectERochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").t',
