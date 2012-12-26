@@ -427,6 +427,11 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     trigtools.switchOnTrigger(process)
 
+    #configure the PAT trigger
+    if kwargs['HLTprocess']:
+        process.patTrigger.processName = cms.string(kwargs['HLTprocess'])
+        process.patTriggerEvent.processName = cms.string(kwargs['HLTprocess'])
+
     # Now build the PATFinalStateLS object, which holds LumiSection info.
     process.load(
         "FinalStateAnalysis.PatTools.finalStates.patFinalStateLSProducer_cfi")

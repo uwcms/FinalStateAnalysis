@@ -24,7 +24,7 @@ import re
 # This is so you can make an update to the underlying data sample pythia/powheg
 # etc.
 data_name_map = {
-    'Zjets' : ['Zjets_M50',],
+    'Zjets' : ['Zjets_M50'],
 
     'QCDMu' : ['QCD_20toInf_MuPt15'],
 
@@ -68,6 +68,14 @@ data_name_map = {
     'WWW' : ['WWWTo2Lplus', 'WWWTo2Lminus'],
 
     'ggH_ZZ_4l_120' : ['ggH_ZZ_4l_120'],
+    'HToZG120' : ['VBFHToZG_M-120','VHToZG_M-120','ggHToZG_M-120','ttHToZG_M-120'],
+    'HToZG125' : ['VBFHToZG_M-125','VHToZG_M-125','ggHToZG_M-125','ttHToZG_M-125'],
+    'HToZG130' : ['VBFHToZG_M-130','VHToZG_M-130','ggHToZG_M-130','ttHToZG_M-130'],
+    'HToZG135' : ['VBFHToZG_M-135','VHToZG_M-135','ggHToZG_M-135','ttHToZG_M-135'],
+    'HToZG140' : ['VBFHToZG_M-140','VHToZG_M-140','ggHToZG_M-140','ttHToZG_M-140'],
+    'HToZG145' : ['VBFHToZG_M-145','VHToZG_M-145','ggHToZG_M-145','ttHToZG_M-145'],
+    'HToZG150' : ['VBFHToZG_M-150','VHToZG_M-150','ggHToZG_M-150','ttHToZG_M-150'],
+    'ZGToLLG_PRIVATE' : ['ZGToEEG','ZGToMuMuG']
 }
 
 datadefs = {
@@ -92,7 +100,7 @@ datadefs = {
         'datasetpath' : '/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : 3048*picobarns, #NNLO
         'pu' : 'S6',
-        'analyses' : ['HTT',  'VH', 'Tau', 'Mu'],
+        'analyses' : ['HTT',  'VH', 'Tau', 'Mu','HZG'],
     },
     'WplusJets_madgraph' : {
         'datasetpath' : "/WJetsToLNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
@@ -402,7 +410,7 @@ datadefs = {
         'pu' : 'S6',
         'analyses' : ['VH', 'HTT'],
     },
-
+    
     ############################################################################
     #### VH -> WW dataset                   ####################################
     ############################################################################
@@ -1331,6 +1339,60 @@ datadefs = {
 
 }
 
+# H -> Z\gamma signal datasets
+hzgMap = {'gg':['/GluGluToHToZG_M-','_7TeV-powheg-pythia6'],
+          'VBF':['/VBF_HToZG_M-','_7TeV-powheg-pythia6'],
+          'V':['/WH_ZH_HToZG_M-','_7TeV-pythia6'],
+          'tt':['/TTH_HToZG_M-','_7TeV-pythia6']}
+#all cross sections in picobarns
+cs_hzg = {120.0:{'gg':16.65,'VBF':1.279,'V':0.6561+0.3598,'tt':0.0976},
+          125.0:{'gg':15.32,'VBF':1.222,'V':0.5729+0.3158,'tt':0.0863},
+          130.0:{'gg':14.16,'VBF':1.168,'V':0.5008+0.2778,'tt':0.0766},
+          135.0:{'gg':13.11,'VBF':1.117,'V':0.4390+0.2453,'tt':0.0681},
+          140.0:{'gg':12.18,'VBF':1.069,'V':0.3857+0.2172,'tt':0.0607},
+          145.0:{'gg':11.33,'VBF':1.023,'V':0.3406+0.1930,'tt':0.0544},
+          150.0:{'gg':10.58,'VBF':0.9800,'V':0.3001+0.1713,'tt':0.0487}}
+hbr_hzg = {120:1.12e-03,
+           125:1.55e-03,
+           130:1.96e-03,
+           135:2.28e-03,
+           140:2.46e-03,
+           145:2.48e-03,
+           150:2.31e-03}
+zbr_hzg = {'gg':br_z_leptons,'VBF':br_z_leptons,'V':1.0,'tt':br_z_leptons}
+for mass in range(120,155,5):
+  ver=1
+  for ch in cs_hzg[mass].keys():
+    datadefs['%sHToZG_M-%i' %(ch,mass)]= {
+      'datasetpath' :'%s%i%s/Fall11-PU_S6_START42_V14B-v%i/AODSIM' % (hzgMap[ch][0],
+                                                                      mass,
+                                                                      hzgMap[ch][1],
+                                                                      ver),
+      'pu' : 'S6',
+      'x_sec' : cs_hzg[mass][ch]*hbr_hzg[mass]*zbr_hzg[ch]*picobarns,
+      'analyses' : ['HZG']
+      }
+
+#Z\gamma standard model background (private datasamples!!!)
+#needs dbs = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet
+#needs 'REDIGI' process fed to the pat HLT handler
+datadefs['ZGToEEG']= {
+      'datasetpath':'/ZGToEEG_TuneZ2_7TeV-madgraph-upto2jets/lgray-Fall11-REDIGI-AODSIM-START42_V14B-v1_ZGToEEG-RECO-01715716b3165466edf30580d661ec8b/USER',
+      'pu' : 'S6',
+      'x_sec' : 12.29*picobarns,
+      'analyses' : ['HZG'],
+      'dbs' : 'cms_dbs_ph_analysis_01',
+      'hlt_process' : 'REDIGI'
+      }
+datadefs['ZGToMuMuG']= {
+      'datasetpath':'/ZGToMuMuG_TuneZ2_7TeV-madgraph-upto2jets/lgray-Fall11-REDIGI-AODSIM-START42_V14B-v1_ZGToMuMuG-RECO-01715716b3165466edf30580d661ec8b/USER',
+      'pu' : 'S6',
+      'x_sec' : 12.29*picobarns,
+      'analyses' : ['HZG'],
+      'dbs' : 'cms_dbs_ph_analysis_01',
+      'hlt_process' : 'REDIGI'
+      }
+
 
 #VH->HWW xsec: WH + ZH; ZH --> totalxsec * BR(ZtoLL) * BR(HtoWW) * BR( WtoLL )^2
 datadefs['VH_110_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.4721 * br_z_leptons * 4.77E-02 * br_w_leptons**2}
@@ -1442,7 +1504,7 @@ def build_data_set(pd, analyses):
   return subsample_dict, sample_dict
 
 # Build all the PDs we use
-data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu'])
+data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu','HZG'])
 datadefs.update(data_DoubleMu)
 data_name_map.update(list_DoubleMu)
 
@@ -1450,7 +1512,7 @@ data_MuEG, list_MuEG = build_data_set('MuEG', ['VH', 'HTT', 'Mu'])
 datadefs.update(data_MuEG)
 data_name_map.update(list_MuEG)
 
-data_DoubleE, list_DoubleE = build_data_set('DoubleElectron', ['VH',])
+data_DoubleE, list_DoubleE = build_data_set('DoubleElectron', ['VH','HZG'])
 datadefs.update(data_DoubleE)
 data_name_map.update(list_DoubleE)
 
@@ -1487,7 +1549,7 @@ for embedded_sample in embedded_samples:
     datadefs[name] = {
         'datasetpath' : embedded_sample,
         'analyses' : ['HTT'],
-        'xsec' : -999,
+        'x_sec' : -999,
         'pu' : 'data',
     }
 

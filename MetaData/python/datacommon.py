@@ -20,8 +20,9 @@ picobarns =  1.0
 femtobarns = 1.0e-3
 
 # Branching ratios
+#LAG 26 DEC 2012 -- set Z->leptons branching to PDG values
 br_w_leptons = 0.1075+0.1057+0.1125
-br_z_leptons = 3*0.03365
+br_z_leptons = 0.03363+0.03366+0.03370 #e,mu,tau
 
 def square(x):
     return x*x
@@ -51,7 +52,7 @@ def query_cli(datadefs, argv=None):
     output_group.add_argument(
         '--columns', nargs='+',  help='Output columns',
         default=['name', 'datasetpath'],
-        choices=['name', 'datasetpath', 'pu', 'xsec', 'lumi_mask',
+        choices=['name', 'datasetpath', 'pu', 'x_sec', 'lumi_mask',
                  'firstRun', 'lastRun'])
     output_group.add_argument(
         '--sort', default='name', help='Column to sort by')
