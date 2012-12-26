@@ -12,11 +12,15 @@ import os
 def configure_pat_tuple(sample, sample_info):
     options = []
 
+    #if the HLT process happens to not be 'HLT'
+    if 'hlt_process' in sample_info:
+        options.append('HLTprocess=%s'%(sample_info['hlt_process']))
+
     if 'data' not in sample and 'embedded' not in sample:
         options.append('isMC=1')
         options.append('globalTag=%s' % os.environ['mcgt'])
         if 'x_sec' in sample_info:
-            options.append('xSec=%0.4f' % sample_info['x_sec'])
+            options.append('xSec=%0.5e' % sample_info['x_sec'])
         else:
             options.append('xSec=0')
         options.append('puTag=%s' % sample_info['pu'])
@@ -25,7 +29,7 @@ def configure_pat_tuple(sample, sample_info):
         options.append('embedded=1')
         options.append('globalTag=%s' % os.environ['datagt'])
         if 'x_sec' in sample_info:
-            options.append('xSec=%0.4f' % sample_info['x_sec'])
+            options.append('xSec=%0.5e' % sample_info['x_sec'])
         else:
             options.append('xSec=0')
         options.append('puTag=%s' % sample_info['pu'])

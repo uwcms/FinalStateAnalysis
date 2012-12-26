@@ -9,7 +9,7 @@ echo $label
 #electrons and muons
 #/GluGluToHToZG_M-125_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM
 
-hzg_list=`dbs lsf --path=/GluGluToHToZG_M-125_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM | head -20 | tail -17 | tr -d ' ' | sed 's/\/store/root\:\/\/cmsxrootd\.hep\.wisc\.edu\/\/store/'`
+hzg_list=`dbs lsf --path=/GluGluToHToZG_M-125_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM | head -16 | tail -13 | tr -d ' ' | sed 's/\/store/root\:\/\/cmsxrootd\.hep\.wisc\.edu\/\/store/'`
 
 hzg_list_arr=()
 for item in $hzg_list
@@ -42,9 +42,9 @@ do
 
   if [[ "${parts[0]}" == *Data* ]]
       then
-      farmoutAnalysisJobs $fajOpts $jobName patTuple_cfg.py inputFiles='$inputFileNames' $patTupleOpts $dataOpts
+      farmoutAnalysisJobs $fajOpts $jobName ../patTuple_cfg.py inputFiles='$inputFileNames' $patTupleOpts $dataOpts
       else
-      farmoutAnalysisJobs $fajOpts $jobName patTuple_cfg.py inputFiles='$inputFileNames' $patTupleOpts $mcOpts
+      farmoutAnalysisJobs $fajOpts $jobName ../patTuple_cfg.py inputFiles='$inputFileNames' $patTupleOpts $mcOpts
   fi  
 done
 #echo "Tuplizing ggH sample - will write log to ggH_tuplization.log"

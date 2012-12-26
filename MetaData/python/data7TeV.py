@@ -1380,13 +1380,17 @@ datadefs['ZGToEEG']= {
       'datasetpath':'/ZGToEEG_TuneZ2_7TeV-madgraph-upto2jets/lgray-Fall11-REDIGI-AODSIM-START42_V14B-v1_ZGToEEG-RECO-01715716b3165466edf30580d661ec8b/USER',
       'pu' : 'S6',
       'x_sec' : 12.29*picobarns,
-      'analyses' : ['HZG']
+      'analyses' : ['HZG'],
+      'dbs' : 'cms_dbs_ph_analysis_01',
+      'hlt_process' : 'REDIGI'
       }
 datadefs['ZGToMuMuG']= {
       'datasetpath':'/ZGToMuMuG_TuneZ2_7TeV-madgraph-upto2jets/lgray-Fall11-REDIGI-AODSIM-START42_V14B-v1_ZGToMuMuG-RECO-01715716b3165466edf30580d661ec8b/USER',
       'pu' : 'S6',
       'x_sec' : 12.29*picobarns,
-      'analyses' : ['HZG']
+      'analyses' : ['HZG'],
+      'dbs' : 'cms_dbs_ph_analysis_01',
+      'hlt_process' : 'REDIGI'
       }
 
 
