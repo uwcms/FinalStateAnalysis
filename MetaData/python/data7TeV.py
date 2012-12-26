@@ -24,7 +24,7 @@ import re
 # This is so you can make an update to the underlying data sample pythia/powheg
 # etc.
 data_name_map = {
-    'Zjets' : ['Zjets_M50',],
+    'Zjets' : ['Zjets_M50'],
 
     'QCDMu' : ['QCD_20toInf_MuPt15'],
 
@@ -100,7 +100,7 @@ datadefs = {
         'datasetpath' : '/DYJetsToLL_TuneZ2_M-50_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : 3048*picobarns, #NNLO
         'pu' : 'S6',
-        'analyses' : ['HTT',  'VH', 'Tau', 'Mu'],
+        'analyses' : ['HTT',  'VH', 'Tau', 'Mu','HZG'],
     },
     'WplusJets_madgraph' : {
         'datasetpath' : "/WJetsToLNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",

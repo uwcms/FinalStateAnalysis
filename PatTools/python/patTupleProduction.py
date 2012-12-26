@@ -180,11 +180,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Setup hZg custom iso definitions
     add_hZg_iso_needs(process)
 
-    #configure the PAT trigger
-    if kwargs['HLTprocess']:
-        process.patTrigger.processName = cms.string(kwargs['HLTprocess'])
-        process.patTriggerEvent.processName = cms.string(kwargs['HLTprocess'])
-
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring(
         'EcalEndcaps:ConeVeto(0.08)')
@@ -431,6 +426,11 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*_cleanPatPhotons_*_*')
 
     trigtools.switchOnTrigger(process)
+
+    #configure the PAT trigger
+    if kwargs['HLTprocess']:
+        process.patTrigger.processName = cms.string(kwargs['HLTprocess'])
+        process.patTriggerEvent.processName = cms.string(kwargs['HLTprocess'])
 
     # Now build the PATFinalStateLS object, which holds LumiSection info.
     process.load(
