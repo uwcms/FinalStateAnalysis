@@ -70,6 +70,8 @@ PATElectronMVAIDEmbedder::PATElectronMVAIDEmbedder(const edm::ParameterSet& pset
 }
 
 void PATElectronMVAIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
+  ElectronIDMVA::MVAType mvaType = mva_.getMVAType();
+
   edm::Handle<edm::View<pat::Electron> > electrons;
   evt.getByLabel(src_, electrons);
 
@@ -100,26 +102,37 @@ void PATElectronMVAIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
 
     // See preID definition at https://twiki.cern.ch/twiki/bin/view/CMS/HTTWorkingTwiki
     bool passPreID = true;
-    if (electron.superCluster().isNonnull()) {
-      if (std::abs(electron.superCluster()->eta()) < 1.479) {
-        if ((std::abs(electron.deltaEtaSuperClusterTrackAtVtx()) >= 0.007)
-            || (std::abs(electron.deltaPhiSuperClusterTrackAtVtx()) >= 0.15)
-            || (electron.hadronicOverEm() >= 0.12)
-            || (electron.sigmaIetaIeta() >= 0.01)) {
-          passPreID = false;
-        }
-      } else { // forward
-        if ((std::abs(electron.deltaEtaSuperClusterTrackAtVtx()) >= 0.009)
-            || (std::abs(electron.deltaPhiSuperClusterTrackAtVtx()) >= 0.10)
-            || (electron.hadronicOverEm() >= 0.10)
-            || (electron.sigmaIetaIeta() >= 0.03)) {
-          passPreID = false;
-        }
+    switch(mvaType) {
+    case ElectronIDMVA::kTrig2012: // needs additional isolation preselection
+      passPreID *= (electron.dr04TkSumPt()/electron.pt() < 0.2);
+      passPreID *= (electron.dr04EcalRecHitSumEt()/electron.pt() < 0.2);
+      passPreID *= (electron.dr04HcalTowerSumEt()/electron.pt() < 0.2);
+    case ElectronIDMVA::kBaseline:
+    case ElectronIDMVA::kNoIPInfo:
+    case ElectronIDMVA::kWithIPInfo:
+      if (electron.superCluster().isNonnull()) {
+	if (std::abs(electron.superCluster()->eta()) < 1.479) {
+	  if ((std::abs(electron.deltaEtaSuperClusterTrackAtVtx()) >= 0.007)
+	      || (std::abs(electron.deltaPhiSuperClusterTrackAtVtx()) >= 0.15)
+	      || (electron.hadronicOverEm() >= 0.12)
+	      || (electron.sigmaIetaIeta() >= 0.01)) {
+	    passPreID = false;
+	  }
+	} else { // forward
+	  if ((std::abs(electron.deltaEtaSuperClusterTrackAtVtx()) >= 0.009)
+	      || (std::abs(electron.deltaPhiSuperClusterTrackAtVtx()) >= 0.10)
+	      || (electron.hadronicOverEm() >= 0.10)
+	      || (electron.sigmaIetaIeta() >= 0.03)) {
+	    passPreID = false;
+	  }
+	}      
+      } else {
+	passPreID = false;
       }
-    } else {
-      passPreID = false;
+      break;
     }
-    electron.addUserFloat("MVApreID", passPreID);
+    electron.addUserFloat(Form("MVApreID_type%i",int(mvaType)), 
+			  passPreID);
 
     double dz = 999;
     if (vtxHandle->size())
@@ -130,7 +143,8 @@ void PATElectronMVAIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
     double mvaV = mva_.MVAValue(
         &electron, evt, es, ebRecHits_, eeRecHits_);
     // Add it as a user float
-    electron.addUserFloat("MVA", mvaV);
+    electron.addUserFloat(Form("MVA_type%i",int(mvaType)), 
+			  mvaV);
 
     float pt = electron.pt();
 
@@ -151,7 +165,8 @@ void PATElectronMVAIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
       if(pt>20 && eta>1.0 && eta<1.5 &&mvaV<0.947) passID=false;
       if(pt>20 && eta>1.5 && eta<2.5 &&mvaV<0.878) passID=false;
     }
-    electron.addUserFloat("MITID", passID);
+    electron.addUserFloat(Form("MVAID_type%i",int(mvaType)), 
+			  passID);
 
     output->push_back(electron);
   }

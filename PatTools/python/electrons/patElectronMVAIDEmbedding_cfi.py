@@ -12,3 +12,14 @@ patElectronMVAIDEmbedder = cms.EDProducer(
     maxDZ = cms.double(0.2),
     maxDB = cms.double(0.045),
 )
+
+patElectronMVAIDEmbedder2012 = cms.EDProducer(
+    "PATElectronMVAIDEmbedder",
+    electronMVAIDTrig2012,
+    src = cms.InputTag("fixme"),
+    ebRecHits = cms.InputTag("reducedEcalRecHitsEB"),
+    eeRecHits = cms.InputTag("reducedEcalRecHitsEE"),
+    srcVertices = cms.InputTag("selectedPrimaryVertex"),
+    maxDZ = cms.double(1e3),
+    maxDB = cms.double(1e3),
+)

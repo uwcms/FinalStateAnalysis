@@ -16,9 +16,9 @@ from FinalStateAnalysis.PatTools.electrons.electronSystematics_cfi import \
 from FinalStateAnalysis.PatTools.electrons.triggerMatch_cfi import \
         triggeredPatElectrons, triggeredPatElectronsL
 
-# This is the 2011 MIT MVA ID.  The 2012 one is handled in electronId_cff
+# This is the 2011 MIT MVA ID.  
 from FinalStateAnalysis.PatTools.electrons.patElectronMVAIDEmbedding_cfi import\
-        patElectronMVAIDEmbedder
+        patElectronMVAIDEmbedder, patElectronMVAIDEmbedder2012
 
 from FinalStateAnalysis.PatTools.electrons.patElectronMVAWPEmbedding_cfi import\
         patElectronMVAIDWPEmbedding
@@ -62,6 +62,7 @@ customizeElectronSequence += electronSystematics
 customizeElectronSequence += patElectronCutBasedIdEmbedder
 customizeElectronSequence += patElectronEAEmbedder
 customizeElectronSequence += patElectronMVAIDEmbedder
+customizeElectronSequence += patElectronMVAIDEmbedder2012
 customizeElectronSequence += patElectronMVAIDWPEmbedding
 customizeElectronSequence += patElectronsEmbedIp
 customizeElectronSequence += patElectronEnergyCorrections
