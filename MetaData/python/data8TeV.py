@@ -390,7 +390,7 @@ def build_data_set(pd, analyses):
             'firstRun' : 190450,
             'lastRun' : 193686,
             'analyses' : analyses,
-            'calibrationTarget'='ICHEP2012'
+            'calibrationTarget':'ICHEP2012'
         },
         'data_%s_Run2012B_PromptReco_v1_a' % pd : {
             'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
@@ -398,7 +398,7 @@ def build_data_set(pd, analyses):
             'firstRun' : 193752,
             'lastRun' : 194479,
             'analyses' : analyses,
-            'calibrationTarget'='ICHEP2012'
+            'calibrationTarget':'ICHEP2012'
         },
         'data_%s_Run2012B_PromptReco_v1_b' % pd : {
             'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
@@ -406,7 +406,7 @@ def build_data_set(pd, analyses):
             'firstRun' : 194478,
             'lastRun' : 195396,
             'analyses' : analyses,
-            'calibrationTarget'='ICHEP2012'
+            'calibrationTarget':'ICHEP2012'
         },
         'data_%s_Run2012B_PromptReco_v1_c' % pd : {
             'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
@@ -414,7 +414,7 @@ def build_data_set(pd, analyses):
             'firstRun' : 195397,
             'lastRun' : 195947,
             'analyses' : analyses,
-            'calibrationTarget'='ICHEP2012'
+            'calibrationTarget':'ICHEP2012'
         },
         'data_%s_Run2012B_PromptReco_v1_d' % pd : {
             'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
@@ -422,7 +422,7 @@ def build_data_set(pd, analyses):
             'firstRun' : 195948,
             'lastRun' : 196509,
             'analyses' : analyses,
-            'calibrationTarget'='Prompt'
+            'calibrationTarget':'Prompt'
         },
         'data_%s_Run2012B_PromptReco_v1_e' % pd : {
             'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
@@ -430,7 +430,7 @@ def build_data_set(pd, analyses):
             'firstRun' : 196510,
             'lastRun' : 196531,
             'analyses' : analyses,
-            'calibrationTarget'='ICHEP2012'
+            'calibrationTarget':'ICHEP2012'
         },
         'data_%s_Run2012A_PromptReco_v1_Run190456_193683' % pd : {
             'datasetpath' : "/%s/Run2012A-PromptReco-v1/AOD" % pd,
@@ -438,7 +438,7 @@ def build_data_set(pd, analyses):
             'firstRun' : 190456,
             'lastRun' : 193683,
             'analyses' : analyses,
-            'calibrationTarget'='ICHEP2012'
+            'calibrationTarget':'ICHEP2012'
         },
         'data_%s_Run2012B_PromptReco_v1_Run193752_196531' % pd : {
             'datasetpath' : "/%s/Run2012B-PromptReco-v1/AOD" % pd,
@@ -453,7 +453,7 @@ def build_data_set(pd, analyses):
             'firstRun' : 193752,
             'lastRun' : 196531,
             'analyses' : analyses,
-            'calibrationTarget'='2012Jul13ReReco'
+            'calibrationTarget':'2012Jul13ReReco'
         },
         'data_%s_Run2012C_PromptReco_v1_Run198934_201264' % pd : {
             'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
@@ -461,7 +461,7 @@ def build_data_set(pd, analyses):
             'firstRun' : 198934,
             'lastRun' : 201264,
             'analyses' : analyses,
-            'calibrationTarget'='ICHEP2012'
+            'calibrationTarget':'ICHEP2012'
         },
         'data_%s_Run2012C_PromptReco_v2_Run198934_201264' % pd : {
             'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
@@ -469,7 +469,7 @@ def build_data_set(pd, analyses):
             'firstRun' : 198934,
             'lastRun' : 201264,
             'analyses' : analyses,
-            'calibrationTarget'='ICHEP2012'
+            'calibrationTarget':'ICHEP2012'
         },
     }
     sample_dict = {
