@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.PatTools.electrons.electronIDMVAConfiguration_cfi \
-        import electronMVAIDNOIPcfg
+        import electronMVAIDNOIPcfg, electronMVAIDTrig2012
 
 patElectronMVAIDEmbedder = cms.EDProducer(
     "PATElectronMVAIDEmbedder",

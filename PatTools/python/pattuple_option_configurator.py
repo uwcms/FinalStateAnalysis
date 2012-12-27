@@ -16,6 +16,9 @@ def configure_pat_tuple(sample, sample_info):
     if 'hlt_process' in sample_info:
         options.append('HLTprocess=%s'%(sample_info['hlt_process']))
 
+    if 'calibrationTarget' in sample_info:
+        options.append('calibrationTarget=%s'%sample_info['calibrationTarget'])
+
     if 'data' not in sample and 'embedded' not in sample:
         options.append('isMC=1')
         options.append('globalTag=%s' % os.environ['mcgt'])
