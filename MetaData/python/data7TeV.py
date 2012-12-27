@@ -317,6 +317,18 @@ datadefs = {
         'x_sec' : 0.01386*picobarns, # from https://twiki.cern.ch/twiki/bin/view/CMS/HZZSamples7TeV
         'analyses' : ['VH',  '4L', 'HTT'],
     },
+   'WGstarToLNu2Mu_TuneZ2_7TeV-madgraph' : {
+        'datasetpath' : "/WGstarToLNu2Mu_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+        'pu' : 'S4',
+        'x_sec' : -999.,
+        'analyses' : ['VH'],
+    },
+   'WGstarToLNu2E_TuneZ2_7TeV-madgraph' : {
+        'datasetpath' : "/WGstarToLNu2E_TuneZ2_7TeV-madgraph-tauola/Summer11-PU_S4_START42_V11-v1/AODSIM",
+        'pu' : 'S4',
+        'x_sec' : -999.,
+        'analyses' : ['VH'],
+    },
 
     ############################################################################
     #### QCD datasets                       ####################################
@@ -937,6 +949,13 @@ datadefs = {
         'analyses' : ['VH'],
     },
 
+    'GluGluToWWTo4L' : {
+        'datasetpath' :"/GluGluToWWTo4L_TuneZ2_7TeV-gg2ww-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : -999,
+        'pu' : 'S6',
+        'analyses' : ['VH'],
+    },
+  
     ############################################################################
     #### UF ZZ private production (M_ll>4)  ####################################
     ############################################################################
