@@ -20,6 +20,6 @@ patElectronMVAIDEmbedder2012 = cms.EDProducer(
     ebRecHits = cms.InputTag("reducedEcalRecHitsEB"),
     eeRecHits = cms.InputTag("reducedEcalRecHitsEE"),
     srcVertices = cms.InputTag("selectedPrimaryVertex"),
-    maxDZ = cms.double(1e3),
+    maxDZ = cms.double(0.1),
     maxDB = cms.double(1e3),
 )

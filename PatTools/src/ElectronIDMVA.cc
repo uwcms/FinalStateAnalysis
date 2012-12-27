@@ -62,6 +62,8 @@ void ElectronIDMVA::Initialize( std::string methodName,
 
   fMethodname = methodName;
 
+  std::cout << "Initializing type " << fMVAType << "MVA" << std::endl;
+
   for(UInt_t i=0; i<6; ++i) {
     if (fTMVAReader[i]) delete fTMVAReader[i];
 

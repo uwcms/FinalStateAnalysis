@@ -102,10 +102,14 @@ void PATElectronMVAIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
 
     // See preID definition at https://twiki.cern.ch/twiki/bin/view/CMS/HTTWorkingTwiki
     bool passPreID = true;
+    double ecal_iso = 0.0;
     switch(mvaType) {
     case ElectronIDMVA::kTrig2012: // needs additional isolation preselection
       passPreID *= (electron.dr04TkSumPt()/electron.pt() < 0.2);
-      passPreID *= (electron.dr04EcalRecHitSumEt()/electron.pt() < 0.2);
+      ecal_iso = ( fabs(electron.superCluster()->eta()) < 1.479 ?
+		   std::max( electron.dr03EcalRecHitSumEt() - 1.0, 0.0) :
+		   electron.dr03EcalRecHitSumEt() );
+      passPreID *= (ecal_iso/electron.pt() < 0.2);
       passPreID *= (electron.dr04HcalTowerSumEt()/electron.pt() < 0.2);
     case ElectronIDMVA::kBaseline:
     case ElectronIDMVA::kNoIPInfo:
