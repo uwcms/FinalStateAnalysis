@@ -222,6 +222,21 @@ datadefs = {
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
    },
+
+   'GluGluToHToZZTo2L2Q_M-125_8TeV-powheg-pythia6' : {
+   'analyses': ['HBB'],
+   'datasetpath' : "/GluGluToHToZZTo2L2Q_M-125_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   },
+
+   'VBF_HToZZTo2L2Q_M-125_8TeV-powheg-pythia6' : {
+   'analyses': ['HBB'],
+   'datasetpath' : "/VBF_HToZZTo2L2Q_M-125_8TeV-powheg-pythia6/Summer12-PU_S7_START52_V9-v1/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S7',
+   },
+
 }
 
 for n in range(1,5) :
@@ -377,6 +392,13 @@ def build_data_set(pd, analyses):
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
       'firstRun' : 198022,
       'lastRun' : 198523,
+      'analyses' : analyses,
+      },
+      'data_%s_Run2012D_PromptReco_v1' % pd : {
+      'datasetpath' : "/%s/Run2012D-PromptReco-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'firstRun' : 203773,
+      'lastRun' : 208940,
       'analyses' : analyses,
       },
     }
