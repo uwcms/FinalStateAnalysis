@@ -81,6 +81,7 @@ _photon_template = PSet(
     #templates.candidates.vertex_info, #photons have no tracking info
     templates.photons.id,
     templates.photons.tracking,
+    templates.photons.energyCorrections,
     templates.photons.supercluster,
     #templates.photons.trigger, #add photons later
     templates.topology.mtToMET,

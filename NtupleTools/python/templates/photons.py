@@ -87,6 +87,18 @@ supercluster = PSet(
     objectSCEtaWidth = '{object}.superCluster().etaWidth' 
 )
 
+energyCorrections = PSet(
+    objectECorrPHOSPHOR2011 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2011").t',
+    objectPtCorrPHOSPHOR2011 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2011").Pt',
+    objectEtaCorrPHOSPHOR2011 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2011").Eta',
+    objectPhiCorrPHOSPHOR2011 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2011").Phi',
+
+    objectECorrPHOSPHOR2012 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2012").t',
+    objectPtCorrPHOSPHOR2012 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2012").Pt',
+    objectEtaCorrPHOSPHOR2012 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2012").Eta',
+    objectPhiCorrPHOSPHOR2012 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2012").Phi'
+    )
+
 trigger = PSet(
     objectPhoton26RPhoton18_caloORr9_MatchLastFilter  = 'matchToHLTFilter({object_idx}, "hltPhoton26R9Id85ORCaloId10Iso50Photon18R9Id85ORCaloId10Iso50Mass70EgammaAllCombMassLastFilter")', # HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass70_v* (2012),
     objectPhoton36Photon10_caloORr9_MassLastFilter  = 'matchToHLTFilter({object_idx}, " hltPhoton36R9Id85ORCaloId10Iso50Photon10R9Id85ORCaloId10Iso50Mass80EgammaAllCombMassLastFilter")', #	HLT_Photon36_R9Id85_OR_CaloId10_Iso50_Photon10_R9Id85_OR_CaloId10_Iso50_Mass80_v* (2012)
