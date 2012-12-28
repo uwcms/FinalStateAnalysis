@@ -22,7 +22,7 @@ try:
     recoElectronID5YX += mvaTrigV0
     recoElectronID5YX += mvaNonTrigV0
     recoElectronID5YX += mvaTrigIDISOV0
-    recoElectronID5YX += mvaTrigIDISOPUSUBV0
+    #recoElectronID5YX += mvaTrigIDISOPUSUBV0
 
     recoElectronID42X += mvaTrigV0
     recoElectronID42X += mvaNonTrigV0
@@ -45,5 +45,5 @@ electronIDSources5YX = cms.PSet(
         mvaTrigV0 = cms.InputTag("mvaTrigV0"),
         mvaNonTrigV0 = cms.InputTag("mvaNonTrigV0"),
         mvaTrigIDISOV0 = cms.InputTag("mvaTrigIDISOV0"),
-        mvaTrigIDISOPUSUBV0 = cms.InputTag("mvaTrigIDISOPUSUBV0"),
+        #mvaTrigIDISOPUSUBV0 = cms.InputTag("mvaTrigIDISOPUSUBV0"),
 )
