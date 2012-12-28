@@ -61,7 +61,13 @@ then
 
   #apply patch that lets us use the new MVA ID
   set +o errexit
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaMVAID_updatepatch.patch
+  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaMVAID_updatepatch.patch  
+  set -o errexit
+  set +o errexit
+  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaMVAID_Estimator.patch
+  set -o errexit
+  set +o errexit
+  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaMVAID_buildfile.patch
   set -o errexit
 
   echo "Applying Marias b-tag patch"
