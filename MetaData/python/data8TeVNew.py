@@ -28,6 +28,7 @@ datadefs = {
    'datasetpath' : "/WZJetsTo3LNu_TuneZ2_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola' : {
@@ -35,6 +36,7 @@ datadefs = {
    'datasetpath' : "/ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola' : {
@@ -42,6 +44,7 @@ datadefs = {
    'datasetpath' : "/ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v3/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'WZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola' : {
@@ -49,6 +52,7 @@ datadefs = {
    'datasetpath' : "/WZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola' : {
@@ -56,6 +60,7 @@ datadefs = {
    'datasetpath' : "/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola' : {
@@ -63,6 +68,7 @@ datadefs = {
    'datasetpath' : "/WWJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola' : {
@@ -77,6 +83,7 @@ datadefs = {
    'datasetpath' : "/T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'TTTo2L2Nu2B_8TeV-powheg-pythia6' : {
@@ -84,6 +91,7 @@ datadefs = {
    'datasetpath' : "/TTTo2L2Nu2B_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_v2' : {
@@ -91,6 +99,7 @@ datadefs = {
    'datasetpath' : "/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball_v1' : {
@@ -98,6 +107,7 @@ datadefs = {
    'datasetpath' : "/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball' : {
@@ -106,6 +116,7 @@ datadefs = {
    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat8TeV
    'x_sec' : 3503.71,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },   
 
    'DYJetsToLL_M-10To50filter_8TeV-madgraph' : {
@@ -113,6 +124,7 @@ datadefs = {
    'datasetpath' : "/DYJetsToLL_M-10To50filter_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola' : {
@@ -127,6 +139,7 @@ datadefs = {
    'datasetpath' : "/ZZTo2e2tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'ZZTo2e2mu_8TeV-powheg-pythia6' : {
@@ -134,6 +147,7 @@ datadefs = {
    'datasetpath' : "/ZZTo2e2mu_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'ZZTo2mu2tau_8TeV-powheg-pythia6' : {
@@ -141,6 +155,7 @@ datadefs = {
    'datasetpath' : "/ZZTo2mu2tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM ",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'ZZTo4mu_8TeV-powheg-pythia6' : {
@@ -155,6 +170,7 @@ datadefs = {
    'datasetpath' : "/ZZTo4e_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'ZZTo4tau_8TeV-powheg-pythia6' : {
@@ -162,6 +178,7 @@ datadefs = {
    'datasetpath' : "/ZZTo4tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
    
    'WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola' : {
@@ -169,6 +186,7 @@ datadefs = {
    'datasetpath' : "/WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
    'DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
@@ -176,6 +194,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
+    'calibrationTarget':'2012Jul13ReReco'
    },
 
    'DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
@@ -183,6 +202,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
+   'calibrationTarget':'2012Jul13ReReco'
    },
 
    'DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
@@ -190,6 +210,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
+   'calibrationTarget':'2012Jul13ReReco'
    },
 
    'DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
@@ -197,6 +218,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
+   'calibrationTarget':'2012Jul13ReReco'
    },
 
    'DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
@@ -204,6 +226,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
+   'calibrationTarget':'2012Jul13ReReco'
    },
 
    'DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
@@ -211,6 +234,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
+   'calibrationTarget':'ICHEP2012'
    },
 
    'DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
@@ -218,6 +242,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
+   'calibrationTarget':'ICHEP2012'
    },
 
    'DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
@@ -225,6 +250,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_24Aug2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
+   'calibrationTarget':'ICHEP2012'
    },
 }
 
@@ -234,6 +260,7 @@ for n in range(1,5) :
       'datasetpath': "/W%iJetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % n,
       'pu' : 'S10',
       'x_sec' : -999,
+      'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
 
 # SM Z\gamma 8 TeV
@@ -241,7 +268,8 @@ datadefs['ZGToLLG']= {
    'datasetpath' :'/ZGToLLG_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
    'pu' : 'S10',
    'x_sec' : 132.6*picobarns,
-   'analyses' : ['HZG']
+   'analyses' : ['HZG'],
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
    }
 
 ############################################################################
@@ -253,12 +281,14 @@ for mass in range(80,150, 10) + range(160, 220, 20) + range(250, 550, 50) + rang
       'datasetpath': "/SUSYGluGluToHToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
       'x_sec' : -999,
+      'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
    datadefs['SUSYBBHToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
       'analyses': ['HTT'],
       'datasetpath': "/SUSYBBHToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
       'x_sec' : -999,
+       'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
 
 datadefs['SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola'] = {
@@ -266,6 +296,7 @@ datadefs['SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola'] = {
    'datasetpath': "/SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM",
    'pu' : 'S10',
    'x_sec' : -999,
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
    }
 
 for mass in range(110, 165, 5) :
@@ -274,12 +305,14 @@ for mass in range(110, 165, 5) :
       'datasetpath': "/GluGluToHToTauTau_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
       'x_sec' : -999,
+       'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
    datadefs['VBF_HToTauTau_M-%i_8TeV-powheg-pythia6' % mass] = {
       'analyses': ['HTT'],
       'datasetpath': "/VBF_HToTauTau_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
       'x_sec' : -999,
+       'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
 
 for mass in range(115,130) + range(130,150,5) + range(150,200,10) + [200,220] + range(250,600,25) + range(600,1001,50) :
@@ -288,12 +321,14 @@ for mass in range(115,130) + range(130,150,5) + range(150,200,10) + [200,220] + 
       'datasetpath': "/GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
       'x_sec' : -999,
+       'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
    datadefs['VBF_HToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
       'analyses': ['HTT'],
       'datasetpath': "/VBF_HToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
       'x_sec' : -999,
+       'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
 
 
@@ -309,6 +344,7 @@ for mass in range(110, 165, 5) :
       'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v%i/AODSIM" % (mass,ver),
       'pu' : 'S10',
       'x_sec' : -999,
+       'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
 
 # H -> Z\gamma signal datasets
@@ -341,6 +377,7 @@ for mass in range(120,155,5):
                                                                               hzgMap[ch][1],
                                                                               ver),
       'pu' : 'S10',
+      'calibrationTarget':'Summer12_DR53X_HCP2012',
       'x_sec' : cs_hzg[mass][ch]*hbr_hzg[mass]*zbr_hzg[ch]*picobarns,
       'analyses' : ['HZG']
       }
@@ -353,6 +390,7 @@ for mass in range(110, 145, 5):
       'analyses': ['VH'],
       'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
+       'calibrationTarget':'Summer12_DR53X_HCP2012',
       'x_sec' : -999,
       }
 
@@ -361,6 +399,7 @@ for mass in range(110, 150, 10):
       'analyses': ['VH'],
       'datasetpath': "/WH_ZH_TTH_HToWW_M-%i_lepdecay_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
+       'calibrationTarget':'Summer12_DR53X_HCP2012',
       'x_sec' : -999,
       }
 
@@ -385,6 +424,7 @@ datadefs['data_DoubleMu_Run2012B_13Jul2012_v4'] = {
    'firstRun' : 193834,
    'lastRun' : 196531,
    'analyses' : ['HZZ'],
+    'calibrationTarget':'2012Jul13ReReco'
    }
 
 def build_data_set(pd, analyses):
@@ -395,6 +435,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 190456,
       'lastRun' : 193621,
       'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
       },
       'data_%s_Run2012B_13Jul2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-13Jul2012-v1/AOD" % pd,
@@ -402,6 +443,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 193833,
       'lastRun' : 196531,
       'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
       },
       'data_%s_Run2012C_PromptReco_v2_Run198934_201264' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
@@ -409,6 +451,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 198934,
       'lastRun' : 201264,
       'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
       },
       'data_%s_Run2012C_PromptReco_v2_Run201265_203755' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
@@ -416,6 +459,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 201265,
       'lastRun' : 203755,
       'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
       },
       'data_%s_Run2012A_recover_06Aug2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012A-recover-06Aug2012-v1/AOD" % pd,
@@ -423,6 +467,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 190782, #LAG from A. David, 26 Dec 2012
       'lastRun' : 190949,
       'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
       },
       'data_%s_Run2012C_PromptReco_v1' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
@@ -430,6 +475,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 197700,
       'lastRun' : 198913,
       'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
       },
       'data_%s_Run2012C_24Aug2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012C-24Aug2012-v1/AOD" % pd,
@@ -437,6 +483,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 198022,
       'lastRun' : 198523, 
       'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
       },      
       'data_%s_Run2012C_EcalRecover_11DEC2012_v1' % pd :{
       'datasetpath' : "/%s/Run2012C-EcalRecover_11Dec2012-v1/AOD" % pd,
@@ -444,6 +491,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 201191,
       'lastRun' : 201191,
       'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
       },
       'data_%s_Run2012D_PromptReco_v1' % pd :{
       'datasetpath' : "/%s/Run2012D-PromptReco-v1/AOD" % pd,
@@ -451,6 +499,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 203768,
       'lastRun' :  208686,
       'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
       },
     }
    sample_dict = {

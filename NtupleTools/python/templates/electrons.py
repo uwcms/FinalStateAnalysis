@@ -20,6 +20,7 @@ id = PSet(
     objectMITID = '{object}.userFloat("MITID")',
     objectMVANonTrig = '{object}.electronID("mvaNonTrigV0")',
     objectMVATrig = '{object}.electronID("mvaTrigV0")',
+    objectMVATrigIDISO = '? {object}.isElectronIDAvailable("mvaTrigIDISOV0") ?{object}.electronID("mvaTrigIDISOV0") : -1',
     objectMVAIDH2TauWP = '{object}.userInt("mvaidwp")',
     objectCiCTight = '{object}.electronID("cicTight")',
     objectCBID_VETO = '{object}.userInt("CBID_VETO")',
