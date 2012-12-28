@@ -30,10 +30,10 @@ do
 
   if [[ "${parts[0]}" == *Data* ]]
       then
-      ./patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
+      ../patTuple_cfg.py isMC=0 globalTag=$datagt inputFiles=${parts[1]} reportEvery=1 maxEvents=-1\
 	  outputFile=/scratch/$LOGNAME/hZg_sync53X.$label.${parts[0]}.root dataset=ReReco #&> ${part[0]}_sync.log  & 
       else
-      ./patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=100 maxEvents=-1\
+      ../patTuple_cfg.py isMC=1 globalTag=$mcgt inputFiles=${parts[1]} reportEvery=1 maxEvents=-1\
 	  outputFile=/scratch/$LOGNAME/hZg_sync53X.$label.${parts[0]}.root dataset=Summer12 #&> ${part[0]}_sync.log  &
   fi  
 done
