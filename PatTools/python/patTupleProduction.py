@@ -180,6 +180,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Setup hZg custom iso definitions
     add_hZg_iso_needs(process)
 
+    #alter the photon matching to accept various fakes
+    if isMC:
+        process.photonMatch.mcPdgId = cms.vint32(22,111,113,221,
+                                                 1,2,3,4,5,11,-11,21)
+        process.photonMatch.checkCharge = cms.bool(False)
+
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring(
         'EcalEndcaps:ConeVeto(0.08)')
@@ -198,8 +204,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Do extra electron ID
     process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
-    process.tuplize += process.recoElectronID
-    process.patElectrons.electronIDSources = process.electronIDSources
+    if cmssw_major_version() == 4:
+        process.tuplize += process.recoElectronID42X
+        process.patElectrons.electronIDSources = process.electronIDSources42X
+    else :
+        process.tuplize += process.recoElectronID5YX
+        process.patElectrons.electronIDSources = process.electronIDSources5YX
     process.electronMatch.checkCharge = cms.bool(False)
     process.patElectrons.embedTrack = False
     process.patElectrons.embedPFCandidate = False
@@ -341,6 +351,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load("FinalStateAnalysis.PatTools.patPhotonProduction_cff")
     final_photon_collection = chain_sequence(process.customizePhotonSequence,
                                              "selectedPatPhotons")
+    #setup PHOSPHOR for a specific dataset
+    if cmssw_major_version() == 4: #for now 2011 = CMSSW42X
+        process.patPhotonPHOSPHOREmbedder.year = cms.uint32(2011)
+    else: # 2012 is 5YX
+        process.patPhotonPHOSPHOREmbedder.year = cms.uint32(2012)
+    process.patPhotonPHOSPHOREmbedder.isMC = cms.bool(bool(isMC))
     #inject photons into pat sequence
     process.customizePhotonSequence.insert(0, process.selectedPatPhotons)
     process.patDefaultSequence.replace(process.selectedPatPhotons,

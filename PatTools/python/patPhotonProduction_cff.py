@@ -26,3 +26,9 @@ from FinalStateAnalysis.PatTools.photons.patPhotonCutBasedIdEmbedding_cfi import
      patPhotonCutBasedIdEmbedder
 
 customizePhotonSequence += patPhotonCutBasedIdEmbedder
+
+#phosphor corrections from CalTech
+from FinalStateAnalysis.PatTools.photons.patPhotonPHOSPHOREmbedder_cff import \
+     patPhotonPHOSPHOREmbedder
+
+customizePhotonSequence += patPhotonPHOSPHOREmbedder
