@@ -18,6 +18,6 @@ mvaTrigIDISOV0 = cms.EDFilter(
     reducedEERecHitCollection = cms.InputTag('reducedEcalRecHitsEE'),
     method = cms.string("BDT"),
     mvaWeightFile = cms.vstring(fullNames),
-    isISISO=cms.untracked.bool(True),
+    isIDISO=cms.untracked.bool(True),
     Trig = cms.bool(True),
 )
