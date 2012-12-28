@@ -21,3 +21,17 @@ mvaTrigIDISOV0 = cms.EDFilter(
     isIDISO=cms.untracked.bool(True),
     Trig = cms.bool(True),
 )
+
+mvaTrigIDISOPUSUBV0 = cms.EDFilter(
+    "ElectronIdMVAProducer",
+    verbose = cms.untracked.bool(False),
+    vertexTag = cms.InputTag('offlinePrimaryVertices'),
+    electronTag = cms.InputTag('gsfElectrons'),
+    reducedEBRecHitCollection = cms.InputTag('reducedEcalRecHitsEB'),
+    reducedEERecHitCollection = cms.InputTag('reducedEcalRecHitsEE'),
+    method = cms.string("BDT"),
+    mvaWeightFile = cms.vstring(fullNames),
+    isIDISO=cms.untracked.bool(True),
+    isPUSUB=cms.untracked.bool(True),
+    Trig = cms.bool(True),
+)
