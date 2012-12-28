@@ -6,7 +6,7 @@ patPhotonPHOSPHOREmbedder = cms.EDProducer(
     year = cms.uint32(2011),
     isMC = cms.bool(False),
     r9Categories = cms.bool(True),    
-    dataCard = cms.FileInPath("PHOSPHOR_NUMBERS_EXPFIT_ERRORS.txt")
+    dataCard = cms.FileInPath("FinalStatAnalysis/PatTools/data/PHOSPHOR_NUMBERS_EXPFIT_ERRORS.txt")
 )
 
 
