@@ -347,6 +347,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load("FinalStateAnalysis.PatTools.patPhotonProduction_cff")
     final_photon_collection = chain_sequence(process.customizePhotonSequence,
                                              "selectedPatPhotons")
+    #setup PHOSPHOR for a specific dataset
+    if cmssw_major_version() == 4: #for now 2011 = CMSSW42X
+        process.patPhotonPHOSPHOREmbedder.year = cms.uint32(2011)
+    else: # 2012 is 5YX
+        process.patPhotonPHOSPHOREmbedder.year = cms.uint32(2012)
+    process.patPhotonPHOSPHOREmbedder.isMC = cms.bool(bool(isMC))
     #inject photons into pat sequence
     process.customizePhotonSequence.insert(0, process.selectedPatPhotons)
     process.patDefaultSequence.replace(process.selectedPatPhotons,

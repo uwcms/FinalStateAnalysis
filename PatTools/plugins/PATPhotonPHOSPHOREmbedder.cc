@@ -132,7 +132,7 @@ void PATPhotonPHOSPHOREmbedder::produce(Event& evt,
     math::XYZVector newMom = cPho.momentum().unit()*corrE;
     math::XYZTLorentzVector corrp4(newMom.x(),newMom.y(),newMom.z(),corrE);
 
-    cPho.addUserData<math::XYZTLorentzVector>(Form("PHOSPHOR_%i",_year),
+    cPho.addUserData<math::XYZTLorentzVector>(Form("p4_PHOSPHOR_%i",_year),
 					      corrp4);
 
     out->push_back(cPho);
