@@ -1,7 +1,7 @@
-Index: EGamma/EGammaAnalysisTools/plugins/BuildFile.xml
+Index: EGamma/EGammaAnalysisTools/BuildFile.xml
 ===================================================================
-RCS file: /local/reps/CMSSW/UserCode/EGamma/EGammaAnalysisTools/plugins/BuildFile.xml,v
-retrieving revision 1.2
-diff -r1.2 BuildFile.xml
-8a9
-> <use name="RecoTauTag/RecoTau"/>
+RCS file: /local/reps/CMSSW/UserCode/EGamma/EGammaAnalysisTools/BuildFile.xml,v
+retrieving revision 1.3
+diff -r1.3 BuildFile.xml
+16a17
+> <use   name="RecoTauTag/RecoTau"/>
