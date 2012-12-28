@@ -59,7 +59,7 @@ id = PSet(
     objectIsStandardPhoton = '{object}.isStandardPhoton',   
     objectHasPixelSeed = '{object}.hasPixelSeed',
     # gen matching (photons can be matched to many object types)
-    objectPdgId = '? ({object}.genParticleRef().isNonnull && {object}.genParticleRef().isAvailable) ? {object}.getParticleRef().pdgId() : -999',
+    objectPdgId = '? ({object}.genParticleRef().isNonnull && {object}.genParticleRef().isAvailable) ? {object}.genParticleRef().pdgId() : -999',
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
     objectGenGrandMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull && (getDaughterGenParticleMotherSmart({object_idx}).numberOfMothers() != 0)) ? getDaughterGenParticleMotherSmart({object_idx}).mother().pdgId() : -999',
     objectComesFromHiggs = 'comesFromHiggs({object_idx})',
