@@ -180,6 +180,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Setup hZg custom iso definitions
     add_hZg_iso_needs(process)
 
+    #alter the photon matching to accept various fakes
+    if isMC:
+        process.photonMatch.mcPdgId = cms.vint32(22,111,113,221,
+                                                 1,2,3,4,5,11,-11,21)
+        process.photonMatch.checkCharge = cms.bool(False)
+
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring(
         'EcalEndcaps:ConeVeto(0.08)')

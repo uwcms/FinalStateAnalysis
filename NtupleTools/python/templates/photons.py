@@ -58,9 +58,12 @@ id = PSet(
     objectIsPFlowPhoton = '{object}.isPFlowPhoton',
     objectIsStandardPhoton = '{object}.isStandardPhoton',   
     objectHasPixelSeed = '{object}.hasPixelSeed',
-    # gen matching
+    # gen matching (photons can be matched to many object types)
+    objectPdgId = '? ({object}.genParticleRef().isNonnull && {object}.genParticleRef().isAvailable) ? {object}.getParticleRef().pdgId() : -999',
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
-    objectComesFromHiggs = 'comesFromHiggs({object_idx})',        
+    objectGenGrandMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull && getDaughterGenParticleMotherSmart({object_idx}).mother()) ? getDaughterGenParticleMotherSmart({object_idx}).mother().pdgId() : -999',
+    objectComesFromHiggs = 'comesFromHiggs({object_idx})',
+    objectGenEnergy = '? ({object}.genParticleRef().isNonnull && {object}.genParticleRef().isAvailable) ? {object}.genParticleRef().energy() : -999',
 )
 
 tracking = PSet(

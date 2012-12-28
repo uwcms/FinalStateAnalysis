@@ -63,6 +63,7 @@ then
   set +o errexit
   patch -N -p0 < FinalStateAnalysis/recipe/patches/PhysicsToolsPatAlgos_fix_btags_52X.patch
   set -o errexit
+  
 fi
 
 popd
