@@ -17,14 +17,19 @@ VBFVariables computeVBFInfo(
   if (output.nJets < 2)
     return output;
 
-  assert(jets[0]->pt() > jets[1]->pt());
+  //assert(jets[0]->pt() > jets[1]->pt());
 
-  output.leadJet = jets[0];
-  output.subleadJet = jets[1];
+  if( jets[0]->pt() > jets[1]->pt() ) {
+    output.leadJet = jets[0];
+    output.subleadJet = jets[1];
+  } else {
+    output.leadJet = jets[1];
+    output.subleadJet = jets[0];
+  } 
 
   // Get 4vectors of two highest jets
-  reco::Candidate::LorentzVector leadJet(jets[0]->p4());
-  reco::Candidate::LorentzVector subleadJet(jets[1]->p4());
+  reco::Candidate::LorentzVector leadJet(output.leadJet->p4());
+  reco::Candidate::LorentzVector subleadJet(output.subleadJet->p4());
 
   reco::Candidate::LorentzVector dijet = leadJet + subleadJet;
 
