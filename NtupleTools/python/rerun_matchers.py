@@ -108,7 +108,7 @@ def rerun_matchers(process):
         "PATJetGenRematchEmbedder",
         src = cms.InputTag('selectedPatJets'),
         matchSrc = cms.InputTag('patJetPartonMatch'),
-        getJetMatchSrc = cms.InputTag('patJetGenJetMatch'),
+        genJetMatchSrc = cms.InputTag('patJetGenJetMatch'),
         )
 
     process.rerunMCMatch = cms.Sequence( process.electronMatch+
