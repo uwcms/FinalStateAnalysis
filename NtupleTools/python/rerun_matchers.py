@@ -53,7 +53,7 @@ def rerun_matchers(process):
         matched = cms.InputTag("genParticles")
         )
 
-    process.patJetGenJetMatcher = cms.EDProducer(
+    process.patJetGenJetMatch = cms.EDProducer(
         "GenJetMatcher",
         src = cms.InputTag("selectedPatJets"),
         maxDPtRel = cms.double(3.0),
@@ -107,8 +107,8 @@ def rerun_matchers(process):
     process.selectedPatJetsRematched = cms.EDProducer(
         "PATJetGenRematchEmbedder",
         src = cms.InputTag('selectedPatJets'),
-        matchSrc = cms.InputTag('patJetPartonMatcher'),
-        getJetMatchSrc = cms.InputTag('patJetGenJetMatcher'),
+        matchSrc = cms.InputTag('patJetPartonMatch'),
+        getJetMatchSrc = cms.InputTag('patJetGenJetMatch'),
         )
 
     process.rerunMCMatch = cms.Sequence( process.electronMatch+
