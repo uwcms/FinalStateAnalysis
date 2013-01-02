@@ -119,8 +119,8 @@ def rerun_matchers(process):
                                          process.cleanPatTausRematched+
                                          process.photonMatch+
                                          process.cleanPatPhotonsRematched+
-                                         process.patJetGenJetMatcher+
-                                         process.patJetPartonMatcher+
+                                         process.patJetGenJetMatch+
+                                         process.patJetPartonMatch+
                                          process.selectedPatJetsRematched )    
     
     process.rerunMCMatchPath = cms.Path(process.rerunMCMatch)
