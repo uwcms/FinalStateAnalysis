@@ -181,10 +181,20 @@ def configurePatTuple(process, isMC=True, **kwargs):
     add_hZg_iso_needs(process)
 
     #alter the photon matching to accept various fakes
+    # and sort matches by d-pt-rel
     if isMC:
-        process.photonMatch.mcPdgId = cms.vint32(22,111,113,221,
-                                                 1,2,3,4,5,11,-11,21)
-        process.photonMatch.checkCharge = cms.bool(False)
+        process.photonMatch = cms.EDProducer(
+            "MCMatcherByPt",
+            src = cms.InputTag("photons"),
+            maxDPtRel = cms.double(100.0),
+            mcPdgId = cms.vint32(),
+            mcStatus = cms.vint32(1),
+            resolveByMatchQuality = cms.bool(False),
+            maxDeltaR = cms.double(0.3),
+            checkCharge = cms.bool(False),
+            resolveAmbiguities = cms.bool(True),
+            matched = cms.InputTag("genParticles")
+            )        
 
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring(
@@ -235,6 +245,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patElectrons.embedGenMatch = False
     process.patTaus.embedGenMatch = False
     process.patTaus.embedGenJetMatch = False
+    process.patPhotons.embedGenMatch = False
 
     # Use PFJets and turn on JEC
     jec = ['L1FastJet', 'L2Relative', 'L3Absolute']
