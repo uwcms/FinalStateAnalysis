@@ -48,14 +48,17 @@ VBFVariables computeVBFInfo(
   output.pt2 = subleadJet.pt();
   output.dijetpt = dijet.pt();
   output.ditaupt = ditau.pt();
+  output.hrapidity = ditauvis.Rapidity();
+  output.dijetrapidity = dijet.Rapidity();
   output.eta1 = leadJet.eta();
   output.eta2 = subleadJet.eta();
   output.dphihj = std::abs(reco::deltaPhi(dijet.phi(), ditau.phi()));
+  output.dphihj_nomet = std::abs(reco::deltaPhi(dijet.phi(),ditauvis.phi()));
   output.c1 = std::min(
       std::abs(ditauvis.eta() - leadJet.eta()),
       std::abs(ditauvis.eta() - subleadJet.eta()));
   output.c2 = ditauvis.pt();
-
+ 
   // Figure out the central gap area
   float maxEta = std::max(leadJet.eta(), subleadJet.eta());
   float minEta = std::min(leadJet.eta(), subleadJet.eta());
