@@ -152,7 +152,9 @@ const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter)
 /// Helper function to get the first interesting mother particle 
 const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, int idNOTtoMatch)
 {
-  const reco::GenParticleRef mother = /*dynamic_cast<const reco::GenParticleRef>*/ (genPart->motherRef());
+  if( genPart->numberOfMothers() == 0 ) return getPart; // if we've recursed all the way back we need to stop
+
+  const reco::GenParticleRef mother = genPart->motherRef();
   if( !(mother.isAvailable() && mother.isNonnull())  ) return mother;
   if( mother.isAvailable() && mother.isNonnull() && mother->status() == 3 && mother->pdgId() != idNOTtoMatch )
     return mother;
