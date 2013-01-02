@@ -165,15 +165,15 @@ if options.make4L:
 
 if options.makeHZG:
     add_trilepton_ntuples(process, process.schedule,
-                          do_trileptons=False, do_photons=True,
-                          event_view=options.eventView)
+                          do_trileptons=False, do_photons=False,
+                          do_hzg=True, event_view=options.eventView)
 
 if options.makeTGC:
     add_leptonphoton_ntuples(process, process.schedule,
                              options.eventView)
     add_trilepton_ntuples(process, process.schedule,
                           do_trileptons=False, do_photons=True,
-                          event_view=options.eventView)
+                          do_hzg = False, event_view=options.eventView)
 if options.makeQuartic:
     add_trilepton_ntuples(process, process.schedule,
                           do_trileptons=True, do_photons=True,

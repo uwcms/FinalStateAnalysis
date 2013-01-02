@@ -19,21 +19,25 @@ trilepton_final_states = [
 ]
 photon_final_states = [
     'eeg',
-#    'egg',
+    'egg',
     'mmg',
-#    'mgg',
-#    'emg',
+    'mgg',
+    'emg',
 ]
 
 def add_trilepton_ntuples(process, schedule,
                           do_trileptons = True,
                           do_photons    = False,
+                          do_hzg        = False,
                           event_view    = False):
     final_states = []
     if do_trileptons:
         final_states.extend(trilepton_final_states)
     if do_photons:
         final_states.extend(photon_final_states)
+    if do_hzg:
+        final_states.append('mmg')
+        final_states.append('eeg')
     for final_state in final_states:
         print "Building %s final state" % final_state
         analyzer = make_ntuple(*final_state)
