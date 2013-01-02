@@ -122,9 +122,7 @@ if options.rerunFSA:
         fs_daughter_inputs['muons']     = 'cleanPatMuonsRematched'
         fs_daughter_inputs['taus']      = 'cleanPatTausRematched'
         fs_daughter_inputs['photons']   = 'cleanPatPhotonsRematched'
-        fs_daughter_inputs['jets']      = 'selectedPatJetsRematched'
-        
-        
+        fs_daughter_inputs['jets']      = 'selectedPatJetsRematched'        
         
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
