@@ -61,6 +61,6 @@ vbf = PSet(
     vbfVispt = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").c2',
     vbfHrap = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").hrapidity',
     vbfDijetrap = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").dijetrapidity',
-    vbfDphihj = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").diphihj',
+    vbfDphihj = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").dphihj',
     vbfDphihjnomet = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").diphihj_nomet',
 )
