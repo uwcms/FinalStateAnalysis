@@ -19,10 +19,10 @@ trilepton_final_states = [
 ]
 photon_final_states = [
     'eeg',
-    'egg',
+#    'egg',
     'mmg',
-    'mgg',
-    'emg',
+#    'mgg',
+#    'emg',
 ]
 
 def add_trilepton_ntuples(process, schedule,
