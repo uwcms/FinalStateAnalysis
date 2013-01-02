@@ -112,7 +112,7 @@ def rerun_matchers(process):
         )
 
     process.rerunMCMatch = cms.Sequence( process.electronMatch+
-                                         process.cleanPatElectronsRematched
+                                         process.cleanPatElectronsRematched+
                                          process.muonMatch+
                                          process.cleanPatMuonsRematched+
                                          process.tauMatch+
