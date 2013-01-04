@@ -15,7 +15,7 @@ diff -r1.4 ElectronIdMVAProducer.cc
 >                 EGammaMvaEleEstimator::MVAType type_;
 66a74,75
 > 	pfCandidates_ = iConfig.getUntrackedParameter<edm::InputTag>("particleFlow",edm::InputTag("particleFlow"));
-> 	rhoSrc_ = iConfig.getUntrackedParameter<edm::InputTag>("rhoSrc",edm::InputTag("kt6PFJets"));
+> 	rhoSrc_ = iConfig.getUntrackedParameter<edm::InputTag>("rhoSrc",edm::InputTag("kt6PFJets::rho"));
 74,75c83,86
 <  
 <         EGammaMvaEleEstimator::MVAType type_;
