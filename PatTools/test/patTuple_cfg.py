@@ -13,6 +13,7 @@ options = TauVarParsing.TauVarParsing(
     keepEverything=0,
     reportEvery=2000,
     puTag='unknown',
+    HLTprocess='HLT',
     isAOD=True,
     calibrationTarget='2012Jul13ReReco',
     passThru=0,
@@ -89,7 +90,8 @@ tuplize, output_commands = tuplizer.configurePatTuple(
     isAOD=options.isAOD, xSecErr=options.xSecErr,
     puTag=options.puTag, dataset=options.dataset,
     embedded=options.embedded,
-    calibrationTarget=options.calibrationTarget
+    calibrationTarget=options.calibrationTarget,
+    HLTprocess=options.HLTprocess
 )
 
 if options.globalTag == "":
