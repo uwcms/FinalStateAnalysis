@@ -16,3 +16,7 @@ diff -r1.14.2.3 EGammaMvaEleEstimator.cc
 <     tmpTMVAReader->BookMVA(fMethodname , weightsfiles[i]);
 ---
 >     loadTMVAWeights(tmpTMVAReader, fMethodname , weightsfiles[i] );
+1217c1222
+<   if(fMVAType == kTrig) {
+---
+>   if(fMVAType == kTrigIDIsoCombined) {
