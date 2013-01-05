@@ -215,15 +215,16 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Do extra electron ID
     process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
     if cmssw_major_version() == 4:
-        process.tuplize += process.recoElectronID42X
         process.patDefaultSequence.replace(process.patElectrons,
-                                           process.electronIDSources42X+
+                                           process.recoElectronID42X+
                                            process.patElectrons)
+        process.patElectrons.electronIDSources = process.electronIDSources42X
     else :
-        process.tuplize += process.recoElectronID5YX
         process.patDefaultSequence.replace(process.patElectrons,
-                                           process.electronIDSources5YX+
+                                           process.recoElectronID5YX+
                                            process.patElectrons)
+        process.patElectrons.electronIDSources = process.electronIDSources5YX
+
     process.electronMatch.checkCharge = cms.bool(False)
     process.patElectrons.embedTrack = False
     process.patElectrons.embedPFCandidate = False
