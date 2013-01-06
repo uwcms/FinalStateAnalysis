@@ -420,7 +420,7 @@ datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713*br_w_leptons + 0.2728*br_z_leptons
 
 datadefs['data_DoubleMu_Run2012B_13Jul2012_v4'] = {
    'datasetpath' : "/DoubleMu/Run2012B-13Jul2012-v4/AOD",
-   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
    'firstRun' : 193834,
    'lastRun' : 196531,
    'analyses' : ['HZZ'],
