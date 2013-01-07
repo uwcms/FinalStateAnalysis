@@ -36,6 +36,15 @@ id = PSet(
         "-0.5*{object}.puChargedHadronIso,0.0))"
         "/{object}.pt()"
     ),
+
+    ## objectRelPFIsoDBZhLike = cms.string(
+    ##     "({object}.chargedHadronIso()"
+    ##     "+max({object}.photonIso()"
+    ##     "+{object}.neutralHadronIso()"
+    ##     "-0.5*{object}.puChargedHadronIso,0.0))"
+    ##     "/{object}.pt()"
+    ## ),
+    
     objectIsGlobal = '{object}.isGlobalMuon',
     objectIsTracker = '{object}.isTrackerMuon',
     objectTypeCode = cms.vstring('{object}.type','I'),
