@@ -38,10 +38,13 @@ id = PSet(
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
     #ZH Synch iso variables
-    objectDefaultChargedIso = cms.string('{object}.chargedHadronIso()'),
-    objectDefaultNeutralIso = cms.string('{object}.neutralHadronIso()'),
-    objectDefaultPhotonIso  = cms.string('{object}.photonIso()'),
-    objectDefaultPileupIso  = cms.string('{object}.userIso(2)'),
+    ## objectRelPFIsoDBZhLike = cms.string(
+    ##     "({object}.chargedHadronIso()"
+    ##     "+max({object}.photonIso()"
+    ##     "+{object}.neutralHadronIso()"
+    ##     "-0.5*{object}.userIso(2),0.0))"
+    ##     "/{object}.pt()"
+    ## ),
     
     objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
     objectEffectiveArea2011Data = cms.string('{object}.userFloat("ea_comb_Data2011_iso04_kt6PFJ")'),
