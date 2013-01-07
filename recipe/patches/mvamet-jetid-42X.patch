@@ -1,0 +1,28 @@
+? RecoJets/JetProducers/data/dummy.txt
+? RecoJets/JetProducers/python/__init__.py
+? RecoJets/JetProducers/python/pujetidsequence_cff.py
+Index: RecoJets/JetProducers/python/PileupJetID_cfi.py
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/RecoJets/JetProducers/python/PileupJetID_cfi.py,v
+retrieving revision 1.2
+diff -r1.2 PileupJetID_cfi.py
+5,6c5,6
+< stdalgos_4x = cms.VPSet(full,   cutbased,PhilV1)
+< stdalgos_5x = cms.VPSet(full_5x,cutbased,PhilV1)
+---
+> stdalgos_4x = cms.VPSet(full_5x)
+> stdalgos_5x = cms.VPSet(full_5x)
+8,9c8,9
+< chsalgos_4x = cms.VPSet(full,   cutbased)
+< chsalgos_5x = cms.VPSet(full_5x_chs,cutbased)
+---
+> chsalgos_4x = cms.VPSet(simple_5x_chs_wp,   full_5x_chs,   cutbased)
+> chsalgos_5x = cms.VPSet(simple_5x_chs_wp,full_5x_chs,cutbased)
+38c38
+<                          residualsTxt     = cms.FileInPath(""),
+---
+>                          residualsTxt     = cms.FileInPath("RecoJets/JetProducers/data/dummy.txt"),
+54c54
+<                          residualsTxt     = cms.FileInPath(""),
+---
+>                          residualsTxt     = cms.FileInPath("RecoJets/JetProducers/data/dummy.txt"),

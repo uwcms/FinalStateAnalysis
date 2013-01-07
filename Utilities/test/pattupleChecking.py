@@ -6,9 +6,9 @@ Author: Ian Ross (iross@cern.ch), University of Wisconsin Madison
 Description: Scans specified users' [webhome]/tuples.txt, tallies up who is using what (and how much overlap exists between users), and spits out the list of unused samples.
 '''
 
-from prettytable import PrettyTable
+from FinalStateAnalysis.Utilities.prettytable import PrettyTable
 import glob
-import argparse
+from RecoLuminosity.LumiDB import argparse
 import urllib2
 
 
@@ -90,8 +90,10 @@ if __name__ == '__main__':
 
     userSets['not_in_use']=userSets['master']-userSets['in_use']
     with open('/afs/hep.wisc.edu/user/iross/www/unused_pattuples.txt','w') as f:
-        for i in userSets['not_in_use']:
-            f.write(i)
+        f.write("------------\n"+str(len(userSets['not_in_use']))+" pattuples not in use!\n")
+        f.write("------------\n")
+        for i in sorted(userSets['not_in_use']):
+            f.write(i+"\n")
 
     #todo: save pickle with the sets
     #todo: shove results into a webpage somewhere

@@ -1,0 +1,18 @@
+Index: EGamma/EGammaAnalysisTools/plugins/ElectronIdMVAProducer.cc
+===================================================================
+RCS file: /local/reps/CMSSW/UserCode/EGamma/EGammaAnalysisTools/plugins/Attic/ElectronIdMVAProducer.cc,v
+retrieving revision 1.4
+diff -r1.4 ElectronIdMVAProducer.cc
+75a76,78
+> 	bool isIDISO = iConfig.getUntrackedParameter<bool>("isIDISO",false);
+> 	bool isPUSUB = iConfig.getUntrackedParameter<bool>("isPUSUB",false);
+> 
+77c80,85
+<           type_ = EGammaMvaEleEstimator::kTrig;
+---
+> 	  if ( isIDISO && isPUSUB ) 
+> 	    type_ = EGammaMvaEleEstimator::kTrigIDIsoCombinedPUCorrected;
+> 	  else if( isIDISO ) 
+> 	    type_ = EGammaMvaEleEstimator::kTrigIDIsoCombined;
+> 	  else 
+> 	    type_ = EGammaMvaEleEstimator::kTrig;

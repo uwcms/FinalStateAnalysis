@@ -28,19 +28,19 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
     cvs up -r 1.2 RecoMET/METAlgorithms/src/PFClusterSpecificAlgo.cc
   fi
 else
-  cvs co -r METPU_4_2_X JetMETCorrections/METPUSubtraction
+  cvs co -r   METPU_4_2_X_v2 JetMETCorrections/METPUSubtraction
   pushd $CMSSW_BASE/src/JetMETCorrections/METPUSubtraction/test/
   ./setup42.sh
   popd
-  cp JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_42X_cff.py JetMETCorrections/METPUSubtraction/python/mvaPFMET_leptons_cff.py
-  cvs up -r 1.6 PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
-  # Get forgotton dependency
-  cvs co -r CMSSW_4_4_2 JetMETCorrections/Objects
-  cvs co -r CMSSW_4_4_2 CondFormats/JetMETObjects
+  touch $CMSSW_BASE/src/RecoJets/JetProducers/data/dummy.txt
+  # apply patch from Andrew Gilbert
+  # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingMoriond2013#MVA_Met_Sequence_with_predef_AN1
   pushd $CMSSW_BASE/src
-  # Fix link error
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/PhysicsToolsPatAlgos_mvamet_buildfile_42X.patch
+    patch -p0 -N < FinalStateAnalysis/recipe/patches/mvamet-jetid-42X.patch
   popd
+  addpkg CommonTools/RecoAlgos
+  cvs co -r 1.1 CommonTools/RecoAlgos/plugins/PFJetSelector.cc
+
 fi
 
 popd

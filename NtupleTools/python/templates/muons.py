@@ -29,6 +29,7 @@ id = PSet(
     objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
+    objectPFPUChargedIso = cms.string('{object}.userIsolation("PfPUChargedHadronIso")'),
     objectRelPFIsoDB = cms.string(
         "({object}.userIso(0)"
         "+max({object}.photonIso()"
@@ -54,21 +55,21 @@ id = PSet(
 
 energyCorrections = PSet(
     objectERochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").t',
-    objectPxRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").x',
-    objectPyRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").y',
-    objectPzRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").z',
+    objectPtRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Pt',
+    objectEtaRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Eta',
+    objectPhiRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Phi',
     objectEErrRochCor2011A = '{object}.userFloat("p4_RochCor2011A_tkFitErr")',
     
     objectERochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").t',
-    objectPxRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").x',
-    objectPyRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").y',
-    objectPzRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").z',
+    objectPtRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Pt',
+    objectEtaRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Eta',
+    objectPhiRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Phi',
     objectEErrRochCor2011B = '{object}.userFloat("p4_RochCor2011B_tkFitErr")',
         
     objectERochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").t',
-    objectPxRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").x',
-    objectPyRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").y',
-    objectPzRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").z',
+    objectPtRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Pt',
+    objectEtaRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Eta',
+    objectPhiRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Phi',
     objectEErrRochCor2012 = '{object}.userFloat("p4_RochCor2012_tkFitErr")'
 )
 

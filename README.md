@@ -28,7 +28,6 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
 </table>
 
 
-
 DataFormats
 -----------
 

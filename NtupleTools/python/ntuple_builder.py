@@ -81,6 +81,7 @@ _photon_template = PSet(
     #templates.candidates.vertex_info, #photons have no tracking info
     templates.photons.id,
     templates.photons.tracking,
+    templates.photons.energyCorrections,
     templates.photons.supercluster,
     #templates.photons.trigger, #add photons later
     templates.topology.mtToMET,
@@ -102,7 +103,7 @@ _pt_cuts = {
 
 _eta_cuts = {
     'm' : '2.5',
-    'e' : '2.5',
+    'e' : '3.0',
     't' : '2.3',
     'g' : '3.0'
 }

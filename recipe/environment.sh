@@ -34,8 +34,8 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
       export mcgt=START52_V9E::All #last 52X MC reprocessing
   else
       echo "Setting up CMSSW 5_3_X global tags"
-      export datagt=GR_P_V41_AN1::All
-      export mcgt=START53_V10::All
+      export datagt=GR_P_V39_AN3::All
+      export mcgt=START53_V15::All
   fi
 fi
 #  export datagt=GR_R_52_V8::All
