@@ -16,6 +16,7 @@ mvaTrigIDISOV0 = cms.EDFilter(
     electronTag = cms.InputTag('gsfElectrons'),
     reducedEBRecHitCollection = cms.InputTag('reducedEcalRecHitsEB'),
     reducedEERecHitCollection = cms.InputTag('reducedEcalRecHitsEE'),
+    particleFlow = cms.untracked.InputTag('pfNoPileUpIso'),
     method = cms.string("BDT"),
     mvaWeightFile = cms.vstring(fullNames),
     isIDISO=cms.untracked.bool(True),

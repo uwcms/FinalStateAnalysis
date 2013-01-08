@@ -42,9 +42,12 @@ class VBFVariables {
     double pt2;
     double dijetpt;
     double ditaupt;
+    double hrapidity;
+    double dijetrapidity;
     double eta1;
     double eta2;
     double dphihj;
+    double dphihj_nomet;
     double c1;
     double c2;
     double mva;
