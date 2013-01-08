@@ -17,7 +17,8 @@
   <class name="std::pair<std::string, int>"/>
   <class name ="std::map<std::string,edm::Ptr<pat::MET> >" />
 
-  <class name="VBFVariables" ClassVersion="10">
+  <class name="VBFVariables" ClassVersion="11">
+   <version ClassVersion="11" checksum="2844821699"/>
    <version ClassVersion="10" checksum="2474259455"/>
   </class>
 

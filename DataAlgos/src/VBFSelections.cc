@@ -17,14 +17,19 @@ VBFVariables computeVBFInfo(
   if (output.nJets < 2)
     return output;
 
-  assert(jets[0]->pt() > jets[1]->pt());
+  //assert(jets[0]->pt() > jets[1]->pt());
 
-  output.leadJet = jets[0];
-  output.subleadJet = jets[1];
+  if( jets[0]->pt() > jets[1]->pt() ) {
+    output.leadJet = jets[0];
+    output.subleadJet = jets[1];
+  } else {
+    output.leadJet = jets[1];
+    output.subleadJet = jets[0];
+  } 
 
   // Get 4vectors of two highest jets
-  reco::Candidate::LorentzVector leadJet(jets[0]->p4());
-  reco::Candidate::LorentzVector subleadJet(jets[1]->p4());
+  reco::Candidate::LorentzVector leadJet(output.leadJet->p4());
+  reco::Candidate::LorentzVector subleadJet(output.subleadJet->p4());
 
   reco::Candidate::LorentzVector dijet = leadJet + subleadJet;
 
@@ -43,14 +48,17 @@ VBFVariables computeVBFInfo(
   output.pt2 = subleadJet.pt();
   output.dijetpt = dijet.pt();
   output.ditaupt = ditau.pt();
+  output.hrapidity = ditauvis.Rapidity();
+  output.dijetrapidity = dijet.Rapidity();
   output.eta1 = leadJet.eta();
   output.eta2 = subleadJet.eta();
   output.dphihj = std::abs(reco::deltaPhi(dijet.phi(), ditau.phi()));
+  output.dphihj_nomet = std::abs(reco::deltaPhi(dijet.phi(),ditauvis.phi()));
   output.c1 = std::min(
       std::abs(ditauvis.eta() - leadJet.eta()),
       std::abs(ditauvis.eta() - subleadJet.eta()));
   output.c2 = ditauvis.pt();
-
+ 
   // Figure out the central gap area
   float maxEta = std::max(leadJet.eta(), subleadJet.eta());
   float minEta = std::min(leadJet.eta(), subleadJet.eta());
