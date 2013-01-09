@@ -9,7 +9,7 @@ pushd $CMSSW_BASE/src
 # To install lumiCalc.py
 if [ "$LUMI" = "1" ] 
 then
-  cvs co -r V04-01-06 RecoLuminosity/LumiDB 
+  cvs co -r V04-01-09 RecoLuminosity/LumiDB 
 fi
 
 # Add and patch to way speed up trigger matching

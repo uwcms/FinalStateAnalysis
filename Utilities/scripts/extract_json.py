@@ -22,4 +22,4 @@ if __name__=="__main__":
         sys.stderr.write(str(input) + '\n')
         sys.exit(1)
 
-    sys.stdout.write(str(input[args.key]) + '\n')
+    sys.stdout.write(json.dumps(input[args.key]) + '\n')
