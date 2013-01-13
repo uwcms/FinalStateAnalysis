@@ -267,7 +267,7 @@ for n in range(1,5) :
 datadefs['ZGToLLG']= {
    'datasetpath' :'/ZGToLLG_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
    'pu' : 'S10',
-   'x_sec' : 132.6*picobarns,
+   'x_sec' : 156.2*picobarns,
    'analyses' : ['HZG'],
    'calibrationTarget':'Summer12_DR53X_HCP2012'
    }
