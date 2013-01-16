@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
     long int input_entries =  chain->GetEntries();
     // cout << "calling make_dirs_and_enter, "<< file<<" , "<<split(*location, '/').size() << endl;      
     TDirectory* current_dir = make_dirs_and_enter(file, split(*location, '/') );
-    chain->Merge(file,1,"keep"); //1--> Use the basket size of the Chain "keep" --> DO NOT CLOSE THE OUTPUT FILE!!
+    chain->Merge(file,1,"fast keep"); //1--> Use the basket size of the Chain "keep" --> DO NOT CLOSE THE OUTPUT FILE!!
     delete chain;
     TTree *output = dynamic_cast<TTree *> (file->Get(location->c_str()));
     if(output->GetEntries() != input_entries){
