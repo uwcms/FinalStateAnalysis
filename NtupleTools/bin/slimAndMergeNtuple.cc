@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <TFile.h>
 #include <TChain.h>
+#include <TStopwatch.h>
 #include<fstream>
 #include <iostream>
 
@@ -68,6 +69,15 @@ inline bool fexists(string path)
   return ret;
 }
 
+double getTimeWithoutStopping( TStopwatch* watch )
+{
+  double ret = watch->RealTime();
+  watch->Start(true);
+  //watch.Continue();
+  return ret;
+}
+
+
 int main(int argc, char* argv[]) {
 
   // only allow one argument for this which should be the python cfg file
@@ -75,7 +85,8 @@ int main(int argc, char* argv[]) {
     std::cout << "Usage : " << argv[0] << " [directory with lists] [output_file_name] [input_files]+" << std::endl;
     return 42;
   }
-  
+  TStopwatch *global_watch = new TStopwatch();
+  TStopwatch *watch = new TStopwatch();
   string lists_dir = argv[1];
   string outf_name = argv[2];
   vector<string> inputs;
@@ -86,46 +97,75 @@ int main(int argc, char* argv[]) {
     return 42;
   }
 
-  cout << "reading trees locations..." << endl;
   vector<string> trees_locations = read_file( (lists_dir+"/trees_location.list") );
+  // cout << getTimeWithoutStopping( watch ) << ": spent reading trees locations..." << endl;
   
   //Create output file
-  cout << "creating output file..." << endl;
   TFile* file = TFile::Open(outf_name.c_str(), "RECREATE");
   for( vector<string>::const_iterator location = trees_locations.begin(); location != trees_locations.end(); ++location){
-    cout << "   Merging " << *location << endl;
-    TChain *chain = new TChain(location->c_str());
-    for(vector<string>::const_iterator input = inputs.begin(); input != inputs.end(); ++input) chain->Add(input->c_str());
-    string loc_copy = *location; //makes a copy
-    replace(loc_copy.begin(), loc_copy.end(), '/', '_');
-    if( fexists( (lists_dir+"/"+loc_copy+".list") ) ){ //exists a list of branches to be kept
-      cout << "      Found file containing the list of branches to keep..."<< endl;      
-      vector<string> branches = read_file((lists_dir+"/"+loc_copy+".list"));
-      chain->SetBranchStatus("*",0); //deactivate all branches
-      for(vector<string>::const_iterator branch = branches.begin(); branch != branches.end(); ++branch) chain->SetBranchStatus(branch->c_str(),1); //activate this branch
+    cout << "Merging.. " << *location << endl;
+    string loc_copy = *location;
+    bool chop_tree = fexists( (lists_dir+"/"+loc_copy+".list") );
+    long int input_entries = 0;
+    vector<string> branches;
+    if( chop_tree ){
+      branches = read_file((lists_dir+"/"+loc_copy+".list"));
     }
-    else{
-      cout << "      copying all branches..."<< endl;      
-      chain->SetBranchStatus("*",1); //activate all branches
-    }
-    long int input_entries =  chain->GetEntries();
-    // cout << "calling make_dirs_and_enter, "<< file<<" , "<<split(*location, '/').size() << endl;      
     TDirectory* current_dir = make_dirs_and_enter(file, split(*location, '/') );
-    chain->Merge(file,1,"fast keep"); //1--> Use the basket size of the Chain "keep" --> DO NOT CLOSE THE OUTPUT FILE!!
-    delete chain;
-    TTree *output = dynamic_cast<TTree *> (file->Get(location->c_str()));
-    if(output->GetEntries() != input_entries){
+    TTree *newtree;
+    bool first = true;
+
+    getTimeWithoutStopping( watch );
+    for(vector<string>::const_iterator input = inputs.begin(); input != inputs.end(); ++input) {
+      //Open files, load tree
+      TFile* infile = TFile::Open(input->c_str());
+      TTree *input_tree = dynamic_cast<TTree *> (infile->Get(location->c_str()));
+      input_entries += input_tree->GetEntriesFast();
+
+      //properly sets the branches
+      if( chop_tree ){
+	input_tree->SetBranchStatus("*",0); //deactivate all branches
+	for(vector<string>::const_iterator branch = branches.begin(); branch != branches.end(); ++branch) input_tree->SetBranchStatus(branch->c_str(),1); //activate this branch
+      }
+      else{
+	input_tree->SetBranchStatus("*",1); //activate all branches
+      }
+
+      //cd into newfile dir, adds tree/copies it
+      current_dir->cd();
+      if(first){
+	newtree = input_tree->CloneTree(-1,"fast");
+	first = false;
+      }
+      else{
+	newtree->CopyEntries(input_tree, -1, "fast");
+      }
+
+      //closes input and flushes baskets
+      delete input_tree;
+      infile->Close();
+      newtree->FlushBaskets();
+    }
+    current_dir->cd();
+    long int new_entries = newtree->GetEntries();
+    newtree->Write();
+    cout << getTimeWithoutStopping( watch ) << " spent Merging.. " << *location << endl;
+    
+    if(new_entries != input_entries){
       cout << "Something wrong happened during merging, input and output trees have different number of entries. Exiting..." << endl;
-      delete output;
+      delete newtree;
       file->Close();
       return 42;
     }
-    delete output;
+    delete newtree;
     //file = TFile::Open(outf_name.c_str(), "UPDATE"); //Open it again because root is stupid and will close it when the TChain gets deleted. Looking for a better way though
   }
 
   cout << "Done!" << endl;
   file->Close();
+  cout << "Total time used: " << global_watch->RealTime() << endl;
+  delete global_watch;
+  delete watch;
   return 0;
 }
 
