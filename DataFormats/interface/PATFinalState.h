@@ -253,9 +253,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         size_t i, const std::string& label) const = 0;
 
     /// Get the specified overlaps for the ith daughter
-    const reco::GenParticleRef getDaughterGenParticle(size_t i) const;
-    const reco::GenParticleRef getDaughterGenParticleMotherSmart(size_t i) const;
-    const bool comesFromHiggs(size_t i) const;
+    const reco::GenParticleRef getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge) const;
+    const reco::GenParticleRef getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const;
+    const bool comesFromHiggs(size_t i, int pdgIdToMatch, int checkCharge) const;
 
     // Things to get LorentzVectors and other complex datatypes
     // out of objects

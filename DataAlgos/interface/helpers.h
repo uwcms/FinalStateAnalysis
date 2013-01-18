@@ -38,7 +38,7 @@ double transverseMass(const reco::Candidate::LorentzVector& p1,
 void addFourMomenta(reco::Candidate & c);
 
 /// Helper function to get the matched gen particle 
-const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter);
+const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter,const reco::GenParticleRefProd genCollectionRef, int pdgIdToMatch, bool checkCharge);
 
 /// Helper function to get the first interesting mother particle 
 const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, int idNOTtoMatch = -999);

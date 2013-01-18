@@ -21,18 +21,21 @@
   "data_DoubleMu_Run2012B_13Jul2012_v4" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_DoubleMu_Run2012B_13Jul2012_v4/",
   "data_DoubleMu_Run2012C_PromptReco_v2_Run198934_201264" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_DoubleMu_Run2012C_PromptReco_v2_Run198934_201264/",
   "data_DoubleMu_Run2012C_PromptReco_v2_Run201265_203755" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_DoubleMu_Run2012C_PromptReco_v2_Run201265_203755/",
-
+  "data_DoubleMu_Run2012D_PromptReco_v1" : "/hdfs/store/user/tapas/2012-12-05-8TeV-53X-PatTuple_HCP2012/data_DoubleMu_Run2012D_PromptReco_v1/",
+  
   "data_MuEG_Run2012A_13Jul2012_v1" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_MuEG_Run2012A_13Jul2012_v1/",
   "data_MuEG_Run2012A_recover_06Aug2012_v1" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_MuEG_Run2012A_recover_06Aug2012_v1/",
   "data_MuEG_Run2012B_13Jul2012_v1" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_MuEG_Run2012B_13Jul2012_v1//",
   "data_MuEG_Run2012C_PromptReco_v2_Run198934_201264" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_MuEG_Run2012C_PromptReco_v2_Run198934_201264/",
   "data_MuEG_Run2012C_PromptReco_v2_Run201265_203755" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_MuEG_Run2012C_PromptReco_v2_Run201265_203755/",
-
+  "data_MuEG_Run2012D_PromptReco_v1" : "/hdfs/store/user/tapas/2012-12-05-8TeV-53X-PatTuple_HCP2012/data_MuEG_Run2012D_PromptReco_v1/",
+  
   "data_DoubleElectron_Run2012A_13Jul2012_v1" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_DoubleElectron_Run2012A_13Jul2012_v1/",
   "data_DoubleElectron_Run2012A_recover_06Aug2012_v1" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_DoubleElectron_Run2012A_recover_06Aug2012_v1/",
   "data_DoubleElectron_Run2012B_13Jul2012_v1" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_DoubleElectron_Run2012B_13Jul2012_v1/",
   "data_DoubleElectron_Run2012C_PromptReco_v2_Run198934_201264" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_DoubleElectron_Run2012C_PromptReco_v2_Run198934_201264/",
-  "data_DoubleElectron_Run2012C_PromptReco_v2_Run201265_203755" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_DoubleElectron_Run2012C_PromptReco_v2_Run201265_203755/"
+  "data_DoubleElectron_Run2012C_PromptReco_v2_Run201265_203755" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_DoubleElectron_Run2012C_PromptReco_v2_Run201265_203755/",
+  "data_DoubleElectron_Run2012D_PromptReco_v1" : "/hdfs/store/user/tapas/2012-12-05-8TeV-53X-PatTuple_HCP2012/data_DoubleElectron_Run2012D_PromptReco_v1/"
 }
 
 
