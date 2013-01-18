@@ -105,51 +105,32 @@ int main(int argc, char* argv[]) {
   for( vector<string>::const_iterator location = trees_locations.begin(); location != trees_locations.end(); ++location){
     cout << "Merging.. " << *location << endl;
     string loc_copy = *location;
-    bool chop_tree = fexists( (lists_dir+"/"+loc_copy+".list") );
-    long int input_entries = 0;
     vector<string> branches;
     if( chop_tree ){
       branches = read_file((lists_dir+"/"+loc_copy+".list"));
     }
-    TDirectory* current_dir = make_dirs_and_enter(file, split(*location, '/') );
-    TTree *newtree;
-    bool first = true;
 
-    getTimeWithoutStopping( watch );
+    TChain *chain = new TChain(location->c_str());
     for(vector<string>::const_iterator input = inputs.begin(); input != inputs.end(); ++input) {
-      //Open files, load tree
-      TFile* infile = TFile::Open(input->c_str());
-      TTree *input_tree = dynamic_cast<TTree *> (infile->Get(location->c_str()));
-      input_entries += input_tree->GetEntriesFast();
-
-      //properly sets the branches
-      if( chop_tree ){
-	input_tree->SetBranchStatus("*",0); //deactivate all branches
-	for(vector<string>::const_iterator branch = branches.begin(); branch != branches.end(); ++branch) input_tree->SetBranchStatus(branch->c_str(),1); //activate this branch
-      }
-      else{
-	input_tree->SetBranchStatus("*",1); //activate all branches
-      }
-
-      //cd into newfile dir, adds tree/copies it
-      current_dir->cd();
-      if(first){
-	newtree = input_tree->CloneTree(-1,"fast");
-	first = false;
-      }
-      else{
-	newtree->CopyEntries(input_tree, -1, "fast");
-      }
-
-      //closes input and flushes baskets
-      delete input_tree;
-      infile->Close();
-      newtree->FlushBaskets();
+      chain->Add(input->c_str());
     }
-    current_dir->cd();
+
+    //properly sets the branches
+    if( fexists( (lists_dir+"/"+loc_copy+".list") ) ){
+      input_tree->SetBranchStatus("*",0); //deactivate all branches
+      for(vector<string>::const_iterator branch = branches.begin(); branch != branches.end(); ++branch) input_tree->SetBranchStatus(branch->c_str(),1); //activate this branch
+    }
+    else{
+      input_tree->SetBranchStatus("*",1); //activate all branches
+    }
+
+
+    TDirectory* current_dir = make_dirs_and_enter(file, split(*location, '/') );
+    long int input_entries = input_tree->GetEntriesFast();
+
+    chain->Merge(file,0, "fast keep"); // keep->prevents file from beeing closed
+    
     long int new_entries = newtree->GetEntries();
-    newtree->Write();
-    cout << getTimeWithoutStopping( watch ) << " spent Merging.. " << *location << endl;
     
     if(new_entries != input_entries){
       cout << "Something wrong happened during merging, input and output trees have different number of entries. Exiting..." << endl;
