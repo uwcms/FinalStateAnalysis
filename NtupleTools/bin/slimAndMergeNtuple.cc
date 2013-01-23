@@ -82,18 +82,23 @@ int main(int argc, char* argv[]) {
 
   // only allow one argument for this which should be the python cfg file
   if ( argc < 4 ) {
-    std::cout << "Usage : " << argv[0] << " [directory with lists] [output_file_name] [input_files]+" << std::endl;
+    std::cout << __LINE__ << " Usage : " << argv[0] << " [directory with lists] [output_file_name] [input_files]+" << std::endl;
     return 42;
   }
+  cout << "argv read by .cc "; 
+  for (unsigned int i = 0; i< sizeof(argv); i++){
+    cout << argv[i] << " " ;
+  }
+  cout << endl;
   TStopwatch *global_watch = new TStopwatch();
   TStopwatch *watch = new TStopwatch();
   string lists_dir = argv[1];
   string outf_name = argv[2];
-  vector<string> inputs;
-  for( int i=3; i< argc; i++) inputs.push_back(argv[i]);
-  
+  string input_file_list = argv[3];
+  vector<string> inputs = split(input_file_list,',');
+
   if( !fexists( (lists_dir+"/trees_location.list") ) ){
-    cout << "Cannot stat " << lists_dir << "/trees_location.list no such file" << endl;
+    cout << __LINE__ << " Cannot stat " << lists_dir << "/trees_location.list no such file" << endl;
     return 42;
   }
 
@@ -105,40 +110,45 @@ int main(int argc, char* argv[]) {
   for( vector<string>::const_iterator location = trees_locations.begin(); location != trees_locations.end(); ++location){
     cout << "Merging.. " << *location << endl;
     string loc_copy = *location;
-    vector<string> branches;
-    if( chop_tree ){
-      branches = read_file((lists_dir+"/"+loc_copy+".list"));
-    }
-
+ 
     TChain *chain = new TChain(location->c_str());
     for(vector<string>::const_iterator input = inputs.begin(); input != inputs.end(); ++input) {
-      chain->Add(input->c_str());
+      if( !fexists( ("/hdfs"+*input).c_str())) {
+	cout << __LINE__ << " Cannot stat /hdfs"<< (*input)<< " no such file" << endl;
+	return 42;
+      }
+      chain->Add(("/hdfs"+*input).c_str());
+
+//       cout << __PRETTY_FUNCTION__ << " " << __LINE__ << " " << chain->GetEntries()<< endl;
     }
 
     //properly sets the branches
     if( fexists( (lists_dir+"/"+loc_copy+".list") ) ){
-      input_tree->SetBranchStatus("*",0); //deactivate all branches
-      for(vector<string>::const_iterator branch = branches.begin(); branch != branches.end(); ++branch) input_tree->SetBranchStatus(branch->c_str(),1); //activate this branch
+      vector<string> branches = read_file((lists_dir+"/"+loc_copy+".list"));
+      chain->SetBranchStatus("*",0); //deactivate all branches
+      for(vector<string>::const_iterator branch = branches.begin(); branch != branches.end(); ++branch) chain->SetBranchStatus(branch->c_str(),1); //activate this branch
     }
     else{
-      input_tree->SetBranchStatus("*",1); //activate all branches
+      chain->SetBranchStatus("*",1); //activate all branches
     }
 
 
     TDirectory* current_dir = make_dirs_and_enter(file, split(*location, '/') );
-    long int input_entries = input_tree->GetEntriesFast();
+//     long int input_entries = input_tree->GetEntriesFast();
 
     chain->Merge(file,0, "fast keep"); // keep->prevents file from beeing closed
     
-    long int new_entries = newtree->GetEntries();
+//     long int input_entries = chain->GetEntries();
+//     TTree * outtree = (TTree*) file->Get(location->c_str());
     
-    if(new_entries != input_entries){
-      cout << "Something wrong happened during merging, input and output trees have different number of entries. Exiting..." << endl;
-      delete newtree;
-      file->Close();
-      return 42;
-    }
-    delete newtree;
+
+//     If(outtree->GetEntries() != input_entries){
+//       cout << "Something wrong happened during merging, input and output trees have different number of entries. Exiting..." << endl;
+//       delete outtree;
+//       file->Close();
+//       return 42;
+//     }
+//     delete outtree;
     //file = TFile::Open(outf_name.c_str(), "UPDATE"); //Open it again because root is stupid and will close it when the TChain gets deleted. Looking for a better way though
   }
 
@@ -147,7 +157,7 @@ int main(int argc, char* argv[]) {
   cout << "Total time used: " << global_watch->RealTime() << endl;
   delete global_watch;
   delete watch;
-  return 0;
-}
+  return 0;}
+
 
 //To replace in a string replace( s.begin(), s.end(), ' ', '~' );
