@@ -12,6 +12,8 @@
 
 #include "FinalStateAnalysis/DataAlgos/interface/VBFVariables.h"
 #include "FinalStateAnalysis/DataAlgos/interface/VBFSelections.h"
+#include "TVector2.h"
+
 
 // Forward delcarations
 namespace pat {
@@ -27,6 +29,8 @@ namespace reco {
   class Vertex;
   class GenParticle;
 }
+
+
 
 typedef pat::PATObject<reco::LeafCandidate> PATLeafCandidate;
 
@@ -256,6 +260,11 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     const reco::GenParticleRef getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge) const;
     const reco::GenParticleRef getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const;
     const bool comesFromHiggs(size_t i, int pdgIdToMatch, int checkCharge) const;
+
+    // Get Recoils
+    const reco::Candidate::Vector getDaughtersRecoil() const;
+    const reco::Candidate::Vector getDaughtersRecoilWithMet() const;
+    const double   getRecoilWithMetSignificance() const;
 
     // Things to get LorentzVectors and other complex datatypes
     // out of objects
