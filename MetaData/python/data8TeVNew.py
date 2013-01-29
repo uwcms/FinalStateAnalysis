@@ -117,7 +117,7 @@ datadefs = {
    'x_sec' : 3503.71,
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },   
+   },
 
    'DYJetsToLL_M-10To50filter_8TeV-madgraph' : {
    'analyses': ['ZZ'],
@@ -152,7 +152,7 @@ datadefs = {
 
    'ZZTo2mu2tau_8TeV-powheg-pythia6' : {
    'analyses': ['ZZ'],
-   'datasetpath' : "/ZZTo2mu2tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM ",
+   'datasetpath' : "/ZZTo2mu2tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
@@ -180,7 +180,7 @@ datadefs = {
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
-   
+
    'WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola' : {
    'analyses' : ['Wbb'],
    'datasetpath' : "/WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
@@ -481,10 +481,10 @@ def build_data_set(pd, analyses):
       'datasetpath' : "/%s/Run2012C-24Aug2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_198022-198523_8TeV_24Aug2012ReReco_Collisions12_JSON.txt",
       'firstRun' : 198022,
-      'lastRun' : 198523, 
+      'lastRun' : 198523,
       'analyses' : analyses,
       'calibrationTarget':'2012Jul13ReReco'
-      },      
+      },
       'data_%s_Run2012C_EcalRecover_11DEC2012_v1' % pd :{
       'datasetpath' : "/%s/Run2012C-EcalRecover_11Dec2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_201191-201191_8TeV_11Dec2012ReReco-recover_Collisions12_JSON.txt",
