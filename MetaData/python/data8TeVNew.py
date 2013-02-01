@@ -181,6 +181,80 @@ datadefs = {
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
+   'ZZ4L_f4_m0p0150_0p0150' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_m0p0150_0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_m0p015_0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
+   'dbs' : "cms_dbs_ph_analysis_02",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+   'ZZ4L_f4_m0p0150_m0p0150' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_m0p0150_m0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_m0p015_m0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
+   'dbs' : "cms_dbs_ph_analysis_02",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+   'ZZ4L_f4_m0p0150_0p0000' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_m0p0150_0p0000_v2/iross-SUMMER12-AODSIM-START53_V7C_4_m0p015_0p000-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
+   'dbs' : "cms_dbs_ph_analysis_02",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+
+   'ZZ4L_f4_0p0150_0p0150' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0150_0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p015_0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
+   'dbs' : "cms_dbs_ph_analysis_02",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+   'ZZ4L_f4_0p0150_m0p0150' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0150_m0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p015_m0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
+   'dbs' : "cms_dbs_ph_analysis_02",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+   'ZZ4L_f4_0p0150_0p0000' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0150_0p0000_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p015_0p000-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
+   'dbs' : "cms_dbs_ph_analysis_02",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+   'ZZ4L_f4_0p0000_0p0150' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0000_0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p000_0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
+   'dbs' : "cms_dbs_ph_analysis_02",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+   'ZZ4L_f4_0p0150_m0p0150' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0150_m0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p015_m0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
+   'dbs' : "cms_dbs_ph_analysis_02",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+   'ZZ4L_f4_0p0000_0p0000' : {
+   'analyses': ['ZZ'],
+   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0000_0p0000_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p000_0p000-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
+   'dbs' : "cms_dbs_ph_analysis_02",
+   'x_sec' : -999,
+   'pu' : 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+
    'WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola' : {
    'analyses' : ['Wbb'],
    'datasetpath' : "/WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
@@ -381,7 +455,6 @@ for mass in range(120,155,5):
       'x_sec' : cs_hzg[mass][ch]*hbr_hzg[mass]*zbr_hzg[ch]*picobarns,
       'analyses' : ['HZG']
       }
-
 
 
 # Add VH files
