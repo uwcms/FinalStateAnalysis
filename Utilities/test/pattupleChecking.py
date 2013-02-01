@@ -69,6 +69,19 @@ def unique(user):
 
     return tempSet
 
+def uniqueNot(user,notUsers):
+    """Returns the list of pattuples unique to that user"""
+    tempSet=userSets[user]
+    print len(tempSet),"before uniqueing"
+    for u in userSets:
+        if u in notUsers:
+            tempSet=tempSet.difference(userSets[u])
+        else:
+            continue;
+    print len(tempSet),"in",user,"not in",notUsers;
+
+    return tempSet
+
 if __name__ == '__main__':
     parser=argparse.ArgumentParser(description="%prog -- dump some analysis-level plots and yields")
     parser.add_argument("--size",dest="size",type=bool,default=False,help="Gather size info when getting master list (slow)")
