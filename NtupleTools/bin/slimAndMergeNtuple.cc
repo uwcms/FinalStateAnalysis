@@ -7,7 +7,12 @@
 #include <TStopwatch.h>
 #include<fstream>
 #include <iostream>
+#include <TList.h>
+#include <TObject.h>
+#include <TCollection.h>
+#include <TKey.h>
 
+#define DEBUG 0
 
 using namespace std;
 
@@ -69,6 +74,20 @@ inline bool fexists(string path)
   ifile.close();
   return ret;
 }
+inline bool frootexists(string path)
+{
+  bool ret ;
+  TFile *f = TFile::Open(path.c_str());
+  if (!f) {
+    ret = false ;
+  }else {
+    ret = true ;
+  }
+  
+  f->Close();
+  f->~TFile();
+  return ret;
+}
 
 double getTimeWithoutStopping( TStopwatch* watch )
 {
@@ -86,8 +105,8 @@ int main(int argc, char* argv[]) {
     std::cout << __LINE__ << " Usage : " << argv[0] << " [directory with lists] [output_file_name] [input_files]+" << std::endl;
     return 42;
   }
-  cout << "argv read by .cc "; 
-  for (unsigned int i = 0; i< sizeof(argv); i++){
+  cout << "argv read by .cc " ;
+  for ( int i = 0; i< argc; i++){
     cout << argv[i] << " " ;
   }
   cout << endl;
@@ -97,39 +116,64 @@ int main(int argc, char* argv[]) {
   string outf_name = argv[2];
   string input_file_list = argv[3];
   vector<string> inputs = split(input_file_list,',');
+  if (DEBUG)  cout << __LINE__ << endl;
 
   if( !fexists( (lists_dir+"/trees_location.list") ) ){
     cout << __LINE__ << " Cannot stat " << lists_dir << "/trees_location.list no such file" << endl;
     return 42;
   }
+  if (DEBUG)   cout << __LINE__ << endl;
 
   vector<string> trees_locations = read_file( (lists_dir+"/trees_location.list") );
   // cout << getTimeWithoutStopping( watch ) << ": spent reading trees locations..." << endl;
   
   //Create output file
   TFile* file = TFile::Open(outf_name.c_str(), "RECREATE");
+
+  if (DEBUG)   cout << __LINE__ << endl;
   for( vector<string>::const_iterator location = trees_locations.begin(); location != trees_locations.end(); ++location){
     cout << "Merging.. " << *location << endl;
     string loc_copy = *location;
+    unsigned found = loc_copy.find("/");
+    loc_copy.replace(found,1,"_");
+    
+    while (found<loc_copy.size()){
+      found = loc_copy.find("/");
+      if (DEBUG) cout << __LINE__ << " found= " << found << endl; 
+      if (found <loc_copy.size())loc_copy.replace(found,1,"_");
+    }
+
+    if (DEBUG)     cout << __LINE__ << endl;
  
     TChain *chain = new TChain(location->c_str());
     for(vector<string>::const_iterator input = inputs.begin(); input != inputs.end(); ++input) {
-      if( !fexists( ("/hdfs"+*input).c_str())) {
-	cout << __LINE__ << " Cannot stat /hdfs"<< (*input)<< " no such file" << endl;
+      if( !frootexists( (*input).c_str())) {
+	cout << __LINE__ << " Cannot stat "<< (*input)<< " no such file" << endl;
 	return 42;
       }
-      chain->Add(("/hdfs"+*input).c_str());
+      chain->Add((*input).c_str());
 
-//       cout << __PRETTY_FUNCTION__ << " " << __LINE__ << " " << chain->GetEntries()<< endl;
     }
 
     //properly sets the branches
     if( fexists( (lists_dir+"/"+loc_copy+".list") ) ){
       vector<string> branches = read_file((lists_dir+"/"+loc_copy+".list"));
+      if (DEBUG)      cout << __LINE__ << " " << (lists_dir+"/"+loc_copy+".list") << " number of branches to switch on " <<branches.size() <<  endl;
       chain->SetBranchStatus("*",0); //deactivate all branches
-      for(vector<string>::const_iterator branch = branches.begin(); branch != branches.end(); ++branch) chain->SetBranchStatus(branch->c_str(),1); //activate this branch
+//       TIter next(chain->GetListOfBranches());
+//       TKey *obj;
+//       while (((obj = (TKey*)next()))){
+// 	if (DEBUG) cout << __LINE__ << " " << obj->GetName() << endl; 
+// 	unsigned findname=((string)obj->GetName()).find("Gen");
+// 	if (findname< ((string)obj->GetName()).length())  chain->SetBranchStatus(obj->GetName(),1);
+//       }
+      for(vector<string>::const_iterator branch = branches.begin(); branch != branches.end(); ++branch) {
+	if (chain->GetBranch(branch->c_str())) chain->SetBranchStatus(branch->c_str(),1); //activate this branch
+      }
+
     }
     else{
+      if (DEBUG)       cout << __LINE__ << " No branch list found at " << lists_dir << " in "<< (lists_dir+"/"+loc_copy+".list") <<endl;
       chain->SetBranchStatus("*",1); //activate all branches
     }
 
