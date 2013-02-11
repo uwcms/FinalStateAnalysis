@@ -9,7 +9,7 @@ pushd $CMSSW_BASE/src
 # To install lumiCalc.py
 if [ "$LUMI" = "1" ] 
 then
-  cvs co -r V04-01-06 RecoLuminosity/LumiDB 
+  cvs co -r V04-01-09 RecoLuminosity/LumiDB 
 fi
 
 # Add and patch to way speed up trigger matching
@@ -39,20 +39,11 @@ EOF
   cat download.url | xargs wget
   popd
 
-  # MVA MET + PU Jet ID
-  pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
-  ./recipe_mvamet.sh
-  popd
-
 else
   cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF 
 //#define ENABLE_PAT_PROD
 EOF
 
 fi
-
-# Get the VBF MVA weight files
-# https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2012#VBF_selection_Matthew
-cvs co -r 1.2 UserCode/MitHtt/data/VBFMVA/MuTau/VBFMVA_BDTG.weights.xml
 
 popd

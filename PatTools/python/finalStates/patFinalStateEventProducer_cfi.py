@@ -4,6 +4,7 @@ patFinalStateEventProducer = cms.EDProducer(
     "PATFinalStateEventProducer",
     rhoSrc = cms.InputTag("kt6PFJetsForRhoComputationVoronoi", "rho"),
     pvSrc = cms.InputTag("selectedPrimaryVertex"),
+    pvSrcBackup = cms.InputTag("selectedPrimaryVertexUnclean"),
     verticesSrc = cms.InputTag("selectPrimaryVerticesQuality"),
     electronSrc = cms.InputTag("fixme"),
     muonSrc = cms.InputTag("fixme"),

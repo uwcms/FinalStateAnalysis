@@ -28,13 +28,12 @@ zz_final_states = [
 zgg_final_states = [
     'eegg',
     'mmgg',
-    'etgg',
-    'mtgg'
-    ]
+]
 
 branches = {
-    'rapidityGap' : 'abs(subcand(0, 1).get.eta - subcand(2, 3).get.eta)',
+    'rapidityGap': 'abs(subcand(0, 1).get.eta - subcand(2, 3).get.eta)',
 }
+
 
 def add_quad_ntuples(process, schedule,
                      do_zh=True, do_zz=False, do_zgg=False,

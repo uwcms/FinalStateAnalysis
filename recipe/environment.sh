@@ -34,8 +34,8 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
       export mcgt=START52_V9E::All #last 52X MC reprocessing
   else
       echo "Setting up CMSSW 5_3_X global tags"
-      export datagt=GR_P_V41_AN1::All
-      export mcgt=START53_V10::All
+      export datagt=GR_P_V39_AN3::All
+      export mcgt=START53_V15::All
   fi
 fi
 #  export datagt=GR_R_52_V8::All
@@ -72,7 +72,7 @@ export PATH=$fsa/RecoTools/scripts:$PATH
 # Add some shortcuts to example files for testing
 if [ "$MAJOR_VERSION" -eq "4" ]; then
   export mcAODFile=/hdfs/store/mc/Fall11/WH_ZH_TTH_HToTauTau_M-130_7TeV-pythia6-tauola/AODSIM/PU_S6_START42_V14B-v1/0000/08400E05-880C-E111-9E78-90E6BA0D0987.root
-  export dataAODFile=/hdfs/store/data/Run2011B/MuEG/AOD/PromptReco-v1/000/175/832/08252A90-35DD-E011-B45A-485B3989721B.root
+  export dataAODFile=/hdfs/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/0036326C-C244-E111-BF09-00261894397D.root
   export patTupleFile=/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-130_7TeV-pythia6-tauola/VH_130_2012-05-29-7TeV-PatTuple-b08cf9d/c7f0540d247deade88c2d29ec1211eaf/output_10_2_sbE.root
 fi
 

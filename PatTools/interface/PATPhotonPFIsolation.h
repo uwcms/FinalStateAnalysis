@@ -21,7 +21,7 @@
 
 // forward decls
 class PFIsolationEstimator;
-namespace reco {
+namespace pat {
   class Photon;
 }
 
@@ -43,7 +43,7 @@ namespace pattools {
     PATPhotonPFIsolation(const float cone_size);
     ~PATPhotonPFIsolation();
 
-    pfisolation operator() (const reco::Photon*,
+    pfisolation operator() (const pat::Photon*,
 			    const reco::PFCandidateCollection*,
 			    reco::VertexRef,
 			    edm::Handle< reco::VertexCollection >);

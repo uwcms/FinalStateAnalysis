@@ -22,12 +22,25 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
   cvs up -r 1.6 PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
   # This is a bug in setup.sh
   cvs up -r METPU_5_3_X_v3 RecoJets/JetProducers
+  if [ "$MINOR_VERSION" -eq "2" ]; then
+    # Workaround a header file location change
+    cvs up -r 1.1 DataFormats/JetReco/interface/PFClusterJet.h
+    cvs up -r 1.2 RecoMET/METAlgorithms/src/PFClusterSpecificAlgo.cc
+  fi
 else
-  cvs co -r METPU_4_2_X JetMETCorrections/METPUSubtraction
+  cvs co -r   METPU_4_2_X_v2 JetMETCorrections/METPUSubtraction
   pushd $CMSSW_BASE/src/JetMETCorrections/METPUSubtraction/test/
   ./setup42.sh
   popd
-  cvs up -r 1.6 PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
+  touch $CMSSW_BASE/src/RecoJets/JetProducers/data/dummy.txt
+  # apply patch from Andrew Gilbert
+  # https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorkingMoriond2013#MVA_Met_Sequence_with_predef_AN1
+  pushd $CMSSW_BASE/src
+    patch -p0 -N < FinalStateAnalysis/recipe/patches/mvamet-jetid-42X.patch
+  popd
+  addpkg CommonTools/RecoAlgos
+  cvs co -r 1.1 CommonTools/RecoAlgos/plugins/PFJetSelector.cc
+
 fi
 
 popd

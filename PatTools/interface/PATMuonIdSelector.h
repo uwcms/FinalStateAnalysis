@@ -61,6 +61,7 @@ class PATMuonIdSelectorImp
   unsigned minTrackerHits_;             // min. number of hits in SiStrip + Pixel detectors
   unsigned minTkLayersWithMeasurement_; // min. number of TkLayers with a valid measurement (2012 ID)
   unsigned minPixelHits_;               // min. number of hits in Pixel detector
+  unsigned minMuonHits_;
   unsigned minMuonStations_;            // min. number of hits in Muon chambers
   unsigned minMatchedSegments_;         // min. number of segments in Muon stations matched to inner track
 };

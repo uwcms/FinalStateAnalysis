@@ -26,8 +26,8 @@ namespace rochcor {
     RochesterCorrections2012(bool central_value);
     ~RochesterCorrections2012();
     
-    void momcor_mc(TLorentzVector&, float, float, int/*, float&*/);
-    void momcor_data(TLorentzVector&, float, float, int/*, float&*/);
+    void momcor_mc(TLorentzVector&, float, float, int, float&);
+    void momcor_data(TLorentzVector&, float, float, int, float&);
     
     void musclefit_data(TLorentzVector& , TLorentzVector&);
     

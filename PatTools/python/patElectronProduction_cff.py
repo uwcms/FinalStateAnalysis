@@ -1,14 +1,14 @@
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.Utilities.version import cmssw_major_version
 
-from FinalStateAnalysis.PatTools.electrons.patConversionRejection_cfi import \
+from FinalStateAnalysis.PatTools.electrons.patWWIDEmbedding_cfi import \
         electronsWWID
 from FinalStateAnalysis.PatTools.electrons.patElectronVBTFEmbedding_cff import \
         electronsWP80, electronsWP90, electronsWP95, electronsWP95V, electronsVBTFId
 
 from FinalStateAnalysis.PatTools.electrons.patElectronRhoEmbedding_cfi import \
         patElectronRhoEmbedding, patElectronZZRhoEmbedding, patElectronZZ2012RhoEmbedding, \
-	patElectronHZGRhoEmbedding
+	patElectronHZGRho2011Embedding, patElectronHZGRho2012Embedding
 
 from FinalStateAnalysis.PatTools.electrons.electronSystematics_cfi import \
         electronSystematics
@@ -42,11 +42,15 @@ from FinalStateAnalysis.PatTools.electrons.eTrackCandidates_cfi import \
 from FinalStateAnalysis.PatTools.electrons.patElectronEnergyCorrections_cfi import \
      patElectronEnergyCorrections
 
+from FinalStateAnalysis.PatTools.electrons.patConversionRejection_cfi import \
+     patElectronConversionMatch
+
 customizeElectronSequence = cms.Sequence()
 customizeElectronSequence += gsfTrackCandidates
 customizeElectronSequence += patElectronRhoEmbedding
 customizeElectronSequence += patElectronZZRhoEmbedding
-customizeElectronSequence += patElectronHZGRhoEmbedding
+customizeElectronSequence += patElectronHZGRho2011Embedding
+customizeElectronSequence += patElectronHZGRho2012Embedding
 if cmssw_major_version() == 5:
 	customizeElectronSequence += patElectronZZ2012RhoEmbedding
 customizeElectronSequence += electronsWWID
@@ -61,3 +65,4 @@ customizeElectronSequence += patElectronMVAIDEmbedder
 customizeElectronSequence += patElectronMVAIDWPEmbedding
 customizeElectronSequence += patElectronsEmbedIp
 customizeElectronSequence += patElectronEnergyCorrections
+customizeElectronSequence += patElectronConversionMatch

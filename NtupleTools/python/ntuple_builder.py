@@ -22,6 +22,8 @@ _common_template = PSet(
     templates.event.num,
     # templates.Rho, ntvtx, nTruePU
     templates.event.pileup,
+    # information about the selected primary vertex
+    templates.event.pv_info,
     # templates.Info about the MET
     templates.event.met,
     # templates.Info about the generator
@@ -79,6 +81,7 @@ _photon_template = PSet(
     #templates.candidates.vertex_info, #photons have no tracking info
     templates.photons.id,
     templates.photons.tracking,
+    templates.photons.energyCorrections,
     templates.photons.supercluster,
     #templates.photons.trigger, #add photons later
     templates.topology.mtToMET,
@@ -100,7 +103,7 @@ _pt_cuts = {
 
 _eta_cuts = {
     'm' : '2.5',
-    'e' : '2.5',
+    'e' : '3.0',
     't' : '2.3',
     'g' : '3.0'
 }
@@ -157,8 +160,8 @@ def make_ntuple(*legs, **kwargs):
 
     ntuple_config = _common_template.clone()
 
-    # If we only have two legs, we are interested in VBF selections.
-    if len(legs) == 2:
+    # If we have two legs or photons, we are interested in VBF selections.
+    if len(legs) == 2 or 'g' in legs:
         ntuple_config = PSet(
             ntuple_config,
             templates.topology.vbf

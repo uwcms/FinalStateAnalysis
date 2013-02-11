@@ -41,6 +41,7 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     // General global quantities
     edm::InputTag rhoSrc_;
     edm::InputTag pvSrc_;
+    edm::InputTag pvBackSrc_;
     edm::InputTag verticesSrc_;
 
     // The final tau/jet/muon etc collections in the event
@@ -83,6 +84,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
     const edm::ParameterSet& pset) {
   rhoSrc_ = pset.getParameter<edm::InputTag>("rhoSrc");
   pvSrc_ = pset.getParameter<edm::InputTag>("pvSrc");
+  pvBackSrc_ = pset.getParameter<edm::InputTag>("pvSrcBackup");
   verticesSrc_ = pset.getParameter<edm::InputTag>("verticesSrc");
 
   electronSrc_ = pset.getParameter<edm::InputTag>("electronSrc");
@@ -145,8 +147,20 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
 
   edm::Handle<edm::View<reco::Vertex> > pv;
   evt.getByLabel(pvSrc_, pv);
-  edm::Ptr<reco::Vertex> pvPtr = pv->ptrAt(0);
 
+  edm::Handle<edm::View<reco::Vertex> > pv_back;
+  evt.getByLabel(pvBackSrc_, pv_back);
+
+  edm::Ptr<reco::Vertex> pvPtr;
+  if( pv->size() )
+    pvPtr = pv->ptrAt(0);
+  else if( pv_back->size() ) {
+    std::cout << "!!!!! There are no selected primary vertices,"
+	      << " pvPtr is set to unclean vertex !!!!!" << std::endl;
+    pvPtr = pv_back->ptrAt(0);
+  } else
+    std::cout << "!!!!! There are no primary vertices,"
+	      << " pvPtr is not set !!!!!" << std::endl;
   edm::Handle<edm::View<reco::Vertex> > vertices;
   evt.getByLabel(verticesSrc_, vertices);
   edm::PtrVector<reco::Vertex> verticesPtr = vertices->ptrVector();
@@ -199,7 +213,14 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   for (size_t i = 0; i < metCfg_.size(); ++i) {
     edm::Handle<edm::View<pat::MET> > theMet;
     evt.getByLabel(metCfg_[i].second, theMet);
-    edm::Ptr<pat::MET> theMetPtr = theMet->ptrAt(0);
+    edm::Ptr<pat::MET> theMetPtr;
+    if (!forbidMissing_ && !theMet.isValid()) {
+      edm::LogWarning("FSAEventMissingProduct")
+        << "The FSA collection " << metCfg_[i].second.label()
+        << " is missing.  It will be null." << std::endl;
+    } else {
+      theMetPtr = theMet->ptrAt(0);
+    }
     theMEts[metCfg_[i].first] = theMetPtr;
   }
 

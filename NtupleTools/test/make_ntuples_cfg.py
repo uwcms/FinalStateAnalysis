@@ -18,6 +18,9 @@ You can turn on different ntuples by passing option=1 using one of:
 
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
+from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
+    cmssw_minor_version
+from FinalStateAnalysis.NtupleTools.rerun_matchers import rerun_matchers
 
 process = cms.Process("TrileptonNtuple")
 
@@ -36,6 +39,7 @@ options = TauVarParsing.TauVarParsing(
     makeQuartic=0,
     makeTGC=0,
     makeHZG=0,
+    rerunMCMatch=False,
     eventView=0, #switch between final state view (0) and event view (1)
     passThru=0, #turn off preselections
     dump=0, # If one, dump process python to stdout
@@ -43,6 +47,8 @@ options = TauVarParsing.TauVarParsing(
     verbose=0, # If one print out the TimeReport
     noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
 )
+
+
 
 options.outputFile = "ntuplize.root"
 options.parseArguments()
@@ -75,6 +81,25 @@ process.schedule = cms.Schedule()
 # Check if we want to rerun creation of the FSA objects
 if options.rerunFSA:
     print "Rebuilding FS composite objects"
+
+    #load magfield and geometry (for mass resolution)
+    if cmssw_major_version() == 5 and cmssw_minor_version() >= 3:
+        process.load('Configuration.Geometry.GeometryIdeal_cff')
+    else:
+        process.load('Configuration.StandardSequences.GeometryIdeal_cff')
+
+    process.load('Configuration.StandardSequences.MagneticField_cff')
+    process.load(
+        'Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+
+    #need the global tag because of the above
+    if options.globalTag == "":
+        raise RuntimeError("Global tag not specified!"\
+                           "Try sourcing environment.sh\n")
+    else:
+        print 'Using globalTag: %s'%options.globalTag
+    process.GlobalTag.globaltag = cms.string(options.globalTag)
+
     # Drop the input ones, just to make sure we aren't screwing anything up
     process.buildFSASeq = cms.Sequence()
     from FinalStateAnalysis.PatTools.patFinalStateProducers \
@@ -89,21 +114,32 @@ if options.rerunFSA:
         'pfmet': 'systematicsMET',
         'mvamet': 'systematicsMETMVA',
     }
+    #re run the MC matching, if requested
+    if options.rerunMCMatch:
+        rerun_matchers(process)
+        process.schedule.append(process.rerunMCMatchPath)
+        fs_daughter_inputs['electrons'] = 'cleanPatElectronsRematched'
+        fs_daughter_inputs['muons']     = 'cleanPatMuonsRematched'
+        fs_daughter_inputs['taus']      = 'cleanPatTausRematched'
+        fs_daughter_inputs['photons']   = 'cleanPatPhotonsRematched'
+        fs_daughter_inputs['jets']      = 'selectedPatJetsRematched'        
+        
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
     produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
                          'puTagDoesntMatter', buildFSAEvent=True,
                          noTracks=True, noPhotons=options.noPhotons)
-    process.buildFSAPath = cms.Path(process.buildFSASeq)
+    process.buildFSAPath = cms.Path(process.buildFSASeq)    
     # Don't crash if some products are missing (like tracks)
-    process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
+    process.patFinalStateEventProducer.forbidMissing = cms.bool(False)        
     process.schedule.append(process.buildFSAPath)
     # Drop the old stuff.
     process.source.inputCommands = cms.untracked.vstring(
         'keep *',
         'drop PATFinalStatesOwned_finalState*_*_*',
-        'drop *_patFinalStateEvent*_*_*'
-    )
+        'drop *_patFinalStateEvent*_*_*'        
+    )    
+    
 
 from FinalStateAnalysis.NtupleTools.tnp_ntuples_cfi import add_tnp_ntuples
 from FinalStateAnalysis.NtupleTools.h2tau_ntuples_cfi import add_h2tau_ntuples
@@ -142,15 +178,15 @@ if options.make4L:
 
 if options.makeHZG:
     add_trilepton_ntuples(process, process.schedule,
-                          do_trileptons=False, do_photons=True,
-                          event_view=options.eventView)
+                          do_trileptons=False, do_photons=False,
+                          do_hzg=True, event_view=options.eventView)
 
 if options.makeTGC:
     add_leptonphoton_ntuples(process, process.schedule,
                              options.eventView)
     add_trilepton_ntuples(process, process.schedule,
                           do_trileptons=False, do_photons=True,
-                          event_view=options.eventView)
+                          do_hzg = False, event_view=options.eventView)
 if options.makeQuartic:
     add_trilepton_ntuples(process, process.schedule,
                           do_trileptons=True, do_photons=True,
@@ -161,6 +197,8 @@ if options.makeQuartic:
 
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
+
+
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
 process.MessageLogger.categories.append('FSAEventMissingProduct')
 # Don't go nuts if there are a lot of missing products.

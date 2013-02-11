@@ -18,8 +18,13 @@
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
+// This is some nonsense so this will work out of the box w/ the 42X and 52X
+// versions of TMVAZipReader.
+namespace reco { namespace details { int dummy; }}
+
 
 using namespace reco;
+using namespace reco::details;
 
 //--------------------------------------------------------------------------------------------------
 ElectronIDMVA::ElectronIDMVA() :

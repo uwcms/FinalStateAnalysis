@@ -143,8 +143,8 @@ const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter)
   }
   else{
     cms::Exception ex("ImplementationMissing");
-    ex.addContext("No implementation was found to get gen particle from a requested daughter, please consider either fixing the configuration or adding the implementation in FinalStateAnalysis/DataAlgos/src/helpers.cc");
-    ex.addAdditionalInfo("Available objects are pat::Tau, pat::Muon, pat::Electron, pat::Jet, pat::Photon");
+    ex << "No implementation was found to get gen particle from a requested daughter, please consider either fixing the configuration or adding the implementation in FinalStateAnalysis/DataAlgos/src/helpers.cc\n";
+    ex << "Available objects are pat::Tau, pat::Muon, pat::Electron, pat::Jet, pat::Photon\n";
     throw ex;
   }
 }
@@ -152,7 +152,9 @@ const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter)
 /// Helper function to get the first interesting mother particle 
 const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, int idNOTtoMatch)
 {
-  const reco::GenParticleRef mother = /*dynamic_cast<const reco::GenParticleRef>*/ (genPart->motherRef());
+  if( genPart->numberOfMothers() == 0 ) return genPart; // if we've recursed all the way back we need to stop
+
+  const reco::GenParticleRef mother = genPart->motherRef();
   if( !(mother.isAvailable() && mother.isNonnull())  ) return mother;
   if( mother.isAvailable() && mother.isNonnull() && mother->status() == 3 && mother->pdgId() != idNOTtoMatch )
     return mother;

@@ -76,21 +76,23 @@ def produce_final_states(process, collections, output_commands,
     process.muonsForFinalStates = cms.EDFilter(
         "PATMuonRefSelector",
         src=cms.InputTag(muonsrc),
-        cut=cms.string('pt > 4 & (isGlobalMuon | isTrackerMuon)'),
+        cut=cms.string('max(pt, userFloat("maxCorPt")) > 4 '
+                       '& (isGlobalMuon | isTrackerMuon)'),
         filter=cms.bool(False),
     )
 
     process.electronsForFinalStates = cms.EDFilter(
         "PATElectronRefSelector",
         src=cms.InputTag(esrc),
-        cut=cms.string('abs(eta) < 2.5 & pt > 7'),
+        cut=cms.string('abs(superCluster().eta) < 3.0 '
+                       '& max(pt, userFloat("maxCorPt")) > 7'),
         filter=cms.bool(False),
     )
 
     process.photonsForFinalStates = cms.EDFilter(
         "PATPhotonRefSelector",
         src=cms.InputTag(phosrc),
-        cut=cms.string('abs(eta) < 2.5 & pt > 10'),
+        cut=cms.string('abs(superCluster().eta()) < 3.0 & pt > 10'),
         filter=cms.bool(False),
     )
 
@@ -134,6 +136,8 @@ def produce_final_states(process, collections, output_commands,
         # Don't build two jet states
         if (diobject[0][0], diobject[1][0]) == ('Tau', 'Tau'):
             continue
+        if (diobject[0][0], diobject[1][0]) == ('Tau', 'Pho'):
+            continue
 
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
@@ -169,6 +173,14 @@ def produce_final_states(process, collections, output_commands,
         # Don't build three jet states
         if (triobject[0][0], triobject[1][0], triobject[2][0]) == \
            ('Tau', 'Tau', 'Tau'):
+            continue
+        n_taus = [x[0] for x in triobject].count('Tau')
+        n_phos = [x[0] for x in triobject].count('Pho')
+        if n_taus > 2:
+            continue
+        if n_phos > 2:
+            continue
+        if n_taus and n_phos:
             continue
 
         # Define some basic selections for building combinations
@@ -206,8 +218,14 @@ def produce_final_states(process, collections, output_commands,
     # Build 4 lepton final states
     process.buildQuadObjects = cms.Sequence()
     for quadobject in _combinatorics(object_types, 4):
-        # Don't build states with more than 2 hadronic taus
-        if [x[0] for x in quadobject].count('Tau') > 2:
+        # Don't build states with more than 2 hadronic taus or phos
+        n_taus = [x[0] for x in quadobject].count('Tau')
+        n_phos = [x[0] for x in quadobject].count('Pho')
+        if n_taus > 2:
+            continue
+        if n_phos > 2:
+            continue
+        if n_taus and n_phos:
             continue
 
         # Define some basic selections for building combinations

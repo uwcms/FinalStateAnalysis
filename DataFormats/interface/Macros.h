@@ -85,4 +85,13 @@
 #define FWD_ABS_CLASSDECL(type) \
   FWD_REF_CLASSDECL(type)
 
+// Version which declares only the base type + the wrapper.
+// This reduces the number of generated templates if it will only be stored
+// in an OwnVector, and never in a vector<Derived>
+#define FWD_MIN_CLASSDECL(type) \
+  type dummy ## type; \
+  edm::Wrapper<type> dummyW ## type; \
+  type ## Collection dummyColl ## type; \
+  edm::Wrapper<type ## Collection> dummyCollW ## type;
+
 #endif /* end of include guard: MACROS_ZCP45DIB */

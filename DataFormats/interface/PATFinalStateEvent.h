@@ -96,7 +96,7 @@ class PATFinalStateEvent {
     double metSignificance() const;
 
     // Get a given type of MET
-    const edm::Ptr<pat::MET>& met(const std::string& type) const;
+    const edm::Ptr<pat::MET> met(const std::string& type) const;
 
     /// Get the event ID
     const edm::EventID& evtId() const;
