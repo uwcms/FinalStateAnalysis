@@ -19,6 +19,8 @@ from datacommon import square, cube, quad, picobarns, \
 
 from data8TeV import datadefs as datadefs52
 
+from string import Template
+
 # Figure this out later.
 data_name_map = {}
 
@@ -181,80 +183,6 @@ datadefs = {
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
-   'ZZ4L_f4_m0p0150_0p0150' : {
-   'analyses': ['ZZ'],
-   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_m0p0150_0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_m0p015_0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
-   'dbs' : "cms_dbs_ph_analysis_02",
-   'x_sec' : -999,
-   'pu' : 'S10',
-   'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },
-   'ZZ4L_f4_m0p0150_m0p0150' : {
-   'analyses': ['ZZ'],
-   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_m0p0150_m0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_m0p015_m0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
-   'dbs' : "cms_dbs_ph_analysis_02",
-   'x_sec' : -999,
-   'pu' : 'S10',
-   'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },
-   'ZZ4L_f4_m0p0150_0p0000' : {
-   'analyses': ['ZZ'],
-   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_m0p0150_0p0000_v2/iross-SUMMER12-AODSIM-START53_V7C_4_m0p015_0p000-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
-   'dbs' : "cms_dbs_ph_analysis_02",
-   'x_sec' : -999,
-   'pu' : 'S10',
-   'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },
-
-   'ZZ4L_f4_0p0150_0p0150' : {
-   'analyses': ['ZZ'],
-   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0150_0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p015_0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
-   'dbs' : "cms_dbs_ph_analysis_02",
-   'x_sec' : -999,
-   'pu' : 'S10',
-   'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },
-   'ZZ4L_f4_0p0150_m0p0150' : {
-   'analyses': ['ZZ'],
-   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0150_m0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p015_m0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
-   'dbs' : "cms_dbs_ph_analysis_02",
-   'x_sec' : -999,
-   'pu' : 'S10',
-   'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },
-   'ZZ4L_f4_0p0150_0p0000' : {
-   'analyses': ['ZZ'],
-   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0150_0p0000_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p015_0p000-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
-   'dbs' : "cms_dbs_ph_analysis_02",
-   'x_sec' : -999,
-   'pu' : 'S10',
-   'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },
-   'ZZ4L_f4_0p0000_0p0150' : {
-   'analyses': ['ZZ'],
-   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0000_0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p000_0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
-   'dbs' : "cms_dbs_ph_analysis_02",
-   'x_sec' : -999,
-   'pu' : 'S10',
-   'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },
-   'ZZ4L_f4_0p0150_m0p0150' : {
-   'analyses': ['ZZ'],
-   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0150_m0p0150_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p015_m0p015-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
-   'dbs' : "cms_dbs_ph_analysis_02",
-   'x_sec' : -999,
-   'pu' : 'S10',
-   'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },
-   'ZZ4L_f4_0p0000_0p0000' : {
-   'analyses': ['ZZ'],
-   'datasetpath' : "/ZZ4L_Sherpa_aTGC_f4_0p0000_0p0000_v2/iross-SUMMER12-AODSIM-START53_V7C_4_0p000_0p000-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER",
-   'dbs' : "cms_dbs_ph_analysis_02",
-   'x_sec' : -999,
-   'pu' : 'S10',
-   'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },
-
    'WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola' : {
    'analyses' : ['Wbb'],
    'datasetpath' : "/WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
@@ -364,6 +292,20 @@ for mass in range(80,150, 10) + range(160, 220, 20) + range(250, 550, 50) + rang
       'x_sec' : -999,
        'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
+
+aTGC_path = Template('/ZZ4L_Sherpa_aTGC_f${i}_${f1}0_${f2}0_v2/iross-SUMMER12-AODSIM-START53_V7C_${i}_${f1}_${f2}-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER')
+
+for coup in ["4","5"]:
+    for coup1 in ["0p015","0p000","m0p015"]:
+        for coup2 in ["0p015","0p000","m0p015"]:
+            datadefs['ZZ4L_f%s_%s0_%s0' % ( coup, coup1, coup2 )] = {
+               'analyses': ['ZZ'],
+               'datasetpath' : aTGC_path.substitute(i=coup,f1=coup1,f2=coup2),
+               'dbs' : "cms_dbs_ph_analysis_01",
+               'x_sec' : -999,
+               'pu' : 'S10',
+               'calibrationTarget':'Summer12_DR53X_HCP2012'
+               }
 
 datadefs['SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola'] = {
    'analyses': ['HTT'],
