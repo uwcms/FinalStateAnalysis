@@ -28,15 +28,9 @@ if [ "$MAJOR_VERSION" -eq "4" ]; then
 fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
-  if [ "$MINOR_VERSION" -eq "2" ]; then
-      echo "Setting up CMSSW 5_2_X global tags"
-      export datagt=FT_R_52_V8D::All #reprocessing tags
-      export mcgt=START52_V9E::All #last 52X MC reprocessing
-  else
-      echo "Setting up CMSSW 5_3_X global tags"
-      export datagt=GR_P_V39_AN3::All
-      export mcgt=START53_V15::All
-  fi
+  echo "Setting up CMSSW 5_3_X global tags"
+  export datagt=GR_P_V39_AN3::All
+  export mcgt=START53_V15::All
 fi
 #  export datagt=GR_R_52_V8::All
 #  export mcgt=START52_V10::All
