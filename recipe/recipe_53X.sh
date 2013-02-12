@@ -7,7 +7,7 @@ set -o nounset
 pushd $CMSSW_BASE/src
 
 echo "Checking out PAT dataformats"
-addpkg DataFormats/PatCandidates       V06-05-06-03
+addpkg DataFormats/PatCandidates       V06-05-06-06
 
 if [ "$LIMITS" = "1" ]
 then
@@ -21,7 +21,8 @@ then
 
   echo "Checking out tuple production tags"
   
-  addpkg PhysicsTools/PatAlgos           V08-09-47
+  addpkg PhysicsTools/PatAlgos           V08-09-52
+  addpkg DataFormats/StdDictionaries     V00-02-14
   addpkg PhysicsTools/PatUtils           V03-09-26
   addpkg CommonTools/ParticleFlow        V00-03-16
   addpkg FWCore/GuiBrowsers              V00-00-70
@@ -41,12 +42,9 @@ then
   popd
 
   echo "Checking out Tau POG recipe"
-  cvs co -r V01-04-20 RecoTauTag/RecoTau #equivalent to 04-14
-  cvs co -r V01-04-08 RecoTauTag/Configuration
+  cvs co -r V01-04-23 RecoTauTag/RecoTau #equivalent to 04-14
+  cvs co -r V01-04-10 RecoTauTag/Configuration
   cvs co -r V00-04-00 CondFormats/EgammaObjects
-  cvs up -r 1.53 PhysicsTools/PatAlgos/python/tools/tauTools.py
-  cvs up -r 1.12 PhysicsTools/PatAlgos/python/producersLayer1/tauProducer_cff.py
-  cvs up -r 1.15 PhysicsTools/PatAlgos/python/recoLayer0/tauDiscriminators_cff.py
 
   echo "Checking out EGamma POG recipe for electron corrections"
   addpkg RecoEgamma/EgammaTools V08-11-10-02
