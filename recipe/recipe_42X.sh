@@ -32,6 +32,11 @@ then
   # link errors with the MVAMET
   rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer*
 
+  # patch (really an un-patch, but who's counting) electron corrections in 42x IAR 13.Feb.2013
+  pushd $CMSSW_BASE/src/FinalStateAnalysis/
+  patch -p1 < recipe/patches/electronCorr_42X.patch 
+  popd
+
   #Update to calculate Single Tower H/E in 42X
   #https://twiki.cern.ch/twiki/bin/view/CMS/HoverE2012
   cvs co -r CMSSW_4_2_8_patch7 RecoEgamma/EgammaElectronAlgos
