@@ -47,10 +47,10 @@ then
   cvs co -r V00-04-00 CondFormats/EgammaObjects
 
   echo "Checking out EGamma POG recipe for electron corrections"
-  addpkg RecoEgamma/EgammaTools V08-11-10-02
-  cvs co -r V00-00-30-02 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
+  cvs co -r V09-00-01 RecoEgamma/EgammaTools
+  cvs co -r V00-00-30-00 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
   cvs up -r 1.4 EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h
-  cvs co -r HCP2012_V03-02 EgammaAnalysis/ElectronTools
+  cvs co -r Moriond_2013_V01-1 EgammaAnalysis/ElectronTools
   
   # apply patch so we can configure the passing mask for the PassWP function
   set +o errexit
