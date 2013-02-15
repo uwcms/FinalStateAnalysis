@@ -7,6 +7,12 @@
 #include <TStopwatch.h>
 #include<fstream>
 #include <iostream>
+#include <TList.h>
+#include <TObject.h>
+#include <TCollection.h>
+#include <TKey.h>
+
+#define DEBUG 0
 
 using namespace std;
 
@@ -68,6 +74,20 @@ inline bool fexists(string path)
   ifile.close();
   return ret;
 }
+inline bool frootexists(string path)
+{
+  bool ret ;
+  TFile *f = TFile::Open(path.c_str());
+  if (!f) {
+    ret = false ;
+  }else {
+    ret = true ;
+  }
+  
+  f->Close();
+  f->~TFile();
+  return ret;
+}
 
 double getTimeWithoutStopping( TStopwatch* watch )
 {
@@ -82,63 +102,98 @@ int main(int argc, char* argv[]) {
 
   // only allow one argument for this which should be the python cfg file
   if ( argc < 4 ) {
-    std::cout << "Usage : " << argv[0] << " [directory with lists] [output_file_name] [input_files]+" << std::endl;
+    std::cout << __LINE__ << " Usage : " << argv[0] << " [directory with lists] [output_file_name] [input_files]+" << std::endl;
     return 42;
   }
+  cout << "argv read by .cc " ;
+  for ( int i = 0; i< argc; i++){
+    cout << argv[i] << " " ;
+  }
+  cout << endl;
   TStopwatch *global_watch = new TStopwatch();
   TStopwatch *watch = new TStopwatch();
   string lists_dir = argv[1];
   string outf_name = argv[2];
-  vector<string> inputs;
-  for( int i=3; i< argc; i++) inputs.push_back(argv[i]);
-  
+  string input_file_list = argv[3];
+  vector<string> inputs = split(input_file_list,',');
+  if (DEBUG)  cout << __LINE__ << endl;
+
   if( !fexists( (lists_dir+"/trees_location.list") ) ){
-    cout << "Cannot stat " << lists_dir << "/trees_location.list no such file" << endl;
+    cout << __LINE__ << " Cannot stat " << lists_dir << "/trees_location.list no such file" << endl;
     return 42;
   }
+  if (DEBUG)   cout << __LINE__ << endl;
 
   vector<string> trees_locations = read_file( (lists_dir+"/trees_location.list") );
   // cout << getTimeWithoutStopping( watch ) << ": spent reading trees locations..." << endl;
   
   //Create output file
   TFile* file = TFile::Open(outf_name.c_str(), "RECREATE");
+
+  if (DEBUG)   cout << __LINE__ << endl;
   for( vector<string>::const_iterator location = trees_locations.begin(); location != trees_locations.end(); ++location){
     cout << "Merging.. " << *location << endl;
     string loc_copy = *location;
-    vector<string> branches;
-    if( chop_tree ){
-      branches = read_file((lists_dir+"/"+loc_copy+".list"));
+    unsigned found = loc_copy.find("/");
+    loc_copy.replace(found,1,"_");
+    
+    while (found<loc_copy.size()){
+      found = loc_copy.find("/");
+      if (DEBUG) cout << __LINE__ << " found= " << found << endl; 
+      if (found <loc_copy.size())loc_copy.replace(found,1,"_");
     }
 
+    if (DEBUG)     cout << __LINE__ << endl;
+ 
     TChain *chain = new TChain(location->c_str());
     for(vector<string>::const_iterator input = inputs.begin(); input != inputs.end(); ++input) {
-      chain->Add(input->c_str());
+      if( !frootexists( (*input).c_str())) {
+	cout << __LINE__ << " Cannot stat "<< (*input)<< " no such file" << endl;
+	return 42;
+      }
+      chain->Add((*input).c_str());
+
     }
 
     //properly sets the branches
     if( fexists( (lists_dir+"/"+loc_copy+".list") ) ){
-      input_tree->SetBranchStatus("*",0); //deactivate all branches
-      for(vector<string>::const_iterator branch = branches.begin(); branch != branches.end(); ++branch) input_tree->SetBranchStatus(branch->c_str(),1); //activate this branch
+      vector<string> branches = read_file((lists_dir+"/"+loc_copy+".list"));
+      if (DEBUG)      cout << __LINE__ << " " << (lists_dir+"/"+loc_copy+".list") << " number of branches to switch on " <<branches.size() <<  endl;
+      chain->SetBranchStatus("*",0); //deactivate all branches
+//       TIter next(chain->GetListOfBranches());
+//       TKey *obj;
+//       while (((obj = (TKey*)next()))){
+// 	if (DEBUG) cout << __LINE__ << " " << obj->GetName() << endl; 
+// 	unsigned findname=((string)obj->GetName()).find("Gen");
+// 	if (findname< ((string)obj->GetName()).length())  chain->SetBranchStatus(obj->GetName(),1);
+//       }
+      for(vector<string>::const_iterator branch = branches.begin(); branch != branches.end(); ++branch) {
+	if (chain->GetBranch(branch->c_str())) chain->SetBranchStatus(branch->c_str(),1); //activate this branch
+      }
+
     }
     else{
-      input_tree->SetBranchStatus("*",1); //activate all branches
+      if (DEBUG)       cout << __LINE__ << " No branch list found at " << lists_dir << " in "<< (lists_dir+"/"+loc_copy+".list") <<endl;
+      chain->SetBranchStatus("*",1); //activate all branches
     }
 
 
     TDirectory* current_dir = make_dirs_and_enter(file, split(*location, '/') );
-    long int input_entries = input_tree->GetEntriesFast();
+//     long int input_entries = input_tree->GetEntriesFast();
 
     chain->Merge(file,0, "fast keep"); // keep->prevents file from beeing closed
     
-    long int new_entries = newtree->GetEntries();
+//     long int input_entries = chain->GetEntries();
+//     TTree * outtree = (TTree*) file->Get(location->c_str());
     
-    if(new_entries != input_entries){
-      cout << "Something wrong happened during merging, input and output trees have different number of entries. Exiting..." << endl;
-      delete newtree;
-      file->Close();
-      return 42;
-    }
-    delete newtree;
+
+//     If(outtree->GetEntries() != input_entries){
+//       cout << "Something wrong happened during merging, input and output trees have different number of entries. Exiting..." << endl;
+//       delete outtree;
+//       file->Close();
+//       return 42;
+//     }
+//     delete outtree;
     //file = TFile::Open(outf_name.c_str(), "UPDATE"); //Open it again because root is stupid and will close it when the TChain gets deleted. Looking for a better way though
   }
 
@@ -147,7 +202,7 @@ int main(int argc, char* argv[]) {
   cout << "Total time used: " << global_watch->RealTime() << endl;
   delete global_watch;
   delete watch;
-  return 0;
-}
+  return 0;}
+
 
 //To replace in a string replace( s.begin(), s.end(), ' ', '~' );

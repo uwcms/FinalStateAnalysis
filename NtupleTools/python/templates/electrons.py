@@ -56,6 +56,9 @@ id = PSet(
     objectRelIso = cms.string("({object}.dr03TkSumPt()"
                "+max({object}.dr03EcalRecHitSumEt()-1.0,0.0)"
                "+{object}.dr03HcalTowerSumEt())/{object}.pt()"),
+    objectTrkIsoDR03 = cms.string("{object}.dr03TkSumPt()"),
+    objectEcalIsoDR03 = cms.string("{object}.dr03EcalRecHitSumEt()"),
+    objectHcalIsoDR03 = cms.string("{object}.dr03HcalTowerSumEt()"),
     objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
     objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
     objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
