@@ -8,7 +8,7 @@ This could be improved with cython.
 
 Author: Evan K. Friis, UW Madison
 
->>> import ROOT
+>>> from FinalStateAnalysis.Utilities.rootbindings import ROOT
 >>> file = ROOT.TFile('../test/test_RooFunctorFromWS.root')
 >>> ws = file.Get('fit_efficiency')
 >>> functor = RooFunctorFromWS(ws, 'efficiency')
@@ -19,7 +19,8 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
-import ROOT
+from FinalStateAnalysis.Utilities.rootbindings import ROOT
+#ROOT.gSystem.Load("libFinalStateAnalysisStatTools")
 
 class RooFunctorFromWS(ROOT.RooFunctor):
     def __init__(self, workspace, functionname, var='x'):
@@ -27,7 +28,7 @@ class RooFunctorFromWS(ROOT.RooFunctor):
         self.function = workspace.function(functionname)
         # Get the ind. var and the parameters
         #self.x = workspace.var(var)
-        self.x = self.function.getParameter(var)
+        self.x = self.function.getParameter(var) if hasattr(self.function, 'getParameter') else self.function.getVariables().find(var)
         self.x.setRange(0, 1e99)
 
     def __call__(self, x):
