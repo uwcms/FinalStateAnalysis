@@ -73,9 +73,9 @@ if __name__ == "__main__":
 
     from rootpy.plotting import views
     import rootpy.io as io
-    import ROOT
+    from FinalStateAnalysis.Utilities.rootbindings import ROOT
     ROOT.gROOT.SetBatch(True)
-    ROOT.gSystem.Load("libFinalStateAnalysisStatTools")
+    #ROOT.gSystem.Load("libFinalStateAnalysisStatTools")
 
     # Build view of input histograms
     log.info("Merging input files")
