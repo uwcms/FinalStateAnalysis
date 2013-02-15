@@ -8,10 +8,9 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
-import ROOT
+from FinalStateAnalysis.Utilities.rootbindings import ROOT
 # Load the library with th1fmorph
-ROOT.gSystem.Load(
-    '$CMSSW_BASE/lib/$SCRAM_ARCH/libHiggsAnalysisCombinedLimit.so')
+#ROOT.gSystem.Load('$CMSSW_BASE/lib/$SCRAM_ARCH/libHiggsAnalysisCombinedLimit.so')
 from ROOT import th1fmorph
 
 def interpolate(x1, y1, x2, y2, x):
