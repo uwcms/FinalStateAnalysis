@@ -3,5 +3,5 @@
 <use   name="roofitcore"/>
 <use   name="FWCore/Framework"/>
 <export>
-  <lib   name="1"/>
+  <lib   name="FinalStateAnalysisStatTools"/>
 </export>
