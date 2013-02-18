@@ -22,16 +22,16 @@
 
 #include <stdio.h>
 
-namespace pattools { 
+namespace pattools {
 
   namespace { // hide a bunch of convenient typedefs
     typedef edm::ParameterSet PSet;
     typedef edm::VParameterSet VPSet;
-        
+
     typedef std::auto_ptr<pat::Electron> pelectron;
     typedef std::vector<pelectron> vpelectron;
     typedef pat::ElectronRef eRef;
-    
+
     typedef edm::ESHandle<CaloTopology> topo_hdl;
     typedef edm::ESHandle<CaloGeometry> geom_hdl;
 
@@ -42,23 +42,26 @@ namespace pattools {
 							   const bool isAOD,
 							   const bool isMC):
     _errPostfix("_error") {
-    
+
     _userP4Prefix = conf.getParameter<std::string>("userP4Prefix");
+
+    _smearRatio = conf.getParameter<double>("smearRatio");
+    _isSync = conf.getParameter<bool>("isSync");
 
     _vtxsrc = conf.getParameter<edm::InputTag>("vtxSrc");
     _rhosrc = conf.getParameter<edm::InputTag>("rhoSrc");
 
     _recHitsEB = conf.getParameter<edm::InputTag>("recHitsEB");
-    _recHitsEE = conf.getParameter<edm::InputTag>("recHitsEE");    
-    
+    _recHitsEE = conf.getParameter<edm::InputTag>("recHitsEE");
+
     // setup regression pool
-    VPSet available_regressions = 
+    VPSet available_regressions =
       conf.getParameterSetVector("available_regressions");
-    
+
     { // make iterators descope
       VPSet::const_iterator i = available_regressions.begin();
       VPSet::const_iterator e = available_regressions.end();
-      
+
       for( ; i != e; ++i) {
 	std::string type     = i->getParameter<std::string>("type");
 	std::string fWeights = i->getParameter<std::string>("weightsFile");
@@ -69,27 +72,27 @@ namespace pattools {
 	  _regs[type] = std::make_pair(version,new regCalc());
 	  _regs[type].second->initialize(fWeights,
 				(regCalc::ElectronEnergyRegressionType)index);
-	  if( _regs[type].second->isInitialized() ) 
+	  if( _regs[type].second->isInitialized() )
 	    std::cout << type << " is init!" << std::endl;
-	}	
+	}
 	else {
 	  _regs[type] = std::make_pair(-1,new regCalc());
 	  // compiler yells at me if I try to instantiate to NULL
 	  delete _regs[type].second;
 	  _regs[type].second = NULL;
 	}
-	
+
       }
     }
-    
+
     // setup calibration pool
-    VPSet available_calibrations = 
-      conf.getParameterSetVector("available_calibrations");  
+    VPSet available_calibrations =
+      conf.getParameterSetVector("available_calibrations");
     // get applied calibrations
-    vstring applyCalibrations = 
+    vstring applyCalibrations =
       conf.getParameter<vstring>("applyCalibrations");
     _dataset = conf.getParameter<std::string>("dataSet");
-    
+
     { // make iterators descope
       VPSet::const_iterator i = available_calibrations.begin();
       VPSet::const_iterator e = available_calibrations.end();
@@ -103,34 +106,34 @@ namespace pattools {
 	int applyCorrections = i->getParameter<int>("applyCorrections");
 
 	if( applyCorrections >= 0 ) {
-	  _calibs[type] = 
-	    new eCalib(_dataset,isAOD,isMC,true,applyCorrections,false);
+	  _calibs[type] =
+	    new eCalib(_dataset,isAOD,isMC,true,applyCorrections,_smearRatio,false,_isSync);
 	  if( std::find(iapp,eapp,type) != eapp)
 	    _apply[type] = regType;
-	}	
-	else 
+	}
+	else
 	  _calibs[type] = NULL;
-      }      
-    }    
-    
+      }
+    }
+
   }
- 
+
   PATElectronEnergyCorrection::~PATElectronEnergyCorrection() {
     calib_map::iterator i = _calibs.begin();
     calib_map::iterator e = _calibs.end();
-    for(; i != e; ++i) 
-      if(i->second) 
+    for(; i != e; ++i)
+      if(i->second)
 	delete i->second;
 
     reg_map::iterator ii = _regs.begin();
     reg_map::iterator ee = _regs.end();
-    for(; ii != ee; ++ii) 
+    for(; ii != ee; ++ii)
       if(ii->second.second)
 	delete ii->second.second;
   }
 
   PATElectronEnergyCorrection::value_type
-  PATElectronEnergyCorrection::operator() (const eRef& ele) {    
+  PATElectronEnergyCorrection::operator() (const eRef& ele) {
     value_type out = value_type(new value_type::element_type(*ele));
 
     apply_map::const_iterator app = _apply.begin();
@@ -140,7 +143,7 @@ namespace pattools {
 				   _recHitsEB,_recHitsEE);
 
     float max_cor_pt = out->pt();
-    
+
     for( ; app != end; ++app ) {
       value_type temp = value_type(new value_type::element_type(*ele));
 
@@ -159,12 +162,12 @@ namespace pattools {
 								 clustools,
 								 *_esetup,
 								 _rho,_nvtx);
-	  	  
-	  math::XYZTLorentzVector oldP4,newP4;	
+
+	  math::XYZTLorentzVector oldP4,newP4;
 	  // recalculate then propagate the regression energy and errors
 	  switch( thisReg.first ) {
 	  case 1: // V1 regression (just ecal energy)
-	    temp->setEcalRegressionEnergy(en,en_err); //HCP2012_V03-02 
+	    temp->setEcalRegressionEnergy(en,en_err); //HCP2012_V03-02
 	    temp->correctEcalEnergy(en,en_err); // this is for later versions?
 	    break;
 	  case 2: // V2 regression (including track variables)
@@ -180,11 +183,11 @@ namespace pattools {
 	    break;
 	  }
 	}
-	
+
 	pCalib thisCalib = _calibs[app->first];
 	if( thisCalib )
-	  thisCalib->correct(*(temp.get()),*_event,*_esetup);
-	
+	  thisCalib->correct(*(temp.get()),temp.get()->r9(),*_event,*_esetup,temp.get()->ecalRegressionEnergy(),temp.get()->ecalRegressionError());
+
 	out->addUserData<math::XYZTLorentzVector>(_userP4Prefix+
 						  _dataset+app->first,
 				  temp->p4(reco::GsfElectron::P4_COMBINATION));
@@ -205,18 +208,18 @@ namespace pattools {
 			  temp->p4Error(temp->candidateP4Kind()));
 	this_pt = temp->p4(temp->candidateP4Kind()).pt();
       }
-      max_cor_pt = std::max(max_cor_pt, 
+      max_cor_pt = std::max(max_cor_pt,
 			    this_pt);
     }
 
     out->addUserFloat("maxCorPt",max_cor_pt);
 
     return out;
-  }  
+  }
 
-  void PATElectronEnergyCorrection::setES(const edm::EventSetup& es) { 
-    _esetup = &es; 
-    
+  void PATElectronEnergyCorrection::setES(const edm::EventSetup& es) {
+    _esetup = &es;
+
     edm::ESHandle<CaloTopology> topo;
     _esetup->get<CaloTopologyRecord>().get(topo);
 
@@ -227,7 +230,7 @@ namespace pattools {
     _geom = geom.product();
   }
 
-  void PATElectronEnergyCorrection::setEvent(const edm::Event& ev) { 
+  void PATElectronEnergyCorrection::setEvent(const edm::Event& ev) {
     _event  = &ev;
 
     edm::Handle<double> rho;
@@ -237,5 +240,5 @@ namespace pattools {
     edm::Handle<reco::VertexCollection> vtxs;
     _event->getByLabel(_vtxsrc,vtxs);
     _nvtx = vtxs->size();
-  }  
+  }
 }
