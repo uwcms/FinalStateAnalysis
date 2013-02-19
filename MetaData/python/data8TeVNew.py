@@ -516,6 +516,22 @@ def build_data_set(pd, analyses):
       'analyses' : analyses,
       'calibrationTarget':'2012Jul13ReReco'
       },
+      'data_%s_Run2012D_16Jan2013_v1' % pd :{
+      'datasetpath' : "/%s/Run2012D-16Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
+      'firstRun' : 203768,
+      'lastRun' :  208686,
+      'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
+      },
+      'data_%s_Run2012D_16Jan2013_v2' % pd :{ #apparently some of these got re-re-re-recoed. Or something. v1 no longer exists for MuEG or DoubleMu IAR 19.Feb.2013
+      'datasetpath' : "/%s/Run2012D-16Jan2013-v2/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
+      'firstRun' : 203768,
+      'lastRun' :  208686,
+      'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
+      },
     }
    sample_dict = {
       'data_%s' % pd : subsample_dict.keys()
