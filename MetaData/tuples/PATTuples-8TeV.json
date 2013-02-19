@@ -36,6 +36,12 @@
   "data_DoubleElectron_Run2012C_PromptReco_v2_Run198934_201264" : "/hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/data_DoubleElectron_Run2012C_PromptReco_v2_Run198934_201264/",
   "data_DoubleElectron_Run2012C_PromptReco_v2_Run201265_203755" : "/hdfs/store/user/tapas/2012-10-30-8TeV-53X-PatTuple_IanEleIsolationFix/data_DoubleElectron_Run2012C_PromptReco_v2_Run201265_203755/",
   "data_DoubleElectron_Run2012D_PromptReco_v1" : "/hdfs/store/user/tapas/2012-12-05-8TeV-53X-PatTuple_HCP2012/data_DoubleElectron_Run2012D_PromptReco_v1/"
+
+  "data_SingleMu_Run2012A_13Jul2012_v1" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_SingleMu_Run2012A_13Jul2012_v1"
+  "data_SingleMu_Run2012B_13Jul2012_v1" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_SingleMu_Run2012B_13Jul2012_v1"
+  "data_SingleMu_Run2012C_24Aug2012_v1" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_SingleMu_Run2012C_24Aug2012_v1"
+  "data_SingleMu_Run2012C_PromptReco_v2_Run198934_201264" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_SingleMu_Run2012C_PromptReco_v2_Run198934_201264"
+  "data_SingleMu_Run2012C_PromptReco_v2_Run201265_203755" : "/hdfs/store/user/tapas/2012-10-02-8TeV-53X-PatTuple_ShareFSFix/data_SingleMu_Run2012C_PromptReco_v2_Run201265_203755"
 }
 
 
