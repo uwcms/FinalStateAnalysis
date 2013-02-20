@@ -40,10 +40,13 @@ id = PSet(
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
     #ZH Synch iso variables
-    objectDefaultChargedIso = cms.string('{object}.chargedHadronIso()'),
-    objectDefaultNeutralIso = cms.string('{object}.neutralHadronIso()'),
-    objectDefaultPhotonIso  = cms.string('{object}.photonIso()'),
-    objectDefaultPileupIso  = cms.string('{object}.userIso(2)'),
+    ## objectRelPFIsoDBZhLike = cms.string(
+    ##     "({object}.chargedHadronIso()"
+    ##     "+max({object}.photonIso()"
+    ##     "+{object}.neutralHadronIso()"
+    ##     "-0.5*{object}.userIso(2),0.0))"
+    ##     "/{object}.pt()"
+    ## ),
     
     objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
     objectEffectiveArea2011Data = cms.string('{object}.userFloat("ea_comb_Data2011_iso04_kt6PFJ")'),
@@ -75,10 +78,13 @@ id = PSet(
     objectE2x5Max = '{object}.scE2x5Max',
     objectE5x5 = '{object}.scE5x5',
     objectNearMuonVeto = 'overlapMuons({object_idx},0.05,"isGlobalMuon() & abs(eta()) < 2.4").size()',
-    objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
-    objectComesFromHiggs = 'comesFromHiggs({object_idx})',
-    objectGenPdgId       = '? ({object}.genParticleRef(0).isAvailable && {object}.genParticleRef(0).isNonnull) ? {object}.genParticleRef(0).pdgId() : -999',
-    objectGenCharge      = '? ({object}.genParticleRef(0).isAvailable && {object}.genParticleRef(0).isNonnull) ? {object}.genParticleRef(0).charge() : -999',
+    objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).pdgId() : -999',
+    objectComesFromHiggs = 'comesFromHiggs({object_idx}, 11, 1)',
+    objectGenPdgId       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).pdgId() : -999',
+    objectGenCharge      = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).charge() : -999',
+    objectGenEnergy      = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).energy() : -999',
+    objectGenEta         = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).eta()   : -999',
+    objectGenPhi         = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).phi()   : -999',
 )
 
 energyCorrections = PSet(

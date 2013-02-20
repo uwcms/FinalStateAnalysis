@@ -8,8 +8,8 @@ See: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012
 
 '''
 
-import ROOT
-ROOT.gSystem.Load("libFinalStateAnalysisTagAndProbe")
+from FinalStateAnalysis.Utilities.rootbindings import ROOT
+#ROOT.gSystem.Load("libFinalStateAnalysisTagAndProbe")
 
 
 def correct_mueg_mu_2011(pt, abseta):

@@ -36,7 +36,7 @@ They are available as python functions (taking the eta of both muons) as::
 '''
 
 import os
-import ROOT
+from FinalStateAnalysis.Utilities.rootbindings import ROOT
 
 _DATA_DIR = os.path.join(os.environ['CMSSW_BASE'], 'src',
                          "FinalStateAnalysis", "TagAndProbe", "data")
@@ -47,7 +47,7 @@ _DATA_FILES = {
 }
 
 # Load the 2011 muon HLT corrections and give the function a consistent name
-ROOT.gSystem.Load("libFinalStateAnalysisTagAndProbe")
+#ROOT.gSystem.Load("libFinalStateAnalysisTagAndProbe")
 muon_pog_Mu13Mu8_eta_eta_2011 = ROOT.Eff_HLT_Mu13_Mu8_2011_TPfit_RunAB_EtaEta_DATAoverMC
 muon_pog_Mu17Mu8_eta_eta_2011 = ROOT.Eff_HLT_Mu17_Mu8_2011_TPfit_RunAB_EtaEta_DATAoverMC
 

@@ -160,6 +160,9 @@ class PATFinalStateEvent {
     /// Access to particle flow collections
     const reco::PFCandidateCollection& pflow() const;
 
+    //Access to GenParticleRefProd
+    const reco::GenParticleRefProd genParticleRefProd() const {return genParticles_;} 
+
     /// Get the version of the FinalState data formats API
     /// This allows you to detect which version of the software was used
     /// So that the methods can be update.

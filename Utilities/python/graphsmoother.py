@@ -6,7 +6,7 @@ Author: Evan K. Friis, UW Madison
 
 Check with a linear function with an outlier at x = 3
 
->>> import ROOT
+>>> from FinalStateAnalysis.Utilities.rootbindings import ROOT
 >>> graph = ROOT.TGraph(5)
 >>> graph.SetPoint(0, 1, 1)
 >>> graph.SetPoint(1, 2, 2)
@@ -35,9 +35,9 @@ True
 '''
 
 
-import ROOT
+from FinalStateAnalysis.Utilities.rootbindings import ROOT
 
-ROOT.gSystem.Load('libFinalStateAnalysisUtilities')
+#ROOT.gSystem.Load('libFinalStateAnalysisUtilities')
 
 def smooth_graph(tgraph, width):
     if isinstance(tgraph, ROOT.TGraphAsymmErrors):
