@@ -165,7 +165,7 @@ final_states = [x.strip() for x in options.channels.split(',')]
 def expanded_final_states(input):
     for fs in input:
         if fs in _FINAL_STATE_GROUPS:
-            for subfs in fs.split(','):
+            for subfs in _FINAL_STATE_GROUPS[fs].split(','):
                 yield subfs.strip()
         else:
             yield fs
