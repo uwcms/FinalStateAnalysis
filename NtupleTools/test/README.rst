@@ -1,36 +1,45 @@
 Higgs Analysis Software
 =======================
 
-TTree Generation
-----------------
-
 The file ``make_ntuples_cfg.py`` generates TTrees for all Higgs final states of 
 interest.  It can be tested in place by::
 
-    cmsRun make_ntuples_cfg.py maxEvents=50 inputFiles=my_file.root
+    cmsRun make_ntuples_cfg.py channels="em,mt" [options] inputFiles=file.root
 
-The jobs can be submitted to condor using the ``submit_job.py`` script.  Example
-to submit jobs based on the 2012-03-05-EWKPatTuple::
+There are some additional pre-defined groups of channels which are expanded
+for your convenience::
 
-   submit_job.py VH JOBID make_ntuples_cfg.py --input-dir=/hdfs/store/user/efriis/2012-03-05-EWKPatTuple/{sample}/ --input-files-per-job=5 > do_higgs.txt 
+    zh = eeem, eeet, eemt, eett, emmm, emmt, mmmt, mmtt,
+    zz = eeee, eemm, mmmm,
+    zgg = eegg, mmgg
+    llt = emt, mmt, eet, mmm, emm
+    zg = mmg,eeg
+    zgxtra = mgg, emg, egg,
+
+
+Ntuple Options
+--------------
+
+The available command line options (which are enabled/disabled by setting to
+zero or one) are::
+
+    skipEvents=0            - events to skip (for debugging)
+    maxEvents=-1            - events to run on
+    rerunMCMatch=0          - rerun MC matching
+    eventView=0             - make a row in the ntuple correspond to an event
+                              instead of a final state in an event.
+    passThru=0              - turn off any preselection/skim
+    rerunFSA=0              - regenerate PATFinalState dataformats
+    verbose=0               - print out timing information
+    noPhotons=0             - don't build things which depend on photons.
+
+Batch submission
+----------------
+
+The jobs can be submitted to condor using the ``submit_job.py`` script, found in
+the FinalStateAnalysis/Utilities/scripts folder.  Example to submit jobs based
+on the 2012-03-05-EWKPatTuple::
+
+   submit_job.py JOBID make_ntuples_cfg.py --input-dir=/hdfs/store/user/efriis/2012-03-05-EWKPatTuple/{sample}/ --input-files-per-job=5 > do_higgs.txt 
    # Submit the jobs
    bash < do_higgs.txt
-
-The ``do_higgs.txt`` should be committed and tagged after each job submission (to keep track of what 
-SW was used to produce the ntuples).
-
-
-Higgs TTree Definitions
------------------------
-
-This directory contains the definitions of the Higgs ntuple content.
-Each final state (e-mu = em, e-mu-tau = emt) of interest has a .py file
-defining the content.
-
-Common blocks of ntuples are grouped together into cfi files::
-
-    h2tau_ntuples_cfi.py 
-    trilepton_ntuples_cfi.py
-    quad_ntuples_cfi.py
-    tnp_ntuples_cfi.py
-
