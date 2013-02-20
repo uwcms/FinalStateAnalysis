@@ -1,5 +1,5 @@
-Higgs Analysis Software
-=======================
+FSA Flat Ntuple Generation
+==========================
 
 The file ``make_ntuples_cfg.py`` generates TTrees for all Higgs final states of 
 interest.  It can be tested in place by::
