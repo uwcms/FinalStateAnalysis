@@ -254,7 +254,7 @@ def make_ntuple(*legs, **kwargs):
     #   then order third and fourth by pt
     make_unique = True
     if 'noclean' in kwargs:
-        make_unique = False
+        make_unique = not kwargs['noclean']
     if make_unique:
         for type, count in counts.iteritems():
             if count == 2:
