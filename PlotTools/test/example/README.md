@@ -5,6 +5,29 @@ In this directory are a few files which illustrate using the tools in
 PlotTools to analyze flat ROOT ntuples into histogram files, and then to make
 pretty plots from the histograms.
 
+MyAnalyzer.py
+-------------
+
+The analysis logic lives here.  This file analyzes a sample (defined in inputs)
+and produces a ROOT file with histograms. See the comments in that file for
+more information on what it is doing.
+
+Running MyAnalyzer.py
+---------------------
+
+The minimal way to run the analyzer is by directly using the "mega" command line
+program.
+
+```shell
+mega MyAnalyzer.py inputs/JOBID/SAMPLE.txt outputfile.root
+```
+
+will process the files listed in SAMPLE.txt and create outptufile.root with the
+histograms.   For a less tedious way of running the analysis, see the next
+section.
+
+Getting Fancy (a work in progress, not yet complete)
+==================================
 
 The inputs directory
 --------------------
@@ -22,30 +45,13 @@ The inputs directory
   collection of files.  For data, this is the integrated luminosity, for MC
   the effective integrated luminosity.
 
+```shell
   rake "getmeta[inputs/MyJobID, mm/ntuple/Final, 8]"
+````
 
   Will build for each SAMPLE.txt in inputs/MyJobID a SAMPLE.lumicalc.sum
   which has the (effective) integrated lumi.  
   
-
-MyAnalyzer.py
--------------
-
-The analysis logic lives here.  This file analyzes a sample (defined in inputs)
-and produces a ROOT file with histograms. See the comments in that file for
-more information on what it is doing.
-
-Running MyAnalyzer.py
----------------------
-
-The minimal way to run the analyzer is by directly using the "mega" command line
-program.
-
-mega MyAnalyzer.py inputs/JOBID/SAMPLE.txt outputfile.root
-
-will process the files listed in SAMPLE.txt and create outptufile.root with the
-histograms.   For a less tedious way of running the analysis, see the next
-section.
 
 Rakefile
 --------
@@ -56,8 +62,10 @@ analysis tasks.
 
 By running:
 
+```shell
    export jobid=MYJOBID (just once)
    rake results/$jobid/MyAnalyzer/SAMPLE.root
+```
 
 rake will look at the desired output path and deduce that it should run
 MyAnalyzer.py over the inputs in SAMPLE.txt and put the output in the path given
