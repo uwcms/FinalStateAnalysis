@@ -1,14 +1,8 @@
-TTree Definitions
------------------
+Ntuple defintion and plumbing
+-----------------------------
 
-This directory contains the definitions of the Higgs ntuple content.
-Each final state (e-mu = em, e-mu-tau = emt) of interest has a .py file
-defining the content.
+Defintions of how to build Ntuple branches from FSA objects are found in the
+templates/ folder.
 
-Common blocks of ntuples are grouped together into cfi files::
-
-    h2tau_ntuples_cfi.py 
-    trilepton_ntuples_cfi.py
-    quad_ntuples_cfi.py
-    tnp_ntuples_cfi.py
-
+ntuple_builder.py adds production of an ntuple for a given final state to a
+cms.Process.  Used in ../test/make_ntuples_cfg.py.
