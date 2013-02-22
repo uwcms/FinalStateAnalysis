@@ -80,3 +80,9 @@ fi
 export pu2011JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/PileUp/pileup_2011_JSON_pixelLumi.txt
 # Valid up to the September 12 technical stop, see https://hypernews.cern.ch/HyperNews/CMS/get/physics-validation/1882.html
 export pu2012JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/pileup_JSON_DCSONLY_190389-208686_corr.txt 
+
+#check if dev area is up to date
+oldPath=$PWD
+cd $fsa
+check_git_updates.sh
+cd $oldPath
