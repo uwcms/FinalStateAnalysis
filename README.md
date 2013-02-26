@@ -43,7 +43,7 @@ Checkout the FinalStateAnalysis repository::
 
 ```bash
   cd MyWorkingAreaName/src
-  git clone https://github.com/uwcms/FinalStateAnalysis.git
+  git clone --recursive https://github.com/uwcms/FinalStateAnalysis.git
 ```
 
 This will checkout the lastest and greatest version of the code.  You might also want the HCP2012 compatible branch, if so you should additionally run:
