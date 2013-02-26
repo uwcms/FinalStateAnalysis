@@ -26,12 +26,12 @@ try:
       br(mass,'WW')
 except (ImportError, ValueError) as error:
       #define / override functions to avoid crashes
-      def br(*args, **kwargs): 
+      def br(*args, **kwargs):
             return -99
       def xs(*args, **kwargs):
-            return -99
+            return -99, (-99, 99)
       def xsbr(*args, **kwargs):
-            return -99
+            return -99, (-99, 99)
 
 
 # Figure this out later.
@@ -437,7 +437,7 @@ for mass in range(110, 150, 10):
 for mass in range(110, 145, 5):
     datadefs['VH_H2Tau_M-%s' % mass] = {}
     datadefs['VH_H2Tau_M-%s' % mass]['x_sec'] = xsbr(8,mass,'wh','tautau')[0]*br_w_leptons + xsbr(8,mass,'zh','tautau')[0]*br_z_leptons + xsbr(8,mass,'tth','tautau')[0]*br_w_leptons**2
-    
+
 ## datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966*br_w_leptons + 0.4483*br_z_leptons + 0.1470*square(br_w_leptons))*7.04E-02
 ## datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095*br_w_leptons + 0.3473*br_z_leptons + 0.1157*square(br_w_leptons))*5.48E-02
 ## datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713*br_w_leptons + 0.2728*br_z_leptons + 0.09207*square(br_w_leptons))*3.54E-02
