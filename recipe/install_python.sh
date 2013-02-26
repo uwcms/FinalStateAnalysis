@@ -48,7 +48,7 @@ pip install -U argparse
 echo "Installing pudb <-- interactive debugging"
 pip install -U pudb
 echo "Installing yellowhiggs <-- higgs yellow report x-sections lookup table"
-pip install -U yellowhiggs
+pip install -e $recipe/external/src/yellowhiggs
 
 echo "Installing rootpy"
 pip install -e $recipe/external/src/rootpy
