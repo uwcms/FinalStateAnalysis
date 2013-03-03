@@ -109,6 +109,7 @@ trigger = PSet(
     objectMatchesMu17Ele8Path      = r'matchToHLTPath({object_idx}, "HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
     objectMatchesMu8Ele17Path      = r'matchToHLTPath({object_idx}, "HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+")',
     objectMatchesIsoMuGroup        = r'matchToHLTPath({object_idx}, "HLT_IsoMu17_v\\d+,HLT_IsoMu20_v\\d+,HLT_IsoMu24_v\\d+,HLT_IsoMu24_eta2p1_v\\d+,HLT_IsoMu30_v\\d+,HLT_IsoMu30_eta2p1_v\\d+")',
+    objectMatchesIsoMu24eta2p1     = r'matchToHLTPath({object_idx}, "HLT_IsoMu24_eta2p1_v\\d+")',
 )
 
 
