@@ -31,6 +31,7 @@ The available options (which are set to zero or one) are::
     rerunFSA=0              - regenerate PATFinalState dataformats
     verbose=0               - print out timing information
     noPhotons=0             - don't build things which depend on photons.
+    suffix=''               - add an optional suffix to the FSA producers used
 
 '''
 
@@ -56,6 +57,7 @@ options = TauVarParsing.TauVarParsing(
     rerunFSA=0,  # If one, rebuild the PAT FSA events
     verbose=0,  # If one print out the TimeReport
     noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
+    suffix='', # add optional suffix to FSA producers.
 )
 
 options.outputFile = "ntuplize.root"
@@ -174,7 +176,7 @@ print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
     analyzer = make_ntuple(*final_state)
     add_ntuple(final_state, analyzer, process,
-               process.schedule, options.eventView)
+               process.schedule, options.eventView, suffix=options.suffix)
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 
