@@ -209,10 +209,12 @@ def make_ntuple(*legs, **kwargs):
     output = cms.EDFilter(
         "PATFinalStateAnalysisFilter",
         weights=cms.vstring(),
+        # input final state collection.
         src=cms.InputTag("finalState" + "".join(
             _producer_translation[x] for x in legs) 
             + producer_suffix),
         evtSrc=cms.InputTag("patFinalStateEventProducer"),
+        # counter of events before any selections
         skimCounter=cms.InputTag("eventCount", "", "TUPLE"),
         analysis=cms.PSet(
             selections=cms.VPSet(),
@@ -222,6 +224,7 @@ def make_ntuple(*legs, **kwargs):
                 take=cms.uint32(50),
                 plot=cms.PSet(
                     histos=cms.VPSet(),  # Don't make any final plots
+                    # ntuple has all generated branches in it.
                     ntuple=ntuple_config.clone(),
                 )
             ),
