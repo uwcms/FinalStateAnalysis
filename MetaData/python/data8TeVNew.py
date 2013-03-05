@@ -19,6 +19,21 @@ from datacommon import square, cube, quad, picobarns, \
 
 from data8TeV import datadefs as datadefs52
 
+from string import Template
+
+try:
+      from yellowhiggs import xs, br, xsbr
+      br(mass,'WW')
+except (ImportError, ValueError) as error:
+      #define / override functions to avoid crashes
+      def br(*args, **kwargs):
+            return -99
+      def xs(*args, **kwargs):
+            return -99, (-99, 99)
+      def xsbr(*args, **kwargs):
+            return -99, (-99, 99)
+
+
 # Figure this out later.
 data_name_map = {}
 
@@ -117,7 +132,7 @@ datadefs = {
    'x_sec' : 3503.71,
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },   
+   },
 
    'DYJetsToLL_M-10To50filter_8TeV-madgraph' : {
    'analyses': ['ZZ'],
@@ -152,7 +167,7 @@ datadefs = {
 
    'ZZTo2mu2tau_8TeV-powheg-pythia6' : {
    'analyses': ['ZZ'],
-   'datasetpath' : "/ZZTo2mu2tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM ",
+   'datasetpath' : "/ZZTo2mu2tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
@@ -180,7 +195,7 @@ datadefs = {
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
-   
+
    'WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola' : {
    'analyses' : ['Wbb'],
    'datasetpath' : "/WbbJetsToLNu_Massive_TuneZ2star_8TeV-madgraph-pythia6_tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
@@ -291,6 +306,20 @@ for mass in range(80,150, 10) + range(160, 220, 20) + range(250, 550, 50) + rang
        'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
 
+aTGC_path = Template('/ZZ4L_Sherpa_aTGC_f${i}_${f1}0_${f2}0_v2/iross-SUMMER12-AODSIM-START53_V7C_${i}_${f1}_${f2}-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER')
+
+for coup in ["4","5"]:
+    for coup1 in ["0p015","0p000","m0p015"]:
+        for coup2 in ["0p015","0p000","m0p015"]:
+            datadefs['ZZ4L_f%s_%s0_%s0' % ( coup, coup1, coup2 )] = {
+               'analyses': ['ZZ'],
+               'datasetpath' : aTGC_path.substitute(i=coup,f1=coup1,f2=coup2),
+               'dbs' : "cms_dbs_ph_analysis_01",
+               'x_sec' : -999,
+               'pu' : 'S10',
+               'calibrationTarget':'Summer12_DR53X_HCP2012'
+               }
+
 datadefs['SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola'] = {
    'analyses': ['HTT'],
    'datasetpath': "/SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM",
@@ -383,7 +412,6 @@ for mass in range(120,155,5):
       }
 
 
-
 # Add VH files
 for mass in range(110, 145, 5):
    datadefs['VHtautau_lepdecay_%i' % mass] = {
@@ -400,21 +428,19 @@ for mass in range(110, 150, 10):
       'datasetpath': "/WH_ZH_TTH_HToWW_M-%i_lepdecay_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
        'calibrationTarget':'Summer12_DR53X_HCP2012',
-      'x_sec' : -999,
+      'x_sec' : (xs(8,mass,'wh')[0]+xs(8,mass,'zh')[0]+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
       }
 
 
 
 # We use the same name for the 53X lepdecay only samples (sigh)
-datadefs['VH_H2Tau_M-110'] = {}
-datadefs['VH_H2Tau_M-120'] = {}
-datadefs['VH_H2Tau_M-130'] = {}
-datadefs['VH_H2Tau_M-140'] = {}
+for mass in range(110, 145, 5):
+    datadefs['VH_H2Tau_M-%s' % mass] = {}
+    datadefs['VH_H2Tau_M-%s' % mass]['x_sec'] = xsbr(8,mass,'wh','tautau')[0]*br_w_leptons + xsbr(8,mass,'zh','tautau')[0]*br_z_leptons + xsbr(8,mass,'tth','tautau')[0]*br_w_leptons**2
 
-datadefs['VH_H2Tau_M-110']['x_sec'] = (1.060*br_w_leptons + 0.5869*br_z_leptons + 0.1887*square(br_w_leptons))*7.95E-02
-datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966*br_w_leptons + 0.4483*br_z_leptons + 0.1470*square(br_w_leptons))*7.04E-02
-datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095*br_w_leptons + 0.3473*br_z_leptons + 0.1157*square(br_w_leptons))*5.48E-02
-datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713*br_w_leptons + 0.2728*br_z_leptons + 0.09207*square(br_w_leptons))*3.54E-02
+## datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966*br_w_leptons + 0.4483*br_z_leptons + 0.1470*square(br_w_leptons))*7.04E-02
+## datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095*br_w_leptons + 0.3473*br_z_leptons + 0.1157*square(br_w_leptons))*5.48E-02
+## datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713*br_w_leptons + 0.2728*br_z_leptons + 0.09207*square(br_w_leptons))*3.54E-02
 
 # Add data files
 
@@ -481,10 +507,10 @@ def build_data_set(pd, analyses):
       'datasetpath' : "/%s/Run2012C-24Aug2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_198022-198523_8TeV_24Aug2012ReReco_Collisions12_JSON.txt",
       'firstRun' : 198022,
-      'lastRun' : 198523, 
+      'lastRun' : 198523,
       'analyses' : analyses,
       'calibrationTarget':'2012Jul13ReReco'
-      },      
+      },
       'data_%s_Run2012C_EcalRecover_11DEC2012_v1' % pd :{
       'datasetpath' : "/%s/Run2012C-EcalRecover_11Dec2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_201191-201191_8TeV_11Dec2012ReReco-recover_Collisions12_JSON.txt",
@@ -495,6 +521,22 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012D_PromptReco_v1' % pd :{
       'datasetpath' : "/%s/Run2012D-PromptReco-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
+      'firstRun' : 203768,
+      'lastRun' :  208686,
+      'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
+      },
+      'data_%s_Run2012D_16Jan2013_v1' % pd :{
+      'datasetpath' : "/%s/Run2012D-16Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
+      'firstRun' : 203768,
+      'lastRun' :  208686,
+      'analyses' : analyses,
+      'calibrationTarget':'2012Jul13ReReco'
+      },
+      'data_%s_Run2012D_16Jan2013_v2' % pd :{ #apparently some of these got re-re-re-recoed. Or something. v1 no longer exists for MuEG or DoubleMu IAR 19.Feb.2013
+      'datasetpath' : "/%s/Run2012D-16Jan2013-v2/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
       'firstRun' : 203768,
       'lastRun' :  208686,

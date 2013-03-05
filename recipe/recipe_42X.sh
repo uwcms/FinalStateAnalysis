@@ -6,6 +6,19 @@ pushd $CMSSW_BASE/src
 
 # Always need these
 addpkg DataFormats/PatCandidates  V06-04-19-05
+# PAT RECIPE V08-06-58 IAR 27.Sep.2012
+# patch in 44X electrons so regression BS works
+cvs up -r 1.44 DataFormats/PatCandidates/interface/Electron.h
+cvs up -r 1.33 DataFormats/PatCandidates/src/Electron.cc
+addpkg PhysicsTools/PatAlgos V08-06-58
+addpkg PhysicsTools/PatUtils V03-09-18
+addpkg CommonTools/ParticleFlow B4_2_X_V00-03-05
+addpkg PhysicsTools/SelectorUtils V00-03-24
+addpkg PhysicsTools/UtilAlgos V08-02-14 
+# Remove this junky MHT package, we don't need it and it causes
+# link errors with the MVAMET
+rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer*
+
 
 if [ "$LIMITS" = "1" ]
 then
@@ -17,20 +30,6 @@ fi
 
 if [ "$PATPROD" = "1" ]
 then
-
-  # PAT RECIPE V08-06-58 IAR 27.Sep.2012
-  #addpkg DataFormats/PatCandidates  V06-04-19-05
-  # patch in 44X electrons so regression BS works
-  cvs up -r 1.44 DataFormats/PatCandidates/interface/Electron.h
-  cvs up -r 1.33 DataFormats/PatCandidates/src/Electron.cc
-  addpkg PhysicsTools/PatAlgos V08-06-58
-  addpkg PhysicsTools/PatUtils V03-09-18
-  addpkg CommonTools/ParticleFlow B4_2_X_V00-03-05
-  addpkg PhysicsTools/SelectorUtils V00-03-24
-  addpkg PhysicsTools/UtilAlgos V08-02-14 
-  # Remove this junky MHT package, we don't need it and it causes
-  # link errors with the MVAMET
-  rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer*
 
   #Update to calculate Single Tower H/E in 42X
   #https://twiki.cern.ch/twiki/bin/view/CMS/HoverE2012
@@ -50,6 +49,11 @@ then
   # apply patch so we can configure the passing mask for the PassWP function
   patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaAnalysisTools_configpatch.patch
 
+  # patch (really an un-patch, but who's counting) electron corrections in 42x IAR 13.Feb.2013
+  pushd $CMSSW_BASE/src/FinalStateAnalysis/
+  patch -p1 < recipe/patches/electronCorr_42X.patch 
+  popd
+
   # MVA MET + PU Jet ID
   # This must go *before* the Tau POG checkout as it fucks with it.
   pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
@@ -59,10 +63,10 @@ then
   echo "Checking out Tau POG recipe"
   addpkg DataFormats/TauReco CMSSW_5_2_4 # yes, this is correct
   addpkg RecoTauTag/TauTagTools CMSSW_5_2_4
-  cvs co -r V01-04-21-4XX RecoTauTag/RecoTau
-  cvs co -r V01-04-08-4XX RecoTauTag/Configuration
+  cvs co -r V01-04-23-4XX-00 RecoTauTag/RecoTau
+  cvs co -r V01-04-10-4XX RecoTauTag/Configuration
   cvs co -r V00-04-00 CondFormats/EgammaObjects
-  cvs up -r 1.52.10.3 PhysicsTools/PatAlgos/python/tools/tauTools.py
+  cvs up -r 1.52.10.4 PhysicsTools/PatAlgos/python/tools/tauTools.py
   # Apply an optimization - don't build taus w/ pt < 19
   # Don't crash if patch already appliede
   set +o errexit 

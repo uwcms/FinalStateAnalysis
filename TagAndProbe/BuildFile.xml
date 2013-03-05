@@ -3,8 +3,7 @@
 <use   name="FinalStateAnalysis/DataFormats"/>
 <use   name="DataFormats/Luminosity"/>
 <use   name="PhysicsTools/SelectorUtils"/>
-<use   name="FinalStateAnalysis/Utilities"/>
 <use   name="root"/>
 <export>
-  <lib   name="1"/>
+  <lib   name="FinalStateAnalysisTagAndProbe"/>
 </export>

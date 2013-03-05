@@ -59,6 +59,8 @@ patElectronEnergyCorrections = cms.EDProducer(
     src = cms.InputTag("fixme"),
     isAOD = cms.bool(True),
     isMC = cms.bool(True),
+    smearRatio = cms.double(0.607), #fraction of data added on top of HCP -- (19.6-12.2)/12.2 = 0.607 for full 2012
+    isSync = cms.bool(False), #if True-->use deterministic smearing
     vtxSrc = cms.InputTag("selectPrimaryVerticesQuality"),
     rhoSrc = cms.InputTag("kt6PFJets","rho"),
     userP4Prefix = cms.string("EGCorr_")

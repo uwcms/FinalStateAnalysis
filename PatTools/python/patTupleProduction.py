@@ -115,9 +115,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     add_fsa_random_seeds(process)
 
     if cmssw_major_version() == 5 and cmssw_minor_version() >= 3:
-        process.load('Configuration.Geometry.GeometryIdeal_cff')
+        process.load('Configuration.Geometry.GeometryDB_cff')
     else:
-        process.load('Configuration.StandardSequences.GeometryIdeal_cff')
+        process.load('Configuration.StandardSequences.GeometryDB_cff')
 
     process.load('Configuration.StandardSequences.MagneticField_cff')
     process.load(
