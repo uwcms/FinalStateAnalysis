@@ -157,10 +157,10 @@ PATQuadFinalStateBuilderT<FinalState>::produce(
 
     // Create the output candidate object, apply cuts, and push to the event
 
-    FinalState outputCand(leg1, leg2, leg3, leg4, evtPtr);
+    FinalState outputCand( leg1, leg2, leg3, leg4, evtPtr );
 
-    if (cut_(outputCand))
-        output->push_back(outputCand);
+    if ( cut_(outputCand) )
+        output->push_back( outputCand );
 
-    evt.put(output);
+    evt.put( output );
 }
