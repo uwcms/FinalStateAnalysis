@@ -28,14 +28,18 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATQuadFinalStateT.h"
 
+#include "DataFormats/Math/interface/deltaR.h"
+#include "Math/GenVector/VectorUtil.h"
+
+
 template<class FinalState>
 class PATQuadFinalStateBuilderHzzT : public edm::EDProducer
 {
     public:
         typedef std::vector<FinalState> FinalStateCollection;
 
-        PATQuadFinalStateBuilderT(const edm::ParameterSet& pset);
-        virtual ~PATQuadFinalStateBuilderT(){}
+        PATQuadFinalStateBuilderHzzT(const edm::ParameterSet& pset);
+        virtual ~PATQuadFinalStateBuilderHzzT(){}
         void produce(edm::Event& evt, const edm::EventSetup& es);
 
     private:
@@ -54,7 +58,7 @@ class PATQuadFinalStateBuilderHzzT : public edm::EDProducer
  * Class constructor. Parse collections from the EDM framework.
  */
 template<class FinalState>
-PATQuadFinalStateBuilderT<FinalState>::PATQuadFinalStateBuilderT(
+PATQuadFinalStateBuilderHzzT<FinalState>::PATQuadFinalStateBuilderHzzT(
         const edm::ParameterSet& pset):
     cut_(pset.getParameter<std::string>("cut"), true)
 {
@@ -74,7 +78,7 @@ PATQuadFinalStateBuilderT<FinalState>::PATQuadFinalStateBuilderT(
  * pushed back into the event.
  */
 template<class FinalState> void
-PATQuadFinalStateBuilderT<FinalState>::produce(
+PATQuadFinalStateBuilderHzzT<FinalState>::produce(
         edm::Event& evt, const edm::EventSetup& es) {
 
     edm::Handle<edm::View<PATFinalStateEvent> > fsEvent;
@@ -100,13 +104,13 @@ PATQuadFinalStateBuilderT<FinalState>::produce(
     edm::Handle<edm::View<typename FinalState::daughter4_type> > leg4s;
     evt.getByLabel( leg4Src_, leg4s );
 
-    edm::Handle<edm::View<typename FinalState::daugher4_type> > photons;
+    edm::Handle<edm::View<pat::Photon> > photons;
     evt.getByLabel( photonSrc_, photons );
 
 
 
     // Load leptons into a set to ensure no duplicates
-    // ToDo: consolidate into a single function
+    // To-Do: consolidate into a single function
 
     std::set<reco::CandidatePtr> lepton_set;
 
@@ -114,25 +118,25 @@ PATQuadFinalStateBuilderT<FinalState>::produce(
     {
         edm::Ptr<typename FinalState::daughter1_type> leg1 = leg1s->ptrAt(iLeg1);
         assert( leg1.isNonnull() );
-        lepton_set.insert( reco::Candidate(leg1) );
+        lepton_set.insert( reco::CandidatePtr(leg1) );
     }
     for ( size_t iLeg2 = 0; iLeg2  < leg2s->size(); ++iLeg2 )
     {
         edm::Ptr<typename FinalState::daughter2_type> leg2 = leg2s->ptrAt(iLeg2);
         assert( leg2.isNonnull() );
-        lepton_set.insert( reco::Candidate(leg2) );
+        lepton_set.insert( reco::CandidatePtr(leg2) );
     }
     for ( size_t iLeg3 = 0; iLeg3  < leg3s->size(); ++iLeg3 )
     {
         edm::Ptr<typename FinalState::daughter3_type> leg3 = leg3s->ptrAt(iLeg3);
         assert( leg3.isNonnull() );
-        lepton_set.insert( reco::Candidate(leg3) );
+        lepton_set.insert( reco::CandidatePtr(leg3) );
     }
     for ( size_t iLeg4 = 0; iLeg4  < leg4s->size(); ++iLeg4 )
     {
         edm::Ptr<typename FinalState::daughter4_type> leg4 = leg4s->ptrAt(iLeg4);
         assert( leg4.isNonnull() );
-        lepton_set.insert( reco::Candidate(leg4) );
+        lepton_set.insert( reco::CandidatePtr(leg4) );
     }
 
     // load the lepton set into a vector
@@ -143,13 +147,39 @@ PATQuadFinalStateBuilderT<FinalState>::produce(
 
     // Map the photons to their nearest lepton
 
-    std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::Photon> > photonMap;
+    std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::Photon> > > photonMap;
     for ( size_t i = 0; i < photons->size(); ++i )
     {
-        reco::CandiatePtr nearestLepton = lepton_list.at(0);
+        edm::Ptr<pat::Photon> current_photon = photons->ptrAt(i);
+
+        reco::CandidatePtr nearest_lepton = lepton_list.at(0);
+        double nearest_dR = ROOT::Math::VectorUtil::DeltaR( nearest_lepton->p4(), current_photon->p4() );
 
         for ( size_t j = 1; j < lepton_list.size(); ++j )
         {
+            reco::CandidatePtr current_lepton = lepton_list.at(j);
+            double current_dR = ROOT::Math::VectorUtil::DeltaR( current_lepton->p4(), current_photon->p4() );
+
+            // choose closest lepton
+            if ( current_dR < nearest_dR )
+            {
+                nearest_dR = current_dR;
+                nearest_lepton = current_lepton;
+            }
+        }
+
+
+        // assign the photon to the lepton. One lepton may have more than one
+        // photon attached to it.
+        if ( photonMap.count( nearest_lepton ) == 0 )
+        {
+            std::vector<edm::Ptr<pat::Photon> > phot_vec;
+            phot_vec.push_back( current_photon );
+            photonMap[nearest_lepton] = phot_vec;
+        }
+        else if ( photonMap.count( nearest_lepton ) == 1 )
+        {
+            photonMap[nearest_lepton].push_back( current_photon );
         }
     }
 
@@ -157,10 +187,12 @@ PATQuadFinalStateBuilderT<FinalState>::produce(
 
     // Create the output candidate object, apply cuts, and push to the event
 
+    /*
     FinalState outputCand( leg1, leg2, leg3, leg4, evtPtr );
 
     if ( cut_(outputCand) )
         output->push_back( outputCand );
 
     evt.put( output );
+    */
 }
