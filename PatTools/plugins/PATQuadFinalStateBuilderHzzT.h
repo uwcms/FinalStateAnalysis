@@ -32,6 +32,10 @@
 #include "Math/GenVector/VectorUtil.h"
 
 
+// function prototype
+bool comparePt( reco::CandidatePtr A, reco::CandidatePtr B );
+
+
 template<class FinalState>
 class PATQuadFinalStateBuilderHzzT : public edm::EDProducer
 {
@@ -51,7 +55,6 @@ class PATQuadFinalStateBuilderHzzT : public edm::EDProducer
         edm::InputTag evtSrc_;
         StringCutObjectSelector<PATFinalState> cut_;
 
-        bool comparePt( reco::CandidatePtr A, reco::CandidatePtr B );
 };
 
 
@@ -242,8 +245,7 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
  * @param B Second lepton
  * @return True iff A.pt is greater than B.pt
  */
-template<class FinalState> bool
-PATQuadFinalStateBuilderHzzT<FinalState>::comparePt( reco::CandidatePtr A, reco::CandidatePtr B )
+bool comparePt( reco::CandidatePtr A, reco::CandidatePtr B )
 {
     return A->pt() > B->pt();
 }
