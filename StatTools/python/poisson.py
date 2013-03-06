@@ -23,6 +23,11 @@ Code taken from:
    }
 
 
+Command line usage:
+
+   python poisson.py N
+   
+prints the upper and lower confidence interval to stdout.
 
 '''
 
@@ -68,3 +73,7 @@ def convert(histogram, x_err=True, set_zero_bins=None):
             output.SetPointEXhigh(i, 0)
 
     return output
+
+if __name__ == "__main__":
+    arg = sys.argv[-1]
+    print poisson_error(int(arg))
