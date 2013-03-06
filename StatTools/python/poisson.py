@@ -30,7 +30,7 @@ Command line usage:
 prints the upper and lower confidence interval to stdout.
 
 '''
-
+import sys
 import ROOT
 
 def poisson_errors(N, coverage=0.6827):
