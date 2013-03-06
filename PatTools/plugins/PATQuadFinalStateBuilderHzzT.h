@@ -50,6 +50,8 @@ class PATQuadFinalStateBuilderHzzT : public edm::EDProducer
         edm::InputTag photonSrc_;
         edm::InputTag evtSrc_;
         StringCutObjectSelector<PATFinalState> cut_;
+
+        bool comparePt( reco::CandidatePtr A, reco::CandidatePtr B );
 };
 
 
@@ -145,7 +147,13 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     std::copy( lepton_set.begin(), lepton_set.end(), lepton_list.begin() );
 
 
-    // Map the photons to their nearest lepton
+
+
+    // -------------------------------------------------
+    //
+    // Assign photons to their closest lepton
+    //
+    // -------------------------------------------------
 
     std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::Photon> > > photonMap;
     for ( size_t i = 0; i < photons->size(); ++i )
@@ -185,6 +193,33 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
 
 
+    // -------------------------------------------------
+    //
+    // The core candidate building algorithm begins here
+    //
+    // -------------------------------------------------
+    
+    // leptons must be sorted before permuting
+    sort( lepton_list.begin(), lepton_list.end(), comparePt )
+    
+    do
+    {
+        edm::Ptr<pat::Photon> photon1;
+        edm::Ptr<pat::Photon> photon2;
+
+        reco::CandidatePtr lepton1 = lepton_list.at(0);
+        reco::CandidatePtr lepton2 = lepton_list.at(1);
+        reco::CandidatePtr lepton3 = lepton_list.at(2);
+        reco::CandidatePtr lepton4 = lepton_list.at(3);
+
+        bool OSSF_pass     = lepton1->pdgId() == -1 lepton2->pdgId() && lepton3->pdgId() == -lepton4->pdgId();
+        bool pt_order_pass = lepton1->pt() > lepton2->pt() && lepton3->pt() > lepton4.pt();
+        
+    }
+    while next_permutation( lepton_list.begin(), lepton_list.end(), comparePt );
+
+
+
     // Create the output candidate object, apply cuts, and push to the event
 
     /*
@@ -195,4 +230,20 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
     evt.put( output );
     */
+}
+
+
+
+/**
+ * Compares leptons based on their pt.
+ * Ensures ordering from greatest to least during sorting.
+ *
+ * @param A First lepton
+ * @param B Second lepton
+ * @return True iff A.pt is greater than B.pt
+ */
+template<class FinalState> bool
+PATQuadFinalStateBuilderHzzT<FinalState>::comparePt( reco::CandidatePtr A, reco::CandidatePtr B )
+{
+    return A->pt() > B->pt();
 }
