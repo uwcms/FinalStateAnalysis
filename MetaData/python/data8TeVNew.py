@@ -24,7 +24,8 @@ from string import Template
 try:
       from yellowhiggs import xs, br, xsbr
       br(mass,'WW')
-except (ImportError, ValueError) as error:
+except:
+      print "warning: yellowhiggs error"
       #define / override functions to avoid crashes
       def br(*args, **kwargs):
             return -99
