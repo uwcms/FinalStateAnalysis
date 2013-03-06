@@ -32,7 +32,7 @@
 #include "Math/GenVector/VectorUtil.h"
 
 
-// function prototype
+// function prototypes
 bool comparePt( reco::CandidatePtr A, reco::CandidatePtr B );
 
 
@@ -179,19 +179,11 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
             }
         }
 
+        bool photon_pass1 = nearest_dR < 0.07 && current_photon->pt() > 2;
+        bool photon_pass2 = nearest_dR < 0.5 && current_photon->pt() > 4; // need to add PFiso here
 
-        // assign the photon to the lepton. One lepton may have more than one
-        // photon attached to it.
-        if ( photonMap.count( nearest_lepton ) == 0 )
-        {
-            std::vector<edm::Ptr<pat::Photon> > phot_vec;
-            phot_vec.push_back( current_photon );
-            photonMap[nearest_lepton] = phot_vec;
-        }
-        else if ( photonMap.count( nearest_lepton ) == 1 )
-        {
+        if ( photon_pass1 || photon_pass2 )
             photonMap[nearest_lepton].push_back( current_photon );
-        }
     }
 
 
