@@ -200,7 +200,7 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     // -------------------------------------------------
     
     // leptons must be sorted before permuting
-    sort( lepton_list.begin(), lepton_list.end(), comparePt )
+    std::sort( lepton_list.begin(), lepton_list.end(), comparePt );
     
     do
     {
@@ -212,11 +212,11 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
         reco::CandidatePtr lepton3 = lepton_list.at(2);
         reco::CandidatePtr lepton4 = lepton_list.at(3);
 
-        bool OSSF_pass     = lepton1->pdgId() == -1 lepton2->pdgId() && lepton3->pdgId() == -lepton4->pdgId();
-        bool pt_order_pass = lepton1->pt() > lepton2->pt() && lepton3->pt() > lepton4.pt();
+        bool OSSF_pass     = lepton1->pdgId() == -lepton2->pdgId() && lepton3->pdgId() == -lepton4->pdgId();
+        bool pt_order_pass = lepton1->pt() > lepton2->pt() && lepton3->pt() > lepton4->pt();
         
     }
-    while next_permutation( lepton_list.begin(), lepton_list.end(), comparePt );
+    while ( std::next_permutation(lepton_list.begin(), lepton_list.end(), comparePt) );
 
 
 
