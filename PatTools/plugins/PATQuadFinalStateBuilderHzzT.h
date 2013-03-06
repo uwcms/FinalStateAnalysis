@@ -32,6 +32,8 @@
 #include "Math/GenVector/VectorUtil.h"
 
 
+const double ZMASS = 91.188;
+
 // function prototypes
 bool comparePt( reco::CandidatePtr A, reco::CandidatePtr B );
 
@@ -39,8 +41,10 @@ bool comparePt( reco::CandidatePtr A, reco::CandidatePtr B );
 template<class FinalState>
 class PATQuadFinalStateBuilderHzzT : public edm::EDProducer
 {
+
     public:
         typedef std::vector<FinalState> FinalStateCollection;
+        typedef reco::Candidate::LorentzVector FourVec;
 
         PATQuadFinalStateBuilderHzzT(const edm::ParameterSet& pset);
         virtual ~PATQuadFinalStateBuilderHzzT(){}
@@ -190,13 +194,22 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
     // -------------------------------------------------
     //
-    // The core candidate building algorithm begins here
+    // The core candidate-building algorithm begins here
     //
     // -------------------------------------------------
     
     // leptons must be sorted before permuting
     std::sort( lepton_list.begin(), lepton_list.end(), comparePt );
     
+    double best_zmass = 0;
+    double best_pt1   = 0;
+    double best_pt2   = 0;
+
+    reco::CandidatePtr leg1;
+    reco::CandidatePtr leg2;
+    reco::CandidatePtr leg3;
+    reco::CandidatePtr leg4;
+
     do
     {
         edm::Ptr<pat::Photon> photon1;
@@ -209,7 +222,35 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
         bool OSSF_pass     = lepton1->pdgId() == -lepton2->pdgId() && lepton3->pdgId() == -lepton4->pdgId();
         bool pt_order_pass = lepton1->pt() > lepton2->pt() && lepton3->pt() > lepton4->pt();
-        
+
+        if ( !(OSSF_pass && pt_order_pass) )
+            continue;
+
+        FourVec z1 = lepton1->p4() + lepton2->p4();
+        FourVec z2 = lepton3->p4() + lepton4->p4();
+
+        // Z1 should be closer to nominal Z mass than Z2
+        if ( fabs(z1.M() - ZMASS) > fabs(z2.M() - ZMASS) )
+            continue;
+
+        // is Z1 mass the closest to nominal of all tried, and is Z2 made of the highest pt leptons?
+        // if yes, then keep 'em!
+        if ( fabs(z1.M() - ZMASS) <= best_zmass && lepton3->pt() >= best_pt1 && lepton4->pt() >= best_pt2 )
+        {
+            leg1 = lepton1;
+            leg2 = lepton2;
+            leg3 = lepton3;
+            leg4 = lepton4;
+
+            best_zmass = z1.M();
+            best_pt1 = lepton3->pt();
+            best_pt2 = lepton4->pt();
+        }
+        else
+            continue;
+
+
+        // implement FSR here
     }
     while ( std::next_permutation(lepton_list.begin(), lepton_list.end(), comparePt) );
 
@@ -218,7 +259,7 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     // Create the output candidate object, apply cuts, and push to the event
 
     /*
-    FinalState outputCand( leg1, leg2, leg3, leg4, evtPtr );
+    FinalState outputCand( leg1, leg2, leg3, leg4, evtPtr ); // the legs are NOT reco::Candidates
 
     if ( cut_(outputCand) )
         output->push_back( outputCand );
