@@ -185,8 +185,16 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
             }
         }
 
+        // The PF isolation is computed using a cone of 0.3, a threshold of 0.2 GeV on charged
+        // hadrons and 0.5 GeV on neutral hadrons and photons
+        double isoChHad = current_photon->userFloat("fsrPhotonPFIsoChHad03pt02") + current_photon->userFloat("fsrPhotonPFIsoChHadPU03pt02");
+        double isoNeHad = current_photon->userFloat("fsrPhotonPFIsoNHad03");
+        double isoPhot  = current_photon->userFloat("fsrPhotonPFIsoPhoton03");
+
+        double photonPfRelIso = ( isoChHad + isoNeHad + isoPhot )/current_photon->pt();
+
         bool photon_pass1 = nearest_dR < 0.07 && current_photon->pt() > 2;
-        bool photon_pass2 = nearest_dR < 0.5 && current_photon->pt() > 4; // need to add PFiso here
+        bool photon_pass2 = nearest_dR < 0.5 && current_photon->pt() > 4 && photonPfRelIso < 1.0;
 
         if ( photon_pass1 || photon_pass2 )
             photonMap[nearest_lepton].push_back( current_photon );
