@@ -15,6 +15,7 @@
  * @author D. Austin Belknap
  */
 #include <vector>
+#include <limits>
 #include <algorithm>
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -168,10 +169,10 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     {
         edm::Ptr<pat::PFParticle> current_photon = photons->ptrAt(i);
 
-        reco::CandidatePtr nearest_lepton = lepton_list.at(0);
-        double nearest_dR = ROOT::Math::VectorUtil::DeltaR( nearest_lepton->p4(), current_photon->p4() );
+        reco::CandidatePtr nearest_lepton;
+        double nearest_dR =  std::numeric_limits<double>::infinity(); // set dR to infty
 
-        for ( size_t j = 1; j < lepton_list.size(); ++j )
+        for ( size_t j = 0; j < lepton_list.size(); ++j )
         {
             reco::CandidatePtr current_lepton = lepton_list.at(j);
             double current_dR = ROOT::Math::VectorUtil::DeltaR( current_lepton->p4(), current_photon->p4() );
