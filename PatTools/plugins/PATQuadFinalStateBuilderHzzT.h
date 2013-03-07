@@ -29,6 +29,7 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATQuadFinalStateT.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
+#include "DataFormats/PatCandidates/interface/PFParticle.h"
 #include "Math/GenVector/VectorUtil.h"
 
 
@@ -235,7 +236,7 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
         // is Z1 mass the closest to nominal of all tried, and is Z2 made of the highest pt leptons?
         // if yes, then keep 'em!
-        if ( fabs(z1.M() - ZMASS) <= best_zmass && lepton3->pt() >= best_pt1 && lepton4->pt() >= best_pt2 )
+        if ( fabs(z1.M() - ZMASS) <= fabs(best_zmass - ZMASS) && lepton3->pt() >= best_pt1 && lepton4->pt() >= best_pt2 )
         {
             leg1 = lepton1;
             leg2 = lepton2;
