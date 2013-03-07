@@ -17,6 +17,8 @@
 #include <vector>
 #include <limits>
 #include <algorithm>
+#include <typeinfo>
+#include <string>
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/Event.h"
@@ -259,23 +261,52 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
         else
             continue;
 
-
         // implement FSR here
     }
     while ( std::next_permutation(lepton_list.begin(), lepton_list.end(), comparePt) );
 
 
 
+    // -------------------------------------------------
+    //
     // Create the output candidate object, apply cuts, and push to the event
+    // Also, take care of the special case of 2e2mu
+    //
+    // -------------------------------------------------
+    
+    std::string final_state_type = typeid(FinalState).name();
+    std::string eemm_type        = "PATElecElecMuMuFinalState";
 
-    /*
-    FinalState outputCand( leg1, leg2, leg3, leg4, evtPtr ); // the legs are NOT reco::Candidates
+    edm::Ptr<typename FinalState::daughter1_type> leg1_out; 
+    edm::Ptr<typename FinalState::daughter2_type> leg2_out; 
+    edm::Ptr<typename FinalState::daughter3_type> leg3_out; 
+    edm::Ptr<typename FinalState::daughter4_type> leg4_out; 
+
+    // make sure the legs are arranged to match the FinalState datatype
+    // i.e. electrons go first for 2e2mu
+    if ( final_state_type == eemm_type && abs(leg1->pdgId()) == 13 && abs(leg3->pdgId()) == 11 )
+    {
+        leg1_out = edm::Ptr<typename FinalState::daughter1_type> ( leg3 ); 
+        leg2_out = edm::Ptr<typename FinalState::daughter2_type> ( leg4 ); 
+        leg3_out = edm::Ptr<typename FinalState::daughter3_type> ( leg1 ); 
+        leg4_out = edm::Ptr<typename FinalState::daughter4_type> ( leg2 ); 
+    }
+    else
+    {
+        leg1_out = edm::Ptr<typename FinalState::daughter1_type> ( leg1 ); 
+        leg2_out = edm::Ptr<typename FinalState::daughter2_type> ( leg2 ); 
+        leg3_out = edm::Ptr<typename FinalState::daughter3_type> ( leg3 ); 
+        leg4_out = edm::Ptr<typename FinalState::daughter4_type> ( leg4 ); 
+    }
+
+
+    // Load the legs into the output candidate and push to the event
+    FinalState outputCand( leg1_out, leg2_out, leg3_out, leg4_out, evtPtr );
 
     if ( cut_(outputCand) )
         output->push_back( outputCand );
 
     evt.put( output );
-    */
 }
 
 
