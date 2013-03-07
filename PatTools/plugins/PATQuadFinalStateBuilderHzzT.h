@@ -88,8 +88,8 @@ PATQuadFinalStateBuilderHzzT<FinalState>::PATQuadFinalStateBuilderHzzT(
  */
 template<class FinalState> void
 PATQuadFinalStateBuilderHzzT<FinalState>::produce(
-        edm::Event& evt, const edm::EventSetup& es) {
-
+        edm::Event& evt, const edm::EventSetup& es)
+{
     edm::Handle<edm::View<PATFinalStateEvent> > fsEvent;
     evt.getByLabel(evtSrc_, fsEvent);
     edm::Ptr<PATFinalStateEvent> evtPtr = fsEvent->ptrAt(0);
@@ -113,7 +113,7 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     edm::Handle<edm::View<typename FinalState::daughter4_type> > leg4s;
     evt.getByLabel( leg4Src_, leg4s );
 
-    edm::Handle<edm::View<pat::Photon> > photons;
+    edm::Handle<edm::View<pat::PFParticle> > photons;
     evt.getByLabel( photonSrc_, photons );
 
 
@@ -162,10 +162,10 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     //
     // -------------------------------------------------
 
-    std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::Photon> > > photonMap;
+    std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::PFParticle> > > photonMap;
     for ( size_t i = 0; i < photons->size(); ++i )
     {
-        edm::Ptr<pat::Photon> current_photon = photons->ptrAt(i);
+        edm::Ptr<pat::PFParticle> current_photon = photons->ptrAt(i);
 
         reco::CandidatePtr nearest_lepton = lepton_list.at(0);
         double nearest_dR = ROOT::Math::VectorUtil::DeltaR( nearest_lepton->p4(), current_photon->p4() );
@@ -212,8 +212,8 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
     do
     {
-        edm::Ptr<pat::Photon> photon1;
-        edm::Ptr<pat::Photon> photon2;
+        edm::Ptr<pat::PFParticle> photon1;
+        edm::Ptr<pat::PFParticle> photon2;
 
         reco::CandidatePtr lepton1 = lepton_list.at(0);
         reco::CandidatePtr lepton2 = lepton_list.at(1);
