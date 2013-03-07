@@ -7,10 +7,16 @@
  * This template follows the HZZ4L algorithm for construction of ZZ
  * candidates that include final-state radiation (FSR).
  *
- * The first step is to parse the input lepton collectios and form
+ * The first step is to parse the input lepton collections and form
  * a single collection of unique leptons.
  *
  * Next, map the photons to their closest leptons.
+ *
+ * Permute through the list of leptons choosing four.
+ * Keep the best arrangement of leptons.
+ *
+ * Using the photon map, assign FSR photons to the Z candidates
+ * (if any)
  *
  * @author D. Austin Belknap
  */
@@ -62,7 +68,6 @@ class PATQuadFinalStateBuilderHzzT : public edm::EDProducer
         edm::InputTag photonSrc_;
         edm::InputTag evtSrc_;
         StringCutObjectSelector<PATFinalState> cut_;
-
 };
 
 
@@ -100,6 +105,7 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     assert(evtPtr.isNonnull());
 
     std::auto_ptr<FinalStateCollection> output(new FinalStateCollection);
+
 
 
 
@@ -152,10 +158,15 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
         lepton_set.insert( reco::CandidatePtr(leg4) );
     }
 
+    // there must be at least 4 leptons in the event, otherwise ignore the event
+    if ( lepton_set.size() < 4 )
+        return;
+
     // load the lepton set into a vector
 
-    std::vector<reco::CandidatePtr> lepton_list;
+    std::vector<reco::CandidatePtr> lepton_list (lepton_set.size());
     std::copy( lepton_set.begin(), lepton_set.end(), lepton_list.begin() );
+
 
 
 
@@ -204,6 +215,7 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
 
 
+
     // -------------------------------------------------
     //
     // The core candidate-building algorithm begins here
@@ -221,6 +233,8 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     reco::CandidatePtr leg2;
     reco::CandidatePtr leg3;
     reco::CandidatePtr leg4;
+
+    bool found_event = false;
 
     do
     {
@@ -249,6 +263,8 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
         // if yes, then keep 'em!
         if ( fabs(z1.M() - ZMASS) <= fabs(best_zmass - ZMASS) && lepton3->pt() >= best_pt1 && lepton4->pt() >= best_pt2 )
         {
+            found_event = true;
+
             leg1 = lepton1;
             leg2 = lepton2;
             leg3 = lepton3;
@@ -264,6 +280,10 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
         // implement FSR here
     }
     while ( std::next_permutation(lepton_list.begin(), lepton_list.end(), comparePt) );
+
+    // if no events pass the ZZ selection, toss the event
+    if ( !found_event )
+        return;
 
 
 
@@ -298,7 +318,6 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
         leg3_out = edm::Ptr<typename FinalState::daughter3_type> ( leg3 ); 
         leg4_out = edm::Ptr<typename FinalState::daughter4_type> ( leg4 ); 
     }
-
 
     // Load the legs into the output candidate and push to the event
     FinalState outputCand( leg1_out, leg2_out, leg3_out, leg4_out, evtPtr );
