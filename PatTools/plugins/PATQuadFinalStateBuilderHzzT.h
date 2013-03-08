@@ -295,12 +295,17 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     // -------------------------------------------------
     
     std::string final_state_type = typeid(FinalState).name();
-    std::string eemm_type        = "PATElecElecMuMuFinalState";
+    std::string eemm_type        = "18PATQuadFinalStateTIN3pat8ElectronES1_NS0_4MuonES2_E";
 
     edm::Ptr<typename FinalState::daughter1_type> leg1_out; 
     edm::Ptr<typename FinalState::daughter2_type> leg2_out; 
     edm::Ptr<typename FinalState::daughter3_type> leg3_out; 
-    edm::Ptr<typename FinalState::daughter4_type> leg4_out; 
+    edm::Ptr<typename FinalState::daughter4_type> leg4_out;
+
+    // for 2e2mu make sure that you have, in fact, 2e2mu
+    if ( final_state_type == eemm_type && abs(leg1->pdgId()) == abs(leg3->pdgId()) )
+        return;
+
 
     // make sure the legs are arranged to match the FinalState datatype
     // i.e. electrons go first for 2e2mu
