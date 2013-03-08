@@ -86,7 +86,7 @@ void PhotonParentage::resolveParentage() {
   auto np = _nonPromptParents.cbegin();
   auto npend = _nonPromptParents.cend();
   std::cout << "Non-prompt parents of gen-matched photon: " << std::endl;
-  for( ; np != epend; ++np ) {
+  for( ; np != npend; ++np ) {
     std::cout << (*np)->pdgId() << ' ' 
 	      << (*np)->status() << std::endl;
   }
