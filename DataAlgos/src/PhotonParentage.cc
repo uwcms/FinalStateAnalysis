@@ -14,7 +14,7 @@ PhotonParentage(const edm::Ref<std::vector<pat::Photon> >& pho) {
 void PhotonParentage::getParentageRecursive(const reco::GenParticleRef& p) {
   // stopping condition
   if( p->numberOfMothers() == 0 ) return;
-  const int nmom = p->numberOfMothers();
+  
 
   // only keep track of parent types we care about
   switch(std::abs(p->pdgId())) {
@@ -41,10 +41,12 @@ void PhotonParentage::getParentageRecursive(const reco::GenParticleRef& p) {
   case 24:
   case 25:
     _ewkBosonParents.push_back(p);
+    break;
   default:
     _nonPromptParents.push_back(p);
   }
-
+  
+  const int nmom = p->numberOfMothers();
   for( int i = 0; i < nmom; ++i ) {
     reco::GenParticleRef next = p->motherRef(i);
     if( next.isAvailable() && next.isNonnull() ) {
