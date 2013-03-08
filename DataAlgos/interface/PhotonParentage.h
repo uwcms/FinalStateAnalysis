@@ -32,8 +32,10 @@ namespace phohelpers {
       { return _nonPromptParent; }
 
   private:    
-    void getParentageRecursive(const reco::GenParticleRef&);
+    void getParentageRecursive(const reco::GenParticleRef&);    
     void resolveParentage();
+    bool hasAsParent(const reco::GenParticleRef& daughter,
+		     const reco::GenParticleRef& parent_check) const;
 
     reco::GenParticleRef _match;
     //niave parent is just the direct parent of this photon

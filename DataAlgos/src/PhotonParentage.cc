@@ -60,11 +60,16 @@ void PhotonParentage::resolveParentage() {
   std::cout << "Photon gen-matched to: " << _match->pdgId() << std::endl;
 
   auto lp = _leptonParents.cbegin();
-  auto lpend = _leptonParents.cend();
+  auto lpend = _leptonParents.cend();  
   std::cout << "Lepton parents of gen-matched photon: " << std::endl;
   for( ; lp != lpend; ++lp ) {
     std::cout << (*lp)->pdgId() << ' ' 
 	      << (*lp)->status() << std::endl;
+    if( lp == _leptonParents.cbegin() ) {
+      _leptonParent = *lp;
+    } else if( hasAsParent(_leptonParent,*lp) ) {
+      _leptonParent = *lp;
+    }
   }
 
   auto qp = _qcdParents.cbegin();
@@ -73,14 +78,24 @@ void PhotonParentage::resolveParentage() {
   for( ; qp != qpend; ++qp ) {
     std::cout << (*qp)->pdgId() << ' ' 
 	      << (*qp)->status() << std::endl;
+    if( qp == _qcdParents.cbegin() ) {
+      _qcdParent = *qp;
+    } else if( hasAsParent(_qcdParent,*qp) ) {
+      _qcdParent = *qp;
+    }    
   }
 
   auto ep = _ewkBosonParents.cbegin();
-  auto epend = _ewkBosonParents.cend();
+  auto epend = _ewkBosonParents.cend();  
   std::cout << "EWK Boson parents of gen-matched photon: " << std::endl;
   for( ; ep != epend; ++ep ) {
     std::cout << (*ep)->pdgId() << ' ' 
-	      << (*ep)->status() << std::endl;
+	      << (*ep)->status() << std::endl;  
+    if( ep == _ewkBosonParents.cbegin() ) {
+      _ewkBosonParent = *ep;
+    } else if( hasAsParent(_ewkBosonParent,*ep) ) {
+      _ewkBosonParent = *ep;
+    }   
   }
   
   auto np = _nonPromptParents.cbegin();
@@ -89,5 +104,24 @@ void PhotonParentage::resolveParentage() {
   for( ; np != npend; ++np ) {
     std::cout << (*np)->pdgId() << ' ' 
 	      << (*np)->status() << std::endl;
+    if( np == _nonPromptParents.cbegin() ) {
+      _nonPromptParent = *np;
+    } else if( hasAsParent(_nonPromptParent,*np) ) {
+      _nonPromptParent = *np;
+    }   
   }
+}
+
+bool PhotonParentage::hasAsParent(const reco::GenParticleRef& d,
+				  const reco::GenParticleRef& pc) const {
+  if( d->numberOfMothers() == 0 ) return false;
+  const int nmom = d->numberOfMothers();
+  bool result = false;
+  for( int i = 0; i < nmom; ++i ) {
+    if( pc == d->motherRef(i) ) return true;
+    else {
+      result += hasAsParent(d->motherRef(i),pc);
+    }
+  }
+  return result;
 }
