@@ -160,7 +160,10 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
     // there must be at least 4 leptons in the event, otherwise ignore the event
     if ( lepton_set.size() < 4 )
+    {
+        evt.put( output );
         return;
+    }
 
     // load the lepton set into a vector
 
@@ -283,7 +286,10 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
     // if no events pass the ZZ selection, toss the event
     if ( !found_event )
+    {
+        evt.put( output );
         return;
+    }
 
 
 
@@ -295,16 +301,19 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     // -------------------------------------------------
     
     std::string final_state_type = typeid(FinalState).name();
-    std::string eemm_type        = "18PATQuadFinalStateTIN3pat8ElectronES1_NS0_4MuonES2_E";
+    std::string eemm_type        = "18PATQuadFinalStateTIN3pat8ElectronES1_NS0_4MuonES2_E"; // 0_o
 
     edm::Ptr<typename FinalState::daughter1_type> leg1_out; 
     edm::Ptr<typename FinalState::daughter2_type> leg2_out; 
     edm::Ptr<typename FinalState::daughter3_type> leg3_out; 
     edm::Ptr<typename FinalState::daughter4_type> leg4_out;
 
-    // for 2e2mu make sure that you have, in fact, 2e2mu
+    // for 2e2mu make sure that you have, in fact, 2e2mu (or 2mu2e)
     if ( final_state_type == eemm_type && abs(leg1->pdgId()) == abs(leg3->pdgId()) )
+    {
+        evt.put( output );
         return;
+    }
 
 
     // make sure the legs are arranged to match the FinalState datatype
