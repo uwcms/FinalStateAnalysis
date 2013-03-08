@@ -110,6 +110,26 @@ void PhotonParentage::resolveParentage() {
       _nonPromptParent = *np;
     }   
   }
+
+  std::cout << "Best parents:" << std::endl;
+  if( _leptonParent.isNonnull() && _leptonParent.isAvailable() ) {
+    std::cout << "Lepton Parent: " << _leptonParent->pdgId() << ' ' 
+	      << _leptonParent->status() << std::endl;
+  }
+  if( _qcdParent.isNonnull() && _qcdParent.isAvailable() ) {
+    std::cout << "QCD Parent: " << _qcdParent->pdgId() << ' ' 
+	      << _qcdParent->status() << std::endl;
+  }
+  if( _ewkBosonParent.isNonnull() && _ewkBosonParent.isAvailable() ) {
+    std::cout << "EWK Boson Parent: " << _ewkBosonParent->pdgId() << ' ' 
+	      << _ewkBosonParent->status() << std::endl;
+  }
+  if( _nonPromptParent.isNonnull() && _nonPromptParent.isAvailable() ) {
+    std::cout << "NonPrompt Parent: " << _nonPromptParent->pdgId() << ' ' 
+	      << _nonPromptParent->status() << std::endl;
+  }
+    
+
 }
 
 bool PhotonParentage::hasAsParent(const reco::GenParticleRef& d,
