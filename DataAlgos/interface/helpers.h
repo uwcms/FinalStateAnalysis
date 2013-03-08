@@ -45,6 +45,7 @@ const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, in
 
 /// Helper function to get if the gen particle associated comes from higgs 
 const bool comesFromHiggs(const reco::GenParticleRef genPart);
+
 }
 
 #endif /* end of include guard: HELPERS_TAQ1PE50 */
