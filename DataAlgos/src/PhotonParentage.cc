@@ -15,7 +15,7 @@ void PhotonParentage::getParentageRecursive(const reco::GenParticleRef& p) {
   // stopping condition
   if( p->numberOfMothers() == 0 ) return;
   const int nmom = p->numberOfMothers();
-  
+
   // only keep track of parent types we care about
   switch(std::abs(p->pdgId())) {
   case 12:
@@ -54,4 +54,38 @@ void PhotonParentage::getParentageRecursive(const reco::GenParticleRef& p) {
 }
 
 void PhotonParentage::resolveParentage() {
+
+  std::cout << "Photon gen-matched to: " << _match->pdgId() << std::endl;
+
+  auto lp = _leptonParents.cbegin();
+  auto lpend = _leptonParents.cend();
+  std::cout << "Lepton parents of gen-matched photon: " << std::endl;
+  for( ; lp != lpend; ++lp ) {
+    std::cout << (*lp)->pdgId() << ' ' 
+	      << (*lp)->status() << std::endl;
+  }
+
+  auto qp = _qcdParents.cbegin();
+  auto qpend = _qcdParents.cend();
+  std::cout << "QCD parents of gen-matched photon: " << std::endl;
+  for( ; qp != qpend; ++qp ) {
+    std::cout << (*qp)->pdgId() << ' ' 
+	      << (*qp)->status() << std::endl;
+  }
+
+  auto ep = _ewkBosonParents.cbegin();
+  auto epend = _ewkBosonParents.cend();
+  std::cout << "EWK Boson parents of gen-matched photon: " << std::endl;
+  for( ; ep != epend; ++ep ) {
+    std::cout << (*ep)->pdgId() << ' ' 
+	      << (*ep)->status() << std::endl;
+  }
+  
+  auto np = _nonPromptParents.cbegin();
+  auto npend = _nonPromptParents.cend();
+  std::cout << "Non-prompt parents of gen-matched photon: " << std::endl;
+  for( ; np != epend; ++np ) {
+    std::cout << (*np)->pdgId() << ' ' 
+	      << (*np)->status() << std::endl;
+  }
 }
