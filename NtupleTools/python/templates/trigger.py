@@ -24,6 +24,9 @@ isomu = _trig_template.replace(name='isoMu',
           r'HLT_IsoMu24_v\\d+, HLT_IsoMu24_eta2p1_v\\d+, '
           r'HLT_IsoMu30_v\\d+, HLT_IsoMu30_eta2p1_v\\d+')
 
+isomu24eta2p1 = _trig_template.replace(name='isoMu24eta2p1',
+    paths=r'HLT_IsoMu24_eta2p1_v\\d+')
+
 doublemu = PSet(
     _trig_template.replace(
         name='doubleMu',
