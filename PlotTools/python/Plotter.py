@@ -123,7 +123,10 @@ class Plotter(object):
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.pdf')
         # Reset keeps
         self.keep = []
-
+        # Reset logx/y
+        self.canvas.SetLogx(False)
+        self.canvas.SetLogy(False)
+        
     def plot(self, sample, path, drawopt='', rebin=None, styler=None, xaxis='', xrange=None):
         ''' Plot a single histogram from a single sample.
 
@@ -168,7 +171,7 @@ class Plotter(object):
         mc_stack.Draw()
         mc_stack.GetHistogram().GetXaxis().SetTitle(xaxis)
         if xrange:
-            mc_stack.GetXaxis().SetRange(xrange[0], xrange[1])
+            mc_stack.GetXaxis().SetRangeUser(xrange[0], xrange[1])
             mc_stack.Draw()
         self.keep.append(mc_stack)
         # Draw data
