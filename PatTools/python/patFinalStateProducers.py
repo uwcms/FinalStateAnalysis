@@ -306,7 +306,6 @@ def produce_final_states(process, collections, output_commands,
             quadobject[0][0], quadobject[1][0], quadobject[2][0],
             quadobject[3][0]
         )
-        print "***",producer_name,"***"
         #setattr(process, producer_name, producer)
         #process.buildTriLeptons += producer
         setattr(process, producer_name + "Raw", producer)
