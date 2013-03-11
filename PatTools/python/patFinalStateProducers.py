@@ -270,17 +270,20 @@ def produce_final_states(process, collections, output_commands,
 
 
     # Build 4 lepton final states w/ FSR
-    process.buildQuadFsrObjects = cms.Sequence()
-    for quadfsrobject in _combinatorics(object_types, 4):
-        # Don't build states with more than 2 hadronic taus or phos
+    process.buildQuadHzzObjects = cms.Sequence()
+    for quadobject in _combinatorics(object_types, 4):
         n_taus = [x[0] for x in quadobject].count('Tau')
+        n_elec = [x[0] for x in quadobject].count('Elec')
+        n_muon = [x[0] for x in quadobject].count('Mu')
         n_phos = [x[0] for x in quadobject].count('Pho')
 
-        if n_taus > 2:
+        if n_taus > 0:
             continue
-        if n_phos > 2:
+        if n_phos > 0:
             continue
-        if n_taus and n_phos:
+        if n_elec%2 == 1:
+            continue
+        if n_muon%2 == 1:
             continue
 
         # Define some basic selections for building combinations
@@ -303,16 +306,17 @@ def produce_final_states(process, collections, output_commands,
             quadobject[0][0], quadobject[1][0], quadobject[2][0],
             quadobject[3][0]
         )
+        print "***",producer_name,"***"
         #setattr(process, producer_name, producer)
         #process.buildTriLeptons += producer
         setattr(process, producer_name + "Raw", producer)
-        process.buildQuadFsrObjects += producer
+        process.buildQuadHzzObjects += producer
 
         # Embed the other collections
         embedder_seq = helpers.cloneProcessingSnippet(
             process, process.patFinalStatesEmbedObjects, producer_name)
 
-        process.buildQuadFsrObjects += embedder_seq
+        process.buildQuadHzzObjects += embedder_seq
 
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
@@ -320,10 +324,10 @@ def produce_final_states(process, collections, output_commands,
             "PATFinalStateCopier", src=final_module_name)
 
         setattr(process, producer_name, final_module)
-        process.buildQuadFsrObjects += final_module
+        process.buildQuadHzzObjects += final_module
         output_commands.append("*_%s_*_*" % producer_name)
 
-    sequence += process.buildQuadFsrObjects
+    sequence += process.buildQuadHzzObjects
 
 
 
