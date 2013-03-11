@@ -86,6 +86,7 @@ _photon_template = PSet(
     templates.topology.mtToMET,
 )
 
+
 _leg_templates = {
     't': _tau_template,
     'm': _muon_template,
@@ -94,15 +95,15 @@ _leg_templates = {
 }
 
 _pt_cuts = {
-    'm': '7',
+    'm': '5',
     'e': '7',
     't': '18',
     'g': '10'
 }
 
 _eta_cuts = {
-    'm': '2.5',
-    'e': '3.0',
+    'm': '2.4',
+    'e': '2.5',
     't': '2.3',
     'g': '3.0'
 }
@@ -112,7 +113,8 @@ _producer_translation = {
     'm': 'Mu',
     'e': 'Elec',
     't': 'Tau',
-    'g': 'Pho'
+    'g': 'Pho',
+    'f': 'Fsr'
 }
 
 
@@ -360,6 +362,8 @@ def make_ntuple(*legs, **kwargs):
                     cut=cms.string('orderedInPt(%s, %s)' %
                                    (leg3_idx_label, leg4_idx_label))
                 ))
+
+
 
     # Now apply our formatting operations
     format(output, **format_labels)

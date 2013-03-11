@@ -18,6 +18,9 @@
  * Using the photon map, assign FSR photons to the Z candidates
  * (if any)
  *
+ * Note that Z1 and Z2 are not necessarily in the proper order
+ * upon output.
+ *
  * @author D. Austin Belknap
  */
 #include <vector>

@@ -52,6 +52,7 @@ def produce_final_states(process, collections, output_commands,
     pfmetsrc = collections['pfmet']
     mvametsrc = collections['mvamet']
     phosrc = collections['photons']
+    fsrsrc = collections['fsr']
 
     # Build the PATFinalStateEventObject
     if buildFSAEvent:
@@ -76,7 +77,7 @@ def produce_final_states(process, collections, output_commands,
     process.muonsForFinalStates = cms.EDFilter(
         "PATMuonRefSelector",
         src=cms.InputTag(muonsrc),
-        cut=cms.string('max(pt, userFloat("maxCorPt")) > 4 '
+        cut=cms.string('max(pt, userFloat("maxCorPt")) > 5 '
                        '& (isGlobalMuon | isTrackerMuon)'),
         filter=cms.bool(False),
     )
@@ -84,7 +85,7 @@ def produce_final_states(process, collections, output_commands,
     process.electronsForFinalStates = cms.EDFilter(
         "PATElectronRefSelector",
         src=cms.InputTag(esrc),
-        cut=cms.string('abs(superCluster().eta) < 3.0 '
+        cut=cms.string('abs(superCluster().eta) < 2.5 '
                        '& max(pt, userFloat("maxCorPt")) > 7'),
         filter=cms.bool(False),
     )
@@ -215,6 +216,8 @@ def produce_final_states(process, collections, output_commands,
         output_commands.append("*_%s_*_*" % producer_name)
     sequence += process.buildTriObjects
 
+
+
     # Build 4 lepton final states
     process.buildQuadObjects = cms.Sequence()
     for quadobject in _combinatorics(object_types, 4):
@@ -263,6 +266,66 @@ def produce_final_states(process, collections, output_commands,
         process.buildQuadObjects += final_module
         output_commands.append("*_%s_*_*" % producer_name)
     sequence += process.buildQuadObjects
+
+
+
+    # Build 4 lepton final states w/ FSR
+    process.buildQuadFsrObjects = cms.Sequence()
+    for quadfsrobject in _combinatorics(object_types, 4):
+        # Don't build states with more than 2 hadronic taus or phos
+        n_taus = [x[0] for x in quadobject].count('Tau')
+        n_phos = [x[0] for x in quadobject].count('Pho')
+
+        if n_taus > 2:
+            continue
+        if n_phos > 2:
+            continue
+        if n_taus and n_phos:
+            continue
+
+        # Define some basic selections for building combinations
+        cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
+
+        producer = cms.EDProducer(
+            "PAT%s%s%s%sFinalStateHzzProducer" %
+            (quadobject[0][0], quadobject[1][0], quadobject[2][0],
+             quadobject[3][0]),
+            evtSrc    = cms.InputTag("patFinalStateEventProducer"),
+            leg1Src   = quadobject[0][1],
+            leg2Src   = quadobject[1][1],
+            leg3Src   = quadobject[2][1],
+            leg4Src   = quadobject[3][1],
+            photonSrc = cms.InputTag(fsrsrc),
+            # X-cleaning
+            cut       = cms.string('')
+        )
+        producer_name = "finalState%s%s%s%sFsr" % (
+            quadobject[0][0], quadobject[1][0], quadobject[2][0],
+            quadobject[3][0]
+        )
+        #setattr(process, producer_name, producer)
+        #process.buildTriLeptons += producer
+        setattr(process, producer_name + "Raw", producer)
+        process.buildQuadFsrObjects += producer
+
+        # Embed the other collections
+        embedder_seq = helpers.cloneProcessingSnippet(
+            process, process.patFinalStatesEmbedObjects, producer_name)
+
+        process.buildQuadFsrObjects += embedder_seq
+
+        # Do some trickery so the final module has a nice output name
+        final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
+        final_module = cms.EDProducer(
+            "PATFinalStateCopier", src=final_module_name)
+
+        setattr(process, producer_name, final_module)
+        process.buildQuadFsrObjects += final_module
+        output_commands.append("*_%s_*_*" % producer_name)
+
+    sequence += process.buildQuadFsrObjects
+
+
 
 if __name__ == "__main__":
     import doctest

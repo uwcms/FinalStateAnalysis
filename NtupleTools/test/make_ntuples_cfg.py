@@ -121,6 +121,7 @@ if options.rerunFSA:
         'jets': 'selectedPatJets',
         'pfmet': 'systematicsMET',
         'mvamet': 'systematicsMETMVA',
+        'fsr': 'boostedFsrPhotons',
     }
     #re run the MC matching, if requested
     if options.rerunMCMatch:
@@ -152,6 +153,7 @@ if options.rerunFSA:
 _FINAL_STATE_GROUPS = {
     'zh': 'eeem, eeet, eemt, eett, emmm, emmt, mmmt, mmtt',
     'zz': 'eeee, eemm, mmmm',
+    'hzz': 'eeeef, eemmf, mmmmf',
     'zgg': 'eegg, mmgg',
     'llt': 'emt, mmt, eet, mmm, emm',
     'zg': 'mmg, eeg',
@@ -180,6 +182,7 @@ process.load("FWCore.MessageLogger.MessageLogger_cfi")
 
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
 process.MessageLogger.categories.append('FSAEventMissingProduct')
+
 # Don't go nuts if there are a lot of missing products.
 process.MessageLogger.cerr.FSAEventMissingProduct = cms.untracked.PSet(
     limit=cms.untracked.int32(10)
