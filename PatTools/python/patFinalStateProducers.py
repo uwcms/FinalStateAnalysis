@@ -299,7 +299,7 @@ def produce_final_states(process, collections, output_commands,
             # X-cleaning
             cut       = cms.string('')
         )
-        producer_name = "finalState%s%s%s%sFsr" % (
+        producer_name = "finalState%s%s%s%sHzz" % (
             quadobject[0][0], quadobject[1][0], quadobject[2][0],
             quadobject[3][0]
         )

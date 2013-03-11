@@ -114,7 +114,6 @@ _producer_translation = {
     'e': 'Elec',
     't': 'Tau',
     'g': 'Pho',
-    'f': 'Fsr'
 }
 
 
@@ -203,12 +202,20 @@ def make_ntuple(*legs, **kwargs):
             templates.topology.zboson.replace(object1=leg_a, object2=leg_b),
         )
 
+    # Are we running on the ZZ-specific collections?
+    zz_mode = kwargs.get('zz_mode', False)
+
+    analyzerSrc = "finalState" + "".join(
+            _producer_translation[x] for x in legs)
+
+    if zz_mode:
+        analyzerSrc += "Hzz"
+
     # Now build our analyzer EDFilter skeleton
     output = cms.EDFilter(
         "PATFinalStateAnalysisFilter",
         weights=cms.vstring(),
-        src=cms.InputTag("finalState" + "".join(
-            _producer_translation[x] for x in legs)),
+        src=cms.InputTag( analyzerSrc ),
         evtSrc=cms.InputTag("patFinalStateEventProducer"),
         skimCounter=cms.InputTag("eventCount", "", "TUPLE"),
         analysis=cms.PSet(
@@ -255,10 +262,12 @@ def make_ntuple(*legs, **kwargs):
     #   first put best Z in initial position
     #   then order first two by pt
     #   then order third and fourth by pt
-    make_unique = True
-    if 'noclean' in kwargs:
-        make_unique = not kwargs['noclean']
-    if make_unique:
+    noclean = kwargs.get('noclean', False)
+
+    # ZZ-producer does not require this cleaning step
+    make_unique = not noclean and not zz_mode
+    
+    if make_unique and not zz_mode:
         for type, count in counts.iteritems():
             if count == 2:
                 leg1_idx = format_labels['%s1_idx' % type]

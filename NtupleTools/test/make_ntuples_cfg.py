@@ -153,7 +153,6 @@ if options.rerunFSA:
 _FINAL_STATE_GROUPS = {
     'zh': 'eeem, eeet, eemt, eett, emmm, emmt, mmmt, mmtt',
     'zz': 'eeee, eemm, mmmm',
-    'hzz': 'eeeef, eemmf, mmmmf',
     'zgg': 'eegg, mmgg',
     'llt': 'emt, mmt, eet, mmm, emm',
     'zg': 'mmg, eeg',
@@ -174,7 +173,13 @@ def expanded_final_states(input):
 
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
-    analyzer = make_ntuple(*final_state)
+
+    if final_state in ['mmmm','eeee','eemm']:
+        zz_mode = True
+    else:
+        zz_mode = False
+
+    analyzer = make_ntuple(*final_state, zz_mode=zz_mode)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 
