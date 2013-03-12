@@ -41,12 +41,13 @@ pv_info = PSet(
 )
 
 met = PSet(
-    metEt ='evt.met("mvamet").et',
+    metEt='evt.met("mvamet").et',
     metPhi='evt.met("mvamet").phi',
     #metSignificance='evt.metSignificance',
-    recoilDaught  ='getDaughtersRecoil().mag()',
-    recoilWithMet ='getDaughtersRecoilWithMet().mag()',
-    #recoilWMetSig ='getRecoilWithMetSignificance()', #does not seem to work, investigating...
+    recoilDaught='getDaughtersRecoil().R()',
+    recoilWithMet='getDaughtersRecoilWithMet().R()',
+    #does not seem to work, investigating...
+    #recoilWMetSig ='getRecoilWithMetSignificance()',
     #mvametEt='evt.met("mvamet").et',
     #mvametPhi='evt.met("mvamet").phi',
     #mvametSignificance='evt.met("mvamet").significance',

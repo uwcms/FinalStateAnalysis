@@ -56,7 +56,7 @@ options = TauVarParsing.TauVarParsing(
     rerunFSA=0,  # If one, rebuild the PAT FSA events
     verbose=0,  # If one print out the TimeReport
     noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
-    rerunMVAMET=0, # If one, (re)build the MVA MET
+    rerunMVAMET=0,  # If one, (re)build the MVA MET
 )
 
 options.outputFile = "ntuplize.root"
@@ -109,35 +109,20 @@ if options.rerunFSA:
         print 'Using globalTag: %s' % options.globalTag
     process.GlobalTag.globaltag = cms.string(options.globalTag)
 
-    # Make a version with the MVA MET reconstruction method (works only if we rerun the FSA!)
+    mvamet_collection = 'systematicsMETMVA'
+
+    # Make a version with the MVA MET reconstruction method
+    # Works only if we rerun the FSA!
     if options.rerunMVAMET:
-        process.load("JetMETCorrections.Configuration.JetCorrectionServicesAllAlgos_cff")
-        process.load("JetMETCorrections.Configuration.DefaultJEC_cff")
-        process.load("JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cfi")
-        process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
         process.load("FinalStateAnalysis.PatTools.met.mvaMetOnPatTuple_cff")
-        from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
-        import PhysicsTools.PatAlgos.tools.helpers as helpers
-        process.buildMvamet = cms.Sequence()
-
-        # Setup MET production
-        # The MET systematics depend on all other systematics
-        process.systematicsMET.tauSrc = cms.InputTag("cleanPatTausForMETSyst")
-        process.systematicsMET.muonSrc = cms.InputTag("cleanPatMuons")
-        process.systematicsMET.electronSrc = cms.InputTag("cleanPatElectrons")        
-
-        process.buildMvamet += process.pfMEtMVAsequence
-        mva_met_sequence = helpers.cloneProcessingSnippet(
-            process, process.customizeMETSequence, "MVA")
-        final_mvamet_collection = chain_sequence(
-            mva_met_sequence, "patMEtMVA")
-        process.isotaus.src = 'cleanPatTaus'
+        process.isotaus.src = "cleanPatTaus"
+        mvamet_collection = "patMEtMVA"
         if not options.isMC:
             process.patMEtMVA.addGenMET = False
-        process.buildMvamet += mva_met_sequence
-        process.mvaMetPath = cms.Path(process.buildMvamet)
-        process.schedule.append( process.mvaMetPath )
-        print "rerunning MVA MET sequence, output collection will be %s" % final_mvamet_collection.value()
+        process.mvaMetPath = cms.Path(process.pfMEtMVAsequence)
+        process.schedule.append(process.mvaMetPath)
+        print "rerunning MVA MET sequence, output collection will be {n}"\
+            .format(n=mvamet_collection)
 
     # Drop the input ones, just to make sure we aren't screwing anything up
     process.buildFSASeq = cms.Sequence()
@@ -151,7 +136,7 @@ if options.rerunFSA:
         'photons': 'cleanPatPhotons',
         'jets': 'selectedPatJets',
         'pfmet': 'systematicsMET',
-        'mvamet': final_mvamet_collection.value(),#'systematicsMETMVA',
+        'mvamet': mvamet_collection,
     }
     #re run the MC matching, if requested
     if options.rerunMCMatch:
