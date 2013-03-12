@@ -82,7 +82,6 @@ export pu2011JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions
 export pu2012JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/pileup_JSON_DCSONLY_190389-208686_corr.txt 
 
 #check if dev area is up to date
-oldPath=$PWD
-cd $fsa
+pushd $fsa
 check_git_updates.sh
-cd $oldPath
+popd

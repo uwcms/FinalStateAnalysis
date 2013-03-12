@@ -18,10 +18,18 @@ try:
                 calibratedAK5PFJetsForPFMEtMVA, pfMEtMVA, \
                 isomuons, isoelectrons
     else:
-        from JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_42X_cff import \
-                calibratedAK5PFJetsForPFMEtMVA, pfMEtMVA, \
+        from JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_42X_cff \
+                import calibratedAK5PFJetsForPFMEtMVA, pfMEtMVA, \
                 isomuons, isoelectrons
 
+    from JetMETCorrections.Configuration.DefaultJEC_cff \
+            import ak5PFJetsL1FastL2L3, ak5PFJetsL1FastL2L3Residual
+
+    from JetMETCorrections.Configuration.JetCorrectionServicesAllAlgos_cff \
+            import ak5PFL1FastL2L3, ak5PFL1Fastjet, ak5PFL2Relative, \
+            ak5PFL3Absolute
+
+    #process.load("JetMETCorrections.Configuration.DefaultJEC_cff")
     # Modify muons
     muon_cut = isomuons.cut
     isomuons = cms.EDFilter(
