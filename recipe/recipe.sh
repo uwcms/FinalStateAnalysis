@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Install dependencies for the FinalStateAnalysis package.
 # Usage:
