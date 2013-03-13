@@ -173,6 +173,10 @@ def make_ntuple(*legs, **kwargs):
     if 'branches' in kwargs:
         for branch, value in kwargs['branches'].iteritems():
             setattr(ntuple_config, branch, cms.string(value))
+        
+    # Check if we want to use special versions of the FSA producers
+    # via a suffix on the producer name.
+    producer_suffix = kwargs.get('suffix', '')
 
     for i, leg in enumerate(legs):
         counts[leg] += 1
@@ -217,6 +221,7 @@ def make_ntuple(*legs, **kwargs):
         weights=cms.vstring(),
         src=cms.InputTag( analyzerSrc ),
         evtSrc=cms.InputTag("patFinalStateEventProducer"),
+        # counter of events before any selections
         skimCounter=cms.InputTag("eventCount", "", "TUPLE"),
         analysis=cms.PSet(
             selections=cms.VPSet(),
@@ -226,6 +231,7 @@ def make_ntuple(*legs, **kwargs):
                 take=cms.uint32(50),
                 plot=cms.PSet(
                     histos=cms.VPSet(),  # Don't make any final plots
+                    # ntuple has all generated branches in it.
                     ntuple=ntuple_config.clone(),
                 )
             ),
