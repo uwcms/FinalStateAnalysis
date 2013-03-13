@@ -56,6 +56,7 @@ options = TauVarParsing.TauVarParsing(
     rerunFSA=0,  # If one, rebuild the PAT FSA events
     verbose=0,  # If one print out the TimeReport
     noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
+    zzMode=False,
 )
 
 options.outputFile = "ntuplize.root"
@@ -137,7 +138,7 @@ if options.rerunFSA:
     # in pat tuples.
     produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
                          'puTagDoesntMatter', buildFSAEvent=True,
-                         noTracks=True, noPhotons=options.noPhotons)
+                         noTracks=True, noPhotons=options.noPhotons, zzMode=options.zzMode)
     process.buildFSAPath = cms.Path(process.buildFSASeq)
     # Don't crash if some products are missing (like tracks)
     process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
@@ -174,10 +175,7 @@ def expanded_final_states(input):
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
 
-    if final_state in ['mmmm','eeee','eemm']:
-        zz_mode = True
-    else:
-        zz_mode = False
+    zz_mode = ( final_state in ['mmmm','eeee','eemm'] )
 
     analyzer = make_ntuple(*final_state, zz_mode=zz_mode)
     add_ntuple(final_state, analyzer, process,

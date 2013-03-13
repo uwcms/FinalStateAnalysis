@@ -267,7 +267,7 @@ def make_ntuple(*legs, **kwargs):
     # ZZ-producer does not require this cleaning step
     make_unique = not noclean and not zz_mode
     
-    if make_unique and not zz_mode:
+    if make_unique:
         for type, count in counts.iteritems():
             if count == 2:
                 leg1_idx = format_labels['%s1_idx' % type]

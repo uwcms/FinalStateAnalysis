@@ -43,7 +43,7 @@ def _combinatorics(items, n):
 
 def produce_final_states(process, collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
-                         noTracks=False, noPhotons=False):
+                         noTracks=False, noPhotons=False, zzMode=False):
 
     muonsrc = collections['muons']
     esrc = collections['electrons']
@@ -74,19 +74,38 @@ def produce_final_states(process, collections, output_commands,
 
     # Apply some loose PT cuts on the objects we use to create the final states
     # so the combinatorics don't blow up
+    if zzMode:
+        muon_string = 'pt > 5 &'
+                      'abs(eta) < 2.4 &'
+                      'userFloat("ipDXY") < 0.5 &'
+                      'userFloat("dz") < 1 &'
+                      '(isGlobalMuon | isTrackerMuon) &'
+                      'abs(userFloat("ip3DS")) < 4'
+
+        elec_string = 'pt > 7 &'
+                      'abs(eta) < 2.5 &'
+                      'userFloat("ipDXY") < 0.5 &'
+                      'userFloat("dz") < 1 &'
+                      'userInt("missingHits") <= 1 &'
+                      'abs(userFloat("ip3DS")) < 4'
+    else:
+        muon_string = 'max(pt, userFloat("maxCorPt")) > 4 &'
+                      '& (isGlobalMuon | isTrackerMuon)'
+
+        elec_string = 'abs(superCluster().eta) < 2.5 '
+                      '& max(pt, userFloat("maxCorPt")) > 7'
+
     process.muonsForFinalStates = cms.EDFilter(
         "PATMuonRefSelector",
         src=cms.InputTag(muonsrc),
-        cut=cms.string('max(pt, userFloat("maxCorPt")) > 5 '
-                       '& (isGlobalMuon | isTrackerMuon)'),
+        cut=cms.string(muon_string),
         filter=cms.bool(False),
     )
 
     process.electronsForFinalStates = cms.EDFilter(
         "PATElectronRefSelector",
         src=cms.InputTag(esrc),
-        cut=cms.string('abs(superCluster().eta) < 2.5 '
-                       '& max(pt, userFloat("maxCorPt")) > 7'),
+        cut=cms.string(elec_string),
         filter=cms.bool(False),
     )
 
