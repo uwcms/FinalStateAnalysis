@@ -55,7 +55,12 @@ options = TauVarParsing.TauVarParsing(
     dump=0,  # If one, dump process python to stdout
     rerunFSA=0,  # If one, rebuild the PAT FSA events
     verbose=0,  # If one print out the TimeReport
+<<<<<<< HEAD
     noPhotons=0,  # If one, don\'t assume that photons are in the PAT tuples.
+=======
+    noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
+    rerunMVAMET=0,  # If one, (re)build the MVA MET
+>>>>>>> 9ec8fe3d86c3a52b3703b45b1dea47e1bddb52ce
 )
 
 options.outputFile = "ntuplize.root"
@@ -108,6 +113,21 @@ if options.rerunFSA:
         print 'Using globalTag: %s' % options.globalTag
     process.GlobalTag.globaltag = cms.string(options.globalTag)
 
+    mvamet_collection = 'systematicsMETMVA'
+
+    # Make a version with the MVA MET reconstruction method
+    # Works only if we rerun the FSA!
+    if options.rerunMVAMET:
+        process.load("FinalStateAnalysis.PatTools.met.mvaMetOnPatTuple_cff")
+        process.isotaus.src = "cleanPatTaus"
+        mvamet_collection = "patMEtMVA"
+        if not options.isMC:
+            process.patMEtMVA.addGenMET = False
+        process.mvaMetPath = cms.Path(process.pfMEtMVAsequence)
+        process.schedule.append(process.mvaMetPath)
+        print "rerunning MVA MET sequence, output collection will be {n}"\
+            .format(n=mvamet_collection)
+
     # Drop the input ones, just to make sure we aren't screwing anything up
     process.buildFSASeq = cms.Sequence()
     from FinalStateAnalysis.PatTools.patFinalStateProducers \
@@ -120,7 +140,7 @@ if options.rerunFSA:
         'photons': 'cleanPatPhotons',
         'jets': 'selectedPatJets',
         'pfmet': 'systematicsMET',
-        'mvamet': 'systematicsMETMVA',
+        'mvamet': mvamet_collection,
     }
     #re run the MC matching, if requested
     if options.rerunMCMatch:

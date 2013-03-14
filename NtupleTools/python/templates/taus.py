@@ -22,7 +22,7 @@ info = PSet(
 
 # ID and isolation
 id = PSet(
-    objectAntiElectronMVA2loose   = '{object}.tauID("objectAntiElectronMVA2Medium")',
+    objectAntiElectronMVA2loose   = '{object}.tauID("againstElectronLooseMVA2")',
     againstElectronLooseMVA2      = '{object}.tauID("againstElectronMediumMVA2")',
     objectAntiElectronMVA2Tight   = '{object}.tauID("againstElectronTightMVA2")',
     objectAntiElectronMVA2Vloose  = '{object}.tauID("againstElectronVLooseMVA2")',
