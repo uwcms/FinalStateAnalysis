@@ -66,3 +66,6 @@ void PATMuonRochesterCorrector::produce( edm::Event& evt, const edm::EventSetup&
 
     evt.put( out );
 }
+
+#include "FWCore/Framework/interface/MakerMacros.h"
+DEFINE_FWK_MODULE(PATMuonRochesterCorrector);

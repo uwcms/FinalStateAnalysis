@@ -58,6 +58,7 @@ options = TauVarParsing.TauVarParsing(
     noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
     zzMode=False,
     rerunMVAMET=0,  # If one, (re)build the MVA MET
+    rochCor="",
 )
 
 options.outputFile = "ntuplize.root"
@@ -154,7 +155,8 @@ if options.rerunFSA:
     # in pat tuples.
     produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
                          'puTagDoesntMatter', buildFSAEvent=True,
-                         noTracks=True, noPhotons=options.noPhotons, zzMode=options.zzMode)
+                         noTracks=True, noPhotons=options.noPhotons,
+                         zzMode=options.zzMode, rochCor=options.rochCor)
     process.buildFSAPath = cms.Path(process.buildFSASeq)
     # Don't crash if some products are missing (like tracks)
     process.patFinalStateEventProducer.forbidMissing = cms.bool(False)

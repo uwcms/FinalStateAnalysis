@@ -43,7 +43,7 @@ def _combinatorics(items, n):
 
 def produce_final_states(process, collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
-                         noTracks=False, noPhotons=False, zzMode=False):
+                         noTracks=False, noPhotons=False, zzMode=False, rochCor=""):
 
     muonsrc = collections['muons']
     esrc = collections['electrons']
@@ -99,6 +99,26 @@ def produce_final_states(process, collections, output_commands,
                 'abs(superCluster().eta) < 2.5 '
                 '& max(pt, userFloat("maxCorPt")) > 7' )
 
+
+    # Initialize final-state object sequence
+    process.selectObjectsForFinalStates = cms.Sequence()
+
+    # Are we applying Rochester Corrections to the muons?
+    if rochCor != "":
+        if rochCor not in ["RochCor2012","RochCor2011A","RochCor2011B"]:
+            raise RuntimeError(rochCor + ": not a valid option")
+            
+        process.rochCorMuons = cms.EDProducer(
+            "PATMuonRochesterCorrector",
+            src = cms.InputTag( muonsrc ),
+            corr_type = cms.string( "p4_" + rochCor )
+        )
+
+        muonsrc = "rochCorMuons"
+
+        process.selectObjectsForFinalStates += process.rochCorMuons
+
+
     process.muonsForFinalStates = cms.EDFilter(
         "PATMuonRefSelector",
         src=cms.InputTag(muonsrc),
@@ -129,7 +149,7 @@ def produce_final_states(process, collections, output_commands,
         filter=cms.bool(False),
     )
 
-    process.selectObjectsForFinalStates = cms.Sequence(
+    process.selectObjectsForFinalStates += (
         process.muonsForFinalStates
         + process.electronsForFinalStates
         + process.tausForFinalStates
