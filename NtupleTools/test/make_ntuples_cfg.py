@@ -55,12 +55,8 @@ options = TauVarParsing.TauVarParsing(
     dump=0,  # If one, dump process python to stdout
     rerunFSA=0,  # If one, rebuild the PAT FSA events
     verbose=0,  # If one print out the TimeReport
-<<<<<<< HEAD
-    noPhotons=0,  # If one, don\'t assume that photons are in the PAT tuples.
-=======
     noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
-    rerunMVAMET=0,  # If one, (re)build the MVA MET
->>>>>>> 9ec8fe3d86c3a52b3703b45b1dea47e1bddb52ce
+    rerunMVAMET=0  # If one, (re)build the MVA MET
 )
 
 options.outputFile = "ntuplize.root"
