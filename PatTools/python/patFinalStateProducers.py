@@ -107,7 +107,9 @@ def produce_final_states(process, collections, output_commands,
     if rochCor != "":
         if rochCor not in ["RochCor2012","RochCor2011A","RochCor2011B"]:
             raise RuntimeError(rochCor + ": not a valid option")
-            
+        
+        print "-- Applying Muon Rochester Corrections --"
+         
         process.rochCorMuons = cms.EDProducer(
             "PATMuonRochesterCorrector",
             src = cms.InputTag( muonsrc ),

@@ -34,7 +34,6 @@ class PATMuonRochesterCorrector : public edm::EDProducer
 
 
 
-
 PATMuonRochesterCorrector::PATMuonRochesterCorrector( const edm::ParameterSet& pset)
 {
     _src = pset.getParameter<edm::InputTag>("src");
@@ -44,7 +43,10 @@ PATMuonRochesterCorrector::PATMuonRochesterCorrector( const edm::ParameterSet& p
 
 
 
-
+/**
+ * Create a new collection of pat::Muons with the Rochester-corrected p4 and
+ * push the collection to the event.
+ */
 void PATMuonRochesterCorrector::produce( edm::Event& evt, const edm::EventSetup& es )
 {
     std::auto_ptr<pat::MuonCollection> out(new pat::MuonCollection);
