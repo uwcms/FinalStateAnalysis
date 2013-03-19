@@ -120,6 +120,14 @@ datadefs = {
         'calibrationTarget' : 'Fall11',
         'analyses' : ['HTT',  'VH', 'Tau', 'Mu'],
     },
+    'TTplusJets_madgraph_v2' : {
+        'datasetpath' : "/TTJets_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v2/AODSIM",
+        #'x_sec' : 157.5*picobarns, # NLO cross-section from https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSections
+        'x_sec' : 164.4, # From H2Tau
+        'pu' : 'S6',
+        'calibrationTarget' : 'Fall11',
+        'analyses' : ['HTT',  'VH', 'Tau', 'Mu'],
+    },
     # Single top samples
     'T_tW_Powheg' : {
         'datasetpath' : "/T_TuneZ2_tW-channel-DR_7TeV-powheg-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
@@ -458,7 +466,7 @@ datadefs = {
         'calibrationTarget' : 'Fall11',
         'analyses' : ['VH', 'HTT'],
     },
-    
+
     ############################################################################
     #### VH -> WW dataset                   ####################################
     ############################################################################
@@ -1399,7 +1407,7 @@ datadefs = {
         'datasetpath' : "/VBF_ToHToZZTo4L_M-200_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'x_sec' : 1,
         'pu' : 'S6',
-        'calibrationTarget' : 'Fall11',        
+        'calibrationTarget' : 'Fall11',
         'analyses' : ['4L'],
     },
     'VBF_ZZ_4l_210' : {
