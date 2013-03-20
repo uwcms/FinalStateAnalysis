@@ -37,6 +37,13 @@ id = PSet(
         "-0.5*{object}.puChargedHadronIso,0.0))"
         "/{object}.pt()"
     ),
+    objectRelPFIsoRho = cms.string(
+        '({object}.chargedHadronIso()'
+        '+max(0.0,{object}.neutralHadronIso()'
+        '+{object}.photonIso()'
+        '-{object}.userFloat("zzRho2012")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
+        '/{object}.pt()'
+    ),
 
     ## objectRelPFIsoDBZhLike = cms.string(
     ##     "({object}.chargedHadronIso()"
