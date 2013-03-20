@@ -187,7 +187,7 @@ datadefs = {
         'analyses' : ['HTT'],
     },
     'Wplus3Jets_madgraph' : {
-        'datasetpath' : "/W3Jets_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'datasetpath' : "/W3Jets_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v2/AODSIM",
         'x_sec' : 304.2*picobarns,
         'pu' : 'S6',
         'calibrationTarget' : 'Fall11',
