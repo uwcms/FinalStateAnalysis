@@ -59,6 +59,7 @@ options = TauVarParsing.TauVarParsing(
     zzMode=False,
     rerunMVAMET=0,  # If one, (re)build the MVA MET
     rochCor="",
+    eleCor="",
 )
 
 options.outputFile = "ntuplize.root"
@@ -156,7 +157,8 @@ if options.rerunFSA:
     produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
                          'puTagDoesntMatter', buildFSAEvent=True,
                          noTracks=True, noPhotons=options.noPhotons,
-                         zzMode=options.zzMode, rochCor=options.rochCor)
+                         zzMode=options.zzMode, rochCor=options.rochCor, 
+                         eleCor=options.eleCor)
     process.buildFSAPath = cms.Path(process.buildFSASeq)
     # Don't crash if some products are missing (like tracks)
     process.patFinalStateEventProducer.forbidMissing = cms.bool(False)

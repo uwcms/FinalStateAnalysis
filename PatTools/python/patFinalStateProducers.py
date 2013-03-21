@@ -43,7 +43,8 @@ def _combinatorics(items, n):
 
 def produce_final_states(process, collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
-                         noTracks=False, noPhotons=False, zzMode=False, rochCor=""):
+                         noTracks=False, noPhotons=False, zzMode=False, 
+                         rochCor="", eleCor=""):
 
     muonsrc = collections['muons']
     esrc = collections['electrons']
@@ -119,6 +120,25 @@ def produce_final_states(process, collections, output_commands,
         muonsrc = "rochCorMuons"
 
         process.selectObjectsForFinalStates += process.rochCorMuons
+
+
+    # Are we applying electron energy corrections?
+    if eleCor != "":
+        if eleCor not in ["Summer12_DR53X_HCP2012","2012Jul13ReReco","Fall11"]:
+            raise RuntimeError(eleCor + ": not a valid option")
+
+        print "-- Applying Electron Energy Corrections --"
+
+        process.corrElectrons = cms.EDProducer(
+            "PATElectronEnergyCorrector",
+            src = cms.InputTag( esrc ),
+            corr_type = cms.string( "EGCorr_" + eleCor + "SmearedRegression" )
+        )
+
+        esrc = "corrElectrons"
+
+        process.selectObjectsForFinalStates += process.corrElectrons
+
 
 
     process.muonsForFinalStates = cms.EDFilter(
