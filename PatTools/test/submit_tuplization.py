@@ -17,6 +17,7 @@ from FinalStateAnalysis.PatTools.pattuple_option_configurator import \
         configure_pat_tuple
 import os
 import sys
+import FinalStateAnalysis.PatTools.site_spec as site_spec
 
 parser = argparse.ArgumentParser(description='Build PAT Tuple CRAB submission')
 parser.add_argument('jobid', help='Job ID identifier')
@@ -44,7 +45,8 @@ for sample in sorted(datadefs.keys()):
     if not passes_filter:
         continue
 
-    submit_dir_base = "/scratch/{logname}/{jobid}/{sample}".format(
+    submit_dir_base = "{root}/{logname}/{jobid}/{sample}".format(
+        root = site_spec.submit_dir_root,
         logname = os.environ['LOGNAME'],
         jobid = jobId,
         sample = sample
@@ -86,7 +88,7 @@ for sample in sorted(datadefs.keys()):
         )
 
     output_dir = os.path.join(
-        '/hdfs/store/user/',
+        site_spec.output_dir_root,
         os.environ['LOGNAME'] + sample_info['datasetpath'],
         jobId
     )
@@ -97,7 +99,7 @@ for sample in sorted(datadefs.keys()):
         '--infer-cmssw-path',
         '--vsize-limit=30000',
         '--input-files-per-job=1',
-        '"--output-dir=srm://cmssrm.hep.wisc.edu:8443/srm/v2/server?SFN=%s"' % output_dir,
+        '"--output-dir=srm://%s/srm/v2/server?SFN=%s"' %(site_spec.output_dir_srm,output_dir),
         '--submit-dir=%s' % submit_dir,
         '--output-dag-file=%s/dag.dag' % dag_directory,
     ]
