@@ -45,9 +45,8 @@ for sample in sorted(datadefs.keys()):
     if not passes_filter:
         continue
 
-    submit_dir_base = "{root}/{logname}/{jobid}/{sample}".format(
+    submit_dir_base = "{root}/{jobid}/{sample}".format(
         root = site_spec.submit_dir_root,
-        logname = os.environ['LOGNAME'],
         jobid = jobId,
         sample = sample
     )
@@ -89,7 +88,7 @@ for sample in sorted(datadefs.keys()):
 
     output_dir = os.path.join(
         site_spec.output_dir_root,
-        os.environ['LOGNAME'] + sample_info['datasetpath'],
+        sample_info['datasetpath'],
         jobId
     )
 
