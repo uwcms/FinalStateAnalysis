@@ -394,6 +394,17 @@ double PATFinalState::mtMET(int i, const std::string& metTag) const {
   }
 }
 
+double PATFinalState::mtMET(int i, const std::string& tag,
+  const std::string& metName, const std::string& metTag) const {
+  if (metTag != "") {
+    return fshelpers::transverseMass(daughterUserCandP4(i, tag),
+				     evt()->met(metName)->userCand(metTag)->p4());
+  } else {
+    return fshelpers::transverseMass(daughterUserCandP4(i, tag),
+        evt()->met(metName)->p4());
+  }
+}
+
 double PATFinalState::ht(const std::string& sysTags) const {
   std::vector<const reco::Candidate*> theDaughters = daughters(sysTags);
   double output = 0;
