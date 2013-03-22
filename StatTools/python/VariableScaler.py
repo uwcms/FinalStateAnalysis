@@ -10,4 +10,7 @@ def make_scaler(file_path, roovar_path):
     tfile.Close()
     if value == 0:
         raise ZeroDivisionError("make_scaler(%s, %s): value got by the function is zero, function returned will crash!" % (file_path, roovar_path))
-    return lambda x: x/value
+    def scaler(x):
+        '%s, %s' % (file_path, roovar_path)
+        return x/value
+    return scaler 
