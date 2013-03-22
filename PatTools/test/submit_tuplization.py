@@ -87,10 +87,12 @@ for sample in sorted(datadefs.keys()):
         )
 
     output_dir = os.path.join(
-        site_spec.output_dir_root,
-        sample_info['datasetpath'],
+        site_spec.output_dir_root + sample_info['datasetpath'],
         jobId
     )
+
+
+    print site_spec.output_dir_root,output_dir
 
     command = [
         'farmoutAnalysisJobs',
