@@ -175,7 +175,7 @@ class Plotter(object):
             mc_stack.Draw()
         self.keep.append(mc_stack)
         # Draw data
-        data = self.rebin_view(self.data, rebin).Get(path)
+        data = self.rebin_view(self.get_view('data'), rebin).Get(path)
         data.Draw('same')
         self.keep.append(data)
         # Make sure we can see everything
