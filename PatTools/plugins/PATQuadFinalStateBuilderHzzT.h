@@ -402,7 +402,10 @@ edm::Ptr<pat::PFParticle> PATQuadFinalStateBuilderHzzT<FinalState>::assignPhoton
 
     // return if one or zero photons are found
     if ( photons.size() == 0 )
-        return NULL;
+    {
+        edm::Ptr<pat::PFParticle> out;
+        return out;
+    }
     else if ( photons.size() == 1 )
         return photons.at(0);
 
