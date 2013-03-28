@@ -71,6 +71,10 @@ class PATQuadFinalStateBuilderHzzT : public edm::EDProducer
         edm::InputTag photonSrc_;
         edm::InputTag evtSrc_;
         StringCutObjectSelector<PATFinalState> cut_;
+
+        edm::Ptr<pat::PFParticle> assignPhoton(
+                reco::CandidatePtr leg1, reco::CandidatePtr leg2, 
+                std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::PFParticle> > >& photonMap );
 };
 
 
@@ -244,9 +248,6 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
     do
     {
-        edm::Ptr<pat::PFParticle> photon1;
-        edm::Ptr<pat::PFParticle> photon2;
-
         reco::CandidatePtr lepton1 = lepton_list.at(0);
         reco::CandidatePtr lepton2 = lepton_list.at(1);
         reco::CandidatePtr lepton3 = lepton_list.at(2);
@@ -280,10 +281,6 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
             best_pt1 = lepton3->pt();
             best_pt2 = lepton4->pt();
         }
-        else
-            continue;
-
-        // implement FSR here
     }
     while ( std::next_permutation(lepton_list.begin(), lepton_list.end(), comparePt) );
 
@@ -293,6 +290,20 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
         evt.put( output );
         return;
     }
+
+
+    // -------------------------------------------------
+    //
+    // Assign FSR photons to Z candidates
+    //
+    // -------------------------------------------------
+    
+    //std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::PFParticle> > > photonMap;
+    edm::Ptr<pat::PFParticle> photon1;
+    edm::Ptr<pat::PFParticle> photon2;
+
+    std::vector<edm::Ptr<pat::PFParticle> > z1photons;
+    std::vector<edm::Ptr<pat::PFParticle> > z2photons;
 
 
 
@@ -343,6 +354,95 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
         output->push_back( outputCand );
 
     evt.put( output );
+}
+
+
+
+/**
+ */
+template<class FinalState> 
+edm::Ptr<pat::PFParticle> PATQuadFinalStateBuilderHzzT<FinalState>::assignPhoton(
+        reco::CandidatePtr leg1, reco::CandidatePtr leg2, 
+        std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::PFParticle> > >& photonMap )
+{
+    std::vector<edm::Ptr<pat::PFParticle> > photons;
+
+    for ( int i = 0; i < photonMap[leg1].size(); ++i )
+    {
+        edm::Ptr<pat::PFParticle> photon = photonMap[leg1].at(i);
+
+        FourVec Z     = leg1->p4() + leg2->p4();
+        FourVec Z_fsr = Z + photon->p4();
+
+        bool cut1 = 4 < Z_fsr.M() && Z_fsr.M() < 100;
+        bool cut2 = fabs(Z_fsr.M() - ZMASS) < fabs(Z.M() - ZMASS);
+
+        if ( cut1 && cut2 )
+            photons.push_back( photon );
+    }
+
+    for ( int i = 0; i < photonMap[leg2].size(); ++i )
+    {
+        edm::Ptr<pat::PFParticle> photon = photonMap[leg2].at(i);
+
+        FourVec Z     = leg1->p4() + leg2->p4();
+        FourVec Z_fsr = Z + photon->p4();
+
+        bool cut1 = 4 < Z_fsr.M() && Z_fsr.M() < 100;
+        bool cut2 = fabs(Z_fsr.M() - ZMASS) < fabs(Z.M() - ZMASS);
+
+        if ( cut1 && cut2 )
+            photons.push_back( photon );
+    }
+
+    // return if one or zero photons are found
+    if ( photons.size() == 0 )
+        return NULL;
+    else if ( photons.size() == 1 )
+        return photons.at(0);
+
+    // pick highest pt photon if above 4 GeV
+    bool found = false;
+    edm::Ptr<pat::PFParticle> highest_photon;
+    double highest_pt = 0;
+
+    for ( int i = 0; i < photons.size(); ++i )
+    {
+        if ( photons.at(i)->pt() > 4 && photons.at(i)->pt() > highest_pt )
+        {
+            highest_photon = photons.at(i);
+            highest_pt     = photons.at(i)->pt();
+            found = true;
+        }
+    }
+
+    if (found)
+        return highest_photon;
+
+    // if no photons above 4 GeV, select smallest dR
+    edm::Ptr<pat::PFParticle> closest_photon;
+    double closest_dR = std::numeric_limits<double>::infinity();
+
+    for ( int i = 0; i < photons.size(); ++i )
+    {
+        edm::Ptr<pat::PFParticle> current_photon = photons.at(i);
+
+        double dR1 = ROOT::Math::VectorUtil::DeltaR( leg1->p4(), current_photon->p4() );
+        double dR2 = ROOT::Math::VectorUtil::DeltaR( leg2->p4(), current_photon->p4() );
+
+        if ( dR1 < closest_dR )
+        {
+            closest_dR = dR1;
+            closest_photon = current_photon;
+        }
+        if ( dR2 < closest_dR )
+        {
+            closest_dR = dR2;
+            closest_photon = current_photon;
+        }
+    }
+
+    return closest_photon;
 }
 
 
