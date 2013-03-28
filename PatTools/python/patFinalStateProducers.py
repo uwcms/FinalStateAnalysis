@@ -77,20 +77,20 @@ def produce_final_states(process, collections, output_commands,
     # so the combinatorics don't blow up
     if zzMode:
         muon_string = ( 
-                'pt > 5 &'
+                'pt > 5.0 &'
                 'abs(eta) < 2.4 &'
                 'userFloat("ipDXY") < 0.5 &'
-                'userFloat("dz") < 1 &'
+                'userFloat("dz") < 1.0 &'
                 '(isGlobalMuon | isTrackerMuon) &'
-                'abs(userFloat("ip3DS")) < 4' )
+                'abs(userFloat("ip3DS")) < 4.0' )
 
         elec_string = (
-                'pt > 7 &'
+                'pt > 7.0 &'
                 'abs(eta) < 2.5 &'
                 'userFloat("ipDXY") < 0.5 &'
-                'userFloat("dz") < 1 &'
-                'userInt("missingHits") <= 1 &'
-                'abs(userFloat("ip3DS")) < 4' )
+                'userFloat("dz") < 1.0 &'
+                'gsfTrack().trackerExpectedHitsInner().numberOfHits() < 2.0 &'
+                'abs(userFloat("ip3DS")) < 4.0' )
     else:
         muon_string = (
                 'max(pt, userFloat("maxCorPt")) > 4 &'
