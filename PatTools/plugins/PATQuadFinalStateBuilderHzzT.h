@@ -298,13 +298,8 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     //
     // -------------------------------------------------
     
-    //std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::PFParticle> > > photonMap;
-    edm::Ptr<pat::PFParticle> photon1;
-    edm::Ptr<pat::PFParticle> photon2;
-
-    std::vector<edm::Ptr<pat::PFParticle> > z1photons;
-    std::vector<edm::Ptr<pat::PFParticle> > z2photons;
-
+    edm::Ptr<pat::PFParticle> photon1 = assignPhoton( leg1, leg2, photonMap );
+    edm::Ptr<pat::PFParticle> photon2 = assignPhoton( leg3, leg4, photonMap );
 
 
     // -------------------------------------------------
@@ -359,6 +354,16 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
 
 /**
+ * This function takes the two legs of a Z candidate and the photon mapping and assigns
+ * either one or zero FSR photons to the Z candidate. A photon is accepted only if brings
+ * the Z mass closer to nominal, and 4 < M_llg < 100. If more than one photons pass, pick
+ * the one with the highest pT greater than 4 GeV. Otherwise, choose the one with the
+ * smallest dR to the leptons.
+ *
+ * @param leg1,leg2 Legs of the Z-candidate
+ * @param photonMap The mapping of leptons to their closest photons
+ *
+ * @return A single photon candidate or NULL if there isn't one
  */
 template<class FinalState> 
 edm::Ptr<pat::PFParticle> PATQuadFinalStateBuilderHzzT<FinalState>::assignPhoton(
@@ -367,7 +372,7 @@ edm::Ptr<pat::PFParticle> PATQuadFinalStateBuilderHzzT<FinalState>::assignPhoton
 {
     std::vector<edm::Ptr<pat::PFParticle> > photons;
 
-    for ( int i = 0; i < photonMap[leg1].size(); ++i )
+    for ( size_t i = 0; i < photonMap[leg1].size(); ++i )
     {
         edm::Ptr<pat::PFParticle> photon = photonMap[leg1].at(i);
 
@@ -381,7 +386,7 @@ edm::Ptr<pat::PFParticle> PATQuadFinalStateBuilderHzzT<FinalState>::assignPhoton
             photons.push_back( photon );
     }
 
-    for ( int i = 0; i < photonMap[leg2].size(); ++i )
+    for ( size_t i = 0; i < photonMap[leg2].size(); ++i )
     {
         edm::Ptr<pat::PFParticle> photon = photonMap[leg2].at(i);
 
@@ -406,7 +411,7 @@ edm::Ptr<pat::PFParticle> PATQuadFinalStateBuilderHzzT<FinalState>::assignPhoton
     edm::Ptr<pat::PFParticle> highest_photon;
     double highest_pt = 0;
 
-    for ( int i = 0; i < photons.size(); ++i )
+    for ( size_t i = 0; i < photons.size(); ++i )
     {
         if ( photons.at(i)->pt() > 4 && photons.at(i)->pt() > highest_pt )
         {
@@ -423,7 +428,7 @@ edm::Ptr<pat::PFParticle> PATQuadFinalStateBuilderHzzT<FinalState>::assignPhoton
     edm::Ptr<pat::PFParticle> closest_photon;
     double closest_dR = std::numeric_limits<double>::infinity();
 
-    for ( int i = 0; i < photons.size(); ++i )
+    for ( size_t i = 0; i < photons.size(); ++i )
     {
         edm::Ptr<pat::PFParticle> current_photon = photons.at(i);
 
@@ -451,8 +456,7 @@ edm::Ptr<pat::PFParticle> PATQuadFinalStateBuilderHzzT<FinalState>::assignPhoton
  * Compares leptons based on their pt.
  * Ensures ordering from greatest to least during sorting.
  *
- * @param A First lepton
- * @param B Second lepton
+ * @param A,B Lepton candidates
  * @return True iff A.pt is greater than B.pt
  */
 bool comparePt( reco::CandidatePtr A, reco::CandidatePtr B )
