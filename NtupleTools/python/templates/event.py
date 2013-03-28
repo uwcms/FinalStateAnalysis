@@ -41,8 +41,21 @@ pv_info = PSet(
 )
 
 met = PSet(
-    metEt='evt.met("mvamet").et',
-    metPhi='evt.met("mvamet").phi',
+    ## mva_metEt     = 'evt.met("mvamet").et',
+    ## mva_metPhi    = 'evt.met("mvamet").phi',
+    type1_pfMetEt  = 'evt.met("pfmet").userCand("type1").et',
+    type1_pfMetPhi = 'evt.met("pfmet").userCand("type1").phi',
+    #systematics
+    pfMet_mes_Et   = 'evt.met("pfmet").userCand("mes+").et',
+    pfMet_tes_Et   = 'evt.met("pfmet").userCand("tes+").et',
+    pfMet_jes_Et   = 'evt.met("pfmet").userCand("jes+").et',
+    pfMet_ues_Et   = 'evt.met("pfmet").userCand("ues+").et',
+
+    pfMet_mes_Phi  = 'evt.met("pfmet").userCand("mes+").phi',
+    pfMet_tes_Phi  = 'evt.met("pfmet").userCand("tes+").phi',
+    pfMet_jes_Phi  = 'evt.met("pfmet").userCand("jes+").phi',
+    pfMet_ues_Phi  = 'evt.met("pfmet").userCand("ues+").phi',
+    
     #metSignificance='evt.metSignificance',
     recoilDaught='getDaughtersRecoil().R()',
     recoilWithMet='getDaughtersRecoilWithMet().R()',
