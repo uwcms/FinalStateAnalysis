@@ -42,6 +42,9 @@
 
 #include "DataFormats/Math/interface/deltaR.h"
 #include "DataFormats/PatCandidates/interface/PFParticle.h"
+#include "DataFormats/PatCandidates/interface/PATObject.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Electron.h"
 #include "Math/GenVector/VectorUtil.h"
 
 
@@ -295,11 +298,42 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     // -------------------------------------------------
     //
     // Assign FSR photons to Z candidates
+    // Correct lepton iso if necessary
     //
     // -------------------------------------------------
     
+    float lepIsoCone = 0.4;
+    
     edm::Ptr<pat::PFParticle> photon1 = assignPhoton( leg1, leg2, photonMap );
     edm::Ptr<pat::PFParticle> photon2 = assignPhoton( leg3, leg4, photonMap );
+
+    float leg1_fsrIsoCorr = 0.0;
+    float leg2_fsrIsoCorr = 0.0;
+    float leg3_fsrIsoCorr = 0.0;
+    float leg4_fsrIsoCorr = 0.0;
+
+    if ( !photon1.isNull() )
+    {
+        float dR1 = ROOT::Math::VectorUtil::DeltaR( leg1->p4(), photon1->p4() );
+        float dR2 = ROOT::Math::VectorUtil::DeltaR( leg2->p4(), photon1->p4() );
+
+        if ( dR1 < dR2 && dR1 < lepIsoCone )
+            leg1_fsrIsoCorr = photon1->pt();
+        else if ( dR2 < dR1 && dR2 < lepIsoCone )
+            leg2_fsrIsoCorr = photon1->pt();
+    }
+
+    if ( !photon2.isNull() )
+    {
+        float dR3 = ROOT::Math::VectorUtil::DeltaR( leg3->p4(), photon2->p4() );
+        float dR4 = ROOT::Math::VectorUtil::DeltaR( leg4->p4(), photon2->p4() );
+
+        if ( dR3 < dR4 && dR3 < lepIsoCone )
+            leg3_fsrIsoCorr = photon2->pt();
+        else if ( dR4 < dR3 && dR4 < lepIsoCone )
+            leg4_fsrIsoCorr = photon2->pt();
+    }
+
 
 
     // -------------------------------------------------
@@ -344,6 +378,16 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
     // Load the legs into the output candidate and push to the event
     FinalState outputCand( leg1_out, leg2_out, leg3_out, leg4_out, evtPtr );
+
+    // attach FSR photons to quad candidate
+    outputCand.addUserCand("fsrPhoton1", photon1);
+    outputCand.addUserCand("fsrPhoton2", photon2);
+    
+    // attach FSR isolation corrections
+    outputCand.addUserFloat("leg1fsrIsoCorr", leg1_fsrIsoCorr);
+    outputCand.addUserFloat("leg2fsrIsoCorr", leg2_fsrIsoCorr);
+    outputCand.addUserFloat("leg3fsrIsoCorr", leg3_fsrIsoCorr);
+    outputCand.addUserFloat("leg4fsrIsoCorr", leg4_fsrIsoCorr);
 
     if ( cut_(outputCand) )
         output->push_back( outputCand );
