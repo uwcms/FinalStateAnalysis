@@ -384,10 +384,10 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     outputCand.addUserCand("fsrPhoton2", photon2);
     
     // attach FSR isolation corrections
-    outputCand.addUserFloat("leg1fsrIsoCorr", leg1_fsrIsoCorr);
-    outputCand.addUserFloat("leg2fsrIsoCorr", leg2_fsrIsoCorr);
-    outputCand.addUserFloat("leg3fsrIsoCorr", leg3_fsrIsoCorr);
-    outputCand.addUserFloat("leg4fsrIsoCorr", leg4_fsrIsoCorr);
+    outputCand.addUserFloat("leg0fsrIsoCorr", leg1_fsrIsoCorr);
+    outputCand.addUserFloat("leg1fsrIsoCorr", leg2_fsrIsoCorr);
+    outputCand.addUserFloat("leg2fsrIsoCorr", leg3_fsrIsoCorr);
+    outputCand.addUserFloat("leg3fsrIsoCorr", leg4_fsrIsoCorr);
 
     if ( cut_(outputCand) )
         output->push_back( outputCand );
