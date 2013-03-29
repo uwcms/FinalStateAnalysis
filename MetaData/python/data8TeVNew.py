@@ -228,7 +228,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
-    'calibrationTarget':'2012Jul13ReReco'
+    'calibrationTarget':'Moriond2013'
    },
 
    'DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
@@ -236,7 +236,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012B_13Jul2012_v4_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
-   'calibrationTarget':'2012Jul13ReReco'
+   'calibrationTarget':'Moriond2013'
    },
 
    'DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
@@ -244,7 +244,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau115_ptelec1_17had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
-   'calibrationTarget':'2012Jul13ReReco'
+   'calibrationTarget':'Moriond2013'
    },
 
    'DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
@@ -252,7 +252,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012A_13Jul2012_v1_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
-   'calibrationTarget':'2012Jul13ReReco'
+   'calibrationTarget':'Moriond2013'
    },
 
    'DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau116_ptmu1_13had1_17_v1' : {
@@ -260,7 +260,7 @@ datadefs = {
    'datasetpath' : "/DoubleMu/StoreResults-DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau116_ptmu1_13had1_17_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
    'pu' : 'data',
-   'calibrationTarget':'2012Jul13ReReco'
+   'calibrationTarget':'Moriond2013'
    },
 
    'DoubleMu_Run2012C_PromptReco_v2_embedded_trans1_tau115_ptelec1_17had1_17_v1' : {
@@ -469,7 +469,7 @@ datadefs['data_DoubleMu_Run2012B_13Jul2012_v4'] = {
    'firstRun' : 193834,
    'lastRun' : 196531,
    'analyses' : ['HZZ'],
-    'calibrationTarget':'2012Jul13ReReco'
+    'calibrationTarget':'Moriond2013'
    }
 
 def build_data_set(pd, analyses):
@@ -480,7 +480,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 190456,
       'lastRun' : 193621,
       'analyses' : analyses,
-      'calibrationTarget':'2012Jul13ReReco'
+      'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012B_13Jul2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-13Jul2012-v1/AOD" % pd,
@@ -488,7 +488,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 193833,
       'lastRun' : 196531,
       'analyses' : analyses,
-      'calibrationTarget':'2012Jul13ReReco'
+      'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012C_PromptReco_v2_Run198934_201264' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
@@ -496,7 +496,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 198934,
       'lastRun' : 201264,
       'analyses' : analyses,
-      'calibrationTarget':'2012Jul13ReReco'
+      'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012C_PromptReco_v2_Run201265_203755' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
@@ -504,7 +504,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 201265,
       'lastRun' : 203755,
       'analyses' : analyses,
-      'calibrationTarget':'2012Jul13ReReco'
+      'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012A_recover_06Aug2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012A-recover-06Aug2012-v1/AOD" % pd,
@@ -512,7 +512,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 190782, #LAG from A. David, 26 Dec 2012
       'lastRun' : 190949,
       'analyses' : analyses,
-      'calibrationTarget':'2012Jul13ReReco'
+      'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012C_PromptReco_v1' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
@@ -520,7 +520,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 197700,
       'lastRun' : 198913,
       'analyses' : analyses,
-      'calibrationTarget':'2012Jul13ReReco'
+      'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012C_24Aug2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012C-24Aug2012-v1/AOD" % pd,
@@ -528,7 +528,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 198022,
       'lastRun' : 198523,
       'analyses' : analyses,
-      'calibrationTarget':'2012Jul13ReReco'
+      'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012C_EcalRecover_11DEC2012_v1' % pd :{
       'datasetpath' : "/%s/Run2012C-EcalRecover_11Dec2012-v1/AOD" % pd,
@@ -536,7 +536,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 201191,
       'lastRun' : 201191,
       'analyses' : analyses,
-      'calibrationTarget':'2012Jul13ReReco'
+      'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012D_PromptReco_v1' % pd :{
       'datasetpath' : "/%s/Run2012D-PromptReco-v1/AOD" % pd,
@@ -544,7 +544,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 203768,
       'lastRun' :  208686,
       'analyses' : analyses,
-      'calibrationTarget':'2012Jul13ReReco'
+      'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012D_16Jan2013_v1' % pd :{
       'datasetpath' : "/%s/Run2012D-16Jan2013-v1/AOD" % pd,
@@ -552,7 +552,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 203768,
       'lastRun' :  208686,
       'analyses' : analyses,
-      'calibrationTarget':'2012Jul13ReReco'
+      'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012D_16Jan2013_v2' % pd :{ #apparently some of these got re-re-re-recoed. Or something. v1 no longer exists for MuEG or DoubleMu IAR 19.Feb.2013
       'datasetpath' : "/%s/Run2012D-16Jan2013-v2/AOD" % pd,
@@ -560,7 +560,7 @@ def build_data_set(pd, analyses):
       'firstRun' : 203768,
       'lastRun' :  208686,
       'analyses' : analyses,
-      'calibrationTarget':'2012Jul13ReReco'
+      'calibrationTarget':'Moriond2013'
       },
     }
    sample_dict = {
