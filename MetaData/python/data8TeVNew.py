@@ -202,7 +202,7 @@ datadefs = {
    'datasetpath': '/GluGluToZZTo4L_8TeV-gg2zz-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
    'pu': 'S7',
    'xsec': -999,
-   'calibrationTarget': 'Summer12',
+   'calibrationTarget': 'Summer12_DR53X_HCP2012',
    'responsible' : 'Ian',
    },
 
@@ -211,7 +211,7 @@ datadefs = {
    'datasetpath': '/GluGluToZZTo2L2L_TuneZ2star_8TeV-gg2zz-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
    'pu': 'S7',
    'xsec': -999,
-   'calibrationTarget': 'Summer12',
+   'calibrationTarget': 'Summer12_DR53X_HCP2012',
    'responsible' : 'Ian',
    },
 
