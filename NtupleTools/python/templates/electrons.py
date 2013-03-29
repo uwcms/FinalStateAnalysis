@@ -43,6 +43,13 @@ id = PSet(
         '-{object}.userFloat("zzRho2012")*{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")))'
         '/{object}.pt()'
     ),
+    objectRelPFIsoRhoFSR = cms.string(
+        '({object}.chargedHadronIso()'
+        '+max(0.0,{object}.neutralHadronIso()'
+        '+{object}.photonIso() - userFloat("leg{object_idx}fsrIsoCorr")'
+        '-{object}.userFloat("zzRho2012")*{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")))'
+        '/{object}.pt()'
+    ),
     objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
