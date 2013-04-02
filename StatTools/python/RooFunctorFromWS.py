@@ -53,14 +53,14 @@ def make_corrector_from_th2(filename, path):
     binsy = hist.GetNbinsY()
     def refFun(xval,yval):
         #print hist
-        xbin = hist.GetXaxis().FindBin(xval)
+        xbin = hist.GetXaxis().FindFixBin(xval) #Faster than FindBin
         xbin = (xbin if xbin <= binsx else binsx ) if xbin >= 1 else 1 #Compute underflow and overflow as first and last bin
-        ybin = hist.GetYaxis().FindBin(yval)
+        ybin = hist.GetYaxis().FindFixBin(yval)
         ybin = (ybin if ybin <= binsy else binsy ) if ybin >= 1 else 1 #Compute underflow and overflow as first and last bin
         prob = hist.GetBinContent(xbin,ybin)
-        try:
-            return prob 
-        except ZeroDivisionError:
+        if prob:
+            return prob
+        else:
             raise ZeroDivisionError(" catched trying to return weight for (%.3f,%.3f) ==> (%i,%i) bin out of (%i,%i). Prob: %.3f. Hist: %s : %s. " % (xval, yval, xbin, ybin, binsx, binsy , prob, filename, path))
     return refFun
 
