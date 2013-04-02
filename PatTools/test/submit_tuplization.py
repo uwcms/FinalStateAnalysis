@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ #!/usr/bin/env python
 
 '''
 File: submit_tuplization.py
@@ -100,7 +100,7 @@ for sample in sorted(datadefs.keys()):
         '--infer-cmssw-path',
         '--vsize-limit=30000',
         '--input-files-per-job=1',
-        '"--output-dir=srm://%s/srm/v2/server?SFN=%s"' %(site_spec.output_dir_srm,output_dir),
+        '"--output-dir=srm://%s%s"' %(site_spec.output_dir_srm,output_dir),
         '--submit-dir=%s' % submit_dir,
         '--output-dag-file=%s/dag.dag' % dag_directory,
     ]

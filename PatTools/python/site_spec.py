@@ -6,7 +6,7 @@ _log_name  = os.environ['LOGNAME']
 
 submit_dir_root = '/scratch/%s'%_log_name
 output_dir_root = '/hdfs/store/user/%s'%_log_name
-output_dir_srm  = 'cmssrm.hep.wisc.edu:8443'
+output_dir_srm  = 'cmssrm.hep.wisc.edu:8443/srm/v2/server?SFN='
 
 if 'fnal.gov' in _host_name:
     output_dir_srm  = 'cmssrm.fnal.gov:8443'
