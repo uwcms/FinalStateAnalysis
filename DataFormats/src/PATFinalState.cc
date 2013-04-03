@@ -339,8 +339,9 @@ PATFinalState::SVfit(int i, int j) const {
   toFit.push_back(daughterPtr(i));
   toFit.push_back(daughterPtr(j));
 
-  return ApplySVfit::getSVfitMass(toFit, met(), evt()->metCovariance(), 0,
-      evt().evtId());
+  return ApplySVfit::getSVfitMass(toFit, *(met()),
+      evt()->metCovariance(), 0,
+      evt()->evtId());
 }
 
 double
