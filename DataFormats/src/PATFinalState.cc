@@ -1,11 +1,10 @@
-#include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
-
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalState.h"
 
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 #include "FinalStateAnalysis/DataAlgos/interface/CollectionFilter.h"
+#include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
 
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
@@ -321,19 +320,8 @@ PATFinalState::smallestDeltaPhi() const {
   return smallestDeltaPhi;
 }
 
-///////////////////////
-// Call to function getSVfitMass which returns the SVfit mass
-// (szs)
-////////////////////////
-
 double
 PATFinalState::SVfit(int i, int j) const {
-
-  ///////////
-  // call only for the 2 higgs daughters in a 4-object
-  // ZH final state (indices 2 & 3)
-  if (i < 2 || j < 2)
-    return -1;
 
   std::vector<reco::CandidatePtr> toFit;
   toFit.push_back(daughterPtr(i));
