@@ -27,7 +27,6 @@ mtToMET = PSet(
 
 # Variables based on pairs of objects
 pairs = PSet(
-    object1_object2_SVfitMass = 'SVfit({object1_idx},{object2_idx})', # SVfit mass (sshalhou@CERN.CH)
     object1_object2_Mass = 'subcand({object1_idx}, {object2_idx}).get.mass',
     object1_object2_Pt = 'subcand({object1_idx}, {object2_idx}).get.pt',
     object1_object2_DR = 'dR({object1_idx}, {object2_idx})',
@@ -40,6 +39,10 @@ pairs = PSet(
     object1_object2_ToMETDPhi = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("type1").phi)',
 )
 
+svfit = PSet(
+    object1_object2_SVfitMass = 'SVfit({object1_idx},{object2_idx})',
+)
+
 finalstate = PSet(
     LT = 'ht',
     charge = 'charge',
@@ -49,7 +52,7 @@ finalstate = PSet(
     MassErrord1 = 'userFloat("cand_dM_0")',
     MassErrord2 = 'userFloat("cand_dM_1")',
     MassErrord3 = 'userFloat("cand_dM_2")',
-    MassErrord4 = 'userFloat("cand_dM_3")'    
+    MassErrord4 = 'userFloat("cand_dM_3")'
 )
 
 # Branches for identifying Z bosons using a pair of objects
