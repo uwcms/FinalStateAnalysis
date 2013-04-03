@@ -55,7 +55,9 @@ finalstate = PSet(
 zboson = PSet(
     # Absolute distance to Z mass.  If SS, returns 1000.  The smaller the more
     # "Z like"
-    object1_object2_Zcompat = 'zCompatibility({object1_idx}, {object2_idx})'
+    object1_object2_Zcompat = 'zCompatibility({object1_idx}, {object2_idx})',
+    object1_object2_MassFsr = 'subcandfsr({object1_idx}, {object2_idx}).get.mass',
+    object1_object2_PtFsr = 'subcandfsr({object1_idx}, {object2_idx}).get.pt',
 )
 
 vbf = PSet(
