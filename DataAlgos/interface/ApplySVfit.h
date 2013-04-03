@@ -11,10 +11,10 @@
 
 #include "DataFormats/Candidate/interface/CandidateFwd.h"
 #include <vector>
+#include "TMatrixDfwd.h"
 
 // forward declarations
 namespace pat { class MET; }
-class TMatrixD;
 namespace edm { class EventID; }
 
 namespace ApplySVfit {
