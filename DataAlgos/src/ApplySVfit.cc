@@ -11,6 +11,8 @@
 #include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
 #include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
 #include "TLorentzVector.h"
+#include "DataFormats/Candidate/interface/Candidate.h"
+#include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/Math/interface/Vector3D.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "FinalStateAnalysis/DataAlgos/interface/Hash.h"
@@ -38,7 +40,7 @@ namespace ApplySVfit {
 
     // Check if this a new event
     if (evtId != lastSVfitEvent) {
-      SVFitCache.clear();
+      theCache.clear();
     }
     lastSVfitEvent = evtId;
 
@@ -52,9 +54,8 @@ namespace ApplySVfit {
     }
 
     // No pain no gain
-    Vector measuredMET = met()->momentum();
+    Vector measuredMET = met.momentum();
     std::vector<MeasuredTauLepton> measuredTauLeptons;
-    unsigned int verbosity = 0;
 
     for (size_t dau = 0; dau < cands.size(); ++dau) {
       int pdgId = std::abs(cands[dau]->pdgId());
