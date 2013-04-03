@@ -1,0 +1,22 @@
+Index: EGamma/EGammaAnalysisTools/src/EGammaMvaEleEstimator.cc
+===================================================================
+RCS file: /local/reps/CMSSW/UserCode/EGamma/EGammaAnalysisTools/src/Attic/EGammaMvaEleEstimator.cc,v
+retrieving revision 1.14.2.3
+diff -r1.14.2.3 EGammaMvaEleEstimator.cc
+22a23,26
+> #include "RecoTauTag/RecoTau/interface/TMVAZipReader.h"
+> 
+> namespace reco{ namespace details { int dummy; } } 
+> 
+23a28,29
+> using namespace reco::details;
+> 
+327,328c333
+< 
+<     tmpTMVAReader->BookMVA(fMethodname , weightsfiles[i]);
+---
+>     loadTMVAWeights(tmpTMVAReader, fMethodname , weightsfiles[i] );
+1217c1222
+<   if(fMVAType == kTrig) {
+---
+>   if(fMVAType == kTrigIDIsoCombined) {

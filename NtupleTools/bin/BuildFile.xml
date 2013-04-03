@@ -9,3 +9,8 @@
 <environment>
   <bin   file="analyzeFinalStates.cc"></bin>
 </environment>
+
+<bin name="slimAndMergeNtuple" file="slimAndMergeNtuple.cc">
+  <use   name="root"/>
+</bin>
+  

@@ -27,73 +27,59 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
     </tr>
 </table>
 
+Installation
+------------
 
+Current CMSSW versions: ``4_2_8_patch7`` or ``5_3_7``.  
+The installation instructions are the same for both.  
 
-DataFormats
------------
+Get a supported CMSSW release area::
 
-Definitions of custom, EDM persist-able data formats used by the framework.
+```bash
+  scram pro -n MyWorkingAreaName CMSSW CMSSW_VERSION
+```
 
-DataAlgos
----------
+Checkout the FinalStateAnalysis repository::
 
-The DataAlgos package defines the algorithm implementations used by the member
-functions of the DataFormats package.  This improves code reuse, eases backward
-compatibility, and improves compilation speed.
+```bash
+  cd MyWorkingAreaName/src
+  git clone --recursive https://github.com/uwcms/FinalStateAnalysis.git
+```
 
-MetaData 
---------
+This will checkout the lastest and greatest version of the code.  You might also want the HCP2012 compatible branch, if so you should additionally run:
+```bash
+cd FinalStateAnalysis
+git checkout hcp2012
+```
+and then proceed as normal.
 
-This package holds "data about data."  It knows what samples exist, how to find
-them in DBS, and what their cross sections are.  It also holds the central
-definition of plot styles used for different data samples.  Also, reference type
-code (such as getting Higgs boson properties from lookup tables, etc, are hosted
-here).
+Checkout the needed CMSSW tags:
 
-NtupleTools
------------
+```bash
+  cd FinalStateAnalysis/recipe/
+  # You need to have CVS access
+  kinit me@CERN.CH
+  # Make sure your CMSSW environment is set up
+  cmsenv
+  # Checkout needed packages and apply patches
+  # This enables all options.  You can turn off things you don't need.
+  # NB that in the hcp2012 changes the options won't do anything.
+  PATPROD=1 LUMI=1 LIMITS=1 ./recipe.sh
+  # Compile
+  cd ../../
+  scram b -j 8
+```
 
-The NtupleTools package defines the "analyzeFinalStates" binary, which is
-the final analysis builder, used to build flat TTrees from PATFinalState
-objects in the PAT tuple.  New selections and ntuple columns should be defined
-in
-``NtupleTools/python/templates.``  Ntuples designed for Higgs multi-lepton final 
-states can be produced by make_ntuples_cfg.py, in test/.
+You must always set up the environment::
 
-PatTools
---------
+```bash
+  source FinalStateAnalysis/environment.sh
+```
 
-The PAT tools package contains everything needed to build the FSA pat tuple.  
+For python plotting enhancements, install the custom python virtualenv and extra
+packages (note this is *not* necessary for PAT tuple production)::
 
-PlotTools
---------
-
-Tools and helpers for making plots from ntuples created by NtupleTools.
-
-RecoTools
----------
-
-The RecoTools package contains plugin modules and utilities for dealing with
-RECO and AOD content.  
-
-StatTools
----------
-
-Various statistical/limit setting tools.
-
-Utilities
----------
-
-Contains various command--line tools and C++ functionality.  
-
-TagAndProbe
------------
-
-Tools for generating Tag and Probe studies.  Classes for querying Tag and Probe
-results provided by other groups (eg Muon POG) are kept here as well.
-
-recipe
----------------
-
-The recipe section contains scripts which automate installation of related
-packages.  
+```bash
+  ./install_python.sh
+  yolk -l # List installed packages
+```

@@ -25,7 +25,8 @@ id = PSet(
     objectPFPhotonIso   = 'getPhotonUserIsolation({object_idx},"PfGammaIso")',
     objectEffectiveAreaCHad = '{object}.userFloat("PhotonEA_pfchg")',
     objectEffectiveAreaNHad = '{object}.userFloat("PhotonEA_pfneut")',
-    objectEffectiveAreaPho  = '{object}.userFloat("PhotonEA_pfpho")',    
+    objectEffectiveAreaPho  = '{object}.userFloat("PhotonEA_pfpho")',
+    objectRho = '{object}.userFloat("kt6PFJetsRho")',
     # photon id variables
     objectConvSafeElectronVeto = '{object}.userInt("ConvSafeElectronVeto")',
     objectHadronicOverEM = '{object}.hadronicOverEm',
@@ -57,9 +58,12 @@ id = PSet(
     objectIsPFlowPhoton = '{object}.isPFlowPhoton',
     objectIsStandardPhoton = '{object}.isStandardPhoton',   
     objectHasPixelSeed = '{object}.hasPixelSeed',
-    # gen matching
+    # gen matching (photons can be matched to many object types)
+    objectPdgId = '? ({object}.genParticleRef().isNonnull && {object}.genParticleRef().isAvailable) ? {object}.genParticleRef().pdgId() : -999',
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}).pdgId() : -999',
-    objectComesFromHiggs = 'comesFromHiggs({object_idx})',        
+    objectGenGrandMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}).isAvailable && getDaughterGenParticleMotherSmart({object_idx}).isNonnull && (getDaughterGenParticleMotherSmart({object_idx}).numberOfMothers() != 0)) ? getDaughterGenParticleMotherSmart({object_idx}).mother().pdgId() : -999',
+    objectComesFromHiggs = 'comesFromHiggs({object_idx})',
+    objectGenEnergy = '? ({object}.genParticleRef().isNonnull && {object}.genParticleRef().isAvailable) ? {object}.genParticleRef().energy() : -999',
 )
 
 tracking = PSet(
@@ -82,6 +86,18 @@ supercluster = PSet(
     objectSCPhiWidth = '{object}.superCluster().phiWidth',
     objectSCEtaWidth = '{object}.superCluster().etaWidth' 
 )
+
+energyCorrections = PSet(
+    objectECorrPHOSPHOR2011 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2011").t',
+    objectPtCorrPHOSPHOR2011 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2011").Pt',
+    objectEtaCorrPHOSPHOR2011 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2011").Eta',
+    objectPhiCorrPHOSPHOR2011 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2011").Phi',
+
+    objectECorrPHOSPHOR2012 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2012").t',
+    objectPtCorrPHOSPHOR2012 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2012").Pt',
+    objectEtaCorrPHOSPHOR2012 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2012").Eta',
+    objectPhiCorrPHOSPHOR2012 = 'getUserLorentzVector({object_idx},"p4_PHOSPHOR_2012").Phi'
+    )
 
 trigger = PSet(
     objectPhoton26RPhoton18_caloORr9_MatchLastFilter  = 'matchToHLTFilter({object_idx}, "hltPhoton26R9Id85ORCaloId10Iso50Photon18R9Id85ORCaloId10Iso50Mass70EgammaAllCombMassLastFilter")', # HLT_Photon26_R9Id85_OR_CaloId10_Iso50_Photon18_R9Id85_OR_CaloId10_Iso50_Mass70_v* (2012),

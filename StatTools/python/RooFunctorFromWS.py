@@ -8,7 +8,7 @@ This could be improved with cython.
 
 Author: Evan K. Friis, UW Madison
 
->>> import ROOT
+>>> from FinalStateAnalysis.Utilities.rootbindings import ROOT
 >>> file = ROOT.TFile('../test/test_RooFunctorFromWS.root')
 >>> ws = file.Get('fit_efficiency')
 >>> functor = RooFunctorFromWS(ws, 'efficiency')
@@ -19,7 +19,8 @@ Author: Evan K. Friis, UW Madison
 
 '''
 
-import ROOT
+from FinalStateAnalysis.Utilities.rootbindings import ROOT
+#ROOT.gSystem.Load("libFinalStateAnalysisStatTools")
 
 class RooFunctorFromWS(ROOT.RooFunctor):
     def __init__(self, workspace, functionname, var='x'):
@@ -27,7 +28,7 @@ class RooFunctorFromWS(ROOT.RooFunctor):
         self.function = workspace.function(functionname)
         # Get the ind. var and the parameters
         #self.x = workspace.var(var)
-        self.x = self.function.getParameter(var)
+        self.x = self.function.getParameter(var) if hasattr(self.function, 'getParameter') else self.function.getVariables().find(var)
         self.x.setRange(0, 1e99)
 
     def __call__(self, x):
@@ -41,6 +42,28 @@ def build_roofunctor(filename, wsname, functionname, var='x'):
         raise IOError("Can't open file: %s" % filename)
     ws = file.Get(wsname)
     return RooFunctorFromWS(ws, functionname, var)
+
+def make_corrector_from_th2(filename, path):
+    tfile = ROOT.TFile.Open(filename)
+    if not tfile:
+        raise IOError("Can't open file: %s" % filename)
+    hist  = tfile.Get(path).Clone()
+    #print hist
+    binsx = hist.GetNbinsX()
+    binsy = hist.GetNbinsY()
+    def refFun(xval,yval):
+        #print hist
+        xbin = hist.GetXaxis().FindFixBin(xval) #Faster than FindBin
+        xbin = (xbin if xbin <= binsx else binsx ) if xbin >= 1 else 1 #Compute underflow and overflow as first and last bin
+        ybin = hist.GetYaxis().FindFixBin(yval)
+        ybin = (ybin if ybin <= binsy else binsy ) if ybin >= 1 else 1 #Compute underflow and overflow as first and last bin
+        prob = hist.GetBinContent(xbin,ybin)
+        if prob:
+            return prob
+        else:
+            raise ZeroDivisionError(" catched trying to return weight for (%.3f,%.3f) ==> (%i,%i) bin out of (%i,%i). Prob: %.3f. Hist: %s : %s. " % (xval, yval, xbin, ybin, binsx, binsy , prob, filename, path))
+    return refFun
+
 
 if __name__ == "__main__":
     import doctest; doctest.testmod()

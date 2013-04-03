@@ -38,12 +38,12 @@ calibration_versions = cms.VPSet(
     )
 
 # available calibration targets:
-# 2012 Data : 2012Jul13ReReco, Summer12_DR53X_HCP2012,
-#             Prompt, ReReco, ICHEP2012
+# 2012 Data : 2012Jul13ReReco,
+#              ICHEP2012
 # 2012 MC   : Summer12, Summer12_DR53X_HCP2012
 #
-# 2011 Data : Jan16ReReco
-# 2011 MC   : Summer11, Fall11
+# 2011 Data : Jan16ReReco,Prompt, ReReco
+# 2011 MC   : Summer11, Fall11,
 
 
 patElectronEnergyCorrections = cms.EDProducer(
@@ -59,6 +59,8 @@ patElectronEnergyCorrections = cms.EDProducer(
     src = cms.InputTag("fixme"),
     isAOD = cms.bool(True),
     isMC = cms.bool(True),
+    smearRatio = cms.double(0.607), #fraction of data added on top of HCP -- (19.6-12.2)/12.2 = 0.607 for full 2012
+    isSync = cms.bool(False), #if True-->use deterministic smearing
     vtxSrc = cms.InputTag("selectPrimaryVerticesQuality"),
     rhoSrc = cms.InputTag("kt6PFJets","rho"),
     userP4Prefix = cms.string("EGCorr_")

@@ -14,6 +14,14 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 mtToMET = PSet(
     # Raw means no MET corrections
     objectMtToMET = 'mtMET({object_idx}, "raw")',
+
+    objectMtToPFMET      = 'mtMET({object_idx}, "", "pfmet", "")',
+    objectMtToPfMet_Ty1  = 'mtMET({object_idx}, "", "pfmet", "type1")',
+    objectMtToPfMet_mes  = 'mtMET({object_idx}, "", "pfmet", "mes+")',
+    objectMtToPfMet_tes  = 'mtMET({object_idx}, "", "pfmet", "tes+")',
+    objectMtToPfMet_jes  = 'mtMET({object_idx}, "", "pfmet", "jes+")',
+    objectMtToPfMet_ues  = 'mtMET({object_idx}, "", "pfmet", "ues+")',
+
     objectToMETDPhi = 'deltaPhi({object}.phi, met().phi())',
 )
 
@@ -27,6 +35,9 @@ pairs = PSet(
     object1_object2_SS = 'likeSigned({object1_idx}, {object2_idx})',
     object1_object2_PZeta = 'pZeta({object1_idx}, {object2_idx})',
     object1_object2_PZetaVis = 'pZetaVis({object1_idx}, {object2_idx})',
+
+    #Pairs + MET
+    object1_object2_ToMETDPhi = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("type1").phi)',
 )
 
 finalstate = PSet(
@@ -34,6 +45,11 @@ finalstate = PSet(
     charge = 'charge',
     Pt = 'pt',
     Mass = 'mass',
+    MassError = 'userFloat("cand_dM")',
+    MassErrord1 = 'userFloat("cand_dM_0")',
+    MassErrord2 = 'userFloat("cand_dM_1")',
+    MassErrord3 = 'userFloat("cand_dM_2")',
+    MassErrord4 = 'userFloat("cand_dM_3")'    
 )
 
 # Branches for identifying Z bosons using a pair of objects
@@ -51,4 +67,11 @@ vbf = PSet(
     vbfMVA = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").mva',
     vbfMass = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").mass',
     vbfDeta = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").deta',
+    vbfj1eta = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").eta1',
+    vbfj2eta = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").eta2',
+    vbfVispt = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").c2',
+    vbfHrap = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").hrapidity',
+    vbfDijetrap = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").dijetrapidity',
+    vbfDphihj = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").dphihj',
+    vbfDphihjnomet = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").dphihj_nomet',
 )

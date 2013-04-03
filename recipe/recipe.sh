@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Install dependencies for the FinalStateAnalysis package.
 # Usage:
@@ -68,13 +68,8 @@ if [ "$MAJOR_VERSION" -eq "4" ]; then
 fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
-    if [ "$MINOR_VERSION" -eq "2" ]; then
-	echo "Applying recipe for CMSSW 5_2_X"
-	LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_52X.sh
-    else
-	echo "Applying recipe for CMSSW 5_3_X"
-	LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_53X.sh
-    fi
+  echo "Applying recipe for CMSSW 5_3_X"
+  LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_53X.sh
 fi
 
 echo "Applying common recipe"

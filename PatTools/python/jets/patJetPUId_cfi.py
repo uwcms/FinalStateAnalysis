@@ -22,14 +22,13 @@ except ImportError:
 patJetsPUID = cms.EDProducer(
     "PATJetPUIDEmbedder",
     src=cms.InputTag('fixme'),
-    discriminants=cms.VInputTag(
-        cms.InputTag("pileupJetIdProducer", "fullDiscriminant"),
-        cms.InputTag("pileupJetIdProducer", "cutbasedDiscriminant"),
-        #cms.InputTag("pileupJetIdProducer", "simpleDiscriminant"),
-    ),
-    ids=cms.VInputTag(
-        cms.InputTag("pileupJetIdProducer", "fullId"),
-        cms.InputTag("pileupJetIdProducer", "cutbasedId"),
-        #cms.InputTag("pileupJetIdProducer", "simpleId"),
-    )
+    discriminants=cms.VInputTag(),
+    ids=cms.VInputTag()
 )
+
+for algo in pileupJetIdProducer.algos:
+    label = algo.label.value()
+    patJetsPUID.discriminants.append(cms.InputTag(
+        "pileupJetIdProducer", label + "Discriminant"))
+    patJetsPUID.ids.append(cms.InputTag(
+        "pileupJetIdProducer", label + "Id"))

@@ -1,6 +1,0 @@
-file:/hdfs/store/user/efriis//2012-02-19-v1-WHAnalyze-WZJetsTo3LNu-analyzeFinalStates/1/analyzeFinalStates-patTuple_cfg-00090ECD-74BF-E011-9106-0017A4770C20.root
-file:/hdfs/store/user/efriis//2012-02-19-v1-WHAnalyze-WZJetsTo3LNu-analyzeFinalStates/1/analyzeFinalStates-patTuple_cfg-2A8280B2-74BF-E011-9D51-001E0BE922E2.root
-file:/hdfs/store/user/efriis//2012-02-19-v1-WHAnalyze-WZJetsTo3LNu-analyzeFinalStates/1/analyzeFinalStates-patTuple_cfg-6830CC5C-74BF-E011-BE8A-1CC1DE1D2004.root
-file:/hdfs/store/user/efriis//2012-02-19-v1-WHAnalyze-WZJetsTo3LNu-analyzeFinalStates/1/analyzeFinalStates-patTuple_cfg-A2691B0D-2ABF-E011-AA28-001E0B49D0A4.root
-file:/hdfs/store/user/efriis//2012-02-19-v1-WHAnalyze-WZJetsTo3LNu-analyzeFinalStates/1/analyzeFinalStates-patTuple_cfg-B665992D-30BF-E011-BF48-002264055CE4.root
-file:/hdfs/store/user/efriis//2012-02-19-v1-WHAnalyze-WZJetsTo3LNu-analyzeFinalStates/1/analyzeFinalStates-patTuple_cfg-EA921CC9-73BF-E011-B92D-00237DA15F56.root

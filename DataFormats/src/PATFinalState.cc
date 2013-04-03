@@ -1,4 +1,3 @@
-// Next 2 includes needed for SVfit  Mass
 #include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
@@ -419,6 +418,17 @@ double PATFinalState::mtMET(int i, const std::string& metTag) const {
   }
 }
 
+double PATFinalState::mtMET(int i, const std::string& tag,
+  const std::string& metName, const std::string& metTag) const {
+  if (metTag != "") {
+    return fshelpers::transverseMass(daughterUserCandP4(i, tag),
+				     evt()->met(metName)->userCand(metTag)->p4());
+  } else {
+    return fshelpers::transverseMass(daughterUserCandP4(i, tag),
+        evt()->met(metName)->p4());
+  }
+}
+
 double PATFinalState::ht(const std::string& sysTags) const {
   std::vector<const reco::Candidate*> theDaughters = daughters(sysTags);
   double output = 0;
@@ -645,28 +655,58 @@ edm::Ptr<pat::Photon> PATFinalState::daughterAsPhoton(size_t i) const {
   return daughterAs<pat::Photon>(i);
 }
 
-const reco::GenParticleRef PATFinalState::getDaughterGenParticle(size_t i) const
+const reco::GenParticleRef PATFinalState::getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge) const
 {
-  return fshelpers::getGenParticle( daughter(i) );
+  bool charge = (bool) checkCharge;
+  return fshelpers::getGenParticle( daughter(i), event_->genParticleRefProd(), pdgIdToMatch, charge);
 }
 
-const reco::GenParticleRef PATFinalState::getDaughterGenParticleMotherSmart(size_t i) const
+const reco::GenParticleRef PATFinalState::getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const
 {
-  const reco::GenParticleRef genp = getDaughterGenParticle(i);
+  const reco::GenParticleRef genp = getDaughterGenParticle(i, pdgIdToMatch, checkCharge);
   if( genp.isAvailable() && genp.isNonnull()  )
     return fshelpers::getMotherSmart(genp, genp->pdgId());
   else
     return genp;
 }
 
-const bool PATFinalState::comesFromHiggs(size_t i) const
+const bool PATFinalState::comesFromHiggs(size_t i, int pdgIdToMatch, int checkCharge) const
 {
-  const reco::GenParticleRef genp = getDaughterGenParticle(i);
+  const reco::GenParticleRef genp = getDaughterGenParticle(i, pdgIdToMatch, checkCharge);
   if( genp.isAvailable() && genp.isNonnull()  )
     return fshelpers::comesFromHiggs(genp);
   else
     return false;
 }
+
+const reco::Candidate::Vector PATFinalState::getDaughtersRecoil() const
+{
+  double x =0;
+  double y =0;
+  std::vector<const reco::Candidate*> daughters = this->daughters();
+  for(std::vector<const reco::Candidate*>::const_iterator daughter = daughters.begin(); daughter != daughters.end(); ++daughter){
+    TVector2 ivec;
+    ivec.SetMagPhi( (*daughter)->pt(), (*daughter)->phi() );
+    x += ivec.X();
+    y += ivec.Y();
+  }
+  const reco::Candidate::Vector retval(x,y,0.);
+  return retval;
+}
+
+const reco::Candidate::Vector PATFinalState::getDaughtersRecoilWithMet() const
+{
+  const reco::Candidate::Vector dau_recoil = getDaughtersRecoil();
+  const edm::Ptr<pat::MET>& met = event_->met();
+  const reco::Candidate::Vector retval = dau_recoil + met->momentum();
+  return retval;
+}
+
+const double PATFinalState::getRecoilWithMetSignificance() const
+{
+  return fshelpers::xySignficance(getDaughtersRecoilWithMet(), event_->metCovariance());
+}
+
 
 const math::XYZTLorentzVector
 PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const

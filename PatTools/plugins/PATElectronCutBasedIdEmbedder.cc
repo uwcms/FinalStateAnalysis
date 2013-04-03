@@ -93,7 +93,11 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
       if(iEvent.getByLabel(_src,cands))
         for(unsigned int  i=0;i!=cands->size();++i) {
           
-	  pat::Electron* electron = const_cast<pat::Electron*>(&cands->at(i));
+	  pat::Electron newElectron = cands->at(i);
+
+	  const reco::GsfElectron* electron = 
+	    dynamic_cast<const reco::GsfElectron*>(cands->at(i).
+					     originalObjectRef().get());
 	  
 	  ii = _wps_applied.begin();
 	  for( ; ii != ee; ++ii ) {
@@ -102,10 +106,12 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
 					the_convs,*the_bs.product(),
 					the_vtxs,
 					0.0,0.0,0.0,0.0); 
-	    electron->addUserInt(*ii,pass);	    
+
+	    
+	    newElectron.addUserInt(*ii,pass);	    
 	  }
 
-	  out->push_back(*electron);
+	  out->push_back(newElectron);
 	}
 
       iEvent.put(out);

@@ -8,8 +8,15 @@
 #include "DataFormats/PatCandidates/interface/Photon.h"
 #include "FWCore/Utilities/interface/Exception.h"
 
+#include "CommonTools/UtilAlgos/interface/MCMatchSelector.h"
+#include "CommonTools/UtilAlgos/interface/MatchByDRDPt.h"
+#include "CommonTools/UtilAlgos/interface/MatchLessByDPt.h"
+#include "DataFormats/Math/interface/deltaR.h"
+#include "FWCore/ParameterSet/interface/ParameterSet.h"
+
 #include "TMatrixD.h"
 #include "TMath.h"
+#include <vector>
 //#include <iostream>
 
 namespace fshelpers {
@@ -115,44 +122,72 @@ void addFourMomenta( reco::Candidate & c ) {
 }
 
 /// Helper function to get the matched gen particle 
-const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter)
+const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter, const reco::GenParticleRefProd genCollectionRef, int pdgIdToMatch, bool checkCharge)
 {
-  const pat::Tau* dauTau = dynamic_cast<const pat::Tau*>(daughter);
-  if( dauTau ){
-    return dauTau->genParticleRef();
+  //if no genPaticle no matching
+  if(!genCollectionRef){
+    return reco::GenParticleRef();
+  }
+  reco::GenParticleCollection genParticles = *genCollectionRef;
+
+  //builds pset used by various subclasses
+  edm::ParameterSet pset;
+  pset.addParameter<double>("maxDPtRel", 0.5);
+  pset.addParameter<double>("maxDeltaR", 0.5);
+  std::vector<int> pdgIdsToMatch;
+  pdgIdsToMatch.push_back(pdgIdToMatch);
+  pset.addParameter<std::vector<int> >("mcPdgId", pdgIdsToMatch);
+  std::vector<int> status;
+  pdgIdsToMatch.push_back(1);
+  pset.addParameter<std::vector<int> >("mcStatus", status);
+  pset.addParameter<bool>("resolveByMatchQuality", false);
+  pset.addParameter<bool>("checkCharge", checkCharge);
+  pset.addParameter<bool>("resolveAmbiguities", true); //does not make any difference since we have no access to multiple candidates to match
+
+  reco::MCMatchSelector<reco::Candidate, reco::GenParticle> slector(pset);
+  reco::MatchByDRDPt<reco::Candidate, reco::GenParticle> matcher(pset);
+
+  //copied from CommonTools/ UtilAlgos/ interface/ PhysObjectMatcher.h
+  typedef std::pair<size_t, size_t> IndexPair;
+  typedef std::vector<IndexPair> MatchContainer;
+
+  // loop over (one in my case) candidates
+  int index = -1;
+  double minDr = 9999;
+  // loop over target collection
+  for(size_t m = 0; m != genParticles.size(); ++m) {
+    const reco::GenParticle& match = genParticles[m];
+    // check lock and preselection
+    if ( slector(*daughter, match) ) {
+      // matching requirement fulfilled -> store pair of indices
+      if ( matcher(*daughter,match) )  {
+	double curDr = reco::deltaR(*daughter,match);
+	if(curDr < minDr){
+	  minDr = curDr;
+	  index = m;
+	}
+      }
+    }
   }
 
-  const pat::Muon* dauMu = dynamic_cast<const pat::Muon*>(daughter);
-  if( dauMu){
-    return dauMu->genParticleRef();
+  // if match(es) found and no global ambiguity resolution requested
+  if(index != -1){
+    return reco::GenParticleRef(genCollectionRef,index);
   }
-
-  const pat::Electron* dauE = dynamic_cast<const pat::Electron*>(daughter);
-  if( dauE){
-    return dauE->genParticleRef();
-  }
-
-  const pat::Jet* dauJet = dynamic_cast<const pat::Jet*>(daughter);
-  if( dauJet){
-    return dauJet->genParticleRef();
-  }
-
-  const pat::Photon* dauPho = dynamic_cast<const pat::Photon*>(daughter);
-  if( dauPho){
-    return dauPho->genParticleRef();
-  }
+  //No Match found
   else{
-    cms::Exception ex("ImplementationMissing");
-    ex << "No implementation was found to get gen particle from a requested daughter, please consider either fixing the configuration or adding the implementation in FinalStateAnalysis/DataAlgos/src/helpers.cc\n";
-    ex << "Available objects are pat::Tau, pat::Muon, pat::Electron, pat::Jet, pat::Photon\n";
-    throw ex;
+    return reco::GenParticleRef();
   }
+
+
 }
 
 /// Helper function to get the first interesting mother particle 
 const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, int idNOTtoMatch)
 {
-  const reco::GenParticleRef mother = /*dynamic_cast<const reco::GenParticleRef>*/ (genPart->motherRef());
+  if( genPart->numberOfMothers() == 0 ) return genPart; // if we've recursed all the way back we need to stop
+
+  const reco::GenParticleRef mother = genPart->motherRef();
   if( !(mother.isAvailable() && mother.isNonnull())  ) return mother;
   if( mother.isAvailable() && mother.isNonnull() && mother->status() == 3 && mother->pdgId() != idNOTtoMatch )
     return mother;

@@ -7,7 +7,6 @@ Author: Evan K. Friis, UW Madison
 '''
 
 import itertools
-import pdb
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.Utilities.cfgtools import format, PSet
 
@@ -81,39 +80,41 @@ _photon_template = PSet(
     #templates.candidates.vertex_info, #photons have no tracking info
     templates.photons.id,
     templates.photons.tracking,
+    templates.photons.energyCorrections,
     templates.photons.supercluster,
     #templates.photons.trigger, #add photons later
     templates.topology.mtToMET,
 )
 
 _leg_templates = {
-    't' : _tau_template,
-    'm' : _muon_template,
-    'e' : _electron_template,
-    'g' : _photon_template
+    't': _tau_template,
+    'm': _muon_template,
+    'e': _electron_template,
+    'g': _photon_template
 }
 
 _pt_cuts = {
-    'm' : '7',
-    'e' : '7',
-    't' : '18',
-    'g' : '10'
+    'm': '7',
+    'e': '7',
+    't': '18',
+    'g': '10'
 }
 
 _eta_cuts = {
-    'm' : '2.5',
-    'e' : '2.5',
-    't' : '2.3',
-    'g' : '3.0'
+    'm': '2.5',
+    'e': '3.0',
+    't': '2.3',
+    'g': '3.0'
 }
 
 # How to get from a leg name to "finalStateElecMuMuMu" etc
 _producer_translation = {
-    'm' : 'Mu',
-    'e' : 'Elec',
-    't' : 'Tau',
-    'g' : 'Pho'
+    'm': 'Mu',
+    'e': 'Elec',
+    't': 'Tau',
+    'g': 'Pho'
 }
+
 
 def add_ntuple(name, analyzer, process, schedule, event_view=False):
     ''' Add an ntuple to the process with given name and schedule it
@@ -129,6 +130,7 @@ def add_ntuple(name, analyzer, process, schedule, event_view=False):
     p = cms.Path(analyzer)
     setattr(process, name + 'path', p)
     schedule.append(p)
+
 
 def make_ntuple(*legs, **kwargs):
     ''' Build an ntuple for a set of input legs.
@@ -151,16 +153,16 @@ def make_ntuple(*legs, **kwargs):
 
     # Count how many objects of each type we put in
     counts = {
-        't' : 0,
-        'm' : 0,
-        'e' : 0,
-        'g' : 0
+        't': 0,
+        'm': 0,
+        'e': 0,
+        'g': 0
     }
 
     ntuple_config = _common_template.clone()
 
-    # If we only have two legs, we are interested in VBF selections.
-    if len(legs) == 2:
+    # If we have two legs or photons, we are interested in VBF selections.
+    if len(legs) == 2 or 'g' in legs:
         ntuple_config = PSet(
             ntuple_config,
             templates.topology.vbf
@@ -170,15 +172,19 @@ def make_ntuple(*legs, **kwargs):
     if 'branches' in kwargs:
         for branch, value in kwargs['branches'].iteritems():
             setattr(ntuple_config, branch, cms.string(value))
+        
+    # Check if we want to use special versions of the FSA producers
+    # via a suffix on the producer name.
+    producer_suffix = kwargs.get('suffix', '')
 
     for i, leg in enumerate(legs):
         counts[leg] += 1
-        # Check if we need to append an index (i.e. we have same flavor objects)
+        # Check if we need to append an index (we have same flavor objects)
         label = leg
         if legs.count(leg) > 1:
             label = leg + str(counts[leg])
         format_labels[label] = 'daughter(%i)' % i
-        format_labels[label+ '_idx'] = '%i' % i
+        format_labels[label + '_idx'] = '%i' % i
         object_labels.append(label)
 
         # Get a PSet describing the branches for this leg
@@ -202,20 +208,24 @@ def make_ntuple(*legs, **kwargs):
     # Now build our analyzer EDFilter skeleton
     output = cms.EDFilter(
         "PATFinalStateAnalysisFilter",
-        weights = cms.vstring(),
-        src = cms.InputTag("finalState" + "".join(
-            _producer_translation[x] for x in legs)),
-        evtSrc = cms.InputTag("patFinalStateEventProducer"),
-        skimCounter = cms.InputTag("eventCount", "", "TUPLE"),
-        analysis = cms.PSet(            
-            selections = cms.VPSet(),
-            EventView = cms.bool(False),
-            final = cms.PSet(
-                sort = cms.string('daughter(0).pt'), # Doesn't really matter
-                take = cms.uint32(50),
-                plot = cms.PSet(
-                    histos = cms.VPSet(), # Don't make any final plots
-                    ntuple = ntuple_config.clone(),
+        weights=cms.vstring(),
+        # input final state collection.
+        src=cms.InputTag("finalState" + "".join(
+            _producer_translation[x] for x in legs) 
+            + producer_suffix),
+        evtSrc=cms.InputTag("patFinalStateEventProducer"),
+        # counter of events before any selections
+        skimCounter=cms.InputTag("eventCount", "", "TUPLE"),
+        analysis=cms.PSet(
+            selections=cms.VPSet(),
+            EventView=cms.bool(False),
+            final=cms.PSet(
+                sort=cms.string('daughter(0).pt'),  # Doesn't really matter
+                take=cms.uint32(50),
+                plot=cms.PSet(
+                    histos=cms.VPSet(),  # Don't make any final plots
+                    # ntuple has all generated branches in it.
+                    ntuple=ntuple_config.clone(),
                 )
             ),
         )
@@ -225,16 +235,16 @@ def make_ntuple(*legs, **kwargs):
     for i, leg in enumerate(legs):
         output.analysis.selections.append(
             cms.PSet(
-                name = cms.string('Leg%iPt' % i),
-                cut = cms.string('daughter(%i).pt>%s' % (
+                name=cms.string('Leg%iPt' % i),
+                cut=cms.string('daughter(%i).pt>%s' % (
                     i, _pt_cuts[legs[i]]),
                 )
             )
         )
         output.analysis.selections.append(
             cms.PSet(
-                name = cms.string('Leg%iEta' % i),
-                cut = cms.string('abs(daughter(%i).eta) < %s' % (
+                name=cms.string('Leg%iEta' % i),
+                cut=cms.string('abs(daughter(%i).eta) < %s' % (
                     i, _eta_cuts[legs[i]]))
             ),
         )
@@ -253,15 +263,16 @@ def make_ntuple(*legs, **kwargs):
     #   then order third and fourth by pt
     make_unique = True
     if 'noclean' in kwargs:
-        make_unique = False
+        make_unique = not kwargs['noclean']
     if make_unique:
         for type, count in counts.iteritems():
             if count == 2:
                 leg1_idx = format_labels['%s1_idx' % type]
                 leg2_idx = format_labels['%s2_idx' % type]
                 output.analysis.selections.append(cms.PSet(
-                    name = cms.string('%s_UniqueByPt' % type),
-                    cut = cms.string('orderedInPt(%s, %s)' % (leg1_idx, leg2_idx))
+                    name=cms.string('%s_UniqueByPt' % type),
+                    cut=cms.string('orderedInPt(%s, %s)' %
+                                   (leg1_idx, leg2_idx))
                 ))
             if count == 3:
                 leg1_idx_label = format_labels['%s1_idx' % type]
@@ -270,8 +281,8 @@ def make_ntuple(*legs, **kwargs):
 
                 # Require first two leptons make the best Z
                 output.analysis.selections.append(cms.PSet(
-                    name = cms.string('Z12_Better_Z13'),
-                    cut = cms.string(
+                    name=cms.string('Z12_Better_Z13'),
+                    cut=cms.string(
                         'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
                         (leg1_idx_label, leg2_idx_label, leg1_idx_label,
                          leg3_idx_label)
@@ -279,8 +290,8 @@ def make_ntuple(*legs, **kwargs):
                 ))
 
                 output.analysis.selections.append(cms.PSet(
-                    name = cms.string('Z12_Better_Z23'),
-                    cut = cms.string(
+                    name=cms.string('Z12_Better_Z23'),
+                    cut=cms.string(
                         'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
                         (leg1_idx_label, leg2_idx_label, leg2_idx_label,
                          leg3_idx_label)
@@ -289,8 +300,8 @@ def make_ntuple(*legs, **kwargs):
 
                 # Require first two leptons are ordered in PT
                 output.analysis.selections.append(cms.PSet(
-                    name = cms.string('%s_UniqueByPt' % type),
-                    cut = cms.string('orderedInPt(%s, %s)' %
+                    name=cms.string('%s_UniqueByPt' % type),
+                    cut=cms.string('orderedInPt(%s, %s)' %
                                      (leg1_idx_label, leg2_idx_label))
                 ))
             if count == 4:
@@ -301,8 +312,8 @@ def make_ntuple(*legs, **kwargs):
 
                 # Require first two leptons make the best Z
                 output.analysis.selections.append(cms.PSet(
-                    name = cms.string('Z12_Better_Z13'),
-                    cut = cms.string(
+                    name=cms.string('Z12_Better_Z13'),
+                    cut=cms.string(
                         'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
                         (leg1_idx_label, leg2_idx_label, leg1_idx_label,
                          leg3_idx_label)
@@ -310,8 +321,8 @@ def make_ntuple(*legs, **kwargs):
                 ))
 
                 output.analysis.selections.append(cms.PSet(
-                    name = cms.string('Z12_Better_Z23'),
-                    cut = cms.string(
+                    name=cms.string('Z12_Better_Z23'),
+                    cut=cms.string(
                         'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
                         (leg1_idx_label, leg2_idx_label, leg2_idx_label,
                          leg3_idx_label)
@@ -319,8 +330,8 @@ def make_ntuple(*legs, **kwargs):
                 ))
 
                 output.analysis.selections.append(cms.PSet(
-                    name = cms.string('Z12_Better_Z14'),
-                    cut = cms.string(
+                    name=cms.string('Z12_Better_Z14'),
+                    cut=cms.string(
                         'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
                         (leg1_idx_label, leg2_idx_label, leg1_idx_label,
                          leg4_idx_label)
@@ -328,8 +339,8 @@ def make_ntuple(*legs, **kwargs):
                 ))
 
                 output.analysis.selections.append(cms.PSet(
-                    name = cms.string('Z12_Better_Z24'),
-                    cut = cms.string(
+                    name=cms.string('Z12_Better_Z24'),
+                    cut=cms.string(
                         'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
                         (leg1_idx_label, leg2_idx_label, leg2_idx_label,
                          leg4_idx_label)
@@ -337,8 +348,8 @@ def make_ntuple(*legs, **kwargs):
                 ))
 
                 output.analysis.selections.append(cms.PSet(
-                    name = cms.string('Z12_Better_Z34'),
-                    cut = cms.string(
+                    name=cms.string('Z12_Better_Z34'),
+                    cut=cms.string(
                         'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
                         (leg1_idx_label, leg2_idx_label, leg3_idx_label,
                          leg4_idx_label)
@@ -347,21 +358,19 @@ def make_ntuple(*legs, **kwargs):
 
                 # Require first two leptons are ordered in PT
                 output.analysis.selections.append(cms.PSet(
-                    name = cms.string('%s_UniqueByPt12' % type),
-                    cut = cms.string('orderedInPt(%s, %s)' %
-                                     (leg1_idx_label, leg2_idx_label))
+                    name=cms.string('%s_UniqueByPt12' % type),
+                    cut=cms.string('orderedInPt(%s, %s)' %
+                                   (leg1_idx_label, leg2_idx_label))
                 ))
                 # Require last two leptons are ordered in PT
                 output.analysis.selections.append(cms.PSet(
-                    name = cms.string('%s_UniqueByPt34' % type),
-                    cut = cms.string('orderedInPt(%s, %s)' %
-                                     (leg3_idx_label, leg4_idx_label))
+                    name=cms.string('%s_UniqueByPt34' % type),
+                    cut=cms.string('orderedInPt(%s, %s)' %
+                                   (leg3_idx_label, leg4_idx_label))
                 ))
-
 
     # Now apply our formatting operations
     format(output, **format_labels)
-
     return output
 
 if __name__ == "__main__":

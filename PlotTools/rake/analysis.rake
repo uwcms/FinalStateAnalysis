@@ -10,8 +10,9 @@ rule ".root" => [
   # Make the output directory
   sh "mkdir -p `dirname #{t.name}`"
   workers = ENV.fetch('megaworkers', 2)
+  chain   = ENV.fetch('megachain'  , 10)
   ENV['megatarget'] = t.name
-  sh "time mega #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name} --workers #{workers} --chain 10"
+  sh "time mega #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name} --workers #{workers} --chain #{chain}"
 end
 
 task :analyze, [:jobid, :analyzer, :sample] do |t, args|

@@ -43,5 +43,5 @@ patMuonHZG2012RhoEmbedding = cms.EDProducer(
     src = cms.InputTag("fixme"),
     srcRho = cms.InputTag("kt6PFJetsCentralNeutralHZGMu", "rho"),
     # Used as userFloat label
-    userLabel = cms.string("zzRho2012")
+    userLabel = cms.string("hzgRho2012")
 )

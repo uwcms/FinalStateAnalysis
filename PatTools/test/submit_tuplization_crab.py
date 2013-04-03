@@ -26,6 +26,9 @@ parser.add_argument('--samples', nargs='+', type=str, required=False,
 parser.add_argument('--no-whitelist', dest='nowhitelist', default=False,
                     action='store_true',
                     help='Disable the default T2_US, T3_US whitelist')
+parser.add_argument('--glite', dest='glite', default=False,
+                    action='store_true',
+                    help='Use glite server')
 args = parser.parse_args()
 
 cfg = 'patTuple_cfg.py'
@@ -39,7 +42,8 @@ if not os.path.exists(jobId):
 
 #Write a simple crab.cfg
 f=open('%s/crab.cfg' % jobId, 'w')
-f.write('[CRAB]\njobtype = cmssw\nscheduler = glidein\nuse_server = 1\n')
+f.write('[CRAB]\njobtype = cmssw\nscheduler = %s\nuse_server = 1\n' %
+       'glidein' if not args.glite else 'glite')
 f.write('[USER]\nreturn_data = 0\ncopy_data = 1\nstorage_element = T2_US_Wisconsin\n')
 f.write('publish_data = 1\ndbs_url_for_publication = https://cmsdbsprod.cern.ch:8443/cms_dbs_ph_analysis_01_writer/servlet/DBSServlet\n')
 f.write('[GRID]\nrb = CERN\nmaxtarballsize = 250\n')
