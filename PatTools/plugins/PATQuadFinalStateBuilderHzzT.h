@@ -380,8 +380,10 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     FinalState outputCand( leg1_out, leg2_out, leg3_out, leg4_out, evtPtr );
 
     // attach FSR photons to quad candidate
-    outputCand.addUserCand("fsrPhoton1", photon1);
-    outputCand.addUserCand("fsrPhoton2", photon2);
+    if ( photon1.isNonnull() )
+        outputCand.addUserCand("fsrPhoton01", photon1);
+    if ( photon2.isNonnull() )
+        outputCand.addUserCand("fsrPhoton23", photon2);
     
     // attach FSR isolation corrections
     outputCand.addUserFloat("leg0fsrIsoCorr", leg1_fsrIsoCorr);
