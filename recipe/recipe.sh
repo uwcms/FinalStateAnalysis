@@ -10,6 +10,7 @@
 #    PATPROD: enable PAT tuple production
 #    LIMIT: code for computing limits
 #    LUMI: code for computing instantaneous luminosity (lumiCalc and friends)
+#    MVAMET: code for MVA MET.  Always produced if PATPROD=1
 #
 # Options which are absolutely required, like PAT data formats, are always 
 # installed.
@@ -20,6 +21,7 @@
 LIMITS=${LIMITS:-0}
 LUMI=${LUMI:-0}
 PATPROD=${PATPROD:-0}
+MVAMET=${MVAMET:-$PATPROD}
 
 set -o errexit
 set -o nounset
@@ -74,6 +76,12 @@ fi
 
 echo "Applying common recipe"
 LUMI=$LUMI LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_common.sh
+
+if [ "$MVAMET" = "1" ] 
+then
+  echo "Applying MVA MET recpe"
+  ./recipe_mvamet.sh
+fi
 
 # Note you now need to install virtual env
 echo "Now run recipe/install_python.sh to install python"
