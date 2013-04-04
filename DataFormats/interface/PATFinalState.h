@@ -242,6 +242,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Build a subcandidate w/ fsr
     PATFinalStateProxy subcandfsr( int i, int j ) const;
 
+    /// quad candidate p4 w/ fsr
+    LorentzVector p4fsr() const;
+
     /// Build a subcand using a tag string
     PATFinalStateProxy subcand(const std::string& tags) const;
 

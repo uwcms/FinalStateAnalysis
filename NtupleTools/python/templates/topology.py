@@ -57,8 +57,14 @@ zboson = PSet(
     # "Z like"
     object1_object2_Zcompat = 'zCompatibility({object1_idx}, {object2_idx})',
     object1_object2_MassFsr = 'subcandfsr({object1_idx}, {object2_idx}).get.mass',
-    object1_object2_PtFsr = 'subcandfsr({object1_idx}, {object2_idx}).get.pt',
+    object1_object2_PtFsr   = 'subcandfsr({object1_idx}, {object2_idx}).get.pt',
 )
+
+zzfsr = PSet(
+    MassFsr                 = 'p4fsr().M',
+    PtFsr                   = 'p4fsr().pt',
+)
+
 
 vbf = PSet(
     # If nJets < 2, none of these other branches are valid

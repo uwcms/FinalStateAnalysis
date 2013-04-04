@@ -587,6 +587,26 @@ PATFinalState::subcandfsr( int i, int j ) const
       new PATMultiCandFinalState(output, evt()));
 }
 
+PATFinalState::LorentzVector
+PATFinalState::p4fsr() const
+{
+  PATFinalState::LorentzVector p4_out;
+
+  p4_out = daughter(0)->p4() + daughter(1)->p4() + daughter(2)->p4() + daughter(3)->p4();
+
+  const std::vector<std::string>& userCandList = this->userCandNames();
+  for (size_t i = 0; i < userCandList.size(); ++i)
+  {
+      if (userCandList[i].find("fsrPhoton1") != std::string::npos)
+          p4_out += this->userCand(userCandList[i])->p4();
+
+      if (userCandList[i].find("fsrPhoton2") != std::string::npos)
+          p4_out += this->userCand(userCandList[i])->p4();
+  }
+
+  return p4_out;
+}
+
 PATFinalStateProxy
 PATFinalState::subcand(const std::string& tags) const {
   const std::vector<reco::CandidatePtr> daus = daughterPtrs(tags);

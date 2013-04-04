@@ -214,6 +214,10 @@ def make_ntuple(*legs, **kwargs):
 
     if zz_mode:
         analyzerSrc += "Hzz"
+        ntuple_config = PSet(
+                ntuple_config,
+                templates.topology.zzfsr
+        )
 
     # Now build our analyzer EDFilter skeleton
     output = cms.EDFilter(
