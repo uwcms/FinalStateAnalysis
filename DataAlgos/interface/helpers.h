@@ -33,7 +33,7 @@ std::pair<double, double> pZeta(const reco::Candidate::LorentzVector& leg1,
 double transverseMass(const reco::Candidate::LorentzVector& p1,
     const reco::Candidate::LorentzVector& p2);
 
-const reco::Candidate::LorentzVector& phiCorrection(const reco::Candidate::LorentzVector& vector, int nvertices);
+const reco::Candidate::LorentzVector metPhiCorrection(const reco::Candidate::LorentzVector& vector, int nvertices);
 
 // Taken from CommonTools/CandUtils/AddFourMomenta.h
 // makes sure the composite objects P4 = sum of daughters
