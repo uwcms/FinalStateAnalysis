@@ -220,4 +220,23 @@ const bool comesFromHiggs(const reco::GenParticleRef genPart)
   }
 }
 
+const reco::Candidate::LorentzVector& phiCorrection(const reco::Candidate::LorentzVector& vector, int nvertices)
+{
+  //constants as defined in AN-2012/333
+  const double cx0 = 0.2661;
+  const double cxS = 0.3217;
+  const double cy0 = -0.2251;
+  const double cyS = -0.1747;
+
+  double offset_x = cx0 + cxS*nvertices;
+  double offset_y = cy0 + cyS*nvertices;
+
+  double newx     = vector.x() - offset_x;
+  double newy     = vector.y() - offset_y;
+  double mag      = TMath::Sqrt(newx*newx + newy*newy);
+
+  //the vector is made in pt eta phi e coordinates!
+  return reco::Candidate::LorentzVector(newx, newy, 0., mag);
+}
+
 }
