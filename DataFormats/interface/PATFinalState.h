@@ -155,7 +155,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     double mtMET(int i, const std::string& tag,
         const std::string& metTag) const;
     double mtMET(int i, const std::string& metTag="") const;
-    double mtMET(int i, const std::string& tag, const std::string& metName, const std::string& metTag) const;
+    double mtMET(int i, const std::string& tag,
+		 const std::string& metName, const std::string& metTag, 
+		 const int applyPhiCorr) const;
 
     double ht(const std::string& sysTags) const;
     double ht() const;
