@@ -432,7 +432,7 @@ for mass in range(120,155,5):
 
 
 # Add VH files
-for mass in range(110, 145, 5):
+for mass in range(110, 165, 5):
    datadefs['VHtautau_lepdecay_%i' % mass] = {
       'analyses': ['VH'],
       'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
