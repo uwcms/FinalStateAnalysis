@@ -36,6 +36,7 @@ They are available as python functions (taking the eta of both muons) as::
 '''
 
 import os
+import re
 from FinalStateAnalysis.Utilities.rootbindings import ROOT
 
 _DATA_DIR = os.path.join(os.environ['CMSSW_BASE'], 'src',
@@ -141,6 +142,16 @@ def make_muon_pog_Mu17Mu8_Mu8_2012():
         'DATA/MC_DoubleMu17Mu8_Mu8_Tight_eta_pt20-100',
     )
 
+def make_muon_pog_IsoMu24eta2p1_2012():
+    return MuonPOGCorrection(
+        _DATA_FILES['2012'],
+        'DATA/MC_IsoMu24_eta2p1_TightIso_pt_abseta<1.2', 
+        'DATA/MC_IsoMu24_eta2p1_TightIso_pt_abseta>1.2', 
+        'DATA/MC_IsoMu24_eta2p1_TightIso_abseta_pt26-100',
+        pt_thr = 26,
+    )
+
+
 class MuonPOGCorrection(object):
     '''
 
@@ -149,10 +160,11 @@ class MuonPOGCorrection(object):
 
     '''
 
-    def __init__(self, file, pt_barrel, pt_endcap, eta_pt20, abs_eta=False):
+    def __init__(self, file, pt_barrel, pt_endcap, eta_pt20, abs_eta=False, pt_thr=20):
         self.filename = file
         self.file = ROOT.TFile.Open(file)
         self.abs_eta = abs_eta
+        self.pt_thr  = pt_thr
 
         # Map the functions to the appropriate TGraphAsymmErrors
         self.correct_by_pt_barrel = self.load_graph_eval_func(pt_barrel)
@@ -171,7 +183,7 @@ class MuonPOGCorrection(object):
         return obj.Eval
 
     def __call__(self, pt, eta):
-        if pt < 20:
+        if pt < self.pt_thr:
             if abs(eta) < 1.2:
                 return self.correct_by_pt_barrel(pt)
             else:
@@ -203,3 +215,4 @@ if __name__ == "__main__":
     make_muon_pog_PFRelIsoDB012_2011()
     make_muon_pog_Mu17Mu8_Mu17_2012()
     make_muon_pog_Mu17Mu8_Mu8_2012()
+    make_muon_pog_IsoMu24eta2p1_2012()
