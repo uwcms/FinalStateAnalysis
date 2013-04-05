@@ -62,6 +62,11 @@ id = PSet(
     objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
     objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
     objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
+    #Experimental charge id from Silvia
+    objectGsfCharge = '{object}.gsfTrack().charge()',
+    objectTrkCharge = '{object}.track().charge()',
+    objectScPixCharge =  '{object}.scPixCharge()',
+    
     # shower shape / ID variables
     objectHadronicOverEM = '{object}.hcalOverEcal',
     objectHadronicDepth1OverEm = '{object}.hcalDepth1OverEcal',
