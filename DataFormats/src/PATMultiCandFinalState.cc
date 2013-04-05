@@ -137,7 +137,7 @@ const reco::CandidatePtrVector& PATMultiCandFinalState::daughterOverlaps(
   }
 }
 
-const double& PATMultiCandFinalState::daughterCosThetaStar(
+const double PATMultiCandFinalState::daughterCosThetaStar(
       size_t i) const
 {
   reco::Candidate::LorentzVector totalP4 = p4();
