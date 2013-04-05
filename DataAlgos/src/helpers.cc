@@ -102,7 +102,7 @@ double transverseMass(const reco::Candidate::LorentzVector& p1,
   double totalPt = (p1 + p2).pt();
   double mt2 = totalEt*totalEt - totalPt*totalPt;
   if (mt2 < 0) {
-    //std::cout << "P1 = " << p1 << " P2 = " << p2 << " " << mt2 << std::endl;
+    std::cout << "P1 = " << p1 << " P2 = " << p2 << " " << mt2 << std::endl;
   }
   return std::sqrt(std::abs(mt2));
 }
@@ -220,7 +220,7 @@ const bool comesFromHiggs(const reco::GenParticleRef genPart)
   }
 }
 
-const reco::Candidate::LorentzVector& phiCorrection(const reco::Candidate::LorentzVector& vector, int nvertices)
+const reco::Candidate::LorentzVector metPhiCorrection(const reco::Candidate::LorentzVector& vector, int nvertices)
 {
   //constants as defined in AN-2012/333
   const double cx0 = 0.2661;
