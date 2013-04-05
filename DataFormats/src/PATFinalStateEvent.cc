@@ -127,7 +127,7 @@ const edm::Ptr<pat::MET> PATFinalStateEvent::met(
   return edm::Ptr<pat::MET>();
 }
 
-const reco::Candidate::LorentzVector& PATFinalStateEvent::met4vector(
+const reco::Candidate::LorentzVector PATFinalStateEvent::met4vector(
     const std::string& type, 
     const std::string& tag, 
     const int applyPhiCorr) const {
@@ -138,7 +138,7 @@ const reco::Candidate::LorentzVector& PATFinalStateEvent::met4vector(
 
   const reco::Candidate::LorentzVector& metp4 = (tag == "") ? met(type)->p4() : met(type)->userCand(tag)->p4();
   if (applyPhiCorr == 1)
-    return fshelpers::phiCorrection(metp4, recoVertices_.size());
+    return fshelpers::metPhiCorrection(metp4, recoVertices_.size());
 
   return metp4;
 }

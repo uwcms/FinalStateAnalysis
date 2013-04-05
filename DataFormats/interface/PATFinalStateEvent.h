@@ -98,7 +98,7 @@ class PATFinalStateEvent {
     // Get a given type of MET
     const edm::Ptr<pat::MET> met(const std::string& type) const;
     // Get 4-vector of the MET
-    const reco::Candidate::LorentzVector& met4vector(const std::string& type, const std::string& tag="", const int applyPhiCorr=0) const;
+    const reco::Candidate::LorentzVector met4vector(const std::string& type, const std::string& tag="", const int applyPhiCorr=0) const;
 
     /// Get the event ID
     const edm::EventID& evtId() const;
