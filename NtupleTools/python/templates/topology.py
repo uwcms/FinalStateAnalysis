@@ -38,7 +38,7 @@ pairs = PSet(
     object1_object2_SS = 'likeSigned({object1_idx}, {object2_idx})',
     object1_object2_PZeta = 'pZeta({object1_idx}, {object2_idx})',
     object1_object2_PZetaVis = 'pZetaVis({object1_idx}, {object2_idx})',
-    object1_object2_CosThetaStar = 'abs(subcand({object1_idx}, {object2_idx}).daughterCosThetaStar(0))',
+    object1_object2_CosThetaStar = 'abs(subcand({object1_idx}, {object2_idx}).get.daughterCosThetaStar(0))',
 
     #Pairs + MET
     object1_object2_ToMETDPhi = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("type1").phi)',
