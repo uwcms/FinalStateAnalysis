@@ -31,6 +31,10 @@ The available options (which are set to zero or one) are::
     rerunFSA=0              - regenerate PATFinalState dataformats
     verbose=0               - print out timing information
     noPhotons=0             - don't build things which depend on photons.
+    rerunMVAMET=0           - rerun the MVAMET algorithm
+    svFit=0                 - run the SVfit on appropriate pairs.
+                              Requires rerunMVAMET, if it's not already
+                              in the PAT tuple.
 
 '''
 
@@ -57,6 +61,7 @@ options = TauVarParsing.TauVarParsing(
     verbose=0,  # If one print out the TimeReport
     noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
     rerunMVAMET=0,  # If one, (re)build the MVA MET
+    svFit=1,  # If one, SVfit appropriate lepton pairs.
 )
 
 options.outputFile = "ntuplize.root"
@@ -188,7 +193,7 @@ def expanded_final_states(input):
 
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
-    analyzer = make_ntuple(*final_state)
+    analyzer = make_ntuple(*final_state, svFit=options.svFit)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 

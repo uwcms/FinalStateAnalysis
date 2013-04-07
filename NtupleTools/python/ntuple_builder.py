@@ -206,7 +206,7 @@ def make_ntuple(*legs, **kwargs):
         )
         # Check if we want to enable SVfit
         # Only do SVfit in states with 2 or 4 leptons
-        do_svfit = True
+        do_svfit = kwargs.get("svFit", False)
         if not len(legs) % 2 == 0:
             do_svfit = False
 
