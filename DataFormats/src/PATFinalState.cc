@@ -327,7 +327,7 @@ PATFinalState::SVfit(int i, int j) const {
   toFit.push_back(daughterPtr(i));
   toFit.push_back(daughterPtr(j));
 
-  edm::Ptr<pat::MET> mvaMet = evt()->met("mva");
+  edm::Ptr<pat::MET> mvaMet = evt()->met("mvamet");
 
   if (mvaMet.isNull()) {
     throw cms::Exception("MissingMVAMet")
