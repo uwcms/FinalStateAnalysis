@@ -170,7 +170,7 @@ _FINAL_STATE_GROUPS = {
     'zh': 'eeem, eeet, eemt, eett, emmm, emmt, mmmt, mmtt',
     'zz': 'eeee, eemm, mmmm',
     'zgg': 'eegg, mmgg',
-    'llt': 'emt, mmt, eet, mmm, emm',
+    'llt': 'emt, mmt, eet, mmm, emm, mm, ee, em',
     'zg': 'mmg, eeg',
     'zgxtra': 'mgg, emg, egg',
 }
