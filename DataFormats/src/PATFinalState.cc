@@ -327,8 +327,18 @@ PATFinalState::SVfit(int i, int j) const {
   toFit.push_back(daughterPtr(i));
   toFit.push_back(daughterPtr(j));
 
-  return ApplySVfit::getSVfitMass(toFit, *evt()->met("mva"),
-      evt()->met("mva")->getSignificanceMatrix(), 0,
+  edm::Ptr<pat::MET> mvaMet = evt()->met("mva");
+
+  if (mvaMet.isNull()) {
+    throw cms::Exception("MissingMVAMet")
+      << "SV fit requires the MVAMET be available via "
+      << " met('mvamet') method in PATFinalStateEvent.  It's null."
+      << std::endl;
+  }
+
+
+  return ApplySVfit::getSVfitMass(toFit, *mvaMet,
+      mvaMet->getSignificanceMatrix(), 0,
       evt()->evtId());
 }
 
