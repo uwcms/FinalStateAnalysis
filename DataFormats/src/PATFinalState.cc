@@ -396,14 +396,10 @@ double PATFinalState::mtMET(int i, const std::string& metTag) const {
 }
 
 double PATFinalState::mtMET(int i, const std::string& tag,
-  const std::string& metName, const std::string& metTag) const {
-  if (metTag != "") {
-    return fshelpers::transverseMass(daughterUserCandP4(i, tag),
-				     evt()->met(metName)->userCand(metTag)->p4());
-  } else {
-    return fshelpers::transverseMass(daughterUserCandP4(i, tag),
-        evt()->met(metName)->p4());
-  }
+			    const std::string& metName, const std::string& metTag, 
+			    const int applyPhiCorr) const {
+  return fshelpers::transverseMass(daughterUserCandP4(i, tag),
+				   evt()->met4vector(metName, metTag, applyPhiCorr));
 }
 
 double PATFinalState::ht(const std::string& sysTags) const {

@@ -41,20 +41,20 @@ pv_info = PSet(
 )
 
 met = PSet(
-    ## mva_metEt     = 'evt.met("mvamet").et',
-    ## mva_metPhi    = 'evt.met("mvamet").phi',
-    type1_pfMetEt  = 'evt.met("pfmet").userCand("type1").et',
-    type1_pfMetPhi = 'evt.met("pfmet").userCand("type1").phi',
+    mva_metEt     = 'evt.met("mvamet").et',
+    mva_metPhi    = 'evt.met("mvamet").phi',
+    type1_pfMetEt  = 'evt.met4vector("pfmet","type1",1).Et', #1 --> Apply phi correction
+    type1_pfMetPhi = 'evt.met4vector("pfmet","type1",1).phi',
     #systematics
-    pfMet_mes_Et   = 'evt.met("pfmet").userCand("mes+").et',
-    pfMet_tes_Et   = 'evt.met("pfmet").userCand("tes+").et',
-    pfMet_jes_Et   = 'evt.met("pfmet").userCand("jes+").et',
-    pfMet_ues_Et   = 'evt.met("pfmet").userCand("ues+").et',
+    pfMet_mes_Et   = 'evt.met4vector("pfmet","mes+", 1).Et',
+    pfMet_tes_Et   = 'evt.met4vector("pfmet","tes+", 1).Et',
+    pfMet_jes_Et   = 'evt.met4vector("pfmet","jes+", 1).Et',
+    pfMet_ues_Et   = 'evt.met4vector("pfmet","ues+", 1).Et',
 
-    pfMet_mes_Phi  = 'evt.met("pfmet").userCand("mes+").phi',
-    pfMet_tes_Phi  = 'evt.met("pfmet").userCand("tes+").phi',
-    pfMet_jes_Phi  = 'evt.met("pfmet").userCand("jes+").phi',
-    pfMet_ues_Phi  = 'evt.met("pfmet").userCand("ues+").phi',
+    pfMet_mes_Phi  = 'evt.met4vector("pfmet","mes+", 1).phi',
+    pfMet_tes_Phi  = 'evt.met4vector("pfmet","tes+", 1).phi',
+    pfMet_jes_Phi  = 'evt.met4vector("pfmet","jes+", 1).phi',
+    pfMet_ues_Phi  = 'evt.met4vector("pfmet","ues+", 1).phi',
     
     #metSignificance='evt.metSignificance',
     recoilDaught='getDaughtersRecoil().R()',

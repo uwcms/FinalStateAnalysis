@@ -34,6 +34,7 @@ _common_template = PSet(
     templates.trigger.doublemu,
     templates.trigger.doublee,
     templates.trigger.isomu,
+    templates.trigger.isomu24eta2p1,
     templates.trigger.singlemu,
     templates.trigger.singlee,
     templates.trigger.singlePho,
