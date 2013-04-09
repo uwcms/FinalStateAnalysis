@@ -23,9 +23,9 @@ from string import Template
 
 try:
       from yellowhiggs import xs, br, xsbr
-      br(mass,'WW')
+      br(130.,'WW')
 except:
-      print "warning: yellowhiggs error"
+      #print "warning: yellowhiggs error"
       #define / override functions to avoid crashes
       def br(*args, **kwargs):
             return -99
@@ -432,7 +432,7 @@ for mass in range(120,155,5):
 
 
 # Add VH files
-for mass in range(110, 145, 5):
+for mass in range(110, 165, 5):
    datadefs['VHtautau_lepdecay_%i' % mass] = {
       'analyses': ['VH'],
       'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
@@ -453,7 +453,7 @@ for mass in range(110, 150, 10):
 
 
 # We use the same name for the 53X lepdecay only samples (sigh)
-for mass in range(110, 145, 5):
+for mass in range(110, 160, 5):
     datadefs['VH_H2Tau_M-%s' % mass] = {}
     datadefs['VH_H2Tau_M-%s' % mass]['x_sec'] = xsbr(8,mass,'wh','tautau')[0]*br_w_leptons + xsbr(8,mass,'zh','tautau')[0]*br_z_leptons + xsbr(8,mass,'tth','tautau')[0]*br_w_leptons**2
 

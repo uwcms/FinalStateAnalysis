@@ -42,6 +42,9 @@
 
 #include "DataFormats/Math/interface/deltaR.h"
 #include "DataFormats/PatCandidates/interface/PFParticle.h"
+#include "DataFormats/PatCandidates/interface/PATObject.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Electron.h"
 #include "Math/GenVector/VectorUtil.h"
 
 
@@ -71,6 +74,10 @@ class PATQuadFinalStateBuilderHzzT : public edm::EDProducer
         edm::InputTag photonSrc_;
         edm::InputTag evtSrc_;
         StringCutObjectSelector<PATFinalState> cut_;
+
+        edm::Ptr<pat::PFParticle> assignPhoton(
+                reco::CandidatePtr leg1, reco::CandidatePtr leg2, 
+                std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::PFParticle> > >& photonMap );
 };
 
 
@@ -244,9 +251,6 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
     do
     {
-        edm::Ptr<pat::PFParticle> photon1;
-        edm::Ptr<pat::PFParticle> photon2;
-
         reco::CandidatePtr lepton1 = lepton_list.at(0);
         reco::CandidatePtr lepton2 = lepton_list.at(1);
         reco::CandidatePtr lepton3 = lepton_list.at(2);
@@ -280,10 +284,6 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
             best_pt1 = lepton3->pt();
             best_pt2 = lepton4->pt();
         }
-        else
-            continue;
-
-        // implement FSR here
     }
     while ( std::next_permutation(lepton_list.begin(), lepton_list.end(), comparePt) );
 
@@ -292,6 +292,46 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     {
         evt.put( output );
         return;
+    }
+
+
+    // -------------------------------------------------
+    //
+    // Assign FSR photons to Z candidates
+    // Correct lepton iso if necessary
+    //
+    // -------------------------------------------------
+    
+    float lepIsoCone = 0.4;
+    
+    edm::Ptr<pat::PFParticle> photon1 = assignPhoton( leg1, leg2, photonMap );
+    edm::Ptr<pat::PFParticle> photon2 = assignPhoton( leg3, leg4, photonMap );
+
+    float leg1_fsrIsoCorr = 0.0;
+    float leg2_fsrIsoCorr = 0.0;
+    float leg3_fsrIsoCorr = 0.0;
+    float leg4_fsrIsoCorr = 0.0;
+
+    if ( !photon1.isNull() )
+    {
+        float dR1 = ROOT::Math::VectorUtil::DeltaR( leg1->p4(), photon1->p4() );
+        float dR2 = ROOT::Math::VectorUtil::DeltaR( leg2->p4(), photon1->p4() );
+
+        if ( dR1 < dR2 && dR1 < lepIsoCone )
+            leg1_fsrIsoCorr = photon1->pt();
+        else if ( dR2 < dR1 && dR2 < lepIsoCone )
+            leg2_fsrIsoCorr = photon1->pt();
+    }
+
+    if ( !photon2.isNull() )
+    {
+        float dR3 = ROOT::Math::VectorUtil::DeltaR( leg3->p4(), photon2->p4() );
+        float dR4 = ROOT::Math::VectorUtil::DeltaR( leg4->p4(), photon2->p4() );
+
+        if ( dR3 < dR4 && dR3 < lepIsoCone )
+            leg3_fsrIsoCorr = photon2->pt();
+        else if ( dR4 < dR3 && dR4 < lepIsoCone )
+            leg4_fsrIsoCorr = photon2->pt();
     }
 
 
@@ -339,6 +379,18 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     // Load the legs into the output candidate and push to the event
     FinalState outputCand( leg1_out, leg2_out, leg3_out, leg4_out, evtPtr );
 
+    // attach FSR photons to quad candidate
+    if ( photon1.isNonnull() )
+        outputCand.addUserCand("fsrPhoton01", photon1);
+    if ( photon2.isNonnull() )
+        outputCand.addUserCand("fsrPhoton23", photon2);
+    
+    // attach FSR isolation corrections
+    outputCand.addUserFloat("leg0fsrIsoCorr", leg1_fsrIsoCorr);
+    outputCand.addUserFloat("leg1fsrIsoCorr", leg2_fsrIsoCorr);
+    outputCand.addUserFloat("leg2fsrIsoCorr", leg3_fsrIsoCorr);
+    outputCand.addUserFloat("leg3fsrIsoCorr", leg4_fsrIsoCorr);
+
     if ( cut_(outputCand) )
         output->push_back( outputCand );
 
@@ -348,11 +400,112 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
 
 /**
+ * This function takes the two legs of a Z candidate and the photon mapping and assigns
+ * either one or zero FSR photons to the Z candidate. A photon is accepted only if brings
+ * the Z mass closer to nominal, and 4 < M_llg < 100. If more than one photons pass, pick
+ * the one with the highest pT greater than 4 GeV. Otherwise, choose the one with the
+ * smallest dR to the leptons.
+ *
+ * @param leg1,leg2 Legs of the Z-candidate
+ * @param photonMap The mapping of leptons to their closest photons
+ *
+ * @return A single photon candidate or NULL if there isn't one
+ */
+template<class FinalState> 
+edm::Ptr<pat::PFParticle> PATQuadFinalStateBuilderHzzT<FinalState>::assignPhoton(
+        reco::CandidatePtr leg1, reco::CandidatePtr leg2, 
+        std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::PFParticle> > >& photonMap )
+{
+    std::vector<edm::Ptr<pat::PFParticle> > photons;
+
+    for ( size_t i = 0; i < photonMap[leg1].size(); ++i )
+    {
+        edm::Ptr<pat::PFParticle> photon = photonMap[leg1].at(i);
+
+        FourVec Z     = leg1->p4() + leg2->p4();
+        FourVec Z_fsr = Z + photon->p4();
+
+        bool cut1 = 4 < Z_fsr.M() && Z_fsr.M() < 100;
+        bool cut2 = fabs(Z_fsr.M() - ZMASS) < fabs(Z.M() - ZMASS);
+
+        if ( cut1 && cut2 )
+            photons.push_back( photon );
+    }
+
+    for ( size_t i = 0; i < photonMap[leg2].size(); ++i )
+    {
+        edm::Ptr<pat::PFParticle> photon = photonMap[leg2].at(i);
+
+        FourVec Z     = leg1->p4() + leg2->p4();
+        FourVec Z_fsr = Z + photon->p4();
+
+        bool cut1 = 4 < Z_fsr.M() && Z_fsr.M() < 100;
+        bool cut2 = fabs(Z_fsr.M() - ZMASS) < fabs(Z.M() - ZMASS);
+
+        if ( cut1 && cut2 )
+            photons.push_back( photon );
+    }
+
+    // return if one or zero photons are found
+    if ( photons.size() == 0 )
+    {
+        edm::Ptr<pat::PFParticle> out;
+        return out;
+    }
+    else if ( photons.size() == 1 )
+        return photons.at(0);
+
+    // pick highest pt photon if above 4 GeV
+    bool found = false;
+    edm::Ptr<pat::PFParticle> highest_photon;
+    double highest_pt = 0;
+
+    for ( size_t i = 0; i < photons.size(); ++i )
+    {
+        if ( photons.at(i)->pt() > 4 && photons.at(i)->pt() > highest_pt )
+        {
+            highest_photon = photons.at(i);
+            highest_pt     = photons.at(i)->pt();
+            found = true;
+        }
+    }
+
+    if (found)
+        return highest_photon;
+
+    // if no photons above 4 GeV, select smallest dR
+    edm::Ptr<pat::PFParticle> closest_photon;
+    double closest_dR = std::numeric_limits<double>::infinity();
+
+    for ( size_t i = 0; i < photons.size(); ++i )
+    {
+        edm::Ptr<pat::PFParticle> current_photon = photons.at(i);
+
+        double dR1 = ROOT::Math::VectorUtil::DeltaR( leg1->p4(), current_photon->p4() );
+        double dR2 = ROOT::Math::VectorUtil::DeltaR( leg2->p4(), current_photon->p4() );
+
+        if ( dR1 < closest_dR )
+        {
+            closest_dR = dR1;
+            closest_photon = current_photon;
+        }
+        if ( dR2 < closest_dR )
+        {
+            closest_dR = dR2;
+            closest_photon = current_photon;
+        }
+    }
+
+    return closest_photon;
+}
+
+
+
+/**
  * Compares leptons based on their pt.
  * Ensures ordering from greatest to least during sorting.
  *
- * @param A First lepton
- * @param B Second lepton
+ * @param A,B Lepton candidates
  * @return True iff A.pt is greater than B.pt
  */
 bool comparePt( reco::CandidatePtr A, reco::CandidatePtr B )

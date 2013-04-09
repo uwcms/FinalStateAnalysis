@@ -7,6 +7,8 @@
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
 
+#include "TLorentzVector.h"
+
 PATMultiCandFinalState::PATMultiCandFinalState():PATFinalState(){}
 
 PATMultiCandFinalState::PATMultiCandFinalState(
@@ -133,4 +135,16 @@ const reco::CandidatePtrVector& PATMultiCandFinalState::daughterOverlaps(
       << "The edm::Ptr at index " << i 
       << "is not castable to a PAT Object." << std::endl;
   }
+}
+
+const double PATMultiCandFinalState::daughterCosThetaStar(
+      size_t i) const
+{
+  reco::Candidate::LorentzVector totalP4 = p4();
+  TLorentzVector sub_cand_p4(totalP4.x(),totalP4.y(),totalP4.z(),totalP4.T()); //reco::Candidate::LorentzVector does not boost, that I know
+  reco::Candidate::LorentzVector dauP4   = daughterUnsafe(i)->p4();
+  TLorentzVector dau_p4(dauP4.x(), dauP4.y(), dauP4.z(), dauP4.T());
+
+  dau_p4.Boost(-sub_cand_p4.BoostVector()); //boost in sub-candidate CM frame
+  return (dau_p4.Vect().Unit()).Dot(sub_cand_p4.Vect().Unit());
 }

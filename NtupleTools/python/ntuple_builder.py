@@ -34,6 +34,7 @@ _common_template = PSet(
     templates.trigger.doublemu,
     templates.trigger.doublee,
     templates.trigger.isomu,
+    templates.trigger.isomu24eta2p1,
     templates.trigger.singlemu,
     templates.trigger.singlee,
     templates.trigger.singlePho,
@@ -214,6 +215,10 @@ def make_ntuple(*legs, **kwargs):
 
     if zz_mode:
         analyzerSrc += "Hzz"
+        ntuple_config = PSet(
+                ntuple_config,
+                templates.topology.zzfsr
+        )
 
     # Now build our analyzer EDFilter skeleton
     output = cms.EDFilter(

@@ -155,7 +155,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     double mtMET(int i, const std::string& tag,
         const std::string& metTag) const;
     double mtMET(int i, const std::string& metTag="") const;
-    double mtMET(int i, const std::string& tag, const std::string& metName, const std::string& metTag) const;
+    double mtMET(int i, const std::string& tag,
+		 const std::string& metName, const std::string& metTag, 
+		 const int applyPhiCorr) const;
 
     double ht(const std::string& sysTags) const;
     double ht() const;
@@ -238,6 +240,12 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Build a subcandidate
     PATFinalStateProxy subcand(int i, int j,
         int x=-1, int y=-1, int z=-1) const;
+
+    /// Build a subcandidate w/ fsr
+    PATFinalStateProxy subcandfsr( int i, int j ) const;
+
+    /// quad candidate p4 w/ fsr
+    LorentzVector p4fsr() const;
 
     /// Build a subcand using a tag string
     PATFinalStateProxy subcand(const std::string& tags) const;
