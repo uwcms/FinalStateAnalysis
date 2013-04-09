@@ -490,6 +490,14 @@ def build_data_set(pd, analyses):
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
+      'data_%s_Run2012B_22Jan2013_v1' % pd : {
+      'datasetpath' : "/%s/Run2012B-22Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
+      'firstRun' : 193833,
+      'lastRun' : 196531,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
       'data_%s_Run2012C_PromptReco_v2_Run198934_201264' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
