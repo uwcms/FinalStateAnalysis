@@ -7,6 +7,7 @@
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/Photon.h"
 #include "FWCore/Utilities/interface/Exception.h"
+#include "PhysicsTools/HepMCCandAlgos/interface/GenParticlesHelper.h"
 
 #include "CommonTools/UtilAlgos/interface/MCMatchSelector.h"
 #include "CommonTools/UtilAlgos/interface/MatchByDRDPt.h"
@@ -220,13 +221,13 @@ const bool comesFromHiggs(const reco::GenParticleRef genPart)
   }
 }
 
-const reco::Candidate::LorentzVector metPhiCorrection(const reco::Candidate::LorentzVector& vector, int nvertices)
+const reco::Candidate::LorentzVector metPhiCorrection(const reco::Candidate::LorentzVector& vector, int nvertices, bool isMC)
 {
-  //constants as defined in AN-2012/333
-  const double cx0 = 0.2661;
-  const double cxS = 0.3217;
-  const double cy0 = -0.2251;
-  const double cyS = -0.1747;
+  //constants as defined in AN-2012/333 for Type1 PFMET
+  const double cx0 = (isMC) ?  0.1166 :  0.2661;
+  const double cxS = (isMC) ?  0.0200 :  0.3217;
+  const double cy0 = (isMC) ?  0.2764 : -0.2251;
+  const double cyS = (isMC) ? -0.1280 : -0.1747;
 
   double offset_x = cx0 + cxS*nvertices;
   double offset_y = cy0 + cyS*nvertices;
@@ -237,6 +238,28 @@ const reco::Candidate::LorentzVector metPhiCorrection(const reco::Candidate::Lor
 
   //the vector is made in pt eta phi e coordinates!
   return reco::Candidate::LorentzVector(newx, newy, 0., mag);
+}
+
+const bool findDecay(const reco::GenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter)
+{
+  //if no genPaticle no matching
+  if(!genCollectionRef){
+    return false;
+  }
+  reco::GenParticleCollection genParticles = *genCollectionRef;
+  reco::GenParticleRefVector allMothers;  
+  GenParticlesHelper::findParticles( *genCollectionRef,     
+		 allMothers, std::abs(pdgIdMother), 2);
+  GenParticlesHelper::findParticles( *genCollectionRef,     
+		 allMothers, std::abs(pdgIdMother), 3);
+
+  reco::GenParticleRefVector descendents;
+  for ( GenParticlesHelper::IGR iMom = allMothers.begin(); iMom != allMothers.end(); ++iMom ) {
+    GenParticlesHelper::findDescendents( *iMom, descendents, 2, std::abs(pdgIdDaughter)); //Might not be stable, but it's fine
+    GenParticlesHelper::findDescendents( *iMom, descendents, 3, std::abs(pdgIdDaughter)); //Might not be stable, but it's fine
+  }
+
+  return (descendents.size() > 0);
 }
 
 }

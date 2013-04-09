@@ -69,4 +69,6 @@ met = PSet(
 gen = PSet(
     # Process ID used to simulate in Pythia
     processID='evt.genEventInfo.signalProcessID',
+    isZtautau='evt.findDecay(23,15)',
+    isGtautau='evt.findDecay(22,15)',
 )
