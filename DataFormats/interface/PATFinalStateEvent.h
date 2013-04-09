@@ -125,6 +125,9 @@ class PATFinalStateEvent {
     int matchedToPath(const reco::Candidate& cand, const std::string& pattern,
         double maxDeltaR = 0.3) const;
 
+    //Finds a decay in MC
+    const bool findDecay(const int pdgIdMother, const int pdgIdDaughter) const;
+
     /// Get the PU scenario used to generate this events (if MC)
     const std::string& puTag() const;
 

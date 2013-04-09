@@ -138,7 +138,7 @@ const reco::Candidate::LorentzVector PATFinalStateEvent::met4vector(
 
   const reco::Candidate::LorentzVector& metp4 = (tag == "") ? met(type)->p4() : met(type)->userCand(tag)->p4();
   if (applyPhiCorr == 1)
-    return fshelpers::metPhiCorrection(metp4, recoVertices_.size());
+    return fshelpers::metPhiCorrection(metp4, recoVertices_.size(), !isRealData_);
 
   return metp4;
 }
@@ -287,4 +287,8 @@ const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
     throw cms::Exception("PATFSAEventNullRefs")
       << "The PFLOW RefProd is null!" << std::endl;
   return *pfRefProd_;
+}
+
+const bool PATFinalStateEvent::findDecay(const int pdgIdMother, const int pdgIdDaughter) const{
+  return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
 }
