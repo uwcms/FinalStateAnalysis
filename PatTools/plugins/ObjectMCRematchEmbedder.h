@@ -60,6 +60,7 @@ void MCRematchEmbedder<Collection>::produce(edm::Event& iEvent,
   for( ; i != e; ++i ) {
     typename Collection::value_type temp = *i;
     ObjectRef oref(in,i-b);
+    
     reco::GenParticleRef genp = (*match)[oref];
     temp.setGenParticleRef((*match)[oref]);
     out->push_back(temp);
