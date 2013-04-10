@@ -22,6 +22,7 @@ namespace reco {
 namespace edm { class EventSetup; }
 class EcalClusterFunctionBaseClass;
 
+#include <FWCore/ParameterSet/interface/ParameterSet.h>
 #include <vector>
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "MagneticField/Engine/interface/MagneticField.h"
@@ -33,6 +34,7 @@ class EcalClusterFunctionBaseClass;
  */
 
 class FinalStateMassResolution  {
+  typedef std::vector<std::string> vstring;
  public:
   FinalStateMassResolution();
   ~FinalStateMassResolution() {}
@@ -66,6 +68,7 @@ class FinalStateMassResolution  {
   
   edm::ESHandle<MagneticField> magfield_;
   EcalClusterFunctionBaseClass* uncertainty_;
+  std::string mu_corr, e_corr;
   
   // 1 if this is a lead, recursive number of leafs if composite
   void getLeaves(const reco::Candidate &c, 
