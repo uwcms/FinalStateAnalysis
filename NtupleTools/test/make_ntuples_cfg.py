@@ -30,7 +30,7 @@ The available options (which are set to zero or one) are::
     passThru=0              - turn off any preselection/skim
     rerunFSA=0              - regenerate PATFinalState dataformats
     verbose=0               - print out timing information
-    noPhotons=0             - don't build things which depend on photons.
+    noPhotons=0             - don\'t build things which depend on photons.
 
 '''
 
@@ -144,12 +144,13 @@ if options.rerunFSA:
     }
     #re run the MC matching, if requested
     if options.rerunMCMatch:
+        print 'doing rematching!'
         rerun_matchers(process)
         process.schedule.append(process.rerunMCMatchPath)
         fs_daughter_inputs['electrons'] = 'cleanPatElectronsRematched'
         fs_daughter_inputs['muons'] = 'cleanPatMuonsRematched'
         fs_daughter_inputs['taus'] = 'cleanPatTausRematched'
-        fs_daughter_inputs['photons'] = 'cleanPatPhotonsRematched'
+        fs_daughter_inputs['photons'] = 'photonParentage'
         fs_daughter_inputs['jets'] = 'selectedPatJetsRematched'
 
     # Eventually, set buildFSAEvent to False, currently working around bug

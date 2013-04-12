@@ -301,7 +301,7 @@ for n in range(1,5) :
 datadefs['ZGToLLG']= {
    'datasetpath' :'/ZGToLLG_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
    'pu' : 'S10',
-   'x_sec' : 132.6*picobarns,
+   'x_sec' : 156.2*picobarns,
    'analyses' : ['HZG'],
    'calibrationTarget':'Summer12_DR53X_HCP2012'
    }
@@ -484,6 +484,14 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012B_13Jul2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-13Jul2012-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
+      'firstRun' : 193833,
+      'lastRun' : 196531,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
+      'data_%s_Run2012B_22Jan2013_v1' % pd : {
+      'datasetpath' : "/%s/Run2012B-22Jan2013-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
       'firstRun' : 193833,
       'lastRun' : 196531,
