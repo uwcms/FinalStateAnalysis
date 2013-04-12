@@ -82,7 +82,8 @@ def produce_final_states(process, collections, output_commands,
                 'userFloat("ipDXY") < 0.5 &'
                 'userFloat("dz") < 1.0 &'
                 '(isGlobalMuon | isTrackerMuon) &'
-                'abs(userFloat("ip3DS")) < 4.0' )
+                'abs(userFloat("ip3DS")) < 4.0 &'
+                'pfCandidateRef().isNonnull()' )
 
         elec_string = (
                 'pt > 7.0 &'
