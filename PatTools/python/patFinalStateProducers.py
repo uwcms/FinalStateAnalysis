@@ -53,7 +53,10 @@ def produce_final_states(process, collections, output_commands,
     pfmetsrc = collections['pfmet']
     mvametsrc = collections['mvamet']
     phosrc = collections['photons']
-    fsrsrc = collections['fsr']
+    try:
+        fsrsrc = collections['fsr']
+    except KeyError:
+        fsrsrc = 'boostedFsrPhotons'
 
     # Build the PATFinalStateEventObject
     if buildFSAEvent:
@@ -90,8 +93,9 @@ def produce_final_states(process, collections, output_commands,
                 'abs(eta) < 2.5 &'
                 'userFloat("ipDXY") < 0.5 &'
                 'userFloat("dz") < 1.0 &'
-                'gsfTrack().trackerExpectedHitsInner().numberOfHits() < 2.0 &'
-                'abs(userFloat("ip3DS")) < 4.0' )
+                'gsfTrack().trackerExpectedHitsInner().numberOfHits() <= 1 &'
+                'abs(userFloat("ip3DS")) < 4.0 &'
+                'userInt("mvaidzz") == 1')
     else:
         muon_string = (
                 'max(pt, userFloat("maxCorPt")) > 4 &'
