@@ -15,6 +15,18 @@ Author: Evan K. Friis, UW Madison
 '''
 
 from datacommon import square, cube, quad, picobarns, br_w_leptons, br_z_leptons, query_cli
+try:
+      from yellowhiggs import xs, br, xsbr
+      br(130.,'WW')
+except:
+      #print "warning: yellowhiggs error"
+      #define / override functions to avoid crashes
+      def br(*args, **kwargs):
+            return -99
+      def xs(*args, **kwargs):
+            return -99, (-99, 99)
+      def xsbr(*args, **kwargs):
+            return -99, (-99, 99)
 
 # Figure this out later.
 data_name_map = {}
@@ -334,23 +346,23 @@ for mass in[115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128
         }
 
 # Add WH TauTau signal samples
-for mass in [110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160]:
+for mass in range(110, 165, 5):
     datadefs['VH_H2Tau_M-%i' % mass] = {
         'analyses': ['HTT', 'VH'],
         'datasetpath': '/WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM' % mass,
         'pu': 'S7',
         'calibrationTarget': 'Summer12',
-        'x_sec': -999,
+        'x_sec': xsbr(8,mass,'wh','tautau')[0] + xsbr(8,mass,'zh','tautau')[0] + xsbr(8,mass,'tth','tautau')[0],
     }
     if mass == 110:
         # Special case use v3 instead of v2, which doesn't exist
         datadefs['VH_H2Tau_M-110']['datasetpath'] = datadefs['VH_H2Tau_M-110']['datasetpath'].replace(
             'V9-v2', 'V9-v3')
 
-datadefs['VH_H2Tau_M-110']['x_sec'] = (1.060*br_w_leptons + 0.5869*br_z_leptons + 0.1887*square(br_w_leptons))*7.95E-02
-datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966*br_w_leptons + 0.4483*br_z_leptons + 0.1470*square(br_w_leptons))*7.04E-02
-datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095*br_w_leptons + 0.3473*br_z_leptons + 0.1157*square(br_w_leptons))*5.48E-02
-datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713*br_w_leptons + 0.2728*br_z_leptons + 0.09207*square(br_w_leptons))*3.54E-02
+## datadefs['VH_H2Tau_M-110']['x_sec'] = (1.060*br_w_leptons + 0.5869*br_z_leptons + 0.1887*square(br_w_leptons))*7.95E-02
+## datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966*br_w_leptons + 0.4483*br_z_leptons + 0.1470*square(br_w_leptons))*7.04E-02
+## datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095*br_w_leptons + 0.3473*br_z_leptons + 0.1157*square(br_w_leptons))*5.48E-02
+## datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713*br_w_leptons + 0.2728*br_z_leptons + 0.09207*square(br_w_leptons))*3.54E-02
 
 # fix me
 for mass in range(110, 150, 10):
