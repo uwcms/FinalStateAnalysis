@@ -32,8 +32,8 @@ data_styles = {
     'QCD*' : {
         'legendstyle' : 'f',
         'drawstyle' : 'hist',
-        'fillcolor' : colors['magenta'],
-        'linecolor' :colors['magenta'],
+        'fillcolor' : colors['cyan'],
+        'linecolor' :colors['cyan'],
         'name' : "QCD",
     },
     'TT*' : {
