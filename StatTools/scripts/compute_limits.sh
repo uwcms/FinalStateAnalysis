@@ -18,12 +18,12 @@ BLINDED=$3
 
 if [[ $BLINDED == "YES" ]];
 then
-    if ls -d $INPUT_DIR/* | xargs -n 1 -P $NUMPROCS limit.py --asymptotic --noprefit --expectedOnly
+    if ls -d $INPUT_DIR/[0-9]* | xargs -n 1 -P $NUMPROCS limit.py --asymptotic --no-prefit --expectedOnly
     then touch $INPUT_DIR/.limits_computed
     else exit 1
     fi
 else
-    if ls -d $INPUT_DIR/* | xargs -n 1 -P $NUMPROCS limit.py --asymptotic 
+    if ls -d $INPUT_DIR/[0-9]* | xargs -n 1 -P $NUMPROCS limit.py --asymptotic 
     then touch $INPUT_DIR/.limits_computed
     else exit 1
     fi
