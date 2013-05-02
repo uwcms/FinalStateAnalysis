@@ -15,6 +15,8 @@ import os
 import ROOT
 import math
 
+ROOT.gROOT.SetBatch(True)
+
 def json2graph(json_dict, load_error=None, **kwargs):
     limit   = json_dict['limits']
     ret     = Graph(npoints = len(limit.keys()), **kwargs)
@@ -47,19 +49,6 @@ parser.add_option('--ref', type=str, default = "",
 parser.add_option('--legend-on-the-left', action='store_true', dest='legend_left', default = False,
                   help='puts the legend on the left')
 
-## parser.add_option('--png', action='store_true', dest='png', default = False,
-##                   help='prints in png format')
-## parser.add_option('--pdf', action='store_true', dest='pdf', default = False,
-##                   help='prints in pdf format')
-## parser.add_option('--tex', action='store_true', dest='tex', default = False,
-##                   help='prints in LaTex format')
-## parser.add_option('--txt', action='store_true', dest='txt', default = False,
-##                   help='prints in txt format')
-## parser.add_option('--root', action='store_true', dest='root', default = False,
-##                   help='prints in root format')
-## parser.add_option('--cpp', action='store_true', dest='cpp', default = False,
-##                   help='prints in .C format')
-
 
 (options,jsons) = parser.parse_args()
 jmaps= [prettyjson.loads( open(json).read() ) for json in jsons]
@@ -68,28 +57,30 @@ to_print = []
 mycols   = [
     colors['red'],
     colors['blue'],
-    colors['green'],
-    colors['orange'],
+    'darkviolet',
+    'green',
     colors['cyan'],
+    colors['orange'],
     ]
 
 canvas   = plotting.Canvas(name='adsf', title='asdf')
 one_line = None
 first = True
 for json, col in zip(jmaps, mycols):
+    title = ' '.join([json[tag] for tag in options.name_by.split(',')])
     col = col if (not options.ref) or \
-        json[options.name_by] != options.ref \
+        title != options.ref \
         else ROOT.kBlack
     to_print.append(
         json2graph(
             json,
-            name=json['channel'],
+            name=title,
             drawstyle = 'ALP' if first else 'LP SAME',
             legendstyle = 'PL',
             fillcolor = col,
             linecolor = col,
             markercolor = col,
-            title = json[options.name_by],
+            title = title,
             markerstyle = 20,
             markersize  = 1,
             linewidth = 3,
@@ -114,13 +105,20 @@ for json, col in zip(jmaps, mycols):
 to_print[0].GetXaxis().SetTitle(options.xtitle)
 to_print[0].GetYaxis().SetTitle(options.ytitle)
 
+x_range = eval(options.xrange) if options.xrange else None
 if options.xrange:
-    r = eval(options.xrange)
-    to_print[0].GetXaxis().SetRangeUser(r[0], r[1])
+    to_print[0].GetXaxis().SetRangeUser(x_range[0], x_range[1])
 if options.yrange:
     r = eval(options.yrange)
     to_print[0].GetYaxis().SetRangeUser(r[0], r[1])
+else:
+    ys = [
+        max([y for x, y in zip(graph.x(), graph.y()) if not x_range or x_range[0] < x < x_range[1]])
+        for graph in to_print
+        ]
+    to_print[0].GetYaxis().SetRangeUser(0., max(ys)*1.2)
 
+    
 if options.logy:
     canvas.SetLogy(True)
 
