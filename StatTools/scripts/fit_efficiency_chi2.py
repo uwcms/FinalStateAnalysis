@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     # Build view of input histograms
     log.info("Merging input files")
-    input_view = views.SumView(*[io.root_open(x) for x in args.input])
+    input_view = views.SumView(*[io.open(x) for x in args.input])
 
     if args.rebin and args.rebin > 1:
         binning = None

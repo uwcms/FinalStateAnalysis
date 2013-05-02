@@ -69,12 +69,15 @@ for info, paths in file_groups.iteritems():
         tfile = io.open(path)
         limit_tree = tfile.Get('limit')
         limit_map  = tree_to_quantile_map(limit_tree)
-        store['limits'][mass]['median'] = limit_map['0.500']
         if kind == 'expected':
             store['limits'][mass]['+2sigma'] = limit_map['0.975']
             store['limits'][mass]['+1sigma'] = limit_map['0.840']
+            store['limits'][mass]['median'] = limit_map['0.500']
             store['limits'][mass]['-1sigma'] = limit_map['0.160']
             store['limits'][mass]['-2sigma'] = limit_map['0.025']
+        else:
+            store['limits'][mass]['median'] = limit_map['-1.000']
+            
         tfile.Close()
     outfilename = '%s_%s_%s_limit.json' % (channel, method, kind)
     with open( os.path.join(input_dir,outfilename),'w') as outfile:
