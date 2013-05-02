@@ -490,6 +490,14 @@ def build_data_set(pd, analyses):
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
+      'data_%s_Run2012B_13Jul2012_v4' % pd : {
+      'datasetpath' : "/%s/Run2012B-13Jul2012-v4/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
+      'firstRun' : 193833,
+      'lastRun' : 196531,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
       'data_%s_Run2012B_22Jan2013_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-22Jan2013-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
@@ -498,25 +506,17 @@ def build_data_set(pd, analyses):
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
-      'data_%s_Run2012C_PromptReco_v2_Run198934_201264' % pd : {
+      'data_%s_Run2012C_PromptReco_v2' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
-      'firstRun' : 198934,
-      'lastRun' : 201264,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012C_PromptReco_v2_Run201265_203755' % pd : {
-      'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
-      'firstRun' : 201265,
-      'lastRun' : 203755,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
+      ## 'firstRun' : 201265,
+      ## 'lastRun' : 203755,
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012A_recover_06Aug2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012A-recover-06Aug2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190782-190949_8TeV_06Aug2012ReReco_Collisions12_JSON.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
       'firstRun' : 190782, #LAG from A. David, 26 Dec 2012
       'lastRun' : 190949,
       'analyses' : analyses,
@@ -524,7 +524,7 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012C_PromptReco_v1' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-203002_8TeV_PromptReco_Collisions12_JSON_v2.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
       'firstRun' : 197700,
       'lastRun' : 198913,
       'analyses' : analyses,
@@ -548,7 +548,7 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012D_PromptReco_v1' % pd :{
       'datasetpath' : "/%s/Run2012D-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
       'firstRun' : 203768,
       'lastRun' :  208686,
       'analyses' : analyses,

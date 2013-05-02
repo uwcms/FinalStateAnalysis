@@ -22,10 +22,10 @@
   "VH_H2Tau_M-155" : "/hdfs/store/user/tapas/WH_ZH_TTH_HToTauTau_M-155_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/2013-02-25-8TeV-53X-PatTuple_Master",
   "VH_H2Tau_M-160" : "/hdfs/store/user/tapas/WH_ZH_TTH_HToTauTau_M-160_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/2013-02-25-8TeV-53X-PatTuple_Master",
 
-  "VH_110_HWW" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/VHWW_lepdecay_110",
-  "VH_120_HWW" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/VHWW_lepdecay_120",
-  "VH_130_HWW" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/VHWW_lepdecay_130",
-  "VH_140_HWW" : "/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/VHWW_lepdecay_140",
+  "VH_110_HWW" : "/hdfs/store/user/tapas/WH_ZH_TTH_HToWW_M-110_lepdecay_8TeV-pythia6",
+  "VH_120_HWW" : "/hdfs/store/user/tapas/WH_ZH_TTH_HToWW_M-120_lepdecay_8TeV-pythia6",
+  "VH_130_HWW" : "/hdfs/store/user/tapas/WH_ZH_TTH_HToWW_M-130_lepdecay_8TeV-pythia6",
+  "VH_140_HWW" : "/hdfs/store/user/tapas/WH_ZH_TTH_HToWW_M-140_lepdecay_8TeV-pythia6",
 
   "data_DoubleElectron_Run2012A_13Jul2012_v1"            : "/hdfs/store/user/tapas/DoubleElectron/Run2012A-13Jul2012-v1/AOD/2013-04-01-8TeV-53X-PatTuple_Master",
   "data_DoubleElectron_Run2012A_recover_06Aug2012_v1"    : "/hdfs/store/user/tapas/DoubleElectron/Run2012A-recover-06Aug2012-v1/AOD/2013-04-01-8TeV-53X-PatTuple_Master",
@@ -51,7 +51,7 @@
   "data_MuEG_Run2012C_24Aug2012_v1"            : "/hdfs/store/user/tapas/MuEG/Run2012C-24Aug2012-v1/AOD/2013-04-01-8TeV-53X-PatTuple_Master",
   "data_MuEG_Run2012C_EcalRecover_11DEC2012_v1": "/hdfs/store/user/tapas/MuEG/Run2012C-EcalRecover_11Dec2012-v1/AOD/2013-04-01-8TeV-53X-PatTuple_Master",
   "data_MuEG_Run2012C_PromptReco_v2"           : "/hdfs/store/user/tapas/MuEG/Run2012C-PromptReco-v2/AOD/2013-04-01-8TeV-53X-PatTuple_Master",
-  "data_MuEG_Run2012D_PromptReco_v1"           : "/hdfs/store/user/tapas/MuEG/Run2012D-PromptReco-v1/AOD/2013-01-11-8TeV-53X-PatTuple_Master",
+  "data_MuEG_Run2012D_PromptReco_v1"           : "/hdfs/store/user/tapas/MuEG/Run2012D-PromptReco-v1/AOD/2013-04-01-8TeV-53X-PatTuple_Master",
   "data_MuEG_Run2012D_16Jan2013_v2"            : "/hdfs/store/user/tapas/MuEG/Run2012D-16Jan2013-v2/AOD/2013-04-01-8TeV-53X-PatTuple_Master",
     
   "data_SingleMu_Run2012A_13Jul2012_v1" : "/hdfs/store/user/tapas/SingleMu/Run2012A-13Jul2012-v1",
