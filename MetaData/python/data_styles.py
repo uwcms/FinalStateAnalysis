@@ -22,12 +22,14 @@ data_styles = {
         'fillcolor' : '#FFCC66',
         'linecolor' : '#000000',
         'name' : "Z + jets",
-    },
+        'fillstyle': 'solid',
+        },
     'WplusJets*' : {
         'legendstyle' : 'f',
         'drawstyle' : 'hist',
         'fillcolor' : '#990000',
         'name' : "W + jets",
+        'fillstyle': 'solid',
     },
     'QCD*' : {
         'legendstyle' : 'f',
@@ -35,6 +37,7 @@ data_styles = {
         'fillcolor' : colors['cyan'],
         'linecolor' :colors['cyan'],
         'name' : "QCD",
+        'fillstyle': 'solid',
     },
     'TT*' : {
         'legendstyle' : 'f',
@@ -42,6 +45,7 @@ data_styles = {
         'fillcolor' : '#9999CC',
         'linecolor' : '#9999CC',
         'name' : "ttbar",
+        'fillstyle': 'solid',
     },
     'VH*' : {
         'legendstyle' : 'l',
@@ -59,6 +63,7 @@ data_styles = {
         'fillcolor' : colors['blue'],
         'linecolor' : colors['blue'],
         'name' : "WZ",
+        'fillstyle': 'solid',
     },
     'WW*' : {
         'legendstyle' : 'f',
@@ -66,6 +71,7 @@ data_styles = {
         'fillcolor' : colors['red'],
         'linecolor' : colors['red'],
         'name' : "WW",
+        'fillstyle': 'solid',
     },
     'ZZ*' : {
         'legendstyle' : 'f',
@@ -73,6 +79,7 @@ data_styles = {
         'linecolor' : '#50A634',
         'fillcolor' : '#50A634',
         'name' : "ZZ",
+        'fillstyle': 'solid',
     },
     'data*' : {
         'legendstyle' : 'pe',
