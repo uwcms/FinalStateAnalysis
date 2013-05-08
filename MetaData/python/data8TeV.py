@@ -388,10 +388,8 @@ datadefs['WH_130_HWW3l'] = { 'x_sec' : 0.6095*cube(br_w_leptons)*3.05E-01 }
 datadefs['WH_140_HWW3l'] = { 'x_sec' : 0.4713*cube(br_w_leptons)*5.03E-01 }
 
 #VH->HWW xsec: WH + ZH; ZH --> totalxsec * BR(ZtoLL) * BR(HtoWW) * BR( WtoLL )^2
-datadefs['VH_110_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.5869 * br_z_leptons * 4.77E-02 * br_w_leptons**2}
-datadefs['VH_120_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.4483 * br_z_leptons * 1.41E-01 * br_w_leptons**2}
-datadefs['VH_130_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.3473 * br_z_leptons * 3.03E-01 * br_w_leptons**2}
-datadefs['VH_140_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.2728 * br_z_leptons * 5.01E-01 * br_w_leptons**2}
+for mass in range(110, 150, 10):
+      datadefs['VH_%s_HWW' % mass] = {'x_sec' : (xs(8,mass,'wh')[0]*br_w_leptons+xs(8,mass,'zh')[0]*br_z_leptons+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2}
 
 # Add data files
 def build_data_set(pd, analyses):
