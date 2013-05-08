@@ -447,7 +447,7 @@ for mass in range(110, 150, 10):
       'datasetpath': "/WH_ZH_TTH_HToWW_M-%i_lepdecay_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
        'calibrationTarget':'Summer12_DR53X_HCP2012',
-      'x_sec' : (xs(8,mass,'wh')[0]+xs(8,mass,'zh')[0]+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
+      'x_sec' : (xs(8,mass,'wh')[0]*br_w_leptons+xs(8,mass,'zh')[0]*br_z_leptons+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
       }
 
 
