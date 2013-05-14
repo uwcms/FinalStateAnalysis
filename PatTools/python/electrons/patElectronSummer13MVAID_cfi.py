@@ -14,8 +14,8 @@ mvaTrigNoIPPAT = cms.EDProducer(
         "EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigNoIPV0_2012_Cat5.weights.xml",
         "EgammaAnalysis/ElectronTools/data/Electrons_BDTG_TrigNoIPV0_2012_Cat6.weights.xml",
         ),
-    Trig = cms.bool(True),
-    NoIP = cms.bool(True),
+    ## Trig = cms.bool(True),
+    ## NoIP = cms.bool(True),
     )
 
 patElectrons2013MVAID = cms.EDProducer(
