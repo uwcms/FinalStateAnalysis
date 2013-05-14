@@ -80,7 +80,7 @@ void PATObjectValueMapEmbedder<T>::produce(edm::Event& evt, const edm::EventSetu
 
     // Embed in each pat jet
     for (size_t iobj = 0; iobj < inputs->size(); ++iobj) {
-      std::cout << "getting float value for jet " << iobj << " and value map: " << ufloat_label << std::endl;
+      //std::cout << "getting float value for jet " << iobj << " and value map: " << ufloat_label << std::endl;
       float map_result = (*map)[inputs->refAt(iobj)];
       output->at(iobj).addUserFloat(ufloat_label, map_result);
     }
