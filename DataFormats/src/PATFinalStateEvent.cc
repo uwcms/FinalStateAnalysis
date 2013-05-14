@@ -292,3 +292,103 @@ const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
 const bool PATFinalStateEvent::findDecay(const int pdgIdMother, const int pdgIdDaughter) const{
   return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
 }
+float  PATFinalStateEvent::variables(const reco::Candidate&  jet, const std::string& myvar)const{
+  std::map <std::string, float> varMap_; 
+  varMap_["eta"] = jet.eta();
+  Bool_t useQC = true;
+  // if(fabs(jet->eta()) > 2.5 && type == "MLP") useQC = false;		//In MLP: no QC in forward region
+
+ edm::PtrVector<reco::Vertex>::const_iterator  vtxLead = recoVertices_.begin();
+
+  Float_t sum_weight = 0., sum_deta = 0., sum_dphi = 0., sum_deta2 = 0., sum_dphi2 = 0., sum_detadphi = 0., sum_pt = 0.;
+  Int_t nChg_QC = 0, nChg_ptCut = 0, nNeutral_ptCut = 0;
+
+  //Loop over the jet constituents
+  const pat::Jet *myjet = 0;
+  for (pat::JetCollection::const_iterator patjet=jetRefProd_->begin(); patjet!=jetRefProd_->end(); ++patjet){
+    if (patjet->pt() == jet.pt() &&patjet->phi() == jet.phi() &&patjet->eta() == jet.eta() ) 
+      myjet = &*patjet;
+  }
+  if (myjet!=0){
+    std::vector<reco::PFCandidatePtr> constituents = myjet->getPFConstituents();
+    for(unsigned i = 0; i < constituents.size(); ++i){
+      reco::PFCandidatePtr part = myjet->getPFConstituent(i);      
+      if(!part.isNonnull()) continue;
+      
+      reco::TrackRef itrk = part->trackRef();;
+      
+      bool trkForAxis = false;
+      if(itrk.isNonnull()){						//Track exists --> charged particle
+	if(part->pt() > 1.0) nChg_ptCut++;
+	
+	//Search for closest vertex to track
+	edm::PtrVector<reco::Vertex>::const_iterator  vtxClose = recoVertices_.begin();
+	for( edm::PtrVector<reco::Vertex>::const_iterator  vtx = recoVertices_.begin(); vtx != recoVertices_.end(); ++vtx){
+	  if(fabs(itrk->dz((*vtx)->position())) < fabs(itrk->dz((*vtxClose)->position()))) vtxClose = vtx;
+	}
+	
+	if(vtxClose == vtxLead){
+        Float_t dz = itrk->dz((*vtxClose)->position());
+        Float_t dz_sigma = sqrt(pow(itrk->dzError(),2) + pow((*vtxClose)->zError(),2));
+	
+        if(itrk->quality(reco::TrackBase::qualityByName("highPurity")) && fabs(dz/dz_sigma) < 5.){
+          trkForAxis = true;
+          Float_t d0 = itrk->dxy((*vtxClose)->position());
+          Float_t d0_sigma = sqrt(pow(itrk->d0Error(),2) + pow((*vtxClose)->xError(),2) + pow((*vtxClose)->yError(),2));
+          if(fabs(d0/d0_sigma) < 5.) nChg_QC++;
+        }
+	}
+      } else {								//No track --> neutral particle
+	if(part->pt() > 1.0) nNeutral_ptCut++;
+	trkForAxis = true;
+      }
+      
+      Float_t deta = part->eta() - jet.eta();
+      Float_t dphi = 2*atan(tan(((part->phi()- jet.phi()))/2));           
+      Float_t partPt = part->pt(); 
+      Float_t weight = partPt*partPt;
+
+      if(!useQC || trkForAxis){					//If quality cuts, only use when trkForAxis
+	sum_weight += weight;
+	sum_pt += partPt;
+	sum_deta += deta*weight;                  
+	sum_dphi += dphi*weight;                                                                                             
+	sum_deta2 += deta*deta*weight;                    
+	sum_detadphi += deta*dphi*weight;                               
+	sum_dphi2 += dphi*dphi*weight;
+      }	
+    }
+  }
+  //Calculate axis and ptD
+  Float_t a = 0., b = 0., c = 0.;
+  Float_t ave_deta = 0., ave_dphi = 0., ave_deta2 = 0., ave_dphi2 = 0.;
+  if(sum_weight > 0){
+    varMap_["ptD"] = sqrt(sum_weight)/sum_pt;
+    ave_deta = sum_deta/sum_weight;
+    ave_dphi = sum_dphi/sum_weight;
+    ave_deta2 = sum_deta2/sum_weight;
+    ave_dphi2 = sum_dphi2/sum_weight;
+    a = ave_deta2 - ave_deta*ave_deta;                          
+    b = ave_dphi2 - ave_dphi*ave_dphi;                          
+    c = -(sum_detadphi/sum_weight - ave_deta*ave_dphi);                
+  } else varMap_["ptD"] = 0;
+  Float_t delta = sqrt(fabs((a-b)*(a-b)+4*c*c));
+  if(a+b+delta > 0) varMap_["axis1"] = sqrt(0.5*(a+b+delta));
+  else varMap_["axis1"] = 0.;
+  if(a+b-delta > 0) varMap_["axis2"] = sqrt(0.5*(a+b-delta));
+  else varMap_["axis2"] = 0.;
+  
+  // if(type == "MLP" && useQC) variables["mult"] = nChg_QC;
+  // else if(type == "MLP") variables["mult"] = (nChg_ptCut + nNeutral_ptCut);
+  // else variables["mult"] = (nChg_QC + nNeutral_ptCut);
+  varMap_["mult"] = (nChg_QC + nNeutral_ptCut);
+  varMap_["mult_MLP_QC"] = (nChg_QC );
+  varMap_["mult_MLP"] = (nChg_ptCut + nNeutral_ptCut );
+  float myVarValue =-1;
+  for (std::map<std::string, float>::const_iterator it = varMap_.begin(); it != varMap_.end(); ++it){
+    if (myvar == it->first)
+      myVarValue= it->second; 
+  }
+  return myVarValue;
+}
+
