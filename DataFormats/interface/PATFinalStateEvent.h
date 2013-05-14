@@ -69,7 +69,7 @@ class PATFinalStateEvent {
         const reco::PFCandidateRefProd& pfRefProd,
         const reco::TrackRefProd& tracks,
         const reco::GsfTrackRefProd& gsfTracks,
-        const std::map<std::string, edm::Ptr<pat::MET> >& mets
+	const std::map<std::string, edm::Ptr<pat::MET> >& mets
     );
 
     /// Get PV
@@ -174,7 +174,8 @@ class PATFinalStateEvent {
     /// The FSA_DATA_FORMAT_VERSION def at the top of the .cc file should be
     /// incremented after each change to the data format.
     char version() const { return fsaDataFormatVersion_; }
-
+    float variables(const reco::Candidate& jet, const std::string& myvar) const;
+      
   private:
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;
