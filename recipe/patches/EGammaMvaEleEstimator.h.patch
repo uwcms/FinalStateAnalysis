@@ -1,0 +1,11 @@
+Index: EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h,v
+retrieving revision 1.1.4.3
+diff -w -r1.1.4.3 EGammaMvaEleEstimator.h
+37a38
+> namespace EgammaAnalysis_ElectronTools{
+292c293
+< 
+---
+> }//namespace end

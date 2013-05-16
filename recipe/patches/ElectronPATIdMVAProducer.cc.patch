@@ -1,0 +1,12 @@
+Index: EgammaAnalysis/ElectronTools/plugins/ElectronPATIdMVAProducer.cc
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/EgammaAnalysis/ElectronTools/plugins/Attic/ElectronPATIdMVAProducer.cc,v
+retrieving revision 1.1.2.3
+diff -w -r1.1.2.3 ElectronPATIdMVAProducer.cc
+25a26,27
+> using EgammaAnalysis_ElectronTools::EGammaMvaEleEstimator;
+> 
+68d69
+<  
+83d83
+< 	
