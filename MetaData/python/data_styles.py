@@ -57,12 +57,20 @@ data_styles = {
         'linecolor' : '#1C1C76',
         'name' : "VH",
     },
-    'WZ*' : {
+    'WZ*ZToTauTau*' : {
         'legendstyle' : 'f',
         'drawstyle' : 'hist',
         'fillcolor' : colors['blue'],
         'linecolor' : colors['blue'],
-        'name' : "WZ",
+        'name' : "WZ#rightarrowl#tau#tau",
+        'fillstyle': 'solid',
+    },
+    'WZ*' : {
+        'legendstyle' : 'f',
+        'drawstyle' : 'hist',
+        'fillcolor' : colors['red'],
+        'linecolor' : colors['red'],
+        'name' : "WZ#rightarrow3l",
         'fillstyle': 'solid',
     },
     'WW*' : {
