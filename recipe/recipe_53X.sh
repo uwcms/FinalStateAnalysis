@@ -38,7 +38,6 @@ then
   echo "Cherry picking summer 2013 MVAID"
   cvs co -r 1.1.4.3 EgammaAnalysis/ElectronTools/src/EGammaMvaEleEstimator.cc
   cvs co -r 1.1.4.3 EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h
-  cvs co -d -r 1.3.2.1 EgammaAnalysis/ElectronTools/data/download.url
   cvs co -r 1.3.2.1 EgammaAnalysis/ElectronTools/data/download.url
   cvs co -r 1.1.2.3 EgammaAnalysis/ElectronTools/plugins/ElectronPATIdMVAProducer.cc
   cvs co -r  1.2 EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h
@@ -49,9 +48,7 @@ then
   #apply some pathces to make everythin work
   set +o errexit
   patch -N -p0 < FinalStateAnalysis/recipe/patches/PATObject.h.patch
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaMvaEleEstimator.h.patch
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaMvaEleEstimator.cc.patch
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/ElectronPATIdMVAProducer.cc.patch
+  patch -N -p0 < FinalStateAnalysis/recipe/patches/EgammaAnalysis_ElectronTools.patch
   set -o errexit
 
   echo "Downloading Quark Gluon Jet ID"
