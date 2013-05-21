@@ -742,7 +742,7 @@ const float PATFinalState::getPhotonUserIsolation(size_t i,
 const float PATFinalState::jetVariables(size_t i, const std::string& key) const {
   //  const reco::Candidate* mydaughter = this->daughter(i);
   if (this->daughterUserCand(i,"patJet").isAvailable() && this->daughterUserCand(i,"patJet").isNonnull()){
-    return evt()->variables(*daughterUserCand(i,"patJet"), key);
+    return evt()->jetVariables(daughterUserCand(i,"patJet"), key);
   }
   return -100; 
 }
