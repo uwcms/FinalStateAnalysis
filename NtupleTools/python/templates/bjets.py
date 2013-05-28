@@ -1,13 +1,12 @@
 '''
 
-Ntuple branch template sets for tau objects.
+Ntuple branch template sets for bjet objects.
 
 Each string is transformed into an expression on a FinalStateEvent object.
 
 {object} should be replaced by an expression which evaluates to a pat::Muon
 i.e. daughter(1) or somesuch.
 
-Author: Evan K. Friis
 
 '''
 
