@@ -19,6 +19,7 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "TMatrixD.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+#include "DataFormats/VertexReco/interface/Vertex.h"
 
 namespace fshelpers {
 
@@ -50,6 +51,8 @@ const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, in
 
 /// Helper function to get if the gen particle associated comes from higgs 
 const bool comesFromHiggs(const reco::GenParticleRef genPart);
+
+float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const edm::PtrVector<reco::Vertex> recoVertices);
 
 }
 

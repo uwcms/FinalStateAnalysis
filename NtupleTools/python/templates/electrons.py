@@ -28,6 +28,9 @@ id = PSet(
     objectCBID_LOOSE = '{object}.userInt("CBID_LOOSE")',
     objectCBID_MEDIUM = '{object}.userInt("CBID_MEDIUM")',
     objectCBID_TIGHT = '{object}.userInt("CBID_TIGHT")',
+    #new Summer13 MVA ID
+    objectMVATrigNoIP = '{object}.userFloat("mvaTrigNoIP")',
+    
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(
         "({object}.userIso(0)"
