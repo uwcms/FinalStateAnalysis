@@ -60,7 +60,7 @@ PATFinalState::PATFinalState(
 }
 
 const edm::Ptr<pat::MET>& PATFinalState::met() const {
-  return event_->met();
+    return event_->met();
 }
 
 const edm::Ptr<reco::Vertex>& PATFinalState::vertexObject() const {
@@ -392,6 +392,13 @@ double PATFinalState::mtMET(int i, const std::string& metTag) const {
   } else {
     return fshelpers::transverseMass(daughterUserCandP4(i, ""), met()->p4());
   }
+}
+
+double PATFinalState::mtMET(int i, const std::string& tag,
+			    const std::string& metName, const std::string& metTag, 
+			    const int applyPhiCorr) const {
+  return fshelpers::transverseMass(daughterUserCandP4(i, tag),
+				   evt()->met4vector(metName, metTag, applyPhiCorr));
 }
 
 double PATFinalState::ht(const std::string& sysTags) const {
@@ -729,4 +736,13 @@ const float PATFinalState::getPhotonUserIsolation(size_t i,
   //<< "Isolation corresponding to key " 
   //<< key << " was not stored for this particle.";
   return -1.0;
+}
+
+
+const float PATFinalState::jetVariables(size_t i, const std::string& key) const {
+  //  const reco::Candidate* mydaughter = this->daughter(i);
+  if (this->daughterUserCand(i,"patJet").isAvailable() && this->daughterUserCand(i,"patJet").isNonnull()){
+    return evt()->jetVariables(daughterUserCand(i,"patJet"), key);
+  }
+  return -100; 
 }

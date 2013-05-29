@@ -51,6 +51,12 @@ id = PSet(
     objectTypeCode = cms.vstring('{object}.type','I'),
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}, 13, 1).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 13, 1).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 13, 1).pdgId() : -999',
     objectComesFromHiggs = 'comesFromHiggs({object_idx}, 13, 1)',
+
+    objectGenPdgId       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).pdgId() : -999',
+    objectGenCharge      = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).charge() : -999',
+    objectGenEnergy      = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).energy() : -999',
+    objectGenEta         = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).eta()   : -999',
+    objectGenPhi         = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).phi()   : -999',
 )
 
 energyCorrections = PSet(
@@ -103,11 +109,14 @@ trigger = PSet(
     objectL1Mu3EG5L3Filtered17 = 'matchToHLTFilter({object_idx}, "hltL1Mu3EG5L3Filtered17")',
     objectMu17Ele8dZFilter  = 'matchToHLTFilter({object_idx}, "hltMu17Ele8dZFilter")',
     objectL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17  = 'matchToHLTFilter({object_idx}, "hltL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17")',# missing ) on purpose
-    objectMatchesDoubleMu2011Paths = r'matchToHLTPath({object_idx}, "HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+,HLT_Mu17_Mu8_v\\d+")', #DoubleMu7_v* Mu13_Mu8 Mu17_Mu8 wichever least prescaled
-    objectMatchesMu17Mu8Path = r'matchToHLTPath({object_idx}, "HLT_Mu17_Mu8_v\\d+")',
+    objectMatchesDoubleMuPaths    = r'matchToHLTPath({object_idx}, "HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+,HLT_Mu17_Mu8_v\\d+")', 
+    objectMatchesDoubleMuTrkPaths = r'matchToHLTPath({object_idx}, "HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+,HLT_Mu17_TrkMu8_v\\d+")', 
+    objectMatchesMu17Mu8Path   = r'matchToHLTPath({object_idx}, "HLT_Mu17_Mu8_v\\d+")',
     objectMatchesMu17TrkMu8Path    = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkMu8_v\\d+")',
     objectMatchesMu17Ele8Path      = r'matchToHLTPath({object_idx}, "HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
     objectMatchesMu8Ele17Path      = r'matchToHLTPath({object_idx}, "HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+")',
+    objectMatchesMu17Ele8IsoPath      = r'matchToHLTPath({object_idx}, "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
+    objectMatchesMu8Ele17IsoPath      = r'matchToHLTPath({object_idx}, "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
     objectMatchesIsoMuGroup        = r'matchToHLTPath({object_idx}, "HLT_IsoMu17_v\\d+,HLT_IsoMu20_v\\d+,HLT_IsoMu24_v\\d+,HLT_IsoMu24_eta2p1_v\\d+,HLT_IsoMu30_v\\d+,HLT_IsoMu30_eta2p1_v\\d+")',
     objectMatchesIsoMu24eta2p1     = r'matchToHLTPath({object_idx}, "HLT_IsoMu24_eta2p1_v\\d+")',
 )

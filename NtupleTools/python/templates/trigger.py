@@ -77,7 +77,10 @@ mueg = PSet(
     # Mu8Ele17 paths
     _trig_template.replace(
         name='mu8ele17',
-        paths=r'HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+')
+        paths=r'HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+'),
+    _trig_template.replace(
+        name='mu8ele17iso',
+        paths=r"HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+"),
 )
 
 singlePho = _trig_template.replace( name='singlePho', paths='' )

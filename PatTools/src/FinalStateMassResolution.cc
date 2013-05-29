@@ -20,7 +20,8 @@
 
 #include <TMatrixD.h>
 
-FinalStateMassResolution::FinalStateMassResolution() {  
+FinalStateMassResolution::
+FinalStateMassResolution() {
   uncertainty_ = EcalClusterFunctionFactory::get()->
     create( "EcalClusterEnergyUncertainty", 
 	    edm::ParameterSet() );

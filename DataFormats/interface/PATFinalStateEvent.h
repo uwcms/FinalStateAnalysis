@@ -69,7 +69,7 @@ class PATFinalStateEvent {
         const reco::PFCandidateRefProd& pfRefProd,
         const reco::TrackRefProd& tracks,
         const reco::GsfTrackRefProd& gsfTracks,
-        const std::map<std::string, edm::Ptr<pat::MET> >& mets
+	const std::map<std::string, edm::Ptr<pat::MET> >& mets
     );
 
     /// Get PV
@@ -97,6 +97,8 @@ class PATFinalStateEvent {
 
     // Get a given type of MET
     const edm::Ptr<pat::MET> met(const std::string& type) const;
+    // Get 4-vector of the MET
+    const reco::Candidate::LorentzVector met4vector(const std::string& type, const std::string& tag="", const int applyPhiCorr=0) const;
 
     /// Get the event ID
     const edm::EventID& evtId() const;
@@ -122,6 +124,9 @@ class PATFinalStateEvent {
     /// Determine if a candidate is matched to an HLT path
     int matchedToPath(const reco::Candidate& cand, const std::string& pattern,
         double maxDeltaR = 0.3) const;
+
+    //Finds a decay in MC
+    const bool findDecay(const int pdgIdMother, const int pdgIdDaughter) const;
 
     /// Get the PU scenario used to generate this events (if MC)
     const std::string& puTag() const;
@@ -169,7 +174,8 @@ class PATFinalStateEvent {
     /// The FSA_DATA_FORMAT_VERSION def at the top of the .cc file should be
     /// incremented after each change to the data format.
     char version() const { return fsaDataFormatVersion_; }
-
+    float jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const;
+      
   private:
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;

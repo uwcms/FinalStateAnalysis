@@ -155,6 +155,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     double mtMET(int i, const std::string& tag,
         const std::string& metTag) const;
     double mtMET(int i, const std::string& metTag="") const;
+    double mtMET(int i, const std::string& tag,
+		 const std::string& metName, const std::string& metTag, 
+		 const int applyPhiCorr) const;
 
     double ht(const std::string& sysTags) const;
     double ht() const;
@@ -274,6 +277,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     //a hot fix for the fact that no one cares about pat photons.
     const float getPhotonUserIsolation(size_t i,
 				       const std::string& key) const;
+    const float jetVariables(size_t i, const std::string& key) const;
 
 
   private:

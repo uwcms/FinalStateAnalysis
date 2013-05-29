@@ -3,6 +3,7 @@
 <use   name="FWCore/PythonParameterSet"/>
 <use   name="DataFormats/Luminosity"/>
 <use   name="DataFormats/ParticleFlowCandidate"/>
+<use   name="PhysicsTools/HepMCCandAlgos"/>
 <use   name="DataFormats/Candidate"/>
 <use   name="CommonTools/Utils"/>
 <use   name="root"/>

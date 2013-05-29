@@ -99,7 +99,7 @@ class Plotter(object):
         self.keep.append(legend)
         return legend
 
-    def add_cms_blurb(self, sqrts, preliminary=True, lumiformat='%0.f'):
+    def add_cms_blurb(self, sqrts, preliminary=True, lumiformat='%0.1f'):
         ''' Add the CMS blurb '''
         latex = ROOT.TLatex()
         latex.SetNDC();
@@ -175,7 +175,7 @@ class Plotter(object):
             mc_stack.Draw()
         self.keep.append(mc_stack)
         # Draw data
-        data = self.rebin_view(self.data, rebin).Get(path)
+        data = self.rebin_view(self.get_view('data'), rebin).Get(path)
         data.Draw('same')
         self.keep.append(data)
         # Make sure we can see everything

@@ -14,6 +14,18 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 mtToMET = PSet(
     # Raw means no MET corrections
     objectMtToMET = 'mtMET({object_idx}, "raw")',
+
+    #PF Type1 MET (and systematics)
+    objectMtToPFMET      = 'mtMET({object_idx}, "", "pfmet", ""     , 1)',
+    objectMtToPfMet_Ty1  = 'mtMET({object_idx}, "", "pfmet", "type1", 1)',
+    objectMtToPfMet_mes  = 'mtMET({object_idx}, "", "pfmet", "mes+" , 1)',
+    objectMtToPfMet_tes  = 'mtMET({object_idx}, "", "pfmet", "tes+" , 1)',
+    objectMtToPfMet_jes  = 'mtMET({object_idx}, "", "pfmet", "jes+" , 1)',
+    objectMtToPfMet_ues  = 'mtMET({object_idx}, "", "pfmet", "ues+" , 1)',
+
+    #MVA MET
+    objectMtToMVAMET     = 'mtMET({object_idx}, "", "mvamet", "", 0)',
+
     objectToMETDPhi = 'deltaPhi({object}.phi, met().phi())',
 )
 
@@ -26,7 +38,10 @@ pairs = PSet(
     object1_object2_SS = 'likeSigned({object1_idx}, {object2_idx})',
     object1_object2_PZeta = 'pZeta({object1_idx}, {object2_idx})',
     object1_object2_PZetaVis = 'pZetaVis({object1_idx}, {object2_idx})',
-    
+    object1_object2_CosThetaStar = 'abs(subcand({object1_idx}, {object2_idx}).get.daughterCosThetaStar(0))',
+
+    #Pairs + MET
+    object1_object2_ToMETDPhi = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("type1").phi)',
 )
 
 finalstate = PSet(
