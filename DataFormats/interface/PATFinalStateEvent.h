@@ -174,7 +174,7 @@ class PATFinalStateEvent {
     /// The FSA_DATA_FORMAT_VERSION def at the top of the .cc file should be
     /// incremented after each change to the data format.
     char version() const { return fsaDataFormatVersion_; }
-    float variables(const reco::Candidate& jet, const std::string& myvar) const;
+    float jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const;
       
   private:
     std::map<std::string, float> weights_;
