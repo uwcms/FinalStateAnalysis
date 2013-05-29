@@ -42,5 +42,6 @@ typedef PATTripletFinalStateT<pat::Muon, pat::Tau, pat::Tau> PATMuTauTauFinalSta
 FWD_TYPEDEFS(PATMuTauTauFinalState)
 typedef PATTripletFinalStateT<pat::Muon, pat::Photon, pat::Photon> PATMuPhoPhoFinalState;
 FWD_TYPEDEFS(PATMuPhoPhoFinalState)
-
+typedef PATTripletFinalStateT<pat::Muon, pat::Jet, pat::Jet> PATMuJetJetFinalState;
+FWD_TYPEDEFS(PATMuJetJetFinalState)
 #endif

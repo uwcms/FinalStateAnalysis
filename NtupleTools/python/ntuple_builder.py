@@ -38,7 +38,8 @@ _common_template = PSet(
     templates.trigger.singlemu,
     templates.trigger.singlee,
     templates.trigger.singlePho,
-    templates.trigger.doublePho
+    templates.trigger.doublePho,
+    templates.trigger.isoMuTau
 )
 
 # Define the branch templates for different object types.
@@ -61,6 +62,12 @@ _muon_template = PSet(
     templates.muons.tracking,
     templates.muons.trigger,
     templates.topology.mtToMET,
+)
+
+_bjet_template= PSet(
+    templates.bjets.btagging,
+    templates.candidates.kinematics,
+    templates.candidates.vertex_info,
 )
 
 _electron_template = PSet(
@@ -91,21 +98,24 @@ _leg_templates = {
     't': _tau_template,
     'm': _muon_template,
     'e': _electron_template,
-    'g': _photon_template
+    'g': _photon_template,
+    'j': _bjet_template
 }
 
 _pt_cuts = {
     'm': '7',
     'e': '7',
     't': '18',
-    'g': '10'
+    'g': '10',
+    'j': '20'
 }
 
 _eta_cuts = {
     'm': '2.5',
     'e': '3.0',
     't': '2.3',
-    'g': '3.0'
+    'g': '3.0',
+    'j': '2.5'
 }
 
 # How to get from a leg name to "finalStateElecMuMuMu" etc
@@ -113,8 +123,10 @@ _producer_translation = {
     'm': 'Mu',
     'e': 'Elec',
     't': 'Tau',
-    'g': 'Pho'
+    'g': 'Pho',
+    'j': 'Jet'
 }
+
 
 
 def add_ntuple(name, analyzer, process, schedule, event_view=False):
@@ -133,6 +145,25 @@ def add_ntuple(name, analyzer, process, schedule, event_view=False):
     schedule.append(p)
 
 
+def add_ntuple_filter(name, analyzer, filterSeq, process, schedule, event_view=False):
+    ''' Add an ntuple to the process with given name and schedule it
+
+    A path for the ntuple will be created.
+    '''
+    if hasattr(process, name):
+        raise ValueError("An ntuple builder module named %s has already"
+                         " been attached to the process!" % name)
+    setattr(process, name, analyzer)
+    analyzer.analysis.EventView = cms.bool(bool(event_view))
+    # Make a path for this ntuple, adding the filter
+    p=cms.Path(filterSeq*analyzer)
+    #p = cms.Path(analyzer)
+    setattr(process, name + 'path', p)
+    schedule.append(p)
+
+
+
+
 def make_ntuple(*legs, **kwargs):
     ''' Build an ntuple for a set of input legs.
 
@@ -145,7 +176,7 @@ def make_ntuple(*legs, **kwargs):
 
     '''
     # Make sure we only use allowed leg types
-    allowed = set(['m', 'e', 't', 'g'])
+    allowed = set(['m', 'e', 't', 'g','j'])
     assert(all(x in allowed for x in legs))
     # Make object labels
     object_labels = []
@@ -157,7 +188,8 @@ def make_ntuple(*legs, **kwargs):
         't': 0,
         'm': 0,
         'e': 0,
-        'g': 0
+        'g': 0,
+	'j': 0,
     }
 
     ntuple_config = _common_template.clone()
@@ -370,8 +402,10 @@ def make_ntuple(*legs, **kwargs):
                                    (leg3_idx_label, leg4_idx_label))
                 ))
 
+
     # Now apply our formatting operations
     format(output, **format_labels)
+#    return LHEFilter*output
     return output
 
 if __name__ == "__main__":

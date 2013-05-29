@@ -53,6 +53,7 @@ datadefs = {
         'calibrationTarget': 'Summer12',
         'x_sec': 36257.2,
     },
+
     'Zjets_M50' : {
         'analyses': ['HTT','HZG'],
         'datasetpath': '/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9-v2/AODSIM',
@@ -390,6 +391,7 @@ datadefs['WH_140_HWW3l'] = { 'x_sec' : 0.4713*cube(br_w_leptons)*5.03E-01 }
 #VH->HWW xsec: WH + ZH; ZH --> totalxsec * BR(ZtoLL) * BR(HtoWW) * BR( WtoLL )^2
 for mass in range(110, 150, 10):
       datadefs['VH_%s_HWW' % mass] = {'x_sec' : (xs(8,mass,'wh')[0]*br_w_leptons+xs(8,mass,'zh')[0]*br_z_leptons+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2}
+
 
 # Add data files
 def build_data_set(pd, analyses):
