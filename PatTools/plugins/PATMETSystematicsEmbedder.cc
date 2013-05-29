@@ -131,6 +131,9 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   LorentzVector mesUpMuonP4;
   LorentzVector mesDownMuonP4;
 
+  // We have currently disabled the muon correction, as MusclFit is broken
+  // as currently implemented.
+  /*
   for (size_t i = 0; i < muons->size(); ++i) {
     const pat::Muon& muon = muons->at(i);
     assert(muon.userCand("uncorr").isNonnull());
@@ -141,6 +144,7 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     mesUpMuonP4 += muon.userCand("mes+")->p4();
     mesDownMuonP4 += muon.userCand("mes-")->p4();
   }
+  */
 
   // Do EES shifts
   LorentzVector uncorrElectronP4;
