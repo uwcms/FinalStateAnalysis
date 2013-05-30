@@ -224,7 +224,7 @@ def produce_final_states(process, collections, output_commands,
             continue
         if n_taus and n_phos:
             continue
-	if n_jets>0 and not (n_jets==2 and n_muons==1):
+	if n_jets > 0 and not (n_jets == 2 and n_muons == 1):
 	    continue 
 
 

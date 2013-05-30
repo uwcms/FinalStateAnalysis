@@ -99,7 +99,7 @@ class Plotter(object):
         self.keep.append(legend)
         return legend
 
-    def add_cms_blurb(self, sqrts, preliminary=True, lumiformat='%0.f'):
+    def add_cms_blurb(self, sqrts, preliminary=True, lumiformat='%0.1f'):
         ''' Add the CMS blurb '''
         latex = ROOT.TLatex()
         latex.SetNDC();

@@ -54,6 +54,9 @@ if __name__ == "__main__":
 
     for sample_dir in glob.glob(os.path.join(args.directory, args.jobid, '*')):
         sample_name = os.path.basename(sample_dir)
+        if not os.path.isdir(sample_dir):
+            log.info("skipping object %s" % sample_name)
+            continue
         log.info("Finding files for sample %s" % sample_name)
         log.info("Looking for  %s" %  args.meta)
 

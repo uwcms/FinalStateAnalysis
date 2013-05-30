@@ -4,6 +4,7 @@ Simple script that compares multiple limits
 '''
 
 import rootpy.io as io
+import itertools
 from FinalStateAnalysis.Utilities.struct import struct
 from FinalStateAnalysis.Utilities.solarized import colors
 import FinalStateAnalysis.Utilities.prettyjson as prettyjson
@@ -44,6 +45,9 @@ parser.add_option('--logy', action='store_true', dest='logy', default = False,
                   help='log scale on y axis')
 parser.add_option('--name-by', type=str, default = "channel",
                   help='which information use to name',dest='name_by')
+parser.add_option('--compare-by', type=str, default = "",
+                  help='which information use compare. Json with same info will be plotted with same color but different line style',
+                  dest='compare_by')
 parser.add_option('--ref', type=str, default = "",
                   help='limit to be used as reference',dest='ref')
 parser.add_option('--legend-on-the-left', action='store_true', dest='legend_left', default = False,
@@ -51,26 +55,38 @@ parser.add_option('--legend-on-the-left', action='store_true', dest='legend_left
 
 
 (options,jsons) = parser.parse_args()
-jmaps= [prettyjson.loads( open(json).read() ) for json in jsons]
+jmaps= []
+for json in jsons:
+    print 'adding json limit file %s to stack' % json
+    jmaps.append(prettyjson.loads( open(json).read() ))
 
 to_print = []
 mycols   = [
     colors['red'],
     colors['blue'],
+    'darkgreen',
     'darkviolet',
-    'green',
     colors['cyan'],
     colors['orange'],
     ]
 
 canvas   = plotting.Canvas(name='adsf', title='asdf')
+style_dict = {}
 one_line = None
 first = True
-for json, col in zip(jmaps, mycols):
+for json, col in zip(jmaps, itertools.cycle(mycols)):
     title = ' '.join([json[tag] for tag in options.name_by.split(',')])
     col = col if (not options.ref) or \
         title != options.ref \
-        else ROOT.kBlack
+        else 'black'
+    linestyle = 1
+    if options.compare_by:
+        if json[options.compare_by] not in style_dict:
+            style_dict[json[options.compare_by]] = {'color' : col, 'lstyle' : 0}
+        col = style_dict[json[options.compare_by]]['color']
+        linestyle = style_dict[json[options.compare_by]]['lstyle'] + 1
+        style_dict[json[options.compare_by]]['lstyle'] += 1
+    
     to_print.append(
         json2graph(
             json,
@@ -80,11 +96,11 @@ for json, col in zip(jmaps, mycols):
             fillcolor = col,
             linecolor = col,
             markercolor = col,
+            linestyle = linestyle,
             title = title,
             markerstyle = 20,
             markersize  = 1,
             linewidth = 3,
-            linestyle = 1,
             )
         )
 
