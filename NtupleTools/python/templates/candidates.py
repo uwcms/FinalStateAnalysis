@@ -41,3 +41,4 @@ base_jet = PSet(
     objectJetArea = '? {object}.userCand("patJet").isNonnull ? '
         '{object}.userCand("patJet").jetArea() : -5',
 )
+

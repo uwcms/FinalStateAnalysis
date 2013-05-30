@@ -110,6 +110,7 @@ def data_views(files, lumifiles):
             # Set style and title
             # title = the name of the sample, rootpy Legend uses this.
             nicename = copy.copy(style_dict['name'])
+	    log.debug("sample name %s",nicename)
             style_dict_no_name = dict( [ i for i in style_dict.iteritems() if i[0] != 'name'] )
             view = views.TitleView(
                 views.StyleView(view, **style_dict_no_name), nicename
