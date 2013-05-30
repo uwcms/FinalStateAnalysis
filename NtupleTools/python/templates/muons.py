@@ -45,7 +45,7 @@ id = PSet(
     ##     "-0.5*{object}.puChargedHadronIso,0.0))"
     ##     "/{object}.pt()"
     ## ),
-    
+
     objectIsGlobal = '{object}.isGlobalMuon',
     objectIsTracker = '{object}.isTrackerMuon',
     objectTypeCode = cms.vstring('{object}.type','I'),
@@ -65,13 +65,13 @@ energyCorrections = PSet(
     objectEtaRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Eta',
     objectPhiRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Phi',
     objectEErrRochCor2011A = '{object}.userFloat("p4_RochCor2011A_tkFitErr")',
-    
+
     objectERochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").t',
     objectPtRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Pt',
     objectEtaRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Eta',
     objectPhiRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Phi',
     objectEErrRochCor2011B = '{object}.userFloat("p4_RochCor2011B_tkFitErr")',
-        
+
     objectERochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").t',
     objectPtRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Pt',
     objectEtaRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Eta',
@@ -81,7 +81,6 @@ energyCorrections = PSet(
 
 # Information about the associated track
 tracking = PSet(
-    objectPtUncorr = '{object}.userCand("uncorr").pt',
     objectPixHits = '? {object}.innerTrack.isNonnull ? '
         '{object}.innerTrack.hitPattern.numberOfValidPixelHits :-1',
     objectGlbTrkHits = '? {object}.globalTrack.isNonnull ? '
@@ -89,14 +88,14 @@ tracking = PSet(
     objectNormTrkChi2 = "? {object}.combinedMuon.isNonnull ? "
         "{object}.combinedMuon.normalizedChi2 : 1e99",
     objectTkLayersWithMeasurement = '? {object}.innerTrack.isNonnull ? '
-        '{object}.innerTrack().hitPattern().trackerLayersWithMeasurement : -1',  
+        '{object}.innerTrack().hitPattern().trackerLayersWithMeasurement : -1',
     objectMuonHits = '? {object}.globalTrack.isNonnull ? '
         '{object}.globalTrack().hitPattern().numberOfValidMuonHits() : -1',
     objectMatchedStations = '{object}.numberOfMatchedStations',
     objectD0 = '{object}.dB("PV3D")',
     objectPVDXY = '{object}.userFloat("ipDXY")',
     objectPVDZ = '{object}.userFloat("dz")'
-    
+
 )
 
 # Trigger matching
@@ -109,8 +108,8 @@ trigger = PSet(
     objectL1Mu3EG5L3Filtered17 = 'matchToHLTFilter({object_idx}, "hltL1Mu3EG5L3Filtered17")',
     objectMu17Ele8dZFilter  = 'matchToHLTFilter({object_idx}, "hltMu17Ele8dZFilter")',
     objectL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17  = 'matchToHLTFilter({object_idx}, "hltL3fL1DoubleMu10MuOpenL1f0L2f10L3Filtered17")',# missing ) on purpose
-    objectMatchesDoubleMuPaths    = r'matchToHLTPath({object_idx}, "HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+,HLT_Mu17_Mu8_v\\d+")', 
-    objectMatchesDoubleMuTrkPaths = r'matchToHLTPath({object_idx}, "HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+,HLT_Mu17_TrkMu8_v\\d+")', 
+    objectMatchesDoubleMuPaths    = r'matchToHLTPath({object_idx}, "HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+,HLT_Mu17_Mu8_v\\d+")',
+    objectMatchesDoubleMuTrkPaths = r'matchToHLTPath({object_idx}, "HLT_DoubleMu7_v\\d+,HLT_Mu13_Mu8_v\\d+,HLT_Mu17_TrkMu8_v\\d+")',
     objectMatchesMu17Mu8Path   = r'matchToHLTPath({object_idx}, "HLT_Mu17_Mu8_v\\d+")',
     objectMatchesMu17TrkMu8Path    = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkMu8_v\\d+")',
     objectMatchesMu17Ele8Path      = r'matchToHLTPath({object_idx}, "HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
