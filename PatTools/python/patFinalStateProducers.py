@@ -216,7 +216,7 @@ def produce_final_states(process, collections, output_commands,
         n_taus = [x[0] for x in triobject].count('Tau')
         n_phos = [x[0] for x in triobject].count('Pho')
         n_muons = [x[0] for x in triobject].count('Mu')
-        n_jet = [x[0] for x in triobject].count('Jet')
+        n_jets = [x[0] for x in triobject].count('Jet')
 
         if n_taus > 2:
             continue
@@ -224,7 +224,7 @@ def produce_final_states(process, collections, output_commands,
             continue
         if n_taus and n_phos:
             continue
-	if n_jets>0 and not (n_jets==2 and n_muons==1):
+	if n_jets > 0 and not (n_jets == 2 and n_muons == 1):
 	    continue 
 
 
