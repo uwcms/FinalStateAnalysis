@@ -15,7 +15,7 @@ pushd $CMSSW_BASE/src
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   # Add MVA MET
-  cvs co -r METPU_5_3_X_v2 JetMETCorrections/METPUSubtraction
+  cvs co -r METPU_5_3_X_v9 JetMETCorrections/METPUSubtraction
   pushd $CMSSW_BASE/src/JetMETCorrections/METPUSubtraction/test/
   ./setup.sh
   popd
