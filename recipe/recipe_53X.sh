@@ -53,9 +53,9 @@ then
 
   echo "Checking out EGamma POG recipe for electron corrections"
   cvs co -r V09-00-01 RecoEgamma/EgammaTools
-  cvs co -r V00-00-30-00 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
+  cvs co -r beforePFIsoEst_migration -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
   cvs up -r 1.4 EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h
-  cvs co -r Moriond_2013_V01-1 EgammaAnalysis/ElectronTools
+  cvs co -r V00-00-06 EgammaAnalysis/ElectronTools
 
   echo "Cherry picking summer 2013 MVAID"
   cvs co -r 1.1.4.3 EgammaAnalysis/ElectronTools/src/EGammaMvaEleEstimator.cc
