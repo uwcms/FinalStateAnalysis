@@ -289,6 +289,15 @@ datadefs = {
 ############################################################################
 #### Signal datasets                    ####################################
 ############################################################################
+# Add LFV
+
+datadefs['LFV_VBF_H2Tau_M-126'] = { 'analyses': ['HTT'], 'x_sec' : 0.157, 'pu' : 'S10',
+      'calibrationTarget': 'Summer12_DR53X_HCP2012', 'datasetpath':'something'}
+
+datadefs['LFV_GluGlu_H2Tau_M-126'] = { 'analyses': ['HTT'], 'x_sec' :1.922, 'pu' : 'S10',
+      'calibrationTarget': 'Summer12_DR53X_HCP2012', 'datasetpath':'something'}
+
+
 # Add HToBB
 for mass in range(110, 140, 5):
    ver=1
