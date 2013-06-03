@@ -38,6 +38,12 @@ except:
 # Figure this out later.
 data_name_map = {}
 
+datadefs['LFV_VBF_H2Tau_M-126'] = { 'analyses': ['HTT'], 'x_sec' : 1.57*0.1, 'pu' : 'S10',
+      'calibrationTarget': 'Summer12_DR53X_HCP2012', 'datasetpath':'something'}
+
+datadefs['LFV_GluGlu_H2Tau_M-126'] = { 'analyses': ['HTT'], 'x_sec' :19.22*0.1, 'pu' : 'S10',
+      'calibrationTarget': 'Summer12_DR53X_HCP2012', 'datasetpath':'something'}
+
 datadefs = {
    'WZJetsTo3LNu_TuneZ2_8TeV-madgraph-tauola' : {
    'analyses': ['HTT'],
@@ -309,6 +315,14 @@ datadefs['ZGToLLG']= {
 ############################################################################
 #### Signal datasets                    ####################################
 ############################################################################
+
+datadefs['LFV_VBF_H2Tau_M-126'] = { 'analyses': ['HTT'], 'x_sec' : 0.157, 'pu' : 'S10',
+      'calibrationTarget': 'Summer12_DR53X_HCP2012', 'datasetpath':'something'}
+
+datadefs['LFV_GluGlu_H2Tau_M-126'] = { 'analyses': ['HTT'], 'x_sec' : 1.922, 'pu' : 'S10',
+      'calibrationTarget': 'Summer12_DR53X_HCP2012', 'datasetpath':'something'}
+
+
 for mass in range(80,150, 10) + range(160, 220, 20) + range(250, 550, 50) + range(600, 1100, 100) :
    datadefs['SUSYGluGluToHToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
       'analyses': ['HTT'],
