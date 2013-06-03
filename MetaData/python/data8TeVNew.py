@@ -38,12 +38,6 @@ except:
 # Figure this out later.
 data_name_map = {}
 
-datadefs['LFV_VBF_H2Tau_M-126'] = { 'analyses': ['HTT'], 'x_sec' : 1.57*0.1, 'pu' : 'S10',
-      'calibrationTarget': 'Summer12_DR53X_HCP2012', 'datasetpath':'something'}
-
-datadefs['LFV_GluGlu_H2Tau_M-126'] = { 'analyses': ['HTT'], 'x_sec' :19.22*0.1, 'pu' : 'S10',
-      'calibrationTarget': 'Summer12_DR53X_HCP2012', 'datasetpath':'something'}
-
 datadefs = {
    'WZJetsTo3LNu_TuneZ2_8TeV-madgraph-tauola' : {
    'analyses': ['HTT'],
