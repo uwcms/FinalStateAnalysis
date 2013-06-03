@@ -7,7 +7,7 @@ set -o nounset
 pushd $CMSSW_BASE/src
 
 echo "Checking out PAT dataformats"
-addpkg DataFormats/PatCandidates       V06-05-06-06
+addpkg DataFormats/PatCandidates       V06-05-06-10
 
 if [ "$LIMITS" = "1" ]
 then
@@ -21,11 +21,13 @@ then
 
   echo "Checking out tuple production tags"
   
-  addpkg PhysicsTools/PatAlgos           V08-09-52
+  addpkg PhysicsTools/PatAlgos           V08-09-56
   addpkg DataFormats/StdDictionaries     V00-02-14
-  addpkg PhysicsTools/PatUtils           V03-09-26
+  addpkg PhysicsTools/PatUtils           V03-09-28
+  addpkg DataFormats/CaloRecHit          V02-05-11
   addpkg CommonTools/ParticleFlow        V00-03-16
   addpkg FWCore/GuiBrowsers              V00-00-70
+  addpkg RecoMET/METProducers            V03-03-12-02
   #24/10/2012 LAG -- PF Isolation for Photons
   addpkg RecoParticleFlow/PFProducer     V15-02-06
   addpkg CommonTools/RecoUtils           V00-00-12
@@ -51,9 +53,9 @@ then
 
   echo "Checking out EGamma POG recipe for electron corrections"
   cvs co -r V09-00-01 RecoEgamma/EgammaTools
-  cvs co -r V00-00-30-00 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
+  cvs co -r beforePFIsoEst_migration -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
   cvs up -r 1.4 EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h
-  cvs co -r Moriond_2013_V01-1 EgammaAnalysis/ElectronTools
+  cvs co -r V00-00-06 EgammaAnalysis/ElectronTools
 
   echo "Cherry picking summer 2013 MVAID"
   cvs co -r 1.1.4.3 EgammaAnalysis/ElectronTools/src/EGammaMvaEleEstimator.cc
