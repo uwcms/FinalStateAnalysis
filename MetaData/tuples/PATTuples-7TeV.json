@@ -38,4 +38,11 @@
   "data_SingleMu_Run2011A_PromptReco_v4" : "/hdfs/store/user/tapas/2012-09-10-7TeV-PatTuple/data_SingleMu_Run2011A_PromptReco_v4",
   "data_SingleMu_Run2011A_PromptReco_v6" : "/hdfs/store/user/tapas/2012-09-10-7TeV-PatTuple/data_SingleMu_Run2011A_PromptReco_v6",
   "data_SingleMu_Run2011B_PromptReco_v1" : "/hdfs/store/user/tapas/2012-09-10-7TeV-PatTuple/data_SingleMu_Run2011B_PromptReco_v1"
+
+  "data_TauPlusX_Run2011A_05Aug2011_v1" : "/hdfs/store/user/tapas/TauPlusX/Run2011A_05Aug2011_v1",
+  "data_TauPlusX_Run2011A_May10ReReco_v1" : "/hdfs/store/user/tapas/TauPlusX/Run2011A_May10ReReco_v1",
+  "data_TauPlusX_Run2011A_PromptReco_v4" : "/hdfs/store/user/tapas/TauPlusX/Run2011A_PromptReco_v4",
+  "data_TauPlusX_Run2011A_PromptReco_v6" : "/hdfs/store/user/tapas/TauPlusX/Run2011A_PromptReco_v6",
+  "data_TauPlusX_Run2011B_PromptReco_v1" : "/hdfs/store/user/tapas/TauPlusX/Run2011B_PromptReco_v1"
+
 }

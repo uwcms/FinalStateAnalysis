@@ -34,6 +34,8 @@ class RebinView(views._FolderView):
         # Fancy variable size bins
         bin_array = array.array('d', binning)
         new_histo = histogram.Rebin(len(binning)-1, histogram.GetName() + 'rebin', bin_array)
+
+	print new_histo.GetTitle()
         return new_histo
         #import pdb; pdb.set_trace()
 
