@@ -53,14 +53,8 @@ then
   cvs co -r V09-00-01 RecoEgamma/EgammaTools
   cvs co -r V00-00-30-00 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
   cvs up -r 1.4 EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h
-  cvs co -r Moriond_2013_V01-1 EgammaAnalysis/ElectronTools
+  cvs co -r FB_4Jun2013 EgammaAnalysis/ElectronTools
 
-  echo "Cherry picking summer 2013 MVAID"
-  cvs co -r 1.1.4.3 EgammaAnalysis/ElectronTools/src/EGammaMvaEleEstimator.cc
-  cvs co -r 1.1.4.3 EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h
-  cvs co -r 1.3.2.1 EgammaAnalysis/ElectronTools/data/download.url
-  cvs co -r 1.1.2.3 EgammaAnalysis/ElectronTools/plugins/ElectronPATIdMVAProducer.cc
-  cvs co -r  1.2 EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h
   #Get weight files
   pushd $CMSSW_BASE/src/EgammaAnalysis/ElectronTools/data
   cat download.url | xargs wget
@@ -68,7 +62,6 @@ then
   #apply some pathces to make everythin work
   set +o errexit
   patch -N -p0 < FinalStateAnalysis/recipe/patches/PATObject.h.patch
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/EgammaAnalysis_ElectronTools.patch
   set -o errexit
   
   # apply patch so we can configure the passing mask for the PassWP function
