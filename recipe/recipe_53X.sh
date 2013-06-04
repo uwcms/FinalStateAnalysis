@@ -7,7 +7,9 @@ set -o nounset
 pushd $CMSSW_BASE/src
 
 echo "Checking out PAT dataformats"
-addpkg DataFormats/PatCandidates       V06-05-06-06
+addpkg DataFormats/PatCandidates   V06-05-06-10
+addpkg PhysicsTools/PatAlgos       V08-09-58
+addpkg PhysicsTools/PatUtils       V03-09-28
 
 if [ "$LIMITS" = "1" ]
 then
@@ -20,14 +22,11 @@ if [ "$PATPROD" = "1" ]
 then
 
   echo "Checking out tuple production tags"
+  addpkg DataFormats/CaloRecHit      V02-05-11
+  addpkg DataFormats/StdDictionaries V00-02-14
+  addpkg RecoMET/METProducers        V03-03-12-02
   
-  addpkg PhysicsTools/PatAlgos           V08-09-52
-  addpkg DataFormats/StdDictionaries     V00-02-14
-  addpkg PhysicsTools/PatUtils           V03-09-26
-  addpkg CommonTools/ParticleFlow        V00-03-16
-  addpkg FWCore/GuiBrowsers              V00-00-70
-  #24/10/2012 LAG -- PF Isolation for Photons
-  addpkg RecoParticleFlow/PFProducer     V15-02-06
+  # Stuff from Lindsey
   addpkg CommonTools/RecoUtils           V00-00-12
   cvs up -r 1.4 CommonTools/RecoUtils/BuildFile.xml
   addpkg DataFormats/HLTReco             V02-06-05
