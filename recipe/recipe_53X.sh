@@ -55,6 +55,10 @@ then
   cvs up -r 1.4 EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h
   cvs co -r FB_4Jun2013 EgammaAnalysis/ElectronTools
 
+  # revert some deleted files in the 4June tag
+  cvs co -r 1.16 EgammaAnalysis/ElectronTools/src/PatElectronEnergyCalibrator.cc
+  cvs co -r 1.6 EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h
+
   #Get weight files
   pushd $CMSSW_BASE/src/EgammaAnalysis/ElectronTools/data
   cat download.url | xargs wget
