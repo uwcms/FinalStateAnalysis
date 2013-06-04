@@ -139,9 +139,6 @@ namespace pattools {
     apply_map::const_iterator app = _apply.begin();
     apply_map::const_iterator end = _apply.end();
 
-    EcalClusterLazyTools clustools(*_event,*_esetup,
-				   _recHitsEB,_recHitsEE);
-
     float max_cor_pt = out->pt();
 
     for( ; app != end; ++app ) {
@@ -154,14 +151,15 @@ namespace pattools {
       // LAG - 11 DEC 2012
       if( temp->core()->ecalDrivenSeed() ) {
 	if( thisReg.second ) {
+          SuperClusterHelper suckyClusterHelper(temp.get(),
+              temp->isEB() ? _recHitCollectionEB.product() : _recHitCollectionEE.product(),
+              _topo, _geom);
 	  double en =
-	    thisReg.second->calculateRegressionEnergy(temp.get(),clustools,
-						      *_esetup,_rho,_nvtx);
+	    thisReg.second->calculateRegressionEnergy(
+                temp.get(), suckyClusterHelper, _rho,_nvtx);
 	  double en_err =
-	    thisReg.second->calculateRegressionEnergyUncertainty(temp.get(),
-								 clustools,
-								 *_esetup,
-								 _rho,_nvtx);
+	    thisReg.second->calculateRegressionEnergyUncertainty(
+                temp.get(), suckyClusterHelper, _rho,_nvtx);
 
 	  math::XYZTLorentzVector oldP4,newP4;
 	  // recalculate then propagate the regression energy and errors
@@ -240,5 +238,8 @@ namespace pattools {
     edm::Handle<reco::VertexCollection> vtxs;
     _event->getByLabel(_vtxsrc,vtxs);
     _nvtx = vtxs->size();
+
+    _event->getByLabel(_recHitsEB, _recHitCollectionEB);
+    _event->getByLabel(_recHitsEE, _recHitCollectionEE);
   }
 }
