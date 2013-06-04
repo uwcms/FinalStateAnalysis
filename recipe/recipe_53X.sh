@@ -50,7 +50,7 @@ then
 
   echo "Checking out EGamma POG recipe for electron corrections"
   cvs co -r V09-00-01 RecoEgamma/EgammaTools
-  cvs co -r V00-00-30-00 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
+  cvs co -r beforePFIsoEst_migration -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
   cvs up -r 1.4 EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h
   cvs co -r FB_4Jun2013 EgammaAnalysis/ElectronTools
 

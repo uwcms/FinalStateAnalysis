@@ -3,7 +3,7 @@
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 
 #include "EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h"
-#include "EGamma/EGammaAnalysisTools/interface/ElectronEnergyRegressionEvaluate.h"
+#include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
 
 #include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"
 #include "Geometry/Records/interface/CaloGeometryRecord.h"
