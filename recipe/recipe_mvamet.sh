@@ -15,18 +15,14 @@ pushd $CMSSW_BASE/src
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   # Add MVA MET
-  cvs co -r METPU_5_3_X_v2 JetMETCorrections/METPUSubtraction
+  cvs co -r METPU_5_3_X_v9 JetMETCorrections/METPUSubtraction
   pushd $CMSSW_BASE/src/JetMETCorrections/METPUSubtraction/test/
   ./setup.sh
   popd
   cvs up -r 1.6 PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
-  # This is a bug in setup.sh
-  cvs up -r METPU_5_3_X_v3 RecoJets/JetProducers
-  if [ "$MINOR_VERSION" -eq "2" ]; then
-    # Workaround a header file location change
-    cvs up -r 1.1 DataFormats/JetReco/interface/PFClusterJet.h
-    cvs up -r 1.2 RecoMET/METAlgorithms/src/PFClusterSpecificAlgo.cc
-  fi
+  pushd $CMSSW_BASE/src
+    patch -p0 -N < FinalStateAnalysis/recipe/patches/fixMVAMET_CVSConflicts.patch
+  popd
 else
   cvs co -r   METPU_4_2_X_v2 JetMETCorrections/METPUSubtraction
   pushd $CMSSW_BASE/src/JetMETCorrections/METPUSubtraction/test/
