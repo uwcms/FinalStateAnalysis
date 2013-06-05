@@ -44,7 +44,7 @@ then
   popd
 
   echo "Checking out Tau POG recipe"
-  cvs co -r V01-04-23 RecoTauTag/RecoTau #equivalent to 04-14
+  cvs co -r V01-04-25 RecoTauTag/RecoTau 
   cvs co -r V01-04-10 RecoTauTag/Configuration
   cvs co -r V00-04-00 CondFormats/EgammaObjects
 
