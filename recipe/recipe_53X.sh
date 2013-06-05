@@ -50,8 +50,6 @@ then
 
   echo "Checking out EGamma POG recipe for electron corrections"
   cvs co -r V09-00-01 RecoEgamma/EgammaTools
-  cvs co -r beforePFIsoEst_migration -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
-  cvs up -r 1.4 EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h
   cvs co -r FB_4Jun2013 EgammaAnalysis/ElectronTools
 
   # revert some deleted files in the 4June tag
@@ -67,22 +65,6 @@ then
   patch -N -p0 < FinalStateAnalysis/recipe/patches/PATObject.h.patch
   set -o errexit
   
-  # apply patch so we can configure the passing mask for the PassWP function
-  set +o errexit
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaAnalysisTools_configpatch.patch
-  set -o errexit
-
-  #apply patch that lets us use the new MVA ID
-  set +o errexit
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaMVAID_updatepatch.patch
-  set -o errexit
-  set +o errexit
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaMVAID_Estimator.patch
-  set -o errexit
-  set +o errexit
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/EGammaMVAID_buildfile.patch
-  set -o errexit
-
   echo "Applying Marias b-tag patch"
   set +o errexit
   patch -N -p0 < FinalStateAnalysis/recipe/patches/PhysicsToolsPatAlgos_fix_btags_52X.patch

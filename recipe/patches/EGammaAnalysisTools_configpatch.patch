@@ -1,9 +1,0 @@
-Index: EgammaAnalysis/ElectronTools/interface/EGammaCutBasedEleId.h
-===================================================================
-RCS file: /local/reps/CMSSW/CMSSW/EgammaAnalysis/ElectronTools/interface/EGammaCutBasedEleId.h,v
-retrieving revision 1.1
-diff -w -r1.1 EGammaCutBasedEleId.h
-66c66
-< static const unsigned int PassAll         = DETAIN | DPHIIN | SIGMAIETAIETA | HOE | OOEMOOP | D0VTX | DZVTX | ISO | VTXFIT | MHITS;
----
-> static unsigned int PassAll         = DETAIN | DPHIIN | SIGMAIETAIETA | HOE | OOEMOOP | D0VTX | DZVTX | ISO | VTXFIT | MHITS;
