@@ -29,3 +29,10 @@ diff -w -r1.7 PFMETAlgorithmMVA.cc
 < =======
 153d143
 < >>>>>>> 1.6
+Index: JetMETCorrections/METPUSubtraction/test/setup.sh
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/JetMETCorrections/METPUSubtraction/test/setup.sh,v
+retrieving revision 1.7
+diff -w -r1.7 setup.sh
+23d22
+< cvs co -r V01-05-07                             RecoTauTag/RecoTau 
