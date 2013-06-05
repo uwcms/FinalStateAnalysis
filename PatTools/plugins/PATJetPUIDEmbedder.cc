@@ -19,7 +19,7 @@
 #include "FWCore/Framework/interface/EDProducer.h"
 
 #include "DataFormats/PatCandidates/interface/Jet.h"
-#include "RecoJets/JetProducers/interface/PileupJetIdentifier.h"
+#include "DataFormats/JetReco/interface/PileupJetIdentifier.h"
 
 class PATJetPUIDEmbedder : public edm::EDProducer {
   public:
