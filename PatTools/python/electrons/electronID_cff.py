@@ -15,13 +15,8 @@ recoElectronID5YX = cms.Sequence()
 from EgammaAnalysis.ElectronTools.electronIdMVAProducer_cfi import \
         mvaTrigV0, mvaNonTrigV0
 
-from FinalStateAnalysis.PatTools.electrons.electronMVAID2012_config_cfi import \
-     mvaTrigIDISOV0,mvaTrigIDISOPUSUBV0
-
 recoElectronID5YX += mvaTrigV0
 recoElectronID5YX += mvaNonTrigV0
-recoElectronID5YX += mvaTrigIDISOV0
-#recoElectronID5YX += mvaTrigIDISOPUSUBV0
 
 recoElectronID42X += mvaTrigV0
 recoElectronID42X += mvaNonTrigV0
@@ -39,6 +34,4 @@ electronIDSources5YX = cms.PSet(
 	cicTight = cms.InputTag("eidTight"),
     mvaTrigV0 = cms.InputTag("mvaTrigV0"),
     mvaNonTrigV0 = cms.InputTag("mvaNonTrigV0"),
-    mvaTrigIDISOV0 = cms.InputTag("mvaTrigIDISOV0"),
-    #mvaTrigIDISOPUSUBV0 = cms.InputTag("mvaTrigIDISOPUSUBV0"),
 )
