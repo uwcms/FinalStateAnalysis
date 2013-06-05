@@ -45,7 +45,7 @@ then
 
   echo "Checking out Tau POG recipe"
   cvs co -r V01-04-25 RecoTauTag/RecoTau 
-  cvs co -r V01-04-10 RecoTauTag/Configuration
+  cvs co -r V01-04-13 RecoTauTag/Configuration
   cvs co -r V00-04-00 CondFormats/EgammaObjects
 
   echo "Checking out EGamma POG recipe for electron corrections"
