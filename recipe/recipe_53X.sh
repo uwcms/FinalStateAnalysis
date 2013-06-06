@@ -55,6 +55,9 @@ then
   # revert some deleted files in the 4June tag
   cvs co -r 1.16 EgammaAnalysis/ElectronTools/src/PatElectronEnergyCalibrator.cc
   cvs co -r 1.6 EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h
+  set +o errexit
+  patch -N -p0 < FinalStateAnalysis/recipe/patches/Egamma_PassAll.patch
+  set -o errexit
 
   #Get weight files
   pushd $CMSSW_BASE/src/EgammaAnalysis/ElectronTools/data
