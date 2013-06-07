@@ -84,7 +84,6 @@ if __name__ == "__main__":
     import rootpy.io as io
     from FinalStateAnalysis.Utilities.rootbindings import ROOT
 
-
     # Build view of input histograms
     log.info("Merging input files")
     input_view = views.SumView(*[io.open(x) for x in args.input])
@@ -106,12 +105,12 @@ if __name__ == "__main__":
                 #print binningx
                 binningy= tuple(float(x) for x in binning[1])
                 newbinning = tuple([binningx, binningy]) 
-                
-            
-                
+
         input_view = RebinView(input_view, newbinning)
+        
     from math import *
     #log.info("Getting histograms")
+    #from pdb import set_trace; set_trace()
     pass_histo = input_view.Get(args.num)
     all_histo = input_view.Get(args.denom)
     new_histo =  pass_histo.Clone()
@@ -123,11 +122,12 @@ if __name__ == "__main__":
             eff = new_histo.GetBinContent(binx,biny) 
             erreff = sqrt(eff*(1.-eff)/all_histo.GetBinContent(binx,biny))
             new_histo.SetBinError(binx, biny, erreff)
-    myeff = ROOT.TEfficiency(pass_histo, all_histo)
+
+            
+    myeff = ROOT.TEfficiencyBugFixed(pass_histo, all_histo)
     myeff.SetStatisticOption(0) # 0 means  ClopperPearson
-    myEffFitter  = ROOT.TBinomialEfficiencyFitter(pass_histo, new_histo)
-#    myf = ROOT.TF2('myf', "xygaus", 10, 200, 0, 50)
-#    myf = ROOT.TF2('myf', 'xyexpo', 0, 200, 0, 50)
+    ROOT.SetOwnership( myeff, False )
+    
     myf = ROOT.TF2('myf', 'xylandau', 10, 200, 0, 50)
     myf.SetParameters(30, 12.5, 5, 0.5, 0.05)
     myf.SetParLimits(0, 0, 50)
@@ -136,8 +136,8 @@ if __name__ == "__main__":
     myf.SetParLimits(3, 0, 5)
     myf.SetParLimits(4, 0, 10)
 
-    myeff.Fit(myf, "LMI") # fitta con l'esponenziale ma crasha
-
+    ROOT.SetOwnership( myf, False )
+    myeff.Fit(myf, "LMI") # fitta con l'esponenziale ma crasha    
 
     if args.plot:
         canvas = ROOT.TCanvas("asdf", "asdf", 800, 600)
