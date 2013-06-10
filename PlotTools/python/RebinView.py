@@ -63,8 +63,6 @@ class RebinView(views._FolderView):
                 new_histo.Fill(histogram.GetXaxis().GetBinCenter(x), histogram.GetYaxis().GetBinCenter(y), histogram.GetBinContent(x,y))
 
         new_histo.SetEntries( histogram.GetEntries() )
-        print 'Integral ', new_histo.Integral()
-   
         return new_histo
                               
     def rebin(self, histogram, binning):
@@ -76,6 +74,8 @@ class RebinView(views._FolderView):
         '''
         # Just merging bins
         if isinstance(binning, int):
+            if binning == 1:
+                return histogram
             histogram.Rebin(binning)
             return histogram
         # Fancy variable size bins
