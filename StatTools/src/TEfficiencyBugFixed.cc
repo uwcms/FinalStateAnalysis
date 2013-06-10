@@ -17,6 +17,7 @@
 #include "TVirtualFitter.h"
 #include <iostream>
 #include <string>
+#include <ctime>
 
 ClassImp(TEfficiencyBugFixed)
 
@@ -74,10 +75,11 @@ TGraphAsymmErrors* TEfficiencyBugFixed::Projection(axis axisMarker)
   //But the sum of den and num and THEN you divide them
   TH2* h2pass = dynamic_cast<TH2*> (fPassedHistogram);
   TH2* h2tot  = dynamic_cast<TH2*> (fTotalHistogram) ;
+  
   //check if casting went fine
   if (!(h2pass && h2tot)){
-      return NULL;
-    }
+    return NULL;
+  }
 
   TH1D *hpass, *htot = NULL;
   if( axisMarker == axis::xaxis ){
@@ -103,7 +105,7 @@ TGraphErrors* TEfficiencyBugFixed::ProjectFunction(axis axisMarker, TH2* fine_bi
 
   //Get the denominator histogram
   TH2* h2tot  = dynamic_cast<TH2*> (fTotalHistogram) ;
-  if (!(current_fcn_ && h2tot && fitter_)){
+  if (!(current_fcn_ && h2tot )){ //&& fitter_
       return NULL;
     }
   if(fine_binned_histo){
