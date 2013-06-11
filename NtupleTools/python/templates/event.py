@@ -41,8 +41,8 @@ pv_info = PSet(
 )
 
 met = PSet(
-    ## mva_metEt     = 'evt.met("mvamet").et',
-    ## mva_metPhi    = 'evt.met("mvamet").phi',
+    mva_metEt     = 'evt.met("mvamet").et',
+    mva_metPhi    = 'evt.met("mvamet").phi',
     type1_pfMetEt  = 'evt.met("pfmet").userCand("type1").et',
     type1_pfMetPhi = 'evt.met("pfmet").userCand("type1").phi',
     #systematics
