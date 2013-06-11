@@ -17,6 +17,7 @@ def memo(fn):
             cache[args] = result = fn(*args)
             return result
         except TypeError: #Actually, the args cannot even be a key of dict (like lists)
+                          #print "this cannot be cached: %s" % type(args)
             return fn(*args)
     return _f
         

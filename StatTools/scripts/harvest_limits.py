@@ -3,7 +3,7 @@
 __doc__='''
 gathers the limits produced and dumps the values into a json
 Usage:
-gather_asymptotic_limits.py input_dir
+harvest_limits.py input_dir
 '''
 
 import os
@@ -41,14 +41,15 @@ input_dir  = sys.argv[1]
 
 
 root_files = glob.glob(os.path.join(input_dir,'*/*.root')) #FIXME: check if the name is correct*scr
-file_regex = re.compile(r'higgsCombine-(?P<obs>exp|obs).(?P<method>\w+).\w+\d+.root')
+file_regex = re.compile(r'higgsCombine-(?P<obs>exp|obs|sig)\.(?P<method>\w+)\.\w+\d+.root')
 file_groups={}
 for tfile_path in root_files:
     match   = file_regex.match(tfile_path.split('/')[-1])
     if not match:
         logging.info('%s does not match to a limit root file, skipping it...' % tfile_path)
         continue
-    kind    = 'observed' if match.group('obs') == 'obs' else 'expected'
+    kind    = 'observed' if match.group('obs') == 'obs' else \
+              'expected' if match.group('obs') == 'exp' else 'significance'
     method  = match.group('method')
     if (kind, method) not in file_groups:
         file_groups[(kind, method)] = []
@@ -58,10 +59,10 @@ for info, paths in file_groups.iteritems():
     store        = {}
     kind, method = info
     channel      = paths[0].split('/')[-3]
-    store['kind'] = kind
-    store['method'] = method
-    store['channel']= channel
-    store['limits']={}
+    store['kind']    = kind
+    store['method']  = method
+    store['channel'] = channel
+    store['limits']  ={}
     for path in paths:
         print path
         mass     = path.split('/')[-2]
@@ -72,7 +73,7 @@ for info, paths in file_groups.iteritems():
         if kind == 'expected':
             store['limits'][mass]['+2sigma'] = limit_map['0.975']
             store['limits'][mass]['+1sigma'] = limit_map['0.840']
-            store['limits'][mass]['median'] = limit_map['0.500']
+            store['limits'][mass]['median']  = limit_map['0.500']
             store['limits'][mass]['-1sigma'] = limit_map['0.160']
             store['limits'][mass]['-2sigma'] = limit_map['0.025']
         else:
