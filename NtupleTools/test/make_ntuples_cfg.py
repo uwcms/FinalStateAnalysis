@@ -37,7 +37,7 @@ The available options (which are set to zero or one) are::
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
-    make_ntuple, add_ntuple
+    make_ntuple, add_ntuple, add_ntuple_filter
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
 from FinalStateAnalysis.NtupleTools.rerun_matchers import rerun_matchers
@@ -207,10 +207,11 @@ def expanded_final_states(input):
         else:
             yield fs
 
+
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
     analyzer = make_ntuple(*final_state)
-    add_ntuple(final_state, analyzer, process,
+    add_ntuple(final_state, analyzer,  process,
                process.schedule, options.eventView)
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
