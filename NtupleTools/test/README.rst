@@ -44,17 +44,7 @@ on the 2012-03-05-EWKPatTuple::
    # Submit the jobs
    bash < do_higgs.txt
 
-
    submit_job.py JOBID make_ntuples_cfg.py makeQuad=1 makeTNP=1 makeH2Tau=0 makeTrilepton=1 make4L=1 rerunFSA=1 --tuple-dirs=$fsa/MetaData/tuples/PATTuples-8TeV.json --apply-cmsRun-lumimask --input-files-per-job=1 --shared-fs  --samples "VH*" "*WZ*" "*ZZ*" "data_DoubleMu*" "data_DoubleEl*" "data_MuEG*" "Wpl*" "TT*" "Zjets*" "WW*" "*WH*" > do_higgs8TeV.txt
    bash < do_higgs8TeV.txt
 
-
-   submit_job.py testMuTau make_ntuples_cfg.py --tuple-dirs=$fsa/MetaData/tuples/PATTuples-8TeV.json --apply-cmsRun-lumimask --input-files-per-job=1 --shared-fs  --samples "VH*" "*WZ*" "*ZZ*" "data_DoubleMu*" "data_DoubleEl*" "data_MuEG*" "Wpl*" "TT*" "Zjets*" "WW*" "*WH*" > test 
-
-
-   submit_job.py SubmitMuTau3 make_ntuples_cfg.py  makeH2Tau=1 rerunFSA=1 --tuple-dirs=$fsa/MetaData/tuples/PATTuples-8TeV.json --apply-cmsRun-lumimask --input-files-per-job=1 --shared-fs  --samples "*TauPlusX*" > test
-
-   submit_job.py SubmitMuTau3 make_ntuples_cfg.py  makeH2Tau=1 rerunFSA=1 --tuple-dirs=$fsa/MetaData/tuples/PATTuples-8TeV.json --apply-cmsRun-lumimask --input-files-per-job=1 --shared-fs  --samples  "Wpl*" "TT*" "Zjets*" "WW*" "*TauTau* > test2
-
-   submit_job.py SubmitMuTauSingleMU make_ntuples_cfg.py --tuple-dirs=$fsa/MetaData/tuples/PATTuples-8TeV.json --apply-cmsRun-lumimask --input-files-per-job=1 --shared-fs  --samples  "data_SingleMu_Run2012B" > test3
 
