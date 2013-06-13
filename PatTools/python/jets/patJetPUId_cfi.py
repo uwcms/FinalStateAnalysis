@@ -13,6 +13,7 @@ from RecoJets.JetProducers.PileupJetID_cfi import pileupJetIdProducer
 # The path to the residuals must exist, even if we don't use it.
 pileupJetIdProducer.residualsTxt = \
         "FinalStateAnalysis/PatTools/data/readme.txt"
+pileupJetIdProducer.applyJec = cms.bool(True)
 
 # Module to embed the IDs
 patJetsPUID = cms.EDProducer(
