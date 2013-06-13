@@ -76,6 +76,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_genDaughters_*_*',
         '*_boosted*_*_*',
         '*_tmfTracks_*_*',
+        # For Zmumu RecHit embedding samples
+        # https://twiki.cern.ch/twiki/bin/view/CMS/MuonTauReplacementRecHit
+        'double_TauSpinnerReco_TauSpinnerWT_EmbeddedSPIN',
+        'double_ZmumuEvtSelEffCorrWeightProducer_weight_EmbeddedRECO',
+        'double_muonRadiationCorrWeightProducer_weight_EmbeddedRECO',
+        'GenFilterInfo_generator_minVisPtFilter_EmbeddedRECO',
     ]
     # Define our patTuple production sequence
     process.tuplize = cms.Sequence()
@@ -194,7 +200,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
             checkCharge = cms.bool(False),
             resolveAmbiguities = cms.bool(True),
             matched = cms.InputTag("genParticles")
-            )        
+            )
 
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring(
