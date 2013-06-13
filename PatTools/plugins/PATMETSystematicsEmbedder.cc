@@ -220,6 +220,7 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     }
   }
 
+  /*
   if (shiftedUnclustered + shiftedJets + shiftedTaus != taus->size()) {
     edm::LogWarning("BadExclusivityCuts") <<
       "The set of cuts used to split taus into real taus, jets, and unclustered"
@@ -229,6 +230,7 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
       << shiftedJets << " selected as jets,"
       << shiftedUnclustered << " selected as unclustered." << std::endl;
   }
+  */
 
   LorentzVector metP4Type1 = outputMET.p4();
   // Check if we want to apply type1 corrections to the MET
