@@ -7,6 +7,7 @@
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/Photon.h"
 #include "FWCore/Utilities/interface/Exception.h"
+#include "PhysicsTools/HepMCCandAlgos/interface/GenParticlesHelper.h"
 
 #include "CommonTools/UtilAlgos/interface/MCMatchSelector.h"
 #include "CommonTools/UtilAlgos/interface/MatchByDRDPt.h"
@@ -218,6 +219,143 @@ const bool comesFromHiggs(const reco::GenParticleRef genPart)
     //std::cout << "comesFromHiggs::ret false from no mother" << std::endl;
     return false;
   }
+}
+
+const reco::Candidate::LorentzVector metPhiCorrection(const reco::Candidate::LorentzVector& vector, int nvertices, bool isMC)
+{
+  //constants as defined in AN-2012/333 for Type1 PFMET
+  const double cx0 = (isMC) ?  0.1166 :  0.2661;
+  const double cxS = (isMC) ?  0.0200 :  0.3217;
+  const double cy0 = (isMC) ?  0.2764 : -0.2251;
+  const double cyS = (isMC) ? -0.1280 : -0.1747;
+
+  double offset_x = cx0 + cxS*nvertices;
+  double offset_y = cy0 + cyS*nvertices;
+
+  double newx     = vector.x() - offset_x;
+  double newy     = vector.y() - offset_y;
+  double mag      = TMath::Sqrt(newx*newx + newy*newy);
+
+  //the vector is made in pt eta phi e coordinates!
+  return reco::Candidate::LorentzVector(newx, newy, 0., mag);
+}
+
+const bool findDecay(const reco::GenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter)
+{
+  //if no genPaticle no matching
+  if(!genCollectionRef){
+    return false;
+  }
+  reco::GenParticleCollection genParticles = *genCollectionRef;
+  reco::GenParticleRefVector allMothers;  
+  GenParticlesHelper::findParticles( *genCollectionRef,     
+		 allMothers, std::abs(pdgIdMother), 2);
+  GenParticlesHelper::findParticles( *genCollectionRef,     
+		 allMothers, std::abs(pdgIdMother), 3);
+
+  reco::GenParticleRefVector descendents;
+  for ( GenParticlesHelper::IGR iMom = allMothers.begin(); iMom != allMothers.end(); ++iMom ) {
+    GenParticlesHelper::findDescendents( *iMom, descendents, 2, std::abs(pdgIdDaughter)); //Might not be stable, but it's fine
+    GenParticlesHelper::findDescendents( *iMom, descendents, 3, std::abs(pdgIdDaughter)); //Might not be stable, but it's fine
+  }
+
+  return (descendents.size() > 0);
+}
+
+float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const edm::PtrVector<reco::Vertex> recoVertices)
+{
+  //std::map <std::string, float> varMap; 
+  const pat::Jet *jet = dynamic_cast<const pat::Jet*> (jetptr.get());
+  if (myvar == "eta")
+    return jet->eta();
+  Bool_t useQC = true;
+  // if(fabs(jet->eta()) > 2.5 && type == "MLP") useQC = false;		//In MLP: no QC in forward region
+
+  edm::PtrVector<reco::Vertex>::const_iterator vtxLead = recoVertices.begin();
+
+  Float_t sum_weight = 0., sum_deta = 0., sum_dphi = 0., sum_deta2 = 0., sum_dphi2 = 0., sum_detadphi = 0., sum_pt = 0.;
+  Int_t nChg_QC = 0, nChg_ptCut = 0, nNeutral_ptCut = 0;
+
+  //Loop over the jet constituents
+  std::vector<reco::PFCandidatePtr> constituents = jet->getPFConstituents();
+  for(unsigned i = 0; i < constituents.size(); ++i){
+    reco::PFCandidatePtr part = jet->getPFConstituent(i);      
+    if(!part.isNonnull()) continue;
+    
+    reco::TrackRef itrk = part->trackRef();
+    
+    bool trkForAxis = false;
+    if(itrk.isNonnull()){						//Track exists --> charged particle
+      if(part->pt() > 1.0) nChg_ptCut++;
+  	
+      //Search for closest vertex to track
+      edm::PtrVector<reco::Vertex>::const_iterator  vtxClose = recoVertices.begin();
+      for( edm::PtrVector<reco::Vertex>::const_iterator  vtx = recoVertices.begin(); vtx != recoVertices.end(); ++vtx){
+	if(fabs(itrk->dz((*vtx)->position())) < fabs(itrk->dz((*vtxClose)->position()))) vtxClose = vtx;
+      }
+  	
+      if(vtxClose == vtxLead){
+	Float_t dz = itrk->dz((*vtxClose)->position());
+	Float_t dz_sigma = sqrt(pow(itrk->dzError(),2) + pow((*vtxClose)->zError(),2));
+  	
+	if(itrk->quality(reco::TrackBase::qualityByName("highPurity")) && fabs(dz/dz_sigma) < 5.){
+	  trkForAxis = true;
+	  Float_t d0 = itrk->dxy((*vtxClose)->position());
+	  Float_t d0_sigma = sqrt(pow(itrk->d0Error(),2) + pow((*vtxClose)->xError(),2) + pow((*vtxClose)->yError(),2));
+	  if(fabs(d0/d0_sigma) < 5.) nChg_QC++;
+	}
+      }
+    } else {								//No track --> neutral particle
+      if(part->pt() > 1.0) nNeutral_ptCut++;
+      trkForAxis = true;
+    }
+    
+    Float_t deta = part->eta() - jet->eta();
+    Float_t dphi = 2*atan(tan(((part->phi()- jet->phi()))/2));           
+    Float_t partPt = part->pt(); 
+    Float_t weight = partPt*partPt;
+
+    if(!useQC || trkForAxis){					//If quality cuts, only use when trkForAxis
+      sum_weight += weight;
+      sum_pt += partPt;
+      sum_deta += deta*weight;                  
+      sum_dphi += dphi*weight;                                                                                             
+      sum_deta2 += deta*deta*weight;                    
+      sum_detadphi += deta*dphi*weight;                               
+      sum_dphi2 += dphi*dphi*weight;
+    }	
+  }
+
+  //Calculate axis and ptD
+  Float_t a = 0., b = 0., c = 0.;
+  Float_t ave_deta = 0., ave_dphi = 0., ave_deta2 = 0., ave_dphi2 = 0.;
+  if(sum_weight > 0){
+    if (myvar == "ptD")
+      return sqrt(sum_weight)/sum_pt;
+    ave_deta = sum_deta/sum_weight;
+    ave_dphi = sum_dphi/sum_weight;
+    ave_deta2 = sum_deta2/sum_weight;
+    ave_dphi2 = sum_dphi2/sum_weight;
+    a = ave_deta2 - ave_deta*ave_deta;                          
+    b = ave_dphi2 - ave_dphi*ave_dphi;                          
+    c = -(sum_detadphi/sum_weight - ave_deta*ave_dphi);                
+  } 
+  else if(myvar == "ptD")
+    return 0;
+  Float_t delta = sqrt(fabs((a-b)*(a-b)+4*c*c));
+  
+  if(myvar == "axis1")
+    return (a+b+delta > 0) ? sqrt(0.5*(a+b+delta)) : 0.;
+  else if(myvar == "axis2")
+    return (a+b-delta > 0) ? sqrt(0.5*(a+b-delta)) : 0.;
+  else if(myvar == "mult")
+    return (nChg_QC + nNeutral_ptCut);
+  else if(myvar == "mult_MLP_QC")
+    return (nChg_QC );
+  else if(myvar == "mult_MLP")
+    return (nChg_ptCut + nNeutral_ptCut );
+  
+  return -1.;
 }
 
 }

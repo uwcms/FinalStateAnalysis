@@ -13,6 +13,7 @@ def rerun_matchers(process):
         resolveAmbiguities = cms.bool(True),
         matched = cms.InputTag("genParticles")
         )
+    
 
     process.electronMatch = cms.EDProducer(
         "MCMatcher",
@@ -103,6 +104,10 @@ def rerun_matchers(process):
         src = cms.InputTag('cleanPatPhotons'),
         matchSrc = cms.InputTag('photonMatch')
         )
+    process.photonParentage = cms.EDProducer(
+        "PATPhotonParentageEmbedder",
+        src = cms.InputTag("cleanPatPhotonsRematched")
+        )
 
     process.selectedPatJetsRematched = cms.EDProducer(
         "PATJetGenRematchEmbedder",
@@ -119,6 +124,7 @@ def rerun_matchers(process):
                                          process.cleanPatTausRematched+
                                          process.photonMatch+
                                          process.cleanPatPhotonsRematched+
+                                         process.photonParentage+
                                          process.patJetGenJetMatch+
                                          process.patJetPartonMatch+
                                          process.selectedPatJetsRematched )    
