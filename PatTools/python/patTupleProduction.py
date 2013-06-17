@@ -324,7 +324,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         process.customizeElectronSequence, "selectedPatElectrons",
         # Some of the EGamma modules have non-standard src InputTags,
         # specify them here.
-        ("src", "inputPatElectronsTag")
+        ("src", "inputPatElectronsTag", "inputElectronsTag")
     )
     process.tuplize += process.customizeElectronSequence
     process.customizeElectronSequence.insert(0, process.selectedPatElectrons)
