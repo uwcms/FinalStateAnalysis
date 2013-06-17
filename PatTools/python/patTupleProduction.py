@@ -194,7 +194,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
             checkCharge = cms.bool(False),
             resolveAmbiguities = cms.bool(True),
             matched = cms.InputTag("genParticles")
-            )        
+            )
 
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring(
@@ -321,7 +321,11 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Produce the electron collections
     process.load("FinalStateAnalysis.PatTools.patElectronProduction_cff")
     final_electron_collection = chain_sequence(
-        process.customizeElectronSequence, "selectedPatElectrons")
+        process.customizeElectronSequence, "selectedPatElectrons",
+        # Some of the EGamma modules have non-standard src InputTags,
+        # specify them here.
+        ("src", "inputPatElectronsTag")
+    )
     process.tuplize += process.customizeElectronSequence
     process.customizeElectronSequence.insert(0, process.selectedPatElectrons)
     process.patDefaultSequence.replace(process.selectedPatElectrons,
