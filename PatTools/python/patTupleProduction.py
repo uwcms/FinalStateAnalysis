@@ -336,9 +336,14 @@ def configurePatTuple(process, isMC=True, **kwargs):
     #setup the energy regression for the specific dataset
     process.eleRegressionEnergy.energyRegressionType    = cms.uint32(2)
     process.calibratedPatElectrons.correctionsType      = cms.int32(2)
+    process.calibratedPatElectrons.inputDataset         = cms.string("Summer12_LegacyPaper")
     process.calibratedPatElectrons.combinationType      = cms.int32(3)
     process.calibratedPatElectrons.lumiRatio            = cms.double(1.0)
     process.calibratedPatElectrons.synchronization      = cms.bool(True)
+    process.calibratedPatElectrons.isMC                 = cms.bool(True)
+    process.calibratedPatElectrons.verbose              = cms.bool(True)
+    process.calibratedPatElectrons.initialSeed          = cms.untracked.uint32(1000)
+    
 
     process.load("FinalStateAnalysis.PatTools.patMuonProduction_cff")
     final_muon_collection = chain_sequence(
