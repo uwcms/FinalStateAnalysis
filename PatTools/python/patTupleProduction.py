@@ -72,6 +72,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_photonCore_*_*',
         # for Zmumu -> embedded samples
         # https://twiki.cern.ch/twiki/bin/view/CMS/MuonTauReplacementRecHit
+        '*_generalTracksORG_*_EmbeddedRECO',
+        '*_electronGsfTracksORG_*_EmbeddedRECO',
         'double_TauSpinnerReco_TauSpinnerWT_EmbeddedSPIN',
         'double_ZmumuEvtSelEffCorrWeightProducer_weight_EmbeddedRECO',
         'double_muonRadiationCorrWeightProducer_weight_EmbeddedRECO',
