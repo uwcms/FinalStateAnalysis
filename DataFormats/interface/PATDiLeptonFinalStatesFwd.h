@@ -12,6 +12,7 @@ namespace pat {
   class Muon;
   class Tau;
   class Photon;
+  class Jet;
 }
 
 typedef PATPairFinalStateT<pat::Electron, pat::Electron> PATElecElecFinalState;
@@ -24,6 +25,8 @@ typedef PATPairFinalStateT<pat::Muon, pat::Photon> PATMuPhoFinalState;
 typedef PATPairFinalStateT<pat::Tau, pat::Tau> PATTauTauFinalState;
 typedef PATPairFinalStateT<pat::Tau, pat::Photon> PATTauPhoFinalState;
 typedef PATPairFinalStateT<pat::Photon, pat::Photon> PATPhoPhoFinalState;
+typedef PATPairFinalStateT<pat::Muon, pat::Jet> PATMuJetFinalState;
+typedef PATPairFinalStateT<pat::Electron, pat::Jet> PATElecJetFinalState;
 
 FWD_TYPEDEFS(PATElecElecFinalState)
 FWD_TYPEDEFS(PATElecMuFinalState)
@@ -35,5 +38,7 @@ FWD_TYPEDEFS(PATMuPhoFinalState)
 FWD_TYPEDEFS(PATTauTauFinalState)
 FWD_TYPEDEFS(PATTauPhoFinalState)
 FWD_TYPEDEFS(PATPhoPhoFinalState)
+FWD_TYPEDEFS(PATMuJetFinalState)
+FWD_TYPEDEFS(PATElecJetFinalState)
 
 #endif

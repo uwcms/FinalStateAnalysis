@@ -127,6 +127,22 @@ const edm::Ptr<pat::MET> PATFinalStateEvent::met(
   return edm::Ptr<pat::MET>();
 }
 
+const reco::Candidate::LorentzVector PATFinalStateEvent::met4vector(
+    const std::string& type, 
+    const std::string& tag, 
+    const int applyPhiCorr) const {
+  std::map<std::string, edm::Ptr<pat::MET> >::const_iterator findit =
+    mets_.find(type);
+  if (findit == mets_.end())
+    return reco::Candidate::LorentzVector();
+
+  const reco::Candidate::LorentzVector& metp4 = (tag == "") ? met(type)->p4() : met(type)->userCand(tag)->p4();
+  if (applyPhiCorr == 1)
+    return fshelpers::metPhiCorrection(metp4, recoVertices_.size(), !isRealData_);
+
+  return metp4;
+}
+
 const edm::EventID& PATFinalStateEvent::evtId() const {
   return evtID_;
 }
@@ -272,3 +288,12 @@ const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
       << "The PFLOW RefProd is null!" << std::endl;
   return *pfRefProd_;
 }
+
+const bool PATFinalStateEvent::findDecay(const int pdgIdMother, const int pdgIdDaughter) const{
+  return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
+}
+
+float  PATFinalStateEvent::jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const{
+  return fshelpers::jetQGVariables( jet, myvar, recoVertices_);
+}
+

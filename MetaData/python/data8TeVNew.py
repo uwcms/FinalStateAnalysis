@@ -23,9 +23,9 @@ from string import Template
 
 try:
       from yellowhiggs import xs, br, xsbr
-      br(mass,'WW')
+      br(130.,'WW')
 except:
-      print "warning: yellowhiggs error"
+      #print "warning: yellowhiggs error"
       #define / override functions to avoid crashes
       def br(*args, **kwargs):
             return -99
@@ -90,17 +90,51 @@ datadefs = {
    'Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola' : {
    'analyses': ['HTT'],
    'datasetpath' : "/Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
-   'x_sec' : -999,
+   'x_sec' : 11.1,
    'pu' : 'S10',
    },
 
    'T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola' : {
    'analyses': ['HTT'],
    'datasetpath' : "/T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
-   'x_sec' : -999,
+   'x_sec' : 11.1,
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
+
+   'Tbar_t-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/Tbar_t-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 30.7,
+   'pu' : 'S10',
+   },
+
+   'T_t-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/T_t-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 56.4,
+   'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+
+
+   'Tbar_s-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/Tbar_s-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 1.56,
+   'pu' : 'S10',
+   },
+
+   'T_s-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/T_s-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 3.79,
+   'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+
+
+
 
    'TTTo2L2Nu2B_8TeV-powheg-pythia6' : {
    'analyses': ['4L'],
@@ -286,22 +320,69 @@ datadefs = {
    'pu' : 'data',
    'calibrationTarget':'ICHEP2012'
    },
+
+   'DoubleMu_Run2012D_22Jan2013_v1_RHembedded_trans1_tau115_ptelec1_20had1_18_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMuParked/StoreResults-Run2012D_22Jan2013_v1_RHembedded_trans1_tau115_ptelec1_20had1_18_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   'calibrationTarget':'ICHEP2012'
+   },
+
+    'WplusJets_madgraph_filtered' : {
+	# This is not a sample exactly... To combine 1-2-3-4 jets I have incorporated a filtered version of WJets (NUP==5) in my workflow 
+	# I need the name in datadefs for UWHiggs to work 
+        'analyses': ['HTT'],
+        'datasetpath': '/ThisIsNotARealSample/NeededForUWCMSToWork/Sorry/Maria',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 37509,  # this is the W xsec in the StandardModelReference twiki
+    },
+
+
+    'Wplus1Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W1JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 6662.8,
+    },
+
+    'Wplus2Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W2JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 2159.2,
+    },
+
+
+    'Wplus3Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 640.4,
+    },
+
+    'Wplus4Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W4JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 264.,
+    },
+
+
 }
 
-for n in range(1,5) :
-   datadefs['W%iJetsToLNu_TuneZ2Star_8TeV-madgraph' % n] = {
-      'analyses': ['HTT','Wbb'],
-      'datasetpath': "/W%iJetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % n,
-      'pu' : 'S10',
-      'x_sec' : -999,
-      'calibrationTarget':'Summer12_DR53X_HCP2012'
-      }
+
 
 # SM Z\gamma 8 TeV
 datadefs['ZGToLLG']= {
    'datasetpath' :'/ZGToLLG_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
    'pu' : 'S10',
-   'x_sec' : 132.6*picobarns,
+   'x_sec' : 156.2*picobarns,
    'analyses' : ['HZG'],
    'calibrationTarget':'Summer12_DR53X_HCP2012'
    }
@@ -432,7 +513,7 @@ for mass in range(120,155,5):
 
 
 # Add VH files
-for mass in range(110, 145, 5):
+for mass in range(110, 165, 5):
    datadefs['VHtautau_lepdecay_%i' % mass] = {
       'analyses': ['VH'],
       'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
@@ -447,13 +528,13 @@ for mass in range(110, 150, 10):
       'datasetpath': "/WH_ZH_TTH_HToWW_M-%i_lepdecay_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
        'calibrationTarget':'Summer12_DR53X_HCP2012',
-      'x_sec' : (xs(8,mass,'wh')[0]+xs(8,mass,'zh')[0]+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
+      'x_sec' : (xs(8,mass,'wh')[0]*br_w_leptons+xs(8,mass,'zh')[0]*br_z_leptons+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
       }
 
 
 
 # We use the same name for the 53X lepdecay only samples (sigh)
-for mass in range(110, 145, 5):
+for mass in range(110, 160, 5):
     datadefs['VH_H2Tau_M-%s' % mass] = {}
     datadefs['VH_H2Tau_M-%s' % mass]['x_sec'] = xsbr(8,mass,'wh','tautau')[0]*br_w_leptons + xsbr(8,mass,'zh','tautau')[0]*br_z_leptons + xsbr(8,mass,'tth','tautau')[0]*br_w_leptons**2
 
@@ -482,6 +563,14 @@ def build_data_set(pd, analyses):
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
+      'data_%s_Run2012A_22Jan2013_v1' % pd : {
+      'datasetpath' : "/%s/Run2012A-22Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'firstRun' : 190456,
+      'lastRun' : 193621,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
       'data_%s_Run2012B_13Jul2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-13Jul2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
@@ -490,25 +579,33 @@ def build_data_set(pd, analyses):
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
-      'data_%s_Run2012C_PromptReco_v2_Run198934_201264' % pd : {
-      'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
-      'firstRun' : 198934,
-      'lastRun' : 201264,
+      'data_%s_Run2012B_13Jul2012_v4' % pd : {
+      'datasetpath' : "/%s/Run2012B-13Jul2012-v4/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
+      'firstRun' : 193833,
+      'lastRun' : 196531,
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
-      'data_%s_Run2012C_PromptReco_v2_Run201265_203755' % pd : {
+      'data_%s_Run2012B_22Jan2013_v1' % pd : {
+      'datasetpath' : "/%s/Run2012B-22Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'firstRun' : 193833,
+      'lastRun' : 196531,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
+      'data_%s_Run2012C_PromptReco_v2' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
-      'firstRun' : 201265,
-      'lastRun' : 203755,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
+      ## 'firstRun' : 201265,
+      ## 'lastRun' : 203755,
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
       'data_%s_Run2012A_recover_06Aug2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012A-recover-06Aug2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190782-190949_8TeV_06Aug2012ReReco_Collisions12_JSON.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
       'firstRun' : 190782, #LAG from A. David, 26 Dec 2012
       'lastRun' : 190949,
       'analyses' : analyses,
@@ -516,7 +613,7 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012C_PromptReco_v1' % pd : {
       'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-203002_8TeV_PromptReco_Collisions12_JSON_v2.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
       'firstRun' : 197700,
       'lastRun' : 198913,
       'analyses' : analyses,
@@ -525,6 +622,14 @@ def build_data_set(pd, analyses):
       'data_%s_Run2012C_24Aug2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012C-24Aug2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_198022-198523_8TeV_24Aug2012ReReco_Collisions12_JSON.txt",
+      'firstRun' : 198022,
+      'lastRun' : 198523,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
+      'data_%s_Run2012C_22Jan2013_v1' % pd : {
+      'datasetpath' : "/%s/Run2012C-22Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
       'firstRun' : 198022,
       'lastRun' : 198523,
       'analyses' : analyses,
@@ -540,7 +645,7 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012D_PromptReco_v1' % pd :{
       'datasetpath' : "/%s/Run2012D-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
       'firstRun' : 203768,
       'lastRun' :  208686,
       'analyses' : analyses,
@@ -557,6 +662,14 @@ def build_data_set(pd, analyses):
       'data_%s_Run2012D_16Jan2013_v2' % pd :{ #apparently some of these got re-re-re-recoed. Or something. v1 no longer exists for MuEG or DoubleMu IAR 19.Feb.2013
       'datasetpath' : "/%s/Run2012D-16Jan2013-v2/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
+      'firstRun' : 203768,
+      'lastRun' :  208686,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
+      'data_%s_Run2012D_22Jan2013_v1' % pd :{
+      'datasetpath' : "/%s/Run2012D-22Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
       'firstRun' : 203768,
       'lastRun' :  208686,
       'analyses' : analyses,

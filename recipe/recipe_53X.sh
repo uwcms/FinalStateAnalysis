@@ -35,6 +35,9 @@ then
   addpkg RecoBTag/SecondaryVertex        V01-08-00
   addpkg RecoVertex/AdaptiveVertexFinder V02-02-00  
 
+  echo "Downloading Quark Gluon Jet ID"
+  cvs co -r v1-2-3 -d QuarkGluonTagger/EightTeV UserCode/tomc/QuarkGluonTagger/EightTeV
+  
   # MVA MET + PU Jet ID
   # This must go *before* the Tau POG checkout as it fucks with it.
   pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
@@ -51,6 +54,22 @@ then
   cvs co -r V00-00-30-00 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
   cvs up -r 1.4 EGamma/EGammaAnalysisTools/interface/ElectronEffectiveArea.h
   cvs co -r Moriond_2013_V01-1 EgammaAnalysis/ElectronTools
+
+  echo "Cherry picking summer 2013 MVAID"
+  cvs co -r 1.1.4.3 EgammaAnalysis/ElectronTools/src/EGammaMvaEleEstimator.cc
+  cvs co -r 1.1.4.3 EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimator.h
+  cvs co -r 1.3.2.1 EgammaAnalysis/ElectronTools/data/download.url
+  cvs co -r 1.1.2.3 EgammaAnalysis/ElectronTools/plugins/ElectronPATIdMVAProducer.cc
+  cvs co -r  1.2 EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h
+  #Get weight files
+  pushd $CMSSW_BASE/src/EgammaAnalysis/ElectronTools/data
+  cat download.url | xargs wget
+  popd
+  #apply some pathces to make everythin work
+  set +o errexit
+  patch -N -p0 < FinalStateAnalysis/recipe/patches/PATObject.h.patch
+  patch -N -p0 < FinalStateAnalysis/recipe/patches/EgammaAnalysis_ElectronTools.patch
+  set -o errexit
   
   # apply patch so we can configure the passing mask for the PassWP function
   set +o errexit

@@ -1,7 +1,3 @@
-// Check if PAT tuple production is enabled - we can skip otherwise.
-#include "FinalStateAnalysis/PatTools/interface/PATProductionFlag.h"
-#ifdef ENABLE_PAT_PROD
-
 #include <TFile.h>
 #include "../interface/ElectronIDMVA.h"
 #include "DataFormats/TrackReco/interface/Track.h"
@@ -413,4 +409,3 @@ double ElectronIDMVA::MVAValue(
   return MVAValue(ele, clusterTool);
 }
 
-#endif

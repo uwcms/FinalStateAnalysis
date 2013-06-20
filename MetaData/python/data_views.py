@@ -72,7 +72,7 @@ def data_views(files, lumifiles):
                 "Can't find a lumi file for %s - I have these ones: " % x
                 + repr(lumi_files.keys()))
         datalumi += lumi_files[x]
-    log.info("-> total int. lumi = %0.0fpb-1", datalumi)
+    log.warning("-> total int. lumi = %0.0fpb-1", datalumi)
 
     # Figure out the dataset for each file, and the int lumi.
     # Key = dataset name
@@ -82,13 +82,12 @@ def data_views(files, lumifiles):
     for sample in histo_files.keys():
         raw_file = histo_files[sample]
         intlumi = lumi_files[sample]
-        log.info("Building sample: %s => int lumi: %0.f pb-1", sample, intlumi)
         weight = 1
         if intlumi:
             weight = datalumi/intlumi
         if 'data' in sample:
             weight = 1
-        log.debug("Weight: %0.2f", weight)
+        log.warning("Building sample: %s => int lumi: %0.f pb-1. Weight => %0.2E", sample, intlumi, weight)
 
         view = views.ScaleView(raw_file, weight)
         unweighted_view = raw_file
@@ -110,6 +109,7 @@ def data_views(files, lumifiles):
             # Set style and title
             # title = the name of the sample, rootpy Legend uses this.
             nicename = copy.copy(style_dict['name'])
+	    log.debug("sample name %s",nicename)
             style_dict_no_name = dict( [ i for i in style_dict.iteritems() if i[0] != 'name'] )
             view = views.TitleView(
                 views.StyleView(view, **style_dict_no_name), nicename

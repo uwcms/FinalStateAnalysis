@@ -54,7 +54,11 @@ if __name__ == "__main__":
 
     for sample_dir in glob.glob(os.path.join(args.directory, args.jobid, '*')):
         sample_name = os.path.basename(sample_dir)
+        if not os.path.isdir(sample_dir):
+            log.info("skipping object %s" % sample_name)
+            continue
         log.info("Finding files for sample %s" % sample_name)
+        log.info("Looking for  %s" %  args.meta)
 
 
         output_txt = os.path.join(args.outputdir, sample_name + '.txt')
@@ -94,6 +98,7 @@ if __name__ == "__main__":
                 # Made it!
                 flist.write(file + '\n')
 
+
         # Check if we found anything new in the .txt file
         # Don't update if we didn't, so rake knows nothing has changed
         if not os.path.exists(output_txt):
@@ -107,3 +112,7 @@ if __name__ == "__main__":
             # Nothing has changed, remove the tmp
             log.debug("-- Completed sample %s - no new files found", sample_dir)
             os.remove(output_tmp)
+
+
+        log.info('Finished finding files for %s'% sample_name)
+
