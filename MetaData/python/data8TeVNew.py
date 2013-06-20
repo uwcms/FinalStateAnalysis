@@ -333,7 +333,7 @@ datadefs = {
 	# This is not a sample exactly... To combine 1-2-3-4 jets I have incorporated a filtered version of WJets (NUP==5) in my workflow 
 	# I need the name in datadefs for UWHiggs to work 
         'analyses': ['HTT'],
-        'datasetpath': '/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
+        'datasetpath': '/ThisIsNotARealSample/NeededForUWCMSToWork/Sorry/Maria',
         'pu': 'S7',
         'calibrationTarget': 'Summer12',
         'x_sec': 37509,  # this is the W xsec in the StandardModelReference twiki
@@ -342,7 +342,7 @@ datadefs = {
 
     'Wplus1Jets_madgraph' : {
         'analyses': ['HTT'],
-        'datasetpath': '/W1JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
+        'datasetpath': '/W1JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
         'pu': 'S7',
         'calibrationTarget': 'Summer12',
         'x_sec': 6662.8,
@@ -350,7 +350,7 @@ datadefs = {
 
     'Wplus2Jets_madgraph' : {
         'analyses': ['HTT'],
-        'datasetpath': '/W2JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
+        'datasetpath': '/W2JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
         'pu': 'S7',
         'calibrationTarget': 'Summer12',
         'x_sec': 2159.2,
@@ -359,7 +359,7 @@ datadefs = {
 
     'Wplus3Jets_madgraph' : {
         'analyses': ['HTT'],
-        'datasetpath': '/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
+        'datasetpath': '/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
         'pu': 'S7',
         'calibrationTarget': 'Summer12',
         'x_sec': 640.4,
@@ -367,7 +367,7 @@ datadefs = {
 
     'Wplus4Jets_madgraph' : {
         'analyses': ['HTT'],
-        'datasetpath': '/W4JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
+        'datasetpath': '/W4JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
         'pu': 'S7',
         'calibrationTarget': 'Summer12',
         'x_sec': 264.,
