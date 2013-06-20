@@ -48,15 +48,6 @@ from EgammaAnalysis.ElectronTools.calibratedPatElectrons_cfi import \
 from FinalStateAnalysis.PatTools.electrons.patConversionRejection_cfi import \
      patElectronConversionMatch
 
-printElectrons = cms.EDAnalyzer(
-        "CandInfoPrinter",
-        printHeader = cms.bool(True),
-        src = cms.InputTag("cleanPatElectrons"),
-        # some variables to print out
-        pt = cms.string("pt"),
-        eta = cms.string("eta")
-        )
-
 customizeElectronSequence = cms.Sequence()
 customizeElectronSequence += gsfTrackCandidates
 customizeElectronSequence += patElectronRhoEmbedding
@@ -79,4 +70,3 @@ customizeElectronSequence += patElectronsEmbedIp
 customizeElectronSequence += eleRegressionEnergy
 customizeElectronSequence += calibratedPatElectrons
 customizeElectronSequence += patElectronConversionMatch
-#customizeElectronSequence += printElectrons
