@@ -321,6 +321,13 @@ datadefs = {
    'calibrationTarget':'ICHEP2012'
    },
 
+   'DoubleMu_Run2012D_22Jan2013_v1_RHembedded_trans1_tau115_ptelec1_20had1_18_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMuParked/StoreResults-Run2012D_22Jan2013_v1_RHembedded_trans1_tau115_ptelec1_20had1_18_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   'calibrationTarget':'ICHEP2012'
+   },
 
     'WplusJets_madgraph_filtered' : {
 	# This is not a sample exactly... To combine 1-2-3-4 jets I have incorporated a filtered version of WJets (NUP==5) in my workflow 
@@ -329,7 +336,7 @@ datadefs = {
         'datasetpath': '/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
         'pu': 'S7',
         'calibrationTarget': 'Summer12',
-        'x_sec': 36257.2,
+        'x_sec': 37509,  # this is the W xsec in the StandardModelReference twiki
     },
 
 
@@ -556,6 +563,14 @@ def build_data_set(pd, analyses):
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
+      'data_%s_Run2012A_22Jan2013_v1' % pd : {
+      'datasetpath' : "/%s/Run2012A-22Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'firstRun' : 190456,
+      'lastRun' : 193621,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
       'data_%s_Run2012B_13Jul2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-13Jul2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
@@ -574,7 +589,7 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012B_22Jan2013_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-22Jan2013-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
       'firstRun' : 193833,
       'lastRun' : 196531,
       'analyses' : analyses,
@@ -612,6 +627,14 @@ def build_data_set(pd, analyses):
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
+      'data_%s_Run2012C_22Jan2013_v1' % pd : {
+      'datasetpath' : "/%s/Run2012C-22Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'firstRun' : 198022,
+      'lastRun' : 198523,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
       'data_%s_Run2012C_EcalRecover_11DEC2012_v1' % pd :{
       'datasetpath' : "/%s/Run2012C-EcalRecover_11Dec2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_201191-201191_8TeV_11Dec2012ReReco-recover_Collisions12_JSON.txt",
@@ -639,6 +662,14 @@ def build_data_set(pd, analyses):
       'data_%s_Run2012D_16Jan2013_v2' % pd :{ #apparently some of these got re-re-re-recoed. Or something. v1 no longer exists for MuEG or DoubleMu IAR 19.Feb.2013
       'datasetpath' : "/%s/Run2012D-16Jan2013-v2/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
+      'firstRun' : 203768,
+      'lastRun' :  208686,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
+      'data_%s_Run2012D_22Jan2013_v1' % pd :{
+      'datasetpath' : "/%s/Run2012D-22Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
       'firstRun' : 203768,
       'lastRun' :  208686,
       'analyses' : analyses,
