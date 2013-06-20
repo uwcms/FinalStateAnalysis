@@ -30,6 +30,9 @@ class PATMultiCandFinalState : public PATFinalState {
     virtual const reco::CandidatePtrVector& daughterOverlaps(
         size_t i, const std::string& label) const;
 
+    virtual const double daughterCosThetaStar(
+        size_t i) const;
+
   private:
     //reco::CandidateBaseRefVector cands_; // try new way later
     std::vector<reco::CandidatePtr> cands_; // old way

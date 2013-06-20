@@ -12,10 +12,6 @@
  * =====================================================================================
  */
 
-// Check if PAT tuple production is enabled - we can skip otherwise.
-#include "FinalStateAnalysis/PatTools/interface/PATProductionFlag.h"
-#ifdef ENABLE_PAT_PROD
-
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
@@ -23,7 +19,7 @@
 #include "FWCore/Framework/interface/EDProducer.h"
 
 #include "DataFormats/PatCandidates/interface/Jet.h"
-#include "RecoJets/JetProducers/interface/PileupJetIdentifier.h"
+#include "DataFormats/JetReco/interface/PileupJetIdentifier.h"
 
 class PATJetPUIDEmbedder : public edm::EDProducer {
   public:
@@ -108,4 +104,3 @@ void PATJetPUIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 #include "FWCore/Framework/interface/MakerMacros.h"
 DEFINE_FWK_MODULE(PATJetPUIDEmbedder);
 
-#endif // PAT Production flag

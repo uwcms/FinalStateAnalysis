@@ -28,6 +28,9 @@ id = PSet(
     objectCBID_LOOSE = '{object}.userInt("CBID_LOOSE")',
     objectCBID_MEDIUM = '{object}.userInt("CBID_MEDIUM")',
     objectCBID_TIGHT = '{object}.userInt("CBID_TIGHT")',
+    #new Summer13 MVA ID
+    objectMVATrigNoIP = '{object}.userFloat("mvaTrigNoIP")',
+    
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(
         "({object}.userIso(0)"
@@ -62,6 +65,12 @@ id = PSet(
     objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
     objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
     objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
+    # raw energy error
+    objectEnergyError = '{object}.corrections().combinedP4Error',
+    #Experimental charge id from Silvia
+    ## objectGsfCharge = '{object}.gsfTrack().charge()',
+    ## objectTrkCharge = '{object}.track().charge()',
+    ## objectScPixCharge =  '{object}.scPixCharge()',
     # shower shape / ID variables
     objectHadronicOverEM = '{object}.hcalOverEcal',
     objectHadronicDepth1OverEm = '{object}.hcalDepth1OverEcal',
@@ -192,6 +201,8 @@ trigger = PSet(
     objectMatchesDoubleEPath       = r'matchToHLTPath({object_idx}, "HLT_Ele17_CaloIdL_CaloIsoVL_Ele8_CaloIdL_CaloIsoVL_v\\d+,HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
     objectMatchesMu17Ele8Path      = r'matchToHLTPath({object_idx}, "HLT_Mu17_Ele8_CaloIdL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_v\\d+,HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
     objectMatchesMu8Ele17Path      = r'matchToHLTPath({object_idx}, "HLT_Mu8_Ele17_CaloIdL_v\\d+,HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_v\\d+")',
+    objectMatchesMu17Ele8IsoPath      = r'matchToHLTPath({object_idx}, "HLT_Mu17_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
+    objectMatchesMu8Ele17IsoPath      = r'matchToHLTPath({object_idx}, "HLT_Mu8_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+")',
     objectMatchesSingleE    = r'matchToHLTPath({object_idx}, "HLT_Ele27_WP80_v\\d+,HLT_Ele27_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v\\d+,HLT_Ele32_CaloIdVT_CaloIsoT_TrkIdT_TrkIsoT_v\\d+")',
     objectMatchesSingleEPlusMET = r'matchToHLTPath({object_idx},"HLT_Ele27_WP80_PFMET_MT50_v\\d+,HLT_Ele32_WP70_PFMT50_v\\d+")',
 )

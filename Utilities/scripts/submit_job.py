@@ -24,6 +24,7 @@ from FinalStateAnalysis.MetaData.datadefs import datadefs
 log = logging.getLogger("submit_job")
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
@@ -116,7 +117,6 @@ if __name__ == "__main__":
     sys.stdout.write('export TERMCAP=screen\n')
     for sample, sample_info in reversed(
         sorted(datadefs.iteritems(), key=lambda (x,y): x)):
-
         passes_filter = True
         # Filter by analysis
         if args.analysis:

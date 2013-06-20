@@ -105,10 +105,41 @@ def produce_final_states(process, collections, output_commands,
         filter=cms.bool(False),
     )
 
+
+    process.jetsForFinalStates = cms.EDProducer("PATJetCleaner",
+        src = cms.InputTag(jetsrc),
+        # preselection (any string-based cut on pat::Jet)
+        preselection = cms.string("pt>20 & abs(eta) < 2.5 & userFloat('idLoose') & userFloat('fullDiscriminant')"),
+        # overlap checking configurables
+        checkOverlaps = cms.PSet(
+         muons = cms.PSet(
+          src = cms.InputTag("muonsForFinalStates"),
+          algorithm = cms.string("byDeltaR"),
+          preselection = cms.string("pt>10&&isGlobalMuon&&isTrackerMuon&&(chargedHadronIso()+max(photonIso+neutralHadronIso(),0.0))/pt()<0.3"),
+          deltaR = cms.double(0.3),
+          checkRecoComponents = cms.bool(False),
+          pairCut = cms.string(""),
+          requireNoOverlaps = cms.bool(True),
+        ),
+        electrons = cms.PSet(
+           src = cms.InputTag("electronsForFinalStates"),
+           algorithm = cms.string("byDeltaR"),
+           preselection = cms.string("pt>10&&(chargedHadronIso()+max(photonIso()+neutralHadronIso(),0.0))/pt()<0.3"),
+           deltaR = cms.double(0.3),
+           checkRecoComponents = cms.bool(False),
+           pairCut = cms.string(""),
+           requireNoOverlaps = cms.bool(True),
+         ),
+         ),
+         # finalCut (any string-based cut on pat::Jet)
+         finalCut = cms.string('')
+    )
+
     process.selectObjectsForFinalStates = cms.Sequence(
         process.muonsForFinalStates
         + process.electronsForFinalStates
         + process.tausForFinalStates
+	+ process.jetsForFinalStates
     )
     if not noPhotons:
         process.selectObjectsForFinalStates += process.photonsForFinalStates
@@ -118,7 +149,8 @@ def produce_final_states(process, collections, output_commands,
     # Now build all combinatorics for E/Mu/Tau/Photon
     object_types = [('Elec', cms.InputTag("electronsForFinalStates")),
                     ('Mu', cms.InputTag("muonsForFinalStates")),
-                    ('Tau', cms.InputTag("tausForFinalStates"))]
+                    ('Tau', cms.InputTag("tausForFinalStates")),
+			('Jet', cms.InputTag("jetsForFinalStates"))]
 
     if not noPhotons:
         object_types.append(('Pho', cms.InputTag("photonsForFinalStates")))
@@ -137,6 +169,12 @@ def produce_final_states(process, collections, output_commands,
         if (diobject[0][0], diobject[1][0]) == ('Tau', 'Tau'):
             continue
         if (diobject[0][0], diobject[1][0]) == ('Tau', 'Pho'):
+            continue
+        if (diobject[0][0], diobject[1][0]) == ('Tau', 'Jet'):
+            continue
+        if (diobject[0][0], diobject[1][0]) == ('Jet', 'Pho'):
+            continue
+        if (diobject[0][0], diobject[1][0]) == ('Jet', 'Jet'):
             continue
 
         # Define some basic selections for building combinations
@@ -174,14 +212,21 @@ def produce_final_states(process, collections, output_commands,
         if (triobject[0][0], triobject[1][0], triobject[2][0]) == \
            ('Tau', 'Tau', 'Tau'):
             continue
+
         n_taus = [x[0] for x in triobject].count('Tau')
         n_phos = [x[0] for x in triobject].count('Pho')
+        n_muons = [x[0] for x in triobject].count('Mu')
+        n_jets = [x[0] for x in triobject].count('Jet')
+
         if n_taus > 2:
             continue
         if n_phos > 2:
             continue
         if n_taus and n_phos:
             continue
+	if n_jets > 0 and not (n_jets == 2 and n_muons == 1):
+	    continue 
+
 
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
@@ -221,12 +266,17 @@ def produce_final_states(process, collections, output_commands,
         # Don't build states with more than 2 hadronic taus or phos
         n_taus = [x[0] for x in quadobject].count('Tau')
         n_phos = [x[0] for x in quadobject].count('Pho')
+        n_jets = [x[0] for x in quadobject].count('Jet')
+
         if n_taus > 2:
             continue
         if n_phos > 2:
             continue
         if n_taus and n_phos:
             continue
+	if n_jets> 0:
+            continue
+
 
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning

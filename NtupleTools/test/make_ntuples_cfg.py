@@ -35,16 +35,19 @@ The available options (which are set to zero or one) are::
     svFit=0                 - run the SVfit on appropriate pairs.
                               Requires rerunMVAMET, if it's not already
                               in the PAT tuple.
+    noPhotons=0             - don\'t build things which depend on photons.
 
 '''
 
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
-    make_ntuple, add_ntuple
+    make_ntuple, add_ntuple, add_ntuple_filter
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
 from FinalStateAnalysis.NtupleTools.rerun_matchers import rerun_matchers
+from FinalStateAnalysis.NtupleTools.rerun_QGJetID import rerun_QGJetID
+import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")
 
@@ -60,8 +63,10 @@ options = TauVarParsing.TauVarParsing(
     rerunFSA=0,  # If one, rebuild the PAT FSA events
     verbose=0,  # If one print out the TimeReport
     noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
-    rerunMVAMET=0,  # If one, (re)build the MVA MET
     svFit=1,  # If one, SVfit appropriate lepton pairs.
+    rerunQGJetID=0, #if one reruns the quark-gluon JetID
+    runNewElectronMVAID=0, #if one runs the new electron MVAID
+    rerunMVAMET=0  # If one, (re)build the MVA MET
 )
 
 options.outputFile = "ntuplize.root"
@@ -145,13 +150,30 @@ if options.rerunFSA:
     }
     #re run the MC matching, if requested
     if options.rerunMCMatch:
+        print 'doing rematching!'
         rerun_matchers(process)
         process.schedule.append(process.rerunMCMatchPath)
         fs_daughter_inputs['electrons'] = 'cleanPatElectronsRematched'
         fs_daughter_inputs['muons'] = 'cleanPatMuonsRematched'
         fs_daughter_inputs['taus'] = 'cleanPatTausRematched'
-        fs_daughter_inputs['photons'] = 'cleanPatPhotonsRematched'
+        fs_daughter_inputs['photons'] = 'photonParentage'
         fs_daughter_inputs['jets'] = 'selectedPatJetsRematched'
+
+    if options.rerunQGJetID:
+        process.schedule.append(
+            rerun_QGJetID(process, fs_daughter_inputs)
+            )
+
+    if options.runNewElectronMVAID:
+        process.load("FinalStateAnalysis.PatTools.electrons.patElectronSummer13MVAID_cfi")
+        helpers.massSearchReplaceAnyInputTag(
+            process.runAndEmbedSummer13Id,
+            'fixme',
+            fs_daughter_inputs['electrons'])
+        fs_daughter_inputs['electrons'] = 'patElectrons2013MVAID'
+        process.runNewElectronMVAID = cms.Path(process.runAndEmbedSummer13Id)
+        process.schedule.append(process.runNewElectronMVAID)
+
 
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
@@ -174,7 +196,7 @@ _FINAL_STATE_GROUPS = {
     'zh': 'eeem, eeet, eemt, eett, emmm, emmt, mmmt, mmtt',
     'zz': 'eeee, eemm, mmmm',
     'zgg': 'eegg, mmgg',
-    'llt': 'emt, mmt, eet, mmm, emm',
+    'llt': 'emt, mmt, eet, mmm, emm, mm, ee, em',
     'zg': 'mmg, eeg',
     'zgxtra': 'mgg, emg, egg',
 }
@@ -190,6 +212,7 @@ def expanded_final_states(input):
                 yield subfs.strip()
         else:
             yield fs
+
 
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):

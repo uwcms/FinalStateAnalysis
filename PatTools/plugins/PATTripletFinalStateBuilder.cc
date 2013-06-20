@@ -15,6 +15,7 @@ typedef PATTripletFinalStateBuilderT<PATMuMuTauFinalState> PATMuMuTauFinalStateP
 typedef PATTripletFinalStateBuilderT<PATMuMuPhoFinalState> PATMuMuPhoFinalStateProducer;
 typedef PATTripletFinalStateBuilderT<PATMuTauTauFinalState> PATMuTauTauFinalStateProducer;
 typedef PATTripletFinalStateBuilderT<PATMuPhoPhoFinalState> PATMuPhoPhoFinalStateProducer;
+typedef PATTripletFinalStateBuilderT<PATMuJetJetFinalState> PATMuJetJetFinalStateProducer;
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 
@@ -32,3 +33,5 @@ DEFINE_FWK_MODULE(PATMuMuTauFinalStateProducer);
 DEFINE_FWK_MODULE(PATMuMuPhoFinalStateProducer);
 DEFINE_FWK_MODULE(PATMuTauTauFinalStateProducer);
 DEFINE_FWK_MODULE(PATMuPhoPhoFinalStateProducer);
+DEFINE_FWK_MODULE(PATMuJetJetFinalStateProducer);
+
