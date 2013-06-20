@@ -342,8 +342,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.calibratedPatElectrons.synchronization      = cms.bool(True)
     process.calibratedPatElectrons.isMC                 = cms.bool(True)
     process.calibratedPatElectrons.verbose              = cms.bool(True)
-    process.calibratedPatElectrons.initialSeed          = cms.untracked.uint32(1000)
-    
+
 
     process.load("FinalStateAnalysis.PatTools.patMuonProduction_cff")
     final_muon_collection = chain_sequence(
@@ -442,7 +441,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Define the default lepton cleaning
     process.cleanPatElectrons.preselection = cms.string(
-        'userFloat("maxCorPt") > 5')
+        'pt > 5')
     process.cleanPatElectrons.checkOverlaps.muons.requireNoOverlaps = False
     # Make sure we don't kill any good taus by calling them electrons
     # Note that we don't actually remove these overlaps.
