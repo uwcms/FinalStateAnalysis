@@ -90,17 +90,51 @@ datadefs = {
    'Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola' : {
    'analyses': ['HTT'],
    'datasetpath' : "/Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
-   'x_sec' : -999,
+   'x_sec' : 11.1,
    'pu' : 'S10',
    },
 
    'T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola' : {
    'analyses': ['HTT'],
    'datasetpath' : "/T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
-   'x_sec' : -999,
+   'x_sec' : 11.1,
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
+
+   'Tbar_t-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/Tbar_t-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 30.7,
+   'pu' : 'S10',
+   },
+
+   'T_t-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/T_t-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 56.4,
+   'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+
+
+   'Tbar_s-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/Tbar_s-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 1.56,
+   'pu' : 'S10',
+   },
+
+   'T_s-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/T_s-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 3.79,
+   'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+
+
+
 
    'TTTo2L2Nu2B_8TeV-powheg-pythia6' : {
    'analyses': ['4L'],
@@ -286,16 +320,56 @@ datadefs = {
    'pu' : 'data',
    'calibrationTarget':'ICHEP2012'
    },
+
+
+    'WplusJets_madgraph_filtered' : {
+	# This is not a sample exactly... To combine 1-2-3-4 jets I have incorporated a filtered version of WJets (NUP==5) in my workflow 
+	# I need the name in datadefs for UWHiggs to work 
+        'analyses': ['HTT'],
+        'datasetpath': '/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 36257.2,
+    },
+
+
+    'Wplus1Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W1JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 6662.8,
+    },
+
+    'Wplus2Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W2JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 2159.2,
+    },
+
+
+    'Wplus3Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 640.4,
+    },
+
+    'Wplus4Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W4JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12-PU_S7_START52_V9_extension-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 264.,
+    },
+
+
 }
 
-for n in range(1,5) :
-   datadefs['W%iJetsToLNu_TuneZ2Star_8TeV-madgraph' % n] = {
-      'analyses': ['HTT','Wbb'],
-      'datasetpath': "/W%iJetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % n,
-      'pu' : 'S10',
-      'x_sec' : -999,
-      'calibrationTarget':'Summer12_DR53X_HCP2012'
-      }
+
 
 # SM Z\gamma 8 TeV
 datadefs['ZGToLLG']= {
