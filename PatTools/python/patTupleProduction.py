@@ -332,17 +332,41 @@ def configurePatTuple(process, isMC=True, **kwargs):
                                        process.customizeElectronSequence)
     # We have to do the pat Jets before the pat electrons since we embed them
     process.customizeElectronSequence.insert(0, process.selectedPatJets)
-    process.cleanPatElectrons.src = final_electron_collection
-    #setup the energy regression for the specific dataset
-    process.eleRegressionEnergy.energyRegressionType    = cms.uint32(2)
-    process.calibratedPatElectrons.correctionsType      = cms.int32(2)
-    process.calibratedPatElectrons.inputDataset         = cms.string("Summer12_LegacyPaper")
-    process.calibratedPatElectrons.combinationType      = cms.int32(3)
-    process.calibratedPatElectrons.lumiRatio            = cms.double(1.0)
-    process.calibratedPatElectrons.synchronization      = cms.bool(True)
-    process.calibratedPatElectrons.isMC                 = cms.bool(True)
-    process.calibratedPatElectrons.verbose              = cms.bool(True)
 
+    
+    # Electron Energy Regression and Calibrations
+    from EgammaAnalysis.ElectronTools.electronRegressionEnergyProducer_cfi \
+        import eleRegressionEnergy
+    
+    from EgammaAnalysis.ElectronTools.calibratedPatElectrons_cfi import \
+         calibratedPatElectrons
+
+    #setup the energy regression for the specific dataset
+    if kwargs['eleReg']:
+        final_electron_collection += eleRegressionEnergy
+        final_electron_collection += calibratedPatElectrons
+
+        final_electron_collection = chain_sequence(
+                final_electron_collection, "selectedPatElectrons",
+                ("src", "inputPatElectronsTag", "inputElectronsTag")
+                )
+
+        process.eleRegressionEnergy.energyRegressionType    = cms.uint32(2)
+        process.calibratedPatElectrons.correctionsType      = cms.int32(2)
+        if isMC:
+            process.calibratedPatElectrons.inputDataset     = cms.string(
+                    "Summer12_LegacyPaper")
+        else:
+            process.calibratedPatElectrons.inputDataset     = cms.string(
+                    "22Jan2013ReReco")
+        process.calibratedPatElectrons.combinationType      = cms.int32(3)
+        process.calibratedPatElectrons.lumiRatio            = cms.double(1.0)
+        process.calibratedPatElectrons.synchronization      = cms.bool(True)
+        process.calibratedPatElectrons.isMC                 = cms.bool(isMC)
+        process.calibratedPatElectrons.verbose              = cms.bool(False)
+
+    # Define cleanPatElectrons input collection
+    process.cleanPatElectrons.src = final_electron_collection
 
     process.load("FinalStateAnalysis.PatTools.patMuonProduction_cff")
     final_muon_collection = chain_sequence(
