@@ -70,7 +70,7 @@ fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   export mcAODFile=/hdfs/store/mc/Summer12_DR53X/WH_ZH_TTH_HToWW_M-140_lepdecay_8TeV-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/1022798A-5AE1-E111-956C-002618943865.root
-  export dataAODFile=/hdfs/store/data/Run2012B/TauPlusX/AOD/22Jan2013-v1/30001/0025F510-0C76-E211-8DDE-00266CFFA044.root
+  export dataAODFile=/hdfs/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/204/705/8ADDD20D-8413-E211-BBD9-003048D2BF1C.root
   export patTupleFile=/hdfs/store/user/tapas/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/2013-03-13-8TeV-53X-PatTuple_Master/patTuple_cfg-00037C53-AAD1-E111-B1BE-003048D45F38.root
 fi
 

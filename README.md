@@ -14,10 +14,6 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
         <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/'><img src='https://www.hep.wisc.edu/~efriis/badges/FSA.jpg' width='100'></a></td>
     </tr>
     <tr>
-        <td>52X PAT + Ntuple</td> 
-        <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-52X/'><img src='https://www.hep.wisc.edu/~efriis/badges/FSA-52X.jpg' width='100'></a></td>
-    </tr>
-    <tr>
         <td>42X PAT + Ntuple</td> 
         <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-42X/'><img src='https://www.hep.wisc.edu/~efriis/badges/FSA-42X.jpg' width='100'></a></td>
     </tr>
@@ -30,7 +26,7 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
 Installation
 ------------
 
-Current CMSSW versions: ``4_2_8_patch7`` or ``5_3_7``.  
+Current CMSSW versions: ``4_2_8_patch7`` or ``5_3_9``.  
 The installation instructions are the same for both.  
 
 Get a supported CMSSW release area::
