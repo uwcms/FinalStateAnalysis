@@ -1,12 +1,23 @@
 import FWCore.ParameterSet.Config as cms
+from CommonTools.ParticleFlow.Isolation.tools_cfi import *
 
-def ReRunJetsMC(process):
+from PhysicsTools.PatAlgos.tools.jetTools import *
+from PhysicsTools.PatAlgos.tools.helpers import *
+from PhysicsTools.PatAlgos.tools.tauTools import *
+from PhysicsTools.PatAlgos.tools.coreTools import *
+from PhysicsTools.PatAlgos.tools.metTools import *
+from PhysicsTools.PatAlgos.tools.pfTools import *
+from PhysicsTools.PatAlgos.tools.trigTools import *
+import sys
+
+
+
+def rerun_JetsMC(process):
 
   process.load("RecoJets.Configuration.RecoPFJets_cff") 
   import PhysicsTools.PatAlgos.tools.jetTools as jettools
   process.load("PhysicsTools.PatAlgos.patSequences_cff")
-  process.load("FinalStateAnalysis.PatTools.jets.patJetPUId_cfi.py")
-
+  process.load("FinalStateAnalysis.PatTools.jets.patJetPUId_cfi")
   process.pileupJetIdProducer.applyJec = cms.bool(True)
 
   # Define options for BTagging - these are release dependent.
@@ -49,11 +60,11 @@ def ReRunJetsMC(process):
       coneSize     = cms.double(0.5)
   )
   
-  process.load('FinalStateAnalysis.PatTools.jets.RecoBTag_cff')  
+  process.load('FinalStateAnalysis.PatTools.jets.RecoBTag_cff')
+  process.load('FinalStateAnalysis.PatTools.jets.patJetEmbedId_cfi') 
   process.patJetCharge.src = cms.InputTag("ak5JetTracksAssociatorAtVertex")
   process.NewSelectedPatJets = process.selectedPatJets.clone(src = cms.InputTag("patJetId"))
-  process.analysisSequence = cms.Sequence(
-  					process.analysisSequence*
+  process.rerun_JetsMC = cms.Path(
   					process.ak5PFJets*
   					process.ak5JetTracksAssociatorAtVertex*
   					process.btagging*
@@ -63,4 +74,5 @@ def ReRunJetsMC(process):
   					process.patJetId*
   					process.NewSelectedPatJets  					
   					)
+  return process.rerun_JetsMC
 
