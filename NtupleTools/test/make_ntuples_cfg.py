@@ -30,6 +30,11 @@ instead of a final state in an event.
 passThru=0 - turn off any preselection/skim
 rerunFSA=0 - regenerate PATFinalState dataformats
 verbose=0 - print out timing information
+noPhotons=0 - don't build things which depend on photons.
+rerunMVAMET=0 - rerun the MVAMET algorithm
+svFit=0 - run the SVfit on appropriate pairs.
+Requires rerunMVAMET, if it's not already
+in the PAT tuple.
 noPhotons=0 - don\'t build things which depend on photons.
 
 '''
@@ -37,7 +42,7 @@ noPhotons=0 - don\'t build things which depend on photons.
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
-    make_ntuple, add_ntuple
+    make_ntuple, add_ntuple, add_ntuple_filter
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
 from FinalStateAnalysis.NtupleTools.rerun_matchers import rerun_matchers
@@ -59,10 +64,11 @@ options = TauVarParsing.TauVarParsing(
     rerunFSA=0, # If one, rebuild the PAT FSA events
     verbose=0, # If one print out the TimeReport
     noPhotons=0, # If one, don't assume that photons are in the PAT tuples.
+    svFit=1, # If one, SVfit appropriate lepton pairs.
     rerunQGJetID=0, #if one reruns the quark-gluon JetID
     runNewElectronMVAID=0, #if one runs the new electron MVAID
     rerunMVAMET=0, # If one, (re)build the MVA MET
-    rerunJetsMC=0
+    rerunJetsMC=0 # rerun on MC jets with new JEC's
 )
 
 options.outputFile = "ntuplize.root"
@@ -159,7 +165,7 @@ if options.rerunFSA:
         process.schedule.append(
             rerun_QGJetID(process, fs_daughter_inputs)
             )
-        
+
     if options.rerunJetsMC:
         process.schedule.append( rerun_JetsMC(process) )
 
@@ -172,8 +178,8 @@ if options.rerunFSA:
         fs_daughter_inputs['electrons'] = 'patElectrons2013MVAID'
         process.runNewElectronMVAID = cms.Path(process.runAndEmbedSummer13Id)
         process.schedule.append(process.runNewElectronMVAID)
-        
-        
+
+
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
     produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
@@ -212,9 +218,10 @@ def expanded_final_states(input):
         else:
             yield fs
 
+
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
-    analyzer = make_ntuple(*final_state)
+    analyzer = make_ntuple(*final_state, svFit=options.svFit)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 
