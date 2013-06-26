@@ -22,6 +22,7 @@ zgxtra = mgg, emg, egg,
 
 The available options (which are set to zero or one) are::
 
+<<<<<<< HEAD
 skipEvents=0 - events to skip (for debugging)
 maxEvents=-1 - events to run on
 rerunMCMatch=0 - rerun MC matching
@@ -36,6 +37,25 @@ svFit=0 - run the SVfit on appropriate pairs.
 Requires rerunMVAMET, if it's not already
 in the PAT tuple.
 noPhotons=0 - don\'t build things which depend on photons.
+=======
+    skipEvents=0            - events to skip (for debugging)
+    maxEvents=-1            - events to run on
+    rerunMCMatch=0          - rerun MC matching
+    eventView=0             - make a row in the ntuple correspond to an event
+                              instead of a final state in an event.
+    passThru=0              - turn off any preselection/skim
+    rerunFSA=0              - regenerate PATFinalState dataformats
+    verbose=0               - print out timing information
+<<<<<<< HEAD
+    noPhotons=0             - don't build things which depend on photons.
+    rerunMVAMET=0           - rerun the MVAMET algorithm
+    svFit=0                 - run the SVfit on appropriate pairs.
+                              Requires rerunMVAMET, if it's not already
+                              in the PAT tuple.
+=======
+    noPhotons=0             - don\'t build things which depend on photons.
+>>>>>>> e3e956b5cd9b4d6d47fd8c3c3c006efb0ae5c1d8
+>>>>>>> a2fc0f2823e83eef89aa545de72d23d9c56c6eb6
 
 '''
 
