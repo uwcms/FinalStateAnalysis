@@ -14,7 +14,11 @@ import sys
 
 def rerun_JetsMC(process):
 
+<<<<<<< HEAD
   process.load("RecoJets.Configuration.RecoPFJets_cff")
+=======
+  process.load("RecoJets.Configuration.RecoPFJets_cff") 
+>>>>>>> 2ef769810c6515270992ba6dc519c09d213502c4
   import PhysicsTools.PatAlgos.tools.jetTools as jettools
   process.load("PhysicsTools.PatAlgos.patSequences_cff")
   process.load("FinalStateAnalysis.PatTools.jets.patJetPUId_cfi")
@@ -55,23 +59,23 @@ def rerun_JetsMC(process):
   process.patJets.addBTagInfo = cms.bool(True)
   
   process.ak5JetTracksAssociatorAtVertex = cms.EDProducer("JetTracksAssociatorAtVertex",
-    tracks = cms.InputTag("generalTracks"),
-      jets = cms.InputTag("ak5PFJets"),
-      coneSize = cms.double(0.5)
+   	  tracks       = cms.InputTag("generalTracks"),
+      jets         = cms.InputTag("ak5PFJets"),
+      coneSize     = cms.double(0.5)
   )
   
   process.load('FinalStateAnalysis.PatTools.jets.RecoBTag_cff')
-  process.load('FinalStateAnalysis.PatTools.jets.patJetEmbedId_cfi')
+  process.load('FinalStateAnalysis.PatTools.jets.patJetEmbedId_cfi') 
   process.patJetCharge.src = cms.InputTag("ak5JetTracksAssociatorAtVertex")
   process.NewSelectedPatJets = process.selectedPatJets.clone(src = cms.InputTag("patJetId"))
   process.rerun_JetsMC = cms.Path(
-   process.ak5PFJets*
-   process.ak5JetTracksAssociatorAtVertex*
-   process.btagging*
-   process.pileupJetIdProducer*
-   process.makePatJets*
-   process.patJetsPUID*
-   process.patJetId*
-   process.NewSelectedPatJets
-   )
+  					process.ak5PFJets*
+  					process.ak5JetTracksAssociatorAtVertex*
+  					process.btagging*
+  					process.pileupJetIdProducer*
+  					process.makePatJets*
+  					process.patJetsPUID*
+  					process.patJetId*
+  					process.NewSelectedPatJets  					
+  					)
   return process.rerun_JetsMC
