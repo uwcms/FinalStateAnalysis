@@ -686,6 +686,10 @@ data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu','4L','HZG'
 datadefs.update(data_DoubleMu)
 data_name_map.update(list_DoubleMu)
 
+data_DoubleMuParked, list_DoubleMuParked = build_data_set('DoubleMuParked', ['VH', 'Mu','4L','HZG'])
+datadefs.update(data_DoubleMuParked)
+data_name_map.update(list_DoubleMuParked)
+
 data_MuEG, list_MuEG = build_data_set('MuEG', ['VH', 'HTT', 'Mu'])
 datadefs.update(data_MuEG)
 data_name_map.update(list_MuEG)
