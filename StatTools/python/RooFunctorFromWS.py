@@ -61,8 +61,21 @@ def make_corrector_from_th2(filename, path):
         if prob:
             return prob
         else:
-            raise ZeroDivisionError(" catched trying to return weight for (%.3f,%.3f) ==> (%i,%i) bin out of (%i,%i). Prob: %.3f. Hist: %s : %s. " % (xval, yval, xbin, ybin, binsx, binsy , prob, filename, path))
+            return 10**-8
+           # raise ZeroDivisionError(" catched trying to return weight for (%.3f,%.3f) ==> (%i,%i) bin out of (%i,%i). Prob: %.3f. Hist: %s : %s. " % (xval, yval, xbin, ybin, binsx, binsy , prob, filename, path))
     return refFun
+
+def build_uncorr_2Droofunctor(functor_x, functor_y, filename, num='numerator', den='denominator'):
+    ''' Build a functor from a filename '''
+    file = ROOT.TFile.Open(filename)
+    num_int = file.Get(num).Integral()
+    den_int = file.Get(den).Integral()
+    scale   = num_int/den_int
+    def _f(x, y):
+        print scale
+        return functor_x(x)*functor_y(y)/scale
+    return _f
+
 
 
 if __name__ == "__main__":

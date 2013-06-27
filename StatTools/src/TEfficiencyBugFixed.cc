@@ -18,6 +18,11 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include "RooDataHist.h"
+#include "RooRealVar.h"
+#include "RooNDKeysPdf.h"
+
+using namespace RooFit;
 
 ClassImp(TEfficiencyBugFixed)
 
@@ -126,6 +131,12 @@ TGraphErrors* TEfficiencyBugFixed::ProjectFunction(axis axisMarker, TH2* fine_bi
   int binsx = x_axis->GetNbins();
   int binsy = y_axis->GetNbins();
 
+  //create KeysPDF out of the histogram
+  // RooRealVar* x = new RooRealVar( "x", "x", x_axis->GetBinLowEdge(1), x_axis->GetBinLowEdge(binsx) + x_axis->GetBinWidth(binsx) );
+  // RooRealVar* y = new RooRealVar( "y", "y", y_axis->GetBinLowEdge(1), y_axis->GetBinLowEdge(binsy) + y_axis->GetBinWidth(binsy) );
+  // RooDataSet* datahist = new RooDataHist("datahist", "datahist", RooArgList(*x, *y), h2tot);
+  // RooNDKeysPdf keysPdf("keysPdf", "keysPdf", RooArgSet(*x, *y), *datahist, "am") ;
+
   //fill dummy TGraph
   TGraph2DErrors *fcn_quantized = new TGraph2DErrors();
   int counter = 0;
@@ -166,5 +177,9 @@ TGraphErrors* TEfficiencyBugFixed::ProjectFunction(axis axisMarker, TH2* fine_bi
   }
   
   delete fcn_quantized;
+  // delete x;
+  // delete y;
+  // delete datahist;
+
   return ret;
 }

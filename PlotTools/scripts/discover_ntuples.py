@@ -40,7 +40,7 @@ if __name__ == "__main__":
                         help='More output')
 
     args = parser.parse_args()
-
+    print args
     if args.verbose:
         log.setLevel(logging.DEBUG)
 

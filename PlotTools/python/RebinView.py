@@ -27,7 +27,7 @@ class RebinView(views._FolderView):
         'Rebin 2D histo with irregular bin size'
         
         #create a clone with proper binning
-       # from pdb import set_trace; set_trace()
+        # from pdb import set_trace; set_trace()
         new_histo = plotting.Hist2D(
             bin_arrayx,
             bin_arrayy,
@@ -41,7 +41,6 @@ class RebinView(views._FolderView):
         oldbiny = [float(histogram.GetYaxis().GetBinLowEdge(1))]
         oldbinx.extend(float(histogram.GetXaxis().GetBinUpEdge(x)) for x in xrange(1, histogram.GetNbinsX()+1))
         oldbiny.extend(float(histogram.GetYaxis().GetBinUpEdge(y)) for y in xrange(1, histogram.GetNbinsY()+1))
-        
         for x in bin_arrayx:
             if x==0:
                 if not any( abs((oldx)) < 10**-8 for oldx in oldbinx ):
@@ -52,10 +51,10 @@ class RebinView(views._FolderView):
         for y in bin_arrayy:
             if y ==0:
                 if not any( abs((oldy) )< 10**-8 for oldy in oldbiny ):
-                    raise Exception('New bin edge in y axis %s does not match any old bin edge, operation not permitted' % x)
+                    raise Exception('New bin edge in y axis %s does not match any old bin edge, operation not permitted' % y)
             else:
                 if not any( abs((oldy / y)-1.) < 10**-8 for oldy in oldbiny ):
-                    raise Exception('New bin edge in y axis %s does not match any old bin edge, operation not permitted' % x)
+                    raise Exception('New bin edge in y axis %s does not match any old bin edge, operation not permitted' % y)
         
         #fill the new histogram
         for x in xrange(1, histogram.GetNbinsX()+1 ):
@@ -83,8 +82,7 @@ class RebinView(views._FolderView):
             #print binning[0], ' ' , binning[1] 
             bin_arrayx = binning[0] #array.array('d',binning[0])
             bin_arrayy = binning[1] #array.array('d',binning[1])
-            if len(binning[0]) ==1 and len(binning[1])==1 :
-                
+            if len(binning[0]) ==1 and len(binning[1])==1 :                
                 return  histogram.Rebin2D(int(binning[0][0]),int(binning[1][0]), histogram.GetName() + 'rebin')
             else:
                 return self.newRebin2D(histogram, bin_arrayx, bin_arrayy)
