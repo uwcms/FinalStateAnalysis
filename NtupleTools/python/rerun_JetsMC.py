@@ -14,11 +14,7 @@ import sys
 
 def rerun_JetsMC(process):
 
-<<<<<<< HEAD
   process.load("RecoJets.Configuration.RecoPFJets_cff")
-=======
-  process.load("RecoJets.Configuration.RecoPFJets_cff") 
->>>>>>> 2ef769810c6515270992ba6dc519c09d213502c4
   import PhysicsTools.PatAlgos.tools.jetTools as jettools
   process.load("PhysicsTools.PatAlgos.patSequences_cff")
   process.load("FinalStateAnalysis.PatTools.jets.patJetPUId_cfi")
