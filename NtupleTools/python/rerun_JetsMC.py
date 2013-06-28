@@ -60,8 +60,7 @@ def rerun_JetsMC(process):
       coneSize     = cms.double(0.5)
   )
   
-  process.load('FinalStateAnalysis.PatTools.jets.RecoBTag_cff')
-  process.load('FinalStateAnalysis.PatTools.jets.patJetEmbedId_cfi') 
+  process.load('FinalStateAnalysis.PatTools.jets.RecoBTag_cff') 
   process.patJetCharge.src = cms.InputTag("ak5JetTracksAssociatorAtVertex")
   process.NewSelectedPatJets = process.selectedPatJets.clone(src = cms.InputTag("patJetId"))
   process.rerun_JetsMC = cms.Path(
