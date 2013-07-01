@@ -283,6 +283,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     //a hot fix for the fact that no one cares about pat photons.
     const float getPhotonUserIsolation(size_t i,
 				       const std::string& key) const;
+    const float jetVariables(size_t i, const std::string& key) const;
 
 
   private:

@@ -37,10 +37,12 @@ The available options (which are set to zero or one) are::
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
-    make_ntuple, add_ntuple
+    make_ntuple, add_ntuple, add_ntuple_filter
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
 from FinalStateAnalysis.NtupleTools.rerun_matchers import rerun_matchers
+from FinalStateAnalysis.NtupleTools.rerun_QGJetID import rerun_QGJetID
+import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")
 
@@ -57,9 +59,11 @@ options = TauVarParsing.TauVarParsing(
     verbose=0,  # If one print out the TimeReport
     noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
     zzMode=False,
-    rerunMVAMET=0,  # If one, (re)build the MVA MET
     rochCor="",
     eleCor="",
+    rerunQGJetID=0, #if one reruns the quark-gluon JetID
+    runNewElectronMVAID=0, #if one runs the new electron MVAID
+    rerunMVAMET=0  # If one, (re)build the MVA MET
 )
 
 options.outputFile = "ntuplize.root"
@@ -153,6 +157,22 @@ if options.rerunFSA:
         fs_daughter_inputs['photons'] = 'photonParentage'
         fs_daughter_inputs['jets'] = 'selectedPatJetsRematched'
 
+    if options.rerunQGJetID:
+        process.schedule.append(
+            rerun_QGJetID(process, fs_daughter_inputs)
+            )
+        
+    if options.runNewElectronMVAID:
+        process.load("FinalStateAnalysis.PatTools.electrons.patElectronSummer13MVAID_cfi")
+        helpers.massSearchReplaceAnyInputTag(
+            process.runAndEmbedSummer13Id,
+            'fixme',
+            fs_daughter_inputs['electrons'])
+        fs_daughter_inputs['electrons'] = 'patElectrons2013MVAID'
+        process.runNewElectronMVAID = cms.Path(process.runAndEmbedSummer13Id)
+        process.schedule.append(process.runNewElectronMVAID) 
+        
+        
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
     produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
@@ -192,6 +212,7 @@ def expanded_final_states(input):
                 yield subfs.strip()
         else:
             yield fs
+
 
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):

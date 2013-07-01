@@ -50,13 +50,6 @@ from FinalStateAnalysis.PatTools.muons.patMuonTightIdEmbedding_cfi import \
         patMuonTightIDEmbedding
 customizeMuonSequence += patMuonTightIDEmbedding
 
-from FinalStateAnalysis.PatTools.muons.muonSystematics_cfi import \
-        poolDBESSourceMuScleFitCentralValue, \
-        poolDBESSourceMuScleFitShiftUp, \
-        poolDBESSourceMuScleFitShiftDown, \
-        patMuonsEmbedSystematics
-customizeMuonSequence += patMuonsEmbedSystematics
-
 from FinalStateAnalysis.PatTools.muons.patMuonRochesterCorrectionEmbedding_cfi import \
      patMuonRochesterCorrectionEmbedder
 customizeMuonSequence += patMuonRochesterCorrectionEmbedder

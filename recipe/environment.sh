@@ -29,11 +29,9 @@ fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   echo "Setting up CMSSW 5_3_X global tags"
-  export datagt=GR_P_V39_AN3::All
-  export mcgt=START53_V15::All
+  export datagt=FT_53_V21_AN4::All
+  export mcgt=START53_V23::All
 fi
-#  export datagt=GR_R_52_V8::All
-#  export mcgt=START52_V10::All
 
 echo "Data global tag: $datagt"
 echo "MC global tag: $mcgt"
@@ -67,13 +65,13 @@ export PATH=$fsa/RecoTools/scripts:$PATH
 if [ "$MAJOR_VERSION" -eq "4" ]; then
   export mcAODFile=/hdfs/store/mc/Fall11/WH_ZH_TTH_HToTauTau_M-130_7TeV-pythia6-tauola/AODSIM/PU_S6_START42_V14B-v1/0000/08400E05-880C-E111-9E78-90E6BA0D0987.root
   export dataAODFile=/hdfs/store/data/Run2011B/DoubleMu/AOD/16Jan2012-v1/0000/0036326C-C244-E111-BF09-00261894397D.root
-  export patTupleFile=/hdfs/store/user/friis/WH_ZH_TTH_HToTauTau_M-130_7TeV-pythia6-tauola/VH_130_2012-05-29-7TeV-PatTuple-b08cf9d/c7f0540d247deade88c2d29ec1211eaf/output_10_2_sbE.root
+  export patTupleFile=/hdfs/store/user/tapas/GluGluToHToTauTau_M-100_7TeV-powheg-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM/2013-03-06-7TeV-42X-PatTuple_Master/patTuple_cfg-0E4D5BE2-9DF0-E011-BCEC-0019BB3FE352.root
 fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
-  export mcAODFile=/hdfs/store/mc/Summer12_DR53X/WH_ZH_TTH_HToTauTau_M-125_lepdecay_8TeV-pythia6-tauola/AODSIM/PU_S10_START53_V7A-v1/0000/04E2F0AA-09E1-E111-B2BC-0018F3D096C8.root
-  export dataAODFile=/hdfs/store/data/Run2012B/DoubleMu/AOD/13Jul2012-v4/00000/3ADCC745-ACDD-E111-BB64-E0CB4E55368D.root
-  export patTupleFile=/hdfs/store/user/tapas/2012-09-18-8TeV-53X-PatTuple/data_TauPlusX_Run2012C_PromptReco_v2_Run198934_201264/patTuple_cfg-0001908A-8BE3-E111-9C6D-BCAEC53296F3.root
+  export mcAODFile=/hdfs/store/mc/Summer12_DR53X/WH_ZH_TTH_HToWW_M-140_lepdecay_8TeV-pythia6/AODSIM/PU_S10_START53_V7A-v1/0000/1022798A-5AE1-E111-956C-002618943865.root
+  export dataAODFile=/hdfs/store/data/Run2012D/DoubleMu/AOD/PromptReco-v1/000/204/705/8ADDD20D-8413-E211-BBD9-003048D2BF1C.root
+  export patTupleFile=/hdfs/store/user/tapas/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/2013-03-13-8TeV-53X-PatTuple_Master/patTuple_cfg-00037C53-AAD1-E111-B1BE-003048D45F38.root
 fi
 
 # Define the current most-informative PU information JSONs

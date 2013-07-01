@@ -131,6 +131,9 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   LorentzVector mesUpMuonP4;
   LorentzVector mesDownMuonP4;
 
+  // We have currently disabled the muon correction, as MusclFit is broken
+  // as currently implemented.
+  /*
   for (size_t i = 0; i < muons->size(); ++i) {
     const pat::Muon& muon = muons->at(i);
     assert(muon.userCand("uncorr").isNonnull());
@@ -141,6 +144,7 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     mesUpMuonP4 += muon.userCand("mes+")->p4();
     mesDownMuonP4 += muon.userCand("mes-")->p4();
   }
+  */
 
   // Do EES shifts
   LorentzVector uncorrElectronP4;
@@ -216,6 +220,7 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     }
   }
 
+  /*
   if (shiftedUnclustered + shiftedJets + shiftedTaus != taus->size()) {
     edm::LogWarning("BadExclusivityCuts") <<
       "The set of cuts used to split taus into real taus, jets, and unclustered"
@@ -225,6 +230,7 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
       << shiftedJets << " selected as jets,"
       << shiftedUnclustered << " selected as unclustered." << std::endl;
   }
+  */
 
   LorentzVector metP4Type1 = outputMET.p4();
   // Check if we want to apply type1 corrections to the MET

@@ -292,3 +292,8 @@ const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
 const bool PATFinalStateEvent::findDecay(const int pdgIdMother, const int pdgIdDaughter) const{
   return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
 }
+
+float  PATFinalStateEvent::jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const{
+  return fshelpers::jetQGVariables( jet, myvar, recoVertices_);
+}
+
