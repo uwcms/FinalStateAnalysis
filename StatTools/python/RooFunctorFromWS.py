@@ -20,7 +20,10 @@ Author: Evan K. Friis, UW Madison
 '''
 
 from FinalStateAnalysis.Utilities.rootbindings import ROOT
+import array
 #ROOT.gSystem.Load("libFinalStateAnalysisStatTools")
+
+TMVA_tools = ROOT.TMVA.Tools.Instance()
 
 class RooFunctorFromWS(ROOT.RooFunctor):
     def __init__(self, workspace, functionname, var='x'):
@@ -34,6 +37,28 @@ class RooFunctorFromWS(ROOT.RooFunctor):
     def __call__(self, x):
         self.x.setVal(x)
         return self.function.getVal()
+
+class FunctorFromMVA(object):
+    def __init__(self, name, xml_filename, *variables):
+        self.reader    = ROOT.TMVA.Reader( "!Color:Silent=T:Verbose=F" )
+        self.var_map   = {}
+        self.name      = name
+        self.variables = variables
+        for var in variables:
+            self.var_map[var] = array.array('f',[0]) 
+            self.reader.AddVariable(var, self.var_map[var])
+        self.reader.BookMVA(name, xml_filename)
+
+    def __call__(self, **kvars):
+        #kvars enforces that we use the proper vars
+        if not ( 
+                 all(name in self.variables for name in kvars.keys()) and \
+                 all(name in kvars.keys() for name in self.variables)
+                ):
+            raise Exception("Wrong variable names. Available variables: %s" % self.variables.__repr__())
+        for name, val in kvars.iteritems():
+            self.var_map[name][0] = val
+        return self.reader.EvaluateMVA(self.name)
 
 def build_roofunctor(filename, wsname, functionname, var='x'):
     ''' Build a functor from a filename '''
