@@ -396,10 +396,13 @@ def produce_final_states(process, collections, output_commands,
         n_elec = [x[0] for x in quadobject].count('Elec')
         n_muon = [x[0] for x in quadobject].count('Mu')
         n_phos = [x[0] for x in quadobject].count('Pho')
+        n_jets = [x[0] for x in quadobject].count('Jet')
 
         if n_taus > 0:
             continue
         if n_phos > 0:
+            continue
+        if n_jets > 0:
             continue
         if n_elec%2 == 1:
             continue
