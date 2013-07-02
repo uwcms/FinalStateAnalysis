@@ -102,8 +102,8 @@ def produce_final_states(process, collections, output_commands,
                     '(0.8 < abs(superCluster().eta) & abs(superCluster().eta) < 1.479 & electronID("mvaNonTrigV0") > 0.004) |'
                     '(1.479 < abs(superCluster().eta) & electronID("mvaNonTrigV0") > 0.295) ) ) |'
                 '(10 < pt &'
-                    '((abs(superCluster().eta) < 0.8 & electronID("mvaNonTrigV0") > 0.5) |'
-                    '(0.8 < abs(superCluster().eta) & abs(superCluster().eta) < 1.479 & electronID("mvaNonTrigV0") > 0.12) |'
+                    '((abs(superCluster().eta) < 0.8 & electronID("mvaNonTrigV0") > -0.34) |'
+                    '(0.8 < abs(superCluster().eta) & abs(superCluster().eta) < 1.479 & electronID("mvaNonTrigV0") > -0.65) |'
                     '(1.479 < abs(superCluster().eta) & electronID("mvaNonTrigV0") > 0.6) ) )'
                     ')' )
 
