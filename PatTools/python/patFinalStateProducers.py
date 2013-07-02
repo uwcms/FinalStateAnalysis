@@ -90,12 +90,26 @@ def produce_final_states(process, collections, output_commands,
 
         elec_string = (
                 'pt > 7.0 &'
-                'abs(eta) < 2.5 &'
+                'abs(superCluster().eta) < 2.5 &'
                 'userFloat("ipDXY") < 0.5 &'
                 'userFloat("dz") < 1.0 &'
                 'gsfTrack().trackerExpectedHitsInner().numberOfHits() <= 1 &'
-                'abs(userFloat("ip3DS")) < 4.0 &'
-                'userInt("mvaidzz") == 1')
+                'abs(userFloat("ip3DS")) < 4.0' )
+
+        elec_mva = ('('
+                '(5 < pt & pt < 10 &'
+                    '((abs(superCluster().eta) < 0.8 & electronID("mvaNonTrigV0") > 0.47) |'
+                    '(0.8 < abs(superCluster().eta) & abs(superCluster().eta) < 1.479 & electronID("mvaNonTrigV0") > 0.004) |'
+                    '(1.479 < abs(superCluster().eta) & electronID("mvaNonTrigV0") > 0.295) ) ) |'
+                '(10 < pt &'
+                    '((abs(superCluster().eta) < 0.8 & electronID("mvaNonTrigV0") > 0.5) |'
+                    '(0.8 < abs(superCluster().eta) & abs(superCluster().eta) < 1.479 & electronID("mvaNonTrigV0") > 0.12) |'
+                    '(1.479 < abs(superCluster().eta) & electronID("mvaNonTrigV0") > 0.6) ) )'
+                    ')' )
+
+        elec_string = elec_string + '&' + elec_mva
+
+
     else:
         muon_string = (
                 'max(pt, userFloat("maxCorPt")) > 4 &'
