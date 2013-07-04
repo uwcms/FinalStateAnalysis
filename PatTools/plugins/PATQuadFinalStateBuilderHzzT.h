@@ -47,6 +47,10 @@
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "Math/GenVector/VectorUtil.h"
 
+#include "TLorentzVector.h"
+#include "ZZMatrixElement/MELA/interface/Mela.h"
+#include "ZZMatrixElement/MEMCalculators/interface/MEMCalculators.h"
+
 
 const double ZMASS = 91.188;
 
@@ -75,6 +79,8 @@ class PATQuadFinalStateBuilderHzzT : public edm::EDProducer
         edm::InputTag evtSrc_;
         StringCutObjectSelector<PATFinalState> cut_;
 
+        MEMs mMEM;
+
         edm::Ptr<pat::PFParticle> assignPhoton(
                 reco::CandidatePtr leg1, reco::CandidatePtr leg2, 
                 std::map<reco::CandidatePtr, std::vector<edm::Ptr<pat::PFParticle> > >& photonMap );
@@ -97,6 +103,8 @@ PATQuadFinalStateBuilderHzzT<FinalState>::PATQuadFinalStateBuilderHzzT(
     photonSrc_ = pset.getParameter<edm::InputTag>("photonSrc");
     evtSrc_    = pset.getParameter<edm::InputTag>("evtSrc");
     produces<FinalStateCollection>();
+
+    mMEM = MEMs(8);
 }
 
 
@@ -391,6 +399,34 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     outputCand.addUserFloat("leg2fsrIsoCorr", leg3_fsrIsoCorr);
     outputCand.addUserFloat("leg3fsrIsoCorr", leg4_fsrIsoCorr);
 
+    // ----------------------
+    // Add KDs
+    // ----------------------
+    std::vector<TLorentzVector> partP(4);
+    std::vector<int> partId(4);
+
+    partP.at(0) = TLorentzVector(leg1_out->px(), leg1_out->py(), leg1_out->pz(), leg1_out->p4().E());
+    partP.at(1) = TLorentzVector(leg2_out->px(), leg2_out->py(), leg2_out->pz(), leg2_out->p4().E());
+    partP.at(2) = TLorentzVector(leg3_out->px(), leg3_out->py(), leg3_out->pz(), leg3_out->p4().E());
+    partP.at(3) = TLorentzVector(leg4_out->px(), leg4_out->py(), leg4_out->pz(), leg4_out->p4().E());
+
+    partId.at(0) = leg1_out->pdgId();
+    partId.at(1) = leg2_out->pdgId();
+    partId.at(2) = leg3_out->pdgId();
+    partId.at(3) = leg4_out->pdgId();
+
+    mMEM.computeMEs( partP, partId );
+
+    double KD         = -1;
+    double ME_ggHiggs = -1;
+    double ME_qqZZ    = -1;
+    mMEM.computeKD(MEMNames::kSMHiggs, MEMNames::kJHUGen, MEMNames::kqqZZ, MEMNames::kMCFM, &MEMs::probRatio, KD, ME_ggHiggs, ME_qqZZ);
+
+    outputCand.addUserFloat("KD", KD);
+
+    // -------------------------
+    // Output candidate to event
+    // -------------------------
     if ( cut_(outputCand) )
         output->push_back( outputCand );
 
