@@ -12,7 +12,7 @@ addpkg DataFormats/PatCandidates       V06-05-06-06
 if [ "$LIMITS" = "1" ]
 then
   # For limit tool
-  cvs co -r V02-02-03 HiggsAnalysis/CombinedLimit
+  cvs co -r V02-06-00 HiggsAnalysis/CombinedLimit
   cvs co -r V00-02-06 HiggsAnalysis/HiggsToTauTau
 fi
 
@@ -48,6 +48,13 @@ then
   cvs co -r V01-04-23 RecoTauTag/RecoTau #equivalent to 04-14
   cvs co -r V01-04-10 RecoTauTag/Configuration
   cvs co -r V00-04-00 CondFormats/EgammaObjects
+
+  echo "Checking out HZZ4L KD recipe"
+  cvs co -r V00-03-01 -d Higgs/Higgs_CS_and_Width UserCode/Snowball/Higgs/Higgs_CS_and_Width 
+  cvs co -r bonato_supermela_20121107 -d HZZ4L_Combination/CombinationPy UserCode/HZZ4L_Combination/CombinationPy
+  cvs co -r V00-02-03 -d ZZMatrixElement/MELA UserCode/CJLST/ZZMatrixElement/MELA
+  cvs co -r V00-02-00 -d ZZMatrixElement/MEKD UserCode/UFL/ZZMatrixElement/MEKD
+  cvs co -r V00-00-12 -d ZZMatrixElement/MEMCalculators UserCode/HZZ4l_MEM/ZZMatrixElement/MEMCalculators
 
   echo "Checking out EGamma POG recipe for electron corrections"
   cvs co -r V09-00-01 RecoEgamma/EgammaTools
