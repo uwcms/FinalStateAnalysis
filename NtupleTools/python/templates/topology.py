@@ -68,6 +68,12 @@ zboson = PSet(
 zzfsr = PSet(
     MassFsr                 = 'p4fsr().M',
     PtFsr                   = 'p4fsr().pt',
+    KD                      = 'userFloat("KD")',
+    costheta1               = 'userFloat("costheta1")',
+    costheta2               = 'userFloat("costheta2")',
+    costhetastar            = 'userFloat("costhetastar")',
+    Phi                     = 'userFloat("Phi")',
+    Phi1                    = 'userFloat("Phi1")'
 )
 
 
