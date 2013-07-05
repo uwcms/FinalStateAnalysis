@@ -406,15 +406,15 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     std::vector<TLorentzVector> partP(4);
     std::vector<int> partId(4);
 
-    partP.at(0) = TLorentzVector(leg1_out->px(), leg1_out->py(), leg1_out->pz(), leg1_out->p4().E());
-    partP.at(1) = TLorentzVector(leg2_out->px(), leg2_out->py(), leg2_out->pz(), leg2_out->p4().E());
-    partP.at(2) = TLorentzVector(leg3_out->px(), leg3_out->py(), leg3_out->pz(), leg3_out->p4().E());
-    partP.at(3) = TLorentzVector(leg4_out->px(), leg4_out->py(), leg4_out->pz(), leg4_out->p4().E());
+    partP.at(0) = TLorentzVector(leg1->px(), leg1->py(), leg1->pz(), leg1->p4().E());
+    partP.at(1) = TLorentzVector(leg2->px(), leg2->py(), leg2->pz(), leg2->p4().E());
+    partP.at(2) = TLorentzVector(leg3->px(), leg3->py(), leg3->pz(), leg3->p4().E());
+    partP.at(3) = TLorentzVector(leg4->px(), leg4->py(), leg4->pz(), leg4->p4().E());
 
-    partId.at(0) = leg1_out->pdgId();
-    partId.at(1) = leg2_out->pdgId();
-    partId.at(2) = leg3_out->pdgId();
-    partId.at(3) = leg4_out->pdgId();
+    partId.at(0) = leg1->pdgId();
+    partId.at(1) = leg2->pdgId();
+    partId.at(2) = leg3->pdgId();
+    partId.at(3) = leg4->pdgId();
 
     mMEM.computeMEs( partP, partId );
 
