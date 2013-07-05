@@ -50,6 +50,7 @@
 #include "TLorentzVector.h"
 #include "ZZMatrixElement/MELA/interface/Mela.h"
 #include "ZZMatrixElement/MEMCalculators/interface/MEMCalculators.h"
+#include "FinalStateAnalysis/PatTools/interface/HZZ4LAngles.h"
 
 
 const double ZMASS = 91.188;
@@ -400,7 +401,7 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     outputCand.addUserFloat("leg3fsrIsoCorr", leg4_fsrIsoCorr);
 
     // ----------------------
-    // Add KDs
+    // Add KDs and Angles
     // ----------------------
     std::vector<TLorentzVector> partP(4);
     std::vector<int> partId(4);
@@ -417,12 +418,36 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
     mMEM.computeMEs( partP, partId );
 
+    // Compute KD
     double KD         = -1;
     double ME_ggHiggs = -1;
     double ME_qqZZ    = -1;
     mMEM.computeKD(MEMNames::kSMHiggs, MEMNames::kJHUGen, MEMNames::kqqZZ, MEMNames::kMCFM, &MEMs::probRatio, KD, ME_ggHiggs, ME_qqZZ);
 
+    // Compute X -> 4l kinematic angles (Uses Matt Snowball's code)
+    // http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/UserCode/UFL/PAT/Analysis_5X/HZZAnalysis/UFHZZ4LAna/interface/HZZ4LAngles.h
+    double costhetastar  = -99;
+    double costheta1     = -99;
+    double costheta2     = -99;
+    double Phi           = -99;
+    double Phi1          = -99;
+    HZZ4LAngles angles;
+    angles.computeAngles(
+            partP.at(0) + partP.at(1) + partP.at(2) + partP.at(3),  // H.p4
+            partP.at(0) + partP.at(1),                              // Z1.p4
+            partP.at(0),                                            // l1.p4
+            partP.at(1),                                            // l2.p4
+            partP.at(2) + partP.at(3),                              // Z2.p4
+			partP.at(2),                                            // l3.p4
+            partP.at(3),                                            // l4.p4
+            costheta1, costheta2, Phi, costhetastar, Phi1);
+    
     outputCand.addUserFloat("KD", KD);
+    outputCand.addUserFloat("costheta1", costheta1);
+    outputCand.addUserFloat("costheta2", costheta2);
+    outputCand.addUserFloat("costhetastar", costhetastar);
+    outputCand.addUserFloat("Phi", Phi);
+    outputCand.addUserFloat("Phi1", Phi1);
 
     // -------------------------
     // Output candidate to event
