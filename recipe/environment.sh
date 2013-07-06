@@ -11,6 +11,7 @@ echo "Setting variable \$fsa=$fsa"
 export base=$CMSSW_BASE/src
 
 export vpython=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/vpython
+export hdf5=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/hdf5
 echo "Activating python virtualenv from $vpython"
 
 export tests=$CMSSW_BASE/test/$SCRAM_ARCH/
@@ -52,6 +53,13 @@ fi
 export PYTHONPATH=.:$PYTHONPATH
 # Make sure we prefer our virtualenv packages
 export PYTHONPATH=$fsa/recipe/external/vpython/lib/python2.6/site-packages/:$PYTHONPATH
+
+if [ -d "$hdf5" ]
+then
+    export LD_LIBRARY_PATH=$hdf5/lib:$LD_LIBRARY_PATH
+    export HDF5_DIR=$hdf5
+fi
+
 
 # Don't require a scram build to get updated scripts
 export PATH=$fsa/Utilities/scripts:$PATH
