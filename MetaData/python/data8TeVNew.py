@@ -631,7 +631,7 @@ def build_data_set(pd, analyses):
       'datasetpath' : "/%s/Run2012C-22Jan2013-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
       'firstRun' : 198022,
-      'lastRun' : 198523,
+      'lastRun' : 203742,
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
