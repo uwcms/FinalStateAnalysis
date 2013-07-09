@@ -46,10 +46,10 @@ Checkout the FinalStateAnalysis repository::
   git clone --recursive https://github.com/uwcms/FinalStateAnalysis.git
 ```
 
-This will checkout the lastest and greatest version of the code.  You might also want the HCP2012 compatible branch, if so you should additionally run:
+This will checkout the lastest and greatest version of the code.  You might also want the Summer 2013 compatible branch, if so you should additionally run:
 ```bash
 cd FinalStateAnalysis
-git checkout hcp2012
+git checkout summer2013
 ```
 and then proceed as normal.
 
