@@ -8,6 +8,10 @@ pushd $CMSSW_BASE/src
 
 echo "Checking out PAT dataformats"
 addpkg DataFormats/PatCandidates       V06-05-06-06
+addpkg PhysicsTools/PatAlgos           V08-09-52
+addpkg DataFormats/StdDictionaries     V00-02-14
+addpkg PhysicsTools/PatUtils           V03-09-26
+addpkg CommonTools/ParticleFlow        V00-03-16
 
 if [ "$LIMITS" = "1" ]
 then
@@ -21,10 +25,6 @@ then
 
   echo "Checking out tuple production tags"
   
-  addpkg PhysicsTools/PatAlgos           V08-09-52
-  addpkg DataFormats/StdDictionaries     V00-02-14
-  addpkg PhysicsTools/PatUtils           V03-09-26
-  addpkg CommonTools/ParticleFlow        V00-03-16
   addpkg FWCore/GuiBrowsers              V00-00-70
   #24/10/2012 LAG -- PF Isolation for Photons
   addpkg RecoParticleFlow/PFProducer     V15-02-06

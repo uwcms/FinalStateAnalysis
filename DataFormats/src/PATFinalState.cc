@@ -4,6 +4,7 @@
 
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 #include "FinalStateAnalysis/DataAlgos/interface/CollectionFilter.h"
+#include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
 
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
@@ -320,6 +321,28 @@ PATFinalState::smallestDeltaPhi() const {
 }
 
 double
+PATFinalState::SVfit(int i, int j) const {
+
+  std::vector<reco::CandidatePtr> toFit;
+  toFit.push_back(daughterPtr(i));
+  toFit.push_back(daughterPtr(j));
+
+  edm::Ptr<pat::MET> mvaMet = evt()->met("mvamet");
+
+  if (mvaMet.isNull()) {
+    throw cms::Exception("MissingMVAMet")
+      << "SV fit requires the MVAMET be available via "
+      << " met('mvamet') method in PATFinalStateEvent.  It's null."
+      << std::endl;
+  }
+
+
+  return ApplySVfit::getSVfitMass(toFit, *mvaMet,
+      mvaMet->getSignificanceMatrix(), 0,
+      evt()->evtId());
+}
+
+double
 PATFinalState::dR(int i, const std::string& sysTagI,
     int j, const std::string& sysTagJ) const {
   return reco::deltaR(daughterUserCandP4(i, sysTagI),
@@ -627,14 +650,12 @@ edm::Ptr<pat::Photon> PATFinalState::daughterAsPhoton(size_t i) const {
   return daughterAs<pat::Photon>(i);
 }
 
-const reco::GenParticleRef PATFinalState::getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge) const
-{
+const reco::GenParticleRef PATFinalState::getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge) const {
   bool charge = (bool) checkCharge;
   return fshelpers::getGenParticle( daughter(i), event_->genParticleRefProd(), pdgIdToMatch, charge);
 }
 
-const reco::GenParticleRef PATFinalState::getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const
-{
+const reco::GenParticleRef PATFinalState::getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const {
   const reco::GenParticleRef genp = getDaughterGenParticle(i, pdgIdToMatch, checkCharge);
   if( genp.isAvailable() && genp.isNonnull()  )
     return fshelpers::getMotherSmart(genp, genp->pdgId());
@@ -642,8 +663,7 @@ const reco::GenParticleRef PATFinalState::getDaughterGenParticleMotherSmart(size
     return genp;
 }
 
-const bool PATFinalState::comesFromHiggs(size_t i, int pdgIdToMatch, int checkCharge) const
-{
+const bool PATFinalState::comesFromHiggs(size_t i, int pdgIdToMatch, int checkCharge) const {
   const reco::GenParticleRef genp = getDaughterGenParticle(i, pdgIdToMatch, checkCharge);
   if( genp.isAvailable() && genp.isNonnull()  )
     return fshelpers::comesFromHiggs(genp);
@@ -651,8 +671,7 @@ const bool PATFinalState::comesFromHiggs(size_t i, int pdgIdToMatch, int checkCh
     return false;
 }
 
-const reco::Candidate::Vector PATFinalState::getDaughtersRecoil() const
-{
+const reco::Candidate::Vector PATFinalState::getDaughtersRecoil() const {
   double x =0;
   double y =0;
   std::vector<const reco::Candidate*> daughters = this->daughters();
@@ -666,23 +685,20 @@ const reco::Candidate::Vector PATFinalState::getDaughtersRecoil() const
   return retval;
 }
 
-const reco::Candidate::Vector PATFinalState::getDaughtersRecoilWithMet() const
-{
+const reco::Candidate::Vector PATFinalState::getDaughtersRecoilWithMet() const {
   const reco::Candidate::Vector dau_recoil = getDaughtersRecoil();
   const edm::Ptr<pat::MET>& met = event_->met();
   const reco::Candidate::Vector retval = dau_recoil + met->momentum();
   return retval;
 }
 
-const double PATFinalState::getRecoilWithMetSignificance() const
-{
+const double PATFinalState::getRecoilWithMetSignificance() const {
   return fshelpers::xySignficance(getDaughtersRecoilWithMet(), event_->metCovariance());
 }
 
 
-const math::XYZTLorentzVector 
-PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const 
-{
+const math::XYZTLorentzVector
+PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const {
   edm::Ptr<pat::Electron> ele = daughterAsElectron(i);
   edm::Ptr<pat::Muon> mu = daughterAsMuon(i);
   edm::Ptr<pat::Photon> pho = daughterAsPhoton(i);
@@ -694,16 +710,16 @@ PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const
   if(ele.isNonnull() && ele.isAvailable())
     result = ele->userData<math::XYZTLorentzVector>(name);
 
-  if(mu.isNonnull() && mu.isAvailable()) 
+  if(mu.isNonnull() && mu.isAvailable())
     result = mu->userData<math::XYZTLorentzVector>(name);
 
-  if(pho.isNonnull() && pho.isAvailable()) 
+  if(pho.isNonnull() && pho.isAvailable())
     result = pho->userData<math::XYZTLorentzVector>(name);
 
-  if(jet.isNonnull() && jet.isAvailable()) 
+  if(jet.isNonnull() && jet.isAvailable())
     result = jet->userData<math::XYZTLorentzVector>(name);
 
-  if(tau.isNonnull() && tau.isAvailable()) 
+  if(tau.isNonnull() && tau.isAvailable())
     result = tau->userData<math::XYZTLorentzVector>(name);
 
   if( result ) return *result; // return the result if we have it stored
@@ -711,7 +727,7 @@ PATFinalState::getUserLorentzVector(size_t i,const std::string& name) const
   return math::XYZTLorentzVector();
 }
 
-const float PATFinalState::getPhotonUserIsolation(size_t i, 
+const float PATFinalState::getPhotonUserIsolation(size_t i,
 						  const std::string& key) const {
   edm::Ptr<pat::Photon> d = daughterAsPhoton(i);
   // remove leading namespace specifier
@@ -730,10 +746,10 @@ const float PATFinalState::getPhotonUserIsolation(size_t i,
   if ( prunedKey == "User5Iso" ) return d->userIsolation(pat::User5Iso);
   if ( prunedKey == "UserBaseIso" ) return d->userIsolation(pat::UserBaseIso);
   if ( prunedKey == "CaloIso" ) return d->userIsolation(pat::CaloIso);
-  if ( prunedKey == "PfPUChargedHadronIso" ) 
+  if ( prunedKey == "PfPUChargedHadronIso" )
     return d->userIsolation(pat::PfPUChargedHadronIso);
   //throw cms::Excepton("Missing Data")
-  //<< "Isolation corresponding to key " 
+  //<< "Isolation corresponding to key "
   //<< key << " was not stored for this particle.";
   return -1.0;
 }
