@@ -13,10 +13,12 @@
 #   > progressbar - cool progress bars
 #   > cython - used for mixing C and python
 #   > argparse - improved argument parsing
-#   > rootpy - pythonic bindings for PyROOT 
+#   > rootpy - pythonic bindings for PyROOT
+#   > pytables - provides hdf5 support
 
 export recipe=$CMSSW_BASE/src/FinalStateAnalysis/recipe
 export vpython=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/vpython
+export hdf5=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/hdf5
 
 cd $recipe/external/src/virtualenv
 
@@ -53,3 +55,27 @@ pip install -e $recipe/external/src/yellowhiggs
 echo "Installing rootpy"
 pip install -e $recipe/external/src/rootpy
 
+if [ "$PYTABLES" = "1" ]
+then
+    echo "Installing PyTables"
+    cd $CMSSW_BASE/src/FinalStateAnalysis/recipe/external
+    if [ ! -d "hdf5-1.8.11" ]
+    then
+        echo "Downloading HDF5"
+        wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.11.tar.gz
+        tar xvzf hdf5-1.8.11.tar.gz
+        cd hdf5-1.8.11
+        ./configure --prefix=$hdf5
+        cd ..
+    fi
+    cd hdf5-1.8.11
+    echo "Installing HDF5"
+    make -j 2
+    make install
+    cd ..
+    export HDF5_DIR=$hdf5
+    pip install -U numexpr
+    pip install -U tables
+
+    echo "Run: source environment.sh"
+fi

@@ -30,7 +30,7 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
 Installation
 ------------
 
-Current CMSSW versions: ``4_2_8_patch7`` or ``5_3_7``.  
+Current CMSSW versions: ``4_2_8_patch7`` or ``5_3_9``.  
 The installation instructions are the same for both.  
 
 Get a supported CMSSW release area::
