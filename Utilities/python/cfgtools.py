@@ -8,22 +8,23 @@ Author: Evan K. Friis UW Madison
 Chaining Modules in a Sequence
 ------------------------------
 
-You can use [chain_sequence] to connect the inputs and outputs of objects
-in a sequence.  The output of each module is connected to the next modules
-['src'] input.
+You can use [chain_sequence] to connect the inputs and outputs of objects in a
+sequence.  Per default, the output of each module is connected to the next
+modules ['src'] input.  You can specify additional PSet keys which should
+be considered as a <src_name> as well.
 
 >>> import FWCore.ParameterSet.Config as cms
 >>> proc = cms.Process("TEST")
 >>> proc.pA = cms.EDProducer("AProducer", src = cms.InputTag("fixme"))
->>> proc.pB = cms.EDProducer("AProducer", src = cms.InputTag("fixme"))
+>>> proc.pB = cms.EDProducer("AProducer", inputSrc = cms.InputTag("fixme"))
 >>> proc.pC = cms.EDProducer("AProducer", src = cms.InputTag("fixme"))
 >>> proc.pD = cms.EDProducer("AProducer", src = cms.InputTag("fixme"))
 >>> proc.subseq = cms.Sequence(proc.pB + proc.pC)
 >>> proc.seq = cms.Sequence(proc.pA + proc.subseq + proc.pD)
->>> end_result = chain_sequence(proc.seq, "start")
+>>> end_result = chain_sequence(proc.seq, "start", ("src", "inputSrc"))
 >>> proc.pA.src
 cms.InputTag("start")
->>> proc.pB.src
+>>> proc.pB.inputSrc
 cms.InputTag("pA")
 >>> proc.pC.src
 cms.InputTag("pB")
@@ -121,18 +122,23 @@ cms.string('{object}.pt')
 import FWCore.ParameterSet.Config as cms
 
 class SequenceChainer(object):
-    def __init__(self, input_src):
+    def __init__(self, input_src, src_names):
         self.current_src = input_src
+        self.src_names = src_names
     def enter(self, visitee):
         skip = hasattr(visitee, 'noSeqChain') and visitee.noSeqChain
-        if hasattr(visitee, 'src') and not skip:
-            visitee.src = cms.InputTag(self.current_src)
-            self.current_src = visitee.label()
+        if skip:
+            return
+        for src_name in self.src_names:
+            if hasattr(visitee, src_name):
+                setattr(visitee, src_name, cms.InputTag(self.current_src))
+                self.current_src = visitee.label()
+                break
     def leave(self, visitee):
         pass
 
-def chain_sequence(sequence, input_src):
-    chainer = SequenceChainer(input_src)
+def chain_sequence(sequence, input_src, src_names=('src',)):
+    chainer = SequenceChainer(input_src, src_names)
     sequence.visit(chainer)
     return cms.InputTag(chainer.current_src)
 
@@ -303,5 +309,5 @@ class PSet(cms.PSet):
 
 if __name__ == "__main__":
     import doctest
-    #doctest.testmod(verbose=True)
+    doctest.testmod(verbose=True)
     doctest.testmod()

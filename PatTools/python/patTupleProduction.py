@@ -312,7 +312,11 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # Produce the electron collections
     process.load("FinalStateAnalysis.PatTools.patElectronProduction_cff")
     final_electron_collection = chain_sequence(
-        process.customizeElectronSequence, "selectedPatElectrons")
+        process.customizeElectronSequence, "selectedPatElectrons",
+        # Some of the EGamma modules have non-standard src InputTags,
+        # specify them here.
+        ("src", "inputPatElectronsTag", "inputElectronsTag")
+    )
     process.tuplize += process.customizeElectronSequence
     process.customizeElectronSequence.insert(0, process.selectedPatElectrons)
     process.patDefaultSequence.replace(process.selectedPatElectrons,
@@ -321,11 +325,11 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.customizeElectronSequence.insert(0, process.selectedPatJets)
     process.cleanPatElectrons.src = final_electron_collection
     #setup the energy regression for the specific dataset
-    process.patElectronEnergyCorrections.isMC = cms.bool(bool(isMC))
-    process.patElectronEnergyCorrections.isAOD = \
-        cms.bool(bool(kwargs['isAOD']))
-    process.patElectronEnergyCorrections.dataSet = \
-        cms.string(kwargs['calibrationTarget'])
+    process.eleRegressionEnergy.energyRegressionType    = cms.uint32(2)
+    process.calibratedPatElectrons.correctionsType      = cms.int32(2)
+    process.calibratedPatElectrons.combinationType      = cms.int32(3)
+    process.calibratedPatElectrons.lumiRatio            = cms.double(1.0)
+    process.calibratedPatElectrons.synchronization      = cms.bool(True)
 
     process.load("FinalStateAnalysis.PatTools.patMuonProduction_cff")
     final_muon_collection = chain_sequence(

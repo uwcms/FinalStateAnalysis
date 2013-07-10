@@ -39,8 +39,11 @@ from FinalStateAnalysis.PatTools.electrons.eTrackCandidates_cfi import \
         gsfTrackCandidates
 
 # Electron Energy Regression and Calibrations
-from FinalStateAnalysis.PatTools.electrons.patElectronEnergyCorrections_cfi import \
-     patElectronEnergyCorrections
+from EgammaAnalysis.ElectronTools.electronRegressionEnergyProducer_cfi import \
+     eleRegressionEnergy
+
+from EgammaAnalysis.ElectronTools.calibratedPatElectrons_cfi import \
+     calibratedPatElectrons
 
 from FinalStateAnalysis.PatTools.electrons.patConversionRejection_cfi import \
      patElectronConversionMatch
@@ -64,5 +67,6 @@ customizeElectronSequence += patElectronEAEmbedder
 customizeElectronSequence += patElectronMVAIDEmbedder
 customizeElectronSequence += patElectronMVAIDWPEmbedding
 customizeElectronSequence += patElectronsEmbedIp
-customizeElectronSequence += patElectronEnergyCorrections
+customizeElectronSequence += eleRegressionEnergy
+customizeElectronSequence += calibratedPatElectrons
 customizeElectronSequence += patElectronConversionMatch

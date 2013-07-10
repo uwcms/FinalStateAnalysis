@@ -68,6 +68,8 @@ namespace pattools {
     int    _nvtx;
 
     edm::InputTag _recHitsEB,_recHitsEE;
+    edm::Handle< EcalRecHitCollection > _recHitCollectionEE;
+    edm::Handle< EcalRecHitCollection > _recHitCollectionEB;
 
     apply_map _apply;
     calib_map _calibs;
