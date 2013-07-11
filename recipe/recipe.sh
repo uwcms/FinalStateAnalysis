@@ -64,6 +64,12 @@ if [ -z "FORCERECIPE" ]; then
    done
 fi
 
+if [ "$MVAMET" = "1" ] 
+then
+  echo "Applying MVA MET recpe"
+  ./recipe_mvamet.sh
+fi
+
 if [ "$MAJOR_VERSION" -eq "4" ]; then
   echo "Applying recipe for CMSSW 4_2_8"
   LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_42X.sh
@@ -76,12 +82,6 @@ fi
 
 echo "Applying common recipe"
 LUMI=$LUMI LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_common.sh
-
-if [ "$MVAMET" = "1" ] 
-then
-  echo "Applying MVA MET recpe"
-  ./recipe_mvamet.sh
-fi
 
 # Note you now need to install virtual env
 echo "Now run recipe/install_python.sh to install python"

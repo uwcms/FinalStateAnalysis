@@ -38,12 +38,6 @@ then
   echo "Downloading Quark Gluon Jet ID"
   cvs co -r v1-2-3 -d QuarkGluonTagger/EightTeV UserCode/tomc/QuarkGluonTagger/EightTeV
   
-  # MVA MET + PU Jet ID
-  # This must go *before* the Tau POG checkout as it fucks with it.
-  pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
-  ./recipe_mvamet.sh
-  popd
-
   echo "Checking out Tau POG recipe"
   cvs co -r V01-04-23 RecoTauTag/RecoTau #equivalent to 04-14
   cvs co -r V01-04-10 RecoTauTag/Configuration
