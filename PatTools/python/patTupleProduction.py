@@ -71,6 +71,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_kt6PFJetsCentralNeutral_rho_*',  # for zz muons
         '*_photonCore_*_*',
         # for Zmumu -> embedded samples
+        '*_generator_weight_*',  # 2k11
+        "GenFilterInfo_generator_minVisPtFilter_*",  # 2k12
+        '*_genDaughters_*_*',
+        '*_boosted*_*_*',
+        '*_tmfTracks_*_*',
+        # For Zmumu RecHit embedding samples
         # https://twiki.cern.ch/twiki/bin/view/CMS/MuonTauReplacementRecHit
         '*_generalTracksORG_*_EmbeddedRECO',
         '*_electronGsfTracksORG_*_EmbeddedRECO',
@@ -161,6 +167,17 @@ def configurePatTuple(process, isMC=True, **kwargs):
     else:
         # Just keep the normal ones
         output_commands.append('*_ak5PFJets_*_*')
+
+    # In the embedded samples, we need to re-run the b-tagging
+    if kwargs['embedded']:
+        process.load('RecoBTag/Configuration/RecoBTag_cff')
+        process.load('RecoJets/JetAssociationProducers/ak5JTA_cff')
+        process.ak5JetTracksAssociatorAtVertex.jets = \
+            cms.InputTag("ak5PFJets")
+        process.ak5JetTracksAssociatorAtVertex.tracks = \
+            cms.InputTag("tmfTracks")
+        process.tuplize += process.ak5JetTracksAssociatorAtVertex
+        process.tuplize += process.btagging
 
     # Run pat default sequence
     process.load("PhysicsTools.PatAlgos.patSequences_cff")
