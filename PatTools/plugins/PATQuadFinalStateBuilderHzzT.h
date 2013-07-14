@@ -370,12 +370,14 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
     // make sure the legs are arranged to match the FinalState datatype
     // i.e. electrons go first for 2e2mu
+    bool revOrder = false;
     if ( final_state_type == eemm_type && abs(leg1->pdgId()) == 13 && abs(leg3->pdgId()) == 11 )
     {
         leg1_out = edm::Ptr<typename FinalState::daughter1_type> ( leg3 ); 
         leg2_out = edm::Ptr<typename FinalState::daughter2_type> ( leg4 ); 
         leg3_out = edm::Ptr<typename FinalState::daughter3_type> ( leg1 ); 
-        leg4_out = edm::Ptr<typename FinalState::daughter4_type> ( leg2 ); 
+        leg4_out = edm::Ptr<typename FinalState::daughter4_type> ( leg2 );
+        revOrder = true;
     }
     else
     {
@@ -399,6 +401,33 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     outputCand.addUserFloat("leg1fsrIsoCorr", leg2_fsrIsoCorr);
     outputCand.addUserFloat("leg2fsrIsoCorr", leg3_fsrIsoCorr);
     outputCand.addUserFloat("leg3fsrIsoCorr", leg4_fsrIsoCorr);
+
+
+    // ------------------------------------------------
+    // Grab gen-level leptons
+    // Correct lepton ordering for 2e2mu if necessary
+    // ------------------------------------------------
+    const reco::GenParticle *leg1_gen;
+    const reco::GenParticle *leg2_gen;
+    const reco::GenParticle *leg3_gen;
+    const reco::GenParticle *leg4_gen;
+
+    if (revOrder)
+    {
+        leg1_gen = leg3_out->genLepton();
+        leg2_gen = leg4_out->genLepton();
+        leg3_gen = leg1_out->genLepton();
+        leg4_gen = leg2_out->genLepton();
+    }
+    else
+    {
+        leg1_gen = leg1_out->genLepton();
+        leg2_gen = leg2_out->genLepton();
+        leg3_gen = leg3_out->genLepton();
+        leg4_gen = leg4_out->genLepton();
+    }
+
+
 
     // ----------------------
     // Add KDs and Angles
