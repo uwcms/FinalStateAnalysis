@@ -478,6 +478,42 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     outputCand.addUserFloat("Phi", Phi);
     outputCand.addUserFloat("Phi1", Phi1);
 
+
+    // Add Gen angles
+    double costhetastar_gen  = -99;
+    double costheta1_gen     = -99;
+    double costheta2_gen     = -99;
+    double Phi_gen           = -99;
+    double Phi1_gen          = -99;
+
+    if ( leg1_gen != NULL && leg2_gen != NULL && leg3_gen != NULL && leg4_gen != NULL )
+    {
+        std::vector<TLorentzVector> partP_gen(4);
+
+        partP_gen.at(0) = TLorentzVector(leg1_gen->px(), leg1_gen->py(), leg1_gen->pz(), leg1_gen->p4().E());
+        partP_gen.at(1) = TLorentzVector(leg2_gen->px(), leg2_gen->py(), leg2_gen->pz(), leg2_gen->p4().E());
+        partP_gen.at(2) = TLorentzVector(leg3_gen->px(), leg3_gen->py(), leg3_gen->pz(), leg3_gen->p4().E());
+        partP_gen.at(3) = TLorentzVector(leg4_gen->px(), leg4_gen->py(), leg4_gen->pz(), leg4_gen->p4().E());
+
+        HZZ4LAngles angles_gen;
+        angles_gen.computeAngles(
+                partP_gen.at(0) + partP_gen.at(1) + partP_gen.at(2) + partP_gen.at(3),  // H.p4
+                partP_gen.at(0) + partP_gen.at(1),                                      // Z1.p4
+                partP_gen.at(0),                                                        // l1.p4
+                partP_gen.at(1),                                                        // l2.p4
+                partP_gen.at(2) + partP_gen.at(3),                                      // Z2.p4
+	    		partP_gen.at(2),                                                        // l3.p4
+                partP_gen.at(3),                                                        // l4.p4
+                costheta1_gen, costheta2_gen, Phi_gen, costhetastar_gen, Phi1_gen);
+    }
+    
+    outputCand.addUserFloat("costheta1_gen", costheta1_gen);
+    outputCand.addUserFloat("costheta2_gen", costheta2_gen);
+    outputCand.addUserFloat("costhetastar_gen", costhetastar_gen);
+    outputCand.addUserFloat("Phi_gen", Phi_gen);
+    outputCand.addUserFloat("Phi1_gen", Phi1_gen);
+    
+
     // -------------------------
     // Output candidate to event
     // -------------------------
