@@ -9,6 +9,7 @@ pushd $CMSSW_BASE/src
 echo "Checking out PAT dataformats"
 addpkg DataFormats/PatCandidates       V06-05-06-06
 addpkg PhysicsTools/PatAlgos           V08-09-52
+rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer.*
 addpkg DataFormats/StdDictionaries     V00-02-14
 addpkg PhysicsTools/PatUtils           V03-09-26
 addpkg CommonTools/ParticleFlow        V00-03-16
