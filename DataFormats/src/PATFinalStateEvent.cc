@@ -46,6 +46,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const reco::GenParticleRefProd& genParticles,
     const edm::EventID& evtId,
     const GenEventInfoProduct& genEventInfo,
+    const GenFilterInfo& generatorFilter,
     bool isRealData,
     const std::string& puScenario,
     const edm::RefProd<pat::ElectronCollection>& electronRefProd,
@@ -69,6 +70,7 @@ PATFinalStateEvent::PATFinalStateEvent(
   genParticles_(genParticles),
   evtID_(evtId),
   genEventInfoProduct_(genEventInfo),
+  generatorFilter_(generatorFilter),
   isRealData_(isRealData),
   puScenario_(puScenario),
   fsaDataFormatVersion_(FSA_DATA_FORMAT_VERSION),
@@ -99,6 +101,10 @@ const lhef::HEPEUP& PATFinalStateEvent::lesHouches() const {
 
 const GenEventInfoProduct& PATFinalStateEvent::genEventInfo() const {
   return genEventInfoProduct_;
+}
+
+const GenFilterInfo& PATFinalStateEvent::generatorFilter() const {
+  return generatorFilter_;
 }
 
 double PATFinalStateEvent::rho() const { return rho_; }
