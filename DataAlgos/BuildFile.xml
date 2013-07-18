@@ -12,6 +12,9 @@
 <use   name="DataFormats/HepMCCandidate"/>
 <use   name="DataFormats/PatCandidates"/>
 <use   name="FWCore/Utilities"/>
+<use   name="TauAnalysis/CandidateTools"/>
 <export>
   <lib   name="1"/>
+  <use   name="TauAnalysis/CandidateTools"/>
 </export>
+
