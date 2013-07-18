@@ -64,18 +64,33 @@ zboson = PSet(
 )
 
 vbf = PSet(
-    # If nJets < 2, none of these other branches are valid
-    vbfNJets = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").jets20',
-    vbfJetVeto30 = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").jets30',
-    vbfJetVeto20 = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").jets20',
-    vbfMVA = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").mva',
-    vbfMass = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").mass',
-    vbfDeta = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").deta',
-    vbfj1eta = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").eta1',
-    vbfj2eta = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").eta2',
-    vbfVispt = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").c2',
-    vbfHrap = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").hrapidity',
-    vbfDijetrap = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").dijetrapidity',
-    vbfDphihj = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").dphihj',
-    vbfDphihjnomet = 'vbfVariables("pt > 30 & userInt(\'fullIdLoose\')").dphihj_nomet',
+  # If nJets < 2, none of these other branches are valid
+   vbfNJets = 'vbfVariables("pt >30& userInt(\'fullIdTight\') & userFloat(\'idLoose\')").nJets',
+   vbfJetVeto30 = 'vbfVariables("pt >30& userInt(\'fullIdLoose\') & userFloat(\'idLoose\')").jets30',
+   vbfJetVeto20 = 'vbfVariables("pt >30& userInt(\'fullIdLoose\')  & userFloat(\'idLoose\')").jets20',
+   vbfJetVetoTight30 = 'vbfVariables("pt >30& userInt(\'fullIdTight\') & userFloat(\'idLoose\')").jets30',
+   vbfJetVetoTight20 = 'vbfVariables("pt >30& userInt(\'fullIdTight\')  & userFloat(\'idLoose\')").jets20',
+   vbfMVA = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\') ").mva',
+   vbfMass = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").mass',
+   vbfDeta = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").deta',
+   vbfDphi = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dphi',
+   vbfj1eta = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").eta1',
+   vbfj2eta = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").eta2',
+   vbfVispt = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").c2',
+   vbfHrap = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").hrapidity',
+   vbfDijetrap = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dijetrapidity',
+   vbfDphihj = 'vbfVariables("pt >30& userInt(\'fullIdTight\')  & userFloat(\'idLoose\')").dphihj',
+   vbfDphihjnomet = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dphihj_nomet',
+   vbfj1pt = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").pt1',
+   vbfj2pt = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").pt2',
+   vbfdijetpt = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dijetpt',
+   vbfditaupt = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").ditaupt',
+   #vbfj1IdTight = 'vbfVariables("pt >30& userInt(\'fullIdLoose\') &  userFloat(\'idLoose\')").leadJet.userInt(\'fullIdTight\')', # crashes!!
+   #vbfj2IdTight = 'vbfVariables("pt >30& userInt(\'fullIdLoose\') &  userFloat(\'idLoose\')").subleadJet.userInt(\'fullIdTight\')', # not protected in the code
+
+
 )
+
+
+
+

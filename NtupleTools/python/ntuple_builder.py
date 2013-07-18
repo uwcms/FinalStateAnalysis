@@ -68,6 +68,7 @@ _bjet_template= PSet(
     templates.bjets.btagging,
     templates.candidates.kinematics,
     templates.candidates.vertex_info,
+    templates.bjets.pujets
 )
 
 _electron_template = PSet(

@@ -128,6 +128,12 @@ if options.rerunFSA:
         print "rerunning MVA MET sequence, output collection will be {n}"\
             .format(n=mvamet_collection)
 
+    #process.cleanPatMuons2=cms.EDProducer("PATMuonRanker", src=cms.InputTag("cleanPatMuons"))
+    #process.selectedPatJets2=cms.EDProducer("PATJetRanker", src=cms.InputTag("selectedPatJets"))
+
+    #process.rankPath=cms.Path(process.cleanPatMuons2*process.selectedPatJets2)
+    #process.schedule.append(process.rankPath)
+
     # Drop the input ones, just to make sure we aren't screwing anything up
     process.buildFSASeq = cms.Sequence()
     from FinalStateAnalysis.PatTools.patFinalStateProducers \

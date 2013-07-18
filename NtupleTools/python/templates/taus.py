@@ -60,6 +60,7 @@ id = PSet(
     objectLooseIso3Hits  = '{object}.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")',
     objectMediumIso3Hits = '{object}.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")',
     objectTightIso3Hits  = '{object}.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits")',
+
     #MVA
     objectLooseMVAIso  = '{object}.tauID("byLooseIsolationMVA")',
     objectMediumMVAIso = '{object}.tauID("byMediumIsolationMVA")',
@@ -68,6 +69,9 @@ id = PSet(
     objectLooseMVA2Iso  = '{object}.tauID("byLooseIsolationMVA2")',
     objectMediumMVA2Iso = '{object}.tauID("byMediumIsolationMVA2")',
     objectTightMVA2Iso  = '{object}.tauID("byTightIsolationMVA2")',
+
+
+
 )
 
 
