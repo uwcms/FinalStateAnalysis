@@ -343,27 +343,28 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     #setup the energy regression for the specific dataset
     if kwargs['eleReg']:
-        final_electron_collection += eleRegressionEnergy
-        final_electron_collection += calibratedPatElectrons
+        process.customizeElectronSequence += cms.Sequence(eleRegressionEnergy)
+        process.customizeElectronSequence += cms.Sequence(calibratedPatElectrons)
 
-        final_electron_collection = chain_sequence(
-                final_electron_collection, "selectedPatElectrons",
-                ("src", "inputPatElectronsTag", "inputElectronsTag")
-                )
+        eleRegressionEnergy.inputElectronsTag       = final_electron_collection
 
-        process.eleRegressionEnergy.energyRegressionType    = cms.uint32(2)
-        process.calibratedPatElectrons.correctionsType      = cms.int32(2)
+        eleRegressionEnergy.energyRegressionType    = cms.uint32(2)
+        calibratedPatElectrons.correctionsType      = cms.int32(2)
+
         if isMC:
-            process.calibratedPatElectrons.inputDataset     = cms.string(
-                    "Summer12_LegacyPaper")
+            calibratedPatElectrons.inputDataset     = cms.string(
+                "Summer12_LegacyPaper")
         else:
-            process.calibratedPatElectrons.inputDataset     = cms.string(
-                    "22Jan2013ReReco")
-        process.calibratedPatElectrons.combinationType      = cms.int32(3)
-        process.calibratedPatElectrons.lumiRatio            = cms.double(1.0)
-        process.calibratedPatElectrons.synchronization      = cms.bool(True)
-        process.calibratedPatElectrons.isMC                 = cms.bool(isMC)
-        process.calibratedPatElectrons.verbose              = cms.bool(False)
+            calibratedPatElectrons.inputDataset     = cms.string(
+                "22Jan2013ReReco")
+
+        calibratedPatElectrons.combinationType      = cms.int32(3)
+        calibratedPatElectrons.lumiRatio            = cms.double(1.0)
+        calibratedPatElectrons.synchronization      = cms.bool(True)
+        calibratedPatElectrons.isMC                 = cms.bool(isMC == 1)
+        calibratedPatElectrons.verbose              = cms.bool(False)
+
+        final_electron_collection                   = cms.InputTag("calibratedPatElectrons")
 
     # Define cleanPatElectrons input collection
     process.cleanPatElectrons.src = final_electron_collection
