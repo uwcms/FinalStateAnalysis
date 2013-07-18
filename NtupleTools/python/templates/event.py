@@ -76,6 +76,7 @@ gen = PSet(
     isWtaunu='evt.findDecay(24,15)',
     isWmunu='evt.findDecay(24,13)',
     NUP='evt.lesHouches.NUP',
+    EmbPtWeight='evt.generatorFilter.filterEfficiency',
 )
 
 
