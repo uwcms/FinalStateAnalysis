@@ -40,11 +40,11 @@ Checkout the FinalStateAnalysis repository::
 ```bash
   cd MyWorkingAreaName/src
   git clone --recursive https://github.com/uwcms/FinalStateAnalysis.git
+  cd FinalStateAnalysis
 ```
 
 This will checkout the lastest and greatest version of the code.  You might also want the Summer 2013 compatible branch, if so you should additionally run:
 ```bash
-cd FinalStateAnalysis
 git checkout summer2013
 ```
 and then proceed as normal.
@@ -52,7 +52,7 @@ and then proceed as normal.
 Checkout the needed CMSSW tags:
 
 ```bash
-  cd FinalStateAnalysis/recipe/
+  cd recipe/
   # You need to have CVS access
   kinit me@CERN.CH
   # Make sure your CMSSW environment is set up
@@ -66,10 +66,11 @@ Checkout the needed CMSSW tags:
   scram b -j 8
 ```
 
-You must always set up the environment::
+You must always set up the CMSSW environment + some extra variables from FinalStateAnalysis::
 
 ```bash
-  source FinalStateAnalysis/environment.sh
+  cmsenv
+  source $CMSSW_BASE/src/FinalStateAnalysis/environment.sh
 ```
 
 For python plotting enhancements, install the custom python virtualenv and extra
