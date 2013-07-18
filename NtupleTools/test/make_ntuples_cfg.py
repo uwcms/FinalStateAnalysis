@@ -28,11 +28,15 @@ rerunMCMatch=0 - rerun MC matching
 eventView=0 - make a row in the ntuple correspond to an event
 instead of a final state in an event.
 passThru=0 - turn off any preselection/skim
+dump=0     - if one, dump process python to stdout
 rerunFSA=0 - regenerate PATFinalState dataformats
 verbose=0 - print out timing information
 noPhotons=0 - don't build things which depend on photons.
 rerunMVAMET=0 - rerun the MVAMET algorithm
-svFit=0 - run the SVfit on appropriate pairs
+svFit=1 - run the SVfit on appropriate pairs
+rerunQGJetID=0 - rerun the quark-gluon JetID
+runNewElectronMVAID=0 - run the new electron MVAID
+rerunJetsMC=0   - rerun with new jet energy corrections
            
 
 '''

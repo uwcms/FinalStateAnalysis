@@ -30,10 +30,7 @@ options = TauVarParsing.TauVarParsing(
 )
 
 files = [
-    'file:/afs/hep.wisc.edu/home/stephane/svafit/src/FinalStateAnalysis/PatTools/test/skimmed_AODS/DoubleElectron_2012A_ANskimmed.root',
-    'file:/afs/hep.wisc.edu/home/stephane/svafit/src/FinalStateAnalysis/PatTools/test/skimmed_AODS/DoubleElectron_2012C_ANskimmed.root'
-    'file:/afs/hep.wisc.edu/home/stephane/svafit/src/FinalStateAnalysis/PatTools/test/skimmed_AODS/DoubleElectron_2012D_ANskimmed.root' 
-    #"root://cmsxrootd.hep.wisc.edu//store/data/Run2012B/DoubleMu/AOD/29Jun2012-v1/0001/C46FD2A9-3FC3-E111-A1A8-485B39800C00.root"
+    
 ]
 
 options.inputFiles = files

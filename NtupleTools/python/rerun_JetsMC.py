@@ -1,16 +1,4 @@
 import FWCore.ParameterSet.Config as cms
-from CommonTools.ParticleFlow.Isolation.tools_cfi import *
-
-from PhysicsTools.PatAlgos.tools.jetTools import *
-from PhysicsTools.PatAlgos.tools.helpers import *
-from PhysicsTools.PatAlgos.tools.tauTools import *
-from PhysicsTools.PatAlgos.tools.coreTools import *
-from PhysicsTools.PatAlgos.tools.metTools import *
-from PhysicsTools.PatAlgos.tools.pfTools import *
-from PhysicsTools.PatAlgos.tools.trigTools import *
-import sys
-
-
 
 def rerun_JetsMC(process):
 
