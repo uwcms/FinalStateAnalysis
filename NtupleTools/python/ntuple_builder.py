@@ -233,6 +233,7 @@ def make_ntuple(*legs, **kwargs):
 
     # Now we need to add all the information about the pairs
     for leg_a, leg_b in itertools.combinations(object_labels, 2):
+        
         ntuple_config = PSet(
             ntuple_config,
             templates.topology.pairs.replace(object1=leg_a, object2=leg_b),
@@ -246,13 +247,15 @@ def make_ntuple(*legs, **kwargs):
 
         leg_a_type = leg_a[0]
         leg_b_type = leg_b[0]
+      
         leg_a_index = legs.index(leg_a_type) \
-            if counts[leg_a_type] == 1 else int(leg_a[1]) - 1
+            if counts[leg_a_type] == 1 else legs.index(leg_a_type) + int(leg_a[1]) - 1
         leg_b_index = legs.index(leg_b_type) \
-            if counts[leg_b_type] == 1 else int(leg_b[1]) - 1
+            if counts[leg_b_type] == 1 else legs.index(leg_b_type) + int(leg_b[1]) - 1
 
         # Never do SVfit on 'non-paired' leptons (eg legs 0 & 2), or legs 1&3
-        if leg_a_index % 2 != 0 or abs(leg_a_index - leg_b_index) != 1:
+        # legs either adjacent or both ends (0 and 3)
+        if leg_a_index % 2 != 0 or abs(leg_a_index - leg_b_index) % 2 != 1:
             do_svfit = False
         # Only do SVfit on mu + tau, e + tau, e + mu, & tau + tau combinations
         if leg_a_type == leg_b_type and leg_a_type in ('m', 'e'):

@@ -22,6 +22,7 @@ info = PSet(
 
 # ID and isolation
 id = PSet(
+
     #Against Electron
     #STD
     objectAntiElectronLoose  = '{object}.tauID("againstElectronLoose")',
