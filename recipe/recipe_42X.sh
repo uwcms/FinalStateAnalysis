@@ -54,12 +54,6 @@ then
   patch -p1 < recipe/patches/electronCorr_42X.patch 
   popd
 
-  # MVA MET + PU Jet ID
-  # This must go *before* the Tau POG checkout as it fucks with it.
-  pushd $CMSSW_BASE/src/FinalStateAnalysis/recipe/
-  ./recipe_mvamet.sh
-  popd
-  
   echo "Checking out Tau POG recipe"
   addpkg DataFormats/TauReco CMSSW_5_2_4 # yes, this is correct
   addpkg RecoTauTag/TauTagTools CMSSW_5_2_4

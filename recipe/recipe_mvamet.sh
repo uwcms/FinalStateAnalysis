@@ -19,7 +19,6 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
   pushd $CMSSW_BASE/src/JetMETCorrections/METPUSubtraction/test/
   ./setup.sh
   popd
-  cvs up -r 1.6 PhysicsTools/PatAlgos/plugins/PATMHTProducer.h
   pushd $CMSSW_BASE/src
     patch -p0 -N < FinalStateAnalysis/recipe/patches/fixMVAMET_CVSConflicts.patch
   popd
