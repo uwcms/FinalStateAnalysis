@@ -14,8 +14,11 @@ Where [efficiency] is a RooFit factory command.
 import array
 from RecoLuminosity.LumiDB import argparse
 from FinalStateAnalysis.PlotTools.RebinView import RebinView
+import rootpy.plotting as plotting
 import logging
 import sys
+from rootpy.utils import asrootpy
+
 args = sys.argv[:]
 sys.argv = [sys.argv[0]]
 
@@ -54,6 +57,9 @@ if __name__ == "__main__":
                         'Can be either an integer or a list of bin edges.'
                         ' If variable binning is used, the numbers should '
                         ' be specified as a comma separated list w/o spaces.')
+    parser.add_argument('--slice', metavar='N', type=int, required=False,
+                        help='when using a TH2 uses a slices it and uses the projection. ') #FIXME: document it properly!
+
 
     plot_grp = parser.add_argument_group('plotting')
     plot_grp.add_argument('--plot', action='store_true',
@@ -100,6 +106,23 @@ if __name__ == "__main__":
     log.info("Getting histograms")
     pass_histo = input_view.Get(args.num)
     all_histo = input_view.Get(args.denom)
+
+    #make slice if necessary
+    if args.slice: #maybe a check if is 2d would be a good thing
+        log.info("Slicing! Slice #%s" % args.slice)
+        #project
+        pass_histo_px = asrootpy( pass_histo.ProjectionX('pass_histo_px', args.slice, args.slice, "e") )
+        all_histo_px  = asrootpy( all_histo.ProjectionX('all_histo_px', args.slice, args.slice, "e") )
+
+        #get rootpy plotting stuff
+        pass_histo_px.decorate( **pass_histo.decorators )
+        all_histo_px.decorate( **all_histo.decorators   )
+
+        #reassign variables
+        pass_histo = pass_histo_px
+        all_histo  = all_histo_px 
+
+
     if not all_histo.Integral():
         log.info("no entries in denominator!")
     else:

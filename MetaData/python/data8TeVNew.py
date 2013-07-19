@@ -565,7 +565,7 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012A_22Jan2013_v1' % pd : {
       'datasetpath' : "/%s/Run2012A-22Jan2013-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
       'firstRun' : 190456,
       'lastRun' : 193621,
       'analyses' : analyses,
@@ -589,7 +589,7 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012B_22Jan2013_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-22Jan2013-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
       'firstRun' : 193833,
       'lastRun' : 196531,
       'analyses' : analyses,
@@ -629,7 +629,7 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012C_22Jan2013_v1' % pd : {
       'datasetpath' : "/%s/Run2012C-22Jan2013-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
       'firstRun' : 198022,
       'lastRun' : 203742,
       'analyses' : analyses,
@@ -669,7 +669,7 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012D_22Jan2013_v1' % pd :{
       'datasetpath' : "/%s/Run2012D-22Jan2013-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
       'firstRun' : 203768,
       'lastRun' : 208686,
       'analyses' : analyses,
