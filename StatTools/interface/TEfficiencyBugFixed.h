@@ -78,6 +78,9 @@ public:
   Int_t Fit(TF1* f1,Option_t* opt);
   TGraphAsymmErrors* Projection(axis axisMarker);
   TGraphErrors* ProjectFunction(axis axisMarker, TH2* fine_binned_histo = 0);
+
+  void SetFunction(TF1* f1) {current_fcn_ = f1;}
+
 private:
   ClassDef(TEfficiencyBugFixed, 1)
 

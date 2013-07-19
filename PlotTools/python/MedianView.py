@@ -35,7 +35,7 @@ class MedianView(object):
             else:
                 raise KeyError("Shift keyword argument can only be 'up' or 'down'")            
         
-        for bin in range(1, high_hist.GetNbinsX() + 1):
+        for bin in range(1, ret_hist.GetNbinsX() + 1):
             error = quad(
                 central_hist.GetBinError(bin),
                 (high_hist.GetBinContent(bin) - central_hist.GetBinContent(bin))
