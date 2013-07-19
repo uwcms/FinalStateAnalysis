@@ -1,4 +1,4 @@
-class smart_dict(object):
+class SmartDict(object):
     '''Smart dictionary for storing objects. Book an object key with book method, 
     call it like with a dictionary. But the object is created ONLY when called the first time, 
     if it never gets called it never gets created, saving memory and time'''
@@ -10,9 +10,7 @@ class smart_dict(object):
         self.booked[key] = (type, args, kwargs)
 
     def __activate__(self, key):
-        kind   = self.booked[key][0]
-        args   = self.booked[key][1]
-        kwargs = self.booked[key][2]
+        kind, args, kwargs = self.booked[key]
         if len(args) and len(kwargs):
             self.active[key] = kind(*args, **kwargs)
         elif len(args): #and not kwargs
