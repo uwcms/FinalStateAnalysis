@@ -320,52 +320,46 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Produce the electron collections
     process.load("FinalStateAnalysis.PatTools.patElectronProduction_cff")
+
+    # Electron Energy Regression and Calibrations
+    process.load("EgammaAnalysis.ElectronTools.electronRegressionEnergyProducer_cfi")
+    process.load("EgammaAnalysis.ElectronTools.calibratedPatElectrons_cfi")
+
+    #setup the energy regression for the specific dataset
+    if kwargs['eleReg']:
+        process.customizeElectronSequence += process.eleRegressionEnergy
+        process.customizeElectronSequence += process.calibratedPatElectrons
+
+        process.eleRegressionEnergy.energyRegressionType    = cms.uint32(2)
+        process.calibratedPatElectrons.correctionsType      = cms.int32(2)
+
+        if isMC:
+            process.calibratedPatElectrons.inputDataset     = cms.string(
+                "Summer12_LegacyPaper")
+        else:
+            process.calibratedPatElectrons.inputDataset     = cms.string(
+                "22Jan2013ReReco")
+
+        process.calibratedPatElectrons.combinationType      = cms.int32(3)
+        process.calibratedPatElectrons.lumiRatio            = cms.double(1.0)
+        process.calibratedPatElectrons.synchronization      = cms.bool(True)
+        process.calibratedPatElectrons.isMC                 = cms.bool(isMC == 1)
+        process.calibratedPatElectrons.verbose              = cms.bool(False)
+
     final_electron_collection = chain_sequence(
         process.customizeElectronSequence, "selectedPatElectrons",
         # Some of the EGamma modules have non-standard src InputTags,
         # specify them here.
         ("src", "inputPatElectronsTag", "inputElectronsTag")
     )
+
     process.tuplize += process.customizeElectronSequence
     process.customizeElectronSequence.insert(0, process.selectedPatElectrons)
     process.patDefaultSequence.replace(process.selectedPatElectrons,
                                        process.customizeElectronSequence)
     # We have to do the pat Jets before the pat electrons since we embed them
     process.customizeElectronSequence.insert(0, process.selectedPatJets)
-
     
-    # Electron Energy Regression and Calibrations
-    from EgammaAnalysis.ElectronTools.electronRegressionEnergyProducer_cfi \
-        import eleRegressionEnergy
-    
-    from EgammaAnalysis.ElectronTools.calibratedPatElectrons_cfi import \
-         calibratedPatElectrons
-
-    #setup the energy regression for the specific dataset
-    if kwargs['eleReg']:
-        process.customizeElectronSequence += cms.Sequence(eleRegressionEnergy)
-        process.customizeElectronSequence += cms.Sequence(calibratedPatElectrons)
-
-        eleRegressionEnergy.inputElectronsTag       = final_electron_collection
-
-        eleRegressionEnergy.energyRegressionType    = cms.uint32(2)
-        calibratedPatElectrons.correctionsType      = cms.int32(2)
-
-        if isMC:
-            calibratedPatElectrons.inputDataset     = cms.string(
-                "Summer12_LegacyPaper")
-        else:
-            calibratedPatElectrons.inputDataset     = cms.string(
-                "22Jan2013ReReco")
-
-        calibratedPatElectrons.combinationType      = cms.int32(3)
-        calibratedPatElectrons.lumiRatio            = cms.double(1.0)
-        calibratedPatElectrons.synchronization      = cms.bool(True)
-        calibratedPatElectrons.isMC                 = cms.bool(isMC == 1)
-        calibratedPatElectrons.verbose              = cms.bool(False)
-
-        final_electron_collection                   = cms.InputTag("calibratedPatElectrons")
-
     # Define cleanPatElectrons input collection
     process.cleanPatElectrons.src = final_electron_collection
 
