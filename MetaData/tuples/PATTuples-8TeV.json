@@ -92,7 +92,7 @@
   "data_TauPlusX_Run2012D_PromptReco_v1" : "/hdfs/store/user/tapas/TauPlusX/Run2012D-PromptReco-v1/AOD/2013-02-25-8TeV-53X-PatTuple_Master",
 
   "LFV_VBF_v1" : "/hdfs/store/user/nkellams/LFV_VBFHToTauMu_M126_8TeV_Tauola_Pythia6",
-  "LFV_GluGlu_v1" : "/hdfs/store/user/nkellams/LFV_GluGluHToTauMu_M126_8TeV_Tauola_Pythia6"
+  "LFV_GluGlu_v1" : "/hdfs/store/user/nkellams/LFV_GluGluHToTauMu_M126_8TeV_Tauola_Pythia6",
 
   "VH_H2Tau_M-125_PavelSync" : "/hdfs/store/user/stephane/Pavel_sync_07-16-2013-patTuple_cfg"
 }
