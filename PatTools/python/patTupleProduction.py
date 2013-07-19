@@ -327,6 +327,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     #setup the energy regression for the specific dataset
     if kwargs['eleReg']:
+        print "-- Applying Electron Regression and Calibration --"
+
         process.customizeElectronSequence += process.eleRegressionEnergy
         process.customizeElectronSequence += process.calibratedPatElectrons
 
