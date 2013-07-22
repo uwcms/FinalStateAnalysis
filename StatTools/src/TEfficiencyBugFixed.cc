@@ -17,6 +17,12 @@
 #include "TVirtualFitter.h"
 #include <iostream>
 #include <string>
+#include <ctime>
+#include "RooDataHist.h"
+#include "RooRealVar.h"
+#include "RooNDKeysPdf.h"
+
+using namespace RooFit;
 
 ClassImp(TEfficiencyBugFixed)
 
@@ -74,10 +80,11 @@ TGraphAsymmErrors* TEfficiencyBugFixed::Projection(axis axisMarker)
   //But the sum of den and num and THEN you divide them
   TH2* h2pass = dynamic_cast<TH2*> (fPassedHistogram);
   TH2* h2tot  = dynamic_cast<TH2*> (fTotalHistogram) ;
+  
   //check if casting went fine
   if (!(h2pass && h2tot)){
-      return NULL;
-    }
+    return NULL;
+  }
 
   TH1D *hpass, *htot = NULL;
   if( axisMarker == axis::xaxis ){
@@ -103,7 +110,7 @@ TGraphErrors* TEfficiencyBugFixed::ProjectFunction(axis axisMarker, TH2* fine_bi
 
   //Get the denominator histogram
   TH2* h2tot  = dynamic_cast<TH2*> (fTotalHistogram) ;
-  if (!(current_fcn_ && h2tot && fitter_)){
+  if (!(current_fcn_ && h2tot )){ //&& fitter_
       return NULL;
     }
   if(fine_binned_histo){
@@ -123,6 +130,12 @@ TGraphErrors* TEfficiencyBugFixed::ProjectFunction(axis axisMarker, TH2* fine_bi
   //nbins
   int binsx = x_axis->GetNbins();
   int binsy = y_axis->GetNbins();
+
+  //create KeysPDF out of the histogram
+  // RooRealVar* x = new RooRealVar( "x", "x", x_axis->GetBinLowEdge(1), x_axis->GetBinLowEdge(binsx) + x_axis->GetBinWidth(binsx) );
+  // RooRealVar* y = new RooRealVar( "y", "y", y_axis->GetBinLowEdge(1), y_axis->GetBinLowEdge(binsy) + y_axis->GetBinWidth(binsy) );
+  // RooDataSet* datahist = new RooDataHist("datahist", "datahist", RooArgList(*x, *y), h2tot);
+  // RooNDKeysPdf keysPdf("keysPdf", "keysPdf", RooArgSet(*x, *y), *datahist, "am") ;
 
   //fill dummy TGraph
   TGraph2DErrors *fcn_quantized = new TGraph2DErrors();
@@ -164,5 +177,9 @@ TGraphErrors* TEfficiencyBugFixed::ProjectFunction(axis axisMarker, TH2* fine_bi
   }
   
   delete fcn_quantized;
+  // delete x;
+  // delete y;
+  // delete datahist;
+
   return ret;
 }

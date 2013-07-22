@@ -20,7 +20,10 @@
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
+#include "SimDataFormats/GeneratorProducts/interface/GenFilterInfo.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
+
+
 
 // For covariance matrix
 #include "DataFormats/Math/interface/Error.h"
@@ -251,6 +254,13 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   if (genEventInfoH.isValid())
     genEventInfo = *genEventInfoH;
 
+  // Try and get the GenFilterInfo information
+  edm::Handle<GenFilterInfo> generatorFilterH;
+  evt.getByLabel("generator","minVisPtFilter",generatorFilterH);
+  GenFilterInfo generatorFilter;
+  if (generatorFilterH.isValid())
+    generatorFilter = *generatorFilterH;
+	
   // Try and get the gen information if it exists
   edm::Handle<reco::GenParticleCollection> genParticles;
   evt.getByLabel(truthSrc_, genParticles);
@@ -259,7 +269,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
-      *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo,
+      *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo, generatorFilter,
       evt.isRealData(), puScenario_,
       electronRefProd, muonRefProd, tauRefProd, jetRefProd,
       phoRefProd, pfRefProd, trackRefProd, gsftrackRefProd, theMEts);

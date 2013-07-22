@@ -80,8 +80,11 @@ for json, col in zip(jmaps, itertools.cycle(mycols)):
         title != options.ref \
         else 'black'
     linestyle = 1
+    inlegend  = True
     if options.compare_by:
+        inlegend  = False
         if json[options.compare_by] not in style_dict:
+            inlegend  = True
             style_dict[json[options.compare_by]] = {'color' : col, 'lstyle' : 0}
         col = style_dict[json[options.compare_by]]['color']
         linestyle = style_dict[json[options.compare_by]]['lstyle'] + 1
@@ -93,6 +96,7 @@ for json, col in zip(jmaps, itertools.cycle(mycols)):
             name=title,
             drawstyle = 'ALP' if first else 'LP SAME',
             legendstyle = 'PL',
+            inlegend  = inlegend,
             fillcolor = col,
             linecolor = col,
             markercolor = col,
@@ -143,9 +147,9 @@ for graph in to_print:
 
 one_line.Draw()
 
-legend = plotting.Legend(len(to_print), rightmargin=0.07, topmargin=0.05, leftmargin=0.45) \
+legend = plotting.Legend(len([i for i in to_print if i.inlegend]), rightmargin=0.03, topmargin=0.03, leftmargin=0.49) \
     if not options.legend_left else \
-    plotting.Legend(len(to_print), leftmargin=0.03, topmargin=0.05, rightmargin=0.65)
+    plotting.Legend(len([i for i in to_print if i.inlegend]), leftmargin=0.03, topmargin=0.03, rightmargin=0.49)
 legend.SetEntrySeparation(0.0)
 legend.SetMargin(0.35)
 

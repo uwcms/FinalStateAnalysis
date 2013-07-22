@@ -146,6 +146,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Using the raw four vector
     double deltaPhiToMEt(int i) const;
 
+   // return the SVfit computed  mass
+    double SVfit(int i, int j) const;
+
     /// Get the transverse mass between two objects
     double mt(int i, const std::string& tagI,
         int j, const std::string& tagJ) const;

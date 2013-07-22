@@ -8,29 +8,36 @@ Generates the ntuples for a given list of final state generation.
 
 Usage:
 
-    ./make_ntuples_cfg.py channels="mt,em,mm,eemm" [options]
+./make_ntuples_cfg.py channels="mt,em,mm,eemm" [options]
 
 There are some additional pre-defined groups of channels which are expanded
 for your convenience::
 
-    zh = eeem, eeet, eemt, eett, emmm, emmt, mmmt, mmtt,
-    zz = eeee, eemm, mmmm,
-    zgg = eegg, mmgg
-    llt = emt, mmt, eet, mmm, emm
-    zg = mmg,eeg
-    zgxtra = mgg, emg, egg,
+zh = eeem, eeet, eemt, eett, emmm, emmt, mmmt, mmtt,
+zz = eeee, eemm, mmmm,
+zgg = eegg, mmgg
+llt = emt, mmt, eet, mmm, emm
+zg = mmg,eeg
+zgxtra = mgg, emg, egg,
 
 The available options (which are set to zero or one) are::
 
-    skipEvents=0            - events to skip (for debugging)
-    maxEvents=-1            - events to run on
-    rerunMCMatch=0          - rerun MC matching
-    eventView=0             - make a row in the ntuple correspond to an event
-                              instead of a final state in an event.
-    passThru=0              - turn off any preselection/skim
-    rerunFSA=0              - regenerate PATFinalState dataformats
-    verbose=0               - print out timing information
-    noPhotons=0             - don\'t build things which depend on photons.
+skipEvents=0 - events to skip (for debugging)
+maxEvents=-1 - events to run on
+rerunMCMatch=0 - rerun MC matching
+eventView=0 - make a row in the ntuple correspond to an event
+instead of a final state in an event.
+passThru=0 - turn off any preselection/skim
+dump=0     - if one, dump process python to stdout
+rerunFSA=0 - regenerate PATFinalState dataformats
+verbose=0 - print out timing information
+noPhotons=0 - don't build things which depend on photons.
+rerunMVAMET=0 - rerun the MVAMET algorithm
+svFit=1 - run the SVfit on appropriate pairs
+rerunQGJetID=0 - rerun the quark-gluon JetID
+runNewElectronMVAID=0 - run the new electron MVAID
+rerunJetsMC=0   - rerun with new jet energy corrections
+           
 
 '''
 
@@ -42,13 +49,14 @@ from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
 from FinalStateAnalysis.NtupleTools.rerun_matchers import rerun_matchers
 from FinalStateAnalysis.NtupleTools.rerun_QGJetID import rerun_QGJetID
+from FinalStateAnalysis.NtupleTools.rerun_JetsMC import rerun_JetsMC
 import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")
 
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
-    skipEvents=0,  # Start at an event offset (for debugging)
+    skipEvents=0, # Start at an event offset (for debugging)
     reportEvery=100,
     channels='mm',
     rerunMCMatch=False,
@@ -58,12 +66,14 @@ options = TauVarParsing.TauVarParsing(
     rerunFSA=0,  # If one, rebuild the PAT FSA events
     verbose=0,  # If one print out the TimeReport
     noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
+    svFit=1, # If one, SVfit appropriate lepton pairs.
     zzMode=False,
     rochCor="",
     eleCor="",
     rerunQGJetID=0, #if one reruns the quark-gluon JetID
     runNewElectronMVAID=0, #if one runs the new electron MVAID
-    rerunMVAMET=0  # If one, (re)build the MVA MET
+    rerunMVAMET=0,  # If one, (re)build the MVA MET
+    rerunJetsMC=0
 )
 
 options.outputFile = "ntuplize.root"
@@ -161,7 +171,10 @@ if options.rerunFSA:
         process.schedule.append(
             rerun_QGJetID(process, fs_daughter_inputs)
             )
-        
+
+    if options.rerunJetsMC:
+        process.schedule.append( rerun_JetsMC(process) )
+
     if options.runNewElectronMVAID:
         process.load("FinalStateAnalysis.PatTools.electrons.patElectronSummer13MVAID_cfi")
         helpers.massSearchReplaceAnyInputTag(
@@ -170,9 +183,9 @@ if options.rerunFSA:
             fs_daughter_inputs['electrons'])
         fs_daughter_inputs['electrons'] = 'patElectrons2013MVAID'
         process.runNewElectronMVAID = cms.Path(process.runAndEmbedSummer13Id)
-        process.schedule.append(process.runNewElectronMVAID) 
-        
-        
+        process.schedule.append(process.runNewElectronMVAID)
+
+
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
     produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
@@ -219,7 +232,7 @@ for final_state in expanded_final_states(final_states):
 
     zz_mode = ( final_state in ['mmmm','eeee','eemm'] )
 
-    analyzer = make_ntuple(*final_state, zz_mode=zz_mode)
+    analyzer = make_ntuple(*final_state, zz_mode=zz_mode, svFit=options.svFit)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 
