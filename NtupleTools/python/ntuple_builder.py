@@ -275,8 +275,7 @@ def make_ntuple(*legs, **kwargs):
     zz_mode = kwargs.get('zz_mode', False)
 
     analyzerSrc = "finalState" + "".join(
-            _producer_translation[x] for x in legs
-            + producer_suffix)
+            _producer_translation[x] for x in legs ) + producer_suffix
 
     if zz_mode:
         analyzerSrc += "Hzz"
