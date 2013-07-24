@@ -12,6 +12,16 @@ zBosons = cms.EDProducer(
     )
 )
 
+wBosons = cms.EDProducer(
+    "GenParticlePruner",
+    src = cms.InputTag("genParticles"),
+    select = cms.vstring(
+        'drop *',
+        'keep++ abs(pdgId) = {24}',
+        'drop abs(pdgId) = {24} & status = 2',
+    )
+)
+
 higgsBosons = cms.EDProducer(
     "GenParticlePruner",
     src = cms.InputTag("genParticles"),
@@ -50,6 +60,7 @@ tauGenJetsFromHiggs = tauGenJets.clone(
 
 genEwkTauSelectors = cms.Sequence(
     zBosons
+    +wBosons
     +higgsBosons
     +genTausFromZs
     +genTausFromHiggs

@@ -3,6 +3,8 @@
 //From FinalStateAnalysis/StatTools
 #include "FinalStateAnalysis/StatTools/interface/RooDataHistEffBuilder.h"
 #include "FinalStateAnalysis/StatTools/interface/RooCruijff.h"
+#include "FinalStateAnalysis/StatTools/interface/TEfficiencyBugFixed.h"
+#include "FinalStateAnalysis/StatTools/interface/functions.h"
 
 //From FinalStateAnalysis/TagAndProbe
 #include "FinalStateAnalysis/TagAndProbe/interface/MuonPOG2011HLTEfficiencies.h"
@@ -22,6 +24,8 @@
 //From FinalStateAnalysis/StatTools
 #pragma link C++ class RooDataHistEffBuilder;
 #pragma link C++ class RooCruijff;
+#pragma link C++ class TEfficiencyBugFixed;
+#pragma link C++ function RooCruijffFcn;
 
 //From FinalStateAnalysis/TagAndProbe
 #pragma link C++ function Eff_HLT_Mu13_Mu8_2011_TPfit_RunAB_EtaEta_DATA;

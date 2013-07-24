@@ -22,6 +22,7 @@ info = PSet(
 
 # ID and isolation
 id = PSet(
+
     #Against Electron
     #STD
     objectAntiElectronLoose  = '{object}.tauID("againstElectronLoose")',
@@ -48,7 +49,7 @@ id = PSet(
     objectAntiMuonLoose2  = '{object}.tauID("againstMuonLoose2")',
     objectAntiMuonMedium2 = '{object}.tauID("againstMuonMedium2")',
     objectAntiMuonTight2  = '{object}.tauID("againstMuonTight2")',
-    
+
     #ISO
     objectDecayFinding = '{object}.tauID("decayModeFinding")',
     #STD
@@ -69,3 +70,5 @@ id = PSet(
     objectMediumMVA2Iso = '{object}.tauID("byMediumIsolationMVA2")',
     objectTightMVA2Iso  = '{object}.tauID("byTightIsolationMVA2")',
 )
+
+

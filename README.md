@@ -14,10 +14,6 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
         <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis/'><img src='https://www.hep.wisc.edu/~efriis/badges/FSA.jpg' width='100'></a></td>
     </tr>
     <tr>
-        <td>52X PAT + Ntuple</td> 
-        <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-52X/'><img src='https://www.hep.wisc.edu/~efriis/badges/FSA-52X.jpg' width='100'></a></td>
-    </tr>
-    <tr>
         <td>42X PAT + Ntuple</td> 
         <td><a href='http://login06.hep.wisc.edu:8080/job/FinalStateAnalysis-42X/'><img src='https://www.hep.wisc.edu/~efriis/badges/FSA-42X.jpg' width='100'></a></td>
     </tr>
@@ -30,7 +26,7 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
 Installation
 ------------
 
-Current CMSSW versions: ``4_2_8_patch7`` or ``5_3_7``.  
+Current CMSSW versions: ``4_2_8_patch7`` or ``5_3_9``.  
 The installation instructions are the same for both.  
 
 Get a supported CMSSW release area::
@@ -44,19 +40,19 @@ Checkout the FinalStateAnalysis repository::
 ```bash
   cd MyWorkingAreaName/src
   git clone --recursive https://github.com/uwcms/FinalStateAnalysis.git
+  cd FinalStateAnalysis
 ```
 
-This will checkout the lastest and greatest version of the code.  You might also want the HCP2012 compatible branch, if so you should additionally run:
+This will checkout the lastest and greatest version of the code.  You might also want the Summer 2013 compatible branch, if so you should additionally run:
 ```bash
-cd FinalStateAnalysis
-git checkout hcp2012
+git checkout summer2013
 ```
 and then proceed as normal.
 
 Checkout the needed CMSSW tags:
 
 ```bash
-  cd FinalStateAnalysis/recipe/
+  cd recipe/
   # You need to have CVS access
   kinit me@CERN.CH
   # Make sure your CMSSW environment is set up
@@ -70,10 +66,11 @@ Checkout the needed CMSSW tags:
   scram b -j 8
 ```
 
-You must always set up the environment::
+You must always set up the CMSSW environment + some extra variables from FinalStateAnalysis::
 
 ```bash
-  source FinalStateAnalysis/environment.sh
+  cmsenv
+  source $CMSSW_BASE/src/FinalStateAnalysis/environment.sh
 ```
 
 For python plotting enhancements, install the custom python virtualenv and extra

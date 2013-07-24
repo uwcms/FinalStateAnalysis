@@ -90,17 +90,51 @@ datadefs = {
    'Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola' : {
    'analyses': ['HTT'],
    'datasetpath' : "/Tbar_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
-   'x_sec' : -999,
+   'x_sec' : 11.1,
    'pu' : 'S10',
    },
 
    'T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola' : {
    'analyses': ['HTT'],
    'datasetpath' : "/T_tW-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
-   'x_sec' : -999,
+   'x_sec' : 11.1,
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
+
+   'Tbar_t-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/Tbar_t-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 30.7,
+   'pu' : 'S10',
+   },
+
+   'T_t-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/T_t-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 56.4,
+   'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+
+
+   'Tbar_s-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/Tbar_s-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 1.56,
+   'pu' : 'S10',
+   },
+
+   'T_s-channel_TuneZ2star_8TeV-powheg-tauola' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/T_s-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : 3.79,
+   'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+
+
+
 
    'TTTo2L2Nu2B_8TeV-powheg-pythia6' : {
    'analyses': ['4L'],
@@ -286,16 +320,63 @@ datadefs = {
    'pu' : 'data',
    'calibrationTarget':'ICHEP2012'
    },
+
+   'DoubleMu_Run2012D_22Jan2013_v1_RHembedded_trans1_tau115_ptelec1_20had1_18_v1' : {
+   'analyses': ['HTauTau'],
+   'datasetpath' : "/DoubleMuParked/StoreResults-Run2012D_22Jan2013_v1_RHembedded_trans1_tau115_ptelec1_20had1_18_v1-f456bdbb960236e5c696adfe9b04eaae/USER",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/json_DCSONLY.txt",
+   'pu' : 'data',
+   'calibrationTarget':'ICHEP2012'
+   },
+
+    'WplusJets_madgraph_filtered' : {
+# This is not a sample exactly... To combine 1-2-3-4 jets I have incorporated a filtered version of WJets (NUP==5) in my workflow
+# I need the name in datadefs for UWHiggs to work
+        'analyses': ['HTT'],
+        'datasetpath': '/ThisIsNotARealSample/NeededForUWCMSToWork/Sorry/Maria',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 37509, # this is the W xsec in the StandardModelReference twiki
+    },
+
+
+    'Wplus1Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W1JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 6662.8,
+    },
+
+    'Wplus2Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W2JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 2159.2,
+    },
+
+
+    'Wplus3Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 640.4,
+    },
+
+    'Wplus4Jets_madgraph' : {
+        'analyses': ['HTT'],
+        'datasetpath': '/W4JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S7',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 264.,
+    },
+
+
 }
 
-for n in range(1,5) :
-   datadefs['W%iJetsToLNu_TuneZ2Star_8TeV-madgraph' % n] = {
-      'analyses': ['HTT','Wbb'],
-      'datasetpath': "/W%iJetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % n,
-      'pu' : 'S10',
-      'x_sec' : -999,
-      'calibrationTarget':'Summer12_DR53X_HCP2012'
-      }
+
 
 # SM Z\gamma 8 TeV
 datadefs['ZGToLLG']= {
@@ -307,7 +388,7 @@ datadefs['ZGToLLG']= {
    }
 
 ############################################################################
-#### Signal datasets                    ####################################
+#### Signal datasets ####################################
 ############################################################################
 for mass in range(80,150, 10) + range(160, 220, 20) + range(250, 550, 50) + range(600, 1100, 100) :
    datadefs['SUSYGluGluToHToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
@@ -482,6 +563,14 @@ def build_data_set(pd, analyses):
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
+      'data_%s_Run2012A_22Jan2013_v1' % pd : {
+      'datasetpath' : "/%s/Run2012A-22Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+      'firstRun' : 190456,
+      'lastRun' : 193621,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
       'data_%s_Run2012B_13Jul2012_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-13Jul2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
@@ -500,7 +589,7 @@ def build_data_set(pd, analyses):
       },
       'data_%s_Run2012B_22Jan2013_v1' % pd : {
       'datasetpath' : "/%s/Run2012B-22Jan2013-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
       'firstRun' : 193833,
       'lastRun' : 196531,
       'analyses' : analyses,
@@ -538,6 +627,14 @@ def build_data_set(pd, analyses):
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
+      'data_%s_Run2012C_22Jan2013_v1' % pd : {
+      'datasetpath' : "/%s/Run2012C-22Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+      'firstRun' : 198022,
+      'lastRun' : 203742,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
       'data_%s_Run2012C_EcalRecover_11DEC2012_v1' % pd :{
       'datasetpath' : "/%s/Run2012C-EcalRecover_11Dec2012-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_201191-201191_8TeV_11Dec2012ReReco-recover_Collisions12_JSON.txt",
@@ -550,7 +647,7 @@ def build_data_set(pd, analyses):
       'datasetpath' : "/%s/Run2012D-PromptReco-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
       'firstRun' : 203768,
-      'lastRun' :  208686,
+      'lastRun' : 208686,
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
@@ -558,7 +655,7 @@ def build_data_set(pd, analyses):
       'datasetpath' : "/%s/Run2012D-16Jan2013-v1/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
       'firstRun' : 203768,
-      'lastRun' :  208686,
+      'lastRun' : 208686,
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
@@ -566,7 +663,15 @@ def build_data_set(pd, analyses):
       'datasetpath' : "/%s/Run2012D-16Jan2013-v2/AOD" % pd,
       'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
       'firstRun' : 203768,
-      'lastRun' :  208686,
+      'lastRun' : 208686,
+      'analyses' : analyses,
+      'calibrationTarget':'Moriond2013'
+      },
+      'data_%s_Run2012D_22Jan2013_v1' % pd :{
+      'datasetpath' : "/%s/Run2012D-22Jan2013-v1/AOD" % pd,
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+      'firstRun' : 203768,
+      'lastRun' : 208686,
       'analyses' : analyses,
       'calibrationTarget':'Moriond2013'
       },
@@ -580,6 +685,10 @@ def build_data_set(pd, analyses):
 data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu','4L','HZG'])
 datadefs.update(data_DoubleMu)
 data_name_map.update(list_DoubleMu)
+
+data_DoubleMuParked, list_DoubleMuParked = build_data_set('DoubleMuParked', ['VH', 'Mu','4L','HZG'])
+datadefs.update(data_DoubleMuParked)
+data_name_map.update(list_DoubleMuParked)
 
 data_MuEG, list_MuEG = build_data_set('MuEG', ['VH', 'HTT', 'Mu'])
 datadefs.update(data_MuEG)
@@ -603,4 +712,5 @@ data_name_map.update(list_TauPlusX)
 
 if __name__=="__main__":
     query_cli(datadefs)
+
 
