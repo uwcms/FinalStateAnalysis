@@ -12,6 +12,8 @@ final_states = [
     "PATElecMuFinalState",
     "PATElecTauFinalState",
     "PATMuTauFinalState",
+    "PATMuJetFinalState",
+
     "PATMuMuFinalState",
     "PATTauTauFinalState",
     "PATElecElecElecFinalState",
@@ -23,6 +25,8 @@ final_states = [
     "PATMuMuTauFinalState",
     "PATElecTauTauFinalState",
     "PATMuTauTauFinalState",
+    "PATMuJetJetFinalState",
+
     "PATTauTauTauFinalState",
 
     "PATElecElecElecElecFinalState",

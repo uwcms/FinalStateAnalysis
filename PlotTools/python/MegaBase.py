@@ -30,6 +30,7 @@ class MegaBase(object):
         # Always store sum of weights for histograms, so the errors make sense
         # later.
         ROOT.TH1.SetDefaultSumw2(True)
+        ROOT.TH2.SetDefaultSumw2(True)
 
     def book(self, location, name, *args, **kwargs):
         ''' Book an object at location
@@ -60,6 +61,39 @@ class MegaBase(object):
         directory.Append(object)
         self.histograms[os.path.join(location, name)] = object
         return object
+
+    def book2D(self, location, name, *args, **kwargs):
+        ''' Book an object at location
+
+        The object is built using::
+
+            the_type(name, *args)
+
+        The type can be specified using the 'type' kwarg.  The default is
+        ROOT.TH1F
+
+        '''
+        self.log.debug("booking %s at %s", name, location)
+
+        directory = make_dirs(self.output, os.path.normpath(location).split('/'))
+
+        if not directory:
+            raise IOError("Couldn't create directory %s in file %s" %
+                          (location, self.output))
+
+        directory.cd()
+        the_type = kwargs.get('type', ROOT.TH2F)
+        object = the_type(name, *args)
+        if isinstance(the_type, ROOT.TH2):
+            # Check if we've specified an xaxis, otherwise use the title.
+            xaxis = kwargs.get('xaxis', args[1])
+            object.GetXaxis().SetTitle(xaxis)
+        directory.Append(object)
+        self.histograms[os.path.join(location, name)] = object
+        return object
+
+
+
 
     def enable_branch(self, branch):
         ''' Set the branch to read on TTree::GetEntry '''

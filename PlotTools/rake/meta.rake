@@ -23,6 +23,7 @@ namespace :meta do
         sh "extract_meta_info.py #{t.prerequisites} #{ntuple} #{t.name}"
       end
     end
+    
 
     # For data, we need a computed lumi mask 
     if sample.include? 'data' 
@@ -46,7 +47,9 @@ namespace :meta do
           pu_file = ENV['pu2012JSON']
           maxbin = 60
           nbins = 600
-          minbias = 69400
+        #  minbias = 69400
+	#  minbias = 73500 # I am changing this to do a test! Change back
+	  minbias = 71450
         end
         if sqrts == "7" then
           pu_file = ENV["pu2011JSON"]
@@ -74,6 +77,7 @@ namespace :meta do
     chdir(args.directory) do
       FileList["*.txt"].each do |txtfile|
         sample = txtfile.sub('.txt', '')
+	file   =txtfile + '.lumicalc.sum'
         target = make_meta_tasks(sample, args.ntuple, args.sqrts)
         task :computemeta => target
       end

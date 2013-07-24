@@ -42,6 +42,7 @@ class PileupWeight(object):
                 self.data.SetDirectory(0)
             else:
                 self.data.Add(pu)
+	    print "Now PU Mean is : %4.2f" %self.data.GetMean()
             file.Close()
 
         # Normalize

@@ -15,7 +15,8 @@ options = TauVarParsing.TauVarParsing(
     puTag='unknown',
     HLTprocess='HLT',
     isAOD=True,
-    calibrationTarget='2012Jul13ReReco',
+    calibrationTarget='Summer12_DR53X_HCP2012',
+#    calibrationTarget='2012Jul13ReReco',
     passThru=0,
     verbose=0, # Print out summary table at end
     profile=0, # Enabling profiling
@@ -30,7 +31,6 @@ options = TauVarParsing.TauVarParsing(
 )
 
 files = [
-    
 ]
 
 options.inputFiles = files
@@ -47,6 +47,7 @@ process.source = cms.Source(
     fileNames = cms.untracked.vstring(options.inputFiles),
     skipEvents = cms.untracked.uint32(options.skipEvents),
 )
+
 # If data, apply a luminosity mask
 if not options.isMC and options.lumiMask:
     # Figure out what the absolute PATH is
@@ -65,7 +66,9 @@ if options.eventsToProcess:
             cms.untracked.VEventRange(options.eventsToProcess)
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(options.maxEvents))
+#    input = cms.untracked.int32(options.maxEvents))
+input = cms.untracked.int32(10)
+)
 
 output_command = 'drop *'
 if options.keepEverything:
@@ -85,7 +88,8 @@ process.out = cms.OutputModule(
 # Configure the pat tuple
 import FinalStateAnalysis.PatTools.patTupleProduction as tuplizer
 tuplize, output_commands = tuplizer.configurePatTuple(
-    process, isMC=options.isMC, xSec=options.xSec,
+#    process, isMC=options.isMC, xSec=options.xSec,
+	process, True, xSec=options.xSec,
     isAOD=options.isAOD, xSecErr=options.xSecErr,
     puTag=options.puTag, dataset=options.dataset,
     embedded=options.embedded,
