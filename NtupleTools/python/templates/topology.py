@@ -41,7 +41,11 @@ pairs = PSet(
     object1_object2_CosThetaStar = 'abs(subcand({object1_idx}, {object2_idx}).get.daughterCosThetaStar(0))',
 
     #Pairs + MET
-    object1_object2_ToMETDPhi = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("type1").phi)',
+    object1_object2_ToMETDPhi_Ty1 = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("type1").phi)',
+)
+
+svfit = PSet(
+    object1_object2_SVfitMass = 'SVfit({object1_idx},{object2_idx})',
 )
 
 finalstate = PSet(
@@ -53,7 +57,7 @@ finalstate = PSet(
     MassErrord1 = 'userFloat("cand_dM_0")',
     MassErrord2 = 'userFloat("cand_dM_1")',
     MassErrord3 = 'userFloat("cand_dM_2")',
-    MassErrord4 = 'userFloat("cand_dM_3")'    
+    MassErrord4 = 'userFloat("cand_dM_3")'
 )
 
 # Branches for identifying Z bosons using a pair of objects

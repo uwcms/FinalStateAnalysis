@@ -43,3 +43,8 @@ on the 2012-03-05-EWKPatTuple::
    submit_job.py JOBID make_ntuples_cfg.py --input-dir=/hdfs/store/user/efriis/2012-03-05-EWKPatTuple/{sample}/ --input-files-per-job=5 > do_higgs.txt 
    # Submit the jobs
    bash < do_higgs.txt
+
+   submit_job.py JOBID make_ntuples_cfg.py makeQuad=1 makeTNP=1 makeH2Tau=0 makeTrilepton=1 make4L=1 rerunFSA=1 --tuple-dirs=$fsa/MetaData/tuples/PATTuples-8TeV.json --apply-cmsRun-lumimask --input-files-per-job=1 --shared-fs  --samples "VH*" "*WZ*" "*ZZ*" "data_DoubleMu*" "data_DoubleEl*" "data_MuEG*" "Wpl*" "TT*" "Zjets*" "WW*" "*WH*" > do_higgs8TeV.txt
+   bash < do_higgs8TeV.txt
+
+

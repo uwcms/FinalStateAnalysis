@@ -173,9 +173,10 @@ fillP3Covariance(const reco::LeafCandidate &c,
 		 TMatrixDSym &bigCov,
 		 int offset) const {
 
-  if (c.pdgId() != 22)
-    edm::LogWarning("Pdg Id mismatch")
-      << "Treating errors as for Photons, but pdgId is "<< c.pdgId();
+//  if (c.pdgId() != 22)
+//    edm::LogWarning("Pdg Id mismatch")
+//      << "Treating errors as for Photons, but pdgId is "<< c.pdgId();
+
 
   reco::PFCandidate pfc(0,c.p4(),reco::PFCandidate::gamma);
   fillP3Covariance(pfc, bigCov, offset);

@@ -26,7 +26,7 @@ if [ -z "$FORCENUKE" ]; then
    done
 fi
 
-pushd $fsa/PatTools
+pushd $CMSSW_BASE/src/FinalStateAnalysis/PatTools
 echo "Deleting all bogus files in PatTools..."
 # We keep the ones needed for producing PATFinalStateObjects
 # The pfCandAuxFunctions is just to ensure that libFinalStateAnalysisPatTools

@@ -53,13 +53,14 @@ try:
         cut=cms.string(
             'pt > 19 && abs(eta) < 2.3 && '
             'tauID("decayModeFinding") && '
-            'tauID("byIsolationMVAraw") > 0.7 && '
-            'tauID("againstElectronLoose") && tauID("againstMuonLoose")'),
+            'tauID("byIsolationMVAraw") > 0.8 && '
+            'tauID("againstElectronLoose") && tauID("againstMuonLoose2")'),
         filter=cms.bool(False)
     )
 
     patMEtMVA = patMETs.clone(metSource=cms.InputTag("pfMEtMVA"))
     patMEtMVA.addMuonCorrections = False
+    pfMEtMVA.verbosity = 0
 
     print "Built MVA MET sequence"
     pfMEtMVAsequence = cms.Sequence(
