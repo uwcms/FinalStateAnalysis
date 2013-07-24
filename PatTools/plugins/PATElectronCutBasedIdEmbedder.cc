@@ -23,7 +23,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
 
-#include "EGamma/EGammaAnalysisTools/interface/EGammaCutBasedEleId.h"
+#include "EgammaAnalysis/ElectronTools/interface/EGammaCutBasedEleId.h"
 
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
 
@@ -41,8 +41,8 @@ namespace eid = EgammaCutBasedEleId;
 
 class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
   typedef std::vector<std::string> vstring;
-  typedef std::map<std::string,eid::WorkingPoint> wp_map;  
-  
+  typedef std::map<std::string,eid::WorkingPoint> wp_map;
+
   public:
     explicit PATElectronCutBasedIdEmbedder(const edm::ParameterSet& iConfig):
       _src(iConfig.getParameter<edm::InputTag>("src")),
@@ -50,8 +50,8 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
       _vtxsrc(iConfig.getParameter<edm::InputTag>("vtxSrc")),
       _convsrc(iConfig.getParameter<edm::InputTag>("conversionsSrc")),
       _wps_applied(iConfig.getParameter<vstring>("wps_to_apply")) {
-      
-      edm::VParameterSet wps = 
+
+      edm::VParameterSet wps =
 	iConfig.getParameterSetVector("available_working_points");
 
       edm::VParameterSet::const_iterator i = wps.begin();
@@ -60,12 +60,12 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
       for( ; i != e; ++i)
 	_wps[i->getParameter<std::string>("name")] =
 	  (eid::WorkingPoint)i->getParameter<int>("index");
-      
+
 
       // do not apply isolation criteria to the selection
-      eid::PassAll = 
-	( eid::DETAIN | eid::DPHIIN  | eid::SIGMAIETAIETA | 
-	  eid::HOE    | eid::OOEMOOP | eid::D0VTX  | 
+      eid::PassAll =
+	( eid::DETAIN | eid::DPHIIN  | eid::SIGMAIETAIETA |
+	  eid::HOE    | eid::OOEMOOP | eid::D0VTX  |
 	  eid::DZVTX  | eid::VTXFIT  | eid::MHITS );
 
       produces<pat::ElectronCollection>();
@@ -92,23 +92,23 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
       Handle<pat::ElectronCollection > cands;
       if(iEvent.getByLabel(_src,cands))
         for(unsigned int  i=0;i!=cands->size();++i) {
-          
+
 	  pat::Electron newElectron = cands->at(i);
 
-	  const reco::GsfElectron* electron = 
+	  const reco::GsfElectron* electron =
 	    dynamic_cast<const reco::GsfElectron*>(cands->at(i).
 					     originalObjectRef().get());
-	  
+
 	  ii = _wps_applied.begin();
 	  for( ; ii != ee; ++ii ) {
 	    // iso applied later/differently
 	    int pass = (int)eid::PassWP(_wps[*ii],*electron,
 					the_convs,*the_bs.product(),
 					the_vtxs,
-					0.0,0.0,0.0,0.0); 
+					0.0,0.0,0.0,0.0);
 
-	    
-	    newElectron.addUserInt(*ii,pass);	    
+
+	    newElectron.addUserInt(*ii,pass);
 	  }
 
 	  out->push_back(newElectron);

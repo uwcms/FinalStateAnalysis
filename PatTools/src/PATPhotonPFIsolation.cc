@@ -3,7 +3,7 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 
 // this has a ton of using directives in it...
-#include "EGamma/EGammaAnalysisTools/interface/PFIsolationEstimator.h"
+#include "EgammaAnalysis/ElectronTools/interface/PFIsolationEstimator.h"
 
 namespace pattools {
   typedef reco::PFCandidateCollection PFCandColl;
@@ -11,7 +11,7 @@ namespace pattools {
 
   PATPhotonPFIsolation::PATPhotonPFIsolation(const float cone_size):
     _iso(new PFIsolationEstimator()),
-    _cone_size(cone_size) {    
+    _cone_size(cone_size) {
     _iso->initializePhotonIsolation(kTRUE);
     _iso->setConeSize(cone_size);
   }
@@ -25,8 +25,8 @@ namespace pattools {
 						reco::VertexRef r_vtx,
 						VtxHandle h_vtxs) {
     pfisolation the_iso;
-    
-    const reco::Photon* pRef = 
+
+    const reco::Photon* pRef =
       dynamic_cast<const reco::Photon*>(p_pho->originalObjectRef().get());
 
     _iso->fGetIsolation(pRef,p_pfs,r_vtx,h_vtxs);
