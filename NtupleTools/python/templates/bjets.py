@@ -25,13 +25,31 @@ btagging = PSet(
         objectNSVsBtag ='{object}.userFloat("nTracksSSV")',
 	objectSVFlightDistanceBtag ='{object}.userFloat("flightDistance")',
         objectSVErrFlightDistanceBtag ='{object}.userFloat("errorFlightDistance")',
+        objectSVMassDPMBtag ='{object}.userFloat("massD_SSV")',
+        objectSVMassD0Btag ='{object}.userFloat("massD0_SSV")',
 
 	#Custom Btagging, based on Muons-In-Jets
 	objectMuonInJetPtBtag ='{object}.userFloat("MuonInJetPt")',
         objectMuonInJetPtRelBtag ='{object}.userFloat("MuonInJetPtRel")',
 
 	#Flavour
-	objectsJetFlavour ='{object}.partonFlavour()',
+	objectJetFlavour ='{object}.partonFlavour()',
 )
+
+pujets = PSet(
+        objectIDTight='{object}.userFloat("idTight")',
+	objectPUIDFullDiscriminant='{object}.userFloat("fullDiscriminant")',
+	objectPUIDFullIDTight='{object}.userInt("fullIdTight")',
+)
+
+
+
+
+
+
+
+
+
+
 
 

@@ -75,13 +75,14 @@ style_dict = {}
 one_line = None
 first = True
 for json, col in zip(jmaps, itertools.cycle(mycols)):
-    title = ' '.join([json[tag] for tag in options.name_by.split(',')])
+    title = ' '.join([json[tag] for tag in options.name_by.split(',')])    
     col = col if (not options.ref) or \
         title != options.ref \
         else 'black'
     linestyle = 1
     inlegend  = True
     if options.compare_by:
+        title     = json[options.compare_by]
         inlegend  = False
         if json[options.compare_by] not in style_dict:
             inlegend  = True
@@ -124,6 +125,7 @@ for json, col in zip(jmaps, itertools.cycle(mycols)):
 
 to_print[0].GetXaxis().SetTitle(options.xtitle)
 to_print[0].GetYaxis().SetTitle(options.ytitle)
+to_print[0].GetYaxis().SetTitleOffset(1)
 
 x_range = eval(options.xrange) if options.xrange else None
 if options.xrange:

@@ -116,7 +116,7 @@ def produce_final_states(process, collections, output_commands,
                 '& (isGlobalMuon | isTrackerMuon)' )
 
         elec_string = (
-                'abs(superCluster().eta) < 2.5 '
+                'abs(superCluster().eta) < 3.0 '
                 '& max(pt, userFloat("maxCorPt")) > 7' )
 
 
@@ -160,16 +160,20 @@ def produce_final_states(process, collections, output_commands,
 
 
 
+    process.muonsRank=cms.EDProducer("PATMuonRanker", src=cms.InputTag(muonsrc))
+    
     process.muonsForFinalStates = cms.EDFilter(
         "PATMuonRefSelector",
-        src=cms.InputTag(muonsrc),
+        src=cms.InputTag("muonsRank"),
         cut=cms.string(muon_string),
         filter=cms.bool(False),
     )
 
+    process.electronsRank=cms.EDProducer("PATElectronRanker", src=cms.InputTag(esrc))
+
     process.electronsForFinalStates = cms.EDFilter(
         "PATElectronRefSelector",
-        src=cms.InputTag(esrc),
+        src=cms.InputTag("electronsRank"),
         cut=cms.string(elec_string),
         filter=cms.bool(False),
     )
@@ -181,26 +185,28 @@ def produce_final_states(process, collections, output_commands,
         filter=cms.bool(False),
     )
 
+    process.tausRank=cms.EDProducer("PATTauRanker", src=cms.InputTag(tausrc))
+
     # Require that the PT of the jet (either corrected jet or tau)
     # to be greater than 17
     process.tausForFinalStates = cms.EDFilter(
         "PATTauRefSelector",
-        src=cms.InputTag(tausrc),
+        src=cms.InputTag("tausRank"),
         cut=cms.string('abs(eta) < 2.5 & pt > 17 & tauID("decayModeFinding")'),
         filter=cms.bool(False),
     )
 
 
-    process.jetsForFinalStates = cms.EDProducer("PATJetCleaner",
+    process.jetsFiltered = cms.EDProducer("PATJetCleaner",
         src = cms.InputTag(jetsrc),
         # preselection (any string-based cut on pat::Jet)
-        preselection = cms.string("pt>20 & abs(eta) < 2.5 & userFloat('idLoose') & userFloat('fullDiscriminant')"),
+        preselection = cms.string("pt>20 & abs(eta) < 2.5 & userFloat('idLoose') & userInt('fullIdLoose')"), # I leave it loose here, can be tightened at the last step
         # overlap checking configurables
         checkOverlaps = cms.PSet(
          muons = cms.PSet(
           src = cms.InputTag("muonsForFinalStates"),
           algorithm = cms.string("byDeltaR"),
-          preselection = cms.string("pt>10&&isGlobalMuon&&isTrackerMuon&&(chargedHadronIso()+max(photonIso+neutralHadronIso(),0.0))/pt()<0.3"),
+          preselection = cms.string("pt>10&&isGlobalMuon&&isTrackerMuon&&(userIso(0)+max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso(),0))/pt()<0.3"), 	
           deltaR = cms.double(0.3),
           checkRecoComponents = cms.bool(False),
           pairCut = cms.string(""),
@@ -209,7 +215,7 @@ def produce_final_states(process, collections, output_commands,
         electrons = cms.PSet(
            src = cms.InputTag("electronsForFinalStates"),
            algorithm = cms.string("byDeltaR"),
-           preselection = cms.string("pt>10&&(chargedHadronIso()+max(photonIso()+neutralHadronIso(),0.0))/pt()<0.3"),
+           preselection = cms.string("pt>10&&userFloat('wp95')>0&&(userIso(0)+max(userIso(1)+neutralHadronIso()-0.5*userIso(2),0.0))/pt()<0.3"),
            deltaR = cms.double(0.3),
            checkRecoComponents = cms.bool(False),
            pairCut = cms.string(""),
@@ -219,11 +225,16 @@ def produce_final_states(process, collections, output_commands,
          # finalCut (any string-based cut on pat::Jet)
          finalCut = cms.string('')
     )
+    process.jetsForFinalStates=cms.EDProducer("PATJetRanker", src=cms.InputTag("jetsFiltered"))
 
     process.selectObjectsForFinalStates = cms.Sequence(
-        process.muonsForFinalStates
+	process.muonsRank
+        +process.muonsForFinalStates
+	+process.electronsRank
         + process.electronsForFinalStates
+	+process.tausRank
         + process.tausForFinalStates
+        + process.jetsFiltered
 	+ process.jetsForFinalStates
     )
     if not noPhotons:

@@ -15,6 +15,7 @@ kinematics = PSet(
     objectPhi = '{object}.phi',
     objectCharge = '{object}.charge',
     objectMass = '{object}.mass',
+    objectRank ='{object}.userFloat("rankByPt")'
 )
 
 vertex_info = PSet(
@@ -56,6 +57,7 @@ base_jet = PSet(
     'jetVariables({object_idx},"mult_MLP_QC") : -100 ',
     objectJetmultMLP    =   '? {object}.userCand("patJet").isNonnull ? '
     'jetVariables({object_idx},"mult_MLP") : -100',
- 
+    objectJetPartonFlavour = '? {object}.userCand("patJet").isNonnull ? '
+        '{object}.userCand("patJet").partonFlavour : -100',
 )
 

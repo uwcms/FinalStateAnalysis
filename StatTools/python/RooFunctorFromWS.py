@@ -21,6 +21,8 @@ Author: Evan K. Friis, UW Madison
 
 from FinalStateAnalysis.Utilities.rootbindings import ROOT
 import array
+from FinalStateAnalysis.PlotTools.decorators import memo_last
+
 #ROOT.gSystem.Load("libFinalStateAnalysisStatTools")
 
 TMVA_tools = ROOT.TMVA.Tools.Instance()
@@ -49,6 +51,7 @@ class FunctorFromMVA(object):
             self.reader.AddVariable(var, self.var_map[var])
         self.reader.BookMVA(name, xml_filename)
 
+    @memo_last
     def __call__(self, **kvars):
         #kvars enforces that we use the proper vars
         if not ( 
