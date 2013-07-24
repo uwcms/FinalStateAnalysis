@@ -9,6 +9,7 @@ Author: Evan K. Friis, UW Madison
 import array
 import rootpy.plotting.views as views
 import rootpy.plotting as plotting
+from rootpy.utils import asrootpy
 import ROOT
 import os
 
@@ -73,12 +74,14 @@ class RebinView(views._FolderView):
         '''
         # Just merging bins
         if isinstance(binning, int):
-            if binning == 1:
+            if binning == 1 or isinstance(histogram, ROOT.TH2):
                 return histogram
             histogram.Rebin(binning)
             return histogram
         # Fancy variable size bins
         if isinstance(histogram, ROOT.TH2):
+            if not isinstance(binning[0], (list, tuple)):
+                return histogram
             #print binning[0], ' ' , binning[1] 
             bin_arrayx = binning[0] #array.array('d',binning[0])
             bin_arrayy = binning[1] #array.array('d',binning[1])
@@ -86,10 +89,14 @@ class RebinView(views._FolderView):
                 return  histogram.Rebin2D(int(binning[0][0]),int(binning[1][0]), histogram.GetName() + 'rebin')
             else:
                 return self.newRebin2D(histogram, bin_arrayx, bin_arrayy)
-
         elif isinstance(histogram, ROOT.TH1):
+            if isinstance(binning[0], (list, tuple)):
+                return histogram
             bin_array = array.array('d', binning)
-            return histogram.Rebin(len(binning)-1, histogram.GetName() + 'rebin', bin_array)
+            ret = asrootpy( histogram.Rebin(len(binning)-1, histogram.GetName() + 'rebin', bin_array) )
+            if hasattr(histogram, 'decorators'):
+                ret.decorate( **histogram.decorators )
+            return ret 
         else:
             print 'ERROR in RebinView: not a TH1 or TH2 histo. Rebin not done'
             
