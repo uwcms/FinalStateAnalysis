@@ -73,11 +73,20 @@ zzfsr = PSet(
     MassFsr                 = 'p4fsr().M',
     PtFsr                   = 'p4fsr().pt',
     KD                      = 'userFloat("KD")',
+
+    # KD angles
     costheta1               = 'userFloat("costheta1")',
     costheta2               = 'userFloat("costheta2")',
     costhetastar            = 'userFloat("costhetastar")',
     Phi                     = 'userFloat("Phi")',
-    Phi1                    = 'userFloat("Phi1")'
+    Phi1                    = 'userFloat("Phi1")',
+
+    # Gen-level KD angles
+    costheta1_gen           = 'userFloat("costheta1_gen")',
+    costheta2_gen           = 'userFloat("costheta2_gen")',
+    costhetastar_gen        = 'userFloat("costhetastar_gen")',
+    Phi_gen                 = 'userFloat("Phi_gen")',
+    Phi1_gen                = 'userFloat("Phi1_gen")'
 )
 
 

@@ -370,12 +370,14 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
 
     // make sure the legs are arranged to match the FinalState datatype
     // i.e. electrons go first for 2e2mu
+    bool revOrder = false;
     if ( final_state_type == eemm_type && abs(leg1->pdgId()) == 13 && abs(leg3->pdgId()) == 11 )
     {
         leg1_out = edm::Ptr<typename FinalState::daughter1_type> ( leg3 ); 
         leg2_out = edm::Ptr<typename FinalState::daughter2_type> ( leg4 ); 
         leg3_out = edm::Ptr<typename FinalState::daughter3_type> ( leg1 ); 
-        leg4_out = edm::Ptr<typename FinalState::daughter4_type> ( leg2 ); 
+        leg4_out = edm::Ptr<typename FinalState::daughter4_type> ( leg2 );
+        revOrder = true;
     }
     else
     {
@@ -399,6 +401,33 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     outputCand.addUserFloat("leg1fsrIsoCorr", leg2_fsrIsoCorr);
     outputCand.addUserFloat("leg2fsrIsoCorr", leg3_fsrIsoCorr);
     outputCand.addUserFloat("leg3fsrIsoCorr", leg4_fsrIsoCorr);
+
+
+    // ------------------------------------------------
+    // Grab gen-level leptons
+    // Correct lepton ordering for 2e2mu if necessary
+    // ------------------------------------------------
+    const reco::GenParticle *leg1_gen;
+    const reco::GenParticle *leg2_gen;
+    const reco::GenParticle *leg3_gen;
+    const reco::GenParticle *leg4_gen;
+
+    if (revOrder)
+    {
+        leg1_gen = leg3_out->genLepton();
+        leg2_gen = leg4_out->genLepton();
+        leg3_gen = leg1_out->genLepton();
+        leg4_gen = leg2_out->genLepton();
+    }
+    else
+    {
+        leg1_gen = leg1_out->genLepton();
+        leg2_gen = leg2_out->genLepton();
+        leg3_gen = leg3_out->genLepton();
+        leg4_gen = leg4_out->genLepton();
+    }
+
+
 
     // ----------------------
     // Add KDs and Angles
@@ -448,6 +477,42 @@ PATQuadFinalStateBuilderHzzT<FinalState>::produce(
     outputCand.addUserFloat("costhetastar", costhetastar);
     outputCand.addUserFloat("Phi", Phi);
     outputCand.addUserFloat("Phi1", Phi1);
+
+
+    // Add Gen angles
+    double costhetastar_gen  = -99;
+    double costheta1_gen     = -99;
+    double costheta2_gen     = -99;
+    double Phi_gen           = -99;
+    double Phi1_gen          = -99;
+
+    if ( leg1_gen != NULL && leg2_gen != NULL && leg3_gen != NULL && leg4_gen != NULL )
+    {
+        std::vector<TLorentzVector> partP_gen(4);
+
+        partP_gen.at(0) = TLorentzVector(leg1_gen->px(), leg1_gen->py(), leg1_gen->pz(), leg1_gen->p4().E());
+        partP_gen.at(1) = TLorentzVector(leg2_gen->px(), leg2_gen->py(), leg2_gen->pz(), leg2_gen->p4().E());
+        partP_gen.at(2) = TLorentzVector(leg3_gen->px(), leg3_gen->py(), leg3_gen->pz(), leg3_gen->p4().E());
+        partP_gen.at(3) = TLorentzVector(leg4_gen->px(), leg4_gen->py(), leg4_gen->pz(), leg4_gen->p4().E());
+
+        HZZ4LAngles angles_gen;
+        angles_gen.computeAngles(
+                partP_gen.at(0) + partP_gen.at(1) + partP_gen.at(2) + partP_gen.at(3),  // H.p4
+                partP_gen.at(0) + partP_gen.at(1),                                      // Z1.p4
+                partP_gen.at(0),                                                        // l1.p4
+                partP_gen.at(1),                                                        // l2.p4
+                partP_gen.at(2) + partP_gen.at(3),                                      // Z2.p4
+	    		partP_gen.at(2),                                                        // l3.p4
+                partP_gen.at(3),                                                        // l4.p4
+                costheta1_gen, costheta2_gen, Phi_gen, costhetastar_gen, Phi1_gen);
+    }
+    
+    outputCand.addUserFloat("costheta1_gen", costheta1_gen);
+    outputCand.addUserFloat("costheta2_gen", costheta2_gen);
+    outputCand.addUserFloat("costhetastar_gen", costhetastar_gen);
+    outputCand.addUserFloat("Phi_gen", Phi_gen);
+    outputCand.addUserFloat("Phi1_gen", Phi1_gen);
+    
 
     // -------------------------
     // Output candidate to event
