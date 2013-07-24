@@ -81,7 +81,7 @@ def rerun_Jets(process, isData=False):
 
   process.patJetCharge.src = cms.InputTag("ak5JetTracksAssociatorAtVertex")
   process.load("PhysicsTools.PatAlgos.patSequences_cff")
-  process.NewSelectedPatJets = process.selectedPatJets.clone(src = cms.InputTag("patJetId"))
+  process.NewSelectedPatJets = process.selectedPatJets.clone(src = cms.InputTag("patSSVJetEmbedder"))
 
 #  All the btagging bits should go to a btag.cff  to be cleaner...
 
@@ -108,6 +108,11 @@ def rerun_Jets(process, isData=False):
       )
   ))
 
+  process.patSSVJetEmbedder = cms.EDProducer(
+    "PATSSVJetEmbedder",
+    src = cms.InputTag("patJetId")
+  )
+
   process.rerun_JetsMC = cms.Path(
                                  process.inclusiveVertexing *
                                  process.inclusiveMergedVerticesFiltered *
@@ -122,7 +127,8 @@ def rerun_Jets(process, isData=False):
                                  process.makePatJets*
                                  process.patJetsPUID*
                                  process.patJetId*
-                                 process.NewSelectedPatJets#*
+				 process.patSSVJetEmbedder*
+                                 process.NewSelectedPatJets
                                         )
 
 
