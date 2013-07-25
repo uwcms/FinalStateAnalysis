@@ -94,6 +94,7 @@ _photon_template = PSet(
     templates.topology.mtToMET,
 )
 
+
 _leg_templates = {
     't': _tau_template,
     'm': _muon_template,
@@ -103,7 +104,7 @@ _leg_templates = {
 }
 
 _pt_cuts = {
-    'm': '7',
+    'm': '5',
     'e': '7',
     't': '18',
     'g': '10',
@@ -270,14 +271,25 @@ def make_ntuple(*legs, **kwargs):
                 templates.topology.svfit.replace(object1=leg_a, object2=leg_b)
             )
 
+    # Are we running on the ZZ-specific collections?
+    zz_mode = kwargs.get('zz_mode', False)
+
+    analyzerSrc = "finalState" + "".join(
+            _producer_translation[x] for x in legs ) + producer_suffix
+
+    if zz_mode:
+        analyzerSrc += "Hzz"
+        ntuple_config = PSet(
+                ntuple_config,
+                templates.topology.zzfsr
+        )
+
     # Now build our analyzer EDFilter skeleton
     output = cms.EDFilter(
         "PATFinalStateAnalysisFilter",
         weights=cms.vstring(),
         # input final state collection.
-        src=cms.InputTag("finalState" + "".join(
-            _producer_translation[x] for x in legs)
-            + producer_suffix),
+        src=cms.InputTag( analyzerSrc ),
         evtSrc=cms.InputTag("patFinalStateEventProducer"),
         # counter of events before any selections
         skimCounter=cms.InputTag("eventCount", "", "TUPLE"),
@@ -326,9 +338,11 @@ def make_ntuple(*legs, **kwargs):
     #   first put best Z in initial position
     #   then order first two by pt
     #   then order third and fourth by pt
-    make_unique = True
-    if 'noclean' in kwargs:
-        make_unique = not kwargs['noclean']
+    noclean = kwargs.get('noclean', False)
+
+    # ZZ-producer does not require this cleaning step
+    make_unique = not noclean and not zz_mode
+    
     if make_unique:
         for type, count in counts.iteritems():
             if count == 2:

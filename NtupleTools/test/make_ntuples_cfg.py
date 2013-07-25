@@ -60,13 +60,16 @@ options = TauVarParsing.TauVarParsing(
     reportEvery=100,
     channels='mm',
     rerunMCMatch=False,
-    eventView=0, # Switch between final state view (0) and event view (1)
-    passThru=0, # Turn off preselections
-    dump=0, # If one, dump process python to stdout
-    rerunFSA=0, # If one, rebuild the PAT FSA events
-    verbose=0, # If one print out the TimeReport
-    noPhotons=0, # If one, don't assume that photons are in the PAT tuples.
+    eventView=0,  # Switch between final state view (0) and event view (1)
+    passThru=0,  # Turn off preselections
+    dump=0,  # If one, dump process python to stdout
+    rerunFSA=0,  # If one, rebuild the PAT FSA events
+    verbose=0,  # If one print out the TimeReport
+    noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
     svFit=1, # If one, SVfit appropriate lepton pairs.
+    zzMode=False,
+    rochCor="",
+    eleCor="",
     rerunQGJetID=0, #if one reruns the quark-gluon JetID
     runNewElectronMVAID=0, #if one runs the new electron MVAID
     rerunMVAMET=0,  # If one, (re)build the MVA MET
@@ -151,6 +154,7 @@ if options.rerunFSA:
         'jets': 'selectedPatJets',
         'pfmet': 'systematicsMET',
         'mvamet': mvamet_collection,
+        'fsr': 'boostedFsrPhotons',
     }
     #re run the MC matching, if requested
     if options.rerunMCMatch:
@@ -186,7 +190,9 @@ if options.rerunFSA:
     # in pat tuples.
     produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
                          'puTagDoesntMatter', buildFSAEvent=True,
-                         noTracks=True, noPhotons=options.noPhotons)
+                         noTracks=True, noPhotons=options.noPhotons,
+                         zzMode=options.zzMode, rochCor=options.rochCor, 
+                         eleCor=options.eleCor)
     process.buildFSAPath = cms.Path(process.buildFSASeq)
     # Don't crash if some products are missing (like tracks)
     process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
@@ -223,7 +229,10 @@ def expanded_final_states(input):
 
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
-    analyzer = make_ntuple(*final_state, svFit=options.svFit)
+
+    zz_mode = ( final_state in ['mmmm','eeee','eemm'] )
+
+    analyzer = make_ntuple(*final_state, zz_mode=zz_mode, svFit=options.svFit)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 
@@ -231,6 +240,7 @@ process.load("FWCore.MessageLogger.MessageLogger_cfi")
 
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
 process.MessageLogger.categories.append('FSAEventMissingProduct')
+
 # Don't go nuts if there are a lot of missing products.
 process.MessageLogger.cerr.FSAEventMissingProduct = cms.untracked.PSet(
     limit=cms.untracked.int32(10)
