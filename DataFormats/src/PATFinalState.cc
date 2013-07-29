@@ -20,6 +20,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/erase.hpp>
 #include <algorithm>
+#include <sstream>
 #include "TMath.h"
 
 namespace {
@@ -578,8 +579,51 @@ PATFinalState::subcand(int i, int j, int x, int y, int z) const {
     output.push_back(daughterPtr(y));
   if (z > -1)
     output.push_back(daughterPtr(z));
+
   return PATFinalStateProxy(
       new PATMultiCandFinalState(output, evt()));
+}
+
+PATFinalStateProxy
+PATFinalState::subcandfsr( int i, int j ) const
+{
+  std::vector<reco::CandidatePtr> output;
+  output.push_back( daughterPtr(i) );
+  output.push_back( daughterPtr(j) );
+
+  std::stringstream ss;
+  ss << "fsrPhoton" << i << j;
+  std::string photon_name = ss.str();
+
+  const std::vector<std::string>& userCandList = this->userCandNames();
+  for (size_t i = 0; i < userCandList.size(); ++i)
+  {
+      if (userCandList[i].find(photon_name) != std::string::npos)
+          output.push_back(this->userCand(userCandList[i]));
+  }
+
+  return PATFinalStateProxy(
+      new PATMultiCandFinalState(output, evt()));
+}
+
+PATFinalState::LorentzVector
+PATFinalState::p4fsr() const
+{
+  PATFinalState::LorentzVector p4_out;
+
+  p4_out = daughter(0)->p4() + daughter(1)->p4() + daughter(2)->p4() + daughter(3)->p4();
+
+  const std::vector<std::string>& userCandList = this->userCandNames();
+  for (size_t i = 0; i < userCandList.size(); ++i)
+  {
+      if (userCandList[i].find("fsrPhoton1") != std::string::npos)
+          p4_out += this->userCand(userCandList[i])->p4();
+
+      if (userCandList[i].find("fsrPhoton2") != std::string::npos)
+          p4_out += this->userCand(userCandList[i])->p4();
+  }
+
+  return p4_out;
 }
 
 PATFinalStateProxy

@@ -1,0 +1,12 @@
+#include "FinalStateAnalysis/PatTools/plugins/PATQuadFinalStateBuilderHzzT.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATQuadLeptonFinalStates.h"
+
+typedef PATQuadFinalStateBuilderHzzT<PATElecElecElecElecFinalState> PATElecElecElecElecFinalStateHzzProducer;
+typedef PATQuadFinalStateBuilderHzzT<PATElecElecMuMuFinalState> PATElecElecMuMuFinalStateHzzProducer;
+typedef PATQuadFinalStateBuilderHzzT<PATMuMuMuMuFinalState> PATMuMuMuMuFinalStateHzzProducer;
+
+#include "FWCore/Framework/interface/MakerMacros.h"
+
+DEFINE_FWK_MODULE(PATElecElecElecElecFinalStateHzzProducer);
+DEFINE_FWK_MODULE(PATElecElecMuMuFinalStateHzzProducer);
+DEFINE_FWK_MODULE(PATMuMuMuMuFinalStateHzzProducer);
