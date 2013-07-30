@@ -50,6 +50,8 @@ if __name__ == '__main__':
                      help='pattern of shape to be excluded',dest='excluded')
     parser.add_option('-n','--nuisance', metavar='pattern', type=str, default = '*CMS_*',
                      help='pattern of nuisances to be excluded',dest='nuisances')
+    parser.add_option('-x','--x-title', metavar='name', type=str, default = '',
+                     help='x axis title',dest='xtitle')
 
     (options,arguments) = parser.parse_args()
     
@@ -91,6 +93,7 @@ if __name__ == '__main__':
     canvas.cd()
     stack.SetMaximum(maximum*1.8)
     stack.Draw()
+    stack.GetXaxis().SetTitle(options.xtitle)
     observed.Draw('same')
 
     #tries to figure which side the legend goes
@@ -110,7 +113,8 @@ if __name__ == '__main__':
     legend.SetEntrySeparation(0.0)
     legend.SetMargin(0.35)
     legend.Draw()
-    
+    canvas.Update()
+
     outfile = os.path.join(os.getcwd(), options.out)
     canvas.SaveAs(outfile )
     logging.info("%s created" % outfile)
