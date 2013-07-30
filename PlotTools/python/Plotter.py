@@ -114,13 +114,24 @@ class Plotter(object):
             self.views['data']['intlumi']/1000.)
         self.keep.append(latex.DrawLatex(0.18,0.96, label_text));
 
-    def save(self, filename):
+    def save(self, filename, dotc=False, dotroot=False):
         ''' Save the current canvas contents to [filename] '''
         self.canvas.Update()
         if not os.path.exists(self.outputdir):
             os.makedirs(self.outputdir)
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.png')
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.pdf')
+        if dotc:
+            self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.C')
+        if dotroot:
+            outfile = ROOT.TFile.Open(os.path.join(self.outputdir, filename) + '.root', 'recreate')
+            outfile.cd()
+            self.canvas.Write()
+            for obj in self.keep:
+                obj.Write()
+            self.keep = []
+            outfile.Close()
+            self.canvas = plotting.Canvas(name='adsf', title='asdf')
         # Reset keeps
         self.keep = []
         # Reset logx/y

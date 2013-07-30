@@ -96,3 +96,8 @@ data_styles = {
     },
 }
 
+#makes life easier when converting shape files
+data_styles['fakes'] = data_styles['Zjets*']
+data_styles['zz'] = data_styles['ZZ*']
+data_styles['wz'] = data_styles['WZ*']
+data_styles['charge_fakes'] = data_styles['TT*']
