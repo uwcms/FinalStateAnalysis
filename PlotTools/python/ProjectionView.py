@@ -19,9 +19,8 @@ class ProjectionView(object):
         if axis.GetBinLowEdge(max_bin) == self.range[1]:
             max_bin -= 1
 
-        output = asrootpy(
-            getattr(hist, 'Projection%s' % self.axis.upper())('projection', min_bin, max_bin)
-            )
+        output = getattr(hist, 'Projection%s' % self.axis.upper())(hist.GetName() + '_projection', min_bin, max_bin)
+        output = asrootpy( output )
         #print "ProjectionView: path %s, minimum:%.2f --> %i, maximum:%.2f --> %i, integral: %.3f entries: %i" % (path, self.range[0], min_bin, self.range[1], max_bin, output.Integral(), output.GetEntries()) 
         output.decorate( **hist.decorators )
         output.SetTitle( hist.GetTitle() )
