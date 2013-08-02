@@ -19,6 +19,8 @@ parser.add_argument('--outputfile', required=True)
 parser.add_argument('--tree', required=True, help='Path to tree')
 parser.add_argument('--cut', required=True, help='branch name of id/iso WP')
 parser.add_argument('--neighbors', type=int, help='numer of heighbors to use', default=100)
+parser.add_argument('--makePlots', type=int, help='skip the plotting step to be faster', default=1)
+
 
 args = parser.parse_args()
 
@@ -175,48 +177,49 @@ for var in args.variables:
         'all'      : plotting.Hist([10,12,15,20,25,30,35,40,45,50,60,70,100,150,200]),
         }
 
-log.info("making plots")
-functor = FunctorFromMVA('kNN', target, *args.variables)
+if args.makePlots:
+    log.info("making plots")
+    functor = FunctorFromMVA('kNN', target, *args.variables)
 
-for row in training_NTuple:
-    var_d  = dict([(v, getattr(row, v)) for v in args.variables])
-    mva    = functor(**var_d)
-    weight = row.weight
-    cut    = bool( getattr(row, args.cut) )
-    for var in args.variables:
-        value = var_d[var]
-        hist_maps[var]['estimate'].Fill(value, mva*weight)
-        hist_maps[var]['all'].Fill(value, weight)
-        hist_maps[var]['estimate_all'].Fill(value, weight)
-        if cut:
-            hist_maps[var]['pass'].Fill(value, weight)
+    for row in training_NTuple:
+        var_d  = dict([(v, getattr(row, v)) for v in args.variables])
+        mva    = functor(**var_d)
+        weight = row.weight
+        cut    = bool( getattr(row, args.cut) )
+        for var in args.variables:
+            value = var_d[var]
+            hist_maps[var]['estimate'].Fill(value, mva*weight)
+            hist_maps[var]['all'].Fill(value, weight)
+            hist_maps[var]['estimate_all'].Fill(value, weight)
+            if cut:
+                hist_maps[var]['pass'].Fill(value, weight)
 
 
-canvas = plotting.Canvas(name='adsf', title='asdf')
-canvas.SetLogy(True)
-for var in args.variables:
-
-    for key in hist_maps[var].iterkeys():
-        hist_maps[var][key] = round_to_ints(hist_maps[var][key])
-
-    eff = asrootpy( ROOT.TGraphAsymmErrors( hist_maps[var]['pass'], hist_maps[var]['all']) )
-    eff.markerstyle = 20
-    estimate = hist_maps[var]['estimate']
-    estimate.Divide(hist_maps[var]['estimate_all'])
-    estimate.linecolor = ROOT.kBlue 
-    estimate.linewidth = 2
-    estimate.fillstyle = 0
-    estimate.drawstyle = 'hist'
-    
-    estimate.Draw()
-    eff.Draw('P same')
-    canvas.Update()
+    canvas = plotting.Canvas(name='adsf', title='asdf')
     canvas.SetLogy(True)
-    canvas.SaveAs( output_file.replace('.root', '.%s.png' % var ) )
-    
-    for key, obj in hist_maps[var].iteritems():
-        obj.SetName( '%s_%s' % (var, key) )
-        obj.Write()
+    for var in args.variables:
+
+        for key in hist_maps[var].iterkeys():
+            hist_maps[var][key] = round_to_ints(hist_maps[var][key])
+
+        eff = asrootpy( ROOT.TGraphAsymmErrors( hist_maps[var]['pass'], hist_maps[var]['all']) )
+        eff.markerstyle = 20
+        estimate = hist_maps[var]['estimate']
+        estimate.Divide(hist_maps[var]['estimate_all'])
+        estimate.linecolor = ROOT.kBlue 
+        estimate.linewidth = 2
+        estimate.fillstyle = 0
+        estimate.drawstyle = 'hist'
+        
+        estimate.Draw()
+        eff.Draw('P same')
+        canvas.Update()
+        canvas.SetLogy(True)
+        canvas.SaveAs( output_file.replace('.root', '.%s.png' % var ) )
+        
+        for key, obj in hist_maps[var].iteritems():
+            obj.SetName( '%s_%s' % (var, key) )
+            obj.Write()
 
 training_NTuple.Write()
 
