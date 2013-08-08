@@ -186,7 +186,12 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     const pat::Tau& tau = taus->at(i);
     // Get the underlying seed jet
     edm::Ptr<pat::Jet> seedJet(tau.userCand("patJet"));
-    assert(seedJet.isNonnull());
+    if (!seedJet.isNonnull()) {
+      edm::LogError("NoJetForTau") << "A pat::Tau with pt: " <<
+        tau.pt() << " and eta/phi " << tau.eta() << "/" << tau.phi()
+        << " has not associated pat::Jet!  Should not happen." << std::endl;
+      continue;
+    }
     const pat::Jet& jet = *seedJet;
     if (tauCut_(tau)) {
       shiftedTaus++;

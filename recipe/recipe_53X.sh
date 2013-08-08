@@ -22,6 +22,8 @@ then
   echo "Checking out tuple production tags"
   
   addpkg PhysicsTools/PatAlgos           V08-09-52
+  # This producer is unused and conflicts with the MVA MET recipe.
+  rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer.*
   addpkg DataFormats/StdDictionaries     V00-02-14
   addpkg PhysicsTools/PatUtils           V03-09-26
   addpkg CommonTools/ParticleFlow        V00-03-16
