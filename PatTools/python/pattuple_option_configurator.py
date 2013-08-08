@@ -9,15 +9,19 @@ Author: Evan K. Friis, UW Madison
 
 import os
 
+
 def configure_pat_tuple(sample, sample_info):
     options = []
 
+    sample = sample.lower()
+
     #if the HLT process happens to not be 'HLT'
     if 'hlt_process' in sample_info:
-        options.append('HLTprocess=%s'%(sample_info['hlt_process']))
+        options.append('HLTprocess=%s' % (sample_info['hlt_process']))
 
     if 'calibrationTarget' in sample_info:
-        options.append('calibrationTarget=%s'%sample_info['calibrationTarget'])
+        options.append('calibrationTarget=%s' %
+                       sample_info['calibrationTarget'])
 
     if 'data' not in sample and 'embedded' not in sample:
         options.append('isMC=1')
@@ -49,4 +53,3 @@ def configure_pat_tuple(sample, sample_info):
             options.append('lastRun=%s' % sample_info['lastRun'])
 
     return options
-
