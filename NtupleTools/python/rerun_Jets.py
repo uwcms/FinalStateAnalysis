@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 from RecoBTag.ImpactParameter.impactParameter_cff import *
 from RecoBTag.SecondaryVertex.secondaryVertex_cff import *
 
-def rerun_Jets(process, isData=False):
+def rerun_jets(process, isData=False):
 
   process.load("RecoJets.Configuration.RecoPFJets_cff")
   import PhysicsTools.PatAlgos.tools.jetTools as jettools
@@ -40,7 +40,7 @@ def rerun_Jets(process, isData=False):
 
   # This is the key to produce the JES
   jec = ['L1FastJet', 'L2Relative', 'L3Absolute']
-  # For Data 
+  # For Data
   if isData:
 	jec.extend(['L2L3Residual'])
 

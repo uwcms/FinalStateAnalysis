@@ -36,8 +36,8 @@ rerunMVAMET=0 - rerun the MVAMET algorithm
 svFit=1 - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
 runNewElectronMVAID=0 - run the new electron MVAID
-rerunJetsMC=0   - rerun with new jet energy corrections
-           
+rerunJets=0   - rerun with new jet energy corrections
+
 
 '''
 
@@ -49,7 +49,7 @@ from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
 from FinalStateAnalysis.NtupleTools.rerun_matchers import rerun_matchers
 from FinalStateAnalysis.NtupleTools.rerun_QGJetID import rerun_QGJetID
-from FinalStateAnalysis.NtupleTools.rerun_JetsMC import rerun_JetsMC
+from FinalStateAnalysis.NtupleTools.rerun_Jets import rerun_jets
 import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")
@@ -73,7 +73,7 @@ options = TauVarParsing.TauVarParsing(
     rerunQGJetID=0, #if one reruns the quark-gluon JetID
     runNewElectronMVAID=0, #if one runs the new electron MVAID
     rerunMVAMET=0,  # If one, (re)build the MVA MET
-    rerunJetsMC=0
+    rerunJets=0
 )
 
 options.outputFile = "ntuplize.root"
@@ -172,8 +172,8 @@ if options.rerunFSA:
             rerun_QGJetID(process, fs_daughter_inputs)
             )
 
-    if options.rerunJetsMC:
-        process.schedule.append( rerun_JetsMC(process) )
+    if options.rerunJets:
+        process.schedule.append(rerun_Jets(process))
 
     if options.runNewElectronMVAID:
         process.load("FinalStateAnalysis.PatTools.electrons.patElectronSummer13MVAID_cfi")
@@ -191,7 +191,7 @@ if options.rerunFSA:
     produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
                          'puTagDoesntMatter', buildFSAEvent=True,
                          noTracks=True, noPhotons=options.noPhotons,
-                         zzMode=options.zzMode, rochCor=options.rochCor, 
+                         zzMode=options.zzMode, rochCor=options.rochCor,
                          eleCor=options.eleCor)
     process.buildFSAPath = cms.Path(process.buildFSASeq)
     # Don't crash if some products are missing (like tracks)
