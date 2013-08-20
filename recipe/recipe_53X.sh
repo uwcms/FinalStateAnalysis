@@ -50,13 +50,6 @@ then
   cvs co -r V01-04-13 RecoTauTag/Configuration
   cvs co -r V00-04-00 CondFormats/EgammaObjects
 
-  echo "Checking out HZZ4L KD recipe"
-  cvs co -r V00-03-01 -d Higgs/Higgs_CS_and_Width UserCode/Snowball/Higgs/Higgs_CS_and_Width 
-  cvs co -r bonato_supermela_20121107 -d HZZ4L_Combination/CombinationPy UserCode/HZZ4L_Combination/CombinationPy
-  cvs co -r V00-02-03 -d ZZMatrixElement/MELA UserCode/CJLST/ZZMatrixElement/MELA
-  cvs co -r V00-02-00 -d ZZMatrixElement/MEKD UserCode/UFL/ZZMatrixElement/MEKD
-  cvs co -r V00-00-12 -d ZZMatrixElement/MEMCalculators UserCode/HZZ4l_MEM/ZZMatrixElement/MEMCalculators
-
   echo "Checking out EGamma POG recipe for electron corrections"
   cvs co -r V09-00-01 RecoEgamma/EgammaTools
   cvs co -r FB_4Jun2013 EgammaAnalysis/ElectronTools

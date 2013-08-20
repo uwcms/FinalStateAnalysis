@@ -22,6 +22,7 @@ LIMITS=${LIMITS:-0}
 LUMI=${LUMI:-0}
 PATPROD=${PATPROD:-0}
 MVAMET=${MVAMET:-$PATPROD}
+HZZ=${HZZ:-0}
 
 set -o errexit
 set -o nounset
@@ -52,6 +53,7 @@ echo "I'm going to install the FinalStateAnalysis with the following options:"
 echo " Limit setting (\$LIMITS): $LIMITS"
 echo " PAT tuple production (\$PATPROD): $PATPROD"
 echo " LumiCalc (\$LUMI): $LUMI"
+echo " HZZ Features (MELA etc) (\$HZZ): $HZZ"
 
 if [ -z "FORCERECIPE" ]; then
    while true; do
@@ -68,6 +70,17 @@ if [ "$MVAMET" = "1" ]
 then
   echo "Applying MVA MET recpe"
   ./recipe_mvamet.sh
+fi
+
+if [ "$HZZ" = "1" ] 
+then
+  echo "Applying HZZ specific recpe"
+  ./recipe_hzz.sh
+else
+  # Remove HZZ FSA plugins dependent on MELA 
+  git ls-files ../PatTools/plugins/PATQuadFinalStateBuilderHzz* | xargs rm
+  git ls-files ../PatTools/plugins/PATQuadFinalStateBuilderHzz* | \
+    xargs -n 1 git update-index --assume-unchanged 
 fi
 
 if [ "$MAJOR_VERSION" -eq "4" ]; then
