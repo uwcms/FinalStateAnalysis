@@ -10,7 +10,10 @@ echo "Checking out PAT dataformats"
 addpkg DataFormats/PatCandidates   V06-05-06-10
 addpkg PhysicsTools/PatAlgos       V08-09-58
 addpkg PhysicsTools/PatUtils       V03-09-28
+# These conflict with the MVA MET RecoMET tags.
 rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer.*
+rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer.*
+addpkg RecoMET/METProducers        V03-03-12-02
 addpkg DataFormats/StdDictionaries     V00-02-14
 addpkg CommonTools/ParticleFlow        V00-03-16
 
