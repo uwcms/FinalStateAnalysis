@@ -78,7 +78,7 @@ then
   ./recipe_hzz.sh
 else
   # Remove HZZ FSA plugins dependent on MELA 
-  git ls-files ../PatTools/plugins/PATQuadFinalStateBuilderHzz* | xargs rm
+  git ls-files ../PatTools/plugins/PATQuadFinalStateBuilderHzz* | xargs rm -f
   git ls-files ../PatTools/plugins/PATQuadFinalStateBuilderHzz* | \
     xargs -n 1 git update-index --assume-unchanged 
 fi
