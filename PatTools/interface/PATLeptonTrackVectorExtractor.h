@@ -79,6 +79,8 @@ class PATLeptonTrackVectorExtractor<pat::Tau>
         pfChargedHadron != pfChargedHadrons.end(); ++pfChargedHadron ) {
       if ( (*pfChargedHadron)->trackRef().isNonnull() ) {
         retVal.push_back((*pfChargedHadron)->trackRef().get());
+      } else if ( (*pfChargedHadron)->gsfTrackRef().isNonnull() ) {
+        retVal.push_back((*pfChargedHadron)->gsfTrackRef().get());
       }
     }
     return retVal;
