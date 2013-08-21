@@ -426,8 +426,6 @@ def produce_final_states(process, collections, output_commands,
             quadobject[0][0], quadobject[1][0], quadobject[2][0],
             quadobject[3][0]
         )
-        #setattr(process, producer_name, producer)
-        #process.buildTriLeptons += producer
         setattr(process, producer_name + "Raw", producer)
         process.buildQuadHzzObjects += producer
 
@@ -438,7 +436,8 @@ def produce_final_states(process, collections, output_commands,
         process.buildQuadHzzObjects += embedder_seq
 
         # Do some trickery so the final module has a nice output name
-        final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
+        final_module_name = chain_sequence(
+            embedder_seq, producer_name + "Raw")
         final_module = cms.EDProducer(
             "PATFinalStateCopier", src=final_module_name)
 
@@ -446,7 +445,8 @@ def produce_final_states(process, collections, output_commands,
         process.buildQuadHzzObjects += final_module
         output_commands.append("*_%s_*_*" % producer_name)
 
-    sequence += process.buildQuadHzzObjects
+    if zzMode:
+        sequence += process.buildQuadHzzObjects
 
 if __name__ == "__main__":
     import doctest
