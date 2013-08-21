@@ -17,8 +17,7 @@ if [ -z $CONDOR_ID ]; then
     
     if [ -n "$commitsAhead" ]; then
         if [ "$commitsAhead" != '1' ]; then
-    	    echo "Your repository is ahead of $commitsAhead, consider sending a Pull Request! [any key]"
-    	    read ok
+    	    echo "Your repository is ahead of $commitsAhead, consider sending a Pull Request!"
         fi
     fi
 fi
