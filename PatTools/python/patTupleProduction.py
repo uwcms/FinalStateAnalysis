@@ -70,6 +70,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         '*_kt6PFJetsCentral_rho_*',
         '*_kt6PFJetsCentralNeutral_rho_*',  # for zz muons
         '*_photonCore_*_*',
+        '*_boostedFsrPhotons_*_*',
         # for Zmumu -> embedded samples
         # https://twiki.cern.ch/twiki/bin/view/CMS/MuonTauReplacementRecHit
         '*_generalTracksORG_*_EmbeddedRECO',
