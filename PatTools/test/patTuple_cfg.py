@@ -30,9 +30,7 @@ options = TauVarParsing.TauVarParsing(
     eleReg=False
 )
 
-files = [
-    
-]
+files = []
 
 options.inputFiles = files
 
@@ -95,10 +93,15 @@ tuplize, output_commands = tuplizer.configurePatTuple(
 )
 
 if options.globalTag == "":
-    raise RuntimeError("Global tag not specified!"\
+    raise RuntimeError("Global tag not specified!"
                        " Try sourcing environment.sh\n")
+elif "autocond:" in options.globalTag:
+    import Configuration.AlCa.autoCond as autoCond
+    gt_key = options.globalTag.replace('autocond:', '')
+    print "Using auto-configured global tag from key: %s" % gt_key
+    options.globalTag = autoCond.autoCond[gt_key]
 else:
-    print 'Using globalTag: %s'%options.globalTag
+    print 'Using globalTag: %s' % options.globalTag
 
 process.GlobalTag.globaltag = cms.string(options.globalTag)
 
