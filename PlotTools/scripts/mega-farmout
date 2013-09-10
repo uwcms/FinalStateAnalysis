@@ -1,0 +1,147 @@
+#!/usr/bin/env python
+
+''' Send a mega job to Condor using farmout.
+
+Author: Evan K. Friis, UW Madison
+
+'''
+
+from RecoLuminosity.LumiDB import argparse
+import logging
+import math
+import os
+import subprocess
+import tempfile
+
+log = logging.getLogger(__name__)
+log.setLevel(logging.WARNING)
+
+
+def get_num_lines(filename):
+    """ Count the number of lines in a file.
+
+    Ignores blank lines and lines beginning with #.
+
+    """
+    linecount = 0
+    with open(filename, 'r') as thefile:
+        for line in thefile:
+            if line and not line.startswith('#'):
+                linecount += 1
+    return linecount
+
+
+def get_farmout_username():
+    """ Determine the appropriate user name for HDFS paths, etc. """
+    preferences = ['FARMOUT_USER', 'USER', 'LOGNAME']
+    for variable in preferences:
+        if variable in os.environ:
+            return os.environ[variable]
+    raise KeyError("Could not determine username.")
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('selector', metavar='selector', type=str,
+                        help='Path to TPySelector module')
+
+    parser.add_argument('inputs', metavar='inputs', type=str,
+                        help='Text file listing input ROOT files.')
+
+    parser.add_argument('output', metavar='output',
+                        type=str, help='Output root file')
+
+    parser.add_argument('--files-per-job', dest='filesinjob',
+                        default=10, type=int,
+                        help='Number of files/analysis job. '
+                        'Default: %(default)i')
+
+    parser.add_argument('--files-per-merge', dest='filesinmerge',
+                        default=10, type=int,
+                        help='Number of files/merge job. '
+                        'Default: %(default)i')
+
+    parser.add_argument('--tree', metavar='tree', type=str, default='',
+                        help='Override path to TTree in data files'
+                        ' (Ex: /my/dir/myTree)')
+
+    parser.add_argument('--verbose', action='store_const', const=True,
+                        default=False, help='Print debug output')
+
+    parser.add_argument('--no-clean', action='store_const', const=True,
+                        default=False,
+                        help="Don't clean up the submit directories")
+
+    args = parser.parse_args()
+
+    log.info("Processing %s using %s", args.inputs, args.selector)
+    if args.verbose:
+        log.setLevel(logging.DEBUG)
+
+    # Figure out a nice working directory to create condor submissions
+    inputs_nice_name = os.basename(args.inputs).replace('.txt', '')
+    selector_nice_name = os.basename(args.selector).replace('.py', '')
+    working_dir = tempfile.mkdtemp(
+        suffix=selector_nice_name + '-' + inputs_nice_name)
+    log.info("Generating submit scripts in %s", working_dir)
+
+    # Determine number of files and jobs to process
+    nfiles = get_num_lines(args.inputs)
+    njobs = (nfiles + (args.filesinjob - 1)) / args.filesinjob
+    log.info("Running over %i files in %i jobs", nfiles, njobs)
+
+    # Construct an output path which has the same tmp token as the submit dir.
+    output_path = 'srm://cmssrm2.hep.wisc.edu:8443/srm/v2/server?SFN='
+    hdfs_directory = '/hdfs/store/user/%s/MegaJob_%s/' % (
+        get_farmout_username(), os.basename(working_dir))
+    output_path += hdfs_directory
+
+    # Generate farmout command for analysis step.
+    farmout_cmd = [
+        'farmoutAnalysisJobs',
+        '--submit-dir=%s/analyze' % working_dir,
+        '--input-file-list=%s' % args.inputs,
+        '--input-files-per-job=%i' % args.filesinjob,
+        '--output-dir=%s' % (output_path),
+        '--fwklite',
+        '--infer-cmssw-path',
+        '--output-dag-file=%s/job.dag' % working_dir,
+        '--no-submit',  # will be submitted by merge job via DAG dependencies
+        '--shared-fs',  # Figure out how to remove this later.
+        'Analyze',      # The job name
+        # Begin script command
+        'mega',
+        '$inputFileNames',  # Expanded by farmout
+        '$outputFileName',
+        '--single-mode',
+        '--tree %s' % args.tree,
+    ]
+    subprocess.check_call(farmout_cmd)
+
+    # Determine the number of merge layers needed.
+    # Find N where (files-per-merge)^N = num-analysis-jobs, rounding up.
+    num_merge_layers = int(math.log(njobs, args.filesinmerge) + 0.5)
+
+    merge_layer_names = ['MergeLayer%i' % i for i in range(num_merge_layers)]
+    # Give the last merge layer a nice name
+    merge_layer_names[-1] = 'FinalMerged'
+
+    previous_submit_dir = '%s/analyze' % working_dir
+
+    # Generate farmout command for each merge step.
+    for idx, layer_name in enumerate(merge_layer_names):
+        merge_cmd = [
+            'farmoutAnalysisJobs',
+            '--submit-dir=%s/%s' % (working_dir, layer_name),
+            '--last-submit-dir=%s' % previous_submit_dir,
+            '--output-dag-file=%s/job.dag' % working_dir,
+            '--input-files-per-job=%i' % args.filesinmerge,
+            '--output-dir=%s' % (output_path),
+            '--no-submit',
+            '--merge',
+            '--use-hadd',
+            layer_name
+        ]
+        subprocess.check_call(merge_cmd)
