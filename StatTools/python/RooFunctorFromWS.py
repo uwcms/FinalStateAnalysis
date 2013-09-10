@@ -41,15 +41,19 @@ class RooFunctorFromWS(ROOT.RooFunctor):
         return self.function.getVal()
 
 class FunctorFromMVA(object):
-    def __init__(self, name, xml_filename, *variables):
-        self.reader    = ROOT.TMVA.Reader( "!Color:Silent=T:Verbose=F" )
+    def __init__(self, name, xml_filename, *variables, **kwargs):
+        self.reader    = ROOT.TMVA.Reader( "!Color:Silent=%s:Verbose=%s" % (kwargs.get('silent','T'), kwargs.get('verbose','F')))
         self.var_map   = {}
         self.name      = name
         self.variables = variables
+        self.xml_filename = xml_filename
         for var in variables:
             self.var_map[var] = array.array('f',[0]) 
             self.reader.AddVariable(var, self.var_map[var])
         self.reader.BookMVA(name, xml_filename)
+
+    def evaluate_(self): #so I can profile the time needed
+        return self.reader.EvaluateMVA(self.name)
 
     @memo_last
     def __call__(self, **kvars):
@@ -61,7 +65,10 @@ class FunctorFromMVA(object):
             raise Exception("Wrong variable names. Available variables: %s" % self.variables.__repr__())
         for name, val in kvars.iteritems():
             self.var_map[name][0] = val
-        return self.reader.EvaluateMVA(self.name)
+        retval = self.evaluate_() #reader.EvaluateMVA(self.name)
+        if retval == 1:
+            print "returning 1 in %s, kvars: %s" % (self.xml_filename, kvars.items()) 
+        return retval
 
 def build_roofunctor(filename, wsname, functionname, var='x'):
     ''' Build a functor from a filename '''
