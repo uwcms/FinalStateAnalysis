@@ -20,12 +20,14 @@ from FinalStateAnalysis.PlotTools.Dispatcher import MegaDispatcher
 log = multiprocessing.log_to_stderr()
 log.setLevel(logging.WARNING)
 
-parser = argparse.ArgumentParser()
-args = sys.argv[:]
+# This makes sure that ROOT doesn't do any monkey business with the args.
+argv = sys.argv[:]
 sys.argv = []
 
-if __name__ == "__main__":
 
+def default_argparser(args):
+    """ Default parsing of arguments for command-line use. """
+    parser = argparse.ArgumentParser(args[0])
     parser.add_argument('selector', metavar='selector', type=str,
                         help='Path to TPySelector module')
 
@@ -54,12 +56,57 @@ if __name__ == "__main__":
     parser.add_argument('--verbose', action='store_const', const=True,
                         default=False, help='Print debug output')
 
-    args = parser.parse_args(args[1:])
+    parser.add_argument('--cd', type=str, metavar='DIR',
+                        help='Change working directory to DIR (for batch)')
 
+    args = parser.parse_args(args[1:])
+    return args
+
+
+def condor_argparser(args):
+    """ Parse arguments in a batch environment.
+
+    We can't use "--option" style options, as they will get clobbered
+    by GNU getopts in farmoutAnalysisJobs.
+
+    """
+    parser = argparse.ArgumentParser(args[0])
+    parser.add_argument('selector', metavar='selector', type=str,
+                        help='Path to TPySelector module')
+
+    parser.add_argument('inputs', metavar='inputs', type=str,
+                        help='Text file with input files.  '
+                        'If this option does not end with ".txt", '
+                        'it will be assumed to be a comma separated list of '
+                        'files (no spaces please).')
+
+    parser.add_argument('output', metavar='output',
+                        type=str, help='Output root file')
+
+    parser.add_argument('tree', metavar='tree', type=str, default='',
+                        help='Override path to TTree in data files'
+                        ' (Ex: /my/dir/myTree)')
+
+    parser.add_argument('cd', type=str, metavar='DIR',
+                        help='Change working directory to DIR (for batch)')
+
+    args = parser.parse_args(args[1:])
+    # Always set single CPU mode = true
+    args.single = True
+    return args
+
+
+def main(argparse_builder):
+    ''' Run the job with options constructed by argparse_builder '''
+    args = argparse_builder(argv)
     if args.verbose:
         logging.info("Increasing verbosity...")
         log.setLevel(logging.DEBUG)
         multiprocessing.get_logger().setLevel(logging.DEBUG)
+
+    if args.cd:
+        logging.info("Changing working directory to: %s", args.cd)
+        os.chdir(args.cd)
 
     if not args.single:
         log.info("Creating mega session with %i workers" % args.workers)
@@ -116,4 +163,14 @@ if __name__ == "__main__":
         processor = ChainProcessor(file_list, tree_name, selector,
                                    args.output, log)
         result = processor.process()
-    log.info("Mega2 job is complete")
+    log.info("Mega job is complete with result %s", repr(result))
+    return 0
+
+
+if __name__ == "__main__":
+    if '_CONDOR_SCRATCH_DIR' in os.environ:
+        log.info("Interpreting arguments in condor mode")
+        sys.exit(main(condor_argparser))
+    else:
+        log.info("Interpreting arguments in command line mode")
+        sys.exit(main(default_argparser))
