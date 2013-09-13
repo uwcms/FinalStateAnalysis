@@ -1,9 +1,12 @@
-""" Representation of a Condor DAG file
+""" Representation of a Condor DAG file.
+
+Has various utility for querying status and parameters of the job.
 
 Author: Evan K. Friis
 
 """
 
+import collections
 import os
 import re
 
@@ -33,6 +36,7 @@ class CondorDAGJob(object):
         self.submitfile = submitfile
         self.daughters = []
         self.parents = []
+        self.status = ("UNKNOWN", "")
 
     def __hash__(self):
         """ The jobname is always unique. """
@@ -102,7 +106,7 @@ class CondorDAG(object):
 
         """
         jobmatcher = re.compile(
-            'JOB\s+(?P<jobid>\S+)\s+(?P<status>\S+)\s+\((?P<info>\S*)\)')
+            'JOB\s+(?P<jobid>\S+)\s+(?P<status>\S+)\s+\((?P<info>.*)\)')
         dagmatcher = re.compile(
             'DAG status:\s+(?P<status>\S+)\s+(?P<info>\S*)')
 
@@ -115,7 +119,7 @@ class CondorDAG(object):
             for line in statusfile:
                 jobmatch = jobmatcher.match(line)
                 if jobmatch:
-                    self.nodes[jobmatch.group('jobid')] = (
+                    self.nodes[jobmatch.group('jobid')].status = (
                         jobmatch.group('status'), jobmatch.group('info'))
                     continue
                 dagmatch = dagmatcher.match(line)
@@ -125,6 +129,16 @@ class CondorDAG(object):
         return self.status
 
     def failing_nodes(self):
+        """ Generate all jobs which have failed. """
+        self.update_status()
         for nodeid, node in self.nodes.iteritems():
             if node.status[0] == "STATUS_ERROR":
                 yield (nodeid, node.status[1])
+
+    def job_statistics(self):
+        """ Returns a collection.Counter of jobs in various states. """
+        counts = collections.defaultdict(int)
+        self.update_status()
+        for job, node in self.nodes.iteritems():
+            counts[node.status[0]] += 1
+        return counts
