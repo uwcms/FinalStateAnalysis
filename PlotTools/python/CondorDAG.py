@@ -4,6 +4,9 @@ Author: Evan K. Friis
 
 """
 
+import os
+import re
+
 
 def get_jobs(dagfile):
     """ Generate a list of (jobid, submitfile) from the DAG file. """
@@ -68,6 +71,7 @@ class CondorDAG(object):
     """ Representation of a full batch processing DAG """
     def __init__(self, dagfile):
         self.nodes = {}
+        self.status = ("UNKNOWN", "")
         self.dagfile = dagfile
         for jobid, submitfile in get_jobs(dagfile):
             self.nodes[jobid] = CondorDAGJob(jobid, submitfile)
@@ -89,3 +93,38 @@ class CondorDAG(object):
             for leaf in root.leaves():
                 jobs.add(leaf)
         return list(jobs)
+
+    def update_status(self):
+        """ Parse the dag status file.
+
+        Returns a tuple with (STATUS, REASON) giving the overall status
+        of the DAG.
+
+        """
+        jobmatcher = re.compile(
+            'JOB\s+(?P<jobid>\S+)\s+(?P<status>\S+)\s+\((?P<info>\S*)\)')
+        dagmatcher = re.compile(
+            'DAG status:\s+(?P<status>\S+)\s+(?P<info>\S*)')
+
+        dagstatusfile = self.dagfile + '.status'
+
+        if not os.path.exists(dagstatusfile):
+            return self.status
+
+        with open(dagstatusfile, 'r') as statusfile:
+            for line in statusfile:
+                jobmatch = jobmatcher.match(line)
+                if jobmatch:
+                    self.nodes[jobmatch.group('jobid')] = (
+                        jobmatch.group('status'), jobmatch.group('info'))
+                    continue
+                dagmatch = dagmatcher.match(line)
+                if dagmatch:
+                    self.status = (dagmatch.group('status'),
+                                   dagmatch.group('info'))
+        return self.status
+
+    def failing_nodes(self):
+        for nodeid, node in self.nodes.iteritems():
+            if node.status[0] == "STATUS_ERROR":
+                yield (nodeid, node.status[1])
