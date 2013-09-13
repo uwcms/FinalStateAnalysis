@@ -29,7 +29,7 @@ sandbox=$PWD
 
 pushd $workingdir
 echo time $MEGA $analyzer $inputs $sandbox/$output --tree "$tree" --single-mode 
-time $MEGA $analyzer $inputs $sandbox/$output --tree "$tree" --single-mode 
+time $MEGA $analyzer $inputs $sandbox/$output --tree "$tree" --single-mode --verbose
 retcode=$?
 popd
 
