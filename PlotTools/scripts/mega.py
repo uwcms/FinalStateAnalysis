@@ -83,6 +83,11 @@ if __name__ == "__main__":
         for x in args.inputs.split(','):
             file_list.append(x.strip())
 
+    # If the files are on HDFS, access them using xrootd
+    for idx, input_file in enumerate(file_list):
+        if input_file.startswith('/store'):
+            file_list[idx] = 'root://cmsxrootd.hep.wisc.edu/' + input_file
+
     if not file_list:
         log.error("Dataset %s has no files!  Skipping..." % args.inputs)
         sys.exit(1)
