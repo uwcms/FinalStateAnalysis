@@ -23,22 +23,12 @@ except ImportError:
         return text
 
 from FinalStateAnalysis.PlotTools.CondorDAG import CondorDAG
+# Function to find the location of input files relative to a search path
+from mega import SEARCH_PATHS, find_input_files
+# Modify the search path - we only want to look on HDFS when farming out
+SEARCH_PATHS = [path for path in SEARCH_PATHS if '/store' in path]
 
 log = logging.getLogger(__name__)
-
-
-def get_num_lines(filename):
-    """ Count the number of lines in a file.
-
-    Ignores blank lines and lines beginning with #.
-
-    """
-    linecount = 0
-    with open(filename, 'r') as thefile:
-        for line in thefile:
-            if line and not line.startswith('#'):
-                linecount += 1
-    return linecount
 
 
 def get_farmout_username():
@@ -101,42 +91,52 @@ if __name__ == "__main__":
     )
     log.info("Generating submit scripts in %s", working_dir)
 
-    # Determine number of files and jobs to process
-    nfiles = get_num_lines(args.inputs)
-    njobs = (nfiles + (args.filesinjob - 1)) / args.filesinjob
-    log.info("Running over %i files in %i jobs", nfiles, njobs)
-
     # Construct an output path which has the same tmp token as the submit dir.
     output_path = 'srm://cmssrm2.hep.wisc.edu:8443/srm/v2/server?SFN='
     hdfs_directory = '/hdfs/store/user/%s/MegaJob_%s/' % (
         get_farmout_username(), os.path.basename(working_dir))
     output_path += hdfs_directory
 
-    # Generate farmout command for analysis step.
-    farmout_cmd = [
-        'farmoutAnalysisJobs',
-        '--submit-dir=%s/analyze' % working_dir,
-        '--input-file-list=%s' % args.inputs,
-        '--input-files-per-job=%i' % args.filesinjob,
-        '--output-dir=%s' % (output_path),
-        '--fwklite',
-        '--infer-cmssw-path',
-        '--output-dag-file=%s/job.dag' % working_dir,
-        '--no-submit',  # will be submitted by merge job via DAG dependencies
-        '--shared-fs',  # Figure out how to remove this later.
-        'Analyze',      # The job name
-        # Begin script command
-        '%s/PlotTools/scripts/mega-batch.sh' % os.environ['fsa'],
-        os.path.abspath(args.selector),
-        # Begin script arguments - NB these are single quoted.
-        # Mega handles options differently when it detects it is running on
-        # condor.
-        "$inputFileNames",
-        "$outputFileName",
-        os.getcwd(),
-        args.tree,
-    ]
-    subprocess.check_call(farmout_cmd)
+    log.info("Finding files using search path: %s" % ":".join(SEARCH_PATHS))
+    resolved_input_files = list(
+        x.replace('/hdfs', '') for x in find_input_files(args.inputs))
+    for x in resolved_input_files:
+        print x
+
+    # Write the resolved input file names in temporary file
+    with tempfile.NamedTemporaryFile() as tmp_input_filelist:
+        tmp_input_filelist.write('\n'.join(resolved_input_files))
+        tmp_input_filelist.flush()
+        # Generate farmout command for analysis step.
+        farmout_cmd = [
+            'farmoutAnalysisJobs',
+            '--submit-dir=%s/analyze' % working_dir,
+            '--input-file-list=%s' % tmp_input_filelist.name,
+            '--input-files-per-job=%i' % args.filesinjob,
+            '--output-dir=%s' % (output_path),
+            '--fwklite',
+            '--infer-cmssw-path',
+            '--output-dag-file=%s/job.dag' % working_dir,
+            '--no-submit',  # submitted by merge job via DAG dependencies
+            '--shared-fs',  # Figure out how to remove this later.
+            'Analyze',      # The job name
+            # Begin script command
+            '%s/PlotTools/scripts/mega-batch.sh' % os.environ['fsa'],
+            os.path.abspath(args.selector),
+            # Begin script arguments - NB these are single quoted.
+            # Mega handles options differently when it detects it is running on
+            # condor.
+            "$inputFileNames",
+            "$outputFileName",
+            os.getcwd(),
+            args.tree,
+        ]
+        subprocess.check_call(farmout_cmd)
+
+    # Determine number of files and jobs to process
+    nfiles = len(resolved_input_files)
+    njobs = (nfiles + (args.filesinjob - 1)) / args.filesinjob
+    log.info("Running over %i files in %i jobs", nfiles, njobs)
 
     # Determine the number of merge layers needed.
     # Find N where (files-per-merge)^N = num-analysis-jobs, rounding up.
