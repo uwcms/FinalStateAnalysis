@@ -24,6 +24,59 @@ parser = argparse.ArgumentParser()
 args = sys.argv[:]
 sys.argv = []
 
+# Where to look for files.
+SEARCH_PATHS = ['.'] + os.environ.get("MEGAPATH", "").split(':')
+
+
+def resolve_file(path):
+    """ Mangle an input path string for ROOT consumption. """
+    if path.startswith('root://'):
+        return path
+    if not os.path.isabs(path):
+        for search_path in SEARCH_PATHS:
+            full_path = os.path.join(search_path, path)
+            if os.path.isfile(full_path):
+                path = full_path
+                break
+    if path.startswith('/hdfs'):
+        path = path.replace('/hdfs', '')
+    # If the files are on HDFS/OSG, access them using xrootd
+    if path.startswith('/store'):
+        path = 'root://cmsxrootd.hep.wisc.edu/' + path
+    return path
+
+
+def find_input_files(input_file_list):
+    """ Generate all of the input files given the input_file_list.
+
+    If input_file_list ends with '.txt', use it as an input list.
+    Otherwise, treat it as a comma separated list of files.
+
+    If the files have relative paths, search through the paths in $MEGAPATH
+    (colon separated)for the first directory containing the desired file.
+
+    If an absolute path, do nothing.  If stored on /hdfs (or /store), open the
+    file using the UW xrootd server.
+
+    """
+
+    if '.txt' in input_file_list:
+        log.info("Checking inputs file %s exists..." % input_file_list)
+        # Get the inputs to make sure it exists
+        if not os.path.exists(input_file_list):
+            log.error(
+                "Error: inputs %s input file does not exist", input_file_list)
+            sys.exit(5)
+        with open(input_file_list) as inputs_file:
+            for line in inputs_file:
+                line = line.strip()
+                if line and not line.startswith('#'):
+                    yield resolve_file(line)
+    else:
+        for x in input_file_list.split(','):
+            yield resolve_file(x.strip())
+
+
 if __name__ == "__main__":
 
     parser.add_argument('selector', metavar='selector', type=str,
@@ -66,30 +119,10 @@ if __name__ == "__main__":
     else:
         log.info("Creating mega session with 1 workers - single mode")
 
-    file_list = []
-    if '.txt' in args.inputs:
-        log.info("Checking inputs file %s exists..." % args.inputs)
-        # Get the inputs to make sure it exists
-        if not os.path.exists(args.inputs):
-            log.error(
-                "Error: inputs %s input file does not exist", args.inputs)
-            sys.exit(5)
-        with open(args.inputs) as inputs_file:
-            for line in inputs_file:
-                line = line.strip()
-                if line and not line.startswith('#'):
-                    file_list.append(line)
-    else:
-        for x in args.inputs.split(','):
-            file_list.append(x.strip())
-
-    # If the files are on HDFS, access them using xrootd
-    for idx, input_file in enumerate(file_list):
-        if input_file.startswith('/store'):
-            file_list[idx] = 'root://cmsxrootd.hep.wisc.edu/' + input_file
+    file_list = list(find_input_files(args.inputs))
 
     if not file_list:
-        log.error("Dataset %s has no files!  Skipping..." % args.inputs)
+        log.error("Dataset %s has no files!  Skipping..." % file_list)
         sys.exit(1)
 
     log.info("Dataset has %i files", len(file_list))
