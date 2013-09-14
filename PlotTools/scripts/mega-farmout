@@ -15,6 +15,13 @@ import subprocess
 import tempfile
 import time
 
+# Try and make pretty colors if termcolor is installed.
+try:
+    from termcolor import colored
+except ImportError:
+    def colored(text, *args, **kwargs):
+        return text
+
 from FinalStateAnalysis.PlotTools.CondorDAG import CondorDAG
 
 log = logging.getLogger(__name__)
@@ -163,6 +170,18 @@ if __name__ == "__main__":
     # Parse the DAG file
     dag = CondorDAG(working_dir + '/job.dag')
 
+    def color_status(status):
+        colors = {
+            'UNKNOWN': 'grey',
+            'STATUS_ERROR': 'red',
+            'STATUS_DONE': 'green',
+            'STATUS_SUBMITTED': 'cyan',
+            'STATUS_UNREADY': 'blue',
+        }
+        if status not in colors:
+            return status
+        return colored(status, colors[status])
+
     log.info("Waiting for job to complete")
     jobstatus = dag.update_status()[0]
     while jobstatus not in ["STATUS_ERROR", "STATUS_DONE"]:
@@ -171,7 +190,7 @@ if __name__ == "__main__":
 
         # Make a summary of how many jobs are doing what.
         jobstats = " ".join([
-            "%s(%i)" % (status, count)
+            "%s(%i)" % (color_status(status), count)
             for status, count in dag.job_statistics().iteritems()])
 
         log.info("%s: %s stats: %s",
