@@ -161,6 +161,7 @@ if __name__ == "__main__":
             '--merge',
             '--use-hadd'
         ]
+        previous_submit_dir = '%s/%s' % (working_dir, layer_name)
         # Only submit the final job. It submits all it's dependencies.
         if idx != len(merge_layer_names) - 1:
             merge_cmd.append('--no-submit')
