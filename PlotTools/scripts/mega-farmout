@@ -140,7 +140,7 @@ if __name__ == "__main__":
 
     # Determine the number of merge layers needed.
     # Find N where (files-per-merge)^N = num-analysis-jobs, rounding up.
-    num_merge_layers = max(int(math.log(njobs, args.filesinmerge) + 0.5), 1)
+    num_merge_layers = int(math.ceil(math.log(njobs, args.filesinmerge)))
 
     merge_layer_names = ['MergeLayer%i' % i for i in range(num_merge_layers)]
     # Give the last merge layer a nice name
