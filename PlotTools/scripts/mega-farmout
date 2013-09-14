@@ -202,8 +202,6 @@ if __name__ == "__main__":
             log.error("==> %s: %s", node, node_error)
         raise SystemExit(1)
 
-    log.info("Job complete.")
-
     leafnodes = dag.leaves()
     if len(leafnodes) != 1:
         log.error("There should be only one output job! I found %i",
@@ -215,5 +213,7 @@ if __name__ == "__main__":
 
     log.info("Copying final output %s => %s", final_file, args.output)
     shutil.copyfile(final_file, args.output)
+
+    log.info(colored("%s: job complete." % dag.dagfile, "green"))
 
     raise SystemExit(0)
