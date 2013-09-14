@@ -61,7 +61,6 @@ class CondorDAGJob(object):
     def output_file(self):
         """ Get the output root file of this job. """
         with open(self.submitfile, 'r') as submitfile:
-            print submitfile
             for line in submitfile:
                 # the output is stored like:
                 # # DAG_OUTPUT_FILENAME THE_FILE.root
