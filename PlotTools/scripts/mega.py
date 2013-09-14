@@ -24,6 +24,16 @@ log.setLevel(logging.WARNING)
 SEARCH_PATHS = ['.'] + os.environ.get("MEGAPATH", "").split(':')
 
 
+def xrootify(paths):
+    ''' Transform a file list generator on HDFS or OSG to use xrootd. '''
+    for path in paths:
+        if path.startswith('/hdfs'):
+            path = path.replace('/hdfs', '')
+        if path.startswith('/store'):
+            path = 'root://cmsxrootd.hep.wisc.edu/' + path
+        yield path
+
+
 def resolve_file(path):
     """ Mangle an input path string for ROOT consumption. """
     if path.startswith('root://'):
@@ -34,11 +44,6 @@ def resolve_file(path):
             if os.path.isfile(full_path):
                 path = full_path
                 break
-    if path.startswith('/hdfs'):
-        path = path.replace('/hdfs', '')
-    # If the files are on HDFS/OSG, access them using xrootd
-    if path.startswith('/store'):
-        path = 'root://cmsxrootd.hep.wisc.edu/' + path
     return path
 
 
@@ -50,9 +55,6 @@ def find_input_files(input_file_list):
 
     If the files have relative paths, search through the paths in $MEGAPATH
     (colon separated)for the first directory containing the desired file.
-
-    If an absolute path, do nothing.  If stored on /hdfs (or /store), open the
-    file using the UW xrootd server.
 
     """
 
@@ -118,7 +120,7 @@ if __name__ == "__main__":
     else:
         log.info("Creating mega session with 1 workers - single mode")
 
-    file_list = list(find_input_files(args.inputs))
+    file_list = list(xrootify(find_input_files(args.inputs)))
 
     if not file_list:
         log.error("Dataset %s has no files!  Skipping..." % file_list)
