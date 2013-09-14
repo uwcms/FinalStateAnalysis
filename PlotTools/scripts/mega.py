@@ -20,10 +20,6 @@ from FinalStateAnalysis.PlotTools.Dispatcher import MegaDispatcher
 log = multiprocessing.log_to_stderr()
 log.setLevel(logging.WARNING)
 
-parser = argparse.ArgumentParser()
-args = sys.argv[:]
-sys.argv = []
-
 # Where to look for files.
 SEARCH_PATHS = ['.'] + os.environ.get("MEGAPATH", "").split(':')
 
@@ -78,6 +74,9 @@ def find_input_files(input_file_list):
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    args = sys.argv[:]
+    sys.argv = []
 
     parser.add_argument('selector', metavar='selector', type=str,
                         help='Path to TPySelector module')
