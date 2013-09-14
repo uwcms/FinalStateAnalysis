@@ -6,16 +6,16 @@
 # 1 --> analyzer
 # 2 --> input files, comma separated
 # 3 --> output file name
-# 4 --> TTree path
-# 5 --> working directory
+# 4 --> working directory
+# 5 --> TTree path
 
 echo "mega-batch.sh with arguments: $@"
 
 analyzer=$1
 inputs=$2
 output=$3
-tree=$4
-workingdir=$5
+workingdir=$4
+tree=$5
 
 pushd $CMSSW_BASE
 source $CMSSW_BASE/src/UWHiggs/environment.sh
@@ -28,6 +28,9 @@ echo $PWD
 sandbox=$PWD
 
 pushd $workingdir
+echo "Now in directory $workingdir"
+ls
+
 echo time $MEGA $analyzer $inputs $sandbox/$output --tree "$tree" --single-mode 
 time $MEGA $analyzer $inputs $sandbox/$output --tree "$tree" --single-mode --verbose
 retcode=$?

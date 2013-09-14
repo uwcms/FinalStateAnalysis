@@ -127,8 +127,8 @@ if __name__ == "__main__":
         # condor.
         "$inputFileNames",
         "$outputFileName",
+        os.getcwd(),
         args.tree,
-        os.getcwd()
     ]
     subprocess.check_call(farmout_cmd)
 
