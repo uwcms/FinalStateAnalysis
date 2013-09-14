@@ -415,60 +415,61 @@ def produce_final_states(process, collections, output_commands,
 
 
     # Build 4 lepton final states w/ FSR
-    zz_object_types = [('Elec', cms.InputTag("electronsForFinalStates")),
-                       ('Mu',   cms.InputTag("muonsForFinalStates"))]
+    if zzMode:
+        zz_object_types = [('Elec', cms.InputTag("electronsForFinalStates")),
+                           ('Mu',   cms.InputTag("muonsForFinalStates"))]
 
-    process.buildQuadHzzObjects = cms.Sequence()
-    for quadobject in _combinatorics(zz_object_types, 4):
-        n_elec = [x[0] for x in quadobject].count('Elec')
-        n_muon = [x[0] for x in quadobject].count('Mu')
+        process.buildQuadHzzObjects = cms.Sequence()
+        for quadobject in _combinatorics(zz_object_types, 4):
+            n_elec = [x[0] for x in quadobject].count('Elec')
+            n_muon = [x[0] for x in quadobject].count('Mu')
 
-        if n_elec%2 == 1:
-            continue
-        if n_muon%2 == 1:
-            continue
+            if n_elec%2 == 1:
+                continue
+            if n_muon%2 == 1:
+                continue
 
-        # Define some basic selections for building combinations
-        cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
+            # Define some basic selections for building combinations
+            cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
 
-        producer = cms.EDProducer(
-            "PAT%s%s%s%sFinalStateHzzProducer" %
-            (quadobject[0][0], quadobject[1][0], quadobject[2][0],
-             quadobject[3][0]),
-            evtSrc    = cms.InputTag("patFinalStateEventProducer"),
-            leg1Src   = quadobject[0][1],
-            leg2Src   = quadobject[1][1],
-            leg3Src   = quadobject[2][1],
-            leg4Src   = quadobject[3][1],
-            photonSrc = cms.InputTag(fsrsrc),
-            # X-cleaning
-            cut       = cms.string('')
-        )
-        producer_name = "finalState%s%s%s%sHzz" % (
-            quadobject[0][0], quadobject[1][0], quadobject[2][0],
-            quadobject[3][0]
-        )
-        #setattr(process, producer_name, producer)
-        #process.buildTriLeptons += producer
-        setattr(process, producer_name + "Raw", producer)
-        process.buildQuadHzzObjects += producer
+            producer = cms.EDProducer(
+                "PAT%s%s%s%sFinalStateHzzProducer" %
+                (quadobject[0][0], quadobject[1][0], quadobject[2][0],
+                 quadobject[3][0]),
+                evtSrc    = cms.InputTag("patFinalStateEventProducer"),
+                leg1Src   = quadobject[0][1],
+                leg2Src   = quadobject[1][1],
+                leg3Src   = quadobject[2][1],
+                leg4Src   = quadobject[3][1],
+                photonSrc = cms.InputTag(fsrsrc),
+                # X-cleaning
+                cut       = cms.string('')
+            )
+            producer_name = "finalState%s%s%s%sHzz" % (
+                quadobject[0][0], quadobject[1][0], quadobject[2][0],
+                quadobject[3][0]
+            )
+            #setattr(process, producer_name, producer)
+            #process.buildTriLeptons += producer
+            setattr(process, producer_name + "Raw", producer)
+            process.buildQuadHzzObjects += producer
 
-        # Embed the other collections
-        embedder_seq = helpers.cloneProcessingSnippet(
-            process, process.patFinalStatesEmbedObjects, producer_name)
+            # Embed the other collections
+            embedder_seq = helpers.cloneProcessingSnippet(
+                process, process.patFinalStatesEmbedObjects, producer_name)
 
-        process.buildQuadHzzObjects += embedder_seq
+            process.buildQuadHzzObjects += embedder_seq
 
-        # Do some trickery so the final module has a nice output name
-        final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
-        final_module = cms.EDProducer(
-            "PATFinalStateCopier", src=final_module_name)
+            # Do some trickery so the final module has a nice output name
+            final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
+            final_module = cms.EDProducer(
+                "PATFinalStateCopier", src=final_module_name)
 
-        setattr(process, producer_name, final_module)
-        process.buildQuadHzzObjects += final_module
-        output_commands.append("*_%s_*_*" % producer_name)
+            setattr(process, producer_name, final_module)
+            process.buildQuadHzzObjects += final_module
+            output_commands.append("*_%s_*_*" % producer_name)
 
-    sequence += process.buildQuadHzzObjects
+        sequence += process.buildQuadHzzObjects
 
 
 
