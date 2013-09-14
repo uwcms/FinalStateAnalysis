@@ -176,7 +176,8 @@ if __name__ == "__main__":
             'UNKNOWN': 'grey',
             'STATUS_ERROR': 'red',
             'STATUS_DONE': 'green',
-            'STATUS_SUBMITTED': 'cyan',
+            'STATUS_SUBMITTED': 'yellow',
+            'STATUS_READY': 'cyan',
             'STATUS_UNREADY': 'blue',
         }
         if status not in colors:
