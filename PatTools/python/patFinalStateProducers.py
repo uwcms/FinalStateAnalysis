@@ -43,7 +43,7 @@ def _combinatorics(items, n):
 
 def produce_final_states(process, collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
-                         noTracks=False, noPhotons=False, zzMode=False, 
+                         noTracks=False, noPhotons=False, zzMode=False,
                          rochCor="", eleCor=""):
 
     muonsrc = collections['muons']
@@ -96,43 +96,43 @@ def produce_final_states(process, collections, output_commands,
 
     # Are we applying Rochester Corrections to the muons?
     if rochCor != "":
-        if rochCor not in ["RochCor2012","RochCor2011A","RochCor2011B"]:
+        if rochCor not in ["RochCor2012", "RochCor2011A", "RochCor2011B"]:
             raise RuntimeError(rochCor + ": not a valid option")
-        
+
         print "-- Applying Muon Rochester Corrections --"
-         
+
         process.rochCorMuons = cms.EDProducer(
             "PATMuonRochesterCorrector",
-            src = cms.InputTag( muonsrc ),
-            corr_type = cms.string( "p4_" + rochCor )
+            src=cms.InputTag(muonsrc),
+            corr_type=cms.string("p4_" + rochCor)
         )
 
         muonsrc = "rochCorMuons"
 
         process.selectObjectsForFinalStates += process.rochCorMuons
 
-
     # Are we applying electron energy corrections?
     if eleCor != "":
-        if eleCor not in ["Summer12_DR53X_HCP2012","2012Jul13ReReco","Fall11"]:
+        if eleCor not in ["Summer12_DR53X_HCP2012",
+                          "2012Jul13ReReco", "Fall11"]:
             raise RuntimeError(eleCor + ": not a valid option")
 
         print "-- Applying Electron Energy Corrections --"
 
         process.corrElectrons = cms.EDProducer(
             "PATElectronEnergyCorrector",
-            src = cms.InputTag( esrc ),
-            corr_type = cms.string( "EGCorr_" + eleCor + "SmearedRegression" )
+            src=cms.InputTag(esrc),
+            corr_type=cms.string("EGCorr_" + eleCor + "SmearedRegression")
         )
 
         esrc = "corrElectrons"
 
         process.selectObjectsForFinalStates += process.corrElectrons
 
+    process.muonsRank = cms.EDProducer(
+        "PATMuonRanker",
+        src=cms.InputTag(muonsrc))
 
-
-    process.muonsRank=cms.EDProducer("PATMuonRanker", src=cms.InputTag(muonsrc))
-    
     process.muonsForFinalStates = cms.EDFilter(
         "PATMuonRefSelector",
         src=cms.InputTag("muonsRank"),
@@ -140,7 +140,8 @@ def produce_final_states(process, collections, output_commands,
         filter=cms.bool(False),
     )
 
-    process.electronsRank=cms.EDProducer("PATElectronRanker", src=cms.InputTag(esrc))
+    process.electronsRank = cms.EDProducer(
+        "PATElectronRanker", src=cms.InputTag(esrc))
 
     process.electronsForFinalStates = cms.EDFilter(
         "PATElectronRefSelector",
@@ -156,7 +157,9 @@ def produce_final_states(process, collections, output_commands,
         filter=cms.bool(False),
     )
 
-    process.tausRank=cms.EDProducer("PATTauRanker", src=cms.InputTag(tausrc))
+    process.tausRank = cms.EDProducer(
+        "PATTauRanker",
+        src=cms.InputTag(tausrc))
 
     # Require that the PT of the jet (either corrected jet or tau)
     # to be greater than 17
@@ -167,46 +170,56 @@ def produce_final_states(process, collections, output_commands,
         filter=cms.bool(False),
     )
 
-
-    process.jetsFiltered = cms.EDProducer("PATJetCleaner",
-        src = cms.InputTag(jetsrc),
-        # preselection (any string-based cut on pat::Jet)
-        preselection = cms.string("pt>20 & abs(eta) < 2.5 & userFloat('idLoose') & userInt('fullIdLoose')"), # I leave it loose here, can be tightened at the last step
+    process.jetsFiltered = cms.EDProducer(
+        "PATJetCleaner",
+        src=cms.InputTag(jetsrc),
+        # I leave it loose here, can be tightened at the last step
+        preselection=cms.string(
+            "pt>20 & abs(eta) < 2.5 & "
+            "userFloat('idLoose') & userInt('fullIdLoose')"),
         # overlap checking configurables
-        checkOverlaps = cms.PSet(
-         muons = cms.PSet(
-          src = cms.InputTag("muonsForFinalStates"),
-          algorithm = cms.string("byDeltaR"),
-          preselection = cms.string("pt>10&&isGlobalMuon&&isTrackerMuon&&(userIso(0)+max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso(),0))/pt()<0.3"), 	
-          deltaR = cms.double(0.3),
-          checkRecoComponents = cms.bool(False),
-          pairCut = cms.string(""),
-          requireNoOverlaps = cms.bool(True),
+        checkOverlaps=cms.PSet(
+            muons=cms.PSet(
+                src=cms.InputTag("muonsForFinalStates"),
+                algorithm=cms.string("byDeltaR"),
+                preselection=cms.string(
+                    "pt>10&&isGlobalMuon&&isTrackerMuon&&"
+                    "(userIso(0)+max(photonIso()+neutralHadronIso()"
+                    "-0.5*puChargedHadronIso(),0))/pt()<0.3"),
+                deltaR=cms.double(0.3),
+                checkRecoComponents=cms.bool(False),
+                pairCut=cms.string(""),
+                requireNoOverlaps=cms.bool(True),
+            ),
+            electrons=cms.PSet(
+                src=cms.InputTag("electronsForFinalStates"),
+                algorithm=cms.string("byDeltaR"),
+                preselection=cms.string(
+                    "pt>10&&userFloat('wp95')>0"
+                    "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
+                    "-0.5*userIso(2),0.0))/pt()<0.3"),
+                deltaR=cms.double(0.3),
+                checkRecoComponents=cms.bool(False),
+                pairCut=cms.string(""),
+                requireNoOverlaps=cms.bool(True),
+            ),
         ),
-        electrons = cms.PSet(
-           src = cms.InputTag("electronsForFinalStates"),
-           algorithm = cms.string("byDeltaR"),
-           preselection = cms.string("pt>10&&userFloat('wp95')>0&&(userIso(0)+max(userIso(1)+neutralHadronIso()-0.5*userIso(2),0.0))/pt()<0.3"),
-           deltaR = cms.double(0.3),
-           checkRecoComponents = cms.bool(False),
-           pairCut = cms.string(""),
-           requireNoOverlaps = cms.bool(True),
-         ),
-         ),
-         # finalCut (any string-based cut on pat::Jet)
-         finalCut = cms.string('')
+        # finalCut (any string-based cut on pat::Jet)
+        finalCut=cms.string('')
     )
-    process.jetsForFinalStates=cms.EDProducer("PATJetRanker", src=cms.InputTag("jetsFiltered"))
+    process.jetsForFinalStates = cms.EDProducer(
+        "PATJetRanker",
+        src=cms.InputTag("jetsFiltered"))
 
     process.selectObjectsForFinalStates = cms.Sequence(
-	process.muonsRank
-        +process.muonsForFinalStates
-	+process.electronsRank
+        process.muonsRank
+        + process.muonsForFinalStates
+        + process.electronsRank
         + process.electronsForFinalStates
-	+process.tausRank
+        + process.tausRank
         + process.tausForFinalStates
         + process.jetsFiltered
-	+ process.jetsForFinalStates
+        + process.jetsForFinalStates
     )
     if not noPhotons:
         process.selectObjectsForFinalStates += process.photonsForFinalStates
@@ -217,7 +230,7 @@ def produce_final_states(process, collections, output_commands,
     object_types = [('Elec', cms.InputTag("electronsForFinalStates")),
                     ('Mu', cms.InputTag("muonsForFinalStates")),
                     ('Tau', cms.InputTag("tausForFinalStates")),
-			('Jet', cms.InputTag("jetsForFinalStates"))]
+                    ('Jet', cms.InputTag("jetsForFinalStates"))]
 
     if not noPhotons:
         object_types.append(('Pho', cms.InputTag("photonsForFinalStates")))
@@ -291,9 +304,8 @@ def produce_final_states(process, collections, output_commands,
             continue
         if n_taus and n_phos:
             continue
-	if n_jets > 0 and not (n_jets == 2 and n_muons == 1):
-	    continue 
-
+        if n_jets > 0 and not (n_jets == 2 and n_muons == 1):
+            continue
 
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
@@ -327,8 +339,6 @@ def produce_final_states(process, collections, output_commands,
         output_commands.append("*_%s_*_*" % producer_name)
     sequence += process.buildTriObjects
 
-
-
     # Build 4 lepton final states
     process.buildQuadObjects = cms.Sequence()
     for quadobject in _combinatorics(object_types, 4):
@@ -343,9 +353,8 @@ def produce_final_states(process, collections, output_commands,
             continue
         if n_taus and n_phos:
             continue
-	if n_jets> 0:
+        if n_jets > 0:
             continue
-
 
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
@@ -382,8 +391,6 @@ def produce_final_states(process, collections, output_commands,
         process.buildQuadObjects += final_module
         output_commands.append("*_%s_*_*" % producer_name)
     sequence += process.buildQuadObjects
-
-
 
     # Build 4 lepton final states w/ FSR
     if zzMode:
@@ -441,7 +448,6 @@ def produce_final_states(process, collections, output_commands,
             output_commands.append("*_%s_*_*" % producer_name)
 
         sequence += process.buildQuadHzzObjects
-
 
 
 if __name__ == "__main__":
