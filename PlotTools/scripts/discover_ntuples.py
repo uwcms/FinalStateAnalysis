@@ -21,7 +21,9 @@ import sys
 log = logging.getLogger("discover_ntuples")
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
-# From http://stackoverflow.com/questions/6963610/how-in-python-check-if-two-files-string-and-file-have-same-content
+
+# From http://stackoverflow.com/questions/6963610/
+# how-in-python-check-if-two-files-string-and-file-have-same-content
 def shafile(filename):
     with open(filename, "rb") as f:
         return sha1(f.read()).hexdigest()
@@ -58,8 +60,7 @@ if __name__ == "__main__":
             log.info("skipping object %s" % sample_name)
             continue
         log.info("Finding files for sample %s" % sample_name)
-        log.info("Looking for  %s" %  args.meta)
-
+        log.info("Looking for  %s" % args.meta)
 
         output_txt = os.path.join(args.outputdir, sample_name + '.txt')
         # Do work in a temporary directory
@@ -67,7 +68,8 @@ if __name__ == "__main__":
 
         previous_files = set([])
         if os.path.exists(output_txt):
-            log.debug("-- Output already exists - finding new and re-checking broken.")
+            log.debug("-- Output already exists - "
+                      "finding new and re-checking broken.")
             with open(output_txt, 'r') as current:
                 for line in current.readlines():
                     if '#' not in line:
@@ -75,7 +77,7 @@ if __name__ == "__main__":
 
         with open(output_tmp, 'w') as flist:
             all_files = glob.glob(os.path.join(sample_dir, '*', '*.root')) + \
-                    glob.glob(os.path.join(sample_dir, '*.root'))
+                glob.glob(os.path.join(sample_dir, '*.root'))
             pbar = ProgressBar(widgets=[FormatLabel(
                 'Checked %(value)i/' + str(len(all_files)) + ' files. '),
                 ETA(), Bar('>')], maxval=len(all_files)).start()
@@ -98,7 +100,6 @@ if __name__ == "__main__":
                 # Made it!
                 flist.write(file + '\n')
 
-
         # Check if we found anything new in the .txt file
         # Don't update if we didn't, so rake knows nothing has changed
         if not os.path.exists(output_txt):
@@ -110,9 +111,8 @@ if __name__ == "__main__":
             log.debug("-- Completed sample %s - new files found", sample_dir)
         else:
             # Nothing has changed, remove the tmp
-            log.debug("-- Completed sample %s - no new files found", sample_dir)
+            log.debug("-- Completed sample %s - no new files found",
+                      sample_dir)
             os.remove(output_tmp)
 
-
-        log.info('Finished finding files for %s'% sample_name)
-
+        log.info('Finished finding files for %s' % sample_name)
