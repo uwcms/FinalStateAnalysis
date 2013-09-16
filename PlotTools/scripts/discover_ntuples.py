@@ -28,13 +28,31 @@ def shafile(filename):
     with open(filename, "rb") as f:
         return sha1(f.read()).hexdigest()
 
+
+def get_previous_files(output_txt):
+    """ Returns the set of valid files in the output_txt list. """
+    previous_files = set()
+    if os.path.exists(output_txt):
+        log.debug("-- Output already exists - "
+                  "finding new and re-checking broken.")
+        with open(output_txt, 'r') as current:
+            for line in current.readlines():
+                if '#' not in line:
+                    previous_files.add(line.strip())
+    return previous_files
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('jobid', help='Job ID')
-    parser.add_argument('directory', help='Base directory')
+    parser.add_argument('directory',
+                        help='Base directory(ies).  If this is a colon (:) '
+                        'separated list of directories, it is used as a'
+                        ' search path (like $MEGAPATH)')
     parser.add_argument('outputdir', help='Output directory')
     parser.add_argument('--meta', default='mm/metaInfo',
                         help='Path to a meta tree, default: mm/metaInfo')
+    parser.add_argument('--relative', default=False, action='store_true',
+                        help='Output paths relative to input directory(ies)')
     parser.add_argument('--force', default=False, action='store_true',
                         help='If specified, check files even if they '
                         ' have an older timestamp than previously output')
@@ -46,6 +64,7 @@ if __name__ == "__main__":
     if args.verbose:
         log.setLevel(logging.DEBUG)
 
+    # We do this here to prevent ROOT from messing with sys.argv
     import ROOT
 
     if not os.path.exists(args.outputdir):
@@ -54,65 +73,76 @@ if __name__ == "__main__":
     log.info("Finding input files for job: %s in %s"
              % (args.jobid, args.directory))
 
-    for sample_dir in glob.glob(os.path.join(args.directory, args.jobid, '*')):
-        sample_name = os.path.basename(sample_dir)
-        if not os.path.isdir(sample_dir):
-            log.info("skipping object %s" % sample_name)
-            continue
-        log.info("Finding files for sample %s" % sample_name)
-        log.info("Looking for  %s" % args.meta)
+    # Keep track of the samples that we have found
+    samples_found = set()
 
-        output_txt = os.path.join(args.outputdir, sample_name + '.txt')
-        # Do work in a temporary directory
-        output_tmp = output_txt.replace('.txt', '.tmp')
+    for search_dir in args.directory.split(':'):
+        log.info("Searching for samples in %s", search_dir)
+        for sample_dir in glob.glob(os.path.join(search_dir, args.jobid, '*')):
+            sample_name = os.path.basename(sample_dir)
+            # Take the sample from the first match in the search path
+            if sample_name in samples_found:
+                continue
+            if not os.path.isdir(sample_dir):
+                log.info("skipping object %s" % sample_name)
+                continue
+            log.info("Finding files for sample %s" % sample_name)
 
-        previous_files = set([])
-        if os.path.exists(output_txt):
-            log.debug("-- Output already exists - "
-                      "finding new and re-checking broken.")
-            with open(output_txt, 'r') as current:
-                for line in current.readlines():
-                    if '#' not in line:
-                        previous_files.add(line.strip())
+            output_txt = os.path.join(args.outputdir, sample_name + '.txt')
+            # Do work in a temporary directory
+            output_tmp = output_txt.replace('.txt', '.tmp')
 
-        with open(output_tmp, 'w') as flist:
-            all_files = glob.glob(os.path.join(sample_dir, '*', '*.root')) + \
-                glob.glob(os.path.join(sample_dir, '*.root'))
-            pbar = ProgressBar(widgets=[FormatLabel(
-                'Checked %(value)i/' + str(len(all_files)) + ' files. '),
-                ETA(), Bar('>')], maxval=len(all_files)).start()
+            previous_files = get_previous_files(output_txt)
 
-            for i, file in enumerate(all_files):
-                pbar.update(i)
-                # Always write if we have found + checked it OK before
-                if args.force or file not in previous_files:
-                    tfile = ROOT.TFile.Open(file)
-                    if not tfile:
-                        log.warning("-- Can't open file: %s" % file)
-                        flist.write('# corrupt %s\n' % file)
-                        continue
-                    ntuple = tfile.Get(args.meta)
-                    if not ntuple:
-                        log.warning("-- Can't read ntuple in file: %s" % file)
-                        flist.write('# corrupt %s\n' % file)
-                        continue
-                    tfile.Close()
-                # Made it!
-                flist.write(file + '\n')
+            with open(output_tmp, 'w') as flist:
+                all_files = glob.glob(os.path.join(sample_dir, '*', '*.root'))
+                all_files += glob.glob(os.path.join(sample_dir, '*.root'))
+                if not all_files:
+                    log.info("No files found in %s, skipping this directory" %
+                             sample_dir)
+                    continue
 
-        # Check if we found anything new in the .txt file
-        # Don't update if we didn't, so rake knows nothing has changed
-        if not os.path.exists(output_txt):
-            shutil.move(output_tmp, output_txt)
-            log.debug("-- Completed sample %s", sample_dir)
-        elif shafile(output_txt) != shafile(output_tmp):
-            # content has changed
-            shutil.move(output_tmp, output_txt)
-            log.debug("-- Completed sample %s - new files found", sample_dir)
-        else:
-            # Nothing has changed, remove the tmp
-            log.debug("-- Completed sample %s - no new files found",
-                      sample_dir)
-            os.remove(output_tmp)
+                samples_found.add(sample_name)
+                pbar = ProgressBar(widgets=[FormatLabel(
+                    'Checked %(value)i/' + str(len(all_files)) + ' files. '),
+                    ETA(), Bar('>')], maxval=len(all_files)).start()
 
-        log.info('Finished finding files for %s' % sample_name)
+                for i, file in enumerate(all_files):
+                    pbar.update(i)
+                    filepath = file
+                    if args.relative:
+                        filepath = os.path.relpath(file, search_dir)
+                    # Always write if we have found + checked it OK before
+                    if args.force or file not in previous_files:
+                        tfile = ROOT.TFile.Open(file)
+                        if not tfile:
+                            log.warning("-- Can't open file: %s" % file)
+                            flist.write('# corrupt %s\n' % filepath)
+                            continue
+                        ntuple = tfile.Get(args.meta)
+                        if not ntuple:
+                            log.warning("-- Can't read ntuple in file: %s"
+                                        % file)
+                            flist.write('# corrupt %s\n' % filepath)
+                            continue
+                        tfile.Close()
+                    # Made it!
+                    flist.write(filepath + '\n')
+
+            # Check if we found anything new in the .txt file
+            # Don't update if we didn't, so rake knows nothing has changed
+            if not os.path.exists(output_txt):
+                shutil.move(output_tmp, output_txt)
+                log.debug("-- Completed sample %s", sample_dir)
+            elif shafile(output_txt) != shafile(output_tmp):
+                # content has changed
+                shutil.move(output_tmp, output_txt)
+                log.debug("-- Completed sample %s - new files found",
+                          sample_dir)
+            else:
+                # Nothing has changed, remove the tmp
+                log.debug("-- Completed sample %s - no new files found",
+                          sample_dir)
+                os.remove(output_tmp)
+
+            log.info('Finished finding files for %s' % sample_name)
