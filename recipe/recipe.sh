@@ -11,6 +11,7 @@
 #    LIMIT: code for computing limits
 #    LUMI: code for computing instantaneous luminosity (lumiCalc and friends)
 #    MVAMET: code for MVA MET.  Always produced if PATPROD=1
+#    HZZ: MELA and HZZAngles to support the ZZ analysis. Always produced if PATPROD=1
 #
 # Options which are absolutely required, like PAT data formats, are always 
 # installed.
@@ -22,7 +23,7 @@ LIMITS=${LIMITS:-0}
 LUMI=${LUMI:-0}
 PATPROD=${PATPROD:-0}
 MVAMET=${MVAMET:-$PATPROD}
-HZZ=${HZZ:-0}
+HZZ=${HZZ:-$PATPROD}
 
 set -o errexit
 set -o nounset
@@ -74,12 +75,15 @@ fi
 
 if [ "$HZZ" = "1" ] 
 then
-  echo "Applying HZZ specific recpe"
+  echo "Checking out HZZ specific packages"
   ./recipe_hzz.sh
+  git ls-files ../PatTools/plugins/ | \
+      grep PATQuadFinalStateBuilderHzz | \
+      xargs -n 1 git update-index --no-assume-unchanged 
 else
   # Remove HZZ FSA plugins dependent on MELA 
   git ls-files ../PatTools/plugins/PATQuadFinalStateBuilderHzz* | xargs rm -f
-  git ls-files ../PatTools/plugins/PATQuadFinalStateBuilderHzz* | \
+  git ls-files ../PatTools/plugins/ | grep PATQuadFinalStateBuilderHzz | \
     xargs -n 1 git update-index --assume-unchanged 
 fi
 
