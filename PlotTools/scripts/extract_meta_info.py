@@ -15,40 +15,39 @@ Author: Evan K. Friis, UW
 
 from RecoLuminosity.LumiDB import argparse
 import json
-from FinalStateAnalysis.Utilities.lumitools import json_summary
 import logging
 import sys
 
-log = logging.getLogger("extract_meta_info")
+from mega import resolve_file
+from FinalStateAnalysis.Utilities.lumitools import json_summary
 
-# Steal the args so ROOT doesn't mess them up!
-parser = argparse.ArgumentParser()
-args = sys.argv[:]
-sys.argv = []
-
-import ROOT
+log = logging.getLogger(__name__)
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
     parser.add_argument('input', type=str,
-                        help='A text file with a list of input ROOT files')
+                        help='A text file with a list of input ROOT files.'
+                        ' If paths are relative, the $MEGAPATH will be'
+                        ' searched to locate the files.')
     parser.add_argument('tree', type=str,
                         help='Specify the path to the meta tree.')
     parser.add_argument('output', type=str, help='Output JSON file')
     parser.add_argument('--lumimask', action='store_const',
                         const=True, default=False,
-                        help = 'If true, include the run-lumi mask result')
+                        help='If true, include the run-lumi mask result')
     parser.add_argument('--debug', action='store_const',
                         const=True, default=False,
-                        help = 'Print debug output')
+                        help='Print debug output')
 
-    args = parser.parse_args(args[1:])
+    args = parser.parse_args()
+    import ROOT
 
     files = []
     with open(args.input) as input_files:
         for input_file in input_files:
             input_file = input_file.strip()
             if input_file and '#' not in input_file:
-                files.append(input_file.strip())
+                files.append(resolve_file(input_file))
 
     level = logging.INFO
     if args.debug:
@@ -78,7 +77,7 @@ if __name__ == "__main__":
         tfile.Close()
 
     output = {
-        'n_evts' : total_events,
+        'n_evts': total_events,
     }
     if args.lumimask:
         output['lumi_mask'] = json_summary(run_lumis)
