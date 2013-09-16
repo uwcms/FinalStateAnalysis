@@ -21,7 +21,6 @@ Authors: Bucky & Friends
 '''
 
 import FWCore.ParameterSet.Config as cms
-import copy
 
 import PhysicsTools.PatAlgos.tools.trigTools as trigtools
 import PhysicsTools.PatAlgos.tools.jetTools as jettools
@@ -177,16 +176,16 @@ def configurePatTuple(process, isMC=True, **kwargs):
     if isMC:
         process.photonMatch = cms.EDProducer(
             "MCMatcherByPt",
-            src = cms.InputTag("photons"),
-            maxDPtRel = cms.double(100.0),
-            mcPdgId = cms.vint32(),
-            mcStatus = cms.vint32(1),
-            resolveByMatchQuality = cms.bool(False),
-            maxDeltaR = cms.double(0.3),
-            checkCharge = cms.bool(False),
-            resolveAmbiguities = cms.bool(True),
-            matched = cms.InputTag("genParticles")
-            )
+            src=cms.InputTag("photons"),
+            maxDPtRel=cms.double(100.0),
+            mcPdgId=cms.vint32(),
+            mcStatus=cms.vint32(1),
+            resolveByMatchQuality=cms.bool(False),
+            maxDeltaR=cms.double(0.3),
+            checkCharge=cms.bool(False),
+            resolveAmbiguities=cms.bool(True),
+            matched=cms.InputTag("genParticles")
+        )
 
     # Use POG recommendations for (these) electron Isos
     process.elPFIsoValueGamma04PFIdPFIso.deposits[0].vetos = cms.vstring(
@@ -208,12 +207,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load("FinalStateAnalysis.PatTools.electrons.electronID_cff")
     if cmssw_major_version() == 4:
         process.patDefaultSequence.replace(process.patElectrons,
-                                           process.recoElectronID42X+
+                                           process.recoElectronID42X +
                                            process.patElectrons)
         process.patElectrons.electronIDSources = process.electronIDSources42X
-    else :
+    else:
         process.patDefaultSequence.replace(process.patElectrons,
-                                           process.recoElectronID5YX+
+                                           process.recoElectronID5YX +
                                            process.patElectrons)
         process.patElectrons.electronIDSources = process.electronIDSources5YX
 
@@ -314,7 +313,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load("FinalStateAnalysis.PatTools.patElectronProduction_cff")
 
     # Electron Energy Regression and Calibrations
-    process.load("EgammaAnalysis.ElectronTools.electronRegressionEnergyProducer_cfi")
+    process.load(
+        "EgammaAnalysis.ElectronTools.electronRegressionEnergyProducer_cfi")
     process.load("EgammaAnalysis.ElectronTools.calibratedPatElectrons_cfi")
 
     #setup the energy regression for the specific dataset
@@ -324,21 +324,21 @@ def configurePatTuple(process, isMC=True, **kwargs):
         process.customizeElectronSequence += process.eleRegressionEnergy
         process.customizeElectronSequence += process.calibratedPatElectrons
 
-        process.eleRegressionEnergy.energyRegressionType    = cms.uint32(2)
-        process.calibratedPatElectrons.correctionsType      = cms.int32(2)
+        process.eleRegressionEnergy.energyRegressionType = cms.uint32(2)
+        process.calibratedPatElectrons.correctionsType = cms.int32(2)
 
         if isMC:
-            process.calibratedPatElectrons.inputDataset     = cms.string(
+            process.calibratedPatElectrons.inputDataset = cms.string(
                 "Summer12_LegacyPaper")
         else:
-            process.calibratedPatElectrons.inputDataset     = cms.string(
+            process.calibratedPatElectrons.inputDataset = cms.string(
                 "22Jan2013ReReco")
 
-        process.calibratedPatElectrons.combinationType      = cms.int32(3)
-        process.calibratedPatElectrons.lumiRatio            = cms.double(1.0)
-        process.calibratedPatElectrons.synchronization      = cms.bool(True)
-        process.calibratedPatElectrons.isMC                 = cms.bool(isMC == 1)
-        process.calibratedPatElectrons.verbose              = cms.bool(False)
+        process.calibratedPatElectrons.combinationType = cms.int32(3)
+        process.calibratedPatElectrons.lumiRatio = cms.double(1.0)
+        process.calibratedPatElectrons.synchronization = cms.bool(True)
+        process.calibratedPatElectrons.isMC = cms.bool(isMC == 1)
+        process.calibratedPatElectrons.verbose = cms.bool(False)
 
     final_electron_collection = chain_sequence(
         process.customizeElectronSequence, "selectedPatElectrons",
@@ -353,7 +353,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
                                        process.customizeElectronSequence)
     # We have to do the pat Jets before the pat electrons since we embed them
     process.customizeElectronSequence.insert(0, process.selectedPatJets)
-    
+
     # Define cleanPatElectrons input collection
     process.cleanPatElectrons.src = final_electron_collection
 
@@ -389,9 +389,9 @@ def configurePatTuple(process, isMC=True, **kwargs):
     final_photon_collection = chain_sequence(process.customizePhotonSequence,
                                              "selectedPatPhotons")
     #setup PHOSPHOR for a specific dataset
-    if cmssw_major_version() == 4: #for now 2011 = CMSSW42X
+    if cmssw_major_version() == 4:  # for now 2011 = CMSSW42X
         process.patPhotonPHOSPHOREmbedder.year = cms.uint32(2011)
-    else: # 2012 is 5YX
+    else:  # 2012 is 5YX
         process.patPhotonPHOSPHOREmbedder.year = cms.uint32(2012)
     process.patPhotonPHOSPHOREmbedder.isMC = cms.bool(bool(isMC))
     #inject photons into pat sequence
@@ -510,7 +510,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Setup all the PATFinalState objects
     produce_final_states(process, fs_daughter_inputs, output_commands,
-                         process.tuplize, kwargs['puTag'])
+                         process.tuplize, kwargs['puTag'],
+                         zzMode=kwargs.get('zzMode', False))
 
     return process.tuplize, output_commands
 
