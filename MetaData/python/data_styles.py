@@ -47,6 +47,14 @@ data_styles = {
         'name' : "ttbar",
         'fillstyle': 'solid',
     },
+    'VH*HWW' : {
+        'legendstyle' : 'f',
+        'drawstyle' : 'hist',
+        'fillcolor' : colors['orange'],
+        'linecolor' : colors['orange'],
+        'name' : "VH H#rightarrowWW",
+        'fillstyle': 'solid',
+    },
     'VH*' : {
         'legendstyle' : 'l',
         'drawstyle' : 'hist',
