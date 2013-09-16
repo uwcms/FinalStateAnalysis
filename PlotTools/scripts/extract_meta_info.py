@@ -18,7 +18,7 @@ import json
 import logging
 import sys
 
-from mega import resolve_file
+from FinalStateAnalysis.PlotTools.MegaPath import resolve_file
 from FinalStateAnalysis.Utilities.lumitools import json_summary
 
 log = logging.getLogger(__name__)
