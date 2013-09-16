@@ -1,5 +1,5 @@
 # meta.rake
-# 
+#
 # Finds lists of datafiles (starting from a directory)
 # and computes meta data: # of events, effective/real int. lumi
 
@@ -7,10 +7,15 @@ namespace :meta do
   # How to generate the inputs
   desc "Query lists of ntuple .root files"
   task :getinputs, [:jobid, :source, :ntuple] do |t, args|
+    # If MEGAPATH is enabled, use relative paths.
+    opt_relative = ""
+    if ENV.has_key?("MEGAPATH")
+        opt_relative = "--relative"
+    end
     if ENV.fetch('discovercheck', "0") == "1"
-      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --force --meta=#{args.ntuple}"
+      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --force --meta=#{args.ntuple} #{opt_relative}"
     else
-      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --meta=#{args.ntuple}"
+      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --meta=#{args.ntuple} #{opt_relative}"
     end
   end
 
@@ -24,8 +29,8 @@ namespace :meta do
       end
     end
 
-    # For data, we need a computed lumi mask 
-    if sample.include? 'data' 
+    # For data, we need a computed lumi mask
+    if sample.include? 'data'
       # Get lumi mask in plain format.
       file sample + '.lumimask.json' => sample + '.meta.json' do |t|
         sh "cat #{t.prerequisites} | dump_lumimask.py > #{t.name}"
@@ -36,13 +41,13 @@ namespace :meta do
         sh "lumiCalc2.py overview -i #{t.prerequisites} -o #{t.name}"
       end
       # Get the PU distribution
-      file sample + '.pu.root' => sample + '.lumimask.json' do |t| 
+      file sample + '.pu.root' => sample + '.lumimask.json' do |t|
         pu_file = ''
         maxbin = 50
         nbins = 500
         # Minbias xsection
         minbias = 68000
-        if sqrts == "8" then 
+        if sqrts == "8" then
           pu_file = ENV['pu2012JSON']
           maxbin = 60
           nbins = 600
@@ -54,7 +59,7 @@ namespace :meta do
         # Find the newest PU json file
         sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t.name}"
       end
-      # Put the lumicalc result in a readable format.  Make it dependent 
+      # Put the lumicalc result in a readable format.  Make it dependent
       # on the PU .root file as well, so it gets built.
       file sample + '.lumicalc.sum' => [sample + '.lumicalc.csv', sample + '.pu.root'] do |t|
         sh "lumicalc_parser.py #{t.prerequisites[0]} > #{t.name}"
@@ -70,7 +75,7 @@ namespace :meta do
   end
 
   task :getmeta, [:directory, :ntuple, :sqrts] do |t, args|
-    puts "Computing meta information for #{args.sqrts} TeV in #{args.directory}" 
+    puts "Computing meta information for #{args.sqrts} TeV in #{args.directory}"
     chdir(args.directory) do
       FileList["*.txt"].each do |txtfile|
         sample = txtfile.sub('.txt', '')
