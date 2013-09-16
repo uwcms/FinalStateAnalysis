@@ -69,6 +69,34 @@ def open_update_if_changed(output_txt, sample):
             log.debug("-- Completed sample %s - no new files found", sample)
 
 
+def find_sample_dirs(search_dirs, jobid):
+    """ Find all samples and files for a given job ID and search path.
+
+    For each sample, yields a tuple with (sample, search_dir, list_of_files).
+    A sample is returned only the first time it is found in the search path.
+
+    """
+    samples_found = set()
+    for search_dir in search_dirs:
+        log.info("Searching for samples in %s", search_dir)
+        for sample_dir in glob.glob(os.path.join(search_dir, args.jobid, '*')):
+            sample_name = os.path.basename(sample_dir)
+            # Take the sample from the first match in the search path
+            if sample_name in samples_found:
+                continue
+            if not os.path.isdir(sample_dir):
+                log.info("skipping object %s" % sample_name)
+                continue
+            log.info("Finding files for sample %s" % sample_name)
+            all_files = glob.glob(os.path.join(sample_dir, '*', '*.root'))
+            all_files += glob.glob(os.path.join(sample_dir, '*.root'))
+            if not all_files:
+                log.info("No files in %s, skipping" % sample_dir)
+                continue
+            samples_found.add(sample_name)
+            yield (sample_name, search_dir, all_files)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('jobid', help='Job ID')
@@ -101,60 +129,39 @@ if __name__ == "__main__":
     log.info("Finding input files for job: %s in %s"
              % (args.jobid, args.directory))
 
-    # Keep track of the samples that we have found
-    samples_found = set()
+    for sample_name, search_dir, all_files in find_sample_dirs(
+            args.directory.split(':'), args.jobid):
+        output_txt = os.path.join(args.outputdir, sample_name + '.txt')
+        # Do work in a temporary directory
+        output_tmp = output_txt.replace('.txt', '.tmp')
 
-    for search_dir in args.directory.split(':'):
-        log.info("Searching for samples in %s", search_dir)
-        for sample_dir in glob.glob(os.path.join(search_dir, args.jobid, '*')):
-            sample_name = os.path.basename(sample_dir)
-            # Take the sample from the first match in the search path
-            if sample_name in samples_found:
-                continue
-            if not os.path.isdir(sample_dir):
-                log.info("skipping object %s" % sample_name)
-                continue
-            log.info("Finding files for sample %s" % sample_name)
+        previous_files = get_previous_files(output_txt)
 
-            output_txt = os.path.join(args.outputdir, sample_name + '.txt')
-            # Do work in a temporary directory
-            output_tmp = output_txt.replace('.txt', '.tmp')
+        with open_update_if_changed(output_tmp, sample_name) as flist:
+            pbar = ProgressBar(widgets=[FormatLabel(
+                'Checked %(value)i/' + str(len(all_files)) + ' files. '),
+                ETA(), Bar('>')], maxval=len(all_files)).start()
 
-            previous_files = get_previous_files(output_txt)
+            for i, file in enumerate(all_files):
+                pbar.update(i)
+                filepath = file
+                if args.relative:
+                    filepath = os.path.relpath(file, search_dir)
+                # Always write if we have found + checked it OK before
+                if args.force or file not in previous_files:
+                    tfile = ROOT.TFile.Open(file)
+                    if not tfile:
+                        log.warning("-- Can't open file: %s" % file)
+                        flist.write('# corrupt %s\n' % filepath)
+                        continue
+                    ntuple = tfile.Get(args.meta)
+                    if not ntuple:
+                        log.warning("-- Can't read ntuple in file: %s"
+                                    % file)
+                        flist.write('# corrupt %s\n' % filepath)
+                        continue
+                    tfile.Close()
+                # Made it!
+                flist.write(filepath + '\n')
 
-            with open_update_if_changed(output_tmp, sample_dir) as flist:
-                all_files = glob.glob(os.path.join(sample_dir, '*', '*.root'))
-                all_files += glob.glob(os.path.join(sample_dir, '*.root'))
-                if not all_files:
-                    log.info("No files found in %s, skipping this directory" %
-                             sample_dir)
-                    continue
-
-                samples_found.add(sample_name)
-                pbar = ProgressBar(widgets=[FormatLabel(
-                    'Checked %(value)i/' + str(len(all_files)) + ' files. '),
-                    ETA(), Bar('>')], maxval=len(all_files)).start()
-
-                for i, file in enumerate(all_files):
-                    pbar.update(i)
-                    filepath = file
-                    if args.relative:
-                        filepath = os.path.relpath(file, search_dir)
-                    # Always write if we have found + checked it OK before
-                    if args.force or file not in previous_files:
-                        tfile = ROOT.TFile.Open(file)
-                        if not tfile:
-                            log.warning("-- Can't open file: %s" % file)
-                            flist.write('# corrupt %s\n' % filepath)
-                            continue
-                        ntuple = tfile.Get(args.meta)
-                        if not ntuple:
-                            log.warning("-- Can't read ntuple in file: %s"
-                                        % file)
-                            flist.write('# corrupt %s\n' % filepath)
-                            continue
-                        tfile.Close()
-                    # Made it!
-                    flist.write(filepath + '\n')
-
-            log.info('Finished finding files for %s' % sample_name)
+        log.info('Finished finding files for %s' % sample_name)
