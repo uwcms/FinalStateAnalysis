@@ -12,8 +12,11 @@ namespace :meta do
     if ENV.has_key?("MEGAPATH")
         opt_relative = "--relative"
     end
-    if ENV.fetch('discovercheck', "0") == "1"
+    discovercheck = ENV.fetch('discovercheck', "0")
+    if discovercheck == "1" then
       sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --force --meta=#{args.ntuple} #{opt_relative}"
+    elsif discovercheck == "never" then
+      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --meta=#{args.ntuple} #{opt_relative} --no-check"
     else
       sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --meta=#{args.ntuple} #{opt_relative}"
     end

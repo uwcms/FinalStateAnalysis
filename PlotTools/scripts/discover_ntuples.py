@@ -112,6 +112,9 @@ if __name__ == "__main__":
     parser.add_argument('--force', default=False, action='store_true',
                         help='If specified, check files even if they '
                         ' have an older timestamp than previously output')
+    parser.add_argument('--no-check', dest='nocheck', default=False,
+                        action='store_true',
+                        help='If specified, never check files for corruption.')
     parser.add_argument('--verbose', default=False, action='store_true',
                         help='More output')
 
@@ -148,7 +151,8 @@ if __name__ == "__main__":
                 if args.relative:
                     filepath = os.path.relpath(file, search_dir)
                 # Always write if we have found + checked it OK before
-                if args.force or file not in previous_files:
+                if not args.nocheck and (args.force
+                                         or file not in previous_files):
                     tfile = ROOT.TFile.Open(file)
                     if not tfile:
                         log.warning("-- Can't open file: %s" % file)
