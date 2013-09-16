@@ -10,23 +10,19 @@ Author: Evan K. Friis, UW
 '''
 
 from RecoLuminosity.LumiDB import argparse
+import contextlib
 import glob
 from hashlib import sha1
 import logging
 import os
-from progressbar import ETA, ProgressBar, FormatLabel, Bar
+import tempfile
 import shutil
 import sys
 
+from progressbar import ETA, ProgressBar, FormatLabel, Bar
+
 log = logging.getLogger("discover_ntuples")
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
-
-
-# From http://stackoverflow.com/questions/6963610/
-# how-in-python-check-if-two-files-string-and-file-have-same-content
-def shafile(filename):
-    with open(filename, "rb") as f:
-        return sha1(f.read()).hexdigest()
 
 
 def get_previous_files(output_txt):
@@ -40,6 +36,38 @@ def get_previous_files(output_txt):
                 if '#' not in line:
                     previous_files.add(line.strip())
     return previous_files
+
+
+@contextlib.contextmanager
+def open_update_if_changed(output_txt, sample):
+    """ Yields a smart-updating file object.
+
+    The file at output_file will be written with the new content if it does not
+    exist or if the new content differs from what is currently in output_file.
+
+    """
+    # From http://stackoverflow.com/questions/6963610/
+    # how-in-python-check-if-two-files-string-and-file-have-same-content
+    def shafile(filename):
+        with open(filename, "rb") as f:
+            return sha1(f.read()).hexdigest()
+
+    with tempfile.NamedTemporaryFile() as output_tmp:
+        yield output_tmp
+        output_tmp.flush()
+        # Check if we found anything new in the .txt file
+        # Don't update if we didn't, so rake knows nothing has changed
+        if not os.path.exists(output_txt):
+            shutil.copyfile(output_tmp.name, output_txt)
+            log.debug("-- Completed sample %s", sample)
+        elif shafile(output_txt) != shafile(output_tmp.name):
+            # content has changed
+            shutil.copyfile(output_tmp.name, output_txt)
+            log.debug("-- Completed sample %s - new files found", sample)
+        else:
+            # Nothing has changed, remove the tmp
+            log.debug("-- Completed sample %s - no new files found", sample)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -94,7 +122,7 @@ if __name__ == "__main__":
 
             previous_files = get_previous_files(output_txt)
 
-            with open(output_tmp, 'w') as flist:
+            with open_update_if_changed(output_tmp, sample_dir) as flist:
                 all_files = glob.glob(os.path.join(sample_dir, '*', '*.root'))
                 all_files += glob.glob(os.path.join(sample_dir, '*.root'))
                 if not all_files:
@@ -128,21 +156,5 @@ if __name__ == "__main__":
                         tfile.Close()
                     # Made it!
                     flist.write(filepath + '\n')
-
-            # Check if we found anything new in the .txt file
-            # Don't update if we didn't, so rake knows nothing has changed
-            if not os.path.exists(output_txt):
-                shutil.move(output_tmp, output_txt)
-                log.debug("-- Completed sample %s", sample_dir)
-            elif shafile(output_txt) != shafile(output_tmp):
-                # content has changed
-                shutil.move(output_tmp, output_txt)
-                log.debug("-- Completed sample %s - new files found",
-                          sample_dir)
-            else:
-                # Nothing has changed, remove the tmp
-                log.debug("-- Completed sample %s - no new files found",
-                          sample_dir)
-                os.remove(output_tmp)
 
             log.info('Finished finding files for %s' % sample_name)
