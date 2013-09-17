@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Nuke PatTools from orbit.
-# 
+#
 # This allow a cleaner, slimmer working area without all the PAT dependencies
 # checked out.
 #
-# This script removes the entire PatTools directory, and makes sure that 
+# This script removes the entire PatTools directory, and makes sure that
 # git doesn't complain about the removal.
 #
 # If you pull changes to PatTools from a remote, you'll need to rerun the
@@ -31,14 +31,20 @@ echo "Deleting all bogus files in PatTools..."
 # We keep the ones needed for producing PATFinalStateObjects
 # The pfCandAuxFunctions is just to ensure that libFinalStateAnalysisPatTools
 # is built, since the plugins Buildfile expects it to be there.
-find .  -type f | grep -i -v finalstate | grep -v BuildFile | grep -v pfCandAuxFunctions | xargs rm  
+find .  -type f | grep -i -v finalstate | grep -v BuildFile | grep -v pfCandAuxFunctions | xargs rm
+
+# Figure out if we enabled HZZ mode during installation:
+if [ ! -d $CMSSW_BASE/src/ZZMatrixElement ]; then
+    echo "Removing HZZ producers - dependencies not installed."
+    find . -type f | grep PATQuadFinalStateBuilderHzz | xargs rm
+fi
 
 echo "Telling git to ignore changes in them..."
-git ls-files . | xargs -n 1 git update-index --assume-unchanged 
+git ls-files . | xargs -n 1 git update-index --assume-unchanged
 
 # The remaining files are good (used for making FSAs)
 # Let's track them.
-find .  -type f | grep -i -v finalstate | xargs -n 1 git update-index --no-assume-unchanged 
+find .  -type f | grep -i -v finalstate | xargs -n 1 git update-index --no-assume-unchanged
 
 popd
 echo "done."
