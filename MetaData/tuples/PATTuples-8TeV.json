@@ -46,6 +46,9 @@
 
   "VBF_H2Tau_M-126_LFV" : "/hdfs/store/user/nkellams/LFV_VBFHToTauMu_M126_8TeV_Tauola_Pythia6",
 
+
+  "VH_H2Tau_M-90"  : "/hdfs/store/user/tapas/WH_ZH_TTH_HToTauTau_M-90_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM/2013-02-25-8TeV-53X-PatTuple_Master/",
+  "VH_H2Tau_M-95"  : "/hdfs/store/user/tapas/WH_ZH_TTH_HToTauTau_M-95_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM/2013-02-25-8TeV-53X-PatTuple_Master/",
   "VH_H2Tau_M-100" : "/hdfs/store/user/tapas/WH_ZH_TTH_HToTauTau_M-100_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM/2013-02-25-8TeV-53X-PatTuple_Master",
   "VH_H2Tau_M-105" : "/hdfs/store/user/tapas/WH_ZH_TTH_HToTauTau_M-105_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM/2013-02-25-8TeV-53X-PatTuple_Master",
   "VH_H2Tau_M-110" : "/hdfs/store/user/tapas/WH_ZH_TTH_HToTauTau_M-110_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/2013-02-25-8TeV-53X-PatTuple_Master",

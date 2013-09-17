@@ -356,7 +356,7 @@ for mass in[115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128
         }
 
 # Add WH TauTau signal samples
-for mass in range(110, 165, 5):
+for mass in range(90, 165, 5):
     datadefs['VH_H2Tau_M-%i' % mass] = {
         'analyses': ['HTT', 'VH'],
         'datasetpath': '/WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM' % mass,
