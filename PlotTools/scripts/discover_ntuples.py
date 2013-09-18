@@ -135,12 +135,8 @@ if __name__ == "__main__":
     for sample_name, search_dir, all_files in find_sample_dirs(
             args.directory.split(':'), args.jobid):
         output_txt = os.path.join(args.outputdir, sample_name + '.txt')
-        # Do work in a temporary directory
-        output_tmp = output_txt.replace('.txt', '.tmp')
-
         previous_files = get_previous_files(output_txt)
-
-        with open_update_if_changed(output_tmp, sample_name) as flist:
+        with open_update_if_changed(output_txt, sample_name) as flist:
             pbar = ProgressBar(widgets=[FormatLabel(
                 'Checked %(value)i/' + str(len(all_files)) + ' files. '),
                 ETA(), Bar('>')], maxval=len(all_files)).start()
@@ -168,4 +164,4 @@ if __name__ == "__main__":
                 # Made it!
                 flist.write(filepath + '\n')
 
-        log.info('Finished finding files for %s' % sample_name)
+        log.info('\nFinished finding files for %s' % sample_name)
