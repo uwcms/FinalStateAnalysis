@@ -86,6 +86,7 @@ if __name__ == "__main__":
     log.info("Dataset has %i files", len(file_list))
 
     path_to_selector = os.path.dirname(os.path.abspath(args.selector))
+    sys.path = [path_to_selector] + sys.path
     module_name = os.path.basename(args.selector)
     class_name = module_name.replace('.py', '')
     log.info("Importing class %s from %s", class_name, path_to_selector)
