@@ -94,11 +94,8 @@ if __name__ == "__main__":
         get_farmout_username(), os.path.basename(working_dir))
     output_path += hdfs_directory
 
-    log.info("Finding files using search path: %s" % ":".join(SEARCH_PATHS))
     resolved_input_files = list(
         x.replace('/hdfs', '') for x in find_input_files(args.inputs))
-    for x in resolved_input_files:
-        print x
 
     # Write the resolved input file names in temporary file
     with tempfile.NamedTemporaryFile() as tmp_input_filelist:
