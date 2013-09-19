@@ -25,10 +25,12 @@ log = logging.getLogger(__name__)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('input', type=str,
+    parser.add_argument('input', type=str, metavar='input(.txt|.root)',
                         help='A text file with a list of input ROOT files.'
                         ' If paths are relative, the $MEGAPATH will be'
-                        ' searched to locate the files.')
+                        ' searched to locate the files.'
+                        'If the name does not end in .txt, it will be '
+                        'considered a comma separated list of input files.')
     parser.add_argument('tree', type=str,
                         help='Specify the path to the meta tree.')
     parser.add_argument('output', type=str, help='Output JSON file')
@@ -43,11 +45,14 @@ if __name__ == "__main__":
     import ROOT
 
     files = []
-    with open(args.input) as input_files:
-        for input_file in input_files:
-            input_file = input_file.strip()
-            if input_file and '#' not in input_file:
-                files.append(resolve_file(input_file))
+    if '.txt' in args.input:
+        with open(args.input) as input_files:
+            for input_file in input_files:
+                input_file = input_file.strip()
+                if input_file and '#' not in input_file:
+                    files.append(resolve_file(input_file))
+    else:
+        files = [resolve_file(x.strip()) for x in args.input.split(',')]
 
     level = logging.INFO
     if args.debug:
@@ -63,6 +68,9 @@ if __name__ == "__main__":
         log.debug("OPEN file %s", file)
         tfile = ROOT.TFile.Open(file, "READ")
         tree = tfile.Get(args.tree)
+        if not tree:
+            log.error("Cannot get tree %s from file %s", args.tree, file)
+            raise SystemExit(1)
         for entry in xrange(tree.GetEntries()):
             tree.GetEntry(entry)
             total_events += tree.nevents
