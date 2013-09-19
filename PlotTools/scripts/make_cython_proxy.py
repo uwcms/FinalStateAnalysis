@@ -26,6 +26,8 @@ import cStringIO
 import ROOT
 import subprocess
 
+from FinalStateAnalysis.PlotTools.MegaPath import resolve_file
+
 _pyx_template = '''
 
 # Load relevant ROOT C++ headers
@@ -260,7 +262,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    file = ROOT.TFile(args.template_file, 'READ')
+    file = ROOT.TFile(resolve_file(args.template_file), 'READ')
     tree = file.Get(args.tree_path)
 
     with open('%s.pyx' % args.ClassName, 'w') as pyx_file:
