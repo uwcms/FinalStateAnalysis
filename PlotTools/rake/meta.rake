@@ -24,11 +24,20 @@ namespace :meta do
 
   def make_meta_tasks(sample, ntuple, sqrts)
     # Getting meta information from ntpule
-    file sample + '.meta.json' => sample + '.txt' do |t|
+    file sample + '.meta.root' => sample + '.txt' do |t|
+        farmout = ENV.fetch('farmout', "0")
+        if farmout == "1"
+            sh "mega-farmout $fsa/PlotTools/python/ExtractTree.py #{t.prerequisites} #{t.name} --tree #{ntuple} --verbose"
+        else
+            sh "mega $fsa/PlotTools/python/ExtractTree.py #{t.prerequisites} #{t.name} --tree #{ntuple}"
+        end
+    end
+
+    file sample + '.meta.json' => sample + '.meta.root' do |t|
       if t.name.include? 'data'
-        sh "extract_meta_info.py #{t.prerequisites} #{ntuple} #{t.name} --lumimask"
+        sh "extract_meta_info.py #{t.prerequisites} metaInfo #{t.name} --lumimask"
       else
-        sh "extract_meta_info.py #{t.prerequisites} #{ntuple} #{t.name}"
+        sh "extract_meta_info.py #{t.prerequisites} metaInfo #{t.name}"
       end
     end
 
