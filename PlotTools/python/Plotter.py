@@ -171,13 +171,14 @@ class Plotter(object):
         self.pad.cd()
         self.lower_pad = None
 
-    def save(self, filename, dotc=False, dotroot=False):
+    def save(self, filename, dotc=False, dotroot=False, verbose=False):
         ''' Save the current canvas contents to [filename] '''
         self.pad.Draw()
         self.canvas.Update()
         if not os.path.exists(self.outputdir):
             os.makedirs(self.outputdir)
-        #print 'saving '+os.path.join(self.outputdir, filename) + '.png'
+        if verbose:
+            print 'saving '+os.path.join(self.outputdir, filename) + '.png'
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.png')
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.pdf')
         if dotc:
