@@ -45,7 +45,7 @@ _DATA_DIR = os.path.join(os.environ['CMSSW_BASE'], 'src',
 _DATA_FILES = {
     '2011'     : os.path.join(_DATA_DIR, 'MuonEfficiencies2011_42X_DataMC.root'),
     '2012'     : os.path.join(_DATA_DIR, 'MuonEfficiencies_11June2012_52X.root'), # Outdated!
-    '2012ABCD' : os.path.join(_DATA_DIR, 'Muon_ID_iso_Efficiencies_Run_2012ABCD_53X.root'),  # For ID/Iso: combined in 1
+    '2012ABCD' : os.path.join(_DATA_DIR, 'MuonEfficiencies_Run2012ReReco_53X.root'),  # For ID/Iso: combined in 1 WAS:'Muon_ID_iso_Efficiencies_Run_2012ABCD_53X.root'
     '2012AB'    : os.path.join(_DATA_DIR, 'MuonEfficiencies_Run_2012A_2012B_53X.root'), # For trigger: one each 
     '2012C'    : os.path.join(_DATA_DIR, 'MuonEfficiencies_Run_2012C_53X.root'),
     '2012D'    : os.path.join(_DATA_DIR, 'TriggerMuonEfficiencies_Run_2012D_53X.root')

@@ -57,6 +57,7 @@ if __name__ == '__main__':
                      help='y axis title',dest='ytitle')
     parser.add_option('-d','--differential', type=int, default = 0,
                      help='makes a differential plot',dest='differential')
+    parser.add_option('--show-errors', dest='show_errors', action='store_true')
 
     (options,arguments) = parser.parse_args()
     
@@ -103,6 +104,19 @@ if __name__ == '__main__':
     stack.Draw()
     stack.GetXaxis().SetTitle(options.xtitle)
     stack.GetYaxis().SetTitle(options.ytitle)
+ 
+    #from pdb import set_trace; set_trace()
+    bkg_sum = None
+    if options.show_errors:
+        bkg_sum = sum(stack.GetHists())
+        print [bkg_sum.GetBinError(i) for i in range(bkg_sum.GetNbinsX()+1)]
+        bkg_sum.SetMarkerSize(0)
+        bkg_sum.SetFillColor(1)
+        bkg_sum.SetFillStyle(3013)
+        bkg_sum.legendstyle = 'f'
+        bkg_sum.SetTitle("Bkg. Unc.")
+        bkg_sum.Draw('pe2,same')
+
     observed.Draw('same')
 
     #tries to figure which side the legend goes
@@ -112,12 +126,15 @@ if __name__ == '__main__':
     sx_mean = sum(sx_mean) / float(len(sx_mean))
     dx_mean = sum(dx_mean) / float(len(dx_mean))
 
-    legend = plotting.Legend(len(histograms)+1, rightmargin=0.03, topmargin=0.02, leftmargin=0.45) \
+    num_entries = len(histograms)+1 if bkg_sum else len(histograms)+2
+    legend = plotting.Legend(num_entries, rightmargin=0.03, topmargin=0.02, leftmargin=0.45) \
              if sx_mean > dx_mean else \
-             plotting.Legend(len(histograms)+1, leftmargin=0.03, topmargin=0.02, rightmargin=0.45)
+             plotting.Legend(num_entries, leftmargin=0.03, topmargin=0.02, rightmargin=0.45)
     
     #for sample in samples:
     legend.AddEntry(stack)
+    if bkg_sum:
+        legend.AddEntry(bkg_sum)
     legend.AddEntry(observed)
     legend.SetEntrySeparation(0.0)
     legend.SetMargin(0.35)
