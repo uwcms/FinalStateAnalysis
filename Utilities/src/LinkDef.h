@@ -47,5 +47,7 @@
 #pragma link C++ function Trg_DoubleEle_2012;
 #pragma link C++ function Corr_Trg_Ele_2012_53X;
 #pragma link C++ function Trg_DoubleMu_2012;
+#pragma link C++ function eleTIGHTIDscale_2012_53X;
+#pragma link C++ function eleTIGHTIDscale_2011;
 
 #endif
