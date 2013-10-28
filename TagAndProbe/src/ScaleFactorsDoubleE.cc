@@ -60,3 +60,30 @@ float Trg_DoubleEle_2011(double ept1, double eeta1, double ept2, double eeta2) {
 float Trg_DoubleEle_2012(double ept1, double eeta1, double ept2, double eeta2) {
     return Corr_Trg_Ele_2012_53X(ept1, eeta1) * Corr_Trg_Ele_2012_53X(ept2, eeta2);
 }
+
+Double_t eleTIGHTIDscale_2012_53X(Double_t elept, Double_t eleeta) //from Rebecca & co
+{
+  if( 20.0 < elept && elept <= 30.0 ){  
+    if( abs(eleeta) < 1.479 ) return 0.8999 * 0.9417;
+    else                      return 0.7945 * 0.9471;
+  }
+  else if( elept > 30) { //pt > 30
+    if( abs(eleeta) < 1.479 ) return 0.9486 * 0.9804;
+    else                      return 0.8866 * 0.9900;
+  }
+  return 0.0;
+}
+
+Double_t eleTIGHTIDscale_2011(Double_t elept, Double_t eleeta) //from Rebecca & co
+{
+  if( 20.0 < elept && elept <= 30.0 ){  
+    if( abs(eleeta) < 1.479 ) return 0.9590 * 0.9907;
+    else                      return 0.9462 * 0.9875;
+  }				                    
+  else if( elept > 30) { //pt > 30                  
+    if( abs(eleeta) < 1.479 ) return 0.9826 * 0.9845;
+    else                      return 0.9689 * 0.9971;
+  }
+  return 0.0;
+}
+
