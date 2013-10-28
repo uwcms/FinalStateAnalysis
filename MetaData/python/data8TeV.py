@@ -356,7 +356,7 @@ for mass in[115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128
         }
 
 # Add WH TauTau signal samples
-for mass in range(110, 165, 5):
+for mass in range(90, 165, 5):
     datadefs['VH_H2Tau_M-%i' % mass] = {
         'analyses': ['HTT', 'VH'],
         'datasetpath': '/WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola/Summer12-PU_S7_START52_V9-v2/AODSIM' % mass,
@@ -375,7 +375,7 @@ for mass in range(110, 165, 5):
 ## datadefs['VH_H2Tau_M-140']['x_sec'] = (0.4713*br_w_leptons + 0.2728*br_z_leptons + 0.09207*square(br_w_leptons))*3.54E-02
 
 # fix me
-for mass in range(110, 150, 10):
+for mass in range(90, 150, 10):
    datadefs['VHWW_lepdecay_%i' % mass] = {
       'analyses': ['VH'],
       'datasetpath': "/WH_ZH_TTH_HToWW_M-%i_lepdecay_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
@@ -398,7 +398,7 @@ datadefs['WH_130_HWW3l'] = { 'x_sec' : 0.6095*cube(br_w_leptons)*3.05E-01 }
 datadefs['WH_140_HWW3l'] = { 'x_sec' : 0.4713*cube(br_w_leptons)*5.03E-01 }
 
 #VH->HWW xsec: WH + ZH; ZH --> totalxsec * BR(ZtoLL) * BR(HtoWW) * BR( WtoLL )^2
-for mass in range(110, 150, 10):
+for mass in range(90, 150, 10):
       datadefs['VH_%s_HWW' % mass] = {'x_sec' : (xs(8,mass,'wh')[0]*br_w_leptons+xs(8,mass,'zh')[0]*br_z_leptons+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2}
 
 

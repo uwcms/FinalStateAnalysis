@@ -1583,7 +1583,7 @@ for mass in range(100, 150, 5):
     }
 
 # Add leptonic decay only VH samples
-for mass in range(110, 145, 5):
+for mass in range(90, 145, 5):
     datadefs['VHtautau_lepdecay_%i' % mass] = {
         'analyses': ['VH'],
         'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM" % mass,
@@ -1592,7 +1592,7 @@ for mass in range(110, 145, 5):
         'calibrationTarget' : 'Fall11'
     }
 
-for mass in range(110, 150, 10):
+for mass in range(90, 150, 10):
     datadefs['VHWW_lepdecay_%i' % mass] = {
         'analyses': ['VH'],
         'datasetpath': "/WH_ZH_TTH_HToWW_M-%i_lepdecay_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM" % mass,
@@ -1683,16 +1683,22 @@ def build_data_set(pd, analyses):
   return subsample_dict, sample_dict
 
 # We use the same name for the 53X lepdecay only samples (sigh)
-for mass in range(110, 150, 10):
+for mass in range(90, 180, 10):
     datadefs['VH_%s_HWW' % mass] = {
         'datasetpath' :"/WH_ZH_TTH_HToWW_M-%s_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM" % mass,
-        'x_sec' :  (xs(8,mass,'wh')[0]*br_w_leptons+xs(8,mass,'zh')[0]*br_z_leptons+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
+        'x_sec' :  (xs(7,mass,'wh')[0]*br_w_leptons+xs(7,mass,'zh')[0]*br_z_leptons+xs(7,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
         'pu' : 'S6',
         'calibrationTarget' : 'Fall11',
         'analyses' : ['VH'],
     }
 
-
+for mass in range(90, 165, 5):
+      datadefs['VH_H2Tau_M-%s' % mass] = {}
+      datadefs['VH_H2Tau_M-%s' % mass]['x_sec'] = xsbr(7,mass,'wh','tautau')[0]*br_w_leptons + xsbr(7,mass,'zh','tautau')[0]*br_z_leptons + xsbr(7,mass,'tth','tautau')[0]*br_w_leptons**2
+      datadefs['VH_%s' % mass] = {}
+      datadefs['VH_%s' % mass]['x_sec'] = xsbr(7,mass,'wh','tautau')[0]*br_w_leptons + xsbr(7,mass,'zh','tautau')[0]*br_z_leptons + xsbr(7,mass,'tth','tautau')[0]*br_w_leptons**2
+      
+              
 # Build all the PDs we use
 data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu','HZG'])
 datadefs.update(data_DoubleMu)

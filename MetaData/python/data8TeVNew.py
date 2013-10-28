@@ -534,7 +534,7 @@ for mass in range(110, 150, 10):
 
 
 # We use the same name for the 53X lepdecay only samples (sigh)
-for mass in range(110, 160, 5):
+for mass in range(90, 170, 5):
     datadefs['VH_H2Tau_M-%s' % mass] = {}
     datadefs['VH_H2Tau_M-%s' % mass]['x_sec'] = xsbr(8,mass,'wh','tautau')[0]*br_w_leptons + xsbr(8,mass,'zh','tautau')[0]*br_z_leptons + xsbr(8,mass,'tth','tautau')[0]*br_w_leptons**2
 
