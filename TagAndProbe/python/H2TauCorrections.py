@@ -146,3 +146,9 @@ def correct_double_electron_trg_2011(ept1, eabseta1, ept2, eabseta2):
 def correct_double_muon_trg_2012(mupt1, muabseta1, mupt2, muabseta2):
     return ROOT.Trg_DoubleMu_2012(mupt1, muabseta1, mupt2, muabseta2)
 
+
+def correct_e_TIGHTidiso_2012(pt, abseta):
+    return ROOT.eleTIGHTIDscale_2012_53X(pt, abseta)
+
+def correct_e_TIGHTidiso_2011(pt, abseta):
+    return ROOT.eleTIGHTIDscale_2011(pt, abseta)
