@@ -151,10 +151,10 @@ eTauPath = cms.Path(atLeastOneGoodVertexSequence + e17Selector + e19Selector +
 skimConfig.paths.append("eTauPath")
 
 # DoubleTau
-tau18JetSelectorKeepEvents = cms.EDFilter(
+tau30JetSelector = cms.EDFilter(
     "PFTauSelector",
     src=cms.InputTag("hpsPFTauProducer"),
-    cut=cms.string("abs(eta) < 2.3 & pt > 18.0"),
+    cut=cms.string("abs(eta) < 2.3 & pt > 30.0"),
     discriminators=cms.VPSet(
     cms.PSet(discriminator=cms.InputTag("hpsPFTauDiscriminationByDecayModeFinding"),
              selectionCut=cms.double(0.5)
@@ -165,10 +165,11 @@ tau18JetSelectorKeepEvents = cms.EDFilter(
 
 twoTaus = cms.EDFilter(
     "CandViewCountFilter",
-    src=cms.InputTag("tau18JetSelectorKeepEvents"),
+    src=cms.InputTag("tau30JetSelector"),
     minNumber=cms.uint32(2)
 )
-doubleTauPath = cms.Path(atLeastOneGoodVertexSequence + twoTaus)
+
+doubleTauPath = cms.Path(atLeastOneGoodVertexSequence + tau30JetSelector + twoTaus)
 skimConfig.paths.append("doubleTauPath")
 
 # DoubleE for ZZ, VH, and HZG
