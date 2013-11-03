@@ -27,7 +27,7 @@ options = TauVarParsing.TauVarParsing(
     clean=1,
     embedded=0,  # If running on embedded samples, set to 1
     analyzeSkimEff='',  # Analyze the skim efficiency and put it in this file
-    eleReg=False,
+    eleReg=0,
     zzMode=False
 )
 
