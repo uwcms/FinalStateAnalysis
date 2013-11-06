@@ -406,6 +406,31 @@ for mass in range(80,150, 10) + range(160, 220, 20) + range(250, 550, 50) + rang
        'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
 
+for mass in range(80,150, 10) + range(160, 220, 20) + range(250, 550, 50) + range(600, 1100, 100) :
+   datadefs['SUSYGluGluToHToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
+      'analyses': ['HTT'],
+      'datasetpath': "/SUSYGluGluToHToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+      'pu' : 'S10',
+      'x_sec' : -999,
+      'calibrationTarget':'Summer12_DR53X_HCP2012'
+      }
+   datadefs['SUSYBBHToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
+      'analyses': ['HTT'],
+      'datasetpath': "/SUSYBBHToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+      'pu' : 'S10',
+      'x_sec' : -999,
+       'calibrationTarget':'Summer12_DR53X_HCP2012'
+      }
+
+for mass in ['260','300','350'] :
+   datadefs['GluGluToHTohhTo2Tau2B_mH-%s_mh-125_8TeV-pythia6-tauola' % mass] = {
+      'analyses': ['HTT'],
+      'datasetpath': "/GluGluToHTohhTo2Tau2B_mH-%s_mh-125_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM" % mass,
+      'pu' : 'S10',
+      'x_sec' : -999,
+      'calibrationTarget':'Summer12_DR53X_HCP2012'
+      }
+
 aTGC_path = Template('/ZZ4L_Sherpa_aTGC_f${i}_${f1}0_${f2}0_v2/iross-SUMMER12-AODSIM-START53_V7C_${i}_${f1}_${f2}-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER')
 
 for coup in ["4","5"]:
