@@ -4,6 +4,7 @@ import sys
 import os
 import argparse
 
+
 def hadd(outfile, infiles):
     """This makes a simple call to hadd"""
     cmd = "hadd " + outfile + " " + " ".join(infiles)
@@ -46,11 +47,13 @@ def parse_command_line(argv):
                         help='The name of the output ROOT file.')
     parser.add_argument('infiles', nargs='+',
                         help='A list of input ROOT files to merge.')
-    parser.add_argument('--max-jobs', type=int, default=1,
-                        help='How many instances of hadd should run at once?')
+    parser.add_argument('--files-per-job', type=int, default=200,
+                        help='Number of files to merge with hadd at one time. '
+                             'Default is 200.')
     args = parser.parse_args(argv)
 
     return args
+
 
 def main(argv=None):
     if argv is None:
@@ -58,8 +61,8 @@ def main(argv=None):
 
     args = parse_command_line(argv)
 
-    batch_hadd(args.outfile, args.infiles)
-    
+    batch_hadd(args.outfile, args.infiles, args.files_per_job)
+
     return 0
 
 
