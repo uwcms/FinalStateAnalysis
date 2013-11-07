@@ -25,13 +25,13 @@ def batch_hadd(outfile, infiles, n_files=200):
 
     user_name = os.environ['USER']
 
-    for i in xrange(len(split_infiles)):
+    for i, file_list in enumerate(split_infiles):
         # Use unique names for the intermediate files to avoid collisions
         intm_file = ("/tmp/tmp_" + user_name + "_" + str(i) + "_" +
                      os.path.basename(outfile))
         print intm_file
         intermediate_files.append(intm_file)
-        hadd(intm_file, split_infiles[i])
+        hadd(intm_file, file_list)
 
     # merge the intermediate files together
     hadd(outfile, intermediate_files)
