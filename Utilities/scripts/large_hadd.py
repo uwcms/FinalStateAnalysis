@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+"""
+Enables running hadd on a large number of files w/out crashing hadd.
+
+Author: D. Austin Belknap, UW-Madison
+"""
 
 import sys
 import os
@@ -13,8 +18,8 @@ def hadd(outfile, infiles):
 
 def batch_hadd(outfile, infiles, n_files=200):
     """
-    This runs hadd on smaller chunks of files into intermediate files. Then
-    hadd is run to merge the intermidate files into the final file.
+    This runs hadd on smaller chunks of files and merges them into intermediate
+    files. Then hadd is run to merge the intermidate files into the final file.
     """
 
     # split the list of input files into sublists
