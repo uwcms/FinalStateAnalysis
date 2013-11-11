@@ -170,11 +170,19 @@ os.system( cmd )
 #Reads back and produces control plots
 hist_maps = {}
 for var in args.variables:
-    hist_maps[var] = {
-        'estimate' : plotting.Hist(100, 0, 200),
-        'estimate_all' : plotting.Hist(100, 0, 200),
-        'pass'     : plotting.Hist([10,12,15,20,25,30,35,40,45,50,60,70,100,150,200]),
-        'all'      : plotting.Hist([10,12,15,20,25,30,35,40,45,50,60,70,100,150,200]),
+    if 'pt' in var.lower():
+        hist_maps[var] = {
+            'estimate' : plotting.Hist(100, 0, 200),
+            'estimate_all' : plotting.Hist(100, 0, 200),
+            'pass'     : plotting.Hist([10,12,15,20,25,30,35,40,45,50,60,70,100,150,200]),
+            'all'      : plotting.Hist([10,12,15,20,25,30,35,40,45,50,60,70,100,150,200]),
+        }
+    elif 'jets' in var.lower():
+        hist_maps[var] = {
+            'estimate'     : plotting.Hist(12, 0, 12),
+            'estimate_all' : plotting.Hist(12, 0, 12),
+            'pass'         : plotting.Hist(12, 0, 12),
+            'all'          : plotting.Hist(12, 0, 12),
         }
 
 if args.makePlots:
@@ -204,7 +212,7 @@ if args.makePlots:
 
         eff = asrootpy( ROOT.TGraphAsymmErrors( hist_maps[var]['pass'], hist_maps[var]['all']) )
         eff.markerstyle = 20
-        estimate = hist_maps[var]['estimate']
+        estimate = hist_maps[var]['estimate'].Clone() #avoid getting divided
         estimate.Divide(hist_maps[var]['estimate_all'])
         estimate.linecolor = ROOT.kBlue 
         estimate.linewidth = 2

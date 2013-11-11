@@ -1,4 +1,4 @@
-#include "FinalStateAnalysis/PatTools/plugins/PATRankEmbedder.h"
+#include "FinalStateAnalysis/PatTools/plugins/PATFinalStateRankEmbedder.h"
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"

@@ -20,6 +20,19 @@ Author: Evan K. Friis, UW Madison
 from datacommon import square, cube, quad, picobarns, br_w_leptons, query_cli, br_z_leptons
 import re
 
+try:
+      from yellowhiggs import xs, br, xsbr
+      br(130.,'WW')
+except:
+      #print "warning: yellowhiggs error"
+      #define / override functions to avoid crashes
+      def br(*args, **kwargs):
+            return -99
+      def xs(*args, **kwargs):
+            return -99, (-99, 99)
+      def xsbr(*args, **kwargs):
+            return -99, (-99, 99)
+
 # Define a mapping between a "nice" name and a set of datasets.
 # This is so you can make an update to the underlying data sample pythia/powheg
 # etc.
@@ -470,53 +483,6 @@ datadefs = {
     ############################################################################
     #### VH -> WW dataset                   ####################################
     ############################################################################
-
-    'VH_120_HWW' : {
-        'datasetpath' :"/WH_ZH_TTH_HToWW_M-120_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : (0.6561 + 0.3598 + 0.09756)*picobarns*1.43E-01,
-        'pu' : 'S6',
-        'calibrationTarget' : 'Fall11',
-        'analyses' : ['VH'],
-    },
-
-    'VH_130_HWW' : {
-        'datasetpath' :"/WH_ZH_TTH_HToWW_M-130_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : (0.5008 + 0.2778 + 0.07658)*picobarns*3.05E-01,
-        'pu' : 'S6',
-        'calibrationTarget' : 'Fall11',
-        'analyses' : ['VH'],
-    },
-    'VH_135_HWW' : {
-        'datasetpath' :"/WH_ZH_TTH_HToWW_M-135_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM	",
-        'x_sec' : (0.4390 + 0.2453 + 0.06810)*picobarns*4.03E-01,
-        'pu' : 'S6',
-        'calibrationTarget' : 'Fall11',
-        'analyses' : ['VH'],
-    },
-    'VH_140_HWW' : {
-        'datasetpath' :"/WH_ZH_TTH_HToWW_M-140_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
-        'x_sec' : (0.3857 + 0.2172 + 0.06072)*picobarns*5.03E-01,
-        'pu' : 'S6',
-        'calibrationTarget' : 'Fall11',
-        'analyses' : ['VH'],
-    },
-
-    'VH_150_HWW' : {
-        'datasetpath' :"/WH_ZH_TTH_HToWW_M-150_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM	",
-        'x_sec' : (0.3001 + 0.1713 + 0.04869)*picobarns*6.98E-01,
-        'pu' : 'S6',
-        'calibrationTarget' : 'Fall11',
-        'analyses' : ['VH'],
-    },
-
-    'VH_160_HWW' : {
-        'datasetpath' :"/WH_ZH_TTH_HToWW_M-160_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM	",
-        'x_sec' : (0.2291 + 0.1334 + 0.03942)*picobarns*9.08E-01,
-        'pu' : 'S6',
-        'calibrationTarget' : 'Fall11',
-        'analyses' : ['VH'],
-    },
-
     'WH_110_HWW3l' : {
         'datasetpath' : "/WH_HToWW_3l_M-110_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
         'x_sec' : 0.8754*picobarns*cube(br_w_leptons)*4.82E-02,
@@ -1715,6 +1681,17 @@ def build_data_set(pd, analyses):
     'data_%s' % pd : subsample_dict.keys()
   }
   return subsample_dict, sample_dict
+
+# We use the same name for the 53X lepdecay only samples (sigh)
+for mass in range(110, 150, 10):
+    datadefs['VH_%s_HWW' % mass] = {
+        'datasetpath' :"/WH_ZH_TTH_HToWW_M-%s_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM" % mass,
+        'x_sec' :  (xs(8,mass,'wh')[0]*br_w_leptons+xs(8,mass,'zh')[0]*br_z_leptons+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
+        'pu' : 'S6',
+        'calibrationTarget' : 'Fall11',
+        'analyses' : ['VH'],
+    }
+
 
 # Build all the PDs we use
 data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu','HZG'])

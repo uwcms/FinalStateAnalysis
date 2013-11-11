@@ -1,15 +1,15 @@
 #!/usr/bin/env cmsRun
 import FWCore.ParameterSet.Config as cms
-import FinalStateAnalysis.Utilities.cfgcleaner as cfgcleaner
+#import FinalStateAnalysis.Utilities.cfgcleaner as cfgcleaner
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 from FinalStateAnalysis.Utilities.version import fsa_version, get_user
 import os
 import time
 
 options = TauVarParsing.TauVarParsing(
-    xSec = -999.0,
-    xSecErr = 0.0,
-    skipEvents=0, # For debugging
+    xSec=-999.0,
+    xSecErr=0.0,
+    skipEvents=0,  # For debugging
     keepEverything=0,
     reportEvery=2000,
     puTag='unknown',
@@ -17,36 +17,35 @@ options = TauVarParsing.TauVarParsing(
     isAOD=True,
     calibrationTarget='2012Jul13ReReco',
     passThru=0,
-    verbose=0, # Print out summary table at end
-    profile=0, # Enabling profiling
-    keepAll=0, # Don't drop any event content
+    verbose=0,  # Print out summary table at end
+    profile=0,  # Enabling profiling
+    keepAll=0,  # Don't drop any event content
     # Used for the EGamma electron calibration
-    # See https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaElectronEnergyScale
+    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaElectronEnergyScale
     dataset='Prompt',
-    dumpCfg='', #used for crab
-    clean = 1,
-    embedded=0, # If running on embedded samples, set to 1
-    analyzeSkimEff='', # Analyze the skim efficiency and put it in this file
-    eleReg=False
+    dumpCfg='',  # Used for crab
+    clean=1,
+    embedded=0,  # If running on embedded samples, set to 1
+    analyzeSkimEff='',  # Analyze the skim efficiency and put it in this file
+    eleReg=0,
+    zzMode=False
 )
 
-files = [
-    
-]
+files = []
 
 options.inputFiles = files
 
 options.parseArguments()
 
-if not isinstance(options.inputFiles,list):
+if not isinstance(options.inputFiles, list):
     options.inputFiles = options.inputFiles.split(',')
 
 process = cms.Process("TUPLE")
 
 process.source = cms.Source(
     "PoolSource",
-    fileNames = cms.untracked.vstring(options.inputFiles),
-    skipEvents = cms.untracked.uint32(options.skipEvents),
+    fileNames=cms.untracked.vstring(options.inputFiles),
+    skipEvents=cms.untracked.uint32(options.skipEvents),
 )
 # If data, apply a luminosity mask
 if not options.isMC and options.lumiMask:
@@ -62,11 +61,11 @@ if not options.isMC and options.lumiMask:
 
 # Check if we only want to process a few events
 if options.eventsToProcess:
-    process.source.eventsToProcess = \
-            cms.untracked.VEventRange(options.eventsToProcess)
+    process.source.eventsToProcess = cms.untracked.VEventRange(
+        options.eventsToProcess)
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(options.maxEvents))
+    input=cms.untracked.int32(options.maxEvents))
 
 output_command = 'drop *'
 if options.keepEverything:
@@ -74,13 +73,13 @@ if options.keepEverything:
 
 process.out = cms.OutputModule(
     "PoolOutputModule",
-    fileName = cms.untracked.string(options.outputFile),
+    fileName=cms.untracked.string(options.outputFile),
     # Drop per-event meta data from dropped objects
-    dropMetaData = cms.untracked.string("ALL"),
-    SelectEvents = cms.untracked.PSet(
-        SelectEvents = cms.vstring('fixme')
+    dropMetaData=cms.untracked.string("ALL"),
+    SelectEvents=cms.untracked.PSet(
+        SelectEvents=cms.vstring('fixme')
     ),
-    outputCommands = cms.untracked.vstring(output_command)
+    outputCommands=cms.untracked.vstring(output_command)
 )
 
 # Configure the pat tuple
@@ -91,16 +90,21 @@ tuplize, output_commands = tuplizer.configurePatTuple(
     puTag=options.puTag, dataset=options.dataset,
     embedded=options.embedded,
     calibrationTarget=options.calibrationTarget,
-    HLTprocess=options.HLTprocess, eleReg=options.eleReg
+    HLTprocess=options.HLTprocess, eleReg=options.eleReg,
+    zzMode=options.zzMode
 )
 
 if options.globalTag == "":
-    raise RuntimeError("Global tag not specified!"\
+    raise RuntimeError("Global tag not specified!"
                        " Try sourcing environment.sh\n")
+elif "auto:" in options.globalTag:
+    print "Using auto-configured global tag from key: %s" % options.globalTag
+    from HLTrigger.Configuration.AutoCondGlobalTag import AutoCondGlobalTag
+    process.GlobalTag = AutoCondGlobalTag(
+        process.GlobalTag, options.globalTag)
 else:
-    print 'Using globalTag: %s'%options.globalTag
-
-process.GlobalTag.globaltag = cms.string(options.globalTag)
+    print 'Using globalTag: %s' % options.globalTag
+    process.GlobalTag.globaltag = cms.string(options.globalTag)
 
 # Count events at the beginning of the pat tuplization
 process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
@@ -109,9 +113,9 @@ process.load("FinalStateAnalysis.RecoTools.dqmEventCount_cfi")
 # Hack meta information about this PAT tuple in the provenance.
 process.eventCount.uwMeta = cms.PSet(
     # The git commit
-    commit = cms.string(fsa_version()),
-    user = cms.string(get_user()),
-    date = cms.string(time.strftime("%d %b %Y %H:%M:%S +0000", time.gmtime())),
+    commit=cms.string(fsa_version()),
+    user=cms.string(get_user()),
+    date=cms.string(time.strftime("%d %b %Y %H:%M:%S +0000", time.gmtime())),
 )
 
 process.schedule = cms.Schedule()
@@ -154,13 +158,13 @@ for command in output_commands:
 # Save DQM stuff created during pat tuplization
 process.MEtoEDMConverter = cms.EDProducer(
     "MEtoEDMConverter",
-    Name = cms.untracked.string('MEtoEDMConverter'),
-    Verbosity = cms.untracked.int32(0), # 0 provides no output
+    Name=cms.untracked.string('MEtoEDMConverter'),
+    Verbosity=cms.untracked.int32(0),  # 0 provides no output
     # 1 provides basic output
     # 2 provide more detailed output
-    Frequency = cms.untracked.int32(50),
-    MEPathToSave = cms.untracked.string(''),
-    deleteAfterCopy = cms.untracked.bool(True)
+    Frequency=cms.untracked.int32(50),
+    MEPathToSave=cms.untracked.string(''),
+    deleteAfterCopy=cms.untracked.bool(True)
 )
 
 process.outpath = cms.EndPath(
@@ -172,13 +176,13 @@ process.schedule.append(process.outpath)
 if options.analyzeSkimEff:
     process.TFileService = cms.Service(
         "TFileService",
-        fileName = cms.string(options.analyzeSkimEff)
+        fileName=cms.string(options.analyzeSkimEff)
     )
     # Track information about the efficiency of all the skim paths
     # Must be run after all other paths.
     process.skimEfficiency = cms.EDAnalyzer(
         "SkimEfficiencyAnalyzer",
-        paths = process.skimConfig.paths
+        paths=process.skimConfig.paths
     )
     process.outpath += process.skimEfficiency
 
@@ -195,24 +199,24 @@ if options.clean:
     print "Cleaning up the cruft!"
     #unrun, unused, killed = cfgcleaner.clean_cruft(
         #process, process.out.outputCommands.value())
-    #print "Removed %i unrun and %i unused modules!" % (len(unrun), len(unused))
 
 ###############################################################################
 ### DEBUG options #############################################################
 ###############################################################################
 
 if options.verbose:
-    process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
+    process.options = cms.untracked.PSet(wantSummary=cms.untracked.bool(True))
 
 if options.profile:
-    # From https://twiki.cern.ch/twiki/bin/viewauth/CMS/MemoUnixPatrick#Timing_profiling_avec_valgrind
+    # From twiki: MemoUnixPatrick#Timing_profiling_avec_valgrind
     # Use with maxEvents=10 or so
-    # And  valgrind --tool=callgrind --combine-dumps=yes --instr-atstart=no --dump-instr=yes --separate-recs=1 cmsRun ...
-    process.ProfilerService = cms.Service (
+    # And  valgrind --tool=callgrind --combine-dumps=yes \
+    #       --instr-atstart=no --dump-instr=yes --separate-recs=1 cmsRun ...
+    process.ProfilerService = cms.Service(
         "ProfilerService",
-        firstEvent = cms.untracked.int32(15),
-        lastEvent = cms.untracked.int32(100),
-        paths = cms.untracked.vstring('muTauPath')
+        firstEvent=cms.untracked.int32(15),
+        lastEvent=cms.untracked.int32(100),
+        paths=cms.untracked.vstring('muTauPath')
     )
 
 if options.dumpCfg:

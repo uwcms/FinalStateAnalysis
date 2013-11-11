@@ -177,6 +177,14 @@ datadefs = {
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
+   'DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph' : {
+   'analyses': ['ZZ'],
+   'datasetpath': '/DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+   'x_sec': -999,
+   'pu': 'S10',
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
+
    'TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola' : {
    'analyses': ['HTT'],
    'datasetpath' : "/TTJets_MassiveBinDECAY_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",

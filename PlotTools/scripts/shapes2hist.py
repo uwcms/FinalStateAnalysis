@@ -6,6 +6,7 @@ import rootpy.plotting.views as views
 import rootpy.plotting as plotting
 from rootpy import io
 from FinalStateAnalysis.MetaData.data_styles import data_styles
+from FinalStateAnalysis.PlotTools.DifferentialView import DifferentialView
 from fnmatch import fnmatch
 from optparse import OptionParser
 import logging
@@ -52,6 +53,10 @@ if __name__ == '__main__':
                      help='pattern of nuisances to be excluded',dest='nuisances')
     parser.add_option('-x','--x-title', metavar='name', type=str, default = '',
                      help='x axis title',dest='xtitle')
+    parser.add_option('-y','--y-title', metavar='name', type=str, default = '',
+                     help='y axis title',dest='ytitle')
+    parser.add_option('-d','--differential', type=int, default = 0,
+                     help='makes a differential plot',dest='differential')
 
     (options,arguments) = parser.parse_args()
     
@@ -75,6 +80,9 @@ if __name__ == '__main__':
            for category in categories]
         )
     
+    if options.differential == 1:
+        input_view = DifferentialView( input_view )
+
     histograms = [ apply_style(input_view.Get(i), i) for i in keys ]
     histograms = sorted(histograms, key=lambda x: x.Integral())
     observed   = apply_style(input_view.Get(data), data)
@@ -94,6 +102,7 @@ if __name__ == '__main__':
     stack.SetMaximum(maximum*1.8)
     stack.Draw()
     stack.GetXaxis().SetTitle(options.xtitle)
+    stack.GetYaxis().SetTitle(options.ytitle)
     observed.Draw('same')
 
     #tries to figure which side the legend goes

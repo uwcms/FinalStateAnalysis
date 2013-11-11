@@ -9,13 +9,19 @@ rule ".root" => [
   proc {|targ| targ.sub(%r{results/(.*)/.*/(.*).root}, "inputs/\\1/\\2.txt")} ] do |t|
   # Make the output directory
   sh "mkdir -p `dirname #{t.name}`"
-  workers = ENV.fetch('megaworkers', 2)
-  chain   = ENV.fetch('megachain'  , 10)
+  # Expose output filename to the analyzer
   ENV['megatarget'] = t.name
-  sh "time mega #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name} --workers #{workers} --chain #{chain}"
+  farmout = ENV.fetch('farmout', "0")
+  puts farmout
+  if farmout == "1"
+      sh "mega-farmout #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name} --verbose"
+  else
+      workers = ENV.fetch('megaworkers', 2)
+      chain   = ENV.fetch('megachain'  , 10)
+      sh "time mega #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name} --workers #{workers} --chain #{chain}"
+  end
 end
 
 task :analyze, [:jobid, :analyzer, :sample] do |t, args|
    Rake::Task["results/#{args.jobid}/#{args.analyzer}/#{args.sample}.root"].invoke
 end
-
