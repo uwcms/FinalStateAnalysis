@@ -491,6 +491,35 @@ datadefs['Higgs0M-126'] = {
         'eleReg' : 1
         }
 
+datadefs['Higgs0PH-126'] = {
+        'analyses': ['4L'],
+        'datasetpath': '/Higgs0PHToZZTo4L_M-126_8TeV-JHUgenV2-pythia6/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12_DR53X_HCP2012',
+        'x_sec': -999,
+        'globalTag': 'START53_V7G::All',
+        'eleReg' : 1
+        }
+
+datadefs['Graviton2PM-126'] = {
+        'analyses': ['4L'],
+        'datasetpath': '/Graviton2PMToZZTo4L_M-126_8TeV_ext-JHUgenV2-PYTHIA6_Tauola/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12_DR53X_HCP2012',
+        'x_sec': -999,
+        'globalTag': 'START53_V7G::All',
+        'eleReg' : 1
+        }
+
+datadefs['Graviton2PMqq-126'] = {
+        'analyses': ['4L'],
+        'datasetpath': '/Graviton2PMqqbarToZZTo4L_M-126_8TeV-JHUgenV2-PYTHIA6_Tauola/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12_DR53X_HCP2012',
+        'x_sec': -999,
+        'globalTag': 'START53_V7G::All',
+        'eleReg' : 1
+        }
 
 
 
