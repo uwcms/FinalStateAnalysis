@@ -9,6 +9,9 @@ import sys
 import os
 import argparse
 
+from Queue import Queue
+from threading import Thread
+
 
 def hadd(outfile, infiles):
     """This makes a simple call to hadd"""
@@ -16,7 +19,18 @@ def hadd(outfile, infiles):
     os.system(cmd)
 
 
-def batch_hadd(outfile, infiles, n_files=200):
+def worker(q):
+    """
+    Runs a single instance of hadd from the job queue.
+    """
+    while True:
+        outfile, infiles = q.get()
+        print outfile
+        hadd(outfile, infiles)
+        q.task_done()
+
+
+def batch_hadd(outfile, infiles, n_files=200, n_threads=1):
     """
     This runs hadd on smaller chunks of files and merges them into intermediate
     files. Then hadd is run to merge the intermidate files into the final file.
@@ -30,13 +44,24 @@ def batch_hadd(outfile, infiles, n_files=200):
 
     user_name = os.environ['USER']
 
+    q = Queue()
+
+    # Create worker threads
+    for i in range(n_threads):
+        t = Thread(target=worker, args=(q,))
+        t.daemon = True
+        t.start()
+
+    # Queue up the individual hadd jobs
     for i, file_list in enumerate(split_infiles):
         # Use unique names for the intermediate files to avoid collisions
         intm_file = ("/tmp/tmp_" + user_name + "_" + str(i) + "_" +
                      os.path.basename(outfile))
-        print intm_file
         intermediate_files.append(intm_file)
-        hadd(intm_file, file_list)
+        q.put((intm_file, file_list))
+
+    # Block until all hadd threads have completed
+    q.join()
 
     # merge the intermediate files together
     hadd(outfile, intermediate_files)
@@ -55,6 +80,9 @@ def parse_command_line(argv):
     parser.add_argument('--files-per-job', type=int, default=200,
                         help='Number of files to merge with hadd at one time. '
                              'Default is 200.')
+    parser.add_argument('--n-threads', type=int, default=1,
+                        help='Number of instances of hadd to run at one time. '
+                             'Default is 1.')
     args = parser.parse_args(argv)
 
     return args
@@ -66,7 +94,7 @@ def main(argv=None):
 
     args = parse_command_line(argv)
 
-    batch_hadd(args.outfile, args.infiles, args.files_per_job)
+    batch_hadd(args.outfile, args.infiles, args.files_per_job, args.n_threads)
 
     return 0
 
