@@ -44,6 +44,15 @@ if __name__ == "__main__":
     if args.verbose:
         log.setLevel(logging.DEBUG)
 
+    override_keyword   = 'OVERRIDE_META_TREE_'
+    meta_override_keys = filter(lambda x: x.startswith(override_keyword), os.environ.keys())
+    meta_override      = [(i.replace(override_keyword,''), os.environ[i]) for i in meta_override_keys]
+    def get_meta_treename(sample):
+        for key, value in meta_override:
+            if sample.startswith(key):
+                return value
+        return args.meta
+
     import ROOT
 
     if not os.path.exists(args.outputdir):
@@ -54,11 +63,12 @@ if __name__ == "__main__":
 
     for sample_dir in glob.glob(os.path.join(args.directory, args.jobid, '*')):
         sample_name = os.path.basename(sample_dir)
+        tree_name   = get_meta_treename( sample_name )
         if not os.path.isdir(sample_dir):
             log.info("skipping object %s" % sample_name)
             continue
         log.info("Finding files for sample %s" % sample_name)
-        log.info("Looking for  %s" %  args.meta)
+        log.info("Looking for  %s" %  tree_name)
 
 
         output_txt = os.path.join(args.outputdir, sample_name + '.txt')
@@ -89,7 +99,7 @@ if __name__ == "__main__":
                         log.warning("-- Can't open file: %s" % file)
                         flist.write('# corrupt %s\n' % file)
                         continue
-                    ntuple = tfile.Get(args.meta)
+                    ntuple = tfile.Get(tree_name)
                     if not ntuple:
                         log.warning("-- Can't read ntuple in file: %s" % file)
                         flist.write('# corrupt %s\n' % file)

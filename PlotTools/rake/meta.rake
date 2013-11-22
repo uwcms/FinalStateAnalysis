@@ -72,9 +72,22 @@ namespace :meta do
   task :getmeta, [:directory, :ntuple, :sqrts] do |t, args|
     puts "Computing meta information for #{args.sqrts} TeV in #{args.directory}" 
     chdir(args.directory) do
+
+      #get override meta tree values
+      override_keyword   = 'OVERRIDE_META_TREE_'
+      meta_override_keys = ENV.keys.select{|x| x.start_with?(override_keyword)}
+
       FileList["*.txt"].each do |txtfile|
         sample = txtfile.sub('.txt', '')
-        target = make_meta_tasks(sample, args.ntuple, args.sqrts)
+        #check if we have to override
+        meta_ntuple = args.ntuple
+        meta_override_keys.each do |key|
+          if sample.start_with?(key.gsub(override_keyword,''))
+            meta_ntuple = ENV[key]
+          end
+        end
+        #make the task
+        target = make_meta_tasks(sample, meta_ntuple, args.sqrts)
         task :computemeta => target
       end
       #puts Rake::Task['computemeta'].timestamp
