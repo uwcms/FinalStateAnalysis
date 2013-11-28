@@ -20,9 +20,7 @@ def hadd(outfile, infiles):
 
 
 def worker(q):
-    """
-    Runs a single instance of hadd from the job queue.
-    """
+    """Runs a single instance of hadd from the job queue."""
     while True:
         outfile, infiles = q.get()
         print outfile
