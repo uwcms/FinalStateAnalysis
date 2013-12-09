@@ -1564,10 +1564,8 @@ datadefs['ZGToMuMuG']= {
 
 
 #VH->HWW xsec: WH + ZH; ZH --> totalxsec * BR(ZtoLL) * BR(HtoWW) * BR( WtoLL )^2
-datadefs['VH_110_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.4721 * br_z_leptons * 4.77E-02 * br_w_leptons**2}
-datadefs['VH_120_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.3598 * br_z_leptons * 1.41E-01 * br_w_leptons**2}
-#datadefs['VH_130_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.2778 * br_z_leptons * 3.03E-01 * br_w_leptons**2}
-datadefs['VH_140_HWW'] = { 'x_sec' : datadefs['WH_110_HWW3l']['x_sec'] + 0.2172 * br_z_leptons * 5.01E-01 * br_w_leptons**2}
+for mass in range(90, 150, 10):
+      datadefs['VH_%s_HWW' % mass] = {'x_sec' : (xs(7,mass,'wh')[0]*br_w_leptons+xs(7,mass,'zh')[0]*br_z_leptons+xs(7,mass,'tth')[0]*br_w_leptons**2)*br(mass,'WW')*br_w_leptons**2}
 
 # Add HToBB
 for mass in range(100, 150, 5):
@@ -1580,16 +1578,6 @@ for mass in range(100, 150, 5):
     'x_sec' : -999,
     'calibrationTarget' : 'Fall11',
     'analyses' : ['VH', 'HBB'],
-    }
-
-# Add leptonic decay only VH samples
-for mass in range(90, 145, 5):
-    datadefs['VHtautau_lepdecay_%i' % mass] = {
-        'analyses': ['VH'],
-        'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM" % mass,
-        'pu' : 'S6',
-        'x_sec' : -999,
-        'calibrationTarget' : 'Fall11'
     }
 
 for mass in range(90, 150, 10):
@@ -1683,20 +1671,28 @@ def build_data_set(pd, analyses):
   return subsample_dict, sample_dict
 
 # We use the same name for the 53X lepdecay only samples (sigh)
-for mass in range(90, 180, 10):
-    datadefs['VH_%s_HWW' % mass] = {
-        'datasetpath' :"/WH_ZH_TTH_HToWW_M-%s_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM" % mass,
-        'x_sec' :  (xs(7,mass,'wh')[0]*br_w_leptons+xs(7,mass,'zh')[0]*br_z_leptons+xs(7,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
-        'pu' : 'S6',
-        'calibrationTarget' : 'Fall11',
-        'analyses' : ['VH'],
-    }
+#for mass in range(90, 180, 10):
+#    datadefs['VH_%s_HWW' % mass] = {
+#        'datasetpath' :"/WH_ZH_TTH_HToWW_M-%s_7TeV-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM" % mass,
+#        'x_sec' :  (xs(7,mass,'wh')[0]*br_w_leptons+xs(7,mass,'zh')[0]*br_z_leptons+xs(7,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
+#        'pu' : 'S6',
+#        'calibrationTarget' : 'Fall11',
+#        'analyses' : ['VH'],
+#    }
 
 for mass in range(90, 165, 5):
       datadefs['VH_H2Tau_M-%s' % mass] = {}
-      datadefs['VH_H2Tau_M-%s' % mass]['x_sec'] = xsbr(7,mass,'wh','tautau')[0]*br_w_leptons + xsbr(7,mass,'zh','tautau')[0]*br_z_leptons + xsbr(7,mass,'tth','tautau')[0]*br_w_leptons**2
+      datadefs['VH_H2Tau_M-%s' % mass]['x_sec'] = xsbr(7,mass,'wh','tautau')[0] + xsbr(7,mass,'zh','tautau')[0] + xsbr(7,mass,'tth','tautau')[0]
       datadefs['VH_%s' % mass] = {}
-      datadefs['VH_%s' % mass]['x_sec'] = xsbr(7,mass,'wh','tautau')[0]*br_w_leptons + xsbr(7,mass,'zh','tautau')[0]*br_z_leptons + xsbr(7,mass,'tth','tautau')[0]*br_w_leptons**2
+      datadefs['VH_%s' % mass]['x_sec'] = xsbr(7,mass,'wh','tautau')[0] + xsbr(7,mass,'zh','tautau')[0] + xsbr(7,mass,'tth','tautau')[0]
+
+      datadefs['VHtautau_lepdecay_%i' % mass] = {
+            'analyses': ['VH'],
+            'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_7TeV-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM" % mass,
+            'pu' : 'S6',
+            'x_sec' : xsbr(7,mass,'wh','tautau')[0]*br_w_leptons + xsbr(7,mass,'zh','tautau')[0]*br_z_leptons + xsbr(7,mass,'tth','tautau')[0]*br_w_leptons**2,
+            'calibrationTarget' : 'Fall11'
+      }
       
               
 # Build all the PDs we use
