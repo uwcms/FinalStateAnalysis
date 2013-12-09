@@ -36,15 +36,17 @@ def group(branch_lists):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('file')
-parser.add_argument('event')
+parser.add_argument('events')
 parser.add_argument('treepath')
 parser.add_argument('scan', help='supports python regex')
+#parser.add_argument('--filter', type=str, default="", help='filters the events')
+parser.add_argument('--by-combination', dest='combos', action='store_true')
 
 args = parser.parse_args()
 
-event = txt2tuple(args.event)
-tfile = ROOT.TFile.Open(args.file)
-tree  = tfile.Get(args.treepath)
+event  = txt2tuple(args.events) #[txt2tuple(i) for i in args.events]
+tfile  = ROOT.TFile.Open(args.file)
+tree   = tfile.Get(args.treepath)
 
 branches = [branch.GetName() for branch in tree.GetListOfBranches()]
 regexes  = [re.compile(i+'$') for i in args.scan.split(',')]
@@ -58,6 +60,7 @@ for row in tree:
         for i in branches_to_monitor:
             monitor[i].append( getattr(row, i) )
 
+by_option = {}
 for gr, branches in grouped.iteritems():
     values_by_option = zip(*[monitor[i] for i in branches])
     group_options = []
@@ -67,9 +70,18 @@ for gr, branches in grouped.iteritems():
             to_append += '%s: %.4f   ' % info
         #to_append += '\n'
         group_options.append(to_append)
-    print '%s:' % gr
-    for opt in set(group_options): #remove duplicates
-        print opt
-    print
 
+    if not args.combos:
+        print '%s:' % gr
+        for opt in set(group_options): #remove duplicates
+            print opt
+        print
+    else:
+        by_option[gr] = group_options
 
+if args.combos:
+    for i in range( len(by_option[grouped.keys()[0]]) ):
+        print "\nCombination #%i" % i
+        for key in by_option:
+            print '%s:' % key
+            print by_option[key][i]
