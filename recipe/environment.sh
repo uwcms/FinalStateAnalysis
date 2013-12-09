@@ -45,6 +45,7 @@ if [ -d "$vpython" ]; then
   echo "Activating python virtual environment"
   export VIRTUAL_ENV_DISABLE_PROMPT=1
   cd $vpython
+  # See https://github.com/pypa/virtualenv/issues/150
   source bin/activate
   cd -
 fi
@@ -84,8 +85,9 @@ fi
 
 # Define the current most-informative PU information JSONs
 export pu2011JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/PileUp/pileup_2011_JSON_pixelLumi.txt
-# Valid up to the September 12 technical stop, see https://hypernews.cern.ch/HyperNews/CMS/get/physics-validation/1882.html
-export pu2012JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/pileup_JSON_DCSONLY_190389-208686_corr.txt 
+# Final 2012 pileup calculation 
+# https://hypernews.cern.ch/HyperNews/CMS/get/physics-announcements/2533.html
+export pu2012JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/pileup_JSON_DCSONLY_190389-208686_All_2012_pixelcorr.txt
 
 #check if dev area is up to date
 pushd $fsa

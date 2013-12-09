@@ -16,7 +16,7 @@ cvs co -r V00-03-13 CommonTools/ParticleFlow
 # To install lumiCalc.py
 if [ "$LUMI" = "1" ] 
 then
-  cvs co -r V04-01-09 RecoLuminosity/LumiDB 
+  cvs co -r V04-02-10 RecoLuminosity/LumiDB 
 fi
 
 # Add and patch to way speed up trigger matching
