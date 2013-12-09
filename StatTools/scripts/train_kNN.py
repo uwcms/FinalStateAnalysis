@@ -10,6 +10,7 @@ from FinalStateAnalysis.StatTools.RooFunctorFromWS import FunctorFromMVA
 import logging
 from array import array
 from rootpy.utils import asrootpy
+from progressbar import ETA, ProgressBar, FormatLabel, Bar
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
 parser = argparse.ArgumentParser()
@@ -20,6 +21,7 @@ parser.add_argument('--tree', required=True, help='Path to tree')
 parser.add_argument('--cut', required=True, help='branch name of id/iso WP')
 parser.add_argument('--neighbors', type=int, help='numer of heighbors to use', default=100)
 parser.add_argument('--makePlots', type=int, help='skip the plotting step to be faster', default=1)
+parser.add_argument('--forceLumi', type=float, help='force the data lumi value, helpful when running on MC only', default=0)
 
 
 args = parser.parse_args()
@@ -52,9 +54,10 @@ def round_to_ints(histo):
 
 
 
-data_files  = filter(lambda x: 'data_' in x, args.files)
-zz_file     = filter(lambda x: 'ZZ'    in x, args.files)[0]
-wz_file     = filter(lambda x: 'WZ'    in x, args.files)[0]
+data_files = filter(lambda x: 'data_' in x, args.files)
+mc_files   = filter(lambda x: x not in data_files, args.files)
+#zz_file     = filter(lambda x: 'ZZ'    in x, args.files)[0]
+#wz_file     = filter(lambda x: 'WZ'    in x, args.files)[0]
 
 output_file = args.outputfile
 input_tree  = args.tree #'wjets/pt10/muonInfo'
@@ -63,74 +66,66 @@ out_tfile   = ROOT.TFile.Open(output_file, 'recreate')
 cut_pass    = ROOT.TCut('%s==1' % selection)
 cut_fail    = ROOT.TCut('%s==0' % selection)
 
-log.info('Getting data Tree')
-data_tree   = ROOT.TChain(input_tree)
+data_tree = None
 data_lumi   = 0.
-for i in data_files:
-    data_lumi += get_lumi(i)
-    data_tree.Add(i)
-num_pass    = data_tree.GetEntries(cut_pass.GetTitle())
-num_fail    = data_tree.GetEntries(cut_fail.GetTitle())
-log.info("found %i input files for a total lumi: %f total passing events: %i. total failing events: %i" % (len(data_files), data_lumi, num_pass, num_fail) )
+mc_multiplicative = -1
+if data_files:
+    log.info('Getting data Tree')
+    data_tree   = ROOT.TChain(input_tree)
+    data_lumi   = 0.
+    for i in data_files:
+        data_lumi += get_lumi(i)
+        data_tree.Add(i)
+    num_pass    = data_tree.GetEntries(cut_pass.GetTitle())
+    num_fail    = data_tree.GetEntries(cut_fail.GetTitle())
+    log.info("found %i input files for a total lumi: %f total passing events: %i. total failing events: %i" % (len(data_files), data_lumi, num_pass, num_fail) )
 
+if args.forceLumi:
+    data_lumi = args.forceLumi
+    log.info("forcing total lumi to %f", data_lumi )
+    mc_multiplicative = 1
 
-log.info('getting ZZ dataset...')
-zz_tree    = ROOT.TFile.Open(zz_file).Get(input_tree)
-zz_lumi    = get_lumi(zz_file)
-zz_factor  = -(data_lumi / zz_lumi)
-log.info('   Events are going to be scaled by %f' % zz_factor)
+mc_trees = []
+for mc_file in mc_files:
+    sample_name = extract_sample(mc_file)
+    log.info('getting %s dataset...' % sample_name)
+    mc_tree   = ROOT.TFile.Open(mc_file).Get(input_tree)
+    mc_lumi   = get_lumi(mc_file)
+    mc_factor = mc_multiplicative*(data_lumi / mc_lumi) \
+                if data_lumi <> -1 else 1.
+    log.info('   Events are going to be scaled by %f' % mc_factor)
+    mc_trees.append( (sample_name, mc_tree, mc_factor) )
 
-log.info('getting WZ dataset...')
-wz_tree    = ROOT.TFile.Open(wz_file).Get(input_tree)
-wz_lumi    = get_lumi(wz_file)
-wz_factor  = -(data_lumi / wz_lumi)
-log.info('   Events are going to be scaled by %f' % wz_factor)
 
 out_tfile.cd()
 training_vars   = args.variables+[args.cut,'weight']
 training_NTuple = ROOT.TNtuple('training_ntuple', 'training_ntuple', ':'.join(training_vars) )
 
 #Copy the data tree as it is
-log.info('copying data events into training tree')
-for row in data_tree:
-    training_NTuple.Fill(
-        array('f',
-              [ getattr(row, var) for var in training_vars ]
-          )
-    )
+if data_tree:
+    log.info('copying data events into training tree')
+    for row in data_tree:
+        training_NTuple.Fill(
+            array('f',
+                  [ getattr(row, var) for var in training_vars ]
+              )
+        )
 
-#Copy WZ and ZZ Trees but scale each event by the proper lumi factor
+#Copy MC Trees but scale each event by the proper lumi factor
+for sample_name, mc_tree, mc_factor in mc_trees:
+    log.info('copying %s events into training tree' % sample_name)
+    for row in mc_tree:
+        to_fill = array('f',
+                        [ getattr(row, var) for var in training_vars ]
+                    )
+        #scale by lumi factor
+        to_fill[-1] *= mc_factor
+        training_NTuple.Fill(to_fill)
 
-#WZ
-log.info('copying WZ events into training tree')
-for row in wz_tree:
-    to_fill = array('f',
-                    [ getattr(row, var) for var in training_vars ]
-                )
-    #scale by lumi factor
-    to_fill[-1] *= wz_factor
-
-    training_NTuple.Fill(
-        to_fill
-    )
-
-#ZZ
-log.info('copying ZZ events into training tree')
-for row in zz_tree:
-    to_fill = array('f',
-                    [ getattr(row, var) for var in training_vars ]
-                )
-    #scale by lumi factor
-    to_fill[-1] *= zz_factor
-
-    training_NTuple.Fill(
-        to_fill
-    )
-
-
-num_pass    = training_NTuple.GetEntries(cut_pass.GetTitle())
-num_fail    = training_NTuple.GetEntries(cut_fail.GetTitle())
-
+num_tot  = training_NTuple.GetEntries()
+num_pass = training_NTuple.GetEntries(cut_pass.GetTitle())
+num_fail = training_NTuple.GetEntries(cut_fail.GetTitle())
+log.info("# Events: %i, # Passing the cut: %i, # Failing: %i" % (num_tot, num_pass, num_fail))
 
 #Start TMVA and create factory
 TMVA_tools = ROOT.TMVA.Tools.Instance()
@@ -177,28 +172,44 @@ for var in args.variables:
             'pass'     : plotting.Hist([10,12,15,20,25,30,35,40,45,50,60,70,100,150,200]),
             'all'      : plotting.Hist([10,12,15,20,25,30,35,40,45,50,60,70,100,150,200]),
         }
-    elif 'jets' in var.lower():
+    elif 'jets' in var.lower() or 'njet' in var.lower():
         hist_maps[var] = {
             'estimate'     : plotting.Hist(12, 0, 12),
             'estimate_all' : plotting.Hist(12, 0, 12),
             'pass'         : plotting.Hist(12, 0, 12),
             'all'          : plotting.Hist(12, 0, 12),
         }
+    else:
+        hist_maps[var] = {
+            'estimate'     : plotting.Hist(100, 0, 200),
+            'estimate_all' : plotting.Hist(100, 0, 200),
+            'pass'         : plotting.Hist(100, 0, 200),
+            'all'          : plotting.Hist(100, 0, 200),
+        }
 
 if args.makePlots:
     log.info("making plots")
     functor = FunctorFromMVA('kNN', target, *args.variables)
 
-    for row in training_NTuple:
+    progress= ProgressBar(
+        widgets = [
+            ETA(),
+            Bar('>')],
+        maxval = training_NTuple.GetEntries() ).start()
+
+
+    for i, row in enumerate(training_NTuple):
+        progress.update(i+1)
         var_d  = dict([(v, getattr(row, v)) for v in args.variables])
         mva    = functor(**var_d)
         weight = row.weight
         cut    = bool( getattr(row, args.cut) )
         for var in args.variables:
             value = var_d[var]
-            hist_maps[var]['estimate'].Fill(value, mva*weight)
+            if weight > 0: #fill only data-like events
+                hist_maps[var]['estimate'].Fill(value, weight*mva)
+                hist_maps[var]['estimate_all'].Fill(value, weight)
             hist_maps[var]['all'].Fill(value, weight)
-            hist_maps[var]['estimate_all'].Fill(value, weight)
             if cut:
                 hist_maps[var]['pass'].Fill(value, weight)
 
@@ -207,13 +218,15 @@ if args.makePlots:
     canvas.SetLogy(True)
     for var in args.variables:
 
-        for key in hist_maps[var].iterkeys():
+        for key in ['pass', 'all']: #hist_maps[var].iterkeys():
             hist_maps[var][key] = round_to_ints(hist_maps[var][key])
 
         eff = asrootpy( ROOT.TGraphAsymmErrors( hist_maps[var]['pass'], hist_maps[var]['all']) )
         eff.markerstyle = 20
+        eff.SetName('efficiency_%s' % var)
         estimate = hist_maps[var]['estimate'].Clone() #avoid getting divided
         estimate.Divide(hist_maps[var]['estimate_all'])
+        estimate.SetName('estimate_%s' % var)
         estimate.linecolor = ROOT.kBlue 
         estimate.linewidth = 2
         estimate.fillstyle = 0
@@ -225,6 +238,8 @@ if args.makePlots:
         canvas.SetLogy(True)
         canvas.SaveAs( output_file.replace('.root', '.%s.png' % var ) )
         
+        eff.Write()
+        estimate.Write()
         for key, obj in hist_maps[var].iteritems():
             obj.SetName( '%s_%s' % (var, key) )
             obj.Write()
