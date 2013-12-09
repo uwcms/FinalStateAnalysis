@@ -54,6 +54,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     input_files = args.infiles
 
+    print "loading events to pick..."
     evts_to_pick = dict([(txt2tuple(line), False) for line in open(args.pickfile).readlines() if line.strip()])
     run_periods  = {
         '2012A' : [190456, 193621], 
@@ -99,10 +100,18 @@ if __name__ == "__main__":
         input_files = good_files
             
 
+    print "loading trees..."
     in_tree  = ROOT.TChain(args.treepath) #'mmt/final/Ntuple')
-    for i in input_files:
+    progress= ProgressBar(
+        widgets = [
+            ETA(),
+            Bar('>')],
+        maxval = len(input_files) ).start()
+    for n, i in enumerate(input_files):
+        progress.update(n+1)
         in_tree.Add(i)
 
+    del progress
     out_name = args.pickfile.split('.')[0]+'.root' if not args.outputfile else args.outputfile
     new_file = ROOT.TFile(out_name,"recreate")
     new_tree = in_tree.CloneTree(0)
