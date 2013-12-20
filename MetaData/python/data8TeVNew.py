@@ -431,6 +431,38 @@ for mass in ['260','300','350'] :
       'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
 
+datadefs['ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola_S10'] = {
+      'analyses': ['HTT'],
+      'datasetpath': '/ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+      'pu' : 'S10',
+      'x_sec' : -999,
+      'calibrationTarget':'Summer12_DR53X_HCP2012'
+      }
+
+datadefs['TTJets_FullLeptMGDecays_8TeV-madgraph-tauola_S10'] = {
+      'analyses': ['HTT'],
+      'datasetpath': '/TTJets_FullLeptMGDecays_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7C-v2/AODSIM',
+      'pu' : 'S10',
+      'x_sec' : -999,
+      'calibrationTarget':'Summer12_DR53X_HCP2012'
+      }
+
+#datadefs['DoubleMu_StoreResults-Run2012A_22Jan2013_v1_RHembedded_trans1_tau132_pthad1_30had2_30_v1'] = {
+#      'analyses': ['HTT'],
+#      'datasetpath': '/DoubleMu/StoreResults-Run2012A_22Jan2013_v1_RHembedded_trans1_tau132_pthad1_30had2_30_v1-f456bdbb960236e5c696adfe9b04eaae/USER',
+#      'calibrationTarget':'Moriond2013',
+#      }
+#
+#for run in ["B", "C", "D"]:
+#      datadefs['DoubleMuParked_StoreResults-Run2012%s_22Jan2013_v1_RHembedded_trans1_tau132_pthad1_30had2_30_v1' % run] = {
+#            'analyses': ['HTT'],
+#            'datasetpath': '/DoubleMuParked/StoreResults-Run2012%s_22Jan2013_v1_RHembedded_trans1_tau132_pthad1_30had2_30_v1-f456bdbb960236e5c696adfe9b04eaae/USER' % run,
+#            'calibrationTarget':'Moriond2013'
+#            #'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
+#            #'firstRun' : 193834,
+#            #'lastRun' : 196531,
+#            }
+
 aTGC_path = Template('/ZZ4L_Sherpa_aTGC_f${i}_${f1}0_${f2}0_v2/iross-SUMMER12-AODSIM-START53_V7C_${i}_${f1}_${f2}-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER')
 
 for coup in ["4","5"]:
