@@ -22,7 +22,10 @@ class PyTree(ROOT.TObject):
         
         self.holders = [] #dict([(i.split) for i in branch_names])
         for name in branch_names:
-            varname, vartype = tuple(name.split('/'))
+            try:
+                varname, vartype = tuple(name.split('/'))
+            except:
+                raise ValueError('Problem parsing %s' % name)
             inverted_type = invert_case(vartype)
             self.holders.append( (varname, array.array(inverted_type,[0]) ) )
 
