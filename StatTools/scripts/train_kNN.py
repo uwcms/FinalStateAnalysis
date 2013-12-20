@@ -22,6 +22,7 @@ parser.add_argument('--cut', required=True, help='branch name of id/iso WP')
 parser.add_argument('--neighbors', type=int, help='numer of heighbors to use', default=100)
 parser.add_argument('--makePlots', type=int, help='skip the plotting step to be faster', default=1)
 parser.add_argument('--forceLumi', type=float, help='force the data lumi value, helpful when running on MC only', default=0)
+parser.add_argument('--splitter', type=str, help='function to split the sample, based on the entry number', default='')
 
 
 args = parser.parse_args()
@@ -65,6 +66,11 @@ selection   = args.cut #'h2taucuts'
 out_tfile   = ROOT.TFile.Open(output_file, 'recreate')
 cut_pass    = ROOT.TCut('%s==1' % selection)
 cut_fail    = ROOT.TCut('%s==0' % selection)
+splitter    = eval('lambda x: '+args.splitter) if args.splitter else None
+
+######################################
+## Getting luminosities
+######################################
 
 data_tree = None
 data_lumi   = 0.
@@ -98,13 +104,21 @@ for mc_file in mc_files:
 
 
 out_tfile.cd()
+
+######################################
+## Loading training Tree
+######################################
+
 training_vars   = args.variables+[args.cut,'weight']
 training_NTuple = ROOT.TNtuple('training_ntuple', 'training_ntuple', ':'.join(training_vars) )
 
 #Copy the data tree as it is
 if data_tree:
     log.info('copying data events into training tree')
-    for row in data_tree:
+    for i, row in enumerate(data_tree):
+        if splitter and not splitter(i):
+            #If there is a splitter and it returns False, skip the event
+            continue
         training_NTuple.Fill(
             array('f',
                   [ getattr(row, var) for var in training_vars ]
@@ -114,7 +128,10 @@ if data_tree:
 #Copy MC Trees but scale each event by the proper lumi factor
 for sample_name, mc_tree, mc_factor in mc_trees:
     log.info('copying %s events into training tree' % sample_name)
-    for row in mc_tree:
+    for i, row in enumerate(mc_tree):
+        if splitter and not splitter(i):
+            #If there is a splitter and it returns False, skip the event
+            continue
         to_fill = array('f',
                         [ getattr(row, var) for var in training_vars ]
                     )
@@ -126,6 +143,10 @@ num_tot  = training_NTuple.GetEntries()
 num_pass = training_NTuple.GetEntries(cut_pass.GetTitle())
 num_fail = training_NTuple.GetEntries(cut_fail.GetTitle())
 log.info("# Events: %i, # Passing the cut: %i, # Failing: %i" % (num_tot, num_pass, num_fail))
+
+############################################################################
+## MVA Settings, training, move of the xml file
+############################################################################
 
 #Start TMVA and create factory
 TMVA_tools = ROOT.TMVA.Tools.Instance()
@@ -161,14 +182,16 @@ cmd      = 'mv %s %s' % (xml_name, target)
 log.info(cmd)
 os.system( cmd )
 
+#############################################
+##  Reads back and produces control plots
+#############################################
 
-#Reads back and produces control plots
 hist_maps = {}
 for var in args.variables:
     if 'pt' in var.lower():
         hist_maps[var] = {
-            'estimate' : plotting.Hist(100, 0, 200),
-            'estimate_all' : plotting.Hist(100, 0, 200),
+            'estimate'     : plotting.Hist([10,12,15,20,25,30,35,40,45,50,60,70,100,150,200]), #plotting.Hist(100, 0, 200),
+            'estimate_all' : plotting.Hist([10,12,15,20,25,30,35,40,45,50,60,70,100,150,200]), #plotting.Hist(100, 0, 200),
             'pass'     : plotting.Hist([10,12,15,20,25,30,35,40,45,50,60,70,100,150,200]),
             'all'      : plotting.Hist([10,12,15,20,25,30,35,40,45,50,60,70,100,150,200]),
         }
@@ -204,6 +227,11 @@ if args.makePlots:
         mva    = functor(**var_d)
         weight = row.weight
         cut    = bool( getattr(row, args.cut) )
+        if weight > 0:
+            print cut, mva, weight
+            #assert(int(cut) == mva)
+        else:
+            print cut, mva, weight
         for var in args.variables:
             value = var_d[var]
             if weight > 0: #fill only data-like events
