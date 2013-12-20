@@ -40,7 +40,7 @@ branch1 = set(branch.GetName() for branch in tree1.GetListOfBranches())
 fname2  = args.file2.split(':')[0]
 tname2  = args.file2.split(':')[1]
 tfile2  = ROOT.TFile.Open(fname2)
-tree2   = tfile2.Get(tname1)
+tree2   = tfile2.Get(tname2)
 branch2 = set(branch.GetName() for branch in tree2.GetListOfBranches())
 
 #check branches naming to avoid crash
