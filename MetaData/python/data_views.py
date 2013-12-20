@@ -38,6 +38,21 @@ def read_lumi(filename):
             print "I couldn't extract a float from %s" % filename
             raise
 
+def get_best_style(sample):
+    best_pattern = ''
+    for pattern, style_dict in data_styles.iteritems():
+        log.debug("Checking pattern: %s against %s", pattern, sample)
+        if fnmatch.fnmatch(sample, pattern):
+            log.debug("-> it matches!")
+            if len(pattern) > len(best_pattern):
+                best_pattern = pattern
+                log.info("Found new best style for %s: %s",
+                         sample, pattern)
+    if best_pattern:
+        return data_styles[best_pattern]
+    else:
+        return None
+
 def data_views(files, lumifiles):
     ''' Builds views of files.
 
