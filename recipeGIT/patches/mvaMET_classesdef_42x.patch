@@ -1,0 +1,23 @@
+Index: DataFormats/METReco/src/classes.h
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/DataFormats/METReco/src/classes.h,v
+retrieving revision 1.25
+diff -w -r1.25 classes.h
+34a35,37
+> #include "DataFormats/METReco/interface/MVAMETData.h"
+> #include "DataFormats/METReco/interface/MVAMETDataFwd.h"
+> 
+138a142,144
+>     reco::JetInfo dummyJetInfo;
+>     reco::JetInfoCollection dummyJetInfoCollection;
+>     edm::Wrapper<reco::JetInfoCollection> dummyJetInfoCollectionWrapped;
+Index: DataFormats/METReco/src/classes_def.xml
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/DataFormats/METReco/src/classes_def.xml,v
+retrieving revision 1.22
+diff -w -r1.22 classes_def.xml
+2a3,6
+>   <class name="reco::JetInfo" />
+>   <class name="reco::JetInfoCollection" />
+>   <class name="edm::Wrapper<reco::JetInfoCollection>" />
+> 
