@@ -23,19 +23,13 @@ git cms-cvs-history import V00-03-16 CommonTools/ParticleFlow
 
 if [ "$LIMITS" = "1" ]
 then
-   echo "You shouldnt run limits/fits from here. LIMITS should be run from 6XX, and do not require the rest of the machinery. Please, change area"
-   echo " and run:"
-   echo "setenv SCRAM_ARCH slc5_amd64_gcc472 "
-   echo "cmsrel CMSSW_6_1_1 ### must be >= 6.1.1, as older versions have bugs (6.2.X and 7.0.X are NOT supported either)  "
-   echo "cd CMSSW_6_1_1/src  "
-   echo "cmsenv"
-   echo "git addpkg HiggsAnalysis/HiggsToTauTau"
-   echo "git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit"
-   echo "cd HiggsAnalysis/CombinedLimit"
-   echo "git pull origin master"
-   echo "git checkout V03-05-00"
-   echo "scramv1 b clean; scramv1 b"
+   echo ""     
+   echo "======================================="
+   echo "You shouldnt run limits/fits from here." 
+   echo "LIMITS should be run from 6XX, and do not require the rest of the machinery. Please, change area."
    echo "Check https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideHiggsAnalysisCombinedLimit for updates"
+   echo "======================================="
+   echo ""     
 fi
 
 

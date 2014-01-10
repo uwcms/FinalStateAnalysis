@@ -6,18 +6,20 @@ pushd $CMSSW_BASE/src
 
 #for standalone version of svfit
 # cvs co -r V00-01-04s TauAnalysis/CandidateTools
-git clone https://github.com/cms-analysis/TauAnalysis-CandidateTools.git TauAnalysis/CandidateTools
-pushd $CMSSW_BASE/src/TauAnalysis/CandidateTools
-git checkout TauAnalysis-CandidateTools-V00-01-04s
-pushd $CMSSW_BASE/src
+#git clone https://github.com/cms-analysis/TauAnalysis-CandidateTools.git TauAnalysis/CandidateTools
+#pushd $CMSSW_BASE/src/TauAnalysis/CandidateTools
+#git checkout TauAnalysis-CandidateTools-V00-01-04s
+#pushd $CMSSW_BASE/src
 
 # Tags that work in any release
 
 # To install lumiCalc.py
 if [ "$LUMI" = "1" ]
 then
-#cvs co -r V04-02-10 RecoLuminosity/LumiDB
-git cms-cvs-history import  V04-02-10 RecoLuminosity/LumiDB
+git clone https://github.com/cms-sw/RecoLuminosity-LumiDB.git RecoLuminosity/LumiDB
+pushd $CMSSW_BASE/src/RecoLuminosity/LumiDB
+git checkout V04-02-10
+pushd $CMSSW_BASE/src
 fi
 
 # Add and patch to way speed up trigger matching
