@@ -6,10 +6,10 @@ pushd $CMSSW_BASE/src
 
 #for standalone version of svfit
 # cvs co -r V00-01-04s TauAnalysis/CandidateTools
-#git clone https://github.com/cms-analysis/TauAnalysis-CandidateTools.git TauAnalysis/CandidateTools
-#pushd $CMSSW_BASE/src/TauAnalysis/CandidateTools
-#git checkout TauAnalysis-CandidateTools-V00-01-04s
-#pushd $CMSSW_BASE/src
+git clone https://github.com/cms-analysis/TauAnalysis-CandidateTools.git TauAnalysis/CandidateTools
+pushd $CMSSW_BASE/src/TauAnalysis/CandidateTools
+git checkout TauAnalysis-CandidateTools-V00-01-04s
+pushd $CMSSW_BASE/src
 
 # Tags that work in any release
 
