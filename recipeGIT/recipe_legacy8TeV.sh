@@ -77,9 +77,6 @@ then
   git clone https://github.com/cms-analysis/EgammaAnalysis-ElectronTools.git EgammaAnalysis/ElectronTools
   pushd $CMSSW_BASE/src/EgammaAnalysis/ElectronTools
   git checkout EgammaAnalysis-ElectronTools-FB_4Jun2013
-  # revert some deleted files in the 4June tag
-  git checkout EgammaAnalysis-ElectronTools-electronRegressionBeforeMoveIn_06April2013 src/PatElectronEnergyCalibrator.cc
-  git checkout EgammaAnalysis-ElectronTools-electronRegressionBeforeMoveIn_06April2013 interface/PatElectronEnergyCalibrator.h
   pushd $CMSSW_BASE/src
 
   set +o errexit
