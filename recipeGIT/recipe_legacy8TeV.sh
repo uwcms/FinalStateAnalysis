@@ -14,10 +14,10 @@ git cms-cvs-history import V08-09-58  PhysicsTools/PatAlgos
 git cms-cvs-history import  V03-09-28 PhysicsTools/PatUtils
 
 # These conflict with the MVA MET RecoMET tags.
-rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer.*
-rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer.*
+#rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer.*
+#rm -f PhysicsTools/PatAlgos/plugins/PATMHTProducer.*
+#git cms-cvs-history import V03-03-12-02 RecoMET/METProducers
 
-git cms-cvs-history import V03-03-12-02 RecoMET/METProducers
 git cms-cvs-history import V00-02-14 DataFormats/StdDictionaries
 git cms-cvs-history import V00-03-16 CommonTools/ParticleFlow
 
@@ -38,7 +38,6 @@ then
   echo "Checking out tuple production tags"
   git cms-cvs-history import V02-05-11 DataFormats/CaloRecHit
   git cms-cvs-history import V00-00-70 FWCore/GuiBrowsers
-  git cms-cvs-history import V03-03-12-02 RecoMET/METProducers
   #24/10/2012 LAG -- PF Isolation for Photons
   git cms-cvs-history import V15-02-06 RecoParticleFlow/PFProducer
   git cms-cvs-history import V00-00-12  CommonTools/RecoUtils
