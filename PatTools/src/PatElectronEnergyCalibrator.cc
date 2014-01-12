@@ -5,7 +5,7 @@
 //#if CMSSW_VERSION>500
 
 
-#include "EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h"
+#include "FinalStateAnalysis/PatTools/interface/PatElectronEnergyCalibrator.h"
 
 
 #include <CLHEP/Random/RandGaussQ.h>

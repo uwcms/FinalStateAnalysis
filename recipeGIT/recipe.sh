@@ -20,10 +20,10 @@
 
 # Set default values for the options
 LIMITS=${LIMITS:-0}
-LUMI=${LUMI:-0}
-PATPROD=${PATPROD:-0}
+LUMI=${LUMI:-1}
+PATPROD=${PATPROD:-1}
 MVAMET=${MVAMET:-$PATPROD}
-HZZ=${HZZ:-$PATPROD}
+HZZ=${HZZ:-0}
 
 set -o errexit
 set -o nounset
@@ -54,12 +54,6 @@ echo "Store your git ssh password"
 eval `ssh-agent -s` 
 ssh-add
 
-echo "Setting up the git area"
-pushd $CMSSW_BASE/src
-git cms-init
-pushd $CMSSW_BASE/src/FinalStateAnalysis/recipeGIT
-
-
 echo "I'm going to install the FinalStateAnalysis with the following options:"
 echo " Limit setting (\$LIMITS): $LIMITS"
 echo " PAT tuple production (\$PATPROD): $PATPROD"
@@ -77,6 +71,13 @@ if [ -z "FORCERECIPE" ]; then
    done
 fi
 
+if [ "$MVAMET" = "1" ]
+then
+  echo "Applying MVA MET recpe"
+  ./recipe_mvamet.sh
+fi
+
+
 
 if [ "$MAJOR_VERSION" -eq "4" ]; then
   echo "Recipe not setup for 42X"
@@ -89,13 +90,6 @@ fi
 
 echo "Applying common recipe"
 LUMI=$LUMI LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_common.sh
-
-
-#if [ "$MVAMET" = "1" ]
-#then
-#  echo "Applying MVA MET recpe"
-#  ./recipe_mvamet.sh
-#fi
 
 # Note you now need to install virtual env
 echo "Now run recipe/install_python.sh to install python"
