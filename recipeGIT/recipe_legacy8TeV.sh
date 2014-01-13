@@ -40,7 +40,7 @@ then
   git cms-cvs-history import V00-00-70 FWCore/GuiBrowsers
   #24/10/2012 LAG -- PF Isolation for Photons
   git cms-cvs-history import V15-02-06 RecoParticleFlow/PFProducer
-  git cms-cvs-history import V00-00-12  CommonTools/RecoUtils
+  #git cms-cvs-history import V00-00-12  CommonTools/RecoUtils
   #    V00-00-12, cvs up -r 1.4 CommonTools/RecoUtils/BuildFile.xml
   git cms-cvs-history import V02-06-05 DataFormats/HLTReco
   git cms-cvs-history import V04-06-09 JetMETCorrections/Type1MET
