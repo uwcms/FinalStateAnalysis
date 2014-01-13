@@ -91,6 +91,9 @@ fi
 echo "Applying common recipe"
 LUMI=$LUMI LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_common.sh
 
+echo "Kill the ssh-agent"
+eval `ssh-agent -k` 
+
 # Note you now need to install virtual env
 echo "Now run recipe/install_python.sh to install python"
 
