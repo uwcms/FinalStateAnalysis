@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
     farmout_group.add_argument(
         '--output-dag-file', dest='dagdir',
-        default='/scratch/{user}/{jobid}/{sample}/dags/dag',
+        default='/nfs_scratch/{user}/{jobid}/{sample}/dags/dag',
         help = 'Where to put dag files',
     )
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
     farmout_group.add_argument(
         '--submit-dir', dest='subdir',
-        default='/scratch/{user}/{jobid}/{sample}/submit',
+        default='/nfs_scratch/{user}/{jobid}/{sample}/submit',
         help = 'Where to put submit files. Default: %s(default)s',
     )
 
