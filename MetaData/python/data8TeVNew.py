@@ -520,6 +520,25 @@ for mass in range(110, 165, 5) :
        'calibrationTarget':'Summer12_DR53X_HCP2012'
       }
 
+# Double Charged Higgs Signal Samples
+for mass in [110, 130, 150, 170, 200, 250, 300, 350, 400, 450, 500, 600, 700]:
+    if mass >= 170:
+        datadefs['HPlusPlusHMinusHTo3L_M-%i_8TeV-calchep-pythia6' % mass] = {
+            'analyses' : ['HPP'],
+            'datasetpath' : '/HPlusPlusHMinusHTo3L_M-%i_8TeV-calchep-pythia6/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM' % mass,
+            'pu' : 'S10',
+            'x_sec' : -999,
+            'calibrationTarget' : 'Summer12_DR53X_HCP2012'
+            }
+
+    datadefs['HPlusPlusHMinusMinusHTo4L_M-%i_8TeV-pythia6' % mass] = {
+        'analyses' : ['HPP'],
+        'datasetpath' : '/HPlusPlusHMinusMinusHTo4L_M-%i_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM' % mass,
+        'pu' : 'S10',
+        'x_sec' : -999,
+        'calibrationTarget' : 'Summer12_DR53X_HCP2012'
+        }
+
 
 # HZZ4L Signal Samples
 for mass in range(115,130) + range(130,150,5) + range(150,200,10) + [200,220] + range(250,600,25) + range(600,1001,50) :
