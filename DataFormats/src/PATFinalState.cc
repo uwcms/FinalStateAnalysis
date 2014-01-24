@@ -658,6 +658,16 @@ bool PATFinalState::likeFlavor(int i, int j) const {
   return std::abs(daughter(i)->pdgId()) == std::abs(daughter(j)->pdgId());
 }
 
+int PATFinalState::hppCompatibility(int i, int j, int chg) const {
+  if (likeSigned(i,j)) {
+    if ((chg > 0 && daughter(i)->charge() > 0) ||
+        (chg < 0 && daughter(i)->charge() < 0)) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 double PATFinalState::zCompatibility(int i, int j) const {
   if (likeSigned(i, j)) {
     return 1000;
