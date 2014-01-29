@@ -1,0 +1,48 @@
+Index: RecoTauTag/RecoTau/plugins/RecoTauBuilderCombinatoricPlugin.cc
+===================================================================
+RCS file: /local/reps/CMSSW/CMSSW/RecoTauTag/RecoTau/plugins/RecoTauBuilderCombinatoricPlugin.cc,v
+retrieving revision 1.17
+diff -r1.17 RecoTauBuilderCombinatoricPlugin.cc
+34a35
+>     double minPtToBuild_;
+43a45
+>   minPtToBuild_ = pset.exists("minPtToBuild") ? pset.getParameter<double>("minPtToBuild") : -1;
+63c65
+<       }  
+---
+>       }
+71c73
+<     const std::vector<PFCandidatePtr>& regionalExtras) const 
+---
+>     const std::vector<PFCandidatePtr>& regionalExtras) const
+78a81,85
+> 
+>   // If jet pt is below the tau pt threshold we know we can't build a good tau.
+>   if (jet->pt() < minPtToBuild_)
+>     return output.release();
+> 
+80c87
+<  
+---
+> 
+172c179,196
+<            piZeroCombo != piZeroCombos.end(); ++piZeroCombo) {
+---
+>           piZeroCombo != piZeroCombos.end(); ++piZeroCombo) {
+> 
+>         // Speed up the tau reco significantly by not building low pt junk,
+>         // if desired.
+>         if (minPtToBuild_ > 0) {
+>           double pt = 0;
+>           for (PFCombo::combo_iterator trk = trackCombo->combo_begin();
+>               trk != trackCombo->combo_end(); ++trk) {
+>             pt += (*trk)->pt();
+>           }
+>           for (PiZeroCombo::combo_iterator pi0 = piZeroCombo->combo_begin();
+>               pi0 != piZeroCombo->combo_end(); ++pi0) {
+>             pt += pi0->pt();
+>           }
+>           if (pt <= minPtToBuild_)
+>             continue;
+>         }
+> 

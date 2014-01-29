@@ -2,7 +2,8 @@
 
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 
-#include "EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h"
+#include "FinalStateAnalysis/PatTools/interface/PatElectronEnergyCalibrator.h"
+//#include "EgammaAnalysis/ElectronTools/interface/PatElectronEnergyCalibrator.h"
 #include "EgammaAnalysis/ElectronTools/interface/ElectronEnergyRegressionEvaluate.h"
 
 #include "Geometry/CaloEventSetup/interface/CaloTopologyRecord.h"

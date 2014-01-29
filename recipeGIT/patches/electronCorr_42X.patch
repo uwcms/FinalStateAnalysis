@@ -1,0 +1,317 @@
+diff --git a/PatTools/interface/PATElectronEnergyCorrection.h b/PatTools/interface/PATElectronEnergyCorrection.h
+index dd0f40d..da39157 100644
+--- a/PatTools/interface/PATElectronEnergyCorrection.h
++++ b/PatTools/interface/PATElectronEnergyCorrection.h
+@@ -3,10 +3,10 @@
+  * Auxiliary class to encapsulate the prescription
+  * for applying the regression-based electron energy
+  * corrections.
+- * Constructed by giving a list of datasets and
+- * correction types defined in
++ * Constructed by giving a list of datasets and 
++ * correction types defined in 
+  * https://twiki.cern.ch/twiki/bin/view/CMS/EgammaElectronEnergyScale.
+- * The user may then apply any one of the given
++ * The user may then apply any one of the given 
+  * corrections to an input electron.
+  *
+  * \author Lindsey Gray, UW Madison
+@@ -38,52 +38,50 @@ namespace edm {
+ 
+ 
+ namespace pattools {
+-
++  
+   class PATElectronEnergyCorrection {
+   public:
+     typedef ElectronEnergyRegressionEvaluate regCalc;
+     typedef regCalc* pRegCalc;
+     typedef ElectronEnergyCalibrator eCalib;
+     typedef eCalib* pCalib;
+-    typedef std::map<std::string,pCalib>      calib_map;
++    typedef std::map<std::string,pCalib>      calib_map;    
+     typedef std::map<std::string,std::pair<int,pRegCalc> > reg_map;
+     // calib : regression
+-    typedef std::map<std::string,std::string> apply_map;
++    typedef std::map<std::string,std::string> apply_map; 
+     typedef std::auto_ptr<pat::Electron> value_type;
+-
++    
+   private:
+     const std::string _errPostfix;
+ 
+     const CaloTopology* _topo;
+     const CaloGeometry* _geom;
+     const edm::Event* _event;
+-    const edm::EventSetup* _esetup;
+-
++    const edm::EventSetup* _esetup;    
++    
+     edm::InputTag _vtxsrc, _rhosrc;
+     std::string _dataset, _userP4Prefix;
+-    double _smearRatio;
+-    bool _isSync;
+ 
+     double _rho;
+     int    _nvtx;
+-
+-    edm::InputTag _recHitsEB,_recHitsEE;
++    
++    edm::InputTag _recHitsEB,_recHitsEE;    
+ 
+     apply_map _apply;
+     calib_map _calibs;
+     reg_map   _regs;
+-
++    
+   public:
+     PATElectronEnergyCorrection(const edm::ParameterSet&,
+ 				const bool isAOD,
+ 				const bool isMC);
+     ~PATElectronEnergyCorrection();
+-
+-    value_type operator() (const pat::ElectronRef&);
++    
++    value_type operator() (const pat::ElectronRef&);    
+ 
+     void setES(const edm::EventSetup& es);
+-    void setEvent(const edm::Event& ev);
+-
++    void setEvent(const edm::Event& ev);    
++    
+   };
+ 
+ }
+diff --git a/PatTools/python/electrons/patElectronEnergyCorrections_cfi.py b/PatTools/python/electrons/patElectronEnergyCorrections_cfi.py
+index 76d6580..be2f206 100644
+--- a/PatTools/python/electrons/patElectronEnergyCorrections_cfi.py
++++ b/PatTools/python/electrons/patElectronEnergyCorrections_cfi.py
+@@ -59,8 +59,6 @@ patElectronEnergyCorrections = cms.EDProducer(
+     src = cms.InputTag("fixme"),
+     isAOD = cms.bool(True),
+     isMC = cms.bool(True),
+-    smearRatio = cms.double(0.607), #fraction of data added on top of HCP -- (19.6-12.2)/12.2 = 0.607 for full 2012
+-    isSync = cms.bool(False), #if True-->use deterministic smearing
+     vtxSrc = cms.InputTag("selectPrimaryVerticesQuality"),
+     rhoSrc = cms.InputTag("kt6PFJets","rho"),
+     userP4Prefix = cms.string("EGCorr_")
+diff --git a/PatTools/src/PATElectronEnergyCorrection.cc b/PatTools/src/PATElectronEnergyCorrection.cc
+index a1c4166..0a12ae7 100644
+--- a/PatTools/src/PATElectronEnergyCorrection.cc
++++ b/PatTools/src/PATElectronEnergyCorrection.cc
+@@ -22,16 +22,16 @@
+ 
+ #include <stdio.h>
+ 
+-namespace pattools {
++namespace pattools { 
+ 
+   namespace { // hide a bunch of convenient typedefs
+     typedef edm::ParameterSet PSet;
+     typedef edm::VParameterSet VPSet;
+-
++        
+     typedef std::auto_ptr<pat::Electron> pelectron;
+     typedef std::vector<pelectron> vpelectron;
+     typedef pat::ElectronRef eRef;
+-
++    
+     typedef edm::ESHandle<CaloTopology> topo_hdl;
+     typedef edm::ESHandle<CaloGeometry> geom_hdl;
+ 
+@@ -42,26 +42,23 @@ namespace pattools {
+ 							   const bool isAOD,
+ 							   const bool isMC):
+     _errPostfix("_error") {
+-
++    
+     _userP4Prefix = conf.getParameter<std::string>("userP4Prefix");
+ 
+-    _smearRatio = conf.getParameter<double>("smearRatio");
+-    _isSync = conf.getParameter<bool>("isSync");
+-
+     _vtxsrc = conf.getParameter<edm::InputTag>("vtxSrc");
+     _rhosrc = conf.getParameter<edm::InputTag>("rhoSrc");
+ 
+     _recHitsEB = conf.getParameter<edm::InputTag>("recHitsEB");
+-    _recHitsEE = conf.getParameter<edm::InputTag>("recHitsEE");
+-
++    _recHitsEE = conf.getParameter<edm::InputTag>("recHitsEE");    
++    
+     // setup regression pool
+-    VPSet available_regressions =
++    VPSet available_regressions = 
+       conf.getParameterSetVector("available_regressions");
+-
++    
+     { // make iterators descope
+       VPSet::const_iterator i = available_regressions.begin();
+       VPSet::const_iterator e = available_regressions.end();
+-
++      
+       for( ; i != e; ++i) {
+ 	std::string type     = i->getParameter<std::string>("type");
+ 	std::string fWeights = i->getParameter<std::string>("weightsFile");
+@@ -72,27 +69,27 @@ namespace pattools {
+ 	  _regs[type] = std::make_pair(version,new regCalc());
+ 	  _regs[type].second->initialize(fWeights,
+ 				(regCalc::ElectronEnergyRegressionType)index);
+-	  if( _regs[type].second->isInitialized() )
++	  if( _regs[type].second->isInitialized() ) 
+ 	    std::cout << type << " is init!" << std::endl;
+-	}
++	}	
+ 	else {
+ 	  _regs[type] = std::make_pair(-1,new regCalc());
+ 	  // compiler yells at me if I try to instantiate to NULL
+ 	  delete _regs[type].second;
+ 	  _regs[type].second = NULL;
+ 	}
+-
++	
+       }
+     }
+-
++    
+     // setup calibration pool
+-    VPSet available_calibrations =
+-      conf.getParameterSetVector("available_calibrations");
++    VPSet available_calibrations = 
++      conf.getParameterSetVector("available_calibrations");  
+     // get applied calibrations
+-    vstring applyCalibrations =
++    vstring applyCalibrations = 
+       conf.getParameter<vstring>("applyCalibrations");
+     _dataset = conf.getParameter<std::string>("dataSet");
+-
++    
+     { // make iterators descope
+       VPSet::const_iterator i = available_calibrations.begin();
+       VPSet::const_iterator e = available_calibrations.end();
+@@ -106,34 +103,34 @@ namespace pattools {
+ 	int applyCorrections = i->getParameter<int>("applyCorrections");
+ 
+ 	if( applyCorrections >= 0 ) {
+-	  _calibs[type] =
+-	    new eCalib(_dataset,isAOD,isMC,true,applyCorrections,_smearRatio,false,_isSync);
++	  _calibs[type] = 
++	    new eCalib(_dataset,isAOD,isMC,true,applyCorrections,false);
+ 	  if( std::find(iapp,eapp,type) != eapp)
+ 	    _apply[type] = regType;
+-	}
+-	else
++	}	
++	else 
+ 	  _calibs[type] = NULL;
+-      }
+-    }
+-
++      }      
++    }    
++    
+   }
+-
++ 
+   PATElectronEnergyCorrection::~PATElectronEnergyCorrection() {
+     calib_map::iterator i = _calibs.begin();
+     calib_map::iterator e = _calibs.end();
+-    for(; i != e; ++i)
+-      if(i->second)
++    for(; i != e; ++i) 
++      if(i->second) 
+ 	delete i->second;
+ 
+     reg_map::iterator ii = _regs.begin();
+     reg_map::iterator ee = _regs.end();
+-    for(; ii != ee; ++ii)
++    for(; ii != ee; ++ii) 
+       if(ii->second.second)
+ 	delete ii->second.second;
+   }
+ 
+   PATElectronEnergyCorrection::value_type
+-  PATElectronEnergyCorrection::operator() (const eRef& ele) {
++  PATElectronEnergyCorrection::operator() (const eRef& ele) {    
+     value_type out = value_type(new value_type::element_type(*ele));
+ 
+     apply_map::const_iterator app = _apply.begin();
+@@ -143,7 +140,7 @@ namespace pattools {
+ 				   _recHitsEB,_recHitsEE);
+ 
+     float max_cor_pt = out->pt();
+-
++    
+     for( ; app != end; ++app ) {
+       value_type temp = value_type(new value_type::element_type(*ele));
+ 
+@@ -162,12 +159,12 @@ namespace pattools {
+ 								 clustools,
+ 								 *_esetup,
+ 								 _rho,_nvtx);
+-
+-	  math::XYZTLorentzVector oldP4,newP4;
++	  	  
++	  math::XYZTLorentzVector oldP4,newP4;	
+ 	  // recalculate then propagate the regression energy and errors
+ 	  switch( thisReg.first ) {
+ 	  case 1: // V1 regression (just ecal energy)
+-	    temp->setEcalRegressionEnergy(en,en_err); //HCP2012_V03-02
++	    temp->setEcalRegressionEnergy(en,en_err); //HCP2012_V03-02 
+ 	    temp->correctEcalEnergy(en,en_err); // this is for later versions?
+ 	    break;
+ 	  case 2: // V2 regression (including track variables)
+@@ -183,11 +180,11 @@ namespace pattools {
+ 	    break;
+ 	  }
+ 	}
+-
++	
+ 	pCalib thisCalib = _calibs[app->first];
+ 	if( thisCalib )
+-	  thisCalib->correct(*(temp.get()),temp.get()->r9(),*_event,*_esetup,temp.get()->ecalRegressionEnergy(),temp.get()->ecalRegressionError());
+-
++	  thisCalib->correct(*(temp.get()),*_event,*_esetup);
++	
+ 	out->addUserData<math::XYZTLorentzVector>(_userP4Prefix+
+ 						  _dataset+app->first,
+ 				  temp->p4(reco::GsfElectron::P4_COMBINATION));
+@@ -208,18 +205,18 @@ namespace pattools {
+ 			  temp->p4Error(temp->candidateP4Kind()));
+ 	this_pt = temp->p4(temp->candidateP4Kind()).pt();
+       }
+-      max_cor_pt = std::max(max_cor_pt,
++      max_cor_pt = std::max(max_cor_pt, 
+ 			    this_pt);
+     }
+ 
+     out->addUserFloat("maxCorPt",max_cor_pt);
+ 
+     return out;
+-  }
+-
+-  void PATElectronEnergyCorrection::setES(const edm::EventSetup& es) {
+-    _esetup = &es;
++  }  
+ 
++  void PATElectronEnergyCorrection::setES(const edm::EventSetup& es) { 
++    _esetup = &es; 
++    
+     edm::ESHandle<CaloTopology> topo;
+     _esetup->get<CaloTopologyRecord>().get(topo);
+ 
+@@ -230,7 +227,7 @@ namespace pattools {
+     _geom = geom.product();
+   }
+ 
+-  void PATElectronEnergyCorrection::setEvent(const edm::Event& ev) {
++  void PATElectronEnergyCorrection::setEvent(const edm::Event& ev) { 
+     _event  = &ev;
+ 
+     edm::Handle<double> rho;
+@@ -240,5 +237,5 @@ namespace pattools {
+     edm::Handle<reco::VertexCollection> vtxs;
+     _event->getByLabel(_vtxsrc,vtxs);
+     _nvtx = vtxs->size();
+-  }
++  }  
+ }

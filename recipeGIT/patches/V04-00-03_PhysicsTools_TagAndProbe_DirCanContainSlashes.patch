@@ -1,0 +1,173 @@
+? PhysicsTools/TagAndProbe/python/__init__.py
+Index: PhysicsTools/TagAndProbe/src/TagProbeFitter.cc
+===================================================================
+RCS file: /cvs_server/repositories/CMSSW/CMSSW/PhysicsTools/TagAndProbe/src/TagProbeFitter.cc,v
+retrieving revision 1.21
+diff -r1.21 TagProbeFitter.cc
+3a4
+> #include <boost/algorithm/string/erase.hpp>
+50c51,53
+<   outputDirectory = outputFile->mkdir(inputDirectoryName.c_str());
+---
+>   std::string cleanDirectory = boost::algorithm::erase_all_copy(
+>       inputDirectoryName, "/");
+>   outputDirectory = outputFile->mkdir(cleanDirectory.c_str());
+77,78c80,81
+< void TagProbeFitter::setQuiet(bool quiet_) { 
+<     quiet = quiet_; 
+---
+> void TagProbeFitter::setQuiet(bool quiet_) {
+>     quiet = quiet_;
+185c188
+<  
+---
+> 
+187c190
+<   RooDataSet data("data", "data", inputTree, 
+---
+>   RooDataSet data("data", "data", inputTree,
+201c204
+<  
+---
+> 
+209c212
+<  
+---
+> 
+222c225
+<       RooArgSet rooEffCats; 
+---
+>       RooArgSet rooEffCats;
+242c245
+<   
+---
+> 
+285c288
+<     
+---
+> 
+314c317
+<       meanOfVariables.addClone(*data_bin->get(0), true); 
+---
+>       meanOfVariables.addClone(*data_bin->get(0), true);
+339c342
+<   
+---
+> 
+367c370
+<   setInitialValues(w);  
+---
+>   setInitialValues(w);
+371c374
+<   if (binnedFit) { 
+---
+>   if (binnedFit) {
+373c376
+<     const RooArgSet *dataObs = data->get(0); 
+---
+>     const RooArgSet *dataObs = data->get(0);
+376c379
+<     RooDataHist *bdata = new RooDataHist("data_binned", "data_binned", *obs, *data); 
+---
+>     RooDataHist *bdata = new RooDataHist("data_binned", "data_binned", *obs, *data);
+389c392
+<   /////   ---> if "floatShapeParameters==true" && "fixVars is empty" : 
+---
+>   /////   ---> if "floatShapeParameters==true" && "fixVars is empty" :
+391c394
+<   /////   ---> if "floatShapeParameters==true" && "fixVars is NOT empty" : 
+---
+>   /////   ---> if "floatShapeParameters==true" && "fixVars is NOT empty" :
+394c397
+<   ////    ---> if "floatShapeParameters==false" && "fixVars is empty" : 
+---
+>   ////    ---> if "floatShapeParameters==false" && "fixVars is empty" :
+396,398c399,402
+<   ////    ---> if "floatShapeParameters==false" && "fixVars is NOT empty" : 
+<   ///              Perform a global fit to the whole sample, save the fitted values of the 
+<   ///              user specified parameters, and fix them for bin-by-bin fit. 
+---
+>   ////    ---> if "floatShapeParameters==false" && "fixVars is NOT empty" :
+>   ///              Perform a global fit to the whole sample, save the fitted values of the
+>   ///              user specified parameters, and fix them for bin-by-bin fit.
+> 
+400d403
+<       
+406c409
+<       // to get reasonable values. 
+---
+>       // to get reasonable values.
+413c416
+<       //do fit 
+---
+>       //do fit
+417c420
+<       //do fit 
+---
+>       //do fit
+423c426
+<     
+---
+> 
+427,428c430,431
+<     
+<     // if we don't want to "floatShapeParameters" we just fix, fit, 
+---
+> 
+>     // if we don't want to "floatShapeParameters" we just fix, fit,
+435c438
+<   
+---
+> 
+440c443
+<     
+---
+> 
+464c467
+<     double cerr = ROOT::Math::beta_quantile( 1-(1.0-.68540158589942957)/2, 1, nS->getVal() ); 
+---
+>     double cerr = ROOT::Math::beta_quantile( 1-(1.0-.68540158589942957)/2, 1, nS->getVal() );
+503c506
+<     if (w->pdf("signal") != 0) throw std::logic_error("You must either define one 'signal' PDF or two PDFs ('signalPass', 'signalFail'), not both!"); 
+---
+>     if (w->pdf("signal") != 0) throw std::logic_error("You must either define one 'signal' PDF or two PDFs ('signalPass', 'signalFail'), not both!");
+507c510
+<         throw std::logic_error("You must either define one 'signal' PDF or two PDFs ('signalPass', 'signalFail'), not both!"); 
+---
+>         throw std::logic_error("You must either define one 'signal' PDF or two PDFs ('signalPass', 'signalFail'), not both!");
+568,569c571,572
+<   RooAbsData* dataPass = dataAll->reduce(Cut("_efficiencyCategory_==_efficiencyCategory_::Passed")); 
+<   RooAbsData* dataFail = dataAll->reduce(Cut("_efficiencyCategory_==_efficiencyCategory_::Failed")); 
+---
+>   RooAbsData* dataPass = dataAll->reduce(Cut("_efficiencyCategory_==_efficiencyCategory_::Passed"));
+>   RooAbsData* dataFail = dataAll->reduce(Cut("_efficiencyCategory_==_efficiencyCategory_::Failed"));
+629,630c632,633
+<   RooAbsData* dataPass = dataAll->reduce(Cut("_efficiencyCategory_==_efficiencyCategory_::Passed")); 
+<   RooAbsData* dataFail = dataAll->reduce(Cut("_efficiencyCategory_==_efficiencyCategory_::Failed")); 
+---
+>   RooAbsData* dataPass = dataAll->reduce(Cut("_efficiencyCategory_==_efficiencyCategory_::Passed"));
+>   RooAbsData* dataFail = dataAll->reduce(Cut("_efficiencyCategory_==_efficiencyCategory_::Failed"));
+684c687
+<       }  
+---
+>       }
+699c702
+<         }        
+---
+>         }
+731c734
+<   delete p;  
+---
+>   delete p;
+779c782
+<   for(it=fixVars.begin(); it<fixVars.end(); it++){    
+---
+>   for(it=fixVars.begin(); it<fixVars.end(); it++){
+797c800
+<   
+---
+> 
+807c810
+<     std::cout << "fixVars and fixVarValues are not of the same size!" << std::endl; 
+---
+>     std::cout << "fixVars and fixVarValues are not of the same size!" << std::endl;

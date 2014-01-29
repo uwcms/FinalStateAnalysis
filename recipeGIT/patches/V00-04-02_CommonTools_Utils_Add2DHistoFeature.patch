@@ -1,0 +1,126 @@
+Index: CommonTools/Utils/interface/ExpressionHisto.h
+===================================================================
+RCS file: /cvs_server/repositories/CMSSW/CMSSW/CommonTools/Utils/interface/ExpressionHisto.h,v
+retrieving revision 1.1
+diff -r1.1 ExpressionHisto.h
+7c7
+< // 
+---
+> //
+10c10
+<  Description: Histogram tool using expressions 
+---
+>  Description: Histogram tool using expressions
+30a31
+> #include "TH2F.h"
+38c39
+<   
+---
+> 
+45,46c46,47
+<   bool fill(const T& element, double weight=1.0, uint32_t i=0);  
+<   
+---
+>   bool fill(const T& element, double weight=1.0, uint32_t i=0);
+> 
+48,49c49,53
+<   double min, max;
+<   int nbins;
+---
+>   void fillHisto(TH1* histo, const T& element, double weight);
+> 
+>   double minX, maxX, minY, maxY;
+>   int nbinsX, nbinsY;
+>   bool is2D;
+53,54c57,59
+<   TH1F ** hist;
+<   StringObjectFunction<T> function;      
+---
+>   TH1 ** hist;
+>   std::auto_ptr<StringObjectFunction<T> > xAxisFunction;
+>   std::auto_ptr<StringObjectFunction<T> > yAxisFunction;
+59,61d63
+<   min(iConfig.template getUntrackedParameter<double>("min")),
+<   max(iConfig.template getUntrackedParameter<double>("max")),
+<   nbins(iConfig.template getUntrackedParameter<int>("nbins")),
+63,65c65,97
+<   description(iConfig.template getUntrackedParameter<std::string>("description")),
+<   function(iConfig.template getUntrackedParameter<std::string>("plotquantity"), 
+<            iConfig.template getUntrackedParameter<bool>("lazyParsing", false)) {
+---
+>   description(iConfig.template getUntrackedParameter<std::string>("description")) {
+> 
+>   // Detect if this is a 2D or 1D histogram
+>   if (iConfig.exists("xAxis")) {
+>     is2D = true;
+> 
+>     edm::ParameterSet xAxis =
+>       iConfig.getUntrackedParameter<edm::ParameterSet>("xAxis");
+>     minX = xAxis.getUntrackedParameter<double>("min");
+>     maxX = xAxis.getUntrackedParameter<double>("max");
+>     nbinsX = xAxis.getUntrackedParameter<int>("nbins");
+>     xAxisFunction.reset(new StringObjectFunction<T>(
+>           xAxis.getUntrackedParameter<std::string>("plotquantity"),
+>           xAxis.getUntrackedParameter<bool>("lazyParsing", false)));
+> 
+>     edm::ParameterSet yAxis =
+>       iConfig.getUntrackedParameter<edm::ParameterSet>("yAxis");
+>     minY = yAxis.getUntrackedParameter<double>("min");
+>     maxY = yAxis.getUntrackedParameter<double>("max");
+>     nbinsY = yAxis.getUntrackedParameter<int>("nbins");
+>     yAxisFunction.reset(new StringObjectFunction<T>(
+>           yAxis.getUntrackedParameter<std::string>("plotquantity"),
+>           yAxis.getUntrackedParameter<bool>("lazyParsing", false)));
+>   } else {
+>     is2D = false;
+>     minX = iConfig.getUntrackedParameter<double>("min");
+>     maxX = iConfig.getUntrackedParameter<double>("max");
+>     nbinsX = iConfig.getUntrackedParameter<int>("nbins");
+>     xAxisFunction.reset(new StringObjectFunction<T>(
+>           iConfig.getUntrackedParameter<std::string>("plotquantity"),
+>           iConfig.getUntrackedParameter<bool>("lazyParsing", false)));
+>   }
+> 
+79c111
+< void ExpressionHisto<T>::initialize(TFileDirectory& fs) 
+---
+> void ExpressionHisto<T>::initialize(TFileDirectory& fs)
+81c113
+<    hist = new TH1F*[nhistos];
+---
+>    hist = new TH1*[nhistos];
+95c127,130
+<                hist[i] = fs.make<TH1F>(buff,baff,nbins,min,max);
+---
+>                if (is2D)
+>                  hist[i] = fs.make<TH2F>(buff,baff,nbinsX,minX,maxX,nbinsY,minY,maxY);
+>                else
+>                  hist[i] = fs.make<TH1F>(buff,baff,nbinsX,minX,maxX);
+98c133,136
+<        hist[0] = fs.make<TH1F>(name.c_str(),description.c_str(),nbins,min,max);
+---
+>       if (is2D)
+>        hist[0] = fs.make<TH2F>(name.c_str(),description.c_str(),nbinsX,minX,maxX,nbinsY,minY,maxY);
+>       else
+>        hist[0] = fs.make<TH1F>(name.c_str(),description.c_str(),nbinsX,minX,maxX);
+103c141,152
+< bool ExpressionHisto<T>::fill(const T& element, double weight, uint32_t i) 
+---
+> void ExpressionHisto<T>::fillHisto(TH1* histo, const T& element, double weight){
+>   if (is2D) {
+>     static_cast<TH2*>(histo)->Fill(
+>         (*xAxisFunction)(element), (*yAxisFunction)(element), weight);
+>   } else {
+>     histo->Fill((*xAxisFunction)(element),  weight);
+>   }
+> }
+> 
+> 
+> template<typename T>
+> bool ExpressionHisto<T>::fill(const T& element, double weight, uint32_t i)
+105,106c154,155
+<   if (!separatePlots) hist[0]->Fill( function(element), weight );
+<   else if (i < nhistos)  hist[i]->Fill( function(element), weight );
+---
+>   if (!separatePlots) fillHisto(hist[0], element, weight);
+>   else if (i < nhistos)  fillHisto(hist[i], element, weight);
