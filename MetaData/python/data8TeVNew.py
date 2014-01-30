@@ -521,6 +521,12 @@ for mass in range(110, 165, 5) :
       }
 
 # Double Charged Higgs Signal Samples
+dblh_4l_xsec = {110: 8730.9,  130: 186.21,  150: 106.55,
+                170: 64.641,  200: 33.209,  250: 12.724,
+                300: 5.5458,  350: 2.6413,  400: 1.3414,
+                450: 0.71531, 500: 0.39604, 600: 0.13271,
+                700: 0.48382e-1}
+
 for mass in [110, 130, 150, 170, 200, 250, 300, 350, 400, 450, 500, 600, 700]:
     if mass >= 170:
         datadefs['HPlusPlusHMinusHTo3L_M-%i_8TeV-calchep-pythia6' % mass] = {
@@ -535,7 +541,7 @@ for mass in [110, 130, 150, 170, 200, 250, 300, 350, 400, 450, 500, 600, 700]:
         'analyses' : ['HPP'],
         'datasetpath' : '/HPlusPlusHMinusMinusHTo4L_M-%i_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM' % mass,
         'pu' : 'S10',
-        'x_sec' : -999,
+        'x_sec' : dblh_4l_xsec[mass],
         'calibrationTarget' : 'Summer12_DR53X_HCP2012'
         }
 
