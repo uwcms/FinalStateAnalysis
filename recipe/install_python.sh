@@ -62,7 +62,7 @@ then
     if [ ! -d "hdf5-1.8.11" ]
     then
         echo "Downloading HDF5"
-        wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.11.tar.gz
+        wget http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8.11/src/hdf5-1.8.11.tar.gz
         tar xvzf hdf5-1.8.11.tar.gz
         cd hdf5-1.8.11
         ./configure --prefix=$hdf5
