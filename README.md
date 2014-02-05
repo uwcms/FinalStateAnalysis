@@ -27,7 +27,8 @@ Installation
 ------------
 
 Current CMSSW versions: ``5_3_14``.
-The installation instructions are the same for both.  
+
+If you have not done so already, set up Git following the instructions here: http://cms-sw.github.io/cmssw/faq.html#general_questions
 
 Get a supported CMSSW release area::
 
@@ -46,6 +47,41 @@ Checkout the FinalStateAnalysis repository::
   git clone --recursive https://github.com/uwcms/FinalStateAnalysis.git
   cd FinalStateAnalysis
 ```
+
+Now, check out the FSA dependencies from CMSSW (using Git).
+
+```bash
+cd recipeGIT
+kinit [your_cern_username]@CERN.CH
+./recipe.sh
+cd ../../
+scram b -j 8
+```
+
+Now, you need to set the relevant environment variables and such
+
+```bash
+cmsenv
+source $CMSSW_BASE/src/FinalStateAnalysis/environment.sh
+```
+
+To use the extra Python tools, install a Python virtualenv and extra packages. This is not needed for PAT-tuples. It is needed for UWHiggs, however.
+
+```bash
+cd $CMSSW_BASE/src/FinalStateAnalysis/recipe
+./install_python.sh
+source environment.sh
+```
+
+If you wish to use PyTables (along with the HDF5 library), run the install script with
+
+```bash
+PYTABLES=1 ./install_python.sh
+```
+
+
+Old CVS Recipe
+----------
 
 This will checkout the lastest and greatest version of the code.  You might also want the Summer 2013 compatible branch, if so you should additionally run:
 ```bash
