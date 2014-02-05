@@ -3,7 +3,7 @@
 //From FinalStateAnalysis/StatTools
 #include "FinalStateAnalysis/StatTools/interface/RooDataHistEffBuilder.h"
 #include "FinalStateAnalysis/StatTools/interface/RooCruijff.h"
-#include "FinalStateAnalysis/StatTools/interface/TEfficiencyBugFixed.h"
+//#include "FinalStateAnalysis/StatTools/interface/TEfficiencyBugFixed.h"
 #include "FinalStateAnalysis/StatTools/interface/functions.h"
 
 //From FinalStateAnalysis/TagAndProbe
@@ -24,7 +24,7 @@
 //From FinalStateAnalysis/StatTools
 #pragma link C++ class RooDataHistEffBuilder;
 #pragma link C++ class RooCruijff;
-#pragma link C++ class TEfficiencyBugFixed;
+//#pragma link C++ class TEfficiencyBugFixed;
 #pragma link C++ function RooCruijffFcn;
 
 //From FinalStateAnalysis/TagAndProbe
