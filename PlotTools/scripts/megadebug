@@ -89,7 +89,8 @@ if __name__ == "__main__":
     class_name = module_name.replace('.py', '')
     log.info("Importing class %s from %s", class_name, path_to_selector)
 
-    module = __import__(class_name, fromlist=[args.selections])
+    module = __import__(class_name, fromlist=[class_name]) #fromlist=[args.selections])
+    selector = getattr(module, class_name)
     log.info("Loading %i selections", len(args.selections))
     selections = []
     for selection in args.selections:
@@ -101,7 +102,10 @@ if __name__ == "__main__":
 
         selection = selection.replace('+', '')
         selection = selection.replace('-', '')
-        selections.append( (selection, getattr(module, selection), command) )
+        try:
+            selections.append( (selection, getattr(selector, selection), command) )
+        except AttributeError:
+            raise AttributeError("'%s' object has no attribute '%s'. Available attributes: %s" % (args.selector, selection, dir(selector)))
 
     log.info("Beginning loop over %i TChain entries", chain.GetEntries())
 

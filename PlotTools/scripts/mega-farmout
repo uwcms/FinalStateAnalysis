@@ -14,6 +14,7 @@ import shutil
 import subprocess
 import tempfile
 import time
+from pdb import set_trace
 
 # Try and make pretty colors if termcolor is installed.
 try:
@@ -73,11 +74,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    log.info("Processing %s using %s", args.inputs, args.selector)
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
     else:
-        logging.basicConfig(level=logging.WARNING)
+        logging.basicConfig(level=logging.INFO)
+    log.info("Processing %s using %s, the output file will be %s", args.inputs, args.selector, args.output)
 
     # Figure out a nice working directory to create condor submissions
     inputs_nice_name = os.path.basename(args.inputs).replace('.txt', '')
@@ -98,8 +99,13 @@ if __name__ == "__main__":
         x.replace('/hdfs', '') for x in find_input_files(args.inputs))
 
     # Write the resolved input file names in temporary file
+    # Determine number of files and jobs to process
+    nfiles = len(resolved_input_files)
+    njobs = (nfiles + (args.filesinjob - 1)) / args.filesinjob
+    log.info("Running over %i files in %i jobs", nfiles, njobs)
+
     with tempfile.NamedTemporaryFile() as tmp_input_filelist:
-        tmp_input_filelist.write('\n'.join(resolved_input_files))
+        tmp_input_filelist.write('\n'.join(resolved_input_files)+'\n')
         tmp_input_filelist.flush()
         # Generate farmout command for analysis step.
         farmout_cmd = [
@@ -111,7 +117,11 @@ if __name__ == "__main__":
             '--fwklite',
             '--infer-cmssw-path',
             '--output-dag-file=%s/job.dag' % working_dir,
-            '--no-submit',  # submitted by merge job via DAG dependencies
+            ]
+        if njobs != 1:
+            farmout_cmd.append('--no-submit') # submitted by merge job via DAG dependencies
+        
+        farmout_cmd.extend([
             '--shared-fs',  # Figure out how to remove this later.
             'Analyze',      # The job name
             # Begin script command
@@ -124,43 +134,39 @@ if __name__ == "__main__":
             "$outputFileName",
             os.getcwd(),
             args.tree,
-        ]
+        ])
         subprocess.check_call(farmout_cmd)
 
-    # Determine number of files and jobs to process
-    nfiles = len(resolved_input_files)
-    njobs = (nfiles + (args.filesinjob - 1)) / args.filesinjob
-    log.info("Running over %i files in %i jobs", nfiles, njobs)
+    if njobs != 1:
+        # Determine the number of merge layers needed.
+        # Find N where (files-per-merge)^N = num-analysis-jobs, rounding up.
+        num_merge_layers = int(math.ceil(math.log(njobs, args.filesinmerge)))
 
-    # Determine the number of merge layers needed.
-    # Find N where (files-per-merge)^N = num-analysis-jobs, rounding up.
-    num_merge_layers = int(math.ceil(math.log(njobs, args.filesinmerge)))
+        merge_layer_names = ['MergeLayer%i' % i for i in range(num_merge_layers)]
+        # Give the last merge layer a nice name
+        merge_layer_names[-1] = 'FinalMerged'
 
-    merge_layer_names = ['MergeLayer%i' % i for i in range(num_merge_layers)]
-    # Give the last merge layer a nice name
-    merge_layer_names[-1] = 'FinalMerged'
+        previous_submit_dir = '%s/analyze' % working_dir
 
-    previous_submit_dir = '%s/analyze' % working_dir
-
-    # Generate farmout command for each merge step.
-    for idx, layer_name in enumerate(merge_layer_names):
-        merge_cmd = [
-            'farmoutAnalysisJobs',
-            '--submit-dir=%s/%s' % (working_dir, layer_name),
-            '--last-submit-dir=%s' % previous_submit_dir,
-            '--output-dag-file=%s/job.dag' % working_dir,
-            '--input-files-per-job=%i' % args.filesinmerge,
-            '--output-dir=%s' % (output_path),
-            '--infer-cmssw-path',
-            '--merge',
-            '--use-hadd'
-        ]
-        previous_submit_dir = '%s/%s' % (working_dir, layer_name)
-        # Only submit the final job. It submits all it's dependencies.
-        if idx != len(merge_layer_names) - 1:
-            merge_cmd.append('--no-submit')
-        merge_cmd.append(layer_name)
-        subprocess.check_call(merge_cmd)
+        # Generate farmout command for each merge step.
+        for idx, layer_name in enumerate(merge_layer_names):
+            merge_cmd = [
+                'farmoutAnalysisJobs',
+                '--submit-dir=%s/%s' % (working_dir, layer_name),
+                '--last-submit-dir=%s' % previous_submit_dir,
+                '--output-dag-file=%s/job.dag' % working_dir,
+                '--input-files-per-job=%i' % args.filesinmerge,
+                '--output-dir=%s' % (output_path),
+                '--infer-cmssw-path',
+                '--merge',
+                '--use-hadd'
+            ]
+            previous_submit_dir = '%s/%s' % (working_dir, layer_name)
+            # Only submit the final job. It submits all it's dependencies.
+            if idx != len(merge_layer_names) - 1:
+                merge_cmd.append('--no-submit')
+            merge_cmd.append(layer_name)
+            subprocess.check_call(merge_cmd)
 
     # Parse the DAG file
     dag = CondorDAG(working_dir + '/job.dag')

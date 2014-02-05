@@ -183,7 +183,8 @@ def get_branches(tree):
     type_map = {
         'F': 'float',
         'I': 'int',
-        'D': 'double'
+        'D': 'double',
+        'i': 'long',
     }
 
     for branch in tree.GetListOfBranches():

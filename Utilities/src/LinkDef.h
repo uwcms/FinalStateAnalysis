@@ -9,6 +9,8 @@
 //From FinalStateAnalysis/TagAndProbe
 #include "FinalStateAnalysis/TagAndProbe/interface/MuonPOG2011HLTEfficiencies.h"
 #include "FinalStateAnalysis/TagAndProbe/interface/ScaleFactorsMuEG201253X.h"
+#include "FinalStateAnalysis/TagAndProbe/interface/ScaleFactorsDoubleE.h"
+#include "FinalStateAnalysis/TagAndProbe/interface/ScaleFactorsDoubleMu.h"
 
 #ifdef __CINT__
 #pragma link off all globals;
@@ -41,5 +43,11 @@
 #pragma link C++ function eleTrigEff_MuEG_2012_53X;
 #pragma link C++ function muIDscale_MuEG_2012_53X;
 #pragma link C++ function eleIDscale_MuEG_2012_53X;
+#pragma link C++ function Trg_DoubleEle_2011;
+#pragma link C++ function Trg_DoubleEle_2012;
+#pragma link C++ function Corr_Trg_Ele_2012_53X;
+#pragma link C++ function Trg_DoubleMu_2012;
+#pragma link C++ function eleTIGHTIDscale_2012_53X;
+#pragma link C++ function eleTIGHTIDscale_2011;
 
 #endif

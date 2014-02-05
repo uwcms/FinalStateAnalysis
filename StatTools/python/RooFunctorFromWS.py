@@ -21,6 +21,7 @@ Author: Evan K. Friis, UW Madison
 
 from FinalStateAnalysis.Utilities.rootbindings import ROOT
 import array
+from pdb import set_trace
 from FinalStateAnalysis.PlotTools.decorators import memo_last
 
 #ROOT.gSystem.Load("libFinalStateAnalysisStatTools")
@@ -39,6 +40,32 @@ class RooFunctorFromWS(ROOT.RooFunctor):
     def __call__(self, x):
         self.x.setVal(x)
         return self.function.getVal()
+
+class FunctorFromTF1(object):
+    def __init__(self, tfile_name, path):
+        # Get the RooFormulaVar
+        self.tfile    = ROOT.TFile.Open(tfile_name)
+        self.function = self.tfile.Get(path)
+
+    def __call__(self, x):
+        return self.function.Eval(x)
+
+class MultiFunctorFromTF1(object):
+    def __init__(self, tfile_name, paths_and_borders):
+        # Get the RooFormulaVar
+        self.tfile    = ROOT.TFile.Open(tfile_name)
+        self.fcns_and_borders = []
+        for path, borders in paths_and_borders:
+            self.fcns_and_borders.append(
+                (self.tfile.Get(path),
+                borders)
+                )
+
+    def __call__(self, x, y):
+        for fcn, border in self.fcns_and_borders:
+            if border[0] <= y < border[1]:
+                return fcn.Eval(x)
+        raise ValueError("MultiFunctorFromTF1: y range aoutside boundaries!")
 
 class FunctorFromMVA(object):
     def __init__(self, name, xml_filename, *variables, **kwargs):
@@ -66,9 +93,48 @@ class FunctorFromMVA(object):
         for name, val in kvars.iteritems():
             self.var_map[name][0] = val
         retval = self.evaluate_() #reader.EvaluateMVA(self.name)
-        if retval == 1:
-            print "returning 1 in %s, kvars: %s" % (self.xml_filename, kvars.items()) 
+        #if retval == 1:
+        #    print "returning 1 in %s, kvars: %s" % (self.xml_filename, kvars.items()) 
         return retval
+
+
+class MultiFunctorFromMVA(object):
+    '''Phil's diboson subtraction implementation'''
+    def __init__(self, name, data_and_lumi, mcs_and_lumis, *variables, **kwargs):
+        phase_space = kwargs.get('phase_space','')
+        print 'phase_space: %s' % phase_space
+        self.functors_and_weights = []
+        data_xml, data_lumi = data_and_lumi
+        self.functors_and_weights.append(
+            (FunctorFromMVA('_'.join([name, data_xml]), data_xml, *variables, **kwargs),
+             1.)
+        )
+        #compute data phase space
+        training_path = kwargs.get('training_ntuple','training_ntuple')
+        tfile    = ROOT.TFile.Open(data_xml.replace('weights.xml','root'))
+        training = tfile.Get(training_path)
+        data_phase_space = training.GetEntries(phase_space)
+        tfile.Close()
+
+        for xml, lumi in mcs_and_lumis:
+            weight   = data_lumi / lumi
+            tfile    = ROOT.TFile.Open(xml.replace('weights.xml','root'))
+            training = tfile.Get(training_path)
+            mc_phase_space = training.GetEntries(phase_space)
+            tfile.Close()            
+            weight *= float(mc_phase_space) / float(data_phase_space)
+            weight *= -1
+            self.functors_and_weights.append(
+                (FunctorFromMVA('_'.join([name, xml]), xml, *variables, **kwargs),
+                 weight)
+                )
+
+    @memo_last
+    def __call__(self, **kvars):
+        return sum(
+            weight*functor(**kvars) for functor, weight in self.functors_and_weights
+            )
+
 
 def build_roofunctor(filename, wsname, functionname, var='x'):
     ''' Build a functor from a filename '''
