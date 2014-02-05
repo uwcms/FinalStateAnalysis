@@ -52,7 +52,14 @@ fi
 
 echo "Store your git ssh password"
 eval `ssh-agent -s` 
-ssh-add
+if ssh-add; then
+    echo "ssh agent properly configured"
+else
+    echo "ssh agent could not retreive your git password!"
+    echo "This is probably due to the fact that you did not install either locally or on gitHub the ssh-key access"
+    echo "follow the instructions on https://help.github.com/articles/generating-ssh-keys and launch again this command"
+    exit 42
+fi
 
 echo "I'm going to install the FinalStateAnalysis with the following options:"
 echo " Limit setting (\$LIMITS): $LIMITS"
