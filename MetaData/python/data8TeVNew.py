@@ -116,14 +116,14 @@ datadefs = {
    'pu' : 'S10',
    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
-   'Zjets_M50' : {
+   'Zjets_M50_S10' : {
    'analyses': ['ET'],
    'datasetpath': '/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
    'pu': 'S10',
    'calibrationTarget': 'Summer12',
    'xsec': -999,
    },
-    'Z2jets_M50' : {
+    'Z2jets_M50_S10' : {
         'analyses': ['ET'],
         'datasetpath': '/DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM',
         'pu': 'S10',
@@ -395,7 +395,7 @@ datadefs = {
         'x_sec': 37509, # this is the W xsec in the StandardModelReference twiki
     },
 
-   'WplusJets_madgraph' : {
+   'WplusJets_madgraph_S10' : {
    'analyses': ['HTT'],
    'datasetpath' : "/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : -999,
