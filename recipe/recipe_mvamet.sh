@@ -16,8 +16,8 @@ pushd $CMSSW_BASE/src
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   # Add MVA MET
-  if [ "$LEAST_VERSION" -eq "9" ] && [ "$MINOR_VERSION" -eq "3" ]; then
-      echo "The mva met stuff will ONLY work in 5314! If you want to stay in 539, you need CSV access."
+  if [ "$LEAST_VERSION" -lt 14 ] && [ "$MINOR_VERSION" -eq "3" ]; then
+      echo "The mva met stuff will ONLY work in version > 5.3.14! If you want to stay in 539, you need CSV access."
   else
       git cms-addpkg PhysicsTools/PatAlgos
       git cms-merge-topic cms-analysis-tools:5_3_14-updateSelectorUtils

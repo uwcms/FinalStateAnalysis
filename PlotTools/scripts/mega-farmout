@@ -85,7 +85,7 @@ if __name__ == "__main__":
     selector_nice_name = os.path.basename(args.selector).replace('.py', '')
     working_dir = tempfile.mkdtemp(
         suffix=selector_nice_name + '-' + inputs_nice_name,
-        dir='/scratch/%s/' % os.environ['LOGNAME']
+        dir='/nfs_scratch/%s/' % os.environ['LOGNAME']
     )
     log.info("Generating submit scripts in %s", working_dir)
 
