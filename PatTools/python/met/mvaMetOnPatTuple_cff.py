@@ -11,10 +11,13 @@ import FWCore.ParameterSet.Config as cms
 
 from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
 from FinalStateAnalysis.Utilities.version import cmssw_major_version
+#from pdb import set_trace
+
+#set_trace()
 
 try:
     if cmssw_major_version() == 5:
-        from JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff import \
+        from RecoMET.METPUSubtraction.mvaPFMET_leptons_cff import \
                 calibratedAK5PFJetsForPFMEtMVA, pfMEtMVA, \
                 isomuons, isoelectrons
     else:
