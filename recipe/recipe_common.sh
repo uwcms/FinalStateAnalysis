@@ -5,43 +5,41 @@ set -o nounset
 pushd $CMSSW_BASE/src
 
 #for standalone version of svfit
- cvs co -r V00-01-04s TauAnalysis/CandidateTools
-
-# for some reason patTuple creation fails due to lack  of plugin PFCandIsolatorFromDeposits
-# to fix
-cvs co -r V00-03-13 CommonTools/ParticleFlow
+# cvs co -r V00-01-04s TauAnalysis/CandidateTools
+git clone https://github.com/cms-analysis/TauAnalysis-CandidateTools.git TauAnalysis/CandidateTools
+pushd $CMSSW_BASE/src/TauAnalysis/CandidateTools
+git checkout TauAnalysis-CandidateTools-V00-01-04s
+pushd $CMSSW_BASE/src
 
 # Tags that work in any release
 
 # To install lumiCalc.py
-if [ "$LUMI" = "1" ] 
+if [ "$LUMI" = "1" ]
 then
-  cvs co -r V04-02-10 RecoLuminosity/LumiDB 
+git clone https://github.com/cms-sw/RecoLuminosity-LumiDB.git RecoLuminosity/LumiDB
+pushd $CMSSW_BASE/src/RecoLuminosity/LumiDB
+git checkout V04-02-10
+pushd $CMSSW_BASE/src
 fi
 
 # Add and patch to way speed up trigger matching
 # Don't crash if patch already applied.
-set +o errexit 
+set +o errexit
 echo "Applying pat trigger matching speedup"
 patch -N -p0 < FinalStateAnalysis/recipe/patches/V06-04-16_DataFormats_PatCandidates_PassStrByRef.patch
 set -o errexit
-
-#echo "Adding 2D expression histogram feature"
-#addpkg -z CommonTools/Utils 
-#patch -N -p0 < FinalStateAnalysis/recipe/patches/V00-04-02_CommonTools_Utils_Add2DHistoFeature.patch
-#set -o errexit
 
 # Only checkout PAT tuple production dependencies if requested.
 if [ "$PATPROD" = "1" ]
 then
   # Set the compile time flag which enables PAT modules that have external
-  # dependencies. 
-  cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF 
+  # dependencies.
+  cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF
 #define ENABLE_PAT_PROD
 EOF
 
 else
-  cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF 
+cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF
 //#define ENABLE_PAT_PROD
 EOF
 

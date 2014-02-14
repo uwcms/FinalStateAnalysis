@@ -12,6 +12,9 @@ import sys
 import math
 
 if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print 'Usage:\n    deltaR.py eta1,phi1 eta2,phi2 '
+        sys.exit(0)
     pair1 = sys.argv[1]
     pair2 = sys.argv[2]
 

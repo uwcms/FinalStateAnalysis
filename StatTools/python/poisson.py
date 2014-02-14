@@ -47,12 +47,15 @@ def poisson_errors(N, coverage=0.6827):
     return L, U
 
 
-def convert(histogram, x_err=True, set_zero_bins=None):
+def convert(histogram, x_err=True, set_zero_bins=None, is_scaled=False):
     ''' Convert a histogram into a TGraphAsymmErrors with Poisson errors '''
     output = ROOT.TGraphAsymmErrors(histogram)
 
     for i in xrange(output.GetN()):
-        yield_in_bin = output.GetY()[i]
+        multiplier = 1.
+        if is_scaled:
+            multiplier = output.GetErrorXhigh(i) + output.GetErrorXlow(i)
+        yield_in_bin = output.GetY()[i] * multiplier
         N = ROOT.TMath.Nint(yield_in_bin)
         if abs(yield_in_bin - N) > 1e-4:
             raise ValueError("Bin %i has non-integer value %0.5f" %
@@ -66,8 +69,8 @@ def convert(histogram, x_err=True, set_zero_bins=None):
         alpha = 1.0-0.6827
         L, U = poisson_errors(N)
 
-        output.SetPointEYlow(i, N - L)
-        output.SetPointEYhigh(i, U - N)
+        output.SetPointEYlow( i, (N - L) / multiplier )
+        output.SetPointEYhigh(i, (U - N) / multiplier )
         if not x_err:
             output.SetPointEXlow(i, 0)
             output.SetPointEXhigh(i, 0)

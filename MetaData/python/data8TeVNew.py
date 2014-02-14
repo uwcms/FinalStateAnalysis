@@ -114,8 +114,45 @@ datadefs = {
    'datasetpath' : "/T_t-channel-DR_TuneZ2star_8TeV-powheg-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    'x_sec' : 56.4,
    'pu' : 'S10',
-    'calibrationTarget':'Summer12_DR53X_HCP2012'
+   'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
+   'Zjets_M50_S10' : {
+   'analyses': ['ET'],
+   'datasetpath': '/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+   'pu': 'S10',
+   'calibrationTarget': 'Summer12',
+   'xsec': -999,
+   },
+    'Z2jets_M50_S10' : {
+        'analyses': ['ET'],
+        'datasetpath': '/DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'xsec': -999,
+    },
+    'Z3jets_M50' : {
+        'analyses': ['ET'],
+        'datasetpath': '/DY3JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'xsec': -999,
+    },
+    'Z4jets_M50' : {
+        'analyses': ['ET'],
+        'datasetpath': '/DY4JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'xsec': -999,
+    },
+    'Z1jets_M50' : {
+        'analyses': ['ET'],
+        'datasetpath': '/DY1JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'xsec': -999,
+    },
+
+
 
 
    'Tbar_s-channel_TuneZ2star_8TeV-powheg-tauola' : {
@@ -133,9 +170,20 @@ datadefs = {
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
 
-
-
-
+   'TTJetsFullLepMGDecays' : {
+         'analyses': ["ET"],
+         'datasetpath' : "/TTJets_FullLeptMGDecays_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7C-v2/AODSIM",
+         'x_sec' : -999,
+         'pu' : 'S10',
+         'calibrationTarget' : 'Summer12_DR53X',
+   },
+   'TTJetsSemiLepMGDecays' : {
+         'analyses': ["ET"],
+         'datasetpath' : "/TTJets_SemiLeptMGDecays_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM",
+         'x_sec' : -999,
+         'pu' : 'S10',
+         'calibrationTarget' : 'Summer12_DR53X',
+   },
    'TTTo2L2Nu2B_8TeV-powheg-pythia6' : {
    'analyses': ['4L'],
    'datasetpath' : "/TTTo2L2Nu2B_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
@@ -347,11 +395,25 @@ datadefs = {
         'x_sec': 37509, # this is the W xsec in the StandardModelReference twiki
     },
 
+   'WplusJets_madgraph_S10' : {
+   'analyses': ['HTT'],
+   'datasetpath' : "/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+   'x_sec' : -999,
+   'pu' : 'S10',
+    'calibrationTarget':'Summer12_DR53X_HCP2012'
+   },
 
     'Wplus1Jets_madgraph' : {
         'analyses': ['HTT'],
         'datasetpath': '/W1JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
-        'pu': 'S7',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 6662.8,
+    },
+    'Wplus1Jets_madgraph_tapas' : {
+        'analyses': ['ET'],
+        'datasetpath': '/W1JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM',
+        'pu': 'S10',
         'calibrationTarget': 'Summer12',
         'x_sec': 6662.8,
     },
@@ -363,7 +425,13 @@ datadefs = {
         'calibrationTarget': 'Summer12',
         'x_sec': 2159.2,
     },
-
+      'Wplus2Jets_madgraph_tapas' : {
+            'analyses': ['HTT'],
+            'datasetpath': '/W2JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM',
+            'pu': 'S10',
+            'calibrationTarget': 'Summer12',
+            'x_sec': 2159.2,
+      },
 
     'Wplus3Jets_madgraph' : {
         'analyses': ['HTT'],
@@ -580,7 +648,7 @@ for mass in range(110, 165, 5):
       'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
       'pu' : 'S10',
        'calibrationTarget':'Summer12_DR53X_HCP2012',
-      'x_sec' : -999,
+      'x_sec' : xsbr(8,mass,'wh','tautau')[0]*br_w_leptons + xsbr(8,mass,'zh','tautau')[0]*br_z_leptons + xsbr(8,mass,'tth','tautau')[0]*br_w_leptons**2,
       }
 
 for mass in range(110, 150, 10):
@@ -595,9 +663,9 @@ for mass in range(110, 150, 10):
 
 
 # We use the same name for the 53X lepdecay only samples (sigh)
-for mass in range(110, 160, 5):
+for mass in range(90, 170, 5):
     datadefs['VH_H2Tau_M-%s' % mass] = {}
-    datadefs['VH_H2Tau_M-%s' % mass]['x_sec'] = xsbr(8,mass,'wh','tautau')[0]*br_w_leptons + xsbr(8,mass,'zh','tautau')[0]*br_z_leptons + xsbr(8,mass,'tth','tautau')[0]*br_w_leptons**2
+    datadefs['VH_H2Tau_M-%s' % mass]['x_sec'] = xsbr(8,mass,'wh','tautau')[0] + xsbr(8,mass,'zh','tautau')[0] + xsbr(8,mass,'tth','tautau')[0]
 
 ## datadefs['VH_H2Tau_M-120']['x_sec'] = (0.7966*br_w_leptons + 0.4483*br_z_leptons + 0.1470*square(br_w_leptons))*7.04E-02
 ## datadefs['VH_H2Tau_M-130']['x_sec'] = (0.6095*br_w_leptons + 0.3473*br_z_leptons + 0.1157*square(br_w_leptons))*5.48E-02

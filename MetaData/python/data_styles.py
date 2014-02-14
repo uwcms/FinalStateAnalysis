@@ -100,6 +100,8 @@ data_styles = {
     'data*' : {
         'legendstyle' : 'pe',
         'drawstyle' : 'pe',
+        'markerstyle' : 20,
+#        'markersize'  : 2,
         'name' : "Observed",
     },
 }
