@@ -23,7 +23,7 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
     </tr>
 </table>
 
-Installation for SL6 (courtesy of Maria)
+Installation for SL6 (abridged)
 ---------------------
 ```
 scram project CMSSW_5_3_14
@@ -43,8 +43,8 @@ cmsenv
 source $CMSSW_BASE/src/FinalStateAnalysis/environment.sh
 ```
 
-Installation for SL5
-------------
+Installation for SL6 (detailed)
+--------------------
 
 Current CMSSW versions: ``5_3_14``.
 
