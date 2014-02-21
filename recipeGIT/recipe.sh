@@ -33,22 +33,7 @@ set -o nounset
 # Check CMSSW version
 MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
 MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
-
 echo "Detected CMSSW version: $MAJOR_VERSION $MINOR_VERSION"
-
-echo "Checking for CERN CVS kerberos ticket"
-set +o errexit
-HAS_TICKET=`klist 2>&1 | grep CERN.CH`
-# Check if we can checkout anonymously
-IS_ANON=`echo $CVSROOT | grep pserver`
-set -o errexit
-
-if [ -z "$HAS_TICKET" ]; then
-  if [ -z "$IS_ANON" ]; then
-    echo "ERROR: You need to kinit yourname@CERN.CH to enable CVS checkouts"
-    exit 1
-  fi
-fi
 
 echo "Store your git ssh password"
 eval `ssh-agent -s` 
