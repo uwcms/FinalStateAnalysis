@@ -22,13 +22,13 @@ git checkout V04-02-10
 pushd $CMSSW_BASE/src
 fi
 
-## Add and patch to way speed up trigger matching
-## Don't crash if patch already applied.
-#set +o errexit
-#echo "Applying pat trigger matching speedup"
-#git cms-addpkg DataFormats/PatCandidates
-#patch -N -p0 < FinalStateAnalysis/recipe/patches/V06-04-16_DataFormats_PatCandidates_PassStrByRef.patch
-#set -o errexit
+# Add and patch to way speed up trigger matching
+# Don't crash if patch already applied.
+set +o errexit
+echo "Applying pat trigger matching speedup"
+git cms-addpkg DataFormats/PatCandidates
+git apply FinalStateAnalysis/recipeGIT/patches/DataFormats_PatCandidates_TriggerEvent.cc.patch
+set -o errexit
 
 # Only checkout PAT tuple production dependencies if requested.
 if [ "$PATPROD" = "1" ]
