@@ -77,7 +77,7 @@ fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   echo "Applying recipe for CMSSW 5_3_X"
-  PATPROD=$PATPROD ./recipe_legacy8TeV.sh
+  PATPROD=$PATPROD ./recipe_8TeV.sh
 fi
 
 echo "Applying common recipe"
