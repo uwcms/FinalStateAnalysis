@@ -18,6 +18,7 @@
 # Author: Bucky Badger and friends, UW Madison
 
 # Set default values for the options
+LIMITS=${LIMITS:-0}
 LUMI=${LUMI:-1}
 PATPROD=${PATPROD:-1}
 MVAMET=${MVAMET:-$PATPROD}
@@ -77,7 +78,7 @@ fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   echo "Applying recipe for CMSSW 5_3_X"
-  PATPROD=$PATPROD ./recipe_8TeV.sh
+  MVAMET=$MVAMET PATPROD=$PATPROD ./recipe_8TeV.sh
 fi
 
 echo "Applying common recipe"
