@@ -40,7 +40,7 @@ then
   popd
 
   #echo "Patching data format"
-  #git cms-addpkg DataFormats/PatCandidates
+  ##git cms-addpkg DataFormats/PatCandidates  # done already in recipe_common.sh
   #set +o errexit
   #patch -N -p0 < FinalStateAnalysis/recipe/patches/PATObject.h.patch
   #set -o errexit
