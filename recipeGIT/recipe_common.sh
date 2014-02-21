@@ -26,6 +26,7 @@ fi
 # Don't crash if patch already applied.
 set +o errexit
 echo "Applying pat trigger matching speedup"
+git cms-addpkg DataFormats/PatCandidates
 patch -N -p0 < FinalStateAnalysis/recipe/patches/V06-04-16_DataFormats_PatCandidates_PassStrByRef.patch
 set -o errexit
 
