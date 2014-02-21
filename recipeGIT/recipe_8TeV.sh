@@ -38,10 +38,12 @@ then
   pushd $CMSSW_BASE/src/EgammaAnalysis/ElectronTools/data
   cat download.url | xargs wget
   popd
-  #apply some pathces to make everything work
-  set +o errexit
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/PATObject.h.patch
-  set -o errexit
+
+  #echo "Patching data format"
+  #git cms-addpkg DataFormats/PatCandidates
+  #set +o errexit
+  #patch -N -p0 < FinalStateAnalysis/recipe/patches/PATObject.h.patch
+  #set -o errexit
 
   #echo "Applying Marias b-tag patch"   
   ##doubtful that we need it now... but just in case...
@@ -51,4 +53,3 @@ then
 fi
 
 popd
-
