@@ -51,7 +51,7 @@ Checkout the FinalStateAnalysis repository::
 Now, check out the FSA dependencies from CMSSW (using Git).
 
 ```bash
-cd recipeGIT
+cd recipe
 kinit [your_cern_username]@CERN.CH
 ./recipe.sh
 cd ../../
