@@ -27,8 +27,7 @@ Installation
 ------------
 
 Current CMSSW versions: ``5_3_14``.
-
-If you have not done so already, set up Git following the instructions here: http://cms-sw.github.io/cmssw/faq.html#general_questions
+The installation instructions are the same for both.  
 
 Get a supported CMSSW release area::
 
@@ -48,44 +47,9 @@ Checkout the FinalStateAnalysis repository::
   cd FinalStateAnalysis
 ```
 
-Now, check out the FSA dependencies from CMSSW (using Git).
-
-```bash
-cd recipe
-kinit [your_cern_username]@CERN.CH
-./recipe.sh
-cd ../../
-scram b -j 8
-```
-
-Now, you need to set the relevant environment variables and such
-
-```bash
-cmsenv
-source $CMSSW_BASE/src/FinalStateAnalysis/environment.sh
-```
-
-To use the extra Python tools, install a Python virtualenv and extra packages. This is not needed for PAT-tuples. It is needed for UWHiggs, however.
-
-```bash
-cd $CMSSW_BASE/src/FinalStateAnalysis/recipe
-./install_python.sh
-source environment.sh
-```
-
-If you wish to use PyTables (along with the HDF5 library), run the install script with
-
-```bash
-PYTABLES=1 ./install_python.sh
-```
-
-
-Old CVS Recipe
-----------
-
 This will checkout the lastest and greatest version of the code.  You might also want the Summer 2013 compatible branch, if so you should additionally run:
 ```bash
-git checkout 53X_SLC6
+git checkout 53X_SLC6_Dev
 ```
 and then proceed as normal.
 
@@ -102,7 +66,7 @@ Checkout the needed CMSSW tags:
   # Compile
   cd ../../
   # Avoid the new strict version of the compiler by relaxing some flags
-  export USER_CXXFLAGS="-Wno-delete-non-virtual-dtor -Wno-error=unused-but-set-variable -Wno-error=unused-variable"
+  export USER_CXXFLAGS="-Wno-delete-non-virtual-dtor -Wno-error=unused-but-set-variable -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=reorder"
   scram b -j 8
 ```
 
@@ -120,3 +84,4 @@ packages (note this is *not* necessary for PAT tuple production)::
   ./install_python.sh
   yolk -l # List installed packages
 ```
+
