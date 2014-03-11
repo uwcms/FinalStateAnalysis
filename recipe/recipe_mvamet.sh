@@ -19,14 +19,12 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
   if [ "$LEAST_VERSION" -lt 14 ] && [ "$MINOR_VERSION" -eq "3" ]; then
       echo "The mva met stuff will ONLY work in version > 5.3.14! If you want to stay in 539, you need CSV access."
   else
+      #from https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideCMSDataAnalysisSchoolJetMetAnalysis#Step_2_Checkout_additional_softw
       git cms-addpkg PhysicsTools/PatAlgos
-      git cms-merge-topic cms-analysis-tools:5_3_14-updateSelectorUtils
-      git cms-merge-topic cms-analysis-tools:5_3_13_patch2-testNewTau
       git cms-merge-topic -u TaiSakuma:53X-met-131120-01
-      git-cms-merge-topic -u cms-met:53X-MVaNoPuMET-20131217-01
-      
-      # We should not need this, but..
-      git cms-cvs-history import V05-00-16      DataFormats/JetReco 
+      git cms-merge-topic -u cms-analysis-tools:5_3_14-updateSelectorUtils
+      git cms-merge-topic -u cms-analysis-tools:5_3_13_patch2-testNewTau
+      git cms-merge-topic -u cms-met:53X-MVaNoPuMET-20131217-01
   fi
 else
   echo "Sorry, 42X not ported yet. For 7 TeV, we should move to the rereco"
