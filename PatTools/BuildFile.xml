@@ -7,6 +7,7 @@
 <use   name="FinalStateAnalysis/RecoTools"/>
 <use   name="EgammaAnalysis/ElectronTools"/>
 <use   name="RecoMET/METAlgorithms"/>
+<use   name="CommonTools/Utils"/>
 <use   name="RecoTauTag/RecoTau"/>
 <use   name="RecoEgamma/EgammaTools"/>
 <use   name="RecoEgamma/EgammaElectronAlgos"/>

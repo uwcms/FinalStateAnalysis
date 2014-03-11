@@ -174,7 +174,7 @@ bool PATTauPreselectionEmbedder::filter(edm::Event& evt, const edm::EventSetup& 
     std::vector<reco::PFCandidatePtr> selPFChargedHadrons;
     for ( std::vector<reco::PFCandidatePtr>::const_iterator pfChargedJetConstituent = pfChargedJetConstituents.begin();
 	  pfChargedJetConstituent != pfChargedJetConstituents.end(); ++pfChargedJetConstituent ) {
-      if ( trackQualityCuts_->filter(**pfChargedJetConstituent) ) selPFChargedHadrons.push_back(*pfChargedJetConstituent);
+      if ( trackQualityCuts_->filterCand(**pfChargedJetConstituent) ) selPFChargedHadrons.push_back(*pfChargedJetConstituent);
     }
 
 //--- find highest Pt "leading" PFChargedHadron
