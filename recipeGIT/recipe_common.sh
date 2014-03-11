@@ -26,7 +26,8 @@ fi
 # Don't crash if patch already applied.
 set +o errexit
 echo "Applying pat trigger matching speedup"
-patch -N -p0 < FinalStateAnalysis/recipe/patches/V06-04-16_DataFormats_PatCandidates_PassStrByRef.patch
+git cms-addpkg DataFormats/PatCandidates
+git apply FinalStateAnalysis/recipeGIT/patches/DataFormats_PatCandidates_TriggerEvent.cc.patch
 set -o errexit
 
 # Only checkout PAT tuple production dependencies if requested.
