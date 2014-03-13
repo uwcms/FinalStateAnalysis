@@ -32,14 +32,21 @@ set -o errexit
 # Only checkout PAT tuple production dependencies if requested.
 if [ "$PATPROD" = "1" ]
 then
-  # Set the compile time flag which enables PAT modules that have external
-  # dependencies.
-  cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF
+    #PU Jet ID Weights -- yes this way sucks
+    git clone https://github.com/violatingcp/Jets_Short.git
+    rm -r RecoJets/
+    mv Jets_Short/RecoJets .
+    mv Jets_Short/JetMETCorrections/Modules JetMETCorrections/.
+    rm -rf Jets_Short
+    
+    # Set the compile time flag which enables PAT modules that have external
+    # dependencies.
+    cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF
 #define ENABLE_PAT_PROD
 EOF
 
 else
-cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF
+    cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF
 //#define ENABLE_PAT_PROD
 EOF
 

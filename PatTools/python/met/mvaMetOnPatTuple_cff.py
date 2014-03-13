@@ -56,7 +56,7 @@ try:
         cut=cms.string(
             'pt > 19 && abs(eta) < 2.3 && '
             'tauID("decayModeFinding") && '
-            'tauID("byIsolationMVAraw") > 0.8 && '
+            'tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits") > 0.5 && '
             'tauID("againstElectronLoose") && tauID("againstMuonLoose2")'),
         filter=cms.bool(False)
     )

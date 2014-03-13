@@ -144,7 +144,7 @@ def add_hZg_iso_needs(process):
         MapFile = cms.untracked.string('Geometry/CaloTopology/data/CaloTowerEEGeometric.map.gz')
             )            
 
-    process.pfAllNeutralHadronsAndPhotons = cms.EDProducer(
+    process.pfAllNeutralHadronsAndPhotonsHZG = cms.EDProducer(
         "CandViewMerger",
         src = cms.VInputTag(cms.InputTag("pfAllNeutralHadrons"),
                             cms.InputTag("pfAllPhotons"))
@@ -166,7 +166,7 @@ def add_hZg_iso_needs(process):
     
     process.kt6PFJetsCentralNeutralHZGMu = process.kt4PFJets.clone(
         rParam        = cms.double(0.6),
-        src           = cms.InputTag("pfAllNeutralHadronsAndPhotons"),
+        src           = cms.InputTag("pfAllNeutralHadronsAndPhotonsHZG"),
         Ghost_EtaMax  = cms.double(3.1),
         Rho_EtaMax    = cms.double(2.5),
         inputEtMin    = cms.double(0.5),
@@ -186,7 +186,7 @@ def add_hZg_iso_needs(process):
 
     process.hzg_isolations = cms.Sequence(
         process.kt6PFJetsHZGPho + 
-        process.pfAllNeutralHadronsAndPhotons +        
+        process.pfAllNeutralHadronsAndPhotonsHZG +        
         process.kt6PFJetsCentralHZGEle +
         process.kt6PFJetsCentralNeutralHZGMu +
         process.kt6PFJetsCentralHZGMu )

@@ -94,6 +94,10 @@ tuplize, output_commands = tuplizer.configurePatTuple(
     zzMode=options.zzMode
 )
 
+import FinalStateAnalysis.PatTools.rerunRecoObjects as rerecoer
+rereco, more_output = rerecoer.rerunRecoObjects(process)
+output_commands.extend(more_output)
+
 if options.globalTag == "":
     raise RuntimeError("Global tag not specified!"
                        " Try sourcing environment.sh\n")
@@ -119,6 +123,10 @@ process.eventCount.uwMeta = cms.PSet(
 )
 
 process.schedule = cms.Schedule()
+
+#re-reconstruct needed objects
+process.rereco   = cms.Path(process.rerecoObjects)
+process.schedule.append(process.rereco)
 
 # add a bare tuplization path if we are using pass thru
 if options.passThru:
