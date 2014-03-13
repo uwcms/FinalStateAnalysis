@@ -250,6 +250,14 @@ def configurePatTuple(process, isMC=True, **kwargs):
     if not isMC or kwargs['embedded']:
         jec.extend(['L2L3Residual'])
 
+    # tmp
+    # define the b-tag squences for offline reconstruction
+    process.load("RecoBTag.SecondaryVertex.secondaryVertex_cff")
+    process.load("RecoBTau.JetTagComputer.combinedMVA_cff")
+    process.load('RecoVertex/AdaptiveVertexFinder/inclusiveVertexing_cff')
+    process.load('RecoBTag/SecondaryVertex/bToCharmDecayVertexMerger_cfi')
+    #process.load("PhysicsTools.PatAlgos.patSequences_cff")
+
     # Define options for BTagging - these are release dependent.
     btag_options = {'doBTagging': True}
     if cmssw_major_version() == 5:
@@ -264,6 +272,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
             'simpleSecondaryVertexHighEffBJetTags',
             'combinedSecondaryVertexMVABJetTags',
             'combinedSecondaryVertexBJetTags',
+            'jetBProbabilityBJetTags', 
+            'jetProbabilityBJetTags',   
         ]
 
     # Use AK5 PFJets
@@ -280,9 +290,59 @@ def configurePatTuple(process, isMC=True, **kwargs):
     )
     process.patJets.embedPFCandidates = False
     process.patJets.embedCaloTowers = False
-    process.patJets.embedGenJetMatch = False
+    if not isMC: 
+     process.patJets.embedGenJetMatch = False
+     process.patJets.embedGenPartonMatch = False
+    else:  ## tmp added this
+     process.patJets.embedGenJetMatch = True
+     process.patJets.embedGenPartonMatch = True
     process.patJets.addAssociatedTracks = False
-    process.patJets.embedGenPartonMatch = False
+
+    process.patJets.tagInfoSources = cms.VInputTag(
+     cms.InputTag("impactParameterTagInfos"),
+     cms.InputTag("secondaryVertexTagInfos"),
+     cms.InputTag("secondaryVertexNegativeTagInfos")
+    )
+    process.patJets.discriminatorSources = cms.VInputTag(
+     cms.InputTag("jetBProbabilityBJetTags"),
+     cms.InputTag("jetProbabilityBJetTags"),
+     cms.InputTag("trackCountingHighPurBJetTags"),
+     cms.InputTag("trackCountingHighEffBJetTags"),
+     cms.InputTag("simpleSecondaryVertexHighEffBJetTags"),
+     cms.InputTag("simpleSecondaryVertexHighPurBJetTags"),
+     cms.InputTag("combinedSecondaryVertexBJetTags"),
+     cms.InputTag("combinedSecondaryVertexMVABJetTags"),
+     cms.InputTag("simpleInclusiveSecondaryVertexHighEffBJetTags"),
+     cms.InputTag("simpleInclusiveSecondaryVertexHighPurBJetTags")
+    )
+
+#    process.patJets.addBTagInfo = cms.bool(True)
+#    process.patJets.addDiscriminators = cms.bool(True)
+#    process.patJets.addTagInfos = cms.bool(True)
+
+#    process.btagging = cms.Sequence(
+#     (
+#      # impact parameters and IP-only algorithms
+#      impactParameterTagInfos *
+#      (trackCountingHighEffBJetTags +
+#       trackCountingHighPurBJetTags +
+#       jetProbabilityBJetTags +
+#       jetBProbabilityBJetTags +
+#       # SV tag infos depending on IP tag infos, and SV (+IP) based algos
+#       secondaryVertexTagInfos *
+#       (simpleSecondaryVertexHighEffBJetTags +
+#        simpleSecondaryVertexHighPurBJetTags +
+#        combinedSecondaryVertexBJetTags +
+#        combinedSecondaryVertexMVABJetTags
+#       )+
+#       secondaryVertexNegativeTagInfos*simpleSecondaryVertexNegativeHighEffBJetTags
+#       +
+#       ghostTrackVertexTagInfos *
+#       ghostTrackBJetTags
+#      )
+#     )
+#    )
+
     #process.patJetCorrFactors.useRho = True
     ## Let's use the same rho as in the TauID, so we don't need to do it twice.
     #process.patJetCorrFactors.rho = cms.InputTag(
@@ -304,6 +364,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.customizeJetSequence.insert(0, process.patJets)
     # Make it a "complete" sequence
     process.customizeJetSequence += process.selectedPatJets
+#    process.customizeJetSequence += process.btagging
     # We can't mess up the selected pat jets because the taus use them.
     process.selectedPatJets.src = final_jet_collection
     process.patDefaultSequence.replace(process.patJets,
