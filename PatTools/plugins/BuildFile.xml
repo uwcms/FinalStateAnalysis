@@ -13,11 +13,15 @@
   <use   name="CommonTools/UtilAlgos"/>
   <use   name="PhysicsTools/Utilities"/>
   <use   name="PhysicsTools/PatAlgos"/>
+
+  <use   name="ZZMatrixElement/MELA"/>
+  <use   name="ZZMatrixElement/MEMCalculators"/>
   
   <use   name="CondFormats/JetMETObjects"/>
   <use   name="JetMETCorrections/Objects"/>
   <use   name="MuonAnalysis/MomentumScaleCalibration"/>
   <use   name="RecoVertex/KinematicFitPrimitives"/>
   <use   name="RecoEgamma/EgammaTools"/>
-  <use   name="EGamma/EGammaAnalysisTools"/>
+  
+  <use   name="RecoBTag/SecondaryVertex"/>
 </library>
