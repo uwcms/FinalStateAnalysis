@@ -16,6 +16,9 @@ from FinalStateAnalysis.PatTools.jets.patMuonInJetEmbedder_cfi import \
 from FinalStateAnalysis.PatTools.jets.patSSVJetEmbedder_cfi import \
         patSSVJetEmbedder
 
+from FinalStateAnalysis.PatTools.jets.patCSVJetEmbedder_cfi import \
+        patCSVJetEmbedder
+
 import sys
 
 # Need to attach this to process to get SSV BTag production
@@ -48,6 +51,7 @@ except ImportError:
 # Embed Maria's information about jets
 customizeJetSequence += patMuonInJetEmbedder
 customizeJetSequence += patSSVJetEmbedder
+customizeJetSequence += patCSVJetEmbedder
 
 # Remove low pt garbage jets.  This cut is propagated to the taus - only taus
 # that have an existing jet are kept.  This cut is important, so we require
