@@ -300,6 +300,14 @@ def configurePatTuple(process, isMC=True, **kwargs):
     if not isMC or kwargs['embedded']:
         jec.extend(['L2L3Residual'])
 
+    # tmp
+    # define the b-tag squences for offline reconstruction
+    process.load("RecoBTag.SecondaryVertex.secondaryVertex_cff")
+    process.load("RecoBTau.JetTagComputer.combinedMVA_cff")
+    process.load('RecoVertex/AdaptiveVertexFinder/inclusiveVertexing_cff')
+    process.load('RecoBTag/SecondaryVertex/bToCharmDecayVertexMerger_cfi')
+    #process.load("PhysicsTools.PatAlgos.patSequences_cff")
+
     # Define options for BTagging - these are release dependent.
     btag_options = {'doBTagging': True}
     if cmssw_major_version() == 5:
@@ -311,9 +319,15 @@ def configurePatTuple(process, isMC=True, **kwargs):
         ]
         btag_options['btagdiscriminators'] = [
             'trackCountingHighEffBJetTags',
+            'trackCountingHighPurBJetTags',    
             'simpleSecondaryVertexHighEffBJetTags',
+            'simpleSecondaryVertexHighPurBJetTags',
+            'simpleInclusiveSecondaryVertexHighEffBJetTags',
+            'simpleInclusiveSecondaryVertexHighEffBJetTags',        
             'combinedSecondaryVertexMVABJetTags',
             'combinedSecondaryVertexBJetTags',
+            'jetBProbabilityBJetTags', 
+            'jetProbabilityBJetTags',   
         ]
 
     #Avoid embedding
@@ -361,6 +375,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.customizeJetSequence.insert(0, process.patJets)
     # Make it a "complete" sequence
     process.customizeJetSequence += process.selectedPatJets
+#    process.customizeJetSequence += process.btagging
     # We can't mess up the selected pat jets because the taus use them.
     process.selectedPatJets.src = final_jet_collection
     process.patDefaultSequence.replace(process.patJets,
