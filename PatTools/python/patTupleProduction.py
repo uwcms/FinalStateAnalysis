@@ -315,7 +315,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
             'impactParameterTagInfos',
             'secondaryVertexTagInfos',
             'softMuonTagInfos',
-            'secondaryVertexNegativeTagInfos'
+            'secondaryVertexNegativeTagInfos',
+            'inclusiveSecondaryVertexFinderFilteredTagInfos'
         ]
         btag_options['btagdiscriminators'] = [
             'trackCountingHighEffBJetTags',
@@ -323,7 +324,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
             'simpleSecondaryVertexHighEffBJetTags',
             'simpleSecondaryVertexHighPurBJetTags',
             'simpleInclusiveSecondaryVertexHighEffBJetTags',
-            'simpleInclusiveSecondaryVertexHighEffBJetTags',        
+            'simpleInclusiveSecondaryVertexHighPurBJetTags',        
             'combinedSecondaryVertexMVABJetTags',
             'combinedSecondaryVertexBJetTags',
             'jetBProbabilityBJetTags', 
@@ -331,11 +332,11 @@ def configurePatTuple(process, isMC=True, **kwargs):
         ]
 
     #Avoid embedding
-    process.patJets.embedPFCandidates = False
+    process.patJets.embedPFCandidates = True
     process.patJets.embedCaloTowers = False
-    process.patJets.embedGenJetMatch = False
-    process.patJets.addAssociatedTracks = False
-    process.patJets.embedGenPartonMatch = False
+    process.patJets.embedGenJetMatch = True
+    process.patJets.addAssociatedTracks = True
+    process.patJets.embedGenPartonMatch = True
 
     # Add AK5chs PFJets
     jettools.addJetCollection(
@@ -343,7 +344,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
         cms.InputTag('ak5PFchsJets'),
         'AK5', 'PF',
         doJTA              = True,
-        jetCorrLabel       = ('AK5PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute'])),
+        jetCorrLabel       = ('AK5PFchs', jec),
         doType1MET         = False,
         doL1Cleaning       = False,
         doL1Counters       = False,
@@ -356,7 +357,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     jettools.switchJetCollection(
         process,
         cms.InputTag('ak5PFJets'),
-        doJTA=False,
+        doJTA=True,
         jetCorrLabel=('AK5PF', jec),
         #jetCorrLabel = None,
         doType1MET=False,
@@ -399,6 +400,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     output_commands.append('*_selectedPatJets_*_*')
     output_commands.append('*_selectedPatJetsAK5chsPF_*_*')
+    output_commands.append('*SecondaryVertexTagInfo*_*_*_*')
+    output_commands.append('*TrackIPTagInfo*_*_*_*')
+    output_commands.append('*SoftLeptonTagInfo*_*_*_*')
+
+
+
 
     ########################
     ##        MET         ##
@@ -526,7 +533,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load(
         "FinalStateAnalysis.PatTools.finalStates.patFinalStateLSProducer_cfi")
     process.tuplize += process.finalStateLS
-    output_commands.append('*_finalStateLS_*_*')
+#    output_commands.append('*_finalStateLS_*_*')
     if isMC:
         process.finalStateLS.xSec = kwargs['xSec']
 
