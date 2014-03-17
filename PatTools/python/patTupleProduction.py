@@ -532,7 +532,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load(
         "FinalStateAnalysis.PatTools.finalStates.patFinalStateLSProducer_cfi")
     process.tuplize += process.finalStateLS
-#    output_commands.append('*_finalStateLS_*_*')
+    output_commands.append('*_finalStateLS_*_*')
     if isMC:
         process.finalStateLS.xSec = kwargs['xSec']
 
