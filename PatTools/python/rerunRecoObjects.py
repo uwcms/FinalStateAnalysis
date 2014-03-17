@@ -89,16 +89,29 @@ def rerunRecoObjects(process):
     process.rerecoObjects += process.recoTauClassicHPSSequence
 
     #Run PF NoPu Jets
+
+    from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
+ 
+    process.goodOfflinePrimaryVertices = cms.EDFilter(
+          "PrimaryVertexObjectFilter",
+        filterParams = pvSelector.clone( maxZ = cms.double(24.0),
+        minNdof = cms.double(4.0) # this is >= 4
+        ),
+        src=cms.InputTag("offlinePrimaryVertices")
+        )
+
     process.load("CommonTools.ParticleFlow.PFBRECO_cff")
-    process.pfPileUp.Vertices = cms.InputTag("selectedPrimaryVertex")
+    process.pfPileUp.Vertices = cms.InputTag("goodOfflinePrimaryVertices")
     process.pfPileUp.checkClosestZVertex = False
 
     process.ak5PFchsJets = process.pfJets.clone()
     process.ak5PFchsJets.doAreaFastjet = True
     process.ak5PFchsJets.src = 'pfNoPileUp'
 
-    process.makeAK5PFNoPUJets = cms.Sequence(process.pfPileUp + process.pfNoPileUpSequence + process.ak5PFchsJets)
-    
+    process.makeAK5PFNoPUJets = cms.Sequence(
+        process.goodOfflinePrimaryVertices*
+        process.pfNoPileUpSequence*
+        process.ak5PFchsJets)
     
     #chs JECs
     process.load("JetMETCorrections.Configuration.DefaultJEC_cff")

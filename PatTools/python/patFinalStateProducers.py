@@ -176,7 +176,8 @@ def produce_final_states(process, collections, output_commands,
         # I leave it loose here, can be tightened at the last step
         preselection=cms.string(
             "pt>20 & abs(eta) < 2.5 & "
-            "userFloat('idLoose') & userInt('fullIdLoose')"),
+            "userFloat('idLoose')"),
+                # & userInt('fullIdLoose')"),
         # overlap checking configurables
         checkOverlaps=cms.PSet(
             muons=cms.PSet(
@@ -237,6 +238,8 @@ def produce_final_states(process, collections, output_commands,
 
     process.buildDiObjects = cms.Sequence()
 
+    print "Hola"
+
     process.load("FinalStateAnalysis.PatTools."
                  "finalStates.patFinalStatesEmbedExtraCollections_cfi")
     # If we don't have tracks, don't fit the FS vertices
@@ -257,6 +260,7 @@ def produce_final_states(process, collections, output_commands,
         if (diobject[0][0], diobject[1][0]) == ('Jet', 'Jet'):
             continue
 
+        print "I am inside"
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
 
@@ -448,6 +452,8 @@ def produce_final_states(process, collections, output_commands,
             output_commands.append("*_%s_*_*" % producer_name)
 
         sequence += process.buildQuadHzzObjects
+
+        print "ReHola"
 
 
 if __name__ == "__main__":
