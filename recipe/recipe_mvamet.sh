@@ -20,6 +20,7 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
       echo "The mva met stuff will ONLY work in version > 5.3.14! If you want to stay in 539, you need CSV access."
   else
       #from https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideCMSDataAnalysisSchoolJetMetAnalysis#Step_2_Checkout_additional_softw
+      # https://hypernews.cern.ch/HyperNews/CMS/get/met/333.html
       git cms-addpkg PhysicsTools/PatAlgos
       git cms-merge-topic -u TaiSakuma:53X-met-131120-01
       git cms-merge-topic -u cms-analysis-tools:5_3_14-updateSelectorUtils
