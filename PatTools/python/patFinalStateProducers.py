@@ -238,7 +238,6 @@ def produce_final_states(process, collections, output_commands,
 
     process.buildDiObjects = cms.Sequence()
 
-    print "Hola"
 
     process.load("FinalStateAnalysis.PatTools."
                  "finalStates.patFinalStatesEmbedExtraCollections_cfi")
@@ -260,7 +259,6 @@ def produce_final_states(process, collections, output_commands,
         if (diobject[0][0], diobject[1][0]) == ('Jet', 'Jet'):
             continue
 
-        print "I am inside"
         # Define some basic selections for building combinations
         cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
 
@@ -453,7 +451,6 @@ def produce_final_states(process, collections, output_commands,
 
         sequence += process.buildQuadHzzObjects
 
-        print "ReHola"
 
 
 if __name__ == "__main__":
