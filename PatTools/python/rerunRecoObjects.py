@@ -97,31 +97,32 @@ def rerunRecoObjects(process):
     process.ak5PFchsJets.doAreaFastjet = True
     process.ak5PFchsJets.src = 'pfNoPileUp'
 
+    process.makeAK5PFNoPUJets = cms.Sequence(process.pfPileUp + process.pfNoPileUpSequence + process.ak5PFchsJets)
+    
+    
     #chs JECs
     process.load("JetMETCorrections.Configuration.DefaultJEC_cff")
     process.load("JetMETCorrections.Configuration.JetCorrectionServices_cff")
 
     # Setting up JEC ESProducers for ak5PFchs. This block will be included in the JetCorrectionServices_cff
     # in a future tag by JetMET (March 13, 2014)
-    #-#process.ak5PFchsL1Fastjet  = process.ak5PFL1Fastjet.clone(algorithm = cms.string('AK5PFchs'))
-    #-#process.ak5PFchsL2Relative = process.ak5PFL2Relative.clone(algorithm = cms.string('AK5PFchs'))
-    #-#process.ak5PFchsL3Absolute = process.ak5PFL3Absolute.clone(algorithm = cms.string('AK5PFchs'))
-    #-#process.ak5PFchsResidual   = process.ak5PFResidual.clone(algorithm = cms.string('AK5PFchs'))
-    #-#process.ak5PFchsL2L3   = cms.ESProducer(
-    #-#    'JetCorrectionESChain',
-    #-#    correctors = cms.vstring('ak5PFchsL2Relative', 'ak5PFchsL3Absolute')
-    #-#)
-    #-#
-    #-#process.ak5PFchsL2L3Residual = process.ak5PFchsL2L3.clone()
-    #-#process.ak5PFchsL2L3Residual.correctors.append('ak5PFchsResidual')
-    #-#process.ak5PFchsL1FastL2L3 = process.ak5PFchsL2L3.clone()
-    #-#process.ak5PFchsL1FastL2L3.correctors.insert(0, 'ak5PFchsL1Fastjet')
-    #-#process.ak5PFchsL1FastL2L3Residual = process.ak5PFchsL1FastL2L3.clone()
-    #-#process.ak5PFchsL1FastL2L3Residual.correctors.append('ak5PFchsResidual')
-
-    process.ak5chsSequence = cms.Sequence(
-        process.pfNoPileUpSequence *
-        process.ak5PFchsJets
+    process.ak5PFchsL1Fastjet  = process.ak5PFL1Fastjet.clone(algorithm = cms.string('AK5PFchs'))
+    process.ak5PFchsL2Relative = process.ak5PFL2Relative.clone(algorithm = cms.string('AK5PFchs'))
+    process.ak5PFchsL3Absolute = process.ak5PFL3Absolute.clone(algorithm = cms.string('AK5PFchs'))
+    process.ak5PFchsResidual   = process.ak5PFResidual.clone(algorithm = cms.string('AK5PFchs'))
+    process.ak5PFchsL2L3   = cms.ESProducer(
+        'JetCorrectionESChain',
+        correctors = cms.vstring('ak5PFchsL2Relative', 'ak5PFchsL3Absolute')
     )
-    process.rerecoObjects += process.ak5chsSequence
+    
+    process.ak5PFchsL2L3Residual = process.ak5PFchsL2L3.clone()
+    process.ak5PFchsL2L3Residual.correctors.append('ak5PFchsResidual')
+    process.ak5PFchsL1FastL2L3 = process.ak5PFchsL2L3.clone()
+    process.ak5PFchsL1FastL2L3.correctors.insert(0, 'ak5PFchsL1Fastjet')
+    process.ak5PFchsL1FastL2L3Residual = process.ak5PFchsL1FastL2L3.clone()
+    process.ak5PFchsL1FastL2L3Residual.correctors.append('ak5PFchsResidual')
+
+
+    process.rerecoObjects +=process.makeAK5PFNoPUJets 
+
     return process.rerecoObjects, output_commands

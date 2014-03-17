@@ -342,7 +342,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     jettools.addJetCollection(
         process,
         cms.InputTag('ak5PFchsJets'),
-        'AK5', 'PF',
+        algoLabel = "AK5",
+        typeLabel = "PFchs",
         doJTA              = True,
         jetCorrLabel       = ('AK5PFchs', jec),
         doType1MET         = False,
@@ -368,8 +369,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Customize/embed all our sequences
     process.load("FinalStateAnalysis.PatTools.patJetProduction_cff")
-    helpers.cloneProcessingSnippet( process, process.customizeJetSequence, 'AK5PF' )
-
+    helpers.cloneProcessingSnippet( process, process.customizeJetSequence, 'AK5PFchs' )
     process.patJetGarbageRemoval.cut = 'pt > 12'
     final_jet_collection = chain_sequence(
         process.customizeJetSequence, "patJets")
@@ -382,30 +382,29 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patDefaultSequence.replace(process.patJets,
                                        process.customizeJetSequence)
 
-    #Remove PU Jet ID, does not make any sense for these jets
-    process.customizeJetSequenceAK5PF.remove( process.patJetsPUIDAK5PF )
-    process.customizeJetSequenceAK5PF.remove( process.pileupJetIdProducerAK5PF )
-    process.patJetGarbageRemovalAK5PF.cut = 'pt > 20'
+    process.customizeJetSequenceAK5PFchs.remove( process.patJetsPUIDAK5PFchs )
+    process.customizeJetSequenceAK5PFchs.remove( process.pileupJetIdProducerAK5PFchs )
+    process.patJetGarbageRemovalAK5PFchs.cut = 'pt > 20'
+    process.patJetCorrFactorsAK5PFchs.payload = cms.string('AK5PFchs') 
     final_jetchs_collection = chain_sequence(
-        process.customizeJetSequenceAK5PF, "patJetsAK5PF")
-    process.customizeJetSequenceAK5PF.insert(0, process.patJetsAK5PF)
+        process.customizeJetSequenceAK5PFchs, "patJetsAK5PFchs")
+    process.customizeJetSequenceAK5PFchs.insert(0, process.patJetsAK5PFchs)
     # Make it a "complete" sequence
-    process.customizeJetSequenceAK5PF += process.selectedPatJetsAK5PF
+    process.customizeJetSequenceAK5PFchs += process.selectedPatJetsAK5PFchs
     # We can't mess up the selected pat jets because the taus use them.
-    process.selectedPatJetsAK5PF.src = final_jetchs_collection
-    process.selectedPatJetsAK5chsPF  = process.selectedPatJetsAK5PF.clone() #that's what we keep
-    process.customizeJetSequenceAK5PF += process.selectedPatJetsAK5chsPF
-    process.patDefaultSequence.replace(process.patJetsAK5PF,
-                                       process.customizeJetSequenceAK5PF)
+    process.selectedPatJetsAK5PFchs.src = final_jetchs_collection
+    process.selectedPatJetsAK5chsPF  = process.selectedPatJetsAK5PFchs.clone() #that's what we keep
+    process.customizeJetSequenceAK5PFchs += process.selectedPatJetsAK5chsPF
+    process.patDefaultSequence.replace(process.patJetsAK5PFchs,
+                                       process.customizeJetSequenceAK5PFchs)
 
     output_commands.append('*_selectedPatJets_*_*')
     output_commands.append('*_selectedPatJetsAK5chsPF_*_*')
     output_commands.append('*SecondaryVertexTagInfo*_*_*_*')
     output_commands.append('*TrackIPTagInfo*_*_*_*')
     output_commands.append('*SoftLeptonTagInfo*_*_*_*')
-
-
-
+    output_commands.append('*_ak5PFJets_*_*')
+    output_commands.append('*_ak5PFchsJets_*_*')
 
     ########################
     ##        MET         ##
