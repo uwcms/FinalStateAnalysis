@@ -31,7 +31,6 @@ try:
     from JetMETCorrections.Configuration.JetCorrectionServicesAllAlgos_cff \
             import ak5PFL1FastL2L3, ak5PFL1Fastjet, ak5PFL2Relative, \
             ak5PFL3Absolute
-
     #process.load("JetMETCorrections.Configuration.DefaultJEC_cff")
     # Modify muons
     muon_cut = isomuons.cut
@@ -60,11 +59,9 @@ try:
             'tauID("againstElectronLoose") && tauID("againstMuonLoose2")'),
         filter=cms.bool(False)
     )
-
     patMEtMVA = patMETs.clone(metSource=cms.InputTag("pfMEtMVA"))
     patMEtMVA.addMuonCorrections = False
     pfMEtMVA.verbosity = 0
-
     print "Built MVA MET sequence"
     pfMEtMVAsequence = cms.Sequence(
         calibratedAK5PFJetsForPFMEtMVA *
