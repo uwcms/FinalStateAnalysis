@@ -15,7 +15,7 @@ Author: Evan K. Friis, UW Madison
 '''
 
 from datacommon import square, cube, quad, picobarns, \
-        br_w_leptons, br_z_leptons, query_cli
+        br_w_leptons, br_z_leptons, query_cli, femtobarns
 
 from data8TeV import datadefs as datadefs52
 
@@ -50,7 +50,7 @@ datadefs = {
    'ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola' : {
    'analyses': ['HTT'],
    'datasetpath' : "/ZZJetsTo2L2Q_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
-   'x_sec' : -999,
+   'x_sec' : 0.91*picobarns,
    'pu' : 'S10',
    'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
@@ -74,7 +74,7 @@ datadefs = {
    'ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola' : {
    'analyses': ['HTT'],
    'datasetpath' : "/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
-   'x_sec' : -999,
+   'x_sec' : 0.1296*picobarns,
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
@@ -212,7 +212,7 @@ datadefs = {
    'analyses': ['HTT','HZG'],
    'datasetpath' : "/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
    # https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat8TeV
-   'x_sec' : 3503.71,
+   'x_sec' : 3503.71*picobarns,
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
@@ -220,7 +220,7 @@ datadefs = {
    'DYJetsToLL_M-10To50filter_8TeV-madgraph' : {
    'analyses': ['ZZ'],
    'datasetpath' : "/DYJetsToLL_M-10To50filter_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
-   'x_sec' : -999,
+   'x_sec' : 915.0*picobarns,
    'pu' : 'S10',
     'calibrationTarget':'Summer12_DR53X_HCP2012'
    },
@@ -541,7 +541,7 @@ for mass in [110, 130, 150, 170, 200, 250, 300, 350, 400, 450, 500, 600, 700]:
         'analyses' : ['HPP'],
         'datasetpath' : '/HPlusPlusHMinusMinusHTo4L_M-%i_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM' % mass,
         'pu' : 'S10',
-        'x_sec' : dblh_4l_xsec[mass],
+        'x_sec' : dblh_4l_xsec[mass]*femtobarns,
         'calibrationTarget' : 'Summer12_DR53X_HCP2012'
         }
 
