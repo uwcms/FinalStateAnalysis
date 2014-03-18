@@ -90,18 +90,19 @@ def rerunRecoObjects(process):
 
     #Run PF NoPu Jets
 
-    from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
- 
-    process.goodOfflinePrimaryVertices = cms.EDFilter(
-          "PrimaryVertexObjectFilter",
-        filterParams = pvSelector.clone( maxZ = cms.double(24.0),
-        minNdof = cms.double(4.0) # this is >= 4
-        ),
-        src=cms.InputTag("offlinePrimaryVertices")
-        )
+#    from PhysicsTools.SelectorUtils.pvSelector_cfi import pvSelector
+#    process.goodOfflinePrimaryVertices = cms.EDFilter(
+#          "PrimaryVertexObjectFilter",
+#        filterParams = pvSelector.clone( maxZ = cms.double(24.0),
+#        minNdof = cms.double(4.0) # this is >= 4
+#        ),
+#        src=cms.InputTag("offlinePrimaryVertices")
+#        )
+#   We are using the default collection in FSA for vertices (which has a cut on Rho as well)
+
 
     process.load("CommonTools.ParticleFlow.PFBRECO_cff")
-    process.pfPileUp.Vertices = cms.InputTag("goodOfflinePrimaryVertices")
+    process.pfPileUp.Vertices = cms.InputTag("selectPrimaryVerticesQuality")
     process.pfPileUp.checkClosestZVertex = False
 
     process.ak5PFchsJets = process.pfJets.clone()
@@ -109,7 +110,7 @@ def rerunRecoObjects(process):
     process.ak5PFchsJets.src = 'pfNoPileUp'
 
     process.makeAK5PFNoPUJets = cms.Sequence(
-        process.goodOfflinePrimaryVertices*
+#        process.goodOfflinePrimaryVertices*
         process.pfNoPileUpSequence*
         process.ak5PFchsJets)
     
