@@ -7,6 +7,6 @@ then
 fi
 
 JOBID=$1
-SCRATCH_PATH=/scratch/$USER/$JOBID
+SCRATCH_PATH=/nfs_scratch/$USER/$JOBID
 
 ls $SCRATCH_PATH/*/dags/*dag.status | xargs grep -lir ERR | sed -e "s|status|rescue001|" | xargs -I{} -n 1 farmoutAnalysisJobs --rescue-dag-file={}
