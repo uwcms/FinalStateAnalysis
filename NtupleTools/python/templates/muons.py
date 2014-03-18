@@ -31,7 +31,7 @@ id = PSet(
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
     objectPFPUChargedIso = cms.string('{object}.userIsolation("PfPUChargedHadronIso")'),
     objectRelPFIsoDB = cms.string(
-        "({object}.userIso(0)"
+        "({object}.chargedHadronIso()"
         "+max({object}.photonIso()"
         "+{object}.neutralHadronIso()"
         "-0.5*{object}.puChargedHadronIso,0.0))"
