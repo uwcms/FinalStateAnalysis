@@ -30,8 +30,15 @@ id = PSet(
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
     objectPFPUChargedIso = cms.string('{object}.userIsolation("PfPUChargedHadronIso")'),
-    objectRelPFIsoDB = cms.string(
+    objectRelPFIsoDBHtt = cms.string(
         "({object}.userIso(0)"
+        "+max({object}.photonIso()"
+        "+{object}.neutralHadronIso()"
+        "-0.5*{object}.puChargedHadronIso,0.0))"
+        "/{object}.pt()"
+    ),
+    objectRelPFIsoDBDefault = cms.string(
+        "({object}.chargedHadronIso()"
         "+max({object}.photonIso()"
         "+{object}.neutralHadronIso()"
         "-0.5*{object}.puChargedHadronIso,0.0))"

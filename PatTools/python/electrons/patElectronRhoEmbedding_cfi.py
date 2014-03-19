@@ -29,6 +29,14 @@ patElectronZZ2012RhoEmbedding = cms.EDProducer(
     userLabel = cms.string("zzRho2012")
 )
 
+patElectronHZZ2012RhoEmbedding = cms.EDProducer(
+    "ElectronRhoOverloader",
+    src = cms.InputTag("fixme"),
+    srcRho = cms.InputTag("double_kt6PFJets_rho", "rho"),
+    # Used as userFloat label
+    userLabel = cms.string("hzzRho2012")
+)
+
 patElectronHZGRho2011Embedding = cms.EDProducer(
     "ElectronRhoOverloader",
     src = cms.InputTag("fixme"),
