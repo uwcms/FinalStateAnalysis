@@ -63,13 +63,13 @@ then
   git cherry-pick 7c142ddc3ce1a3e3d82be1142a7f13d1c3483be6
 
   echo "Checking out EGamma POG recipe for electron corrections"
-  #cvs co -r V09-00-01 RecoEgamma/EgammaTools
-  #cvs co -r FB_4Jun2013 EgammaAnalysis/ElectronTools
-  git cms-cvs-history import V09-00-01 RecoEgamma/EgammaTools
-  git clone https://github.com/cms-analysis/EgammaAnalysis-ElectronTools.git EgammaAnalysis/ElectronTools
-  pushd $CMSSW_BASE/src/EgammaAnalysis/ElectronTools
-  git checkout EgammaAnalysis-ElectronTools-FB_4Jun2013
-  pushd $CMSSW_BASE/src
+  #Following Volker's instructions
+  #git cms-cvs-history import V09-00-01 RecoEgamma/EgammaTools
+  #git clone https://github.com/cms-analysis/EgammaAnalysis-ElectronTools.git EgammaAnalysis/ElectronTools
+  #pushd $CMSSW_BASE/src/EgammaAnalysis/ElectronTools
+  #git checkout EgammaAnalysis-ElectronTools-FB_4Jun2013
+  #pushd $CMSSW_BASE/src
+  git cms-addpkg EgammaAnalysis/ElectronTools
 
   set +o errexit
   patch -N -p0 < FinalStateAnalysis/recipe/patches/Egamma_PassAll.patch
@@ -84,11 +84,6 @@ then
   patch -N -p0 < FinalStateAnalysis/recipe/patches/PATObject.h.patch
   set -o errexit
 
-  echo "Applying Marias b-tag patch"   
-  #doubtful that we need it now... but just in case...
-  set +o errexit
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/PhysicsToolsPatAlgos_fix_btags_52X.patch
-  set -o errexit
 fi
 
 popd

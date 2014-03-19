@@ -176,7 +176,8 @@ def produce_final_states(process, collections, output_commands,
         # I leave it loose here, can be tightened at the last step
         preselection=cms.string(
             "pt>20 & abs(eta) < 2.5 & "
-            "userFloat('idLoose') & userInt('fullIdLoose')"),
+            "userFloat('idLoose')"),
+                # & userInt('fullIdLoose')"),
         # overlap checking configurables
         checkOverlaps=cms.PSet(
             muons=cms.PSet(
@@ -236,6 +237,7 @@ def produce_final_states(process, collections, output_commands,
         object_types.append(('Pho', cms.InputTag("photonsForFinalStates")))
 
     process.buildDiObjects = cms.Sequence()
+
 
     process.load("FinalStateAnalysis.PatTools."
                  "finalStates.patFinalStatesEmbedExtraCollections_cfi")
@@ -448,6 +450,7 @@ def produce_final_states(process, collections, output_commands,
             output_commands.append("*_%s_*_*" % producer_name)
 
         sequence += process.buildQuadHzzObjects
+
 
 
 if __name__ == "__main__":

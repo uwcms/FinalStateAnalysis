@@ -22,10 +22,10 @@ vetos = PSet(
     muVetoPt15IsoIdVtx = 'vetoMuons(0.4, "pt > 15 & abs(eta) < 2.4 & userInt(\'tightID\') > 0.5 & ((userIso(0) + max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso,0.0))/pt()) < 0.15 & userFloat(\'dz\') < 0.2").size()',
     
     #TAU VETOS
-    tauVetoPt20 = 'vetoTaus(0.4, "pt > 20 & abs(eta) < 2.5 & tauID(\'decayModeFinding\') & tauID(\'byLooseIsolationMVA\')").size()',
-    tauHpsVetoPt20 = 'vetoTaus(0.3, "pt > 20 & abs(eta) < 2.3 & tauID(\'decayModeFinding\') & tauID(\'againstElectronLoose\') & tauID(\'againstMuonLoose\') & tauID(\'byMediumCombinedIsolationDeltaBetaCorr\')").size()',
-    tauVetoPt20LooseMVAVtx  = 'vetoTaus(0.4, "pt > 20 & abs(eta) < 2.5 & tauID(\'decayModeFinding\') & tauID(\'byLooseIsolationMVA\') & userFloat(\'dz\') < 0.2").size()',
-    tauVetoPt20LooseMVA2Vtx = 'vetoTaus(0.4, "pt > 20 & abs(eta) < 2.5 & tauID(\'decayModeFinding\') & tauID(\'byLooseIsolationMVA2\') & userFloat(\'dz\') < 0.2").size()',
+#    tauVetoPt20 = 'vetoTaus(0.4, "pt > 20 & abs(eta) < 2.5 & tauID(\'decayModeFinding\') & tauID(\'byLooseIsolationMVA\')").size()',
+#    tauHpsVetoPt20 = 'vetoTaus(0.3, "pt > 20 & abs(eta) < 2.3 & tauID(\'decayModeFinding\') & tauID(\'againstElectronLoose\') & tauID(\'againstMuonLoose\') & tauID(\'byMediumCombinedIsolationDeltaBetaCorr\')").size()',
+#    tauVetoPt20LooseMVAVtx  = 'vetoTaus(0.4, "pt > 20 & abs(eta) < 2.5 & tauID(\'decayModeFinding\') & tauID(\'byLooseIsolationMVA\') & userFloat(\'dz\') < 0.2").size()',
+#    tauVetoPt20LooseMVA2Vtx = 'vetoTaus(0.4, "pt > 20 & abs(eta) < 2.5 & tauID(\'decayModeFinding\') & tauID(\'byLooseIsolationMVA2\') & userFloat(\'dz\') < 0.2").size()',
     tauVetoPt20Loose3HitsVtx = 'vetoTaus(0.4, "pt > 20 & abs(eta) < 2.5 & tauID(\'decayModeFinding\') & tauID(\'byLooseCombinedIsolationDeltaBetaCorr3Hits\') & userFloat(\'dz\') < 0.2").size()',
     tauVetoPt20VLooseHPSVtx = 'vetoTaus(0.4, "pt > 20 & abs(eta) < 2.5 & tauID(\'decayModeFinding\') & tauID(\'byVLooseCombinedIsolationDeltaBetaCorr\') & userFloat(\'dz\') < 0.2").size()',
     
