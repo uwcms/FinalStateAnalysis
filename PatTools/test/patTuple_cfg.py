@@ -98,15 +98,12 @@ import FinalStateAnalysis.PatTools.rerunRecoObjects as rerecoer
 rereco, more_output = rerecoer.rerunRecoObjects(process)
 output_commands.extend(more_output)
 
-if options.globalTag == "":
+gtag_evn_var = 'mcgt' if options.isMC else 'datagt'
+if gtag_evn_var not in os.environ: 
     raise RuntimeError("Global tag not specified!"
                        " Try sourcing environment.sh\n")
-elif "auto:" in options.globalTag:
-    print "Using auto-configured global tag from key: %s" % options.globalTag
-    from HLTrigger.Configuration.AutoCondGlobalTag import AutoCondGlobalTag
-    process.GlobalTag = AutoCondGlobalTag(
-        process.GlobalTag, options.globalTag)
 else:
+    options.globalTag = os.environ[gtag_evn_var]
     print 'Using globalTag: %s' % options.globalTag
     process.GlobalTag.globaltag = cms.string(options.globalTag)
 
