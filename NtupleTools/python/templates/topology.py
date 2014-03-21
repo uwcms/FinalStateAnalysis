@@ -18,6 +18,8 @@ mtToMET = PSet(
     #PF Type1 MET (and systematics)
     objectMtToPFMET      = 'mtMET({object_idx}, "", "pfmet", ""     , 1)',
     objectMtToPfMet_Ty1  = 'mtMET({object_idx}, "", "pfmet", "type1", 1)',
+    objectMtToPfMet_Ty1_uesUp  = 'mtMET({object_idx}, "", "pfmet", "type1ues+", 1)',
+    objectMtToPfMet_Ty1_uesDown  = 'mtMET({object_idx}, "", "pfmet", "type1ues-", 1)',
     objectMtToPfMet_mes  = 'mtMET({object_idx}, "", "pfmet", "mes+" , 1)',
     objectMtToPfMet_tes  = 'mtMET({object_idx}, "", "pfmet", "tes+" , 1)',
     objectMtToPfMet_jes  = 'mtMET({object_idx}, "", "pfmet", "jes+" , 1)',
@@ -42,6 +44,8 @@ pairs = PSet(
 
     #Pairs + MET
     object1_object2_ToMETDPhi_Ty1 = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("type1").phi)',
+    object1_object2_ToMETDPhi_Ty1_UesUp = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("type1ues+").phi)',
+    object1_object2_ToMETDPhi_Ty1_UesDown = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("type1ues-").phi)',
 )
 
 svfit = PSet(
