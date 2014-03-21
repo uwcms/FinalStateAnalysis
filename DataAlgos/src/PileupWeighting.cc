@@ -21,34 +21,36 @@ namespace {
 static DistMap mcDistributions;
 static DistMap dataDistributions;
 
+//FileInPath error needs to be fixed
 // Where we store our data
-const static edm::FileInPath puInfoFile(
-    "FinalStateAnalysis/DataAlgos/data/pileup_distributions.py");
+//const static edm::FileInPath puInfoFile(
+//    "FinalStateAnalysis/DataAlgos/data/pileup_distributions.py");
 
 boost::shared_ptr<TH1> loadFromPSet(const std::string& name) {
-  boost::shared_ptr<edm::ParameterSet> toplevel =
-    edm::readPSetsFrom(puInfoFile.fullPath());
+  //boost::shared_ptr<edm::ParameterSet> toplevel =
+    //edm::readPSetsFrom(puInfoFile.fullPath());
 
-  edm::ParameterSet steering = toplevel->getParameterSet(
-      "pileup_distributions");
+  //edm::ParameterSet steering = toplevel->getParameterSet(
+   //   "pileup_distributions");
 
   // ROOT file path
   std::string path = "";
-  try {
-    path = steering.getParameter<edm::FileInPath>(name).fullPath();
-  } catch (cms::Exception) {
-    std::cerr << "Couldn't get PU distribution corresponding to " << name
-      << std::endl;
-    std::vector<std::string> available = toplevel->getParameterNames();
-    std::cerr << "There are " << available.size() << " available PUs:"
-      << std::endl;
-    for (size_t i = 0; i < available.size(); ++i) {
-      std::cerr << i << ") " << available[i] << std::endl;
-    }
-    throw;
-  }
+  //try {
+    //path = steering.getParameter<edm::FileInPath>(name).fullPath();
+ // } catch (cms::Exception) {
+   // std::cerr << "Couldn't get PU distribution corresponding to " << name
+     // << std::endl;
+    //std::vector<std::string> available = toplevel->getParameterNames();
+    //std::cerr << "There are " << available.size() << " available PUs:"
+     // << std::endl;
+    //for (size_t i = 0; i < available.size(); ++i) {
+    //  std::cerr << i << ") " << available[i] << std::endl;
+   // }
+   // throw;
+  //}
 
-  TFile file(path.c_str(), "READ");
+  //TFile file(path.c_str(), "READ"); fixme
+  TFile file("fixme", "READ");
 
   TH1* histo = static_cast<TH1*>(file.Get("pileup"));
 
