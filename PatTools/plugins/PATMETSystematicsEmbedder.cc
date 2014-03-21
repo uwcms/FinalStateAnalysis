@@ -71,6 +71,8 @@ PATMETSystematicsEmbedder::PATMETSystematicsEmbedder(
     produces<ShiftedCandCollection>("metsJESDown");
     produces<ShiftedCandCollection>("metsUESUp");
     produces<ShiftedCandCollection>("metsUESDown");
+    produces<ShiftedCandCollection>("metType1UESDown");
+    produces<ShiftedCandCollection>("metType1UESUp");  
 }
 
 // Get the transverse component of the vector
@@ -89,7 +91,6 @@ void embedShift(pat::MET& met, edm::Event& evt,
   typedef std::vector<ShiftedCand> ShiftedCandCollection;
   typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
   typedef reco::CandidatePtr CandidatePtr;
-
   std::auto_ptr<ShiftedCandCollection> output(new ShiftedCandCollection);
   ShiftedCand newCand(met);
   newCand.setP4(transverse(newCand.p4() + residual));
@@ -186,7 +187,14 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     const pat::Tau& tau = taus->at(i);
     // Get the underlying seed jet
     edm::Ptr<pat::Jet> seedJet(tau.userCand("patJet"));
-    assert(seedJet.isNonnull());
+    //assert(seedJet.isNonnull());
+    if (!(seedJet.isNonnull())){
+	std::cout << "null patJet in tau" << std::endl;
+	double tauPt = tau.pt();
+	std::cout << "pt of tau with null patJet" << tauPt << std::endl;
+	continue;
+    }
+    std::cout << "good patJet in tau" << std::endl;	
     const pat::Jet& jet = *seedJet;
     if (tauCut_(tau)) {
       shiftedTaus++;
@@ -264,6 +272,12 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   // Embed the type one corrected MET
   embedShift(outputMET, evt, "metType1", "type1",
       metP4Type1 - outputMET.p4());
+
+  embedShift(outputMET, evt, "metType1UESUp", "type1ues+",
+      metP4Type1 - outputMET.p4()-uesUpUnclusteredP4);
+
+  embedShift(outputMET, evt, "metType1UESDown", "type1ues-",
+      metP4Type1 - outputMET.p4()-uesDownUnclusteredP4);
 
   embedShift(outputMET, evt, "metsMESUp", "mes+",
       nominalMuonP4 - mesUpMuonP4);
