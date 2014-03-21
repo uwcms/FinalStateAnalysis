@@ -4,6 +4,7 @@ import FWCore.ParameterSet.Config as cms
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 from FinalStateAnalysis.Utilities.version import fsa_version, get_user
 import os
+from pdb import set_trace
 import time
 
 options = TauVarParsing.TauVarParsing(
@@ -28,12 +29,13 @@ options = TauVarParsing.TauVarParsing(
     embedded=0,  # If running on embedded samples, set to 1
     analyzeSkimEff='',  # Analyze the skim efficiency and put it in this file
     eleReg=0,
-    zzMode=False
+    zzMode=False,
 )
 
 files = []
 
 options.inputFiles = files
+options.globalTag  = ''
 
 options.parseArguments()
 
@@ -98,14 +100,16 @@ import FinalStateAnalysis.PatTools.rerunRecoObjects as rerecoer
 rereco, more_output = rerecoer.rerunRecoObjects(process)
 output_commands.extend(more_output)
 
-gtag_evn_var = 'mcgt' if options.isMC else 'datagt'
-if gtag_evn_var not in os.environ: 
-    raise RuntimeError("Global tag not specified!"
-                       " Try sourcing environment.sh\n")
-else:
-    options.globalTag = os.environ[gtag_evn_var]
-    print 'Using globalTag: %s' % options.globalTag
-    process.GlobalTag.globaltag = cms.string(options.globalTag)
+if not options.globalTag:
+    gtag_evn_var = 'mcgt' if options.isMC else 'datagt'
+    if gtag_evn_var not in os.environ: 
+        raise RuntimeError("Global tag not specified!"
+                           " Try sourcing environment.sh\n")
+    else:
+        options.globalTag = os.environ[gtag_evn_var]
+
+print '--- Using globalTag: %s ---' % options.globalTag
+process.GlobalTag.globaltag = cms.string(options.globalTag)
 
 # Count events at the beginning of the pat tuplization
 process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
