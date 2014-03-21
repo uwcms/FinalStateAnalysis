@@ -13,18 +13,28 @@ from RecoLuminosity.LumiDB import argparse
 import fnmatch
 from FinalStateAnalysis.MetaData.datadefs import datadefs
 from FinalStateAnalysis.Utilities.version import fsa_version
+from FinalStateAnalysis.Utilities.dbsinterface import get_dbs_info
 from FinalStateAnalysis.PatTools.pattuple_option_configurator import \
     configure_pat_tuple
 import os
 import sys
 import FinalStateAnalysis.PatTools.site_spec as site_spec
+import time
+from pdb import set_trace
+from hashlib import md5
 
 parser = argparse.ArgumentParser(description='Build PAT Tuple CRAB submission')
 parser.add_argument('jobid', help='Job ID identifier')
 parser.add_argument('--samples', nargs='+', type=str, required=False,
                     help='Filter samples using list of patterns (shell style)')
+parser.add_argument('--dbsnames', nargs='+', type=str, required=False,
+                    help='use full DBS names')
 parser.add_argument('--lumimask', type=str, required=False,
                     help='Optionally override the lumi mask used.')
+parser.add_argument('--xrootd', action='store_true', required=False, default=False,
+                    help='fetch files from remote tiers using xrootd')
+parser.add_argument('--ignoreRunRange', action='store_true', required=False, default=False,
+                    help='ignores the run range passed from datadefs')
 args = parser.parse_args()
 
 cfg = 'patTuple_cfg.py'
@@ -32,20 +42,31 @@ jobId = args.jobid
 
 print " # Job ID: %s Version: %s" % (jobId, fsa_version())
 print 'export TERMCAP=screen'
-for sample in sorted(datadefs.keys()):
-    sample_info = datadefs[sample]
 
-    passes_filter = True
+def any_matches(regexes, string):
+    for regex in regexes:
+        if fnmatch.fnmatchcase(string, regex):
+            return True
+    return False
 
-    # Filter by sample wildcards
+to_be_used = []
+for key, info in datadefs.iteritems():
     if args.samples:
-        passes_wildcard = False
-        for pattern in args.samples:
-            if fnmatch.fnmatchcase(sample, pattern):
-                passes_wildcard = True
-        passes_filter = passes_wildcard and passes_filter
-    if not passes_filter:
-        continue
+        if any_matches(args.samples, key):
+            to_be_used.append(key)
+    if 'datasetpath' in info and args.dbsnames:
+        dbs = info['datasetpath']
+        if any_matches(args.dbsnames, dbs):
+            to_be_used.append(key)            
+
+production_info = {}
+
+for sample in sorted(to_be_used):
+
+    sample_info = datadefs[sample]
+    if args.ignoreRunRange and 'firstRun' in sample_info:
+        del sample_info['firstRun']
+        del sample_info['lastRun']
 
     submit_dir_base = "{root}/{jobid}/{sample}".format(
         root=site_spec.submit_dir_root,
@@ -54,7 +75,8 @@ for sample in sorted(datadefs.keys()):
     )
     dag_directory = os.path.join(submit_dir_base, 'dags')
     # Create the dag directory
-    print "mkdir -p %s" % dag_directory
+    mkdir_cmd = "mkdir -p %s" % dag_directory
+    print mkdir_cmd
 
     submit_dir = os.path.join(submit_dir_base, 'submit')
 
@@ -73,15 +95,29 @@ for sample in sorted(datadefs.keys()):
                              " and the path relative to $CMSSW_BASE"
                              " must be given.\n")
             sys.exit(1)
-        sample_info['lumi_mask'] = args.lumimask
+        sample_info['lumi_mask'] = args.lumimask        
 
     options = configure_pat_tuple(sample, sample_info)
     options.append("'inputFiles=$inputFileNames'")
     options.append("'outputFile=$outputFileName'")
 
     farmout_options = []
-    farmout_options.append(
-        '--input-dbs-path=%s' % sample_info['datasetpath'])
+    if args.xrootd:
+        #query DBS to get the filenames
+        files = get_dbs_info('file','dataset=%s' % sample_info['datasetpath'])
+        os.system(mkdir_cmd) #make the directory now, we need to
+        input_txt = '%s_inputfiles.txt' % sample
+        input_txt_path = os.path.join(dag_directory, input_txt)
+        with open(input_txt_path, 'w') as txt:
+            txt.write('\n'.join(files))
+        farmout_options.extend([
+            '--input-file-list=%s' % input_txt_path,
+            '--assume-input-files-exist', 
+            '--input-dir=root://xrootd.unl.edu/',
+        ])
+    else:
+        farmout_options.append(
+            '--input-dbs-path=%s' % sample_info['datasetpath'])
 
     if 'lumi_mask' in sample_info:
         # This path goes to farmout, and should be absolute.
@@ -124,3 +160,29 @@ for sample in sorted(datadefs.keys()):
     command.append(cfg)
     command.extend(options)
     print ' '.join(command)
+
+    info = {
+        'creator' : '%s' % site_spec._log_name,
+        'jobid' : jobId,
+        'production date' : time.strftime("%c"),
+        'FSA Version' : fsa_version(),
+        'DBS Name' : sample_info['datasetpath'],
+        'PAT Location' : output_dir,
+    }
+    hasher = md5()
+    hasher.update(info.__repr__())
+
+    production_info[hasher.hexdigest()] = info
+
+
+import FinalStateAnalysis.Utilities.prettyjson as prettyjson
+
+hasher = md5()
+hasher.update(production_info.__repr__())
+
+with open(hasher.hexdigest() + '.json', 'w') as json:
+    json.write( 
+        prettyjson.dumps( 
+            production_info
+            )
+        )
