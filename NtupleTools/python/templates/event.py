@@ -54,7 +54,10 @@ met = PSet(
     pfMet_tes_Et   = 'evt.met4vector("pfmet","tes+", 1).Et',
     pfMet_jes_Et   = 'evt.met4vector("pfmet","jes+", 1).Et',
     pfMet_ues_Et   = 'evt.met4vector("pfmet","ues+", 1).Et',
-
+    type1_pfMetPhi_uesUp = 'evt.met4vector("pfmet","type1ues+",1).phi',
+    type1_pfMetPhi_uesDown = 'evt.met4vector("pfmet","type1ues-",1).phi',
+    type1_pfMetEt_uesUp  = 'evt.met4vector("pfmet","type1ues+",1).Et',
+    type1_pfMetEt_uesDown = 'evt.met4vector("pfmet","type1ues-",1).Et',
     pfMet_mes_Phi  = 'evt.met4vector("pfmet","mes+", 1).phi',
     pfMet_tes_Phi  = 'evt.met4vector("pfmet","tes+", 1).phi',
     pfMet_jes_Phi  = 'evt.met4vector("pfmet","jes+", 1).phi',
