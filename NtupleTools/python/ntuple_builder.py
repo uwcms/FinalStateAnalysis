@@ -33,6 +33,7 @@ _common_template = PSet(
     templates.trigger.mueg,
     templates.trigger.doublemu,
     templates.trigger.doublee,
+    templates.trigger.tripee,
     templates.trigger.isomu,
     templates.trigger.isomu24eta2p1,
     templates.trigger.singlemu,
