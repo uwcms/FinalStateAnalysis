@@ -100,18 +100,21 @@ mu16MuSelector = cms.EDFilter(
         "(isGlobalMuon) & abs(eta) < 2.2 & pt > 16.0"),
     filter=cms.bool(True)
 )
+
 tau18JetSelector = cms.EDFilter(
     "PFTauSelector",
     src=cms.InputTag("hpsPFTauProducer"),
     cut=cms.string("abs(eta) < 2.3 & pt > 18.0"),
     discriminators=cms.VPSet(
-        cms.PSet(discriminator=cms.InputTag(
-            "hpsPFTauDiscriminationByDecayModeFinding"),
+        cms.PSet(
+            discriminator=cms.InputTag("hpsPFTauDiscriminationByDecayModeFindingNewDMs"),
             selectionCut=cms.double(0.5)
         ),
     ),
     filter=cms.bool(True)
 )
+
+
 # Make sure we don't count the muon as a jet
 tau18JetsNotOverlappingMu14 = cms.EDFilter(
     "CandViewOverlapSubtraction",

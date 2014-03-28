@@ -172,7 +172,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.load("FinalStateAnalysis.PatTools.patTauProduction_cff")
     # Require all taus to pass decay mode finding and have high PT
     process.patTauGarbageRemoval.cut = cms.string(
-        "pt > 17 && abs(eta) < 2.5 && tauID('decayModeFinding')")
+        "pt > 17 && abs(eta) < 2.5 && tauID('decayModeFindingNewDMs')")
     final_tau_collection = chain_sequence(
         process.customizeTauSequence, "selectedPatTaus")
     # Inject into the pat sequence
