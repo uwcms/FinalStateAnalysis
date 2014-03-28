@@ -105,8 +105,8 @@ tau18JetSelector = cms.EDFilter(
     src=cms.InputTag("hpsPFTauProducer"),
     cut=cms.string("abs(eta) < 2.3 & pt > 18.0"),
     discriminators=cms.VPSet(
-        cms.PSet(discriminator=cms.InputTag(
-            "hpsPFTauDiscriminationByDecayModeFinding"),
+        cms.PSet(
+            discriminator=cms.InputTag("hpsPFTauDiscriminationByDecayModeFindingNewDMs"),
             selectionCut=cms.double(0.5)
         ),
     ),
