@@ -100,52 +100,20 @@ mu16MuSelector = cms.EDFilter(
         "(isGlobalMuon) & abs(eta) < 2.2 & pt > 16.0"),
     filter=cms.bool(True)
 )
-tau18JetSelectorOldDM = cms.EDFilter(
+
+tau18JetSelector = cms.EDFilter(
     "PFTauSelector",
     src=cms.InputTag("hpsPFTauProducer"),
     cut=cms.string("abs(eta) < 2.3 & pt > 18.0"),
     discriminators=cms.VPSet(
-        cms.PSet(discriminator=cms.InputTag(
-            "hpsPFTauDiscriminationByDecayModeFinding"),
+        cms.PSet(
+            discriminator=cms.InputTag("hpsPFTauDiscriminationByDecayModeFindingNewDMs"),
             selectionCut=cms.double(0.5)
         ),
     ),
-    filter=cms.bool(False)
+    filter=cms.bool(True)
 )
 
-tau18JetSelectorNewDM = cms.EDFilter(
-    "PFTauSelector",
-    src=cms.InputTag("hpsPFTauProducer"),
-    cut=cms.string("abs(eta) < 2.3 & pt > 18.0"),
-    discriminators=cms.VPSet(
-        cms.PSet(discriminator=cms.InputTag(
-            "hpsPFTauDiscriminationByDecayModeFindingNewDMs"),
-            selectionCut=cms.double(0.5)
-        ),
-    ),
-    filter=cms.bool(False)
-)
-
-tau18JetSelector = cms.EDProducer(
-    "CandViewMerger",
-    src = cms.VInputTag(
-        cms.InputTag("tau18JetSelectorOldDM"),
-        cms.InputTag("tau18JetSelectorNewDM")
-        )
-)
-
-oneTau18 = cms.EDFilter(
-    "CandViewCountFilter",
-    src=cms.InputTag("tau18JetSelector"),
-    minNumber=cms.uint32(1)
-)
-
-tau18Selection = cms.Sequence(
-    tau18JetSelectorOldDM * 
-    tau18JetSelectorNewDM *
-    tau18JetSelector *
-    oneTau18
-)
 
 # Make sure we don't count the muon as a jet
 tau18JetsNotOverlappingMu14 = cms.EDFilter(
@@ -156,7 +124,7 @@ tau18JetsNotOverlappingMu14 = cms.EDFilter(
     filter=cms.bool(True)
 )
 muTauPath = cms.Path(atLeastOneGoodVertexSequence + mu16MuSelector +
-                     tau18Selection + tau18JetsNotOverlappingMu14)
+                     tau18JetSelector + tau18JetsNotOverlappingMu14)
 skimConfig.paths.append("muTauPath")
 
 # E+Tau for H2Tau
@@ -182,7 +150,7 @@ tau18JetsNotOverlappingE19 = cms.EDFilter(
     filter=cms.bool(True)
 )
 eTauPath = cms.Path(atLeastOneGoodVertexSequence + e17Selector + e19Selector +
-                    tau18Selection + tau18JetsNotOverlappingE19)
+                    tau18JetSelector + tau18JetsNotOverlappingE19)
 skimConfig.paths.append("eTauPath")
 
 # DoubleE for ZZ, VH, and HZG
