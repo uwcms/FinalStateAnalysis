@@ -230,7 +230,7 @@ def expanded_final_states(input):
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
     zz_mode = (final_state in ['mmmm', 'eeee', 'eemm'])
-    analyzer = make_ntuple(*final_state, zz_mode=zz_mode, svFit=options.svFit)
+    analyzer = make_ntuple(*final_state, zz_mode=options.zz_mode, svFit=options.svFit)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 
