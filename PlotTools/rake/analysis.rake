@@ -12,9 +12,18 @@ rule ".root" => [
   # Expose output filename to the analyzer
   ENV['megatarget'] = t.name
   farmout = ENV.fetch('farmout', "0")
-  puts farmout
+  print_only = ENV.fetch('dryrun', "0")
+  puts "#using farmout:#{farmout}"
+  puts "#dry run:#{print_only}"
   if farmout == "1"
-      sh "mega-farmout #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name} --verbose"
+      if print_only == "1"
+          puts "export megatarget=#{t.name}"
+          puts "mkdir -p batch_logs"
+          puts "mega-farmout #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name} --verbose >& batch_logs/#{t.name.gsub('/','_').gsub('.root','.log')} &"
+          puts "sleep 10s"
+      else
+          sh "mega-farmout #{t.prerequisites[0]} #{t.prerequisites[1]} #{t.name} --verbose"
+      end
   else
       workers = ENV.fetch('megaworkers', 2)
       chain   = ENV.fetch('megachain'  , 10)
