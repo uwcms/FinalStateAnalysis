@@ -94,5 +94,12 @@
   "LFV_VBF_v1" : "/hdfs/store/user/nkellams/LFV_VBFHToTauMu_M126_8TeV_Tauola_Pythia6",
   "LFV_GluGlu_v1" : "/hdfs/store/user/nkellams/LFV_GluGluHToTauMu_M126_8TeV_Tauola_Pythia6",
 
-  "VH_H2Tau_M-125_PavelSync" : "/hdfs/store/user/stephane/Pavel_sync_07-16-2013-patTuple_cfg"
+  "VH_H2Tau_M-125_PavelSync" : "/hdfs/store/user/stephane/Pavel_sync_07-16-2013-patTuple_cfg",
+
+  "ggZZ2L2L" : "/hdfs/store/user/tapas/GluGluToZZTo2L2L_TuneZ2star_8TeV-gg2zz-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1",
+  "ggZZ4L" : "/hdfs/store/user/tapas/GluGluToZZTo4L_8TeV-gg2zz-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1",
+  "ZZ4E_powheg" : "/hdfs/store/user/tapas/2012-08-16-8TeV-PatTuple/ZZ4E_powheg",
+  "ZZ4M_powheg" : "/hdfs/store/user/tapas/2012-08-16-8TeV-PatTuple/ZZ4M_powheg",
+  "ZZ2E2M_powheg" : "/hdfs/store/user/tapas/2012-08-16-8TeV-PatTuple/ZZ2E2M_powheg"
+
 }
