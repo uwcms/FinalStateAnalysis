@@ -64,8 +64,14 @@ doublee = PSet(
         name='doubleETight',
         paths=r'HLT_Ele17_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_Ele8_CaloIdT_CaloIsoVL_TrkIdVL_TrkIsoVL_v\\d+'
     )
-
 )
+
+tripee = PSet(
+    _trig_template.replace(
+        name='tripleE',
+        paths=r'HLT_Ele15_Ele8_Ele5_CaloIdL_TrkIdVL_v\\d+'
+        )
+    )
 
 mueg = PSet(
     # Mu17Ele8 paths
