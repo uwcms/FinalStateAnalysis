@@ -194,6 +194,16 @@ def make_ntuple(*legs, **kwargs):
     }
 
     ntuple_config = _common_template.clone()
+    if kwargs.get('runTauSpinner', False):
+        for parName in templates.event.tauSpinner.parameterNames_():
+            setattr(
+                ntuple_config, 
+                parName, 
+                getattr(
+                    templates.event.tauSpinner, 
+                    parName
+                ) 
+            )
 
     # If we have two legs or photons, we are interested in VBF selections.
     if len(legs) == 2 or 'g' in legs:
