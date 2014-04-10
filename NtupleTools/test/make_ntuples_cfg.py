@@ -42,6 +42,7 @@ rerunJets=0   - rerun with new jet energy corrections
 '''
 
 import FWCore.ParameterSet.Config as cms
+import os
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
     make_ntuple, add_ntuple
@@ -73,7 +74,8 @@ options = TauVarParsing.TauVarParsing(
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runNewElectronMVAID=0,  # If one runs the new electron MVAID
     rerunMVAMET=0,  # If one, (re)build the MVA MET
-    rerunJets=0
+    rerunJets=0,
+    runTauSpinner=0
 )
 
 options.outputFile = "ntuplize.root"
@@ -119,12 +121,9 @@ if options.rerunFSA:
         'Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
     # Need the global tag for geometry etc.
-    if options.globalTag == "":
-        raise RuntimeError("Global tag not specified! "
-                           "Try sourcing environment.sh\n")
-    else:
-        print 'Using globalTag: %s' % options.globalTag
-    process.GlobalTag.globaltag = cms.string(options.globalTag)
+    envvar = 'mcgt' if options.isMC else 'datagt'
+    process.GlobalTag.globaltag = cms.string(os.environ[envvar])
+    print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
     mvamet_collection = 'systematicsMETMVA'
 
@@ -166,6 +165,14 @@ if options.rerunFSA:
         fs_daughter_inputs['taus'] = 'cleanPatTausRematched'
         fs_daughter_inputs['photons'] = 'photonParentage'
         fs_daughter_inputs['jets'] = 'selectedPatJetsRematched'
+
+    if options.runTauSpinner:
+        process.load('FinalStateAnalysis.RecoTools.TauSpinner_cfi')
+        process.TauSpinnerPath = cms.Path( process.TauSpinnerReco )
+        process.schedule.append(process.TauSpinnerPath)
+        fs_daughter_inputs['extraWeights'] = cms.PSet(
+            tauSpinnerWeight = cms.InputTag("TauSpinnerReco", "TauSpinnerWT") 
+        )
 
     if options.rerunQGJetID:
         process.schedule.append(
@@ -230,7 +237,7 @@ def expanded_final_states(input):
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
     zz_mode = (final_state in ['mmmm', 'eeee', 'eemm'])
-    analyzer = make_ntuple(*final_state, zz_mode=zz_mode, svFit=options.svFit)
+    analyzer = make_ntuple(*final_state, zz_mode=zz_mode, svFit=options.svFit, runTauSpinner=options.runTauSpinner)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 
