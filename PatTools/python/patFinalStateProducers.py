@@ -71,6 +71,8 @@ def produce_final_states(process, collections, output_commands,
         process.patFinalStateEventProducer.puTag = cms.string(puTag)
         process.patFinalStateEventProducer.mets.pfmet = pfmetsrc
         process.patFinalStateEventProducer.mets.mvamet = mvametsrc
+        if 'extraWeights' in collections:
+            process.patFinalStateEventProducer.extraWeights = collections['extraWeights']
         sequence += process.patFinalStateEventProducer
 
     # Always keep
