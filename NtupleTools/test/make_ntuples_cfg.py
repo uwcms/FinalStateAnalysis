@@ -75,8 +75,17 @@ options = TauVarParsing.TauVarParsing(
     runNewElectronMVAID=0,  # If one runs the new electron MVAID
     rerunMVAMET=0,  # If one, (re)build the MVA MET
     rerunJets=0,
-    runTauSpinner=0
+    runTauSpinner=0,
 )
+
+options.register(
+    'skimCuts',
+    '',
+    TauVarParsing.TauVarParsing.multiplicity.list,
+    TauVarParsing.TauVarParsing.varType.string,
+    'additional cuts to impose on the NTuple'
+)
+
 
 options.outputFile = "ntuplize.root"
 options.parseArguments()
@@ -237,9 +246,11 @@ def expanded_final_states(input):
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
     zz_mode = (final_state in ['mmmm', 'eeee', 'eemm'])
-    analyzer = make_ntuple(*final_state, zz_mode=zz_mode, svFit=options.svFit, runTauSpinner=options.runTauSpinner)
+    analyzer = make_ntuple(*final_state, zz_mode=zz_mode, svFit=options.svFit, 
+                           runTauSpinner=options.runTauSpinner, skimCuts=options.skimCuts)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
+
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 
