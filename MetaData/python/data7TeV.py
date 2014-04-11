@@ -91,6 +91,12 @@ datadefs = {
   'analyses' : [ 'Wbb' ],
   },
 
+    'TTTo2L2Nu2B_pythia' : {
+        'datasetpath' : '/TTTo2L2Nu2B_7TeV-powheg-pythia6/Summer11-PU_S4_START42_V11-v1/AODSIM',
+        'x_sec' : -999, #NNLO
+        'pu' : 'S4',
+        'analyses' : ['Mu'],
+    },
     'WbbToLNu_TuneZ2_7TeV-madgraph-pythia6-tauola' : {
         'datasetpath' : '/WbbToLNu_TuneZ2_7TeV-madgraph-pythia6-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM',
         'x_sec' : -999, #NNLO
@@ -217,6 +223,18 @@ datadefs = {
         'x_sec_unc' : quad(1.5, 0.2, 0.2)*0.10096*0.10096,
         'calibrationTarget' : 'Fall11',
         'analyses' : ['VH',  '4L', 'HTT'],
+    },
+    'ZZJetsTo4L_madgraph' : {
+        'datasetpath' : "/ZZJetsTo4L_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'pu' : 'S6',
+        'x_sec' : -999.,
+        'analyses' : ['HTT'],
+    },
+    'ZZJetsTo2L2Q_madgraph' : {
+        'datasetpath' : "/ZZJetsTo2L2Q_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'pu' : 'S6',
+        'x_sec_unc' : -999.,
+        'analyses' : ['HTT'],
     },
     'WZJetsTo3LNu' : {
         'datasetpath' : "/WZJetsTo3LNu_TuneZ2_7TeV-madgraph-tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
@@ -1536,6 +1554,41 @@ datadefs = {
         'calibrationTarget' : 'Fall11',
         'analyses' : ['4L'],
     },
+    'Graviton2PMToZZTo4L_M-126' : {
+        'datasetpath' : "/Graviton2PMToZZTo4L_M-126_7TeV_ext-JHUgenV2-PYTHIA6_Tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 1,
+        'pu' : 'S6',
+        'calibrationTarget' : 'Fall11',
+        'analyses' : ['4L'],
+    },
+    'Higgs0MToZZTo4L_M-126' : {
+        'datasetpath' : "/Higgs0MToZZTo4L_M-126_7TeV_ext-JHUgenV2-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 1,
+        'pu' : 'S6',
+        'calibrationTarget' : 'Fall11',
+        'analyses' : ['4L'],
+    },
+    'Higgs0PHToZZTo4L_M-126' : {
+        'datasetpath' : "/Higgs0PHToZZTo4L_M-126_7TeV_ext-JHUgenV2-pythia6/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 1,
+        'pu' : 'S6',
+        'calibrationTarget' : 'Fall11',
+        'analyses' : ['4L'],
+    },
+    'SMHiggsToZZTo4L_M-126' : {
+        'datasetpath' : "/SMHiggsToZZTo4L_M-126_7TeV_ext-JHUgenV2-PYTHIA6_Tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 1,
+        'pu' : 'S6',
+        'calibrationTarget' : 'Fall11',
+        'analyses' : ['4L'],
+    },
+    'Graviton2PMqqbarToZZTo4L_M-126' : {
+        'datasetpath' : "/Graviton2PMqqbarToZZTo4L_M-126_7TeV-JHUgenV2-PYTHIA6_Tauola/Fall11-PU_S6_START42_V14B-v1/AODSIM",
+        'x_sec' : 1,
+        'pu' : 'S6',
+        'calibrationTarget' : 'Fall11',
+        'analyses' : ['4L'],
+    },
 
 }
 
@@ -1703,13 +1756,13 @@ def build_data_set(pd, analyses):
 #          'lastRun' : 167913,
 #          'analyses' : analyses,
 #      },
-#      'data_%s_Run2011A_Oct03ReReco_v1' % pd : {
-#          'datasetpath' : "/%s/Run2011A-03Oct2011-v1/AOD" % pd,
-#          'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-180252_7TeV_PromptReco_Collisions11_JSON.txt",
-#          'firstRun' : 172620,
-#          'lastRun' : 175770,
-#          'analyses' : analyses,
-#      },
+      'data_%s_Run2011A_Oct03ReReco_v1' % pd : {
+          'datasetpath' : "/%s/Run2011A-03Oct2011-v1/AOD" % pd,
+          'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_160404-180252_7TeV_PromptReco_Collisions11_JSON.txt",
+          'firstRun' : 172620,
+          'lastRun' : 175770,
+          'analyses' : analyses,
+      }
   }
   sample_dict = {
     'data_%s' % pd : subsample_dict.keys()

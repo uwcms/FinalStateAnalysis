@@ -45,9 +45,6 @@ namespace pattools {
 
     _userP4Prefix = conf.getParameter<std::string>("userP4Prefix");
 
-    _smearRatio = conf.getParameter<double>("smearRatio");
-    _isSync = conf.getParameter<bool>("isSync");
-
     _vtxsrc = conf.getParameter<edm::InputTag>("vtxSrc");
     _rhosrc = conf.getParameter<edm::InputTag>("rhoSrc");
 
@@ -81,7 +78,6 @@ namespace pattools {
 	  delete _regs[type].second;
 	  _regs[type].second = NULL;
 	}
-
       }
     }
 
@@ -107,7 +103,7 @@ namespace pattools {
 
 	if( applyCorrections >= 0 ) {
 	  _calibs[type] =
-	    new eCalib(_dataset,isAOD,isMC,true,applyCorrections,_smearRatio,false,_isSync);
+	    new eCalib(_dataset,isAOD,isMC,true,applyCorrections,false);
 	  if( std::find(iapp,eapp,type) != eapp)
 	    _apply[type] = regType;
 	}
@@ -186,7 +182,7 @@ namespace pattools {
 
 	pCalib thisCalib = _calibs[app->first];
 	if( thisCalib )
-	  thisCalib->correct(*(temp.get()),temp.get()->r9(),*_event,*_esetup,temp.get()->ecalRegressionEnergy(),temp.get()->ecalRegressionError());
+	  thisCalib->correct(*(temp.get()),*_event,*_esetup);
 
 	out->addUserData<math::XYZTLorentzVector>(_userP4Prefix+
 						  _dataset+app->first,

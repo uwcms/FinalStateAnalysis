@@ -61,8 +61,6 @@ namespace pattools {
 
     edm::InputTag _vtxsrc, _rhosrc;
     std::string _dataset, _userP4Prefix;
-    double _smearRatio;
-    bool _isSync;
 
     double _rho;
     int    _nvtx;
