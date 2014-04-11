@@ -36,6 +36,10 @@ class Plotter(object):
         self.views = data_views(files, lumifiles)
         self.canvas = plotting.Canvas(name='adsf', title='asdf')
         self.canvas.cd()
+        self.pad    = plotting.Pad('up', 'up', 0., 0., 1., 1.) #ful-size pad
+        self.pad.Draw()
+        self.pad.cd()
+        self.lower_pad = None
         if blinder:
             # Keep the unblinded data around if desired.
             self.views['data']['unblinded_view'] = self.views['data']['view']
@@ -68,16 +72,26 @@ class Plotter(object):
         '''
         for sample, sample_info in self.views.iteritems():
             if fnmatch.fnmatch(sample, sample_pattern):
-                return sample_info[key_name]
+                try: 
+                    return sample_info[key_name]
+                except KeyError:
+                    raise KeyError("you asked for %s in sample %s, but it was not found, I only have: %s" % (key_name, sample, ','.join(sample_info.keys())))
         raise KeyError("I can't find a view that matches %s, I have: %s" % (
             sample_pattern, " ".join(self.views.keys())))
 
-    def make_stack(self, rebin=1):
+    def make_stack(self, rebin=1, preprocess=None):
         ''' Make a stack of the MC histograms '''
-        all_mc_stack = views.StackView(
-            *[self.rebin_view(self.get_view(x), rebin) for x in self.mc_samples]
-        )
-        return all_mc_stack
+        
+        mc_views = []
+        for x in self.mc_samples:
+            mc_view = self.get_view(x)
+            if preprocess:
+                mc_view = preprocess(mc_view)
+            mc_views.append(
+                self.rebin_view(mc_view, rebin)
+                )
+            
+        return views.StackView(*mc_views)
 
     def add_legend(self, samples, leftside=True, entries=None):
         ''' Build a legend using samples.
@@ -114,11 +128,57 @@ class Plotter(object):
             self.views['data']['intlumi']/1000.)
         self.keep.append(latex.DrawLatex(0.18,0.96, label_text));
 
-    def save(self, filename, dotc=False, dotroot=False):
+    def add_ratio_plot(self, data_hist, mc_stack, x_range=None, ratio_range=0.2):
+        #resize the canvas and the pad to fit the second pad
+        self.canvas.SetCanvasSize( self.canvas.GetWw(), int(self.canvas.GetWh()*1.3) )
+        self.canvas.cd()
+        self.pad.SetPad(0, 0.33, 1., 1.)
+        self.pad.Draw()
+        self.canvas.cd()
+        #create lower pad
+        self.lower_pad = plotting.Pad('low', 'low', 0, 0., 1., 0.33)
+        self.lower_pad.Draw()
+        self.lower_pad.cd()
+        
+        mc_hist    = sum(mc_stack.GetHists())
+        data_clone = data_hist.Clone()
+        if not x_range:
+            nbins = data_clone.GetNbinsX()
+            x_range = (data_clone.GetBinLowEdge(1), 
+                       data_clone.GetBinLowEdge(nbins)+data_clone.GetBinWidth(nbins))
+        ref_function = ROOT.TF1('f', "1.", *x_range)
+        ref_function.SetLineWidth(3)
+        ref_function.SetLineStyle(2)
+        
+        data_clone.Divide(mc_hist)
+        data_clone.Draw()
+        data_clone.GetYaxis().SetRangeUser(1-ratio_range, 1+ratio_range)
+        ref_function.Draw('same')
+        self.keep.append(data_clone)
+        self.keep.append(ref_function)
+        self.pad.cd()        
+
+    def reset(self):
+        '''hard graphic reset'''
+        del self.canvas
+        del self.pad
+        del self.lower_pad
+        self.keep = []
+        self.canvas = plotting.Canvas(name='adsf', title='asdf')
+        self.canvas.cd()
+        self.pad    = plotting.Pad('up', 'up', 0., 0., 1., 1.) #ful-size pad
+        self.pad.Draw()
+        self.pad.cd()
+        self.lower_pad = None
+
+    def save(self, filename, dotc=False, dotroot=False, verbose=False):
         ''' Save the current canvas contents to [filename] '''
+        self.pad.Draw()
         self.canvas.Update()
         if not os.path.exists(self.outputdir):
             os.makedirs(self.outputdir)
+        if verbose:
+            print 'saving '+os.path.join(self.outputdir, filename) + '.png'
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.png')
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.pdf')
         if dotc:
@@ -129,11 +189,20 @@ class Plotter(object):
             self.canvas.Write()
             for obj in self.keep:
                 obj.Write()
-            self.keep = []
+            #self.keep = []
+            self.reset()
             outfile.Close()
-            self.canvas = plotting.Canvas(name='adsf', title='asdf')
-        # Reset keeps
-        self.keep = []
+            #self.canvas = plotting.Canvas(name='adsf', title='asdf')
+            #self.canvas.cd()
+            #self.pad    = plotting.Pad(0., 0., 1., 1.) #ful-size pad
+            #self.pad.cd()
+
+        if self.keep and self.lower_pad:
+            #pass
+            self.reset()
+        else:
+            # Reset keeps
+            self.keep = []
         # Reset logx/y
         self.canvas.SetLogx(False)
         self.canvas.SetLogy(False)
@@ -175,10 +244,11 @@ class Plotter(object):
         self.keep.append( (histo1, histo2) )
 
     def plot_mc_vs_data(self, folder, variable, rebin=1, xaxis='',
-                        leftside=True, xrange=None):
+                        leftside=True, xrange=None, preprocess=None,
+                        show_ratio=False, ratio_range=0.2):
         ''' Compare Monte Carlo to data '''
         path = os.path.join(folder, variable)
-        mc_stack = self.make_stack(rebin).Get(path)
+        mc_stack = self.make_stack(rebin, preprocess).Get(path)
         mc_stack.Draw()
         mc_stack.GetHistogram().GetXaxis().SetTitle(xaxis)
         if xrange:
@@ -186,7 +256,11 @@ class Plotter(object):
             mc_stack.Draw()
         self.keep.append(mc_stack)
         # Draw data
-        data = self.rebin_view(self.get_view('data'), rebin).Get(path)
+        data_view = self.get_view('data')
+        if preprocess:
+            data_view = preprocess( data_view )
+        data_view = self.rebin_view(data_view, rebin)
+        data = data_view.Get(path)
         data.Draw('same')
         self.keep.append(data)
         # Make sure we can see everything
@@ -194,3 +268,5 @@ class Plotter(object):
             mc_stack.SetMaximum(1.2*data.GetMaximum())
         # Add legend
         self.add_legend([data, mc_stack], leftside, entries=5)
+        if show_ratio:
+            self.add_ratio_plot(data, mc_stack, xrange, ratio_range=0.2)
