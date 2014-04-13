@@ -22,17 +22,17 @@ from data8TeV import datadefs as datadefs52
 from string import Template
 
 try:
-      from yellowhiggs import xs, br, xsbr
-      br(130.,'WW')
+        from yellowhiggs import xs, br, xsbr
+        br(130.,'WW')
 except:
-      #print "warning: yellowhiggs error"
-      #define / override functions to avoid crashes
-      def br(*args, **kwargs):
-            return -99
-      def xs(*args, **kwargs):
-            return -99, (-99, 99)
-      def xsbr(*args, **kwargs):
-            return -99, (-99, 99)
+#print "warning: yellowhiggs error"
+#define / override functions to avoid crashes
+        def br(*args, **kwargs):
+                return -99
+        def xs(*args, **kwargs):
+                return -99, (-99, 99)
+        def xsbr(*args, **kwargs):
+                return -99, (-99, 99)
 
 
 # Figure this out later.
@@ -386,139 +386,139 @@ datadefs = {
    },
 
     'WplusJets_madgraph_filtered' : {
-# This is not a sample exactly... To combine 1-2-3-4 jets I have incorporated a filtered version of WJets (NUP==5) in my workflow
+                                # This is not a sample exactly... To combine 1-2-3-4 jets I have incorporated a filtered version of WJets (NUP==5) in my workflow
 # I need the name in datadefs for UWHiggs to work
-        'analyses': ['HTT'],
-        'datasetpath': '/ThisIsNotARealSample/NeededForUWCMSToWork/Sorry/Maria',
-        'pu': 'S7',
-        'calibrationTarget': 'Summer12',
-        'x_sec': 37509, # this is the W xsec in the StandardModelReference twiki
-    },
+                                        'analyses': ['HTT'],
+                                        'datasetpath': '/ThisIsNotARealSample/NeededForUWCMSToWork/Sorry/Maria',
+                                        'pu': 'S7',
+                                        'calibrationTarget': 'Summer12',
+                                        'x_sec': 37509, # this is the W xsec in the StandardModelReference twiki
+                                },
 
-   'WplusJets_madgraph_S10' : {
-   'analyses': ['HTT'],
-   'datasetpath' : "/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
-   'x_sec' : -999,
-   'pu' : 'S10',
-    'calibrationTarget':'Summer12_DR53X_HCP2012'
-   },
+                                'WplusJets_madgraph_S10' : {
+                                        'analyses': ['HTT'],
+                                        'datasetpath' : "/WJetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM",
+                                        'x_sec' : -999,
+                                        'pu' : 'S10',
+                                        'calibrationTarget':'Summer12_DR53X_HCP2012'
+                                },
 
-    'Wplus1Jets_madgraph' : {
-        'analyses': ['HTT'],
-        'datasetpath': '/W1JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
-        'pu': 'S10',
-        'calibrationTarget': 'Summer12',
-        'x_sec': 6662.8,
-    },
-    'Wplus1Jets_madgraph_tapas' : {
-        'analyses': ['ET'],
-        'datasetpath': '/W1JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM',
-        'pu': 'S10',
-        'calibrationTarget': 'Summer12',
-        'x_sec': 6662.8,
-    },
+                                'Wplus1Jets_madgraph' : {
+                                        'analyses': ['HTT'],
+                                        'datasetpath': '/W1JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+                                        'pu': 'S10',
+                                        'calibrationTarget': 'Summer12',
+                                        'x_sec': 6662.8,
+                                },
+                                'Wplus1Jets_madgraph_tapas' : {
+                                        'analyses': ['ET'],
+                                        'datasetpath': '/W1JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM',
+                                        'pu': 'S10',
+                                        'calibrationTarget': 'Summer12',
+                                        'x_sec': 6662.8,
+                                },
 
-    'Wplus2Jets_madgraph' : {
-        'analyses': ['HTT'],
-        'datasetpath': '/W2JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
-        'pu': 'S7',
-        'calibrationTarget': 'Summer12',
-        'x_sec': 2159.2,
-    },
-      'Wplus2Jets_madgraph_tapas' : {
-            'analyses': ['HTT'],
-            'datasetpath': '/W2JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM',
-            'pu': 'S10',
-            'calibrationTarget': 'Summer12',
-            'x_sec': 2159.2,
-      },
+                                'Wplus2Jets_madgraph' : {
+                                        'analyses': ['HTT'],
+                                        'datasetpath': '/W2JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+                                        'pu': 'S7',
+                                        'calibrationTarget': 'Summer12',
+                                        'x_sec': 2159.2,
+                                },
+                                'Wplus2Jets_madgraph_tapas' : {
+                                        'analyses': ['HTT'],
+                                        'datasetpath': '/W2JetsToLNu_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM',
+                                        'pu': 'S10',
+                                        'calibrationTarget': 'Summer12',
+                                        'x_sec': 2159.2,
+                                },
 
-    'Wplus3Jets_madgraph' : {
-        'analyses': ['HTT'],
-        'datasetpath': '/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
-        'pu': 'S7',
-        'calibrationTarget': 'Summer12',
-        'x_sec': 640.4,
-    },
+                                'Wplus3Jets_madgraph' : {
+                                        'analyses': ['HTT'],
+                                        'datasetpath': '/W3JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+                                        'pu': 'S7',
+                                        'calibrationTarget': 'Summer12',
+                                        'x_sec': 640.4,
+                                },
 
-    'Wplus4Jets_madgraph' : {
-        'analyses': ['HTT'],
-        'datasetpath': '/W4JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
-        'pu': 'S7',
-        'calibrationTarget': 'Summer12',
-        'x_sec': 264.,
-    },
+                                'Wplus4Jets_madgraph' : {
+                                        'analyses': ['HTT'],
+                                        'datasetpath': '/W4JetsToLNu_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+                                        'pu': 'S7',
+                                        'calibrationTarget': 'Summer12',
+                                        'x_sec': 264.,
+                                },
 
 
-}
+                        }
 
 
 
 # SM Z\gamma 8 TeV
 datadefs['ZGToLLG']= {
-   'datasetpath' :'/ZGToLLG_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
-   'pu' : 'S10',
-   'x_sec' : 156.2*picobarns,
-   'analyses' : ['HZG'],
-   'calibrationTarget':'Summer12_DR53X_HCP2012'
-   }
+        'datasetpath' :'/ZGToLLG_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu' : 'S10',
+        'x_sec' : 156.2*picobarns,
+        'analyses' : ['HZG'],
+        'calibrationTarget':'Summer12_DR53X_HCP2012'
+}
 
 ############################################################################
 #### Signal datasets ####################################
 ############################################################################
 for mass in range(80,150, 10) + range(160, 220, 20) + range(250, 550, 50) + range(600, 1100, 100) :
-   datadefs['SUSYGluGluToHToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
-      'analyses': ['HTT'],
-      'datasetpath': "/SUSYGluGluToHToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
-      'pu' : 'S10',
-      'x_sec' : -999,
-      'calibrationTarget':'Summer12_DR53X_HCP2012'
-      }
-   datadefs['SUSYBBHToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
-      'analyses': ['HTT'],
-      'datasetpath': "/SUSYBBHToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
-      'pu' : 'S10',
-      'x_sec' : -999,
-       'calibrationTarget':'Summer12_DR53X_HCP2012'
-      }
+        datadefs['SUSYGluGluToHToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
+                'analyses': ['HTT'],
+                'datasetpath': "/SUSYGluGluToHToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+                'pu' : 'S10',
+                'x_sec' : -999,
+                'calibrationTarget':'Summer12_DR53X_HCP2012'
+        }
+datadefs['SUSYBBHToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
+        'analyses': ['HTT'],
+        'datasetpath': "/SUSYBBHToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+        'pu' : 'S10',
+        'x_sec' : -999,
+        'calibrationTarget':'Summer12_DR53X_HCP2012'
+}
 
 aTGC_path = Template('/ZZ4L_Sherpa_aTGC_f${i}_${f1}0_${f2}0_v2/iross-SUMMER12-AODSIM-START53_V7C_${i}_${f1}_${f2}-RECO-v2-6c2e8f83abf0ca43d500aa4162646310/USER')
 
 for coup in ["4","5"]:
-    for coup1 in ["0p015","0p000","m0p015"]:
-        for coup2 in ["0p015","0p000","m0p015"]:
-            datadefs['ZZ4L_f%s_%s0_%s0' % ( coup, coup1, coup2 )] = {
-               'analyses': ['ZZ'],
-               'datasetpath' : aTGC_path.substitute(i=coup,f1=coup1,f2=coup2),
-               'dbs' : "cms_dbs_ph_analysis_01",
-               'x_sec' : -999,
-               'pu' : 'S10',
-               'calibrationTarget':'Summer12_DR53X_HCP2012'
-               }
+        for coup1 in ["0p015","0p000","m0p015"]:
+                for coup2 in ["0p015","0p000","m0p015"]:
+                        datadefs['ZZ4L_f%s_%s0_%s0' % ( coup, coup1, coup2 )] = {
+                        'analyses': ['ZZ'],
+                        'datasetpath' : aTGC_path.substitute(i=coup,f1=coup1,f2=coup2),
+                        'dbs' : "cms_dbs_ph_analysis_01",
+                        'x_sec' : -999,
+                        'pu' : 'S10',
+                        'calibrationTarget':'Summer12_DR53X_HCP2012'
+                         }
 
-datadefs['SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola'] = {
-   'analyses': ['HTT'],
-   'datasetpath': "/SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM",
-   'pu' : 'S10',
-   'x_sec' : -999,
-    'calibrationTarget':'Summer12_DR53X_HCP2012'
-   }
+                        datadefs['SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola'] = {
+                        'analyses': ['HTT'],
+                        'datasetpath': "/SUSYBBHToTauTau_M-300_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v2/AODSIM",
+                        'pu' : 'S10',
+                        'x_sec' : -999,
+                        'calibrationTarget':'Summer12_DR53X_HCP2012'
+                        }
 
 for mass in range(110, 165, 5) :
-   datadefs['GluGluToHToTauTau_M-%i_8TeV-powheg-pythia6' % mass] = {
-      'analyses': ['HTT'],
-      'datasetpath': "/GluGluToHToTauTau_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
-      'pu' : 'S10',
-      'x_sec' : -999,
-       'calibrationTarget':'Summer12_DR53X_HCP2012'
-      }
-   datadefs['VBF_HToTauTau_M-%i_8TeV-powheg-pythia6' % mass] = {
-      'analyses': ['HTT'],
-      'datasetpath': "/VBF_HToTauTau_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
-      'pu' : 'S10',
-      'x_sec' : -999,
-       'calibrationTarget':'Summer12_DR53X_HCP2012'
-      }
+        datadefs['GluGluToHToTauTau_M-%i_8TeV-powheg-pythia6' % mass] = {
+                'analyses': ['HTT'],
+                'datasetpath': "/GluGluToHToTauTau_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+                'pu' : 'S10',
+                'x_sec' : -999,
+                'calibrationTarget':'Summer12_DR53X_HCP2012'
+        }
+datadefs['VBF_HToTauTau_M-%i_8TeV-powheg-pythia6' % mass] = {
+        'analyses': ['HTT'],
+        'datasetpath': "/VBF_HToTauTau_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+        'pu' : 'S10',
+        'x_sec' : -999,
+        'calibrationTarget':'Summer12_DR53X_HCP2012'
+}
 
 # Double Charged Higgs Signal Samples
 dblh_4l_xsec = {110: 8730.9,  130: 186.21,  150: 106.55,
@@ -548,20 +548,20 @@ for mass in [110, 130, 150, 170, 200, 250, 300, 350, 400, 450, 500, 600, 700]:
 
 # HZZ4L Signal Samples
 for mass in range(115,130) + range(130,150,5) + range(150,200,10) + [200,220] + range(250,600,25) + range(600,1001,50) :
-   datadefs['GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
-      'analyses': ['HTT'],
-      'datasetpath': "/GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
-      'pu' : 'S10',
-      'x_sec' : -999,
-       'calibrationTarget':'Summer12_DR53X_HCP2012'
-      }
-   datadefs['VBF_HToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
-      'analyses': ['HTT'],
-      'datasetpath': "/VBF_HToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
-      'pu' : 'S10',
-      'x_sec' : -999,
-       'calibrationTarget':'Summer12_DR53X_HCP2012'
-      }
+        datadefs['GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
+                'analyses': ['HTT'],
+                'datasetpath': "/GluGluToHToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+                'pu' : 'S10',
+                'x_sec' : -999,
+                'calibrationTarget':'Summer12_DR53X_HCP2012'
+        }
+datadefs['VBF_HToZZTo4L_M-%i_8TeV-powheg-pythia6' % mass] = {
+        'analyses': ['HTT'],
+        'datasetpath': "/VBF_HToZZTo4L_M-%i_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+        'pu' : 'S10',
+        'x_sec' : -999,
+        'calibrationTarget':'Summer12_DR53X_HCP2012'
+}
 
 # HZZ4L Spin Parity Samples
 datadefs['SMHiggs-126'] = {
@@ -572,7 +572,7 @@ datadefs['SMHiggs-126'] = {
         'x_sec': -999,
         'globalTag': 'START53_V7G::All',
         'eleReg' : 1
-        }
+}
 
 datadefs['Higgs0M-126'] = {
         'analyses': ['4L'],
@@ -582,7 +582,7 @@ datadefs['Higgs0M-126'] = {
         'x_sec': -999,
         'globalTag': 'START53_V7G::All',
         'eleReg' : 1
-        }
+}
 
 datadefs['Higgs0PH-126'] = {
         'analyses': ['4L'],
@@ -592,7 +592,7 @@ datadefs['Higgs0PH-126'] = {
         'x_sec': -999,
         'globalTag': 'START53_V7G::All',
         'eleReg' : 1
-        }
+}
 
 datadefs['Graviton2PM-126'] = {
         'analyses': ['4L'],
@@ -602,7 +602,7 @@ datadefs['Graviton2PM-126'] = {
         'x_sec': -999,
         'globalTag': 'START53_V7G::All',
         'eleReg' : 1
-        }
+}
 
 datadefs['Graviton2PMqq-126'] = {
         'analyses': ['4L'],
@@ -612,78 +612,79 @@ datadefs['Graviton2PMqq-126'] = {
         'x_sec': -999,
         'globalTag': 'START53_V7G::All',
         'eleReg' : 1
-        }
+}
 
 
 
 for mass in range(110, 165, 5) :
-   if mass==135 :
-      ver=2
-   else :
-      ver=1
+        if mass==135 :
+                ver=2
+        else :
+                ver=1
 
-   datadefs['WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
-      'analyses': ['HTT'],
-      'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v%i/AODSIM" % (mass,ver),
-      'pu' : 'S10',
-      'x_sec' : -999,
-       'calibrationTarget':'Summer12_DR53X_HCP2012'
-      }
+        datadefs['WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola' % mass] = {
+                'analyses': ['HTT'],
+                'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v%i/AODSIM" % (mass,ver),
+                'pu' : 'S10',
+                'x_sec' : -999,
+                'calibrationTarget':'Summer12_DR53X_HCP2012'
+        }
 
 # H -> Z\gamma signal datasets
 hzgMap = {'gg':['/GluGluToHToZG_M-','_8TeV-powheg-pythia6'],
-          'VBF':['/VBF_HToZG_M-','_8TeV-powheg-pythia6'],
-          'V':['/WH_ZH_HToZG_M-','_8TeV-pythia6'],
-          'tt':['/TTH_HToZG_M-','_8TeV-pythia6']}
+        'VBF':['/VBF_HToZG_M-','_8TeV-powheg-pythia6'],
+        'V':['/WH_ZH_HToZG_M-','_8TeV-pythia6'],
+        'tt':['/TTH_HToZG_M-','_8TeV-pythia6']}
 #all cross sections in picobarns
 cs_hzg = {120.0:{'gg':21.13,'VBF':1.649,'V':0.7966+0.4483,'tt':0.1470},
-          125.0:{'gg':19.52,'VBF':1.578,'V':0.6966+0.3943,'tt':0.1302},
-          130.0:{'gg':18.07,'VBF':1.511,'V':0.6095+0.3473,'tt':0.1157},
-          135.0:{'gg':16.79,'VBF':1.448,'V':0.5351+0.3074,'tt':0.1031},
-          140.0:{'gg':15.63,'VBF':1.389,'V':0.4713+0.2728,'tt':0.09207},
-          145.0:{'gg':14.59,'VBF':1.333,'V':0.4164+0.2424,'tt':0.08246},
-          150.0:{'gg':13.65,'VBF':1.280,'V':0.3681+0.2159,'tt':0.07403}}
+                125.0:{'gg':19.52,'VBF':1.578,'V':0.6966+0.3943,'tt':0.1302},
+                130.0:{'gg':18.07,'VBF':1.511,'V':0.6095+0.3473,'tt':0.1157},
+                135.0:{'gg':16.79,'VBF':1.448,'V':0.5351+0.3074,'tt':0.1031},
+                140.0:{'gg':15.63,'VBF':1.389,'V':0.4713+0.2728,'tt':0.09207},
+                145.0:{'gg':14.59,'VBF':1.333,'V':0.4164+0.2424,'tt':0.08246},
+                150.0:{'gg':13.65,'VBF':1.280,'V':0.3681+0.2159,'tt':0.07403}}
 hbr_hzg = {120:1.12e-03,
-           125:1.55e-03,
-           130:1.96e-03,
-           135:2.28e-03,
-           140:2.46e-03,
-           145:2.48e-03,
-           150:2.31e-03}
+                        125:1.55e-03,
+                        130:1.96e-03,
+                        135:2.28e-03,
+                        140:2.46e-03,
+                        145:2.48e-03,
+                        150:2.31e-03}
 zbr_hzg = {'gg':br_z_leptons,'VBF':br_z_leptons,'V':1.0,'tt':br_z_leptons}
+ 
 for mass in range(120,155,5):
-  ver=1
-  for ch in cs_hzg[mass].keys():
-    datadefs['%sHToZG_M-%i' %(ch,mass)]= {
-      'datasetpath' :'%s%i%s/Summer12_DR53X-PU_S10_START53_V7A-v%i/AODSIM' % (hzgMap[ch][0],
-                                                                              mass,
-                                                                              hzgMap[ch][1],
-                                                                              ver),
-      'pu' : 'S10',
-      'calibrationTarget':'Summer12_DR53X_HCP2012',
-      'x_sec' : cs_hzg[mass][ch]*hbr_hzg[mass]*zbr_hzg[ch]*picobarns,
-      'analyses' : ['HZG']
-      }
+                                ver=1
+                                for ch in cs_hzg[mass].keys():
+                                        datadefs['%sHToZG_M-%i' %(ch,mass)]= {
+                                                'datasetpath' :'%s%i%s/Summer12_DR53X-PU_S10_START53_V7A-v%i/AODSIM' % (hzgMap[ch][0],
+                                                                mass,
+                                                                hzgMap[ch][1],
+                                                                ver),
+                                                'pu' : 'S10',
+                                                'calibrationTarget':'Summer12_DR53X_HCP2012',
+                                                'x_sec' : cs_hzg[mass][ch]*hbr_hzg[mass]*zbr_hzg[ch]*picobarns,
+                                                'analyses' : ['HZG']
+                                        }
 
 
 # Add VH files
 for mass in range(110, 165, 5):
-   datadefs['VHtautau_lepdecay_%i' % mass] = {
-      'analyses': ['VH'],
-      'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
-      'pu' : 'S10',
-       'calibrationTarget':'Summer12_DR53X_HCP2012',
-      'x_sec' : xsbr(8,mass,'wh','tautau')[0]*br_w_leptons + xsbr(8,mass,'zh','tautau')[0]*br_z_leptons + xsbr(8,mass,'tth','tautau')[0]*br_w_leptons**2,
-      }
+        datadefs['VHtautau_lepdecay_%i' % mass] = {
+                'analyses': ['VH'],
+                'datasetpath': "/WH_ZH_TTH_HToTauTau_M-%i_lepdecay_8TeV-pythia6-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+                'pu' : 'S10',
+                'calibrationTarget':'Summer12_DR53X_HCP2012',
+                'x_sec' : xsbr(8,mass,'wh','tautau')[0]*br_w_leptons + xsbr(8,mass,'zh','tautau')[0]*br_z_leptons + xsbr(8,mass,'tth','tautau')[0]*br_w_leptons**2,
+        }
 
 for mass in range(110, 150, 10):
-   datadefs['VHWW_lepdecay_%i' % mass] = {
-      'analyses': ['VH'],
-      'datasetpath': "/WH_ZH_TTH_HToWW_M-%i_lepdecay_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
-      'pu' : 'S10',
-       'calibrationTarget':'Summer12_DR53X_HCP2012',
-      'x_sec' : (xs(8,mass,'wh')[0]*br_w_leptons+xs(8,mass,'zh')[0]*br_z_leptons+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
-      }
+        datadefs['VHWW_lepdecay_%i' % mass] = {
+                'analyses': ['VH'],
+                'datasetpath': "/WH_ZH_TTH_HToWW_M-%i_lepdecay_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM" % mass,
+                'pu' : 'S10',
+                'calibrationTarget':'Summer12_DR53X_HCP2012',
+                'x_sec' : (xs(8,mass,'wh')[0]*br_w_leptons+xs(8,mass,'zh')[0]*br_z_leptons+xs(8,mass,'tth')[0])*br(mass,'WW')*br_w_leptons**2,
+        }
 
 
 
@@ -698,142 +699,142 @@ for mass in range(90, 165, 5):
 
 # Add data files
 
-datadefs['data_DoubleMu_Run2012B_13Jul2012_v4'] = {
-   'datasetpath' : "/DoubleMu/Run2012B-13Jul2012-v4/AOD",
-   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
-   'firstRun' : 193834,
-   'lastRun' : 196531,
-   'analyses' : ['HZZ'],
-    'calibrationTarget':'Moriond2013'
-   }
+        datadefs['data_DoubleMu_Run2012B_13Jul2012_v4'] = {
+                'datasetpath' : "/DoubleMu/Run2012B-13Jul2012-v4/AOD",
+                'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
+                'firstRun' : 193834,
+                'lastRun' : 196531,
+                'analyses' : ['HZZ'],
+                'calibrationTarget':'Moriond2013'
+        }
 
 def build_data_set(pd, analyses):
-   subsample_dict = {
-      'data_%s_Run2012A_13Jul2012_v1' % pd : {
-      'datasetpath' : "/%s/Run2012A-13Jul2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
-      'firstRun' : 190456,
-      'lastRun' : 193621,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012A_22Jan2013_v1' % pd : {
-      'datasetpath' : "/%s/Run2012A-22Jan2013-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
-      'firstRun' : 190456,
-      'lastRun' : 193621,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012B_13Jul2012_v1' % pd : {
-      'datasetpath' : "/%s/Run2012B-13Jul2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
-      'firstRun' : 193833,
-      'lastRun' : 196531,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012B_13Jul2012_v4' % pd : {
-      'datasetpath' : "/%s/Run2012B-13Jul2012-v4/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
-      'firstRun' : 193833,
-      'lastRun' : 196531,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012B_22Jan2013_v1' % pd : {
-      'datasetpath' : "/%s/Run2012B-22Jan2013-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
-      'firstRun' : 193833,
-      'lastRun' : 196531,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012C_PromptReco_v2' % pd : {
-      'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
-      ## 'firstRun' : 201265,
-      ## 'lastRun' : 203755,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012A_recover_06Aug2012_v1' % pd : {
-      'datasetpath' : "/%s/Run2012A-recover-06Aug2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
-      'firstRun' : 190782, #LAG from A. David, 26 Dec 2012
-      'lastRun' : 190949,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012C_PromptReco_v1' % pd : {
-      'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
-      'firstRun' : 197700,
-      'lastRun' : 198913,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012C_24Aug2012_v1' % pd : {
-      'datasetpath' : "/%s/Run2012C-24Aug2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_198022-198523_8TeV_24Aug2012ReReco_Collisions12_JSON.txt",
-      'firstRun' : 198022,
-      'lastRun' : 198523,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012C_22Jan2013_v1' % pd : {
-      'datasetpath' : "/%s/Run2012C-22Jan2013-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
-      'firstRun' : 198022,
-      'lastRun' : 203742,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012C_EcalRecover_11DEC2012_v1' % pd :{
-      'datasetpath' : "/%s/Run2012C-EcalRecover_11Dec2012-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_201191-201191_8TeV_11Dec2012ReReco-recover_Collisions12_JSON.txt",
-      'firstRun' : 201191,
-      'lastRun' : 201191,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012D_PromptReco_v1' % pd :{
-      'datasetpath' : "/%s/Run2012D-PromptReco-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
-      'firstRun' : 203768,
-      'lastRun' : 208686,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012D_16Jan2013_v1' % pd :{
-      'datasetpath' : "/%s/Run2012D-16Jan2013-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
-      'firstRun' : 203768,
-      'lastRun' : 208686,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012D_16Jan2013_v2' % pd :{ #apparently some of these got re-re-re-recoed. Or something. v1 no longer exists for MuEG or DoubleMu IAR 19.Feb.2013
-      'datasetpath' : "/%s/Run2012D-16Jan2013-v2/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
-      'firstRun' : 203768,
-      'lastRun' : 208686,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-      'data_%s_Run2012D_22Jan2013_v1' % pd :{
-      'datasetpath' : "/%s/Run2012D-22Jan2013-v1/AOD" % pd,
-      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
-      'firstRun' : 203768,
-      'lastRun' : 208686,
-      'analyses' : analyses,
-      'calibrationTarget':'Moriond2013'
-      },
-    }
-   sample_dict = {
-      'data_%s' % pd : subsample_dict.keys()
-      }
-   return subsample_dict, sample_dict
+        subsample_dict = {
+                'data_%s_Run2012A_13Jul2012_v1' % pd : {
+                        'datasetpath' : "/%s/Run2012A-13Jul2012-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
+                        'firstRun' : 190456,
+                        'lastRun' : 193621,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012A_22Jan2013_v1' % pd : {
+                        'datasetpath' : "/%s/Run2012A-22Jan2013-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+                        'firstRun' : 190456,
+                        'lastRun' : 193621,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012B_13Jul2012_v1' % pd : {
+                        'datasetpath' : "/%s/Run2012B-13Jul2012-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
+                        'firstRun' : 193833,
+                        'lastRun' : 196531,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012B_13Jul2012_v4' % pd : {
+                        'datasetpath' : "/%s/Run2012B-13Jul2012-v4/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt",
+                        'firstRun' : 193833,
+                        'lastRun' : 196531,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012B_22Jan2013_v1' % pd : {
+                        'datasetpath' : "/%s/Run2012B-22Jan2013-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+                        'firstRun' : 193833,
+                        'lastRun' : 196531,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012C_PromptReco_v2' % pd : {
+                        'datasetpath' : "/%s/Run2012C-PromptReco-v2/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
+                        ## 'firstRun' : 201265,
+                        ## 'lastRun' : 203755,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012A_recover_06Aug2012_v1' % pd : {
+                        'datasetpath' : "/%s/Run2012A-recover-06Aug2012-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
+                        'firstRun' : 190782, #LAG from A. David, 26 Dec 2012
+                                'lastRun' : 190949,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012C_PromptReco_v1' % pd : {
+                        'datasetpath' : "/%s/Run2012C-PromptReco-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
+                        'firstRun' : 197700,
+                        'lastRun' : 198913,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012C_24Aug2012_v1' % pd : {
+                        'datasetpath' : "/%s/Run2012C-24Aug2012-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_198022-198523_8TeV_24Aug2012ReReco_Collisions12_JSON.txt",
+                        'firstRun' : 198022,
+                        'lastRun' : 198523,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012C_22Jan2013_v1' % pd : {
+                        'datasetpath' : "/%s/Run2012C-22Jan2013-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+                        'firstRun' : 198022,
+                        'lastRun' : 203742,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012C_EcalRecover_11DEC2012_v1' % pd :{
+                        'datasetpath' : "/%s/Run2012C-EcalRecover_11Dec2012-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_201191-201191_8TeV_11Dec2012ReReco-recover_Collisions12_JSON.txt",
+                        'firstRun' : 201191,
+                        'lastRun' : 201191,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012D_PromptReco_v1' % pd :{
+                        'datasetpath' : "/%s/Run2012D-PromptReco-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/JSON_ALL_2012_pixel_ecal_removed.txt",
+                        'firstRun' : 203768,
+                        'lastRun' : 208686,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012D_16Jan2013_v1' % pd :{
+                        'datasetpath' : "/%s/Run2012D-16Jan2013-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
+                        'firstRun' : 203768,
+                        'lastRun' : 208686,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012D_16Jan2013_v2' % pd :{ #apparently some of these got re-re-re-recoed. Or something. v1 no longer exists for MuEG or DoubleMu IAR 19.Feb.2013
+                        'datasetpath' : "/%s/Run2012D-16Jan2013-v2/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_PromptReco_Collisions12_JSON.txt",
+                        'firstRun' : 203768,
+                        'lastRun' : 208686,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+                'data_%s_Run2012D_22Jan2013_v1' % pd :{
+                        'datasetpath' : "/%s/Run2012D-22Jan2013-v1/AOD" % pd,
+                        'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_190456-208686_8TeV_22Jan2013ReReco_Collisions12_JSON.txt",
+                        'firstRun' : 203768,
+                        'lastRun' : 208686,
+                        'analyses' : analyses,
+                        'calibrationTarget':'Moriond2013'
+                },
+        }
+        sample_dict = {
+        'data_%s' % pd : subsample_dict.keys()
+        }
+        return subsample_dict, sample_dict
 
 # Build all the PDs we use
 data_DoubleMu, list_DoubleMu = build_data_set('DoubleMu', ['VH', 'Mu','4L','HZG'])
@@ -865,6 +866,6 @@ datadefs.update(data_TauPlusX)
 data_name_map.update(list_TauPlusX)
 
 if __name__=="__main__":
-    query_cli(datadefs)
+        query_cli(datadefs)
 
 
