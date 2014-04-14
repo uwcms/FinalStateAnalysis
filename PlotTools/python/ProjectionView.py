@@ -1,5 +1,8 @@
 import ROOT
-from rootpy.utils import asrootpy
+try:
+    from rootpy.utils import asrootpy
+except ImportError:
+    from rootpy import asrootpy
 
 class ProjectionView(object):
     def __init__(self, input_view, axis, proj_range):

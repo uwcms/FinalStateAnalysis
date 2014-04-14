@@ -195,6 +195,16 @@ def make_ntuple(*legs, **kwargs):
     }
 
     ntuple_config = _common_template.clone()
+    if kwargs.get('runTauSpinner', False):
+        for parName in templates.event.tauSpinner.parameterNames_():
+            setattr(
+                ntuple_config, 
+                parName, 
+                getattr(
+                    templates.event.tauSpinner, 
+                    parName
+                ) 
+            )
 
     # If we have two legs or photons, we are interested in VBF selections.
     if len(legs) == 2 or 'g' in legs:
@@ -326,6 +336,16 @@ def make_ntuple(*legs, **kwargs):
                     i, _eta_cuts[legs[i]]))
             ),
         )
+
+    #Apply additional selections
+    if 'skimCuts' in kwargs and kwargs['skimCuts']:
+        for cut in kwargs['skimCuts']:
+            output.analysis.selections.append(
+                cms.PSet(
+                    name = cms.string(cut),
+                    cut  = cms.string(cut)
+                ),
+            )
 
     # Apply "uniqueness requirements" to reduce final processing/storage.
     # This make sure there is only one ntuple entry per-final state.  The

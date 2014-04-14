@@ -43,6 +43,11 @@ _DATA_DIR = os.path.join(os.environ['CMSSW_BASE'], 'src',
                          "FinalStateAnalysis", "TagAndProbe", "data")
 
 _DATA_FILES = {
+    '2012ReReco' : {
+        'SingleMuTrg' : os.path.join(_DATA_DIR, 'SingleMuonTriggerEfficiencies_eta2p1_Run2012ABCD_v5trees.root'),
+        'PFID'        : os.path.join(_DATA_DIR, 'MuonEfficiencies_Run2012ReReco_53X.root'),
+        'Iso'         : os.path.join(_DATA_DIR, 'MuonEfficiencies_ISO_Run_2012ReReco_53X.root'),
+    },
     '2011'     : os.path.join(_DATA_DIR, 'MuonEfficiencies2011_42X_DataMC.root'),
     '2012'     : os.path.join(_DATA_DIR, 'MuonEfficiencies_11June2012_52X.root'), # Outdated!
     '2012ABCD' : os.path.join(_DATA_DIR, 'MuonEfficiencies_Run2012ReReco_53X.root'),  # For ID/Iso: combined in 1 WAS:'Muon_ID_iso_Efficiencies_Run_2012ABCD_53X.root'
@@ -76,11 +81,13 @@ def make_muon_pog_PFTight_2011():
 
 def make_muon_pog_PFTight_2012():
     ''' Make PFTight DATA/MC corrector for 2012 '''
-    return MuonPOGCorrection(
-        _DATA_FILES['2012'],
-        "DATA/MC_Tight_pt_abseta<1.2",
-        "DATA/MC_Tight_pt_abseta>1.2",
-        "DATA/MC_Tight_eta_pt20-100",
+    return BetterMuonPOGCorrection(
+        _DATA_FILES['2012ReReco']['PFID'],
+        [(0.9, 'DATA_over_MC_Tight_pt_abseta<0.9'   ),
+         (1.2, 'DATA_over_MC_Tight_pt_abseta0.9-1.2'),
+         (2.1, 'DATA_over_MC_Tight_pt_abseta1.2-2.1'),
+         (2.4, 'DATA_over_MC_Tight_pt_abseta2.1-2.4')],
+        'DATA_over_MC_Tight_eta_pt20-500'
     )
 
 def make_muon_pog_PFTight_2012ABCD():
@@ -96,11 +103,13 @@ def make_muon_pog_PFTight_2012ABCD():
 
 
 def make_muon_pog_PFRelIsoDB012_2012():
-    return MuonPOGCorrection(
-        _DATA_FILES['2012'],
-        'DATA/MC_combRelIsoPF04dBeta<012_Tight_pt_abseta<1.2',
-        'DATA/MC_combRelIsoPF04dBeta<012_Tight_pt_abseta>1.2',
-        'DATA/MC_combRelIsoPF04dBeta<012_Tight_eta_pt20-100',
+    return BetterMuonPOGCorrection(
+        _DATA_FILES['2012ReReco']['Iso'],
+        [(0.9, 'DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta<0.9'   ),
+         (1.2, 'DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta0.9-1.2'),
+         (2.1, 'DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta1.2-2.1'), 
+         (2.4, 'DATA_over_MC_combRelIsoPF04dBeta<012_Tight_pt_abseta2.1-2.4')], 
+        'DATA_over_MC_combRelIsoPF04dBeta<012_Tight_eta_pt20-500'
     )
 
 
@@ -184,39 +193,13 @@ def make_muon_pog_IsoMu24eta2p1_2012_early():
 def make_muon_pog_IsoMu24eta2p1_2012():
    # Taking into account the Muon Pt Dependence of the trigger until 26, from then on assuming eta dependence 
    # To accont for the turn on. That value could be adjusted 
-    return MuonPOG2012Combiner(
-        MuonPOGCorrection3R(
-            _DATA_FILES['2012AB'],
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta<0.9_2012A',
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta0.9-1.2_2012A',
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta1.2-2.1_2012A',
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_eta_2p1_pt25-500_2012A',
-            pt_thr = 26,
-        ),
-        MuonPOGCorrection3R(
-            _DATA_FILES['2012AB'],
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta<0.9_2012B',
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta0.9-1.2_2012B',
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta1.2-2.1_2012B',
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_eta_2p1_pt25-500_2012B',
-            pt_thr = 26,
-        ),
-        MuonPOGCorrection3R(
-            _DATA_FILES['2012C'],
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta<0.9',
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta0.9-1.2',
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta1.2-2.1',
-            'DATA_over_MC_IsoMu24_eta2p1_TightIso_eta_2p1_pt25-500',
-            pt_thr = 26,
-        ),
-        MuonPOGCorrection3R(
-            _DATA_FILES['2012D'],
-             'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta<0.9_2012D',
-             'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta0.9-1.2_2012D',
-             'DATA_over_MC_IsoMu24_eta2p1_TightIso_pt_abseta1.2-2.1_2012D',
-             'DATA_over_MC_IsoMu24_eta2p1_TightIso_eta_2p1_pt25-500_2012D',
-             pt_thr = 26,
-        ),
+    return MuonPOGCorrection3R(
+        _DATA_FILES['2012ReReco']['SingleMuTrg'],
+        'IsoMu24_eta2p1_DATA_over_MC_TightID_IsodB_PT_ABSETA_Barrel_0to0p9_pt25-500_2012ABCD',
+        'IsoMu24_eta2p1_DATA_over_MC_TightID_IsodB_PT_ABSETA_Transition_0p9to1p2_pt25-500_2012ABCD', 
+        'IsoMu24_eta2p1_DATA_over_MC_TightID_IsodB_PT_ABSETA_Endcaps_1p2to2p1_pt25-500_2012ABCD',
+        'IsoMu24_eta2p1_DATA_over_MC_TightID_IsodB_ETA_0to0p9_0p9to1p2_1p2to2p1_pt25-500_2012ABCD',
+        pt_thr = 25,
     )
 
 
@@ -260,6 +243,48 @@ and pt dependent for pt < 20, split by barrel and endcap.
             if self.abs_eta:
                 eta = abs(eta)
             return self.correct_by_eta_pt20(eta)
+
+
+class BetterMuonPOGCorrection(object):
+    '''
+
+Muon POG corrections are generally by eta dependent for pt > 20,
+and pt dependent for pt < 20, split by barrel and endcap. Accepts any number of segmentation
+
+'''
+
+    def __init__(self, file, pt_corections, eta_correction, pt_thr=20, abs_eta=False):
+        self.filename = file
+        self.file = ROOT.TFile.Open(file)
+        self.abs_eta = abs_eta
+        self.pt_thr = pt_thr
+
+        # Map the functions to the appropriate TGraphAsymmErrors
+        self.correct_by_pt = [(thr, self.load_graph_eval_func(graph_name)) 
+                              for thr, graph_name in pt_corections]
+        self.correct_by_eta= self.load_graph_eval_func(eta_correction)
+
+    def load_graph_eval_func(self, name):
+        ''' Load a graph with a given name form the file '''
+        key = self.file.GetKey(name)
+        if not key:
+            raise IOError("Object with name %s d.n.e. in file %s" %
+                          (name, self.filename))
+        obj = key.ReadObj()
+        if not obj:
+            raise IOError("Object with key name %s d.n.e. can't be read" % name)
+        return obj.Eval
+
+    def __call__(self, pt, eta):
+        if pt < self.pt_thr:
+            for thr, correction in self.correct_by_pt:
+                if abs(eta) < thr:
+                    return correction(pt)
+        else:
+            compute_eta = eta
+            if self.abs_eta:
+                compute_eta = abs(eta)
+            return self.correct_by_eta(compute_eta)
 
 
 

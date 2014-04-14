@@ -223,11 +223,11 @@ const bool comesFromHiggs(const reco::GenParticleRef genPart)
 
 const reco::Candidate::LorentzVector metPhiCorrection(const reco::Candidate::LorentzVector& vector, int nvertices, bool isMC)
 {
-  //constants as defined in AN-2012/333 for Type1 PFMET
-  const double cx0 = (isMC) ?  0.1166 :  0.2661;
-  const double cxS = (isMC) ?  0.0200 :  0.3217;
-  const double cy0 = (isMC) ?  0.2764 : -0.2251;
-  const double cyS = (isMC) ? -0.1280 : -0.1747;
+  //ReReco data / Summer'12 MC + Summer'13 JEC Type1 PFMET
+  const double cx0 = (isMC) ? +1.62861e-01 : +4.83642e-02;  // 0.1166 :  0.2661;
+  const double cxS = (isMC) ? -2.38517e-02 : +2.48870e-01;  // 0.0200 :  0.3217;
+  const double cy0 = (isMC) ? +3.60860e-01 : -1.50135e-01;  // 0.2764 : -0.2251;
+  const double cyS = (isMC) ? -1.30335e-01 : -8.27917e-02;  //-0.1280 : -0.1747;
 
   double offset_x = cx0 + cxS*nvertices;
   double offset_y = cy0 + cyS*nvertices;

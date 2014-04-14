@@ -9,7 +9,10 @@ Author: Evan K. Friis, UW Madison
 import array
 import rootpy.plotting.views as views
 import rootpy.plotting as plotting
-from rootpy.utils import asrootpy
+try:
+    from rootpy.utils import asrootpy
+except ImportError:
+    from rootpy import asrootpy
 import ROOT
 import os
 
