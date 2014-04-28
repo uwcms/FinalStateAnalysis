@@ -201,7 +201,7 @@ class Plotter(object):
         ref_function.SetLineWidth(3)
         ref_function.SetLineStyle(2)
         
-        data_clone.Draw()
+        data_clone.Draw('ep')
         if ratio_range:
             data_clone.GetYaxis().SetRangeUser(1-ratio_range, 1+ratio_range)
         ref_function.Draw('same')
