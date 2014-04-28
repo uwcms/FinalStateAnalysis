@@ -1,7 +1,7 @@
 PAT-TUPLE SUBMISSION
 ====================
 
-The (submit_tuplization.py)[https://github.com/uwcms/FinalStateAnalysis/blob/53X_SLC6_Dev/PatTools/test/submit_tuplization.py] takes care of creating the appropriate condor jobs.
+The [submit_tuplization.py](https://github.com/uwcms/FinalStateAnalysis/blob/53X_SLC6_Dev/PatTools/test/submit_tuplization.py) takes care of creating the appropriate condor jobs.
 You can access the help by simply
 
 ```
@@ -41,4 +41,4 @@ Once the jobs are done and checked please copy the json file that submit_tupliza
 cp *.json /afs/hep.wisc.edu/home/mverzett/public/uwdb_data/.
 ```
 
-The information contaied into these file will be mirrored (here)[http://www.hep.wisc.edu/~mverzett/cgi-bin/uwdb.cgi] allowing easy access and bookkeeping
+The information contaied into these file will be mirrored [here](http://www.hep.wisc.edu/~mverzett/cgi-bin/uwdb.cgi) allowing easy access and bookkeeping
