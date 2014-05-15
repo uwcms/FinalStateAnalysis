@@ -207,14 +207,11 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
       jesUpJetP4 += jet.userCand("jes+")->p4();
       jesDownJetP4 += jet.userCand("jes-")->p4();
     }
-    std::cout << "checking unclustered cut" << std::endl;
     if (unclusteredCut_(tau)) {
-      std::cout << "passed unclustered cut" << std::endl;
       shiftedUnclustered++;
       assert(jet.userCand("uncorr").isNonnull());
       assert(jet.userCand("ues+").isNonnull());
       assert(jet.userCand("ues-").isNonnull());
-      std::cout << "all are nonnull" << std::endl;
       uncorrUnclusteredP4 += jet.userCand("uncorr")->p4();
       nominalUnclusteredP4 += jet.p4();
       uesUpUnclusteredP4 += jet.userCand("ues+")->p4();
@@ -267,8 +264,6 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   embedShift(outputMET, evt, "metType1", "type1",
       metP4Type1 - outputMET.p4());
 
-  std::cout << uesUpUnclusteredP4 << std::endl;
-  std::cout<< uesDownUnclusteredP4 << std::endl;
 
   embedShift(outputMET, evt, "metsMESUp", "mes+",
       nominalMuonP4 - mesUpMuonP4);
