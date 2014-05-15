@@ -9,6 +9,7 @@ Author: Evan K. Friis
 '''
 
 import FWCore.ParameterSet.Config as cms
+import math
 from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 # Vetos on extra stuff in the event
@@ -52,16 +53,22 @@ met = PSet(
     #systematics
     pfMet_mes_Et   = 'evt.met4vector("pfmet","mes+", 1).Et',
     pfMet_tes_Et   = 'evt.met4vector("pfmet","tes+", 1).Et',
-    pfMet_jes_Et   = 'evt.met4vector("pfmet","jes+", 1).Et',
+    pfMet_jes_plus_Et   = 'evt.met4vector("pfmet","jes+", 1).Et',
+    pfMet_jes_minus_Et = 'evt.met4vector("pfmet","jes-", 1).Et',
     pfMet_ues_Et   = 'evt.met4vector("pfmet","ues+", 1).Et',
-    type1_pfMetPhi_uesUp = 'evt.met4vector("pfmet","type1ues+",1).phi',
-    type1_pfMetPhi_uesDown = 'evt.met4vector("pfmet","type1ues-",1).phi',
-    type1_pfMetEt_uesUp  = 'evt.met4vector("pfmet","type1ues+",1).Et',
-    type1_pfMetEt_uesDown = 'evt.met4vector("pfmet","type1ues-",1).Et',
+    pfMet_diff_Et = 'evt.met4vector("pfmet","type1",1).Et - evt.met4vector("pfmet","ues+", 1).Et',
+    type1_pfMetPt = 'evt.met4vector("pfmet","type1",1).Pt',
+    type1_pfMetEt_ues_plus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ues+", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ues+", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ues+", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ues+", 1).Py-evt.met4vector("pfmet","",1).Py))',
+   type1_pfMetEt_ues_minus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ues-", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ues-", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ues-", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ues-", 1).Py-evt.met4vector("pfmet","",1).Py))',
+
     pfMet_mes_Phi  = 'evt.met4vector("pfmet","mes+", 1).phi',
     pfMet_tes_Phi  = 'evt.met4vector("pfmet","tes+", 1).phi',
-    pfMet_jes_Phi  = 'evt.met4vector("pfmet","jes+", 1).phi',
+    pfMet_jes_plus_Phi  = 'evt.met4vector("pfmet","jes+", 1).phi',
+    pfMet_jes_minus_Phi  = 'evt.met4vector("pfmet","jes-", 1).phi',
     pfMet_ues_Phi  = 'evt.met4vector("pfmet","ues+", 1).phi',
+    pfMet_ues_AtanToPhi = 'atan(evt.met4vector("pfmet","ues+", 1).Py/evt.met4vector("pfmet","ues+", 1).Px)',
+    type1_pfMetPhi_ues_plus = 'resetPhi("pfmet", "type1", "ues+" , 1)',
+    type1_pfMetPhi_ues_minus = 'resetPhi("pfmet", "type1", "ues-" , 1)',
     
     #metSignificance='evt.metSignificance',
     recoilDaught='getDaughtersRecoil().R()',
