@@ -112,8 +112,6 @@ get3DPileupWeight(const std::string& dataTag, const std::string& mcTag,
   double mcProb = mcHisto3D->GetBinContent(npm1+1, np0+1, npp1+1);
   double dataProb = dataHisto3D->GetBinContent(npm1+1, np0+1, npp1+1);
 
-  double mcProb = 0;
-  double dataProb = 0;
   if (mcProb <= 0.) {
     return 0.;
   }
