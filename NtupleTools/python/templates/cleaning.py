@@ -43,8 +43,12 @@ vetos = PSet(
 
     #JET VETOS
     jetVeto20 = 'vetoJets(0.4, "pt > 20 & abs(eta) < 5.0 & userInt(\'fullIdLoose\')").size()',
+    jetVeto20jes_plus = 'vetoJets(0.4, "userCand(\'jes+\').pt() > 20 & abs(eta) < 5.0 & userInt(\'fullIdLoose\')").size()',
+    jetVeto20jes_minus = 'vetoJets(0.4, "userCand(\'jes-\').pt() > 20 & abs(eta) < 5.0 & userInt(\'fullIdLoose\')").size()',
     jetVeto20_DR05 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 5.0 & userInt(\'fullIdLoose\')").size()',
     jetVeto30 = 'vetoJets(0.4, "pt > 30 & abs(eta) < 5.0 & userInt(\'fullIdLoose\')").size()',
+    jetVeto30jes_plus = 'vetoJets(0.4, "userCand(\'jes+\').pt() > 30 & abs(eta) < 5.0 & userInt(\'fullIdLoose\')").size()',
+    jetVeto30jes_minus = 'vetoJets(0.4, "userCand(\'jes-\').pt() > 30 & abs(eta) < 5.0 & userInt(\'fullIdLoose\')").size()',
     jetVeto30_DR05 = 'vetoJets(0.5, "pt > 30 & abs(eta) < 5.0 & userInt(\'fullIdLoose\')").size()',
     jetVeto40 = 'vetoJets(0.4, "pt > 40 & abs(eta) < 5.0 & userInt(\'fullIdLoose\')").size()',
     jetVeto40_DR05 = 'vetoJets(0.5, "pt > 40 & abs(eta) < 5.0 & userInt(\'fullIdLoose\')").size()',
