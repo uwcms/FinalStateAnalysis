@@ -73,7 +73,7 @@ options = TauVarParsing.TauVarParsing(
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runNewElectronMVAID=0,  # If one runs the new electron MVAID
     rerunMVAMET=0,  # If one, (re)build the MVA MET
-    rerunJets=0,
+    rerunJets=0
 )
 
 options.outputFile = "ntuplize.root"
