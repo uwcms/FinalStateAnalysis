@@ -89,7 +89,6 @@ void embedShift(pat::MET& met, edm::Event& evt,
   typedef std::vector<ShiftedCand> ShiftedCandCollection;
   typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
   typedef reco::CandidatePtr CandidatePtr;
-
   std::auto_ptr<ShiftedCandCollection> output(new ShiftedCandCollection);
   ShiftedCand newCand(met);
   newCand.setP4(transverse(newCand.p4() + residual));
@@ -264,6 +263,7 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   // Embed the type one corrected MET
   embedShift(outputMET, evt, "metType1", "type1",
       metP4Type1 - outputMET.p4());
+
 
   embedShift(outputMET, evt, "metsMESUp", "mes+",
       nominalMuonP4 - mesUpMuonP4);

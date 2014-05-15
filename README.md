@@ -23,8 +23,28 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
     </tr>
 </table>
 
-Installation
-------------
+Installation for SL6 (abridged)
+---------------------
+```
+scram project CMSSW_5_3_14
+cd CMSSW_5_3_14/src
+cmsenv
+git cms-init # needs to be done before ANYTHING else
+git clone --recursive https://github.com/uwcms/FinalStateAnalysis.git
+cd FinalStateAnalysis/recipeGIT
+kinit [cern_username]@CERN.CH
+./recipe.sh
+USER_CXXFLAGS="-Wno-delete-non-virtual-dtor -Wno-error=unused-but-set-variable -Wno-error=unused-variable" scram b -j 8
+```
+Now, you need to set the relevant environment variables and such
+
+```bash
+cmsenv
+source $CMSSW_BASE/src/FinalStateAnalysis/environment.sh
+```
+
+Installation for SL6 (detailed)
+--------------------
 
 Current CMSSW versions: ``5_3_14``.
 
