@@ -41,14 +41,14 @@ boost::shared_ptr<TH1> loadFromPSet(const std::string& name) {
       << std::endl;
     std::vector<std::string> available = toplevel->getParameterNames();
     std::cerr << "There are " << available.size() << " available PUs:"
-    << std::endl;
+      << std::endl;
     for (size_t i = 0; i < available.size(); ++i) {
       std::cerr << i << ") " << available[i] << std::endl;
     }
     throw;
   }
 
-  TFile file(path.c_str(), "READ"); fixme
+  TFile file(path.c_str(), "READ"); 
 
   TH1* histo = static_cast<TH1*>(file.Get("pileup"));
 
