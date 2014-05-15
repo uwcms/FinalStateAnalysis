@@ -71,8 +71,6 @@ PATMETSystematicsEmbedder::PATMETSystematicsEmbedder(
     produces<ShiftedCandCollection>("metsJESDown");
     produces<ShiftedCandCollection>("metsUESUp");
     produces<ShiftedCandCollection>("metsUESDown");
-    produces<ShiftedCandCollection>("metType1UESDown");
-    produces<ShiftedCandCollection>("metType1UESUp");  
 }
 
 // Get the transverse component of the vector
@@ -187,14 +185,7 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     const pat::Tau& tau = taus->at(i);
     // Get the underlying seed jet
     edm::Ptr<pat::Jet> seedJet(tau.userCand("patJet"));
-    //assert(seedJet.isNonnull());
-    if (!(seedJet.isNonnull())){
-	std::cout << "null patJet in tau" << std::endl;
-	double tauPt = tau.pt();
-	std::cout << "pt of tau with null patJet" << tauPt << std::endl;
-	continue;
-    }
-    std::cout << "good patJet in tau" << std::endl;	
+    assert(seedJet.isNonnull());
     const pat::Jet& jet = *seedJet;
     if (tauCut_(tau)) {
       shiftedTaus++;
@@ -216,11 +207,14 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
       jesUpJetP4 += jet.userCand("jes+")->p4();
       jesDownJetP4 += jet.userCand("jes-")->p4();
     }
+    std::cout << "checking unclustered cut" << std::endl;
     if (unclusteredCut_(tau)) {
+      std::cout << "passed unclustered cut" << std::endl;
       shiftedUnclustered++;
       assert(jet.userCand("uncorr").isNonnull());
       assert(jet.userCand("ues+").isNonnull());
       assert(jet.userCand("ues-").isNonnull());
+      std::cout << "all are nonnull" << std::endl;
       uncorrUnclusteredP4 += jet.userCand("uncorr")->p4();
       nominalUnclusteredP4 += jet.p4();
       uesUpUnclusteredP4 += jet.userCand("ues+")->p4();
@@ -273,11 +267,8 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   embedShift(outputMET, evt, "metType1", "type1",
       metP4Type1 - outputMET.p4());
 
-  embedShift(outputMET, evt, "metType1UESUp", "type1ues+",
-      metP4Type1 - outputMET.p4()-uesUpUnclusteredP4);
-
-  embedShift(outputMET, evt, "metType1UESDown", "type1ues-",
-      metP4Type1 - outputMET.p4()-uesDownUnclusteredP4);
+  std::cout << uesUpUnclusteredP4 << std::endl;
+  std::cout<< uesDownUnclusteredP4 << std::endl;
 
   embedShift(outputMET, evt, "metsMESUp", "mes+",
       nominalMuonP4 - mesUpMuonP4);
