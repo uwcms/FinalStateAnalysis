@@ -36,15 +36,15 @@ namespace {
   }
 
   // Build the list of available MC histos
-  //static std::map<std::string, TH1Ptr> mcHistos = boost::assign::map_list_of
-   // ("S6", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/fall11_mc_truth.3d.root")))
-    //("S4", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/summer11_mc_truth.3d.root")));
+  static std::map<std::string, TH1Ptr> mcHistos = boost::assign::map_list_of
+    ("S6", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/fall11_mc_truth.3d.root")))
+    ("S4", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/summer11_mc_truth.3d.root")));
 
   // Build the list of available data histos
-  //static const std::map<std::string, TH1Ptr> dataHistos = boost::assign::map_list_of
-   // ("2011B", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011B_finebin.3d.root")))
-    //("2011A", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011A_finebin.3d.root")))
-    //("2011AB", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011AB_finebin.3d.root")));
+  static const std::map<std::string, TH1Ptr> dataHistos = boost::assign::map_list_of
+    ("2011B", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011B_finebin.3d.root")))
+    ("2011A", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011A_finebin.3d.root")))
+    ("2011AB", loadAndNormHistogram(edm::FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011AB_finebin.3d.root")));
 
 } // end anon. namespace
 
@@ -54,7 +54,7 @@ get3DPileupWeight(const std::string& dataTag, const std::string& mcTag,
 
 //  std::cout << "Getting PU weight for " << dataTag << " " << mcTag << std::endl;
 
-  /*std::map<std::string, TH1Ptr>::const_iterator mcHisto = mcHistos.find(mcTag);
+  std::map<std::string, TH1Ptr>::const_iterator mcHisto = mcHistos.find(mcTag);
   if (mcHisto == mcHistos.end()) {
     throw cms::Exception("WrongPUTag")
       << "I didn't understand the MC PU tag: " << mcTag << std::endl;
@@ -65,11 +65,11 @@ get3DPileupWeight(const std::string& dataTag, const std::string& mcTag,
     throw cms::Exception("WrongPUTag")
       << "I didn't understand the data PU tag: " << dataTag << std::endl;
   }
-*/
+
   int npm1=-1;
   int np0=-1;
   int npp1=-1;
-/*
+
   for(std::vector<PileupSummaryInfo>::const_iterator PVI = puInfo.begin();
       PVI != puInfo.end(); ++PVI) {
 
@@ -86,7 +86,7 @@ get3DPileupWeight(const std::string& dataTag, const std::string& mcTag,
     }
 
   }
-*/
+
   npm1 = std::min(npm1,49);
   np0 = std::min(np0,49);
   npp1 = std::min(npp1,49);
@@ -96,7 +96,7 @@ get3DPileupWeight(const std::string& dataTag, const std::string& mcTag,
   assert(npm1 != -1);
   assert(np0 != -1);
   assert(npp1 != -1);
-/*
+
   assert(mcHisto->second);
   assert(dataHisto->second);
 
@@ -105,14 +105,13 @@ get3DPileupWeight(const std::string& dataTag, const std::string& mcTag,
 
   assert(mcHisto3D);
   assert(dataHisto3D);
-*/
+
 //  std::cout << "MC" << mcHisto3D << std::endl;
 //  std::cout << "data" << dataHisto3D << std::endl;
-/*
+
   double mcProb = mcHisto3D->GetBinContent(npm1+1, np0+1, npp1+1);
   double dataProb = dataHisto3D->GetBinContent(npm1+1, np0+1, npp1+1);
-*/
-//fixme
+
   double mcProb = 0;
   double dataProb = 0;
   if (mcProb <= 0.) {
