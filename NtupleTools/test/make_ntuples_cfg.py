@@ -101,7 +101,6 @@ process.TFileService = cms.Service(
 
 process.maxEvents = cms.untracked.PSet(
     input=cms.untracked.int32(options.maxEvents))
-    #input=cms.untracked.int32(200))
 
 process.schedule = cms.Schedule()
 
