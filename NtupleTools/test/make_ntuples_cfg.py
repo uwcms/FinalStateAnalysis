@@ -50,7 +50,6 @@ from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
 from FinalStateAnalysis.NtupleTools.rerun_matchers import rerun_matchers
 from FinalStateAnalysis.NtupleTools.rerun_QGJetID import rerun_QGJetID
 from FinalStateAnalysis.NtupleTools.rerun_Jets import rerun_jets
-from FinalStateAnalysis.NtupleTools.rerun_METSystematics import rerun_metsys
 import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")
@@ -59,15 +58,15 @@ import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
     skipEvents=0,  # Start at an event offset (for debugging)
     reportEvery=100,
-    channels='mt',
+    channels='mm',
     rerunMCMatch=False,
     eventView=0,  # Switch between final state view (0) and event view (1)
     passThru=0,  # Turn off preselections
     dump=0,  # If one, dump process python to stdout
-    rerunFSA=1,  # If one, rebuild the PAT FSA events
+    rerunFSA=0,  # If one, rebuild the PAT FSA events
     verbose=0,  # If one print out the TimeReport
     noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
-    svFit=0,  # If one, SVfit appropriate lepton pairs.
+    svFit=1,  # If one, SVfit appropriate lepton pairs.
     zzMode=False,
     rochCor="",
     eleCor="",
@@ -75,7 +74,6 @@ options = TauVarParsing.TauVarParsing(
     runNewElectronMVAID=0,  # If one runs the new electron MVAID
     rerunMVAMET=0,  # If one, (re)build the MVA MET
     rerunJets=0,
-    rerunMETSystematics=1
 )
 
 options.outputFile = "ntuplize.root"
@@ -103,6 +101,7 @@ process.TFileService = cms.Service(
 
 process.maxEvents = cms.untracked.PSet(
     input=cms.untracked.int32(options.maxEvents))
+    #input=cms.untracked.int32(200))
 
 process.schedule = cms.Schedule()
 
@@ -143,9 +142,6 @@ if options.rerunFSA:
         print "rerunning MVA MET sequence, output collection will be {n}"\
             .format(n=mvamet_collection)
 
-    if options.rerunMETSystematics:
-	process.schedule.append(rerun_metsys(process))
-
     # Drop the input ones, just to make sure we aren't screwing anything up
     process.buildFSASeq = cms.Sequence()
     from FinalStateAnalysis.PatTools.patFinalStateProducers \
@@ -157,7 +153,7 @@ if options.rerunFSA:
         'taus': 'cleanPatTaus',
         'photons': 'cleanPatPhotons',
         'jets': 'selectedPatJets',
-        'pfmet': 'newsystematicsMET',
+        'pfmet': 'systematicsMET',
         'mvamet': mvamet_collection,
         'fsr': 'boostedFsrPhotons',
     }
@@ -179,7 +175,6 @@ if options.rerunFSA:
 
     if options.rerunJets:
         process.schedule.append(rerun_jets(process))
-
 
     if options.runNewElectronMVAID:
         process.load("FinalStateAnalysis.PatTools."
