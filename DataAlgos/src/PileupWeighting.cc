@@ -49,6 +49,7 @@ boost::shared_ptr<TH1> loadFromPSet(const std::string& name) {
   }
 
   TFile file(path.c_str(), "READ");
+  
   TH1* histo = static_cast<TH1*>(file.Get("pileup"));
 
   if (!histo) {
