@@ -35,7 +35,7 @@ if __name__ == "__main__":
         import FinalStateAnalysis.MetaData.data7TeV as datadefs
     elif args.sqrts == 8:
         sys.stderr.write("Using 8 TeV data definitions\n")
-        import FinalStateAnalysis.MetaData.data8TeV as datadefs
+        import FinalStateAnalysis.MetaData.data8TeVNew as datadefs
 
     sample_xsec = datadefs.datadefs[args.sample]['x_sec']/picobarns
 

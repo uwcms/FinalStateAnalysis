@@ -11,10 +11,13 @@ import FWCore.ParameterSet.Config as cms
 
 from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
 from FinalStateAnalysis.Utilities.version import cmssw_major_version
+#from pdb import set_trace
+
+#set_trace()
 
 try:
     if cmssw_major_version() == 5:
-        from JetMETCorrections.METPUSubtraction.mvaPFMET_leptons_cff import \
+        from RecoMET.METPUSubtraction.mvaPFMET_leptons_cff import \
                 calibratedAK5PFJetsForPFMEtMVA, pfMEtMVA, \
                 isomuons, isoelectrons
     else:
@@ -28,7 +31,6 @@ try:
     from JetMETCorrections.Configuration.JetCorrectionServicesAllAlgos_cff \
             import ak5PFL1FastL2L3, ak5PFL1Fastjet, ak5PFL2Relative, \
             ak5PFL3Absolute
-
     #process.load("JetMETCorrections.Configuration.DefaultJEC_cff")
     # Modify muons
     muon_cut = isomuons.cut
@@ -53,15 +55,13 @@ try:
         cut=cms.string(
             'pt > 19 && abs(eta) < 2.3 && '
             'tauID("decayModeFinding") && '
-            'tauID("byIsolationMVAraw") > 0.8 && '
+            'tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits") > 0.5 && '
             'tauID("againstElectronLoose") && tauID("againstMuonLoose2")'),
         filter=cms.bool(False)
     )
-
     patMEtMVA = patMETs.clone(metSource=cms.InputTag("pfMEtMVA"))
     patMEtMVA.addMuonCorrections = False
     pfMEtMVA.verbosity = 0
-
     print "Built MVA MET sequence"
     pfMEtMVAsequence = cms.Sequence(
         calibratedAK5PFJetsForPFMEtMVA *

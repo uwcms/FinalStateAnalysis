@@ -33,6 +33,7 @@ _common_template = PSet(
     templates.trigger.mueg,
     templates.trigger.doublemu,
     templates.trigger.doublee,
+    templates.trigger.tripee,
     templates.trigger.isomu,
     templates.trigger.isomu24eta2p1,
     templates.trigger.singlemu,
@@ -194,6 +195,16 @@ def make_ntuple(*legs, **kwargs):
     }
 
     ntuple_config = _common_template.clone()
+    if kwargs.get('runTauSpinner', False):
+        for parName in templates.event.tauSpinner.parameterNames_():
+            setattr(
+                ntuple_config, 
+                parName, 
+                getattr(
+                    templates.event.tauSpinner, 
+                    parName
+                ) 
+            )
 
     # If we have two legs or photons, we are interested in VBF selections.
     if len(legs) == 2 or 'g' in legs:
@@ -326,6 +337,16 @@ def make_ntuple(*legs, **kwargs):
             ),
         )
 
+    #Apply additional selections
+    if 'skimCuts' in kwargs and kwargs['skimCuts']:
+        for cut in kwargs['skimCuts']:
+            output.analysis.selections.append(
+                cms.PSet(
+                    name = cms.string(cut),
+                    cut  = cms.string(cut)
+                ),
+            )
+
     # Apply "uniqueness requirements" to reduce final processing/storage.
     # This make sure there is only one ntuple entry per-final state.  The
     # combinatorics due to different orderings are removed.
@@ -338,10 +359,19 @@ def make_ntuple(*legs, **kwargs):
     #   first put best Z in initial position
     #   then order first two by pt
     #   then order third and fourth by pt
+    #
+    # Algorithm for dblhMode:
+    # if there are 4
+    #   first two leptons must be positive
+    #   third and fourth leptons must be negative
+    #   order first two by pt
+    #   order third and fourth by pt
     noclean = kwargs.get('noclean', False)
 
     # ZZ-producer does not require this cleaning step
     make_unique = not noclean and not zz_mode
+
+    isDblH = kwargs.get('dblhMode', False)
     
     if make_unique:
         for type, count in counts.iteritems():
@@ -389,51 +419,62 @@ def make_ntuple(*legs, **kwargs):
                 leg3_idx_label = format_labels['%s3_idx' % type]
                 leg4_idx_label = format_labels['%s4_idx' % type]
 
-                # Require first two leptons make the best Z
-                output.analysis.selections.append(cms.PSet(
-                    name=cms.string('Z12_Better_Z13'),
-                    cut=cms.string(
-                        'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
-                        (leg1_idx_label, leg2_idx_label, leg1_idx_label,
-                         leg3_idx_label)
-                    )
-                ))
+                if isDblH:
+                    output.analysis.selections.append(cms.PSet(
+                        name=cms.string('hpp12_and_hmm34'),
+                        cut=cms.string(
+                            'hppCompatibility(%s, %s, 1) &&'
+                            'hppCompatibility(%s, %s, -1)' %
+                            (leg1_idx_label, leg2_idx_label, leg3_idx_label,
+                             leg4_idx_label)
+                        )
+                    ))
+                else:
+                    # Require first two leptons make the best Z
+                    output.analysis.selections.append(cms.PSet(
+                        name=cms.string('Z12_Better_Z13'),
+                        cut=cms.string(
+                            'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
+                            (leg1_idx_label, leg2_idx_label, leg1_idx_label,
+                             leg3_idx_label)
+                        )
+                    ))
 
-                output.analysis.selections.append(cms.PSet(
-                    name=cms.string('Z12_Better_Z23'),
-                    cut=cms.string(
-                        'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
-                        (leg1_idx_label, leg2_idx_label, leg2_idx_label,
-                         leg3_idx_label)
-                    )
-                ))
+                    output.analysis.selections.append(cms.PSet(
+                        name=cms.string('Z12_Better_Z23'),
+                        cut=cms.string(
+                            'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
+                            (leg1_idx_label, leg2_idx_label, leg2_idx_label,
+                             leg3_idx_label)
+                        )
+                    ))
 
-                output.analysis.selections.append(cms.PSet(
-                    name=cms.string('Z12_Better_Z14'),
-                    cut=cms.string(
-                        'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
-                        (leg1_idx_label, leg2_idx_label, leg1_idx_label,
-                         leg4_idx_label)
-                    )
-                ))
+                    output.analysis.selections.append(cms.PSet(
+                        name=cms.string('Z12_Better_Z14'),
+                        cut=cms.string(
+                            'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
+                            (leg1_idx_label, leg2_idx_label, leg1_idx_label,
+                             leg4_idx_label)
+                        )
+                    ))
 
-                output.analysis.selections.append(cms.PSet(
-                    name=cms.string('Z12_Better_Z24'),
-                    cut=cms.string(
-                        'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
-                        (leg1_idx_label, leg2_idx_label, leg2_idx_label,
-                         leg4_idx_label)
-                    )
-                ))
+                    output.analysis.selections.append(cms.PSet(
+                        name=cms.string('Z12_Better_Z24'),
+                        cut=cms.string(
+                            'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
+                            (leg1_idx_label, leg2_idx_label, leg2_idx_label,
+                             leg4_idx_label)
+                        )
+                    ))
 
-                output.analysis.selections.append(cms.PSet(
-                    name=cms.string('Z12_Better_Z34'),
-                    cut=cms.string(
-                        'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
-                        (leg1_idx_label, leg2_idx_label, leg3_idx_label,
-                         leg4_idx_label)
-                    )
-                ))
+                    output.analysis.selections.append(cms.PSet(
+                        name=cms.string('Z12_Better_Z34'),
+                        cut=cms.string(
+                            'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
+                            (leg1_idx_label, leg2_idx_label, leg3_idx_label,
+                             leg4_idx_label)
+                        )
+                    ))
 
                 # Require first two leptons are ordered in PT
                 output.analysis.selections.append(cms.PSet(

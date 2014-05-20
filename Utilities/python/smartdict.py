@@ -9,6 +9,23 @@ class SmartDict(object):
     def book(self, key, type, *args, **kwargs):
         self.booked[key] = (type, args, kwargs)
 
+    def keys(self):
+        return self.active.keys()+self.booked.keys()
+
+    def items(self):
+        booked = self.booked.keys()
+        for key in booked:
+            self.__activate__(key)
+
+        return self.active.items()
+
+    def values(self):
+        booked = self.booked.keys()
+        for key in booked:
+            self.__activate__(key)
+
+        return self.active.values()
+
     def __activate__(self, key):
         kind, args, kwargs = self.booked[key]
         if len(args) and len(kwargs):

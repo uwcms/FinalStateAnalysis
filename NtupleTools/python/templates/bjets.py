@@ -27,6 +27,9 @@ btagging = PSet(
         objectSVErrFlightDistanceBtag ='{object}.userFloat("errorFlightDistance")',
         objectSVMassDPMBtag ='{object}.userFloat("massD_SSV")',
         objectSVMassD0Btag ='{object}.userFloat("massD0_SSV")',
+        objectSVMassUnweightedBtag ='{object}.userFloat("mass_SV_unweighted")',
+        objectSVMassWeightedBtag ='{object}.userFloat("mass_SV_weighted")',
+        objectSVMassCorrectedBtag ='{object}.userFloat("mass_SV_corrected")',
 
 	#Custom Btagging, based on Muons-In-Jets
 	objectMuonInJetPtBtag ='{object}.userFloat("MuonInJetPt")',

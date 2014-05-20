@@ -10,7 +10,7 @@
 #include "RecoEcal/EgammaCoreTools/interface/EcalClusterLazyTools.h"
 #include "TMVA/Tools.h"
 #include "TMVA/Reader.h"
-#include "RecoTauTag/RecoTau/interface/TMVAZipReader.h"
+#include "CommonTools/Utils/interface/TMVAZipReader.h"
 #include "TrackingTools/TransientTrack/interface/TransientTrackBuilder.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
 

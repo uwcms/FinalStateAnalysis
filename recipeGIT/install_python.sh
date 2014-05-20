@@ -1,1 +1,0 @@
-../recipe/install_python.sh

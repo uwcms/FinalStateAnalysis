@@ -179,6 +179,7 @@ int main(int argc, char* argv[]) {
 
 
     TDirectory* current_dir = make_dirs_and_enter(file, split(*location, '/') );
+    current_dir->cd(); //simply avoids the unused variable error
 //     long int input_entries = input_tree->GetEntriesFast();
 
     chain->Merge(file,0, "fast keep"); // keep->prevents file from beeing closed

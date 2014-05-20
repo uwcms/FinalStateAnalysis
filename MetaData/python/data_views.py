@@ -38,7 +38,22 @@ def read_lumi(filename):
             print "I couldn't extract a float from %s" % filename
             raise
 
-def data_views(files, lumifiles):
+def get_best_style(sample):
+    best_pattern = ''
+    for pattern, style_dict in data_styles.iteritems():
+        log.debug("Checking pattern: %s against %s", pattern, sample)
+        if fnmatch.fnmatch(sample, pattern):
+            log.debug("-> it matches!")
+            if len(pattern) > len(best_pattern):
+                best_pattern = pattern
+                log.info("Found new best style for %s: %s",
+                         sample, pattern)
+    if best_pattern:
+        return data_styles[best_pattern]
+    else:
+        return None
+
+def data_views(files, lumifiles, forceLumi=-1):
     ''' Builds views of files.
 
     [files] gives an iterator of .root files with histograms to build.
@@ -73,7 +88,10 @@ def data_views(files, lumifiles):
                 + repr(lumi_files.keys()))
         datalumi += lumi_files[x]
     log.warning("-> total int. lumi = %0.0fpb-1", datalumi)
-
+    if forceLumi > 0:
+        datalumi = forceLumi
+        log.warning("-> forcing lumi to = %0.0fpb-1", datalumi)
+        
     # Figure out the dataset for each file, and the int lumi.
     # Key = dataset name
     # Value = {intlumi, rootpy file, weight, weighted view}

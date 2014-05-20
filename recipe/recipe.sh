@@ -20,10 +20,10 @@
 
 # Set default values for the options
 LIMITS=${LIMITS:-0}
-LUMI=${LUMI:-0}
-PATPROD=${PATPROD:-0}
+LUMI=${LUMI:-1}
+PATPROD=${PATPROD:-1}
 MVAMET=${MVAMET:-$PATPROD}
-HZZ=${HZZ:-$PATPROD}
+HZZ=${HZZ:-0}
 
 set -o errexit
 set -o nounset
@@ -36,18 +36,15 @@ MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 
 echo "Detected CMSSW version: $MAJOR_VERSION $MINOR_VERSION"
 
-echo "Checking for CERN CVS kerberos ticket"
-set +o errexit
-HAS_TICKET=`klist 2>&1 | grep CERN.CH`
-# Check if we can checkout anonymously
-IS_ANON=`echo $CVSROOT | grep pserver`
-set -o errexit
-
-if [ -z "$HAS_TICKET" ]; then
-  if [ -z "$IS_ANON" ]; then
-    echo "ERROR: You need to kinit yourname@CERN.CH to enable CVS checkouts"
-    exit 1
-  fi
+echo "Store your git ssh password"
+eval `ssh-agent -s` 
+if ssh-add; then
+    echo "ssh agent properly configured"
+else
+    echo "ssh agent could not retreive your git password!"
+    echo "This is probably due to the fact that you did not install either locally or on gitHub the ssh-key access"
+    echo "follow the instructions on https://help.github.com/articles/generating-ssh-keys and launch again this command"
+    exit 42
 fi
 
 echo "I'm going to install the FinalStateAnalysis with the following options:"
@@ -67,38 +64,28 @@ if [ -z "FORCERECIPE" ]; then
    done
 fi
 
-if [ "$MVAMET" = "1" ] 
+if [ "$MVAMET" = "1" ]
 then
   echo "Applying MVA MET recpe"
   ./recipe_mvamet.sh
 fi
 
-if [ "$HZZ" = "1" ] 
-then
-  echo "Checking out HZZ specific packages"
-  ./recipe_hzz.sh
-  git ls-files ../PatTools/plugins/ | \
-      grep PATQuadFinalStateBuilderHzz | \
-      xargs -n 1 git update-index --no-assume-unchanged 
-else
-  # Remove HZZ FSA plugins dependent on MELA 
-  git ls-files ../PatTools/plugins/PATQuadFinalStateBuilderHzz* | xargs rm -f
-  git ls-files ../PatTools/plugins/ | grep PATQuadFinalStateBuilderHzz | \
-    xargs -n 1 git update-index --assume-unchanged 
-fi
+
 
 if [ "$MAJOR_VERSION" -eq "4" ]; then
-  echo "Applying recipe for CMSSW 4_2_8"
-  LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_42X.sh
+  echo "Recipe not setup for 42X"
 fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   echo "Applying recipe for CMSSW 5_3_X"
-  LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_53X.sh
+  LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_legacy8TeV.sh
 fi
 
 echo "Applying common recipe"
 LUMI=$LUMI LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_common.sh
+
+echo "Kill the ssh-agent"
+eval `ssh-agent -k` 
 
 # Note you now need to install virtual env
 echo "Now run recipe/install_python.sh to install python"

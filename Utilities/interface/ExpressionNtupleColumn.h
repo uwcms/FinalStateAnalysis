@@ -39,17 +39,23 @@ protected:
   virtual void setValue(const std::vector<double>& value) = 0;
   ExpressionNtupleColumn(const std::string& name, const std::string& func);
 private:
-  std::string name_;
+  std::string name_, expression_;
   StringObjectFunction<ObjType> func_;
 };
 
 template<typename T>
 ExpressionNtupleColumn<T>::ExpressionNtupleColumn(
     const std::string& name, const std::string& func):
-  name_(name), func_(func, true) {}
+name_(name), expression_(func), func_(func, true) {}
 
 template<typename T> void ExpressionNtupleColumn<T>::compute(const T& obj) {
-  this->setValue(func_(obj));
+    try{
+      this->setValue(func_(obj));
+    } catch(cms::Exception& iException) {
+      iException << "Caught exception in evaluating branch: "
+        << name_ << " with formula: " << expression_;
+      throw;
+    }
 }
 
 //vector specialization for base class

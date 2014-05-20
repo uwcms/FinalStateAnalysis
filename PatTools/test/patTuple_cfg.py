@@ -4,6 +4,7 @@ import FWCore.ParameterSet.Config as cms
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 from FinalStateAnalysis.Utilities.version import fsa_version, get_user
 import os
+from pdb import set_trace
 import time
 
 options = TauVarParsing.TauVarParsing(
@@ -28,12 +29,13 @@ options = TauVarParsing.TauVarParsing(
     embedded=0,  # If running on embedded samples, set to 1
     analyzeSkimEff='',  # Analyze the skim efficiency and put it in this file
     eleReg=0,
-    zzMode=False
+    zzMode=False,
 )
 
 files = []
 
 options.inputFiles = files
+options.globalTag  = ''
 
 options.parseArguments()
 
@@ -94,17 +96,20 @@ tuplize, output_commands = tuplizer.configurePatTuple(
     zzMode=options.zzMode
 )
 
-if options.globalTag == "":
-    raise RuntimeError("Global tag not specified!"
-                       " Try sourcing environment.sh\n")
-elif "auto:" in options.globalTag:
-    print "Using auto-configured global tag from key: %s" % options.globalTag
-    from HLTrigger.Configuration.AutoCondGlobalTag import AutoCondGlobalTag
-    process.GlobalTag = AutoCondGlobalTag(
-        process.GlobalTag, options.globalTag)
-else:
-    print 'Using globalTag: %s' % options.globalTag
-    process.GlobalTag.globaltag = cms.string(options.globalTag)
+import FinalStateAnalysis.PatTools.rerunRecoObjects as rerecoer
+rereco, more_output = rerecoer.rerunRecoObjects(process)
+output_commands.extend(more_output)
+
+if not options.globalTag:
+    gtag_evn_var = 'mcgt' if options.isMC else 'datagt'
+    if gtag_evn_var not in os.environ: 
+        raise RuntimeError("Global tag not specified!"
+                           " Try sourcing environment.sh\n")
+    else:
+        options.globalTag = os.environ[gtag_evn_var]
+
+print '--- Using globalTag: %s ---' % options.globalTag
+process.GlobalTag.globaltag = cms.string(options.globalTag)
 
 # Count events at the beginning of the pat tuplization
 process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
@@ -119,6 +124,10 @@ process.eventCount.uwMeta = cms.PSet(
 )
 
 process.schedule = cms.Schedule()
+
+#re-reconstruct needed objects
+process.rereco   = cms.Path(process.rerecoObjects)
+process.schedule.append(process.rereco)
 
 # add a bare tuplization path if we are using pass thru
 if options.passThru:
