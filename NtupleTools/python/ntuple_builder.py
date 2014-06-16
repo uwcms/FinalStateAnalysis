@@ -285,8 +285,6 @@ def make_ntuple(*legs, **kwargs):
     # Are we running on the ZZ-specific collections?
     zz_mode = kwargs.get('zz_mode', False)
 
-    print "Hasta aqui llegue"
-
     analyzerSrc = "finalState" + "".join(
             _producer_translation[x] for x in legs ) + producer_suffix
 
@@ -296,8 +294,6 @@ def make_ntuple(*legs, **kwargs):
                 ntuple_config,
                 templates.topology.zzfsr
         )
-
-    print "Hasta aqui llegue tambien"
 
 
     # Now build our analyzer EDFilter skeleton
@@ -499,7 +495,6 @@ def make_ntuple(*legs, **kwargs):
     format(output, **format_labels)
 #    return LHEFilter*output
 
-    print "Y.... hasta aqui?"
     return output
 
 if __name__ == "__main__":
