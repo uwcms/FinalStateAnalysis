@@ -337,7 +337,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patJets.embedGenJetMatch = True
     process.patJets.addAssociatedTracks = True
     process.patJets.embedGenPartonMatch = True
-
+    process.patJets.addTagInfos = True
     # Add AK5chs PFJets
     jettools.addJetCollection(
         process,
