@@ -77,6 +77,7 @@ options = TauVarParsing.TauVarParsing(
     rerunJets=0,
     dblhMode=False, # For double-charged Higgs analysis
     runTauSpinner=0,
+    globalTag=""
 )
 
 options.register(
@@ -134,11 +135,14 @@ if options.rerunFSA:
     envvar = 'mcgt' if options.isMC else 'datagt'
     GT = {'mcgt': 'START53_V27::All', 'datagt': 'FT53_V21A_AN6::All'}
 
-    try:
-        process.GlobalTag.globaltag = cms.string(os.environ[envvar])
-    except KeyError:
-        print 'Warning: GlobalTag not defined in environment. Using default.'
-        process.GlobalTag.globaltag = cms.string(GT[envvar])
+    if options.globalTag:
+        process.GlobalTag.globaltag = cms.string(options.globalTag)
+    else:
+        try:
+            process.GlobalTag.globaltag = cms.string(os.environ[envvar])
+        except KeyError:
+            print 'Warning: GlobalTag not defined in environment. Using default.'
+            process.GlobalTag.globaltag = cms.string(GT[envvar])
 
     print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
