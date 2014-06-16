@@ -160,8 +160,8 @@ if options.rerunFSA:
         'muons': 'cleanPatMuons',
         'taus': 'cleanPatTaus',
         'photons': 'cleanPatPhotons',
-#        'jets': 'selectedPatJets',
-        'jets':  'selectedPatJetsAK5chsPF',
+        'jets': 'selectedPatJets',
+#        'jets':  'selectedPatJetsAK5chsPF',   # for chsJets
         'pfmet': 'systematicsMET',
         'mvamet': mvamet_collection,
         'fsr': 'boostedFsrPhotons',
@@ -175,8 +175,8 @@ if options.rerunFSA:
         fs_daughter_inputs['muons'] = 'cleanPatMuonsRematched'
         fs_daughter_inputs['taus'] = 'cleanPatTausRematched'
         fs_daughter_inputs['photons'] = 'photonParentage'
-#        fs_daughter_inputs['jets'] = 'selectedPatJetsRematched'
-        fs_daughter_inputs['jets'] = 'selectedPatJetsAK5chsPFRematched'
+        fs_daughter_inputs['jets'] = 'selectedPatJetsRematched'
+#        fs_daughter_inputs['jets'] = 'selectedPatJetsAK5chsPFRematched' # for chsJets
 
     if options.runTauSpinner:
         process.load('FinalStateAnalysis.RecoTools.TauSpinner_cfi')
