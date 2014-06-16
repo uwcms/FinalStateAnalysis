@@ -74,13 +74,13 @@ class PATLeptonTrackVectorExtractor<pat::Tau>
   {
     //std::cout << "<PATLeptonTrackVectorExtractor<pat::Tau>::operator()>" << std::endl;
     std::vector<const reco::Track*> retVal;
-    const reco::PFCandidateRefVector& pfChargedHadrons = tau.signalPFChargedHadrCands();
-    for ( reco::PFCandidateRefVector::const_iterator pfChargedHadron = pfChargedHadrons.begin();
-        pfChargedHadron != pfChargedHadrons.end(); ++pfChargedHadron ) {
-      if ( (*pfChargedHadron)->trackRef().isNonnull() ) {
-        retVal.push_back((*pfChargedHadron)->trackRef().get());
-      } else if ( (*pfChargedHadron)->gsfTrackRef().isNonnull() ) {
-        retVal.push_back((*pfChargedHadron)->gsfTrackRef().get());
+    const std::vector<reco::PFCandidatePtr>& pfChargedHadrons = tau.signalPFChargedHadrCands();
+    for ( std::vector<reco::PFCandidatePtr>::const_iterator pfChargedHadronPtr = pfChargedHadrons.begin();
+        pfChargedHadronPtr != pfChargedHadrons.end(); ++pfChargedHadronPtr ) {
+      if ( (*pfChargedHadronPtr)->trackRef().isNonnull() ) {
+        retVal.push_back((*pfChargedHadronPtr)->trackRef().get());
+      } else if ( (*pfChargedHadronPtr)->gsfTrackRef().isNonnull() ) {
+        retVal.push_back((*pfChargedHadronPtr)->gsfTrackRef().get());
       }
     }
     return retVal;

@@ -7,8 +7,10 @@ Author: Mauro Verzetti, Uni. Zurich
 '''
 
 import rootpy.plotting.views as views
-import rootpy.plotting as plotting
-from rootpy.utils import asrootpy
+try:
+    from rootpy.utils import asrootpy
+except ImportError:
+    from rootpy import asrootpy
 import ROOT
 import os
 

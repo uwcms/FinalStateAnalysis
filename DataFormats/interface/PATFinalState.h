@@ -177,6 +177,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Check if the ith and jth daughters are like flavored
     bool likeFlavor(int i, int j) const;
 
+    /// Check if the ith and jth objects are like in sign and match the given
+    /// charge. Return 0 if not, and 1 if true.
+    int hppCompatibility(int i, int j, int chg) const;
+
     /// Check how far in mass the subcandidate made by the ith and jth objects
     /// is from the Z mass.  If they are same sign, it will return 1000.
     /// = |M_i_j - 91.2|

@@ -53,7 +53,7 @@ def get_best_style(sample):
     else:
         return None
 
-def data_views(files, lumifiles):
+def data_views(files, lumifiles, forceLumi=-1):
     ''' Builds views of files.
 
     [files] gives an iterator of .root files with histograms to build.
@@ -88,7 +88,10 @@ def data_views(files, lumifiles):
                 + repr(lumi_files.keys()))
         datalumi += lumi_files[x]
     log.warning("-> total int. lumi = %0.0fpb-1", datalumi)
-
+    if forceLumi > 0:
+        datalumi = forceLumi
+        log.warning("-> forcing lumi to = %0.0fpb-1", datalumi)
+        
     # Figure out the dataset for each file, and the int lumi.
     # Key = dataset name
     # Value = {intlumi, rootpy file, weight, weighted view}

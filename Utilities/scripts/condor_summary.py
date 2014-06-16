@@ -19,7 +19,7 @@ user  = os.environ['USER']
 term_rows, term_columns = os.popen('stty size', 'r').read().split()
 term_columns = int(term_columns)
 
-status_files = glob.glob('/nfs_scratch/%s/%s/*/dags/dag.status' % (user, jobid))
+status_files = glob.glob('/nfs_scratch/%s/%s/*/dags/*.status' % (user, jobid))
 max_name_lenght = max([len(i.split('/')[4]) for i in status_files])
 print_format = ('%'+str(max_name_lenght)+'s%10s%10s%10s%10s%10s|')
 header       = print_format % ('sample', 'jobs', 'done', 'errors', 'submitted', 'other')

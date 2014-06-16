@@ -307,6 +307,25 @@ class PSet(cms.PSet):
         format(clone, **replacements)
         return clone
 
+class GetInfoVisotor(object):
+    def __init__(self):
+        self.info = []
+    def enter(self, module):
+        label = module.label() if module.hasLabel_() else ''
+        kind  = module.type_() if hasattr(module,'type_') else type(module)
+        self.info.append(
+            ( label,
+              kind
+          )
+        )
+    def leave(self, module):
+        pass
+
+def get_cms_iterable_info(iterable):
+    visitor = GetInfoVisotor()
+    iterable.visit(visitor)
+    return visitor.info
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod(verbose=True)

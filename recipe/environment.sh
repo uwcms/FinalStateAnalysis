@@ -30,8 +30,9 @@ fi
 
 if [ "$MAJOR_VERSION" -eq "5" ]; then
   echo "Setting up CMSSW 5_3_X global tags"
-  export datagt=FT_53_V21_AN4::All
-  export mcgt=START53_V23::All
+  #from https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions#Winter13_2012_A_B_C_D_datasets_r
+  export datagt=FT53_V21A_AN6::All
+  export mcgt=START53_V27::All
 fi
 
 echo "Data global tag: $datagt"
