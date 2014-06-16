@@ -132,7 +132,14 @@ if options.rerunFSA:
 
     # Need the global tag for geometry etc.
     envvar = 'mcgt' if options.isMC else 'datagt'
-    process.GlobalTag.globaltag = cms.string(os.environ[envvar])
+    GT = {'mcgt': 'START53_V27::All', 'datagt': 'FT53_V21A_AN6::All'}
+
+    try:
+        process.GlobalTag.globaltag = cms.string(os.environ[envvar])
+    except KeyError:
+        print 'Warning: GlobalTag not defined in environment. Using default.'
+        process.GlobalTag.globaltag = cms.string(GT[envvar])
+
     print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
     mvamet_collection = 'systematicsMETMVA'
