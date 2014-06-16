@@ -77,7 +77,7 @@ options = TauVarParsing.TauVarParsing(
     rerunJets=0,
     dblhMode=False, # For double-charged Higgs analysis
     runTauSpinner=0,
-    globalTag=""
+    GlobalTag=""
 )
 
 options.register(
@@ -135,8 +135,8 @@ if options.rerunFSA:
     envvar = 'mcgt' if options.isMC else 'datagt'
     GT = {'mcgt': 'START53_V27::All', 'datagt': 'FT53_V21A_AN6::All'}
 
-    if options.globalTag:
-        process.GlobalTag.globaltag = cms.string(options.globalTag)
+    if options.GlobalTag:
+        process.GlobalTag.globaltag = cms.string(options.GlobalTag)
     else:
         try:
             process.GlobalTag.globaltag = cms.string(os.environ[envvar])
