@@ -295,6 +295,7 @@ def make_ntuple(*legs, **kwargs):
                 templates.topology.zzfsr
         )
 
+
     # Now build our analyzer EDFilter skeleton
     output = cms.EDFilter(
         "PATFinalStateAnalysisFilter",
@@ -493,6 +494,7 @@ def make_ntuple(*legs, **kwargs):
     # Now apply our formatting operations
     format(output, **format_labels)
 #    return LHEFilter*output
+
     return output
 
 if __name__ == "__main__":
