@@ -161,7 +161,7 @@ if options.rerunFSA:
         'taus': 'cleanPatTaus',
         'photons': 'cleanPatPhotons',
         'jets': 'selectedPatJets',
-#        'jets':  'selectedPatJetsAK5chsPF',   # for chsJets
+#        'jets':  'selectedPatJetsAK5chsPF',
         'pfmet': 'systematicsMET',
         'mvamet': mvamet_collection,
         'fsr': 'boostedFsrPhotons',
@@ -175,8 +175,16 @@ if options.rerunFSA:
         fs_daughter_inputs['muons'] = 'cleanPatMuonsRematched'
         fs_daughter_inputs['taus'] = 'cleanPatTausRematched'
         fs_daughter_inputs['photons'] = 'photonParentage'
-        fs_daughter_inputs['jets'] = 'selectedPatJetsRematched'
-#        fs_daughter_inputs['jets'] = 'selectedPatJetsAK5chsPFRematched' # for chsJets
+#        fs_daughter_inputs['jets'] = 'selectedPatJetsRematched'
+        fs_daughter_inputs['jets'] = 'selectedPatJetsAK5chsPFRematched'
+
+    if options.runTauSpinner:
+        process.load('FinalStateAnalysis.RecoTools.TauSpinner_cfi')
+        process.TauSpinnerPath = cms.Path( process.TauSpinnerReco )
+        process.schedule.append(process.TauSpinnerPath)
+        fs_daughter_inputs['extraWeights'] = cms.PSet(
+            tauSpinnerWeight = cms.InputTag("TauSpinnerReco", "TauSpinnerWT") 
+        )
 
     if options.runTauSpinner:
         process.load('FinalStateAnalysis.RecoTools.TauSpinner_cfi')
