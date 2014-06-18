@@ -8,6 +8,7 @@ import multiprocessing
 from MegaWorker import MegaWorker
 from MegaMerger import MegaMerger
 import sys
+import errno
 
 def group_list(files, n=1):
     ''' Merge an iterable into groups of N '''
