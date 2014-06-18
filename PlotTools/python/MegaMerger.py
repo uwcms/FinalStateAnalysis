@@ -15,6 +15,7 @@ import ROOT
 import shutil
 import signal
 import tempfile
+import errno
 
 class MegaMerger(multiprocessing.Process):
     log = multiprocessing.get_logger()
@@ -97,6 +98,13 @@ class MegaMerger(multiprocessing.Process):
                     self.log.debug("empty to get")
                     # Noting to merge right now
                     break
+                except IOError, e:
+                    if e.errno == errno.EINTR:
+                        self.log.debug("Interrupted by IOError, probably because user's system setting changed in a weird way")
+                        break
+                    else:
+                        raise
+                    # Reset loop and hope the problem has passed
             if inputs_to_merge:
                 files_to_merge = []
                 for entries, file in inputs_to_merge:
