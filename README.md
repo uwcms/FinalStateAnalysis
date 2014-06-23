@@ -47,10 +47,20 @@ Checkout the FinalStateAnalysis repository::
   cd FinalStateAnalysis
 ```
 
-This will checkout the lastest and greatest version of the code.  You might also want the Summer 2013 compatible branch, if so you should additionally run:
+This will checkout `master` branch with the lastest and greatest version of the code.
+Use this branch for the production of PAT-tuples.
+You might also want the Summer 2013 compatible branch, if so you should additionally run:
+
 ```bash
-git checkout 53X_SLC6_Dev
+git checkout -b summer2013 origin/summer2013
 ```
+
+For development, use the `53X_SLC6_Dev` branch,
+
+```bash
+git checkout -b 53X_SLC6_Dev origin/53X_SLC6_Dev
+```
+
 and then proceed as normal.
 
 Checkout the needed CMSSW tags:
