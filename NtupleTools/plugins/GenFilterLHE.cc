@@ -15,7 +15,7 @@ private:
   edm::InputTag LHEParticleTag_;
   int statusGen_;
   int statusGenMAX_;
- 
+
    std::map<std::string,TH1D*> h1_;
    std::map<std::string,TH2D*> h2_;
 
@@ -49,7 +49,7 @@ GenFilterLHE::GenFilterLHE( const ParameterSet & cfg ) :
 
 void GenFilterLHE::beginJob() {
       nall=0;
-      nsel=0;	
+      nsel=0;
 
      edm::Service<TFileService> fs;
       h1_["LHE_PARTONMULTIPLICITY"]                    =fs->make<TH1D>("LHE_PARTONMULTIPLICITY","hepeup().NUP",20,0.,20.);
@@ -80,7 +80,7 @@ bool found=true;
             LogDebug("") << ">>> LHE info not found!!";
             return false;
   }
-  
+
   h1_["LHE_PARTONMULTIPLICITY"]->Fill(lheeventinfo->hepeup().NUP);
         double ptPART=sqrt( lheeventinfo->hepeup().PUP.at(0)[0]*lheeventinfo->hepeup().PUP.at(0)[0] + lheeventinfo->hepeup().PUP.at(0)[1]*lheeventinfo->hepeup().PUP.at(0)[1] );
       h2_["LHE_LEADINGPARTON_PT"]  ->Fill(lheeventinfo->hepeup().NUP, ptPART);

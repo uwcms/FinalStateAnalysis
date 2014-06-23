@@ -46,7 +46,7 @@ using namespace reco;
 GenJetCleaner::GenJetCleaner( const ParameterSet & cfg ) :
       src_(cfg.getUntrackedParameter<edm::InputTag>("src", edm::InputTag("ak5GenJets"))),
       ptMin_(cfg.getUntrackedParameter<double>("ptMin",30)),
-      etaMax_(cfg.getUntrackedParameter<double>("etaMax",5))	
+      etaMax_(cfg.getUntrackedParameter<double>("etaMax",5))
   {
     produces<reco::GenJetCollection>();
   }
@@ -100,8 +100,8 @@ void GenJetCleaner::produce (Event & iEvent, const EventSetup &) {
 //      if(nJets>0) std::cout<<nJets<<"  "<<nJetsClean<<std::endl;
       iEvent.put(out);
 
-      h1_["Jets"]->Fill(nJets); h1_["CleanJets"]->Fill(nJetsClean);	
-      h2_["Jets_LHENUP"]->Fill(nJetsClean,NUP);	
+      h1_["Jets"]->Fill(nJets); h1_["CleanJets"]->Fill(nJetsClean);
+      h2_["Jets_LHENUP"]->Fill(nJetsClean,NUP);
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"

@@ -26,7 +26,7 @@ private:
   bool skipBeamRemnant_;
   bool skipIntermediateHadronization_;
   bool skipDecayProcess_;
- 
+
   TTree* tree;
 
   std::map<std::string,TH1D*> h1_;
@@ -80,7 +80,7 @@ BasicGenPlotter::BasicGenPlotter( const ParameterSet & cfg ) :
 
 void BasicGenPlotter::beginJob() {
       nall=0;
-      nsel=0;	
+      nsel=0;
 
       edm::Service<TFileService> fs;
       tree = fs->make<TTree>("Ntuple", "Ntuple");
@@ -140,11 +140,11 @@ bool BasicGenPlotter::filter (Event & ev, const EventSetup &) {
 
   int keep[11] = {36,25,23,24,21,11,12,13,14,15,16};
 
-  cout<<"Reading!"<<endl; 
+  cout<<"Reading!"<<endl;
         cout<<"Number || PdgID  || Status || Daugthers  || Mothers "<<endl;
   for( size_t i = 0; i < pGenPart->size(); ++ i ) {
         const reco::GenParticle& genpart = (*pGenPart)[i];
-        if(genpart.pt()<minPtThreshold_ && genpart.pt()!=0) continue;  // the "=!0" bit  comes from the A->ZH file, where for whatever reason the first A has 0 pt...    
+        if(genpart.pt()<minPtThreshold_ && genpart.pt()!=0) continue;  // the "=!0" bit  comes from the A->ZH file, where for whatever reason the first A has 0 pt...
         if(skipMPI_ && genpart.status()>30 && genpart.status()<40) continue;
         if(skipInitialStateShowers_ && genpart.status()>40 && genpart.status()<50) continue;
         if(skipFinalStateShowers_ && genpart.status()>50 && genpart.status()<60) continue;
@@ -155,7 +155,7 @@ bool BasicGenPlotter::filter (Event & ev, const EventSetup &) {
         bool skip=true;
         for (int k=0; k<11; k++) { if (abs(genpart.pdgId())==keep[k]) skip=false;}
         if (!skip){
-                cout <<"\t\t"<<i<<"   "<<genpart.pdgId()<<"   "<<genpart.status()<<"    "<<genpart.pt()<<"   "<<genpart.numberOfDaughters()<<"   "<<genpart.mass()<<endl;   
+                cout <<"\t\t"<<i<<"   "<<genpart.pdgId()<<"   "<<genpart.status()<<"    "<<genpart.pt()<<"   "<<genpart.numberOfDaughters()<<"   "<<genpart.mass()<<endl;
                 pts_->push_back(genpart.pt());
                 etas_->push_back(genpart.eta());
                 phis_->push_back(genpart.phi());
@@ -164,7 +164,7 @@ bool BasicGenPlotter::filter (Event & ev, const EventSetup &) {
                 pdgIds_->push_back(genpart.pdgId());
                 numberOfDaughters_->push_back(genpart.numberOfDaughters());
 
-                if(genpart.numberOfMothers()>0){ 
+                if(genpart.numberOfMothers()>0){
                         const reco::Candidate* higgsmother=genpart.mother(0);
                         cout <<"\t\t mother   "<<higgsmother->pdgId()<<"   "<<higgsmother->status()<<"    "<<higgsmother->pt()<<"    "<<higgsmother->numberOfDaughters()<<endl;
                         motherStatuses_->push_back(higgsmother->status());
@@ -187,7 +187,7 @@ bool BasicGenPlotter::filter (Event & ev, const EventSetup &) {
   event_=nall;
   tree->Fill();
 
-  
+
   if (found) nsel++;
 return found;
 }
