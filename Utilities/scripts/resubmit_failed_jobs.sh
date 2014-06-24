@@ -11,7 +11,7 @@
 
 if [ $# -lt 1 ]
 then
-    echo "Usage: resubmit_failed_jobs.sh JOB_ID"
+    echo "Usage: bash resubmit_failed_jobs.sh JOB_ID"
     exit 1
 fi
 
