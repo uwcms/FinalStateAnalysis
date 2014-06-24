@@ -18,4 +18,5 @@ fi
 JOBID=$1
 SCRATCH_PATH=/nfs_scratch/$USER/$JOBID
 
-ls $SCRATCH_PATH/*/dags/*dag.status | xargs grep -lir ERR | sed -e "s|status|rescue|" | sed 's/^/^/' | grep -f- <(ls -1 $SCRATCH_PATH/*/dags/*dag.rescue*) | sort -r | sort -u -t/ -k1,1 | xargs -I{} -n 1 farmoutAnalysisJobs --rescue-dag-file={}
+EXISTING_RESCUE_DAGS=$(ls -1 $SCRATCH_PATH/*/dags/*dag.rescue*)
+ls $SCRATCH_PATH/*/dags/*dag.status | xargs grep -lir ERR | sed -e "s|status|rescue|" | sed 's/^/^/' | grep -f- $EXISTING_RESCUE_DAGS | sort -r | sort -u -t/ -k1,1 | xargs -I{} -n 1 farmoutAnalysisJobs --rescue-dag-file={}
