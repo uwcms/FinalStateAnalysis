@@ -81,6 +81,12 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
   LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_legacy8TeV.sh
 fi
 
+if [ "$MAJOR_VERSION" -eq "7" ]; then
+  echo "Applying recipe for CMSSW 7_0_X"
+  LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_13TeV.sh
+fi
+
+
 echo "Applying common recipe"
 LUMI=$LUMI LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_common.sh
 
