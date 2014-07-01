@@ -36,7 +36,10 @@ if [ "$PATPROD" = "1" ]
 then
     #PU Jet ID Weights -- yes this way sucks
     git clone https://github.com/violatingcp/Jets_Short.git
-    rm -r RecoJets/
+    if [ -d "RecoJets/" ];
+    then
+      rm -r RecoJets/
+    fi
     mv Jets_Short/RecoJets .
     mv Jets_Short/JetMETCorrections/Modules JetMETCorrections/.
     rm -rf Jets_Short
