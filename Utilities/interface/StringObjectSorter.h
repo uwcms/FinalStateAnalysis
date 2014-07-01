@@ -11,6 +11,7 @@
  *
  */
 
+#include <cassert>
 #include <functional>
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
 
