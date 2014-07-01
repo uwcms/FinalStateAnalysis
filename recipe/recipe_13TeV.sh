@@ -65,9 +65,9 @@ then
   cat download.url | xargs wget
   popd
   #apply some pathces to make everythin work
-  set +o errexit
-  patch -N -p0 < FinalStateAnalysis/recipe/patches/PATObject.h.patch
-  set -o errexit
+  #set +o errexit
+  #patch -N -p0 < FinalStateAnalysis/recipe/patches/PATObject.h.patch
+  #set -o errexit
 
 fi
 
