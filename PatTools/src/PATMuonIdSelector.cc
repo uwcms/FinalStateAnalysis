@@ -54,7 +54,7 @@ T getConfigurationParameter(const edm::ParameterSet& cfg, const std::string& cfg
   else return (*cfgParDefaultValue);
 }
 
-PATMuonIdSelectorImp::PATMuonIdSelectorImp(const edm::ParameterSet& cfg)
+PATMuonIdSelectorImp::PATMuonIdSelectorImp(const edm::ParameterSet& cfg, edm::ConsumesCollector iC)
   : IPtrackType_(defaultIPtrackType_),
     IPrefType_(defaultIPrefType_)
 {
