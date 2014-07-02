@@ -73,7 +73,7 @@ PATPhotonCutBasedIDEmbedder(const
 
   _helperCfg.hOverEConeSize = pset.getParameter<double>("hOverEConeSize");
   _helperCfg.useTowers = true;
-  _helperCfg.hcalTowers = pset.getParameter<InputTag>("hOverETowerSrc");
+  _helperCfg.hcalTowers = pset.getParameter<edm::EDGetTokenT<CaloTowerCollection>>("hOverETowerSrc");
   _helperCfg.hOverEPtMin = pset.getParameter<double>("hOverEPtMin");
 
   _hcalHelper = new ElectronHcalHelper(_helperCfg);
@@ -95,7 +95,7 @@ void PATPhotonCutBasedIDEmbedder::produce(Event& evt,
   evt.getByLabel(_eleSrc,eleHandle);
 
   edm::Handle<CaloTowerCollection> hcalTowersHandle;
-  evt.getByLabel(_helperCfg.hcalTowers,hcalTowersHandle);
+  evt.getByToken(_helperCfg.hcalTowers,hcalTowersHandle);
 
   //setup H/E for this event
   _hcalHelper->checkSetup(es);
