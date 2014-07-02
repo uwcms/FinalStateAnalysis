@@ -14,6 +14,7 @@
 #include "FWCore/Framework/interface/EDFilter.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
+#include "PhysicsTools/FWLite/interface/TFileService.h"
 
 #include "FinalStateAnalysis/NtupleTools/interface/PATFinalStateAnalysis.h"
 
@@ -34,7 +35,7 @@ class PATFinalStateAnalysisFilter : public edm::EDFilter {
 
 PATFinalStateAnalysisFilter::PATFinalStateAnalysisFilter(
     const edm::ParameterSet& pset) {
-  edm::Service<TFileService> fs;
+  edm::Service<fwlite::TFileService> fs;
   analysis_.reset(new PATFinalStateAnalysis(pset, *fs));
 }
 
