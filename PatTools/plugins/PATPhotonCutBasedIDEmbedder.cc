@@ -14,6 +14,7 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Utilities/interface/InputTag.h"
+#include "FWCore/Utilities/interface/EDGetToken.h"
 
 #include "DataFormats/PatCandidates/interface/Photon.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
@@ -73,7 +74,7 @@ PATPhotonCutBasedIDEmbedder(const
 
   _helperCfg.hOverEConeSize = pset.getParameter<double>("hOverEConeSize");
   _helperCfg.useTowers = true;
-  _helperCfg.hcalTowers = pset.getParameter<edm::EDGetTokenT<CaloTowerCollection>>("hOverETowerSrc");
+  _helperCfg.hcalTowers = consumes<CaloTowerCollection>(pset.getParameter<edm::InputTag>("hOverETowerSrc"));
   _helperCfg.hOverEPtMin = pset.getParameter<double>("hOverEPtMin");
 
   _hcalHelper = new ElectronHcalHelper(_helperCfg);
