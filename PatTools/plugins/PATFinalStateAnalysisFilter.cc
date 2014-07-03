@@ -35,7 +35,7 @@ class PATFinalStateAnalysisFilter : public edm::EDFilter {
 
 PATFinalStateAnalysisFilter::PATFinalStateAnalysisFilter(
     const edm::ParameterSet& pset) {
-  edm::Service<fwlite::TFileService> fs;
+  edm::Service<TFileDirectory> fs;
   analysis_.reset(new PATFinalStateAnalysis(pset, *fs));
 }
 
