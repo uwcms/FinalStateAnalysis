@@ -80,7 +80,7 @@ options = TauVarParsing.TauVarParsing(
     runTauSpinner=0,
     GlobalTag="",
     useMiniAOD=0,
-    miniAODScenario='V7', # V7 = 25ns, V6 = 50ns
+    miniAODScenario='', # V7 = 25ns, V6 = 50ns
 )
 
 options.register(
@@ -143,7 +143,10 @@ if options.rerunFSA:
     envvar = 'mcgt' if options.isMC else 'datagt'
     GT = {'mcgt': 'START53_V27::All', 'datagt': 'FT53_V21A_AN6::All'}
     if options.useMiniAOD:
-        GT['mcgt'] = 'PLS170_%sAN1::All' % options.miniAODScenario
+        if options.miniAODScenario:
+            GT['mcgt'] = 'PLS170_%sAN1::All' % options.miniAODScenario
+        else:
+            GT['mcgt'] = 'PLS170_V7AN1::All'
         GT['datagt'] = 'GR_70_V2_AN1::All'
 
 
@@ -154,6 +157,8 @@ if options.rerunFSA:
             process.GlobalTag.globaltag = cms.string(os.environ[envvar])
         except KeyError:
             print 'Warning: GlobalTag not defined in environment. Using default.'
+            process.GlobalTag.globaltag = cms.string(GT[envvar])
+        if options.useMiniAOD and options.miniAODScenario:
             process.GlobalTag.globaltag = cms.string(GT[envvar])
 
     print 'Using globalTag: %s' % process.GlobalTag.globaltag
