@@ -44,7 +44,7 @@ def _combinatorics(items, n):
 def produce_final_states(process, collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
                          noTracks=False, noPhotons=False, zzMode=False,
-                         rochCor="", eleCor=""):
+                         rochCor="", eleCor="", useMiniAOD=False):
 
     muonsrc = collections['muons']
     esrc = collections['electrons']
@@ -62,18 +62,32 @@ def produce_final_states(process, collections, output_commands,
     if buildFSAEvent:
         process.load("FinalStateAnalysis.PatTools."
                      "finalStates.patFinalStateEventProducer_cfi")
-        process.patFinalStateEventProducer.electronSrc = cms.InputTag(esrc)
-        process.patFinalStateEventProducer.muonSrc = cms.InputTag(muonsrc)
-        process.patFinalStateEventProducer.tauSrc = cms.InputTag(tausrc)
-        process.patFinalStateEventProducer.jetSrc = cms.InputTag(jetsrc)
-        process.patFinalStateEventProducer.phoSrc = cms.InputTag(phosrc)
-        process.patFinalStateEventProducer.metSrc = pfmetsrc
-        process.patFinalStateEventProducer.puTag = cms.string(puTag)
-        process.patFinalStateEventProducer.mets.pfmet = pfmetsrc
-        process.patFinalStateEventProducer.mets.mvamet = mvametsrc
-        if 'extraWeights' in collections:
-            process.patFinalStateEventProducer.extraWeights = collections['extraWeights']
-        sequence += process.patFinalStateEventProducer
+        if useMiniAOD:
+            process.patFinalStateEventProducerMiniAOD.electronSrc = cms.InputTag(esrc)
+            process.patFinalStateEventProducerMiniAOD.muonSrc = cms.InputTag(muonsrc)
+            process.patFinalStateEventProducerMiniAOD.tauSrc = cms.InputTag(tausrc)
+            process.patFinalStateEventProducerMiniAOD.jetSrc = cms.InputTag(jetsrc)
+            process.patFinalStateEventProducerMiniAOD.phoSrc = cms.InputTag(phosrc)
+            process.patFinalStateEventProducerMiniAOD.metSrc = pfmetsrc
+            process.patFinalStateEventProducerMiniAOD.puTag = cms.string(puTag)
+            process.patFinalStateEventProducerMiniAOD.mets.pfmet = pfmetsrc
+            process.patFinalStateEventProducerMiniAOD.mets.mvamet = mvametsrc
+            if 'extraWeights' in collections:
+                process.patFinalStateEventProducerMiniAOD.extraWeights = collections['extraWeights']
+            sequence += process.patFinalStateEventProducerMiniAOD
+        else:
+            process.patFinalStateEventProducer.electronSrc = cms.InputTag(esrc)
+            process.patFinalStateEventProducer.muonSrc = cms.InputTag(muonsrc)
+            process.patFinalStateEventProducer.tauSrc = cms.InputTag(tausrc)
+            process.patFinalStateEventProducer.jetSrc = cms.InputTag(jetsrc)
+            process.patFinalStateEventProducer.phoSrc = cms.InputTag(phosrc)
+            process.patFinalStateEventProducer.metSrc = pfmetsrc
+            process.patFinalStateEventProducer.puTag = cms.string(puTag)
+            process.patFinalStateEventProducer.mets.pfmet = pfmetsrc
+            process.patFinalStateEventProducer.mets.mvamet = mvametsrc
+            if 'extraWeights' in collections:
+                process.patFinalStateEventProducer.extraWeights = collections['extraWeights']
+            sequence += process.patFinalStateEventProducer
 
     # Always keep
     output_commands.append('*_patFinalStateEventProducer_*_*')

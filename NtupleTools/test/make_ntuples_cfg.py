@@ -261,7 +261,7 @@ if options.rerunFSA:
                          'puTagDoesntMatter', buildFSAEvent=True,
                          noTracks=True, noPhotons=options.noPhotons,
                          zzMode=options.zzMode, rochCor=options.rochCor,
-                         eleCor=options.eleCor)
+                         eleCor=options.eleCor, useMiniAOD=options.useMiniAOD)
     process.buildFSAPath = cms.Path(process.buildFSASeq)
     # Don't crash if some products are missing (like tracks)
     process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
