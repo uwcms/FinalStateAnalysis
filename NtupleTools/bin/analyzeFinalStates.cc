@@ -104,7 +104,6 @@ int main(int argc, char* argv[]) {
       }
 
       if (edm::shutdown_flag) {
-        //std::cerr << "Signal " << edm::getSigNum() << " detected, quitting after " << ievt << " events."
         std::cerr << "Signal detected, quitting after " << ievt << " events."
           << std::endl;
         break;
