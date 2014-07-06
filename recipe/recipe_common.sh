@@ -39,7 +39,7 @@ set -o errexit
 if [ "$PATPROD" = "1" ]
 then
     #PU Jet ID Weights -- yes this way sucks
-    if [ "$MAJOR_VERSION" -eq "7" ]; 
+    if [ "$MAJOR_VERSION" -eq "7" ] 
     then
         echo "No RecoJets yet"
     else
