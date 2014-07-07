@@ -20,7 +20,7 @@ class PATMuonIdEmbedder : public edm::EDProducer {
 };
 
 PATMuonIdEmbedder::PATMuonIdEmbedder(const edm::ParameterSet& pset)
-  :selector_(pset) {
+  :selector_(pset, consumesCollector()) {
   src_ = pset.getParameter<edm::InputTag>("src");
   userIntLabel_ = pset.getParameter<std::string>("userIntLabel");
   produces<pat::MuonCollection>();

@@ -24,7 +24,7 @@ using namespace pat;
 
 
 PATPFParticleProducerUser::PATPFParticleProducerUser(const edm::ParameterSet & iConfig) :
-    userDataHelper_ ( iConfig.getParameter<edm::ParameterSet>("userData") )
+    userDataHelper_ ( iConfig.getParameter<edm::ParameterSet>("userData"), consumesCollector())
 {
   // general configurables
   pfCandidateSrc_ = iConfig.getParameter<edm::InputTag>( "pfCandidateSource" );
@@ -43,7 +43,7 @@ PATPFParticleProducerUser::PATPFParticleProducerUser(const edm::ParameterSet & i
   // Efficiency configurables
   addEfficiencies_ = iConfig.getParameter<bool>("addEfficiencies");
   if (addEfficiencies_) {
-     efficiencyLoader_ = pat::helper::EfficiencyLoader(iConfig.getParameter<edm::ParameterSet>("efficiencies"));
+     efficiencyLoader_ = pat::helper::EfficiencyLoader(iConfig.getParameter<edm::ParameterSet>("efficiencies"), consumesCollector());
   }
 
   // Resolution configurables

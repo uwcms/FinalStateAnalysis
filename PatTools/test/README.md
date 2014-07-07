@@ -42,3 +42,8 @@ cp *.json /afs/hep.wisc.edu/home/mverzett/public/uwdb_data/.
 ```
 
 The information contaied into these file will be mirrored [here](http://www.hep.wisc.edu/~mverzett/cgi-bin/uwdb.cgi) allowing easy access and bookkeeping
+
+MINI-AOD SUBMISSION
+===================
+
+The miniAOD submission is currently a work in progress. In the future, submit_tuplzation.py will be modified to allow the submission of miniAOD production locally using xrootd or using crab3. For now, the miniAOD_cfg.py file is just the output os a cmsDriver script for testing purposes only.

@@ -18,6 +18,7 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Utilities/interface/InputTag.h"
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 
 #include "DataFormats/PatCandidates/interface/Muon.h"
 
@@ -28,7 +29,7 @@ class PATMuonIdSelectorImp
  public:
   typedef pat::MuonCollection collection;
 
-  explicit PATMuonIdSelectorImp(const edm::ParameterSet&);
+  PATMuonIdSelectorImp(const edm::ParameterSet&, edm::ConsumesCollector);
   ~PATMuonIdSelectorImp();
 
   std::vector<const pat::Muon*>::const_iterator begin() const { return selected_.begin(); }

@@ -28,3 +28,32 @@ patFinalStateEventProducer = cms.EDProducer(
         #puInTime = cms.InputTag("lumiWeights"),
     )
 )
+
+patFinalStateEventProducerMiniAOD = cms.EDProducer(
+    "PATFinalStateEventProducer",
+    rhoSrc = cms.InputTag('slimmedJets', "rho"), #cms.InputTag("kt6PFJetsForRhoComputationVoronoi", "rho"),
+    pvSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
+    pvSrcBackup = cms.InputTag("offlineSlimmedPrimaryVertices"),
+    verticesSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
+    electronSrc = cms.InputTag("fixme"),
+    muonSrc = cms.InputTag("fixme"),
+    tauSrc = cms.InputTag("fixme"),
+    jetSrc = cms.InputTag("fixme"),
+    pfSrc = cms.InputTag("packedPFCandidates"),
+    metSrc = cms.InputTag("fixme"),
+    metCovSrc = cms.InputTag("pfMEtSignCovMatrix"),
+    trgSrc = cms.InputTag("patTrigger"),
+    puInfoSrc = cms.InputTag("addPileupInfo"),
+    genParticleSrc = cms.InputTag("prunedGenParticles"),
+    trackSrc = cms.InputTag("fixme"),
+    gsfTrackSrc = cms.InputTag("fixme"),
+    mets = cms.PSet(
+        pfmet = cms.InputTag("fixme"),
+        mvamet = cms.InputTag("fixme"),
+    ),
+    extraWeights = cms.PSet(
+        #anyOldThing = cms.double(9999), # just an example
+        #puAvg = cms.InputTag("lumiWeights", "3bx"),
+        #puInTime = cms.InputTag("lumiWeights"),
+    )
+)

@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
 
   // watch for shutdown signal
   {
-    boost::mutex::scoped_lock sl(edm::usr2_lock);
+    boost::mutex::scoped_lock sl(boost::mutex);
 
     for(event.toBegin(); !event.atEnd(); ++event, ++ievt){
       // Check if we are in a new lumi.  If so we gotta call the appropriate
@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
       }
 
       if (edm::shutdown_flag) {
-        std::cerr << "Signal " << edm::getSigNum() << " detected, quitting after " << ievt << " events."
+        std::cerr << "Signal detected, quitting after " << ievt << " events."
           << std::endl;
         break;
       }

@@ -14,6 +14,7 @@
 #include "FWCore/Framework/interface/EDFilter.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
+#include "CommonTools/Utils/interface/TFileDirectory.h"
 
 #include "FinalStateAnalysis/NtupleTools/interface/PATFinalStateAnalysis.h"
 
@@ -35,7 +36,8 @@ class PATFinalStateAnalysisFilter : public edm::EDFilter {
 PATFinalStateAnalysisFilter::PATFinalStateAnalysisFilter(
     const edm::ParameterSet& pset) {
   edm::Service<TFileService> fs;
-  analysis_.reset(new PATFinalStateAnalysis(pset, *fs));
+  TFileDirectory &fd =  fs->tFileDirectory();
+  analysis_.reset(new PATFinalStateAnalysis(pset, fd));
 }
 
 bool PATFinalStateAnalysisFilter::filter(

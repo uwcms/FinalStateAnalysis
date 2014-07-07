@@ -24,6 +24,8 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 
 
+#include "FWCore/Framework/interface/GetterOfProducts.h" 
+#include "FWCore/Framework/interface/ProcessMatch.h"
 
 // For covariance matrix
 #include "DataFormats/Math/interface/Error.h"
@@ -81,6 +83,11 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     std::vector<InputTagMap> metCfg_;
 
     bool forbidMissing_;
+
+    // initialize getterOfProducts (replacing getByType)
+    edm::GetterOfProducts<LHEEventProduct> getLHEEventProduct_;
+    edm::GetterOfProducts<GenEventInfoProduct> getGenEventInfoProduct_;
+
 };
 
 PATFinalStateEventProducer::PATFinalStateEventProducer(
@@ -123,6 +130,14 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   }
 
   produces<PATFinalStateEventCollection>();
+
+  getLHEEventProduct_ = edm::GetterOfProducts<LHEEventProduct>(edm::ProcessMatch("*"), this);
+  getGenEventInfoProduct_ = edm::GetterOfProducts<GenEventInfoProduct>(edm::ProcessMatch("*"), this);
+
+  callWhenNewProductsRegistered([this](edm::BranchDescription const& bd){
+    getLHEEventProduct_(bd); 
+    getGenEventInfoProduct_(bd); 
+  });
 }
 
 template<typename T> edm::RefProd<T>
@@ -239,20 +254,22 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     myPuInfo = * puInfo;
 
   // Try and get the Les Hoochies information
-  edm::Handle<LHEEventProduct> hoochie;
-  evt.getByType(hoochie);
+  // replace to getterOfProducts (getByType depreciated)
+  std::vector<edm::Handle<LHEEventProduct> > hoochie;
+  getLHEEventProduct_.fillHandles(evt, hoochie);
   // Get the event tag
   lhef::HEPEUP genInfo;
-  if (hoochie.isValid())
-    genInfo = hoochie->hepeup();
+  if (hoochie[0].isValid())
+    genInfo = hoochie[0]->hepeup();
 
   // Try and get the GenParticleInfo information
-  edm::Handle<GenEventInfoProduct> genEventInfoH;
-  evt.getByType(genEventInfoH);
+  // replace to getterOfProducts (getByType depreciated)
+  std::vector<edm::Handle<GenEventInfoProduct> > genEventInfoH;
+  getGenEventInfoProduct_.fillHandles(evt, genEventInfoH);
   // Get the event tag
   GenEventInfoProduct genEventInfo;
-  if (genEventInfoH.isValid())
-    genEventInfo = *genEventInfoH;
+  if (genEventInfoH[0].isValid())
+    genEventInfo = *genEventInfoH[0];
 
   // Try and get the GenFilterInfo information
   edm::Handle<GenFilterInfo> generatorFilterH;
