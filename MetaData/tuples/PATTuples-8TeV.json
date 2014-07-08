@@ -14,6 +14,11 @@
     "data_MuEG_Run2012C_22Jan2013_v1" : "/hdfs/store/user/belknap/MuEG/Run2012C-22Jan2013-v1/AOD/Spring2014PATTuples_V2",
     "data_MuEG_Run2012D_22Jan2013_v1" : "/hdfs/store/user/belknap/MuEG/Run2012D-22Jan2013-v1/AOD/Spring2014PATTuples_V2",
 
+    "data_SingleMu_Run2012A-22Jan2013-v1" : "/hdfs/store/user/mverzett/SingleMu/Run2012A-22Jan2013-v1/AOD/Spring2014PATTuples_v2",
+    "data_SingleMu_Run2012B-22Jan2013-v1" : "/hdfs/store/user/mverzett/SingleMu/Run2012B-22Jan2013-v1/AOD/Spring2014PATTuples_v2",
+    "data_SingleMu_Run2012C-22Jan2013-v1" : "/hdfs/store/user/mcepeda/SingleMu/Run2012C-22Jan2013-v1/AOD/Spring2014PATTuples",
+    "data_SingleMu_Run2012D-22Jan2013-v1" : "/hdfs/store/user/mcepeda/SingleMu/Run2012D-22Jan2013-v1/AOD/Spring2014PATTuples",
+
     "HPlusPlusHMinusMinusHTo4L_M-110_8TeV-pythia6" : "/hdfs/store/user/belknap/HPlusPlusHMinusMinusHTo4L_M-110_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM/Spring2014PATTuples_V2",
     "HPlusPlusHMinusMinusHTo4L_M-130_8TeV-pythia6" : "/hdfs/store/user/belknap/HPlusPlusHMinusMinusHTo4L_M-130_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM/Spring2014PATTuples_V2",
     "HPlusPlusHMinusMinusHTo4L_M-150_8TeV-pythia6" : "/hdfs/store/user/belknap/HPlusPlusHMinusMinusHTo4L_M-150_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM/Spring2014PATTuples_V2",
