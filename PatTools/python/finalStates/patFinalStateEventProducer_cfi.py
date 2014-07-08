@@ -30,8 +30,8 @@ patFinalStateEventProducer = cms.EDProducer(
 )
 
 patFinalStateEventProducerMiniAOD = cms.EDProducer(
-    "PATFinalStateEventProducer",
-    rhoSrc = cms.InputTag('slimmedJets', "rho"), #cms.InputTag("kt6PFJetsForRhoComputationVoronoi", "rho"),
+    "PATFinalStateEventMiniProducer",
+    rhoSrc = cms.InputTag('slimmedJets', "rho"),
     pvSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
     pvSrcBackup = cms.InputTag("offlineSlimmedPrimaryVertices"),
     verticesSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
@@ -42,11 +42,13 @@ patFinalStateEventProducerMiniAOD = cms.EDProducer(
     pfSrc = cms.InputTag("packedPFCandidates"),
     metSrc = cms.InputTag("fixme"),
     metCovSrc = cms.InputTag("pfMEtSignCovMatrix"),
-    trgSrc = cms.InputTag("patTrigger"),
+    trgSrc = cms.InputTag("selectedPatTrigger"),
+    trgPrescaleSrc = cms.InputTag("patTrigger"),
+    trgResultsSrc = cms.InputTag("TriggerResults"),
     puInfoSrc = cms.InputTag("addPileupInfo"),
     genParticleSrc = cms.InputTag("prunedGenParticles"),
-    trackSrc = cms.InputTag("fixme"),
-    gsfTrackSrc = cms.InputTag("fixme"),
+    photonCoreSrc = cms.InputTag("reducedEgamma","reducedGedPhotonCores"),
+    gsfCoreSrc = cms.InputTag("reducedEgamma","reducedGedGsfElectronCores"),
     mets = cms.PSet(
         pfmet = cms.InputTag("fixme"),
         mvamet = cms.InputTag("fixme"),

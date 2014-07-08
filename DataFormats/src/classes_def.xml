@@ -53,6 +53,17 @@
   <class name="edm::RefProd<PATFinalStateEventCollection>"/>
   <class name="edm::Ptr<PATFinalStateEvent>"/>
 
+  <class name="PATFinalStateEventMini" ClassVersion="1">
+   <version ClassVersion="1" checksum="4080903132"/>
+  </class>
+  <class name="PATFinalStateEventMiniCollection"/>
+  <class name="edm::Wrapper<PATFinalStateEventMini>"/>
+  <class name="edm::Wrapper<PATFinalStateEventMiniCollection>"/>
+  <class name="edm::Ref<PATFinalStateEventMiniCollection,PATFinalStateEventMini,edm::refhelper::FindUsingAdvance<PATFinalStateEventMiniCollection,PATFinalStateEventMini> >"/>
+  <class name="edm::RefVector<PATFinalStateEventMiniCollection,PATFinalStateEventMini,edm::refhelper::FindUsingAdvance<PATFinalStateEventMiniCollection,PATFinalStateEventMini> >"/>
+  <class name="edm::RefProd<PATFinalStateEventMiniCollection>"/>
+  <class name="edm::Ptr<PATFinalStateEventMini>"/>
+
   <class name="PATFinalStateLS" ClassVersion="10">
    <version ClassVersion="10" checksum="3002000688"/>
   </class>
