@@ -61,7 +61,7 @@ SmartTriggerResult smartTrigger(
 
 /// Get the result for a single event using the pat::TriggerObjectStandAlone
 SmartTriggerResult smartTrigger(
-    const std::string& trgs, const pat::TriggerObjectStandAlone& trgObject, 
+    const std::string& trgs, const std::vector<pat::TriggerObjectStandAlone>& trgObject, 
     bool ez=false);
 
 /// This version caches the results across events to speed things up.
@@ -71,7 +71,7 @@ const SmartTriggerResult& smartTrigger(
 
 /// Get the result for a single event using the pat::TriggerObjectStandAlone
 const SmartTriggerResult& smartTrigger(
-    const std::string& trgs, const pat::TriggerObjectStandAlone& trgObject, 
+    const std::string& trgs, const std::vector<pat::TriggerObjectStandAlone>& trgObject, 
     const edm::EventID& event, bool ez=false);
 
 /// Get the list of trigger paths matching a given pattern.  If [ez] is
@@ -81,7 +81,7 @@ std::vector<const pat::TriggerPath*> matchingTriggerPaths(
     const std::string& pattern, bool ez=false);
 
 std::vector<const pat::TriggerPath*> matchingTriggerPaths(
-    const pat::TriggerObjectStandAlone& trgObject, 
+    const std::vector<pat::TriggerObjectStandAlone>& trgObject, 
     const std::string& pattern, bool ez=false);
 
 /// Get the list of trigger filters matching a given pattern.
@@ -90,7 +90,7 @@ std::vector<const pat::TriggerFilter*> matchingTriggerFilters(
     const std::string& pattern, bool ez=false);
 
 std::vector<const pat::TriggerFilter*> matchingTriggerFilters(
-    const pat::TriggerObjectStandAlone& trgObject,
+    const std::vector<pat::TriggerObjectStandAlone>& trgObject,
     const std::string& pattern, bool ez=false);
 
 /// Expose decision making method for testing.  Not for general use.

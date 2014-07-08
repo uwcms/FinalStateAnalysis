@@ -121,16 +121,18 @@ std::vector<const pat::TriggerPath*> matchingTriggerPaths(
 }
 
 std::vector<const pat::TriggerPath*> matchingTriggerPaths(
-    const pat::TriggerObjectStandAlone& trgObject,
+    const std::vector<pat::TriggerObjectStandAlone>& trgObject,
     const std::string& pattern, bool ez) {
   std::vector<const pat::TriggerPath*> output;
   try {
-    std::vector<std::string> pathNamesAll  = trgObject.pathNames(false);
     boost::regex matcher(ez ? edm::glob2reg(pattern) : pattern);
-    for (size_t i = 0; i < pathNamesAll.size(); ++i) {
-      if (boost::regex_match(pathNamesAll.at(i), matcher)) {
-        pat::TriggerPath* path = new pat::TriggerPath(pathNamesAll.at(i));
-        output.push_back(path);
+    for (pat::TriggerObjectStandAlone obj : trgObject) {
+      std::vector<std::string> pathNamesAll  = obj.pathNames(false);
+      for (size_t i = 0; i < pathNamesAll.size(); ++i) {
+        if (boost::regex_match(pathNamesAll.at(i), matcher)) {
+          pat::TriggerPath* path = new pat::TriggerPath(pathNamesAll.at(i));
+          output.push_back(path);
+        }
       }
     }
   } catch (std::exception& e) {
@@ -155,15 +157,17 @@ matchingTriggerFilters(const pat::TriggerEvent& result,
 }
 
 std::vector<const pat::TriggerFilter*>
-matchingTriggerFilters(const pat::TriggerObjectStandAlone& trgObject,
+matchingTriggerFilters(const std::vector<pat::TriggerObjectStandAlone>& trgObject,
     const std::string& pattern, bool ez) {
   std::vector<const pat::TriggerFilter*> output;
   boost::regex matcher(ez ? edm::glob2reg(pattern) : pattern);
-  std::vector<std::string> filterLabels = trgObject.filterLabels();
-  for (size_t i = 0; i < filterLabels.size(); ++i) {
-    if (boost::regex_match(filterLabels.at(i), matcher)) {
-      pat::TriggerFilter* filter = new pat::TriggerFilter(filterLabels.at(i));
-      output.push_back(filter);
+  for (pat::TriggerObjectStandAlone obj : trgObject) {
+    std::vector<std::string> filterLabels = obj.filterLabels();
+    for (size_t i = 0; i < filterLabels.size(); ++i) {
+      if (boost::regex_match(filterLabels.at(i), matcher)) {
+        pat::TriggerFilter* filter = new pat::TriggerFilter(filterLabels.at(i));
+        output.push_back(filter);
+      }
     }
   }
   return output;
@@ -243,7 +247,7 @@ SmartTriggerResult smartTrigger(const std::string& trgs,
 }
 
 SmartTriggerResult smartTrigger(const std::string& trgs,
-    const pat::TriggerObjectStandAlone& trgObject, bool ez) {
+    const std::vector<pat::TriggerObjectStandAlone>& trgObject, bool ez) {
   // Tokenize the trigger groups
   vstring groups = getGroups(trgs);
   VVInt prescales;
@@ -310,7 +314,7 @@ const SmartTriggerResult& smartTrigger(const std::string& trgs,
 }
 
 const SmartTriggerResult& smartTrigger(const std::string& trgs,
-    const pat::TriggerObjectStandAlone& trgObject, const edm::EventID& evt, bool ez) {
+    const std::vector<pat::TriggerObjectStandAlone>& trgObject, const edm::EventID& evt, bool ez) {
   // Check if we have cached the result.
   if (evt != lastTrigEvent) {
     // new event, clear the cache

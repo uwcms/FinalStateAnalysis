@@ -58,7 +58,7 @@ class PATFinalStateEventMini {
         const edm::PtrVector<reco::Vertex>& recoVertices,
         const edm::Ptr<pat::MET>& met,
         const TMatrixD& metCovariance,
-        const pat::TriggerObjectStandAlone& triggerObject,
+        const std::vector<pat::TriggerObjectStandAlone>& triggerObject,
         const pat::PackedTriggerPrescales& triggerPrescale,
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
@@ -94,7 +94,7 @@ class PATFinalStateEventMini {
     /// Get FastJet rho
     double rho() const;
     /// Get trigger information
-    const pat::TriggerObjectStandAlone& trig() const;
+    const std::vector<pat::TriggerObjectStandAlone>& trig() const;
     const pat::PackedTriggerPrescales& trigPrescale() const;
 
     /*  These methods will be deprecated! */
@@ -190,7 +190,7 @@ class PATFinalStateEventMini {
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;
     double rho_;
-    pat::TriggerObjectStandAlone triggerObject_;
+    std::vector<pat::TriggerObjectStandAlone> triggerObject_;
     pat::PackedTriggerPrescales triggerPrescale_;
     edm::Ptr<reco::Vertex> pv_;
     edm::PtrVector<reco::Vertex> recoVertices_;

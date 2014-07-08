@@ -248,7 +248,7 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
     theMEts[metCfg_[i].first] = theMetPtr;
   }
 
-  edm::Handle<pat::TriggerObjectStandAlone> trig;
+  edm::Handle<std::vector<pat::TriggerObjectStandAlone>> trig;
   evt.getByLabel(trgSrc_, trig);
 
   edm::Handle<pat::PackedTriggerPrescales> trigPrescale;
@@ -259,7 +259,9 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
 
   // get triggerNames form event
   const edm::TriggerNames& names = evt.triggerNames(*trigResults);
-  trig.unpackPathNames(names);
+  for (pat::TriggerObjectStandAlone obj : *trig) {
+    obj.unpackPathNames(names);
+  }
   trigPrescale.setTriggerNames(names);
 
   edm::Handle<std::vector<PileupSummaryInfo> > puInfo;

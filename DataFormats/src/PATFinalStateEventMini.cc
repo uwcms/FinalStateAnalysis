@@ -40,7 +40,7 @@ PATFinalStateEventMini::PATFinalStateEventMini(
     const edm::PtrVector<reco::Vertex>& recoVertices,
     const edm::Ptr<pat::MET>& met,
     const TMatrixD& metCovariance,
-    const pat::TriggerObjectStandAlone& triggerObject,
+    const std::vector<pat::TriggerObjectStandAlone>& triggerObject,
     const pat::PackedTriggerPrescales& triggerPrescale,
     const std::vector<PileupSummaryInfo>& puInfo,
     const lhef::HEPEUP& hepeup,
@@ -111,7 +111,7 @@ const GenFilterInfo& PATFinalStateEventMini::generatorFilter() const {
 
 double PATFinalStateEventMini::rho() const { return rho_; }
 
-const pat::TriggerObjectStandAlone& PATFinalStateEventMini::trig() const {
+const std::vector<pat::TriggerObjectStandAlone>& PATFinalStateEventMini::trig() const {
   return triggerObject_; }
 
 const pat::PackedTriggerPrescales& PATFinalStateEventMini::trigPrescale() const {
@@ -181,7 +181,7 @@ int PATFinalStateEventMini::matchedToFilter(const reco::Candidate& cand,
   if (!filters.size())
     return -1;
   return matchedToAnObject(
-      triggerObject_.filterObjects(filters[0]->label()), cand, maxDeltaR);
+      triggerObject_, cand, maxDeltaR);
 }
 
 int PATFinalStateEventMini::matchedToPath(const reco::Candidate& cand,
@@ -195,7 +195,7 @@ int PATFinalStateEventMini::matchedToPath(const reco::Candidate& cand,
   int matchCount = 0;
   for (size_t i = 0; i < result.paths.size(); ++i) {
     bool matched = matchedToAnObject(
-      triggerObject_.pathObjects(result.paths[i]), cand, maxDeltaR);
+      triggerObject_, cand, maxDeltaR);
     // std::cout << " - path: " << result.paths[i] << " matched: " << matched << std::endl;
     if (matched)
       matchCount += 1;
