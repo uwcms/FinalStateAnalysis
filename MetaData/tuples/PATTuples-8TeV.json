@@ -40,6 +40,8 @@
     "ZZTo2e2tau_8TeV-powheg-pythia6" : "/hdfs/store/user/belknap/ZZTo2e2tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Spring2014PATTuples_V2",
     "ZZTo2mu2tau_8TeV-powheg-pythia6" : "/hdfs/store/user/belknap/ZZTo2mu2tau_8TeV-powheg-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Spring2014PATTuples_V2",
 
+    "ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola" : "/hdfs/store/user/mcepeda/ZZJetsTo4L_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Spring2014PATTuples",
+
     "Z1jets_M50" : "/hdfs/store/user/belknap/DY1JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Spring2014PATTuples_V2",
     "Z2jets_M50_S10" : "/hdfs/store/user/belknap/DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7C-v1/AODSIM/Spring2014PATTuples_V2",
     "Z3jets_M50" : "/hdfs/store/user/belknap/DY3JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Spring2014PATTuples_V2",
