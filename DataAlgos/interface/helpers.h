@@ -20,6 +20,7 @@
 #include "TMatrixD.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
+#include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
 
 namespace fshelpers {
 

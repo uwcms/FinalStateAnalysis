@@ -165,7 +165,7 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
     const edm::EventSetup& es) {
   std::auto_ptr<PATFinalStateEventMiniCollection> output(
       new PATFinalStateEventMiniCollection);
-  std::cout << "starting eventMini production" << std::endl;
+
   edm::Handle<double> rho;
   evt.getByLabel(rhoSrc_, rho);
 
@@ -188,8 +188,6 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
   edm::Handle<edm::View<reco::Vertex> > vertices;
   evt.getByLabel(verticesSrc_, vertices);
   edm::PtrVector<reco::Vertex> verticesPtr = vertices->ptrVector();
-
-  std::cout << "starting getting physics objects" << std::endl; 
 
   // Get refs to the objects in the event
   edm::RefProd<pat::ElectronCollection> electronRefProd =
@@ -250,8 +248,6 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
     theMEts[metCfg_[i].first] = theMetPtr;
   }
 
-  std::cout << "starting getting Trigger" << std::endl; 
-
   edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > trig =
     getRefProd<std::vector<pat::TriggerObjectStandAlone> >(trgSrc_, evt);
 
@@ -261,17 +257,14 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
   edm::Handle<edm::TriggerResults> trigResults;
   evt.getByLabel(trgResultsSrc_, trigResults);
 
-  std::cout << "starting getting Trigger: fill names" << std::endl; 
   // get triggerNames form event
   const edm::TriggerNames& names = evt.triggerNames(*trigResults);
-  std::cout << "size of names: " << names.size() << std::endl;
   for (pat::TriggerObjectStandAlone obj : *trig) {
     //obj.unpackPathNames(names);
     // error: path names range larger than path indices
   }
   //trigPrescale->setTriggerNames(names);
 
-  std::cout << "starting getting Trigger: done" << std::endl; 
   edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
   evt.getByLabel(puInfoSrc_, puInfo);
 
@@ -279,8 +272,6 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
   std::vector<PileupSummaryInfo> myPuInfo;
   if (puInfo.isValid())
     myPuInfo = * puInfo;
-
-  std::cout << "starting to get generator info" << std::endl; 
 
   // Try and get the Les Hoochies information
   // replace to getterOfProducts (getByType depreciated)
@@ -320,8 +311,6 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
   if (!evt.isRealData())
     genParticlesRef = pat::GenParticleRefProd(genParticles);
 
-  std::cout << "make the event" << std::endl; 
-
   PATFinalStateEventMini theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
       trig, *trigPrescale, myPuInfo, genInfo, genParticlesRef, evt.id(), 
       genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
@@ -342,7 +331,6 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
     }
   }
   output->push_back(theEvent);
-  std::cout << "put the event" << std::endl; 
   evt.put(output);
 }
 

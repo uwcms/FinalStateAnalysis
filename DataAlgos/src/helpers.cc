@@ -268,21 +268,34 @@ const bool findDecay(const pat::PackedGenParticleRefProd genCollectionRef, int p
   if(!genCollectionRef){
     return false;
   }
-  pat::PackedGenParticleCollection genParticles = *genCollectionRef;
-  pat::PackedGenParticleRefVector allMothers;  
-  GenParticlesHelper::findParticles( *genCollectionRef,     
-		 allMothers, std::abs(pdgIdMother), 2);
-  GenParticlesHelper::findParticles( *genCollectionRef,     
-		 allMothers, std::abs(pdgIdMother), 3);
 
-  pat::PackedGenParticleRefVector descendents;
-  for ( GenParticlesHelper::IGR iMom = allMothers.begin(); iMom != allMothers.end(); ++iMom ) {
-    GenParticlesHelper::findDescendents( *iMom, descendents, 2, std::abs(pdgIdDaughter)); //Might not be stable, but it's fine
-    GenParticlesHelper::findDescendents( *iMom, descendents, 3, std::abs(pdgIdDaughter)); //Might not be stable, but it's fine
+  for ( pat::PackedGenParticle obj, *genCollectionRef) { 
+    if (std::abs(obj.pdgId()) == pdgIdMother) {
+      int numDaughters = obj.numberOfDaughters();
+      for (int d=0; d<numDaughters; d++) {
+        const pat::PackedGenParticle* daughter = dynamic_cast<pat::PackedGenParticle>(obj.daughter(d));
+        return findDecayHelper(*daughter, pdgIdDaughter);
+      }
+    }
   }
-
-  return (descendents.size() > 0);
+  return false;
 }
+
+bool findDecayHelper(const pat::PackedGenParticle cand, int pdgIdDaughter)
+{
+  if (std::abs(cand.pdgId()) == pdgIdDaughter) {
+    return true;
+  }
+  else {
+    int numberDaughters = cand.numberOfDaughters();
+    for (int d=0; d<numberDaughters; d++) { 
+      const pat::PackedGenParticle* daughter = dynamic_cast<pat::PackedGenParticle>(cand.daughter(d));
+      return findDecayHelper(*daughter, pdgIdDaughter);
+    }
+  }
+  return false;
+}
+
 float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const edm::PtrVector<reco::Vertex> recoVertices)
 {
   //std::map <std::string, float> varMap; 
