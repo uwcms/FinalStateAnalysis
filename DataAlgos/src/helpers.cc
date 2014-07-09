@@ -262,6 +262,27 @@ const bool findDecay(const reco::GenParticleRefProd genCollectionRef, int pdgIdM
   return (descendents.size() > 0);
 }
 
+const bool findDecay(const pat::PackedGenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter)
+{
+  //if no genPaticle no matching
+  if(!genCollectionRef){
+    return false;
+  }
+  pat::PackedGenParticleCollection genParticles = *genCollectionRef;
+  pat::PackedGenParticleRefVector allMothers;  
+  GenParticlesHelper::findParticles( *genCollectionRef,     
+		 allMothers, std::abs(pdgIdMother), 2);
+  GenParticlesHelper::findParticles( *genCollectionRef,     
+		 allMothers, std::abs(pdgIdMother), 3);
+
+  pat::PackedGenParticleRefVector descendents;
+  for ( GenParticlesHelper::IGR iMom = allMothers.begin(); iMom != allMothers.end(); ++iMom ) {
+    GenParticlesHelper::findDescendents( *iMom, descendents, 2, std::abs(pdgIdDaughter)); //Might not be stable, but it's fine
+    GenParticlesHelper::findDescendents( *iMom, descendents, 3, std::abs(pdgIdDaughter)); //Might not be stable, but it's fine
+  }
+
+  return (descendents.size() > 0);
+}
 float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const edm::PtrVector<reco::Vertex> recoVertices)
 {
   //std::map <std::string, float> varMap; 

@@ -44,7 +44,7 @@ PATFinalStateEventMini::PATFinalStateEventMini(
     const pat::PackedTriggerPrescales& triggerPrescale,
     const std::vector<PileupSummaryInfo>& puInfo,
     const lhef::HEPEUP& hepeup,
-    const reco::GenParticleRefProd& genParticles,
+    const edm::RefProd<pat::PackedGenParticleCollection>& genParticles,
     const edm::EventID& evtId,
     const GenEventInfoProduct& genEventInfo,
     const GenFilterInfo& generatorFilter,
