@@ -248,7 +248,7 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
     theMEts[metCfg_[i].first] = theMetPtr;
   }
 
-  edm::Handle<std::vector<pat::TriggerObjectStandAlone>> trig;
+  edm::RefProd<std::vector<pat::TriggerObjectStandAlone>> trig;
   evt.getByLabel(trgSrc_, trig);
 
   edm::Handle<pat::PackedTriggerPrescales> trigPrescale;
@@ -311,9 +311,8 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
   PATFinalStateEventMini theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
-      *trig, *trigPrescale, 
-      myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo, generatorFilter,
-      evt.isRealData(), puScenario_,
+      trig, *trigPrescale, myPuInfo, genInfo, genParticlesRef, evt.id(), 
+      genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
       electronRefProd, muonRefProd, tauRefProd, jetRefProd,
       phoRefProd, pfRefProd, photonCoreRefProd, gsfCoreRefProd, theMEts);
 
