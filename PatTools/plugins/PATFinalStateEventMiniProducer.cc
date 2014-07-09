@@ -77,7 +77,7 @@ class PATFinalStateEventMiniProducer : public edm::EDProducer {
 
     // MC information
     edm::InputTag truthSrc_;
-    edm::InputTag pruneTruthSrc_;
+    edm::InputTag prunedTruthSrc_;
     edm::ParameterSet extraWeights_;
     // The PU scenario to use
     std::string puScenario_;
@@ -135,7 +135,7 @@ PATFinalStateEventMiniProducer::PATFinalStateEventMiniProducer(
           ));
   }
 
-  produces<PATFinalStateEventCollection>();
+  produces<PATFinalStateEventMiniCollection>();
 
   getLHEEventProduct_ = edm::GetterOfProducts<LHEEventProduct>(edm::ProcessMatch("*"), this);
   getGenEventInfoProduct_ = edm::GetterOfProducts<GenEventInfoProduct>(edm::ProcessMatch("*"), this);
@@ -248,21 +248,21 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
     theMEts[metCfg_[i].first] = theMetPtr;
   }
 
-  edm::RefProd<std::vector<pat::TriggerObjectStandAlone>> trig;
-  evt.getByLabel(trgSrc_, trig);
+  edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > trig =
+    getRefProd<std::vector<pat::TriggerObjectStandAlone> >(trgSrc_, evt);
 
   edm::Handle<pat::PackedTriggerPrescales> trigPrescale;
-  evt.getByLabel(trgPrescaleSrc_, trig);
+  evt.getByLabel(trgPrescaleSrc_, trigPrescale);
 
   edm::Handle<edm::TriggerResults> trigResults;
-  evt.getByLabel(trgResultsSrc_, trig);
+  evt.getByLabel(trgResultsSrc_, trigResults);
 
   // get triggerNames form event
   const edm::TriggerNames& names = evt.triggerNames(*trigResults);
   for (pat::TriggerObjectStandAlone obj : *trig) {
     obj.unpackPathNames(names);
   }
-  trigPrescale.setTriggerNames(names);
+  //trigPrescale->setTriggerNames(names);
 
   edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
   evt.getByLabel(puInfoSrc_, puInfo);

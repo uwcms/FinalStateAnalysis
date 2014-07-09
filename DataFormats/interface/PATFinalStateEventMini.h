@@ -58,7 +58,7 @@ class PATFinalStateEventMini {
         const edm::PtrVector<reco::Vertex>& recoVertices,
         const edm::Ptr<pat::MET>& met,
         const TMatrixD& metCovariance,
-        const edm::RefProd<std::vector<pat::TriggerObjectStandAlone>>& triggerObjects,
+        const edm::RefProd<std::vector<pat::TriggerObjectStandAlone> >& triggerObjects,
         const pat::PackedTriggerPrescales& triggerPrescale,
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
@@ -190,7 +190,7 @@ class PATFinalStateEventMini {
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;
     double rho_;
-    edm::RefProd<std::vector<pat::TriggerObjectStandAlone>> triggerObjects_;
+    edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > triggerObjects_;
     pat::PackedTriggerPrescales triggerPrescale_;
     edm::Ptr<reco::Vertex> pv_;
     edm::PtrVector<reco::Vertex> recoVertices_;
