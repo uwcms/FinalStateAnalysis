@@ -13,7 +13,7 @@ import glob
 import argparse
 
 
-def submit_jobid(jobid):
+def submit_jobid(jobid, dryrun=False):
     """
     Scan through the samples of a given job id, and check the dag status file
     for failed jobs. If any, submit the rescue dag files to farmoutAnalysisJobs
@@ -46,17 +46,23 @@ def submit_jobid(jobid):
 
         # if there are any errors, submit the rescue dag files
         if any(errors):
-            rescue_dags = glob.glob('%s/dags/*dag.rescue[0-9][0-9][1-9]' % s)
-            for dag in rescue_dags:
-                cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % dag
-                os.system(cmd)
+            if dryrun:
+                print "Resubmit: %s" % s
+            else:
+                rescue_dags = glob.glob('%s/dags/*dag.rescue[0-9][0-9][1-9]' % s)
+                for dag in rescue_dags:
+                    cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % dag
+                    os.system(cmd)
 
 
 def parse_command_line(argv):
     parser = argparse.ArgumentParser(description='Resubmit failed Condor jobs')
 
-    parser.add_argument('jobid', type=str, help='Provide the FSA job ID the
-            original jobs were run with')
+    parser.add_argument('jobid', type=str, help='Provide the FSA job ID the'
+                                                'original jobs were run with')
+
+    parser.add_argument('--dry-run', dest='dryrun', action='store_true',
+                        help='Show samples to submit without submitting them')
 
     args = parser.parse_args(argv)
 
@@ -69,7 +75,7 @@ def main(argv=None):
 
     args = parse_command_line(argv)
 
-    submit_jobid(args.jobid)
+    submit_jobid(args.jobid, dryrun=args.dryrun)
 
     return 0
 
