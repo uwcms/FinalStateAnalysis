@@ -53,9 +53,8 @@
   <class name="edm::RefProd<PATFinalStateEventCollection>"/>
   <class name="edm::Ptr<PATFinalStateEvent>"/>
 
-  <class name="PATFinalStateEventMini" ClassVersion="0">
-   <version ClassVersion="0" checksum="1664516519"/>
-   <version ClassVersion="-1" checksum="2019802985"/>
+  <class name="PATFinalStateEventMini" ClassVersion="-1">
+   <version ClassVersion="-1" checksum="2552288176"/>
   </class>
   <class name="PATFinalStateEventMiniCollection"/>
   <class name="edm::Wrapper<PATFinalStateEventMini>"/>

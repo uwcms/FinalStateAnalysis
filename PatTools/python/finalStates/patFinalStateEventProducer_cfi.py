@@ -31,7 +31,7 @@ patFinalStateEventProducer = cms.EDProducer(
 
 patFinalStateEventProducerMiniAOD = cms.EDProducer(
     "PATFinalStateEventMiniProducer",
-    rhoSrc = cms.InputTag('slimmedJets', "rho"),
+    #rhoSrc = cms.InputTag('slimmedJets', "rho"),
     pvSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
     pvSrcBackup = cms.InputTag("offlineSlimmedPrimaryVertices"),
     verticesSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
