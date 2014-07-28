@@ -13,7 +13,7 @@ PATMultiCandFinalState::PATMultiCandFinalState():PATFinalState(){}
 
 PATMultiCandFinalState::PATMultiCandFinalState(
     const std::vector<reco::CandidatePtr>& cands,
-    const edm::Ptr<PATFinalStateEvent>& evt):
+    const edm::Ptr<PATFinalStateEventBase>& evt):
   PATFinalState(0, reco::Candidate::LorentzVector(), evt),
   cands_(cands) {
   

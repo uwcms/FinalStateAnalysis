@@ -23,7 +23,7 @@
   </class>
 
   <class name="PATFinalState" ClassVersion="10">
-   <version ClassVersion="10" checksum="2840789346"/>
+   <version ClassVersion="10" checksum="2470674681"/>
   </class>
   <class name="std::vector<PATFinalState*>"/>
   <class name="PATFinalStateCollection"/>

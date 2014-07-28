@@ -1,6 +1,5 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMini.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventBase.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalState.h"
 
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
@@ -57,7 +56,7 @@ PATFinalState::PATFinalState():PATLeafCandidate(){}
 
 PATFinalState::PATFinalState(
     int charge, const reco::Candidate::LorentzVector& p4,
-    const edm::Ptr<PATFinalStateEvent>& event):PATLeafCandidate(
+    const edm::Ptr<PATFinalStateEventBase>& event):PATLeafCandidate(
       reco::LeafCandidate(charge, p4)) {
   event_ = event;
 }
@@ -705,26 +704,26 @@ edm::Ptr<pat::Photon> PATFinalState::daughterAsPhoton(size_t i) const {
   return daughterAs<pat::Photon>(i);
 }
 
-const reco::GenParticleRef PATFinalState::getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge) const {
-  bool charge = (bool) checkCharge;
-  return fshelpers::getGenParticle( daughter(i), event_->genParticleRefProd(), pdgIdToMatch, charge);
-}
+//const reco::GenParticleRef PATFinalState::getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge) const {
+//  bool charge = (bool) checkCharge;
+//  return fshelpers::getGenParticle( daughter(i), event_->genParticleRefProd(), pdgIdToMatch, charge);
+//}
 
-const reco::GenParticleRef PATFinalState::getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const {
-  const reco::GenParticleRef genp = getDaughterGenParticle(i, pdgIdToMatch, checkCharge);
-  if( genp.isAvailable() && genp.isNonnull()  )
-    return fshelpers::getMotherSmart(genp, genp->pdgId());
-  else
-    return genp;
-}
+//const reco::GenParticleRef PATFinalState::getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const {
+//  const reco::GenParticleRef genp = getDaughterGenParticle(i, pdgIdToMatch, checkCharge);
+//  if( genp.isAvailable() && genp.isNonnull()  )
+//    return fshelpers::getMotherSmart(genp, genp->pdgId());
+//  else
+//    return genp;
+//}
 
-const bool PATFinalState::comesFromHiggs(size_t i, int pdgIdToMatch, int checkCharge) const {
-  const reco::GenParticleRef genp = getDaughterGenParticle(i, pdgIdToMatch, checkCharge);
-  if( genp.isAvailable() && genp.isNonnull()  )
-    return fshelpers::comesFromHiggs(genp);
-  else
-    return false;
-}
+//const bool PATFinalState::comesFromHiggs(size_t i, int pdgIdToMatch, int checkCharge) const {
+//  const reco::GenParticleRef genp = getDaughterGenParticle(i, pdgIdToMatch, checkCharge);
+//  if( genp.isAvailable() && genp.isNonnull()  )
+//    return fshelpers::comesFromHiggs(genp);
+//  else
+//    return false;
+//}
 
 const reco::Candidate::Vector PATFinalState::getDaughtersRecoil() const {
   double x =0;

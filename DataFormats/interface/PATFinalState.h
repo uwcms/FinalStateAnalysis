@@ -8,7 +8,7 @@
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateProxy.h"
 
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventBaseFwd.h"
 
 #include "FinalStateAnalysis/DataAlgos/interface/VBFVariables.h"
 #include "FinalStateAnalysis/DataAlgos/interface/VBFSelections.h"
@@ -42,11 +42,11 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     PATFinalState(
         int charge, const reco::Candidate::LorentzVector& p4,
-        const edm::Ptr<PATFinalStateEvent>& evt);
+        const edm::Ptr<PATFinalStateEventBase>& evt);
 
     const edm::Ptr<pat::MET>& met() const;
     const edm::Ptr<reco::Vertex>& vertexObject() const;
-    const edm::Ptr<PATFinalStateEvent>& evt() const { return event_; }
+    const edm::Ptr<PATFinalStateEventBase>& evt() const { return event_; }
 
     virtual PATFinalState* clone() const = 0;
 
@@ -273,9 +273,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         size_t i, const std::string& label) const = 0;
 
     /// Get the specified overlaps for the ith daughter
-    const reco::GenParticleRef getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge) const;
-    const reco::GenParticleRef getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const;
-    const bool comesFromHiggs(size_t i, int pdgIdToMatch, int checkCharge) const;
+    //const reco::GenParticleRef getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge) const;
+    //const reco::GenParticleRef getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const;
+    //const bool comesFromHiggs(size_t i, int pdgIdToMatch, int checkCharge) const;
 
     // Get Recoils
     const reco::Candidate::Vector getDaughtersRecoil() const;
@@ -294,7 +294,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
 
   private:
-    edm::Ptr<PATFinalStateEvent> event_;
+    edm::Ptr<PATFinalStateEventBase> event_;
 };
 
 #endif /* end of include guard: FinalStateAnalysis_DataFormats_PATFinalState_h */
