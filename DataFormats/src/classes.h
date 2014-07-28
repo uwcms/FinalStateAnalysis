@@ -6,6 +6,7 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalStateFwd.h"
 
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventBase.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMini.h"
 

@@ -1,4 +1,5 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventBase.h"
 #include "FinalStateAnalysis/DataAlgos/interface/SmartTrigger.h"
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting3D.h"

@@ -9,6 +9,8 @@
  *
  */
 
+//#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventBaseFwd.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventBase.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMiniFwd.h"
 
 #include "DataFormats/Common/interface/Ptr.h"
@@ -41,7 +43,9 @@
 #include <map>
 #include <string>
 
-class PATFinalStateEventMini {
+class PATFinalStateEventBase;
+
+class PATFinalStateEventMini : public PATFinalStateEventBase {
   public:
 
     PATFinalStateEventMini();
@@ -93,7 +97,7 @@ class PATFinalStateEventMini {
     /// Get weight for embedded samples
     const GenFilterInfo& generatorFilter() const;
     /// Get FastJet rho
-    //double rho() const;
+    double rho() const {return 0;}
     /// Get trigger information
     const std::vector<pat::TriggerObjectStandAlone>& trig() const;
     const pat::PackedTriggerPrescales& trigPrescale() const;

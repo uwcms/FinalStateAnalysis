@@ -1,7 +1,9 @@
 #ifndef PATFINALSTATEEVENTFWD_G3AD96QM
 #define PATFINALSTATEEVENTFWD_G3AD96QM
 
-class PATFinalStateEvent;
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventBaseFwd.h"
+
+class PATFinalStateEvent : public PATFinalStateEventBase;
 
 #include "FinalStateAnalysis/DataFormats/interface/FwdIncludes.h"
 #include "FinalStateAnalysis/DataFormats/interface/Macros.h"

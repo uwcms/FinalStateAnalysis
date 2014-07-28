@@ -9,6 +9,8 @@
  *
  */
 
+//#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventBaseFwd.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventBase.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
 
 #include "DataFormats/Common/interface/Ptr.h"
@@ -36,7 +38,9 @@
 #include <map>
 #include <string>
 
-class PATFinalStateEvent {
+class PATFinalStateEventBase;
+
+class PATFinalStateEvent : public PATFinalStateEventBase {
   public:
 
     PATFinalStateEvent();
