@@ -262,39 +262,39 @@ const bool findDecay(const reco::GenParticleRefProd genCollectionRef, int pdgIdM
   return (descendents.size() > 0);
 }
 
-const bool findDecay(const pat::PackedGenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter)
-{
-  //if no genPaticle no matching
-  if(!genCollectionRef){
-    return false;
-  }
-
-  for ( pat::PackedGenParticle obj, *genCollectionRef) { 
-    if (std::abs(obj.pdgId()) == pdgIdMother) {
-      int numDaughters = obj.numberOfDaughters();
-      for (int d=0; d<numDaughters; d++) {
-        const pat::PackedGenParticle* daughter = dynamic_cast<pat::PackedGenParticle>(obj.daughter(d));
-        return findDecayHelper(*daughter, pdgIdDaughter);
-      }
-    }
-  }
-  return false;
-}
-
-bool findDecayHelper(const pat::PackedGenParticle cand, int pdgIdDaughter)
-{
-  if (std::abs(cand.pdgId()) == pdgIdDaughter) {
-    return true;
-  }
-  else {
-    int numberDaughters = cand.numberOfDaughters();
-    for (int d=0; d<numberDaughters; d++) { 
-      const pat::PackedGenParticle* daughter = dynamic_cast<pat::PackedGenParticle>(cand.daughter(d));
-      return findDecayHelper(*daughter, pdgIdDaughter);
-    }
-  }
-  return false;
-}
+//const bool findDecay(const pat::PackedGenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter)
+//{
+//  //if no genPaticle no matching
+//  if(!genCollectionRef){
+//    return false;
+//  }
+//
+//  for ( pat::PackedGenParticle obj, *genCollectionRef) { 
+//    if (std::abs(obj.pdgId()) == pdgIdMother) {
+//      int numDaughters = obj.numberOfDaughters();
+//      for (int d=0; d<numDaughters; d++) {
+//        const pat::PackedGenParticle* daughter = dynamic_cast<pat::PackedGenParticle>(obj.daughter(d));
+//        return findDecayHelper(*daughter, pdgIdDaughter);
+//      }
+//    }
+//  }
+//  return false;
+//}
+//
+//bool findDecayHelper(const pat::PackedGenParticle cand, int pdgIdDaughter)
+//{
+//  if (std::abs(cand.pdgId()) == pdgIdDaughter) {
+//    return true;
+//  }
+//  else {
+//    int numberDaughters = cand.numberOfDaughters();
+//    for (int d=0; d<numberDaughters; d++) { 
+//      const pat::PackedGenParticle* daughter = dynamic_cast<pat::PackedGenParticle>(cand.daughter(d));
+//      return findDecayHelper(*daughter, pdgIdDaughter);
+//    }
+//  }
+//  return false;
+//}
 
 float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const edm::PtrVector<reco::Vertex> recoVertices)
 {

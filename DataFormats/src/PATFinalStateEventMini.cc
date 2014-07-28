@@ -301,7 +301,8 @@ const pat::PackedCandidateCollection& PATFinalStateEventMini::pflow() const {
 }
 
 const bool PATFinalStateEventMini::findDecay(const int pdgIdMother, const int pdgIdDaughter) const{
-  return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
+  //return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
+  return false;
 }
 
 float  PATFinalStateEventMini::jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const{

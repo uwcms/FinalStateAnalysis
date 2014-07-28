@@ -30,6 +30,7 @@
 // For covariance matrix
 #include "DataFormats/Math/interface/Error.h"
 
+typedef edm::RefProd<pat::PackedGenParticleCollection> PackedGenParticleRefProd; 
 
 class PATFinalStateEventMiniProducer : public edm::EDProducer {
   public:
@@ -309,7 +310,7 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
   evt.getByLabel(truthSrc_, genParticles);
   pat::PackedGenParticleRefProd genParticlesRef;
   if (!evt.isRealData())
-    genParticlesRef = pat::GenParticleRefProd(genParticles);
+    genParticlesRef = pat::PackedGenParticleRefProd(genParticles);
 
   PATFinalStateEventMini theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
       trig, *trigPrescale, myPuInfo, genInfo, genParticlesRef, evt.id(), 
