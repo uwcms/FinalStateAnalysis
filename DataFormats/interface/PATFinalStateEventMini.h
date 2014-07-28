@@ -97,7 +97,7 @@ class PATFinalStateEventMini : public PATFinalStateEventBase {
     /// Get weight for embedded samples
     const GenFilterInfo& generatorFilter() const;
     /// Get FastJet rho
-    double rho() const {return 0;}
+    //double rho() const {return 0;}
     /// Get trigger information
     const std::vector<pat::TriggerObjectStandAlone>& trig() const;
     const pat::PackedTriggerPrescales& trigPrescale() const;

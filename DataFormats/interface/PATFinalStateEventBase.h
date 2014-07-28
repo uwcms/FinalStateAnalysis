@@ -50,7 +50,7 @@ class PATFinalStateEventBase {
     /// Get weight for embedded samples
     virtual const GenFilterInfo& generatorFilter() const = 0;
     /// Get FastJet rho
-    virtual double rho() const = 0;
+    //virtual double rho() const = 0;
     /// Get trigger information
     //virtual const pat::TriggerEvent& trig() const = 0;
 
