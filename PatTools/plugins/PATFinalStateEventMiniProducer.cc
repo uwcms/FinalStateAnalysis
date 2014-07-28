@@ -30,7 +30,13 @@
 // For covariance matrix
 #include "DataFormats/Math/interface/Error.h"
 
-typedef edm::RefProd<pat::PackedGenParticleCollection> PackedGenParticleRefProd; 
+namespace pat {
+  typedef std::vector<PackedGenParticle> PackedGenParticleCollection;
+  typedef edm::RefProd<PackedGenParticleCollection> PackedGenParticleRefProd; 
+  typedef edm::Ref<PackedGenParticleCollection> PackedGenParticleRef;
+  typedef edm::RefVector<PackedGenParticleCollection> PackedGenParticleRefVector;
+  typedef edm::Association<PackedGenParticleCollection> PackedGenParticleMatch;
+}
 
 class PATFinalStateEventMiniProducer : public edm::EDProducer {
   public:
