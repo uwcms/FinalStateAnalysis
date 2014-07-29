@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMini.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATDiLeptonFinalStates.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATTriLeptonFinalStates.h"
@@ -62,8 +63,8 @@ class testFinalState: public CppUnit::TestFixture {
     edm::Ptr<pat::MET> mockMETPtr_;
 
     ProductID eventPID;
-    std::vector<PATFinalStateEvent> mockEventColl_;
-    edm::Ptr<PATFinalStateEvent> mockEventPtr_;
+    std::vector<PATFinalStateEventMini> mockEventColl_;
+    edm::Ptr<PATFinalStateEventMini> mockEventPtr_;
 
     edm::Ptr<reco::Vertex> nullVtx_;
 
@@ -123,10 +124,10 @@ void testFinalState::setUp() {
   TestHandle<std::vector<pat::MET> > metHandle(&mockMETColl_, metPID);
   mockMETPtr_ = Ptr<pat::MET>(metHandle, 0);
 
-  PATFinalStateEvent mockEvent(nullVtx_, mockMETPtr_);
+  PATFinalStateEventMini mockEvent(nullVtx_, mockMETPtr_);
   mockEventColl_.push_back(mockEvent);
-  TestHandle<std::vector<PATFinalStateEvent> > eventHandle(&mockEventColl_, eventPID);
-  mockEventPtr_ = Ptr<PATFinalStateEvent>(eventHandle, 0);
+  TestHandle<std::vector<PATFinalStateEventMini> > eventHandle(&mockEventColl_, eventPID);
+  mockEventPtr_ = Ptr<PATFinalStateEventMini>(eventHandle, 0);
 
   for (size_t i = 10; i < 100; i += 10) {
     reco::LeafCandidate cand;

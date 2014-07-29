@@ -74,7 +74,8 @@ def produce_final_states(process, collections, output_commands,
             process.patFinalStateEventProducerMiniAOD.mets.mvamet = mvametsrc
             if 'extraWeights' in collections:
                 process.patFinalStateEventProducerMiniAOD.extraWeights = collections['extraWeights']
-            sequence += process.patFinalStateEventProducerMiniAOD
+            process.patFinalStateEventProducer = process.patFinalStateEventProducerMiniAOD.clone()
+            sequence += process.patFinalStateEventProducer
         else:
             process.patFinalStateEventProducer.electronSrc = cms.InputTag(esrc)
             process.patFinalStateEventProducer.muonSrc = cms.InputTag(muonsrc)

@@ -7,6 +7,7 @@
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMini.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATPairFinalStateT.h"
 
 template<class FinalStatePair>
@@ -38,9 +39,9 @@ template<class FinalStatePair> void
 PATPairFinalStateBuilderT<FinalStatePair>::produce(
     edm::Event& evt, const edm::EventSetup& es) {
 
-  edm::Handle<edm::View<PATFinalStateEvent> > fsEvent;
+  edm::Handle<edm::View<PATFinalStateEventMini> > fsEvent;
   evt.getByLabel(evtSrc_, fsEvent);
-  edm::Ptr<PATFinalStateEvent> evtPtr = fsEvent->ptrAt(0);
+  edm::Ptr<PATFinalStateEventMini> evtPtr = fsEvent->ptrAt(0);
   assert(evtPtr.isNonnull());
 
   std::auto_ptr<FinalStatePairCollection> output(new FinalStatePairCollection);
