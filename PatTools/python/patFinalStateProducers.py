@@ -91,6 +91,7 @@ def produce_final_states(process, collections, output_commands,
 
     # Always keep
     output_commands.append('*_patFinalStateEventProducer_*_*')
+    output_commands.append('*_patFinalStateEventProducerMiniAOD_*_*')
 
     # Apply some loose PT cuts on the objects we use to create the final states
     # so the combinatorics don't blow up

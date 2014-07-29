@@ -17,6 +17,7 @@
 #include "DataFormats/Provenance/interface/RunID.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMiniFwd.h"
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
 #include "PhysicsTools/UtilAlgos/interface/BasicAnalyzer.h"
 

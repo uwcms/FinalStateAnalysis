@@ -307,7 +307,7 @@ for final_state in expanded_final_states(final_states):
     analyzer = make_ntuple(*final_state, zz_mode=options.zzMode,
                             svFit=options.svFit, dblhMode=options.dblhMode,
                             runTauSpinner=options.runTauSpinner, 
-                            skimCuts=options.skimCuts)
+                            skimCuts=options.skimCuts,miniAOD=options.useMiniAOD)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 

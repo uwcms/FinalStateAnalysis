@@ -26,7 +26,7 @@ _common_template = PSet(
     # templates.Info about the MET
     templates.event.met,
     # templates.Info about the generator
-    templates.event.gen,
+    #templates.event.gen,
     # templates.Vetoes on extra objects
     templates.cleaning.vetos,
     # Need to fill out photon triggers
@@ -296,13 +296,16 @@ def make_ntuple(*legs, **kwargs):
         )
 
 
+    miniAOD = kwargs.get('miniAOD', False)
+    eventInputSrc = "patFinalStateEventProducerMiniAOD" if miniAOD else "patFinalStateEventProducer"
+
     # Now build our analyzer EDFilter skeleton
     output = cms.EDFilter(
         "PATFinalStateAnalysisFilter",
         weights=cms.vstring(),
         # input final state collection.
         src=cms.InputTag( analyzerSrc ),
-        evtSrc=cms.InputTag("patFinalStateEventProducer"),
+        evtSrc=cms.InputTag(eventInputSrc),
         # counter of events before any selections
         skimCounter=cms.InputTag("eventCount", "", "TUPLE"),
         analysis=cms.PSet(
