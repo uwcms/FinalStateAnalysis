@@ -238,7 +238,6 @@ PATFinalState::matchToHLTFilter(size_t i, const std::string& filter,
     double maxDeltaR) const {
   const reco::Candidate* dau = this->daughter(i);
   assert(dau);
-  std::cout << "matchToHLTFilter" << std::endl;
   return evt()->matchedToFilter(*dau, filter, maxDeltaR);
 }
 
@@ -247,7 +246,6 @@ PATFinalState::matchToHLTPath(size_t i, const std::string& path,
     double maxDeltaR) const {
   const reco::Candidate* dau = this->daughter(i);
   assert(dau);
-  std::cout << "matchToHLTPath" << std::endl;
   return evt()->matchedToPath(*dau, path, maxDeltaR);
 }
 

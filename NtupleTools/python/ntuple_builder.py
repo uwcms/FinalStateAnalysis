@@ -24,7 +24,7 @@ _common_template = PSet(
     # information about the selected primary vertex
     templates.event.pv_info,
     # templates.Info about the MET
-    templates.event.met,
+#    templates.event.met,
     # templates.Info about the generator
     #templates.event.gen,
     # templates.Vetoes on extra objects
@@ -51,7 +51,7 @@ _tau_template = PSet(
     templates.cleaning.overlaps,
     templates.taus.info,
     templates.taus.id,
-    templates.topology.mtToMET,
+#    templates.topology.mtToMET,
 )
 
 _muon_template = PSet(
@@ -62,7 +62,7 @@ _muon_template = PSet(
     templates.muons.energyCorrections,
     templates.muons.tracking,
     templates.muons.trigger,
-    templates.topology.mtToMET,
+#    templates.topology.mtToMET,
 )
 
 _bjet_template= PSet(
@@ -80,7 +80,7 @@ _electron_template = PSet(
     templates.electrons.tracking,
     templates.electrons.supercluster,
     templates.electrons.trigger,
-    templates.topology.mtToMET,
+#    templates.topology.mtToMET,
 )
 
 _photon_template = PSet(
@@ -92,7 +92,7 @@ _photon_template = PSet(
     templates.photons.energyCorrections,
     templates.photons.supercluster,
     #templates.photons.trigger, #add photons later
-    templates.topology.mtToMET,
+#    templates.topology.mtToMET,
 )
 
 

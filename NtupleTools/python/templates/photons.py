@@ -60,10 +60,10 @@ id = PSet(
     objectHasPixelSeed = '{object}.hasPixelSeed',
     # gen matching (photons can be matched to many object types)
     objectPdgId = '? ({object}.genParticleRef().isNonnull && {object}.genParticleRef().isAvailable) ? {object}.genParticleRef().pdgId() : -999',
-    objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx},22,0).isAvailable && getDaughterGenParticleMotherSmart({object_idx},22,0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx},22,0).pdgId() : -999',
-    objectGenGrandMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx},22,0).isAvailable && getDaughterGenParticleMotherSmart({object_idx},22,0).isNonnull && (getDaughterGenParticleMotherSmart({object_idx},22,0).numberOfMothers() != 0)) ? getDaughterGenParticleMotherSmart({object_idx},22,0).mother().pdgId() : -999',
-    objectComesFromHiggs = 'comesFromHiggs({object_idx},22,0)',
-    objectGenEnergy = '? ({object}.genParticleRef().isNonnull && {object}.genParticleRef().isAvailable) ? {object}.genParticleRef().energy() : -999',
+    #objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx},22,0).isAvailable && getDaughterGenParticleMotherSmart({object_idx},22,0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx},22,0).pdgId() : -999',
+    #objectGenGrandMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx},22,0).isAvailable && getDaughterGenParticleMotherSmart({object_idx},22,0).isNonnull && (getDaughterGenParticleMotherSmart({object_idx},22,0).numberOfMothers() != 0)) ? getDaughterGenParticleMotherSmart({object_idx},22,0).mother().pdgId() : -999',
+    #objectComesFromHiggs = 'comesFromHiggs({object_idx},22,0)',
+    #objectGenEnergy = '? ({object}.genParticleRef().isNonnull && {object}.genParticleRef().isAvailable) ? {object}.genParticleRef().energy() : -999',
 )
 
 tracking = PSet(
