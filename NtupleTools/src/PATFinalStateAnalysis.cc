@@ -17,14 +17,9 @@
 
 #include <sstream>
 
-bool DEBUG = true;
-
 PATFinalStateAnalysis::PATFinalStateAnalysis(
     const edm::ParameterSet& pset, TFileDirectory& fs):
   BasicAnalyzer(pset, fs),fs_(fs) {
-  if (DEBUG)
-    std::cout << "Creating PATFinalStateAnalysis" << std::endl;
-
   src_ = pset.getParameter<edm::InputTag>("src");
   name_ = pset.getParameter<std::string>("@module_label");
 
@@ -65,18 +60,12 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
   metaTree_->Branch("run", &treeRunBranch_, "run/I");
   metaTree_->Branch("lumi", &treeLumiBranch_, "lumi/I");
   metaTree_->Branch("nevents", &treeEventsProcessedBranch_, "nevents/I");
-  if (DEBUG)
-    std::cout << "...finished" << std::endl;
-
 }
 
 PATFinalStateAnalysis::~PATFinalStateAnalysis() { }
 
 void PATFinalStateAnalysis::endLuminosityBlock(
     const edm::LuminosityBlockBase& ls) {
-  if (DEBUG)
-    std::cout << "PATFinalStateAnalysis endLuminosityBlock" << std::endl;
-
   //std::cout << "Analyzing lumisec: " << ls.id() << std::endl;
 
   edm::Handle<edm::MergeableCounter> skimmedEvents;
@@ -96,9 +85,6 @@ void PATFinalStateAnalysis::endLuminosityBlock(
 }
 
 bool PATFinalStateAnalysis::filter(const edm::EventBase& evt) {
-  if (DEBUG)
-    std::cout << "PATFinalStateAnalysis filter" << std::endl;
-
   // Get the event weight
   double eventWeight = 1.0;
 
@@ -162,9 +148,6 @@ bool PATFinalStateAnalysis::filter(const edm::EventBase& evt) {
 }
 
 void PATFinalStateAnalysis::analyze(const edm::EventBase& evt) {
-  if (DEBUG)
-    std::cout << "PATFinalStateAnalysis analyze" << std::endl;
-
   filter(evt);
 }
 

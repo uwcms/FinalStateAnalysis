@@ -25,6 +25,12 @@ namespace {
   }
 }
 
+void unpackTrigger(std::vector<pat::TriggerObjectStandAlone> trig, const edm::TriggerNames& names) {
+  for (pat::TriggerObjectStandAlone obj : trig) {
+    obj.unpackPathNames(names);
+  }
+}
+
 PATFinalStateEventMini::PATFinalStateEventMini() {}
 
 // testing CTOR
@@ -41,6 +47,7 @@ PATFinalStateEventMini::PATFinalStateEventMini(
     const edm::Ptr<pat::MET>& met,
     const TMatrixD& metCovariance,
     const edm::RefProd<std::vector<pat::TriggerObjectStandAlone>>& triggerObjects,
+    const edm::TriggerNames& names,
     const pat::PackedTriggerPrescales& triggerPrescale,
     const std::vector<PileupSummaryInfo>& puInfo,
     const lhef::HEPEUP& hepeup,
@@ -62,6 +69,7 @@ PATFinalStateEventMini::PATFinalStateEventMini(
     ):
   //rho_(rho),
   triggerObjects_(triggerObjects),
+  names_(names),
   triggerPrescale_(triggerPrescale),
   pv_(pv),
   recoVertices_(recoVertices),
@@ -114,6 +122,9 @@ const GenFilterInfo& PATFinalStateEventMini::generatorFilter() const {
 const std::vector<pat::TriggerObjectStandAlone>& PATFinalStateEventMini::trig() const {
   return *triggerObjects_; }
 
+const edm::TriggerNames& PATFinalStateEventMini::names() const {
+  return names_; }
+
 const pat::PackedTriggerPrescales& PATFinalStateEventMini::trigPrescale() const {
   return triggerPrescale_; }
 
@@ -160,24 +171,24 @@ const edm::EventID& PATFinalStateEventMini::evtId() const {
 
 // Superseded by the smart trigger
 int PATFinalStateEventMini::hltResult(const std::string& pattern) const {
-  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
+  SmartTriggerResult result = smartTrigger(pattern, trig(), names(), evtID_);
   return result.passed;
 }
 
 int PATFinalStateEventMini::hltPrescale(const std::string& pattern) const {
-  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
+  SmartTriggerResult result = smartTrigger(pattern, trig(), names(), evtID_);
   return result.prescale;
 }
 
 int PATFinalStateEventMini::hltGroup(const std::string& pattern) const {
-  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
+  SmartTriggerResult result = smartTrigger(pattern, trig(), names(), evtID_);
   return result.group;
 }
 
 int PATFinalStateEventMini::matchedToFilter(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
   std::vector<const pat::TriggerFilter*> filters =
-    matchingTriggerFilters(trig(), pattern);
+    matchingTriggerFilters(trig(), names(), pattern);
   if (!filters.size())
     return -1;
   return matchedToAnObject(
@@ -187,7 +198,7 @@ int PATFinalStateEventMini::matchedToFilter(const reco::Candidate& cand,
 int PATFinalStateEventMini::matchedToPath(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
   // std::cout << "matcher: " << pattern << std::endl;
-  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
+  SmartTriggerResult result = smartTrigger(pattern, trig(), names(), evtID_);
   // std::cout << " result: " << result.group << " " << result.prescale << " " << result.passed << std::endl;
   // Loop over all the paths that fired and see if any matched this object.
   if (!result.passed)

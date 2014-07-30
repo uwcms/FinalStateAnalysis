@@ -9,8 +9,6 @@
  *
  */
 
-//#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventBaseFwd.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventBase.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMiniFwd.h"
 
 #include "DataFormats/Common/interface/Ptr.h"
@@ -43,9 +41,7 @@
 #include <map>
 #include <string>
 
-class PATFinalStateEventBase;
-
-class PATFinalStateEventMini : public PATFinalStateEventBase {
+class PATFinalStateEventMini {
   public:
 
     PATFinalStateEventMini();
@@ -64,6 +60,7 @@ class PATFinalStateEventMini : public PATFinalStateEventBase {
         const edm::Ptr<pat::MET>& met,
         const TMatrixD& metCovariance,
         const edm::RefProd<std::vector<pat::TriggerObjectStandAlone> >& triggerObjects,
+        const edm::TriggerNames& names,
         const pat::PackedTriggerPrescales& triggerPrescale,
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
@@ -100,6 +97,7 @@ class PATFinalStateEventMini : public PATFinalStateEventBase {
     //double rho() const {return 0;}
     /// Get trigger information
     const std::vector<pat::TriggerObjectStandAlone>& trig() const;
+    const edm::TriggerNames& names() const;
     const pat::PackedTriggerPrescales& trigPrescale() const;
 
     /*  These methods will be deprecated! */
@@ -196,6 +194,7 @@ class PATFinalStateEventMini : public PATFinalStateEventBase {
     std::map<std::string, int> flags_;
     //double rho_;
     edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > triggerObjects_;
+    edm::TriggerNames names_;
     pat::PackedTriggerPrescales triggerPrescale_;
     edm::Ptr<reco::Vertex> pv_;
     edm::PtrVector<reco::Vertex> recoVertices_;
