@@ -53,7 +53,7 @@ class PATFinalStateEventMini {
 
     // This constructor should only be used in the initial production!
     // It automatically sets the version() to the current one.
-    PATFinalStateEventMini(
+    PATFinalStateEventMini(double rho,
         const edm::Ptr<reco::Vertex>& pv,
         const edm::PtrVector<reco::Vertex>& recoVertices,
         const edm::Ptr<pat::MET>& met,
@@ -93,7 +93,7 @@ class PATFinalStateEventMini {
     /// Get weight for embedded samples
     const GenFilterInfo& generatorFilter() const;
     /// Get FastJet rho
-    //double rho() const {return 0;}
+    double rho() const;
     /// Get trigger information
     const std::vector<pat::TriggerObjectStandAlone>& trig() const;
     const edm::TriggerNames& names() const;
@@ -191,7 +191,7 @@ class PATFinalStateEventMini {
   private:
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;
-    //double rho_;
+    double rho_;
     edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > triggerObjects_;
     edm::TriggerNames names_;
     pat::PackedTriggerPrescales triggerPrescale_;

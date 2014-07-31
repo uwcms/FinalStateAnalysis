@@ -35,7 +35,7 @@ PATFinalStateEvent::PATFinalStateEvent(
   met_(met) { }
 
 PATFinalStateEvent::PATFinalStateEvent(
-    //double rho,
+    double rho,
     const edm::Ptr<reco::Vertex>& pv,
     const edm::PtrVector<reco::Vertex>& recoVertices,
     const edm::Ptr<pat::MET>& met,
@@ -59,7 +59,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const reco::GsfTrackRefProd& gsfTracks,
     const std::map<std::string, edm::Ptr<pat::MET> >& mets
     ):
-  //rho_(rho),
+  rho_(rho),
   triggerEvent_(triggerEvent),
   pv_(pv),
   recoVertices_(recoVertices),
@@ -107,7 +107,7 @@ const GenFilterInfo& PATFinalStateEvent::generatorFilter() const {
   return generatorFilter_;
 }
 
-//double PATFinalStateEvent::rho() const { return rho_; }
+double PATFinalStateEvent::rho() const { return rho_; }
 
 const pat::TriggerEvent& PATFinalStateEvent::trig() const {
   return triggerEvent_; }

@@ -43,7 +43,7 @@ class PATFinalStateEventMiniProducer : public edm::EDProducer {
 
     typedef math::Error<2>::type Matrix;
     // General global quantities
-    //edm::InputTag rhoSrc_;
+    edm::InputTag rhoSrc_;
     edm::InputTag pvSrc_;
     edm::InputTag pvBackSrc_;
     edm::InputTag verticesSrc_;
@@ -94,7 +94,7 @@ class PATFinalStateEventMiniProducer : public edm::EDProducer {
 
 PATFinalStateEventMiniProducer::PATFinalStateEventMiniProducer(
     const edm::ParameterSet& pset) {
-  //rhoSrc_ = pset.getParameter<edm::InputTag>("rhoSrc");
+  rhoSrc_ = pset.getParameter<edm::InputTag>("rhoSrc");
   pvSrc_ = pset.getParameter<edm::InputTag>("pvSrc");
   pvBackSrc_ = pset.getParameter<edm::InputTag>("pvSrcBackup");
   verticesSrc_ = pset.getParameter<edm::InputTag>("verticesSrc");
@@ -165,8 +165,8 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
   std::auto_ptr<PATFinalStateEventMiniCollection> output(
       new PATFinalStateEventMiniCollection);
 
-  //edm::Handle<double> rho;
-  //evt.getByLabel(rhoSrc_, rho);
+  edm::Handle<double> rho;
+  evt.getByLabel(rhoSrc_, rho);
 
   edm::Handle<edm::View<reco::Vertex> > pv;
   evt.getByLabel(pvSrc_, pv);
@@ -309,7 +309,7 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
   if (!evt.isRealData())
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
-  PATFinalStateEventMini theEvent(pvPtr, verticesPtr, metPtr, metCovariance,
+  PATFinalStateEventMini theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
       trig, names, *trigPrescale, myPuInfo, genInfo, genParticlesRef, evt.id(), 
       genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
       electronRefProd, muonRefProd, tauRefProd, jetRefProd,

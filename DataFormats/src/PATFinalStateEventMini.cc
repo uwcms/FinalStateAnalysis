@@ -41,7 +41,7 @@ PATFinalStateEventMini::PATFinalStateEventMini(
   met_(met) { }
 
 PATFinalStateEventMini::PATFinalStateEventMini(
-    //double rho,
+    double rho,
     const edm::Ptr<reco::Vertex>& pv,
     const edm::PtrVector<reco::Vertex>& recoVertices,
     const edm::Ptr<pat::MET>& met,
@@ -67,7 +67,7 @@ PATFinalStateEventMini::PATFinalStateEventMini(
     const reco::GsfElectronCoreRefProd& gsfCore,
     const std::map<std::string, edm::Ptr<pat::MET> >& mets
     ):
-  //rho_(rho),
+  rho_(rho),
   triggerObjects_(triggerObjects),
   names_(names),
   triggerPrescale_(triggerPrescale),
@@ -117,7 +117,7 @@ const GenFilterInfo& PATFinalStateEventMini::generatorFilter() const {
   return generatorFilter_;
 }
 
-//double PATFinalStateEventMini::rho() const { return rho_; }
+double PATFinalStateEventMini::rho() const { return rho_; }
 
 const std::vector<pat::TriggerObjectStandAlone>& PATFinalStateEventMini::trig() const {
   return *triggerObjects_; }

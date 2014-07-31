@@ -50,7 +50,7 @@ class PATFinalStateEvent {
 
     // This constructor should only be used in the initial production!
     // It automatically sets the version() to the current one.
-    PATFinalStateEvent(//double rho,
+    PATFinalStateEvent(double rho,
         const edm::Ptr<reco::Vertex>& pv,
         const edm::PtrVector<reco::Vertex>& recoVertices,
         const edm::Ptr<pat::MET>& met,
@@ -88,7 +88,7 @@ class PATFinalStateEvent {
     /// Get weight for embedded samples
     const GenFilterInfo& generatorFilter() const;
     /// Get FastJet rho
-    //double rho() const;
+    double rho() const;
     /// Get trigger information
     const pat::TriggerEvent& trig() const;
 

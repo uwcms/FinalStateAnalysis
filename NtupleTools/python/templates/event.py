@@ -20,7 +20,7 @@ num = PSet(
 )
 
 pileup = PSet(
-#    rho='evt.rho',
+    rho='evt.rho',
     nvtx='evt.recoVertices.size',
     # Number of true PU events
     nTruePU='? evt.puInfo.size > 0 ? evt.puInfo[1].getTrueNumInteractions :-1',
