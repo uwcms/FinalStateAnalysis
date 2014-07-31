@@ -51,7 +51,7 @@ PATFinalStateEventMini::PATFinalStateEventMini(
     const pat::PackedTriggerPrescales& triggerPrescale,
     const std::vector<PileupSummaryInfo>& puInfo,
     const lhef::HEPEUP& hepeup,
-    const edm::RefProd<pat::PackedGenParticleCollection>& genParticles,
+    const edm::RefProd<reco::GenParticleCollection>& genParticles,
     const edm::EventID& evtId,
     const GenEventInfoProduct& genEventInfo,
     const GenFilterInfo& generatorFilter,
@@ -312,8 +312,7 @@ const pat::PackedCandidateCollection& PATFinalStateEventMini::pflow() const {
 }
 
 const bool PATFinalStateEventMini::findDecay(const int pdgIdMother, const int pdgIdDaughter) const{
-  //return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
-  return false;
+  return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
 }
 
 float  PATFinalStateEventMini::jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const{

@@ -20,7 +20,6 @@
 #include "TMatrixD.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
-#include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
 
 namespace fshelpers {
 
@@ -43,11 +42,9 @@ void addFourMomenta(reco::Candidate & c);
 
 /// Helper function to get the matched gen particle 
 const reco::GenParticleRef getGenParticle(const reco::Candidate*   daughter,const reco::GenParticleRefProd genCollectionRef, int pdgIdToMatch, bool checkCharge);
-//const pat::PackedGenParticleRef getGenParticle(const reco::Candidate*   daughter,const pat::PackedGenParticleRefProd genCollectionRef, int pdgIdToMatch, bool checkCharge);
 
 ///Helper function to find a gen particle given pdgid and status
 const bool findDecay(const reco::GenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter);
-//const bool findDecay(const pat::PackedGenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter);
 
 /// Helper function to get the first interesting mother particle 
 const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, int idNOTtoMatch = -999);

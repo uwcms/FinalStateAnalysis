@@ -30,14 +30,6 @@
 // For covariance matrix
 #include "DataFormats/Math/interface/Error.h"
 
-namespace pat {
-  typedef std::vector<PackedGenParticle> PackedGenParticleCollection;
-  typedef edm::RefProd<PackedGenParticleCollection> PackedGenParticleRefProd; 
-  typedef edm::Ref<PackedGenParticleCollection> PackedGenParticleRef;
-  typedef edm::RefVector<PackedGenParticleCollection> PackedGenParticleRefVector;
-  typedef edm::Association<PackedGenParticleCollection> PackedGenParticleMatch;
-}
-
 class PATFinalStateEventMiniProducer : public edm::EDProducer {
   public:
     PATFinalStateEventMiniProducer(const edm::ParameterSet& pset);
@@ -311,11 +303,11 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
     generatorFilter = *generatorFilterH;
 	
   // Try and get the gen information if it exists
-  edm::Handle<std::vector<pat::PackedGenParticle> > genParticles;
+  edm::Handle<std::vector<reco::GenParticle> > genParticles;
   evt.getByLabel(truthSrc_, genParticles);
-  pat::PackedGenParticleRefProd genParticlesRef;
+  reco::GenParticleRefProd genParticlesRef;
   if (!evt.isRealData())
-    genParticlesRef = pat::PackedGenParticleRefProd(genParticles);
+    genParticlesRef = reco::GenParticleRefProd(genParticles);
 
   PATFinalStateEventMini theEvent(pvPtr, verticesPtr, metPtr, metCovariance,
       trig, names, *trigPrescale, myPuInfo, genInfo, genParticlesRef, evt.id(), 

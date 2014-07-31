@@ -35,7 +35,6 @@
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenFilterInfo.h"
 #include "DataFormats/Provenance/interface/EventID.h"
-#include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
 
 #include "TMatrixD.h"
 #include <map>
@@ -64,7 +63,7 @@ class PATFinalStateEventMini {
         const pat::PackedTriggerPrescales& triggerPrescale,
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
-        const edm::RefProd<pat::PackedGenParticleCollection>& genParticles,
+        const edm::RefProd<reco::GenParticleCollection>& genParticles,
         const edm::EventID& evtId,
         const GenEventInfoProduct& genEventInfoProd,
         const GenFilterInfo& genFilterInfo,
@@ -179,7 +178,7 @@ class PATFinalStateEventMini {
     const pat::PackedCandidateCollection& pflow() const;
 
     //Access to GenParticleRefProd
-    const edm::RefProd<pat::PackedGenParticleCollection> genParticleRefProd() const {return genParticles_;} 
+    const edm::RefProd<reco::GenParticleCollection> genParticleRefProd() const {return genParticles_;} 
 
     /// Get the version of the FinalState data formats API
     /// This allows you to detect which version of the software was used
@@ -202,7 +201,7 @@ class PATFinalStateEventMini {
     TMatrixD metCovariance_;
     std::vector<PileupSummaryInfo> puInfo_;
     lhef::HEPEUP lhe_;
-    edm::RefProd<pat::PackedGenParticleCollection> genParticles_;
+    edm::RefProd<reco::GenParticleCollection> genParticles_;
     edm::EventID evtID_;
     GenEventInfoProduct genEventInfoProduct_;
     GenFilterInfo generatorFilter_;
