@@ -45,8 +45,8 @@ met = PSet(
     #mva_metPhi    = 'evt.met("mvamet").phi',
     #type1_pfMetEt  = 'evt.met("pfmet").userCand("type1").et',
     #type1_pfMetPhi = 'evt.met("pfmet").userCand("type1").phi',
-    #pfMetEt  = 'evt.met4vector("pfmet","",1).Et',
-    #pfMetPhi = 'evt.met4vector("pfmet","",1).phi',
+    pfMetEt  = 'evt.met4vector("pfmet","",1).Et',
+    pfMetPhi = 'evt.met4vector("pfmet","",1).phi',
     #type1_pfMetEt  = 'evt.met4vector("pfmet","type1",1).Et', #1 --> Apply phi correction
     #type1_pfMetPhi = 'evt.met4vector("pfmet","type1",1).phi',
     #systematics
@@ -61,8 +61,8 @@ met = PSet(
     #pfMet_ues_Phi  = 'evt.met4vector("pfmet","ues+", 1).phi',
     
     #metSignificance='evt.metSignificance',
-    #recoilDaught='getDaughtersRecoil().R()',
-    #recoilWithMet='getDaughtersRecoilWithMet().R()',
+    recoilDaught='getDaughtersRecoil().R()',
+    recoilWithMet='getDaughtersRecoilWithMet().R()',
     #does not seem to work, investigating...
     #recoilWMetSig ='getRecoilWithMetSignificance()',
     #mvametEt='evt.met("mvamet").et',

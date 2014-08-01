@@ -76,7 +76,8 @@ def produce_final_states(process, collections, output_commands,
             process.patFinalStateEventProducerMiniAOD.phoSrc = cms.InputTag(phosrc)
             process.patFinalStateEventProducerMiniAOD.metSrc = pfmetsrc
             process.patFinalStateEventProducerMiniAOD.puTag = cms.string(puTag)
-            process.patFinalStateEventProducerMiniAOD.mets.pfmet = cms.InputTag("pfMet")
+            #process.patFinalStateEventProducerMiniAOD.mets.pfmet = cms.InputTag("pfMet")
+            process.patFinalStateEventProducerMiniAOD.mets.pfmet = cms.InputTag(pfmetsrc)
             if 'extraWeights' in collections:
                 process.patFinalStateEventProducerMiniAOD.extraWeights = collections['extraWeights']
             process.patFinalStateEventProducer = process.patFinalStateEventProducerMiniAOD.clone()
