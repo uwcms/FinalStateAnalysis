@@ -6,6 +6,7 @@
 #include "FinalStateAnalysis/Utilities/interface/CutFlow.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMini.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLS.h"
 
 #include "FWCore/Common/interface/LuminosityBlockBase.h"

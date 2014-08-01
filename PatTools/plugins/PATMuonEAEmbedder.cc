@@ -39,7 +39,7 @@ public:
   virtual ~PATMuonEAEmbedder(){}
   void produce(Event& evt, const EventSetup& es);
 private:
-  InputTag _src,;
+  InputTag _src;
   vstring _eas_to_get;  
   PATMuonEACalculator _eacalc;
   

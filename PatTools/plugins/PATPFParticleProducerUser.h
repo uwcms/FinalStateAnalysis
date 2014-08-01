@@ -22,6 +22,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Utilities/interface/InputTag.h"
 #include "DataFormats/Common/interface/View.h"
+#include "FWCore/Framework/interface/ConsumesCollector.h"
 
 #include "CommonTools/Utils/interface/PtComparator.h"
 

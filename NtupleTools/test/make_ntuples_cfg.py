@@ -37,6 +37,7 @@ svFit=1 - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
 runNewElectronMVAID=0 - run the new electron MVAID
 rerunJets=0   - rerun with new jet energy corrections
+useMiniAOD=0 - run on miniAOD rather than UW PATTuples
 
 
 '''
@@ -77,7 +78,9 @@ options = TauVarParsing.TauVarParsing(
     rerunJets=0,
     dblhMode=False, # For double-charged Higgs analysis
     runTauSpinner=0,
-    GlobalTag=""
+    GlobalTag="",
+    useMiniAOD=0,
+    miniAODScenario='', # V7 = 25ns, V6 = 50ns
 )
 
 options.register(
@@ -124,16 +127,28 @@ if options.rerunFSA:
     #load magfield and geometry (for mass resolution)
     if cmssw_major_version() == 5 and cmssw_minor_version() >= 3:
         process.load('Configuration.Geometry.GeometryIdeal_cff')
+    elif cmssw_major_version() == 7:
+        process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
     else:
         process.load('Configuration.StandardSequences.GeometryIdeal_cff')
 
-    process.load('Configuration.StandardSequences.MagneticField_cff')
+    if cmssw_major_version() == 7:
+        process.load('Configuration.StandardSequences.MagneticField_38T_cff')
+    else:
+        process.load('Configuration.StandardSequences.MagneticField_cff')
     process.load(
         'Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
     # Need the global tag for geometry etc.
     envvar = 'mcgt' if options.isMC else 'datagt'
     GT = {'mcgt': 'START53_V27::All', 'datagt': 'FT53_V21A_AN6::All'}
+    if options.useMiniAOD:
+        if options.miniAODScenario:
+            GT['mcgt'] = 'PLS170_%sAN1::All' % options.miniAODScenario
+        else:
+            GT['mcgt'] = 'PLS170_V7AN1::All'
+        GT['datagt'] = 'GR_70_V2_AN1::All'
+
 
     if options.GlobalTag:
         process.GlobalTag.globaltag = cms.string(options.GlobalTag)
@@ -143,17 +158,26 @@ if options.rerunFSA:
         except KeyError:
             print 'Warning: GlobalTag not defined in environment. Using default.'
             process.GlobalTag.globaltag = cms.string(GT[envvar])
+        if options.useMiniAOD and options.miniAODScenario:
+            process.GlobalTag.globaltag = cms.string(GT[envvar])
 
     print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
-    mvamet_collection = 'systematicsMETMVA'
+    if options.useMiniAOD:
+        mvamet_collection = 'slimmedMETs'
+    else:
+        mvamet_collection = 'systematicsMETMVA'
 
     # Make a version with the MVA MET reconstruction method
     # Works only if we rerun the FSA!
     if options.rerunMVAMET:
         process.load("FinalStateAnalysis.PatTools.met.mvaMetOnPatTuple_cff")
-        process.isotaus.src = "cleanPatTaus"
-        mvamet_collection = "patMEtMVA"
+        if options.useMiniAOD:
+            process.isotaus.src = "slimmedTaus"
+            mvamet_collection = "slimmedMETs"
+        else:
+            process.isotaus.src = "cleanPatTaus"
+            mvamet_collection = "patMEtMVA"
         if not options.isMC:
             process.patMEtMVA.addGenMET = False
         process.mvaMetPath = cms.Path(process.pfMEtMVAsequence)
@@ -166,17 +190,29 @@ if options.rerunFSA:
     from FinalStateAnalysis.PatTools.patFinalStateProducers \
         import produce_final_states
     # Which collections are used to build the final states
-    fs_daughter_inputs = {
-        'electrons': 'cleanPatElectrons',
-        'muons': 'cleanPatMuons',
-        'taus': 'cleanPatTaus',
-        'photons': 'cleanPatPhotons',
-        'jets': 'selectedPatJets',
-#        'jets':  'selectedPatJetsAK5chsPF',
-        'pfmet': 'systematicsMET',
-        'mvamet': mvamet_collection,
-        'fsr': 'boostedFsrPhotons',
-    }
+    if options.useMiniAOD:
+        fs_daughter_inputs = {
+            'electrons': 'slimmedElectrons',
+            'muons': 'slimmedMuons',
+            'taus': 'slimmedTaus',
+            'photons': 'slimmedPhotons',
+            'jets': 'slimmedJets',
+            'pfmet': 'slimmedMETs',         # only one MET in miniAOD
+            'mvamet': mvamet_collection,
+            'fsr': 'slimmedPhotons',        # not available?
+        }
+    else:
+        fs_daughter_inputs = {
+            'electrons': 'cleanPatElectrons',
+            'muons': 'cleanPatMuons',
+            'taus': 'cleanPatTaus',
+            'photons': 'cleanPatPhotons',
+            'jets': 'selectedPatJets',
+#            'jets':  'selectedPatJetsAK5chsPF',
+            'pfmet': 'systematicsMET',
+            'mvamet': mvamet_collection,
+            'fsr': 'boostedFsrPhotons',
+        }
     #re run the MC matching, if requested
     if options.rerunMCMatch:
         print 'doing rematching!'
@@ -230,7 +266,7 @@ if options.rerunFSA:
                          'puTagDoesntMatter', buildFSAEvent=True,
                          noTracks=True, noPhotons=options.noPhotons,
                          zzMode=options.zzMode, rochCor=options.rochCor,
-                         eleCor=options.eleCor)
+                         eleCor=options.eleCor, useMiniAOD=options.useMiniAOD)
     process.buildFSAPath = cms.Path(process.buildFSASeq)
     # Don't crash if some products are missing (like tracks)
     process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
@@ -271,7 +307,7 @@ for final_state in expanded_final_states(final_states):
     analyzer = make_ntuple(*final_state, zz_mode=options.zzMode,
                             svFit=options.svFit, dblhMode=options.dblhMode,
                             runTauSpinner=options.runTauSpinner, 
-                            skimCuts=options.skimCuts)
+                            skimCuts=options.skimCuts,miniAOD=options.useMiniAOD)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 

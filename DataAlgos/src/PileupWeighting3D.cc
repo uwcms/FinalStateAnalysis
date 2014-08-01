@@ -7,6 +7,7 @@
 #include "TH3D.h"
 #include "TFile.h"
 
+#include <cassert>
 #include <boost/shared_ptr.hpp>
 #include <boost/assign/list_of.hpp>
 #include <map>

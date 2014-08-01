@@ -1,5 +1,5 @@
-#ifndef PATFINALSTATEEVENT_MB433KP6
-#define PATFINALSTATEEVENT_MB433KP6
+#ifndef PATFINALSTATEEVENTMINI_MB433KP6
+#define PATFINALSTATEEVENTMINI_MB433KP6
 
 /*
  *   A simple container for holding quantities that are defined across the whole
@@ -9,13 +9,16 @@
  *
  */
 
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMiniFwd.h"
 
 #include "DataFormats/Common/interface/Ptr.h"
 #include "DataFormats/Common/interface/PtrVector.h"
 
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
+#include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"
+#include "DataFormats/Common/interface/TriggerResults.h"
+#include "DataFormats/PatCandidates/interface/PackedTriggerPrescales.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
@@ -23,6 +26,7 @@
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/Photon.h"
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
+#include "DataFormats/PatCandidates/interface/PackedCandidate.h"
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 #include "DataFormats/GsfTrackReco/interface/GsfTrackFwd.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
@@ -36,26 +40,27 @@
 #include <map>
 #include <string>
 
-
-class PATFinalStateEvent {
+class PATFinalStateEventMini {
   public:
 
-    PATFinalStateEvent();
+    PATFinalStateEventMini();
 
     // minimal constructor used only for unit tests
-    PATFinalStateEvent(
+    PATFinalStateEventMini(
         const edm::Ptr<reco::Vertex>& pv,
         const edm::Ptr<pat::MET>& met
     );
 
     // This constructor should only be used in the initial production!
     // It automatically sets the version() to the current one.
-    PATFinalStateEvent(double rho,
+    PATFinalStateEventMini(double rho,
         const edm::Ptr<reco::Vertex>& pv,
         const edm::PtrVector<reco::Vertex>& recoVertices,
         const edm::Ptr<pat::MET>& met,
-        const TMatrixD& metCovariance,
-        const pat::TriggerEvent& triggerEvent,
+        //const TMatrixD& metCovariance,
+        const edm::RefProd<std::vector<pat::TriggerObjectStandAlone> >& triggerObjects,
+        const edm::TriggerNames& names,
+        const pat::PackedTriggerPrescales& triggerPrescale,
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
         const reco::GenParticleRefProd& genParticles,
@@ -69,9 +74,9 @@ class PATFinalStateEvent {
         const edm::RefProd<pat::TauCollection>& tauRefProd,
         const edm::RefProd<pat::JetCollection>& jetRefProd,
 	const edm::RefProd<pat::PhotonCollection>& phoRefProd,
-        const reco::PFCandidateRefProd& pfRefProd,
-        const reco::TrackRefProd& tracks,
-        const reco::GsfTrackRefProd& gsfTracks,
+        const edm::RefProd<pat::PackedCandidateCollection>& pfRefProd,
+        const reco::PhotonCoreRefProd& photonCore,
+        const reco::GsfElectronCoreRefProd& gsfCore,
 	const std::map<std::string, edm::Ptr<pat::MET> >& mets
     );
 
@@ -90,15 +95,17 @@ class PATFinalStateEvent {
     /// Get FastJet rho
     double rho() const;
     /// Get trigger information
-    const pat::TriggerEvent& trig() const;
+    const std::vector<pat::TriggerObjectStandAlone>& trig() const;
+    const edm::TriggerNames& names() const;
+    const pat::PackedTriggerPrescales& trigPrescale() const;
 
     /*  These methods will be deprecated! */
     /// Get PFMET
     const edm::Ptr<pat::MET>& met() const;
     /// Get MET covariance
-    const TMatrixD& metCovariance() const;
+    //const TMatrixD& metCovariance() const;
     /// Get MET significance
-    double metSignificance() const;
+    //double metSignificance() const;
 
     // Get a given type of MET
     const edm::Ptr<pat::MET> met(const std::string& type) const;
@@ -168,10 +175,10 @@ class PATFinalStateEvent {
     const pat::PhotonCollection& photons() const;
 
     /// Access to particle flow collections
-    const reco::PFCandidateCollection& pflow() const;
+    const pat::PackedCandidateCollection& pflow() const;
 
     //Access to GenParticleRefProd
-    const reco::GenParticleRefProd genParticleRefProd() const {return genParticles_;} 
+    const reco::GenParticleRefProd genParticleRefProd() const {return genParticles_;}
 
     /// Get the version of the FinalState data formats API
     /// This allows you to detect which version of the software was used
@@ -185,11 +192,13 @@ class PATFinalStateEvent {
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;
     double rho_;
-    pat::TriggerEvent triggerEvent_;
+    edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > triggerObjects_;
+    edm::TriggerNames names_;
+    pat::PackedTriggerPrescales triggerPrescale_;
     edm::Ptr<reco::Vertex> pv_;
     edm::PtrVector<reco::Vertex> recoVertices_;
     edm::Ptr<pat::MET> met_;
-    TMatrixD metCovariance_;
+    //TMatrixD metCovariance_;
     std::vector<PileupSummaryInfo> puInfo_;
     lhef::HEPEUP lhe_;
     reco::GenParticleRefProd genParticles_;
@@ -205,11 +214,11 @@ class PATFinalStateEvent {
     edm::RefProd<pat::TauCollection> tauRefProd_;
     edm::RefProd<pat::JetCollection> jetRefProd_;
     edm::RefProd<pat::PhotonCollection> phoRefProd_;
-    reco::PFCandidateRefProd pfRefProd_;
-    reco::TrackRefProd tracks_;
-    reco::GsfTrackRefProd gsfTracks_;
+    edm::RefProd<pat::PackedCandidateCollection> pfRefProd_;
+    reco::PhotonCoreRefProd photonCore_;
+    reco::GsfElectronCoreRefProd gsfCore_;
     // List of different MET types
     std::map<std::string, edm::Ptr<pat::MET> > mets_;
 };
 
-#endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */
+#endif /* end of include guard: PATFINALSTATEEVENTMINI_MB433KP6 */

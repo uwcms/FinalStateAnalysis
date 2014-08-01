@@ -4,6 +4,10 @@ set -o nounset
 
 pushd $CMSSW_BASE/src
 
+# Check CMSSW version
+MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
+MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
+
 #for standalone version of svfit
 # cvs co -r V00-01-04s TauAnalysis/CandidateTools
 git clone https://github.com/cms-analysis/TauAnalysis-CandidateTools.git TauAnalysis/CandidateTools
@@ -27,7 +31,7 @@ fi
 set +o errexit
 echo "Applying pat trigger matching speedup"
 git cms-addpkg DataFormats/PatCandidates
-git apply FinalStateAnalysis/recipeGIT/patches/DataFormats_PatCandidates_TriggerEvent.cc.patch
+git apply FinalStateAnalysis/recipe/patches/DataFormats_PatCandidates_TriggerEvent.cc.patch
 set -o errexit
 
 
@@ -35,12 +39,16 @@ set -o errexit
 if [ "$PATPROD" = "1" ]
 then
     #PU Jet ID Weights -- yes this way sucks
-    git clone https://github.com/violatingcp/Jets_Short.git
-    rm -r RecoJets/
-    mv Jets_Short/RecoJets .
-    mv Jets_Short/JetMETCorrections/Modules JetMETCorrections/.
-    rm -rf Jets_Short
-    
+    if [ "$MAJOR_VERSION" -eq "7" ] 
+    then
+        echo "No RecoJets yet"
+    else
+        git clone https://github.com/violatingcp/Jets_Short.git
+        rm -r RecoJets/
+        mv Jets_Short/RecoJets .
+        mv Jets_Short/JetMETCorrections/Modules JetMETCorrections/.
+        rm -rf Jets_Short
+    fi
     # Set the compile time flag which enables PAT modules that have external
     # dependencies.
     cat > $CMSSW_BASE/src/FinalStateAnalysis/PatTools/interface/PATProductionFlag.h << EOF

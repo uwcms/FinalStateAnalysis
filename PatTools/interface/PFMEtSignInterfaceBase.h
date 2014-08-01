@@ -20,7 +20,7 @@
 #include "FWCore/Utilities/interface/InputTag.h"
 
 #include "RecoMET/METAlgorithms/interface/SignAlgoResolutions.h"
-#include "RecoMET/METAlgorithms/interface/SigInputObj.h"
+#include "DataFormats/METReco/interface/SigInputObj.h"
 
 #include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"

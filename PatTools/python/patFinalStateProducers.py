@@ -44,7 +44,7 @@ def _combinatorics(items, n):
 def produce_final_states(process, collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
                          noTracks=False, noPhotons=False, zzMode=False,
-                         rochCor="", eleCor=""):
+                         rochCor="", eleCor="", useMiniAOD=False):
 
     muonsrc = collections['muons']
     esrc = collections['electrons']
@@ -62,21 +62,42 @@ def produce_final_states(process, collections, output_commands,
     if buildFSAEvent:
         process.load("FinalStateAnalysis.PatTools."
                      "finalStates.patFinalStateEventProducer_cfi")
-        process.patFinalStateEventProducer.electronSrc = cms.InputTag(esrc)
-        process.patFinalStateEventProducer.muonSrc = cms.InputTag(muonsrc)
-        process.patFinalStateEventProducer.tauSrc = cms.InputTag(tausrc)
-        process.patFinalStateEventProducer.jetSrc = cms.InputTag(jetsrc)
-        process.patFinalStateEventProducer.phoSrc = cms.InputTag(phosrc)
-        process.patFinalStateEventProducer.metSrc = pfmetsrc
-        process.patFinalStateEventProducer.puTag = cms.string(puTag)
-        process.patFinalStateEventProducer.mets.pfmet = pfmetsrc
-        process.patFinalStateEventProducer.mets.mvamet = mvametsrc
-        if 'extraWeights' in collections:
-            process.patFinalStateEventProducer.extraWeights = collections['extraWeights']
-        sequence += process.patFinalStateEventProducer
+        if useMiniAOD:
+            # first, recalculate pfMet without type1 corrections
+            from RecoMET.METProducers.PFMET_cfi import pfMet
+            process.pfMet = pfMet.clone(src = "packedPFCandidates")
+            process.pfMet.calculateSignificance = False # this can't be easily implemented on packed PF candidates at the moment
+            sequence += process.pfMet
+            # now produce the final states
+            process.patFinalStateEventProducerMiniAOD.electronSrc = cms.InputTag(esrc)
+            process.patFinalStateEventProducerMiniAOD.muonSrc = cms.InputTag(muonsrc)
+            process.patFinalStateEventProducerMiniAOD.tauSrc = cms.InputTag(tausrc)
+            process.patFinalStateEventProducerMiniAOD.jetSrc = cms.InputTag(jetsrc)
+            process.patFinalStateEventProducerMiniAOD.phoSrc = cms.InputTag(phosrc)
+            process.patFinalStateEventProducerMiniAOD.metSrc = pfmetsrc
+            process.patFinalStateEventProducerMiniAOD.puTag = cms.string(puTag)
+            process.patFinalStateEventProducerMiniAOD.mets.pfmet = cms.InputTag("pfMet")
+            if 'extraWeights' in collections:
+                process.patFinalStateEventProducerMiniAOD.extraWeights = collections['extraWeights']
+            process.patFinalStateEventProducer = process.patFinalStateEventProducerMiniAOD.clone()
+            sequence += process.patFinalStateEventProducer
+        else:
+            process.patFinalStateEventProducer.electronSrc = cms.InputTag(esrc)
+            process.patFinalStateEventProducer.muonSrc = cms.InputTag(muonsrc)
+            process.patFinalStateEventProducer.tauSrc = cms.InputTag(tausrc)
+            process.patFinalStateEventProducer.jetSrc = cms.InputTag(jetsrc)
+            process.patFinalStateEventProducer.phoSrc = cms.InputTag(phosrc)
+            process.patFinalStateEventProducer.metSrc = pfmetsrc
+            process.patFinalStateEventProducer.puTag = cms.string(puTag)
+            process.patFinalStateEventProducer.mets.pfmet = pfmetsrc
+            process.patFinalStateEventProducer.mets.mvamet = mvametsrc
+            if 'extraWeights' in collections:
+                process.patFinalStateEventProducer.extraWeights = collections['extraWeights']
+            sequence += process.patFinalStateEventProducer
 
     # Always keep
     output_commands.append('*_patFinalStateEventProducer_*_*')
+    output_commands.append('*_patFinalStateEventProducerMiniAOD_*_*')
 
     # Apply some loose PT cuts on the objects we use to create the final states
     # so the combinatorics don't blow up

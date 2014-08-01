@@ -1,5 +1,5 @@
 /*
- * Produce a PATFinalStateEvent container with some interesting event info.
+ * Produce a PATFinalStateEventMini container with some interesting event info.
  *
  * */
 
@@ -9,8 +9,8 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/EDProducer.h"
 
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMini.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMiniFwd.h"
 
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
@@ -30,11 +30,10 @@
 // For covariance matrix
 #include "DataFormats/Math/interface/Error.h"
 
-
-class PATFinalStateEventProducer : public edm::EDProducer {
+class PATFinalStateEventMiniProducer : public edm::EDProducer {
   public:
-    PATFinalStateEventProducer(const edm::ParameterSet& pset);
-    virtual ~PATFinalStateEventProducer(){}
+    PATFinalStateEventMiniProducer(const edm::ParameterSet& pset);
+    virtual ~PATFinalStateEventMiniProducer(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
 
   private:
@@ -59,9 +58,9 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     // Information about PFLOW
     edm::InputTag pfSrc_;
 
-    // Information about tracks
-    edm::InputTag trackSrc_;
-    edm::InputTag gsfTrackSrc_;
+    // Information about egamma
+    edm::InputTag photonCoreSrc_;
+    edm::InputTag gsfCoreSrc_;
 
     // Information about the MET
     edm::InputTag metSrc_;
@@ -69,12 +68,15 @@ class PATFinalStateEventProducer : public edm::EDProducer {
 
     // Trigger input
     edm::InputTag trgSrc_;
+    edm::InputTag trgPrescaleSrc_;
+    edm::InputTag trgResultsSrc_;
 
     // PU information
     edm::InputTag puInfoSrc_;
 
     // MC information
     edm::InputTag truthSrc_;
+    edm::InputTag prunedTruthSrc_;
     edm::ParameterSet extraWeights_;
     // The PU scenario to use
     std::string puScenario_;
@@ -90,7 +92,7 @@ class PATFinalStateEventProducer : public edm::EDProducer {
 
 };
 
-PATFinalStateEventProducer::PATFinalStateEventProducer(
+PATFinalStateEventMiniProducer::PATFinalStateEventMiniProducer(
     const edm::ParameterSet& pset) {
   rhoSrc_ = pset.getParameter<edm::InputTag>("rhoSrc");
   pvSrc_ = pset.getParameter<edm::InputTag>("pvSrc");
@@ -105,14 +107,17 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
 
   pfSrc_ = pset.getParameter<edm::InputTag>("pfSrc");
 
-  trackSrc_ = pset.getParameter<edm::InputTag>("trackSrc");
-  gsfTrackSrc_ = pset.getParameter<edm::InputTag>("gsfTrackSrc");
+  photonCoreSrc_ = pset.getParameter<edm::InputTag>("photonCoreSrc");
+  gsfCoreSrc_ = pset.getParameter<edm::InputTag>("gsfCoreSrc");
 
   metSrc_ = pset.getParameter<edm::InputTag>("metSrc");
-  metCovSrc_ = pset.getParameter<edm::InputTag>("metCovSrc");
+  //metCovSrc_ = pset.getParameter<edm::InputTag>("metCovSrc");
   trgSrc_ = pset.getParameter<edm::InputTag>("trgSrc");
+  trgPrescaleSrc_ = pset.getParameter<edm::InputTag>("trgPrescaleSrc");
+  trgResultsSrc_ = pset.getParameter<edm::InputTag>("trgResultsSrc");
   puInfoSrc_ = pset.getParameter<edm::InputTag>("puInfoSrc");
   truthSrc_ = pset.getParameter<edm::InputTag>("genParticleSrc");
+  prunedTruthSrc_ = pset.getParameter<edm::InputTag>("genParticlePrunedSrc");
   extraWeights_ = pset.getParameterSet("extraWeights");
   puScenario_ = pset.getParameter<std::string>("puTag");
 
@@ -129,7 +134,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
           ));
   }
 
-  produces<PATFinalStateEventCollection>();
+  produces<PATFinalStateEventMiniCollection>();
 
   getLHEEventProduct_ = edm::GetterOfProducts<LHEEventProduct>(edm::ProcessMatch("*"), this);
   getGenEventInfoProduct_ = edm::GetterOfProducts<GenEventInfoProduct>(edm::ProcessMatch("*"), this);
@@ -141,7 +146,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
 }
 
 template<typename T> edm::RefProd<T>
-PATFinalStateEventProducer::getRefProd(const edm::InputTag& src,
+PATFinalStateEventMiniProducer::getRefProd(const edm::InputTag& src,
     const edm::Event& evt) const {
   edm::Handle<T> handle;
   evt.getByLabel(src, handle);
@@ -155,10 +160,10 @@ PATFinalStateEventProducer::getRefProd(const edm::InputTag& src,
   return edm::RefProd<T>(handle);
 }
 
-void PATFinalStateEventProducer::produce(edm::Event& evt,
+void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
     const edm::EventSetup& es) {
-  std::auto_ptr<PATFinalStateEventCollection> output(
-      new PATFinalStateEventCollection);
+  std::auto_ptr<PATFinalStateEventMiniCollection> output(
+      new PATFinalStateEventMiniCollection);
 
   edm::Handle<double> rho;
   evt.getByLabel(rhoSrc_, rho);
@@ -199,35 +204,35 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::RefProd<pat::TauCollection> tauRefProd =
     getRefProd<pat::TauCollection>(tauSrc_, evt);
 
-  edm::RefProd<reco::PFCandidateCollection> pfRefProd =
-    getRefProd<reco::PFCandidateCollection>(pfSrc_, evt);
+  edm::RefProd<pat::PackedCandidateCollection> pfRefProd =
+    getRefProd<pat::PackedCandidateCollection>(pfSrc_, evt);
 
-  edm::RefProd<reco::TrackCollection> trackRefProd =
-    getRefProd<reco::TrackCollection>(trackSrc_, evt);
+  edm::RefProd<reco::PhotonCoreCollection> photonCoreRefProd =
+    getRefProd<reco::PhotonCoreCollection>(photonCoreSrc_, evt);
 
-  edm::RefProd<reco::GsfTrackCollection> gsftrackRefProd =
-    getRefProd<reco::GsfTrackCollection>(gsfTrackSrc_, evt);
+  edm::RefProd<reco::GsfElectronCoreCollection> gsfCoreRefProd =
+    getRefProd<reco::GsfElectronCoreCollection>(gsfCoreSrc_, evt);
 
   edm::Handle<edm::View<pat::MET> > met;
   evt.getByLabel(metSrc_, met);
   edm::Ptr<pat::MET> metPtr = met->ptrAt(0);
 
   // Get MET covariance matrix
-  edm::Handle<Matrix> metCov;
-  evt.getByLabel(metCovSrc_, metCov);
-  TMatrixD metCovariance(2,2);
-  if (metCov.isValid()) {
-    // Covert to TMatrixD
-    metCovariance(0,0) = (*metCov)(0,0);
-    metCovariance(0,1) = (*metCov)(0,1);
-    metCovariance(1,0) = (*metCov)(1,0);
-    metCovariance(1,1) = (*metCov)(1,1);
-  }
+  //edm::Handle<Matrix> metCov;
+  //evt.getByLabel(metCovSrc_, metCov);
+  //TMatrixD metCovariance(2,2);
+  //if (metCov.isValid()) {
+  //  // Covert to TMatrixD
+  //  metCovariance(0,0) = (*metCov)(0,0);
+  //  metCovariance(0,1) = (*metCov)(0,1);
+  //  metCovariance(1,0) = (*metCov)(1,0);
+  //  metCovariance(1,1) = (*metCov)(1,1);
+  //}
 
   std::map<std::string, edm::Ptr<pat::MET> > theMEts;
   // Get different types of METs - this will be a map like
-  // "pfmet" ->
-  // "mvamet" ->
+  // "pfmet" ->    RECALCULATED FROM PACKEDCANDIDATES (no significance)
+  // "mvamet" ->   NOT POSSIBLE
   for (size_t i = 0; i < metCfg_.size(); ++i) {
     edm::Handle<edm::View<pat::MET> > theMet;
     evt.getByLabel(metCfg_[i].second, theMet);
@@ -242,8 +247,21 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     theMEts[metCfg_[i].first] = theMetPtr;
   }
 
-  edm::Handle<pat::TriggerEvent> trig;
-  evt.getByLabel(trgSrc_, trig);
+  edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > trig =
+    getRefProd<std::vector<pat::TriggerObjectStandAlone> >(trgSrc_, evt);
+
+  edm::Handle<pat::PackedTriggerPrescales> trigPrescale;
+  evt.getByLabel(trgPrescaleSrc_, trigPrescale);
+
+  edm::Handle<edm::TriggerResults> trigResults;
+  evt.getByLabel(trgResultsSrc_, trigResults);
+
+  // get triggerNames form event
+  const edm::TriggerNames& names = evt.triggerNames(*trigResults);
+  for (pat::TriggerObjectStandAlone obj : *trig) {
+    obj.unpackPathNames(names);
+  }
+  //trigPrescale->setTriggerNames(names);
 
   edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
   evt.getByLabel(puInfoSrc_, puInfo);
@@ -285,17 +303,17 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     generatorFilter = *generatorFilterH;
 	
   // Try and get the gen information if it exists
-  edm::Handle<reco::GenParticleCollection> genParticles;
+  edm::Handle<std::vector<reco::GenParticle> > genParticles;
   evt.getByLabel(truthSrc_, genParticles);
   reco::GenParticleRefProd genParticlesRef;
   if (!evt.isRealData())
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
-  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
-      *trig, myPuInfo, genInfo, genParticlesRef, evt.id(), genEventInfo, generatorFilter,
-      evt.isRealData(), puScenario_,
+  PATFinalStateEventMini theEvent(*rho, pvPtr, verticesPtr, metPtr, /*metCovariance,*/
+      trig, names, *trigPrescale, myPuInfo, genInfo, genParticlesRef, evt.id(), 
+      genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
       electronRefProd, muonRefProd, tauRefProd, jetRefProd,
-      phoRefProd, pfRefProd, trackRefProd, gsftrackRefProd, theMEts);
+      phoRefProd, pfRefProd, photonCoreRefProd, gsfCoreRefProd, theMEts);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
@@ -315,4 +333,4 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"
-DEFINE_FWK_MODULE(PATFinalStateEventProducer);
+DEFINE_FWK_MODULE(PATFinalStateEventMiniProducer);

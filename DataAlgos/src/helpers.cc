@@ -262,6 +262,7 @@ const bool findDecay(const reco::GenParticleRefProd genCollectionRef, int pdgIdM
   return (descendents.size() > 0);
 }
 
+
 float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const edm::PtrVector<reco::Vertex> recoVertices)
 {
   //std::map <std::string, float> varMap; 
