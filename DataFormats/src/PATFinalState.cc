@@ -747,9 +747,9 @@ const reco::Candidate::Vector PATFinalState::getDaughtersRecoilWithMet() const {
   return retval;
 }
 
-const double PATFinalState::getRecoilWithMetSignificance() const {
-  return fshelpers::xySignficance(getDaughtersRecoilWithMet(), event_->metCovariance());
-}
+//const double PATFinalState::getRecoilWithMetSignificance() const {
+//  return fshelpers::xySignficance(getDaughtersRecoilWithMet(), event_->metCovariance());
+//}
 
 
 const math::XYZTLorentzVector

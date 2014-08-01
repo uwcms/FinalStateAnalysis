@@ -45,7 +45,7 @@ PATFinalStateEventMini::PATFinalStateEventMini(
     const edm::Ptr<reco::Vertex>& pv,
     const edm::PtrVector<reco::Vertex>& recoVertices,
     const edm::Ptr<pat::MET>& met,
-    const TMatrixD& metCovariance,
+    //const TMatrixD& metCovariance,
     const edm::RefProd<std::vector<pat::TriggerObjectStandAlone>>& triggerObjects,
     const edm::TriggerNames& names,
     const pat::PackedTriggerPrescales& triggerPrescale,
@@ -74,7 +74,7 @@ PATFinalStateEventMini::PATFinalStateEventMini(
   pv_(pv),
   recoVertices_(recoVertices),
   met_(met),
-  metCovariance_(metCovariance),
+  //metCovariance_(metCovariance),
   puInfo_(puInfo),
   lhe_(hepeup),
   genParticles_(genParticles),
@@ -132,13 +132,13 @@ const edm::Ptr<pat::MET>& PATFinalStateEventMini::met() const {
   return met_;
 }
 
-const TMatrixD& PATFinalStateEventMini::metCovariance() const {
-  return metCovariance_;
-}
+//const TMatrixD& PATFinalStateEventMini::metCovariance() const {
+//  return metCovariance_;
+//}
 
-double PATFinalStateEventMini::metSignificance() const {
-  return fshelpers::xySignficance(met_->momentum(), metCovariance_);
-}
+//double PATFinalStateEventMini::metSignificance() const {
+//  return fshelpers::xySignficance(met_->momentum(), metCovariance_);
+//}
 
 const edm::Ptr<pat::MET> PATFinalStateEventMini::met(
     const std::string& type) const {

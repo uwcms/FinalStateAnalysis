@@ -52,7 +52,7 @@ patFinalStateEventProducerMiniAOD = cms.EDProducer(
     gsfCoreSrc = cms.InputTag("reducedEgamma","reducedGedGsfElectronCores"),
     mets = cms.PSet(
         pfmet = cms.InputTag("fixme"),
-        mvamet = cms.InputTag("fixme"),
+        #mvamet = cms.InputTag("fixme"),
     ),
     extraWeights = cms.PSet(
         #anyOldThing = cms.double(9999), # just an example

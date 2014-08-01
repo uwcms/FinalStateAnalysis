@@ -281,7 +281,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // Get Recoils
     const reco::Candidate::Vector getDaughtersRecoil() const;
     const reco::Candidate::Vector getDaughtersRecoilWithMet() const;
-    const double   getRecoilWithMetSignificance() const;
+    //const double   getRecoilWithMetSignificance() const;
 
     // Things to get LorentzVectors and other complex datatypes
     // out of objects

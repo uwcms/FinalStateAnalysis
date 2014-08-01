@@ -57,7 +57,7 @@ class PATFinalStateEventMini {
         const edm::Ptr<reco::Vertex>& pv,
         const edm::PtrVector<reco::Vertex>& recoVertices,
         const edm::Ptr<pat::MET>& met,
-        const TMatrixD& metCovariance,
+        //const TMatrixD& metCovariance,
         const edm::RefProd<std::vector<pat::TriggerObjectStandAlone> >& triggerObjects,
         const edm::TriggerNames& names,
         const pat::PackedTriggerPrescales& triggerPrescale,
@@ -103,9 +103,9 @@ class PATFinalStateEventMini {
     /// Get PFMET
     const edm::Ptr<pat::MET>& met() const;
     /// Get MET covariance
-    const TMatrixD& metCovariance() const;
+    //const TMatrixD& metCovariance() const;
     /// Get MET significance
-    double metSignificance() const;
+    //double metSignificance() const;
 
     // Get a given type of MET
     const edm::Ptr<pat::MET> met(const std::string& type) const;
@@ -198,7 +198,7 @@ class PATFinalStateEventMini {
     edm::Ptr<reco::Vertex> pv_;
     edm::PtrVector<reco::Vertex> recoVertices_;
     edm::Ptr<pat::MET> met_;
-    TMatrixD metCovariance_;
+    //TMatrixD metCovariance_;
     std::vector<PileupSummaryInfo> puInfo_;
     lhef::HEPEUP lhe_;
     reco::GenParticleRefProd genParticles_;

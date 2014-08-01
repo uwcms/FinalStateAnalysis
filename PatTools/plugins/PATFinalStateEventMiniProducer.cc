@@ -111,7 +111,7 @@ PATFinalStateEventMiniProducer::PATFinalStateEventMiniProducer(
   gsfCoreSrc_ = pset.getParameter<edm::InputTag>("gsfCoreSrc");
 
   metSrc_ = pset.getParameter<edm::InputTag>("metSrc");
-  metCovSrc_ = pset.getParameter<edm::InputTag>("metCovSrc");
+  //metCovSrc_ = pset.getParameter<edm::InputTag>("metCovSrc");
   trgSrc_ = pset.getParameter<edm::InputTag>("trgSrc");
   trgPrescaleSrc_ = pset.getParameter<edm::InputTag>("trgPrescaleSrc");
   trgResultsSrc_ = pset.getParameter<edm::InputTag>("trgResultsSrc");
@@ -218,21 +218,21 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
   edm::Ptr<pat::MET> metPtr = met->ptrAt(0);
 
   // Get MET covariance matrix
-  edm::Handle<Matrix> metCov;
-  evt.getByLabel(metCovSrc_, metCov);
-  TMatrixD metCovariance(2,2);
-  if (metCov.isValid()) {
-    // Covert to TMatrixD
-    metCovariance(0,0) = (*metCov)(0,0);
-    metCovariance(0,1) = (*metCov)(0,1);
-    metCovariance(1,0) = (*metCov)(1,0);
-    metCovariance(1,1) = (*metCov)(1,1);
-  }
+  //edm::Handle<Matrix> metCov;
+  //evt.getByLabel(metCovSrc_, metCov);
+  //TMatrixD metCovariance(2,2);
+  //if (metCov.isValid()) {
+  //  // Covert to TMatrixD
+  //  metCovariance(0,0) = (*metCov)(0,0);
+  //  metCovariance(0,1) = (*metCov)(0,1);
+  //  metCovariance(1,0) = (*metCov)(1,0);
+  //  metCovariance(1,1) = (*metCov)(1,1);
+  //}
 
   std::map<std::string, edm::Ptr<pat::MET> > theMEts;
   // Get different types of METs - this will be a map like
-  // "pfmet" ->
-  // "mvamet" ->
+  // "pfmet" ->    RECALCULATED FROM PACKEDCANDIDATES (no significance)
+  // "mvamet" ->   NOT POSSIBLE
   for (size_t i = 0; i < metCfg_.size(); ++i) {
     edm::Handle<edm::View<pat::MET> > theMet;
     evt.getByLabel(metCfg_[i].second, theMet);
@@ -309,7 +309,7 @@ void PATFinalStateEventMiniProducer::produce(edm::Event& evt,
   if (!evt.isRealData())
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
-  PATFinalStateEventMini theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
+  PATFinalStateEventMini theEvent(*rho, pvPtr, verticesPtr, metPtr, /*metCovariance,*/
       trig, names, *trigPrescale, myPuInfo, genInfo, genParticlesRef, evt.id(), 
       genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
       electronRefProd, muonRefProd, tauRefProd, jetRefProd,
