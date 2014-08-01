@@ -13,18 +13,18 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 mtToMET = PSet(
     # Raw means no MET corrections
-    objectMtToMET = 'mtMET({object_idx}, "raw")',
+    #objectMtToMET = 'mtMET({object_idx}, "raw")',
 
     #PF Type1 MET (and systematics)
-    objectMtToPFMET      = 'mtMET({object_idx}, "", "pfmet", ""     , 1)',#1, apply phi correction
-    objectMtToPfMet_Ty1  = 'mtMET({object_idx}, "", "pfmet", "type1", 1)',
-    objectMtToPfMet_mes  = 'mtMET({object_idx}, "", "pfmet", "mes+" , 1)',
-    objectMtToPfMet_tes  = 'mtMET({object_idx}, "", "pfmet", "tes+" , 1)',
-    objectMtToPfMet_jes  = 'mtMET({object_idx}, "", "pfmet", "jes+" , 1)',
-    objectMtToPfMet_ues  = 'mtMET({object_idx}, "", "pfmet", "ues+" , 1)',
+    #objectMtToPFMET      = 'mtMET({object_idx}, "", "pfmet", ""     , 1)',#1, apply phi correction
+    #objectMtToPfMet_Ty1  = 'mtMET({object_idx}, "", "pfmet", "type1", 1)',
+    #objectMtToPfMet_mes  = 'mtMET({object_idx}, "", "pfmet", "mes+" , 1)',
+    #objectMtToPfMet_tes  = 'mtMET({object_idx}, "", "pfmet", "tes+" , 1)',
+    #objectMtToPfMet_jes  = 'mtMET({object_idx}, "", "pfmet", "jes+" , 1)',
+    #objectMtToPfMet_ues  = 'mtMET({object_idx}, "", "pfmet", "ues+" , 1)',
 
     #MVA MET
-    objectMtToMVAMET     = 'mtMET({object_idx}, "", "mvamet", "", 0)',
+    #objectMtToMVAMET     = 'mtMET({object_idx}, "", "mvamet", "", 0)',
 
     objectToMETDPhi = 'deltaPhi({object}.phi, met().phi())',
 )
