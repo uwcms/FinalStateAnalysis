@@ -1,6 +1,5 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMini.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalState.h"
 
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
@@ -57,7 +56,7 @@ PATFinalState::PATFinalState():PATLeafCandidate(){}
 
 PATFinalState::PATFinalState(
     int charge, const reco::Candidate::LorentzVector& p4,
-    const edm::Ptr<PATFinalStateEventMini>& event):PATLeafCandidate(
+    const edm::Ptr<PATFinalStateEvent>& event):PATLeafCandidate(
       reco::LeafCandidate(charge, p4)) {
   event_ = event;
 }

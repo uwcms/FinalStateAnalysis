@@ -16,7 +16,7 @@ class PATQuadFinalStateT : public PATFinalState {
     PATQuadFinalStateT(const edm::Ptr<T1>& p1, const edm::Ptr<T2>& p2,
         const edm::Ptr<T3>& p3,
         const edm::Ptr<T4>& p4,
-        const edm::Ptr<PATFinalStateEventMini>& evt)
+        const edm::Ptr<PATFinalStateEvent>& evt)
       :PATFinalState(
           p1->charge() + p2->charge() + p3->charge() + p4->charge(),
           p1->p4() + p2->p4() + p3->p4() + p4->p4(), evt) {

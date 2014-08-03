@@ -23,6 +23,25 @@ namespace {
       return 1;
     else return 0;
   }
+  int matchedToAnObject(const std::vector<pat::TriggerObjectStandAlone> trgObjects,
+      const reco::Candidate& cand, double maxDeltaR) {
+    bool matched = false;
+    for (size_t i = 0; i < trgObjects.size(); ++i) {
+      if (reco::deltaR(cand, trgObjects.at(i)) < maxDeltaR) {
+        matched = true;
+        break;
+      }
+    }
+    if (matched)
+      return 1;
+    else return 0;
+  }
+}
+
+void unpackTrigger(std::vector<pat::TriggerObjectStandAlone> trig, const edm::TriggerNames& names) {
+  for (pat::TriggerObjectStandAlone obj : trig) {
+    obj.unpackPathNames(names);
+  }
 }
 
 PATFinalStateEvent::PATFinalStateEvent() {}
@@ -35,12 +54,16 @@ PATFinalStateEvent::PATFinalStateEvent(
   met_(met) { }
 
 PATFinalStateEvent::PATFinalStateEvent(
+    bool miniAOD,
     double rho,
     const edm::Ptr<reco::Vertex>& pv,
     const edm::PtrVector<reco::Vertex>& recoVertices,
     const edm::Ptr<pat::MET>& met,
     const TMatrixD& metCovariance,
-    const pat::TriggerEvent& triggerEvent,
+    const pat::TriggerEvent triggerEvent,
+    const edm::RefProd<std::vector<pat::TriggerObjectStandAlone>>& triggerObjects,
+    const edm::TriggerNames& names,
+    const pat::PackedTriggerPrescales& triggerPrescale,
     const std::vector<PileupSummaryInfo>& puInfo,
     const lhef::HEPEUP& hepeup,
     const reco::GenParticleRefProd& genParticles,
@@ -55,12 +78,17 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::RefProd<pat::JetCollection>& jetRefProd,
     const edm::RefProd<pat::PhotonCollection>& phoRefProd,
     const reco::PFCandidateRefProd& pfRefProd,
+    const edm::RefProd<pat::PackedCandidateCollection>& packedPFRefProd,
     const reco::TrackRefProd& tracks,
     const reco::GsfTrackRefProd& gsfTracks,
     const std::map<std::string, edm::Ptr<pat::MET> >& mets
     ):
+  miniAOD_(miniAOD),
   rho_(rho),
   triggerEvent_(triggerEvent),
+  triggerObjects_(triggerObjects),
+  names_(names),
+  triggerPrescale_(triggerPrescale),
   pv_(pv),
   recoVertices_(recoVertices),
   met_(met),
@@ -80,6 +108,7 @@ PATFinalStateEvent::PATFinalStateEvent(
   jetRefProd_(jetRefProd),
   phoRefProd_(phoRefProd),
   pfRefProd_(pfRefProd),
+  packedPFRefProd_(packedPFRefProd),
   tracks_(tracks),
   gsfTracks_(gsfTracks),
   mets_(mets)
@@ -111,6 +140,15 @@ double PATFinalStateEvent::rho() const { return rho_; }
 
 const pat::TriggerEvent& PATFinalStateEvent::trig() const {
   return triggerEvent_; }
+
+const std::vector<pat::TriggerObjectStandAlone>& PATFinalStateEvent::trigStandAlone() const {
+  return *triggerObjects_; }
+
+const edm::TriggerNames& PATFinalStateEvent::names() const {
+  return names_; }
+
+const pat::PackedTriggerPrescales& PATFinalStateEvent::trigPrescale() const {
+  return triggerPrescale_; }
 
 const edm::Ptr<pat::MET>& PATFinalStateEvent::met() const {
   return met_;
@@ -155,42 +193,47 @@ const edm::EventID& PATFinalStateEvent::evtId() const {
 
 // Superseded by the smart trigger
 int PATFinalStateEvent::hltResult(const std::string& pattern) const {
-  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
+  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, trigStandAlone(), names(), evtID_) : 
+    smartTrigger(pattern, trig(), evtID_);
   return result.passed;
 }
 
 int PATFinalStateEvent::hltPrescale(const std::string& pattern) const {
-  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
+  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, trigStandAlone(), names(), evtID_) : 
+    smartTrigger(pattern, trig(), evtID_);
   return result.prescale;
 }
 
 int PATFinalStateEvent::hltGroup(const std::string& pattern) const {
-  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
+  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, trigStandAlone(), names(), evtID_) : 
+    smartTrigger(pattern, trig(), evtID_);
   return result.group;
 }
 
 int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
-  std::vector<const pat::TriggerFilter*> filters =
+  std::vector<const pat::TriggerFilter*> filters = miniAOD_ ?
+    matchingTriggerFilters(trigStandAlone(), names(), pattern) :
     matchingTriggerFilters(trig(), pattern);
   if (!filters.size())
     return -1;
-  return matchedToAnObject(
-      triggerEvent_.filterObjects(filters[0]->label()), cand, maxDeltaR);
+  return miniAOD_ ? matchedToAnObject(trigStandAlone(), cand, maxDeltaR) :
+    matchedToAnObject(triggerEvent_.filterObjects(filters[0]->label()), cand, maxDeltaR);
 }
 
 int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
   // std::cout << "matcher: " << pattern << std::endl;
-  SmartTriggerResult result = smartTrigger(pattern, trig(), evtID_);
-  // std::cout << " result: " << result.group << " " << result.prescale << " " << result.passed << std::endl;
+  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, trigStandAlone(), names(), evtID_) : 
+    smartTrigger(pattern, trig(), evtID_);
+  //std::cout << " result: " << result.group << " " << result.prescale << " " << result.passed << std::endl;
   // Loop over all the paths that fired and see if any matched this object.
   if (!result.passed)
     return -1;
   int matchCount = 0;
   for (size_t i = 0; i < result.paths.size(); ++i) {
-    bool matched = matchedToAnObject(
-      triggerEvent_.pathObjects(result.paths[i]), cand, maxDeltaR);
+    bool matched = miniAOD_ ? matchedToAnObject(trigStandAlone(), cand, maxDeltaR) :
+      matchedToAnObject(triggerEvent_.pathObjects(result.paths[i]), cand, maxDeltaR);
     // std::cout << " - path: " << result.paths[i] << " matched: " << matched << std::endl;
     if (matched)
       matchCount += 1;
@@ -293,6 +336,13 @@ const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
     throw cms::Exception("PATFSAEventNullRefs")
       << "The PFLOW RefProd is null!" << std::endl;
   return *pfRefProd_;
+}
+
+const pat::PackedCandidateCollection& PATFinalStateEvent::packedPflow() const {
+  if (!packedPFRefProd_)
+    throw cms::Exception("PATFSAEventNullRefs")
+      << "The Packed PFLOW RefProd is null!" << std::endl;
+  return *packedPFRefProd_;
 }
 
 const bool PATFinalStateEvent::findDecay(const int pdgIdMother, const int pdgIdDaughter) const{

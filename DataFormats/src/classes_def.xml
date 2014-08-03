@@ -23,7 +23,7 @@
   </class>
 
   <class name="PATFinalState" ClassVersion="10">
-   <version ClassVersion="10" checksum="2470675755"/>
+   <version ClassVersion="10" checksum="2840789346"/>
   </class>
   <class name="std::vector<PATFinalState*>"/>
   <class name="PATFinalStateCollection"/>
@@ -38,7 +38,7 @@
   </class>
 
   <class name="PATFinalStateEvent" ClassVersion="15">
-   <version ClassVersion="15" checksum="4080903132"/>
+   <version ClassVersion="15" checksum="148376409"/>
    <version ClassVersion="14" checksum="1619979458"/>
    <version ClassVersion="13" checksum="3775954220"/>
    <version ClassVersion="12" checksum="4160196554"/>
@@ -52,17 +52,6 @@
   <class name="edm::RefVector<PATFinalStateEventCollection,PATFinalStateEvent,edm::refhelper::FindUsingAdvance<PATFinalStateEventCollection,PATFinalStateEvent> >"/>
   <class name="edm::RefProd<PATFinalStateEventCollection>"/>
   <class name="edm::Ptr<PATFinalStateEvent>"/>
-
-  <class name="PATFinalStateEventMini" ClassVersion="-1">
-   <version ClassVersion="-1" checksum="1259485264"/>
-  </class>
-  <class name="PATFinalStateEventMiniCollection"/>
-  <class name="edm::Wrapper<PATFinalStateEventMini>"/>
-  <class name="edm::Wrapper<PATFinalStateEventMiniCollection>"/>
-  <class name="edm::Ref<PATFinalStateEventMiniCollection,PATFinalStateEventMini,edm::refhelper::FindUsingAdvance<PATFinalStateEventMiniCollection,PATFinalStateEventMini> >"/>
-  <class name="edm::RefVector<PATFinalStateEventMiniCollection,PATFinalStateEventMini,edm::refhelper::FindUsingAdvance<PATFinalStateEventMiniCollection,PATFinalStateEventMini> >"/>
-  <class name="edm::RefProd<PATFinalStateEventMiniCollection>"/>
-  <class name="edm::Ptr<PATFinalStateEventMini>"/>
 
   <class name="PATFinalStateLS" ClassVersion="10">
    <version ClassVersion="10" checksum="3002000688"/>

@@ -235,6 +235,10 @@ def make_ntuple(*legs, **kwargs):
         # Get a PSet describing the branches for this leg
         leg_branches = _leg_templates[leg].replace(object=label)
 
+        # if miniAOD, remove some stuff
+        miniAOD = kwargs.get('miniAOD', False)
+        # TODO: need to modify Utilities/python/cfgtools.py to get a remove function
+
         # Add to the total config
         ntuple_config = PSet(
             ntuple_config,
@@ -296,8 +300,6 @@ def make_ntuple(*legs, **kwargs):
         )
 
 
-    miniAOD = kwargs.get('miniAOD', False)
-    eventInputSrc = "patFinalStateEventProducerMiniAOD" if miniAOD else "patFinalStateEventProducer"
 
     # Now build our analyzer EDFilter skeleton
     output = cms.EDFilter(
@@ -305,7 +307,7 @@ def make_ntuple(*legs, **kwargs):
         weights=cms.vstring(),
         # input final state collection.
         src=cms.InputTag( analyzerSrc ),
-        evtSrc=cms.InputTag(eventInputSrc),
+        evtSrc=cms.InputTag("patFinalStateEventProducer"),
         # counter of events before any selections
         skimCounter=cms.InputTag("eventCount", "", "TUPLE"),
         analysis=cms.PSet(

@@ -3,7 +3,6 @@
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMini.h"
 #include "DataFormats/Candidate/interface/CandidateFwd.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 
@@ -12,7 +11,7 @@ class PATMultiCandFinalState : public PATFinalState {
     PATMultiCandFinalState();
 
     PATMultiCandFinalState(const std::vector<reco::CandidatePtr>& cands,
-        const edm::Ptr<PATFinalStateEventMini>& evt);
+        const edm::Ptr<PATFinalStateEvent>& evt);
 
     virtual PATMultiCandFinalState* clone() const;
 

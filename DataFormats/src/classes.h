@@ -7,7 +7,6 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalStateFwd.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
-#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventMini.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLS.h"
 
@@ -50,7 +49,6 @@ namespace {
     // base classes
     FWD_ABS_CLASSDECL(PATFinalState)
     FWD_CLASSDECL(PATFinalStateEvent)
-    FWD_CLASSDECL(PATFinalStateEventMini)
     FWD_CLASSDECL(PATFinalStateLS)
 
     // n-cand state
