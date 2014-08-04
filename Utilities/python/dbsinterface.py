@@ -30,7 +30,7 @@ def get_das_info(query):
     DBS one. '''
     
     das_command = [
-        'das.py',
+        'das_client.py',
         '--query=%s' % query,
         '--limit=0' 
         ]
