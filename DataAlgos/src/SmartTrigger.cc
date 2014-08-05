@@ -13,6 +13,9 @@
 
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 #include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"
+#include <DataFormats/PatCandidates/interface/PackedTriggerPrescales.h>
+#include <FWCore/Common/interface/TriggerNames.h>
+#include "DataFormats/PatCandidates/interface/TriggerPath.h"
 
 #include "DataFormats/Provenance/interface/EventID.h"
 
@@ -120,21 +123,16 @@ std::vector<const pat::TriggerPath*> matchingTriggerPaths(
   return output;
 }
 
-std::vector<const pat::TriggerPath*> matchingTriggerPaths(
-    const std::vector<pat::TriggerObjectStandAlone>& trgObject,
+std::vector<int> matchingTriggerPaths(
     const edm::TriggerNames& names,
+    const edm::TriggerResults trgResults,
     const std::string& pattern, bool ez) {
-  std::vector<const pat::TriggerPath*> output;
+  std::vector<int> output;
   try {
     boost::regex matcher(ez ? edm::glob2reg(pattern) : pattern);
-    for (pat::TriggerObjectStandAlone obj : trgObject) {
-      obj.unpackPathNames(names);
-      std::vector<std::string> pathNamesAll  = obj.pathNames(false);
-      for (size_t i = 0; i < pathNamesAll.size(); ++i) {
-        if (boost::regex_match(pathNamesAll.at(i), matcher)) {
-          pat::TriggerPath* path = new pat::TriggerPath(pathNamesAll.at(i));
-          output.push_back(path);
-        }
+    for (unsigned int i=0, n=trgResults.size(); i<n; ++i) {
+      if (boost::regex_match(names.triggerName(i), matcher)) {
+        output.push_back(i);
       }
     }
   } catch (std::exception& e) {
@@ -250,7 +248,8 @@ SmartTriggerResult smartTrigger(const std::string& trgs,
 }
 
 SmartTriggerResult smartTrigger(const std::string& trgs,
-    const std::vector<pat::TriggerObjectStandAlone>& trgObject, const edm::TriggerNames& names, bool ez) {
+    const edm::TriggerNames& names, const pat::PackedTriggerPrescales& trgPrescales, 
+    const edm::TriggerResults& trgResults, bool ez) {
   // Tokenize the trigger groups
   vstring groups = getGroups(trgs);
   VVInt prescales;
@@ -268,24 +267,20 @@ SmartTriggerResult smartTrigger(const std::string& trgs,
       // Get all the triggers that match this path pattern.  There should be
       // only one.  The point of the smart trigger is that each path type is a
       // separate group.
-      std::vector<const pat::TriggerPath*> matching =
-        matchingTriggerPaths(trgObject, names, path, ez);
+      std::vector<int> matching = matchingTriggerPaths(names, trgResults, path, ez);
       if (matching.size() > 1) {
         std::stringstream err;
         err << "Error: more than one"
           << " paths match pattern: " << path << ", taking first!" << std::endl
           << " Matches: " << std::endl;
         for (size_t i = 0; i < matching.size(); ++i) {
-          err << i << ": " << matching[i]->name() << std::endl;
+          err << i << ": " << names.triggerName(matching[i]) << std::endl;
         }
         edm::LogError("SmartTriggerMultiMatchHLT") << err.str();
       }
-      const pat::TriggerPath* trgPath = matching.size() ? matching[0] : NULL;
-      int thePrescale = (trgPath != NULL) ? trgPath->prescale() : 0;
-      int theResult = (trgPath != NULL) ? trgPath->wasAccept() : -1;
-      realpaths.push_back((trgPath != NULL) ? trgPath->name() : "error");
-      groupPrescale.push_back(thePrescale);
-      groupResult.push_back(theResult);
+      realpaths.push_back(matching.size() ? names.triggerName(matching[0]) : "error");
+      groupPrescale.push_back(matching.size() ? trgPrescales.getPrescaleForIndex(matching[0]) : 0);
+      groupResult.push_back(matching.size() ? trgResults.accept(matching[0]) : -1);
     }
     pathGroups.push_back(realpaths);
     prescales.push_back(groupPrescale);
@@ -317,7 +312,8 @@ const SmartTriggerResult& smartTrigger(const std::string& trgs,
 }
 
 const SmartTriggerResult& smartTrigger(const std::string& trgs,
-    const std::vector<pat::TriggerObjectStandAlone>& trgObject, const edm::TriggerNames& names, const edm::EventID& evt, bool ez) {
+    const edm::TriggerNames& names, const pat::PackedTriggerPrescales& trgPrescales, 
+    const edm::TriggerResults& trgResults, const edm::EventID& evt, bool ez) {
   // Check if we have cached the result.
   if (evt != lastTrigEvent) {
     // new event, clear the cache
@@ -331,6 +327,6 @@ const SmartTriggerResult& smartTrigger(const std::string& trgs,
 
   // If we are here, we just computed the new value bu need to update the cache
   lastTrigEvent = evt;
-  cache[trgs] = smartTrigger(trgs, trgObject, names, ez);
+  cache[trgs] = smartTrigger(trgs, names, trgPrescales, trgResults, ez);
   return cache[trgs];
 }

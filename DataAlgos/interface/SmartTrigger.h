@@ -62,7 +62,9 @@ SmartTriggerResult smartTrigger(
 
 /// Get the result for a single event using the pat::TriggerObjectStandAlone
 SmartTriggerResult smartTrigger(
-    const std::string& trgs, const std::vector<pat::TriggerObjectStandAlone>& trgObject, const edm::TriggerNames& names,
+    const std::string& trgs, const edm::TriggerNames& names, 
+    const pat::PackedTriggerPrescales& trgPrescales,
+    const edm::TriggerResults& trgResults,
     bool ez=false);
 
 /// This version caches the results across events to speed things up.
@@ -72,7 +74,9 @@ const SmartTriggerResult& smartTrigger(
 
 /// Get the result for a single event using the pat::TriggerObjectStandAlone
 const SmartTriggerResult& smartTrigger(
-    const std::string& trgs, const std::vector<pat::TriggerObjectStandAlone>& trgObject, const edm::TriggerNames& names,
+    const std::string& trgs, const edm::TriggerNames& names,
+    const pat::PackedTriggerPrescales& trgPrescales,
+    const edm::TriggerResults& trgResults,
     const edm::EventID& event, bool ez=false);
 
 /// Get the list of trigger paths matching a given pattern.  If [ez] is
@@ -81,8 +85,10 @@ std::vector<const pat::TriggerPath*> matchingTriggerPaths(
     const pat::TriggerEvent& result,
     const std::string& pattern, bool ez=false);
 
-std::vector<const pat::TriggerPath*> matchingTriggerPaths(
-    const std::vector<pat::TriggerObjectStandAlone>& trgObject, const edm::TriggerNames& names,
+std::vector<int> matchingTriggerPaths(
+    const edm::TriggerNames& names,
+    const pat::PackedTriggerPrescales& trgPrescales,
+    const edm::TriggerResults& trgResults,
     const std::string& pattern, bool ez=false);
 
 /// Get the list of trigger filters matching a given pattern.

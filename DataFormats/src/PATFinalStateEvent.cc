@@ -64,6 +64,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::RefProd<std::vector<pat::TriggerObjectStandAlone>>& triggerObjects,
     const edm::TriggerNames& names,
     const pat::PackedTriggerPrescales& triggerPrescale,
+    const edm::TriggerResults& triggerResults,
     const std::vector<PileupSummaryInfo>& puInfo,
     const lhef::HEPEUP& hepeup,
     const reco::GenParticleRefProd& genParticles,
@@ -89,6 +90,7 @@ PATFinalStateEvent::PATFinalStateEvent(
   triggerObjects_(triggerObjects),
   names_(names),
   triggerPrescale_(triggerPrescale),
+  triggerResults_(triggerResults),
   pv_(pv),
   recoVertices_(recoVertices),
   met_(met),
@@ -150,6 +152,9 @@ const edm::TriggerNames& PATFinalStateEvent::names() const {
 const pat::PackedTriggerPrescales& PATFinalStateEvent::trigPrescale() const {
   return triggerPrescale_; }
 
+const edm::TriggerResults& PATFinalStateEvent::trigResults() const {
+  return triggerResults_; }
+
 const edm::Ptr<pat::MET>& PATFinalStateEvent::met() const {
   return met_;
 }
@@ -193,19 +198,19 @@ const edm::EventID& PATFinalStateEvent::evtId() const {
 
 // Superseded by the smart trigger
 int PATFinalStateEvent::hltResult(const std::string& pattern) const {
-  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, trigStandAlone(), names(), evtID_) : 
+  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, names(), trigPrescale(), trigResults(), evtID_) : 
     smartTrigger(pattern, trig(), evtID_);
   return result.passed;
 }
 
 int PATFinalStateEvent::hltPrescale(const std::string& pattern) const {
-  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, trigStandAlone(), names(), evtID_) : 
+  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, names(), trigPrescale(), trigResults(), evtID_) : 
     smartTrigger(pattern, trig(), evtID_);
   return result.prescale;
 }
 
 int PATFinalStateEvent::hltGroup(const std::string& pattern) const {
-  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, trigStandAlone(), names(), evtID_) : 
+  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, names(), trigPrescale(), trigResults(), evtID_) : 
     smartTrigger(pattern, trig(), evtID_);
   return result.group;
 }
@@ -224,7 +229,7 @@ int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
 int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
   // std::cout << "matcher: " << pattern << std::endl;
-  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, trigStandAlone(), names(), evtID_) : 
+  SmartTriggerResult result = miniAOD_ ? smartTrigger(pattern, names(), trigPrescale(), trigResults(), evtID_) : 
     smartTrigger(pattern, trig(), evtID_);
   //std::cout << " result: " << result.group << " " << result.prescale << " " << result.passed << std::endl;
   // Loop over all the paths that fired and see if any matched this object.

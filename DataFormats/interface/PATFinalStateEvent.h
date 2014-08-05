@@ -65,6 +65,7 @@ class PATFinalStateEvent {
         const edm::RefProd<std::vector<pat::TriggerObjectStandAlone> >& triggerObjects,
         const edm::TriggerNames& names,
         const pat::PackedTriggerPrescales& triggerPrescale,
+        const edm::TriggerResults& triggerResults,
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
         const reco::GenParticleRefProd& genParticles,
@@ -104,6 +105,7 @@ class PATFinalStateEvent {
     const std::vector<pat::TriggerObjectStandAlone>& trigStandAlone() const;
     const edm::TriggerNames& names() const;
     const pat::PackedTriggerPrescales& trigPrescale() const;
+    const edm::TriggerResults& trigResults() const;
 
     /*  These methods will be deprecated! */
     /// Get PFMET
@@ -207,6 +209,7 @@ class PATFinalStateEvent {
     edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > triggerObjects_;
     edm::TriggerNames names_;
     pat::PackedTriggerPrescales triggerPrescale_;
+    edm::TriggerResults triggerResults_;
     edm::Ptr<reco::Vertex> pv_;
     edm::PtrVector<reco::Vertex> recoVertices_;
     edm::Ptr<pat::MET> met_;

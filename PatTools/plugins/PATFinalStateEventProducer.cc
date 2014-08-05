@@ -341,14 +341,14 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   if (miniAOD_) {
     pat::TriggerEvent* trg = new pat::TriggerEvent();
     theEvent = new PATFinalStateEvent(miniAOD_, *rho, pvPtr, verticesPtr, metPtr, metCovariance,
-      *trg, trigStandAlone, names, *trigPrescale,  myPuInfo, genInfo, genParticlesRef, 
+      *trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
       evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
       electronRefProd, muonRefProd, tauRefProd, jetRefProd,
       phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
   }
   else {
     theEvent = new PATFinalStateEvent(miniAOD_, *rho, pvPtr, verticesPtr, metPtr, metCovariance,
-      *trig, trigStandAlone, names, *trigPrescale,  myPuInfo, genInfo, genParticlesRef, 
+      *trig, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
       evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
       electronRefProd, muonRefProd, tauRefProd, jetRefProd,
       phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
