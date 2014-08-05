@@ -53,8 +53,11 @@ on the 2012-03-05-EWKPatTuple::
 miniAOD Example
 ---------------
 
-A simple test job that can be run over the grid using xrootd.
+A test batch submission job that can be run over condor using xrootd. (The MiniAOD samples are not at UW).
 
-   cmsRun make_ntuples_cfg.py channels="em,mt" maxEvents=200 useMiniAOD=1 isMC=1 miniAODScenario='V6' inputFiles=/store/mc/Spring14miniaod/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/MINIAODSIM/PU_S14_POSTLS170_V6-v1/00000/00080927-67FD-E311-B049-0025901D4854.root
+   submit_job.py MINIAOD_BATCH_SUBMISSION_TEST FinalStateAnalysis/NtupleTools/test/make_ntuples_cfg.py channels="zz" useMiniAOD=1 isMC=1 rerunFSA=1 miniAODScenario='V7' --tuple-dbs=FinalStateAnalysis/MetaData/tuples/MiniAOD-13TeV.json --xrootd --input-files-per-job=1 --samples "TTjets" "ggHZZ" "VBFHZZ" "Zjets_M50" > do_MINIAOD_TEST.sh
+   bash < do_MINIAOD_TEST.sh
+
+
 
 
