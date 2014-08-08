@@ -33,5 +33,9 @@ elif cmssw_major_version() == 5 and cmssw_minor_version() >= 3 :
     # Always prefer the 53X version
     data_name_map.update(data8TeVNew.data_name_map)
     datadefs.update(data8TeVNew.datadefs)
+elif cmssw_major_version() == 7:
+    import data13TeV
+    data_name_map = data13TeV.data_name_map
+    datadefs = data13TeV.datadefs
 else:
     raise ValueError("I can't figure out which release to use!")

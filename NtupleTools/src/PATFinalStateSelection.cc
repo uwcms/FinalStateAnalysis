@@ -4,6 +4,7 @@
 #include "FinalStateAnalysis/Utilities/interface/CutFlow.h"
 #include "FWCore/Utilities/interface/RegexMatch.h"
 
+
 namespace {
   class CandPtSorter {
     public:
@@ -70,7 +71,6 @@ PATFinalStateSelection::PATFinalStateSelection(
     }
 
     if (isIgnored) {
-      std::cout << "Ignoring cut: " << cutName << std::endl;
       set(cutIndex, false);
       cuts_[i].setIgnore(true);
       assert(ignoreCut(cutIndex));
@@ -105,7 +105,6 @@ PATFinalStateSelection::~PATFinalStateSelection(){}
 
 bool PATFinalStateSelection::operator()(const PATFinalStatePtrs& input,
     double weight) {
-
   // Copy the collection to one that we can modify.
   PATFinalStatePtrs passingLocal(input);
 

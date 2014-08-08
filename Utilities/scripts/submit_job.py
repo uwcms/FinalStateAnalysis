@@ -20,6 +20,7 @@ import logging
 import os
 import sys
 from FinalStateAnalysis.MetaData.datadefs import datadefs
+from FinalStateAnalysis.Utilities.dbsinterface import get_das_info
 
 log = logging.getLogger("submit_job")
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
@@ -45,6 +46,11 @@ if __name__ == "__main__":
         '--apply-cmsRun-lumimask', dest='apply_cms_lumimask',
         action='store_true', help = 'If specified, pass the appropriate '
         'lumiMask=XXX.json and firstRun etc to cmsRun'
+    )
+
+    cmsrun_group.add_argument(
+        '--xrootd', action='store_true', required=False, default=False,
+        help='fetch files from remote tiers using xrootd'
     )
 
     input_group = parser.add_mutually_exclusive_group(required=True)
@@ -186,13 +192,26 @@ if __name__ == "__main__":
                               " for sample %s, matches: [%s]",
                               sample, ", ".join(matching_datasets))
                     continue
-                datasetpath = matching_datasets[0]
+                datasetpath = tuple_info[matching_datasets[0]]
 
-                input_commands.append(
-                    '--input-dbs-path=%s' % datasetpath)
-                input_commands.append(
-                    '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet'
-                )
+                if args.xrootd:
+                    files = get_das_info('file dataset=%s' % datasetpath)
+                    mkdir_cmd = "mkdir -p %s" % (dag_dir+"inputs")
+                    os.system(mkdir_cmd)
+                    input_txt = '%s_inputfiles.txt' % matching_datasets[0]
+                    input_txt_path = os.path.join(dag_dir+"inputs", input_txt)
+                    with open(input_txt_path, 'w') as txt:
+                        txt.write('\n'.join(files))
+                    input_commands.extend([
+                        '--input-file-list=%s' % input_txt_path,
+                        '--assume-input-files-exist', 
+                        '--input-dir=root://xrootd.unl.edu/',
+                    ])
+                else:
+                    input_commands.append(
+                        '--input-dbs-path=%s' % datasetpath)
+                    input_commands.append(
+                        '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet')
         elif args.tupledirlist:
             with open(args.tupledirlist) as tuple_file:
                 # Parse info about PAT tuples

@@ -39,9 +39,13 @@ namespace pat {
   class TriggerEvent;
   class TriggerPath;
   class TriggerFilter;
+  class TriggerObjectStandAlone;
+  class PackedTriggerPrescales;
 }
 namespace edm {
   class EventID;
+  class TriggerResults;
+  class TriggerNames;
 }
 
 struct SmartTriggerResult {
@@ -56,9 +60,23 @@ SmartTriggerResult smartTrigger(
     const std::string& trgs, const pat::TriggerEvent& trgResult,
     bool ez=false);
 
+/// Get the result for a single event using the pat::TriggerObjectStandAlone
+SmartTriggerResult smartTrigger(
+    const std::string& trgs, const edm::TriggerNames& names, 
+    const pat::PackedTriggerPrescales& trgPrescales,
+    const edm::TriggerResults& trgResults,
+    bool ez=false);
+
 /// This version caches the results across events to speed things up.
 const SmartTriggerResult& smartTrigger(
     const std::string& trgs, const pat::TriggerEvent& trgResult,
+    const edm::EventID& event, bool ez=false);
+
+/// Get the result for a single event using the pat::TriggerObjectStandAlone
+const SmartTriggerResult& smartTrigger(
+    const std::string& trgs, const edm::TriggerNames& names,
+    const pat::PackedTriggerPrescales& trgPrescales,
+    const edm::TriggerResults& trgResults,
     const edm::EventID& event, bool ez=false);
 
 /// Get the list of trigger paths matching a given pattern.  If [ez] is
@@ -67,9 +85,19 @@ std::vector<const pat::TriggerPath*> matchingTriggerPaths(
     const pat::TriggerEvent& result,
     const std::string& pattern, bool ez=false);
 
+std::vector<int> matchingTriggerPaths(
+    const edm::TriggerNames& names,
+    const pat::PackedTriggerPrescales& trgPrescales,
+    const edm::TriggerResults& trgResults,
+    const std::string& pattern, bool ez=false);
+
 /// Get the list of trigger filters matching a given pattern.
 std::vector<const pat::TriggerFilter*> matchingTriggerFilters(
     const pat::TriggerEvent& result,
+    const std::string& pattern, bool ez=false);
+
+std::vector<const pat::TriggerFilter*> matchingTriggerFilters(
+    const std::vector<pat::TriggerObjectStandAlone>& trgObject, const edm::TriggerNames& names,
     const std::string& pattern, bool ez=false);
 
 /// Expose decision making method for testing.  Not for general use.

@@ -235,6 +235,10 @@ def make_ntuple(*legs, **kwargs):
         # Get a PSet describing the branches for this leg
         leg_branches = _leg_templates[leg].replace(object=label)
 
+        # if miniAOD, remove some stuff
+        miniAOD = kwargs.get('miniAOD', False)
+        # TODO: need to modify Utilities/python/cfgtools.py to get a remove function
+
         # Add to the total config
         ntuple_config = PSet(
             ntuple_config,
@@ -294,6 +298,7 @@ def make_ntuple(*legs, **kwargs):
                 ntuple_config,
                 templates.topology.zzfsr
         )
+
 
 
     # Now build our analyzer EDFilter skeleton
