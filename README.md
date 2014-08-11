@@ -1,5 +1,5 @@
-FinalStateAnalysis Package Description
-======================================
+FinalStateAnalysis Package Description (miniAOD_dev version)
+============================================================
 
 The Final State Analysis (FSA) package is a CMSSW analysis framework.  
 The package contains a complete implementatation to build a POG-approved 
@@ -26,7 +26,7 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
 Installation
 ------------
 
-Current CMSSW versions: ``5_3_14``.
+Current CMSSW versions: ``7_0_6_patch1, 7_0_7_patch1``.
 The installation instructions are the same for both.  
 
 Get a supported CMSSW release area::
@@ -43,27 +43,13 @@ Get a supported CMSSW release area::
 Checkout the FinalStateAnalysis repository::
 
 ```bash
-  git clone --recursive https://github.com/uwcms/FinalStateAnalysis.git
+  git clone --recursive -b miniAOD_dev https://github.com/uwcms/FinalStateAnalysis.git
   cd FinalStateAnalysis
 ```
 
-This will checkout `master` branch with the lastest and greatest version of the code.
-Use this branch for the production of PAT-tuples.
-You might also want the Summer 2013 compatible branch, if so you should additionally run:
-
-```bash
-git checkout -b summer2013 origin/summer2013
-```
-
-For development, use the `53X_SLC6_Dev` branch,
-
-```bash
-git checkout -b 53X_SLC6_Dev origin/53X_SLC6_Dev
-```
-
-and then proceed as normal.
-
 Checkout the needed CMSSW tags:
+
+N.B. taus are currently (11 Aug. 2014) broken, so the tau POG lines need to be commented out of `recipe_13TeV.sh`
 
 ```bash
   cd recipe/
