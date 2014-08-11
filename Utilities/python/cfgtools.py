@@ -223,6 +223,25 @@ def replace(cfg_object, **replacements):
             output += replace(subpset, **replacements)
         return output
 
+def remove(cfg_object, *removals):
+    ''' helper function for PSet.remove(*removals) '''
+    output = cfg_object.clone()
+    for par in removals:
+        if hasattr(output, par):
+            delattr(output, par)
+            
+    # Any members that are PSets, etc., also need the items removed
+    for par in output.parameters_().keys():
+        if isinstance(cfg_object, cms._Parameterizable):
+            # Do this so we get objects, not copies
+            value = getattr(output, par)
+            # Recurse down
+            new_value = remove(value, *removals)
+            setattr(output, par, new_value)
+
+    return output        
+
+
 class PSet(cms.PSet):
     def __init__(self, *args, **kwargs):
         ''' Convenient version of PSet constructor
@@ -306,6 +325,24 @@ class PSet(cms.PSet):
         clone = self.clone()
         format(clone, **replacements)
         return clone
+
+    def remove(self, *removals):
+        ''' 
+        Remove item from PSet, return modified copy.
+
+        Will move recursively down chains of PSets, but if a 
+            PSet-in-a-PSet has a name in removals, the whole
+            sub-PSet is removed
+
+        >>> mytpset = PSet(
+        ...     muonPt = '{muon}.pt'
+        ... )
+        >>> removed = mytpset.remove('muonPt')
+        >>> hasattr(removed, 'muonPt')
+        False
+        '''
+        return remove(self, *removals)
+        
 
 class GetInfoVisotor(object):
     def __init__(self):
