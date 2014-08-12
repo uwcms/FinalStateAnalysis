@@ -120,6 +120,8 @@ cms.string('{object}.pt')
 '''
 
 import FWCore.ParameterSet.Config as cms
+# Need regular expressions for removal of non-miniAOD branches
+import re
 
 class SequenceChainer(object):
     def __init__(self, input_src, src_names):
@@ -223,21 +225,18 @@ def replace(cfg_object, **replacements):
             output += replace(subpset, **replacements)
         return output
 
-def remove(cfg_object, *removals):
+def remove(cfg_object, removals):
     ''' helper function for PSet.remove(*removals) '''
+    if not isinstance(cfg_object, cms._Parameterizable):
+        return cfg_object
+
     output = cfg_object.clone()
-    for par in removals:
-        if hasattr(output, par):
-            delattr(output, par)
-            
-    # Any members that are PSets, etc., also need the items removed
-    for par in output.parameters_().keys():
-        if isinstance(cfg_object, cms._Parameterizable):
-            # Do this so we get objects, not copies
-            value = getattr(output, par)
-            # Recurse down
-            new_value = remove(value, *removals)
-            setattr(output, par, new_value)
+
+    for key in output.parameters_().keys():
+        if removals.match(key):
+            delattr(output, key)
+            continue
+        setattr(output, key, remove(getattr(output, key), removals))
 
     return output        
 
@@ -325,8 +324,8 @@ class PSet(cms.PSet):
         clone = self.clone()
         format(clone, **replacements)
         return clone
-
-    def remove(self, *removals):
+    
+    def remove(self, removals):
         ''' 
         Remove item from PSet, return modified copy.
 
@@ -334,16 +333,40 @@ class PSet(cms.PSet):
             PSet-in-a-PSet has a name in removals, the whole
             sub-PSet is removed
 
-        >>> mytpset = PSet(
-        ...     muonPt = '{muon}.pt'
-        ... )
-        >>> removed = mytpset.remove('muonPt')
-        >>> hasattr(removed, 'muonPt')
-        False
-        '''
-        return remove(self, *removals)
-        
+        removals should be a regular expression that catches all the items to be removed, 
+            e.g. re.compile("(*MVAMet*)|([emtgj][1-9]?MtTo[Pp][fF]Met)"
 
+        >>> mytpset = PSet(
+        ...     foo = 'foo'
+        ...     fob = 'fob'
+        ...     bar = 'bar'
+        ...     ebar = 'ebar'
+        ...     tbar = 'tbar'
+        ...     bbar = 'bbar'
+        ... )
+        >>> toremove = re.compile("(foo)|([emt]?bar)")
+        >>> removed = mytpset.remove(toremove)
+        >>> hasattr(removed, 'foo')
+        False
+        >>> hasattr(removed, 'fob')
+        True
+        >> hasattr(removed, 'bar')
+        False
+        >> hasattr(removed, 'ebar')
+        False
+        >> hasattr(removed, 'tbar')
+        False
+        >> hasattr(removed, 'bbar')
+        True
+        '''
+        output = self.clone()
+        for key in output.parameters_().keys():
+            if removals.match(key):
+                delattr(output, key)
+                continue
+            setattr(output, key, remove(getattr(output, key), removals))
+        return output
+        
 class GetInfoVisotor(object):
     def __init__(self):
         self.info = []
