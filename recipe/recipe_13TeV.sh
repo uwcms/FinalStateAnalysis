@@ -39,13 +39,13 @@ then
   git checkout v1-2-6
   pushd $CMSSW_BASE/src
 
-  echo "Checking out Tau POG recipe" # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePFTauID#Tau_ID_2014_preparation_for_Run
-  if [ "$MINOR_VERSION" -eq "0" ]; then
-    git cms-merge-topic -u cms-tau-pog:CMSSW_7_0_X_taus  
-  fi
-  if [ "$MINOR_VERSION" -eq "1" ]; then
-    git cms-merge-topic -u cms-tau-pog:CMSSW_7_1_X_taus  
-  fi  
+#   echo "Checking out Tau POG recipe" # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePFTauID#Tau_ID_2014_preparation_for_Run
+#   if [ "$MINOR_VERSION" -eq "0" ]; then
+#     git cms-merge-topic -u cms-tau-pog:CMSSW_7_0_X_taus  
+#   fi
+#   if [ "$MINOR_VERSION" -eq "1" ]; then
+#     git cms-merge-topic -u cms-tau-pog:CMSSW_7_1_X_taus  
+#   fi  
 
   echo "Checking out EGamma POG recipe for electron corrections"
   #Following Volker's instructions

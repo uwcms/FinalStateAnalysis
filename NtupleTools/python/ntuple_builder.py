@@ -9,6 +9,8 @@ Author: Evan K. Friis, UW Madison
 import itertools
 import FWCore.ParameterSet.Config as cms
 from FinalStateAnalysis.Utilities.cfgtools import format, PSet
+# Need regular expressions to get rid of non-miniAOD branches
+import re
 
 # Import the templates used to make the branches
 import FinalStateAnalysis.NtupleTools.templates as templates
@@ -194,6 +196,8 @@ def make_ntuple(*legs, **kwargs):
 	'j': 0,
     }
 
+    useMiniAOD = kwargs.get('useMiniAOD',False)
+
     ntuple_config = _common_template.clone()
     if kwargs.get('runTauSpinner', False):
         for parName in templates.event.tauSpinner.parameterNames_():
@@ -235,9 +239,6 @@ def make_ntuple(*legs, **kwargs):
         # Get a PSet describing the branches for this leg
         leg_branches = _leg_templates[leg].replace(object=label)
 
-        # if miniAOD, remove some stuff
-        miniAOD = kwargs.get('miniAOD', False)
-        # TODO: need to modify Utilities/python/cfgtools.py to get a remove function
 
         # Add to the total config
         ntuple_config = PSet(
@@ -246,6 +247,7 @@ def make_ntuple(*legs, **kwargs):
         )
     #pdb.set_trace()
 
+    
     # Now we need to add all the information about the pairs
     for leg_a, leg_b in itertools.combinations(object_labels, 2):
         
@@ -299,6 +301,26 @@ def make_ntuple(*legs, **kwargs):
                 templates.topology.zzfsr
         )
 
+    if useMiniAOD:
+        # Some feature are not included in miniAOD or are currently broken. 
+        # Remove them from the ntuples to prevent crashes.
+        #!!! Take items off of this list as we unbreak them. !!!#
+        notInMiniAOD = [
+            "tauVetoPt20VLooseHPS(NewDM)?Vtx", # cleaning.py
+            "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?",
+            "[emtgj][1-9]?MVA(Non)?Trig(IDISO)?(PUSUB)?", # electrons.py
+            "[emtgj][1-9]?MVAIDH2TauWP",
+            "mva_?[Mm][Ee][Tt]((Et)|(Phi))", # event.py
+            "(type1_)?pfMet(_[mtju]es_)?((Et)|(Phi))",
+            "[emtgj][1-9]?DecayFindingOldDMs", # taus.py
+            "[emtgj][1-9]?((V?Loose)|(Medium)|(Tight))Iso",
+            "[emtgj][1-9]?MtTo(([pP][fF])|(MVA))?M[eE][tT](_((Ty1)|([mtju]es)))?", # topology.py
+            "[emtgj][1-9]?_[emtgj][1-9]?_ToMETDPhi_Ty1",
+            ]
+
+        allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")
+        
+        ntuple_config = ntuple_config.remove(allRemovals)
 
 
     # Now build our analyzer EDFilter skeleton
@@ -494,7 +516,6 @@ def make_ntuple(*legs, **kwargs):
                     cut=cms.string('orderedInPt(%s, %s)' %
                                    (leg3_idx_label, leg4_idx_label))
                 ))
-
 
     # Now apply our formatting operations
     format(output, **format_labels)

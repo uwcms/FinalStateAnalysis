@@ -53,13 +53,13 @@ id = PSet(
     #DM
     objectDecayFinding       = '{object}.tauID("decayModeFinding")',
     objectDecayFindingNewDMs = '{object}.tauID("decayModeFindingNewDMs")',
-    #objectDecayFindingOldDMs = '{object}.tauID("decayModeFindingOldDMs")',
+    objectDecayFindingOldDMs = '{object}.tauID("decayModeFindingOldDMs")',
 
     #ISO DB
-    #objectVLooseIso = '{object}.tauID("byVLooseCombinedIsolationDeltaBetaCorr")',
-    #objectLooseIso  = '{object}.tauID("byLooseCombinedIsolationDeltaBetaCorr")',
-    #objectMediumIso = '{object}.tauID("byMediumCombinedIsolationDeltaBetaCorr")',
-    #objectTightIso  = '{object}.tauID("byTightCombinedIsolationDeltaBetaCorr")',
+    objectVLooseIso = '{object}.tauID("byVLooseCombinedIsolationDeltaBetaCorr")',
+    objectLooseIso  = '{object}.tauID("byLooseCombinedIsolationDeltaBetaCorr")',
+    objectMediumIso = '{object}.tauID("byMediumCombinedIsolationDeltaBetaCorr")',
+    objectTightIso  = '{object}.tauID("byTightCombinedIsolationDeltaBetaCorr")',
 
     #ISO DB 3Hits
     objectLooseIso3Hits  = '{object}.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")',
