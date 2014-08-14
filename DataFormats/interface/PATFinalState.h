@@ -42,7 +42,8 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     PATFinalState(
         int charge, const reco::Candidate::LorentzVector& p4,
-        const edm::Ptr<PATFinalStateEvent>& evt);
+        const edm::Ptr<PATFinalStateEvent>& evt
+		  );
 
     const edm::Ptr<pat::MET>& met() const;
     const edm::Ptr<reco::Vertex>& vertexObject() const;
@@ -292,9 +293,11 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 				       const std::string& key) const;
     const float jetVariables(size_t i, const std::string& key) const;
 
-
+    double twoParticleDeltaPhiToMEt(const int i, const int j, const std::string& metTag) const;
+    
   private:
     edm::Ptr<PATFinalStateEvent> event_;
+    //    const bool useMiniAOD_;
 };
 
 #endif /* end of include guard: FinalStateAnalysis_DataFormats_PATFinalState_h */

@@ -307,15 +307,16 @@ def make_ntuple(*legs, **kwargs):
         #!!! Take items off of this list as we unbreak them. !!!#
         notInMiniAOD = [
             "tauVetoPt20VLooseHPS(NewDM)?Vtx", # cleaning.py
-            "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?",
+            "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?", # cleaning.py and electrons.py
             "[emtgj][1-9]?MVA(Non)?Trig(IDISO)?(PUSUB)?", # electrons.py
             "[emtgj][1-9]?MVAIDH2TauWP",
-            "mva_?[Mm][Ee][Tt]((Et)|(Phi))", # event.py
-            "(type1_)?pfMet(_[mtju]es_)?((Et)|(Phi))",
+#            "((mva_)|(type1_))?(pf)?[mM][eE][tT](_[mtju]es_)?((Et)|(Phi))", # event.py
+            "mva_met((Et)|(Phi))",
             "[emtgj][1-9]?DecayFindingOldDMs", # taus.py
             "[emtgj][1-9]?((V?Loose)|(Medium)|(Tight))Iso",
-            "[emtgj][1-9]?MtTo(([pP][fF])|(MVA))?M[eE][tT](_((Ty1)|([mtju]es)))?", # topology.py
-            "[emtgj][1-9]?_[emtgj][1-9]?_ToMETDPhi_Ty1",
+#            "[emtgj][1-9]?MtTo(([pP][fF])|(MVA))?M[eE][tT](_((Ty1)|([mtju]es)))?", # topology.py
+            "[emtgj][1-9]?MtToMVAMET", 
+#            "[emtgj][1-9]?_[emtgj][1-9]?_ToMETDPhi_Ty1",
             ]
 
         allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")

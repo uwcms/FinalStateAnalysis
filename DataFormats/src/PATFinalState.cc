@@ -20,6 +20,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/erase.hpp>
 #include <algorithm>
+#include <iostream>
 #include <sstream>
 #include "TMath.h"
 
@@ -52,12 +53,13 @@ namespace {
 }
 
 // empty constructor
-PATFinalState::PATFinalState():PATLeafCandidate(){}
+PATFinalState::PATFinalState():PATLeafCandidate(){} //,useMiniAOD_(false){}
 
 PATFinalState::PATFinalState(
     int charge, const reco::Candidate::LorentzVector& p4,
-    const edm::Ptr<PATFinalStateEvent>& event):PATLeafCandidate(
-      reco::LeafCandidate(charge, p4)) {
+    const edm::Ptr<PATFinalStateEvent>& event) : PATLeafCandidate(reco::LeafCandidate(charge, p4))//,
+						 //						 useMiniAOD_(event->isMiniAOD())
+{
   event_ = event;
 }
 
@@ -281,7 +283,7 @@ PATFinalState::visP4() const {
 PATFinalState::LorentzVector PATFinalState::totalP4(
     const std::string& tags, const std::string& metSysTag) const {
   reco::Candidate::LorentzVector output = visP4(tags);
-  if (metSysTag != "" && metSysTag != "@") {
+  if (!event_->isMiniAOD() && metSysTag != "" && metSysTag != "@") {
     const reco::CandidatePtr& metUserCand = met()->userCand(metSysTag);
     assert(metUserCand.isNonnull());
     output += metUserCand->p4();
@@ -328,7 +330,16 @@ PATFinalState::SVfit(int i, int j) const {
   toFit.push_back(daughterPtr(i));
   toFit.push_back(daughterPtr(j));
 
-  edm::Ptr<pat::MET> mvaMet = evt()->met("mvamet");
+  edm::Ptr<pat::MET> mvaMet;
+  if(event_->isMiniAOD())
+    {
+      // Turn this back on when miniAOD gains MVA MET
+      std::cout << "MVA MET doesn't exist in miniAOD yet. How did we even get here!?!?!?" << std::endl;
+    }
+  else
+    {
+      mvaMet = evt()->met("mvamet");
+    }
 
   if (mvaMet.isNull()) {
     throw cms::Exception("MissingMVAMet")
@@ -372,13 +383,68 @@ PATFinalState::smallestDeltaR() const {
 double
 PATFinalState::deltaPhiToMEt(int i, const std::string& sysTag,
     const std::string& metTag) const {
-  double metPhi = met()->phi();
-  if (metTag != "") {
-    const reco::CandidatePtr& metUserCand = met()->userCand(metTag);
-    assert(metUserCand.isNonnull());
-    metPhi = metUserCand->phi();
-  }
+  double metPhi;
+  if(metTag != "")
+    {
+      if (event_->isMiniAOD())
+	{
+	  if(metTag == "jes+")
+	    metPhi = met()->shiftedPhi(pat::MET::JetEnUp);
+	  else if(metTag == "ues+")
+	    metPhi = met()->shiftedPhi(pat::MET::UnclusteredEnUp);
+	  else if(metTag == "tes+")
+	    metPhi = met()->shiftedPhi(pat::MET::TauEnUp);
+	  else if(metTag == "mes+")
+	    metPhi = met()->shiftedPhi(pat::MET::MuonEnUp);
+	  else // all miniAOD pfMET is Type 1
+	    metPhi = met()->phi();
+	}
+      else
+	{
+	  const reco::CandidatePtr& metUserCand = met()->userCand(metTag);
+	  assert(metUserCand.isNonnull());
+	  metPhi = metUserCand->phi();
+	}
+    }
+  else
+    metPhi = met()->phi();
+      
   return reco::deltaPhi(daughterUserCandP4(i, sysTag).phi(), metPhi);
+}
+
+double 
+PATFinalState::twoParticleDeltaPhiToMEt(const int i, const int j, const std::string& metTag) const
+{
+  PATFinalStateProxy composite = subcand(i,j);
+  double compositePhi = composite.get()->phi();
+  double metPhi;
+  if(metTag != "")
+    {
+      if(event_->isMiniAOD())
+	{
+	  if(metTag == "jes+")
+	    metPhi = met()->shiftedPhi(pat::MET::JetEnUp);
+	  else if(metTag == "ues+")
+	    metPhi = met()->shiftedPhi(pat::MET::UnclusteredEnUp);
+	  else if(metTag == "tes+")
+	    metPhi = met()->shiftedPhi(pat::MET::TauEnUp);
+	  else if(metTag == "mes+")
+	    metPhi = met()->shiftedPhi(pat::MET::MuonEnUp);
+	  else // all miniAOD pfMET is Type 1
+	    metPhi = met()->phi();
+	}
+      else
+	{
+	  const reco::CandidatePtr& metUserCand = met()->userCand(metTag);
+	  assert(metUserCand.isNonnull());
+	  metPhi = metUserCand->phi();
+	}
+    }
+  else
+    metPhi = met()->phi();
+      
+  return reco::deltaPhi(compositePhi, metPhi);
+      
 }
 
 double
@@ -400,27 +466,40 @@ PATFinalState::mt(int i, int j) const {
 
 double PATFinalState::mtMET(int i, const std::string& tag,
     const std::string& metTag) const {
-  if (metTag != "") {
-    return fshelpers::transverseMass(daughterUserCandP4(i, tag),
-        met()->userCand(metTag)->p4());
-  } else {
-    return fshelpers::transverseMass(daughterUserCandP4(i, tag),
-        met()->p4());
-  }
+  reco::Candidate::LorentzVector metP4;
+  if(event_->isMiniAOD())
+    {
+      if(metTag == "jes+")
+	metP4 = met()->shiftedP4(pat::MET::JetEnUp);
+      else if(metTag == "ues+")
+	metP4 = met()->shiftedP4(pat::MET::UnclusteredEnUp);
+      else if(metTag == "tes+")
+	metP4 = met()->shiftedP4(pat::MET::TauEnUp);
+      else if(metTag == "mes+")
+	metP4 = met()->shiftedP4(pat::MET::MuonEnUp);
+      else // all miniAOD pfMET is Type 1
+	metP4 = met()->p4();
+    }
+  else if (metTag != "") 
+    {
+      metP4 = met()->userCand(metTag)->p4();
+    } 
+  else 
+    {
+      metP4 = met()->p4();
+    }
+  return fshelpers::transverseMass(daughterUserCandP4(i, tag), metP4);
 }
 
 double PATFinalState::mtMET(int i, const std::string& metTag) const {
-  if (metTag != "") {
-    return fshelpers::transverseMass(daughterUserCandP4(i, ""),
-        met()->userCand(metTag)->p4());
-  } else {
-    return fshelpers::transverseMass(daughterUserCandP4(i, ""), met()->p4());
-  }
+  return mtMET(i, "", metTag);
 }
 
 double PATFinalState::mtMET(int i, const std::string& tag,
 			    const std::string& metName, const std::string& metTag, 
 			    const int applyPhiCorr) const {
+  if(event_->isMiniAOD())
+    return mtMET(i, tag, metTag);
   return fshelpers::transverseMass(daughterUserCandP4(i, tag),
 				   evt()->met4vector(metName, metTag, applyPhiCorr));
 }

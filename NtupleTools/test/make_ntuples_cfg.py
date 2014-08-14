@@ -307,7 +307,7 @@ for final_state in expanded_final_states(final_states):
     analyzer = make_ntuple(*final_state, zz_mode=options.zzMode,
                             svFit=options.svFit, dblhMode=options.dblhMode,
                             runTauSpinner=options.runTauSpinner, 
-                            skimCuts=options.skimCuts,miniAOD=options.useMiniAOD)
+                            skimCuts=options.skimCuts,useMiniAOD=options.useMiniAOD)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 
@@ -316,10 +316,19 @@ process.load("FWCore.MessageLogger.MessageLogger_cfi")
 
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
 process.MessageLogger.categories.append('FSAEventMissingProduct')
+process.MessageLogger.categories.append('UndefinedPreselectionInfo')
+process.MessageLogger.categories.append('GsfElectronAlgo')
 
 # Don't go nuts if there are a lot of missing products.
 process.MessageLogger.cerr.FSAEventMissingProduct = cms.untracked.PSet(
     limit=cms.untracked.int32(10)
+)
+# process.MessageLogger.suppresssWarning = cms.untracked.vstring("GsfElectronAlgo","UndefinedPreselectionInfo")
+process.MessageLogger.cerr.GsfElectronAlgo = cms.untracked.PSet(
+    limit = cms.untracked.int32(0)
+)
+process.MessageLogger.cerr.UndefinedPreselectionInfo = cms.untracked.PSet(
+    limit = cms.untracked.int32(0)
 )
 
 if options.verbose:

@@ -198,7 +198,7 @@ class PATFinalStateEvent {
     float jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const;
 
     // check if is miniAOD
-    bool isMiniAOD() const {return miniAOD_;} 
+    const bool isMiniAOD() const {return miniAOD_;} 
       
   private:
     std::map<std::string, float> weights_;
@@ -233,8 +233,9 @@ class PATFinalStateEvent {
     edm::RefProd<pat::PackedCandidateCollection> packedPFRefProd_;
     reco::TrackRefProd tracks_;
     reco::GsfTrackRefProd gsfTracks_;
-    // List of different MET types
+    // List of different MET types (non used with miniAOD)
     std::map<std::string, edm::Ptr<pat::MET> > mets_;
+
 };
 
 #endif /* end of include guard: PATFINALSTATEEVENT_MB433KP6 */
