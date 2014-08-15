@@ -297,7 +297,6 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     
   private:
     edm::Ptr<PATFinalStateEvent> event_;
-    //    const bool useMiniAOD_;
 };
 
 #endif /* end of include guard: FinalStateAnalysis_DataFormats_PATFinalState_h */

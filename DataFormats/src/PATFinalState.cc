@@ -53,12 +53,11 @@ namespace {
 }
 
 // empty constructor
-PATFinalState::PATFinalState():PATLeafCandidate(){} //,useMiniAOD_(false){}
+PATFinalState::PATFinalState():PATLeafCandidate(){} 
 
 PATFinalState::PATFinalState(
     int charge, const reco::Candidate::LorentzVector& p4,
-    const edm::Ptr<PATFinalStateEvent>& event) : PATLeafCandidate(reco::LeafCandidate(charge, p4))//,
-						 //						 useMiniAOD_(event->isMiniAOD())
+    const edm::Ptr<PATFinalStateEvent>& event) : PATLeafCandidate(reco::LeafCandidate(charge, p4))
 {
   event_ = event;
 }
