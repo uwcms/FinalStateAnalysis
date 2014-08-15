@@ -306,17 +306,20 @@ def make_ntuple(*legs, **kwargs):
         # Remove them from the ntuples to prevent crashes.
         #!!! Take items off of this list as we unbreak them. !!!#
         notInMiniAOD = [
-            "tauVetoPt20VLooseHPS(NewDM)?Vtx", # cleaning.py
-            "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?", # cleaning.py and electrons.py
-            "[emtgj][1-9]?MVA(Non)?Trig(IDISO)?(PUSUB)?", # electrons.py
-            "[emtgj][1-9]?MVAIDH2TauWP",
-#            "((mva_)|(type1_))?(pf)?[mM][eE][tT](_[mtju]es_)?((Et)|(Phi))", # event.py
-            "mva_met((Et)|(Phi))",
-            "[emtgj][1-9]?DecayFindingOldDMs", # taus.py
-            "[emtgj][1-9]?((V?Loose)|(Medium)|(Tight))Iso",
-#            "[emtgj][1-9]?MtTo(([pP][fF])|(MVA))?M[eE][tT](_((Ty1)|([mtju]es)))?", # topology.py
-            "[emtgj][1-9]?MtToMVAMET", 
-#            "[emtgj][1-9]?_[emtgj][1-9]?_ToMETDPhi_Ty1",
+            # cleaning.py
+            "tauVetoPt20VLooseHPS(NewDM)?Vtx", # deprecated, could be changed to a different combined iso discriminator
+            # cleaning.py and electrons.py
+            "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?", # electron MVA not yet in miniAOD (or done at all)
+            # electrons.py
+            "e[1-9]?MVA(Non)?Trig(IDISO)?(PUSUB)?", # electron MVA not yet in miniAOD (or done at all)
+            "e[1-9]?MVAIDH2TauWP",# electron MVA not yet in miniAOD (or done at all)
+            # event.py
+            "mva_met((Et)|(Phi))", # not yet implemented in miniAOD
+            # taus.py
+            "t[1-9]?DecayFindingOldDMs", # deprecated in miniAOD
+            "t[1-9]?((V?Loose)|(Medium)|(Tight))Iso", # deprecated, could be changed to a different combined iso discriminator
+            # topology.py
+            "[emtgj][1-9]?MtToMVAMET", # not yet implemented in miniAOD
             ]
 
         allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")
