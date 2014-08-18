@@ -113,7 +113,8 @@ PATFinalStateEvent::PATFinalStateEvent(
   packedPFRefProd_(packedPFRefProd),
   tracks_(tracks),
   gsfTracks_(gsfTracks),
-  mets_(mets)
+  mets_(miniAOD ? std::map<std::string, edm::Ptr<pat::MET> >() : mets)
+  //  (miniAOD ? mets_(std::map<std::string, edm::Ptr<pat::MET> >()) : mets_(mets))
 { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
@@ -159,6 +160,24 @@ const edm::Ptr<pat::MET>& PATFinalStateEvent::met() const {
   return met_;
 }
 
+const edm::Ptr<pat::MET> PATFinalStateEvent::met(
+    const std::string& type) const 
+{
+  if(miniAOD_)
+    {
+      // At least for now, miniAOD only has type1 pfMET
+      return met_;
+    }
+  else
+    {
+      std::map<std::string, edm::Ptr<pat::MET> >::const_iterator findit =
+	mets_.find(type);
+      if (findit != mets_.end() && findit->second.isNonnull())
+	return findit->second;
+      return edm::Ptr<pat::MET>();
+    }
+}
+
 const TMatrixD& PATFinalStateEvent::metCovariance() const {
   return metCovariance_;
 }
@@ -167,22 +186,27 @@ double PATFinalStateEvent::metSignificance() const {
   return fshelpers::xySignficance(met_->momentum(), metCovariance_);
 }
 
-const edm::Ptr<pat::MET> PATFinalStateEvent::met(
-    const std::string& type) const {
-  std::map<std::string, edm::Ptr<pat::MET> >::const_iterator findit =
-    mets_.find(type);
-  if (findit != mets_.end())
-    return findit->second;
-  return edm::Ptr<pat::MET>();
-}
-
 const reco::Candidate::LorentzVector PATFinalStateEvent::met4vector(
-    const std::string& type, 
-    const std::string& tag, 
-    const int applyPhiCorr) const {
+								    const std::string& type, 
+								    const std::string& tag, 
+								    const int applyPhiCorr) const 
+{
+  if(miniAOD_)
+    { // miniAOD only has type1 pfMET for now, but corrections (jes, mes etc.) are supported
+      if(tag == "jes+")
+	return met_->shiftedP4(pat::MET::JetEnUp);
+      else if(tag == "ues+")
+	return met_->shiftedP4(pat::MET::UnclusteredEnUp);
+      else if(tag == "tes+")
+	return met_->shiftedP4(pat::MET::TauEnUp);
+      else if(tag == "mes+")
+	return met_->shiftedP4(pat::MET::MuonEnUp);
+      else // all miniAOD pfMET is Type 1
+	return met_->p4();      
+    }
   std::map<std::string, edm::Ptr<pat::MET> >::const_iterator findit =
     mets_.find(type);
-  if (findit == mets_.end())
+  if (findit == mets_.end() || findit->second.isNull())
     return reco::Candidate::LorentzVector();
 
   const reco::Candidate::LorentzVector& metp4 = (tag == "") ? met(type)->p4() : met(type)->userCand(tag)->p4();
