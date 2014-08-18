@@ -218,30 +218,28 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   // Get refs to the objects in the event
   edm::RefProd<pat::ElectronCollection> electronRefProd =
     getRefProd<pat::ElectronCollection>(electronSrc_, evt);
-
   edm::RefProd<pat::MuonCollection> muonRefProd =
     getRefProd<pat::MuonCollection>(muonSrc_, evt);
-
   edm::RefProd<pat::JetCollection> jetRefProd =
     getRefProd<pat::JetCollection>(jetSrc_, evt);
-
   edm::RefProd<pat::PhotonCollection> phoRefProd =
     getRefProd<pat::PhotonCollection>(phoSrc_, evt);
-
   edm::RefProd<pat::TauCollection> tauRefProd =
     getRefProd<pat::TauCollection>(tauSrc_, evt);
-
-  edm::RefProd<reco::PFCandidateCollection> pfRefProd =
-    getRefProd<reco::PFCandidateCollection>(pfSrc_, evt);
-
-  edm::RefProd<pat::PackedCandidateCollection> packedPFRefProd =
-    getRefProd<pat::PackedCandidateCollection>(packedPFSrc_, evt);
-
-  edm::RefProd<reco::TrackCollection> trackRefProd = 
-    getRefProd<reco::TrackCollection>(trackSrc_, evt);
-
-  edm::RefProd<reco::GsfTrackCollection> gsftrackRefProd =
-    getRefProd<reco::GsfTrackCollection>(gsfTrackSrc_, evt); 
+  edm::RefProd<reco::PFCandidateCollection> pfRefProd;
+  edm::RefProd<reco::TrackCollection> trackRefProd;
+  edm::RefProd<reco::GsfTrackCollection> gsftrackRefProd;
+  edm::RefProd<pat::PackedCandidateCollection> packedPFRefProd;
+  if(miniAOD_)
+    {
+      packedPFRefProd =	getRefProd<pat::PackedCandidateCollection>(packedPFSrc_, evt);
+    }
+  else
+    {
+      pfRefProd = getRefProd<reco::PFCandidateCollection>(pfSrc_, evt);
+      trackRefProd = getRefProd<reco::TrackCollection>(trackSrc_, evt);
+      gsftrackRefProd =	getRefProd<reco::GsfTrackCollection>(gsfTrackSrc_, evt); 
+    }
 
   edm::Handle<edm::View<pat::MET> > met;
   evt.getByLabel(metSrc_, met);
