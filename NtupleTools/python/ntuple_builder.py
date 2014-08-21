@@ -320,6 +320,12 @@ def make_ntuple(*legs, **kwargs):
             "t[1-9]?((V?Loose)|(Medium)|(Tight))Iso", # deprecated, could be changed to a different combined iso discriminator
             # topology.py
             "[emtgj][1-9]?MtToMVAMET", # not yet implemented in miniAOD
+            #
+            # Remove because old
+            "[em][1-9]?((WW)|(MIT)|(CB))ID(_((LOOSE)|(MEDIUM)|(TIGHT)|(VETO)))?",
+            "eMVAIDH2TauWP",
+            "\w*201[12]\w*",
+            "\w*[(Fall)(Winter)(Spring)(Summer)]1[12]\w*",
             ]
 
         allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")
