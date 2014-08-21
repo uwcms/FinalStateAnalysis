@@ -8,6 +8,12 @@ final_states = [
     #"PATFinalState", # special case
 
     # Already generated
+    "PATElecFinalState",
+    "PATMuFinalState",
+    "PATTauFinalState",
+    "PATPhoFinalState",
+    "PATJetFinalState",
+
     "PATElecElecFinalState",
     "PATElecMuFinalState",
     "PATElecTauFinalState",

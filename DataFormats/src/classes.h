@@ -10,6 +10,8 @@
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLS.h"
 
+#include "FinalStateAnalysis/DataFormats/interface/PATSingleFinalStates.h"
+
 #include "FinalStateAnalysis/DataFormats/interface/PATDiLeptonFinalStates.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATTriLeptonFinalStates.h"
@@ -53,6 +55,13 @@ namespace {
 
     // n-cand state
     FWD_CLASSDECL(PATMultiCandFinalState)
+
+    // single final states
+    FWD_MIN_CLASSDECL(PATElecFinalState)
+    FWD_MIN_CLASSDECL(PATMuFinalState)
+    FWD_MIN_CLASSDECL(PATTauFinalState)
+    FWD_MIN_CLASSDECL(PATPhoFinalState)
+    FWD_MIN_CLASSDECL(PATJetFinalState)
 
     // pair final states
     FWD_MIN_CLASSDECL(PATElecElecFinalState)
