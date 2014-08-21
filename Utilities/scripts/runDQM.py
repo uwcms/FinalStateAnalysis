@@ -78,7 +78,7 @@ def plot_hist(variable,hists):
     else:
         canvas.SetLogy(0)
 
-def plot_helper(trees,events,savepath):
+def plot_helper(trees,events,savepath,channel):
     '''A helper script for plotting a given channel'''
     # book histograms for each variable
     print 'Booking histograms'
@@ -91,7 +91,7 @@ def plot_helper(trees,events,savepath):
         var = variables[v]
         hists[var] = []
         for t in range(len(trees)):
-            histname = "h%s%i" % (var, t)
+            histname = "h%s%s%i" % (var, channel, t)
             print "  "+histname
             if hists[var]:
                 hists[var].append(hists[var][0].Clone(histname))
@@ -163,7 +163,7 @@ def plot_all(filenames,channels,savepath):
         # get common events
         if not events: events = get_events(trees)
         print 'Running over channel: '+ channel
-        plot_helper(trees,events,channelsave)
+        plot_helper(trees,events,channelsave,channel)
 
 
     
