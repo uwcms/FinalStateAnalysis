@@ -38,6 +38,7 @@ rerunQGJetID=0 - rerun the quark-gluon JetID
 runNewElectronMVAID=0 - run the new electron MVAID
 rerunJets=0   - rerun with new jet energy corrections
 useMiniAOD=0 - run on miniAOD rather than UW PATTuples
+runDQM=0 - run over single object final states to test all object properties (wont check diobject properties)
 
 
 '''
@@ -81,6 +82,7 @@ options = TauVarParsing.TauVarParsing(
     GlobalTag="",
     useMiniAOD=0,
     miniAODScenario='', # V7 = 25ns, V6 = 50ns
+    runDQM=0,
 )
 
 options.register(
@@ -286,7 +288,11 @@ _FINAL_STATE_GROUPS = {
     'llt': 'emt, mmt, eet, mmm, emm, mm, ee, em',
     'zg': 'mmg, eeg',
     'zgxtra': 'mgg, emg, egg',
+    'dqm': 'e,m,t,g,j',
 }
+
+# run dqm
+if options.runDQM: options.channels = 'dqm'
 
 # Generate analyzers which build the desired final states.
 final_states = [x.strip() for x in options.channels.split(',')]
