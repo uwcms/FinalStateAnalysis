@@ -19,9 +19,10 @@ kinematics = PSet(
 )
 
 vertex_info = PSet(
-    objectDZ = '{object}.userFloat("dz")',
+    objectDZ = 'getDZ({object_idx})',
     objectVZ = '{object}.vz',
-    objectIP3DS = '{object}.userFloat("ip3DS")',
+    objectIP3D = 'getIP3D({object_idx})',
+    objectIP3DSig = 'getIP3DSig({object_idx})', # uncertainty ("significance") of IP3D
 )
 
 # The info about the associated pat::Jet

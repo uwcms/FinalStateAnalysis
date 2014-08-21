@@ -70,7 +70,7 @@ _muon_template = PSet(
 _bjet_template= PSet(
     templates.bjets.btagging,
     templates.candidates.kinematics,
-    templates.candidates.vertex_info,
+#    templates.candidates.vertex_info, # Always filled with 0 as far as I can tell
 )
 
 _electron_template = PSet(
@@ -320,6 +320,9 @@ def make_ntuple(*legs, **kwargs):
             "t[1-9]?((V?Loose)|(Medium)|(Tight))Iso", # deprecated, could be changed to a different combined iso discriminator
             # topology.py
             "[emtgj][1-9]?MtToMVAMET", # not yet implemented in miniAOD
+            # candidates.py
+            "t[1-9]?IP3D(Sig)?", # tau impact parameter interface is weird, will add if anyone needs it
+            "t[1-9]?DZ",
             #
             # Remove because old
             "[em][1-9]?((WW)|(MIT)|(CB))ID(_((LOOSE)|(MEDIUM)|(TIGHT)|(VETO)))?",
