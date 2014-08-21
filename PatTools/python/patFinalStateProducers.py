@@ -256,7 +256,6 @@ def produce_final_states(process, collections, output_commands,
     if not noPhotons:
         object_types.append(('Pho', cms.InputTag("photonsForFinalStates")))
 
-    process.buildDiObjects = cms.Sequence()
 
 
     process.load("FinalStateAnalysis.PatTools."
@@ -265,6 +264,37 @@ def produce_final_states(process, collections, output_commands,
     if noTracks:
         process.patFinalStateVertexFitter.enable = False
 
+    process.buildSingleObjects = cms.Sequence()
+    # build single object pairs
+    for object in object_types:
+        # Define some basic selections for building combinations
+        cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
+
+        producer = cms.EDProducer(
+            "PAT%sFinalStateProducer" % object[0],
+            evtSrc=cms.InputTag("patFinalStateEventProducer"),
+            leg1Src=object[1],
+            # X-cleaning
+            cut=cms.string(' & '.join(cuts))
+        )
+        producer_name = "finalState%s" % object[0]
+        setattr(process, producer_name + "Raw", producer)
+        process.buildSingleObjects += producer
+        # Embed the other collections
+        embedder_seq = helpers.cloneProcessingSnippet(
+            process, process.patFinalStatesEmbedObjects, producer_name)
+        process.buildSingleObjects += embedder_seq
+        # Do some trickery so the final module has a nice output name
+        final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
+        final_module = cms.EDProducer(
+            "PATFinalStateCopier", src=final_module_name)
+        setattr(process, producer_name, final_module)
+        process.buildSingleObjects += final_module
+        setattr(process, producer_name, final_module)
+        output_commands.append("*_%s_*_*" % producer_name)
+    sequence += process.buildSingleObjects
+
+    process.buildDiObjects = cms.Sequence()
     # Build di-object pairs
     for diobject in _combinatorics(object_types, 2):
         # Don't build two jet states

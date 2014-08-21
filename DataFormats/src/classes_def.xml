@@ -76,6 +76,36 @@
   <class name="edm::Ptr<PATMultiCandFinalState>"/>
 
 
+  <class name="PATElecFinalState"/>
+  <class name="edm::Wrapper<PATElecFinalState>"/>
+  <class name="PATElecFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecFinalStateCollection>"/>
+
+
+  <class name="PATMuFinalState"/>
+  <class name="edm::Wrapper<PATMuFinalState>"/>
+  <class name="PATMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuFinalStateCollection>"/>
+
+
+  <class name="PATTauFinalState"/>
+  <class name="edm::Wrapper<PATTauFinalState>"/>
+  <class name="PATTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauFinalStateCollection>"/>
+
+
+  <class name="PATPhoFinalState"/>
+  <class name="edm::Wrapper<PATPhoFinalState>"/>
+  <class name="PATPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATPhoFinalStateCollection>"/>
+
+
+  <class name="PATJetFinalState"/>
+  <class name="edm::Wrapper<PATJetFinalState>"/>
+  <class name="PATJetFinalStateCollection"/>
+  <class name="edm::Wrapper<PATJetFinalStateCollection>"/>
+
+
   <class name="PATElecElecFinalState"/>
   <class name="edm::Wrapper<PATElecElecFinalState>"/>
   <class name="PATElecElecFinalStateCollection"/>
