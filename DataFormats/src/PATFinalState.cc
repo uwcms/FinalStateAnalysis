@@ -896,7 +896,6 @@ const float PATFinalState::jetVariables(size_t i, const std::string& key) const 
   return -100; 
 }
 
-
 const float PATFinalState::getIP3D(const size_t i) const
 {
   if(event_->isMiniAOD())

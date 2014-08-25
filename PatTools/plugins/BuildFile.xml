@@ -24,4 +24,6 @@
   <use   name="RecoEgamma/EgammaTools"/>
   
   <use   name="RecoBTag/SecondaryVertex"/>
+
+  <use   name="EgammaAnalysis/ElectronTools"/>
 </library>

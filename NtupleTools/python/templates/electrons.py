@@ -16,21 +16,32 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 # ID and isolation
 id = PSet(
-    objectWWID = '{object}.userFloat("WWID")',
-    objectMITID = '{object}.userFloat("MITID")',
-    objectMVANonTrig = '{object}.electronID("mvaNonTrigV0")',
-    objectMVATrig = '{object}.electronID("mvaTrigV0")',
+    # mva ids added manually right now, only trig available https://twiki.cern.ch/twiki/bin/viewauth/CMS/MultivariateElectronIdentificationRun2
+    objectMVATrigCSA14 = '? {object}.isElectronIDAvailable("mvaTrigV0CSA14") ?{object}.electronID("mvaTrigV0CSA14") : {object}.userFloat("mvaTrigV0CSA14")',
+    #objectMVANonTrigCSA14 = '? {object}.isElectronIDAvailable("mvaNonTrigV0CSA14") ?{object}.electronID("mvaNonTrigV0CSA14") : -1',
+    objectMVANonTrig = '? {object}.isElectronIDAvailable("mvaNonTrigV0") ?{object}.electronID("mvaNonTrigV0") : -1',
+    objectMVATrig = '? {object}.isElectronIDAvailable("mvaTrigV0") ?{object}.electronID("mvaTrigV0") : -1',
     objectMVATrigIDISO = '? {object}.isElectronIDAvailable("mvaTrigIDISOV0") ?{object}.electronID("mvaTrigIDISOV0") : -1',
     objectMVATrigIDISOPUSUB = '? {object}.isElectronIDAvailable("mvaTrigIDISOPUSUBV0") ?{object}.electronID("mvaTrigIDISOPUSUBV0") : -1',
-    objectMVAIDH2TauWP = '{object}.userInt("mvaidwp")',
-    objectCiCTight = '{object}.electronID("cicTight")',
-    objectCBID_VETO = '{object}.userInt("CBID_VETO")',
-    objectCBID_LOOSE = '{object}.userInt("CBID_LOOSE")',
-    objectCBID_MEDIUM = '{object}.userInt("CBID_MEDIUM")',
-    objectCBID_TIGHT = '{object}.userInt("CBID_TIGHT")',
+    objectCiCTight = '?  {object}.isElectronIDAvailable("cicTight") ?{object}.electronID("cicTight") : -1',
+    # not implemented yet for miniAOD https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedElectronIdentificationRun2
+    #objectCBID_VETO = '{object}.userInt("CBID_VETO")',
+    #objectCBID_LOOSE = '{object}.userInt("CBID_LOOSE")',
+    #objectCBID_MEDIUM = '{object}.userInt("CBID_MEDIUM")',
+    #objectCBID_TIGHT = '{object}.userInt("CBID_TIGHT")',
     #new Summer13 MVA ID
-    objectMVATrigNoIP = '{object}.userFloat("mvaTrigNoIP")',
-    
+    #objectMVATrigNoIP = '{object}.userFloat("mvaTrigNoIP")',
+
+    # CSA14 cutbased ids (TODO)    
+    objectCBIDCSA14_VETO_50ns = '? {object}.isElectronIDAvailable("egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-veto") ?{object}.electronID("egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-veto") : {object}.userFloat("cutBasedElectronID-CSA14-50ns-V1-standalone-veto")',
+    objectCBIDCSA14_LOOSE_50ns = '? {object}.isElectronIDAvailable("egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-loose") ?{object}.electronID("egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-loose") : {object}.userFloat("cutBasedElectronID-CSA14-50ns-V1-standalone-loose")',
+    objectCBIDCSA14_MEDIUM_50ns = '? {object}.isElectronIDAvailable("egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-medium") ?{object}.electronID("egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-medium") : {object}.userFloat("cutBasedElectronID-CSA14-50ns-V1-standalone-medium")',
+    objectCBIDCSA14_TIGHT_50ns = '? {object}.isElectronIDAvailable("egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-tight") ?{object}.electronID("egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-tight") : {object}.userFloat("cutBasedElectronID-CSA14-50ns-V1-standalone-tight")',
+    objectCBIDCSA14_VETO_25ns = '? {object}.isElectronIDAvailable("egmGsfElectronIDs:cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto") ?{object}.electronID("egmGsfElectronIDs:cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto") : {object}.userFloat("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto")',
+    objectCBIDCSA14_LOOSE_25ns = '? {object}.isElectronIDAvailable("egmGsfElectronIDs:cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose") ?{object}.electronID("egmGsfElectronIDs:cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose") : {object}.userFloat("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose")',
+    objectCBIDCSA14_MEDIUM_25ns = '? {object}.isElectronIDAvailable("egmGsfElectronIDs:cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium") ?{object}.electronID("egmGsfElectronIDs:cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium") : {object}.userFloat("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium")',
+    objectCBIDCSA14_TIGHT_25ns = '? {object}.isElectronIDAvailable("egmGsfElectronIDs:cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight") ?{object}.electronID("egmGsfElectronIDs:cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight") : {object}.userFloat("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight")',
+
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(
         "({object}.userIso(0)"
@@ -65,11 +76,6 @@ id = PSet(
     ##     "/{object}.pt()"
     ## ),
     
-    objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
-    objectEffectiveArea2011Data = cms.string('{object}.userFloat("ea_comb_Data2011_iso04_kt6PFJ")'),
-    objectEffectiveAreaFall11MC = cms.string('{object}.userFloat("ea_comb_Fall11MC_iso04_kt6PFJ")'),
-    objectRhoHZG2011 = cms.string('{object}.userFloat("hzgRho2011")'),
-    objectRhoHZG2012 = cms.string('{object}.userFloat("hzgRho2012")'),
     objectRelIso = cms.string("({object}.dr03TkSumPt()"
                "+max({object}.dr03EcalRecHitSumEt()-1.0,0.0)"
                "+{object}.dr03HcalTowerSumEt())/{object}.pt()"),
