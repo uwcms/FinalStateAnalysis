@@ -295,6 +295,12 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     double twoParticleDeltaPhiToMEt(const int i, const int j, const std::string& metTag) const;
     
+    const float getIP3D(const size_t i) const;
+
+    const float getIP3DSig(const size_t i) const;
+
+    const float getDZ(const size_t i) const;
+
   private:
     edm::Ptr<PATFinalStateEvent> event_;
 };

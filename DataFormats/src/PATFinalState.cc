@@ -6,6 +6,7 @@
 #include "FinalStateAnalysis/DataAlgos/interface/CollectionFilter.h"
 #include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
 
+#include "DataFormats/PatCandidates/interface/PATObject.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
@@ -750,7 +751,7 @@ double PATFinalState::zCompatibility(int i, int j) const {
   if (likeSigned(i, j)) {
     return 1000;
   }
-  return std::abs(subcand(i, j)->mass() - 91.2);
+  return std::abs(subcand(i, j)->mass() - 91.1876);
 }
 
 VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts) const {
@@ -893,4 +894,64 @@ const float PATFinalState::jetVariables(size_t i, const std::string& key) const 
     return evt()->jetVariables(daughterUserCand(i,"patJet"), key);
   }
   return -100; 
+}
+
+
+const float PATFinalState::getIP3D(const size_t i) const
+{
+  if(event_->isMiniAOD())
+    {
+      if(abs(daughter(i)->pdgId()) == 11)
+	{
+	  return fabs(daughterAsElectron(i)->dB(pat::Electron::PV3D));
+	}
+      else if (abs(daughter(i)->pdgId()) == 13)
+	{
+	  return fabs(daughterAsMuon(i)->dB(pat::Muon::PV3D));
+	}
+      
+      throw cms::Exception("InvalidParticle") << "FSA can only find SIP3D for electron and muon for now" << std::endl;
+    }
+
+  return dynamic_cast<const pat::PATObject<reco::Candidate>* >(daughter(i))->userFloat("ip3D");
+}
+
+const float PATFinalState::getIP3DSig(const size_t i) const
+{
+  if(event_->isMiniAOD())
+    {
+      if(abs(daughter(i)->pdgId()) == 11)
+	{
+	  return daughterAsElectron(i)->edB(pat::Electron::PV3D);
+	}
+      else if (abs(daughter(i)->pdgId()) == 13)
+	{
+	  return daughterAsMuon(i)->edB(pat::Muon::PV3D);
+	}
+      
+      throw cms::Exception("InvalidParticle") << "FSA can only find SIP3D for electron and muon for now" << std::endl;
+    }
+
+return static_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("ip3DS");
+}
+
+const float PATFinalState::getDZ(const size_t i) const
+{
+  if(event_->isMiniAOD())
+    {
+      if(abs(daughter(i)->pdgId()) == 11)
+	{
+	  const edm::Ptr<reco::Vertex> pv = event_->pv();
+	  return daughterAsElectron(i)->gsfTrack()->dz(pv->position());
+	}
+      else if(abs(daughter(i)->pdgId()) == 13)
+	{
+	  const edm::Ptr<reco::Vertex> pv = event_->pv();
+	  return daughterAsMuon(i)->muonBestTrack()->dz(pv->position());
+	}
+      
+      throw cms::Exception("InvalidParticle") << "FSA can only find dZ for electron and muon for now" << std::endl;
+    }
+  
+  return dynamic_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("dz");
 }
