@@ -50,9 +50,8 @@ def submit_jobid(jobid, dryrun=False):
                 print "Resubmit: %s" % s
             else:
                 rescue_dags = glob.glob('%s/dags/*dag.rescue[0-9][0-9][1-9]' % s)
-                for dag in rescue_dags:
-                    cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % dag
-                    os.system(cmd)
+                cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % max(rescue_dags)
+                os.system(cmd)
 
 
 def parse_command_line(argv):
