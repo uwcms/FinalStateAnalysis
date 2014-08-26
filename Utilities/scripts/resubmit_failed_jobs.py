@@ -49,7 +49,7 @@ def submit_jobid(jobid, dryrun=False):
             if dryrun:
                 print "Resubmit: %s" % s
             else:
-                rescue_dags = glob.glob('%s/dags/*dag.rescue[0-9][0-9][1-9]' % s)
+                rescue_dags = glob.glob('%s/dags/*dag.rescue[0-9][0-9][0-9]' % s)
                 cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % max(rescue_dags)
                 os.system(cmd)
 
