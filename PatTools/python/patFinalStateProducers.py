@@ -195,8 +195,7 @@ def produce_final_states(process, collections, output_commands,
         src=cms.InputTag(jetsrc),
         # I leave it loose here, can be tightened at the last step
         preselection=cms.string(
-            "pt>20 & abs(eta) < 2.5 & "
-            "userFloat('idLoose')"),
+            "pt>20 & abs(eta) < 2.5"),
                 # & userInt('fullIdLoose')"),
         # overlap checking configurables
         checkOverlaps=cms.PSet(
@@ -216,7 +215,7 @@ def produce_final_states(process, collections, output_commands,
                 src=cms.InputTag("electronsForFinalStates"),
                 algorithm=cms.string("byDeltaR"),
                 preselection=cms.string(
-                    "pt>10&&userFloat('wp95')>0"
+                    "pt>10"
                     "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
                     "-0.5*userIso(2),0.0))/pt()<0.3"),
                 deltaR=cms.double(0.3),

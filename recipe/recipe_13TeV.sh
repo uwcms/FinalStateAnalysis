@@ -47,6 +47,9 @@ then
 #     git cms-merge-topic -u cms-tau-pog:CMSSW_7_1_X_taus  
 #   fi  
 
+  echo "Checking out EGamma MVA ID for miniAOD"
+  git cms-merge-topic HuguesBrun:addTheElecIDMVAoutputCSA14 #needed until mva added by default
+
   echo "Checking out EGamma POG recipe for electron corrections"
   #Following Volker's instructions
   #git cms-cvs-history import V09-00-01 RecoEgamma/EgammaTools

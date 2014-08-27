@@ -262,9 +262,22 @@ if options.rerunFSA:
         process.runNewElectronMVAID = cms.Path(process.runAndEmbedSummer13Id)
         process.schedule.append(process.runNewElectronMVAID)
 
+    # embed some things we need that arent in miniAOD yet (like some ids)
+    output_commands = []
+    if options.useMiniAOD:
+        process.miniPatElectrons = cms.EDProducer(
+            "MiniAODElectronIDEmbedder",
+            src=cms.InputTag(fs_daughter_inputs['electrons']),
+            MVAId=cms.InputTag("mvaTrigV0CSA14","","addMVAid")
+        )
+        output_commands.append('*_miniPatElectrons_*_*')
+        fs_daughter_inputs['electrons'] = "miniPatElectrons"
+        process.runMiniAODObjectEmbedding = cms.Path(process.miniPatElectrons)
+        process.schedule.append(process.runMiniAODObjectEmbedding)
+
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
-    produce_final_states(process, fs_daughter_inputs, [], process.buildFSASeq,
+    produce_final_states(process, fs_daughter_inputs, output_commands, process.buildFSASeq,
                          'puTagDoesntMatter', buildFSAEvent=True,
                          noTracks=True, noPhotons=options.noPhotons,
                          zzMode=options.zzMode, rochCor=options.rochCor,
