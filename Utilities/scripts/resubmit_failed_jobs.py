@@ -35,14 +35,21 @@ def submit_jobid(jobid, dryrun=False):
         errors = []
         try:
             with open(status_dag1, 'r') as dagfile:
-                errors = [re.search('ERROR', line) for line in dagfile]
+                errors = [re.search('STATUS_ERROR', line) for line in dagfile]
+                submitted = [re.search('STATUS_SUBMITTED', line) for line in dagfile]
         except IOError:
             try:
                 with open(status_dag2, 'r') as dagfile:
-                    errors = [re.search('ERROR', line) for line in dagfile]
+                    errors = [re.search('STATUS_ERROR', line) for line in dagfile]
+                    submitted = [re.search('STATUS_SUBMITTED', line) for line in dagfile]
             except IOError:
                 print "Skipping: %s" % s
                 continue
+
+        # Do not try to resubmit jobs if jobs are still running
+        if any(submitted):
+            print "'%s' is still running -- wait for jobs to complete" % s
+            continue
 
         # if there are any errors, submit the rescue dag files
         if any(errors):
