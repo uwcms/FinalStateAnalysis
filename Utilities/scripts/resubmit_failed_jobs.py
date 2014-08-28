@@ -36,11 +36,13 @@ def submit_jobid(jobid, dryrun=False):
         try:
             with open(status_dag1, 'r') as dagfile:
                 errors = [re.search('STATUS_ERROR', line) for line in dagfile]
+            with open(status_dag1, 'r') as dagfile:
                 submitted = [re.search('STATUS_SUBMITTED', line) for line in dagfile]
         except IOError:
             try:
                 with open(status_dag2, 'r') as dagfile:
                     errors = [re.search('STATUS_ERROR', line) for line in dagfile]
+                with open(status_dag2, 'r') as dagfile:
                     submitted = [re.search('STATUS_SUBMITTED', line) for line in dagfile]
             except IOError:
                 print "Skipping: %s" % s
