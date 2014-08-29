@@ -40,6 +40,10 @@ id = PSet(
     objectCBIDLoose_25ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose")',
     objectCBIDMedium_25ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium")',
     objectCBIDTight_25ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight")',
+    objectMVATrigCSA14 = '? {object}.isElectronIDAvailable("mvaTrigV0CSA14") ?{object}.electronID("mvaTrigV0CSA14") : {object}.userFloat("mvaTrigV0CSA14")',
+    objectMVANonTrigCSA14 = '? {object}.isElectronIDAvailable("mvaNonTrigV0CSA14") ?{object}.electronID("mvaNonTrigV0CSA14") : -1',
+    objectMVANonTrig = '? {object}.isElectronIDAvailable("mvaNonTrigV0") ?{object}.electronID("mvaNonTrigV0") : -1',
+    objectMVATrig = '? {object}.isElectronIDAvailable("mvaTrigV0") ?{object}.electronID("mvaTrigV0") : -1',
     
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(

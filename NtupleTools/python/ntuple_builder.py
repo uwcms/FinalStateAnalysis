@@ -311,7 +311,7 @@ def make_ntuple(*legs, **kwargs):
             # cleaning.py and electrons.py
             "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?", # electron MVA not yet in miniAOD (or done at all)
             # electrons.py
-            "e[1-9]?MVA(Non)?Trig(IDISO)?(PUSUB)?", # electron MVA not yet in miniAOD (or done at all)
+            #"e[1-9]?MVA(Non)?Trig(IDISO)?(PUSUB)?",
             "e[1-9]?MVAIDH2TauWP",# electron MVA not yet in miniAOD (or done at all)
             # event.py
             "mva_met((Et)|(Phi))", # not yet implemented in miniAOD
