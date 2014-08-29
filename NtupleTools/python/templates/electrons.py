@@ -30,6 +30,16 @@ id = PSet(
     objectCBID_TIGHT = '{object}.userInt("CBID_TIGHT")',
     #new Summer13 MVA ID
     objectMVATrigNoIP = '{object}.userFloat("mvaTrigNoIP")',
+
+    # CSA14 IDs
+    objectCBIDVeto_50ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-50ns-V1-standalone-veto")',
+    objectCBIDLoose_50ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-50ns-V1-standalone-loose")',
+    objectCBIDMedium_50ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-50ns-V1-standalone-medium")',
+    objectCBIDTight_50ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-50ns-V1-standalone-tight")',
+    objectCBIDVeto_25ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto")',
+    objectCBIDLoose_25ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose")',
+    objectCBIDMedium_25ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium")',
+    objectCBIDTight_25ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight")',
     
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(

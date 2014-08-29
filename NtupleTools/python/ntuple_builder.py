@@ -325,7 +325,7 @@ def make_ntuple(*legs, **kwargs):
             "t[1-9]?DZ",
             #
             # Remove because old
-            "[em][1-9]?((WW)|(MIT)|(CB))ID(_((LOOSE)|(MEDIUM)|(TIGHT)|(VETO)))?",
+            #"[em][1-9]?((WW)|(MIT)|(CB))ID(_((LOOSE)|(MEDIUM)|(TIGHT)|(VETO)))?",
             "eMVAIDH2TauWP",
             "\w*201[12]\w*",
             "\w*[(Fall)(Winter)(Spring)(Summer)]1[12]\w*",

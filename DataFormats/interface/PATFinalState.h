@@ -303,6 +303,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     const bool isTightMuon(const size_t i) const;
 
+    const bool passElectronID(const size_t i, const std::string id) const;
+
+    bool eIDHelper(const size_t, double, double, double, double, double, double, double, double, int) const;
+
   private:
     edm::Ptr<PATFinalStateEvent> event_;
 };
