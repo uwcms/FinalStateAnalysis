@@ -160,10 +160,10 @@ bool MiniAODElectronIDEmbedder::cutBasedIDHelper(pat::Electron el,  double dEtaI
   // the case for electrons below 5 GeV in miniAOD)
   float ooEmooP_ = 0;
   if( el.ecalEnergy() == 0 ){
-    printf("Electron energy is zero!\n");
+    //printf("Electron energy is zero!\n");
     ooEmooP_ = 1e30;
   }else if( !std::isfinite(el.ecalEnergy())){
-    printf("Electron energy is not finite!\n");
+    //printf("Electron energy is not finite!\n");
     ooEmooP_ = 1e30;
   }else{
     ooEmooP_ = fabs(1.0/el.ecalEnergy() - el.eSuperClusterOverP()/el.ecalEnergy() );
@@ -187,7 +187,7 @@ bool MiniAODElectronIDEmbedder::cutBasedIDHelper(pat::Electron el,  double dEtaI
     passConversionVeto_ = !ConversionTools::hasMatchedConversion(el,convs_,
                                                          thebs_->position());
   }else{
-    printf("\n\nERROR!!! conversions not found!!!\n");
+    //printf("\n\nERROR!!! conversions not found!!!\n");
   }
 
   return (fabs(dEtaIn_) < dEtaIn\

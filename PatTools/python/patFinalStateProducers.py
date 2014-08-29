@@ -195,8 +195,7 @@ def produce_final_states(process, collections, output_commands,
         src=cms.InputTag(jetsrc),
         # I leave it loose here, can be tightened at the last step
         preselection=cms.string(
-            "pt>20 & abs(eta) < 2.5 & "),
-                # & userInt('fullIdLoose')"),
+            "pt>20 & abs(eta) < 2.5"), # need to add back in jet id
         # overlap checking configurables
         checkOverlaps=cms.PSet(
             muons=cms.PSet(
@@ -215,6 +214,7 @@ def produce_final_states(process, collections, output_commands,
                 src=cms.InputTag("electronsForFinalStates"),
                 algorithm=cms.string("byDeltaR"),
                 preselection=cms.string(
+                    # TODO: 25/50 ns
                     "pt>10&&userInt('cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto')>0"
                     "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
                     "-0.5*userIso(2),0.0))/pt()<0.3"),
