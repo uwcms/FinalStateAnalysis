@@ -268,7 +268,10 @@ if options.rerunFSA:
         process.miniPatElectrons = cms.EDProducer(
             "MiniAODElectronIDEmbedder",
             src=cms.InputTag(fs_daughter_inputs['electrons']),
-            MVAId=cms.InputTag("mvaTrigV0CSA14","","addMVAid")
+            MVAId=cms.InputTag("mvaTrigV0CSA14","","addMVAid"),
+            vertices=cms.InputTag("offlineSlimmedPrimaryVertices"),
+            convcollection=cms.InputTag("reducedEgamma:reducedConversions"),
+            beamspot=cms.InputTag("offlineBeamSpot")
         )
         output_commands.append('*_miniPatElectrons_*_*')
         fs_daughter_inputs['electrons'] = "miniPatElectrons"
