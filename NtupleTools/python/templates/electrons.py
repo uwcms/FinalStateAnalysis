@@ -18,8 +18,8 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 id = PSet(
     objectWWID = '{object}.userFloat("WWID")',
     objectMITID = '{object}.userFloat("MITID")',
-    objectMVANonTrig = '{object}.electronID("mvaNonTrigV0")',
-    objectMVATrig = '{object}.electronID("mvaTrigV0")',
+    objectMVATrig = '? {object}.isElectronIDAvailable("mvaTrigV0") ?{object}.electronID("mvaTrigV0") : -1',
+    objectMVANonTrig = '? {object}.isElectronIDAvailable("mvaNonTrigV0") ?{object}.electronID("mvaNonTrigV0") : -1',
     objectMVATrigIDISO = '? {object}.isElectronIDAvailable("mvaTrigIDISOV0") ?{object}.electronID("mvaTrigIDISOV0") : -1',
     objectMVATrigIDISOPUSUB = '? {object}.isElectronIDAvailable("mvaTrigIDISOPUSUBV0") ?{object}.electronID("mvaTrigIDISOPUSUBV0") : -1',
     objectMVAIDH2TauWP = '{object}.userInt("mvaidwp")',
@@ -42,8 +42,6 @@ id = PSet(
     objectCBIDTight_25ns = 'passElectronID({object_idx},"cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight")',
     objectMVATrigCSA14 = '? {object}.isElectronIDAvailable("mvaTrigV0CSA14") ?{object}.electronID("mvaTrigV0CSA14") : {object}.userFloat("mvaTrigV0CSA14")',
     objectMVANonTrigCSA14 = '? {object}.isElectronIDAvailable("mvaNonTrigV0CSA14") ?{object}.electronID("mvaNonTrigV0CSA14") : -1',
-    objectMVANonTrig = '? {object}.isElectronIDAvailable("mvaNonTrigV0") ?{object}.electronID("mvaNonTrigV0") : -1',
-    objectMVATrig = '? {object}.isElectronIDAvailable("mvaTrigV0") ?{object}.electronID("mvaTrigV0") : -1',
     
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(
