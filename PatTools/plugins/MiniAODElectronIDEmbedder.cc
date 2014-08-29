@@ -60,8 +60,8 @@ MiniAODElectronIDEmbedder::MiniAODElectronIDEmbedder(const edm::ParameterSet& ps
   beamToken_           = consumes<reco::BeamSpot>(pset.getParameter<edm::InputTag>("beamspot"));
 
   std::vector<std::string> myManualCatWeigths;
-  myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_EB_BDT.weights.xml");
-  myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_EE_BDT.weights.xml");
+  myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EB_BDT.weights.xml");
+  myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EE_BDT.weights.xml");
   
   vector<string> myManualCatWeigthsTrig;
   string the_path;
