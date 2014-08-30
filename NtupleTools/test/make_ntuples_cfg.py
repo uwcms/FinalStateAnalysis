@@ -38,6 +38,7 @@ rerunQGJetID=0 - rerun the quark-gluon JetID
 runNewElectronMVAID=0 - run the new electron MVAID
 rerunJets=0   - rerun with new jet energy corrections
 useMiniAOD=0 - run on miniAOD rather than UW PATTuples
+use25ns=0 - run on 25 ns miniAOD (50 ns default)
 runDQM=0 - run over single object final states to test all object properties (wont check diobject properties)
 
 
@@ -81,7 +82,7 @@ options = TauVarParsing.TauVarParsing(
     runTauSpinner=0,
     GlobalTag="",
     useMiniAOD=0,
-    miniAODScenario='', # V7 = 25ns, V6 = 50ns
+    use25ns=0,
     runDQM=0,
 )
 
@@ -145,10 +146,10 @@ if options.rerunFSA:
     envvar = 'mcgt' if options.isMC else 'datagt'
     GT = {'mcgt': 'START53_V27::All', 'datagt': 'FT53_V21A_AN6::All'}
     if options.useMiniAOD:
-        if options.miniAODScenario:
-            GT['mcgt'] = 'PLS170_%sAN1::All' % options.miniAODScenario
-        else:
+        if options.use25ns:
             GT['mcgt'] = 'PLS170_V7AN1::All'
+        else:
+            GT['mcgt'] = 'PLS170_V6AN1::All'
         GT['datagt'] = 'GR_70_V2_AN1::All'
 
 
@@ -160,7 +161,7 @@ if options.rerunFSA:
         except KeyError:
             print 'Warning: GlobalTag not defined in environment. Using default.'
             process.GlobalTag.globaltag = cms.string(GT[envvar])
-        if options.useMiniAOD and options.miniAODScenario:
+        if options.useMiniAOD:
             process.GlobalTag.globaltag = cms.string(GT[envvar])
 
     print 'Using globalTag: %s' % process.GlobalTag.globaltag
@@ -265,13 +266,15 @@ if options.rerunFSA:
     # embed some things we need that arent in miniAOD yet (like some ids)
     output_commands = []
     if options.useMiniAOD:
+        bx = '25ns' if options.use25ns else '50ns'
         process.miniPatElectrons = cms.EDProducer(
             "MiniAODElectronIDEmbedder",
             src=cms.InputTag(fs_daughter_inputs['electrons']),
             MVAId=cms.InputTag("mvaTrigV0CSA14","","addMVAid"),
             vertices=cms.InputTag("offlineSlimmedPrimaryVertices"),
             convcollection=cms.InputTag("reducedEgamma:reducedConversions"),
-            beamspot=cms.InputTag("offlineBeamSpot")
+            beamspot=cms.InputTag("offlineBeamSpot"),
+            bunchspacing=cms.untracked.string(bx)
         )
         output_commands.append('*_miniPatElectrons_*_*')
         fs_daughter_inputs['electrons'] = "miniPatElectrons"
@@ -284,7 +287,8 @@ if options.rerunFSA:
                          'puTagDoesntMatter', buildFSAEvent=True,
                          noTracks=True, noPhotons=options.noPhotons,
                          zzMode=options.zzMode, rochCor=options.rochCor,
-                         eleCor=options.eleCor, useMiniAOD=options.useMiniAOD)
+                         eleCor=options.eleCor, useMiniAOD=options.useMiniAOD, 
+                         use25ns=options.use25ns)
     process.buildFSAPath = cms.Path(process.buildFSASeq)
     # Don't crash if some products are missing (like tracks)
     process.patFinalStateEventProducer.forbidMissing = cms.bool(False)

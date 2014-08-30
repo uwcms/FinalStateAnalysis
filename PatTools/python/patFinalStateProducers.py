@@ -44,7 +44,7 @@ def _combinatorics(items, n):
 def produce_final_states(process, collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
                          noTracks=False, noPhotons=False, zzMode=False,
-                         rochCor="", eleCor="", useMiniAOD=False):
+                         rochCor="", eleCor="", useMiniAOD=False, use25ns=False):
 
     muonsrc = collections['muons']
     esrc = collections['electrons']
@@ -190,6 +190,15 @@ def produce_final_states(process, collections, output_commands,
         filter=cms.bool(False),
     )
 
+    if use25ns:
+        electronCleaning = ("pt>10&&userInt('cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto')>0"
+                            "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
+                            "-0.5*userIso(2),0.0))/pt()<0.3")
+    else:
+        electronCleaning = ("pt>10&&userInt('cutBasedElectronID-CSA14-50ns-V1-standalone-veto')>0"
+                            "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
+                            "-0.5*userIso(2),0.0))/pt()<0.3")
+
     process.jetsFiltered = cms.EDProducer(
         "PATJetCleaner",
         src=cms.InputTag(jetsrc),
@@ -213,11 +222,7 @@ def produce_final_states(process, collections, output_commands,
             electrons=cms.PSet(
                 src=cms.InputTag("electronsForFinalStates"),
                 algorithm=cms.string("byDeltaR"),
-                preselection=cms.string(
-                    # TODO: 25/50 ns
-                    "pt>10&&userInt('cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto')>0"
-                    "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
-                    "-0.5*userIso(2),0.0))/pt()<0.3"),
+                preselection=cms.string(electronCleaning),
                 deltaR=cms.double(0.3),
                 checkRecoComponents=cms.bool(False),
                 pairCut=cms.string(""),

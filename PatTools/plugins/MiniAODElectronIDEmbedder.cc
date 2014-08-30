@@ -45,6 +45,7 @@ class MiniAODElectronIDEmbedder : public edm::EDProducer {
     edm::EDGetTokenT<reco::ConversionCollection> convToken_;
     edm::EDGetTokenT<reco::BeamSpot> beamToken_;
     edm::InputTag MVAidCollection_;
+    std::string bunchspacing_;
     EGammaMvaEleEstimatorCSA14* MVATrig_;
     reco::Vertex pv_;
     edm::Handle<reco::ConversionCollection> convs_;
@@ -58,10 +59,17 @@ MiniAODElectronIDEmbedder::MiniAODElectronIDEmbedder(const edm::ParameterSet& ps
   vtxToken_            = consumes<reco::VertexCollection>(pset.getParameter<edm::InputTag>("vertices"));
   convToken_           = consumes<reco::ConversionCollection>(pset.getParameter<edm::InputTag>("convcollection"));
   beamToken_           = consumes<reco::BeamSpot>(pset.getParameter<edm::InputTag>("beamspot"));
+  bunchspacing_        = pset.getUntrackedParameter<std::string>("bunchspacing","50ns");
 
   std::vector<std::string> myManualCatWeigths;
-  myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EB_BDT.weights.xml");
-  myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EE_BDT.weights.xml");
+  if (bunchspacing_ == "50ns"){
+    myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_50ns_EB_BDT.weights.xml");
+    myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_50ns_EE_BDT.weights.xml");
+  }
+  else{
+    myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EB_BDT.weights.xml");
+    myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EE_BDT.weights.xml");
+  }
   
   vector<string> myManualCatWeigthsTrig;
   string the_path;
@@ -104,7 +112,7 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     // mva
     electron.addUserFloat("mvaTrigV0CSA14",MVATrig_->mvaValue(electrons->at(i),false));
 
-    // cutbased id TODO
+    // cutbased id 
     float etaSC_ = electron.superCluster()->eta();
     bool veto25 = false, loose25 = false, medium25 = false, tight25 = false;
     bool veto50 = false, loose50 = false, medium50 = false, tight50 = false;
