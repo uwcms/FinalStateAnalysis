@@ -204,7 +204,8 @@ def produce_final_states(process, collections, output_commands,
         src=cms.InputTag(jetsrc),
         # I leave it loose here, can be tightened at the last step
         preselection=cms.string(
-            "pt>20 & abs(eta) < 2.5"), # need to add back in jet id
+            "pt>20 & abs(eta) < 2.5"
+            "& userFloat('idLoose')"),
         # overlap checking configurables
         checkOverlaps=cms.PSet(
             muons=cms.PSet(

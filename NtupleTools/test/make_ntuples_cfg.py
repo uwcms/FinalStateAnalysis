@@ -278,7 +278,13 @@ if options.rerunFSA:
         )
         output_commands.append('*_miniPatElectrons_*_*')
         fs_daughter_inputs['electrons'] = "miniPatElectrons"
-        process.runMiniAODObjectEmbedding = cms.Path(process.miniPatElectrons)
+        process.miniPatJets = cms.EDProducer(
+            "MiniJetIdEmbedder",
+            src=cms.InputTag(fs_daughter_inputs['jets'])
+        )
+        output_commands.append('*_miniPatJets_*_*')
+        fs_daughter_inputs['jets'] = 'miniPatJets'
+        process.runMiniAODObjectEmbedding = cms.Path(process.miniPatElectrons+process.miniPatJets)
         process.schedule.append(process.runMiniAODObjectEmbedding)
 
     # Eventually, set buildFSAEvent to False, currently working around bug

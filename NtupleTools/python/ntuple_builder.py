@@ -70,6 +70,7 @@ _muon_template = PSet(
 _bjet_template= PSet(
     templates.bjets.btagging,
     templates.candidates.kinematics,
+    templates.bjets.pujets,
 #    templates.candidates.vertex_info, # Always filled with 0 as far as I can tell
 )
 
@@ -309,7 +310,7 @@ def make_ntuple(*legs, **kwargs):
             # cleaning.py
             "tauVetoPt20VLooseHPS(NewDM)?Vtx", # deprecated, could be changed to a different combined iso discriminator
             # cleaning.py and electrons.py
-            "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?", # electron MVA not yet in miniAOD (or done at all)
+            "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?",
             # electrons.py
             #"e[1-9]?MVA(Non)?Trig(IDISO)?(PUSUB)?",
             "e[1-9]?MVAIDH2TauWP",# electron MVA not yet in miniAOD (or done at all)
