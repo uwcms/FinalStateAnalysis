@@ -131,10 +131,10 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
       loose50 = cutBasedIDHelper(electron,0.025,0.097,0.032,0.12,0.099,0.88,0.11,0.21,1);
       medium50 = cutBasedIDHelper(electron,0.023,0.056,0.030,0.099,0.068,0.78,0.11,0.15,1);
       tight50 = cutBasedIDHelper(electron,0.019,0.043,0.029,0.08,0.037,0.065,0.076,0.14,1);
-      veto25 = cutBasedIDHelper(electron,0.0141,0.2591,0.371,0.1335,0.2232,0.9513,0.1542,0.3816,3);
-      loose25 = cutBasedIDHelper(electron,0.0124,0.0642,0.035,0.1115,0.096,0.9187,0.1443,0.3529,1);
+      veto25 = cutBasedIDHelper(electron,0.0141,0.2591,0.0371,0.1335,0.2232,0.9513,0.1542,0.3816,3);
+      loose25 = cutBasedIDHelper(electron,0.0124,0.0642,0.035,0.1115,0.098,0.9187,0.1443,0.3529,1);
       medium25 = cutBasedIDHelper(electron,0.0108,0.0455,0.0318,0.097,0.0845,0.7523,0.1201,0.254,1);
-      tight25 = cutBasedIDHelper(electron,0.106,0.0359,0.305,0.0835,0.0163,0.5999,0.1126,0.2075,1);
+      tight25 = cutBasedIDHelper(electron,0.0106,0.0359,0.0305,0.0835,0.0163,0.5999,0.1126,0.2075,1);
     }
 
     electron.addUserInt("cutBasedElectronID-CSA14-50ns-V1-standalone-veto",veto50);
