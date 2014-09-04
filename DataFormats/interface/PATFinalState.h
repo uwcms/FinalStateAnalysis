@@ -301,6 +301,8 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     const float getDZ(const size_t i) const;
 
+    const bool isTightMuon(const size_t i) const;
+
   private:
     edm::Ptr<PATFinalStateEvent> event_;
 };

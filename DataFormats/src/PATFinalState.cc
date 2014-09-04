@@ -955,3 +955,8 @@ const float PATFinalState::getDZ(const size_t i) const
   
   return dynamic_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("dz");
 }
+
+const bool PATFinalState::isTightMuon(const size_t i) const
+{
+  return daughterAsMuon(i)->isTightMuon(*vertexObject());
+}

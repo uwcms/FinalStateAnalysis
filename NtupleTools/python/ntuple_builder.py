@@ -70,6 +70,7 @@ _muon_template = PSet(
 _bjet_template= PSet(
     templates.bjets.btagging,
     templates.candidates.kinematics,
+    templates.bjets.pujets,
 #    templates.candidates.vertex_info, # Always filled with 0 as far as I can tell
 )
 
@@ -309,9 +310,9 @@ def make_ntuple(*legs, **kwargs):
             # cleaning.py
             "tauVetoPt20VLooseHPS(NewDM)?Vtx", # deprecated, could be changed to a different combined iso discriminator
             # cleaning.py and electrons.py
-            "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?", # electron MVA not yet in miniAOD (or done at all)
+            "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?",
             # electrons.py
-            "e[1-9]?MVA(Non)?Trig(IDISO)?(PUSUB)?", # electron MVA not yet in miniAOD (or done at all)
+            #"e[1-9]?MVA(Non)?Trig(IDISO)?(PUSUB)?",
             "e[1-9]?MVAIDH2TauWP",# electron MVA not yet in miniAOD (or done at all)
             # event.py
             "mva_met((Et)|(Phi))", # not yet implemented in miniAOD
@@ -325,7 +326,7 @@ def make_ntuple(*legs, **kwargs):
             "t[1-9]?DZ",
             #
             # Remove because old
-            "[em][1-9]?((WW)|(MIT)|(CB))ID(_((LOOSE)|(MEDIUM)|(TIGHT)|(VETO)))?",
+            #"[em][1-9]?((WW)|(MIT)|(CB))ID(_((LOOSE)|(MEDIUM)|(TIGHT)|(VETO)))?",
             "eMVAIDH2TauWP",
             "\w*201[12]\w*",
             "\w*[(Fall)(Winter)(Spring)(Summer)]1[12]\w*",

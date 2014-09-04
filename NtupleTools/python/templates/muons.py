@@ -18,7 +18,8 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 id = PSet(
     objectVBTFID = '{object}.userInt("VBTF")',
     objectWWID = '{object}.userInt("WWID")',
-    objectPFIDTight = '{object}.userInt("tightID")',
+    #objectPFIDTight = '{object}.userInt("tightID")',
+    objectPFIDTight = 'isTightMuon({object_idx})',
     objectIDHZG2011 = '{object}.userInt("HZG2011")',
     objectIDHZG2012 = '{object}.userInt("HZG2012")',
     # For charged, we use ALL charged particles

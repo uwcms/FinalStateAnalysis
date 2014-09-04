@@ -44,7 +44,7 @@ def _combinatorics(items, n):
 def produce_final_states(process, collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
                          noTracks=False, noPhotons=False, zzMode=False,
-                         rochCor="", eleCor="", useMiniAOD=False):
+                         rochCor="", eleCor="", useMiniAOD=False, use25ns=False):
 
     muonsrc = collections['muons']
     esrc = collections['electrons']
@@ -190,14 +190,22 @@ def produce_final_states(process, collections, output_commands,
         filter=cms.bool(False),
     )
 
+    if use25ns:
+        electronCleaning = ("pt>10&&userInt('cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto')>0"
+                            "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
+                            "-0.5*userIso(2),0.0))/pt()<0.3")
+    else:
+        electronCleaning = ("pt>10&&userInt('cutBasedElectronID-CSA14-50ns-V1-standalone-veto')>0"
+                            "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
+                            "-0.5*userIso(2),0.0))/pt()<0.3")
+
     process.jetsFiltered = cms.EDProducer(
         "PATJetCleaner",
         src=cms.InputTag(jetsrc),
         # I leave it loose here, can be tightened at the last step
         preselection=cms.string(
-            "pt>20 & abs(eta) < 2.5 & "
-            "userFloat('idLoose')"),
-                # & userInt('fullIdLoose')"),
+            "pt>20 & abs(eta) < 2.5"
+            "& userFloat('idLoose')"),
         # overlap checking configurables
         checkOverlaps=cms.PSet(
             muons=cms.PSet(
@@ -215,10 +223,7 @@ def produce_final_states(process, collections, output_commands,
             electrons=cms.PSet(
                 src=cms.InputTag("electronsForFinalStates"),
                 algorithm=cms.string("byDeltaR"),
-                preselection=cms.string(
-                    "pt>10&&userFloat('wp95')>0"
-                    "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
-                    "-0.5*userIso(2),0.0))/pt()<0.3"),
+                preselection=cms.string(electronCleaning),
                 deltaR=cms.double(0.3),
                 checkRecoComponents=cms.bool(False),
                 pairCut=cms.string(""),
