@@ -330,6 +330,7 @@ def make_ntuple(*legs, **kwargs):
             "eMVAIDH2TauWP",
             "\w*201[12]\w*",
             "\w*[(Fall)(Winter)(Spring)(Summer)]1[12]\w*",
+            "t[1-9]?S?IP3D(Sig)?",
             ]
 
         allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")
