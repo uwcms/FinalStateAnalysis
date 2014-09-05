@@ -23,7 +23,7 @@ vertex_info = PSet(
     objectVZ = '{object}.vz',
     objectIP3D = 'getIP3D({object_idx})',
     objectIP3DSig = 'getIP3DSig({object_idx})', # uncertainty ("significance") of IP3D
-    objectSIP3D = 'getIP3D({object_idx}) / getIP3dSig({object_idx})',
+    objectSIP3D = 'getIP3D({object_idx}) / getIP3DSig({object_idx})',
 )
 
 # The info about the associated pat::Jet
