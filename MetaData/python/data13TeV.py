@@ -2,7 +2,7 @@
 Data definitions for 13 TeV samples.
 '''
 
-from datacommon import square, cube, quad, picobarns, br_w_leptons, br_z_leptons, query_cli, picobarns
+from datacommon import square, cube, quad, picobarns, br_w_leptons, br_z_leptons, query_cli
 
 data_name_map = {}
 
