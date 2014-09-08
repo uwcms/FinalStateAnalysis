@@ -4,6 +4,7 @@ CVS
 *.png
 *.C
 *.tex
+*.json
 __init__.py
 *.root
 do_*.txt
