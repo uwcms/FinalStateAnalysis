@@ -53,6 +53,7 @@ namespace pattools {
     std::vector<ea_info>::const_iterator i = eas.begin();
     std::vector<ea_info>::const_iterator e = eas.end();
 
+    --e;  //To take care of the cases when eta > 3.0
     while(fabs(pho.superCluster()->eta()) >= i->eta_max && i != e) ++i;    
     
     return i->eff_area;
