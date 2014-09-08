@@ -19,7 +19,8 @@ kinematics = PSet(
 )
 
 vertex_info = PSet(
-    objectDZ = 'getDZ({object_idx})',
+    objectPVDZ = 'getPVDZ({object_idx})',
+    objectPVDXY = 'getPVDXY({object_idx})',
     objectVZ = '{object}.vz',
     objectIP3D = 'getIP3D({object_idx})',
     objectIP3DSig = 'getIP3DSig({object_idx})', # uncertainty ("significance") of IP3D

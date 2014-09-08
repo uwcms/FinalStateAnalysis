@@ -299,7 +299,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     const float getIP3DSig(const size_t i) const;
 
-    const float getDZ(const size_t i) const;
+    const float getPVDZ(const size_t i) const;
+
+    const float getPVDXY(const size_t i) const;
 
     const bool isTightMuon(const size_t i) const;
 
