@@ -9,6 +9,10 @@
 
  "VBFHZZ" : "/VBF_HToZZTo4L_M-125_13TeV-powheg-pythia6/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
 
+ "DYJetsToLL_M-50" : "/DYJetsToLL_M-50_13TeV-madgraph-pythia8-tauola_v2/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+
+ "ZZJetsTo4L" : "/ZZTo4L_Tune4C_13TeV-powheg-pythia8/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM", 
+
  "Bprime_M1000" : "/BprimeBprime_M_1000_Tune4C_13TeV-madgraph/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
  "Bprime_M2000" : "/BprimeBprime_M_2000_Tune4C_13TeV-madgraph/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
  "Bprime_M3000" : "/BprimeBprime_M_3000_Tune4C_13TeV-madgraph/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM"

@@ -115,9 +115,6 @@ tracking = PSet(
         '{object}.globalTrack().hitPattern().numberOfValidMuonHits() : -1',
     objectMatchedStations = '{object}.numberOfMatchedStations',
     objectD0 = '{object}.dB("PV3D")',
-    objectPVDXY = '{object}.userFloat("ipDXY")',
-    objectPVDZ = '{object}.userFloat("dz")'
-
 )
 
 # Trigger matching

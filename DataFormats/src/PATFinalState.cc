@@ -935,7 +935,7 @@ const float PATFinalState::getIP3DSig(const size_t i) const
 return static_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("ip3DS");
 }
 
-const float PATFinalState::getDZ(const size_t i) const
+const float PATFinalState::getPVDZ(const size_t i) const
 {
   if(event_->isMiniAOD())
     {
@@ -954,6 +954,27 @@ const float PATFinalState::getDZ(const size_t i) const
     }
   
   return dynamic_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("dz");
+}
+
+const float PATFinalState::getPVDXY(const size_t i) const
+{
+  if(event_->isMiniAOD())
+    {
+      if(abs(daughter(i)->pdgId()) == 11)
+	{
+	  const edm::Ptr<reco::Vertex> pv = event_->pv();
+	  return daughterAsElectron(i)->gsfTrack()->dxy(pv->position());
+	}
+      else if(abs(daughter(i)->pdgId()) == 13)
+	{
+	  const edm::Ptr<reco::Vertex> pv = event_->pv();
+	  return daughterAsMuon(i)->muonBestTrack()->dxy(pv->position());
+	}
+      
+      throw cms::Exception("InvalidParticle") << "FSA can only find dXY for electron and muon for now" << std::endl;
+    }
+  
+  return dynamic_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("ipDXY");
 }
 
 const bool PATFinalState::isTightMuon(const size_t i) const

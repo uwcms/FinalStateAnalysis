@@ -312,7 +312,7 @@ def make_ntuple(*legs, **kwargs):
             # cleaning.py and electrons.py
             "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?",
             # electrons.py
-            #"e[1-9]?MVA(Non)?Trig(IDISO)?(PUSUB)?",
+            "e[1-9]?MVANonTrig((IDISO)|(PUSUB))",
             "e[1-9]?MVAIDH2TauWP",# electron MVA not yet in miniAOD (or done at all)
             # event.py
             "mva_met((Et)|(Phi))", # not yet implemented in miniAOD
@@ -324,12 +324,14 @@ def make_ntuple(*legs, **kwargs):
             # candidates.py
             "t[1-9]?IP3D(Sig)?", # tau impact parameter interface is weird, will add if anyone needs it
             "t[1-9]?DZ",
+            "t[1-9]?DXY",
             #
             # Remove because old
-            #"[em][1-9]?((WW)|(MIT)|(CB))ID(_((LOOSE)|(MEDIUM)|(TIGHT)|(VETO)))?",
+            "[em][1-9]?((WW)|(MIT))ID(_((LOOSE)|(MEDIUM)|(TIGHT)|(VETO)))?",
             "eMVAIDH2TauWP",
             "\w*201[12]\w*",
             "\w*[(Fall)(Winter)(Spring)(Summer)]1[12]\w*",
+            "t[1-9]?S?IP3D(Sig)?",
             ]
 
         allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")

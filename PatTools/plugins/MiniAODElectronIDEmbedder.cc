@@ -47,6 +47,7 @@ class MiniAODElectronIDEmbedder : public edm::EDProducer {
     edm::InputTag MVAidCollection_;
     std::string bunchspacing_;
     EGammaMvaEleEstimatorCSA14* MVATrig_;
+    EGammaMvaEleEstimatorCSA14* MVANonTrig_;
     reco::Vertex pv_;
     edm::Handle<reco::ConversionCollection> convs_;
     edm::Handle<reco::BeamSpot> thebs_;
@@ -55,34 +56,61 @@ class MiniAODElectronIDEmbedder : public edm::EDProducer {
 // class member functions
 MiniAODElectronIDEmbedder::MiniAODElectronIDEmbedder(const edm::ParameterSet& pset) {
   electronsCollection_ = consumes<pat::ElectronCollection>(pset.getParameter<edm::InputTag>("src"));
-  MVAidCollection_     = pset.getParameter<edm::InputTag>("MVAId");
+  //  MVAidCollection_     = pset.getParameter<edm::InputTag>("MVAId");
   vtxToken_            = consumes<reco::VertexCollection>(pset.getParameter<edm::InputTag>("vertices"));
   convToken_           = consumes<reco::ConversionCollection>(pset.getParameter<edm::InputTag>("convcollection"));
   beamToken_           = consumes<reco::BeamSpot>(pset.getParameter<edm::InputTag>("beamspot"));
   bunchspacing_        = pset.getUntrackedParameter<std::string>("bunchspacing","50ns");
 
-  std::vector<std::string> myManualCatWeigths;
+  std::vector<std::string> myManualCatWeightsTrigXML;
   if (bunchspacing_ == "50ns"){
-    myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_50ns_EB_BDT.weights.xml");
-    myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_50ns_EE_BDT.weights.xml");
+    myManualCatWeightsTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_50ns_EB_BDT.weights.xml");
+    myManualCatWeightsTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_50ns_EE_BDT.weights.xml");
   }
   else{
-    myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EB_BDT.weights.xml");
-    myManualCatWeigths.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EE_BDT.weights.xml");
+    myManualCatWeightsTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EB_BDT.weights.xml");
+    myManualCatWeightsTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EE_BDT.weights.xml");
   }
   
-  vector<string> myManualCatWeigthsTrig;
+  vector<string> myManualCatWeightsTrig;
   string the_path;
-  for (unsigned i  = 0 ; i < myManualCatWeigths.size() ; i++){
-    the_path = edm::FileInPath ( myManualCatWeigths[i] ).fullPath();
-    myManualCatWeigthsTrig.push_back(the_path);
+  for (unsigned i  = 0 ; i < myManualCatWeightsTrigXML.size() ; i++){
+    the_path = edm::FileInPath ( myManualCatWeightsTrigXML[i] ).fullPath();
+    myManualCatWeightsTrig.push_back(the_path);
   }
   
   MVATrig_ = new EGammaMvaEleEstimatorCSA14();
   MVATrig_->initialize("BDT",
                        EGammaMvaEleEstimatorCSA14::kTrig,
                        true,
-                       myManualCatWeigthsTrig);
+                       myManualCatWeightsTrig);
+
+  std::vector<std::string> myManualCatWeightsNonTrigXML;
+  // Should eventually be passed in as arguments, as they will change over time
+  if (bunchspacing_ == "50ns"){
+    myManualCatWeightsNonTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EB_5_50ns_BDT.weights.xml");
+    myManualCatWeightsNonTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EE_5_50ns_BDT.weights.xml");
+    myManualCatWeightsNonTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EB_10_50ns_BDT.weights.xml");
+    myManualCatWeightsNonTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EE_10_50ns_BDT.weights.xml");
+  }
+  else{
+    myManualCatWeightsNonTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EB_5_25ns_BDT.weights.xml");
+    myManualCatWeightsNonTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EE_5_25ns_BDT.weights.xml");
+    myManualCatWeightsNonTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EB_10_25ns_BDT.weights.xml");
+    myManualCatWeightsNonTrigXML.push_back("EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EE_10_25ns_BDT.weights.xml");
+  }
+  
+  vector<string> myManualCatWeightsNonTrig;
+  for (unsigned i  = 0 ; i < myManualCatWeightsNonTrigXML.size() ; i++){
+    the_path = edm::FileInPath ( myManualCatWeightsNonTrigXML[i] ).fullPath();
+    myManualCatWeightsNonTrig.push_back(the_path);
+  }
+  
+  MVANonTrig_ = new EGammaMvaEleEstimatorCSA14();
+  MVANonTrig_->initialize("BDT",
+                       EGammaMvaEleEstimatorCSA14::kNonTrig,
+                       true,
+                       myManualCatWeightsNonTrig);
 
   produces<pat::ElectronCollection>();
 }
@@ -111,6 +139,7 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
 
     // mva
     electron.addUserFloat("mvaTrigV0CSA14",MVATrig_->mvaValue(electrons->at(i),false));
+    electron.addUserFloat("mvaNonTrigV0CSA14",MVANonTrig_->mvaValue(electrons->at(i),false));
 
     // cutbased id 
     float etaSC_ = electron.superCluster()->eta();
