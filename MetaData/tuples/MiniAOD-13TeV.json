@@ -1,19 +1,29 @@
 {
- "Zjets_M50" : "/DYJetsToLL_M-50_13TeV-pythia6/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
-
- "Wjets" : "/WJetsToLNu_13TeV-madgraph-pythia8-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
-
- "TTjets" : "/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v2/MINIAODSIM",
-
- "ggHZZ" : "/GluGluToHToZZTo4L_M-125_13TeV-powheg-pythia6/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
-
- "VBFHZZ" : "/VBF_HToZZTo4L_M-125_13TeV-powheg-pythia6/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
-
- "DYJetsToLL_M-50" : "/DYJetsToLL_M-50_13TeV-madgraph-pythia8-tauola_v2/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
-
- "ZZJetsTo4L" : "/ZZTo4L_Tune4C_13TeV-powheg-pythia8/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM", 
-
- "Bprime_M1000" : "/BprimeBprime_M_1000_Tune4C_13TeV-madgraph/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
- "Bprime_M2000" : "/BprimeBprime_M_2000_Tune4C_13TeV-madgraph/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
- "Bprime_M3000" : "/BprimeBprime_M_3000_Tune4C_13TeV-madgraph/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM"
+  "ZZTo4L-PU20bx25" : "/ZZTo4L_Tune4C_13TeV-powheg-pythia8/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "Zjets_M50-PU20bx25" : "/DYJetsToLL_M-50_13TeV-madgraph-pythia8-tauola_v2/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "T_tW-PU20bx25" : "/T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "Tbar_tW-PU20bx25" : "/Tbar_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "T_s-PU20bx25" : "/TToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "Tbar_s-PU20bx25" : "/TBarToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "T_t-PU20bx25" : "/TToLeptons_t-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v2/MINIAODSIM",
+  "Tbar_t-PU20bx25" : "/TBarToLeptons_t-channel_Tune4C_CSA14_13TeV-aMCatNLO-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "TTjets-PU20bx25" : "/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v2/MINIAODSIM",
+  "QCD_5to10-PU20bx25" : "/QCD_Pt-5to10_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_10to15-PU20bx25" : "/QCD_Pt-10to15_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_15to30-PU20bx25" : "/QCD_Pt-15to30_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_30to50-PU20bx25" : "/QCD_Pt-30to50_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_50to80-PU20bx25" : "/QCD_Pt-50to80_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_80to120-PU20bx25" : "/QCD_Pt-80to120_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_120to170-PU20bx25" : "/QCD_Pt-120to170_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_170to300-PU20bx25" : "/QCD_Pt-170to300_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_300to470-PU20bx25" : "/QCD_Pt-300to470_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_470to600-PU20bx25" : "/QCD_Pt-470to600_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_600to800-PU20bx25" : "/QCD_Pt-600to800_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_800to1000-PU20bx25" : "/QCD_Pt-800to1000_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_1000to1400-PU20bx25" : "/QCD_Pt-1000to1400_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_1400to1800-PU20bx25" : "/QCD_Pt-1400to1800_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_1800-PU20bx25" : "/QCD_Pt-1800_Tune4C_13TeV_pythia8/Spring14miniaod-castor_PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_1800to2400-PU20bx25" : "/QCD_Pt-1800to2400_Tune4C_13TeV_pythia8/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_2400to3200-PU20bx25" : "/QCD_Pt-2400to3200_Tune4C_13TeV_pythia8/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "QCD_3200-PU20bx25" : "/QCD_Pt-3200_Tune4C_13TeV_pythia8/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM"
 }
