@@ -141,6 +141,22 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     electron.addUserFloat("mvaTrigV0CSA14",MVATrig_->mvaValue(electrons->at(i),false));
     electron.addUserFloat("mvaNonTrigV0CSA14",MVANonTrig_->mvaValue(electrons->at(i),false));
 
+    float mva = MVANonTrig_->mvaValue(electrons->at(i),false);
+    float pt = electron.pt();
+    float eta = electron.superCluster()->eta();
+    int mvaidpass = 0;
+
+    if (pt > 5.0 && pt < 10.0) {
+      if ( (eta<0.8 && mva>0.47) || (eta>0.8 && eta<1.479 && mva>0.004) || (eta>1.479 && mva>0.295) )
+        mvaidpass=1;
+    }
+    else if (pt > 10.0) {
+      if ( (eta<0.8 && mva>-0.34) || (eta>0.8 && eta<1.479 && mva>-0.65) || (eta>1.479 && mva>0.6) )
+        mvaidpass=1;
+    }
+
+    electron.addUserInt("mvaidwp",mvaidpass);
+
     // cutbased id 
     float etaSC_ = electron.superCluster()->eta();
     bool veto25 = false, loose25 = false, medium25 = false, tight25 = false;

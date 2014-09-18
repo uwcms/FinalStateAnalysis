@@ -14,21 +14,21 @@
 
 #include "DataFormats/PatCandidates/interface/Jet.h"
 
-class MiniJetIdEmbedder : public edm::EDProducer {
+class MiniAODJetIdEmbedder : public edm::EDProducer {
   public:
-    MiniJetIdEmbedder(const edm::ParameterSet& pset);
-    virtual ~MiniJetIdEmbedder(){}
+    MiniAODJetIdEmbedder(const edm::ParameterSet& pset);
+    virtual ~MiniAODJetIdEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
     edm::InputTag src_;
 };
 
-MiniJetIdEmbedder::MiniJetIdEmbedder(const edm::ParameterSet& pset) {
+MiniAODJetIdEmbedder::MiniAODJetIdEmbedder(const edm::ParameterSet& pset) {
   src_ = pset.getParameter<edm::InputTag>("src");
   produces<pat::JetCollection>();
 }
 
-void MiniJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
+void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
   std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
 
   edm::Handle<edm::View<pat::Jet> > input;
@@ -87,4 +87,4 @@ void MiniJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"
-DEFINE_FWK_MODULE(MiniJetIdEmbedder);
+DEFINE_FWK_MODULE(MiniAODJetIdEmbedder);
