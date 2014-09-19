@@ -50,6 +50,20 @@ datadefs["ZZTo4L-PU20bx25"] = {
     'calibrationTarget': 'Spring14miniaod',
     'x_sec': 15.4*picobarns,
 }
+datadefs["WZTo3LNu-PU20bx25"] = {
+    'analyses': [],
+    'datasetpath': '/WZTo3LNu_CT10_13TeV-powheg-pythia8-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM',
+    'pu': '20bx25',
+    'calibrationTarget': 'Spring14miniaod',
+    'x_sec': -999,
+}
+datadefs["WWTo2L2Nu-PU20bx25"] = {
+    'analyses': [],
+    'datasetpath': '/WWTo2L2Nu_CT10_13TeV-powheg-pythia8-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM',
+    'pu': '20bx25',
+    'calibrationTarget': 'Spring14miniaod',
+    'x_sec': -999,
+}
 datadefs["T_tW-PU20bx25"] = {
     'analyses': [],
     'datasetpath': '/T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM',
