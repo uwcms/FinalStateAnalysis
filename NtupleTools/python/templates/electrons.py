@@ -201,8 +201,6 @@ tracking = PSet(
     objectMissingHits = cms.string(
         '? {object}.gsfTrack.isNonnull? '
         '{object}.gsfTrack.trackerExpectedHitsInner.numberOfHits() : 10'),
-    objectPVDZ = 'getPVDZ({object_idx})',
-    objectPVDXY = 'getPVDXY({object_idx})',
 )
 
 # Information about the matched supercluster

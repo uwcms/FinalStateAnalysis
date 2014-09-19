@@ -323,8 +323,8 @@ def make_ntuple(*legs, **kwargs):
             "[emtgj][1-9]?MtToMVAMET", # not yet implemented in miniAOD
             # candidates.py
             "t[1-9]?IP3D(Sig)?", # tau impact parameter interface is weird, will add if anyone needs it
-            "t[1-9]?DZ",
-            "t[1-9]?DXY",
+            "t[1-9]?PVDZ",
+            "t[1-9]?PVDXY",
             #
             # Remove because old
             "[em][1-9]?((WW)|(MIT))ID(_((LOOSE)|(MEDIUM)|(TIGHT)|(VETO)))?",
