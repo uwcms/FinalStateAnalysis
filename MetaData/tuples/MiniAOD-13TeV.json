@@ -1,6 +1,9 @@
 {
   "ZZTo4L-PU20bx25" : "/ZZTo4L_Tune4C_13TeV-powheg-pythia8/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
   "Zjets_M50-PU20bx25" : "/DYJetsToLL_M-50_13TeV-madgraph-pythia8-tauola_v2/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "Wjets-PU20bx25" : "/WJetsToLNu_13TeV-madgraph-pythia8-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "ggHZZ-PU20bx25" : "/GluGluToHToZZTo4L_M-125_13TeV-powheg-pythia6/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
+  "VBFHZZ-PU20bx25" : "/VBF_HToZZTo4L_M-125_13TeV-powheg-pythia6/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
   "T_tW-PU20bx25" : "/T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
   "Tbar_tW-PU20bx25" : "/Tbar_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
   "T_s-PU20bx25" : "/TToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/Spring14miniaod-PU20bx25_POSTLS170_V5-v1/MINIAODSIM",
