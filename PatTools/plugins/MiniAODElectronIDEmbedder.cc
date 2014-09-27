@@ -21,6 +21,7 @@
 #include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
 
 #include "DataFormats/Common/interface/ValueMap.h"
+#include "RecoEgamma/EgammaTools/interface/ConversionTools.h"
 
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/EgammaCandidates/interface/ConversionFwd.h"
@@ -156,6 +157,11 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     }
 
     electron.addUserInt("mvaidwp",mvaidpass);
+
+    if( thebs_.isValid() && convs_.isValid() ) {
+       bool hasConversion = ConversionTools::hasMatchedConversion(electron,convs_,thebs_->position());
+       electron.addUserFloat("hasConversion", hasConversion);
+    }
 
     // cutbased id 
     float etaSC_ = electron.superCluster()->eta();
