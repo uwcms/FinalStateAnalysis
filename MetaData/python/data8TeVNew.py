@@ -449,6 +449,70 @@ datadefs = {
         'x_sec': 264.,
     },
 
+    'TTZJets' : {
+        'analyses': [],
+        'datasetpath': '/TTZJets_8TeV-madgraph_v2/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 0.232,
+    },
+
+    'TTWJets' : {
+        'analyses': [],
+        'datasetpath': '/TTWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 0.2057,
+    },
+
+    'TTWWJets' : {
+        'analyses': [],
+        'datasetpath': '/TTWWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 0.002,
+    },
+
+    'TTGJets' : {
+        'analyses': [],
+        'datasetpath': '/TTGJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 2.166,
+    },
+
+    'ZZZNoGstarJets' : {
+        'analyses': [],
+        'datasetpath': '/ZZZNoGstarJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 0.0192,
+    },
+
+    'WWWJets' : {
+        'analyses': [],
+        'datasetpath': '/WWWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 0.08217,
+    },
+
+    'WWZNoGstarJets' : {
+        'analyses': [],
+        'datasetpath': '/WWZNoGstarJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 0.0633,
+    },
+
+    'WWGJets' : {
+        'analyses': [],
+        'datasetpath': '/WWGJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        'x_sec': 1.44,
+    },
+
 
 }
 
