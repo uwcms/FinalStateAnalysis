@@ -278,14 +278,42 @@ if options.rerunFSA:
         )
         output_commands.append('*_miniPatElectrons_*_*')
         fs_daughter_inputs['electrons'] = "miniPatElectrons"
+
         process.miniPatJets = cms.EDProducer(
             "MiniJetIdEmbedder",
             src=cms.InputTag(fs_daughter_inputs['jets'])
         )
         output_commands.append('*_miniPatJets_*_*')
         fs_daughter_inputs['jets'] = 'miniPatJets'
-        process.runMiniAODObjectEmbedding = cms.Path(process.miniPatElectrons+process.miniPatJets)
+
+        process.runMiniAODObjectEmbedding = cms.Path(
+            process.miniPatElectrons+
+            process.miniPatJets
+        )
         process.schedule.append(process.runMiniAODObjectEmbedding)
+
+        process.miniMuonsEmbedIp = cms.EDProducer(
+            "MiniAODMuonIpEmbedder",
+            src = cms.InputTag(fs_daughter_inputs['muons']),
+            vtxSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
+        )
+        output_commands.append('*_miniMuonsEmbedIp_*_*')
+        fs_daughter_inputs['muons'] = 'miniMuonsEmbedIp'
+
+        process.miniElectronsEmbedIp = cms.EDProducer(
+            "MiniAODElectronIpEmbedder",
+            src = cms.InputTag(fs_daughter_inputs['electrons']),
+            vtxSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
+        )
+        output_commands.append('*_miniElectronsEmbedIp_*_*')
+        fs_daughter_inputs['electrons'] = 'miniElectronsEmbedIp'
+
+        process.runMiniAODLeptonIpEmbedding = cms.Path(
+            process.miniMuonsEmbedIp+
+            process.miniElectronsEmbedIp
+        )
+        process.schedule.append(process.runMiniAODLeptonIpEmbedding)
+        
 
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
