@@ -94,5 +94,14 @@
   "LFV_VBF_v1" : "/hdfs/store/user/nkellams/LFV_VBFHToTauMu_M126_8TeV_Tauola_Pythia6",
   "LFV_GluGlu_v1" : "/hdfs/store/user/nkellams/LFV_GluGluHToTauMu_M126_8TeV_Tauola_Pythia6",
 
+  "TTGJets" : "/hdfs/store/user/dntaylor/TTGJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V19-v1/AODSIM/Fall2014_v2",
+  "TTWJets" : "/hdfs/store/user/dntaylor/TTWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Fall2014_v1",
+  "TTWWJets" : "/hdfs/store/user/dntaylor/TTWWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Fall2014_v1",
+  "TTZJets" : "/hdfs/store/user/dntaylor/TTZJets_8TeV-madgraph_v2/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Fall2014_v1",
+  "WWGJets" : "/hdfs/store/user/dntaylor/WWGJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Fall2014_v1",
+  "WWWJets" : "/hdfs/store/user/dntaylor/WWWJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Fall2014_v1",
+  "WWZNoGstarJets" : "/hdfs/store/user/dntaylor/WWZNoGstarJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Fall2014_v1",
+  "ZZZNoGstarJets" : "/hdfs/store/user/dntaylor/ZZZNoGstarJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Fall2014_v1",
+
   "VH_H2Tau_M-125_PavelSync" : "/hdfs/store/user/stephane/Pavel_sync_07-16-2013-patTuple_cfg"
 }
