@@ -159,8 +159,16 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         const std::string& metTag) const;
     double mtMET(int i, const std::string& metTag="") const;
     double mtMET(int i, const std::string& tag,
-		 const std::string& metName, const std::string& metTag, 
-		 const int applyPhiCorr) const;
+	const std::string& metName, const std::string& metTag, 
+	const int applyPhiCorr) const;
+    double mtMET(int i, const std::string& tag,
+        const std::string& metName, const std::string& metTag_type1, const std::string& metTag_ues,
+        const int applyPhiCorr) const;
+
+    double resetPhi( 
+	const std::string& metName, const std::string& metTag_type1, const std::string& metTag_ues,
+        const int applyPhiCorr) const ;
+
 
     double ht(const std::string& sysTags) const;
     double ht() const;
@@ -176,6 +184,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     /// Check if the ith and jth daughters are like flavored
     bool likeFlavor(int i, int j) const;
+
+    /// Check if the ith and jth objects are like in sign and match the given
+    /// charge. Return 0 if not, and 1 if true.
+    int hppCompatibility(int i, int j, int chg) const;
 
     /// Check how far in mass the subcandidate made by the ith and jth objects
     /// is from the Z mass.  If they are same sign, it will return 1000.

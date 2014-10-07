@@ -8,6 +8,7 @@ import multiprocessing
 from MegaWorker import MegaWorker
 from MegaMerger import MegaMerger
 import sys
+import errno
 
 def group_list(files, n=1):
     ''' Merge an iterable into groups of N '''
@@ -78,7 +79,17 @@ class MegaDispatcher(object):
             # Require all the workers to finish
             #input_q.join()
             for i, worker in enumerate(workers):
-                worker.join()
+                interrupted = True
+                while interrupted:
+                    try: # Avoid weird crashes from certain user system settings changes
+                        worker.join()
+                        interrupted = False
+                    except OSError, e:
+                        if e.errno == errno.EINTR:
+                            self.log.debug("Received EINTR from system, probably because of user system settings change")
+                            # interrupted, will just try to join again
+                        else:
+                            raise
                 exit_code = worker.exitcode
                 if exit_code:
                     everything_will_turn_out_okay = False

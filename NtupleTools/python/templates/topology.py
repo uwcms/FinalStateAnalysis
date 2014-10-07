@@ -16,12 +16,22 @@ mtToMET = PSet(
     objectMtToMET = 'mtMET({object_idx}, "raw")',
 
     #PF Type1 MET (and systematics)
-    objectMtToPFMET      = 'mtMET({object_idx}, "", "pfmet", ""     , 1)',
+    objectMtToPFMET      = 'mtMET({object_idx}, "", "pfmet", ""     , 1)',#1, apply phi correction
     objectMtToPfMet_Ty1  = 'mtMET({object_idx}, "", "pfmet", "type1", 1)',
     objectMtToPfMet_mes  = 'mtMET({object_idx}, "", "pfmet", "mes+" , 1)',
     objectMtToPfMet_tes  = 'mtMET({object_idx}, "", "pfmet", "tes+" , 1)',
     objectMtToPfMet_jes  = 'mtMET({object_idx}, "", "pfmet", "jes+" , 1)',
     objectMtToPfMet_ues  = 'mtMET({object_idx}, "", "pfmet", "ues+" , 1)',
+    objectMtToPfMet_Ty1_ues_plus = 'mtMET({object_idx}, "", "pfmet", "type1", "ues+", 1)',
+    objectMtToPfMet_Ty1_ues_minus = 'mtMET({object_idx}, "", "pfmet", "type1", "ues-", 1)',
+    objectMtToPfMet_mes_plus  = 'mtMET({object_idx}, "", "pfmet", "mes+" , 1)',
+    objectMtToPfMet_tes_plus  = 'mtMET({object_idx}, "", "pfmet", "tes+" , 1)',
+    objectMtToPfMet_jes_plus  = 'mtMET({object_idx}, "", "pfmet", "jes+" , 1)',
+    objectMtToPfMet_ues_plus  = 'mtMET({object_idx}, "", "pfmet", "ues+" , 1)',
+    objectMtToPfMet_mes_minus  = 'mtMET({object_idx}, "", "pfmet", "mes-" , 1)',
+    objectMtToPfMet_tes_minus  = 'mtMET({object_idx}, "", "pfmet", "tes-" , 1)',
+    objectMtToPfMet_jes_minus  = 'mtMET({object_idx}, "", "pfmet", "jes-" , 1)',
+    objectMtToPfMet_ues_minus  = 'mtMET({object_idx}, "", "pfmet", "ues-" , 1)',
 
     #MVA MET
     objectMtToMVAMET     = 'mtMET({object_idx}, "", "mvamet", "", 0)',
@@ -42,6 +52,8 @@ pairs = PSet(
 
     #Pairs + MET
     object1_object2_ToMETDPhi_Ty1 = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("type1").phi)',
+    object1_object2_ToMETDPhi_jes_plus = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("jes+").phi)',
+    object1_object2_ToMETDPhi_jes_minus = 'deltaPhi(subcand({object1_idx}, {object2_idx}).get.phi, evt.met("pfmet").userCand("jes-").phi)', 
 )
 
 svfit = PSet(
@@ -112,5 +124,45 @@ vbf = PSet(
    vbfj2pt = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").pt2',
    vbfdijetpt = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dijetpt',
    vbfditaupt = 'vbfVariables("pt >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").ditaupt',
+   vbfNJetsjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') & userFloat(\'idLoose\')").nJets',
+   vbfJetVeto30jes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdLoose\') & userFloat(\'idLoose\')").jets30',
+   vbfJetVeto20jes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdLoose\')  & userFloat(\'idLoose\')").jets20',
+   vbfJetVetoTight30jes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') & userFloat(\'idLoose\')").jets30',
+   vbfJetVetoTight20jes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\')  & userFloat(\'idLoose\')").jets20',
+   vbfMVAjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\') ").mva',
+   vbfMassjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").mass',
+   vbfDetajes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").deta',
+   vbfDphijes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dphi',
+   vbfj1etajes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").eta1',
+   vbfj2etajes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").eta2',
+   vbfVisptjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").c2',
+   vbfHrapjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").hrapidity',
+   vbfDijetrapjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dijetrapidity',
+   vbfDphihjjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\')  & userFloat(\'idLoose\')").dphihj',
+   vbfDphihjnometjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dphihj_nomet',
+   vbfj1ptjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").pt1',
+   vbfj2ptjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").pt2',
+   vbfdijetptjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dijetpt',
+   vbfditauptjes_plus = 'vbfVariables("userCand(\'jes+\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").ditaupt',
+   vbfNJetsjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') & userFloat(\'idLoose\')").nJets',
+   vbfJetVeto30jes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdLoose\') & userFloat(\'idLoose\')").jets30',
+   vbfJetVeto20jes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdLoose\')  & userFloat(\'idLoose\')").jets20',
+   vbfJetVetoTight30jes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') & userFloat(\'idLoose\')").jets30',
+   vbfJetVetoTight20jes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\')  & userFloat(\'idLoose\')").jets20',
+   vbfMVAjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\') ").mva',
+   vbfMassjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").mass',
+   vbfDetajes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").deta',
+   vbfDphijes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dphi',
+   vbfj1etajes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").eta1',
+   vbfj2etajes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").eta2',
+   vbfVisptjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").c2',
+   vbfHrapjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").hrapidity',
+   vbfDijetrapjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dijetrapidity',
+   vbfDphihjjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\')  & userFloat(\'idLoose\')").dphihj',
+   vbfDphihjnometjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dphihj_nomet',
+   vbfj1ptjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").pt1',
+   vbfj2ptjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").pt2',
+   vbfdijetptjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").dijetpt',
+   vbfditauptjes_minus = 'vbfVariables("userCand(\'jes-\').pt() >30& userInt(\'fullIdTight\') &  userFloat(\'idLoose\')").ditaupt',
 )
 

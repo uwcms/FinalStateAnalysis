@@ -23,28 +23,8 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
     </tr>
 </table>
 
-Installation for SL6 (abridged)
----------------------
-```
-scram project CMSSW_5_3_14
-cd CMSSW_5_3_14/src
-cmsenv
-git cms-init # needs to be done before ANYTHING else
-git clone --recursive https://github.com/uwcms/FinalStateAnalysis.git
-cd FinalStateAnalysis/recipeGIT
-kinit [cern_username]@CERN.CH
-./recipe.sh
-USER_CXXFLAGS="-Wno-delete-non-virtual-dtor -Wno-error=unused-but-set-variable -Wno-error=unused-variable" scram b -j 8
-```
-Now, you need to set the relevant environment variables and such
-
-```bash
-cmsenv
-source $CMSSW_BASE/src/FinalStateAnalysis/environment.sh
-```
-
-Installation for SL6 (detailed)
---------------------
+Installation
+------------
 
 Current CMSSW versions: ``5_3_14``.
 The installation instructions are the same for both.  
@@ -67,18 +47,26 @@ Checkout the FinalStateAnalysis repository::
   cd FinalStateAnalysis
 ```
 
-This will checkout the lastest and greatest version of the code.  You might also want the Summer 2013 compatible branch, if so you should additionally run:
+This will checkout `master` branch with the lastest and greatest version of the code.
+Use this branch for the production of PAT-tuples.
+You might also want the Summer 2013 compatible branch, if so you should additionally run:
+
 ```bash
-git checkout 53X_SLC6_Dev
+git checkout -b summer2013 origin/summer2013
 ```
+
+For development, use the `53X_SLC6_Dev` branch,
+
+```bash
+git checkout -b 53X_SLC6_Dev origin/53X_SLC6_Dev
+```
+
 and then proceed as normal.
 
 Checkout the needed CMSSW tags:
 
 ```bash
   cd recipe/
-  # You need to have CVS access -- Actually not, but do it anyway
-  kinit me@CERN.CH
   # Checkout needed packages and apply patches
   # This enables all options.  You can turn off things you don't need.
   # NB that in the hcp2012 changes the options won't do anything.
@@ -104,4 +92,3 @@ packages (note this is *not* necessary for PAT tuple production)::
   ./install_python.sh
   yolk -l # List installed packages
 ```
-

@@ -13,7 +13,7 @@ from RecoLuminosity.LumiDB import argparse
 import fnmatch
 from FinalStateAnalysis.MetaData.datadefs import datadefs
 from FinalStateAnalysis.Utilities.version import fsa_version
-from FinalStateAnalysis.Utilities.dbsinterface import get_dbs_info
+from FinalStateAnalysis.Utilities.dbsinterface import get_das_info
 from FinalStateAnalysis.PatTools.pattuple_option_configurator import \
     configure_pat_tuple
 import os
@@ -104,7 +104,7 @@ for sample in sorted(to_be_used):
     farmout_options = []
     if args.xrootd:
         #query DBS to get the filenames
-        files = get_dbs_info('file','dataset=%s' % sample_info['datasetpath'])
+        files = get_das_info('file dataset=%s' % sample_info['datasetpath'])
         os.system(mkdir_cmd) #make the directory now, we need to
         input_txt = '%s_inputfiles.txt' % sample
         input_txt_path = os.path.join(dag_directory, input_txt)
