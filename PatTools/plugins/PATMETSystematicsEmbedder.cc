@@ -28,6 +28,9 @@ class PATMETSystematicsEmbedder : public edm::EDProducer {
     edm::InputTag muonSrc_;
     edm::InputTag electronSrc_;
     edm::InputTag metSrc_;
+    edm::InputTag metT1Src_;
+    edm::InputTag metT0pcT1TxySrc_;
+    edm::InputTag metT0rtT1TxySrc_;
 
     bool applyType1ForTaus_;
     bool applyType1ForMuons_;
@@ -58,9 +61,14 @@ PATMETSystematicsEmbedder::PATMETSystematicsEmbedder(
     muonSrc_ = pset.getParameter<edm::InputTag>("muonSrc");
     electronSrc_ = pset.getParameter<edm::InputTag>("electronSrc");
     metSrc_ = pset.getParameter<edm::InputTag>("src");
+    metT1Src_ = pset.getParameter<edm::InputTag>("metT1Src");
+    metT0pcT1TxySrc_ = pset.getParameter<edm::InputTag>("metT0pcT1TxySrc");
+    metT0rtT1TxySrc_ = pset.getParameter<edm::InputTag>("metT0rtT1TxySrc");
 
     produces<ShiftedCandCollection>("metsRaw");
     produces<ShiftedCandCollection>("metType1");
+    produces<ShiftedCandCollection>("metT0pcT1Txy");
+    produces<ShiftedCandCollection>("metT0rtT1Txy");
     produces<ShiftedCandCollection>("metsMESUp");
     produces<ShiftedCandCollection>("metsMESDown");
     produces<ShiftedCandCollection>("metsTESUp");
@@ -110,12 +118,24 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   edm::Handle<edm::View<pat::Electron> > electrons;
   evt.getByLabel(electronSrc_, electrons);
 
-  edm::Handle<pat::METCollection> mets;
+  edm::Handle<edm::View<pat::MET> > mets;
   evt.getByLabel(metSrc_, mets);
+
+  edm::Handle<edm::View<pat::MET> > metT1s;
+  evt.getByLabel(metT1Src_, metT1s);
+
+  edm::Handle<edm::View<pat::MET> > metT0pcT1Txys;
+  evt.getByLabel(metT0pcT1TxySrc_, metT0pcT1Txys);
+
+  edm::Handle<edm::View<pat::MET> > metT0rtT1Txys;
+  evt.getByLabel(metT0rtT1TxySrc_, metT0rtT1Txys);
 
   assert(mets->size() == 1);
 
   const pat::MET& inputMET = mets->at(0);
+  const pat::MET& metT1 = metT1s->at(0);
+  const pat::MET& metT0pcT1Txy = metT0pcT1Txys->at(0);
+  const pat::MET& metT0rtT1Txy = metT0rtT1Txys->at(0);
   pat::MET outputMET = inputMET;
 
   // Raw MET
@@ -262,8 +282,12 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
 
   // Embed the type one corrected MET
   embedShift(outputMET, evt, "metType1", "type1",
-      metP4Type1 - outputMET.p4());
+      metT1.p4() - outputMET.p4());
 
+  embedShift(outputMET, evt,"metT0pcT1Txy", "type0pcT1Txy",
+      metT0pcT1Txy.p4() - outputMET.p4());
+  embedShift(outputMET, evt,"metT0rtT1Txy", "type0rtT1Txy",
+      metT0rtT1Txy.p4() - outputMET.p4());
 
   embedShift(outputMET, evt, "metsMESUp", "mes+",
       nominalMuonP4 - mesUpMuonP4);

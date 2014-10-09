@@ -442,8 +442,100 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.systematicsMET.muonSrc = cms.InputTag("cleanPatMuons")
     process.systematicsMET.electronSrc = cms.InputTag("cleanPatElectrons")
 
+    from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
+    process.patPfMet = patMETs.clone(
+        metSource = cms.InputTag('pfMet'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0rt = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0rt'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0rtT1 = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0rtT1'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0pc = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0pc'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0pcT1 = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0pcT1'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0rtTxy = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0rtTxy'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0rtT1Txy = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0rtT1Txy'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0pcTxy = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0pcTxy'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0pcT1Txy = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0pcT1Txy'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT1 = patMETs.clone(
+        metSource = cms.InputTag('pfMetT1'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT1xy = patMETs.clone(
+        metSource = cms.InputTag('pfMetT1Txy'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+
+    process.officialMETSequence = cms.Sequence(
+        process.correctionTermsPfMetType1Type2 
+        + process.correctionTermsPfMetType0RecoTrack 
+        + process.correctionTermsPfMetType0PFCandidate 
+        + process.correctionTermsPfMetShiftXY 
+        + process.correctionTermsCaloMet 
+        + process.caloMetT1 
+        + process.caloMetT1T2 
+        + process.pfMetT0rt 
+        + process.pfMetT0rtT1 
+        + process.pfMetT0pc 
+        + process.pfMetT0pcT1 
+        + process.pfMetT0rtTxy 
+        + process.pfMetT0rtT1Txy 
+        + process.pfMetT0pcTxy 
+        + process.pfMetT0pcT1Txy 
+        + process.pfMetT1 
+        + process.pfMetT1Txy
+        + process.patPfMet
+        + process.patPfMetT1
+        + process.patPfMetT1xy
+        + process.patPfMetT0rt
+        + process.patPfMetT0rtT1
+        + process.patPfMetT0pc
+        + process.patPfMetT0pcT1
+        + process.patPfMetT0rtTxy
+        + process.patPfMetT0rtT1Txy
+        + process.patPfMetT0pcTxy
+        + process.patPfMetT0pcT1Txy
+    )
+
+    output_commands.append('*_patPfMet*_*_*')
+
     final_met_collection = chain_sequence(
-        process.customizeMETSequence, "patMETsPF")
+        process.customizeMETSequence, "patPfMet")
+
+    process.tuplize += process.officialMETSequence
     process.tuplize += process.customizeMETSequence
     process.patMETsPF.addGenMET = bool(isMC)
     output_commands.append('*_%s_*_*' % final_met_collection.value())
@@ -458,13 +550,13 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.tuplize += mva_met_sequence
     output_commands.append('*_%s_*_*' % final_mvamet_collection.value())
 
-    # Keep all the data formats needed for the systematics
-    output_commands.append('recoLeafCandidates_*_*_%s'
-                           % process.name_())
-    # We can drop to jet and tau MET specific products. They were only used for
-    # computation of the MET numbers.
-    output_commands.append('drop recoLeafCandidates_*ForMETSyst_*_%s'
-                           % process.name_())
+    ## Keep all the data formats needed for the systematics
+    #output_commands.append('recoLeafCandidates_*_*_%s'
+    #                       % process.name_())
+    ## We can drop to jet and tau MET specific products. They were only used for
+    ## computation of the MET numbers.
+    #output_commands.append('drop recoLeafCandidates_*ForMETSyst_*_%s'
+    #                       % process.name_())
 
     ########################
     ##      PHOTONS       ##
@@ -549,6 +641,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
         'jets':  'selectedPatJets',
         'pfmet':  final_met_collection,
         'mvamet':  final_mvamet_collection,
+        #'pfmet':   'patPfMetT1',
+        #'mvamet':  'patPfMet',
     }
 
     # Setup all the PATFinalState objects
