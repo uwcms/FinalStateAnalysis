@@ -405,6 +405,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*SoftLeptonTagInfo*_*_*_*')
     output_commands.append('*_ak5PFJets_*_*')
     output_commands.append('*_ak5PFchsJets_*_*')
+    #output_commands.append('*_*AK5PFchs_*_*')
+
 
     ########################
     ##        MET         ##
@@ -437,6 +439,14 @@ def configurePatTuple(process, isMC=True, **kwargs):
 
     # Setup MET production
     process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
+
+    if isMC:
+     process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_mc
+     process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3")
+    else:
+     process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_data
+     process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
+
     # The MET systematics depend on all other systematics
     process.systematicsMET.tauSrc = cms.InputTag("cleanPatTausForMETSyst")
     process.systematicsMET.muonSrc = cms.InputTag("cleanPatMuons")
