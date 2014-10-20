@@ -560,13 +560,13 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.tuplize += mva_met_sequence
     output_commands.append('*_%s_*_*' % final_mvamet_collection.value())
 
-    ## Keep all the data formats needed for the systematics
-    #output_commands.append('recoLeafCandidates_*_*_%s'
-    #                       % process.name_())
-    ## We can drop to jet and tau MET specific products. They were only used for
-    ## computation of the MET numbers.
-    #output_commands.append('drop recoLeafCandidates_*ForMETSyst_*_%s'
-    #                       % process.name_())
+    # Keep all the data formats needed for the systematics
+    output_commands.append('recoLeafCandidates_*_*_%s'
+                           % process.name_())
+    # We can drop to jet and tau MET specific products. They were only used for
+    # computation of the MET numbers.
+    output_commands.append('drop recoLeafCandidates_*ForMETSyst_*_%s'
+                           % process.name_())
 
     ########################
     ##      PHOTONS       ##
