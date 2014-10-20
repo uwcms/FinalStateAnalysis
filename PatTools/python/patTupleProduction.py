@@ -651,8 +651,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
         'jets':  'selectedPatJets',
         'pfmet':  final_met_collection,
         'mvamet':  final_mvamet_collection,
-        #'pfmet':   'patPfMetT1',
-        #'mvamet':  'patPfMet',
     }
 
     # Setup all the PATFinalState objects
