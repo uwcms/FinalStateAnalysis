@@ -279,8 +279,16 @@ if options.rerunFSA:
         output_commands.append('*_miniPatElectrons_*_*')
         fs_daughter_inputs['electrons'] = "miniPatElectrons"
 
+        process.miniPatMuons = cms.EDProducer(
+            "MiniAODMuonIDEmbedder",
+            src=cms.InputTag(fs_daughter_inputs['muons']),
+            vertices=cms.InputTag("offlineSlimmedPrimaryVertices"),
+        )
+        output_commands.append('*_miniPatMuons_*_*')
+        fs_daughter_inputs['muons'] = "miniPatMuons"
+
         process.miniPatJets = cms.EDProducer(
-            "MiniJetIdEmbedder",
+            "MiniAODJetIdEmbedder",
             src=cms.InputTag(fs_daughter_inputs['jets'])
         )
         output_commands.append('*_miniPatJets_*_*')
@@ -288,6 +296,7 @@ if options.rerunFSA:
 
         process.runMiniAODObjectEmbedding = cms.Path(
             process.miniPatElectrons+
+            process.miniPatMuons+
             process.miniPatJets
         )
         process.schedule.append(process.runMiniAODObjectEmbedding)
