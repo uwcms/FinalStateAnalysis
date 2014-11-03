@@ -329,7 +329,7 @@ def make_ntuple(*legs, **kwargs):
             # Remove because old
             "[em][1-9]?((WW)|(MIT))ID(_((LOOSE)|(MEDIUM)|(TIGHT)|(VETO)))?",
             "eMVAIDH2TauWP",
-            "\w*201[12]\w*",
+#            "\w*201[12]\w*",
             "\w*[(Fall)(Winter)(Spring)(Summer)]1[12]\w*",
             "t[1-9]?S?IP3D(Sig)?",
             ]

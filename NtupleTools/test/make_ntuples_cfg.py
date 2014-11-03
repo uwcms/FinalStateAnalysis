@@ -84,6 +84,7 @@ options = TauVarParsing.TauVarParsing(
     useMiniAOD=0,
     use25ns=0,
     runDQM=0,
+    hzzfsr=0,
 )
 
 options.register(
@@ -202,7 +203,7 @@ if options.rerunFSA:
             'jets': 'slimmedJets',
             'pfmet': 'slimmedMETs',         # only one MET in miniAOD
             'mvamet': mvamet_collection,
-            'fsr': 'slimmedPhotons',        # not available?
+            'fsr': 'slimmedPhotons',
         }
     else:
         fs_daughter_inputs = {
@@ -323,6 +324,57 @@ if options.rerunFSA:
         )
         process.schedule.append(process.runMiniAODLeptonIpEmbedding)
         
+        # Embed effective areas in muons and electrons
+
+        process.load("FinalStateAnalysis.PatTools.electrons.patElectronEAEmbedding_cfi")
+        process.patElectronEAEmbedder.src = cms.InputTag(fs_daughter_inputs['electrons'])
+        process.load("FinalStateAnalysis.PatTools.muons.patMuonEAEmbedding_cfi")
+        process.patMuonEAEmbedder.src = cms.InputTag(fs_daughter_inputs['muons'])
+        process.EAEmbedding = cms.Path(
+            process.patElectronEAEmbedder +
+            process.patMuonEAEmbedder
+            )
+        process.schedule.append(process.EAEmbedding)
+        fs_daughter_inputs['electrons'] = 'patElectronEAEmbedder'
+        fs_daughter_inputs['muons'] = 'patMuonEAEmbedder'
+
+        # Embed rhos in electrons
+        process.load("FinalStateAnalysis.PatTools.electrons.patElectronRhoEmbedding_cfi")
+        process.patElectronZZ2012RhoEmbedding.src = cms.InputTag(fs_daughter_inputs['electrons'])
+        fs_daughter_inputs['electrons'] = 'patElectronZZ2012RhoEmbedding'
+        output_commands.append('*_patElectronZZ2012RhoEmbedding_*_*')
+        process.miniAODElectronRhoEmbedding = cms.EDProducer(
+            "ElectronRhoOverloader",
+            src = cms.InputTag(fs_daughter_inputs['electrons']),
+            srcRho = cms.InputTag("fixedGridRhoFastjetAll"), # not sure this is right
+            userLabel = cms.string("zzRhoMiniAOD")
+            )
+        fs_daughter_inputs['electrons'] = 'miniAODElectronRhoEmbedding'
+        output_commands.append('*_miniAODElectronRhoEmbedding_*_*')
+
+        # ... and muons
+        process.load("FinalStateAnalysis.PatTools.muons.patMuonRhoEmbedding_cfi")
+        process.patMuonZZ2012RhoEmbedding.src = cms.InputTag(fs_daughter_inputs['muons'])
+        fs_daughter_inputs['muons'] = 'patMuonZZ2012RhoEmbedding'
+        output_commands.append('*_patMuonZZ2012RhoEmbedding_*_*')
+        process.miniAODMuonRhoEmbedding = cms.EDProducer(
+            "MuonRhoOverloader",
+            src = cms.InputTag(fs_daughter_inputs['muons']),
+            srcRho = cms.InputTag("fixedGridRhoFastjetCentralNeutral"), # not sure this is right
+            userLabel = cms.string("zzRhoMiniAOD")
+            )
+        fs_daughter_inputs['muons'] = 'miniAODMuonRhoEmbedding'
+        output_commands.append('*_miniAODMuonRhoEmbedding_*_*')
+        process.rhoEmbedding = cms.Path(
+            process.patElectronZZ2012RhoEmbedding +
+            process.miniAODElectronRhoEmbedding +
+            process.patMuonZZ2012RhoEmbedding +
+            process.miniAODMuonRhoEmbedding
+            )
+        process.schedule.append(process.rhoEmbedding)
+
+        
+
 
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
