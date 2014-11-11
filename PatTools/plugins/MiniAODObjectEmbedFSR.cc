@@ -6,6 +6,7 @@
 #include "DataFormats/PatCandidates/interface/Photon.h"
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h"
+#include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 #include "DataFormats/Math/interface/deltaPhi.h"
@@ -47,10 +48,10 @@ void MiniAODObjectEmbedFSR<T,U>::produce(edm::Event& iEvent, const edm::EventSet
 
       if(bestCand == src->end()) continue; // no close lepton (or it's in the other collection)
 
-      float dR = reco::deltaR(pho->p4(), bestCand->p4());
+      double dR = reco::deltaR(pho->p4(), bestCand->p4());
 
       if(dR > dROuter) continue;
-      float fsrIso = photonRelIso(*pho);
+      double fsrIso = photonRelIso(*pho);
       if(dR > dRInner)
 	{
 	  if(fsrIso > isoOuter || pho->pt() < ptOuter) continue;
@@ -75,10 +76,10 @@ typename std::vector<T>::iterator MiniAODObjectEmbedFSR<T,U>::findBestLepton(con
 {
   // Find closest lepton
   typename std::vector<T>::iterator out;
-  float bestDR = 999.;
+  double bestDR = 999.;
   for(typename std::vector<T>::iterator lept = src->begin(); lept != src->end(); ++lept)
     {
-      float dR = reco::deltaR(pho.p4(), lept->p4());
+      double dR = reco::deltaR(pho.p4(), lept->p4());
       if(dR < bestDR && leptonPassID(*lept))
 	{
 	  out = lept;
@@ -92,7 +93,7 @@ typename std::vector<T>::iterator MiniAODObjectEmbedFSR<T,U>::findBestLepton(con
   // If we did find a decent one, make sure there's not a better one from the other lepton collection
   for(typename std::vector<U>::iterator lept = srcAlt->begin(); lept != srcAlt->end(); ++lept)
     {
-      float dR = reco::deltaR(pho.p4(), lept->p4());
+      double dR = reco::deltaR(pho.p4(), lept->p4());
       if(dR < bestDR && leptonPassID(*lept))
 	{
 	  // Better lepton in other collection -- never mind!
@@ -106,9 +107,9 @@ typename std::vector<T>::iterator MiniAODObjectEmbedFSR<T,U>::findBestLepton(con
 
 // Relative isolation, summing all types passed in in isoLabels
 template<typename T, typename U>
-float MiniAODObjectEmbedFSR<T,U>::photonRelIso(const pat::PFParticle& pho) const
+double MiniAODObjectEmbedFSR<T,U>::photonRelIso(const pat::PFParticle& pho) const
 {
-  float phoIso = 0.;
+  double phoIso = 0.;
   for(std::vector<std::string>::const_iterator isoType = isoLabels_.begin();
       isoType != isoLabels_.end(); ++isoType)
     {
@@ -142,8 +143,8 @@ bool MiniAODObjectEmbedFSR<T,U>::leptonPassID(leptonType& lept)
 template<typename T, typename U>
 bool MiniAODObjectEmbedFSR<T,U>::idHelper(const pat::Electron& e) const
 {
-  float pt = e.pt();
-  float eta = fabs(e.superCluster()->eta());
+  double pt = e.pt();
+  double eta = fabs(e.superCluster()->eta());
 
   bool passSelection = pt > electronPt &&
     eta < electronMaxEta &&
@@ -151,7 +152,7 @@ bool MiniAODObjectEmbedFSR<T,U>::idHelper(const pat::Electron& e) const
     fabs(e.gsfTrack()->dxy(srcVtx->at(0).position())) < electronPVDXY &&
     fabs(e.gsfTrack()->dz(srcVtx->at(0).position())) < electronPVDZ;
   
-  float bdtCut;
+  double bdtCut;
   if(e.pt() < electronIDPtThr)
     {
       if(eta < electronIDEtaThrLow)

@@ -61,36 +61,36 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
     srcVtx_(iConfig.exists("srcVtx") ? iConfig.getParameter<edm::InputTag>("srcVtx") : edm::InputTag("selectedPrimaryVertex")),
     label_(iConfig.exists("userLabel") ? iConfig.getParameter<std::string>("userLabel") : "FSRCand"),
     isoLabels_(iConfig.getParameter<std::vector<std::string> >("isoLabels")),
-    dRInner(iConfig.exists("dRInner") ? iConfig.getParameter<float>("dRInner") : 0.07),
-    dROuter(iConfig.exists("dROuter") ? iConfig.getParameter<float>("dROuter") : 0.5),
-    isoInner(iConfig.exists("isoInner") ? iConfig.getParameter<float>("isoInner") : 9999.9),
-    isoOuter(iConfig.exists("isoOuter") ? iConfig.getParameter<float>("isoOuter") : 1.0),
-    ptInner(iConfig.exists("ptInner") ? iConfig.getParameter<float>("ptInner") : 2.),
-    ptOuter(iConfig.exists("ptOuter") ? iConfig.getParameter<float>("ptOuter") : 4.),
-    maxEta(iConfig.exists("maxEta") ? iConfig.getParameter<float>("maxEta") : 2.4),
-    vetoDR(iConfig.exists("vetoDR") ? iConfig.getParameter<float>("vetoDR") : 0.15),
-    vetoDPhi(iConfig.exists("vetoDPhi") ? iConfig.getParameter<float>("vetoDPhi") : 2.),
-    vetoDEta(iConfig.exists("vetoDEta") ? iConfig.getParameter<float>("vetoDEta") : 0.05),
-    electronPt(iConfig.exists("electronPt") ? iConfig.getParameter<float>("electronPt") : 7.),
-    electronMaxEta(iConfig.exists("electronMaxEta") ? iConfig.getParameter<float>("electronMaxEta") : 2.5),
-    electronSIP(iConfig.exists("electronSIP") ? iConfig.getParameter<float>("electronSIP") : 4.),
-    electronPVDXY(iConfig.exists("electronPVDXY") ? iConfig.getParameter<float>("electronPVDXY") : 0.5),
-    electronPVDZ(iConfig.exists("electronPVDZ") ? iConfig.getParameter<float>("electronPVDZ") : 1.),
-    electronIDPtThr(iConfig.exists("electronIDPtThr") ? iConfig.getParameter<float>("electronIDPtThr") : 10.),
-    electronIDEtaThrLow(iConfig.exists("electronIDEtaThrLow") ? iConfig.getParameter<float>("electronIDEtaThrLow") : 0.8),
-    electronIDEtaThrHigh(iConfig.exists("electronIDEtaThrHigh") ? iConfig.getParameter<float>("electronIDEtaThrHigh") : 1.479),
-    electronIDCutLowPtLowEta(iConfig.exists("electronIDCutLowPtLowEta") ? iConfig.getParameter<float>("electronIDCutLowPtLowEta") : 0.47),
-    electronIDCutLowPtMedEta(iConfig.exists("electronIDCutLowPtMedEta") ? iConfig.getParameter<float>("electronIDCutLowPtMedEta") : 0.004),
-    electronIDCutLowPtHighEta(iConfig.exists("electronIDCutLowPtHighEta") ? iConfig.getParameter<float>("electronIDCutLowPtHighEta") : 0.295),
-    electronIDCutHighPtLowEta(iConfig.exists("electronIDCutHighPtLowEta") ? iConfig.getParameter<float>("electronIDCutHighPtLowEta") : -0.34),
-    electronIDCutHighPtMedEta(iConfig.exists("electronIDCutHighPtMedEta") ? iConfig.getParameter<float>("electronIDCutHighPtMedEta") : -0.65),
-    electronIDCutHighPtHighEta(iConfig.exists("electronIDCutHighPtHighEta") ? iConfig.getParameter<float>("electronIDCutHighPtHighEta") : 0.6),
+    dRInner(iConfig.exists("dRInner") ? iConfig.getParameter<double>("dRInner") : 0.07),
+    dROuter(iConfig.exists("dROuter") ? iConfig.getParameter<double>("dROuter") : 0.5),
+    isoInner(iConfig.exists("isoInner") ? iConfig.getParameter<double>("isoInner") : 9999.9),
+    isoOuter(iConfig.exists("isoOuter") ? iConfig.getParameter<double>("isoOuter") : 1.0),
+    ptInner(iConfig.exists("ptInner") ? iConfig.getParameter<double>("ptInner") : 2.),
+    ptOuter(iConfig.exists("ptOuter") ? iConfig.getParameter<double>("ptOuter") : 4.),
+    maxEta(iConfig.exists("maxEta") ? iConfig.getParameter<double>("maxEta") : 2.4),
+    vetoDR(iConfig.exists("vetoDR") ? iConfig.getParameter<double>("vetoDR") : 0.15),
+    vetoDPhi(iConfig.exists("vetoDPhi") ? iConfig.getParameter<double>("vetoDPhi") : 2.),
+    vetoDEta(iConfig.exists("vetoDEta") ? iConfig.getParameter<double>("vetoDEta") : 0.05),
+    electronPt(iConfig.exists("electronPt") ? iConfig.getParameter<double>("electronPt") : 7.),
+    electronMaxEta(iConfig.exists("electronMaxEta") ? iConfig.getParameter<double>("electronMaxEta") : 2.5),
+    electronSIP(iConfig.exists("electronSIP") ? iConfig.getParameter<double>("electronSIP") : 4.),
+    electronPVDXY(iConfig.exists("electronPVDXY") ? iConfig.getParameter<double>("electronPVDXY") : 0.5),
+    electronPVDZ(iConfig.exists("electronPVDZ") ? iConfig.getParameter<double>("electronPVDZ") : 1.),
+    electronIDPtThr(iConfig.exists("electronIDPtThr") ? iConfig.getParameter<double>("electronIDPtThr") : 10.),
+    electronIDEtaThrLow(iConfig.exists("electronIDEtaThrLow") ? iConfig.getParameter<double>("electronIDEtaThrLow") : 0.8),
+    electronIDEtaThrHigh(iConfig.exists("electronIDEtaThrHigh") ? iConfig.getParameter<double>("electronIDEtaThrHigh") : 1.479),
+    electronIDCutLowPtLowEta(iConfig.exists("electronIDCutLowPtLowEta") ? iConfig.getParameter<double>("electronIDCutLowPtLowEta") : 0.47),
+    electronIDCutLowPtMedEta(iConfig.exists("electronIDCutLowPtMedEta") ? iConfig.getParameter<double>("electronIDCutLowPtMedEta") : 0.004),
+    electronIDCutLowPtHighEta(iConfig.exists("electronIDCutLowPtHighEta") ? iConfig.getParameter<double>("electronIDCutLowPtHighEta") : 0.295),
+    electronIDCutHighPtLowEta(iConfig.exists("electronIDCutHighPtLowEta") ? iConfig.getParameter<double>("electronIDCutHighPtLowEta") : -0.34),
+    electronIDCutHighPtMedEta(iConfig.exists("electronIDCutHighPtMedEta") ? iConfig.getParameter<double>("electronIDCutHighPtMedEta") : -0.65),
+    electronIDCutHighPtHighEta(iConfig.exists("electronIDCutHighPtHighEta") ? iConfig.getParameter<double>("electronIDCutHighPtHighEta") : 0.6),
     electronIDLabel_(iConfig.exists("electronIDLabel") ? iConfig.getParameter<std::string>("electronIDLabel") : "MVANonTrigCSA14"),
-    muonPt(iConfig.exists("muonPt") ? iConfig.getParameter<float>("muonPt") : 5.),
-    muonMaxEta(iConfig.exists("muonMaxEta") ? iConfig.getParameter<float>("muonMaxEta") : 2.4),
-    muonSIP(iConfig.exists("muonSIP") ? iConfig.getParameter<float>("muonSIP") : 4.),
-    muonPVDXY(iConfig.exists("muonPVDXY") ? iConfig.getParameter<float>("muonPVDXY") : 0.5),
-    muonPVDZ(iConfig.exists("muonPVDZ") ? iConfig.getParameter<float>("muonPVDZ") : 1.)
+    muonPt(iConfig.exists("muonPt") ? iConfig.getParameter<double>("muonPt") : 5.),
+    muonMaxEta(iConfig.exists("muonMaxEta") ? iConfig.getParameter<double>("muonMaxEta") : 2.4),
+    muonSIP(iConfig.exists("muonSIP") ? iConfig.getParameter<double>("muonSIP") : 4.),
+    muonPVDXY(iConfig.exists("muonPVDXY") ? iConfig.getParameter<double>("muonPVDXY") : 0.5),
+    muonPVDZ(iConfig.exists("muonPVDZ") ? iConfig.getParameter<double>("muonPVDZ") : 1.)
       {
 	produces<std::vector<T> >();
       }
@@ -112,7 +112,7 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
   typename std::vector<T>::iterator findBestLepton(const pat::PFParticle& pho);
 
   // Relative isolation of photon. Sum of all the userFloats whose keys are passed in as isoLabels
-  float photonRelIso(const pat::PFParticle& pho) const;
+  double photonRelIso(const pat::PFParticle& pho) const;
 
   // Takes a reco::Candidate and tells you whether it passes ID cuts. e and mu only.
   // Stores this as a userFloat in the candidate (1 or 0) for reuse (won't persist for
@@ -160,36 +160,36 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
   const std::vector<std::string> isoLabels_; // keys to userfloats with isolation
 
   // parameters for FSR algorithm
-  const float dRInner; // cuts different for photons very near and just kind of near lepton
-  const float dROuter;
-  const float isoInner; // iso cut (on photon) within dRInner
-  const float isoOuter; // iso cut (on photon) between dRInner and dROuter
-  const float ptInner; // pt cut within dRInner
-  const float ptOuter; // pt cut between dRInner and dROuter
-  const float maxEta; // of photon
+  const double dRInner; // cuts different for photons very near and just kind of near lepton
+  const double dROuter;
+  const double isoInner; // iso cut (on photon) within dRInner
+  const double isoOuter; // iso cut (on photon) between dRInner and dROuter
+  const double ptInner; // pt cut within dRInner
+  const double ptOuter; // pt cut between dRInner and dROuter
+  const double maxEta; // of photon
 
   // parameters governing cluster veto
-  const float vetoDR; // veto when electron is within dR OR...
-  const float vetoDPhi; // ... when it's within dPhi AND dEta
-  const float vetoDEta;
-  const float electronPt; // This and following select good electrons
-  const float electronMaxEta;
-  const float electronSIP;
-  const float electronPVDXY;
-  const float electronPVDZ;
-  const float electronIDPtThr; // ID different for high and low pt electrons
-  const float electronIDEtaThrLow; // ID different for low, medium, and high eta electrons
-  const float electronIDEtaThrHigh;
-  const float electronIDCutLowPtLowEta;
-  const float electronIDCutLowPtMedEta;
-  const float electronIDCutLowPtHighEta;
-  const float electronIDCutHighPtLowEta;
-  const float electronIDCutHighPtMedEta;
-  const float electronIDCutHighPtHighEta;
+  const double vetoDR; // veto when electron is within dR OR...
+  const double vetoDPhi; // ... when it's within dPhi AND dEta
+  const double vetoDEta;
+  const double electronPt; // This and following select good electrons
+  const double electronMaxEta;
+  const double electronSIP;
+  const double electronPVDXY;
+  const double electronPVDZ;
+  const double electronIDPtThr; // ID different for high and low pt electrons
+  const double electronIDEtaThrLow; // ID different for low, medium, and high eta electrons
+  const double electronIDEtaThrHigh;
+  const double electronIDCutLowPtLowEta;
+  const double electronIDCutLowPtMedEta;
+  const double electronIDCutLowPtHighEta;
+  const double electronIDCutHighPtLowEta;
+  const double electronIDCutHighPtMedEta;
+  const double electronIDCutHighPtHighEta;
   const std::string electronIDLabel_; // ID variable to use
-  const float muonPt; // This and following select good muons (along with cuts listed under bool muonPassID above)
-  const float muonMaxEta;
-  const float muonSIP;
-  const float muonPVDXY;
-  const float muonPVDZ;
+  const double muonPt; // This and following select good muons (along with cuts listed under bool muonPassID above)
+  const double muonMaxEta;
+  const double muonSIP;
+  const double muonPVDXY;
+  const double muonPVDZ;
 };
