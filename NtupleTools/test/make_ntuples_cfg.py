@@ -40,6 +40,7 @@ rerunJets=0   - rerun with new jet energy corrections
 useMiniAOD=0 - run on miniAOD rather than UW PATTuples
 use25ns=0 - run on 25 ns miniAOD (50 ns default)
 runDQM=0 - run over single object final states to test all object properties (wont check diobject properties)
+hzzfsr=0 - Include FSR contribution a la HZZ4l group
 
 
 '''
@@ -325,7 +326,6 @@ if options.rerunFSA:
         process.schedule.append(process.runMiniAODLeptonIpEmbedding)
         
         # Embed effective areas in muons and electrons
-
         process.load("FinalStateAnalysis.PatTools.electrons.patElectronEAEmbedding_cfi")
         process.patElectronEAEmbedder.src = cms.InputTag(fs_daughter_inputs['electrons'])
         process.load("FinalStateAnalysis.PatTools.muons.patMuonEAEmbedding_cfi")
@@ -373,8 +373,40 @@ if options.rerunFSA:
             )
         process.schedule.append(process.rhoEmbedding)
 
-        
+        # Make FSR photon collection, give them isolation
+        process.load("FinalStateAnalysis.PatTools.miniFSRPhotons_cff")
+        fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
+        output_commands.append('*_boostedFsrPhotons_*_*')
+        process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
+        process.schedule.append(process.makeFSRPhotons)
 
+        # Put FSR photons into leptons as user cands
+        from FinalStateAnalysis.PatTools.miniAODEmbedFSR_cfi \
+            import embedFSRInElectrons, embedFSRInMuons
+
+        process.electronFSREmbedder = embedFSRInElectrons.Clone(
+            src = cms.InputTag(fs_daughter_inputs['electrons']),
+            srcAlt = cms.InputTag(fs_daughter_inputs['muons']),
+            srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
+            srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
+            srcVtx = cms.InputTag("offlineSlimmedPrimaryVertices"),
+            )
+        fs_daughter_inputs['electrons'] = 'electronFSREmbedder'
+        output_commands.append('*_electronFSREmbedder_*_*')
+        process.muonFSREmbedder = embedFSRInMuons.Clone(
+            src = cms.InputTag(fs_daughter_inputs['muons']),
+            srcAlt = cms.InputTag(fs_daughter_inputs['electrons']),
+            srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
+            srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
+            srcVtx = cms.InputTag("offlineSlimmedPrimaryVertices"),
+            )
+        fs_daughter_inputs['muons'] = 'muonFSREmbedder'
+        output_commands.append('*_muonFSREmbedder_*_*')
+        process.embedFSRInfo = cms.Path(
+            process.electronFSREmbedder +
+            process.muonFSREmbedder
+            )
+        process.schedule.append(process.embedFSRInfo)
 
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
