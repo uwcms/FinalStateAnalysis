@@ -367,6 +367,63 @@ def configurePatTuple(process, isMC=True, **kwargs):
         **btag_options
     )
 
+    process.patJetsMETTOM = cms.EDProducer("PATJetProducer",
+        addJetCharge = cms.bool(True),
+        addGenJetMatch = cms.bool(True),
+        embedPFCandidates = cms.bool(True),
+        embedGenJetMatch = cms.bool(True),
+        addAssociatedTracks = cms.bool(True),
+        partonJetSource = cms.InputTag("NOT_IMPLEMENTED"),
+        addGenPartonMatch = cms.bool(True),
+        JetPartonMapSource = cms.InputTag("patJetFlavourAssociation"),
+        resolutions = cms.PSet(
+    
+        ),
+        genPartonMatch = cms.InputTag("patJetPartonMatch"),
+        addTagInfos = cms.bool(True),
+        addPartonJetMatch = cms.bool(False),
+        embedGenPartonMatch = cms.bool(True),
+        efficiencies = cms.PSet(
+    
+        ),
+        genJetMatch = cms.InputTag("patJetGenJetMatch"),
+        userData = cms.PSet(
+            userCands = cms.PSet(
+                src = cms.VInputTag("")
+            ),
+            userInts = cms.PSet(
+                src = cms.VInputTag("")
+            ),
+            userFloats = cms.PSet(
+                src = cms.VInputTag("")
+            ),
+            userClasses = cms.PSet(
+                src = cms.VInputTag("")
+            ),
+            userFunctionLabels = cms.vstring(),
+            userFunctions = cms.vstring()
+        ),
+        jetSource = cms.InputTag("ak5PFJets"),
+        addEfficiencies = cms.bool(False),
+        jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactors")),
+        trackAssociationSource = cms.InputTag("jetTracksAssociatorAtVertex"),
+        tagInfoSources = cms.VInputTag(cms.InputTag("impactParameterTagInfosAOD"), cms.InputTag("secondaryVertexTagInfosAOD"), cms.InputTag("softMuonTagInfosAOD"), cms.InputTag("secondaryVertexNegativeTagInfosAOD"), cms.InputTag("inclusiveSecondaryVertexFinderFilteredTagInfosAOD")),
+        discriminatorSources = cms.VInputTag(cms.InputTag("trackCountingHighEffBJetTagsAOD"), cms.InputTag("trackCountingHighPurBJetTagsAOD"), cms.InputTag("simpleSecondaryVertexHighEffBJetTagsAOD"), cms.InputTag("simpleSecondaryVertexHighPurBJetTagsAOD"), cms.InputTag("simpleInclusiveSecondaryVertexHighEffBJetTagsAOD"),
+            cms.InputTag("simpleInclusiveSecondaryVertexHighPurBJetTagsAOD"), cms.InputTag("combinedSecondaryVertexMVABJetTagsAOD"), cms.InputTag("combinedSecondaryVertexBJetTagsAOD"), cms.InputTag("jetBProbabilityBJetTagsAOD"), cms.InputTag("jetProbabilityBJetTagsAOD")),
+        #addBTagInfo = cms.bool(True),
+        addBTagInfo = cms.bool(False),
+        embedCaloTowers = cms.bool(False),
+        addResolutions = cms.bool(False),
+        getJetMCFlavour = cms.bool(True),
+        addDiscriminators = cms.bool(False),
+        #addDiscriminators = cms.bool(True),
+        jetChargeSource = cms.InputTag("patJetCharge"),
+        addJetCorrFactors = cms.bool(False),
+        #addJetCorrFactors = cms.bool(True),
+        jetIDMap = cms.InputTag("ak5JetID"),
+        addJetID = cms.bool(True)
+    )
+
     # Customize/embed all our sequences
     process.load("FinalStateAnalysis.PatTools.patJetProduction_cff")
     helpers.cloneProcessingSnippet( process, process.customizeJetSequence, 'AK5PFchs' )
@@ -374,6 +431,7 @@ def configurePatTuple(process, isMC=True, **kwargs):
     final_jet_collection = chain_sequence(
         process.customizeJetSequence, "patJets")
     process.customizeJetSequence.insert(0, process.patJets)
+    process.customizeJetSequence.insert(0, process.patJetsMETTOM) # TOM ADDED THIS TOO
     # Make it a "complete" sequence
     process.customizeJetSequence += process.selectedPatJets
 #    process.customizeJetSequence += process.btagging
@@ -406,6 +464,42 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*_ak5PFJets_*_*')
     output_commands.append('*_ak5PFchsJets_*_*')
     #output_commands.append('*_*AK5PFchs_*_*')
+
+    ########################
+    ##      PHOTONS       ##
+    ########################
+
+    #alter the photon matching to accept various fakes
+    # and sort matches by d-pt-rel
+    if isMC:
+        process.photonMatch = cms.EDProducer(
+            "MCMatcherByPt",
+            src=cms.InputTag("photons"),
+            maxDPtRel=cms.double(100.0),
+            mcPdgId=cms.vint32(),
+            mcStatus=cms.vint32(1),
+            resolveByMatchQuality=cms.bool(False),
+            maxDeltaR=cms.double(0.3),
+            checkCharge=cms.bool(False),
+            resolveAmbiguities=cms.bool(True),
+            matched=cms.InputTag("genParticles")
+        )
+
+    # Setup pat::Photon Production
+    process.load("FinalStateAnalysis.PatTools.patPhotonProduction_cff")
+    final_photon_collection = chain_sequence(process.customizePhotonSequence,
+                                             "selectedPatPhotons")
+    #setup PHOSPHOR for a specific dataset
+    if cmssw_major_version() == 4:  # for now 2011 = CMSSW42X
+        process.patPhotonPHOSPHOREmbedder.year = cms.uint32(2011)
+    else:  # 2012 is 5YX
+        process.patPhotonPHOSPHOREmbedder.year = cms.uint32(2012)
+    process.patPhotonPHOSPHOREmbedder.isMC = cms.bool(bool(isMC))
+    #inject photons into pat sequence
+    process.customizePhotonSequence.insert(0, process.selectedPatPhotons)
+    process.patDefaultSequence.replace(process.selectedPatPhotons,
+                                       process.customizePhotonSequence)
+    process.cleanPatPhotons.src = final_photon_collection
 
 
     ########################
@@ -509,6 +603,13 @@ def configurePatTuple(process, isMC=True, **kwargs):
         addGenMET    = cms.bool(False)
     )
 
+    process.selectedPatJetsForMETtype1p2CorrTOMAS = cms.EDFilter("PATJetSelector",
+        src = cms.InputTag('patJetsMETTOM'),
+        cut = cms.string('abs(eta) < 9.9'),
+        filter = cms.bool(False)
+    )
+
+
     process.officialMETSequence = cms.Sequence(
         process.correctionTermsPfMetType1Type2 
         + process.correctionTermsPfMetType0RecoTrack 
@@ -538,9 +639,33 @@ def configurePatTuple(process, isMC=True, **kwargs):
         + process.patPfMetT0rtT1Txy
         + process.patPfMetT0pcTxy
         + process.patPfMetT0pcT1Txy
+        + process.selectedPatJetsForMETtype1p2CorrTOMAS
     )
 
+
+
+
+    from FinalStateAnalysis.PatTools.met.metUncertaintyTools  import runMEtUncertainties
+    #from PhysicsTools.PatUtils.tools.metUncertaintyTools import runMEtUncertainties
+    if isMC: jc = "ak5PFL1FastL2L3"
+    else: jc = "ak5PFL1FastL2L3Residual"
+    #from PhysicsTools.PatUtils.patPFMETCorrections_cff import 
+    #process.patPFJetMETtype1p2Corr.src = cms.InputTag("ak5PFJets")
+    runMEtUncertainties( process, electronCollection=cms.InputTag("cleanPatElectrons"), photonCollection=None , muonCollection=cms.InputTag("cleanPatMuons"), tauCollection=cms.InputTag("cleanPatTaus"), jetCollection=cms.InputTag("patJetsMETTOM"), jetCorrLabel=jc, makeType1corrPFMEt=True, makeType1p2corrPFMEt=False, postfix="TOM" )
+
+    #runMEtUncertainties( process, electronCollection=cms.InputTag("cleanPatElectrons"), photonCollection=None , muonCollection=cms.InputTag("cleanPatMuons"), tauCollection=cms.InputTag("cleanPatTaus"), jetCollection=cms.InputTag("selectedPatJetsForMETtype1p2Corr"), jetCorrLabel=jc, makeType1corrPFMEt=True, makeType1p2corrPFMEt=False, postfix="TOM" )
+    #runMEtUncertainties( process, electronCollection=cms.InputTag("cleanPatElectrons"), photonCollection=None , muonCollection=cms.InputTag("cleanPatMuons"), tauCollection=cms.InputTag("cleanPatTaus"), jetCollection=cms.InputTag("selectedPatJetsAK5chsPF"), jetCorrLabel=jc, makeType1corrPFMEt=True, makeType1p2corrPFMEt=False, postfix="TOM" )
+
     output_commands.append('*_patPfMet*_*_*')
+    output_commands.append('*_pfMet_*_*')
+    output_commands.append('*_patPFMetForMEtUncertainty*_*_*')
+    output_commands.append('*_patPFJetMETtype1p2Corr*_*_*')
+    output_commands.append('*_selectedPatJetsForMETtype1p2Corr*_*_*')
+    output_commands.append('*_patJetsNotOverlappingWithLeptonsForMEtUncertaint*_*_*')
+    output_commands.append('*_*selectedPatJetsForMETtype1p2Corr*_*_*')
+    output_commands.append('*_*corrPfMetType1*_*_*')
+    output_commands.append('*_*patPFJetMETtype1p2Corr*_*_*')
+    output_commands.append('*_patJets*_*_*')
 
     final_met_collection = chain_sequence(
         process.customizeMETSequence, "patPfMet")
@@ -567,42 +692,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     # computation of the MET numbers.
     output_commands.append('drop recoLeafCandidates_*ForMETSyst_*_%s'
                            % process.name_())
-
-    ########################
-    ##      PHOTONS       ##
-    ########################
-
-    #alter the photon matching to accept various fakes
-    # and sort matches by d-pt-rel
-    if isMC:
-        process.photonMatch = cms.EDProducer(
-            "MCMatcherByPt",
-            src=cms.InputTag("photons"),
-            maxDPtRel=cms.double(100.0),
-            mcPdgId=cms.vint32(),
-            mcStatus=cms.vint32(1),
-            resolveByMatchQuality=cms.bool(False),
-            maxDeltaR=cms.double(0.3),
-            checkCharge=cms.bool(False),
-            resolveAmbiguities=cms.bool(True),
-            matched=cms.InputTag("genParticles")
-        )
-
-    # Setup pat::Photon Production
-    process.load("FinalStateAnalysis.PatTools.patPhotonProduction_cff")
-    final_photon_collection = chain_sequence(process.customizePhotonSequence,
-                                             "selectedPatPhotons")
-    #setup PHOSPHOR for a specific dataset
-    if cmssw_major_version() == 4:  # for now 2011 = CMSSW42X
-        process.patPhotonPHOSPHOREmbedder.year = cms.uint32(2011)
-    else:  # 2012 is 5YX
-        process.patPhotonPHOSPHOREmbedder.year = cms.uint32(2012)
-    process.patPhotonPHOSPHOREmbedder.isMC = cms.bool(bool(isMC))
-    #inject photons into pat sequence
-    process.customizePhotonSequence.insert(0, process.selectedPatPhotons)
-    process.patDefaultSequence.replace(process.selectedPatPhotons,
-                                       process.customizePhotonSequence)
-    process.cleanPatPhotons.src = final_photon_collection
 
     ########################
     ##      TRIGGER       ##

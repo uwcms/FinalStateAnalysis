@@ -280,6 +280,7 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   // Make sure we haven't picked up a mass component
   metP4Type1 = transverse(metP4Type1);
 
+  //   embedShift(outputMET, evt, "metsRaw", "raw", LorentzVector());
   // Embed the type one corrected MET
   embedShift(outputMET, evt, "metType1", "type1",
       metT1.p4() - outputMET.p4());
