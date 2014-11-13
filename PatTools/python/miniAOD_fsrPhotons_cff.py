@@ -7,7 +7,7 @@
 import FWCore.ParameterSet.Config as cms
 
 ## PF Photons
-fsrPhotons = cms.EDProducer("FSRPhotonProducer",
+fsrPhotons = cms.EDProducer("MiniAODFSRPhotonProducer",
     srcCands = cms.InputTag("packedPFCandidates"),
     muons = cms.InputTag("slimmedMuons"), 
     ptThresh = cms.double(1.0), ## will tighten to 2 at analysis level
