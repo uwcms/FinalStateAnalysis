@@ -138,9 +138,9 @@ def rerun_jets(process, isData=False):
         process.ak5PFJets *
         process.ak5JetTracksAssociatorAtVertex *
         process.btagging *
-        process.inclusiveSecondaryVertexFinderTagInfosFiltered *
-        process.simpleInclusiveSecondaryVertexHighEffBJetTags *
-        process.simpleInclusiveSecondaryVertexHighPurBJetTags *
+        #process.inclusiveSecondaryVertexFinderTagInfosFiltered * not part of official CMSSW anymore (Nov 12 2014)
+        #process.simpleInclusiveSecondaryVertexHighEffBJetTags * (ditto)
+        #process.simpleInclusiveSecondaryVertexHighPurBJetTags * (ditto)
         process.pileupJetIdProducer *
         process.makePatJets *
         process.patJetsPUID *
