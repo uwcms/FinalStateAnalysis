@@ -17,11 +17,11 @@ srcAlt                       = cms.InputTag("fixme_otherLeptonCollection")
 srcPho                       = cms.InputTag("fixme_FSRPhotons")
 srcVeto                      = cms.InputTag("fixme_electrons")
 srcVtx                       = cms.InputTag("selectedPrimaryVertex")
-label                        = cms.InputTag("you could change this if you wanted to (default: FSRCand)")
-isoLabels                    = cms.VInputTag(
-                                             cms.InputTag("fsrPhotonPFIsoChHadPUNoPU03pt02"),
-                                             cms.InputTag("fsrPhotonPFIsoNHadPhoton03"),
-                                             ),
+# userLabel                    = cms.InputTag("you could change this if you wanted to (default: FSRCand)")
+isoLabels                    = cms.vstring(
+                                           'fsrPhotonPFIsoChHadPUNoPU03pt02',
+                                           'fsrPhotonPFIsoNHadPhoton03',
+                                           )
 dRInner                      = cms.double(0.07)
 dROuter                      = cms.double(0.5)
 isoInner                     = cms.double(999.9)
@@ -63,7 +63,7 @@ embedFSRInMuons = cms.EDProducer(
     srcAlt                       = srcAlt,
     srcVeto                      = srcVeto,
     srcVtx                       = srcVtx,
-    label                        = label,
+#     userLabel                    = userLabel,
     isoLabels                    = isoLabels,                                   
     dRInner                      = dRInner,
     dROuter                      = dROuter,
@@ -104,7 +104,7 @@ embedFSRInElectrons = cms.EDProducer(
     srcAlt                       = srcAlt,
     srcVeto                      = srcVeto,
     srcVtx                       = srcVtx,
-    label                        = label,
+#     userLabel                    = userLabel,
     isoLabels                    = isoLabels,                                   
     dRInner                      = dRInner,
     dROuter                      = dROuter,
