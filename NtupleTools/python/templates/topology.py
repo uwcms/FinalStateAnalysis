@@ -67,7 +67,31 @@ zboson = PSet(
     object1_object2_Zcompat = 'zCompatibility({object1_idx}, {object2_idx})',
     object1_object2_MassFsr = 'subcandfsr({object1_idx}, {object2_idx}).get.mass',
     object1_object2_PtFsr   = 'subcandfsr({object1_idx}, {object2_idx}).get.pt',
+    object1_object2_EtaFsr   = 'subcandfsr({object1_idx}, {object2_idx}).get.eta',
+    object1_object2_PhiFsr   = 'subcandfsr({object1_idx}, {object2_idx}).get.phi',
 )
+
+# use fsrMiniAOD OR zzfsr, never both
+fsrMiniAOD = PSet(
+    MassFSR = 'p4fsr("FSRCand").M',
+    PtFSR = 'p4fsr("FSRCand").pt',
+    EtaFSR = 'p4fsr("FSRCand").eta',
+    PhiFSR = 'p4fsr("FSRCand").phi',
+)
+
+# use zbosonMiniAOD OR zboson, never both
+zbosonMiniAOD = PSet(
+    object1_object2_MassFsr  = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.mass',
+    object1_object2_PtFsr    = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.pt',
+    object1_object2_EtaFsr   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.eta',
+    object1_object2_PhiFsr   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.phi',
+    object1_object2_FSRPt    = '? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? '
+        'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").pt() : -999.',
+    object1_object2_FSREta   = '? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? ' 
+        'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").eta() : -999.',
+    object1_object2_FSRPhi   = '? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? '
+        'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").phi() : -999.',
+)    
 
 zzfsr = PSet(
     MassFsr                 = 'p4fsr().M',
@@ -88,7 +112,7 @@ zzfsr = PSet(
     Phi_gen                 = 'userFloat("Phi_gen")',
     Phi1_gen                = 'userFloat("Phi1_gen")'
 )
-
+    
 
 vbf = PSet(
   # If nJets < 2, none of these other branches are valid
