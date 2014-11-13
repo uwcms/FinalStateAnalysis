@@ -129,7 +129,7 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
   // that's also in the veto collection, so we don't auto-veto.
   bool passClusterVeto(const pat::PFParticle& pho, const reco::Candidate& pairedLep);
 
-  // Embed the FSR photon in a lepton as a userCand, and the number of such cands as userInt("nFSRCands")
+  // Embed the FSR photon in a lepton as a userCand, and the number of such cands as userInt("n"+label_)
   // The usercand has a key of the form label_+str(nPho), e.g. FSRCand0 for the pt of the first photon, 
   //     if a new label is not specified
   // nFSRCands is automatically created and incremented, and its new value is returned
@@ -192,4 +192,9 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
   const double muonSIP;
   const double muonPVDXY;
   const double muonPVDZ;
+
+  int nPassPre;
+  int nHaveBest;
+  int nPassIso;
+  int nPassVeto;
 };

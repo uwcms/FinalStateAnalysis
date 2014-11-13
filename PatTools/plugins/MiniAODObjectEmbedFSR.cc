@@ -1,3 +1,5 @@
+// #define _DEBUGFSR_ 1
+
 #include "FinalStateAnalysis/PatTools/plugins/MiniAODObjectEmbedFSR.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 
@@ -12,6 +14,8 @@
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "DataFormats/Math/interface/deltaR.h"
 
+#include "FWCore/Utilities/interface/Exception.h"
+
 template<typename T, typename U>
 void MiniAODObjectEmbedFSR<T,U>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
@@ -21,16 +25,25 @@ void MiniAODObjectEmbedFSR<T,U>::produce(edm::Event& iEvent, const edm::EventSet
   edm::Handle<std::vector<pat::Electron> > srcVetoTemp;
 
   // Get stuff
+  src = std::auto_ptr<std::vector<T> >(new std::vector<T>);
   iEvent.getByLabel(src_,srcTemp);
+  src->assign(srcTemp->begin(),srcTemp->end());
+  srcAlt = std::auto_ptr<std::vector<U> >(new std::vector<U>);
   iEvent.getByLabel(srcAlt_,srcAltTemp);
+  srcAlt->assign(srcAltTemp->begin(),srcAltTemp->end());
+  srcVeto = std::auto_ptr<pat::ElectronCollection>(new pat::ElectronCollection);
   iEvent.getByLabel(srcVeto_,srcVetoTemp);
+  srcVeto->assign(srcVetoTemp->begin(),srcVetoTemp->end());
   iEvent.getByLabel(srcVtx_,srcVtx);
   iEvent.getByLabel(srcPho_,srcPho);
 
+  nPassPre = 0;
+  nHaveBest = 0;
+  nPassIso = 0;
+  nPassVeto = 0;
+
   // copy into container we're going to put into the event now to avoid const issues
-  src->assign(srcTemp->begin(),srcTemp->end());
-  srcAlt->assign(srcAltTemp->begin(),srcAltTemp->end());
-  srcVeto->assign(srcVetoTemp->begin(),srcVetoTemp->end());
+  
   // for(unsigned int q = 0; q < srcTemp->size(); ++q)
   //   {
   //     T temp = srcTemp->at(q);
@@ -43,10 +56,14 @@ void MiniAODObjectEmbedFSR<T,U>::produce(edm::Event& iEvent, const edm::EventSet
       // preselection
       if(pho->pt() < ptInner || fabs(pho->eta()) > maxEta) continue;
 
+      nPassPre++;
+
       // Loop through lepton candidates, keep track of the best one (smallest dPhi)
       typename std::vector<T>::iterator bestCand = findBestLepton(*pho);
 
       if(bestCand == src->end()) continue; // no close lepton (or it's in the other collection)
+
+      nHaveBest++;
 
       double dR = reco::deltaR(pho->p4(), bestCand->p4());
 
@@ -61,11 +78,21 @@ void MiniAODObjectEmbedFSR<T,U>::produce(edm::Event& iEvent, const edm::EventSet
 	  if(fsrIso > isoInner || pho->pt() < ptInner) continue;
 	}
 
+      nPassIso++;
+
       // Cluster veto
       if(!passClusterVeto(*pho, *bestCand)) continue;
 
+      nPassVeto++;
+
       embedFSRCand(bestCand, pho);
     }
+
+  // if(nPassPre > 0) std::cout << "Event " << iEvent.id().event() << std::endl 
+  // 			     << "   Pre:  " << nPassPre << std::endl;
+  // if(nHaveBest > 0) std::cout << "   Best: " << nHaveBest << std::endl;
+  // if(nPassIso > 0) std::cout << "   Iso:  " << nPassIso << std::endl;
+  // if(nPassVeto > 0) std::cout << "   Veto: " << nPassVeto << std::endl;
 
   iEvent.put(src);
 }
@@ -212,20 +239,26 @@ bool MiniAODObjectEmbedFSR<T,U>::passClusterVeto(const pat::PFParticle& pho, con
 template<typename T, typename U>
 int MiniAODObjectEmbedFSR<T,U>::embedFSRCand(typename std::vector<T>::iterator& lept, const std::vector<pat::PFParticle>::const_iterator& pho)
 {
+  //  std::cout << "A" << std::endl;
+
   int n, nFSRCands=0; // This is the nth photon; when it's placed there will be nFSRCands=n+1 total
-  if(!lept->hasUserInt("nFSRCands"))
+  if(!lept->hasUserInt("n"+label_))
     n = 0;
   else
-    n = lept->userInt("nFSRCands");
+    n = lept->userInt("n"+label_);
 
-  if(pho->sourceCandidatePtr(0).isNonnull())
-    {
-      nFSRCands = n+1;
-      lept->addUserInt("nFSRCands", nFSRCands);
+  //  std::cout << "B: " << n << std::endl;
+
+  nFSRCands = n+1;
+  lept->addUserInt("n"+label_, nFSRCands);
+
+  //  std::cout << "D: " << "n"+label_ << " " << nFSRCands <<std::endl;
       
-      // The argument to sourceCandidatePtr doesn't appear to matter?
-      lept->addUserCand(label_+"Pt"+std::to_string(n), pho->sourceCandidatePtr(0)); 
-    }
+  lept->addUserCand(label_+std::to_string(n), reco::CandidatePtr(srcPho, std::distance(srcPho->begin(), pho)));
+
+  //  std::cout << "Found FSR Cand with (pt, eta, phi) = " << pho->pt() << ", " << pho->eta()
+  //	    << ", " << pho->phi() << std::endl;
+
   return nFSRCands;
 }
 
