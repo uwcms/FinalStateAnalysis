@@ -186,6 +186,11 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// is from the Z mass.  If they are same sign, it will return 1000.
     /// = |M_i_j - 91.2|
     double zCompatibility(int i, int j) const;
+    // and the same thing for 2 leptons and something else (presumably a photon)
+    double zCompatibility(int i, int j, const LorentzVector& thirdWheel) const;
+    // and the same thing for a whole final state (presumably 2 leptons and a photon
+    // assumes you want 0 overall charge
+    double zCompatibility(PATFinalStateProxy& cand) const;
 
     /// Get the VBF selection variables.  The jet cuts are applied to the veto
     /// jets using dR of 0.3 away from the members.
@@ -250,10 +255,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         int x=-1, int y=-1, int z=-1) const;
 
     /// Build a subcandidate w/ fsr
-    PATFinalStateProxy subcandfsr( int i, int j ) const;
+    PATFinalStateProxy subcandfsr( int i, int j, const std::string& fsrLabel="" ) const;
 
     /// quad candidate p4 w/ fsr
-    LorentzVector p4fsr() const;
+    LorentzVector p4fsr(const std::string& fsrLabel="") const;
 
     /// Build a subcand using a tag string
     PATFinalStateProxy subcand(const std::string& tags) const;
@@ -262,6 +267,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     PATFinalStateProxy subcand(
         const std::string& tags, const std::string& extras,
         const std::string& filter="") const;
+
+    // Get the FSR candidate that moves the invariant mass of the lepton pair closest to nominal Z mass
+    const reco::CandidatePtr bestFSROfZ(int i, int j, const std::string& fsrLabel) const;
 
     // Abstract interface to derived classes.  Can return null stuff.
     virtual const reco::Candidate* daughterUnsafe(size_t i) const = 0;
