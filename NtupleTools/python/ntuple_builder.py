@@ -488,11 +488,20 @@ def make_ntuple(*legs, **kwargs):
                         )
                     ))
                 else:
+                    if hzzfsr:
+                        cutstr = 'zCompatibilityFSR(%s, %s, "FSRCand") < zCompatibilityFSR(%s, %s, "FSRCand")'
+                        # 'zCompatibility(subcandfsr(%s, %s, "FSRCand")) < zCompatibility(subcandfsr(%s, %s, "FSRCand"))'
+                    else:
+                        cutstr = 'zCompatibility(%s, %s) < zCompatibility(%s, %s)'
+
                     # Require first two leptons make the best Z
+
+                    print cutstr%(leg1_idx_label, leg2_idx_label, leg1_idx_label,leg3_idx_label)
+
                     output.analysis.selections.append(cms.PSet(
                         name=cms.string('Z12_Better_Z13'),
                         cut=cms.string(
-                            'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
+                            cutstr %
                             (leg1_idx_label, leg2_idx_label, leg1_idx_label,
                              leg3_idx_label)
                         )
@@ -501,7 +510,7 @@ def make_ntuple(*legs, **kwargs):
                     output.analysis.selections.append(cms.PSet(
                         name=cms.string('Z12_Better_Z23'),
                         cut=cms.string(
-                            'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
+                            cutstr %
                             (leg1_idx_label, leg2_idx_label, leg2_idx_label,
                              leg3_idx_label)
                         )
@@ -510,7 +519,7 @@ def make_ntuple(*legs, **kwargs):
                     output.analysis.selections.append(cms.PSet(
                         name=cms.string('Z12_Better_Z14'),
                         cut=cms.string(
-                            'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
+                            cutstr %
                             (leg1_idx_label, leg2_idx_label, leg1_idx_label,
                              leg4_idx_label)
                         )
@@ -519,7 +528,7 @@ def make_ntuple(*legs, **kwargs):
                     output.analysis.selections.append(cms.PSet(
                         name=cms.string('Z12_Better_Z24'),
                         cut=cms.string(
-                            'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
+                            cutstr %
                             (leg1_idx_label, leg2_idx_label, leg2_idx_label,
                              leg4_idx_label)
                         )
@@ -528,7 +537,7 @@ def make_ntuple(*legs, **kwargs):
                     output.analysis.selections.append(cms.PSet(
                         name=cms.string('Z12_Better_Z34'),
                         cut=cms.string(
-                            'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
+                            cutstr %
                             (leg1_idx_label, leg2_idx_label, leg3_idx_label,
                              leg4_idx_label)
                         )
