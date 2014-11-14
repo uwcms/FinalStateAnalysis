@@ -192,6 +192,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // assumes you want 0 overall charge
     double zCompatibility(PATFinalStateProxy& cand) const;
 
+    // Try this method to see if I can get the parser to work when I reorder my candidates
+    double zCompatibilityFSR(int i, int j, std::string fsrLabel) const;
+
     /// Get the VBF selection variables.  The jet cuts are applied to the veto
     /// jets using dR of 0.3 away from the members.
     VBFVariables vbfVariables(const std::string& jetCuts) const;

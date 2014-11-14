@@ -902,6 +902,12 @@ double PATFinalState::zCompatibility(PATFinalStateProxy& cand) const
   return std::abs(cand->mass() - 91.1876);
 }
 
+double PATFinalState::zCompatibilityFSR(int i, int j, const std::string fsrLabel) const
+{
+  PATFinalStateProxy z = subcandfsr(i, j, fsrLabel);
+  return zCompatibility(z);
+}
+
 VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts) const {
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
   std::vector<const reco::Candidate*> jets = this->vetoJets(0.3, jetCuts);
