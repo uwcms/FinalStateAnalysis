@@ -58,7 +58,7 @@ void MiniAODObjectEmbedFSR<T,U>::produce(edm::Event& iEvent, const edm::EventSet
 
       nPassPre++;
 
-      // Loop through lepton candidates, keep track of the best one (smallest dPhi)
+      // Loop through lepton candidates, keep track of the best one (smallest dR)
       typename std::vector<T>::iterator bestCand = findBestLepton(*pho);
 
       if(bestCand == src->end()) continue; // no close lepton (or it's in the other collection)
