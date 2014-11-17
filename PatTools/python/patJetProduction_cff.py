@@ -6,7 +6,7 @@ from FinalStateAnalysis.PatTools.jets.patJetUncorrectedEmbedder_cfi import \
         patJetUncorrectedEmbedder
 
 from FinalStateAnalysis.PatTools.jets.patJetEmbedSystematics_cfi import \
-        patJetEmbedSystematics
+        patJetEmbedSystematics, patJetEmbedSystematicsFull
 from FinalStateAnalysis.PatTools.jets.patJetEmbedSmear_cfi import \
         patJetEmbedSmear
 

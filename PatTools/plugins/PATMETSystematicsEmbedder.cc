@@ -24,10 +24,14 @@ class PATMETSystematicsEmbedder : public edm::EDProducer {
     virtual ~PATMETSystematicsEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
+    edm::InputTag jetSrc_;
     edm::InputTag tauSrc_;
     edm::InputTag muonSrc_;
     edm::InputTag electronSrc_;
     edm::InputTag metSrc_;
+    edm::InputTag metT1Src_;
+    edm::InputTag metT0pcT1TxySrc_;
+    edm::InputTag metT0rtT1TxySrc_;
 
     bool applyType1ForTaus_;
     bool applyType1ForMuons_;
@@ -54,13 +58,19 @@ PATMETSystematicsEmbedder::PATMETSystematicsEmbedder(
     applyType1ForJets_ = pset.getParameter<bool>("applyType1ForJets");
     applyType2ForJets_ = pset.getParameter<bool>("applyType2ForJets");
 
+    jetSrc_ = pset.getParameter<edm::InputTag>("jetSrc");
     tauSrc_ = pset.getParameter<edm::InputTag>("tauSrc");
     muonSrc_ = pset.getParameter<edm::InputTag>("muonSrc");
     electronSrc_ = pset.getParameter<edm::InputTag>("electronSrc");
     metSrc_ = pset.getParameter<edm::InputTag>("src");
+    metT1Src_ = pset.getParameter<edm::InputTag>("metT1Src");
+    metT0pcT1TxySrc_ = pset.getParameter<edm::InputTag>("metT0pcT1TxySrc");
+    metT0rtT1TxySrc_ = pset.getParameter<edm::InputTag>("metT0rtT1TxySrc");
 
     produces<ShiftedCandCollection>("metsRaw");
     produces<ShiftedCandCollection>("metType1");
+    produces<ShiftedCandCollection>("metT0pcT1Txy");
+    produces<ShiftedCandCollection>("metT0rtT1Txy");
     produces<ShiftedCandCollection>("metsMESUp");
     produces<ShiftedCandCollection>("metsMESDown");
     produces<ShiftedCandCollection>("metsTESUp");
@@ -71,6 +81,10 @@ PATMETSystematicsEmbedder::PATMETSystematicsEmbedder(
     produces<ShiftedCandCollection>("metsJESDown");
     produces<ShiftedCandCollection>("metsUESUp");
     produces<ShiftedCandCollection>("metsUESDown");
+    produces<ShiftedCandCollection>("metsFullJESUp");
+    produces<ShiftedCandCollection>("metsFullJESDown");
+    produces<ShiftedCandCollection>("metsFullUESUp");
+    produces<ShiftedCandCollection>("metsFullUESDown");
 }
 
 // Get the transverse component of the vector
@@ -89,7 +103,6 @@ void embedShift(pat::MET& met, edm::Event& evt,
   typedef std::vector<ShiftedCand> ShiftedCandCollection;
   typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
   typedef reco::CandidatePtr CandidatePtr;
-
   std::auto_ptr<ShiftedCandCollection> output(new ShiftedCandCollection);
   ShiftedCand newCand(met);
   newCand.setP4(transverse(newCand.p4() + residual));
@@ -98,9 +111,28 @@ void embedShift(pat::MET& met, edm::Event& evt,
   met.addUserCand(embedName, CandidatePtr(outputH, 0));
 }
 
+void embedShiftT1(pat::MET& met, edm::Event& evt,
+    const std::string& branchName, const std::string& embedName,
+    const reco::Candidate::LorentzVector& residual, 
+    const reco::Candidate::LorentzVector& metT1P4) {
+
+  typedef reco::LeafCandidate ShiftedCand;
+  typedef std::vector<ShiftedCand> ShiftedCandCollection;
+  typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
+  typedef reco::CandidatePtr CandidatePtr;
+  std::auto_ptr<ShiftedCandCollection> output(new ShiftedCandCollection);
+  ShiftedCand newCand(met);
+  newCand.setP4(transverse(metT1P4 + residual));
+  output->push_back(newCand);
+  PutHandle outputH = evt.put(output, branchName);
+  met.addUserCand(embedName, CandidatePtr(outputH, 0));
+}
 
 void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 
+  edm::Handle<edm::View<pat::Jet> > jets; // if patJet
+  //edm::Handle<edm::View<reco::PFJet> > jets; // if PFJet
+  evt.getByLabel(jetSrc_, jets);
 
   edm::Handle<edm::View<pat::Tau> > taus;
   evt.getByLabel(tauSrc_, taus);
@@ -111,12 +143,24 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   edm::Handle<edm::View<pat::Electron> > electrons;
   evt.getByLabel(electronSrc_, electrons);
 
-  edm::Handle<pat::METCollection> mets;
+  edm::Handle<edm::View<pat::MET> > mets;
   evt.getByLabel(metSrc_, mets);
+
+  edm::Handle<edm::View<pat::MET> > metT1s;
+  evt.getByLabel(metT1Src_, metT1s);
+
+  edm::Handle<edm::View<pat::MET> > metT0pcT1Txys;
+  evt.getByLabel(metT0pcT1TxySrc_, metT0pcT1Txys);
+
+  edm::Handle<edm::View<pat::MET> > metT0rtT1Txys;
+  evt.getByLabel(metT0rtT1TxySrc_, metT0rtT1Txys);
 
   assert(mets->size() == 1);
 
   const pat::MET& inputMET = mets->at(0);
+  const pat::MET& metT1 = metT1s->at(0);
+  const pat::MET& metT0pcT1Txy = metT0pcT1Txys->at(0);
+  const pat::MET& metT0rtT1Txy = metT0rtT1Txys->at(0);
   pat::MET outputMET = inputMET;
 
   // Raw MET
@@ -173,10 +217,39 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   LorentzVector jesUpJetP4;
   LorentzVector jesDownJetP4;
 
+  LorentzVector uncorrJetFullP4;
+  LorentzVector nominalJetFullP4;
+  LorentzVector uncorrUnclusteredFullP4;
+  LorentzVector nominalUnclusteredFullP4;
+  LorentzVector jesUpJetFullP4;
+  LorentzVector jesDownJetFullP4;
+  LorentzVector uesUpJetFullP4;
+  LorentzVector uesDownJetFullP4;
+
   LorentzVector uncorrUnclusteredP4;
   LorentzVector nominalUnclusteredP4;
   LorentzVector uesUpUnclusteredP4;
   LorentzVector uesDownUnclusteredP4;
+
+  for (size_t i = 0; i < jets->size(); ++i){
+   const pat::Jet& jetFull = jets->at(i);
+   assert(jetFull.userCand("uncorrFull").isNonnull());
+   assert(jetFull.userCand("jesFull+").isNonnull());
+   assert(jetFull.userCand("jesFull-").isNonnull());
+   
+   if (jetFull.pt() >= 10){
+    uncorrJetFullP4 += jetFull.userCand("uncorrFull")->p4();
+    nominalJetFullP4 += jetFull.p4();
+    jesUpJetFullP4 += jetFull.userCand("jesFull+")->p4();
+    jesDownJetFullP4 += jetFull.userCand("jesFull-")->p4();
+   }
+   if (jetFull.pt() < 10){
+    uncorrUnclusteredFullP4 += jetFull.userCand("uncorrFull")->p4();
+    nominalUnclusteredFullP4 += jetFull.p4();
+    uesUpJetFullP4 += jetFull.userCand("uesFull+")->p4();
+    uesDownJetFullP4 += jetFull.userCand("uesFull-")->p4();
+   }
+  }
 
   // Do Tau ES, Jet ES, and Unclustered ES shifts using the taus
   size_t shiftedTaus = 0; // counter for sanity check
@@ -188,6 +261,7 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     edm::Ptr<pat::Jet> seedJet(tau.userCand("patJet"));
     assert(seedJet.isNonnull());
     const pat::Jet& jet = *seedJet;
+    //std::cout<<"Jet uncorr: "<<jet.userCand("uncorr")->pt()<<std::endl;
     if (tauCut_(tau)) {
       shiftedTaus++;
       assert(tau.userCand("uncorr").isNonnull());
@@ -232,63 +306,63 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   }
   */
 
-  LorentzVector metP4Type1 = outputMET.p4();
-  // Check if we want to apply type1 corrections to the MET
-  if (applyType1ForJets_) {
-    LorentzVector deltaJets = nominalJetP4 - uncorrJetP4;
-    metP4Type1 -= transverse(deltaJets);
-  }
-
-  if (applyType2ForJets_) {
-    LorentzVector deltaJets = nominalUnclusteredP4 - uncorrUnclusteredP4;
-    metP4Type1 -= transverse(deltaJets);
-  }
-
-  if (applyType1ForTaus_) {
-    LorentzVector deltaTaus = nominalTauP4 - uncorrTauP4;
-    metP4Type1 -= transverse(deltaTaus);
-  }
-
-  if (applyType1ForElectrons_) {
-    LorentzVector deltaElectrons = nominalElectronP4 - uncorrElectronP4;
-    metP4Type1 -= transverse(deltaElectrons);
-  }
-
-  if (applyType1ForMuons_) {
-    LorentzVector deltaMuons = nominalMuonP4 - uncorrMuonP4;
-    metP4Type1 -= transverse(deltaMuons);
-  }
-  // Make sure we haven't picked up a mass component
-  metP4Type1 = transverse(metP4Type1);
-
   // Embed the type one corrected MET
   embedShift(outputMET, evt, "metType1", "type1",
-      metP4Type1 - outputMET.p4());
+      metT1.p4() - outputMET.p4());
 
-  embedShift(outputMET, evt, "metsMESUp", "mes+",
-      nominalMuonP4 - mesUpMuonP4);
-  embedShift(outputMET, evt, "metsMESDown", "mes-",
-      nominalMuonP4 - mesDownMuonP4);
+  embedShift(outputMET, evt,"metT0pcT1Txy", "type0pcT1Txy",
+      metT0pcT1Txy.p4() - outputMET.p4());
+  embedShift(outputMET, evt,"metT0rtT1Txy", "type0rtT1Txy",
+      metT0rtT1Txy.p4() - outputMET.p4());
 
-  embedShift(outputMET, evt, "metsEESUp", "ees+",
-      nominalElectronP4 - eesUpElectronP4);
-  embedShift(outputMET, evt, "metsEESDown", "ees-",
-      nominalElectronP4 - eesDownElectronP4);
+  embedShiftT1(outputMET, evt, "metsMESUp", "mes+",
+      nominalMuonP4 - mesUpMuonP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsMESDown", "mes-",
+      nominalMuonP4 - mesDownMuonP4,
+      metT1.p4() );
 
-  embedShift(outputMET, evt, "metsTESUp", "tes+",
-      nominalTauP4 - tesUpTauP4);
-  embedShift(outputMET, evt, "metsTESDown", "tes-",
-      nominalTauP4 - tesDownTauP4);
+  embedShiftT1(outputMET, evt, "metsEESUp", "ees+",
+      nominalElectronP4 - eesUpElectronP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsEESDown", "ees-",
+      nominalElectronP4 - eesDownElectronP4,
+      metT1.p4() );
 
-  embedShift(outputMET, evt, "metsJESUp", "jes+",
-      nominalJetP4 - jesUpJetP4);
-  embedShift(outputMET, evt, "metsJESDown", "jes-",
-      nominalJetP4 - jesDownJetP4);
+  embedShiftT1(outputMET, evt, "metsTESUp", "tes+",
+      nominalTauP4 - tesUpTauP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsTESDown", "tes-",
+      nominalTauP4 - tesDownTauP4,
+      metT1.p4() );
 
-  embedShift(outputMET, evt, "metsUESUp", "ues+",
-      nominalUnclusteredP4 - uesUpUnclusteredP4);
-  embedShift(outputMET, evt, "metsUESDown", "ues-",
-      nominalUnclusteredP4 - uesDownUnclusteredP4);
+  embedShiftT1(outputMET, evt, "metsJESUp", "jes+",
+      nominalJetP4 - jesUpJetP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsJESDown", "jes-",
+      nominalJetP4 - jesDownJetP4,
+      metT1.p4() );
+
+  embedShiftT1(outputMET, evt, "metsUESUp", "ues+",
+      nominalUnclusteredP4 - uesUpUnclusteredP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsUESDown", "ues-",
+      nominalUnclusteredP4 - uesDownUnclusteredP4,
+      metT1.p4() );
+
+  embedShiftT1(outputMET, evt, "metsFullJESUp", "jesFull+",
+      nominalJetFullP4 - jesUpJetFullP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsFullJESDown", "jesFull-",
+      nominalJetFullP4 - jesDownJetFullP4,
+      metT1.p4() );
+
+  embedShiftT1(outputMET, evt, "metsFullUESUp", "uesFull+",
+      nominalUnclusteredFullP4 - uesUpJetFullP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsFullUESDown", "uesFull-",
+      nominalUnclusteredFullP4 - uesDownJetFullP4,
+      metT1.p4() );
 
   std::auto_ptr<pat::METCollection> outputColl(new pat::METCollection);
   outputColl->push_back(outputMET);

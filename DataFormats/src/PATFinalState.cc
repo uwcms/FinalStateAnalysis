@@ -419,10 +419,45 @@ double PATFinalState::mtMET(int i, const std::string& metTag) const {
 }
 
 double PATFinalState::mtMET(int i, const std::string& tag,
-			    const std::string& metName, const std::string& metTag, 
-			    const int applyPhiCorr) const {
+    const std::string& metName, const std::string& metTag, 
+    const int applyPhiCorr) const {
   return fshelpers::transverseMass(daughterUserCandP4(i, tag),
-				   evt()->met4vector(metName, metTag, applyPhiCorr));
+      evt()->met4vector(metName, metTag, applyPhiCorr));
+}
+
+double PATFinalState::mtMET(int i, const std::string& tag,
+    const std::string& metName, const std::string& metTag_type1, const std::string& metTag_ues,
+    const int applyPhiCorr) const {
+  //std::cout << "initial Px: " << evt()->met4vector(metName, metTag_type1, applyPhiCorr).Px() <<std::endl;
+  ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >::Scalar newMETpx = evt()->met4vector(metName, metTag_type1, applyPhiCorr).Px()+evt()->met4vector(metName, metTag_ues, applyPhiCorr).Px() - evt()->met4vector(metName,"",applyPhiCorr).Px();
+  ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > type1_ues_met4vector = evt()->met4vector(metName,metTag_type1, applyPhiCorr);
+  type1_ues_met4vector.SetPx(newMETpx);
+  //std::cout << "New Px: " <<  type1_ues_met4vector.Px() << std::endl;
+  //std::cout << "initial Py: " << evt()->met4vector(metName, metTag_type1, applyPhiCorr).Py() <<std::endl;
+  ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >::Scalar newMETpy = evt()->met4vector(metName, metTag_type1, applyPhiCorr).Py()+evt()->met4vector(metName, metTag_ues, applyPhiCorr).Py() - evt()->met4vector(metName,"",applyPhiCorr).Py();
+  type1_ues_met4vector.SetPy(newMETpy);
+  //std::cout << "New Py: " <<  type1_ues_met4vector.Py() << std::endl;
+  //std::cout << "Initial Et: " << evt()->met4vector(metName, metTag_type1, applyPhiCorr).E() <<std::endl;
+  ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >::Scalar newMETe = std::sqrt(newMETpx*newMETpx + newMETpy*newMETpy);
+  type1_ues_met4vector.SetE(newMETe);
+  //std::cout << "New E: " << type1_ues_met4vector.E() << std::endl;
+  return fshelpers::transverseMass(daughterUserCandP4(i, tag),
+      type1_ues_met4vector);
+}
+
+double PATFinalState::resetPhi(
+    const std::string& metName, const std::string& metTag_type1, const std::string& metTag_ues,
+    const int applyPhiCorr) const {
+  //std::cout << "initial Phi: " << evt()->met4vector(metName, metTag_type1, applyPhiCorr).Phi() << std::endl;
+  ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >::Scalar newMETpx = evt()->met4vector(metName, metTag_type1, applyPhiCorr).Px()+evt()->met4vector(metName, metTag_ues, applyPhiCorr).Px() - evt()->met4vector(metName,"",applyPhiCorr).Px();
+  ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > type1_ues_met4vector = evt()->met4vector(metName,metTag_type1, applyPhiCorr);
+  type1_ues_met4vector.SetPx(newMETpx);
+  ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >::Scalar newMETpy = evt()->met4vector(metName, metTag_type1, applyPhiCorr).Py()+evt()->met4vector(metName, metTag_ues, applyPhiCorr).Py() - evt()->met4vector(metName,"",applyPhiCorr).Py();
+  type1_ues_met4vector.SetPy(newMETpy);
+  ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> >::Scalar newMETe = std::sqrt(newMETpx*newMETpx + newMETpy*newMETpy);
+  type1_ues_met4vector.SetE(newMETe);
+  //std::cout << "New Phi: " <<  type1_ues_met4vector.Phi() << std::endl;
+  return type1_ues_met4vector.Phi();
 }
 
 double PATFinalState::ht(const std::string& sysTags) const {
