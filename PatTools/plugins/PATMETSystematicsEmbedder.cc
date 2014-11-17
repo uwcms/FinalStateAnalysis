@@ -111,6 +111,22 @@ void embedShift(pat::MET& met, edm::Event& evt,
   met.addUserCand(embedName, CandidatePtr(outputH, 0));
 }
 
+void embedShiftT1(pat::MET& met, edm::Event& evt,
+    const std::string& branchName, const std::string& embedName,
+    const reco::Candidate::LorentzVector& residual, 
+    const reco::Candidate::LorentzVector& metT1P4) {
+
+  typedef reco::LeafCandidate ShiftedCand;
+  typedef std::vector<ShiftedCand> ShiftedCandCollection;
+  typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
+  typedef reco::CandidatePtr CandidatePtr;
+  std::auto_ptr<ShiftedCandCollection> output(new ShiftedCandCollection);
+  ShiftedCand newCand(met);
+  newCand.setP4(transverse(metT1P4 + residual));
+  output->push_back(newCand);
+  PutHandle outputH = evt.put(output, branchName);
+  met.addUserCand(embedName, CandidatePtr(outputH, 0));
+}
 
 void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 
@@ -327,40 +343,54 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   embedShift(outputMET, evt,"metT0rtT1Txy", "type0rtT1Txy",
       metT0rtT1Txy.p4() - outputMET.p4());
 
-  embedShift(outputMET, evt, "metsMESUp", "mes+",
-      nominalMuonP4 - mesUpMuonP4);
-  embedShift(outputMET, evt, "metsMESDown", "mes-",
-      nominalMuonP4 - mesDownMuonP4);
+  embedShiftT1(outputMET, evt, "metsMESUp", "mes+",
+      nominalMuonP4 - mesUpMuonP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsMESDown", "mes-",
+      nominalMuonP4 - mesDownMuonP4,
+      metT1.p4() );
 
-  embedShift(outputMET, evt, "metsEESUp", "ees+",
-      nominalElectronP4 - eesUpElectronP4);
-  embedShift(outputMET, evt, "metsEESDown", "ees-",
-      nominalElectronP4 - eesDownElectronP4);
+  embedShiftT1(outputMET, evt, "metsEESUp", "ees+",
+      nominalElectronP4 - eesUpElectronP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsEESDown", "ees-",
+      nominalElectronP4 - eesDownElectronP4,
+      metT1.p4() );
 
-  embedShift(outputMET, evt, "metsTESUp", "tes+",
-      nominalTauP4 - tesUpTauP4);
-  embedShift(outputMET, evt, "metsTESDown", "tes-",
-      nominalTauP4 - tesDownTauP4);
+  embedShiftT1(outputMET, evt, "metsTESUp", "tes+",
+      nominalTauP4 - tesUpTauP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsTESDown", "tes-",
+      nominalTauP4 - tesDownTauP4,
+      metT1.p4() );
 
-  embedShift(outputMET, evt, "metsJESUp", "jes+",
-      nominalJetP4 - jesUpJetP4);
-  embedShift(outputMET, evt, "metsJESDown", "jes-",
-      nominalJetP4 - jesDownJetP4);
+  embedShiftT1(outputMET, evt, "metsJESUp", "jes+",
+      nominalJetP4 - jesUpJetP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsJESDown", "jes-",
+      nominalJetP4 - jesDownJetP4,
+      metT1.p4() );
 
-  embedShift(outputMET, evt, "metsUESUp", "ues+",
-      nominalUnclusteredP4 - uesUpUnclusteredP4);
-  embedShift(outputMET, evt, "metsUESDown", "ues-",
-      nominalUnclusteredP4 - uesDownUnclusteredP4);
+  embedShiftT1(outputMET, evt, "metsUESUp", "ues+",
+      nominalUnclusteredP4 - uesUpUnclusteredP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsUESDown", "ues-",
+      nominalUnclusteredP4 - uesDownUnclusteredP4,
+      metT1.p4() );
 
-  embedShift(outputMET, evt, "metsFullJESUp", "jesFull+",
-      nominalJetP4 - jesUpJetFullP4);
-  embedShift(outputMET, evt, "metsFullJESDown", "jesFull-",
-      nominalJetP4 - jesDownJetFullP4);
+  embedShiftT1(outputMET, evt, "metsFullJESUp", "jesFull+",
+      nominalJetP4 - jesUpJetFullP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsFullJESDown", "jesFull-",
+      nominalJetP4 - jesDownJetFullP4,
+      metT1.p4() );
 
-  embedShift(outputMET, evt, "metsFullUESUp", "uesFull+",
-      nominalUnclusteredP4 - uesUpJetFullP4);
-  embedShift(outputMET, evt, "metsFullUESDown", "uesFull-",
-      nominalUnclusteredP4 - uesDownJetFullP4);
+  embedShiftT1(outputMET, evt, "metsFullUESUp", "uesFull+",
+      nominalUnclusteredP4 - uesUpJetFullP4,
+      metT1.p4() );
+  embedShiftT1(outputMET, evt, "metsFullUESDown", "uesFull-",
+      nominalUnclusteredP4 - uesDownJetFullP4,
+      metT1.p4() );
 
   std::auto_ptr<pat::METCollection> outputColl(new pat::METCollection);
   outputColl->push_back(outputMET);
