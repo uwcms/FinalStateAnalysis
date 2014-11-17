@@ -42,6 +42,7 @@ def count(inputPath):
 
     handlePatMETs = Handle("std::vector<pat::MET>") 
     handlePFMETs = Handle("std::vector<reco::PFMET>") 
+    handleLeafCand = Handle("std::vector<reco::LeafCandidate>")
 
     handlePatJets = Handle("std::vector<pat::Jet>")
     handlePFJets = Handle("std::vector<reco::PFJet>")
@@ -50,18 +51,27 @@ def count(inputPath):
         ("pfMet",                   "", "RECO", handlePFMETs   ),
         ("patPfMet",                "", "TUPLE", handlePatMETs   ),
         #("patPFMetForMEtUncertaintyTOM", "", "TUPLE", handlePatMETs   ),
-       ("patPFMetTOM",                "", "TUPLE", handlePatMETs   ),
+       #("patPFMetTOM",                "", "TUPLE", handlePatMETs   ),
         #("patPfMetT0rt",            "", "TUPLE", handlePatMETs   ),
         #("patPfMetT0rtT1",          "", "TUPLE", handlePatMETs   ),
         #("patPfMetT0pc",            "", "TUPLE", handlePatMETs   ),
         #("patPfMetT0pcT1",          "", "TUPLE", handlePatMETs   ),
         ("patPfMetT1",              "", "TUPLE", handlePatMETs   ),
+        ("systematicsMET", "metType1", "TUPLE", handleLeafCand),
+        ("systematicsMET", "metsJESUp", "TUPLE", handleLeafCand),
+        ("systematicsMET", "metsFullJESUp", "TUPLE", handleLeafCand),
+        ("systematicsMET", "metsUESUp", "TUPLE", handleLeafCand),
+        ("systematicsMET", "metsFullUESUp", "TUPLE", handleLeafCand),
+        ("systematicsMET", "metsJESDown", "TUPLE", handleLeafCand),
+        ("systematicsMET", "metsFullJESDown", "TUPLE", handleLeafCand),
+        ("systematicsMET", "metsUESDown", "TUPLE", handleLeafCand),
+        ("systematicsMET", "metsFullUESDown", "TUPLE", handleLeafCand),
 #        #("patPfMetT0rtTxy",         "", "TUPLE", handlePatMETs   ),
 #        #("patPfMetT0rtT1Txy",       "", "TUPLE", handlePatMETs   ),
 #        #("patPfMetT0pcTxy",         "", "TUPLE", handlePatMETs   ),
 #        #("patPfMetT0pcT1Txy",       "", "TUPLE", handlePatMETs   ),
 #        #("patPfMetT1xy",            "", "TUPLE", handlePatMETs   ),
-        ("patType1CorrectedPFMetTOM",  "", "TUPLE", handlePatMETs   ),
+#        ("patType1CorrectedPFMetTOM",  "", "TUPLE", handlePatMETs   ),
 #        ("patType1CorrectedPFMetElectronEnDown"     ,  "", "TUPLE", handlePatMETs ),
 #        ("patType1CorrectedPFMetElectronEnUp"       ,  "", "TUPLE", handlePatMETs ),
 #        ("patType1CorrectedPFMetJetEnDown"          ,  "", "TUPLE", handlePatMETs ),
@@ -83,9 +93,9 @@ def count(inputPath):
 #        ("selectedPatJetsForMETtype1p2CorrTOM", "", "TUPLE", handlePatJets),
         ("ak5PFJets",              "", "RECO" , handlePFJets),
 #        ("patJetsForMETSyst",              "", "TUPLE" , handlePatJets),
-        ("patJetsMETTOM",              "", "TUPLE" , handlePatJets),
+        ("patJetsMET",              "", "TUPLE" , handlePatJets),
         ("patJets",              "", "TUPLE" , handlePatJets),
-        ("selectedPatJetsForMETtype1p2CorrTOMAS",              "", "TUPLE" , handlePatJets),
+#        ("selectedPatJetsForMETtype1p2CorrTOMAS",              "", "TUPLE" , handlePatJets),
         #("selectedPatJetsForMETtype1p2Corr",              "", "TUPLE" , handlePatJets),
         #("patJetsMETTOMnotOverlappingWithLeptonsForMEtUncertaintyTOM", "", "TUPLE", handlePatJets),
 #        ("patJetsNotOverlappingWithLeptonsForMEtUncertaintyTOM", "", "TUPLE", handlePatJets),
@@ -121,8 +131,8 @@ def count(inputPath):
             print '%10.2f' % met.phi(),
             #print '%10.2f' % (met.phi()/math.pi*180.0),
             print
-        print("(off - tom) / avg(off,tom) = %0.4f"%(2 * (T1_official - T1_tom) / (T1_official + T1_tom)) )
-        print
+#        print("(off - tom) / avg(off,tom) = %0.4f"%(2 * (T1_official - T1_tom) / (T1_official + T1_tom)) )
+#        print
 
         for JetCollection in JetCollections:
 

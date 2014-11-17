@@ -21,6 +21,7 @@ systematicsMET = cms.EDProducer(
     metT1Src = cms.InputTag("patPfMetT1"),
     metT0pcT1TxySrc = cms.InputTag("patPfMetT0pcT1Txy"), 
     metT0rtT1TxySrc = cms.InputTag("patPfMetT0rtT1Txy"), 
+    jetSrc = cms.InputTag("fixme"),
     tauSrc = cms.InputTag("fixme"),
     muonSrc = cms.InputTag("fixme"),
     electronSrc = cms.InputTag("fixme"),

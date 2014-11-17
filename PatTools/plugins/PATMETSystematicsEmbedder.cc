@@ -24,6 +24,7 @@ class PATMETSystematicsEmbedder : public edm::EDProducer {
     virtual ~PATMETSystematicsEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
+    edm::InputTag jetSrc_;
     edm::InputTag tauSrc_;
     edm::InputTag muonSrc_;
     edm::InputTag electronSrc_;
@@ -57,6 +58,7 @@ PATMETSystematicsEmbedder::PATMETSystematicsEmbedder(
     applyType1ForJets_ = pset.getParameter<bool>("applyType1ForJets");
     applyType2ForJets_ = pset.getParameter<bool>("applyType2ForJets");
 
+    jetSrc_ = pset.getParameter<edm::InputTag>("jetSrc");
     tauSrc_ = pset.getParameter<edm::InputTag>("tauSrc");
     muonSrc_ = pset.getParameter<edm::InputTag>("muonSrc");
     electronSrc_ = pset.getParameter<edm::InputTag>("electronSrc");
@@ -79,6 +81,10 @@ PATMETSystematicsEmbedder::PATMETSystematicsEmbedder(
     produces<ShiftedCandCollection>("metsJESDown");
     produces<ShiftedCandCollection>("metsUESUp");
     produces<ShiftedCandCollection>("metsUESDown");
+    produces<ShiftedCandCollection>("metsFullJESUp");
+    produces<ShiftedCandCollection>("metsFullJESDown");
+    produces<ShiftedCandCollection>("metsFullUESUp");
+    produces<ShiftedCandCollection>("metsFullUESDown");
 }
 
 // Get the transverse component of the vector
@@ -108,6 +114,9 @@ void embedShift(pat::MET& met, edm::Event& evt,
 
 void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 
+  edm::Handle<edm::View<pat::Jet> > jets; // if patJet
+  //edm::Handle<edm::View<reco::PFJet> > jets; // if PFJet
+  evt.getByLabel(jetSrc_, jets);
 
   edm::Handle<edm::View<pat::Tau> > taus;
   evt.getByLabel(tauSrc_, taus);
@@ -192,10 +201,35 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   LorentzVector jesUpJetP4;
   LorentzVector jesDownJetP4;
 
+  LorentzVector uncorrJetFullP4;
+  LorentzVector nominalJetFullP4;
+  LorentzVector jesUpJetFullP4;
+  LorentzVector jesDownJetFullP4;
+  LorentzVector uesUpJetFullP4;
+  LorentzVector uesDownJetFullP4;
+
   LorentzVector uncorrUnclusteredP4;
   LorentzVector nominalUnclusteredP4;
   LorentzVector uesUpUnclusteredP4;
   LorentzVector uesDownUnclusteredP4;
+
+  for (size_t i = 0; i < jets->size(); ++i){
+   const pat::Jet& jetFull = jets->at(i);
+   assert(jetFull.userCand("uncorrFull").isNonnull());
+   assert(jetFull.userCand("jesFull+").isNonnull());
+   assert(jetFull.userCand("jesFull-").isNonnull());
+   uncorrJetFullP4 += jetFull.userCand("uncorrFull")->p4();
+   nominalJetFullP4 += jetFull.p4();
+   
+   if (jetFull.pt() >= 10){
+    jesUpJetFullP4 += jetFull.userCand("jesFull+")->p4();
+    jesDownJetFullP4 += jetFull.userCand("jesFull-")->p4();
+   }
+   if (jetFull.pt() < 10){
+    uesUpJetFullP4 += jetFull.userCand("uesFull+")->p4();
+    uesDownJetFullP4 += jetFull.userCand("uesFull-")->p4();
+   }
+  }
 
   // Do Tau ES, Jet ES, and Unclustered ES shifts using the taus
   size_t shiftedTaus = 0; // counter for sanity check
@@ -207,6 +241,7 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     edm::Ptr<pat::Jet> seedJet(tau.userCand("patJet"));
     assert(seedJet.isNonnull());
     const pat::Jet& jet = *seedJet;
+    //std::cout<<"Jet uncorr: "<<jet.userCand("uncorr")->pt()<<std::endl;
     if (tauCut_(tau)) {
       shiftedTaus++;
       assert(tau.userCand("uncorr").isNonnull());
@@ -251,34 +286,36 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   }
   */
 
-  LorentzVector metP4Type1 = outputMET.p4();
-  // Check if we want to apply type1 corrections to the MET
-  if (applyType1ForJets_) {
-    LorentzVector deltaJets = nominalJetP4 - uncorrJetP4;
-    metP4Type1 -= transverse(deltaJets);
-  }
-
-  if (applyType2ForJets_) {
-    LorentzVector deltaJets = nominalUnclusteredP4 - uncorrUnclusteredP4;
-    metP4Type1 -= transverse(deltaJets);
-  }
-
-  if (applyType1ForTaus_) {
-    LorentzVector deltaTaus = nominalTauP4 - uncorrTauP4;
-    metP4Type1 -= transverse(deltaTaus);
-  }
-
-  if (applyType1ForElectrons_) {
-    LorentzVector deltaElectrons = nominalElectronP4 - uncorrElectronP4;
-    metP4Type1 -= transverse(deltaElectrons);
-  }
-
-  if (applyType1ForMuons_) {
-    LorentzVector deltaMuons = nominalMuonP4 - uncorrMuonP4;
-    metP4Type1 -= transverse(deltaMuons);
-  }
-  // Make sure we haven't picked up a mass component
-  metP4Type1 = transverse(metP4Type1);
+//  LorentzVector metP4Type1 = outputMET.p4();
+//  // Check if we want to apply type1 corrections to the MET
+//  if (applyType1ForJets_) {
+//    LorentzVector deltaJets = nominalJetP4 - uncorrJetP4;
+//    LorentzVector deltaJetsFull = nominalJetFullP4 - uncorrJetFullP4;
+//    metP4Type1 -= transverse(deltaJetsFull);
+//    //metP4Type1 -= transverse(deltaJets);
+//  }
+//
+//  if (applyType2ForJets_) {
+//    LorentzVector deltaJets = nominalUnclusteredP4 - uncorrUnclusteredP4;
+//    metP4Type1 -= transverse(deltaJets);
+//  }
+//
+//  if (applyType1ForTaus_) {
+//    LorentzVector deltaTaus = nominalTauP4 - uncorrTauP4;
+//    metP4Type1 -= transverse(deltaTaus);
+//  }
+//
+//  if (applyType1ForElectrons_) {
+//    LorentzVector deltaElectrons = nominalElectronP4 - uncorrElectronP4;
+//    metP4Type1 -= transverse(deltaElectrons);
+//  }
+//
+//  if (applyType1ForMuons_) {
+//    LorentzVector deltaMuons = nominalMuonP4 - uncorrMuonP4;
+//    metP4Type1 -= transverse(deltaMuons);
+//  }
+//  // Make sure we haven't picked up a mass component
+//  metP4Type1 = transverse(metP4Type1);
 
   //   embedShift(outputMET, evt, "metsRaw", "raw", LorentzVector());
   // Embed the type one corrected MET
@@ -314,6 +351,16 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
       nominalUnclusteredP4 - uesUpUnclusteredP4);
   embedShift(outputMET, evt, "metsUESDown", "ues-",
       nominalUnclusteredP4 - uesDownUnclusteredP4);
+
+  embedShift(outputMET, evt, "metsFullJESUp", "jesFull+",
+      nominalJetP4 - jesUpJetFullP4);
+  embedShift(outputMET, evt, "metsFullJESDown", "jesFull-",
+      nominalJetP4 - jesDownJetFullP4);
+
+  embedShift(outputMET, evt, "metsFullUESUp", "uesFull+",
+      nominalUnclusteredP4 - uesUpJetFullP4);
+  embedShift(outputMET, evt, "metsFullUESDown", "uesFull-",
+      nominalUnclusteredP4 - uesDownJetFullP4);
 
   std::auto_ptr<pat::METCollection> outputColl(new pat::METCollection);
   outputColl->push_back(outputMET);
