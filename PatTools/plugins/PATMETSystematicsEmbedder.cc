@@ -306,38 +306,6 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   }
   */
 
-//  LorentzVector metP4Type1 = outputMET.p4();
-//  // Check if we want to apply type1 corrections to the MET
-//  if (applyType1ForJets_) {
-//    LorentzVector deltaJets = nominalJetP4 - uncorrJetP4;
-//    LorentzVector deltaJetsFull = nominalJetFullP4 - uncorrJetFullP4;
-//    metP4Type1 -= transverse(deltaJetsFull);
-//    //metP4Type1 -= transverse(deltaJets);
-//  }
-//
-//  if (applyType2ForJets_) {
-//    LorentzVector deltaJets = nominalUnclusteredP4 - uncorrUnclusteredP4;
-//    metP4Type1 -= transverse(deltaJets);
-//  }
-//
-//  if (applyType1ForTaus_) {
-//    LorentzVector deltaTaus = nominalTauP4 - uncorrTauP4;
-//    metP4Type1 -= transverse(deltaTaus);
-//  }
-//
-//  if (applyType1ForElectrons_) {
-//    LorentzVector deltaElectrons = nominalElectronP4 - uncorrElectronP4;
-//    metP4Type1 -= transverse(deltaElectrons);
-//  }
-//
-//  if (applyType1ForMuons_) {
-//    LorentzVector deltaMuons = nominalMuonP4 - uncorrMuonP4;
-//    metP4Type1 -= transverse(deltaMuons);
-//  }
-//  // Make sure we haven't picked up a mass component
-//  metP4Type1 = transverse(metP4Type1);
-
-  //   embedShift(outputMET, evt, "metsRaw", "raw", LorentzVector());
   // Embed the type one corrected MET
   embedShift(outputMET, evt, "metType1", "type1",
       metT1.p4() - outputMET.p4());
