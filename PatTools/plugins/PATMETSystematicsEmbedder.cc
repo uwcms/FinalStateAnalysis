@@ -219,6 +219,8 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
 
   LorentzVector uncorrJetFullP4;
   LorentzVector nominalJetFullP4;
+  LorentzVector uncorrUnclusteredFullP4;
+  LorentzVector nominalUnclusteredFullP4;
   LorentzVector jesUpJetFullP4;
   LorentzVector jesDownJetFullP4;
   LorentzVector uesUpJetFullP4;
@@ -234,14 +236,16 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
    assert(jetFull.userCand("uncorrFull").isNonnull());
    assert(jetFull.userCand("jesFull+").isNonnull());
    assert(jetFull.userCand("jesFull-").isNonnull());
-   uncorrJetFullP4 += jetFull.userCand("uncorrFull")->p4();
-   nominalJetFullP4 += jetFull.p4();
    
    if (jetFull.pt() >= 10){
+    uncorrJetFullP4 += jetFull.userCand("uncorrFull")->p4();
+    nominalJetFullP4 += jetFull.p4();
     jesUpJetFullP4 += jetFull.userCand("jesFull+")->p4();
     jesDownJetFullP4 += jetFull.userCand("jesFull-")->p4();
    }
    if (jetFull.pt() < 10){
+    uncorrUnclusteredFullP4 += jetFull.userCand("uncorrFull")->p4();
+    nominalUnclusteredFullP4 += jetFull.p4();
     uesUpJetFullP4 += jetFull.userCand("uesFull+")->p4();
     uesDownJetFullP4 += jetFull.userCand("uesFull-")->p4();
    }
@@ -379,17 +383,17 @@ void PATMETSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
       metT1.p4() );
 
   embedShiftT1(outputMET, evt, "metsFullJESUp", "jesFull+",
-      nominalJetP4 - jesUpJetFullP4,
+      nominalJetFullP4 - jesUpJetFullP4,
       metT1.p4() );
   embedShiftT1(outputMET, evt, "metsFullJESDown", "jesFull-",
-      nominalJetP4 - jesDownJetFullP4,
+      nominalJetFullP4 - jesDownJetFullP4,
       metT1.p4() );
 
   embedShiftT1(outputMET, evt, "metsFullUESUp", "uesFull+",
-      nominalUnclusteredP4 - uesUpJetFullP4,
+      nominalUnclusteredFullP4 - uesUpJetFullP4,
       metT1.p4() );
   embedShiftT1(outputMET, evt, "metsFullUESDown", "uesFull-",
-      nominalUnclusteredP4 - uesDownJetFullP4,
+      nominalUnclusteredFullP4 - uesDownJetFullP4,
       metT1.p4() );
 
   std::auto_ptr<pat::METCollection> outputColl(new pat::METCollection);

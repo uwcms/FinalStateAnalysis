@@ -50,21 +50,15 @@ def count(inputPath):
     METCollections = (
         ("pfMet",                   "", "RECO", handlePFMETs   ),
         ("patPfMet",                "", "TUPLE", handlePatMETs   ),
-        #("patPFMetForMEtUncertaintyTOM", "", "TUPLE", handlePatMETs   ),
-       #("patPFMetTOM",                "", "TUPLE", handlePatMETs   ),
-        #("patPfMetT0rt",            "", "TUPLE", handlePatMETs   ),
-        #("patPfMetT0rtT1",          "", "TUPLE", handlePatMETs   ),
-        #("patPfMetT0pc",            "", "TUPLE", handlePatMETs   ),
-        #("patPfMetT0pcT1",          "", "TUPLE", handlePatMETs   ),
         ("patPfMetT1",              "", "TUPLE", handlePatMETs   ),
         ("systematicsMET", "metType1", "TUPLE", handleLeafCand),
         ("systematicsMET", "metsJESUp", "TUPLE", handleLeafCand),
-        ("systematicsMET", "metsFullJESUp", "TUPLE", handleLeafCand),
-        ("systematicsMET", "metsUESUp", "TUPLE", handleLeafCand),
-        ("systematicsMET", "metsFullUESUp", "TUPLE", handleLeafCand),
         ("systematicsMET", "metsJESDown", "TUPLE", handleLeafCand),
+        ("systematicsMET", "metsFullJESUp", "TUPLE", handleLeafCand),
         ("systematicsMET", "metsFullJESDown", "TUPLE", handleLeafCand),
+        ("systematicsMET", "metsUESUp", "TUPLE", handleLeafCand),
         ("systematicsMET", "metsUESDown", "TUPLE", handleLeafCand),
+        ("systematicsMET", "metsFullUESUp", "TUPLE", handleLeafCand),
         ("systematicsMET", "metsFullUESDown", "TUPLE", handleLeafCand),
 #        #("patPfMetT0rtTxy",         "", "TUPLE", handlePatMETs   ),
 #        #("patPfMetT0rtT1Txy",       "", "TUPLE", handlePatMETs   ),
@@ -87,22 +81,14 @@ def count(inputPath):
         )
 
     JetCollections = (
-#        ("selectedPatJets",                "", "TUPLE", handlePatJets),
-#        ("selectedPatJetsAK5chsPF",        "", "TUPLE", handlePatJets),
-##        ("smearedPatJets",         "", "TUPLE", handlePatJets),
-#        ("selectedPatJetsForMETtype1p2CorrTOM", "", "TUPLE", handlePatJets),
         ("ak5PFJets",              "", "RECO" , handlePFJets),
-#        ("patJetsForMETSyst",              "", "TUPLE" , handlePatJets),
         ("patJetsMET",              "", "TUPLE" , handlePatJets),
         ("patJets",              "", "TUPLE" , handlePatJets),
-#        ("selectedPatJetsForMETtype1p2CorrTOMAS",              "", "TUPLE" , handlePatJets),
-        #("selectedPatJetsForMETtype1p2Corr",              "", "TUPLE" , handlePatJets),
-        #("patJetsMETTOMnotOverlappingWithLeptonsForMEtUncertaintyTOM", "", "TUPLE", handlePatJets),
-#        ("patJetsNotOverlappingWithLeptonsForMEtUncertaintyTOM", "", "TUPLE", handlePatJets),
-#        ("selectedPatJetsAK5chsPF",        "", "TUPLE", handleJets),
-#        ("smearedPatJetsAK5chsPF",         "", "TUPLE", handleJets),
-#        ("shiftedPatJetsAK5chsPFenUpForRawMEt", "", "TUPLE", handleJets),
-#        ("shiftedPatJetsAK5chsPFenUpForCorrMEt", "", "TUPLE", handleJets),
+#        ("selectedPatJets",                "", "TUPLE", handlePatJets),
+#        ("selectedPatJetsAK5chsPF",        "", "TUPLE", handlePatJets),
+#        ("smearedPatJets",         "", "TUPLE", handlePatJets),
+#        ("selectedPatJetsForMETtype1p2CorrTOM", "", "TUPLE", handlePatJets),
+#        ("patJetsForMETSyst",              "", "TUPLE" , handlePatJets),
 
     )
 
@@ -118,9 +104,6 @@ def count(inputPath):
 
             event.getByLabel(METCollection[0:3], handle)
             met = handle.product().front()
-            #if (eventId==3196817 or eventId==3196833 or eventId==3196840):
-            if METCollection[0]=="patPfMetT1": T1_official=met.pt()
-            if METCollection[0]=="patType1CorrectedPFMetTOM": T1_tom=met.pt()
              
             print '%6d'    % run,
             print '%10d'   % lumi,
@@ -129,16 +112,12 @@ def count(inputPath):
             print '%10.8f' % met.pt(),
             print '%10.3f' % met.eta(),
             print '%10.2f' % met.phi(),
-            #print '%10.2f' % (met.phi()/math.pi*180.0),
             print
-#        print("(off - tom) / avg(off,tom) = %0.4f"%(2 * (T1_official - T1_tom) / (T1_official + T1_tom)) )
-#        print
 
         for JetCollection in JetCollections:
 
             handle = JetCollection[3]
             event.getByLabel(JetCollection[0:3], handle)
-            #if (eventId==3196817 or eventId==3196833 or eventId==3196840):
             for i in range (handle.product().size()):
              jet = handle.product().at(i)
              if jet.pt() > 20:
@@ -151,7 +130,6 @@ def count(inputPath):
               print '%10.3f'  % jet.eta(),
               print '%10.2f'  % jet.phi(),
               print
-        #if (eventId==3196817 or eventId==3196833 or eventId==3196840): print 
         print
 
 ##____________________________________________________________________________||

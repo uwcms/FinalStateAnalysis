@@ -410,16 +410,13 @@ def configurePatTuple(process, isMC=True, **kwargs):
         tagInfoSources = cms.VInputTag(cms.InputTag("impactParameterTagInfosAOD"), cms.InputTag("secondaryVertexTagInfosAOD"), cms.InputTag("softMuonTagInfosAOD"), cms.InputTag("secondaryVertexNegativeTagInfosAOD"), cms.InputTag("inclusiveSecondaryVertexFinderFilteredTagInfosAOD")),
         discriminatorSources = cms.VInputTag(cms.InputTag("trackCountingHighEffBJetTagsAOD"), cms.InputTag("trackCountingHighPurBJetTagsAOD"), cms.InputTag("simpleSecondaryVertexHighEffBJetTagsAOD"), cms.InputTag("simpleSecondaryVertexHighPurBJetTagsAOD"), cms.InputTag("simpleInclusiveSecondaryVertexHighEffBJetTagsAOD"),
             cms.InputTag("simpleInclusiveSecondaryVertexHighPurBJetTagsAOD"), cms.InputTag("combinedSecondaryVertexMVABJetTagsAOD"), cms.InputTag("combinedSecondaryVertexBJetTagsAOD"), cms.InputTag("jetBProbabilityBJetTagsAOD"), cms.InputTag("jetProbabilityBJetTagsAOD")),
-        #addBTagInfo = cms.bool(True),
         addBTagInfo = cms.bool(False),
         embedCaloTowers = cms.bool(False),
         addResolutions = cms.bool(False),
         getJetMCFlavour = cms.bool(True),
         addDiscriminators = cms.bool(False),
-        #addDiscriminators = cms.bool(True),
         jetChargeSource = cms.InputTag("patJetCharge"),
         addJetCorrFactors = cms.bool(False),
-        #addJetCorrFactors = cms.bool(True),
         jetIDMap = cms.InputTag("ak5JetID"),
         addJetID = cms.bool(True)
     )
@@ -432,8 +429,8 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patJetGarbageRemoval.cut = 'pt > 12'
     final_jet_collection = chain_sequence(
         process.customizeJetSequence, "patJets")
-    process.customizeJetSequence.insert(0, process.patJetEmbedSystematicsFull) # TOM ADDED THIS TOO
-    process.customizeJetSequence.insert(0, process.patJetsMET) # TOM ADDED THIS TOO
+    process.customizeJetSequence.insert(0, process.patJetEmbedSystematicsFull) 
+    process.customizeJetSequence.insert(0, process.patJetsMET) 
     process.customizeJetSequence.insert(0, process.patJets)
     # Make it a "complete" sequence
     process.customizeJetSequence += process.selectedPatJets
@@ -466,7 +463,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*SoftLeptonTagInfo*_*_*_*')
     output_commands.append('*_ak5PFJets_*_*')
     output_commands.append('*_ak5PFchsJets_*_*')
-    #output_commands.append('*_*AK5PFchs_*_*')
 
     ########################
     ##      PHOTONS       ##
@@ -607,13 +603,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
         addGenMET    = cms.bool(False)
     )
 
-    process.selectedPatJetsForMETtype1p2CorrTOMAS = cms.EDFilter("PATJetSelector",
-        src = cms.InputTag('patJetsMET'),
-        cut = cms.string('abs(eta) < 9.9'),
-        filter = cms.bool(False)
-    )
-
-
     process.officialMETSequence = cms.Sequence(
         process.correctionTermsPfMetType1Type2 
         + process.correctionTermsPfMetType0RecoTrack 
@@ -643,33 +632,12 @@ def configurePatTuple(process, isMC=True, **kwargs):
         + process.patPfMetT0rtT1Txy
         + process.patPfMetT0pcTxy
         + process.patPfMetT0pcT1Txy
-        + process.selectedPatJetsForMETtype1p2CorrTOMAS
     )
 
-
-
-
-    #from FinalStateAnalysis.PatTools.met.metUncertaintyTools  import runMEtUncertainties
-    from PhysicsTools.PatUtils.tools.metUncertaintyTools import runMEtUncertainties
-    if isMC: jc = "ak5PFL1FastL2L3"
-    else: jc = "ak5PFL1FastL2L3Residual"
-    #from PhysicsTools.PatUtils.patPFMETCorrections_cff import 
-    #process.patPFJetMETtype1p2Corr.src = cms.InputTag("ak5PFJets")
-    runMEtUncertainties( process, electronCollection=cms.InputTag("cleanPatElectrons"), photonCollection=None , muonCollection=cms.InputTag("cleanPatMuons"), tauCollection=cms.InputTag("cleanPatTaus"), jetCollection=cms.InputTag("patJets"), jetCorrLabel=jc, makeType1corrPFMEt=True, makeType1p2corrPFMEt=False, postfix="TOM" )
-    #runMEtUncertainties( process, electronCollection=cms.InputTag("cleanPatElectrons"), photonCollection=None , muonCollection=cms.InputTag("cleanPatMuons"), tauCollection=cms.InputTag("cleanPatTaus"), jetCollection=cms.InputTag("patJetsMETTOM"), jetCorrLabel=jc, makeType1corrPFMEt=True, makeType1p2corrPFMEt=False, postfix="TOM" )
-
-    #runMEtUncertainties( process, electronCollection=cms.InputTag("cleanPatElectrons"), photonCollection=None , muonCollection=cms.InputTag("cleanPatMuons"), tauCollection=cms.InputTag("cleanPatTaus"), jetCollection=cms.InputTag("selectedPatJetsForMETtype1p2Corr"), jetCorrLabel=jc, makeType1corrPFMEt=True, makeType1p2corrPFMEt=False, postfix="TOM" )
-    #runMEtUncertainties( process, electronCollection=cms.InputTag("cleanPatElectrons"), photonCollection=None , muonCollection=cms.InputTag("cleanPatMuons"), tauCollection=cms.InputTag("cleanPatTaus"), jetCollection=cms.InputTag("selectedPatJetsAK5chsPF"), jetCorrLabel=jc, makeType1corrPFMEt=True, makeType1p2corrPFMEt=False, postfix="TOM" )
 
     output_commands.append('*_patPfMet*_*_*')
     output_commands.append('*_pfMet_*_*')
     output_commands.append('*_patPFMetForMEtUncertainty*_*_*')
-    output_commands.append('*_patPFJetMETtype1p2Corr*_*_*')
-    output_commands.append('*_selectedPatJetsForMETtype1p2Corr*_*_*')
-    output_commands.append('*_patJetsNotOverlappingWithLeptonsForMEtUncertaint*_*_*')
-    output_commands.append('*_*selectedPatJetsForMETtype1p2Corr*_*_*')
-    output_commands.append('*_*corrPfMetType1*_*_*')
-    output_commands.append('*_*patPFJetMETtype1p2Corr*_*_*')
     output_commands.append('*_patJets*_*_*')
 
     final_met_collection = chain_sequence(
