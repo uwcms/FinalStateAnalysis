@@ -367,12 +367,70 @@ def configurePatTuple(process, isMC=True, **kwargs):
         **btag_options
     )
 
+    process.patJetsMET = cms.EDProducer("PATJetProducer",
+        addJetCharge = cms.bool(True),
+        addGenJetMatch = cms.bool(True),
+        embedPFCandidates = cms.bool(True),
+        embedGenJetMatch = cms.bool(True),
+        addAssociatedTracks = cms.bool(True),
+        partonJetSource = cms.InputTag("NOT_IMPLEMENTED"),
+        addGenPartonMatch = cms.bool(True),
+        JetPartonMapSource = cms.InputTag("patJetFlavourAssociation"),
+        resolutions = cms.PSet(
+    
+        ),
+        genPartonMatch = cms.InputTag("patJetPartonMatch"),
+        addTagInfos = cms.bool(True),
+        addPartonJetMatch = cms.bool(False),
+        embedGenPartonMatch = cms.bool(True),
+        efficiencies = cms.PSet(
+    
+        ),
+        genJetMatch = cms.InputTag("patJetGenJetMatch"),
+        userData = cms.PSet(
+            userCands = cms.PSet(
+                src = cms.VInputTag("")
+            ),
+            userInts = cms.PSet(
+                src = cms.VInputTag("")
+            ),
+            userFloats = cms.PSet(
+                src = cms.VInputTag("")
+            ),
+            userClasses = cms.PSet(
+                src = cms.VInputTag("")
+            ),
+            userFunctionLabels = cms.vstring(),
+            userFunctions = cms.vstring()
+        ),
+        jetSource = cms.InputTag("ak5PFJets"),
+        addEfficiencies = cms.bool(False),
+        jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactors")),
+        trackAssociationSource = cms.InputTag("jetTracksAssociatorAtVertex"),
+        tagInfoSources = cms.VInputTag(cms.InputTag("impactParameterTagInfosAOD"), cms.InputTag("secondaryVertexTagInfosAOD"), cms.InputTag("softMuonTagInfosAOD"), cms.InputTag("secondaryVertexNegativeTagInfosAOD"), cms.InputTag("inclusiveSecondaryVertexFinderFilteredTagInfosAOD")),
+        discriminatorSources = cms.VInputTag(cms.InputTag("trackCountingHighEffBJetTagsAOD"), cms.InputTag("trackCountingHighPurBJetTagsAOD"), cms.InputTag("simpleSecondaryVertexHighEffBJetTagsAOD"), cms.InputTag("simpleSecondaryVertexHighPurBJetTagsAOD"), cms.InputTag("simpleInclusiveSecondaryVertexHighEffBJetTagsAOD"),
+            cms.InputTag("simpleInclusiveSecondaryVertexHighPurBJetTagsAOD"), cms.InputTag("combinedSecondaryVertexMVABJetTagsAOD"), cms.InputTag("combinedSecondaryVertexBJetTagsAOD"), cms.InputTag("jetBProbabilityBJetTagsAOD"), cms.InputTag("jetProbabilityBJetTagsAOD")),
+        addBTagInfo = cms.bool(False),
+        embedCaloTowers = cms.bool(False),
+        addResolutions = cms.bool(False),
+        getJetMCFlavour = cms.bool(True),
+        addDiscriminators = cms.bool(False),
+        jetChargeSource = cms.InputTag("patJetCharge"),
+        addJetCorrFactors = cms.bool(False),
+        jetIDMap = cms.InputTag("ak5JetID"),
+        addJetID = cms.bool(True)
+    )
+
     # Customize/embed all our sequences
     process.load("FinalStateAnalysis.PatTools.patJetProduction_cff")
+    process.patJetEmbedSystematicsFull.srcPFJets = cms.InputTag("ak5PFJets")
+    process.patJetEmbedSystematicsFull.srcPatJets = cms.InputTag("patJetsMET")
     helpers.cloneProcessingSnippet( process, process.customizeJetSequence, 'AK5PFchs' )
     process.patJetGarbageRemoval.cut = 'pt > 12'
     final_jet_collection = chain_sequence(
         process.customizeJetSequence, "patJets")
+    process.customizeJetSequence.insert(0, process.patJetEmbedSystematicsFull) 
+    process.customizeJetSequence.insert(0, process.patJetsMET) 
     process.customizeJetSequence.insert(0, process.patJets)
     # Make it a "complete" sequence
     process.customizeJetSequence += process.selectedPatJets
@@ -405,66 +463,6 @@ def configurePatTuple(process, isMC=True, **kwargs):
     output_commands.append('*SoftLeptonTagInfo*_*_*_*')
     output_commands.append('*_ak5PFJets_*_*')
     output_commands.append('*_ak5PFchsJets_*_*')
-
-    ########################
-    ##        MET         ##
-    ########################
-
-    # Use PFMEt
-    mettools.addPfMET(process)
-
-    # We cut out a lot of the junky taus and jets - but we need these
-    # to correctly apply the MET uncertainties.  So, let's make a
-    # non-cleaned version of the jet and tau sequence.
-    process.jetsForMetSyst = helpers.cloneProcessingSnippet(
-        process, process.customizeJetSequence, 'ForMETSyst')
-    process.tausForMetSyst = helpers.cloneProcessingSnippet(
-        process, process.customizeTauSequence, 'ForMETSyst')
-    # Don't apply any cut for these
-    process.patTauGarbageRemovalForMETSyst.cut = ''
-    process.patJetGarbageRemovalForMETSyst.cut = ''
-    process.tuplize += process.jetsForMetSyst
-    process.tuplize += process.tausForMetSyst
-    # We have to make our clone of cleanPatTaus separately, since e/mu
-    # cleaning is applied - therefore it isn't in the customizeTausSequence.
-    process.cleanPatTausForMETSyst = process.cleanPatTaus.clone(
-        src=cms.InputTag(process.cleanPatTaus.src.value() + "ForMETSyst"))
-    process.cleanPatTausForMETSyst.preselection = ''
-    process.cleanPatTausForMETSyst.finalCut = ''
-    process.patTausEmbedJetInfoForMETSyst.jetSrc = \
-        final_jet_collection.value() + "ForMETSyst"
-    process.tuplize += process.cleanPatTausForMETSyst
-
-    # Setup MET production
-    process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
-    # The MET systematics depend on all other systematics
-    process.systematicsMET.tauSrc = cms.InputTag("cleanPatTausForMETSyst")
-    process.systematicsMET.muonSrc = cms.InputTag("cleanPatMuons")
-    process.systematicsMET.electronSrc = cms.InputTag("cleanPatElectrons")
-
-    final_met_collection = chain_sequence(
-        process.customizeMETSequence, "patMETsPF")
-    process.tuplize += process.customizeMETSequence
-    process.patMETsPF.addGenMET = bool(isMC)
-    output_commands.append('*_%s_*_*' % final_met_collection.value())
-
-    # Make a version with the MVA MET reconstruction method
-    process.load("FinalStateAnalysis.PatTools.met.mvaMetOnPatTuple_cff")
-    process.tuplize += process.pfMEtMVAsequence
-    mva_met_sequence = helpers.cloneProcessingSnippet(
-        process, process.customizeMETSequence, "MVA")
-    final_mvamet_collection = chain_sequence(
-        mva_met_sequence, "patMEtMVA")
-    process.tuplize += mva_met_sequence
-    output_commands.append('*_%s_*_*' % final_mvamet_collection.value())
-
-    # Keep all the data formats needed for the systematics
-    output_commands.append('recoLeafCandidates_*_*_%s'
-                           % process.name_())
-    # We can drop to jet and tau MET specific products. They were only used for
-    # computation of the MET numbers.
-    output_commands.append('drop recoLeafCandidates_*ForMETSyst_*_%s'
-                           % process.name_())
 
     ########################
     ##      PHOTONS       ##
@@ -501,6 +499,172 @@ def configurePatTuple(process, isMC=True, **kwargs):
     process.patDefaultSequence.replace(process.selectedPatPhotons,
                                        process.customizePhotonSequence)
     process.cleanPatPhotons.src = final_photon_collection
+
+
+    ########################
+    ##        MET         ##
+    ########################
+
+    # Use PFMEt
+    mettools.addPfMET(process)
+
+    # We cut out a lot of the junky taus and jets - but we need these
+    # to correctly apply the MET uncertainties.  So, let's make a
+    # non-cleaned version of the jet and tau sequence.
+    process.jetsForMetSyst = helpers.cloneProcessingSnippet(
+        process, process.customizeJetSequence, 'ForMETSyst')
+    process.tausForMetSyst = helpers.cloneProcessingSnippet(
+        process, process.customizeTauSequence, 'ForMETSyst')
+    # Don't apply any cut for these
+    process.patTauGarbageRemovalForMETSyst.cut = ''
+    process.patJetGarbageRemovalForMETSyst.cut = ''
+    process.tuplize += process.jetsForMetSyst
+    process.tuplize += process.tausForMetSyst
+    # We have to make our clone of cleanPatTaus separately, since e/mu
+    # cleaning is applied - therefore it isn't in the customizeTausSequence.
+    process.cleanPatTausForMETSyst = process.cleanPatTaus.clone(
+        src=cms.InputTag(process.cleanPatTaus.src.value() + "ForMETSyst"))
+    process.cleanPatTausForMETSyst.preselection = ''
+    process.cleanPatTausForMETSyst.finalCut = ''
+    process.patTausEmbedJetInfoForMETSyst.jetSrc = \
+        final_jet_collection.value() + "ForMETSyst"
+    process.tuplize += process.cleanPatTausForMETSyst
+
+    # Setup MET production
+    process.load("FinalStateAnalysis.PatTools.patMETProduction_cff")
+
+    if isMC:
+        process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_mc
+        process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3")
+    else:
+        process.corrPfMetShiftXY.parameter = process.pfMEtSysShiftCorrParameters_2012runABCDvsNvtx_data
+        process.corrPfMetType1.jetCorrLabel = cms.string("ak5PFL1FastL2L3Residual")
+
+    # The MET systematics depend on all other systematics
+    process.systematicsMET.jetSrc = cms.InputTag("patJetEmbedSystematicsFull")
+    process.systematicsMET.tauSrc = cms.InputTag("cleanPatTausForMETSyst")
+    process.systematicsMET.muonSrc = cms.InputTag("cleanPatMuons")
+    process.systematicsMET.electronSrc = cms.InputTag("cleanPatElectrons")
+
+    from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
+    process.patPfMet = patMETs.clone(
+        metSource = cms.InputTag('pfMet'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0rt = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0rt'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0rtT1 = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0rtT1'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0pc = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0pc'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0pcT1 = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0pcT1'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0rtTxy = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0rtTxy'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0rtT1Txy = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0rtT1Txy'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0pcTxy = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0pcTxy'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT0pcT1Txy = patMETs.clone(
+        metSource = cms.InputTag('pfMetT0pcT1Txy'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT1 = patMETs.clone(
+        metSource = cms.InputTag('pfMetT1'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+    process.patPfMetT1xy = patMETs.clone(
+        metSource = cms.InputTag('pfMetT1Txy'),
+        addMuonCorrections = cms.bool(False),
+        addGenMET    = cms.bool(False)
+    )
+
+    process.officialMETSequence = cms.Sequence(
+        process.correctionTermsPfMetType1Type2 
+        + process.correctionTermsPfMetType0RecoTrack 
+        + process.correctionTermsPfMetType0PFCandidate 
+        + process.correctionTermsPfMetShiftXY 
+        + process.correctionTermsCaloMet 
+        + process.caloMetT1 
+        + process.caloMetT1T2 
+        + process.pfMetT0rt 
+        + process.pfMetT0rtT1 
+        + process.pfMetT0pc 
+        + process.pfMetT0pcT1 
+        + process.pfMetT0rtTxy 
+        + process.pfMetT0rtT1Txy 
+        + process.pfMetT0pcTxy 
+        + process.pfMetT0pcT1Txy 
+        + process.pfMetT1 
+        + process.pfMetT1Txy
+        + process.patPfMet
+        + process.patPfMetT1
+        + process.patPfMetT1xy
+        + process.patPfMetT0rt
+        + process.patPfMetT0rtT1
+        + process.patPfMetT0pc
+        + process.patPfMetT0pcT1
+        + process.patPfMetT0rtTxy
+        + process.patPfMetT0rtT1Txy
+        + process.patPfMetT0pcTxy
+        + process.patPfMetT0pcT1Txy
+    )
+
+
+    output_commands.append('*_patPfMet*_*_*')
+    output_commands.append('*_pfMet_*_*')
+    output_commands.append('*_patPFMetForMEtUncertainty*_*_*')
+    output_commands.append('*_patJets*_*_*')
+
+    final_met_collection = chain_sequence(
+        process.customizeMETSequence, "patPfMet")
+
+    process.tuplize += process.officialMETSequence
+    process.tuplize += process.customizeMETSequence
+    process.patMETsPF.addGenMET = bool(isMC)
+    output_commands.append('*_%s_*_*' % final_met_collection.value())
+
+    # Make a version with the MVA MET reconstruction method
+    process.load("FinalStateAnalysis.PatTools.met.mvaMetOnPatTuple_cff")
+    process.tuplize += process.pfMEtMVAsequence
+    mva_met_sequence = helpers.cloneProcessingSnippet(
+        process, process.customizeMETSequence, "MVA")
+    final_mvamet_collection = chain_sequence(
+        mva_met_sequence, "patMEtMVA")
+    process.tuplize += mva_met_sequence
+    output_commands.append('*_%s_*_*' % final_mvamet_collection.value())
+
+    # Keep all the data formats needed for the systematics
+    output_commands.append('recoLeafCandidates_*_*_%s'
+                           % process.name_())
+    # We can drop to jet and tau MET specific products. They were only used for
+    # computation of the MET numbers.
+    output_commands.append('drop recoLeafCandidates_*ForMETSyst_*_%s'
+                           % process.name_())
 
     ########################
     ##      TRIGGER       ##

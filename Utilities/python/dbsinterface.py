@@ -6,7 +6,7 @@ from DBSAPI.dbsApi import DbsApi
 def get_dbs_info(toFind, requirements):
     "Interface with the DBS API to get the whatever you want of a requirements. ALWAYS RETURN A LIST OF STRINGS"
     args = {}
-    args['url']='http://cmsdbsprod.cern.ch/cms_dbs_prod_global/servlet/DBSServlet'
+    args['url']='https://cmsweb.cern.ch/dbs/prod/global/DBSReader'
     args['version']='DBS_2_0_9'
     args['mode']='POST'
     api = DbsApi(args)

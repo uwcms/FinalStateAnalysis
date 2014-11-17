@@ -1,5 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
+from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
+
 metTypeCategorization = cms.PSet(
     tauCut = cms.string(
         'pt > 10 && (tauID("decayModeFinding") && tauID("byLooseIsolation"))'
@@ -15,7 +17,11 @@ metTypeCategorization = cms.PSet(
 
 systematicsMET = cms.EDProducer(
     "PATMETSystematicsEmbedder",
-    src = cms.InputTag("patMETsPF"),
+    src = cms.InputTag("patPfMet"),
+    metT1Src = cms.InputTag("patPfMetT1"),
+    metT0pcT1TxySrc = cms.InputTag("patPfMetT0pcT1Txy"), 
+    metT0rtT1TxySrc = cms.InputTag("patPfMetT0rtT1Txy"), 
+    jetSrc = cms.InputTag("fixme"),
     tauSrc = cms.InputTag("fixme"),
     muonSrc = cms.InputTag("fixme"),
     electronSrc = cms.InputTag("fixme"),

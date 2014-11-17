@@ -231,3 +231,7 @@ if options.profile:
 if options.dumpCfg:
     dump_cfg = open(options.dumpCfg, 'w')
     dump_cfg.write(process.dumpPython())
+
+
+#Pax = open("data.py","w")
+#Pax.write(process.dumpPython())
