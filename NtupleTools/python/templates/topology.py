@@ -81,10 +81,10 @@ fsrMiniAOD = PSet(
 
 # use zbosonMiniAOD OR zboson, never both
 zbosonMiniAOD = PSet(
-    object1_object2_MassFsr  = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.mass',
-    object1_object2_PtFsr    = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.pt',
-    object1_object2_EtaFsr   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.eta',
-    object1_object2_PhiFsr   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.phi',
+    object1_object2_MassFSR  = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.mass',
+    object1_object2_PtFSR    = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.pt',
+    object1_object2_EtaFSR   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.eta',
+    object1_object2_PhiFSR   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.phi',
     object1_object2_FSRPt    = '? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? '
         'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").pt() : -999.',
     object1_object2_FSREta   = '? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? ' 
