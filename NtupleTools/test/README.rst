@@ -58,6 +58,7 @@ miniAOD Example
 The following will run a bunch of CSA14 miniAOD files desired for the H->ZZ->4l analysis. Remote files can be run over condor using xrootd (the MiniAOD samples are not at UW). 
 
    submit_job.py MAKE_ZZ_NTUPLES_FSR_PU20BX25_1 $fsa/NtupleTools/test/make_ntuples_cfg.py channels="zz" useMiniAOD=1 isMC=1 rerunFSA=1 use25ns=1 hzzfsr=1 --tuple-dbs=$fsa/MetaData/tuples/MiniAOD-13TeV.json --xrootd --input-files-per-job=1 --samples "TTjets-PU20bx25" "Zjets_M50-PU20bx25" "WZTo3LNu-PU20bx25" "ggHZZ-PU20bx25" "VBFHZZ-PU20bx25" "ZZTo4L-PU20bx25" > HZZ4l_FSR_ntuples_PU20bx25_1.sh
+
    bash HZZ4l_FSR_nuples_PU20bx25_1.sh
 
 
