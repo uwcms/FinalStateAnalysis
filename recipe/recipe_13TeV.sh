@@ -48,7 +48,13 @@ then
 #   fi  
 
   echo "Checking out EGamma MVA ID for miniAOD"
-  git cms-merge-topic HuguesBrun:addTheElecIDMVAoutputCSA14 #needed until mva added by default
+  if [ "$MINOR_VERSION" -eq "0" ]
+  then
+    git cms-merge-topic HuguesBrun:addTheElecIDMVAoutputCSA14 #needed until mva added by default
+  elif [ "$MINOR_VERSION" -eq "2" ]
+  then
+    git cms-merge-topic HuguesBrun:trigElecIdInCommonIsoSelection720
+  fi
 
   echo "Checking out EGamma POG recipe for electron corrections"
   #Following Volker's instructions
