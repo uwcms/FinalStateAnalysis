@@ -34,9 +34,8 @@ namespace ApplySVfit {
   static SVFitCache theCache;
   static edm::EventID lastSVfitEvent; // last processed event
 
-  template<typename M>
   double getSVfitMass(std::vector<reco::CandidatePtr>& cands,
-		      const pat::MET& met, const M& covMET, unsigned int verbosity,
+		      const pat::MET& met, const ROOT::Math::SMatrix2D& covMET, unsigned int verbosity,
 		      const edm::EventID& evtId) {
 
     // Check if this a new event

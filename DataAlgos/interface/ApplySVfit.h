@@ -19,11 +19,10 @@ namespace pat { class MET; }
 namespace edm { class EventID; }
 
 namespace ApplySVfit {
-  template<typename M> // TMatrixD or SMatrix2D depending on CMSSW version
   double getSVfitMass(
       std::vector<reco::CandidatePtr>& cands,
       const pat::MET& met,
-      const M& covariance, 
+      const ROOT::Math::SMatrix2D& covariance, 
       unsigned int verbosity,
       const edm::EventID& evtId);
 
