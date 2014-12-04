@@ -12,6 +12,8 @@
 
 // system include files
 #include <memory>
+#include <stdexcept>
+#include <functional>
 
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -24,6 +26,7 @@
 #include "DataFormats/PatCandidates/interface/Electron.h"
 
 #include "EgammaAnalysis/ElectronTools/interface/EGammaCutBasedEleId.h"
+#include "EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h"
 
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
 
@@ -102,10 +105,12 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
 	  ii = _wps_applied.begin();
 	  for( ; ii != ee; ++ii ) {
 	    // iso applied later/differently
-	    int pass = (int)eid::PassWP(_wps[*ii],*electron,
-					the_convs,*the_bs.product(),
-					the_vtxs,
-					0.0,0.0,0.0,0.0);
+	    int pass = (int)backwards_compatible_function(make_function_ptr(eid::PassWP), 
+							  _wps[*ii],*electron,
+							  the_convs,*the_bs.product(),
+							  the_vtxs,
+							  0.0,0.0,0.0,0.0,
+							  ElectronEffectiveArea::kEleEAData2012);
 
 
 	    newElectron.addUserInt(*ii,pass);
@@ -117,11 +122,34 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
       iEvent.put(out);
     }
 
+  // Black magic to maintain backwards compatibility after a 10th argument was added to
+  // EGammaCutBasedEleId::PassWP in CMSSW_7_2_X
+  // Explanation: https://stackoverflow.com/questions/8645058/getting-argument-count-of-a-function-pointer
+  template<typename R, typename... Args>
+  std::function<R(Args...)> make_function_ptr(R (*f)(Args...))
+  {
+    return std::function<R(Args...)>(f);
+  }
+
+  template<typename R, typename... BaseArgs, typename... FirstArgs, typename LastArg>
+  R backwards_compatible_function(std::function<R(BaseArgs...)> f, 
+				  FirstArgs... firstArgs, 
+				  LastArg lastArg)
+  {
+    if(sizeof...(BaseArgs) == sizeof...(firstArgs))
+      return f(firstArgs...);
+    if(sizeof...(BaseArgs) == sizeof...(firstArgs) + 1)
+      return f(firstArgs..., lastArg);
+    throw std::invalid_argument( "Wrong number of arguments passed to backwards_compatible_function()" );
+  }
+
+
   // ----------member data ---------------------------
   edm::InputTag _src,_bssrc,_vtxsrc,_convsrc;
   vstring _wps_applied;
   wp_map _wps;
 };
+
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 DEFINE_FWK_MODULE(PATElectronCutBasedIdEmbedder);
