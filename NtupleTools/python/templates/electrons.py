@@ -18,8 +18,6 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 id = PSet(
     objectWWID = '{object}.userFloat("WWID")',
     objectMITID = '{object}.userFloat("MITID")',
-    objectMVATrig = '? {object}.isElectronIDAvailable("mvaTrigV0") ?{object}.electronID("mvaTrigV0") : -1',
-    objectMVANonTrig = '? {object}.isElectronIDAvailable("mvaNonTrigV0") ?{object}.electronID("mvaNonTrigV0") : -1',
     objectMVATrigIDISO = '? {object}.isElectronIDAvailable("mvaTrigIDISOV0") ?{object}.electronID("mvaTrigIDISOV0") : -1',
     objectMVATrigIDISOPUSUB = '? {object}.isElectronIDAvailable("mvaTrigIDISOPUSUBV0") ?{object}.electronID("mvaTrigIDISOPUSUBV0") : -1',
     objectMVAIDH2TauWP = '{object}.userInt("mvaidwp")',
@@ -31,17 +29,13 @@ id = PSet(
     #new Summer13 MVA ID
     objectMVATrigNoIP = '{object}.userFloat("mvaTrigNoIP")',
 
-    # CSA14 IDs
-    objectCBIDVeto_50ns = '{object}.userInt("cutBasedElectronID-CSA14-50ns-V1-standalone-veto")',
-    objectCBIDLoose_50ns = '{object}.userInt("cutBasedElectronID-CSA14-50ns-V1-standalone-loose")',
-    objectCBIDMedium_50ns = '{object}.userInt("cutBasedElectronID-CSA14-50ns-V1-standalone-medium")',
-    objectCBIDTight_50ns = '{object}.userInt("cutBasedElectronID-CSA14-50ns-V1-standalone-tight")',
-    objectCBIDVeto_25ns = '{object}.userInt("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto")',
-    objectCBIDLoose_25ns = '{object}.userInt("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose")',
-    objectCBIDMedium_25ns = '{object}.userInt("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium")',
-    objectCBIDTight_25ns = '{object}.userInt("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight")',
-    objectMVATrigCSA14 = '? {object}.isElectronIDAvailable("mvaTrigV0CSA14") ?{object}.electronID("mvaTrigV0CSA14") : {object}.userFloat("mvaTrigV0CSA14")',
-    objectMVANonTrigCSA14 = '? {object}.isElectronIDAvailable("mvaNonTrigV0CSA14") ?{object}.electronID("mvaNonTrigV0CSA14") : {object}.userFloat("mvaNonTrigV0CSA14")',
+    # PHYS14 IDs (some of which are still CSA14 IDs...)
+    objectCBIDVeto = '{object}.userFloat("CBIDVeto")',
+    objectCBIDLoose = '{object}.userFloat("CBIDLoose")',
+    objectCBIDMedium = '{object}.userFloat("CBIDMedium")',
+    objectCBIDTight = '{object}.userFloat("CBIDTight")',
+    objectMVATrig = '{object}.userFloat("BDTIDTrig")',
+    objectMVANonTrig = '{object}.userFloat("BDTIDNonTrig")',
     
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(
