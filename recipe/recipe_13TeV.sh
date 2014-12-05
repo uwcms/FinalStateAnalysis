@@ -47,14 +47,13 @@ then
 #     git cms-merge-topic -u cms-tau-pog:CMSSW_7_1_X_taus  
 #   fi  
 
-  echo "Checking out EGamma MVA ID for miniAOD"
-  if [ "$MINOR_VERSION" -eq "0" ]
-  then
-    git cms-merge-topic HuguesBrun:addTheElecIDMVAoutputCSA14 #needed until mva added by default
-  elif [ "$MINOR_VERSION" -eq "2" ]
-  then
-    git cms-merge-topic HuguesBrun:trigElecIdInCommonIsoSelection720
-  fi
+  # These recipes are sort of "hacky" at the moment, pending updates to the official EGM ID framework
+  # From https://twiki.cern.ch/twiki/bin/viewauth/CMS/CutBasedElectronIdentificationRun2#Working_points_for_PHYS14_sample (cut based)
+  # and  https://twiki.cern.ch/twiki/bin/viewauth/CMS/MultivariateElectronIdentificationRun2 (MVA)
+  echo "Checking out electron IDs for miniAOD in CMSSW_7_2_X"
+  git cms-merge-topic HuguesBrun:trigElecIdInCommonIsoSelection720
+  cp /afs/cern.ch/user/i/ikrav/public/EGMCode/GsfEleFull5x5SigmaIEtaIEtaCut72X.cc RecoEgamma/ElectronIdentification/plugins/cuts/
+  cp /afs/cern.ch/user/i/ikrav/public/EGMCode/cutBasedElectronID_PHYS14_PU20bx25_V0_cff.py RecoEgamma/ElectronIdentification/python/Identification/
 
   echo "Checking out EGamma POG recipe for electron corrections"
   #Following Volker's instructions
