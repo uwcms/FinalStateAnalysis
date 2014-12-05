@@ -57,7 +57,7 @@ private:
 // Constructors and destructors
 
 MiniAODElectronMVAIDEmbedder::MiniAODElectronMVAIDEmbedder(const edm::ParameterSet& iConfig):
-  electronCollectionToken_(consumes<edm::View<pat::Electron> >(iConfig.getParameter<edm::InputTag>("electrons"))),
+  electronCollectionToken_(consumes<edm::View<pat::Electron> >(iConfig.getParameter<edm::InputTag>("src"))),
   trigWeights_(iConfig.getParameter<std::vector<std::string> >("trigWeights")),
   nonTrigWeights_(iConfig.getParameter<std::vector<std::string> >("nonTrigWeights")),
   trigLabel_(iConfig.getParameter<std::string>("trigLabel")),

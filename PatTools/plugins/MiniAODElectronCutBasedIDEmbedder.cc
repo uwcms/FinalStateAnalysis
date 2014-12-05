@@ -52,7 +52,7 @@ private:
 // Constructors and destructors
 
 MiniAODElectronCutBasedIDEmbedder::MiniAODElectronCutBasedIDEmbedder(const edm::ParameterSet& iConfig):
-  electronCollectionToken_(consumes<edm::View<pat::Electron> >(iConfig.getParameter<edm::InputTag>("electrons"))),
+  electronCollectionToken_(consumes<edm::View<pat::Electron> >(iConfig.getParameter<edm::InputTag>("src"))),
   idLabels_(iConfig.getParameter<std::vector<std::string> >("idLabels"))
 {
   std::vector<edm::InputTag> idTags = iConfig.getParameter<std::vector<edm::InputTag> >("ids");
