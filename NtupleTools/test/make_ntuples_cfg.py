@@ -157,9 +157,9 @@ if options.rerunFSA:
     GT = {'mcgt': 'START53_V27::All', 'datagt': 'FT53_V21A_AN6::All'}
     if options.useMiniAOD:
         if options.use25ns:
-            GT['mcgt'] = 'PLS170_V7AN1::All'
+            GT['mcgt'] = 'PHYS14_25_V1'
         else:
-            GT['mcgt'] = 'PLS170_V6AN1::All'
+            GT['mcgt'] = 'PHYS14_50_V1'
         GT['datagt'] = 'GR_70_V2_AN1::All'
 
 
@@ -277,17 +277,79 @@ if options.rerunFSA:
     output_commands = []
     if options.useMiniAOD:
         bx = '25ns' if options.use25ns else '50ns'
-        process.miniPatElectrons = cms.EDProducer(
-            "MiniAODElectronIDEmbedder",
+
+        # Turn on versioned cut-based ID
+        from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
+        process.load("RecoEgamma.ElectronIdentification.egmGsfElectronIDs_cfi")
+        process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag(fs_daughter_inputs['electrons'])
+        output_commands.append('*_egmGsfElectronIDs_*_*')
+        from PhysicsTools.SelectorUtils.centralIDRegistry import central_id_registry
+        process.egmGsfElectronIDSequence = cms.Sequence(process.egmGsfElectronIDs)
+        if options.use25ns:
+            cb_id_modules = ['RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_PHYS14_PU20bx25_V0_cff']
+        else:
+            print "50 ns cut based electron IDs don't exist yet for PHYS14. Using CSA14 cuts."
+            cb_id_modules = ['RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_CSA14_50ns_V1_cff']
+        for idmod in cb_id_modules:
+            setupAllVIDIdsInModule(process,idmod,setupVIDElectronSelection)
+
+        CBIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight"] # keys of cut based id user floats
+        if options.use25ns:
+            CBIDTags = [
+                cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-PHYS14-PU20bx25-V0-miniAOD-standalone-veto'),
+                cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-PHYS14-PU20bx25-V0-miniAOD-standalone-loose'),
+                cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-PHYS14-PU20bx25-V0-miniAOD-standalone-medium'),
+                cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-PHYS14-PU20bx25-V0-miniAOD-standalone-tight'),
+                ]
+        else:
+            CBIDTags = [ # almost certainly wrong. Just don't use 50ns miniAOD any more
+                cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-veto'),
+                cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-loose'),
+                cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-medium'),
+                cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-tight'),
+                ]
+
+        # Embed cut-based VIDs
+        process.miniAODElectronCutBasedID = cms.EDProducer(
+            "MiniAODElectronCutBasedIDEmbedder",
             src=cms.InputTag(fs_daughter_inputs['electrons']),
-            MVAId=cms.InputTag("mvaTrigV0CSA14","","addMVAid"),
-            vertices=cms.InputTag("offlineSlimmedPrimaryVertices"),
-            convcollection=cms.InputTag("reducedEgamma:reducedConversions"),
-            beamspot=cms.InputTag("offlineBeamSpot"),
-            bunchspacing=cms.untracked.string(bx)
+            idLabels = cms.vstring(*CBIDLabels),
+            ids = cms.VInputTag(*CBIDTags)
         )
-        output_commands.append('*_miniPatElectrons_*_*')
-        fs_daughter_inputs['electrons'] = "miniPatElectrons"
+        output_commands.append('*_miniAODElectronCutBasedID_*_*')
+        fs_daughter_inputs['electrons'] = "miniAODElectronCutBasedID"
+
+        # Embed MVA VIDs (weights will change soon for PHYS14!)
+        trigMVAWeights = [
+            'EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EB_BDT.weights.xml',
+            'EgammaAnalysis/ElectronTools/data/CSA14/TrigIDMVA_25ns_EE_BDT.weights.xml',
+            ]
+        nonTrigMVAWeights = [
+            'EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EB_5_25ns_BDT.weights.xml',
+            'EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EE_5_25ns_BDT.weights.xml',
+            'EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EB_10_25ns_BDT.weights.xml',
+            'EgammaAnalysis/ElectronTools/data/CSA14/EIDmva_EE_10_25ns_BDT.weights.xml',
+            ]
+        if not options.use25ns:
+            for wt in trigMVAWeights+nonTrigMVAWeights:
+                wt.replace('25ns','50ns')
+        process.miniAODElectronMVAID = cms.EDProducer(
+            "MiniAODElectronMVAIDEmbedder",
+            src=cms.InputTag(fs_daughter_inputs['electrons']),
+            trigWeights = cms.vstring(*trigMVAWeights),
+            trigLabel = cms.string('BDTIDTrig'), # triggering MVA ID userfloat key
+            nonTrigWeights = cms.vstring(*nonTrigMVAWeights),
+            nonTrigLabel = cms.string('BDTIDNonTrig') # nontriggering MVA ID userfloat key
+            )
+        output_commands.append('*_miniAODElectronMVAID_*_*')
+        fs_daughter_inputs['electrons'] = 'miniAODElectronMVAID'
+        
+        process.miniAODElectrons = cms.Path(
+            process.egmGsfElectronIDSequence+
+            process.miniAODElectronCutBasedID+
+            process.miniAODElectronMVAID
+            )
+        process.schedule.append(process.miniAODElectrons)
 
         process.miniPatMuons = cms.EDProducer(
             "MiniAODMuonIDEmbedder",
@@ -305,7 +367,6 @@ if options.rerunFSA:
         fs_daughter_inputs['jets'] = 'miniPatJets'
 
         process.runMiniAODObjectEmbedding = cms.Path(
-            process.miniPatElectrons+
             process.miniPatMuons+
             process.miniPatJets
         )
