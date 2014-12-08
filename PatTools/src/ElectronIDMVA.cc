@@ -403,8 +403,8 @@ double ElectronIDMVA::MVAValue(
     const reco::GsfElectron *ele,
     const edm::Event& evt,
     const edm::EventSetup& es,
-    const edm::InputTag& ebRecHits,
-    const edm::InputTag& eeRecHits) {
+    const edm::EDGetTokenT<EcalRecHitCollection>& ebRecHits,
+    const edm::EDGetTokenT<EcalRecHitCollection>& eeRecHits) {
   EcalClusterLazyTools clusterTool(evt, es, ebRecHits, eeRecHits);
   return MVAValue(ele, clusterTool);
 }

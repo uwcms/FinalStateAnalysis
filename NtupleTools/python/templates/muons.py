@@ -121,8 +121,9 @@ energyCorrections = PSet(
 tracking = PSet(
     objectPixHits = '? {object}.innerTrack.isNonnull ? '
         '{object}.innerTrack.hitPattern.numberOfValidPixelHits :-1',
-    objectGlbTrkHits = '? {object}.globalTrack.isNonnull ? '
-        '{object}.globalTrack.hitPattern.numberOfHits :-1',
+#     objectGlbTrkHits = 'getMuonHits({object_idx})',
+#                        '? {object}.globalTrack.isNonnull ? '
+#         '{object}.globalTrack.hitPattern.numberOfHits(reco::HitPattern::TRACK_HITS) :-1',
     objectNormTrkChi2 = "? {object}.combinedMuon.isNonnull ? "
         "{object}.combinedMuon.normalizedChi2 : 1e99",
     objectTkLayersWithMeasurement = '? {object}.innerTrack.isNonnull ? '

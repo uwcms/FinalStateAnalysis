@@ -18,30 +18,20 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 id = PSet(
     objectWWID = '{object}.userFloat("WWID")',
     objectMITID = '{object}.userFloat("MITID")',
-    objectMVATrig = '? {object}.isElectronIDAvailable("mvaTrigV0") ?{object}.electronID("mvaTrigV0") : -1',
-    objectMVANonTrig = '? {object}.isElectronIDAvailable("mvaNonTrigV0") ?{object}.electronID("mvaNonTrigV0") : -1',
     objectMVATrigIDISO = '? {object}.isElectronIDAvailable("mvaTrigIDISOV0") ?{object}.electronID("mvaTrigIDISOV0") : -1',
     objectMVATrigIDISOPUSUB = '? {object}.isElectronIDAvailable("mvaTrigIDISOPUSUBV0") ?{object}.electronID("mvaTrigIDISOPUSUBV0") : -1',
     objectMVAIDH2TauWP = '{object}.userInt("mvaidwp")',
     objectCiCTight = '{object}.electronID("cicTight")',
-    objectCBID_VETO = '{object}.userInt("CBID_VETO")',
-    objectCBID_LOOSE = '{object}.userInt("CBID_LOOSE")',
-    objectCBID_MEDIUM = '{object}.userInt("CBID_MEDIUM")',
-    objectCBID_TIGHT = '{object}.userInt("CBID_TIGHT")',
     #new Summer13 MVA ID
     objectMVATrigNoIP = '{object}.userFloat("mvaTrigNoIP")',
 
-    # CSA14 IDs
-    objectCBIDVeto_50ns = '{object}.userInt("cutBasedElectronID-CSA14-50ns-V1-standalone-veto")',
-    objectCBIDLoose_50ns = '{object}.userInt("cutBasedElectronID-CSA14-50ns-V1-standalone-loose")',
-    objectCBIDMedium_50ns = '{object}.userInt("cutBasedElectronID-CSA14-50ns-V1-standalone-medium")',
-    objectCBIDTight_50ns = '{object}.userInt("cutBasedElectronID-CSA14-50ns-V1-standalone-tight")',
-    objectCBIDVeto_25ns = '{object}.userInt("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto")',
-    objectCBIDLoose_25ns = '{object}.userInt("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-loose")',
-    objectCBIDMedium_25ns = '{object}.userInt("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-medium")',
-    objectCBIDTight_25ns = '{object}.userInt("cutBasedElectronID-CSA14-PU20bx25-V0-standalone-tight")',
-    objectMVATrigCSA14 = '? {object}.isElectronIDAvailable("mvaTrigV0CSA14") ?{object}.electronID("mvaTrigV0CSA14") : {object}.userFloat("mvaTrigV0CSA14")',
-    objectMVANonTrigCSA14 = '? {object}.isElectronIDAvailable("mvaNonTrigV0CSA14") ?{object}.electronID("mvaNonTrigV0CSA14") : {object}.userFloat("mvaNonTrigV0CSA14")',
+    # PHYS14 IDs (some of which are still CSA14 IDs...)
+    objectCBIDVeto = '{object}.userFloat("CBIDVeto")',
+    objectCBIDLoose = '{object}.userFloat("CBIDLoose")',
+    objectCBIDMedium = '{object}.userFloat("CBIDMedium")',
+    objectCBIDTight = '{object}.userFloat("CBIDTight")',
+    objectMVATrigID = '{object}.userFloat("BDTIDTrig")',
+    objectMVANonTrigID = '{object}.userFloat("BDTIDNonTrig")',
     
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(
@@ -55,27 +45,6 @@ id = PSet(
         '({object}.chargedHadronIso()'
         '+max(0.0,{object}.neutralHadronIso()'
         '+{object}.photonIso()'
-        '-{object}.userFloat("hzzRho2012")*{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")))'
-        '/{object}.pt()'
-    ),
-    objectRelPFIsoRhoFSR = cms.string(
-        '({object}.chargedHadronIso()'
-        '+max(0.0,{object}.neutralHadronIso()'
-        '+{object}.photonIso() - userFloat("leg{object_idx}fsrIsoCorr")'
-        '-{object}.userFloat("hzzRho2012")*{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")))'
-        '/{object}.pt()'
-    ),
-    objectRelPFIsoRhoCSA14 = cms.string(
-        '({object}.chargedHadronIso()'
-        '+max(0.0,{object}.neutralHadronIso()'
-        '+{object}.photonIso()'
-        '-{object}.userFloat("rhoCSA14")*{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")))'
-        '/{object}.pt()'
-    ),
-    objectRelPFIsoRhoFSRCSA14 = cms.string(
-        '({object}.chargedHadronIso()'
-        '+max(0.0,{object}.neutralHadronIso()'
-        '+{object}.photonIso() - userFloat("leg{object_idx}fsrIsoCorr")'
         '-{object}.userFloat("rhoCSA14")*{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")))'
         '/{object}.pt()'
     ),
@@ -83,22 +52,11 @@ id = PSet(
     objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
-    #ZH Synch iso variables
-    ## objectRelPFIsoDBZhLike = cms.string(
-    ##     "({object}.chargedHadronIso()"
-    ##     "+max({object}.photonIso()"
-    ##     "+{object}.neutralHadronIso()"
-    ##     "-0.5*{object}.userIso(2),0.0))"
-    ##     "/{object}.pt()"
-    ## ),
     
     objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
     objectEffectiveArea2011Data = cms.string('{object}.userFloat("ea_comb_Data2011_iso04_kt6PFJ")'),
     objectEffectiveAreaFall11MC = cms.string('{object}.userFloat("ea_comb_Fall11MC_iso04_kt6PFJ")'),
-    objectRhoZZ2012 = cms.string('{object}.userFloat("zzRho2012")'),
-    objectRhoCSA14 = cms.string('{object}.userFloat("rhoCSA14")'),
-#     objectRhoHZG2011 = cms.string('{object}.userFloat("hzgRho2011")'),
-#     objectRhoHZG2012 = cms.string('{object}.userFloat("hzgRho2012")'),
+    objectRho = cms.string('{object}.userFloat("rhoCSA14")'),
     objectRelIso = cms.string("({object}.dr03TkSumPt()"
                "+max({object}.dr03EcalRecHitSumEt()-1.0,0.0)"
                "+{object}.dr03HcalTowerSumEt())/{object}.pt()"),
@@ -215,9 +173,10 @@ energyCorrections = PSet(
 
 tracking = PSet(
     objectHasConversion = '{object}.userFloat("hasConversion")',
-    objectMissingHits = cms.string(
-        '? {object}.gsfTrack.isNonnull? '
-        '{object}.gsfTrack.trackerExpectedHitsInner.numberOfHits() : 10'),
+#     objectMissingHits = 'getElectronMissingHits({object_idx})',
+#                         cms.string(
+#         '? {object}.gsfTrack().isNonnull ? '
+#         '{object}.gsfTrack().hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS) : 10'), 
 )
 
 # Information about the matched supercluster

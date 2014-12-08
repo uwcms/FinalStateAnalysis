@@ -24,8 +24,8 @@ class PATElectronMVAIDEmbedder : public edm::EDProducer {
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
     edm::InputTag src_;
-    edm::InputTag ebRecHits_;
-    edm::InputTag eeRecHits_;
+    edm::EDGetTokenT<EcalRecHitCollection> ebRecHits_;
+    edm::EDGetTokenT<EcalRecHitCollection> eeRecHits_;
     edm::InputTag srcVertices_;
     std::string userLabel_;
     ElectronIDMVA mva_;
@@ -35,8 +35,8 @@ class PATElectronMVAIDEmbedder : public edm::EDProducer {
 
 PATElectronMVAIDEmbedder::PATElectronMVAIDEmbedder(const edm::ParameterSet& pset) {
   src_ = pset.getParameter<edm::InputTag>("src");
-  ebRecHits_ = pset.getParameter<edm::InputTag>("ebRecHits");
-  eeRecHits_ = pset.getParameter<edm::InputTag>("eeRecHits");
+  ebRecHits_ = consumes<EcalRecHitCollection>(pset.getParameter<edm::InputTag>("ebRecHits"));
+  eeRecHits_ = consumes<EcalRecHitCollection>(pset.getParameter<edm::InputTag>("eeRecHits"));
   maxDB_ = pset.getParameter<double>("maxDB");
   maxDZ_ = pset.getParameter<double>("maxDZ");
   srcVertices_ = pset.getParameter<edm::InputTag>("srcVertices");
@@ -90,8 +90,8 @@ void PATElectronMVAIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
     electron.addUserFloat("hasConversion", hasConversion);
 
     const reco::HitPattern& p_inner =
-      electron.gsfTrack()->trackerExpectedHitsInner();
-    electron.addUserInt("missingHits", p_inner.numberOfHits());
+      electron.gsfTrack()->hitPattern();
+    electron.addUserInt("missingHits", p_inner.numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS));
 
     // See preID definition at https://twiki.cern.ch/twiki/bin/view/CMS/HTTWorkingTwiki
     bool passPreID = true;
@@ -133,7 +133,7 @@ void PATElectronMVAIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
     bool passID = electron.superCluster().isNonnull();
     passID = passID && passPreID;
     passID = passID && (!hasConversion);
-    passID = passID && (p_inner.numberOfHits() == 0);
+    passID = passID && (p_inner.numberOfHits(reco::HitPattern::MISSING_INNER_HITS) == 0);
     passID = passID && (dz < maxDZ_);
     passID = passID && (electron.dB() < maxDB_);
     if (passID) {

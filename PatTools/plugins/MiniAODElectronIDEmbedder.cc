@@ -240,7 +240,7 @@ bool MiniAODElectronIDEmbedder::cutBasedIDHelper(pat::Electron el,  double dEtaI
   float dz_ = el.gsfTrack()->dz( pv_.position() );
 
   // Conversion rejection
-  int expectedMissingInnerHits_ = el.gsfTrack()->trackerExpectedHitsInner().numberOfHits();
+  int expectedMissingInnerHits_ = el.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
   bool passConversionVeto_ = false;
   if( thebs_.isValid() && convs_.isValid() ) {
     passConversionVeto_ = !ConversionTools::hasMatchedConversion(el,convs_,

@@ -6,7 +6,6 @@
 #include "FWCore/Utilities/interface/Exception.h"
 
 #include <boost/assign/list_of.hpp>
-#include <boost/shared_ptr.hpp>
 #include <map>
 #include <iostream>
 
@@ -27,7 +26,7 @@ const static edm::FileInPath puInfoFile(
 
 boost::shared_ptr<TH1> loadFromPSet(const std::string& name) {
   boost::shared_ptr<edm::ParameterSet> toplevel =
-    edm::readPSetsFrom(puInfoFile.fullPath());
+    make_shared_ptr(edm::readPSetsFrom(puInfoFile.fullPath()));
 
   edm::ParameterSet steering = toplevel->getParameterSet(
       "pileup_distributions");

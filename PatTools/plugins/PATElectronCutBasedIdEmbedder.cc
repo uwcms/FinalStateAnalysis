@@ -12,6 +12,8 @@
 
 // system include files
 #include <memory>
+#include <stdexcept>
+#include <functional>
 
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -24,6 +26,7 @@
 #include "DataFormats/PatCandidates/interface/Electron.h"
 
 #include "EgammaAnalysis/ElectronTools/interface/EGammaCutBasedEleId.h"
+#include "EgammaAnalysis/ElectronTools/interface/ElectronEffectiveArea.h"
 
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
 
@@ -105,7 +108,8 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
 	    int pass = (int)eid::PassWP(_wps[*ii],*electron,
 					the_convs,*the_bs.product(),
 					the_vtxs,
-					0.0,0.0,0.0,0.0);
+					0.0,0.0,0.0,0.0,
+					ElectronEffectiveArea::kEleEAData2012);
 
 
 	    newElectron.addUserInt(*ii,pass);
@@ -117,11 +121,13 @@ class PATElectronCutBasedIdEmbedder : public edm::EDProducer {
       iEvent.put(out);
     }
 
+
   // ----------member data ---------------------------
   edm::InputTag _src,_bssrc,_vtxsrc,_convsrc;
   vstring _wps_applied;
   wp_map _wps;
 };
+
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 DEFINE_FWK_MODULE(PATElectronCutBasedIdEmbedder);
