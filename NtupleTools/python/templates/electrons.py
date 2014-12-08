@@ -209,9 +209,10 @@ energyCorrections = PSet(
 
 tracking = PSet(
     objectHasConversion = '{object}.userFloat("hasConversion")',
-    objectMissingHits = cms.string(
-        '? {object}.gsfTrack.isNonnull? '
-        '{object}.gsfTrack.trackerExpectedHitsInner.numberOfHits() : 10'),
+#     objectMissingHits = 'getElectronMissingHits({object_idx})',
+#                         cms.string(
+#         '? {object}.gsfTrack().isNonnull ? '
+#         '{object}.gsfTrack().hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS) : 10'), 
 )
 
 # Information about the matched supercluster

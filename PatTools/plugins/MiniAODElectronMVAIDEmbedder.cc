@@ -57,11 +57,21 @@ private:
 // Constructors and destructors
 
 MiniAODElectronMVAIDEmbedder::MiniAODElectronMVAIDEmbedder(const edm::ParameterSet& iConfig):
-  electronCollectionToken_(consumes<edm::View<pat::Electron> >(iConfig.getParameter<edm::InputTag>("src"))),
-  trigWeights_(iConfig.getParameter<std::vector<std::string> >("trigWeights")),
-  nonTrigWeights_(iConfig.getParameter<std::vector<std::string> >("nonTrigWeights")),
-  trigLabel_(iConfig.getParameter<std::string>("trigLabel")),
-  nonTrigLabel_(iConfig.getParameter<std::string>("nonTrigLabel"))
+  electronCollectionToken_(consumes<edm::View<pat::Electron> >(iConfig.exists("src") ?
+							       iConfig.getParameter<edm::InputTag>("src") :
+							       edm::InputTag("slimmedElectrons"))),
+  trigWeights_(iConfig.exists("trigWeights") ?
+	       iConfig.getParameter<std::vector<std::string> >("trigWeights") :
+	       std::vector<std::string>()),
+  nonTrigWeights_(iConfig.exists("nonTrigWeights") ?
+		  iConfig.getParameter<std::vector<std::string> >("nonTrigWeights") :
+		  std::vector<std::string>()),
+  trigLabel_(iConfig.exists("trigLabel") ?
+	     iConfig.getParameter<std::string>("trigLabel") :
+	     std::string("BDTIDTrig")),
+  nonTrigLabel_(iConfig.exists("nonTrigLabel") ?
+		iConfig.getParameter<std::string>("nonTrigLabel") :
+		std::string("BDTIDNonTrig"))
 {
   std::vector<std::string> trigWeightPaths;
   std::vector<std::string> nonTrigWeightPaths;
@@ -89,7 +99,9 @@ MiniAODElectronMVAIDEmbedder::MiniAODElectronMVAIDEmbedder(const edm::ParameterS
 
 void MiniAODElectronMVAIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out->clear();
+  out = std:: auto_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
+
+  //  out->clear();
 
   edm::Handle<edm::View<pat::Electron> > electronsIn;
   iEvent.getByToken(electronCollectionToken_, electronsIn);

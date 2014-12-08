@@ -3,7 +3,7 @@
 //   MiniAODElectronCutBasedIDEmbedder.cc				    //
 //									    //
 //   Takes cut based ID decisions from the common ID framework's value      //
-//       maps and embeds them as user ints (1 for true, 0 for false)        //
+//       maps and embeds them as user floats (1 for true, 0 for false)        //
 //									    //
 //   Author: Nate Woods, U. Wisconsin					    //
 //									    //
@@ -13,6 +13,7 @@
 // system includes
 #include <memory>
 #include <vector>
+#include <iostream>
 
 // CMS includes
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -52,10 +53,15 @@ private:
 // Constructors and destructors
 
 MiniAODElectronCutBasedIDEmbedder::MiniAODElectronCutBasedIDEmbedder(const edm::ParameterSet& iConfig):
-  electronCollectionToken_(consumes<edm::View<pat::Electron> >(iConfig.getParameter<edm::InputTag>("src"))),
-  idLabels_(iConfig.getParameter<std::vector<std::string> >("idLabels"))
+  electronCollectionToken_(consumes<edm::View<pat::Electron> >(iConfig.exists("src") ? 
+							       iConfig.getParameter<edm::InputTag>("src") :
+							       edm::InputTag("slimmedElectrons"))),
+  idLabels_(iConfig.exists("idLabels") ?
+	    iConfig.getParameter<std::vector<std::string> >("idLabels") :
+	    std::vector<std::string>())
 {
   std::vector<edm::InputTag> idTags = iConfig.getParameter<std::vector<edm::InputTag> >("ids");
+
   for(unsigned int i = 0;
       (i < idTags.size() && i < idLabels_.size()); // ignore IDs with no known label
       ++i)
@@ -69,7 +75,7 @@ MiniAODElectronCutBasedIDEmbedder::MiniAODElectronCutBasedIDEmbedder(const edm::
 
 void MiniAODElectronCutBasedIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out->clear();
+  out = std::auto_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
 
   edm::Handle<edm::View<pat::Electron> > electronsIn;
   std::vector<edm::Handle<edm::ValueMap<bool> > > ids(idMapTokens_.size(), edm::Handle<edm::ValueMap<bool> >() );

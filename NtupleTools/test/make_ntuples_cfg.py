@@ -157,9 +157,9 @@ if options.rerunFSA:
     GT = {'mcgt': 'START53_V27::All', 'datagt': 'FT53_V21A_AN6::All'}
     if options.useMiniAOD:
         if options.use25ns:
-            GT['mcgt'] = 'PHYS14_25_V1'
+            GT['mcgt'] = 'PHYS14_25_V1::All'
         else:
-            GT['mcgt'] = 'PHYS14_50_V1'
+            GT['mcgt'] = 'PHYS14_50_V1::All'
         GT['datagt'] = 'GR_70_V2_AN1::All'
 
 
@@ -286,7 +286,7 @@ if options.rerunFSA:
         from PhysicsTools.SelectorUtils.centralIDRegistry import central_id_registry
         process.egmGsfElectronIDSequence = cms.Sequence(process.egmGsfElectronIDs)
         if options.use25ns:
-            cb_id_modules = ['RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_PHYS14_PU20bx25_V0_cff']
+            cb_id_modules = ['RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_PHYS14_PU20bx25_V0_miniAOD_cff']
         else:
             print "50 ns cut based electron IDs don't exist yet for PHYS14. Using CSA14 cuts."
             cb_id_modules = ['RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_CSA14_50ns_V1_cff']
