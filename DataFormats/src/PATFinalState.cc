@@ -725,38 +725,66 @@ const reco::CandidatePtr PATFinalState::bestFSROfZ(int i, int j, const std::stri
 
   int leptonOfBest; // index of daughter that has best FSR cand 
   int bestFSR = -1; // index of best photon as userCand
-  float bestDist = zCompatibility(i,j); // must be better than no FSR
+  double bestFSRPt = -1; // Pt of best photon
+  double bestFSRDeltaR = 1000; // delta R between best FSR and nearest lepton
+  float noFSRDist = zCompatibility(i,j); // must be better Z candidate than no FSR
+  if(noFSRDist == -1000) // Same sign leptons
+    return reco::CandidatePtr();
+  PATFinalState::LorentzVector p4NoFSR = daughter(i)->p4() + daughter(j)->p4();
 
   if((iIsElectron?ei->hasUserInt("n"+fsrLabel):mi->hasUserInt("n"+fsrLabel)))
     {
-      //      std::cout << "Found an embedded candidate in event " << evt()->evtId().event() << std::endl;
-      for(unsigned int ind = 0; ind < (iIsElectron?ei->hasUserInt("n"+fsrLabel):mi->hasUserInt("n"+fsrLabel)); ++ind)
+      for(int ind = 0; ind < (iIsElectron?ei->userInt("n"+fsrLabel):mi->userInt("n"+fsrLabel)); ++ind)
 	{
-	  //	  std::cout << "Distance was " << bestDist << " and is now ";
-	  float dist = zCompatibility(i, j, daughterUserCandP4(i,fsrLabel+std::to_string(ind)));
-	  //	  std::cout << dist << std::endl;
-	  if(dist < bestDist)
+	  PATFinalState::LorentzVector fsrCandP4 = daughterUserCandP4(i, fsrLabel+std::to_string(ind));
+	  PATFinalState::LorentzVector zCandP4 = p4NoFSR + fsrCandP4;
+	  if(zCandP4.mass() < 4. || zCandP4.mass() > 100.) // overall mass cut
+	    continue;
+	  if(zCompatibility(zCandP4) > noFSRDist) // Must bring us closer to on-shell Z
+	    continue;
+	  // If any FSR candidate has pt > 4, pick the highest pt candidate. 
+	  // Otherwise, pick the one with the smallest deltaR to its lepton.
+	  if(bestFSRPt > 4. || fsrCandP4.pt() > 4.)
 	    {
-	      bestDist = dist;
-	      leptonOfBest = i;
-	      bestFSR = ind;
+	      if(fsrCandP4.pt() < bestFSRPt)
+		continue;
 	    }
+	  else if(reco::deltaR(daughter(i)->p4(), fsrCandP4) > bestFSRDeltaR)
+	    continue;
+
+	  // This one looks like the best for now
+	  leptonOfBest = i;
+	  bestFSR = ind;
+	  bestFSRPt = fsrCandP4.pt();
+	  bestFSRDeltaR = reco::deltaR(daughter(i)->p4(), fsrCandP4);
 	}
     }
-  if((jIsElectron?ej->userInt("n"+fsrLabel):mj->userInt("n"+fsrLabel)))
+  if((jIsElectron?ej->hasUserInt("n"+fsrLabel):mj->hasUserInt("n"+fsrLabel)))
     {
       //      std::cout << "Found an embedded candidate in event " << evt()->evtId().event() << std::endl;
-      for(unsigned int ind = 0; ind < (jIsElectron?ej->hasUserInt("n"+fsrLabel):mj->hasUserInt("n"+fsrLabel)); ++ind)
+      for(int ind = 0; ind < (jIsElectron?ej->userInt("n"+fsrLabel):mj->userInt("n"+fsrLabel)); ++ind)
 	{
-	  //	  std::cout << "Distance was " << bestDist << " and is now ";
-	  float dist = zCompatibility(i, j, daughterUserCandP4(j,fsrLabel+std::to_string(ind)));
-	  //	  std::cout << dist << std::endl;
-	  if(dist < bestDist)
+	  PATFinalState::LorentzVector fsrCandP4 = daughterUserCandP4(j, fsrLabel+std::to_string(ind));
+	  PATFinalState::LorentzVector zCandP4 = p4NoFSR + fsrCandP4;
+	  if(zCandP4.mass() < 4. || zCandP4.mass() > 100.) // overall mass cut
+	    continue;
+	  if(zCompatibility(zCandP4) > noFSRDist) // Must bring us closer to on-shell Z
+	    continue;
+	  // If any FSR candidate has pt > 4, pick the highest pt candidate. 
+	  // Otherwise, pick the one with the smallest deltaR to its lepton.
+	  if(bestFSRPt > 4. || fsrCandP4.pt() > 4.)
 	    {
-	      bestDist = dist;
-	      leptonOfBest = j;
-	      bestFSR = ind;
+	      if(fsrCandP4.pt() < bestFSRPt)
+		continue;
 	    }
+	  else if(reco::deltaR(daughter(j)->p4(), fsrCandP4) > bestFSRDeltaR)
+	    continue;
+
+	  // This one looks like the best for now
+	  leptonOfBest = j;
+	  bestFSR = ind;
+	  bestFSRPt = fsrCandP4.pt();
+	  bestFSRDeltaR = reco::deltaR(daughter(j)->p4(), fsrCandP4);
 	}
     }
   if(bestFSR != -1)
@@ -900,6 +928,12 @@ double PATFinalState::zCompatibility(PATFinalStateProxy& cand) const
   if(cand->charge() != 0) // assume this will only be used for 2 leptons + photon
     return 1000;
   return std::abs(cand->mass() - 91.1876);
+}
+
+double PATFinalState::zCompatibility(const PATFinalState::LorentzVector& p4) const 
+{
+  // Assumes you already checked for opposite-sign-ness
+  return std::abs(p4.mass() - 91.1876);
 }
 
 double PATFinalState::zCompatibilityFSR(int i, int j, const std::string fsrLabel) const

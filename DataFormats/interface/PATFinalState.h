@@ -191,6 +191,8 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // and the same thing for a whole final state (presumably 2 leptons and a photon
     // assumes you want 0 overall charge
     double zCompatibility(PATFinalStateProxy& cand) const;
+    // and the same thing for a general Lorentz vector. Doesn't check sign.
+    double zCompatibility(const PATFinalState::LorentzVector& p4) const;
 
     // Try this method to see if I can get the parser to work when I reorder my candidates
     double zCompatibilityFSR(int i, int j, std::string fsrLabel) const;
