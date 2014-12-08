@@ -40,6 +40,7 @@ rerunJets=0   - rerun with new jet energy corrections
 useMiniAOD=0 - run on miniAOD rather than UW PATTuples
 use25ns=0 - run on 25 ns miniAOD (50 ns default)
 runDQM=0 - run over single object final states to test all object properties (wont check diobject properties)
+hzzfsr=0 - Include FSR contribution a la HZZ4l group
 
 
 '''
@@ -84,7 +85,16 @@ options = TauVarParsing.TauVarParsing(
     useMiniAOD=0,
     use25ns=0,
     runDQM=0,
+    hzzfsr=0,
 )
+
+# options.register(
+#     'hzzfsr',
+#     0,
+#     TauVarParsing.TauVarParsing.multiplicity.singleton,
+#     TauVarParsing.TauVarParsing.varType.int,
+#     'MiniAOD version of FSR with the HZZ4l algorithm'
+# )
 
 options.register(
     'skimCuts',
@@ -202,7 +212,7 @@ if options.rerunFSA:
             'jets': 'slimmedJets',
             'pfmet': 'slimmedMETs',         # only one MET in miniAOD
             'mvamet': mvamet_collection,
-            'fsr': 'slimmedPhotons',        # not available?
+            'fsr': 'slimmedPhotons',
         }
     else:
         fs_daughter_inputs = {
@@ -323,6 +333,89 @@ if options.rerunFSA:
         )
         process.schedule.append(process.runMiniAODLeptonIpEmbedding)
         
+        # Embed effective areas in muons and electrons
+        process.load("FinalStateAnalysis.PatTools.electrons.patElectronEAEmbedding_cfi")
+        process.patElectronEAEmbedder.src = cms.InputTag(fs_daughter_inputs['electrons'])
+        process.load("FinalStateAnalysis.PatTools.muons.patMuonEAEmbedding_cfi")
+        process.patMuonEAEmbedder.src = cms.InputTag(fs_daughter_inputs['muons'])
+        process.EAEmbedding = cms.Path(
+            process.patElectronEAEmbedder +
+            process.patMuonEAEmbedder
+            )
+        process.schedule.append(process.EAEmbedding)
+        fs_daughter_inputs['electrons'] = 'patElectronEAEmbedder'
+        fs_daughter_inputs['muons'] = 'patMuonEAEmbedder'
+
+        # Embed rhos in electrons
+        process.load("FinalStateAnalysis.PatTools.electrons.patElectronRhoEmbedding_cfi")
+        process.patElectronZZ2012RhoEmbedding.src = cms.InputTag(fs_daughter_inputs['electrons'])
+        fs_daughter_inputs['electrons'] = 'patElectronZZ2012RhoEmbedding'
+        output_commands.append('*_patElectronZZ2012RhoEmbedding_*_*')
+        process.miniAODElectronRhoEmbedding = cms.EDProducer(
+            "ElectronRhoOverloader",
+            src = cms.InputTag(fs_daughter_inputs['electrons']),
+            srcRho = cms.InputTag("fixedGridRhoFastjetAll"), # not sure this is right
+            userLabel = cms.string("rhoCSA14")
+            )
+        fs_daughter_inputs['electrons'] = 'miniAODElectronRhoEmbedding'
+        output_commands.append('*_miniAODElectronRhoEmbedding_*_*')
+
+        # ... and muons
+        process.load("FinalStateAnalysis.PatTools.muons.patMuonRhoEmbedding_cfi")
+        process.patMuonZZ2012RhoEmbedding.src = cms.InputTag(fs_daughter_inputs['muons'])
+        fs_daughter_inputs['muons'] = 'patMuonZZ2012RhoEmbedding'
+        output_commands.append('*_patMuonZZ2012RhoEmbedding_*_*')
+        process.miniAODMuonRhoEmbedding = cms.EDProducer(
+            "MuonRhoOverloader",
+            src = cms.InputTag(fs_daughter_inputs['muons']),
+            srcRho = cms.InputTag("fixedGridRhoFastjetCentralNeutral"), # not sure this is right
+            userLabel = cms.string("rhoCSA14")
+            )
+        fs_daughter_inputs['muons'] = 'miniAODMuonRhoEmbedding'
+        output_commands.append('*_miniAODMuonRhoEmbedding_*_*')
+        process.rhoEmbedding = cms.Path(
+            process.patElectronZZ2012RhoEmbedding +
+            process.miniAODElectronRhoEmbedding +
+            process.patMuonZZ2012RhoEmbedding +
+            process.miniAODMuonRhoEmbedding
+            )
+        process.schedule.append(process.rhoEmbedding)
+
+        if options.hzzfsr:
+            # Make FSR photon collection, give them isolation
+            process.load("FinalStateAnalysis.PatTools.miniAOD_fsrPhotons_cff")
+            fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
+            output_commands.append('*_boostedFsrPhotons_*_*')
+            process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
+            process.schedule.append(process.makeFSRPhotons)
+    
+            # Put FSR photons into leptons as user cands
+            from FinalStateAnalysis.PatTools.miniAODEmbedFSR_cfi \
+                import embedFSRInElectrons, embedFSRInMuons
+    
+            process.electronFSREmbedder = embedFSRInElectrons.clone(
+                src = cms.InputTag(fs_daughter_inputs['electrons']),
+                srcAlt = cms.InputTag(fs_daughter_inputs['muons']),
+                srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
+                srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
+                srcVtx = cms.InputTag("offlineSlimmedPrimaryVertices"),
+                )
+            fs_daughter_inputs['electrons'] = 'electronFSREmbedder'
+            output_commands.append('*_electronFSREmbedder_*_*')
+            process.muonFSREmbedder = embedFSRInMuons.clone(
+                src = cms.InputTag(fs_daughter_inputs['muons']),
+                srcAlt = cms.InputTag(fs_daughter_inputs['electrons']),
+                srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
+                srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
+                srcVtx = cms.InputTag("offlineSlimmedPrimaryVertices"),
+                )
+            fs_daughter_inputs['muons'] = 'muonFSREmbedder'
+            output_commands.append('*_muonFSREmbedder_*_*')
+            process.embedFSRInfo = cms.Path(
+                process.electronFSREmbedder +
+                process.muonFSREmbedder
+                )
+            process.schedule.append(process.embedFSRInfo)
 
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
@@ -376,7 +469,8 @@ for final_state in expanded_final_states(final_states):
     analyzer = make_ntuple(*final_state, zz_mode=options.zzMode,
                             svFit=options.svFit, dblhMode=options.dblhMode,
                             runTauSpinner=options.runTauSpinner, 
-                            skimCuts=options.skimCuts,useMiniAOD=options.useMiniAOD)
+                            skimCuts=options.skimCuts,useMiniAOD=options.useMiniAOD,
+                            hzzfsr=options.hzzfsr)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 

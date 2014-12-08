@@ -664,45 +664,206 @@ PATFinalState::subcand(int i, int j, int x, int y, int z) const {
 }
 
 PATFinalStateProxy
-PATFinalState::subcandfsr( int i, int j ) const
+PATFinalState::subcandfsr( int i, int j, const std::string& fsrLabel ) const
 {
   std::vector<reco::CandidatePtr> output;
   output.push_back( daughterPtr(i) );
   output.push_back( daughterPtr(j) );
+  
+  if(evt()->isMiniAOD())
+    {
+      const reco::CandidatePtr fsrPho = bestFSROfZ(i, j, fsrLabel);
+      if(fsrPho.isNonnull() && fsrPho.isAvailable())
+	{
+	  output.push_back(fsrPho);
+	}
+    }
+  else
+    {
+      std::stringstream ss;
+      ss << "fsrPhoton" << i << j;
+      std::string photon_name = ss.str();
 
-  std::stringstream ss;
-  ss << "fsrPhoton" << i << j;
-  std::string photon_name = ss.str();
+      const std::vector<std::string>& userCandList = this->userCandNames();
+      for (size_t i = 0; i < userCandList.size(); ++i)
+	{
+	  if (userCandList[i].find(photon_name) != std::string::npos)
+	    output.push_back(this->userCand(userCandList[i]));
+	}
+    }
+  return PATFinalStateProxy(new PATMultiCandFinalState(output, evt()));
+}
 
-  const std::vector<std::string>& userCandList = this->userCandNames();
-  for (size_t i = 0; i < userCandList.size(); ++i)
-  {
-      if (userCandList[i].find(photon_name) != std::string::npos)
-          output.push_back(this->userCand(userCandList[i]));
-  }
+const reco::CandidatePtr PATFinalState::bestFSROfZ(int i, int j, const std::string& fsrLabel) const
+{
+  bool iIsElectron = false;
+  bool jIsElectron = false;
 
-  return PATFinalStateProxy(
-      new PATMultiCandFinalState(output, evt()));
+  edm::Ptr<pat::Electron> ei = daughterAsElectron(i);
+  edm::Ptr<pat::Muon> mi = daughterAsMuon(i);
+  if(daughter(i)->isElectron() && ei.isNonnull() && ei.isAvailable())
+    {
+      iIsElectron = true;
+    }
+  else 
+    {
+      if(!(daughter(i)->isMuon() && mi.isNonnull() && mi.isAvailable()))
+	return reco::CandidatePtr();
+    }
+
+  edm::Ptr<pat::Electron> ej = daughterAsElectron(j);
+  edm::Ptr<pat::Muon> mj = daughterAsMuon(j);
+  if(daughter(j)->isElectron() && ej.isNonnull() && ej.isAvailable())
+    {
+      jIsElectron = true;
+    }
+  else 
+    {
+      if(!(daughter(j)->isMuon() && mj.isNonnull() && mj.isAvailable()))
+	return reco::CandidatePtr();//edm::Ptr<reco::Candidate>(new const reco::Candidate());
+    }
+
+  int leptonOfBest; // index of daughter that has best FSR cand 
+  int bestFSR = -1; // index of best photon as userCand
+  double bestFSRPt = -1; // Pt of best photon
+  double bestFSRDeltaR = 1000; // delta R between best FSR and nearest lepton
+  float noFSRDist = zCompatibility(i,j); // must be better Z candidate than no FSR
+  if(noFSRDist == -1000) // Same sign leptons
+    return reco::CandidatePtr();
+  PATFinalState::LorentzVector p4NoFSR = daughter(i)->p4() + daughter(j)->p4();
+
+  if((iIsElectron?ei->hasUserInt("n"+fsrLabel):mi->hasUserInt("n"+fsrLabel)))
+    {
+      for(int ind = 0; ind < (iIsElectron?ei->userInt("n"+fsrLabel):mi->userInt("n"+fsrLabel)); ++ind)
+	{
+	  PATFinalState::LorentzVector fsrCandP4 = daughterUserCandP4(i, fsrLabel+std::to_string(ind));
+	  PATFinalState::LorentzVector zCandP4 = p4NoFSR + fsrCandP4;
+	  if(zCandP4.mass() < 4. || zCandP4.mass() > 100.) // overall mass cut
+	    continue;
+	  if(zCompatibility(zCandP4) > noFSRDist) // Must bring us closer to on-shell Z
+	    continue;
+	  // If any FSR candidate has pt > 4, pick the highest pt candidate. 
+	  // Otherwise, pick the one with the smallest deltaR to its lepton.
+	  if(bestFSRPt > 4. || fsrCandP4.pt() > 4.)
+	    {
+	      if(fsrCandP4.pt() < bestFSRPt)
+		continue;
+	    }
+	  else if(reco::deltaR(daughter(i)->p4(), fsrCandP4) > bestFSRDeltaR)
+	    continue;
+
+	  // This one looks like the best for now
+	  leptonOfBest = i;
+	  bestFSR = ind;
+	  bestFSRPt = fsrCandP4.pt();
+	  bestFSRDeltaR = reco::deltaR(daughter(i)->p4(), fsrCandP4);
+	}
+    }
+  if((jIsElectron?ej->hasUserInt("n"+fsrLabel):mj->hasUserInt("n"+fsrLabel)))
+    {
+      //      std::cout << "Found an embedded candidate in event " << evt()->evtId().event() << std::endl;
+      for(int ind = 0; ind < (jIsElectron?ej->userInt("n"+fsrLabel):mj->userInt("n"+fsrLabel)); ++ind)
+	{
+	  PATFinalState::LorentzVector fsrCandP4 = daughterUserCandP4(j, fsrLabel+std::to_string(ind));
+	  PATFinalState::LorentzVector zCandP4 = p4NoFSR + fsrCandP4;
+	  if(zCandP4.mass() < 4. || zCandP4.mass() > 100.) // overall mass cut
+	    continue;
+	  if(zCompatibility(zCandP4) > noFSRDist) // Must bring us closer to on-shell Z
+	    continue;
+	  // If any FSR candidate has pt > 4, pick the highest pt candidate. 
+	  // Otherwise, pick the one with the smallest deltaR to its lepton.
+	  if(bestFSRPt > 4. || fsrCandP4.pt() > 4.)
+	    {
+	      if(fsrCandP4.pt() < bestFSRPt)
+		continue;
+	    }
+	  else if(reco::deltaR(daughter(j)->p4(), fsrCandP4) > bestFSRDeltaR)
+	    continue;
+
+	  // This one looks like the best for now
+	  leptonOfBest = j;
+	  bestFSR = ind;
+	  bestFSRPt = fsrCandP4.pt();
+	  bestFSRDeltaR = reco::deltaR(daughter(j)->p4(), fsrCandP4);
+	}
+    }
+  if(bestFSR != -1)
+    {
+      //  std::cout << "Accepted FSR cand, event " << evt()->evtId().event() << std::endl;
+      return daughterUserCand(leptonOfBest, fsrLabel+std::to_string(bestFSR));
+    }
+  //  std::cout << "Rejected FSR cand, event " << evt()->evtId().event() << std::endl;
+  return reco::CandidatePtr();//edm::Ptr<reco::Candidate>(new const reco::Candidate());
 }
 
 PATFinalState::LorentzVector
-PATFinalState::p4fsr() const
+PATFinalState::p4fsr(const std::string& fsrLabel) const
 {
-  PATFinalState::LorentzVector p4_out;
+  if(evt()->isMiniAOD())
+    {
+      PATFinalStateProxy bestZ;
+      int bestL1 = 0;
+      int bestL2 = 1;
+      
+      for(int lep1 = 0; lep1 < 3; ++lep1)
+	{
+	  for(int lep2 = lep1 + 1; lep2 <= 3; ++lep2)
+	    {
+	      PATFinalStateProxy cand = subcandfsr(lep1,lep2,fsrLabel);
+	      if(lep1 == 0 && lep2 == 1) // no best Z yet
+		{
+		  bestZ = cand;
+		  continue;
+		}
+	      
+	      if(zCompatibility(cand) < zCompatibility(bestZ))
+		{
+		  bestZ = cand;
+		  bestL1 = lep1;
+		  bestL2 = lep2;
+		  continue;
+		}
+	    }
+	}
 
-  p4_out = daughter(0)->p4() + daughter(1)->p4() + daughter(2)->p4() + daughter(3)->p4();
+      int otherL1 = -1;
+      int otherL2 = -1;
+      for(int foo = 0; foo < 4; ++foo)
+	{
+	  if(foo != bestL1 && foo != bestL2)
+	    {
+	      if(otherL1 == -1)
+		{
+		  otherL1 = foo;
+		}
+	      else
+		{
+		  otherL2 = foo;
+		}
+	    }
+	}
+      PATFinalStateProxy otherZ = subcandfsr(otherL1, otherL2, fsrLabel);
 
-  const std::vector<std::string>& userCandList = this->userCandNames();
-  for (size_t i = 0; i < userCandList.size(); ++i)
-  {
-      if (userCandList[i].find("fsrPhoton1") != std::string::npos)
-          p4_out += this->userCand(userCandList[i])->p4();
+      return bestZ->p4() + otherZ->p4();
+    }
+  else
+    {
+      PATFinalState::LorentzVector p4_out;
 
-      if (userCandList[i].find("fsrPhoton2") != std::string::npos)
-          p4_out += this->userCand(userCandList[i])->p4();
-  }
+      p4_out = daughter(0)->p4() + daughter(1)->p4() + daughter(2)->p4() + daughter(3)->p4();
 
-  return p4_out;
+      const std::vector<std::string>& userCandList = this->userCandNames();
+      for (size_t i = 0; i < userCandList.size(); ++i)
+	{
+	  if (userCandList[i].find("fsrPhoton1") != std::string::npos)
+	    p4_out += this->userCand(userCandList[i])->p4();
+
+	  if (userCandList[i].find("fsrPhoton2") != std::string::npos)
+	    p4_out += this->userCand(userCandList[i])->p4();
+	}
+
+      return p4_out;
+    }
 }
 
 PATFinalStateProxy
@@ -752,6 +913,33 @@ double PATFinalState::zCompatibility(int i, int j) const {
     return 1000;
   }
   return std::abs(subcand(i, j)->mass() - 91.1876);
+}
+
+double PATFinalState::zCompatibility(int i, int j, const LorentzVector& thirdWheel) const {
+  if (likeSigned(i, j)) {
+    return 1000;
+  }
+  LorentzVector totalP4 = daughter(i)->p4() + daughter(j)->p4() + thirdWheel;
+  return std::abs(totalP4.mass() - 91.1876);
+}
+
+double PATFinalState::zCompatibility(PATFinalStateProxy& cand) const
+{
+  if(cand->charge() != 0) // assume this will only be used for 2 leptons + photon
+    return 1000;
+  return std::abs(cand->mass() - 91.1876);
+}
+
+double PATFinalState::zCompatibility(const PATFinalState::LorentzVector& p4) const 
+{
+  // Assumes you already checked for opposite-sign-ness
+  return std::abs(p4.mass() - 91.1876);
+}
+
+double PATFinalState::zCompatibilityFSR(int i, int j, const std::string fsrLabel) const
+{
+  PATFinalStateProxy z = subcandfsr(i, j, fsrLabel);
+  return zCompatibility(z);
 }
 
 VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts) const {
