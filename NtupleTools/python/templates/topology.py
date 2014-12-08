@@ -32,7 +32,10 @@ mtToMET = PSet(
 # Variables based on pairs of objects
 pairs = PSet(
     object1_object2_Mass = 'subcand({object1_idx}, {object2_idx}).get.mass',
+    object1_object2_Mt = 'subcand({object1_idx}, {object2_idx}).get.mt',
     object1_object2_Pt = 'subcand({object1_idx}, {object2_idx}).get.pt',
+    object1_object2_Eta = 'subcand({object1_idx}, {object2_idx}).get.eta',
+    object1_object2_Phi = 'subcand({object1_idx}, {object2_idx}).get.phi',
     object1_object2_DR = 'dR({object1_idx}, {object2_idx})',
     object1_object2_DPhi = 'dPhi({object1_idx}, {object2_idx})',
     object1_object2_SS = 'likeSigned({object1_idx}, {object2_idx})',
@@ -52,7 +55,10 @@ finalstate = PSet(
     LT = 'ht',
     charge = 'charge',
     Pt = 'pt',
+    Eta = 'eta',
+    Phi = 'phi',
     Mass = 'mass',
+    Mt = 'mt',
     MassError = 'userFloat("cand_dM")',
     MassErrord1 = 'userFloat("cand_dM_0")',
     MassErrord2 = 'userFloat("cand_dM_1")',
@@ -77,6 +83,7 @@ fsrMiniAOD = PSet(
     PtFSR = 'p4fsr("FSRCand").pt',
     EtaFSR = 'p4fsr("FSRCand").eta',
     PhiFSR = 'p4fsr("FSRCand").phi',
+    MtFSR = 'p4fsr("FSRCand").Mt',
 )
 
 # use zbosonMiniAOD OR zboson, never both
@@ -85,6 +92,7 @@ zbosonMiniAOD = PSet(
     object1_object2_PtFSR    = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.pt',
     object1_object2_EtaFSR   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.eta',
     object1_object2_PhiFSR   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.phi',
+    object1_object2_MtFSR   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.mt',
     object1_object2_FSRPt    = '? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? '
         'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").pt() : -999.',
     object1_object2_FSREta   = '? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? ' 
