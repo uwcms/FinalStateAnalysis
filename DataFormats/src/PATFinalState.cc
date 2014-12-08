@@ -16,6 +16,8 @@
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
 
+#include "DataFormats/TrackReco/interface/HitPattern.h"
+
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "DataFormats/Math/interface/deltaR.h"
 #include <boost/algorithm/string.hpp>
@@ -1169,3 +1171,30 @@ const bool PATFinalState::isTightMuon(const size_t i) const
 {
   return daughterAsMuon(i)->isTightMuon(*vertexObject());
 }
+
+const int PATFinalState::getElectronMissingHits(const size_t i) const
+{
+  if(daughterAsElectron(i)->gsfTrack().isNonnull())
+    return daughterAsElectron(i)->gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
+  std::cout << "Daughter " << i << " has null gsf track" << std::endl;
+  return -1;
+}
+
+const int PATFinalState::getMuonHits(const size_t i) const
+{
+  if(daughterAsMuon(i)->globalTrack().isNonnull())
+    return daughterAsMuon(i)->globalTrack()->hitPattern().numberOfHits(reco::HitPattern::TRACK_HITS);
+  std::cout << "Daughter " << i << " has null global track" << std::endl;
+  return -1;
+}
+
+
+
+
+
+
+
+
+
+
+

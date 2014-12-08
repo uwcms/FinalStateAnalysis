@@ -318,6 +318,12 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     const bool isTightMuon(const size_t i) const;
 
+    // Helper function to get missing inner tracker hits for electron i
+    const int getElectronMissingHits(const size_t i) const;
+
+    // Helper function to get global track hits for muon i
+    const int getMuonHits(const size_t i) const;
+
   private:
     edm::Ptr<PATFinalStateEvent> event_;
 };
