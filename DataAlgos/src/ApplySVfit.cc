@@ -35,8 +35,8 @@ namespace ApplySVfit {
   static edm::EventID lastSVfitEvent; // last processed event
 
   double getSVfitMass(std::vector<reco::CandidatePtr>& cands,
-		      const pat::MET& met, const ROOT::Math::SMatrix2D& covMET, unsigned int verbosity,
-		      const edm::EventID& evtId) {
+                      const pat::MET& met, const ROOT::Math::SMatrix2D& covMET, unsigned int verbosity,
+                      const edm::EventID& evtId) {
 
     // Check if this a new event
     if (evtId != lastSVfitEvent) {
@@ -71,7 +71,7 @@ namespace ApplySVfit {
     }
 
     NSVfitStandaloneAlgorithm algo(measuredTauLeptons,
-				   measuredMET, convert_matrix(covMET), verbosity);
+                                   measuredMET, convert_matrix(covMET), verbosity);
     algo.addLogM(false);
     algo.integrate();
     double mass = algo.getMass(); // mass uncertainty not implemented yet
