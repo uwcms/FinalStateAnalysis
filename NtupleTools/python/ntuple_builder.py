@@ -31,18 +31,17 @@ _common_template = PSet(
     templates.event.gen,
     # templates.Vetoes on extra objects
     templates.cleaning.vetos,
+
+    # PHYS14 lepton triggers
+    templates.trigger.singleLepton,
+    templates.trigger.doubleLepton,
+    templates.trigger.tripleLepton, # tiple e only, for some reason
     # Need to fill out photon triggers
-    templates.trigger.mueg,
-    templates.trigger.doublemu,
-    templates.trigger.doublee,
-    templates.trigger.tripee,
-    templates.trigger.isomu,
-    templates.trigger.isomu24eta2p1,
-    templates.trigger.singlemu,
-    templates.trigger.singlee,
-    templates.trigger.singlePho,
-    templates.trigger.doublePho,
-    templates.trigger.isoMuTau
+#     templates.trigger.isomu,
+#     templates.trigger.isomu24eta2p1,
+#     templates.trigger.singlePho,
+#     templates.trigger.doublePho,
+#     templates.trigger.isoMuTau
 )
 
 # Define the branch templates for different object types.
