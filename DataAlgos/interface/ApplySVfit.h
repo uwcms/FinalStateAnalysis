@@ -12,6 +12,7 @@
 #include "DataFormats/Candidate/interface/CandidateFwd.h"
 #include <vector>
 #include "TMatrixDfwd.h"
+#include "Math/SMatrixDfwd.h"
 
 // forward declarations
 namespace pat { class MET; }
@@ -21,9 +22,13 @@ namespace ApplySVfit {
   double getSVfitMass(
       std::vector<reco::CandidatePtr>& cands,
       const pat::MET& met,
-      const TMatrixD& covariance,
+      const ROOT::Math::SMatrix2D& covariance, 
       unsigned int verbosity,
       const edm::EventID& evtId);
+
+  // Needed to ensure compatibility with CMSSW_7_2+
+  TMatrixD convert_matrix(const ROOT::Math::SMatrix2D& mat);
+  TMatrixD convert_matrix(const TMatrixD& mat); 
 }
 
 #endif // end of include guard: APPLYSVFIT_TO_FSA

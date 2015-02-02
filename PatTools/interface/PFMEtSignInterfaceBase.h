@@ -34,6 +34,7 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 
 #include <TMatrixD.h>
+#include "Math/SMatrixDfwd.h"
 
 #include <list>
 
@@ -120,6 +121,9 @@ class PFMEtSignInterfaceBase
   }
 
  private:
+
+  TMatrixD convert_matrix(const ROOT::Math::SMatrix2D& mat) const;
+  TMatrixD convert_matrix(const TMatrixD& mat) const; 
 
   metsig::SignAlgoResolutions* pfMEtResolution_;
 

@@ -4,6 +4,7 @@
 <use   name="SimDataFormats/PileupSummaryInfo"/>
 <use   name="FinalStateAnalysis/DataAlgos"/>
 <use   name="CommonTools/Utils"/>
+<use   name="DataFormats/TrackReco"/>
 <use   name="rootrflx"/>
 <export>
   <lib   name="1"/>

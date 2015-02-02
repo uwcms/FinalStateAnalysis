@@ -98,7 +98,7 @@ class PATJetSmearEmbedder : public edm::EDProducer
 
     edm::FileInPath inputFileName = cfg.getParameter<edm::FileInPath>("inputFileName");
     std::string lutName = cfg.getParameter<std::string>("lutName");
-    if ( !inputFileName.isLocal() )
+    if ( inputFileName.location() != edm::FileInPath::Local )
       throw cms::Exception("JetMETsmearInputProducer")
         << " Failed to find File = " << inputFileName << " !!\n";
 

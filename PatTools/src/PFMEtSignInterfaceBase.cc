@@ -27,6 +27,17 @@ PFMEtSignInterfaceBase::~PFMEtSignInterfaceBase()
   delete pfMEtResolution_;
 }
 
+TMatrixD PFMEtSignInterfaceBase::convert_matrix(const ROOT::Math::SMatrix2D& mat) const
+{
+  TMatrixD output = TMatrixD(mat.kRows, mat.kCols, mat.Array());
+  return output;
+}
+
+TMatrixD PFMEtSignInterfaceBase::convert_matrix(const TMatrixD& mat) const
+{
+  return mat;
+}
+
 TMatrixD PFMEtSignInterfaceBase::operator()(const std::list<const reco::Candidate*>& particles) const
 {
   if ( this->verbosity_ ) {
@@ -61,7 +72,7 @@ TMatrixD PFMEtSignInterfaceBase::operator()(const std::vector<metsig::SigInputOb
   if ( pfMEtSignObjects.size() >= 2 ) {
     metsig::significanceAlgo pfMEtSignAlgorithm;
     pfMEtSignAlgorithm.addObjects(pfMEtSignObjects);
-    pfMEtCov = pfMEtSignAlgorithm.getSignifMatrix();
+    pfMEtCov = convert_matrix(pfMEtSignAlgorithm.getSignifMatrix());
 
     if ( this->verbosity_ && TMath::Abs(pfMEtCov.Determinant()) > epsilon ) {
       TVectorD eigenValues(2);
