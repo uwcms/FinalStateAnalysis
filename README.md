@@ -11,7 +11,7 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
 Installation
 ------------
 
-Current CMSSW version: ``7_2_3_patch1``.
+Current CMSSW version: ``7_2_X``.
 
 Get a supported CMSSW release area:
 
@@ -20,6 +20,9 @@ Get a supported CMSSW release area:
   cd MyWorkingAreaName/src
   # Setup your CMSSW environment
   cmsenv
+  # SSH agent is optional, but will save you from typing your password many times
+  eval `ssh-agent -s`
+  ssh-add
   # Run this before doing ANYTHING else in src
   git cms-init
 ```
@@ -37,7 +40,6 @@ Checkout the needed CMSSW tags:
   cd recipe/
   # Checkout needed packages and apply patches
   # This enables all options.  You can turn off things you don't need.
-  # NB that in the hcp2012 changes the options won't do anything.
   PATPROD=1 LUMI=1 LIMITS=0 ./recipe.sh
   # Compile
   cd ../../
