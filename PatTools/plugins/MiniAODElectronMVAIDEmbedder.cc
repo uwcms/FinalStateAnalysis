@@ -89,8 +89,8 @@ MiniAODElectronMVAIDEmbedder::MiniAODElectronMVAIDEmbedder(const edm::ParameterS
   nonTrigMVA = EGammaMvaEleEstimatorCSA14();
 
   trigMVA.initialize("BDT", EGammaMvaEleEstimatorCSA14::kTrig,
-		     true, trigWeightPaths);		  
-  nonTrigMVA.initialize("BDT", EGammaMvaEleEstimatorCSA14::kNonTrig,
+		     true, trigWeightPaths);
+  nonTrigMVA.initialize("BDT", EGammaMvaEleEstimatorCSA14::kNonTrigPhys14,
 			true, nonTrigWeightPaths);		  
 
   produces<std::vector<pat::Electron> >();
