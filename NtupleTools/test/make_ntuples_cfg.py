@@ -37,8 +37,8 @@ svFit=1 - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
 runNewElectronMVAID=0 - run the new electron MVAID
 rerunJets=0   - rerun with new jet energy corrections
-useMiniAOD=0 - run on miniAOD rather than UW PATTuples
-use25ns=0 - run on 25 ns miniAOD (50 ns default)
+useMiniAOD=1 - run on miniAOD rather than UW PATTuples (default)
+use25ns=1 - run on 25 ns miniAOD (default, 0 = 50ns)
 runDQM=0 - run over single object final states to test all object properties (wont check diobject properties)
 hzzfsr=0 - Include FSR contribution a la HZZ4l group
 
@@ -82,8 +82,8 @@ options = TauVarParsing.TauVarParsing(
     dblhMode=False, # For double-charged Higgs analysis
     runTauSpinner=0,
     GlobalTag="",
-    useMiniAOD=0,
-    use25ns=0,
+    useMiniAOD=1,
+    use25ns=1,
     runDQM=0,
     hzzfsr=0,
 )
