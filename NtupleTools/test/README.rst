@@ -55,11 +55,15 @@ on the 2012-03-05-EWKPatTuple::
 miniAOD Example
 ---------------
 
-The following will run a bunch of CSA14 miniAOD files desired for the H->ZZ->4l analysis. Remote files can be run over condor using xrootd (the MiniAOD samples are not at UW). 
+The following will run a bunch of PHYS14 miniAOD files. As new MiniAOD versions are released,
+you only need to change the campaign-tag. This command uses a DAS lookup to find all available
+datasets for a given campaign and pattern match to the DAS name desired. Careful selection of 
+the campaign tag should avoid repeated datasets (since old datasets should be invalidated as
+the new ones arrive: example, *-v1 should not appear if *-v2 has been released). Most other
+things are now taken care of without special options (miniaod 25ns has been made default)::
 
-   submit_job.py MAKE_ZZ_NTUPLES_FSR_PU20BX25_1 $fsa/NtupleTools/test/make_ntuples_cfg.py channels="zz" useMiniAOD=1 isMC=1 rerunFSA=1 use25ns=1 hzzfsr=1 --tuple-dbs=$fsa/MetaData/tuples/MiniAOD-13TeV.json --xrootd --input-files-per-job=1 --samples "TTjets-PU20bx25" "Zjets_M50-PU20bx25" "WZTo3LNu-PU20bx25" "ggHZZ-PU20bx25" "VBFHZZ-PU20bx25" "ZZTo4L-PU20bx25" > HZZ4l_FSR_ntuples_PU20bx25_1.sh
-
-   bash HZZ4l_FSR_nuples_PU20bx25_1.sh
+   submit_job.py MiniAOD_Test make_ntuples_cfg.py channels="eeee,eeem,eemm,emmm,mmmm,eee,eem,emm,mmm" --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" --samples "ZZTo4L*" "WZJetsTo3LNu*" "WJetsToLNu_13TeV*" "T*_tW*" "T*ToLeptons_*" "TTW*" "TTZ*" "TTJets_MSDecaysCKM*" "DYJetsToLL_M-50_13TeV*" > do_test.sh 
+   bash < do_test.sh
 
 
 
