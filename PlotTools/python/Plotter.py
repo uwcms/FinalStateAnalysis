@@ -13,7 +13,7 @@ import rootpy.plotting.views as views
 import rootpy.plotting as plotting
 from FinalStateAnalysis.MetaData.data_views import data_views
 from FinalStateAnalysis.PlotTools.RebinView import RebinView
-from FinalStateAnalysis.Utilities.struct import struct
+from FinalStateAnalysis.Utilities.struct import FSAstruct as struct
 import FinalStateAnalysis.Utilities.prettyjson as prettyjson
 import ROOT
 

@@ -4,7 +4,7 @@ Simple script that takes as input one or more json files and produces a limit pl
 '''
 
 import rootpy.io as io
-from FinalStateAnalysis.Utilities.struct import struct
+from FinalStateAnalysis.Utilities.struct import FSAstruct as struct
 from FinalStateAnalysis.Utilities.solarized import colors
 import FinalStateAnalysis.Utilities.prettyjson as prettyjson
 from rootpy.plotting.graph import Graph

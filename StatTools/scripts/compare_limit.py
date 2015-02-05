@@ -5,7 +5,7 @@ Simple script that compares multiple limits
 
 import rootpy.io as io
 import itertools
-from FinalStateAnalysis.Utilities.struct import struct
+from FinalStateAnalysis.Utilities.struct import FSAstruct as struct
 from FinalStateAnalysis.Utilities.solarized import colors
 import FinalStateAnalysis.Utilities.prettyjson as prettyjson
 from rootpy.plotting.graph import Graph
