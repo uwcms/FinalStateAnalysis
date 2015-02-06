@@ -20,15 +20,10 @@ id = PSet(
     objectWWID = '{object}.userInt("WWID")',
     #objectPFIDTight = '{object}.userInt("tightID")',
     objectPFIDTight = 'isTightMuon({object_idx})',
-    objectIDHZG2011 = '{object}.userInt("HZG2011")',
-    objectIDHZG2012 = '{object}.userInt("HZG2012")',
     # For charged, we use ALL charged particles
     objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
     objectEffectiveArea2011 = '{object}.userFloat("ea_comb_iso04_kt6PFJCth05")',
-    objectRhoZZ2012 = cms.string('{object}.userFloat("zzRho2012")'),
-    objectRhoCSA14 = cms.string('{object}.userFloat("rhoCSA14")'),
-#     objectRhoHZG2012 = '{object}.userFloat("hzgRho2012")',
-#     objectRhoHZG2011 = '{object}.userFloat("hzgRho2011")',
+    objectRho = cms.string('{object}.userFloat("rhoCSA14")'),
     objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
@@ -51,24 +46,10 @@ id = PSet(
         '({object}.chargedHadronIso()'
         '+max(0.0,{object}.neutralHadronIso()'
         '+{object}.photonIso()'
-        '-{object}.userFloat("zzRho2012")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
-        '/{object}.pt()'
-    ),
-    objectRelPFIsoRhoFSR = cms.string(
-        '({object}.chargedHadronIso()'
-        '+max(0.0,{object}.neutralHadronIso()'
-        '+{object}.photonIso() - userFloat("leg{object_idx}fsrIsoCorr")'
-        '-{object}.userFloat("zzRho2012")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
-        '/{object}.pt()'
-    ),
-    objectRelPFIsoRhoCSA14 = cms.string(
-        '({object}.chargedHadronIso()'
-        '+max(0.0,{object}.neutralHadronIso()'
-        '+{object}.photonIso()'
         '-{object}.userFloat("rhoCSA14")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
         '/{object}.pt()'
     ),
-    objectRelPFIsoRhoFSRCSA14 = cms.string(
+    objectRelPFIsoRhoFSR = cms.string(
         '({object}.chargedHadronIso()'
         '+max(0.0,{object}.neutralHadronIso()'
         '+{object}.photonIso() - userFloat("leg{object_idx}fsrIsoCorr")'
