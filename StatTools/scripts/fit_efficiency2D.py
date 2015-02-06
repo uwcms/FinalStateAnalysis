@@ -14,7 +14,7 @@ Where [efficiency] is a RooFit factory command.
 import array
 from RecoLuminosity.LumiDB import argparse
 from FinalStateAnalysis.PlotTools.RebinView import RebinView
-from FinalStateAnalysis.Utilities.struct import struct
+from FinalStateAnalysis.Utilities.struct import FSAstruct as struct
 import rootpy.plotting as plotting
 import logging
 import sys
