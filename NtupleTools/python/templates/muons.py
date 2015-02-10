@@ -16,13 +16,13 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 # ID and isolation
 id = PSet(
-    objectVBTFID = '{object}.userInt("VBTF")',
-    objectWWID = '{object}.userInt("WWID")',
+    #objectVBTFID = '{object}.userInt("VBTF")',
+    #objectWWID = '{object}.userInt("WWID")',
     #objectPFIDTight = '{object}.userInt("tightID")',
     objectPFIDTight = 'isTightMuon({object_idx})',
     # For charged, we use ALL charged particles
-    objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
-    objectEffectiveArea2011 = '{object}.userFloat("ea_comb_iso04_kt6PFJCth05")',
+    #objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
+    #objectEffectiveArea2011 = '{object}.userFloat("ea_comb_iso04_kt6PFJCth05")',
     objectRho = cms.string('{object}.userFloat("rhoCSA14")'),
     objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
@@ -71,23 +71,23 @@ id = PSet(
 )
 
 energyCorrections = PSet(
-    objectERochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").t',
-    objectPtRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Pt',
-    objectEtaRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Eta',
-    objectPhiRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Phi',
-    objectEErrRochCor2011A = '{object}.userFloat("p4_RochCor2011A_tkFitErr")',
+    #objectERochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").t',
+    #objectPtRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Pt',
+    #objectEtaRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Eta',
+    #objectPhiRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Phi',
+    #objectEErrRochCor2011A = '{object}.userFloat("p4_RochCor2011A_tkFitErr")',
 
-    objectERochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").t',
-    objectPtRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Pt',
-    objectEtaRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Eta',
-    objectPhiRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Phi',
-    objectEErrRochCor2011B = '{object}.userFloat("p4_RochCor2011B_tkFitErr")',
+    #objectERochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").t',
+    #objectPtRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Pt',
+    #objectEtaRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Eta',
+    #objectPhiRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Phi',
+    #objectEErrRochCor2011B = '{object}.userFloat("p4_RochCor2011B_tkFitErr")',
 
-    objectERochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").t',
-    objectPtRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Pt',
-    objectEtaRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Eta',
-    objectPhiRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Phi',
-    objectEErrRochCor2012 = '{object}.userFloat("p4_RochCor2012_tkFitErr")'
+    #objectERochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").t',
+    #objectPtRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Pt',
+    #objectEtaRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Eta',
+    #objectPhiRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Phi',
+    #objectEErrRochCor2012 = '{object}.userFloat("p4_RochCor2012_tkFitErr")'
 )
 
 # Information about the associated track

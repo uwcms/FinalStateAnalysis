@@ -16,12 +16,13 @@ btagging = PSet(
 	#Btagging
         objectSSVHEBtag = '{object}.bDiscriminator("simpleSecondaryVertexHighEffBJetTags")',
 	objectSSVHPBtag = '{object}.bDiscriminator("simpleSecondaryVertexHighPurBJetTags")',
-        objectCSVBtag ='{object}.bDiscriminator("combinedSecondaryVertexBJetTags")',
         objectJBPBJtag = '{object}.bDiscriminator("jetBProbabilityBJetTags")',
         objectJPBJtag = '{object}.bDiscriminator("jetProbabilityBJetTags")',
         objectTCHPBTag = '{object}.bDiscriminator("trackCountingHighPurBJetTags")',
         objectTCHEBtag = '{object}.bDiscriminator("trackCountingHighEffBJetTags")',
-        objectCISVBtag = '{object}.bDiscriminator("combinedInclusiveSecondaryVertexBJetTags")',
+        objectCISVBtag = '{object}.bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags")',
+        objectPFCSVBtag = '{object}.bDiscriminator("pfCombinedSecondaryVertexBJetTags")',
+        objectCMVABtag = '{object}.bDiscriminator("combinedMVABJetTags")',
 
         # sv variables in miniAOD
         objectSVMass = '{object}.userFloat("vtxMass")',
