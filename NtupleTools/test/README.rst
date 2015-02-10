@@ -55,6 +55,13 @@ things are now taken care of without special options (miniaod 25ns has been made
    submit_job.py MiniAOD_Test make_ntuples_cfg.py channels="eeee,eeem,eemm,emmm,mmmm,eee,eem,emm,mmm" isMC=1 --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" --samples "ZZTo4L*" "WZJetsTo3LNu*" "WJetsToLNu_13TeV*" "T*_tW*" "T*ToLeptons_*" "TTW*" "TTZ*" "TTJets_MSDecaysCKM*" "DYJetsToLL_M-50_13TeV*" > do_test.sh 
    bash < do_test.sh
 
+Alternatively, you can define a shorthand json to simplify the selection ntuple names (an example
+can be found in MetData/tuples/MiniAOD-13TeV.json). The command would then use the shorthand
+names for lookup::
+
+
+   submit_job.py MiniAOD_Test make_ntuples_cfg.py channels="eeee,eeem,eemm,emmm,mmmm,eee,eem,emm,mmm" isMC=1 --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" --das-replace-tuple=$fsa/MetaData/tuples/MiniAOD-13TeV.json --samples "ZZ*" "WZ*" "DY*" > do_test.sh
+   bash < do_test.sh
 
 
 
