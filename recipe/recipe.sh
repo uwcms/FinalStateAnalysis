@@ -64,23 +64,6 @@ if [ -z "FORCERECIPE" ]; then
    done
 fi
 
-if [ "$MVAMET" = "1" ]
-then
-  echo "Applying MVA MET recpe"
-  ./recipe_mvamet.sh
-fi
-
-
-
-if [ "$MAJOR_VERSION" -eq "4" ]; then
-  echo "Recipe not setup for 42X"
-fi
-
-if [ "$MAJOR_VERSION" -eq "5" ]; then
-  echo "Applying recipe for CMSSW 5_3_X"
-  LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_legacy8TeV.sh
-fi
-
 if [ "$MAJOR_VERSION" -eq "7" ]; then
   echo "Applying recipe for CMSSW 7_0_X"
   LIMITS=$LIMITS PATPROD=$PATPROD ./recipe_13TeV.sh
