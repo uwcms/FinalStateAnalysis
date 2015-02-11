@@ -202,6 +202,11 @@
   <class name="PATMuTauTauFinalStateCollection"/>
   <class name="edm::Wrapper<PATMuTauTauFinalStateCollection>"/>
 
+  <class name="PATTauTauTauFinalState"/>
+  <class name="edm::Wrapper<PATTauTauTauFinalState>"/>
+  <class name="PATTauTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauTauTauFinalStateCollection>"/>
+
   <class name="PATMuJetJetFinalState"/>
   <class name="edm::Wrapper<PATMuJetJetFinalState>"/>
   <class name="PATMuJetJetFinalStateCollection"/>
@@ -255,6 +260,11 @@
   <class name="edm::Wrapper<PATElecMuMuTauFinalStateCollection>"/>
 
 
+  <class name="PATElecTauTauTauFinalState"/>
+  <class name="edm::Wrapper<PATElecTauTauTauFinalState>"/>
+  <class name="PATElecTauTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecTauTauTauFinalStateCollection>"/>
+
   <class name="PATElecMuTauTauFinalState"/>
   <class name="edm::Wrapper<PATElecMuTauTauFinalState>"/>
   <class name="PATElecMuTauTauFinalStateCollection"/>
@@ -277,6 +287,16 @@
   <class name="edm::Wrapper<PATMuMuTauTauFinalState>"/>
   <class name="PATMuMuTauTauFinalStateCollection"/>
   <class name="edm::Wrapper<PATMuMuTauTauFinalStateCollection>"/>
+
+  <class name="PATMuTauTauTauFinalState"/>
+  <class name="edm::Wrapper<PATMuTauTauTauFinalState>"/>
+  <class name="PATMuTauTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuTauTauTauFinalStateCollection>"/>
+
+  <class name="PATTauTauTauTauFinalState"/>
+  <class name="edm::Wrapper<PATTauTauTauTauFinalState>"/>
+  <class name="PATTauTauTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauTauTauTauFinalStateCollection>"/>
 
 
   <class name="PATElecPhoFinalState"/>
