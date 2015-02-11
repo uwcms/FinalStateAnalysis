@@ -498,6 +498,8 @@ _FINAL_STATE_GROUPS = {
     'zg': 'mmg, eeg',
     'zgxtra': 'mgg, emg, egg',
     'dqm': 'e,m,t,g,j',
+    '3lep': 'eee, eem, eet, emm, emt, ett, mmm, mmt, mtt, ttt',
+    '4lep': 'eeee, eeem, eeet, eemm, eemt, eett, emmm, emmt, emtt, ettt, mmmm, mmmt, mmtt, mttt, tttt',
 }
 
 # run dqm
