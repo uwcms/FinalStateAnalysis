@@ -75,5 +75,12 @@
     "WWZNoGstarJets" : "/hdfs/store/user/dntaylor/WWZNoGstarJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Fall2014_v1",
     "ZZZNoGstarJets" : "/hdfs/store/user/dntaylor/ZZZNoGstarJets_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/Fall2014_v1",
 
-    "VH_H2Tau_M-125_PavelSync" : "/hdfs/store/user/stephane/Pavel_sync_07-16-2013-patTuple_cfg"
+    "VH_H2Tau_M-125_PavelSync" : "/hdfs/store/user/stephane/Pavel_sync_07-16-2013-patTuple_cfg",
+
+    "ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola" : "/hdfs/store/user/nsmith/ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v3/AODSIM/ZHinv2015",
+    "ZG_Inclusive" : "/hdfs/store/user/nsmith/ZG_Inclusive_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/ZHinv2015",
+    "ZH_ZToLL_HToInv_M-125" : "/hdfs/store/user/nsmith/ZH_ZToLL_HToInv_M-125_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/ZHinv2015",
+    "WGToLNuG" : "/hdfs/store/user/nsmith/WGToLNuG_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/ZHinv2015",
+    "Zjets_lowMass" : "/hdfs/store/user/nsmith/DYJetsToLL_M-10To50filter_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/ZHinv2015",
+    "DYJetsToLL_M-10To50filter_8TeV-madgraph" : "/hdfs/store/user/nsmith/DYJetsToLL_M-10To50filter_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/ZHinv2015"
 }

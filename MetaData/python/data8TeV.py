@@ -62,6 +62,22 @@ datadefs = {
          # https://twiki.cern.ch/twiki/bin/viewauth/CMS/StandardModelCrossSectionsat8TeV
          'x_sec': 3503.71,
      },
+    'Zjets_lowMass' : {
+         'analyses': [''],
+         'datasetpath': '/DYJetsToLL_M-10To50filter_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+         'pu': 'S10',
+         'calibrationTarget': 'Summer12',
+         # AN2012-123
+         'x_sec': 860.5,
+     },
+     'WGToLNuG' : {
+        'analyses': [''],
+        'datasetpath': '/WGToLNuG_TuneZ2star_8TeV-madgraph-tauola/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+        'pu': 'S10',
+        'calibrationTarget': 'Summer12',
+        # AN2012-123
+        'xsec': 461.6,
+    },
     'Z2jets_M50' : {
         'analyses': ['HTT'],
         'datasetpath': '/DY2JetsToLL_M-50_TuneZ2Star_8TeV-madgraph/Summer12-PU_S7_START52_V9-v1/AODSIM',
@@ -96,7 +112,24 @@ datadefs = {
    'datasetpath': '/ZZJetsTo2L2Nu_TuneZ2star_8TeV-madgraph-tauola/Summer12-PU_S7_START52_V9-v3/AODSIM',
    'pu': 'S7',
    'calibrationTarget': 'Summer12',
-   'xsec': -999,
+   # AN2012-123
+   'xsec': 0.380,
+       },
+     'ZG_Inclusive' : {
+   'analyses': [''],
+   'datasetpath': '/ZG_Inclusive_8TeV-madgraph/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+   'pu': 'S10',
+   'calibrationTarget': 'Summer12',
+   # AN2012-123
+   'xsec': 123.9,
+       },
+    'ZH_ZToLL_HToInv_M-125' : {
+   'analyses': [''],
+   'datasetpath': '/ZH_ZToLL_HToInv_M-125_8TeV-pythia6/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM',
+   'pu': 'S10',
+   'calibrationTarget': 'Summer12',
+   # AN2012-123
+   'xsec': 0.0398,
        },
     'ZZJetsTo2L2Q_TuneZ2' : {
    'analyses': ['HTT'],
