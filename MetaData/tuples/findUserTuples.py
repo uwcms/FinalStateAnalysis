@@ -1,6 +1,5 @@
 #!/bin/env python
-import sys
-import subprocess
+import sys, os, subprocess
 import json
 from FinalStateAnalysis.MetaData.datadefs import datadefs
 
@@ -8,6 +7,7 @@ def getUserHDFSlisting ( username ) :
   cmd = ['hdfs dfs']
   cmd.append('-ls -R')
   cmd.append('/store/user/'+username)
+  cmd.append('2>/dev/null')
   listing = subprocess.Popen(" ".join(cmd), shell=True, stdout=subprocess.PIPE).stdout.read()
   files = [l.split() for l in listing.split('\n')]
   dirs = [file[-1] for file in files if len(file) > 0 and file[0][0] == 'd']
@@ -32,14 +32,19 @@ def findUserPatConfigJsonFiles ( username ) :
   return user_pat_configs
 
 if __name__ == "__main__" :
-  username = sys.argv[1]
-  store_user = getUserHDFSlisting(username)
-  user_pat_configs = findUserPatConfigJsonFiles(username)
+  usernames = sys.argv[1].split(',')
+  store_user = []
+  user_pat_configs = []
+  for username in usernames :
+    print "Loading HDFS listing for %s" % username
+    store_user.extend(getUserHDFSlisting(username))
+    print "Finding FSA PAT-tuplizer configs for %s" % username
+    user_pat_configs.extend(findUserPatConfigJsonFiles(username))
 
-  pat_locations = {}
+  pat_datadefs = {}
   for name, datadef in datadefs.iteritems() :
-    pat_locations[name] = []
     if 'datasetpath' in datadef :
+      locations = []
       for dir in store_user :
         if datadef['datasetpath'] in dir :
           loc = {}
@@ -47,8 +52,12 @@ if __name__ == "__main__" :
           for config in user_pat_configs :
             if config['PAT Location'] == loc['dir'] :
               loc['possible PAT config'] = config
-          pat_locations[name].append(loc)
-    if len(pat_locations[name]) == 0 :
-      pat_locations.pop(name)
+          locations.append(loc)
+      if len(locations) != 0 :
+        pat_datadefs[name] = {}
+        pat_datadefs[name]['locations'] = locations
+        pat_datadefs[name]['datadef'] = datadef
 
-  print json.dumps(pat_locations, indent=4, separators=(',',': '))
+  print json.dumps(pat_datadefs, indent=4, separators=(',',': '))
+  # with open(os.path.expanduser('~/public_html/pat_datadefs.min.json'), 'w') as output :
+  #   json.dump(pat_datadefs, output)
