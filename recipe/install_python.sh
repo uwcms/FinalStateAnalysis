@@ -45,8 +45,10 @@ echo "Install progressbar"
 pip install -U progressbar
 echo "Install cython"
 pip install -U cython
-echo "Installing argparse"
-pip install -U argparse
+if ! python -c 'import argparse' 2>/dev/null; then
+    echo "Installing argparse"
+    pip install -U argparse
+fi
 echo "Installing pudb <-- interactive debugging"
 pip install -U pudb
 echo "Installing yellowhiggs <-- higgs yellow report x-sections lookup table"
