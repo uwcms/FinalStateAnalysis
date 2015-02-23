@@ -309,11 +309,12 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     double twoParticleDeltaPhiToMEt(const int i, const int j, const std::string& metTag) const;
     
     const float getIP3D(const size_t i) const;
+    const float getIP3DErr(const size_t i) const;
 
-    const float getIP3DSig(const size_t i) const;
+    const float getIP2D(const size_t i) const;
+    const float getIP2DErr(const size_t i) const;
 
     const float getPVDZ(const size_t i) const;
-
     const float getPVDXY(const size_t i) const;
 
     const bool isTightMuon(const size_t i) const;
@@ -323,6 +324,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     // Helper function to get global track hits for muon i
     const int getMuonHits(const size_t i) const;
+    
+    // Is the PV the closest vertex to the gen vertex for this object?
+    const bool genVtxPVMatch(const size_t i) const;
 
   private:
     edm::Ptr<PATFinalStateEvent> event_;

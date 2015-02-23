@@ -1106,7 +1106,7 @@ const float PATFinalState::getIP3D(const size_t i) const
   return dynamic_cast<const pat::PATObject<reco::Candidate>* >(daughter(i))->userFloat("ip3D");
 }
 
-const float PATFinalState::getIP3DSig(const size_t i) const
+const float PATFinalState::getIP3DErr(const size_t i) const
 {
   if(event_->isMiniAOD())
     {
@@ -1120,6 +1120,44 @@ const float PATFinalState::getIP3DSig(const size_t i) const
 	}
       
       throw cms::Exception("InvalidParticle") << "FSA can only find SIP3D for electron and muon for now" << std::endl;
+    }
+
+return static_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("ip3DS");
+}
+
+const float PATFinalState::getIP2D(const size_t i) const
+{
+  if(event_->isMiniAOD())
+    {
+      if(abs(daughter(i)->pdgId()) == 11)
+	{
+	  return fabs(daughterAsElectron(i)->dB(pat::Electron::PV2D));
+	}
+      else if (abs(daughter(i)->pdgId()) == 13)
+	{
+	  return fabs(daughterAsMuon(i)->dB(pat::Muon::PV2D));
+	}
+      
+      throw cms::Exception("InvalidParticle") << "FSA can only find SIP3D for electron and muon for now" << std::endl;
+    }
+
+  return dynamic_cast<const pat::PATObject<reco::Candidate>* >(daughter(i))->userFloat("ip3D");
+}
+
+const float PATFinalState::getIP2DErr(const size_t i) const
+{
+  if(event_->isMiniAOD())
+    {
+      if(abs(daughter(i)->pdgId()) == 11)
+	{
+	  return daughterAsElectron(i)->edB(pat::Electron::PV2D);
+	}
+      else if (abs(daughter(i)->pdgId()) == 13)
+	{
+	  return daughterAsMuon(i)->edB(pat::Muon::PV2D);
+	}
+      
+      throw cms::Exception("InvalidParticle") << "FSA can only find SIP2D for electron and muon for now" << std::endl;
     }
 
 return static_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("ip3DS");
@@ -1139,10 +1177,8 @@ const float PATFinalState::getPVDZ(const size_t i) const
 	  const edm::Ptr<reco::Vertex> pv = event_->pv();
 	  return daughterAsMuon(i)->muonBestTrack()->dz(pv->position());
 	}
-      
       throw cms::Exception("InvalidParticle") << "FSA can only find dZ for electron and muon for now" << std::endl;
     }
-  
   return dynamic_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("dz");
 }
 
@@ -1160,10 +1196,8 @@ const float PATFinalState::getPVDXY(const size_t i) const
 	  const edm::Ptr<reco::Vertex> pv = event_->pv();
 	  return daughterAsMuon(i)->muonBestTrack()->dxy(pv->position());
 	}
-      
       throw cms::Exception("InvalidParticle") << "FSA can only find dXY for electron and muon for now" << std::endl;
     }
-  
   return dynamic_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("ipDXY");
 }
 
@@ -1188,7 +1222,25 @@ const int PATFinalState::getMuonHits(const size_t i) const
   return -1;
 }
 
+const bool PATFinalState::genVtxPVMatch(const size_t i) const
+{
+  unsigned int pdgId = abs(daughter(i)->pdgId());
+  if(!(getDaughterGenParticle(i, pdgId, 0).isAvailable() && getDaughterGenParticle(i, pdgId, 0).isNonnull()))
+    return false;
 
+  float genVZ = getDaughterGenParticle(i, pdgId, 0)->vz();
+  float genVtxPVDZ = fabs(event_->pv()->z() - genVZ);
+
+  // Loop over all vertices, and if there's one that's better, say so
+  for(edm::PtrVector<reco::Vertex>::const_iterator iVtx = event_->recoVertices().begin();
+      iVtx != event_->recoVertices().end(); ++iVtx)
+    {
+      if(fabs((*iVtx)->z() - genVZ) < genVtxPVDZ)
+	return false;
+    }
+  // Didn't find a better one, PV must be the best
+  return true;
+}
 
 
 

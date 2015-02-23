@@ -21,10 +21,12 @@ kinematics = PSet(
 vertex_info = PSet(
     objectVZ = '{object}.vz',
     objectIP3D = 'getIP3D({object_idx})',
-    objectIP3DSig = 'getIP3DSig({object_idx})', # uncertainty ("significance") of IP3D
-    objectSIP3D = 'getIP3D({object_idx}) / getIP3DSig({object_idx})',
+    objectIP3DErr = 'getIP3DErr({object_idx})', # uncertainty of IP3D
+    objectSIP3D = 'getIP3D({object_idx}) / getIP3DErr({object_idx})',
     objectPVDZ = 'getPVDZ({object_idx})',
     objectPVDXY = 'getPVDXY({object_idx})',
+    objectSIP2D = 'getIP2D({object_idx}) / getIP2DErr({object_idx})',
+#    objectPVAssociation = '{object}.fromPV', # 0->used in PV fit, 1->PV is closest VTX, 2->other VTX is closest, 3->used in other VTX fit
 )
 
 # The info about the associated pat::Jet
