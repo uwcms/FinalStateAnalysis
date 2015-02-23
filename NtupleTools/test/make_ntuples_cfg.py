@@ -353,6 +353,18 @@ if options.rerunFSA:
             )
         process.schedule.append(process.miniAODElectrons)
 
+        # Clean out muon "ghosts" caused by track ambiguities
+        process.ghostCleanedMuons = cms.EDProducer("PATMuonCleanerBySegments",
+                                                   src = cms.InputTag(fs_daughter_inputs['muons']),
+                                                   preselection = cms.string("track.isNonnull"),
+                                                   passthrough = cms.string("isGlobalMuon && numberOfMatches >= 2"),
+                                                   fractionOfSharedSegments = cms.double(0.499))
+        output_commands.append('*_ghostCleanedMuons_*_*')
+        fs_daughter_inputs['muons'] = "ghostCleanedMuons"
+
+        process.miniCleanedMuons = cms.Path(process.ghostCleanedMuons)
+        process.schedule.append(process.miniCleanedMuons)
+
         process.miniPatMuons = cms.EDProducer(
             "MiniAODMuonIDEmbedder",
             src=cms.InputTag(fs_daughter_inputs['muons']),
