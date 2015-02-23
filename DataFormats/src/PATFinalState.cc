@@ -1214,6 +1214,28 @@ const int PATFinalState::getElectronMissingHits(const size_t i) const
   return -1;
 }
 
+const float PATFinalState::electronClosestMuonDR(const size_t i) const
+{
+  float closestDR = 999;
+  for(pat::MuonCollection::const_iterator iMu = evt()->muons().begin();
+      iMu != evt()->muons().end(); ++iMu)
+    {
+      if(!( // have to pass loose muon cuts + global or PF muon
+	   (iMu->isGlobalMuon() || iMu->isPFMuon())
+	   && iMu->pt() > 5 
+	   && fabs(iMu->eta()) < 2.4
+	   && iMu->muonBestTrack()->dxy(evt()->pv()->position()) < 0.5
+	   && iMu->muonBestTrack()->dz(evt()->pv()->position()) < 1.
+	   ))
+	continue;
+      float thisDR = reco::deltaR(daughter(i)->p4(), iMu->p4());
+      if(thisDR < closestDR)
+	closestDR = thisDR;
+    }
+
+  return closestDR;
+}
+
 const int PATFinalState::getMuonHits(const size_t i) const
 {
   if(daughterAsMuon(i)->globalTrack().isNonnull())

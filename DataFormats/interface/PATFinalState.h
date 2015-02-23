@@ -322,6 +322,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // Helper function to get missing inner tracker hits for electron i
     const int getElectronMissingHits(const size_t i) const;
 
+    // Get the distance from this electron to the nearest muon passing 
+    // (isPFMuon || isGlobalMuon) and a few loose quality cuts
+    const float electronClosestMuonDR(const size_t i) const;
+
     // Helper function to get global track hits for muon i
     const int getMuonHits(const size_t i) const;
     
