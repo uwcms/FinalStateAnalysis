@@ -84,6 +84,7 @@ id = PSet(
     ##     "/{object}.pt()"
     ## ),
 
+    objectIsPFMuon = '{object}.isPFMuon',
     objectIsGlobal = '{object}.isGlobalMuon',
     objectIsTracker = '{object}.isTrackerMuon',
     objectTypeCode = cms.vstring('{object}.type','I'),
