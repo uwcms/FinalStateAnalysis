@@ -48,6 +48,8 @@ typedef PATQuadFinalStateT<pat::Electron, pat::Muon, pat::Tau, pat::Tau> PATElec
 FWD_TYPEDEFS(PATElecMuTauTauFinalState)
 typedef PATQuadFinalStateT<pat::Electron, pat::Muon, pat::Photon, pat::Photon> PATElecMuPhoPhoFinalState;
 FWD_TYPEDEFS(PATElecMuPhoPhoFinalState)
+typedef PATQuadFinalStateT<pat::Electron, pat::Tau, pat::Tau, pat::Tau> PATElecTauTauTauFinalState;
+FWD_TYPEDEFS(PATElecTauTauTauFinalState)
 typedef PATQuadFinalStateT<pat::Muon, pat::Muon, pat::Muon, pat::Muon> PATMuMuMuMuFinalState;
 FWD_TYPEDEFS(PATMuMuMuMuFinalState)
 typedef PATQuadFinalStateT<pat::Muon, pat::Muon, pat::Muon, pat::Tau> PATMuMuMuTauFinalState;
@@ -58,5 +60,9 @@ typedef PATQuadFinalStateT<pat::Muon, pat::Muon, pat::Tau, pat::Tau> PATMuMuTauT
 FWD_TYPEDEFS(PATMuMuTauTauFinalState)
 typedef PATQuadFinalStateT<pat::Muon, pat::Muon, pat::Photon, pat::Photon> PATMuMuPhoPhoFinalState;
 FWD_TYPEDEFS(PATMuMuPhoPhoFinalState)
+typedef PATQuadFinalStateT<pat::Muon, pat::Tau, pat::Tau, pat::Tau> PATMuTauTauTauFinalState;
+FWD_TYPEDEFS(PATMuTauTauTauFinalState)
+typedef PATQuadFinalStateT<pat::Tau, pat::Tau, pat::Tau, pat::Tau> PATTauTauTauTauFinalState;
+FWD_TYPEDEFS(PATTauTauTauTauFinalState)
 
 #endif

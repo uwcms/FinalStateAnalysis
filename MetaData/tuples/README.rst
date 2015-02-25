@@ -1,8 +1,7 @@
-Definition of published PAT Tuples
-==================================
+Definition of published MiniAOD samples
+=======================================
 
-Each PAT tuple production should exists as a .txt file in this directory.
-Just add the samples as they finish to the .txt file, and the run ``make``.
-
-Produces a .json file with a mapping from PAT dataset -> AOD dataset,
-and a .rst file with a nice ASCII table.
+Here, we have a simple json file to give shorthand names to DAS data samples.
+This tuple is used by submit_jobs.py to allow a convenient way of selecting
+samples (rather than using the full DAS name). The shorthand name corresponds
+to the sample name not the full dataset name (i.e. /[SampleName]/[Production]/MINIAOD*).

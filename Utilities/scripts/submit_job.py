@@ -53,6 +53,11 @@ if __name__ == "__main__":
         help='fetch files from remote tiers using xrootd'
     )
 
+    cmsrun_group.add_argument(
+        '--das-replace-tuple', dest='dastuple',
+         help = 'JSON file listing shorthand names for DAS samples.'
+    )
+
     input_group = parser.add_mutually_exclusive_group(required=True)
 
     input_group.add_argument(
@@ -139,8 +144,17 @@ if __name__ == "__main__":
             if args.samples:
                 passes_wildcard = False
                 for pattern in args.samples:
-                    if fnmatch.fnmatchcase(dataset_name, pattern):
-                        passes_wildcard = True
+                    if args.dastuple: # check json for shorthand
+                        with open(args.dastuple) as tuple_file:
+                            tuple_info = json.load(tuple_file)
+                            matching_datasets = []
+                            for shorthand, fullname in tuple_info.iteritems():
+                                if fullname in dataset_name:
+                                    if fnmatch.fnmatchcase(shorthand, pattern):
+                                        passes_wildcard = True
+                    else: # check das directly
+                        if fnmatch.fnmatchcase(dataset_name, pattern):
+                            passes_wildcard = True
                 passes_filter = passes_wildcard and passes_filter
             if not passes_filter:
                 continue

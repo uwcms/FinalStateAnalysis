@@ -1,7 +1,16 @@
 {
-  "ZZTo4L-PU20bx25" : "/ZZTo4L_Tune4C_13TeV-powheg-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM",
-  "ggHZZ-PU20bx25" : "/GluGluToHToZZTo4L_M-125_13TeV-powheg-pythia6/Phys14DR-PU20bx25_tsg_PHYS14_25_V1-v1/MINIAODSIM",
-  "WZTo3LNu-PU20bx25" : "/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM",
-  "DYJets_M50-PU20bx25" : "/DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM",
-  "TTJets-PU20bx25" : "/TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM"
+  "WJetsToLNu" : "WJetsToLNu_13TeV-madgraph-pythia8-tauola",
+  "DYJetsToLL_M50" : "DYJetsToLL_M-50_13TeV-madgraph-pythia8",
+  "WZTo3LNu" : "WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola",
+  "ZZTo4L" : "ZZTo4L_Tune4C_13TeV-powheg-pythia8",
+  "ggHZZ" : "GluGluToHToZZTo4L_M-125_13TeV-powheg-pythia6",
+  "TTJets" : "TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola",
+  "TTWJets" : "TTWJets_Tune4C_13TeV-madgraph-tauola",
+  "TTZJets" : "TTZJets_Tune4C_13TeV-madgraph-tauola",
+  "T_s" : "TToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola",
+  "T_t" : "TToLeptons_t-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola",
+  "T_tW" : "T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola",
+  "Tbar_s" : "TBarToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola",
+  "Tbar_t" : "TBarToLeptons_t-channel_Tune4C_CSA14_13TeV-aMCatNLO-tauola",
+  "Tbar_tW" : "Tbar_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola"
 }
