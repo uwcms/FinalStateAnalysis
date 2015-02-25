@@ -93,6 +93,7 @@ namespace {
     FWD_MIN_CLASSDECL(PATMuTauTauFinalState)
     FWD_MIN_CLASSDECL(PATMuPhoPhoFinalState)
     FWD_MIN_CLASSDECL(PATMuJetJetFinalState)
+    FWD_MIN_CLASSDECL(PATTauTauTauFinalState)
 
     // quad final states
     FWD_MIN_CLASSDECL(PATElecElecElecElecFinalState)
@@ -108,11 +109,14 @@ namespace {
     FWD_MIN_CLASSDECL(PATElecMuMuTauFinalState)
     FWD_MIN_CLASSDECL(PATElecMuMuPhoFinalState)
     FWD_MIN_CLASSDECL(PATElecMuTauTauFinalState)
+    FWD_MIN_CLASSDECL(PATElecTauTauTauFinalState)
     FWD_MIN_CLASSDECL(PATElecMuPhoPhoFinalState)
     FWD_MIN_CLASSDECL(PATMuMuMuMuFinalState)
     FWD_MIN_CLASSDECL(PATMuMuMuTauFinalState)
     FWD_MIN_CLASSDECL(PATMuMuMuPhoFinalState)
     FWD_MIN_CLASSDECL(PATMuMuTauTauFinalState)
+    FWD_MIN_CLASSDECL(PATMuTauTauTauFinalState)
+    FWD_MIN_CLASSDECL(PATTauTauTauTauFinalState)
     FWD_MIN_CLASSDECL(PATMuMuPhoPhoFinalState)
 
   };

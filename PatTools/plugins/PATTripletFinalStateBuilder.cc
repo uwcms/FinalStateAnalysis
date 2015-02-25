@@ -14,6 +14,7 @@ typedef PATTripletFinalStateBuilderT<PATMuMuMuFinalState> PATMuMuMuFinalStatePro
 typedef PATTripletFinalStateBuilderT<PATMuMuTauFinalState> PATMuMuTauFinalStateProducer;
 typedef PATTripletFinalStateBuilderT<PATMuMuPhoFinalState> PATMuMuPhoFinalStateProducer;
 typedef PATTripletFinalStateBuilderT<PATMuTauTauFinalState> PATMuTauTauFinalStateProducer;
+typedef PATTripletFinalStateBuilderT<PATTauTauTauFinalState> PATTauTauTauFinalStateProducer;
 typedef PATTripletFinalStateBuilderT<PATMuPhoPhoFinalState> PATMuPhoPhoFinalStateProducer;
 typedef PATTripletFinalStateBuilderT<PATMuJetJetFinalState> PATMuJetJetFinalStateProducer;
 
@@ -32,6 +33,7 @@ DEFINE_FWK_MODULE(PATMuMuMuFinalStateProducer);
 DEFINE_FWK_MODULE(PATMuMuTauFinalStateProducer);
 DEFINE_FWK_MODULE(PATMuMuPhoFinalStateProducer);
 DEFINE_FWK_MODULE(PATMuTauTauFinalStateProducer);
+DEFINE_FWK_MODULE(PATTauTauTauFinalStateProducer);
 DEFINE_FWK_MODULE(PATMuPhoPhoFinalStateProducer);
 DEFINE_FWK_MODULE(PATMuJetJetFinalStateProducer);
 

@@ -9,8 +9,6 @@ for n_elec in reversed(range(5)):
         for n_tau in reversed(range(5 - n_elec - n_muon)):
             # Don't make very unlikely final states
             n_pho = 4 - (n_muon + n_elec + n_tau)
-            if n_tau > 2:
-                continue
             if n_pho > 2:
                 continue
             if n_tau and n_pho:

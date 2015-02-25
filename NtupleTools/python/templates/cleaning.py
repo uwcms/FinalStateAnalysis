@@ -41,10 +41,8 @@ vetos = PSet(
     
     #B-JET Vetos
     bjetVeto = 'vetoJets(0.4, "pt > 20 & abs(eta) < 2.4  & bDiscriminator(\'\') > 3.3").size()',
-    bjetCSVVeto = 'vetoJets(0.4, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'combinedSecondaryVertexBJetTags\') > 0.679").size()',
-    bjetCSVVetoZHLike = 'vetoJets(0.4, "pt > 20 & abs(eta) < 2.4 &  bDiscriminator(\'combinedSecondaryVertexBJetTags\') > 0.898").size()',
-    bjetCSVVetoZHLikeNoJetId = 'vetoJets(0.4, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'combinedSecondaryVertexBJetTags\') > 0.898").size()',
-    bjetCSVVeto30 = 'vetoJets(0.4, "pt > 30 & abs(eta) < 2.4 & bDiscriminator(\'combinedSecondaryVertexBJetTags\') > 0.679").size()',
+    bjetCSVVeto = 'vetoJets(0.4, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'combinedInclusiveSecondaryVertexV2BJetTags\') > 0.679").size()',
+    bjetCSVVeto30 = 'vetoJets(0.4, "pt > 30 & abs(eta) < 2.4 & bDiscriminator(\'combinedInclusiveSecondaryVertexV2BJetTags\') > 0.679").size()',
 
     #JET VETOS
     jetVeto20 = 'vetoJets(0.4, "pt > 20 & abs(eta) < 5.0").size()',

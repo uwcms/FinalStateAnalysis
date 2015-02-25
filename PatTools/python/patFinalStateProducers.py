@@ -345,18 +345,11 @@ def produce_final_states(process, collections, output_commands,
     # Build tri-lepton pairs
     process.buildTriObjects = cms.Sequence()
     for triobject in _combinatorics(object_types, 3):
-        # Don't build three jet states
-        if (triobject[0][0], triobject[1][0], triobject[2][0]) == \
-           ('Tau', 'Tau', 'Tau'):
-            continue
-
         n_taus = [x[0] for x in triobject].count('Tau')
         n_phos = [x[0] for x in triobject].count('Pho')
         n_muons = [x[0] for x in triobject].count('Mu')
         n_jets = [x[0] for x in triobject].count('Jet')
 
-        if n_taus > 2:
-            continue
         if n_phos > 2:
             continue
         if n_taus and n_phos:
@@ -404,8 +397,6 @@ def produce_final_states(process, collections, output_commands,
         n_phos = [x[0] for x in quadobject].count('Pho')
         n_jets = [x[0] for x in quadobject].count('Jet')
 
-        if n_taus > 2:
-            continue
         if n_phos > 2:
             continue
         if n_taus and n_phos:

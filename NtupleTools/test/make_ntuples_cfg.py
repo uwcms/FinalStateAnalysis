@@ -410,10 +410,6 @@ if options.rerunFSA:
         fs_daughter_inputs['muons'] = 'patMuonEAEmbedder'
 
         # Embed rhos in electrons
-        process.load("FinalStateAnalysis.PatTools.electrons.patElectronRhoEmbedding_cfi")
-        process.patElectronZZ2012RhoEmbedding.src = cms.InputTag(fs_daughter_inputs['electrons'])
-        fs_daughter_inputs['electrons'] = 'patElectronZZ2012RhoEmbedding'
-        output_commands.append('*_patElectronZZ2012RhoEmbedding_*_*')
         process.miniAODElectronRhoEmbedding = cms.EDProducer(
             "ElectronRhoOverloader",
             src = cms.InputTag(fs_daughter_inputs['electrons']),
@@ -424,10 +420,6 @@ if options.rerunFSA:
         output_commands.append('*_miniAODElectronRhoEmbedding_*_*')
 
         # ... and muons
-        process.load("FinalStateAnalysis.PatTools.muons.patMuonRhoEmbedding_cfi")
-        process.patMuonZZ2012RhoEmbedding.src = cms.InputTag(fs_daughter_inputs['muons'])
-        fs_daughter_inputs['muons'] = 'patMuonZZ2012RhoEmbedding'
-        output_commands.append('*_patMuonZZ2012RhoEmbedding_*_*')
         process.miniAODMuonRhoEmbedding = cms.EDProducer(
             "MuonRhoOverloader",
             src = cms.InputTag(fs_daughter_inputs['muons']),
@@ -437,9 +429,7 @@ if options.rerunFSA:
         fs_daughter_inputs['muons'] = 'miniAODMuonRhoEmbedding'
         output_commands.append('*_miniAODMuonRhoEmbedding_*_*')
         process.rhoEmbedding = cms.Path(
-            process.patElectronZZ2012RhoEmbedding +
             process.miniAODElectronRhoEmbedding +
-            process.patMuonZZ2012RhoEmbedding +
             process.miniAODMuonRhoEmbedding
             )
         process.schedule.append(process.rhoEmbedding)
@@ -508,6 +498,8 @@ _FINAL_STATE_GROUPS = {
     'zg': 'mmg, eeg',
     'zgxtra': 'mgg, emg, egg',
     'dqm': 'e,m,t,g,j',
+    '3lep': 'eee, eem, eet, emm, emt, ett, mmm, mmt, mtt, ttt',
+    '4lep': 'eeee, eeem, eeet, eemm, eemt, eett, emmm, emmt, emtt, ettt, mmmm, mmmt, mmtt, mttt, tttt',
 }
 
 # run dqm

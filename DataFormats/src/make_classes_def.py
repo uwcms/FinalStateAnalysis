@@ -104,8 +104,6 @@ minimal_template = string.Template('''
 
 
 for final_state in final_states:
-    if final_state.count('Tau') > 2:
-        continue
     if final_state.count('Pho') > 2:
         continue
     if final_state.count('Tau') and final_state.count('Pho'):
