@@ -20,6 +20,7 @@ id = PSet(
     objectWWID = '{object}.userInt("WWID")',
     #objectPFIDTight = '{object}.userInt("tightID")',
     objectPFIDTight = 'isTightMuon({object_idx})',
+    objectPFIDLoose = '{object}.isLooseMuon()',
     # For charged, we use ALL charged particles
     objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
     objectEffectiveArea2011 = '{object}.userFloat("ea_comb_iso04_kt6PFJCth05")',
