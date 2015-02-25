@@ -37,7 +37,8 @@ pv_info = PSet(
     pvndof='? evt.pv.isNonnull() ? evt.pv.ndof : -999',
     pvNormChi2='? evt.pv.isNonnull() ? evt.pv.normalizedChi2 : -999',
     pvIsValid=cms.vstring('? evt.pv.isNonnull() ? evt.pv.isValid : 0', 'I'),
-    pvIsFake=cms.vstring('? evt.pv.isNonnull() ? evt.pv.isFake : 1', 'I')
+    pvIsFake=cms.vstring('? evt.pv.isNonnull() ? evt.pv.isFake : 1', 'I'),
+    pvRho = 'evt.pv.position.Rho',
 )
 
 met = PSet(

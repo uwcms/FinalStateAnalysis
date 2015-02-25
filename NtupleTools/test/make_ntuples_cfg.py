@@ -41,6 +41,7 @@ useMiniAOD=1 - run on miniAOD rather than UW PATTuples (default)
 use25ns=1 - run on 25 ns miniAOD (default, 0 = 50ns)
 runDQM=0 - run over single object final states to test all object properties (wont check diobject properties)
 hzzfsr=0 - Include FSR contribution a la HZZ4l group
+nExtraJets=0 - Include basic info about this many jets (ordered by pt). Ignored if final state involves jets.
 
 
 '''
@@ -102,6 +103,13 @@ options.register(
     TauVarParsing.TauVarParsing.multiplicity.list,
     TauVarParsing.TauVarParsing.varType.string,
     'additional cuts to impose on the NTuple'
+)
+options.register(
+    'nExtraJets',
+    0,
+    TauVarParsing.TauVarParsing.multiplicity.singleton,
+    TauVarParsing.TauVarParsing.varType.int,
+    'Number of pt-ordered jets to keep some info about. Ignored if final state involves jets.',
 )
 
 
@@ -353,6 +361,18 @@ if options.rerunFSA:
             )
         process.schedule.append(process.miniAODElectrons)
 
+        # Clean out muon "ghosts" caused by track ambiguities
+        process.ghostCleanedMuons = cms.EDProducer("PATMuonCleanerBySegments",
+                                                   src = cms.InputTag(fs_daughter_inputs['muons']),
+                                                   preselection = cms.string("track.isNonnull"),
+                                                   passthrough = cms.string("isGlobalMuon && numberOfMatches >= 2"),
+                                                   fractionOfSharedSegments = cms.double(0.499))
+        output_commands.append('*_ghostCleanedMuons_*_*')
+        fs_daughter_inputs['muons'] = "ghostCleanedMuons"
+
+        process.miniCleanedMuons = cms.Path(process.ghostCleanedMuons)
+        process.schedule.append(process.miniCleanedMuons)
+
         process.miniPatMuons = cms.EDProducer(
             "MiniAODMuonIDEmbedder",
             src=cms.InputTag(fs_daughter_inputs['muons']),
@@ -516,7 +536,6 @@ if options.runDQM: options.channels = 'dqm'
 # Generate analyzers which build the desired final states.
 final_states = [x.strip() for x in options.channels.split(',')]
 
-
 def expanded_final_states(input):
     for fs in input:
         if fs in _FINAL_STATE_GROUPS:
@@ -528,12 +547,13 @@ def expanded_final_states(input):
 
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
+    extraJets = options.nExtraJets if 'j' not in final_state else 0
     zz_mode = (final_state in ['mmmm', 'eeee', 'eemm'])
     analyzer = make_ntuple(*final_state, zz_mode=options.zzMode,
                             svFit=options.svFit, dblhMode=options.dblhMode,
                             runTauSpinner=options.runTauSpinner, 
                             skimCuts=options.skimCuts,useMiniAOD=options.useMiniAOD,
-                            hzzfsr=options.hzzfsr)
+                            hzzfsr=options.hzzfsr, nExtraJets=extraJets)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 

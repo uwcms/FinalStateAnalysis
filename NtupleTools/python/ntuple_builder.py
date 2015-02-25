@@ -248,6 +248,16 @@ def make_ntuple(*legs, **kwargs):
         )
     #pdb.set_trace()
 
+    # If basic jet information is desired for a non-jet final state, put it in
+    for i in range(1,kwargs.get("nExtraJets", 0)+1):
+        label = "jet%i"%i
+        format_labels[label] = 'evt.jets.at(%i)' % i
+        format_labels[label + '_idx'] = '%i' % i
+        
+        ntuple_config = PSet(
+            ntuple_config,
+            templates.topology.extraJet.replace(object=label)
+            )
     
     # Now we need to add all the information about the pairs
     for leg_a, leg_b in itertools.combinations(object_labels, 2):
@@ -335,7 +345,6 @@ def make_ntuple(*legs, **kwargs):
             # topology.py
             "[emtgj][1-9]?MtToMVAMET", # not yet implemented in miniAOD
             # candidates.py
-            "t[1-9]?IP3D(Sig)?", # tau impact parameter interface is weird, will add if anyone needs it
             "t[1-9]?PVDZ",
             "t[1-9]?PVDXY",
             #
@@ -344,7 +353,7 @@ def make_ntuple(*legs, **kwargs):
             "eMVAIDH2TauWP",
 #            "\w*201[12]\w*",
             "\w*[(Fall)(Winter)(Spring)(Summer)]1[12]\w*",
-            "t[1-9]?S?IP3D(Sig)?",
+            "t[1-9]?S?IP[23]D(Err)?",
             ]
 
         allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")

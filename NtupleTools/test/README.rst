@@ -36,7 +36,8 @@ zero or one) are::
     useMiniAOD=1            - run over miniAOD samples rather than UW pattuples
     runDQM=0                - run on single objects instead of final states, plotting many quantities to make sure things work
     use25ns=1               - (with useMiniAOD=1) use conditions for 25ns CSA14 miniAOD samples
-    hzzfsr=0                - (with useMiniAOD=1. DO NOT use with zz_mode=1) run the HZZ4l group's FSR algorithm on miniAOD
+    hzzfsr=0                - (with useMiniAOD=1; DO NOT use with zz_mode=1) run the HZZ4l group's FSR algorithm on miniAOD
+    nExtraJets=0            - (for non-jet final states) add basic info about this many jets in addition to final state branches
 
 Batch submission
 ----------------
