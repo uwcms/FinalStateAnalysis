@@ -345,7 +345,6 @@ def make_ntuple(*legs, **kwargs):
             # topology.py
             "[emtgj][1-9]?MtToMVAMET", # not yet implemented in miniAOD
             # candidates.py
-            "t[1-9]?IP3D(Sig)?", # tau impact parameter interface is weird, will add if anyone needs it
             "t[1-9]?PVDZ",
             "t[1-9]?PVDXY",
             #
@@ -354,7 +353,7 @@ def make_ntuple(*legs, **kwargs):
             "eMVAIDH2TauWP",
 #            "\w*201[12]\w*",
             "\w*[(Fall)(Winter)(Spring)(Summer)]1[12]\w*",
-            "t[1-9]?S?IP3D(Sig)?",
+            "t[1-9]?S?IP[23]D(Err)?",
             ]
 
         allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")
