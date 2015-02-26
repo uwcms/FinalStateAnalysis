@@ -66,6 +66,11 @@ id = PSet(
     objectMediumIso3Hits = '{object}.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")',
     objectTightIso3Hits  = '{object}.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits")',
 
+    #ISO no correction 3Hits
+    objectLooseIso3HitsNoCorr  = '{object}.tauID("byCombinedIsolation3HitsLoose")',
+    objectMediumIso3HitsNoCorr = '{object}.tauID("byCombinedIsolation3HitsMedium")',
+    objectTightIso3HitsNoCorr  = '{object}.tauID("byCombinedIsolation3HitsTight")',
+
     #MVA 3 oldDM
     objectVLooseIsoMVA3OldDMNoLT  = '{object}.tauID("byVLooseIsolationMVA3oldDMwoLT")',
     objectLooseIsoMVA3OldDMNoLT   = '{object}.tauID("byLooseIsolationMVA3oldDMwoLT")',
