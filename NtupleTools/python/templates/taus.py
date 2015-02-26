@@ -23,86 +23,89 @@ info = PSet(
 
 # ID and isolation
 id = PSet(
-    #Against Electron
-    #STD
-    objectAntiElectronLoose   = '{object}.tauID("againstElectronLoose")',
-    objectAntiElectronMedium  = '{object}.tauID("againstElectronMedium")',
-    objectAntiElectronTight   = '{object}.tauID("againstElectronTight")',
+    # updated for what is included in PHYS14 MiniAOD
+    # TODO: update when new IDs are released: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePFTauID#Tau_ID_2014_preparation_for_AN1
+    # Against Electron
+    objectAgainstElectronLoose  = '{object}.tauID("againstElectronLoose")',
+    objectAgainstElectronMedium = '{object}.tauID("againstElectronMedium")',
+    objectAgainstElectronTight  = '{object}.tauID("againstElectronTight")',
     
-    objectAntiElectronMVA5VLoose = '{object}.tauID("againstElectronVLooseMVA5")',
-    objectAntiElectronMVA5Loose  = '{object}.tauID("againstElectronLooseMVA5")',
-    objectAntiElectronMVA5Medium = '{object}.tauID("againstElectronMediumMVA5")',
-    objectAntiElectronMVA5Tight  = '{object}.tauID("againstElectronTightMVA5")',
-    objectAntiElectronMVA5VTight = '{object}.tauID("againstElectronVTightMVA5")',
-
-    objectAntiMuonLoose  = '{object}.tauID("againstMuonLoose")',
-    objectAntiMuonMedium = '{object}.tauID("againstMuonMedium")',
-    objectAntiMuonTight  = '{object}.tauID("againstMuonTight")',
+    objectAgainstElectronVLooseMVA5 = '{object}.tauID("againstElectronVLooseMVA5")', 
+    objectAgainstElectronLooseMVA5  = '{object}.tauID("againstElectronLooseMVA5")',
+    objectAgainstElectronMediumMVA5 = '{object}.tauID("againstElectronMediumMVA5")',
+    objectAgainstElectronTightMVA5  = '{object}.tauID("againstElectronTightMVA5")',
+    objectAgainstElectronVTightMVA5 = '{object}.tauID("againstElectronVTightMVA5")',
     
-    objectAntiMuon2Loose   = '{object}.tauID("againstMuonLoose2")',
-    objectAntiMuon2Medium  = '{object}.tauID("againstMuonMedium2")',
-    objectAntiMuon2Tight   = '{object}.tauID("againstMuonTight2")',
+    objectAgainstElectronMVA5category = '{object}.tauID("againstElectronMVA5category")',
+    objectAgainstElectronMVA5raw      = '{object}.tauID("againstElectronMVA5raw")',
+
+    # Against Muon
+    objectAgainstMuonLoose  = '{object}.tauID("againstMuonLoose")',
+    objectAgainstMuonMedium = '{object}.tauID("againstMuonMedium")',
+    objectAgainstMuonTight  = '{object}.tauID("againstMuonTight")',
     
-    objectAntiMuon3Loose  = '{object}.tauID("againstMuonLoose3")',
-    objectAntiMuon3Tight  = '{object}.tauID("againstMuonTight3")',
+    objectAgainstMuonLoose2  = '{object}.tauID("againstMuonLoose2")',
+    objectAgainstMuonMedium2 = '{object}.tauID("againstMuonMedium2")',
+    objectAgainstMuonTight2  = '{object}.tauID("againstMuonTight2")',
     
-    objectAntiMuonMVALoose   = '{object}.tauID("againstMuonLooseMVA")',
-    objectAntiMuonMVAMedium  = '{object}.tauID("againstMuonMediumMVA")',
-    objectAntiMuonMVATight   = '{object}.tauID("againstMuonTightMVA")',
-
-    #DM
-    objectDecayFinding       = '{object}.tauID("decayModeFinding")',
-    objectDecayFindingNewDMs = '{object}.tauID("decayModeFindingNewDMs")',
-    objectDecayFindingOldDMs = '{object}.tauID("decayModeFindingOldDMs")',
-
-    #ISO DB
-    objectVLooseIso = '{object}.tauID("byVLooseCombinedIsolationDeltaBetaCorr")',
-    objectLooseIso  = '{object}.tauID("byLooseCombinedIsolationDeltaBetaCorr")',
-    objectMediumIso = '{object}.tauID("byMediumCombinedIsolationDeltaBetaCorr")',
-    objectTightIso  = '{object}.tauID("byTightCombinedIsolationDeltaBetaCorr")',
-
-    #ISO DB 3Hits
-    objectLooseIso3Hits  = '{object}.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")',
-    objectMediumIso3Hits = '{object}.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")',
-    objectTightIso3Hits  = '{object}.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits")',
-
-    #ISO no correction 3Hits
-    objectLooseIso3HitsNoCorr  = '{object}.tauID("byCombinedIsolation3HitsLoose")',
-    objectMediumIso3HitsNoCorr = '{object}.tauID("byCombinedIsolation3HitsMedium")',
-    objectTightIso3HitsNoCorr  = '{object}.tauID("byCombinedIsolation3HitsTight")',
-
-    #MVA 3 oldDM
-    objectVLooseIsoMVA3OldDMNoLT  = '{object}.tauID("byVLooseIsolationMVA3oldDMwoLT")',
-    objectLooseIsoMVA3OldDMNoLT   = '{object}.tauID("byLooseIsolationMVA3oldDMwoLT")',
-    objectMediumIsoMVA3OldDMNoLT  = '{object}.tauID("byMediumIsolationMVA3oldDMwoLT")',
-    objectTightIsoMVA3OldDMNoLT   = '{object}.tauID("byTightIsolationMVA3oldDMwoLT")',
-    objectVTightIsoMVA3OldDMNoLT  = '{object}.tauID("byVTightIsolationMVA3oldDMwoLT")',
-    objectVVTightIsoMVA3OldDMNoLT = '{object}.tauID("byVVTightIsolationMVA3oldDMwoLT")',
+    objectAgainstMuonLoose3 = '{object}.tauID("againstMuonLoose3")',
+    objectAgainstMuonTight3 = '{object}.tauID("againstMuonTight3")',
     
-    #MVA 3 oldDM & LifeTime
-    objectVLooseIsoMVA3OldDMLT  = '{object}.tauID("byVLooseIsolationMVA3oldDMwLT")',
-    objectLooseIsoMVA3OldDMLT   = '{object}.tauID("byLooseIsolationMVA3oldDMwLT")',
-    objectMediumIsoMVA3OldDMLT  = '{object}.tauID("byMediumIsolationMVA3oldDMwLT")',
-    objectTightIsoMVA3OldDMLT   = '{object}.tauID("byTightIsolationMVA3oldDMwLT")',
-    objectVTightIsoMVA3OldDMLT  = '{object}.tauID("byVTightIsolationMVA3oldDMwLT")',
-    objectVVTightIsoMVA3OldDMLT = '{object}.tauID("byVVTightIsolationMVA3oldDMwLT")',
+    objectAgainstMuonLooseMVA  = '{object}.tauID("againstMuonLooseMVA")',
+    objectAgainstMuonMediumMVA = '{object}.tauID("againstMuonMediumMVA")',
+    objectAgainstMuonTightMVA  = '{object}.tauID("againstMuonTightMVA")',
+    
+    objectAgainstMuonMVAraw = '{object}.tauID("againstMuonMVAraw")',
 
-    #MVA 3 newDM
-    objectVLooseIsoMVA3NewDMNoLT  = '{object}.tauID("byVLooseIsolationMVA3newDMwoLT")',
-    objectLooseIsoMVA3NewDMNoLT   = '{object}.tauID("byLooseIsolationMVA3newDMwoLT")',
-    objectMediumIsoMVA3NewDMNoLT  = '{object}.tauID("byMediumIsolationMVA3newDMwoLT")',
-    objectTightIsoMVA3NewDMNoLT   = '{object}.tauID("byTightIsolationMVA3newDMwoLT")',
-    objectVTightIsoMVA3NewDMNoLT  = '{object}.tauID("byVTightIsolationMVA3newDMwoLT")',
-    objectVVTightIsoMVA3NewDMNoLT = '{object}.tauID("byVVTightIsolationMVA3newDMwoLT")',
+    # combined isolation DB corr 3 hits
+    objectByLooseCombinedIsolationDeltaBetaCorr3Hits = '{object}.tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits")',
+    objectByMediumCombinedIsolationDeltaBetaCorr3Hits = '{object}.tauID("byMediumCombinedIsolationDeltaBetaCorr3Hits")', 
+    objectByTightCombinedIsolationDeltaBetaCorr3Hits = '{object}.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits")',
+    objectByCombinedIsolationDeltaBetaCorrRaw3Hits = '{object}.tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits")',
     
-    #MVA 3 newDM & LifeTime
-    objectVLooseIsoMVA3NewDMLT  = '{object}.tauID("byVLooseIsolationMVA3newDMwLT")',
-    objectLooseIsoMVA3NewDMLT   = '{object}.tauID("byLooseIsolationMVA3newDMwLT")',
-    objectMediumIsoMVA3NewDMLT  = '{object}.tauID("byMediumIsolationMVA3newDMwLT")',
-    objectTightIsoMVA3NewDMLT   = '{object}.tauID("byTightIsolationMVA3newDMwLT")',
-    objectVTightIsoMVA3NewDMLT  = '{object}.tauID("byVTightIsolationMVA3newDMwLT")',
-    objectVVTightIsoMVA3NewDMLT = '{object}.tauID("byVVTightIsolationMVA3newDMwLT")',
+    # BDT based tau ID discriminator based on isolation Pt sums plus tau lifetime information, trained on 1-prong, "2-prong" and 3-prong tau candidates 
+    objectByVLooseIsolationMVA3newDMwLT = '{object}.tauID("byVLooseIsolationMVA3newDMwLT")',
+    objectByLooseIsolationMVA3newDMwLT = '{object}.tauID("byLooseIsolationMVA3newDMwLT")',
+    objectByMediumIsolationMVA3newDMwLT = '{object}.tauID("byMediumIsolationMVA3newDMwLT")', 
+    objectByTightIsolationMVA3newDMwLT = '{object}.tauID("byTightIsolationMVA3newDMwLT")',
+    objectByVTightIsolationMVA3newDMwLT = '{object}.tauID("byVTightIsolationMVA3newDMwLT")', 
+    objectByVVTightIsolationMVA3newDMwLT = '{object}.tauID("byVVTightIsolationMVA3newDMwLT")', 
+    objectByIsolationMVA3newDMwLTraw = '{object}.tauID("byIsolationMVA3newDMwLTraw")',
     
+    # BDT based tau ID discriminator based on isolation Pt sums, trained on 1-prong, "2-prong" and 3-prong tau candidates 
+    objectByVLooseIsolationMVA3newDMwoLT = '{object}.tauID("byVLooseIsolationMVA3newDMwoLT")', 
+    objectByLooseIsolationMVA3newDMwoLT = '{object}.tauID("byLooseIsolationMVA3newDMwoLT")', 
+    objectByMediumIsolationMVA3newDMwoLT = '{object}.tauID("byMediumIsolationMVA3newDMwoLT")', 
+    objectByTightIsolationMVA3newDMwoLT = '{object}.tauID("byTightIsolationMVA3newDMwoLT")', 
+    objectByVTightIsolationMVA3newDMwoLT = '{object}.tauID("byVTightIsolationMVA3newDMwoLT")', 
+    objectByVVTightIsolationMVA3newDMwoLT = '{object}.tauID("byVVTightIsolationMVA3newDMwoLT")',
+    objectByIsolationMVA3newDMwoLTraw = '{object}.tauID("byIsolationMVA3newDMwoLTraw")', 
+    
+    # BDT based tau ID discriminator based on isolation Pt sums plus tau lifetime information, trained on 1-prong and 3-prong tau candidates 
+    objectByVLooseIsolationMVA3oldDMwLT = '{object}.tauID("byVLooseIsolationMVA3oldDMwLT")', 
+    objectByLooseIsolationMVA3oldDMwLT = '{object}.tauID("byLooseIsolationMVA3oldDMwLT")', 
+    objectByMediumIsolationMVA3oldDMwLT = '{object}.tauID("byMediumIsolationMVA3oldDMwLT")', 
+    objectByTightIsolationMVA3oldDMwLT = '{object}.tauID("byTightIsolationMVA3oldDMwLT")', 
+    objectByVTightIsolationMVA3oldDMwLT = '{object}.tauID("byVTightIsolationMVA3oldDMwLT")', 
+    objectByVVTightIsolationMVA3oldDMwLT = '{object}.tauID("byVVTightIsolationMVA3oldDMwLT")',
+    objectByIsolationMVA3oldDMwLTraw = '{object}.tauID("byIsolationMVA3oldDMwLTraw")', 
+    
+    # BDT based tau ID discriminator based on isolation Pt sums, trained on 1-prong and 3-prong tau candidates 
+    objectByVLooseIsolationMVA3oldDMwoLT = '{object}.tauID("byVLooseIsolationMVA3oldDMwoLT")', 
+    objectByLooseIsolationMVA3oldDMwoLT = '{object}.tauID("byLooseIsolationMVA3oldDMwoLT")', 
+    objectByMediumIsolationMVA3oldDMwoLT = '{object}.tauID("byMediumIsolationMVA3oldDMwoLT")', 
+    objectByTightIsolationMVA3oldDMwoLT = '{object}.tauID("byTightIsolationMVA3oldDMwoLT")', 
+    objectByVTightIsolationMVA3oldDMwoLT = '{object}.tauID("byVTightIsolationMVA3oldDMwoLT")', 
+    objectByVVTightIsolationMVA3oldDMwoLT = '{object}.tauID("byVVTightIsolationMVA3oldDMwoLT")',
+    objectByIsolationMVA3oldDMwoLTraw = '{object}.tauID("byIsolationMVA3oldDMwoLTraw")', 
+
+    # DecayModeFinding
+    objectDecayModeFinding       = '{object}.tauID("decayModeFinding")',
+    objectDecayModeFindingNewDMs = '{object}.tauID("decayModeFindingNewDMs")',
+
+    objectNeutralIsoPtSum = '{object}.tauID("neutralIsoPtSum")',
+    objectChargedIsoPtSum = '{object}.tauID("chargedIsoPtSum")',
+    objectPuCorrPtSum     = '{object}.tauID("puCorrPtSum")',
 )
 
 
