@@ -340,8 +340,6 @@ def make_ntuple(*legs, **kwargs):
             # event.py
             "mva_met((Et)|(Phi))", # not yet implemented in miniAOD
             # taus.py
-            "t[1-9]?DecayFindingOldDMs", # deprecated in miniAOD
-            "t[1-9]?((V?Loose)|(Medium)|(Tight))Iso", # deprecated, could be changed to a different combined iso discriminator
             # topology.py
             "[emtgj][1-9]?MtToMVAMET", # not yet implemented in miniAOD
             # candidates.py
