@@ -10,11 +10,6 @@ sent to stderr. If --output_file (-o) is specified, a bash script is
 created containing the ouput.
 
 
-Example to make submit script for VH analysis on UW PAT:
-
-    submit_job.py VH 2012-03-14-Trileptons trilepton_ntuples_cfg.py \
-            "--input-dir={myhdfs}/2012-03-05-EWKPatTuple/{sample}"
-
 Example to make submit script (stored in test.sh) for WZ analysis on Phys14 miniAOD:
 (run from $fsa/NtupleTools/test or use full path to make_ntuples_cfg.py)
     
@@ -43,11 +38,11 @@ def datasets_from_das(args):
     ''' Build submit script using datasets from DAS
 
     Builds text for a bash script to submit ntuplization jobs to condor
-    via FarmoutAnalysisJobs. Recieves the command line input to the script
-    (via the varialbe args) as input. The MINIAOD file to be ntuplized is
-    found by searching for files in DAS matching args.samples in the campaign
-    args.campaignstring. If args.dastuple is specified (a json file), this is 
-    used as a simpler lookup method rather than searching through all of DAS. 
+    via FarmoutAnalysisJobs. Recieves the command line input (via the varialbe 
+    args) as input. The MINIAOD file to be ntuplized is found by searching for 
+    files in DAS matching args.samples in the campaign args.campaignstring. If 
+    args.dastuple is specified (a json file), this is used as a simpler lookup 
+    method rather than searching through all of DAS. 
 
     If a submit folder already exists with the same name, it will not be
     recreated. A warning is written to the submit script.
@@ -116,7 +111,7 @@ def datasets_from_das(args):
         input_commands.extend([
             '--input-file-list=%s' % input_txt_path,
             '--assume-input-files-exist', 
-            '--input-dir=root://xrootd.unl.edu/',
+            '--input-dir=root://cmsxrootd.fnal.gov/',
         ])
 
         command = [
@@ -340,12 +335,6 @@ def get_com_line_args():
         action='store_true', help = 'If specified, pass the appropriate '
         'lumiMask=XXX.json and firstRun etc to cmsRun'
     )
-
-    cmsrun_group.add_argument(
-        '--xrootd', action='store_true', required=False, default=False,
-        help='fetch files from remote tiers using xrootd'
-    )
-
     cmsrun_group.add_argument(
         '--das-replace-tuple', dest='dastuple',
          help = 'JSON file listing shorthand names for DAS samples.'
