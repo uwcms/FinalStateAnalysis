@@ -28,6 +28,256 @@ from FinalStateAnalysis.Utilities.dbsinterface import get_das_info
 log = logging.getLogger("submit_job")
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 
+def datasets_from_dbs():
+    dbs_datasets = get_das_info('/*/%s/MINIAOD*' % args.campaignstring)
+        # check sample wildcards
+    for dataset in dbs_datasets:
+        dataset_name = dataset.split('/')[1] 
+        passes_filter = True
+        if args.samples:
+            passes_wildcard = False
+            for pattern in args.samples:
+                if args.dastuple: # check json for shorthand
+                    with open(args.dastuple) as tuple_file:
+                        tuple_info = json.load(tuple_file)
+                        matching_datasets = []
+                        for shorthand, fullname in tuple_info.iteritems():
+                            if fullname in dataset_name:
+                                if fnmatch.fnmatchcase(shorthand, pattern):
+                                    passes_wildcard = True
+                else: # check das directly
+                    if fnmatch.fnmatchcase(dataset_name, pattern):
+                        passes_wildcard = True
+            passes_filter = passes_wildcard and passes_filter
+        if not passes_filter:
+            continue
+        
+        submit_dir = args.subdir.format(
+            user = os.environ['LOGNAME'],
+            jobid = args.jobid,
+            sample = dataset_name
+        )
+        if os.path.exists(submit_dir):
+            sys.stdout.write('# Submission directory for %s already exists\n'
+                            % dataset_name)
+            log.warning("Submit directory for sample %s exists, skipping",
+                        dataset_name)
+            continue
+
+        log.info("Building submit files for sample %s", dataset_name)
+
+        dag_dir = args.dagdir.format(
+            user = os.environ['LOGNAME'],
+            jobid = args.jobid,
+            sample = dataset_name
+        )
+
+        output_dir = args.outdir.format(
+            user = os.environ['LOGNAME'],
+            jobid = args.jobid,
+            sample = dataset_name
+        )
+
+        input_commands = []
+
+        files = get_das_info('file dataset=%s' % dataset)
+        mkdir_cmd = "mkdir -p %s" % (dag_dir+"inputs")
+        os.system(mkdir_cmd)
+        input_txt = '%s_inputfiles.txt' % dataset_name
+        input_txt_path = os.path.join(dag_dir+"inputs", input_txt)
+        with open(input_txt_path, 'w') as txt:
+            txt.write('\n'.join(files))
+        input_commands.extend([
+            '--input-file-list=%s' % input_txt_path,
+            '--assume-input-files-exist', 
+            '--input-dir=root://xrootd.unl.edu/',
+        ])
+
+        command = [
+            'farmoutAnalysisJobs',
+            '--infer-cmssw-path',
+            '"--submit-dir=%s"' % submit_dir,
+            '"--output-dag-file=%s"' % dag_dir,
+            '"--output-dir=%s"' % output_dir,
+            '--input-files-per-job=%i' % args.filesperjob,
+        ]
+        if args.sharedfs:
+            command.append('--shared-fs')
+        command.extend(input_commands)
+        command.extend([
+            # The job ID
+            '%s-%s' % (args.jobid, dataset_name),
+            args.cfg
+        ])
+
+        command.extend(args.cmsargs)
+        command.append("'inputFiles=$inputFileNames'")
+        command.append("'outputFile=$outputFileName'")
+
+        if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
+            lumi_mask_path = os.path.join(
+                os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
+            command.append('lumiMask=%s' % lumi_mask_path)
+            firstRun = sample_info.get('firstRun', -1)
+            if firstRun > 0:
+                command.append('firstRun=%i' % firstRun)
+            lastRun = sample_info.get('lastRun', -1)
+            if lastRun > 0:
+                command.append('lastRun=%i' % lastRun)
+
+        script_content = '# Submit file for sample %s\n' % dataset_name
+        script_content += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
+        script_content += ' '.join(command) + '\n'
+        return script_content
+def datasets_from_datadefs():
+    for sample, sample_info in reversed(
+        sorted(datadefs.iteritems(), key=lambda (x,y): x)):
+        passes_filter = True
+        # Filter by analysis
+        if args.analysis:
+            passes_ana = sample_info['analysis'] == args.analysis
+            passes_filter = passes_filter and passes_ana
+        # Filter by sample wildcards
+        if args.samples:
+            passes_wildcard = False
+            for pattern in args.samples:
+                if fnmatch.fnmatchcase(sample, pattern):
+                    passes_wildcard = True
+            passes_filter = passes_wildcard and passes_filter
+        if not passes_filter:
+            continue
+
+        submit_dir = args.subdir.format(
+            user = os.environ['LOGNAME'],
+            jobid = args.jobid,
+            sample = sample
+        )
+        if os.path.exists(submit_dir):
+            sys.stdout.write('# Submission directory for %s already exists\n'
+                            % sample)
+            log.warning("Submit directory for sample %s exists, skipping",
+                        sample)
+            continue
+
+        log.info("Building submit files for sample %s", sample)
+
+        dag_dir = args.dagdir.format(
+            user = os.environ['LOGNAME'],
+            jobid = args.jobid,
+            sample = sample
+        )
+
+        output_dir = args.outdir.format(
+            user = os.environ['LOGNAME'],
+            jobid = args.jobid,
+            sample = sample
+        )
+
+        input_commands = []
+
+        if args.inputdir:
+            input_dir = args.inputdir.format(
+                user = os.environ['LOGNAME'],
+                jobid = args.jobid,
+                sample = sample,
+                dataset = sample_info['datasetpath'],
+                myhdfs = 'root://cmsxrootd.hep.wisc.edu//store/user/%s/' % os.environ['LOGNAME']
+            )
+            input_commands.append('"--input-dir=%s"' % input_dir)
+            if args.cleancrab:
+                input_commands.append('--clean-crab-dupes')
+        elif args.tuplelist:
+            with open(args.tuplelist) as tuple_file:
+                # Parse info about PAT tuples
+                tuple_info = json.load(tuple_file)
+                # Find the matching pat tuple DBS name
+                #import pdb; pdb.set_trace();
+                matching_datasets = []
+                for pat_tuple, pat_tuple_info in tuple_info.iteritems():
+                    if sample in pat_tuple:
+                        matching_datasets.append(pat_tuple)
+                if len(matching_datasets) != 1:
+                    log.error("No or multiple matching datasets found "
+                                " for sample %s, matches: [%s]",
+                                sample, ", ".join(matching_datasets))
+                    continue
+                datasetpath = tuple_info[matching_datasets[0]]
+
+                if args.xrootd:
+                    files = get_das_info('file dataset=%s' % datasetpath)
+                    mkdir_cmd = "mkdir -p %s" % (dag_dir+"inputs")
+                    os.system(mkdir_cmd)
+                    input_txt = '%s_inputfiles.txt' % matching_datasets[0]
+                    input_txt_path = os.path.join(dag_dir+"inputs", input_txt)
+                    with open(input_txt_path, 'w') as txt:
+                        txt.write('\n'.join(files))
+                    input_commands.extend([
+                        '--input-file-list=%s' % input_txt_path,
+                        '--assume-input-files-exist', 
+                        '--input-dir=root://xrootd.unl.edu/',
+                    ])
+                else:
+                    input_commands.append(
+                        '--input-dbs-path=%s' % datasetpath)
+                    input_commands.append(
+                        '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet')
+        elif args.tupledirlist:
+            with open(args.tupledirlist) as tuple_file:
+                # Parse info about PAT tuples
+                tuple_info = json.load(tuple_file)
+                if sample not in tuple_info:
+                    log.warning("No data directory for %s specified, skipping",
+                                sample)
+                    continue
+                input_dir = tuple_info[sample]
+                if '!' in input_dir:
+                    # ! means it a DBS path
+                    input_commands.append(
+                        '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet'
+                    )
+                    input_commands.append(
+                        '--input-dbs-path=%s' % input_dir.replace('!', ''))
+                else:
+                    input_commands.append('"--input-dir=%s"' % input_dir)
+                    if args.cleancrab:
+                        input_commands.append('--clean-crab-dupes')
+
+        command = [
+            'farmoutAnalysisJobs',
+            '--infer-cmssw-path',
+            '"--submit-dir=%s"' % submit_dir,
+            '"--output-dag-file=%s"' % dag_dir,
+            '"--output-dir=%s"' % output_dir,
+            '--input-files-per-job=%i' % args.filesperjob,
+        ]
+        if args.sharedfs:
+            command.append('--shared-fs')
+        command.extend(input_commands)
+        command.extend([
+            # The job ID
+            '%s-%s' % (args.jobid, sample),
+            args.cfg
+        ])
+
+        command.extend(args.cmsargs)
+        command.append("'inputFiles=$inputFileNames'")
+        command.append("'outputFile=$outputFileName'")
+
+        if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
+            lumi_mask_path = os.path.join(
+                os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
+            command.append('lumiMask=%s' % lumi_mask_path)
+            firstRun = sample_info.get('firstRun', -1)
+            if firstRun > 0:
+                command.append('firstRun=%i' % firstRun)
+            lastRun = sample_info.get('lastRun', -1)
+            if lastRun > 0:
+                command.append('lastRun=%i' % lastRun)
+
+        script_content = '# Submit file for sample %s\n' % sample
+        script_content += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
+        script_content += ' '.join(command) + '\n'
+    return script_content
 def get_com_line_args():
     parser = argparse.ArgumentParser()
 
@@ -134,267 +384,22 @@ def get_com_line_args():
     return args
 
 if __name__ == "__main__":
-    output = '# Condor submission script\n'
-    output += '# Generated with submit_job.py at %s\n' % datetime.datetime.now()
-    output += '# The command was: %s\n' % ' '.join(sys.argv)
-    output += 'export TERMCAP=screen\n'
+    script_content = '# Condor submission script\n'
+    script_content += '# Generated with submit_job.py at %s\n' % datetime.datetime.now()
+    script_content += '# The command was: %s\n' % ' '.join(sys.argv)
+    script_content += 'export TERMCAP=screen\n'
     args = get_com_line_args()
     # first, make DAS query for dataset if not using local dataset or hdfs/dbs tuple list
     if args.campaignstring:
-        dbs_datasets = get_das_info('/*/%s/MINIAOD*' % args.campaignstring)
-        # check sample wildcards
-        for dataset in dbs_datasets:
-            dataset_name = dataset.split('/')[1] 
-            passes_filter = True
-            if args.samples:
-                passes_wildcard = False
-                for pattern in args.samples:
-                    if args.dastuple: # check json for shorthand
-                        with open(args.dastuple) as tuple_file:
-                            tuple_info = json.load(tuple_file)
-                            matching_datasets = []
-                            for shorthand, fullname in tuple_info.iteritems():
-                                if fullname in dataset_name:
-                                    if fnmatch.fnmatchcase(shorthand, pattern):
-                                        passes_wildcard = True
-                    else: # check das directly
-                        if fnmatch.fnmatchcase(dataset_name, pattern):
-                            passes_wildcard = True
-                passes_filter = passes_wildcard and passes_filter
-            if not passes_filter:
-                continue
-            
-            submit_dir = args.subdir.format(
-                user = os.environ['LOGNAME'],
-                jobid = args.jobid,
-                sample = dataset_name
-            )
-            if os.path.exists(submit_dir):
-                sys.stdout.write('# Submission directory for %s already exists\n'
-                                % dataset_name)
-                log.warning("Submit directory for sample %s exists, skipping",
-                           dataset_name)
-                continue
-
-            log.info("Building submit files for sample %s", dataset_name)
-
-            dag_dir = args.dagdir.format(
-                user = os.environ['LOGNAME'],
-                jobid = args.jobid,
-                sample = dataset_name
-            )
-
-            output_dir = args.outdir.format(
-                user = os.environ['LOGNAME'],
-                jobid = args.jobid,
-                sample = dataset_name
-            )
-
-            input_commands = []
-
-            files = get_das_info('file dataset=%s' % dataset)
-            mkdir_cmd = "mkdir -p %s" % (dag_dir+"inputs")
-            os.system(mkdir_cmd)
-            input_txt = '%s_inputfiles.txt' % dataset_name
-            input_txt_path = os.path.join(dag_dir+"inputs", input_txt)
-            with open(input_txt_path, 'w') as txt:
-                txt.write('\n'.join(files))
-            input_commands.extend([
-                '--input-file-list=%s' % input_txt_path,
-                '--assume-input-files-exist', 
-                '--input-dir=root://xrootd.unl.edu/',
-            ])
-
-            command = [
-                'farmoutAnalysisJobs',
-                '--infer-cmssw-path',
-                '"--submit-dir=%s"' % submit_dir,
-                '"--output-dag-file=%s"' % dag_dir,
-                '"--output-dir=%s"' % output_dir,
-                '--input-files-per-job=%i' % args.filesperjob,
-            ]
-            if args.sharedfs:
-                command.append('--shared-fs')
-            command.extend(input_commands)
-            command.extend([
-                # The job ID
-                '%s-%s' % (args.jobid, dataset_name),
-                args.cfg
-            ])
-
-            command.extend(args.cmsargs)
-            command.append("'inputFiles=$inputFileNames'")
-            command.append("'outputFile=$outputFileName'")
-
-            if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
-                lumi_mask_path = os.path.join(
-                    os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
-                command.append('lumiMask=%s' % lumi_mask_path)
-                firstRun = sample_info.get('firstRun', -1)
-                if firstRun > 0:
-                    command.append('firstRun=%i' % firstRun)
-                lastRun = sample_info.get('lastRun', -1)
-                if lastRun > 0:
-                    command.append('lastRun=%i' % lastRun)
-
-            output += '# Submit file for sample %s\n' % dataset_name
-            output += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
-            output += ' '.join(command) + '\n'
+        script_content += datasets_from_dbs()
     else:
         # this is the old version that uses datadefs
-        for sample, sample_info in reversed(
-            sorted(datadefs.iteritems(), key=lambda (x,y): x)):
-            passes_filter = True
-            # Filter by analysis
-            if args.analysis:
-                passes_ana = sample_info['analysis'] == args.analysis
-                passes_filter = passes_filter and passes_ana
-            # Filter by sample wildcards
-            if args.samples:
-                passes_wildcard = False
-                for pattern in args.samples:
-                    if fnmatch.fnmatchcase(sample, pattern):
-                        passes_wildcard = True
-                passes_filter = passes_wildcard and passes_filter
-            if not passes_filter:
-                continue
-
-            submit_dir = args.subdir.format(
-                user = os.environ['LOGNAME'],
-                jobid = args.jobid,
-                sample = sample
-            )
-            if os.path.exists(submit_dir):
-                sys.stdout.write('# Submission directory for %s already exists\n'
-                                % sample)
-                log.warning("Submit directory for sample %s exists, skipping",
-                           sample)
-                continue
-
-            log.info("Building submit files for sample %s", sample)
-
-            dag_dir = args.dagdir.format(
-                user = os.environ['LOGNAME'],
-                jobid = args.jobid,
-                sample = sample
-            )
-
-            output_dir = args.outdir.format(
-                user = os.environ['LOGNAME'],
-                jobid = args.jobid,
-                sample = sample
-            )
-
-            input_commands = []
-
-            if args.inputdir:
-                input_dir = args.inputdir.format(
-                    user = os.environ['LOGNAME'],
-                    jobid = args.jobid,
-                    sample = sample,
-                    dataset = sample_info['datasetpath'],
-                    myhdfs = 'root://cmsxrootd.hep.wisc.edu//store/user/%s/' % os.environ['LOGNAME']
-                )
-                input_commands.append('"--input-dir=%s"' % input_dir)
-                if args.cleancrab:
-                    input_commands.append('--clean-crab-dupes')
-            elif args.tuplelist:
-                with open(args.tuplelist) as tuple_file:
-                    # Parse info about PAT tuples
-                    tuple_info = json.load(tuple_file)
-                    # Find the matching pat tuple DBS name
-                    #import pdb; pdb.set_trace();
-                    matching_datasets = []
-                    for pat_tuple, pat_tuple_info in tuple_info.iteritems():
-                        if sample in pat_tuple:
-                            matching_datasets.append(pat_tuple)
-                    if len(matching_datasets) != 1:
-                        log.error("No or multiple matching datasets found "
-                                  " for sample %s, matches: [%s]",
-                                  sample, ", ".join(matching_datasets))
-                        continue
-                    datasetpath = tuple_info[matching_datasets[0]]
-
-                    if args.xrootd:
-                        files = get_das_info('file dataset=%s' % datasetpath)
-                        mkdir_cmd = "mkdir -p %s" % (dag_dir+"inputs")
-                        os.system(mkdir_cmd)
-                        input_txt = '%s_inputfiles.txt' % matching_datasets[0]
-                        input_txt_path = os.path.join(dag_dir+"inputs", input_txt)
-                        with open(input_txt_path, 'w') as txt:
-                            txt.write('\n'.join(files))
-                        input_commands.extend([
-                            '--input-file-list=%s' % input_txt_path,
-                            '--assume-input-files-exist', 
-                            '--input-dir=root://xrootd.unl.edu/',
-                        ])
-                    else:
-                        input_commands.append(
-                            '--input-dbs-path=%s' % datasetpath)
-                        input_commands.append(
-                            '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet')
-            elif args.tupledirlist:
-                with open(args.tupledirlist) as tuple_file:
-                    # Parse info about PAT tuples
-                    tuple_info = json.load(tuple_file)
-                    if sample not in tuple_info:
-                        log.warning("No data directory for %s specified, skipping",
-                                    sample)
-                        continue
-                    input_dir = tuple_info[sample]
-                    if '!' in input_dir:
-                        # ! means it a DBS path
-                        input_commands.append(
-                            '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet'
-                        )
-                        input_commands.append(
-                            '--input-dbs-path=%s' % input_dir.replace('!', ''))
-                    else:
-                        input_commands.append('"--input-dir=%s"' % input_dir)
-                        if args.cleancrab:
-                            input_commands.append('--clean-crab-dupes')
-
-            command = [
-                'farmoutAnalysisJobs',
-                '--infer-cmssw-path',
-                '"--submit-dir=%s"' % submit_dir,
-                '"--output-dag-file=%s"' % dag_dir,
-                '"--output-dir=%s"' % output_dir,
-                '--input-files-per-job=%i' % args.filesperjob,
-            ]
-            if args.sharedfs:
-                command.append('--shared-fs')
-            command.extend(input_commands)
-            command.extend([
-                # The job ID
-                '%s-%s' % (args.jobid, sample),
-                args.cfg
-            ])
-
-            command.extend(args.cmsargs)
-            command.append("'inputFiles=$inputFileNames'")
-            command.append("'outputFile=$outputFileName'")
-
-            if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
-                lumi_mask_path = os.path.join(
-                    os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
-                command.append('lumiMask=%s' % lumi_mask_path)
-                firstRun = sample_info.get('firstRun', -1)
-                if firstRun > 0:
-                    command.append('firstRun=%i' % firstRun)
-                lastRun = sample_info.get('lastRun', -1)
-                if lastRun > 0:
-                    command.append('lastRun=%i' % lastRun)
-
-            output += '# Submit file for sample %s\n' % sample
-            output += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
-            output += ' '.join(command) + '\n'
-
+        script_content += datasets_from_datadefs()
     if args.output_file == "":
-        sys.stdout.write(output)
+        sys.stdout.write(script_content)
     else:
         with open(args.output_file, "w") as file:
             file.write("#!/bin/bash")
-            file.write(output)
+            file.write(script_content)
         sys.stdout.write("\nWrote submit script %s\n" % args.output_file)
 
