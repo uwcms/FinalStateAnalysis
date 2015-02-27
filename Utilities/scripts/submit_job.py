@@ -2,8 +2,11 @@
 
 '''
 
-Create a script file to submit jobs to condor.  The script is written to stdout,
-some logging information is sent to stderr.
+Create a script file to submit jobs to condor using farmoutAnalysisJobs. 
+By default, the script is written to stdout, with some logging information 
+sent to stderr. If --output_file (-o) is specified, a bash script is
+created containing the ouput.
+
 
 Example to make submit script for VH analysis:
 
@@ -12,7 +15,7 @@ Example to make submit script for VH analysis:
 
 '''
 
-from RecoLuminosity.LumiDB import argparse
+import argparse
 import datetime
 import fnmatch
 import json
@@ -25,8 +28,7 @@ from FinalStateAnalysis.Utilities.dbsinterface import get_das_info
 log = logging.getLogger("submit_job")
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 
-
-if __name__ == "__main__":
+def get_com_line_args():
     parser = argparse.ArgumentParser()
 
     cmsrun_group = parser.add_argument_group('Analysis and cmsRun options')
@@ -125,15 +127,18 @@ if __name__ == "__main__":
                                default=False, dest='cleancrab',
                                help='Clean crab dupes')
 
+    parser.add_argument('--output_file', '-o', type=str, default="",
+                        required=False, help="Create bash script OUTPUT_FILE file with ouput "
+                        "rather than printing information to stdout")
     args = parser.parse_args()
+    return args
 
-    sys.stdout.write('# Condor submission script\n')
-    sys.stdout.write('# Generated with submit_job.py at %s\n'
-                     % datetime.datetime.now())
-    sys.stdout.write('# The command was: %s\n' % ' '.join(sys.argv))
-
-    sys.stdout.write('export TERMCAP=screen\n')
-
+if __name__ == "__main__":
+    output = '# Condor submission script\n'
+    output += '# Generated with submit_job.py at %s\n' % datetime.datetime.now()
+    output += '# The command was: %s\n' % ' '.join(sys.argv)
+    output += 'export TERMCAP=screen\n'
+    args = get_com_line_args()
     # first, make DAS query for dataset if not using local dataset or hdfs/dbs tuple list
     if args.campaignstring:
         dbs_datasets = get_das_info('/*/%s/MINIAOD*' % args.campaignstring)
@@ -232,9 +237,9 @@ if __name__ == "__main__":
                 if lastRun > 0:
                     command.append('lastRun=%i' % lastRun)
 
-            sys.stdout.write('# Submit file for sample %s\n' % dataset_name)
-            sys.stdout.write('mkdir -p %s\n' % os.path.dirname(dag_dir))
-            sys.stdout.write(' '.join(command) + '\n')
+            output += '# Submit file for sample %s\n' % dataset_name
+            output += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
+            output += ' '.join(command) + '\n'
     else:
         # this is the old version that uses datadefs
         for sample, sample_info in reversed(
@@ -381,6 +386,15 @@ if __name__ == "__main__":
                 if lastRun > 0:
                     command.append('lastRun=%i' % lastRun)
 
-            sys.stdout.write('# Submit file for sample %s\n' % sample)
-            sys.stdout.write('mkdir -p %s\n' % os.path.dirname(dag_dir))
-            sys.stdout.write(' '.join(command) + '\n')
+            output += '# Submit file for sample %s\n' % sample
+            output += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
+            output += ' '.join(command) + '\n'
+
+    if args.output_file == "":
+        sys.stdout.write(output)
+    else:
+        with open(args.output_file, "w") as file:
+            file.write("#!/bin/bash")
+            file.write(output)
+        sys.stdout.write("\nWrote submit script %s\n" % args.output_file)
+
