@@ -3,7 +3,9 @@
 '''
 
 Create a script file to submit jobs to condor using farmoutAnalysisJobs. 
-The script is written to stdout, some logging information is sent to stderr.
+By default, the script is written to stdout, with some logging information 
+sent to stderr. If --output_file (-o) is specified, a bash script is
+created containing the ouput.
 
 
 Example to make submit script for VH analysis:
@@ -126,8 +128,8 @@ def get_com_line_args():
                                help='Clean crab dupes')
 
     parser.add_argument('--output_file', '-o', type=str, default="",
-                        required=False, help="Create Bash file with ouput rather than"
-                        "printing information to stdout")
+                        required=False, help="Create bash script OUTPUT_FILE file with ouput "
+                        "rather than printing information to stdout")
     args = parser.parse_args()
     return args
 
