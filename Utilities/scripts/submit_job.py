@@ -2,16 +2,27 @@
 
 '''
 
-Create a script file to submit jobs to condor using farmoutAnalysisJobs. 
+Create a script file to submit jobs to condor using farmoutAnalysisJobs.
+(http://www.hep.wisc.edu/cms/comp/faq.html#how-can-i-use-farmoutanalysisjobs...)
+
 By default, the script is written to stdout, with some logging information 
 sent to stderr. If --output_file (-o) is specified, a bash script is
 created containing the ouput.
 
 
-Example to make submit script for VH analysis:
+Example to make submit script for VH analysis on UW PAT:
 
     submit_job.py VH 2012-03-14-Trileptons trilepton_ntuples_cfg.py \
             "--input-dir={myhdfs}/2012-03-05-EWKPatTuple/{sample}"
+
+Example to make submit script (stored in test.sh) for WZ analysis on Phys14 miniAOD:
+(run from $fsa/NtupleTools/test or use full path to make_ntuples_cfg.py)
+    
+    submit_job.py 2015-02-26-WZ_ntuples_test make_ntuples_cfg.py \
+    channels="eee,mmm,eem,mme" isMC=1 --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" \
+    --das-replace-tuple=$fsa/MetaData/tuples/MiniAOD-13TeV.json \
+    --samples W* Z* D* T* \
+    -o test.sh \
 
 '''
 
@@ -28,9 +39,25 @@ from FinalStateAnalysis.Utilities.dbsinterface import get_das_info
 log = logging.getLogger("submit_job")
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 
-def datasets_from_dbs():
+def datasets_from_das(args):
+    ''' Build submit script using datasets from DAS
+
+    Builds text for a bash script to submit ntuplization jobs to condor
+    via FarmoutAnalysisJobs. Recieves the command line input to the script
+    (via the varialbe args) as input. The MINIAOD file to be ntuplized is
+    found by searching for files in DAS matching args.samples in the campaign
+    args.campaignstring. If args.dastuple is specified (a json file), this is 
+    used as a simpler lookup method rather than searching through all of DAS. 
+
+    If a submit folder already exists with the same name, it will not be
+    recreated. A warning is written to the submit script.
+
+    returns a string containing the text of the bash submit script.
+
+    '''
+    script_content = ""
     dbs_datasets = get_das_info('/*/%s/MINIAOD*' % args.campaignstring)
-        # check sample wildcards
+    # check sample wildcards
     for dataset in dbs_datasets:
         dataset_name = dataset.split('/')[1] 
         passes_filter = True
@@ -58,8 +85,7 @@ def datasets_from_dbs():
             sample = dataset_name
         )
         if os.path.exists(submit_dir):
-            sys.stdout.write('# Submission directory for %s already exists\n'
-                            % dataset_name)
+            script_content += '# Submission directory for %s already exists\n' % dataset_name
             log.warning("Submit directory for sample %s exists, skipping",
                         dataset_name)
             continue
@@ -125,11 +151,25 @@ def datasets_from_dbs():
             if lastRun > 0:
                 command.append('lastRun=%i' % lastRun)
 
-        script_content = '# Submit file for sample %s\n' % dataset_name
+        script_content += '# Submit file for sample %s\n' % dataset_name
         script_content += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
         script_content += ' '.join(command) + '\n'
-        return script_content
-def datasets_from_datadefs():
+    return script_content
+def datasets_from_datadefs(args):
+    ''' Build submit script using datasets from DAS
+
+    Builds text for a bash script to submit ntuplization jobs to condor
+    via FarmoutAnalysisJobs. Sample names are found using information
+    passed by args.samples (which may contain wildcards) to match to the
+    samples described in $fsa/MetaData/python/data.py
+
+    If a submit folder already exists with the same name, it will not be
+    recreated. A warning is written to the submit script.
+
+    returns a string containing the text of the bash submit script.
+
+    '''
+    script_content = ""
     for sample, sample_info in reversed(
         sorted(datadefs.iteritems(), key=lambda (x,y): x)):
         passes_filter = True
@@ -153,8 +193,7 @@ def datasets_from_datadefs():
             sample = sample
         )
         if os.path.exists(submit_dir):
-            sys.stdout.write('# Submission directory for %s already exists\n'
-                            % sample)
+            script_content += '# Submission directory for %s already exists\n' % sample
             log.warning("Submit directory for sample %s exists, skipping",
                         sample)
             continue
@@ -274,10 +313,12 @@ def datasets_from_datadefs():
             if lastRun > 0:
                 command.append('lastRun=%i' % lastRun)
 
-        script_content = '# Submit file for sample %s\n' % sample
+        script_content += '# Submit file for sample %s\n' % sample
         script_content += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
         script_content += ' '.join(command) + '\n'
     return script_content
+
+
 def get_com_line_args():
     parser = argparse.ArgumentParser()
 
@@ -386,20 +427,19 @@ def get_com_line_args():
 if __name__ == "__main__":
     script_content = '# Condor submission script\n'
     script_content += '# Generated with submit_job.py at %s\n' % datetime.datetime.now()
-    script_content += '# The command was: %s\n' % ' '.join(sys.argv)
-    script_content += 'export TERMCAP=screen\n'
+    script_content += '# The command was: %s\n\n' % ' '.join(sys.argv)
     args = get_com_line_args()
     # first, make DAS query for dataset if not using local dataset or hdfs/dbs tuple list
     if args.campaignstring:
-        script_content += datasets_from_dbs()
+        script_content += datasets_from_das(args)
     else:
         # this is the old version that uses datadefs
-        script_content += datasets_from_datadefs()
+        script_content += datasets_from_datadefs(args)
     if args.output_file == "":
         sys.stdout.write(script_content)
     else:
         with open(args.output_file, "w") as file:
-            file.write("#!/bin/bash")
+            file.write("#!/bin/bash\n")
             file.write(script_content)
         sys.stdout.write("\nWrote submit script %s\n" % args.output_file)
 
