@@ -41,10 +41,10 @@ Checkout the needed CMSSW tags:
   # Checkout needed packages and apply patches
   # This enables all options.  You can turn off things you don't need.
   PATPROD=1 LUMI=1 LIMITS=0 ./recipe.sh
+  # Setup FSA environment
+  source environment.sh
   # Compile
   cd ../../
-  # Avoid the new strict version of the compiler by relaxing some flags
-  export USER_CXXFLAGS="-Wno-delete-non-virtual-dtor -Wno-error=unused-but-set-variable -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=reorder"
   scram b -j 8
 ```
 
