@@ -14,10 +14,10 @@ Example to make submit script (stored in test.sh) for WZ analysis on Phys14 mini
 (run from $fsa/NtupleTools/test or use full path to make_ntuples_cfg.py)
     
     submit_job.py 2015-02-26-WZ_ntuples_test make_ntuples_cfg.py \
-    channels="eee,mmm,eem,mme" isMC=1 --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" \
+    channels="eee,mmm,eem,emm" isMC=1 --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" \
     --das-replace-tuple=$fsa/MetaData/tuples/MiniAOD-13TeV.json \
     --samples W* Z* D* T* \
-    -o test.sh \
+    -o test.sh
 
 '''
 
@@ -150,169 +150,6 @@ def datasets_from_das(args):
         script_content += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
         script_content += ' '.join(command) + '\n'
     return script_content
-def datasets_from_datadefs(args):
-    ''' Build submit script using datasets from DAS
-
-    Builds text for a bash script to submit ntuplization jobs to condor
-    via FarmoutAnalysisJobs. Sample names are found using information
-    passed by args.samples (which may contain wildcards) to match to the
-    samples described in $fsa/MetaData/python/data.py
-
-    If a submit folder already exists with the same name, it will not be
-    recreated. A warning is written to the submit script.
-
-    returns a string containing the text of the bash submit script.
-
-    '''
-    script_content = ""
-    for sample, sample_info in reversed(
-        sorted(datadefs.iteritems(), key=lambda (x,y): x)):
-        passes_filter = True
-        # Filter by analysis
-        if args.analysis:
-            passes_ana = sample_info['analysis'] == args.analysis
-            passes_filter = passes_filter and passes_ana
-        # Filter by sample wildcards
-        if args.samples:
-            passes_wildcard = False
-            for pattern in args.samples:
-                if fnmatch.fnmatchcase(sample, pattern):
-                    passes_wildcard = True
-            passes_filter = passes_wildcard and passes_filter
-        if not passes_filter:
-            continue
-
-        submit_dir = args.subdir.format(
-            user = os.environ['LOGNAME'],
-            jobid = args.jobid,
-            sample = sample
-        )
-        if os.path.exists(submit_dir):
-            script_content += '# Submission directory for %s already exists\n' % sample
-            log.warning("Submit directory for sample %s exists, skipping",
-                        sample)
-            continue
-
-        log.info("Building submit files for sample %s", sample)
-
-        dag_dir = args.dagdir.format(
-            user = os.environ['LOGNAME'],
-            jobid = args.jobid,
-            sample = sample
-        )
-
-        output_dir = args.outdir.format(
-            user = os.environ['LOGNAME'],
-            jobid = args.jobid,
-            sample = sample
-        )
-
-        input_commands = []
-
-        if args.inputdir:
-            input_dir = args.inputdir.format(
-                user = os.environ['LOGNAME'],
-                jobid = args.jobid,
-                sample = sample,
-                dataset = sample_info['datasetpath'],
-                myhdfs = 'root://cmsxrootd.hep.wisc.edu//store/user/%s/' % os.environ['LOGNAME']
-            )
-            input_commands.append('"--input-dir=%s"' % input_dir)
-            if args.cleancrab:
-                input_commands.append('--clean-crab-dupes')
-        elif args.tuplelist:
-            with open(args.tuplelist) as tuple_file:
-                # Parse info about PAT tuples
-                tuple_info = json.load(tuple_file)
-                # Find the matching pat tuple DBS name
-                #import pdb; pdb.set_trace();
-                matching_datasets = []
-                for pat_tuple, pat_tuple_info in tuple_info.iteritems():
-                    if sample in pat_tuple:
-                        matching_datasets.append(pat_tuple)
-                if len(matching_datasets) != 1:
-                    log.error("No or multiple matching datasets found "
-                                " for sample %s, matches: [%s]",
-                                sample, ", ".join(matching_datasets))
-                    continue
-                datasetpath = tuple_info[matching_datasets[0]]
-
-                if args.xrootd:
-                    files = get_das_info('file dataset=%s' % datasetpath)
-                    mkdir_cmd = "mkdir -p %s" % (dag_dir+"inputs")
-                    os.system(mkdir_cmd)
-                    input_txt = '%s_inputfiles.txt' % matching_datasets[0]
-                    input_txt_path = os.path.join(dag_dir+"inputs", input_txt)
-                    with open(input_txt_path, 'w') as txt:
-                        txt.write('\n'.join(files))
-                    input_commands.extend([
-                        '--input-file-list=%s' % input_txt_path,
-                        '--assume-input-files-exist', 
-                        '--input-dir=root://xrootd.unl.edu/',
-                    ])
-                else:
-                    input_commands.append(
-                        '--input-dbs-path=%s' % datasetpath)
-                    input_commands.append(
-                        '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet')
-        elif args.tupledirlist:
-            with open(args.tupledirlist) as tuple_file:
-                # Parse info about PAT tuples
-                tuple_info = json.load(tuple_file)
-                if sample not in tuple_info:
-                    log.warning("No data directory for %s specified, skipping",
-                                sample)
-                    continue
-                input_dir = tuple_info[sample]
-                if '!' in input_dir:
-                    # ! means it a DBS path
-                    input_commands.append(
-                        '--dbs-service-url=http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_01/servlet/DBSServlet'
-                    )
-                    input_commands.append(
-                        '--input-dbs-path=%s' % input_dir.replace('!', ''))
-                else:
-                    input_commands.append('"--input-dir=%s"' % input_dir)
-                    if args.cleancrab:
-                        input_commands.append('--clean-crab-dupes')
-
-        command = [
-            'farmoutAnalysisJobs',
-            '--infer-cmssw-path',
-            '"--submit-dir=%s"' % submit_dir,
-            '"--output-dag-file=%s"' % dag_dir,
-            '"--output-dir=%s"' % output_dir,
-            '--input-files-per-job=%i' % args.filesperjob,
-        ]
-        if args.sharedfs:
-            command.append('--shared-fs')
-        command.extend(input_commands)
-        command.extend([
-            # The job ID
-            '%s-%s' % (args.jobid, sample),
-            args.cfg
-        ])
-
-        command.extend(args.cmsargs)
-        command.append("'inputFiles=$inputFileNames'")
-        command.append("'outputFile=$outputFileName'")
-
-        if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
-            lumi_mask_path = os.path.join(
-                os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
-            command.append('lumiMask=%s' % lumi_mask_path)
-            firstRun = sample_info.get('firstRun', -1)
-            if firstRun > 0:
-                command.append('firstRun=%i' % firstRun)
-            lastRun = sample_info.get('lastRun', -1)
-            if lastRun > 0:
-                command.append('lastRun=%i' % lastRun)
-
-        script_content += '# Submit file for sample %s\n' % sample
-        script_content += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
-        script_content += ' '.join(command) + '\n'
-    return script_content
-
 
 def get_com_line_args():
     parser = argparse.ArgumentParser()
@@ -346,19 +183,6 @@ def get_com_line_args():
         '--input-dir', dest='inputdir',
         help = 'Input dir argument passed to farmout.'
     )
-
-    input_group.add_argument(
-        '--tuple-dbs', dest='tuplelist',
-        help = 'JSON file mapping datasets to DBS paths.'
-        ' Generally kept in MetaData/tuples'
-    )
-
-    input_group.add_argument(
-        '--tuple-dirs', dest='tupledirlist',
-        help = 'JSON file mapping datasets to HDFS directories'
-        ' Generally kept in MetaData/tuples'
-    )
-
     input_group.add_argument(
         '--campaign-tag', dest='campaignstring',
         help = 'DAS production campaign string for query.'
@@ -367,10 +191,6 @@ def get_com_line_args():
     )
 
     filter_group = parser.add_argument_group('Sample Filters')
-    filter_group.add_argument('--analysis', type=str, default='',
-                              help='Which analysis to use - this determines'
-                              ' which samples in datadefs to run over.')
-
     filter_group.add_argument('--samples', nargs='+', type=str, required=False,
                         help='Filter samples using list of patterns (shell style)')
 
@@ -402,10 +222,6 @@ def get_com_line_args():
 
     farmout_group.add_argument('--input-files-per-job', type=int, dest='filesperjob',
                         default=1, help='Files per job')
-
-    farmout_group.add_argument('--clean-crab-dupes', action='store_true',
-                               default=False, dest='cleancrab',
-                               help='Clean crab dupes')
 
     parser.add_argument('--output_file', '-o', type=str, default="",
                         required=False, help="Create bash script OUTPUT_FILE file with ouput "
