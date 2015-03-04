@@ -66,17 +66,6 @@ finalstate = PSet(
     MassErrord4 = 'userFloat("cand_dM_3")'
 )
 
-# Branches for identifying Z bosons using a pair of objects
-zboson = PSet(
-    # Absolute distance to Z mass.  If SS, returns 1000.  The smaller the more
-    # "Z like"
-    object1_object2_Zcompat = 'zCompatibility({object1_idx}, {object2_idx})',
-    object1_object2_MassFsr = 'subcandfsr({object1_idx}, {object2_idx}).get.mass',
-    object1_object2_PtFsr   = 'subcandfsr({object1_idx}, {object2_idx}).get.pt',
-    object1_object2_EtaFsr   = 'subcandfsr({object1_idx}, {object2_idx}).get.eta',
-    object1_object2_PhiFsr   = 'subcandfsr({object1_idx}, {object2_idx}).get.phi',
-)
-
 # use fsrMiniAOD OR zzfsr, never both
 fsrMiniAOD = PSet(
     MassFSR = 'p4fsr("FSRCand").M',
@@ -86,7 +75,6 @@ fsrMiniAOD = PSet(
     MtFSR = 'p4fsr("FSRCand").Mt',
 )
 
-# use zbosonMiniAOD OR zboson, never both
 zbosonMiniAOD = PSet(
     object1_object2_MassFSR  = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.mass',
     object1_object2_PtFSR    = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.pt',
@@ -101,26 +89,6 @@ zbosonMiniAOD = PSet(
         'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").phi() : -999.',
 )    
 
-zzfsr = PSet(
-    MassFsr                 = 'p4fsr().M',
-    PtFsr                   = 'p4fsr().pt',
-    KD                      = 'userFloat("KD")',
-
-    # KD angles
-    costheta1               = 'userFloat("costheta1")',
-    costheta2               = 'userFloat("costheta2")',
-    costhetastar            = 'userFloat("costhetastar")',
-    Phi                     = 'userFloat("Phi")',
-    Phi1                    = 'userFloat("Phi1")',
-
-    # Gen-level KD angles
-    costheta1_gen           = 'userFloat("costheta1_gen")',
-    costheta2_gen           = 'userFloat("costheta2_gen")',
-    costhetastar_gen        = 'userFloat("costhetastar_gen")',
-    Phi_gen                 = 'userFloat("Phi_gen")',
-    Phi1_gen                = 'userFloat("Phi1_gen")'
-)
-    
 
 vbf = PSet(
   # If nJets < 2, none of these other branches are valid

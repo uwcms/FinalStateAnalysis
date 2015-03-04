@@ -212,7 +212,7 @@ def make_ntuple(*legs, **kwargs):
             )
 
     # If we have two legs or photons, we are interested in VBF selections.
-    if len(legs) == 2 or 'g' in legs:
+    if len(legs) == 2 or 'g' in legs or hzz:
         ntuple_config = PSet(
             ntuple_config,
             templates.topology.vbf
@@ -271,7 +271,6 @@ def make_ntuple(*legs, **kwargs):
             ntuple_config = PSet(
                 ntuple_config,
                 templates.topology.pairs.replace(object1=leg_a, object2=leg_b),
-                templates.topology.zboson.replace(object1=leg_a, object2=leg_b),
                 )
         # Check if we want to enable SVfit
         # Only do SVfit in states with 2 or 4 leptons
@@ -305,19 +304,8 @@ def make_ntuple(*legs, **kwargs):
                 templates.topology.svfit.replace(object1=leg_a, object2=leg_b)
             )
 
-    # Are we running on the ZZ-specific collections?
-    zz_mode = kwargs.get('zz_mode', False)
-
     analyzerSrc = "finalState" + "".join(
             _producer_translation[x] for x in legs ) + producer_suffix
-
-    if zz_mode:
-        assert not hzz, "Only use one kind of HZZ FSR. Use zz_mode for <= 8TeV, hzz for 13TeV"
-        analyzerSrc += "Hzz"
-        ntuple_config = PSet(
-                ntuple_config,
-                templates.topology.zzfsr
-        )
 
     if useMiniAOD:
         if hzz:
@@ -433,7 +421,7 @@ def make_ntuple(*legs, **kwargs):
     noclean = kwargs.get('noclean', False)
 
     # ZZ-producer does not require this cleaning step
-    make_unique = not noclean and not zz_mode
+    make_unique = not noclean
 
     isDblH = kwargs.get('dblhMode', False)
     
