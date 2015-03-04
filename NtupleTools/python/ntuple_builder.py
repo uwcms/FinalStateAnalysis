@@ -197,7 +197,7 @@ def make_ntuple(*legs, **kwargs):
     }
 
     useMiniAOD = kwargs.get('useMiniAOD',False)
-    hzzfsr = kwargs.get('hzzfsr',False)
+    hzz = kwargs.get('hzz',False)
 
     ntuple_config = _common_template.clone()
     if kwargs.get('runTauSpinner', False):
@@ -261,7 +261,7 @@ def make_ntuple(*legs, **kwargs):
     
     # Now we need to add all the information about the pairs
     for leg_a, leg_b in itertools.combinations(object_labels, 2):
-        if hzzfsr:
+        if hzz:
             ntuple_config = PSet(
                 ntuple_config,
                 templates.topology.pairs.replace(object1=leg_a, object2=leg_b),
@@ -312,7 +312,7 @@ def make_ntuple(*legs, **kwargs):
             _producer_translation[x] for x in legs ) + producer_suffix
 
     if zz_mode:
-        assert not hzzfsr, "Only use one kind of HZZ FSR. Use zz_mode for <= 8TeV, hzzfsr for 13TeV"
+        assert not hzz, "Only use one kind of HZZ FSR. Use zz_mode for <= 8TeV, hzz for 13TeV"
         analyzerSrc += "Hzz"
         ntuple_config = PSet(
                 ntuple_config,
@@ -320,7 +320,7 @@ def make_ntuple(*legs, **kwargs):
         )
 
     if useMiniAOD:
-        if hzzfsr:
+        if hzz:
             ntuple_config = PSet(
                 ntuple_config,
                 templates.topology.fsrMiniAOD
@@ -494,9 +494,8 @@ def make_ntuple(*legs, **kwargs):
                         )
                     ))
                 else:
-                    if hzzfsr:
+                    if hzz:
                         cutstr = 'zCompatibilityFSR(%s, %s, "FSRCand") < zCompatibilityFSR(%s, %s, "FSRCand")'
-                        # 'zCompatibility(subcandfsr(%s, %s, "FSRCand")) < zCompatibility(subcandfsr(%s, %s, "FSRCand"))'
                     else:
                         cutstr = 'zCompatibility(%s, %s) < zCompatibility(%s, %s)'
 
@@ -504,41 +503,43 @@ def make_ntuple(*legs, **kwargs):
 
                     print cutstr%(leg1_idx_label, leg2_idx_label, leg1_idx_label,leg3_idx_label)
 
-                    output.analysis.selections.append(cms.PSet(
-                        name=cms.string('Z12_Better_Z13'),
-                        cut=cms.string(
-                            cutstr %
-                            (leg1_idx_label, leg2_idx_label, leg1_idx_label,
-                             leg3_idx_label)
-                        )
-                    ))
-
-                    output.analysis.selections.append(cms.PSet(
-                        name=cms.string('Z12_Better_Z23'),
-                        cut=cms.string(
-                            cutstr %
-                            (leg1_idx_label, leg2_idx_label, leg2_idx_label,
-                             leg3_idx_label)
-                        )
-                    ))
-
-                    output.analysis.selections.append(cms.PSet(
-                        name=cms.string('Z12_Better_Z14'),
-                        cut=cms.string(
-                            cutstr %
-                            (leg1_idx_label, leg2_idx_label, leg1_idx_label,
-                             leg4_idx_label)
-                        )
-                    ))
-
-                    output.analysis.selections.append(cms.PSet(
-                        name=cms.string('Z12_Better_Z24'),
-                        cut=cms.string(
-                            cutstr %
-                            (leg1_idx_label, leg2_idx_label, leg2_idx_label,
-                             leg4_idx_label)
-                        )
-                    ))
+                    if not hzz: # HZZ wants all ZZ candidates to have their own row, so order the Zs but don't cut alternative pairings
+                        output.analysis.selections.append(cms.PSet(
+                            name=cms.string('Z12_Better_Z13'),
+                            cut=cms.string(
+                                cutstr %
+                                (leg1_idx_label, leg2_idx_label, leg1_idx_label,
+                                 leg3_idx_label)
+                            )
+                        ))
+    
+                        output.analysis.selections.append(cms.PSet(
+                            name=cms.string('Z12_Better_Z23'),
+                            cut=cms.string(
+                                cutstr %
+                                (leg1_idx_label, leg2_idx_label, leg2_idx_label,
+                                 leg3_idx_label)
+                            )
+                        ))
+    
+                        output.analysis.selections.append(cms.PSet(
+                            name=cms.string('Z12_Better_Z14'),
+                            cut=cms.string(
+                                cutstr %
+                                (leg1_idx_label, leg2_idx_label, leg1_idx_label,
+                                 leg4_idx_label)
+                            )
+                        ))
+    
+                        output.analysis.selections.append(cms.PSet(
+                            name=cms.string('Z12_Better_Z24'),
+                            cut=cms.string(
+                                cutstr %
+                                (leg1_idx_label, leg2_idx_label, leg2_idx_label,
+                                 leg4_idx_label)
+                            )
+                        ))
+                    #endif (everything past here happens for HZZ as well) 
 
                     output.analysis.selections.append(cms.PSet(
                         name=cms.string('Z12_Better_Z34'),
