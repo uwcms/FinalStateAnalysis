@@ -89,7 +89,10 @@ if [ "$MAJOR_VERSION" -eq "5" ]; then
   export dataAODFile=/hdfs/store/user/efriis//double_mu_2012C_data_53X_20events.root
   export patTupleFile=/hdfs/store/user/tapas/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/Summer12_DR53X-PU_S10_START53_V7A-v1/AODSIM/2013-03-13-8TeV-53X-PatTuple_Master/patTuple_cfg-00037C53-AAD1-E111-B1BE-003048D45F38.root
 fi
-
+# Some tight compiler flags should be relaxed
+if [ "$MAJOR_VERSION" -eq "7" ]; then
+  export USER_CXXFLAGS="-Wno-delete-non-virtual-dtor -Wno-error=unused-but-set-variable -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=reorder"
+fi
 # Define the current most-informative PU information JSONs
 export pu2011JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions11/7TeV/PileUp/pileup_2011_JSON_pixelLumi.txt
 # Final 2012 pileup calculation 

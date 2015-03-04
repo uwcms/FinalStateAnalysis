@@ -43,7 +43,12 @@ Batch submission
 ----------------
 
 The jobs can be submitted to condor using the ``submit_job.py`` script, found in
-the FinalStateAnalysis/Utilities/scripts folder.  
+the FinalStateAnalysis/Utilities/scripts folder. Run submit_job.py -h to view the
+list of possible command line options. submit_job.py creates text for a bash script 
+to submit jobs via FarmoutAnalysisJobs.
+(see http://www.hep.wisc.edu/cms/comp/faq.html#how-can-i-use-farmoutanalysisjobs...)
+By default the output of this script is printed to stdout. You can also use the option
+--output_file (-o) to create a script with this information. 
 
 The following will run a bunch of PHYS14 miniAOD files. As new MiniAOD versions are released,
 you only need to change the campaign-tag. This command uses a DAS lookup to find all available
@@ -52,15 +57,15 @@ the campaign tag should avoid repeated datasets (since old datasets should be in
 the new ones arrive: example, *-v1 should not appear if *-v2 has been released). Most other
 things are now taken care of without special options (miniaod 25ns has been made default)::
 
-   submit_job.py MiniAOD_Test make_ntuples_cfg.py channels="eeee,eeem,eemm,emmm,mmmm,eee,eem,emm,mmm" isMC=1 --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" --samples "ZZTo4L*" "WZJetsTo3LNu*" "WJetsToLNu_13TeV*" "T*_tW*" "T*ToLeptons_*" "TTW*" "TTZ*" "TTJets_MSDecaysCKM*" "DYJetsToLL_M-50_13TeV*" > do_test.sh 
+   submit_job.py MiniAOD_Test make_ntuples_cfg.py channels="eeee,eeem,eemm,emmm,mmmm,eee,eem,emm,mmm" isMC=1 --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" --samples "ZZTo4L*" "WZJetsTo3LNu*" "WJetsToLNu_13TeV*" "T*_tW*" "T*ToLeptons_*" "TTW*" "TTZ*" "TTJets_MSDecaysCKM*" "DYJetsToLL_M-50_13TeV*" -o do_test.sh
    bash < do_test.sh
 
 Alternatively, you can define a shorthand json to simplify the selection ntuple names (an example
-can be found in MetData/tuples/MiniAOD-13TeV.json). The command would then use the shorthand
-names for lookup::
+can be found in MetData/tuples/MiniAOD-13TeV.json) by using the option --das-replace-tuple=file.json. 
+The command would then use the shorthand names for lookup::
 
 
-   submit_job.py MiniAOD_Test make_ntuples_cfg.py channels="eeee,eeem,eemm,emmm,mmmm,eee,eem,emm,mmm" isMC=1 --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" --das-replace-tuple=$fsa/MetaData/tuples/MiniAOD-13TeV.json --samples "ZZ*" "WZ*" "DY*" > do_test.sh
+   submit_job.py MiniAOD_Test make_ntuples_cfg.py channels="eeee,eeem,eemm,emmm,mmmm,eee,eem,emm,mmm" isMC=1 --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" --das-replace-tuple=$fsa/MetaData/tuples/MiniAOD-13TeV.json --samples "ZZ*" "WZ*" "DY*" -o do_test.sh
    bash < do_test.sh
 
 
