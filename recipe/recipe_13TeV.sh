@@ -54,6 +54,7 @@ then
   git cms-merge-topic HuguesBrun:trigElecIdInCommonIsoSelection720
   cp /afs/cern.ch/user/i/ikrav/public/EGMCode/GsfEleFull5x5SigmaIEtaIEtaCut72X.cc RecoEgamma/ElectronIdentification/plugins/cuts/
   cp /afs/cern.ch/user/i/ikrav/public/EGMCode/cutBasedElectronID_PHYS14_PU20bx25_V0_miniAOD_cff.py RecoEgamma/ElectronIdentification/python/Identification/
+  cp /afs/cern.ch/user/i/ikrav/public/EGMCode/cutBasedElectronID_PHYS14_PU20bx25_V1_miniAOD_cff.py RecoEgamma/ElectronIdentification/python/Identification/
 
   echo "Checking out EGamma POG recipe for electron corrections"
   #Following Volker's instructions
