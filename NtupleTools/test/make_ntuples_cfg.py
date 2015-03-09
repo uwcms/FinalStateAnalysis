@@ -420,13 +420,22 @@ if options.rerunFSA:
         process.patElectronEAEmbedder.src = cms.InputTag(fs_daughter_inputs['electrons'])
         process.load("FinalStateAnalysis.PatTools.muons.patMuonEAEmbedding_cfi")
         process.patMuonEAEmbedder.src = cms.InputTag(fs_daughter_inputs['muons'])
-        process.EAEmbedding = cms.Path(
-            process.patElectronEAEmbedder +
-            process.patMuonEAEmbedder
-            )
-        process.schedule.append(process.EAEmbedding)
         fs_daughter_inputs['electrons'] = 'patElectronEAEmbedder'
         fs_daughter_inputs['muons'] = 'patMuonEAEmbedder'
+        # And for electrons, the new HZZ4l EAs as well
+        process.miniAODElectronEAEmbedding = cms.EDProducer(
+            "MiniAODElectronEffectiveArea2015Embedder",
+            src = cms.InputTag(fs_daughter_inputs['electrons']),
+            label = cms.string("EffectiveArea_HZZ4l2015"), # embeds a user float with this name
+            )
+        fs_daughter_inputs['electrons'] = 'miniAODElectronEAEmbedding'
+        output_commands.append('*_miniAODElectronEAEmbedding_*_*')
+        process.EAEmbedding = cms.Path(
+            process.patElectronEAEmbedder +
+            process.patMuonEAEmbedder +
+            process.miniAODElectronEAEmbedding
+            )
+        process.schedule.append(process.EAEmbedding)
 
         # Embed rhos in electrons
         process.miniAODElectronRhoEmbedding = cms.EDProducer(
@@ -461,6 +470,37 @@ if options.rerunFSA:
             process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
             process.schedule.append(process.makeFSRPhotons)
     
+            # Embed ID and isolation decisions to "cheat" in FSR algorithm
+            idCheatLabel = "HZZ4lTightIDPass"
+            isoCheatLabel = "HZZ4lIsoPass"
+            process.electronIDIsoCheatEmbedding = cms.EDProducer(
+                "MiniAODElectronHZZIDDecider",
+                src = cms.InputTag(fs_daughter_inputs['electrons']),
+                idLabel = cms.string(idCheatLabel), # boolean stored as userFloat with this name
+                isoLabel = cms.string(isoCheatLabel), # boolean stored as userFloat with this name
+                rhoLabel = cms.string("rhoCSA14"), # use rho and EA userFloats with these names
+                eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
+                vtxSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
+                # Defaults are correct as of 9 March 2015, overwrite later if needed
+                )
+            fs_daughter_inputs['electrons'] = 'electronIDIsoCheatEmbedding'
+            output_commands.append('*_electronIDIsoCheatEmbedding_*_*')
+            process.muonIDIsoCheatEmbedding = cms.EDProducer(
+                "MiniAODMuonHZZIDDecider",
+                src = cms.InputTag(fs_daughter_inputs['muons']),
+                idLabel = cms.string(idCheatLabel), # boolean will be stored as userFloat with this name
+                isoLabel = cms.string(isoCheatLabel), # boolean will be stored as userFloat with this name
+                vtxSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
+                # Defaults are correct as of 9 March 2015, overwrite later if needed
+                )
+            fs_daughter_inputs['muons'] = 'muonIDIsoCheatEmbedding'
+            output_commands.append('*_muonIDIsoCheatEmbedding_*_*')
+            process.embedHZZ4lIDDecisions = cms.Path(
+                process.electronIDIsoCheatEmbedding +
+                process.muonIDIsoCheatEmbedding
+                )
+            process.schedule.append(process.embedHZZ4lIDDecisions)
+
             # Put FSR photons into leptons as user cands
             from FinalStateAnalysis.PatTools.miniAODEmbedFSR_cfi \
                 import embedFSRInElectrons, embedFSRInMuons
@@ -471,6 +511,7 @@ if options.rerunFSA:
                 srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
                 srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
                 srcVtx = cms.InputTag("offlineSlimmedPrimaryVertices"),
+                idDecisionLabel = cms.string(idCheatLabel),
                 )
             fs_daughter_inputs['electrons'] = 'electronFSREmbedder'
             output_commands.append('*_electronFSREmbedder_*_*')
@@ -480,6 +521,7 @@ if options.rerunFSA:
                 srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
                 srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
                 srcVtx = cms.InputTag("offlineSlimmedPrimaryVertices"),
+                idDecisionLabel = cms.string(idCheatLabel),
                 )
             fs_daughter_inputs['muons'] = 'muonFSREmbedder'
             output_commands.append('*_muonFSREmbedder_*_*')
@@ -488,6 +530,12 @@ if options.rerunFSA:
                 process.muonFSREmbedder
                 )
             process.schedule.append(process.embedFSRInfo)
+
+            # Clean jets overlapping with tight-ID'd leptons
+#             process.hzzJetCleaning = cms.EDProducer(
+#                 "PATJetCleaner",
+#                 src = cms.InputTag(fs_daughter_inputs['jets']),
+#                 preselection = cms.string(
 
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
