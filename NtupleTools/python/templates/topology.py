@@ -73,6 +73,7 @@ fsrMiniAOD = PSet(
     EtaFSR = 'p4fsr("FSRCand").eta',
     PhiFSR = 'p4fsr("FSRCand").phi',
     MtFSR = 'p4fsr("FSRCand").Mt',
+    nJets = 'evt.jets.size',
 )
 
 zbosonMiniAOD = PSet(
