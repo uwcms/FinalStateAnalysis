@@ -30,7 +30,7 @@ singleLepton = PSet(
 doubleLepton = PSet(
     _trig_template.replace(
         name='doubleMu',
-        paths=r'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v\\d+,HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v\\d+'
+        paths=r'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v\\d+|HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v\\d+'
         ),
     _trig_template.replace(
         name='doubleE',
