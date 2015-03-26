@@ -87,9 +87,6 @@ void PATObjectJetInfoEmbedder<T>::produce(
     double closestDeltaR = std::numeric_limits<double>::infinity();
     for (size_t j = 0; j < jets->size(); ++j) {
       JetPtr jet = jets->ptrAt(j);
-      // Use the uncorrected P4. Embedded in the UncorrectedEmbedder module.
-      //pat::Jet uncorrected = jet->correctedJet(0);
-      //assert(uncorrected.isNonnull());
       reco::Candidate::LorentzVector jetP4 = jet->correctedP4(0);
       double deltaR = reco::deltaR(objectP4, jetP4);
       if (deltaR < closestDeltaR) {
