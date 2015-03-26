@@ -192,7 +192,7 @@ bool MiniAODElectronHZZIDDecider::passBDT(const edm::Ptr<pat::Electron>& elec) c
 	bdtCut = idCutHighPtHighEta;
     }
 
-  return (elec->userFloat(bdtLabel) < bdtCut);
+  return (elec->userFloat(bdtLabel) > bdtCut);
 }
 
 
