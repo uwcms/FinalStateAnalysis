@@ -16,35 +16,19 @@ btagging = PSet(
 	#Btagging
         objectSSVHEBtag = '{object}.bDiscriminator("simpleSecondaryVertexHighEffBJetTags")',
 	objectSSVHPBtag = '{object}.bDiscriminator("simpleSecondaryVertexHighPurBJetTags")',
-        objectCSVBtag ='{object}.bDiscriminator("combinedSecondaryVertexBJetTags")',
-        objectJBPBJtag = '{object}.bDiscriminator("jetBProbabilityBJetTags")',
-        objectJPBJtag = '{object}.bDiscriminator("jetProbabilityBJetTags")',
-        objectTCHPBTag = '{object}.bDiscriminator("trackCountingHighPurBJetTags")',
-        objectTCHEBtag = '{object}.bDiscriminator("trackCountingHighEffBJetTags")',
-        objectCISVBtag = '{object}.bDiscriminator("combinedInclusiveSecondaryVertexBJetTags")',
+        objectJBPBJtag  = '{object}.bDiscriminator("jetBProbabilityBJetTags")',
+        objectJPBJtag   = '{object}.bDiscriminator("jetProbabilityBJetTags")',
+        objectTCHPBTag  = '{object}.bDiscriminator("trackCountingHighPurBJetTags")',
+        objectTCHEBtag  = '{object}.bDiscriminator("trackCountingHighEffBJetTags")',
+        objectCISVBtag  = '{object}.bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags")',
+        objectPFCSVBtag = '{object}.bDiscriminator("pfCombinedSecondaryVertexBJetTags")',
+        objectCMVABtag  = '{object}.bDiscriminator("combinedMVABJetTags")',
 
         # sv variables in miniAOD
-        objectSVMass = '{object}.userFloat("vtxMass")',
+        objectSVMass    = '{object}.userFloat("vtxMass")',
         objectSVNTracks = '{object}.userFloat("vtxNtracks")',
-        objectSV3DVal = '{object}.userFloat("vtx3DVal")',
-        objectSV3DSig = '{object}.userFloat("vtx3DSig")',
-
-	#Custom Btagging, based on SV
-        #objectSVMassBtag ='{object}.userFloat("mass_SSV")',
-	#objectSVChargeBtag ='{object}.userFloat("chargeSSV")',
-	#objectSVNtracksBtag ='{object}.userFloat("nTracksSSV")',
-        #objectNSVsBtag ='{object}.userFloat("nTracksSSV")',
-	#objectSVFlightDistanceBtag ='{object}.userFloat("flightDistance")',
-        #objectSVErrFlightDistanceBtag ='{object}.userFloat("errorFlightDistance")',
-        #objectSVMassDPMBtag ='{object}.userFloat("massD_SSV")',
-        #objectSVMassD0Btag ='{object}.userFloat("massD0_SSV")',
-        #objectSVMassUnweightedBtag ='{object}.userFloat("mass_SV_unweighted")',
-        #objectSVMassWeightedBtag ='{object}.userFloat("mass_SV_weighted")',
-        #objectSVMassCorrectedBtag ='{object}.userFloat("mass_SV_corrected")',
-
-	#Custom Btagging, based on Muons-In-Jets
-	#objectMuonInJetPtBtag ='{object}.userFloat("MuonInJetPt")',
-        #objectMuonInJetPtRelBtag ='{object}.userFloat("MuonInJetPtRel")',
+        objectSV3DVal   = '{object}.userFloat("vtx3DVal")',
+        objectSV3DSig   = '{object}.userFloat("vtx3DSig")',
 
 	#Flavour
 	objectJetFlavour ='{object}.partonFlavour()',
@@ -53,7 +37,6 @@ btagging = PSet(
 pujets = PSet(
         objectIDTight='{object}.userFloat("idTight")',
 	objectPUIDFullDiscriminant='{object}.userFloat("pileupJetId:fullDiscriminant")',
-	#objectPUIDFullIDTight='{object}.userInt("fullIdTight")',
 )
 
 

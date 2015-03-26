@@ -1196,7 +1196,11 @@ const float PATFinalState::getPVDXY(const size_t i) const
 	  const edm::Ptr<reco::Vertex> pv = event_->pv();
 	  return daughterAsMuon(i)->muonBestTrack()->dxy(pv->position());
 	}
-      throw cms::Exception("InvalidParticle") << "FSA can only find dXY for electron and muon for now" << std::endl;
+      else if(abs(daughter(i)->pdgId()) == 15)
+	{
+	  return daughterAsTau(i)->dxy();
+	}
+      throw cms::Exception("InvalidParticle") << "FSA can only find dXY for electron, muon, and tau for now" << std::endl;
     }
   return dynamic_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("ipDXY");
 }

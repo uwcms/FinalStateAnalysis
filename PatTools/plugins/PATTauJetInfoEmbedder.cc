@@ -20,7 +20,7 @@
 namespace {
   // Taus we can get the value straight from the jet
   reco::Candidate::LorentzVector extractObjectP4(const pat::Tau& tau) {
-    return tau.pfJetRef()->p4();
+    return tau.pfEssential().p4Jet_;
   }
 
   reco::Candidate::LorentzVector extractObjectP4(const pat::Muon& mu) {
@@ -88,9 +88,9 @@ void PATObjectJetInfoEmbedder<T>::produce(
     for (size_t j = 0; j < jets->size(); ++j) {
       JetPtr jet = jets->ptrAt(j);
       // Use the uncorrected P4. Embedded in the UncorrectedEmbedder module.
-      reco::CandidatePtr uncorrected = jet->userCand("uncorr");
-      assert(uncorrected.isNonnull());
-      reco::Candidate::LorentzVector jetP4 = uncorrected->p4();
+      //pat::Jet uncorrected = jet->correctedJet(0);
+      //assert(uncorrected.isNonnull());
+      reco::Candidate::LorentzVector jetP4 = jet->correctedP4(0);
       double deltaR = reco::deltaR(objectP4, jetP4);
       if (deltaR < closestDeltaR) {
         closestDeltaR = deltaR;

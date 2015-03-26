@@ -454,6 +454,43 @@ if options.rerunFSA:
             )
         process.schedule.append(process.rhoEmbedding)
 
+        process.miniAODElectronJetInfoEmbedding = cms.EDProducer(
+            "PATElectronJetInfoEmbedder",
+            src = cms.InputTag(fs_daughter_inputs['electrons']),
+            embedBtags = cms.bool(False),
+            suffix = cms.string(''),
+            jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
+            maxDeltaR = cms.double(0.1),
+        )
+        fs_daughter_inputs['electrons'] = 'miniAODElectronJetInfoEmbedding'
+        output_commands.append('*_miniAODElectronJetInfoEmbedding_*_*')
+        process.miniAODMuonJetInfoEmbedding = cms.EDProducer(
+            "PATMuonJetInfoEmbedder",
+            src = cms.InputTag(fs_daughter_inputs['muons']),
+            embedBtags = cms.bool(False),
+            suffix = cms.string(''),
+            jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
+            maxDeltaR = cms.double(0.1),
+        )
+        fs_daughter_inputs['muons'] = 'miniAODMuonJetInfoEmbedding'
+        output_commands.append('*_miniAODMuonJetInfoEmbedding_*_*')
+        process.miniAODTauJetInfoEmbedding = cms.EDProducer(
+            "PATTauJetInfoEmbedder",
+            src = cms.InputTag(fs_daughter_inputs['taus']),
+            embedBtags = cms.bool(False),
+            suffix = cms.string(''),
+            jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
+            maxDeltaR = cms.double(0.1),
+        )
+        fs_daughter_inputs['taus'] = 'miniAODTauJetInfoEmbedding'
+        output_commands.append('*_miniAODTauJetInfoEmbedding_*_*')
+        process.jetInfoEmbedding = cms.Path(
+            process.miniAODElectronJetInfoEmbedding +
+            process.miniAODMuonJetInfoEmbedding +
+            process.miniAODTauJetInfoEmbedding
+        )
+        process.schedule.append(process.jetInfoEmbedding)
+
         if options.hzzfsr:
             # Make FSR photon collection, give them isolation
             process.load("FinalStateAnalysis.PatTools.miniAOD_fsrPhotons_cff")
