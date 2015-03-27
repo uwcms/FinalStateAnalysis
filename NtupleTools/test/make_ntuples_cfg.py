@@ -455,7 +455,7 @@ if options.rerunFSA:
         process.schedule.append(process.rhoEmbedding)
 
         process.miniAODElectronJetInfoEmbedding = cms.EDProducer(
-            "PATElectronJetInfoEmbedder",
+            "MiniAODElectronJetInfoEmbedder",
             src = cms.InputTag(fs_daughter_inputs['electrons']),
             embedBtags = cms.bool(False),
             suffix = cms.string(''),
@@ -465,7 +465,7 @@ if options.rerunFSA:
         fs_daughter_inputs['electrons'] = 'miniAODElectronJetInfoEmbedding'
         output_commands.append('*_miniAODElectronJetInfoEmbedding_*_*')
         process.miniAODMuonJetInfoEmbedding = cms.EDProducer(
-            "PATMuonJetInfoEmbedder",
+            "MiniAODMuonJetInfoEmbedder",
             src = cms.InputTag(fs_daughter_inputs['muons']),
             embedBtags = cms.bool(False),
             suffix = cms.string(''),
@@ -475,7 +475,7 @@ if options.rerunFSA:
         fs_daughter_inputs['muons'] = 'miniAODMuonJetInfoEmbedding'
         output_commands.append('*_miniAODMuonJetInfoEmbedding_*_*')
         process.miniAODTauJetInfoEmbedding = cms.EDProducer(
-            "PATTauJetInfoEmbedder",
+            "MiniAODTauJetInfoEmbedder",
             src = cms.InputTag(fs_daughter_inputs['taus']),
             embedBtags = cms.bool(False),
             suffix = cms.string(''),
