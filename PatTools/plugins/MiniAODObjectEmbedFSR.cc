@@ -131,14 +131,12 @@ bool MiniAODObjectEmbedFSR<T,U>::passClusterVeto(const pat::PFParticle& pho, con
 {
   for(pat::ElectronCollection::iterator elec = srcVeto->begin(); elec != srcVeto->end(); ++elec)
     {
-      bool passDR = reco::deltaR(pho.eta(), pho.phi(), elec->superCluster()->eta(), elec->superCluster()->phi()) < vetoDR;
-      bool passDPhi = fabs(reco::deltaPhi(pho.phi(), elec->superCluster()->phi())) < vetoDPhi;
-      bool passDEta = fabs(pho.eta() - elec->superCluster()->eta()) < vetoDEta;
-      if(! (passDR || (passDEta && passDPhi))) continue;
-
-      if(reco::deltaR(pairedLep.p4(), elec->p4()) < 0.0001) continue; // same object
-
       if(!leptonPassID(*elec)) continue;
+
+      bool failDR = reco::deltaR(pho.eta(), pho.phi(), elec->eta(), elec->phi()) < vetoDR;
+      bool failDPhi = fabs(reco::deltaPhi(pho.phi(), elec->phi())) < vetoDPhi;
+      bool failDEta = fabs(pho.eta() - elec->eta()) < vetoDEta;
+      if(! (failDR || (failDEta && failDPhi))) continue;
 
       // Found a vetoing electron
       return false;
