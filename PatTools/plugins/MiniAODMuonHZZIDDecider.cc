@@ -81,8 +81,8 @@ MiniAODMuonHZZIDDecider::MiniAODMuonHZZIDDecider(const edm::ParameterSet& iConfi
 	   iConfig.getParameter<std::string>("isoLabel") :
 	   std::string("HZZ4lIsoPass")),
   vtxSrc_(iConfig.exists("vtxSrc") ? iConfig.getParameter<edm::InputTag>("vtxSrc") : edm::InputTag("selectedPrimaryVertex")),
-  ptCut(iConfig.exists("ptCut") ? iConfig.getParameter<double>("ptCut") : 7.),
-  etaCut(iConfig.exists("etaCut") ? iConfig.getParameter<double>("etaCut") : 2.5),
+  ptCut(iConfig.exists("ptCut") ? iConfig.getParameter<double>("ptCut") : 5.),
+  etaCut(iConfig.exists("etaCut") ? iConfig.getParameter<double>("etaCut") : 2.4),
   sipCut(iConfig.exists("sipCut") ? iConfig.getParameter<double>("sipCut") : 4.),
   pvDXYCut(iConfig.exists("pvDXYCut") ? iConfig.getParameter<double>("pvDXYCut") : 0.5),
   pvDZCut(iConfig.exists("pvDZCut") ? iConfig.getParameter<double>("pvDZCut") : 1.),
