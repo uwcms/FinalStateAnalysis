@@ -89,7 +89,7 @@ void MiniAODElectronEffectiveArea2015Embedder::produce(edm::Event& iEvent, const
 
 float MiniAODElectronEffectiveArea2015Embedder::getHZZ4lEA(const edm::Ptr<pat::Electron>& elec) const
 {
-  float eta = fabs(elec->superCluster()->eta());
+  float eta = fabs(elec->eta());
 
   if(eta >= 2.2)
     return 0.2680;
