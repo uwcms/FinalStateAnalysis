@@ -98,6 +98,8 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
   // Takes a reco::Candidate and tells you whether it passes ID cuts using decision embedded previously
   template<typename leptonType>
   bool leptonPassID(const leptonType& lept) const;
+  template<typename leptonType>
+  bool leptonPassIDTight(const leptonType& lept) const;
 
   // Find out if photon passes cluster veto (returns true if it's good).
   // Pass in the lepton the photon is matched to in case it's an electron

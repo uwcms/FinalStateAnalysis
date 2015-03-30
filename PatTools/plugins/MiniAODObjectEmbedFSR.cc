@@ -123,7 +123,14 @@ template<typename T, typename U>
 template<typename leptonType>
 bool MiniAODObjectEmbedFSR<T,U>::leptonPassID(const leptonType& lept) const
 {
-  return lept.userFloat(idDecisionLabel_);
+  return bool(lept.userFloat(idDecisionLabel_));
+}
+
+template<typename T, typename U>
+template<typename leptonType>
+bool MiniAODObjectEmbedFSR<T,U>::leptonPassIDTight(const leptonType& lept) const
+{
+  return bool(lept.userFloat(idDecisionLabel_+"Tight"));
 }
 
 template<typename T, typename U>
@@ -131,11 +138,11 @@ bool MiniAODObjectEmbedFSR<T,U>::passClusterVeto(const pat::PFParticle& pho, con
 {
   for(pat::ElectronCollection::iterator elec = srcVeto->begin(); elec != srcVeto->end(); ++elec)
     {
-      if(!leptonPassID(*elec)) continue;
+      if(!leptonPassIDTight(*elec)) continue;
 
-      bool failDR = reco::deltaR(pho.eta(), pho.phi(), elec->eta(), elec->phi()) < vetoDR;
-      bool failDPhi = fabs(reco::deltaPhi(pho.phi(), elec->phi())) < vetoDPhi;
-      bool failDEta = fabs(pho.eta() - elec->eta()) < vetoDEta;
+      bool failDR = reco::deltaR(pho.eta(), pho.phi(), elec->superCluster()->eta(), elec->superCluster()->phi()) < vetoDR;
+      bool failDPhi = fabs(reco::deltaPhi(pho.phi(), elec->superCluster()->phi())) < vetoDPhi;
+      bool failDEta = fabs(pho.eta() - elec->superCluster()->eta()) < vetoDEta;
       if(! (failDR || (failDEta && failDPhi))) continue;
 
       // Found a vetoing electron
