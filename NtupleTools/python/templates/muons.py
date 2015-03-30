@@ -16,9 +16,6 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 # ID and isolation
 id = PSet(
-    objectVBTFID = '{object}.userInt("VBTF")',
-    objectWWID = '{object}.userInt("WWID")',
-    #objectPFIDTight = '{object}.userInt("tightID")',
     objectPFIDTight = 'isTightMuon({object_idx})',
     objectPFIDLoose = '{object}.isLooseMuon()',
     # For charged, we use ALL charged particles
@@ -29,13 +26,6 @@ id = PSet(
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
     objectPFPUChargedIso = cms.string('{object}.userIsolation("PfPUChargedHadronIso")'),
-    objectRelPFIsoDBHtt = cms.string(
-        "({object}.userIso(0)"
-        "+max({object}.photonIso()"
-        "+{object}.neutralHadronIso()"
-        "-0.5*{object}.puChargedHadronIso,0.0))"
-        "/{object}.pt()"
-    ),
     objectRelPFIsoDBDefault = cms.string(
         "({object}.chargedHadronIso()"
         "+max({object}.photonIso()"
@@ -58,14 +48,6 @@ id = PSet(
         '/{object}.pt()'
     ),
 
-    ## objectRelPFIsoDBZhLike = cms.string(
-    ##     "({object}.chargedHadronIso()"
-    ##     "+max({object}.photonIso()"
-    ##     "+{object}.neutralHadronIso()"
-    ##     "-0.5*{object}.puChargedHadronIso,0.0))"
-    ##     "/{object}.pt()"
-    ## ),
-
     objectIsPFMuon = '{object}.isPFMuon',
     objectIsGlobal = '{object}.isGlobalMuon',
     objectIsTracker = '{object}.isTrackerMuon',
@@ -83,32 +65,18 @@ id = PSet(
 )
 
 energyCorrections = PSet(
-    objectERochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").t',
-    objectPtRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Pt',
-    objectEtaRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Eta',
-    objectPhiRochCor2011A = 'getUserLorentzVector({object_idx},"p4_RochCor2011A").Phi',
-    objectEErrRochCor2011A = '{object}.userFloat("p4_RochCor2011A_tkFitErr")',
-
-    objectERochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").t',
-    objectPtRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Pt',
-    objectEtaRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Eta',
-    objectPhiRochCor2011B = 'getUserLorentzVector({object_idx},"p4_RochCor2011B").Phi',
-    objectEErrRochCor2011B = '{object}.userFloat("p4_RochCor2011B_tkFitErr")',
-
-    objectERochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").t',
-    objectPtRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Pt',
-    objectEtaRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Eta',
-    objectPhiRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Phi',
-    objectEErrRochCor2012 = '{object}.userFloat("p4_RochCor2012_tkFitErr")'
+    # left as template
+    #objectERochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").t',
+    #objectPtRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Pt',
+    #objectEtaRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Eta',
+    #objectPhiRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Phi',
+    #objectEErrRochCor2012 = '{object}.userFloat("p4_RochCor2012_tkFitErr")'
 )
 
 # Information about the associated track
 tracking = PSet(
     objectPixHits = '? {object}.innerTrack.isNonnull ? '
         '{object}.innerTrack.hitPattern.numberOfValidPixelHits :-1',
-#     objectGlbTrkHits = 'getMuonHits({object_idx})',
-#                        '? {object}.globalTrack.isNonnull ? '
-#         '{object}.globalTrack.hitPattern.numberOfHits(reco::HitPattern::TRACK_HITS) :-1',
     objectNormTrkChi2 = "? {object}.combinedMuon.isNonnull ? "
         "{object}.combinedMuon.normalizedChi2 : 1e99",
     objectTkLayersWithMeasurement = '? {object}.innerTrack.isNonnull ? '

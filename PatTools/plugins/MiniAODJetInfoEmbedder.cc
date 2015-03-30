@@ -20,7 +20,7 @@
 namespace {
   // Taus we can get the value straight from the jet
   reco::Candidate::LorentzVector extractObjectP4(const pat::Tau& tau) {
-    return tau.pfJetRef()->p4();
+    return tau.pfEssential().p4Jet_;
   }
 
   reco::Candidate::LorentzVector extractObjectP4(const pat::Muon& mu) {
@@ -33,11 +33,11 @@ namespace {
 }
 
 template<class T>
-class PATObjectJetInfoEmbedder : public edm::EDProducer {
+class MiniAODObjectJetInfoEmbedder : public edm::EDProducer {
   public:
     typedef std::vector<T> TCollection;
-    PATObjectJetInfoEmbedder(const edm::ParameterSet& pset);
-    virtual ~PATObjectJetInfoEmbedder(){}
+    MiniAODObjectJetInfoEmbedder(const edm::ParameterSet& pset);
+    virtual ~MiniAODObjectJetInfoEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
     edm::InputTag src_;
@@ -48,7 +48,7 @@ class PATObjectJetInfoEmbedder : public edm::EDProducer {
 };
 
 template<class T>
-PATObjectJetInfoEmbedder<T>::PATObjectJetInfoEmbedder(
+MiniAODObjectJetInfoEmbedder<T>::MiniAODObjectJetInfoEmbedder(
     const edm::ParameterSet& pset) {
   src_ = pset.getParameter<edm::InputTag>("src");
   jetSrc_ = pset.getParameter<edm::InputTag>("jetSrc");
@@ -59,7 +59,7 @@ PATObjectJetInfoEmbedder<T>::PATObjectJetInfoEmbedder(
 }
 
 template<class T>
-void PATObjectJetInfoEmbedder<T>::produce(
+void MiniAODObjectJetInfoEmbedder<T>::produce(
     edm::Event& evt, const edm::EventSetup& es) {
   std::auto_ptr<TCollection> output(new TCollection);
 
@@ -87,10 +87,7 @@ void PATObjectJetInfoEmbedder<T>::produce(
     double closestDeltaR = std::numeric_limits<double>::infinity();
     for (size_t j = 0; j < jets->size(); ++j) {
       JetPtr jet = jets->ptrAt(j);
-      // Use the uncorrected P4. Embedded in the UncorrectedEmbedder module.
-      reco::CandidatePtr uncorrected = jet->userCand("uncorr");
-      assert(uncorrected.isNonnull());
-      reco::Candidate::LorentzVector jetP4 = uncorrected->p4();
+      reco::Candidate::LorentzVector jetP4 = jet->correctedP4(0);
       double deltaR = reco::deltaR(objectP4, jetP4);
       if (deltaR < closestDeltaR) {
         closestDeltaR = deltaR;
@@ -125,9 +122,9 @@ void PATObjectJetInfoEmbedder<T>::produce(
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"
-typedef PATObjectJetInfoEmbedder<pat::Tau> PATTauJetInfoEmbedder;
-typedef PATObjectJetInfoEmbedder<pat::Muon> PATMuonJetInfoEmbedder;
-typedef PATObjectJetInfoEmbedder<pat::Electron> PATElectronJetInfoEmbedder;
-DEFINE_FWK_MODULE(PATTauJetInfoEmbedder);
-DEFINE_FWK_MODULE(PATMuonJetInfoEmbedder);
-DEFINE_FWK_MODULE(PATElectronJetInfoEmbedder);
+typedef MiniAODObjectJetInfoEmbedder<pat::Tau> MiniAODTauJetInfoEmbedder;
+typedef MiniAODObjectJetInfoEmbedder<pat::Muon> MiniAODMuonJetInfoEmbedder;
+typedef MiniAODObjectJetInfoEmbedder<pat::Electron> MiniAODElectronJetInfoEmbedder;
+DEFINE_FWK_MODULE(MiniAODTauJetInfoEmbedder);
+DEFINE_FWK_MODULE(MiniAODMuonJetInfoEmbedder);
+DEFINE_FWK_MODULE(MiniAODElectronJetInfoEmbedder);
