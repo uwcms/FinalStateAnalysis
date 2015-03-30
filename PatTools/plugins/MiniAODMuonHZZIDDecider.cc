@@ -139,7 +139,8 @@ bool MiniAODMuonHZZIDDecider::passVertex(const edm::Ptr<pat::Muon>& mu) const
 
 bool MiniAODMuonHZZIDDecider::passType(const edm::Ptr<pat::Muon>& mu) const
 {
-  return (mu->isTrackerMuon() || mu->isGlobalMuon());
+  // Global muon or (arbitrated) tracker muon
+  return (mu->isGlobalMuon() || (mu->isTrackerMuon() && mu->numberOfMatchedStations() >= 1));
 }
 
 
