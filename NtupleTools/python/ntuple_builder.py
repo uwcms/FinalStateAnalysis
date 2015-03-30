@@ -318,27 +318,12 @@ def make_ntuple(*legs, **kwargs):
         # Remove them from the ntuples to prevent crashes.
         #!!! Take items off of this list as we unbreak them. !!!#
         notInMiniAOD = [
-            # cleaning.py
-            "tauVetoPt20VLooseHPS(NewDM)?Vtx", # deprecated, could be changed to a different combined iso discriminator
-            # cleaning.py and electrons.py
-            "[emtgj][1-9]?(Veto)?Ci[cC]Tight((ElecOverlap)|(Iso))?",
-            # electrons.py
-            "e[1-9]?MVANonTrig((IDISO)|(PUSUB))",
-            "e[1-9]?MVAIDH2TauWP",# electron MVA not yet in miniAOD (or done at all)
             # event.py
             "mva_met((Et)|(Phi))", # not yet implemented in miniAOD
-            # taus.py
             # topology.py
             "[emtgj][1-9]?MtToMVAMET", # not yet implemented in miniAOD
             # candidates.py
             "t[1-9]?PVDZ",
-            "t[1-9]?PVDXY",
-            #
-            # Remove because old
-            "[em][1-9]?((WW)|(MIT))ID(_((LOOSE)|(MEDIUM)|(TIGHT)|(VETO)))?",
-            "eMVAIDH2TauWP",
-#            "\w*201[12]\w*",
-            "\w*[(Fall)(Winter)(Spring)(Summer)]1[12]\w*",
             "t[1-9]?S?IP[23]D(Err)?",
             ]
 
