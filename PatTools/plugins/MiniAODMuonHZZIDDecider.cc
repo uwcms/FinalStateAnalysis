@@ -109,7 +109,9 @@ void MiniAODMuonHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSetup&
       out->push_back(*mi); // copy muon to save correctly in event
 
       bool idResult = (passKinematics(mptr) && passVertex(mptr) && passType(mptr));
-      out->back().addUserFloat(idLabel_, float(idResult)); // 1 for true, 0 for false
+      out->back().addUserFloat(idLabel_, float(idResult && mi->isPFMuon())); // 1 for true, 0 for false
+
+      out->back().addUserFloat(idLabel_+"Tight", float(idResult && mi->isPFMuon())); // 1 for true, 0 for false
       
       bool isoResult = (PFRelIsoDBNoFSR(mptr) < isoCut);
       out->back().addUserFloat(isoLabel_, float(isoResult)); // 1 for true, 0 for false
@@ -137,7 +139,7 @@ bool MiniAODMuonHZZIDDecider::passVertex(const edm::Ptr<pat::Muon>& mu) const
 
 bool MiniAODMuonHZZIDDecider::passType(const edm::Ptr<pat::Muon>& mu) const
 {
-  return (mu->isPFMuon() && (mu->isTrackerMuon() || mu->isGlobalMuon()));
+  return (mu->isTrackerMuon() || mu->isGlobalMuon());
 }
 
 

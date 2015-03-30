@@ -140,8 +140,10 @@ void MiniAODElectronHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSe
 
       out->push_back(*ei); // copy electron to save correctly in event
 
-      bool idResult = (passKinematics(eptr) && passVertex(eptr) && passBDT(eptr) && passMissingHits(eptr));
+      bool idResult = (passKinematics(eptr) && passVertex(eptr) && passMissingHits(eptr));
       out->back().addUserFloat(idLabel_, float(idResult)); // 1 for true, 0 for false
+
+      out->back().addUserFloat(idLabel_+"Tight", float(idResult && passBDT(eptr))); // 1 for true, 0 for false
       
       bool isoResult = (PFRelIsoRhoNoFSR(eptr) < isoCut);
       out->back().addUserFloat(isoLabel_, float(isoResult)); // 1 for true, 0 for false
