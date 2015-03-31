@@ -80,6 +80,45 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
     jet.addUserFloat("idLoose", loose);
     jet.addUserFloat("idMedium", medium);
     jet.addUserFloat("idTight", tight);
+
+    // Pileup discriminant
+    bool passPU = true;
+    float jpumva = jet.userFloat("pileupJetId:fullDiscriminant");
+    if(jet.pt() > 20)
+      {
+	if(fabs(jet.eta()) > 3.)
+	  {
+	    if(jpumva <= -0.45) passPU = false;
+	  }
+	else if(fabs(jet.eta()) > 2.75)
+	  {
+	    if(jpumva <= -0.55) passPU = false;
+	  }
+	else if(fabs(jet.eta()) > 2.5)
+	  {
+	    if(jpumva <= -0.6) passPU = false;
+	  }
+	else if(jpumva <= -0.63) passPU = false;
+      }
+    else
+      {
+	if(fabs(jet.eta()) > 3.)
+	  {
+	    if(jpumva <= -0.95) passPU = false;
+	  }
+	else if(fabs(jet.eta()) > 2.75)
+	  {
+	    if(jpumva <= -0.94) passPU = false;
+	  }
+	else if(fabs(jet.eta()) > 2.5)
+	  {
+	    if(jpumva <= -0.96) passPU = false;
+	  }
+	else if(jpumva <= -0.95) passPU = false;
+      }
+
+    jet.addUserFloat("puID", float(passPU));
+
     output->push_back(jet);
   }
 
