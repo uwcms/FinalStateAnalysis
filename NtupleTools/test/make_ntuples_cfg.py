@@ -508,7 +508,7 @@ if options.rerunFSA:
             process.schedule.append(process.makeFSRPhotons)
     
             # Embed ID and isolation decisions to "cheat" in FSR algorithm
-            idCheatLabel = "HZZ4lTightIDPass"
+            idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
             isoCheatLabel = "HZZ4lIsoPass"
             process.electronIDIsoCheatEmbedding = cms.EDProducer(
                 "MiniAODElectronHZZIDDecider",
@@ -569,10 +569,36 @@ if options.rerunFSA:
             process.schedule.append(process.embedFSRInfo)
 
             # Clean jets overlapping with tight-ID'd leptons
-#             process.hzzJetCleaning = cms.EDProducer(
-#                 "PATJetCleaner",
-#                 src = cms.InputTag(fs_daughter_inputs['jets']),
-#                 preselection = cms.string(
+            process.hzzJetCleaning = cms.EDProducer(
+                "PATJetCleaner",
+                src = cms.InputTag(fs_daughter_inputs['jets']),
+                preselection = cms.string('pt > 30 && eta < 4.7 && eta > -4.7 && userFloat("puID") > 0.5'),
+                checkOverlaps = cms.PSet(
+                    muons = cms.PSet(
+                        src = cms.InputTag(fs_daughter_inputs['muons']),
+                        algorithm = cms.string("byDeltaR"),
+                        preselection = cms.string('userFloat("%s") > 0.5 && userFloat("%s") > 0.5'%(idCheatLabel+"Tight", isoCheatLabel)),
+                        deltaR = cms.double(0.4),
+                        checkRecoComponents = cms.bool(False),
+                        pairCut = cms.string(""),
+                        requireNoOverlaps = cms.bool(True),
+                        ),
+                    electrons = cms.PSet(
+                        src = cms.InputTag(fs_daughter_inputs['electrons']),
+                        algorithm = cms.string("byDeltaR"),
+                        preselection = cms.string('userFloat("%s") > 0.5 && userFloat("%s") > 0.5'%(idCheatLabel+"Tight", isoCheatLabel)),
+                        deltaR = cms.double(0.4),
+                        checkRecoComponents = cms.bool(False),
+                        pairCut = cms.string(""),
+                        requireNoOverlaps = cms.bool(True),
+                        ),
+                    ),
+                finalCut = cms.string(''),
+                )
+            process.cleanJetsHZZ = cms.Path(process.hzzJetCleaning)
+            process.schedule.append(process.cleanJetsHZZ)
+            fs_daughter_inputs['jets'] = 'hzzJetCleaning'
+            output_commands.append('*_hzzJetCleaning_*_*')
 
     # Eventually, set buildFSAEvent to False, currently working around bug
     # in pat tuples.
