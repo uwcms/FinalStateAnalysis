@@ -138,7 +138,7 @@ bool MiniAODObjectEmbedFSR<T,U>::passClusterVeto(const pat::PFParticle& pho, con
 {
   for(pat::ElectronCollection::iterator elec = srcVeto->begin(); elec != srcVeto->end(); ++elec)
     {
-      if(!leptonPassIDTight(*elec)) continue;
+      if(!leptonPassID(*elec)) continue;
 
       bool failDR = reco::deltaR(pho.eta(), pho.phi(), elec->superCluster()->eta(), elec->superCluster()->phi()) < vetoDR;
       bool failDPhi = fabs(reco::deltaPhi(pho.phi(), elec->superCluster()->phi())) < vetoDPhi;
