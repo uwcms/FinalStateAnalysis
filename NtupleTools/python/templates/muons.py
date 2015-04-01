@@ -52,6 +52,7 @@ id = PSet(
     objectIsGlobal = '{object}.isGlobalMuon',
     objectIsTracker = '{object}.isTrackerMuon',
     objectTypeCode = cms.vstring('{object}.type','I'),
+    objectBestTrackType = '{object}.muonBestTrackType',
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}, 13, 1).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 13, 1).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 13, 1).pdgId() : -999',
     objectComesFromHiggs = 'comesFromHiggs({object_idx}, 13, 1)',
 
