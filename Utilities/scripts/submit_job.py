@@ -16,8 +16,13 @@ Example to make submit script (stored in test.sh) for WZ analysis on Phys14 mini
     submit_job.py 2015-02-26-WZ_ntuples_test make_ntuples_cfg.py \
     channels="eee,mmm,eem,emm" isMC=1 --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" \
     --das-replace-tuple=$fsa/MetaData/tuples/MiniAOD-13TeV.json \
-    --samples W* Z* D* T* \
+    --samples "W*" "Z*" "D*" "T*" \
     -o test.sh
+
+Note: It's a good idea to put your sample names with wildcards inside quotes,
+    as otherwise the unix wildcard will be expanded before it is passed to the 
+    program (so a file named 'Wsubmit.sh' in your folder would cause the 
+    argument W* to become Wsubmit.sh, which you don't want)
 
 '''
 
@@ -33,6 +38,94 @@ from FinalStateAnalysis.Utilities.dbsinterface import get_das_info
 
 log = logging.getLogger("submit_job")
 logging.basicConfig(level=logging.INFO, stream=sys.stderr)
+
+def getFarmoutCommand(args, dataset_name, full_dataset_name):
+    ''' Builds the command to submit an ntuple job for the given dataset 
+
+    Builds text for a bash script to submit ntuplization jobs to condor
+    via FarmoutAnalysisJobs. Recieves the command line input (via the varialbe 
+    args), the dataset shortname (dataset_name) and full name with path 
+    (full_dataset_name) as input. Creates the directory dag_dir+"inputs", 
+    where dag_dir is a command line argument.
+
+    returns text for the bash script
+    '''
+    submit_dir = args.subdir.format(
+        user = os.environ['LOGNAME'],
+        jobid = args.jobid,
+        sample = dataset_name
+    )
+    if os.path.exists(submit_dir):
+        command = '# Submission directory for %s already exists\n' % dataset_name
+        log.warning("Submit directory for sample %s exists, skipping",
+                    dataset_name)
+        return command
+
+    log.info("Building submit files for sample %s", dataset_name)
+
+    dag_dir = args.dagdir.format(
+        user = os.environ['LOGNAME'],
+        jobid = args.jobid,
+        sample = dataset_name
+    )
+
+    output_dir = args.outdir.format(
+        user = os.environ['LOGNAME'],
+        jobid = args.jobid,
+        sample = dataset_name
+    )
+
+    input_commands = []
+
+    files = get_das_info('file dataset=%s' % full_dataset_name)
+    mkdir_cmd = "mkdir -p %s" % (dag_dir+"inputs")
+    os.system(mkdir_cmd)
+    input_txt = '%s_inputfiles.txt' % dataset_name
+    input_txt_path = os.path.join(dag_dir+"inputs", input_txt)
+    with open(input_txt_path, 'w') as txt:
+        txt.write('\n'.join(files))
+    input_commands.extend([
+        '--input-file-list=%s' % input_txt_path,
+        '--assume-input-files-exist', 
+        '--input-dir=root://cmsxrootd.fnal.gov/',
+    ])
+
+    command = [
+        'farmoutAnalysisJobs',
+        '--infer-cmssw-path',
+        '"--submit-dir=%s"' % submit_dir,
+        '"--output-dag-file=%s"' % dag_dir,
+        '"--output-dir=%s"' % output_dir,
+        '--input-files-per-job=%i' % args.filesperjob,
+    ]
+    if args.sharedfs:
+        command.append('--shared-fs')
+    command.extend(input_commands)
+    command.extend([
+        # The job ID
+        '%s-%s' % (args.jobid, dataset_name),
+        args.cfg
+    ])
+
+    command.extend(args.cmsargs)
+    command.append("'inputFiles=$inputFileNames'")
+    command.append("'outputFile=$outputFileName'")
+
+    if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
+        lumi_mask_path = os.path.join(
+            os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
+        command.append('lumiMask=%s' % lumi_mask_path)
+        firstRun = sample_info.get('firstRun', -1)
+        if firstRun > 0:
+            command.append('firstRun=%i' % firstRun)
+        lastRun = sample_info.get('lastRun', -1)
+        if lastRun > 0:
+            command.append('lastRun=%i' % lastRun)
+
+    farmout_command = '# Submit file for sample %s\n' % dataset_name
+    farmout_command += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
+    farmout_command += ' '.join(command) + '\n'
+    return farmout_command
 
 def datasets_from_das(args):
     ''' Build submit script using datasets from DAS
@@ -56,99 +149,25 @@ def datasets_from_das(args):
     for dataset in dbs_datasets:
         dataset_name = dataset.split('/')[1] 
         passes_filter = True
-        if args.samples:
-            passes_wildcard = False
-            for pattern in args.samples:
-                if args.dastuple: # check json for shorthand
-                    with open(args.dastuple) as tuple_file:
-                        tuple_info = json.load(tuple_file)
-                        matching_datasets = []
-                        for shorthand, fullname in tuple_info.iteritems():
-                            if fullname in dataset_name:
-                                if fnmatch.fnmatchcase(shorthand, pattern):
-                                    passes_wildcard = True
-                else: # check das directly
-                    if fnmatch.fnmatchcase(dataset_name, pattern):
-                        passes_wildcard = True
-            passes_filter = passes_wildcard and passes_filter
-        if not passes_filter:
-            continue
+        passes_wildcard = False
         
-        submit_dir = args.subdir.format(
-            user = os.environ['LOGNAME'],
-            jobid = args.jobid,
-            sample = dataset_name
-        )
-        if os.path.exists(submit_dir):
-            script_content += '# Submission directory for %s already exists\n' % dataset_name
-            log.warning("Submit directory for sample %s exists, skipping",
-                        dataset_name)
-            continue
-
-        log.info("Building submit files for sample %s", dataset_name)
-
-        dag_dir = args.dagdir.format(
-            user = os.environ['LOGNAME'],
-            jobid = args.jobid,
-            sample = dataset_name
-        )
-
-        output_dir = args.outdir.format(
-            user = os.environ['LOGNAME'],
-            jobid = args.jobid,
-            sample = dataset_name
-        )
-
-        input_commands = []
-
-        files = get_das_info('file dataset=%s' % dataset)
-        mkdir_cmd = "mkdir -p %s" % (dag_dir+"inputs")
-        os.system(mkdir_cmd)
-        input_txt = '%s_inputfiles.txt' % dataset_name
-        input_txt_path = os.path.join(dag_dir+"inputs", input_txt)
-        with open(input_txt_path, 'w') as txt:
-            txt.write('\n'.join(files))
-        input_commands.extend([
-            '--input-file-list=%s' % input_txt_path,
-            '--assume-input-files-exist', 
-            '--input-dir=root://cmsxrootd.fnal.gov/',
-        ])
-
-        command = [
-            'farmoutAnalysisJobs',
-            '--infer-cmssw-path',
-            '"--submit-dir=%s"' % submit_dir,
-            '"--output-dag-file=%s"' % dag_dir,
-            '"--output-dir=%s"' % output_dir,
-            '--input-files-per-job=%i' % args.filesperjob,
-        ]
-        if args.sharedfs:
-            command.append('--shared-fs')
-        command.extend(input_commands)
-        command.extend([
-            # The job ID
-            '%s-%s' % (args.jobid, dataset_name),
-            args.cfg
-        ])
-
-        command.extend(args.cmsargs)
-        command.append("'inputFiles=$inputFileNames'")
-        command.append("'outputFile=$outputFileName'")
-
-        if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
-            lumi_mask_path = os.path.join(
-                os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
-            command.append('lumiMask=%s' % lumi_mask_path)
-            firstRun = sample_info.get('firstRun', -1)
-            if firstRun > 0:
-                command.append('firstRun=%i' % firstRun)
-            lastRun = sample_info.get('lastRun', -1)
-            if lastRun > 0:
-                command.append('lastRun=%i' % lastRun)
-
-        script_content += '# Submit file for sample %s\n' % dataset_name
-        script_content += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
-        script_content += ' '.join(command) + '\n'
+        for pattern in args.samples:
+            if args.dastuple: # check json for shorthand
+                with open(args.dastuple) as tuple_file:
+                    tuple_info = json.load(tuple_file)
+                    matching_datasets = []
+                    for shorthand, fullname in tuple_info.iteritems():
+                        if fullname in dataset_name:
+                            if fnmatch.fnmatchcase(shorthand, pattern):
+                                passes_wildcard = True
+            else: # check das directly
+                if fnmatch.fnmatchcase(dataset_name, pattern):
+                    passes_wildcard = True
+        passes_filter = passes_wildcard and passes_filter
+        if passes_filter:
+            script_content += getFarmoutCommand(args, dataset_name, dataset)
+    if "Submit file" not in script_content:
+        log.warning("No datasets found matching %s", args.samples)
     return script_content
 
 def get_com_line_args():
@@ -246,5 +265,5 @@ if __name__ == "__main__":
         with open(args.output_file, "w") as file:
             file.write("#!/bin/bash\n")
             file.write(script_content)
-        sys.stdout.write("\nWrote submit script %s\n" % args.output_file)
+        sys.stdout.write("\nWrote submit script %s\n\n" % args.output_file)
 
