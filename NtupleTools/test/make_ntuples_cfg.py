@@ -565,6 +565,25 @@ if options.runDQM: options.channels = 'dqm'
 # Generate analyzers which build the desired final states.
 final_states = [x.strip() for x in options.channels.split(',')]
 
+
+def order_final_state(state):
+    '''
+    Sorts final state objects into order expected by FSA.
+    '''
+    order = ['e', 'm', 't', 'g', 'j']
+    counts = dict.fromkeys(order, 0)
+    for letter in state:
+        if letter in counts:
+            counts[letter] += 1
+        else:
+            print 'Warning: Invalid object "%s" in state ignored' \
+                % letter
+    state = ""
+    for letter in order:
+        for i in range(0, counts[letter]):
+            state += letter
+    return state
+
 def expanded_final_states(input):
     for fs in input:
         if fs in _FINAL_STATE_GROUPS:
@@ -573,7 +592,7 @@ def expanded_final_states(input):
         else:
             yield fs
 
-
+final_states = [order_final_state(fs) for fs in final_states]
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
     extraJets = options.nExtraJets if 'j' not in final_state else 0
