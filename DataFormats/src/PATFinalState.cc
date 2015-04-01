@@ -1175,7 +1175,7 @@ const float PATFinalState::getPVDZ(const size_t i) const
       else if(abs(daughter(i)->pdgId()) == 13)
 	{
 	  const edm::Ptr<reco::Vertex> pv = event_->pv();
-	  return daughterAsMuon(i)->muonBestTrack()->dz(pv->position());
+	  return daughterAsMuon(i)->innerTrack()->dz(pv->position());
 	}
       throw cms::Exception("InvalidParticle") << "FSA can only find dZ for electron and muon for now" << std::endl;
     }
@@ -1194,7 +1194,7 @@ const float PATFinalState::getPVDXY(const size_t i) const
       else if(abs(daughter(i)->pdgId()) == 13)
 	{
 	  const edm::Ptr<reco::Vertex> pv = event_->pv();
-	  return daughterAsMuon(i)->muonBestTrack()->dxy(pv->position());
+	  return daughterAsMuon(i)->innerTrack()->dxy(pv->position());
 	}
       else if(abs(daughter(i)->pdgId()) == 15)
 	{
