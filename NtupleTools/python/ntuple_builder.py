@@ -211,12 +211,11 @@ def make_ntuple(*legs, **kwargs):
                 ) 
             )
 
-    # If we have two legs or photons, we are interested in VBF selections.
-    if len(legs) == 2 or 'g' in legs or hzz:
-        ntuple_config = PSet(
-            ntuple_config,
-            templates.topology.vbf
-        )
+    # lots of analyses use VBF variables, so they're now in by default
+    ntuple_config = PSet(
+        ntuple_config,
+        templates.topology.vbf
+    )
 
     # Optionally apply extra branches in kwargs
     if 'branches' in kwargs:
