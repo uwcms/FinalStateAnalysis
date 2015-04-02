@@ -592,11 +592,11 @@ def expanded_final_states(input):
         else:
             yield fs
 
-final_states = [order_final_state(fs) for fs in final_states]
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
     extraJets = options.nExtraJets if 'j' not in final_state else 0
     zz_mode = (final_state in ['mmmm', 'eeee', 'eemm'])
+    final_state = order_final_state(final_state)
     analyzer = make_ntuple(*final_state, zz_mode=options.zzMode,
                             svFit=options.svFit, dblhMode=options.dblhMode,
                             runTauSpinner=options.runTauSpinner, 
