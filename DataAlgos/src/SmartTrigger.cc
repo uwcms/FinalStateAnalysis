@@ -42,7 +42,7 @@ vstring getGroups(const std::string& trgGrps) {
 
 vstring getPaths(const std::string& grp) {
   vstring tokens;
-  boost::split_regex(tokens, grp, boost::regex(" OR "));
+  boost::split_regex(tokens, grp, boost::regex("\\|"));
   return tokens;
 }
 

@@ -121,69 +121,16 @@ double MiniAODObjectEmbedFSR<T,U>::photonRelIso(const pat::PFParticle& pho) cons
 
 template<typename T, typename U>
 template<typename leptonType>
-bool MiniAODObjectEmbedFSR<T,U>::leptonPassID(leptonType& lept)
+bool MiniAODObjectEmbedFSR<T,U>::leptonPassID(const leptonType& lept) const
 {
-  if(lept.hasUserInt(std::string("passMiniAODFSREmbedderID")))
-    return (lept.userInt("passMiniAODFSREmbedderID") == 1);
-
-  if(!(lept.isElectron() || lept.isMuon()))
-    {
-      return false;
-    }
-
-  bool passID = idHelper(lept);
-  
-  // store so we don't have to recalculate
-  lept.addUserInt("passMiniAODFSREmbedderID", passID ? 1 : 0);
-  
-  return passID;
+  return bool(lept.userFloat(idDecisionLabel_));
 }
 
 template<typename T, typename U>
-bool MiniAODObjectEmbedFSR<T,U>::idHelper(const pat::Electron& e) const
+template<typename leptonType>
+bool MiniAODObjectEmbedFSR<T,U>::leptonPassIDTight(const leptonType& lept) const
 {
-  double pt = e.pt();
-  double eta = fabs(e.superCluster()->eta());
-
-  bool passSelection = pt > electronPt &&
-    eta < electronMaxEta &&
-    fabs(e.dB(pat::Electron::PV3D))/e.edB(pat::Electron::PV3D) < electronSIP && // SIP3D cut
-    fabs(e.gsfTrack()->dxy(srcVtx->at(0).position())) < electronPVDXY &&
-    fabs(e.gsfTrack()->dz(srcVtx->at(0).position())) < electronPVDZ;
-  
-  double bdtCut;
-  if(e.pt() < electronIDPtThr)
-    {
-      if(eta < electronIDEtaThrLow)
-	bdtCut = electronIDCutLowPtLowEta;
-      else if(eta < electronIDEtaThrHigh)
-	bdtCut = electronIDCutLowPtMedEta;
-      else
-	bdtCut = electronIDCutLowPtHighEta;
-    }
-  else
-    {
-      if(eta < electronIDEtaThrLow)
-	bdtCut = electronIDCutHighPtLowEta;
-      else if(eta < electronIDEtaThrHigh)
-	bdtCut = electronIDCutHighPtMedEta;
-      else
-	bdtCut = electronIDCutHighPtHighEta;
-    }
-  bool passID = e.userFloat(electronIDLabel_) < bdtCut;
-  return passID & passSelection;
-}
-
-template<typename T, typename U>
-bool MiniAODObjectEmbedFSR<T,U>::idHelper(const pat::Muon& m) const
-{
-  bool passID = (m.isPFMuon()==1 && (m.isGlobalMuon() || m.isTrackerMuon()));
-  bool passSelection = m.pt() > muonPt &&
-    fabs(m.eta()) < muonMaxEta &&
-    fabs(m.dB(pat::Muon::PV3D))/m.edB(pat::Muon::PV3D) < muonSIP && // SIP3D cut
-    fabs(m.muonBestTrack()->dxy(srcVtx->at(0).position())) < muonPVDXY &&
-    fabs(m.muonBestTrack()->dz(srcVtx->at(0).position())) < muonPVDZ;
-  return passID && passSelection;
+  return bool(lept.userFloat(idDecisionLabel_+"Tight"));
 }
 
 template<typename T, typename U>
@@ -191,14 +138,12 @@ bool MiniAODObjectEmbedFSR<T,U>::passClusterVeto(const pat::PFParticle& pho, con
 {
   for(pat::ElectronCollection::iterator elec = srcVeto->begin(); elec != srcVeto->end(); ++elec)
     {
-      bool passDR = reco::deltaR(pho.eta(), pho.phi(), elec->superCluster()->eta(), elec->superCluster()->phi()) < vetoDR;
-      bool passDPhi = fabs(reco::deltaPhi(pho.phi(), elec->superCluster()->phi())) < vetoDPhi;
-      bool passDEta = fabs(pho.eta() - elec->superCluster()->eta()) < vetoDEta;
-      if(! (passDR || (passDEta && passDPhi))) continue;
-
-      if(reco::deltaR(pairedLep.p4(), elec->p4()) < 0.0001) continue; // same object
-
       if(!leptonPassID(*elec)) continue;
+
+      bool failDR = reco::deltaR(pho.eta(), pho.phi(), elec->superCluster()->eta(), elec->superCluster()->phi()) < vetoDR;
+      bool failDPhi = fabs(reco::deltaPhi(pho.phi(), elec->superCluster()->phi())) < vetoDPhi;
+      bool failDEta = fabs(pho.eta() - elec->superCluster()->eta()) < vetoDEta;
+      if(! (failDR || (failDEta && failDPhi))) continue;
 
       // Found a vetoing electron
       return false;

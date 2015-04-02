@@ -71,26 +71,7 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
     vetoDR(iConfig.exists("vetoDR") ? iConfig.getParameter<double>("vetoDR") : 0.15),
     vetoDPhi(iConfig.exists("vetoDPhi") ? iConfig.getParameter<double>("vetoDPhi") : 2.),
     vetoDEta(iConfig.exists("vetoDEta") ? iConfig.getParameter<double>("vetoDEta") : 0.05),
-    electronPt(iConfig.exists("electronPt") ? iConfig.getParameter<double>("electronPt") : 7.),
-    electronMaxEta(iConfig.exists("electronMaxEta") ? iConfig.getParameter<double>("electronMaxEta") : 2.5),
-    electronSIP(iConfig.exists("electronSIP") ? iConfig.getParameter<double>("electronSIP") : 4.),
-    electronPVDXY(iConfig.exists("electronPVDXY") ? iConfig.getParameter<double>("electronPVDXY") : 0.5),
-    electronPVDZ(iConfig.exists("electronPVDZ") ? iConfig.getParameter<double>("electronPVDZ") : 1.),
-    electronIDPtThr(iConfig.exists("electronIDPtThr") ? iConfig.getParameter<double>("electronIDPtThr") : 10.),
-    electronIDEtaThrLow(iConfig.exists("electronIDEtaThrLow") ? iConfig.getParameter<double>("electronIDEtaThrLow") : 0.8),
-    electronIDEtaThrHigh(iConfig.exists("electronIDEtaThrHigh") ? iConfig.getParameter<double>("electronIDEtaThrHigh") : 1.479),
-    electronIDCutLowPtLowEta(iConfig.exists("electronIDCutLowPtLowEta") ? iConfig.getParameter<double>("electronIDCutLowPtLowEta") : 0.47),
-    electronIDCutLowPtMedEta(iConfig.exists("electronIDCutLowPtMedEta") ? iConfig.getParameter<double>("electronIDCutLowPtMedEta") : 0.004),
-    electronIDCutLowPtHighEta(iConfig.exists("electronIDCutLowPtHighEta") ? iConfig.getParameter<double>("electronIDCutLowPtHighEta") : 0.295),
-    electronIDCutHighPtLowEta(iConfig.exists("electronIDCutHighPtLowEta") ? iConfig.getParameter<double>("electronIDCutHighPtLowEta") : -0.34),
-    electronIDCutHighPtMedEta(iConfig.exists("electronIDCutHighPtMedEta") ? iConfig.getParameter<double>("electronIDCutHighPtMedEta") : -0.65),
-    electronIDCutHighPtHighEta(iConfig.exists("electronIDCutHighPtHighEta") ? iConfig.getParameter<double>("electronIDCutHighPtHighEta") : 0.6),
-    electronIDLabel_(iConfig.exists("electronIDLabel") ? iConfig.getParameter<std::string>("electronIDLabel") : "MVANonTrigCSA14"),
-    muonPt(iConfig.exists("muonPt") ? iConfig.getParameter<double>("muonPt") : 5.),
-    muonMaxEta(iConfig.exists("muonMaxEta") ? iConfig.getParameter<double>("muonMaxEta") : 2.4),
-    muonSIP(iConfig.exists("muonSIP") ? iConfig.getParameter<double>("muonSIP") : 4.),
-    muonPVDXY(iConfig.exists("muonPVDXY") ? iConfig.getParameter<double>("muonPVDXY") : 0.5),
-    muonPVDZ(iConfig.exists("muonPVDZ") ? iConfig.getParameter<double>("muonPVDZ") : 1.)
+    idDecisionLabel_(iConfig.exists("idDecisionLabel") ? iConfig.getParameter<std::string>("idDecisionLabel") : "HZZ4lTightIDPass")
       {
 	produces<std::vector<T> >();
       }
@@ -114,15 +95,11 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
   // Relative isolation of photon. Sum of all the userFloats whose keys are passed in as isoLabels
   double photonRelIso(const pat::PFParticle& pho) const;
 
-  // Takes a reco::Candidate and tells you whether it passes ID cuts. e and mu only.
-  // Stores this as a userFloat in the candidate (1 or 0) for reuse (won't persist for
-  // any collection except src
+  // Takes a reco::Candidate and tells you whether it passes ID cuts using decision embedded previously
   template<typename leptonType>
-  bool leptonPassID(leptonType& lept);
-  // helper for electrons. Electron cuts as passed in. 
-  bool idHelper(const pat::Electron& e) const;
-  // helper for muons. Muon cuts: isPFMuon && (isGlobalMuon || isTrackerMuon)
-  bool idHelper(const pat::Muon& m) const;
+  bool leptonPassID(const leptonType& lept) const;
+  template<typename leptonType>
+  bool leptonPassIDTight(const leptonType& lept) const;
 
   // Find out if photon passes cluster veto (returns true if it's good).
   // Pass in the lepton the photon is matched to in case it's an electron
@@ -172,26 +149,9 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
   const double vetoDR; // veto when electron is within dR OR...
   const double vetoDPhi; // ... when it's within dPhi AND dEta
   const double vetoDEta;
-  const double electronPt; // This and following select good electrons
-  const double electronMaxEta;
-  const double electronSIP;
-  const double electronPVDXY;
-  const double electronPVDZ;
-  const double electronIDPtThr; // ID different for high and low pt electrons
-  const double electronIDEtaThrLow; // ID different for low, medium, and high eta electrons
-  const double electronIDEtaThrHigh;
-  const double electronIDCutLowPtLowEta;
-  const double electronIDCutLowPtMedEta;
-  const double electronIDCutLowPtHighEta;
-  const double electronIDCutHighPtLowEta;
-  const double electronIDCutHighPtMedEta;
-  const double electronIDCutHighPtHighEta;
-  const std::string electronIDLabel_; // ID variable to use
-  const double muonPt; // This and following select good muons (along with cuts listed under bool muonPassID above)
-  const double muonMaxEta;
-  const double muonSIP;
-  const double muonPVDXY;
-  const double muonPVDZ;
+  
+  // name of the userFloat holding ID decisions
+  std::string idDecisionLabel_;
 
   int nPassPre;
   int nHaveBest;

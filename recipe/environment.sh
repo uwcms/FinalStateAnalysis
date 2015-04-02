@@ -100,6 +100,7 @@ export pu2011JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions
 export pu2012JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions12/8TeV/PileUp/pileup_JSON_DCSONLY_190389-208686_All_2012_pixelcorr.txt
 
 #check if dev area is up to date
-pushd $fsa
-check_git_updates.sh
-popd
+### Removed by Nate 31 March 2015. Can be put back in when we're following master again.
+# pushd $fsa
+# check_git_updates.sh
+# popd
