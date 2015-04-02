@@ -16,6 +16,11 @@ echo "Activating python virtualenv from $vpython"
 
 export tests=$CMSSW_BASE/test/$SCRAM_ARCH/
 
+# Only use the ZZ MELA packages if we actually need them (they take a long time to compile)
+if [ -d $CMSSW_BASE/src/ZZMatrixElement ]; then
+    export USER_CXXFLAGS="$USER_CXXFLAGS -D\"HZZMELA\""
+fi
+
 # Define shortcuts for the relevant global tags 
 
 # Check CMSSW version
