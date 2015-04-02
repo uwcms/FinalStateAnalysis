@@ -31,6 +31,8 @@ _common_template = PSet(
     templates.event.gen,
     # templates.Vetoes on extra objects
     templates.cleaning.vetos,
+    # VBF variables, because most analyses using FSA want them
+    templates.topology.vbf,
 
     # PHYS14 lepton triggers
     templates.trigger.singleLepton,
@@ -210,13 +212,6 @@ def make_ntuple(*legs, **kwargs):
                     parName
                 ) 
             )
-
-    # If we have two legs or photons, we are interested in VBF selections.
-    if len(legs) == 2 or 'g' in legs or hzz:
-        ntuple_config = PSet(
-            ntuple_config,
-            templates.topology.vbf
-        )
 
     # Optionally apply extra branches in kwargs
     if 'branches' in kwargs:

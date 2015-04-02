@@ -68,6 +68,11 @@ The command would then use the shorthand names for lookup::
 
    submit_job.py MiniAOD_Test make_ntuples_cfg.py channels="eeee,eeem,eemm,emmm,mmmm,eee,eem,emm,mmm" isMC=1 --campaign-tag="Phys14DR-PU20bx25_PHYS14_25_V*" --das-replace-tuple=$fsa/MetaData/tuples/MiniAOD-13TeV.json --samples "ZZ*" "WZ*" "DY*" -o do_test.sh
    bash < do_test.sh
+   
+   
+Note: It's a good idea to put your sample names with wildcards inside quotes, as otherwise the unix 
+wildcard will be expanded before it is passed to the program (so a file named 'WZsubmit.sh' in your 
+folder would cause the argument WZ* to become Wsubmit.sh, which you don't want)
 
 
 
