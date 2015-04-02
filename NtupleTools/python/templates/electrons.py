@@ -36,7 +36,7 @@ id = PSet(
         '({object}.chargedHadronIso()'
         '+max(0.0,{object}.neutralHadronIso()'
         '+{object}.photonIso()'
-        '-{object}.userFloat("rhoCSA14")*{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")))'
+        '-{object}.userFloat("rhoCSA14")*{object}.userFloat("EffectiveArea_HZZ4l2015")))'
         '/{object}.pt()'
     ),
 
@@ -45,6 +45,8 @@ id = PSet(
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
     
     objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
+    objectEffectiveAreaPHYS14 = cms.string('{object}.userFloat("EffectiveArea_HZZ4l2015")'),
+
     objectRho = cms.string('{object}.userFloat("rhoCSA14")'),
     objectRelIso = cms.string("({object}.dr03TkSumPt()"
                "+max({object}.dr03EcalRecHitSumEt()-1.0,0.0)"

@@ -31,6 +31,8 @@ _common_template = PSet(
     templates.event.gen,
     # templates.Vetoes on extra objects
     templates.cleaning.vetos,
+    # VBF variables, because most analyses using FSA want them
+    templates.topology.vbf,
 
     # PHYS14 lepton triggers
     templates.trigger.singleLepton,
@@ -197,7 +199,7 @@ def make_ntuple(*legs, **kwargs):
     }
 
     useMiniAOD = kwargs.get('useMiniAOD',False)
-    hzzfsr = kwargs.get('hzzfsr',False)
+    hzz = kwargs.get('hzz',False)
 
     ntuple_config = _common_template.clone()
     if kwargs.get('runTauSpinner', False):
@@ -210,13 +212,6 @@ def make_ntuple(*legs, **kwargs):
                     parName
                 ) 
             )
-
-    # If we have two legs or photons, we are interested in VBF selections.
-    if len(legs) == 2 or 'g' in legs:
-        ntuple_config = PSet(
-            ntuple_config,
-            templates.topology.vbf
-        )
 
     # Optionally apply extra branches in kwargs
     if 'branches' in kwargs:
@@ -261,7 +256,7 @@ def make_ntuple(*legs, **kwargs):
     
     # Now we need to add all the information about the pairs
     for leg_a, leg_b in itertools.combinations(object_labels, 2):
-        if hzzfsr:
+        if hzz:
             ntuple_config = PSet(
                 ntuple_config,
                 templates.topology.pairs.replace(object1=leg_a, object2=leg_b),
@@ -271,7 +266,6 @@ def make_ntuple(*legs, **kwargs):
             ntuple_config = PSet(
                 ntuple_config,
                 templates.topology.pairs.replace(object1=leg_a, object2=leg_b),
-                templates.topology.zboson.replace(object1=leg_a, object2=leg_b),
                 )
         # Check if we want to enable SVfit
         # Only do SVfit in states with 2 or 4 leptons
@@ -305,22 +299,11 @@ def make_ntuple(*legs, **kwargs):
                 templates.topology.svfit.replace(object1=leg_a, object2=leg_b)
             )
 
-    # Are we running on the ZZ-specific collections?
-    zz_mode = kwargs.get('zz_mode', False)
-
     analyzerSrc = "finalState" + "".join(
             _producer_translation[x] for x in legs ) + producer_suffix
 
-    if zz_mode:
-        assert not hzzfsr, "Only use one kind of HZZ FSR. Use zz_mode for <= 8TeV, hzzfsr for 13TeV"
-        analyzerSrc += "Hzz"
-        ntuple_config = PSet(
-                ntuple_config,
-                templates.topology.zzfsr
-        )
-
     if useMiniAOD:
-        if hzzfsr:
+        if hzz:
             ntuple_config = PSet(
                 ntuple_config,
                 templates.topology.fsrMiniAOD
@@ -418,7 +401,7 @@ def make_ntuple(*legs, **kwargs):
     noclean = kwargs.get('noclean', False)
 
     # ZZ-producer does not require this cleaning step
-    make_unique = not noclean and not zz_mode
+    make_unique = not noclean
 
     isDblH = kwargs.get('dblhMode', False)
     
@@ -479,9 +462,8 @@ def make_ntuple(*legs, **kwargs):
                         )
                     ))
                 else:
-                    if hzzfsr:
+                    if hzz:
                         cutstr = 'zCompatibilityFSR(%s, %s, "FSRCand") < zCompatibilityFSR(%s, %s, "FSRCand")'
-                        # 'zCompatibility(subcandfsr(%s, %s, "FSRCand")) < zCompatibility(subcandfsr(%s, %s, "FSRCand"))'
                     else:
                         cutstr = 'zCompatibility(%s, %s) < zCompatibility(%s, %s)'
 
@@ -489,41 +471,43 @@ def make_ntuple(*legs, **kwargs):
 
                     print cutstr%(leg1_idx_label, leg2_idx_label, leg1_idx_label,leg3_idx_label)
 
-                    output.analysis.selections.append(cms.PSet(
-                        name=cms.string('Z12_Better_Z13'),
-                        cut=cms.string(
-                            cutstr %
-                            (leg1_idx_label, leg2_idx_label, leg1_idx_label,
-                             leg3_idx_label)
-                        )
-                    ))
-
-                    output.analysis.selections.append(cms.PSet(
-                        name=cms.string('Z12_Better_Z23'),
-                        cut=cms.string(
-                            cutstr %
-                            (leg1_idx_label, leg2_idx_label, leg2_idx_label,
-                             leg3_idx_label)
-                        )
-                    ))
-
-                    output.analysis.selections.append(cms.PSet(
-                        name=cms.string('Z12_Better_Z14'),
-                        cut=cms.string(
-                            cutstr %
-                            (leg1_idx_label, leg2_idx_label, leg1_idx_label,
-                             leg4_idx_label)
-                        )
-                    ))
-
-                    output.analysis.selections.append(cms.PSet(
-                        name=cms.string('Z12_Better_Z24'),
-                        cut=cms.string(
-                            cutstr %
-                            (leg1_idx_label, leg2_idx_label, leg2_idx_label,
-                             leg4_idx_label)
-                        )
-                    ))
+                    if not hzz: # HZZ wants all ZZ candidates to have their own row, so order the Zs but don't cut alternative pairings
+                        output.analysis.selections.append(cms.PSet(
+                            name=cms.string('Z12_Better_Z13'),
+                            cut=cms.string(
+                                cutstr %
+                                (leg1_idx_label, leg2_idx_label, leg1_idx_label,
+                                 leg3_idx_label)
+                            )
+                        ))
+    
+                        output.analysis.selections.append(cms.PSet(
+                            name=cms.string('Z12_Better_Z23'),
+                            cut=cms.string(
+                                cutstr %
+                                (leg1_idx_label, leg2_idx_label, leg2_idx_label,
+                                 leg3_idx_label)
+                            )
+                        ))
+    
+                        output.analysis.selections.append(cms.PSet(
+                            name=cms.string('Z12_Better_Z14'),
+                            cut=cms.string(
+                                cutstr %
+                                (leg1_idx_label, leg2_idx_label, leg1_idx_label,
+                                 leg4_idx_label)
+                            )
+                        ))
+    
+                        output.analysis.selections.append(cms.PSet(
+                            name=cms.string('Z12_Better_Z24'),
+                            cut=cms.string(
+                                cutstr %
+                                (leg1_idx_label, leg2_idx_label, leg2_idx_label,
+                                 leg4_idx_label)
+                            )
+                        ))
+                    #endif (everything past here happens for HZZ as well) 
 
                     output.analysis.selections.append(cms.PSet(
                         name=cms.string('Z12_Better_Z34'),

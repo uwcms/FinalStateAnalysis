@@ -32,27 +32,7 @@ maxEta                       = cms.double(2.4)
 vetoDR                       = cms.double(0.15)
 vetoDPhi                     = cms.double(2.)
 vetoDEta                     = cms.double(0.05)
-electronPt                   = cms.double(7.)
-electronMaxEta               = cms.double(2.5)
-electronSIP                  = cms.double(4.)
-electronPVDXY                = cms.double(0.5)
-electronPVDZ                 = cms.double(1.)
-electronIDPtThr              = cms.double(10.)
-electronIDEtaThrLow          = cms.double(0.8)
-electronIDEtaThrHigh         = cms.double(1.479)
-electronIDCutLowPtLowEta     = cms.double(0.47)
-electronIDCutLowPtMedEta     = cms.double(0.004)
-electronIDCutLowPtHighEta    = cms.double(0.295)
-electronIDCutHighPtLowEta    = cms.double(-0.34)
-electronIDCutHighPtMedEta    = cms.double(-0.65)
-electronIDCutHighPtHighEta   = cms.double(0.6)
-electronIDLabel              = cms.string("MVANonTrigCSA14")
-muonPt                       = cms.double(5.)
-muonMaxEta                   = cms.double(2.4)
-muonSIP                      = cms.double(4.)
-muonPVDXY                    = cms.double(0.5)
-muonPVDZ                     = cms.double(1.)
-
+idDecisionLabel              = cms.string("fixme")
 
 
 
@@ -63,7 +43,6 @@ embedFSRInMuons = cms.EDProducer(
     srcAlt                       = srcAlt,
     srcVeto                      = srcVeto,
     srcVtx                       = srcVtx,
-#     userLabel                    = userLabel,
     isoLabels                    = isoLabels,                                   
     dRInner                      = dRInner,
     dROuter                      = dROuter,
@@ -75,26 +54,7 @@ embedFSRInMuons = cms.EDProducer(
     vetoDR                       = vetoDR,
     vetoDPhi                     = vetoDPhi,
     vetoDEta                     = vetoDEta,
-    electronPt                   = electronPt,
-    electronMaxEta               = electronMaxEta,
-    electronSIP                  = electronSIP,
-    electronPVDXY                = electronPVDXY,
-    electronPVDZ                 = electronPVDZ,
-    electronIDPtThr              = electronIDPtThr,
-    electronIDEtaThrLow          = electronIDEtaThrLow,
-    electronIDEtaThrHigh         = electronIDEtaThrHigh,
-    electronIDCutLowPtLowEta     = electronIDCutLowPtLowEta,
-    electronIDCutLowPtMedEta     = electronIDCutLowPtMedEta,
-    electronIDCutLowPtHighEta    = electronIDCutLowPtHighEta,
-    electronIDCutHighPtLowEta    = electronIDCutHighPtLowEta,
-    electronIDCutHighPtMedEta    = electronIDCutHighPtMedEta,
-    electronIDCutHighPtHighEta   = electronIDCutHighPtHighEta,
-    electronIDLabel              = electronIDLabel,
-    muonPt                       = muonPt,
-    muonMaxEta                   = muonMaxEta,
-    muonSIP                      = muonSIP,
-    muonPVDXY                    = muonPVDXY,
-    muonPVDZ                     = muonPVDZ,
+    idDecisionLabel              = idDecisionLabel,
 )
 
 
@@ -104,7 +64,6 @@ embedFSRInElectrons = cms.EDProducer(
     srcAlt                       = srcAlt,
     srcVeto                      = srcVeto,
     srcVtx                       = srcVtx,
-#     userLabel                    = userLabel,
     isoLabels                    = isoLabels,                                   
     dRInner                      = dRInner,
     dROuter                      = dROuter,
@@ -116,26 +75,7 @@ embedFSRInElectrons = cms.EDProducer(
     vetoDR                       = vetoDR,
     vetoDPhi                     = vetoDPhi,
     vetoDEta                     = vetoDEta,
-    electronPt                   = electronPt,
-    electronMaxEta               = electronMaxEta,
-    electronSIP                  = electronSIP,
-    electronPVDXY                = electronPVDXY,
-    electronPVDZ                 = electronPVDZ,
-    electronIDPtThr              = electronIDPtThr,
-    electronIDEtaThrLow          = electronIDEtaThrLow,
-    electronIDEtaThrHigh         = electronIDEtaThrHigh,
-    electronIDCutLowPtLowEta     = electronIDCutLowPtLowEta,
-    electronIDCutLowPtMedEta     = electronIDCutLowPtMedEta,
-    electronIDCutLowPtHighEta    = electronIDCutLowPtHighEta,
-    electronIDCutHighPtLowEta    = electronIDCutHighPtLowEta,
-    electronIDCutHighPtMedEta    = electronIDCutHighPtMedEta,
-    electronIDCutHighPtHighEta   = electronIDCutHighPtHighEta,
-    electronIDLabel              = electronIDLabel,
-    muonPt                       = muonPt,
-    muonMaxEta                   = muonMaxEta,
-    muonSIP                      = muonSIP,
-    muonPVDXY                    = muonPVDXY,
-    muonPVDZ                     = muonPVDZ,
+    idDecisionLabel              = idDecisionLabel,
 )
 
 
