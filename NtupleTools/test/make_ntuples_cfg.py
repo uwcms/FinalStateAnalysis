@@ -642,21 +642,20 @@ final_states = [x.strip() for x in options.channels.split(',')]
 def order_final_state(state):
     '''
     Sorts final state objects into order expected by FSA.
+    
+    Sorts string of characters into ordr defined by "order." Invalid 
+    characters are ignored, and a warning is pribted to stdout
+    
+    returns the sorted string
     '''
-    order = ['e', 'm', 't', 'g', 'j']
-    counts = dict.fromkeys(order, 0)
-    for letter in state:
-        if letter in counts:
-            counts[letter] += 1
-        else:
-            print 'Warning: Invalid object "%s" in state ignored' \
-                % letter
-    state = ""
-    for letter in order:
-        for i in range(0, counts[letter]):
-            state += letter
-    return state
-
+    order = "emtgj"
+    for obj in state:
+        if obj not in order:
+            print "invalid Final State object "\
+                "'%s' ignored" % obj
+            state = state.replace(obj, "")
+    return ''.join(sorted(state, key=lambda x: order.index(x)))
+ 
 def expanded_final_states(input):
     for fs in input:
         if fs in _FINAL_STATE_GROUPS:
