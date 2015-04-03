@@ -40,12 +40,14 @@ Checkout the needed CMSSW tags:
   cd recipe/
   # Checkout needed packages and apply patches
   # This enables all options.  You can turn off things you don't need.
-  PATPROD=1 LUMI=1 LIMITS=0 ./recipe.sh
+  ./recipe.sh
+  cd ..
   # Setup FSA environment
   source environment.sh
   # Compile
-  cd ../../
+  pushd ..
   scram b -j 8
+  popd
 ```
 
 You must always set up the CMSSW environment + some extra variables from FinalStateAnalysis:
