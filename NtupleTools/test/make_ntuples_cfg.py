@@ -638,6 +638,24 @@ if options.runDQM: options.channels = 'dqm'
 # Generate analyzers which build the desired final states.
 final_states = [x.strip() for x in options.channels.split(',')]
 
+
+def order_final_state(state):
+    '''
+    Sorts final state objects into order expected by FSA.
+    
+    Sorts string of characters into ordr defined by "order." Invalid 
+    characters are ignored, and a warning is pribted to stdout
+    
+    returns the sorted string
+    '''
+    order = "emtgj"
+    for obj in state:
+        if obj not in order:
+            print "invalid Final State object "\
+                "'%s' ignored" % obj
+            state = state.replace(obj, "")
+    return ''.join(sorted(state, key=lambda x: order.index(x)))
+ 
 def expanded_final_states(input):
     for fs in input:
         if fs in _FINAL_STATE_GROUPS:
@@ -646,10 +664,10 @@ def expanded_final_states(input):
         else:
             yield fs
 
-
 print "Building ntuple for final states: %s" % ", ".join(final_states)
 for final_state in expanded_final_states(final_states):
     extraJets = options.nExtraJets if 'j' not in final_state else 0
+    final_state = order_final_state(final_state)
     analyzer = make_ntuple(*final_state, 
                             svFit=options.svFit, dblhMode=options.dblhMode,
                             runTauSpinner=options.runTauSpinner, 
