@@ -306,7 +306,7 @@ def make_ntuple(*legs, **kwargs):
         if hzz:
             ntuple_config = PSet(
                 ntuple_config,
-                templates.topology.fsrMiniAOD
+                templates.topology.hzzMiniAOD
                 )
         
         # Some feature are not included in miniAOD or are currently broken. 

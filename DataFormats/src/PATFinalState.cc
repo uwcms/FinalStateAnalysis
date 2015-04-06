@@ -26,6 +26,7 @@
 #include <iostream>
 #include <sstream>
 #include "TMath.h"
+#include "TLorentzVector.h"
 
 namespace {
 
@@ -63,6 +64,12 @@ PATFinalState::PATFinalState(
     const edm::Ptr<PATFinalStateEvent>& event) : PATLeafCandidate(reco::LeafCandidate(charge, p4))
 {
   event_ = event;
+
+  // ZZ MELA calculator (if needed)
+#ifdef HZZMELA
+  std::cout << "foo" << std::endl;
+  MEM_ = MEMs(13, 125.6, "CTEQ6L");
+#endif
 }
 
 const edm::Ptr<pat::MET>& PATFinalState::met() const {
@@ -1259,6 +1266,43 @@ const bool PATFinalState::genVtxPVMatch(const size_t i) const
   return true;
 }
 
+
+// HZZ MELA things
+#ifdef HZZMELA
+const double PATFinalState::getZZME(MEMNames::Processes process, MEMNames::MEMCalcs calc, const std::string& fsrLabel) const
+{
+  std::vector<TLorentzVector> partP4 = std::vector<TLorentzVector>();
+  std::vector<int> partID = std::vector<int>();
+  for(unsigned int iLep = 0; iLep < numberOfDaughters(); iLep++)
+    {
+      PATFinalState::LorentzVector thisP4 = subcandfsr(iLep, get4LPartner(iLep), fsrLabel)->p4();
+      partP4.push_back(TLorentzVector());
+      partP4.back().SetPtEtaPhiM(thisP4.pt(), thisP4.eta(), thisP4.phi(), thisP4.mass());
+      partID.push_back(daughter(iLep)->pdgId());
+    }
+
+  double ME;
+  MEM_.computeME(process, calc, partP4, partID, ME);
+
+  return ME;
+}
+
+
+const float PATFinalState::getZZKD(MEMNames::Processes signal, MEMNames::Processes background, 
+		    MEMNames::MEMCalcs calcSig, MEMNames::MEMCalcs calcBkg, 
+		    const std::string& fsrLabel) const
+{
+  double pSig = getZZME(signal, calcSig, fsrLabel);
+  double pBkg = getZZME(background, calcBkg, fsrLabel);
+
+  return float(pSig / (pSig + pBkg));
+}
+
+const float PATFinalState::ZZKDTest() const
+{
+  return getZZKD(MEMNames::kSMHiggs, MEMNames::kqqZZ, MEMNames::kJHUGen, MEMNames::kMCFM, "FSRCand");
+}
+#endif
 
 
 

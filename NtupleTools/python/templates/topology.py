@@ -66,14 +66,16 @@ finalstate = PSet(
     MassErrord4 = 'userFloat("cand_dM_3")'
 )
 
-# use fsrMiniAOD OR zzfsr, never both
-fsrMiniAOD = PSet(
+# FSR, jets, and KD/MELA stuff for ZZ
+hzzMiniAOD = PSet(
     MassFSR = 'p4fsr("FSRCand").M',
     PtFSR = 'p4fsr("FSRCand").pt',
     EtaFSR = 'p4fsr("FSRCand").eta',
     PhiFSR = 'p4fsr("FSRCand").phi',
     MtFSR = 'p4fsr("FSRCand").Mt',
     nJets = 'evt.jets.size',
+#    D_bkg = 'getZZKD(memTypes().kSMHiggs(), memTypes().kqqZZ(), memTypes().kJHUGen(), memTypes().kMCFM(), "FSRCand")',
+#    D_bkg = 'ZZKDTest',
 )
 
 zbosonMiniAOD = PSet(
