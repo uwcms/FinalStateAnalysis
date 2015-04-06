@@ -233,7 +233,7 @@ class PATFinalStateEvent {
     edm::RefProd<pat::PackedCandidateCollection> packedPFRefProd_;
     reco::TrackRefProd tracks_;
     reco::GsfTrackRefProd gsfTracks_;
-    // List of different MET types (non used with miniAOD)
+    // List of different MET types
     std::map<std::string, edm::Ptr<pat::MET> > mets_;
 
 };

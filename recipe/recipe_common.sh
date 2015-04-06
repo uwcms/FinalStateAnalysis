@@ -9,11 +9,10 @@ MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
 MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 
 #for standalone version of svfit
-# cvs co -r V00-01-04s TauAnalysis/CandidateTools
-git clone https://github.com/cms-analysis/TauAnalysis-CandidateTools.git TauAnalysis/CandidateTools
-pushd $CMSSW_BASE/src/TauAnalysis/CandidateTools
-git checkout TauAnalysis-CandidateTools-V00-01-04s
-pushd $CMSSW_BASE/src
+git clone git@github.com:veelken/SVfit_standalone.git TauAnalysis/SVfitStandalone
+pushd $CMSSW_BASE/src/TauAnalysis/SVfitStandalone
+git checkout svFit_2015Mar28
+popd
 
 # Tags that work in any release
 

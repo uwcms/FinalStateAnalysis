@@ -72,13 +72,6 @@ def produce_final_states(process, collections, output_commands,
         if 'extraWeights' in collections:
             process.patFinalStateEventProducer.extraWeights = collections['extraWeights']
         if useMiniAOD:
-            # first, recalculate pfMet without type1 corrections
-            #from RecoMET.METProducers.PFMET_cfi import pfMet
-            #process.pfMet = pfMet.clone(src = "packedPFCandidates")
-            #process.pfMet.calculateSignificance = False # this can't be easily implemented on packed PF candidates at the moment
-            #sequence += process.pfMet
-            # now produce the final states
-            #process.patFinalStateEventProducerMiniAOD.mets.pfmet = cms.InputTag("pfMet")
             process.patFinalStateEventProducer.miniAOD = cms.bool(True)
             process.patFinalStateEventProducer.trgSrc = cms.InputTag("selectedPatTrigger")
             process.patFinalStateEventProducer.rhoSrc = cms.InputTag('fixedGridRhoAll')
@@ -87,6 +80,7 @@ def produce_final_states(process, collections, output_commands,
             process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles")
             process.patFinalStateEventProducer.mets = cms.PSet(
                 pfmet = cms.InputTag(pfmetsrc),
+                mvamet = cms.InputTag(mvametsrc)
             )
         else:
             process.patFinalStateEventProducer.mets.pfmet = pfmetsrc

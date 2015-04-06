@@ -332,16 +332,7 @@ PATFinalState::SVfit(int i, int j) const {
   toFit.push_back(daughterPtr(i));
   toFit.push_back(daughterPtr(j));
 
-  edm::Ptr<pat::MET> mvaMet;
-  if(event_->isMiniAOD())
-    {
-      // Turn this back on when miniAOD gains MVA MET
-      std::cout << "MVA MET doesn't exist in miniAOD yet. How did we even get here!?!?!?" << std::endl;
-    }
-  else
-    {
-      mvaMet = evt()->met("mvamet");
-    }
+  edm::Ptr<pat::MET> mvaMet = evt()->met("mvamet");
 
   if (mvaMet.isNull()) {
     throw cms::Exception("MissingMVAMet")

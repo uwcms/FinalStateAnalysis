@@ -313,10 +313,6 @@ def make_ntuple(*legs, **kwargs):
         # Remove them from the ntuples to prevent crashes.
         #!!! Take items off of this list as we unbreak them. !!!#
         notInMiniAOD = [
-            # event.py
-            "mva_met((Et)|(Phi))", # not yet implemented in miniAOD
-            # topology.py
-            "[emtgj][1-9]?MtToMVAMET", # not yet implemented in miniAOD
             # candidates.py
             "t[1-9]?PVDZ",
             "t[1-9]?S?IP[23]D(Err)?",

@@ -42,33 +42,25 @@ pv_info = PSet(
 )
 
 met = PSet(
-    mva_metEt     = 'evt.met("mvamet").et',
-    mva_metPhi    = 'evt.met("mvamet").phi',
-    #type1_pfMetEt  = 'evt.met("pfmet").userCand("type1").et',
-    #type1_pfMetPhi = 'evt.met("pfmet").userCand("type1").phi',
-    pfMetEt  = 'evt.met4vector("pfmet","",1).Et',
-    pfMetPhi = 'evt.met4vector("pfmet","",1).phi',
-    type1_pfMetEt  = 'evt.met4vector("pfmet","type1",1).Et', #1 --> Apply phi correction
-    type1_pfMetPhi = 'evt.met4vector("pfmet","type1",1).phi',
+    mvaMetEt       = 'evt.met("mvamet").et',
+    mvaMetPhi      = 'evt.met("mvamet").phi',
+    pfMetEt        = 'evt.met4vector("pfmet","",1).Et',
+    pfMetPhi       = 'evt.met4vector("pfmet","",1).Phi',
+    type1_pfMetEt  = 'evt.met4vector("pfmet","type1",1).Et', #1 --> phi correction not in miniAOD
+    type1_pfMetPhi = 'evt.met4vector("pfmet","type1",1).Phi',
     #systematics
     pfMet_mes_Et   = 'evt.met4vector("pfmet","mes+", 1).Et',
     pfMet_tes_Et   = 'evt.met4vector("pfmet","tes+", 1).Et',
     pfMet_jes_Et   = 'evt.met4vector("pfmet","jes+", 1).Et',
     pfMet_ues_Et   = 'evt.met4vector("pfmet","ues+", 1).Et',
 
-    pfMet_mes_Phi  = 'evt.met4vector("pfmet","mes+", 1).phi',
-    pfMet_tes_Phi  = 'evt.met4vector("pfmet","tes+", 1).phi',
-    pfMet_jes_Phi  = 'evt.met4vector("pfmet","jes+", 1).phi',
-    pfMet_ues_Phi  = 'evt.met4vector("pfmet","ues+", 1).phi',
+    pfMet_mes_Phi  = 'evt.met4vector("pfmet","mes+", 1).Phi',
+    pfMet_tes_Phi  = 'evt.met4vector("pfmet","tes+", 1).Phi',
+    pfMet_jes_Phi  = 'evt.met4vector("pfmet","jes+", 1).Phi',
+    pfMet_ues_Phi  = 'evt.met4vector("pfmet","ues+", 1).Phi',
     
-    #metSignificance='evt.metSignificance',
     recoilDaught='getDaughtersRecoil().R()',
     recoilWithMet='getDaughtersRecoilWithMet().R()',
-    #does not seem to work, investigating...
-    #recoilWMetSig ='getRecoilWithMetSignificance()',
-    #mvametEt='evt.met("mvamet").et',
-    #mvametPhi='evt.met("mvamet").phi',
-    #mvametSignificance='evt.met("mvamet").significance',
 )
 
 gen = PSet(
