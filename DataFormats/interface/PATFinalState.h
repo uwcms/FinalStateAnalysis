@@ -15,7 +15,8 @@
 #include "TVector2.h"
 
 #ifdef HZZMELA
-#include "ZZMatrixElement/MEMCalculators/interface/MEMCalculators.h"
+class MEMs;
+
 // workaround for namespace-specific stuff in parsed expressions
 /* class MEMEnums */
 /* { */
@@ -365,15 +366,19 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     // Kinematic discriminants and so forth for HZZ
 #ifdef HZZMELA
-    const double getZZME(MEMNames::Processes process, MEMNames::MEMCalcs calc, const std::string& fsrLabel) const;
-    const float getZZKD(MEMNames::Processes signal, MEMNames::Processes background, MEMNames::MEMCalcs calcSig, MEMNames::MEMCalcs calcBkg, const std::string& fsrLabel) const;
-    const float ZZKDTest() const;
+    const double getZZME(uint process, uint calc, const std::string& fsrLabel);
+    const float getZZKD(uint sigProcess, uint sigCalc, uint bkgProcess, uint bkgCalc, const std::string& fsrLabel);
+    // const double getZZME(MEMNames::Processes process, MEMNames::MEMCalcs calc, const std::string& fsrLabel);
+    // const float getZZKD(MEMNames::Processes signal, MEMNames::Processes background, MEMNames::MEMCalcs calcSig, MEMNames::MEMCalcs calcBkg, const std::string& fsrLabel);
+    const float ZZKDTest();
+
+    virtual ~PATFinalState();
 #endif
 
   private:
     edm::Ptr<PATFinalStateEvent> event_;
 #ifdef HZZMELA
-    MEMs MEM_;
+    MEMs* MEM_;
     /* const MEMEnums MEMTypes() const {return MEM_;} */
 #endif
 };

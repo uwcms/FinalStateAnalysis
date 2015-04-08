@@ -71,9 +71,10 @@ export USER_CXXFLAGS="-Wno-delete-non-virtual-dtor -Wno-error=unused-but-set-var
 if [ -d $CMSSW_BASE/src/ZZMatrixElement ]; then
     echo "Using HZZ Matrix Element packages."
     export USER_CXXFLAGS="$USER_CXXFLAGS -D HZZMELA"
-    echo $USER_CXXFLAGS
 fi
 
+echo "Will compile with flags:"
+echo $USER_CXXFLAGS
 
 #check if dev area is up to date
 ### Removed by Nate 31 March 2015. Can be put back in when we're following master again.

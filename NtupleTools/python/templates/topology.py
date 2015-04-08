@@ -75,7 +75,7 @@ hzzMiniAOD = PSet(
     MtFSR = 'p4fsr("FSRCand").Mt',
     nJets = 'evt.jets.size',
 #    D_bkg = 'getZZKD(memTypes().kSMHiggs(), memTypes().kqqZZ(), memTypes().kJHUGen(), memTypes().kMCFM(), "FSRCand")',
-#    D_bkg = 'ZZKDTest',
+    D_bkg = 'ZZKDTest',
 )
 
 zbosonMiniAOD = PSet(

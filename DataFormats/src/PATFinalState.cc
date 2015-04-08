@@ -28,6 +28,10 @@
 #include "TMath.h"
 #include "TLorentzVector.h"
 
+#ifdef HZZMELA
+#include "ZZMatrixElement/MEMCalculators/interface/MEMCalculators.h"
+#endif
+
 namespace {
 
   // Predicate to sort a collection of indices, which correspond to a list of
@@ -68,7 +72,7 @@ PATFinalState::PATFinalState(
   // ZZ MELA calculator (if needed)
 #ifdef HZZMELA
   std::cout << "foo" << std::endl;
-  MEM_ = MEMs(13, 125.6, "CTEQ6L");
+  MEM_ = new MEMs(13, 125.6, "CTEQ6L");
 #endif
 }
 
@@ -1269,7 +1273,8 @@ const bool PATFinalState::genVtxPVMatch(const size_t i) const
 
 // HZZ MELA things
 #ifdef HZZMELA
-const double PATFinalState::getZZME(MEMNames::Processes process, MEMNames::MEMCalcs calc, const std::string& fsrLabel) const
+//const double PATFinalState::getZZME(MEMNames::Processes process, MEMNames::MEMCalcs calc, const std::string& fsrLabel)
+const double PATFinalState::getZZME(uint process, uint calc, const std::string& fsrLabel)
 {
   std::vector<TLorentzVector> partP4 = std::vector<TLorentzVector>();
   std::vector<int> partID = std::vector<int>();
@@ -1282,25 +1287,31 @@ const double PATFinalState::getZZME(MEMNames::Processes process, MEMNames::MEMCa
     }
 
   double ME;
-  MEM_.computeME(process, calc, partP4, partID, ME);
+  MEM_->computeME((MEMNames::Processes)process, (MEMNames::MEMCalcs)calc, partP4, partID, ME);
 
   return ME;
 }
 
 
-const float PATFinalState::getZZKD(MEMNames::Processes signal, MEMNames::Processes background, 
-		    MEMNames::MEMCalcs calcSig, MEMNames::MEMCalcs calcBkg, 
-		    const std::string& fsrLabel) const
+//const float PATFinalState::getZZKD(MEMNames::Processes signal, MEMNames::Processes background, 
+//		    MEMNames::MEMCalcs calcSig, MEMNames::MEMCalcs calcBkg, 
+//		    const std::string& fsrLabel)
+const float PATFinalState::getZZKD(uint sigProcess, uint sigCalc, uint bkgProcess, uint bkgCalc, const std::string& fsrLabel)
 {
-  double pSig = getZZME(signal, calcSig, fsrLabel);
-  double pBkg = getZZME(background, calcBkg, fsrLabel);
+  double pSig = getZZME(sigProcess, sigCalc, fsrLabel);
+  double pBkg = getZZME(bkgProcess, bkgCalc, fsrLabel);
 
   return float(pSig / (pSig + pBkg));
 }
 
-const float PATFinalState::ZZKDTest() const
+const float PATFinalState::ZZKDTest()
 {
-  return getZZKD(MEMNames::kSMHiggs, MEMNames::kqqZZ, MEMNames::kJHUGen, MEMNames::kMCFM, "FSRCand");
+  return getZZKD((uint)MEMNames::kSMHiggs, (uint)MEMNames::kqqZZ, (uint)MEMNames::kJHUGen, (uint)MEMNames::kMCFM, "FSRCand");
+}
+
+PATFinalState::~PATFinalState()
+{
+  delete MEM_;
 }
 #endif
 
