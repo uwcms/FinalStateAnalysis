@@ -26,11 +26,6 @@
 #include <iostream>
 #include <sstream>
 #include "TMath.h"
-#include "TLorentzVector.h"
-
-#ifdef HZZMELA
-#include "ZZMatrixElement/MEMCalculators/interface/MEMCalculators.h"
-#endif
 
 namespace {
 
@@ -68,12 +63,6 @@ PATFinalState::PATFinalState(
     const edm::Ptr<PATFinalStateEvent>& event) : PATLeafCandidate(reco::LeafCandidate(charge, p4))
 {
   event_ = event;
-
-  // ZZ MELA calculator (if needed)
-#ifdef HZZMELA
-  std::cout << "foo" << std::endl;
-  MEM_ = new MEMs(13, 125.6, "CTEQ6L");
-#endif
 }
 
 const edm::Ptr<pat::MET>& PATFinalState::met() const {
@@ -1270,50 +1259,6 @@ const bool PATFinalState::genVtxPVMatch(const size_t i) const
   return true;
 }
 
-
-// HZZ MELA things
-#ifdef HZZMELA
-//const double PATFinalState::getZZME(MEMNames::Processes process, MEMNames::MEMCalcs calc, const std::string& fsrLabel)
-const double PATFinalState::getZZME(uint process, uint calc, const std::string& fsrLabel)
-{
-  std::vector<TLorentzVector> partP4 = std::vector<TLorentzVector>();
-  std::vector<int> partID = std::vector<int>();
-  for(unsigned int iLep = 0; iLep < numberOfDaughters(); iLep++)
-    {
-      PATFinalState::LorentzVector thisP4 = subcandfsr(iLep, get4LPartner(iLep), fsrLabel)->p4();
-      partP4.push_back(TLorentzVector());
-      partP4.back().SetPtEtaPhiM(thisP4.pt(), thisP4.eta(), thisP4.phi(), thisP4.mass());
-      partID.push_back(daughter(iLep)->pdgId());
-    }
-
-  double ME;
-  MEM_->computeME((MEMNames::Processes)process, (MEMNames::MEMCalcs)calc, partP4, partID, ME);
-
-  return ME;
-}
-
-
-//const float PATFinalState::getZZKD(MEMNames::Processes signal, MEMNames::Processes background, 
-//		    MEMNames::MEMCalcs calcSig, MEMNames::MEMCalcs calcBkg, 
-//		    const std::string& fsrLabel)
-const float PATFinalState::getZZKD(uint sigProcess, uint sigCalc, uint bkgProcess, uint bkgCalc, const std::string& fsrLabel)
-{
-  double pSig = getZZME(sigProcess, sigCalc, fsrLabel);
-  double pBkg = getZZME(bkgProcess, bkgCalc, fsrLabel);
-
-  return float(pSig / (pSig + pBkg));
-}
-
-const float PATFinalState::ZZKDTest()
-{
-  return getZZKD((uint)MEMNames::kSMHiggs, (uint)MEMNames::kqqZZ, (uint)MEMNames::kJHUGen, (uint)MEMNames::kMCFM, "FSRCand");
-}
-
-PATFinalState::~PATFinalState()
-{
-  delete MEM_;
-}
-#endif
 
 
 

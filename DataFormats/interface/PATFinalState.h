@@ -14,32 +14,6 @@
 #include "FinalStateAnalysis/DataAlgos/interface/VBFSelections.h"
 #include "TVector2.h"
 
-#ifdef HZZMELA
-class MEMs;
-
-// workaround for namespace-specific stuff in parsed expressions
-/* class MEMEnums */
-/* { */
-/*  public: */
-/*   MEMEnums(){} */
-/*   ~MEMEnums(){} */
-/*   const MEMNames::Processes kSMHiggs() const {return MEMNames::kSMHiggs;} */
-/*   const MEMNames::Processes kqqZZ() const {return MEMNames::kqqZZ;} */
-/*   const MEMNames::Calc kJHUGen() const {return MEMNames::kJHUGen;} */
-/*   const MEMNames::Calc kMCFM() const {return MEMNames::kMCFM;} */
-/* }; */
-
-//typedef enum
-//  {
-//    kMEMSMHiggs = MEMNames::kSMHiggs,
-//    kMEMqqZZ = MEMNames::kqqZZ
-//  } MEMProcesses;
-//typedef enum
-//  {
-//    kMEMJHUGen = MEMNames::kJHUGen,
-//    kMEMMCFM = MEMNames::kMCFM
-//  } MEMCalcs;
-#endif
 
 // Forward delcarations
 namespace pat {
@@ -291,7 +265,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// quad candidate p4 w/ fsr
     LorentzVector p4fsr(const std::string& fsrLabel="") const;
 
-    /// Return's the index of this lepton's Z partner for the ZZ->analysis
+    /// Returns the index of this lepton's Z partner in 4l ordering
     const inline size_t get4LPartner(size_t i) const
     {
       return i + (i%2 ? -1 : 1);
@@ -364,23 +338,8 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // Is the PV the closest vertex to the gen vertex for this object?
     const bool genVtxPVMatch(const size_t i) const;
 
-    // Kinematic discriminants and so forth for HZZ
-#ifdef HZZMELA
-    const double getZZME(uint process, uint calc, const std::string& fsrLabel);
-    const float getZZKD(uint sigProcess, uint sigCalc, uint bkgProcess, uint bkgCalc, const std::string& fsrLabel);
-    // const double getZZME(MEMNames::Processes process, MEMNames::MEMCalcs calc, const std::string& fsrLabel);
-    // const float getZZKD(MEMNames::Processes signal, MEMNames::Processes background, MEMNames::MEMCalcs calcSig, MEMNames::MEMCalcs calcBkg, const std::string& fsrLabel);
-    const float ZZKDTest();
-
-    virtual ~PATFinalState();
-#endif
-
   private:
     edm::Ptr<PATFinalStateEvent> event_;
-#ifdef HZZMELA
-    MEMs* MEM_;
-    /* const MEMEnums MEMTypes() const {return MEM_;} */
-#endif
 };
 
 #endif /* end of include guard: FinalStateAnalysis_DataFormats_PATFinalState_h */
