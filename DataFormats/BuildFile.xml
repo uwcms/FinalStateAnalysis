@@ -6,7 +6,6 @@
 <use   name="CommonTools/Utils"/>
 <use   name="DataFormats/TrackReco"/>
 <use   name="rootrflx"/>
-<use   name="ZZMatrixElement/MEMCalculators"/>
 <export>
   <lib   name="1"/>
 </export>

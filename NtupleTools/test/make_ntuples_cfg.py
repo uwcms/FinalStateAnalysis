@@ -647,6 +647,32 @@ if options.rerunFSA:
         'drop *_patFinalStateEvent*_*_*'
     )
 
+    suffix = '' # most analyses don't need to modify the final states
+    if options.hzz:
+        process.embedHZZMESeq = cms.Sequence()
+        # Embed matrix elements in relevant final states
+        suffix = "HZZME"
+        for quadFS in ['ElecElecElecElec', 
+                       'ElecElecMuMu',
+                       'MuMuMuMu']:
+            oldName = "finalState%s"%quadFS
+            embedProducer = cms.EDProducer(
+                "MiniAODHZZMEEmbedder",
+                src = cms.InputTag(oldName),
+                processes = cms.vstring("p0plus_VAJHU",
+                                        "bkg_VAMCFM"),
+                )
+
+            # give the FS collection the same name as before, but with an identifying suffix
+            newName = oldName + suffix
+            setattr(process, newName, embedProducer)
+            process.embedHZZMESeq += embedProducer
+            output_commands.append('*_%s_*_*'%newName)
+            
+        process.embedHZZME = cms.Path(process.embedHZZMESeq)
+        process.schedule.append(process.embedHZZME)
+        
+
 
 _FINAL_STATE_GROUPS = {
     'zh': 'eeem, eeet, eemt, eett, emmm, emmt, mmmt, mmtt',
@@ -700,7 +726,7 @@ for final_state in expanded_final_states(final_states):
                             svFit=options.svFit, dblhMode=options.dblhMode,
                             runTauSpinner=options.runTauSpinner, 
                             skimCuts=options.skimCuts,useMiniAOD=options.useMiniAOD,
-                            hzz=options.hzz, nExtraJets=extraJets)
+                            hzz=options.hzz, nExtraJets=extraJets, suffix=suffix)
     add_ntuple(final_state, analyzer, process,
                process.schedule, options.eventView)
 
