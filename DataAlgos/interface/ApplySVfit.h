@@ -1,7 +1,7 @@
 ///////////
 // getSVFit mass
 // based on standalone SVfit instructions
-// https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012#SVFit_Christian_Lorenzo_Aram_Rog
+// https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2015#SVfit
 //
 // S.Z. Shalhout (sshalhou@CERN.CH) Nov 20, 2012
 /////////

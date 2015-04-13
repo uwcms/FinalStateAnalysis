@@ -6,10 +6,10 @@
 // S.Z. Shalhout (sshalhou@CERN.CH) Nov 20, 2012
 /////////
 
-
+#include "FWCore/ParameterSet/interface/FileInPath.h"
 #include "DataFormats/Provenance/interface/EventID.h"
 #include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
-#include "TauAnalysis/CandidateTools/interface/NSVfitStandaloneAlgorithm.h"
+#include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
 #include "TLorentzVector.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
@@ -24,10 +24,6 @@
 
 
 namespace ApplySVfit {
-
-  using NSVfitStandalone::Vector;
-  using NSVfitStandalone::LorentzVector;
-  using NSVfitStandalone::MeasuredTauLepton;
 
   // Caching and translation layer
   typedef std::map<size_t, double> SVFitCache;
@@ -59,22 +55,31 @@ namespace ApplySVfit {
 
     for (size_t dau = 0; dau < cands.size(); ++dau) {
       int pdgId = std::abs(cands[dau]->pdgId());
-      if (pdgId == 11 || pdgId == 13)
+      if (pdgId == 11)
         measuredTauLeptons.push_back(
-            MeasuredTauLepton(NSVfitStandalone::kLepDecay,cands[dau]->p4()));
+            MeasuredTauLepton(svFitStandalone::kTauToElecDecay,cands[dau]->pt(),cands[dau]->eta(),cands[dau]->phi(),cands[dau]->mass()));
+      else if (pdgId == 13)
+        measuredTauLeptons.push_back(
+            MeasuredTauLepton(svFitStandalone::kTauToMuDecay,cands[dau]->pt(),cands[dau]->eta(),cands[dau]->phi(),cands[dau]->mass()));
       else if (pdgId == 15)
         measuredTauLeptons.push_back(
-            MeasuredTauLepton(NSVfitStandalone::kHadDecay,cands[dau]->p4()));
+            MeasuredTauLepton(svFitStandalone::kTauToHadDecay,cands[dau]->pt(),cands[dau]->eta(),cands[dau]->phi(),cands[dau]->mass()));
       else
         throw cms::Exception("BadPdgId") << "I don't understand PDG id: "
           << pdgId << ", sorry." << std::endl;
     }
 
-    NSVfitStandaloneAlgorithm algo(measuredTauLeptons,
-                                   measuredMET, convert_matrix(covMET), verbosity);
+    SVfitStandaloneAlgorithm algo(measuredTauLeptons, measuredMET.x(), measuredMET.y(), 
+                                  convert_matrix(covMET), verbosity);
     algo.addLogM(false);
-    algo.integrate();
+    edm::FileInPath inputFileName_visPtResolution("TauAnalysis/SVfitStandalone/data/svFitVisMassAndPtResolutionPDF.root");
+    TH1::AddDirectory(false);  
+    TFile* inputFile_visPtResolution = new TFile(inputFileName_visPtResolution.fullPath().data());
+    algo.shiftVisPt(true, inputFile_visPtResolution);
+    algo.integrateMarkovChain();
     double mass = algo.getMass(); // mass uncertainty not implemented yet
+
+    delete inputFile_visPtResolution;
 
     theCache[hash] = mass;
     return mass;

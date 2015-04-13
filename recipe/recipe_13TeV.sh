@@ -78,6 +78,13 @@ then
   #patch -N -p0 < FinalStateAnalysis/recipe/patches/PATObject.h.patch
   #set -o errexit
 
+  echo "Checking out recipe for mvamet"
+  # https://twiki.cern.ch/twiki/bin/viewauth/CMS/MVAMet#CMSSW_7_2_X_requires_slc6_MiniAO
+  git-cms-merge-topic -u cms-met:72X-13TeV-Training-30Jan15
+  pushd $CMSSW_BASE/src/RecoMET/METPUSubtraction
+  git clone https://github.com/rfriese/RecoMET-METPUSubtraction data -b 72X-13TeV-Phys14_25_V4-26Mar15
+  popd
+
 fi
 
 popd
