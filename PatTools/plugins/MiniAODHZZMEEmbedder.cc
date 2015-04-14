@@ -31,6 +31,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
+#include "DataFormats/Math/interface/deltaR.h"
 
 // FSA includes
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
@@ -155,13 +156,10 @@ const float MiniAODHZZMEEmbedder::getZZME(const PATFinalState& fs, MEMNames::Pro
       PATFinalState::LorentzVector thisP4 = fs.daughter(iLep)->p4();
       reco::CandidatePtr fsrPtr = fs.bestFSROfZ(iLep, fs.get4LPartner(iLep), fsrLabel);
       if(fsrPtr.isAvailable() && fsrPtr.isNonnull())
-	thisP4 += fsrPtr->p4();
+	if(reco::deltaR(thisP4, fsrPtr->p4()) < reco::deltaR(fs.daughter(fs.get4LPartner(iLep))->p4(), fsrPtr->p4()))
+	  thisP4 += fsrPtr->p4();
       partP4.push_back(TLorentzVector());
       partP4.back().SetPtEtaPhiM(thisP4.pt(), thisP4.eta(), thisP4.phi(), thisP4.mass());
-//      std::cout << "bare lepton id:pt,eta,phi,m" << partID.back() << ":" << fs.daughter(iLep)->pt() << "," 
-//		<< fs.daughter(iLep)->eta() << "," << fs.daughter(iLep)->phi() << std::endl;
-//      std::cout << "id:pt,eta,phi,m = " << partID.back() << ":" << thisP4.Pt() << "," 
-//		<< thisP4.Eta() << "," << thisP4.Phi() << "," << partP4.back().M() << std::endl;
     }
 
   double ME;
@@ -182,7 +180,8 @@ void MiniAODHZZMEEmbedder::getPm4l(const PATFinalState& fs, MEMNames::SuperKDsys
       PATFinalState::LorentzVector thisP4 = fs.daughter(iLep)->p4();
       reco::CandidatePtr fsrPtr = fs.bestFSROfZ(iLep, fs.get4LPartner(iLep), fsrLabel);
       if(fsrPtr.isAvailable() && fsrPtr.isNonnull())
-	thisP4 += fsrPtr->p4();
+	if(reco::deltaR(thisP4, fsrPtr->p4()) < reco::deltaR(fs.daughter(fs.get4LPartner(iLep))->p4(), fsrPtr->p4()))
+	  thisP4 += fsrPtr->p4();
       partP4.push_back(TLorentzVector());
       partP4.back().SetPtEtaPhiM(thisP4.pt(), thisP4.eta(), thisP4.phi(), thisP4.mass());
 //      std::cout << "bare lepton id:pt,eta,phi,m" << partID.back() << ":" << fs.daughter(iLep)->pt() << "," 
