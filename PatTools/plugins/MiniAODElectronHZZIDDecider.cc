@@ -91,7 +91,7 @@ MiniAODElectronHZZIDDecider::MiniAODElectronHZZIDDecider(const edm::ParameterSet
                                                                edm::InputTag("slimmedElectrons"))),
   idLabel_(iConfig.exists("idLabel") ?
 	   iConfig.getParameter<std::string>("idLabel") :
-	   std::string("HZZ4lTightIDPass")),
+	   std::string("HZZ4lIDPass")),
   isoLabel_(iConfig.exists("isoLabel") ?
 	   iConfig.getParameter<std::string>("isoLabel") :
 	   std::string("HZZ4lIsoPass")),
@@ -156,7 +156,7 @@ void MiniAODElectronHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSe
 bool MiniAODElectronHZZIDDecider::passKinematics(const edm::Ptr<pat::Electron>& elec) const
 {
   bool result = (elec->pt() > ptCut);
-  result = (result && fabs(elec->superCluster()->eta()) < etaCut);
+  result = (result && fabs(elec->eta()) < etaCut);
   return result;
 }
 

@@ -76,7 +76,7 @@ MiniAODMuonHZZIDDecider::MiniAODMuonHZZIDDecider(const edm::ParameterSet& iConfi
 						       edm::InputTag("slimmedMuons"))),
   idLabel_(iConfig.exists("idLabel") ?
 	   iConfig.getParameter<std::string>("idLabel") :
-	   std::string("HZZ4lTightIDPass")),
+	   std::string("HZZ4lIDPass")),
   isoLabel_(iConfig.exists("isoLabel") ?
 	   iConfig.getParameter<std::string>("isoLabel") :
 	   std::string("HZZ4lIsoPass")),
@@ -132,15 +132,15 @@ bool MiniAODMuonHZZIDDecider::passKinematics(const edm::Ptr<pat::Muon>& mu) cons
 bool MiniAODMuonHZZIDDecider::passVertex(const edm::Ptr<pat::Muon>& mu) const
 {
   return (fabs(mu->dB(pat::Muon::PV3D))/mu->edB(pat::Muon::PV3D) < sipCut && 
-	  fabs(mu->innerTrack()->dxy(vertices->at(0).position())) < pvDXYCut &&
-	  fabs(mu->innerTrack()->dz(vertices->at(0).position())) < pvDZCut);
+	  fabs(mu->muonBestTrack()->dxy(vertices->at(0).position())) < pvDXYCut &&
+	  fabs(mu->muonBestTrack()->dz(vertices->at(0).position())) < pvDZCut);
 }
 
 
 bool MiniAODMuonHZZIDDecider::passType(const edm::Ptr<pat::Muon>& mu) const
 {
   // Global muon or (arbitrated) tracker muon
-  return (mu->isGlobalMuon() || (mu->isTrackerMuon() && mu->numberOfMatchedStations() >= 2));
+  return (mu->isGlobalMuon() || (mu->isTrackerMuon() && mu->numberOfMatchedStations() > 0)) && mu->muonBestTrackType() != 2;
 }
 
 
