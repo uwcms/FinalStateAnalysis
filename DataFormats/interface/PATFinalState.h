@@ -329,7 +329,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     const int getElectronMissingHits(const size_t i) const;
 
     // Get the distance from this electron to the nearest muon passing 
-    // (isPFMuon || isGlobalMuon) and a few loose quality cuts
+    // some quality cuts
     const float electronClosestMuonDR(const size_t i) const;
 
     // Helper function to get global track hits for muon i

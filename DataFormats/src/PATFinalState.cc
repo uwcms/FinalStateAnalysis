@@ -1166,7 +1166,7 @@ const float PATFinalState::getPVDZ(const size_t i) const
       else if(abs(daughter(i)->pdgId()) == 13)
 	{
 	  const edm::Ptr<reco::Vertex> pv = event_->pv();
-	  return daughterAsMuon(i)->innerTrack()->dz(pv->position());
+	  return daughterAsMuon(i)->muonBestTrack()->dz(pv->position());
 	}
       throw cms::Exception("InvalidParticle") << "FSA can only find dZ for electron and muon for now" << std::endl;
     }
@@ -1185,7 +1185,7 @@ const float PATFinalState::getPVDXY(const size_t i) const
       else if(abs(daughter(i)->pdgId()) == 13)
 	{
 	  const edm::Ptr<reco::Vertex> pv = event_->pv();
-	  return daughterAsMuon(i)->innerTrack()->dxy(pv->position());
+	  return daughterAsMuon(i)->muonBestTrack()->dxy(pv->position());
 	}
       else if(abs(daughter(i)->pdgId()) == 15)
 	{
@@ -1215,12 +1215,15 @@ const float PATFinalState::electronClosestMuonDR(const size_t i) const
   for(pat::MuonCollection::const_iterator iMu = evt()->muons().begin();
       iMu != evt()->muons().end(); ++iMu)
     {
-      if(!( // have to pass loose muon cuts + global or PF muon
-	   (iMu->isGlobalMuon() || iMu->isPFMuon())
+      if(!( // have to pass tight muon cuts + SIP
+	   (iMu->isGlobalMuon() || (iMu->isTrackerMuon() && iMu->numberOfMatchedStations() > 0))
+	   && iMu->isPFMuon()
 	   && iMu->pt() > 5 
 	   && fabs(iMu->eta()) < 2.4
 	   && iMu->muonBestTrack()->dxy(evt()->pv()->position()) < 0.5
 	   && iMu->muonBestTrack()->dz(evt()->pv()->position()) < 1.
+	   && iMu->muonBestTrackType() != 2
+	   && fabs(iMu->dB(pat::Muon::PV3D) / iMu->edB(pat::Muon::PV3D)) < 4
 	   ))
 	continue;
       float thisDR = reco::deltaR(daughter(i)->p4(), iMu->p4());
