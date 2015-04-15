@@ -792,71 +792,15 @@ const reco::CandidatePtr PATFinalState::bestFSROfZ(int i, int j, const std::stri
 PATFinalState::LorentzVector
 PATFinalState::p4fsr(const std::string& fsrLabel) const
 {
-  if(evt()->isMiniAOD())
+  // start with the 4-momentum of the first Z and add to it
+  PATFinalState::LorentzVector p = subcandfsr(0, 1, fsrLabel)->p4();
+
+  for(unsigned int i = 2; i+1 < numberOfDaughters(); i += 2)
     {
-      PATFinalStateProxy bestZ;
-      int bestL1 = 0;
-      int bestL2 = 1;
-      
-      for(int lep1 = 0; lep1 < 3; ++lep1)
-	{
-	  for(int lep2 = lep1 + 1; lep2 <= 3; ++lep2)
-	    {
-	      PATFinalStateProxy cand = subcandfsr(lep1,lep2,fsrLabel);
-	      if(lep1 == 0 && lep2 == 1) // no best Z yet
-		{
-		  bestZ = cand;
-		  continue;
-		}
-	      
-	      if(zCompatibility(cand) < zCompatibility(bestZ))
-		{
-		  bestZ = cand;
-		  bestL1 = lep1;
-		  bestL2 = lep2;
-		  continue;
-		}
-	    }
-	}
-
-      int otherL1 = -1;
-      int otherL2 = -1;
-      for(int foo = 0; foo < 4; ++foo)
-	{
-	  if(foo != bestL1 && foo != bestL2)
-	    {
-	      if(otherL1 == -1)
-		{
-		  otherL1 = foo;
-		}
-	      else
-		{
-		  otherL2 = foo;
-		}
-	    }
-	}
-      PATFinalStateProxy otherZ = subcandfsr(otherL1, otherL2, fsrLabel);
-
-      return bestZ->p4() + otherZ->p4();
+      p += subcandfsr(i, i+1, fsrLabel)->p4();
     }
-  else
-    {
-      PATFinalState::LorentzVector p4_out;
 
-      p4_out = daughter(0)->p4() + daughter(1)->p4() + daughter(2)->p4() + daughter(3)->p4();
-
-      const std::vector<std::string>& userCandList = this->userCandNames();
-      for (size_t i = 0; i < userCandList.size(); ++i)
-	{
-	  if (userCandList[i].find("fsrPhoton1") != std::string::npos)
-	    p4_out += this->userCand(userCandList[i])->p4();
-
-	  if (userCandList[i].find("fsrPhoton2") != std::string::npos)
-	    p4_out += this->userCand(userCandList[i])->p4();
-	}
-
-      return p4_out;
-    }
+  return p;
 }
 
 PATFinalStateProxy
