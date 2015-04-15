@@ -66,6 +66,17 @@ void MiniAODObjectEmbedFSR<T,U>::produce(edm::Event& iEvent, const edm::EventSet
       embedFSRCand(bestCand, pho);
     }
 
+  // count the number of stored photons and place it in the lepton as a userInt
+  for(typename std::vector<T>::iterator iLep = src->begin(); iLep != src->end(); ++iLep)
+    {
+      unsigned int nFSR = 0;
+
+      while(iLep->hasUserCand(label_+std::to_string(nFSR)))
+	nFSR++;
+
+      iLep->addUserInt("n"+label_, nFSR);
+    }
+
   iEvent.put(src);
 }
 
@@ -156,18 +167,13 @@ bool MiniAODObjectEmbedFSR<T,U>::passClusterVeto(const pat::PFParticle& pho, con
 template<typename T, typename U>
 int MiniAODObjectEmbedFSR<T,U>::embedFSRCand(typename std::vector<T>::iterator& lept, const std::vector<pat::PFParticle>::const_iterator& pho)
 {
-  int n, nFSRCands=0; // This is the nth photon; when it's placed there will be nFSRCands=n+1 total
-  if(!lept->hasUserInt("n"+label_))
-    n = 0;
-  else
-    n = lept->userInt("n"+label_);
-
-  nFSRCands = n+1;
-  lept->addUserInt("n"+label_, nFSRCands);
+  unsigned int n = 0;
+  while(lept->hasUserCand(label_+std::to_string(n)))
+    n++;
 
   lept->addUserCand(label_+std::to_string(n), reco::CandidatePtr(srcPho, std::distance(srcPho->begin(), pho)));
 
-  return nFSRCands;
+  return n;
 }
 
 typedef MiniAODObjectEmbedFSR<pat::Muon, pat::Electron> MiniAODMuonFSREmbedder;
