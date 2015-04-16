@@ -565,6 +565,28 @@ if options.rerunFSA:
                 process.muonIDIsoCheatEmbedding
                 )
             process.schedule.append(process.embedHZZ4lIDDecisions)
+            
+            process.electronCrossCleaning = cms.EDProducer(
+                "PATElectronCleaner",
+                src = cms.InputTag(fs_daughter_inputs['electrons']),
+                preselection = cms.string(''),
+                checkOverlaps = cms.PSet(
+                    muons = cms.PSet(
+                        src = cms.InputTag(fs_daughter_inputs['muons']),
+                        algorithm = cms.string("byDeltaR"),
+                        preselection = cms.string('userFloat("%s") > 0.5'%(idCheatLabel+"Tight")),
+                        deltaR = cms.double(0.05),
+                        checkRecoComponents = cms.bool(False),
+                        pairCut = cms.string(""),
+                        requireNoOverlaps = cms.bool(True),
+                        ),
+                    ),
+                finalCut = cms.string(''),
+                )
+            fs_daughter_inputs['electrons'] = 'electronCrossCleaning'
+            output_commands.append('*_electronCrossCleaning_*_*')
+            process.crossCleanElectrons = cms.Path(process.electronCrossCleaning)
+            process.schedule.append(process.crossCleanElectrons)
 
             # Put FSR photons into leptons as user cands
             from FinalStateAnalysis.PatTools.miniAODEmbedFSR_cfi \
