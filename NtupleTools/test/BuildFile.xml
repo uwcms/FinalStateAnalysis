@@ -1,3 +1,5 @@
+<flags LDFLAGS="-Wl,--unresolved-symbols=ignore-all" />
+
 <use   name="root"/>
 <use   name="boost_program_options"/>
 <use   name="PhysicsTools/FWLite"/>

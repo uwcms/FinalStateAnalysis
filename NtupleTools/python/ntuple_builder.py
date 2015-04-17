@@ -244,8 +244,8 @@ def make_ntuple(*legs, **kwargs):
     #pdb.set_trace()
 
     # If basic jet information is desired for a non-jet final state, put it in
-    for i in range(1,kwargs.get("nExtraJets", 0)+1):
-        label = "jet%i"%i
+    for i in range(kwargs.get("nExtraJets", 0)):
+        label = "jet%i"%(i+1)
         format_labels[label] = 'evt.jets.at(%i)' % i
         format_labels[label + '_idx'] = '%i' % i
         
@@ -306,7 +306,7 @@ def make_ntuple(*legs, **kwargs):
         if hzz:
             ntuple_config = PSet(
                 ntuple_config,
-                templates.topology.fsrMiniAOD
+                templates.topology.hzzMiniAOD
                 )
         
         # Some feature are not included in miniAOD or are currently broken. 

@@ -180,52 +180,57 @@ def produce_final_states(process, collections, output_commands,
         filter=cms.bool(False),
     )
 
-    if use25ns:
-        electronCleaning = ("pt>10&&userInt('cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto')>0"
-                            "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
-                            "-0.5*userIso(2),0.0))/pt()<0.3")
-    else:
-        electronCleaning = ("pt>10&&userInt('cutBasedElectronID-CSA14-50ns-V1-standalone-veto')>0"
-                            "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
-                            "-0.5*userIso(2),0.0))/pt()<0.3")
+    # Standard jet cleaning (but not for HZZ)
+    if not hzz:
+        if use25ns:
+            electronCleaning = ("pt>10&&userInt('cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto')>0"
+                                "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
+                                "-0.5*userIso(2),0.0))/pt()<0.3")
+        else:
+            electronCleaning = ("pt>10&&userInt('cutBasedElectronID-CSA14-50ns-V1-standalone-veto')>0"
+                                "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
+                                "-0.5*userIso(2),0.0))/pt()<0.3")
+    
+        process.jetsFiltered = cms.EDProducer(
+            "PATJetCleaner",
+            src=cms.InputTag(jetsrc),
+            # I leave it loose here, can be tightened at the last step
+            preselection=cms.string(
+                "pt>20 & abs(eta) < 2.5"
+                "& userFloat('idLoose')"),
+            # overlap checking configurables
+            checkOverlaps=cms.PSet(
+                muons=cms.PSet(
+                    src=cms.InputTag("muonsForFinalStates"),
+                    algorithm=cms.string("byDeltaR"),
+                    preselection=cms.string(
+                        "pt>10&&isGlobalMuon&&isTrackerMuon&&"
+                        "(userIso(0)+max(photonIso()+neutralHadronIso()"
+                        "-0.5*puChargedHadronIso(),0))/pt()<0.3"),
+                    deltaR=cms.double(0.3),
+                    checkRecoComponents=cms.bool(False),
+                    pairCut=cms.string(""),
+                    requireNoOverlaps=cms.bool(True),
+                ),
+                electrons=cms.PSet(
+                    src=cms.InputTag("electronsForFinalStates"),
+                    algorithm=cms.string("byDeltaR"),
+                    preselection=cms.string(electronCleaning),
+                    deltaR=cms.double(0.3),
+                    checkRecoComponents=cms.bool(False),
+                    pairCut=cms.string(""),
+                    requireNoOverlaps=cms.bool(True),
+                ),
+            ),
+            # finalCut (any string-based cut on pat::Jet)
+            finalCut=cms.string('')
+        )
+        
+        jetsrc = 'jetsFiltered'
 
-    process.jetsFiltered = cms.EDProducer(
-        "PATJetCleaner",
-        src=cms.InputTag(jetsrc),
-        # I leave it loose here, can be tightened at the last step
-        preselection=cms.string(
-            "pt>20 & abs(eta) < 2.5"
-            "& userFloat('idLoose')"),
-        # overlap checking configurables
-        checkOverlaps=cms.PSet(
-            muons=cms.PSet(
-                src=cms.InputTag("muonsForFinalStates"),
-                algorithm=cms.string("byDeltaR"),
-                preselection=cms.string(
-                    "pt>10&&isGlobalMuon&&isTrackerMuon&&"
-                    "(userIso(0)+max(photonIso()+neutralHadronIso()"
-                    "-0.5*puChargedHadronIso(),0))/pt()<0.3"),
-                deltaR=cms.double(0.3),
-                checkRecoComponents=cms.bool(False),
-                pairCut=cms.string(""),
-                requireNoOverlaps=cms.bool(True),
-            ),
-            electrons=cms.PSet(
-                src=cms.InputTag("electronsForFinalStates"),
-                algorithm=cms.string("byDeltaR"),
-                preselection=cms.string(electronCleaning),
-                deltaR=cms.double(0.3),
-                checkRecoComponents=cms.bool(False),
-                pairCut=cms.string(""),
-                requireNoOverlaps=cms.bool(True),
-            ),
-        ),
-        # finalCut (any string-based cut on pat::Jet)
-        finalCut=cms.string('')
-    )
     process.jetsForFinalStates = cms.EDProducer(
         "PATJetRanker",
-        src=cms.InputTag("jetsFiltered"))
+        src=cms.InputTag(jetsrc))
 
     process.selectObjectsForFinalStates = cms.Sequence(
         process.muonsRank
@@ -234,9 +239,13 @@ def produce_final_states(process, collections, output_commands,
         + process.electronsForFinalStates
         + process.tausRank
         + process.tausForFinalStates
-        + process.jetsFiltered
-        + process.jetsForFinalStates
     )
+
+    if not hzz:
+        process.selectObjectsForFinalStates += process.jetsFiltered
+    
+    process.selectObjectsForFinalStates += process.jetsForFinalStates
+    
     if not noPhotons:
         process.selectObjectsForFinalStates += process.photonsForFinalStates
 

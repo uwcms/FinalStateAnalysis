@@ -1,4 +1,6 @@
 <bin   name="TestFinalStateAnalysisUtilities" file="test_Utilities.cppunit.cc">
+  <flags LDFLAGS="-Wl,--unresolved-symbols=ignore-all" />
+
   <use   name="root"/>
   <use   name="FinalStateAnalysis/Utilities"/>
   <use   name="DataFormats/Math"/>
@@ -10,6 +12,8 @@
 </bin>
 
 <bin   name="TestFinalStateAnalysisExpressionNtuple" file="test_ExpressionNtpule.cppunit.cc">
+  <flags LDFLAGS="-Wl,--unresolved-symbols=ignore-all" />
+
   <use   name="root"/>
   <use   name="FinalStateAnalysis/Utilities"/>
   <use   name="DataFormats/Math"/>

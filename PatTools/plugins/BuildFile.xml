@@ -25,4 +25,6 @@
   <use   name="EgammaAnalysis/ElectronTools"/>
   
   <use   name="RecoBTag/SecondaryVertex"/>
+
+  <use   name="ZZMatrixElement/MEMCalculators"/>
 </library>
