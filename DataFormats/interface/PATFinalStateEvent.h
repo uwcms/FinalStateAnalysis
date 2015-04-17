@@ -55,7 +55,6 @@ class PATFinalStateEvent {
     // This constructor should only be used in the initial production!
     // It automatically sets the version() to the current one.
     PATFinalStateEvent(
-        bool miniAOD,
         double rho,
         const edm::Ptr<reco::Vertex>& pv,
         const edm::PtrVector<reco::Vertex>& recoVertices,
@@ -197,13 +196,9 @@ class PATFinalStateEvent {
     char version() const { return fsaDataFormatVersion_; }
     float jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const;
 
-    // check if is miniAOD
-    const bool isMiniAOD() const {return miniAOD_;} 
-      
   private:
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;
-    bool miniAOD_;
     double rho_;
     pat::TriggerEvent triggerEvent_;
     edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > triggerObjects_;

@@ -44,7 +44,7 @@ def _combinatorics(items, n):
 def produce_final_states(process, collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
                          noTracks=False, noPhotons=False, hzz=False,
-                         rochCor="", eleCor="", useMiniAOD=False, use25ns=False):
+                         rochCor="", eleCor="", use25ns=False, **kwargs):
 
     muonsrc = collections['muons']
     esrc = collections['electrons']
@@ -71,20 +71,15 @@ def produce_final_states(process, collections, output_commands,
         process.patFinalStateEventProducer.puTag = cms.string(puTag)
         if 'extraWeights' in collections:
             process.patFinalStateEventProducer.extraWeights = collections['extraWeights']
-        if useMiniAOD:
-            process.patFinalStateEventProducer.miniAOD = cms.bool(True)
-            process.patFinalStateEventProducer.trgSrc = cms.InputTag("selectedPatTrigger")
-            process.patFinalStateEventProducer.rhoSrc = cms.InputTag('fixedGridRhoAll')
-            process.patFinalStateEventProducer.pvSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
-            process.patFinalStateEventProducer.verticesSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
-            process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles")
-            process.patFinalStateEventProducer.mets = cms.PSet(
-                pfmet = cms.InputTag(pfmetsrc),
-                mvamet = cms.InputTag(mvametsrc)
-            )
-        else:
-            process.patFinalStateEventProducer.mets.pfmet = pfmetsrc
-            process.patFinalStateEventProducer.mets.mvamet = mvametsrc
+        process.patFinalStateEventProducer.trgSrc = cms.InputTag("selectedPatTrigger")
+        process.patFinalStateEventProducer.rhoSrc = cms.InputTag('fixedGridRhoAll')
+        process.patFinalStateEventProducer.pvSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
+        process.patFinalStateEventProducer.verticesSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
+        process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles")
+        process.patFinalStateEventProducer.mets = cms.PSet(
+            pfmet = cms.InputTag(pfmetsrc),
+            mvamet = cms.InputTag(mvametsrc)
+        )
         sequence += process.patFinalStateEventProducer
 
     # Always keep
@@ -92,13 +87,9 @@ def produce_final_states(process, collections, output_commands,
 
     # Apply some loose PT cuts on the objects we use to create the final states
     # so the combinatorics don't blow up
-    muon_string = (
-        'max(pt, userFloat("maxCorPt")) > 4 &'
-        '& (isGlobalMuon | isTrackerMuon)' )
-    
-    elec_string = (
-        'abs(superCluster().eta) < 3.0 '
-        '& max(pt, userFloat("maxCorPt")) > 7' )
+    objectSelections = kwargs.get('objectSelection',{'e':'','m':'','t':'','g':'','j':''})
+    muon_string = objectSelections['m']
+    elec_string = objectSelections['e']
 
 
     # Initialize final-state object sequence
@@ -163,7 +154,7 @@ def produce_final_states(process, collections, output_commands,
     process.photonsForFinalStates = cms.EDFilter(
         "PATPhotonRefSelector",
         src=cms.InputTag(phosrc),
-        cut=cms.string('abs(superCluster().eta()) < 3.0 & pt > 10'),
+        cut=cms.string(objectSelections['g']),
         filter=cms.bool(False),
     )
 
@@ -176,36 +167,27 @@ def produce_final_states(process, collections, output_commands,
     process.tausForFinalStates = cms.EDFilter(
         "PATTauRefSelector",
         src=cms.InputTag("tausRank"),
-        cut=cms.string('abs(eta) < 2.5 & pt > 17 & tauID("decayModeFinding")'),
+        cut=cms.string(objectSelections['t']),
         filter=cms.bool(False),
     )
 
-    if use25ns:
-        electronCleaning = ("pt>10&&userInt('cutBasedElectronID-CSA14-PU20bx25-V0-standalone-veto')>0"
-                            "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
-                            "-0.5*userIso(2),0.0))/pt()<0.3")
-    else:
-        electronCleaning = ("pt>10&&userInt('cutBasedElectronID-CSA14-50ns-V1-standalone-veto')>0"
-                            "&&(userIso(0)+max(userIso(1)+neutralHadronIso()"
-                            "-0.5*userIso(2),0.0))/pt()<0.3")
+    jetCleaningSelections = kwargs.get('jetCleaningSelections',{'e':'','m':''})
+    electronCleaning = jetCleaningSelections['e']
+    muonCleaning = jetCleaningSelections['m']
+    jetDeltaRCleaning = kwargs.get('jetDeltaRCleaning',0.3)
 
     process.jetsFiltered = cms.EDProducer(
         "PATJetCleaner",
         src=cms.InputTag(jetsrc),
         # I leave it loose here, can be tightened at the last step
-        preselection=cms.string(
-            "pt>20 & abs(eta) < 2.5"
-            "& userFloat('idLoose')"),
+        preselection=cms.string(objectSelections['j']),
         # overlap checking configurables
         checkOverlaps=cms.PSet(
             muons=cms.PSet(
                 src=cms.InputTag("muonsForFinalStates"),
                 algorithm=cms.string("byDeltaR"),
-                preselection=cms.string(
-                    "pt>10&&isGlobalMuon&&isTrackerMuon&&"
-                    "(userIso(0)+max(photonIso()+neutralHadronIso()"
-                    "-0.5*puChargedHadronIso(),0))/pt()<0.3"),
-                deltaR=cms.double(0.3),
+                preselection=cms.string(muonCleaning),
+                deltaR=cms.double(jetDeltaRCleaning),
                 checkRecoComponents=cms.bool(False),
                 pairCut=cms.string(""),
                 requireNoOverlaps=cms.bool(True),
@@ -214,7 +196,7 @@ def produce_final_states(process, collections, output_commands,
                 src=cms.InputTag("electronsForFinalStates"),
                 algorithm=cms.string("byDeltaR"),
                 preselection=cms.string(electronCleaning),
-                deltaR=cms.double(0.3),
+                deltaR=cms.double(jetDeltaRCleaning),
                 checkRecoComponents=cms.bool(False),
                 pairCut=cms.string(""),
                 requireNoOverlaps=cms.bool(True),
@@ -259,11 +241,13 @@ def produce_final_states(process, collections, output_commands,
     if noTracks:
         process.patFinalStateVertexFitter.enable = False
 
+    crossCleaning = kwargs.get('crossCleaning','smallestDeltaR() > 0.3')
+
     process.buildSingleObjects = cms.Sequence()
     # build single object pairs
     for object in object_types:
         # Define some basic selections for building combinations
-        cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
+        cuts = [crossCleaning]  # basic x-cleaning
 
         producer = cms.EDProducer(
             "PAT%sFinalStateProducer" % object[0],
@@ -305,7 +289,7 @@ def produce_final_states(process, collections, output_commands,
             continue
 
         # Define some basic selections for building combinations
-        cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
+        cuts = [crossCleaning]  # basic x-cleaning
 
         producer = cms.EDProducer(
             "PAT%s%sFinalStateProducer" % (diobject[0][0], diobject[1][0]),
@@ -348,7 +332,7 @@ def produce_final_states(process, collections, output_commands,
             continue
 
         # Define some basic selections for building combinations
-        cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
+        cuts = [crossCleaning]  # basic x-cleaning
 
         producer = cms.EDProducer(
             "PAT%s%s%sFinalStateProducer" %
@@ -398,7 +382,7 @@ def produce_final_states(process, collections, output_commands,
         if hzz:
             cuts = []
         else:
-            cuts = ['smallestDeltaR() > 0.3']  # basic x-cleaning
+            cuts = [crossCleaning]  # basic x-cleaning
 
         producer = cms.EDProducer(
             "PAT%s%s%s%sFinalStateProducer" %

@@ -79,9 +79,6 @@ class PATFinalStateEventProducer : public edm::EDProducer {
     // The PU scenario to use
     std::string puScenario_;
 
-    // miniAOD scenario
-    bool miniAOD_;
-
     edm::InputTag photonCoreSrc_;
     edm::InputTag gsfCoreSrc_;
 
@@ -106,10 +103,6 @@ class PATFinalStateEventProducer : public edm::EDProducer {
 
 PATFinalStateEventProducer::PATFinalStateEventProducer(
     const edm::ParameterSet& pset) {
-  // miniAOD check
-  miniAOD_ = pset.exists("miniAOD") ?
-    pset.getParameter<bool>("miniAOD") : false;
-
   rhoSrc_ = pset.getParameter<edm::InputTag>("rhoSrc");
   pvSrc_ = pset.getParameter<edm::InputTag>("pvSrc");
   pvBackSrc_ = pset.getParameter<edm::InputTag>("pvSrcBackup");
@@ -121,13 +114,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   jetSrc_ = pset.getParameter<edm::InputTag>("jetSrc");
   phoSrc_ = pset.getParameter<edm::InputTag>("phoSrc");
 
-  if (!miniAOD_) pfSrc_ = pset.getParameter<edm::InputTag>("pfSrc");
-
-  if (!miniAOD_) trackSrc_ = pset.getParameter<edm::InputTag>("trackSrc");
-  if (!miniAOD_) gsfTrackSrc_ = pset.getParameter<edm::InputTag>("gsfTrackSrc");
-
   metSrc_ = pset.getParameter<edm::InputTag>("metSrc");
-  if (!miniAOD_) metCovSrc_ = pset.getParameter<edm::InputTag>("metCovSrc");
   trgSrc_ = pset.getParameter<edm::InputTag>("trgSrc");
   puInfoSrc_ = pset.getParameter<edm::InputTag>("puInfoSrc");
   truthSrc_ = pset.getParameter<edm::InputTag>("genParticleSrc");
@@ -139,17 +126,15 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
 
   trgResultsSrc_ = pset.getParameter<edm::InputTag>("trgResultsSrc");
 
-  if (miniAOD_) {
-    photonCoreSrc_ = pset.getParameter<edm::InputTag>("photonCoreSrc");
-    gsfCoreSrc_ = pset.getParameter<edm::InputTag>("gsfCoreSrc");
+  photonCoreSrc_ = pset.getParameter<edm::InputTag>("photonCoreSrc");
+  gsfCoreSrc_ = pset.getParameter<edm::InputTag>("gsfCoreSrc");
 
-    packedPFSrc_ = pset.getParameter<edm::InputTag>("packedPFSrc");
-    packedGenSrc_ = pset.getParameter<edm::InputTag>("packedGenSrc");
+  packedPFSrc_ = pset.getParameter<edm::InputTag>("packedPFSrc");
+  packedGenSrc_ = pset.getParameter<edm::InputTag>("packedGenSrc");
 
-    trgPrescaleSrc_ = pset.getParameter<edm::InputTag>("trgPrescaleSrc");
+  trgPrescaleSrc_ = pset.getParameter<edm::InputTag>("trgPrescaleSrc");
 
-    jetAK8Src_ = pset.getParameter<edm::InputTag>("jetAK8Src");
-  }
+  jetAK8Src_ = pset.getParameter<edm::InputTag>("jetAK8Src");
 
   // Get different type of METs
   edm::ParameterSet mets = pset.getParameterSet("mets");
@@ -226,38 +211,16 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     getRefProd<pat::PhotonCollection>(phoSrc_, evt);
   edm::RefProd<pat::TauCollection> tauRefProd =
     getRefProd<pat::TauCollection>(tauSrc_, evt);
+  edm::RefProd<pat::PackedCandidateCollection> packedPFRefProd =
+    getRefProd<pat::PackedCandidateCollection>(packedPFSrc_, evt);
   edm::RefProd<reco::PFCandidateCollection> pfRefProd;
   edm::RefProd<reco::TrackCollection> trackRefProd;
   edm::RefProd<reco::GsfTrackCollection> gsftrackRefProd;
-  edm::RefProd<pat::PackedCandidateCollection> packedPFRefProd;
-  if(miniAOD_)
-    {
-      packedPFRefProd =	getRefProd<pat::PackedCandidateCollection>(packedPFSrc_, evt);
-    }
-  else
-    {
-      pfRefProd = getRefProd<reco::PFCandidateCollection>(pfSrc_, evt);
-      trackRefProd = getRefProd<reco::TrackCollection>(trackSrc_, evt);
-      gsftrackRefProd =	getRefProd<reco::GsfTrackCollection>(gsfTrackSrc_, evt); 
-    }
 
   edm::Handle<edm::View<pat::MET> > met;
   evt.getByLabel(metSrc_, met);
   edm::Ptr<pat::MET> metPtr = met->ptrAt(0);
-
   TMatrixD metCovariance(2,2);
-  if (!miniAOD_) {
-    // Get MET covariance matrix
-    edm::Handle<Matrix> metCov;
-    evt.getByLabel(metCovSrc_, metCov);
-    if (metCov.isValid()) {
-      // Covert to TMatrixD
-      metCovariance(0,0) = (*metCov)(0,0);
-      metCovariance(0,1) = (*metCov)(0,1);
-      metCovariance(1,0) = (*metCov)(1,0);
-      metCovariance(1,1) = (*metCov)(1,1);
-    }
-  }
 
   std::map<std::string, edm::Ptr<pat::MET> > theMEts;
   // Get different types of METs - this will be a map like
@@ -287,7 +250,6 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   evt.getByLabel(trgResultsSrc_, trigResults);
   const edm::TriggerNames& names = evt.triggerNames(*trigResults);
   evt.getByLabel(trgPrescaleSrc_, trigPrescale);
-  if (!miniAOD_) evt.getByLabel(trgSrc_, trig);
 
   edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
   evt.getByLabel(puInfoSrc_, puInfo);
@@ -336,21 +298,12 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
   PATFinalStateEvent* theEvent;
-  if (miniAOD_) {
-    pat::TriggerEvent* trg = new pat::TriggerEvent();
-    theEvent = new PATFinalStateEvent(miniAOD_, *rho, pvPtr, verticesPtr, metPtr, metCovariance,
-      *trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
-      evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
-      electronRefProd, muonRefProd, tauRefProd, jetRefProd,
-      phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
-  }
-  else {
-    theEvent = new PATFinalStateEvent(miniAOD_, *rho, pvPtr, verticesPtr, metPtr, metCovariance,
-      *trig, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
-      evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
-      electronRefProd, muonRefProd, tauRefProd, jetRefProd,
-      phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
-  }
+  pat::TriggerEvent* trg = new pat::TriggerEvent();
+  theEvent = new PATFinalStateEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
+    *trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
+    evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
+    electronRefProd, muonRefProd, tauRefProd, jetRefProd,
+    phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {

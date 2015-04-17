@@ -285,13 +285,7 @@ PATFinalState::visP4() const {
 PATFinalState::LorentzVector PATFinalState::totalP4(
     const std::string& tags, const std::string& metSysTag) const {
   reco::Candidate::LorentzVector output = visP4(tags);
-  if (!event_->isMiniAOD() && metSysTag != "" && metSysTag != "@") {
-    const reco::CandidatePtr& metUserCand = met()->userCand(metSysTag);
-    assert(metUserCand.isNonnull());
-    output += metUserCand->p4();
-  } else {
-    output += met()->p4();
-  }
+  output += met()->p4();
   return output;
 }
 
@@ -379,25 +373,16 @@ PATFinalState::deltaPhiToMEt(int i, const std::string& sysTag,
   double metPhi;
   if(metTag != "")
     {
-      if (event_->isMiniAOD())
-	{
-	  if(metTag == "jes+")
-	    metPhi = met()->shiftedPhi(pat::MET::JetEnUp);
-	  else if(metTag == "ues+")
-	    metPhi = met()->shiftedPhi(pat::MET::UnclusteredEnUp);
-	  else if(metTag == "tes+")
-	    metPhi = met()->shiftedPhi(pat::MET::TauEnUp);
-	  else if(metTag == "mes+")
-	    metPhi = met()->shiftedPhi(pat::MET::MuonEnUp);
-	  else // all miniAOD pfMET is Type 1
-	    metPhi = met()->phi();
-	}
-      else
-	{
-	  const reco::CandidatePtr& metUserCand = met()->userCand(metTag);
-	  assert(metUserCand.isNonnull());
-	  metPhi = metUserCand->phi();
-	}
+      if(metTag == "jes+")
+        metPhi = met()->shiftedPhi(pat::MET::JetEnUp);
+      else if(metTag == "ues+")
+        metPhi = met()->shiftedPhi(pat::MET::UnclusteredEnUp);
+      else if(metTag == "tes+")
+        metPhi = met()->shiftedPhi(pat::MET::TauEnUp);
+      else if(metTag == "mes+")
+        metPhi = met()->shiftedPhi(pat::MET::MuonEnUp);
+      else // all miniAOD pfMET is Type 1
+        metPhi = met()->phi();
     }
   else
     metPhi = met()->phi();
@@ -413,25 +398,16 @@ PATFinalState::twoParticleDeltaPhiToMEt(const int i, const int j, const std::str
   double metPhi;
   if(metTag != "")
     {
-      if(event_->isMiniAOD())
-	{
-	  if(metTag == "jes+")
-	    metPhi = met()->shiftedPhi(pat::MET::JetEnUp);
-	  else if(metTag == "ues+")
-	    metPhi = met()->shiftedPhi(pat::MET::UnclusteredEnUp);
-	  else if(metTag == "tes+")
-	    metPhi = met()->shiftedPhi(pat::MET::TauEnUp);
-	  else if(metTag == "mes+")
-	    metPhi = met()->shiftedPhi(pat::MET::MuonEnUp);
-	  else // all miniAOD pfMET is Type 1
-	    metPhi = met()->phi();
-	}
-      else
-	{
-	  const reco::CandidatePtr& metUserCand = met()->userCand(metTag);
-	  assert(metUserCand.isNonnull());
-	  metPhi = metUserCand->phi();
-	}
+      if(metTag == "jes+")
+        metPhi = met()->shiftedPhi(pat::MET::JetEnUp);
+      else if(metTag == "ues+")
+        metPhi = met()->shiftedPhi(pat::MET::UnclusteredEnUp);
+      else if(metTag == "tes+")
+        metPhi = met()->shiftedPhi(pat::MET::TauEnUp);
+      else if(metTag == "mes+")
+        metPhi = met()->shiftedPhi(pat::MET::MuonEnUp);
+      else // all miniAOD pfMET is Type 1
+        metPhi = met()->phi();
     }
   else
     metPhi = met()->phi();
@@ -460,27 +436,16 @@ PATFinalState::mt(int i, int j) const {
 double PATFinalState::mtMET(int i, const std::string& tag,
     const std::string& metTag) const {
   reco::Candidate::LorentzVector metP4;
-  if(event_->isMiniAOD())
-    {
-      if(metTag == "jes+")
-	metP4 = met()->shiftedP4(pat::MET::JetEnUp);
-      else if(metTag == "ues+")
-	metP4 = met()->shiftedP4(pat::MET::UnclusteredEnUp);
-      else if(metTag == "tes+")
-	metP4 = met()->shiftedP4(pat::MET::TauEnUp);
-      else if(metTag == "mes+")
-	metP4 = met()->shiftedP4(pat::MET::MuonEnUp);
-      else // all miniAOD pfMET is Type 1
-	metP4 = met()->p4();
-    }
-  else if (metTag != "") 
-    {
-      metP4 = met()->userCand(metTag)->p4();
-    } 
-  else 
-    {
-      metP4 = met()->p4();
-    }
+  if(metTag == "jes+")
+    metP4 = met()->shiftedP4(pat::MET::JetEnUp);
+  else if(metTag == "ues+")
+    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnUp);
+  else if(metTag == "tes+")
+    metP4 = met()->shiftedP4(pat::MET::TauEnUp);
+  else if(metTag == "mes+")
+    metP4 = met()->shiftedP4(pat::MET::MuonEnUp);
+  else // all miniAOD pfMET is Type 1
+    metP4 = met()->p4();
   return fshelpers::transverseMass(daughterUserCandP4(i, tag), metP4);
 }
 
@@ -491,10 +456,7 @@ double PATFinalState::mtMET(int i, const std::string& metTag) const {
 double PATFinalState::mtMET(int i, const std::string& tag,
 			    const std::string& metName, const std::string& metTag, 
 			    const int applyPhiCorr) const {
-  if(event_->isMiniAOD())
-    return mtMET(i, tag, metTag);
-  return fshelpers::transverseMass(daughterUserCandP4(i, tag),
-				   evt()->met4vector(metName, metTag, applyPhiCorr));
+  return mtMET(i, tag, metTag);
 }
 
 double PATFinalState::ht(const std::string& sysTags) const {
@@ -663,27 +625,9 @@ PATFinalState::subcandfsr( int i, int j, const std::string& fsrLabel ) const
   output.push_back( daughterPtr(i) );
   output.push_back( daughterPtr(j) );
   
-  if(evt()->isMiniAOD())
-    {
-      const reco::CandidatePtr fsrPho = bestFSROfZ(i, j, fsrLabel);
-      if(fsrPho.isNonnull() && fsrPho.isAvailable())
-	{
-	  output.push_back(fsrPho);
-	}
-    }
-  else
-    {
-      std::stringstream ss;
-      ss << "fsrPhoton" << i << j;
-      std::string photon_name = ss.str();
-
-      const std::vector<std::string>& userCandList = this->userCandNames();
-      for (size_t i = 0; i < userCandList.size(); ++i)
-	{
-	  if (userCandList[i].find(photon_name) != std::string::npos)
-	    output.push_back(this->userCand(userCandList[i]));
-	}
-    }
+  const reco::CandidatePtr fsrPho = bestFSROfZ(i, j, fsrLabel);
+  if(fsrPho.isNonnull() && fsrPho.isAvailable())
+    output.push_back(fsrPho);
   return PATFinalStateProxy(new PATMultiCandFinalState(output, evt()));
 }
 
@@ -792,71 +736,50 @@ const reco::CandidatePtr PATFinalState::bestFSROfZ(int i, int j, const std::stri
 PATFinalState::LorentzVector
 PATFinalState::p4fsr(const std::string& fsrLabel) const
 {
-  if(evt()->isMiniAOD())
+  PATFinalStateProxy bestZ;
+  int bestL1 = 0;
+  int bestL2 = 1;
+  
+  for(int lep1 = 0; lep1 < 3; ++lep1)
     {
-      PATFinalStateProxy bestZ;
-      int bestL1 = 0;
-      int bestL2 = 1;
-      
-      for(int lep1 = 0; lep1 < 3; ++lep1)
-	{
-	  for(int lep2 = lep1 + 1; lep2 <= 3; ++lep2)
-	    {
-	      PATFinalStateProxy cand = subcandfsr(lep1,lep2,fsrLabel);
-	      if(lep1 == 0 && lep2 == 1) // no best Z yet
-		{
-		  bestZ = cand;
-		  continue;
-		}
-	      
-	      if(zCompatibility(cand) < zCompatibility(bestZ))
-		{
-		  bestZ = cand;
-		  bestL1 = lep1;
-		  bestL2 = lep2;
-		  continue;
-		}
-	    }
-	}
-
-      int otherL1 = -1;
-      int otherL2 = -1;
-      for(int foo = 0; foo < 4; ++foo)
-	{
-	  if(foo != bestL1 && foo != bestL2)
-	    {
-	      if(otherL1 == -1)
-		{
-		  otherL1 = foo;
-		}
-	      else
-		{
-		  otherL2 = foo;
-		}
-	    }
-	}
-      PATFinalStateProxy otherZ = subcandfsr(otherL1, otherL2, fsrLabel);
-
-      return bestZ->p4() + otherZ->p4();
+      for(int lep2 = lep1 + 1; lep2 <= 3; ++lep2)
+        {
+          PATFinalStateProxy cand = subcandfsr(lep1,lep2,fsrLabel);
+          if(lep1 == 0 && lep2 == 1) // no best Z yet
+    	{
+    	  bestZ = cand;
+    	  continue;
+    	}
+          
+          if(zCompatibility(cand) < zCompatibility(bestZ))
+    	{
+    	  bestZ = cand;
+    	  bestL1 = lep1;
+    	  bestL2 = lep2;
+    	  continue;
+    	}
+        }
     }
-  else
+
+  int otherL1 = -1;
+  int otherL2 = -1;
+  for(int foo = 0; foo < 4; ++foo)
     {
-      PATFinalState::LorentzVector p4_out;
-
-      p4_out = daughter(0)->p4() + daughter(1)->p4() + daughter(2)->p4() + daughter(3)->p4();
-
-      const std::vector<std::string>& userCandList = this->userCandNames();
-      for (size_t i = 0; i < userCandList.size(); ++i)
-	{
-	  if (userCandList[i].find("fsrPhoton1") != std::string::npos)
-	    p4_out += this->userCand(userCandList[i])->p4();
-
-	  if (userCandList[i].find("fsrPhoton2") != std::string::npos)
-	    p4_out += this->userCand(userCandList[i])->p4();
-	}
-
-      return p4_out;
+      if(foo != bestL1 && foo != bestL2)
+        {
+          if(otherL1 == -1)
+    	{
+    	  otherL1 = foo;
+    	}
+          else
+    	{
+    	  otherL2 = foo;
+    	}
+        }
     }
+  PATFinalStateProxy otherZ = subcandfsr(otherL1, otherL2, fsrLabel);
+
+  return bestZ->p4() + otherZ->p4();
 }
 
 PATFinalStateProxy
@@ -1080,120 +1003,92 @@ const float PATFinalState::jetVariables(size_t i, const std::string& key) const 
 
 const float PATFinalState::getIP3D(const size_t i) const
 {
-  if(event_->isMiniAOD())
+  if(abs(daughter(i)->pdgId()) == 11)
     {
-      if(abs(daughter(i)->pdgId()) == 11)
-	{
-	  return fabs(daughterAsElectron(i)->dB(pat::Electron::PV3D));
-	}
-      else if (abs(daughter(i)->pdgId()) == 13)
-	{
-	  return fabs(daughterAsMuon(i)->dB(pat::Muon::PV3D));
-	}
-      
-      throw cms::Exception("InvalidParticle") << "FSA can only find SIP3D for electron and muon for now" << std::endl;
+      return fabs(daughterAsElectron(i)->dB(pat::Electron::PV3D));
     }
-
-  return dynamic_cast<const pat::PATObject<reco::Candidate>* >(daughter(i))->userFloat("ip3D");
+  else if (abs(daughter(i)->pdgId()) == 13)
+    {
+      return fabs(daughterAsMuon(i)->dB(pat::Muon::PV3D));
+    }
+  
+  throw cms::Exception("InvalidParticle") << "FSA can only find SIP3D for electron and muon for now" << std::endl;
 }
 
 const float PATFinalState::getIP3DErr(const size_t i) const
 {
-  if(event_->isMiniAOD())
+  if(abs(daughter(i)->pdgId()) == 11)
     {
-      if(abs(daughter(i)->pdgId()) == 11)
-	{
-	  return daughterAsElectron(i)->edB(pat::Electron::PV3D);
-	}
-      else if (abs(daughter(i)->pdgId()) == 13)
-	{
-	  return daughterAsMuon(i)->edB(pat::Muon::PV3D);
-	}
-      
-      throw cms::Exception("InvalidParticle") << "FSA can only find SIP3D for electron and muon for now" << std::endl;
+      return daughterAsElectron(i)->edB(pat::Electron::PV3D);
     }
-
-return static_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("ip3DS");
+  else if (abs(daughter(i)->pdgId()) == 13)
+    {
+      return daughterAsMuon(i)->edB(pat::Muon::PV3D);
+    }
+  
+  throw cms::Exception("InvalidParticle") << "FSA can only find SIP3D for electron and muon for now" << std::endl;
 }
 
 const float PATFinalState::getIP2D(const size_t i) const
 {
-  if(event_->isMiniAOD())
+  if(abs(daughter(i)->pdgId()) == 11)
     {
-      if(abs(daughter(i)->pdgId()) == 11)
-	{
-	  return fabs(daughterAsElectron(i)->dB(pat::Electron::PV2D));
-	}
-      else if (abs(daughter(i)->pdgId()) == 13)
-	{
-	  return fabs(daughterAsMuon(i)->dB(pat::Muon::PV2D));
-	}
-      
-      throw cms::Exception("InvalidParticle") << "FSA can only find SIP3D for electron and muon for now" << std::endl;
+      return fabs(daughterAsElectron(i)->dB(pat::Electron::PV2D));
     }
-
-  return dynamic_cast<const pat::PATObject<reco::Candidate>* >(daughter(i))->userFloat("ip3D");
+  else if (abs(daughter(i)->pdgId()) == 13)
+    {
+      return fabs(daughterAsMuon(i)->dB(pat::Muon::PV2D));
+    }
+  
+  throw cms::Exception("InvalidParticle") << "FSA can only find SIP3D for electron and muon for now" << std::endl;
 }
 
 const float PATFinalState::getIP2DErr(const size_t i) const
 {
-  if(event_->isMiniAOD())
+  if(abs(daughter(i)->pdgId()) == 11)
     {
-      if(abs(daughter(i)->pdgId()) == 11)
-	{
-	  return daughterAsElectron(i)->edB(pat::Electron::PV2D);
-	}
-      else if (abs(daughter(i)->pdgId()) == 13)
-	{
-	  return daughterAsMuon(i)->edB(pat::Muon::PV2D);
-	}
-      
-      throw cms::Exception("InvalidParticle") << "FSA can only find SIP2D for electron and muon for now" << std::endl;
+      return daughterAsElectron(i)->edB(pat::Electron::PV2D);
     }
-
-return static_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("ip3DS");
+  else if (abs(daughter(i)->pdgId()) == 13)
+    {
+      return daughterAsMuon(i)->edB(pat::Muon::PV2D);
+    }
+  
+  throw cms::Exception("InvalidParticle") << "FSA can only find SIP2D for electron and muon for now" << std::endl;
 }
 
 const float PATFinalState::getPVDZ(const size_t i) const
 {
-  if(event_->isMiniAOD())
+  if(abs(daughter(i)->pdgId()) == 11)
     {
-      if(abs(daughter(i)->pdgId()) == 11)
-	{
-	  const edm::Ptr<reco::Vertex> pv = event_->pv();
-	  return daughterAsElectron(i)->gsfTrack()->dz(pv->position());
-	}
-      else if(abs(daughter(i)->pdgId()) == 13)
-	{
-	  const edm::Ptr<reco::Vertex> pv = event_->pv();
-	  return daughterAsMuon(i)->innerTrack()->dz(pv->position());
-	}
-      throw cms::Exception("InvalidParticle") << "FSA can only find dZ for electron and muon for now" << std::endl;
+      const edm::Ptr<reco::Vertex> pv = event_->pv();
+      return daughterAsElectron(i)->gsfTrack()->dz(pv->position());
     }
-  return dynamic_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("dz");
+  else if(abs(daughter(i)->pdgId()) == 13)
+    {
+      const edm::Ptr<reco::Vertex> pv = event_->pv();
+      return daughterAsMuon(i)->innerTrack()->dz(pv->position());
+    }
+  throw cms::Exception("InvalidParticle") << "FSA can only find dZ for electron and muon for now" << std::endl;
 }
 
 const float PATFinalState::getPVDXY(const size_t i) const
 {
-  if(event_->isMiniAOD())
+  if(abs(daughter(i)->pdgId()) == 11)
     {
-      if(abs(daughter(i)->pdgId()) == 11)
-	{
-	  const edm::Ptr<reco::Vertex> pv = event_->pv();
-	  return daughterAsElectron(i)->gsfTrack()->dxy(pv->position());
-	}
-      else if(abs(daughter(i)->pdgId()) == 13)
-	{
-	  const edm::Ptr<reco::Vertex> pv = event_->pv();
-	  return daughterAsMuon(i)->innerTrack()->dxy(pv->position());
-	}
-      else if(abs(daughter(i)->pdgId()) == 15)
-	{
-	  return daughterAsTau(i)->dxy();
-	}
-      throw cms::Exception("InvalidParticle") << "FSA can only find dXY for electron, muon, and tau for now" << std::endl;
+      const edm::Ptr<reco::Vertex> pv = event_->pv();
+      return daughterAsElectron(i)->gsfTrack()->dxy(pv->position());
     }
-  return dynamic_cast<const pat::PATObject<reco::Candidate> *>(daughter(i))->userFloat("ipDXY");
+  else if(abs(daughter(i)->pdgId()) == 13)
+    {
+      const edm::Ptr<reco::Vertex> pv = event_->pv();
+      return daughterAsMuon(i)->innerTrack()->dxy(pv->position());
+    }
+  else if(abs(daughter(i)->pdgId()) == 15)
+    {
+      return daughterAsTau(i)->dxy();
+    }
+  throw cms::Exception("InvalidParticle") << "FSA can only find dXY for electron, muon, and tau for now" << std::endl;
 }
 
 const bool PATFinalState::isTightMuon(const size_t i) const
