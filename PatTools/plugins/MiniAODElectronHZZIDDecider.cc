@@ -2,7 +2,7 @@
 //                                                                          //
 //   MiniAODElectronHZZIDDecider.cc                                         //
 //                                                                          //
-//   Embeds electron tight ID and siolation decisions as userfloats         //
+//   Embeds electron ID and siolation decisions as userfloats               //
 //       (1 for true, 0for false), for use in other modules using           //
 //       HZZ4l2015 definitions.                                             //
 //                                                                          //

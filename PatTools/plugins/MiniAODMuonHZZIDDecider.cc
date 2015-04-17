@@ -2,7 +2,7 @@
 //                                                                          //
 //   MiniAODMuonHZZIDDecider.cc                                             //
 //                                                                          //
-//   Embeds muon tight ID and siolation decisions as userfloats             //
+//   Embeds muon ID and isolation decisions as userfloats                   //
 //       (1 for true, 0 for false), for use in other modules using          //
 //       HZZ4l2015 definitions.                                             //
 //                                                                          //
@@ -109,7 +109,7 @@ void MiniAODMuonHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSetup&
       out->push_back(*mi); // copy muon to save correctly in event
 
       bool idResult = (passKinematics(mptr) && passVertex(mptr) && passType(mptr));
-      out->back().addUserFloat(idLabel_, float(idResult && mi->isPFMuon())); // 1 for true, 0 for false
+      out->back().addUserFloat(idLabel_, float(idResult)); // 1 for true, 0 for false
 
       out->back().addUserFloat(idLabel_+"Tight", float(idResult && mi->isPFMuon())); // 1 for true, 0 for false
       
