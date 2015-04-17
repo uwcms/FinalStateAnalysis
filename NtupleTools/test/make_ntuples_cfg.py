@@ -329,13 +329,16 @@ if options.rerunFSA:
         if not options.use25ns:
             for wt in trigMVAWeights+nonTrigMVAWeights:
                 wt.replace('25ns','50ns')
+
+        electronMVATrigIDLabel = "BDTIDTrig"
+        electronMVANonTrigIDLabel = "BDTIDNonTrig"
         process.miniAODElectronMVAID = cms.EDProducer(
             "MiniAODElectronMVAIDEmbedder",
             src=cms.InputTag(fs_daughter_inputs['electrons']),
             trigWeights = cms.vstring(*trigMVAWeights),
-            trigLabel = cms.string('BDTIDTrig'), # triggering MVA ID userfloat key
+            trigLabel = cms.string(electronMVATrigIDLabel), # triggering MVA ID userfloat key
             nonTrigWeights = cms.vstring(*nonTrigMVAWeights),
-            nonTrigLabel = cms.string('BDTIDNonTrig') # nontriggering MVA ID userfloat key
+            nonTrigLabel = cms.string(electronMVANonTrigIDLabel) # nontriggering MVA ID userfloat key
             )
         output_commands.append('*_miniAODElectronMVAID_*_*')
         fs_daughter_inputs['electrons'] = 'miniAODElectronMVAID'
@@ -546,7 +549,7 @@ if options.rerunFSA:
                 rhoLabel = cms.string("rhoCSA14"), # use rho and EA userFloats with these names
                 eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
                 vtxSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
-                # Defaults are correct as of 9 March 2015, overwrite later if needed
+                bdtLabel = cms.string(electronMVANonTrigIDLabel),
                 )
             fs_daughter_inputs['electrons'] = 'electronIDIsoCheatEmbedding'
             output_commands.append('*_electronIDIsoCheatEmbedding_*_*')
