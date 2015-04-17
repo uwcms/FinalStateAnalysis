@@ -29,16 +29,15 @@ zero or one) are::
     eventView=0             - make a row in the ntuple correspond to an event
                               instead of a final state in an event.
     passThru=0              - turn off any preselection/skim
-    rerunFSA=1              - regenerate PATFinalState dataformats
     verbose=0               - print out timing information
     noPhotons=0             - don't build things which depend on photons.
     isMC=0                  - run over monte carlo
-    useMiniAOD=1            - run over miniAOD samples rather than UW pattuples
     runDQM=0                - run on single objects instead of final states, plotting many quantities to make sure things work
     use25ns=1               - (with useMiniAOD=1) use conditions for 25ns PHYS14 miniAOD samples
     hzz=0                   - (with useMiniAOD=1) run the H->ZZ->4l group's FSR algorithm, don't clean
                               alternate Z pairings out of ntuples, several other small changes
     nExtraJets=0            - (for non-jet final states) add basic info about this many jets in addition to final state branches
+    paramFile=''            - custom parameter file for ntuple production
 
 Batch submission
 ----------------
