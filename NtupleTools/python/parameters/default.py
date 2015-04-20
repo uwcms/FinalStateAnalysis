@@ -35,7 +35,7 @@ parameters = {
                 'deltaR' : 0.3,
                 },
             },
-        }
+        },
 
     # selections to include object in final state (should be looser than analysis selections)
     'finalSelection' : {
