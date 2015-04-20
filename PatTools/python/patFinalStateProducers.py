@@ -43,31 +43,21 @@ def _combinatorics(items, n):
 
 def produce_final_states(process, collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
-                         noTracks=False, noPhotons=False, hzz=False,
+                         noTracks=False, hzz=False,
                          rochCor="", eleCor="", use25ns=False, **kwargs):
 
-    muonsrc = collections['muons']
-    esrc = collections['electrons']
-    tausrc = collections['taus']
-    jetsrc = collections['jets']
-    pfmetsrc = collections['pfmet']
-    mvametsrc = collections['mvamet']
-    phosrc = collections['photons']
-    try:
-        fsrsrc = collections['fsr']
-    except KeyError:
-        fsrsrc = 'boostedFsrPhotons'
+    src = collections
 
     # Build the PATFinalStateEventObject
     if buildFSAEvent:
         process.load("FinalStateAnalysis.PatTools."
                      "finalStates.patFinalStateEventProducer_cfi")
-        process.patFinalStateEventProducer.electronSrc = cms.InputTag(esrc)
-        process.patFinalStateEventProducer.muonSrc = cms.InputTag(muonsrc)
-        process.patFinalStateEventProducer.tauSrc = cms.InputTag(tausrc)
-        process.patFinalStateEventProducer.jetSrc = cms.InputTag(jetsrc)
-        process.patFinalStateEventProducer.phoSrc = cms.InputTag(phosrc)
-        process.patFinalStateEventProducer.metSrc = pfmetsrc
+        process.patFinalStateEventProducer.electronSrc = cms.InputTag(src['electrons'])
+        process.patFinalStateEventProducer.muonSrc = cms.InputTag(src['muons'])
+        process.patFinalStateEventProducer.tauSrc = cms.InputTag(src['taus'])
+        process.patFinalStateEventProducer.jetSrc = cms.InputTag(src['jets'])
+        process.patFinalStateEventProducer.phoSrc = cms.InputTag(src['photons'])
+        process.patFinalStateEventProducer.metSrc = cms.InputTag(src['pfmet'])
         process.patFinalStateEventProducer.puTag = cms.string(puTag)
         if 'extraWeights' in collections:
             process.patFinalStateEventProducer.extraWeights = collections['extraWeights']
@@ -77,25 +67,17 @@ def produce_final_states(process, collections, output_commands,
         process.patFinalStateEventProducer.verticesSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
         process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles")
         process.patFinalStateEventProducer.mets = cms.PSet(
-            pfmet = cms.InputTag(pfmetsrc),
-            mvamet = cms.InputTag(mvametsrc)
+            pfmet = cms.InputTag(src['pfmet']),
+            mvamet = cms.InputTag(src['mvamet'])
         )
         sequence += process.patFinalStateEventProducer
 
     # Always keep
     output_commands.append('*_patFinalStateEventProducer_*_*')
 
-    # Apply some loose PT cuts on the objects we use to create the final states
-    # so the combinatorics don't blow up
-    objectSelections = kwargs.get('objectSelection',{'e':'','m':'','t':'','g':'','j':''})
-    muon_string = objectSelections['m']
-    elec_string = objectSelections['e']
-
-
-    # Initialize final-state object sequence
-    process.selectObjectsForFinalStates = cms.Sequence()
-
     # Are we applying Rochester Corrections to the muons?
+    if rochCor != "" or eleCor != "":
+        process.correctionSequence = cms.Sequence()
     if rochCor != "":
         if rochCor not in ["RochCor2012", "RochCor2011A", "RochCor2011B"]:
             raise RuntimeError(rochCor + ": not a valid option")
@@ -104,13 +86,13 @@ def produce_final_states(process, collections, output_commands,
 
         process.rochCorMuons = cms.EDProducer(
             "PATMuonRochesterCorrector",
-            src=cms.InputTag(muonsrc),
+            src=cms.InputTag(src['muons']),
             corr_type=cms.string("p4_" + rochCor)
         )
 
-        muonsrc = "rochCorMuons"
+        src['muons'] = "rochCorMuons"
 
-        process.selectObjectsForFinalStates += process.rochCorMuons
+        process.correctionSequence += process.rochCorMuons
 
     # Are we applying electron energy corrections?
     if eleCor != "":
@@ -122,122 +104,75 @@ def produce_final_states(process, collections, output_commands,
 
         process.corrElectrons = cms.EDProducer(
             "PATElectronEnergyCorrector",
-            src=cms.InputTag(esrc),
+            src=cms.InputTag(src['electrons']),
             corr_type=cms.string("EGCorr_" + eleCor + "SmearedRegression")
         )
 
-        esrc = "corrElectrons"
+        src['electrons'] = "corrElectrons"
 
-        process.selectObjectsForFinalStates += process.corrElectrons
+        process.correctionSequence += process.corrElectrons
 
+    if rochCor != "" or eleCor != "":
+        process.correctLeptons = cms.Path(process.correctionSequence)
+        process.schedule.append(process.correctLeptons)
+
+
+    # Rank objects
     process.muonsRank = cms.EDProducer(
         "PATMuonRanker",
-        src=cms.InputTag(muonsrc))
-
-    process.muonsForFinalStates = cms.EDFilter(
-        "PATMuonRefSelector",
-        src=cms.InputTag("muonsRank"),
-        cut=cms.string(muon_string),
-        filter=cms.bool(False),
-    )
+        src=cms.InputTag(src['muons']))
+    src['muons'] = 'muonsRank'
 
     process.electronsRank = cms.EDProducer(
-        "PATElectronRanker", src=cms.InputTag(esrc))
-
-    process.electronsForFinalStates = cms.EDFilter(
-        "PATElectronRefSelector",
-        src=cms.InputTag("electronsRank"),
-        cut=cms.string(elec_string),
-        filter=cms.bool(False),
-    )
-
-    process.photonsForFinalStates = cms.EDFilter(
-        "PATPhotonRefSelector",
-        src=cms.InputTag(phosrc),
-        cut=cms.string(objectSelections['g']),
-        filter=cms.bool(False),
-    )
+        "PATElectronRanker", src=cms.InputTag(src['electrons']))
+    src['electrons'] = 'electronsRank'
 
     process.tausRank = cms.EDProducer(
         "PATTauRanker",
-        src=cms.InputTag(tausrc))
+        src=cms.InputTag(src['taus']))
+    src['taus'] = 'tausRank'
 
-    # Require that the PT of the jet (either corrected jet or tau)
-    # to be greater than 17
-    process.tausForFinalStates = cms.EDFilter(
-        "PATTauRefSelector",
-        src=cms.InputTag("tausRank"),
-        cut=cms.string(objectSelections['t']),
-        filter=cms.bool(False),
-    )
-
-    jetCleaningSelections = kwargs.get('jetCleaningSelections',{'e':'','m':''})
-    electronCleaning = jetCleaningSelections['e']
-    muonCleaning = jetCleaningSelections['m']
-    jetDeltaRCleaning = kwargs.get('jetDeltaRCleaning',0.3)
-
-    process.jetsFiltered = cms.EDProducer(
-        "PATJetCleaner",
-        src=cms.InputTag(jetsrc),
-        # I leave it loose here, can be tightened at the last step
-        preselection=cms.string(objectSelections['j']),
-        # overlap checking configurables
-        checkOverlaps=cms.PSet(
-            muons=cms.PSet(
-                src=cms.InputTag("muonsForFinalStates"),
-                algorithm=cms.string("byDeltaR"),
-                preselection=cms.string(muonCleaning),
-                deltaR=cms.double(jetDeltaRCleaning),
-                checkRecoComponents=cms.bool(False),
-                pairCut=cms.string(""),
-                requireNoOverlaps=cms.bool(True),
-            ),
-            electrons=cms.PSet(
-                src=cms.InputTag("electronsForFinalStates"),
-                algorithm=cms.string("byDeltaR"),
-                preselection=cms.string(electronCleaning),
-                deltaR=cms.double(jetDeltaRCleaning),
-                checkRecoComponents=cms.bool(False),
-                pairCut=cms.string(""),
-                requireNoOverlaps=cms.bool(True),
-            ),
-            # finalCut (any string-based cut on pat::Jet)
-            finalCut=cms.string('')
-        )
-    )
-    
-    jetsrc = 'jetsFiltered'
-
-    process.jetsForFinalStates = cms.EDProducer(
+    process.jetsRank = cms.EDProducer(
         "PATJetRanker",
-        src=cms.InputTag(jetsrc))
+        src=cms.InputTag(src['jets']))
+    src['jets'] = 'jetsRank'
 
-    process.selectObjectsForFinalStates = cms.Sequence(
+    process.rankSequence = cms.Sequence(
         process.muonsRank
-        + process.muonsForFinalStates
         + process.electronsRank
-        + process.electronsForFinalStates
         + process.tausRank
-        + process.tausForFinalStates
-        + process.jetsFiltered
-    )
+        + process.jetsRank
+        )
+    process.rankObjects = cms.Path(process.rankSequence)
+    process.schedule.append(process.rankObjects)
 
-    process.selectObjectsForFinalStates += process.jetsForFinalStates
-    
-    if not noPhotons:
-        process.selectObjectsForFinalStates += process.photonsForFinalStates
+
+    ### apply final selections to the objects we'll use in the final states
+    # Initialize final-state object sequence
+    finalSelections = kwargs.get('finalSelection',{})
+    print "AA"
+    from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections, getName
+    process.selectObjectsForFinalStates = setup_selections(
+        process, 
+        "FinalSelection",
+        src,
+        finalSelections,
+        )
+    for ob in finalSelections:
+        src[getName(ob)+"s"] = getName(ob)+"FinalSelection"
+        output_commands.append('*_%sFinalSelection_*_*'%getName(ob))
 
     sequence += process.selectObjectsForFinalStates
+    print "BB"
 
     # Now build all combinatorics for E/Mu/Tau/Photon
-    object_types = [('Elec', cms.InputTag("electronsForFinalStates")),
-                    ('Mu', cms.InputTag("muonsForFinalStates")),
-                    ('Tau', cms.InputTag("tausForFinalStates")),
-                    ('Jet', cms.InputTag("jetsForFinalStates"))]
-
-    if not noPhotons:
-        object_types.append(('Pho', cms.InputTag("photonsForFinalStates")))
-
+    object_types = [
+        ('Elec', cms.InputTag(src["electrons"])),
+        ('Mu', cms.InputTag(src["muons"])),
+        ('Tau', cms.InputTag(src["taus"])),
+        ('Jet', cms.InputTag(src["jets"])),
+        ('Pho', cms.InputTag(src["photons"])),
+        ]
 
 
     process.load("FinalStateAnalysis.PatTools."
@@ -383,11 +318,7 @@ def produce_final_states(process, collections, output_commands,
         if n_jets > 0:
             continue
 
-        # Define some basic selections for building combinations (but not for HZZ)
-        if hzz:
-            cuts = []
-        else:
-            cuts = [crossCleaning]  # basic x-cleaning
+        cuts = [crossCleaning]  # basic x-cleaning
 
         producer = cms.EDProducer(
             "PAT%s%s%s%sFinalStateProducer" %
@@ -422,6 +353,7 @@ def produce_final_states(process, collections, output_commands,
         output_commands.append("*_%s_*_*" % producer_name)
     sequence += process.buildQuadObjects
 
+    print "CC"
 
 if __name__ == "__main__":
     import doctest

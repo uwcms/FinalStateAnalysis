@@ -336,7 +336,7 @@ def make_ntuple(*legs, **kwargs):
     if hzz:
         ntuple_config = PSet(
             ntuple_config,
-            templates.topology.fsrMiniAOD
+            templates.topology.hzzMiniAOD
             )
     
     # Some feature are not included in miniAOD or are currently broken. 
@@ -491,10 +491,6 @@ def make_ntuple(*legs, **kwargs):
                         cutstr = 'zCompatibilityFSR(%s, %s, "FSRCand") < zCompatibilityFSR(%s, %s, "FSRCand")'
                     else:
                         cutstr = 'zCompatibility(%s, %s) < zCompatibility(%s, %s)'
-
-                    # Require first two leptons make the best Z
-
-                    print cutstr%(leg1_idx_label, leg2_idx_label, leg1_idx_label,leg3_idx_label)
 
                     if not hzz: # HZZ wants all ZZ candidates to have their own row, so order the Zs but don't cut alternative pairings
                         output.analysis.selections.append(cms.PSet(
