@@ -43,7 +43,7 @@ def _combinatorics(items, n):
 
 def produce_final_states(process, collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
-                         noTracks=False, hzz=False,
+                         noTracks=False, runMVAMET=False, hzz=False,
                          rochCor="", eleCor="", use25ns=False, **kwargs):
 
     src = collections
@@ -68,8 +68,10 @@ def produce_final_states(process, collections, output_commands,
         process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles")
         process.patFinalStateEventProducer.mets = cms.PSet(
             pfmet = cms.InputTag(src['pfmet']),
-            mvamet = cms.InputTag(src['mvamet'])
         )
+        if runMVAMET:
+            process.patFinalStateEventProducer.mets.mvamet = cms.InputTag(src['mvamet'])
+        
         sequence += process.patFinalStateEventProducer
 
     # Always keep
@@ -150,7 +152,6 @@ def produce_final_states(process, collections, output_commands,
     ### apply final selections to the objects we'll use in the final states
     # Initialize final-state object sequence
     finalSelections = kwargs.get('finalSelection',{})
-    print "AA"
     from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections, getName
     process.selectObjectsForFinalStates = setup_selections(
         process, 
@@ -163,7 +164,6 @@ def produce_final_states(process, collections, output_commands,
         output_commands.append('*_%sFinalSelection_*_*'%getName(ob))
 
     sequence += process.selectObjectsForFinalStates
-    print "BB"
 
     # Now build all combinatorics for E/Mu/Tau/Photon
     object_types = [
@@ -353,7 +353,6 @@ def produce_final_states(process, collections, output_commands,
         output_commands.append("*_%s_*_*" % producer_name)
     sequence += process.buildQuadObjects
 
-    print "CC"
 
 if __name__ == "__main__":
     import doctest

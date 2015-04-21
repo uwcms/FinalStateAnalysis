@@ -78,7 +78,7 @@ options = TauVarParsing.TauVarParsing(
     eleCor="",
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runNewElectronMVAID=0,  # If one runs the new electron MVAID
-    rerunMVAMET=0,  # If one, (re)build the MVA MET
+    runMVAMET=0,  # If one, (re)build the MVA MET
     rerunJets=0,
     dblhMode=False, # For double-charged Higgs analysis
     runTauSpinner=0,
@@ -107,6 +107,9 @@ options.register(
 
 options.outputFile = "ntuplize.root"
 options.parseArguments()
+
+# SV Fit requires MVA MET
+options.runMVAMET = (options.runMVAMET or options.svFit)
 
 process.source = cms.Source(
     "PoolSource",
@@ -384,43 +387,44 @@ process.jetInfoEmbedding = cms.Path(
 process.schedule.append(process.jetInfoEmbedding)
 
 # mvamet
-process.load("RecoJets.JetProducers.ak4PFJets_cfi")
-process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
-process.ak4PFJets.doAreaFastjet = cms.bool(True)
-
-from JetMETCorrections.Configuration.DefaultJEC_cff import ak4PFJetsL1FastL2L3
-
-process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
-process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
-process.pfMVAMEt.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
-process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-if not options.use25ns:
-    process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-    process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-    process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-    process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-
-process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
-process.puJetIdForPFMVAMEt.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
-process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
-
-from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
-
-process.miniAODMVAMEt = patMETs.clone(
-    metSource=cms.InputTag("pfMVAMEt"),
-    addMuonCorrections = cms.bool(False),
-    addGenMET = cms.bool(False)
-)
-fs_daughter_inputs['mvamet'] = 'miniAODMVAMEt'
-
-process.mvaMetSequence = cms.Path(
-    process.ak4PFJets *
-    process.pfMVAMEtSequence *
-    process.miniAODMVAMEt
-)
+if options.runMVAMET:
+    process.load("RecoJets.JetProducers.ak4PFJets_cfi")
+    process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
+    process.ak4PFJets.doAreaFastjet = cms.bool(True)
+    
+    from JetMETCorrections.Configuration.DefaultJEC_cff import ak4PFJetsL1FastL2L3
+    
+    process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
+    process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
+    process.pfMVAMEt.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
+    process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
+    process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
+    process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
+    process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
+    if not options.use25ns:
+        process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
+        process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
+        process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
+        process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
+    
+    process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
+    process.puJetIdForPFMVAMEt.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
+    process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
+    
+    from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
+    
+    process.miniAODMVAMEt = patMETs.clone(
+        metSource=cms.InputTag("pfMVAMEt"),
+        addMuonCorrections = cms.bool(False),
+        addGenMET = cms.bool(False)
+    )
+    fs_daughter_inputs['mvamet'] = 'miniAODMVAMEt'
+    
+    process.mvaMetSequence = cms.Path(
+        process.ak4PFJets *
+        process.pfMVAMEtSequence *
+        process.miniAODMVAMEt
+    )
 
 if options.hzz:    
     # Put FSR photons into leptons as user cands
@@ -456,7 +460,7 @@ if options.hzz:
 # in pat tuples.
 produce_final_states(process, fs_daughter_inputs, output_commands, process.buildFSASeq,
                      'puTagDoesntMatter', buildFSAEvent=True,
-                     noTracks=True, 
+                     noTracks=True, runMVAMET=options.runMVAMET,
                      hzz=options.hzz, rochCor=options.rochCor,
                      eleCor=options.eleCor, use25ns=options.use25ns, **parameters)
 process.buildFSAPath = cms.Path(process.buildFSASeq)
@@ -549,6 +553,7 @@ for final_state in expanded_final_states(final_states):
     analyzer = make_ntuple(*final_state, 
                             svFit=options.svFit, dblhMode=options.dblhMode,
                             runTauSpinner=options.runTauSpinner, 
+                            runMVAMET=options.runMVAMET,
                             skimCuts=options.skimCuts, suffix=suffix,
                             hzz=options.hzz, nExtraJets=extraJets, **parameters)
     add_ntuple(final_state, analyzer, process,
