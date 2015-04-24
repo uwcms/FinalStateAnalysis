@@ -24,8 +24,17 @@ parameters = {
 
     # preselections for an object to be used anywhere
     'preselection' : {
+        },
+
+    # selections to include object in final state (should be looser than analysis selections)
+    'finalSelection' : {
+        'e': 'abs(superCluster().eta) < 3.0 & max(pt, userFloat("maxCorPt")) > 7',
+        'm': 'max(pt, userFloat("maxCorPt")) > 4 & (isGlobalMuon | isTrackerMuon)',
+        't': 'abs(eta) < 2.5 & pt > 17 & tauID("decayModeFinding")',
+        'g': 'abs(superCluster().eta()) < 3.0 & pt > 10',
         # remove jets that are close to leptons
         'j' : {
+            'selection' : 'pt>20 & abs(eta) < 2.5 & userFloat("idLoose")',
             'e': {
                 'selection' : 'pt>10&&userInt("CBIDLoose")>0&&(chargedHadronIso()+max(0.0,neutralHadronIso()+photonIso()-userFloat("rhoCSA14")*userFloat("EffectiveArea_HZZ4l2015")))/pt()<0.2',
                 'deltaR' : 0.3,
@@ -35,15 +44,7 @@ parameters = {
                 'deltaR' : 0.3,
                 },
             },
-        },
 
-    # selections to include object in final state (should be looser than analysis selections)
-    'finalSelection' : {
-        'e': 'abs(superCluster().eta) < 3.0 & max(pt, userFloat("maxCorPt")) > 7',
-        'm': 'max(pt, userFloat("maxCorPt")) > 4 & (isGlobalMuon | isTrackerMuon)',
-        't': 'abs(eta) < 2.5 & pt > 17 & tauID("decayModeFinding")',
-        'g': 'abs(superCluster().eta()) < 3.0 & pt > 10',
-        'j': 'pt>20 & abs(eta) < 2.5 & userFloat("idLoose")'
     },
 
     # cross cleaning for objects in final state
