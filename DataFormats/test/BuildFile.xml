@@ -1,4 +1,6 @@
 <bin   name="TestPATFinalState" file="test_FinalState.cppunit.cc">
+  <flags LDFLAGS="-Wl,--unresolved-symbols=ignore-all" />
+
   <use   name="root"/>
   <use   name="FinalStateAnalysis/DataFormats"/>
   <use   name="DataFormats/Math"/>

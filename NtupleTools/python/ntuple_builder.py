@@ -189,6 +189,9 @@ def make_ntuple(*legs, **kwargs):
     format_labels = {
     }
 
+    pt_cuts = kwargs.get('ptCuts',{'e':'0','m':'0','t':'0','g':'0','j':'0'})
+    eta_cuts = kwargs.get('etaCuts',{'e':'10','m':'10','t':'10','g':'10','j':'10'})
+
     # Count how many objects of each type we put in
     counts = {
         't': 0,
@@ -198,8 +201,9 @@ def make_ntuple(*legs, **kwargs):
 	'j': 0,
     }
 
-    useMiniAOD = kwargs.get('useMiniAOD',False)
     hzz = kwargs.get('hzz',False)
+
+    runMVAMET = kwargs.get('runMVAMET', False)
 
     ntuple_config = _common_template.clone()
     if kwargs.get('runTauSpinner', False):
@@ -221,6 +225,29 @@ def make_ntuple(*legs, **kwargs):
     # Check if we want to use special versions of the FSA producers
     # via a suffix on the producer name.
     producer_suffix = kwargs.get('suffix', '')
+
+    # custom ntuple psets
+    eventVariables = kwargs.get('eventVariables',PSet())
+    ntuple_config = PSet(
+        ntuple_config,
+        eventVariables
+    )
+
+    candidateVariables = kwargs.get('candidateVariables',PSet())
+    custVariables = {}
+    custVariables['e'] = kwargs.get('electronVariables',PSet())
+    custVariables['m'] = kwargs.get('muonVariables',PSet())
+    custVariables['t'] = kwargs.get('tauVariables',PSet())
+    custVariables['g'] = kwargs.get('photonVariables',PSet())
+    custVariables['j'] = kwargs.get('jetVariables',PSet())
+
+    for v in ['e','m','t','g','j']:
+        _leg_templates[v] = PSet(
+            _leg_templates[v],
+            candidateVariables,
+            custVariables[v]
+        )
+
 
     for i, leg in enumerate(legs):
         counts[leg] += 1
@@ -244,8 +271,8 @@ def make_ntuple(*legs, **kwargs):
     #pdb.set_trace()
 
     # If basic jet information is desired for a non-jet final state, put it in
-    for i in range(1,kwargs.get("nExtraJets", 0)+1):
-        label = "jet%i"%i
+    for i in range(kwargs.get("nExtraJets", 0)):
+        label = "jet%i"%(i+1)
         format_labels[label] = 'evt.jets.at(%i)' % i
         format_labels[label + '_idx'] = '%i' % i
         
@@ -254,6 +281,12 @@ def make_ntuple(*legs, **kwargs):
             templates.topology.extraJet.replace(object=label)
             )
     
+    dicandidateVariables = kwargs.get('dicandidateVariables',PSet())
+    templates.topology.pairs = PSet(
+        templates.topology.pairs,
+        dicandidateVariables
+    )
+
     # Now we need to add all the information about the pairs
     for leg_a, leg_b in itertools.combinations(object_labels, 2):
         if hzz:
@@ -302,26 +335,29 @@ def make_ntuple(*legs, **kwargs):
     analyzerSrc = "finalState" + "".join(
             _producer_translation[x] for x in legs ) + producer_suffix
 
-    if useMiniAOD:
-        if hzz:
-            ntuple_config = PSet(
-                ntuple_config,
-                templates.topology.fsrMiniAOD
-                )
-        
-        # Some feature are not included in miniAOD or are currently broken. 
-        # Remove them from the ntuples to prevent crashes.
-        #!!! Take items off of this list as we unbreak them. !!!#
-        notInMiniAOD = [
-            # candidates.py
-            "t[1-9]?PVDZ",
-            "t[1-9]?S?IP[23]D(Err)?",
-            ]
+    if hzz:
+        ntuple_config = PSet(
+            ntuple_config,
+            templates.topology.hzzMiniAOD
+            )
+    
+    # Some feature are not included in miniAOD or are currently broken. 
+    # Remove them from the ntuples to prevent crashes.
+    #!!! Take items off of this list as we unbreak them. !!!#
+    notInMiniAOD = [
+        # candidates.py
+        "t[1-9]?PVDZ",
+        "t[1-9]?S?IP[23]D(Err)?",
+        ]
 
-        allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")
-        
-        ntuple_config = ntuple_config.remove(allRemovals)
+    # get rid of MVA MET stuff if we're not computing it
+    if not runMVAMET:
+        notInMiniAOD.append("mvaMet((Et)|(Phi))")
+        notInMiniAOD.append("[emtgj][1-9]?MtToMVAMET")
 
+    allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")
+    
+    ntuple_config = ntuple_config.remove(allRemovals)
 
     # Now build our analyzer EDFilter skeleton
     output = cms.EDFilter(
@@ -353,7 +389,7 @@ def make_ntuple(*legs, **kwargs):
             cms.PSet(
                 name=cms.string('Leg%iPt' % i),
                 cut=cms.string('daughter(%i).pt>%s' % (
-                    i, _pt_cuts[legs[i]]),
+                    i, pt_cuts[legs[i]]),
                 )
             )
         )
@@ -361,7 +397,7 @@ def make_ntuple(*legs, **kwargs):
             cms.PSet(
                 name=cms.string('Leg%iEta' % i),
                 cut=cms.string('abs(daughter(%i).eta) < %s' % (
-                    i, _eta_cuts[legs[i]]))
+                    i, eta_cuts[legs[i]]))
             ),
         )
 
@@ -462,10 +498,6 @@ def make_ntuple(*legs, **kwargs):
                         cutstr = 'zCompatibilityFSR(%s, %s, "FSRCand") < zCompatibilityFSR(%s, %s, "FSRCand")'
                     else:
                         cutstr = 'zCompatibility(%s, %s) < zCompatibility(%s, %s)'
-
-                    # Require first two leptons make the best Z
-
-                    print cutstr%(leg1_idx_label, leg2_idx_label, leg1_idx_label,leg3_idx_label)
 
                     if not hzz: # HZZ wants all ZZ candidates to have their own row, so order the Zs but don't cut alternative pairings
                         output.analysis.selections.append(cms.PSet(

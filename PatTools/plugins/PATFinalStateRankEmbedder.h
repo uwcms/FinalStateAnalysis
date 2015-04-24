@@ -29,11 +29,12 @@ class PATRankEmbedder : public edm::EDProducer {
     inline bool ptComparator(const reco::Candidate* a , const reco::Candidate* b) {return a->pt() > b->pt(); }
  
     PATRankEmbedder(const edm::ParameterSet& pset) :
-     src_ (pset.getParameter<edm::InputTag>("src")){
-     produces< TCollection >();}
+    src_ (consumes<edm::View<T> >(pset.getParameter<edm::InputTag>("src"))){
+      produces< TCollection >();
+    }
 
   private:
-    edm::InputTag src_;
+     edm::EDGetTokenT<edm::View<T> > src_;
 
 };
 
@@ -41,14 +42,14 @@ template<typename T>
 void PATRankEmbedder< T>::produce(edm::Event& evt, const edm::EventSetup& es) {
   std::auto_ptr<TCollection >output(new TCollection);
 
-  edm::Handle< TCollection > candidates;
-  evt.getByLabel(src_, candidates);
+  edm::Handle< edm::View<T> > candidates;
+  evt.getByToken(src_, candidates);
   output->reserve(candidates->size());
 
 
   for (size_t i = 0; i < candidates->size(); i++) {
-    T embedInto = candidates->at(i);
-    embedInto.addUserFloat("rankByPt",i);
+    T embedInto = *(candidates->ptrAt(i));
+    embedInto.addUserFloat("rankByPt",float(i));
     output->push_back(embedInto); // takes ownership
   }
   evt.put(output);

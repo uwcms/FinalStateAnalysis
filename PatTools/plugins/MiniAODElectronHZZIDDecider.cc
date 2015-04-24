@@ -2,7 +2,7 @@
 //                                                                          //
 //   MiniAODElectronHZZIDDecider.cc                                         //
 //                                                                          //
-//   Embeds electron tight ID and siolation decisions as userfloats         //
+//   Embeds electron ID and siolation decisions as userfloats               //
 //       (1 for true, 0for false), for use in other modules using           //
 //       HZZ4l2015 definitions.                                             //
 //                                                                          //
@@ -91,7 +91,7 @@ MiniAODElectronHZZIDDecider::MiniAODElectronHZZIDDecider(const edm::ParameterSet
                                                                edm::InputTag("slimmedElectrons"))),
   idLabel_(iConfig.exists("idLabel") ?
 	   iConfig.getParameter<std::string>("idLabel") :
-	   std::string("HZZ4lTightIDPass")),
+	   std::string("HZZ4lIDPass")),
   isoLabel_(iConfig.exists("isoLabel") ?
 	   iConfig.getParameter<std::string>("isoLabel") :
 	   std::string("HZZ4lIsoPass")),
@@ -110,7 +110,7 @@ MiniAODElectronHZZIDDecider::MiniAODElectronHZZIDDecider(const edm::ParameterSet
   idCutHighPtLowEta(iConfig.exists("idCutHighPtLowEta") ? iConfig.getParameter<double>("idCutHighPtLowEta") : -0.110),
   idCutHighPtMedEta(iConfig.exists("idCutHighPtMedEta") ? iConfig.getParameter<double>("idCutHighPtMedEta") : -0.284),
   idCutHighPtHighEta(iConfig.exists("idCutHighPtHighEta") ? iConfig.getParameter<double>("idCutHighPtHighEta") : -0.212),
-  bdtLabel(iConfig.exists("bdtLabel") ? iConfig.getParameter<std::string>("bdtLabel") : "MVANonTrigCSA14"),
+  bdtLabel(iConfig.exists("bdtLabel") ? iConfig.getParameter<std::string>("bdtLabel") : "BDTIDNonTrig"),
   missingHitsCut(iConfig.exists("missingHitsCut") ? iConfig.getParameter<int>("missingHitsCut") : 1),
   isoCut(iConfig.exists("isoCut") ? iConfig.getParameter<double>("isoCut") : 0.5),
   rhoLabel(iConfig.exists("rhoLabel") ?
@@ -156,7 +156,7 @@ void MiniAODElectronHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSe
 bool MiniAODElectronHZZIDDecider::passKinematics(const edm::Ptr<pat::Electron>& elec) const
 {
   bool result = (elec->pt() > ptCut);
-  result = (result && fabs(elec->superCluster()->eta()) < etaCut);
+  result = (result && fabs(elec->eta()) < etaCut);
   return result;
 }
 

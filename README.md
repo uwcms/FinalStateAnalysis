@@ -16,7 +16,7 @@ Current CMSSW version: ``7_2_X``.
 Get a supported CMSSW release area:
 
 ```bash
-  scram pro -n MyWorkingAreaName CMSSW CMSSW_VERSION
+  scram pro -n MyWorkingAreaName CMSSW <CMSSW_VERSION>
   cd MyWorkingAreaName/src
   # Setup your CMSSW environment
   cmsenv
@@ -30,7 +30,7 @@ Get a supported CMSSW release area:
 Checkout the FinalStateAnalysis repository:
 
 ```bash
-  git clone --recursive -b miniAOD_dev https://github.com/uwcms/FinalStateAnalysis.git
+  git clone --recursive -b miniAOD_dev git@github.com:uwcms/FinalStateAnalysis.git
   cd FinalStateAnalysis
 ```
 
@@ -39,13 +39,15 @@ Checkout the needed CMSSW tags:
 ```bash
   cd recipe/
   # Checkout needed packages and apply patches
-  # This enables all options.  You can turn off things you don't need.
-  PATPROD=1 LUMI=1 LIMITS=0 ./recipe.sh
+  # do >> HZZ=1 ./recipe.sh  instead if you want H->ZZ MELA stuff.
+  ./recipe.sh
+  cd ..
   # Setup FSA environment
   source environment.sh
   # Compile
-  cd ../../
+  pushd ..
   scram b -j 8
+  popd
 ```
 
 You must always set up the CMSSW environment + some extra variables from FinalStateAnalysis:

@@ -25,3 +25,7 @@ callgrind.out.*
 *.rej
 *.swp
 *nohup.out
+*.dat
+*.DAT
+*.tbl
+*~
