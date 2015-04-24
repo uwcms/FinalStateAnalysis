@@ -78,8 +78,6 @@ def produce_final_states(process, collections, output_commands,
     output_commands.append('*_patFinalStateEventProducer_*_*')
 
     # Are we applying Rochester Corrections to the muons?
-    if rochCor != "" or eleCor != "":
-        process.correctionSequence = cms.Sequence()
     if rochCor != "":
         if rochCor not in ["RochCor2012", "RochCor2011A", "RochCor2011B"]:
             raise RuntimeError(rochCor + ": not a valid option")
@@ -94,7 +92,7 @@ def produce_final_states(process, collections, output_commands,
 
         src['muons'] = "rochCorMuons"
 
-        process.correctionSequence += process.rochCorMuons
+        sequence += process.rochCorMuons
 
     # Are we applying electron energy corrections?
     if eleCor != "":
@@ -112,12 +110,25 @@ def produce_final_states(process, collections, output_commands,
 
         src['electrons'] = "corrElectrons"
 
-        process.correctionSequence += process.corrElectrons
+        sequence += process.corrElectrons
 
-    if rochCor != "" or eleCor != "":
-        process.correctLeptons = cms.Path(process.correctionSequence)
-        process.schedule.append(process.correctLeptons)
 
+    ### apply final selections to the objects we'll use in the final states
+    # Initialize final-state object sequence
+    finalSelections = kwargs.get('finalSelection',{})
+    from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections, getName
+    process.selectObjectsForFinalStates = setup_selections(
+        process, 
+        "FinalSelection",
+        src,
+        finalSelections,
+        )
+    for ob in finalSelections:
+        src[getName(ob)+"s"] = getName(ob)+"FinalSelection"
+        output_commands.append('*_%sFinalSelection_*_*'%getName(ob))
+
+    if len(finalSelections):
+        sequence += process.selectObjectsForFinalStates
 
     # Rank objects
     process.muonsRank = cms.EDProducer(
@@ -139,31 +150,19 @@ def produce_final_states(process, collections, output_commands,
         src=cms.InputTag(src['jets']))
     src['jets'] = 'jetsRank'
 
-    process.rankSequence = cms.Sequence(
+    output_commands.append('*_muonsRank_*_*')
+    output_commands.append('*_electronsRank_*_*')
+    output_commands.append('*_tausRank_*_*')
+    output_commands.append('*_jetsRank_*_*')
+
+    process.rankObjects = cms.Sequence(
         process.muonsRank
         + process.electronsRank
         + process.tausRank
         + process.jetsRank
         )
-    process.rankObjects = cms.Path(process.rankSequence)
-    process.schedule.append(process.rankObjects)
+    sequence += process.rankObjects
 
-
-    ### apply final selections to the objects we'll use in the final states
-    # Initialize final-state object sequence
-    finalSelections = kwargs.get('finalSelection',{})
-    from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections, getName
-    process.selectObjectsForFinalStates = setup_selections(
-        process, 
-        "FinalSelection",
-        src,
-        finalSelections,
-        )
-    for ob in finalSelections:
-        src[getName(ob)+"s"] = getName(ob)+"FinalSelection"
-        output_commands.append('*_%sFinalSelection_*_*'%getName(ob))
-
-    sequence += process.selectObjectsForFinalStates
 
     # Now build all combinatorics for E/Mu/Tau/Photon
     object_types = [
