@@ -40,7 +40,7 @@ public:
 private:
 
   template<typename T> edm::RefProd<T> getRefProd(
-						  const edm::InputTag& src, const edm::Event& evt) const;
+                                                  const edm::InputTag& src, const edm::Event& evt) const;
 
   typedef math::Error<2>::type Matrix;
   // General global quantities
@@ -102,7 +102,7 @@ private:
 };
 
 PATFinalStateEventProducer::PATFinalStateEventProducer(
-						       const edm::ParameterSet& pset) {
+                                                       const edm::ParameterSet& pset) {
   rhoSrc_ = pset.getParameter<edm::InputTag>("rhoSrc");
   pvSrc_ = consumes<edm::View<reco::Vertex> >(pset.getParameter<edm::InputTag>("pvSrc"));
   pvBackSrc_ = consumes<edm::View<reco::Vertex> >(pset.getParameter<edm::InputTag>("pvSrcBackup"));
@@ -140,10 +140,10 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   edm::ParameterSet mets = pset.getParameterSet("mets");
   for (size_t i = 0; i < mets.getParameterNames().size(); ++i) {
     metCfg_.push_back(
-		      std::make_pair(
-				     mets.getParameterNames()[i],
-				     consumes<edm::View<pat::MET> >(mets.getParameter<edm::InputTag>(mets.getParameterNames()[i]))
-				     ));
+                      std::make_pair(
+                                     mets.getParameterNames()[i],
+                                     consumes<edm::View<pat::MET> >(mets.getParameter<edm::InputTag>(mets.getParameterNames()[i]))
+                                     ));
   }
 
   produces<PATFinalStateEventCollection>();
@@ -159,23 +159,23 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
 
 template<typename T> edm::RefProd<T>
 PATFinalStateEventProducer::getRefProd(const edm::InputTag& src,
-				       const edm::Event& evt) const {
+                                       const edm::Event& evt) const {
   edm::Handle<T> handle;
   evt.getByLabel(src, handle);
   // If we are being permissive, and the product doesn't exist,
   // emit an error and a null ref.
   if (!forbidMissing_ && !handle.isValid()) {
     edm::LogWarning("FSAEventMissingProduct") << "The FSA collection "
-					      << src.label() << " is missing.  It will be null." << std::endl;
+                                              << src.label() << " is missing.  It will be null." << std::endl;
     return edm::RefProd<T>();
   }
   return edm::RefProd<T>(handle);
 }
 
 void PATFinalStateEventProducer::produce(edm::Event& evt,
-					 const edm::EventSetup& es) {
+                                         const edm::EventSetup& es) {
   std::auto_ptr<PATFinalStateEventCollection> output(
-						     new PATFinalStateEventCollection);
+                                                     new PATFinalStateEventCollection);
 
   edm::Handle<double> rho;
   evt.getByLabel(rhoSrc_, rho);
@@ -191,11 +191,11 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     pvPtr = pv->ptrAt(0);
   else if( pv_back->size() ) {
     std::cout << "!!!!! There are no selected primary vertices,"
-	      << " pvPtr is set to unclean vertex !!!!!" << std::endl;
+              << " pvPtr is set to unclean vertex !!!!!" << std::endl;
     pvPtr = pv_back->ptrAt(0);
   } else
     std::cout << "!!!!! There are no primary vertices,"
-	      << " pvPtr is not set !!!!!" << std::endl;
+              << " pvPtr is not set !!!!!" << std::endl;
   edm::Handle<edm::View<reco::Vertex> > vertices;
   evt.getByToken(verticesSrc_, vertices);
   edm::PtrVector<reco::Vertex> verticesPtr = vertices->ptrVector();
@@ -233,7 +233,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     if (!forbidMissing_ && !theMet.isValid()) {
       edm::LogWarning("FSAEventMissingProduct")
         << "The FSA collection for "
-	<< metCfg_[i].first
+        << metCfg_[i].first
         << " is missing.  It will be null." << std::endl;
     } else {
       theMetPtr = theMet->ptrAt(0);
@@ -290,7 +290,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   GenFilterInfo generatorFilter;
   if (generatorFilterH.isValid())
     generatorFilter = *generatorFilterH;
-	
+        
   // Try and get the gen information if it exists
   edm::Handle<reco::GenParticleCollection> genParticles;
   evt.getByLabel(truthSrc_, genParticles);
@@ -301,19 +301,19 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   PATFinalStateEvent* theEvent;
   pat::TriggerEvent* trg = new pat::TriggerEvent();
   theEvent = new PATFinalStateEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
-				    *trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
-				    evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
-				    electronRefProd, muonRefProd, tauRefProd, jetRefProd,
-				    phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
+                                    *trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
+                                    evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
+                                    electronRefProd, muonRefProd, tauRefProd, jetRefProd,
+                                    phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
     if (extraWeights_.existsAs<double>(extras[i])) {
       theEvent->addWeight(extras[i],
-			  extraWeights_.getParameter<double>(extras[i]));
+                          extraWeights_.getParameter<double>(extras[i]));
     } else {
       edm::InputTag weightSrc = extraWeights_.getParameter<edm::InputTag>(
-									  extras[i]);
+                                                                          extras[i]);
       edm::Handle<double> weightH;
       evt.getByLabel(weightSrc, weightH);
       theEvent->addWeight(extras[i], *weightH);
