@@ -19,13 +19,13 @@
 #ifndef EXPRESSIONNTUPLECOLUMN_VOU3DWMC
 #define EXPRESSIONNTUPLECOLUMN_VOU3DWMC
 
-#include "Reflex/Type.h"
 #include <TTree.h>
 #include <TLeaf.h>
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
 #include <TMath.h>
 #include <iostream>
 #include <sstream>
+#include "FWCore/Utilities/interface/TypeWithDict.h"
 
 template<typename ObjType>
 class ExpressionNtupleColumn {
@@ -267,8 +267,8 @@ ExpressionNtupleColumnT(const std::string& name,
   branch_.reset(new ColType[1]);
 
   std::stringstream idxwrap;
-  Reflex::Type theType = Reflex::Type::ByTypeInfo(typeid(T));
-  idxwrap << "[N_" << theType.Name() << "]";
+  edm::TypeWithDict t(typeid(T));
+  idxwrap << "[N_" << t.name() << "]";
 
   std::string branchCmd = name + idxwrap.str() + getTypeCmd<ColType>();
   std::string fullName = name;

@@ -263,7 +263,7 @@ const bool findDecay(const reco::GenParticleRefProd genCollectionRef, int pdgIdM
 }
 
 
-float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const edm::PtrVector<reco::Vertex> recoVertices)
+float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const std::vector<edm::Ptr<reco::Vertex>>& recoVertices)
 {
   //std::map <std::string, float> varMap; 
   const pat::Jet *jet = dynamic_cast<const pat::Jet*> (jetptr.get());
@@ -272,7 +272,7 @@ float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar,
   Bool_t useQC = true;
   // if(fabs(jet->eta()) > 2.5 && type == "MLP") useQC = false;		//In MLP: no QC in forward region
 
-  edm::PtrVector<reco::Vertex>::const_iterator vtxLead = recoVertices.begin();
+  std::vector<edm::Ptr<reco::Vertex>>::const_iterator vtxLead = recoVertices.begin();
 
   Float_t sum_weight = 0., sum_deta = 0., sum_dphi = 0., sum_deta2 = 0., sum_dphi2 = 0., sum_detadphi = 0., sum_pt = 0.;
   Int_t nChg_QC = 0, nChg_ptCut = 0, nNeutral_ptCut = 0;
@@ -290,8 +290,8 @@ float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar,
       if(part->pt() > 1.0) nChg_ptCut++;
   	
       //Search for closest vertex to track
-      edm::PtrVector<reco::Vertex>::const_iterator  vtxClose = recoVertices.begin();
-      for( edm::PtrVector<reco::Vertex>::const_iterator  vtx = recoVertices.begin(); vtx != recoVertices.end(); ++vtx){
+      std::vector<edm::Ptr<reco::Vertex>>::const_iterator  vtxClose = recoVertices.begin();
+      for( std::vector<edm::Ptr<reco::Vertex>>::const_iterator  vtx = recoVertices.begin(); vtx != recoVertices.end(); ++vtx){
 	if(fabs(itrk->dz((*vtx)->position())) < fabs(itrk->dz((*vtxClose)->position()))) vtxClose = vtx;
       }
   	
