@@ -51,9 +51,6 @@ from FinalStateAnalysis.NtupleTools.ntuple_builder import \
     make_ntuple, add_ntuple
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
-from FinalStateAnalysis.NtupleTools.rerun_matchers import rerun_matchers
-from FinalStateAnalysis.NtupleTools.rerun_QGJetID import rerun_QGJetID
-from FinalStateAnalysis.NtupleTools.rerun_Jets import rerun_jets
 import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")

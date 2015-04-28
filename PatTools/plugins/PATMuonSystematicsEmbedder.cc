@@ -111,10 +111,10 @@ void PATMuonSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup&
     double phi = muon.phi();
     double mass = muon.mass();
 
-    ShiftedCand uncorr(muon);
-    ShiftedCand nominal(muon);
-    ShiftedCand mesUp(muon);
-    ShiftedCand mesDown(muon);
+    ShiftedCand uncorr = *muon.clone();
+    ShiftedCand nominal = *muon.clone();
+    ShiftedCand mesUp = *muon.clone();
+    ShiftedCand mesDown = *muon.clone();
 
     // Don't apply the correction by default, no one else does.
 

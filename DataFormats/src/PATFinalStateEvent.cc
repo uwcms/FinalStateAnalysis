@@ -56,7 +56,7 @@ PATFinalStateEvent::PATFinalStateEvent(
 PATFinalStateEvent::PATFinalStateEvent(
     double rho,
     const edm::Ptr<reco::Vertex>& pv,
-    const edm::PtrVector<reco::Vertex>& recoVertices,
+    const std::vector<edm::Ptr<reco::Vertex>>& recoVertices,
     const edm::Ptr<pat::MET>& met,
     const TMatrixD& metCovariance,
     const pat::TriggerEvent triggerEvent,
@@ -116,8 +116,12 @@ PATFinalStateEvent::PATFinalStateEvent(
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
 
-const edm::PtrVector<reco::Vertex>& PATFinalStateEvent::recoVertices() const {
+const std::vector<edm::Ptr<reco::Vertex>>& PATFinalStateEvent::recoVertices() const {
   return recoVertices_;
+}
+
+int PATFinalStateEvent::numberVertices() const {
+  return recoVertices().size();
 }
 
 const std::vector<PileupSummaryInfo>& PATFinalStateEvent::puInfo() const {
@@ -202,6 +206,12 @@ const reco::Candidate::LorentzVector PATFinalStateEvent::met4vector(
 
 const edm::EventID& PATFinalStateEvent::evtId() const {
   return evtID_;
+}
+
+int PATFinalStateEvent::event() const {
+  ULong64_t eventNum = evtId().event();
+  int doub = 0;
+  return doub + eventNum;
 }
 
 // Superseded by the smart trigger

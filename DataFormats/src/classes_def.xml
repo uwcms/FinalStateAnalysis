@@ -12,17 +12,17 @@
   <class name="edm::RefProd<pat::JetCollection>"/>
 
   <class name="std::map<std::string, float>"/>
-  <class name="std::pair<std::string, float>"/>
   <class name="std::map<std::string, int>"/>
-  <class name="std::pair<std::string, int>"/>
   <class name ="std::map<std::string,edm::Ptr<pat::MET> >" />
 
-  <class name="VBFVariables" ClassVersion="11">
+  <class name="VBFVariables" ClassVersion="12">
+   <version ClassVersion="12" checksum="1002516445"/>
    <version ClassVersion="11" checksum="2844821699"/>
    <version ClassVersion="10" checksum="2474259455"/>
   </class>
 
-  <class name="PATFinalState" ClassVersion="10">
+  <class name="PATFinalState" ClassVersion="11">
+   <version ClassVersion="11" checksum="2004223533"/>
    <version ClassVersion="10" checksum="2840789346"/>
   </class>
   <class name="std::vector<PATFinalState*>"/>
@@ -38,7 +38,7 @@
   </class>
 
   <class name="PATFinalStateEvent" ClassVersion="16">
-   <version ClassVersion="16" checksum="178010298"/>
+   <version ClassVersion="16" checksum="319173420"/>
    <version ClassVersion="15" checksum="1840019056"/>
    <version ClassVersion="14" checksum="1619979458"/>
    <version ClassVersion="13" checksum="3775954220"/>
@@ -65,7 +65,8 @@
   <class name="edm::RefProd<PATFinalStateLSCollection>"/>
   <class name="edm::Ptr<PATFinalStateLS>"/>
 
-  <class name="PATMultiCandFinalState" ClassVersion="10">
+  <class name="PATMultiCandFinalState" ClassVersion="11">
+   <version ClassVersion="11" checksum="2040738471"/>
    <version ClassVersion="10" checksum="3774322392"/>
   </class>
   <class name="PATMultiCandFinalStateCollection"/>

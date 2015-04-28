@@ -20,7 +20,8 @@
 namespace {
   // Taus we can get the value straight from the jet
   reco::Candidate::LorentzVector extractObjectP4(const pat::Tau& tau) {
-    return tau.pfEssential().p4Jet_;
+    //return tau.pfEssential().p4Jet_;
+    return tau.p4();
   }
 
   reco::Candidate::LorentzVector extractObjectP4(const pat::Muon& mu) {

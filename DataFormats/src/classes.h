@@ -38,8 +38,8 @@ namespace {
 
     std::map<std::string, float> dummyFloatMap;
     std::map<std::string, int> dummyIntMap;
-    std::pair<std::string, float> dummyFloatPair;
-    std::pair<std::string, int> dummyIntPair;
+    //std::pair<std::string, float> dummyFloatPair;
+    //std::pair<std::string, int> dummyIntPair;
     std::map<std::string, edm::Ptr<pat::MET> > dummyMETMap;
 
     // For the VBF variables

@@ -198,7 +198,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
               << " pvPtr is not set !!!!!" << std::endl;
   edm::Handle<edm::View<reco::Vertex> > vertices;
   evt.getByToken(verticesSrc_, vertices);
-  edm::PtrVector<reco::Vertex> verticesPtr = vertices->ptrVector();
+  std::vector<edm::Ptr<reco::Vertex>> verticesPtr = vertices->ptrs();
 
   // Get refs to the objects in the event
   edm::RefProd<pat::ElectronCollection> electronRefProd =
