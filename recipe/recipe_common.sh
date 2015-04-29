@@ -16,10 +16,10 @@ popd
 
 # Add and patch to way speed up trigger matching
 # Don't crash if patch already applied.
-set +o errexit
-echo "Applying pat trigger matching speedup"
-git cms-addpkg DataFormats/PatCandidates
-git apply FinalStateAnalysis/recipe/patches/DataFormats_PatCandidates_TriggerEvent.cc.patch
-set -o errexit
+#set +o errexit
+#echo "Applying pat trigger matching speedup"
+#git cms-addpkg DataFormats/PatCandidates
+#git apply FinalStateAnalysis/recipe/patches/DataFormats_PatCandidates_TriggerEvent.cc.patch
+#set -o errexit
 
 popd

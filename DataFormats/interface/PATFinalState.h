@@ -34,7 +34,7 @@ namespace reco {
 
 typedef pat::PATObject<reco::LeafCandidate> PATLeafCandidate;
 
-class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
+class PATFiState : public pat::PATObject<reco::LeafCandidate> {
   public:
     typedef reco::Candidate::LorentzVector LorentzVector;
 

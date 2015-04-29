@@ -81,7 +81,7 @@ namespace zgamma{
     map < string, double > CorrMap;
     map < string, double > ErrMap;
     map < int, int > CatMap;
-    ifstream MapFile;
+    std::ifstream MapFile;
     const char* filename;
 
     //Private Methods

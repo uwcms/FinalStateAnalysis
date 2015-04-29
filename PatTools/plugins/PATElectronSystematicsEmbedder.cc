@@ -61,7 +61,7 @@ void PATElectronSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSe
     pat::Electron electron = electrons->at(i); // make a local copy
 
     double pt = electron.pt();
-    ShiftedCand uncorr(electron);
+    ShiftedCand uncorr = *electron.clone();
 
     double correctedPt = nominal_*pt;
     double correctedPtUp = eScaleUp_*pt;
@@ -74,8 +74,8 @@ void PATElectronSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSe
     electron.setP4(reco::Particle::PolarLorentzVector(
           correctedPt, eta, phi, mass));
 
-    ShiftedCand mesUp(electron);
-    ShiftedCand mesDown(electron);
+    ShiftedCand mesUp = *electron.clone();
+    ShiftedCand mesDown = *electron.clone();
 
     mesUp.setP4(reco::Particle::PolarLorentzVector(
           correctedPtUp, eta, phi, mass));

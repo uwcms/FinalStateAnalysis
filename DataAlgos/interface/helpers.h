@@ -52,7 +52,7 @@ const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, in
 /// Helper function to get if the gen particle associated comes from higgs 
 const bool comesFromHiggs(const reco::GenParticleRef genPart);
 
-float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const edm::PtrVector<reco::Vertex> recoVertices);
+float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const std::vector<edm::Ptr<reco::Vertex>>& recoVertices);
 
 }
 

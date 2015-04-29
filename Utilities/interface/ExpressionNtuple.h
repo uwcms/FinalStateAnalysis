@@ -11,10 +11,10 @@
 #include "boost/utility.hpp"
  #include <boost/ptr_container/ptr_vector.hpp>
 
-#include "Reflex/Type.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "CommonTools/Utils/interface/TFileDirectory.h"
 #include "TTree.h"
+#include "FWCore/Utilities/interface/TypeWithDict.h"
 
 #include "FinalStateAnalysis/Utilities/interface/ExpressionNtupleColumn.h"
 
@@ -139,9 +139,9 @@ template<class T>
 void ExpressionNtuple<std::vector<const T*> >::initialize(TFileDirectory& fs) {
   tree_ = fs.make<TTree>("Ntuple", "Expression Ntuple");
   // build the index branch
-  Reflex::Type theType = Reflex::Type::ByTypeInfo(typeid(T));
   std::stringstream name, leaf;
-  name << "N_"  << theType.Name();
+  edm::TypeWithDict t(typeid(T));
+  name << "N_"  << t.name();
   leaf << name.str() << "/I";
   
   // In this specialization the idx is allows us to have
