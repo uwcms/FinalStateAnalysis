@@ -244,7 +244,6 @@ def make_ntuple(*legs, **kwargs):
     for v in ['e','m','t','g','j']:
         _leg_templates[v] = PSet(
             _leg_templates[v],
-            candidateVariables,
             custVariables[v]
         )
 
@@ -261,12 +260,13 @@ def make_ntuple(*legs, **kwargs):
 
         # Get a PSet describing the branches for this leg
         leg_branches = _leg_templates[leg].replace(object=label)
-
+        extra_cand_branches = candidateVariables.replace(object=label)
 
         # Add to the total config
         ntuple_config = PSet(
             ntuple_config,
-            leg_branches
+            leg_branches,
+            extra_cand_branches,
         )
     #pdb.set_trace()
 
