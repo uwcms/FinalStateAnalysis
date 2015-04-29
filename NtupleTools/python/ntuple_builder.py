@@ -241,13 +241,13 @@ def make_ntuple(*legs, **kwargs):
     custVariables['g'] = kwargs.get('photonVariables',PSet())
     custVariables['j'] = kwargs.get('jetVariables',PSet())
 
+    leg_branch_templates = {}
     for v in ['e','m','t','g','j']:
-        _leg_templates[v] = PSet(
+        leg_branch_templates[v] = PSet(
             _leg_templates[v],
+            custVariables[v],
             candidateVariables,
-            custVariables[v]
         )
-
 
     for i, leg in enumerate(legs):
         counts[leg] += 1
@@ -260,17 +260,21 @@ def make_ntuple(*legs, **kwargs):
         object_labels.append(label)
 
         # Get a PSet describing the branches for this leg
-        leg_branches = _leg_templates[leg].replace(object=label)
-
+        leg_branches = leg_branch_templates[leg].replace(object=label)
 
         # Add to the total config
         ntuple_config = PSet(
             ntuple_config,
-            leg_branches
+            leg_branches,
         )
-    #pdb.set_trace()
+
 
     # If basic jet information is desired for a non-jet final state, put it in
+    extraJetVariables = kwargs.get('extraJetVariables', PSet())
+    extra_jet_template = PSet(
+        templates.topology.extraJet,
+        extraJetVariables,
+        )
     for i in range(kwargs.get("nExtraJets", 0)):
         label = "jet%i"%(i+1)
         format_labels[label] = 'evt.jets.at(%i)' % i
@@ -278,11 +282,11 @@ def make_ntuple(*legs, **kwargs):
         
         ntuple_config = PSet(
             ntuple_config,
-            templates.topology.extraJet.replace(object=label)
+            extra_jet_template.replace(object=label)            
             )
     
     dicandidateVariables = kwargs.get('dicandidateVariables',PSet())
-    templates.topology.pairs = PSet(
+    dicandidate_template = PSet(
         templates.topology.pairs,
         dicandidateVariables
     )
@@ -292,13 +296,13 @@ def make_ntuple(*legs, **kwargs):
         if hzz:
             ntuple_config = PSet(
                 ntuple_config,
-                templates.topology.pairs.replace(object1=leg_a, object2=leg_b),
+                dicandidate_template.replace(object1=leg_a, object2=leg_b),
                 templates.topology.zbosonMiniAOD.replace(object1=leg_a, object2=leg_b),
                 )
         else:
             ntuple_config = PSet(
                 ntuple_config,
-                templates.topology.pairs.replace(object1=leg_a, object2=leg_b),
+                dicandidate_template.replace(object1=leg_a, object2=leg_b),
                 )
         # Check if we want to enable SVfit
         # Only do SVfit in states with 2 or 4 leptons
