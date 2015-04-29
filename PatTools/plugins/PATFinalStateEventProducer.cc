@@ -31,7 +31,7 @@
 #include "DataFormats/Math/interface/Error.h"
 
 
-class PATFinalStateEventProducer : public edm::EDProducer {
+class PATFiStateEventProducer : public edm::EDProducer {
 public:
   PATFinalStateEventProducer(const edm::ParameterSet& pset);
   virtual ~PATFinalStateEventProducer(){}
