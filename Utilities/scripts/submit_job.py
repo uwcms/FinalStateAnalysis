@@ -98,6 +98,8 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
         '"--output-dir=%s"' % output_dir,
         '--input-files-per-job=%i' % args.filesperjob,
     ]
+    if args.extraUserCodeFiles:
+        command.append('--extra-usercode-files="%s"'%(' '.join(args.extraUserCodeFiles)))
     if args.sharedfs:
         command.append('--shared-fs')
     command.extend(input_commands)
@@ -215,6 +217,12 @@ def get_com_line_args():
 
     farmout_group = parser.add_argument_group("farmout",
                                               description="Farmout options")
+
+    farmout_group.add_argument(
+        '--extra-usercode-files', nargs='*', type=str, dest='extraUserCodeFiles',
+        help = 'Space-separated list of extra directories that need to be included '
+               'in the user_code tarball sent with the job. Paths relative to $CMSSW_BASE.'
+    )
 
     farmout_group.add_argument(
         '--output-dag-file', dest='dagdir',
