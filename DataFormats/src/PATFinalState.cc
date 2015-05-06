@@ -852,9 +852,10 @@ edm::Ptr<pat::Photon> PATFinalState::daughterAsPhoton(size_t i) const {
   return daughterAs<pat::Photon>(i);
 }
 
-const reco::GenParticleRef PATFinalState::getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge) const {
+const reco::GenParticleRef PATFinalState::getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge, int preFSR) const {
   bool charge = (bool) checkCharge;
-  return fshelpers::getGenParticle( daughter(i), event_->genParticleRefProd(), pdgIdToMatch, charge);
+  bool pFSR = (bool) preFSR;
+  return fshelpers::getGenParticle( daughter(i), event_->genParticleRefProd(), pdgIdToMatch, charge, pFSR);
 }
 
 const reco::GenParticleRef PATFinalState::getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const {
