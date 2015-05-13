@@ -40,6 +40,8 @@ zero or one) are::
                               alternate Z pairings out of ntuples, several other small changes
     nExtraJets=0            - (for non-jet final states) add basic info about this many jets in addition to final state branches
     paramFile=''            - custom parameter file for ntuple production
+    keepPat=0               - Instead of creating flat ntuples, write out the high level
+                              physics objects including the PATFinalState objects.
 
 Batch submission
 ----------------
