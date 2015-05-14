@@ -395,7 +395,8 @@ def make_ntuple(*legs, **kwargs):
 
         for name, cut in uniqueness_cuts(legs, pt_cuts, eta_cuts,
                                          skimCuts=kwargs.get('skimCuts', []),
-                                         hzz=hzz, dblH=kwargs.get('dblhMode', False)):
+                                         hzz=hzz, 
+                                         dblH=kwargs.get('dblhMode', False)).iteritems():
             output.analysis.selections.append(
                 cms.PSet(
                     name=cms.string(name),
