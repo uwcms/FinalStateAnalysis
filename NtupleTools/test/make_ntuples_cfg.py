@@ -340,7 +340,10 @@ if options.hzz:
     
 
 ## Do preselection as requested in the analysis parameters
-preselections = parameters.get('preselection',{})
+if options.passThru:
+    preselections = {}
+else:
+    preselections = parameters.get('preselection',{})
 
 from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections, getName
 process.preselectionSequence = setup_selections(
@@ -606,8 +609,7 @@ if options.keepPat:
     for name, label in fs_daughter_inputs.iteritems():
         output_to_keep.append('*_%s_*_*'%label)
 
-    # keep gen particle collections
-    output_to_keep.append('*_packedGenParticles_*_*')
+    # keep important gen particles
     output_to_keep.append('*_prunedGenParticles_*_*')
     output_commands = cms.untracked.vstring('drop *')
 
