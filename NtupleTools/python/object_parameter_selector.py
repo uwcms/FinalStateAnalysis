@@ -103,6 +103,6 @@ def setup_selections(process, moduleName, inputs, params):
         seq += module
 
         # use the correct name for this object if it's needed by other selector modules
-        inputs[obj] = getName(obj)+moduleName
+        inputs[getName(obj)+"s"] = getName(obj)+moduleName
 
     return seq
