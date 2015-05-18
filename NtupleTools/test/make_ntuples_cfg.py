@@ -611,6 +611,7 @@ if options.keepPat:
 
     # keep important gen particles
     output_to_keep.append('*_prunedGenParticles_*_*')
+    output_to_keep.append('*_packedGenParticles_*_*')
     output_commands = cms.untracked.vstring('drop *')
 
     for product in output_to_keep:
