@@ -24,7 +24,7 @@ cd $recipe/external/src/virtualenv
 
 echo "Creating virtual python environment in $vpython"
 if [ ! -d "$vpython" ]; then
-  python virtualenv.py --distribute $vpython
+  python virtualenv.py $vpython
 else
   echo "...virtual environment already setup."
 fi
@@ -35,6 +35,7 @@ source bin/activate
 
 echo "Installing yolk"
 pip install -U yolk
+
 echo "Installing ipython"
 pip install -U ipython
 echo "Installing termcolor"
@@ -54,7 +55,11 @@ pip install -U pudb
 echo "Installing yellowhiggs <-- higgs yellow report x-sections lookup table"
 pip install -e $recipe/external/src/yellowhiggs
 
-echo "Installing rootpy"
+echo "Installing rootpy and necessary peripherals"
+# have to mess with things a little to install rootpy
+# pyzmq is required to use rootpy in ipython
+pip install pyzmq --install-option="--zmq=bundled"
+
 pip install -e $recipe/external/src/rootpy
 
 if [ "$PYTABLES" = "1" ]
