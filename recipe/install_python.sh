@@ -53,7 +53,7 @@ fi
 echo "Installing pudb <-- interactive debugging"
 pip install -U pudb
 echo "Installing yellowhiggs <-- higgs yellow report x-sections lookup table"
-pip install -e $recipe/external/src/yellowhiggs
+pip install -U yellowhiggs
 
 echo "Installing rootpy and necessary peripherals"
 # have to mess with things a little to install rootpy

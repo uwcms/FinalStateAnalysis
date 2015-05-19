@@ -4,6 +4,3 @@
 [submodule "recipe/external/src/rootpy"]
 	path = recipe/external/src/rootpy
 	url = git@github.com:rootpy/rootpy.git
-[submodule "recipe/external/src/yellowhiggs"]
-	path = recipe/external/src/yellowhiggs
-	url = https://github.com/mverzett/yellowhiggs.git
