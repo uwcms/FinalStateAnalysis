@@ -1124,8 +1124,164 @@ const bool PATFinalState::genVtxPVMatch(const size_t i) const
 }
 
 
+// Get the invariant mass of the ith and jth jet in the event
+const float PATFinalState::dijetMass(const size_t i, const size_t j) const
+{
+  if(evt()->jets().size() <= i || evt()->jets().size() <= j)
+    return -999.;
+
+  return (evt()->jets().at(i).p4() + evt()->jets().at(j).p4()).M();
+}
 
 
+// Get the event category for the 2015 H->ZZ->4l analysis
+const uint PATFinalState::getHZZCategory() const
+{
+  if(numberOfDaughters() != 4)
+    return 999;
+
+  if(isVBFTagged())
+    return 2;
+
+  if(isVHHadronicTagged())
+    return 4;
+
+  if(isVHLeptonicTagged())
+    return 3;
+
+  if(isTTHTagged())
+    return 5;
+
+  if(isHZZ1JetTagged())
+    return 1;
+
+  return 0;
+}
+
+
+// helper functions for use in getHZZCategory()
+// each assumes that the earlier categories have already been checked
+const bool PATFinalState::isVBFTagged() const
+{
+  // at least 2 jets
+  if(evt()->jets().size() < 2)
+    return false;
+
+  // at most one B-tagged jet
+  uint nBTags = 0;
+  for(size_t j = 0; j < evt()->jets().size(); ++j)
+    {
+      if(isHZZBTagged(evt()->jets().at(j)))
+        {
+          nBTags++;
+          if(nBTags > 1)
+            return false;
+        }
+    }
+  
+  // Fisher discriminant > 0.5
+  float D_jet = 0.18 * fabs(evt()->jets().at(0).eta() - evt()->jets().at(1).eta()) +
+    0.000192 * dijetMass(0,1);
+  if(D_jet < 0.5)
+    return false;
+
+  // exactly 4 leptons
+  const std::string tightLepCut = std::string("userFloat(\"HZZ4lIDPassTight\") > 0.5 && userFloat(\"HZZ4lIsoPass\") > 0.5");
+  if(vetoMuons(0.05, tightLepCut).size() != 0 || vetoElectrons(0.05, tightLepCut).size() != 0)
+    return false;
+
+  return true;
+}
+
+const bool PATFinalState::isVHHadronicTagged() const
+{
+  // all possibilities require at least 2 jets
+  if(evt()->jets().size() < 2)
+    return false;
+
+  // exactly 2 b-tagged jets
+  bool twoBs = evt()->jets().size() == 2;
+  for(size_t j = 0; j < 2 && twoBs; ++j)
+    twoBs &= isHZZBTagged(evt()->jets().at(j));
+          
+  // OR at least 2 jets with |eta|<2.4, pt>40, 60<m_jj<120; and 4lpT>4lmass
+  bool vJets = (mass() < pt());
+  if(!twoBs)
+    {
+      for(size_t ijet = 0; ijet < evt()->jets().size()-1 && !vJets; ++ijet) // safe because of 2 jet requirement
+        {
+          pat::Jet j1 = evt()->jets().at(ijet);
+          if(fabs(j1.eta()) > 2.4 || j1.pt() < 40.)
+            continue;
+
+          for(size_t jjet = ijet+1; jjet < evt()->jets().size() && !vJets; ++jjet)
+            {
+              pat::Jet j2 = evt()->jets().at(jjet);
+              if(fabs(j2.eta()) > 2.4 || j2.pt() < 40.)
+                continue;
+
+              float mjj = (j1.p4() + j2.p4()).M();
+              vJets |= (mjj > 60. && mjj < 120);
+            }
+        }
+    }
+
+  if(! (twoBs || vJets))
+    return false;
+
+  // and exactly 4 leptons
+  const std::string tightLepCut = std::string("userFloat(\"HZZ4lIDPassTight\") > 0.5 && userFloat(\"HZZ4lIsoPass\") > 0.5");
+  if(vetoMuons(0.05, tightLepCut).size() != 0 || vetoElectrons(0.05, tightLepCut).size() != 0)
+    return false;
+
+  return true;
+}
+
+const bool PATFinalState::isVHLeptonicTagged() const
+{
+  // no more than 2 jets
+  if(evt()->jets().size() > 2)
+    return false;
+  
+  // no B-tagged jets
+  for(size_t j = 0; j < evt()->jets().size(); ++j)
+    if(isHZZBTagged(evt()->jets().at(j)))
+      return false;
+
+  // at least 5 leptons
+  const std::string tightLepCut = std::string("userFloat(\"HZZ4lIDPassTight\") > 0.5 && userFloat(\"HZZ4lIsoPass\") > 0.5");
+  return (vetoMuons(0.05, tightLepCut).size() != 0 || vetoElectrons(0.05, tightLepCut).size() != 0);
+}
+
+const bool PATFinalState::isTTHTagged() const
+{
+  // at least 3 jets, at least one of which is B tagged
+  bool threeJ = (evt()->jets().size() >= 3);
+  bool oneB = false;
+  for(size_t j = 0; j < evt()->jets().size() && !oneB; ++j)
+    {
+      oneB |= isHZZBTagged(evt()->jets().at(j));
+    }
+  
+  if(threeJ && oneB)
+    return true;
+
+  // OR at least 5 leptons
+  const std::string tightLepCut = std::string("userFloat(\"HZZ4lIDPassTight\") > 0.5 && userFloat(\"HZZ4lIsoPass\") > 0.5");
+  return (vetoMuons(0.05, tightLepCut).size() != 0 || vetoElectrons(0.05, tightLepCut).size() != 0);
+}
+
+const bool PATFinalState::isHZZ1JetTagged() const
+{
+  // at least 1 jet
+  return bool(evt()->jets().size());
+}
+
+
+bool PATFinalState::isHZZBTagged(const pat::Jet& j) const
+{
+  return (j.bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags") > 0.814);
+}
 
 
 
