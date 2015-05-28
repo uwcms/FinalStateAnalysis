@@ -110,7 +110,9 @@ options.register(
     0,
     TauVarParsing.TauVarParsing.multiplicity.singleton,
     TauVarParsing.TauVarParsing.varType.int,
-    'If 1, write final PAT objects rather than a flat ntuple.',
+    'If 1, write final PAT objects rather than a flat ntuple. '
+    'If 2, also keep packedGenParticles. If 3 or more, also keep '
+    'packedPFCands (increases size significantly).',
 )
 
 options.outputFile = "ntuplize.root"
@@ -566,7 +568,7 @@ def get_producer_suffix(state):
 
 
 if options.keepPat:
-    print "Saving physics objects instead of making ntuples"
+    print "Saving final physics objects instead of making ntuples"
 
     # Clean unwanted final states (otherwise happens at flat ntuple creation)
     from FinalStateAnalysis.NtupleTools.uniqueness_cut_generator import uniqueness_cuts
@@ -611,7 +613,12 @@ if options.keepPat:
 
     # keep important gen particles
     output_to_keep.append('*_prunedGenParticles_*_*')
-    output_to_keep.append('*_packedGenParticles_*_*')
+    if options.keepPat >= 2:
+        print "... Including packedGenParticles"
+        output_to_keep.append('*_packedGenParticles_*_*')
+        if options.keepPat >= 3:
+            print "... Including packedPFCandidates"
+            output_to_keep.append('*_packedPFCandidates_*_*')
     output_commands = cms.untracked.vstring('drop *')
 
     for product in output_to_keep:

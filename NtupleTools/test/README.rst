@@ -41,7 +41,9 @@ zero or one) are::
     nExtraJets=0            - (for non-jet final states) add basic info about this many jets in addition to final state branches
     paramFile=''            - custom parameter file for ntuple production
     keepPat=0               - Instead of creating flat ntuples, write out the high level
-                              physics objects including the PATFinalState objects.
+                              physics objects including the PATFinalState objects. If >= 2,
+                              also keep the packedGenParticles. If >= 3, also keep the 
+                              packedPFCandidates (will make output file much larger).
 
 Batch submission
 ----------------
@@ -51,8 +53,8 @@ the FinalStateAnalysis/Utilities/scripts folder. Run submit_job.py -h to view th
 list of possible command line options. submit_job.py creates text for a bash script 
 to submit jobs via FarmoutAnalysisJobs.
 (see http://www.hep.wisc.edu/cms/comp/faq.html#how-can-i-use-farmoutanalysisjobs...)
-By default the output of this script is printed to stdout. You can also use the option
---output_file (-o) to create a script with this information. 
+By default the resulting script is printed to stdout. You can also use the option
+--output_file (-o) to create put the script in a text file.
 
 The following will run a bunch of PHYS14 miniAOD files. As new MiniAOD versions are released,
 you only need to change the campaign-tag. This command uses a DAS lookup to find all available
