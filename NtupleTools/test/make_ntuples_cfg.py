@@ -502,7 +502,12 @@ if options.hzz:
             "MiniAODHZZMEEmbedder",
             src = cms.InputTag(oldName),
             processes = cms.vstring("p0plus_VAJHU",
-                                    "bkg_VAMCFM"),
+                                    "p0minus_VAJHU",
+                                    "Dgg10_VAMCFM",
+                                    "bkg_VAMCFM",
+                                    "phjj_VAJHU",
+                                    "pvbf_VAJHU",
+                                    ),
             )
 
         # give the FS collection the same name as before, but with an identifying suffix

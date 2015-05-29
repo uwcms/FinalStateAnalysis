@@ -36,6 +36,8 @@
 // FSA includes
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateFwd.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
 #include "FinalStateAnalysis/PatTools/data/HZZMEProcesses.h"
 
 // ZZMatrixElement includes
@@ -54,7 +56,8 @@ class MiniAODHZZMEEmbedder : public edm::EDProducer {
 
   // Calculate the matrix element for fs under process hypothesis proc using calculator calc
   const float getZZME(const PATFinalState& fs, MEMNames::Processes proc, 
-		      MEMNames::MEMCalcs calc, const std::string& fsrLabel);
+		      MEMNames::MEMCalcs calc, const std::string& fsrLabel,
+                      bool useJets);
   // Calculate the 4l SM Higgs and background probability for fs under systematics assumption syst
   // Outputs by setting sigProb and bkgProb rather than returning
   void getPm4l(const PATFinalState& fs, MEMNames::SuperKDsyst syst, float& sigProb, 
@@ -65,11 +68,14 @@ class MiniAODHZZMEEmbedder : public edm::EDProducer {
   MEMs MEM_; 
   // List of probabilities to calculate
   const std::vector<std::string> processes_;
+  // For each process, a boolean indicating if we should include jets
+  std::vector<bool> processUsesJets_;
   // Label of FSR candidate photons
   const std::string fsrLabel_;
   // The process and calculator for each probability we might to calculate are stored in 
   // a pair, keyed to the same string they would be keyed to in the 
   const std::unordered_map<std::string, std::pair<MEMNames::Processes, MEMNames::MEMCalcs> > processInfo_;
+  const std::unordered_map<std::string, std::pair<MEMNames::Processes, MEMNames::MEMCalcs> > processInfoJets_;
   // ME calculation parameters
   const unsigned int energy_; // collision energy
   const double mH_; // Higgs mass hypothesis
@@ -88,6 +94,7 @@ MiniAODHZZMEEmbedder::MiniAODHZZMEEmbedder(const edm::ParameterSet& iConfig) :
 	    iConfig.getParameter<std::string>("fsrLabel") :
 	    std::string("FSRCand")),
   processInfo_(getHZZMEProcessInfo()),
+  processInfoJets_(getHZZMEProcessInfoJets()),
   energy_(iConfig.exists("energy") ? 
 	  iConfig.getParameter<unsigned int>("energy") :
 	  13),
@@ -100,15 +107,21 @@ MiniAODHZZMEEmbedder::MiniAODHZZMEEmbedder(const edm::ParameterSet& iConfig) :
 {
   MEM_ = MEMs(energy_, mH_, pdf_);
 
-  // Check to make sure all desired processes are valid
-  for(std::vector<std::string>::const_iterator iProc = processes_.begin(); 
-      iProc < processes_.end(); ++iProc)
+  // Check to make sure all desired processes are valid, see which need jet info
+  for(auto iProc = processes_.begin(); 
+      iProc != processes_.end(); ++iProc)
     {
       if(processInfo_.find(*iProc) == processInfo_.end())
-	throw cms::Exception("MiniAODHZZMEEmbedder") << "Process " << *iProc
-						     << " is not defined in "
-						     << "PatTools/data/HZZMEProcesses.h.\n" 
-						     << "Please define it there or fix your typo.\n";
+        {
+          if(processInfoJets_.find(*iProc) == processInfoJets_.end())
+            throw cms::Exception("MiniAODHZZMEEmbedder") << "Process " << *iProc
+                                                         << " is not defined in "
+                                                         << "PatTools/data/HZZMEProcesses.h.\n" 
+                                                         << "Please define it there or fix your typo.\n";
+          processUsesJets_.push_back(true);
+        }
+      else
+        processUsesJets_.push_back(false);
     }
 
   produces<PATFinalStateCollection>();
@@ -125,11 +138,24 @@ void MiniAODHZZMEEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iS
   for (size_t iFS = 0; iFS < finalStatesIn->size(); ++iFS) 
     {
       PATFinalState* embedInto = finalStatesIn->ptrAt(iFS)->clone();
-      for(std::vector<std::string>::const_iterator iProc = processes_.begin(); 
-	  iProc < processes_.end(); ++iProc)
+      for(size_t iProc = 0; iProc < processes_.size(); ++iProc)
 	{
-	  float ME = getZZME(*embedInto, processInfo_.at(*iProc).first, processInfo_.at(*iProc).second, fsrLabel_);
-	  embedInto->addUserFloat(*iProc, ME);
+          const std::string processName = processes_.at(iProc);
+          MEMNames::Processes proc;
+          MEMNames::MEMCalcs calc;
+          bool useJets = processUsesJets_.at(iProc);
+          if(useJets)
+            {
+              proc = processInfoJets_.at(processName).first;
+              calc = processInfoJets_.at(processName).second;
+            }
+          else
+            {
+              proc = processInfo_.at(processName).first;
+              calc = processInfo_.at(processName).second;
+            }
+	  float ME = getZZME(*embedInto, proc, calc, fsrLabel_, useJets);
+	  embedInto->addUserFloat(processes_.at(iProc), ME);
 	}
 
       // Embed SM Higgs and background m4l probabilities, as in datacards
@@ -146,11 +172,12 @@ void MiniAODHZZMEEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iS
 
 
 const float MiniAODHZZMEEmbedder::getZZME(const PATFinalState& fs, MEMNames::Processes proc, 
-					  MEMNames::MEMCalcs calc, const std::string& fsrLabel)
+					  MEMNames::MEMCalcs calc, const std::string& fsrLabel,
+                                          bool includeJets)
 {
   std::vector<TLorentzVector> partP4 = std::vector<TLorentzVector>();
   std::vector<int> partID = std::vector<int>();
-  for(unsigned int iLep = 0; iLep < fs.numberOfDaughters(); iLep++)
+  for(size_t iLep = 0; iLep < fs.numberOfDaughters(); iLep++)
     {
       partID.push_back(fs.daughter(iLep)->pdgId());
       PATFinalState::LorentzVector thisP4 = fs.daughter(iLep)->p4();
@@ -160,6 +187,20 @@ const float MiniAODHZZMEEmbedder::getZZME(const PATFinalState& fs, MEMNames::Pro
 	  thisP4 += fsrPtr->p4();
       partP4.push_back(TLorentzVector());
       partP4.back().SetPtEtaPhiM(thisP4.pt(), thisP4.eta(), thisP4.phi(), thisP4.mass());
+    }
+  
+  // if this process cares about jets, add them too
+  for(size_t j = 0; j < 2; ++j)
+    {
+      if(j < fs.evt()->jets().size())
+        {
+          partP4.push_back(TLorentzVector());
+          PATFinalState::LorentzVector thisP4 = fs.evt()->jets().at(j).p4();
+          partP4.back().SetPtEtaPhiM(thisP4.pt(), thisP4.eta(), thisP4.phi(), thisP4.mass());
+        }
+      else
+        return -1;
+      partID.push_back(0); // jets are always ID 0 in MEM
     }
 
   double ME;
@@ -184,10 +225,6 @@ void MiniAODHZZMEEmbedder::getPm4l(const PATFinalState& fs, MEMNames::SuperKDsys
 	  thisP4 += fsrPtr->p4();
       partP4.push_back(TLorentzVector());
       partP4.back().SetPtEtaPhiM(thisP4.pt(), thisP4.eta(), thisP4.phi(), thisP4.mass());
-//      std::cout << "bare lepton id:pt,eta,phi,m" << partID.back() << ":" << fs.daughter(iLep)->pt() << "," 
-//		<< fs.daughter(iLep)->eta() << "," << fs.daughter(iLep)->phi() << std::endl;
-//      std::cout << "id:pt,eta,phi,m = " << partID.back() << ":" << thisP4.Pt() << "," 
-//		<< thisP4.Eta() << "," << thisP4.Phi() << "," << partP4.back().M() << std::endl;
     }
 
   double pSig, pBkg;
