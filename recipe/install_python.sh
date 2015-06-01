@@ -33,6 +33,9 @@ echo "Activating virtual python environment"
 cd $vpython
 source bin/activate
 
+echo "Updating pip to latest version"
+pip install -U pip
+
 echo "Installing yolk"
 pip install -U yolk
 
