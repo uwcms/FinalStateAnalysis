@@ -190,17 +190,20 @@ const float MiniAODHZZMEEmbedder::getZZME(const PATFinalState& fs, MEMNames::Pro
     }
   
   // if this process cares about jets, add them too
-  for(size_t j = 0; j < 2; ++j)
+  if(includeJets)
     {
-      if(j < fs.evt()->jets().size())
-        {
-          partP4.push_back(TLorentzVector());
-          PATFinalState::LorentzVector thisP4 = fs.evt()->jets().at(j).p4();
-          partP4.back().SetPtEtaPhiM(thisP4.pt(), thisP4.eta(), thisP4.phi(), thisP4.mass());
-        }
-      else
-        return -1;
-      partID.push_back(0); // jets are always ID 0 in MEM
+      for(size_t j = 0; j < 2; ++j)
+	{
+	  if(j < fs.evt()->jets().size())
+	    {
+	      partP4.push_back(TLorentzVector());
+	      PATFinalState::LorentzVector thisP4 = fs.evt()->jets().at(j).p4();
+	      partP4.back().SetPtEtaPhiM(thisP4.pt(), thisP4.eta(), thisP4.phi(), thisP4.mass());
+	    }
+	  else
+	    return -1;
+	  partID.push_back(0); // jets are always ID 0 in MEM
+	}
     }
 
   double ME;
