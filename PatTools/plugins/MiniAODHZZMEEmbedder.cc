@@ -100,7 +100,7 @@ MiniAODHZZMEEmbedder::MiniAODHZZMEEmbedder(const edm::ParameterSet& iConfig) :
 	  13),
   mH_(iConfig.exists("mH") ? 
       iConfig.getParameter<double>("mH") :
-      125.6),
+      125),
   pdf_(iConfig.exists("pdf") ? 
        iConfig.getParameter<std::string>("pdf") :
        std::string("CTEQ6L"))
