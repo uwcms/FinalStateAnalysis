@@ -51,7 +51,7 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     returns text for the bash script
     '''
-    uname = os.environ['LOGNAME']
+    uname = os.environ['USER']
 
     if 'uwlogin' in gethostname():
         scratchDir = 'data'
