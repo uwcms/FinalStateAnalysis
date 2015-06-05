@@ -1205,7 +1205,7 @@ const bool PATFinalState::isVHHadronicTagged() const
     twoBs &= isHZZBTagged(evt()->jets().at(j));
           
   // OR at least 2 jets with |eta|<2.4, pt>40, 60<m_jj<120; and 4lpT>4lmass
-  bool vJets = (mass() < pt());
+  bool vJets = false;
   if(!twoBs)
     {
       for(size_t ijet = 0; ijet < evt()->jets().size()-1 && !vJets; ++ijet) // safe because of 2 jet requirement
@@ -1225,6 +1225,7 @@ const bool PATFinalState::isVHHadronicTagged() const
             }
         }
     }
+  vJets &= (mass() < pt());
 
   if(! (twoBs || vJets))
     return false;
@@ -1258,9 +1259,16 @@ const bool PATFinalState::isTTHTagged() const
   // at least 3 jets, at least one of which is B tagged
   bool threeJ = (evt()->jets().size() >= 3);
   bool oneB = false;
-  for(size_t j = 0; j < evt()->jets().size() && !oneB; ++j)
+  if(threeJ)
     {
-      oneB |= isHZZBTagged(evt()->jets().at(j));
+      for(size_t j = 0; j < evt()->jets().size(); ++j)
+	{
+	  if(isHZZBTagged(evt()->jets().at(j)))
+	    {
+	      oneB = true;
+	      break;
+	    }
+	}
     }
   
   if(threeJ && oneB)
