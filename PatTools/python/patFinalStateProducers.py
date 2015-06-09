@@ -41,12 +41,12 @@ def _combinatorics(items, n):
         yield tuple(items[x] for x in index_set)
 
 
-def produce_final_states(process, collections, output_commands,
+def produce_final_states(process, daughter_collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
                          noTracks=False, runMVAMET=False, hzz=False,
                          rochCor="", eleCor="", use25ns=False, **kwargs):
 
-    src = collections
+    src = dict(daughter_collections) # make a copy so we don't change the passed collection
 
     # Build the PATFinalStateEventObject
     if buildFSAEvent:
@@ -59,8 +59,8 @@ def produce_final_states(process, collections, output_commands,
         process.patFinalStateEventProducer.phoSrc = cms.InputTag(src['photons'])
         process.patFinalStateEventProducer.metSrc = cms.InputTag(src['pfmet'])
         process.patFinalStateEventProducer.puTag = cms.string(puTag)
-        if 'extraWeights' in collections:
-            process.patFinalStateEventProducer.extraWeights = collections['extraWeights']
+        if 'extraWeights' in src:
+            process.patFinalStateEventProducer.extraWeights = src['extraWeights']
         process.patFinalStateEventProducer.trgSrc = cms.InputTag("selectedPatTrigger")
         process.patFinalStateEventProducer.rhoSrc = cms.InputTag('fixedGridRhoAll')
         process.patFinalStateEventProducer.pvSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
@@ -125,7 +125,6 @@ def produce_final_states(process, collections, output_commands,
         )
     for ob in finalSelections:
         src[getName(ob)+"s"] = getName(ob)+"FinalSelection"
-        output_commands.append('*_%sFinalSelection_*_*'%getName(ob))
 
     if len(finalSelections):
         sequence += process.selectObjectsForFinalStates
@@ -150,11 +149,6 @@ def produce_final_states(process, collections, output_commands,
         src=cms.InputTag(src['jets']))
     src['jets'] = 'jetsRank'
 
-    output_commands.append('*_muonsRank_*_*')
-    output_commands.append('*_electronsRank_*_*')
-    output_commands.append('*_tausRank_*_*')
-    output_commands.append('*_jetsRank_*_*')
-
     process.rankObjects = cms.Sequence(
         process.muonsRank
         + process.electronsRank
@@ -173,6 +167,11 @@ def produce_final_states(process, collections, output_commands,
         ('Pho', cms.InputTag(src["photons"])),
         ]
 
+    # keep the collections we used to build the final states 
+    for name, label in src.iteritems():
+        if label != daughter_collections[name]:
+            output_commands.append('*_%s_*_*'%label)
+    
 
     process.load("FinalStateAnalysis.PatTools."
                  "finalStates.patFinalStatesEmbedExtraCollections_cfi")
@@ -209,7 +208,6 @@ def produce_final_states(process, collections, output_commands,
         setattr(process, producer_name, final_module)
         process.buildSingleObjects += final_module
         setattr(process, producer_name, final_module)
-        output_commands.append("*_%s_*_*" % producer_name)
     sequence += process.buildSingleObjects
 
     process.buildDiObjects = cms.Sequence()
@@ -252,7 +250,6 @@ def produce_final_states(process, collections, output_commands,
         setattr(process, producer_name, final_module)
         process.buildDiObjects += final_module
         setattr(process, producer_name, final_module)
-        output_commands.append("*_%s_*_*" % producer_name)
     sequence += process.buildDiObjects
 
     # Build tri-lepton pairs
@@ -299,7 +296,6 @@ def produce_final_states(process, collections, output_commands,
             "PATFinalStateCopier", src=final_module_name)
         setattr(process, producer_name, final_module)
         process.buildTriObjects += final_module
-        output_commands.append("*_%s_*_*" % producer_name)
     sequence += process.buildTriObjects
 
     # Build 4 lepton final states
@@ -349,7 +345,6 @@ def produce_final_states(process, collections, output_commands,
             "PATFinalStateCopier", src=final_module_name)
         setattr(process, producer_name, final_module)
         process.buildQuadObjects += final_module
-        output_commands.append("*_%s_*_*" % producer_name)
     sequence += process.buildQuadObjects
 
 
