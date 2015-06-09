@@ -215,9 +215,7 @@ def produce_final_states(process, collections, output_commands,
     process.buildDiObjects = cms.Sequence()
     # Build di-object pairs
     for diobject in _combinatorics(object_types, 2):
-        # Don't build two jet states
-        if (diobject[0][0], diobject[1][0]) == ('Tau', 'Tau'):
-            continue
+        # Don't build two jet states - Tau Tau is now allowed
         if (diobject[0][0], diobject[1][0]) == ('Tau', 'Pho'):
             continue
         if (diobject[0][0], diobject[1][0]) == ('Tau', 'Jet'):
