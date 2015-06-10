@@ -60,6 +60,13 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
       tight = false;
     }
 
+    if (jet.muonEnergyFraction() >= 0.8)
+      {
+	loose = false;
+	medium = false;
+	tight = false;
+      }
+
     if (std::abs(jet.eta()) < 2.4) {
       if (jet.chargedHadronEnergyFraction() == 0) {
         loose = false;
