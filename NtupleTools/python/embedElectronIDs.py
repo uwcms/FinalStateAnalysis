@@ -3,11 +3,8 @@ import FWCore.ParameterSet.Config as cms
 
 def embedElectronIDs(process, use25ns, eSrc, nonTrigBDTLabel='BDTIDNonTrig', trigBDTLabel='BDTIDTrig'):
     # Turn on versioned cut-based ID
-    from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection
-    process.load("RecoEgamma.ElectronIdentification.egmGsfElectronIDs_cfi")
-    process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag(eSrc)
-    from PhysicsTools.SelectorUtils.centralIDRegistry import central_id_registry
-    process.egmGsfElectronIDSequence = cms.Sequence(process.egmGsfElectronIDs)
+    from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection, switchOnVIDElectronIdProducer, DataFormat
+    switchOnVIDElectronIdProducer(process, DataFormat.MiniAOD)
     if use25ns:
         cb_id_modules = ['RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_PHYS14_PU20bx25_V2_cff']
     else:
