@@ -14,15 +14,17 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 btagging = PSet(
 	#Btagging
-        objectSSVHEBtag = '{object}.bDiscriminator("simpleSecondaryVertexHighEffBJetTags")',
-	objectSSVHPBtag = '{object}.bDiscriminator("simpleSecondaryVertexHighPurBJetTags")',
-        objectJBPBJtag  = '{object}.bDiscriminator("jetBProbabilityBJetTags")',
-        objectJPBJtag   = '{object}.bDiscriminator("jetProbabilityBJetTags")',
-        objectTCHPBTag  = '{object}.bDiscriminator("trackCountingHighPurBJetTags")',
-        objectTCHEBtag  = '{object}.bDiscriminator("trackCountingHighEffBJetTags")',
-        objectCISVBtag  = '{object}.bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags")',
-        objectPFCSVBtag = '{object}.bDiscriminator("pfCombinedSecondaryVertexBJetTags")',
-        objectCMVABtag  = '{object}.bDiscriminator("combinedMVABJetTags")',
+        objectCSVBtag     = '{object}.bDiscriminator("combinedSecondaryVertexBJetTags")',
+        objectPFJBPBtag   = '{object}.bDiscriminator("pfJetBProbabilityBJetTags")',
+        objectPFJPBtag    = '{object}.bDiscriminator("pfJetProbabilityBJetTags")',
+        objectPFTCHPBtag  = '{object}.bDiscriminator("pfTrackCountingHighPurBJetTags")',
+        objectPFTCHEBtag  = '{object}.bDiscriminator("pfTrackCountingHighEffBJetTags")',
+        objectPFSSVHEBtag = '{object}.bDiscriminator("pfSimpleSecondaryVertexHighEffBJetTags")',
+        objectPFSSVHPBtag = '{object}.bDiscriminator("pfSimpleSecondaryVertexHighPurBJetTags")',
+        objectPFCSVBtag   = '{object}.bDiscriminator("pfCombinedSecondaryVertexV2BJetTags")',
+        objectPFCISVBtag  = '{object}.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")',
+        objectPFCSVSLBtag = '{object}.bDiscriminator("pfCombinedSecondaryVertexSoftLeptonBJetTags")',
+        objectPFCMVABtag  = '{object}.bDiscriminator("pfCombinedMVABJetTags")',
 
         # sv variables in miniAOD
         objectSVMass    = '{object}.userFloat("vtxMass")',

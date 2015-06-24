@@ -21,8 +21,8 @@ id = PSet(
     objectCBIDLoose = '{object}.userFloat("CBIDLoose")',
     objectCBIDMedium = '{object}.userFloat("CBIDMedium")',
     objectCBIDTight = '{object}.userFloat("CBIDTight")',
-    objectMVATrigID = '{object}.userFloat("BDTIDTrig")',
-    objectMVANonTrigID = '{object}.userFloat("BDTIDNonTrig")',
+    #objectMVATrigID = '{object}.userFloat("BDTIDTrig")',
+    #objectMVANonTrigID = '{object}.userFloat("BDTIDNonTrig")',
     
     # Use cms.string so we get the parentheses formatting bonus
     objectRelPFIsoDB = cms.string(
