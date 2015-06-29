@@ -338,6 +338,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // Is the PV the closest vertex to the gen vertex for this object?
     const bool genVtxPVMatch(const size_t i) const;
 
+    // Get the invariant mass of the ith and jth jet in the event
+    // or -999 if one doesn't exist
+    const float dijetMass(const size_t i, const size_t j) const;
+
   private:
     edm::Ptr<PATFinalStateEvent> event_;
 };

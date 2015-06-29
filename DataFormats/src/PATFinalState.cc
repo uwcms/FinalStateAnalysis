@@ -1124,7 +1124,14 @@ const bool PATFinalState::genVtxPVMatch(const size_t i) const
 }
 
 
+// Get the invariant mass of the ith and jth jet in the event
+const float PATFinalState::dijetMass(const size_t i, const size_t j) const
+{
+  if(evt()->jets().size() <= i || evt()->jets().size() <= j)
+    return -999.;
 
+  return (evt()->jets().at(i).p4() + evt()->jets().at(j).p4()).M();
+}
 
 
 
