@@ -342,21 +342,8 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // or -999 if one doesn't exist
     const float dijetMass(const size_t i, const size_t j) const;
 
-    // Get the event category for the 2015 H->ZZ->4l analysis
-    const uint getHZZCategory() const;
-
   private:
     edm::Ptr<PATFinalStateEvent> event_;
-
-    // helper functions for use in getHZZCategory()
-    // each assumes that the earlier categories have already been checked
-    const bool isVBFTagged() const;
-    const bool isVHHadronicTagged() const;
-    const bool isVHLeptonicTagged() const;
-    const bool isTTHTagged() const;
-    const bool isHZZ1JetTagged() const;
-    // several of these need to check jet B tags
-    bool isHZZBTagged(const pat::Jet& j) const;
 };
 
 #endif /* end of include guard: FinalStateAnalysis_DataFormats_PATFinalState_h */

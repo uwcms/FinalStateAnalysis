@@ -491,16 +491,28 @@ process.source.inputCommands = cms.untracked.vstring(
 suffix = '' # most analyses don't need to modify the final states
 
 if options.hzz:
-    process.embedHZZMESeq = cms.Sequence()
+    process.embedHZZSeq = cms.Sequence()
     # Embed matrix elements in relevant final states
-    suffix = "HZZME"
+    suffix = "HZZ"
     for quadFS in ['ElecElecElecElec', 
                    'ElecElecMuMu',
                    'MuMuMuMu']:
         oldName = "finalState%s"%quadFS
-        embedProducer = cms.EDProducer(
-            "MiniAODHZZMEEmbedder",
+        embedCategoryProducer = cms.EDProducer(
+            "MiniAODHZZCategoryEmbedder",
             src = cms.InputTag(oldName),
+            tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
+            bDisciminant = cms.string("combinedInclusiveSecondaryVertexV2BJetTags"),
+            bDiscriminantCut = cms.double(0.814),
+            )
+        # give the FS collection an intermediate name, with an identifying suffix
+        intermediateName = oldName + "HZZCategory"
+        setattr(process, intermediateName, embedCategoryProducer)
+        process.embedHZZSeq += embedCategoryProducer
+        
+        embedMEProducer = cms.EDProducer(
+            "MiniAODHZZMEEmbedder",
+            src = cms.InputTag(intermediateName),
             processes = cms.vstring("p0plus_VAJHU",
                                     "p0minus_VAJHU",
                                     "Dgg10_VAMCFM",
@@ -509,14 +521,13 @@ if options.hzz:
                                     "pvbf_VAJHU",
                                     ),
             )
-
         # give the FS collection the same name as before, but with an identifying suffix
         newName = oldName + suffix
-        setattr(process, newName, embedProducer)
-        process.embedHZZMESeq += embedProducer
+        setattr(process, newName, embedMEProducer)
+        process.embedHZZSeq += embedMEProducer
             
-    process.embedHZZME = cms.Path(process.embedHZZMESeq)
-    process.schedule.append(process.embedHZZME)
+    process.embedHZZ = cms.Path(process.embedHZZSeq)
+    process.schedule.append(process.embedHZZ)
         
 
 

@@ -46,7 +46,7 @@ parameters = {
 
     # additional variables for ntuple
     'eventVariables' : PSet(
-        HZZCategory = 'getHZZCategory',
+        HZZCategory = 'userFloat("HZZCategory")',
         D_bkg_kin = 'userFloat("p0plus_VAJHU") / (userFloat("p0plus_VAJHU") + userFloat("bkg_VAMCFM"))',
         D_bkg = 'userFloat("p0plus_VAJHU") * userFloat("p0plus_m4l") / '
             '(userFloat("p0plus_VAJHU") * userFloat("p0plus_m4l") + userFloat("bkg_VAMCFM") * userFloat("bkg_m4l"))',
