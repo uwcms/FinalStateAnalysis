@@ -161,10 +161,6 @@ class PATFinalStateEvent {
     /// manually specifying which MC tag to use.
     double puWeight(const std::string& dataTag, const std::string& mcTag) const;
 
-    /// Use 3D reweighting, for backwards compatibility.
-    double puWeight3D(const std::string& dataTag) const;
-    double puWeight3D(const std::string& dataTag, const std::string& mcTag) const;
-
     /// Get a named event weight
     float weight(const std::string& name) const;
     void addWeight(const std::string& name, float weight);
