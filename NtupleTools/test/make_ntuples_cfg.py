@@ -463,6 +463,53 @@ if options.hzz:
         )
     process.schedule.append(process.embedFSRInfo)
 
+    # Make a skimmed collection that is a subset of packed PF cands to speed things up
+    process.fsrBaseCands = cms.EDFilter(
+        "CandPtrSelector",
+        src = cms.InputTag("packedPFCandidates"),
+        cut = cms.string("pdgId == 22 & pt > 2. & abs(eta) < 2.6"),
+        )
+    process.fsrBaseCandSeq = cms.Sequence(process.fsrBaseCands)
+    process.fsrBaseCandPath = cms.Path(process.fsrBaseCandSeq)
+    process.schedule.append(process.fsrBaseCandPath)
+
+    # Create and embed yet another experimental FSR collection, this time using
+    # deltaR/eT as the photon figure of merit
+    process.dretPhotonSelection = cms.EDFilter(
+        "CandPtrSelector",
+        src = cms.InputTag("fsrBaseCands"), #packedPFCandidates"),
+        cut = cms.string("pdgId == 22 & pt > 2. & abs(eta) < 2.4"),
+        )
+    fs_daughter_inputs['dretfsr'] = 'dretPhotonSelection'
+
+    process.leptonDRETFSREmbedding = cms.EDProducer(
+        "MiniAODLeptonDRETFSREmbedder",
+        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
+        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
+        phoSrc = cms.InputTag("dretPhotonSelection"),
+        phoSelection = cms.string(""),
+        eSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
+        muSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
+        fsrLabel = cms.string("dretFSRCand"),
+        )
+    fs_daughter_inputs['muons'] = 'leptonDRETFSREmbedding'
+    fs_daughter_inputs['elecrons'] = 'leptonDRETFSREmbedding'
+
+    process.leptonDRET2FSREmbedding = process.leptonDRETFSREmbedding.clone(
+        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
+        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
+        etPower = cms.double(2.),
+        fsrLabel = cms.string("dret2FSRCand"),
+        )
+
+    process.embedDRETFSR = cms.Sequence(process.dretPhotonSelection * 
+                                        process.leptonDRETFSREmbedding *
+                                        process.leptonDRET2FSREmbedding)
+    process.dREtFSR = cms.Path(process.embedDRETFSR)
+    process.schedule.append(process.dREtFSR)
+
+
+
 # Make a list of collections to save (in case we're saving 
 # collections instead of flat ntuples)
 # Note that produce_final_states adds the PATFinalStateEvent and
