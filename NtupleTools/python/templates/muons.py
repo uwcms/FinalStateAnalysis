@@ -17,6 +17,7 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 # ID and isolation
 id = PSet(
     objectPFIDTight = 'isTightMuon({object_idx})',
+    objectPFIDMedium = '{object}.isMediumMuon()',
     objectPFIDLoose = '{object}.isLooseMuon()',
     # For charged, we use ALL charged particles
     objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
