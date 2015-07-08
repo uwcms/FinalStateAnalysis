@@ -40,9 +40,8 @@ void PATTauGenInfoEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) 
   output->reserve(taus->size());
 
   // Loop over input taus
-  edm::PtrVector<pat::Tau> ptrs = taus->ptrVector();
-  for (size_t i = 0; i < ptrs.size(); ++i) {
-    pat::Tau copy = *ptrs[i];
+  for (size_t i = 0; i < taus->size(); ++i) {
+    pat::Tau copy = *taus->ptrAt(i);
     int decayModeIndex = -2;
     if (copy.genJet() != NULL) {
       decayModeIndex = reco::tau::getDecayMode(copy.genJet());

@@ -17,6 +17,7 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 # ID and isolation
 id = PSet(
     objectPFIDTight = 'isTightMuon({object_idx})',
+    objectPFIDMedium = '{object}.isMediumMuon()',
     objectPFIDLoose = '{object}.isLooseMuon()',
     # For charged, we use ALL charged particles
     objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
@@ -86,7 +87,7 @@ tracking = PSet(
     objectMuonHits = '? {object}.globalTrack.isNonnull ? '
         '{object}.globalTrack().hitPattern().numberOfValidMuonHits() : -1',
     objectMatchedStations = '{object}.numberOfMatchedStations',
-    objectD0 = '{object}.dB("PV3D")',
+    #objectD0 = '{object}.dB("PV3D")',
 )
 
 # Trigger matching

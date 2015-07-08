@@ -57,14 +57,11 @@ bool PFJetViewOverlapSubtraction::filter(edm::Event& evt, const edm::EventSetup&
   std::auto_ptr<reco::PFJetCollection> output(
       new reco::PFJetCollection());
 
-  const edm::PtrVector<reco::PFJet> &toFilter = candsToFilter->ptrVector();
-  const reco::CandidateBaseRefVector &toSubtract = candsToSubtract->refVector();
-
-  for (size_t i = 0; i < toFilter.size(); ++i) {
-    edm::Ptr<reco::PFJet> baseRef = toFilter[i];
+  for (size_t i = 0; i < candsToFilter->size(); ++i) {
+    edm::RefToBase<reco::PFJet> baseRef = candsToFilter->refAt(i);
     bool passes = true;
-    for (size_t j = 0; j < toSubtract.size(); ++j) {
-      double deltaR = reco::deltaR(baseRef->p4(), toSubtract[j]->p4());
+    for (size_t j = 0; j < candsToSubtract->size(); ++j) {
+      double deltaR = reco::deltaR(baseRef->p4(), candsToSubtract->refAt(j)->p4());
       if (deltaR < minDeltaR_) {
         passes = false;
         break;
@@ -76,6 +73,7 @@ bool PFJetViewOverlapSubtraction::filter(edm::Event& evt, const edm::EventSetup&
       output->push_back(*baseRef);
     }
   }
+
   size_t outputSize = output->size();
   evt.put(output);
   return ( !filter_ || outputSize );

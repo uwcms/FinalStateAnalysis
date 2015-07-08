@@ -9,7 +9,7 @@
 #include "FWCore/ParameterSet/interface/FileInPath.h"
 #include "DataFormats/Provenance/interface/EventID.h"
 #include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
-#include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
+//#include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
 #include "TLorentzVector.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
@@ -34,6 +34,8 @@ namespace ApplySVfit {
                       const pat::MET& met, const ROOT::Math::SMatrix2D& covMET, unsigned int verbosity,
                       const edm::EventID& evtId) {
 
+    return -1.;
+/*
     // Check if this a new event
     if (evtId != lastSVfitEvent) {
       theCache.clear();
@@ -83,6 +85,7 @@ namespace ApplySVfit {
 
     theCache[hash] = mass;
     return mass;
+*/
   }
 
   TMatrixD convert_matrix(const ROOT::Math::SMatrix2D& mat)

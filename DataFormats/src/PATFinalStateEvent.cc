@@ -1,7 +1,6 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataAlgos/interface/SmartTrigger.h"
 #include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
-#include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting3D.h"
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 #include "FinalStateAnalysis/DataAlgos/interface/Hash.h"
 
@@ -56,7 +55,7 @@ PATFinalStateEvent::PATFinalStateEvent(
 PATFinalStateEvent::PATFinalStateEvent(
     double rho,
     const edm::Ptr<reco::Vertex>& pv,
-    const edm::PtrVector<reco::Vertex>& recoVertices,
+    const std::vector<edm::Ptr<reco::Vertex>>& recoVertices,
     const edm::Ptr<pat::MET>& met,
     const TMatrixD& metCovariance,
     const pat::TriggerEvent triggerEvent,
@@ -116,8 +115,12 @@ PATFinalStateEvent::PATFinalStateEvent(
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
 
-const edm::PtrVector<reco::Vertex>& PATFinalStateEvent::recoVertices() const {
+const std::vector<edm::Ptr<reco::Vertex>>& PATFinalStateEvent::recoVertices() const {
   return recoVertices_;
+}
+
+int PATFinalStateEvent::numberVertices() const {
+  return recoVertices().size();
 }
 
 const std::vector<PileupSummaryInfo>& PATFinalStateEvent::puInfo() const {
@@ -204,6 +207,12 @@ const edm::EventID& PATFinalStateEvent::evtId() const {
   return evtID_;
 }
 
+int PATFinalStateEvent::event() const {
+  ULong64_t eventNum = evtId().event();
+  int doub = 0;
+  return doub + eventNum;
+}
+
 // Superseded by the smart trigger
 int PATFinalStateEvent::hltResult(const std::string& pattern) const {
   SmartTriggerResult result = smartTrigger(pattern, names(), trigPrescale(), trigResults(), evtID_);
@@ -262,20 +271,6 @@ double PATFinalStateEvent::puWeight(const std::string& dataTag,
     return 1.;
   return getPileupWeight(dataTag, mcTag, puInfo_[1].getTrueNumInteractions());
 }
-
-double PATFinalStateEvent::puWeight3D(const std::string& dataTag) const {
-  if (isRealData_)
-    return 1.;
-  return this->puWeight3D(dataTag, puTag());
-}
-
-double PATFinalStateEvent::puWeight3D(const std::string& dataTag,
-    const std::string& mcTag) const {
-  if (isRealData_)
-    return 1.;
-  return get3DPileupWeight(dataTag, mcTag, puInfo_);
-}
-
 
 float PATFinalStateEvent::weight(const std::string& name) const {
   typedef std::map<std::string, float> WeightMap;

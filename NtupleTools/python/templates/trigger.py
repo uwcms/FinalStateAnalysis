@@ -25,33 +25,68 @@ singleLepton = PSet(
         name='singleE',
         paths=r'HLT_Ele27_eta2p1_WP85_Gsf_v\\d+,HLT_Ele32_eta2p1_WP85_Gsf_v\\d+,HLT_Ele95_CaloIdVT_GsfTrkIdT_v\\d+'
         ),
+    _trig_template.replace(
+        name='singleMu_leg1', 
+        paths=r'HLT_Mu17_TrkIsoVVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu_leg2', 
+        paths=r'HLT_Mu8_TrkIsoVVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu_leg1_noiso', 
+        paths=r'HLT_Mu17_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu_leg2_noiso', 
+        paths=r'HLT_Mu8_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE_leg1', 
+        paths=r'HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE_leg2', 
+        paths=r'HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
     )
 
 doubleLepton = PSet(
     _trig_template.replace(
         name='doubleMu',
-        paths=r'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v\\d+|HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v\\d+'
+        paths=r'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\d+|HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+'
         ),
     _trig_template.replace(
         name='doubleE',
-        paths=r'HLT_Ele23_Ele12_CaloId_TrackId_Iso_v\\d+'
+        paths=r'HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+'
         ),
     _trig_template.replace(
-        name='eMu',
-        paths=r'HLT_Mu8_TrkIsoVVL_Ele23_Gsf_CaloId_TrackId_Iso_MediumWP_v\\d+'
+        name='singleESingleMu',
+        paths=r'HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
     _trig_template.replace(
-        name='muE',
-        paths=r'HLT_Mu23_TrkIsoVVL_Ele12_Gsf_CaloId_TrackId_Iso_MediumWP_v\\d+'
+        name='singleMuSingleE',
+        paths=r'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
     )
 
 tripleLepton = PSet(
     _trig_template.replace(
         name='tripleE',
-        paths=r'HLT_Ele17_Ele12_Ele10_CaloId_TrackId_v\\d+'
+        paths=r'HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v\\d+'
         ),
-    # other trilepton paths don't seem to exist in PHYS14...
+    _trig_template.replace(
+        name='doubleESingleMu',
+        paths=r'HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='doubleMuSingleE',
+        paths=r'HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='tripleMu',
+        paths=r'HLT_TripleMu_12_10_5_v\\d+'
+        ),
     )
 
 # isomu = _trig_template.replace(name='isoMu',

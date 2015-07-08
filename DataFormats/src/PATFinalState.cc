@@ -1113,7 +1113,7 @@ const bool PATFinalState::genVtxPVMatch(const size_t i) const
   float genVtxPVDZ = fabs(event_->pv()->z() - genVZ);
 
   // Loop over all vertices, and if there's one that's better, say so
-  for(edm::PtrVector<reco::Vertex>::const_iterator iVtx = event_->recoVertices().begin();
+  for(std::vector<edm::Ptr<reco::Vertex>>::const_iterator iVtx = event_->recoVertices().begin();
       iVtx != event_->recoVertices().end(); ++iVtx)
     {
       if(fabs((*iVtx)->z() - genVZ) < genVtxPVDZ)

@@ -34,7 +34,6 @@ noPhotons=0 - don't build things which depend on photons.
 rerunMVAMET=0 - rerun the MVAMET algorithm
 svFit=1 - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
-runNewElectronMVAID=0 - run the new electron MVAID
 rerunJets=0   - rerun with new jet energy corrections
 use25ns=1 - run on 25 ns miniAOD (default, 0 = 50ns)
 runDQM=0 - run over single object final states to test all object properties (wont check diobject properties)
@@ -53,9 +52,6 @@ from FinalStateAnalysis.NtupleTools.ntuple_builder import \
     make_ntuple, add_ntuple, _producer_translation
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
-from FinalStateAnalysis.NtupleTools.rerun_matchers import rerun_matchers
-from FinalStateAnalysis.NtupleTools.rerun_QGJetID import rerun_QGJetID
-from FinalStateAnalysis.NtupleTools.rerun_Jets import rerun_jets
 import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")
@@ -79,7 +75,6 @@ options = TauVarParsing.TauVarParsing(
     rochCor="",
     eleCor="",
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
-    runNewElectronMVAID=0,  # If one runs the new electron MVAID
     runMVAMET=0,  # If one, (re)build the MVA MET
     rerunJets=0,
     dblhMode=False, # For double-charged Higgs analysis
@@ -165,9 +160,9 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'PHYS14_50_V1::All', 'datagt': 'GR_70_V2_AN1::All'}
+GT = {'mcgt': 'MCRUN2_74_V9A::All', 'datagt': 'GR_70_V2_AN1::All'}
 if options.use25ns:
-    GT['mcgt'] = 'PHYS14_25_V1::All'
+    GT['mcgt'] = 'MCRUN2_74_V9::All'
 
 
 if options.GlobalTag:

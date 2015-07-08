@@ -82,14 +82,14 @@ void PATJetSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
     LorentzVector uncUESDown = (1-unclusteredEnergyScale_)*jet.p4();
     LorentzVector uncUESUp = (1+unclusteredEnergyScale_)*jet.p4();
 
-    ShiftedCand candUncDown(jet);
+    ShiftedCand candUncDown = *jet.clone();
     candUncDown.setP4(uncDown);
-    ShiftedCand candUncUp(jet);
+    ShiftedCand candUncUp = *jet.clone();
     candUncUp.setP4(uncUp);
 
-    ShiftedCand candUncUESDown(jet);
+    ShiftedCand candUncUESDown = *jet.clone();
     candUncUESDown.setP4(uncUESDown);
-    ShiftedCand candUncUESUp(jet);
+    ShiftedCand candUncUESUp = *jet.clone();
     candUncUESUp.setP4(uncUESUp);
 
     p4OutJESUpJets->push_back(candUncUp);

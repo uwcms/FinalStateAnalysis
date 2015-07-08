@@ -34,8 +34,8 @@ base_jet = PSet(
     objectJetPt = '{object}.userFloat("jetPt")',
     objectJetBtag = '? {object}.userCand("patJet").isNonnull ? '
         '{object}.userCand("patJet").bDiscriminator("") : -5',
-    objectJetCISVBtag = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").bDiscriminator("combinedInclusiveSecondaryVertexV2BJetTags") : -5',
+    objectJetPFCISVBtag = '? {object}.userCand("patJet").isNonnull ? '
+        '{object}.userCand("patJet").bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") : -5',
     objectJetEtaPhiSpread = '? {object}.userCand("patJet").isNonnull ? '
         '{object}.userCand("patJet").constituentEtaPhiSpread() : -5',
     objectJetEtaEtaMoment = '? {object}.userCand("patJet").isNonnull ? '

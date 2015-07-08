@@ -57,7 +57,7 @@ class PATFinalStateEvent {
     PATFinalStateEvent(
         double rho,
         const edm::Ptr<reco::Vertex>& pv,
-        const edm::PtrVector<reco::Vertex>& recoVertices,
+        const std::vector<edm::Ptr<reco::Vertex>>& recoVertices,
         const edm::Ptr<pat::MET>& met,
         const TMatrixD& metCovariance,
         const pat::TriggerEvent triggerEvent,
@@ -88,7 +88,8 @@ class PATFinalStateEvent {
     /// Get PV
     const edm::Ptr<reco::Vertex>& pv() const;
     /// Get all reconstructed vertices
-    const edm::PtrVector<reco::Vertex>& recoVertices() const;
+    const std::vector<edm::Ptr<reco::Vertex>>& recoVertices() const;
+    int numberVertices() const;
     /// Get PU information
     const std::vector<PileupSummaryInfo>& puInfo() const;
     /// Get the Les Houches event information
@@ -121,6 +122,7 @@ class PATFinalStateEvent {
 
     /// Get the event ID
     const edm::EventID& evtId() const;
+    int event() const;
 
     /// The following functions use the "SmartTrigger" functionality.
     /// They can be passed a comma separated list of paths:
@@ -158,10 +160,6 @@ class PATFinalStateEvent {
     /// The following allow use of the PileupWeighting feature in DataAlgos,
     /// manually specifying which MC tag to use.
     double puWeight(const std::string& dataTag, const std::string& mcTag) const;
-
-    /// Use 3D reweighting, for backwards compatibility.
-    double puWeight3D(const std::string& dataTag) const;
-    double puWeight3D(const std::string& dataTag, const std::string& mcTag) const;
 
     /// Get a named event weight
     float weight(const std::string& name) const;
@@ -206,7 +204,7 @@ class PATFinalStateEvent {
     pat::PackedTriggerPrescales triggerPrescale_;
     edm::TriggerResults triggerResults_;
     edm::Ptr<reco::Vertex> pv_;
-    edm::PtrVector<reco::Vertex> recoVertices_;
+    std::vector<edm::Ptr<reco::Vertex>> recoVertices_;
     edm::Ptr<pat::MET> met_;
     TMatrixD metCovariance_;
     std::vector<PileupSummaryInfo> puInfo_;
