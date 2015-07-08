@@ -374,7 +374,7 @@ def make_ntuple(*legs, **kwargs):
             EventView=cms.bool(False),
             final=cms.PSet(
                 sort=cms.string('daughter(0).pt'),  # Doesn't really matter
-                take=cms.uint32(50),
+                take=cms.uint32(999), # max number of rows for an event
                 plot=cms.PSet(
                     histos=cms.VPSet(),  # Don't make any final plots
                     # ntuple has all generated branches in it.
