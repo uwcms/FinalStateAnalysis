@@ -69,6 +69,9 @@ class MiniAODHZZCategoryEmbedder : public edm::EDProducer {
 
   // B discriminator cut
   const float bDiscrimCut_;
+
+  // userCand label for FSR
+  const std::string fsrLabel_;
 };
 
 
@@ -84,7 +87,10 @@ MiniAODHZZCategoryEmbedder::MiniAODHZZCategoryEmbedder(const edm::ParameterSet& 
 		 std::string("combinedInclusiveSecondaryVertexV2BJetTags")),
   bDiscrimCut_(iConfig.exists("bDiscriminatorCut") ?
 	       iConfig.getParameter<double>("bDiscriminatorCut") :
-	       0.814)
+	       0.814),
+  fsrLabel_(iConfig.exists("fsrLabel") ?
+		 iConfig.getParameter<std::string>("fsrLabel") :
+		 std::string("FSRCand"))  
 {
   produces<PATFinalStateCollection>();
 }
@@ -202,7 +208,7 @@ const bool MiniAODHZZCategoryEmbedder::isVHHadronicTagged(const PATFinalState& f
             }
         }
     }
-  vJets &= (fs.mass() < fs.pt());
+  vJets &= (fs.p4fsr(fsrLabel_).M() < fs.p4fsr(fsrLabel_).pt());
 
   if(! (twoBs || vJets))
     return false;

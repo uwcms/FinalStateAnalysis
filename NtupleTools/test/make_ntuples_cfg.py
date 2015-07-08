@@ -551,6 +551,7 @@ if options.hzz:
             tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
             bDisciminant = cms.string("combinedInclusiveSecondaryVertexV2BJetTags"),
             bDiscriminantCut = cms.double(0.814),
+            fsrLabel = cms.string("FSRCand"),
             )
         # give the FS collection an intermediate name, with an identifying suffix
         intermediateName = oldName + "HZZCategory"
