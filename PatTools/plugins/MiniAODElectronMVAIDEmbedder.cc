@@ -25,7 +25,6 @@
 #include "DataFormats/Common/interface/View.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
-#include "EgammaAnalysis/ElectronTools/interface/EGammaMvaEleEstimatorCSA14.h"
 
 
 class MiniAODElectronMVAIDEmbedder : public edm::EDProducer
@@ -44,13 +43,9 @@ private:
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
-  std::vector<std::string> trigWeights_; // xml files for weights for triggering and non-triggering MVA
-  std::vector<std::string> nonTrigWeights_;
-  std::string trigLabel_; // labels for the userFloats holding results
-  std::string nonTrigLabel_;
+  std::vector<std::string> valueLabels_;
+  std::vector<edm::EDGetTokenT<edm::ValueMap<float> > > valueTokens_;
   std::auto_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
-  EGammaMvaEleEstimatorCSA14 trigMVA;
-  EGammaMvaEleEstimatorCSA14 nonTrigMVA;
 };
 
 
@@ -60,38 +55,18 @@ MiniAODElectronMVAIDEmbedder::MiniAODElectronMVAIDEmbedder(const edm::ParameterS
   electronCollectionToken_(consumes<edm::View<pat::Electron> >(iConfig.exists("src") ?
 							       iConfig.getParameter<edm::InputTag>("src") :
 							       edm::InputTag("slimmedElectrons"))),
-  trigWeights_(iConfig.exists("trigWeights") ?
-	       iConfig.getParameter<std::vector<std::string> >("trigWeights") :
-	       std::vector<std::string>()),
-  nonTrigWeights_(iConfig.exists("nonTrigWeights") ?
-		  iConfig.getParameter<std::vector<std::string> >("nonTrigWeights") :
-		  std::vector<std::string>()),
-  trigLabel_(iConfig.exists("trigLabel") ?
-	     iConfig.getParameter<std::string>("trigLabel") :
-	     std::string("BDTIDTrig")),
-  nonTrigLabel_(iConfig.exists("nonTrigLabel") ?
-		iConfig.getParameter<std::string>("nonTrigLabel") :
-		std::string("BDTIDNonTrig"))
+  valueLabels_(iConfig.exists("valueLabels") ?
+               iConfig.getParameter<std::vector<std::string> >("valueLabels") :
+               std::vector<std::string>())
+                                                    
 {
-  std::vector<std::string> trigWeightPaths;
-  std::vector<std::string> nonTrigWeightPaths;
-  string the_path;
-  for (unsigned i = 0 ; i < trigWeights_.size() ; i++){
-    the_path = edm::FileInPath ( trigWeights_[i] ).fullPath();
-    trigWeightPaths.push_back(the_path);
-  }
-  for (unsigned i = 0 ; i < nonTrigWeights_.size() ; i++){
-    the_path = edm::FileInPath ( nonTrigWeights_[i] ).fullPath();
-    nonTrigWeightPaths.push_back(the_path);
-  }
-
-  trigMVA = EGammaMvaEleEstimatorCSA14();
-  nonTrigMVA = EGammaMvaEleEstimatorCSA14();
-
-  trigMVA.initialize("BDT", EGammaMvaEleEstimatorCSA14::kTrig,
-		     true, trigWeightPaths);
-  nonTrigMVA.initialize("BDT", EGammaMvaEleEstimatorCSA14::kNonTrigPhys14,
-			true, nonTrigWeightPaths);		  
+  std::vector<edm::InputTag> valueTags = iConfig.getParameter<std::vector<edm::InputTag> >("values");
+  for(unsigned int i = 0;
+      (i < valueTags.size() && i < valueLabels_.size()); // ignore IDs with no known label
+      ++i)
+    {
+      valueTokens_.push_back(consumes<edm::ValueMap<float> >(valueTags.at(i)));
+    }
 
   produces<std::vector<pat::Electron> >();
 }
@@ -99,23 +74,33 @@ MiniAODElectronMVAIDEmbedder::MiniAODElectronMVAIDEmbedder(const edm::ParameterS
 
 void MiniAODElectronMVAIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std:: auto_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
-
-  //  out->clear();
+  out = std::auto_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
 
   edm::Handle<edm::View<pat::Electron> > electronsIn;
   iEvent.getByToken(electronCollectionToken_, electronsIn);
 
+  std::vector<edm::Handle<edm::ValueMap<float> > > values(valueTokens_.size(), edm::Handle<edm::ValueMap<float> >() );
+
+  for(unsigned int i = 0;
+      i < valueTokens_.size();
+      ++i)
+    {
+      iEvent.getByToken(valueTokens_.at(i), values.at(i));
+    }
+
   for(edm::View<pat::Electron>::const_iterator ei = electronsIn->begin();
       ei != electronsIn->end(); ei++) // loop over electrons
     {
+      const edm::Ptr<pat::Electron> eptr(electronsIn, ei - electronsIn->begin());
+
       out->push_back(*ei); // copy electron to save correctly in event
 
-      float trigMVAVal = trigMVA.mvaValue(*ei, false);
-      float nonTrigMVAVal = nonTrigMVA.mvaValue(*ei, false);
-      
-      out->back().addUserFloat(trigLabel_, trigMVAVal);
-      out->back().addUserFloat(nonTrigLabel_, nonTrigMVAVal);
+      for(unsigned int i = 0; // Loop over mva values
+          i < values.size(); ++i)
+        {
+          float result = (*(values.at(i)))[eptr];
+          out->back().addUserFloat(valueLabels_.at(i), float(result));
+        }
     }
 
   iEvent.put(out);
