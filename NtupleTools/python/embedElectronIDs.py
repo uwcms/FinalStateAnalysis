@@ -4,6 +4,7 @@ import FWCore.ParameterSet.Config as cms
 def embedElectronIDs(process, use25ns, eSrc):
     from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection, switchOnVIDElectronIdProducer, DataFormat
     switchOnVIDElectronIdProducer(process, DataFormat.MiniAOD)
+    process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag(eSrc)
     if use25ns:
         id_modules = [
             'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_PHYS14_PU20bx25_V2_cff',
@@ -32,35 +33,26 @@ def embedElectronIDs(process, use25ns, eSrc):
             cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-medium'),
             cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-tight'),
             ]
+    mvaValueLabels = ["BDTIDNonTrig"]
+    if use25ns:
+        mvaValues = [
+            cms.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Phys14NonTrigValues"),
+            ]
     
     # Embed cut-based VIDs
-    process.miniAODElectronCutBasedID = cms.EDProducer(
-        "MiniAODElectronCutBasedIDEmbedder",
+    process.miniAODElectronID = cms.EDProducer(
+        "MiniAODElectronIDEmbedder",
         src=cms.InputTag(eSrc),
         idLabels = cms.vstring(*CBIDLabels),
-        ids = cms.VInputTag(*CBIDTags)
+        ids = cms.VInputTag(*CBIDTags),
+        valueLabels = cms.vstring(*mvaValueLabels),       # labels for MVA values
+        values = cms.VInputTag(*mvaValues),               # mva values
     )
-    eSrc = "miniAODElectronCutBasedID"
-    
-    #mvaValueLabels = ["BDTIDNonTrig"]
-    #if use25ns:
-    #    mvaValues = [
-    #        cms.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Phys14NonTrigValues"),
-    #        ]
-    #
-    ## Embed MVA VIDs
-    #process.miniAODElectronMVAID = cms.EDProducer(
-    #    "MiniAODElectronMVAIDEmbedder",
-    #    src=cms.InputTag(eSrc),
-    #    valueLabels = cms.vstring(*mvaValueLabels),       # labels for MVA values
-    #    values = cms.VInputTag(*mvaValues),               # mva values
-    #    )
-    #eSrc = 'miniAODElectronMVAID'
+    eSrc = "miniAODElectronID"
     
     process.miniAODElectrons = cms.Path(
         process.egmGsfElectronIDSequence+
-        process.miniAODElectronCutBasedID
-        #process.miniAODElectronMVAID
+        process.miniAODElectronID
         )
     process.schedule.append(process.miniAODElectrons)
 
