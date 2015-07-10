@@ -1,9 +1,9 @@
 //////////////////////////////////////////////////////////////////////////////
 //									    //
-//   MiniAODElectronCutBasedIDEmbedder.cc				    //
+//   MiniAODElectronIDEmbedder.cc				            //
 //									    //
 //   Takes cut based ID decisions from the common ID framework's value      //
-//       maps and embeds them as user floats (1 for true, 0 for false)        //
+//       maps and embeds them as user floats (1 for true, 0 for false)      //
 //									    //
 //   Author: Nate Woods, U. Wisconsin					    //
 //									    //
@@ -28,11 +28,11 @@
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 
 
-class MiniAODElectronCutBasedIDEmbedder : public edm::EDProducer
+class MiniAODElectronIDEmbedder : public edm::EDProducer
 {
 public:
-  explicit MiniAODElectronCutBasedIDEmbedder(const edm::ParameterSet&);
-  ~MiniAODElectronCutBasedIDEmbedder() {}
+  explicit MiniAODElectronIDEmbedder(const edm::ParameterSet&);
+  ~MiniAODElectronIDEmbedder() {}
 
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
 
@@ -46,19 +46,24 @@ private:
   edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
   std::vector<edm::EDGetTokenT<edm::ValueMap<bool> > > idMapTokens_; // store all ID tokens
   std::vector<std::string> idLabels_; // labels for the userInts holding results
+  std::vector<std::string> valueLabels_;
+  std::vector<edm::EDGetTokenT<edm::ValueMap<float> > > valueTokens_;
   std::auto_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
 };
 
 
 // Constructors and destructors
 
-MiniAODElectronCutBasedIDEmbedder::MiniAODElectronCutBasedIDEmbedder(const edm::ParameterSet& iConfig):
+MiniAODElectronIDEmbedder::MiniAODElectronIDEmbedder(const edm::ParameterSet& iConfig):
   electronCollectionToken_(consumes<edm::View<pat::Electron> >(iConfig.exists("src") ? 
 							       iConfig.getParameter<edm::InputTag>("src") :
 							       edm::InputTag("slimmedElectrons"))),
   idLabels_(iConfig.exists("idLabels") ?
 	    iConfig.getParameter<std::vector<std::string> >("idLabels") :
-	    std::vector<std::string>())
+	    std::vector<std::string>()),
+  valueLabels_(iConfig.exists("valueLabels") ?
+               iConfig.getParameter<std::vector<std::string> >("valueLabels") :
+               std::vector<std::string>())
 {
   std::vector<edm::InputTag> idTags = iConfig.getParameter<std::vector<edm::InputTag> >("ids");
 
@@ -69,16 +74,25 @@ MiniAODElectronCutBasedIDEmbedder::MiniAODElectronCutBasedIDEmbedder(const edm::
       idMapTokens_.push_back(consumes<edm::ValueMap<bool> >(idTags.at(i)));
     }
 
+  std::vector<edm::InputTag> valueTags = iConfig.getParameter<std::vector<edm::InputTag> >("values");
+  for(unsigned int i = 0;
+      (i < valueTags.size() && i < valueLabels_.size()); // ignore IDs with no known label
+      ++i)
+    {
+      valueTokens_.push_back(consumes<edm::ValueMap<float> >(valueTags.at(i)));
+    }
+
   produces<std::vector<pat::Electron> >();
 }
 
 
-void MiniAODElectronCutBasedIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
+void MiniAODElectronIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
   out = std::auto_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
 
   edm::Handle<edm::View<pat::Electron> > electronsIn;
   std::vector<edm::Handle<edm::ValueMap<bool> > > ids(idMapTokens_.size(), edm::Handle<edm::ValueMap<bool> >() );
+  std::vector<edm::Handle<edm::ValueMap<float> > > values(valueTokens_.size(), edm::Handle<edm::ValueMap<float> >() );
 
   iEvent.getByToken(electronCollectionToken_, electronsIn);
 
@@ -87,6 +101,12 @@ void MiniAODElectronCutBasedIDEmbedder::produce(edm::Event& iEvent, const edm::E
       ++i)
     {
       iEvent.getByToken(idMapTokens_.at(i), ids.at(i));
+    }
+  for(unsigned int i = 0;
+      i < valueTokens_.size();
+      ++i)
+    {
+      iEvent.getByToken(valueTokens_.at(i), values.at(i));
     }
 
   for(edm::View<pat::Electron>::const_iterator ei = electronsIn->begin();
@@ -102,22 +122,29 @@ void MiniAODElectronCutBasedIDEmbedder::produce(edm::Event& iEvent, const edm::E
 	  bool result = (*(ids.at(i)))[eptr];
 	  out->back().addUserFloat(idLabels_.at(i), float(result)); // 1 for true, 0 for false
 	}
+      for(unsigned int i = 0; // Loop over mva values
+          i < values.size(); ++i)
+        {
+          float result = (*(values.at(i)))[eptr];
+          out->back().addUserFloat(valueLabels_.at(i), float(result));
+        }
+
     }
 
   iEvent.put(out);
 }
 
 
-void MiniAODElectronCutBasedIDEmbedder::beginJob()
+void MiniAODElectronIDEmbedder::beginJob()
 {}
 
 
-void MiniAODElectronCutBasedIDEmbedder::endJob()
+void MiniAODElectronIDEmbedder::endJob()
 {}
 
 
 void
-MiniAODElectronCutBasedIDEmbedder::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+MiniAODElectronIDEmbedder::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   //The following says we do not know what parameters are allowed so do no validation
   // Please change this to state exactly what you do use, even if it is no parameters
   edm::ParameterSetDescription desc;
@@ -125,7 +152,7 @@ MiniAODElectronCutBasedIDEmbedder::fillDescriptions(edm::ConfigurationDescriptio
   descriptions.addDefault(desc);
 }
 //define this as a plug-in
-DEFINE_FWK_MODULE(MiniAODElectronCutBasedIDEmbedder);
+DEFINE_FWK_MODULE(MiniAODElectronIDEmbedder);
 
 
 

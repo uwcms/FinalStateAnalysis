@@ -200,10 +200,7 @@ fs_daughter_inputs = {
 electronMVANonTrigIDLabel = "BDTIDNonTrig"
 electronMVATrigIDLabel = "BDTIDTrig"
 from FinalStateAnalysis.NtupleTools.embedElectronIDs import embedElectronIDs
-fs_daughter_inputs['electrons'] = embedElectronIDs(process,options.use25ns,
-                                                   fs_daughter_inputs['electrons'], 
-                                                   electronMVANonTrigIDLabel,
-                                                   electronMVATrigIDLabel,)
+fs_daughter_inputs['electrons'] = embedElectronIDs(process,options.use25ns,fs_daughter_inputs['electrons'])
 
 # Clean out muon "ghosts" caused by track ambiguities
 process.ghostCleanedMuons = cms.EDProducer("PATMuonCleanerBySegments",
