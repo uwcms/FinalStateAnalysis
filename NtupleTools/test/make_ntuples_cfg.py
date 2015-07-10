@@ -35,7 +35,7 @@ rerunMVAMET=0 - rerun the MVAMET algorithm
 svFit=1 - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
 rerunJets=0   - rerun with new jet energy corrections
-use25ns=1 - run on 25 ns miniAOD (default, 0 = 50ns)
+use25ns=1 - run on 25 ns miniAOD (0 -> 50ns)
 runDQM=0 - run over single object final states to test all object properties (wont check diobject properties)
 hzz=0 - Include FSR contribution a la HZZ4l group, include all ZZ candidates (including alternative lepton pairings).
 nExtraJets=0 - Include basic info about this many jets (ordered by pt). Ignored if final state involves jets.
@@ -702,7 +702,8 @@ else:
                                 runTauSpinner=options.runTauSpinner, 
                                 runMVAMET=options.runMVAMET,
                                 skimCuts=options.skimCuts, suffix=suffix,
-                                hzz=options.hzz, nExtraJets=extraJets, **parameters)
+                                hzz=options.hzz, nExtraJets=extraJets, 
+                                use25ns=options.use25ns, **parameters)
         add_ntuple(final_state, analyzer, process,
                    process.schedule, options.eventView)
 

@@ -34,16 +34,16 @@ _common_template = PSet(
     # VBF variables, because most analyses using FSA want them
     templates.topology.vbf,
 
-    # PHYS14 lepton triggers
-    templates.trigger.singleLepton,
-    templates.trigger.doubleLepton,
-    templates.trigger.tripleLepton, # tiple e only, for some reason
+    # Triggers different for 25 and 50ns, no longer in common template
+    # templates.trigger.singleLepton,
+    # templates.trigger.doubleLepton,
+    # templates.trigger.tripleLepton, # tiple e only, for some reason
     # Need to fill out photon triggers
-#     templates.trigger.isomu,
-#     templates.trigger.isomu24eta2p1,
-#     templates.trigger.singlePho,
-#     templates.trigger.doublePho,
-#     templates.trigger.isoMuTau
+    # templates.trigger.isomu,
+    # templates.trigger.isomu24eta2p1,
+    # templates.trigger.singlePho,
+    # templates.trigger.doublePho,
+    # templates.trigger.isoMuTau
 )
 
 # Define the branch templates for different object types.
@@ -202,6 +202,8 @@ def make_ntuple(*legs, **kwargs):
 
     runMVAMET = kwargs.get('runMVAMET', False)
 
+    use25ns = kwargs.get('use25ns', False)
+
     ntuple_config = _common_template.clone()
     if kwargs.get('runTauSpinner', False):
         for parName in templates.event.tauSpinner.parameterNames_():
@@ -213,6 +215,25 @@ def make_ntuple(*legs, **kwargs):
                     parName
                 ) 
             )
+
+    # Triggers we care about depend on run configuration
+    if use25ns:
+        ntuple_config = PSet(
+            ntuple_config,
+            templates.trigger.singleLepton_25ns,
+            templates.trigger.doubleLepton_25ns
+        )
+    else:
+        ntuple_config = PSet(
+            ntuple_config,
+            templates.trigger.singleLepton_50ns,
+            templates.trigger.doubleLepton_50ns
+        )
+    # triple lepton paths are the same either way
+    ntuple_config = PSet(
+        ntuple_config,
+        templates.trigger.tripleLepton
+    )
 
     # Optionally apply extra branches in kwargs
     if 'branches' in kwargs:
