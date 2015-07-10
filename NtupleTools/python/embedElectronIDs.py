@@ -33,12 +33,15 @@ def embedElectronIDs(process, use25ns, eSrc):
             cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-medium'),
             cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-CSA14-50ns-V1-standalone-tight'),
             ]
-    mvaValueLabels = ["BDTIDNonTrig"]
     if use25ns:
+        mvaValueLabels = ["BDTIDNonTrig"]
         mvaValues = [
             cms.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Phys14NonTrigValues"),
             ]
-    
+    else:
+        mvaValueLabels = []
+        mvaValues = []
+
     # Embed cut-based VIDs
     process.miniAODElectronID = cms.EDProducer(
         "MiniAODElectronIDEmbedder",
