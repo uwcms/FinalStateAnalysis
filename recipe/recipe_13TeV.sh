@@ -17,7 +17,7 @@ pushd $CMSSW_BASE/src
 if [ "$HZZ" = "1" ]; then
     echo "Checking out ZZ MELA and Higgs combine"
     git clone https://github.com/cms-analysis/HiggsAnalysis-ZZMatrixElement.git ZZMatrixElement
-    git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+    git clone -b 74x-root6 https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
 fi
 
 popd
