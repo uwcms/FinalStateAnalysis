@@ -48,6 +48,8 @@ private:
   std::vector<std::string> idLabels_; // labels for the userInts holding results
   std::vector<std::string> valueLabels_;
   std::vector<edm::EDGetTokenT<edm::ValueMap<float> > > valueTokens_;
+  std::vector<std::string> categoryLabels_;
+  std::vector<edm::EDGetTokenT<edm::ValueMap<int> > > categoryTokens_;
   std::auto_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
 };
 
@@ -62,6 +64,9 @@ MiniAODElectronIDEmbedder::MiniAODElectronIDEmbedder(const edm::ParameterSet& iC
 	    iConfig.getParameter<std::vector<std::string> >("idLabels") :
 	    std::vector<std::string>()),
   valueLabels_(iConfig.exists("valueLabels") ?
+               iConfig.getParameter<std::vector<std::string> >("valueLabels") :
+               std::vector<std::string>()),
+  categoryLabels_(iConfig.exists("categoryLabels") ?
                iConfig.getParameter<std::vector<std::string> >("valueLabels") :
                std::vector<std::string>())
 {
@@ -82,6 +87,14 @@ MiniAODElectronIDEmbedder::MiniAODElectronIDEmbedder(const edm::ParameterSet& iC
       valueTokens_.push_back(consumes<edm::ValueMap<float> >(valueTags.at(i)));
     }
 
+  std::vector<edm::InputTag> categoryTags = iConfig.getParameter<std::vector<edm::InputTag> >("categories");
+  for(unsigned int i = 0;
+      (i < categoryTags.size() && i < categoryLabels_.size()); // ignore IDs with no known label
+      ++i)
+    {
+      categoryTokens_.push_back(consumes<edm::ValueMap<int> >(categoryTags.at(i)));
+    }
+
   produces<std::vector<pat::Electron> >();
 }
 
@@ -93,6 +106,7 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetu
   edm::Handle<edm::View<pat::Electron> > electronsIn;
   std::vector<edm::Handle<edm::ValueMap<bool> > > ids(idMapTokens_.size(), edm::Handle<edm::ValueMap<bool> >() );
   std::vector<edm::Handle<edm::ValueMap<float> > > values(valueTokens_.size(), edm::Handle<edm::ValueMap<float> >() );
+  std::vector<edm::Handle<edm::ValueMap<int> > > categories(categoryTokens_.size(), edm::Handle<edm::ValueMap<int> >() );
 
   iEvent.getByToken(electronCollectionToken_, electronsIn);
 
@@ -107,6 +121,12 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetu
       ++i)
     {
       iEvent.getByToken(valueTokens_.at(i), values.at(i));
+    }
+  for(unsigned int i = 0;
+      i < categoryTokens_.size();
+      ++i)
+    {
+      iEvent.getByToken(categoryTokens_.at(i), categories.at(i));
     }
 
   for(edm::View<pat::Electron>::const_iterator ei = electronsIn->begin();
@@ -127,6 +147,12 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetu
         {
           float result = (*(values.at(i)))[eptr];
           out->back().addUserFloat(valueLabels_.at(i), float(result));
+        }
+      for(unsigned int i = 0; // Loop over mva values
+          i < categories.size(); ++i)
+        {
+          int result = (*(categories.at(i)))[eptr];
+          out->back().addUserFloat(categoryLabels_.at(i), float(result));
         }
 
     }
