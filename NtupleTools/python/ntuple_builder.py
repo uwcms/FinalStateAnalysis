@@ -204,6 +204,8 @@ def make_ntuple(*legs, **kwargs):
 
     use25ns = kwargs.get('use25ns', False)
 
+    isMC = kwargs.get('isMC', False)
+
     ntuple_config = _common_template.clone()
     if kwargs.get('runTauSpinner', False):
         for parName in templates.event.tauSpinner.parameterNames_():
@@ -218,21 +220,24 @@ def make_ntuple(*legs, **kwargs):
 
     # Triggers we care about depend on run configuration
     if use25ns:
-        ntuple_config = PSet(
-            ntuple_config,
-            templates.trigger.singleLepton_25ns,
-            templates.trigger.doubleLepton_25ns
-        )
-    else:
-        ntuple_config = PSet(
-            ntuple_config,
-            templates.trigger.singleLepton_50ns,
-            templates.trigger.doubleLepton_50ns
-        )
-    # triple lepton paths are the same either way
+        diLep_triggers = templates.trigger.doubleLepton_25ns
+        if isMC:
+            lep_triggers = templates.trigger.singleLepton_25ns_MC
+        else:
+            lep_triggers = templates.trigger.singleLepton_25ns
+    else:    
+        diLep_triggers = templates.trigger.doubleLepton_50ns
+        if isMC:
+            lep_triggers = templates.trigger.singleLepton_50ns_MC
+        else:
+            lep_triggers = templates.trigger.singleLepton_50ns
+    triLep_triggers = templates.trigger.tripleLepton # same in 25 and 50 ns    
+
     ntuple_config = PSet(
         ntuple_config,
-        templates.trigger.tripleLepton
+        lep_triggers,
+        diLep_triggers,
+        triLep_triggers
     )
 
     # Optionally apply extra branches in kwargs

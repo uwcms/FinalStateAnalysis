@@ -700,7 +700,8 @@ else:
                                 runMVAMET=options.runMVAMET,
                                 skimCuts=options.skimCuts, suffix=suffix,
                                 hzz=options.hzz, nExtraJets=extraJets, 
-                                use25ns=options.use25ns, **parameters)
+                                use25ns=options.use25ns, 
+                                isMC=options.isMC, **parameters)
         add_ntuple(final_state, analyzer, process,
                    process.schedule, options.eventView)
 

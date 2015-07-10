@@ -21,6 +21,41 @@ _trig_template = PSet(
     namePrescale = 'evt.hltPrescale("paths")',
 )
 
+singleLepton_50ns_MC = PSet(
+    _trig_template.replace(
+        name='singleMu', 
+        paths=r'HLT_Mu50_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE',
+        paths=r'HLT_Ele27_eta2p1_WP75_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu_leg1', 
+        paths=r'HLT_Mu17_TrkIsoVVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu_leg2', 
+        paths=r'HLT_Mu8_TrkIsoVVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu_leg1_noiso', 
+        paths=r'HLT_Mu17_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu_leg2_noiso', 
+        paths=r'HLT_Mu8_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE_leg1', 
+        paths=r'HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE_leg2', 
+        paths=r'HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
+    )
+
 singleLepton_50ns = PSet(
     _trig_template.replace(
         name='Mu40', 
@@ -56,7 +91,7 @@ singleLepton_50ns = PSet(
         ),
     )
 
-singleLepton_25ns = PSet(
+singleLepton_25ns_MC = PSet(
     _trig_template.replace(
         name='singleMu', 
         paths=r'HLT_Mu50_v\\d+'
@@ -64,6 +99,41 @@ singleLepton_25ns = PSet(
     _trig_template.replace(
         name='singleE',
         paths=r'HLT_Ele32_eta2p1_WP75_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu_leg1', 
+        paths=r'HLT_Mu17_TrkIsoVVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu_leg2', 
+        paths=r'HLT_Mu8_TrkIsoVVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu_leg1_noiso', 
+        paths=r'HLT_Mu17_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu_leg2_noiso', 
+        paths=r'HLT_Mu8_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE_leg1', 
+        paths=r'HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE_leg2', 
+        paths=r'HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
+    )
+
+singleLepton_25ns = PSet(
+    _trig_template.replace(
+        name='singleMu', 
+        paths=r'HLT_Mu50_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE',
+        paths=r'HLT_Ele32_eta2p1_WPLoose_Gsf_v\\d+'
         ),
     _trig_template.replace(
         name='singleMu_leg1', 
