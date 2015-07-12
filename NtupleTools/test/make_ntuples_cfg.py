@@ -150,20 +150,21 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'MCRUN2_74_V9A::All', 'datagt': 'GR_70_V2_AN1::All'}
+GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': '74X_dataRun2_Prompt_v0'}
 if options.use25ns:
-    GT['mcgt'] = 'MCRUN2_74_V9::All'
+    GT['mcgt'] = 'MCRUN2_74_V9'
 
 
-if options.GlobalTag:
-    process.GlobalTag.globaltag = cms.string(options.GlobalTag)
-else:
-    try:
-        process.GlobalTag.globaltag = cms.string(os.environ[envvar])
-    except KeyError:
-        print 'Warning: GlobalTag not defined in environment. Using default.'
-        process.GlobalTag.globaltag = cms.string(GT[envvar])
-    process.GlobalTag.globaltag = cms.string(GT[envvar])
+#if options.GlobalTag:
+#    process.GlobalTag.globaltag = cms.string(options.GlobalTag)
+#else:
+#    try:
+#        process.GlobalTag.globaltag = cms.string(os.environ[envvar])
+#    except KeyError:
+#        print 'Warning: GlobalTag not defined in environment. Using default.'
+#        process.GlobalTag.globaltag = cms.string(GT[envvar])
+#    process.GlobalTag.globaltag = cms.string(GT[envvar])
+process.GlobalTag.globaltag = cms.string(GT[envvar])
 
 print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
