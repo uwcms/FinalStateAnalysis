@@ -463,6 +463,53 @@ if options.hzz:
         )
     process.schedule.append(process.embedFSRInfo)
 
+    # Make a skimmed collection that is a subset of packed PF cands to speed things up
+    process.fsrBaseCands = cms.EDFilter(
+        "CandPtrSelector",
+        src = cms.InputTag("packedPFCandidates"),
+        cut = cms.string("pdgId == 22 & pt > 2. & abs(eta) < 2.6"),
+        )
+    process.fsrBaseCandSeq = cms.Sequence(process.fsrBaseCands)
+    process.fsrBaseCandPath = cms.Path(process.fsrBaseCandSeq)
+    process.schedule.append(process.fsrBaseCandPath)
+
+    # Create and embed yet another experimental FSR collection, this time using
+    # deltaR/eT as the photon figure of merit
+    process.dretPhotonSelection = cms.EDFilter(
+        "CandPtrSelector",
+        src = cms.InputTag("fsrBaseCands"), #packedPFCandidates"),
+        cut = cms.string("pdgId == 22 & pt > 2. & abs(eta) < 2.4"),
+        )
+    fs_daughter_inputs['dretfsr'] = 'dretPhotonSelection'
+
+    process.leptonDRETFSREmbedding = cms.EDProducer(
+        "MiniAODLeptonDRETFSREmbedder",
+        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
+        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
+        phoSrc = cms.InputTag("dretPhotonSelection"),
+        phoSelection = cms.string(""),
+        eSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
+        muSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
+        fsrLabel = cms.string("dretFSRCand"),
+        )
+    fs_daughter_inputs['muons'] = 'leptonDRETFSREmbedding'
+    fs_daughter_inputs['elecrons'] = 'leptonDRETFSREmbedding'
+
+    process.leptonDRET2FSREmbedding = process.leptonDRETFSREmbedding.clone(
+        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
+        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
+        etPower = cms.double(2.),
+        fsrLabel = cms.string("dret2FSRCand"),
+        )
+
+    process.embedDRETFSR = cms.Sequence(process.dretPhotonSelection * 
+                                        process.leptonDRETFSREmbedding *
+                                        process.leptonDRET2FSREmbedding)
+    process.dREtFSR = cms.Path(process.embedDRETFSR)
+    process.schedule.append(process.dREtFSR)
+
+
+
 # Make a list of collections to save (in case we're saving 
 # collections instead of flat ntuples)
 # Note that produce_final_states adds the PATFinalStateEvent and
@@ -491,27 +538,44 @@ process.source.inputCommands = cms.untracked.vstring(
 suffix = '' # most analyses don't need to modify the final states
 
 if options.hzz:
-    process.embedHZZMESeq = cms.Sequence()
+    process.embedHZZSeq = cms.Sequence()
     # Embed matrix elements in relevant final states
-    suffix = "HZZME"
+    suffix = "HZZ"
     for quadFS in ['ElecElecElecElec', 
                    'ElecElecMuMu',
                    'MuMuMuMu']:
         oldName = "finalState%s"%quadFS
-        embedProducer = cms.EDProducer(
-            "MiniAODHZZMEEmbedder",
+        embedCategoryProducer = cms.EDProducer(
+            "MiniAODHZZCategoryEmbedder",
             src = cms.InputTag(oldName),
-            processes = cms.vstring("p0plus_VAJHU",
-                                    "bkg_VAMCFM"),
+            tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
+            bDisciminant = cms.string("combinedInclusiveSecondaryVertexV2BJetTags"),
+            bDiscriminantCut = cms.double(0.814),
+            fsrLabel = cms.string("FSRCand"),
             )
-
+        # give the FS collection an intermediate name, with an identifying suffix
+        intermediateName = oldName + "HZZCategory"
+        setattr(process, intermediateName, embedCategoryProducer)
+        process.embedHZZSeq += embedCategoryProducer
+        
+        embedMEProducer = cms.EDProducer(
+            "MiniAODHZZMEEmbedder",
+            src = cms.InputTag(intermediateName),
+            processes = cms.vstring("p0plus_VAJHU",
+                                    "p0minus_VAJHU",
+                                    "Dgg10_VAMCFM",
+                                    "bkg_VAMCFM",
+                                    "phjj_VAJHU",
+                                    "pvbf_VAJHU",
+                                    ),
+            )
         # give the FS collection the same name as before, but with an identifying suffix
         newName = oldName + suffix
-        setattr(process, newName, embedProducer)
-        process.embedHZZMESeq += embedProducer
+        setattr(process, newName, embedMEProducer)
+        process.embedHZZSeq += embedMEProducer
             
-    process.embedHZZME = cms.Path(process.embedHZZMESeq)
-    process.schedule.append(process.embedHZZME)
+    process.embedHZZ = cms.Path(process.embedHZZSeq)
+    process.schedule.append(process.embedHZZ)
         
 
 

@@ -1124,9 +1124,66 @@ const bool PATFinalState::genVtxPVMatch(const size_t i) const
 }
 
 
+// Get the invariant mass of the ith and jth jet in the event
+const float PATFinalState::dijetMass(const size_t i, const size_t j) const
+{
+  if(evt()->jets().size() <= i || evt()->jets().size() <= j)
+    return -999.;
+
+  return (evt()->jets().at(i).p4() + evt()->jets().at(j).p4()).M();
+}
+
+PATFinalState::LorentzVector PATFinalState::daughterP4WithUserCand(const size_t i, const std::string& label) const
+{
+  LorentzVector out = daughter(i)->p4();
+
+  if(daughterHasUserCand(i, label))
+    out += daughterUserCandP4(i, label);
+
+  return out;
+}
 
 
+PATFinalState::LorentzVector PATFinalState::diObjectP4WithUserCands(const size_t i, const size_t j, const std::string&label) const
+{
+  return (daughterP4WithUserCand(i, label) + daughterP4WithUserCand(j, label));
+}
 
+
+PATFinalState::LorentzVector PATFinalState::p4WithUserCands(const std::string& label) const
+{
+  LorentzVector out = LorentzVector();
+  for(size_t i = 0; i < numberOfDaughters(); ++i)
+    out += daughterP4WithUserCand(i, label);
+
+  return out;
+}
+
+
+const float PATFinalState::ptOfDaughterUserCand(const size_t i, const std::string& label) const
+{
+  if(daughterHasUserCand(i, label))
+    {
+      reco::CandidatePtr uCand = daughterUserCand(i, label);
+      return uCand->pt();
+    }
+
+  return 0.;
+}
+
+
+const float PATFinalState::daughterUserCandIsoContribution(const size_t i, const std::string& label) const
+{
+  if(daughterHasUserCand(i, label))
+    {
+      reco::CandidatePtr cand = daughterUserCand(i, label);
+      float dR = reco::deltaR(daughter(i)->p4(), cand->p4());
+      if(dR > 0.01 && dR < 0.4)
+        return cand->pt();
+    }
+
+  return 0.;
+}
 
 
 
