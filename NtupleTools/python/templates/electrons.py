@@ -23,6 +23,7 @@ id = PSet(
     objectCBIDTight = '{object}.userFloat("CBIDTight")',
     #objectMVATrigID = '{object}.userFloat("BDTIDTrig")',
     objectMVANonTrigID = '{object}.userFloat("BDTIDNonTrig")',
+    objectMVANonTrigCategory = '{object}.userFloat("BDTIDNonTrigCategory")',
     objectMVANonTrigWP80 = '{object}.userFloat("MVANonTrigWP80")',
     objectMVANonTrigWP90 = '{object}.userFloat("MVANonTrigWP90")',
     

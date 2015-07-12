@@ -38,9 +38,15 @@ def embedElectronIDs(process, use25ns, eSrc):
         mvaValues = [
             cms.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Phys14NonTrigValues"),
             ]
+        mvaCategoryLabels = ["BDTIDNonTrigCategory"]
+        mvaCategories = [
+            cms.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Phys14NonTrigCategories"),
+            ]
     else:
         mvaValueLabels = []
         mvaValues = []
+        mvaCategoryLabels = []
+        mvaCategories = []
 
     # Embed cut-based VIDs
     process.miniAODElectronID = cms.EDProducer(
@@ -50,6 +56,8 @@ def embedElectronIDs(process, use25ns, eSrc):
         ids = cms.VInputTag(*CBIDTags),
         valueLabels = cms.vstring(*mvaValueLabels),       # labels for MVA values
         values = cms.VInputTag(*mvaValues),               # mva values
+        categoryLabels = cms.vstring(*mvaCategoryLabels),
+        categories = cms.VInputTag(*mvaCategories),
     )
     eSrc = "miniAODElectronID"
     
