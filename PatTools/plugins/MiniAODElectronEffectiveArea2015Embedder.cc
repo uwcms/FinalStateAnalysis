@@ -40,7 +40,7 @@ private:
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
   virtual void endJob();
 
-  float getHZZ4lEA(const edm::Ptr<pat::Electron>& elec) const;
+  float getEA2015(const edm::Ptr<pat::Electron>& elec) const;
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
@@ -79,7 +79,7 @@ void MiniAODElectronEffectiveArea2015Embedder::produce(edm::Event& iEvent, const
 
       out->push_back(*ei); // copy electron to save correctly in event
 
-      float ea = getHZZ4lEA(eptr);
+      float ea = getEA2015(eptr);
       out->back().addUserFloat(label_, ea);
     }
 
@@ -87,20 +87,20 @@ void MiniAODElectronEffectiveArea2015Embedder::produce(edm::Event& iEvent, const
 }
 
 
-float MiniAODElectronEffectiveArea2015Embedder::getHZZ4lEA(const edm::Ptr<pat::Electron>& elec) const
+float MiniAODElectronEffectiveArea2015Embedder::getEA2015(const edm::Ptr<pat::Electron>& elec) const
 {
   float eta = fabs(elec->eta());
 
   if(eta >= 2.2)
-    return 0.2680;
+    return 0.1337;
   else if(eta >= 2.0)
-    return 0.1565;
+    return 0.0727;
   else if(eta >= 1.3)
-    return 0.1077;
+    return 0.0632;
   else if(eta >= 0.8)
-    return 0.1734;
+    return 0.0954;
   else
-    return 0.1830;
+    return 0.0973;
 }
 
 
