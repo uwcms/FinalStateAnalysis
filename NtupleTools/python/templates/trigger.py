@@ -58,7 +58,7 @@ singleLepton_50ns_MC = PSet(
 
 singleLepton_50ns = PSet(
     _trig_template.replace(
-        name='Mu40', 
+        name='singleMu', 
         paths=r'HLT_Mu40_v\\d+'
         ),
     _trig_template.replace(
