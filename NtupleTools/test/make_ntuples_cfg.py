@@ -187,13 +187,8 @@ fs_daughter_inputs = {
 output_commands = []
 
 # embed electron ids
-electronMVANonTrigIDLabel = "BDTIDNonTrig"
-electronMVATrigIDLabel = "BDTIDTrig"
 from FinalStateAnalysis.NtupleTools.embedElectronIDs import embedElectronIDs
-fs_daughter_inputs['electrons'] = embedElectronIDs(process,options.use25ns,
-                                                   fs_daughter_inputs['electrons'], 
-                                                   electronMVANonTrigIDLabel,
-                                                   electronMVATrigIDLabel,)
+fs_daughter_inputs['electrons'] = embedElectronIDs(process,options.use25ns,fs_daughter_inputs['electrons'])
 
 # Clean out muon "ghosts" caused by track ambiguities
 process.ghostCleanedMuons = cms.EDProducer("PATMuonCleanerBySegments",
@@ -308,7 +303,7 @@ if options.hzz:
         rhoLabel = cms.string("rhoCSA14"), # use rho and EA userFloats with these names
         eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
         vtxSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
-        bdtLabel = cms.string(electronMVANonTrigIDLabel),
+        bdtLabel = cms.string("BDTIDNonTrig"),
         )
     fs_daughter_inputs['electrons'] = 'electronIDIsoCheatEmbedding'
     output_commands.append('*_electronIDIsoCheatEmbedding_*_*')
