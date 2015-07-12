@@ -326,6 +326,18 @@ if options.hzz:
         # Defaults are correct as of 9 March 2015, overwrite later if needed
         )
     fs_daughter_inputs['muons'] = 'muonIDIsoCheatEmbedding'
+
+    # at 50ns, HZZ is actually SMP ZZ, which requires slightly different cuts
+    # (use cut based ID rather than MVA electron ID, all leptons must have pt>10,
+    # and we don't use the SIP cut)
+    if not options.use25ns:
+        process.electronIDIsoCheatEmbedding.bdtLabel = cms.string('')
+        process.electronIDIsoCheatEmbedding.selection = cms.string('userFloat("CBIDMedium") > 0.5')
+        process.electronIDIsoCheatEmbedding.ptCut = cms.double(10.)
+        process.electronIDIsoCheatEmbedding.sipCut = cms.double(9999.)
+        process.muonIDIsoCheatEmbedding.ptCut = cms.double(10.)
+        process.muonIDIsoCheatEmbedding.sipCut = cms.double(9999.)
+
     process.embedHZZ4lIDDecisions = cms.Path(
         process.electronIDIsoCheatEmbedding +
         process.muonIDIsoCheatEmbedding
