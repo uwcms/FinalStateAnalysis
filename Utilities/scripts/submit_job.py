@@ -113,16 +113,22 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
     command.append("'inputFiles=$inputFileNames'")
     command.append("'outputFile=$outputFileName'")
 
-    if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
-        lumi_mask_path = os.path.join(
-            os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
+    # temp hardcode
+    if args.apply_cms_lumimask:
+        filename = 'DCSOnly/json_DCSONLY_Run2015B.txt'
+        lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV',filename)
         command.append('lumiMask=%s' % lumi_mask_path)
-        firstRun = sample_info.get('firstRun', -1)
-        if firstRun > 0:
-            command.append('firstRun=%i' % firstRun)
-        lastRun = sample_info.get('lastRun', -1)
-        if lastRun > 0:
-            command.append('lastRun=%i' % lastRun)
+
+    #if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
+    #    lumi_mask_path = os.path.join(
+    #        os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
+    #    command.append('lumiMask=%s' % lumi_mask_path)
+    #    firstRun = sample_info.get('firstRun', -1)
+    #    if firstRun > 0:
+    #        command.append('firstRun=%i' % firstRun)
+    #    lastRun = sample_info.get('lastRun', -1)
+    #    if lastRun > 0:
+    #        command.append('lastRun=%i' % lastRun)
 
     farmout_command = '# Submit file for sample %s\n' % dataset_name
     farmout_command += 'mkdir -p %s\n' % os.path.dirname(dag_dir)

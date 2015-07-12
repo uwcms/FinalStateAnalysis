@@ -144,13 +144,13 @@ process.maxEvents = cms.untracked.PSet(
 process.schedule = cms.Schedule()
 
 #load magfield and geometry (for mass resolution)
-process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
+process.load('Configuration.Geometry.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': '74X_dataRun2_Prompt_v0'}
+GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': 'GR_P_V56'}
 if options.use25ns:
     GT['mcgt'] = 'MCRUN2_74_V9'
 

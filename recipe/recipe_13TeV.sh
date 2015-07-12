@@ -13,8 +13,6 @@ MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 
 pushd $CMSSW_BASE/src
 
-#git cms-merge-topic ikrav:egm_id_74X_v2 # mva id
-
 # HZZ MELA, MEKD etc.
 if [ "$HZZ" = "1" ]; then
     echo "Checking out ZZ MELA and Higgs combine"
