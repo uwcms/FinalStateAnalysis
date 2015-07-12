@@ -93,6 +93,8 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
     command = [
         'farmoutAnalysisJobs',
         '--infer-cmssw-path',
+        '--memory-requirement=6000',
+        '--vsize-limit=6000',
         '"--submit-dir=%s"' % submit_dir,
         '"--output-dag-file=%s"' % dag_dir,
         '"--output-dir=%s"' % output_dir,
@@ -144,28 +146,54 @@ def datasets_from_das(args):
 
     '''
     script_content = ""
-    dbs_datasets = get_das_info('/*/%s/MINIAOD*' % args.campaignstring)
-    # check sample wildcards
-    for dataset in dbs_datasets:
-        dataset_name = dataset.split('/')[1] 
-        passes_filter = True
-        passes_wildcard = False
-        
-        for pattern in args.samples:
-            if args.dastuple: # check json for shorthand
-                with open(args.dastuple) as tuple_file:
-                    tuple_info = json.load(tuple_file)
-                    matching_datasets = []
-                    for shorthand, fullname in tuple_info.iteritems():
-                        if fullname in dataset_name:
-                            if fnmatch.fnmatchcase(shorthand, pattern):
-                                passes_wildcard = True
-            else: # check das directly
-                if fnmatch.fnmatchcase(dataset_name, pattern):
-                    passes_wildcard = True
-        passes_filter = passes_wildcard and passes_filter
-        if passes_filter:
-            script_content += getFarmoutCommand(args, dataset_name, dataset)
+    # this part searches for MC
+    if args.campaignstring:
+        dbs_datasets = get_das_info('/*/%s/MINIAODSIM' % args.campaignstring)
+        # check sample wildcards
+        for dataset in dbs_datasets:
+            dataset_name = dataset.split('/')[1] 
+            passes_filter = True
+            passes_wildcard = False
+            
+            for pattern in args.samples:
+                if args.dastuple: # check json for shorthand
+                    with open(args.dastuple) as tuple_file:
+                        tuple_info = json.load(tuple_file)
+                        matching_datasets = []
+                        for shorthand, fullname in tuple_info.iteritems():
+                            if fullname in dataset_name:
+                                if fnmatch.fnmatchcase(shorthand, pattern):
+                                    passes_wildcard = True
+                else: # check das directly
+                    if fnmatch.fnmatchcase(dataset_name, pattern):
+                        passes_wildcard = True
+            passes_filter = passes_wildcard and passes_filter
+            if passes_filter:
+                script_content += getFarmoutCommand(args, dataset_name, dataset)
+    # special handling for data
+    if args.isData:
+        data_patterns = [x for x in args.samples if 'data_' in x]
+        data_datasets = get_das_info('/*/*/MINIAOD')
+        for dataset in data_datasets:
+            passes_filter = True
+            passes_wildcard = False
+            name_to_use = 'data_' + '_'.join(dataset.split('/'))
+            for pattern in data_patterns:
+                if args.dastuple: # check json for shorthand, links to full dataset name
+                    with open(args.dastuple) as tuple_file:
+                        tuple_info = json.load(tuple_file)
+                        matching_datasets = []
+                        for shorthand, fullname in tuple_info.iteritems():
+                            if fullname in dataset:
+                                if fnmatch.fnmatchcase(shorthand, pattern):
+                                    passes_wildcard = True
+                                    name_to_use = shorthand
+                else: # check das directly
+                    if fnmatch.fnmatchcase(dataset, pattern):
+                        passes_wildcard = True
+            passes_filter = passes_wildcard and passes_filter
+            if passes_filter:
+                script_content += getFarmoutCommand(args, name_to_use, dataset)
     if "Submit file" not in script_content:
         log.warning("No datasets found matching %s", args.samples)
     return script_content
@@ -207,6 +235,10 @@ def get_com_line_args():
         help = 'DAS production campaign string for query.'
                ' For a given DAS query, it is the second part'
                ' (dataset=/*/[campaign-tag]/MINIAODSIM).'
+    )
+    input_group.add_argument(
+        '--data', dest='isData', action='store_true',
+        help = 'Run over data',
     )
 
     filter_group = parser.add_argument_group('Sample Filters')
@@ -254,7 +286,7 @@ if __name__ == "__main__":
     script_content += '# The command was: %s\n\n' % ' '.join(sys.argv)
     args = get_com_line_args()
     # first, make DAS query for dataset if not using local dataset or hdfs/dbs tuple list
-    if args.campaignstring:
+    if args.campaignstring or args.isData:
         script_content += datasets_from_das(args)
     else:
         # this is the old version that uses datadefs
