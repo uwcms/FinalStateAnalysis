@@ -265,6 +265,7 @@ process.miniAODElectronEAEmbedding = cms.EDProducer(
     "MiniAODElectronEffectiveArea2015Embedder",
     src = cms.InputTag(fs_daughter_inputs['electrons']),
     label = cms.string("EffectiveArea_HZZ4l2015"), # embeds a user float with this name
+    use25ns = cms.bool(bool(options.use25ns)),
     )
 fs_daughter_inputs['electrons'] = 'miniAODElectronEAEmbedding'
 process.EAEmbedding = cms.Path(
