@@ -35,11 +35,13 @@ rerunMVAMET=0 - rerun the MVAMET algorithm
 svFit=1 - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
 rerunJets=0   - rerun with new jet energy corrections
-use25ns=1 - run on 25 ns miniAOD (default, 0 = 50ns)
+use25ns=1 - run on 25 ns miniAOD (0 -> 50ns)
 runDQM=0 - run over single object final states to test all object properties (wont check diobject properties)
 hzz=0 - Include FSR contribution a la HZZ4l group, include all ZZ candidates (including alternative lepton pairings).
 nExtraJets=0 - Include basic info about this many jets (ordered by pt). Ignored if final state involves jets.
 paramFile='' - custom parameter file for ntuple production
+keepPat=0 - Instead of making flat ntuples, write high level 
+            physics objects including the PATFinalState objects
 
 '''
 
@@ -47,7 +49,7 @@ import FWCore.ParameterSet.Config as cms
 import os
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
-    make_ntuple, add_ntuple
+    make_ntuple, add_ntuple, _producer_translation
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
 import PhysicsTools.PatAlgos.tools.helpers as helpers
@@ -98,7 +100,15 @@ options.register(
     TauVarParsing.TauVarParsing.varType.int,
     'Number of pt-ordered jets to keep some info about. Ignored if final state involves jets.',
 )
-
+options.register(
+    'keepPat',
+    0,
+    TauVarParsing.TauVarParsing.multiplicity.singleton,
+    TauVarParsing.TauVarParsing.varType.int,
+    'If 1, write final PAT objects rather than a flat ntuple. '
+    'If 2, also keep packedGenParticles. If 3 or more, also keep '
+    'packedPFCands (increases size significantly).',
+)
 
 options.outputFile = "ntuplize.root"
 options.parseArguments()
@@ -144,26 +154,27 @@ process.maxEvents = cms.untracked.PSet(
 process.schedule = cms.Schedule()
 
 #load magfield and geometry (for mass resolution)
-process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
+process.load('Configuration.Geometry.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'MCRUN2_74_V9A::All', 'datagt': 'GR_70_V2_AN1::All'}
+GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': 'GR_P_V56'}
 if options.use25ns:
-    GT['mcgt'] = 'MCRUN2_74_V9::All'
+    GT['mcgt'] = 'MCRUN2_74_V9'
 
 
-if options.GlobalTag:
-    process.GlobalTag.globaltag = cms.string(options.GlobalTag)
-else:
-    try:
-        process.GlobalTag.globaltag = cms.string(os.environ[envvar])
-    except KeyError:
-        print 'Warning: GlobalTag not defined in environment. Using default.'
-        process.GlobalTag.globaltag = cms.string(GT[envvar])
-    process.GlobalTag.globaltag = cms.string(GT[envvar])
+#if options.GlobalTag:
+#    process.GlobalTag.globaltag = cms.string(options.GlobalTag)
+#else:
+#    try:
+#        process.GlobalTag.globaltag = cms.string(os.environ[envvar])
+#    except KeyError:
+#        print 'Warning: GlobalTag not defined in environment. Using default.'
+#        process.GlobalTag.globaltag = cms.string(GT[envvar])
+#    process.GlobalTag.globaltag = cms.string(GT[envvar])
+process.GlobalTag.globaltag = cms.string(GT[envvar])
 
 print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
@@ -181,12 +192,14 @@ fs_daughter_inputs = {
     'pfmet': 'slimmedMETs',         # only one MET in miniAOD
     'mvamet': 'fixme',              # produced later
     'fsr': 'slimmedPhotons',
+    'vertices': 'offlineSlimmedPrimaryVertices',
 }
 
-# embed some things we need that arent in miniAOD yet (like some ids)
-output_commands = []
+### embed some things we need that arent in miniAOD (ids, etc.)
 
 # embed electron ids
+electronMVANonTrigIDLabel = "BDTIDNonTrig"
+electronMVATrigIDLabel = "BDTIDTrig"
 from FinalStateAnalysis.NtupleTools.embedElectronIDs import embedElectronIDs
 fs_daughter_inputs['electrons'] = embedElectronIDs(process,options.use25ns,fs_daughter_inputs['electrons'])
 
@@ -204,7 +217,7 @@ process.schedule.append(process.miniCleanedMuons)
 process.miniPatMuons = cms.EDProducer(
     "MiniAODMuonIDEmbedder",
     src=cms.InputTag(fs_daughter_inputs['muons']),
-    vertices=cms.InputTag("offlineSlimmedPrimaryVertices"),
+    vertices=cms.InputTag(fs_daughter_inputs['vertices']),
 )
 fs_daughter_inputs['muons'] = "miniPatMuons"
 
@@ -223,14 +236,14 @@ process.schedule.append(process.runMiniAODObjectEmbedding)
 process.miniMuonsEmbedIp = cms.EDProducer(
     "MiniAODMuonIpEmbedder",
     src = cms.InputTag(fs_daughter_inputs['muons']),
-    vtxSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
+    vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
 )
 fs_daughter_inputs['muons'] = 'miniMuonsEmbedIp'
 
 process.miniElectronsEmbedIp = cms.EDProducer(
     "MiniAODElectronIpEmbedder",
     src = cms.InputTag(fs_daughter_inputs['electrons']),
-    vtxSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
+    vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
 )
 fs_daughter_inputs['electrons'] = 'miniElectronsEmbedIp'
 
@@ -252,6 +265,7 @@ process.miniAODElectronEAEmbedding = cms.EDProducer(
     "MiniAODElectronEffectiveArea2015Embedder",
     src = cms.InputTag(fs_daughter_inputs['electrons']),
     label = cms.string("EffectiveArea_HZZ4l2015"), # embeds a user float with this name
+    use25ns = cms.bool(bool(options.use25ns)),
     )
 fs_daughter_inputs['electrons'] = 'miniAODElectronEAEmbedding'
 process.EAEmbedding = cms.Path(
@@ -288,7 +302,6 @@ if options.hzz:
     # Make FSR photon collection, give them isolation
     process.load("FinalStateAnalysis.PatTools.miniAOD_fsrPhotons_cff")
     fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
-    output_commands.append('*_boostedFsrPhotons_*_*')
     process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
     process.schedule.append(process.makeFSRPhotons)
 
@@ -302,21 +315,31 @@ if options.hzz:
         isoLabel = cms.string(isoCheatLabel), # boolean stored as userFloat with this name
         rhoLabel = cms.string("rhoCSA14"), # use rho and EA userFloats with these names
         eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
-        vtxSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
-        bdtLabel = cms.string("BDTIDNonTrig"),
+        vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
+        bdtLabel = cms.string(electronMVANonTrigIDLabel),
         )
     fs_daughter_inputs['electrons'] = 'electronIDIsoCheatEmbedding'
-    output_commands.append('*_electronIDIsoCheatEmbedding_*_*')
     process.muonIDIsoCheatEmbedding = cms.EDProducer(
         "MiniAODMuonHZZIDDecider",
         src = cms.InputTag(fs_daughter_inputs['muons']),
         idLabel = cms.string(idCheatLabel), # boolean will be stored as userFloat with this name
         isoLabel = cms.string(isoCheatLabel), # boolean will be stored as userFloat with this name
-        vtxSrc = cms.InputTag("offlineSlimmedPrimaryVertices"),
+        vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
         # Defaults are correct as of 9 March 2015, overwrite later if needed
         )
     fs_daughter_inputs['muons'] = 'muonIDIsoCheatEmbedding'
-    output_commands.append('*_muonIDIsoCheatEmbedding_*_*')
+
+    # at 50ns, HZZ is actually SMP ZZ, which requires slightly different cuts
+    # (use cut based ID rather than MVA electron ID, all leptons must have pt>10,
+    # and we don't use the SIP cut)
+    if not options.use25ns:
+        process.electronIDIsoCheatEmbedding.bdtLabel = cms.string('')
+        process.electronIDIsoCheatEmbedding.selection = cms.string('userFloat("CBIDMedium") > 0.5')
+        process.electronIDIsoCheatEmbedding.ptCut = cms.double(10.)
+        process.electronIDIsoCheatEmbedding.sipCut = cms.double(9999.)
+        process.muonIDIsoCheatEmbedding.ptCut = cms.double(10.)
+        process.muonIDIsoCheatEmbedding.sipCut = cms.double(9999.)
+
     process.embedHZZ4lIDDecisions = cms.Path(
         process.electronIDIsoCheatEmbedding +
         process.muonIDIsoCheatEmbedding
@@ -325,7 +348,10 @@ if options.hzz:
     
 
 ## Do preselection as requested in the analysis parameters
-preselections = parameters.get('preselection',{})
+if options.passThru:
+    preselections = {}
+else:
+    preselections = parameters.get('preselection',{})
 
 from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections, getName
 process.preselectionSequence = setup_selections(
@@ -336,7 +362,6 @@ process.preselectionSequence = setup_selections(
     )
 for ob in preselections:
     fs_daughter_inputs[getName(ob)+'s'] = getName(ob)+"Preselection"
-    output_commands.append('*_%sPreselection_*_*'%getName(ob))
 process.FSAPreselection = cms.Path(process.preselectionSequence)
 process.schedule.append(process.FSAPreselection)
 
@@ -386,7 +411,7 @@ if options.runMVAMET:
     
     process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
     process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
-    process.pfMVAMEt.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
+    process.pfMVAMEt.srcVertices = cms.InputTag(fs_daughter_inputs['vertices'])
     process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
     process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
     process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
@@ -398,7 +423,7 @@ if options.runMVAMET:
         process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
     
     process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
-    process.puJetIdForPFMVAMEt.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
+    process.puJetIdForPFMVAMEt.vertexes = cms.InputTag(fs_daughter_inputs['vertices'])
     process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
     
     from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
@@ -425,30 +450,82 @@ if options.hzz:
         srcAlt = cms.InputTag(fs_daughter_inputs['muons']),
         srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
         srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
-        srcVtx = cms.InputTag("offlineSlimmedPrimaryVertices"),
+        srcVtx = cms.InputTag(fs_daughter_inputs['vertices']),
         idDecisionLabel = cms.string(idCheatLabel),
         )
     fs_daughter_inputs['electrons'] = 'electronFSREmbedder'
-    output_commands.append('*_electronFSREmbedder_*_*')
     process.muonFSREmbedder = embedFSRInMuons.clone(
         src = cms.InputTag(fs_daughter_inputs['muons']),
         srcAlt = cms.InputTag(fs_daughter_inputs['electrons']),
         srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
         srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
-        srcVtx = cms.InputTag("offlineSlimmedPrimaryVertices"),
+        srcVtx = cms.InputTag(fs_daughter_inputs['vertices']),
         idDecisionLabel = cms.string(idCheatLabel),
         )
     fs_daughter_inputs['muons'] = 'muonFSREmbedder'
-    output_commands.append('*_muonFSREmbedder_*_*')
     process.embedFSRInfo = cms.Path(
         process.electronFSREmbedder +
         process.muonFSREmbedder
         )
     process.schedule.append(process.embedFSRInfo)
 
+    # Make a skimmed collection that is a subset of packed PF cands to speed things up
+    process.fsrBaseCands = cms.EDFilter(
+        "CandPtrSelector",
+        src = cms.InputTag("packedPFCandidates"),
+        cut = cms.string("pdgId == 22 & pt > 2. & abs(eta) < 2.6"),
+        )
+    process.fsrBaseCandSeq = cms.Sequence(process.fsrBaseCands)
+    process.fsrBaseCandPath = cms.Path(process.fsrBaseCandSeq)
+    process.schedule.append(process.fsrBaseCandPath)
+
+    # Create and embed yet another experimental FSR collection, this time using
+    # deltaR/eT as the photon figure of merit
+    process.dretPhotonSelection = cms.EDFilter(
+        "CandPtrSelector",
+        src = cms.InputTag("fsrBaseCands"), #packedPFCandidates"),
+        cut = cms.string("pdgId == 22 & pt > 2. & abs(eta) < 2.4"),
+        )
+    fs_daughter_inputs['dretfsr'] = 'dretPhotonSelection'
+
+    process.leptonDRETFSREmbedding = cms.EDProducer(
+        "MiniAODLeptonDRETFSREmbedder",
+        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
+        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
+        phoSrc = cms.InputTag("dretPhotonSelection"),
+        phoSelection = cms.string(""),
+        eSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
+        muSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
+        fsrLabel = cms.string("dretFSRCand"),
+        )
+    fs_daughter_inputs['muons'] = 'leptonDRETFSREmbedding'
+    fs_daughter_inputs['elecrons'] = 'leptonDRETFSREmbedding'
+
+    process.leptonDRET2FSREmbedding = process.leptonDRETFSREmbedding.clone(
+        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
+        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
+        etPower = cms.double(2.),
+        fsrLabel = cms.string("dret2FSRCand"),
+        )
+
+    process.embedDRETFSR = cms.Sequence(process.dretPhotonSelection * 
+                                        process.leptonDRETFSREmbedding *
+                                        process.leptonDRET2FSREmbedding)
+    process.dREtFSR = cms.Path(process.embedDRETFSR)
+    process.schedule.append(process.dREtFSR)
+
+
+
+# Make a list of collections to save (in case we're saving 
+# collections instead of flat ntuples)
+# Note that produce_final_states adds the PATFinalStateEvent and
+# the collections it used to build the final states, but not the final
+# states themselves, because that fills the file up with unwanted stuff
+output_to_keep = []
+
 # Eventually, set buildFSAEvent to False, currently working around bug
 # in pat tuples.
-produce_final_states(process, fs_daughter_inputs, output_commands, process.buildFSASeq,
+produce_final_states(process, fs_daughter_inputs, output_to_keep, process.buildFSASeq,
                      'puTagDoesntMatter', buildFSAEvent=True,
                      noTracks=True, runMVAMET=options.runMVAMET,
                      hzz=options.hzz, rochCor=options.rochCor,
@@ -457,7 +534,7 @@ process.buildFSAPath = cms.Path(process.buildFSASeq)
 # Don't crash if some products are missing (like tracks)
 process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
 process.schedule.append(process.buildFSAPath)
-# Drop the old stuff.
+# Drop the old stuff. (do we still need this?)
 process.source.inputCommands = cms.untracked.vstring(
     'keep *',
     'drop PATFinalStatesOwned_finalState*_*_*',
@@ -467,28 +544,43 @@ process.source.inputCommands = cms.untracked.vstring(
 suffix = '' # most analyses don't need to modify the final states
 
 if options.hzz:
-    process.embedHZZMESeq = cms.Sequence()
+    process.embedHZZSeq = cms.Sequence()
     # Embed matrix elements in relevant final states
-    suffix = "HZZME"
+    suffix = "HZZ"
     for quadFS in ['ElecElecElecElec', 
                    'ElecElecMuMu',
                    'MuMuMuMu']:
         oldName = "finalState%s"%quadFS
-        embedProducer = cms.EDProducer(
-            "MiniAODHZZMEEmbedder",
+        embedCategoryProducer = cms.EDProducer(
+            "MiniAODHZZCategoryEmbedder",
             src = cms.InputTag(oldName),
-            processes = cms.vstring("p0plus_VAJHU",
-                                    "bkg_VAMCFM"),
+            tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
+            bDisciminant = cms.string("combinedInclusiveSecondaryVertexV2BJetTags"),
+            bDiscriminantCut = cms.double(0.814),
             )
-
+        # give the FS collection an intermediate name, with an identifying suffix
+        intermediateName = oldName + "HZZCategory"
+        setattr(process, intermediateName, embedCategoryProducer)
+        process.embedHZZSeq += embedCategoryProducer
+        
+        embedMEProducer = cms.EDProducer(
+            "MiniAODHZZMEEmbedder",
+            src = cms.InputTag(intermediateName),
+            processes = cms.vstring("p0plus_VAJHU",
+                                    "p0minus_VAJHU",
+                                    "Dgg10_VAMCFM",
+                                    "bkg_VAMCFM",
+                                    "phjj_VAJHU",
+                                    "pvbf_VAJHU",
+                                    ),
+            )
         # give the FS collection the same name as before, but with an identifying suffix
         newName = oldName + suffix
-        setattr(process, newName, embedProducer)
-        process.embedHZZMESeq += embedProducer
-        output_commands.append('*_%s_*_*'%newName)
+        setattr(process, newName, embedMEProducer)
+        process.embedHZZSeq += embedMEProducer
             
-    process.embedHZZME = cms.Path(process.embedHZZMESeq)
-    process.schedule.append(process.embedHZZME)
+    process.embedHZZ = cms.Path(process.embedHZZSeq)
+    process.schedule.append(process.embedHZZ)
         
 
 
@@ -536,18 +628,96 @@ def expanded_final_states(input):
         else:
             yield fs
 
-print "Building ntuple for final states: %s" % ", ".join(final_states)
-for final_state in expanded_final_states(final_states):
-    extraJets = options.nExtraJets if 'j' not in final_state else 0
-    final_state = order_final_state(final_state)
-    analyzer = make_ntuple(*final_state, 
-                            svFit=options.svFit, dblhMode=options.dblhMode,
-                            runTauSpinner=options.runTauSpinner, 
-                            runMVAMET=options.runMVAMET,
-                            skimCuts=options.skimCuts, suffix=suffix,
-                            hzz=options.hzz, nExtraJets=extraJets, **parameters)
-    add_ntuple(final_state, analyzer, process,
-               process.schedule, options.eventView)
+def get_producer_suffix(state):
+    '''
+    Returns the suffix FSA puts on the end of produer and class names, e.g.
+    "ElecElecMuTau" for final state 'eemt'.
+    '''
+    return ''.join(_producer_translation[obj] for obj in order_final_state(state))
+
+
+if options.keepPat:
+    print "Saving final physics objects instead of making ntuples"
+
+    # Clean unwanted final states (otherwise happens at flat ntuple creation)
+    from FinalStateAnalysis.NtupleTools.uniqueness_cut_generator import uniqueness_cuts
+
+    ptCuts = parameters.get('ptCuts', {'e':'0','m':'0','t':'0','g':'0','j':'0'})
+    etaCuts = parameters.get('etaCuts', {'e':'10','m':'10','t':'10','g':'10','j':'10'})
+    skimCuts = parameters.get('skimCuts', [])
+
+    if options.passThru:
+        output_to_keep.append('*')
+    else:
+        process.finalStateCleaning = cms.Sequence()
+
+        for fs in expanded_final_states(final_states):
+            fsCuts = cms.vstring()
+            for name, cut in uniqueness_cuts(fs, ptCuts, etaCuts, 
+                                             skimCuts=skimCuts,
+                                             hzz=options.hzz, 
+                                             dblH=options.dblhMode).iteritems():
+                fsCuts.append(cut)
+                
+            fsCleaner = cms.EDProducer(
+                "PATFinalStateSelector",
+                src = cms.InputTag("finalState%s%s"%(get_producer_suffix(fs), suffix)),
+                cuts = fsCuts,
+                )
+            
+            # give the producer a good name so it's easy to find the output
+            cleanerName = 'cleanedFinalState%s'%get_producer_suffix(fs)
+            setattr(process, cleanerName, fsCleaner)
+            process.finalStateCleaning += fsCleaner
+            
+            # and keep the output in the final file
+            output_to_keep.append('*_%s_*_*'%cleanerName)
+
+        process.cleanFinalStates = cms.Path(process.finalStateCleaning)
+        process.schedule.append(process.cleanFinalStates)
+
+    # keep final object collections (final states and associated collections already saved)
+    for name, label in fs_daughter_inputs.iteritems():
+        output_to_keep.append('*_%s_*_*'%label)
+
+    # keep important gen particles
+    output_to_keep.append('*_prunedGenParticles_*_*')
+    if options.keepPat >= 2:
+        print "... Including packedGenParticles"
+        output_to_keep.append('*_packedGenParticles_*_*')
+        if options.keepPat >= 3:
+            print "... Including packedPFCandidates"
+            output_to_keep.append('*_packedPFCandidates_*_*')
+    output_commands = cms.untracked.vstring('drop *')
+
+    for product in output_to_keep:
+        output_commands.append('keep %s'%product)
+
+    process.out = cms.OutputModule(
+        "PoolOutputModule",
+        fileName=cms.untracked.string(options.outputFile),
+        # Drop per-event meta data from dropped objects
+        dropMetaData=cms.untracked.string("ALL"),
+        outputCommands=output_commands,
+        )
+    
+    process.save = cms.EndPath(process.out)
+    process.schedule.append(process.save)
+else:
+    print "Building ntuple for final states: %s" % ", ".join(final_states)
+    for final_state in expanded_final_states(final_states):
+        extraJets = options.nExtraJets if 'j' not in final_state else 0
+        final_state = order_final_state(final_state)
+        analyzer = make_ntuple(*final_state, 
+                                svFit=options.svFit, dblhMode=options.dblhMode,
+                                runTauSpinner=options.runTauSpinner, 
+                                runMVAMET=options.runMVAMET,
+                                skimCuts=options.skimCuts, suffix=suffix,
+                                hzz=options.hzz, nExtraJets=extraJets, 
+                                use25ns=options.use25ns, 
+                                isMC=options.isMC, **parameters)
+        add_ntuple(final_state, analyzer, process,
+                   process.schedule, options.eventView)
 
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")

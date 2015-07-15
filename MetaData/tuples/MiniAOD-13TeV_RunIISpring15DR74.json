@@ -1,4 +1,8 @@
 {
+  "data_DoubleMuon_Run2015B_PromptReco_50ns" : "/DoubleMuon/Run2015B-PromptReco-v1/MINIAOD",
+  "data_MuonEG_Run2015B_PromptReco_50ns" : "/MuonEG/Run2015B-PromptReco-v1/MINIAOD",
+  "data_DoubleEG_Run2015B_PromptReco_50ns" : "/DoubleEG/Run2015B-PromptReco-v1/MINIAOD",
+
   "DYJetsToLL_M-10to50" : "DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
   "DYJetsToLL_M-50" : "DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
 

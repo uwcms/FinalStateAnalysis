@@ -29,3 +29,5 @@ callgrind.out.*
 *.DAT
 *.tbl
 *~
+NtupleTools/test/Pdfdata/*
+NtupleTools/test/br.sm*

@@ -11,7 +11,7 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
 Installation
 ------------
 
-Current CMSSW version: ``7_4_5``.
+Current CMSSW version: ``7_4_7``.
 
 Get a supported CMSSW release area:
 
@@ -34,7 +34,7 @@ Checkout the FinalStateAnalysis repository:
   cd FinalStateAnalysis
 ```
 
-Checkout the needed CMSSW tags:
+Checkout extra needed code:
 
 ```bash
   cd recipe/
@@ -49,6 +49,12 @@ Checkout the needed CMSSW tags:
   scram b -j 8
   popd
 ```
+
+It is highly recommended to set up a python virtualenv with a number of nice tools:
+```bash
+  ./recipe/install_python.sh
+```
+The virtualenv is automatically activated by `environment.sh`.
 
 You must always set up the CMSSW environment + some extra variables from FinalStateAnalysis:
 

@@ -34,16 +34,16 @@ _common_template = PSet(
     # VBF variables, because most analyses using FSA want them
     templates.topology.vbf,
 
-    # PHYS14 lepton triggers
-    templates.trigger.singleLepton,
-    templates.trigger.doubleLepton,
-    templates.trigger.tripleLepton, # tiple e only, for some reason
+    # Triggers different for 25 and 50ns, no longer in common template
+    # templates.trigger.singleLepton,
+    # templates.trigger.doubleLepton,
+    # templates.trigger.tripleLepton, # tiple e only, for some reason
     # Need to fill out photon triggers
-#     templates.trigger.isomu,
-#     templates.trigger.isomu24eta2p1,
-#     templates.trigger.singlePho,
-#     templates.trigger.doublePho,
-#     templates.trigger.isoMuTau
+    # templates.trigger.isomu,
+    # templates.trigger.isomu24eta2p1,
+    # templates.trigger.singlePho,
+    # templates.trigger.doublePho,
+    # templates.trigger.isoMuTau
 )
 
 # Define the branch templates for different object types.
@@ -189,9 +189,6 @@ def make_ntuple(*legs, **kwargs):
     format_labels = {
     }
 
-    pt_cuts = kwargs.get('ptCuts',{'e':'0','m':'0','t':'0','g':'0','j':'0'})
-    eta_cuts = kwargs.get('etaCuts',{'e':'10','m':'10','t':'10','g':'10','j':'10'})
-
     # Count how many objects of each type we put in
     counts = {
         't': 0,
@@ -205,6 +202,10 @@ def make_ntuple(*legs, **kwargs):
 
     runMVAMET = kwargs.get('runMVAMET', False)
 
+    use25ns = kwargs.get('use25ns', False)
+
+    isMC = kwargs.get('isMC', False)
+
     ntuple_config = _common_template.clone()
     if kwargs.get('runTauSpinner', False):
         for parName in templates.event.tauSpinner.parameterNames_():
@@ -216,6 +217,28 @@ def make_ntuple(*legs, **kwargs):
                     parName
                 ) 
             )
+
+    # Triggers we care about depend on run configuration
+    if use25ns:
+        diLep_triggers = templates.trigger.doubleLepton_25ns
+        if isMC:
+            lep_triggers = templates.trigger.singleLepton_25ns_MC
+        else:
+            lep_triggers = templates.trigger.singleLepton_25ns
+    else:    
+        diLep_triggers = templates.trigger.doubleLepton_50ns
+        if isMC:
+            lep_triggers = templates.trigger.singleLepton_50ns_MC
+        else:
+            lep_triggers = templates.trigger.singleLepton_50ns
+    triLep_triggers = templates.trigger.tripleLepton # same in 25 and 50 ns    
+
+    ntuple_config = PSet(
+        ntuple_config,
+        lep_triggers,
+        diLep_triggers,
+        triLep_triggers
+    )
 
     # Optionally apply extra branches in kwargs
     if 'branches' in kwargs:
@@ -377,7 +400,7 @@ def make_ntuple(*legs, **kwargs):
             EventView=cms.bool(False),
             final=cms.PSet(
                 sort=cms.string('daughter(0).pt'),  # Doesn't really matter
-                take=cms.uint32(50),
+                take=cms.uint32(999), # max number of rows for an event
                 plot=cms.PSet(
                     histos=cms.VPSet(),  # Don't make any final plots
                     # ntuple has all generated branches in it.
@@ -387,181 +410,25 @@ def make_ntuple(*legs, **kwargs):
         )
     )
 
-    # Apply the basic selection to each leg
-    for i, leg in enumerate(legs):
-        output.analysis.selections.append(
-            cms.PSet(
-                name=cms.string('Leg%iPt' % i),
-                cut=cms.string('daughter(%i).pt>%s' % (
-                    i, pt_cuts[legs[i]]),
-                )
-            )
-        )
-        output.analysis.selections.append(
-            cms.PSet(
-                name=cms.string('Leg%iEta' % i),
-                cut=cms.string('abs(daughter(%i).eta) < %s' % (
-                    i, eta_cuts[legs[i]]))
-            ),
-        )
+    # Apply minimal pt and eta cuts and "uniqueness requirements" 
+    # to reduce final processing/storage.
+    # See NtupleTools/python/uniqueness_cut_generator for details.
+    noclean = kwargs.get('noclean', False)
+    from FinalStateAnalysis.NtupleTools.uniqueness_cut_generator import uniqueness_cuts
+    if not noclean:
+        pt_cuts = kwargs.get('ptCuts',{'e':'0','m':'0','t':'0','g':'0','j':'0'})
+        eta_cuts = kwargs.get('etaCuts',{'e':'10','m':'10','t':'10','g':'10','j':'10'})
 
-    #Apply additional selections
-    if 'skimCuts' in kwargs and kwargs['skimCuts']:
-        for cut in kwargs['skimCuts']:
+        for name, cut in uniqueness_cuts(legs, pt_cuts, eta_cuts,
+                                         skimCuts=kwargs.get('skimCuts', []),
+                                         hzz=hzz, 
+                                         dblH=kwargs.get('dblhMode', False)).iteritems():
             output.analysis.selections.append(
                 cms.PSet(
-                    name = cms.string(cut),
-                    cut  = cms.string(cut)
-                ),
-            )
-
-    # Apply "uniqueness requirements" to reduce final processing/storage.
-    # This make sure there is only one ntuple entry per-final state.  The
-    # combinatorics due to different orderings are removed.
-    # Algorithm:
-    # if there are 2 of any given type, order them by pt
-    # if there are 3
-    #   first put best Z in initial position
-    #   then order first two by pt
-    # if there are 4
-    #   first put best Z in initial position
-    #   then order first two by pt
-    #   then order third and fourth by pt
-    #
-    # Algorithm for dblhMode:
-    # if there are 4
-    #   first two leptons must be positive
-    #   third and fourth leptons must be negative
-    #   order first two by pt
-    #   order third and fourth by pt
-    noclean = kwargs.get('noclean', False)
-
-    # ZZ-producer does not require this cleaning step
-    make_unique = not noclean
-
-    isDblH = kwargs.get('dblhMode', False)
-    
-    if make_unique:
-        for type, count in counts.iteritems():
-            if count == 2:
-                leg1_idx = format_labels['%s1_idx' % type]
-                leg2_idx = format_labels['%s2_idx' % type]
-                output.analysis.selections.append(cms.PSet(
-                    name=cms.string('%s_UniqueByPt' % type),
-                    cut=cms.string('orderedInPt(%s, %s)' %
-                                   (leg1_idx, leg2_idx))
-                ))
-            if count == 3:
-                leg1_idx_label = format_labels['%s1_idx' % type]
-                leg2_idx_label = format_labels['%s2_idx' % type]
-                leg3_idx_label = format_labels['%s3_idx' % type]
-
-                # Require first two leptons make the best Z
-                output.analysis.selections.append(cms.PSet(
-                    name=cms.string('Z12_Better_Z13'),
-                    cut=cms.string(
-                        'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
-                        (leg1_idx_label, leg2_idx_label, leg1_idx_label,
-                         leg3_idx_label)
+                    name=cms.string(name),
+                    cut=cms.string(cut),
                     )
-                ))
-
-                output.analysis.selections.append(cms.PSet(
-                    name=cms.string('Z12_Better_Z23'),
-                    cut=cms.string(
-                        'zCompatibility(%s, %s) < zCompatibility(%s, %s)' %
-                        (leg1_idx_label, leg2_idx_label, leg2_idx_label,
-                         leg3_idx_label)
-                    )
-                ))
-
-                # Require first two leptons are ordered in PT
-                output.analysis.selections.append(cms.PSet(
-                    name=cms.string('%s_UniqueByPt' % type),
-                    cut=cms.string('orderedInPt(%s, %s)' %
-                                     (leg1_idx_label, leg2_idx_label))
-                ))
-            if count == 4:
-                leg1_idx_label = format_labels['%s1_idx' % type]
-                leg2_idx_label = format_labels['%s2_idx' % type]
-                leg3_idx_label = format_labels['%s3_idx' % type]
-                leg4_idx_label = format_labels['%s4_idx' % type]
-
-                if isDblH:
-                    output.analysis.selections.append(cms.PSet(
-                        name=cms.string('hpp12_and_hmm34'),
-                        cut=cms.string(
-                            'hppCompatibility(%s, %s, 1) &&'
-                            'hppCompatibility(%s, %s, -1)' %
-                            (leg1_idx_label, leg2_idx_label, leg3_idx_label,
-                             leg4_idx_label)
-                        )
-                    ))
-                else:
-                    if hzz:
-                        cutstr = 'zCompatibilityFSR(%s, %s, "FSRCand") < zCompatibilityFSR(%s, %s, "FSRCand")'
-                    else:
-                        cutstr = 'zCompatibility(%s, %s) < zCompatibility(%s, %s)'
-
-                    if not hzz: # HZZ wants all ZZ candidates to have their own row, so order the Zs but don't cut alternative pairings
-                        output.analysis.selections.append(cms.PSet(
-                            name=cms.string('Z12_Better_Z13'),
-                            cut=cms.string(
-                                cutstr %
-                                (leg1_idx_label, leg2_idx_label, leg1_idx_label,
-                                 leg3_idx_label)
-                            )
-                        ))
-    
-                        output.analysis.selections.append(cms.PSet(
-                            name=cms.string('Z12_Better_Z23'),
-                            cut=cms.string(
-                                cutstr %
-                                (leg1_idx_label, leg2_idx_label, leg2_idx_label,
-                                 leg3_idx_label)
-                            )
-                        ))
-    
-                        output.analysis.selections.append(cms.PSet(
-                            name=cms.string('Z12_Better_Z14'),
-                            cut=cms.string(
-                                cutstr %
-                                (leg1_idx_label, leg2_idx_label, leg1_idx_label,
-                                 leg4_idx_label)
-                            )
-                        ))
-    
-                        output.analysis.selections.append(cms.PSet(
-                            name=cms.string('Z12_Better_Z24'),
-                            cut=cms.string(
-                                cutstr %
-                                (leg1_idx_label, leg2_idx_label, leg2_idx_label,
-                                 leg4_idx_label)
-                            )
-                        ))
-                    #endif (everything past here happens for HZZ as well) 
-
-                    output.analysis.selections.append(cms.PSet(
-                        name=cms.string('Z12_Better_Z34'),
-                        cut=cms.string(
-                            cutstr %
-                            (leg1_idx_label, leg2_idx_label, leg3_idx_label,
-                             leg4_idx_label)
-                        )
-                    ))
-
-                # Require first two leptons are ordered in PT
-                output.analysis.selections.append(cms.PSet(
-                    name=cms.string('%s_UniqueByPt12' % type),
-                    cut=cms.string('orderedInPt(%s, %s)' %
-                                   (leg1_idx_label, leg2_idx_label))
-                ))
-                # Require last two leptons are ordered in PT
-                output.analysis.selections.append(cms.PSet(
-                    name=cms.string('%s_UniqueByPt34' % type),
-                    cut=cms.string('orderedInPt(%s, %s)' %
-                                   (leg3_idx_label, leg4_idx_label))
-                ))
+                )
 
     # Now apply our formatting operations
     format(output, **format_labels)

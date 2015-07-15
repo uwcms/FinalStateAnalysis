@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
   factorial[0] = 1.;
   PowerSer[0]=1.;
 
-  for (int i = 1; i<51; ++i) {
+  for (int i = 1; i<50; ++i) {
     base = base*float(i);
     factorial[i] = base;
   }

@@ -293,7 +293,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         size_t i, const std::string& label) const = 0;
 
     /// Get the specified overlaps for the ith daughter
-    const reco::GenParticleRef getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge) const;
+    const reco::GenParticleRef getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge, int preFSR=0) const;
     const reco::GenParticleRef getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const;
     const bool comesFromHiggs(size_t i, int pdgIdToMatch, int checkCharge) const;
 
@@ -337,6 +337,26 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     
     // Is the PV the closest vertex to the gen vertex for this object?
     const bool genVtxPVMatch(const size_t i) const;
+
+    // Get the invariant mass of the ith and jth jet in the event
+    // or -999 if one doesn't exist
+    const float dijetMass(const size_t i, const size_t j) const;
+
+    // Get the daughter's 4-momentum with a usercand included if it exists
+    LorentzVector daughterP4WithUserCand(const size_t i, const std::string& label) const;
+
+    // Z (or whatever) candidate 4-momentum with usercands included if they exist
+    LorentzVector diObjectP4WithUserCands(const size_t i, const size_t j, const std::string& label) const;
+
+    // Get the final state's P4 with a usercand included from all daughters that have it
+    LorentzVector p4WithUserCands(const std::string& label) const;
+
+    // Get the pt of a daughter's userCand, or 0 if it doesn't have one
+    const float ptOfDaughterUserCand(const size_t i, const std::string& label) const;
+
+    // Get the pt of a daughter's userCand if it's closer than deltaR=0.4 and 
+    // farther than deltaR=0.01
+    const float daughterUserCandIsoContribution(const size_t i, const std::string& label) const;
 
   private:
     edm::Ptr<PATFinalStateEvent> event_;

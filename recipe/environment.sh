@@ -24,8 +24,8 @@ MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 
 if [ "$MAJOR_VERSION" -eq "7" ]; then
   echo "Setting up CMSSW 7 global tags"
-  export datagt=GR_70_V2_AN1::All
-  export mcgt=MCRUN2_74_V9::All
+  export datagt=GR_P_V56
+  export mcgt=MCRUN2_74_V9
 fi
 
 echo "Data global tag: $datagt"
@@ -42,12 +42,12 @@ if [ -d "$vpython" ]; then
   # See https://github.com/pypa/virtualenv/issues/150
   source bin/activate
   cd -
+  # Make sure we prefer our virtualenv packages
+  export PYTHONPATH=$fsa/recipe/external/vpython/lib/python2.7/site-packages/:$PYTHONPATH
 fi
 
 # Put the PWD into the PYTHONPATH
 export PYTHONPATH=.:$PYTHONPATH
-# Make sure we prefer our virtualenv packages
-export PYTHONPATH=$fsa/recipe/external/vpython/lib/python2.6/site-packages/:$PYTHONPATH
 
 if [ -d "$hdf5" ]
 then

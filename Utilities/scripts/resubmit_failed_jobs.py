@@ -11,6 +11,7 @@ import re
 import sys
 import glob
 import argparse
+from socket import gethostname
 
 
 def submit_jobid(jobid, dryrun=False):
@@ -18,8 +19,12 @@ def submit_jobid(jobid, dryrun=False):
     Scan through the samples of a given job id, and check the dag status file
     for failed jobs. If any, submit the rescue dag files to farmoutAnalysisJobs
     """
+    if 'uwlogin' in gethostname():
+        scratch = '/data'
+    else:
+        scratch = '/nfs_scratch'
+
     user = os.environ['USER']
-    scratch = '/nfs_scratch'
 
     path = os.path.join(scratch, user, jobid)
 

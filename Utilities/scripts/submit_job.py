@@ -33,6 +33,7 @@ import json
 import logging
 import os
 import sys
+from socket import gethostname
 from FinalStateAnalysis.MetaData.datadefs import datadefs
 from FinalStateAnalysis.Utilities.dbsinterface import get_das_info
 
@@ -50,8 +51,16 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     returns text for the bash script
     '''
+    uname = os.environ['USER']
+
+    if 'uwlogin' in gethostname():
+        scratchDir = 'data'
+    else:
+        scratchDir = 'nfs_scratch'
+
     submit_dir = args.subdir.format(
-        user = os.environ['LOGNAME'],
+        scratch = scratchDir,
+        user = uname,
         jobid = args.jobid,
         sample = dataset_name
     )
@@ -64,13 +73,14 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
     log.info("Building submit files for sample %s", dataset_name)
 
     dag_dir = args.dagdir.format(
-        user = os.environ['LOGNAME'],
+        scratch = scratchDir,
+        user = uname,
         jobid = args.jobid,
         sample = dataset_name
     )
 
     output_dir = args.outdir.format(
-        user = os.environ['LOGNAME'],
+        user = uname,
         jobid = args.jobid,
         sample = dataset_name
     )
@@ -93,11 +103,15 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
     command = [
         'farmoutAnalysisJobs',
         '--infer-cmssw-path',
+        '--memory-requirement=6000',
+        '--vsize-limit=6000',
         '"--submit-dir=%s"' % submit_dir,
         '"--output-dag-file=%s"' % dag_dir,
         '"--output-dir=%s"' % output_dir,
         '--input-files-per-job=%i' % args.filesperjob,
     ]
+    if args.extraUserCodeFiles:
+        command.append('--extra-usercode-files="%s"'%(' '.join(args.extraUserCodeFiles)))
     if args.sharedfs:
         command.append('--shared-fs')
     command.extend(input_commands)
@@ -111,16 +125,22 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
     command.append("'inputFiles=$inputFileNames'")
     command.append("'outputFile=$outputFileName'")
 
-    if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
-        lumi_mask_path = os.path.join(
-            os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
+    # temp hardcode
+    if args.apply_cms_lumimask:
+        filename = 'DCSOnly/json_DCSONLY_Run2015B.txt'
+        lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV',filename)
         command.append('lumiMask=%s' % lumi_mask_path)
-        firstRun = sample_info.get('firstRun', -1)
-        if firstRun > 0:
-            command.append('firstRun=%i' % firstRun)
-        lastRun = sample_info.get('lastRun', -1)
-        if lastRun > 0:
-            command.append('lastRun=%i' % lastRun)
+
+    #if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
+    #    lumi_mask_path = os.path.join(
+    #        os.environ['CMSSW_BASE'], 'src', sample_info['lumi_mask'])
+    #    command.append('lumiMask=%s' % lumi_mask_path)
+    #    firstRun = sample_info.get('firstRun', -1)
+    #    if firstRun > 0:
+    #        command.append('firstRun=%i' % firstRun)
+    #    lastRun = sample_info.get('lastRun', -1)
+    #    if lastRun > 0:
+    #        command.append('lastRun=%i' % lastRun)
 
     farmout_command = '# Submit file for sample %s\n' % dataset_name
     farmout_command += 'mkdir -p %s\n' % os.path.dirname(dag_dir)
@@ -144,28 +164,54 @@ def datasets_from_das(args):
 
     '''
     script_content = ""
-    dbs_datasets = get_das_info('/*/%s/MINIAOD*' % args.campaignstring)
-    # check sample wildcards
-    for dataset in dbs_datasets:
-        dataset_name = dataset.split('/')[1] 
-        passes_filter = True
-        passes_wildcard = False
-        
-        for pattern in args.samples:
-            if args.dastuple: # check json for shorthand
-                with open(args.dastuple) as tuple_file:
-                    tuple_info = json.load(tuple_file)
-                    matching_datasets = []
-                    for shorthand, fullname in tuple_info.iteritems():
-                        if fullname in dataset_name:
-                            if fnmatch.fnmatchcase(shorthand, pattern):
-                                passes_wildcard = True
-            else: # check das directly
-                if fnmatch.fnmatchcase(dataset_name, pattern):
-                    passes_wildcard = True
-        passes_filter = passes_wildcard and passes_filter
-        if passes_filter:
-            script_content += getFarmoutCommand(args, dataset_name, dataset)
+    # this part searches for MC
+    if args.campaignstring:
+        dbs_datasets = get_das_info('/*/%s/MINIAODSIM' % args.campaignstring)
+        # check sample wildcards
+        for dataset in dbs_datasets:
+            dataset_name = dataset.split('/')[1] 
+            passes_filter = True
+            passes_wildcard = False
+            
+            for pattern in args.samples:
+                if args.dastuple: # check json for shorthand
+                    with open(args.dastuple) as tuple_file:
+                        tuple_info = json.load(tuple_file)
+                        matching_datasets = []
+                        for shorthand, fullname in tuple_info.iteritems():
+                            if fullname in dataset_name:
+                                if fnmatch.fnmatchcase(shorthand, pattern):
+                                    passes_wildcard = True
+                else: # check das directly
+                    if fnmatch.fnmatchcase(dataset_name, pattern):
+                        passes_wildcard = True
+            passes_filter = passes_wildcard and passes_filter
+            if passes_filter:
+                script_content += getFarmoutCommand(args, dataset_name, dataset)
+    # special handling for data
+    if args.isData:
+        data_patterns = [x for x in args.samples if 'data_' in x]
+        data_datasets = get_das_info('/*/*/MINIAOD')
+        for dataset in data_datasets:
+            passes_filter = True
+            passes_wildcard = False
+            name_to_use = 'data_' + '_'.join(dataset.split('/'))
+            for pattern in data_patterns:
+                if args.dastuple: # check json for shorthand, links to full dataset name
+                    with open(args.dastuple) as tuple_file:
+                        tuple_info = json.load(tuple_file)
+                        matching_datasets = []
+                        for shorthand, fullname in tuple_info.iteritems():
+                            if fullname in dataset:
+                                if fnmatch.fnmatchcase(shorthand, pattern):
+                                    passes_wildcard = True
+                                    name_to_use = shorthand
+                else: # check das directly
+                    if fnmatch.fnmatchcase(dataset, pattern):
+                        passes_wildcard = True
+            passes_filter = passes_wildcard and passes_filter
+            if passes_filter:
+                script_content += getFarmoutCommand(args, name_to_use, dataset)
     if "Submit file" not in script_content:
         log.warning("No datasets found matching %s", args.samples)
     return script_content
@@ -208,6 +254,10 @@ def get_com_line_args():
                ' For a given DAS query, it is the second part'
                ' (dataset=/*/[campaign-tag]/MINIAODSIM).'
     )
+    input_group.add_argument(
+        '--data', dest='isData', action='store_true',
+        help = 'Run over data',
+    )
 
     filter_group = parser.add_argument_group('Sample Filters')
     filter_group.add_argument('--samples', nargs='+', type=str, required=False,
@@ -217,8 +267,14 @@ def get_com_line_args():
                                               description="Farmout options")
 
     farmout_group.add_argument(
+        '--extra-usercode-files', nargs='*', type=str, dest='extraUserCodeFiles',
+        help = 'Space-separated list of extra directories that need to be included '
+               'in the user_code tarball sent with the job. Paths relative to $CMSSW_BASE.'
+    )
+
+    farmout_group.add_argument(
         '--output-dag-file', dest='dagdir',
-        default='/nfs_scratch/{user}/{jobid}/{sample}/dags/dag',
+        default='/{scratch}/{user}/{jobid}/{sample}/dags/dag',
         help = 'Where to put dag files',
     )
 
@@ -229,7 +285,7 @@ def get_com_line_args():
 
     farmout_group.add_argument(
         '--submit-dir', dest='subdir',
-        default='/nfs_scratch/{user}/{jobid}/{sample}/submit',
+        default='/{scratch}/{user}/{jobid}/{sample}/submit',
         help = 'Where to put submit files. Default: %s(default)s',
     )
 
@@ -254,7 +310,7 @@ if __name__ == "__main__":
     script_content += '# The command was: %s\n\n' % ' '.join(sys.argv)
     args = get_com_line_args()
     # first, make DAS query for dataset if not using local dataset or hdfs/dbs tuple list
-    if args.campaignstring:
+    if args.campaignstring or args.isData:
         script_content += datasets_from_das(args)
     else:
         # this is the old version that uses datadefs
