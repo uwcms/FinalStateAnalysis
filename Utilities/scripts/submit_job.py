@@ -33,6 +33,7 @@ import json
 import logging
 import os
 import sys
+from socket import gethostname
 from FinalStateAnalysis.MetaData.datadefs import datadefs
 from FinalStateAnalysis.Utilities.dbsinterface import get_das_info
 
@@ -50,8 +51,16 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     returns text for the bash script
     '''
+    uname = os.environ['USER']
+
+    if 'uwlogin' in gethostname():
+        scratchDir = 'data'
+    else:
+        scratchDir = 'nfs_scratch'
+
     submit_dir = args.subdir.format(
-        user = os.environ['LOGNAME'],
+        scratch = scratchDir,
+        user = uname,
         jobid = args.jobid,
         sample = dataset_name
     )
@@ -64,13 +73,14 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
     log.info("Building submit files for sample %s", dataset_name)
 
     dag_dir = args.dagdir.format(
-        user = os.environ['LOGNAME'],
+        scratch = scratchDir,
+        user = uname,
         jobid = args.jobid,
         sample = dataset_name
     )
 
     output_dir = args.outdir.format(
-        user = os.environ['LOGNAME'],
+        user = uname,
         jobid = args.jobid,
         sample = dataset_name
     )
@@ -100,6 +110,8 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
         '"--output-dir=%s"' % output_dir,
         '--input-files-per-job=%i' % args.filesperjob,
     ]
+    if args.extraUserCodeFiles:
+        command.append('--extra-usercode-files="%s"'%(' '.join(args.extraUserCodeFiles)))
     if args.sharedfs:
         command.append('--shared-fs')
     command.extend(input_commands)
@@ -255,8 +267,14 @@ def get_com_line_args():
                                               description="Farmout options")
 
     farmout_group.add_argument(
+        '--extra-usercode-files', nargs='*', type=str, dest='extraUserCodeFiles',
+        help = 'Space-separated list of extra directories that need to be included '
+               'in the user_code tarball sent with the job. Paths relative to $CMSSW_BASE.'
+    )
+
+    farmout_group.add_argument(
         '--output-dag-file', dest='dagdir',
-        default='/nfs_scratch/{user}/{jobid}/{sample}/dags/dag',
+        default='/{scratch}/{user}/{jobid}/{sample}/dags/dag',
         help = 'Where to put dag files',
     )
 
@@ -267,7 +285,7 @@ def get_com_line_args():
 
     farmout_group.add_argument(
         '--submit-dir', dest='subdir',
-        default='/nfs_scratch/{user}/{jobid}/{sample}/submit',
+        default='/{scratch}/{user}/{jobid}/{sample}/submit',
         help = 'Where to put submit files. Default: %s(default)s',
     )
 

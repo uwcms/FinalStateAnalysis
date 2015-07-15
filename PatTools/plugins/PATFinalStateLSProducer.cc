@@ -11,18 +11,19 @@
 #include "FWCore/Framework/interface/LuminosityBlock.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/one/EDProducer.h"
+#include "FWCore/Framework/interface/one/producerAbilityToImplementor.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLS.h"
 #include "DataFormats/PatCandidates/interface/TriggerEvent.h"
 
-class PATFinalStateLSProducer : public edm::EDProducer {
+class PATFinalStateLSProducer : public edm::one::EDProducer<edm::EndLuminosityBlockProducer> {
   public:
     PATFinalStateLSProducer(const edm::ParameterSet& pset);
     virtual ~PATFinalStateLSProducer(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
-    void endLuminosityBlock(
-        edm::LuminosityBlock& ls, const edm::EventSetup& es);
+    void endLuminosityBlockProduce(
+        edm::LuminosityBlock& ls, edm::EventSetup const& es);
   private:
     const edm::InputTag trigSrc_;
     // For MC
@@ -48,8 +49,8 @@ PATFinalStateLSProducer::produce(edm::Event& evt, const edm::EventSetup& es) {
   eventCount_ += 1;
 }
 
-void PATFinalStateLSProducer::endLuminosityBlock(
-    edm::LuminosityBlock& ls, const edm::EventSetup& es) {
+void PATFinalStateLSProducer::endLuminosityBlockProduce(
+    edm::LuminosityBlock& ls, edm::EventSetup const& es) {
 
   double intgRecLumi = -999;
   double instLumi = -999;

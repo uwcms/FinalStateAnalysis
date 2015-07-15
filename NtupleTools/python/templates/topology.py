@@ -74,9 +74,6 @@ hzzMiniAOD = PSet(
     PhiFSR = 'p4fsr("FSRCand").phi',
     MtFSR = 'p4fsr("FSRCand").Mt',
     nJets = 'evt.jets.size',
-    D_bkg_kin = 'userFloat("p0plus_VAJHU") / (userFloat("p0plus_VAJHU") + userFloat("bkg_VAMCFM"))',
-    D_bkg = 'userFloat("p0plus_VAJHU") * userFloat("p0plus_m4l") / '
-        '(userFloat("p0plus_VAJHU") * userFloat("p0plus_m4l") + userFloat("bkg_VAMCFM") * userFloat("bkg_m4l"))',
 )
 
 zbosonMiniAOD = PSet(

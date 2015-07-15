@@ -30,6 +30,7 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "DataFormats/TrackReco/interface/HitPattern.h"
+#include "CommonTools/Utils/interface/StringCutObjectSelector.h"
 
 
 class MiniAODElectronHZZIDDecider : public edm::EDProducer
@@ -54,32 +55,34 @@ private:
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
-  std::string idLabel_; // label for the decision userfloat
-  std::string isoLabel_;
+  const std::string idLabel_; // label for the decision userfloat
+  const std::string isoLabel_;
   const edm::InputTag vtxSrc_; // primary vertex (for veto PV and SIP cuts)
   edm::Handle<reco::VertexCollection> vertices;
   std::auto_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
 
-  double ptCut;
-  double etaCut;
-  double sipCut;
-  double pvDXYCut;
-  double pvDZCut;
-  double idPtThr;
-  double idEtaThrLow;
-  double idEtaThrHigh;
-  double idCutLowPtLowEta;
-  double idCutLowPtMedEta;
-  double idCutLowPtHighEta;
-  double idCutHighPtLowEta;
-  double idCutHighPtMedEta;
-  double idCutHighPtHighEta;
-  std::string bdtLabel;
-  int missingHitsCut;
-  double isoCut;
-  std::string rhoLabel;
-  std::string eaLabel; // use this effective area to correct isolation
-
+  const double ptCut;
+  const double etaCut;
+  const double sipCut;
+  const double pvDXYCut;
+  const double pvDZCut;
+  const double idPtThr;
+  const double idEtaThrLow;
+  const double idEtaThrHigh;
+  const double idCutLowPtLowEta;
+  const double idCutLowPtMedEta;
+  const double idCutLowPtHighEta;
+  const double idCutHighPtLowEta;
+  const double idCutHighPtMedEta;
+  const double idCutHighPtHighEta;
+  const std::string bdtLabel;
+  const int missingHitsCut;
+  const double isoCut;
+  const std::string rhoLabel;
+  const std::string eaLabel; // use this effective area to correct isolation
+  const bool checkMVAID;
+  
+  StringCutObjectSelector<pat::Electron> selector;
 };
 
 
@@ -104,12 +107,12 @@ MiniAODElectronHZZIDDecider::MiniAODElectronHZZIDDecider(const edm::ParameterSet
   idPtThr(iConfig.exists("idPtThr") ? iConfig.getParameter<double>("idPtThr") : 10.),
   idEtaThrLow(iConfig.exists("idEtaThrLow") ? iConfig.getParameter<double>("idEtaThrLow") : 0.8),
   idEtaThrHigh(iConfig.exists("idEtaThrHigh") ? iConfig.getParameter<double>("idEtaThrHigh") : 1.479),
-  idCutLowPtLowEta(iConfig.exists("idCutLowPtLowEta") ? iConfig.getParameter<double>("idCutLowPtLowEta") : -0.202),
-  idCutLowPtMedEta(iConfig.exists("idCutLowPtMedEta") ? iConfig.getParameter<double>("idCutLowPtMedEta") : -0.444),
-  idCutLowPtHighEta(iConfig.exists("idCutLowPtHighEta") ? iConfig.getParameter<double>("idCutLowPtHighEta") : 0.264),
-  idCutHighPtLowEta(iConfig.exists("idCutHighPtLowEta") ? iConfig.getParameter<double>("idCutHighPtLowEta") : -0.110),
-  idCutHighPtMedEta(iConfig.exists("idCutHighPtMedEta") ? iConfig.getParameter<double>("idCutHighPtMedEta") : -0.284),
-  idCutHighPtHighEta(iConfig.exists("idCutHighPtHighEta") ? iConfig.getParameter<double>("idCutHighPtHighEta") : -0.212),
+  idCutLowPtLowEta(iConfig.exists("idCutLowPtLowEta") ? iConfig.getParameter<double>("idCutLowPtLowEta") : -0.586),
+  idCutLowPtMedEta(iConfig.exists("idCutLowPtMedEta") ? iConfig.getParameter<double>("idCutLowPtMedEta") : -0.712),
+  idCutLowPtHighEta(iConfig.exists("idCutLowPtHighEta") ? iConfig.getParameter<double>("idCutLowPtHighEta") : -0.662),
+  idCutHighPtLowEta(iConfig.exists("idCutHighPtLowEta") ? iConfig.getParameter<double>("idCutHighPtLowEta") : 0.652),
+  idCutHighPtMedEta(iConfig.exists("idCutHighPtMedEta") ? iConfig.getParameter<double>("idCutHighPtMedEta") : 0.701),
+  idCutHighPtHighEta(iConfig.exists("idCutHighPtHighEta") ? iConfig.getParameter<double>("idCutHighPtHighEta") : 0.350),
   bdtLabel(iConfig.exists("bdtLabel") ? iConfig.getParameter<std::string>("bdtLabel") : "BDTIDNonTrig"),
   missingHitsCut(iConfig.exists("missingHitsCut") ? iConfig.getParameter<int>("missingHitsCut") : 1),
   isoCut(iConfig.exists("isoCut") ? iConfig.getParameter<double>("isoCut") : 0.5),
@@ -118,7 +121,11 @@ MiniAODElectronHZZIDDecider::MiniAODElectronHZZIDDecider(const edm::ParameterSet
 	   std::string("rhoCSA14")),
   eaLabel(iConfig.exists("eaLabel") ?
 	  iConfig.getParameter<std::string>("eaLabel") :
-	  std::string("EffectiveArea_HZZ4l2015"))
+	  std::string("EffectiveArea_HZZ4l2015")),
+  checkMVAID(bdtLabel != ""),
+  selector(iConfig.exists("selection") ?
+	    iConfig.getParameter<std::string>("selection") :
+	    "")
 {
   produces<std::vector<pat::Electron> >();
 }
@@ -140,7 +147,7 @@ void MiniAODElectronHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSe
 
       out->push_back(*ei); // copy electron to save correctly in event
 
-      bool idResult = (passKinematics(eptr) && passVertex(eptr) && passMissingHits(eptr));
+      bool idResult = selector(*eptr) && (passKinematics(eptr) && passVertex(eptr) && passMissingHits(eptr));
       out->back().addUserFloat(idLabel_, float(idResult)); // 1 for true, 0 for false
 
       out->back().addUserFloat(idLabel_+"Tight", float(idResult && passBDT(eptr))); // 1 for true, 0 for false
@@ -171,6 +178,9 @@ bool MiniAODElectronHZZIDDecider::passVertex(const edm::Ptr<pat::Electron>& elec
 
 bool MiniAODElectronHZZIDDecider::passBDT(const edm::Ptr<pat::Electron>& elec) const
 {
+  if(!checkMVAID)
+    return true;
+
   double pt = elec->pt();
   double eta = fabs(elec->superCluster()->eta());
 

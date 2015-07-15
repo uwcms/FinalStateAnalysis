@@ -42,12 +42,12 @@ if [ -d "$vpython" ]; then
   # See https://github.com/pypa/virtualenv/issues/150
   source bin/activate
   cd -
+  # Make sure we prefer our virtualenv packages
+  export PYTHONPATH=$fsa/recipe/external/vpython/lib/python2.7/site-packages/:$PYTHONPATH
 fi
 
 # Put the PWD into the PYTHONPATH
 export PYTHONPATH=.:$PYTHONPATH
-# Make sure we prefer our virtualenv packages
-export PYTHONPATH=$fsa/recipe/external/vpython/lib/python2.6/site-packages/:$PYTHONPATH
 
 if [ -d "$hdf5" ]
 then
