@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 #include <boost/shared_ptr.hpp>
+#include <iostream>
 
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/Event.h"

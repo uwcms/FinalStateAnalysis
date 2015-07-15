@@ -178,6 +178,14 @@ process.GlobalTag.globaltag = cms.string(GT[envvar])
 
 print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
+# Count events at the beginning of the tuplization
+process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
+process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateLSProducer_cfi")
+process.generateMetaInfo = cms.Path(process.eventCount *
+                                    process.finalStateLS
+                                    )
+process.schedule.append(process.generateMetaInfo)
+
 # Drop the input ones, just to make sure we aren't screwing anything up
 process.buildFSASeq = cms.Sequence()
 from FinalStateAnalysis.PatTools.patFinalStateProducers \
@@ -194,6 +202,7 @@ fs_daughter_inputs = {
     'fsr': 'slimmedPhotons',
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
+
 
 ### embed some things we need that arent in miniAOD (ids, etc.)
 

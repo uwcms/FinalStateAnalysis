@@ -394,7 +394,7 @@ def make_ntuple(*legs, **kwargs):
         src=cms.InputTag( analyzerSrc ),
         evtSrc=cms.InputTag("patFinalStateEventProducer"),
         # counter of events before any selections
-        skimCounter=cms.InputTag("eventCount", "", "TUPLE"),
+        skimCounter=cms.InputTag("eventCount"),
         analysis=cms.PSet(
             selections=cms.VPSet(),
             EventView=cms.bool(False),
