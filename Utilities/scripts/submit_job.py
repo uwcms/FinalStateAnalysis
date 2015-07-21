@@ -103,6 +103,8 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
     command = [
         'farmoutAnalysisJobs',
         '--infer-cmssw-path',
+        '--memory-requirement=6000',
+        '--vsize-limit=6000',
         '"--submit-dir=%s"' % submit_dir,
         '"--output-dag-file=%s"' % dag_dir,
         '"--output-dir=%s"' % output_dir,

@@ -56,19 +56,6 @@ import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")
 
-# if you want to debug in the future, uncomment this
-#process.ProfilerService = cms.Service (
-#      "ProfilerService",
-#       firstEvent = cms.untracked.int32(1),
-#       lastEvent = cms.untracked.int32(100),
-#       paths = cms.untracked.vstring('schedule') 
-#)
-#
-#process.SimpleMemoryCheck = cms.Service(
-#    "SimpleMemoryCheck",
-#    ignoreTotal = cms.untracked.int32(1)
-#)
-
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True)
 )

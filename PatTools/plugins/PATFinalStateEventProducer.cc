@@ -298,27 +298,28 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   if (!evt.isRealData())
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
-  pat::TriggerEvent trg;
-  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
-                              trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
-                              evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
-                              electronRefProd, muonRefProd, tauRefProd, jetRefProd,
-                              phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
+  PATFinalStateEvent* theEvent;
+  pat::TriggerEvent* trg = new pat::TriggerEvent();
+  theEvent = new PATFinalStateEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
+                                    *trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
+                                    evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
+                                    electronRefProd, muonRefProd, tauRefProd, jetRefProd,
+                                    phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
     if (extraWeights_.existsAs<double>(extras[i])) {
-      theEvent.addWeight(extras[i],
+      theEvent->addWeight(extras[i],
                           extraWeights_.getParameter<double>(extras[i]));
     } else {
       edm::InputTag weightSrc = extraWeights_.getParameter<edm::InputTag>(
                                                                           extras[i]);
       edm::Handle<double> weightH;
       evt.getByLabel(weightSrc, weightH);
-      theEvent.addWeight(extras[i], *weightH);
+      theEvent->addWeight(extras[i], *weightH);
     }
   }
-  output->push_back(theEvent);
+  output->push_back(*theEvent);
   evt.put(output);
 }
 
