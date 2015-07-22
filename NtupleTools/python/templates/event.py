@@ -68,12 +68,13 @@ met = PSet(
 gen = PSet(
     # Process ID used to simulate in Pythia
     processID='evt.genEventInfo.signalProcessID',
-    isZtautau='evt.findDecay(23,15)',
-    isGtautau='evt.findDecay(22,15)',
-    isWtaunu='evt.findDecay(24,15)',
-    isWmunu='evt.findDecay(24,13)',
+    #isZtautau='evt.findDecay(23,15)',
+    #isGtautau='evt.findDecay(22,15)',
+    #isWtaunu='evt.findDecay(24,15)',
+    #isWmunu='evt.findDecay(24,13)',
     NUP='evt.lesHouches.NUP',
     EmbPtWeight='evt.generatorFilter.filterEfficiency',
+    GenWeight='evt.genEventInfo.weights()[0]',
 )
 
 tauSpinner = PSet(
