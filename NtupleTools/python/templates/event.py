@@ -74,7 +74,7 @@ gen = PSet(
     #isWmunu='evt.findDecay(24,13)',
     NUP='evt.lesHouches.NUP',
     EmbPtWeight='evt.generatorFilter.filterEfficiency',
-    GenWeight='evt.genEventInfo.weights()[0]',
+    GenWeight='? evt.genEventInfo.weights().size>0 ? evt.genEventInfo.weights()[0] : 0',
 )
 
 tauSpinner = PSet(
