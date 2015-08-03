@@ -210,8 +210,8 @@ fs_daughter_inputs = {
     'taus': 'slimmedTaus',
     'photons': 'slimmedPhotons',
     'jets': 'slimmedJets',
-    'pfmet': 'slimmedMETs',
-    'mvamet': 'fixme',              # produced later, there is also puppi, but it is crap
+    'pfmet': 'slimmedMETs',         # puppi also available, not implemented yet though
+    'mvamet': 'fixme',              # produced later
     'fsr': 'slimmedPhotons',
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
