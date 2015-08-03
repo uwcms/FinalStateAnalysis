@@ -66,30 +66,6 @@ finalstate = PSet(
     MassErrord4 = 'userFloat("cand_dM_3")'
 )
 
-# FSR, jets, and KD/MELA stuff for ZZ
-hzzMiniAOD = PSet(
-    MassFSR = 'p4fsr("FSRCand").M',
-    PtFSR = 'p4fsr("FSRCand").pt',
-    EtaFSR = 'p4fsr("FSRCand").eta',
-    PhiFSR = 'p4fsr("FSRCand").phi',
-    MtFSR = 'p4fsr("FSRCand").Mt',
-    nJets = 'evt.jets.size',
-)
-
-zbosonMiniAOD = PSet(
-    object1_object2_MassFSR  = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.mass',
-    object1_object2_PtFSR    = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.pt',
-    object1_object2_EtaFSR   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.eta',
-    object1_object2_PhiFSR   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.phi',
-    object1_object2_MtFSR   = 'subcandfsr({object1_idx}, {object2_idx}, "FSRCand").get.mt',
-    object1_object2_FSRPt    = '? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? '
-        'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").pt() : -999.',
-    object1_object2_FSREta   = '? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? ' 
-        'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").eta() : -999.',
-    object1_object2_FSRPhi   = '? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? '
-        'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").phi() : -999.',
-)    
-
 
 vbf = PSet(
   # If nJets < 2, none of these other branches are valid

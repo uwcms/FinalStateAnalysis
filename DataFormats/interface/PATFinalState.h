@@ -194,9 +194,6 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // and the same thing for a general Lorentz vector. Doesn't check sign.
     double zCompatibility(const PATFinalState::LorentzVector& p4) const;
 
-    // Try this method to see if I can get the parser to work when I reorder my candidates
-    double zCompatibilityFSR(int i, int j, std::string fsrLabel) const;
-
     /// Get the VBF selection variables.  The jet cuts are applied to the veto
     /// jets using dR of 0.3 away from the members.
     VBFVariables vbfVariables(const std::string& jetCuts) const;
@@ -259,18 +256,6 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     PATFinalStateProxy subcand(int i, int j,
         int x=-1, int y=-1, int z=-1) const;
 
-    /// Build a subcandidate w/ fsr
-    PATFinalStateProxy subcandfsr( int i, int j, const std::string& fsrLabel="" ) const;
-
-    /// quad candidate p4 w/ fsr
-    LorentzVector p4fsr(const std::string& fsrLabel="") const;
-
-    /// Returns the index of this lepton's Z partner in 4l ordering
-    const inline size_t get4LPartner(size_t i) const
-    {
-      return i + (i%2 ? -1 : 1);
-    }
-
     /// Build a subcand using a tag string
     PATFinalStateProxy subcand(const std::string& tags) const;
 
@@ -278,9 +263,6 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     PATFinalStateProxy subcand(
         const std::string& tags, const std::string& extras,
         const std::string& filter="") const;
-
-    // Get the FSR candidate that moves the invariant mass of the lepton pair closest to nominal Z mass
-    const reco::CandidatePtr bestFSROfZ(int i, int j, const std::string& fsrLabel) const;
 
     // Abstract interface to derived classes.  Can return null stuff.
     virtual const reco::Candidate* daughterUnsafe(size_t i) const = 0;
