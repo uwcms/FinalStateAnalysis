@@ -106,6 +106,8 @@ id = PSet(
     objectNeutralIsoPtSum = '{object}.tauID("neutralIsoPtSum")',
     objectChargedIsoPtSum = '{object}.tauID("chargedIsoPtSum")',
     objectPuCorrPtSum     = '{object}.tauID("puCorrPtSum")',
+    # closest Z mass
+    objectNearestZMass = 'closestZTau({object_idx},"")',
 )
 
 

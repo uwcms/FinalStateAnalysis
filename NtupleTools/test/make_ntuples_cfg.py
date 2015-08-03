@@ -210,8 +210,8 @@ fs_daughter_inputs = {
     'taus': 'slimmedTaus',
     'photons': 'slimmedPhotons',
     'jets': 'slimmedJets',
-    'pfmet': 'slimmedMETs',         # only one MET in miniAOD
-    'mvamet': 'fixme',              # produced later
+    'pfmet': 'slimmedMETs',
+    'mvamet': 'fixme',              # produced later, there is also puppi, but it is crap
     'fsr': 'slimmedPhotons',
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
