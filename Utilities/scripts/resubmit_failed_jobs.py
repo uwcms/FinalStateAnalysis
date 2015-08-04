@@ -94,14 +94,12 @@ def submit_jobid(jobid, dryrun=False, verbose=False):
 
         # if there are any errors, submit the rescue dag files
         if any(errors):
-            if dryrun:
-                print "    Resubmit: %s" % s
-                if verbose: print statusString
-            else:
-                print "    Resubmit: %s" % s
-                if verbose: print statusString
-                rescue_dags = glob.glob('%s/dags/*dag.rescue[0-9][0-9][0-9]' % s)
-                cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % max(rescue_dags)
+            print "    Resubmit: %s" % s
+            if verbose: print statusString
+            rescue_dag = max(glob.glob('%s/dags/*dag.rescue[0-9][0-9][0-9]' % s))
+            if verbose: print '        Rescue file: {0}'.format(rescue_dag)
+            if not dryrun:
+                cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % rescue_dag
                 os.system(cmd)
 
     if verbose:
