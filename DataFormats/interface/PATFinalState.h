@@ -194,6 +194,12 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // and the same thing for a general Lorentz vector. Doesn't check sign.
     double zCompatibility(const PATFinalState::LorentzVector& p4) const;
 
+    // closest Z value
+    double closestZ(int i, const std::string& filter, std::vector<const reco::Candidate*> legs) const;
+    double closestZElectron(int i, const std::string& filter) const;
+    double closestZMuon(int i, const std::string& filter) const;
+    double closestZTau(int i, const std::string& filter) const;
+
     /// Get the VBF selection variables.  The jet cuts are applied to the veto
     /// jets using dR of 0.3 away from the members.
     VBFVariables vbfVariables(const std::string& jetCuts) const;

@@ -688,6 +688,44 @@ double PATFinalState::zCompatibility(const PATFinalState::LorentzVector& p4) con
   return std::abs(p4.mass() - 91.1876);
 }
 
+double PATFinalState::closestZ(int i, const std::string& filter, std::vector<const reco::Candidate*> legs) const
+{
+  std::vector<const reco::Candidate*> zFirstLeg;
+  zFirstLeg.push_back(daughter(i));
+  int charge = daughter(i)->charge();
+  std::string newfilter = filter;
+  if (charge>0) {
+    newfilter += "charge()<0";
+  }
+  else {
+    newfilter += "charge()>0";
+  }
+  std::vector<const reco::Candidate*> zSecondLegs = getVetoObjects(
+      zFirstLeg, legs, 0.0, newfilter);
+  double result = 1000;
+  for (size_t j=0; j<zSecondLegs.size(); j++) {
+    LorentzVector totalP4 = daughter(i)->p4() + zSecondLegs.at(j)->p4();
+    double temp = std::abs(totalP4.mass() - 91.1876);
+    if (temp < result) result = temp;
+  }
+  return result;
+}
+
+double PATFinalState::closestZElectron(int i, const std::string& filter="") const
+{
+  return closestZ(i,filter,ptrizeCollection(evt()->electrons()));
+}
+
+double PATFinalState::closestZMuon(int i, const std::string& filter="") const
+{
+  return closestZ(i,filter,ptrizeCollection(evt()->muons()));
+}
+
+double PATFinalState::closestZTau(int i, const std::string& filter="") const
+{
+  return closestZ(i,filter,ptrizeCollection(evt()->taus()));
+}
+
 VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts) const {
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
   std::vector<const reco::Candidate*> jets = this->vetoJets(0.3, jetCuts);
