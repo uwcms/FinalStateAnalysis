@@ -39,7 +39,11 @@ zero or one) are::
     hzz=0                   - run the H->ZZ->4l group's FSR algorithm, don't clean
                               alternate Z pairings out of ntuples, several other small changes
     nExtraJets=0            - (for non-jet final states) add basic info about this many jets in addition to final state branches
-    paramFile=''            - custom parameter file for ntuple production
+    paramFile=''            - analysis-specific parameter file defining cuts and extra 
+                              ntuple variables. Note that when submitting to CONDOR from
+                              UWLogin, the path should be specified starting with
+                              'CMSSW_7_X_Y_pZ/src/...'. If the file cannot be found, 
+                              a default is used and the job will not crash.
     keepPat=0               - Instead of creating flat ntuples, write out the high level
                               physics objects including the PATFinalState objects. If >= 2,
                               also keep the packedGenParticles. If >= 3, also keep the 
