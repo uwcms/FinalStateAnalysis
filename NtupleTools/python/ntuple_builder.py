@@ -64,7 +64,7 @@ _muon_template = PSet(
     templates.muons.id,
     templates.muons.energyCorrections,
     templates.muons.tracking,
-    templates.muons.trigger,
+    #templates.muons.trigger_25ns,
     templates.topology.mtToMET,
 )
 
@@ -83,7 +83,7 @@ _electron_template = PSet(
     templates.electrons.energyCorrections,
     templates.electrons.tracking,
     templates.electrons.supercluster,
-    templates.electrons.trigger,
+    #templates.electrons.trigger_25ns,
     templates.topology.mtToMET,
 )
 
@@ -219,13 +219,18 @@ def make_ntuple(*legs, **kwargs):
             )
 
     # Triggers we care about depend on run configuration
+    leg_triggers = { 'e':PSet(), 'm':PSet(), 't':PSet(), 'j':PSet(), 'g':PSet() }
     if use25ns:
+        leg_triggers['e'] = templates.electrons.trigger_25ns
+        leg_triggers['m'] = templates.muons.trigger_25ns
         diLep_triggers = templates.trigger.doubleLepton_25ns
         if isMC:
             lep_triggers = templates.trigger.singleLepton_25ns_MC
         else:
             lep_triggers = templates.trigger.singleLepton_25ns
     else:    
+        leg_triggers['e'] = templates.electrons.trigger_50ns
+        leg_triggers['m'] = templates.muons.trigger_50ns
         diLep_triggers = templates.trigger.doubleLepton_50ns
         if isMC:
             lep_triggers = templates.trigger.singleLepton_50ns_MC
@@ -268,6 +273,7 @@ def make_ntuple(*legs, **kwargs):
     for v in ['e','m','t','g','j']:
         leg_branch_templates[v] = PSet(
             _leg_templates[v],
+            leg_triggers[v],
             custVariables[v],
             candidateVariables,
         )
