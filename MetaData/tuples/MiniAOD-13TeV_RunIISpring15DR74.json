@@ -59,6 +59,7 @@
   "TT" : "TT_TuneCUETP8M1_13TeV-powheg-pythia8",
   "TTWJetsToLNu" : "TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8",
   "TTZToQQ" : "TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8",
+  "TTZToLLNuNu" : "TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8",
   "TTHToGG" : "ttHToGG_M125_13TeV_powheg_pythia8",
   "TTHToNonbb" : "ttHToNonbb_M125_13TeV_powheg_pythia8",
   "TTHTobb" : "ttHTobb_M125_13TeV_powheg_pythia8",

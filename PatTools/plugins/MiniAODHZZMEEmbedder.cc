@@ -32,8 +32,12 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "DataFormats/Math/interface/deltaR.h"
+#include "DataFormats/PatCandidates/interface/Electron.h"
+#include "DataFormats/PatCandidates/interface/Muon.h"
 
 // FSA includes
+#include "FinalStateAnalysis/DataFormats/interface/PATQuadLeptonFinalStates.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATQuadLeptonFinalStatesFwd.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateFwd.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
@@ -44,6 +48,7 @@
 #include "ZZMatrixElement/MEMCalculators/interface/MEMCalculators.h"
 
 
+template<class... Ls>
 class MiniAODHZZMEEmbedder : public edm::EDProducer {
  public:
   MiniAODHZZMEEmbedder(const edm::ParameterSet& pset);
@@ -55,12 +60,12 @@ class MiniAODHZZMEEmbedder : public edm::EDProducer {
   virtual void endJob();
 
   // Calculate the matrix element for fs under process hypothesis proc using calculator calc
-  const float getZZME(const PATFinalState& fs, MEMNames::Processes proc, 
+  const float getZZME(const PATQuadFinalStateT<Ls...>& fs, MEMNames::Processes proc, 
 		      MEMNames::MEMCalcs calc, const std::string& fsrLabel,
                       bool useJets);
   // Calculate the 4l SM Higgs and background probability for fs under systematics assumption syst
   // Outputs by setting sigProb and bkgProb rather than returning
-  void getPm4l(const PATFinalState& fs, MEMNames::SuperKDsyst syst, float& sigProb, 
+  void getPm4l(const PATQuadFinalStateT<Ls...>& fs, MEMNames::SuperKDsyst syst, float& sigProb, 
 	       float& bkgProb, const std::string& fsrLabel);
   // Tag of final states to calculate MEs for
   edm::InputTag src_;
@@ -83,7 +88,8 @@ class MiniAODHZZMEEmbedder : public edm::EDProducer {
 };
 
 
-MiniAODHZZMEEmbedder::MiniAODHZZMEEmbedder(const edm::ParameterSet& iConfig) :
+template<class... Ls>
+MiniAODHZZMEEmbedder<Ls...>::MiniAODHZZMEEmbedder(const edm::ParameterSet& iConfig) :
   src_(iConfig.exists("src") ?
        iConfig.getParameter<edm::InputTag>("src") :
        edm::InputTag("finalStateeeee")),
@@ -128,7 +134,8 @@ MiniAODHZZMEEmbedder::MiniAODHZZMEEmbedder(const edm::ParameterSet& iConfig) :
 }
 
 
-void MiniAODHZZMEEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) 
+template<class... Ls>
+void MiniAODHZZMEEmbedder<Ls...>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup) 
 {
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
@@ -137,7 +144,9 @@ void MiniAODHZZMEEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iS
 
   for (size_t iFS = 0; iFS < finalStatesIn->size(); ++iFS) 
     {
-      PATFinalState* embedInto = finalStatesIn->ptrAt(iFS)->clone();
+      PATQuadFinalStateT<Ls...> * embedInto = 
+	dynamic_cast<PATQuadFinalStateT<Ls...>* >(finalStatesIn->ptrAt(iFS)->clone());
+
       for(size_t iProc = 0; iProc < processes_.size(); ++iProc)
 	{
           const std::string processName = processes_.at(iProc);
@@ -171,9 +180,11 @@ void MiniAODHZZMEEmbedder::produce(edm::Event& iEvent, const edm::EventSetup& iS
 }
 
 
-const float MiniAODHZZMEEmbedder::getZZME(const PATFinalState& fs, MEMNames::Processes proc, 
-					  MEMNames::MEMCalcs calc, const std::string& fsrLabel,
-                                          bool includeJets)
+template<class... Ls>
+const float MiniAODHZZMEEmbedder<Ls...>::getZZME(const PATQuadFinalStateT<Ls...> & fs, 
+						 MEMNames::Processes proc, 
+						 MEMNames::MEMCalcs calc, const std::string& fsrLabel,
+						 bool includeJets)
 {
   std::vector<TLorentzVector> partP4 = std::vector<TLorentzVector>();
   std::vector<int> partID = std::vector<int>();
@@ -213,8 +224,10 @@ const float MiniAODHZZMEEmbedder::getZZME(const PATFinalState& fs, MEMNames::Pro
 }
 
 // Assigns the answers to sigProb and bkgProb rather than returning them
-void MiniAODHZZMEEmbedder::getPm4l(const PATFinalState& fs, MEMNames::SuperKDsyst syst, float& sigProb, 
-				   float& bkgProb, const std::string& fsrLabel)
+template<class... Ls>
+void MiniAODHZZMEEmbedder<Ls...>::getPm4l(const PATQuadFinalStateT<Ls...> & fs, 
+					  MEMNames::SuperKDsyst syst, float& sigProb, 
+					  float& bkgProb, const std::string& fsrLabel)
 {
   std::vector<TLorentzVector> partP4 = std::vector<TLorentzVector>();
   std::vector<int> partID = std::vector<int>();
@@ -237,13 +250,18 @@ void MiniAODHZZMEEmbedder::getPm4l(const PATFinalState& fs, MEMNames::SuperKDsys
   bkgProb = float(pBkg);
 }
 
-
-void MiniAODHZZMEEmbedder::beginJob(){}
-void MiniAODHZZMEEmbedder::endJob(){}
-
+template<class... Ls>
+void MiniAODHZZMEEmbedder<Ls...>::beginJob(){}
+template<class... Ls>
+void MiniAODHZZMEEmbedder<Ls...>::endJob(){}
 
 #include "FWCore/Framework/interface/MakerMacros.h"
-DEFINE_FWK_MODULE(MiniAODHZZMEEmbedder);
+typedef MiniAODHZZMEEmbedder<pat::Electron, pat::Electron, pat::Electron, pat::Electron> MiniAODHZZMEEmbedderElecElecElecElec;
+typedef MiniAODHZZMEEmbedder<pat::Electron, pat::Electron, pat::Muon, pat::Muon> MiniAODHZZMEEmbedderElecElecMuMu;
+typedef MiniAODHZZMEEmbedder<pat::Muon, pat::Muon, pat::Muon, pat::Muon> MiniAODHZZMEEmbedderMuMuMuMu;
+DEFINE_FWK_MODULE(MiniAODHZZMEEmbedderElecElecElecElec);
+DEFINE_FWK_MODULE(MiniAODHZZMEEmbedderElecElecMuMu);
+DEFINE_FWK_MODULE(MiniAODHZZMEEmbedderMuMuMuMu);
 
 
 
