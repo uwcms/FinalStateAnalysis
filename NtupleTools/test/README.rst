@@ -42,8 +42,12 @@ zero or one) are::
     paramFile=''            - analysis-specific parameter file defining cuts and extra 
                               ntuple variables. Note that when submitting to CONDOR from
                               UWLogin, the path should be specified starting with
-                              'CMSSW_7_X_Y_pZ/src/...'. If the file cannot be found, 
-                              a default is used and the job will not crash.
+                              'CMSSW_7_X_Y_pZ/src/...'. If you have renamed your CMSSW_BASE, 
+                              you will need to find the default name in 'CMSSW_X_X_X formate. 
+                              If the file cannot be found, a default is used and the job will not crash.
+                              Additionally, on UWLogin, you will need to include 
+                              "--extra-usercode-files 'src/FinalStateAnalysis/NtupleTools/python/parameters'" 
+                              in your submit script.
     keepPat=0               - Instead of creating flat ntuples, write out the high level
                               physics objects including the PATFinalState objects. If >= 2,
                               also keep the packedGenParticles. If >= 3, also keep the 
