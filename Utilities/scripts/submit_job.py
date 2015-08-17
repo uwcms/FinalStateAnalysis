@@ -108,8 +108,14 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
         '"--output-dir=%s"' % output_dir,
         '--input-files-per-job=%i' % args.filesperjob,
     ]
+    paramLoc = 'src/FinalStateAnalysis/NtupleTools/python/parameters'
+    if 'uwlogin' in gethostname() and not args.extraUserCodeFiles:
+        command.append('--extra-usercode-files="%s"'%paramLoc)
     if args.extraUserCodeFiles:
-        command.append('--extra-usercode-files="%s"'%(' '.join(args.extraUserCodeFiles)))
+        if paramLoc in args.extraUserCodeFiles:
+            command.append('--extra-usercode-files="%s"'%(' '.join(args.extraUserCodeFiles)))
+        else: 
+            command.append('--extra-usercode-files="%s %s"'%(' '.join(args.extraUserCodeFiles), paramLoc))
     if args.sharedfs:
         command.append('--shared-fs')
     command.extend(input_commands)
