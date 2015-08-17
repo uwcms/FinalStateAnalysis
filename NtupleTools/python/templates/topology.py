@@ -97,4 +97,5 @@ extraJet = PSet(
     objectEta = '? evt.jets.size()>{object_idx} ? {object}.eta() : -999',
     objectPhi = '? evt.jets.size()>{object_idx} ? {object}.phi() : -999',
     objectPUMVA = '? evt.jets.size()>{object_idx} ? {object}.userFloat("pileupJetId:fullDiscriminant") : -999',
+    objectBJetCISV = '? evt.jets.size()>{object_idx} ? {object}.bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') : -999',
 )
