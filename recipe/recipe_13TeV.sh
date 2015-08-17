@@ -13,6 +13,9 @@ MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 
 pushd $CMSSW_BASE/src
 
+# 74X met corrections (no HF)
+git cms-merge-topic -u cms-met:METCorUnc74X
+
 # HZZ MELA, MEKD etc.
 if [ "$HZZ" = "1" ]; then
     echo "Checking out ZZ MELA and Higgs combine"

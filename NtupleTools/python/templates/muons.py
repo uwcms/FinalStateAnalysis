@@ -67,6 +67,8 @@ id = PSet(
     objectGenVtxPVMatch  = 'genVtxPVMatch({object_idx})', # is PV closest vtx to gen vtx?
     # closest Z mass
     objectNearestZMass = 'closestZMuon({object_idx},"")',
+    # lowest invariant mass
+    objectLowestMll = 'smallestMmm({object_idx},"")',
 )
 
 energyCorrections = PSet(
@@ -94,30 +96,30 @@ tracking = PSet(
 
 # Trigger matching
 trigger_50ns = PSet(
-    objectMatchesSingleMu = r'matchToHLTPath({object_idx},"HLT_Mu40_v\\d+")',
-    objectMatchesSingleMu_leg1 = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_v\\d+")',
-    objectMatchesSingleMu_leg2 = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_v\\d+")',
-    objectMatchesSingleMu_leg1_noiso = r'matchToHLTPath({object_idx},"HLT_Mu17_v\\d+")',
-    objectMatchesSingleMu_leg2_noiso = r'matchToHLTPath({object_idx},"HLT_Mu8_v\\d+")',
-    objectMatchesDoubleMu = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\d+|HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+")',
-    objectMatchesSingleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+")',
-    objectMatchesSingleMuSingleE = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+")',
-    objectMatchesTripleMu = r'matchToHLTPath({object_idx},"HLT_TripleMu_12_10_5_v\\d+")',
-    objectMatchesDoubleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+")',
-    objectMatchesDoubleMuSingleE = r'matchToHLTPath({object_idx},"HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+")',
+    objectMatchesSingleMu = r'matchToHLTPath({object_idx},"HLT_Mu40_v\\d+",0.5)',
+    objectMatchesSingleMu_leg1 = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_v\\d+",0.5)',
+    objectMatchesSingleMu_leg2 = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_v\\d+",0.5)',
+    objectMatchesSingleMu_leg1_noiso = r'matchToHLTPath({object_idx},"HLT_Mu17_v\\d+",0.5)',
+    objectMatchesSingleMu_leg2_noiso = r'matchToHLTPath({object_idx},"HLT_Mu8_v\\d+",0.5)',
+    objectMatchesDoubleMu = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\d+|HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+",0.5)',
+    objectMatchesSingleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesSingleMuSingleE = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesTripleMu = r'matchToHLTPath({object_idx},"HLT_TripleMu_12_10_5_v\\d+",0.5)',
+    objectMatchesDoubleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+",0.5)',
+    objectMatchesDoubleMuSingleE = r'matchToHLTPath({object_idx},"HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+",0.5)',
 )
 
 trigger_25ns = PSet(
-    objectMatchesSingleMu = r'matchToHLTPath({object_idx},"HLT_Mu50_v\\d+")',
-    objectMatchesSingleMu_leg1 = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_v\\d+")',
-    objectMatchesSingleMu_leg2 = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_v\\d+")',
-    objectMatchesSingleMu_leg1_noiso = r'matchToHLTPath({object_idx},"HLT_Mu17_v\\d+")',
-    objectMatchesSingleMu_leg2_noiso = r'matchToHLTPath({object_idx},"HLT_Mu8_v\\d+")',
-    objectMatchesDoubleMu = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\d+|HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+")',
-    objectMatchesSingleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+")',
-    objectMatchesSingleMuSingleE = r'matchToHLTPath({object_idx},"HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+")',
-    objectMatchesTripleMu = r'matchToHLTPath({object_idx},"HLT_TripleMu_12_10_5_v\\d+")',
-    objectMatchesDoubleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+")',
-    objectMatchesDoubleMuSingleE = r'matchToHLTPath({object_idx},"HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+")',
+    objectMatchesSingleMu = r'matchToHLTPath({object_idx},"HLT_Mu50_v\\d+",0.5)',
+    objectMatchesSingleMu_leg1 = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_v\\d+",0.5)',
+    objectMatchesSingleMu_leg2 = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_v\\d+",0.5)',
+    objectMatchesSingleMu_leg1_noiso = r'matchToHLTPath({object_idx},"HLT_Mu17_v\\d+",0.5)',
+    objectMatchesSingleMu_leg2_noiso = r'matchToHLTPath({object_idx},"HLT_Mu8_v\\d+",0.5)',
+    objectMatchesDoubleMu = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\d+|HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+",0.5)',
+    objectMatchesSingleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesSingleMuSingleE = r'matchToHLTPath({object_idx},"HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesTripleMu = r'matchToHLTPath({object_idx},"HLT_TripleMu_12_10_5_v\\d+",0.5)',
+    objectMatchesDoubleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+",0.5)',
+    objectMatchesDoubleMuSingleE = r'matchToHLTPath({object_idx},"HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+",0.5)',
 )
 
