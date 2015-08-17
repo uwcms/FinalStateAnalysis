@@ -28,11 +28,18 @@ id = PSet(
     objectMVANonTrigWP90 = '{object}.userFloat("MVANonTrigWP90")',
     
     # Use cms.string so we get the parentheses formatting bonus
+#    objectRelPFIsoDB = cms.string(
+#        "({object}.userIso(0)"
+#        "+max({object}.userIso(1)"
+#        "+{object}.neutralHadronIso()"
+#        "-0.5*{object}.userIso(2),0.0))"
+#        "/{object}.pt()"
+#    ),
     objectRelPFIsoDB = cms.string(
-        "({object}.userIso(0)"
-        "+max({object}.userIso(1)"
-        "+{object}.neutralHadronIso()"
-        "-0.5*{object}.userIso(2),0.0))"
+        "({object}.userIsolation('PfChargedHadronIso')"
+        "+max({object}.userIsolation('PfNeutralHadronIso')"
+        "+{object}.userIsolation('PfGammaIso')"
+        "-0.5*{object}.userIsolation('PfPUChargedHadronIso'),0.0))"
         "/{object}.pt()"
     ),
     objectRelPFIsoRho = cms.string(
@@ -46,6 +53,7 @@ id = PSet(
     objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
+    objectPFPUChargedIso = cms.string('{object}.userIsolation("PfPUChargedHadronIso")'),
     
     objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
     objectEffectiveAreaPHYS14 = cms.string('{object}.userFloat("EffectiveArea_HZZ4l2015")'),
