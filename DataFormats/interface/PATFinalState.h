@@ -200,6 +200,12 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     double closestZMuon(int i, const std::string& filter) const;
     double closestZTau(int i, const std::string& filter) const;
 
+    // smallest invariant mass
+    double smallestMll(int i, const std::string& filter, std::vector<const reco::Candidate*> legs) const;
+    double smallestMee(int i, const std::string& filter) const;
+    double smallestMmm(int i, const std::string& filter) const;
+    double smallestMtt(int i, const std::string& filter) const;
+
     /// Get the VBF selection variables.  The jet cuts are applied to the veto
     /// jets using dR of 0.3 away from the members.
     VBFVariables vbfVariables(const std::string& jetCuts) const;

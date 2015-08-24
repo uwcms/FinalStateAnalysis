@@ -108,6 +108,8 @@ id = PSet(
     objectPuCorrPtSum     = '{object}.tauID("puCorrPtSum")',
     # closest Z mass
     objectNearestZMass = 'closestZTau({object_idx},"")',
+    # lowest invariant mass
+    objectLowestMll = 'smallestMtt({object_idx},"")',
 )
 
 

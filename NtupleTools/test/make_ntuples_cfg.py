@@ -22,26 +22,30 @@ zgxtra = mgg, emg, egg,
 
 The available options (which are set to zero or one) are::
 
-skipEvents=0 - events to skip (for debugging)
-maxEvents=-1 - events to run on
+skipEvents=0   - events to skip (for debugging)
+maxEvents=-1   - events to run on
 rerunMCMatch=0 - rerun MC matching
-eventView=0 - make a row in the ntuple correspond to an event
-instead of a final state in an event.
-passThru=0 - turn off any preselection/skim
-dump=0     - if one, dump process python to stdout
-verbose=0 - print out timing information
-noPhotons=0 - don't build things which depend on photons.
-rerunMVAMET=0 - rerun the MVAMET algorithm
-svFit=1 - run the SVfit on appropriate pairs
+eventView=0    - make a row in the ntuple correspond to an event
+                 instead of a final state in an event.
+passThru=0     - turn off any preselection/skim
+dump=0         - if one, dump process python to stdout
+verbose=0      - print out timing information
+noPhotons=0    - don't build things which depend on photons.
+rerunMVAMET=0  - rerun the MVAMET algorithm
+svFit=1        - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
-rerunJets=0   - rerun with new jet energy corrections
-use25ns=1 - run on 25 ns miniAOD (0 -> 50ns)
-runDQM=0 - run over single object final states to test all object properties (wont check diobject properties)
-hzz=0 - Include FSR contribution a la HZZ4l group, include all ZZ candidates (including alternative lepton pairings).
-nExtraJets=0 - Include basic info about this many jets (ordered by pt). Ignored if final state involves jets.
-paramFile='' - custom parameter file for ntuple production
-keepPat=0 - Instead of making flat ntuples, write high level 
-            physics objects including the PATFinalState objects
+rerunJets=0    - rerun with new jet energy corrections
+runMetFilter=0 - apply met filters
+use25ns=1      - run on 25 ns miniAOD (0 -> 50ns)
+runDQM=0       - run over single object final states to test all 
+                 object properties (wont check diobject properties)
+hzz=0          - Include FSR contribution a la HZZ4l group, 
+                 include all ZZ candidates (including alternative lepton pairings).
+nExtraJets=0   - Include basic info about this many jets (ordered by pt). 
+                 Ignored if final state involves jets.
+paramFile=''   - custom parameter file for ntuple production
+keepPat=0      - Instead of making flat ntuples, write high level 
+                 physics objects including the PATFinalState objects
 
 '''
 
@@ -93,6 +97,7 @@ options = TauVarParsing.TauVarParsing(
     dblhMode=False, # For double-charged Higgs analysis
     runTauSpinner=0,
     GlobalTag="",
+    runMetFilter=0,
     use25ns=1,
     runDQM=0,
     hzz=0,
@@ -216,6 +221,9 @@ fs_daughter_inputs = {
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
 
+# add met filters
+if options.runMetFilter:
+    pass
 
 ### embed some things we need that arent in miniAOD (ids, etc.)
 
