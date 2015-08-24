@@ -83,6 +83,8 @@ def submit_jobid(sample, dryrun=False, verboseInfo={}):
         if not dryrun:
             cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % rescue_dag
             os.system(cmd)
+    else:
+        print "    %s successful, nothing to do"%sample
 
 
 def parse_dag_state(filename):
