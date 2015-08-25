@@ -178,18 +178,6 @@ doubleLepton_50ns = PSet(
         name='singleMuSingleE',
         paths=r'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
-    _trig_template.replace(
-        name='singleMu23SingleE12',
-        paths=r'HLT_Mu23_TrkIsoVVL_Ele12_Gsf_CaloId_TrackId_Iso_MediumWP_v\\d+'
-        ),
-    _trig_template.replace(
-        name='singleMu8SingleE23',
-        paths=r'HLT_Mu8_TrkIsoVVL_Ele23_Gsf_CaloId_TrackId_Iso_MediumWP_v\\d+'
-        ),
-    _trig_template.replace(
-        name='doubleTau',
-        paths=r'HLT_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v\\d+'
-        ),
     )
 
 doubleLepton_25ns = PSet(
@@ -208,14 +196,6 @@ doubleLepton_25ns = PSet(
     _trig_template.replace(
         name='singleMuSingleE',
         paths=r'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
-        ),
-    _trig_template.replace(
-        name='singleMu23SingleE12',
-        paths=r'HLT_Mu23_TrkIsoVVL_Ele12_Gsf_CaloId_TrackId_Iso_MediumWP_v\\d+'
-        ),
-    _trig_template.replace(
-        name='singleMu8SingleE23',
-        paths=r'HLT_Mu8_TrkIsoVVL_Ele23_Gsf_CaloId_TrackId_Iso_MediumWP_v\\d+'
         ),
     _trig_template.replace(
         name='doubleTau',
