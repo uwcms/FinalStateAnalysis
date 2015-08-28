@@ -72,7 +72,6 @@ parameters = {
     ),
 
     'tauVariables' : PSet(
-        objectZTT_PVDZ = '(evt.pv.z - {object}.vertex().z())',
         objectDoubleTau40Filter = 'matchToHLTFilter({object_idx}, "hltDoublePFTau40TrackPt1MediumIsolationDz02Reg", 0.5)',
         objectMatchesDoubleTau40Path      = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v\\d+", 0.5)',
     ),
