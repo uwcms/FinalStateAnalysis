@@ -596,7 +596,7 @@ if options.hzz:
         process.embedHZZSeq += embedCategoryProducer
         
         embedMEProducer = cms.EDProducer(
-            "MiniAODHZZMEEmbedder",
+            "MiniAODHZZMEEmbedder%s"%quadFS,
             src = cms.InputTag(intermediateName),
             processes = cms.vstring("p0plus_VAJHU",
                                     "p0minus_VAJHU",
