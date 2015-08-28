@@ -102,6 +102,7 @@ options = TauVarParsing.TauVarParsing(
     runDQM=0,
     hzz=0,
     paramFile='',
+    skipGhost=0,
 )
 
 options.register(
@@ -233,16 +234,17 @@ electronMVATrigIDLabel = "BDTIDTrig"
 from FinalStateAnalysis.NtupleTools.embedElectronIDs import embedElectronIDs
 fs_daughter_inputs['electrons'] = embedElectronIDs(process,options.use25ns,fs_daughter_inputs['electrons'])
 
-# Clean out muon "ghosts" caused by track ambiguities
-process.ghostCleanedMuons = cms.EDProducer("PATMuonCleanerBySegments",
-                                           src = cms.InputTag(fs_daughter_inputs['muons']),
-                                           preselection = cms.string("track.isNonnull"),
-                                           passthrough = cms.string("isGlobalMuon && numberOfMatches >= 2"),
-                                           fractionOfSharedSegments = cms.double(0.499))
-fs_daughter_inputs['muons'] = "ghostCleanedMuons"
-
-process.miniCleanedMuons = cms.Path(process.ghostCleanedMuons)
-process.schedule.append(process.miniCleanedMuons)
+if not options.skipGhost:
+    # Clean out muon "ghosts" caused by track ambiguities
+    process.ghostCleanedMuons = cms.EDProducer("PATMuonCleanerBySegments",
+                                               src = cms.InputTag(fs_daughter_inputs['muons']),
+                                               preselection = cms.string("track.isNonnull"),
+                                               passthrough = cms.string("isGlobalMuon && numberOfMatches >= 2"),
+                                               fractionOfSharedSegments = cms.double(0.499))
+    fs_daughter_inputs['muons'] = "ghostCleanedMuons"
+    
+    process.miniCleanedMuons = cms.Path(process.ghostCleanedMuons)
+    process.schedule.append(process.miniCleanedMuons)
 
 process.miniPatMuons = cms.EDProducer(
     "MiniAODMuonIDEmbedder",
