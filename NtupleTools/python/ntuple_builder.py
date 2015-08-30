@@ -322,17 +322,10 @@ def make_ntuple(*legs, **kwargs):
 
     # Now we need to add all the information about the pairs
     for leg_a, leg_b in itertools.combinations(object_labels, 2):
-        if hzz:
-            ntuple_config = PSet(
-                ntuple_config,
-                dicandidate_template.replace(object1=leg_a, object2=leg_b),
-                templates.topology.zbosonMiniAOD.replace(object1=leg_a, object2=leg_b),
-                )
-        else:
-            ntuple_config = PSet(
-                ntuple_config,
-                dicandidate_template.replace(object1=leg_a, object2=leg_b),
-                )
+        ntuple_config = PSet(
+            ntuple_config,
+            dicandidate_template.replace(object1=leg_a, object2=leg_b),
+            )
         # Check if we want to enable SVfit
         # Only do SVfit in states with 2 or 4 leptons
         do_svfit = kwargs.get("svFit", False)
@@ -368,12 +361,6 @@ def make_ntuple(*legs, **kwargs):
     analyzerSrc = "finalState" + "".join(
             _producer_translation[x] for x in legs ) + producer_suffix
 
-    if hzz:
-        ntuple_config = PSet(
-            ntuple_config,
-            templates.topology.hzzMiniAOD
-            )
-    
     # Some feature are not included in miniAOD or are currently broken. 
     # Remove them from the ntuples to prevent crashes.
     #!!! Take items off of this list as we unbreak them. !!!#
