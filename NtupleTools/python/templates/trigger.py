@@ -197,6 +197,10 @@ doubleLepton_25ns = PSet(
         name='singleMuSingleE',
         paths=r'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
+    _trig_template.replace(
+        name='doubleTau',
+        paths=r'HLT_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v\\d+'
+        ),
     )
 
 tripleLepton = PSet(

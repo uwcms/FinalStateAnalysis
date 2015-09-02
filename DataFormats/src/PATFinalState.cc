@@ -978,7 +978,12 @@ const float PATFinalState::getPVDZ(const size_t i) const
       const edm::Ptr<reco::Vertex> pv = event_->pv();
       return daughterAsMuon(i)->muonBestTrack()->dz(pv->position());
     }
-  throw cms::Exception("InvalidParticle") << "FSA can only find dZ for electron and muon for now" << std::endl;
+  else if(abs(daughter(i)->pdgId()) == 15)
+    {
+      pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(daughterAsTau(i)->leadChargedHadrCand().get());
+      return (packedLeadTauCand->dz());
+    }
+  throw cms::Exception("InvalidParticle") << "FSA can only find dZ for electron, muon and tau for now" << std::endl;
 }
 
 const float PATFinalState::getPVDXY(const size_t i) const

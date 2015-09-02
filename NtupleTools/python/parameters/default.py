@@ -30,7 +30,7 @@ parameters = {
     'finalSelection' : {
         'e': 'abs(superCluster().eta) < 3.0 & max(pt, userFloat("maxCorPt")) > 7',
         'm': 'max(pt, userFloat("maxCorPt")) > 4 & (isGlobalMuon | isTrackerMuon)',
-        't': 'abs(eta) < 2.5 & pt > 17 & tauID("decayModeFinding")',
+        't': 'abs(eta) < 2.5 & pt > 17',
         'g': 'abs(superCluster().eta()) < 3.0 & pt > 10',
         # remove jets that are close to leptons
         'j' : {
