@@ -47,17 +47,23 @@ parameters = {
 
     # additional variables for ntuple
     'eventVariables' : PSet(
-        muVetoZTT15 = 'vetoMuons(0.4, "isGlobalMuon & isTrackerMuon & pt > 15 & abs(eta) < 2.4 & abs(userFloat(\'dz\')) < 0.2 & abs(userFloat(\'dxy\')) < 0.045 & (chargedHadronIso()+max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso,0.0))/pt() < 0.3").size()',
         muVetoZTT10 = 'vetoMuons(0.4, "pt > 10 & abs(eta) < 2.4 & abs(userFloat(\'dz\')) < 0.2 & abs(userFloat(\'dxy\')) < 0.045 & (chargedHadronIso()+max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso,0.0))/pt() < 0.3 & isMediumMuon > 0").size()',
-        eVetoZTT15 = 'vetoElectrons(0.4, "pt > 15 & abs(eta) < 2.5 & ((userIso(0) + max(userIso(1) + neutralHadronIso - 0.5*userIso(2), 0))/pt) < 0.3 & abs(userFloat(\'dz\')) < 0.2 & abs(userFloat(\'dxy\')) < 0.045").size()',
+        muVetoZTT10new = 'vetoMuons(0.01, "pt > 10 & abs(eta) < 2.4 & abs(userFloat(\'dz\')) < 0.2 & abs(userFloat(\'dxy\')) < 0.045 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt - 0.5 * pfIsolationR03().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0").size()',
+        muVetoZTT10new2 = 'vetoMuons(0.001, "pt > 10 & abs(eta) < 2.4 & abs(userFloat(\'dz\')) < 0.2 & abs(userFloat(\'dxy\')) < 0.045 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt - 0.5 * pfIsolationR03().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0").size()',
         eVetoZTT10 = 'vetoElectrons(0.4, "pt > 10 & abs(eta) < 2.5 & ((userIso(0) + max(userIso(1) + neutralHadronIso - 0.5*userIso(2), 0))/pt) < 0.3 & abs(userFloat(\'dz\')) < 0.2 & abs(userFloat(\'dxy\')) < 0.045 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0").size()',
+        eVetoZTT10new = 'vetoElectrons(0.01, "pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & abs(userFloat(\'dz\')) < 0.2 & abs(userFloat(\'dxy\')) < 0.045 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0").size()',
+        eVetoZTT10new2 = 'vetoElectrons(0.001, "pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & abs(userFloat(\'dz\')) < 0.2 & abs(userFloat(\'dxy\')) < 0.045 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0").size()',
         eVetoZTT10old = 'vetoElectrons(0.4, "pt > 10 & abs(eta) < 2.5 & ((userIso(0) + max(userIso(1) + neutralHadronIso - 0.5*userIso(2), 0))/pt) < 0.3 & abs(userFloat(\'dz\')) < 0.2 & abs(userFloat(\'dxy\')) < 0.045").size()',
+        jetVeto20ZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 4.7").size()',
+        bjetCISVVeto20MediumZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.814").size()',
     ),
 
     # candidates of form: objectVarName = 'string expression for selection'
     'candidateVariables' : PSet(),
 
     'electronVariables' : PSet(
+        objectIsoDB03               = '({object}.pfIsolationVariables().sumChargedHadronPt + max( {object}.pfIsolationVariables().sumNeutralHadronEt \
+                                    + {object}.pfIsolationVariables().sumPhotonEt - 0.5 * {object}.pfIsolationVariables().sumPUPt, 0.0)) / {object}.pt()',
         objectMatchesMu23Ele12Path      = r'matchToHLTPath({object_idx}, "HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
         objectMatchesMu8Ele23Path      = r'matchToHLTPath({object_idx}, "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
         objectMu23Ele12Filter      = 'matchToHLTFilter({object_idx}, "hltMu23TrkIsoVVLEle12CaloIdLTrackIdLIsoVLElectronlegTrackIsoFilter", 0.5)',
@@ -65,6 +71,10 @@ parameters = {
     ),
 
     'muonVariables' : PSet(
+        objectIsoDB03               = '({object}.pfIsolationR03().sumChargedHadronPt + max( {object}.pfIsolationR03().sumNeutralHadronEt \
+                                        + {object}.pfIsolationR03().sumPhotonEt - 0.5 * {object}.pfIsolationR03().sumPUPt, 0.0)) / {object}.pt()',
+        objectIsoDB04               = '({object}.pfIsolationR04().sumChargedHadronPt + max( {object}.pfIsolationR04().sumNeutralHadronEt \
+                                        + {object}.pfIsolationR04().sumPhotonEt - 0.5 * {object}.pfIsolationR04().sumPUPt, 0.0)) / {object}.pt()',
         objectMatchesMu8Ele23Path      = r'matchToHLTPath({object_idx}, "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
         objectMatchesMu23Ele12Path      = r'matchToHLTPath({object_idx}, "HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
         objectMu8Ele23Filter = 'matchToHLTFilter({object_idx}, "hltMu8TrkIsoVVLEle23CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered8", 0.5)',
