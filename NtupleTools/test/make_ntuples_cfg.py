@@ -179,7 +179,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': 'GR_P_V56'}
+GT = {'mcgt': 'PLACEHOLDER', 'datagt': '75X_dataRun2_Prompt_v0'}
 if options.use25ns:
     GT['mcgt'] = 'MCRUN2_74_V9'
 
