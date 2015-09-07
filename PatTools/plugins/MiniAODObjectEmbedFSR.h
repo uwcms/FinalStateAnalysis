@@ -29,7 +29,7 @@
 
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
 
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
@@ -50,15 +50,21 @@
 // class declaration
 //
 template <typename T, typename U>
-class MiniAODObjectEmbedFSR : public edm::EDProducer {
+class MiniAODObjectEmbedFSR : public edm::stream::EDProducer<> {
 
  public:
   explicit MiniAODObjectEmbedFSR(const edm::ParameterSet& iConfig) : 
-    src_(iConfig.getParameter<edm::InputTag>("src")),
-    srcAlt_(iConfig.getParameter<edm::InputTag>("srcAlt")),
-    srcPho_(iConfig.exists("srcPho") ? iConfig.getParameter<edm::InputTag>("srcPho") : edm::InputTag("boodtedFsrPhotons")),
-    srcVeto_(iConfig.exists("srcVeto") ? iConfig.getParameter<edm::InputTag>("srcVeto") : edm::InputTag("slimmedElectrons")),
-    srcVtx_(iConfig.exists("srcVtx") ? iConfig.getParameter<edm::InputTag>("srcVtx") : edm::InputTag("selectedPrimaryVertex")),
+  src_(consumes<std::vector<T> >(iConfig.getParameter<edm::InputTag>("src"))),
+    srcAlt_(consumes<std::vector<U> >(iConfig.getParameter<edm::InputTag>("srcAlt"))),
+    srcPho_(consumes<edm::View<pat::PFParticle> >(iConfig.exists("srcPho") ? 
+                                                  iConfig.getParameter<edm::InputTag>("srcPho") : 
+                                                  edm::InputTag("boodtedFsrPhotons"))),
+    srcVeto_(consumes<pat::ElectronCollection>(iConfig.exists("srcVeto") ? 
+                                               iConfig.getParameter<edm::InputTag>("srcVeto") : 
+                                               edm::InputTag("slimmedElectrons"))),
+    srcVtx_(consumes<reco::VertexCollection>(iConfig.exists("srcVtx") ? 
+                                             iConfig.getParameter<edm::InputTag>("srcVtx") : 
+                                             edm::InputTag("selectedPrimaryVertex"))),
     label_(iConfig.exists("userLabel") ? iConfig.getParameter<std::string>("userLabel") : "FSRCand"),
     isoLabels_(iConfig.getParameter<std::vector<std::string> >("isoLabels")),
     dRInner(iConfig.exists("dRInner") ? iConfig.getParameter<double>("dRInner") : 0.07),
@@ -85,12 +91,13 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
 
   // do producer stuff
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
-  virtual void endJob() { }
 
   // For photon pho, find the closest (deltaR) lepton in src.
   // If none are within dROuter, or there is a better lepton in srcAlt,
   // returns src->end()
-  typename std::vector<T>::iterator findBestLepton(const pat::PFParticle& pho);
+  typename std::vector<T>::iterator findBestLepton(const pat::PFParticle& pho,
+                                                   const std::auto_ptr<std::vector<T> >& src,
+                                                   const std::auto_ptr<std::vector<U> >& srcAlt) const;
 
   // Relative isolation of photon. Sum of all the userFloats whose keys are passed in as isoLabels
   double photonRelIso(const pat::PFParticle& pho) const;
@@ -104,35 +111,32 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
   // Find out if photon passes cluster veto (returns true if it's good).
   // Pass in the lepton the photon is matched to in case it's an electron
   // that's also in the veto collection, so we don't auto-veto.
-  bool passClusterVeto(const pat::PFParticle& pho, const reco::Candidate& pairedLep);
+  bool passClusterVeto(const pat::PFParticle& pho, const reco::Candidate& pairedLep,
+                       const std::auto_ptr<pat::ElectronCollection>& srcVeto) const;
 
   // Embed the FSR photon in a lepton as a userCand, and the number of such cands as userInt("n"+label_)
   // The usercand has a key of the form label_+str(nPho), e.g. FSRCand0 for the pt of the first photon, 
   //     if a new label is not specified
   // nFSRCands is automatically created and incremented, and its new value is returned
   // Leaves the lepton in its collection
-  int embedFSRCand(typename std::vector<T>::iterator& lept, const std::vector<pat::PFParticle>::const_iterator& pho);
-  
-
-  std::auto_ptr<std::vector<T> > src;
-  std::auto_ptr<std::vector<U> > srcAlt;
-  std::auto_ptr<pat::ElectronCollection> srcVeto;
-  edm::Handle<reco::VertexCollection> srcVtx;
-  edm::Handle<std::vector<pat::PFParticle> > srcPho;
+  int embedFSRCand(typename std::vector<T>::iterator& lept, 
+                   const edm::View<pat::PFParticle>::const_iterator& pho,
+                   const edm::Handle<edm::View<pat::PFParticle> >& srcPho) const;
+                   
 
   // collection input tags/labels
-  const edm::InputTag src_; // FS leptons
-  const edm::InputTag srcAlt_; // Dumb hack to deal with the fact that we only consider 
-                                       // the closest lepton to a given photoon, so we have to
-                                       // worry about both lepton collections at once, but an
-                                       // EDProducer can only put one of the collections.
-                                       // To put FSR info in electrons, src is for electrons
-                                       // and srcAlt_ points to muons, so that we can ignore
-                                       // a photon later (and deal with it in the muon producer)
-                                       // if there's a closer muon. Or vice versa. 
-  const edm::InputTag srcPho_; // FSR candidates
-  const edm::InputTag srcVeto_; // electrons for cluster veto
-  const edm::InputTag srcVtx_; // primary vertex (for veto PV and SIP cuts)
+  const edm::EDGetTokenT<std::vector<T> > src_; // FS leptons
+  const edm::EDGetTokenT<std::vector<U> > srcAlt_; // Dumb hack to deal with the fact that we only consider 
+                                                 // the closest lepton to a given photoon, so we have to
+                                                 // worry about both lepton collections at once, but an
+                                                 // EDProducer can only put one of the collections.
+                                                 // To put FSR info in electrons, src is for electrons
+                                                 // and srcAlt_ points to muons, so that we can ignore
+                                                 // a photon later (and deal with it in the muon producer)
+                                                 // if there's a closer muon. Or vice versa. 
+  const edm::EDGetTokenT<edm::View<pat::PFParticle> > srcPho_; // FSR candidates
+  const edm::EDGetTokenT<pat::ElectronCollection> srcVeto_; // electrons for cluster veto
+  const edm::EDGetTokenT<reco::VertexCollection> srcVtx_; // primary vertex (for veto PV and SIP cuts)
   const std::string label_; // userFloats names things like <label_>pt1
   const std::vector<std::string> isoLabels_; // keys to userfloats with isolation
 
@@ -151,10 +155,5 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
   const double vetoDEta;
   
   // name of the userFloat holding ID decisions
-  std::string idDecisionLabel_;
-
-  int nPassPre;
-  int nHaveBest;
-  int nPassIso;
-  int nPassVeto;
+  const std::string idDecisionLabel_;
 };

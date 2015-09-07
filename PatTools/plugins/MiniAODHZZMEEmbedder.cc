@@ -25,7 +25,7 @@
 
 // CMS includes
 #include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/one/EDProducer.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
@@ -49,15 +49,13 @@
 
 
 template<class... Ls>
-class MiniAODHZZMEEmbedder : public edm::EDProducer {
+class MiniAODHZZMEEmbedder : public edm::one::EDProducer<> {
  public:
   MiniAODHZZMEEmbedder(const edm::ParameterSet& pset);
   virtual ~MiniAODHZZMEEmbedder(){}
  private:
   // Methods
-  virtual void beginJob();
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
-  virtual void endJob();
 
   // Calculate the matrix element for fs under process hypothesis proc using calculator calc
   const float getZZME(const PATQuadFinalStateT<Ls...>& fs, MEMNames::Processes proc, 
@@ -68,7 +66,7 @@ class MiniAODHZZMEEmbedder : public edm::EDProducer {
   void getPm4l(const PATQuadFinalStateT<Ls...>& fs, MEMNames::SuperKDsyst syst, float& sigProb, 
 	       float& bkgProb, const std::string& fsrLabel);
   // Tag of final states to calculate MEs for
-  edm::InputTag src_;
+  edm::EDGetTokenT<edm::View<PATFinalState> > src_;
   // MEM calculator object
   MEMs MEM_; 
   // List of probabilities to calculate
@@ -90,9 +88,9 @@ class MiniAODHZZMEEmbedder : public edm::EDProducer {
 
 template<class... Ls>
 MiniAODHZZMEEmbedder<Ls...>::MiniAODHZZMEEmbedder(const edm::ParameterSet& iConfig) :
-  src_(iConfig.exists("src") ?
+  src_(consumes<edm::View<PATFinalState> >(iConfig.exists("src") ?
        iConfig.getParameter<edm::InputTag>("src") :
-       edm::InputTag("finalStateeeee")),
+       edm::InputTag("finalStateeeee"))),
   processes_(iConfig.exists("processes") ?
 	     iConfig.getParameter<std::vector<std::string> >("processes") :
 	     std::vector<std::string>()),
@@ -140,7 +138,7 @@ void MiniAODHZZMEEmbedder<Ls...>::produce(edm::Event& iEvent, const edm::EventSe
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
   edm::Handle<edm::View<PATFinalState> > finalStatesIn;
-  iEvent.getByLabel(src_, finalStatesIn);
+  iEvent.getByToken(src_, finalStatesIn);
 
   for (size_t iFS = 0; iFS < finalStatesIn->size(); ++iFS) 
     {
@@ -250,10 +248,6 @@ void MiniAODHZZMEEmbedder<Ls...>::getPm4l(const PATQuadFinalStateT<Ls...> & fs,
   bkgProb = float(pBkg);
 }
 
-template<class... Ls>
-void MiniAODHZZMEEmbedder<Ls...>::beginJob(){}
-template<class... Ls>
-void MiniAODHZZMEEmbedder<Ls...>::endJob(){}
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 typedef MiniAODHZZMEEmbedder<pat::Electron, pat::Electron, pat::Electron, pat::Electron> MiniAODHZZMEEmbedderElecElecElecElec;

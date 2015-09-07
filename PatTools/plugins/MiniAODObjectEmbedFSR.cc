@@ -19,31 +19,34 @@
 template<typename T, typename U>
 void MiniAODObjectEmbedFSR<T,U>::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+  edm::Handle<reco::VertexCollection> srcVtx;
+  edm::Handle<edm::View<pat::PFParticle> > srcPho;
+
   // Read the shallow clones of a candidate and save the SECOND Clone
   edm::Handle<std::vector<T> > srcTemp;
   edm::Handle<std::vector<U> > srcAltTemp;
   edm::Handle<std::vector<pat::Electron> > srcVetoTemp;
 
   // Get stuff
-  src = std::auto_ptr<std::vector<T> >(new std::vector<T>);
-  iEvent.getByLabel(src_,srcTemp);
+  std::auto_ptr<std::vector<T> > src(new std::vector<T>);
+  iEvent.getByToken(src_,srcTemp);
   src->assign(srcTemp->begin(),srcTemp->end());
-  srcAlt = std::auto_ptr<std::vector<U> >(new std::vector<U>);
-  iEvent.getByLabel(srcAlt_,srcAltTemp);
+  std::auto_ptr<std::vector<U> > srcAlt(new std::vector<U>);
+  iEvent.getByToken(srcAlt_,srcAltTemp);
   srcAlt->assign(srcAltTemp->begin(),srcAltTemp->end());
-  srcVeto = std::auto_ptr<pat::ElectronCollection>(new pat::ElectronCollection);
-  iEvent.getByLabel(srcVeto_,srcVetoTemp);
+  std::auto_ptr<pat::ElectronCollection> srcVeto(new pat::ElectronCollection);
+  iEvent.getByToken(srcVeto_,srcVetoTemp);
   srcVeto->assign(srcVetoTemp->begin(),srcVetoTemp->end());
-  iEvent.getByLabel(srcVtx_,srcVtx);
-  iEvent.getByLabel(srcPho_,srcPho);
+  iEvent.getByToken(srcVtx_,srcVtx);
+  iEvent.getByToken(srcPho_,srcPho);
 
-  for(std::vector<pat::PFParticle>::const_iterator pho = srcPho->cbegin(); pho != srcPho->cend(); ++pho) 
+  for(edm::View<pat::PFParticle>::const_iterator pho = srcPho->begin(); pho != srcPho->end(); ++pho) 
     {
       // preselection
       if(pho->pt() < ptInner || fabs(pho->eta()) > maxEta) continue;
 
       // Loop through lepton candidates, keep track of the best one (smallest dR)
-      typename std::vector<T>::iterator bestCand = findBestLepton(*pho);
+      typename std::vector<T>::iterator bestCand = findBestLepton(*pho, src, srcAlt);
 
       if(bestCand == src->end()) continue; // no close lepton (or it's in the other collection)
 
@@ -61,9 +64,9 @@ void MiniAODObjectEmbedFSR<T,U>::produce(edm::Event& iEvent, const edm::EventSet
 	}
 
       // Cluster veto
-      if(!passClusterVeto(*pho, *bestCand)) continue;
+      if(!passClusterVeto(*pho, *bestCand, srcVeto)) continue;
 
-      embedFSRCand(bestCand, pho);
+      embedFSRCand(bestCand, pho, srcPho);
     }
 
   // count the number of stored photons and place it in the lepton as a userInt
@@ -82,7 +85,10 @@ void MiniAODObjectEmbedFSR<T,U>::produce(edm::Event& iEvent, const edm::EventSet
 
 
 template<typename T, typename U>
-typename std::vector<T>::iterator MiniAODObjectEmbedFSR<T,U>::findBestLepton(const pat::PFParticle& pho)
+typename std::vector<T>::iterator 
+MiniAODObjectEmbedFSR<T,U>::findBestLepton(const pat::PFParticle& pho,
+                                           const std::auto_ptr<std::vector<T> >& src,
+                                           const std::auto_ptr<std::vector<U> >& srcAlt) const
 {
   // Find closest lepton
   typename std::vector<T>::iterator out;
@@ -145,7 +151,8 @@ bool MiniAODObjectEmbedFSR<T,U>::leptonPassIDTight(const leptonType& lept) const
 }
 
 template<typename T, typename U>
-bool MiniAODObjectEmbedFSR<T,U>::passClusterVeto(const pat::PFParticle& pho, const reco::Candidate& pairedLep)
+bool MiniAODObjectEmbedFSR<T,U>::passClusterVeto(const pat::PFParticle& pho, const reco::Candidate& pairedLep,
+                                                 const std::auto_ptr<pat::ElectronCollection>& srcVeto) const
 {
   for(pat::ElectronCollection::iterator elec = srcVeto->begin(); elec != srcVeto->end(); ++elec)
     {
@@ -165,7 +172,9 @@ bool MiniAODObjectEmbedFSR<T,U>::passClusterVeto(const pat::PFParticle& pho, con
 }
 
 template<typename T, typename U>
-int MiniAODObjectEmbedFSR<T,U>::embedFSRCand(typename std::vector<T>::iterator& lept, const std::vector<pat::PFParticle>::const_iterator& pho)
+int MiniAODObjectEmbedFSR<T,U>::embedFSRCand(typename std::vector<T>::iterator& lept, 
+                                             const edm::View<pat::PFParticle>::const_iterator& pho,
+                                             const edm::Handle<edm::View<pat::PFParticle> >& srcPho) const
 {
   unsigned int n = 0;
   while(lept->hasUserCand(label_+std::to_string(n)))

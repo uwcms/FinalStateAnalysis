@@ -15,7 +15,7 @@
 
 // CMS includes
 #include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
@@ -25,18 +25,16 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateFwd.h"
 
 
-class PATFinalStateSelector : public edm::EDProducer {
+class PATFinalStateSelector : public edm::stream::EDProducer<> {
  public:
   PATFinalStateSelector(const edm::ParameterSet& pset);
   virtual ~PATFinalStateSelector(){}
  private:
   // Methods
-  virtual void beginJob();
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
-  virtual void endJob();
 
   // Tag of final states in question
-  edm::InputTag src_;
+  const edm::EDGetTokenT<edm::View<PATFinalState> > src_;
 
   // List of selectors
   std::vector<StringCutObjectSelector<PATFinalState> > cuts_;
@@ -44,9 +42,9 @@ class PATFinalStateSelector : public edm::EDProducer {
 
 
 PATFinalStateSelector::PATFinalStateSelector(const edm::ParameterSet& iConfig) :
-  src_(iConfig.exists("src") ?
+  src_(consumes<edm::View<PATFinalState> >(iConfig.exists("src") ?
        iConfig.getParameter<edm::InputTag>("src") :
-       edm::InputTag("finalStateeeee"))
+       edm::InputTag("finalStateeeee")))
 {
   const std::vector<std::string> cutStrings = (iConfig.exists("cuts") ?
                                                iConfig.getParameter<std::vector<std::string> >("cuts") :
@@ -66,7 +64,7 @@ void PATFinalStateSelector::produce(edm::Event& iEvent, const edm::EventSetup& i
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
   edm::Handle<edm::View<PATFinalState> > finalStatesIn;
-  iEvent.getByLabel(src_, finalStatesIn);
+  iEvent.getByToken(src_, finalStatesIn);
 
   for (size_t iFS = 0; iFS < finalStatesIn->size(); ++iFS) 
     {
@@ -88,8 +86,6 @@ void PATFinalStateSelector::produce(edm::Event& iEvent, const edm::EventSetup& i
   iEvent.put(output);
 }
 
-void PATFinalStateSelector::beginJob(){}
-void PATFinalStateSelector::endJob(){}
 
 
 #include "FWCore/Framework/interface/MakerMacros.h"

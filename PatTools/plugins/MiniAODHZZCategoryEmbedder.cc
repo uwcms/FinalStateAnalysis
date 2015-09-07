@@ -20,7 +20,7 @@
 
 // CMS includes
 #include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
@@ -35,15 +35,13 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
 
 
-class MiniAODHZZCategoryEmbedder : public edm::EDProducer {
+class MiniAODHZZCategoryEmbedder : public edm::stream::EDProducer<> {
  public:
   MiniAODHZZCategoryEmbedder(const edm::ParameterSet& pset);
   virtual ~MiniAODHZZCategoryEmbedder(){}
  private:
   // Methods
-  virtual void beginJob();
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
-  virtual void endJob();
 
   // Calculate the matrix element for fs under process hypothesis proc using calculator calc
   const unsigned int getHZZCategory(const PATFinalState& fs) const;
@@ -59,7 +57,7 @@ class MiniAODHZZCategoryEmbedder : public edm::EDProducer {
   bool isHZZBTagged(const pat::Jet& j) const;
 
   // Tag of final state collection
-  edm::InputTag src_;
+  const edm::EDGetTokenT<edm::View<PATFinalState> > src_;
 
   // Cut string to select tight leptons
   const std::string tightLepCut_;
@@ -73,9 +71,9 @@ class MiniAODHZZCategoryEmbedder : public edm::EDProducer {
 
 
 MiniAODHZZCategoryEmbedder::MiniAODHZZCategoryEmbedder(const edm::ParameterSet& iConfig) :
-  src_(iConfig.exists("src") ?
+  src_(consumes<edm::View<PATFinalState> >(iConfig.exists("src") ?
        iConfig.getParameter<edm::InputTag>("src") :
-       edm::InputTag("finalStateeeee")),
+       edm::InputTag("finalStateeeee"))),
   tightLepCut_(iConfig.exists("tightLepCut") ?
 	       iConfig.getParameter<std::string>("tightLepCut") :
 	       std::string("userFloat(\"HZZ4lIDPassTight\") > 0.5 && userFloat(\"HZZ4lIsoPass\") > 0.5")),
@@ -95,7 +93,7 @@ void MiniAODHZZCategoryEmbedder::produce(edm::Event& iEvent, const edm::EventSet
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
   edm::Handle<edm::View<PATFinalState> > finalStatesIn;
-  iEvent.getByLabel(src_, finalStatesIn);
+  iEvent.getByToken(src_, finalStatesIn);
 
   for (size_t iFS = 0; iFS < finalStatesIn->size(); ++iFS) 
     {
@@ -265,10 +263,6 @@ bool MiniAODHZZCategoryEmbedder::isHZZBTagged(const pat::Jet& j) const
   return (j.bDiscriminator(bDiscrimLabel_) > bDiscrimCut_);
 }
 
-
-
-void MiniAODHZZCategoryEmbedder::beginJob(){}
-void MiniAODHZZCategoryEmbedder::endJob(){}
 
 
 #include "FWCore/Framework/interface/MakerMacros.h"
