@@ -50,11 +50,14 @@ id = PSet(
         '/{object}.pt()'
     ),
 
+    # Number of matched conversions
+    objectPassesConversionVeto = '{object}.passConversionVeto()',
+
     objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
     objectPFPUChargedIso = cms.string('{object}.userIsolation("PfPUChargedHadronIso")'),
-    
+
     objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
     objectEffectiveAreaPHYS14 = cms.string('{object}.userFloat("EffectiveArea_HZZ4l2015")'),
 

@@ -366,7 +366,6 @@ def make_ntuple(*legs, **kwargs):
     #!!! Take items off of this list as we unbreak them. !!!#
     notInMiniAOD = [
         # candidates.py
-        "t[1-9]?PVDZ",
         "t[1-9]?S?IP[23]D(Err)?",
         ]
 

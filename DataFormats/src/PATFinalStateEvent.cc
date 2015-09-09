@@ -16,12 +16,51 @@ namespace {
       pat::TriggerObjectStandAlone obj = trgObjects.at(i);
       //std::cout << " - - dR(cand,trig" << i << "): " << reco::deltaR(cand, obj) << " max: " << maxDeltaR << std::endl;
       if (reco::deltaR(cand, obj) > maxDeltaR) continue;
+
       obj.unpackPathNames(names);
       std::vector<std::string> pathNames = obj.pathNames(false);
       for (size_t t = 0; t < pathNames.size(); t++) {
           std::string path = pathNames.at(t);
           //std::cout << " - - - path name: " << path << " match name " << trigName << std::endl;
           if (path.compare(trigName)==0) {
+            matched = true;
+            return 1;
+          }
+      }
+
+      // Current filter matching relies only on checking for a trigger object
+      // within the desired cone size that contains the desired trigger filter.
+      // There is no requirement place on the HLT object to match pdgID type
+      // with the candidate. If this matching is desired, uncomment, and double
+      // check the below code.
+      std::vector<std::string> filterLabels = obj.filterLabels();
+      for (size_t i = 0; i < filterLabels.size(); i++) {
+          std::string filter = filterLabels.at(i);
+          if (filter.compare(trigName)==0) {
+            //std::cout << " - - - filter name: " << filter << " match name " << trigName << std::endl;
+            //std::cout << "Checking obj with pdgID = " << cand.pdgId() << std::endl;
+            //std::cout << "Trig Obj pdgId: " << obj.pdgId() << std::endl;
+            //std::cout << "Trig Obj Type: " << obj.filterIds() << std::endl;
+            //for (size_t j = 0; j < obj.filterIds().size(); j++) {
+            //  std::cout << " -- filter ID " << obj.filterIds().at(j) << std::endl;
+            //  // Match the Candidate PDG ID to the Trigger Object ID: see DataFormats/HLTReco/interface/TriggerTypeDefs.h
+            //  // Currently many miniAOD files are missing HLT Electron Trigger objects from above .h file.
+            //  if ( abs( obj.pdgId() ) == 11 && abs( obj.pdgId() ) == 11 ) {
+            //    std::cout << "  ------ XXX Matching electron!" << std::endl;
+            //    matched = true;
+            //    return 1;
+            //  }
+            //  if ( abs( obj.pdgId() ) == 13 && abs( obj.pdgId() ) == 13 ) {
+            //    std::cout << "  ------ XXX Matching muon!" << std::endl;
+            //    matched = true;
+            //    return 1;
+            //  }
+            //  if ( abs( obj.pdgId() ) == 15 && abs( obj.pdgId() ) == 15 ) {
+            //    std::cout << "  ------ XXX Matching tau!" << std::endl;
+            //    matched = true;
+            //    return 1;
+            //  }
+            //}
             matched = true;
             return 1;
           }
@@ -227,15 +266,32 @@ int PATFinalStateEvent::hltGroup(const std::string& pattern) const {
 
 int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
+  //std::cout << evtID_ << " running <<< matchedToFilter >>> : " << pattern << std::endl;
   std::vector<const pat::TriggerFilter*> filters = matchingTriggerFilters(trigStandAlone(), names(), pattern);
   if (!filters.size())
     return -1;
-  return matchedToAnObject(trigStandAlone(), names(), cand, maxDeltaR);
+  //std::cout << "Filters Obj: " << filters << std::endl;
+  int matchCount = 0;
+  //std::cout << "Filters: " << std::endl;
+  for (unsigned int i=0; i < filters.size(); ++i)
+  {
+  //std::cout << "     ---- Calling matchedToAnObject for:" << std::endl;
+  //std::cout << "     ---- trigStandAlone() " << trigStandAlone() << std::endl;
+  //std::cout << "     ---- names() " << names() << std::endl;
+  //std::cout << "     ---- cand " << cand << std::endl;
+  //std::cout << "     ---- filter " << filters[i] << std::endl;
+  bool matched = matchedToAnObject(trigStandAlone(), names(), cand, maxDeltaR, pattern);//, filters[i]);
+  if (matched)
+    matchCount += 1;
+  //std::cout << "Filters matched obj " << cand << "number of matches: " << matched << " for dr: " << maxDeltaR << std::endl;
+  }
+  //std::cout << "TOTAL MATCHES: " << matchCount << std::endl;
+  return matchCount;
 }
 
 int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
     const std::string& pattern, double maxDeltaR) const {
-  //std::cout << "smart trigger pattern: " << pattern << std::endl;
+  //std::cout << evtID_ << " smart trigger pattern: " << pattern << std::endl;
   SmartTriggerResult result = smartTrigger(pattern, names(), trigPrescale(), trigResults(), evtID_);
   //std::cout << " result: group " << result.group << ", prescale " << result.prescale << ", passed " << result.passed << std::endl;
   // Loop over all the paths that fired and see if any matched this object.
