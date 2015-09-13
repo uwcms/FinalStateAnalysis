@@ -4,7 +4,7 @@
 //                                                                          //
 //   Embeds electron effective areas using the EGamma POG recommendation.   //
 //                                                                          //
-//   Author: Devin Taylor, U. Wisconsin                                     //
+//   Authors: Devin Taylor and Nate Woods, U. Wisconsin                     //
 //                                                                          //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -25,6 +25,7 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "RecoEgamma/EgammaTools/interface/EffectiveAreas.h"
+
 
 class MiniAODElectronEffectiveAreaEmbedder : public edm::EDProducer
 {
@@ -95,9 +96,6 @@ float MiniAODElectronEffectiveAreaEmbedder::getEA(const edm::Ptr<pat::Electron>&
   float abseta = fabs(elec->eta());
   return effectiveAreas_.getEffectiveArea(abseta);
 }
-
-
-
 
 void MiniAODElectronEffectiveAreaEmbedder::beginJob()
 {}

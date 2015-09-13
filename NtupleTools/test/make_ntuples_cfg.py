@@ -246,8 +246,6 @@ if options.usePUPPI:
     fs_daughter_inputs['jets'] = 'slimmedJetsPuppi'
 
 
-
-
 ##############
 ### mvamet ###
 ##############

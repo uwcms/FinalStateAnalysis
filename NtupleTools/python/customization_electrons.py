@@ -126,18 +126,10 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     )
     process.schedule.append(process.runMiniAODElectronIpEmbedding)
 
-    # Embed effective areas in muons and electrons
+    # Embed effective areas in electrons
     process.load("FinalStateAnalysis.PatTools.electrons.patElectronEAEmbedding_cfi")
     process.patElectronEAEmbedder.src = cms.InputTag(eSrc)
     eSrc = 'patElectronEAEmbedder'
-    # And for electrons, the new HZZ4l EAs as well
-    process.miniAODElectronEAHZZEmbedding = cms.EDProducer(
-        "MiniAODElectronEffectiveArea2015Embedder",
-        src = cms.InputTag(eSrc),
-        label = cms.string("EffectiveArea_HZZ4l2015"), # embeds a user float with this name
-        use25ns = cms.bool(bool(use25ns)),
-        )
-    eSrc = 'miniAODElectronEAHZZEmbedding'
     eaFile = 'RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_{0}ns.txt'.format('25' if use25ns else '50')
     process.miniAODElectronEAEmbedding = cms.EDProducer(
         "MiniAODElectronEffectiveAreaEmbedder",
@@ -148,7 +140,6 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     eSrc = 'miniAODElectronEAEmbedding'
     process.ElectronEAEmbedding = cms.Path(
         process.patElectronEAEmbedder +
-        process.miniAODElectronEAHZZEmbedding +
         process.miniAODElectronEAEmbedding
         )
     process.schedule.append(process.ElectronEAEmbedding)
@@ -174,7 +165,7 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
         idLabel = cms.string(idCheatLabel), # boolean stored as userFloat with this name
         isoLabel = cms.string(isoCheatLabel), # boolean stored as userFloat with this name
         rhoLabel = cms.string("rho_fastjet"), # use rho and EA userFloats with these names
-        eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
+        eaLabel = cms.string("EffectiveArea"),
         vtxSrc = cms.InputTag(vSrc),
         bdtLabel = cms.string(electronMVANonTrigIDLabel),
         idCutLowPtLowEta = cms.double(-.265),
