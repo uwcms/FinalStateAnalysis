@@ -293,16 +293,24 @@ process.patMuonEAEmbedder.src = cms.InputTag(fs_daughter_inputs['muons'])
 fs_daughter_inputs['electrons'] = 'patElectronEAEmbedder'
 fs_daughter_inputs['muons'] = 'patMuonEAEmbedder'
 # And for electrons, the new HZZ4l EAs as well
-process.miniAODElectronEAEmbedding = cms.EDProducer(
+process.miniAODElectronEAHZZEmbedding = cms.EDProducer(
     "MiniAODElectronEffectiveArea2015Embedder",
     src = cms.InputTag(fs_daughter_inputs['electrons']),
     label = cms.string("EffectiveArea_HZZ4l2015"), # embeds a user float with this name
+    use25ns = cms.bool(bool(options.use25ns)),
+    )
+fs_daughter_inputs['electrons'] = 'miniAODElectronEAHZZEmbedding'
+process.miniAODElectronEAEmbedding = cms.EDProducer(
+    "MiniAODElectronEffectiveArea2015Embedder",
+    src = cms.InputTag(fs_daughter_inputs['electrons']),
+    label = cms.string("EffectiveArea"), # embeds a user float with this name
     use25ns = cms.bool(bool(options.use25ns)),
     )
 fs_daughter_inputs['electrons'] = 'miniAODElectronEAEmbedding'
 process.EAEmbedding = cms.Path(
     process.patElectronEAEmbedder +
     process.patMuonEAEmbedder +
+    process.miniAODElectronEAHZZEmbedding +
     process.miniAODElectronEAEmbedding
     )
 process.schedule.append(process.EAEmbedding)
@@ -312,7 +320,7 @@ process.miniAODElectronRhoEmbedding = cms.EDProducer(
     "ElectronRhoOverloader",
     src = cms.InputTag(fs_daughter_inputs['electrons']),
     srcRho = cms.InputTag("fixedGridRhoFastjetAll"), # not sure this is right
-    userLabel = cms.string("rhoCSA14")
+    userLabel = cms.string("rho_fastjet")
     )
 fs_daughter_inputs['electrons'] = 'miniAODElectronRhoEmbedding'
 
@@ -321,7 +329,7 @@ process.miniAODMuonRhoEmbedding = cms.EDProducer(
     "MuonRhoOverloader",
     src = cms.InputTag(fs_daughter_inputs['muons']),
     srcRho = cms.InputTag("fixedGridRhoFastjetCentralNeutral"), # not sure this is right
-    userLabel = cms.string("rhoCSA14")
+    userLabel = cms.string("rho_fastjet")
     )
 fs_daughter_inputs['muons'] = 'miniAODMuonRhoEmbedding'
 process.rhoEmbedding = cms.Path(
@@ -345,7 +353,7 @@ if options.hzz:
         src = cms.InputTag(fs_daughter_inputs['electrons']),
         idLabel = cms.string(idCheatLabel), # boolean stored as userFloat with this name
         isoLabel = cms.string(isoCheatLabel), # boolean stored as userFloat with this name
-        rhoLabel = cms.string("rhoCSA14"), # use rho and EA userFloats with these names
+        rhoLabel = cms.string("rho_fastjet"), # use rho and EA userFloats with these names
         eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
         vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
         bdtLabel = cms.string(electronMVANonTrigIDLabel),
