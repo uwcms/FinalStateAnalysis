@@ -4,7 +4,7 @@
 //                                                                          //
 //   Embeds electron effective areas using the EGamma POG recommendation.   //
 //                                                                          //
-//   Author: Nate Woods, U. Wisconsin                                       //
+//   Author: Devin Taylor, U. Wisconsin                                     //
 //                                                                          //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +24,7 @@
 #include "DataFormats/Common/interface/View.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
-
+#include "RecoEgamma/EgammaTools/interface/EffectiveAreas.h"
 
 class MiniAODElectronEffectiveAreaEmbedder : public edm::EDProducer
 {
@@ -40,14 +40,14 @@ private:
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
   virtual void endJob();
 
-  float getEA_25ns(const edm::Ptr<pat::Electron>& elec) const;
-  float getEA_50ns(const edm::Ptr<pat::Electron>& elec) const;
+  float getEA(const edm::Ptr<pat::Electron>& elec) const;
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
   const std::string label_; // label for the embedded userfloat
+  const std::string filename_; //filename for effective area
   std::auto_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
-  const bool use25ns_;
+  EffectiveAreas effectiveAreas_;
 };
 
 
@@ -60,9 +60,7 @@ MiniAODElectronEffectiveAreaEmbedder::MiniAODElectronEffectiveAreaEmbedder(const
   label_(iConfig.exists("label") ?
 	 iConfig.getParameter<std::string>("label") :
 	 std::string("EffectiveArea")),
-  use25ns_(iConfig.exists("use25ns") ?
-	   iConfig.getParameter<bool>("use25ns") :
-	   true)
+  effectiveAreas_((iConfig.getParameter<edm::FileInPath>("configFile")).fullPath())
 {
   produces<std::vector<pat::Electron> >();
 }
@@ -84,10 +82,7 @@ void MiniAODElectronEffectiveAreaEmbedder::produce(edm::Event& iEvent, const edm
       out->push_back(*ei); // copy electron to save correctly in event
 
       float ea;
-      if(use25ns_)
-	ea = getEA_25ns(eptr);
-      else
-	ea = getEA_50ns(eptr);
+      ea = getEA(eptr);
 	
       out->back().addUserFloat(label_, ea);
     }
@@ -95,51 +90,13 @@ void MiniAODElectronEffectiveAreaEmbedder::produce(edm::Event& iEvent, const edm
   iEvent.put(out);
 }
 
-
-// Spring15 25ns tuning: https://indico.cern.ch/event/369239/contribution/4/attachments/1134761/1623262/talk_effective_areas_25ns.pdf
-// RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_25ns.txt
-float MiniAODElectronEffectiveAreaEmbedder::getEA_25ns(const edm::Ptr<pat::Electron>& elec) const
+float MiniAODElectronEffectiveAreaEmbedder::getEA(const edm::Ptr<pat::Electron>& elec) const
 {
-  float eta = fabs(elec->eta());
-
-  if(eta >= 2.4)
-    return 0.2687;
-  else if(eta >= 2.3)
-    return 0.2243;
-  else if(eta >= 2.2)
-    return 0.1903;
-  else if(eta >= 2.0)
-    return 0.1534;
-  else if(eta >= 1.479)
-    return 0.1411;
-  else if(eta >= 1.0)
-    return 0.1862;
-  else
-    return 0.1752;
+  float abseta = fabs(elec->eta());
+  return effectiveAreas_.getEffectiveArea(abseta);
 }
 
 
-// Spring15 50ns tuning: https://indico.cern.ch/event/369239/contribution/4/attachments/1134761/1623262/talk_effective_areas_25ns.pdf
-// RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_50ns.txt
-float MiniAODElectronEffectiveAreaEmbedder::getEA_50ns(const edm::Ptr<pat::Electron>& elec) const
-{
-  float eta = fabs(elec->eta());
-
-  if(eta >= 2.4)
-    return 0.2935;
-  else if(eta >= 2.3)
-    return 0.2425;
-  else if(eta >= 2.2)
-    return 0.2095;
-  else if(eta >= 2.0)
-    return 0.1571;
-  else if(eta >= 1.479)
-    return 0.1238;
-  else if(eta >= 1.0)
-    return 0.1782;
-  else
-    return 0.1733;
-}
 
 
 void MiniAODElectronEffectiveAreaEmbedder::beginJob()
