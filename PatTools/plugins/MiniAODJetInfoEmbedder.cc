@@ -43,9 +43,9 @@ class MiniAODObjectJetInfoEmbedder : public edm::stream::EDProducer<> {
   private:
     const edm::EDGetTokenT<edm::View<T> > src_;
     const edm::EDGetTokenT<edm::View<pat::Jet> > jetSrc_;
-    const double maxDeltaR_;
-    const bool embedBtags_;
     const std::string suffix_;
+    const bool embedBtags_;
+    const double maxDeltaR_;
 };
 
 template<class T>
