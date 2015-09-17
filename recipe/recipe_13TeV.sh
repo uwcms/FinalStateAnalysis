@@ -14,10 +14,11 @@ MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 pushd $CMSSW_BASE/src
 
 # electron and photon id
-git cms-merge-topic ikrav:egm_id_747_v2
+git cms-merge-topic 11232
+git cms-merge-topic 11262
 
 # 74X met corrections (no HF)
-git cms-merge-topic -u cms-met:METCorUnc74X
+#git cms-merge-topic -u cms-met:METCorUnc74X
 
 # HZZ MELA, MEKD etc.
 if [ "$HZZ" = "1" ]; then
