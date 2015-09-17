@@ -14,7 +14,8 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
+#include "FWCore/Utilities/interface/EDGetToken.h"
 
 #include "FinalStateAnalysis/PatTools/interface/PATLeptonTrackVectorExtractor.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
@@ -23,21 +24,23 @@
 #include <vector>
 
 template<typename T>
-class MiniAODLeptonIpEmbedder : public edm::EDProducer {
+class MiniAODLeptonIpEmbedder : public edm::stream::EDProducer<> {
   public:
     MiniAODLeptonIpEmbedder(const edm::ParameterSet& pset);
     virtual ~MiniAODLeptonIpEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
-    edm::InputTag vtxSrc_;
-    ek::PATLeptonTrackVectorExtractor<T> trackExtractor_;
+  const edm::EDGetTokenT<edm::View<T> > src_;
+    const edm::EDGetTokenT<reco::VertexCollection> vtxSrc_;
+    const ek::PATLeptonTrackVectorExtractor<T> trackExtractor_;
 };
 
 template<typename T>
-MiniAODLeptonIpEmbedder<T>::MiniAODLeptonIpEmbedder(const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
-  vtxSrc_ = pset.getParameter<edm::InputTag>("vtxSrc");
+MiniAODLeptonIpEmbedder<T>::MiniAODLeptonIpEmbedder(const edm::ParameterSet& pset) :
+  src_ (consumes<edm::View<T> >(pset.getParameter<edm::InputTag>("src"))),
+  vtxSrc_(consumes<reco::VertexCollection>(pset.getParameter<edm::InputTag>("vtxSrc"))),
+  trackExtractor_(ek::PATLeptonTrackVectorExtractor<T>())
+{
   produces<std::vector<T> >();
 }
 
@@ -47,10 +50,10 @@ void MiniAODLeptonIpEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup&
   std::auto_ptr<std::vector<T> > output(new std::vector<T>());
 
   edm::Handle<edm::View<T> > handle;
-  evt.getByLabel(src_, handle);
+  evt.getByToken(src_, handle);
 
   edm::Handle<reco::VertexCollection> vertices;
-  evt.getByLabel(vtxSrc_, vertices);
+  evt.getByToken(vtxSrc_, vertices);
 
   const reco::Vertex& thePV = *vertices->begin();
 

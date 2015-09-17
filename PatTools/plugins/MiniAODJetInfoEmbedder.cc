@@ -7,7 +7,7 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
 
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
@@ -34,28 +34,28 @@ namespace {
 }
 
 template<class T>
-class MiniAODObjectJetInfoEmbedder : public edm::EDProducer {
+class MiniAODObjectJetInfoEmbedder : public edm::stream::EDProducer<> {
   public:
     typedef std::vector<T> TCollection;
     MiniAODObjectJetInfoEmbedder(const edm::ParameterSet& pset);
     virtual ~MiniAODObjectJetInfoEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
-    edm::InputTag jetSrc_;
-    double maxDeltaR_;
-    bool embedBtags_;
-    std::string suffix_;
+    const edm::EDGetTokenT<edm::View<T> > src_;
+    const edm::EDGetTokenT<edm::View<pat::Jet> > jetSrc_;
+    const std::string suffix_;
+    const bool embedBtags_;
+    const double maxDeltaR_;
 };
 
 template<class T>
-MiniAODObjectJetInfoEmbedder<T>::MiniAODObjectJetInfoEmbedder(
-    const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
-  jetSrc_ = pset.getParameter<edm::InputTag>("jetSrc");
-  suffix_ = pset.getParameter<std::string>("suffix");
-  embedBtags_ = pset.getParameter<bool>("embedBtags");
-  maxDeltaR_ = pset.getParameter<double>("maxDeltaR");
+MiniAODObjectJetInfoEmbedder<T>::MiniAODObjectJetInfoEmbedder(const edm::ParameterSet& pset) :
+  src_(consumes<edm::View<T> >(pset.getParameter<edm::InputTag>("src"))),
+  jetSrc_(consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("jetSrc"))),
+  suffix_(pset.getParameter<std::string>("suffix")),
+  embedBtags_(pset.getParameter<bool>("embedBtags")),
+  maxDeltaR_(pset.getParameter<double>("maxDeltaR"))
+{
   produces<TCollection>();
 }
 
@@ -65,11 +65,11 @@ void MiniAODObjectJetInfoEmbedder<T>::produce(
   std::auto_ptr<TCollection> output(new TCollection);
 
   edm::Handle<edm::View<T> > objects;
-  evt.getByLabel(src_, objects);
+  evt.getByToken(src_, objects);
   output->reserve(objects->size());
 
   edm::Handle<edm::View<pat::Jet> > jets;
-  evt.getByLabel(jetSrc_, jets);
+  evt.getByToken(jetSrc_, jets);
 
 //  edm::Handle<edm::View<reco::Jet> > recoJets;
 //  evt.getByLabel("ak5PFJets", recoJets);

@@ -2,7 +2,7 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateFwd.h"
@@ -42,26 +42,27 @@ namespace {
   }
 }
 
-class PATFinalStateVertexFitter : public edm::EDProducer {
+class PATFinalStateVertexFitter : public edm::stream::EDProducer<> {
   public:
     PATFinalStateVertexFitter(const edm::ParameterSet& pset);
     virtual ~PATFinalStateVertexFitter(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
-    bool enable_;
+    const edm::EDGetTokenT<edm::View<PATFinalState> > src_;
+    const bool enable_;
 };
 
-PATFinalStateVertexFitter::PATFinalStateVertexFitter(const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
-  enable_ = pset.getParameter<bool>("enable");
+PATFinalStateVertexFitter::PATFinalStateVertexFitter(const edm::ParameterSet& pset) :
+  src_(consumes<edm::View<PATFinalState> >(pset.getParameter<edm::InputTag>("src"))),
+  enable_(pset.getParameter<bool>("enable"))
+{
   produces<PATFinalStateCollection>();
 }
 void PATFinalStateVertexFitter::produce(edm::Event& evt, const edm::EventSetup& es) {
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
   edm::Handle<edm::View<PATFinalState> > finalStates;
-  evt.getByLabel(src_, finalStates);
+  evt.getByToken(src_, finalStates);
 
   edm::ESHandle<TransientTrackBuilder> trackBuilderHandle;
   if (enable_) {

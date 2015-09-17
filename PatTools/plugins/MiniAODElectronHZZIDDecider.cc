@@ -18,7 +18,7 @@
 
 // CMS includes
 #include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
@@ -33,33 +33,28 @@
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
 
 
-class MiniAODElectronHZZIDDecider : public edm::EDProducer
+class MiniAODElectronHZZIDDecider : public edm::stream::EDProducer<>
 {
 public:
   explicit MiniAODElectronHZZIDDecider(const edm::ParameterSet&);
   ~MiniAODElectronHZZIDDecider() {}
 
-  static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
-
 private:
   // Methods
-  virtual void beginJob();
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
-  virtual void endJob();
 
   bool passKinematics(const edm::Ptr<pat::Electron>& elec) const;
-  bool passVertex(const edm::Ptr<pat::Electron>& elec) const;
+  bool passVertex(const edm::Ptr<pat::Electron>& elec,
+                  const reco::Vertex& vtx) const;
   bool passBDT(const edm::Ptr<pat::Electron>& elec) const;
   bool passMissingHits(const edm::Ptr<pat::Electron>& elec) const;
   float PFRelIsoRhoNoFSR(const edm::Ptr<pat::Electron>& elec) const;
 
   // Data
-  edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
+  const edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
   const std::string idLabel_; // label for the decision userfloat
   const std::string isoLabel_;
-  const edm::InputTag vtxSrc_; // primary vertex (for veto PV and SIP cuts)
-  edm::Handle<reco::VertexCollection> vertices;
-  std::auto_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
+  const edm::EDGetTokenT<reco::VertexCollection> vtxSrc_; // primary vertex (for veto PV and SIP cuts)
 
   const double ptCut;
   const double etaCut;
@@ -98,7 +93,9 @@ MiniAODElectronHZZIDDecider::MiniAODElectronHZZIDDecider(const edm::ParameterSet
   isoLabel_(iConfig.exists("isoLabel") ?
 	   iConfig.getParameter<std::string>("isoLabel") :
 	   std::string("HZZ4lIsoPass")),
-  vtxSrc_(iConfig.exists("vtxSrc") ? iConfig.getParameter<edm::InputTag>("vtxSrc") : edm::InputTag("selectedPrimaryVertex")),
+  vtxSrc_(consumes<reco::VertexCollection>(iConfig.exists("vtxSrc") ? 
+                                           iConfig.getParameter<edm::InputTag>("vtxSrc") : 
+                                           edm::InputTag("selectedPrimaryVertex"))),
   ptCut(iConfig.exists("ptCut") ? iConfig.getParameter<double>("ptCut") : 7.),
   etaCut(iConfig.exists("etaCut") ? iConfig.getParameter<double>("etaCut") : 2.5),
   sipCut(iConfig.exists("sipCut") ? iConfig.getParameter<double>("sipCut") : 4.),
@@ -133,11 +130,13 @@ MiniAODElectronHZZIDDecider::MiniAODElectronHZZIDDecider(const edm::ParameterSet
 
 void MiniAODElectronHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  out = std::auto_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
+  std::auto_ptr<std::vector<pat::Electron> > out = 
+    std::auto_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
+
+  edm::Handle<reco::VertexCollection> vertices;
+  iEvent.getByToken(vtxSrc_,vertices);
 
   edm::Handle<edm::View<pat::Electron> > electronsIn;
-  iEvent.getByLabel(vtxSrc_,vertices);
-
   iEvent.getByToken(electronCollectionToken_, electronsIn);
 
   for(edm::View<pat::Electron>::const_iterator ei = electronsIn->begin();
@@ -147,7 +146,7 @@ void MiniAODElectronHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSe
 
       out->push_back(*ei); // copy electron to save correctly in event
 
-      bool idResult = selector(*eptr) && (passKinematics(eptr) && passVertex(eptr) && passMissingHits(eptr));
+      bool idResult = selector(*eptr) && (passKinematics(eptr) && passVertex(eptr, vertices->at(0)) && passMissingHits(eptr));
       out->back().addUserFloat(idLabel_, float(idResult)); // 1 for true, 0 for false
 
       out->back().addUserFloat(idLabel_+"Tight", float(idResult && passBDT(eptr))); // 1 for true, 0 for false
@@ -168,11 +167,12 @@ bool MiniAODElectronHZZIDDecider::passKinematics(const edm::Ptr<pat::Electron>& 
 }
 
 
-bool MiniAODElectronHZZIDDecider::passVertex(const edm::Ptr<pat::Electron>& elec) const
+bool MiniAODElectronHZZIDDecider::passVertex(const edm::Ptr<pat::Electron>& elec,
+                                             const reco::Vertex& vtx) const
 {
   return (fabs(elec->dB(pat::Electron::PV3D))/elec->edB(pat::Electron::PV3D) < sipCut && 
-	  fabs(elec->gsfTrack()->dxy(vertices->at(0).position())) < pvDXYCut &&
-	  fabs(elec->gsfTrack()->dz(vertices->at(0).position())) < pvDZCut);
+	  fabs(elec->gsfTrack()->dxy(vtx.position())) < pvDXYCut &&
+	  fabs(elec->gsfTrack()->dz(vtx.position())) < pvDZCut);
 }
 
 
@@ -229,22 +229,6 @@ float MiniAODElectronHZZIDDecider::PFRelIsoRhoNoFSR(const edm::Ptr<pat::Electron
 }
 
 
-void MiniAODElectronHZZIDDecider::beginJob()
-{}
-
-
-void MiniAODElectronHZZIDDecider::endJob()
-{}
-
-
-void
-MiniAODElectronHZZIDDecider::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
-  //The following says we do not know what parameters are allowed so do no validation
-  // Please change this to state exactly what you do use, even if it is no parameters
-  edm::ParameterSetDescription desc;
-  desc.setUnknown();
-  descriptions.addDefault(desc);
-}
 //define this as a plug-in
 DEFINE_FWK_MODULE(MiniAODElectronHZZIDDecider);
 

@@ -14,102 +14,77 @@ import argparse
 from socket import gethostname
 
 
-def submit_jobid(jobid, dryrun=False, verbose=False):
+def submit_jobid(sample, dryrun=False, verboseInfo={}):
     """
-    Scan through the samples of a given job id, and check the dag status file
-    for failed jobs. If any, submit the rescue dag files to farmoutAnalysisJobs
+    Check the dag status file of the sample for failed jobs. If any, submit 
+    the rescue dag files to farmoutAnalysisJobs. 
+    Sample should be a path to the submit directory.
     """
-    if 'uwlogin' in gethostname():
-        scratch = '/data'
-    else:
-        scratch = '/nfs_scratch'
+    verbose = bool(verboseInfo)
 
-    user = os.environ['USER']
+    # FSA ntuples and PAT tuples use a different naming convention for the
+    # status dag files. Try both.
+    status_dag1 = '%s/dags/dag.status' % sample
+    status_dag2 = '%s/dags/dag.dag.status' % sample
 
-    path = os.path.join(scratch, user, jobid)
-
-    samples = glob.glob('%s/*' % path)
-
-    print "Job: %i samples in %s" % (len(samples),path)
-
-    if verbose:
-        jobTotal = 0
-        jobDone = 0
-        jobQueued = 0
-        jobFailed = 0
-        jobErrors = []
-
-    for s in samples:
-        # FSA ntuples and PAT tuples use a different naming convention for the
-        # status dag files. Try both.
-        status_dag1 = '%s/dags/dag.status' % s
-        status_dag2 = '%s/dags/dag.dag.status' % s
-
-        # look for failed jobs
-        errors = []
+    # look for failed jobs
+    errors = []
+    try:
+        if verbose: dagStatus, nodeStatuses, endStatus = parse_dag_state(status_dag1)
+        with open(status_dag1, 'r') as dagfile:
+            errors = [re.search('STATUS_ERROR', line) for line in dagfile]
+        with open(status_dag1, 'r') as dagfile:
+            submitted = [re.search('STATUS_SUBMITTED', line) for line in dagfile]
+    except IOError:
         try:
-            if verbose: dagStatus, nodeStatuses, endStatus = parse_dag_state(status_dag1)
-            with open(status_dag1, 'r') as dagfile:
+            if verbose: dagStatus, nodeStatuses, endStatus = parse_dag_state(status_dag2)
+            with open(status_dag2, 'r') as dagfile:
                 errors = [re.search('STATUS_ERROR', line) for line in dagfile]
-            with open(status_dag1, 'r') as dagfile:
+            with open(status_dag2, 'r') as dagfile:
                 submitted = [re.search('STATUS_SUBMITTED', line) for line in dagfile]
         except IOError:
-            try:
-                if verbose: dagStatus, nodeStatuses, endStatus = parse_dag_state(status_dag2)
-                with open(status_dag2, 'r') as dagfile:
-                    errors = [re.search('STATUS_ERROR', line) for line in dagfile]
-                with open(status_dag2, 'r') as dagfile:
-                    submitted = [re.search('STATUS_SUBMITTED', line) for line in dagfile]
-            except IOError:
-                print "    Skipping: %s" % s
-                continue
+            print "    Skipping: %s" % sample
+            return
 
-        # verbose details
-        if verbose:
-            total = dagStatus['NodesTotal']
-            jobTotal += total
-            done = dagStatus['NodesDone']
-            jobDone += done
-            queued = dagStatus['NodesQueued']
-            jobQueued += queued
-            failed = dagStatus['NodesFailed']
-            jobFailed += failed
-            statusString = "        Total: {0} Done: {1} Queued: {2} Failed: {3}".format(total,done,queued,failed)
-            errors = []
-            for node in nodeStatuses:
-                if 'status' in node['StatusDetails']:
-                    errors.append(int(node['StatusDetails'].split()[-1]))
-            jobErrors.extend(errors)
-            counts = [[x,errors.count(x)] for x in set(errors)]
-            counts = sorted(counts, key=lambda error: error[0])
-            statusString += "\n        Errors:"
-            for c in counts:
-                statusString += "\n            Error {0:d}: {1:d} times".format(c[0],c[1])
-
-        # Do not try to resubmit jobs if jobs are still running
-        if any(submitted):
-            print "    Not done: %s" % s
-            if verbose: print statusString
-            continue
-
-        # if there are any errors, submit the rescue dag files
-        if any(errors):
-            print "    Resubmit: %s" % s
-            if verbose: print statusString
-            rescue_dag = max(glob.glob('%s/dags/*dag.rescue[0-9][0-9][0-9]' % s))
-            if verbose: print '        Rescue file: {0}'.format(rescue_dag)
-            if not dryrun:
-                cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % rescue_dag
-                os.system(cmd)
-
+    # verbose details
     if verbose:
-        statusString = "    Job Total: {0} Done: {1} Queued: {2} Failed: {3}".format(jobTotal,jobDone,jobQueued,jobFailed)
-        counts = [[x,jobErrors.count(x)] for x in set(jobErrors)]
+        total = dagStatus['NodesTotal']
+        verboseInfo["jobTotal"] += total
+        done = dagStatus['NodesDone']
+        verboseInfo["jobDone"] += done
+        queued = dagStatus['NodesQueued']
+        verboseInfo["jobQueued"] += queued
+        failed = dagStatus['NodesFailed']
+        verboseInfo["jobFailed"] += failed
+        statusString = "        Total: {0} Done: {1} Queued: {2} Failed: {3}".format(total,done,queued,failed)
+        errors = []
+        for node in nodeStatuses:
+            if 'status' in node['StatusDetails']:
+                errors.append(int(node['StatusDetails'].split()[-1]))
+        verboseInfo["jobErrors"].extend(errors)
+        counts = [[x,errors.count(x)] for x in set(errors)]
         counts = sorted(counts, key=lambda error: error[0])
-        statusString += "\n    Job Errors:"
+        statusString += "\n        Errors:"
         for c in counts:
-            statusString += "\n        Job Error {0:d}: {1:d} times".format(c[0],c[1])
-        print statusString
+            statusString += "\n            Error {0:d}: {1:d} times".format(c[0],c[1])
+
+    # Do not try to resubmit jobs if jobs are still running
+    if any(submitted):
+        print "    Not done: %s" % sample
+        if verbose: print statusString
+        return
+
+    # if there are any errors, submit the rescue dag files
+    if any(errors):
+        print "    Resubmit: %s" % sample
+        if verbose: print statusString
+        rescue_dag = max(glob.glob('%s/dags/*dag.rescue[0-9][0-9][0-9]' % sample))
+        if verbose: print '        Rescue file: {0}'.format(rescue_dag)
+        if not dryrun:
+            cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % rescue_dag
+            os.system(cmd)
+    else:
+        print "    %s successful, nothing to do"%sample
 
 
 def parse_dag_state(filename):
@@ -151,9 +126,14 @@ def parse_dag_state(filename):
     return dagStatus, nodeStatuses, endStatus
 
 def parse_command_line(argv):
-    parser = argparse.ArgumentParser(description='Resubmit failed Condor jobs')
+    parser = argparse.ArgumentParser(description='Resubmit failed Condor jobs',
+                                     formatter_class=argparse.RawTextHelpFormatter)
 
-    parser.add_argument('jobids', nargs='+', help='Provide the FSA job ID(s) (UNIX wildcards allowed) the original jobs were run with')
+    parser.add_argument('jobids', nargs='+', help='Provide the FSA sample(s) in'
+                        ' one of the following formats (UNIX wildcards allowed):\n'
+                        'jobID \n'
+                        'jobID/sample \n'
+                        '/path/to/job/or/submit/directory')
 
     parser.add_argument('--dry-run', dest='dryrun', action='store_true',
                         help='Show samples to submit without submitting them')
@@ -164,6 +144,43 @@ def parse_command_line(argv):
 
     return args
 
+def generate_submit_dirs(jobids):
+    '''
+    Make a list of submit directories from an input argument. 
+    If two or more forward slashes ('/') appear in a jobid, it is interpreted 
+    as a path to a submit directory (which is resubmitted) or directory 
+    containing submit directories, all of which are resubmitted.
+    If there are no forward slashes, it is interpreted as a jobid, and its
+    submit directories are found in /<submit_base>/<username>/jobid, where
+    <submit_base> is '/data' on UWLogin and '/nfs_scratch' on login0*, and 
+    all subdirectories are resubmitted.
+    If there is exactly one forward slash, it is considered a jobid/sample pair
+    and the sample is resubmitted.
+    Either way, UNIX-style wildcards are allowed. 
+    '''
+    dirs = []
+
+    if 'uwlogin' in gethostname():
+        scratch = '/data'
+    else:
+        scratch = '/nfs_scratch'
+
+    user = os.environ['USER']
+
+    for job in jobids:
+        if job.count('/') > 1: # full path
+            unixPath = job
+        else: # jobid or jobid/sample
+            unixPath = os.path.join(scratch, user, job)
+
+        subdirs = glob.glob('%s/*' % unixPath)
+        if any('dags' in s for s in subdirs): # this is a sample
+            dirs += glob.glob(unixPath)
+        else:
+            dirs += subdirs
+
+    return dirs
+
 
 def main(argv=None):
     if argv is None:
@@ -171,12 +188,31 @@ def main(argv=None):
 
     args = parse_command_line(argv)
 
-    jobids = [directory
-              for string in args.jobids
-              for directory in glob.glob(string)]
+    samples = generate_submit_dirs(args.jobids)
 
-    for jobid in jobids:
-        submit_jobid(jobid, dryrun=args.dryrun, verbose=args.verbose)
+    verboseInfo = {}
+    if args.verbose:
+        verboseInfo["jobTotal"] = 0
+        verboseInfo["jobDone"] = 0
+        verboseInfo["jobQueued"] = 0
+        verboseInfo["jobFailed"] = 0
+        verboseInfo["jobErrors"] = []
+
+    for s in samples:
+        submit_jobid(s, dryrun=args.dryrun, verboseInfo=verboseInfo)
+
+    if args.verbose:
+        statusString = "    Job Total: {0} Done: {1} Queued: {2} Failed: {3}".format(verboseInfo["jobTotal"],
+                                                                                     verboseInfo["jobDone"],
+                                                                                     verboseInfo["jobQueued"],
+                                                                                     verboseInfo["jobFailed"])
+        counts = [[x,verboseInfo["jobErrors"].count(x)] for x in set(verboseInfo["jobErrors"])]
+        counts = sorted(counts, key=lambda error: error[0])
+        statusString += "\n    Job Errors:"
+        for c in counts:
+            statusString += "\n        Job Error {0:d}: {1:d} times".format(c[0],c[1])
+        print statusString
+
 
     return 0
 

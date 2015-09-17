@@ -2,10 +2,12 @@
 #define FinalStateAnalysis_DataFormats_PATQuadFinalStateT_h
 
 class PATFinalStateProxy;
-class PATMultiCandFinalState;
+//class PATMultiCandFinalState;
 
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateProxy.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalStateFwd.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATMultiCandFinalState.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
@@ -285,6 +287,62 @@ class PATQuadFinalStateT : public PATFinalState {
 	    output.push_back(fsr2);
 	}
       return PATFinalStateProxy(new PATMultiCandFinalState(output, evt()));
+    }
+
+
+    // Methods ending with DM are as the equivalent methods inherited from 
+    // PATFinalState, but with the user cand ignored if it does not bring the 
+    // Z candidate closer to on-shell
+
+    LorentzVector daughterP4WithUserCandDM(const size_t i, const std::string& label) const
+    {
+      if(fsrImprovesZ(i, label))
+        return daughterP4WithUserCand(i, label);
+      return daughter(i)->p4();
+    }
+
+    const bool fsrImprovesZ(const size_t i, const std::string& label) const
+    {
+      size_t j = get4LPartner(i);
+      LorentzVector without = daughter(i)->p4() + daughter(j)->p4();
+      LorentzVector with = daughterP4WithUserCand(i, label) + daughter(j)->p4();
+
+      return (fabs(with.mass() - 91.1876) < fabs(without.mass() - 91.1876));
+    }
+
+    LorentzVector diObjectP4WithUserCandsDM(const size_t i, 
+                                            const size_t j, 
+                                            const std::string& label) const
+    {
+      return (daughterP4WithUserCandDM(i, label) + 
+              daughterP4WithUserCandDM(j, label));
+    }
+
+    LorentzVector p4WithUserCandsDM(const std::string& label) const
+    {
+      LorentzVector out = LorentzVector();
+      for(size_t i = 0; i < numberOfDaughters(); ++i)
+        out += daughterP4WithUserCandDM(i, label);
+      
+      return out;      
+    }
+
+    const float ptOfDaughterUserCandDM(const size_t i, const std::string& label) const
+    {  
+      if(fsrImprovesZ(i, label))
+        {
+          reco::CandidatePtr uCand = daughterUserCand(i, label);
+          return uCand->pt();
+        }
+      
+      return 0.;
+    }
+
+    const float daughterUserCandIsoContributionDM(const size_t i, const std::string& label) const
+    {
+      if(fsrImprovesZ(i, label))
+        return daughterUserCandIsoContribution(i, label);
+      return 0.;
     }
 
     

@@ -11,7 +11,7 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
 
 #include <string>
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
@@ -19,14 +19,14 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "FinalStateAnalysis/PatTools/interface/FinalStateMassResolution.h"
 
-class PATFinalStateMassResolutionEmbedder : public edm::EDProducer {
+class PATFinalStateMassResolutionEmbedder : public edm::stream::EDProducer<> {
 public:
   PATFinalStateMassResolutionEmbedder(const edm::ParameterSet& pset);
   virtual ~PATFinalStateMassResolutionEmbedder(){ delete resoCalc_;}
   void produce(edm::Event& evt, const edm::EventSetup& es);
 private:
   const bool debug_;
-  edm::InputTag src_;    
+  const edm::EDGetTokenT<edm::View<PATFinalState> > src_;    
   FinalStateMassResolution* resoCalc_;  
   
 };
@@ -34,7 +34,7 @@ private:
 PATFinalStateMassResolutionEmbedder::
 PATFinalStateMassResolutionEmbedder(const edm::ParameterSet& pset):
   debug_(pset.getParameter<bool>("debug")),
-  src_(pset.getParameter<edm::InputTag>("src"))
+  src_(consumes<edm::View<PATFinalState> >(pset.getParameter<edm::InputTag>("src")))
 {  
   resoCalc_ = new FinalStateMassResolution();    
   produces<PATFinalStateCollection>();
@@ -47,7 +47,7 @@ produce(edm::Event& evt, const edm::EventSetup& es) {
   resoCalc_->init(es);
 
   edm::Handle<edm::View<PATFinalState> > finalStatesH;
-  evt.getByLabel(src_, finalStatesH);
+  evt.getByToken(src_, finalStatesH);
   
   for (size_t i = 0; i < finalStatesH->size(); ++i) {
     PATFinalState* embedInto = finalStatesH->ptrAt(i)->clone();    

@@ -40,7 +40,7 @@ PATFinalStateAnalysisFilter::PATFinalStateAnalysisFilter(
     const edm::ParameterSet& pset) {
   edm::Service<TFileService> fs;
   TFileDirectory &fd =  fs->tFileDirectory();
-  analysis_.reset(new PATFinalStateAnalysis(pset, fd));
+  analysis_.reset(new PATFinalStateAnalysis(pset, fd, consumesCollector()));
 
 }
 
@@ -53,15 +53,13 @@ bool PATFinalStateAnalysisFilter::filter(
 void PATFinalStateAnalysisFilter::beginLuminosityBlock(
     edm::LuminosityBlock const& ls, edm::EventSetup const& es) {
 
-  const edm::LuminosityBlockBase& lsBase = ls;
-  analysis_->beginLuminosityBlock(lsBase);
+  analysis_->beginLuminosityBlock(ls);
 }
 
 void PATFinalStateAnalysisFilter::endLuminosityBlock(
     edm::LuminosityBlock const& ls, edm::EventSetup const& es) {
-  const edm::LuminosityBlockBase& lsBase = ls;
 
-  analysis_->endLuminosityBlock(lsBase);
+  analysis_->endLuminosityBlock(ls);
 }
 
 void PATFinalStateAnalysisFilter::beginJob() {

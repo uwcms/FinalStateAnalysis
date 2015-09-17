@@ -2,7 +2,7 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
 
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
@@ -10,7 +10,7 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATTripletFinalStateT.h"
 
 template<class FinalState>
-class PATTripletFinalStateBuilderT : public edm::EDProducer {
+class PATTripletFinalStateBuilderT : public edm::stream::EDProducer<> {
   public:
     typedef std::vector<FinalState> FinalStateCollection;
 
@@ -18,21 +18,22 @@ class PATTripletFinalStateBuilderT : public edm::EDProducer {
     virtual ~PATTripletFinalStateBuilderT(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag leg1Src_;
-    edm::InputTag leg2Src_;
-    edm::InputTag leg3Src_;
-    edm::InputTag evtSrc_;
-    StringCutObjectSelector<PATFinalState> cut_;
+    const StringCutObjectSelector<PATFinalState> cut_;
+    const edm::EDGetTokenT<edm::View<typename FinalState::daughter1_type> > leg1Src_;
+    const edm::EDGetTokenT<edm::View<typename FinalState::daughter2_type> > leg2Src_;
+    const edm::EDGetTokenT<edm::View<typename FinalState::daughter3_type> > leg3Src_;
+    const edm::EDGetTokenT<edm::View<PATFinalStateEvent> > evtSrc_;
 };
 
 template<class FinalState>
 PATTripletFinalStateBuilderT<FinalState>::PATTripletFinalStateBuilderT(
     const edm::ParameterSet& pset):
-  cut_(pset.getParameter<std::string>("cut"), true) {
-  leg1Src_ = pset.getParameter<edm::InputTag>("leg1Src");
-  leg2Src_ = pset.getParameter<edm::InputTag>("leg2Src");
-  leg3Src_ = pset.getParameter<edm::InputTag>("leg3Src");
-  evtSrc_ = pset.getParameter<edm::InputTag>("evtSrc");
+  cut_(pset.getParameter<std::string>("cut"), true),
+  leg1Src_(consumes<edm::View<typename FinalState::daughter1_type> >(pset.getParameter<edm::InputTag>("leg1Src"))),
+  leg2Src_(consumes<edm::View<typename FinalState::daughter2_type> >(pset.getParameter<edm::InputTag>("leg2Src"))),
+  leg3Src_(consumes<edm::View<typename FinalState::daughter3_type> >(pset.getParameter<edm::InputTag>("leg3Src"))),
+  evtSrc_(consumes<edm::View<PATFinalStateEvent> >(pset.getParameter<edm::InputTag>("evtSrc")))
+{
   produces<FinalStateCollection>();
 }
 
@@ -41,20 +42,20 @@ PATTripletFinalStateBuilderT<FinalState>::produce(
     edm::Event& evt, const edm::EventSetup& es) {
 
   edm::Handle<edm::View<PATFinalStateEvent> > fsEvent;
-  evt.getByLabel(evtSrc_, fsEvent);
+  evt.getByToken(evtSrc_, fsEvent);
   edm::Ptr<PATFinalStateEvent> evtPtr = fsEvent->ptrAt(0);
   assert(evtPtr.isNonnull());
 
   std::auto_ptr<FinalStateCollection> output(new FinalStateCollection);
 
   edm::Handle<edm::View<typename FinalState::daughter1_type> > leg1s;
-  evt.getByLabel(leg1Src_, leg1s);
+  evt.getByToken(leg1Src_, leg1s);
 
   edm::Handle<edm::View<typename FinalState::daughter2_type> > leg2s;
-  evt.getByLabel(leg2Src_, leg2s);
+  evt.getByToken(leg2Src_, leg2s);
 
   edm::Handle<edm::View<typename FinalState::daughter3_type> > leg3s;
-  evt.getByLabel(leg3Src_, leg3s);
+  evt.getByToken(leg3Src_, leg3s);
 
   for (size_t iLeg1 = 0; iLeg1 < leg1s->size(); ++iLeg1) {
     edm::Ptr<typename FinalState::daughter1_type> leg1 = leg1s->ptrAt(iLeg1);

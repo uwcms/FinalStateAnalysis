@@ -10,21 +10,23 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
+#include "FWCore/Utilities/interface/EDGetToken.h"
 
 #include "DataFormats/PatCandidates/interface/Jet.h"
 
-class MiniAODJetIdEmbedder : public edm::EDProducer {
+class MiniAODJetIdEmbedder : public edm::stream::EDProducer<> {
   public:
     MiniAODJetIdEmbedder(const edm::ParameterSet& pset);
     virtual ~MiniAODJetIdEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
+  const edm::EDGetTokenT<edm::View<pat::Jet> > src_;
 };
 
-MiniAODJetIdEmbedder::MiniAODJetIdEmbedder(const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
+MiniAODJetIdEmbedder::MiniAODJetIdEmbedder(const edm::ParameterSet& pset) :
+  src_(consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src")))
+{
   produces<pat::JetCollection>();
 }
 
@@ -32,7 +34,7 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
   std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
 
   edm::Handle<edm::View<pat::Jet> > input;
-  evt.getByLabel(src_, input);
+  evt.getByToken(src_, input);
 
   output->reserve(input->size());
   for (size_t i = 0; i < input->size(); ++i) {

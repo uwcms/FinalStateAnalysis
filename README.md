@@ -11,7 +11,7 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
 Installation
 ------------
 
-Current CMSSW version: ``7_4_7``.
+Current CMSSW version: ``7_5_2``.
 
 Get a supported CMSSW release area:
 
@@ -30,7 +30,7 @@ Get a supported CMSSW release area:
 Checkout the FinalStateAnalysis repository:
 
 ```bash
-  git clone --recursive -b miniAOD_dev_74X git@github.com:uwcms/FinalStateAnalysis.git
+  git clone --recursive -b miniAOD_dev_75X git@github.com:uwcms/FinalStateAnalysis.git
   cd FinalStateAnalysis
 ```
 
@@ -39,7 +39,7 @@ Checkout extra needed code:
 ```bash
   cd recipe/
   # Checkout needed packages and apply patches
-  # do >> HZZ=1 ./recipe.sh  instead if you want H->ZZ MELA stuff.
+  # do $ HZZ=1 ./recipe.sh  instead if you want H->ZZ MELA stuff.
   ./recipe.sh
   cd ..
   # Setup FSA environment

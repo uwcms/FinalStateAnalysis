@@ -7,7 +7,8 @@
 
 // user include files
 #include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDProducer.h"
+#include "FWCore/Framework/interface/stream/EDProducer.h"
+#include "FWCore/Utilities/interface/EDGetToken.h"
 
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
@@ -16,14 +17,14 @@
 // class decleration
 //
 template <typename T>
-class PATRhoOverloader : public edm::EDProducer {
+class PATRhoOverloader : public edm::stream::EDProducer<> {
 
    public:
-     explicit PATRhoOverloader (const edm::ParameterSet& iConfig):
-       src_(iConfig.getParameter<edm::InputTag>("src")),
-       srcRho_(iConfig.getParameter<edm::InputTag>("srcRho"))
+     explicit PATRhoOverloader (const edm::ParameterSet& iConfig) :
+        src_(consumes<std::vector<T> >(iConfig.getParameter<edm::InputTag>("src"))),
+        srcRho_(consumes<double>(iConfig.getParameter<edm::InputTag>("srcRho"))),
+        label_(iConfig.exists("userLabel") ? iConfig.getParameter<std::string>("userLabel") : "rho")
        {
-         label_ = iConfig.exists("userLabel") ? iConfig.getParameter<std::string>("userLabel") : "rho";
 	 produces<std::vector<T> >();
        }
 
@@ -44,11 +45,11 @@ class PATRhoOverloader : public edm::EDProducer {
 	  float rho = 0.0;
 
 	  edm::Handle<double> srcRho;
-	  if(iEvent.getByLabel(srcRho_,srcRho))
+	  if(iEvent.getByToken(srcRho_,srcRho))
 	    rho = *srcRho;
 
 
-	  if(iEvent.getByLabel(src_,src))
+	  if(iEvent.getByToken(src_,src))
 	    for(unsigned int i=0;i<src->size();++i) {
 	      T obj = src->at(i);
 	      obj.addUserFloat(label_, rho );
@@ -60,8 +61,8 @@ class PATRhoOverloader : public edm::EDProducer {
 
       virtual void endJob() { }
 
-      edm::InputTag src_;
-      edm::InputTag srcRho_;
-      std::string label_;
+      const edm::EDGetTokenT<std::vector<T> > src_;
+      const edm::EDGetTokenT<double> srcRho_;
+      const std::string label_;
 
 };
