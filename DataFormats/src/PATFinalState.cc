@@ -478,6 +478,15 @@ double PATFinalState::ht() const {
   return output;
 }
 
+double PATFinalState::jetHt(const std::string& jetCuts) const {
+  std::vector<const reco::Candidate*> jets = this->vetoJets(0.0, jetCuts);
+  double output = 0;
+  for (size_t i = 0; i < jets.size(); ++i) {
+    output += jets[i]->pt();
+  }
+  return output;
+}
+
 double PATFinalState::pZeta(int i, int j) const {
   return fshelpers::pZeta(daughter(i)->p4(), daughter(j)->p4(),
       met()->px(), met()->py()).first;
