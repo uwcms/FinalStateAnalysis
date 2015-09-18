@@ -16,9 +16,6 @@ pushd $CMSSW_BASE/src
 # electron and photon id
 git cms-merge-topic ikrav:egm_id_7.4.12_v1
 
-# 74X met corrections (no HF)
-#git cms-merge-topic -u cms-met:METCorUnc74X
-
 # HZZ MELA, MEKD etc.
 if [ "$HZZ" = "1" ]; then
     echo "Checking out ZZ MELA and Higgs combine"
