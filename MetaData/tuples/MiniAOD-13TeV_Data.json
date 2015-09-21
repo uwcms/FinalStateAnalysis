@@ -10,7 +10,11 @@
   "data_DoubleMuon_Run2015C_PromptReco_25ns" : "/DoubleMuon/Run2015C-PromptReco-v1/MINIAOD",
   "data_MuonEG_Run2015C_PromptReco_25ns" : "/MuonEG/Run2015C-PromptReco-v1/MINIAOD",
   "data_DoubleEG_Run2015C_PromptReco_25ns" : "/DoubleEG/Run2015C-PromptReco-v1/MINIAOD",
-  "data_Tau_Run2015C_PromptReco_25ns" : "/Tau/Run2015C-PromptReco-v1/MINIAOD"
+  "data_Tau_Run2015C_PromptReco_25ns" : "/Tau/Run2015C-PromptReco-v1/MINIAOD",
+  "data_DoubleMuon_Run2015D_PromptReco_25ns" : "/DoubleMuon/Run2015D-PromptReco-v3/MINIAOD",
+  "data_MuonEG_Run2015D_PromptReco_25ns" : "/MuonEG/Run2015D-PromptReco-v3/MINIAOD",
+  "data_DoubleEG_Run2015D_PromptReco_25ns" : "/DoubleEG/Run2015D-PromptReco-v3/MINIAOD",
+  "data_Tau_Run2015D_PromptReco_25ns" : "/Tau/Run2015D-PromptReco-v3/MINIAOD"
 }
 
 
