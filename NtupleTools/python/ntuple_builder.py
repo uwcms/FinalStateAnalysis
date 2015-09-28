@@ -387,6 +387,7 @@ def make_ntuple(*legs, **kwargs):
         evtSrc=cms.InputTag("patFinalStateEventProducer"),
         # counter of events before any selections
         skimCounter=cms.InputTag("eventCount"),
+        summedWeight=cms.InputTag("summedWeight"),
         analysis=cms.PSet(
             selections=cms.VPSet(),
             EventView=cms.bool(False),

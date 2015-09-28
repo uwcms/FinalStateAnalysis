@@ -201,6 +201,7 @@ print 'Using globalTag: %s' % process.GlobalTag.globaltag
 process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
 process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateLSProducer_cfi")
 process.generateMetaInfo = cms.Path(process.eventCount *
+                                    process.summedWeight *
                                     process.finalStateLS
                                     )
 process.schedule.append(process.generateMetaInfo)
