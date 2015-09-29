@@ -41,6 +41,7 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
     runDir_.reset(new TFileDirectory(fs.mkdir("runs")));
 
   skimCounter_ = pset.getParameter<edm::InputTag>("skimCounter");
+  summedWeight_ = pset.getParameter<edm::InputTag>("summedWeight");
   lumiProducer_ = pset.exists("lumiProducer") ?
     pset.getParameter<edm::InputTag>("lumiProducer") :
     edm::InputTag("finalStateLS");
@@ -52,6 +53,8 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
       "eventWeights", "Events Weights", 100, 0, 5);
   skimEventCounter_ = fs_.make<TH1F>(
       "skimCounter", "Original Events Processed", 1, -0.5, 0.5);
+  summedWeightHist_ = fs_.make<TH1F>(
+      "summedWeights", "Sum of weights for processed events", 1, -0.5, 0.5);
   integratedLumi_ = fs_.make<TH1F>(
       "intLumi", "Integrated Lumi", 1, -0.5, 0.5);
   metaTree_ = fs_.make<TTree>(
@@ -59,6 +62,7 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
   metaTree_->Branch("run", &treeRunBranch_, "run/I");
   metaTree_->Branch("lumi", &treeLumiBranch_, "lumi/I");
   metaTree_->Branch("nevents", &treeEventsProcessedBranch_, "nevents/I");
+  metaTree_->Branch("summedWeights", &treeSummedWeightsBranch_, "summedWeights/F");
 
 }
 
@@ -72,6 +76,10 @@ void PATFinalStateAnalysis::endLuminosityBlock(
   ls.getByLabel(skimCounter_, skimmedEvents);
   skimEventCounter_->Fill(0.0, skimmedEvents->value);
 
+  edm::Handle<edm::MergeableCounter> summedWeights;
+  ls.getByLabel(summedWeight_, summedWeights);
+  summedWeightHist_->Fill(0.0, summedWeights->value);
+
   edm::Handle<PATFinalStateLS> lumiSummary;
   ls.getByLabel(lumiProducer_, lumiSummary);
   integratedLumi_->Fill(0.0, lumiSummary->intLumi());
@@ -81,6 +89,7 @@ void PATFinalStateAnalysis::endLuminosityBlock(
   treeRunBranch_ = ls.run();
   treeLumiBranch_ = ls.luminosityBlock();
   treeEventsProcessedBranch_ = skimmedEvents->value;
+  treeSummedWeightsBranch_ = summedWeights->value;
   metaTree_->Fill();
 }
 
