@@ -36,7 +36,7 @@ parameters = {
         'j' : {
             'selection' : 'pt>20 & abs(eta) < 2.5 & userFloat("idLoose")',
             'e': {
-                'selection' : 'pt>10&&userInt("CBIDLoose")>0&&(chargedHadronIso()+max(0.0,neutralHadronIso()+photonIso()-userFloat("rhoCSA14")*userFloat("EffectiveArea_HZZ4l2015")))/pt()<0.2',
+                'selection' : 'pt>10&&userInt("CBIDLoose")>0&&(chargedHadronIso()+max(0.0,neutralHadronIso()+photonIso()-userFloat("rho_fastjet")*userFloat("EffectiveArea")))/pt()<0.2',
                 'deltaR' : 0.3,
                 },
             'm': {

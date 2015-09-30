@@ -97,7 +97,9 @@
   "WH_HToBB_WToLNu" : "WH_HToBB_WToLNu_M125_13TeV_amcatnloFXFX_madspin_pythia8",
   "ZH_HToBB_ZToLL" : "ZH_HToBB_ZToLL_M125_13TeV_amcatnloFXFX_madspin_pythia8",
 
-  "WZZ" : "WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"
+  "WWZ" : "WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8",
+  "WZZ" : "WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8",
+  "ZZZ" : "ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"
 }
 
 
