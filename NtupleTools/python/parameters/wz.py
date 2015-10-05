@@ -27,11 +27,11 @@ parameters = {
         # remove jets that are close to leptons
         'j' : {
             'e': {
-                'selection' : 'pt>10&&userInt("CBIDLoose")>0&&(chargedHadronIso()+max(0.0,neutralHadronIso()+photonIso()-userFloat("rhoCSA14")*userFloat("EffectiveArea_HZZ4l2015")))/pt()<0.2',
+                'selection' : 'pt>10 && userInt("CBIDLoose")>0.5',
                 'deltaR' : 0.3,
                 },
             'm': {
-                'selection' : 'pt>10&&isLooseMuon&&(chargedHadronIso()+max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso,0.0))/pt()<0.2',
+                'selection' : 'pt>10 && isLooseMuon && (chargedHadronIso()+max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso,0.0))/pt()<0.2',
                 'deltaR' : 0.3,
                 },
             },
@@ -39,20 +39,20 @@ parameters = {
 
     # selections to include object in final state (should be looser than analysis selections)
     'finalSelection' : {
-        'e': 'abs(superCluster().eta) < 3.0 & max(pt, userFloat("maxCorPt")) > 7',
-        'm': 'max(pt, userFloat("maxCorPt")) > 4 & (isGlobalMuon | isTrackerMuon)',
-        't': 'abs(eta) < 2.5 & pt > 17 & tauID("decayModeFinding")',
-        'g': 'abs(superCluster().eta()) < 3.0 & pt > 10',
-        'j': 'pt>20 & abs(eta) < 2.5 & userFloat("idLoose")'
+        'e': 'abs(superCluster().eta) < 3.0 && max(pt, userFloat("maxCorPt")) > 7',
+        'm': 'max(pt, userFloat("maxCorPt")) > 4 && (isGlobalMuon | isTrackerMuon)',
+        't': 'abs(eta) < 2.5 && pt > 17 && tauID("decayModeFinding")',
+        'g': 'abs(superCluster().eta()) < 3.0 && pt > 10',
+        'j': 'pt>20 && abs(eta) < 2.5 && userFloat("idLoose")'
     },
     # cross cleaning for objects in final state
     'crossCleaning' : '',
     # additional variables for ntuple
     'eventVariables' : PSet(
-        muVeto = 'vetoMuons(0.1, "isLooseMuon & pt > 10 & abs(eta) < 2.4 & (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/pt()<0.2").size()',
-        muVetoTight = 'vetoMuons(0.1, "userInt(\'tightID\') > 0.5  & pt > 10 & abs(eta) < 2.4 & (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/pt()<0.12").size()',
-        eVeto = 'vetoElectrons(0.1, "userFloat(\'CBIDLoose\')>0.5 & pt > 10 & abs(eta) < 2.5").size()',
-        eVetoTight = 'vetoElectrons(0.1, "userFloat(\'CBIDMedium\')>0.5 & pt > 10 & abs(eta) < 2.5").size()',
+        muVeto = 'vetoMuons(0.01, "isLooseMuon && pt > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/pt()<0.2").size()',
+        muVetoTight = 'vetoMuons(0.01, "userInt(\'tightID\') > 0.5  && pt > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/pt()<0.12").size()',
+        eVeto = 'vetoElectrons(0.01, "userFloat(\'CBIDLoose\')>0.5 && pt > 10 && abs(eta) < 2.5").size()',
+        eVetoTight = 'vetoElectrons(0.01, "userFloat(\'CBIDMedium\')>0.5 && pt > 10 && abs(eta) < 2.5").size()',
     ),
     # candidates of form: objectVarName = 'string expression for selection'
     'candidateVariables' : PSet(),

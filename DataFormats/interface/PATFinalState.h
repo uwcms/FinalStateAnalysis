@@ -166,6 +166,8 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     double ht(const std::string& sysTags) const;
     double ht() const;
 
+    double jetHt(const std::string& jetCuts) const;
+
     /// Compute the pZeta variable using the ith and jth legs as
     /// the "visible" objects.
     double pZeta(int i=0, int j=1) const;

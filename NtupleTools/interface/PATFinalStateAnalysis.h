@@ -67,6 +67,9 @@ class PATFinalStateAnalysis : public edm::BasicAnalyzer {
     // For keeping track of the skimming
     edm::InputTag skimCounter_;
     TH1* skimEventCounter_;
+    // gen weights
+    edm::InputTag summedWeight_;
+    TH1* summedWeightHist_;
     // For counting the luminosity
     edm::InputTag lumiProducer_;
     TH1* integratedLumi_;
@@ -76,6 +79,7 @@ class PATFinalStateAnalysis : public edm::BasicAnalyzer {
     Int_t treeRunBranch_;
     Int_t treeLumiBranch_;
     Int_t treeEventsProcessedBranch_;
+    Float_t treeSummedWeightsBranch_;
     Float_t treeIntLumi_; // The estimated integrated luminosity
 
     bool filter_;

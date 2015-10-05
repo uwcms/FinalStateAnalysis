@@ -22,7 +22,7 @@ id = PSet(
     # For charged, we use ALL charged particles
     objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
     objectEffectiveArea2011 = '{object}.userFloat("ea_comb_iso04_kt6PFJCth05")',
-    objectRho = cms.string('{object}.userFloat("rhoCSA14")'),
+    objectRho = cms.string('{object}.userFloat("rho_fastjet")'),
     objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
@@ -38,14 +38,14 @@ id = PSet(
         '({object}.chargedHadronIso()'
         '+max(0.0,{object}.neutralHadronIso()'
         '+{object}.photonIso()'
-        '-{object}.userFloat("rhoCSA14")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
+        '-{object}.userFloat("rho_fastjet")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
         '/{object}.pt()'
     ),
     objectRelPFIsoRhoFSR = cms.string(
         '({object}.chargedHadronIso()'
         '+max(0.0,{object}.neutralHadronIso()'
         '+{object}.photonIso() - userFloat("leg{object_idx}fsrIsoCorr")'
-        '-{object}.userFloat("rhoCSA14")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
+        '-{object}.userFloat("rho_fastjet")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
         '/{object}.pt()'
     ),
 

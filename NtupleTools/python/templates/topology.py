@@ -59,6 +59,7 @@ finalstate = PSet(
     Phi = 'phi',
     Mass = 'mass',
     Mt = 'mt',
+    Ht = 'jetHt("pt>30 && abs(eta)<2.5")',
     MassError = 'userFloat("cand_dM")',
     MassErrord1 = 'userFloat("cand_dM_0")',
     MassErrord2 = 'userFloat("cand_dM_1")',

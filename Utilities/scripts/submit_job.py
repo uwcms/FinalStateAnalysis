@@ -131,9 +131,10 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     # temp hardcode
     if args.apply_cms_lumimask:
-        filename = 'Cert_246908-255031_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt' # 16.1/pb
-        if args.bunchSpacing==50: filename = 'Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON.txt' # TODO/pb
+        filename = 'Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON.txt' # 225.57/pb
+        if args.bunchSpacing==50: filename = 'Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2.txt' # 71.52/pb
         lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV',filename)
+        if args.lumimaskjson: lumi_mask_path = args.lumimaskjson
         command.append('lumiMask=%s' % lumi_mask_path)
 
     #if args.apply_cms_lumimask and 'lumi_mask' in sample_info:
@@ -241,6 +242,11 @@ def get_com_line_args():
         '--apply-cmsRun-lumimask', dest='apply_cms_lumimask',
         action='store_true', help = 'If specified, pass the appropriate '
         'lumiMask=XXX.json and firstRun etc to cmsRun'
+    )
+    cmsrun_group.add_argument(
+        '--lumimask-json', dest='lumimaskjson',
+        default='',
+        help = 'Custom lumimask json.',
     )
     cmsrun_group.add_argument(
         '--bunch-spacing', dest='bunchSpacing', type=int,
