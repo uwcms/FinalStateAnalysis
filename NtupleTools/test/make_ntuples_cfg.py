@@ -242,8 +242,8 @@ if options.runMETNoHF:
         runMetCorAndUncFromMiniAOD(process,
                                    isData=not options.isMC,
                                    pfCandColl=cms.InputTag("noHFCands"),
-                                   reclusterJets=True, #needed for NoHF
-                                   recoMetFromPFCs=True, #needed for NoHF
+                                   #reclusterJets=True, #needed for NoHF
+                                   #recoMetFromPFCs=True, #needed for NoHF
                                    postfix="NoHF"
                                    )
     fs_daughter_inputs['pfmet'] = 'slimmedMETsNoHF'
