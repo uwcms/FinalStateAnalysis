@@ -228,7 +228,27 @@ fs_daughter_inputs = {
 }
 
 
+# caluclate slimmedMETsNoHF
+if options.runMETNoHF:
+    if options.isMC: # temp until they run miniaodv2
+        process.noHFCands = cms.EDFilter("CandPtrSelector",
+                                         src=cms.InputTag("packedPFCandidates"),
+                                         cut=cms.string("abs(pdgId)!=1 && abs(pdgId)!=2 && abs(eta)<3.0")
+                                         )
+        from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+        runMetCorAndUncFromMiniAOD(process,
+                               isData=not options.isMC,
+                               )
+        runMetCorAndUncFromMiniAOD(process,
+                                   isData=not options.isMC,
+                                   pfCandColl=cms.InputTag("noHFCands"),
+                                   reclusterJets=True, #needed for NoHF
+                                   recoMetFromPFCs=True, #needed for NoHF
+                                   postfix="NoHF"
+                                   )
+    fs_daughter_inputs['pfmet'] = 'slimmedMETsNoHF'
 
+### embed some things we need that arent in miniAOD (ids, etc.)
 
 
 ###############################
@@ -400,9 +420,6 @@ if options.hzz:
         fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
         process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
         process.schedule.append(process.makeFSRPhotons)
-
-
-
 
 
 
