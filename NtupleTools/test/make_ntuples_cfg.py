@@ -93,6 +93,7 @@ options = TauVarParsing.TauVarParsing(
     eleCor="",
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runMVAMET=0,  # If one, (re)build the MVA MET
+    runMETNoHF=0,  # If one, use get metnohf (needs to be recalculated in miniaodv1)
     rerunJets=0,
     dblhMode=False, # For double-charged Higgs analysis
     runTauSpinner=0,
@@ -217,7 +218,7 @@ fs_daughter_inputs = {
     'taus': 'slimmedTaus',
     'photons': 'slimmedPhotons',
     'jets': 'slimmedJets',
-    'pfmet': 'slimmedMETs',         # puppi also available, not implemented yet though
+    'pfmet': 'slimmedMETs',         # slimmedMETs, slimmedMETsNoHF (miniaodv2), slimmmedMETsPuppi (not correct in miniaodv1)
     'mvamet': 'fixme',              # produced later
     'fsr': 'slimmedPhotons',
     'vertices': 'offlineSlimmedPrimaryVertices',
@@ -226,6 +227,26 @@ fs_daughter_inputs = {
 # add met filters
 if options.runMetFilter:
     pass
+
+# caluclate slimmedMETsNoHF
+if options.runMETNoHF:
+    if options.isMC: # temp until they run miniaodv2
+        process.noHFCands = cms.EDFilter("CandPtrSelector",
+                                         src=cms.InputTag("packedPFCandidates"),
+                                         cut=cms.string("abs(pdgId)!=1 && abs(pdgId)!=2 && abs(eta)<3.0")
+                                         )
+        from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+        runMetCorAndUncFromMiniAOD(process,
+                               isData=not options.isMC,
+                               )
+        runMetCorAndUncFromMiniAOD(process,
+                                   isData=not options.isMC,
+                                   pfCandColl=cms.InputTag("noHFCands"),
+                                   reclusterJets=True, #needed for NoHF
+                                   recoMetFromPFCs=True, #needed for NoHF
+                                   postfix="NoHF"
+                                   )
+    fs_daughter_inputs['pfmet'] = 'slimmedMETsNoHF'
 
 ### embed some things we need that arent in miniAOD (ids, etc.)
 
@@ -347,46 +368,46 @@ if options.hzz:
     process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
     process.schedule.append(process.makeFSRPhotons)
 
-    # Embed HZZ ID and isolation decisions because we need to know them for FSR recovery
-    idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
-    isoCheatLabel = "HZZ4lIsoPass"
-    process.electronIDIsoCheatEmbedding = cms.EDProducer(
-        "MiniAODElectronHZZIDDecider",
-        src = cms.InputTag(fs_daughter_inputs['electrons']),
-        idLabel = cms.string(idCheatLabel), # boolean stored as userFloat with this name
-        isoLabel = cms.string(isoCheatLabel), # boolean stored as userFloat with this name
-        rhoLabel = cms.string("rho_fastjet"), # use rho and EA userFloats with these names
-        eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
-        vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
-        bdtLabel = cms.string(electronMVANonTrigIDLabel),
-        )
-    fs_daughter_inputs['electrons'] = 'electronIDIsoCheatEmbedding'
-    process.muonIDIsoCheatEmbedding = cms.EDProducer(
-        "MiniAODMuonHZZIDDecider",
-        src = cms.InputTag(fs_daughter_inputs['muons']),
-        idLabel = cms.string(idCheatLabel), # boolean will be stored as userFloat with this name
-        isoLabel = cms.string(isoCheatLabel), # boolean will be stored as userFloat with this name
-        vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
-        # Defaults are correct as of 9 March 2015, overwrite later if needed
-        )
-    fs_daughter_inputs['muons'] = 'muonIDIsoCheatEmbedding'
+# Embed HZZ ID and isolation decisions because we need to know them for FSR recovery
+idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
+isoCheatLabel = "HZZ4lIsoPass"
+process.electronIDIsoCheatEmbedding = cms.EDProducer(
+    "MiniAODElectronHZZIDDecider",
+    src = cms.InputTag(fs_daughter_inputs['electrons']),
+    idLabel = cms.string(idCheatLabel), # boolean stored as userFloat with this name
+    isoLabel = cms.string(isoCheatLabel), # boolean stored as userFloat with this name
+    rhoLabel = cms.string("rho_fastjet"), # use rho and EA userFloats with these names
+    eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
+    vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
+    bdtLabel = cms.string(electronMVANonTrigIDLabel),
+    )
+fs_daughter_inputs['electrons'] = 'electronIDIsoCheatEmbedding'
+process.muonIDIsoCheatEmbedding = cms.EDProducer(
+    "MiniAODMuonHZZIDDecider",
+    src = cms.InputTag(fs_daughter_inputs['muons']),
+    idLabel = cms.string(idCheatLabel), # boolean will be stored as userFloat with this name
+    isoLabel = cms.string(isoCheatLabel), # boolean will be stored as userFloat with this name
+    vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
+    # Defaults are correct as of 9 March 2015, overwrite later if needed
+    )
+fs_daughter_inputs['muons'] = 'muonIDIsoCheatEmbedding'
 
-    # at 50ns, HZZ is actually SMP ZZ, which requires slightly different cuts
-    # (use cut based ID rather than MVA electron ID, all leptons must have pt>10,
-    # and we don't use the SIP cut)
-    if not options.use25ns:
-        process.electronIDIsoCheatEmbedding.bdtLabel = cms.string('')
-        process.electronIDIsoCheatEmbedding.selection = cms.string('userFloat("CBIDMedium") > 0.5')
-        process.electronIDIsoCheatEmbedding.ptCut = cms.double(10.)
-        process.electronIDIsoCheatEmbedding.sipCut = cms.double(9999.)
-        process.muonIDIsoCheatEmbedding.ptCut = cms.double(10.)
-        process.muonIDIsoCheatEmbedding.sipCut = cms.double(9999.)
+# at 50ns, HZZ is actually SMP ZZ, which requires slightly different cuts
+# (use cut based ID rather than MVA electron ID, all leptons must have pt>10,
+# and we don't use the SIP cut)
+if not options.use25ns:
+    process.electronIDIsoCheatEmbedding.bdtLabel = cms.string('')
+    process.electronIDIsoCheatEmbedding.selection = cms.string('userFloat("CBIDMedium") > 0.5')
+    process.electronIDIsoCheatEmbedding.ptCut = cms.double(10.)
+    process.electronIDIsoCheatEmbedding.sipCut = cms.double(9999.)
+    process.muonIDIsoCheatEmbedding.ptCut = cms.double(10.)
+    process.muonIDIsoCheatEmbedding.sipCut = cms.double(9999.)
 
-    process.embedHZZ4lIDDecisions = cms.Path(
-        process.electronIDIsoCheatEmbedding +
-        process.muonIDIsoCheatEmbedding
-        )
-    process.schedule.append(process.embedHZZ4lIDDecisions)
+process.embedHZZ4lIDDecisions = cms.Path(
+    process.electronIDIsoCheatEmbedding +
+    process.muonIDIsoCheatEmbedding
+    )
+process.schedule.append(process.embedHZZ4lIDDecisions)
     
 
 ## Do preselection as requested in the analysis parameters
