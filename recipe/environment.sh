@@ -22,15 +22,6 @@ export tests=$CMSSW_BASE/test/$SCRAM_ARCH/
 MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
 MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 
-if [ "$MAJOR_VERSION" -eq "7" ]; then
-  echo "Setting up CMSSW 7 global tags"
-  export datagt=GR_P_V56
-  export mcgt=MCRUN2_74_V9
-fi
-
-echo "Data global tag: $datagt"
-echo "MC global tag: $mcgt"
-
 # Define some shortcuts to HDFS and scratch areas
 export hdfs=/hdfs/store/user/$LOGNAME/
 export scratch=/scratch/$LOGNAME/
