@@ -13,6 +13,9 @@ MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 
 pushd $CMSSW_BASE/src
 
+# electron and photon id
+git cms-merge-topic ikrav:egm_id_7.4.12_v1
+
 # 74X met corrections (no HF)
 #git cms-merge-topic -u cms-met:METCorUnc74X
 
