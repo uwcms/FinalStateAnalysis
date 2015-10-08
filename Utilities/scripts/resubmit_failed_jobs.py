@@ -70,7 +70,7 @@ def submit_jobid(sample, dryrun=False, verboseInfo={}):
 
     # Do not try to resubmit jobs if jobs are still running
     if any(submitted):
-        print "    Not done: %s" % sample
+        print "    %s not done, try again later" % sample
         if verbose: print statusString
         return
 
