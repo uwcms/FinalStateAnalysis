@@ -137,7 +137,7 @@ namespace fshelpers {
       return reco::GenParticleRef();
     }
     reco::GenParticleCollection genParticles = *genCollectionRef;
-
+ 
     //builds pset used by various subclasses
     edm::ParameterSet pset;
     pset.addParameter<double>("maxDPtRel", 0.5);
@@ -147,6 +147,9 @@ namespace fshelpers {
     pset.addParameter<std::vector<int> >("mcPdgId", pdgIdsToMatch);
     std::vector<int> status;
     status.push_back(1);
+    for (int istatus = 21; istatus< 30 ; istatus++){
+      status.push_back(istatus); //pythia8 particles from an hard process have status code 21-29 
+    }
     pset.addParameter<std::vector<int> >("mcStatus", status);
     pset.addParameter<bool>("resolveByMatchQuality", false);
     pset.addParameter<bool>("checkCharge", checkCharge);
@@ -167,9 +170,9 @@ namespace fshelpers {
       const reco::GenParticle& match = genParticles[m];
       // check lock and preselection
       if ( slector(*daughter, match) ) {
-        // matching requirement fulfilled -> store pair of indices
+       // matching requirement fulfilled -> store pair of indices
         if ( matcher(*daughter,match) )  {
-          double curDr = reco::deltaR(*daughter,match);
+	  double curDr = reco::deltaR(*daughter,match);
           if(curDr < minDr){
             minDr = curDr;
             index = m;
@@ -261,33 +264,27 @@ namespace fshelpers {
 
     const reco::GenParticleRef mother = genPart->motherRef();
     if( !(mother.isAvailable() && mother.isNonnull())  ) return mother;
-    if( mother.isAvailable() && mother.isNonnull() && mother->status() == 3 && mother->pdgId() != idNOTtoMatch )
-      return mother;
+    if( mother.isAvailable() && mother.isNonnull() && (mother->status() == 3 || mother->status()==22) && mother->pdgId() != idNOTtoMatch )
+       return mother;
     else
       return getMotherSmart(mother, idNOTtoMatch);
   }
 
   const bool comesFromHiggs(const reco::GenParticleRef genPart)
   {
-    //std::cout << "comesFromHiggs::start" << std::endl;
     if( genPart->numberOfMothers() >= 1 ){
       const reco::GenParticleRef mother = /*dynamic_cast<reco::GenParticleRef>*/ (genPart->motherRef());
-      //std::cout << "comesFromHiggs::if statements" << std::endl;
       if( !(mother.isAvailable() && mother.isNonnull()) ){
-        //std::cout << "comesFromHiggs::ret false" << std::endl;
         return false;
       }
       if( mother.isAvailable() && mother.isNonnull() && (mother->pdgId() == 25 || mother->pdgId() == 35 ) ){ // h^0 or H^0
-        //std::cout << "comesFromHiggs::ret true" << std::endl;
         return true;
       }
       else{
-        //std::cout << "comesFromHiggs::ret recursive" << std::endl;
         return comesFromHiggs(mother);
       }
     }
     else{
-      //std::cout << "comesFromHiggs::ret false from no mother" << std::endl;
       return false;
     }
   }

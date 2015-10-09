@@ -802,6 +802,7 @@ const reco::GenParticleRef PATFinalState::getDaughterGenParticle(size_t i, int p
 }
 
 const reco::GenParticleRef PATFinalState::getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const {
+
   const reco::GenParticleRef genp = getDaughterGenParticle(i, pdgIdToMatch, checkCharge);
   if( genp.isAvailable() && genp.isNonnull()  )
     return fshelpers::getMotherSmart(genp, genp->pdgId());
@@ -1014,7 +1015,7 @@ const int PATFinalState::getElectronMissingHits(const size_t i) const
 {
   if(daughterAsElectron(i)->gsfTrack().isNonnull())
     return daughterAsElectron(i)->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS);
-  std::cout << "Daughter " << i << " has null gsf track" << std::endl;
+  std::cout <<__LINE__ <<  " Daughter " << i << " has null gsf track" << std::endl;
   return -1;
 }
 

@@ -102,7 +102,7 @@ options = TauVarParsing.TauVarParsing(
     runDQM=0,
     hzz=0,
     paramFile='',
-    skipGhost=0,
+    skipGhost=0
 )
 
 options.register(

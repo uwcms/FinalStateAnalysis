@@ -165,7 +165,8 @@ setup(ext_modules=[Extension(
     include_dirs=['{incdir}'],
     library_dirs=['{libdir}'],
     libraries=['Tree', 'Core', 'TreePlayer'],
-    language="c++")],  # causes Cython to create C++ source
+    language="c++", 
+    extra_compile_args=['-std=c++11'])],  # causes Cython to create C++ source
     cmdclass={{'build_ext': build_ext}})
 '''
 
