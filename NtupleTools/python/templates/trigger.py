@@ -118,7 +118,7 @@ singleLepton_25ns_MC = PSet(
         ),
     _trig_template.replace(
         name='singleE_leg1', 
-        paths=r'HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        paths=r'HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
     _trig_template.replace(
         name='singleE_leg2', 
@@ -153,7 +153,7 @@ singleLepton_25ns = PSet(
         ),
     _trig_template.replace(
         name='singleE_leg1', 
-        paths=r'HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        paths=r'HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
     _trig_template.replace(
         name='singleE_leg2', 
@@ -187,15 +187,15 @@ doubleLepton_25ns = PSet(
         ),
     _trig_template.replace(
         name='doubleE',
-        paths=r'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+'
+        paths=r'HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+'
         ),
     _trig_template.replace(
         name='singleESingleMu',
-        paths=r'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        paths=r'HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
     _trig_template.replace(
         name='singleMuSingleE',
-        paths=r'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        paths=r'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v3\\d+'
         ),
     _trig_template.replace(
         name='doubleTau',

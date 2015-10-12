@@ -230,7 +230,7 @@ if options.runMetFilter:
 
 # caluclate slimmedMETsNoHF
 if options.runMETNoHF:
-    if options.isMC: # temp until they run miniaodv2
+    if options.isMC and False: # temp until they run miniaodv2, broken in CMSSW_7_4_14
         process.noHFCands = cms.EDFilter("CandPtrSelector",
                                          src=cms.InputTag("packedPFCandidates"),
                                          cut=cms.string("abs(pdgId)!=1 && abs(pdgId)!=2 && abs(eta)<3.0")

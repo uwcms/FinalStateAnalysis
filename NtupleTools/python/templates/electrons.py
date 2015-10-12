@@ -159,11 +159,11 @@ trigger_50ns = PSet(
 
 trigger_25ns = PSet(
     objectMatchesSingleE = r'matchToHLTPath({object_idx},"HLT_Ele32_eta2p1_WPLoose_Gsf_v\\d+",0.5)',
-    objectMatchesSingleE_leg1 = r'matchToHLTPath({object_idx},"HLT_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesSingleE_leg1 = r'matchToHLTPath({object_idx},"HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
     objectMatchesSingleE_leg2 = r'matchToHLTPath({object_idx},"HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
-    objectMatchesDoubleE = r'matchToHLTPath({object_idx},"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+",0.5)',
-    objectMatchesSingleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
-    objectMatchesSingleMuSingleE = r'matchToHLTPath({object_idx},"HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesDoubleE = r'matchToHLTPath({object_idx},"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+",0.5)',
+    objectMatchesSingleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesSingleMuSingleE = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
     objectMatchesTripleE = r'matchToHLTPath({object_idx},"HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v\\d+",0.5)',
     objectMatchesDoubleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+",0.5)',
     objectMatchesDoubleMuSingleE = r'matchToHLTPath({object_idx},"HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+",0.5)',
