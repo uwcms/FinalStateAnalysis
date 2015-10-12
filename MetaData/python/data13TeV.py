@@ -79,6 +79,63 @@ datadefs["VBF_LFV_HToETau_M200_13TeV_powheg_pythia8"]={
     'x_sec': xs(14,200,'vbf')[0],
 }
 
+datadefs["GluGlu_LFV_HToMuTau_M120_13TeV_powheg_pythia8"]={
+    'analyses': ['4L'],
+    'datasetpath': '/GluGlu_LFV_HToMuTau_M120_13TeV_powheg_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': xs(14,120,'ggf')[0], 
+}
+datadefs["VBF_LFV_HToMuTau_M120_13TeV_powheg_pythia8"]={
+    'analyses': ['4L'],
+    'datasetpath': '/VBF_LFV_HToMuTau_M120_13TeV_powheg_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR74',
+    'x_sec': xs(14,120,'vbf')[0],
+}
+datadefs["GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8"]={
+    'analyses': ['4L'],
+    'datasetpath': '/GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': xs(14,125,'ggf')[0],
+}
+datadefs["VBF_LFV_HToMuTau_M125_13TeV_powheg_pythia8"]={
+    'analyses': ['4L'],
+    'datasetpath': '/VBF_LFV_HToMuTau_M125_13TeV_powheg_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR74',
+    'x_sec': xs(14,125,'vbf')[0],
+}
+datadefs["GluGlu_LFV_HToMuTau_M130_13TeV_powheg_pythia8"]={
+    'analyses': ['4L'],
+    'datasetpath': '/GluGlu_LFV_HToMuTau_M130_13TeV_powheg_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': xs(14,130,'ggf')[0],
+}
+datadefs["VBF_LFV_HToMuTau_M130_13TeV_powheg_pythia8"]={
+    'analyses': ['4L'],
+    'datasetpath': '/VBF_LFV_HToMuTau_M130_13TeV_powheg_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR74',
+    'x_sec': xs(14,130,'vbf')[0],
+}
+datadefs["GluGlu_LFV_HToMuTau_M200_13TeV_powheg_pythia8"]={
+    'analyses': ['4L'],
+    'datasetpath': '/GluGlu_LFV_HToMuTau_M200_13TeV_powheg_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': xs(14,200,'ggf')[0],
+}
+datadefs["VBF_LFV_HToMuTau_M200_13TeV_powheg_pythia8"]={
+    'analyses': ['4L'],
+    'datasetpath': '/VBF_LFV_HToMuTau_M200_13TeV_powheg_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR74',
+    'x_sec': xs(14,200,'vbf')[0],
+}
+
 datadefs["DYJetsToLL_M-50_13TeV-madgraph-pythia8"]={
     'analyses': ['4L'],
     'datasetpath': '/DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM',
