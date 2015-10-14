@@ -44,22 +44,29 @@ pv_info = PSet(
 )
 
 met = PSet(
-    mvaMetEt       = 'evt.met("mvamet").et',
-    mvaMetPhi      = 'evt.met("mvamet").phi',
-    pfMetEt        = 'evt.met4vector("pfmet","",1).Et',
-    pfMetPhi       = 'evt.met4vector("pfmet","",1).Phi',
-    type1_pfMetEt  = 'evt.met4vector("pfmet","type1",1).Et', #1 --> phi correction not in miniAOD
-    type1_pfMetPhi = 'evt.met4vector("pfmet","type1",1).Phi',
-    #systematics
-    pfMet_mes_Et   = 'evt.met4vector("pfmet","mes+", 1).Et',
-    pfMet_tes_Et   = 'evt.met4vector("pfmet","tes+", 1).Et',
-    pfMet_jes_Et   = 'evt.met4vector("pfmet","jes+", 1).Et',
-    pfMet_ues_Et   = 'evt.met4vector("pfmet","ues+", 1).Et',
+    #mvaMetEt       = 'evt.met("mvamet").et',
+    #mvaMetPhi      = 'evt.met("mvamet").phi',
+    raw_pfMetEt    = 'evt.met("pfmet").uncorPt',
+    raw_pfMetPhi   = 'evt.met("pfmet").uncorPhi',
+    type1_pfMetEt  = 'evt.met("pfmet").pt', 
+    type1_pfMetPhi = 'evt.met("pfmet").phi',
 
-    pfMet_mes_Phi  = 'evt.met4vector("pfmet","mes+", 1).Phi',
-    pfMet_tes_Phi  = 'evt.met4vector("pfmet","tes+", 1).Phi',
-    pfMet_jes_Phi  = 'evt.met4vector("pfmet","jes+", 1).Phi',
-    pfMet_ues_Phi  = 'evt.met4vector("pfmet","ues+", 1).Phi',
+    # new systematics
+    type1_pfMet_shiftedPt_JetResUp             = 'evt.metShift("pfmet","pt","jres+")',
+    type1_pfMet_shiftedPt_JetEnUp              = 'evt.metShift("pfmet","pt","jes+")',
+    type1_pfMet_shiftedPt_MuonEnUp             = 'evt.metShift("pfmet","pt","mes+")',
+    type1_pfMet_shiftedPt_ElectronEnUp         = 'evt.metShift("pfmet","pt","ees+")',
+    type1_pfMet_shiftedPt_TauEnUp              = 'evt.metShift("pfmet","pt","tes+")',
+    type1_pfMet_shiftedPt_UnclusteredEnUp      = 'evt.metShift("pfmet","pt","ues+")',
+    type1_pfMet_shiftedPt_PhotonEnUp           = 'evt.metShift("pfmet","pt","pes+")',
+    
+    type1_pfMet_shiftedPhi_JetResUp            = 'evt.metShift("pfmet","phi","jres+")',
+    type1_pfMet_shiftedPhi_JetEnUp             = 'evt.metShift("pfmet","phi","jes+")',
+    type1_pfMet_shiftedPhi_MuonEnUp            = 'evt.metShift("pfmet","phi","mes+")',
+    type1_pfMet_shiftedPhi_ElectronEnUp        = 'evt.metShift("pfmet","phi","ees+")',
+    type1_pfMet_shiftedPhi_TauEnUp             = 'evt.metShift("pfmet","phi","tes+")',
+    type1_pfMet_shiftedPhi_UnclusteredEnUp     = 'evt.metShift("pfmet","phi","ues+")',
+    type1_pfMet_shiftedPhi_PhotonEnUp          = 'evt.metShift("pfmet","phi","pes+")',
     
     recoilDaught='getDaughtersRecoil().R()',
     recoilWithMet='getDaughtersRecoilWithMet().R()',

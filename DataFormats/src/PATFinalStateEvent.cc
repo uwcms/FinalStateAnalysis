@@ -238,6 +238,54 @@ const reco::Candidate::LorentzVector PATFinalStateEvent::met4vector(
   //  return fshelpers::metPhiCorrection(metp4, recoVertices_.size(), !isRealData_);
 }
 
+double PATFinalStateEvent::metShift(const std::string& type, const std::string& var, const std::string& tag) const
+{
+  std::map<std::string, edm::Ptr<pat::MET> >::const_iterator findit =
+    mets_.find(type);
+  if (findit == mets_.end() || findit->second.isNull())
+    return 0.0;
+  if (var=="pt") {
+    if(tag == "jres+")
+      return met(type)->shiftedPt(pat::MET::JetResUp);
+    else if(tag == "jes+")
+      return met(type)->shiftedPt(pat::MET::JetEnUp);
+    else if(tag == "mes+")
+      return met(type)->shiftedPt(pat::MET::MuonEnUp);
+    else if(tag == "ees+")
+      return met(type)->shiftedPt(pat::MET::ElectronEnUp);
+    else if(tag == "tes+")
+      return met(type)->shiftedPt(pat::MET::TauEnUp);
+    else if(tag == "ues+")
+      return met(type)->shiftedPt(pat::MET::UnclusteredEnUp);
+    else if(tag == "pes+")
+      return met(type)->shiftedPt(pat::MET::PhotonEnUp);
+    else
+      return met(type)->pt();
+  }
+  else if (var=="phi") {
+    if(tag == "jres+")
+      return met(type)->shiftedPhi(pat::MET::JetResUp);
+    else if(tag == "jes+")
+      return met(type)->shiftedPhi(pat::MET::JetEnUp);
+    else if(tag == "mes+")
+      return met(type)->shiftedPhi(pat::MET::MuonEnUp);
+    else if(tag == "ees+")
+      return met(type)->shiftedPhi(pat::MET::ElectronEnUp);
+    else if(tag == "tes+")
+      return met(type)->shiftedPhi(pat::MET::TauEnUp);
+    else if(tag == "ues+")
+      return met(type)->shiftedPhi(pat::MET::UnclusteredEnUp);
+    else if(tag == "pes+")
+      return met(type)->shiftedPhi(pat::MET::PhotonEnUp);
+    else
+      return met(type)->phi();
+  }
+  else
+    return 0.;
+
+}
+
+
 const edm::EventID& PATFinalStateEvent::evtId() const {
   return evtID_;
 }
