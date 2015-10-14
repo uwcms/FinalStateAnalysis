@@ -179,7 +179,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': 'GR_P_V56'}
+GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': '74X_dataRun2_Prompt_v2'}
 if options.use25ns:
     GT['mcgt'] = 'MCRUN2_74_V9'
 
@@ -341,11 +341,16 @@ process.rhoEmbedding = cms.Path(
 process.schedule.append(process.rhoEmbedding)
 
 if options.hzz:
-    # Make FSR photon collection, give them isolation
-    process.load("FinalStateAnalysis.PatTools.miniAOD_fsrPhotons_cff")
-    fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
-    process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
-    process.schedule.append(process.makeFSRPhotons)
+    hzz4l = options.channels == 'zz' or 'eeee' in options.channels or \
+        'eemm' in options.channels or 'mmmm' in options.channels 
+    # alternative is Z+l control region
+
+    if hzz4l:
+        # Make FSR photon collection, give them isolation
+        process.load("FinalStateAnalysis.PatTools.miniAOD_fsrPhotons_cff")
+        fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
+        process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
+        process.schedule.append(process.makeFSRPhotons)
 
     # Embed HZZ ID and isolation decisions because we need to know them for FSR recovery
     idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
@@ -359,6 +364,13 @@ if options.hzz:
         eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
         vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
         bdtLabel = cms.string(electronMVANonTrigIDLabel),
+        idCutLowPtLowEta = cms.double(-.265),
+        idCutLowPtMedEta = cms.double(-.556),
+        idCutLowPtHighEta = cms.double(-.551),
+        idCutHighPtLowEta = cms.double(-.072),
+        idCutHighPtMedEta = cms.double(-.286),
+        idCutHighPtHighEta = cms.double(-.267),
+        missingHitsCut = cms.int32(999),
         )
     fs_daughter_inputs['electrons'] = 'electronIDIsoCheatEmbedding'
     process.muonIDIsoCheatEmbedding = cms.EDProducer(
@@ -483,7 +495,7 @@ if options.runMVAMET:
         process.miniAODMVAMEt
     )
 
-if options.hzz:    
+if options.hzz and hzz4l:
     # Put FSR photons into leptons as user cands
     from FinalStateAnalysis.PatTools.miniAODEmbedFSR_cfi \
         import embedFSRInElectrons, embedFSRInMuons
@@ -585,7 +597,7 @@ process.source.inputCommands = cms.untracked.vstring(
 
 suffix = '' # most analyses don't need to modify the final states
 
-if options.hzz:
+if options.hzz and hzz4l:
     process.embedHZZSeq = cms.Sequence()
     # Embed matrix elements in relevant final states
     suffix = "HZZ"

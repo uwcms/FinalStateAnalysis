@@ -249,7 +249,7 @@ def get_com_line_args():
         help = 'Custom lumimask json.',
     )
     cmsrun_group.add_argument(
-        '--bunch-spacing', dest='bunchSpacing',
+        '--bunch-spacing', dest='bunchSpacing', type=int,
         default=25, choices=[25,50],
         help = 'Bunch spacing in ns.',
     )
