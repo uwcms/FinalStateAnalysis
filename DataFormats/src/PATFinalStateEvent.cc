@@ -247,36 +247,64 @@ double PATFinalStateEvent::metShift(const std::string& type, const std::string& 
   if (var=="pt") {
     if(tag == "jres+")
       return met(type)->shiftedPt(pat::MET::JetResUp);
+    else if(tag == "jres-")
+      return met(type)->shiftedPt(pat::MET::JetResDown);
     else if(tag == "jes+")
       return met(type)->shiftedPt(pat::MET::JetEnUp);
+    else if(tag == "jes-")
+      return met(type)->shiftedPt(pat::MET::JetEnDown);
     else if(tag == "mes+")
       return met(type)->shiftedPt(pat::MET::MuonEnUp);
+    else if(tag == "mes-")
+      return met(type)->shiftedPt(pat::MET::MuonEnDown);
     else if(tag == "ees+")
       return met(type)->shiftedPt(pat::MET::ElectronEnUp);
+    else if(tag == "ees-")
+      return met(type)->shiftedPt(pat::MET::ElectronEnDown);
     else if(tag == "tes+")
       return met(type)->shiftedPt(pat::MET::TauEnUp);
+    else if(tag == "tes-")
+      return met(type)->shiftedPt(pat::MET::TauEnDown);
     else if(tag == "ues+")
       return met(type)->shiftedPt(pat::MET::UnclusteredEnUp);
+    else if(tag == "ues-")
+      return met(type)->shiftedPt(pat::MET::UnclusteredEnDown);
     else if(tag == "pes+")
       return met(type)->shiftedPt(pat::MET::PhotonEnUp);
+    else if(tag == "pes-")
+      return met(type)->shiftedPt(pat::MET::PhotonEnDown);
     else
       return met(type)->pt();
   }
   else if (var=="phi") {
     if(tag == "jres+")
       return met(type)->shiftedPhi(pat::MET::JetResUp);
+    else if(tag == "jres-")
+      return met(type)->shiftedPhi(pat::MET::JetResDown);
     else if(tag == "jes+")
       return met(type)->shiftedPhi(pat::MET::JetEnUp);
+    else if(tag == "jes-")
+      return met(type)->shiftedPhi(pat::MET::JetEnDown);
     else if(tag == "mes+")
       return met(type)->shiftedPhi(pat::MET::MuonEnUp);
+    else if(tag == "mes-")
+      return met(type)->shiftedPhi(pat::MET::MuonEnDown);
     else if(tag == "ees+")
       return met(type)->shiftedPhi(pat::MET::ElectronEnUp);
+    else if(tag == "ees-")
+      return met(type)->shiftedPhi(pat::MET::ElectronEnDown);
     else if(tag == "tes+")
       return met(type)->shiftedPhi(pat::MET::TauEnUp);
+    else if(tag == "tes-")
+      return met(type)->shiftedPhi(pat::MET::TauEnDown);
     else if(tag == "ues+")
       return met(type)->shiftedPhi(pat::MET::UnclusteredEnUp);
+    else if(tag == "ues-")
+      return met(type)->shiftedPhi(pat::MET::UnclusteredEnDown);
     else if(tag == "pes+")
       return met(type)->shiftedPhi(pat::MET::PhotonEnUp);
+    else if(tag == "pes-")
+      return met(type)->shiftedPhi(pat::MET::PhotonEnDown);
     else
       return met(type)->phi();
   }
