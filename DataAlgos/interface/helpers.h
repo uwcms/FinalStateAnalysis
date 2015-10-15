@@ -20,6 +20,7 @@
 #include "TMatrixD.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
+#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 
 namespace fshelpers {
 
@@ -51,6 +52,9 @@ namespace fshelpers {
 
   ///Helper function to find a gen particle given pdgid and status
   const bool findDecay(const reco::GenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter);
+
+  //Helper function to add to the trees the gen level HTT 
+  float genHTT(const lhef::HEPEUP lheeventinfo); 
 
   /// Helper function to get the first interesting mother particle 
   const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, int idNOTtoMatch = -999);

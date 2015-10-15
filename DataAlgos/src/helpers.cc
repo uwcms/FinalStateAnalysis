@@ -333,6 +333,18 @@ namespace fshelpers {
     return (descendents.size() > 0);
   }
 
+float genHTT(const lhef::HEPEUP lheeventinfo){
+      float sumpt=0;
+      for (int i = 0; i < lheeventinfo.NUP ; ++i) {
+            if (lheeventinfo.ISTUP[i] <0||((abs(lheeventinfo.IDUP[i])>5&&lheeventinfo.IDUP[i]!=21) ))  continue;
+            double px=lheeventinfo.PUP.at(i)[0];
+            double py=lheeventinfo.PUP.at(i)[1]; 
+            double pt=sqrt(px*px+py*py);                                                                                                                             
+            sumpt+=pt;
+       }
+
+      return sumpt;
+}
 
 float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const std::vector<edm::Ptr<reco::Vertex>>& recoVertices)
 {
