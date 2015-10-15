@@ -148,9 +148,11 @@ namespace fshelpers {
     pset.addParameter<std::vector<int> >("mcPdgId", pdgIdsToMatch);
     std::vector<int> status;
     status.push_back(1);
-//    for (int istatus = 21; istatus< 30 ; istatus++){
-//      status.push_back(istatus); //pythia8 particles from an hard process have status code 21-29 
-//    }  // Commented out while I check somethings 
+    if(pdgIdToMatch==15){
+     for (int istatus = 21; istatus< 30 ; istatus++){
+      status.push_back(istatus); //pythia8 particles from an hard process have status code 21-29 
+     } // this is specifically for allowing to get gen taus, matching them to the hardprocess. It should be checked further. 
+    }
 
     pset.addParameter<std::vector<int> >("mcStatus", status);
     pset.addParameter<bool>("resolveByMatchQuality", false);
@@ -196,67 +198,11 @@ namespace fshelpers {
     // through particle's ancestry until we find it
     // This is not a good way to do this, but the good way (commented below) doesn't exist in 7_2_X
     //
-    // I am not changing this part since I wont use this preFSR stuff, but why not change to the code below?
-    //
     if(preFSR)
-      {
-        // start at the top of the chain and work back down until we hit FSR or the end
-        bool checkNextMother = true;
-        while(checkNextMother)
-          {
-            checkNextMother = false;
-            for(size_t iM = 0; iM < out->numberOfMothers(); ++iM)
-              {
-                if(out->motherRef(iM).isAvailable() && 
-                   out->motherRef(iM).isNonnull() &&
-                   abs(out->motherRef(iM)->pdgId()) == pdgIdToMatch)
-                  {
-                    out = out->motherRef(iM);
-                    checkNextMother = true;
-                    break;
-                  }
-              }
-          }
-
-        // work back down
-        bool checkNextDaughter = true;
-        while(checkNextDaughter)
-          {
-            for(size_t iD = 0; iD < out->numberOfDaughters(); ++iD)
-              {
-                if(out->daughterRef(iD).isAvailable() && 
-                   out->daughterRef(iD).isNonnull() &&
-                   out->daughterRef(iD)->pdgId() == 22)
-                  {
-                    checkNextDaughter = false;
-                    break;
-                  }
-              }
-            
-            if(checkNextDaughter)
-              {
-                checkNextDaughter = false;
-                for(size_t iD = 0; iD < out->numberOfDaughters(); ++iD)
-                  {
-                    if(out->daughterRef(iD).isAvailable() && 
-                       out->daughterRef(iD).isNonnull() &&
-                       abs(out->daughterRef(iD)->pdgId()) == pdgIdToMatch)
-                      {
-                        out = out->daughterRef(iD);
-                        checkNextDaughter = true;
-                        break;
-                      }
-                  }
-              }
-          }
-      }
-
-    ///// This will be the correct way to do it in future verions of CMSSW. For now, dumb stuff.
-    // if(preFSR)
-    //   {
-    //     while(out->motherRef(0).isNonnull() && !(out->isLastCopyBeforeFSR()))
-    //       out = out->motherRef(0);
-    //   }
+    {
+      while(out->motherRef(0).isNonnull() && !(out->isLastCopyBeforeFSR()))
+        out = out->motherRef(0);
+    }
 
     return out;
     
@@ -329,16 +275,14 @@ namespace fshelpers {
                         //std::cout<<"M"<<genpart.pdgId()<<"   -->"<<genpart.isHardProcess()<<std::endl;
                         for(unsigned int j=0; j<genpart.numberOfDaughters(); j++){
                                 const reco::Candidate* Wdaughter=genpart.daughter(j);
-                                //std::cout<<"....\t"<<Wdaughter->pdgId()<<std::endl;
-                                if(fabs(genpart.pdgId())==pdgIdDaughter) found=true;
+                                if(fabs(Wdaughter->pdgId())==pdgIdDaughter) found=true;
+                                //std::cout<<"....\t"<<Wdaughter->pdgId()<<"..."<<Wdaughter->status()<<std::endl;    
                         }
                         }
-  }
+      }
 
       return found;
-
   }
-
 
 
   float genHTT(const lhef::HEPEUP lheeventinfo){

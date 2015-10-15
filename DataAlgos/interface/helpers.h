@@ -45,6 +45,7 @@ namespace fshelpers {
   /// If preFSR is true, the last unbranched particle in the matched
   /// particle's chain is returned instead. This is not guaranteed to
   /// work for any generators except Pythia6 and Pythia8.
+  //  An option to also match the hard particle has been added now
   const reco::GenParticleRef getGenParticle(const reco::Candidate* daughter,
                                             const reco::GenParticleRefProd genCollectionRef, 
                                             int pdgIdToMatch, bool checkCharge, 

@@ -15,7 +15,7 @@ Author: Evan K. Friis
 from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 info = PSet(
-    objectGenDecayMode = '{object}.userInt("genDecayMode")',
+    objectGenDecayMode = '{object}.userInt("genDecayMode")',  # how can this be working?
     objectLeadTrackPt = '{object}.userFloat("ps_ldTrkPt")',
     objectDecayMode = '{object}.decayMode',
     objectTNPId = '{object}.userInt("ps_sel_nom")',
@@ -68,26 +68,48 @@ id = PSet(
     objectByVVTightIsolationMVA3oldDMwLT = '{object}.tauID("byVVTightIsolationMVA3oldDMwLT")',
     objectByIsolationMVA3oldDMwLTraw = '{object}.tauID("byIsolationMVA3oldDMwLTraw")', 
     
-    objectByPileupWeightedIsolationRaw3Hits = '{object}.tauID("byPileupWeightedIsolationRaw3Hits")',
-    objectByLoosePileupWeightedIsolation3Hits = '{object}.tauID("byLoosePileupWeightedIsolation3Hits")',
-    objectByMediumPileupWeightedIsolation3Hits = '{object}.tauID("byMediumPileupWeightedIsolation3Hits")',
-    objectByTightPileupWeightedIsolation3Hits = '{object}.tauID("byTightPileupWeightedIsolation3Hits")',
-    objectByPhotonPtSumOutsideSignalCone = '{object}.tauID("byPhotonPtSumOutsideSignalCone")',
-    objectPhotonPtSumOutsideSignalCone = '{object}.tauID("photonPtSumOutsideSignalCone")',
+#    objectByPileupWeightedIsolationRaw3Hits = '{object}.tauID("byPileupWeightedIsolationRaw3Hits")',
+#    objectByLoosePileupWeightedIsolation3Hits = '{object}.tauID("byLoosePileupWeightedIsolation3Hits")',
+#    objectByMediumPileupWeightedIsolation3Hits = '{object}.tauID("byMediumPileupWeightedIsolation3Hits")',
+#    objectByTightPileupWeightedIsolation3Hits = '{object}.tauID("byTightPileupWeightedIsolation3Hits")',
+#    objectByPhotonPtSumOutsideSignalCone = '{object}.tauID("byPhotonPtSumOutsideSignalCone")',
+#    objectPhotonPtSumOutsideSignalCone = '{object}.tauID("photonPtSumOutsideSignalCone")',
 
     # DecayModeFinding
     objectDecayModeFinding       = '{object}.tauID("decayModeFinding")',
     objectDecayModeFindingNewDMs = '{object}.tauID("decayModeFindingNewDMs")',
 
-    objectFootprintCorrection = '{object}.tauID("footprintCorrection")',
-    objectNeutralIsoPtSum = '{object}.tauID("neutralIsoPtSum")',
-    objectNeutralIsoPtSumWeight = '{object}.tauID("neutralIsoPtSumWeight")',
-    objectChargedIsoPtSum = '{object}.tauID("chargedIsoPtSum")',
-    objectPuCorrPtSum     = '{object}.tauID("puCorrPtSum")',
+#    objectFootprintCorrection = '{object}.tauID("footprintCorrection")',
+#    objectNeutralIsoPtSum = '{object}.tauID("neutralIsoPtSum")',
+#    objectNeutralIsoPtSumWeight = '{object}.tauID("neutralIsoPtSumWeight")',
+#    objectChargedIsoPtSum = '{object}.tauID("chargedIsoPtSum")',
+#    objectPuCorrPtSum     = '{object}.tauID("puCorrPtSum")',
     # closest Z mass
     objectNearestZMass = 'closestZTau({object_idx},"")',
     # lowest invariant mass
     objectLowestMll = 'smallestMtt({object_idx},"")',
+
+    objectGenEnergy      = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).energy() : -999',
+    objectGenPt          = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).pt() : -999',
+    objectGenPx          = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).px() : -999',
+    objectGenPy          = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).py() : -999',
+    objectGenPz          = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).pz() : -999',
+    objectGenEta         = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).eta() : -999',
+    objectGenPhi         = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).phi() : -999',
+
+    objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}, 15, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 15, 0).pdgId() : -999',
+
+    objectGenMotherPt =  '? (getDaughterGenParticleMotherSmart({object_idx}, 15, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 15, 0).pt() : -999', 
+    objectGenMotherEnergy =  '? (getDaughterGenParticleMotherSmart({object_idx}, 15, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 15, 0).energy() : -999', 
+    objectGenMotherEta =  '? (getDaughterGenParticleMotherSmart({object_idx}, 15, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 15, 0).eta() : -999', 
+    objectGenMotherPhi =  '? (getDaughterGenParticleMotherSmart({object_idx}, 15, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 15, 0).phi() : -999', 
+
+    objectComesFromHiggs = 'comesFromHiggs({object_idx}, 15, 1)',
+    objectGenPdgId       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).pdgId() : -999',
+    objectGenCharge      = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).charge() : -999',
+
+
+
 )
 
 
