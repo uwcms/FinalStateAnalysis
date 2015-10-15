@@ -518,13 +518,29 @@ double PATFinalState::collinearMassMET(int i, const std::string& tag1, int j, co
   
   if(metTag == "jes+")
     metP4 = met()->shiftedP4(pat::MET::JetEnUp);
-  else if(metTag == "ues+")
-    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnUp);
-  else if(metTag == "tes+")
-    metP4 = met()->shiftedP4(pat::MET::TauEnUp);
+  else if(metTag == "jes-")
+    metP4 = met()->shiftedP4(pat::MET::JetEnDown);
   else if(metTag == "mes+")
     metP4 = met()->shiftedP4(pat::MET::MuonEnUp);
-  else // all miniAOD pfMET is Type 1
+  else if(metTag == "mes-")
+    metP4 = met()->shiftedP4(pat::MET::MuonEnDown);
+  else if(metTag == "ees+")
+    metP4 = met()->shiftedP4(pat::MET::ElectronEnUp);
+  else if(metTag == "ees-")
+    metP4 = met()->shiftedP4(pat::MET::ElectronEnDown);
+  else if(metTag == "tes+")
+    metP4 = met()->shiftedP4(pat::MET::TauEnUp);
+  else if(metTag == "tes-")
+    metP4 = met()->shiftedP4(pat::MET::TauEnDown);
+  else if(metTag == "ues+")
+    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnUp);
+  else if(metTag == "ues-")
+    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnDown);
+  else if(metTag == "pes+")
+    metP4 = met()->shiftedP4(pat::MET::PhotonEnUp);
+  else if(metTag == "pes-")
+    metP4 = met()->shiftedP4(pat::MET::PhotonEnDown);
+  else
     metP4 = met()->p4();
   return fshelpers::collinearMass(daughterUserCandP4(i, tag1),daughterUserCandP4(j, tag2), metP4);
 }
