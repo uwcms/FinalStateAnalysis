@@ -50,9 +50,13 @@ parameters = {
     # additional variables for ntuple
     'eventVariables' : PSet(
         muVeto = 'vetoMuons(0.02, "isLooseMuon && pt > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/pt()<0.2").size()',
+        muVetoNoIso = 'vetoMuons(0.02, "isLooseMuon && pt > 10 && abs(eta) < 2.4").size()',
         muVetoTight = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && pt > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/pt()<0.12").size()',
+        muVetoTightNoIso = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && pt > 10 && abs(eta) < 2.4").size()',
         eVeto = 'vetoElectrons(0.02, "userFloat(\'CBIDLoose\')>0.5 && pt > 10 && abs(eta) < 2.5").size()',
+        eVetoNoIso = 'vetoElectrons(0.02, "userFloat(\'CBIDLooseNoIso\')>0.5 && pt > 10 && abs(eta) < 2.5").size()',
         eVetoTight = 'vetoElectrons(0.02, "userFloat(\'CBIDMedium\')>0.5 && pt > 10 && abs(eta) < 2.5").size()',
+        eVetoTightIso = 'vetoElectrons(0.02, "userFloat(\'CBIDMediumNoIso\')>0.5 && pt > 10 && abs(eta) < 2.5").size()',
         muVetoHZZ = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5\').size()',
         muVetoHZZIso = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
         muVetoHZZTight = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5\').size()',

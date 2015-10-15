@@ -47,6 +47,26 @@ def embedElectronIDs(process, use25ns, eSrc):
         cms.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories"),
         ]
 
+    # N-1 results
+    nMinusOneNames = ['GsfEleEffAreaPFIsoCut_0']
+    nMinusOneLabels = ['NoIso']
+    FullIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight"] # keys of cut based id user floats
+    FullIDTags = [
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-50ns-V1-standalone-veto'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-50ns-V1-standalone-loose'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-50ns-V1-standalone-medium'),
+        cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-50ns-V1-standalone-tight'),
+        ]
+    if use25ns:
+        FullIDTags = [
+            cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-veto'),
+            cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-loose'),
+            cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-medium'),
+            cms.InputTag('egmGsfElectronIDs:cutBasedElectronID-Spring15-25ns-V1-standalone-tight'),
+            ]
+
+    
+
     # Embed cut-based VIDs
     process.miniAODElectronID = cms.EDProducer(
         "MiniAODElectronIDEmbedder",
@@ -57,6 +77,10 @@ def embedElectronIDs(process, use25ns, eSrc):
         values = cms.VInputTag(*mvaValues),               # mva values
         categoryLabels = cms.vstring(*mvaCategoryLabels),
         categories = cms.VInputTag(*mvaCategories),
+        fullIdLabels = cms.vstring(*FullIDLabels),
+        nMinusOneNames = cms.vstring(*nMinusOneNames),
+        nMinusOneLabels = cms.vstring(*nMinusOneLabels),
+        fullIds = cms.VInputTag(*FullIDTags),
     )
     eSrc = "miniAODElectronID"
     
