@@ -195,7 +195,7 @@ doubleLepton_25ns = PSet(
         ),
     _trig_template.replace(
         name='singleMuSingleE',
-        paths=r'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v3\\d+'
+        paths=r'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
     _trig_template.replace(
         name='doubleTau',
