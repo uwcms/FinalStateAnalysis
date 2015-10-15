@@ -8,6 +8,7 @@
 #include "DataFormats/PatCandidates/interface/Photon.h"
 #include "FWCore/Utilities/interface/Exception.h"
 #include "PhysicsTools/HepMCCandAlgos/interface/GenParticlesHelper.h"
+#include "DataFormats/PatCandidates/interface/PackedGenParticle.h"
 
 #include "CommonTools/UtilAlgos/interface/MCMatchSelector.h"
 #include "CommonTools/UtilAlgos/interface/MatchByDRDPt.h"
@@ -137,7 +138,7 @@ namespace fshelpers {
       return reco::GenParticleRef();
     }
     reco::GenParticleCollection genParticles = *genCollectionRef;
-
+ 
     //builds pset used by various subclasses
     edm::ParameterSet pset;
     pset.addParameter<double>("maxDPtRel", 0.5);
@@ -147,6 +148,10 @@ namespace fshelpers {
     pset.addParameter<std::vector<int> >("mcPdgId", pdgIdsToMatch);
     std::vector<int> status;
     status.push_back(1);
+//    for (int istatus = 21; istatus< 30 ; istatus++){
+//      status.push_back(istatus); //pythia8 particles from an hard process have status code 21-29 
+//    }  // Commented out while I check somethings 
+
     pset.addParameter<std::vector<int> >("mcStatus", status);
     pset.addParameter<bool>("resolveByMatchQuality", false);
     pset.addParameter<bool>("checkCharge", checkCharge);
@@ -167,9 +172,9 @@ namespace fshelpers {
       const reco::GenParticle& match = genParticles[m];
       // check lock and preselection
       if ( slector(*daughter, match) ) {
-        // matching requirement fulfilled -> store pair of indices
+       // matching requirement fulfilled -> store pair of indices
         if ( matcher(*daughter,match) )  {
-          double curDr = reco::deltaR(*daughter,match);
+	  double curDr = reco::deltaR(*daughter,match);
           if(curDr < minDr){
             minDr = curDr;
             index = m;
@@ -190,6 +195,9 @@ namespace fshelpers {
     // if we want the equivalent particle from the hard scatter, loop back
     // through particle's ancestry until we find it
     // This is not a good way to do this, but the good way (commented below) doesn't exist in 7_2_X
+    //
+    // I am not changing this part since I wont use this preFSR stuff, but why not change to the code below?
+    //
     if(preFSR)
       {
         // start at the top of the chain and work back down until we hit FSR or the end
@@ -261,33 +269,27 @@ namespace fshelpers {
 
     const reco::GenParticleRef mother = genPart->motherRef();
     if( !(mother.isAvailable() && mother.isNonnull())  ) return mother;
-    if( mother.isAvailable() && mother.isNonnull() && mother->status() == 3 && mother->pdgId() != idNOTtoMatch )
-      return mother;
+    if( mother.isAvailable() && mother.isNonnull() && (mother->status() == 3 || mother->status()==22) && mother->pdgId() != idNOTtoMatch )
+       return mother;
     else
       return getMotherSmart(mother, idNOTtoMatch);
   }
 
   const bool comesFromHiggs(const reco::GenParticleRef genPart)
   {
-    //std::cout << "comesFromHiggs::start" << std::endl;
     if( genPart->numberOfMothers() >= 1 ){
       const reco::GenParticleRef mother = /*dynamic_cast<reco::GenParticleRef>*/ (genPart->motherRef());
-      //std::cout << "comesFromHiggs::if statements" << std::endl;
       if( !(mother.isAvailable() && mother.isNonnull()) ){
-        //std::cout << "comesFromHiggs::ret false" << std::endl;
         return false;
       }
       if( mother.isAvailable() && mother.isNonnull() && (mother->pdgId() == 25 || mother->pdgId() == 35 ) ){ // h^0 or H^0
-        //std::cout << "comesFromHiggs::ret true" << std::endl;
         return true;
       }
       else{
-        //std::cout << "comesFromHiggs::ret recursive" << std::endl;
         return comesFromHiggs(mother);
       }
     }
     else{
-      //std::cout << "comesFromHiggs::ret false from no mother" << std::endl;
       return false;
     }
   }
@@ -313,41 +315,47 @@ namespace fshelpers {
 
   const bool findDecay(const reco::GenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter)
   {
+                              
     //if no genPaticle no matching
-    if(!genCollectionRef){
-      return false;
-    }
-    reco::GenParticleCollection genParticles = *genCollectionRef;
-    reco::GenParticleRefVector allMothers;  
-    GenParticlesHelper::findParticles( *genCollectionRef,     
-                                       allMothers, std::abs(pdgIdMother), 2);
-    GenParticlesHelper::findParticles( *genCollectionRef,     
-                                       allMothers, std::abs(pdgIdMother), 3);
+       if(!genCollectionRef){
+             return false;
+       }
 
-    reco::GenParticleRefVector descendents;
-    for ( GenParticlesHelper::IGR iMom = allMothers.begin(); iMom != allMothers.end(); ++iMom ) {
-      GenParticlesHelper::findDescendents( *iMom, descendents, 2, std::abs(pdgIdDaughter)); //Might not be stable, but it's fine
-      GenParticlesHelper::findDescendents( *iMom, descendents, 3, std::abs(pdgIdDaughter)); //Might not be stable, but it's fine
-    }
-
-    return (descendents.size() > 0);
+       bool found=false;
+       reco::GenParticleCollection pGenPart = *genCollectionRef;
+                for( size_t i = 0; i < pGenPart.size(); ++ i ) {
+                        const reco::GenParticle& genpart = (pGenPart)[i];
+                        if(fabs(genpart.pdgId())==pdgIdMother && genpart.isLastCopy()){
+                        //std::cout<<"M"<<genpart.pdgId()<<"   -->"<<genpart.isHardProcess()<<std::endl;
+                        for(unsigned int j=0; j<genpart.numberOfDaughters(); j++){
+                                const reco::Candidate* Wdaughter=genpart.daughter(j);
+                                //std::cout<<"....\t"<<Wdaughter->pdgId()<<std::endl;
+                                if(fabs(genpart.pdgId())==pdgIdDaughter) found=true;
+                        }
+                        }
   }
 
-float genHTT(const lhef::HEPEUP lheeventinfo){
+      return found;
+
+  }
+
+
+
+  float genHTT(const lhef::HEPEUP lheeventinfo){
       float sumpt=0;
       for (int i = 0; i < lheeventinfo.NUP ; ++i) {
             if (lheeventinfo.ISTUP[i] <0||((abs(lheeventinfo.IDUP[i])>5&&lheeventinfo.IDUP[i]!=21) ))  continue;
             double px=lheeventinfo.PUP.at(i)[0];
-            double py=lheeventinfo.PUP.at(i)[1]; 
-            double pt=sqrt(px*px+py*py);                                                                                                                             
+            double py=lheeventinfo.PUP.at(i)[1];
+            double pt=sqrt(px*px+py*py);
             sumpt+=pt;
        }
 
       return sumpt;
-}
+  }
 
-float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const std::vector<edm::Ptr<reco::Vertex>>& recoVertices)
-{
+  float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const std::vector<edm::Ptr<reco::Vertex>>& recoVertices)
+  {
   //std::map <std::string, float> varMap; 
   const pat::Jet *jet = dynamic_cast<const pat::Jet*> (jetptr.get());
   if (myvar == "eta")

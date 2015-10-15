@@ -403,6 +403,7 @@ const bool PATFinalStateEvent::findDecay(const int pdgIdMother, const int pdgIdD
 }
 
 float PATFinalStateEvent::genHTT() const{
+  if(isRealData_) return 0;
   return fshelpers::genHTT(lhe_);
 }
 
