@@ -16,12 +16,39 @@ mtToMET = PSet(
     objectMtToMET = 'mtMET({object_idx}, "raw")',
 
     #PF Type1 MET (and systematics)
-    objectMtToPFMET      = 'mtMET({object_idx}, "", "pfmet", ""     , 1)',#1, apply phi correction; all PFMET is type1 in miniAOD ...
-    objectMtToPfMet_Ty1  = 'mtMET({object_idx}, "", "pfmet", "type1", 1)',#    but scale uncertainties (jes,ues, etc.) may still be applied
-    objectMtToPfMet_mes  = 'mtMET({object_idx}, "", "pfmet", "mes+" , 1)',#    Phi corrections not implemented for miniAOD... maybe already in?
-    objectMtToPfMet_tes  = 'mtMET({object_idx}, "", "pfmet", "tes+" , 1)',
-    objectMtToPfMet_jes  = 'mtMET({object_idx}, "", "pfmet", "jes+" , 1)',
-    objectMtToPfMet_ues  = 'mtMET({object_idx}, "", "pfmet", "ues+" , 1)',
+    objectMtToPFMET_type1             = 'mtMET({object_idx}, "", ""     )',
+    objectMtToPfMet_JetResUp          = 'mtMET({object_idx}, "", "jres+")',
+    objectMtToPfMet_JetEnUp           = 'mtMET({object_idx}, "", "jes+" )',
+    objectMtToPfMet_MuonEnUp          = 'mtMET({object_idx}, "", "mes+" )',
+    objectMtToPfMet_ElectronEnUp      = 'mtMET({object_idx}, "", "ees+" )',
+    objectMtToPfMet_TauEnUp           = 'mtMET({object_idx}, "", "tes+" )',
+    objectMtToPfMet_UnclusteredEnUp   = 'mtMET({object_idx}, "", "ues+" )',
+    objectMtToPfMet_PhotonEnUp        = 'mtMET({object_idx}, "", "pes+" )',
+
+    objectMtToPfMet_JetResDown        = 'mtMET({object_idx}, "", "jres-")',
+    objectMtToPfMet_JetEnDown         = 'mtMET({object_idx}, "", "jes-" )',
+    objectMtToPfMet_MuonEnDown        = 'mtMET({object_idx}, "", "mes-" )',
+    objectMtToPfMet_ElectronEnDown    = 'mtMET({object_idx}, "", "ees-" )',
+    objectMtToPfMet_TauEnDown         = 'mtMET({object_idx}, "", "tes-" )',
+    objectMtToPfMet_UnclusteredEnDown = 'mtMET({object_idx}, "", "ues-" )',
+    objectMtToPfMet_PhotonEnDown      = 'mtMET({object_idx}, "", "pes-" )',
+
+    objectDPhiToPFMET_type1             = 'deltaPhiToMEt({object_idx}, "", ""     )',
+    objectDPhiToPfMet_JetResUp          = 'deltaPhiToMEt({object_idx}, "", "jres+")',
+    objectDPhiToPfMet_JetEnUp           = 'deltaPhiToMEt({object_idx}, "", "jes+" )',
+    objectDPhiToPfMet_MuonEnUp          = 'deltaPhiToMEt({object_idx}, "", "mes+" )',
+    objectDPhiToPfMet_ElectronEnUp      = 'deltaPhiToMEt({object_idx}, "", "ees+" )',
+    objectDPhiToPfMet_TauEnUp           = 'deltaPhiToMEt({object_idx}, "", "tes+" )',
+    objectDPhiToPfMet_UnclusteredEnUp   = 'deltaPhiToMEt({object_idx}, "", "ues+" )',
+    objectDPhiToPfMet_PhotonEnUp        = 'deltaPhiToMEt({object_idx}, "", "pes+" )',
+
+    objectDPhiToPfMet_JetResDown        = 'deltaPhiToMEt({object_idx}, "", "jres-")',
+    objectDPhiToPfMet_JetEnDown         = 'deltaPhiToMEt({object_idx}, "", "jes-" )',
+    objectDPhiToPfMet_MuonEnDown        = 'deltaPhiToMEt({object_idx}, "", "mes-" )',
+    objectDPhiToPfMet_ElectronEnDown    = 'deltaPhiToMEt({object_idx}, "", "ees-" )',
+    objectDPhiToPfMet_TauEnDown         = 'deltaPhiToMEt({object_idx}, "", "tes-" )',
+    objectDPhiToPfMet_UnclusteredEnDown = 'deltaPhiToMEt({object_idx}, "", "ues-" )',
+    objectDPhiToPfMet_PhotonEnDown      = 'deltaPhiToMEt({object_idx}, "", "pes-" )',
 
     #MVA MET
     objectMtToMVAMET     = 'mtMET({object_idx}, "", "mvamet", "", 0)',
