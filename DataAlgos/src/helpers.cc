@@ -301,6 +301,7 @@ namespace fshelpers {
             double px=lheeventinfo.PUP.at(i)[0];
             double py=lheeventinfo.PUP.at(i)[1];
             double pt=sqrt(px*px+py*py);
+
             sumpt+=pt;
        }
 
