@@ -68,9 +68,9 @@ id = PSet(
     objectTrkIsoDR03 = cms.string("{object}.dr03TkSumPt()"),
     objectEcalIsoDR03 = cms.string("{object}.dr03EcalRecHitSumEt()"),
     objectHcalIsoDR03 = cms.string("{object}.dr03HcalTowerSumEt()"),
-    #objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
-    #objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
-    #objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
+    objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
+    objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
+    objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
     # raw energy error
     objectEnergyError = '{object}.corrections().combinedP4Error',
     # shower shape / ID variables
@@ -106,6 +106,15 @@ id = PSet(
     objectNearestZMass = 'closestZElectron({object_idx},"")',
     # lowest invariant mass
     objectLowestMll = 'smallestMee({object_idx},"")',
+
+
+    objectGenMotherPt =  '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).pt() : -999', 
+    objectGenMotherEnergy =  '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).energy() : -999', 
+    objectGenMotherEta =  '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).eta() : -999', 
+    objectGenMotherPhi =  '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).phi() : -999', 
+    
+
+
 )
 
 energyCorrections = PSet(
