@@ -148,11 +148,14 @@ namespace fshelpers {
     pset.addParameter<std::vector<int> >("mcPdgId", pdgIdsToMatch);
     std::vector<int> status;
     status.push_back(1);
-    if(pdgIdToMatch==15){
+
+/*    if(pdgIdToMatch==15){
      for (int istatus = 21; istatus< 30 ; istatus++){
       status.push_back(istatus); //pythia8 particles from an hard process have status code 21-29 
      } // this is specifically for allowing to get gen taus, matching them to the hardprocess. It should be checked further. 
     }
+    // removing this 
+*/
 
     pset.addParameter<std::vector<int> >("mcStatus", status);
     pset.addParameter<bool>("resolveByMatchQuality", false);
@@ -283,7 +286,6 @@ namespace fshelpers {
 
       return found;
   }
-
 
   float genHTT(const lhef::HEPEUP lheeventinfo){
       float sumpt=0;

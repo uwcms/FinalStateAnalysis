@@ -81,7 +81,7 @@ import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
     skipEvents=0,  # Start at an event offset (for debugging)
     reportEvery=100,
-    channels='mm,mjj,mj',
+    channels='mt,em,et,mm,ee',
     rerunMCMatch=False,
     eventView=0,  # Switch between final state view (0) and event view (1)
     passThru=0,  # Turn off preselections
@@ -418,6 +418,16 @@ for ob in preselections:
     fs_daughter_inputs[getName(ob)+'s'] = getName(ob)+"Preselection"
 process.FSAPreselection = cms.Path(process.preselectionSequence)
 process.schedule.append(process.FSAPreselection)
+
+
+process.genembeddedTaus=cms.EDProducer("PATTauGenInfoEmbedder",
+      src=cms.InputTag(fs_daughter_inputs['taus'])
+)
+
+process.embeddedTaus=cms.Path(process.genembeddedTaus)
+
+process.schedule.append(process.embeddedTaus)
+fs_daughter_inputs['taus'] = 'genembeddedTaus'
 
 
 # embed info about nearest jet
