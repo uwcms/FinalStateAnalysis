@@ -16,7 +16,7 @@ mtToMET = PSet(
     objectMtToMET = 'mtMET({object_idx}, "raw")',
 
     #PF Type1 MET (and systematics)
-    objectMtToPFMET_type1             = 'mtMET({object_idx}, "", ""     )',
+    objectMtToPfMet_type1             = 'mtMET({object_idx}, "", ""     )',
     objectMtToPfMet_JetResUp          = 'mtMET({object_idx}, "", "jres+")',
     objectMtToPfMet_JetEnUp           = 'mtMET({object_idx}, "", "jes+" )',
     objectMtToPfMet_MuonEnUp          = 'mtMET({object_idx}, "", "mes+" )',
