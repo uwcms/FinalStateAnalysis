@@ -481,8 +481,6 @@ process.schedule.append(process.FSAPreselection)
 
 
 
-
-
 ###########################################################################
 ### The following is embedding that must be done after object selection ###
 ###########################################################################
