@@ -13,7 +13,7 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 mtToMET = PSet(
     # Raw means no MET corrections
-    objectMtToMET = 'mtMET({object_idx}, "raw")',
+    objectMtToPfMet_Raw = 'mtMET({object_idx}, "", "raw")',
 
     #PF Type1 MET (and systematics)
     objectMtToPfMet_type1             = 'mtMET({object_idx}, "", ""     )',

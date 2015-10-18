@@ -505,6 +505,8 @@ double PATFinalState::mtMET(int i, const std::string& tag,
     metP4 = met()->shiftedP4(pat::MET::PhotonEnUp);
   else if(metTag == "pes-")
     metP4 = met()->shiftedP4(pat::MET::PhotonEnDown);
+  else if(metTag == "raw")
+    metP4 = met()->uncorP4();
   else
     metP4 = met()->p4();
 
