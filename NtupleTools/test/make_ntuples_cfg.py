@@ -227,7 +227,51 @@ fs_daughter_inputs = {
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
 
+# add met filters
+if options.runMetFilter:
+    # HBHE Loose
+    # flag in miniaod wrong, must rerun
+    process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
+    process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
+    process.HBHENoiseFilterResultProducer.IgnoreTS4TS5ifJetInLowBVRegion=cms.bool(False) 
+    process.HBHENoiseFilterResultProducer.defaultDecision = cms.string("HBHENoiseFilterResultRun2Loose")
+    
+    process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
+       inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
+       reverseDecision = cms.bool(False)
+    )
+    
+    process.ApplyBaselineHBHEIsoNoiseFilter = cms.EDFilter('BooleanFlagFilter',
+       inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHEIsoNoiseFilterResult'),
+       reverseDecision = cms.bool(False)
+    )
+    filters += [process.HBHENoiseFilterResultProducer, process.ApplyBaselineHBHENoiseFilter]
 
+    # CSC Tight Halo
+    # TODO: needs RECO to run, so they will release an event txt file to filter
+
+    # good vertices and ee bad sc filter
+    # flag in miniaod, so just filter on that
+    listOfFlags = ['Flag_goodVertices', 'Flag_eeBadScFilter']
+    listOfLabels = ['GoodVerticesFilterResult', 'EEBadSCFilterResult']
+    process.MiniAODMETFilterProducer = cms.EDProducer('MiniAODTriggerProducer',
+        triggers = cms.vstring(*listOfFlags),
+        labels = cms.vstring(*listOfLabels),
+        bits = cms.InputTag("TriggerResults"),
+        #prescales = cms.InputTag("patTrigger"),
+        #objects = cms.InputTag("selectedPatTrigger"),
+    )
+    process.ApplyGoodVerticesFilter = cms.EDFilter('BooleanFlagFilter',
+       inputLabel = cms.InputTag('MiniAODMETFilterProducer','GoodVerticesFilterResult'),
+       reverseDecision = cms.bool(True)
+    )
+    process.ApplyEEBadSCFilter = cms.EDFilter('BooleanFlagFilter',
+       inputLabel = cms.InputTag('MiniAODMETFilterProducer','EEBadSCFilterResult'),
+       reverseDecision = cms.bool(True)
+    )
+    filters += [process.MiniAODMETFilterProducer, process.ApplyGoodVerticesFilter, process.ApplyEEBadSCFilter]
+
+    
 # caluclate slimmedMETsNoHF
 if options.runMETNoHF:
     fs_daughter_inputs['pfmet'] = 'slimmedMETsNoHF'
