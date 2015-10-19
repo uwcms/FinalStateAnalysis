@@ -133,6 +133,8 @@ options.register(
 options.outputFile = "ntuplize.root"
 options.parseArguments()
 
+filters = []
+
 # SV Fit requires MVA MET
 options.runMVAMET = (options.runMVAMET or options.svFit)
 
@@ -226,8 +228,49 @@ fs_daughter_inputs = {
 
 # add met filters
 if options.runMetFilter:
-    pass
+    # HBHE Loose
+    # flag in miniaod wrong, must rerun
+    process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
+    process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
+    process.HBHENoiseFilterResultProducer.IgnoreTS4TS5ifJetInLowBVRegion=cms.bool(False) 
+    process.HBHENoiseFilterResultProducer.defaultDecision = cms.string("HBHENoiseFilterResultRun2Loose")
+    
+    process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
+       inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
+       reverseDecision = cms.bool(False)
+    )
+    
+    process.ApplyBaselineHBHEIsoNoiseFilter = cms.EDFilter('BooleanFlagFilter',
+       inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHEIsoNoiseFilterResult'),
+       reverseDecision = cms.bool(False)
+    )
+    filters += [process.HBHENoiseFilterResultProducer, process.ApplyBaselineHBHENoiseFilter]
 
+    # CSC Tight Halo
+    # TODO: needs RECO to run, so they will release an event txt file to filter
+
+    # good vertices and ee bad sc filter
+    # flag in miniaod, so just filter on that
+    listOfFlags = ['Flag_goodVertices', 'Flag_eeBadScFilter']
+    listOfLabels = ['GoodVerticesFilterResult', 'EEBadSCFilterResult']
+    process.MiniAODMETFilterProducer = cms.EDProducer('MiniAODTriggerProducer',
+        triggers = cms.vstring(*listOfFlags),
+        labels = cms.vstring(*listOfLabels),
+        bits = cms.InputTag("TriggerResults"),
+        #prescales = cms.InputTag("patTrigger"),
+        #objects = cms.InputTag("selectedPatTrigger"),
+    )
+    process.ApplyGoodVerticesFilter = cms.EDFilter('BooleanFlagFilter',
+       inputLabel = cms.InputTag('MiniAODMETFilterProducer','GoodVerticesFilterResult'),
+       reverseDecision = cms.bool(True)
+    )
+    process.ApplyEEBadSCFilter = cms.EDFilter('BooleanFlagFilter',
+       inputLabel = cms.InputTag('MiniAODMETFilterProducer','EEBadSCFilterResult'),
+       reverseDecision = cms.bool(True)
+    )
+    filters += [process.MiniAODMETFilterProducer, process.ApplyGoodVerticesFilter, process.ApplyEEBadSCFilter]
+
+    
 # caluclate slimmedMETsNoHF
 if options.runMETNoHF:
     fs_daughter_inputs['pfmet'] = 'slimmedMETsNoHF'
@@ -776,7 +819,7 @@ else:
                                 use25ns=options.use25ns, 
                                 isMC=options.isMC, **parameters)
         add_ntuple(final_state, analyzer, process,
-                   process.schedule, options.eventView)
+                   process.schedule, options.eventView, filters)
 
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")

@@ -33,7 +33,7 @@ mtToMET = PSet(
     objectMtToPfMet_UnclusteredEnDown = 'mtMET({object_idx}, "", "ues-" )',
     objectMtToPfMet_PhotonEnDown      = 'mtMET({object_idx}, "", "pes-" )',
 
-    objectDPhiToPFMET_type1             = 'deltaPhiToMEt({object_idx}, "", ""     )',
+    objectDPhiToPfMet_type1             = 'deltaPhiToMEt({object_idx}, "", ""     )',
     objectDPhiToPfMet_JetResUp          = 'deltaPhiToMEt({object_idx}, "", "jres+")',
     objectDPhiToPfMet_JetEnUp           = 'deltaPhiToMEt({object_idx}, "", "jes+" )',
     objectDPhiToPfMet_MuonEnUp          = 'deltaPhiToMEt({object_idx}, "", "mes+" )',
