@@ -26,7 +26,7 @@
 #include "DataFormats/Common/interface/View.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
-
+#include "DataFormats/PatCandidates/interface/VIDCutFlowResult.h"
 
 class MiniAODElectronIDEmbedder : public edm::EDProducer
 {
@@ -45,10 +45,14 @@ private:
   // Data
   edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
   std::vector<edm::EDGetTokenT<edm::ValueMap<bool> > > idMapTokens_; // store all ID tokens
+  std::vector<edm::EDGetTokenT<edm::ValueMap<vid::CutFlowResult> > > idFullInfoMapTokens_;
   std::vector<std::string> idLabels_; // labels for the userInts holding results
+  std::vector<std::string> fullIdLabels_; // labels for the userInts holding results
   std::vector<std::string> valueLabels_;
   std::vector<edm::EDGetTokenT<edm::ValueMap<float> > > valueTokens_;
   std::vector<std::string> categoryLabels_;
+  std::vector<std::string> nMinusOneNames_;
+  std::vector<std::string> nMinusOneLabels_;
   std::vector<edm::EDGetTokenT<edm::ValueMap<int> > > categoryTokens_;
   std::auto_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
 };
@@ -63,20 +67,36 @@ MiniAODElectronIDEmbedder::MiniAODElectronIDEmbedder(const edm::ParameterSet& iC
   idLabels_(iConfig.exists("idLabels") ?
 	    iConfig.getParameter<std::vector<std::string> >("idLabels") :
 	    std::vector<std::string>()),
+  fullIdLabels_(iConfig.exists("fullIdLabels") ?
+	    iConfig.getParameter<std::vector<std::string> >("fullIdLabels") :
+	    std::vector<std::string>()),
   valueLabels_(iConfig.exists("valueLabels") ?
                iConfig.getParameter<std::vector<std::string> >("valueLabels") :
                std::vector<std::string>()),
   categoryLabels_(iConfig.exists("categoryLabels") ?
-               iConfig.getParameter<std::vector<std::string> >("valueLabels") :
+               iConfig.getParameter<std::vector<std::string> >("categoryLabels") :
+               std::vector<std::string>()),
+  nMinusOneNames_(iConfig.exists("nMinusOneNames") ?
+               iConfig.getParameter<std::vector<std::string> >("nMinusOneNames") :
+               std::vector<std::string>()),
+  nMinusOneLabels_(iConfig.exists("nMinusOneLabels") ?
+               iConfig.getParameter<std::vector<std::string> >("nMinusOneLabels") :
                std::vector<std::string>())
 {
   std::vector<edm::InputTag> idTags = iConfig.getParameter<std::vector<edm::InputTag> >("ids");
-
   for(unsigned int i = 0;
       (i < idTags.size() && i < idLabels_.size()); // ignore IDs with no known label
       ++i)
     {
       idMapTokens_.push_back(consumes<edm::ValueMap<bool> >(idTags.at(i)));
+    }
+
+  std::vector<edm::InputTag> fullIdTags = iConfig.getParameter<std::vector<edm::InputTag> >("fullIds");
+  for(unsigned int i = 0;
+      (i < fullIdTags.size() && i < fullIdLabels_.size()); // ignore IDs with no known label
+      ++i)
+    {
+      idFullInfoMapTokens_.push_back(consumes<edm::ValueMap<vid::CutFlowResult> >(fullIdTags.at(i)));
     }
 
   std::vector<edm::InputTag> valueTags = iConfig.getParameter<std::vector<edm::InputTag> >("values");
@@ -105,6 +125,7 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetu
 
   edm::Handle<edm::View<pat::Electron> > electronsIn;
   std::vector<edm::Handle<edm::ValueMap<bool> > > ids(idMapTokens_.size(), edm::Handle<edm::ValueMap<bool> >() );
+  std::vector<edm::Handle<edm::ValueMap<vid::CutFlowResult> > > fullIds(idFullInfoMapTokens_.size(), edm::Handle<edm::ValueMap<vid::CutFlowResult> >() );
   std::vector<edm::Handle<edm::ValueMap<float> > > values(valueTokens_.size(), edm::Handle<edm::ValueMap<float> >() );
   std::vector<edm::Handle<edm::ValueMap<int> > > categories(categoryTokens_.size(), edm::Handle<edm::ValueMap<int> >() );
 
@@ -115,6 +136,12 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetu
       ++i)
     {
       iEvent.getByToken(idMapTokens_.at(i), ids.at(i));
+    }
+  for(unsigned int i = 0;
+      i < idFullInfoMapTokens_.size();
+      ++i)
+    {
+      iEvent.getByToken(idFullInfoMapTokens_.at(i), fullIds.at(i));
     }
   for(unsigned int i = 0;
       i < valueTokens_.size();
@@ -141,6 +168,26 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetu
 	{
 	  bool result = (*(ids.at(i)))[eptr];
 	  out->back().addUserFloat(idLabels_.at(i), float(result)); // 1 for true, 0 for false
+	}
+      for(unsigned int i = 0; // Loop over ID cutflows working points
+	  i < fullIds.size(); ++i)
+	{
+	  vid::CutFlowResult result = (*(fullIds.at(i)))[eptr];
+          //for(unsigned int k = 0;
+          //    k < result.cutFlowSize(); ++k)
+          //  {
+          //    std::cout << k << " " << result.getNameAtIndex(k) << std::endl;
+          //  }
+          for(unsigned int j = 0; // Loop over cut strings to exclude
+              j < nMinusOneNames_.size(); ++j)
+            {
+              std::string name = nMinusOneNames_.at(j);
+              std::string suffix = nMinusOneLabels_.at(j);
+              std::string outLabel = fullIdLabels_.at(i);
+              outLabel.append(suffix);
+              vid::CutFlowResult masked = result.getCutFlowResultMasking(name);
+              out->back().addUserFloat(outLabel,float(masked.cutFlowPassed()));
+            }
 	}
       for(unsigned int i = 0; // Loop over mva values
           i < values.size(); ++i)
