@@ -37,6 +37,6 @@ if __name__ == "__main__":
         sys.stderr.write("Using 8 TeV data definitions\n")
         import FinalStateAnalysis.MetaData.data8TeVNew as datadefs
 
-    sample_xsec = datadefs.datadefs[args.sample]['x_sec']/picobarns
+    #sample_xsec = datadefs.datadefs[args.sample]['x_sec']/picobarns
 
-    print args.nevts/sample_xsec
+    #print args.nevts/sample_xsec

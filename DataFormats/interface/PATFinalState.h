@@ -299,7 +299,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Get the specified overlaps for the ith daughter
     const reco::GenParticleRef getDaughterGenParticle(size_t i, int pdgIdToMatch, int checkCharge, int preFSR=0) const;
     const reco::GenParticleRef getDaughterGenParticleMotherSmart(size_t i, int pdgIdToMatch, int checkCharge) const;
+    const reco::GenParticleRef getDaughterGenParticleMotherSmartRef(size_t i) const;
     const bool comesFromHiggs(size_t i, int pdgIdToMatch, int checkCharge) const;
+    const bool comesFromHiggsRef(size_t i) const;
 
     // Get Recoils
     const reco::Candidate::Vector getDaughtersRecoil() const;

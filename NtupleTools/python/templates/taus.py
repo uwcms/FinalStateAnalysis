@@ -15,7 +15,7 @@ Author: Evan K. Friis
 from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 info = PSet(
-    objectGenDecayMode = '{object}.userInt("genDecayMode")',
+    objectGenDecayMode = '{object}.userInt("genDecayMode")',  
     objectLeadTrackPt = '{object}.userFloat("ps_ldTrkPt")',
     objectDecayMode = '{object}.decayMode',
     objectTNPId = '{object}.userInt("ps_sel_nom")',
@@ -84,10 +84,34 @@ id = PSet(
     objectNeutralIsoPtSumWeight = '{object}.tauID("neutralIsoPtSumWeight")',
     objectChargedIsoPtSum = '{object}.tauID("chargedIsoPtSum")',
     objectPuCorrPtSum     = '{object}.tauID("puCorrPtSum")',
+
     # closest Z mass
     objectNearestZMass = 'closestZTau({object_idx},"")',
     # lowest invariant mass
     objectLowestMll = 'smallestMtt({object_idx},"")',
+
+    objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).pdgId() : -999',
+    objectGenMotherPt =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).pt() : -999', 
+    objectGenMotherEnergy =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).energy() : -999', 
+    objectGenMotherEta =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).eta() : -999', 
+    objectGenMotherPhi =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).phi() : -999', 
+
+    objectGenJetPt = '{object}.userFloat("genJetPt")',    
+    objectGenJetEta = '{object}.userFloat("genJetEta")',  
+
+    objectGenStatus = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.status : -2 ',
+    objectGenPdgId = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.pdgId : -2 ',
+    objectGenEta = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.eta : -2 ',
+    objectGenPhi = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.phi : -2 ',
+    objectGenPt = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.pt : -2 ',
+    objectGenEnergy = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.energy : -2 ',
+    objectGenCharge = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.charge : -2 ',
+
+    objectComesFromHiggs = 'comesFromHiggsRef({object_idx})',
+
+
+
+
 )
 
 

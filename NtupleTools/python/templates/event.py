@@ -91,10 +91,14 @@ met = PSet(
 gen = PSet(
     # Process ID used to simulate in Pythia
     processID='evt.genEventInfo.signalProcessID',
-    #isZtautau='evt.findDecay(23,15)',
-    #isGtautau='evt.findDecay(22,15)',
-    #isWtaunu='evt.findDecay(24,15)',
-    #isWmunu='evt.findDecay(24,13)',
+    isZtautau='evt.findDecay(23,15)',
+    isGtautau='evt.findDecay(22,15)',
+    isWtaunu='evt.findDecay(24,15)',
+    isWmunu='evt.findDecay(24,13)',
+    isZmumu='evt.findDecay(23,13)',
+    isZee='evt.findDecay(23,11)',
+
+    genHTT='evt.genHTT',
     NUP='evt.lesHouches.NUP',
     EmbPtWeight='evt.generatorFilter.filterEfficiency',
     GenWeight='? evt.genEventInfo.weights().size>0 ? evt.genEventInfo.weights()[0] : 0',

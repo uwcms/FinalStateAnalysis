@@ -151,6 +151,9 @@ class PATFinalStateEvent {
     //Finds a decay in MC
     const bool findDecay(const int pdgIdMother, const int pdgIdDaughter) const;
 
+    // Get the genHTT for weighting
+    float genHTT() const;
+
     /// Get the PU scenario used to generate this events (if MC)
     const std::string& puTag() const;
 

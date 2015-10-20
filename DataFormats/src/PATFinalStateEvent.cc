@@ -498,6 +498,11 @@ const bool PATFinalStateEvent::findDecay(const int pdgIdMother, const int pdgIdD
   return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
 }
 
+float PATFinalStateEvent::genHTT() const{
+  if(isRealData_) return 0;
+  return fshelpers::genHTT(lhe_);
+}
+
 float  PATFinalStateEvent::jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const{
   return fshelpers::jetQGVariables( jet, myvar, recoVertices_);
 }

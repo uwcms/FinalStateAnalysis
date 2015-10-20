@@ -16,6 +16,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/EDProducer.h"
 
+#include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "RecoTauTag/RecoTau/interface/PFTauDecayModeTools.h"
 
@@ -43,10 +44,24 @@ void PATTauGenInfoEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) 
   for (size_t i = 0; i < taus->size(); ++i) {
     pat::Tau copy = *taus->ptrAt(i);
     int decayModeIndex = -2;
+    double genJetPt=-2;
+    double genJetEta=-10;
+    double genJetPhi=-2;
+    double genJetCharge=-2;
+
     if (copy.genJet() != NULL) {
       decayModeIndex = reco::tau::getDecayMode(copy.genJet());
+      genJetPt = copy.genJet()->pt();
+      genJetEta = copy.genJet()->eta();
+      genJetPhi = copy.genJet()->phi();
+      genJetCharge = copy.genJet()->charge();
     }
     copy.addUserInt("genDecayMode", decayModeIndex);
+    copy.addUserFloat("genJetPt", genJetPt);
+    copy.addUserFloat("genJetEta", genJetEta);
+    copy.addUserFloat("genJetPhi", genJetPhi);
+    copy.addUserFloat("genJetCharge", genJetCharge);
+
     output->push_back(copy);
   }
 
