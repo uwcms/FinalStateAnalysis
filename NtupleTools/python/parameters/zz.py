@@ -79,6 +79,10 @@ setattr(muVars, "objectRelPFIsoDBFSR",
                     '/{object}.pt()'))
         )
 
+zzObjVars.objectHZZLooseID = cms.string('{object}.userFloat("HZZ4lIDPass")')
+zzObjVars.objectHZZTightID = cms.string('{object}.userFloat("HZZ4lIDPassTight")')
+zzObjVars.objectHZZIsoPass = cms.string('{object}.userFloat("HZZ4lIsoPass")')
+
 zzEvVars.MassFSR = cms.string('p4fsr("FSRCand").M')
 zzEvVars.PtFSR   = cms.string('p4fsr("FSRCand").pt')
 zzEvVars.EtaFSR  = cms.string('p4fsr("FSRCand").eta')
