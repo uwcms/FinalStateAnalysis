@@ -40,14 +40,12 @@ private:
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
   virtual void endJob();
 
-  float getEA2015_25ns(const edm::Ptr<pat::Electron>& elec) const;
-  float getEA2015_50ns(const edm::Ptr<pat::Electron>& elec) const;
+  float getEA2015(const edm::Ptr<pat::Electron>& elec) const;
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
   const std::string label_; // label for the embedded userfloat
   std::auto_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
-  const bool use25ns_;
 };
 
 
@@ -59,10 +57,7 @@ MiniAODElectronEffectiveArea2015Embedder::MiniAODElectronEffectiveArea2015Embedd
                                                                edm::InputTag("slimmedElectrons"))),
   label_(iConfig.exists("label") ?
 	 iConfig.getParameter<std::string>("label") :
-	 std::string("EffectiveArea_HZZ4l2015")),
-  use25ns_(iConfig.exists("use25ns") ?
-	   iConfig.getParameter<bool>("use25ns") :
-	   true)
+	 std::string("EffectiveArea_HZZ4l2015"))
 {
   produces<std::vector<pat::Electron> >();
 }
@@ -83,11 +78,7 @@ void MiniAODElectronEffectiveArea2015Embedder::produce(edm::Event& iEvent, const
 
       out->push_back(*ei); // copy electron to save correctly in event
 
-      float ea;
-      if(use25ns_)
-	ea = getEA2015_25ns(eptr);
-      else
-	ea = getEA2015_50ns(eptr);
+      float ea = getEA2015(eptr);
 	
       out->back().addUserFloat(label_, ea);
     }
@@ -97,7 +88,7 @@ void MiniAODElectronEffectiveArea2015Embedder::produce(edm::Event& iEvent, const
 
 
 
-float MiniAODElectronEffectiveArea2015Embedder::getEA2015_25ns(const edm::Ptr<pat::Electron>& elec) const
+float MiniAODElectronEffectiveArea2015Embedder::getEA2015(const edm::Ptr<pat::Electron>& elec) const
 {
   float eta = fabs(elec->eta());
 
@@ -111,23 +102,6 @@ float MiniAODElectronEffectiveArea2015Embedder::getEA2015_25ns(const edm::Ptr<pa
     return 0.1734;
   else
     return 0.1830;
-}
-
-
-float MiniAODElectronEffectiveArea2015Embedder::getEA2015_50ns(const edm::Ptr<pat::Electron>& elec) const
-{
-  float eta = fabs(elec->eta());
-
-  if(eta >= 2.2)
-    return 0.1337;
-  else if(eta >= 2.0)
-    return 0.0727;
-  else if(eta >= 1.3)
-    return 0.0632;
-  else if(eta >= 0.8)
-    return 0.0954;
-  else
-    return 0.0973;
 }
 
 
