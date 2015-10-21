@@ -351,7 +351,7 @@ process.miniAODElectronEAHZZEmbedding = cms.EDProducer(
 fs_daughter_inputs['electrons'] = 'miniAODElectronEAHZZEmbedding'
 eaFile = 'RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_{0}ns.txt'.format('25' if options.use25ns else '50')
 process.miniAODElectronEAEmbedding = cms.EDProducer(
-    "MiniAODElectronEffectiveArea2015Embedder",
+    "MiniAODElectronEffectiveAreaEmbedder",
     src = cms.InputTag(fs_daughter_inputs['electrons']),
     label = cms.string("EffectiveArea"), # embeds a user float with this name
     configFile = cms.FileInPath(eaFile), # the effective areas file
