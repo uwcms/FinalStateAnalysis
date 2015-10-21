@@ -69,6 +69,13 @@ parameters = {
         eVetoHZZIso = 'vetoElectrons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
         eVetoHZZTight = 'vetoElectrons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5\').size()',
         eVetoHZZTightIso = 'vetoElectrons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
+
+        GenDecayWENu='evt.findDecay(24,11)',
+        GenDecayWMuNu='evt.findDecay(24,13)',
+        GenDecayWTauNu='evt.findDecay(24,15)',
+        GenDecayZEE='evt.findDecay(23,11)',
+        GenDecayZMuMu='evt.findDecay(23,13)',
+        GenDecayZTauTau='evt.findDecay(23,15)',
     ),
     # candidates of form: objectVarName = 'string expression for selection'
     'candidateVariables' : PSet(),
