@@ -60,7 +60,7 @@ parameters = {
     ),
     # candidates of form: objectVarName = 'string expression for selection'
     'candidateVariables' : PSet(),
-    'electronVariables' : PSet(),
+    'electronVariables' : PSet(objectEffectiveAreaHZZ = "{object}.userFloat('EffectiveArea_HZZ4l2015')"),
     'muonVariables' : PSet(),
     'tauVariables' : PSet(),
     'photonVariables' : PSet(),

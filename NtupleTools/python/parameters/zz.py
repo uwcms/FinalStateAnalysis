@@ -57,6 +57,8 @@ eleVars.objectDREt = cms.string(('? daughterHasUserCand({object_idx}, "%sCand") 
                            'daughterAsElectron({object_idx}).userFloat("%sDREt") : ' +
                            '-999.')%(fsr, fsr))
 
+eleVars.objectEffectiveAreaHZZ = cms.string("{object}.userFloat('EffectiveArea_HZZ4l2015')")
+
 muVars.objectDREt = cms.string(('? daughterHasUserCand({object_idx}, "%sCand") ? ' +
                           'daughterAsMuon({object_idx}).userFloat("%sCandDREt") : ' +
                           '-999.')%(fsr, fsr))
