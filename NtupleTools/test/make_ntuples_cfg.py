@@ -196,6 +196,7 @@ envvar = 'mcgt' if options.isMC else 'datagt'
 GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': '74X_dataRun2_Prompt_v2'}
 if options.use25ns:
     GT['mcgt'] = 'MCRUN2_74_V9'
+    GT['datagt'] = '74X_dataRun2_Prompt_v4'
 
 process.GlobalTag.globaltag = cms.string(GT[envvar])
 
@@ -448,8 +449,6 @@ if options.hzz:
         fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
         process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
         process.schedule.append(process.makeFSRPhotons)
-
-
 
 
 
