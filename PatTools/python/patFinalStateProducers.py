@@ -44,7 +44,7 @@ def _combinatorics(items, n):
 def produce_final_states(process, daughter_collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
                          noTracks=False, runMVAMET=False, hzz=False,
-                         rochCor="", eleCor="", use25ns=False, **kwargs):
+                         rochCor="", eleCor="", **kwargs):
 
     src = dict(daughter_collections) # make a copy so we don't change the passed collection
 

@@ -193,10 +193,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': '74X_dataRun2_Prompt_v2'}
-if options.use25ns:
-    GT['mcgt'] = 'MCRUN2_74_V9'
-    GT['datagt'] = '74X_dataRun2_Prompt_v4'
+GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': '74X_dataRun2_v4'}
 
 process.GlobalTag.globaltag = cms.string(GT[envvar])
 
@@ -298,6 +295,7 @@ if options.usePUPPI:
 ### mvamet ###
 ##############
 
+<<<<<<< HEAD
 if options.runMVAMET:
     process.load("RecoJets.JetProducers.ak4PFJets_cfi")
     process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
@@ -621,7 +619,7 @@ produce_final_states(process, fs_daughter_inputs, output_to_keep, process.buildF
                      'puTagDoesntMatter', buildFSAEvent=True,
                      noTracks=True, runMVAMET=options.runMVAMET,
                      hzz=options.hzz, rochCor=options.rochCor,
-                     eleCor=options.eleCor, use25ns=options.use25ns, **parameters)
+                     eleCor=options.eleCor, **parameters)
 process.buildFSAPath = cms.Path(process.buildFSASeq)
 # Don't crash if some products are missing (like tracks)
 process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
@@ -806,8 +804,8 @@ else:
                                 runMVAMET=options.runMVAMET,
                                 skimCuts=options.skimCuts, suffix=suffix,
                                 hzz=options.hzz, nExtraJets=extraJets, 
-                                use25ns=options.use25ns, 
-                                isMC=options.isMC, **parameters)
+                                isMC=options.isMC, use25ns=options.use25ns,
+                                **parameters)
         add_ntuple(final_state, analyzer, process,
                    process.schedule, options.eventView, filters)
 
