@@ -61,7 +61,7 @@ to submit jobs via FarmoutAnalysisJobs.
 By default the resulting script is printed to stdout. You can also use the option
 --output_file (-o) to create put the script in a text file.
 
-The following will run a bunch of PHYS14 miniAOD files. As new MiniAOD versions are released,
+The following commands will run some jobs for RunII 25ns MC and data. As new MiniAOD versions are released,
 you only need to change the campaign-tag. This command uses a DAS lookup to find all available
 datasets for a given campaign and pattern match to the DAS name desired. Careful selection of 
 the campaign tag should avoid repeated datasets (since old datasets should be invalidated as
