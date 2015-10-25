@@ -105,6 +105,7 @@ options = TauVarParsing.TauVarParsing(
     hzz=0,
     paramFile='',
     skipGhost=0,
+    runWZ=0,
 )
 
 options.register(
@@ -162,6 +163,10 @@ if options.paramFile:
     else:
         print 'Failed to load custom parameters, using default.'
     pass
+if options.runWZ:
+    from FinalStateAnalysis.NtupleTools.parameters.wz import parameters as wzParams
+    parameters.update(wzParams)
+    
 
 if options.eventsToProcess:
     process.source.eventsToProcess = cms.untracked.VEventRange(
