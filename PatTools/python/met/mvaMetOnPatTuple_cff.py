@@ -33,30 +33,30 @@ try:
             ak5PFL3Absolute
     #process.load("JetMETCorrections.Configuration.DefaultJEC_cff")
     # Modify muons
-    muon_cut = isomuons.cut
+    #muon_cut = isomuons.cut
     isomuons = cms.EDFilter(
         "PATMuonSelector",
-        src=cms.InputTag("cleanPatMuons"),
-        cut=muon_cut,
+        src=cms.InputTag("slimmedMuons"),
+        cut=cms.string(''),
         filter=cms.bool(False)
     )
     # Modify electrons
-    e_cut = isoelectrons.cut
+    #e_cut = isoelectrons.cut
     isoelectrons = cms.EDFilter(
         "PATElectronSelector",
-        src=cms.InputTag("cleanPatElectrons"),
-        cut=e_cut,
+        src=cms.InputTag("slimmedElectrons"),
+        cut=cms.string(''),
         filter=cms.bool(False)
     )
     # Modify taus
     isotaus = cms.EDFilter(
         "PATTauSelector",
-        src=cms.InputTag("selectedPatTaus"),
-        cut=cms.string(
-            'pt > 19 && abs(eta) < 2.3 && '
-            'tauID("decayModeFinding") && '
-            'tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits") > 0.5 && '
-            'tauID("againstElectronLoose") && tauID("againstMuonLoose2")'),
+        src=cms.InputTag("slimmedTaus"),
+        cut=cms.string(''),
+            #'pt > 19 && abs(eta) < 2.3 && '
+            #'tauID("decayModeFinding") && '
+            #'tauID("byLooseCombinedIsolationDeltaBetaCorr3Hits") > 0.5 && '
+            #'tauID("againstElectronLoose") && tauID("againstMuonLoose2")'),
         filter=cms.bool(False)
     )
     patMEtMVA = patMETs.clone(metSource=cms.InputTag("pfMEtMVA"))
