@@ -3,26 +3,36 @@
   "data_DoubleMuon_Run2015B_23Sep2015_50ns" : "/DoubleMuon/Run2015B-23Sep2015-v1/MINIAOD",
   "data_MuonEG_Run2015B_23Sep2015_50ns" : "/MuonEG/Run2015B-23Sep2015-v1/MINIAOD",
   "data_Tau_Run2015B_23Sep2015_50ns" : "/Tau/Run2015B-23Sep2015-v1/MINIAOD",
+  "data_SingleMuon_Run2015B_23Sep2015_50ns" : "/SingleMuon/Run2015B-23Sep2015-v1/MINIAOD",
+
 
   "data_DoubleEG_Run2015C_05Oct2015_50ns" : "/DoubleEG/Run2015C-05Oct2015-v1/MINIAOD",
   "data_DoubleMuon_Run2015C_05Oct2015_50ns" : "/DoubleMuon/Run2015C-05Oct2015-v1/MINIAOD",
   "data_MuonEG_Run2015C_05Oct2015_50ns" : "/MuonEG/Run2015C-05Oct2015-v1/MINIAOD",
   "data_Tau_Run2015C_05Oct2015_50ns" : "/Tau/Run2015C-05Oct2015-v1/MINIAOD",
+  "data_SingleMuon_Run2015C_05Oct2015_50ns" : "/SingleMuon/Run2015C-05Oct2015-v1/MINIAOD",
+
 
   "data_DoubleEG_Run2015C_23Sep2015_25ns" : "/DoubleEG/Run2015C-23Sep2015-v1/MINIAOD",
   "data_DoubleMuon_Run2015C_23Sep2015_25ns" : "/DoubleMuon/Run2015C-23Sep2015-v1/MINIAOD",
   "data_MuonEG_Run2015C_23Sep2015_25ns" : "/MuonEG/Run2015C-23Sep2015-v1/MINIAOD",
   "data_Tau_Run2015C_23Sep2015_25ns" : "/Tau/Run2015C-23Sep2015-v1/MINIAOD",
+  "data_SingleMuon_Run2015C_23Sep2015_25ns" : "/SingleMuon/Run2015C-23Sep2015-v1/MINIAOD",
+
 
   "data_DoubleMuon_Run2015D_05Oct2015_25ns" : "/DoubleMuon/Run2015D-05Oct2015-v1/MINIAOD",
   "data_MuonEG_Run2015D_05Oct2015_25ns" : "/MuonEG/Run2015D-05Oct2015-v2/MINIAOD",
   "data_DoubleEG_Run2015D_05Oct2015_25ns" : "/DoubleEG/Run2015D-05Oct2015-v1/MINIAOD",
   "data_Tau_Run2015D_05Oct2015_25ns" : "/Tau/Run2015D-05Oct2015-v1/MINIAOD",
+  "data_SingleMuon_Run2015D_05Oct2015_25ns" : "/SingleMuon/Run2015D-05Oct2015-v1/MINIAOD",
+
 
   "data_DoubleMuon_Run2015D_PromptReco-v4_25ns" : "/DoubleMuon/Run2015D-PromptReco-v4/MINIAOD",
   "data_MuonEG_Run2015D_PromptReco-v4_25ns" : "/MuonEG/Run2015D-PromptReco-v4/MINIAOD",
   "data_DoubleEG_Run2015D_PromptReco-v4_25ns" : "/DoubleEG/Run2015D-PromptReco-v4/MINIAOD",
   "data_Tau_Run2015D_PromptReco-v4_25ns" : "/Tau/Run2015D-PromptReco-v4/MINIAOD"
+  "data_SingleMuon_Run2015D_PromptReco-v4_25ns" : "/SingleMuon/Run2015D-PromptReco-v4/MINIAOD",
+
 }
 
 
