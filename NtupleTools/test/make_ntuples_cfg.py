@@ -221,7 +221,6 @@ fs_daughter_inputs = {
     'jets': 'slimmedJets',
     'pfmet': 'slimmedMETs',         # slimmedMETs, slimmedMETsNoHF (miniaodv2), slimmmedMETsPuppi (not correct in miniaodv1)
     'mvamet': 'fixme',              # produced later
-    'fsr': 'slimmedPhotons',
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
 
@@ -295,7 +294,6 @@ if options.usePUPPI:
 ### mvamet ###
 ##############
 
-<<<<<<< HEAD
 if options.runMVAMET:
     process.load("RecoJets.JetProducers.ak4PFJets_cfi")
     process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
@@ -437,16 +435,41 @@ fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs[
 ### pre selection HZZ customizations ###
 ########################################
 if options.hzz:
-    hzz4l = options.channels == 'zz' or 'eeee' in options.channels or \
-        'eemm' in options.channels or 'mmmm' in options.channels 
-    # alternative is Z+l control region
+    # Make FSR photon collection, give them isolation and cut on it
+    process.load("FinalStateAnalysis.PatTools.miniAOD_fsrPhotons_cff")
+    fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
 
-    if hzz4l:
-        # Make FSR photon collection, give them isolation
-        process.load("FinalStateAnalysis.PatTools.miniAOD_fsrPhotons_cff")
-        fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
-        process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
-        process.schedule.append(process.makeFSRPhotons)
+    process.dretPhotonSelection = cms.EDFilter(
+        "CandPtrSelector",
+        src = cms.InputTag(fs_daughter_inputs['fsr']),
+        cut = cms.string('pt > 2 && abs(eta) < 2.4 && '
+                         '(userFloat("fsrPhotonPFIsoChHadPUNoPU03pt02") + '
+                         'userFloat("fsrPhotonPFIsoNHadPhoton03") / pt < 1.8)'),
+        )
+    fs_daughter_inputs['fsr'] = 'dretPhotonSelection'
+    process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence *
+                                      process.dretPhotonSelection)
+    process.schedule.append(process.makeFSRPhotons)
+
+    process.leptonDRETFSREmbedding = cms.EDProducer(
+        "MiniAODLeptonDRETFSREmbedder",
+        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
+        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
+        phoSrc = cms.InputTag(fs_daughter_inputs['fsr']),
+        phoSelection = cms.string(""),
+        eSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
+        muSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
+        fsrLabel = cms.string("dretFSRCand"),
+        etPower = cms.double(2.),
+        maxDR = cms.double(0.5),
+        )
+    fs_daughter_inputs['muons'] = 'leptonDRETFSREmbedding'
+    fs_daughter_inputs['electrons'] = 'leptonDRETFSREmbedding'
+
+    process.embedDRETFSR = cms.Sequence(process.leptonDRETFSREmbedding)
+    process.dREtFSR = cms.Path(process.embedDRETFSR)
+    process.schedule.append(process.dREtFSR)
+
 
 
 
@@ -499,98 +522,6 @@ fs_daughter_inputs['muons'] = postMuons(process,options.use25ns,fs_daughter_inpu
 ##############################
 from FinalStateAnalysis.NtupleTools.customization_taus import postTaus
 fs_daughter_inputs['taus'] = postTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['jets'])
-
-
-
-
-
-
-
-
-
-
-
-########################################
-### post selection HZZ customization ###
-########################################
-if options.hzz and hzz4l:
-    # Put FSR photons into leptons as user cands
-    from FinalStateAnalysis.PatTools.miniAODEmbedFSR_cfi \
-        import embedFSRInElectrons, embedFSRInMuons
-    process.electronFSREmbedder = embedFSRInElectrons.clone(
-        src = cms.InputTag(fs_daughter_inputs['electrons']),
-        srcAlt = cms.InputTag(fs_daughter_inputs['muons']),
-        srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
-        srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
-        srcVtx = cms.InputTag(fs_daughter_inputs['vertices']),
-        idDecisionLabel = cms.string(idCheatLabel),
-        )
-    fs_daughter_inputs['electrons'] = 'electronFSREmbedder'
-    process.muonFSREmbedder = embedFSRInMuons.clone(
-        src = cms.InputTag(fs_daughter_inputs['muons']),
-        srcAlt = cms.InputTag(fs_daughter_inputs['electrons']),
-        srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
-        srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
-        srcVtx = cms.InputTag(fs_daughter_inputs['vertices']),
-        idDecisionLabel = cms.string(idCheatLabel),
-        )
-    fs_daughter_inputs['muons'] = 'muonFSREmbedder'
-    process.embedFSRInfo = cms.Path(
-        process.electronFSREmbedder +
-        process.muonFSREmbedder
-        )
-    process.schedule.append(process.embedFSRInfo)
-
-    # Make a skimmed collection that is a subset of packed PF cands to speed things up
-    process.fsrBaseCands = cms.EDFilter(
-        "CandPtrSelector",
-        src = cms.InputTag("packedPFCandidates"),
-        cut = cms.string("pdgId == 22 & pt > 2. & abs(eta) < 2.6"),
-        )
-    process.fsrBaseCandSeq = cms.Sequence(process.fsrBaseCands)
-    process.fsrBaseCandPath = cms.Path(process.fsrBaseCandSeq)
-    process.schedule.append(process.fsrBaseCandPath)
-
-    # Create and embed yet another experimental FSR collection, this time using
-    # deltaR/eT as the photon figure of merit
-    process.dretPhotonSelection = cms.EDFilter(
-        "CandPtrSelector",
-        src = cms.InputTag("fsrBaseCands"), #packedPFCandidates"),
-        cut = cms.string("pdgId == 22 & pt > 2. & abs(eta) < 2.4"),
-        )
-    fs_daughter_inputs['dretfsr'] = 'dretPhotonSelection'
-
-    process.leptonDRETFSREmbedding = cms.EDProducer(
-        "MiniAODLeptonDRETFSREmbedder",
-        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
-        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
-        phoSrc = cms.InputTag("dretPhotonSelection"),
-        phoSelection = cms.string(""),
-        eSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
-        muSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
-        fsrLabel = cms.string("dretFSRCand"),
-        )
-    fs_daughter_inputs['muons'] = 'leptonDRETFSREmbedding'
-    fs_daughter_inputs['elecrons'] = 'leptonDRETFSREmbedding'
-
-    process.leptonDRET2FSREmbedding = process.leptonDRETFSREmbedding.clone(
-        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
-        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
-        etPower = cms.double(2.),
-        fsrLabel = cms.string("dret2FSRCand"),
-        )
-
-    process.embedDRETFSR = cms.Sequence(process.dretPhotonSelection * 
-                                        process.leptonDRETFSREmbedding *
-                                        process.leptonDRET2FSREmbedding)
-    process.dREtFSR = cms.Path(process.embedDRETFSR)
-    process.schedule.append(process.dREtFSR)
-
-
-
-
-
-
 
 
 
