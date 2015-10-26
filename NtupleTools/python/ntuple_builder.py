@@ -135,7 +135,7 @@ _producer_translation = {
 
 
 
-def add_ntuple(name, analyzer, process, schedule, event_view=False):
+def add_ntuple(name, analyzer, process, schedule, event_view=False, filters=[]):
     ''' Add an ntuple to the process with given name and schedule it
 
     A path for the ntuple will be created.
@@ -146,7 +146,11 @@ def add_ntuple(name, analyzer, process, schedule, event_view=False):
     setattr(process, name, analyzer)
     analyzer.analysis.EventView = cms.bool(bool(event_view))
     # Make a path for this ntuple
-    p = cms.Path(analyzer)
+    #p = cms.Path(analyzer)
+    p = cms.Path()
+    for f in filters:
+        p *= f
+    p *= analyzer
     setattr(process, name + 'path', p)
     schedule.append(p)
 

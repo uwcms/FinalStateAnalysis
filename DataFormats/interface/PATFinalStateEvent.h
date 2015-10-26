@@ -119,6 +119,8 @@ class PATFinalStateEvent {
     const edm::Ptr<pat::MET> met(const std::string& type) const;
     // Get 4-vector of the MET
     const reco::Candidate::LorentzVector met4vector(const std::string& type, const std::string& tag="", const int applyPhiCorr=0) const;
+    // get met shift
+    double metShift(const std::string& type,const std::string& var, const std::string& tag="") const;
 
     /// Get the event ID
     const edm::EventID& evtId() const;
