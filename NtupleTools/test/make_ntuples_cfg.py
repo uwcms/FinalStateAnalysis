@@ -94,6 +94,7 @@ options = TauVarParsing.TauVarParsing(
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runMVAMET=0,  # If one, (re)build the MVA MET
     runMETNoHF=0,  # If one, use get metnohf (needs to be recalculated in miniaodv1)
+    usePUPPI=0,
     rerunJets=0,
     dblhMode=False, # For double-charged Higgs analysis
     runTauSpinner=0,
@@ -104,6 +105,7 @@ options = TauVarParsing.TauVarParsing(
     hzz=0,
     paramFile='',
     skipGhost=0,
+    runWZ=0,
 )
 
 options.register(
@@ -133,6 +135,11 @@ options.register(
 options.outputFile = "ntuplize.root"
 options.parseArguments()
 
+#########################
+### Customize the job ###
+#########################
+
+# list if filters to apply
 filters = []
 
 # SV Fit requires MVA MET
@@ -156,6 +163,10 @@ if options.paramFile:
     else:
         print 'Failed to load custom parameters, using default.'
     pass
+if options.runWZ:
+    from FinalStateAnalysis.NtupleTools.parameters.wz import parameters as wzParams
+    parameters.update(wzParams)
+    
 
 if options.eventsToProcess:
     process.source.eventsToProcess = cms.untracked.VEventRange(
@@ -186,16 +197,6 @@ GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': '74X_dataRun2_Prompt_v2'}
 if options.use25ns:
     GT['mcgt'] = 'MCRUN2_74_V9'
 
-
-#if options.GlobalTag:
-#    process.GlobalTag.globaltag = cms.string(options.GlobalTag)
-#else:
-#    try:
-#        process.GlobalTag.globaltag = cms.string(os.environ[envvar])
-#    except KeyError:
-#        print 'Warning: GlobalTag not defined in environment. Using default.'
-#        process.GlobalTag.globaltag = cms.string(GT[envvar])
-#    process.GlobalTag.globaltag = cms.string(GT[envvar])
 process.GlobalTag.globaltag = cms.string(GT[envvar])
 
 print 'Using globalTag: %s' % process.GlobalTag.globaltag
@@ -225,6 +226,77 @@ fs_daughter_inputs = {
     'fsr': 'slimmedPhotons',
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
+
+
+
+
+
+
+###############################
+### Customize object inputs ###
+###############################
+
+# use metNoHF
+if options.runMETNoHF:
+    fs_daughter_inputs['pfmet'] = 'slimmedMETsNoHF'
+
+# use puppi instead
+if options.usePUPPI:
+    fs_daughter_inputs['pfmet'] = 'slimmedMETsPuppi'
+    fs_daughter_inputs['jets'] = 'slimmedJetsPuppi'
+
+##############
+### mvamet ###
+##############
+#if options.runMVAMET:
+#    process.load("RecoJets.JetProducers.ak4PFJets_cfi")
+#    process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
+#    process.ak4PFJets.doAreaFastjet = cms.bool(True)
+#    
+#    from JetMETCorrections.Configuration.DefaultJEC_cff import ak4PFJetsL1FastL2L3
+#    
+#    process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
+#    process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
+#    process.pfMVAMEt.srcVertices = cms.InputTag(fs_daughter_inputs['vertices'])
+#    process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
+#    process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
+#    process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
+#    process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
+#    if not options.use25ns:
+#        process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
+#        process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
+#        process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
+#        process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
+#    
+#    process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
+#    process.puJetIdForPFMVAMEt.vertexes = cms.InputTag(fs_daughter_inputs['vertices'])
+#    process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
+#    
+#    from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
+#    
+#    process.miniAODMVAMEt = patMETs.clone(
+#        metSource=cms.InputTag("pfMVAMEt"),
+#        addMuonCorrections = cms.bool(False),
+#        addGenMET = cms.bool(False)
+#    )
+#    fs_daughter_inputs['mvamet'] = 'miniAODMVAMEt'
+#    
+#    process.mvaMetSequence = cms.Path(
+#        process.ak4PFJets *
+#        process.pfMVAMEtSequence *
+#        process.miniAODMVAMEt
+#    )
+
+
+
+
+
+
+
+
+################################################
+### add filters (that wont make it into fsa) ###
+################################################
 
 # add met filters
 if options.runMetFilter:
@@ -270,124 +342,57 @@ if options.runMetFilter:
     )
     filters += [process.MiniAODMETFilterProducer, process.ApplyGoodVerticesFilter, process.ApplyEEBadSCFilter]
 
-    
-# caluclate slimmedMETsNoHF
-if options.runMETNoHF:
-    fs_daughter_inputs['pfmet'] = 'slimmedMETsNoHF'
 
-### embed some things we need that arent in miniAOD (ids, etc.)
 
-# embed electron ids
+
+
+
+
+
+
+
+
+
+#########################################################
+### embed some things we need before object selection ###
+#########################################################
+
+# HZZ id labels
+idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
+isoCheatLabel = "HZZ4lIsoPass"
 electronMVANonTrigIDLabel = "BDTIDNonTrig"
 electronMVATrigIDLabel = "BDTIDTrig"
-from FinalStateAnalysis.NtupleTools.embedElectronIDs import embedElectronIDs
-fs_daughter_inputs['electrons'] = embedElectronIDs(process,options.use25ns,fs_daughter_inputs['electrons'])
 
-if not options.skipGhost:
-    # Clean out muon "ghosts" caused by track ambiguities
-    process.ghostCleanedMuons = cms.EDProducer("PATMuonCleanerBySegments",
-                                               src = cms.InputTag(fs_daughter_inputs['muons']),
-                                               preselection = cms.string("track.isNonnull"),
-                                               passthrough = cms.string("isGlobalMuon && numberOfMatches >= 2"),
-                                               fractionOfSharedSegments = cms.double(0.499))
-    fs_daughter_inputs['muons'] = "ghostCleanedMuons"
-    
-    process.miniCleanedMuons = cms.Path(process.ghostCleanedMuons)
-    process.schedule.append(process.miniCleanedMuons)
+##########################
+### embed electron ids ###
+##########################
+from FinalStateAnalysis.NtupleTools.customization_electrons import preElectrons
+fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['vertices'],
+    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
+    electronMVATrigIDLabel=electronMVATrigIDLabel)
 
-process.miniPatMuons = cms.EDProducer(
-    "MiniAODMuonIDEmbedder",
-    src=cms.InputTag(fs_daughter_inputs['muons']),
-    vertices=cms.InputTag(fs_daughter_inputs['vertices']),
-)
-fs_daughter_inputs['muons'] = "miniPatMuons"
+######################
+### embed muon IDs ###
+######################
+from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
+fs_daughter_inputs['muons'] = preMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['vertices'],
+    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost)
 
-process.miniPatJets = cms.EDProducer(
-    "MiniAODJetIdEmbedder",
-    src=cms.InputTag(fs_daughter_inputs['jets'])
-)
-fs_daughter_inputs['jets'] = 'miniPatJets'
+#####################
+### embed tau IDs ###
+#####################
+from FinalStateAnalysis.NtupleTools.customization_taus import preTaus
+fs_daughter_inputs['taus'] = preTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['vertices'])
 
-process.runMiniAODObjectEmbedding = cms.Path(
-    process.miniPatMuons+
-    process.miniPatJets
-)
-process.schedule.append(process.runMiniAODObjectEmbedding)
+########################
+### jet id embedding ###
+########################
+from FinalStateAnalysis.NtupleTools.customization_jets import preJets
+fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs['jets'],fs_daughter_inputs['vertices'])
 
-process.miniMuonsEmbedIp = cms.EDProducer(
-    "MiniAODMuonIpEmbedder",
-    src = cms.InputTag(fs_daughter_inputs['muons']),
-    vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
-)
-fs_daughter_inputs['muons'] = 'miniMuonsEmbedIp'
-
-process.miniElectronsEmbedIp = cms.EDProducer(
-    "MiniAODElectronIpEmbedder",
-    src = cms.InputTag(fs_daughter_inputs['electrons']),
-    vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
-)
-fs_daughter_inputs['electrons'] = 'miniElectronsEmbedIp'
-
-process.runMiniAODLeptonIpEmbedding = cms.Path(
-    process.miniMuonsEmbedIp+
-    process.miniElectronsEmbedIp
-)
-process.schedule.append(process.runMiniAODLeptonIpEmbedding)
-
-# Embed effective areas in muons and electrons
-process.load("FinalStateAnalysis.PatTools.electrons.patElectronEAEmbedding_cfi")
-process.patElectronEAEmbedder.src = cms.InputTag(fs_daughter_inputs['electrons'])
-process.load("FinalStateAnalysis.PatTools.muons.patMuonEAEmbedding_cfi")
-process.patMuonEAEmbedder.src = cms.InputTag(fs_daughter_inputs['muons'])
-fs_daughter_inputs['electrons'] = 'patElectronEAEmbedder'
-fs_daughter_inputs['muons'] = 'patMuonEAEmbedder'
-# And for electrons, the new HZZ4l EAs as well
-process.miniAODElectronEAHZZEmbedding = cms.EDProducer(
-    "MiniAODElectronEffectiveArea2015Embedder",
-    src = cms.InputTag(fs_daughter_inputs['electrons']),
-    label = cms.string("EffectiveArea_HZZ4l2015"), # embeds a user float with this name
-    use25ns = cms.bool(bool(options.use25ns)),
-    )
-fs_daughter_inputs['electrons'] = 'miniAODElectronEAHZZEmbedding'
-eaFile = 'RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_{0}ns.txt'.format('25' if options.use25ns else '50')
-process.miniAODElectronEAEmbedding = cms.EDProducer(
-    "MiniAODElectronEffectiveAreaEmbedder",
-    src = cms.InputTag(fs_daughter_inputs['electrons']),
-    label = cms.string("EffectiveArea"), # embeds a user float with this name
-    configFile = cms.FileInPath(eaFile), # the effective areas file
-    )
-fs_daughter_inputs['electrons'] = 'miniAODElectronEAEmbedding'
-process.EAEmbedding = cms.Path(
-    process.patElectronEAEmbedder +
-    process.patMuonEAEmbedder +
-    process.miniAODElectronEAHZZEmbedding +
-    process.miniAODElectronEAEmbedding
-    )
-process.schedule.append(process.EAEmbedding)
-
-# Embed rhos in electrons
-process.miniAODElectronRhoEmbedding = cms.EDProducer(
-    "ElectronRhoOverloader",
-    src = cms.InputTag(fs_daughter_inputs['electrons']),
-    srcRho = cms.InputTag("fixedGridRhoFastjetAll"), # not sure this is right
-    userLabel = cms.string("rho_fastjet")
-    )
-fs_daughter_inputs['electrons'] = 'miniAODElectronRhoEmbedding'
-
-# ... and muons
-process.miniAODMuonRhoEmbedding = cms.EDProducer(
-    "MuonRhoOverloader",
-    src = cms.InputTag(fs_daughter_inputs['muons']),
-    srcRho = cms.InputTag("fixedGridRhoFastjetCentralNeutral"), # not sure this is right
-    userLabel = cms.string("rho_fastjet")
-    )
-fs_daughter_inputs['muons'] = 'miniAODMuonRhoEmbedding'
-process.rhoEmbedding = cms.Path(
-    process.miniAODElectronRhoEmbedding +
-    process.miniAODMuonRhoEmbedding
-    )
-process.schedule.append(process.rhoEmbedding)
-
+########################################
+### pre selection HZZ customizations ###
+########################################
 if options.hzz:
     hzz4l = options.channels == 'zz' or 'eeee' in options.channels or \
         'eemm' in options.channels or 'mmmm' in options.channels 
@@ -400,56 +405,20 @@ if options.hzz:
         process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
         process.schedule.append(process.makeFSRPhotons)
 
-# Embed HZZ ID and isolation decisions because we need to know them for FSR recovery
-idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
-isoCheatLabel = "HZZ4lIsoPass"
-process.electronIDIsoCheatEmbedding = cms.EDProducer(
-    "MiniAODElectronHZZIDDecider",
-    src = cms.InputTag(fs_daughter_inputs['electrons']),
-    idLabel = cms.string(idCheatLabel), # boolean stored as userFloat with this name
-    isoLabel = cms.string(isoCheatLabel), # boolean stored as userFloat with this name
-    rhoLabel = cms.string("rho_fastjet"), # use rho and EA userFloats with these names
-    eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
-    vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
-    bdtLabel = cms.string(electronMVANonTrigIDLabel),
-    idCutLowPtLowEta = cms.double(-.265),
-    idCutLowPtMedEta = cms.double(-.556),
-    idCutLowPtHighEta = cms.double(-.551),
-    idCutHighPtLowEta = cms.double(-.072),
-    idCutHighPtMedEta = cms.double(-.286),
-    idCutHighPtHighEta = cms.double(-.267),
-    missingHitsCut = cms.int32(999),
-    )
-fs_daughter_inputs['electrons'] = 'electronIDIsoCheatEmbedding'
-process.muonIDIsoCheatEmbedding = cms.EDProducer(
-    "MiniAODMuonHZZIDDecider",
-    src = cms.InputTag(fs_daughter_inputs['muons']),
-    idLabel = cms.string(idCheatLabel), # boolean will be stored as userFloat with this name
-    isoLabel = cms.string(isoCheatLabel), # boolean will be stored as userFloat with this name
-    vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
-    # Defaults are correct as of 9 March 2015, overwrite later if needed
-    )
-fs_daughter_inputs['muons'] = 'muonIDIsoCheatEmbedding'
 
-# at 50ns, HZZ is actually SMP ZZ, which requires slightly different cuts
-# (use cut based ID rather than MVA electron ID, all leptons must have pt>10,
-# and we don't use the SIP cut)
-if not options.use25ns:
-    process.electronIDIsoCheatEmbedding.bdtLabel = cms.string('')
-    process.electronIDIsoCheatEmbedding.selection = cms.string('userFloat("CBIDMedium") > 0.5')
-    process.electronIDIsoCheatEmbedding.ptCut = cms.double(10.)
-    process.electronIDIsoCheatEmbedding.sipCut = cms.double(9999.)
-    process.muonIDIsoCheatEmbedding.ptCut = cms.double(10.)
-    process.muonIDIsoCheatEmbedding.sipCut = cms.double(9999.)
 
-process.embedHZZ4lIDDecisions = cms.Path(
-    process.electronIDIsoCheatEmbedding +
-    process.muonIDIsoCheatEmbedding
-    )
-process.schedule.append(process.embedHZZ4lIDDecisions)
-    
 
-## Do preselection as requested in the analysis parameters
+
+
+
+
+
+
+
+
+###########################
+### object preselection ###
+###########################
 if options.passThru:
     preselections = {}
 else:
@@ -468,91 +437,54 @@ process.FSAPreselection = cms.Path(process.preselectionSequence)
 process.schedule.append(process.FSAPreselection)
 
 
-process.genembeddedTaus=cms.EDProducer("PATTauGenInfoEmbedder",
-      src=cms.InputTag(fs_daughter_inputs['taus'])
-)
-
-process.embeddedTaus=cms.Path(process.genembeddedTaus)
-
-process.schedule.append(process.embeddedTaus)
-fs_daughter_inputs['taus'] = 'genembeddedTaus'
 
 
-# embed info about nearest jet
-process.miniAODElectronJetInfoEmbedding = cms.EDProducer(
-    "MiniAODElectronJetInfoEmbedder",
-    src = cms.InputTag(fs_daughter_inputs['electrons']),
-    embedBtags = cms.bool(False),
-    suffix = cms.string(''),
-    jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
-    maxDeltaR = cms.double(0.1),
-)
-fs_daughter_inputs['electrons'] = 'miniAODElectronJetInfoEmbedding'
-process.miniAODMuonJetInfoEmbedding = cms.EDProducer(
-    "MiniAODMuonJetInfoEmbedder",
-    src = cms.InputTag(fs_daughter_inputs['muons']),
-    embedBtags = cms.bool(False),
-    suffix = cms.string(''),
-    jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
-    maxDeltaR = cms.double(0.1),
-)
-fs_daughter_inputs['muons'] = 'miniAODMuonJetInfoEmbedding'
-process.miniAODTauJetInfoEmbedding = cms.EDProducer(
-    "MiniAODTauJetInfoEmbedder",
-    src = cms.InputTag(fs_daughter_inputs['taus']),
-    embedBtags = cms.bool(False),
-    suffix = cms.string(''),
-    jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
-    maxDeltaR = cms.double(0.1),
-)
-fs_daughter_inputs['taus'] = 'miniAODTauJetInfoEmbedding'
-process.jetInfoEmbedding = cms.Path(
-    process.miniAODElectronJetInfoEmbedding +
-    process.miniAODMuonJetInfoEmbedding +
-    process.miniAODTauJetInfoEmbedding
-)
-process.schedule.append(process.jetInfoEmbedding)
 
-# mvamet
-if options.runMVAMET:
-    process.load("RecoJets.JetProducers.ak4PFJets_cfi")
-    process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
-    process.ak4PFJets.doAreaFastjet = cms.bool(True)
-    
-    from JetMETCorrections.Configuration.DefaultJEC_cff import ak4PFJetsL1FastL2L3
-    
-    process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
-    process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
-    process.pfMVAMEt.srcVertices = cms.InputTag(fs_daughter_inputs['vertices'])
-    process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-    process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-    process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-    process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-    if not options.use25ns:
-        process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-        process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-        process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-        process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-    
-    process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
-    process.puJetIdForPFMVAMEt.vertexes = cms.InputTag(fs_daughter_inputs['vertices'])
-    process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
-    
-    from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
-    
-    process.miniAODMVAMEt = patMETs.clone(
-        metSource=cms.InputTag("pfMVAMEt"),
-        addMuonCorrections = cms.bool(False),
-        addGenMET = cms.bool(False)
-    )
-    fs_daughter_inputs['mvamet'] = 'miniAODMVAMEt'
-    
-    process.mvaMetSequence = cms.Path(
-        process.ak4PFJets *
-        process.pfMVAMEtSequence *
-        process.miniAODMVAMEt
-    )
 
+
+
+
+
+
+
+
+
+
+###########################################################################
+### The following is embedding that must be done after object selection ###
+###########################################################################
+
+###################################
+### post electron customization ###
+###################################
+from FinalStateAnalysis.NtupleTools.customization_electrons import postElectrons
+fs_daughter_inputs['electrons'] = postElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['jets'])
+
+###############################
+### post muon customization ###
+###############################
+from FinalStateAnalysis.NtupleTools.customization_muons import postMuons
+fs_daughter_inputs['muons'] = postMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['jets'])
+
+##############################
+### post tau customization ###
+##############################
+from FinalStateAnalysis.NtupleTools.customization_taus import postTaus
+fs_daughter_inputs['taus'] = postTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['jets'])
+
+
+
+
+
+
+
+
+
+
+
+########################################
+### post selection HZZ customization ###
+########################################
 if options.hzz and hzz4l:
     # Put FSR photons into leptons as user cands
     from FinalStateAnalysis.PatTools.miniAODEmbedFSR_cfi \
@@ -627,6 +559,24 @@ if options.hzz and hzz4l:
     process.schedule.append(process.dREtFSR)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################
+### Now do the FSA stuff ###
+############################
 
 # Make a list of collections to save (in case we're saving 
 # collections instead of flat ntuples)
