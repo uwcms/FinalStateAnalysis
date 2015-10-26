@@ -17,6 +17,9 @@
 # Set default values for the options
 HZZ=${HZZ:-0}
 
+# HTT for MVA MET and svFit
+HTT=${HTT:-0}
+
 set -o errexit
 set -o nounset
 
@@ -52,7 +55,7 @@ fi
 
 
 echo "Applying recipe for CMSSW 7_4_X"
-HZZ=$HZZ ./recipe_13TeV.sh
+HZZ=$HZZ HTT=$HTT ./recipe_13TeV.sh
 
 echo "Applying common recipe"
 ./recipe_common.sh

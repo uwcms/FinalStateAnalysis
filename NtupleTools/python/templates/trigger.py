@@ -190,6 +190,18 @@ doubleLepton_25ns = PSet(
         paths=r'HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+'
         ),
     _trig_template.replace(
+        name='singleE23SingleMu8',
+        paths=r'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE17SingleMu8',
+        paths=r'HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu23SingleE12',
+        paths=r'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
+    _trig_template.replace(
         name='singleESingleMu',
         paths=r'HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
@@ -198,8 +210,16 @@ doubleLepton_25ns = PSet(
         paths=r'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
     _trig_template.replace(
-        name='doubleTau',
+        name='singleMu17SingleE12',
+        paths=r'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='doubleTau40',
         paths=r'HLT_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v\\d+'
+        ),
+    _trig_template.replace(
+        name='doubleTau35',
+        paths=r'HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\d+'
         ),
     )
 

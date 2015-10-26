@@ -26,5 +26,14 @@ if [ "$HZZ" = "1" ]; then
     git clone -b 74x-root6 https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
 fi
 
+if [ "$HTT" = "1" ]; then
+    echo "Checking out HTT material: mva met and svFit"
+    git cms-addpkg RecoMET/METPUSubtraction/
+    git clone https://github.com/cms-data/RecoMET-METPUSubtraction RecoMET/METPUSubtraction/data -b 74X-13TeV-Summer15-July2015
+    echo "######################################"
+    echo "### Now go edit XXXX              ###"
+    echo "######################################"
+fi
+
 popd
 
