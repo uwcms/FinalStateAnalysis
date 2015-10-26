@@ -19,8 +19,9 @@ patFinalStateEventProducer = cms.EDProducer(
     trackSrc = cms.InputTag("generalTracks"),
     gsfTrackSrc = cms.InputTag("electronGsfTracks"),
     mets = cms.PSet(
-        pfmet = cms.InputTag("fixme"),
+        pfmet = cms.InputTag("slimmedMETs"),
         mvamet = cms.InputTag("fixme"),
+        puppimet = cms.InputTag("slimmedMETsPuppi"),
     ),
     extraWeights = cms.PSet(
         #anyOldThing = cms.double(9999), # just an example
