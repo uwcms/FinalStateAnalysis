@@ -43,7 +43,7 @@ namespace ApplySVfit {
 
     // Hash our candidates - NB cands will be sorted in place
     size_t hash = hashCandsByContent(cands);
-    std::cout << "EvtID: " << evtId << " Hash: " << hash << std::endl;
+    // std::cout << "EvtID: " << evtId << " Hash: " << hash << std::endl;
 
     // Check if we've already computed it
     SVFitCache::const_iterator lookup = theCache.find(hash);
