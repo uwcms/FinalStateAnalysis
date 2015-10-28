@@ -406,11 +406,21 @@ if options.hzz:
         process.schedule.append(process.makeFSRPhotons)
 
 
+#######################################
+### MET Uncertainty and Corrections ###
+#######################################
 
-
-
-
-
+if True:
+    from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+    runMetCorAndUncFromMiniAOD(process,
+                               jetColl=fs_daughter_inputs['jets'],
+                               photonColl=fs_daughter_inputs['photons'],
+                               electronColl=fs_daughter_inputs['electrons'],
+                               muonColl=fs_daughter_inputs['muons'],
+                               tauColl=fs_daughter_inputs['taus'],
+                               isData=not options.isMC,
+                               repro74X=True,
+                               )
 
 
 
