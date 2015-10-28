@@ -419,7 +419,7 @@ if True:
                                muonColl=fs_daughter_inputs['muons'],
                                tauColl=fs_daughter_inputs['taus'],
                                isData=not options.isMC,
-                               repro74X=True,
+                               #repro74X=True,
                                )
 
 
