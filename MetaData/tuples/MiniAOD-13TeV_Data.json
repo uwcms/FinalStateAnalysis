@@ -11,7 +11,6 @@
   "data_Tau_Run2015C_05Oct2015_50ns" : "/Tau/Run2015C_50ns-05Oct2015-v1/MINIAOD",
   "data_SingleMuon_Run2015C_05Oct2015_50ns" : "/SingleMuon/Run2015C_50ns-05Oct2015-v1/MINIAOD",
 
-
   "data_DoubleEG_Run2015C_05Oct2015_25ns" : "/DoubleEG/Run2015C_25ns-05Oct2015-v1/MINIAOD",
   "data_DoubleMuon_Run2015C_05Oct2015_25ns" : "/DoubleMuon/Run2015C_25ns-05Oct2015-v1/MINIAOD",
   "data_MuonEG_Run2015C_05Oct2015_25ns" : "/MuonEG/Run2015C_25ns-05Oct2015-v1/MINIAOD",
