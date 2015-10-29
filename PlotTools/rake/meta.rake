@@ -6,7 +6,7 @@
 namespace :meta do
   # How to generate the inputs
   desc "Query lists of ntuple .root files"
-  task :getinputs, [:jobid, :source, :ntuple] do |t, args|
+  task :getinputs, [:jobid, :source, :ntuple, :histo] do |t, args|
     # If MEGAPATH is enabled, use relative paths.
     opt_relative = ""
     if ENV.has_key?("MEGAPATH")
@@ -16,13 +16,13 @@ namespace :meta do
     if discovercheck == "1" then
       sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --force --meta=#{args.ntuple} #{opt_relative}"
     elsif discovercheck == "never" then
-      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --meta=#{args.ntuple} #{opt_relative} --no-check"
+      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --meta=#{args.ntuple} --histo=#{args.histo} #{opt_relative} --no-check"
     else
-      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --meta=#{args.ntuple} #{opt_relative}"
+      sh "discover_ntuples.py #{args.jobid} #{args.source} inputs/#{args.jobid} --meta=#{args.ntuple} --histo=#{args.histo} #{opt_relative}"
     end
   end
 
-  def make_meta_tasks(sample, ntuple, sqrts)
+  def make_meta_tasks(sample, ntuple, sqrts,histo)
     # Getting meta information from ntpule
     file sample + '.meta.root' => sample + '.txt' do |t|
         farmout = ENV.fetch('farmout', "0")
@@ -35,9 +35,9 @@ namespace :meta do
 
     file sample + '.meta.json' => sample + '.meta.root' do |t|
       if t.name.include? 'data'
-        sh "extract_meta_info.py #{t.prerequisites} metaInfo #{t.name} --lumimask"
+        sh "extract_meta_info.py #{t.prerequisites} metaInfo  #{t.name}  --lumimask"
       else
-        sh "extract_meta_info.py #{t.prerequisites} metaInfo #{t.name}"
+        sh "extract_meta_info.py #{t.prerequisites} metaInfo  #{t.name} --histo #{histo}"
       end
     end
 
@@ -50,7 +50,8 @@ namespace :meta do
       # Run lumicalc on the mask
       file sample + '.lumicalc.csv' => sample + '.lumimask.json' do |t|
         #sh "pixelLumiCalc.py overview -i #{t.prerequisites} -o #{t.name}"
-        sh "lumiCalc2.py overview -i #{t.prerequisites} -o #{t.name}"
+        #sh "lumiCalc2.py overview -i #{t.prerequisites} -o #{t.name}"
+        print "lumiCalc2 this does not work yet --> move to brilcalc \n"
       end
       # Get the PU distribution
       file sample + '.pu.root' => sample + '.lumimask.json' do |t|
@@ -69,27 +70,29 @@ namespace :meta do
           pu_file = ENV["pu2011JSON"]
         end
         # Find the newest PU json file
-        sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t.name}"
+        print "cannot run pileupCalc.py yet \n"  
+        #sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t.name}"
       end
       # Put the lumicalc result in a readable format.  Make it dependent
       # on the PU .root file as well, so it gets built.
       file sample + '.lumicalc.sum' => [sample + '.lumicalc.csv', sample + '.pu.root'] do |t|
-        sh "lumicalc_parser.py #{t.prerequisites[0]} > #{t.name}"
+        # sh "lumicalc_parser.py #{t.prerequisites[0]} > #{t.name}"
+        print "does not make sense to run lumicalc_parser yet \n"  
       end
     else
       # In MC, we can get the effective lumi from xsec and #events.
       file sample + '.lumicalc.sum' => sample + '.meta.json' do |t|
-        sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} `cat #{t.prerequisites} | extract_json.py n_evts` > #{t.name}"
+        #sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} `cat #{t.prerequisites} | extract_json.py n_evts` > #{t.name}"
       end
     end
     # Return the final target
     return sample + '.lumicalc.sum'
   end
 
-  task :getmeta, [:directory, :ntuple, :sqrts] do |t, args|
+  task :getmeta, [:directory, :ntuple, :sqrt, :histo] do |t, args|
     puts "Computing meta information for #{args.sqrts} TeV in #{args.directory}"
     chdir(args.directory) do
-
+      puts "hello"
       #get override meta tree values
       override_keyword   = 'OVERRIDE_META_TREE_'
       meta_override_keys = ENV.keys.select{|x| x.start_with?(override_keyword)}
@@ -98,13 +101,14 @@ namespace :meta do
         sample = txtfile.sub('.txt', '')
         #check if we have to override
         meta_ntuple = args.ntuple
+        meta_histo = args.histo
         meta_override_keys.each do |key|
           if sample.start_with?(key.gsub(override_keyword,''))
             meta_ntuple = ENV[key]
           end
         end
         #make the task
-        target = make_meta_tasks(sample, meta_ntuple, args.sqrts)
+        target = make_meta_tasks(sample, meta_ntuple, args.sqrts, meta_histo)
         task :computemeta => target
       end
       #puts Rake::Task['computemeta'].timestamp
