@@ -26,12 +26,14 @@ if [ "$HZZ" = "1" ]; then
     git clone -b 74x-root6 https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
 fi
 
+# svFit packaged checked out for everyone so that svFit code in FSA compiles
+git clone git@github.com:veelken/SVFit_standalone.git TauAnalysis/SVfitStandalone
+pushd TauAnalysis/SVfitStandalone
+git checkout svFit_2015Apr03
+popd
+
 if [ "$HTT" = "1" ]; then
     echo "Checking out HTT material: mva met and svFit"
-    git clone git@github.com:veelken/SVFit_standalone.git TauAnalysis/SVfitStandalone
-    cd TauAnalysis/SVfitStandalone
-    git checkout svFit_2015Apr03
-    cd ../..
 
     git cms-addpkg RecoMET/METPUSubtraction
     cd RecoMET/METPUSubtraction/
