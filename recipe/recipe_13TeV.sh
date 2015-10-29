@@ -26,5 +26,25 @@ if [ "$HZZ" = "1" ]; then
     git clone -b 74x-root6 https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
 fi
 
+if [ "$HTT" = "1" ]; then
+    echo "Checking out HTT material: mva met and svFit"
+    git clone git@github.com:veelken/SVFit_standalone.git TauAnalysis/SVfitStandalone
+    cd TauAnalysis/SVfitStandalone
+    git checkout svFit_2015Apr03
+    cd ../..
+
+    git cms-addpkg RecoMET/METPUSubtraction
+    cd RecoMET/METPUSubtraction/
+    git clone https://github.com/rfriese/RecoMET-METPUSubtraction data -b 74X-13TeV-Summer15-July2015
+    git clone https://github.com/cms-data/RecoMET-METPUSubtraction.git
+
+    echo "####################################################################"
+    echo "###   Go Edit: RecoMET/METPUSubtraction/python/mvaPFMET_cff.py   ###"
+    echo "###   Add at line 41:    etaBinnedWeights = cms.bool(False),     ###"
+    echo "###   And await a real fix...                                    ###"
+    echo "####################################################################"
+
+fi
+
 popd
 
