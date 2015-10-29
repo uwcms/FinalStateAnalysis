@@ -98,6 +98,13 @@ namespace fshelpers {
     return std::make_pair(pZeta, pZetaVis);
   }
 
+  double collinearMass(const reco::Candidate::LorentzVector& p1, const reco::Candidate::LorentzVector& p2, const reco::Candidate::LorentzVector& met){
+        double METproj= fabs(met.px()*p2.px()+met.py()*p2.py())/p2.pt();
+        double xth=p2.pt()/(p2.pt()+METproj);
+        double mass=(p1+p2).mass()/sqrt(xth);
+        return mass;
+  }
+
   double transverseMass(const reco::Candidate::LorentzVector& p1,
                         const reco::Candidate::LorentzVector& p2){
     double totalEt = p1.Et() + p2.Et();

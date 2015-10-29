@@ -163,6 +163,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 		 const std::string& metName, const std::string& metTag, 
 		 const int applyPhiCorr) const;
 
+    double collinearMassMET(int i, const std::string& tag1, int j, 
+                  const std::string& tag2, const std::string& metTag) const;
+
     double ht(const std::string& sysTags) const;
     double ht() const;
 

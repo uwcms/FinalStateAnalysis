@@ -513,6 +513,22 @@ double PATFinalState::mtMET(int i, const std::string& tag,
   return fshelpers::transverseMass(daughterUserCandP4(i, tag), metP4);
 }
 
+double PATFinalState::collinearMassMET(int i, const std::string& tag1, int j, const std::string& tag2, const std::string& metTag) const {
+  reco::Candidate::LorentzVector metP4,p1,p2;
+  
+  if(metTag == "jes+")
+    metP4 = met()->shiftedP4(pat::MET::JetEnUp);
+  else if(metTag == "ues+")
+    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnUp);
+  else if(metTag == "tes+")
+    metP4 = met()->shiftedP4(pat::MET::TauEnUp);
+  else if(metTag == "mes+")
+    metP4 = met()->shiftedP4(pat::MET::MuonEnUp);
+  else // all miniAOD pfMET is Type 1
+    metP4 = met()->p4();
+  return fshelpers::collinearMass(daughterUserCandP4(i, tag1),daughterUserCandP4(j, tag2), metP4);
+}
+
 double PATFinalState::mtMET(int i, const std::string& metTag) const {
   return mtMET(i, "", metTag);
 }
