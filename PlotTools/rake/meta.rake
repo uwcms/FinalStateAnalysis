@@ -50,7 +50,7 @@ namespace :meta do
       # Run lumicalc on the mask
       file sample + '.lumicalc.csv' => sample + '.lumimask.json' do |t|
         #sh "pixelLumiCalc.py overview -i #{t.prerequisites} -o #{t.name}"
-        sh "lumiCalc2.py overview -i #{t.prerequisites} -o #{t.name}"
+        #sh "lumiCalc2.py overview -i #{t.prerequisites} -o #{t.name}"
       end
       # Get the PU distribution
       file sample + '.pu.root' => sample + '.lumimask.json' do |t|
@@ -69,12 +69,12 @@ namespace :meta do
           pu_file = ENV["pu2011JSON"]
         end
         # Find the newest PU json file
-        sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t.name}"
+        #sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t.name}"
       end
       # Put the lumicalc result in a readable format.  Make it dependent
       # on the PU .root file as well, so it gets built.
       file sample + '.lumicalc.sum' => [sample + '.lumicalc.csv', sample + '.pu.root'] do |t|
-        sh "lumicalc_parser.py #{t.prerequisites[0]} > #{t.name}"
+        #sh "lumicalc_parser.py #{t.prerequisites[0]} > #{t.name}"
       end
     else
       # In MC, we can get the effective lumi from xsec and #events.
