@@ -62,7 +62,7 @@ def produce_final_states(process, daughter_collections, output_commands,
         if 'extraWeights' in src:
             process.patFinalStateEventProducer.extraWeights = src['extraWeights']
         process.patFinalStateEventProducer.trgSrc = cms.InputTag("selectedPatTrigger")
-        process.patFinalStateEventProducer.rhoSrc = cms.InputTag('fixedGridRhoFastjetAll')
+        process.patFinalStateEventProducer.rhoSrc = cms.InputTag('fixedGridRhoAll')
         process.patFinalStateEventProducer.pvSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
         process.patFinalStateEventProducer.verticesSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
         process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles")
