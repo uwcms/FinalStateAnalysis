@@ -107,6 +107,8 @@ if __name__ == "__main__":
     parser.add_argument('outputdir', help='Output directory')
     parser.add_argument('--meta', default='mm/metaInfo',
                         help='Path to a meta tree, default: mm/metaInfo')
+    parser.add_argument('--histo', default='mt/summedWeights',
+                        help='Path to a meta histo, default: mt/summedWeights')
     parser.add_argument('--relative', default=False, action='store_true',
                         help='Output paths relative to input directory(ies)')
     parser.add_argument('--force', default=False, action='store_true',
@@ -131,6 +133,11 @@ if __name__ == "__main__":
             if sample.startswith(key):
                 return value
         return args.meta
+    def get_meta_histoname(sample):
+        for key, value in meta_override:
+            if sample.startswith(key):
+                return value
+        return args.histo
 
     # We do this here to prevent ROOT from messing with sys.argv
     import ROOT
@@ -144,17 +151,24 @@ if __name__ == "__main__":
     for sample_name, search_dir, all_files in find_sample_dirs(
             args.directory.split(':'), args.jobid):
 
+        sumEventsAll=0 
+
         tree_name   = get_meta_treename( sample_name )
+        histo_name   = get_meta_histoname( sample_name )
+
         log.info("Finding files for sample %s" % sample_name)
-        log.info("Looking for  %s" %  tree_name)
+        log.info("Looking for tree  %s" %  tree_name)
+        log.info("Looking for histo %s" %  histo_name)
 
         output_txt = os.path.join(args.outputdir, sample_name + '.txt')
+        output_weights_txt  = os.path.join(args.outputdir, sample_name + '_weight.log')
         previous_files = get_previous_files(output_txt)
         with open_update_if_changed(output_txt, sample_name) as flist:
             pbar = ProgressBar(widgets=[FormatLabel(
                 'Checked %(value)i/' + str(len(all_files)) + ' files. '),
                 ETA(), Bar('>')], maxval=len(all_files)).start()
 
+            sumEventsAll=0
             for i, file in enumerate(all_files):
                 pbar.update(i)
                 filepath = file
@@ -169,6 +183,8 @@ if __name__ == "__main__":
                         flist.write('# corrupt %s\n' % filepath)
                         continue
                     ntuple = tfile.Get(tree_name)
+                    histo = tfile.Get(histo_name)
+                    sumEventsAll+=histo.Integral()
                     if not ntuple:
                         log.warning("-- Can't read ntuple in file: %s"
                                     % file)
@@ -178,4 +194,6 @@ if __name__ == "__main__":
                 # Made it!
                 flist.write(filepath + '\n')
 
+        fweight=open(output_weights_txt,"a")
+        fweight.write("Weights: %f \n" %sumEventsAll )       
         log.info('\nFinished finding files for %s' % sample_name)

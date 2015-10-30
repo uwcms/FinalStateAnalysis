@@ -97,8 +97,32 @@ singleLepton_25ns_MC = PSet(
         paths=r'HLT_Mu50_v\\d+'
         ),
     _trig_template.replace(
+        name='singleIsoMu20',
+        paths=r'HLT_IsoMu20_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleIsoMu20eta2p1',
+        paths=r'HLT_IsoMu20_eta2p1_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleIsoMu24',
+        paths=r'HLT_IsoMu24_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleIsoMu24eta2p1',
+        paths=r'HLT_IsoMu24_eta2p1_v\\d+'
+        ),
+    _trig_template.replace(
         name='singleE',
         paths=r'HLT_Ele32_eta2p1_WP75_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE22WP75',
+        paths=r'HLT_Ele22_WP75_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE22eta2p1WP75',
+        paths=r'HLT_Ele22_eta2p1_WP75_Gsf_v\\d+'
         ),
     _trig_template.replace(
         name='singleMu_leg1', 
@@ -132,8 +156,44 @@ singleLepton_25ns = PSet(
         paths=r'HLT_Mu50_v\\d+'
         ),
     _trig_template.replace(
+        name='singleIsoMu18',
+        paths=r'HLT_IsoMu18_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleIsoMu18eta2p1',
+        paths=r'HLT_IsoMu18_eta2p1_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleIsoMu20',
+        paths=r'HLT_IsoMu20_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleIsoMu20eta2p1',
+        paths=r'HLT_IsoMu20_eta2p1_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleIsoMu22',
+        paths=r'HLT_IsoMu22_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleIsoMu22eta2p1',
+        paths=r'HLT_IsoMu22_eta2p1_v\\d+'
+        ),
+    _trig_template.replace(
         name='singleE',
         paths=r'HLT_Ele32_eta2p1_WPLoose_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE23Loose',
+        paths=r'HLT_Ele23_WPLoose_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE22eta2p1Loose',
+        paths=r'HLT_Ele22_eta2p1_WPLoose_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE22eta2p1Tight',
+        paths=r'HLT_Ele22_eta2p1_WPTight_Gsf_v\\d+'
         ),
     _trig_template.replace(
         name='singleMu_leg1', 

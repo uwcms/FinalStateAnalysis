@@ -17,4 +17,5 @@ from FinalStateAnalysis.Utilities.lumitools import parse_lumicalc_output
 
 if __name__ == "__main__":
     import sys
-    print parse_lumicalc_output(sys.argv[1])
+    print "cannot parse lumi yet"
+#    print parse_lumicalc_output(sys.argv[1])
