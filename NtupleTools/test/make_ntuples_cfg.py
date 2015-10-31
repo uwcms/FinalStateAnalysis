@@ -245,50 +245,51 @@ if options.usePUPPI:
     fs_daughter_inputs['pfmet'] = 'slimmedMETsPuppi'
     fs_daughter_inputs['jets'] = 'slimmedJetsPuppi'
 
+
+
+
 ##############
 ### mvamet ###
 ##############
-#if options.runMVAMET:
-#    process.load("RecoJets.JetProducers.ak4PFJets_cfi")
-#    process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
-#    process.ak4PFJets.doAreaFastjet = cms.bool(True)
-#    
-#    from JetMETCorrections.Configuration.DefaultJEC_cff import ak4PFJetsL1FastL2L3
-#    
-#    process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
-#    process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
-#    process.pfMVAMEt.srcVertices = cms.InputTag(fs_daughter_inputs['vertices'])
-#    process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-#    process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-#    process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-#    process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_2_X_MINIAOD_BX25PU20_Mar2015.root')
-#    if not options.use25ns:
-#        process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrmet_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-#        process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-#        process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-#        process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_2_X_MINIAOD_BX50PU40_Jan2015.root')
-#    
-#    process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
-#    process.puJetIdForPFMVAMEt.vertexes = cms.InputTag(fs_daughter_inputs['vertices'])
-#    process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
-#    
-#    from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
-#    
-#    process.miniAODMVAMEt = patMETs.clone(
-#        metSource=cms.InputTag("pfMVAMEt"),
-#        addMuonCorrections = cms.bool(False),
-#        addGenMET = cms.bool(False)
-#    )
-#    fs_daughter_inputs['mvamet'] = 'miniAODMVAMEt'
-#    
-#    process.mvaMetSequence = cms.Path(
-#        process.ak4PFJets *
-#        process.pfMVAMEtSequence *
-#        process.miniAODMVAMEt
-#    )
 
-
-
+if options.runMVAMET:
+    process.load("RecoJets.JetProducers.ak4PFJets_cfi")
+    process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
+    process.ak4PFJets.doAreaFastjet = cms.bool(True)
+    
+    from JetMETCorrections.Configuration.DefaultJEC_cff import ak4PFJetsL1FastL2L3
+    
+    process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
+    process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
+    process.pfMVAMEt.srcVertices = cms.InputTag(fs_daughter_inputs['vertices'])
+    process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru_7_4_X_miniAOD_25NS_July2015.root')
+    process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_4_X_miniAOD_25NS_July2015.root')
+    process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_4_X_miniAOD_25NS_July2015.root')
+    process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_4_X_miniAOD_25NS_July2015.root')
+    if not options.use25ns:
+        process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru_7_4_X_miniAOD_50NS_July2015.root')
+        process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_4_X_miniAOD_50NS_July2015.root')
+        process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_4_X_miniAOD_50NS_July2015.root')
+        process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_4_X_miniAOD_50NS_July2015.root')
+    
+    process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
+    process.puJetIdForPFMVAMEt.vertexes = cms.InputTag(fs_daughter_inputs['vertices'])
+    process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
+    
+    from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
+    
+    process.miniAODMVAMEt = patMETs.clone(
+        metSource=cms.InputTag("pfMVAMEt"),
+        addMuonCorrections = cms.bool(False),
+        addGenMET = cms.bool(False)
+    )
+    fs_daughter_inputs['mvamet'] = 'miniAODMVAMEt'
+    
+    process.mvaMetSequence = cms.Path(
+        process.ak4PFJets *
+        process.pfMVAMEtSequence *
+        process.miniAODMVAMEt
+    )
 
 
 
@@ -435,14 +436,6 @@ for ob in preselections:
     fs_daughter_inputs[getName(ob)+'s'] = getName(ob)+"Preselection"
 process.FSAPreselection = cms.Path(process.preselectionSequence)
 process.schedule.append(process.FSAPreselection)
-
-
-
-
-
-
-
-
 
 
 
