@@ -40,12 +40,6 @@ git clone https://github.com/rfriese/RecoMET-METPUSubtraction data -b 74X-13TeV-
 git clone https://github.com/cms-data/RecoMET-METPUSubtraction.git
 popd
 
-echo "####################################################################"
-echo "###   Before using mva MEt make sure to do the following...      ###"
-echo "###   Go Edit: RecoMET/METPUSubtraction/python/mvaPFMET_cff.py   ###"
-echo "###   Add at line 41:    etaBinnedWeights = cms.bool(False),     ###"
-echo "###   And await a real fix...                                    ###"
-echo "####################################################################"
 
 popd
 
