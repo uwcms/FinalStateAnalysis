@@ -9,7 +9,7 @@
 #include "FWCore/ParameterSet/interface/FileInPath.h"
 #include "DataFormats/Provenance/interface/EventID.h"
 #include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
-//#include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
+#include "TauAnalysis/SVfitStandalone/interface/SVfitStandaloneAlgorithm.h"
 #include "TLorentzVector.h"
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
@@ -34,8 +34,7 @@ namespace ApplySVfit {
                       const pat::MET& met, const ROOT::Math::SMatrix2D& covMET, unsigned int verbosity,
                       const edm::EventID& evtId) {
 
-    return -1.;
-/*
+
     // Check if this a new event
     if (evtId != lastSVfitEvent) {
       theCache.clear();
@@ -44,6 +43,7 @@ namespace ApplySVfit {
 
     // Hash our candidates - NB cands will be sorted in place
     size_t hash = hashCandsByContent(cands);
+    // std::cout << "EvtID: " << evtId << " Hash: " << hash << std::endl;
 
     // Check if we've already computed it
     SVFitCache::const_iterator lookup = theCache.find(hash);
@@ -77,7 +77,7 @@ namespace ApplySVfit {
     edm::FileInPath inputFileName_visPtResolution("TauAnalysis/SVfitStandalone/data/svFitVisMassAndPtResolutionPDF.root");
     TH1::AddDirectory(false);  
     TFile* inputFile_visPtResolution = new TFile(inputFileName_visPtResolution.fullPath().data());
-    algo.shiftVisPt(true, inputFile_visPtResolution);
+    //algo.shiftVisPt(true, inputFile_visPtResolution);
     algo.integrateMarkovChain();
     double mass = algo.getMass(); // mass uncertainty not implemented yet
 
@@ -85,7 +85,7 @@ namespace ApplySVfit {
 
     theCache[hash] = mass;
     return mass;
-*/
+
   }
 
   TMatrixD convert_matrix(const ROOT::Math::SMatrix2D& mat)

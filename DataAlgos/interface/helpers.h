@@ -35,6 +35,9 @@ namespace fshelpers {
   double transverseMass(const reco::Candidate::LorentzVector& p1,
                         const reco::Candidate::LorentzVector& p2);
 
+  double collinearMass(const reco::Candidate::LorentzVector& p1, const reco::Candidate::LorentzVector& p2, 
+                       const reco::Candidate::LorentzVector& met);
+
   const reco::Candidate::LorentzVector metPhiCorrection(const reco::Candidate::LorentzVector& vector, int nvertices, bool isMC);
 
   // Taken from CommonTools/CandUtils/AddFourMomenta.h

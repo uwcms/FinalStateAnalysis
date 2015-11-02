@@ -40,7 +40,8 @@ if __name__ == "__main__":
     parser.add_argument('--debug', action='store_const',
                         const=True, default=False,
                         help='Print debug output')
-
+    parser.add_argument('--histo', type=str,
+                        help='Specify the path to the meta histo.')
     args = parser.parse_args()
     import ROOT
 
@@ -62,11 +63,17 @@ if __name__ == "__main__":
     log.info("Extracting meta info from %i files", len(files))
 
     total_events = 0
+    total_weights = 0
     run_lumis = {}
 
     for file in files:
         log.debug("OPEN file %s", file)
         tfile = ROOT.TFile.Open(file, "READ")
+    #    histo = tfile.Get(args.histo)
+     #   if not histo :
+      #      log.error("Cannot get weights histo %s from file %s", args.histo, file)
+       #     raise SystemExit(1)
+        #    total_weights+=histo.Integral()
         tree = tfile.Get(args.tree)
         if not tree:
             log.error("Cannot get tree %s from file %s", args.tree, file)
@@ -86,6 +93,7 @@ if __name__ == "__main__":
 
     output = {
         'n_evts': total_events,
+        'sumweights': total_weights,
     }
     if args.lumimask:
         output['lumi_mask'] = json_summary(run_lumis)

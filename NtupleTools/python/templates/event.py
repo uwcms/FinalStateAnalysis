@@ -44,8 +44,8 @@ pv_info = PSet(
 )
 
 met = PSet(
-    #mvaMetEt       = 'evt.met("mvamet").et',
-    #mvaMetPhi      = 'evt.met("mvamet").phi',
+    mvaMetEt       = 'evt.met("mvamet").et',
+    mvaMetPhi      = 'evt.met("mvamet").phi',
     raw_pfMetEt    = 'evt.met("pfmet").uncorPt',
     raw_pfMetPhi   = 'evt.met("pfmet").uncorPhi',
     type1_pfMetEt  = 'evt.met("pfmet").pt', 

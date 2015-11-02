@@ -26,5 +26,26 @@ if [ "$HZZ" = "1" ]; then
     git clone -b 74x-root6 https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
 fi
 
+echo "Checking out mva met and svFit material:"
+# svFit packaged checked out for everyone so that svFit code in FSA compiles
+git clone git@github.com:veelken/SVFit_standalone.git TauAnalysis/SVfitStandalone
+pushd TauAnalysis/SVfitStandalone
+git checkout svFit_2015Apr03
+popd
+
+
+git cms-addpkg RecoMET/METPUSubtraction
+pushd RecoMET/METPUSubtraction/
+git clone https://github.com/rfriese/RecoMET-METPUSubtraction data -b 74X-13TeV-Summer15-July2015
+git clone https://github.com/cms-data/RecoMET-METPUSubtraction.git
+popd
+
+echo "####################################################################"
+echo "###   Before using mva MEt make sure to do the following...      ###"
+echo "###   Go Edit: RecoMET/METPUSubtraction/python/mvaPFMET_cff.py   ###"
+echo "###   Add at line 41:    etaBinnedWeights = cms.bool(False),     ###"
+echo "###   And await a real fix...                                    ###"
+echo "####################################################################"
+
 popd
 
