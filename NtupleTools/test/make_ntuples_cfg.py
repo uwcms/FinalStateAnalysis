@@ -410,7 +410,7 @@ if options.hzz:
 ### MET Uncertainty and Corrections ###
 #######################################
 
-if True:
+if False:
     from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
     runMetCorAndUncFromMiniAOD(process,
                                jetColl=fs_daughter_inputs['jets'],
@@ -419,7 +419,7 @@ if True:
                                muonColl=fs_daughter_inputs['muons'],
                                tauColl=fs_daughter_inputs['taus'],
                                isData=not options.isMC,
-                               #repro74X=True,
+                               repro74X=True,
                                )
 
 
