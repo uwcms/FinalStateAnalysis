@@ -321,6 +321,27 @@ if options.runMetFilter:
 
     # CSC Tight Halo
     # TODO: needs RECO to run, so they will release an event txt file to filter
+    dataset = ''
+    for d in ['BTagCSV', 'BTagMu', 'Charmonium', 'DisplacedJet', 'DoubleEG', 'DoubleMuon', 'DoubleMuonLowMass', 'HTMHT',
+              'JetHT', 'MET', 'MuOnia', 'MuonEG', 'SingleElectron', 'SingleMuon', 'SinglePhoton', 'Tau']:
+        fileparts = options.inputFiles[0].split('/')
+        if d in fileparts:
+            dataset = d
+    if dataset:
+        eventListFile = 'FinalStateAnalysis/NtupleTools/data/eventlist_{0}_csc2015.txt'.format(dataset)
+        processedRunsFile = 'FinalStateAnalysis/NtupleTools/data/analyzedlumis_{0}.json'.format(dataset)
+        process.MiniAODCSCTightHaloFilterProducer = cms.EDProducer('MiniAODEventListProducer',
+            label = cms.string('CSCTightHaloFilterResult'),
+            eventList = cms.FileInPath(eventListFile),
+            processedRuns = cms.FileInPath(processedRunsFile),
+        )
+        process.ApplyCSCTightHaloFilter = cms.EDFilter('BooleanFlagFilter',
+            inputLabel = cms.InputTag('MiniAODCSCTightHaloFilterProducer','CSCTightHaloFilterResult'),
+            reverseDecision = cms.bool(False),
+        )
+        filters += [process.MiniAODCSCTightHaloFilterProducer, process.ApplyCSCTightHaloFilter]
+    else:
+        print 'Warning: no matched dataset found for CSC Tight Halo Filter'
 
     # good vertices and ee bad sc filter
     # flag in miniaod, so just filter on that
