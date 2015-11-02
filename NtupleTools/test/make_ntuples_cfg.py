@@ -333,7 +333,6 @@ if options.runMetFilter:
         process.MiniAODCSCTightHaloFilterProducer = cms.EDProducer('MiniAODEventListProducer',
             label = cms.string('CSCTightHaloFilterResult'),
             eventList = cms.FileInPath(eventListFile),
-            processedRuns = cms.FileInPath(processedRunsFile),
         )
         process.ApplyCSCTightHaloFilter = cms.EDFilter('BooleanFlagFilter',
             inputLabel = cms.InputTag('MiniAODCSCTightHaloFilterProducer','CSCTightHaloFilterResult'),

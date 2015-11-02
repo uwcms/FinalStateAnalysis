@@ -36,7 +36,6 @@ class MiniAODEventListProducer : public edm::stream::EDProducer<> {
       // parameters
       const std::string label_;
       const std::string eventListFilename_;
-      const std::string processedRunsFilename_;
 
       // other members
       std::map<std::string, bool> decisionMap_;
@@ -53,9 +52,6 @@ MiniAODEventListProducer::MiniAODEventListProducer(const edm::ParameterSet& iCon
 	    std::string()),
   eventListFilename_(iConfig.exists("eventList") ?
 	    (iConfig.getParameter<edm::FileInPath>("eventList")).fullPath() :
-	    std::string()),
-  processedRunsFilename_(iConfig.exists("processedRuns") ?
-	    (iConfig.getParameter<edm::FileInPath>("processedRuns")).fullPath() :
 	    std::string())
 {
   produces<bool>(label_);
@@ -79,8 +75,6 @@ MiniAODEventListProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSe
 
   // Default value
   decisionMap_[label_] = false;
-
-  // TODO: parse json and see if this run was checked
 
   // iterate through txt file of run:lumi:event
   std::stringstream currEvent;
