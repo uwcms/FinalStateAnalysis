@@ -9,15 +9,15 @@ from collections import OrderedDict
 parameters = {
     # minimal object kinematic cuts
     'ptCuts' : {
-        'm': '5',
-        'e': '7',
-        't': '30',
-        'j': '17'
+        'm': '8',
+        'e': '10',
+        't': '37',
+        'j': '18'
     },
     'etaCuts' : {
-        'm': '2.5',
-        'e': '3.0',
-        't': '2.3',
+        'm': '2.4',
+        'e': '2.5',
+        't': '2.1',
         'j': '4.7'
     },
 
@@ -40,10 +40,22 @@ parameters = {
             ]),
 
     # selections to include object in final state (should be looser than analysis selections)
-    #'finalSelection' : '',
+    # Based on default finalSelection, this is a little tighter for muons so we keep the min Pt Mu for our triggers
+    # But we don't svFit them.
+    'finalSelection' : {
+        'e': 'abs(superCluster().eta) < 3.0 && max(pt, userFloat("maxCorPt")) > 7',
+        'm': 'max(pt, userFloat("maxCorPt")) > 10 && (isGlobalMuon | isTrackerMuon)',
+        't': 'abs(eta) < 2.5 && pt > 17',
+        'g': 'abs(superCluster().eta()) < 3.0 && pt > 10',
+        'j': 'pt>20 && abs(eta) < 2.5 && userFloat("idLoose")'
+    },
+
+
 
     # cross cleaning for objects in final state
     'crossCleaning' : 'smallestDeltaR() > 0.3',
+
+
 
     # additional variables for ntuple
     'eventVariables' : PSet(
@@ -58,8 +70,12 @@ parameters = {
         bjetCISVVeto20MediumZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.814").size()',
     ),
 
+
+
     # candidates of form: objectVarName = 'string expression for selection'
     'candidateVariables' : PSet(),
+
+
 
     'electronVariables' : PSet(
         objectIsoDB03               = '({object}.pfIsolationVariables().sumChargedHadronPt + max( {object}.pfIsolationVariables().sumNeutralHadronEt \
@@ -74,7 +90,20 @@ parameters = {
         objectMatchesMu8Ele17Path      = r'matchToHLTPath({object_idx}, "HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
         objectMu17Ele12Filter      = 'matchToHLTFilter({object_idx}, "hltMu17TrkIsoVVLEle12CaloIdLTrackIdLIsoVLElectronlegTrackIsoFilter", 0.5)',
         objectMu8Ele17Filter      = 'matchToHLTFilter({object_idx}, "hltMu8TrkIsoVVLEle17CaloIdLTrackIdLIsoVLElectronlegTrackIsoFilter", 0.5)',
+        objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isPrompt() : -999',
+        objectGenIsDecayedLeptonHadron       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isDecayedLeptonHadron() : -999',
+        objectGenIsTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isTauDecayProduct() : -999',
+        objectGenIsPromptTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isPromptTauDecayProduct() : -999',
+        objectGenIsDirectTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isDirectTauDecayProduct() : -999',
+        objectGenIsDirectPromptTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isDirectPromptTauDecayProduct() : -999',
+        objectGenIsDirectHadronDecayProduct       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isDirectHadronDecayProduct() : -999',
+        objectGenIsHardProcess       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isHardProcess() : -999',
+        objectGenIsHardProcessTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isHardProcessTauDecayProduct() : -999',
+        objectGenIsDirectHardProcessTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isDirectHardProcessTauDecayProduct() : -999',
+        objectGenFromHardProcess       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().fromHardProcess() : -999',
     ),
+
+
 
     'muonVariables' : PSet(
         objectIsoDB03               = '({object}.pfIsolationR03().sumChargedHadronPt + max( {object}.pfIsolationR03().sumNeutralHadronEt \
@@ -91,7 +120,20 @@ parameters = {
         objectMatchesMu17Ele12Path      = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
         objectMu8Ele17Filter = 'matchToHLTFilter({object_idx}, "hltMu8TrkIsoVVLEle17CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered8", 0.5)',
         objectMu17Ele12Filter = 'matchToHLTFilter({object_idx}, "hltMu17TrkIsoVVLEle12CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered17", 0.5)',
+        objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isPrompt() : -999',
+        objectGenIsDecayedLeptonHadron       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isDecayedLeptonHadron() : -999',
+        objectGenIsTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isTauDecayProduct() : -999',
+        objectGenIsPromptTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isPromptTauDecayProduct() : -999',
+        objectGenIsDirectTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isDirectTauDecayProduct() : -999',
+        objectGenIsDirectPromptTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isDirectPromptTauDecayProduct() : -999',
+        objectGenIsDirectHadronDecayProduct       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isDirectHadronDecayProduct() : -999',
+        objectGenIsHardProcess       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isHardProcess() : -999',
+        objectGenIsHardProcessTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isHardProcessTauDecayProduct() : -999',
+        objectGenIsDirectHardProcessTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isDirectHardProcessTauDecayProduct() : -999',
+        objectGenFromHardProcess       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().fromHardProcess() : -999',
     ),
+
+
 
     'tauVariables' : PSet(
         # Sync Triggers
@@ -100,11 +142,28 @@ parameters = {
         # Proposed Triggers
         objectDoubleTau35Filter = 'matchToHLTFilter({object_idx}, "hltDoublePFTau35TrackPt1MediumIsolationDz02Reg", 0.5)',
         objectMatchesDoubleTau35Path      = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
+        objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isPrompt() : -999',
+        objectGenIsDecayedLeptonHadron       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isDecayedLeptonHadron() : -999',
+        objectGenIsTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isTauDecayProduct() : -999',
+        objectGenIsPromptTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isPromptTauDecayProduct() : -999',
+        objectGenIsDirectTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isDirectTauDecayProduct() : -999',
+        objectGenIsDirectPromptTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isDirectPromptTauDecayProduct() : -999',
+        objectGenIsDirectHadronDecayProduct       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isDirectHadronDecayProduct() : -999',
+        objectGenIsHardProcess       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isHardProcess() : -999',
+        objectGenIsHardProcessTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isHardProcessTauDecayProduct() : -999',
+        objectGenIsDirectHardProcessTauDecayProduct       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isDirectHardProcessTauDecayProduct() : -999',
+        objectGenFromHardProcess       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().fromHardProcess() : -999',
     ),
+
+
 
     'photonVariables' : PSet(),
 
+
+
     'jetVariables' : PSet(),
+
+
 
     # dicandidates of form: object1_object2_VarName = 'string expression for candidate'
     'dicandidateVariables' : PSet(),
