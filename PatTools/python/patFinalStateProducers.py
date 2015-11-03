@@ -44,7 +44,8 @@ def _combinatorics(items, n):
 def produce_final_states(process, daughter_collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
                          noTracks=False, runMVAMET=False, hzz=False,
-                         rochCor="", eleCor="", use25ns=False, **kwargs):
+                         rochCor="", eleCor="", use25ns=False, runMetUncertainties=False,
+                         **kwargs):
 
     src = dict(daughter_collections) # make a copy so we don't change the passed collection
 
@@ -71,6 +72,8 @@ def produce_final_states(process, daughter_collections, output_commands,
         )
         if runMVAMET:
             process.patFinalStateEventProducer.mets.mvamet = cms.InputTag(src['mvamet'])
+
+
         
         sequence += process.patFinalStateEventProducer
 

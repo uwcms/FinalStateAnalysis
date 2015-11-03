@@ -106,6 +106,8 @@ options = TauVarParsing.TauVarParsing(
     paramFile='',
     skipGhost=0,
     runWZ=0,
+    runMetUncertainties=0,
+    metShift='',
 )
 
 options.register(
@@ -320,7 +322,6 @@ if options.runMetFilter:
     filters += [process.HBHENoiseFilterResultProducer, process.ApplyBaselineHBHENoiseFilter]
 
     # CSC Tight Halo
-    # TODO: needs RECO to run, so they will release an event txt file to filter
     dataset = ''
     for d in ['BTagCSV', 'BTagMu', 'Charmonium', 'DisplacedJet', 'DoubleEG', 'DoubleMuon', 'DoubleMuonLowMass', 'HTMHT',
               'JetHT', 'MET', 'MuOnia', 'MuonEG', 'SingleElectron', 'SingleMuon', 'SinglePhoton', 'Tau']:
@@ -427,22 +428,6 @@ if options.hzz:
         process.schedule.append(process.makeFSRPhotons)
 
 
-#######################################
-### MET Uncertainty and Corrections ###
-#######################################
-
-if False:
-    from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
-    runMetCorAndUncFromMiniAOD(process,
-                               jetColl=fs_daughter_inputs['jets'],
-                               photonColl=fs_daughter_inputs['photons'],
-                               electronColl=fs_daughter_inputs['electrons'],
-                               muonColl=fs_daughter_inputs['muons'],
-                               tauColl=fs_daughter_inputs['taus'],
-                               isData=not options.isMC,
-                               repro74X=True,
-                               )
-
 
 
 
@@ -469,6 +454,119 @@ process.schedule.append(process.FSAPreselection)
 
 
 
+#######################################
+### MET Uncertainty and Corrections ###
+#######################################
+
+if options.runMetUncertainties:
+    postfix = 'NewMet'
+    from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+    runMetCorAndUncFromMiniAOD(process,
+                               jetColl=fs_daughter_inputs['jets'],
+                               jetCollUnskimmed='slimmedJets',
+                               photonColl=fs_daughter_inputs['photons'],
+                               electronColl=fs_daughter_inputs['electrons'],
+                               muonColl=fs_daughter_inputs['muons'],
+                               tauColl=fs_daughter_inputs['taus'],
+                               isData=not options.isMC,
+                               repro74X=True,
+                               postfix=postfix,
+                               )
+
+    #from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import RunMETCorrectionsAndUncertainties
+    #runMETCorrectionsAndUncertainties = RunMETCorrectionsAndUncertainties()
+    #runMETCorrectionsAndUncertainties(process, metType="PF",
+    #                                  correctionLevel=["T1"],
+    #                                  computeUncertainties=True,
+    #                                  produceIntermediateCorrections=False,
+    #                                  addToPatDefaultSequence=False,
+    #                                  jetCollection=fs_daughter_inputs['jets'],
+    #                                  jetCollectionUnskimmed="slimmedJets",
+    #                                  electronCollection=fs_daughter_inputs['electrons'],
+    #                                  muonCollection=fs_daughter_inputs['muons'],
+    #                                  tauCollection=fs_daughter_inputs['taus'],
+    #                                  photonCollection=fs_daughter_inputs['photons'],
+    #                                  pfCandCollection ="packedPFCandidates",
+    #                                  runOnData=not options.isMC,
+    #                                  onMiniAOD=True,
+    #                                  reclusterJets=False,
+    #                                  recoMetFromPFCs=False,
+    #                                  autoJetCleaning='LepClean',
+    #                                  manualJetConfig=False,
+    #                                  jetFlavor="AK4PFchs",
+    #                                  jetCorLabelUpToL3=cms.InputTag('ak4PFCHSL1FastL2L3Corrector'),
+    #                                  jetCorLabelL3Res=cms.InputTag('ak4PFCHSL1FastL2L3ResidualCorrector'),
+    #                                  jecUncertaintyFile="CondFormats/JetMETObjects/data/Summer15_50nsV5_DATA_UncertaintySources_AK4PFchs.txt",
+    #                                  postfix=postfix,
+    #                                  )
+
+
+    collMap = {
+        'jres' : {'Jets'     : 'shiftedPatJetRes{sign}{postfix}'},
+        'jes'  : {'Jets'     : 'shiftedPatJetEn{sign}{postfix}'},
+        'mes'  : {'Muons'    : 'shiftedPatMuonEn{sign}{postfix}'},
+        'ees'  : {'Electrons': 'shiftedPatElectronEn{sign}{postfix}'},
+        'tes'  : {'Taus'     : 'shiftedPatTauEn{sign}{postfix}'},
+        'ues'  : {},
+        'pes'  : {},
+    }
+    signMap = {
+      '+' : 'Up',
+      '-' : 'Down',
+    }
+    metMap = {
+      'jres' : 'patPFMetT1JetRes{sign}{postfix}',
+      'jes'  : 'patPFMetT1JetEn{sign}{postfix}',
+      'mes'  : 'patPFMetT1MuonEn{sign}{postfix}',
+      'ees'  : 'patPFMetT1ElectronEn{sign}{postfix}',
+      'tes'  : 'patPFMetT1TauEn{sign}{postfix}',
+      'ues'  : 'patPFMetT1UnclusteredEn{sign}{postfix}',
+      'pes'  : '',
+    }
+    allowedShifts = ['jres','jes','mes','ees','tes','ues']
+    allowedSigns = ['+','-']
+
+    # embed references to shifts
+    process.embedShifts = cms.Path()
+    for shift in allowedShifts:
+        for sign in allowedSigns:
+            for coll in collMap[shift]:
+                modName = '{shift}{sign}{coll}Embedding'.format(shift=shift,sign=signMap[sign],coll=coll)
+                pluginName = 'MiniAODShifted{coll}Embedder'.format(coll=coll[:-1])
+                dName = coll.lower()
+                srcName = fs_daughter_inputs[dName]
+                shiftSrcName = collMap[shift][coll].format(sign=signMap[sign],postfix=postfix)
+                label = '{shift}{sign}{coll}'.format(shift=shift,sign=signMap[sign],coll=coll)
+                module = cms.EDProducer(
+                    pluginName,
+                    src = cms.InputTag(srcName),
+                    shiftSrc = cms.InputTag(shiftSrcName),
+                    label = cms.string(label),
+                )
+                setattr(process,modName,module)
+                fs_daughter_inputs[dName] = modName
+                process.embedShifts *= getattr(process,shiftSrcName)
+                process.embedShifts *= getattr(process,modName)
+            #metName = metMap[shift].format(sign=signMap[sign],postfix=postfix)
+            #process.embedShifts *= getattr(process,metName)
+    process.schedule.append(process.embedShifts)
+
+
+    # switch input to desired one
+    if options.metShift and False: # TODO: MET shift is broken...
+        t = options.metShift[:-1]
+        d = options.metShift[-1]
+        if t not in allowedShifts or d not in allowedSigns:
+            print 'Warning: {0} is not an allowed MET shift, using unshifted collections'.format(options.metShift)
+        else:
+            fs_daughter_inputs['pfmet'] = metMap[t].format(sign=signMap[d],postfix=postfix)
+            for coll in collMap[t]:
+                fs_daughter_inputs[coll.lower()] = collMap[t][coll].format(sign=signMap[d],postfix=postfix)
+
+
+    #process.EventAnalyzer = cms.EDAnalyzer("EventContentAnalyzer")
+    #process.eventAnalyzerPath = cms.Path(process.EventAnalyzer)
+    #process.schedule.append(process.eventAnalyzerPath)
 
 
 
@@ -597,6 +695,7 @@ if options.hzz and hzz4l:
 
 
 
+
 ############################
 ### Now do the FSA stuff ###
 ############################
@@ -614,7 +713,8 @@ produce_final_states(process, fs_daughter_inputs, output_to_keep, process.buildF
                      'puTagDoesntMatter', buildFSAEvent=True,
                      noTracks=True, runMVAMET=options.runMVAMET,
                      hzz=options.hzz, rochCor=options.rochCor,
-                     eleCor=options.eleCor, use25ns=options.use25ns, **parameters)
+                     eleCor=options.eleCor, use25ns=options.use25ns, 
+                     runMetUncertainties=options.runMetUncertainties, **parameters)
 process.buildFSAPath = cms.Path(process.buildFSASeq)
 # Don't crash if some products are missing (like tracks)
 process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
@@ -803,7 +903,6 @@ else:
                                 isMC=options.isMC, **parameters)
         add_ntuple(final_state, analyzer, process,
                    process.schedule, options.eventView, filters)
-
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 

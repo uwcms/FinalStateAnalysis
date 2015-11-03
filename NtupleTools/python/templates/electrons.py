@@ -137,6 +137,14 @@ energyCorrections = PSet(
     #objectEtaCorrReg_Jan16ReReco = 'getUserLorentzVector({object_idx},"EGCorr_Jan16ReRecoRegressionOnly").Eta',
     #objectPhiCorrReg_Jan16ReReco = 'getUserLorentzVector({object_idx},"EGCorr_Jan16ReRecoRegressionOnly").Phi',
     #objectdECorrReg_Jan16ReReco = '{object}.userFloat("EGCorr_Jan16ReRecoRegressionOnly_error")',
+
+    objectPt_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").pt : -999.',
+    objectEta_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").eta : -999.',
+    objectPhi_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").phi : -999.',
+
+    objectPt_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").pt : -999.',
+    objectEta_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").eta : -999.',
+    objectPhi_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").phi : -999.',
 )
 
 tracking = PSet(
