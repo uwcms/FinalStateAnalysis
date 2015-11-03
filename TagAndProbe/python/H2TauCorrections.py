@@ -1,11 +1,7 @@
 '''
-
 Compilation of MC-DATA corrections provided by the H2Tau group.
-
 For now just the trigger and electron ID & ISO measured by Valentina.
-
 See: https://twiki.cern.ch/twiki/bin/view/CMS/HiggsToTauTauWorking2012
-
 '''
 
 from FinalStateAnalysis.Utilities.rootbindings import ROOT
@@ -96,16 +92,13 @@ def correct_mu_idiso_2011(pt, abseta):
 
 def correct_e_idiso_2012(pt, abseta):
     ''' Get DATA-MC correction factor electron ID and Iso
-
     Twiki: HiggsToTauTauWorkingHCP2012#Electron_ID_Isolation_EMu_Channe
-
     '''
     return ROOT.eleIDscale_MuEG_2012_53X(pt, abseta)
 
 
 def correct_mu_idiso_2012(pt, abseta):
     ''' Get DATA-MC correction for 53X data from inclusive E-Mu
-
     Twiki: HiggsToTauTauWorkingHCP2012#Muon_ID_Isolation_EMu_Channel
     '''
     return ROOT.muIDscale_MuEG_2012_53X(pt, abseta)
@@ -113,26 +106,18 @@ def correct_mu_idiso_2012(pt, abseta):
 
 def correct_mu_trg_2012(pt, abseta):
     ''' Get DATA-MC correction for 53X data from inclusive E-Mu
-
     Twiki: HiggsToTauTauWorkingHCP2012#Muon_ID_Isolation_EMu_Channel
-
     Remarks from Alexei R:
-
         The muon legs in these electron-muon cross triggers are identical to
         the HLT_Mu17_Mu8 trigger.
-
         To be in synchronization with the e-mu channel we just used the numbers
         obtained by Valentina.
-
         If one requires simulation of HLT_Mu17_Mu8 (and we do require now
         simulation of HLT_Mu17_Mu8 trigger), then one has to apply the
         following trigger weight to MC event :
-
         trigger_weight = SF(pt2,eta2)*SF(pt1,eta),
-
         where SF(pt,eta) - are pt and eta dependent scale factors
         derived by Valentina.
-
     '''
     return correct_mueg_mu_2012(pt, abseta)
 
