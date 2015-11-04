@@ -463,46 +463,19 @@ if options.runMetUncertainties:
     from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
     runMetCorAndUncFromMiniAOD(process,
                                jetColl=fs_daughter_inputs['jets'],
-                               jetCollUnskimmed='slimmedJets',
+                               #jetCollUnskimmed='slimmedJets',
                                photonColl=fs_daughter_inputs['photons'],
                                electronColl=fs_daughter_inputs['electrons'],
                                muonColl=fs_daughter_inputs['muons'],
                                tauColl=fs_daughter_inputs['taus'],
-                               isData=not options.isMC,
+                               isData=False if options.isMC else True,
                                repro74X=True,
                                postfix=postfix,
                                )
 
-    #from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import RunMETCorrectionsAndUncertainties
-    #runMETCorrectionsAndUncertainties = RunMETCorrectionsAndUncertainties()
-    #runMETCorrectionsAndUncertainties(process, metType="PF",
-    #                                  correctionLevel=["T1"],
-    #                                  computeUncertainties=True,
-    #                                  produceIntermediateCorrections=False,
-    #                                  addToPatDefaultSequence=False,
-    #                                  jetCollection=fs_daughter_inputs['jets'],
-    #                                  jetCollectionUnskimmed="slimmedJets",
-    #                                  electronCollection=fs_daughter_inputs['electrons'],
-    #                                  muonCollection=fs_daughter_inputs['muons'],
-    #                                  tauCollection=fs_daughter_inputs['taus'],
-    #                                  photonCollection=fs_daughter_inputs['photons'],
-    #                                  pfCandCollection ="packedPFCandidates",
-    #                                  runOnData=not options.isMC,
-    #                                  onMiniAOD=True,
-    #                                  reclusterJets=False,
-    #                                  recoMetFromPFCs=False,
-    #                                  autoJetCleaning='LepClean',
-    #                                  manualJetConfig=False,
-    #                                  jetFlavor="AK4PFchs",
-    #                                  jetCorLabelUpToL3=cms.InputTag('ak4PFCHSL1FastL2L3Corrector'),
-    #                                  jetCorLabelL3Res=cms.InputTag('ak4PFCHSL1FastL2L3ResidualCorrector'),
-    #                                  jecUncertaintyFile="CondFormats/JetMETObjects/data/Summer15_50nsV5_DATA_UncertaintySources_AK4PFchs.txt",
-    #                                  postfix=postfix,
-    #                                  )
-
-
     collMap = {
-        'jres' : {'Jets'     : 'shiftedPatJetRes{sign}{postfix}'},
+        #'jres' : {'Jets'     : 'shiftedPatJetRes{sign}{postfix}'},
+        'jres' : {},
         'jes'  : {'Jets'     : 'shiftedPatJetEn{sign}{postfix}'},
         'mes'  : {'Muons'    : 'shiftedPatMuonEn{sign}{postfix}'},
         'ees'  : {'Electrons': 'shiftedPatElectronEn{sign}{postfix}'},
@@ -527,9 +500,12 @@ if options.runMetUncertainties:
     allowedSigns = ['+','-']
 
     # embed references to shifts
+    process.patPFMetT1T2CorrNewMet.src = cms.InputTag('slimmedJets')
+    process.patPFMetT2CorrNewMet.src = cms.InputTag('slimmedJets')
     process.embedShifts = cms.Path()
     for shift in allowedShifts:
         for sign in allowedSigns:
+            # embed shifted objects
             for coll in collMap[shift]:
                 modName = '{shift}{sign}{coll}Embedding'.format(shift=shift,sign=signMap[sign],coll=coll)
                 pluginName = 'MiniAODShifted{coll}Embedder'.format(coll=coll[:-1])
@@ -547,13 +523,25 @@ if options.runMetUncertainties:
                 fs_daughter_inputs[dName] = modName
                 process.embedShifts *= getattr(process,shiftSrcName)
                 process.embedShifts *= getattr(process,modName)
-            #metName = metMap[shift].format(sign=signMap[sign],postfix=postfix)
-            #process.embedShifts *= getattr(process,metName)
+            # embed shifted met
+            modName = '{shift}{sign}METEmbedding'.format(shift=shift,sign=signMap[sign])
+            metName = metMap[shift].format(sign=signMap[sign],postfix=postfix)
+            label = '{shift}{sign}MET'.format(shift=shift,sign=signMap[sign])
+            module = cms.EDProducer(
+                'MiniAODShiftedMETEmbedder',
+                src = cms.InputTag(fs_daughter_inputs['pfmet']),
+                shiftSrc = cms.InputTag(metName),
+                label = cms.string(label),
+            )
+            setattr(process,modName,module)
+            fs_daughter_inputs['pfmet'] = modName
+            process.embedShifts *= getattr(process,metName)
+            process.embedShifts *= getattr(process,modName)
     process.schedule.append(process.embedShifts)
 
 
     # switch input to desired one
-    if options.metShift and False: # TODO: MET shift is broken...
+    if options.metShift: 
         t = options.metShift[:-1]
         d = options.metShift[-1]
         if t not in allowedShifts or d not in allowedSigns:
@@ -900,7 +888,8 @@ else:
                                 skimCuts=options.skimCuts, suffix=suffix,
                                 hzz=options.hzz, nExtraJets=extraJets, 
                                 use25ns=options.use25ns, 
-                                isMC=options.isMC, **parameters)
+                                isMC=options.isMC,isShiftedMet=bool(options.metShift),
+                                **parameters)
         add_ntuple(final_state, analyzer, process,
                    process.schedule, options.eventView, filters)
 

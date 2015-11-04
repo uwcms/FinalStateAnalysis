@@ -69,12 +69,14 @@ void MiniAODShiftedObjectEmbedder<T>::produce(edm::Event& iEvent, const edm::Eve
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/Photon.h"
+#include "DataFormats/PatCandidates/interface/MET.h"
 
 typedef MiniAODShiftedObjectEmbedder<pat::Electron> MiniAODShiftedElectronEmbedder;
 typedef MiniAODShiftedObjectEmbedder<pat::Muon> MiniAODShiftedMuonEmbedder;
 typedef MiniAODShiftedObjectEmbedder<pat::Tau> MiniAODShiftedTauEmbedder;
 typedef MiniAODShiftedObjectEmbedder<pat::Jet> MiniAODShiftedJetEmbedder;
 typedef MiniAODShiftedObjectEmbedder<pat::Photon> MiniAODShiftedPhotonEmbedder;
+typedef MiniAODShiftedObjectEmbedder<pat::MET> MiniAODShiftedMETEmbedder;
 
 #include "FWCore/Framework/interface/MakerMacros.h"
 DEFINE_FWK_MODULE(MiniAODShiftedElectronEmbedder);
@@ -82,3 +84,4 @@ DEFINE_FWK_MODULE(MiniAODShiftedMuonEmbedder);
 DEFINE_FWK_MODULE(MiniAODShiftedTauEmbedder);
 DEFINE_FWK_MODULE(MiniAODShiftedJetEmbedder);
 DEFINE_FWK_MODULE(MiniAODShiftedPhotonEmbedder);
+DEFINE_FWK_MODULE(MiniAODShiftedMETEmbedder);

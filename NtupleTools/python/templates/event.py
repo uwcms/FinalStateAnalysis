@@ -46,10 +46,17 @@ pv_info = PSet(
 met = PSet(
     mvaMetEt       = 'evt.met("mvamet").et',
     mvaMetPhi      = 'evt.met("mvamet").phi',
-    raw_pfMetEt    = 'evt.met("pfmet").uncorPt',
-    raw_pfMetPhi   = 'evt.met("pfmet").uncorPhi',
     type1_pfMetEt  = 'evt.met("pfmet").pt', 
     type1_pfMetPhi = 'evt.met("pfmet").phi',
+    
+    recoilDaught='getDaughtersRecoil().R()',
+    recoilWithMet='getDaughtersRecoilWithMet().R()',
+)
+
+# these things break if you pass a shifted met to fsa
+shiftedMet = PSet(
+    raw_pfMetEt    = 'evt.met("pfmet").uncorPt',
+    raw_pfMetPhi   = 'evt.met("pfmet").uncorPhi',
 
     # new systematics
     type1_pfMet_shiftedPt_JetResUp             = 'evt.metShift("pfmet","pt","jres+")',
@@ -83,9 +90,6 @@ met = PSet(
     type1_pfMet_shiftedPhi_TauEnDown           = 'evt.metShift("pfmet","phi","tes-")',
     type1_pfMet_shiftedPhi_UnclusteredEnDown   = 'evt.metShift("pfmet","phi","ues-")',
     type1_pfMet_shiftedPhi_PhotonEnDown        = 'evt.metShift("pfmet","phi","pes-")',
-    
-    recoilDaught='getDaughtersRecoil().R()',
-    recoilWithMet='getDaughtersRecoilWithMet().R()',
 )
 
 gen = PSet(

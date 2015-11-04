@@ -185,6 +185,7 @@ def make_ntuple(*legs, **kwargs):
     by setting 'noclean' to True in kwargs.
 
     '''
+    isShiftedMet = kwargs.pop('isShiftedMet',False)
     # Make sure we only use allowed leg types
     allowed = set(['m', 'e', 't', 'g','j'])
     assert(all(x in allowed for x in legs))
@@ -211,6 +212,12 @@ def make_ntuple(*legs, **kwargs):
     isMC = kwargs.get('isMC', False)
 
     ntuple_config = _common_template.clone()
+    if not isShiftedMet:
+        ntuple_config = PSet(
+            ntuple_config,
+            templates.event.shiftedMet
+        )
+        
     if kwargs.get('runTauSpinner', False):
         for parName in templates.event.tauSpinner.parameterNames_():
             setattr(
@@ -281,6 +288,12 @@ def make_ntuple(*legs, **kwargs):
             custVariables[v],
             candidateVariables,
         )
+        if not isShiftedMet and v!='j':
+            leg_branch_templates[v] = PSet(
+                leg_branch_templates[v],
+                templates.topology.shiftedMtToMET
+            )
+
 
     for i, leg in enumerate(legs):
         counts[leg] += 1
