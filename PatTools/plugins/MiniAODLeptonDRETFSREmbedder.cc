@@ -208,7 +208,7 @@ void MiniAODLeptonDRETFSREmbedder::produce(edm::Event& iEvent, const edm::EventS
             }
         }
 
-      if(phosByEle[iE].size())
+      if(bestPho.isNonnull())
         {
           e.addUserCand(fsrLabel_, bestPho);
           e.addUserFloat(fsrLabel_+"DREt", dREtBestPho);
@@ -236,7 +236,7 @@ void MiniAODLeptonDRETFSREmbedder::produce(edm::Event& iEvent, const edm::EventS
             }
         }
 
-      if(phosByMu[iM].size())
+      if(bestPho.isNonnull())
         {
           m.addUserCand(fsrLabel_, bestPho);
           m.addUserFloat(fsrLabel_+"DREt", dREtBestPho);
