@@ -33,7 +33,7 @@ setattr(eleVars, "objectRelPFIsoRho%s"%brSuffix,
                     '+max(0.0,{object}.neutralHadronIso()' +
                     '+{object}.photonIso()' +
                     '-daughterUserCandIsoContribution({object_idx}, "%sCand")' +
-                    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea_HZZ4l2015")))' +
+                    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea")))' +
                     '/{object}.pt()')%(fsr))
         ),
 
@@ -51,17 +51,15 @@ setattr(zzDiObjVars, "object1_object2_Mass%s"%(brSuffix),
             )
 
 setattr(zzEvVars, 'Mass%s'%(brSuffix),
-            cms.string('p4WithUserCands("%sCand").M'%(fsr)))
+        cms.string('p4WithUserCands("%sCand").M'%(fsr)))
 
 eleVars.objectDREt = cms.string(('? daughterHasUserCand({object_idx}, "%sCand") ? ' +
-                           'daughterAsElectron({object_idx}).userFloat("%sDREt") : ' +
-                           '-999.')%(fsr, fsr))
-
-eleVars.objectEffectiveAreaHZZ = cms.string("{object}.userFloat('EffectiveArea_HZZ4l2015')")
+                                 'daughterAsElectron({object_idx}).userFloat("%sDREt") : ' +
+                                 '-999.')%(fsr, fsr))
 
 muVars.objectDREt = cms.string(('? daughterHasUserCand({object_idx}, "%sCand") ? ' +
-                          'daughterAsMuon({object_idx}).userFloat("%sCandDREt") : ' +
-                          '-999.')%(fsr, fsr))
+                                'daughterAsMuon({object_idx}).userFloat("%sCandDREt") : ' +
+                                '-999.')%(fsr, fsr))
 
 
 zzObjVars.objectHZZLooseID = cms.string('{object}.userFloat("HZZ4lIDPass")')
