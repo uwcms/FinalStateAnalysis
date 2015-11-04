@@ -46,7 +46,6 @@ def preMuons(process, use25ns, mSrc, vSrc, **kwargs):
     process.load("FinalStateAnalysis.PatTools.muons.patMuonEAEmbedding_cfi")
     process.patMuonEAEmbedder.src = cms.InputTag(mSrc)
     mSrc = 'patMuonEAEmbedder'
-    # And for electrons, the new HZZ4l EAs as well
     process.MuonEAEmbedding = cms.Path(
         process.patMuonEAEmbedder
         )
@@ -64,25 +63,6 @@ def preMuons(process, use25ns, mSrc, vSrc, **kwargs):
         process.miniAODMuonRhoEmbedding
         )
     process.schedule.append(process.muonRhoEmbedding)
-
-    process.muonIDIsoCheatEmbedding = cms.EDProducer(
-        "MiniAODMuonHZZIDDecider",
-        src = cms.InputTag(mSrc),
-        idLabel = cms.string(idCheatLabel), # boolean will be stored as userFloat with this name
-        isoLabel = cms.string(isoCheatLabel), # boolean will be stored as userFloat with this name
-        vtxSrc = cms.InputTag(vSrc),
-        # Defaults are correct as of 9 March 2015, overwrite later if needed
-        )
-    mSrc = 'muonIDIsoCheatEmbedding'
-
-    if not use25ns:
-        process.muonIDIsoCheatEmbedding.ptCut = cms.double(10.)
-        process.muonIDIsoCheatEmbedding.sipCut = cms.double(9999.)
-
-    process.embedHZZ4lIDDecisionsMuon = cms.Path(
-        process.muonIDIsoCheatEmbedding
-    )
-    process.schedule.append(process.embedHZZ4lIDDecisionsMuon)
 
 
     return mSrc

@@ -434,41 +434,11 @@ fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs[
 ########################################
 ### pre selection HZZ customizations ###
 ########################################
-if options.hzz:
-    # Make FSR photon collection, give them isolation and cut on it
-    process.load("FinalStateAnalysis.PatTools.miniAOD_fsrPhotons_cff")
-    fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
-
-    process.dretPhotonSelection = cms.EDFilter(
-        "CandPtrSelector",
-        src = cms.InputTag(fs_daughter_inputs['fsr']),
-        cut = cms.string('pt > 2 && abs(eta) < 2.4 && '
-                         '(userFloat("fsrPhotonPFIsoChHadPUNoPU03pt02") + '
-                         'userFloat("fsrPhotonPFIsoNHadPhoton03") / pt < 1.8)'),
-        )
-    fs_daughter_inputs['fsr'] = 'dretPhotonSelection'
-    process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence *
-                                      process.dretPhotonSelection)
-    process.schedule.append(process.makeFSRPhotons)
-
-    process.leptonDRETFSREmbedding = cms.EDProducer(
-        "MiniAODLeptonDRETFSREmbedder",
-        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
-        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
-        phoSrc = cms.InputTag(fs_daughter_inputs['fsr']),
-        phoSelection = cms.string(""),
-        eSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
-        muSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
-        fsrLabel = cms.string("dretFSRCand"),
-        etPower = cms.double(2.),
-        maxDR = cms.double(0.5),
-        )
-    fs_daughter_inputs['muons'] = 'leptonDRETFSREmbedding'
-    fs_daughter_inputs['electrons'] = 'leptonDRETFSREmbedding'
-
-    process.embedDRETFSR = cms.Sequence(process.leptonDRETFSREmbedding)
-    process.dREtFSR = cms.Path(process.embedDRETFSR)
-    process.schedule.append(process.dREtFSR)
+from FinalStateAnalysis.NtupleTools.customization_hzz import hzzCustomize
+hzzCustomize(process, fs_daughter_inputs, idCheatLabel, isoCheatLabel, 
+             electronMVATrigIDLabel, fsrLabel)
+# fs_daughter_inputs entries for electrons, muons, and fsr are automatically 
+# set by hzzCustomize()
 
 
 
@@ -528,9 +498,46 @@ fs_daughter_inputs['taus'] = postTaus(process,options.use25ns,fs_daughter_inputs
 
 
 
+<<<<<<< HEAD
 
 
 
+=======
+# embed info about nearest jet
+process.miniAODElectronJetInfoEmbedding = cms.EDProducer(
+    "MiniAODElectronJetInfoEmbedder",
+    src = cms.InputTag(fs_daughter_inputs['electrons']),
+    embedBtags = cms.bool(False),
+    suffix = cms.string(''),
+    jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
+    maxDeltaR = cms.double(0.1),
+)
+fs_daughter_inputs['electrons'] = 'miniAODElectronJetInfoEmbedding'
+process.miniAODMuonJetInfoEmbedding = cms.EDProducer(
+    "MiniAODMuonJetInfoEmbedder",
+    src = cms.InputTag(fs_daughter_inputs['muons']),
+    embedBtags = cms.bool(False),
+    suffix = cms.string(''),
+    jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
+    maxDeltaR = cms.double(0.1),
+)
+fs_daughter_inputs['muons'] = 'miniAODMuonJetInfoEmbedding'
+process.miniAODTauJetInfoEmbedding = cms.EDProducer(
+    "MiniAODTauJetInfoEmbedder",
+    src = cms.InputTag(fs_daughter_inputs['taus']),
+    embedBtags = cms.bool(False),
+    suffix = cms.string(''),
+    jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
+    maxDeltaR = cms.double(0.1),
+)
+fs_daughter_inputs['taus'] = 'miniAODTauJetInfoEmbedding'
+process.jetInfoEmbedding = cms.Path(
+    process.miniAODElectronJetInfoEmbedding +
+    process.miniAODMuonJetInfoEmbedding +
+    process.miniAODTauJetInfoEmbedding
+)
+process.schedule.append(process.jetInfoEmbedding)
+>>>>>>> Factor apart HZZ ID and isolation decisions, take FSR into account for isolation.
 
 
 ############################

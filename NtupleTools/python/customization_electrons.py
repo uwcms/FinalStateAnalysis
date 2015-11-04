@@ -158,38 +158,6 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
         )
     process.schedule.append(process.electronRhoEmbedding)
 
-    # Embed HZZ ID and isolation decisions because we need to know them for FSR recovery
-    process.electronIDIsoCheatEmbedding = cms.EDProducer(
-        "MiniAODElectronHZZIDDecider",
-        src = cms.InputTag(eSrc),
-        idLabel = cms.string(idCheatLabel), # boolean stored as userFloat with this name
-        isoLabel = cms.string(isoCheatLabel), # boolean stored as userFloat with this name
-        rhoLabel = cms.string("rho_fastjet"), # use rho and EA userFloats with these names
-        eaLabel = cms.string("EffectiveArea"),
-        vtxSrc = cms.InputTag(vSrc),
-        bdtLabel = cms.string(electronMVANonTrigIDLabel),
-        idCutLowPtLowEta = cms.double(-.265),
-        idCutLowPtMedEta = cms.double(-.556),
-        idCutLowPtHighEta = cms.double(-.551),
-        idCutHighPtLowEta = cms.double(-.072),
-        idCutHighPtMedEta = cms.double(-.286),
-        idCutHighPtHighEta = cms.double(-.267),
-        missingHitsCut = cms.int32(999),
-        )
-    eSrc = 'electronIDIsoCheatEmbedding'
-
-    if not use25ns:
-        process.electronIDIsoCheatEmbedding.bdtLabel = cms.string('')
-        process.electronIDIsoCheatEmbedding.selection = cms.string('userFloat("CBIDMedium") > 0.5')
-        process.electronIDIsoCheatEmbedding.ptCut = cms.double(10.)
-        process.electronIDIsoCheatEmbedding.sipCut = cms.double(9999.)
-
-    process.embedHZZ4lIDDecisionsElectron = cms.Path(
-        process.electronIDIsoCheatEmbedding
-        )
-    process.schedule.append(process.embedHZZ4lIDDecisionsElectron)
-
-
     return eSrc
 
 def postElectrons(process, use25ns, eSrc, jSrc,**kwargs):
