@@ -793,6 +793,19 @@ double PATFinalState::zCompatibility(const PATFinalState::LorentzVector& p4) con
   return std::abs(p4.mass() - 91.1876);
 }
 
+double PATFinalState::zCompatibilityWithUserCands(const size_t i, 
+                                                  const size_t j, 
+                                                  const std::string& candLabel)
+  const
+{
+  if (likeSigned(i, j))
+    return 1000;
+
+  PATFinalState::LorentzVector p4WithCands = diObjectP4WithUserCands(i, j, candLabel);
+
+  return zCompatibility(p4WithCands);
+}
+
 double PATFinalState::closestZ(int i, const std::string& filter, std::vector<const reco::Candidate*> legs) const
 {
   std::vector<const reco::Candidate*> zFirstLeg;

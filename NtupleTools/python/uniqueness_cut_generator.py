@@ -75,17 +75,19 @@ def uniqueness_3(cuts, obj, firstIndex, **kwargs):
     Put the best Z candidate first, and order the first two objects by pt.
     '''
     idx = [firstIndex + x for x in range(3)]
-    cuts['Z12_Better_Z13'] = 'zCompatibility(%d, %d) < zCompatibility(%d, %d)'%(idx[0],
-                                                                                idx[1],
-                                                                                idx[0],
-                                                                                idx[2])
 
-    cuts['Z12_Better_Z23'] = 'zCompatibility(%d, %d) < zCompatibility(%d, %d)'%(idx[0],
-                                                                                idx[1],
-                                                                                idx[1],
-                                                                                idx[2])
+    hzz = kwargs.get("hzz", False)
+
+    if hzz:
+        cutstr = 'zCompatibilityWithUserCands(%d, %d, "dretFSRCand") < zCompatibilityWithUserCands(%d, %d, "dretFSRCand")'
+    else:
+        cutstr = 'zCompatibility(%d, %d) < zCompatibility(%d, %d)'
+
+    cuts['Z12_Better_Z13'] = cutstr%(idx[0], idx[1], idx[0], idx[2])
+
+    cuts['Z12_Better_Z23'] = cutstr%(idx[0], idx[1], idx[1], idx[2])
     
-    cuts['%s_UniqueByPt'%obj] = 'orderedInPt(%d, %d)'%(firstIndex, firstIndex+1)
+    cuts['%s_UniqueByPt'%obj] = 'orderedInPt(%d, %d)'%(idx[0], idx[1])
 
 
 def uniqueness_4(cuts, obj, firstIndex, **kwargs):
@@ -110,7 +112,7 @@ def uniqueness_4(cuts, obj, firstIndex, **kwargs):
     hzz = kwargs.get("hzz", False)
 
     if hzz:
-        cutstr = 'zCompatibilityFSR(%d, %d, "FSRCand") < zCompatibilityFSR(%d, %d, "FSRCand")'
+        cutstr = 'zCompatibilityWithUserCands(%d, %d, "dretFSRCand") < zCompatibilityWithUserCands(%d, %d, "dretFSRCand")'
     else:
         cutstr = 'zCompatibility(%d, %d) < zCompatibility(%d, %d)'
 
