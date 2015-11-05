@@ -27,6 +27,7 @@
 #include <sstream>
 #include "TMath.h"
 
+#include "SVfitLFV_standalone/interface/SVfitStandaloneAlgorithmLFV.h"
 namespace {
 
   // Predicate to sort a collection of indices, which correspond to a list of
@@ -328,8 +329,10 @@ PATFinalState::SVfit(int i, int j) const {
   toFit.push_back(daughterPtr(j));
 
   edm::Ptr<pat::MET> mvaMet = evt()->met("mvamet");
+  edm::Ptr<pat::MET> pfMet = evt()->met("pfmet");
 
-  if (mvaMet.isNull()) {
+//  if (mvaMet.isNull()) {
+  if (pfMet.isNull()) {
     throw cms::Exception("MissingMVAMet")
       << "SV fit requires the MVAMET be available via "
       << " met('mvamet') method in PATFinalStateEvent.  It's null."
@@ -340,8 +343,34 @@ PATFinalState::SVfit(int i, int j) const {
   return ApplySVfit::getSVfitMass(toFit, *mvaMet,
       mvaMet->getSignificanceMatrix(), 0,
       evt()->evtId());
+//  return ApplySVfit::getSVfitMass(toFit, *pfMet,
+//      pfMet->getSignificanceMatrix(), 0,
+//      evt()->evtId());
 }
 
+double
+PATFinalState::SVfitLFV(int i, int j) const {
+
+  std::vector<reco::CandidatePtr> toFit;
+  toFit.push_back(daughterPtr(i));
+  toFit.push_back(daughterPtr(j));
+
+  edm::Ptr<pat::MET> pfMet = evt()->met("pfmet");
+
+  if (pfMet.isNull()) {
+    throw cms::Exception("Missingpfmet")
+      << "SVLFV fit requires the pfmet  be available via "
+      << " met('pfmet') method in PATFinalStateEvent.  It's null."
+      << std::endl;
+  }
+//  return ApplySVfit::getSVfitMass(toFit, *pfMet,
+//         pfMet->getSignificanceMatrix(), 0,
+//         evt()->evtId());
+  std::cout<<"something is here *****************************"<<std::endl; 
+//  return SVfitStandaloneAlgorithmLFV(toFit, *pfMet,pfMet->getSignificanceMatrix(),0);
+  return 1;
+     
+}
 double
 PATFinalState::dR(int i, const std::string& sysTagI,
     int j, const std::string& sysTagJ) const {
