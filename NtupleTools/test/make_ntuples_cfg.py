@@ -461,6 +461,7 @@ process.schedule.append(process.FSAPreselection)
 if options.runMetUncertainties:
     postfix = 'NewMet'
     from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+    isData = not options.isMC
     runMetCorAndUncFromMiniAOD(process,
                                jetColl=fs_daughter_inputs['jets'],
                                #jetCollUnskimmed='slimmedJets',
@@ -468,7 +469,8 @@ if options.runMetUncertainties:
                                electronColl=fs_daughter_inputs['electrons'],
                                muonColl=fs_daughter_inputs['muons'],
                                tauColl=fs_daughter_inputs['taus'],
-                               isData=False if options.isMC else True,
+                               isData=isData,
+                               jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
                                repro74X=True,
                                postfix=postfix,
                                )
