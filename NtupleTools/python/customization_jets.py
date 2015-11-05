@@ -2,7 +2,6 @@
 import FWCore.ParameterSet.Config as cms
 
 def preJets(process, use25ns, jSrc, vSrc,**kwargs):
-
     process.miniPatJets = cms.EDProducer(
         "MiniAODJetIdEmbedder",
         src=cms.InputTag(jSrc)
