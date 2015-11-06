@@ -46,7 +46,7 @@ nExtraJets=0   - Include basic info about this many jets (ordered by pt).
 paramFile=''   - custom parameter file for ntuple production
 keepPat=0      - Instead of making flat ntuples, write high level 
                  physics objects including the PATFinalState objects
-
+runPFMETSignificance=1 produce the PF significance
 '''
 
 import FWCore.ParameterSet.Config as cms

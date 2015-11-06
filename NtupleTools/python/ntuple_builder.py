@@ -367,7 +367,7 @@ def make_ntuple(*legs, **kwargs):
                 templates.topology.svfit.replace(object1=leg_a, object2=leg_b)
             )
 
-        do_svfitLFV = False
+      #  do_svfitLFV = False
         if do_svfitLFV:
             print "SVLFV fitting legs %s and %s in final state %s" % (
                 leg_a, leg_b, ''.join(legs))
