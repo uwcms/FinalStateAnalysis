@@ -229,7 +229,8 @@ fs_daughter_inputs = {
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
 
-
+# add additional final states to ntuples with different parameters... work in progress... difficult with VID
+#additional_fs = {}
 
 
 
@@ -367,93 +368,6 @@ if options.runMetFilter:
 
 
 
-
-
-
-
-
-
-
-
-#########################################################
-### embed some things we need before object selection ###
-#########################################################
-
-# HZZ id labels
-idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
-isoCheatLabel = "HZZ4lIsoPass"
-electronMVANonTrigIDLabel = "BDTIDNonTrig"
-electronMVATrigIDLabel = "BDTIDTrig"
-
-##########################
-### embed electron ids ###
-##########################
-from FinalStateAnalysis.NtupleTools.customization_electrons import preElectrons
-fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['vertices'],
-    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
-    electronMVATrigIDLabel=electronMVATrigIDLabel)
-
-######################
-### embed muon IDs ###
-######################
-from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
-fs_daughter_inputs['muons'] = preMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['vertices'],
-    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost)
-
-#####################
-### embed tau IDs ###
-#####################
-from FinalStateAnalysis.NtupleTools.customization_taus import preTaus
-fs_daughter_inputs['taus'] = preTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['vertices'])
-
-########################
-### jet id embedding ###
-########################
-from FinalStateAnalysis.NtupleTools.customization_jets import preJets
-fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs['jets'],fs_daughter_inputs['vertices'])
-
-########################################
-### pre selection HZZ customizations ###
-########################################
-if options.hzz:
-    hzz4l = options.channels == 'zz' or 'eeee' in options.channels or \
-        'eemm' in options.channels or 'mmmm' in options.channels 
-    # alternative is Z+l control region
-
-    if hzz4l:
-        # Make FSR photon collection, give them isolation
-        process.load("FinalStateAnalysis.PatTools.miniAOD_fsrPhotons_cff")
-        fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
-        process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
-        process.schedule.append(process.makeFSRPhotons)
-
-
-
-
-
-
-###########################
-### object preselection ###
-###########################
-if options.passThru:
-    preselections = {}
-else:
-    preselections = parameters.get('preselection',{})
-
-from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections, getName
-process.preselectionSequence = setup_selections(
-    process, 
-    "Preselection",
-    fs_daughter_inputs,
-    preselections,
-    )
-for ob in preselections:
-    fs_daughter_inputs[getName(ob)+'s'] = getName(ob)+"Preselection"
-process.FSAPreselection = cms.Path(process.preselectionSequence)
-process.schedule.append(process.FSAPreselection)
-
-
-
 #######################################
 ### MET Uncertainty and Corrections ###
 #######################################
@@ -463,7 +377,7 @@ from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMet
 isData = not options.isMC
 runMetCorAndUncFromMiniAOD(process,
                            jetColl=fs_daughter_inputs['jets'],
-                           #jetCollUnskimmed='slimmedJets',
+                           jetCollUnskimmed='slimmedJets',
                            photonColl=fs_daughter_inputs['photons'],
                            electronColl=fs_daughter_inputs['electrons'],
                            muonColl=fs_daughter_inputs['muons'],
@@ -500,14 +414,25 @@ metMap = {
 allowedShifts = ['jres','jes','mes','ees','tes','ues']
 allowedSigns = ['+','-']
 
-# get the updated JEC
-process.applyJEC = cms.Path(process.patJetCorrFactorsReapplyJEC + process.patJets)
-process.schedule.append(process.applyJEC)
+# this should be it, but fails
+#process.applyCorrections = cms.Path(getattr(process,'fullPatMetSequence{0}'.format(postfix)))
+# fix things
+getattr(process,'patPFMetT1T2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
+getattr(process,'patPFMetT2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
+getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices')
+process.applyCorrections = cms.Path(
+    process.genMetExtractor+
+    getattr(process,'patPFMet{0}'.format(postfix))+
+    process.patJetCorrFactorsReapplyJEC+
+    process.patJets+
+    getattr(process,'patPFMetT1Txy{0}'.format(postfix))+
+    getattr(process,'patPFMetT1{0}'.format(postfix))+
+    getattr(process,'patPFMetTxy{0}'.format(postfix))
+)
+process.schedule.append(process.applyCorrections)
 fs_daughter_inputs['jets'] = 'patJets'
 
 # embed references to shifts
-process.patPFMetT1T2CorrNewMet.src = cms.InputTag(fs_daughter_inputs['jets'])
-process.patPFMetT2CorrNewMet.src = cms.InputTag(fs_daughter_inputs['jets'])
 process.embedShifts = cms.Path()
 for shift in allowedShifts:
     for sign in allowedSigns:
@@ -527,7 +452,7 @@ for shift in allowedShifts:
             )
             setattr(process,modName,module)
             fs_daughter_inputs[dName] = modName
-            process.embedShifts *= getattr(process,shiftSrcName)
+            #process.embedShifts *= getattr(process,shiftSrcName)
             process.embedShifts *= getattr(process,modName)
         # embed shifted met
         modName = '{shift}{sign}METEmbedding'.format(shift=shift,sign=signMap[sign])
@@ -541,7 +466,7 @@ for shift in allowedShifts:
         )
         setattr(process,modName,module)
         fs_daughter_inputs['pfmet'] = modName
-        process.embedShifts *= getattr(process,metName)
+        #process.embedShifts *= getattr(process,metName)
         process.embedShifts *= getattr(process,modName)
 process.schedule.append(process.embedShifts)
 
@@ -550,7 +475,17 @@ process.schedule.append(process.embedShifts)
 if options.metShift: 
     t = options.metShift[:-1]
     d = options.metShift[-1]
-    if t not in allowedShifts or d not in allowedSigns:
+    if options.metShift=='all':
+        # setup daughters for all
+        #for shift in allowedShifts:
+        #    for sign in allowedSigns:
+        #        label = shift + signMap[sign]
+        #        additional_fs[label] = fs_daugher_inputs.deepcopy()
+        #        additional_fs[label]['pfmet'] = metMap[shift].format(sign=sign,postfix=postfix)
+        #        for coll in collMap[shift]:
+        #            additional_fs[label][coll.lower()] = collMap[shift][coll].format(sign=sign,postfix=postfix)
+        pass
+    elif t not in allowedShifts or d not in allowedSigns:
         print 'Warning: {0} is not an allowed MET shift, using unshifted collections'.format(options.metShift)
     else:
         fs_daughter_inputs['pfmet'] = metMap[t].format(sign=signMap[d],postfix=postfix)
@@ -565,6 +500,116 @@ if options.metShift:
 
 
 
+
+
+
+
+#########################################################
+### embed some things we need before object selection ###
+#########################################################
+
+# HZZ id labels
+idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
+isoCheatLabel = "HZZ4lIsoPass"
+electronMVANonTrigIDLabel = "BDTIDNonTrig"
+electronMVATrigIDLabel = "BDTIDTrig"
+
+##########################
+### embed electron ids ###
+##########################
+from FinalStateAnalysis.NtupleTools.customization_electrons import preElectrons
+fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['vertices'],
+    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
+    electronMVATrigIDLabel=electronMVATrigIDLabel)
+#for fs in additional_fs:
+#    additional_fs[fs]['electrons'] = preElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['vertices'],
+#        idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
+#        electronMVATrigIDLabel=electronMVATrigIDLabel,postfix=fs)
+
+######################
+### embed muon IDs ###
+######################
+from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
+fs_daughter_inputs['muons'] = preMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['vertices'],
+    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost)
+#for fs in additional_fs:
+#    additional_fs[fs]['muons'] = preMuons(process,options.use25ns,additional_fs[fs]['muons'],additional_fs[fs]['vertices'],
+#        idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost,postfix=fs)
+
+#####################
+### embed tau IDs ###
+#####################
+from FinalStateAnalysis.NtupleTools.customization_taus import preTaus
+fs_daughter_inputs['taus'] = preTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['vertices'])
+#for fs in additional_fs:
+#    additional_fs[fs]['taus'] = preTaus(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['vertices'],postfix=fs)
+
+########################
+### jet id embedding ###
+########################
+from FinalStateAnalysis.NtupleTools.customization_jets import preJets
+fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs['jets'],fs_daughter_inputs['vertices'])
+#for fs in additional_fs:
+#    additional_fs[fs]['jets'] = preJets(process,options.use25ns,additional_fs[fs]['jets'],additional_fs[fs]['vertices'],postfix=fs)
+
+########################################
+### pre selection HZZ customizations ###
+########################################
+if options.hzz:
+    hzz4l = options.channels == 'zz' or 'eeee' in options.channels or \
+        'eemm' in options.channels or 'mmmm' in options.channels 
+    # alternative is Z+l control region
+
+    if hzz4l:
+        # Make FSR photon collection, give them isolation
+        process.load("FinalStateAnalysis.PatTools.miniAOD_fsrPhotons_cff")
+        fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
+        process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
+        process.schedule.append(process.makeFSRPhotons)
+
+
+
+
+
+
+
+###########################
+### object preselection ###
+###########################
+if options.passThru:
+    preselections = {}
+else:
+    preselections = parameters.get('preselection',{})
+
+from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections, getName
+process.preselectionSequence = setup_selections(
+    process, 
+    "Preselection",
+    fs_daughter_inputs,
+    preselections,
+    )
+for ob in preselections:
+    fs_daughter_inputs[getName(ob)+'s'] = getName(ob)+"Preselection"
+process.FSAPreselection = cms.Path(process.preselectionSequence)
+process.schedule.append(process.FSAPreselection)
+
+#for fs in additional_fs:
+#    process.preselectionSequence = setup_selections(
+#        process,
+#        "Preselection{0}".format(fs),
+#        additional_fs[fs],
+#        preselections,
+#        postfix=fs,
+#        )
+#    for ob in preselections:
+#        additional_fs[fs][getName(ob)+'s'] = getName(ob)+"Preselection{0}".format(fs)
+#    setattr(process,'FSAPreselection{0}'.format(fs),cms.Path(getattr(process,'preselectionSequence{0}'.format(fs))))
+#    process.schedule.append(getattr(process,'FSAPreselection{0}'.format(fs)))
+
+
+
+
+
 ###########################################################################
 ### The following is embedding that must be done after object selection ###
 ###########################################################################
@@ -574,18 +619,24 @@ if options.metShift:
 ###################################
 from FinalStateAnalysis.NtupleTools.customization_electrons import postElectrons
 fs_daughter_inputs['electrons'] = postElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['jets'])
+#for fs in additional_fs:
+#    additional_fs[fs]['electrons'] = postElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['jets'],postfix=fs)
 
 ###############################
 ### post muon customization ###
 ###############################
 from FinalStateAnalysis.NtupleTools.customization_muons import postMuons
 fs_daughter_inputs['muons'] = postMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['jets'])
+#for fs in additional_fs:
+#    additional_fs[fs]['muons'] = postMuons(process,options.use25ns,additional_fs[fs]['muons'],additional_fs[fs]['jets'],postfix=fs)
 
 ##############################
 ### post tau customization ###
 ##############################
 from FinalStateAnalysis.NtupleTools.customization_taus import postTaus
 fs_daughter_inputs['taus'] = postTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['jets'])
+#for fs in additional_fs:
+#    additional_fs[fs]['taus'] = postElectrons(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['jets'],postfix=fs)
 
 
 

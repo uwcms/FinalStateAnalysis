@@ -11,9 +11,9 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection, switchOnVIDElectronIdProducer, DataFormat
     switchOnVIDElectronIdProducer(process, DataFormat.MiniAOD)
     process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag(eSrc)
+    process.electronMVAValueMapProducer.srcMiniAOD = cms.InputTag(eSrc)
+    process.electronRegressionValueMapProducer.srcMiniAOD = cms.InputTag(eSrc)
     id_modules = [
-        #'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_PHYS14_PU20bx25_V2_cff',
-        #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_PHYS14_PU20bx25_nonTrig_V1_cff',
         'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',    # both 25 and 50 ns cutbased ids produced
         'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_50ns_V1_cff',
         'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV60_cff',                 # recommended for both 50 and 25 ns

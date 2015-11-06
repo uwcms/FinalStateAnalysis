@@ -53,13 +53,32 @@ void MiniAODShiftedObjectEmbedder<T>::produce(edm::Event& iEvent, const edm::Eve
   edm::Handle<edm::View<T> > shiftSrc;
   iEvent.getByToken(shiftSrcToken_, shiftSrc);
 
+  //if(src->size()!=shiftSrc->size())
+  //  std::cout << "Warning: " << label_ << " size missmatch. src: " << src->size() << " shiftSrc: " << shiftSrc->size() << std::endl;
+
   for (size_t i = 0; i < src->size(); ++i) {
     const T& srcObj = src->at(i);
-    const edm::Ptr<T> shiftSrcObj = shiftSrc->ptrAt(i);
+    //std::cout << label_ << " " << i << " src: pt " << srcObj.pt() << " eta " << srcObj.eta() << " phi " << srcObj.phi() << std::endl;
     T newObj = srcObj;
-    newObj.addUserCand(label_,shiftSrcObj);
+    if (i<shiftSrc->size()) {
+      const edm::Ptr<T> shiftSrcObj = shiftSrc->ptrAt(i);
+      //std::cout << label_ << " " << i << " shiftSrc: pt " << shiftSrcObj->pt() << " eta " << shiftSrcObj->eta() << " phi " << shiftSrcObj->phi() << std::endl;
+      newObj.addUserCand(label_,shiftSrcObj);
+    }
+    else {
+      //std::cout << label_ << " " << i << " lost. Object ref set to empty candidate." << std::endl;
+      const edm::Ptr<T> cand = edm::Ptr<T>();
+      newObj.addUserCand(label_,cand);
+    }
     out->push_back(newObj);
   }
+
+  //if(shiftSrc->size()>src->size()) {
+  //  for (size_t i=src->size(); i<shiftSrc->size(); ++i) {
+  //    const edm::Ptr<T> shiftSrcObj = shiftSrc->ptrAt(i);
+  //    std::cout << label_ << " " << i << " shiftSrc: pt " << shiftSrcObj->pt() << " eta " << shiftSrcObj->eta() << " phi " << shiftSrcObj->phi() << std::endl;
+  //  }
+  //}
 
   iEvent.put(out);
 }
