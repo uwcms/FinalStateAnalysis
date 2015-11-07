@@ -420,15 +420,14 @@ allowedSigns = ['+','-']
 getattr(process,'patPFMetT1T2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
 getattr(process,'patPFMetT2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
 getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices')
-process.applyCorrections = cms.Path(
-    process.genMetExtractor+
-    getattr(process,'patPFMet{0}'.format(postfix))+
-    process.patJetCorrFactorsReapplyJEC+
-    process.patJets+
-    getattr(process,'patPFMetT1Txy{0}'.format(postfix))+
-    getattr(process,'patPFMetT1{0}'.format(postfix))+
-    getattr(process,'patPFMetTxy{0}'.format(postfix))
-)
+process.applyCorrections = cms.Path()
+if options.isMC: process.applyCorrections += process.genMetExtractor
+process.applyCorrections += getattr(process,'patPFMet{0}'.format(postfix))
+process.applyCorrections += process.patJetCorrFactorsReapplyJEC
+process.applyCorrections += process.patJets
+process.applyCorrections += getattr(process,'patPFMetT1Txy{0}'.format(postfix))
+process.applyCorrections += getattr(process,'patPFMetT1{0}'.format(postfix))
+process.applyCorrections += getattr(process,'patPFMetTxy{0}'.format(postfix))
 process.schedule.append(process.applyCorrections)
 fs_daughter_inputs['jets'] = 'patJets'
 
