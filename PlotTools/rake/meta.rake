@@ -22,7 +22,7 @@ namespace :meta do
     end
   end
 
-  def make_meta_tasks(sample, ntuple, sqrts,histo)
+  def make_meta_tasks(sample, ntuple, sqrts ,histo)
     # Getting meta information from ntpule
     file sample + '.meta.root' => sample + '.txt' do |t|
         farmout = ENV.fetch('farmout', "0")
@@ -32,7 +32,7 @@ namespace :meta do
             sh "mega $fsa/PlotTools/python/ExtractTree.py #{t.prerequisites} #{t.name} --tree #{ntuple}"
         end
     end
-
+    
     file sample + '.meta.json' => sample + '.meta.root' do |t|
       if t.name.include? 'data'
         sh "extract_meta_info.py #{t.prerequisites} metaInfo  #{t.name}  --lumimask"
@@ -82,7 +82,7 @@ namespace :meta do
     else
       # In MC, we can get the effective lumi from xsec and #events.
       file sample + '.lumicalc.sum' => sample + '.meta.json' do |t|
-        #sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} `cat #{t.prerequisites} | extract_json.py n_evts` > #{t.name}"
+        sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} `cat #{t.prerequisites} | extract_json.py n_evts` > #{t.name}"
       end
     end
     # Return the final target
@@ -108,7 +108,7 @@ namespace :meta do
           end
         end
         #make the task
-        target = make_meta_tasks(sample, meta_ntuple, args.sqrts, meta_histo)
+        target = make_meta_tasks(sample, meta_ntuple, args.sqrt, meta_histo)
         task :computemeta => target
       end
       #puts Rake::Task['computemeta'].timestamp
