@@ -37,8 +37,8 @@ if __name__ == "__main__":
         sys.stderr.write("Using 8 TeV data definitions\n")
         import FinalStateAnalysis.MetaData.data8TeVNew as datadefs
     elif args.sqrts == 13:
+        sys.stderr.write("Using 13 TeV data definitions\n")
         import FinalStateAnalysis.MetaData.data13TeV as datadefs
-        #print "13TeV datadefs deprecated"
 
     sample_xsec = datadefs.datadefs[args.sample]['x_sec']/picobarns
 

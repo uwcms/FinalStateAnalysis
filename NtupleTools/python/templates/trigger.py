@@ -29,7 +29,7 @@ singleLepton_50ns_MC = PSet(
     _trig_template.replace(
         name='singleE',
         paths=r'HLT_Ele27_eta2p1_WP75_Gsf_v\\d+'
-        ),
+    ),
     _trig_template.replace(
         name='singleMu_leg1', 
         paths=r'HLT_Mu17_TrkIsoVVL_v\\d+'
@@ -238,6 +238,14 @@ doubleLepton_50ns = PSet(
         name='singleMuSingleE',
         paths=r'HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
+    _trig_template.replace(
+        name='singleE27LooseTau',
+        paths=r'HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v\\d+'#group: TAU, HIG, rate: in stadow of unprescales Ele27 trigger, 11.5Hz at 7e33, type: signal, description: Trigger with an Isolated Electron and Loose Iso PFTau, seeded by unp'ed L1SingleIsoEGer seed.
+    ),
+    _trig_template.replace(
+        name='singleE32LooseTau',
+        paths=r'HLT_Ele32_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v1\\d+'
+        ),#group: TAU, HIG, rate: in stadow of unprescales Ele32 trigger, 30Hz at 1.4e34, type: signal, description: Trigger with an Isolated Electron and Loose Iso PFTau, seeded by unp'ed L1SingleIsoEGer seed.
     )
 
 doubleLepton_25ns = PSet(

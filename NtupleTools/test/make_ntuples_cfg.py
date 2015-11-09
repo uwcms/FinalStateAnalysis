@@ -106,6 +106,7 @@ options = TauVarParsing.TauVarParsing(
     paramFile='',
     skipGhost=0,
     runWZ=0,
+
 )
 
 options.register(
