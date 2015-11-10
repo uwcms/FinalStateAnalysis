@@ -163,7 +163,6 @@ namespace fshelpers {
     }
     // removing this 
 */
-
     pset.addParameter<std::vector<int> >("mcStatus", status);
     pset.addParameter<bool>("resolveByMatchQuality", false);
     pset.addParameter<bool>("checkCharge", checkCharge);

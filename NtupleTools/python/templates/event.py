@@ -51,6 +51,7 @@ met = PSet(
     type1_pfMetEt  = 'evt.met("pfmet").pt', 
     type1_pfMetPhi = 'evt.met("pfmet").phi',
 
+
     # new systematics
     type1_pfMet_shiftedPt_JetResUp             = 'evt.metShift("pfmet","pt","jres+")',
     type1_pfMet_shiftedPt_JetEnUp              = 'evt.metShift("pfmet","pt","jes+")',
@@ -84,6 +85,34 @@ met = PSet(
     type1_pfMet_shiftedPhi_UnclusteredEnDown   = 'evt.metShift("pfmet","phi","ues-")',
     type1_pfMet_shiftedPhi_PhotonEnDown        = 'evt.metShift("pfmet","phi","pes-")',
     
+    type1_pfMet_Et_ues_plus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ues+", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ues+", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ues+", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ues+", 1).Py-evt.met4vector("pfmet","",1).Py))',
+    type1_pfMet_Et_ues_minus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ues-", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ues-", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ues-", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ues-", 1).Py-evt.met4vector("pfmet","",1).Py))',
+
+    type1_pfMet_Et_ees_plus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ees+", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ees+", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ees+", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ees+", 1).Py-evt.met4vector("pfmet","",1).Py))',
+    type1_pfMet_Et_ees_minus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ees-", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","ees-", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ees-", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","ees-", 1).Py-evt.met4vector("pfmet","",1).Py))',
+
+    type1_pfMet_Et_mes_plus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","mes+", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","mes+", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","mes+", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","mes+", 1).Py-evt.met4vector("pfmet","",1).Py))',
+    type1_pfMet_Et_mes_minus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","mes-", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","mes-", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","mes-", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","mes-", 1).Py-evt.met4vector("pfmet","",1).Py))',
+
+    type1_pfMet_Et_tes_plus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","tes+", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","tes+", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","tes+", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","tes+", 1).Py-evt.met4vector("pfmet","",1).Py))',
+    type1_pfMet_Et_tes_minus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","tes-", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","tes-", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","tes-", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","tes-", 1).Py-evt.met4vector("pfmet","",1).Py))',
+
+    type1_pfMet_Et_jes_plus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","jes+", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","jes+", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","jes+", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","jes+", 1).Py-evt.met4vector("pfmet","",1).Py))',
+    type1_pfMet_Et_jes_minus = 'sqrt((evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","jes-", 1).Px-evt.met4vector("pfmet","",1).Px)*(evt.met4vector("pfmet","type1",1).Px + evt.met4vector("pfmet","jes-", 1).Px-evt.met4vector("pfmet","",1).Px)+(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","jes-", 1).Py-evt.met4vector("pfmet","",1).Py)*(evt.met4vector("pfmet","type1",1).Py + evt.met4vector("pfmet","jes-", 1).Py-evt.met4vector("pfmet","",1).Py))',
+
+    pfMet_Phi_ees_plus  = 'evt.met4vector("pfmet","ees+", 1).phi',
+    pfMet_Phi_mes_plus  = 'evt.met4vector("pfmet","mes+", 1).phi',
+    pfMet_Phi_tes_plus  = 'evt.met4vector("pfmet","tes+", 1).phi',
+    pfMet_Phi_ues_plus  = 'evt.met4vector("pfmet","ues+", 1).phi',
+    pfMet_Phi_jes_plus  = 'evt.met4vector("pfmet","jes+", 1).phi',
+
+    pfMet_Phi_ees_minus  = 'evt.met4vector("pfmet","ees-", 1).phi',
+    pfMet_Phi_mes_minus  = 'evt.met4vector("pfmet","mes-", 1).phi',
+    pfMet_Phi_tes_minus  = 'evt.met4vector("pfmet","tes-", 1).phi',
+    pfMet_Phi_ues_minus  = 'evt.met4vector("pfmet","ues-", 1).phi',
+    pfMet_Phi_jes_minus  = 'evt.met4vector("pfmet","jes-", 1).phi',
+    pfMet_ues_AtanToPhi = 'atan(evt.met4vector("pfmet","ues+", 1).Py/evt.met4vector("pfmet","ues+", 1).Px)',
+
     recoilDaught='getDaughtersRecoil().R()',
     recoilWithMet='getDaughtersRecoilWithMet().R()',
 )

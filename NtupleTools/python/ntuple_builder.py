@@ -359,6 +359,7 @@ def make_ntuple(*legs, **kwargs):
         if 'g' in legs:
             do_svfit = False
             do_svfitLFV = False
+        do_svfit = False
         if do_svfit:
             print "SV fitting legs %s and %s in final state %s" % (
                 leg_a, leg_b, ''.join(legs))
@@ -369,7 +370,7 @@ def make_ntuple(*legs, **kwargs):
 
       #  do_svfitLFV = False
         if do_svfitLFV:
-            print "SVLFV fitting legs %s and %s in final state %s" % (
+            print "SVLFV fitting legs %s and %s in final state %s FANBO" % (
                 leg_a, leg_b, ''.join(legs))
             ntuple_config = PSet(
                 ntuple_config,
