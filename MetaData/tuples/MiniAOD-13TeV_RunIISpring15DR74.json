@@ -110,7 +110,7 @@
    "VBF_HToETau":"VBF_LFV_HToETau_M125_13TeV_powheg_pythia8",
 
    "GluGlu_HToTauTau":"GluGluHToTauTau_M125_13TeV_powheg_pythia8",
-   "VBF_HToTauTau":"VBFHToTauTau_M125_13TeV_powheg_pythia8",
+   "VBF_HToTauTau":"VBFHToTauTau_M125_13TeV_powheg_pythia8"
 
 }
 
