@@ -84,7 +84,8 @@ def submit_jobid(sample, dryrun=False, verboseInfo={}):
             cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % rescue_dag
             os.system(cmd)
     else:
-        print "    %s successful, nothing to do"%sample
+        #print "    %s successful, nothing to do"%sample
+        pass
 
 
 def parse_dag_state(filename):
