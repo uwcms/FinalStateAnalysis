@@ -108,6 +108,7 @@ options = TauVarParsing.TauVarParsing(
     runWZ=0,
     runMetUncertainties=0,
     metShift='',
+    runFSRFilter=0, # 1 = filter for ZG, -1 inverts filter for DY
 )
 
 options.register(
@@ -141,7 +142,7 @@ options.parseArguments()
 ### Customize the job ###
 #########################
 
-# list if filters to apply
+# list of filters to apply
 filters = []
 
 # SV Fit requires MVA MET
@@ -365,7 +366,13 @@ if options.runMetFilter:
     )
     filters += [process.MiniAODMETFilterProducer, process.ApplyGoodVerticesFilter, process.ApplyEEBadSCFilter]
 
-
+if options.runFSRFilter:
+    process.FSRFilter = cms.EDFilter("MiniAODGenLeptonFSRFilter",
+        src = cms.InputTag("prunedGenParticles"),
+    )
+    if options.runFSRFilter<0:
+        process.FSRFilter.reverseDecision=cms.bool(True)
+    filters += [process.FSRFilter]
 
 
 #######################################
