@@ -1,5 +1,6 @@
 # Embed IDs for electrons
 import FWCore.ParameterSet.Config as cms
+from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection, switchOnVIDElectronIdProducer, DataFormat, setupVIDSelection
 
 def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     postfix = kwargs.pop('postfix','')
@@ -9,7 +10,6 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     electronMVATrigIDLabel = kwargs.pop('electronMVATrigIDLabel',"BDTIDTrig")
 
 
-    from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection, switchOnVIDElectronIdProducer, DataFormat, setupVIDSelection
     if not hasattr(process,'egmGsfElectronIDs'):
         switchOnVIDElectronIdProducer(process, DataFormat.MiniAOD)
     egmMod = 'egmGsfElectronIDs{0}'.format(postfix)
@@ -32,7 +32,16 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
         'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',    # 25 ns trig
         'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',    # 50 ns trig
         ]
-    # this part breaks the "postfix" option
+    # something here breaks the postfix stuff... no idea
+    # ----- Begin Fatal Exception 12-Nov-2015 08:36:25 CST-----------------------
+    # An exception of category 'Configuration' occurred while
+    #    [0] Constructing the EventProcessor
+    #    [1] Constructing module: class=VersionedGsfElectronIdProducer label='egmGsfElectronIDsmesUp'
+    # Exception Message:
+    # Duplicate Process The process name Ntuples was previously used on these products.
+    # Please modify the configuration file to use a distinct process name.
+    # ----- End Fatal Exception -------------------------------------------------
+
     # redefine the setupVIDElectronSelection function
     def modSetupVIDElectronSelection(process,cutflow,patProducer=None,addUserData=True):
         eids = 'egmGsfElectronIDs{0}'.format(postfix)

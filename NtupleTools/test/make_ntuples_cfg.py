@@ -51,6 +51,7 @@ keepPat=0      - Instead of making flat ntuples, write high level
 
 import FWCore.ParameterSet.Config as cms
 import os
+import copy
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
     make_ntuple, add_ntuple, _producer_translation
@@ -472,7 +473,6 @@ for shift in allowedShifts:
         )
         setattr(process,modName,module)
         fs_daughter_inputs['pfmet'] = modName
-        #process.embedShifts *= getattr(process,metName)
         process.embedShifts *= getattr(process,modName)
 process.schedule.append(process.embedShifts)
 
@@ -484,12 +484,14 @@ if options.metShift:
     if options.metShift=='all':
         # setup daughters for all
         for shift in allowedShifts:
+            if shift!='mes': continue
             for sign in allowedSigns:
+                if sign!='+': continue
                 label = shift + signMap[sign]
-                additional_fs[label] = fs_daugher_inputs.deepcopy()
-                additional_fs[label]['pfmet'] = metMap[shift].format(sign=sign,postfix=postfix)
+                additional_fs[label] = copy.deepcopy(fs_daughter_inputs)
+                additional_fs[label]['pfmet'] = metMap[shift].format(sign=signMap[sign],postfix=postfix)
                 for coll in collMap[shift]:
-                    additional_fs[label][coll.lower()] = collMap[shift][coll].format(sign=sign,postfix=postfix)
+                    additional_fs[label][coll.lower()] = collMap[shift][coll].format(sign=signMap[sign],postfix=postfix)
     elif t not in allowedShifts or d not in allowedSigns:
         print 'Warning: {0} is not an allowed MET shift, using unshifted collections'.format(options.metShift)
     else:
@@ -498,10 +500,10 @@ if options.metShift:
             fs_daughter_inputs[coll.lower()] = collMap[t][coll].format(sign=signMap[d],postfix=postfix)
 
 
-    #process.EventAnalyzer = cms.EDAnalyzer("EventContentAnalyzer")
-    #process.eventAnalyzerPath = cms.Path(process.EventAnalyzer)
-    #process.schedule.append(process.eventAnalyzerPath)
 
+#process.EventAnalyzer = cms.EDAnalyzer("EventContentAnalyzer")
+#process.eventAnalyzerPath = cms.Path(process.EventAnalyzer)
+#process.schedule.append(process.eventAnalyzerPath)
 
 
 
@@ -599,16 +601,18 @@ process.FSAPreselection = cms.Path(process.preselectionSequence)
 process.schedule.append(process.FSAPreselection)
 
 for fs in additional_fs:
-    process.preselectionSequence = setup_selections(
+    preSeqName = 'preselectionSequence{0}'.format(fs)
+    preSeq = setup_selections(
         process,
-        "Preselection{0}".format(fs),
+        "Preselection",
         additional_fs[fs],
         preselections,
         postfix=fs,
         )
+    setattr(process,preSeqName,preSeq)
     for ob in preselections:
         additional_fs[fs][getName(ob)+'s'] = getName(ob)+"Preselection{0}".format(fs)
-    setattr(process,'FSAPreselection{0}'.format(fs),cms.Path(getattr(process,'preselectionSequence{0}'.format(fs))))
+    setattr(process,'FSAPreselection{0}'.format(fs),cms.Path(getattr(process,preSeqName)))
     process.schedule.append(getattr(process,'FSAPreselection{0}'.format(fs)))
 
 
@@ -627,6 +631,7 @@ fs_daughter_inputs['electrons'] = postElectrons(process,options.use25ns,fs_daugh
 for fs in additional_fs:
     additional_fs[fs]['electrons'] = postElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['jets'],postfix=fs)
 
+
 ###############################
 ### post muon customization ###
 ###############################
@@ -641,7 +646,7 @@ for fs in additional_fs:
 from FinalStateAnalysis.NtupleTools.customization_taus import postTaus
 fs_daughter_inputs['taus'] = postTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['jets'])
 for fs in additional_fs:
-    additional_fs[fs]['taus'] = postElectrons(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['jets'],postfix=fs)
+    additional_fs[fs]['taus'] = postTaus(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['jets'],postfix=fs)
 
 
 
@@ -956,6 +961,7 @@ if options.keepPat:
 else:
     print "Building ntuple for final states: %s" % ", ".join(final_states)
     for final_state in expanded_final_states(final_states):
+        if additional_fs: print 'Adding ntuple {0}'.format(final_state)
         extraJets = options.nExtraJets if 'j' not in final_state else 0
         final_state = order_final_state(final_state)
         analyzer = make_ntuple(*final_state, 
@@ -970,6 +976,7 @@ else:
         add_ntuple(final_state, analyzer, process,
                    process.schedule, options.eventView, filters)
         for fs in additional_fs:
+            print "Adding additional ntuple with postfix {0}".format(fs)
             analyzer = make_ntuple(*final_state,
                                     svFit=options.svFit, dblhMode=options.dblhMode,
                                     runTauSpinner=options.runTauSpinner,
@@ -1011,3 +1018,4 @@ if options.passThru:
 
 if options.dump:
     print process.dumpPython()
+

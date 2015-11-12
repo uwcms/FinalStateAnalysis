@@ -52,7 +52,7 @@ def getName(obj, capitalize=False):
     return fullNames[obj]
 
 
-def setup_selections(process, moduleName, inputs, params):
+def setup_selections(process, moduleName, inputs, params, postfix=''):
     ''' 
     NB: be careful if your selections depend on each other (e.g.
     if you might fail to select an electron that could veto a jet).
@@ -99,10 +99,10 @@ def setup_selections(process, moduleName, inputs, params):
                 )
 
         # add this module to the process with the right name
-        setattr(process, getName(obj)+moduleName, module)
+        setattr(process, getName(obj)+moduleName+postfix, module)
         seq += module
 
         # use the correct name for this object if it's needed by other selector modules
-        inputs[getName(obj)+"s"] = getName(obj)+moduleName
+        inputs[getName(obj)+"s"] = getName(obj)+moduleName+postfix
 
     return seq
