@@ -231,7 +231,7 @@ fs_daughter_inputs = {
 }
 
 # add additional final states to ntuples with different parameters... work in progress... difficult with VID
-#additional_fs = {}
+additional_fs = {}
 
 
 
@@ -483,14 +483,13 @@ if options.metShift:
     d = options.metShift[-1]
     if options.metShift=='all':
         # setup daughters for all
-        #for shift in allowedShifts:
-        #    for sign in allowedSigns:
-        #        label = shift + signMap[sign]
-        #        additional_fs[label] = fs_daugher_inputs.deepcopy()
-        #        additional_fs[label]['pfmet'] = metMap[shift].format(sign=sign,postfix=postfix)
-        #        for coll in collMap[shift]:
-        #            additional_fs[label][coll.lower()] = collMap[shift][coll].format(sign=sign,postfix=postfix)
-        pass
+        for shift in allowedShifts:
+            for sign in allowedSigns:
+                label = shift + signMap[sign]
+                additional_fs[label] = fs_daugher_inputs.deepcopy()
+                additional_fs[label]['pfmet'] = metMap[shift].format(sign=sign,postfix=postfix)
+                for coll in collMap[shift]:
+                    additional_fs[label][coll.lower()] = collMap[shift][coll].format(sign=sign,postfix=postfix)
     elif t not in allowedShifts or d not in allowedSigns:
         print 'Warning: {0} is not an allowed MET shift, using unshifted collections'.format(options.metShift)
     else:
@@ -527,10 +526,10 @@ from FinalStateAnalysis.NtupleTools.customization_electrons import preElectrons
 fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['vertices'],
     idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
     electronMVATrigIDLabel=electronMVATrigIDLabel)
-#for fs in additional_fs:
-#    additional_fs[fs]['electrons'] = preElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['vertices'],
-#        idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
-#        electronMVATrigIDLabel=electronMVATrigIDLabel,postfix=fs)
+for fs in additional_fs:
+    additional_fs[fs]['electrons'] = preElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['vertices'],
+        idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
+        electronMVATrigIDLabel=electronMVATrigIDLabel,postfix=fs)
 
 ######################
 ### embed muon IDs ###
@@ -538,25 +537,25 @@ fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,fs_daught
 from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
 fs_daughter_inputs['muons'] = preMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['vertices'],
     idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost)
-#for fs in additional_fs:
-#    additional_fs[fs]['muons'] = preMuons(process,options.use25ns,additional_fs[fs]['muons'],additional_fs[fs]['vertices'],
-#        idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost,postfix=fs)
+for fs in additional_fs:
+    additional_fs[fs]['muons'] = preMuons(process,options.use25ns,additional_fs[fs]['muons'],additional_fs[fs]['vertices'],
+        idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost,postfix=fs)
 
 #####################
 ### embed tau IDs ###
 #####################
 from FinalStateAnalysis.NtupleTools.customization_taus import preTaus
 fs_daughter_inputs['taus'] = preTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['vertices'])
-#for fs in additional_fs:
-#    additional_fs[fs]['taus'] = preTaus(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['vertices'],postfix=fs)
+for fs in additional_fs:
+    additional_fs[fs]['taus'] = preTaus(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['vertices'],postfix=fs)
 
 ########################
 ### jet id embedding ###
 ########################
 from FinalStateAnalysis.NtupleTools.customization_jets import preJets
 fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs['jets'],fs_daughter_inputs['vertices'])
-#for fs in additional_fs:
-#    additional_fs[fs]['jets'] = preJets(process,options.use25ns,additional_fs[fs]['jets'],additional_fs[fs]['vertices'],postfix=fs)
+for fs in additional_fs:
+    additional_fs[fs]['jets'] = preJets(process,options.use25ns,additional_fs[fs]['jets'],additional_fs[fs]['vertices'],postfix=fs)
 
 ########################################
 ### pre selection HZZ customizations ###
@@ -599,18 +598,18 @@ for ob in preselections:
 process.FSAPreselection = cms.Path(process.preselectionSequence)
 process.schedule.append(process.FSAPreselection)
 
-#for fs in additional_fs:
-#    process.preselectionSequence = setup_selections(
-#        process,
-#        "Preselection{0}".format(fs),
-#        additional_fs[fs],
-#        preselections,
-#        postfix=fs,
-#        )
-#    for ob in preselections:
-#        additional_fs[fs][getName(ob)+'s'] = getName(ob)+"Preselection{0}".format(fs)
-#    setattr(process,'FSAPreselection{0}'.format(fs),cms.Path(getattr(process,'preselectionSequence{0}'.format(fs))))
-#    process.schedule.append(getattr(process,'FSAPreselection{0}'.format(fs)))
+for fs in additional_fs:
+    process.preselectionSequence = setup_selections(
+        process,
+        "Preselection{0}".format(fs),
+        additional_fs[fs],
+        preselections,
+        postfix=fs,
+        )
+    for ob in preselections:
+        additional_fs[fs][getName(ob)+'s'] = getName(ob)+"Preselection{0}".format(fs)
+    setattr(process,'FSAPreselection{0}'.format(fs),cms.Path(getattr(process,'preselectionSequence{0}'.format(fs))))
+    process.schedule.append(getattr(process,'FSAPreselection{0}'.format(fs)))
 
 
 
@@ -625,24 +624,24 @@ process.schedule.append(process.FSAPreselection)
 ###################################
 from FinalStateAnalysis.NtupleTools.customization_electrons import postElectrons
 fs_daughter_inputs['electrons'] = postElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['jets'])
-#for fs in additional_fs:
-#    additional_fs[fs]['electrons'] = postElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['jets'],postfix=fs)
+for fs in additional_fs:
+    additional_fs[fs]['electrons'] = postElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['jets'],postfix=fs)
 
 ###############################
 ### post muon customization ###
 ###############################
 from FinalStateAnalysis.NtupleTools.customization_muons import postMuons
 fs_daughter_inputs['muons'] = postMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['jets'])
-#for fs in additional_fs:
-#    additional_fs[fs]['muons'] = postMuons(process,options.use25ns,additional_fs[fs]['muons'],additional_fs[fs]['jets'],postfix=fs)
+for fs in additional_fs:
+    additional_fs[fs]['muons'] = postMuons(process,options.use25ns,additional_fs[fs]['muons'],additional_fs[fs]['jets'],postfix=fs)
 
 ##############################
 ### post tau customization ###
 ##############################
 from FinalStateAnalysis.NtupleTools.customization_taus import postTaus
 fs_daughter_inputs['taus'] = postTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['jets'])
-#for fs in additional_fs:
-#    additional_fs[fs]['taus'] = postElectrons(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['jets'],postfix=fs)
+for fs in additional_fs:
+    additional_fs[fs]['taus'] = postElectrons(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['jets'],postfix=fs)
 
 
 
@@ -770,6 +769,21 @@ process.buildFSAPath = cms.Path(process.buildFSASeq)
 # Don't crash if some products are missing (like tracks)
 process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
 process.schedule.append(process.buildFSAPath)
+
+for fs in additional_fs:
+    setattr(process,'buildFSASeq{0}'.format(fs),cms.Sequence())
+    produce_final_states(process, additional_fs[fs], output_to_keep, getattr(process,'buildFSASeq{0}'.format(fs)),
+                         'puTagDoesntMatter', buildFSAEvent=True,
+                         noTracks=True, runMVAMET=options.runMVAMET,
+                         hzz=options.hzz, rochCor=options.rochCor,
+                         eleCor=options.eleCor, use25ns=options.use25ns,
+                         postfix=fs,
+                         **parameters)
+    setattr(process,'buildFSAPath{0}'.format(fs), cms.Path(getattr(process,'buildFSASeq{0}'.format(fs))))
+    getattr(process,'patFinalStateEventProducer{0}'.format(fs)).forbidMissing = cms.bool(False)
+    process.schedule.append(getattr(process,'buildFSAPath{0}'.format(fs)))
+
+
 # Drop the old stuff. (do we still need this?)
 process.source.inputCommands = cms.untracked.vstring(
     'keep *',
@@ -955,6 +969,21 @@ else:
                                 **parameters)
         add_ntuple(final_state, analyzer, process,
                    process.schedule, options.eventView, filters)
+        for fs in additional_fs:
+            analyzer = make_ntuple(*final_state,
+                                    svFit=options.svFit, dblhMode=options.dblhMode,
+                                    runTauSpinner=options.runTauSpinner,
+                                    runMVAMET=options.runMVAMET,
+                                    skimCuts=options.skimCuts, suffix=suffix,
+                                    hzz=options.hzz, nExtraJets=extraJets,
+                                    use25ns=options.use25ns,
+                                    isMC=options.isMC,isShiftedMet=bool(options.metShift),
+                                    postfix=fs,
+                                    **parameters)
+            add_ntuple(final_state+fs, analyzer, process,
+                       process.schedule, options.eventView, filters)
+
+            
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 

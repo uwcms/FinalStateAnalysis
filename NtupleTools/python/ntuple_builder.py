@@ -185,6 +185,7 @@ def make_ntuple(*legs, **kwargs):
     by setting 'noclean' to True in kwargs.
 
     '''
+    postfix = kwargs.pop('postfix','')
     isShiftedMet = kwargs.pop('isShiftedMet',False)
     # Make sure we only use allowed leg types
     allowed = set(['m', 'e', 't', 'g','j'])
@@ -376,7 +377,7 @@ def make_ntuple(*legs, **kwargs):
             )
 
     analyzerSrc = "finalState" + "".join(
-            _producer_translation[x] for x in legs ) + producer_suffix
+            _producer_translation[x] for x in legs ) + producer_suffix + postfix
 
     # Some feature are not included in miniAOD or are currently broken. 
     # Remove them from the ntuples to prevent crashes.
@@ -401,7 +402,7 @@ def make_ntuple(*legs, **kwargs):
         weights=cms.vstring(),
         # input final state collection.
         src=cms.InputTag( analyzerSrc ),
-        evtSrc=cms.InputTag("patFinalStateEventProducer"),
+        evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
         # counter of events before any selections
         skimCounter=cms.InputTag("eventCount"),
         summedWeight=cms.InputTag("summedWeight"),
