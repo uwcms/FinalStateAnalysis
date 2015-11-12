@@ -5,6 +5,7 @@
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 #include "FinalStateAnalysis/DataAlgos/interface/CollectionFilter.h"
 #include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
+#include "FinalStateAnalysis/DataAlgos/interface/ApplySVfitLFV.h"
 
 #include "DataFormats/PatCandidates/interface/PATObject.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
@@ -341,6 +342,33 @@ PATFinalState::SVfit(int i, int j) const {
       mvaMet->getSignificanceMatrix(), 0,
       evt()->evtId());
 }
+
+double
+PATFinalState::SVfitLFV(int i, int j) const {
+
+  std::vector<reco::CandidatePtr> toFit;
+  toFit.push_back(daughterPtr(i));
+  toFit.push_back(daughterPtr(j));
+
+  edm::Ptr<pat::MET> mvaMet = evt()->met("mvamet");
+
+  if (mvaMet.isNull()) {
+    throw cms::Exception("MissingMVAMet")
+      << "SV fit requires the MVAMET be available via "
+      << " met('mvamet') method in PATFinalStateEvent.  It's null."
+      << std::endl;
+  }
+
+
+  return ApplySVfitLFV::getSVfitMassLFV(toFit, *mvaMet,
+      mvaMet->getSignificanceMatrix(), 0,
+      evt()->evtId(),true);
+
+  return 0;  
+
+}
+
+
 
 double
 PATFinalState::dR(int i, const std::string& sysTagI,
