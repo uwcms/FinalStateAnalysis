@@ -26,7 +26,7 @@ def hzzCustomize(process, fs_daughter_inputs,
     # Embed HZZ ID decisions because we need to know them for FSR recovery
     process.electronIDCheatEmbedding = cms.EDProducer(
         "MiniAODElectronHZZIDDecider",
-        src = cms.InputTag(fs_daugter_inputs['electrons']),
+        src = cms.InputTag(fs_daughter_inputs['electrons']),
         idLabel = cms.string(idCheatLabel), # boolean stored as userFloat with this name
         vtxSrc = cms.InputTag(fs_daughter_inputs['vertices']),
         bdtLabel = cms.string(mvaLabel),
