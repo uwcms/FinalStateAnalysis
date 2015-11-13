@@ -56,8 +56,8 @@ namespace :meta do
       # Get the PU distribution
       file sample + '.pu.root' => sample + '.lumimask.json' do |t|
         pu_file = ''
-        maxbin = 50
-        nbins = 500
+        maxbin = 52
+        nbins = 52
         # Minbias xsection
         minbias = 68000
         if sqrts == "13" then
@@ -79,7 +79,6 @@ namespace :meta do
         # Find the newest PU json file
         print "cannot run pileupCalc.py yet \n"  
         sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t.name} "
-        #sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t.name}"
       end
       # Put the lumicalc result in a readable format.  Make it dependent
       # on the PU .root file as well, so it gets built.
