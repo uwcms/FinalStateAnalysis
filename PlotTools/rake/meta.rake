@@ -62,8 +62,8 @@ namespace :meta do
         minbias = 68000
         if sqrts == "13" then
           pu_file = ENV['pu2015JSON']
-          maxbin = 100
-          nbins = 100
+          maxbin = 52
+          nbins = 52
           # Minbias xsection
           minbias = 69900 # suggested for 13TeV
         end
