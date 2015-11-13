@@ -224,55 +224,6 @@ fs_daughter_inputs = {
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
 
-# add met filters
-if options.runMetFilter:
-    # HBHE Loose
-    # flag in miniaod wrong, must rerun
-    process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
-    process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
-    process.HBHENoiseFilterResultProducer.IgnoreTS4TS5ifJetInLowBVRegion=cms.bool(False) 
-    process.HBHENoiseFilterResultProducer.defaultDecision = cms.string("HBHENoiseFilterResultRun2Loose")
-    
-    process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
-       inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
-       reverseDecision = cms.bool(False)
-    )
-    
-    process.ApplyBaselineHBHEIsoNoiseFilter = cms.EDFilter('BooleanFlagFilter',
-       inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHEIsoNoiseFilterResult'),
-       reverseDecision = cms.bool(False)
-    )
-    filters += [process.HBHENoiseFilterResultProducer, process.ApplyBaselineHBHENoiseFilter]
-
-    # CSC Tight Halo
-    # TODO: needs RECO to run, so they will release an event txt file to filter
-
-    # good vertices and ee bad sc filter
-    # flag in miniaod, so just filter on that
-    listOfFlags = ['Flag_goodVertices', 'Flag_eeBadScFilter']
-    listOfLabels = ['GoodVerticesFilterResult', 'EEBadSCFilterResult']
-    process.MiniAODMETFilterProducer = cms.EDProducer('MiniAODTriggerProducer',
-        triggers = cms.vstring(*listOfFlags),
-        labels = cms.vstring(*listOfLabels),
-        bits = cms.InputTag("TriggerResults"),
-        #prescales = cms.InputTag("patTrigger"),
-        #objects = cms.InputTag("selectedPatTrigger"),
-    )
-    process.ApplyGoodVerticesFilter = cms.EDFilter('BooleanFlagFilter',
-       inputLabel = cms.InputTag('MiniAODMETFilterProducer','GoodVerticesFilterResult'),
-       reverseDecision = cms.bool(True)
-    )
-    process.ApplyEEBadSCFilter = cms.EDFilter('BooleanFlagFilter',
-       inputLabel = cms.InputTag('MiniAODMETFilterProducer','EEBadSCFilterResult'),
-       reverseDecision = cms.bool(True)
-    )
-    filters += [process.MiniAODMETFilterProducer, process.ApplyGoodVerticesFilter, process.ApplyEEBadSCFilter]
-
-    
-# caluclate slimmedMETsNoHF
-if options.runMETNoHF:
-    fs_daughter_inputs['pfmet'] = 'slimmedMETsNoHF'
-
 ### embed some things we need that arent in miniAOD (ids, etc.)
 
 
@@ -498,46 +449,6 @@ fs_daughter_inputs['taus'] = postTaus(process,options.use25ns,fs_daughter_inputs
 
 
 
-<<<<<<< HEAD
-
-
-
-=======
-# embed info about nearest jet
-process.miniAODElectronJetInfoEmbedding = cms.EDProducer(
-    "MiniAODElectronJetInfoEmbedder",
-    src = cms.InputTag(fs_daughter_inputs['electrons']),
-    embedBtags = cms.bool(False),
-    suffix = cms.string(''),
-    jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
-    maxDeltaR = cms.double(0.1),
-)
-fs_daughter_inputs['electrons'] = 'miniAODElectronJetInfoEmbedding'
-process.miniAODMuonJetInfoEmbedding = cms.EDProducer(
-    "MiniAODMuonJetInfoEmbedder",
-    src = cms.InputTag(fs_daughter_inputs['muons']),
-    embedBtags = cms.bool(False),
-    suffix = cms.string(''),
-    jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
-    maxDeltaR = cms.double(0.1),
-)
-fs_daughter_inputs['muons'] = 'miniAODMuonJetInfoEmbedding'
-process.miniAODTauJetInfoEmbedding = cms.EDProducer(
-    "MiniAODTauJetInfoEmbedder",
-    src = cms.InputTag(fs_daughter_inputs['taus']),
-    embedBtags = cms.bool(False),
-    suffix = cms.string(''),
-    jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
-    maxDeltaR = cms.double(0.1),
-)
-fs_daughter_inputs['taus'] = 'miniAODTauJetInfoEmbedding'
-process.jetInfoEmbedding = cms.Path(
-    process.miniAODElectronJetInfoEmbedding +
-    process.miniAODMuonJetInfoEmbedding +
-    process.miniAODTauJetInfoEmbedding
-)
-process.schedule.append(process.jetInfoEmbedding)
->>>>>>> Factor apart HZZ ID and isolation decisions, take FSR into account for isolation.
 
 
 ############################
