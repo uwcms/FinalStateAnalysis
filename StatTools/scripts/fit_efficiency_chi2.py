@@ -123,7 +123,6 @@ if __name__ == "__main__":
         pass_histo = pass_histo_px
         all_histo  = all_histo_px 
 
-
     if not all_histo.Integral():
         log.info("no entries in denominator!")
     else:

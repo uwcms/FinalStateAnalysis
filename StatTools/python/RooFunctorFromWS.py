@@ -144,6 +144,32 @@ def build_roofunctor(filename, wsname, functionname, var='x'):
     ws = file.Get(wsname)
     return RooFunctorFromWS(ws, functionname, var)
 
+
+def make_corrector_from_histo(filename, path, dimensions='2D'):
+    is2d = (dimensions.lower() == '2d')
+    tfile = ROOT.TFile.Open(filename)
+    if not tfile:
+        raise IOError("Can't open file: %s" % filename)
+    hist  = tfile.Get(path).Clone()
+    #print hist
+    binsx = hist.GetNbinsX()
+    binsy = hist.GetNbinsY() if is2d else None
+    def refFun(xval,yval=None):
+        #print hist
+        #FindFixBin is faster than FindBin
+        #Compute underflow and overflow as first and last bin
+        xbin = max( min(hist.GetXaxis().FindFixBin(xval), binsx), 1)
+        ybin = None
+        if is2d:
+            xbin = max( min(hist.GetYaxis().FindFixBin(yval), binsy), 1)
+
+        prob = hist.GetBinContent(xbin,ybin) if is2d else hist.GetBinContent(xbin)
+        if prob:
+            return prob
+        else:
+            return 10**-8
+           # raise ZeroDivisionError(" catched trying to return weight for (%.3f,%.3f) ==> (%i,%i) bin out of (%i,%i). Prob: %.3f. Hist: %s : %s. " % (xval, yval, xbin, ybin, binsx, binsy , prob, filename, path))
+    return refFun
 def make_corrector_from_th2(filename, path):
     tfile = ROOT.TFile.Open(filename)
     if not tfile:

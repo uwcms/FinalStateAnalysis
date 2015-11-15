@@ -5,6 +5,7 @@
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 #include "FinalStateAnalysis/DataAlgos/interface/CollectionFilter.h"
 #include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
+#include "FinalStateAnalysis/DataAlgos/interface/ApplySVfitLFV.h"
 
 #include "DataFormats/PatCandidates/interface/PATObject.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
@@ -355,22 +356,42 @@ PATFinalState::SVfitLFV(int i, int j) const {
   toFit.push_back(daughterPtr(i));
   toFit.push_back(daughterPtr(j));
 
-  edm::Ptr<pat::MET> pfMet = evt()->met("pfmet");
+//  edm::Ptr<pat::MET> pfMet = evt()->met("pfmet");
+//
+//  if (pfMet.isNull()) {
+//    throw cms::Exception("Missingpfmet")
+//      << "SVLFV fit requires the pfmet  be available via "
+//      << " met('pfmet') method in PATFinalStateEvent.  It's null."
+//      << std::endl;
+//  }
+////  return ApplySVfit::getSVfitMass(toFit, *pfMet,
+////         pfMet->getSignificanceMatrix(), 0,
+////         evt()->evtId());
+//  std::cout<<"something is here *****************************"<<std::endl; 
+////  return SVfitStandaloneAlgorithmLFV(toFit, *pfMet,pfMet->getSignificanceMatrix(),0);
+//  return 1;
+//     
+//}
+  edm::Ptr<pat::MET> mvaMet = evt()->met("mvamet");
 
-  if (pfMet.isNull()) {
-    throw cms::Exception("Missingpfmet")
-      << "SVLFV fit requires the pfmet  be available via "
-      << " met('pfmet') method in PATFinalStateEvent.  It's null."
+  if (mvaMet.isNull()) {
+    throw cms::Exception("MissingMVAMet")
+      << "SV fit requires the MVAMET be available via "
+      << " met('mvamet') method in PATFinalStateEvent.  It's null."
       << std::endl;
   }
-//  return ApplySVfit::getSVfitMass(toFit, *pfMet,
-//         pfMet->getSignificanceMatrix(), 0,
-//         evt()->evtId());
-  std::cout<<"something is here *****************************"<<std::endl; 
-//  return SVfitStandaloneAlgorithmLFV(toFit, *pfMet,pfMet->getSignificanceMatrix(),0);
-  return 1;
-     
+
+
+  return ApplySVfitLFV::getSVfitMassLFV(toFit, *mvaMet,
+      mvaMet->getSignificanceMatrix(), 0,
+      evt()->evtId(),true);
+
+  return 0;  
+
 }
+
+
+
 double
 PATFinalState::dR(int i, const std::string& sysTagI,
     int j, const std::string& sysTagJ) const {
