@@ -38,6 +38,8 @@ btagging = PSet(
 
 pujets = PSet(
         objectIDTight='{object}.userFloat("idTight")',
+        objectIDTightLepVeto='{object}.userFloat("idTightLepVeto")',
+        objectIDLoose='{object}.userFloat("idLoose")',
 	objectPUIDFullDiscriminant='{object}.userFloat("pileupJetId:fullDiscriminant")',
 )
 
