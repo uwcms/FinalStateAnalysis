@@ -26,12 +26,13 @@ parameters = {
     'preselection' : {
         # remove jets that are close to leptons
         'j' : {
+            'selection' : 'pt>20 && abs(eta)<4.7 && userFloat("idLoose") > 0.5',
             'e': {
-                'selection' : 'pt>10 && userInt("CBIDLoose")>0.5',
+                'selection' : 'pt>10 && userInt("CBIDMedium")>0.5 && abs(eta)<2.5',
                 'deltaR' : 0.3,
                 },
             'm': {
-                'selection' : 'pt>10 && isLooseMuon && (chargedHadronIso()+max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso,0.0))/pt()<0.2',
+                'selection' : 'pt>10 && userInt("tightID") > 0.5 && abs(eta)<2.4 && (chargedHadronIso()+max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso,0.0))/pt()<0.12',
                 'deltaR' : 0.3,
                 },
             },
