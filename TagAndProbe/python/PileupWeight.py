@@ -33,6 +33,8 @@ class PileupWeight(object):
         should 600 bins (0-60)
 
         '''
+        ROOT.TH1.AddDirectory(False);
+        self.mc = None
         self.data = None
         for filename in datafiles:
             file = ROOT.TFile.Open(filename)
@@ -72,6 +74,7 @@ class PileupWeight(object):
 
         # Normalize MC
         self.mc.Scale(1./self.mc.Integral())
+        ROOT.TH1.AddDirectory(True);
 
     def __call__(self, ntruepu):
         '''
@@ -90,3 +93,4 @@ _MC_PU_DISTRIBUTIONS['S7'] = 'fixme'
 _MC_PU_DISTRIBUTIONS['S6'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_Fall11_PU_S6-500bins.root").full_path()
 # Version of the S6 with 600 bins, for compatibility
 _MC_PU_DISTRIBUTIONS['S6_600bins'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_Fall11_PU_S6-600bins.root").full_path()
+_MC_PU_DISTRIBUTIONS['Asympt25ns'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_PU_RunIISpring15DR74_Asympt.root").full_path()
