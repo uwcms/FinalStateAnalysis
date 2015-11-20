@@ -32,7 +32,7 @@ data_styles = {
         'name' : "DY + jets",
         'fillstyle': 'solid',
         },
-    'WJets*' : {
+    'WplusJets*' : {
         'legendstyle' : 'f',
         'drawstyle' : 'hist',
         'fillcolor' : '#990000',
