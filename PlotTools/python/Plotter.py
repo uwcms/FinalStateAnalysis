@@ -1,9 +1,6 @@
 '''
-
 Base class which makes nice plots.
-
 Author: Evan K. Friis, UW
-
 '''
 
 import fnmatch
@@ -15,6 +12,7 @@ from FinalStateAnalysis.MetaData.data_views import data_views
 from FinalStateAnalysis.PlotTools.RebinView import RebinView
 from FinalStateAnalysis.Utilities.struct import struct
 import FinalStateAnalysis.Utilities.prettyjson as prettyjson
+from rootpy.plotting.hist import HistStack
 import ROOT
 
 _original_draw = plotting.Legend.Draw
@@ -28,18 +26,17 @@ plotting.Legend.Draw = _monkey_patch_legend_draw
 class Plotter(object):
     def __init__(self, files, lumifiles, outputdir, blinder=None, forceLumi=-1):
         ''' Initialize the Plotter object
-
         Files should be a list of SAMPLE_NAME.root files.
         Lumifiles should contain floats giving the effective luminosity of
         each of the files.
-
         If [blinder] is not None, it will be applied to the data view.
         '''
         self.outputdir = outputdir
+        self.base_out_dir = outputdir
         self.views = data_views(files, lumifiles, forceLumi)
         self.canvas = plotting.Canvas(name='adsf', title='asdf')
         self.canvas.cd()
-        self.pad    = plotting.Pad('up', 'up', 0., 0., 1., 1.) #ful-size pad
+        self.pad    = plotting.Pad(0., 0., 1., 1.) #ful-size pad
         self.pad.Draw()
         self.pad.cd()
         self.lower_pad = None
@@ -76,6 +73,9 @@ class Plotter(object):
                 ret.extend(Plotter.map_dir_structure(directory.Get(keyname), subdirName))
         return ret
 
+    def set_subdir(self, folder):
+        self.outputdir = '/'.join([self.base_out_dir, folder])
+
     @staticmethod
     def rebin_view(x, rebin):
         ''' Make a view which rebins histograms '''
@@ -107,10 +107,8 @@ class Plotter(object):
 
     def get_view(self, sample_pattern, key_name='view'):
         ''' Get a view which matches a pattern like "Zjets*"
-
         Generally key_name does not need to be modified, unless getting
         unblinded data via "unblinded_view"
-
         '''
         for sample, sample_info in self.views.iteritems():
             if fnmatch.fnmatch(sample, sample_pattern):
@@ -120,6 +118,20 @@ class Plotter(object):
                     raise KeyError("you asked for %s in sample %s, but it was not found, I only have: %s" % (key_name, sample, ','.join(sample_info.keys())))
         raise KeyError("I can't find a view that matches %s, I have: %s" % (
             sample_pattern, " ".join(self.views.keys())))
+
+    def mc_views(self, rebin=1, preprocess=None, folder=''):
+        ''' return a list with all the mc samples views'''
+        mc_views = []
+        for x in self.mc_samples:
+            mc_view = self.get_view(x)
+            if preprocess:
+                mc_view = preprocess(mc_view)
+            if folder:
+                mc_view = self.get_wild_dir(mc_view, folder)
+            mc_views.append(
+                self.rebin_view(mc_view, rebin)
+                )
+        return mc_views
 
     def make_stack(self, rebin=1, preprocess=None, folder='', sort=False):
         ''' Make a stack of the MC histograms '''
@@ -139,9 +151,7 @@ class Plotter(object):
 
     def add_legend(self, samples, leftside=True, entries=None):
         ''' Build a legend using samples.
-
         If entries is None it will be taken from len(samples)
-
         '''
         nentries = entries if entries is not None else len(samples)
         legend = None
@@ -172,7 +182,12 @@ class Plotter(object):
             self.views['data']['intlumi']/1000.)
         self.keep.append(latex.DrawLatex(0.18,0.96, label_text));
 
-    def add_ratio_plot(self, data_hist, mc_stack, x_range=None, ratio_range=0.2):
+    def add_ratio_plot(self, data_hist, mc_distribution, x_range=None, ratio_range=0.2, quote_errors=False):
+        mc_hist = mc_distribution
+        if isinstance(mc_hist, HistStack):
+            mc_hist = sum(mc_hist.GetHists())
+            quote_errors = False
+
         #resize the canvas and the pad to fit the second pad
         self.canvas.SetCanvasSize( self.canvas.GetWw(), int(self.canvas.GetWh()*1.3) )
         self.canvas.cd()
@@ -180,33 +195,60 @@ class Plotter(object):
         self.pad.Draw()
         self.canvas.cd()
         #create lower pad
-        self.lower_pad = plotting.Pad('low', 'low', 0, 0., 1., 0.33)
+        self.lower_pad = plotting.Pad( 0, 0., 1., 0.33)
         self.lower_pad.Draw()
         self.lower_pad.cd()
-        
-        mc_hist    = None
-        if isinstance(mc_stack, plotting.HistStack):
-            mc_hist = sum(mc_stack.GetHists())
-        else:
-            mc_hist = mc_stack
+
+        nbins = data_hist.GetNbinsX()
+        #make ratio, but use only data errors
         data_clone = data_hist.Clone()
-        data_clone.Divide(mc_hist)
+        for ibin in range(1, nbins+1):
+            d_cont = data_clone.GetBinContent(ibin)
+            d_err  = data_clone.GetBinError(ibin)  
+
+            m_cont = mc_hist.GetBinContent(ibin)
+
+            d_cont = (d_cont-m_cont)/ m_cont if m_cont else -10.
+            d_err  = d_err / m_cont if m_cont else 0.
+            
+            data_clone.SetBinContent( ibin, d_cont )
+            data_clone.SetBinError(   ibin, d_err  )  
+
+        data_clone.Draw('ep')
+        self.keep.append(data_clone)
+        if ratio_range:
+            data_clone.GetYaxis().SetRangeUser(-ratio_range, ratio_range)
+
+        #reference line
         if not x_range:
             nbins = data_clone.GetNbinsX()
             x_range = (data_clone.GetBinLowEdge(1), 
                        data_clone.GetBinLowEdge(nbins)+data_clone.GetBinWidth(nbins))
         else:
             data_clone.GetXaxis().SetRangeUser(*x_range)
-        ref_function = ROOT.TF1('f', "1.", *x_range)
+        ref_function = ROOT.TF1('f', "0.", *x_range)
         ref_function.SetLineWidth(3)
         ref_function.SetLineStyle(2)
-        
-        data_clone.Draw('ep')
-        if ratio_range:
-            data_clone.GetYaxis().SetRangeUser(1-ratio_range, 1+ratio_range)
         ref_function.Draw('same')
-        self.keep.append(data_clone)
         self.keep.append(ref_function)
+        
+        if quote_errors:
+            err_histo  = mc_hist.Clone() 
+            err_histo.SetMarkerStyle(0)
+            err_histo.SetLineColor(1)
+            err_histo.SetFillColor(1)
+
+            for ibin in range(1, nbins+1):
+                cont = err_histo.GetBinContent(ibin)
+                err  = err_histo.GetBinError(ibin)
+                err  = err/cont if cont else 0.
+
+                err_histo.SetBinContent(ibin, 0)
+                err_histo.SetBinError(  ibin, err)
+
+            err_histo.Draw('pe2 same') #was pe
+            self.keep.append(err_histo)
+
         self.pad.cd()
         return data_clone
 
@@ -269,7 +311,7 @@ class Plotter(object):
         self.keep = []
         self.canvas = plotting.Canvas(name='adsf', title='asdf')
         self.canvas.cd()
-        self.pad    = plotting.Pad('up', 'up', 0., 0., 1., 1.) #ful-size pad
+        self.pad    = plotting.Pad(0., 0., 1., 1.) #ful-size pad
         self.pad.Draw()
         self.pad.cd()
         self.lower_pad = None
@@ -323,9 +365,7 @@ class Plotter(object):
         
     def plot(self, sample, path, drawopt='', rebin=None, styler=None, xaxis='', xrange=None):
         ''' Plot a single histogram from a single sample.
-
         Returns a reference to the histogram.
-
         '''
         view = self.views[sample]['view']
         if rebin:
