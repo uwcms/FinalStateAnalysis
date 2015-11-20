@@ -56,10 +56,17 @@ namespace :meta do
       # Get the PU distribution
       file sample + '.pu.root' => sample + '.lumimask.json' do |t|
         pu_file = ''
-        maxbin = 50
-        nbins = 500
+        maxbin = 52
+        nbins = 52
         # Minbias xsection
         minbias = 68000
+        if sqrts == "13" then
+          pu_file = ENV['pu2015JSON']
+          maxbin = 52
+          nbins = 52
+          # Minbias xsection
+          minbias = 69000 # suggested for 13TeV
+        end
         if sqrts == "8" then
           pu_file = ENV['pu2012JSON']
           maxbin = 60
@@ -70,8 +77,10 @@ namespace :meta do
           pu_file = ENV["pu2011JSON"]
         end
         # Find the newest PU json file
-        print "cannot run pileupCalc.py yet \n"  
-        #sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t.name}"
+        #print "cannot run pileupCalc.py yet \n"  
+        sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t .name} "
+	sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias*1.05} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{sample+'.pu_up.root'} "
+	sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias*0.95} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{sample+'.pu_down.root'} "
       end
       # Put the lumicalc result in a readable format.  Make it dependent
       # on the PU .root file as well, so it gets built.
