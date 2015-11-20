@@ -12,7 +12,7 @@ class struct:
     def clone(self, **subs):
         newd = deepcopy(self.__dict__)
         newd.update(subs)
-        return Struct(**newd)
+        return struct(**newd)
 
     def __len__(self):
         return len(self.__dict__)
