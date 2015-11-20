@@ -79,7 +79,11 @@ pairs = PSet(
 )
 
 svfit = PSet(
-    object1_object2_SVfitMass = 'SVfit({object1_idx},{object2_idx})',
+    object1_object2_SVfitMass = 'SVfit({object1_idx},{object2_idx}).at(0)',
+    object1_object2_SVfitPt = 'SVfit({object1_idx},{object2_idx}).at(1)',
+    object1_object2_SVfitEta = 'SVfit({object1_idx},{object2_idx}).at(2)',
+    object1_object2_SVfitPhi = 'SVfit({object1_idx},{object2_idx}).at(3)',
+    object1_object2_SVfitMET = 'SVfit({object1_idx},{object2_idx}).at(4)',
 )
 
 finalstate = PSet(
