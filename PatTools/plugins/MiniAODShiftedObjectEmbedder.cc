@@ -64,11 +64,17 @@ void MiniAODShiftedObjectEmbedder<T>::produce(edm::Event& iEvent, const edm::Eve
       const edm::Ptr<T> shiftSrcObj = shiftSrc->ptrAt(i);
       //std::cout << label_ << " " << i << " shiftSrc: pt " << shiftSrcObj->pt() << " eta " << shiftSrcObj->eta() << " phi " << shiftSrcObj->phi() << std::endl;
       newObj.addUserCand(label_,shiftSrcObj);
+      newObj.addUserFloat(label_+"Pt",shiftSrcObj->pt());
+      newObj.addUserFloat(label_+"Eta",shiftSrcObj->eta());
+      newObj.addUserFloat(label_+"Phi",shiftSrcObj->phi());
     }
     else {
       //std::cout << label_ << " " << i << " lost. Object ref set to empty candidate." << std::endl;
       const edm::Ptr<T> cand = edm::Ptr<T>();
       newObj.addUserCand(label_,cand);
+      newObj.addUserFloat(label_+"Pt",-9.);
+      newObj.addUserFloat(label_+"Eta",-9.);
+      newObj.addUserFloat(label_+"Phi",-9.);
     }
     out->push_back(newObj);
   }
