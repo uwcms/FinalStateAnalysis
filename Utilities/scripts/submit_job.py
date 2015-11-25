@@ -97,7 +97,7 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
     input_commands.extend([
         '--input-file-list=%s' % input_txt_path,
         '--assume-input-files-exist', 
-        '--input-dir=root://cmsxrootd.fnal.gov/',
+        #'--input-dir=root://cmsxrootd.fnal.gov/',
     ])
 
     command = [
