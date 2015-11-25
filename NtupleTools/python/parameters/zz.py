@@ -37,6 +37,15 @@ setattr(eleVars, "objectRelPFIsoRho%s"%brSuffix,
                     '/{object}.pt()')%(fsr))
         ),
 
+setattr(eleVars, "objectRelPFIsoRho%s_unscaled"%brSuffix,
+        cms.string(('({object}.chargedHadronIso()' +
+                    '+max(0.0,{object}.neutralHadronIso()' +
+                    '+{object}.photonIso()' +
+                    '-daughterUserCandIsoContribution({object_idx}, "%sCand")' +
+                    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea")*16./9.))' +
+                    '/{object}.pt()')%(fsr))
+        ),
+
 setattr(muVars, "objectRelPFIsoDB%s"%brSuffix,
         cms.string(('({object}.chargedHadronIso()' +
                     '+max({object}.photonIso()' +

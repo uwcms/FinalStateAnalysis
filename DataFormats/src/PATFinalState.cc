@@ -1259,9 +1259,20 @@ const float PATFinalState::daughterUserCandIsoContribution(const size_t i, const
 {
   if(daughterHasUserCand(i, label))
     {
+      // muons and electrons do isolation vetos differently, and electrons 
+      // do it weirdly
+      float vetoCone = 0.01;
+      if(daughter(i)->isElectron())
+        {
+          if(fabs(daughterAsElectron(i)->superCluster()->eta()) < 1.479)
+            vetoCone = 0.;
+          else
+            vetoCone = 0.08;
+        }
+
       reco::CandidatePtr cand = daughterUserCand(i, label);
       float dR = reco::deltaR(daughter(i)->p4(), cand->p4());
-      if(dR > 0.01 && dR < 0.4)
+      if(dR > vetoCone && dR < 0.4)
         return cand->pt();
     }
 

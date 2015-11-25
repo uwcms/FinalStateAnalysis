@@ -55,6 +55,9 @@ private:
   const std::string eaLabel; // use this effective area to correct isolation
   const std::string fsrLabel;
 
+  // for the case where the effective areas are for the wrong cone size
+  const double eaScaleFactor; 
+
   const double isoConeDRMax;
   const double isoConeDRMin;
   // only worry about isolation veto cone in barrel
@@ -81,6 +84,8 @@ MiniAODElectronHZZIsoDecider::MiniAODElectronHZZIsoDecider(const edm::ParameterS
   fsrLabel(iConfig.exists("fsrLabel") ?
            iConfig.getParameter<std::string>("fsrLabel") :
            std::string("dretFSRCand")),
+  eaScaleFactor(iConfig.exists("eaScaleFactor") ? 
+                iConfig.getParameter<double>("eaScaleFactor") : 1.),
   isoConeDRMax(iConfig.exists("isoConeDRMax") ? 
                iConfig.getParameter<double>("isoConeDRMax") : 0.4),
   isoConeDRMin(iConfig.exists("isoConeDRMin") ? 
@@ -121,7 +126,9 @@ float MiniAODElectronHZZIsoDecider::PFRelIsoRhoFSR(const edm::Ptr<pat::Electron>
   float chHadIso = elec->chargedHadronIso();
   float nHadIso = elec->neutralHadronIso();
   float phoIso = elec->photonIso();
-  float puCorrection = elec->userFloat(rhoLabel) * elec->userFloat(eaLabel);
+  float puCorrection = elec->userFloat(rhoLabel) * 
+    elec->userFloat(eaLabel) * 
+    eaScaleFactor;
 
   float fsrCorrection = 0.;
   if(elec->hasUserCand(fsrLabel))

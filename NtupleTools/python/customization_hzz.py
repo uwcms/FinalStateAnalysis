@@ -83,6 +83,7 @@ def hzzCustomize(process, fs_daughter_inputs,
         isoLabel = cms.string(isoCheatLabel), # boolean stored as userFloat with this name
         rhoLabel = cms.string("rho_fastjet"), # use rho and EA userFloats with these names
         eaLabel = cms.string("EffectiveArea"),
+        eaScaleFactor = cms.double(16./9.), # until we get effective areas for a cone of 0.4
         fsrLabel = cms.string(fsrLabel),
         )
     fs_daughter_inputs['electrons'] = 'electronIsoCheatEmbedding'
