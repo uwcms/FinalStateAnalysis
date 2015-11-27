@@ -78,8 +78,12 @@ pairs = PSet(
 
 svfit = PSet(
     object1_object2_SVfitMass = 'SVfit({object1_idx},{object2_idx})',
+    object1_object2_SVfitMassLFV = 'SVfitLFV({object1_idx},{object2_idx})',
 )
 
+svfitLFV = PSet(
+    object1_object2_SVfitLFVMass = 'SVfit({object1_idx},{object2_idx})',
+)
 finalstate = PSet(
     LT = 'ht',
     charge = 'charge',

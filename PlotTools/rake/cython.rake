@@ -12,5 +12,6 @@ end
 
 desc "Compile a cython proxy wrapper"
 rule ".so" => [proc { |targ| targ.sub('.so', '_setup.py') }] do |t|
+  sh "echo #{t.source} "
   sh "python #{t.source} build_ext --inplace"
 end

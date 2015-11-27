@@ -155,7 +155,7 @@ if __name__ == "__main__":
 
         tree_name   = get_meta_treename( sample_name )
         histo_name   = get_meta_histoname( sample_name )
-
+        log.info("I'm looking for %s, %s" % (histo_name, tree_name)) 
         log.info("Finding files for sample %s" % sample_name)
         log.info("Looking for tree  %s" %  tree_name)
         log.info("Looking for histo %s" %  histo_name)

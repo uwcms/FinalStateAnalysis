@@ -1,4 +1,6 @@
 {
+  "ggHETau" : "GluGlu_LFV_HToETau_M125_13TeV_powheg_pythia8",
+  "vbfHETau" : "VBF_LFV_HToETau_M125_13TeV_powheg_pythia8",
   "WJetsToLNu" : "WJetsToLNu_13TeV-madgraph-pythia8-tauola",
   "DYJetsToLL_M50" : "DYJetsToLL_M-50_13TeV-madgraph-pythia8",
   "WZTo3LNu" : "WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola",

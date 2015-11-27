@@ -75,7 +75,8 @@ def produce_final_states(process, daughter_collections, output_commands,
         sequence += process.patFinalStateEventProducer
 
     # Always keep
-    output_commands.append('*_patFinalStateEventProducer_*_*')
+  #  output_commands.append('*_patFinalStateEventProducer_*_*')
+    output_commands.append('*_*_*_*')
 
     # Are we applying Rochester Corrections to the muons?
     if rochCor != "":

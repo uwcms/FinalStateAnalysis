@@ -46,7 +46,7 @@ nExtraJets=0   - Include basic info about this many jets (ordered by pt).
 paramFile=''   - custom parameter file for ntuple production
 keepPat=0      - Instead of making flat ntuples, write high level 
                  physics objects including the PATFinalState objects
-
+runPFMETSignificance=1 produce the PF significance
 '''
 
 import FWCore.ParameterSet.Config as cms
@@ -106,6 +106,7 @@ options = TauVarParsing.TauVarParsing(
     paramFile='',
     skipGhost=0,
     runWZ=0,
+    runPFMETSignificance=0
 )
 
 options.register(
@@ -292,7 +293,13 @@ if options.runMVAMET:
     )
 
 
-
+if options.runPFMETSignificance:
+   from RecoMET.METProducers.METSignificance_cfi import *
+   from RecoMET.METProducers.METSignificanceParams_cfi import *
+   process.load("RecoMET.METProducers.METSignificance_cfi")
+   process.PFMETMETSignificance=cms.Path(
+        process.METSignificance 
+    )
 
 
 ################################################
@@ -592,8 +599,9 @@ process.schedule.append(process.buildFSAPath)
 # Drop the old stuff. (do we still need this?)
 process.source.inputCommands = cms.untracked.vstring(
     'keep *',
-    'drop PATFinalStatesOwned_finalState*_*_*',
-    'drop *_patFinalStateEvent*_*_*'
+ #   'drop PATFinalStatesOwned_finalState*_*_*',
+ #   'drop *_patFinalStateEvent*_*_*',
+ #   'keep *_*_*Significance*_*'
 )
 
 suffix = '' # most analyses don't need to modify the final states
@@ -770,7 +778,7 @@ else:
                                 skimCuts=options.skimCuts, suffix=suffix,
                                 hzz=options.hzz, nExtraJets=extraJets, 
                                 use25ns=options.use25ns, 
-                                isMC=options.isMC, **parameters)
+                                isMC=options.isMC,runPFMETSignificance=options.runPFMETSignificance, **parameters)
         add_ntuple(final_state, analyzer, process,
                    process.schedule, options.eventView, filters)
 

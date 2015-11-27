@@ -75,9 +75,9 @@ id = PSet(
     objectTrkIsoDR03 = cms.string("{object}.dr03TkSumPt()"),
     objectEcalIsoDR03 = cms.string("{object}.dr03EcalRecHitSumEt()"),
     objectHcalIsoDR03 = cms.string("{object}.dr03HcalTowerSumEt()"),
-    #objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
-    #objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
-    #objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
+    objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
+    objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
+    objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
     # raw energy error
     objectEnergyError = '{object}.corrections().combinedP4Error',
     # shower shape / ID variables
@@ -96,6 +96,7 @@ id = PSet(
     objectE2x5Max = '{object}.scE2x5Max',
     objectE5x5 = '{object}.scE5x5',
     objectNearMuonVeto = 'overlapMuons({object_idx},0.05,"isGlobalMuon() & abs(eta()) < 2.4").size()',
+
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).pdgId() : -999',
     objectComesFromHiggs = 'comesFromHiggs({object_idx}, 11, 1)',
     objectGenPdgId       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).pdgId() : -999',
@@ -116,6 +117,15 @@ id = PSet(
     objectNearestZMass = 'closestZElectron({object_idx},"")',
     # lowest invariant mass
     objectLowestMll = 'smallestMee({object_idx},"")',
+
+
+    objectGenMotherPt =  '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).pt() : -999', 
+    objectGenMotherEnergy =  '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).energy() : -999', 
+    objectGenMotherEta =  '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).eta() : -999', 
+    objectGenMotherPhi =  '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).phi() : -999', 
+    
+
+
 )
 
 energyCorrections = PSet(
@@ -159,6 +169,8 @@ trigger_50ns = PSet(
     objectMatchesSingleE = r'matchToHLTPath({object_idx},"HLT_Ele27_eta2p1_WPLoose_Gsf_v\\d+|HLT_Ele23_CaloIdL_TrackIdL_IsoVL_V\\d+",0.5)',
     objectMatchesSingleE_leg1 = r'matchToHLTPath({object_idx},"HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
     objectMatchesSingleE_leg2 = r'matchToHLTPath({object_idx},"HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesSingleE27LooseTau = r'matchToHLTPath({object_idx},"HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v\\d+",0.5)',
+    objectMatchesSingleE32LooseTau = r'matchToHLTPath({object_idx},"HLT_Ele32_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v1\\d+",0.5)',
     objectMatchesDoubleE = r'matchToHLTPath({object_idx},"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+",0.5)',
     objectMatchesSingleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
     objectMatchesSingleMuSingleE = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
@@ -171,6 +183,7 @@ trigger_25ns = PSet(
     objectMatchesSingleE = r'matchToHLTPath({object_idx},"HLT_Ele32_eta2p1_WPLoose_Gsf_v\\d+",0.5)',
     objectMatchesSingleE_leg1 = r'matchToHLTPath({object_idx},"HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
     objectMatchesSingleE_leg2 = r'matchToHLTPath({object_idx},"HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+
     objectMatchesDoubleE = r'matchToHLTPath({object_idx},"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+",0.5)',
     objectMatchesSingleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
     objectMatchesSingleMuSingleE = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
