@@ -39,7 +39,7 @@ def hzzCustomize(process, fs_daughter_inputs,
         missingHitsCut = cms.int32(999),
         ptCut = cms.double(10.), # for SMP analysis; change back for Higgs
         )
-    eSrc = 'electronIDCheatEmbedding'
+    fs_daughter_inputs['electrons'] = 'electronIDCheatEmbedding'
     process.muonIDCheatEmbedding = cms.EDProducer(
         "MiniAODMuonHZZIDDecider",
         src = cms.InputTag(fs_daughter_inputs['muons']),
