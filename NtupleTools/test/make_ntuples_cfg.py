@@ -209,10 +209,8 @@ process.generateMetaInfo = cms.Path(process.eventCount *
 process.schedule.append(process.generateMetaInfo)
 
 ######################################################################
-### Delete all this!
 # process.load("FinalStateAnalysis.NtupleTools.genTauFilter_cfi")
-# process.genTauFilter = cms.Path(process.filterForGenTaus)
-# process.schedule.append(process.genTauFilter)
+# filters.append(process.filterForGenTaus)
 ######################################################################
 
 # Drop the input ones, just to make sure we aren't screwing anything up
