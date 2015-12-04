@@ -41,6 +41,10 @@ runDQM=0       - run over single object final states to test all
                  object properties (wont check diobject properties)
 hzz=0          - Include FSR contribution a la HZZ4l group, 
                  include all ZZ candidates (including alternative lepton pairings).
+isSync=0       - (with eCalib=1 and isMC=1) Apply electron energy 
+                 resolution corrections as a 1sigma shift instead of smearing 
+                 for synchronization purposes.
+eCalib=0       - Apply electron energy scale and resolution corrections.
 nExtraJets=0   - Include basic info about this many jets (ordered by pt). 
                  Ignored if final state involves jets.
 paramFile=''   - custom parameter file for ntuple production
@@ -131,6 +135,23 @@ options.register(
     'If 2, also keep packedGenParticles. If 3 or more, also keep '
     'packedPFCands (increases size significantly).',
 )
+options.register(
+    'eCalib',
+    0,
+    TauVarParsing.TauVarParsing.multiplicity.singleton,
+    TauVarParsing.TauVarParsing.varType.int,
+    'Apply electron energy scale and resolution corrections. '
+    'For data, this is a correction; for MC, it is a smearing'
+)
+options.register(
+    'isSync',
+    0,
+    TauVarParsing.TauVarParsing.multiplicity.singleton,
+    TauVarParsing.TauVarParsing.varType.int,
+    'Apply electron energy correction as a 1-sigma shift instead of a '
+    'smearing. Only used if eCalib=0 and isMC=1.'
+)
+
 
 options.outputFile = "ntuplize.root"
 options.parseArguments()
@@ -190,10 +211,11 @@ process.schedule = cms.Schedule()
 process.load('Configuration.Geometry.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+process.load('Configuration.StandardSequences.Services_cff')
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': '74X_dataRun2_v4'}
+GT = {'mcgt': '74X_mcRun2_asymptotic_v4', 'datagt': '74X_dataRun2_reMiniAOD_v1'}
 
 process.GlobalTag.globaltag = cms.string(GT[envvar])
 
@@ -209,6 +231,7 @@ process.generateMetaInfo = cms.Path(process.eventCount *
 process.schedule.append(process.generateMetaInfo)
 
 ######################################################################
+### Uncomment if a hard process tau skim is desired
 # process.load("FinalStateAnalysis.NtupleTools.genTauFilter_cfi")
 # filters.append(process.filterForGenTaus)
 ######################################################################
@@ -360,13 +383,20 @@ isoCheatLabel = "HZZ4lIsoPass"
 electronMVANonTrigIDLabel = "BDTIDNonTrig"
 electronMVATrigIDLabel = "BDTIDTrig"
 
-##########################
-### embed electron ids ###
-##########################
+#########################################
+### calibrate electrons and embed ids ###
+#########################################
 from FinalStateAnalysis.NtupleTools.customization_electrons import preElectrons
-fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['vertices'],
-    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
-    electronMVATrigIDLabel=electronMVATrigIDLabel)
+fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,
+                                               fs_daughter_inputs['electrons'],
+                                               fs_daughter_inputs['vertices'],
+                                               idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,
+                                               electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
+                                               electronMVATrigIDLabel=electronMVATrigIDLabel, 
+                                               applyEnergyCorrections=bool(options.eCalib),
+                                               isMC=bool(options.isMC),
+                                               isSync=bool(options.isSync),
+                                               )
 
 ######################
 ### embed muon IDs ###
