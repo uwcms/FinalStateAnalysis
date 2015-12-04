@@ -325,36 +325,27 @@ if options.runMetFilter:
     filters += [process.HBHENoiseFilterResultProducer, process.ApplyBaselineHBHENoiseFilter]
 
     # CSC Tight Halo and EE Bad SC 4
-    dataset = ''
-    for d in ['BTagCSV', 'BTagMu', 'Charmonium', 'DisplacedJet', 'DoubleEG', 'DoubleMuon', 'DoubleMuonLowMass', 'HTMHT',
-              'JetHT', 'MET', 'MuOnia', 'MuonEG', 'SingleElectron', 'SingleMuon', 'SinglePhoton', 'Tau']:
-        fileparts = options.inputFiles[0].split('/')
-        if d in fileparts:
-            dataset = d
-    if dataset:
-        eventListFile = 'FinalStateAnalysis/NtupleTools/data/{0}_csc2015.txt'.format(dataset)
-        process.MiniAODCSCTightHaloFilterProducer = cms.EDProducer('MiniAODEventListProducer',
-            label = cms.string('CSCTightHaloFilterResult'),
-            eventList = cms.FileInPath(eventListFile),
-        )
-        process.ApplyCSCTightHaloFilter = cms.EDFilter('BooleanFlagFilter',
-            inputLabel = cms.InputTag('MiniAODCSCTightHaloFilterProducer','CSCTightHaloFilterResult'),
-            reverseDecision = cms.bool(False),
-        )
-        filters += [process.MiniAODCSCTightHaloFilterProducer, process.ApplyCSCTightHaloFilter]
+    eventListFile = 'FinalStateAnalysis/NtupleTools/data/csc2015_Dec01.txt'
+    process.MiniAODCSCTightHaloFilterProducer = cms.EDProducer('MiniAODEventListProducer',
+        label = cms.string('CSCTightHaloFilterResult'),
+        eventList = cms.FileInPath(eventListFile),
+    )
+    process.ApplyCSCTightHaloFilter = cms.EDFilter('BooleanFlagFilter',
+        inputLabel = cms.InputTag('MiniAODCSCTightHaloFilterProducer','CSCTightHaloFilterResult'),
+        reverseDecision = cms.bool(False),
+    )
+    filters += [process.MiniAODCSCTightHaloFilterProducer, process.ApplyCSCTightHaloFilter]
 
-        eventListFile = 'FinalStateAnalysis/NtupleTools/data/{0}_ecalscn1043093.txt'.format(dataset)
-        process.MiniAODBadSCEE4FilterProducer = cms.EDProducer('MiniAODEventListProducer',
-            label = cms.string('BadSCEE4FilterResult'),
-            eventList = cms.FileInPath(eventListFile),
-        )
-        process.ApplyBadSCEE4Filter = cms.EDFilter('BooleanFlagFilter',
-            inputLabel = cms.InputTag('MiniAODBadSCEE4FilterProducer','BadSCEE4FilterResult'),
-            reverseDecision = cms.bool(False),
-        )
-        filters += [process.MiniAODBadSCEE4FilterProducer, process.ApplyBadSCEE4Filter]
-    else:
-        print 'Warning: no matched dataset found for CSC Tight Halo and Bad SC EE4 Filters'
+    eventListFile = 'FinalStateAnalysis/NtupleTools/data/ecalscn1043093_Dec01.txt'
+    process.MiniAODBadSCEE4FilterProducer = cms.EDProducer('MiniAODEventListProducer',
+        label = cms.string('BadSCEE4FilterResult'),
+        eventList = cms.FileInPath(eventListFile),
+    )
+    process.ApplyBadSCEE4Filter = cms.EDFilter('BooleanFlagFilter',
+        inputLabel = cms.InputTag('MiniAODBadSCEE4FilterProducer','BadSCEE4FilterResult'),
+        reverseDecision = cms.bool(False),
+    )
+    filters += [process.MiniAODBadSCEE4FilterProducer, process.ApplyBadSCEE4Filter]
 
     # good vertices and ee bad sc filter
     # flag in miniaod, so just filter on that

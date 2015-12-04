@@ -309,73 +309,101 @@ double PATFinalStateEvent::metShift(const std::string& type, const std::string& 
     return 0.0;
   if (var=="pt") {
     if(tag == "jres+"){
-      if(met(type)->hasUserCand("jresUpMET"))
+      if(met(type)->hasUserCand("jresUpMET")) {
+        //std::cout << "jresUp - precomputed: " << met(type)->shiftedPt(pat::MET::JetResUp) << ", mettools: " << met(type)->userCand("jresUpMET")->pt() << std::endl;
         return met(type)->userCand("jresUpMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::JetResUp);
     }
     else if(tag == "jres-"){
-      if(met(type)->hasUserCand("jresUpMET"))
+      if(met(type)->hasUserCand("jresUpMET")) {
+        //std::cout << "jresDown - precomputed: " << met(type)->shiftedPt(pat::MET::JetResDown) << ", mettools: " << met(type)->userCand("jresDownMET")->pt() << std::endl;
         return met(type)->userCand("jresUpMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::JetResDown);
     }
     else if(tag == "jes+"){
-      if(met(type)->hasUserCand("jesUpMET"))
+      if(met(type)->hasUserCand("jesUpMET")) {
+        //std::cout << "jesUp - precomputed: " << met(type)->shiftedPt(pat::MET::JetEnUp) << ", mettools: " << met(type)->userCand("jesUpMET")->pt() << std::endl;
         return met(type)->userCand("jesUpMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::JetEnUp);
     }
     else if(tag == "jes-"){
-      if(met(type)->hasUserCand("jesDownMET"))
+      if(met(type)->hasUserCand("jesDownMET")) {
+        //std::cout << "jesDown - precomputed: " << met(type)->shiftedPt(pat::MET::JetEnDown) << ", mettools: " << met(type)->userCand("jesDownMET")->pt() << std::endl;
         return met(type)->userCand("jesDownMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::JetEnDown);
     }
     else if(tag == "mes+"){
-      if(met(type)->hasUserCand("mesUpMET"))
+      if(met(type)->hasUserCand("mesUpMET")) {
+        //std::cout << "mesUp - precomputed: " << met(type)->shiftedPt(pat::MET::MuonEnUp) << ", mettools: " << met(type)->userCand("mesUpMET")->pt() << std::endl;
         return met(type)->userCand("mesUpMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::MuonEnUp);
     }
     else if(tag == "mes-"){
-      if(met(type)->hasUserCand("mesDownMET"))
+      if(met(type)->hasUserCand("mesDownMET")) {
+        //std::cout << "mesDown - precomputed: " << met(type)->shiftedPt(pat::MET::MuonEnDown) << ", mettools: " << met(type)->userCand("mesDownMET")->pt() << std::endl;
         return met(type)->userCand("mesDownMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::MuonEnDown);
     }
     else if(tag == "ees+"){
-      if(met(type)->hasUserCand("eesUpMET"))
+      if(met(type)->hasUserCand("eesUpMET")) {
+        //std::cout << "eesUp - precomputed: " << met(type)->shiftedPt(pat::MET::ElectronEnUp) << ", mettools: " << met(type)->userCand("eesUpMET")->pt() << std::endl;
         return met(type)->userCand("eesUpMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::ElectronEnUp);
     }
     else if(tag == "ees-"){
-      if(met(type)->hasUserCand("eesDownMET"))
+      if(met(type)->hasUserCand("eesDownMET")) {
+        //std::cout << "eesDown - precomputed: " << met(type)->shiftedPt(pat::MET::ElectronEnDown) << ", mettools: " << met(type)->userCand("eesDownMET")->pt() << std::endl;
         return met(type)->userCand("eesDownMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::ElectronEnDown);
     }
     else if(tag == "tes+"){
-      if(met(type)->hasUserCand("tesUpMET"))
+      if(met(type)->hasUserCand("tesUpMET")) {
+        //std::cout << "tesUp - precomputed: " << met(type)->shiftedPt(pat::MET::TauEnUp) << ", mettools: " << met(type)->userCand("tesUpMET")->pt() << std::endl;
         return met(type)->userCand("tesUpMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::TauEnUp);
     }
     else if(tag == "tes-"){
-      if(met(type)->hasUserCand("tesDownMET"))
+      if(met(type)->hasUserCand("tesDownMET")) {
+        //std::cout << "tesDown - precomputed: " << met(type)->shiftedPt(pat::MET::TauEnDown) << ", mettools: " << met(type)->userCand("tesDownMET")->pt() << std::endl;
         return met(type)->userCand("tesDownMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::TauEnDown);
     }
     else if(tag == "ues+"){
-      if(met(type)->hasUserCand("uesUpMET"))
+      if(met(type)->hasUserCand("uesUpMET")) {
+        //std::cout << "uesUp - precomputed: " << met(type)->shiftedPt(pat::MET::UnclusteredEnUp) << ", mettools: " << met(type)->userCand("uesUpMET")->pt() << std::endl;
         return met(type)->userCand("uesUpMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::UnclusteredEnUp);
     }
     else if(tag == "ues-"){
-      if(met(type)->hasUserCand("uesDownMET"))
+      if(met(type)->hasUserCand("uesDownMET")) {
+        //std::cout << "uesDown - precomputed: " << met(type)->shiftedPt(pat::MET::UnclusteredEnDown) << ", mettools: " << met(type)->userCand("uesDownMET")->pt() << std::endl;
         return met(type)->userCand("uesDownMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::UnclusteredEnDown);
     }
     else if(tag == "pes+"){
-      if(met(type)->hasUserCand("pesUpMET"))
+      if(met(type)->hasUserCand("pesUpMET")) {
+        //std::cout << "pesUp - precomputed: " << met(type)->shiftedPt(pat::MET::PhotonEnUp) << ", mettools: " << met(type)->userCand("pesUpMET")->pt() << std::endl;
         return met(type)->userCand("pesUpMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::PhotonEnUp);
     }
     else if(tag == "pes-"){
-      if(met(type)->hasUserCand("pesDownMET"))
+      if(met(type)->hasUserCand("pesDownMET")) {
+        //std::cout << "pesDown - precomputed: " << met(type)->shiftedPt(pat::MET::PhotonEnDown) << ", mettools: " << met(type)->userCand("pesDownMET")->pt() << std::endl;
         return met(type)->userCand("pesDownMET")->pt();
+      }
       return met(type)->shiftedPt(pat::MET::PhotonEnDown);
     }
     else{
