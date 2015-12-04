@@ -15,6 +15,8 @@ pushd $CMSSW_BASE/src
 
 # electron and photon id
 git cms-merge-topic ikrav:egm_id_7.4.12_v1
+# and energy scale and resolution corrections
+git cms-merge-topic gpetruc:ElectronRun2PromptCalib-74X
 
 # HZZ MELA, MEKD etc.
 if [ "$HZZ" = "1" ]; then

@@ -6,11 +6,36 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     idCheatLabel = kwargs.pop('idCheatLabel','HZZ4lIDPass')
     electronMVANonTrigIDLabel = kwargs.pop('electronMVANonTrigIDLabel',"BDTIDNonTrig")
     electronMVATrigIDLabel = kwargs.pop('electronMVATrigIDLabel',"BDTIDTrig")
+    applyEnergyCorrections = kwargs.pop("applyEnergyCorrections", False)
 
+    if applyEnergyCorrections:
+        isMC = kwargs.pop("isMC", False)
+        isSync = kwargs.pop("isSync", False) and isMC
+        grbForestName = "gedelectron_p4combination_%sns"%("25" if use25ns else "50")
+        process.calibratedElectrons = cms.EDProducer(
+            "CalibratedPatElectronProducerRun2",
+            electrons = cms.InputTag(eSrc),
+            grbForestName = cms.string(grbForestName),
+            isMC = cms.bool(isMC),
+            isSynchronization = cms.bool(isSync),
+        )
+        eSrc = "calibratedElectrons"
+        process.applyElectronCalibrations = cms.Path(process.calibratedElectrons)
+        process.schedule.append(process.applyElectronCalibrations)
+
+        # Get a random number generator and give it a seed if needed
+        if isMC and not isSync:
+            if not hasattr(process, "RandomNumberGeneratorService"):
+                process.load('Configuration.StandardSequences.Services_cff')
+            process.RandomNumberGeneratorService.calibratedElectrons = cms.PSet(
+                initialSeed = cms.untracked.uint32(1029384756),
+                engineName = cms.untracked.string('TRandom3'),
+            )
 
     from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection, switchOnVIDElectronIdProducer, DataFormat
     switchOnVIDElectronIdProducer(process, DataFormat.MiniAOD)
     process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag(eSrc)
+    process.electronMVAValueMapProducer.srcMiniAOD = cms.InputTag(eSrc)
     id_modules = [
         #'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_PHYS14_PU20bx25_V2_cff',
         #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_PHYS14_PU20bx25_nonTrig_V1_cff',
