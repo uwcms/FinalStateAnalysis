@@ -41,6 +41,10 @@ runDQM=0       - run over single object final states to test all
                  object properties (wont check diobject properties)
 hzz=0          - Include FSR contribution a la HZZ4l group, 
                  include all ZZ candidates (including alternative lepton pairings).
+isSync=0       - (with eCalib=1 and isMC=1) Apply electron energy 
+                 resolution corrections as a 1sigma shift instead of smearing 
+                 for synchronization purposes.
+eCalib=0       - Apply electron energy scale and resolution corrections.
 nExtraJets=0   - Include basic info about this many jets (ordered by pt). 
                  Ignored if final state involves jets.
 paramFile=''   - custom parameter file for ntuple production
@@ -131,6 +135,23 @@ options.register(
     'If 2, also keep packedGenParticles. If 3 or more, also keep '
     'packedPFCands (increases size significantly).',
 )
+options.register(
+    'eCalib',
+    0,
+    TauVarParsing.TauVarParsing.multiplicity.singleton,
+    TauVarParsing.TauVarParsing.varType.int,
+    'Apply electron energy scale and resolution corrections. '
+    'For data, this is a correction; for MC, it is a smearing'
+)
+options.register(
+    'isSync',
+    0,
+    TauVarParsing.TauVarParsing.multiplicity.singleton,
+    TauVarParsing.TauVarParsing.varType.int,
+    'Apply electron energy correction as a 1-sigma shift instead of a '
+    'smearing. Only used if eCalib=0 and isMC=1.'
+)
+
 
 options.outputFile = "ntuplize.root"
 options.parseArguments()
@@ -190,12 +211,11 @@ process.schedule = cms.Schedule()
 process.load('Configuration.Geometry.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
+process.load('Configuration.StandardSequences.Services_cff')
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': '74X_dataRun2_Prompt_v2'}
-if options.use25ns:
-    GT['mcgt'] = 'MCRUN2_74_V9'
+GT = {'mcgt': '74X_mcRun2_asymptotic_v4', 'datagt': '74X_dataRun2_reMiniAOD_v1'}
 
 process.GlobalTag.globaltag = cms.string(GT[envvar])
 
@@ -210,6 +230,12 @@ process.generateMetaInfo = cms.Path(process.eventCount *
                                     )
 process.schedule.append(process.generateMetaInfo)
 
+######################################################################
+### Uncomment if a hard process tau skim is desired
+# process.load("FinalStateAnalysis.NtupleTools.genTauFilter_cfi")
+# filters.append(process.filterForGenTaus)
+######################################################################
+
 # Drop the input ones, just to make sure we aren't screwing anything up
 process.buildFSASeq = cms.Sequence()
 from FinalStateAnalysis.PatTools.patFinalStateProducers \
@@ -223,13 +249,10 @@ fs_daughter_inputs = {
     'jets': 'slimmedJets',
     'pfmet': 'slimmedMETs',         # slimmedMETs, slimmedMETsNoHF (miniaodv2), slimmmedMETsPuppi (not correct in miniaodv1)
     'mvamet': 'fixme',              # produced later
-    'fsr': 'slimmedPhotons',
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
 
-
-
-
+### embed some things we need that arent in miniAOD (ids, etc.)
 
 
 ###############################
@@ -244,8 +267,6 @@ if options.runMETNoHF:
 if options.usePUPPI:
     fs_daughter_inputs['pfmet'] = 'slimmedMETsPuppi'
     fs_daughter_inputs['jets'] = 'slimmedJetsPuppi'
-
-
 
 
 ##############
@@ -290,8 +311,6 @@ if options.runMVAMET:
         process.pfMVAMEtSequence *
         process.miniAODMVAMEt
     )
-
-
 
 
 
@@ -364,13 +383,20 @@ isoCheatLabel = "HZZ4lIsoPass"
 electronMVANonTrigIDLabel = "BDTIDNonTrig"
 electronMVATrigIDLabel = "BDTIDTrig"
 
-##########################
-### embed electron ids ###
-##########################
+#########################################
+### calibrate electrons and embed ids ###
+#########################################
 from FinalStateAnalysis.NtupleTools.customization_electrons import preElectrons
-fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['vertices'],
-    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
-    electronMVATrigIDLabel=electronMVATrigIDLabel)
+fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,
+                                               fs_daughter_inputs['electrons'],
+                                               fs_daughter_inputs['vertices'],
+                                               idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,
+                                               electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
+                                               electronMVATrigIDLabel=electronMVATrigIDLabel, 
+                                               applyEnergyCorrections=bool(options.eCalib),
+                                               isMC=bool(options.isMC),
+                                               isSync=bool(options.isSync),
+                                               )
 
 ######################
 ### embed muon IDs ###
@@ -394,21 +420,11 @@ fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs[
 ########################################
 ### pre selection HZZ customizations ###
 ########################################
-if options.hzz:
-    hzz4l = options.channels == 'zz' or 'eeee' in options.channels or \
-        'eemm' in options.channels or 'mmmm' in options.channels 
-    # alternative is Z+l control region
-
-    if hzz4l:
-        # Make FSR photon collection, give them isolation
-        process.load("FinalStateAnalysis.PatTools.miniAOD_fsrPhotons_cff")
-        fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
-        process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
-        process.schedule.append(process.makeFSRPhotons)
-
-
-
-
+from FinalStateAnalysis.NtupleTools.customization_hzz import hzzCustomize
+hzzCustomize(process, fs_daughter_inputs, idCheatLabel, isoCheatLabel, 
+             electronMVANonTrigIDLabel, "dretFSRCand")
+# fs_daughter_inputs entries for electrons, muons, and fsr are automatically 
+# set by hzzCustomize()
 
 
 
@@ -436,8 +452,6 @@ for ob in preselections:
     fs_daughter_inputs[getName(ob)+'s'] = getName(ob)+"Preselection"
 process.FSAPreselection = cms.Path(process.preselectionSequence)
 process.schedule.append(process.FSAPreselection)
-
-
 
 
 
@@ -472,101 +486,6 @@ fs_daughter_inputs['taus'] = postTaus(process,options.use25ns,fs_daughter_inputs
 
 
 
-
-
-
-########################################
-### post selection HZZ customization ###
-########################################
-if options.hzz and hzz4l:
-    # Put FSR photons into leptons as user cands
-    from FinalStateAnalysis.PatTools.miniAODEmbedFSR_cfi \
-        import embedFSRInElectrons, embedFSRInMuons
-    process.electronFSREmbedder = embedFSRInElectrons.clone(
-        src = cms.InputTag(fs_daughter_inputs['electrons']),
-        srcAlt = cms.InputTag(fs_daughter_inputs['muons']),
-        srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
-        srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
-        srcVtx = cms.InputTag(fs_daughter_inputs['vertices']),
-        idDecisionLabel = cms.string(idCheatLabel),
-        )
-    fs_daughter_inputs['electrons'] = 'electronFSREmbedder'
-    process.muonFSREmbedder = embedFSRInMuons.clone(
-        src = cms.InputTag(fs_daughter_inputs['muons']),
-        srcAlt = cms.InputTag(fs_daughter_inputs['electrons']),
-        srcPho = cms.InputTag(fs_daughter_inputs['fsr']),
-        srcVeto = cms.InputTag(fs_daughter_inputs['electrons']),
-        srcVtx = cms.InputTag(fs_daughter_inputs['vertices']),
-        idDecisionLabel = cms.string(idCheatLabel),
-        )
-    fs_daughter_inputs['muons'] = 'muonFSREmbedder'
-    process.embedFSRInfo = cms.Path(
-        process.electronFSREmbedder +
-        process.muonFSREmbedder
-        )
-    process.schedule.append(process.embedFSRInfo)
-
-    # Make a skimmed collection that is a subset of packed PF cands to speed things up
-    process.fsrBaseCands = cms.EDFilter(
-        "CandPtrSelector",
-        src = cms.InputTag("packedPFCandidates"),
-        cut = cms.string("pdgId == 22 & pt > 2. & abs(eta) < 2.6"),
-        )
-    process.fsrBaseCandSeq = cms.Sequence(process.fsrBaseCands)
-    process.fsrBaseCandPath = cms.Path(process.fsrBaseCandSeq)
-    process.schedule.append(process.fsrBaseCandPath)
-
-    # Create and embed yet another experimental FSR collection, this time using
-    # deltaR/eT as the photon figure of merit
-    process.dretPhotonSelection = cms.EDFilter(
-        "CandPtrSelector",
-        src = cms.InputTag("fsrBaseCands"), #packedPFCandidates"),
-        cut = cms.string("pdgId == 22 & pt > 2. & abs(eta) < 2.4"),
-        )
-    fs_daughter_inputs['dretfsr'] = 'dretPhotonSelection'
-
-    process.leptonDRETFSREmbedding = cms.EDProducer(
-        "MiniAODLeptonDRETFSREmbedder",
-        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
-        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
-        phoSrc = cms.InputTag("dretPhotonSelection"),
-        phoSelection = cms.string(""),
-        eSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
-        muSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
-        fsrLabel = cms.string("dretFSRCand"),
-        )
-    fs_daughter_inputs['muons'] = 'leptonDRETFSREmbedding'
-    fs_daughter_inputs['elecrons'] = 'leptonDRETFSREmbedding'
-
-    process.leptonDRET2FSREmbedding = process.leptonDRETFSREmbedding.clone(
-        muSrc = cms.InputTag(fs_daughter_inputs['muons']),
-        eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
-        etPower = cms.double(2.),
-        fsrLabel = cms.string("dret2FSRCand"),
-        )
-
-    process.embedDRETFSR = cms.Sequence(process.dretPhotonSelection * 
-                                        process.leptonDRETFSREmbedding *
-                                        process.leptonDRET2FSREmbedding)
-    process.dREtFSR = cms.Path(process.embedDRETFSR)
-    process.schedule.append(process.dREtFSR)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ############################
 ### Now do the FSA stuff ###
 ############################
@@ -584,7 +503,7 @@ produce_final_states(process, fs_daughter_inputs, output_to_keep, process.buildF
                      'puTagDoesntMatter', buildFSAEvent=True,
                      noTracks=True, runMVAMET=options.runMVAMET,
                      hzz=options.hzz, rochCor=options.rochCor,
-                     eleCor=options.eleCor, use25ns=options.use25ns, **parameters)
+                     eleCor=options.eleCor, **parameters)
 process.buildFSAPath = cms.Path(process.buildFSASeq)
 # Don't crash if some products are missing (like tracks)
 process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
@@ -598,7 +517,7 @@ process.source.inputCommands = cms.untracked.vstring(
 
 suffix = '' # most analyses don't need to modify the final states
 
-if options.hzz and hzz4l:
+if options.hzz and (options.channels == 'zz' or any(len(c)==4 for c in options.channels.split(','))):
     process.embedHZZSeq = cms.Sequence()
     # Embed matrix elements in relevant final states
     suffix = "HZZ"
@@ -769,8 +688,8 @@ else:
                                 runMVAMET=options.runMVAMET,
                                 skimCuts=options.skimCuts, suffix=suffix,
                                 hzz=options.hzz, nExtraJets=extraJets, 
-                                use25ns=options.use25ns, 
-                                isMC=options.isMC, **parameters)
+                                isMC=options.isMC, use25ns=options.use25ns,
+                                **parameters)
         add_ntuple(final_state, analyzer, process,
                    process.schedule, options.eventView, filters)
 

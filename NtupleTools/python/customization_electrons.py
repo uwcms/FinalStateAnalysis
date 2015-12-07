@@ -6,11 +6,36 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     idCheatLabel = kwargs.pop('idCheatLabel','HZZ4lIDPass')
     electronMVANonTrigIDLabel = kwargs.pop('electronMVANonTrigIDLabel',"BDTIDNonTrig")
     electronMVATrigIDLabel = kwargs.pop('electronMVATrigIDLabel',"BDTIDTrig")
+    applyEnergyCorrections = kwargs.pop("applyEnergyCorrections", False)
 
+    if applyEnergyCorrections:
+        isMC = kwargs.pop("isMC", False)
+        isSync = kwargs.pop("isSync", False) and isMC
+        grbForestName = "gedelectron_p4combination_%sns"%("25" if use25ns else "50")
+        process.calibratedElectrons = cms.EDProducer(
+            "CalibratedPatElectronProducerRun2",
+            electrons = cms.InputTag(eSrc),
+            grbForestName = cms.string(grbForestName),
+            isMC = cms.bool(isMC),
+            isSynchronization = cms.bool(isSync),
+        )
+        eSrc = "calibratedElectrons"
+        process.applyElectronCalibrations = cms.Path(process.calibratedElectrons)
+        process.schedule.append(process.applyElectronCalibrations)
+
+        # Get a random number generator and give it a seed if needed
+        if isMC and not isSync:
+            if not hasattr(process, "RandomNumberGeneratorService"):
+                process.load('Configuration.StandardSequences.Services_cff')
+            process.RandomNumberGeneratorService.calibratedElectrons = cms.PSet(
+                initialSeed = cms.untracked.uint32(1029384756),
+                engineName = cms.untracked.string('TRandom3'),
+            )
 
     from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection, switchOnVIDElectronIdProducer, DataFormat
     switchOnVIDElectronIdProducer(process, DataFormat.MiniAOD)
     process.egmGsfElectronIDs.physicsObjectSrc = cms.InputTag(eSrc)
+    process.electronMVAValueMapProducer.srcMiniAOD = cms.InputTag(eSrc)
     id_modules = [
         #'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_PHYS14_PU20bx25_V2_cff',
         #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_PHYS14_PU20bx25_nonTrig_V1_cff',
@@ -126,18 +151,10 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     )
     process.schedule.append(process.runMiniAODElectronIpEmbedding)
 
-    # Embed effective areas in muons and electrons
+    # Embed effective areas in electrons
     process.load("FinalStateAnalysis.PatTools.electrons.patElectronEAEmbedding_cfi")
     process.patElectronEAEmbedder.src = cms.InputTag(eSrc)
     eSrc = 'patElectronEAEmbedder'
-    # And for electrons, the new HZZ4l EAs as well
-    process.miniAODElectronEAHZZEmbedding = cms.EDProducer(
-        "MiniAODElectronEffectiveArea2015Embedder",
-        src = cms.InputTag(eSrc),
-        label = cms.string("EffectiveArea_HZZ4l2015"), # embeds a user float with this name
-        use25ns = cms.bool(bool(use25ns)),
-        )
-    eSrc = 'miniAODElectronEAHZZEmbedding'
     eaFile = 'RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_{0}ns.txt'.format('25' if use25ns else '50')
     process.miniAODElectronEAEmbedding = cms.EDProducer(
         "MiniAODElectronEffectiveAreaEmbedder",
@@ -148,7 +165,6 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     eSrc = 'miniAODElectronEAEmbedding'
     process.ElectronEAEmbedding = cms.Path(
         process.patElectronEAEmbedder +
-        process.miniAODElectronEAHZZEmbedding +
         process.miniAODElectronEAEmbedding
         )
     process.schedule.append(process.ElectronEAEmbedding)
@@ -166,38 +182,6 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
         process.miniAODElectronRhoEmbedding
         )
     process.schedule.append(process.electronRhoEmbedding)
-
-    # Embed HZZ ID and isolation decisions because we need to know them for FSR recovery
-    process.electronIDIsoCheatEmbedding = cms.EDProducer(
-        "MiniAODElectronHZZIDDecider",
-        src = cms.InputTag(eSrc),
-        idLabel = cms.string(idCheatLabel), # boolean stored as userFloat with this name
-        isoLabel = cms.string(isoCheatLabel), # boolean stored as userFloat with this name
-        rhoLabel = cms.string("rho_fastjet"), # use rho and EA userFloats with these names
-        eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
-        vtxSrc = cms.InputTag(vSrc),
-        bdtLabel = cms.string(electronMVANonTrigIDLabel),
-        idCutLowPtLowEta = cms.double(-.265),
-        idCutLowPtMedEta = cms.double(-.556),
-        idCutLowPtHighEta = cms.double(-.551),
-        idCutHighPtLowEta = cms.double(-.072),
-        idCutHighPtMedEta = cms.double(-.286),
-        idCutHighPtHighEta = cms.double(-.267),
-        missingHitsCut = cms.int32(999),
-        )
-    eSrc = 'electronIDIsoCheatEmbedding'
-
-    if not use25ns:
-        process.electronIDIsoCheatEmbedding.bdtLabel = cms.string('')
-        process.electronIDIsoCheatEmbedding.selection = cms.string('userFloat("CBIDMedium") > 0.5')
-        process.electronIDIsoCheatEmbedding.ptCut = cms.double(10.)
-        process.electronIDIsoCheatEmbedding.sipCut = cms.double(9999.)
-
-    process.embedHZZ4lIDDecisionsElectron = cms.Path(
-        process.electronIDIsoCheatEmbedding
-        )
-    process.schedule.append(process.embedHZZ4lIDDecisionsElectron)
-
 
     return eSrc
 
