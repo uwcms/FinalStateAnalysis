@@ -422,7 +422,7 @@ fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs[
 ########################################
 from FinalStateAnalysis.NtupleTools.customization_hzz import hzzCustomize
 hzzCustomize(process, fs_daughter_inputs, idCheatLabel, isoCheatLabel, 
-             electronMVATrigIDLabel, "dretFSRCand")
+             electronMVANonTrigIDLabel, "dretFSRCand")
 # fs_daughter_inputs entries for electrons, muons, and fsr are automatically 
 # set by hzzCustomize()
 
