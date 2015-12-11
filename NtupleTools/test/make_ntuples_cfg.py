@@ -391,6 +391,21 @@ fs_daughter_inputs['taus'] = preTaus(process,options.use25ns,fs_daughter_inputs[
 from FinalStateAnalysis.NtupleTools.customization_jets import preJets
 fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs['jets'],fs_daughter_inputs['vertices'])
 
+########################
+###   jet cleaning   ###
+########################
+process.miniAODJetCleaningEmbedding = cms.EDProducer(
+    "MiniAODJetCleaningEmbedder",
+    jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
+    muSrc = cms.InputTag(fs_daughter_inputs['muons']),
+    eSrc = cms.InputTag(fs_daughter_inputs['electrons'])
+)
+fs_daughter_inputs['jets'] = 'miniAODJetCleaningEmbedding'
+process.jetCleaningEmbedding = cms.Path(
+    process.miniAODJetCleaningEmbedding
+)
+process.schedule.append(process.jetCleaningEmbedding)
+
 ########################################
 ### pre selection HZZ customizations ###
 ########################################
@@ -761,7 +776,8 @@ if options.keepPat:
 else:
     print "Building ntuple for final states: %s" % ", ".join(final_states)
     for final_state in expanded_final_states(final_states):
-        extraJets = options.nExtraJets if 'j' not in final_state else 0
+        #extraJets = options.nExtraJets if 'j' not in final_state else 0
+        extraJets = options.nExtraJets
         final_state = order_final_state(final_state)
         analyzer = make_ntuple(*final_state, 
                                 svFit=options.svFit, dblhMode=options.dblhMode,
