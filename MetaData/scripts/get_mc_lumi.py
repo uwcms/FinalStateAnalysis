@@ -21,7 +21,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('sample', help="MC sample name")
     parser.add_argument('nevts', type=int, help="Number of processed events")
-    parser.add_argument('--sqrts', type=int, choices=[0, 7, 8,13],
+    parser.add_argument('--sqrts', type=int, choices=[0, 7, 8, 13],
                         default=0,
                         help="Use 7 or 8 TeV samples. "
                         "Default 0 - automatic by CMSSW release")
@@ -37,8 +37,9 @@ if __name__ == "__main__":
         sys.stderr.write("Using 8 TeV data definitions\n")
         import FinalStateAnalysis.MetaData.data8TeVNew as datadefs
     elif args.sqrts == 13:
-        print "13TeV datadefs deprecated"
+        sys.stderr.write("Using 13 TeV data definitions\n")
+        import FinalStateAnalysis.MetaData.data13TeV_LFV as datadefs
 
-    #sample_xsec = datadefs.datadefs[args.sample]['x_sec']/picobarns
+    sample_xsec = datadefs.datadefs[args.sample]['x_sec']/picobarns
 
-    #print args.nevts/sample_xsec
+    print args.nevts/sample_xsec

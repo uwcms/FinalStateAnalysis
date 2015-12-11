@@ -15,6 +15,7 @@
 #   > argparse - improved argument parsing
 #   > rootpy - pythonic bindings for PyROOT
 #   > pytables - provides hdf5 support
+#   > jupyter - contains ipython notebook modules
 
 export recipe=$CMSSW_BASE/src/FinalStateAnalysis/recipe
 export vpython=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/vpython
@@ -57,6 +58,8 @@ echo "Installing pudb <-- interactive debugging"
 pip install -U pudb
 echo "Installing yellowhiggs <-- higgs yellow report x-sections lookup table"
 pip install -U yellowhiggs
+echo "Installing jupyter (for ipython notebooks)"
+pip install -U jupyter
 
 echo "Installing rootpy and necessary peripherals"
 # have to mess with things a little to install rootpy

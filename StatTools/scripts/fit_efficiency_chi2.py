@@ -17,8 +17,9 @@ from FinalStateAnalysis.PlotTools.RebinView import RebinView
 import rootpy.plotting as plotting
 import logging
 import sys
-from rootpy.utils import asrootpy
-
+import rootpy.utils  as rootpy
+#import ROOT 
+#ROOT.gSystem.Load("libRooFit")
 args = sys.argv[:]
 sys.argv = [sys.argv[0]]
 
@@ -93,7 +94,7 @@ if __name__ == "__main__":
 
     # Build view of input histograms
     log.info("Merging input files")
-    input_view = views.SumView(*[io.open(x) for x in args.input])
+    input_view = views.SumView(*[io.root_open(x) for x in args.input])
 
     if args.rebin and args.rebin > 1:
         binning = None
@@ -158,19 +159,21 @@ if __name__ == "__main__":
         #x.setError(1)
         y.setAsymError(-ydown, yup)
         xy_data.add(ROOT.RooArgSet(x, y))
+        
 
     log.info("Creating workspace and importing data")
-    ws = ROOT.RooWorkspace("fit_efficiency")
-
+    ws = ROOT.RooWorkspace("fit_efficiency", "fit_efficiency")
+    
     def ws_import(*args):
         # Import is a reserved word
         getattr(ws, 'import')(*args)
-    ws_import(xy_data)
-
+    ws_import(xy_data, ROOT.RooCmdArg())
+ 
     command = "expr::efficiency('%s', x, %s)" % (
         args.efficiency, args.parameters)
-    log.info("Building efficiency function: %s", command)
+    print command
     ws.factory(command)
+    log.info("Building efficiency function: %s", command)
     function = ws.function('efficiency')
     #import pdb; pdb.set_trace()
 
@@ -182,7 +185,7 @@ if __name__ == "__main__":
             ROOT.RooFit.YVar(y),
             # Integrate fit function across x-error width, don't use center
             # This doesn't work... I don't know why.
-            ROOT.RooFit.Integrate(False),
+            #ROOT.RooFit.Integrate(False),
             #ROOT.RooFit.Integrate(True),
             ROOT.RooFit.Save(True),
             ROOT.RooFit.PrintLevel(-1),
@@ -207,18 +210,18 @@ if __name__ == "__main__":
             if not args.noFit and args.showerror:
                 function.plotOn(
                     frame,
-                    ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
+                    ROOT.RooFit.LineColor(1),
                     ROOT.RooFit.VisualizeError(fit_result, 1.0),
-                    ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
+                    ROOT.RooFit.FillColor(ROOT.kAzure - 9)
                 )
             else:
                 function.plotOn(
                     frame,
-                    ROOT.RooFit.LineColor(ROOT.EColor.kBlack),
-                    ROOT.RooFit.FillColor(ROOT.EColor.kAzure - 9)
+                    ROOT.RooFit.LineColor(1),
+                    ROOT.RooFit.FillColor(ROOT.kAzure - 9)
                 )
 
-            function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.EColor.kAzure))
+            function.plotOn(frame, ROOT.RooFit.LineColor(ROOT.kAzure))
             xy_data.plotOnXY(
                 frame,
                 ROOT.RooFit.YVar(y),
@@ -231,7 +234,7 @@ if __name__ == "__main__":
             else:
                 frame.GetXaxis().SetTitle(args.xtitle)
             frame.Draw()
-            canvas.SetLogy(True)
+            #canvas.SetLogy(True)
             if args.grid:
                 canvas.SetGrid()
             canvas.Draw()
