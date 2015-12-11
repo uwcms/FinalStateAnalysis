@@ -39,6 +39,7 @@ class MiniAODEventListProducer : public edm::stream::EDProducer<> {
 
       // other members
       std::map<std::string, bool> decisionMap_;
+      std::vector<std::string> eventList_;
 };
 
 
@@ -54,7 +55,15 @@ MiniAODEventListProducer::MiniAODEventListProducer(const edm::ParameterSet& iCon
 	    (iConfig.getParameter<edm::FileInPath>("eventList")).fullPath() :
 	    std::string())
 {
+  // store txt file in event list
+  std::ifstream infile(eventListFilename_);
+  std::string line;
+  while (std::getline(infile,line)) {
+    eventList_.push_back(line);
+  }
+
   produces<bool>(label_);
+
 }
 
 
@@ -76,14 +85,12 @@ MiniAODEventListProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSe
   // Default value
   decisionMap_[label_] = false;
 
-  // iterate through txt file of run:lumi:event
+  // iterate through event list of run:lumi:event
   std::stringstream currEvent;
   currEvent << iEvent.id().run() << ":" << iEvent.id().luminosityBlock() << ":" << iEvent.id().event();
   std::string evt = currEvent.str();
-  std::ifstream infile(eventListFilename_);
-  std::string line;
-  while (std::getline(infile,line)) {
-    if (evt.compare(line)==0) {
+  for (std::vector<std::string>::iterator it = eventList_.begin(); it != eventList_.end(); ++it) {
+    if (evt.compare(*it)==0) {
       decisionMap_[label_] = true;
     }
   }

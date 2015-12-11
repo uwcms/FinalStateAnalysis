@@ -110,6 +110,7 @@ options = TauVarParsing.TauVarParsing(
     runMetUncertainties=0,
     metShift='',
     runFSRFilter=0, # 1 = filter for ZG, -1 inverts filter for DY
+    eventsToSkip='',
 )
 
 options.register(
@@ -149,10 +150,22 @@ filters = []
 # SV Fit requires MVA MET
 options.runMVAMET = (options.runMVAMET or options.svFit)
 
+eventsToSkip = cms.untracked.VEventRange()
+if options.eventsToSkip:
+    # if it is a file
+    if os.path.isfile(options.eventsToSkip):
+        with open(options.eventsToSkip,'r') as f:
+            for e in f:
+                eventsToSkip.append(e.rstrip())
+    else:
+        print 'Warning: event file {0} does not exist.'.format(options.eventsToSkip)
+
+
 process.source = cms.Source(
     "PoolSource",
     fileNames=cms.untracked.vstring(options.inputFiles),
     skipEvents=cms.untracked.uint32(options.skipEvents),
+    eventsToSkip=eventsToSkip,
 )
 
 from FinalStateAnalysis.NtupleTools.parameters.default import parameters
