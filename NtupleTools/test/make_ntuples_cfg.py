@@ -136,6 +136,22 @@ options.register(
     'If 2, also keep packedGenParticles. If 3 or more, also keep '
     'packedPFCands (increases size significantly).',
 )
+options.register(
+    'eCalib',
+    0,
+    TauVarParsing.TauVarParsing.multiplicity.singleton,
+    TauVarParsing.TauVarParsing.varType.int,
+    'Apply electron energy scale and resolution corrections. '
+    'For data, this is a correction; for MC, it is a smearing'
+)
+options.register(
+    'isSync',
+    0,
+    TauVarParsing.TauVarParsing.multiplicity.singleton,
+    TauVarParsing.TauVarParsing.varType.int,
+    'Apply electron energy correction as a 1-sigma shift instead of a '
+    'smearing. Only used if eCalib=0 and isMC=1.'
+)
 
 options.outputFile = "ntuplize.root"
 options.parseArguments()
@@ -183,6 +199,7 @@ if options.paramFile:
 if options.runWZ:
     from FinalStateAnalysis.NtupleTools.parameters.wz import parameters as wzParams
     parameters.update(wzParams)
+    options.eCalib=1
     
 
 if options.eventsToProcess:
@@ -210,9 +227,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': '74X_dataRun2_Prompt_v2'}
-if options.use25ns:
-    GT['mcgt'] = 'MCRUN2_74_V9'
+GT = {'mcgt': '74X_mcRun2_asymptotic_v4', 'datagt': '74X_dataRun2_reMiniAOD_v1'}
 
 process.GlobalTag.globaltag = cms.string(GT[envvar])
 
@@ -541,7 +556,7 @@ electronMVATrigIDLabel = "BDTIDTrig"
 from FinalStateAnalysis.NtupleTools.customization_electrons import preElectrons
 fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['vertices'],
     idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
-    electronMVATrigIDLabel=electronMVATrigIDLabel)
+    electronMVATrigIDLabel=electronMVATrigIDLabel,applyEnergyCorrections=bool(options.eCalib),isMC=bool(options.isMC),isSync=bool(options.isSync))
 for fs in additional_fs:
     additional_fs[fs]['electrons'] = preElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['vertices'],
         idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
