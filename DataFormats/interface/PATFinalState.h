@@ -147,8 +147,14 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Using the raw four vector
     double deltaPhiToMEt(int i) const;
 
-   // return the SVfit computed  mass
+    // return the SVfit computed  mass
     std::vector<double> SVfit(int i, int j) const;
+
+    // return the Higgs to TauTau decided upon gen matching flags
+    double tauGenMatch( size_t i ) const;//const reco::Candidate* particle) const;
+
+    // return the genTau associated with a pat::tau
+    const reco::GenParticle* getGenTau(const pat::Tau& patTau) const;
 
     /// Get the transverse mass between two objects
     double mt(int i, const std::string& tagI,
