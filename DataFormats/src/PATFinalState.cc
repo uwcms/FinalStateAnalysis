@@ -5,7 +5,6 @@
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 #include "FinalStateAnalysis/DataAlgos/interface/CollectionFilter.h"
 #include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
-#include "FinalStateAnalysis/DataAlgos/interface/TauGenMatching.h"
 
 #include "DataFormats/PatCandidates/interface/PATObject.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"

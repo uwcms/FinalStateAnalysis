@@ -31,3 +31,5 @@ callgrind.out.*
 *~
 NtupleTools/test/Pdfdata/*
 NtupleTools/test/br.sm*
+NtupleTools/test/*.sh
+NtupleTools/test/*.out
