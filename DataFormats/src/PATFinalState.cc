@@ -358,7 +358,7 @@ PATFinalState::tauGenMatch( size_t i ) const {
           double tmpDR = reco::deltaR( daughter(i)->p4(), genp.p4() );
           if ( tmpDR < closestDR ) { closest = genp; closestDR = tmpDR; }
         }
-        if (closestDR > 0.2) return 7.0;
+        if (closestDR > 0.2) return 6.0;
         //std::cout << "Closest DR: " << closestDR << std::endl;
         double dID = abs(daughter(i)->pdgId());
         double genID = abs(closest.pdgId());
@@ -911,12 +911,21 @@ double PATFinalState::smallestMtt(int i, const std::string& filter="") const
 }
 
 
-VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts) const {
+VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts, double dr ) const {
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
-  std::vector<const reco::Candidate*> jets = this->vetoJets(0.3, jetCuts);
+  std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
   const reco::Candidate::LorentzVector& metp4 = met()->p4();
   // todo cache this
   return computeVBFInfo(hardScatter, metp4, jets);
+}
+
+std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, double dr ) const {
+//JetVariables PATFinalState::jetVariables(const std::string& jetCuts, double dr ) const {
+  std::vector<const reco::Candidate*> hardScatter = this->daughters();
+  std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
+  const reco::Candidate::LorentzVector& metp4 = met()->p4();
+  // todo cache this
+  return computeJetInfo(hardScatter, metp4, jets);
 }
 
 bool PATFinalState::orderedInPt(int i, int j) const {

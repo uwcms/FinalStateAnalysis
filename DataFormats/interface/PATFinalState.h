@@ -12,6 +12,8 @@
 
 #include "FinalStateAnalysis/DataAlgos/interface/VBFVariables.h"
 #include "FinalStateAnalysis/DataAlgos/interface/VBFSelections.h"
+//#include "FinalStateAnalysis/DataAlgos/interface/JetVariables.h"
+#include "FinalStateAnalysis/DataAlgos/interface/JetSelections.h"
 #include "TVector2.h"
 
 
@@ -227,7 +229,12 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     /// Get the VBF selection variables.  The jet cuts are applied to the veto
     /// jets using dR of 0.3 away from the members.
-    VBFVariables vbfVariables(const std::string& jetCuts) const;
+    VBFVariables vbfVariables(const std::string& jetCuts, double dr=0.3) const;
+
+    /// Use cut jetVeto style argument to get jets dR away from
+    /// candidate objects and compute necessary vars
+    std::vector<double> jetVariables(const std::string& jetCuts, double dr=0.3) const;
+    //JetVariables jetVariables(const std::string& jetCuts, double dr=0.3) const;
 
     /// Check if two daughters are ordered in PT.
     /// This is equivalent to (daughter(i).pt > daughter(j).pt)
