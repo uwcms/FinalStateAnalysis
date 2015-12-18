@@ -10,7 +10,6 @@
 
 #include <vector>
 #include "DataFormats/Candidate/interface/Candidate.h"
-#include "FinalStateAnalysis/DataAlgos/interface/JetVariables.h"
 
 std::vector<double> computeJetInfo(
     const std::vector<const reco::Candidate*>& hardScatter,
