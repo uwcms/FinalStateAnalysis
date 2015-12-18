@@ -1,8 +1,12 @@
 //#include "FinalStateAnalysis/DataAlgos/interface/JetSelections.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
 
 #include "DataFormats/Candidate/interface/Candidate.h"
+#include "DataFormats/RecoCandidate/interface/RecoCandidate.h"
+//#include "DataFormats/RecoCandidate/interface/JetCandidate.h"
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "FWCore/ParameterSet/interface/FileInPath.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 
 //JetVariables computeJetInfo(
 std::vector<double> computeJetInfo(
@@ -22,14 +26,13 @@ std::vector<double> computeJetInfo(
     }
   }
   if (numJets == 1) {
+    const pat::Jet * jet1Pat = dynamic_cast<const pat::Jet*> (jets[0]);
     output.push_back( jets[0]->pt() );
     output.push_back( jets[0]->eta() );
     output.push_back( jets[0]->phi() );
-    //output.push_back( jets[0]->userCand("patJet").bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
-    //output.push_back( jets[0]->userCand("patJet").userFloat("pileupJetId:fullDiscriminant") );
+    output.push_back( jet1Pat->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
+    output.push_back( jet1Pat->userFloat("pileupJetId:fullDiscriminant") );
     //output.push_back( jets[0]->SomeConversionThingForJEC );
-    output.push_back( -10 );
-    output.push_back( -10 );
     output.push_back( -10 );
     for (int i = 0; i < 6; ++i) {
       output.push_back( -10 );
@@ -37,33 +40,16 @@ std::vector<double> computeJetInfo(
   }
   if (numJets >= 2) {
     for (int i = 0; i < 2; ++i) {
+      const pat::Jet * jetPat = dynamic_cast<const pat::Jet*> (jets[i]);
       output.push_back( jets[i]->pt() );
       output.push_back( jets[i]->eta() );
       output.push_back( jets[i]->phi() );
-      //output.push_back( jets[i]->userCand("patJet").bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
-      //output.push_back( jets[i]->userCand("patJet").userFloat("pileupJetId:fullDiscriminant") );
+      output.push_back( jetPat->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
+      output.push_back( jetPat->userFloat("pileupJetId:fullDiscriminant") );
       //output.push_back( jets[i]->SomeConversionThingForJEC );
-      output.push_back( -10 );
-      output.push_back( -10 );
       output.push_back( -10 );
     }
   }
-//  if( jets[0]->pt() > jets[1]->pt() ) {
-//    output.leadJet = jets[0];
-//    output.subleadJet = jets[1];
-//  } else {
-//    output.leadJet = jets[1];
-//    output.subleadJet = jets[0];
-//  } 
-//
-//  // Get 4vectors of two highest jets
-//  reco::Candidate::LorentzVector leadJet(output.leadJet->p4());
-//  reco::Candidate::LorentzVector subleadJet(output.subleadJet->p4());
-//
-//  output.pt1 = leadJet.pt();
-//  output.pt2 = subleadJet.pt();
-//  output.eta1 = leadJet.eta();
-//  output.eta2 = subleadJet.eta();
 
   return output;
 }
