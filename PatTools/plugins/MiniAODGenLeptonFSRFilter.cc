@@ -93,36 +93,54 @@ MiniAODGenLeptonFSRFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSe
    edm::Handle<edm::View<reco::GenParticle> > genParticles;
    iEvent.getByToken(genParticlesToken_, genParticles);
 
+   // some alias
+   bool keep = !reverseDecision_;
+   bool reject = reverseDecision_;
+
    // keep event in ZG
    bool keepEvent = false;
 
    // Get the photon
    for ( auto& genPhoton : *genParticles ) {
-      if ( genPhoton.status() == 1 
+      if ( //genPhoton.status() == 1 
+            genPhoton.isPromptFinalState()
             && genPhoton.pdgId() == 22 
-            && (abs(genPhoton.mother(0)->pdgId()) == 11 || abs(genPhoton.mother(0)->pdgId()) == 13 || abs(genPhoton.mother(0)->pdgId()) == 15 || abs(genPhoton.mother(0)->pdgId()) < 7) 
+            //&& (abs(genPhoton.mother(0)->pdgId()) == 11 || abs(genPhoton.mother(0)->pdgId()) == 13 || abs(genPhoton.mother(0)->pdgId()) == 15 || abs(genPhoton.mother(0)->pdgId()) < 7) 
             && genPhoton.pt() > photonPtCut_
             ) {
          // pt of photon above threshold and parent is quark or lepton
          keepEvent = true;
+         //std::cout << "found high pt lepton" << std::endl;
          // Get lepton
          for  ( auto& genLepton : *genParticles ) {
            double deltaR = reco::deltaR(genPhoton.p4(), genLepton.p4());
            if ( genLepton.status() == 1
                 && (abs(genLepton.pdgId()) == 11 || abs(genLepton.pdgId()) == 13 || abs(genLepton.pdgId()) == 15)
-                && deltaR < photonDrCut_
+                && (deltaR < photonDrCut_)
                 ) {
              // lepton within dr of lepton
+             //std::cout << "photon within dr of lepton" << std::endl;
              keepEvent = false;
           }
+          // reject if have photon close to lepton
           if (!keepEvent) {
-             return reverseDecision_;
+             //std::cout << "return (fail dr): " << reject << std::endl;
+             return reject;
           }
         }
       }
    }
 
-   return !reverseDecision_;
+   // keep event if we had a passing fsr photon
+   if (keepEvent) {
+       //std::cout << "return: " << keep << std::endl;
+       return keep;
+   }
+   else {
+       //std::cout << "return: " << reject << std::endl;
+       return reject;
+   }
+
 }
 
 // ------------ method called once each job just before starting event loop  ------------

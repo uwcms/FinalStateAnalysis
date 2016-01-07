@@ -396,9 +396,10 @@ if options.runMetFilter:
     )
     filters += [process.MiniAODMETFilterProducer, process.ApplyGoodVerticesFilter, process.ApplyEEBadSCFilter]
 
-if options.runFSRFilter:
+if abs(options.runFSRFilter)>0:
     process.FSRFilter = cms.EDFilter("MiniAODGenLeptonFSRFilter",
         src = cms.InputTag("prunedGenParticles"),
+        drCut = cms.double(0.4),
     )
     if options.runFSRFilter<0:
         process.FSRFilter.reverseDecision=cms.bool(True)
