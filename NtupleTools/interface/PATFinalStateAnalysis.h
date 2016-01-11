@@ -20,6 +20,8 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
 #include "PhysicsTools/UtilAlgos/interface/BasicAnalyzer.h"
+#include "DataFormats/Common/interface/MergeableCounter.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLS.h"
 
 class TH1;
 class TTree;
@@ -32,6 +34,7 @@ namespace edm {
 class PATFinalStateAnalysis : public edm::BasicAnalyzer {
   public:
     PATFinalStateAnalysis(const edm::ParameterSet& pset, TFileDirectory& fs);
+    //PATFinalStateAnalysis(const edm::ParameterSet& pset, TFileDirectory& fs, edm::ConsumesCollector&& iC);
     virtual ~PATFinalStateAnalysis();
     void beginJob() {}
     void endJob();
@@ -65,12 +68,15 @@ class PATFinalStateAnalysis : public edm::BasicAnalyzer {
     TH1* eventCounterWeighted_;
     TH1* eventWeights_;
     // For keeping track of the skimming
+    //edm::EDGetTokenT<edm::MergeableCounter> skimCounter_;
     edm::InputTag skimCounter_;
     TH1* skimEventCounter_;
     // gen weights
+    //edm::EDGetTokenT<edm::MergeableCounter> summedWeight_;
     edm::InputTag summedWeight_;
     TH1* summedWeightHist_;
     // For counting the luminosity
+    //edm::EDGetTokenT<PATFinalStateLS> lumiProducer_;
     edm::InputTag lumiProducer_;
     TH1* integratedLumi_;
 

@@ -16,7 +16,9 @@
 
 #include <sstream>
 
+
 PATFinalStateAnalysis::PATFinalStateAnalysis(
+    //const edm::ParameterSet& pset, TFileDirectory& fs, edm::ConsumesCollector&& iC):
     const edm::ParameterSet& pset, TFileDirectory& fs):
   BasicAnalyzer(pset, fs),fs_(fs) {
   src_ = pset.getParameter<edm::InputTag>("src");
@@ -40,11 +42,18 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
   if (splitRuns_)
     runDir_.reset(new TFileDirectory(fs.mkdir("runs")));
 
-  skimCounter_ = pset.getParameter<edm::InputTag>("skimCounter");
+  //skimCounter_  = iC.consumes<edm::MergeableCounter>(pset.getParameter<edm::InputTag>("skimCounter"));
+  skimCounter_  = pset.getParameter<edm::InputTag>("skimCounter");
+  //summedWeight_ = iC.consumes<edm::MergeableCounter>(pset.getParameter<edm::InputTag>("summedWeight"));
   summedWeight_ = pset.getParameter<edm::InputTag>("summedWeight");
+  //lumiProducer_ = iC.consumes<PATFinalStateLS>(
+  //                                             pset.exists("lumiProducer") ?
+  //                                             pset.getParameter<edm::InputTag>("lumiProducer") :
+  //                                             edm::InputTag("finalStateLS")
+  //                                             );
   lumiProducer_ = pset.exists("lumiProducer") ?
-    pset.getParameter<edm::InputTag>("lumiProducer") :
-    edm::InputTag("finalStateLS");
+                  pset.getParameter<edm::InputTag>("lumiProducer") :
+                  edm::InputTag("finalStateLS");
   // Build the event counter histos.
   eventCounter_ = fs_.make<TH1F>("eventCount", "Events Processed", 1, -0.5, 0.5);
   eventCounterWeighted_ = fs_.make<TH1F>(

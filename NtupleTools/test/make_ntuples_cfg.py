@@ -199,7 +199,7 @@ if options.paramFile:
 if options.runWZ:
     from FinalStateAnalysis.NtupleTools.parameters.wz import parameters as wzParams
     parameters.update(wzParams)
-    options.eCalib=1
+    #options.eCalib=1 TODO fix when no longer broken
     
 
 if options.eventsToProcess:
@@ -422,7 +422,7 @@ runMetCorAndUncFromMiniAOD(process,
                            tauColl=fs_daughter_inputs['taus'],
                            isData=isData,
                            jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
-                           repro74X=True,
+                           #repro74X=True,
                            postfix=postfix,
                            )
 
@@ -556,22 +556,42 @@ electronMVATrigIDLabel = "BDTIDTrig"
 ##########################
 from FinalStateAnalysis.NtupleTools.customization_electrons import preElectrons
 fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['vertices'],
-    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
-    electronMVATrigIDLabel=electronMVATrigIDLabel,applyEnergyCorrections=bool(options.eCalib),isMC=bool(options.isMC),isSync=bool(options.isSync))
+                                               idCheatLabel=idCheatLabel,
+                                               isoCheatLabel=isoCheatLabel,
+                                               electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
+                                               electronMVATrigIDLabel=electronMVATrigIDLabel,
+                                               applyEnergyCorrections=bool(options.eCalib),
+                                               isMC=bool(options.isMC),
+                                               isSync=bool(options.isSync),
+                                               )
 for fs in additional_fs:
     additional_fs[fs]['electrons'] = preElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['vertices'],
-        idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
-        electronMVATrigIDLabel=electronMVATrigIDLabel,postfix=fs)
+                                                  idCheatLabel=idCheatLabel,
+                                                  isoCheatLabel=isoCheatLabel,
+                                                  electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
+                                                  electronMVATrigIDLabel=electronMVATrigIDLabel,
+                                                  applyEnergyCorrections=bool(options.eCalib),
+                                                  isMC=bool(options.isMC),
+                                                  isSync=bool(options.isSync),
+                                                  postfix=fs,
+                                                  )
 
 ######################
 ### embed muon IDs ###
 ######################
 from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
 fs_daughter_inputs['muons'] = preMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['vertices'],
-    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost)
+                                       idCheatLabel=idCheatLabel,
+                                       isoCheatLabel=isoCheatLabel,
+                                       skipGhost=options.skipGhost,
+                                       )
 for fs in additional_fs:
     additional_fs[fs]['muons'] = preMuons(process,options.use25ns,additional_fs[fs]['muons'],additional_fs[fs]['vertices'],
-        idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost,postfix=fs)
+                                          idCheatLabel=idCheatLabel,
+                                          isoCheatLabel=isoCheatLabel,
+                                          skipGhost=options.skipGhost,
+                                          postfix=fs,
+                                          )
 
 #####################
 ### embed tau IDs ###
