@@ -52,7 +52,7 @@ if [ -z "FORCERECIPE" ]; then
 fi
 
 
-echo "Applying recipe for CMSSW 7_4_X"
+echo "Applying recipe for CMSSW 7_6_X"
 HZZ=$HZZ ./recipe_13TeV.sh
 
 echo "Applying common recipe"

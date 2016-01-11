@@ -17,7 +17,7 @@ pushd $CMSSW_BASE/src
 #git cms-merge-topic ikrav:egm_id_7.4.12_v1
 
 # and energy scale and resolution corrections
-git cms-merge-topic gpetruc:ElectronRun2PromptCalib-74X
+#git cms-merge-topic gpetruc:ElectronRun2PromptCalib-74X
 
 # 74X met corrections (no HF)
 #git cms-merge-topic -u cms-met:METCorUnc74X
