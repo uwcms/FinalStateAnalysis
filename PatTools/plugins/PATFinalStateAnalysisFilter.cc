@@ -40,29 +40,29 @@ PATFinalStateAnalysisFilter::PATFinalStateAnalysisFilter(
     const edm::ParameterSet& pset) {
   edm::Service<TFileService> fs;
   TFileDirectory &fd =  fs->tFileDirectory();
-  //analysis_.reset(new PATFinalStateAnalysis(pset, fd, consumesCollector()));
-  analysis_.reset(new PATFinalStateAnalysis(pset, fd));
+  analysis_.reset(new PATFinalStateAnalysis(pset, fd, consumesCollector()));
+  //analysis_.reset(new PATFinalStateAnalysis(pset, fd));
 
 }
 
 bool PATFinalStateAnalysisFilter::filter(
     edm::Event& evt, const edm::EventSetup& es) {
-  const edm::EventBase& evtBase = evt;
-  return analysis_->filter(evtBase);
+  //const edm::EventBase& evtBase = evt;
+  return analysis_->filter(evt);
 }
 
 void PATFinalStateAnalysisFilter::beginLuminosityBlock(
     edm::LuminosityBlock const& ls, edm::EventSetup const& es) {
 
-  const edm::LuminosityBlockBase& lsBase = ls;
-  analysis_->beginLuminosityBlock(lsBase);
+  //const edm::LuminosityBlockBase& lsBase = ls;
+  analysis_->beginLuminosityBlock(ls);
 }
 
 void PATFinalStateAnalysisFilter::endLuminosityBlock(
     edm::LuminosityBlock const& ls, edm::EventSetup const& es) {
-  const edm::LuminosityBlockBase& lsBase = ls;
+  //const edm::LuminosityBlockBase& lsBase = ls;
 
-  analysis_->endLuminosityBlock(lsBase);
+  analysis_->endLuminosityBlock(ls);
 }
 
 void PATFinalStateAnalysisFilter::beginJob() {
