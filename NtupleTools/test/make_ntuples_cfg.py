@@ -75,7 +75,8 @@ process = cms.Process("Ntuples")
 #)
 
 process.options = cms.untracked.PSet(
-    allowUnscheduled = cms.untracked.bool(True)
+    allowUnscheduled = cms.untracked.bool(True),
+    wantSummary = cms.untracked.bool(True),
 )
 
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
@@ -400,8 +401,10 @@ if abs(options.runFSRFilter)>0:
     process.FSRFilter = cms.EDFilter("MiniAODGenLeptonFSRFilter",
         src = cms.InputTag("prunedGenParticles"),
         drCut = cms.double(0.05),
+        #drCut = cms.double(0.4),
     )
-    if options.runFSRFilter<0:
+    #if options.runFSRFilter<0:
+    if options.runFSRFilter>0:
         process.FSRFilter.reverseDecision=cms.bool(True)
     filters += [process.FSRFilter]
 
