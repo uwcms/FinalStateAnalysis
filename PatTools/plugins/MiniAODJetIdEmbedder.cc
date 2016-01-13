@@ -20,11 +20,11 @@ class MiniAODJetIdEmbedder : public edm::EDProducer {
     virtual ~MiniAODJetIdEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
+    edm::EDGetTokenT<edm::View<pat::Jet> > srcToken_;
 };
 
 MiniAODJetIdEmbedder::MiniAODJetIdEmbedder(const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
+  srcToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src"));
   produces<pat::JetCollection>();
 }
 
@@ -32,61 +32,77 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
   std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
 
   edm::Handle<edm::View<pat::Jet> > input;
-  evt.getByLabel(src_, input);
+  evt.getByToken(srcToken_, input);
 
   output->reserve(input->size());
   for (size_t i = 0; i < input->size(); ++i) {
     pat::Jet jet = input->at(i);
+    // https://twiki.cern.ch/twiki/bin/view/CMS/JetID
     bool loose = true;
-    bool medium = true;
     bool tight = true;
-    if (jet.neutralHadronEnergyFraction() >= 0.99)
-      loose = false;
-    if (jet.neutralHadronEnergyFraction() >= 0.95)
-      medium = false;
-    if (jet.neutralHadronEnergyFraction() >= 0.90)
-      tight = false;
+    bool tightLepVeto = true;
+    if (std::abs(jet.eta()) <= 3.0) {
+      if (jet.neutralHadronEnergyFraction() >= 0.99) {
+        loose = false;
+      }
+      if (jet.neutralHadronEnergyFraction() >= 0.90) {
+        tight = false;
+        tightLepVeto = false;
+      }
 
-    if (jet.neutralEmEnergyFraction() >= 0.99)
-      loose = false;
-    if (jet.neutralEmEnergyFraction() >= 0.95)
-      medium = false;
-    if (jet.neutralEmEnergyFraction() >= 0.90)
-      tight = false;
+      if (jet.neutralEmEnergyFraction() >= 0.99) {
+        loose = false;
+      }
+      if (jet.neutralEmEnergyFraction() >= 0.90) {
+        tight = false;
+        tightLepVeto = false;
+      }
 
-    if (jet.numberOfDaughters() <= 1) { //getPFConstitutents broken in miniAOD
-      loose = false;
-      medium = false;
-      tight = false;
+      //if (jet.numberOfDaughters() <= 1) { //getPFConstitutents broken in miniAOD
+      if (jet.chargedMultiplicity()+jet.neutralMultiplicity() <= 1){
+        loose = false;
+        tight = false;
+        tightLepVeto = false;
+      }
+
+      if (jet.muonEnergyFraction() >= 0.8)
+        {
+          tightLepVeto = false;
+        }
+
+      if (std::abs(jet.eta()) < 2.4) {
+        if (jet.chargedHadronEnergyFraction() == 0) {
+          loose = false;
+          tight = false;
+          tightLepVeto = false;
+        }
+        if (jet.chargedHadronMultiplicity() == 0) {
+          loose = false;
+          tight = false;
+          tightLepVeto = false;
+        }
+        if (jet.chargedEmEnergyFraction() >= 0.99) {
+          loose = false;
+          tight = false;
+        }
+        if (jet.chargedEmEnergyFraction() >= 0.90) {
+          tightLepVeto = false;
+        }
+      }
     }
-
-    if (jet.muonEnergyFraction() >= 0.8)
-      {
-	loose = false;
-	medium = false;
-	tight = false;
-      }
-
-    if (std::abs(jet.eta()) < 2.4) {
-      if (jet.chargedHadronEnergyFraction() == 0) {
+    if (std::abs(jet.eta()) > 3.0) {
+      if (jet.neutralEmEnergyFraction() >= 0.90) {
         loose = false;
-        medium = false;
         tight = false;
       }
-      if (jet.chargedHadronMultiplicity() == 0) {
+      if (jet.neutralMultiplicity()<=10) {
         loose = false;
-        medium = false;
-        tight = false;
-      }
-      if (jet.chargedEmEnergyFraction() >= 0.99) {
-        loose = false;
-        medium = false;
         tight = false;
       }
     }
     jet.addUserFloat("idLoose", loose);
-    jet.addUserFloat("idMedium", medium);
     jet.addUserFloat("idTight", tight);
+    jet.addUserFloat("idTightLepVeto", tightLepVeto);
 
     // Pileup discriminant
     bool passPU = true;

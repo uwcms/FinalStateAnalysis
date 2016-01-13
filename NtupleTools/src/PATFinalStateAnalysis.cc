@@ -8,6 +8,7 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateLS.h"
 
+#include "FWCore/Framework/interface/LuminosityBlock.h"
 #include "FWCore/Common/interface/LuminosityBlockBase.h"
 #include "CommonTools/Utils/interface/TFileDirectory.h"
 #include "DataFormats/Common/interface/MergeableCounter.h"
@@ -16,10 +17,12 @@
 
 #include <sstream>
 
+
 PATFinalStateAnalysis::PATFinalStateAnalysis(
-    const edm::ParameterSet& pset, TFileDirectory& fs):
-  BasicAnalyzer(pset, fs),fs_(fs) {
-  src_ = pset.getParameter<edm::InputTag>("src");
+    const edm::ParameterSet& pset, TFileDirectory& fs, edm::ConsumesCollector&& iC):
+    //const edm::ParameterSet& pset, TFileDirectory& fs):
+  fs_(fs) {
+  srcToken_ = iC.consumes<PATFinalStateCollection>(pset.getParameter<edm::InputTag>("src"));
   name_ = pset.getParameter<std::string>("@module_label");
 
   // Setup the code to apply event level weights
@@ -28,7 +31,7 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
   for (size_t i = 0; i < weights.size(); ++i) {
     evtWeights_.push_back(EventFunction(weights[i]));
   }
-  evtSrc_ = pset.getParameter<edm::InputTag>("evtSrc");
+  evtSrcToken_ = iC.consumes<PATFinalStateEventCollection>(pset.getParameter<edm::InputTag>("evtSrc"));
 
   analysisCfg_ = pset.getParameterSet("analysis");
   filter_ = pset.exists("filter") ? pset.getParameter<bool>("filter") : false;
@@ -40,11 +43,14 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
   if (splitRuns_)
     runDir_.reset(new TFileDirectory(fs.mkdir("runs")));
 
-  skimCounter_ = pset.getParameter<edm::InputTag>("skimCounter");
+  skimCounter_  = pset.getParameter<edm::InputTag>("skimCounter");
+  skimCounterToken_  = iC.consumes<edm::MergeableCounter,edm::InLumi>(skimCounter_);
   summedWeight_ = pset.getParameter<edm::InputTag>("summedWeight");
+  summedWeightToken_ = iC.consumes<edm::MergeableCounter,edm::InLumi>(summedWeight_);
   lumiProducer_ = pset.exists("lumiProducer") ?
-    pset.getParameter<edm::InputTag>("lumiProducer") :
-    edm::InputTag("finalStateLS");
+                  pset.getParameter<edm::InputTag>("lumiProducer") :
+                  edm::InputTag("finalStateLS");
+  lumiProducerToken_ = iC.consumes<PATFinalStateLS,edm::InLumi>(lumiProducer_);
   // Build the event counter histos.
   eventCounter_ = fs_.make<TH1F>("eventCount", "Events Processed", 1, -0.5, 0.5);
   eventCounterWeighted_ = fs_.make<TH1F>(
@@ -93,13 +99,44 @@ void PATFinalStateAnalysis::endLuminosityBlock(
   metaTree_->Fill();
 }
 
+
+void PATFinalStateAnalysis::endLuminosityBlock(
+    const edm::LuminosityBlock& ls) {
+  //std::cout << "Analyzing lumisec: " << ls.id() << std::endl;
+
+  edm::Handle<edm::MergeableCounter> skimmedEvents;
+  ls.getByToken(skimCounterToken_, skimmedEvents);
+  skimEventCounter_->Fill(0.0, skimmedEvents->value);
+
+  edm::Handle<edm::MergeableCounter> summedWeights;
+  ls.getByToken(summedWeightToken_, summedWeights);
+  summedWeightHist_->Fill(0.0, summedWeights->value);
+
+  edm::Handle<PATFinalStateLS> lumiSummary;
+  ls.getByToken(lumiProducerToken_, lumiSummary);
+  integratedLumi_->Fill(0.0, lumiSummary->intLumi());
+  treeIntLumi_ = lumiSummary->intLumi();
+
+  // Fill the meta info tree
+  treeRunBranch_ = ls.run();
+  treeLumiBranch_ = ls.luminosityBlock();
+  treeEventsProcessedBranch_ = skimmedEvents->value;
+  treeSummedWeightsBranch_ = summedWeights->value;
+  metaTree_->Fill();
+}
+
 bool PATFinalStateAnalysis::filter(const edm::EventBase& evt) {
+  std::cout << "TODO: add filter for PATFinalStateAnalysis" << std::endl;
+  return false;
+}
+
+bool PATFinalStateAnalysis::filter(const edm::Event& evt) {
   // Get the event weight
   double eventWeight = 1.0;
 
   if (evtWeights_.size()) {
     edm::Handle<PATFinalStateEventCollection> event;
-    evt.getByLabel(evtSrc_, event);
+    evt.getByToken(evtSrcToken_, event);
     for (size_t i = 0; i < evtWeights_.size(); ++i) {
       eventWeight *= evtWeights_[i]( (*event)[0] );
     }
@@ -111,7 +148,7 @@ bool PATFinalStateAnalysis::filter(const edm::EventBase& evt) {
 
   // Get the final states to analyze
   edm::Handle<PATFinalStateCollection> finalStates;
-  evt.getByLabel(src_, finalStates);
+  evt.getByToken(srcToken_, finalStates);
 
   std::vector<const PATFinalState*> finalStatePtrs;
   finalStatePtrs.reserve(finalStates->size());
@@ -157,6 +194,10 @@ bool PATFinalStateAnalysis::filter(const edm::EventBase& evt) {
 }
 
 void PATFinalStateAnalysis::analyze(const edm::EventBase& evt) {
+  filter(evt);
+}
+
+void PATFinalStateAnalysis::analyze(const edm::Event& evt) {
   filter(evt);
 }
 

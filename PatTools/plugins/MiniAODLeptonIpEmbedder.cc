@@ -20,6 +20,8 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 
+#include "FWCore/Utilities/interface/Exception.h" 
+
 #include <vector>
 
 template<typename T>
@@ -29,15 +31,15 @@ class MiniAODLeptonIpEmbedder : public edm::EDProducer {
     virtual ~MiniAODLeptonIpEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
-    edm::InputTag vtxSrc_;
+    edm::EDGetTokenT<edm::View<T> > srcToken_;
+    edm::EDGetTokenT<reco::VertexCollection> vtxSrcToken_;
     ek::PATLeptonTrackVectorExtractor<T> trackExtractor_;
 };
 
 template<typename T>
 MiniAODLeptonIpEmbedder<T>::MiniAODLeptonIpEmbedder(const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
-  vtxSrc_ = pset.getParameter<edm::InputTag>("vtxSrc");
+  srcToken_ = consumes<edm::View<T> >(pset.getParameter<edm::InputTag>("src"));
+  vtxSrcToken_ = consumes<reco::VertexCollection>(pset.getParameter<edm::InputTag>("vtxSrc"));
   produces<std::vector<T> >();
 }
 
@@ -47,10 +49,10 @@ void MiniAODLeptonIpEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup&
   std::auto_ptr<std::vector<T> > output(new std::vector<T>());
 
   edm::Handle<edm::View<T> > handle;
-  evt.getByLabel(src_, handle);
+  evt.getByToken(srcToken_, handle);
 
   edm::Handle<reco::VertexCollection> vertices;
-  evt.getByLabel(vtxSrc_, vertices);
+  evt.getByToken(vtxSrcToken_, vertices);
 
   const reco::Vertex& thePV = *vertices->begin();
 
@@ -86,6 +88,7 @@ void MiniAODLeptonIpEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup&
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 
 typedef MiniAODLeptonIpEmbedder<pat::Muon> MiniAODMuonIpEmbedder;
 typedef MiniAODLeptonIpEmbedder<pat::Electron> MiniAODElectronIpEmbedder;

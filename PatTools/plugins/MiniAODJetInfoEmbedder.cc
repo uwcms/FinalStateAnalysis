@@ -41,8 +41,8 @@ class MiniAODObjectJetInfoEmbedder : public edm::EDProducer {
     virtual ~MiniAODObjectJetInfoEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
-    edm::InputTag jetSrc_;
+    edm::EDGetTokenT<edm::View<T> > srcToken_;
+    edm::EDGetTokenT<edm::View<pat::Jet> > jetSrcToken_;
     double maxDeltaR_;
     bool embedBtags_;
     std::string suffix_;
@@ -51,8 +51,8 @@ class MiniAODObjectJetInfoEmbedder : public edm::EDProducer {
 template<class T>
 MiniAODObjectJetInfoEmbedder<T>::MiniAODObjectJetInfoEmbedder(
     const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
-  jetSrc_ = pset.getParameter<edm::InputTag>("jetSrc");
+  srcToken_ = consumes<edm::View<T> >(pset.getParameter<edm::InputTag>("src"));
+  jetSrcToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("jetSrc"));
   suffix_ = pset.getParameter<std::string>("suffix");
   embedBtags_ = pset.getParameter<bool>("embedBtags");
   maxDeltaR_ = pset.getParameter<double>("maxDeltaR");
@@ -65,17 +65,17 @@ void MiniAODObjectJetInfoEmbedder<T>::produce(
   std::auto_ptr<TCollection> output(new TCollection);
 
   edm::Handle<edm::View<T> > objects;
-  evt.getByLabel(src_, objects);
+  evt.getByToken(srcToken_, objects);
   output->reserve(objects->size());
 
   edm::Handle<edm::View<pat::Jet> > jets;
-  evt.getByLabel(jetSrc_, jets);
+  evt.getByToken(jetSrcToken_, jets);
 
 //  edm::Handle<edm::View<reco::Jet> > recoJets;
-//  evt.getByLabel("ak5PFJets", recoJets);
+//  evt.getByToken("ak5PFJets", recoJets);
 //
 //  edm::Handle<edm::View<reco::PFCandidate> > pfCands;
-//  evt.getByLabel("particleFlow", pfCands);
+//  evt.getByToken("particleFlow", pfCands);
 //
   typedef edm::Ptr<pat::Jet> JetPtr;
 

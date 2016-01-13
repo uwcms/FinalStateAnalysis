@@ -54,11 +54,11 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
 
  public:
   explicit MiniAODObjectEmbedFSR(const edm::ParameterSet& iConfig) : 
-    src_(iConfig.getParameter<edm::InputTag>("src")),
-    srcAlt_(iConfig.getParameter<edm::InputTag>("srcAlt")),
-    srcPho_(iConfig.exists("srcPho") ? iConfig.getParameter<edm::InputTag>("srcPho") : edm::InputTag("boodtedFsrPhotons")),
-    srcVeto_(iConfig.exists("srcVeto") ? iConfig.getParameter<edm::InputTag>("srcVeto") : edm::InputTag("slimmedElectrons")),
-    srcVtx_(iConfig.exists("srcVtx") ? iConfig.getParameter<edm::InputTag>("srcVtx") : edm::InputTag("selectedPrimaryVertex")),
+    srcToken_(consumes<std::vector<T> >(iConfig.getParameter<edm::InputTag>("src"))),
+    srcAltToken_(consumes<std::vector<U> >(iConfig.getParameter<edm::InputTag>("srcAlt"))),
+    srcPhoToken_(consumes<std::vector<pat::PFParticle> >(iConfig.exists("srcPho") ? iConfig.getParameter<edm::InputTag>("srcPho") : edm::InputTag("boodtedFsrPhotons"))),
+    srcVetoToken_(consumes<std::vector<pat::Electron> >(iConfig.exists("srcVeto") ? iConfig.getParameter<edm::InputTag>("srcVeto") : edm::InputTag("slimmedElectrons"))),
+    srcVtxToken_(consumes<reco::VertexCollection>(iConfig.exists("srcVtx") ? iConfig.getParameter<edm::InputTag>("srcVtx") : edm::InputTag("selectedPrimaryVertex"))),
     label_(iConfig.exists("userLabel") ? iConfig.getParameter<std::string>("userLabel") : "FSRCand"),
     isoLabels_(iConfig.getParameter<std::vector<std::string> >("isoLabels")),
     dRInner(iConfig.exists("dRInner") ? iConfig.getParameter<double>("dRInner") : 0.07),
@@ -121,8 +121,8 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
   edm::Handle<std::vector<pat::PFParticle> > srcPho;
 
   // collection input tags/labels
-  const edm::InputTag src_; // FS leptons
-  const edm::InputTag srcAlt_; // Dumb hack to deal with the fact that we only consider 
+  const edm::EDGetTokenT<std::vector<T> > srcToken_; // FS leptons
+  const edm::EDGetTokenT<std::vector<U> > srcAltToken_; // Dumb hack to deal with the fact that we only consider 
                                        // the closest lepton to a given photoon, so we have to
                                        // worry about both lepton collections at once, but an
                                        // EDProducer can only put one of the collections.
@@ -130,9 +130,9 @@ class MiniAODObjectEmbedFSR : public edm::EDProducer {
                                        // and srcAlt_ points to muons, so that we can ignore
                                        // a photon later (and deal with it in the muon producer)
                                        // if there's a closer muon. Or vice versa. 
-  const edm::InputTag srcPho_; // FSR candidates
-  const edm::InputTag srcVeto_; // electrons for cluster veto
-  const edm::InputTag srcVtx_; // primary vertex (for veto PV and SIP cuts)
+  const edm::EDGetTokenT<std::vector<pat::PFParticle> > srcPhoToken_; // FSR candidates
+  const edm::EDGetTokenT<std::vector<pat::Electron> > srcVetoToken_; // electrons for cluster veto
+  const edm::EDGetTokenT<reco::VertexCollection> srcVtxToken_; // primary vertex (for veto PV and SIP cuts)
   const std::string label_; // userFloats names things like <label_>pt1
   const std::vector<std::string> isoLabels_; // keys to userfloats with isolation
 

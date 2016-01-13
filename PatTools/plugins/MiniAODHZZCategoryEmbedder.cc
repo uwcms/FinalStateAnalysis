@@ -59,7 +59,7 @@ class MiniAODHZZCategoryEmbedder : public edm::EDProducer {
   bool isHZZBTagged(const pat::Jet& j) const;
 
   // Tag of final state collection
-  edm::InputTag src_;
+  edm::EDGetTokenT<edm::View<PATFinalState> > srcToken_;
 
   // Cut string to select tight leptons
   const std::string tightLepCut_;
@@ -73,9 +73,9 @@ class MiniAODHZZCategoryEmbedder : public edm::EDProducer {
 
 
 MiniAODHZZCategoryEmbedder::MiniAODHZZCategoryEmbedder(const edm::ParameterSet& iConfig) :
-  src_(iConfig.exists("src") ?
+  srcToken_(consumes<edm::View<PATFinalState> >(iConfig.exists("src") ?
        iConfig.getParameter<edm::InputTag>("src") :
-       edm::InputTag("finalStateeeee")),
+       edm::InputTag("finalStateeeee"))),
   tightLepCut_(iConfig.exists("tightLepCut") ?
 	       iConfig.getParameter<std::string>("tightLepCut") :
 	       std::string("userFloat(\"HZZ4lIDPassTight\") > 0.5 && userFloat(\"HZZ4lIsoPass\") > 0.5")),
@@ -95,7 +95,7 @@ void MiniAODHZZCategoryEmbedder::produce(edm::Event& iEvent, const edm::EventSet
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
   edm::Handle<edm::View<PATFinalState> > finalStatesIn;
-  iEvent.getByLabel(src_, finalStatesIn);
+  iEvent.getByToken(srcToken_, finalStatesIn);
 
   for (size_t iFS = 0; iFS < finalStatesIn->size(); ++iFS) 
     {

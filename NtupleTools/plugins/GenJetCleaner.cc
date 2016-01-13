@@ -4,22 +4,6 @@
 #include <TH1D.h>
 #include <TH2D.h>
 
-class GenJetCleaner : public edm::EDProducer {
-
-public:
-  GenJetCleaner (const edm::ParameterSet &);
-private:
-
-  virtual void produce(edm::Event&, const edm::EventSetup&);
-  virtual void beginJob();
-  virtual void endJob();
-
-   std::map<std::string,TH1D*> h1_;
-   std::map<std::string,TH2D*> h2_;
-
-  edm::InputTag src_;
-  double ptMin_, etaMax_;
-};
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "DataFormats/Common/interface/Handle.h"
@@ -42,9 +26,29 @@ using namespace edm;
 using namespace std;
 using namespace reco;
 
+class GenJetCleaner : public edm::EDProducer {
+
+public:
+  GenJetCleaner (const edm::ParameterSet &);
+private:
+
+  virtual void produce(edm::Event&, const edm::EventSetup&);
+  virtual void beginJob();
+  virtual void endJob();
+
+   std::map<std::string,TH1D*> h1_;
+   std::map<std::string,TH2D*> h2_;
+
+  edm::EDGetTokenT<reco::GenJetCollection> srcToken_;
+  edm::EDGetTokenT<LHEEventProduct> lheSrcToken_;
+  edm::EDGetTokenT<vector<reco::GenParticle> > genParticlesToken_;
+  double ptMin_, etaMax_;
+};
 
 GenJetCleaner::GenJetCleaner( const ParameterSet & cfg ) :
-      src_(cfg.getUntrackedParameter<edm::InputTag>("src", edm::InputTag("ak5GenJets"))),
+      srcToken_(consumes<reco::GenJetCollection>(cfg.getUntrackedParameter<edm::InputTag>("src", edm::InputTag("ak5GenJets")))),
+      lheSrcToken_(consumes<LHEEventProduct>(cfg.getUntrackedParameter<edm::InputTag>("source", edm::InputTag("source")))),
+      genParticlesToken_(consumes<vector<reco::GenParticle> >(cfg.getUntrackedParameter<edm::InputTag>("genParticles", edm::InputTag("genParticles")))),
       ptMin_(cfg.getUntrackedParameter<double>("ptMin",30)),
       etaMax_(cfg.getUntrackedParameter<double>("etaMax",5))
   {
@@ -65,7 +69,7 @@ void GenJetCleaner::endJob() {
 void GenJetCleaner::produce (Event & iEvent, const EventSetup &) {
 
      edm::Handle<LHEEventProduct> lheeventinfo;
-     if(!iEvent.getByLabel("source", lheeventinfo)){
+     if(!iEvent.getByToken(lheSrcToken_, lheeventinfo)){
             std::cout<< ">>> LHE info not found!!"<<std::endl;
      }
 
@@ -77,8 +81,8 @@ void GenJetCleaner::produce (Event & iEvent, const EventSetup &) {
 
       edm::Handle< vector<reco::GenParticle> >pGenPart;
 
-      if(!iEvent.getByLabel("genParticles", pGenPart)) std::cout<<"Hey!!!"<<std::endl;
-      if (!iEvent.getByLabel(src_,cands)) std::cout<<"Hey!!!"<<std::endl;
+      if(!iEvent.getByToken(genParticlesToken_, pGenPart)) std::cout<<"Hey!!!"<<std::endl;
+      if (!iEvent.getByToken(srcToken_,cands)) std::cout<<"Hey!!!"<<std::endl;
 
       double nJets=0, nJetsClean=0;
         for(unsigned int  i=0;i!=cands->size();++i){

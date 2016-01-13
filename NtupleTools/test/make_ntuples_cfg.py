@@ -51,6 +51,7 @@ keepPat=0      - Instead of making flat ntuples, write high level
 
 import FWCore.ParameterSet.Config as cms
 import os
+import copy
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
     make_ntuple, add_ntuple, _producer_translation
@@ -106,6 +107,10 @@ options = TauVarParsing.TauVarParsing(
     paramFile='',
     skipGhost=0,
     runWZ=0,
+    runMetUncertainties=0,
+    metShift='',
+    runFSRFilter=0, # 1 = filter for ZG, -1 inverts filter for DY
+    eventsToSkip='',
 )
 
 options.register(
@@ -131,6 +136,22 @@ options.register(
     'If 2, also keep packedGenParticles. If 3 or more, also keep '
     'packedPFCands (increases size significantly).',
 )
+options.register(
+    'eCalib',
+    0,
+    TauVarParsing.TauVarParsing.multiplicity.singleton,
+    TauVarParsing.TauVarParsing.varType.int,
+    'Apply electron energy scale and resolution corrections. '
+    'For data, this is a correction; for MC, it is a smearing'
+)
+options.register(
+    'isSync',
+    0,
+    TauVarParsing.TauVarParsing.multiplicity.singleton,
+    TauVarParsing.TauVarParsing.varType.int,
+    'Apply electron energy correction as a 1-sigma shift instead of a '
+    'smearing. Only used if eCalib=0 and isMC=1.'
+)
 
 options.outputFile = "ntuplize.root"
 options.parseArguments()
@@ -139,16 +160,28 @@ options.parseArguments()
 ### Customize the job ###
 #########################
 
-# list if filters to apply
+# list of filters to apply
 filters = []
 
 # SV Fit requires MVA MET
 options.runMVAMET = (options.runMVAMET or options.svFit)
 
+eventsToSkip = cms.untracked.VEventRange()
+if options.eventsToSkip:
+    # if it is a file
+    if os.path.isfile(options.eventsToSkip):
+        with open(options.eventsToSkip,'r') as f:
+            for e in f:
+                eventsToSkip.append(e.rstrip())
+    else:
+        print 'Warning: event file {0} does not exist.'.format(options.eventsToSkip)
+
+
 process.source = cms.Source(
     "PoolSource",
     fileNames=cms.untracked.vstring(options.inputFiles),
     skipEvents=cms.untracked.uint32(options.skipEvents),
+    eventsToSkip=eventsToSkip,
 )
 
 from FinalStateAnalysis.NtupleTools.parameters.default import parameters
@@ -166,6 +199,7 @@ if options.paramFile:
 if options.runWZ:
     from FinalStateAnalysis.NtupleTools.parameters.wz import parameters as wzParams
     parameters.update(wzParams)
+    #options.eCalib=1 TODO fix when no longer broken
     
 
 if options.eventsToProcess:
@@ -193,11 +227,13 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condD
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'MCRUN2_74_V9A', 'datagt': '74X_dataRun2_Prompt_v2'}
-if options.use25ns:
-    GT['mcgt'] = 'MCRUN2_74_V9'
+#GT = {'mcgt': '74X_mcRun2_asymptotic_v4', 'datagt': '74X_dataRun2_reMiniAOD_v1'}
+#
+#process.GlobalTag.globaltag = cms.string(GT[envvar])
 
-process.GlobalTag.globaltag = cms.string(GT[envvar])
+from Configuration.AlCa.GlobalTag import GlobalTag
+GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
@@ -227,7 +263,8 @@ fs_daughter_inputs = {
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
 
-
+# add additional final states to ntuples with different parameters... work in progress... difficult with VID
+additional_fs = {}
 
 
 
@@ -319,8 +356,28 @@ if options.runMetFilter:
     )
     filters += [process.HBHENoiseFilterResultProducer, process.ApplyBaselineHBHENoiseFilter]
 
-    # CSC Tight Halo
-    # TODO: needs RECO to run, so they will release an event txt file to filter
+    # CSC Tight Halo and EE Bad SC 4
+    eventListFile = 'FinalStateAnalysis/NtupleTools/data/csc2015_Dec01.txt'
+    process.MiniAODCSCTightHaloFilterProducer = cms.EDProducer('MiniAODEventListProducer',
+        label = cms.string('CSCTightHaloFilterResult'),
+        eventList = cms.FileInPath(eventListFile),
+    )
+    process.ApplyCSCTightHaloFilter = cms.EDFilter('BooleanFlagFilter',
+        inputLabel = cms.InputTag('MiniAODCSCTightHaloFilterProducer','CSCTightHaloFilterResult'),
+        reverseDecision = cms.bool(False),
+    )
+    filters += [process.MiniAODCSCTightHaloFilterProducer, process.ApplyCSCTightHaloFilter]
+
+    eventListFile = 'FinalStateAnalysis/NtupleTools/data/ecalscn1043093_Dec01.txt'
+    process.MiniAODBadSCEE4FilterProducer = cms.EDProducer('MiniAODEventListProducer',
+        label = cms.string('BadSCEE4FilterResult'),
+        eventList = cms.FileInPath(eventListFile),
+    )
+    process.ApplyBadSCEE4Filter = cms.EDFilter('BooleanFlagFilter',
+        inputLabel = cms.InputTag('MiniAODBadSCEE4FilterProducer','BadSCEE4FilterResult'),
+        reverseDecision = cms.bool(False),
+    )
+    filters += [process.MiniAODBadSCEE4FilterProducer, process.ApplyBadSCEE4Filter]
 
     # good vertices and ee bad sc filter
     # flag in miniaod, so just filter on that
@@ -343,10 +400,144 @@ if options.runMetFilter:
     )
     filters += [process.MiniAODMETFilterProducer, process.ApplyGoodVerticesFilter, process.ApplyEEBadSCFilter]
 
+if abs(options.runFSRFilter)>0:
+    process.FSRFilter = cms.EDFilter("MiniAODGenLeptonFSRFilter",
+        src = cms.InputTag("prunedGenParticles"),
+        drCut = cms.double(0.05),
+    )
+    if options.runFSRFilter<0:
+        process.FSRFilter.reverseDecision=cms.bool(True)
+    filters += [process.FSRFilter]
+
+
+#######################################
+### MET Uncertainty and Corrections ###
+#######################################
+
+#postfix = 'NewMet'
+#from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+#isData = not options.isMC
+#runMetCorAndUncFromMiniAOD(process,
+#                           jetColl=fs_daughter_inputs['jets'],
+#                           jetCollUnskimmed='slimmedJets',
+#                           photonColl=fs_daughter_inputs['photons'],
+#                           electronColl=fs_daughter_inputs['electrons'],
+#                           muonColl=fs_daughter_inputs['muons'],
+#                           tauColl=fs_daughter_inputs['taus'],
+#                           isData=isData,
+#                           jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
+#                           #repro74X=True,
+#                           postfix=postfix,
+#                           )
+#
+#collMap = {
+#    #'jres' : {'Jets'     : 'shiftedPatJetRes{sign}{postfix}'},
+#    'jres' : {},
+#    'jes'  : {'Jets'     : 'shiftedPatJetEn{sign}{postfix}'},
+#    'mes'  : {'Muons'    : 'shiftedPatMuonEn{sign}{postfix}'},
+#    'ees'  : {'Electrons': 'shiftedPatElectronEn{sign}{postfix}'},
+#    'tes'  : {'Taus'     : 'shiftedPatTauEn{sign}{postfix}'},
+#    'ues'  : {},
+#    'pes'  : {},
+#}
+#signMap = {
+#  '+' : 'Up',
+#  '-' : 'Down',
+#}
+#metMap = {
+#  'jres' : 'patPFMetT1JetRes{sign}{postfix}',
+#  'jes'  : 'patPFMetT1JetEn{sign}{postfix}',
+#  'mes'  : 'patPFMetT1MuonEn{sign}{postfix}',
+#  'ees'  : 'patPFMetT1ElectronEn{sign}{postfix}',
+#  'tes'  : 'patPFMetT1TauEn{sign}{postfix}',
+#  'ues'  : 'patPFMetT1UnclusteredEn{sign}{postfix}',
+#  'pes'  : '',
+#}
+#allowedShifts = ['jres','jes','mes','ees','tes','ues']
+#allowedSigns = ['+','-']
+#
+## this should be it, but fails
+##process.applyCorrections = cms.Path(getattr(process,'fullPatMetSequence{0}'.format(postfix)))
+## fix things
+#getattr(process,'patPFMetT1T2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
+#getattr(process,'patPFMetT2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
+#getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices')
+#process.applyCorrections = cms.Path()
+#if options.isMC: process.applyCorrections += process.genMetExtractor
+#process.applyCorrections += getattr(process,'patPFMet{0}'.format(postfix))
+#process.applyCorrections += process.patJetCorrFactorsReapplyJEC
+#process.applyCorrections += process.patJets
+#process.applyCorrections += getattr(process,'patPFMetT1Txy{0}'.format(postfix))
+#process.applyCorrections += getattr(process,'patPFMetT1{0}'.format(postfix))
+#process.applyCorrections += getattr(process,'patPFMetTxy{0}'.format(postfix))
+#process.schedule.append(process.applyCorrections)
+#fs_daughter_inputs['jets'] = 'patJets'
+#
+## embed references to shifts
+#process.embedShifts = cms.Path()
+#for shift in allowedShifts:
+#    for sign in allowedSigns:
+#        # embed shifted objects
+#        for coll in collMap[shift]:
+#            modName = '{shift}{sign}{coll}Embedding'.format(shift=shift,sign=signMap[sign],coll=coll)
+#            pluginName = 'MiniAODShifted{coll}Embedder'.format(coll=coll[:-1])
+#            dName = coll.lower()
+#            srcName = fs_daughter_inputs[dName]
+#            shiftSrcName = collMap[shift][coll].format(sign=signMap[sign],postfix=postfix)
+#            label = '{shift}{sign}{coll}'.format(shift=shift,sign=signMap[sign],coll=coll)
+#            module = cms.EDProducer(
+#                pluginName,
+#                src = cms.InputTag(srcName),
+#                shiftSrc = cms.InputTag(shiftSrcName),
+#                label = cms.string(label),
+#            )
+#            setattr(process,modName,module)
+#            fs_daughter_inputs[dName] = modName
+#            #process.embedShifts *= getattr(process,shiftSrcName)
+#            process.embedShifts *= getattr(process,modName)
+#        # embed shifted met
+#        modName = '{shift}{sign}METEmbedding'.format(shift=shift,sign=signMap[sign])
+#        metName = metMap[shift].format(sign=signMap[sign],postfix=postfix)
+#        label = '{shift}{sign}MET'.format(shift=shift,sign=signMap[sign])
+#        module = cms.EDProducer(
+#            'MiniAODShiftedMETEmbedder',
+#            src = cms.InputTag(fs_daughter_inputs['pfmet']),
+#            shiftSrc = cms.InputTag(metName),
+#            label = cms.string(label),
+#        )
+#        setattr(process,modName,module)
+#        fs_daughter_inputs['pfmet'] = modName
+#        process.embedShifts *= getattr(process,modName)
+#process.schedule.append(process.embedShifts)
+#
+#
+## switch input to desired one
+#if options.metShift: 
+#    t = options.metShift[:-1]
+#    d = options.metShift[-1]
+#    if options.metShift=='all':
+#        # setup daughters for all
+#        for shift in allowedShifts:
+#            if shift!='mes': continue
+#            for sign in allowedSigns:
+#                if sign!='+': continue
+#                label = shift + signMap[sign]
+#                additional_fs[label] = copy.deepcopy(fs_daughter_inputs)
+#                additional_fs[label]['pfmet'] = metMap[shift].format(sign=signMap[sign],postfix=postfix)
+#                for coll in collMap[shift]:
+#                    additional_fs[label][coll.lower()] = collMap[shift][coll].format(sign=signMap[sign],postfix=postfix)
+#    elif t not in allowedShifts or d not in allowedSigns:
+#        print 'Warning: {0} is not an allowed MET shift, using unshifted collections'.format(options.metShift)
+#    else:
+#        fs_daughter_inputs['pfmet'] = metMap[t].format(sign=signMap[d],postfix=postfix)
+#        for coll in collMap[t]:
+#            fs_daughter_inputs[coll.lower()] = collMap[t][coll].format(sign=signMap[d],postfix=postfix)
 
 
 
-
+#process.EventAnalyzer = cms.EDAnalyzer("EventContentAnalyzer")
+#process.eventAnalyzerPath = cms.Path(process.EventAnalyzer)
+#process.schedule.append(process.eventAnalyzerPath)
 
 
 
@@ -369,27 +560,58 @@ electronMVATrigIDLabel = "BDTIDTrig"
 ##########################
 from FinalStateAnalysis.NtupleTools.customization_electrons import preElectrons
 fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['vertices'],
-    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
-    electronMVATrigIDLabel=electronMVATrigIDLabel)
+                                               idCheatLabel=idCheatLabel,
+                                               isoCheatLabel=isoCheatLabel,
+                                               electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
+                                               electronMVATrigIDLabel=electronMVATrigIDLabel,
+                                               applyEnergyCorrections=bool(options.eCalib),
+                                               isMC=bool(options.isMC),
+                                               isSync=bool(options.isSync),
+                                               )
+for fs in additional_fs:
+    additional_fs[fs]['electrons'] = preElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['vertices'],
+                                                  idCheatLabel=idCheatLabel,
+                                                  isoCheatLabel=isoCheatLabel,
+                                                  electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
+                                                  electronMVATrigIDLabel=electronMVATrigIDLabel,
+                                                  applyEnergyCorrections=bool(options.eCalib),
+                                                  isMC=bool(options.isMC),
+                                                  isSync=bool(options.isSync),
+                                                  postfix=fs,
+                                                  )
 
 ######################
 ### embed muon IDs ###
 ######################
 from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
 fs_daughter_inputs['muons'] = preMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['vertices'],
-    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost)
+                                       idCheatLabel=idCheatLabel,
+                                       isoCheatLabel=isoCheatLabel,
+                                       skipGhost=options.skipGhost,
+                                       )
+for fs in additional_fs:
+    additional_fs[fs]['muons'] = preMuons(process,options.use25ns,additional_fs[fs]['muons'],additional_fs[fs]['vertices'],
+                                          idCheatLabel=idCheatLabel,
+                                          isoCheatLabel=isoCheatLabel,
+                                          skipGhost=options.skipGhost,
+                                          postfix=fs,
+                                          )
 
 #####################
 ### embed tau IDs ###
 #####################
 from FinalStateAnalysis.NtupleTools.customization_taus import preTaus
 fs_daughter_inputs['taus'] = preTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['vertices'])
+for fs in additional_fs:
+    additional_fs[fs]['taus'] = preTaus(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['vertices'],postfix=fs)
 
 ########################
 ### jet id embedding ###
 ########################
 from FinalStateAnalysis.NtupleTools.customization_jets import preJets
 fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs['jets'],fs_daughter_inputs['vertices'])
+for fs in additional_fs:
+    additional_fs[fs]['jets'] = preJets(process,options.use25ns,additional_fs[fs]['jets'],additional_fs[fs]['vertices'],postfix=fs)
 
 ########################################
 ### pre selection HZZ customizations ###
@@ -405,11 +627,6 @@ if options.hzz:
         fs_daughter_inputs['fsr'] = 'boostedFsrPhotons'
         process.makeFSRPhotons = cms.Path(process.fsrPhotonSequence)
         process.schedule.append(process.makeFSRPhotons)
-
-
-
-
-
 
 
 
@@ -437,7 +654,20 @@ for ob in preselections:
 process.FSAPreselection = cms.Path(process.preselectionSequence)
 process.schedule.append(process.FSAPreselection)
 
-
+for fs in additional_fs:
+    preSeqName = 'preselectionSequence{0}'.format(fs)
+    preSeq = setup_selections(
+        process,
+        "Preselection",
+        additional_fs[fs],
+        preselections,
+        postfix=fs,
+        )
+    setattr(process,preSeqName,preSeq)
+    for ob in preselections:
+        additional_fs[fs][getName(ob)+'s'] = getName(ob)+"Preselection{0}".format(fs)
+    setattr(process,'FSAPreselection{0}'.format(fs),cms.Path(getattr(process,preSeqName)))
+    process.schedule.append(getattr(process,'FSAPreselection{0}'.format(fs)))
 
 
 
@@ -452,18 +682,25 @@ process.schedule.append(process.FSAPreselection)
 ###################################
 from FinalStateAnalysis.NtupleTools.customization_electrons import postElectrons
 fs_daughter_inputs['electrons'] = postElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['jets'])
+for fs in additional_fs:
+    additional_fs[fs]['electrons'] = postElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['jets'],postfix=fs)
+
 
 ###############################
 ### post muon customization ###
 ###############################
 from FinalStateAnalysis.NtupleTools.customization_muons import postMuons
 fs_daughter_inputs['muons'] = postMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['jets'])
+for fs in additional_fs:
+    additional_fs[fs]['muons'] = postMuons(process,options.use25ns,additional_fs[fs]['muons'],additional_fs[fs]['jets'],postfix=fs)
 
 ##############################
 ### post tau customization ###
 ##############################
 from FinalStateAnalysis.NtupleTools.customization_taus import postTaus
 fs_daughter_inputs['taus'] = postTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['jets'])
+for fs in additional_fs:
+    additional_fs[fs]['taus'] = postTaus(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['jets'],postfix=fs)
 
 
 
@@ -567,6 +804,7 @@ if options.hzz and hzz4l:
 
 
 
+
 ############################
 ### Now do the FSA stuff ###
 ############################
@@ -584,11 +822,27 @@ produce_final_states(process, fs_daughter_inputs, output_to_keep, process.buildF
                      'puTagDoesntMatter', buildFSAEvent=True,
                      noTracks=True, runMVAMET=options.runMVAMET,
                      hzz=options.hzz, rochCor=options.rochCor,
-                     eleCor=options.eleCor, use25ns=options.use25ns, **parameters)
+                     eleCor=options.eleCor, use25ns=options.use25ns, 
+                     **parameters)
 process.buildFSAPath = cms.Path(process.buildFSASeq)
 # Don't crash if some products are missing (like tracks)
 process.patFinalStateEventProducer.forbidMissing = cms.bool(False)
 process.schedule.append(process.buildFSAPath)
+
+for fs in additional_fs:
+    setattr(process,'buildFSASeq{0}'.format(fs),cms.Sequence())
+    produce_final_states(process, additional_fs[fs], output_to_keep, getattr(process,'buildFSASeq{0}'.format(fs)),
+                         'puTagDoesntMatter', buildFSAEvent=True,
+                         noTracks=True, runMVAMET=options.runMVAMET,
+                         hzz=options.hzz, rochCor=options.rochCor,
+                         eleCor=options.eleCor, use25ns=options.use25ns,
+                         postfix=fs,
+                         **parameters)
+    setattr(process,'buildFSAPath{0}'.format(fs), cms.Path(getattr(process,'buildFSASeq{0}'.format(fs))))
+    getattr(process,'patFinalStateEventProducer{0}'.format(fs)).forbidMissing = cms.bool(False)
+    process.schedule.append(getattr(process,'buildFSAPath{0}'.format(fs)))
+
+
 # Drop the old stuff. (do we still need this?)
 process.source.inputCommands = cms.untracked.vstring(
     'keep *',
@@ -761,6 +1015,7 @@ if options.keepPat:
 else:
     print "Building ntuple for final states: %s" % ", ".join(final_states)
     for final_state in expanded_final_states(final_states):
+        if additional_fs: print 'Adding ntuple {0}'.format(final_state)
         extraJets = options.nExtraJets if 'j' not in final_state else 0
         final_state = order_final_state(final_state)
         analyzer = make_ntuple(*final_state, 
@@ -770,10 +1025,26 @@ else:
                                 skimCuts=options.skimCuts, suffix=suffix,
                                 hzz=options.hzz, nExtraJets=extraJets, 
                                 use25ns=options.use25ns, 
-                                isMC=options.isMC, **parameters)
+                                isMC=options.isMC,isShiftedMet=bool(options.metShift),
+                                **parameters)
         add_ntuple(final_state, analyzer, process,
                    process.schedule, options.eventView, filters)
+        for fs in additional_fs:
+            print "Adding additional ntuple with postfix {0}".format(fs)
+            analyzer = make_ntuple(*final_state,
+                                    svFit=options.svFit, dblhMode=options.dblhMode,
+                                    runTauSpinner=options.runTauSpinner,
+                                    runMVAMET=options.runMVAMET,
+                                    skimCuts=options.skimCuts, suffix=suffix,
+                                    hzz=options.hzz, nExtraJets=extraJets,
+                                    use25ns=options.use25ns,
+                                    isMC=options.isMC,isShiftedMet=bool(options.metShift),
+                                    postfix=fs,
+                                    **parameters)
+            add_ntuple(final_state+fs, analyzer, process,
+                       process.schedule, options.eventView, filters)
 
+            
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 
@@ -801,3 +1072,4 @@ if options.passThru:
 
 if options.dump:
     print process.dumpPython()
+

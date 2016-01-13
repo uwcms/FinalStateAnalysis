@@ -185,6 +185,8 @@ def make_ntuple(*legs, **kwargs):
     by setting 'noclean' to True in kwargs.
 
     '''
+    postfix = kwargs.pop('postfix','')
+    isShiftedMet = kwargs.pop('isShiftedMet',False)
     # Make sure we only use allowed leg types
     allowed = set(['m', 'e', 't', 'g','j'])
     assert(all(x in allowed for x in legs))
@@ -211,6 +213,12 @@ def make_ntuple(*legs, **kwargs):
     isMC = kwargs.get('isMC', False)
 
     ntuple_config = _common_template.clone()
+    if not isShiftedMet:
+        ntuple_config = PSet(
+            ntuple_config,
+            templates.event.shiftedMet
+        )
+        
     if kwargs.get('runTauSpinner', False):
         for parName in templates.event.tauSpinner.parameterNames_():
             setattr(
@@ -281,6 +289,12 @@ def make_ntuple(*legs, **kwargs):
             custVariables[v],
             candidateVariables,
         )
+        if not isShiftedMet and v!='j':
+            leg_branch_templates[v] = PSet(
+                leg_branch_templates[v],
+                templates.topology.shiftedMtToMET
+            )
+
 
     for i, leg in enumerate(legs):
         counts[leg] += 1
@@ -363,7 +377,7 @@ def make_ntuple(*legs, **kwargs):
             )
 
     analyzerSrc = "finalState" + "".join(
-            _producer_translation[x] for x in legs ) + producer_suffix
+            _producer_translation[x] for x in legs ) + producer_suffix + postfix
 
     # Some feature are not included in miniAOD or are currently broken. 
     # Remove them from the ntuples to prevent crashes.
@@ -388,7 +402,7 @@ def make_ntuple(*legs, **kwargs):
         weights=cms.vstring(),
         # input final state collection.
         src=cms.InputTag( analyzerSrc ),
-        evtSrc=cms.InputTag("patFinalStateEventProducer"),
+        evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
         # counter of events before any selections
         skimCounter=cms.InputTag("eventCount"),
         summedWeight=cms.InputTag("summedWeight"),

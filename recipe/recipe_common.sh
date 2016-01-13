@@ -22,4 +22,10 @@ MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
 #git apply FinalStateAnalysis/recipe/patches/DataFormats_PatCandidates_TriggerEvent.cc.patch
 #set -o errexit
 
+# unzip the txt files for metfilter
+pushd $CMSSW_BASE/src/FinalStateAnalysis/NtupleTools/data/
+gunzip -c csc2015_Dec01.txt.gz > csc2015_Dec01.txt
+gunzip -c ecalscn1043093_Dec01.txt.gz > ecalscn1043093_Dec01.txt
+popd
+
 popd

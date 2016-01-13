@@ -39,7 +39,7 @@ public:
   virtual ~PATMuonEAEmbedder(){}
   void produce(Event& evt, const EventSetup& es);
 private:
-  InputTag _src;
+  edm::EDGetTokenT<MuonCollection> _srcToken;
   vstring _eas_to_get;  
   PATMuonEACalculator _eacalc;
   
@@ -49,7 +49,7 @@ PATMuonEAEmbedder::PATMuonEAEmbedder(const
 				     ParameterSet& pset)
   :_eacalc(PATMuonEACalculator(pset.getParameterSetVector("effective_areas"))){
   _eas_to_get = pset.getParameter<vstring>("applied_effective_areas");
-  _src = pset.getParameter<InputTag>("src");  
+  _srcToken = consumes<MuonCollection>(pset.getParameter<InputTag>("src"));
   produces<MuonCollection>();
 }
 
@@ -60,7 +60,7 @@ void PATMuonEAEmbedder::produce(Event& evt,
   std::auto_ptr<MuonCollection> output(new MuonCollection());
 
   edm::Handle<MuonCollection> handle;
-  evt.getByLabel(_src, handle);
+  evt.getByToken(_srcToken, handle);
   
   vstring::const_iterator i;
   vstring::const_iterator e = _eas_to_get.end();

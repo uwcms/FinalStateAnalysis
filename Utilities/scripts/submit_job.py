@@ -97,7 +97,7 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
     input_commands.extend([
         '--input-file-list=%s' % input_txt_path,
         '--assume-input-files-exist', 
-        '--input-dir=root://cmsxrootd.fnal.gov/',
+        #'--input-dir=root://cmsxrootd.fnal.gov/',
     ])
 
     command = [
@@ -131,7 +131,7 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     # temp hardcode
     if args.apply_cms_lumimask:
-        filename = 'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt' # 2.11/fb
+        filename = 'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt' # 2215.18/pb
         if args.bunchSpacing==50: filename = 'Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2.txt' # 71.52/pb
         lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV',filename)
         if args.lumimaskjson: lumi_mask_path = args.lumimaskjson

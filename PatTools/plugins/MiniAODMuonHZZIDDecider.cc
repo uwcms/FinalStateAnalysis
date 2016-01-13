@@ -54,7 +54,7 @@ private:
   edm::EDGetTokenT<edm::View<pat::Muon> > muonCollectionToken_;
   std::string idLabel_; // label for the decision userfloat
   std::string isoLabel_;
-  const edm::InputTag vtxSrc_; // primary vertex (for veto PV and SIP cuts)
+  const edm::EDGetTokenT<reco::VertexCollection> vtxSrcToken_; // primary vertex (for veto PV and SIP cuts)
   edm::Handle<reco::VertexCollection> vertices;
   std::auto_ptr<std::vector<pat::Muon> > out; // Collection we'll output at the end
 
@@ -80,7 +80,7 @@ MiniAODMuonHZZIDDecider::MiniAODMuonHZZIDDecider(const edm::ParameterSet& iConfi
   isoLabel_(iConfig.exists("isoLabel") ?
 	   iConfig.getParameter<std::string>("isoLabel") :
 	   std::string("HZZ4lIsoPass")),
-  vtxSrc_(iConfig.exists("vtxSrc") ? iConfig.getParameter<edm::InputTag>("vtxSrc") : edm::InputTag("selectedPrimaryVertex")),
+  vtxSrcToken_(consumes<reco::VertexCollection>(iConfig.exists("vtxSrc") ? iConfig.getParameter<edm::InputTag>("vtxSrc") : edm::InputTag("selectedPrimaryVertex"))),
   ptCut(iConfig.exists("ptCut") ? iConfig.getParameter<double>("ptCut") : 5.),
   etaCut(iConfig.exists("etaCut") ? iConfig.getParameter<double>("etaCut") : 2.4),
   sipCut(iConfig.exists("sipCut") ? iConfig.getParameter<double>("sipCut") : 4.),
@@ -97,9 +97,10 @@ void MiniAODMuonHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSetup&
   out = std::auto_ptr<std::vector<pat::Muon> >(new std::vector<pat::Muon>);
 
   edm::Handle<edm::View<pat::Muon> > muonsIn;
-  iEvent.getByLabel(vtxSrc_,vertices);
-
   iEvent.getByToken(muonCollectionToken_, muonsIn);
+
+  iEvent.getByToken(vtxSrcToken_,vertices);
+
 
   for(edm::View<pat::Muon>::const_iterator mi = muonsIn->begin();
       mi != muonsIn->end(); mi++) // loop over muons

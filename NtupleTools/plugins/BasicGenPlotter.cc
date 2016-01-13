@@ -8,6 +8,22 @@
 #include "TH1D.h"
 #include "TH2D.h"
 #include "TTree.h"
+#include "FWCore/Framework/interface/Event.h"
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
+#include "DataFormats/Common/interface/Handle.h"
+
+#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+
+#include <map>
+#include <memory>
+
+using namespace edm;
+using namespace std;
+using namespace reco;
+
 class BasicGenPlotter : public edm::EDFilter {
 
 public:
@@ -16,7 +32,7 @@ public:
   virtual void beginJob();
   virtual void endJob();
 private:
-  edm::InputTag GenParticleTag_;
+  edm::EDGetTokenT<vector<reco::GenParticle> > GenParticleToken_;
   double minPtThreshold_;
 
   // For Pythia8
@@ -49,25 +65,9 @@ private:
   double nall;
   double nsel;
 };
-#include "FWCore/Framework/interface/Event.h"
-#include "FWCore/MessageLogger/interface/MessageLogger.h"
-#include "DataFormats/Common/interface/Handle.h"
-
-#include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
-#include "FWCore/ServiceRegistry/interface/Service.h"
-#include "CommonTools/UtilAlgos/interface/TFileService.h"
-#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
-
-#include <map>
-#include <memory>
-
-using namespace edm;
-using namespace std;
-using namespace reco;
-
 
 BasicGenPlotter::BasicGenPlotter( const ParameterSet & cfg ) :
-      GenParticleTag_(cfg.getUntrackedParameter<edm::InputTag> ("GenTag", edm::InputTag("genParticles"))),
+      GenParticleToken_(consumes<vector<reco::GenParticle> >(cfg.getUntrackedParameter<edm::InputTag> ("GenTag", edm::InputTag("genParticles")))),
       minPtThreshold_(cfg.getUntrackedParameter<double> ("MinPtThreshold",1)),
       skipMPI_(cfg.getUntrackedParameter<bool> ("SkipMPI",false)),
       skipInitialStateShowers_(cfg.getUntrackedParameter<bool> ("SkipInitialStateShowers",false)),
@@ -126,7 +126,7 @@ bool BasicGenPlotter::filter (Event & ev, const EventSetup &) {
   bool found=true;
 
   edm::Handle< vector<reco::GenParticle> >pGenPart;
-  if(ev.getByLabel(GenParticleTag_, pGenPart)){
+  if(ev.getByToken(GenParticleToken_, pGenPart)){
 
   pts_->clear();
   etas_->clear();

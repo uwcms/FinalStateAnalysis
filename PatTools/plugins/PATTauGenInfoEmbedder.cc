@@ -26,18 +26,18 @@ class PATTauGenInfoEmbedder : public edm::EDProducer {
     virtual ~PATTauGenInfoEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
+    edm::EDGetTokenT<edm::View<pat::Tau> > srcToken_;
 
 };
 PATTauGenInfoEmbedder::PATTauGenInfoEmbedder(const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
+  srcToken_ = consumes<edm::View<pat::Tau> >(pset.getParameter<edm::InputTag>("src"));
   produces<pat::TauCollection>();
 }
 
 void PATTauGenInfoEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
   std::auto_ptr<pat::TauCollection> output(new pat::TauCollection);
   edm::Handle<edm::View<pat::Tau> > taus;
-  evt.getByLabel(src_, taus);
+  evt.getByToken(srcToken_, taus);
   output->reserve(taus->size());
 
   // Loop over input taus
