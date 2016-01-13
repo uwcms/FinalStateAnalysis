@@ -48,12 +48,12 @@ class PATFinalStateVertexFitter : public edm::EDProducer {
     virtual ~PATFinalStateVertexFitter(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
+    edm::EDGetTokenT<edm::View<PATFinalState> > srcToken_;
     bool enable_;
 };
 
 PATFinalStateVertexFitter::PATFinalStateVertexFitter(const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
+  srcToken_ = consumes<edm::View<PATFinalState> >(pset.getParameter<edm::InputTag>("src"));
   enable_ = pset.getParameter<bool>("enable");
   produces<PATFinalStateCollection>();
 }
@@ -61,7 +61,7 @@ void PATFinalStateVertexFitter::produce(edm::Event& evt, const edm::EventSetup& 
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
   edm::Handle<edm::View<PATFinalState> > finalStates;
-  evt.getByLabel(src_, finalStates);
+  evt.getByToken(srcToken_, finalStates);
 
   edm::ESHandle<TransientTrackBuilder> trackBuilderHandle;
   if (enable_) {

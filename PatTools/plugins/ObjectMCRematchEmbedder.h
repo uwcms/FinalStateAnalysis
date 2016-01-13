@@ -31,15 +31,16 @@ class MCRematchEmbedder : public edm::EDProducer {
   typedef edm::Ref<Collection> ObjectRef;
   public:
     MCRematchEmbedder (const edm::ParameterSet& iConfig):
-      src_(iConfig.getParameter<edm::InputTag>("src")),
-      matchSrc_(iConfig.getParameter<edm::InputTag>("matchSrc")) {
+      srcToken_(consumes<Collection>(iConfig.getParameter<edm::InputTag>("src"))),
+      matchSrcToken_(consumes<GenMatchMap>(iConfig.getParameter<edm::InputTag>("matchSrc"))) {
       produces< Collection >();
     }
     ~MCRematchEmbedder () { }
 
     virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
  private:
-    edm::InputTag src_, matchSrc_;
+    edm::EDGetTokenT<Collection> srcToken_;
+    edm::EDGetTokenT<GenMatchMap> matchSrcToken_;
 };
 
 template<typename Collection>
@@ -50,8 +51,8 @@ void MCRematchEmbedder<Collection>::produce(edm::Event& iEvent,
   edm::Handle<Collection> in;
   edm::Handle<GenMatchMap> match;
 
-  iEvent.getByLabel(src_,in);
-  iEvent.getByLabel(matchSrc_,match);
+  iEvent.getByToken(srcToken_,in);
+  iEvent.getByToken(matchSrcToken_,match);
 
   typename Collection::const_iterator i = in->begin();
   typename Collection::const_iterator b = in->begin();
@@ -78,9 +79,9 @@ class MCRematchEmbedder<pat::JetCollection> : public edm::EDProducer {
   typedef edm::Ref<pat::JetCollection> ObjectRef;
  public:
   MCRematchEmbedder (const edm::ParameterSet& iConfig):
-    src_(iConfig.getParameter<edm::InputTag>("src")),
-    matchSrc_(iConfig.getParameter<edm::InputTag>("matchSrc")),
-    genJetMatchSrc_(iConfig.getParameter<edm::InputTag>("genJetMatchSrc")) {
+    srcToken_(consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("src"))),
+    matchSrcToken_(consumes<GenMatchMap>(iConfig.getParameter<edm::InputTag>("matchSrc"))),
+    genJetMatchSrcToken_(consumes<GenJetMatchMap>(iConfig.getParameter<edm::InputTag>("genJetMatchSrc"))) {
     produces< pat::JetCollection >();
     produces< reco::GenJetCollection >(); // for forward refs
   }
@@ -88,7 +89,9 @@ class MCRematchEmbedder<pat::JetCollection> : public edm::EDProducer {
   
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
  private:
-  edm::InputTag src_, matchSrc_, genJetMatchSrc_;
+  edm::EDGetTokenT<pat::JetCollection> srcToken_;
+  edm::EDGetTokenT<GenMatchMap> matchSrcToken_;
+  edm::EDGetTokenT<GenJetMatchMap> genJetMatchSrcToken_;
 };
 
 void 
@@ -104,9 +107,9 @@ MCRematchEmbedder<pat::JetCollection>::produce(edm::Event& iEvent,
   edm::Handle<GenMatchMap> match;
   edm::Handle<GenJetMatchMap> jetmatch;
 
-  iEvent.getByLabel(src_,in);
-  iEvent.getByLabel(matchSrc_,match);
-  iEvent.getByLabel(genJetMatchSrc_,jetmatch);
+  iEvent.getByToken(srcToken_,in);
+  iEvent.getByToken(matchSrcToken_,match);
+  iEvent.getByToken(genJetMatchSrcToken_,jetmatch);
 
   pat::JetCollection::const_iterator i = in->begin();
   pat::JetCollection::const_iterator b = in->begin();

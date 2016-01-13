@@ -36,7 +36,7 @@ class PATFinalStateSelector : public edm::EDProducer {
   virtual void endJob();
 
   // Tag of final states in question
-  edm::InputTag src_;
+  edm::EDGetTokenT<edm::View<PATFinalState> > srcToken_;
 
   // List of selectors
   std::vector<StringCutObjectSelector<PATFinalState> > cuts_;
@@ -44,9 +44,9 @@ class PATFinalStateSelector : public edm::EDProducer {
 
 
 PATFinalStateSelector::PATFinalStateSelector(const edm::ParameterSet& iConfig) :
-  src_(iConfig.exists("src") ?
+  srcToken_(consumes<edm::View<PATFinalState> >(iConfig.exists("src") ?
        iConfig.getParameter<edm::InputTag>("src") :
-       edm::InputTag("finalStateeeee"))
+       edm::InputTag("finalStateeeee")))
 {
   const std::vector<std::string> cutStrings = (iConfig.exists("cuts") ?
                                                iConfig.getParameter<std::vector<std::string> >("cuts") :
@@ -66,7 +66,7 @@ void PATFinalStateSelector::produce(edm::Event& iEvent, const edm::EventSetup& i
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
   edm::Handle<edm::View<PATFinalState> > finalStatesIn;
-  iEvent.getByLabel(src_, finalStatesIn);
+  iEvent.getByToken(srcToken_, finalStatesIn);
 
   for (size_t iFS = 0; iFS < finalStatesIn->size(); ++iFS) 
     {

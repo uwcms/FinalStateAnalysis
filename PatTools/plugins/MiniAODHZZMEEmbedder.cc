@@ -68,7 +68,7 @@ class MiniAODHZZMEEmbedder : public edm::EDProducer {
   void getPm4l(const PATQuadFinalStateT<Ls...>& fs, MEMNames::SuperKDsyst syst, float& sigProb, 
 	       float& bkgProb, const std::string& fsrLabel);
   // Tag of final states to calculate MEs for
-  edm::InputTag src_;
+  edm::EDGetTokenT<edm::View<PATFinalState> > src_;
   // MEM calculator object
   MEMs MEM_; 
   // List of probabilities to calculate
@@ -90,9 +90,9 @@ class MiniAODHZZMEEmbedder : public edm::EDProducer {
 
 template<class... Ls>
 MiniAODHZZMEEmbedder<Ls...>::MiniAODHZZMEEmbedder(const edm::ParameterSet& iConfig) :
-  src_(iConfig.exists("src") ?
+  srcToken_(consumes<edm::View<PATFinalState> >(iConfig.exists("src") ?
        iConfig.getParameter<edm::InputTag>("src") :
-       edm::InputTag("finalStateeeee")),
+       edm::InputTag("finalStateeeee"))),
   processes_(iConfig.exists("processes") ?
 	     iConfig.getParameter<std::vector<std::string> >("processes") :
 	     std::vector<std::string>()),
@@ -140,7 +140,7 @@ void MiniAODHZZMEEmbedder<Ls...>::produce(edm::Event& iEvent, const edm::EventSe
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
   edm::Handle<edm::View<PATFinalState> > finalStatesIn;
-  iEvent.getByLabel(src_, finalStatesIn);
+  iEvent.getByToken(srcToken_, finalStatesIn);
 
   for (size_t iFS = 0; iFS < finalStatesIn->size(); ++iFS) 
     {

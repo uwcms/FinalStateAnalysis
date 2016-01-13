@@ -73,7 +73,7 @@ tracking = PSet(
     objectSCPositionX = '{object}.superCluster().position().x',
     objectSCPositionY = '{object}.superCluster().position().y',
     objectSCPositionZ = '{object}.superCluster().position().z',   
-    objectHasConversionTracks = '{object}.hasConversionTracks',    
+    #objectHasConversionTracks = '{object}.hasConversionTracks',    
 )
 
 # Information about the matched supercluster

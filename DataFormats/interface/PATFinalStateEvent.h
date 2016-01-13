@@ -124,7 +124,7 @@ class PATFinalStateEvent {
 
     /// Get the event ID
     const edm::EventID& evtId() const;
-    int event() const;
+    double event() const;
 
     /// The following functions use the "SmartTrigger" functionality.
     /// They can be passed a comma separated list of paths:

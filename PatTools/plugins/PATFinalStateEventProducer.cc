@@ -40,55 +40,58 @@ public:
 private:
 
   template<typename T> edm::RefProd<T> getRefProd(
-                                                  const edm::InputTag& src, const edm::Event& evt) const;
+      const edm::EDGetTokenT<T>& srcToken, const edm::Event& evt) const;
 
   typedef math::Error<2>::type Matrix;
   // General global quantities
-  edm::InputTag rhoSrc_;
-  edm::EDGetTokenT<edm::View<reco::Vertex> > pvSrc_;
-  edm::EDGetTokenT<edm::View<reco::Vertex> > pvBackSrc_;
-  edm::EDGetTokenT<edm::View<reco::Vertex> > verticesSrc_;
+  edm::EDGetTokenT<double> rhoSrcToken_;
+  edm::EDGetTokenT<edm::View<reco::Vertex> > pvSrcToken_;
+  edm::EDGetTokenT<edm::View<reco::Vertex> > pvBackSrcToken_;
+  edm::EDGetTokenT<edm::View<reco::Vertex> > verticesSrcToken_;
 
   // The final tau/jet/muon etc collections in the event
-  edm::InputTag electronSrc_;
-  edm::InputTag jetSrc_;
-  edm::InputTag muonSrc_;
-  edm::InputTag tauSrc_;
-  edm::InputTag phoSrc_;
+  edm::EDGetTokenT<pat::ElectronCollection> electronSrcToken_;
+  edm::EDGetTokenT<pat::JetCollection> jetSrcToken_;
+  edm::EDGetTokenT<pat::MuonCollection> muonSrcToken_;
+  edm::EDGetTokenT<pat::TauCollection> tauSrcToken_;
+  edm::EDGetTokenT<pat::PhotonCollection> phoSrcToken_;
 
   // Information about PFLOW
-  edm::InputTag pfSrc_;
+  //edm::EDGetTokenT<edm::InputTag> pfSrcToken_;
 
   // Information about tracks
-  edm::InputTag trackSrc_;
-  edm::InputTag gsfTrackSrc_;
+  //edm::EDGetTokenT<edm::InputTag> trackSrcToken_;
+  //edm::EDGetTokenT<edm::InputTag> gsfTrackSrcToken_;
 
   // Information about the MET
-  edm::EDGetTokenT<edm::View<pat::MET> > metSrc_;
-  edm::InputTag metCovSrc_;
+  edm::EDGetTokenT<edm::View<pat::MET> > metSrcToken_;
+  //edm::EDGetTokenT<edm::InputTag> metCovSrcToken_;
 
   // Trigger input
-  edm::InputTag trgSrc_;
+  edm::EDGetTokenT<std::vector<pat::TriggerObjectStandAlone> > trgSrcToken_;
 
   // PU information
-  edm::InputTag puInfoSrc_;
+  edm::EDGetTokenT<std::vector<PileupSummaryInfo> > puInfoSrcToken_;
 
   // MC information
-  edm::InputTag truthSrc_;
+  edm::EDGetTokenT<reco::GenParticleCollection> truthSrcToken_;
   edm::ParameterSet extraWeights_;
+
+  edm::EDGetTokenT<GenFilterInfo> generatorFilterToken_;
+
   // The PU scenario to use
   std::string puScenario_;
 
-  edm::InputTag photonCoreSrc_;
-  edm::InputTag gsfCoreSrc_;
+  //edm::EDGetTokenT<edm::InputTag> photonCoreSrcToken_;
+  //edm::EDGetTokenT<edm::InputTag> gsfCoreSrcToken_;
 
-  edm::InputTag packedPFSrc_;
-  edm::InputTag packedGenSrc_;
+  edm::EDGetTokenT<pat::PackedCandidateCollection> packedPFSrcToken_;
+  //edm::EDGetTokenT<edm::InputTag> packedGenSrcToken_;
 
-  edm::InputTag trgPrescaleSrc_;
-  edm::InputTag trgResultsSrc_;
+  edm::EDGetTokenT<pat::PackedTriggerPrescales> trgPrescaleSrcToken_;
+  edm::EDGetTokenT<edm::TriggerResults> trgResultsSrcToken_;
 
-  edm::InputTag jetAK8Src_;
+  //edm::EDGetTokenT<pat::JetCollection> jetAK8SrcToken_;
 
   typedef std::pair<std::string, edm::EDGetTokenT<edm::View<pat::MET> > > METTokenMap;
   std::vector<METTokenMap> metCfg_;
@@ -103,38 +106,40 @@ private:
 
 PATFinalStateEventProducer::PATFinalStateEventProducer(
                                                        const edm::ParameterSet& pset) {
-  rhoSrc_ = pset.getParameter<edm::InputTag>("rhoSrc");
-  pvSrc_ = consumes<edm::View<reco::Vertex> >(pset.getParameter<edm::InputTag>("pvSrc"));
-  pvBackSrc_ = consumes<edm::View<reco::Vertex> >(pset.getParameter<edm::InputTag>("pvSrcBackup"));
-  verticesSrc_ = consumes<edm::View<reco::Vertex> >(pset.getParameter<edm::InputTag>("verticesSrc"));
+  rhoSrcToken_ = consumes<double>(pset.getParameter<edm::InputTag>("rhoSrc"));
+  pvSrcToken_ = consumes<edm::View<reco::Vertex> >(pset.getParameter<edm::InputTag>("pvSrc"));
+  pvBackSrcToken_ = consumes<edm::View<reco::Vertex> >(pset.getParameter<edm::InputTag>("pvSrcBackup"));
+  verticesSrcToken_ = consumes<edm::View<reco::Vertex> >(pset.getParameter<edm::InputTag>("verticesSrc"));
 
-  electronSrc_ = pset.getParameter<edm::InputTag>("electronSrc");
-  muonSrc_ = pset.getParameter<edm::InputTag>("muonSrc");
-  tauSrc_ = pset.getParameter<edm::InputTag>("tauSrc");
-  jetSrc_ = pset.getParameter<edm::InputTag>("jetSrc");
-  phoSrc_ = pset.getParameter<edm::InputTag>("phoSrc");
+  electronSrcToken_ = consumes<pat::ElectronCollection>(pset.getParameter<edm::InputTag>("electronSrc"));
+  muonSrcToken_     = consumes<pat::MuonCollection>(pset.getParameter<edm::InputTag>("muonSrc"));
+  tauSrcToken_      = consumes<pat::TauCollection>(pset.getParameter<edm::InputTag>("tauSrc"));
+  jetSrcToken_      = consumes<pat::JetCollection>(pset.getParameter<edm::InputTag>("jetSrc"));
+  phoSrcToken_      = consumes<pat::PhotonCollection>(pset.getParameter<edm::InputTag>("phoSrc"));
 
-  metSrc_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("metSrc"));
-  trgSrc_ = pset.getParameter<edm::InputTag>("trgSrc");
-  puInfoSrc_ = pset.getParameter<edm::InputTag>("puInfoSrc");
-  truthSrc_ = pset.getParameter<edm::InputTag>("genParticleSrc");
+  metSrcToken_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("metSrc"));
+  trgSrcToken_ = consumes<std::vector<pat::TriggerObjectStandAlone> >(pset.getParameter<edm::InputTag>("trgSrc"));
+  puInfoSrcToken_ = consumes<std::vector<PileupSummaryInfo> >(pset.getParameter<edm::InputTag>("puInfoSrc"));
+  truthSrcToken_ = consumes<reco::GenParticleCollection>(pset.getParameter<edm::InputTag>("genParticleSrc"));
   extraWeights_ = pset.getParameterSet("extraWeights");
   puScenario_ = pset.getParameter<std::string>("puTag");
 
   forbidMissing_ = pset.exists("forbidMissing") ?
     pset.getParameter<bool>("forbidMissing") : true;
 
-  trgResultsSrc_ = pset.getParameter<edm::InputTag>("trgResultsSrc");
+  trgResultsSrcToken_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc"));
 
-  photonCoreSrc_ = pset.getParameter<edm::InputTag>("photonCoreSrc");
-  gsfCoreSrc_ = pset.getParameter<edm::InputTag>("gsfCoreSrc");
+  //photonCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("photonCoreSrc"));
+  //gsfCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("gsfCoreSrc"));
 
-  packedPFSrc_ = pset.getParameter<edm::InputTag>("packedPFSrc");
-  packedGenSrc_ = pset.getParameter<edm::InputTag>("packedGenSrc");
+  packedPFSrcToken_ = consumes<pat::PackedCandidateCollection>(pset.getParameter<edm::InputTag>("packedPFSrc"));
+  //packedGenSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("packedGenSrc"));
 
-  trgPrescaleSrc_ = pset.getParameter<edm::InputTag>("trgPrescaleSrc");
+  trgPrescaleSrcToken_ = consumes<pat::PackedTriggerPrescales>(pset.getParameter<edm::InputTag>("trgPrescaleSrc"));
 
-  jetAK8Src_ = pset.getParameter<edm::InputTag>("jetAK8Src");
+  //jetAK8SrcToken_ = consumes<pat::JetCollection>(pset.getParameter<edm::InputTag>("jetAK8Src"));
+
+  generatorFilterToken_ = consumes<GenFilterInfo>(edm::InputTag("generator","minVisPtFilter"));
 
   // Get different type of METs
   edm::ParameterSet mets = pset.getParameterSet("mets");
@@ -158,15 +163,14 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
 }
 
 template<typename T> edm::RefProd<T>
-PATFinalStateEventProducer::getRefProd(const edm::InputTag& src,
+PATFinalStateEventProducer::getRefProd(const edm::EDGetTokenT<T>& srcToken,
                                        const edm::Event& evt) const {
   edm::Handle<T> handle;
-  evt.getByLabel(src, handle);
+  evt.getByToken(srcToken, handle);
   // If we are being permissive, and the product doesn't exist,
   // emit an error and a null ref.
   if (!forbidMissing_ && !handle.isValid()) {
-    edm::LogWarning("FSAEventMissingProduct") << "The FSA collection "
-                                              << src.label() << " is missing.  It will be null." << std::endl;
+    edm::LogWarning("FSAEventMissingProduct") << "The FSA token is invalid.  It will be null." << std::endl;
     return edm::RefProd<T>();
   }
   return edm::RefProd<T>(handle);
@@ -178,13 +182,13 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
                                                      new PATFinalStateEventCollection);
 
   edm::Handle<double> rho;
-  evt.getByLabel(rhoSrc_, rho);
+  evt.getByToken(rhoSrcToken_, rho);
 
   edm::Handle<edm::View<reco::Vertex> > pv;
-  evt.getByToken(pvSrc_, pv);
+  evt.getByToken(pvSrcToken_, pv);
 
   edm::Handle<edm::View<reco::Vertex> > pv_back;
-  evt.getByToken(pvBackSrc_, pv_back);
+  evt.getByToken(pvBackSrcToken_, pv_back);
 
   edm::Ptr<reco::Vertex> pvPtr;
   if( pv->size() )
@@ -197,28 +201,28 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     std::cout << "!!!!! There are no primary vertices,"
               << " pvPtr is not set !!!!!" << std::endl;
   edm::Handle<edm::View<reco::Vertex> > vertices;
-  evt.getByToken(verticesSrc_, vertices);
+  evt.getByToken(verticesSrcToken_, vertices);
   std::vector<edm::Ptr<reco::Vertex>> verticesPtr = vertices->ptrs();
 
   // Get refs to the objects in the event
   edm::RefProd<pat::ElectronCollection> electronRefProd =
-    getRefProd<pat::ElectronCollection>(electronSrc_, evt);
+    getRefProd<pat::ElectronCollection>(electronSrcToken_, evt);
   edm::RefProd<pat::MuonCollection> muonRefProd =
-    getRefProd<pat::MuonCollection>(muonSrc_, evt);
+    getRefProd<pat::MuonCollection>(muonSrcToken_, evt);
   edm::RefProd<pat::JetCollection> jetRefProd =
-    getRefProd<pat::JetCollection>(jetSrc_, evt);
+    getRefProd<pat::JetCollection>(jetSrcToken_, evt);
   edm::RefProd<pat::PhotonCollection> phoRefProd =
-    getRefProd<pat::PhotonCollection>(phoSrc_, evt);
+    getRefProd<pat::PhotonCollection>(phoSrcToken_, evt);
   edm::RefProd<pat::TauCollection> tauRefProd =
-    getRefProd<pat::TauCollection>(tauSrc_, evt);
+    getRefProd<pat::TauCollection>(tauSrcToken_, evt);
   edm::RefProd<pat::PackedCandidateCollection> packedPFRefProd =
-    getRefProd<pat::PackedCandidateCollection>(packedPFSrc_, evt);
+    getRefProd<pat::PackedCandidateCollection>(packedPFSrcToken_, evt);
   edm::RefProd<reco::PFCandidateCollection> pfRefProd;
   edm::RefProd<reco::TrackCollection> trackRefProd;
   edm::RefProd<reco::GsfTrackCollection> gsftrackRefProd;
 
   edm::Handle<edm::View<pat::MET> > met;
-  evt.getByToken(metSrc_, met);
+  evt.getByToken(metSrcToken_, met);
   edm::Ptr<pat::MET> metPtr = met->ptrAt(0);
   TMatrixD metCovariance(2,2);
 
@@ -244,16 +248,16 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle<pat::TriggerEvent> trig;
 
   edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > trigStandAlone =
-    getRefProd<std::vector<pat::TriggerObjectStandAlone> >(trgSrc_, evt);
+    getRefProd<std::vector<pat::TriggerObjectStandAlone> >(trgSrcToken_, evt);
 
   edm::Handle<pat::PackedTriggerPrescales> trigPrescale;
   edm::Handle<edm::TriggerResults> trigResults;
-  evt.getByLabel(trgResultsSrc_, trigResults);
+  evt.getByToken(trgResultsSrcToken_, trigResults);
   const edm::TriggerNames& names = evt.triggerNames(*trigResults);
-  evt.getByLabel(trgPrescaleSrc_, trigPrescale);
+  evt.getByToken(trgPrescaleSrcToken_, trigPrescale);
 
   edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
-  evt.getByLabel(puInfoSrc_, puInfo);
+  evt.getByToken(puInfoSrcToken_, puInfo);
 
   // Only get PU info if it exist (i.e. not for data)
   std::vector<PileupSummaryInfo> myPuInfo;
@@ -286,14 +290,14 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
 
   // Try and get the GenFilterInfo information
   edm::Handle<GenFilterInfo> generatorFilterH;
-  evt.getByLabel("generator","minVisPtFilter",generatorFilterH);
+  evt.getByToken(generatorFilterToken_,generatorFilterH);
   GenFilterInfo generatorFilter;
   if (generatorFilterH.isValid())
     generatorFilter = *generatorFilterH;
         
   // Try and get the gen information if it exists
   edm::Handle<reco::GenParticleCollection> genParticles;
-  evt.getByLabel(truthSrc_, genParticles);
+  evt.getByToken(truthSrcToken_, genParticles);
   reco::GenParticleRefProd genParticlesRef;
   if (!evt.isRealData())
     genParticlesRef = reco::GenParticleRefProd(genParticles);

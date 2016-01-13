@@ -26,15 +26,15 @@ public:
   void produce(edm::Event& evt, const edm::EventSetup& es);
 private:
   const bool debug_;
-  edm::InputTag src_;    
-  FinalStateMassResolution* resoCalc_;  
+  edm::EDGetTokenT<edm::View<PATFinalState> > srcToken_;
+  FinalStateMassResolution* resoCalc_;
   
 };
 
 PATFinalStateMassResolutionEmbedder::
 PATFinalStateMassResolutionEmbedder(const edm::ParameterSet& pset):
   debug_(pset.getParameter<bool>("debug")),
-  src_(pset.getParameter<edm::InputTag>("src"))
+  srcToken_(consumes<edm::View<PATFinalState> >(pset.getParameter<edm::InputTag>("src")))
 {  
   resoCalc_ = new FinalStateMassResolution();    
   produces<PATFinalStateCollection>();
@@ -47,7 +47,7 @@ produce(edm::Event& evt, const edm::EventSetup& es) {
   resoCalc_->init(es);
 
   edm::Handle<edm::View<PATFinalState> > finalStatesH;
-  evt.getByLabel(src_, finalStatesH);
+  evt.getByToken(srcToken_, finalStatesH);
   
   for (size_t i = 0; i < finalStatesH->size(); ++i) {
     PATFinalState* embedInto = finalStatesH->ptrAt(i)->clone();    

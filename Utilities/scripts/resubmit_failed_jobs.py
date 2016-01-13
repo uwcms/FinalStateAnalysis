@@ -56,6 +56,12 @@ def submit_jobid(sample, dryrun=False, verboseInfo={}):
         verboseInfo["jobQueued"] += queued
         failed = dagStatus['NodesFailed']
         verboseInfo["jobFailed"] += failed
+        if not queued and failed:
+            verboseInfo["doneTotal"] += total
+            verboseInfo["doneDone"] += done
+            verboseInfo["doneQueued"] += queued
+            verboseInfo["doneFailed"] += failed
+            verboseInfo["doneSamples"] += [sample]
         statusString = "        Total: {0} Done: {1} Queued: {2} Failed: {3}".format(total,done,queued,failed)
         errors = []
         for node in nodeStatuses:
@@ -64,9 +70,9 @@ def submit_jobid(sample, dryrun=False, verboseInfo={}):
         verboseInfo["jobErrors"].extend(errors)
         counts = [[x,errors.count(x)] for x in set(errors)]
         counts = sorted(counts, key=lambda error: error[0])
-        statusString += "\n        Errors:"
-        for c in counts:
-            statusString += "\n            Error {0:d}: {1:d} times".format(c[0],c[1])
+        #statusString += "\n        Errors:"
+        #for c in counts:
+        #    statusString += "\n            Error {0:d}: {1:d} times".format(c[0],c[1])
 
     # Do not try to resubmit jobs if jobs are still running
     if any(submitted):
@@ -84,7 +90,8 @@ def submit_jobid(sample, dryrun=False, verboseInfo={}):
             cmd = 'farmoutAnalysisJobs --rescue-dag-file=%s' % rescue_dag
             os.system(cmd)
     else:
-        print "    %s successful, nothing to do"%sample
+        #print "    %s successful, nothing to do"%sample
+        pass
 
 
 def parse_dag_state(filename):
@@ -197,6 +204,11 @@ def main(argv=None):
         verboseInfo["jobQueued"] = 0
         verboseInfo["jobFailed"] = 0
         verboseInfo["jobErrors"] = []
+        verboseInfo["doneTotal"] = 0
+        verboseInfo["doneDone"] = 0
+        verboseInfo["doneQueued"] = 0
+        verboseInfo["doneFailed"] = 0
+        verboseInfo["doneSamples"] = []
 
     for s in samples:
         submit_jobid(s, dryrun=args.dryrun, verboseInfo=verboseInfo)
@@ -208,11 +220,21 @@ def main(argv=None):
                                                                                      verboseInfo["jobFailed"])
         counts = [[x,verboseInfo["jobErrors"].count(x)] for x in set(verboseInfo["jobErrors"])]
         counts = sorted(counts, key=lambda error: error[0])
-        statusString += "\n    Job Errors:"
-        for c in counts:
-            statusString += "\n        Job Error {0:d}: {1:d} times".format(c[0],c[1])
+        #statusString += "\n    Job Errors:"
+        #for c in counts:
+        #    statusString += "\n        Job Error {0:d}: {1:d} times".format(c[0],c[1])
         print statusString
 
+        doneStatusString = "    Resubmit Total: {0} Done: {1} Failed: {2}".format(verboseInfo["doneTotal"],
+                                                                                  verboseInfo["doneDone"],
+                                                                                  verboseInfo["doneFailed"])
+        if verboseInfo["doneTotal"] and verboseInfo["doneFailed"]:
+            print doneStatusString
+            print "    Samples to resubmit:"
+            for sample in verboseInfo["doneSamples"]:
+                print "        {0}".format(sample)
+        else:
+            print "    None can be resubmitted at the moment"
 
     return 0
 

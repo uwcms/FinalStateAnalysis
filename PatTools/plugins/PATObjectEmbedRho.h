@@ -20,8 +20,8 @@ class PATRhoOverloader : public edm::EDProducer {
 
    public:
      explicit PATRhoOverloader (const edm::ParameterSet& iConfig):
-       src_(iConfig.getParameter<edm::InputTag>("src")),
-       srcRho_(iConfig.getParameter<edm::InputTag>("srcRho"))
+       srcToken_(consumes<std::vector<T> >(iConfig.getParameter<edm::InputTag>("src"))),
+       srcRhoToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("srcRho")))
        {
          label_ = iConfig.exists("userLabel") ? iConfig.getParameter<std::string>("userLabel") : "rho";
 	 produces<std::vector<T> >();
@@ -44,11 +44,11 @@ class PATRhoOverloader : public edm::EDProducer {
 	  float rho = 0.0;
 
 	  edm::Handle<double> srcRho;
-	  if(iEvent.getByLabel(srcRho_,srcRho))
+	  if(iEvent.getByToken(srcRhoToken_,srcRho))
 	    rho = *srcRho;
 
 
-	  if(iEvent.getByLabel(src_,src))
+	  if(iEvent.getByToken(srcToken_,src))
 	    for(unsigned int i=0;i<src->size();++i) {
 	      T obj = src->at(i);
 	      obj.addUserFloat(label_, rho );
@@ -60,8 +60,8 @@ class PATRhoOverloader : public edm::EDProducer {
 
       virtual void endJob() { }
 
-      edm::InputTag src_;
-      edm::InputTag srcRho_;
+      edm::EDGetTokenT<std::vector<T> > srcToken_;
+      edm::EDGetTokenT<double> srcRhoToken_;
       std::string label_;
 
 };

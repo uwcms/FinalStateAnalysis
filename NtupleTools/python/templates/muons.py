@@ -44,13 +44,13 @@ id = PSet(
         '-{object}.userFloat("rho_fastjet")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
         '/{object}.pt()'
     ),
-    objectRelPFIsoRhoFSR = cms.string(
-        '({object}.chargedHadronIso()'
-        '+max(0.0,{object}.neutralHadronIso()'
-        '+{object}.photonIso() - userFloat("leg{object_idx}fsrIsoCorr")'
-        '-{object}.userFloat("rho_fastjet")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
-        '/{object}.pt()'
-    ),
+    #objectRelPFIsoRhoFSR = cms.string(
+    #    '({object}.chargedHadronIso()'
+    #    '+max(0.0,{object}.neutralHadronIso()'
+    #    '+{object}.photonIso() - userFloat("leg{object_idx}fsrIsoCorr")'
+    #    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
+    #    '/{object}.pt()'
+    #),
 
     objectIsPFMuon = '{object}.isPFMuon',
     objectIsGlobal = '{object}.isGlobalMuon',
@@ -86,6 +86,14 @@ energyCorrections = PSet(
     #objectEtaRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Eta',
     #objectPhiRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Phi',
     #objectEErrRochCor2012 = '{object}.userFloat("p4_RochCor2012_tkFitErr")'
+    objectPt_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").pt : -999.',
+    objectEta_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").eta : -999.',
+    objectPhi_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").phi : -999.',
+
+    objectPt_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").pt : -999.',
+    objectEta_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").eta : -999.',
+    objectPhi_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").phi : -999.',
+
 )
 
 # Information about the associated track
