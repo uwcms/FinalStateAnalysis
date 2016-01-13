@@ -344,6 +344,8 @@ PATFinalState::SVfit(int i, int j) const {
 
 double
 PATFinalState::tauGenMatch( size_t i ) const {
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) return -1;
     // Get all gen particles in the event
     const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
     reco::GenParticleCollection genParticles = *genCollectionRef;
