@@ -25,20 +25,20 @@ class PATFinalStateCopier : public edm::EDProducer {
     virtual ~PATFinalStateCopier(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
+    edm::EDGetTokenT<edm::View<PATFinalState> > srcToken_;
     std::string name_;
 };
 
 PATFinalStateCopier::PATFinalStateCopier(
     const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
+  srcToken_ = consumes<edm::View<PATFinalState> >(pset.getParameter<edm::InputTag>("src"));
   produces<PATFinalStateCollection>();
 }
 void PATFinalStateCopier::produce(edm::Event& evt, const edm::EventSetup& es) {
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
   edm::Handle<edm::View<PATFinalState> > finalStatesH;
-  evt.getByLabel(src_, finalStatesH);
+  evt.getByToken(srcToken_, finalStatesH);
 
   for (size_t i = 0; i < finalStatesH->size(); ++i) {
     PATFinalState* embedInto = finalStatesH->ptrAt(i)->clone();

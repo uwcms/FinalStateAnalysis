@@ -44,13 +44,13 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
     runDir_.reset(new TFileDirectory(fs.mkdir("runs")));
 
   skimCounter_  = pset.getParameter<edm::InputTag>("skimCounter");
-  skimCounterToken_  = iC.consumes<edm::MergeableCounter>(skimCounter_);
+  skimCounterToken_  = iC.consumes<edm::MergeableCounter,edm::InLumi>(skimCounter_);
   summedWeight_ = pset.getParameter<edm::InputTag>("summedWeight");
-  summedWeightToken_ = iC.consumes<edm::MergeableCounter>(summedWeight_);
+  summedWeightToken_ = iC.consumes<edm::MergeableCounter,edm::InLumi>(summedWeight_);
   lumiProducer_ = pset.exists("lumiProducer") ?
                   pset.getParameter<edm::InputTag>("lumiProducer") :
                   edm::InputTag("finalStateLS");
-  lumiProducerToken_ = iC.consumes<PATFinalStateLS>(lumiProducer_);
+  lumiProducerToken_ = iC.consumes<PATFinalStateLS,edm::InLumi>(lumiProducer_);
   // Build the event counter histos.
   eventCounter_ = fs_.make<TH1F>("eventCount", "Events Processed", 1, -0.5, 0.5);
   eventCounterWeighted_ = fs_.make<TH1F>(

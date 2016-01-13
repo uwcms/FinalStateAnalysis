@@ -26,16 +26,16 @@ void MiniAODObjectEmbedFSR<T,U>::produce(edm::Event& iEvent, const edm::EventSet
 
   // Get stuff
   src = std::auto_ptr<std::vector<T> >(new std::vector<T>);
-  iEvent.getByLabel(src_,srcTemp);
+  iEvent.getByToken(srcToken_,srcTemp);
   src->assign(srcTemp->begin(),srcTemp->end());
   srcAlt = std::auto_ptr<std::vector<U> >(new std::vector<U>);
-  iEvent.getByLabel(srcAlt_,srcAltTemp);
+  iEvent.getByToken(srcAltToken_,srcAltTemp);
   srcAlt->assign(srcAltTemp->begin(),srcAltTemp->end());
   srcVeto = std::auto_ptr<pat::ElectronCollection>(new pat::ElectronCollection);
-  iEvent.getByLabel(srcVeto_,srcVetoTemp);
+  iEvent.getByToken(srcVetoToken_,srcVetoTemp);
   srcVeto->assign(srcVetoTemp->begin(),srcVetoTemp->end());
-  iEvent.getByLabel(srcVtx_,srcVtx);
-  iEvent.getByLabel(srcPho_,srcPho);
+  iEvent.getByToken(srcVtxToken_,srcVtx);
+  iEvent.getByToken(srcPhoToken_,srcPho);
 
   for(std::vector<pat::PFParticle>::const_iterator pho = srcPho->cbegin(); pho != srcPho->cend(); ++pho) 
     {

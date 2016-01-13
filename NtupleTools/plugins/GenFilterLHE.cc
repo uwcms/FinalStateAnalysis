@@ -4,25 +4,6 @@
 #include "TH1D.h"
 #include "TH2D.h"
 
-class GenFilterLHE : public edm::EDFilter {
-
-public:
-  GenFilterLHE (const edm::ParameterSet &);
-  virtual bool filter(edm::Event&, const edm::EventSetup&);
-  virtual void beginJob();
-  virtual void endJob();
-private:
-  edm::InputTag LHEParticleTag_;
-  int statusGen_;
-  int statusGenMAX_;
-
-   std::map<std::string,TH1D*> h1_;
-   std::map<std::string,TH2D*> h2_;
-
-
-  double nall;
-  double nsel;
-};
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "DataFormats/Common/interface/Handle.h"
@@ -39,9 +20,28 @@ using namespace edm;
 using namespace std;
 using namespace reco;
 
+class GenFilterLHE : public edm::EDFilter {
+
+public:
+  GenFilterLHE (const edm::ParameterSet &);
+  virtual bool filter(edm::Event&, const edm::EventSetup&);
+  virtual void beginJob();
+  virtual void endJob();
+private:
+  edm::EDGetTokenT<LHEEventProduct> LHEParticleToken_;
+  int statusGen_;
+  int statusGenMAX_;
+
+   std::map<std::string,TH1D*> h1_;
+   std::map<std::string,TH2D*> h2_;
+
+
+  double nall;
+  double nsel;
+};
 
 GenFilterLHE::GenFilterLHE( const ParameterSet & cfg ) :
-      LHEParticleTag_(cfg.getUntrackedParameter<edm::InputTag> ("LHETag", edm::InputTag("source"))),
+      LHEParticleToken_(consumes<LHEEventProduct>(cfg.getUntrackedParameter<edm::InputTag> ("LHETag", edm::InputTag("source")))),
       statusGen_(cfg.getUntrackedParameter<int>("PartonMultiplicity", 5)),
       statusGenMAX_(cfg.getUntrackedParameter<int>("PartonMultiplicityMAX", 0))
 {
@@ -76,7 +76,7 @@ bool found=true;
 
 
   edm::Handle<LHEEventProduct> lheeventinfo;
-  if(!ev.getByLabel(LHEParticleTag_, lheeventinfo)){
+  if(!ev.getByToken(LHEParticleToken_, lheeventinfo)){
             LogDebug("") << ">>> LHE info not found!!";
             return false;
   }

@@ -29,8 +29,8 @@ class PATFinalStateOverlapEmbedder : public edm::EDProducer {
     virtual ~PATFinalStateOverlapEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
-    edm::InputTag toEmbedSrc_;
+    edm::EDGetTokenT<edm::View<PATFinalState> > srcToken_;
+    edm::EDGetTokenT<edm::View<reco::Candidate> > toEmbedSrcToken_;
     std::string name_;
     StringCutObjectSelector<reco::Candidate> cut_;
     double minDeltaR_;
@@ -41,8 +41,8 @@ class PATFinalStateOverlapEmbedder : public edm::EDProducer {
 PATFinalStateOverlapEmbedder::PATFinalStateOverlapEmbedder(
     const edm::ParameterSet& pset):cut_(
       pset.getParameter<std::string>("cut"), true){
-  src_ = pset.getParameter<edm::InputTag>("src");
-  toEmbedSrc_ = pset.getParameter<edm::InputTag>("toEmbedSrc");
+  srcToken_ = consumes<edm::View<PATFinalState> >(pset.getParameter<edm::InputTag>("src"));
+  toEmbedSrcToken_ = consumes<edm::View<reco::Candidate> >(pset.getParameter<edm::InputTag>("toEmbedSrc"));
   name_ = pset.getParameter<std::string>("name");
   minDeltaR_ = pset.getParameter<double>("minDeltaR");
   maxDeltaR_ = pset.getParameter<double>("maxDeltaR");
@@ -52,10 +52,10 @@ void PATFinalStateOverlapEmbedder::produce(edm::Event& evt, const edm::EventSetu
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
   edm::Handle<edm::View<PATFinalState> > finalStatesH;
-  evt.getByLabel(src_, finalStatesH);
+  evt.getByToken(srcToken_, finalStatesH);
 
   edm::Handle<edm::View<reco::Candidate> > toEmbedH;
-  evt.getByLabel(toEmbedSrc_, toEmbedH);
+  evt.getByToken(toEmbedSrcToken_, toEmbedH);
 
   for (size_t i = 0; i < finalStatesH->size(); ++i) {
     PATFinalState* embedInto = finalStatesH->ptrAt(i)->clone();

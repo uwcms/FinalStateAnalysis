@@ -20,11 +20,11 @@ class MiniAODJetIdEmbedder : public edm::EDProducer {
     virtual ~MiniAODJetIdEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
+    edm::EDGetTokenT<edm::View<pat::Jet> > srcToken_;
 };
 
 MiniAODJetIdEmbedder::MiniAODJetIdEmbedder(const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
+  srcToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src"));
   produces<pat::JetCollection>();
 }
 
@@ -32,7 +32,7 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
   std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
 
   edm::Handle<edm::View<pat::Jet> > input;
-  evt.getByLabel(src_, input);
+  evt.getByToken(srcToken_, input);
 
   output->reserve(input->size());
   for (size_t i = 0; i < input->size(); ++i) {

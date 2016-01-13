@@ -32,7 +32,7 @@ class PATFinalStateLSProducer : public edm::one::EDProducer<edm::EndLuminosityBl
     unsigned int eventCount_;
 
     // The LumiSummary source for data
-    const edm::InputTag src_;
+    const edm::EDGetTokenT<LumiSummary> srcToken_;
 };
 
 PATFinalStateLSProducer::PATFinalStateLSProducer(
@@ -40,7 +40,7 @@ PATFinalStateLSProducer::PATFinalStateLSProducer(
   trigSrc_(pset.getParameter<edm::InputTag>("trigSrc")),
   xSec_(pset.getParameter<double>("xSec")),
   eventCount_(0),
-  src_(pset.getParameter<edm::InputTag>("lumiSrc")) {
+  srcToken_(consumes<LumiSummary, edm::InLumi>(pset.getParameter<edm::InputTag>("lumiSrc"))) {
     produces<PATFinalStateLS, edm::InLumi>();
 }
 
@@ -56,7 +56,7 @@ void PATFinalStateLSProducer::endLuminosityBlockProduce(
   double instLumi = -999;
 
   edm::Handle<LumiSummary> summary;
-  ls.getByLabel(src_, summary);
+  ls.getByToken(srcToken_, summary);
 
   if (summary.isValid()) { // Data
     // Factor of ten comes from bug in LumiSummary.cc

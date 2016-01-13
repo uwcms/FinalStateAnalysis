@@ -57,7 +57,7 @@ private:
   edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
   const std::string idLabel_; // label for the decision userfloat
   const std::string isoLabel_;
-  const edm::InputTag vtxSrc_; // primary vertex (for veto PV and SIP cuts)
+  const edm::EDGetTokenT<reco::VertexCollection> vtxSrcToken_; // primary vertex (for veto PV and SIP cuts)
   edm::Handle<reco::VertexCollection> vertices;
   std::auto_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
 
@@ -98,7 +98,7 @@ MiniAODElectronHZZIDDecider::MiniAODElectronHZZIDDecider(const edm::ParameterSet
   isoLabel_(iConfig.exists("isoLabel") ?
 	   iConfig.getParameter<std::string>("isoLabel") :
 	   std::string("HZZ4lIsoPass")),
-  vtxSrc_(iConfig.exists("vtxSrc") ? iConfig.getParameter<edm::InputTag>("vtxSrc") : edm::InputTag("selectedPrimaryVertex")),
+  vtxSrcToken_(consumes<reco::VertexCollection>(iConfig.exists("vtxSrc") ? iConfig.getParameter<edm::InputTag>("vtxSrc") : edm::InputTag("selectedPrimaryVertex"))),
   ptCut(iConfig.exists("ptCut") ? iConfig.getParameter<double>("ptCut") : 7.),
   etaCut(iConfig.exists("etaCut") ? iConfig.getParameter<double>("etaCut") : 2.5),
   sipCut(iConfig.exists("sipCut") ? iConfig.getParameter<double>("sipCut") : 4.),
@@ -136,7 +136,7 @@ void MiniAODElectronHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSe
   out = std::auto_ptr<std::vector<pat::Electron> >(new std::vector<pat::Electron>);
 
   edm::Handle<edm::View<pat::Electron> > electronsIn;
-  iEvent.getByLabel(vtxSrc_,vertices);
+  iEvent.getByToken(vtxSrcToken_,vertices);
 
   iEvent.getByToken(electronCollectionToken_, electronsIn);
 

@@ -39,7 +39,7 @@ public:
   virtual ~PATElectronEAEmbedder(){}
   void produce(Event& evt, const EventSetup& es);
 private:
-  InputTag _src;
+  edm::EDGetTokenT<ElectronCollection> _srcToken;
   vstring _eas_to_get;  
   PATElectronEACalculator _eacalc;
   
@@ -49,7 +49,7 @@ PATElectronEAEmbedder::PATElectronEAEmbedder(const
 					     ParameterSet& pset)
   :_eacalc(PATElectronEACalculator(pset.getParameterSetVector("effective_areas"))){
   _eas_to_get = pset.getParameter<vstring>("applied_effective_areas");
-  _src = pset.getParameter<InputTag>("src");  
+  _srcToken = consumes<ElectronCollection>(pset.getParameter<InputTag>("src"));  
   produces<ElectronCollection>();
 }
 
@@ -60,7 +60,7 @@ void PATElectronEAEmbedder::produce(Event& evt,
   std::auto_ptr<ElectronCollection> output(new ElectronCollection());
 
   edm::Handle<ElectronCollection> handle;
-  evt.getByLabel(_src, handle);
+  evt.getByToken(_srcToken, handle);
   
   vstring::const_iterator i;
   vstring::const_iterator e = _eas_to_get.end();
