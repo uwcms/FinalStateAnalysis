@@ -22,7 +22,7 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
     const edm::ParameterSet& pset, TFileDirectory& fs, edm::ConsumesCollector&& iC):
     //const edm::ParameterSet& pset, TFileDirectory& fs):
   fs_(fs) {
-  src_ = pset.getParameter<edm::InputTag>("src");
+  srcToken_ = iC.consumes<PATFinalStateCollection>(pset.getParameter<edm::InputTag>("src"));
   name_ = pset.getParameter<std::string>("@module_label");
 
   // Setup the code to apply event level weights
@@ -31,7 +31,7 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
   for (size_t i = 0; i < weights.size(); ++i) {
     evtWeights_.push_back(EventFunction(weights[i]));
   }
-  evtSrc_ = pset.getParameter<edm::InputTag>("evtSrc");
+  evtSrcToken_ = iC.consumes<PATFinalStateEventCollection>(pset.getParameter<edm::InputTag>("evtSrc"));
 
   analysisCfg_ = pset.getParameterSet("analysis");
   filter_ = pset.exists("filter") ? pset.getParameter<bool>("filter") : false;
@@ -126,12 +126,17 @@ void PATFinalStateAnalysis::endLuminosityBlock(
 }
 
 bool PATFinalStateAnalysis::filter(const edm::EventBase& evt) {
+  std::cout << "TODO: add filter for PATFinalStateAnalysis" << std::endl;
+  return false;
+}
+
+bool PATFinalStateAnalysis::filter(const edm::Event& evt) {
   // Get the event weight
   double eventWeight = 1.0;
 
   if (evtWeights_.size()) {
     edm::Handle<PATFinalStateEventCollection> event;
-    evt.getByLabel(evtSrc_, event);
+    evt.getByToken(evtSrcToken_, event);
     for (size_t i = 0; i < evtWeights_.size(); ++i) {
       eventWeight *= evtWeights_[i]( (*event)[0] );
     }
@@ -143,7 +148,7 @@ bool PATFinalStateAnalysis::filter(const edm::EventBase& evt) {
 
   // Get the final states to analyze
   edm::Handle<PATFinalStateCollection> finalStates;
-  evt.getByLabel(src_, finalStates);
+  evt.getByToken(srcToken_, finalStates);
 
   std::vector<const PATFinalState*> finalStatePtrs;
   finalStatePtrs.reserve(finalStates->size());
@@ -193,8 +198,7 @@ void PATFinalStateAnalysis::analyze(const edm::EventBase& evt) {
 }
 
 void PATFinalStateAnalysis::analyze(const edm::Event& evt) {
-  const edm::EventBase& evtBase = evt;
-  filter(evtBase);
+  filter(evt);
 }
 
 void PATFinalStateAnalysis::endJob() {

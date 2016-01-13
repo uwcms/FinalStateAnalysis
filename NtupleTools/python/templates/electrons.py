@@ -91,7 +91,7 @@ id = PSet(
     objecteSuperClusterOverP = '{object}.eSuperClusterOverP',
     objectecalEnergy = '{object}.ecalEnergy',
     objecttrackMomentumAtVtxP = '{object}.trackMomentumAtVtx.r',
-    objectHasMatchedConversion = cms.vstring('{object}.userInt("HasMatchedConversion")','I'),    
+    #objectHasMatchedConversion = cms.vstring('{object}.userInt("HasMatchedConversion")','I'),    
     objectE1x5 = '{object}.scE1x5',
     objectE2x5Max = '{object}.scE2x5Max',
     objectE5x5 = '{object}.scE5x5',
@@ -148,7 +148,7 @@ energyCorrections = PSet(
 )
 
 tracking = PSet(
-    objectHasConversion = '{object}.userFloat("hasConversion")',
+    #objectHasConversion = '{object}.userFloat("hasConversion")',
     objectMissingHits = 'getElectronMissingHits({object_idx})',
 )
 

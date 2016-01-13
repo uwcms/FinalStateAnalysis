@@ -17,7 +17,13 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/Provenance/interface/RunID.h"
 
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalState.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateFwd.h"
+#include "FinalStateAnalysis/NtupleTools/interface/PATFinalStateSelection.h"
+
+#include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEventFwd.h"
+
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
 //#include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "DataFormats/Common/interface/MergeableCounter.h"
@@ -44,6 +50,7 @@ class PATFinalStateAnalysis {
     // Alias for filter with no return value
     void analyze(const edm::Event& evt);
     void analyze(const edm::EventBase& evt);
+    bool filter(const edm::Event& evt);
     bool filter(const edm::EventBase& evt);
     // Do nothing at beginning
     void beginLuminosityBlock(const edm::LuminosityBlock& ls){};
@@ -52,7 +59,7 @@ class PATFinalStateAnalysis {
     void endLuminosityBlock(const edm::LuminosityBlockBase& ls);
 
   private:
-    edm::InputTag src_;
+    edm::EDGetTokenT<PATFinalStateCollection> srcToken_;
     std::string name_;
     TFileDirectory& fs_;
     edm::ParameterSet analysisCfg_;
@@ -60,7 +67,7 @@ class PATFinalStateAnalysis {
 
     // Tools for applying event weights
     typedef StringObjectFunction<PATFinalStateEvent> EventFunction;
-    edm::InputTag evtSrc_;
+    edm::EDGetTokenT<PATFinalStateEventCollection> evtSrcToken_;
     std::vector<EventFunction> evtWeights_;
 
     // Tool for examining individual runs

@@ -28,7 +28,7 @@ parameters = {
         'j' : {
             'selection' : 'pt>20 && abs(eta)<4.7 && userFloat("idLoose") > 0.5',
             'e': {
-                'selection' : 'pt>10 && userInt("CBIDMedium")>0.5 && abs(eta)<2.5',
+                'selection' : 'pt>10 && userFloat("CBIDMedium")>0.5 && abs(eta)<2.5',
                 'deltaR' : 0.3,
                 },
             'm': {
@@ -40,8 +40,8 @@ parameters = {
 
     # selections to include object in final state (should be looser than analysis selections)
     'finalSelection' : {
-        'e': 'abs(superCluster().eta) < 3.0 && max(pt, userFloat("maxCorPt")) > 7',
-        'm': 'max(pt, userFloat("maxCorPt")) > 4 && (isGlobalMuon | isTrackerMuon)',
+        'e': 'abs(superCluster().eta) < 3.0 && pt > 7',
+        'm': 'pt > 4 && (isGlobalMuon | isTrackerMuon)',
         't': 'abs(eta) < 2.5 && pt > 17 && tauID("decayModeFinding")',
         'g': 'abs(superCluster().eta()) < 3.0 && pt > 10',
         'j': 'pt>20 && abs(eta) < 2.5 && userFloat("idLoose")'
@@ -61,27 +61,27 @@ parameters = {
         muVetoTightNoIso = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && pt > 10 && abs(eta) < 2.4").size()',
         muVetoTightTrigIso = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && pt > 10 && abs(eta) < 2.4 && trackIso()/pt()<0.4").size()',
 
-        # mes up
-        muVeto_mesUp = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesUpMuonsPt\')<0.2").size()',
-        muVetoNoIso_mesUp = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4").size()',
-        muVetoTrigIso_mesUp = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesUpMuonsPt\')<0.4").size()',
-        muVetoMedium_mesUp = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesUpMuonsPt\')<0.2").size()',
-        muVetoMediumNoIso_mesUp = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4").size()',
-        muVetoMediumTrigIso_mesUp = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesUpMuonsPt\')<0.4").size()',
-        muVetoTight_mesUp = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesUpMuonsPt\')<0.12").size()',
-        muVetoTightNoIso_mesUp = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4").size()',
-        muVetoTightTrigIso_mesUp = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesUpMuonsPt\')<0.4").size()',
+        ## mes up
+        #muVeto_mesUp = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesUpMuonsPt\')<0.2").size()',
+        #muVetoNoIso_mesUp = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4").size()',
+        #muVetoTrigIso_mesUp = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesUpMuonsPt\')<0.4").size()',
+        #muVetoMedium_mesUp = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesUpMuonsPt\')<0.2").size()',
+        #muVetoMediumNoIso_mesUp = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4").size()',
+        #muVetoMediumTrigIso_mesUp = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesUpMuonsPt\')<0.4").size()',
+        #muVetoTight_mesUp = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesUpMuonsPt\')<0.12").size()',
+        #muVetoTightNoIso_mesUp = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4").size()',
+        #muVetoTightTrigIso_mesUp = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesUpMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesUpMuonsPt\')<0.4").size()',
 
-        # mes down
-        muVeto_mesDown = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesDownMuonsPt\')<0.2").size()',
-        muVetoNoIso_mesDown = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4").size()',
-        muVetoTrigIso_mesDown = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesDownMuonsPt\')<0.4").size()',
-        muVetoMedium_mesDown = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesDownMuonsPt\')<0.2").size()',
-        muVetoMediumNoIso_mesDown = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4").size()',
-        muVetoMediumTrigIso_mesDown = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesDownMuonsPt\')<0.4").size()',
-        muVetoTight_mesDown = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesDownMuonsPt\')<0.12").size()',
-        muVetoTightNoIso_mesDown = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4").size()',
-        muVetoTightTrigIso_mesDown = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesDownMuonsPt\')<0.4").size()',
+        ## mes down
+        #muVeto_mesDown = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesDownMuonsPt\')<0.2").size()',
+        #muVetoNoIso_mesDown = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4").size()',
+        #muVetoTrigIso_mesDown = 'vetoMuons(0.02, "isLooseMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesDownMuonsPt\')<0.4").size()',
+        #muVetoMedium_mesDown = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesDownMuonsPt\')<0.2").size()',
+        #muVetoMediumNoIso_mesDown = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4").size()',
+        #muVetoMediumTrigIso_mesDown = 'vetoMuons(0.02, "isMediumMuon && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesDownMuonsPt\')<0.4").size()',
+        #muVetoTight_mesDown = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && (chargedHadronIso+max(photonIso+neutralHadronIso-0.5*puChargedHadronIso,0.0))/userFloat(\'mesDownMuonsPt\')<0.12").size()',
+        #muVetoTightNoIso_mesDown = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4").size()',
+        #muVetoTightTrigIso_mesDown = 'vetoMuons(0.02, "userInt(\'tightID\') > 0.5  && userFloat(\'mesDownMuonsPt\') > 10 && abs(eta) < 2.4 && trackIso()/userFloat(\'mesDownMuonsPt\')<0.4").size()',
 
         # electron vetos
         eVeto = 'vetoElectrons(0.02, "userFloat(\'CBIDLoose\')>0.5 && pt > 10 && abs(eta) < 2.5").size()',
@@ -91,21 +91,21 @@ parameters = {
         eVetoTightNoIso = 'vetoElectrons(0.02, "userFloat(\'CBIDMediumNoIso\')>0.5 && pt > 10 && abs(eta) < 2.5").size()',
         eVetoTightTrigIso = 'vetoElectrons(0.02, "userFloat(\'CBIDMediumNoIso\')>0.5 && pt > 10 && abs(eta) < 2.5 && dr03TkSumPt()/pt()<0.2 && dr03EcalRecHitSumEt()/pt()<0.5 && dr03HcalTowerSumEt()/pt()<0.3").size()',
 
-        # ees up
-        eVeto_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDLoose\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5").size()',
-        eVetoNoIso_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDLooseNoIso\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5").size()',
-        eVetoTrigIso_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDLooseNoIso\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5 && dr03TkSumPt()/userFloat(\'eesUpElectronsPt\')<0.2 && dr03EcalRecHitSumEt()/userFloat(\'eesUpElectronsPt\')<0.5 && dr03HcalTowerSumEt()/userFloat(\'eesUpElectronsPt\')<0.3").size()',
-        eVetoTight_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDMedium\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5").size()',
-        eVetoTightNoIso_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDMediumNoIso\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5").size()',
-        eVetoTightTrigIso_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDMediumNoIso\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5 && dr03TkSumPt()/userFloat(\'eesUpElectronsPt\')<0.2 && dr03EcalRecHitSumEt()/userFloat(\'eesUpElectronsPt\')<0.5 && dr03HcalTowerSumEt()/userFloat(\'eesUpElectronsPt\')<0.3").size()',
+        ## ees up
+        #eVeto_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDLoose\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5").size()',
+        #eVetoNoIso_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDLooseNoIso\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5").size()',
+        #eVetoTrigIso_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDLooseNoIso\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5 && dr03TkSumPt()/userFloat(\'eesUpElectronsPt\')<0.2 && dr03EcalRecHitSumEt()/userFloat(\'eesUpElectronsPt\')<0.5 && dr03HcalTowerSumEt()/userFloat(\'eesUpElectronsPt\')<0.3").size()',
+        #eVetoTight_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDMedium\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5").size()',
+        #eVetoTightNoIso_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDMediumNoIso\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5").size()',
+        #eVetoTightTrigIso_eesUp = 'vetoElectrons(0.02, "userFloat(\'CBIDMediumNoIso\')>0.5 && userFloat(\'eesUpElectronsPt\') > 10 && abs(eta) < 2.5 && dr03TkSumPt()/userFloat(\'eesUpElectronsPt\')<0.2 && dr03EcalRecHitSumEt()/userFloat(\'eesUpElectronsPt\')<0.5 && dr03HcalTowerSumEt()/userFloat(\'eesUpElectronsPt\')<0.3").size()',
 
-        # ees down
-        eVeto_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDLoose\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5").size()',
-        eVetoNoIso_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDLooseNoIso\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5").size()',
-        eVetoTrigIso_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDLooseNoIso\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5 && dr03TkSumPt()/userFloat(\'eesDownElectronsPt\')<0.2 && dr03EcalRecHitSumEt()/userFloat(\'eesDownElectronsPt\')<0.5 && dr03HcalTowerSumEt()/userFloat(\'eesDownElectronsPt\')<0.3").size()',
-        eVetoTight_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDMedium\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5").size()',
-        eVetoTightNoIso_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDMediumNoIso\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5").size()',
-        eVetoTightTrigIso_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDMediumNoIso\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5 && dr03TkSumPt()/userFloat(\'eesDownElectronsPt\')<0.2 && dr03EcalRecHitSumEt()/userFloat(\'eesDownElectronsPt\')<0.5 && dr03HcalTowerSumEt()/userFloat(\'eesDownElectronsPt\')<0.3").size()',
+        ## ees down
+        #eVeto_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDLoose\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5").size()',
+        #eVetoNoIso_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDLooseNoIso\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5").size()',
+        #eVetoTrigIso_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDLooseNoIso\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5 && dr03TkSumPt()/userFloat(\'eesDownElectronsPt\')<0.2 && dr03EcalRecHitSumEt()/userFloat(\'eesDownElectronsPt\')<0.5 && dr03HcalTowerSumEt()/userFloat(\'eesDownElectronsPt\')<0.3").size()',
+        #eVetoTight_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDMedium\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5").size()',
+        #eVetoTightNoIso_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDMediumNoIso\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5").size()',
+        #eVetoTightTrigIso_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDMediumNoIso\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5 && dr03TkSumPt()/userFloat(\'eesDownElectronsPt\')<0.2 && dr03EcalRecHitSumEt()/userFloat(\'eesDownElectronsPt\')<0.5 && dr03HcalTowerSumEt()/userFloat(\'eesDownElectronsPt\')<0.3").size()',
 
         # HZZ vetos
         muVetoHZZ = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5\').size()',
@@ -136,21 +136,21 @@ parameters = {
         objectPassWZTightNoIso = '? ({object}.userFloat("CBIDMediumNoIso")>0.5 && {object}.pt > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
         objectPassWZTightTrigIso = '? ({object}.userFloat("CBIDMediumNoIso")>0.5 && {object}.pt > 10 && abs({object}.eta) < 2.5 && {object}.dr03TkSumPt/{object}.pt<0.2 && {object}.dr03EcalRecHitSumEt/{object}.pt<0.5 && {object}.dr03HcalTowerSumEt/{object}.pt<0.3) ? 1 : 0',
 
-        # ees up
-        objectPassWZLoose_eesUp = '? ({object}.userFloat("CBIDLoose")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
-        objectPassWZLooseNoIso_eesUp = '? ({object}.userFloat("CBIDLooseNoIso")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
-        objectPassWZLooseTrigIso_eesUp = '? ({object}.userFloat("CBIDLooseNoIso")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5 && {object}.dr03TkSumPt/{object}.userFloat(\'eesUpElectronsPt\')<0.2 && {object}.dr03EcalRecHitSumEt/{object}.userFloat(\'eesUpElectronsPt\')<0.5 && {object}.dr03HcalTowerSumEt/{object}.userFloat(\'eesUpElectronsPt\')<0.3) ? 1 : 0',
-        objectPassWZTight_eesUp = '? ({object}.userFloat("CBIDMedium")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
-        objectPassWZTightNoIso_eesUp = '? ({object}.userFloat("CBIDMediumNoIso")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
-        objectPassWZTightTrigIso_eesUp = '? ({object}.userFloat("CBIDMediumNoIso")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5 && {object}.dr03TkSumPt/{object}.userFloat(\'eesUpElectronsPt\')<0.2 && {object}.dr03EcalRecHitSumEt/{object}.userFloat(\'eesUpElectronsPt\')<0.5 && {object}.dr03HcalTowerSumEt/{object}.userFloat(\'eesUpElectronsPt\')<0.3) ? 1 : 0',
+        ## ees up
+        #objectPassWZLoose_eesUp = '? ({object}.userFloat("CBIDLoose")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
+        #objectPassWZLooseNoIso_eesUp = '? ({object}.userFloat("CBIDLooseNoIso")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
+        #objectPassWZLooseTrigIso_eesUp = '? ({object}.userFloat("CBIDLooseNoIso")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5 && {object}.dr03TkSumPt/{object}.userFloat(\'eesUpElectronsPt\')<0.2 && {object}.dr03EcalRecHitSumEt/{object}.userFloat(\'eesUpElectronsPt\')<0.5 && {object}.dr03HcalTowerSumEt/{object}.userFloat(\'eesUpElectronsPt\')<0.3) ? 1 : 0',
+        #objectPassWZTight_eesUp = '? ({object}.userFloat("CBIDMedium")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
+        #objectPassWZTightNoIso_eesUp = '? ({object}.userFloat("CBIDMediumNoIso")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
+        #objectPassWZTightTrigIso_eesUp = '? ({object}.userFloat("CBIDMediumNoIso")>0.5 && {object}.userFloat(\'eesUpElectronsPt\') > 10 && abs({object}.eta) < 2.5 && {object}.dr03TkSumPt/{object}.userFloat(\'eesUpElectronsPt\')<0.2 && {object}.dr03EcalRecHitSumEt/{object}.userFloat(\'eesUpElectronsPt\')<0.5 && {object}.dr03HcalTowerSumEt/{object}.userFloat(\'eesUpElectronsPt\')<0.3) ? 1 : 0',
 
-        # ees down
-        objectPassWZLoose_eesDown = '? ({object}.userFloat("CBIDLoose")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
-        objectPassWZLooseNoIso_eesDown = '? ({object}.userFloat("CBIDLooseNoIso")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
-        objectPassWZLooseTrigIso_eesDown = '? ({object}.userFloat("CBIDLooseNoIso")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5 && {object}.dr03TkSumPt/{object}.userFloat(\'eesDownElectronsPt\')<0.2 && {object}.dr03EcalRecHitSumEt/{object}.userFloat(\'eesDownElectronsPt\')<0.5 && {object}.dr03HcalTowerSumEt/{object}.userFloat(\'eesDownElectronsPt\')<0.3) ? 1 : 0',
-        objectPassWZTight_eesDown = '? ({object}.userFloat("CBIDMedium")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
-        objectPassWZTightNoIso_eesDown = '? ({object}.userFloat("CBIDMediumNoIso")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
-        objectPassWZTightTrigIso_eesDown = '? ({object}.userFloat("CBIDMediumNoIso")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5 && {object}.dr03TkSumPt/{object}.userFloat(\'eesDownElectronsPt\')<0.2 && {object}.dr03EcalRecHitSumEt/{object}.userFloat(\'eesDownElectronsPt\')<0.5 && {object}.dr03HcalTowerSumEt/{object}.userFloat(\'eesDownElectronsPt\')<0.3) ? 1 : 0',
+        ## ees down
+        #objectPassWZLoose_eesDown = '? ({object}.userFloat("CBIDLoose")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
+        #objectPassWZLooseNoIso_eesDown = '? ({object}.userFloat("CBIDLooseNoIso")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
+        #objectPassWZLooseTrigIso_eesDown = '? ({object}.userFloat("CBIDLooseNoIso")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5 && {object}.dr03TkSumPt/{object}.userFloat(\'eesDownElectronsPt\')<0.2 && {object}.dr03EcalRecHitSumEt/{object}.userFloat(\'eesDownElectronsPt\')<0.5 && {object}.dr03HcalTowerSumEt/{object}.userFloat(\'eesDownElectronsPt\')<0.3) ? 1 : 0',
+        #objectPassWZTight_eesDown = '? ({object}.userFloat("CBIDMedium")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
+        #objectPassWZTightNoIso_eesDown = '? ({object}.userFloat("CBIDMediumNoIso")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5) ? 1 : 0',
+        #objectPassWZTightTrigIso_eesDown = '? ({object}.userFloat("CBIDMediumNoIso")>0.5 && {object}.userFloat(\'eesDownElectronsPt\') > 10 && abs({object}.eta) < 2.5 && {object}.dr03TkSumPt/{object}.userFloat(\'eesDownElectronsPt\')<0.2 && {object}.dr03EcalRecHitSumEt/{object}.userFloat(\'eesDownElectronsPt\')<0.5 && {object}.dr03HcalTowerSumEt/{object}.userFloat(\'eesDownElectronsPt\')<0.3) ? 1 : 0',
     ),
     'muonVariables' : PSet(
         # default
@@ -164,27 +164,27 @@ parameters = {
         objectPassWZTightNoIso = '? ({object}.userInt("tightID") > 0.5  && {object}.pt > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
         objectPassWZTightTrigIso = '? ({object}.userInt("tightID") > 0.5  && {object}.pt > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.pt<0.4) ? 1 : 0',
 
-        # mes up
-        objectPassWZLoose_mesUp = '? ({object}.isLooseMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesUpMuonsPt\')<0.2) ? 1 : 0',
-        objectPassWZLooseNoIso_mesUp = '? ({object}.isLooseMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
-        objectPassWZLooseTrigIso_mesUp = '? ({object}.isLooseMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesUpMuonsPt\')<0.4) ? 1 : 0',
-        objectPassWZMedium_mesUp = '? ({object}.isMediumMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesUpMuonsPt\')<0.2) ? 1 : 0',
-        objectPassWZMediumNoIso_mesUp = '? ({object}.isMediumMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
-        objectPassWZMediumTrigIso_mesUp = '? ({object}.isMediumMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesUpMuonsPt\')<0.4) ? 1 : 0',
-        objectPassWZTight_mesUp = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesUpMuonsPt\')<0.12) ? 1 : 0',
-        objectPassWZTightNoIso_mesUp = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
-        objectPassWZTightTrigIso_mesUp = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesUpMuonsPt\')<0.4) ? 1 : 0',
+        ## mes up
+        #objectPassWZLoose_mesUp = '? ({object}.isLooseMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesUpMuonsPt\')<0.2) ? 1 : 0',
+        #objectPassWZLooseNoIso_mesUp = '? ({object}.isLooseMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
+        #objectPassWZLooseTrigIso_mesUp = '? ({object}.isLooseMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesUpMuonsPt\')<0.4) ? 1 : 0',
+        #objectPassWZMedium_mesUp = '? ({object}.isMediumMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesUpMuonsPt\')<0.2) ? 1 : 0',
+        #objectPassWZMediumNoIso_mesUp = '? ({object}.isMediumMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
+        #objectPassWZMediumTrigIso_mesUp = '? ({object}.isMediumMuon && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesUpMuonsPt\')<0.4) ? 1 : 0',
+        #objectPassWZTight_mesUp = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesUpMuonsPt\')<0.12) ? 1 : 0',
+        #objectPassWZTightNoIso_mesUp = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
+        #objectPassWZTightTrigIso_mesUp = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesUpMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesUpMuonsPt\')<0.4) ? 1 : 0',
 
-        # mes down
-        objectPassWZLoose_mesDown = '? ({object}.isLooseMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesDownMuonsPt\')<0.2) ? 1 : 0',
-        objectPassWZLooseNoIso_mesDown = '? ({object}.isLooseMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
-        objectPassWZLooseTrigIso_mesDown = '? ({object}.isLooseMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesDownMuonsPt\')<0.4) ? 1 : 0',
-        objectPassWZMedium_mesDown = '? ({object}.isMediumMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesDownMuonsPt\')<0.2) ? 1 : 0',
-        objectPassWZMediumNoIso_mesDown = '? ({object}.isMediumMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
-        objectPassWZMediumTrigIso_mesDown = '? ({object}.isMediumMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesDownMuonsPt\')<0.4) ? 1 : 0',
-        objectPassWZTight_mesDown = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesDownMuonsPt\')<0.12) ? 1 : 0',
-        objectPassWZTightNoIso_mesDown = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
-        objectPassWZTightTrigIso_mesDown = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesDownMuonsPt\')<0.4) ? 1 : 0',
+        ## mes down
+        #objectPassWZLoose_mesDown = '? ({object}.isLooseMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesDownMuonsPt\')<0.2) ? 1 : 0',
+        #objectPassWZLooseNoIso_mesDown = '? ({object}.isLooseMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
+        #objectPassWZLooseTrigIso_mesDown = '? ({object}.isLooseMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesDownMuonsPt\')<0.4) ? 1 : 0',
+        #objectPassWZMedium_mesDown = '? ({object}.isMediumMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesDownMuonsPt\')<0.2) ? 1 : 0',
+        #objectPassWZMediumNoIso_mesDown = '? ({object}.isMediumMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
+        #objectPassWZMediumTrigIso_mesDown = '? ({object}.isMediumMuon && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesDownMuonsPt\')<0.4) ? 1 : 0',
+        #objectPassWZTight_mesDown = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && ({object}.chargedHadronIso+max({object}.photonIso+{object}.neutralHadronIso-0.5*{object}.puChargedHadronIso,0.0))/{object}.userFloat(\'mesDownMuonsPt\')<0.12) ? 1 : 0',
+        #objectPassWZTightNoIso_mesDown = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4) ? 1 : 0',
+        #objectPassWZTightTrigIso_mesDown = '? ({object}.userInt("tightID") > 0.5  && {object}.userFloat(\'mesDownMuonsPt\') > 10 && abs({object}.eta) < 2.4 && {object}.trackIso/{object}.userFloat(\'mesDownMuonsPt\')<0.4) ? 1 : 0',
     ),
     'tauVariables' : PSet(),
     'photonVariables' : PSet(),
