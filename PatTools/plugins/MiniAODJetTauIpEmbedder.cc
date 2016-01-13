@@ -1,4 +1,4 @@
-/** \class MiniAODLeptonIpEmbedder
+/** \class MiniAODJetTauIpEmbedder
  *
  * Embed the track IP w.r.t an input PV as a user float in a pat collection
  * Also embeds the 3D & 2D IP and significance
@@ -25,10 +25,10 @@
 #include <vector>
 
 template<typename T>
-class MiniAODLeptonIpEmbedder : public edm::EDProducer {
+class MiniAODJetTauIpEmbedder : public edm::EDProducer {
   public:
-    MiniAODLeptonIpEmbedder(const edm::ParameterSet& pset);
-    virtual ~MiniAODLeptonIpEmbedder(){}
+    MiniAODJetTauIpEmbedder(const edm::ParameterSet& pset);
+    virtual ~MiniAODJetTauIpEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
     edm::EDGetTokenT<edm::View<T> > srcToken_;
@@ -37,14 +37,14 @@ class MiniAODLeptonIpEmbedder : public edm::EDProducer {
 };
 
 template<typename T>
-MiniAODLeptonIpEmbedder<T>::MiniAODLeptonIpEmbedder(const edm::ParameterSet& pset) {
+MiniAODJetTauIpEmbedder<T>::MiniAODJetTauIpEmbedder(const edm::ParameterSet& pset) {
   srcToken_ = consumes<edm::View<T> >(pset.getParameter<edm::InputTag>("src"));
   vtxSrcToken_ = consumes<reco::VertexCollection>(pset.getParameter<edm::InputTag>("vtxSrc"));
   produces<std::vector<T> >();
 }
 
 template<typename T>
-void MiniAODLeptonIpEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup& es) {
+void MiniAODJetTauIpEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup& es) {
 
   std::auto_ptr<std::vector<T> > output(new std::vector<T>());
 
@@ -58,21 +58,19 @@ void MiniAODLeptonIpEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup&
 
   for (size_t iObject = 0; iObject < handle->size(); ++iObject) {
     const T& object = handle->at(iObject);
-    std::vector<const reco::Track*> tracks = trackExtractor_(object);
-    const reco::Track* track = tracks.size() ? tracks.at(0) : NULL;
+    //std::vector<const reco::Track*> tracks = trackExtractor_(object);
+    //const reco::Track* track = tracks.size() ? tracks.at(0) : NULL;
     double ip = -1;
     double dz = -1;
     double vz = -999;
     double ip3D = -1;
     double ip3DS = -1;
 
-    if (track) {
-      ip = track->dxy(thePV.position());
-      dz = track->dz(thePV.position());
-      vz = track->vz();
-      ip3D = fabs(object.dB(T::PV3D));
-      ip3DS = fabs(object.edB(T::PV3D));
-    }
+    //if (track) {
+    //  ip = track->dxy(thePV.position());
+    //  dz = track->dz(thePV.position());
+    //  vz = track->vz();
+    //}
     T newObject = object;
     newObject.addUserFloat("ipDXY", ip);
     newObject.addUserFloat("dz", dz);
@@ -90,9 +88,9 @@ void MiniAODLeptonIpEmbedder<T>::produce(edm::Event& evt, const edm::EventSetup&
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
 
-typedef MiniAODLeptonIpEmbedder<pat::Muon> MiniAODMuonIpEmbedder;
-typedef MiniAODLeptonIpEmbedder<pat::Electron> MiniAODElectronIpEmbedder;
+typedef MiniAODJetTauIpEmbedder<pat::Tau> MiniAODTauIpEmbedder;
+typedef MiniAODJetTauIpEmbedder<pat::Jet> MiniAODJetIpEmbedder;
 
 #include "FWCore/Framework/interface/MakerMacros.h"
-DEFINE_FWK_MODULE(MiniAODMuonIpEmbedder);
-DEFINE_FWK_MODULE(MiniAODElectronIpEmbedder);
+DEFINE_FWK_MODULE(MiniAODTauIpEmbedder);
+DEFINE_FWK_MODULE(MiniAODJetIpEmbedder);

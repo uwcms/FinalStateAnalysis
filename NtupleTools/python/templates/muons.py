@@ -44,13 +44,13 @@ id = PSet(
         '-{object}.userFloat("rho_fastjet")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
         '/{object}.pt()'
     ),
-    objectRelPFIsoRhoFSR = cms.string(
-        '({object}.chargedHadronIso()'
-        '+max(0.0,{object}.neutralHadronIso()'
-        '+{object}.photonIso() - userFloat("leg{object_idx}fsrIsoCorr")'
-        '-{object}.userFloat("rho_fastjet")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
-        '/{object}.pt()'
-    ),
+    #objectRelPFIsoRhoFSR = cms.string(
+    #    '({object}.chargedHadronIso()'
+    #    '+max(0.0,{object}.neutralHadronIso()'
+    #    '+{object}.photonIso() - userFloat("leg{object_idx}fsrIsoCorr")'
+    #    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
+    #    '/{object}.pt()'
+    #),
 
     objectIsPFMuon = '{object}.isPFMuon',
     objectIsGlobal = '{object}.isGlobalMuon',

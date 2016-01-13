@@ -14,6 +14,22 @@ def preTaus(process, use25ns, tSrc, vSrc,**kwargs):
     
     process.schedule.append(getattr(process,modPath))
 
+    # embed IP stuff
+    modName = 'miniTausEmbedIp{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODTauIpEmbedder",
+        src = cms.InputTag(tSrc),
+        vtxSrc = cms.InputTag(vSrc),
+    )
+    tSrc = modName
+    setattr(process,modName,mod)
+
+    pathName = 'runMiniAODTauIpEmbedding{0}'.format(postfix)
+    path = cms.Path(getattr(process,modName))
+    setattr(process,pathName,path)
+    process.schedule.append(getattr(process,pathName))
+
+
     return tSrc
 
 def postTaus(process, use25ns, tSrc, jSrc,**kwargs):
