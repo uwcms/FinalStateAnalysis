@@ -159,10 +159,6 @@ if __name__ == "__main__":
         log.info("Finding files for sample %s" % sample_name)
         log.info("Looking for tree  %s" %  tree_name)
         log.info("Looking for histo %s" %  histo_name)
-   
-        print histo_name
-        print tree_name
-        print "!!!!!!!!!!!!!!!!!"
 
         output_txt = os.path.join(args.outputdir, sample_name + '.txt')
         output_weights_txt  = os.path.join(args.outputdir, sample_name + '_weight.log')

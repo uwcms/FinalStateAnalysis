@@ -776,7 +776,6 @@ if options.keepPat:
 else:
     print "Building ntuple for final states: %s" % ", ".join(final_states)
     for final_state in expanded_final_states(final_states):
-        #extraJets = options.nExtraJets if 'j' not in final_state else 0
         extraJets = options.nExtraJets
         final_state = order_final_state(final_state)
         analyzer = make_ntuple(*final_state, 
