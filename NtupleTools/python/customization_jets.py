@@ -1,7 +1,7 @@
 # Embed IDs for jets
 import FWCore.ParameterSet.Config as cms
 
-def preJets(process, use25ns, jSrc, vSrc,**kwargs):
+def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, eCut,eDeltaR,mCut,mDeltaR,jCut,**kwargs):
     postfix = kwargs.pop('postfix','')
 
     mod = cms.EDProducer(
@@ -30,5 +30,22 @@ def preJets(process, use25ns, jSrc, vSrc,**kwargs):
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
+
+    process.miniAODJetCleaningEmbedding = cms.EDProducer(
+        "MiniAODJetCleaningEmbedder",
+        jetSrc = cms.InputTag(jSrc),
+        muSrc = cms.InputTag(mSrc),
+        eSrc = cms.InputTag(eSrc),
+        eID = cms.string(eCut),
+        eDR = cms.double(eDeltaR),
+        mID = cms.string(mCut),
+        mDR = cms.double(mDeltaR),
+        jID = cms.string(jCut),
+    )
+    jSrc = 'miniAODJetCleaningEmbedding'
+    process.jetCleaningEmbedding = cms.Path(
+        process.miniAODJetCleaningEmbedding
+    )
+    process.schedule.append(process.jetCleaningEmbedding)
 
     return jSrc
