@@ -398,7 +398,12 @@ process.miniAODJetCleaningEmbedding = cms.EDProducer(
     "MiniAODJetCleaningEmbedder",
     jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
     muSrc = cms.InputTag(fs_daughter_inputs['muons']),
-    eSrc = cms.InputTag(fs_daughter_inputs['electrons'])
+    eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
+    eID = cms.string(parameters['finalSelection']['j']['e']['selection']),
+    eDR = cms.double(parameters['finalSelection']['j']['e']['deltaR']),
+    mID = cms.string(parameters['finalSelection']['j']['m']['selection']),
+    mDR = cms.double(parameters['finalSelection']['j']['m']['deltaR']),
+    jID = cms.string(parameters['finalSelection']['j']['selection'])
 )
 fs_daughter_inputs['jets'] = 'miniAODJetCleaningEmbedding'
 process.jetCleaningEmbedding = cms.Path(
