@@ -86,9 +86,7 @@ void MiniAODJetCleaningEmbedder::produce(edm::Event& evt, const edm::EventSetup&
         }
       }
       jet.addUserFloat("cleanJet", float(cleanJet));
-      if (cleanJet == true){
-        output->push_back(jet);
-      }
+      output->push_back(jet);
     }
   }
 
