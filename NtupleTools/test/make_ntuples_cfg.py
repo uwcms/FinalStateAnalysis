@@ -455,10 +455,10 @@ if abs(options.runFSRFilter)>0:
 #}
 #allowedShifts = ['jres','jes','mes','ees','tes','ues']
 #allowedSigns = ['+','-']
-#
-## this should be it, but fails
-##process.applyCorrections = cms.Path(getattr(process,'fullPatMetSequence{0}'.format(postfix)))
-## fix things
+
+# this should be it, but fails
+#process.applyCorrections = cms.Path(getattr(process,'fullPatMetSequence{0}'.format(postfix)))
+# fix things
 #getattr(process,'patPFMetT1T2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
 #getattr(process,'patPFMetT2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
 #getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices')
@@ -472,7 +472,7 @@ if abs(options.runFSRFilter)>0:
 #process.applyCorrections += getattr(process,'patPFMetTxy{0}'.format(postfix))
 #process.schedule.append(process.applyCorrections)
 #fs_daughter_inputs['jets'] = 'patJets'
-#
+
 ## embed references to shifts
 #process.embedShifts = cms.Path()
 #for shift in allowedShifts:
@@ -532,6 +532,8 @@ if abs(options.runFSRFilter)>0:
 #        fs_daughter_inputs['pfmet'] = metMap[t].format(sign=signMap[d],postfix=postfix)
 #        for coll in collMap[t]:
 #            fs_daughter_inputs[coll.lower()] = collMap[t][coll].format(sign=signMap[d],postfix=postfix)
+
+
 
 
 
