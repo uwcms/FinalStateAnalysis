@@ -22,7 +22,7 @@ namespace :meta do
     end
   end
 
-  def make_meta_tasks(sample, ntuple, sqrts,histo)
+  def make_meta_tasks(sample, ntuple, sqrts ,histo)
     # Getting meta information from ntpule
     file sample + '.meta.root' => sample + '.txt' do |t|
         farmout = ENV.fetch('farmout', "0")
@@ -32,7 +32,7 @@ namespace :meta do
             sh "mega $fsa/PlotTools/python/ExtractTree.py #{t.prerequisites} #{t.name} --tree #{ntuple}"
         end
     end
-
+    
     file sample + '.meta.json' => sample + '.meta.root' do |t|
       if t.name.include? 'data'
         sh "extract_meta_info.py #{t.prerequisites} metaInfo  #{t.name}  --lumimask"
@@ -56,10 +56,17 @@ namespace :meta do
       # Get the PU distribution
       file sample + '.pu.root' => sample + '.lumimask.json' do |t|
         pu_file = ''
-        maxbin = 50
-        nbins = 500
+        maxbin = 52
+        nbins = 52
         # Minbias xsection
         minbias = 68000
+        if sqrts == "13" then
+          pu_file = ENV['pu2015JSON']
+          maxbin = 52
+          nbins = 52
+          # Minbias xsection
+          minbias = 69000 # suggested for 13TeV
+        end
         if sqrts == "8" then
           pu_file = ENV['pu2012JSON']
           maxbin = 60
@@ -70,8 +77,10 @@ namespace :meta do
           pu_file = ENV["pu2011JSON"]
         end
         # Find the newest PU json file
-        print "cannot run pileupCalc.py yet \n"  
-        #sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t.name}"
+        #print "cannot run pileupCalc.py yet \n"  
+        sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{t .name} "
+	sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias*1.05} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{sample+'.pu_up.root'} "
+	sh "pileupCalc.py -i #{t.prerequisites[0]} --inputLumiJSON #{pu_file} --calcMode true --minBiasXsec #{minbias*0.95} --maxPileupBin #{maxbin} --numPileupBins #{nbins} #{sample+'.pu_down.root'} "
       end
       # Put the lumicalc result in a readable format.  Make it dependent
       # on the PU .root file as well, so it gets built.
@@ -82,7 +91,7 @@ namespace :meta do
     else
       # In MC, we can get the effective lumi from xsec and #events.
       file sample + '.lumicalc.sum' => sample + '.meta.json' do |t|
-        #sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} `cat #{t.prerequisites} | extract_json.py n_evts` > #{t.name}"
+        sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} `cat #{t.prerequisites} | extract_json.py n_evts` > #{t.name}"
       end
     end
     # Return the final target
@@ -108,7 +117,7 @@ namespace :meta do
           end
         end
         #make the task
-        target = make_meta_tasks(sample, meta_ntuple, args.sqrts, meta_histo)
+        target = make_meta_tasks(sample, meta_ntuple, args.sqrt, meta_histo)
         task :computemeta => target
       end
       #puts Rake::Task['computemeta'].timestamp
