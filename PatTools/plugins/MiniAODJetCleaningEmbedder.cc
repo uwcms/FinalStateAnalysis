@@ -44,10 +44,6 @@ void MiniAODJetCleaningEmbedder::produce(edm::Event& evt, const edm::EventSetup&
   evt.getByLabel(srcMuon_, inputMuon);
   evt.getByLabel(srcElectron_, inputElectron);
   
-  std::cout << inputJet->size() << std::endl;
-  std::cout << inputElectron->size() << std::endl;
-  std::cout << inputMuon->size() << std::endl;
-
   output->reserve(inputJet->size());
   for (size_t i = 0; i < inputJet->size(); ++i) {
     pat::Jet jet = inputJet->at(i);
@@ -80,9 +76,7 @@ void MiniAODJetCleaningEmbedder::produce(edm::Event& evt, const edm::EventSetup&
         }
       }
     }
-    std::cout << "Adding userfloat " << cleanJet << " to jet" << std::endl;
     jet.addUserFloat("cleanJet", float(cleanJet));
-    std::cout << "jet userfloat: " << jet.userFloat("cleanJet") << std::endl;
     if (cleanJet == true){
       output->push_back(jet);
     }
