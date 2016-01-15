@@ -389,27 +389,13 @@ fs_daughter_inputs['taus'] = preTaus(process,options.use25ns,fs_daughter_inputs[
 ### jet id embedding ###
 ########################
 from FinalStateAnalysis.NtupleTools.customization_jets import preJets
-fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs['jets'],fs_daughter_inputs['vertices'])
+fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs['jets'],fs_daughter_inputs['vertices'],fs_daughter_inputs['muons'],fs_daughter_inputs['electrons'],
+    parameters['finalSelection']['j']['e']['selection'],
+    parameters['finalSelection']['j']['e']['deltaR'],
+    parameters['finalSelection']['j']['m']['selection'],
+    parameters['finalSelection']['j']['m']['deltaR'],
+    parameters['finalSelection']['j']['selection'])
 
-########################
-###   jet cleaning   ###
-########################
-process.miniAODJetCleaningEmbedding = cms.EDProducer(
-    "MiniAODJetCleaningEmbedder",
-    jetSrc = cms.InputTag(fs_daughter_inputs['jets']),
-    muSrc = cms.InputTag(fs_daughter_inputs['muons']),
-    eSrc = cms.InputTag(fs_daughter_inputs['electrons']),
-    eID = cms.string(parameters['finalSelection']['j']['e']['selection']),
-    eDR = cms.double(parameters['finalSelection']['j']['e']['deltaR']),
-    mID = cms.string(parameters['finalSelection']['j']['m']['selection']),
-    mDR = cms.double(parameters['finalSelection']['j']['m']['deltaR']),
-    jID = cms.string(parameters['finalSelection']['j']['selection'])
-)
-fs_daughter_inputs['jets'] = 'miniAODJetCleaningEmbedding'
-process.jetCleaningEmbedding = cms.Path(
-    process.miniAODJetCleaningEmbedding
-)
-process.schedule.append(process.jetCleaningEmbedding)
 
 ########################################
 ### pre selection HZZ customizations ###

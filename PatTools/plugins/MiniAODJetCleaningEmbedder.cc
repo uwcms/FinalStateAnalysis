@@ -62,9 +62,6 @@ void MiniAODJetCleaningEmbedder::produce(edm::Event& evt, const edm::EventSetup&
   StringCutObjectSelector<pat::Muon> MuCut(mID_);
   StringCutObjectSelector<pat::Jet> JetCut(jID_);
 
-  std::cout << "mID_" << mID_ << std::endl;
-  std::cout << "eID_" << eID_ << std::endl;
-  std::cout << "jID_" << jID_ << std::endl;
   for (size_t i = 0; i < inputJet->size(); ++i) {
     pat::Jet jet = inputJet->at(i);
     bool cleanJet = true;
