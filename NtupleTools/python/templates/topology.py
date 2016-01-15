@@ -123,9 +123,9 @@ vbf = PSet(
 
 
 extraJet = PSet(
-    objectPt = '? evt.jets.size()>{object_idx} ? {object}.pt() : -999',
-    objectEta = '? evt.jets.size()>{object_idx} ? {object}.eta() : -999',
-    objectPhi = '? evt.jets.size()>{object_idx} ? {object}.phi() : -999',
-    objectPUMVA = '? evt.jets.size()>{object_idx} ? {object}.userFloat("pileupJetId:fullDiscriminant") : -999',
-    objectBJetCISV = '? evt.jets.size()>{object_idx} ? {object}.bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') : -999',
+    objectPt = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') ? {object}.pt() : -999',
+    objectEta = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') ? {object}.eta() : -999',
+    objectPhi = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') ? {object}.phi() : -999',
+    objectPUMVA = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') & {object}.pt()>20 & abs({object}.eta())<2.5? {object}.userFloat("pileupJetId:fullDiscriminant") : -999',
+    objectBJetCISV = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') & {object}.pt()>20 & abs({object}.eta())<2.5? {object}.bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') : -999',
 )
