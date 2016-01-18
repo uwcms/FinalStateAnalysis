@@ -110,9 +110,9 @@ namespace fshelpers {
     double totalEt = p1.Et() + p2.Et();
     double totalPt = (p1 + p2).pt();
     double mt2 = totalEt*totalEt - totalPt*totalPt;
-    if (mt2 < 0) {
-      std::cout << "P1 = " << p1 << " P2 = " << p2 << " " << mt2 << std::endl;
-    }
+    //if (mt2 < 0) {
+    //  std::cout << "P1 = " << p1 << " P2 = " << p2 << " " << mt2 << std::endl;
+    //}
     return std::sqrt(std::abs(mt2));
   }
 
