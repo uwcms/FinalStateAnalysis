@@ -75,9 +75,9 @@ id = PSet(
     objectTrkIsoDR03 = cms.string("{object}.dr03TkSumPt()"),
     objectEcalIsoDR03 = cms.string("{object}.dr03EcalRecHitSumEt()"),
     objectHcalIsoDR03 = cms.string("{object}.dr03HcalTowerSumEt()"),
-    #objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
-    #objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
-    #objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
+    objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
+    objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
+    objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
     # raw energy error
     objectEnergyError = '{object}.corrections().combinedP4Error',
     # shower shape / ID variables
@@ -176,6 +176,10 @@ trigger_50ns = PSet(
 )
 
 trigger_25ns = PSet(
+    objectMatchesSingleE22Tight = r'matchToHLTPath({object_idx},"HLT_Ele22_eta2p1_WPTight_Gsf_v\\d+",0.5)',
+    objectMatchesSingleE22Loose = r'matchToHLTPath({object_idx},"HLT_Ele22_eta2p1_WPLoose_Gsf_v\\d+|HLT_Ele22_eta2p1_WP75_Gsf_v\\d+",0.5)',
+    objectMatchesSingleE23Tight = r'matchToHLTPath({object_idx},"HLT_Ele23_WPTight_Gsf_v\\d+",0.5)',
+    objectMatchesSingleE23Loose = r'matchToHLTPath({object_idx},"HLT_Ele23_WPLoose_Gsf_v\\d+|HLT_Ele23_WP75_Gsf_v\\d+",0.5)',
     objectMatchesSingleE = r'matchToHLTPath({object_idx},"HLT_Ele32_eta2p1_WPLoose_Gsf_v\\d+",0.5)',
     objectMatchesSingleE_leg1 = r'matchToHLTPath({object_idx},"HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
     objectMatchesSingleE_leg2 = r'matchToHLTPath({object_idx},"HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',

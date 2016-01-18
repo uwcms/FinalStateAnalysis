@@ -67,6 +67,8 @@ fi
 echo "Will compile with flags:"
 echo $USER_CXXFLAGS
 
+export pu2015JSON=/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_latest.txt
+
 #check if dev area is up to date
 ### Removed by Nate 31 March 2015. Can be put back in when we're following master again.
 # pushd $fsa

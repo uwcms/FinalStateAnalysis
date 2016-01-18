@@ -27,12 +27,12 @@ remaining_space = term_columns - len(header)
 print header
 for status in status_files:
     sample= status.split('/')[4]
-    lines = [i for i in open(status).readlines() if 'JOB' in i]
+    lines = [i for i in open(status).readlines() if 'NodeStatus =' in i]
     done  = len([i for i in lines if 'STATUS_DONE' in i])
     err   = len([i for i in lines if 'STATUS_ERROR' in i])
     sub   = len([i for i in lines if 'STATUS_SUBMITTED' in i])
     tot   = len(lines)
-
+    #print lines
     ratio_done = float(done) / float(tot)
     ratio_err  = float(err) / float(tot)
     ratio_sub  = float(sub) / float(tot)
