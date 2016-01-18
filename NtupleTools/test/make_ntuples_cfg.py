@@ -1005,12 +1005,8 @@ if options.keepPat:
 else:
     print "Building ntuple for final states: %s" % ", ".join(final_states)
     for final_state in expanded_final_states(final_states):
-<<<<<<< HEAD
         if additional_fs: print 'Adding ntuple {0}'.format(final_state)
-        extraJets = options.nExtraJets if 'j' not in final_state else 0
-=======
         extraJets = options.nExtraJets
->>>>>>> 7d5366e85e25d2f53e20c13f297bb36762aeec98
         final_state = order_final_state(final_state)
         analyzer = make_ntuple(*final_state, 
                                 svFit=options.svFit, dblhMode=options.dblhMode,
