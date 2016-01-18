@@ -441,15 +441,13 @@ if options.passThru:
 else:
     preselections = parameters.get('preselection',{})
 
-from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections, getName
+from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections
 process.preselectionSequence = setup_selections(
     process, 
     "Preselection",
     fs_daughter_inputs,
     preselections,
     )
-for ob in preselections:
-    fs_daughter_inputs[getName(ob)+'s'] = getName(ob)+"Preselection"
 process.FSAPreselection = cms.Path(process.preselectionSequence)
 process.schedule.append(process.FSAPreselection)
 
