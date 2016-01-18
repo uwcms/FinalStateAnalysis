@@ -76,7 +76,6 @@ process = cms.Process("Ntuples")
 
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),
-    wantSummary = cms.untracked.bool(True),
 )
 
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
