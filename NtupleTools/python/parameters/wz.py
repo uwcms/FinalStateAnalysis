@@ -44,7 +44,19 @@ parameters = {
         'm': 'pt > 4 && (isGlobalMuon | isTrackerMuon)',
         't': 'abs(eta) < 2.5 && pt > 17 && tauID("decayModeFinding")',
         'g': 'abs(superCluster().eta()) < 3.0 && pt > 10',
-        'j': 'pt>20 && abs(eta) < 2.5 && userFloat("idLoose")'
+        #'j': 'pt>20 && abs(eta) < 2.5 && userFloat("idLoose")'
+        'j' : {
+            'selection' : 'pt>20 && abs(eta)<4.7 && userFloat("idLoose") > 0.5',
+            'e': {
+                'selection' : 'pt>10 && userFloat("CBIDMedium")>0.5 && abs(eta)<2.5',
+                'deltaR' : 0.3,
+                },
+            'm': {
+                'selection' : 'pt>10 && userInt("tightID") > 0.5 && abs(eta)<2.4 && (chargedHadronIso()+max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso,0.0))/pt()<0.12',
+                'deltaR' : 0.3,
+                },
+            },
+
     },
     # cross cleaning for objects in final state
     'crossCleaning' : '',
