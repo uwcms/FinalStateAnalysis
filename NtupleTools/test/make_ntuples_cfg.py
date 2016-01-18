@@ -545,6 +545,7 @@ if options.hzz and (options.channels == 'zz' or any(len(c)==4 for c in options.c
                                     "phjj_VAJHU",
                                     "pvbf_VAJHU",
                                     ),
+            fsrLabel = cms.string("dretFSRCand"),
             )
         # give the FS collection the same name as before, but with an identifying suffix
         newName = oldName + suffix
