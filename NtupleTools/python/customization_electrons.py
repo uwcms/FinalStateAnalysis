@@ -163,9 +163,19 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
         configFile = cms.FileInPath(eaFile), # the effective areas file
         )
     eSrc = 'miniAODElectronEAEmbedding'
+
+    process.miniAODElectronEAHZZEmbedding = cms.EDProducer(
+        "MiniAODElectronEffectiveArea2015Embedder",
+        src = cms.InputTag(eSrc),
+        label = cms.string("EffectiveArea_HZZ4l2015"), # embeds a user float with this name
+        use25ns = cms.bool(bool(use25ns)),
+        )
+    eSrc = 'miniAODElectronEAHZZEmbedding'
+
     process.ElectronEAEmbedding = cms.Path(
         process.patElectronEAEmbedder +
-        process.miniAODElectronEAEmbedding
+        process.miniAODElectronEAEmbedding +
+        process.miniAODElectronEAHZZEmbedding
         )
     process.schedule.append(process.ElectronEAEmbedding)
     
