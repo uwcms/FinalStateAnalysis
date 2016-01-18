@@ -133,6 +133,7 @@ void MiniAODElectronHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSe
       out->push_back(*ei); // copy electron to save correctly in event
 
       bool idResult = selector(*eptr) && (passKinematics(eptr) && passVertex(eptr) && passMissingHits(eptr));
+
       out->back().addUserFloat(idLabel_, float(idResult)); // 1 for true, 0 for false
 
       out->back().addUserFloat(idLabel_+"Tight", float(idResult && passBDT(eptr))); // 1 for true, 0 for false
@@ -146,15 +147,18 @@ bool MiniAODElectronHZZIDDecider::passKinematics(const edm::Ptr<pat::Electron>& 
 {
   bool result = (elec->pt() > ptCut);
   result = (result && fabs(elec->eta()) < etaCut);
+
   return result;
 }
 
 
 bool MiniAODElectronHZZIDDecider::passVertex(const edm::Ptr<pat::Electron>& elec) const
 {
-  return (fabs(elec->dB(pat::Electron::PV3D))/elec->edB(pat::Electron::PV3D) < sipCut && 
-	  fabs(elec->gsfTrack()->dxy(vertices->at(0).position())) < pvDXYCut &&
-	  fabs(elec->gsfTrack()->dz(vertices->at(0).position())) < pvDZCut);
+  bool out = (fabs(elec->dB(pat::Electron::PV3D))/elec->edB(pat::Electron::PV3D) < sipCut && 
+              fabs(elec->gsfTrack()->dxy(vertices->at(0).position())) < pvDXYCut &&
+              fabs(elec->gsfTrack()->dz(vertices->at(0).position())) < pvDZCut);
+
+  return out;
 }
 
 
