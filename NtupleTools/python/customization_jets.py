@@ -31,7 +31,8 @@ def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, eCut,eDeltaR,mCut,mDeltaR,
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
 
-    process.miniAODJetCleaningEmbedding = cms.EDProducer(
+    modName = 'miniAODJetCleaningEmbedding{0}'.format(postfix)
+    mod = cms.EDProducer(
         "MiniAODJetCleaningEmbedder",
         jetSrc = cms.InputTag(jSrc),
         muSrc = cms.InputTag(mSrc),
@@ -42,10 +43,14 @@ def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, eCut,eDeltaR,mCut,mDeltaR,
         mDR = cms.double(mDeltaR),
         jID = cms.string(jCut),
     )
-    jSrc = 'miniAODJetCleaningEmbedding'
-    process.jetCleaningEmbedding = cms.Path(
-        process.miniAODJetCleaningEmbedding
+    jSrc = modName
+    setattr(process,modName,mod)
+
+    pathName = 'jetCleaningEmbedding{0}'.format(postfix)
+    path = cms.Path(
+        getattr(process,modName)
     )
-    process.schedule.append(process.jetCleaningEmbedding)
+    setattr(process,pathName,path)
+    process.schedule.append(getattr(process,pathName))
 
     return jSrc

@@ -612,18 +612,18 @@ for fs in additional_fs:
 ########################
 from FinalStateAnalysis.NtupleTools.customization_jets import preJets
 fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs['jets'],fs_daughter_inputs['vertices'],fs_daughter_inputs['muons'],fs_daughter_inputs['electrons'],
-    parameters['finalSelection']['j']['e']['selection'],
-    parameters['finalSelection']['j']['e']['deltaR'],
-    parameters['finalSelection']['j']['m']['selection'],
-    parameters['finalSelection']['j']['m']['deltaR'],
-    parameters['finalSelection']['j']['selection'])
+    parameters['preselection']['j']['e']['selection'],
+    parameters['preselection']['j']['e']['deltaR'],
+    parameters['preselection']['j']['m']['selection'],
+    parameters['preselection']['j']['m']['deltaR'],
+    parameters['preselection']['j']['selection'])
 for fs in additional_fs:
     additional_fs[fs]['jets'] = preJets(process,options.use25ns,additional_fs[fs]['jets'],additional_fs[fs]['vertices'],additional_fs[fs]['muons'],additional_fs[fs]['electrons'],
-        parameters['finalSelection']['j']['e']['selection'],
-        parameters['finalSelection']['j']['e']['deltaR'],
-        parameters['finalSelection']['j']['m']['selection'],
-        parameters['finalSelection']['j']['m']['deltaR'],
-        parameters['finalSelection']['j']['selection'],
+        parameters['preselection']['j']['e']['selection'],
+        parameters['preselection']['j']['e']['deltaR'],
+        parameters['preselection']['j']['m']['selection'],
+        parameters['preselection']['j']['m']['deltaR'],
+        parameters['preselection']['j']['selection'],
         postfix=fs)
 
 ########################################

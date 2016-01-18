@@ -24,6 +24,18 @@ parameters = {
 
     # preselections for an object to be used anywhere
     'preselection' : {
+        'j' : {
+            'selection' : 'pt>20 & abs(eta) < 2.5 & userFloat("idLoose")',
+            'e': {
+                'selection' : 'pt>10&&userInt("CBIDLoose")>0&&(chargedHadronIso()+max(0.0,neutralHadronIso()+photonIso()-userFloat("rho_fastjet")*userFloat("EffectiveArea")))/pt()<0.2',
+                'deltaR' : 0.3,
+                },
+            'm': {
+                'selection' : 'pt>10&&isLooseMuon&&(chargedHadronIso()+max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso,0.0))/pt()<0.2',
+                'deltaR' : 0.3,
+                },
+            },
+
         },
 
     # selections to include object in final state (should be looser than analysis selections)

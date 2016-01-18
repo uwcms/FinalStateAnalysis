@@ -25,9 +25,9 @@ class MiniAODJetCleaningEmbedder : public edm::EDProducer {
     virtual ~MiniAODJetCleaningEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag srcJet_;
-    edm::InputTag srcMuon_;
-    edm::InputTag srcElectron_;
+    edm::EDGetTokenT<edm::View<pat::Jet> > srcJetToken_;
+    edm::EDGetTokenT<edm::View<pat::Muon> > srcMuonToken_;
+    edm::EDGetTokenT<edm::View<pat::Electron> > srcElectronToken_;
     std::string eID_;
     double eDR_;
     std::string mID_;
@@ -37,9 +37,9 @@ class MiniAODJetCleaningEmbedder : public edm::EDProducer {
 };
 
 MiniAODJetCleaningEmbedder::MiniAODJetCleaningEmbedder(const edm::ParameterSet& pset) {
-  srcJet_ = pset.getParameter<edm::InputTag>("jetSrc");
-  srcMuon_ = pset.getParameter<edm::InputTag>("muSrc");
-  srcElectron_ = pset.getParameter<edm::InputTag>("eSrc");
+  srcJetToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("jetSrc"));
+  srcMuonToken_ = consumes<edm::View<pat::Muon> >(pset.getParameter<edm::InputTag>("muSrc"));
+  srcElectronToken_ = consumes<edm::View<pat::Electron> >(pset.getParameter<edm::InputTag>("eSrc"));
   eID_ = pset.getParameter<std::string>("eID");
   eDR_ = pset.getParameter<double>("eDR");
   mID_ = pset.getParameter<std::string>("mID");
@@ -54,9 +54,9 @@ void MiniAODJetCleaningEmbedder::produce(edm::Event& evt, const edm::EventSetup&
   edm::Handle<edm::View<pat::Jet> > inputJet;
   edm::Handle<edm::View<pat::Muon> > inputMuon;
   edm::Handle<edm::View<pat::Electron> > inputElectron;
-  evt.getByLabel(srcJet_, inputJet);
-  evt.getByLabel(srcMuon_, inputMuon);
-  evt.getByLabel(srcElectron_, inputElectron);
+  evt.getByToken(srcJetToken_, inputJet);
+  evt.getByToken(srcMuonToken_, inputMuon);
+  evt.getByToken(srcElectronToken_, inputElectron);
   output->reserve(inputJet->size());
   StringCutObjectSelector<pat::Electron> EleCut(eID_);
   StringCutObjectSelector<pat::Muon> MuCut(mID_);
