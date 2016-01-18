@@ -44,12 +44,18 @@ fullNames = {
     't' : 'tau',
     'g' : 'photon',
     'j' : 'jet',
+    'v' : 'vertex',
 }
 
 def getName(obj, capitalize=False):
     if capitalize:
         return fullNames[obj][0].upper()+fullNames[obj][1:]
     return fullNames[obj]
+
+def getPlural(obj, capitalize=False):
+    if obj[0] == 'v':
+        return 'Vertices' if capitalize else 'vertices'
+    return getName(obj, capitalize) + 's'
 
 
 def setup_selections(process, moduleName, inputs, params):
@@ -62,11 +68,18 @@ def setup_selections(process, moduleName, inputs, params):
     seq = cms.Sequence()
 
     for obj, selector in params.iteritems():
+        if obj[0] == 'v':
+            module = cms.EDFilter("VertexSelector",
+                                  src = cms.InputTag(inputs[getPlural(obj)]),
+                                  cut = cms.string(selector),
+                                  filter = cms.bool(True),
+                                  )  
+
         # string indicates simple selection
-        if isinstance(selector, str):
+        elif isinstance(selector, str):
             module = cms.EDFilter(
-                "PAT%sRefSelector"%getName(obj, True),
-                src=cms.InputTag(inputs[getName(obj)+"s"]),
+                "PAT%sSelector"%getName(obj, True),
+                src=cms.InputTag(inputs[getPlural(obj)]),
                 cut=cms.string(selector),
                 filter=cms.bool(False),
                 )
@@ -80,7 +93,7 @@ def setup_selections(process, moduleName, inputs, params):
             for part, overlap in selector.iteritems():
                 subSelection = overlap.pop('selection', '')
                 particleParams = cms.PSet(
-                    src=cms.InputTag(inputs[getName(part)+"s"]),
+                    src=cms.InputTag(inputs[getPlural(part)]),
                     algorithm=cms.string("byDeltaR"),
                     preselection=cms.string(subSelection),
                     deltaR=cms.double(overlap.get('deltaR', 0.3)),
@@ -92,7 +105,7 @@ def setup_selections(process, moduleName, inputs, params):
 
             module = cms.EDProducer(
                 "PAT%sCleaner"%getName(obj, True),
-                src = cms.InputTag(inputs[getName(obj)+"s"]),
+                src = cms.InputTag(inputs[getPlural(obj)]),
                 preselection = cms.string(selection),
                 checkOverlaps = overlapParams,
                 finalCut = cms.string(''),
@@ -101,8 +114,8 @@ def setup_selections(process, moduleName, inputs, params):
         # add this module to the process with the right name
         setattr(process, getName(obj)+moduleName, module)
         seq += module
-
+        
         # use the correct name for this object if it's needed by other selector modules
-        inputs[getName(obj)+"s"] = getName(obj)+moduleName
+        inputs[getPlural(obj)] = getName(obj)+moduleName
 
     return seq
