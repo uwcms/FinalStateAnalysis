@@ -33,7 +33,7 @@ setattr(eleVars, "objectRelPFIsoRho%s"%brSuffix,
                     '+max(0.0,{object}.neutralHadronIso()' +
                     '+{object}.photonIso()' +
                     '-daughterUserCandIsoContribution({object_idx}, "%sCand")' +
-                    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea")))' +
+                    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea_HZZ4l2015")))' +
                     '/{object}.pt()')%(fsr))
         ),
 
@@ -54,6 +54,10 @@ setattr(muVars, "objectRelPFIsoDB%s"%brSuffix,
                     '-0.5*{object}.puChargedHadronIso,0.0))' +
                     '/{object}.pt()')%(fsr))
         )
+
+eleVars.objectEffectiveAreaHZZ = cms.string('{object}.userFloat("EffectiveArea_HZZ4l2015")')
+
+zzObjVars.objectHZZIsoFSR = cms.string('? {object}.hasUserFloat("HZZ4lIsoVal") ? {object}.userFloat("HZZ4lIsoVal") : 999.')
 
 setattr(zzDiObjVars, "object1_object2_Mass%s"%(brSuffix), 
             cms.string(('diObjectP4WithUserCands({object1_idx}, {object2_idx}, "%sCand").M')%(fsr))
@@ -81,6 +85,9 @@ parameters = {
     # selections on all objects whether they're included in final states or not, done immediately after necessary variables are embedded
     'preselection' : OrderedDict(
         [
+            # vertex cuts
+            #('v', '!isFake && ndof > 4 && abs(z) <= 24 && position.Rho <= 2'),
+            ('m', ''),
             # Veto electrons that are very close to muons
             ('e', {
                     'm' : {
@@ -89,9 +96,10 @@ parameters = {
                         },
                     },
              ),
-            # Remove jets that are near tight ID'd, no-FSR isolated leptons
+            # Remove jets that are near tight ID'd, isolated leptons
+            # A separate module cleans jets near FSR photons
             ('j', {
-                    'selection' : 'pt > 30 && eta < 4.7 && eta > -4.7 && userFloat("puID") > 0.5 && userFloat("idLoose") > 0.5',
+                    'selection' : 'pt > 30 && eta < 4.7 && eta > -4.7 && userFloat("idLoose") > 0.5', # ' && userFloat("puID") > 0.5 '
                     'e' : {
                         'deltaR' : 0.4,
                         'selection' : 'userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5',
