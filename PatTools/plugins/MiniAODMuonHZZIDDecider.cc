@@ -121,6 +121,9 @@ bool MiniAODMuonHZZIDDecider::passKinematics(const edm::Ptr<pat::Muon>& mu) cons
 
 bool MiniAODMuonHZZIDDecider::passVertex(const edm::Ptr<pat::Muon>& mu) const
 {
+  if(!vertices->size())
+    return false;
+
   return (fabs(mu->dB(pat::Muon::PV3D))/mu->edB(pat::Muon::PV3D) < sipCut && 
 	  fabs(mu->muonBestTrack()->dxy(vertices->at(0).position())) < pvDXYCut &&
 	  fabs(mu->muonBestTrack()->dz(vertices->at(0).position())) < pvDZCut);

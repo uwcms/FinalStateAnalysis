@@ -154,11 +154,12 @@ bool MiniAODElectronHZZIDDecider::passKinematics(const edm::Ptr<pat::Electron>& 
 
 bool MiniAODElectronHZZIDDecider::passVertex(const edm::Ptr<pat::Electron>& elec) const
 {
-  bool out = (fabs(elec->dB(pat::Electron::PV3D))/elec->edB(pat::Electron::PV3D) < sipCut && 
-              fabs(elec->gsfTrack()->dxy(vertices->at(0).position())) < pvDXYCut &&
-              fabs(elec->gsfTrack()->dz(vertices->at(0).position())) < pvDZCut);
+  if(!vertices->size())
+    return false;
 
-  return out;
+  return (fabs(elec->dB(pat::Electron::PV3D))/elec->edB(pat::Electron::PV3D) < sipCut && 
+          fabs(elec->gsfTrack()->dxy(vertices->at(0).position())) < pvDXYCut &&
+          fabs(elec->gsfTrack()->dz(vertices->at(0).position())) < pvDZCut);
 }
 
 
