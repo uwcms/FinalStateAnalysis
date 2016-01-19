@@ -527,8 +527,8 @@ if options.hzz and (options.channels == 'zz' or any(len(c)==4 for c in options.c
             "MiniAODHZZCategoryEmbedder",
             src = cms.InputTag(oldName),
             tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
-            bDisciminant = cms.string("combinedInclusiveSecondaryVertexV2BJetTags"),
-            bDiscriminantCut = cms.double(0.814),
+            bDiscriminator = cms.string("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
+            bDiscriminantCut = cms.double(0.89),
             )
         # give the FS collection an intermediate name, with an identifying suffix
         intermediateName = oldName + "HZZCategory"
