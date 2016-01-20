@@ -153,13 +153,13 @@ id = PSet(
     objectGenJetPt = '{object}.userFloat("genJetPt")',    
     objectGenJetEta = '{object}.userFloat("genJetEta")',  
 
-    objectGenStatus = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.status : -2 ',
-    objectGenPdgId = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.pdgId : -2 ',
-    objectGenEta = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.eta : -2 ',
-    objectGenPhi = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.phi : -2 ',
-    objectGenPt = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.pt : -2 ',
-    objectGenEnergy = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.energy : -2 ',
-    objectGenCharge = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.charge : -2 ',
+    objectGenStatus = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.status : -999 ',
+    objectGenPdgId = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.pdgId : -999 ',
+    objectGenEta = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.eta : -999 ',
+    objectGenPhi = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.phi : -999 ',
+    objectGenPt = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.pt : -999 ',
+    objectGenEnergy = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.energy : -999 ',
+    objectGenCharge = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.charge : -999 ',
 
     objectComesFromHiggs = 'comesFromHiggsRef({object_idx})',
 
