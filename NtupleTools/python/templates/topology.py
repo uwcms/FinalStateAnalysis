@@ -95,11 +95,11 @@ finalstate = PSet(
     Mass = 'mass',
     Mt = 'mt',
     Ht = 'jetHt("pt>30 && abs(eta)<2.5")',
-    MassError = 'userFloat("cand_dM")',
-    MassErrord1 = 'userFloat("cand_dM_0")',
-    MassErrord2 = 'userFloat("cand_dM_1")',
-    MassErrord3 = 'userFloat("cand_dM_2")',
-    #MassErrord4 = 'userFloat("cand_dM_3")'
+    MassError = '? hasUserFloat("cand_dM") ? userFloat("cand_dM") : -999',
+    MassErrord1 = '? hasUserFloat("cand_dM_0") ? userFloat("cand_dM_0") : -999',
+    MassErrord2 = '? hasUserFloat("cand_dM_1") ? userFloat("cand_dM_1") : -999',
+    MassErrord3 = '? hasUserFloat("cand_dM_2") ? userFloat("cand_dM_2") : -999',
+    MassErrord4 = '? hasUserFloat("cand_dM_3") ? userFloat("cand_dM_3") : -999',
 )
 
 
