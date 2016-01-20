@@ -854,6 +854,7 @@ double PATFinalState::closestZ(int i, const std::string& filter, std::vector<con
     double temp = std::abs(totalP4.mass() - 91.1876);
     if (temp < result) result = temp;
   }
+  if (zSecondLegs.size() == 0) return -999;
   return result;
 }
 
