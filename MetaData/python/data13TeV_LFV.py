@@ -94,13 +94,6 @@ datadefs["WW_TuneCUETP8M1_13TeV-pythia8"] = {
     'calibrationTarget': 'RunIISpring15DR7',
     'x_sec':  63.21, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
 }
-datadefs["WW_TuneCUETP8M1_13TeV-pythia8-dec"] = {
-    'analyses': ['4L'],
-    'datasetpath': '/WW_TuneCUETP8M1_13TeV-pythia8/RunIISpring15MiniAODv2-76X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
-    'pu': 'Asympt25ns',
-    'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec':  63.21, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
-}
 datadefs["WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
     'analyses': ['4L'],
     'datasetpath': '',
