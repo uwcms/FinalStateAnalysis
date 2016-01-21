@@ -47,6 +47,10 @@ pv_info = PSet(
 met = PSet(
     mvaMetEt       = 'evt.met("mvamet").et',
     mvaMetPhi      = 'evt.met("mvamet").phi',
+    mvaMetCov00    = 'evt.met("mvamet").getSignificanceMatrix[0][0]',
+    mvaMetCov01    = 'evt.met("mvamet").getSignificanceMatrix[0][1]',
+    mvaMetCov10    = 'evt.met("mvamet").getSignificanceMatrix[1][0]',
+    mvaMetCov11    = 'evt.met("mvamet").getSignificanceMatrix[1][1]',
     type1_pfMetEt  = 'evt.met("pfmet").pt', 
     type1_pfMetPhi = 'evt.met("pfmet").phi',
     
