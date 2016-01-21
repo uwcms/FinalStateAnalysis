@@ -113,6 +113,10 @@ singleLepton_25ns_MC = PSet(
         paths=r'HLT_IsoMu24_eta2p1_v\\d+'
         ),
     _trig_template.replace(
+        name='singleIsoMu17eta2p1', 
+        paths=r'HLT_IsoMu17_eta2p1_v\\d+'
+        ),
+    _trig_template.replace(
         name='singleE',
         paths=r'HLT_Ele32_eta2p1_WP75_Gsf_v\\d+'
         ),
