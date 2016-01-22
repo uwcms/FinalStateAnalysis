@@ -8,7 +8,7 @@ Author: Evan K. Friis
 
 IMPORTANT NOTE: If you want the logical OR of several paths, separate them 
 by '|' rather than by ','. 
-When the Smart Trigger gets a group of paths separated by commas, it uses 
+(When the Smart Trigger gets a group of paths separated by commas, it uses 
 the one with the lowest prescale (taking the first in case of a tie).
 
 '''
@@ -20,41 +20,6 @@ _trig_template = PSet(
     nameGroup = 'evt.hltGroup("paths")',
     namePrescale = 'evt.hltPrescale("paths")',
 )
-
-singleLepton_50ns_MC = PSet(
-    _trig_template.replace(
-        name='singleMu', 
-        paths=r'HLT_Mu50_v\\d+'
-        ),
-    _trig_template.replace(
-        name='singleE',
-        paths=r'HLT_Ele27_eta2p1_WP75_Gsf_v\\d+'
-        ),
-    _trig_template.replace(
-        name='singleMu_leg1', 
-        paths=r'HLT_Mu17_TrkIsoVVL_v\\d+'
-        ),
-    _trig_template.replace(
-        name='singleMu_leg2', 
-        paths=r'HLT_Mu8_TrkIsoVVL_v\\d+'
-        ),
-    _trig_template.replace(
-        name='singleMu_leg1_noiso', 
-        paths=r'HLT_Mu17_v\\d+'
-        ),
-    _trig_template.replace(
-        name='singleMu_leg2_noiso', 
-        paths=r'HLT_Mu8_v\\d+'
-        ),
-    _trig_template.replace(
-        name='singleE_leg1', 
-        paths=r'HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+'
-        ),
-    _trig_template.replace(
-        name='singleE_leg2', 
-        paths=r'HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
-        ),
-    )
 
 singleLepton_50ns = PSet(
     _trig_template.replace(
@@ -105,6 +70,10 @@ singleLepton_25ns_MC = PSet(
         paths=r'HLT_IsoMu20_eta2p1_v\\d+'
         ),
     _trig_template.replace(
+        name='singleIsoTkMu20',
+        paths=r'HLT_IsoTkMu20_v\\d+'
+        ),
+    _trig_template.replace(
         name='singleIsoMu24',
         paths=r'HLT_IsoMu24_v\\d+'
         ),
@@ -114,7 +83,7 @@ singleLepton_25ns_MC = PSet(
         ),
     _trig_template.replace(
         name='singleE',
-        paths=r'HLT_Ele32_eta2p1_WP75_Gsf_v\\d+'
+        paths=r'HLT_Ele27_WP85_Gsf_v\\d+',
         ),
     _trig_template.replace(
         name='singleE22WP75',
@@ -176,6 +145,10 @@ singleLepton_25ns = PSet(
         paths=r'HLT_IsoMu20_eta2p1_v\\d+'
         ),
     _trig_template.replace(
+        name='singleIsoTkMu20',
+        paths=r'HLT_IsoTkMu20_v\\d+'
+        ),
+    _trig_template.replace(
         name='singleIsoMu22',
         paths=r'HLT_IsoMu22_v\\d+'
         ),
@@ -185,7 +158,7 @@ singleLepton_25ns = PSet(
         ),
     _trig_template.replace(
         name='singleE',
-        paths=r'HLT_Ele32_eta2p1_WPLoose_Gsf_v\\d+'
+        paths=r'HLT_Ele27_WPLoose_Gsf_v\\d+',
         ),
     _trig_template.replace(
         name='singleE23WPLoose',

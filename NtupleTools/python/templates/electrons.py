@@ -175,12 +175,24 @@ trigger_50ns = PSet(
     objectMatchesDoubleMuSingleE = r'matchToHLTPath({object_idx},"HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+",0.5)',
 )
 
+trigger_25ns_MC = PSet(
+    objectMatchesSingleE = r'matchToHLTPath({object_idx},"HLT_Ele27_WP85_Gsf_v\\d+",0.5)',
+    objectMatchesSingleE_leg1 = r'matchToHLTPath({object_idx},"HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesSingleE_leg2 = r'matchToHLTPath({object_idx},"HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesDoubleE = r'matchToHLTPath({object_idx},"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+",0.5)',
+    objectMatchesSingleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesSingleMuSingleE = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
+    objectMatchesTripleE = r'matchToHLTPath({object_idx},"HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v\\d+",0.5)',
+    objectMatchesDoubleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+",0.5)',
+    objectMatchesDoubleMuSingleE = r'matchToHLTPath({object_idx},"HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+",0.5)',
+)
+
 trigger_25ns = PSet(
     objectMatchesSingleE22Tight = r'matchToHLTPath({object_idx},"HLT_Ele22_eta2p1_WPTight_Gsf_v\\d+",0.5)',
     objectMatchesSingleE22Loose = r'matchToHLTPath({object_idx},"HLT_Ele22_eta2p1_WPLoose_Gsf_v\\d+|HLT_Ele22_eta2p1_WP75_Gsf_v\\d+",0.5)',
     objectMatchesSingleE23Tight = r'matchToHLTPath({object_idx},"HLT_Ele23_WPTight_Gsf_v\\d+",0.5)',
     objectMatchesSingleE23Loose = r'matchToHLTPath({object_idx},"HLT_Ele23_WPLoose_Gsf_v\\d+|HLT_Ele23_WP75_Gsf_v\\d+",0.5)',
-    objectMatchesSingleE = r'matchToHLTPath({object_idx},"HLT_Ele32_eta2p1_WPLoose_Gsf_v\\d+",0.5)',
+    objectMatchesSingleE = r'matchToHLTPath({object_idx},"HLT_Ele27_WPLoose_Gsf_v\\d+",0.5)',
     objectMatchesSingleE_leg1 = r'matchToHLTPath({object_idx},"HLT_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
     objectMatchesSingleE_leg2 = r'matchToHLTPath({object_idx},"HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
     objectMatchesDoubleE = r'matchToHLTPath({object_idx},"HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+",0.5)',

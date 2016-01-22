@@ -2,8 +2,8 @@
 //                                                                          //
 //   MiniAODElectronHZZIDDecider.cc                                         //
 //                                                                          //
-//   Embeds electron ID and siolation decisions as userfloats               //
-//       (1 for true, 0for false), for use in other modules using           //
+//   Embeds electron ID decisions as userfloats                             //
+//       (1 for true, 0 for false), for use in other modules using          //
 //       HZZ4l2015 definitions.                                             //
 //                                                                          //
 //   Author: Nate Woods, U. Wisconsin                                       //
@@ -51,7 +51,6 @@ private:
   bool passVertex(const edm::Ptr<pat::Electron>& elec) const;
   bool passBDT(const edm::Ptr<pat::Electron>& elec) const;
   bool passMissingHits(const edm::Ptr<pat::Electron>& elec) const;
-  float PFRelIsoRhoNoFSR(const edm::Ptr<pat::Electron>& elec) const;
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
@@ -77,9 +76,6 @@ private:
   const double idCutHighPtHighEta;
   const std::string bdtLabel;
   const int missingHitsCut;
-  const double isoCut;
-  const std::string rhoLabel;
-  const std::string eaLabel; // use this effective area to correct isolation
   const bool checkMVAID;
   
   StringCutObjectSelector<pat::Electron> selector;
@@ -115,13 +111,6 @@ MiniAODElectronHZZIDDecider::MiniAODElectronHZZIDDecider(const edm::ParameterSet
   idCutHighPtHighEta(iConfig.exists("idCutHighPtHighEta") ? iConfig.getParameter<double>("idCutHighPtHighEta") : 0.350),
   bdtLabel(iConfig.exists("bdtLabel") ? iConfig.getParameter<std::string>("bdtLabel") : "BDTIDNonTrig"),
   missingHitsCut(iConfig.exists("missingHitsCut") ? iConfig.getParameter<int>("missingHitsCut") : 1),
-  isoCut(iConfig.exists("isoCut") ? iConfig.getParameter<double>("isoCut") : 0.5),
-  rhoLabel(iConfig.exists("rhoLabel") ?
-	   iConfig.getParameter<std::string>("rhoLabel") :
-	   std::string("rhoCSA14")),
-  eaLabel(iConfig.exists("eaLabel") ?
-	  iConfig.getParameter<std::string>("eaLabel") :
-	  std::string("EffectiveArea_HZZ4l2015")),
   checkMVAID(bdtLabel != ""),
   selector(iConfig.exists("selection") ?
 	    iConfig.getParameter<std::string>("selection") :
@@ -148,12 +137,10 @@ void MiniAODElectronHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSe
       out->push_back(*ei); // copy electron to save correctly in event
 
       bool idResult = selector(*eptr) && (passKinematics(eptr) && passVertex(eptr) && passMissingHits(eptr));
+
       out->back().addUserFloat(idLabel_, float(idResult)); // 1 for true, 0 for false
 
       out->back().addUserFloat(idLabel_+"Tight", float(idResult && passBDT(eptr))); // 1 for true, 0 for false
-      
-      bool isoResult = (PFRelIsoRhoNoFSR(eptr) < isoCut);
-      out->back().addUserFloat(isoLabel_, float(isoResult)); // 1 for true, 0 for false
     }
 
   iEvent.put(out);
@@ -164,15 +151,19 @@ bool MiniAODElectronHZZIDDecider::passKinematics(const edm::Ptr<pat::Electron>& 
 {
   bool result = (elec->pt() > ptCut);
   result = (result && fabs(elec->eta()) < etaCut);
+
   return result;
 }
 
 
 bool MiniAODElectronHZZIDDecider::passVertex(const edm::Ptr<pat::Electron>& elec) const
 {
+  if(!vertices->size())
+    return false;
+
   return (fabs(elec->dB(pat::Electron::PV3D))/elec->edB(pat::Electron::PV3D) < sipCut && 
-	  fabs(elec->gsfTrack()->dxy(vertices->at(0).position())) < pvDXYCut &&
-	  fabs(elec->gsfTrack()->dz(vertices->at(0).position())) < pvDZCut);
+          fabs(elec->gsfTrack()->dxy(vertices->at(0).position())) < pvDXYCut &&
+          fabs(elec->gsfTrack()->dz(vertices->at(0).position())) < pvDZCut);
 }
 
 
@@ -211,21 +202,6 @@ bool MiniAODElectronHZZIDDecider::passBDT(const edm::Ptr<pat::Electron>& elec) c
 bool MiniAODElectronHZZIDDecider::passMissingHits(const edm::Ptr<pat::Electron>& elec) const
 {
   return (elec->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS) <= missingHitsCut);
-}
-
-
-float MiniAODElectronHZZIDDecider::PFRelIsoRhoNoFSR(const edm::Ptr<pat::Electron>& elec) const
-{
-  float chHadIso = elec->chargedHadronIso();
-  float nHadIso = elec->neutralHadronIso();
-  float phoIso = elec->photonIso();
-  float puCorrection = elec->userFloat(rhoLabel) * elec->userFloat(eaLabel);
-  
-  float neutralIso = nHadIso + phoIso - puCorrection;
-  if(neutralIso < 0.)
-    neutralIso = 0.;
-
-  return ((chHadIso + neutralIso) / elec->pt());
 }
 
 

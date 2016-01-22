@@ -81,7 +81,7 @@ MiniAODHZZCategoryEmbedder::MiniAODHZZCategoryEmbedder(const edm::ParameterSet& 
 	       std::string("userFloat(\"HZZ4lIDPassTight\") > 0.5 && userFloat(\"HZZ4lIsoPass\") > 0.5")),
   bDiscrimLabel_(iConfig.exists("bDiscriminator") ?
 		 iConfig.getParameter<std::string>("bDiscriminator") :
-		 std::string("combinedInclusiveSecondaryVertexV2BJetTags")),
+		 std::string("pfCombinedInclusiveSecondaryVertexV2BJetTags")),
   bDiscrimCut_(iConfig.exists("bDiscriminatorCut") ?
 	       iConfig.getParameter<double>("bDiscriminatorCut") :
 	       0.814)

@@ -495,9 +495,9 @@ const edm::EventID& PATFinalStateEvent::evtId() const {
   return evtID_;
 }
 
-double PATFinalStateEvent::event() const {
+double PATFinalStateEvent::eventDouble() const {
   ULong64_t eventNum = evtId().event();
-  double doub = 0;
+  double doub = 0.;
   return doub + eventNum;
 }
 
