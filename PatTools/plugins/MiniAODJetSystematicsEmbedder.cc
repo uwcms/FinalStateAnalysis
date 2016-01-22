@@ -25,12 +25,12 @@ class MiniAODJetSystematicsEmbedder : public edm::EDProducer {
     virtual ~MiniAODJetSystematicsEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
+    edm::EDGetTokenT<edm::View<pat::Jet> > srcToken_;
     std::string label_;
 };
 
 MiniAODJetSystematicsEmbedder::MiniAODJetSystematicsEmbedder(const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
+  srcToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src"));
   label_ = pset.getParameter<std::string>("corrLabel");
   produces<pat::JetCollection>();
   produces<ShiftedCandCollection>("p4OutJESUpJets");
@@ -40,7 +40,7 @@ void MiniAODJetSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSet
   std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
 
   edm::Handle<edm::View<pat::Jet> > jets;
-  evt.getByLabel(src_, jets);
+  evt.getByToken(srcToken_, jets);
   size_t nJets = jets->size();
 
   std::auto_ptr<ShiftedCandCollection> p4OutJESUpJets(new ShiftedCandCollection);

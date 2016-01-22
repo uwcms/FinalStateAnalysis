@@ -343,51 +343,25 @@ if options.runMVAMET:
 
 # add met filters
 if options.runMetFilter:
-    # HBHE Loose
-    # flag in miniaod wrong, must rerun
-    process.load('CommonTools.RecoAlgos.HBHENoiseFilterResultProducer_cfi')
-    process.HBHENoiseFilterResultProducer.minZeros = cms.int32(99999)
-    process.HBHENoiseFilterResultProducer.IgnoreTS4TS5ifJetInLowBVRegion=cms.bool(False) 
-    process.HBHENoiseFilterResultProducer.defaultDecision = cms.string("HBHENoiseFilterResultRun2Loose")
-    
-    process.ApplyBaselineHBHENoiseFilter = cms.EDFilter('BooleanFlagFilter',
-       inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHENoiseFilterResult'),
-       reverseDecision = cms.bool(False)
-    )
-    
-    process.ApplyBaselineHBHEIsoNoiseFilter = cms.EDFilter('BooleanFlagFilter',
-       inputLabel = cms.InputTag('HBHENoiseFilterResultProducer','HBHEIsoNoiseFilterResult'),
-       reverseDecision = cms.bool(False)
-    )
-    filters += [process.HBHENoiseFilterResultProducer, process.ApplyBaselineHBHENoiseFilter]
-
-    # CSC Tight Halo and EE Bad SC 4
-    eventListFile = 'FinalStateAnalysis/NtupleTools/data/csc2015_Dec01.txt'
-    process.MiniAODCSCTightHaloFilterProducer = cms.EDProducer('MiniAODEventListProducer',
-        label = cms.string('CSCTightHaloFilterResult'),
-        eventList = cms.FileInPath(eventListFile),
-    )
-    process.ApplyCSCTightHaloFilter = cms.EDFilter('BooleanFlagFilter',
-        inputLabel = cms.InputTag('MiniAODCSCTightHaloFilterProducer','CSCTightHaloFilterResult'),
-        reverseDecision = cms.bool(False),
-    )
-    filters += [process.MiniAODCSCTightHaloFilterProducer, process.ApplyCSCTightHaloFilter]
-
-    eventListFile = 'FinalStateAnalysis/NtupleTools/data/ecalscn1043093_Dec01.txt'
-    process.MiniAODBadSCEE4FilterProducer = cms.EDProducer('MiniAODEventListProducer',
-        label = cms.string('BadSCEE4FilterResult'),
-        eventList = cms.FileInPath(eventListFile),
-    )
-    process.ApplyBadSCEE4Filter = cms.EDFilter('BooleanFlagFilter',
-        inputLabel = cms.InputTag('MiniAODBadSCEE4FilterProducer','BadSCEE4FilterResult'),
-        reverseDecision = cms.bool(False),
-    )
-    filters += [process.MiniAODBadSCEE4FilterProducer, process.ApplyBadSCEE4Filter]
-
-    # good vertices and ee bad sc filter
-    # flag in miniaod, so just filter on that
-    listOfFlags = ['Flag_goodVertices', 'Flag_eeBadScFilter']
-    listOfLabels = ['GoodVerticesFilterResult', 'EEBadSCFilterResult']
+    # flags in miniaod
+    listOfFlags = ['Flag_HBHENoiseFilter',
+                   'Flag_HBHENoiseIsoFilter',
+                   'Flag_CSCTightHalo2015Filter',
+                   'Flag_EcalDeadCellTriggerPrimitiveFilter',
+                   'Flag_goodVertices',
+                   'Flag_eeBadScFilter',
+                   'Flag_chargedHadronTrackResolutionFilter',
+                   'Flag_muonBadTrackFilter',
+                   ]
+    listOfLabels = ['HBHENoiseFilterResult',
+                   'HBHENoiseIsoFilterResult',
+                   'CSCTightHalo2015FilterResult',
+                   'EcalDeadCellTriggerPrimitiveFilterResult',
+                   'goodVerticesResult',
+                   'eeBadScFilterResult',
+                   'chargedHadronTrackResolutionFilterResult',
+                   'muonBadTrackFilterResult',
+                   ]
     process.MiniAODMETFilterProducer = cms.EDProducer('MiniAODTriggerProducer',
         triggers = cms.vstring(*listOfFlags),
         labels = cms.vstring(*listOfLabels),
@@ -395,15 +369,15 @@ if options.runMetFilter:
         #prescales = cms.InputTag("patTrigger"),
         #objects = cms.InputTag("selectedPatTrigger"),
     )
-    process.ApplyGoodVerticesFilter = cms.EDFilter('BooleanFlagFilter',
-       inputLabel = cms.InputTag('MiniAODMETFilterProducer','GoodVerticesFilterResult'),
-       reverseDecision = cms.bool(True)
-    )
-    process.ApplyEEBadSCFilter = cms.EDFilter('BooleanFlagFilter',
-       inputLabel = cms.InputTag('MiniAODMETFilterProducer','EEBadSCFilterResult'),
-       reverseDecision = cms.bool(True)
-    )
-    filters += [process.MiniAODMETFilterProducer, process.ApplyGoodVerticesFilter, process.ApplyEEBadSCFilter]
+    filters += [process.MiniAODMETFilterProducer]
+    for label in listOfLabels:
+        modName = 'Apply{0}'.format(label)
+        mod = cms.EDFilter('BooleanFlagFilter',
+            inputLabel = cms.InputTag('MiniAODMETFilterProducer',label),
+            reverseDecision = cms.bool(True)
+        )
+        setattr(process,modName,mod)
+        filters += [getattr(process,modName)]
 
 if abs(options.runFSRFilter)>0:
     process.FSRFilter = cms.EDFilter("MiniAODGenLeptonFSRFilter",
