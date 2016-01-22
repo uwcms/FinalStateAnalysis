@@ -116,15 +116,15 @@ parameters = {
         eVetoTightNoIso_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDTightNoIso\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5").size()',
         eVetoTightTrigIso_eesDown = 'vetoElectrons(0.02, "userFloat(\'CBIDTightNoIso\')>0.5 && userFloat(\'eesDownElectronsPt\') > 10 && abs(eta) < 2.5 && dr03TkSumPt()/userFloat(\'eesDownElectronsPt\')<0.2 && dr03EcalRecHitSumEt()/userFloat(\'eesDownElectronsPt\')<0.5 && dr03HcalTowerSumEt()/userFloat(\'eesDownElectronsPt\')<0.3").size()',
 
-        # HZZ vetos
-        muVetoHZZ = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5\').size()',
-        muVetoHZZIso = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
-        muVetoHZZTight = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5\').size()',
-        muVetoHZZTightIso = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
-        eVetoHZZ = 'vetoElectrons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5\').size()',
-        eVetoHZZIso = 'vetoElectrons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
-        eVetoHZZTight = 'vetoElectrons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5\').size()',
-        eVetoHZZTightIso = 'vetoElectrons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
+        ## HZZ vetos
+        #muVetoHZZ = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5\').size()',
+        #muVetoHZZIso = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
+        #muVetoHZZTight = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5\').size()',
+        #muVetoHZZTightIso = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
+        #eVetoHZZ = 'vetoElectrons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5\').size()',
+        #eVetoHZZIso = 'vetoElectrons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
+        #eVetoHZZTight = 'vetoElectrons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5\').size()',
+        #eVetoHZZTightIso = 'vetoElectrons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
 
         # gen decays
         GenDecayWENu='evt.findDecay(24,11)',

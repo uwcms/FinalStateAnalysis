@@ -3,8 +3,6 @@ import FWCore.ParameterSet.Config as cms
 
 def preMuons(process, use25ns, mSrc, vSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
-    isoCheatLabel = kwargs.pop('isoCheatLabel','HZZ4lISoPass')
-    idCheatLabel = kwargs.pop('idCheatLabel','HZZ4lIDPass')
     skipGhost = kwargs.pop('skipGhost', False)
 
     if not skipGhost:
@@ -80,28 +78,6 @@ def preMuons(process, use25ns, mSrc, vSrc, **kwargs):
     rhoPath = cms.Path(getattr(process,rhoModName))
     setattr(process,rhoPathName,rhoPath)
     process.schedule.append(getattr(process,rhoPathName))
-
-    # hzz id iso embedding
-    modName = 'muonIDIsoCheatEmbedding{0}'.format(postfix)
-    mod = cms.EDProducer(
-        "MiniAODMuonHZZIDDecider",
-        src = cms.InputTag(mSrc),
-        idLabel = cms.string(idCheatLabel), # boolean will be stored as userFloat with this name
-        isoLabel = cms.string(isoCheatLabel), # boolean will be stored as userFloat with this name
-        vtxSrc = cms.InputTag(vSrc),
-        # Defaults are correct as of 9 March 2015, overwrite later if needed
-        )
-    mSrc = modName
-    setattr(process,modName,mod)
-
-    if not use25ns:
-        getattr(process,modName).ptCut = cms.double(10.)
-        getattr(process,modName).sipCut = cms.double(9999.)
-
-    pathName = 'embedHZZ4lIDDecisionsMuon{0}'.format(postfix)
-    modPath = cms.Path(getattr(process,modName))
-    setattr(process,pathName,modPath)
-    process.schedule.append(getattr(process,pathName))
 
     return mSrc
 

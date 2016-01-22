@@ -548,8 +548,6 @@ if options.metShift:
 #########################################################
 
 # HZZ id labels
-idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
-isoCheatLabel = "HZZ4lIsoPass"
 electronMVANonTrigIDLabel = "BDTIDNonTrig"
 electronMVATrigIDLabel = "BDTIDTrig"
 
@@ -557,22 +555,20 @@ electronMVATrigIDLabel = "BDTIDTrig"
 ### calibrate electrons and embed ids ###
 #########################################
 from FinalStateAnalysis.NtupleTools.customization_electrons import preElectrons
-fs_daughter_inputs['electrons'] = preElectrons(process,options.use25ns,
+fs_daughter_inputs['electrons'] = preElectrons(process,
+                                               options.use25ns,
                                                fs_daughter_inputs['electrons'],
                                                fs_daughter_inputs['vertices'],
-                                               idCheatLabel=idCheatLabel,
-                                               isoCheatLabel=isoCheatLabel,
                                                electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
                                                electronMVATrigIDLabel=electronMVATrigIDLabel,
                                                applyEnergyCorrections=bool(options.eCalib),
                                                isMC=bool(options.isMC),
                                                isSync=bool(options.isSync))
 for fs in additional_fs:
-    additional_fs[fs]['electrons'] = preElectrons(process,options.use25ns,
+    additional_fs[fs]['electrons'] = preElectrons(process,
+                                                  options.use25ns,
                                                   additional_fs[fs]['electrons'],
                                                   additional_fs[fs]['vertices'],
-                                                  idCheatLabel=idCheatLabel,
-                                                  isoCheatLabel=isoCheatLabel,
                                                   electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
                                                   electronMVATrigIDLabel=electronMVATrigIDLabel,
                                                   applyEnergyCorrections=bool(options.eCalib),
@@ -584,50 +580,77 @@ for fs in additional_fs:
 ### embed muon IDs ###
 ######################
 from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
-fs_daughter_inputs['muons'] = preMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['vertices'],
-    idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost)
+fs_daughter_inputs['muons'] = preMuons(process,
+                                       options.use25ns,
+                                       fs_daughter_inputs['muons'],
+                                       fs_daughter_inputs['vertices'],
+                                       skipGhost=options.skipGhost)
 for fs in additional_fs:
-    additional_fs[fs]['muons'] = preMuons(process,options.use25ns,additional_fs[fs]['muons'],additional_fs[fs]['vertices'],
-        idCheatLabel=idCheatLabel,isoCheatLabel=isoCheatLabel,skipGhost=options.skipGhost,postfix=fs)
+    additional_fs[fs]['muons'] = preMuons(process,
+                                          options.use25ns,
+                                          additional_fs[fs]['muons'],
+                                          additional_fs[fs]['vertices'],
+                                          skipGhost=options.skipGhost,
+                                          postfix=fs)
 
 #####################
 ### embed tau IDs ###
 #####################
 from FinalStateAnalysis.NtupleTools.customization_taus import preTaus
-fs_daughter_inputs['taus'] = preTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['vertices'])
+fs_daughter_inputs['taus'] = preTaus(process,
+                                     options.use25ns,
+                                     fs_daughter_inputs['taus'],
+                                     fs_daughter_inputs['vertices'])
 for fs in additional_fs:
-    additional_fs[fs]['taus'] = preTaus(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['vertices'],postfix=fs)
+    additional_fs[fs]['taus'] = preTaus(process,
+                                        options.use25ns,
+                                        additional_fs[fs]['taus'],
+                                        additional_fs[fs]['vertices'],
+                                        postfix=fs)
 
 ########################
 ### jet id embedding ###
 ########################
 from FinalStateAnalysis.NtupleTools.customization_jets import preJets
-fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs['jets'],fs_daughter_inputs['vertices'],fs_daughter_inputs['muons'],fs_daughter_inputs['electrons'],
-    parameters['preselection']['j']['e']['selection'],
-    parameters['preselection']['j']['e']['deltaR'],
-    parameters['preselection']['j']['m']['selection'],
-    parameters['preselection']['j']['m']['deltaR'],
-    parameters['preselection']['j']['selection'],
-    "AK4PFchs")
+fs_daughter_inputs['jets'] = preJets(process,
+                                     options.use25ns,
+                                     fs_daughter_inputs['jets'],
+                                     fs_daughter_inputs['vertices'],
+                                     fs_daughter_inputs['muons'],
+                                     fs_daughter_inputs['electrons'],
+                                     eCut=parameters['preselection']['j']['e']['selection'],
+                                     eDeltaR=parameters['preselection']['j']['e']['deltaR'],
+                                     mCut=parameters['preselection']['j']['m']['selection'],
+                                     mDeltaR=parameters['preselection']['j']['m']['deltaR'],
+                                     jCut=parameters['preselection']['j']['selection'],
+                                     jType="AK4PFchs")
 for fs in additional_fs:
-    additional_fs[fs]['jets'] = preJets(process,options.use25ns,additional_fs[fs]['jets'],additional_fs[fs]['vertices'],additional_fs[fs]['muons'],additional_fs[fs]['electrons'],
-        parameters['preselection']['j']['e']['selection'],
-        parameters['preselection']['j']['e']['deltaR'],
-        parameters['preselection']['j']['m']['selection'],
-        parameters['preselection']['j']['m']['deltaR'],
-        parameters['preselection']['j']['selection'],
-        "AK4PFchs",
-        postfix=fs)
+    additional_fs[fs]['jets'] = preJets(process,
+                                        options.use25ns,
+                                        additional_fs[fs]['jets'],
+                                        additional_fs[fs]['vertices'],
+                                        additional_fs[fs]['muons'],
+                                        additional_fs[fs]['electrons'],
+                                        eCut=parameters['preselection']['j']['e']['selection'],
+                                        eDeltaR=parameters['preselection']['j']['e']['deltaR'],
+                                        mCut=parameters['preselection']['j']['m']['selection'],
+                                        mDeltaR=parameters['preselection']['j']['m']['deltaR'],
+                                        jCut=parameters['preselection']['j']['selection'],
+                                        jType="AK4PFchs",
+                                        postfix=fs)
 
 
 ########################################
 ### pre selection HZZ customizations ###
 ########################################
-from FinalStateAnalysis.NtupleTools.customization_hzz import hzzCustomize
-hzzCustomize(process, fs_daughter_inputs, idCheatLabel, isoCheatLabel, 
-             electronMVANonTrigIDLabel, "dretFSRCand")
-# fs_daughter_inputs entries for electrons, muons, and fsr are automatically 
-# set by hzzCustomize()
+idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
+isoCheatLabel = "HZZ4lIsoPass"
+if options.hzz:
+    from FinalStateAnalysis.NtupleTools.customization_hzz import hzzCustomize
+    hzzCustomize(process, fs_daughter_inputs, idCheatLabel, isoCheatLabel, 
+                 electronMVANonTrigIDLabel, "dretFSRCand")
+    # fs_daughter_inputs entries for electrons, muons, and fsr are automatically 
+    # set by hzzCustomize()
 
 
 

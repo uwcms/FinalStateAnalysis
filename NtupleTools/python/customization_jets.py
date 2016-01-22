@@ -1,8 +1,14 @@
 # Embed IDs for jets
 import FWCore.ParameterSet.Config as cms
 
-def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, eCut,eDeltaR,mCut,mDeltaR,jCut,jType,**kwargs):
+def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
+    eCut = kwargs.pop('eCut','')
+    mCut = kwargs.pop('mCut','')
+    jCut = kwargs.pop('jCut','')
+    eDeltaR = kwargs.pop('eDeltaR',0.3)
+    mDeltaR = kwargs.pop('mDeltaR',0.3)
+    jType = kwargs.pop('jType','AK4PFchs')
 
     mod = cms.EDProducer(
         "MiniAODJetIdEmbedder",
