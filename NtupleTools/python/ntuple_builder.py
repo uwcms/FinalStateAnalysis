@@ -185,6 +185,8 @@ def make_ntuple(*legs, **kwargs):
     by setting 'noclean' to True in kwargs.
 
     '''
+    postfix = kwargs.pop('postfix','')
+    isShiftedMet = kwargs.pop('isShiftedMet',False)
     # Make sure we only use allowed leg types
     allowed = set(['m', 'e', 't', 'g','j'])
     assert(all(x in allowed for x in legs))
@@ -206,11 +208,16 @@ def make_ntuple(*legs, **kwargs):
 
     runMVAMET = kwargs.get('runMVAMET', False)
 
-    use25ns = kwargs.get('use25ns', False)
-
+    use25ns = kwargs.get('use25ns', True)
     isMC = kwargs.get('isMC', False)
 
     ntuple_config = _common_template.clone()
+    if not isShiftedMet:
+        ntuple_config = PSet(
+            ntuple_config,
+            templates.event.shiftedMet
+        )
+        
     if kwargs.get('runTauSpinner', False):
         for parName in templates.event.tauSpinner.parameterNames_():
             setattr(
@@ -225,22 +232,20 @@ def make_ntuple(*legs, **kwargs):
     # Triggers we care about depend on run configuration
     leg_triggers = { 'e':PSet(), 'm':PSet(), 't':PSet(), 'j':PSet(), 'g':PSet() }
     if use25ns:
-        leg_triggers['e'] = templates.electrons.trigger_25ns
-        leg_triggers['m'] = templates.muons.trigger_25ns
-        diLep_triggers = templates.trigger.doubleLepton_25ns
         if isMC:
+            leg_triggers['e'] = templates.electrons.trigger_25ns_MC
             lep_triggers = templates.trigger.singleLepton_25ns_MC
         else:
+            leg_triggers['e'] = templates.electrons.trigger_25ns
             lep_triggers = templates.trigger.singleLepton_25ns
-    else:    
+        leg_triggers['m'] = templates.muons.trigger_25ns
+        diLep_triggers = templates.trigger.doubleLepton_25ns
+    else:
         leg_triggers['e'] = templates.electrons.trigger_50ns
         leg_triggers['m'] = templates.muons.trigger_50ns
         diLep_triggers = templates.trigger.doubleLepton_50ns
-        if isMC:
-            lep_triggers = templates.trigger.singleLepton_50ns_MC
-        else:
-            lep_triggers = templates.trigger.singleLepton_50ns
-    triLep_triggers = templates.trigger.tripleLepton # same in 25 and 50 ns    
+        lep_triggers = templates.trigger.singleLepton_50ns
+    triLep_triggers = templates.trigger.tripleLepton
 
     ntuple_config = PSet(
         ntuple_config,
@@ -281,6 +286,12 @@ def make_ntuple(*legs, **kwargs):
             custVariables[v],
             candidateVariables,
         )
+        if not isShiftedMet and v!='j':
+            leg_branch_templates[v] = PSet(
+                leg_branch_templates[v],
+                templates.topology.shiftedMtToMET
+            )
+
 
     for i, leg in enumerate(legs):
         counts[leg] += 1
@@ -363,7 +374,7 @@ def make_ntuple(*legs, **kwargs):
             )
 
     analyzerSrc = "finalState" + "".join(
-            _producer_translation[x] for x in legs ) + producer_suffix
+            _producer_translation[x] for x in legs ) + producer_suffix + postfix
 
     # Some feature are not included in miniAOD or are currently broken. 
     # Remove them from the ntuples to prevent crashes.
@@ -388,7 +399,7 @@ def make_ntuple(*legs, **kwargs):
         weights=cms.vstring(),
         # input final state collection.
         src=cms.InputTag( analyzerSrc ),
-        evtSrc=cms.InputTag("patFinalStateEventProducer"),
+        evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
         # counter of events before any selections
         skimCounter=cms.InputTag("eventCount"),
         summedWeight=cms.InputTag("summedWeight"),

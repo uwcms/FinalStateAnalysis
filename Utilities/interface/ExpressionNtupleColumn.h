@@ -100,35 +100,66 @@ namespace {
   template<typename T> std::string getTypeCmd();
   template<> std::string getTypeCmd<Float_t>() { return "/F"; }
   template<> std::string getTypeCmd<Int_t>() { return "/I"; }
+  template<> std::string getTypeCmd<UInt_t>() { return "/i"; }
+  template<> std::string getTypeCmd<Long64_t>() { return "/L"; }
+  template<> std::string getTypeCmd<ULong64_t>() { return "/l"; }
   template<> std::string getTypeCmd<Double_t>() { return "/D"; }
 
   template<typename T> T convertVal(double x);
   template<> Double_t convertVal<Double_t>(double x) { return x; }
   template<> Float_t convertVal<Float_t>(double x) { return x; }
   template<> Int_t convertVal<Int_t>(double x) { return TMath::Nint(x); }
+  template<> UInt_t convertVal<UInt_t>(double x) { return TMath::Nint(fabs(x)); }
+  template<> Long64_t convertVal<Long64_t>(double x) { return lrint(x); }
+  template<> ULong64_t convertVal<ULong64_t>(double x) { return lrint(fabs(x)); }
   //vector spec
-  template<typename T> std::vector<T> convertVal(const vdouble& x);
-  template<> std::vector<Double_t> convertVal<Double_t>(const vdouble& x) {
-    std::vector<Double_t> result;
+  template<typename T> std::vector<T> convertVector(const vdouble& x) {
+    std::vector<T> result;
     vdouble::const_iterator i = x.begin();
     vdouble::const_iterator e = x.end();
-    for( ; i != e; ++i) result.push_back(*i);
+    for( ; i != e; ++i) result.push_back(convertVal<T>(*i));
     return result;
   }
-  template<> std::vector<Float_t> convertVal<Float_t>(const vdouble& x) {
-    std::vector<Float_t> result;
-    vdouble::const_iterator i = x.begin();
-    vdouble::const_iterator e = x.end();
-    for( ; i != e; ++i) result.push_back(*i);
-    return result;
-  }
-  template<> std::vector<Int_t> convertVal<Int_t>(const vdouble& x) {
-    std::vector<Int_t> result;
-    vdouble::const_iterator i = x.begin();
-    vdouble::const_iterator e = x.end();
-    for( ; i != e; ++i) result.push_back(TMath::Nint(*i));
-    return result;
-  }
+  template<typename T> std::vector<T> convertVal(const vdouble& x) {return convertVector<T>(x);}
+  // template<> std::vector<Double_t> convertVal<Double_t>(const vdouble& x) {
+  //   return convertVector<Double_t>(x);
+  // }
+  // template<> std::vector<Float_t> convertVal<Float_t>(const vdouble& x) {
+  //   return convertVector<Float_t>(x);
+  // }
+  // template<> std::vector<Int_t> convertVal<Int_t>(const vdouble& x) {
+  //   return convertVector<Int_t>(x);
+  // }
+  // template<> std::vector<UInt_t> convertVal<UInt_t>(const vdouble& x) {
+  //   return convertVector<UInt_t>(x);
+  // }
+  // template<> std::vector<Long64_t> convertVal<Long64_t>(const vdouble& x) {
+  //   return convertVector<Long64_t>(x);
+  // }
+  // template<> std::vector<ULong64_t> convertVal<ULong64_t>(const vdouble& x) {
+  //   return convertVector<ULong64_t>(x);
+  // }
+  // template<> std::vector<Double_t> convertVal<Double_t>(const vdouble& x) {
+  //   std::vector<Double_t> result;
+  //   vdouble::const_iterator i = x.begin();
+  //   vdouble::const_iterator e = x.end();
+  //   for( ; i != e; ++i) result.push_back(*i);
+  //   return result;
+  // }
+  // template<> std::vector<Float_t> convertVal<Float_t>(const vdouble& x) {
+  //   std::vector<Float_t> result;
+  //   vdouble::const_iterator i = x.begin();
+  //   vdouble::const_iterator e = x.end();
+  //   for( ; i != e; ++i) result.push_back(*i);
+  //   return result;
+  // }
+  // template<> std::vector<Int_t> convertVal<Int_t>(const vdouble& x) {
+  //   std::vector<Int_t> result;
+  //   vdouble::const_iterator i = x.begin();
+  //   vdouble::const_iterator e = x.end();
+  //   for( ; i != e; ++i) result.push_back(TMath::Nint(*i));
+  //   return result;
+  // }
 }
 
 // Explicit typed (float, double, etc) ntuple column
@@ -195,10 +226,22 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
         << " but doesnt not have the required format"
         << " cms.vstring('function', 'type')" << std::endl;
     }
-    if (command[1] == "I" || command[1] == "i") {
+    if (command[1] == "I") {
       // Make a integer column
       output.reset( ExpressionNtupleColumnT<T, Int_t>::makeExpression(name,
             command[0], tree));
+     } else if (command[1] == "i") {
+       // Make an unsigned integer column
+       output.reset( ExpressionNtupleColumnT<T, UInt_t>::makeExpression(name,
+             command[0], tree));
+     } else if (command[1] == "L") {
+       // Make a long column
+       output.reset( ExpressionNtupleColumnT<T, Long64_t>::makeExpression(name,
+             command[0], tree));
+     } else if (command[1] == "l") {
+       // Make an unsigned long column
+       output.reset( ExpressionNtupleColumnT<T, ULong64_t>::makeExpression(name,
+             command[0], tree));
     } else if (command[1] == "F" || command[1] == "f") {
       // Make a float column
       output.reset( ExpressionNtupleColumnT<T, Float_t>::makeExpression(name,
@@ -210,7 +253,7 @@ std::auto_ptr<ExpressionNtupleColumn<T> > buildColumn(
     } else {
       throw cms::Exception("BadTypeSpecifier")
         << "The column " << name << " has declared type " << command[1]
-        << ", which I don't understand.  Allowed: I, F, and D" << std::endl;
+        << ", which I don't understand.  Allowed: I, i, L, l, F, and D" << std::endl;
     }
   } else {
       throw cms::Exception("BadColumn")

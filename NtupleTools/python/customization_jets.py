@@ -1,20 +1,44 @@
 # Embed IDs for jets
 import FWCore.ParameterSet.Config as cms
 
-def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, eCut,eDeltaR,mCut,mDeltaR,jCut,jType,**kwargs):
+def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, **kwargs):
+    postfix = kwargs.pop('postfix','')
+    eCut = kwargs.pop('eCut','')
+    mCut = kwargs.pop('mCut','')
+    jCut = kwargs.pop('jCut','')
+    eDeltaR = kwargs.pop('eDeltaR',0.3)
+    mDeltaR = kwargs.pop('mDeltaR',0.3)
+    jType = kwargs.pop('jType','AK4PFchs')
 
-    process.miniPatJets = cms.EDProducer(
+    mod = cms.EDProducer(
         "MiniAODJetIdEmbedder",
         src=cms.InputTag(jSrc)
     )
-    jSrc = 'miniPatJets'
-    
-    process.runMiniAODJetEmbedding = cms.Path(
-        process.miniPatJets
-    )
-    process.schedule.append(process.runMiniAODJetEmbedding)
+    modName = 'miniPatJets{0}'.format(postfix)
+    setattr(process,modName,mod)
+    jSrc = modName
 
-    process.miniAODJetCleaningEmbedding = cms.EDProducer(
+    pathName = 'runMiniAODJetEmbedding{0}'.format(postfix)
+    setattr(process,pathName,cms.Path(getattr(process,modName)))
+    process.schedule.append(getattr(process,pathName))
+
+    ## embed IP stuff
+    #modName = 'miniJetsEmbedIp{0}'.format(postfix)
+    #mod = cms.EDProducer(
+    #    "MiniAODJetIpEmbedder",
+    #    src = cms.InputTag(jSrc),
+    #    vtxSrc = cms.InputTag(vSrc),
+    #)
+    #jSrc = modName
+    #setattr(process,modName,mod)
+
+    #pathName = 'runMiniAODJetIpEmbedding{0}'.format(postfix)
+    #path = cms.Path(getattr(process,modName))
+    #setattr(process,pathName,path)
+    #process.schedule.append(getattr(process,pathName))
+
+    modName = 'miniAODJetCleaningEmbedding{0}'.format(postfix)
+    mod = cms.EDProducer(
         "MiniAODJetCleaningEmbedder",
         jetSrc = cms.InputTag(jSrc),
         muSrc = cms.InputTag(mSrc),
@@ -25,22 +49,30 @@ def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, eCut,eDeltaR,mCut,mDeltaR,
         mDR = cms.double(mDeltaR),
         jID = cms.string(jCut)
     )
-    jSrc = 'miniAODJetCleaningEmbedding'
-    process.jetCleaningEmbedding = cms.Path(
-        process.miniAODJetCleaningEmbedding
-    )
-    process.schedule.append(process.jetCleaningEmbedding)
+    jSrc = modName
+    setattr(process,modName,mod)
 
-    process.miniAODJetSystematicsEmbedding = cms.EDProducer(
+    pathName = 'jetCleaningEmbedding{0}'.format(postfix)
+    path = cms.Path(
+        getattr(process,modName)
+    )
+    setattr(process,pathName,path)
+    process.schedule.append(getattr(process,pathName))
+
+    modName = 'miniAODJetSystematicsEmbedding{0}'.format(postfix)
+    mod = cms.EDProducer(
 	"MiniAODJetSystematicsEmbedder",
         src = cms.InputTag(jSrc),
         corrLabel = cms.string(jType)
     )
-    jSrc = 'miniAODJetSystematicsEmbedding'
-    process.jetSystematicsEmbedding = cms.Path(
-	process.miniAODJetSystematicsEmbedding
-    )
+    jSrc = modName
+    setattr(process,modName,mod)
+
+    pathName = 'jetSystematicsEmbedding{0}'.format(postfix)
+    path = cms.Path(getattr(process,modName))
+    setattr(process,pathName,path)
   
-    process.schedule.append(process.jetSystematicsEmbedding)
+    process.schedule.append(getattr(process,pathName))
 
     return jSrc
+

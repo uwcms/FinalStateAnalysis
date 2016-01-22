@@ -199,13 +199,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // and the same thing for a general Lorentz vector. Doesn't check sign.
     double zCompatibility(const PATFinalState::LorentzVector& p4) const;
 
-    // virtual method that allows inheriting classes to have it called while 
-    // stored in an edm::OwnVector<PATFinalState>
-    virtual double zCompatibilityFSR(int i, int j, const std::string fsrLabel) const
-    {
-      PATFinalStateProxy z = subcand(i, j);
-      return zCompatibility(z);
-    }
+    // Z compatibility with a specified userCand included for both 
+    // daughters (if it exists)
+    double zCompatibilityWithUserCands(const size_t i, const size_t j, 
+                                       const std::string& candLabel) const;
 
     // closest Z value
     double closestZ(int i, const std::string& filter, std::vector<const reco::Candidate*> legs) const;

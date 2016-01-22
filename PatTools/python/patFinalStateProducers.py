@@ -44,118 +44,115 @@ def _combinatorics(items, n):
 def produce_final_states(process, daughter_collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
                          noTracks=False, runMVAMET=False, hzz=False,
-                         rochCor="", eleCor="", use25ns=False, **kwargs):
+                         rochCor="", eleCor="", postfix='',
+                         **kwargs):
 
     src = dict(daughter_collections) # make a copy so we don't change the passed collection
 
     # Build the PATFinalStateEventObject
     if buildFSAEvent:
-        process.load("FinalStateAnalysis.PatTools."
-                     "finalStates.patFinalStateEventProducer_cfi")
-        process.patFinalStateEventProducer.electronSrc = cms.InputTag(src['electrons'])
-        process.patFinalStateEventProducer.muonSrc = cms.InputTag(src['muons'])
-        process.patFinalStateEventProducer.tauSrc = cms.InputTag(src['taus'])
-        process.patFinalStateEventProducer.jetSrc = cms.InputTag(src['jets'])
-        process.patFinalStateEventProducer.phoSrc = cms.InputTag(src['photons'])
-        process.patFinalStateEventProducer.metSrc = cms.InputTag(src['pfmet'])
-        process.patFinalStateEventProducer.puTag = cms.string(puTag)
+        if not hasattr(process,'patFinalStateEventProducer'):
+            process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")
+        fsName = 'patFinalStateEventProducer{0}'.format(postfix)
+        if postfix:
+            setattr(process,fsName,process.patFinalStateEventProducer.clone())
+        eventProducer = getattr(process,fsName)
+        eventProducer.electronSrc = cms.InputTag(src['electrons'])
+        eventProducer.muonSrc = cms.InputTag(src['muons'])
+        eventProducer.tauSrc = cms.InputTag(src['taus'])
+        eventProducer.jetSrc = cms.InputTag(src['jets'])
+        eventProducer.phoSrc = cms.InputTag(src['photons'])
+        eventProducer.metSrc = cms.InputTag(src['pfmet'])
+        eventProducer.puTag = cms.string(puTag)
         if 'extraWeights' in src:
-            process.patFinalStateEventProducer.extraWeights = src['extraWeights']
-        process.patFinalStateEventProducer.trgSrc = cms.InputTag("selectedPatTrigger")
-        process.patFinalStateEventProducer.rhoSrc = cms.InputTag('fixedGridRhoAll')
-        process.patFinalStateEventProducer.pvSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
-        process.patFinalStateEventProducer.verticesSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
-        process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles")
-        process.patFinalStateEventProducer.mets = cms.PSet(
+            eventProducer.extraWeights = src['extraWeights']
+        eventProducer.trgSrc = cms.InputTag("selectedPatTrigger")
+        eventProducer.rhoSrc = cms.InputTag('fixedGridRhoAll')
+        eventProducer.pvSrc = cms.InputTag(daughter_collections['vertices'])
+        eventProducer.pvSrcBackup = cms.InputTag('offlineSlimmedPrimaryVertices')
+        eventProducer.verticesSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
+        eventProducer.genParticleSrc = cms.InputTag("prunedGenParticles")
+        eventProducer.mets = cms.PSet(
             pfmet = cms.InputTag(src['pfmet']),
         )
         if runMVAMET:
-            process.patFinalStateEventProducer.mets.mvamet = cms.InputTag(src['mvamet'])
+            eventProducer.mets.mvamet = cms.InputTag(src['mvamet'])
+
+
         
-        sequence += process.patFinalStateEventProducer
+        sequence += eventProducer
 
     # Always keep
-    output_commands.append('*_patFinalStateEventProducer_*_*')
+    output_commands.append('*_{0}_*_*'.format(fsName))
 
     # Are we applying Rochester Corrections to the muons?
-    if rochCor != "":
-        if rochCor not in ["RochCor2012", "RochCor2011A", "RochCor2011B"]:
-            raise RuntimeError(rochCor + ": not a valid option")
+    #if rochCor != "":
+    #    if rochCor not in ["RochCor2012", "RochCor2011A", "RochCor2011B"]:
+    #        raise RuntimeError(rochCor + ": not a valid option")
 
-        print "-- Applying Muon Rochester Corrections --"
+    #    print "-- Applying Muon Rochester Corrections --"
 
-        process.rochCorMuons = cms.EDProducer(
-            "PATMuonRochesterCorrector",
-            src=cms.InputTag(src['muons']),
-            corr_type=cms.string("p4_" + rochCor)
-        )
+    #    process.rochCorMuons = cms.EDProducer(
+    #        "PATMuonRochesterCorrector",
+    #        src=cms.InputTag(src['muons']),
+    #        corr_type=cms.string("p4_" + rochCor)
+    #    )
 
-        src['muons'] = "rochCorMuons"
+    #    src['muons'] = "rochCorMuons"
 
-        sequence += process.rochCorMuons
+    #    sequence += process.rochCorMuons
 
     # Are we applying electron energy corrections?
-    if eleCor != "":
-        if eleCor not in ["Summer12_DR53X_HCP2012",
-                          "2012Jul13ReReco", "Fall11"]:
-            raise RuntimeError(eleCor + ": not a valid option")
+    #if eleCor != "":
+    #    if eleCor not in ["Summer12_DR53X_HCP2012",
+    #                      "2012Jul13ReReco", "Fall11"]:
+    #        raise RuntimeError(eleCor + ": not a valid option")
 
-        print "-- Applying Electron Energy Corrections --"
+    #    print "-- Applying Electron Energy Corrections --"
 
-        process.corrElectrons = cms.EDProducer(
-            "PATElectronEnergyCorrector",
-            src=cms.InputTag(src['electrons']),
-            corr_type=cms.string("EGCorr_" + eleCor + "SmearedRegression")
-        )
+    #    process.corrElectrons = cms.EDProducer(
+    #        "PATElectronEnergyCorrector",
+    #        src=cms.InputTag(src['electrons']),
+    #        corr_type=cms.string("EGCorr_" + eleCor + "SmearedRegression")
+    #    )
 
-        src['electrons'] = "corrElectrons"
+    #    src['electrons'] = "corrElectrons"
 
-        sequence += process.corrElectrons
+    #    sequence += process.corrElectrons
 
 
     ### apply final selections to the objects we'll use in the final states
     # Initialize final-state object sequence
     finalSelections = kwargs.get('finalSelection',{})
     from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections, getName
-    process.selectObjectsForFinalStates = setup_selections(
+    objSelectName = 'selectObjectsForFinalStates{0}'.format(postfix)
+    objSelect = setup_selections(
         process, 
-        "FinalSelection",
+        "FinalSelection{0}".format(postfix),
         src,
         finalSelections,
         )
+    setattr(process,objSelectName,objSelect)
     for ob in finalSelections:
-        src[getName(ob)+"s"] = getName(ob)+"FinalSelection"
+        src[getName(ob)+"s"] = getName(ob)+"FinalSelection{0}".format(postfix)
 
     if len(finalSelections):
-        sequence += process.selectObjectsForFinalStates
+        sequence += getattr(process,objSelectName)
 
     # Rank objects
-    process.muonsRank = cms.EDProducer(
-        "PATMuonRanker",
-        src=cms.InputTag(src['muons']))
-    src['muons'] = 'muonsRank'
-
-    process.electronsRank = cms.EDProducer(
-        "PATElectronRanker", src=cms.InputTag(src['electrons']))
-    src['electrons'] = 'electronsRank'
-
-    process.tausRank = cms.EDProducer(
-        "PATTauRanker",
-        src=cms.InputTag(src['taus']))
-    src['taus'] = 'tausRank'
-
-    process.jetsRank = cms.EDProducer(
-        "PATJetRanker",
-        src=cms.InputTag(src['jets']))
-    src['jets'] = 'jetsRank'
-
-    process.rankObjects = cms.Sequence(
-        process.muonsRank
-        + process.electronsRank
-        + process.tausRank
-        + process.jetsRank
+    rankSeqName = 'rankObjects{0}'.format(postfix)
+    rankSeq = cms.Sequence()
+    for obj in ['muons','electrons','taus','jets']:
+        objRankName = '{0}Rank{1}'.format(obj,postfix)
+        mod = cms.EDProducer(
+            "PAT{0}Ranker".format(obj[:-1].capitalize()),
+            src = cms.InputTag(src[obj]),
         )
-    sequence += process.rankObjects
+        src[obj] = objRankName
+        setattr(process,objRankName,mod)
+        rankSeq += getattr(process,objRankName)
+    setattr(process,rankSeqName,rankSeq)
+    sequence += getattr(process,rankSeqName)
 
 
     # Now build all combinatorics for E/Mu/Tau/Photon
@@ -173,45 +170,56 @@ def produce_final_states(process, daughter_collections, output_commands,
             output_commands.append('*_%s_*_*'%label)
     
 
-    process.load("FinalStateAnalysis.PatTools."
-                 "finalStates.patFinalStatesEmbedExtraCollections_cfi")
+    if not hasattr(process,'patFinalStateVertexFitter'):
+        process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStatesEmbedExtraCollections_cfi")
+    vFitName = 'patFinalStateVertexFitter{0}'.format(postfix)
+    mResName = 'finalStateMassResolutionEmbedder{0}'.format(postfix)
+    embedObjName = 'patFinalStatesEmbedObjects{0}'.format(postfix)
+    if postfix:
+        setattr(process,vFitName,process.patFinalStateVertexFitter.clone())
+        setattr(process,mResName,process.finalStateMassResolutionEmbedder.clone())
+        setattr(process,embedObjName,cms.Sequence(getattr(process,vFitName)+getattr(process,mResName)))
     # If we don't have tracks, don't fit the FS vertices
     if noTracks:
-        process.patFinalStateVertexFitter.enable = False
+        getattr(process,'patFinalStateVertexFitter{0}'.format(postfix)).enable = False
 
     crossCleaning = kwargs.get('crossCleaning','smallestDeltaR() > 0.3')
 
-    process.buildSingleObjects = cms.Sequence()
+
     # build single object pairs
+    singleObjName = 'buildSingleObjects{0}'.format(postfix)
+    singleObjSeq = cms.Sequence()
     for object in object_types:
         # Define some basic selections for building combinations
         cuts = [crossCleaning]  # basic x-cleaning
 
         producer = cms.EDProducer(
             "PAT%sFinalStateProducer" % object[0],
-            evtSrc=cms.InputTag("patFinalStateEventProducer"),
+            evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
             leg1Src=object[1],
             # X-cleaning
             cut=cms.string(' & '.join(cuts))
         )
-        producer_name = "finalState%s" % object[0]
+        producer_name = "finalState{0}{1}".format(object[0],postfix)
         setattr(process, producer_name + "Raw", producer)
-        process.buildSingleObjects += producer
+        singleObjSeq += producer
         # Embed the other collections
         embedder_seq = helpers.cloneProcessingSnippet(
-            process, process.patFinalStatesEmbedObjects, producer_name)
-        process.buildSingleObjects += embedder_seq
+            process, getattr(process,embedObjName), producer_name)
+        singleObjSeq += embedder_seq
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
         final_module = cms.EDProducer(
             "PATFinalStateCopier", src=final_module_name)
         setattr(process, producer_name, final_module)
-        process.buildSingleObjects += final_module
+        singleObjSeq += final_module
         setattr(process, producer_name, final_module)
-    sequence += process.buildSingleObjects
+    setattr(process,singleObjName,singleObjSeq)
+    sequence += getattr(process,singleObjName)
 
-    process.buildDiObjects = cms.Sequence()
     # Build di-object pairs
+    doubleObjName = 'buildDiObjects{0}'.format(postfix)
+    doubleObjSeq = cms.Sequence()
     for diobject in _combinatorics(object_types, 2):
         # Don't build two jet states
         if (diobject[0][0], diobject[1][0]) == ('Tau', 'Pho'):
@@ -228,30 +236,32 @@ def produce_final_states(process, daughter_collections, output_commands,
 
         producer = cms.EDProducer(
             "PAT%s%sFinalStateProducer" % (diobject[0][0], diobject[1][0]),
-            evtSrc=cms.InputTag("patFinalStateEventProducer"),
+            evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
             leg1Src=diobject[0][1],
             leg2Src=diobject[1][1],
             # X-cleaning
             cut=cms.string(' & '.join(cuts))
         )
-        producer_name = "finalState%s%s" % (diobject[0][0], diobject[1][0])
+        producer_name = "finalState{0}{1}{2}".format(diobject[0][0], diobject[1][0], postfix)
         setattr(process, producer_name + "Raw", producer)
-        process.buildDiObjects += producer
+        doubleObjSeq += producer
         # Embed the other collections
         embedder_seq = helpers.cloneProcessingSnippet(
-            process, process.patFinalStatesEmbedObjects, producer_name)
-        process.buildDiObjects += embedder_seq
+            process, getattr(process,embedObjName), producer_name)
+        doubleObjSeq += embedder_seq
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
         final_module = cms.EDProducer(
             "PATFinalStateCopier", src=final_module_name)
         setattr(process, producer_name, final_module)
-        process.buildDiObjects += final_module
+        doubleObjSeq += final_module
         setattr(process, producer_name, final_module)
-    sequence += process.buildDiObjects
+    setattr(process,doubleObjName,doubleObjSeq)
+    sequence += getattr(process,doubleObjName)
 
     # Build tri-lepton pairs
-    process.buildTriObjects = cms.Sequence()
+    tripleObjName = 'buildTriObjects{0}'.format(postfix)
+    tripleObjSeq = cms.Sequence()
     for triobject in _combinatorics(object_types, 3):
         n_taus = [x[0] for x in triobject].count('Tau')
         n_phos = [x[0] for x in triobject].count('Pho')
@@ -271,33 +281,33 @@ def produce_final_states(process, daughter_collections, output_commands,
         producer = cms.EDProducer(
             "PAT%s%s%sFinalStateProducer" %
             (triobject[0][0], triobject[1][0], triobject[2][0]),
-            evtSrc=cms.InputTag("patFinalStateEventProducer"),
+            evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
             leg1Src=triobject[0][1],
             leg2Src=triobject[1][1],
             leg3Src=triobject[2][1],
             # X-cleaning
             cut=cms.string(' & '.join(cuts))
         )
-        producer_name = "finalState%s%s%s" % (
-            triobject[0][0], triobject[1][0], triobject[2][0])
-        #setattr(process, producer_name, producer)
-        #process.buildTriLeptons += producer
+        producer_name = "finalState{0}{1}{2}{3}".format(
+            triobject[0][0], triobject[1][0], triobject[2][0], postfix)
         setattr(process, producer_name + "Raw", producer)
-        process.buildTriObjects += producer
+        tripleObjSeq += producer
         # Embed the other collections
         embedder_seq = helpers.cloneProcessingSnippet(
-            process, process.patFinalStatesEmbedObjects, producer_name)
-        process.buildTriObjects += embedder_seq
+            process, getattr(process,embedObjName), producer_name)
+        tripleObjSeq += embedder_seq
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
         final_module = cms.EDProducer(
             "PATFinalStateCopier", src=final_module_name)
         setattr(process, producer_name, final_module)
-        process.buildTriObjects += final_module
-    sequence += process.buildTriObjects
+        tripleObjSeq += final_module
+    setattr(process,tripleObjName,tripleObjSeq)
+    sequence += getattr(process,tripleObjName)
 
     # Build 4 lepton final states
-    process.buildQuadObjects = cms.Sequence()
+    quadObjName = 'buildQuadObjects{0}'.format(postfix)
+    quadObjSeq = cms.Sequence()
     for quadobject in _combinatorics(object_types, 4):
         # Don't build states with more than 2 hadronic taus or phos
         n_taus = [x[0] for x in quadobject].count('Tau')
@@ -317,7 +327,7 @@ def produce_final_states(process, daughter_collections, output_commands,
             "PAT%s%s%s%sFinalStateProducer" %
             (quadobject[0][0], quadobject[1][0], quadobject[2][0],
              quadobject[3][0]),
-            evtSrc=cms.InputTag("patFinalStateEventProducer"),
+            evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
             leg1Src=quadobject[0][1],
             leg2Src=quadobject[1][1],
             leg3Src=quadobject[2][1],
@@ -325,25 +335,24 @@ def produce_final_states(process, daughter_collections, output_commands,
             # X-cleaning
             cut=cms.string(' & '.join(cuts))
         )
-        producer_name = "finalState%s%s%s%s" % (
+        producer_name = "finalState{0}{1}{2}{3}{4}".format(
             quadobject[0][0], quadobject[1][0], quadobject[2][0],
-            quadobject[3][0]
+            quadobject[3][0], postfix
         )
-        #setattr(process, producer_name, producer)
-        #process.buildTriLeptons += producer
         setattr(process, producer_name + "Raw", producer)
-        process.buildQuadObjects += producer
+        quadObjSeq += producer
         # Embed the other collections
         embedder_seq = helpers.cloneProcessingSnippet(
-            process, process.patFinalStatesEmbedObjects, producer_name)
-        process.buildQuadObjects += embedder_seq
+            process, getattr(process,embedObjName), producer_name)
+        quadObjSeq += embedder_seq
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
         final_module = cms.EDProducer(
             "PATFinalStateCopier", src=final_module_name)
         setattr(process, producer_name, final_module)
-        process.buildQuadObjects += final_module
-    sequence += process.buildQuadObjects
+        quadObjSeq += final_module
+    setattr(process,quadObjName,quadObjSeq)
+    sequence += getattr(process,quadObjName)
 
 
 if __name__ == "__main__":

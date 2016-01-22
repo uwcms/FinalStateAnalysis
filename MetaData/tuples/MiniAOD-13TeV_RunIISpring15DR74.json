@@ -57,29 +57,32 @@
 
   "TTJets" : "TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
   "TTTo2L2Nu" : "TTTo2L2Nu_13TeV-powheg",
-  "TT" : "TT_TuneCUETP8M1_13TeV-powheg-pythia8",
+  "_TT" : "TT_TuneCUETP8M1_13TeV-powheg-pythia8",
   "TTWJetsToLNu" : "TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8",
   "_TTWJetsToQQ" : "TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8",
   "_TTZToQQ" : "TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8",
   "TTZToLLNuNu" : "TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8",
-  "TTHToGG" : "ttHToGG_M125_13TeV_powheg_pythia8",
-  "TTHToNonbb" : "ttHToNonbb_M125_13TeV_powheg_pythia8",
-  "TTHTobb" : "ttHTobb_M125_13TeV_powheg_pythia8",
+  "_TTHToGG" : "ttHToGG_M125_13TeV_powheg_pythia8",
+  "_TTHToNonbb" : "ttHToNonbb_M125_13TeV_powheg_pythia8",
+  "_TTHTobb" : "ttHTobb_M125_13TeV_powheg_pythia8",
 
   "WJetsToLNu" : "WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
   "WJetsToLNuMadgraph" : "WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
 
+  "ZGTo2LG" : "ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
+  "WGToLNu" : "WGToLNuG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
+
   "WWTo2L2Nu" : "WWTo2L2Nu_13TeV-powheg",
   "_WWTo4Q" : "WWTo4Q_13TeV-powheg",
   "_WWToLNuQQ" : "WWToLNuQQ_13TeV-powheg",
-  "WW" : "WW_TuneCUETP8M1_13TeV-pythia8",
+  "_WW" : "WW_TuneCUETP8M1_13TeV-pythia8",
 
   "WZJets" : "WZJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
   "_WZTo1L1Nu2Q" : "WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8",
   "_WZTo1L3Nu" : "WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8",
   "WZTo2L2Q" : "WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8",
   "WZTo3LNu" : "WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8",
-  "WZ" : "WZ_TuneCUETP8M1_13TeV-pythia8",
+  "_WZ" : "WZ_TuneCUETP8M1_13TeV-pythia8",
 
   "ZZTo2L2Nu" : "ZZTo2L2Nu_13TeV_powheg_pythia8",
   "_ZZTo2Q2Nu" : "ZZTo2Q2Nu_13TeV_amcatnloFXFX_madspin_pythia8",
@@ -87,7 +90,7 @@
   "ZZTo4L_powheg" : "ZZTo4L_13TeV_powheg_pythia8",
   "ZZTo4L" : "ZZTo4L_13TeV-amcatnloFXFX-pythia8",
   "_ZZTo4Q" : "ZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8",
-  "ZZ" : "ZZ_TuneCUETP8M1_13TeV-pythia8",
+  "_ZZ" : "ZZ_TuneCUETP8M1_13TeV-pythia8",
 
   "GluGluToZZTo2e2mu" : "GluGluToZZTo2e2mu_BackgroundOnly_13TeV_MCFM",
   "GluGluToZZTo2e2tau" : "GluGluToZZTo2e2tau_BackgroundOnly_13TeV_MCFM",

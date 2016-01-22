@@ -12,11 +12,19 @@ Author: Evan K. Friis
 from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 mtToMET = PSet(
+    objectMtToPfMet_type1   = 'mtMET({object_idx}, "", ""     )',
+    objectDPhiToPfMet_type1 = 'deltaPhiToMEt({object_idx}, "", ""     )',
+    #MVA MET
+    objectMtToMVAMET     = 'mtMET({object_idx}, "", "mvamet", "", 0)',
+    #objectToMETDPhi = 'deltaPhi({object}.phi, met().phi())',
+)
+
+# these things break if you pass a shifted met
+shiftedMtToMET = PSet(
     # Raw means no MET corrections
     objectMtToPfMet_Raw = 'mtMET({object_idx}, "", "raw")',
 
     #PF Type1 MET (and systematics)
-    objectMtToPfMet_type1             = 'mtMET({object_idx}, "", ""     )',
     objectMtToPfMet_JetResUp          = 'mtMET({object_idx}, "", "jres+")',
     objectMtToPfMet_JetEnUp           = 'mtMET({object_idx}, "", "jes+" )',
     objectMtToPfMet_MuonEnUp          = 'mtMET({object_idx}, "", "mes+" )',
@@ -33,7 +41,6 @@ mtToMET = PSet(
     objectMtToPfMet_UnclusteredEnDown = 'mtMET({object_idx}, "", "ues-" )',
     objectMtToPfMet_PhotonEnDown      = 'mtMET({object_idx}, "", "pes-" )',
 
-    objectDPhiToPfMet_type1             = 'deltaPhiToMEt({object_idx}, "", ""     )',
     objectDPhiToPfMet_JetResUp          = 'deltaPhiToMEt({object_idx}, "", "jres+")',
     objectDPhiToPfMet_JetEnUp           = 'deltaPhiToMEt({object_idx}, "", "jes+" )',
     objectDPhiToPfMet_MuonEnUp          = 'deltaPhiToMEt({object_idx}, "", "mes+" )',
@@ -49,11 +56,6 @@ mtToMET = PSet(
     objectDPhiToPfMet_TauEnDown         = 'deltaPhiToMEt({object_idx}, "", "tes-" )',
     objectDPhiToPfMet_UnclusteredEnDown = 'deltaPhiToMEt({object_idx}, "", "ues-" )',
     objectDPhiToPfMet_PhotonEnDown      = 'deltaPhiToMEt({object_idx}, "", "pes-" )',
-
-    #MVA MET
-    objectMtToMVAMET     = 'mtMET({object_idx}, "", "mvamet", "", 0)',
-
-    objectToMETDPhi = 'deltaPhi({object}.phi, met().phi())',
 )
 
 # Variables based on pairs of objects
@@ -179,6 +181,9 @@ extraJet = PSet(
     objectPt = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') ? {object}.pt() : -999',
     objectEta = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') ? {object}.eta() : -999',
     objectPhi = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') ? {object}.phi() : -999',
+    objectIDTight = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') ? {object}.userFloat("idTight") : -999',
+    objectIDTightLepVeto = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') ? {object}.userFloat("idTightLepVeto") : -999',
+    objectIDLoose = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') ? {object}.userFloat("idLoose") : -999',
     objectPUMVA = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') & {object}.pt()>20 & abs({object}.eta())<2.5? {object}.userFloat("pileupJetId:fullDiscriminant") : -999',
     objectBJetCISV = '? evt.jets.size()>{object_idx} & {object}.userFloat(\'idLoose\') & {object}.userFloat(\'cleanJet\') & {object}.pt()>20 & abs({object}.eta())<2.5? {object}.bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') : -999',
 )

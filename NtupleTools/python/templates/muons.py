@@ -86,6 +86,14 @@ energyCorrections = PSet(
     #objectEtaRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Eta',
     #objectPhiRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Phi',
     #objectEErrRochCor2012 = '{object}.userFloat("p4_RochCor2012_tkFitErr")'
+    objectPt_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").pt : -999.',
+    objectEta_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").eta : -999.',
+    objectPhi_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").phi : -999.',
+
+    objectPt_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").pt : -999.',
+    objectEta_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").eta : -999.',
+    objectPhi_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").phi : -999.',
+
 )
 
 # Information about the associated track
@@ -131,4 +139,3 @@ trigger_25ns = PSet(
     objectMatchesDoubleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+",0.5)',
     objectMatchesDoubleMuSingleE = r'matchToHLTPath({object_idx},"HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+",0.5)',
 )
-
