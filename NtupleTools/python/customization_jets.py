@@ -1,7 +1,7 @@
 # Embed IDs for jets
 import FWCore.ParameterSet.Config as cms
 
-def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, eCut,eDeltaR,mCut,mDeltaR,jCut,**kwargs):
+def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, eCut,eDeltaR,mCut,mDeltaR,jCut,jType,**kwargs):
     postfix = kwargs.pop('postfix','')
 
     mod = cms.EDProducer(
@@ -41,7 +41,7 @@ def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, eCut,eDeltaR,mCut,mDeltaR,
         eDR = cms.double(eDeltaR),
         mID = cms.string(mCut),
         mDR = cms.double(mDeltaR),
-        jID = cms.string(jCut),
+        jID = cms.string(jCut)
     )
     jSrc = modName
     setattr(process,modName,mod)
@@ -51,6 +51,21 @@ def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, eCut,eDeltaR,mCut,mDeltaR,
         getattr(process,modName)
     )
     setattr(process,pathName,path)
+    process.schedule.append(getattr(process,pathName))
+
+    modName = 'miniAODJetSystematicsEmbedding{0}'.format(postfix)
+    mod = cms.EDProducer(
+	"MiniAODJetSystematicsEmbedder",
+        src = cms.InputTag(jSrc),
+        corrLabel = cms.string(jType)
+    )
+    jSrc = modName
+    setattr(process,modName,mod)
+
+    pathName = 'jetSystematicsEmbedding{0}'.format(postfix)
+    path = cms.Path(getattr(process,modName))
+    setattr(process,pathName,path)
+  
     process.schedule.append(getattr(process,pathName))
 
     return jSrc

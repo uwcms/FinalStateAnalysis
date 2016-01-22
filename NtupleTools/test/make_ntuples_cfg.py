@@ -538,11 +538,6 @@ if options.metShift:
 #process.schedule.append(process.eventAnalyzerPath)
 
 
-
-
-
-
-
 #########################################################
 ### embed some things we need before object selection ###
 #########################################################
@@ -592,7 +587,8 @@ fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs[
     parameters['preselection']['j']['e']['deltaR'],
     parameters['preselection']['j']['m']['selection'],
     parameters['preselection']['j']['m']['deltaR'],
-    parameters['preselection']['j']['selection'])
+    parameters['preselection']['j']['selection'],
+    "AK4PFchs")
 for fs in additional_fs:
     additional_fs[fs]['jets'] = preJets(process,options.use25ns,additional_fs[fs]['jets'],additional_fs[fs]['vertices'],additional_fs[fs]['muons'],additional_fs[fs]['electrons'],
         parameters['preselection']['j']['e']['selection'],
@@ -600,6 +596,7 @@ for fs in additional_fs:
         parameters['preselection']['j']['m']['selection'],
         parameters['preselection']['j']['m']['deltaR'],
         parameters['preselection']['j']['selection'],
+        "AK4PFchs",
         postfix=fs)
 
 

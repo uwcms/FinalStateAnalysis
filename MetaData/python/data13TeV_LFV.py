@@ -27,28 +27,42 @@ datadefs["VBF_LFV_HToMuTau_M125_13TeV_powheg_pythia8"] = {
     'datasetpath': 'GluGlu_LFV_HToMuTau_M120_13TeV_powheg_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec': 3.748,#xs(14,125,'vbf')[0],
+    'x_sec': 3.748*0.01,#xs(14,125,'vbf')[0],
 }
 datadefs["GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8"] = {
     'analyses': ['4L'],
     'datasetpath': '/GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec': 43.92 ,
+    'x_sec': 43.92*0.01,
 }
 datadefs["GluGlu_LFV_HToETau_M125_13TeV_powheg_pythia8"] = {
     'analyses': ['4L'],
     'datasetpath': '/GluGlu_LFV_HToETau_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec': 43.92 ,
+    'x_sec': 43.92*0.01 ,
 }
 datadefs["VBF_LFV_HToETau_M125_13TeV_powheg_pythia8"] = {
     'analyses': ['4L'],
     'datasetpath': '/VBF_LFV_HToETau_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec': 3.748 ,
+    'x_sec': 3.748*0.01 ,
+}
+datadefs["VBF_LFV_HToEMu_M125_13TeV_powheg_pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/VBF_LFV_HToEMu_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': 3.748*0.01 ,
+}
+datadefs["GluGlu_LFV_HToEMu_M125_13TeV_powheg_pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/GluGlu_LFV_HToEMu_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': 43.92*0.01 ,
 }
 
 datadefs["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
@@ -63,7 +77,7 @@ datadefs["WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
     'datasetpath': '/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec': -999. ,
+    'x_sec': 61526.7 ,
 }
 
 datadefs["WZ_TuneCUETP8M1_13TeV-pythia8"] = {
@@ -75,10 +89,17 @@ datadefs["WZ_TuneCUETP8M1_13TeV-pythia8"] = {
 }
 datadefs["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
     'analyses': ['4L'],
-    'datasetpath': '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
+    'datasetpath': '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
     'x_sec': 6025.2 ,
+}
+datadefs["DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': 18610.0 ,
 }
 datadefs["ZZ_TuneCUETP8M1_13TeV-pythia8"] = {
     'analyses': ['4L'],
@@ -99,14 +120,42 @@ datadefs["WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
     'datasetpath': '',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec': -999. ,
+    'x_sec': 61526.7 ,
 }
 datadefs["TT_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = {
     'analyses': ['4L'],
     'datasetpath': '',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec': -999. ,
+    'x_sec': 831.76,
+}
+datadefs["TT_TuneCUETP8M1_13TeV-powheg-pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': 831.76,
+}
+datadefs["TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': 831.76,
+}
+datadefs["TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': 831.76,
+}
+datadefs["TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': 0.009103,
 }
 datadefs["GluGluHToTauTau_M125_13TeV_powheg_pythia8"] = {
     'analyses': ['4L'],
@@ -214,6 +263,57 @@ datadefs["WZTo3LNu-PU20bx25"] = {
     'x_sec': -999,
 }
 
+datadefs["ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1"] = {
+    'analyses': ['mutau'],
+    'datasetpath': '/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM',
+    'pu': '20bx25',
+    'calibrationTarget': 'Phys14DR',
+    'x_sec': 0.1, ##put the correctnumber
+}
+datadefs["ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1"] = {
+    'analyses': ['mutau'],
+    'datasetpath': '/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM',
+    'pu': '20bx25',
+    'calibrationTarget': 'Phys14DR',
+    'x_sec': 216.99, ##put the correctnumber
+}
+datadefs["ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1"] = {
+    'analyses': ['mutau'],
+    'datasetpath': '/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM',
+    'pu': '20bx25',
+    'calibrationTarget': 'Phys14DR',
+    'x_sec': 80.95, ##put the correctnumber
+}
+datadefs["ST_t-channel_top_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1"] = {
+    'analyses': ['mutau'],
+    'datasetpath': '/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM',
+    'pu': '20bx25',
+    'calibrationTarget': 'Phys14DR',
+    'x_sec': 103.2, ##put the correctnumber
+}
+
+datadefs["ST_tW_antitop_5f_DS_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1"] = {
+      'analyses': ['mutau'],
+      'datasetpath': '/ST_t-channel_antitop_4f_leptonDecays_13TeV-powheg-pythia8_TuneCUETP8M1/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+      'pu': '20bx25',
+      'calibrationTarget': 'Phys14DR',
+      'x_sec': 38.09, ##put the correctnumber
+}
+datadefs["ST_tW_top_5f_DS_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1"] = {
+    'analyses': ['mutau'],
+    'datasetpath': '/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM',
+    'pu': '20bx25',
+    'calibrationTarget': 'Phys14DR',
+    'x_sec': 38.09, ##put the correctnumber
+}
+datadefs["ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1"] = {
+    'analyses': ['mutau'],
+    'datasetpath': '/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM',
+    'pu': '20bx25',
+    'calibrationTarget': 'Phys14DR',
+    'x_sec': 38.09
+      , ##put the correctnumber
+}
 
 if __name__=="__main__":
     query_cli(datadefs)
