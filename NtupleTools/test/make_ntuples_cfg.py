@@ -349,11 +349,6 @@ if options.runMetFilter:
 
 
 
-
-
-
-
-
 #########################################################
 ### embed some things we need before object selection ###
 #########################################################
@@ -394,7 +389,8 @@ fs_daughter_inputs['jets'] = preJets(process,options.use25ns,fs_daughter_inputs[
     parameters['finalSelection']['j']['e']['deltaR'],
     parameters['finalSelection']['j']['m']['selection'],
     parameters['finalSelection']['j']['m']['deltaR'],
-    parameters['finalSelection']['j']['selection'])
+    parameters['finalSelection']['j']['selection'],
+    "AK4PFchs")
 
 
 ########################################
