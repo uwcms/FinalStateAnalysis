@@ -387,6 +387,7 @@ def make_ntuple(*legs, **kwargs):
     # get rid of MVA MET stuff if we're not computing it
     if not runMVAMET:
         notInMiniAOD.append("mvaMet((Et)|(Phi))")
+        notInMiniAOD.append("mvaMetCov((00)|(01)|(10)|(11))")
         notInMiniAOD.append("[emtgj][1-9]?MtToMVAMET")
 
     allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")

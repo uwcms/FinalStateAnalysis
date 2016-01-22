@@ -26,14 +26,16 @@
 namespace ApplySVfit {
 
   // Caching and translation layer
-  typedef std::map<size_t, double> SVFitCache;
+  typedef std::map<size_t, std::vector<double> > SVFitCache;
   static SVFitCache theCache;
   static edm::EventID lastSVfitEvent; // last processed event
 
-  double getSVfitMass(std::vector<reco::CandidatePtr>& cands,
+  std::vector<double> getSVfitMass(std::vector<reco::CandidatePtr>& cands,
                       const pat::MET& met, const ROOT::Math::SMatrix2D& covMET, unsigned int verbosity,
                       const edm::EventID& evtId) {
 
+
+    std::vector<double> returnVector;
 
     // Check if this a new event
     if (evtId != lastSVfitEvent) {
@@ -79,12 +81,18 @@ namespace ApplySVfit {
     TFile* inputFile_visPtResolution = new TFile(inputFileName_visPtResolution.fullPath().data());
     //algo.shiftVisPt(true, inputFile_visPtResolution);
     algo.integrateMarkovChain();
-    double mass = algo.getMass(); // mass uncertainty not implemented yet
+    //double mass = algo.getMass(); // mass uncertainty not implemented yet
 
     delete inputFile_visPtResolution;
 
-    theCache[hash] = mass;
-    return mass;
+    returnVector.push_back( algo.mass() );
+    returnVector.push_back( algo.pt() );
+    returnVector.push_back( algo.eta() );
+    returnVector.push_back( algo.phi() );
+    returnVector.push_back( algo.fittedMET().Rho() );
+
+    theCache[hash] = returnVector;
+    return returnVector;
 
   }
 

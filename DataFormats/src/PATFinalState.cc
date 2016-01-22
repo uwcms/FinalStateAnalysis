@@ -320,7 +320,7 @@ PATFinalState::smallestDeltaPhi() const {
   return smallestDeltaPhi;
 }
 
-double
+std::vector<double>
 PATFinalState::SVfit(int i, int j) const {
 
   std::vector<reco::CandidatePtr> toFit;
@@ -340,6 +340,63 @@ PATFinalState::SVfit(int i, int j) const {
   return ApplySVfit::getSVfitMass(toFit, *mvaMet,
       mvaMet->getSignificanceMatrix(), 0,
       evt()->evtId());
+}
+
+double
+PATFinalState::tauGenMatch( size_t i ) const {
+    // Get all gen particles in the event
+    const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
+    reco::GenParticleCollection genParticles = *genCollectionRef;
+
+    // Find the closest gen particle to our candidate
+    if ( genParticles.size() > 0 ) {
+        reco::GenParticle& closest = genParticles[0];
+        double closestDR = 999;
+        for(size_t m = 0; m != genParticles.size(); ++m) {
+          reco::GenParticle& genp = genParticles[m];
+          //std::cout << " -- " << reco::deltaR( daughter(i)->p4(), genp.p4() ) << std::endl;
+          double tmpDR = reco::deltaR( daughter(i)->p4(), genp.p4() );
+          if ( tmpDR < closestDR ) { closest = genp; closestDR = tmpDR; }
+        }
+        if (closestDR > 0.2) return 6.0;
+        //std::cout << "Closest DR: " << closestDR << std::endl;
+        double dID = abs(daughter(i)->pdgId());
+        double genID = abs(closest.pdgId());
+        //std::cout << "Cand pdgID: " << dID << " Gen pdgID: " << genID << std::endl;
+        if (genID == 11 && closest.pt() > 8 && closest.statusFlags().isPrompt() ) return 1.0;
+        else if (genID == 13 && closest.pt() > 8 && closest.statusFlags().isPrompt() ) return 2.0;
+        else if (genID == 11 && closest.pt() > 8 && closest.statusFlags().isDirectPromptTauDecayProduct() ) return 3.0;
+        else if (genID == 13 && closest.pt() > 8 && closest.statusFlags().isDirectPromptTauDecayProduct() ) return 4.0;
+        else if (dID == 15) {
+            const pat::Tau &patTauRef = *daughterAsTau(i);
+            const reco::GenParticle* genTau = getGenTau( patTauRef );
+            if ( genTau != NULL && genTau->pt() > 15 ) {
+                //std::cout << "getGenTau Worked!" << std::endl;
+                return 5.0;
+            }
+            else return 6.0;
+        }
+        //else if (genID == 15 && closest.pt() > 15 && closest.statusFlags().isPrompt() ) return 5.0;
+        //else if (genID == 15 && closest.statusFlags().isPrompt() && daughterAsTau(i)->userFloat("genJetPt") > 15.0 ) return 5.0;
+        //else if (dID == 15 && closest.statusFlags().isPrompt() && daughterAsTau(i)->userFloat("genJetPt") > 15.0 ) return 5.0;
+        else return 6.0;
+    }
+    return -1.0;
+} 
+
+const reco::GenParticle*
+PATFinalState::getGenTau(const pat::Tau& patTau) const
+{
+  std::vector<reco::GenParticleRef> associatedGenParticles = patTau.genParticleRefs();
+  for ( std::vector<reco::GenParticleRef>::const_iterator it = associatedGenParticles.begin();
+    it != associatedGenParticles.end(); ++it ) {
+    if ( it->isAvailable() ) {
+      const reco::GenParticleRef& genParticle = (*it);
+      if ( genParticle->pdgId() == -15 || genParticle->pdgId() == +15 ) return genParticle.get();
+    }
+  }
+
+  return 0;
 }
 
 double
@@ -832,6 +889,7 @@ double PATFinalState::closestZ(int i, const std::string& filter, std::vector<con
     double temp = std::abs(totalP4.mass() - 91.1876);
     if (temp < result) result = temp;
   }
+  if (zSecondLegs.size() == 0) return -999;
   return result;
 }
 
@@ -889,12 +947,21 @@ double PATFinalState::smallestMtt(int i, const std::string& filter="") const
 }
 
 
-VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts) const {
+VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts, double dr ) const {
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
-  std::vector<const reco::Candidate*> jets = this->vetoJets(0.3, jetCuts);
+  std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
   const reco::Candidate::LorentzVector& metp4 = met()->p4();
   // todo cache this
   return computeVBFInfo(hardScatter, metp4, jets);
+}
+
+std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, double dr ) const {
+//JetVariables PATFinalState::jetVariables(const std::string& jetCuts, double dr ) const {
+  std::vector<const reco::Candidate*> hardScatter = this->daughters();
+  std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
+  const reco::Candidate::LorentzVector& metp4 = met()->p4();
+  // todo cache this
+  return computeJetInfo(hardScatter, metp4, jets);
 }
 
 bool PATFinalState::orderedInPt(int i, int j) const {

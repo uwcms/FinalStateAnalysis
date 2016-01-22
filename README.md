@@ -30,7 +30,7 @@ Get a supported CMSSW release area:
 Checkout the FinalStateAnalysis repository:
 
 ```bash
-  git clone --recursive -b miniAOD_dev_74X git@github.com:uwcms/FinalStateAnalysis.git
+  git clone --recursive -b miniAOD_dev_76X git@github.com:uwcms/FinalStateAnalysis.git
   cd FinalStateAnalysis
 ```
 
