@@ -8,7 +8,7 @@ Author: Evan K. Friis
 
 IMPORTANT NOTE: If you want the logical OR of several paths, separate them 
 by '|' rather than by ','. 
-When the Smart Trigger gets a group of paths separated by commas, it uses 
+(When the Smart Trigger gets a group of paths separated by commas, it uses 
 the one with the lowest prescale (taking the first in case of a tie).
 
 '''
@@ -130,7 +130,7 @@ singleLepton_25ns_MC = PSet(
         ),
     _trig_template.replace(
         name='singleE',
-        paths=r'HLT_Ele32_eta2p1_WP75_Gsf_v\\d+'
+        paths=r'HLT_Ele27_WP85_Gsf_v\\d+',
         ),
     _trig_template.replace(
         name='singleE22WP75',
@@ -205,7 +205,7 @@ singleLepton_25ns = PSet(
         ),
     _trig_template.replace(
         name='singleE',
-        paths=r'HLT_Ele32_eta2p1_WPLoose_Gsf_v\\d+'
+        paths=r'HLT_Ele27_WPLoose_Gsf_v\\d+',
         ),
     _trig_template.replace(
         name='singleE23WPLoose',

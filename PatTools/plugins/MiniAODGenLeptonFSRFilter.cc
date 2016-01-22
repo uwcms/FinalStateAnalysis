@@ -98,7 +98,10 @@ MiniAODGenLeptonFSRFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSe
    bool reject = reverseDecision_;
 
    // keep event in ZG
-   bool keepEvent = false;
+   //bool keepEvent = false;
+
+   // keep event in DY
+   bool keepEvent = true;
 
    // Get the photon
    for ( auto& genPhoton : *genParticles ) {
@@ -109,7 +112,8 @@ MiniAODGenLeptonFSRFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSe
             && genPhoton.pt() > photonPtCut_
             ) {
          // pt of photon above threshold and parent is quark or lepton
-         keepEvent = true;
+         //keepEvent = true;
+         keepEvent = false;
          //std::cout << "found high pt lepton" << std::endl;
          // Get lepton
          for  ( auto& genLepton : *genParticles ) {
@@ -120,7 +124,8 @@ MiniAODGenLeptonFSRFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSe
                 ) {
              // lepton within dr of lepton
              //std::cout << "photon within dr of lepton" << std::endl;
-             keepEvent = false;
+             //keepEvent = false;
+             keepEvent = true;
           }
           // reject if have photon close to lepton
           if (!keepEvent) {

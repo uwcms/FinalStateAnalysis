@@ -191,11 +191,8 @@ const float MiniAODHZZMEEmbedder<Ls...>::getZZME(const PATQuadFinalStateT<Ls...>
   for(size_t iLep = 0; iLep < fs.numberOfDaughters(); iLep++)
     {
       partID.push_back(fs.daughter(iLep)->pdgId());
-      PATFinalState::LorentzVector thisP4 = fs.daughter(iLep)->p4();
-      reco::CandidatePtr fsrPtr = fs.bestFSROfZ(iLep, fs.get4LPartner(iLep), fsrLabel);
-      if(fsrPtr.isAvailable() && fsrPtr.isNonnull())
-	if(reco::deltaR(thisP4, fsrPtr->p4()) < reco::deltaR(fs.daughter(fs.get4LPartner(iLep))->p4(), fsrPtr->p4()))
-	  thisP4 += fsrPtr->p4();
+      PATFinalState::LorentzVector thisP4 = fs.daughterP4WithUserCand(iLep, 
+                                                                      fsrLabel);
       partP4.push_back(TLorentzVector());
       partP4.back().SetPtEtaPhiM(thisP4.pt(), thisP4.eta(), thisP4.phi(), thisP4.mass());
     }
@@ -234,11 +231,7 @@ void MiniAODHZZMEEmbedder<Ls...>::getPm4l(const PATQuadFinalStateT<Ls...> & fs,
   for(unsigned int iLep = 0; iLep < fs.numberOfDaughters(); iLep++)
     {
       partID.push_back(fs.daughter(iLep)->pdgId());
-      PATFinalState::LorentzVector thisP4 = fs.daughter(iLep)->p4();
-      reco::CandidatePtr fsrPtr = fs.bestFSROfZ(iLep, fs.get4LPartner(iLep), fsrLabel);
-      if(fsrPtr.isAvailable() && fsrPtr.isNonnull())
-	if(reco::deltaR(thisP4, fsrPtr->p4()) < reco::deltaR(fs.daughter(fs.get4LPartner(iLep))->p4(), fsrPtr->p4()))
-	  thisP4 += fsrPtr->p4();
+      PATFinalState::LorentzVector thisP4 = fs.daughterP4WithUserCand(iLep, fsrLabel);
       partP4.push_back(TLorentzVector());
       partP4.back().SetPtEtaPhiM(thisP4.pt(), thisP4.eta(), thisP4.phi(), thisP4.mass());
     }
