@@ -54,6 +54,10 @@ singleLepton_50ns_MC = PSet(
         name='singleE_leg2', 
         paths=r'HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
+    _trig_template.replace(
+        name='singleIsoTkMu20',
+        paths=r'HLT_IsoTkMu20_v\\d+'
+        ),
     )
 
 singleLepton_50ns = PSet(
@@ -89,6 +93,10 @@ singleLepton_50ns = PSet(
         name='singleE_leg2', 
         paths=r'HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
+    _trig_template.replace(
+        name='singleIsoTkMu20',
+        paths=r'HLT_IsoTkMu20_v\\d+'
+        ),
     )
 
 singleLepton_25ns_MC = PSet(
@@ -99,6 +107,10 @@ singleLepton_25ns_MC = PSet(
     _trig_template.replace(
         name='singleIsoMu20',
         paths=r'HLT_IsoMu20_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleIsoTkMu20',
+        paths=r'HLT_IsoTkMu20_v\\d+'
         ),
     _trig_template.replace(
         name='singleIsoMu20eta2p1',
@@ -174,6 +186,10 @@ singleLepton_25ns = PSet(
     _trig_template.replace(
         name='singleIsoMu20',
         paths=r'HLT_IsoMu20_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleIsoTkMu20',
+        paths=r'HLT_IsoTkMu20_v\\d+'
         ),
     _trig_template.replace(
         name='singleIsoMu20eta2p1',
