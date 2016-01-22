@@ -37,6 +37,15 @@ setattr(eleVars, "objectRelPFIsoRho%s"%brSuffix,
                     '/{object}.pt()')%(fsr))
         ),
 
+setattr(eleVars, "objectRelPFIsoRho%s_unscaled"%brSuffix,
+        cms.string(('({object}.chargedHadronIso()' +
+                    '+max(0.0,{object}.neutralHadronIso()' +
+                    '+{object}.photonIso()' +
+                    '-daughterUserCandIsoContribution({object_idx}, "%sCand")' +
+                    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea")*16./9.))' +
+                    '/{object}.pt()')%(fsr))
+        ),
+
 setattr(muVars, "objectRelPFIsoDB%s"%brSuffix,
         cms.string(('({object}.chargedHadronIso()' +
                     '+max({object}.photonIso()' +
@@ -46,67 +55,39 @@ setattr(muVars, "objectRelPFIsoDB%s"%brSuffix,
                     '/{object}.pt()')%(fsr))
         )
 
+eleVars.objectEffectiveAreaHZZ = cms.string('{object}.userFloat("EffectiveArea_HZZ4l2015")')
+
+zzObjVars.objectHZZIsoFSR = cms.string('? {object}.hasUserFloat("HZZ4lIsoVal") ? {object}.userFloat("HZZ4lIsoVal") : 999.')
+
 setattr(zzDiObjVars, "object1_object2_Mass%s"%(brSuffix), 
             cms.string(('diObjectP4WithUserCands({object1_idx}, {object2_idx}, "%sCand").M')%(fsr))
             )
 
 setattr(zzEvVars, 'Mass%s'%(brSuffix),
-            cms.string('p4WithUserCands("%sCand").M'%(fsr)))
+        cms.string('p4WithUserCands("%sCand").M'%(fsr)))
 
 eleVars.objectDREt = cms.string(('? daughterHasUserCand({object_idx}, "%sCand") ? ' +
-                           'daughterAsElectron({object_idx}).userFloat("%sDREt") : ' +
-                           '-999.')%(fsr, fsr))
+                                 'daughterAsElectron({object_idx}).userFloat("%sDREt") : ' +
+                                 '-999.')%(fsr, fsr))
 
 muVars.objectDREt = cms.string(('? daughterHasUserCand({object_idx}, "%sCand") ? ' +
-                          'daughterAsMuon({object_idx}).userFloat("%sCandDREt") : ' +
-                          '-999.')%(fsr, fsr))
+                                'daughterAsMuon({object_idx}).userFloat("%sCandDREt") : ' +
+                                '-999.')%(fsr, fsr))
 
-setattr(eleVars, "objectRelPFIsoRhoFSR",
-        cms.string(('({object}.chargedHadronIso()' +
-                    '+max(0.0,{object}.neutralHadronIso()' +
-                    '+{object}.photonIso()' +
-                    '-allFSRIsoContribution({object_idx}, "FSRCand")' +
-                    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea_HZZ4l2015")))' +
-                    '/{object}.pt()'))
-        ),
-
-setattr(muVars, "objectRelPFIsoDBFSR",
-        cms.string(('({object}.chargedHadronIso()' +
-                    '+max({object}.photonIso()' +
-                    '-allFSRIsoContribution({object_idx}, "FSRCand")' +
-                    '+{object}.neutralHadronIso()' +
-                    '-0.5*{object}.puChargedHadronIso,0.0))' +
-                    '/{object}.pt()'))
-        )
 
 zzObjVars.objectHZZLooseID = cms.string('{object}.userFloat("HZZ4lIDPass")')
 zzObjVars.objectHZZTightID = cms.string('{object}.userFloat("HZZ4lIDPassTight")')
 zzObjVars.objectHZZIsoPass = cms.string('{object}.userFloat("HZZ4lIsoPass")')
 
-zzEvVars.MassFSR = cms.string('p4fsr("FSRCand").M')
-zzEvVars.PtFSR   = cms.string('p4fsr("FSRCand").pt')
-zzEvVars.EtaFSR  = cms.string('p4fsr("FSRCand").eta')
-zzEvVars.PhiFSR  = cms.string('p4fsr("FSRCand").phi')
-zzEvVars.MtFSR   = cms.string('p4fsr("FSRCand").Mt')
 zzEvVars.nJets   = cms.string('evt.jets.size')
-
-zzDiObjVars.object1_object2_MassFSR  = cms.string('subcandPrimaryFSR({object1_idx}, {object2_idx}, "FSRCand").get.mass')
-zzDiObjVars.object1_object2_PtFSR    = cms.string('subcandPrimaryFSR({object1_idx}, {object2_idx}, "FSRCand").get.pt')
-zzDiObjVars.object1_object2_EtaFSR   = cms.string('subcandPrimaryFSR({object1_idx}, {object2_idx}, "FSRCand").get.eta')
-zzDiObjVars.object1_object2_PhiFSR   = cms.string('subcandPrimaryFSR({object1_idx}, {object2_idx}, "FSRCand").get.phi')
-zzDiObjVars.object1_object2_MtFSR    = cms.string('subcandPrimaryFSR({object1_idx}, {object2_idx}, "FSRCand").get.mt')
-zzDiObjVars.object1_object2_FSRPt    = cms.string('? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? '
-                                                  'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").pt() : -999.')
-zzDiObjVars.object1_object2_FSREta   = cms.string('? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? ' 
-                                                  'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").eta() : -999.')
-zzDiObjVars.object1_object2_FSRPhi   = cms.string('? bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").isNonnull() ? '
-                                                  'bestFSROfZ({object1_idx}, {object2_idx}, "FSRCand").phi() : -999.')
-
 
 parameters = {
     # selections on all objects whether they're included in final states or not, done immediately after necessary variables are embedded
     'preselection' : OrderedDict(
         [
+            # vertex cuts
+            #('v', '!isFake && ndof > 4 && abs(z) <= 24 && position.Rho <= 2'),
+            ('m', ''),
             # Veto electrons that are very close to muons
             ('e', {
                     'm' : {
@@ -115,9 +96,10 @@ parameters = {
                         },
                     },
              ),
-            # Remove jets that are near tight ID'd, no-FSR isolated leptons
+            # Remove jets that are near tight ID'd, isolated leptons
+            # A separate module cleans jets near FSR photons
             ('j', {
-                    'selection' : 'pt > 30 && eta < 4.7 && eta > -4.7 && userFloat("puID") > 0.5 && userFloat("idLoose") > 0.5',
+                    'selection' : 'pt > 30 && eta < 4.7 && eta > -4.7 && userFloat("idLoose") > 0.5', # ' && userFloat("puID") > 0.5 '
                     'e' : {
                         'deltaR' : 0.4,
                         'selection' : 'userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5',

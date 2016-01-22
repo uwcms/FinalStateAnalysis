@@ -272,7 +272,6 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
 
-
     return eSrc
 
 def postElectrons(process, use25ns, eSrc, jSrc,**kwargs):

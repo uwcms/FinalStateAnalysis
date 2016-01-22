@@ -13,9 +13,7 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 # Vetos on extra stuff in the event
 num = PSet(
-    #evt=cms.vstring('evt.evtId.event', 'I'),  # use int branch
-    #evt=cms.vstring('evt.event', 'I'),  # use int branch
-    evt='evt.event',  # use double to give more headroom until we do this right
+    evt=cms.vstring('evt.eventDouble', 'l'),  # use unsigned long long branch
     lumi=cms.vstring('evt.evtId.luminosityBlock', 'I'),  # use int branch
     run=cms.vstring('evt.evtId.run', 'I'),  # use int branch
     isdata=cms.vstring('evt.isRealData', 'I'),

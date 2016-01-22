@@ -208,8 +208,7 @@ def make_ntuple(*legs, **kwargs):
 
     runMVAMET = kwargs.get('runMVAMET', False)
 
-    use25ns = kwargs.get('use25ns', False)
-
+    use25ns = kwargs.get('use25ns', True)
     isMC = kwargs.get('isMC', False)
 
     ntuple_config = _common_template.clone()
@@ -233,22 +232,20 @@ def make_ntuple(*legs, **kwargs):
     # Triggers we care about depend on run configuration
     leg_triggers = { 'e':PSet(), 'm':PSet(), 't':PSet(), 'j':PSet(), 'g':PSet() }
     if use25ns:
-        leg_triggers['e'] = templates.electrons.trigger_25ns
-        leg_triggers['m'] = templates.muons.trigger_25ns
-        diLep_triggers = templates.trigger.doubleLepton_25ns
         if isMC:
+            leg_triggers['e'] = templates.electrons.trigger_25ns_MC
             lep_triggers = templates.trigger.singleLepton_25ns_MC
         else:
+            leg_triggers['e'] = templates.electrons.trigger_25ns
             lep_triggers = templates.trigger.singleLepton_25ns
-    else:    
+        leg_triggers['m'] = templates.muons.trigger_25ns
+        diLep_triggers = templates.trigger.doubleLepton_25ns
+    else:
         leg_triggers['e'] = templates.electrons.trigger_50ns
         leg_triggers['m'] = templates.muons.trigger_50ns
         diLep_triggers = templates.trigger.doubleLepton_50ns
-        if isMC:
-            lep_triggers = templates.trigger.singleLepton_50ns_MC
-        else:
-            lep_triggers = templates.trigger.singleLepton_50ns
-    triLep_triggers = templates.trigger.tripleLepton # same in 25 and 50 ns    
+        lep_triggers = templates.trigger.singleLepton_50ns
+    triLep_triggers = templates.trigger.tripleLepton
 
     ntuple_config = PSet(
         ntuple_config,

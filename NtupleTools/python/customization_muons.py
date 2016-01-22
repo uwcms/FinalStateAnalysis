@@ -103,7 +103,6 @@ def preMuons(process, use25ns, mSrc, vSrc, **kwargs):
     setattr(process,pathName,modPath)
     process.schedule.append(getattr(process,pathName))
 
-
     return mSrc
 
 def postMuons(process, use25ns, mSrc, jSrc,**kwargs):

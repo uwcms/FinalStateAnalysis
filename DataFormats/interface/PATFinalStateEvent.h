@@ -124,7 +124,11 @@ class PATFinalStateEvent {
 
     /// Get the event ID
     const edm::EventID& evtId() const;
-    double event() const;
+    unsigned long long event() const { return evtId().event(); }
+    // We also need a version that returns a double so the string parser used
+    // to build the ntuples can deal with it. As long as the event number
+    // never reaches 2^52, this should be fine.
+    double eventDouble() const; 
 
     /// The following functions use the "SmartTrigger" functionality.
     /// They can be passed a comma separated list of paths:
