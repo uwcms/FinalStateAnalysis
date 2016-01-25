@@ -26,8 +26,6 @@ info = PSet(
 )
 
 
-
-
 # ID and isolation
 id = PSet(
     # updated for what is included in miniaodv2
@@ -94,8 +92,7 @@ id = PSet(
     objectByVTightIsolationMVA3oldDMwLT = '{object}.tauID("byVTightIsolationMVA3oldDMwLT")', 
     objectByVVTightIsolationMVA3oldDMwLT = '{object}.tauID("byVVTightIsolationMVA3oldDMwLT")',
     objectByIsolationMVA3oldDMwLTraw = '{object}.tauID("byIsolationMVA3oldDMwLTraw")', 
-
-
+    
     # MVA based tau isolation discriminators new 7_6_x
     # With Old Decay Mode reconstruction:
     objectByLooseIsolationMVArun2v1DBoldDMwLT = '{object}.tauID("byLooseIsolationMVArun2v1DBoldDMwLT")',
@@ -137,7 +134,6 @@ id = PSet(
     objectDecayModeFinding       = '{object}.tauID("decayModeFinding")',
     objectDecayModeFindingNewDMs = '{object}.tauID("decayModeFindingNewDMs")',
 
-
     # closest Z mass
     objectNearestZMass = 'closestZTau({object_idx},"")',
     # lowest invariant mass
@@ -148,7 +144,6 @@ id = PSet(
     objectGenMotherEnergy =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).energy() : -999', 
     objectGenMotherEta =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).eta() : -999', 
     objectGenMotherPhi =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).phi() : -999', 
-    objectGenMotherMass =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).mass() : -999',
 
     objectGenJetPt = '{object}.userFloat("genJetPt")',    
     objectGenJetEta = '{object}.userFloat("genJetEta")',  

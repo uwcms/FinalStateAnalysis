@@ -110,9 +110,9 @@ namespace fshelpers {
     double totalEt = p1.Et() + p2.Et();
     double totalPt = (p1 + p2).pt();
     double mt2 = totalEt*totalEt - totalPt*totalPt;
-    if (mt2 < 0) {
-      std::cout << "P1 = " << p1 << " P2 = " << p2 << " " << mt2 << std::endl;
-    }
+    //if (mt2 < 0) {
+    //  std::cout << "P1 = " << p1 << " P2 = " << p2 << " " << mt2 << std::endl;
+    //}
     return std::sqrt(std::abs(mt2));
   }
 
@@ -155,14 +155,6 @@ namespace fshelpers {
     pset.addParameter<std::vector<int> >("mcPdgId", pdgIdsToMatch);
     std::vector<int> status;
     status.push_back(1);
-
-/*    if(pdgIdToMatch==15){
-     for (int istatus = 21; istatus< 30 ; istatus++){
-      status.push_back(istatus); //pythia8 particles from an hard process have status code 21-29 
-     } // this is specifically for allowing to get gen taus, matching them to the hardprocess. It should be checked further. 
-    }
-    // removing this 
-*/
 
     pset.addParameter<std::vector<int> >("mcStatus", status);
     pset.addParameter<bool>("resolveByMatchQuality", false);

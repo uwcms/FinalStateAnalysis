@@ -64,11 +64,14 @@ private:
   StringCutObjectSelector<Muon> mSelection_;
 
   std::string fsrLabel_;
+  
+  const float cut_; // the actual cut on deltaR/eT^n
 
   const float scVetoDR_;
   const float scVetoDEta_;
   const float scVetoDPhi_;
   const float etPower_;
+  const float maxDR_;
 };
 
 
@@ -88,6 +91,9 @@ MiniAODLeptonDRETFSREmbedder::MiniAODLeptonDRETFSREmbedder(const edm::ParameterS
   fsrLabel_(iConfig.exists("fsrLabel") ?
             iConfig.getParameter<std::string>("fsrLabel") :
             "dREtFSRCand"),
+  cut_(iConfig.exists("cut") ?
+       float(iConfig.getParameter<double>("cut")) :
+       0.012), // cut on dR/eT^2 as of 21 October 2015
   scVetoDR_(iConfig.exists("scVetoDR") ?
             float(iConfig.getParameter<double>("scVetoDR")) :
             0.15),
@@ -99,7 +105,11 @@ MiniAODLeptonDRETFSREmbedder::MiniAODLeptonDRETFSREmbedder(const edm::ParameterS
               2.),
   etPower_(iConfig.exists("etPower") ?
 	   float(iConfig.getParameter<double>("etPower")) :
-	   1.)
+	   1.),
+  maxDR_(iConfig.exists("maxDR") ?
+         float(iConfig.getParameter<double>("maxDR")) :
+         0.5)
+
 {
   produces<std::vector<Muon> >();
   produces<std::vector<Elec> >();
@@ -155,6 +165,10 @@ void MiniAODLeptonDRETFSREmbedder::produce(edm::Event& iEvent, const edm::EventS
       for(size_t iE = 0; iE < elecs->size(); ++iE)
         {
           float deltaR = reco::deltaR(pho->p4(), elecs->at(iE).p4());
+
+          if(!eSelection_(elecs->at(iE)))
+            continue;
+
           if(deltaR < dRBestEle)
             {
               iBestEle = iE;
@@ -165,6 +179,10 @@ void MiniAODLeptonDRETFSREmbedder::produce(edm::Event& iEvent, const edm::EventS
       for(size_t iM = 0; iM < mus->size(); ++iM)
         {
           float deltaR = reco::deltaR(pho->p4(), mus->at(iM).p4());
+
+          if(!mSelection_(mus->at(iM)))
+            continue;
+
           if(deltaR < dRBestMu)
             {
               iBestMu = iM;
@@ -172,11 +190,10 @@ void MiniAODLeptonDRETFSREmbedder::produce(edm::Event& iEvent, const edm::EventS
             }
         }
 
-      if(elecs->size() && dRBestEle < dRBestMu)
+      if(elecs->size() && dRBestEle < dRBestMu && dRBestEle < maxDR_)
         phosByEle.at(iBestEle).push_back(pho);
-      else if(mus->size())
+      else if(mus->size() && dRBestMu < maxDR_)
         phosByMu.at(iBestMu).push_back(pho);
-      
     }
 
   for(size_t iE = 0; iE < elecs->size(); ++iE)
@@ -191,14 +208,15 @@ void MiniAODLeptonDRETFSREmbedder::produce(edm::Event& iEvent, const edm::EventS
           CandPtr pho = phosByEle[iE][iPho];
 
           float drEt = reco::deltaR(e.p4(), pho->p4()) / pow(pho->et(), etPower_);
-          if(drEt < dREtBestPho)
+
+          if(drEt < cut_ && drEt < dREtBestPho)
             {
               dREtBestPho = drEt;
               bestPho = pho;
             }
         }
 
-      if(phosByEle[iE].size())
+      if(bestPho.isNonnull())
         {
           e.addUserCand(fsrLabel_, bestPho);
           e.addUserFloat(fsrLabel_+"DREt", dREtBestPho);
@@ -219,14 +237,15 @@ void MiniAODLeptonDRETFSREmbedder::produce(edm::Event& iEvent, const edm::EventS
           CandPtr pho = phosByMu[iM][iPho];
 
           float drEt = reco::deltaR(m.p4(), pho->p4()) / pow(pho->et(), etPower_);
-          if(drEt < dREtBestPho)
+
+          if(drEt < cut_ && drEt < dREtBestPho)
             {
               dREtBestPho = drEt;
               bestPho = pho;
             }
         }
 
-      if(phosByMu[iM].size())
+      if(bestPho.isNonnull())
         {
           m.addUserCand(fsrLabel_, bestPho);
           m.addUserFloat(fsrLabel_+"DREt", dREtBestPho);
@@ -261,4 +280,3 @@ bool MiniAODLeptonDRETFSREmbedder::isInSuperCluster(const CandPtr& cand,
 
 //define this as a plug-in
 DEFINE_FWK_MODULE(MiniAODLeptonDRETFSREmbedder);
-
