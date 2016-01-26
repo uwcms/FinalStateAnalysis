@@ -95,12 +95,15 @@ def hzzCustomize(process, fs_daughter_inputs,
         fsrLabel = cms.string(fsrLabel),
         fsrElecSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
         fsrMuonSelection = cms.string('userFloat("%s") > 0.5'%idCheatLabel),
-        eaLabel = cms.string('EffectiveArea_HZZ4l2015'),
-        #eaScaleFactor = cms.double(16./9.), # until we get effective areas for a cone of 0.4
+        eaLabel = cms.string('EffectiveArea'),
+        isoConeDRMaxE = cms.double(0.3),
+        isoConeDRMaxMu = cms.double(0.3),
+        isoCutE = cms.double(0.35),
+        isoCutMu = cms.double(0.35),
         )
 
-    fs_daughter_inputs['electrons'] = 'leptonIsoCheatEmbedding'
-    fs_daughter_inputs['muons'] = 'leptonIsoCheatEmbedding'
+    fs_daughter_inputs['electrons'] = 'leptonIsoCheatEmbedding:electrons'
+    fs_daughter_inputs['muons'] = 'leptonIsoCheatEmbedding:muons'
     
     process.embedHZZ4lIsoDecisions = cms.Path(
         process.leptonIsoCheatEmbedding

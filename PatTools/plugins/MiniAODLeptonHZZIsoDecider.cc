@@ -29,6 +29,7 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
+#include "DataFormats/MuonReco/interface/MuonPFIsolation.h"
 
 
 typedef reco::Candidate Cand;
@@ -72,6 +73,12 @@ private:
   bool fsrInIsoCone(const MuonPtr& m,
                     const CandPtr& fsr) const;
   
+  // Isolation variables for e and mu (why isn't this standard???)
+  const reco::GsfElectron::PflowIsolationVariables& 
+  isolationVariables(const ElecPtr&) const;
+  const reco::MuonPFIsolation& 
+  isolationVariables(const MuonPtr&) const;
+
   // Get all FSR photons
   std::vector<CandPtr> getFSR(const edm::Handle<ElecView>& elecs,
                               const edm::Handle<MuonView>& muons) const;
@@ -152,7 +159,7 @@ MiniAODLeptonHZZIsoDecider::MiniAODLeptonHZZIsoDecider(const edm::ParameterSet& 
   isoConeDRMaxE(iConfig.exists("isoConeDRMaxE") ? 
                 iConfig.getParameter<double>("isoConeDRMaxE") : 0.4),
   isoConeDRMinE(iConfig.exists("isoConeDRMinE") ? 
-                iConfig.getParameter<double>("isoConeDRMin") : 0.08),
+                iConfig.getParameter<double>("isoConeDRMinE") : 0.08),
   isoConeVetoEtaThresholdE(iConfig.exists("isoConeVetoEtaThresholdE") ? 
                            iConfig.getParameter<double>("isoConeVetoEtaThreshold") : 
                            1.479),
@@ -171,8 +178,8 @@ MiniAODLeptonHZZIsoDecider::MiniAODLeptonHZZIsoDecider(const edm::ParameterSet& 
            iConfig.getParameter<std::string>("fsrLabel") :
            std::string("dretFSRCand"))
 {
-  produces<std::vector<Elec> >();
-  produces<std::vector<Muon> >();
+  produces<std::vector<Elec> >("electrons");
+  produces<std::vector<Muon> >("muons");
 }
 
 
@@ -189,8 +196,8 @@ void MiniAODLeptonHZZIsoDecider::produce(edm::Event& iEvent, const edm::EventSet
   outE = makeCollection(elecsIn, fsr);
   outM = makeCollection(muonsIn, fsr);
 
-  iEvent.put(outE);
-  iEvent.put(outM);
+  iEvent.put(outE, "electrons");
+  iEvent.put(outM, "muons");
 }
     
 
@@ -231,9 +238,9 @@ float
 MiniAODLeptonHZZIsoDecider::relPFIsoFSR(const edm::Ptr<Lep>& lep,
                                         const std::vector<CandPtr>& fsrs) const
 {
-  float chHadIso = lep->chargedHadronIso();
-  float nHadIso = lep->neutralHadronIso();
-  float phoIso = lep->photonIso();
+  float chHadIso = isolationVariables(lep).sumChargedHadronPt;
+  float nHadIso = isolationVariables(lep).sumNeutralHadronEt;
+  float phoIso = isolationVariables(lep).sumPhotonEt;
   float puCorrection = isoPUCorrection(lep);
 
   float fsrCorrection = isoFSRCorrection(lep, fsrs);
@@ -258,7 +265,21 @@ MiniAODLeptonHZZIsoDecider::isoPUCorrection(const ElecPtr& e) const
 float
 MiniAODLeptonHZZIsoDecider::isoPUCorrection(const MuonPtr& m) const
 {
-  return 0.5 * m->puChargedHadronIso();
+  return 0.5 * isolationVariables(m).sumPUPt;
+}
+
+
+const reco::GsfElectron::PflowIsolationVariables&
+MiniAODLeptonHZZIsoDecider::isolationVariables(const ElecPtr& e) const
+{
+  return e->pfIsolationVariables();
+}
+
+
+const reco::MuonPFIsolation&
+MiniAODLeptonHZZIsoDecider::isolationVariables(const MuonPtr& m) const
+{
+  return m->pfIsolationR03();
 }
 
 
