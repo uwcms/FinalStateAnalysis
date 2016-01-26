@@ -24,15 +24,6 @@ parameters = {
 
     # preselections for an object to be used anywhere
     'preselection' : {
-        },
-
-    # selections to include object in final state (should be looser than analysis selections)
-    'finalSelection' : {
-        'e': 'abs(superCluster().eta) < 3.0 & max(pt, userFloat("maxCorPt")) > 7',
-        'm': 'max(pt, userFloat("maxCorPt")) > 4 & (isGlobalMuon | isTrackerMuon)',
-        't': 'abs(eta) < 2.5 & pt > 17',
-        'g': 'abs(superCluster().eta()) < 3.0 & pt > 10',
-        # remove jets that are close to leptons
         'j' : {
             'selection' : 'pt>20 & abs(eta) < 2.5 & userFloat("idLoose")',
             'e': {
@@ -44,6 +35,15 @@ parameters = {
                 'deltaR' : 0.3,
                 },
             },
+        },
+
+    # selections to include object in final state (should be looser than analysis selections)
+    'finalSelection' : {
+        'e': 'abs(superCluster().eta) < 3.0 & max(pt, userFloat("maxCorPt")) > 7',
+        'm': 'max(pt, userFloat("maxCorPt")) > 4 & (isGlobalMuon | isTrackerMuon)',
+        't': 'abs(eta) < 2.5 & pt > 17',
+        'g': 'abs(superCluster().eta()) < 3.0 & pt > 10',
+        'j' : 'pt>20 & abs(eta) < 2.5 & userFloat("idLoose")',
 
     },
 
