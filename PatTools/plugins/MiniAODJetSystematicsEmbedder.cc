@@ -74,9 +74,9 @@ void MiniAODJetSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSet
 
     //std::cout << "uncDown pt: " << uncDown.pt() << " ,uncUp pt: " << uncUp.pt() << std::endl;
 
-    ShiftedCand candUncDown = *jet.clone();
+    ShiftedCand candUncDown = jet;
     candUncDown.setP4(uncDown);
-    ShiftedCand candUncUp = *jet.clone();
+    ShiftedCand candUncUp = jet;
     candUncUp.setP4(uncUp);
 
     p4OutJESUpJets->push_back(candUncUp);
