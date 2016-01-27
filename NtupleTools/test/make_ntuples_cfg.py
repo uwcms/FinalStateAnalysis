@@ -644,11 +644,6 @@ fs_daughter_inputs['jets'] = preJets(process,
                                      fs_daughter_inputs['vertices'],
                                      fs_daughter_inputs['muons'],
                                      fs_daughter_inputs['electrons'],
-                                     eCut=parameters['preselection']['j']['e']['selection'],
-                                     eDeltaR=parameters['preselection']['j']['e']['deltaR'],
-                                     mCut=parameters['preselection']['j']['m']['selection'],
-                                     mDeltaR=parameters['preselection']['j']['m']['deltaR'],
-                                     jCut=parameters['preselection']['j']['selection'],
                                      jType="AK4PFchs")
 for fs in additional_fs:
     additional_fs[fs]['jets'] = preJets(process,
@@ -657,11 +652,6 @@ for fs in additional_fs:
                                         additional_fs[fs]['vertices'],
                                         additional_fs[fs]['muons'],
                                         additional_fs[fs]['electrons'],
-                                        eCut=parameters['preselection']['j']['e']['selection'],
-                                        eDeltaR=parameters['preselection']['j']['e']['deltaR'],
-                                        mCut=parameters['preselection']['j']['m']['selection'],
-                                        mDeltaR=parameters['preselection']['j']['m']['deltaR'],
-                                        jCut=parameters['preselection']['j']['selection'],
                                         jType="AK4PFchs",
                                         postfix=fs)
 
