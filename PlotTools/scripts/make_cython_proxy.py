@@ -186,11 +186,14 @@ def get_branches(tree):
         'I': 'int',
         'D': 'double',
         'i': 'long',
+        'l': 'unsigned long',
     }
 
     for branch in tree.GetListOfBranches():
         name = branch.GetName()
         type = branch.GetTitle()
+        print type
+        print name
         # Clean out the leaflist syntax
         type = type.replace(name, '')
         type = type.replace('/', '')
