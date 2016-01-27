@@ -591,6 +591,21 @@ for fs in additional_fs:
                                         postfix=fs)
 
 ########################
+### embed photon IDs ###
+########################
+from FinalStateAnalysis.NtupleTools.customization_photons import prePhotons
+fs_daughter_inputs['photons'] = prePhotons(process,
+                                           options.use25ns,
+                                           fs_daughter_inputs['photons'],
+                                           fs_daughter_inputs['vertices'])
+for fs in additional_fs:
+    additional_fs[fs]['photons'] = prePhotons(process,
+                                              options.use25ns,
+                                              additional_fs[fs]['photons'],
+                                              additional_fs[fs]['vertices'],
+                                              postfix=fs)
+
+########################
 ### jet id embedding ###
 ########################
 from FinalStateAnalysis.NtupleTools.customization_jets import preJets
@@ -700,6 +715,13 @@ fs_daughter_inputs['taus'] = postTaus(process,options.use25ns,fs_daughter_inputs
 for fs in additional_fs:
     additional_fs[fs]['taus'] = postTaus(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['jets'],postfix=fs)
 
+#################################
+### post photon customization ###
+#################################
+from FinalStateAnalysis.NtupleTools.customization_photons import postPhotons
+fs_daughter_inputs['photons'] = postPhotons(process,options.use25ns,fs_daughter_inputs['photons'],fs_daughter_inputs['jets'])
+for fs in additional_fs:
+    additional_fs[fs]['photons'] = postTaus(process,options.use25ns,additional_fs[fs]['photons'],additional_fs[fs]['jets'],postfix=fs)
 
 
 
