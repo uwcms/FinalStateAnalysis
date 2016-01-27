@@ -22,7 +22,7 @@ class PATElectronSystematicsEmbedder : public edm::EDProducer {
     virtual ~PATElectronSystematicsEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
-    edm::InputTag src_;
+    edm::EDGetTokenT<edm::View<pat::Electron> > srcToken_;
     double nominal_;
     double eScaleUp_;
     double eScaleDown_;
@@ -30,7 +30,7 @@ class PATElectronSystematicsEmbedder : public edm::EDProducer {
 
 PATElectronSystematicsEmbedder::PATElectronSystematicsEmbedder(
     const edm::ParameterSet& pset) {
-  src_ = pset.getParameter<edm::InputTag>("src");
+  srcToken_ = consumes<edm::View<pat::Electron> >(pset.getParameter<edm::InputTag>("src"));
   nominal_ = pset.getParameter<double>("nominal");
   eScaleUp_ = pset.getParameter<double>("eScaleUp");
   eScaleDown_ = pset.getParameter<double>("eScaleDown");
@@ -50,7 +50,7 @@ void PATElectronSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSe
   std::auto_ptr<ShiftedCandCollection> p4OutDown(new ShiftedCandCollection);
 
   edm::Handle<edm::View<pat::Electron> > electrons;
-  evt.getByLabel(src_, electrons);
+  evt.getByToken(srcToken_, electrons);
 
   output->reserve(electrons->size());
   p4OutNom->reserve(electrons->size());
