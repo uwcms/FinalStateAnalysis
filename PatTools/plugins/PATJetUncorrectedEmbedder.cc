@@ -50,7 +50,7 @@ void PATJetUncorrectedEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   for (size_t i = 0; i < nJets; ++i) {
     const pat::Jet& jet = jets->at(i);
     output->push_back(jet); // make our own copy
-    ShiftedCand uncorr = *jet.clone();
+    ShiftedCand uncorr = jet;
     LorentzVector uncorrectedP4 = jet.correctedP4("Uncorrected");
     uncorr.setP4(uncorrectedP4);
     uncorrected->push_back(uncorr);

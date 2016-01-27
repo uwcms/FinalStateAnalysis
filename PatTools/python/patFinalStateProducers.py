@@ -142,7 +142,7 @@ def produce_final_states(process, daughter_collections, output_commands,
     # Rank objects
     rankSeqName = 'rankObjects{0}'.format(postfix)
     rankSeq = cms.Sequence()
-    for obj in ['muons','electrons','taus','jets']:
+    for obj in ['muons','electrons','taus','jets','photons']:
         objRankName = '{0}Rank{1}'.format(obj,postfix)
         mod = cms.EDProducer(
             "PAT{0}Ranker".format(obj[:-1].capitalize()),
