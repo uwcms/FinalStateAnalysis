@@ -127,6 +127,7 @@ trigger_50ns = PSet(
 
 trigger_25ns = PSet(
     objectMatchesSingleMuIso20 = r'matchToHLTPath({object_idx},"HLT_IsoMu20_v\\d+",0.5)',
+    objectMatchesSingleMuIsoTk20 = r'matchToHLTPath({object_idx},"HLT_IsoTkMu20_v\\d+",0.5)',
     objectMatchesSingleMu = r'matchToHLTPath({object_idx},"HLT_Mu50_v\\d+",0.5)',
     objectMatchesSingleMu_leg1 = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_v\\d+",0.5)',
     objectMatchesSingleMu_leg2 = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_v\\d+",0.5)',
@@ -139,4 +140,3 @@ trigger_25ns = PSet(
     objectMatchesDoubleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+",0.5)',
     objectMatchesDoubleMuSingleE = r'matchToHLTPath({object_idx},"HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+",0.5)',
 )
-

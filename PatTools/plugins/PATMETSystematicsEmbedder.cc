@@ -91,7 +91,7 @@ void embedShift(pat::MET& met, edm::Event& evt,
   typedef reco::CandidatePtr CandidatePtr;
 
   std::auto_ptr<ShiftedCandCollection> output(new ShiftedCandCollection);
-  ShiftedCand newCand = *met.clone();
+  ShiftedCand newCand = met;
   newCand.setP4(transverse(newCand.p4() + residual));
   output->push_back(newCand);
   PutHandle outputH = evt.put(output, branchName);

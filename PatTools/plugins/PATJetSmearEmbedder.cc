@@ -147,9 +147,9 @@ class PATJetSmearEmbedder : public edm::EDProducer
       reco::Candidate::LorentzVector smearUpP4 = jetP4;
       reco::Candidate::LorentzVector smearDownP4 = jetP4;
 
-      ShiftedCand smearedCand = *outputJet.clone();
-      ShiftedCand smearUpCand = *outputJet.clone();
-      ShiftedCand smearDownCand = *outputJet.clone();
+      ShiftedCand smearedCand = outputJet;
+      ShiftedCand smearUpCand = outputJet;
+      ShiftedCand smearDownCand = outputJet;
 
       // Only smear MC
       if (!evt.isRealData()) {

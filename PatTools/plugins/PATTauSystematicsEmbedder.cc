@@ -172,17 +172,17 @@ void PATTauSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
   for (size_t i = 0; i < nTaus; ++i) {
     const pat::Tau& origTau = taus->at(i);
     output->push_back(origTau); // make our own copy
-    ShiftedCand p4OutNomTau = *origTau.clone();
+    ShiftedCand p4OutNomTau = origTau; // makes copy
     p4OutNomTaus->push_back(p4OutNomTau);
     // Now make the smeared versions of the jets and taus
     // TES uncertainty
     ShiftedLorentzVectors tesShifts = tauJetCorrection_.uncertainties(
         p4OutNomTau.p4());
-    ShiftedCand p4OutTESUpTau = *p4OutNomTau.clone();
+    ShiftedCand p4OutTESUpTau = p4OutNomTau;
     p4OutTESUpTau.setP4(tesShifts.shiftedUp);
     p4OutTESUpTaus->push_back(p4OutTESUpTau);
 
-    ShiftedCand p4OutTESDownTau = *p4OutNomTau.clone();
+    ShiftedCand p4OutTESDownTau = p4OutNomTau;
     p4OutTESDownTau.setP4(tesShifts.shiftedDown);
     p4OutTESDownTaus->push_back(p4OutTESDownTau);
   }

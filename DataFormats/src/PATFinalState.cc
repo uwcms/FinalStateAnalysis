@@ -575,15 +575,37 @@ double PATFinalState::mtMET(int i, const std::string& tag,
 double PATFinalState::collinearMassMET(int i, const std::string& tag1, int j, const std::string& tag2, const std::string& metTag) const {
   reco::Candidate::LorentzVector metP4,p1,p2;
   
-  if(metTag == "jes+")
+  if(metTag == "jres+")
+    metP4 = met()->shiftedP4(pat::MET::JetResUp);
+  else if(metTag == "jres-")
+    metP4 = met()->shiftedP4(pat::MET::JetResDown);
+  else if(metTag == "jes+")
     metP4 = met()->shiftedP4(pat::MET::JetEnUp);
-  else if(metTag == "ues+")
-    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnUp);
-  else if(metTag == "tes+")
-    metP4 = met()->shiftedP4(pat::MET::TauEnUp);
+  else if(metTag == "jes-")
+    metP4 = met()->shiftedP4(pat::MET::JetEnDown);
   else if(metTag == "mes+")
     metP4 = met()->shiftedP4(pat::MET::MuonEnUp);
-  else // all miniAOD pfMET is Type 1
+  else if(metTag == "mes-")
+    metP4 = met()->shiftedP4(pat::MET::MuonEnDown);
+  else if(metTag == "ees+")
+    metP4 = met()->shiftedP4(pat::MET::ElectronEnUp);
+  else if(metTag == "ees-")
+    metP4 = met()->shiftedP4(pat::MET::ElectronEnDown);
+  else if(metTag == "tes+")
+    metP4 = met()->shiftedP4(pat::MET::TauEnUp);
+  else if(metTag == "tes-")
+    metP4 = met()->shiftedP4(pat::MET::TauEnDown);
+  else if(metTag == "ues+")
+    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnUp);
+  else if(metTag == "ues-")
+    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnDown);
+  else if(metTag == "pes+")
+    metP4 = met()->shiftedP4(pat::MET::PhotonEnUp);
+  else if(metTag == "pes-")
+    metP4 = met()->shiftedP4(pat::MET::PhotonEnDown);
+  else if(metTag == "raw")
+    metP4 = met()->uncorP4();
+  else
     metP4 = met()->p4();
   return fshelpers::collinearMass(daughterUserCandP4(i, tag1),daughterUserCandP4(j, tag2), metP4);
 }
@@ -834,6 +856,19 @@ double PATFinalState::zCompatibility(const PATFinalState::LorentzVector& p4) con
 {
   // Assumes you already checked for opposite-sign-ness
   return std::abs(p4.mass() - 91.1876);
+}
+
+double PATFinalState::zCompatibilityWithUserCands(const size_t i, 
+                                                  const size_t j, 
+                                                  const std::string& candLabel)
+  const
+{
+  if (likeSigned(i, j))
+    return 1000;
+
+  PATFinalState::LorentzVector p4WithCands = diObjectP4WithUserCands(i, j, candLabel);
+
+  return zCompatibility(p4WithCands);
 }
 
 double PATFinalState::closestZ(int i, const std::string& filter, std::vector<const reco::Candidate*> legs) const
@@ -1299,9 +1334,20 @@ const float PATFinalState::daughterUserCandIsoContribution(const size_t i, const
 {
   if(daughterHasUserCand(i, label))
     {
+      // muons and electrons do isolation vetos differently, and electrons 
+      // do it weirdly
+      float vetoCone = 0.01;
+      if(daughter(i)->isElectron())
+        {
+          if(fabs(daughterAsElectron(i)->superCluster()->eta()) < 1.479)
+            vetoCone = 0.;
+          else
+            vetoCone = 0.08;
+        }
+
       reco::CandidatePtr cand = daughterUserCand(i, label);
       float dR = reco::deltaR(daughter(i)->p4(), cand->p4());
-      if(dR > 0.01 && dR < 0.4)
+      if(dR > vetoCone && dR < 0.4)
         return cand->pt();
     }
 

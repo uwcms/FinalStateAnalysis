@@ -141,7 +141,6 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
       }
 
     jet.addUserFloat("puID", float(passPU));
-
     output->push_back(jet);
   }
 

@@ -48,7 +48,6 @@ private:
   bool passKinematics(const edm::Ptr<pat::Muon>& mu) const;
   bool passVertex(const edm::Ptr<pat::Muon>& mu) const;
   bool passType(const edm::Ptr<pat::Muon>& mu) const;
-  float PFRelIsoDBNoFSR(const edm::Ptr<pat::Muon>& mu) const;
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Muon> > muonCollectionToken_;
@@ -63,7 +62,6 @@ private:
   double sipCut;
   double pvDXYCut;
   double pvDZCut;
-  double isoCut;
 
 };
 
@@ -85,8 +83,7 @@ MiniAODMuonHZZIDDecider::MiniAODMuonHZZIDDecider(const edm::ParameterSet& iConfi
   etaCut(iConfig.exists("etaCut") ? iConfig.getParameter<double>("etaCut") : 2.4),
   sipCut(iConfig.exists("sipCut") ? iConfig.getParameter<double>("sipCut") : 4.),
   pvDXYCut(iConfig.exists("pvDXYCut") ? iConfig.getParameter<double>("pvDXYCut") : 0.5),
-  pvDZCut(iConfig.exists("pvDZCut") ? iConfig.getParameter<double>("pvDZCut") : 1.),
-  isoCut(iConfig.exists("isoCut") ? iConfig.getParameter<double>("isoCut") : 0.4)
+  pvDZCut(iConfig.exists("pvDZCut") ? iConfig.getParameter<double>("pvDZCut") : 1.)
 {
   produces<std::vector<pat::Muon> >();
 }
@@ -113,9 +110,6 @@ void MiniAODMuonHZZIDDecider::produce(edm::Event& iEvent, const edm::EventSetup&
       out->back().addUserFloat(idLabel_, float(idResult)); // 1 for true, 0 for false
 
       out->back().addUserFloat(idLabel_+"Tight", float(idResult && mi->isPFMuon())); // 1 for true, 0 for false
-      
-      bool isoResult = (PFRelIsoDBNoFSR(mptr) < isoCut);
-      out->back().addUserFloat(isoLabel_, float(isoResult)); // 1 for true, 0 for false
     }
 
   iEvent.put(out);
@@ -132,6 +126,9 @@ bool MiniAODMuonHZZIDDecider::passKinematics(const edm::Ptr<pat::Muon>& mu) cons
 
 bool MiniAODMuonHZZIDDecider::passVertex(const edm::Ptr<pat::Muon>& mu) const
 {
+  if(!vertices->size())
+    return false;
+
   return (fabs(mu->dB(pat::Muon::PV3D))/mu->edB(pat::Muon::PV3D) < sipCut && 
 	  fabs(mu->muonBestTrack()->dxy(vertices->at(0).position())) < pvDXYCut &&
 	  fabs(mu->muonBestTrack()->dz(vertices->at(0).position())) < pvDZCut);
@@ -142,21 +139,6 @@ bool MiniAODMuonHZZIDDecider::passType(const edm::Ptr<pat::Muon>& mu) const
 {
   // Global muon or (arbitrated) tracker muon
   return (mu->isGlobalMuon() || (mu->isTrackerMuon() && mu->numberOfMatchedStations() > 0)) && mu->muonBestTrackType() != 2;
-}
-
-
-float MiniAODMuonHZZIDDecider::PFRelIsoDBNoFSR(const edm::Ptr<pat::Muon>& mu) const
-{
-  float chHadIso = mu->chargedHadronIso();
-  float nHadIso = mu->neutralHadronIso();
-  float phoIso = mu->photonIso();
-  float puCorrection = 0.5 * mu->puChargedHadronIso();
-  
-  float neutralIso = nHadIso + phoIso - puCorrection;
-  if(neutralIso < 0.)
-    neutralIso = 0.;
-
-  return ((chHadIso + neutralIso) / mu->pt());
 }
 
 

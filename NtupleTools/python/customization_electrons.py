@@ -4,8 +4,6 @@ from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule
 
 def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     postfix = kwargs.pop('postfix','')
-    isoCheatLabel = kwargs.pop('isoCheatLabel','HZZ4lISoPass')
-    idCheatLabel = kwargs.pop('idCheatLabel','HZZ4lIDPass')
     electronMVANonTrigIDLabel = kwargs.pop('electronMVANonTrigIDLabel',"BDTIDNonTrig")
     electronMVATrigIDLabel = kwargs.pop('electronMVATrigIDLabel',"BDTIDTrig")
     applyEnergyCorrections = kwargs.pop("applyEnergyCorrections", False)
@@ -199,15 +197,6 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
         setattr(process,eaModName,process.patElectronEAEmbedder.clone())
     getattr(process,eaModName).src = cms.InputTag(eSrc)
     eSrc = eaModName
-    hzzEaModName = 'miniAODElectronEAHZZEmbedding{0}'.format(postfix)
-    hzzEaMod = cms.EDProducer(
-        "MiniAODElectronEffectiveArea2015Embedder",
-        src = cms.InputTag(eSrc),
-        label = cms.string("EffectiveArea_HZZ4l2015"), # embeds a user float with this name
-        use25ns = cms.bool(bool(use25ns)),
-        )
-    eSrc = hzzEaModName
-    setattr(process,hzzEaModName,hzzEaMod)
     eaFile = 'RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_{0}ns.txt'.format('25' if use25ns else '50')
     newEaModName = 'miniAODElectronEAEmbedding{0}'.format(postfix)
     newEaMod = cms.EDProducer(
@@ -219,7 +208,7 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     eSrc = newEaModName
     setattr(process,newEaModName,newEaMod)
     pathName = 'ElectronEAEmbedding{0}'.format(postfix)
-    path = cms.Path(getattr(process,eaModName) + getattr(process,hzzEaModName) + getattr(process,newEaModName))
+    path = cms.Path(getattr(process,eaModName) + getattr(process,newEaModName))
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
     
@@ -238,40 +227,6 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
-
-    # Embed HZZ ID and isolation decisions because we need to know them for FSR recovery
-    modName = 'electronIDIsoCheatEmbedding{0}'.format(postfix)
-    mod = cms.EDProducer(
-        "MiniAODElectronHZZIDDecider",
-        src = cms.InputTag(eSrc),
-        idLabel = cms.string(idCheatLabel), # boolean stored as userFloat with this name
-        isoLabel = cms.string(isoCheatLabel), # boolean stored as userFloat with this name
-        rhoLabel = cms.string("rho_fastjet"), # use rho and EA userFloats with these names
-        eaLabel = cms.string("EffectiveArea_HZZ4l2015"),
-        vtxSrc = cms.InputTag(vSrc),
-        bdtLabel = cms.string(electronMVANonTrigIDLabel),
-        idCutLowPtLowEta = cms.double(-.265),
-        idCutLowPtMedEta = cms.double(-.556),
-        idCutLowPtHighEta = cms.double(-.551),
-        idCutHighPtLowEta = cms.double(-.072),
-        idCutHighPtMedEta = cms.double(-.286),
-        idCutHighPtHighEta = cms.double(-.267),
-        missingHitsCut = cms.int32(999),
-        )
-    eSrc = modName
-    setattr(process,modName,mod)
-
-    if not use25ns:
-        getattr(process,modName).bdtLabel = cms.string('')
-        getattr(process,modName).selection = cms.string('userFloat("CBIDMedium") > 0.5')
-        getattr(process,modName).ptCut = cms.double(10.)
-        getattr(process,modName).sipCut = cms.double(9999.)
-
-    pathName = 'embedHZZ4lIDDecisionsElectron{0}'.format(postfix)
-    path = cms.Path(getattr(process,modName))
-    setattr(process,pathName,path)
-    process.schedule.append(getattr(process,pathName))
-
 
     return eSrc
 

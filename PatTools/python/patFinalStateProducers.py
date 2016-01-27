@@ -44,8 +44,7 @@ def _combinatorics(items, n):
 def produce_final_states(process, daughter_collections, output_commands,
                          sequence, puTag, buildFSAEvent=True,
                          noTracks=False, runMVAMET=False, hzz=False,
-                         rochCor="", eleCor="", use25ns=False, 
-                         postfix='',
+                         rochCor="", eleCor="", postfix='',
                          **kwargs):
 
     src = dict(daughter_collections) # make a copy so we don't change the passed collection
@@ -69,7 +68,8 @@ def produce_final_states(process, daughter_collections, output_commands,
             eventProducer.extraWeights = src['extraWeights']
         eventProducer.trgSrc = cms.InputTag("selectedPatTrigger")
         eventProducer.rhoSrc = cms.InputTag('fixedGridRhoAll')
-        eventProducer.pvSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
+        eventProducer.pvSrc = cms.InputTag(daughter_collections['vertices'])
+        eventProducer.pvSrcBackup = cms.InputTag('offlineSlimmedPrimaryVertices')
         eventProducer.verticesSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
         eventProducer.genParticleSrc = cms.InputTag("prunedGenParticles")
         eventProducer.mets = cms.PSet(
@@ -142,7 +142,7 @@ def produce_final_states(process, daughter_collections, output_commands,
     # Rank objects
     rankSeqName = 'rankObjects{0}'.format(postfix)
     rankSeq = cms.Sequence()
-    for obj in ['muons','electrons','taus','jets']:
+    for obj in ['muons','electrons','taus','jets','photons']:
         objRankName = '{0}Rank{1}'.format(obj,postfix)
         mod = cms.EDProducer(
             "PAT{0}Ranker".format(obj[:-1].capitalize()),
