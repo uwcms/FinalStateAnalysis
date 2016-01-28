@@ -37,6 +37,17 @@ id = PSet(
         "-0.5*{object}.puChargedHadronIso,0.0))"
         "/{object}.pt()"
     ),
+    objectPFChargedHadronIsoR04 = cms.string('{object}.pfIsolationR04().sumChargedHadronPt'),
+    objectPFNeutralHadronIsoR04 = cms.string('{object}.pfIsolationR04().sumNeutralHadronEt'),
+    objectPFPhotonIsoR04 = cms.string('{object}.pfIsolationR04().sumPhotonEt'),
+    objectPFPileupIsoR04 = cms.string('{object}.pfIsolationR04().sumPUPt'),
+    objectRelPFIsoDBDefaultR04 = cms.string(
+        '({object}.pfIsolationR04().sumChargedHadronPt'
+        '+ max(0., {object}.pfIsolationR04().sumNeutralHadronEt'
+        '+ {object}.pfIsolationR04().sumPhotonEt'
+        '- 0.5*{object}.pfIsolationR04().sumPUPt))'
+        '/{object}.pt()'
+    ),
     objectRelPFIsoRho = cms.string(
         '({object}.chargedHadronIso()'
         '+max(0.0,{object}.neutralHadronIso()'
@@ -65,6 +76,7 @@ id = PSet(
     objectGenTauDecay       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isTauDecayProduct() : -999',
     objectGenPrompt       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isPrompt() : -999',
 
+    objectGenParticle    = '? ({object}.genParticleRef.isNonnull() ) ? {object}.genParticleRef().pdgId() : -999',
     objectGenPdgId       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).pdgId() : -999',
     objectGenCharge      = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).charge() : -999',
     objectGenEnergy      = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).energy() : -999',
