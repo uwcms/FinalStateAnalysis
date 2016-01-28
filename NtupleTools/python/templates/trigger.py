@@ -54,10 +54,6 @@ singleLepton_50ns_MC = PSet(
         name='singleE_leg2', 
         paths=r'HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
-    _trig_template.replace(
-        name='singleIsoTkMu20',
-        paths=r'HLT_IsoTkMu20_v\\d+'
-        ),
     )
 
 singleLepton_50ns = PSet(
@@ -168,6 +164,7 @@ singleLepton_25ns_MC = PSet(
         name='singleE_leg2', 
         paths=r'HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
+
     )
 
 singleLepton_25ns = PSet(
