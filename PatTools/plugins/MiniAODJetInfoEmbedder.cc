@@ -13,6 +13,7 @@
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Tau.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
+#include "DataFormats/PatCandidates/interface/Photon.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
 
@@ -30,6 +31,10 @@ namespace {
 
   reco::Candidate::LorentzVector extractObjectP4(const pat::Electron& e) {
     return e.p4();
+  }
+
+  reco::Candidate::LorentzVector extractObjectP4(const pat::Photon& pho) {
+    return pho.p4();
   }
 }
 
@@ -126,6 +131,8 @@ void MiniAODObjectJetInfoEmbedder<T>::produce(
 typedef MiniAODObjectJetInfoEmbedder<pat::Tau> MiniAODTauJetInfoEmbedder;
 typedef MiniAODObjectJetInfoEmbedder<pat::Muon> MiniAODMuonJetInfoEmbedder;
 typedef MiniAODObjectJetInfoEmbedder<pat::Electron> MiniAODElectronJetInfoEmbedder;
+typedef MiniAODObjectJetInfoEmbedder<pat::Photon> MiniAODPhotonJetInfoEmbedder;
 DEFINE_FWK_MODULE(MiniAODTauJetInfoEmbedder);
 DEFINE_FWK_MODULE(MiniAODMuonJetInfoEmbedder);
 DEFINE_FWK_MODULE(MiniAODElectronJetInfoEmbedder);
+DEFINE_FWK_MODULE(MiniAODPhotonJetInfoEmbedder);
