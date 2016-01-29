@@ -90,7 +90,7 @@ class MiniAODHZZMEEmbedder : public edm::EDProducer {
 
 template<class... Ls>
 MiniAODHZZMEEmbedder<Ls...>::MiniAODHZZMEEmbedder(const edm::ParameterSet& iConfig) :
-  srcToken_(consumes<edm::View<PATFinalState> >(iConfig.exists("src") ?
+  src_(consumes<edm::View<PATFinalState> >(iConfig.exists("src") ?
        iConfig.getParameter<edm::InputTag>("src") :
        edm::InputTag("finalStateeeee"))),
   processes_(iConfig.exists("processes") ?
@@ -140,7 +140,7 @@ void MiniAODHZZMEEmbedder<Ls...>::produce(edm::Event& iEvent, const edm::EventSe
   std::auto_ptr<PATFinalStateCollection> output(new PATFinalStateCollection);
 
   edm::Handle<edm::View<PATFinalState> > finalStatesIn;
-  iEvent.getByToken(srcToken_, finalStatesIn);
+  iEvent.getByToken(src_, finalStatesIn);
 
   for (size_t iFS = 0; iFS < finalStatesIn->size(); ++iFS) 
     {

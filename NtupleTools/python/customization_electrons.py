@@ -7,34 +7,35 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     electronMVANonTrigIDLabel = kwargs.pop('electronMVANonTrigIDLabel',"BDTIDNonTrig")
     electronMVATrigIDLabel = kwargs.pop('electronMVATrigIDLabel',"BDTIDTrig")
     applyEnergyCorrections = kwargs.pop("applyEnergyCorrections", False)
- 
-    if applyEnergyCorrections:
-        isMC = kwargs.pop("isMC", False)
-        isSync = kwargs.pop("isSync", False) and isMC
-        grbForestName = "gedelectron_p4combination_%sns"%("25" if use25ns else "50")
-        modName = 'calibratedElectrons{0}'.format(postfix)
-        mod = cms.EDProducer(
-            "CalibratedPatElectronProducerRun2",
-            electrons = cms.InputTag(eSrc),
-            grbForestName = cms.string(grbForestName),
-            isMC = cms.bool(isMC),
-            isSynchronization = cms.bool(isSync),
-        )
-        setattr(process,modName,mod)
-        eSrc = modName
-        pathName = 'applyElectronCalibrations{0}'.format(postfix)
-        path = cms.Path(process.calibratedElectrons)
-        setattr(process,pathName,path)
-        process.schedule.append(getattr(process,pathName))
 
-        # Get a random number generator and give it a seed if needed
-        if isMC and not isSync:
-            if not hasattr(process, "RandomNumberGeneratorService"):
-                process.load('Configuration.StandardSequences.Services_cff')
-            process.RandomNumberGeneratorService.calibratedElectrons = cms.PSet(
-                initialSeed = cms.untracked.uint32(1029384756),
-                engineName = cms.untracked.string('TRandom3'),
-            )
+    # Removed for now; calibrations only currently exist for 74X
+    # if applyEnergyCorrections:
+    #     isMC = kwargs.pop("isMC", False)
+    #     isSync = kwargs.pop("isSync", False) and isMC
+    #     grbForestName = "gedelectron_p4combination_%sns"%("25" if use25ns else "50")
+    #     modName = 'calibratedElectrons{0}'.format(postfix)
+    #     mod = cms.EDProducer(
+    #         "CalibratedPatElectronProducerRun2",
+    #         electrons = cms.InputTag(eSrc),
+    #         grbForestName = cms.string(grbForestName),
+    #         isMC = cms.bool(isMC),
+    #         isSynchronization = cms.bool(isSync),
+    #     )
+    #     setattr(process,modName,mod)
+    #     eSrc = modName
+    #     pathName = 'applyElectronCalibrations{0}'.format(postfix)
+    #     path = cms.Path(process.calibratedElectrons)
+    #     setattr(process,pathName,path)
+    #     process.schedule.append(getattr(process,pathName))
+    # 
+    #     # Get a random number generator and give it a seed if needed
+    #     if isMC and not isSync:
+    #         if not hasattr(process, "RandomNumberGeneratorService"):
+    #             process.load('Configuration.StandardSequences.Services_cff')
+    #         process.RandomNumberGeneratorService.calibratedElectrons = cms.PSet(
+    #             initialSeed = cms.untracked.uint32(1029384756),
+    #             engineName = cms.untracked.string('TRandom3'),
+    #         )
 
     if not hasattr(process,'egmGsfElectronIDs'):
         switchOnVIDElectronIdProducer(process, DataFormat.MiniAOD)

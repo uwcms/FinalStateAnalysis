@@ -54,7 +54,7 @@ setattr(zzEvVars, 'Mass%s'%(brSuffix),
         cms.string('p4WithUserCands("%sCand").M'%(fsr)))
 
 eleVars.objectDREt = cms.string(('? daughterHasUserCand({object_idx}, "%sCand") ? ' +
-                                 'daughterAsElectron({object_idx}).userFloat("%sDREt") : ' +
+                                 'daughterAsElectron({object_idx}).userFloat("%sCandDREt") : ' +
                                  '-999.')%(fsr, fsr))
 
 muVars.objectDREt = cms.string(('? daughterHasUserCand({object_idx}, "%sCand") ? ' +
@@ -62,9 +62,12 @@ muVars.objectDREt = cms.string(('? daughterHasUserCand({object_idx}, "%sCand") ?
                                 '-999.')%(fsr, fsr))
 
 
-zzObjVars.objectHZZLooseID = cms.string('{object}.userFloat("HZZ4lIDPass")')
-zzObjVars.objectHZZTightID = cms.string('{object}.userFloat("HZZ4lIDPassTight")')
-zzObjVars.objectHZZIsoPass = cms.string('{object}.userFloat("HZZ4lIsoPass")')
+eleVars.objectHZZLooseID = cms.string('{object}.userFloat("HZZ4lIDPass")')
+eleVars.objectHZZTightID = cms.string('{object}.userFloat("HZZ4lIDPassTight")')
+eleVars.objectHZZIsoPass = cms.string('{object}.userFloat("HZZ4lIsoPass")')
+muVars.objectHZZLooseID = cms.string('{object}.userFloat("HZZ4lIDPass")')
+muVars.objectHZZTightID = cms.string('{object}.userFloat("HZZ4lIDPassTight")')
+muVars.objectHZZIsoPass = cms.string('{object}.userFloat("HZZ4lIsoPass")')
 
 zzEvVars.nJets   = cms.string('evt.jets.size')
 
@@ -102,8 +105,8 @@ parameters = {
     # selections to include object in final state (should be looser than analysis selections)
     'finalSelection' : OrderedDict(
         [
-            ('e', 'abs(superCluster().eta) < 3.0 && max(pt, userFloat("maxCorPt")) > 7'),
-            ('m', 'max(pt, userFloat("maxCorPt")) > 4 && (isGlobalMuon || isTrackerMuon)'),
+            ('e', 'abs(superCluster().eta) < 3.0 && pt > 6'),
+            ('m', 'pt > 4 && (isGlobalMuon || isTrackerMuon)'),
             ]
         ),
     

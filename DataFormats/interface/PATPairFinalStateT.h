@@ -53,6 +53,15 @@ class PATPairFinalStateT : public PATFinalState {
       return output;
     }
 
+    virtual bool daughterHasUserCand(size_t i,
+        const std::string& tag) const {
+      if (i == 0)
+        return p1_->hasUserCand(tag);
+      else if (i == 1)
+        return p2_->hasUserCand(tag);
+      return false;
+    }
+
     virtual const reco::CandidatePtrVector& daughterOverlaps(
         size_t i, const std::string& label) const {
       if (i == 0)

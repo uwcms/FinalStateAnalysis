@@ -643,11 +643,6 @@ fs_daughter_inputs['jets'] = preJets(process,
                                      fs_daughter_inputs['vertices'],
                                      fs_daughter_inputs['muons'],
                                      fs_daughter_inputs['electrons'],
-                                     eCut=parameters['preselection']['j']['e']['selection'],
-                                     eDeltaR=parameters['preselection']['j']['e']['deltaR'],
-                                     mCut=parameters['preselection']['j']['m']['selection'],
-                                     mDeltaR=parameters['preselection']['j']['m']['deltaR'],
-                                     jCut=parameters['preselection']['j']['selection'],
                                      jType="AK4PFchs")
 for fs in additional_fs:
     additional_fs[fs]['jets'] = preJets(process,
@@ -656,11 +651,6 @@ for fs in additional_fs:
                                         additional_fs[fs]['vertices'],
                                         additional_fs[fs]['muons'],
                                         additional_fs[fs]['electrons'],
-                                        eCut=parameters['preselection']['j']['e']['selection'],
-                                        eDeltaR=parameters['preselection']['j']['e']['deltaR'],
-                                        mCut=parameters['preselection']['j']['m']['selection'],
-                                        mDeltaR=parameters['preselection']['j']['m']['deltaR'],
-                                        jCut=parameters['preselection']['j']['selection'],
                                         jType="AK4PFchs",
                                         postfix=fs)
 
@@ -674,7 +664,7 @@ if options.hzz:
     from FinalStateAnalysis.NtupleTools.customization_hzz import hzzCustomize
     hzzCustomize(process, fs_daughter_inputs, idCheatLabel, isoCheatLabel, 
                  electronMVANonTrigIDLabel, "dretFSRCand")
-    # fs_daughter_inputs entries for electrons, muons, and fsr are automatically 
+    # fs_daughter_inputs entries for electrons, muons, jets, and fsr are automatically 
     # set by hzzCustomize()
 
 
