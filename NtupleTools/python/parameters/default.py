@@ -56,8 +56,8 @@ parameters = {
                 'deltaR' : 0.3,
                 },
             },
+        },
 
-    },
 
     # cross cleaning for objects in final state
     'crossCleaning' : 'smallestDeltaR() > 0.3',

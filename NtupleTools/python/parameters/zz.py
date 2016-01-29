@@ -28,34 +28,21 @@ for fsrVar in ['pt', 'eta', 'phi']:
     setattr(zzEvVars, '%s%s'%(varCap, brSuffix),
             cms.string('p4WithUserCands("%sCand").%s'%(fsr, varCap)))
 
-setattr(eleVars, "objectRelPFIsoRho%s"%brSuffix,
-        cms.string(('({object}.chargedHadronIso()' +
-                    '+max(0.0,{object}.neutralHadronIso()' +
-                    '+{object}.photonIso()' +
-                    '-daughterUserCandIsoContribution({object_idx}, "%sCand")' +
-                    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea_HZZ4l2015")))' +
-                    '/{object}.pt()')%(fsr))
+setattr(eleVars, "objectRelPFIsoRhoR03",
+        cms.string('({object}.pfIsolationVariables().sumChargedHadronPt' +
+                   '+max(0.0,{object}.pfIsolationVariables().sumNeutralHadronEt' +
+                   '+{object}.pfIsolationVariables().sumPhotonEt' +
+                   '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea")))' +
+                   '/{object}.pt()')
         ),
 
-setattr(eleVars, "objectRelPFIsoRho%s_unscaled"%brSuffix,
-        cms.string(('({object}.chargedHadronIso()' +
-                    '+max(0.0,{object}.neutralHadronIso()' +
-                    '+{object}.photonIso()' +
-                    '-daughterUserCandIsoContribution({object_idx}, "%sCand")' +
-                    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea")*16./9.))' +
-                    '/{object}.pt()')%(fsr))
-        ),
-
-setattr(muVars, "objectRelPFIsoDB%s"%brSuffix,
-        cms.string(('({object}.chargedHadronIso()' +
-                    '+max({object}.photonIso()' +
-                    '-daughterUserCandIsoContribution({object_idx}, "%sCand")' +
-                    '+{object}.neutralHadronIso()' +
-                    '-0.5*{object}.puChargedHadronIso,0.0))' +
-                    '/{object}.pt()')%(fsr))
+setattr(muVars, "objectRelPFIsoDBR03",
+        cms.string('({object}.pfIsolationR03().sumChargedParticlePt' +
+                   '+max({object}.pfIsolationR03().sumPhotonEt' +
+                   '+{object}.pfIsolationR03().sumNeutralHadronEt' +
+                   '-0.5*{object}.pfIsolationR03().sumPUPt,0.0))' +
+                   '/{object}.pt()')
         )
-
-eleVars.objectEffectiveAreaHZZ = cms.string('{object}.userFloat("EffectiveArea_HZZ4l2015")')
 
 zzObjVars.objectHZZIsoFSR = cms.string('? {object}.hasUserFloat("HZZ4lIsoVal") ? {object}.userFloat("HZZ4lIsoVal") : 999.')
 
@@ -87,7 +74,7 @@ parameters = {
         [
             # vertex cuts
             #('v', '!isFake && ndof > 4 && abs(z) <= 24 && position.Rho <= 2'),
-            ('m', ''),
+
             # Veto electrons that are very close to muons
             ('e', {
                     'm' : {
