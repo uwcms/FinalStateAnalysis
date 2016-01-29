@@ -94,6 +94,49 @@ reco::CandidatePtr PATMultiCandFinalState::daughterUserCandUnsafe(size_t i,
   }
 }
 
+bool PATMultiCandFinalState::daughterHasUserCand(size_t i,
+    const std::string& tag) const {
+  reco::CandidatePtr theCand;
+
+  try {// will throw OOB exception
+    theCand = cands_.at(i);
+  } catch ( std::out_of_range &oor ) {
+    throw cms::Exception("CandidateIndexOutOfRange") 
+      << "The edm::Ptr at index " << i 
+      << "is out of range for candidate with "
+      << cands_.size() << " daughters." << std::endl;
+  }
+
+  if( theCand->isElectron() && 
+      dynamic_cast<const pat::Electron*>(theCand.get()) ) {
+    edm::Ptr<pat::Electron> asEle(theCand);
+    return asEle->hasUserCand(tag); 
+  } else if ( theCand->isMuon() &&
+	      dynamic_cast<const pat::Muon*>(theCand.get()) ) {
+    edm::Ptr<pat::Muon> asMuon(theCand);
+    return asMuon->hasUserCand(tag); 
+  } else if ( abs(theCand->pdgId()) == 15 && 
+	      dynamic_cast<const pat::Tau*>(theCand.get()) ) {
+    edm::Ptr<pat::Tau> asTau(theCand);
+    return asTau->hasUserCand(tag); 
+  } else if ( theCand->isPhoton() &&
+	      dynamic_cast<const pat::Photon*>(theCand.get()) ) {
+    edm::Ptr<pat::Photon> asPho(theCand);
+    return asPho->hasUserCand(tag); 
+  } else if ( theCand->isJet() &&
+	      dynamic_cast<const pat::Jet*>(theCand.get()) ) {
+    edm::Ptr<pat::Jet> asJet(theCand);
+    return asJet->hasUserCand(tag); 
+  } else if ( dynamic_cast<const pat::MET*>(theCand.get()) ) { //no lazy false
+    edm::Ptr<pat::MET> asMET(theCand);
+    return asMET->hasUserCand(tag); 
+  } else {
+    throw cms::Exception("Uncastable") 
+      << "The edm::Ptr at index " << i 
+      << "is not castable to a PAT Object." << std::endl;
+  }
+}
+
 const reco::CandidatePtrVector& PATMultiCandFinalState::daughterOverlaps(
     size_t i, const std::string& label) const {
   reco::CandidatePtr theCand; // will throw OOB exception
