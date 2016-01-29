@@ -87,12 +87,12 @@ parameters = {
         muVetoMedium = 'vetoMuons(0.02, "{0}").size()'.format(wzMediumM.replace('{object}.','')),
 
         # mes up
-        muVetoLoose_mesUp = 'vetoMuons(0.02, "{0}").size()'.format(wzLooseM_mesUp.replace('{object}.','')),
-        muVetoMedium_mesUp = 'vetoMuons(0.02, "{0}").size()'.format(wzMediumM_mesUp.replace('{object}.','')),
+        #muVetoLoose_mesUp = 'vetoMuons(0.02, "{0}").size()'.format(wzLooseM_mesUp.replace('{object}.','')),
+        #muVetoMedium_mesUp = 'vetoMuons(0.02, "{0}").size()'.format(wzMediumM_mesUp.replace('{object}.','')),
 
         # mes down
-        muVetoLoose_mesDown = 'vetoMuons(0.02, "{0}").size()'.format(wzLooseM_mesDown.replace('{object}.','')),
-        muVetoMedium_mesDown = 'vetoMuons(0.02, "{0}").size()'.format(wzMediumM_mesDown.replace('{object}.','')),
+        #muVetoLoose_mesDown = 'vetoMuons(0.02, "{0}").size()'.format(wzLooseM_mesDown.replace('{object}.','')),
+        #muVetoMedium_mesDown = 'vetoMuons(0.02, "{0}").size()'.format(wzMediumM_mesDown.replace('{object}.','')),
 
         # electron vetos
         eVetoLoose = 'vetoElectrons(0.02, "{0}").size()'.format(wzLooseE.replace('{object}.','')),
@@ -100,14 +100,14 @@ parameters = {
         eVetoTight = 'vetoElectrons(0.02, "{0}").size()'.format(wzTightE.replace('{object}.','')),
 
         # ees up
-        eVetoLoose_eesUp = 'vetoElectrons(0.02, "{0}").size()'.format(wzLooseE_eesUp.replace('{object}.','')),
-        eVetoMedium_eesUp = 'vetoElectrons(0.02, "{0}").size()'.format(wzMediumE_eesUp.replace('{object}.','')),
-        eVetoTight_eesUp = 'vetoElectrons(0.02, "{0}").size()'.format(wzTightE_eesUp.replace('{object}.','')),
+        #eVetoLoose_eesUp = 'vetoElectrons(0.02, "{0}").size()'.format(wzLooseE_eesUp.replace('{object}.','')),
+        #eVetoMedium_eesUp = 'vetoElectrons(0.02, "{0}").size()'.format(wzMediumE_eesUp.replace('{object}.','')),
+        #eVetoTight_eesUp = 'vetoElectrons(0.02, "{0}").size()'.format(wzTightE_eesUp.replace('{object}.','')),
 
         # ees down
-        eVetoLoose_eesDown = 'vetoElectrons(0.02, "{0}").size()'.format(wzLooseE_eesDown.replace('{object}.','')),
-        eVetoMedium_eesDown = 'vetoElectrons(0.02, "{0}").size()'.format(wzMediumE_eesDown.replace('{object}.','')),
-        eVetoTight_eesDown = 'vetoElectrons(0.02, "{0}").size()'.format(wzTightE_eesDown.replace('{object}.','')),
+        #eVetoLoose_eesDown = 'vetoElectrons(0.02, "{0}").size()'.format(wzLooseE_eesDown.replace('{object}.','')),
+        #eVetoMedium_eesDown = 'vetoElectrons(0.02, "{0}").size()'.format(wzMediumE_eesDown.replace('{object}.','')),
+        #eVetoTight_eesDown = 'vetoElectrons(0.02, "{0}").size()'.format(wzTightE_eesDown.replace('{object}.','')),
 
         # gen decays
         GenDecayWENu='evt.findDecay(24,11)',
@@ -126,14 +126,14 @@ parameters = {
         objectPassWZTight = '? ({0}) ? 1 : 0'.format(wzTightE),
 
         # ees up
-        objectPassWZLoose_eesUp = '? ({0}) ? 1 : 0'.format(wzLooseE_eesUp),
-        objectPassWZMedium_eesUp = '? ({0}) ? 1 : 0'.format(wzMediumE_eesUp),
-        objectPassWZTight_eesUp = '? ({0}) ? 1 : 0'.format(wzTightE_eesUp),
+        #objectPassWZLoose_eesUp = '? ({0}) ? 1 : 0'.format(wzLooseE_eesUp),
+        #objectPassWZMedium_eesUp = '? ({0}) ? 1 : 0'.format(wzMediumE_eesUp),
+        #objectPassWZTight_eesUp = '? ({0}) ? 1 : 0'.format(wzTightE_eesUp),
 
         # ees down
-        objectPassWZLoose_eesDown = '? ({0}) ? 1 : 0'.format(wzLooseE_eesDown),
-        objectPassWZMedium_eesDown = '? ({0}) ? 1 : 0'.format(wzMediumE_eesDown),
-        objectPassWZTight_eesDown = '? ({0}) ? 1 : 0'.format(wzTightE_eesDown),
+        #objectPassWZLoose_eesDown = '? ({0}) ? 1 : 0'.format(wzLooseE_eesDown),
+        #objectPassWZMedium_eesDown = '? ({0}) ? 1 : 0'.format(wzMediumE_eesDown),
+        #objectPassWZTight_eesDown = '? ({0}) ? 1 : 0'.format(wzTightE_eesDown),
     ),
     'muonVariables' : PSet(
         # default
@@ -141,12 +141,12 @@ parameters = {
         objectPassWZMedium = '? ({0}) ? 1 : 0'.format(wzMediumM),
 
         # mes up
-        objectPassWZLoose_mesUp = '? ({0}) ? 1 : 0'.format(wzLooseM_mesUp),
-        objectPassWZMedium_mesUp = '? ({0}) ? 1 : 0'.format(wzMediumM_mesUp),
+        #objectPassWZLoose_mesUp = '? ({0}) ? 1 : 0'.format(wzLooseM_mesUp),
+        #objectPassWZMedium_mesUp = '? ({0}) ? 1 : 0'.format(wzMediumM_mesUp),
 
         # mes down
-        objectPassWZLoose_mesDown = '? ({0}) ? 1 : 0'.format(wzLooseM_mesDown),
-        objectPassWZMedium_mesDown = '? ({0}) ? 1 : 0'.format(wzMediumM_mesDown),
+        #objectPassWZLoose_mesDown = '? ({0}) ? 1 : 0'.format(wzLooseM_mesDown),
+        #objectPassWZMedium_mesDown = '? ({0}) ? 1 : 0'.format(wzMediumM_mesDown),
     ),
     'tauVariables' : PSet(),
     'photonVariables' : PSet(),

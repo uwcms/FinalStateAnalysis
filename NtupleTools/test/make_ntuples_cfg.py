@@ -424,7 +424,7 @@ if abs(options.runFSRFilter)>0:
 ### MET Uncertainty and Corrections ###
 #######################################
 
-if not bool(options.skipMET) or False:
+if not bool(options.skipMET) and False:
     postfix = 'NewMet'
     from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
     isData = not options.isMC
@@ -437,7 +437,6 @@ if not bool(options.skipMET) or False:
                                tauColl=fs_daughter_inputs['taus'],
                                isData=isData,
                                jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
-                               repro74X=True,
                                postfix=postfix,
                                )
     
