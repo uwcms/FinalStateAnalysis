@@ -94,3 +94,4 @@ _MC_PU_DISTRIBUTIONS['S6'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_
 # Version of the S6 with 600 bins, for compatibility
 _MC_PU_DISTRIBUTIONS['S6_600bins'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_Fall11_PU_S6-600bins.root").full_path()
 _MC_PU_DISTRIBUTIONS['Asympt25ns'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_PU_RunIISpring15DR74_Asympt.root").full_path()
+_MC_PU_DISTRIBUTIONS['25ns_matchData'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_PU_25ns_matchData.root").full_path()
