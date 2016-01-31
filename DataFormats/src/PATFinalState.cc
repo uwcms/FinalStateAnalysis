@@ -1210,7 +1210,9 @@ const float PATFinalState::getPVDXY(const size_t i) const
     }
   else if(abs(daughter(i)->pdgId()) == 15)
     {
-      return daughterAsTau(i)->dxy();
+      pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(daughterAsTau(i)->leadChargedHadrCand().get());
+      return (packedLeadTauCand->dxy());
+      //return daughterAsTau(i)->dxy();
     }
   throw cms::Exception("InvalidParticle") << "FSA can only find dXY for electron, muon, and tau for now" << std::endl;
 }
