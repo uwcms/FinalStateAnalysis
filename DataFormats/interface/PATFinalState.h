@@ -185,6 +185,13 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Visible pZeta.
     double pZetaVis(int i=0, int j=1) const;
 
+    /// Compute the transverse momentum of the whole
+    /// di-tau system
+    double PtDiTauSyst(int i, int j) const;
+
+    /// Total transverse mass of di-tau + met
+    double MtTotal(int i, int j) const;
+
     /// Check if the ith and jth daughters are like signed
     bool likeSigned(int i, int j) const;
 

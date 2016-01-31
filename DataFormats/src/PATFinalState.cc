@@ -657,6 +657,28 @@ double PATFinalState::pZetaVis(int i, int j) const {
       met()->px(), met()->py()).second;
 }
 
+double PATFinalState::PtDiTauSyst(int i, int j) const {
+  return (daughter(i)->p4() + daughter(j)->p4() + met()->p4()).Pt();
+}
+
+double PATFinalState::MtTotal(int i, int j) const {
+  edm::Ptr<pat::MET> mvaMet = evt()->met("mvamet");
+  double rad;
+  // Check if mvaMet is available before trying to use it
+  if (mvaMet.isNull()) {
+    rad = (2 * daughter(i)->pt() * met()->pt()) * (1 - TMath::Cos( daughter(i)->phi() - met()->phi()));
+    rad += (2 * daughter(j)->pt() * met()->pt()) * (1 - TMath::Cos( daughter(j)->phi() - met()->phi()));
+    rad += (2 * daughter(i)->pt() * daughter(j)->pt()) * (1 - TMath::Cos( daughter(i)->phi() - daughter(j)->phi()));
+  }
+  // if MVA MET
+  else {
+    rad = (2 * daughter(i)->pt() * mvaMet->pt()) * (1 - TMath::Cos( daughter(i)->phi() - mvaMet->phi()));
+    rad += (2 * daughter(j)->pt() * mvaMet->pt()) * (1 - TMath::Cos( daughter(j)->phi() - mvaMet->phi()));
+    rad += (2 * daughter(i)->pt() * daughter(j)->pt()) * (1 - TMath::Cos( daughter(i)->phi() - daughter(j)->phi()));
+  }
+  return TMath::Sqrt( rad );
+}
+
 std::vector<reco::CandidatePtr> PATFinalState::extras(
     const std::string& label, const std::string& filter) const {
   // maybe this needs to be optimized
