@@ -33,6 +33,7 @@ id = PSet(
     objectMVATrigCategory = '{object}.userFloat("BDTIDTrigCategory")',
     objectMVATrigWP80 = '{object}.userFloat("MVATrigWP80")',
     objectMVATrigWP90 = '{object}.userFloat("MVATrigWP90")',
+    objectWWLoose = '{object}.userFloat("WWLoose")',
     
     # Use cms.string so we get the parentheses formatting bonus
 #    objectRelPFIsoDB = cms.string(
@@ -98,6 +99,7 @@ id = PSet(
     objectNearMuonVeto = 'overlapMuons({object_idx},0.05,"isGlobalMuon() & abs(eta()) < 2.4").size()',
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).pdgId() : -999',
     objectComesFromHiggs = 'comesFromHiggs({object_idx}, 11, 1)',
+    objectGenParticle    = '? ({object}.genParticleRef.isNonnull() ) ? {object}.genParticleRef().pdgId() : -999',
     objectGenPdgId       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).pdgId() : -999',
     objectGenCharge      = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).charge() : -999',
     objectGenEnergy      = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).energy() : -999',

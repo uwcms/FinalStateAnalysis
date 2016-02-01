@@ -229,6 +229,20 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
 
+    # embed WW ID
+    modName = 'miniAODElectronWWIdEmbedding{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODElectronWWIdEmbedder",
+        src = cms.InputTag(eSrc),
+        vertices = cms.InputTag(vSrc),
+    )
+    eSrc = modName
+    setattr(process,modName,mod)
+    pathName = 'miniAODElectronWWEmbeddingPath{0}'.format(postfix)
+    path = cms.Path(getattr(process,modName))
+    setattr(process,pathName,path)
+    process.schedule.append(getattr(process,pathName))
+
     return eSrc
 
 def postElectrons(process, use25ns, eSrc, jSrc,**kwargs):

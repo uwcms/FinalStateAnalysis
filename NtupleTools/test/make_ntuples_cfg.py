@@ -424,126 +424,124 @@ if abs(options.runFSRFilter)>0:
 ### MET Uncertainty and Corrections ###
 #######################################
 
-#if not bool(options.skipMET):
-#    postfix = 'NewMet'
-#    from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
-#    isData = not options.isMC
-#    runMetCorAndUncFromMiniAOD(process,
-#                               jetColl=fs_daughter_inputs['jets'],
-#                               jetCollUnskimmed='slimmedJets',
-#                               photonColl=fs_daughter_inputs['photons'],
-#                               electronColl=fs_daughter_inputs['electrons'],
-#                               muonColl=fs_daughter_inputs['muons'],
-#                               tauColl=fs_daughter_inputs['taus'],
-#                               isData=isData,
-#                               jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
-#                               #repro74X=True,
-#                               postfix=postfix,
-#                               )
-#    
-#    collMap = {
-#        #'jres' : {'Jets'     : 'shiftedPatJetRes{sign}{postfix}'},
-#        'jres' : {},
-#        'jes'  : {'Jets'     : 'shiftedPatJetEn{sign}{postfix}'},
-#        'mes'  : {'Muons'    : 'shiftedPatMuonEn{sign}{postfix}'},
-#        'ees'  : {'Electrons': 'shiftedPatElectronEn{sign}{postfix}'},
-#        'tes'  : {'Taus'     : 'shiftedPatTauEn{sign}{postfix}'},
-#        'ues'  : {},
-#        'pes'  : {},
-#    }
-#    signMap = {
-#      '+' : 'Up',
-#      '-' : 'Down',
-#    }
-#    metMap = {
-#      'jres' : 'patPFMetT1JetRes{sign}{postfix}',
-#      'jes'  : 'patPFMetT1JetEn{sign}{postfix}',
-#      'mes'  : 'patPFMetT1MuonEn{sign}{postfix}',
-#      'ees'  : 'patPFMetT1ElectronEn{sign}{postfix}',
-#      'tes'  : 'patPFMetT1TauEn{sign}{postfix}',
-#      'ues'  : 'patPFMetT1UnclusteredEn{sign}{postfix}',
-#      'pes'  : '',
-#    }
-#    allowedShifts = ['jres','jes','mes','ees','tes','ues']
-#    allowedSigns = ['+','-']
-     
-#     this should be it, but fails
-#    process.applyCorrections = cms.Path(getattr(process,'fullPatMetSequence{0}'.format(postfix)))
-#     fix things
-#    getattr(process,'patPFMetT1T2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
-#    getattr(process,'patPFMetT2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
-#    getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices')
-#    process.applyCorrections = cms.Path()
-#    if options.isMC: process.applyCorrections += process.genMetExtractor
-#    process.applyCorrections += getattr(process,'patPFMet{0}'.format(postfix))
-#    process.applyCorrections += process.patJetCorrFactorsReapplyJEC
-#    process.applyCorrections += process.patJets
-#    process.applyCorrections += getattr(process,'patPFMetT1Txy{0}'.format(postfix))
-#    process.applyCorrections += getattr(process,'patPFMetT1{0}'.format(postfix))
-#    process.applyCorrections += getattr(process,'patPFMetTxy{0}'.format(postfix))
-#    process.schedule.append(process.applyCorrections)
-#    fs_daughter_inputs['jets'] = 'patJets'
-     
-#    # embed references to shifts
-#    process.embedShifts = cms.Path()
-#    for shift in allowedShifts:
-#        for sign in allowedSigns:
-#            # embed shifted objects
-#            for coll in collMap[shift]:
-#                modName = '{shift}{sign}{coll}Embedding'.format(shift=shift,sign=signMap[sign],coll=coll)
-#                pluginName = 'MiniAODShifted{coll}Embedder'.format(coll=coll[:-1])
-#                dName = coll.lower()
-#                srcName = fs_daughter_inputs[dName]
-#                shiftSrcName = collMap[shift][coll].format(sign=signMap[sign],postfix=postfix)
-#                label = '{shift}{sign}{coll}'.format(shift=shift,sign=signMap[sign],coll=coll)
-#                module = cms.EDProducer(
-#                    pluginName,
-#                    src = cms.InputTag(srcName),
-#                    shiftSrc = cms.InputTag(shiftSrcName),
-#                    label = cms.string(label),
-#                )
-#                setattr(process,modName,module)
-#                fs_daughter_inputs[dName] = modName
-#                #process.embedShifts *= getattr(process,shiftSrcName)
-#                process.embedShifts *= getattr(process,modName)
-#            # embed shifted met
-#            modName = '{shift}{sign}METEmbedding'.format(shift=shift,sign=signMap[sign])
-#            metName = metMap[shift].format(sign=signMap[sign],postfix=postfix)
-#            label = '{shift}{sign}MET'.format(shift=shift,sign=signMap[sign])
-#            module = cms.EDProducer(
-#                'MiniAODShiftedMETEmbedder',
-#                src = cms.InputTag(fs_daughter_inputs['pfmet']),
-#                shiftSrc = cms.InputTag(metName),
-#                label = cms.string(label),
-#            )
-#            setattr(process,modName,module)
-#            fs_daughter_inputs['pfmet'] = modName
-#            process.embedShifts *= getattr(process,modName)
-#    process.schedule.append(process.embedShifts)
-#    
-#    
-#    # switch input to desired one
-#    if options.metShift: 
-#        t = options.metShift[:-1]
-#        d = options.metShift[-1]
-#        if options.metShift=='all':
-#            # setup daughters for all
-#            for shift in allowedShifts:
-#                if shift!='mes': continue
-#                for sign in allowedSigns:
-#                    if sign!='+': continue
-#                    label = shift + signMap[sign]
-#                    additional_fs[label] = copy.deepcopy(fs_daughter_inputs)
-#                    additional_fs[label]['pfmet'] = metMap[shift].format(sign=signMap[sign],postfix=postfix)
-#                    for coll in collMap[shift]:
-#                        additional_fs[label][coll.lower()] = collMap[shift][coll].format(sign=signMap[sign],postfix=postfix)
-#        elif t not in allowedShifts or d not in allowedSigns:
-#            print 'Warning: {0} is not an allowed MET shift, using unshifted collections'.format(options.metShift)
-#        else:
-#            fs_daughter_inputs['pfmet'] = metMap[t].format(sign=signMap[d],postfix=postfix)
-#            for coll in collMap[t]:
-#                fs_daughter_inputs[coll.lower()] = collMap[t][coll].format(sign=signMap[d],postfix=postfix)
-
+if not bool(options.skipMET) and False:
+    postfix = 'NewMet'
+    from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+    isData = not options.isMC
+    runMetCorAndUncFromMiniAOD(process,
+                               jetColl=fs_daughter_inputs['jets'],
+                               jetCollUnskimmed='slimmedJets',
+                               photonColl=fs_daughter_inputs['photons'],
+                               electronColl=fs_daughter_inputs['electrons'],
+                               muonColl=fs_daughter_inputs['muons'],
+                               tauColl=fs_daughter_inputs['taus'],
+                               isData=isData,
+                               jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
+                               postfix=postfix,
+                               )
+    
+    collMap = {
+        #'jres' : {'Jets'     : 'shiftedPatJetRes{sign}{postfix}'},
+        'jres' : {},
+        'jes'  : {'Jets'     : 'shiftedPatJetEn{sign}{postfix}'},
+        'mes'  : {'Muons'    : 'shiftedPatMuonEn{sign}{postfix}'},
+        'ees'  : {'Electrons': 'shiftedPatElectronEn{sign}{postfix}'},
+        'tes'  : {'Taus'     : 'shiftedPatTauEn{sign}{postfix}'},
+        'ues'  : {},
+        'pes'  : {},
+    }
+    signMap = {
+      '+' : 'Up',
+      '-' : 'Down',
+    }
+    metMap = {
+      'jres' : 'patPFMetT1JetRes{sign}{postfix}',
+      'jes'  : 'patPFMetT1JetEn{sign}{postfix}',
+      'mes'  : 'patPFMetT1MuonEn{sign}{postfix}',
+      'ees'  : 'patPFMetT1ElectronEn{sign}{postfix}',
+      'tes'  : 'patPFMetT1TauEn{sign}{postfix}',
+      'ues'  : 'patPFMetT1UnclusteredEn{sign}{postfix}',
+      'pes'  : '',
+    }
+    allowedShifts = ['jres','jes','mes','ees','tes','ues']
+    allowedSigns = ['+','-']
+    
+    # this should be it, but fails
+    #process.applyCorrections = cms.Path(getattr(process,'fullPatMetSequence{0}'.format(postfix)))
+    # fix things
+    getattr(process,'patPFMetT1T2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
+    getattr(process,'patPFMetT2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
+    getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices')
+    process.applyCorrections = cms.Path()
+    if options.isMC: process.applyCorrections += process.genMetExtractor
+    process.applyCorrections += getattr(process,'patPFMet{0}'.format(postfix))
+    process.applyCorrections += process.patJetCorrFactorsReapplyJEC
+    process.applyCorrections += process.patJets
+    process.applyCorrections += getattr(process,'patPFMetT1Txy{0}'.format(postfix))
+    process.applyCorrections += getattr(process,'patPFMetT1{0}'.format(postfix))
+    process.applyCorrections += getattr(process,'patPFMetTxy{0}'.format(postfix))
+    process.schedule.append(process.applyCorrections)
+    fs_daughter_inputs['jets'] = 'patJets'
+    
+    # embed references to shifts
+    process.embedShifts = cms.Path()
+    for shift in allowedShifts:
+        for sign in allowedSigns:
+            # embed shifted objects
+            for coll in collMap[shift]:
+                modName = '{shift}{sign}{coll}Embedding'.format(shift=shift,sign=signMap[sign],coll=coll)
+                pluginName = 'MiniAODShifted{coll}Embedder'.format(coll=coll[:-1])
+                dName = coll.lower()
+                srcName = fs_daughter_inputs[dName]
+                shiftSrcName = collMap[shift][coll].format(sign=signMap[sign],postfix=postfix)
+                label = '{shift}{sign}{coll}'.format(shift=shift,sign=signMap[sign],coll=coll)
+                module = cms.EDProducer(
+                    pluginName,
+                    src = cms.InputTag(srcName),
+                    shiftSrc = cms.InputTag(shiftSrcName),
+                    label = cms.string(label),
+                )
+                setattr(process,modName,module)
+                fs_daughter_inputs[dName] = modName
+                #process.embedShifts *= getattr(process,shiftSrcName)
+                process.embedShifts *= getattr(process,modName)
+            # embed shifted met
+            modName = '{shift}{sign}METEmbedding'.format(shift=shift,sign=signMap[sign])
+            metName = metMap[shift].format(sign=signMap[sign],postfix=postfix)
+            label = '{shift}{sign}MET'.format(shift=shift,sign=signMap[sign])
+            module = cms.EDProducer(
+                'MiniAODShiftedMETEmbedder',
+                src = cms.InputTag(fs_daughter_inputs['pfmet']),
+                shiftSrc = cms.InputTag(metName),
+                label = cms.string(label),
+            )
+            setattr(process,modName,module)
+            fs_daughter_inputs['pfmet'] = modName
+            process.embedShifts *= getattr(process,modName)
+    process.schedule.append(process.embedShifts)
+    
+    
+    # switch input to desired one
+    if options.metShift: 
+        t = options.metShift[:-1]
+        d = options.metShift[-1]
+        if options.metShift=='all':
+            # setup daughters for all
+            for shift in allowedShifts:
+                if shift!='mes': continue
+                for sign in allowedSigns:
+                    if sign!='+': continue
+                    label = shift + signMap[sign]
+                    additional_fs[label] = copy.deepcopy(fs_daughter_inputs)
+                    additional_fs[label]['pfmet'] = metMap[shift].format(sign=signMap[sign],postfix=postfix)
+                    for coll in collMap[shift]:
+                        additional_fs[label][coll.lower()] = collMap[shift][coll].format(sign=signMap[sign],postfix=postfix)
+        elif t not in allowedShifts or d not in allowedSigns:
+            print 'Warning: {0} is not an allowed MET shift, using unshifted collections'.format(options.metShift)
+        else:
+            fs_daughter_inputs['pfmet'] = metMap[t].format(sign=signMap[d],postfix=postfix)
+            for coll in collMap[t]:
+                fs_daughter_inputs[coll.lower()] = collMap[t][coll].format(sign=signMap[d],postfix=postfix)
 
 
 
