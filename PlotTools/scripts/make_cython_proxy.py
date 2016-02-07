@@ -186,6 +186,7 @@ def get_branches(tree):
         'I': 'int',
         'D': 'double',
         'i': 'long',
+        'l': 'unsigned long',
     }
 
     for branch in tree.GetListOfBranches():

@@ -2,6 +2,17 @@
   "DYJetsToLL_M-50madgraph" : "DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
   "DYJetsToLL_M-10to50" : "DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
   "DYJetsToLL_M-50" : "DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
+ 
+  "DY2JetsToLL_M-10to50" : "DY2JetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
+  "DY2JetsToLL_M-50" : "DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+  "DY3JetsToLL_M-50" : "DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+  "DY4JetsToLL_M-50" : "DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+ 
+  "DYJetsToLL_M-50_HT-100to200" : "DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+  "DYJetsToLL_M-50_HT-200to400" : "DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+  "DYJetsToLL_M-50_HT-400to600" : "DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+  "DYJetsToLL_M-50_HT-600" : "DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+
 
   "QCD_MuEnrichedPt5-15to20" : "QCD_Pt-15to20_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8",
   "QCD_MuEnrichedPt5-20to30" : "QCD_Pt-20to30_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8",

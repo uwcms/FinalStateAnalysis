@@ -71,7 +71,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     std::vector<reco::CandidatePtr> daughterPtrs() const;
 
     /// Check if the ith daughter has given user cand
-    bool daughterHasUserCand(size_t i, const std::string& tag) const;
+    virtual bool daughterHasUserCand(size_t i, const std::string& tag) const = 0;
 
     /// Get the ith daughter's user cand (needs concrete type info)
     const reco::CandidatePtr daughterUserCand(size_t i,

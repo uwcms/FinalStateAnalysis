@@ -100,12 +100,6 @@ PATFinalState::daughterUserCand(size_t i, const std::string& tag) const {
   return output;
 }
 
-bool
-PATFinalState::daughterHasUserCand(size_t i, const std::string& tag) const {
-  reco::CandidatePtr userCand = daughterUserCandUnsafe(i, tag);
-  return userCand.isNonnull();
-}
-
 const PATFinalState::LorentzVector&
 PATFinalState::daughterUserCandP4(size_t i, const std::string& tag) const {
   if (tag == "")

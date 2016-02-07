@@ -27,6 +27,9 @@ class PATMultiCandFinalState : public PATFinalState {
     virtual reco::CandidatePtr daughterUserCandUnsafe(size_t i,
         const std::string& tag) const;
 
+    virtual bool daughterHasUserCand(size_t i,
+        const std::string& tag) const;
+
     virtual const reco::CandidatePtrVector& daughterOverlaps(
         size_t i, const std::string& label) const;
 
