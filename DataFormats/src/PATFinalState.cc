@@ -395,6 +395,46 @@ PATFinalState::getGenTau(const pat::Tau& patTau) const
   return 0;
 }
 
+/////////////////////////
+std::vector<reco::Candidate::LorentzVector>
+PATFinalState::buildGenTaus() const {
+    std::vector< reco::Candidate::LorentzVector > genTauJets;
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) return genTauJets;
+    // Get all gen particles in the event
+    const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
+    reco::GenParticleCollection genParticles = *genCollectionRef;
+
+    if ( genParticles.size() > 0 ) {
+        for(size_t m = 0; m != genParticles.size(); ++m) {
+          reco::GenParticle& genp = genParticles[m];
+          size_t id = abs(genp.pdgId());
+          if (id == 15) {
+            std::cout << " - pdgId: " << id << std::endl;
+            bool prompt = genp.statusFlags().isPrompt();
+            if (prompt) {
+              std::cout << " --- status: " << prompt << std::endl;
+              std::cout << " ----- Num of daughters: " << genp.numberOfDaughters() << std::endl;
+              //std::cout << " ----- Num of mothers: " << genp.numberOfMothers() << std::endl;
+              if (genp.numberOfDaughters() > 0) {
+                reco::Candidate::LorentzVector genTau = genp.daughterRef(0)->p4();
+                std::cout << " ------- 0: " << genTau.Pt() << std::endl;
+                for(size_t dau = 1; dau != genp.numberOfDaughters(); ++dau) {
+                  genTau += genp.daughterRef( dau )->p4();
+                  std::cout << " ------- " << dau << ": " << genTau.Pt() << std::endl;
+
+                } // daughers loop
+                genTauJets.push_back( genTau );
+              } // daughers > 0
+              
+            } // prompt
+          } // tau ID
+        } // gen Loop
+        std::cout << "Total # of Gen Taus Jets: " << genTauJets.size() << std::endl;
+    }
+    return genTauJets;
+} 
+
 double
 PATFinalState::dR(int i, const std::string& sysTagI,
     int j, const std::string& sysTagJ) const {

@@ -154,6 +154,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     // return the Higgs to TauTau decided upon gen matching flags
     double tauGenMatch( size_t i ) const;//const reco::Candidate* particle) const;
+    std::vector<reco::Candidate::LorentzVector> buildGenTaus() const;//const reco::Candidate* particle) const;
 
     // return the genTau associated with a pat::tau
     const reco::GenParticle* getGenTau(const pat::Tau& patTau) const;
