@@ -153,11 +153,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     std::vector<double> SVfit(int i, int j) const;
 
     // return the Higgs to TauTau decided upon gen matching flags
-    double tauGenMatch( size_t i ) const;//const reco::Candidate* particle) const;
-    std::vector<reco::Candidate::LorentzVector> buildGenTaus() const;//const reco::Candidate* particle) const;
-
-    // return the genTau associated with a pat::tau
-    const reco::GenParticle* getGenTau(const pat::Tau& patTau) const;
+    double tauGenMatch( size_t i ) const;
+    // return a vector of rebuilt "gen taus" w/o neutrino energy and 
+    // excluding E/Mu contributions
+    std::vector<reco::Candidate::LorentzVector> buildGenTaus() const;
 
     /// Get the transverse mass between two objects
     double mt(int i, const std::string& tagI,
