@@ -299,6 +299,19 @@ namespace fshelpers {
       return sumpt;
   }
 
+  float numGenJets(const lhef::HEPEUP lheeventinfo){
+      float nOutgoing = 0; //  Number of outgoing partons
+      for (int i = 0; i < lheeventinfo.NUP ; ++i) {
+         int absPdgId = TMath::Abs(lheeventinfo.IDUP[i]);
+         int status = lheeventinfo.ISTUP[i];
+         if ( status == 1 && ((absPdgId >= 1 && absPdgId <= 6) || absPdgId == 21) ) { // quarks and gluons
+           ++nOutgoing; 
+         }
+      }
+
+      return nOutgoing;
+  }
+
   float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const std::vector<edm::Ptr<reco::Vertex>>& recoVertices)
   {
   //std::map <std::string, float> varMap; 

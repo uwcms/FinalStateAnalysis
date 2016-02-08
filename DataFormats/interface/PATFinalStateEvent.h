@@ -158,6 +158,9 @@ class PATFinalStateEvent {
     // Get the genHTT for weighting
     float genHTT() const;
 
+    // Get the number of gen jets for weighting
+    float numGenJets() const;
+
     /// Get the PU scenario used to generate this events (if MC)
     const std::string& puTag() const;
 
