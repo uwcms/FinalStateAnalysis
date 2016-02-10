@@ -39,12 +39,12 @@ pushd TauAnalysis/SVfitStandalone
 git checkout svFit_2015Apr03
 popd
 
-
-git cms-addpkg RecoMET/METPUSubtraction
-pushd RecoMET/METPUSubtraction/
-git clone https://github.com/rfriese/RecoMET-METPUSubtraction data -b 74X-13TeV-Summer15-July2015
-git clone https://github.com/cms-data/RecoMET-METPUSubtraction.git
-popd
+git cms-merge-topic CMS-HTT:HTauTauMVAMET_763_patch2
+#git cms-addpkg RecoMET/METPUSubtraction
+#pushd RecoMET/METPUSubtraction/
+#git clone https://github.com/rfriese/RecoMET-METPUSubtraction data -b 74X-13TeV-Summer15-July2015
+#git clone https://github.com/cms-data/RecoMET-METPUSubtraction.git
+#popd
 
 
 popd
