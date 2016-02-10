@@ -48,6 +48,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 		  );
 
     const edm::Ptr<pat::MET>& met() const;
+    //const edm::Ptr<pat::MET>& pairMvaMet() const;
     const edm::Ptr<reco::Vertex>& vertexObject() const;
     const edm::Ptr<PATFinalStateEvent>& evt() const { return event_; }
 
@@ -151,6 +152,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     // return the SVfit computed  mass
     std::vector<double> SVfit(int i, int j) const;
+
+    // return the associated pairwise Mva Met 
+    double pairMvaMet( size_t i, size_t j ) const;
 
     // return the Higgs to TauTau decided upon gen matching flags
     double tauGenMatch( size_t i ) const;//const reco::Candidate* particle) const;

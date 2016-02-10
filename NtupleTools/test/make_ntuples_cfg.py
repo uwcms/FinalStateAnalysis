@@ -325,44 +325,108 @@ if options.usePUPPI:
 ### mvamet ###
 ##############
 
-if options.runMVAMET:
-    process.load("RecoJets.JetProducers.ak4PFJets_cfi")
-    process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
-    process.ak4PFJets.doAreaFastjet = cms.bool(True)
-    
-    from JetMETCorrections.Configuration.DefaultJEC_cff import ak4PFJetsL1FastL2L3
-    
-    process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
-    process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
-    process.pfMVAMEt.srcVertices = cms.InputTag(fs_daughter_inputs['vertices'])
-    process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru_7_4_X_miniAOD_25NS_July2015.root')
-    process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_4_X_miniAOD_25NS_July2015.root')
-    process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_4_X_miniAOD_25NS_July2015.root')
-    process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_4_X_miniAOD_25NS_July2015.root')
-    if not options.use25ns:
-        process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru_7_4_X_miniAOD_50NS_July2015.root')
-        process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_4_X_miniAOD_50NS_July2015.root')
-        process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_4_X_miniAOD_50NS_July2015.root')
-        process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_4_X_miniAOD_50NS_July2015.root')
-    
-    process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
-    process.puJetIdForPFMVAMEt.vertexes = cms.InputTag(fs_daughter_inputs['vertices'])
-    process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
-    
-    from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
-    
-    process.miniAODMVAMEt = patMETs.clone(
-        metSource=cms.InputTag("pfMVAMEt"),
-        addMuonCorrections = cms.bool(False),
-        addGenMET = cms.bool(False)
-    )
-    fs_daughter_inputs['mvamet'] = 'miniAODMVAMEt'
-    
-    process.mvaMetSequence = cms.Path(
-        process.ak4PFJets *
-        process.pfMVAMEtSequence *
-        process.miniAODMVAMEt
-    )
+   #I added
+process.load("PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi")  
+
+from JetMETCorrections.Configuration.DefaultJEC_cff import ak4PFL1Fastjet
+process.load("RecoJets.JetProducers.ak4PFJets_cfi")
+process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
+process.ak4PFJets.doAreaFastjet = cms.bool(True)
+process.load('JetMETCorrections.Configuration.JetCorrectors_cff')
+
+#from JetMETCorrections.Configuration.JetCorrectionServices_cff import ak4PFL1Fastjet
+process.load("JetMETCorrections.Configuration.DefaultJEC_cff")
+
+
+#from RecoMET.METPUSubtraction.mvaPFMET_cff import pfMVAMEt
+process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
+process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
+process.pfMVAMEt.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
+# 
+process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
+process.puJetIdForPFMVAMEt.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
+process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
+
+#process.mvaMETTauMu = cms.EDProducer('PFMETProducerMVATauTau', 
+#                          **process.pfMVAMEt.parameters_())
+#
+#process.mvaMETTauMu.srcPFCandidates = cms.InputTag("packedPFCandidates")
+#process.mvaMETTauMu.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
+#process.mvaMETTauMu.srcRho = cms.InputTag("fixedGridRhoFastjetAll")
+#process.mvaMETTauMu.srcLeptons = cms.VInputTag(
+#   cms.InputTag("slimmedMuons"), 
+#   cms.InputTag("slimmedTaus")
+#)
+#process.mvaMETTauMu.permuteLeptons = cms.bool(True)
+#
+#process.mvaMETTauEle = cms.EDProducer('PFMETProducerMVATauTau', 
+#                          **process.pfMVAMEt.parameters_())
+#
+#process.mvaMETTauEle.srcPFCandidates = cms.InputTag("packedPFCandidates")
+#process.mvaMETTauEle.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
+#process.mvaMETTauEle.srcRho = cms.InputTag("fixedGridRhoFastjetAll")
+#process.mvaMETTauEle.srcLeptons = cms.VInputTag(
+#   cms.InputTag("slimmedElectrons"), 
+#   cms.InputTag("slimmedTaus")
+#)
+#process.mvaMETTauEle.permuteLeptons = cms.bool(True)
+process.mvaMETTauTau = cms.EDProducer('PFMETProducerMVATauTau', 
+                          **process.pfMVAMEt.parameters_())
+
+process.mvaMETTauTau.srcPFCandidates = cms.InputTag("packedPFCandidates")
+process.mvaMETTauTau.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
+process.mvaMETTauTau.srcRho = cms.InputTag("fixedGridRhoFastjetAll")
+process.mvaMETTauTau.srcLeptons = cms.VInputTag(
+   cms.InputTag("slimmedTaus"), 
+   cms.InputTag("slimmedTaus")
+)
+process.mvaMETTauTau.permuteLeptons = cms.bool(True)
+
+#if options.runMVAMET:
+
+#process.newMVAMETSequence = cms.Sequence(process.ak4PFJets*process.ak4PFL1FastL2L3CorrectorChain*process.pfMVAMEtSequence*process.mvaMETTauMu*process.mvaMETTauEle)
+###process.newMVAMETSequence = cms.Sequence(process.ak4PFJets*process.ak4PFL1FastL2L3CorrectorChain*process.pfMVAMEtSequence*process.mvaMETTauTau)
+process.newMVAMETSequence = cms.Path(process.ak4PFJets*process.ak4PFL1FastL2L3CorrectorChain*process.pfMVAMEtSequence*process.mvaMETTauTau)
+
+process.schedule.append(process.newMVAMETSequence)
+
+#    process.load("RecoJets.JetProducers.ak4PFJets_cfi")
+#    process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
+#    process.ak4PFJets.doAreaFastjet = cms.bool(True)
+#    
+#    from JetMETCorrections.Configuration.DefaultJEC_cff import ak4PFJetsL1FastL2L3
+#    
+#    process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
+#    process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
+#    process.pfMVAMEt.srcVertices = cms.InputTag(fs_daughter_inputs['vertices'])
+#    process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru_7_4_X_miniAOD_25NS_July2015.root')
+#    process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_4_X_miniAOD_25NS_July2015.root')
+#    process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_4_X_miniAOD_25NS_July2015.root')
+#    process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_4_X_miniAOD_25NS_July2015.root')
+#    if not options.use25ns:
+#        process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru_7_4_X_miniAOD_50NS_July2015.root')
+#        process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_4_X_miniAOD_50NS_July2015.root')
+#        process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_4_X_miniAOD_50NS_July2015.root')
+#        process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_4_X_miniAOD_50NS_July2015.root')
+#    
+#    process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
+#    process.puJetIdForPFMVAMEt.vertexes = cms.InputTag(fs_daughter_inputs['vertices'])
+#    process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
+#    
+#    from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
+#    
+#    process.miniAODMVAMEt = patMETs.clone(
+#        metSource=cms.InputTag("pfMVAMEt"),
+#        addMuonCorrections = cms.bool(False),
+#        addGenMET = cms.bool(False)
+#    )
+#    fs_daughter_inputs['mvamet'] = 'miniAODMVAMEt'
+#    
+#    process.mvaMetSequence = cms.Path(
+#        process.ak4PFJets *
+#        process.pfMVAMEtSequence *
+#        process.miniAODMVAMEt
+#    )
 
 
 
@@ -794,6 +858,8 @@ for fs in additional_fs:
     setattr(process,'buildFSAPath{0}'.format(fs), cms.Path(getattr(process,'buildFSASeq{0}'.format(fs))))
     getattr(process,'patFinalStateEventProducer{0}'.format(fs)).forbidMissing = cms.bool(False)
     process.schedule.append(getattr(process,'buildFSAPath{0}'.format(fs)))
+
+    process.schedule.append(process.newMVAMETSequence)
 
 
 # Drop the old stuff. (do we still need this?)

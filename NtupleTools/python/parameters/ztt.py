@@ -184,5 +184,7 @@ parameters = {
 
 
     # dicandidates of form: object1_object2_VarName = 'string expression for candidate'
-    'dicandidateVariables' : PSet(),
+    'dicandidateVariables' : PSet(
+        ApairMvaMet = 'pairMvaMet({object1_idx},{object2_idx})',
+    ),
 }

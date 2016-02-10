@@ -93,6 +93,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const std::vector<edm::Ptr<reco::Vertex>>& recoVertices,
     const edm::Ptr<pat::MET>& met,
     const TMatrixD& metCovariance,
+    const std::vector<pat::MET> pairMvaMets,
     const pat::TriggerEvent triggerEvent,
     const edm::RefProd<std::vector<pat::TriggerObjectStandAlone>>& triggerObjects,
     const edm::TriggerNames& names,
@@ -127,6 +128,7 @@ PATFinalStateEvent::PATFinalStateEvent(
   recoVertices_(recoVertices),
   met_(met),
   metCovariance_(metCovariance),
+  pairMvaMets_(pairMvaMets),
   puInfo_(puInfo),
   lhe_(hepeup),
   genParticles_(genParticles),
@@ -193,6 +195,11 @@ const edm::TriggerResults& PATFinalStateEvent::trigResults() const {
 
 const edm::Ptr<pat::MET>& PATFinalStateEvent::met() const {
   return met_;
+}
+
+const std::vector<pat::MET> PATFinalStateEvent::pairMvaMets() const {
+  std::cout << "pairMvaMets, patFSE, len: " << pairMvaMets_.size() <<std::endl;
+  return pairMvaMets_;
 }
 
 const edm::Ptr<pat::MET> PATFinalStateEvent::met(
@@ -489,7 +496,6 @@ double PATFinalStateEvent::metShift(const std::string& type, const std::string& 
     return 0.;
 
 }
-
 
 const edm::EventID& PATFinalStateEvent::evtId() const {
   return evtID_;
