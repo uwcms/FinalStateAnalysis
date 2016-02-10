@@ -93,7 +93,8 @@ PATFinalStateEvent::PATFinalStateEvent(
     const std::vector<edm::Ptr<reco::Vertex>>& recoVertices,
     const edm::Ptr<pat::MET>& met,
     const TMatrixD& metCovariance,
-    const std::vector<pat::MET> pairMvaMets,
+    const std::vector<pat::MET> pairMvaMetsTT,
+    const std::vector<pat::MET> pairMvaMetsEM,
     const pat::TriggerEvent triggerEvent,
     const edm::RefProd<std::vector<pat::TriggerObjectStandAlone>>& triggerObjects,
     const edm::TriggerNames& names,
@@ -128,7 +129,8 @@ PATFinalStateEvent::PATFinalStateEvent(
   recoVertices_(recoVertices),
   met_(met),
   metCovariance_(metCovariance),
-  pairMvaMets_(pairMvaMets),
+  pairMvaMetsTT_(pairMvaMetsTT),
+  pairMvaMetsEM_(pairMvaMetsEM),
   puInfo_(puInfo),
   lhe_(hepeup),
   genParticles_(genParticles),
@@ -197,9 +199,14 @@ const edm::Ptr<pat::MET>& PATFinalStateEvent::met() const {
   return met_;
 }
 
-const std::vector<pat::MET> PATFinalStateEvent::pairMvaMets() const {
-  std::cout << "pairMvaMets, patFSE, len: " << pairMvaMets_.size() <<std::endl;
-  return pairMvaMets_;
+const std::vector<pat::MET> PATFinalStateEvent::pairMvaMetsTT() const {
+  //std::cout << "pairMvaMets, patFSE, len: " << pairMvaMets_.size() <<std::endl;
+  return pairMvaMetsTT_;
+}
+
+const std::vector<pat::MET> PATFinalStateEvent::pairMvaMetsEM() const {
+  //std::cout << "pairMvaMets, patFSE, len: " << pairMvaMets_.size() <<std::endl;
+  return pairMvaMetsEM_;
 }
 
 const edm::Ptr<pat::MET> PATFinalStateEvent::met(

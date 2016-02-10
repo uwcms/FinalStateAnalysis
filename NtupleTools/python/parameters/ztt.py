@@ -185,6 +185,17 @@ parameters = {
 
     # dicandidates of form: object1_object2_VarName = 'string expression for candidate'
     'dicandidateVariables' : PSet(
-        ApairMvaMet = 'pairMvaMet({object1_idx},{object2_idx})',
+        TTpairMvaMet = 'pairMvaMet({object1_idx},{object2_idx},0).at(0)',
+        TTpairMvaMetPhi = 'pairMvaMet({object1_idx},{object2_idx},0).at(1)',
+        TTpairMvaMetCovMatrix00 = 'pairMvaMet({object1_idx},{object2_idx},0).at(2)',
+        TTpairMvaMetCovMatrix10 = 'pairMvaMet({object1_idx},{object2_idx},0).at(3)',
+        TTpairMvaMetCovMatrix01 = 'pairMvaMet({object1_idx},{object2_idx},0).at(4)',
+        TTpairMvaMetCovMatrix11 = 'pairMvaMet({object1_idx},{object2_idx},0).at(5)',
+        EMpairMvaMet = 'pairMvaMet({object1_idx},{object2_idx},1).at(0)',
+        EMpairMvaMetPhi = 'pairMvaMet({object1_idx},{object2_idx},1).at(1)',
+        EMpairMvaMetCovMatrix00 = 'pairMvaMet({object1_idx},{object2_idx},1).at(2)',
+        EMpairMvaMetCovMatrix10 = 'pairMvaMet({object1_idx},{object2_idx},1).at(3)',
+        EMpairMvaMetCovMatrix01 = 'pairMvaMet({object1_idx},{object2_idx},1).at(4)',
+        EMpairMvaMetCovMatrix11 = 'pairMvaMet({object1_idx},{object2_idx},1).at(5)',
     ),
 }
