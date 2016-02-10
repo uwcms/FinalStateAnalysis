@@ -673,6 +673,11 @@ float PATFinalStateEvent::genHTT() const{
   return fshelpers::genHTT(lhe_);
 }
 
+float PATFinalStateEvent::numGenJets() const{
+  if(isRealData_) return -1;
+  return fshelpers::numGenJets(lhe_);
+}
+
 float  PATFinalStateEvent::jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const{
   return fshelpers::jetQGVariables( jet, myvar, recoVertices_);
 }

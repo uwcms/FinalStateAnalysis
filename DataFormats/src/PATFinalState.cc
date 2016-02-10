@@ -388,6 +388,8 @@ PATFinalState::pairMvaMet(size_t i, size_t j, size_t chanNum ) const {
 
 double
 PATFinalState::tauGenMatch( size_t i ) const {
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) return -1;
     // Get all gen particles in the event
     const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
     reco::GenParticleCollection genParticles = *genCollectionRef;
@@ -402,46 +404,90 @@ PATFinalState::tauGenMatch( size_t i ) const {
           double tmpDR = reco::deltaR( daughter(i)->p4(), genp.p4() );
           if ( tmpDR < closestDR ) { closest = genp; closestDR = tmpDR; }
         }
-        if (closestDR > 0.2) return 6.0;
+        //if (closestDR > 0.2) return 6.0;
         //std::cout << "Closest DR: " << closestDR << std::endl;
-        double dID = abs(daughter(i)->pdgId());
+        //double dID = abs(daughter(i)->pdgId());
         double genID = abs(closest.pdgId());
         //std::cout << "Cand pdgID: " << dID << " Gen pdgID: " << genID << std::endl;
         if (genID == 11 && closest.pt() > 8 && closest.statusFlags().isPrompt() ) return 1.0;
         else if (genID == 13 && closest.pt() > 8 && closest.statusFlags().isPrompt() ) return 2.0;
         else if (genID == 11 && closest.pt() > 8 && closest.statusFlags().isDirectPromptTauDecayProduct() ) return 3.0;
         else if (genID == 13 && closest.pt() > 8 && closest.statusFlags().isDirectPromptTauDecayProduct() ) return 4.0;
-        else if (dID == 15) {
-            const pat::Tau &patTauRef = *daughterAsTau(i);
-            const reco::GenParticle* genTau = getGenTau( patTauRef );
-            if ( genTau != NULL && genTau->pt() > 15 ) {
-                //std::cout << "getGenTau Worked!" << std::endl;
-                return 5.0;
-            }
-            else return 6.0;
+        // If closest wasn't E / Mu, we need to rebuild taus and check them
+        else {
+
+          // Get rebuilt gen taus w/o neutrino energy
+          std::vector<reco::Candidate::LorentzVector> genTaus = buildGenTaus();
+
+          for ( auto vec : genTaus ) {
+            double tmpDR2 = reco::deltaR( daughter(i)->p4(), vec );
+            //std::cout << "DR: " << tmpDR2 << "   genTauPt: " << vec.Pt() <<std::endl;
+            //std::cout << "DR: " << tmpDR2 << std::endl;
+            if (tmpDR2 < 0.2) {
+              //std::cout << " ~~~~~ Found Gen Tau " << std::endl;
+              return 5.0;}
+          }
+          //std::cout << " - - - - No Gen Tau " << std::endl;
+          return 6.0;
+
         }
-        //else if (genID == 15 && closest.pt() > 15 && closest.statusFlags().isPrompt() ) return 5.0;
-        //else if (genID == 15 && closest.statusFlags().isPrompt() && daughterAsTau(i)->userFloat("genJetPt") > 15.0 ) return 5.0;
-        //else if (dID == 15 && closest.statusFlags().isPrompt() && daughterAsTau(i)->userFloat("genJetPt") > 15.0 ) return 5.0;
-        else return 6.0;
     }
     return -1.0;
 } 
 
-const reco::GenParticle*
-PATFinalState::getGenTau(const pat::Tau& patTau) const
-{
-  std::vector<reco::GenParticleRef> associatedGenParticles = patTau.genParticleRefs();
-  for ( std::vector<reco::GenParticleRef>::const_iterator it = associatedGenParticles.begin();
-    it != associatedGenParticles.end(); ++it ) {
-    if ( it->isAvailable() ) {
-      const reco::GenParticleRef& genParticle = (*it);
-      if ( genParticle->pdgId() == -15 || genParticle->pdgId() == +15 ) return genParticle.get();
-    }
-  }
+std::vector<reco::Candidate::LorentzVector>
+PATFinalState::buildGenTaus() const {
+    bool include_leptonic = false;
+    std::vector< reco::Candidate::LorentzVector > genTauJets;
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) return genTauJets;
+    // Get all gen particles in the event
+    const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
+    reco::GenParticleCollection genParticles = *genCollectionRef;
 
-  return 0;
-}
+    if ( genParticles.size() > 0 ) {
+        for(size_t m = 0; m != genParticles.size(); ++m) {
+          reco::GenParticle& genp = genParticles[m];
+          size_t id = abs(genp.pdgId());
+          if (id == 15) {
+            //std::cout << " - pdgId: " << id << std::endl;
+            bool prompt = genp.statusFlags().isPrompt();
+            if (prompt) {
+              //std::cout << " --- status: " << prompt << std::endl;
+              //std::cout << " ----- Num of daughters: " << genp.numberOfDaughters() << std::endl;
+              //std::cout << " ----- Num of mothers: " << genp.numberOfMothers() << std::endl;
+              if (genp.numberOfDaughters() > 0) {
+                //std::cout << " ------- Gen > 0" << std::endl;
+                bool has_tau_daughter = false;
+                bool has_lepton_daughter = false;
+                for (unsigned j = 0; j < genp.numberOfDaughters(); ++j) {
+                  if (abs(genp.daughterRef(j)->pdgId()) == 15) has_tau_daughter = true;
+                  if (abs(genp.daughterRef(j)->pdgId()) == 11 || abs(genp.daughterRef(j)->pdgId()) == 13) has_lepton_daughter = true;
+                }
+                if (has_tau_daughter) {
+                  //std::cout << "Has Tau Daughter" << std::endl;
+                  continue;}
+                if (has_lepton_daughter && !include_leptonic) {
+                  //std::cout << "Has E/Mu Daughter" << std::endl;
+                  continue;}
+
+                reco::Candidate::LorentzVector genTau;
+                for(size_t dau = 0; dau != genp.numberOfDaughters(); ++dau) {
+                  size_t id_d = abs(genp.daughterRef( dau )->pdgId());
+                  //if (id_d == 11 || id_d == 12 || id_d == 13 || id_d == 14 || id_d == 16) continue; //exclude neutrinos
+                  if (id_d == 12 || id_d == 14 || id_d == 16) continue; //exclude neutrinos
+                  genTau += genp.daughterRef( dau )->p4();
+                  //std::cout << " ------- " << dau << ": " << genTau.Pt() << std::endl;
+                } // daughers loop
+                genTauJets.push_back( genTau );
+              } // daughers > 0
+            } // prompt
+          } // tau ID
+        } // gen Loop
+        //std::cout << "Total # of Gen Taus Jets: " << genTauJets.size() << std::endl;
+    }
+    return genTauJets;
+} 
 
 double
 PATFinalState::dR(int i, const std::string& sysTagI,
@@ -697,6 +743,28 @@ double PATFinalState::pZeta(int i, int j) const {
 double PATFinalState::pZetaVis(int i, int j) const {
   return fshelpers::pZeta(daughter(i)->p4(), daughter(j)->p4(),
       met()->px(), met()->py()).second;
+}
+
+double PATFinalState::PtDiTauSyst(int i, int j) const {
+  return (daughter(i)->p4() + daughter(j)->p4() + met()->p4()).Pt();
+}
+
+double PATFinalState::MtTotal(int i, int j) const {
+  edm::Ptr<pat::MET> mvaMet = evt()->met("mvamet");
+  double rad;
+  // Check if mvaMet is available before trying to use it
+  if (mvaMet.isNull()) {
+    rad = (2 * daughter(i)->pt() * met()->pt()) * (1 - TMath::Cos( daughter(i)->phi() - met()->phi()));
+    rad += (2 * daughter(j)->pt() * met()->pt()) * (1 - TMath::Cos( daughter(j)->phi() - met()->phi()));
+    rad += (2 * daughter(i)->pt() * daughter(j)->pt()) * (1 - TMath::Cos( daughter(i)->phi() - daughter(j)->phi()));
+  }
+  // if MVA MET
+  else {
+    rad = (2 * daughter(i)->pt() * mvaMet->pt()) * (1 - TMath::Cos( daughter(i)->phi() - mvaMet->phi()));
+    rad += (2 * daughter(j)->pt() * mvaMet->pt()) * (1 - TMath::Cos( daughter(j)->phi() - mvaMet->phi()));
+    rad += (2 * daughter(i)->pt() * daughter(j)->pt()) * (1 - TMath::Cos( daughter(i)->phi() - daughter(j)->phi()));
+  }
+  return TMath::Sqrt( rad );
 }
 
 std::vector<reco::CandidatePtr> PATFinalState::extras(
@@ -1252,7 +1320,9 @@ const float PATFinalState::getPVDXY(const size_t i) const
     }
   else if(abs(daughter(i)->pdgId()) == 15)
     {
-      return daughterAsTau(i)->dxy();
+      pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(daughterAsTau(i)->leadChargedHadrCand().get());
+      return (packedLeadTauCand->dxy());
+      //return daughterAsTau(i)->dxy();
     }
   throw cms::Exception("InvalidParticle") << "FSA can only find dXY for electron, muon, and tau for now" << std::endl;
 }

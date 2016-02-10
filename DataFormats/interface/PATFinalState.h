@@ -158,10 +158,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     std::vector<double> pairMvaMet( size_t i, size_t j, size_t chanNum ) const;
 
     // return the Higgs to TauTau decided upon gen matching flags
-    double tauGenMatch( size_t i ) const;//const reco::Candidate* particle) const;
-
-    // return the genTau associated with a pat::tau
-    const reco::GenParticle* getGenTau(const pat::Tau& patTau) const;
+    double tauGenMatch( size_t i ) const;
+    // return a vector of rebuilt "gen taus" w/o neutrino energy and 
+    // excluding E/Mu contributions
+    std::vector<reco::Candidate::LorentzVector> buildGenTaus() const;
 
     /// Get the transverse mass between two objects
     double mt(int i, const std::string& tagI,
@@ -189,6 +189,13 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     double pZeta(int i=0, int j=1) const;
     /// Visible pZeta.
     double pZetaVis(int i=0, int j=1) const;
+
+    /// Compute the transverse momentum of the whole
+    /// di-tau system
+    double PtDiTauSyst(int i, int j) const;
+
+    /// Total transverse mass of di-tau + met
+    double MtTotal(int i, int j) const;
 
     /// Check if the ith and jth daughters are like signed
     bool likeSigned(int i, int j) const;
