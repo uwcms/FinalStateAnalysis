@@ -398,6 +398,7 @@ class MuonPOGCorrection2D(object):
 
     def __call__(self, pt, eta):
         if pt >= 120: pt = 115.
+        if pt < 20. : pt = 20.
         key = self.file.Get(self.histopath)
         self.correct_by_pt_abseta =key.GetBinContent(key.FindFixBin(pt, eta))
         #print 'Mu ID/Tr correction :', pt, eta,  self.correct_by_pt_abseta
@@ -415,6 +416,7 @@ class MuonPOGCorrectionIso2D(object):
  
     def __call__(self, mid, pt, eta):
         if pt >= 120: pt = 115.
+        if pt < 20. : pt = 20.
         if mid == 'Tight':
              key = self.file.Get(self.histopathTIGHT)
              self.correct_by_pt_abseta =key.GetBinContent(key.FindFixBin(pt, eta))

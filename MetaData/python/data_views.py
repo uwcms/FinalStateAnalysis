@@ -35,7 +35,7 @@ def read_lumi(filename):
         try:
             #print lumifile.readline().strip()
             lumistr=lumifile.readline().strip()
-            print lumistr, filename
+            print 'lumi and file', lumifile.readline().strip(), lumistr, filename
             return float(lumistr)
         except ValueError:
             print "I couldn't extract a float from %s" % filename
