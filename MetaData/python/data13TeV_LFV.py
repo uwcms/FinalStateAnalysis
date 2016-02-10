@@ -102,6 +102,13 @@ datadefs["DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
     'x_sec': 18610.0 ,
 }
 ###new stuff
+datadefs["DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': 1016 ,
+}
 
 datadefs["DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
     'analyses': ['4L'],
