@@ -87,7 +87,9 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     input_commands = []
 
-    files = get_das_info('file dataset=%s' % full_dataset_name)
+    dasFilesCommand = 'file dataset={0}'.format(full_dataset_name)
+    if args.instance: dasFilesCommand += ' instance={0}'.format(args.instance)
+    files = get_das_info(dasFilesCommand)
     mkdir_cmd = "mkdir -p %s" % (dag_dir+"inputs")
     os.system(mkdir_cmd)
     input_txt = '%s_inputfiles.txt' % dataset_name
@@ -203,7 +205,7 @@ def datasets_from_das(args):
             if passes_filter:
                 script_content += getFarmoutCommand(args, dataset_name, dataset)
     # special handling for data
-    if args.isData:
+    elif args.isData:
         data_patterns = [x for x in args.samples if 'data_' in x]
         data_datasets = get_das_info('/*/*/MINIAOD')
         for dataset in data_datasets:
@@ -226,6 +228,12 @@ def datasets_from_das(args):
             passes_filter = passes_wildcard and passes_filter
             if passes_filter:
                 script_content += getFarmoutCommand(args, name_to_use, dataset)
+    elif args.useDasName: # passed a full dataset name
+        for dataset in args.samples:
+            dataset_name = dataset.split('/')[1]
+            script_content += getFarmoutCommand(args, dataset_name, dataset)
+    else:
+        print 'Unknown argument'
     if "Submit file" not in script_content:
         log.warning("No datasets found matching %s", args.samples)
     return script_content
@@ -256,6 +264,11 @@ def get_com_line_args():
         '--lumimask-json', dest='lumimaskjson',
         default='',
         help = 'Custom lumimask json.',
+    )
+    cmsrun_group.add_argument(
+        '--instance', dest='instance',
+        default='',
+        help = 'DAS instance',
     )
     cmsrun_group.add_argument(
         '--goldenv2', dest='goldenv2',
@@ -290,6 +303,10 @@ def get_com_line_args():
     input_group.add_argument(
         '--data', dest='isData', action='store_true',
         help = 'Run over data',
+    )
+    input_group.add_argument(
+        '--das-name', dest='useDasName', action='store_true',
+        help = 'Run over DAS sample names',
     )
 
     filter_group = parser.add_argument_group('Sample Filters')
@@ -343,7 +360,7 @@ if __name__ == "__main__":
     script_content += '# The command was: %s\n\n' % ' '.join(sys.argv)
     args = get_com_line_args()
     # first, make DAS query for dataset if not using local dataset or hdfs/dbs tuple list
-    if args.campaignstring or args.isData:
+    if args.campaignstring or args.isData or args.useDasName:
         script_content += datasets_from_das(args)
     else:
         # this is the old version that uses datadefs
