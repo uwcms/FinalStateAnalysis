@@ -266,11 +266,6 @@ def get_com_line_args():
         help = 'Custom lumimask json.',
     )
     cmsrun_group.add_argument(
-        '--instance', dest='instance',
-        default='',
-        help = 'DAS instance',
-    )
-    cmsrun_group.add_argument(
         '--goldenv2', dest='goldenv2',
         action='store_true', help='Use older version of golden JSON.'
     )
@@ -282,10 +277,6 @@ def get_com_line_args():
         '--bunch-spacing', dest='bunchSpacing', type=int,
         default=25, choices=[25,50],
         help = 'Bunch spacing in ns.',
-    )
-    cmsrun_group.add_argument(
-        '--das-replace-tuple', dest='dastuple',
-         help = 'JSON file listing shorthand names for DAS samples.'
     )
 
     input_group = parser.add_mutually_exclusive_group(required=True)
@@ -312,6 +303,15 @@ def get_com_line_args():
     filter_group = parser.add_argument_group('Sample Filters')
     filter_group.add_argument('--samples', nargs='+', type=str, required=False,
                         help='Filter samples using list of patterns (shell style)')
+    filter_group.add_argument(
+        '--instance', dest='instance',
+        default='',
+        help = 'DAS instance',
+    )
+    filter_group.add_argument(
+        '--das-replace-tuple', dest='dastuple',
+         help = 'JSON file listing shorthand names for DAS samples.'
+    )
 
     farmout_group = parser.add_argument_group("farmout",
                                               description="Farmout options")
