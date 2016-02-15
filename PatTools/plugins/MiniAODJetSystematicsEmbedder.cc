@@ -72,8 +72,6 @@ void MiniAODJetSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSet
     LorentzVector uncDown = (1-unc)*jet.p4();
     LorentzVector uncUp = (1+unc)*jet.p4();
 
-    //std::cout << "uncDown pt: " << uncDown.pt() << " ,uncUp pt: " << uncUp.pt() << std::endl;
-
     ShiftedCand candUncDown = jet;
     candUncDown.setP4(uncDown);
     ShiftedCand candUncUp = jet;

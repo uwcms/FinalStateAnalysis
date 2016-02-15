@@ -424,7 +424,7 @@ if abs(options.runFSRFilter)>0:
 ### MET Uncertainty and Corrections ###
 #######################################
 
-if not bool(options.skipMET) and False:
+if not bool(options.skipMET):
     postfix = 'NewMet'
     from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
     isData = not options.isMC
@@ -436,9 +436,10 @@ if not bool(options.skipMET) and False:
                                muonColl=fs_daughter_inputs['muons'],
                                tauColl=fs_daughter_inputs['taus'],
                                isData=isData,
-                               jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
+                               #jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
                                postfix=postfix,
                                )
+    print "MET recipe run"
     
     collMap = {
         #'jres' : {'Jets'     : 'shiftedPatJetRes{sign}{postfix}'},
@@ -542,8 +543,8 @@ if not bool(options.skipMET) and False:
             fs_daughter_inputs['pfmet'] = metMap[t].format(sign=signMap[d],postfix=postfix)
             for coll in collMap[t]:
                 fs_daughter_inputs[coll.lower()] = collMap[t][coll].format(sign=signMap[d],postfix=postfix)
-
-
+          
+    
 
 #process.EventAnalyzer = cms.EDAnalyzer("EventContentAnalyzer")
 #process.eventAnalyzerPath = cms.Path(process.EventAnalyzer)
