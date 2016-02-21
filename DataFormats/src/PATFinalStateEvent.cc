@@ -100,6 +100,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::TriggerNames& names,
     const pat::PackedTriggerPrescales& triggerPrescale,
     const edm::TriggerResults& triggerResults,
+    const std::vector<l1extra::L1JetParticle>& l1extraIsoTaus,
     const std::vector<PileupSummaryInfo>& puInfo,
     const lhef::HEPEUP& hepeup,
     const reco::GenParticleRefProd& genParticles,
@@ -125,6 +126,7 @@ PATFinalStateEvent::PATFinalStateEvent(
   names_(names),
   triggerPrescale_(triggerPrescale),
   triggerResults_(triggerResults),
+  l1extraIsoTaus_(l1extraIsoTaus),
   pv_(pv),
   recoVertices_(recoVertices),
   met_(met),
@@ -194,6 +196,9 @@ const pat::PackedTriggerPrescales& PATFinalStateEvent::trigPrescale() const {
 
 const edm::TriggerResults& PATFinalStateEvent::trigResults() const {
   return triggerResults_; }
+
+const std::vector<l1extra::L1JetParticle>& PATFinalStateEvent::l1extraIsoTaus() const {
+  return l1extraIsoTaus_; }
 
 const edm::Ptr<pat::MET>& PATFinalStateEvent::met() const {
   return met_;

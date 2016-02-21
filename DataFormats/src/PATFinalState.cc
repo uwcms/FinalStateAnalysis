@@ -1466,6 +1466,21 @@ const float PATFinalState::daughterUserCandIsoContribution(const size_t i, const
   return 0.;
 }
 
+const float PATFinalState::l1extraIsoTauMatching(const size_t i) const
+{
+    std::vector< l1extra::L1JetParticle > isoTaus = evt()->l1extraIsoTaus();
+    //for (int i = 0; i < isoTaus.size(); ++i) {
+    for ( auto isoTau : isoTaus ) {
+        //std::cout << " - l1 p4: " << isoTau.p4() << std::endl;
+        if (isoTau.pt() < 28) {
+            //std::cout << " --- Pt small" << std::endl;
+            continue;}
+        float dR = reco::deltaR(daughter(i)->p4(), isoTau.p4() );
+        //std::cout << " --- dR: " << dR << std::endl;
+        if (dR < 0.5) return 1;
+    }
+    
+    return 0.0;
 
-
+}
 

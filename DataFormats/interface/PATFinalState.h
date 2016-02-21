@@ -389,6 +389,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // farther than deltaR=0.01
     const float daughterUserCandIsoContribution(const size_t i, const std::string& label) const;
 
+    // Matching FS object to L1 iso taus
+    const float l1extraIsoTauMatching(const size_t i) const;
+
   private:
     edm::Ptr<PATFinalStateEvent> event_;
 };

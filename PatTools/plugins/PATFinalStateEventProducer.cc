@@ -92,6 +92,7 @@ private:
 
   edm::EDGetTokenT<pat::PackedTriggerPrescales> trgPrescaleSrcToken_;
   edm::EDGetTokenT<edm::TriggerResults> trgResultsSrcToken_;
+  edm::EDGetTokenT< std::vector< l1extra::L1JetParticle > > l1extraIsoTauSrcToken_;
 
   //edm::EDGetTokenT<pat::JetCollection> jetAK8SrcToken_;
 
@@ -132,6 +133,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
     pset.getParameter<bool>("forbidMissing") : true;
 
   trgResultsSrcToken_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc"));
+  l1extraIsoTauSrcToken_ = consumes< std::vector< l1extra::L1JetParticle > >(pset.getParameter<edm::InputTag>("l1extraIsoTauSrc"));
 
   //photonCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("photonCoreSrc"));
   //gsfCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("gsfCoreSrc"));
@@ -272,6 +274,9 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   const edm::TriggerNames& names = evt.triggerNames(*trigResults);
   evt.getByToken(trgPrescaleSrcToken_, trigPrescale);
 
+  edm::Handle< std::vector<l1extra::L1JetParticle> > l1extraIsoTaus;
+  evt.getByToken(l1extraIsoTauSrcToken_, l1extraIsoTaus);
+
   edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
   evt.getByToken(puInfoSrcToken_, puInfo);
 
@@ -321,7 +326,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   pat::TriggerEvent trg;
   //PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, pairMvaMetsRef, 
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, pairMvaMetTTInfo, pairMvaMetEMInfo, 
-                              trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
+                              trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
                               phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
