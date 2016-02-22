@@ -155,6 +155,7 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetu
     {
       iEvent.getByToken(categoryTokens_.at(i), categories.at(i));
     }
+
   for(edm::View<pat::Electron>::const_iterator ei = electronsIn->begin();
       ei != electronsIn->end(); ei++) // loop over electrons
     {

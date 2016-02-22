@@ -170,8 +170,7 @@ def generate_submit_dirs(jobids):
     if 'uwlogin' in gethostname():
         scratch = '/data'
     else:
-        #scratch = '/nfs_scratch'
-        scratch = '/scratch'
+        scratch = '/nfs_scratch'
 
     user = os.environ['USER']
 

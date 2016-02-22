@@ -559,8 +559,8 @@ if not bool(options.skipMET):
             fs_daughter_inputs['pfmet'] = metMap[t].format(sign=signMap[d],postfix=postfix)
             for coll in collMap[t]:
                 fs_daughter_inputs[coll.lower()] = collMap[t][coll].format(sign=signMap[d],postfix=postfix)
-          
-    
+
+
 
 #process.EventAnalyzer = cms.EDAnalyzer("EventContentAnalyzer")
 #process.eventAnalyzerPath = cms.Path(process.EventAnalyzer)
