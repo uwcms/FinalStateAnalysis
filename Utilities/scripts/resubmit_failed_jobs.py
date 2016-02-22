@@ -34,7 +34,7 @@ def submit_jobid(sample, dryrun=False, verboseInfo={}):
         with open(status_dag1, 'r') as dagfile:
             errors = [re.search('STATUS_ERROR', line) for line in dagfile]
         with open(status_dag1, 'r') as dagfile:
-            submitted = [re.search('STATUS_SUBMITTED', line) for line in dagfile]
+            submitted = [re.search('"STATUS_SUBMITTED"', line) for line in dagfile]
     except IOError:
         try:
             if verbose: dagStatus, nodeStatuses, endStatus = parse_dag_state(status_dag2)
@@ -170,7 +170,8 @@ def generate_submit_dirs(jobids):
     if 'uwlogin' in gethostname():
         scratch = '/data'
     else:
-        scratch = '/nfs_scratch'
+        #scratch = '/nfs_scratch'
+        scratch = '/scratch'
 
     user = os.environ['USER']
 
