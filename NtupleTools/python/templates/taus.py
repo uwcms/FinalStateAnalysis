@@ -158,13 +158,13 @@ id = PSet(
 
     objectComesFromHiggs = 'comesFromHiggsRef({object_idx})',
 
-    objectPt_TauEnUp = '? daughterHasUserCand({object_idx}, "mesUpTaus") ? daughterAsTau({object_idx}).userCand("mesUpTaus").pt : -999.',
-    objectEta_TauEnUp = '? daughterHasUserCand({object_idx}, "mesUpTaus") ? daughterAsTau({object_idx}).userCand("mesUpTaus").eta : -999.',
-    objectPhi_TauEnUp = '? daughterHasUserCand({object_idx}, "mesUpTaus") ? daughterAsTau({object_idx}).userCand("mesUpTaus").phi : -999.',
+    objectPt_TauEnUp = '? daughterHasUserCand({object_idx}, "tesUpTaus") ? daughterAsTau({object_idx}).userCand("tesUpTaus").pt : -999.',
+    objectEta_TauEnUp = '? daughterHasUserCand({object_idx}, "tesUpTaus") ? daughterAsTau({object_idx}).userCand("tesUpTaus").eta : -999.',
+    objectPhi_TauEnUp = '? daughterHasUserCand({object_idx}, "tesUpTaus") ? daughterAsTau({object_idx}).userCand("tesUpTaus").phi : -999.',
 
-    objectPt_TauEnDown = '? daughterHasUserCand({object_idx}, "mesDownTaus") ? daughterAsTau({object_idx}).userCand("mesDownTaus").pt : -999.',
-    objectEta_TauEnDown = '? daughterHasUserCand({object_idx}, "mesDownTaus") ? daughterAsTau({object_idx}).userCand("mesDownTaus").eta : -999.',
-    objectPhi_TauEnDown = '? daughterHasUserCand({object_idx}, "mesDownTaus") ? daughterAsTau({object_idx}).userCand("mesDownTaus").phi : -999.',
+    objectPt_TauEnDown = '? daughterHasUserCand({object_idx}, "tesDownTaus") ? daughterAsTau({object_idx}).userCand("tesDownTaus").pt : -999.',
+    objectEta_TauEnDown = '? daughterHasUserCand({object_idx}, "tesDownTaus") ? daughterAsTau({object_idx}).userCand("tesDownTaus").eta : -999.',
+    objectPhi_TauEnDown = '? daughterHasUserCand({object_idx}, "tesDownTaus") ? daughterAsTau({object_idx}).userCand("tesDownTaus").phi : -999.',
 
 
 
