@@ -545,7 +545,6 @@ if not bool(options.skipMET):
         if options.metShift=='all':
             # setup daughters for all
             for shift in allowedShifts:
-                if shift!='mes': continue
                 for sign in allowedSigns:
                     if sign!='+': continue
                     label = shift + signMap[sign]
