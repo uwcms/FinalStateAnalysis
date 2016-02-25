@@ -548,6 +548,8 @@ double PATFinalState::mtMET(int i, const std::string& tag,
   else if(metTag == "jes+")
     metP4 = met()->shiftedP4(pat::MET::JetEnUp);
   else if(metTag == "jes-")
+    metP4 = met()->shiftedP4(pat::MET::JetEnDown);
+  else if(metTag == "mes+")
     metP4 = met()->shiftedP4(pat::MET::MuonEnUp);
   else if(metTag == "mes-")
     metP4 = met()->shiftedP4(pat::MET::MuonEnDown);
