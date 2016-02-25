@@ -29,7 +29,7 @@ shiftedMtToMET = PSet(
     objectMtToPfMet_JetEnUp           = 'mtMET({object_idx}, "", "jes+" )',
     objectMtToPfMet_MuonEnUp          = 'mtMET({object_idx}, "", "mes+" )',
     objectMtToPfMet_ElectronEnUp      = 'mtMET({object_idx}, "", "ees+" )',
-    objectMtToPfMet_TauEnUp           = 'mtMET({object_idx}, "", "tes+" )',
+    objectMtToPfMet_TauEnUp           = 'mtMET({object_idx}, "tesUpTaus", "tes+" )',
     objectMtToPfMet_UnclusteredEnUp   = 'mtMET({object_idx}, "", "ues+" )',
     objectMtToPfMet_PhotonEnUp        = 'mtMET({object_idx}, "", "pes+" )',
 
@@ -37,7 +37,7 @@ shiftedMtToMET = PSet(
     objectMtToPfMet_JetEnDown         = 'mtMET({object_idx}, "", "jes-" )',
     objectMtToPfMet_MuonEnDown        = 'mtMET({object_idx}, "", "mes-" )',
     objectMtToPfMet_ElectronEnDown    = 'mtMET({object_idx}, "", "ees-" )',
-    objectMtToPfMet_TauEnDown         = 'mtMET({object_idx}, "", "tes-" )',
+    objectMtToPfMet_TauEnDown         = 'mtMET({object_idx}, "tesDownTaus", "tes-" )',
     objectMtToPfMet_UnclusteredEnDown = 'mtMET({object_idx}, "", "ues-" )',
     objectMtToPfMet_PhotonEnDown      = 'mtMET({object_idx}, "", "pes-" )',
 
@@ -64,15 +64,21 @@ pairs = PSet(
     object1_object2_Mt = 'subcand({object1_idx}, {object2_idx}).get.mt',
     object1_object2_collinearmass = 'collinearMassMET({object1_idx}, "", {object2_idx},"","")',
     object2_object1_collinearmass = 'collinearMassMET({object2_idx}, "", {object1_idx},"","")',
-    
+   
+    object1_object2_Mass_TauEnUp = 'subcand({object1_idx}, "",{object2_idx},"tesUpTaus").get.mass',
+    object1_object2_Mass_TauEnDown = 'subcand({object1_idx}, "",{object2_idx},"tesDownTaus").get.mass',
+ 
     object1_object2_collinearmass_JetEnUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"","jes+")',
-    object2_object1_collinearmass_JetEnUp = 'collinearMassMET({object2_idx}, "", {object1_idx},"","jes+")',
+    #object2_object1_collinearmass_JetEnUp = 'collinearMassMET({object2_idx}, "", {object1_idx},"","jes+")', # for now we only need m_t_coll
     object1_object2_collinearmass_JetEnDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"","jes-")',
-    object2_object1_collinearmass_JetEnDown = 'collinearMassMET({object2_idx}, "", {object1_idx},"","jes-")',
+    #object2_object1_collinearmass_JetEnDown = 'collinearMassMET({object2_idx}, "", {object1_idx},"","jes-")',
     object1_object2_collinearmass_UnclusteredEnUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"","ues+")',
-    object2_object1_collinearmass_UnclusteredEnUp = 'collinearMassMET({object2_idx}, "", {object1_idx},"","ues+")',
+    #object2_object1_collinearmass_UnclusteredEnUp = 'collinearMassMET({object2_idx}, "", {object1_idx},"","ues+")',
     object1_object2_collinearmass_UnclusteredEnDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"","ues-")',
-    object2_object1_collinearmass_UnclusteredEnDown = 'collinearMassMET({object2_idx}, "", {object1_idx},"","ues-")',
+    #object2_object1_collinearmass_UnclusteredEnDown = 'collinearMassMET({object2_idx}, "", {object1_idx},"","ues-")',
+    object1_object2_collinearmass_TauEnUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"tesUpTaus","tes+")',
+    object1_object2_collinearmass_TauEnDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"tesDownTaus","tes-")',
+
 
     object1_object2_Pt = 'subcand({object1_idx}, {object2_idx}).get.pt',
     object1_object2_Eta = 'subcand({object1_idx}, {object2_idx}).get.eta',
