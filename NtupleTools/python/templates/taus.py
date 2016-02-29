@@ -161,10 +161,12 @@ id = PSet(
     objectPt_TauEnUp = '? daughterHasUserCand({object_idx}, "tesUpTaus") ? daughterAsTau({object_idx}).userCand("tesUpTaus").pt : -999.',
     objectEta_TauEnUp = '? daughterHasUserCand({object_idx}, "tesUpTaus") ? daughterAsTau({object_idx}).userCand("tesUpTaus").eta : -999.',
     objectPhi_TauEnUp = '? daughterHasUserCand({object_idx}, "tesUpTaus") ? daughterAsTau({object_idx}).userCand("tesUpTaus").phi : -999.',
+    objectMass_TauEnUp = '? daughterHasUserCand({object_idx}, "tesUpTaus") ? daughterAsTau({object_idx}).userCand("tesUpTaus").mass : -999.',
 
     objectPt_TauEnDown = '? daughterHasUserCand({object_idx}, "tesDownTaus") ? daughterAsTau({object_idx}).userCand("tesDownTaus").pt : -999.',
     objectEta_TauEnDown = '? daughterHasUserCand({object_idx}, "tesDownTaus") ? daughterAsTau({object_idx}).userCand("tesDownTaus").eta : -999.',
     objectPhi_TauEnDown = '? daughterHasUserCand({object_idx}, "tesDownTaus") ? daughterAsTau({object_idx}).userCand("tesDownTaus").phi : -999.',
+    objectMass_TauEnDown = '? daughterHasUserCand({object_idx}, "tesDownTaus") ? daughterAsTau({object_idx}).userCand("tesDownTaus").mass : -999.',
 
 
 
