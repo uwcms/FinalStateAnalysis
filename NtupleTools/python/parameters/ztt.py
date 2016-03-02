@@ -86,24 +86,24 @@ parameters = {
         j1eta = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(1)',
         j1phi = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(2)',
         j1csv = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(3)',
-        j1mva = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(4)',
+        j1flavor = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(4)',
         j2pt = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(6)',
         j2eta = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(7)',
         j2phi = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(8)',
         j2csv = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(9)',
-        j2mva = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(10)',
+        j2flavor = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(10)',
 
         # Leading and subleading BTagged Jets
         jb1pt = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(0)',
         jb1eta = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(1)',
         jb1phi = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(2)',
         jb1csv = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(3)',
-        jb1mva = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(4)',
+        jb1flavor = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(4)',
         jb2pt = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(6)',
         jb2eta = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(7)',
         jb2phi = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(8)',
         jb2csv = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(9)',
-        jb2mva = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(10)',
+        jb2flavor = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(10)',
     ),
 
 
