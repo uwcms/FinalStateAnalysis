@@ -488,10 +488,27 @@ if abs(options.runFSRFilter)>0:
 ### MET Uncertainty and Corrections ###
 #######################################
 
-if not bool(options.skipMET) and False:
+if not bool(options.skipMET):
     postfix = 'NewMet'
     from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
     isData = not options.isMC
+    process.load ("CondCore.DBCommon.CondDBCommon_cfi")
+    from CondCore.DBCommon.CondDBSetup_cfi import *
+    process.jec = cms.ESSource("PoolDBESSource",
+      DBParameters = cms.PSet(
+        messageLevel = cms.untracked.int32(0)
+        ),
+      timetype = cms.string('runnumber'),
+      toGet = cms.VPSet(
+        cms.PSet(
+              record = cms.string('JetCorrectionsRecord'),
+              tag    = cms.string('JetCorrectorParametersCollection_Fall15_25nsV2_{0}_AK4PFchs'.format('MC' if options.isMC else 'DATA')),
+              label  = cms.untracked.string('AK4PFchs')
+              )
+      ),
+      connect = cms.string('sqlite:../data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA'))
+    )
+    process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
     runMetCorAndUncFromMiniAOD(process,
                                jetColl=fs_daughter_inputs['jets'],
                                jetCollUnskimmed='slimmedJets',
@@ -500,7 +517,7 @@ if not bool(options.skipMET) and False:
                                muonColl=fs_daughter_inputs['muons'],
                                tauColl=fs_daughter_inputs['taus'],
                                isData=isData,
-                               jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
+                               #jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
                                postfix=postfix,
                                )
     
@@ -592,7 +609,6 @@ if not bool(options.skipMET) and False:
         if options.metShift=='all':
             # setup daughters for all
             for shift in allowedShifts:
-                if shift!='mes': continue
                 for sign in allowedSigns:
                     if sign!='+': continue
                     label = shift + signMap[sign]

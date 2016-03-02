@@ -518,6 +518,12 @@ PATFinalState::smallestDeltaR() const {
 double
 PATFinalState::deltaPhiToMEt(int i, const std::string& sysTag,
     const std::string& metTag) const {
+
+  reco::Candidate::LorentzVector p1;
+  if(daughterHasUserCand(i, sysTag))
+          p1=daughterUserCandP4(i, sysTag);
+  else  p1=daughter(i)->p4();
+
   double metPhi;
   if(metTag != "")
     {
@@ -555,12 +561,13 @@ PATFinalState::deltaPhiToMEt(int i, const std::string& sysTag,
   else
     metPhi = met()->phi();
       
-  return reco::deltaPhi(daughterUserCandP4(i, sysTag).phi(), metPhi);
+  return reco::deltaPhi(p1.phi(), metPhi);
 }
 
 double 
 PATFinalState::twoParticleDeltaPhiToMEt(const int i, const int j, const std::string& metTag) const
 {
+
   PATFinalStateProxy composite = subcand(i,j);
   double compositePhi = composite.get()->phi();
   double metPhi;
@@ -623,6 +630,12 @@ PATFinalState::mt(int i, int j) const {
 
 double PATFinalState::mtMET(int i, const std::string& tag,
     const std::string& metTag) const {
+ 
+  reco::Candidate::LorentzVector p1;
+  if(daughterHasUserCand(i, tag)) 
+          p1=daughterUserCandP4(i, tag); 
+  else  p1=daughter(i)->p4(); 
+
   reco::Candidate::LorentzVector metP4;
   if(metTag == "jres+")
     metP4 = met()->shiftedP4(pat::MET::JetResUp);
@@ -657,12 +670,20 @@ double PATFinalState::mtMET(int i, const std::string& tag,
   else
     metP4 = met()->p4();
 
-  return fshelpers::transverseMass(daughterUserCandP4(i, tag), metP4);
+  return fshelpers::transverseMass(p1, metP4);
 }
 
 double PATFinalState::collinearMassMET(int i, const std::string& tag1, int j, const std::string& tag2, const std::string& metTag) const {
   reco::Candidate::LorentzVector metP4,p1,p2;
-  
+ 
+  if(daughterHasUserCand(i, tag1))
+          p1=daughterUserCandP4(i, tag1);
+  else  p1=daughter(i)->p4();
+
+  if(daughterHasUserCand(j, tag2))
+          p2=daughterUserCandP4(j, tag2);
+  else  p2=daughter(j)->p4();
+
   if(metTag == "jres+")
     metP4 = met()->shiftedP4(pat::MET::JetResUp);
   else if(metTag == "jres-")
@@ -695,7 +716,7 @@ double PATFinalState::collinearMassMET(int i, const std::string& tag1, int j, co
     metP4 = met()->uncorP4();
   else
     metP4 = met()->p4();
-  return fshelpers::collinearMass(daughterUserCandP4(i, tag1),daughterUserCandP4(j, tag2), metP4);
+  return fshelpers::collinearMass(p1,p2, metP4);
 }
 
 double PATFinalState::mtMET(int i, const std::string& metTag) const {
@@ -897,6 +918,33 @@ PATFinalState::subcand(int i, int j, int x, int y, int z) const {
   return PATFinalStateProxy(
       new PATMultiCandFinalState(output, evt()));
 }
+
+
+PATFinalStateProxy
+PATFinalState::subcand(int i, const std::string&  tagi,int j, const std::string&  tagj, int x, int y, int z) const {
+  std::vector<reco::CandidatePtr> output;
+ 
+ if(daughterHasUserCand(i,tagi)){
+ output.push_back(daughterUserCand(i,tagi));
+ } else { output.push_back(daughterPtr(i));}
+ if(daughterHasUserCand(j,tagj)){
+ output.push_back(daughterUserCand(j,tagj));
+ } else { output.push_back(daughterPtr(j));}
+
+  if (x > -1)
+    output.push_back(daughterPtr(x));  // not touching this, I think we only want this for the pt/eta/mass, not the internal 
+  if (y > -1)
+    output.push_back(daughterPtr(y));
+  if (z > -1)
+    output.push_back(daughterPtr(z));
+
+  return PATFinalStateProxy(
+      new PATMultiCandFinalState(output, evt()));
+}
+
+
+
+
 
 PATFinalStateProxy
 PATFinalState::subcand(const std::string& tags) const {
