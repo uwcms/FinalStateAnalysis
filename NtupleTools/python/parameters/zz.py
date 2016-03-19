@@ -116,13 +116,27 @@ parameters = {
     # additional variables for ntuple
     'eventVariables' : PSet(
         zzEvVars,
-        HZZCategory = 'userFloat("HZZCategory")',
-        D_bkg_kin = 'userFloat("p0plus_VAJHU") / (userFloat("p0plus_VAJHU") + userFloat("bkg_VAMCFM"))',
-        D_bkg = 'userFloat("p0plus_VAJHU") * userFloat("p0plus_m4l") / '
-            '(userFloat("p0plus_VAJHU") * userFloat("p0plus_m4l") + userFloat("bkg_VAMCFM") * userFloat("bkg_m4l"))',
-        D_gg = 'userFloat("Dgg10_VAMCFM")',
-        D_g4 = 'userFloat("p0plus_VAJHU") / (userFloat("p0plus_VAJHU") + userFloat("p0minus_VAJHU"))',
-        Djet_VAJHU = '? evt.jets.size >= 2 ? userFloat("pvbf_VAJHU") / (userFloat("pvbf_VAJHU") + userFloat("phjj_VAJHU")) : -1',
+        HZZCategory = '? hasUserFloat("HZZCategory") ? userFloat("HZZCategory") : -1.',
+        D_bkg_kin = ('? hasUserFloat("p0plus_VAJHU") ? '
+                     'userFloat("p0plus_VAJHU") / (userFloat("p0plus_VAJHU") + '
+                     'userFloat("bkg_VAMCFM")) : '
+                     '-1.'),
+        D_bkg = ('? hasUserFloat("p0plus_VAJHU") ? '
+                 'userFloat("p0plus_VAJHU") * userFloat("p0plus_m4l") / '
+                 '(userFloat("p0plus_VAJHU") * userFloat("p0plus_m4l") + '
+                 'userFloat("bkg_VAMCFM") * userFloat("bkg_m4l")) : '
+                 '-1.'),
+        D_gg = ('? hasUserFloat("Dgg10_VAMCFM") ? '
+                'userFloat("Dgg10_VAMCFM") : '
+                '-1.'),
+        D_g4 = ('? hasUserFloat("p0plus_VAJHU") ? '
+                'userFloat("p0plus_VAJHU") / (userFloat("p0plus_VAJHU") + '
+                'userFloat("p0minus_VAJHU")) : '
+                '-1.'),
+        Djet_VAJHU = ('? evt.jets.size >= 2 && hasUserFloat("pvbf_VAJHU") ? '
+                      'userFloat("pvbf_VAJHU") / (userFloat("pvbf_VAJHU") + '
+                      'userFloat("phjj_VAJHU")) : '
+                      '-1.'),
         muVeto = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5\').size()',
         muVetoIso = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPass\\\") > 0.5 && userFloat(\\\"HZZ4lIsoPass\\\") > 0.5\').size()',
         muVetoTight = 'vetoMuons(0.05, \'userFloat(\\\"HZZ4lIDPassTight\\\") > 0.5\').size()',
