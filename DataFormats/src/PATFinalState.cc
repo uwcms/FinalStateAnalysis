@@ -385,6 +385,52 @@ PATFinalState::pairMvaMet(size_t i, size_t j, size_t chanNum ) const {
 }
 
 
+std::vector<double>
+PATFinalState::getMVAMET(size_t i, size_t j ) const {
+  std::cout << "new mva mets" << std::endl;
+  /// chanNum 0 = double hadronic channel, mvamet composed of 2 taus
+  /// chanNum 1 = EMu channel, mvamet composed of Ele + Mu
+  std::vector<double> returns;
+  std::vector<double> failedV(6, -1.0);
+  std::vector<pat::MET> Mets;
+  Mets = evt()->MVAMETs();
+  if (Mets.size() == 0) return failedV;
+  else {
+    double pt1 = daughter(i)->pt();
+    double pt2 = daughter(j)->pt();
+    std::cout << "daughter1 pt: " << pt1 << std::endl;
+    std::cout << "daughter2 pt: " << pt2 << std::endl;
+    std::cout << daughter(i) << std::endl;
+    std::cout << daughter(j) << std::endl;
+    std::cout << "mets:" << std::endl;
+    //int cnt = 0;
+    for ( auto met : Mets ) {
+      double ptm1 = met.userCand("lepton1")->pt();
+      double ptm2 = met.userCand("lepton2")->pt();
+      if ((pt1==ptm1&&pt2==ptm2) || (pt1==ptm2&&pt2==ptm1)) {
+        std::cout << "\nEQUAL\n" << std::endl;
+        std::cout << " - MEt: " << met.pt() << std::endl;
+        std::cout << " - MEtPhi: " << met.phi() << std::endl;
+        std::cout << " - Cov00: " << met.getSignificanceMatrix()[0][0] << std::endl;
+        std::cout << " - Cov10: " << met.getSignificanceMatrix()[1][0] << std::endl;
+        std::cout << " - Cov01: " << met.getSignificanceMatrix()[0][1] << std::endl;
+        std::cout << " - Cov11: " << met.getSignificanceMatrix()[1][1] << std::endl;
+        returns.push_back( met.pt() );
+        returns.push_back( met.phi() );
+        returns.push_back( met.getSignificanceMatrix()[0][0] );
+        returns.push_back( met.getSignificanceMatrix()[1][0] );
+        returns.push_back( met.getSignificanceMatrix()[0][1] );
+        returns.push_back( met.getSignificanceMatrix()[1][1] );
+        return returns;
+      }
+  
+  
+    }
+  return failedV;
+  }
+}
+
+
 
 double
 PATFinalState::tauGenMatch( size_t i ) const {

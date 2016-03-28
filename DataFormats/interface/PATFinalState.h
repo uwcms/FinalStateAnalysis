@@ -156,6 +156,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // chanNum is a code for which channel 0 = tau tau, 1 = EMu
     // No other channels added yet
     std::vector<double> pairMvaMet( size_t i, size_t j, size_t chanNum ) const;
+    std::vector<double> getMVAMET( size_t i, size_t j ) const;
 
     // return the Higgs to TauTau decided upon gen matching flags
     double tauGenMatch( size_t i ) const;

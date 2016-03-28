@@ -62,6 +62,7 @@ class PATFinalStateEvent {
         const TMatrixD& metCovariance,
         const std::vector<pat::MET> pairMvaMetsTT,
         const std::vector<pat::MET> pairMvaMetsEM,
+        const std::vector<pat::MET> MVAMETs,
         const pat::TriggerEvent triggerEvent,
         const edm::RefProd<std::vector<pat::TriggerObjectStandAlone> >& triggerObjects,
         const edm::TriggerNames& names,
@@ -118,6 +119,8 @@ class PATFinalStateEvent {
     const std::vector<pat::MET> pairMvaMetsTT() const;
     /// Get pairwise MvaMET EM
     const std::vector<pat::MET> pairMvaMetsEM() const;
+    /// Get pairwise MvaMET EM
+    const std::vector<pat::MET> MVAMETs() const;
     /// Get MET covariance
     const TMatrixD& metCovariance() const;
     /// Get MET significance
@@ -230,6 +233,7 @@ class PATFinalStateEvent {
     TMatrixD metCovariance_;
     std::vector<pat::MET> pairMvaMetsTT_;
     std::vector<pat::MET> pairMvaMetsEM_;
+    std::vector<pat::MET> MVAMETs_;
     std::vector<PileupSummaryInfo> puInfo_;
     lhef::HEPEUP lhe_;
     reco::GenParticleRefProd genParticles_;

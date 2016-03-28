@@ -67,6 +67,7 @@ private:
   edm::EDGetTokenT<edm::View<pat::MET> > metSrcToken_;
   edm::EDGetTokenT<std::vector<pat::MET> > pairMvaMetTTSrcToken_;
   edm::EDGetTokenT<std::vector<pat::MET> > pairMvaMetEMSrcToken_;
+  edm::EDGetTokenT<std::vector<pat::MET> > MVAMETSrcToken_;
   //edm::EDGetTokenT<edm::InputTag> metCovSrcToken_;
 
   // Trigger input
@@ -123,6 +124,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   metSrcToken_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("metSrc"));
   pairMvaMetTTSrcToken_ = consumes<std::vector<pat::MET> >(pset.getParameter<edm::InputTag>("pairMvaMetTTSrc"));
   pairMvaMetEMSrcToken_ = consumes<std::vector<pat::MET> >(pset.getParameter<edm::InputTag>("pairMvaMetEMSrc"));
+  MVAMETSrcToken_ = consumes<std::vector<pat::MET> >(pset.getParameter<edm::InputTag>("MVAMETSrc"));
   trgSrcToken_ = consumes<std::vector<pat::TriggerObjectStandAlone> >(pset.getParameter<edm::InputTag>("trgSrc"));
   puInfoSrcToken_ = consumes<std::vector<PileupSummaryInfo> >(pset.getParameter<edm::InputTag>("puInfoSrc"));
   truthSrcToken_ = consumes<reco::GenParticleCollection>(pset.getParameter<edm::InputTag>("genParticleSrc"));
@@ -243,6 +245,11 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   std::vector<pat::MET> pairMvaMetEMInfo;
   if (pairMvaMetsEM.isValid()) {
     pairMvaMetEMInfo = * pairMvaMetsEM;}
+  edm::Handle<std::vector<pat::MET> > MVAMETs;
+  evt.getByToken(MVAMETSrcToken_, MVAMETs);
+  std::vector<pat::MET> MVAMETInfo;
+  if (MVAMETs.isValid()) {
+    MVAMETInfo = * MVAMETs;}
 
   std::map<std::string, edm::Ptr<pat::MET> > theMEts;
   // Get different types of METs - this will be a map like
@@ -325,7 +332,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
 
   pat::TriggerEvent trg;
   //PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, pairMvaMetsRef, 
-  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, pairMvaMetTTInfo, pairMvaMetEMInfo, 
+  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, pairMvaMetTTInfo, pairMvaMetEMInfo, MVAMETInfo,
                               trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
