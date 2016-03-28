@@ -21,7 +21,7 @@ std::vector<double> computeJetInfo(
   //}
   int numJets = jets.size();
   if (numJets == 0) {
-    for (int i = 0; i < 12; ++i) {
+    for (int i = 0; i < 16; ++i) {
       output.push_back( -10 );
     }
   }
@@ -32,9 +32,14 @@ std::vector<double> computeJetInfo(
     output.push_back( jets[0]->phi() );
     output.push_back( jet1Pat->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
     output.push_back( jet1Pat->userFloat("pileupJetId:fullDiscriminant") );
-    //output.push_back( jets[0]->SomeConversionThingForJEC );
     output.push_back( jet1Pat->partonFlavour() );
-    for (int i = 0; i < 6; ++i) {
+    if (jet1Pat->hasUserCand("jes+")) {
+        output.push_back( jet1Pat->userCand("jes+")->pt() );}
+    else output.push_back( -10 );
+    if (jet1Pat->hasUserCand("jes-")) {
+        output.push_back( jet1Pat->userCand("jes-")->pt() );}
+    else output.push_back( -10 );
+    for (int i = 0; i < 8; ++i) {
       output.push_back( -10 );
     }
   }
@@ -46,8 +51,13 @@ std::vector<double> computeJetInfo(
       output.push_back( jets[i]->phi() );
       output.push_back( jetPat->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
       output.push_back( jetPat->userFloat("pileupJetId:fullDiscriminant") );
-      //output.push_back( jets[i]->SomeConversionThingForJEC );
       output.push_back( jetPat->partonFlavour() );
+      if (jetPat->hasUserCand("jes+")) {
+          output.push_back( jetPat->userCand("jes+")->pt() );}
+      else output.push_back( -10 );
+      if (jetPat->hasUserCand("jes-")) {
+          output.push_back( jetPat->userCand("jes-")->pt() );}
+      else output.push_back( -10 );
     }
   }
 
