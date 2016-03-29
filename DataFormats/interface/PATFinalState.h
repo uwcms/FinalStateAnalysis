@@ -164,6 +164,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // excluding E/Mu contributions
     std::vector<reco::Candidate::LorentzVector> buildGenTaus() const;
 
+    // Gives kinematic info on the generator associated mother pt eta phi
+    // including and excluding visible products
+    std::vector<double> tauGenMotherKin() const;
+
     /// Get the transverse mass between two objects
     double mt(int i, const std::string& tagI,
         int j, const std::string& tagJ) const;

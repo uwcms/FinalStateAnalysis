@@ -387,7 +387,7 @@ PATFinalState::pairMvaMet(size_t i, size_t j, size_t chanNum ) const {
 
 std::vector<double>
 PATFinalState::getMVAMET(size_t i, size_t j ) const {
-  std::cout << "new mva mets" << std::endl;
+  //std::cout << "new mva mets" << std::endl;
   /// chanNum 0 = double hadronic channel, mvamet composed of 2 taus
   /// chanNum 1 = EMu channel, mvamet composed of Ele + Mu
   std::vector<double> returns;
@@ -534,6 +534,53 @@ PATFinalState::buildGenTaus() const {
     }
     return genTauJets;
 } 
+
+std::vector<double>
+PATFinalState::tauGenMotherKin() const {
+
+    std::vector<double> output;
+
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) {
+        for (int i = 0; i < 6; ++i) output.push_back( -10 );
+        return output;}
+    // Get all gen particles in the event
+    const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
+    reco::GenParticleCollection genParticles = *genCollectionRef;
+
+    reco::Candidate::LorentzVector visVec;
+    reco::Candidate::LorentzVector withInvisVec;
+
+    if ( genParticles.size() > 0 ) {
+        for(size_t m = 0; m != genParticles.size(); ++m) {
+          reco::GenParticle& genp = genParticles[m];
+          bool fromHardProcessFinalState = genp.fromHardProcessFinalState();
+          bool isDirectHardProcessTauDecayProduct = genp.statusFlags().isDirectHardProcessTauDecayProduct();
+          bool isMuon = false;
+          bool isElectron = false;
+          bool isNeutrino = false;
+          int pdgId = fabs( genp.pdgId() );
+          if (pdgId == 11) isElectron = true;
+          if (pdgId == 13) isMuon = true;
+          if (pdgId == 12) isNeutrino = true;
+          if (pdgId == 14) isNeutrino = true;
+          if (pdgId == 16) isNeutrino = true;
+          if ((fromHardProcessFinalState && (isMuon || isElectron || isNeutrino)) || isDirectHardProcessTauDecayProduct) {
+            withInvisVec += genp.p4();}
+          if ((fromHardProcessFinalState && (isMuon || isElectron)) || (isDirectHardProcessTauDecayProduct && !isNeutrino)) {
+            visVec += genp.p4();}
+        }
+    }
+    //std::cout << "Final Pt: "<<visVec.pt()<<"  w/ Nu: "<<withInvisVec.pt()<<std::endl;
+    output.push_back( visVec.pt() );
+    output.push_back( visVec.eta() );
+    output.push_back( visVec.phi() );
+    output.push_back( withInvisVec.pt() );
+    output.push_back( withInvisVec.eta() );
+    output.push_back( withInvisVec.phi() );
+    return output;
+} 
+
 
 double
 PATFinalState::dR(int i, const std::string& sysTagI,
