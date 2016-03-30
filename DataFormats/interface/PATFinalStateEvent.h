@@ -119,7 +119,7 @@ class PATFinalStateEvent {
     const std::vector<pat::MET> pairMvaMetsTT() const;
     /// Get pairwise MvaMET EM
     const std::vector<pat::MET> pairMvaMetsEM() const;
-    /// Get pairwise MvaMET EM
+    /// Get new MVAMET
     const std::vector<pat::MET> MVAMETs() const;
     /// Get MET covariance
     const TMatrixD& metCovariance() const;

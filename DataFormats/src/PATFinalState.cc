@@ -387,7 +387,7 @@ PATFinalState::pairMvaMet(size_t i, size_t j, size_t chanNum ) const {
 
 std::vector<double>
 PATFinalState::getMVAMET(size_t i, size_t j ) const {
-  //std::cout << "new mva mets" << std::endl;
+  std::cout << "new mva mets" << std::endl;
   /// chanNum 0 = double hadronic channel, mvamet composed of 2 taus
   /// chanNum 1 = EMu channel, mvamet composed of Ele + Mu
   std::vector<double> returns;
@@ -398,15 +398,16 @@ PATFinalState::getMVAMET(size_t i, size_t j ) const {
   else {
     double pt1 = daughter(i)->pt();
     double pt2 = daughter(j)->pt();
-    std::cout << "daughter1 pt: " << pt1 << std::endl;
-    std::cout << "daughter2 pt: " << pt2 << std::endl;
-    std::cout << daughter(i) << std::endl;
-    std::cout << daughter(j) << std::endl;
-    std::cout << "mets:" << std::endl;
+    //std::cout << "daughter1 pt: " << pt1 << std::endl;
+    //std::cout << "daughter2 pt: " << pt2 << std::endl;
+    //std::cout << daughter(i) << std::endl;
+    //std::cout << daughter(j) << std::endl;
+    //std::cout << "mets:" << std::endl;
     //int cnt = 0;
     for ( auto met : Mets ) {
-      double ptm1 = met.userCand("lepton1")->pt();
-      double ptm2 = met.userCand("lepton2")->pt();
+      //std::cout << "met: "<<cnt<<std::endl;
+      double ptm1 = met.userCand("lepton0")->pt();
+      double ptm2 = met.userCand("lepton1")->pt();
       if ((pt1==ptm1&&pt2==ptm2) || (pt1==ptm2&&pt2==ptm1)) {
         std::cout << "\nEQUAL\n" << std::endl;
         std::cout << " - MEt: " << met.pt() << std::endl;

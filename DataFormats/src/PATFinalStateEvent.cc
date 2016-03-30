@@ -217,7 +217,7 @@ const std::vector<pat::MET> PATFinalStateEvent::pairMvaMetsEM() const {
 }
 
 const std::vector<pat::MET> PATFinalStateEvent::MVAMETs() const {
-  //std::cout << "pairMvaMets, patFSE, len: " << pairMvaMets_.size() <<std::endl;
+  //std::cout << "newMvaMets, len: " << MVAMETs_.size() <<std::endl;
   return MVAMETs_;
 }
 

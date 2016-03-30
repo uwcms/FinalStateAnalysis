@@ -102,6 +102,7 @@ options = TauVarParsing.TauVarParsing(
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runMVAMET=0,  # If one, (re)build the MVA MET
     runPairMVAMET=0,  # If one, (re)build the MVA MET
+    runNewMVAMET=0,  # If one, (re)build the MVA MET
     runMETNoHF=0,  # If one, use get metnohf (needs to be recalculated in miniaodv1)
     usePUPPI=0,
     rerunJets=0,
@@ -262,13 +263,13 @@ process.load('Configuration.StandardSequences.Services_cff')
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-#GT = {'mcgt': '74X_mcRun2_asymptotic_v4', 'datagt': '74X_dataRun2_reMiniAOD_v1'}
-#
-#process.GlobalTag.globaltag = cms.string(GT[envvar])
+GT = {'mcgt': '76X_mcRun2_asymptotic_RunIIFall15DR76_v1', 'datagt': '76X_dataRun2_16Dec2015_v0'}
+
+process.GlobalTag.globaltag = cms.string(GT[envvar])
 
 from Configuration.AlCa.GlobalTag import GlobalTag
-GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
-process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
+#GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+#process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
@@ -367,6 +368,28 @@ if options.runMVAMET:
         process.miniAODMVAMEt
     )
 
+
+
+#######################
+###    NEW   mvamet ###
+#######################
+
+if options.runNewMVAMET:
+    from RecoMET.METPUSubtraction.MVAMETConfiguration_cff import runMVAMET
+    
+    from RecoMET.METPUSubtraction.localSqlite import recorrectJets
+    isData = not options.isMC
+    recorrectJets(process, isData)
+    jetCollection = "patJetsReapplyJEC"
+    
+    runMVAMET( process, jetCollectionPF = "patJetsReapplyJEC"  )
+    #runMVAMET( process )
+    process.MVAMET.srcLeptons  = cms.VInputTag("slimmedMuons", "slimmedElectrons", "slimmedTaus")
+    process.MVAMET.requireOS = cms.bool(False)
+    #process.newestMVAMETSequence = cms.Path(process.slimmedElectronsTight*process.MVAMET)
+    process.newestMVAMETSequence = cms.Path(process.MVAMET)
+
+#    process.schedule.append(process.newestMVAMETSequence)
 
 
 
@@ -875,7 +898,9 @@ for fs in additional_fs:
     getattr(process,'patFinalStateEventProducer{0}'.format(fs)).forbidMissing = cms.bool(False)
     process.schedule.append(getattr(process,'buildFSAPath{0}'.format(fs)))
 
-    process.schedule.append(process.newMVAMETSequence)
+    #process.schedule.append(process.newMVAMETSequence)
+    if options.runNewMVAMET:
+        process.schedule.append(process.newestMVAMETSequence)
 
 
 # Drop the old stuff. (do we still need this?)

@@ -18,6 +18,7 @@
   <use   name="ZZMatrixElement/MEMCalculators"/>
   
   <use   name="CondFormats/JetMETObjects"/>
+  <use   name="CondFormats/BTauObjects"/>
   <use   name="JetMETCorrections/Objects"/>
   <use   name="MuonAnalysis/MomentumScaleCalibration"/>
   <use   name="RecoVertex/KinematicFitPrimitives"/>
