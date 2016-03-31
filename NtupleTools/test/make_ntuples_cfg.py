@@ -370,26 +370,6 @@ if options.runMVAMET:
 
 
 
-#######################
-###    NEW   mvamet ###
-#######################
-
-if options.runNewMVAMET:
-    from RecoMET.METPUSubtraction.MVAMETConfiguration_cff import runMVAMET
-    
-    from RecoMET.METPUSubtraction.localSqlite import recorrectJets
-    isData = not options.isMC
-    recorrectJets(process, isData)
-    jetCollection = "patJetsReapplyJEC"
-    
-    runMVAMET( process, jetCollectionPF = "patJetsReapplyJEC"  )
-    #runMVAMET( process )
-    process.MVAMET.srcLeptons  = cms.VInputTag("slimmedMuons", "slimmedElectrons", "slimmedTaus")
-    process.MVAMET.requireOS = cms.bool(False)
-    #process.newestMVAMETSequence = cms.Path(process.slimmedElectronsTight*process.MVAMET)
-    process.newestMVAMETSequence = cms.Path(process.MVAMET)
-
-#    process.schedule.append(process.newestMVAMETSequence)
 
 
 
@@ -687,6 +667,25 @@ for fs in additional_fs:
                                                   isSync=bool(options.isSync),
                                                   postfix=fs,
                                                   )
+#######################
+###    NEW   mvamet ###
+#######################
+
+if options.runNewMVAMET:
+    from RecoMET.METPUSubtraction.MVAMETConfiguration_cff import runMVAMET
+    
+    from RecoMET.METPUSubtraction.localSqlite import recorrectJets
+    isData = not options.isMC
+    recorrectJets(process, isData)
+    jetCollection = "patJetsReapplyJEC"
+    
+    runMVAMET( process, jetCollectionPF = "patJetsReapplyJEC"  )
+    process.MVAMET.srcLeptons  = cms.VInputTag("slimmedMuons", "slimmedElectrons", "slimmedTaus")
+    process.MVAMET.srcElectrons = cms.InputTag(fs_daughter_inputs['electrons'])
+    process.MVAMET.requireOS = cms.bool(False)
+    process.newestMVAMETSequence = cms.Path(process.MVAMET)
+
+    process.schedule.append(process.newestMVAMETSequence)
 
 ######################
 ### embed muon IDs ###
@@ -745,6 +744,7 @@ fs_daughter_inputs['jets'] = preJets(process,
                                      fs_daughter_inputs['vertices'],
                                      fs_daughter_inputs['muons'],
                                      fs_daughter_inputs['electrons'],
+                                     doBTag=options.runNewMVAMET,
                                      jType="AK4PFchs")
 for fs in additional_fs:
     additional_fs[fs]['jets'] = preJets(process,
@@ -897,10 +897,6 @@ for fs in additional_fs:
     setattr(process,'buildFSAPath{0}'.format(fs), cms.Path(getattr(process,'buildFSASeq{0}'.format(fs))))
     getattr(process,'patFinalStateEventProducer{0}'.format(fs)).forbidMissing = cms.bool(False)
     process.schedule.append(getattr(process,'buildFSAPath{0}'.format(fs)))
-
-    #process.schedule.append(process.newMVAMETSequence)
-    if options.runNewMVAMET:
-        process.schedule.append(process.newestMVAMETSequence)
 
 
 # Drop the old stuff. (do we still need this?)

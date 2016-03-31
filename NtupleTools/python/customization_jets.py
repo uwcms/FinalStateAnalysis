@@ -4,6 +4,7 @@ import FWCore.ParameterSet.Config as cms
 def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
     jType = kwargs.pop('jType','AK4PFchs')
+    doBTag = kwargs.pop('doBTag',False)
 
     mod = cms.EDProducer(
         "MiniAODJetIdEmbedder",
@@ -16,6 +17,21 @@ def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, **kwargs):
     pathName = 'runMiniAODJetEmbedding{0}'.format(postfix)
     setattr(process,pathName,cms.Path(getattr(process,modName)))
     process.schedule.append(getattr(process,pathName))
+
+    # embed BTag SFs
+    if doBTag :
+        modName = 'miniJetsEmbedBTagSF{0}'.format(postfix)
+        mod = cms.EDProducer(
+            "MiniAODJetBTagSFEmbedder",
+            src=cms.InputTag(jSrc)
+        )
+        jSrc = modName
+        setattr(process,modName,mod)
+
+        pathName = 'runMiniAODJetBTagSFEmbedding{0}'.format(postfix)
+        path = cms.Path(getattr(process,modName))
+        setattr(process,pathName,path)
+        process.schedule.append(getattr(process,pathName))
 
     # embed IP stuff
     modName = 'miniJetsEmbedIp{0}'.format(postfix)

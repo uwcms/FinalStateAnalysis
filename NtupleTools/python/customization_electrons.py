@@ -84,16 +84,7 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
             addVIDSelectionToPATProducer(patProducer,eids,idName,addUserData)
     for idmod in id_modules:
         setupAllVIDIdsInModule(process,idmod,modSetupVIDElectronSelection)
-        #setupAllVIDIdsInModule(process,idmod,setupVIDElectronSelection)
 
-#XXX
-#    electronIdModules = ['RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',
-#                         'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV51_cff']
-#    
-#    switchOnVIDElectronIdProducer(process, DataFormat.MiniAOD)
-#    
-#    for idMod in electronIdModules:
-#        setupAllVIDIdsInModule(process, idMod, setupVIDElectronSelection)
     
     CBIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight", "HEEPV60", "MVANonTrigWP80", "MVANonTrigWP90", "MVATrigWP90", "MVATrigWP80"] # keys of cut based id user floats
     
