@@ -247,9 +247,9 @@ def make_muon_pog_IsoMu24eta2p1_2012():
     )
 
 def make_muon_pog_IsoMu20oIsoTkMu20_2015():
-    return MuonPOGCorrection2D(
+    return MuonPOGCorrectionTrig2D_weighted(
             _DATA_FILES['2015CD']['Trigger'],
-            "runD_IsoMu20_OR_IsoTkMu20_HLTv4p2_PtEtaBins/pt_abseta_ratio"
+            ["runD_IsoMu20_OR_IsoTkMu20_HLTv4p2_PtEtaBins/pt_abseta_ratio","runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins/pt_abseta_ratio"]
         )
 
 
@@ -401,8 +401,40 @@ class MuonPOGCorrection2D(object):
         if pt < 20. : pt = 20.
         key = self.file.Get(self.histopath)
         self.correct_by_pt_abseta =key.GetBinContent(key.FindFixBin(pt, eta))
-        #print 'Mu ID/Tr correction :', pt, eta,  self.correct_by_pt_abseta
+#        print 'Mu ID/Tr correction :', pt, eta,  self.correct_by_pt_abseta
         return self.correct_by_pt_abseta
+
+
+class MuonPOGCorrectionTrig2D_weighted(object):
+    '''
+
+    Muon POG corrections are generally by eta dependent for pt > 20,
+    and pt dependent for pt < 20, split by barrel, overlap and endcap.
+    
+    Call to this returns the trigger corrections weighted by luminosity
+    ( Two hlt paths *4p2(Run2015D,upto 257933) and  *4p3(run 257933-260627) )    
+    
+    '''
+
+    def __init__(self, file, pt_abseta):
+        self.filename = file
+        self.file = ROOT.TFile.Open(file)
+        #self.pt_thr  = pt_thr
+        self.histopath_4p2 = pt_abseta[0]
+        self.histopath_4p3 = pt_abseta[1]
+        self.correct_by_pt_abseta_4p3 = {}
+        self.correct_by_pt_abseta_4p2 = {}
+        self.correct_by_pt_abseta_weighted = {}
+
+    def __call__(self, pt, eta):
+        if pt >= 120: pt = 115.
+        if pt < 20. : pt = 20.
+        key_4p2 = self.file.Get(self.histopath_4p2)
+        key_4p3 = self.file.Get(self.histopath_4p3)
+        self.correct_by_pt_abseta_4p2 =key_4p2.GetBinContent(key_4p2.FindFixBin(pt, eta))
+        self.correct_by_pt_abseta_4p3 =key_4p3.GetBinContent(key_4p3.FindFixBin(pt, eta))
+        self.correct_by_pt_abseta_weighted =(1.899*self.correct_by_pt_abseta_4p3+0.401*self.correct_by_pt_abseta_4p2)/2.3
+        return self.correct_by_pt_abseta_weighted
 
 class MuonPOGCorrectionIso2D(object):
     def __init__(self, file, IDLoose, IDMedium, IDTight):

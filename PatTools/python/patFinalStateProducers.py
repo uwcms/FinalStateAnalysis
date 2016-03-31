@@ -23,6 +23,8 @@ from FinalStateAnalysis.Utilities.cfgtools import chain_sequence
 import PhysicsTools.PatAlgos.tools.helpers as helpers
 import itertools
 
+from FinalStateAnalysis.NtupleTools.channel_handling import parseChannels, \
+    mapObjects, get_channel_suffix
 
 def _subsort(iterables):
     for iterable in iterables:
@@ -42,7 +44,7 @@ def _combinatorics(items, n):
 
 
 def produce_final_states(process, daughter_collections, output_commands,
-                         sequence, puTag, buildFSAEvent=True,
+                         sequence, puTag, channels='', buildFSAEvent=True,
                          noTracks=False, runMVAMET=False, hzz=False,
                          rochCor="", eleCor="", postfix='',
                          **kwargs):
@@ -156,13 +158,13 @@ def produce_final_states(process, daughter_collections, output_commands,
 
 
     # Now build all combinatorics for E/Mu/Tau/Photon
-    object_types = [
-        ('Elec', cms.InputTag(src["electrons"])),
-        ('Mu', cms.InputTag(src["muons"])),
-        ('Tau', cms.InputTag(src["taus"])),
-        ('Jet', cms.InputTag(src["jets"])),
-        ('Pho', cms.InputTag(src["photons"])),
-        ]
+    object_types = {
+        'e' : cms.InputTag(src["electrons"]),
+        'm' : cms.InputTag(src["muons"]),
+        't' : cms.InputTag(src["taus"]),
+        'j' : cms.InputTag(src["jets"]),
+        'g' : cms.InputTag(src["photons"]),
+        }
 
     # keep the collections we used to build the final states 
     for name, label in src.iteritems():
@@ -190,174 +192,56 @@ def produce_final_states(process, daughter_collections, output_commands,
     crossCleaning = kwargs.get('crossCleaning','smallestDeltaR() > 0.3')
 
 
-    # build single object pairs
-    singleObjName = 'buildSingleObjects{0}'.format(postfix)
-    singleObjSeq = cms.Sequence()
-    for object in object_types:
-        # Define some basic selections for building combinations
-        cuts = [crossCleaning]  # basic x-cleaning
+    builderSeqs = {}
 
-        producer = cms.EDProducer(
-            "PAT%sFinalStateProducer" % object[0],
-            evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
-            leg1Src=object[1],
-            # X-cleaning
-            cut=cms.string(' & '.join(cuts))
-        )
-        producer_name = "finalState{0}{1}".format(object[0],postfix)
-        setattr(process, producer_name + "Raw", producer)
-        singleObjSeq += producer
-        # Embed the other collections
-        embedder_seq = helpers.cloneProcessingSnippet(
-            process, getattr(process,embedObjName), producer_name)
-        singleObjSeq += embedder_seq
-        # Do some trickery so the final module has a nice output name
-        final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
-        final_module = cms.EDProducer(
-            "PATFinalStateCopier", src=final_module_name)
-        setattr(process, producer_name, final_module)
-        singleObjSeq += final_module
-        setattr(process, producer_name, final_module)
-    setattr(process,singleObjName,singleObjSeq)
-    sequence += getattr(process,singleObjName)
+    for channel in parseChannels(channels):
 
-    # Build di-object pairs
-    doubleObjName = 'buildDiObjects{0}'.format(postfix)
-    doubleObjSeq = cms.Sequence()
-    for diobject in _combinatorics(object_types, 2):
-        # Don't build two jet states
-        if (diobject[0][0], diobject[1][0]) == ('Tau', 'Pho'):
-            continue
-        if (diobject[0][0], diobject[1][0]) == ('Tau', 'Jet'):
-            continue
-        if (diobject[0][0], diobject[1][0]) == ('Jet', 'Pho'):
-            continue
-        if (diobject[0][0], diobject[1][0]) == ('Jet', 'Jet'):
-            continue
+        # build single object final states
+        producerSuffix = get_channel_suffix(channel)
 
         # Define some basic selections for building combinations
         cuts = [crossCleaning]  # basic x-cleaning
 
+        nObj = len(channel)
+        if nObj not in builderSeqs:
+            builderSeqs[nObj] = cms.Sequence()
+
         producer = cms.EDProducer(
-            "PAT%s%sFinalStateProducer" % (diobject[0][0], diobject[1][0]),
+            "PAT%sFinalStateProducer" % producerSuffix,
             evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
-            leg1Src=diobject[0][1],
-            leg2Src=diobject[1][1],
             # X-cleaning
             cut=cms.string(' & '.join(cuts))
-        )
-        producer_name = "finalState{0}{1}{2}".format(diobject[0][0], diobject[1][0], postfix)
+            )
+        for i in range(nObj):
+            setattr(producer, 'leg{}Src'.format(i+1),
+                    object_types[channel[i]])
+    
+        producer_name = "finalState{0}{1}".format(producerSuffix,postfix)
         setattr(process, producer_name + "Raw", producer)
-        doubleObjSeq += producer
+        builderSeqs[nObj] += producer
         # Embed the other collections
         embedder_seq = helpers.cloneProcessingSnippet(
             process, getattr(process,embedObjName), producer_name)
-        doubleObjSeq += embedder_seq
+        builderSeqs[nObj] += embedder_seq
         # Do some trickery so the final module has a nice output name
         final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
         final_module = cms.EDProducer(
             "PATFinalStateCopier", src=final_module_name)
         setattr(process, producer_name, final_module)
-        doubleObjSeq += final_module
-        setattr(process, producer_name, final_module)
-    setattr(process,doubleObjName,doubleObjSeq)
-    sequence += getattr(process,doubleObjName)
+        builderSeqs[nObj] += final_module
 
-    # Build tri-lepton pairs
-    tripleObjName = 'buildTriObjects{0}'.format(postfix)
-    tripleObjSeq = cms.Sequence()
-    for triobject in _combinatorics(object_types, 3):
-        n_taus = [x[0] for x in triobject].count('Tau')
-        n_phos = [x[0] for x in triobject].count('Pho')
-        n_muons = [x[0] for x in triobject].count('Mu')
-        n_jets = [x[0] for x in triobject].count('Jet')
+    for nObj, seq in builderSeqs.iteritems():
+        if nObj == 1:
+            name = 'buildSingleObjects{0}'.format(postfix)
+        if nObj == 2:
+            name = 'buildDiObjects{0}'.format(postfix)
+        if nObj == 3:
+            name = 'buildTriObjects{0}'.format(postfix)
+        if nObj == 4:
+            name = 'buildQuadObjects{0}'.format(postfix)
 
-        if n_phos > 2:
-            continue
-        if n_taus and n_phos:
-            continue
-        if n_jets > 0 and not (n_jets == 2 and n_muons == 1):
-            continue
-
-        # Define some basic selections for building combinations
-        cuts = [crossCleaning]  # basic x-cleaning
-
-        producer = cms.EDProducer(
-            "PAT%s%s%sFinalStateProducer" %
-            (triobject[0][0], triobject[1][0], triobject[2][0]),
-            evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
-            leg1Src=triobject[0][1],
-            leg2Src=triobject[1][1],
-            leg3Src=triobject[2][1],
-            # X-cleaning
-            cut=cms.string(' & '.join(cuts))
-        )
-        producer_name = "finalState{0}{1}{2}{3}".format(
-            triobject[0][0], triobject[1][0], triobject[2][0], postfix)
-        setattr(process, producer_name + "Raw", producer)
-        tripleObjSeq += producer
-        # Embed the other collections
-        embedder_seq = helpers.cloneProcessingSnippet(
-            process, getattr(process,embedObjName), producer_name)
-        tripleObjSeq += embedder_seq
-        # Do some trickery so the final module has a nice output name
-        final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
-        final_module = cms.EDProducer(
-            "PATFinalStateCopier", src=final_module_name)
-        setattr(process, producer_name, final_module)
-        tripleObjSeq += final_module
-    setattr(process,tripleObjName,tripleObjSeq)
-    sequence += getattr(process,tripleObjName)
-
-    # Build 4 lepton final states
-    quadObjName = 'buildQuadObjects{0}'.format(postfix)
-    quadObjSeq = cms.Sequence()
-    for quadobject in _combinatorics(object_types, 4):
-        # Don't build states with more than 2 hadronic taus or phos
-        n_taus = [x[0] for x in quadobject].count('Tau')
-        n_phos = [x[0] for x in quadobject].count('Pho')
-        n_jets = [x[0] for x in quadobject].count('Jet')
-
-        if n_phos > 2:
-            continue
-        if n_taus and n_phos:
-            continue
-        if n_jets > 0:
-            continue
-
-        cuts = [crossCleaning]  # basic x-cleaning
-
-        producer = cms.EDProducer(
-            "PAT%s%s%s%sFinalStateProducer" %
-            (quadobject[0][0], quadobject[1][0], quadobject[2][0],
-             quadobject[3][0]),
-            evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
-            leg1Src=quadobject[0][1],
-            leg2Src=quadobject[1][1],
-            leg3Src=quadobject[2][1],
-            leg4Src=quadobject[3][1],
-            # X-cleaning
-            cut=cms.string(' & '.join(cuts))
-        )
-        producer_name = "finalState{0}{1}{2}{3}{4}".format(
-            quadobject[0][0], quadobject[1][0], quadobject[2][0],
-            quadobject[3][0], postfix
-        )
-        setattr(process, producer_name + "Raw", producer)
-        quadObjSeq += producer
-        # Embed the other collections
-        embedder_seq = helpers.cloneProcessingSnippet(
-            process, getattr(process,embedObjName), producer_name)
-        quadObjSeq += embedder_seq
-        # Do some trickery so the final module has a nice output name
-        final_module_name = chain_sequence(embedder_seq, producer_name + "Raw")
-        final_module = cms.EDProducer(
-            "PATFinalStateCopier", src=final_module_name)
-        setattr(process, producer_name, final_module)
-        quadObjSeq += final_module
-    setattr(process,quadObjName,quadObjSeq)
-    sequence += getattr(process,quadObjName)
-
+        setattr(process,name,seq)
+        sequence += getattr(process,name)
 
 if __name__ == "__main__":
     import doctest

@@ -60,7 +60,7 @@ import os
 import copy
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
-    make_ntuple, add_ntuple, _producer_translation
+    make_ntuple, add_ntuple
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
 import PhysicsTools.PatAlgos.tools.helpers as helpers
@@ -867,6 +867,7 @@ produce_final_states(process,
                      output_to_keep, 
                      process.buildFSASeq,
                      'puTagDoesntMatter', 
+                     options.channels,
                      buildFSAEvent=True,
                      noTracks=True, 
                      runMVAMET=options.runMVAMET,
@@ -886,6 +887,7 @@ for fs in additional_fs:
                          output_to_keep, 
                          getattr(process,'buildFSASeq{0}'.format(fs)),
                          'puTagDoesntMatter', 
+                         options.channels,
                          buildFSAEvent=True,
                          noTracks=True, 
                          runMVAMET=options.runMVAMET,
@@ -908,98 +910,64 @@ process.source.inputCommands = cms.untracked.vstring(
 
 suffix = '' # most analyses don't need to modify the final states
 
-if options.hzz and (options.channels == 'zz' or any(len(c)==4 for c in options.channels.split(','))):
+# turn options.channels into actual channels
+from FinalStateAnalysis.NtupleTools.channel_handling import parseChannels, \
+    get_channel_suffix
+
+if options.hzz:
     process.embedHZZSeq = cms.Sequence()
     # Embed matrix elements in relevant final states
     suffix = "HZZ"
-    for quadFS in ['ElecElecElecElec', 
-                   'ElecElecMuMu',
-                   'MuMuMuMu']:
-        oldName = "finalState%s"%quadFS
-        embedCategoryProducer = cms.EDProducer(
-            "MiniAODHZZCategoryEmbedder",
-            src = cms.InputTag(oldName),
-            tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
-            bDiscriminator = cms.string("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
-            bDiscriminantCut = cms.double(0.89),
-            )
-        # give the FS collection an intermediate name, with an identifying suffix
-        intermediateName = oldName + "HZZCategory"
-        setattr(process, intermediateName, embedCategoryProducer)
-        process.embedHZZSeq += embedCategoryProducer
-        
-        embedMEProducer = cms.EDProducer(
-            "MiniAODHZZMEEmbedder%s"%quadFS,
-            src = cms.InputTag(intermediateName),
-            processes = cms.vstring("p0plus_VAJHU",
-                                    "p0minus_VAJHU",
-                                    "Dgg10_VAMCFM",
-                                    "bkg_VAMCFM",
-                                    "phjj_VAJHU",
-                                    "pvbf_VAJHU",
-                                    ),
-            fsrLabel = cms.string("dretFSRCand"),
-            )
-        # give the FS collection the same name as before, but with an identifying suffix
+    for ch in parseChannels(options.channels):
+        prodSuffix = get_channel_suffix(ch)
+        oldName = "finalState%s"%prodSuffix
         newName = oldName + suffix
-        setattr(process, newName, embedMEProducer)
-        process.embedHZZSeq += embedMEProducer
+
+        if len(ch) == 4:
+            # 4l final states might be higgses, so do some higgs analysis
+            embedCategoryProducer = cms.EDProducer(
+                "MiniAODHZZCategoryEmbedder",
+                src = cms.InputTag(oldName),
+                tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
+                bDiscriminator = cms.string("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
+                bDiscriminantCut = cms.double(0.89),
+                )
+            # give the FS collection an intermediate name, with an identifying suffix
+            intermediateName = oldName + "HZZCategory"
+            setattr(process, intermediateName, embedCategoryProducer)
+            process.embedHZZSeq += embedCategoryProducer
+            
+            embedMEProducer = cms.EDProducer(
+                "MiniAODHZZMEEmbedder%s"%prodSuffix,
+                src = cms.InputTag(intermediateName),
+                processes = cms.vstring("p0plus_VAJHU",
+                                        "p0minus_VAJHU",
+                                        "Dgg10_VAMCFM",
+                                        "bkg_VAMCFM",
+                                        "phjj_VAJHU",
+                                        "pvbf_VAJHU",
+                                        ),
+                fsrLabel = cms.string("dretFSRCand"),
+                )
+            # give the FS collection the same name as before, but with an identifying suffix
+            setattr(process, newName, embedMEProducer)
+            process.embedHZZSeq += embedMEProducer
+        else:
+            # Copy the other final states to keep naming consistent
+            copier = cms.EDProducer(
+                "PATFinalStateCopier",
+                src = cms.InputTag(oldName),
+                )
+            setattr(process, newName, copier)
+            process.embedHZZSeq += copier
             
     process.embedHZZ = cms.Path(process.embedHZZSeq)
     process.schedule.append(process.embedHZZ)
         
 
 
-_FINAL_STATE_GROUPS = {
-    'zh': 'eeem, eeet, eemt, eett, emmm, emmt, mmmt, mmtt',
-    'zz': 'eeee, eemm, mmmm',
-    'zgg': 'eegg, mmgg',
-    'llt': 'emt, mmt, eet, mmm, emm, mm, ee, em',
-    'zg': 'mmg, eeg',
-    'zgxtra': 'mgg, emg, egg',
-    'dqm': 'e,m,t,g,j',
-    '3lep': 'eee, eem, eet, emm, emt, ett, mmm, mmt, mtt, ttt',
-    '4lep': 'eeee, eeem, eeet, eemm, eemt, eett, emmm, emmt, emtt, ettt, mmmm, mmmt, mmtt, mttt, tttt',
-}
-
 # run dqm
 if options.runDQM: options.channels = 'dqm'
-
-# Generate analyzers which build the desired final states.
-final_states = [x.strip() for x in options.channels.split(',')]
-
-
-def order_final_state(state):
-    '''
-    Sorts final state objects into order expected by FSA.
-    
-    Sorts string of characters into ordr defined by "order." Invalid 
-    characters are ignored, and a warning is pribted to stdout
-    
-    returns the sorted string
-    '''
-    order = "emtgj"
-    for obj in state:
-        if obj not in order:
-            print "invalid Final State object "\
-                "'%s' ignored" % obj
-            state = state.replace(obj, "")
-    return ''.join(sorted(state, key=lambda x: order.index(x)))
- 
-def expanded_final_states(input):
-    for fs in input:
-        if fs in _FINAL_STATE_GROUPS:
-            for subfs in _FINAL_STATE_GROUPS[fs].split(','):
-                yield subfs.strip()
-        else:
-            yield fs
-
-def get_producer_suffix(state):
-    '''
-    Returns the suffix FSA puts on the end of produer and class names, e.g.
-    "ElecElecMuTau" for final state 'eemt'.
-    '''
-    return ''.join(_producer_translation[obj] for obj in order_final_state(state))
 
 
 if options.keepPat:
@@ -1017,7 +985,7 @@ if options.keepPat:
     else:
         process.finalStateCleaning = cms.Sequence()
 
-        for fs in expanded_final_states(final_states):
+        for fs in parseChannels(options.channels):
             fsCuts = cms.vstring()
             for name, cut in uniqueness_cuts(fs, ptCuts, etaCuts, 
                                              skimCuts=skimCuts,
@@ -1027,12 +995,12 @@ if options.keepPat:
                 
             fsCleaner = cms.EDProducer(
                 "PATFinalStateSelector",
-                src = cms.InputTag("finalState%s%s"%(get_producer_suffix(fs), suffix)),
+                src = cms.InputTag("finalState%s%s"%(get_channel_suffix(fs), suffix)),
                 cuts = fsCuts,
                 )
             
             # give the producer a good name so it's easy to find the output
-            cleanerName = 'cleanedFinalState%s'%get_producer_suffix(fs)
+            cleanerName = 'cleanedFinalState%s'%get_channel_suffix(fs)
             setattr(process, cleanerName, fsCleaner)
             process.finalStateCleaning += fsCleaner
             
@@ -1070,11 +1038,10 @@ if options.keepPat:
     process.save = cms.EndPath(process.out)
     process.schedule.append(process.save)
 else:
-    print "Building ntuple for final states: %s" % ", ".join(final_states)
-    for final_state in expanded_final_states(final_states):
+    print "Building ntuple for final states: %s" % ", ".join(x.strip() for x in options.channels.split(','))
+    for final_state in parseChannels(options.channels):
         if additional_fs: print 'Adding ntuple {0}'.format(final_state)
         extraJets = options.nExtraJets
-        final_state = order_final_state(final_state)
         analyzer = make_ntuple(*final_state, 
                                 svFit=options.svFit, 
                                 dblhMode=options.dblhMode,
