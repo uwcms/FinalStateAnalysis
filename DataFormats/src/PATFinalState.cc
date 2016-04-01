@@ -567,7 +567,7 @@ PATFinalState::tauGenMotherKin() const {
 
     // Check that there are gen particles (MC)
     if (!event_->genParticleRefProd()) {
-        for (int i = 0; i < 6; ++i) output.push_back( -10 );
+        for (int i = 0; i < 4; ++i) output.push_back( -10 );
         return output;}
     // Get all gen particles in the event
     const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
@@ -596,13 +596,10 @@ PATFinalState::tauGenMotherKin() const {
             visVec += genp.p4();}
         }
     }
-    //std::cout << "Final Pt: "<<visVec.pt()<<"  w/ Nu: "<<withInvisVec.pt()<<std::endl;
-    output.push_back( visVec.pt() );
-    output.push_back( visVec.eta() );
-    output.push_back( visVec.phi() );
-    output.push_back( withInvisVec.pt() );
-    output.push_back( withInvisVec.eta() );
-    output.push_back( withInvisVec.phi() );
+    output.push_back( visVec.px() );
+    output.push_back( visVec.py() );
+    output.push_back( withInvisVec.px() );
+    output.push_back( withInvisVec.py() );
     return output;
 } 
 
@@ -1234,12 +1231,17 @@ VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts, double dr )
 }
 
 std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, double dr ) const {
-//JetVariables PATFinalState::jetVariables(const std::string& jetCuts, double dr ) const {
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
   std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
-  const reco::Candidate::LorentzVector& metp4 = met()->p4();
   // todo cache this
-  return computeJetInfo(hardScatter, metp4, jets);
+  return computeJetInfo(jets);
+}
+
+std::vector<int> PATFinalState::getBTagPromoteDemote(const std::string& jetCuts, double dr ) const {
+  std::vector<const reco::Candidate*> hardScatter = this->daughters();
+  std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
+  // todo cache this
+  return btagPromoteDemote(jets);
 }
 
 bool PATFinalState::orderedInPt(int i, int j) const {

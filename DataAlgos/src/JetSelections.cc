@@ -10,8 +10,6 @@
 
 //JetVariables computeJetInfo(
 std::vector<double> computeJetInfo(
-    const std::vector<const reco::Candidate*>& hardScatter,
-    const reco::Candidate::LorentzVector& metp4,
     const std::vector<const reco::Candidate*>& jets) {
   //JetVariables output;
   std::vector<double> output;
@@ -60,6 +58,47 @@ std::vector<double> computeJetInfo(
       else output.push_back( -10 );
     }
   }
+
+  return output;
+}
+
+// BTag Promote/Demote Method
+std::vector<int> btagPromoteDemote(
+    const std::vector<const reco::Candidate*>& jets) {
+  //JetVariables output;
+  std::vector<int> output;
+
+  int nbtagsL=0;
+  int nbtagsupL=0;
+  int nbtagsdownL=0;
+  int nbtagsM=0;
+  int nbtagsupM=0;
+  int nbtagsdownM=0;
+
+  for (size_t i = 0; i < jets.size(); ++i) {
+    const pat::Jet * jet = dynamic_cast<const pat::Jet*> (jets[i]);
+    float btaggedL = jet->userFloat("btaggedL");
+    float btaggedupL = jet->userFloat("btaggedupL");
+    float btaggeddownL = jet->userFloat("btaggeddownL");
+    float btaggedM = jet->userFloat("btaggedM");
+    float btaggedupM = jet->userFloat("btaggedupM");
+    float btaggeddownM = jet->userFloat("btaggeddownM");
+
+    if (btaggedL) nbtagsL++;
+    if (btaggedupL) nbtagsupL++;
+    if (btaggeddownL) nbtagsdownL++;      
+    if (btaggedM) nbtagsM++;
+    if (btaggedupM) nbtagsupM++;
+    if (btaggeddownM) nbtagsdownM++;      
+
+  }
+
+  output.push_back(nbtagsL);
+  output.push_back(nbtagsupL);
+  output.push_back(nbtagsdownL);
+  output.push_back(nbtagsM);
+  output.push_back(nbtagsupM);
+  output.push_back(nbtagsdownM);
 
   return output;
 }
