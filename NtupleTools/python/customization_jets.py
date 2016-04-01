@@ -20,15 +20,30 @@ def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, **kwargs):
 
     # embed BTag SFs
     if doBTag :
-        modName = 'miniJetsEmbedBTagSF{0}'.format(postfix)
+        modName = 'miniJetsEmbedBTagSFLoose{0}'.format(postfix)
         mod = cms.EDProducer(
-            "MiniAODJetBTagSFEmbedder",
+            "MiniAODJetBTagSFLooseEmbedder",
             src=cms.InputTag(jSrc)
         )
         jSrc = modName
         setattr(process,modName,mod)
 
-        pathName = 'runMiniAODJetBTagSFEmbedding{0}'.format(postfix)
+        pathName = 'runMiniAODJetBTagSFLooseEmbedding{0}'.format(postfix)
+        path = cms.Path(getattr(process,modName))
+        setattr(process,pathName,path)
+        process.schedule.append(getattr(process,pathName))
+
+    # embed BTag SFs
+    if doBTag :
+        modName = 'miniJetsEmbedBTagSFMedium{0}'.format(postfix)
+        mod = cms.EDProducer(
+            "MiniAODJetBTagSFMediumEmbedder",
+            src=cms.InputTag(jSrc)
+        )
+        jSrc = modName
+        setattr(process,modName,mod)
+
+        pathName = 'runMiniAODJetBTagSFMediumEmbedding{0}'.format(postfix)
         path = cms.Path(getattr(process,modName))
         setattr(process,pathName,path)
         process.schedule.append(getattr(process,pathName))

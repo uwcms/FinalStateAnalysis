@@ -67,7 +67,11 @@ parameters = {
         eVetoZTTp001dxyzR0 = 'vetoElectrons(0.0, "pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
 
         jetVeto20ZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 4.7").size()',
+        jetVeto20UpZTT = 'vetoJets(0.5, "userCand(\'jes+\').pt > 20 & abs(eta) < 4.7").size()',
+        jetVeto20DownZTT = 'vetoJets(0.5, "userCand(\'jes-\').pt > 20 & abs(eta) < 4.7").size()',
         jetVeto30ZTT = 'vetoJets(0.5, "pt > 30 & abs(eta) < 4.7").size()',
+        jetVeto30UpZTT = 'vetoJets(0.5, "userCand(\'jes+\').pt > 30 & abs(eta) < 4.7").size()',
+        jetVeto30DownZTT = 'vetoJets(0.5, "userCand(\'jes-\').pt > 30 & abs(eta) < 4.7").size()',
         bjetCISVVeto20LooseZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.46").size()',
         bjetCISVVeto20MediumZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8").size()',
         bjetCISVVeto20TightZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.935").size()',
@@ -83,6 +87,14 @@ parameters = {
         vbfDphiZTT = 'vbfVariables("pt > 20 & abs(eta) < 4.7", 0.5).dphi',
         vbfDijetPtZTT = 'vbfVariables("pt > 20 & abs(eta) < 4.7", 0.5).dijetpt',
         
+        # b tag SF promote / demote method
+        NBTagPDL = 'getBTagPromoteDemote("pt > 20 & abs(eta) < 4.7", 0.5).at(0)',
+        NBTagPDUpL = 'getBTagPromoteDemote("pt > 20 & abs(eta) < 4.7", 0.5).at(1)',
+        NBTagPDDownL = 'getBTagPromoteDemote("pt > 20 & abs(eta) < 4.7", 0.5).at(2)',
+        NBTagPDM = 'getBTagPromoteDemote("pt > 20 & abs(eta) < 4.7", 0.5).at(3)',
+        NBTagPDUpM = 'getBTagPromoteDemote("pt > 20 & abs(eta) < 4.7", 0.5).at(4)',
+        NBTagPDDownM = 'getBTagPromoteDemote("pt > 20 & abs(eta) < 4.7", 0.5).at(5)',
+
         # Leading and sublead jets
         j1pt = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(0)',
         j1eta = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(1)',
@@ -212,11 +224,15 @@ parameters = {
         object1_object2_MvaMetCovMatrix10 = 'getMVAMET({object1_idx},{object2_idx}).at(3)',
         object1_object2_MvaMetCovMatrix01 = 'getMVAMET({object1_idx},{object2_idx}).at(4)',
         object1_object2_MvaMetCovMatrix11 = 'getMVAMET({object1_idx},{object2_idx}).at(5)',
-        motherPt='tauGenMotherKin().at(0)',
-        motherEta='tauGenMotherKin().at(1)',
-        motherPhi='tauGenMotherKin().at(2)',
-        motherPtAll='tauGenMotherKin().at(3)',
-        motherEtaAll='tauGenMotherKin().at(4)',
-        motherPhiAll='tauGenMotherKin().at(5)',
+        #motherPt='tauGenMotherKin().at(0)',
+        #motherEta='tauGenMotherKin().at(1)',
+        #motherPhi='tauGenMotherKin().at(2)',
+        #motherPtAll='tauGenMotherKin().at(3)',
+        #motherEtaAll='tauGenMotherKin().at(4)',
+        #motherPhiAll='tauGenMotherKin().at(5)',
+        vispX='tauGenMotherKin().at(0)',
+        vispY='tauGenMotherKin().at(1)',
+        genpX='tauGenMotherKin().at(2)',
+        genpY='tauGenMotherKin().at(3)',
     ),
 }
