@@ -21,7 +21,41 @@
 #include "CondFormats/BTauObjects/interface/BTagCalibration.h"
 #include "CondFormats/BTauObjects/interface/BTagCalibrationReader.h"
 #include "boost/filesystem.hpp"
-#include "BTagHelper.h"
+
+bool applySFM(double eta, bool& isBTagged, float Btag_SF, float Btag_eff){
+    TRandom3 rand_;
+    rand_ = TRandom3((int)((eta+5)*100000));
+    //rand_ = new TRandom3(12345);
+
+    bool newBTag = isBTagged;
+
+    if (Btag_SF == 1) return newBTag; //no correction needed 
+
+    //throw die
+    float coin = rand_.Uniform();    
+    //std::cout<<"Uniform coin: "<<coin<<std::endl;
+
+    if(Btag_SF > 1){  // use this if SF>1
+
+        if( !isBTagged ) {
+
+            //fraction of jets that need to be upgraded
+            float mistagPercent = (1.0 - Btag_SF) / (1.0 - (Btag_SF/Btag_eff) );
+
+            //upgrade to tagged
+            if( coin < mistagPercent ) {newBTag = true;}
+        }
+
+    }else{  // use this if SF<1
+
+        //downgrade tagged to untagged
+        if( isBTagged && coin > Btag_SF ) {newBTag = false;}
+
+    }
+
+    return newBTag;
+}
+
 
 
 class MiniAODJetBTagSFMediumEmbedder : public edm::EDProducer {
@@ -36,7 +70,6 @@ class MiniAODJetBTagSFMediumEmbedder : public edm::EDProducer {
         delete reader;
         delete reader_up;
         delete reader_down;
-        delete f_EffMap;
     }
 
     void produce(edm::Event& evt, const edm::EventSetup& es);
@@ -200,9 +233,9 @@ void MiniAODJetBTagSFMediumEmbedder::produce(edm::Event& evt, const edm::EventSe
       //std::cout<<"flavor: "<<fabs(jetflavor)<<std::endl;
       //std::cout<<"SF: "<<SF<<std::endl;
       //std::cout<<"eff: "<<eff<<std::endl;
-      btagged = applySF(pass, SF, eff);
-      btaggedup = applySF(pass, SFup, eff);
-      btaggeddown = applySF(pass, SFdown, eff);
+      btagged = applySFM(eta, pass, SF, eff);
+      btaggedup = applySFM(eta, pass, SFup, eff);
+      btaggeddown = applySFM(eta, pass, SFdown, eff);
 
       // Embed the sf info for calculation later
       jet.addUserFloat("btaggedM", float(btagged));
