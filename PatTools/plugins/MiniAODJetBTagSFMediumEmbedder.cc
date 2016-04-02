@@ -151,102 +151,116 @@ void MiniAODJetBTagSFMediumEmbedder::produce(edm::Event& evt, const edm::EventSe
       double eta = std::abs(jet.eta());
       //std::cout<<"=====Jet====="<<std::endl;
       //std::cout<<"Jet Pt: "<<pt<<std::endl;
-      //std::cout<<"Jet Eta: "<<eta<<std::endl;
-      if (pt<20 || std::abs(eta)>2.4) {continue;}
-      else if (pt>1000.) {pt=999.;}
-      int jetflavor = jet.partonFlavour();
-      double SF =0,SFup=0,SFdown=0,eff=0;
-      if (jet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")>0.80) pass =true;
-      if (fabs(jetflavor) == 5) {                // real b-jet
-          //std::cout<<"=====Jet Flavor B====="<<std::endl;
-          if (pt<30){ 
-              //std::cout<<"=====Jet SF"<<std::endl;
-              SF = reader->eval(BTagEntry::FLAV_B, eta, 30. );
-              SFup = 2*reader_up->eval(BTagEntry::FLAV_B, eta, 30. );
-              SFdown = 2*reader_down->eval(BTagEntry::FLAV_B, eta, 30. );
-          }
-          else if (pt>670){ 
-              //std::cout<<"=====Jet SF"<<std::endl;
-              SF = reader->eval(BTagEntry::FLAV_B, eta, 669. );
-              SFup = 2*reader_up->eval(BTagEntry::FLAV_B, eta, 669. );
-              SFdown = 2*reader_down->eval(BTagEntry::FLAV_B, eta, 669. );
-          }
-          else{ 
-              //std::cout<<"=====Jet SF"<<std::endl;
-              SF = reader->eval(BTagEntry::FLAV_B, eta,pt );
-              SFup = reader_up->eval(BTagEntry::FLAV_B, eta,pt );
-              SFdown = reader_down->eval(BTagEntry::FLAV_B, eta,pt );
-          }
-          eff = 0.6829; 
-          //std::cout<<"=====Jet EFF"<<std::endl;
-          if (doBTag_ )eff = h2_TTEffMapB->GetBinContent( h2_TTEffMapB->GetXaxis()->FindBin(pt), h2_TTEffMapB->GetYaxis()->FindBin(eta) );
-          else if (doBTag_ )eff = h2_ZJetsEffMapB->GetBinContent( h2_ZJetsEffMapB->GetXaxis()->FindBin(pt), h2_ZJetsEffMapB->GetYaxis()->FindBin(eta) );
+      //std::cout<<"--- MED EMBD Jet Eta: "<<eta<<std::endl;
+      if (!(pt<20 || std::abs(eta)>2.4)) {
+        if (pt>1000.) {pt=999.;}
+        int jetflavor = jet.partonFlavour();
+        double SF =0,SFup=0,SFdown=0,eff=0;
+        if (jet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags")>0.80) pass =true;
+        if (fabs(jetflavor) == 5) {                // real b-jet
+            //std::cout<<"=====Jet Flavor B====="<<std::endl;
+            if (pt<30){ 
+                //std::cout<<"=====Jet SF"<<std::endl;
+                SF = reader->eval(BTagEntry::FLAV_B, eta, 30. );
+                SFup = 2*reader_up->eval(BTagEntry::FLAV_B, eta, 30. );
+                SFdown = 2*reader_down->eval(BTagEntry::FLAV_B, eta, 30. );
+            }
+            else if (pt>670){ 
+                //std::cout<<"=====Jet SF"<<std::endl;
+                SF = reader->eval(BTagEntry::FLAV_B, eta, 669. );
+                SFup = 2*reader_up->eval(BTagEntry::FLAV_B, eta, 669. );
+                SFdown = 2*reader_down->eval(BTagEntry::FLAV_B, eta, 669. );
+            }
+            else{ 
+                //std::cout<<"=====Jet SF"<<std::endl;
+                SF = reader->eval(BTagEntry::FLAV_B, eta,pt );
+                SFup = reader_up->eval(BTagEntry::FLAV_B, eta,pt );
+                SFdown = reader_down->eval(BTagEntry::FLAV_B, eta,pt );
+            }
+            eff = 0.6829; 
+            //std::cout<<"=====Jet EFF"<<std::endl;
+            if (doBTag_ )eff = h2_TTEffMapB->GetBinContent( h2_TTEffMapB->GetXaxis()->FindBin(pt), h2_TTEffMapB->GetYaxis()->FindBin(eta) );
+            else if (doBTag_ )eff = h2_ZJetsEffMapB->GetBinContent( h2_ZJetsEffMapB->GetXaxis()->FindBin(pt), h2_ZJetsEffMapB->GetYaxis()->FindBin(eta) );
+        }
+        else if (fabs(jetflavor) == 4) { 
+            //std::cout<<"=====Jet Flavor C====="<<std::endl;
+            if (pt<30){ 
+                //std::cout<<"=====Jet SF"<<std::endl;
+                SF = reader->eval(BTagEntry::FLAV_C, eta, 30. );
+                SFup = 2*reader_up->eval(BTagEntry::FLAV_C, eta, 30. );
+                SFdown = 2*reader_down->eval(BTagEntry::FLAV_C, eta, 30. );
+            }
+            else if (pt>670){ 
+                //std::cout<<"=====Jet SF"<<std::endl;
+                SF = reader->eval(BTagEntry::FLAV_C, eta, 669. );
+                SFup = 2*reader_up->eval(BTagEntry::FLAV_C, eta, 669. );
+                SFdown = 2*reader_down->eval(BTagEntry::FLAV_C, eta, 669. );
+            }
+            else{ 
+                SF = reader->eval(BTagEntry::FLAV_C, eta,pt );
+                SFup = reader_up->eval(BTagEntry::FLAV_C, eta,pt );
+                SFdown = reader_down->eval(BTagEntry::FLAV_C, eta,pt );
+            }
+            eff =0.18;
+            //std::cout<<"=====Jet EFF"<<std::endl;
+            if (doBTag_) eff = h2_TTEffMapC->GetBinContent( h2_TTEffMapC->GetXaxis()->FindBin(pt), h2_TTEffMapC->GetYaxis()->FindBin(eta) );
+            else if (doBTag_) eff = h2_ZJetsEffMapC->GetBinContent( h2_ZJetsEffMapC->GetXaxis()->FindBin(pt), h2_ZJetsEffMapC->GetYaxis()->FindBin(eta) );
+        }  
+        else {
+            //std::cout<<"=====Jet Flavor UDSG====="<<std::endl;
+            //std::cout<<"=====Jet SF"<<std::endl;
+            SF = reader_light->eval(BTagEntry::FLAV_UDSG, eta, pt );
+            SFup = reader_light_up->eval(BTagEntry::FLAV_UDSG, eta, pt );
+            SFdown = reader_light_down->eval(BTagEntry::FLAV_UDSG, eta, pt );
+            eff =0.012;
+            //std::cout<<"=====Jet EFF"<<std::endl;
+            if (doBTag_){ 
+                eff = h2_TTEffMapUDSG->GetBinContent( h2_TTEffMapUDSG->GetXaxis()->FindBin(pt), h2_TTEffMapUDSG->GetYaxis()->FindBin(eta) );
+
+            }
+            else if (doBTag_){ 
+                //std::cout<<"=====Jet Pt Bin"<<std::endl;
+                //std::cout<<"pt bin: "<<h2_ZJetsEffMapUDSG->GetXaxis()->FindBin(pt)<<std::endl;
+                //std::cout<<"=====Jet Eta bin"<<std::endl;
+                //std::cout<<"eta bin: "<<h2_ZJetsEffMapUDSG->GetYaxis()->FindBin(eta)<<std::endl;
+                eff = h2_ZJetsEffMapUDSG->GetBinContent( h2_ZJetsEffMapUDSG->GetXaxis()->FindBin(pt), h2_ZJetsEffMapUDSG->GetYaxis()->FindBin(eta) );
+            }
+            //std::cout<<"=====After Jet EFF"<<std::endl;
+            //cout<< "Flavor UDSG: EFF" <<endl;
+        }
+
+        //std::cout<<"pt: "<<pt<<std::endl;
+        //std::cout<<"flavor: "<<fabs(jetflavor)<<std::endl;
+        //std::cout<<"SF: "<<SF<<std::endl;
+        //std::cout<<"eff: "<<eff<<std::endl;
+        btagged = applySFM(eta, pass, SF, eff);
+        btaggedup = applySFM(eta, pass, SFup, eff);
+        btaggeddown = applySFM(eta, pass, SFdown, eff);
+
+        // Embed the sf info for calculation later
+        jet.addUserFloat("btaggedM", float(btagged));
+        jet.addUserFloat("btaggedupM", float(btaggedup));
+        jet.addUserFloat("btaggeddownM", float(btaggeddown));
+        jet.addUserFloat("passM", float(pass));
+        jet.addUserFloat("btagSFM", SF);
+        jet.addUserFloat("btagSFupM", SFup);
+        jet.addUserFloat("btagSFdownM", SFdown);
+        jet.addUserFloat("btagEffM", eff);
+        output->push_back(jet);
       }
-      else if (fabs(jetflavor) == 4) { 
-          //std::cout<<"=====Jet Flavor C====="<<std::endl;
-          if (pt<30){ 
-              //std::cout<<"=====Jet SF"<<std::endl;
-              SF = reader->eval(BTagEntry::FLAV_C, eta, 30. );
-              SFup = 2*reader_up->eval(BTagEntry::FLAV_C, eta, 30. );
-              SFdown = 2*reader_down->eval(BTagEntry::FLAV_C, eta, 30. );
-          }
-          else if (pt>670){ 
-              //std::cout<<"=====Jet SF"<<std::endl;
-              SF = reader->eval(BTagEntry::FLAV_C, eta, 669. );
-              SFup = 2*reader_up->eval(BTagEntry::FLAV_C, eta, 669. );
-              SFdown = 2*reader_down->eval(BTagEntry::FLAV_C, eta, 669. );
-          }
-          else{ 
-              SF = reader->eval(BTagEntry::FLAV_C, eta,pt );
-              SFup = reader_up->eval(BTagEntry::FLAV_C, eta,pt );
-              SFdown = reader_down->eval(BTagEntry::FLAV_C, eta,pt );
-          }
-          eff =0.18;
-          //std::cout<<"=====Jet EFF"<<std::endl;
-          if (doBTag_) eff = h2_TTEffMapC->GetBinContent( h2_TTEffMapC->GetXaxis()->FindBin(pt), h2_TTEffMapC->GetYaxis()->FindBin(eta) );
-          else if (doBTag_) eff = h2_ZJetsEffMapC->GetBinContent( h2_ZJetsEffMapC->GetXaxis()->FindBin(pt), h2_ZJetsEffMapC->GetYaxis()->FindBin(eta) );
-      }  
-      else {
-          //std::cout<<"=====Jet Flavor UDSG====="<<std::endl;
-          //std::cout<<"=====Jet SF"<<std::endl;
-          SF = reader_light->eval(BTagEntry::FLAV_UDSG, eta, pt );
-          SFup = reader_light_up->eval(BTagEntry::FLAV_UDSG, eta, pt );
-          SFdown = reader_light_down->eval(BTagEntry::FLAV_UDSG, eta, pt );
-          eff =0.012;
-          //std::cout<<"=====Jet EFF"<<std::endl;
-          if (doBTag_){ 
-              eff = h2_TTEffMapUDSG->GetBinContent( h2_TTEffMapUDSG->GetXaxis()->FindBin(pt), h2_TTEffMapUDSG->GetYaxis()->FindBin(eta) );
-
-          }
-          else if (doBTag_){ 
-              //std::cout<<"=====Jet Pt Bin"<<std::endl;
-              //std::cout<<"pt bin: "<<h2_ZJetsEffMapUDSG->GetXaxis()->FindBin(pt)<<std::endl;
-              //std::cout<<"=====Jet Eta bin"<<std::endl;
-              //std::cout<<"eta bin: "<<h2_ZJetsEffMapUDSG->GetYaxis()->FindBin(eta)<<std::endl;
-              eff = h2_ZJetsEffMapUDSG->GetBinContent( h2_ZJetsEffMapUDSG->GetXaxis()->FindBin(pt), h2_ZJetsEffMapUDSG->GetYaxis()->FindBin(eta) );
-          }
-          //std::cout<<"=====After Jet EFF"<<std::endl;
-          //cout<< "Flavor UDSG: EFF" <<endl;
+      else { // pt < 20 || eta > 2.4
+        float na = -10.0;
+        jet.addUserFloat("btaggedM", na);
+        jet.addUserFloat("btaggedupM", na);
+        jet.addUserFloat("btaggeddownM", na);
+        jet.addUserFloat("passM", na);
+        jet.addUserFloat("btagSFM", na);
+        jet.addUserFloat("btagSFupM", na);
+        jet.addUserFloat("btagSFdownM", na);
+        jet.addUserFloat("btagEffM", na);
+        output->push_back(jet);
       }
 
-      //std::cout<<"pt: "<<pt<<std::endl;
-      //std::cout<<"flavor: "<<fabs(jetflavor)<<std::endl;
-      //std::cout<<"SF: "<<SF<<std::endl;
-      //std::cout<<"eff: "<<eff<<std::endl;
-      btagged = applySFM(eta, pass, SF, eff);
-      btaggedup = applySFM(eta, pass, SFup, eff);
-      btaggeddown = applySFM(eta, pass, SFdown, eff);
-
-      // Embed the sf info for calculation later
-      jet.addUserFloat("btaggedM", float(btagged));
-      jet.addUserFloat("btaggedupM", float(btaggedup));
-      jet.addUserFloat("btaggeddownM", float(btaggeddown));
-      jet.addUserFloat("passM", float(pass));
-      jet.addUserFloat("btagSFM", SF);
-      jet.addUserFloat("btagSFupM", SFup);
-      jet.addUserFloat("btagSFdownM", SFdown);
-      jet.addUserFloat("btagEffM", eff);
-      output->push_back(jet);
   } // end jet loop
 
   evt.put(output);
