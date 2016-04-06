@@ -250,9 +250,6 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     std::vector<double> jetVariables(const std::string& jetCuts, double dr=0.3) const;
     //JetVariables jetVariables(const std::string& jetCuts, double dr=0.3) const;
     
-    /// grab promote/demote BTag num b tagged jets
-    std::vector<int> getBTagPromoteDemote(const std::string& jetCuts, double dr=0.3) const;
-
     /// Check if two daughters are ordered in PT.
     /// This is equivalent to (daughter(i).pt > daughter(j).pt)
     /// Useful when ensuring a unique candidate is selected from many

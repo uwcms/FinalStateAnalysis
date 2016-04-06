@@ -1237,13 +1237,6 @@ std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, doub
   return computeJetInfo(jets);
 }
 
-std::vector<int> PATFinalState::getBTagPromoteDemote(const std::string& jetCuts, double dr ) const {
-  std::vector<const reco::Candidate*> hardScatter = this->daughters();
-  std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
-  // todo cache this
-  return btagPromoteDemote(jets);
-}
-
 bool PATFinalState::orderedInPt(int i, int j) const {
   return daughter(i)->pt() > daughter(j)->pt();
 }

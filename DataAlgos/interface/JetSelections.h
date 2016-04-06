@@ -14,7 +14,4 @@
 std::vector<double> computeJetInfo(
     const std::vector<const reco::Candidate*>& jets);
 
-std::vector<int> btagPromoteDemote(
-    const std::vector<const reco::Candidate*>& jets);
-
 #endif /* end of include guard: JETSELECTIONS_9N7EKFZ2 */
