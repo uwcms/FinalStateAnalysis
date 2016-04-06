@@ -252,14 +252,14 @@ void MiniAODJetBTagSFLooseEmbedder::produce(edm::Event& evt, const edm::EventSet
       }
       else { // pt < 20 || eta > 2.4
         float na = -10.0;
-        jet.addUserFloat("btaggedM", na);
-        jet.addUserFloat("btaggedupM", na);
-        jet.addUserFloat("btaggeddownM", na);
-        jet.addUserFloat("passM", na);
-        jet.addUserFloat("btagSFM", na);
-        jet.addUserFloat("btagSFupM", na);
-        jet.addUserFloat("btagSFdownM", na);
-        jet.addUserFloat("btagEffM", na);
+        jet.addUserFloat("btaggedL", na);
+        jet.addUserFloat("btaggedupL", na);
+        jet.addUserFloat("btaggeddownL", na);
+        jet.addUserFloat("passL", na);
+        jet.addUserFloat("btagSFL", na);
+        jet.addUserFloat("btagSFupL", na);
+        jet.addUserFloat("btagSFdownL", na);
+        jet.addUserFloat("btagEffL", na);
         output->push_back(jet);
       }
   } // end jet loop
