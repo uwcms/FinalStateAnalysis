@@ -166,6 +166,9 @@ class PATFinalStateEvent {
     //Finds a decay in MC
     const bool findDecay(const int pdgIdMother, const int pdgIdDaughter) const;
 
+    // Get the gen mass for weighting
+    float getGenMass() const;
+
     // Get the genHTT for weighting
     float genHTT() const;
 

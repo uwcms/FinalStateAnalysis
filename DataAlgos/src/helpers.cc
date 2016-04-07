@@ -286,6 +286,26 @@ namespace fshelpers {
       return found;
   }
 
+  float genMass(const lhef::HEPEUP lheeventinfo){
+      reco::Candidate::LorentzVector genMass;
+      int cnt = 0;
+      for (size_t i = 0; i < lheeventinfo.ISTUP.size() ; ++i) {
+          if (lheeventinfo.ISTUP[i] == 1 ) {
+              int pdgId = abs(lheeventinfo.IDUP[i]);
+              if (pdgId == 11 || pdgId == 13 || pdgId == 15) {
+                  cnt += 1;
+                  reco::Candidate::LorentzVector tmpVec = reco::Candidate::LorentzVector(lheeventinfo.PUP[i].x[0],
+                            lheeventinfo.PUP[i].x[1],
+                            lheeventinfo.PUP[i].x[2],
+                            lheeventinfo.PUP[i].x[3]);
+                  genMass += tmpVec;
+              }
+          }
+      }
+      //std::cout << " - Gen Mass: " << genMass.M() << std::endl;
+      return genMass.M();
+  }
+
   float genHTT(const lhef::HEPEUP lheeventinfo){
       float sumpt=0;
       for (int i = 0; i < lheeventinfo.NUP ; ++i) {

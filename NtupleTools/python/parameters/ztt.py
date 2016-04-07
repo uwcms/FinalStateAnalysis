@@ -25,8 +25,9 @@ parameters = {
     'preselection' : OrderedDict(
         [
             # Remove jets that overlap our leptons
-            ('j', {
-                    'selection' : 'pt > 20 && abs(eta) < 4.7 && userFloat("idLoose") > 0.5',
+            ('j', {   # inverted pt cut so that we keep all jets above pt 20.  This is for
+                      # synchronization on njets
+                    'selection' : 'pt < 20 && abs(eta) < 4.7 && userFloat("idLoose") > 0.5',
                     'e' : {
                         'deltaR' : 0.5,
                         'selection' : 'userFloat("MVANonTrigWP90") > 0.5 && pt > 10 && abs(eta) < 2.5',
@@ -47,7 +48,7 @@ parameters = {
         'm': 'pt > 10 && (isGlobalMuon | isTrackerMuon)',
         't': 'abs(eta) < 2.5 && pt > 17',
         'g': 'abs(superCluster().eta()) < 3.0 && pt > 10',
-        'j': 'pt>20 && abs(eta) < 2.5 && userFloat("idLoose")'
+        'j': 'pt>20 && abs(eta) < 4.7 && userFloat("idLoose")'
     },
 
 
@@ -61,6 +62,7 @@ parameters = {
     'eventVariables' : PSet(
         #buildGenTaus = 'buildGenTaus.size()',
         numGenJets = 'evt.numGenJets()',
+        numMass = 'evt.getGenMass()',
         muVetoZTTp001dxyz = 'vetoMuons(0.001, "pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt - 0.5 * pfIsolationR03().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
         eVetoZTTp001dxyz = 'vetoElectrons(0.001, "pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
         muVetoZTTp001dxyzR0 = 'vetoMuons(0.0, "pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt - 0.5 * pfIsolationR03().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',

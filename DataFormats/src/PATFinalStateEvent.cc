@@ -680,8 +680,13 @@ const bool PATFinalStateEvent::findDecay(const int pdgIdMother, const int pdgIdD
   return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
 }
 
+float PATFinalStateEvent::getGenMass() const{
+  if(isRealData_) return -1;
+  return fshelpers::genMass(lhe_);
+}
+
 float PATFinalStateEvent::genHTT() const{
-  if(isRealData_) return 0;
+  if(isRealData_) return -1;
   return fshelpers::genHTT(lhe_);
 }
 
