@@ -603,6 +603,42 @@ PATFinalState::tauGenMotherKin() const {
     return output;
 } 
 
+std::vector<double>
+PATFinalState::getTopQuarkInitialPts() const {
+
+    std::vector<double> output;
+
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) {
+        for (int i = 0; i < 2; ++i) output.push_back( -10 );
+        return output;}
+    // Get all gen particles in the event
+    const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
+    reco::GenParticleCollection genParticles = *genCollectionRef;
+
+    // Get pt of generator top quarks
+    //int cnt = 0;
+    if ( genParticles.size() > 0 ) {
+        for(size_t m = 0; m != genParticles.size(); ++m) {
+          reco::GenParticle& genp = genParticles[m];
+          int pdgId = fabs( genp.pdgId() );
+          if (pdgId == 6) {
+            bool fromHardProcess = genp.statusFlags().fromHardProcess();
+            bool isLastCopy = genp.statusFlags().isLastCopy();
+            if (fromHardProcess && isLastCopy) {
+              //cnt += 1;
+              output.push_back( genp.pt() );
+              //std::cout << cnt << " Gen Pt: " << genp.pt() << std::endl;
+            }
+          }
+        }
+    }
+    if (output.size() < 2) {
+        output.push_back( -10 ); output.push_back( -10 );
+    }
+    return output;
+}
+
 
 double
 PATFinalState::dR(int i, const std::string& sysTagI,

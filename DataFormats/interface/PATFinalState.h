@@ -168,6 +168,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // including and excluding visible products
     std::vector<double> tauGenMotherKin() const;
 
+    // Use this for top pt reweighting, fills the gen pt
+    // of top quarks, returns -10 if no tops found
+    std::vector<double> getTopQuarkInitialPts() const;
+
     /// Get the transverse mass between two objects
     double mt(int i, const std::string& tagI,
         int j, const std::string& tagJ) const;

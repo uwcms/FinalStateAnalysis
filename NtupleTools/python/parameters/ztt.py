@@ -25,16 +25,16 @@ parameters = {
     'preselection' : OrderedDict(
         [
             # Remove jets that overlap our leptons
-            ('j', {   # inverted pt cut so that we keep all jets above pt 20.  This is for
-                      # synchronization on njets
-                    'selection' : 'pt < 20 && abs(eta) < 4.7 && userFloat("idLoose") > 0.5',
+            ('j', { # Made pt requirement for E/Mu to clean an overlapping jet so
+                    # that this never happens
+                    'selection' : 'pt > 20 && abs(eta) < 4.7 && userFloat("idLoose") > 0.5',
                     'e' : {
                         'deltaR' : 0.5,
-                        'selection' : 'userFloat("MVANonTrigWP90") > 0.5 && pt > 10 && abs(eta) < 2.5',
+                        'selection' : 'userFloat("MVANonTrigWP90") > 0.5 && pt > 9999 && abs(eta) < 2.5',
                         },
                     'm' : {
                         'deltaR' : 0.5,
-                        'selection' : 'isMediumMuon() > 0.5 && pt > 10 && abs(eta) < 2.4',
+                        'selection' : 'isMediumMuon() > 0.5 && pt > 9999 && abs(eta) < 2.4',
                         },
                     }
              )
@@ -237,5 +237,7 @@ parameters = {
         genpX='tauGenMotherKin().at(2)',
         genpY='tauGenMotherKin().at(3)',
         doubleL1IsoTauMatch = 'doubleL1extraIsoTauMatching({object1_idx},{object2_idx})',
+        topQuarkPt1 = 'getTopQuarkInitialPts().at(0)',
+        topQuarkPt2 = 'getTopQuarkInitialPts().at(1)',
     ),
 }
