@@ -15,12 +15,12 @@ std::vector<double> computeJetInfo(
   std::vector<double> output;
 
   //for (auto var : output) {
-  //  var = -10;
+  //  var = -9999;
   //}
   int numJets = jets.size();
   if (numJets == 0) {
     for (int i = 0; i < 16; ++i) {
-      output.push_back( -10 );
+      output.push_back( -9999 );
     }
   }
   if (numJets == 1) {
@@ -33,12 +33,12 @@ std::vector<double> computeJetInfo(
     output.push_back( jet1Pat->partonFlavour() );
     if (jet1Pat->hasUserCand("jes+")) {
         output.push_back( jet1Pat->userCand("jes+")->pt() );}
-    else output.push_back( -10 );
+    else output.push_back( -9999 );
     if (jet1Pat->hasUserCand("jes-")) {
         output.push_back( jet1Pat->userCand("jes-")->pt() );}
-    else output.push_back( -10 );
+    else output.push_back( -9999 );
     for (int i = 0; i < 8; ++i) {
-      output.push_back( -10 );
+      output.push_back( -9999 );
     }
   }
   if (numJets >= 2) {
@@ -52,10 +52,10 @@ std::vector<double> computeJetInfo(
       output.push_back( jetPat->partonFlavour() );
       if (jetPat->hasUserCand("jes+")) {
           output.push_back( jetPat->userCand("jes+")->pt() );}
-      else output.push_back( -10 );
+      else output.push_back( -9999 );
       if (jetPat->hasUserCand("jes-")) {
           output.push_back( jetPat->userCand("jes-")->pt() );}
-      else output.push_back( -10 );
+      else output.push_back( -9999 );
     }
   }
 
