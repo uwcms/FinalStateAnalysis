@@ -236,5 +236,6 @@ parameters = {
         vispY='tauGenMotherKin().at(1)',
         genpX='tauGenMotherKin().at(2)',
         genpY='tauGenMotherKin().at(3)',
+        doubleL1IsoTauMatch = 'doubleL1extraIsoTauMatching({object1_idx},{object2_idx})',
     ),
 }

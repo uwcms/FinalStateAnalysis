@@ -32,7 +32,7 @@ bool applySFM(double eta, bool& isBTagged, float Btag_SF, float Btag_eff){
     if (Btag_SF == 1) return newBTag; //no correction needed 
 
     //throw die
-    float coin = rand_.Uniform();    
+    double coin = rand_.Uniform();    
     //std::cout<<"Uniform coin: "<<coin<<std::endl;
 
     if(Btag_SF > 1){  // use this if SF>1

@@ -1640,8 +1640,43 @@ const float PATFinalState::l1extraIsoTauMatching(const size_t i) const
         //std::cout << " --- dR: " << dR << std::endl;
         if (dR < 0.5) return 1;
     }
-    
-    return 0.0;
 
+    return 0.0;
+}
+
+const float PATFinalState::doubleL1extraIsoTauMatching(const size_t i, const size_t j) const
+{
+    std::vector< l1extra::L1JetParticle > isoTaus = evt()->l1extraIsoTaus();
+    //for (int i = 0; i < isoTaus.size(); ++i) {
+    int p1MatchCnt = 0;
+    int p2MatchCnt = 0;
+    int bothMatchCnt = 0;
+    
+    // check for matching to each tau, pay attention to objects that match
+    // both taus
+    for ( auto isoTau : isoTaus ) {
+        //std::cout << " - l1 p4: " << isoTau.p4() << std::endl;
+        if (isoTau.pt() < 28) {
+            //std::cout << " --- Pt small" << std::endl;
+            continue;}
+        float dR1 = reco::deltaR(daughter(i)->p4(), isoTau.p4() );
+        float dR2 = reco::deltaR(daughter(j)->p4(), isoTau.p4() );
+        //std::cout << " --- dR1: " << dR1 << std::endl;
+        //std::cout << " --- dR2: " << dR2 << std::endl;
+        if (dR1 < 0.5) p1MatchCnt += 1;
+        if (dR2 < 0.5) p2MatchCnt += 1;
+        if (dR1 < 0.5 && dR2 < 0.5) bothMatchCnt += 1;
+    }
+ 
+    //std::cout << "p1Match "<<p1MatchCnt<<" p2 "<<p2MatchCnt<<" both "<<bothMatchCnt<<std::endl;
+    // both match different iso taus
+    if (p1MatchCnt > 0 && p2MatchCnt > 0 && bothMatchCnt == 0) return 1.0;
+    // both share a single iso tau, but one tau matching 2 iso objects so
+    // it's okay
+    else if ((p1MatchCnt + p2MatchCnt) == 3 && bothMatchCnt == 1) return 2.0;
+    // This should never happen...probably
+    else if ((p1MatchCnt + p2MatchCnt) == 4 && bothMatchCnt == 2) return 3.0;
+   
+    return 0.0;
 }
 
