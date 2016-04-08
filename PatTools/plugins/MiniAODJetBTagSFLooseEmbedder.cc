@@ -151,6 +151,7 @@ void MiniAODJetBTagSFLooseEmbedder::produce(edm::Event& evt, const edm::EventSet
       bool pass = false;
       double pt = jet.pt();
       double eta = std::abs(jet.eta());
+      double nonAbsEta = jet.eta();
       //std::cout<<"=====Jet====="<<std::endl;
       //std::cout<<"Jet Pt: "<<pt<<std::endl;
       //std::cout<<"Loose EMBD Jet Eta: "<<eta<<std::endl;
@@ -235,9 +236,9 @@ void MiniAODJetBTagSFLooseEmbedder::produce(edm::Event& evt, const edm::EventSet
         //std::cout<<"flavor: "<<fabs(jetflavor)<<std::endl;
         //std::cout<<"SF: "<<SF<<std::endl;
         //std::cout<<"eff: "<<eff<<std::endl;
-        btagged = applySFL(eta, pass, SF, eff);
-        btaggedup = applySFL(eta, pass, SFup, eff);
-        btaggeddown = applySFL(eta, pass, SFdown, eff);
+        btagged = applySFL(nonAbsEta, pass, SF, eff);
+        btaggedup = applySFL(nonAbsEta, pass, SFup, eff);
+        btaggeddown = applySFL(nonAbsEta, pass, SFdown, eff);
 
         // Embed the sf info for calculation later
         jet.addUserFloat("btaggedL", float(btagged));

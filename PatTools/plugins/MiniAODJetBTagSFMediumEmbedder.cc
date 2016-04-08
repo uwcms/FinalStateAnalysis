@@ -149,6 +149,7 @@ void MiniAODJetBTagSFMediumEmbedder::produce(edm::Event& evt, const edm::EventSe
       bool pass = false;
       double pt = jet.pt();
       double eta = std::abs(jet.eta());
+      double nonAbsEta = jet.eta();
       //std::cout<<"=====Jet====="<<std::endl;
       //std::cout<<"Jet Pt: "<<pt<<std::endl;
       //std::cout<<"--- MED EMBD Jet Eta: "<<eta<<std::endl;
@@ -233,9 +234,9 @@ void MiniAODJetBTagSFMediumEmbedder::produce(edm::Event& evt, const edm::EventSe
         //std::cout<<"flavor: "<<fabs(jetflavor)<<std::endl;
         //std::cout<<"SF: "<<SF<<std::endl;
         //std::cout<<"eff: "<<eff<<std::endl;
-        btagged = applySFM(eta, pass, SF, eff);
-        btaggedup = applySFM(eta, pass, SFup, eff);
-        btaggeddown = applySFM(eta, pass, SFdown, eff);
+        btagged = applySFM(nonAbsEta, pass, SF, eff);
+        btaggedup = applySFM(nonAbsEta, pass, SFup, eff);
+        btaggeddown = applySFM(nonAbsEta, pass, SFdown, eff);
 
         // Embed the sf info for calculation later
         jet.addUserFloat("btaggedM", float(btagged));
