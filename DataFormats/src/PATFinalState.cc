@@ -506,6 +506,44 @@ PATFinalState::tauGenMatch( size_t i ) const {
     return -1.0;
 } 
 
+std::vector<double>
+PATFinalState::tauGenKin( size_t i ) const {
+    std::vector<double> output;
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) {
+        for (int i = 0; i < 4; ++i) {
+            output.push_back( -10 );
+        }
+        return output;
+    }
+
+    // Build gen tau jets in the event
+    std::vector<reco::Candidate::LorentzVector> genTaus = buildGenTaus();
+
+    // Find closest tau jet
+    double closestDR = 999;
+    reco::Candidate::LorentzVector closest;
+    for ( auto vec : genTaus ) {
+        double tmpDR = reco::deltaR( daughter(i)->p4(), vec );
+        if ( tmpDR < closestDR ) { closest = vec; closestDR = tmpDR; }
+    }
+
+    if (closestDR == 999) {
+        for (int i = 0; i < 4; ++i) {
+            output.push_back( -10 );
+        }
+    }
+    else {
+        output.push_back( closest.pt() );
+        output.push_back( closest.eta() );
+        output.push_back( closest.phi() );
+        output.push_back( closestDR );
+    }
+
+    return output;
+} 
+
+
 std::vector<reco::Candidate::LorentzVector>
 PATFinalState::buildGenTaus() const {
     bool include_leptonic = false;
@@ -600,6 +638,8 @@ PATFinalState::tauGenMotherKin() const {
     output.push_back( visVec.py() );
     output.push_back( withInvisVec.px() );
     output.push_back( withInvisVec.py() );
+    output.push_back( withInvisVec.pt() );
+    output.push_back( withInvisVec.M() );
     return output;
 } 
 
