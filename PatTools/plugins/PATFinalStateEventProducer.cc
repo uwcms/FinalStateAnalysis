@@ -65,8 +65,6 @@ private:
 
   // Information about the MET
   edm::EDGetTokenT<edm::View<pat::MET> > metSrcToken_;
-  edm::EDGetTokenT<std::vector<pat::MET> > pairMvaMetTTSrcToken_;
-  edm::EDGetTokenT<std::vector<pat::MET> > pairMvaMetEMSrcToken_;
   edm::EDGetTokenT<std::vector<pat::MET> > MVAMETSrcToken_;
   //edm::EDGetTokenT<edm::InputTag> metCovSrcToken_;
 
@@ -122,8 +120,6 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   phoSrcToken_      = consumes<pat::PhotonCollection>(pset.getParameter<edm::InputTag>("phoSrc"));
 
   metSrcToken_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("metSrc"));
-  pairMvaMetTTSrcToken_ = consumes<std::vector<pat::MET> >(pset.getParameter<edm::InputTag>("pairMvaMetTTSrc"));
-  pairMvaMetEMSrcToken_ = consumes<std::vector<pat::MET> >(pset.getParameter<edm::InputTag>("pairMvaMetEMSrc"));
   MVAMETSrcToken_ = consumes<std::vector<pat::MET> >(pset.getParameter<edm::InputTag>("MVAMETSrc"));
   trgSrcToken_ = consumes<std::vector<pat::TriggerObjectStandAlone> >(pset.getParameter<edm::InputTag>("trgSrc"));
   puInfoSrcToken_ = consumes<std::vector<PileupSummaryInfo> >(pset.getParameter<edm::InputTag>("puInfoSrc"));
@@ -234,17 +230,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Ptr<pat::MET> metPtr = met->ptrAt(0);
   TMatrixD metCovariance(2,2);
 
-  // Only get pair Mva Met info if it exist
-  edm::Handle<std::vector<pat::MET> > pairMvaMetsTT;
-  evt.getByToken(pairMvaMetTTSrcToken_, pairMvaMetsTT);
-  std::vector<pat::MET> pairMvaMetTTInfo;
-  if (pairMvaMetsTT.isValid()) {
-    pairMvaMetTTInfo = * pairMvaMetsTT;}
-  edm::Handle<std::vector<pat::MET> > pairMvaMetsEM;
-  evt.getByToken(pairMvaMetEMSrcToken_, pairMvaMetsEM);
-  std::vector<pat::MET> pairMvaMetEMInfo;
-  if (pairMvaMetsEM.isValid()) {
-    pairMvaMetEMInfo = * pairMvaMetsEM;}
+  // Only get new pairwise Mva Met info if it exist
   edm::Handle<std::vector<pat::MET> > MVAMETs;
   evt.getByToken(MVAMETSrcToken_, MVAMETs);
   std::vector<pat::MET> MVAMETInfo;
@@ -331,8 +317,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
   pat::TriggerEvent trg;
-  //PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, pairMvaMetsRef, 
-  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, pairMvaMetTTInfo, pairMvaMetEMInfo, MVAMETInfo,
+  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo,
                               trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,

@@ -101,7 +101,6 @@ options = TauVarParsing.TauVarParsing(
     eleCor="",
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runMVAMET=0,  # If one, (re)build the MVA MET
-    runPairMVAMET=0,  # If one, (re)build the MVA MET
     runNewMVAMET=0,  # If one, (re)build the MVA MET
     runMETNoHF=0,  # If one, use get metnohf (needs to be recalculated in miniaodv1)
     usePUPPI=0,
@@ -370,65 +369,6 @@ if options.runMVAMET:
 
 
 
-
-
-
-#######################
-### pairwise mvamet ###
-#######################
-
-if options.runPairMVAMET:
-       #I added
-    process.load("PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi")  
-    
-    from JetMETCorrections.Configuration.DefaultJEC_cff import ak4PFL1Fastjet
-    process.load("RecoJets.JetProducers.ak4PFJets_cfi")
-    process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
-    process.ak4PFJets.doAreaFastjet = cms.bool(True)
-    process.load('JetMETCorrections.Configuration.JetCorrectors_cff')
-    
-    #from JetMETCorrections.Configuration.JetCorrectionServices_cff import ak4PFL1Fastjet
-    process.load("JetMETCorrections.Configuration.DefaultJEC_cff")
-    
-    
-    #from RecoMET.METPUSubtraction.mvaPFMET_cff import pfMVAMEt
-    process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
-    process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
-    process.pfMVAMEt.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
-    
-    process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
-    process.puJetIdForPFMVAMEt.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
-    process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
-    
-    process.mvaMETTauTau = cms.EDProducer('PFMETProducerMVATauTau', 
-                              **process.pfMVAMEt.parameters_())
-    
-    process.mvaMETTauTau.srcPFCandidates = cms.InputTag("packedPFCandidates")
-    process.mvaMETTauTau.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
-    process.mvaMETTauTau.srcRho = cms.InputTag("fixedGridRhoFastjetAll")
-    process.mvaMETTauTau.srcLeptons = cms.VInputTag(
-       cms.InputTag("slimmedTaus"), 
-       cms.InputTag("slimmedTaus")
-    )
-    process.mvaMETTauTau.permuteLeptons = cms.bool(True)
-    
-    process.mvaMETEleMu = cms.EDProducer('PFMETProducerMVATauTau', 
-                              **process.pfMVAMEt.parameters_())
-    
-    process.mvaMETEleMu.srcPFCandidates = cms.InputTag("packedPFCandidates")
-    process.mvaMETEleMu.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
-    process.mvaMETEleMu.srcRho = cms.InputTag("fixedGridRhoFastjetAll")
-    process.mvaMETEleMu.srcLeptons = cms.VInputTag(
-       cms.InputTag("slimmedElectrons"), 
-       cms.InputTag("slimmedMuons")
-    )
-    process.mvaMETEleMu.permuteLeptons = cms.bool(True)
-    
-    #process.newMVAMETSequence = cms.Sequence(process.ak4PFJets*process.ak4PFL1FastL2L3CorrectorChain*process.pfMVAMEtSequence*process.mvaMETTauMu*process.mvaMETTauEle)
-    ###process.newMVAMETSequence = cms.Sequence(process.ak4PFJets*process.ak4PFL1FastL2L3CorrectorChain*process.pfMVAMEtSequence*process.mvaMETTauTau)
-    process.newMVAMETSequence = cms.Path(process.ak4PFJets*process.ak4PFL1FastL2L3CorrectorChain*process.pfMVAMEtSequence*process.mvaMETTauTau*process.mvaMETEleMu)
-    
-    process.schedule.append(process.newMVAMETSequence)
 
 
 
