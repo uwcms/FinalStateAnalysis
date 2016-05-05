@@ -620,9 +620,8 @@ if options.runNewMVAMET:
     recorrectJets(process, isData)
     jetCollection = "patJetsReapplyJEC"
     
-    runMVAMET( process, jetCollectionPF = "patJetsReapplyJEC"  )
+    runMVAMET( process, jetCollectionPF = "patJetsReapplyJEC", srcElectrons = "eesDownElectronsEmbedding" )
     process.MVAMET.srcLeptons  = cms.VInputTag("slimmedMuons", "slimmedElectrons", "slimmedTaus")
-    process.MVAMET.srcElectrons = cms.InputTag(fs_daughter_inputs['electrons'])
     process.MVAMET.requireOS = cms.bool(False)
     process.newestMVAMETSequence = cms.Path(process.MVAMET)
 
