@@ -262,13 +262,14 @@ process.load('Configuration.StandardSequences.Services_cff')
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': '76X_mcRun2_asymptotic_RunIIFall15DR76_v1', 'datagt': '76X_dataRun2_16Dec2015_v0'}
-
-process.GlobalTag.globaltag = cms.string(GT[envvar])
+if options.runNewMVAMET :
+    GT = {'mcgt': '76X_mcRun2_asymptotic_RunIIFall15DR76_v1', 'datagt': '76X_dataRun2_16Dec2015_v0'}
+    process.GlobalTag.globaltag = cms.string(GT[envvar])
 
 from Configuration.AlCa.GlobalTag import GlobalTag
-#GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
-#process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
+if not options.runNewMVAMET :
+    GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+    process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 
 print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
