@@ -2,7 +2,8 @@ import FWCore.ParameterSet.Config as cms
 
 patFinalStateEventProducer = cms.EDProducer(
     "PATFinalStateEventProducer",
-    rhoSrc = cms.InputTag("fixedGridRhoFastjetAll"), #cms.InputTag("kt6PFJetsForRhoComputationVoronoi", "rho"),
+    #rhoSrc = cms.InputTag("fixedGridRhoFastjetAll"), #cms.InputTag("kt6PFJetsForRhoComputationVoronoi", "rho"),
+    rhoSrc = cms.InputTag('kt6PFJets', "rho"), #cms.InputTag("kt6PFJetsForRhoComputationVoronoi", "rho"),
     pvSrc = cms.InputTag("selectedPrimaryVertex"),
     pvSrcBackup = cms.InputTag("selectedPrimaryVertexUnclean"),
     verticesSrc = cms.InputTag("selectPrimaryVerticesQuality"),
