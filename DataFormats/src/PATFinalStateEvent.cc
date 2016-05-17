@@ -93,11 +93,13 @@ PATFinalStateEvent::PATFinalStateEvent(
     const std::vector<edm::Ptr<reco::Vertex>>& recoVertices,
     const edm::Ptr<pat::MET>& met,
     const TMatrixD& metCovariance,
+    const std::vector<pat::MET> MVAMETs,
     const pat::TriggerEvent triggerEvent,
     const edm::RefProd<std::vector<pat::TriggerObjectStandAlone>>& triggerObjects,
     const edm::TriggerNames& names,
     const pat::PackedTriggerPrescales& triggerPrescale,
     const edm::TriggerResults& triggerResults,
+    const std::vector<l1extra::L1JetParticle>& l1extraIsoTaus,
     const std::vector<PileupSummaryInfo>& puInfo,
     const lhef::HEPEUP& hepeup,
     const reco::GenParticleRefProd& genParticles,
@@ -123,10 +125,12 @@ PATFinalStateEvent::PATFinalStateEvent(
   names_(names),
   triggerPrescale_(triggerPrescale),
   triggerResults_(triggerResults),
+  l1extraIsoTaus_(l1extraIsoTaus),
   pv_(pv),
   recoVertices_(recoVertices),
   met_(met),
   metCovariance_(metCovariance),
+  MVAMETs_(MVAMETs),
   puInfo_(puInfo),
   lhe_(hepeup),
   genParticles_(genParticles),
@@ -191,8 +195,16 @@ const pat::PackedTriggerPrescales& PATFinalStateEvent::trigPrescale() const {
 const edm::TriggerResults& PATFinalStateEvent::trigResults() const {
   return triggerResults_; }
 
+const std::vector<l1extra::L1JetParticle>& PATFinalStateEvent::l1extraIsoTaus() const {
+  return l1extraIsoTaus_; }
+
 const edm::Ptr<pat::MET>& PATFinalStateEvent::met() const {
   return met_;
+}
+
+const std::vector<pat::MET> PATFinalStateEvent::MVAMETs() const {
+  //std::cout << "newMvaMets, len: " << MVAMETs_.size() <<std::endl;
+  return MVAMETs_;
 }
 
 const edm::Ptr<pat::MET> PATFinalStateEvent::met(
@@ -490,7 +502,6 @@ double PATFinalStateEvent::metShift(const std::string& type, const std::string& 
 
 }
 
-
 const edm::EventID& PATFinalStateEvent::evtId() const {
   return evtID_;
 }
@@ -655,9 +666,19 @@ const bool PATFinalStateEvent::findDecay(const int pdgIdMother, const int pdgIdD
   return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
 }
 
+float PATFinalStateEvent::getGenMass() const{
+  if(isRealData_) return -1;
+  return fshelpers::genMass(lhe_);
+}
+
 float PATFinalStateEvent::genHTT() const{
-  if(isRealData_) return 0;
+  if(isRealData_) return -1;
   return fshelpers::genHTT(lhe_);
+}
+
+float PATFinalStateEvent::numGenJets() const{
+  if(isRealData_) return -1;
+  return fshelpers::numGenJets(lhe_);
 }
 
 float  PATFinalStateEvent::jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const{

@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 patFinalStateEventProducer = cms.EDProducer(
     "PATFinalStateEventProducer",
-    rhoSrc = cms.InputTag('kt6PFJets', "rho"), #cms.InputTag("kt6PFJetsForRhoComputationVoronoi", "rho"),
+    rhoSrc = cms.InputTag("fixedGridRhoFastjetAll"),
     pvSrc = cms.InputTag("selectedPrimaryVertex"),
     pvSrcBackup = cms.InputTag("selectedPrimaryVertexUnclean"),
     verticesSrc = cms.InputTag("selectPrimaryVerticesQuality"),
@@ -13,6 +13,7 @@ patFinalStateEventProducer = cms.EDProducer(
     pfSrc = cms.InputTag("particleFlow"),
     metSrc = cms.InputTag("fixme"),
     metCovSrc = cms.InputTag("pfMEtSignCovMatrix"),
+    MVAMETSrc = cms.InputTag("MVAMET","MVAMET","Ntuples"),
     trgSrc = cms.InputTag("patTriggerEvent"),
     puInfoSrc = cms.InputTag("slimmedAddPileupInfo"),
     genParticleSrc = cms.InputTag("genParticles"),
@@ -31,6 +32,7 @@ patFinalStateEventProducer = cms.EDProducer(
     # now some miniAOD specific stuff
     trgPrescaleSrc = cms.InputTag("patTrigger"),
     trgResultsSrc = cms.InputTag("TriggerResults","","HLT"),
+    l1extraIsoTauSrc = cms.InputTag("l1extraParticles","IsoTau","RECO"),
     packedGenSrc = cms.InputTag("packedGenParticles"),
     packedPFSrc = cms.InputTag("packedPFCandidates"),
     jetAK8Src = cms.InputTag("slimmedJetsAK8"),

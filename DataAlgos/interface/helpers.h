@@ -58,8 +58,14 @@ namespace fshelpers {
   const bool findDecay(const reco::GenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter);
 
 
+  //Helper function to get the gen mass of the mother for MC stitching 
+  float genMass(const lhef::HEPEUP lheeventinfo); 
+
   //Helper function to add to the trees the gen level HTT 
   float genHTT(const lhef::HEPEUP lheeventinfo); 
+
+  //Helper function to add to the trees the number of gen jets 
+  float numGenJets(const lhef::HEPEUP lheeventinfo); 
 
   /// Helper function to get the first interesting mother particle 
   const reco::GenParticleRef getMotherSmart(const reco::GenParticleRef genPart, int idNOTtoMatch = -999);

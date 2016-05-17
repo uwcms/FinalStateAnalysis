@@ -67,6 +67,8 @@ pairs = PSet(
    
     object1_object2_Mass_TauEnUp = 'subcand({object1_idx}, "",{object2_idx},"tesUpTaus").get.mass',
     object1_object2_Mass_TauEnDown = 'subcand({object1_idx}, "",{object2_idx},"tesDownTaus").get.mass',
+    object1_object2_Mt_TauEnUp = 'subcand({object1_idx}, "",{object2_idx},"tesUpTaus").get.mt',
+    object1_object2_Mt_TauEnDown = 'subcand({object1_idx}, "",{object2_idx},"tesDownTaus").get.mt',
  
     object1_object2_collinearmass_JetEnUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"","jes+")',
     #object2_object1_collinearmass_JetEnUp = 'collinearMassMET({object2_idx}, "", {object1_idx},"","jes+")', # for now we only need m_t_coll

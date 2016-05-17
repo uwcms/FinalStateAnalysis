@@ -60,11 +60,13 @@ class PATFinalStateEvent {
         const std::vector<edm::Ptr<reco::Vertex>>& recoVertices,
         const edm::Ptr<pat::MET>& met,
         const TMatrixD& metCovariance,
+        const std::vector<pat::MET> MVAMETs,
         const pat::TriggerEvent triggerEvent,
         const edm::RefProd<std::vector<pat::TriggerObjectStandAlone> >& triggerObjects,
         const edm::TriggerNames& names,
         const pat::PackedTriggerPrescales& triggerPrescale,
         const edm::TriggerResults& triggerResults,
+        const std::vector<l1extra::L1JetParticle>& l1extraIsoTaus, 
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
         const reco::GenParticleRefProd& genParticles,
@@ -106,10 +108,13 @@ class PATFinalStateEvent {
     const edm::TriggerNames& names() const;
     const pat::PackedTriggerPrescales& trigPrescale() const;
     const edm::TriggerResults& trigResults() const;
+    const std::vector<l1extra::L1JetParticle>& l1extraIsoTaus() const;
 
     /*  These methods will be deprecated! */
     /// Get PFMET
     const edm::Ptr<pat::MET>& met() const;
+    /// Get new MVAMET
+    const std::vector<pat::MET> MVAMETs() const;
     /// Get MET covariance
     const TMatrixD& metCovariance() const;
     /// Get MET significance
@@ -155,8 +160,14 @@ class PATFinalStateEvent {
     //Finds a decay in MC
     const bool findDecay(const int pdgIdMother, const int pdgIdDaughter) const;
 
+    // Get the gen mass for weighting
+    float getGenMass() const;
+
     // Get the genHTT for weighting
     float genHTT() const;
+
+    // Get the number of gen jets for weighting
+    float numGenJets() const;
 
     /// Get the PU scenario used to generate this events (if MC)
     const std::string& puTag() const;
@@ -212,10 +223,12 @@ class PATFinalStateEvent {
     edm::TriggerNames names_;
     pat::PackedTriggerPrescales triggerPrescale_;
     edm::TriggerResults triggerResults_;
+    std::vector<l1extra::L1JetParticle> l1extraIsoTaus_;
     edm::Ptr<reco::Vertex> pv_;
     std::vector<edm::Ptr<reco::Vertex>> recoVertices_;
     edm::Ptr<pat::MET> met_;
     TMatrixD metCovariance_;
+    std::vector<pat::MET> MVAMETs_;
     std::vector<PileupSummaryInfo> puInfo_;
     lhef::HEPEUP lhe_;
     reco::GenParticleRefProd genParticles_;

@@ -95,6 +95,7 @@ id = PSet(
     
     # MVA based tau isolation discriminators new 7_6_x
     # With Old Decay Mode reconstruction:
+    objectByIsolationMVArun2v1DBoldDMwLTraw = '{object}.tauID("byIsolationMVArun2v1DBoldDMwLTraw")',
     objectByLooseIsolationMVArun2v1DBoldDMwLT = '{object}.tauID("byLooseIsolationMVArun2v1DBoldDMwLT")',
     objectByMediumIsolationMVArun2v1DBoldDMwLT = '{object}.tauID("byMediumIsolationMVArun2v1DBoldDMwLT")',
     objectByTightIsolationMVArun2v1DBoldDMwLT = '{object}.tauID("byTightIsolationMVArun2v1DBoldDMwLT")',
@@ -106,6 +107,7 @@ id = PSet(
     objectByVTightIsolationMVArun2v1DBdR03oldDMwLT = '{object}.tauID("byVTightIsolationMVArun2v1DBdR03oldDMwLT")',
     
     #With New Decay Mode Reconstruction:
+    objectByIsolationMVArun2v1DBnewDMwLTraw = '{object}.tauID("byIsolationMVArun2v1DBnewDMwLTraw")',
     objectByLooseIsolationMVArun2v1DBnewDMwLT = '{object}.tauID("byLooseIsolationMVArun2v1DBnewDMwLT")',
     objectByMediumIsolationMVArun2v1DBnewDMwLT = '{object}.tauID("byMediumIsolationMVArun2v1DBnewDMwLT")',
     objectByTightIsolationMVArun2v1DBnewDMwLT = '{object}.tauID("byTightIsolationMVArun2v1DBnewDMwLT")',

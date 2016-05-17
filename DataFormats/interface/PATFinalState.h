@@ -152,11 +152,26 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // return the SVfit computed  mass
     std::vector<double> SVfit(int i, int j) const;
 
-    // return the Higgs to TauTau decided upon gen matching flags
-    double tauGenMatch( size_t i ) const;//const reco::Candidate* particle) const;
+    // return the associated pairwise Mva Met info including pt, phi, covMatrix 
+    // chanNum is a code for which channel 0 = tau tau, 1 = EMu
+    // No other channels added yet
+    std::vector<double> getMVAMET( size_t i, size_t j ) const;
 
-    // return the genTau associated with a pat::tau
-    const reco::GenParticle* getGenTau(const pat::Tau& patTau) const;
+    // return the Higgs to TauTau decided upon gen matching flags
+    double tauGenMatch( size_t i ) const;
+    // return kin variables for gen taus to test if pat::tau.genJets() works the same
+    std::vector<double> tauGenKin( size_t i ) const;
+    // return a vector of rebuilt "gen taus" w/o neutrino energy and 
+    // excluding E/Mu contributions
+    std::vector<reco::Candidate::LorentzVector> buildGenTaus() const;
+
+    // Gives kinematic info on the generator associated mother pt eta phi
+    // including and excluding visible products
+    std::vector<double> tauGenMotherKin() const;
+
+    // Use this for top pt reweighting, fills the gen pt
+    // of top quarks, returns -10 if no tops found
+    std::vector<double> getTopQuarkInitialPts() const;
 
     /// Get the transverse mass between two objects
     double mt(int i, const std::string& tagI,
@@ -184,6 +199,13 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     double pZeta(int i=0, int j=1) const;
     /// Visible pZeta.
     double pZetaVis(int i=0, int j=1) const;
+
+    /// Compute the transverse momentum of the whole
+    /// di-tau system
+    double PtDiTauSyst(int i, int j) const;
+
+    /// Total transverse mass of di-tau + met
+    double MtTotal(int i, int j) const;
 
     /// Check if the ith and jth daughters are like signed
     bool likeSigned(int i, int j) const;
@@ -232,7 +254,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// candidate objects and compute necessary vars
     std::vector<double> jetVariables(const std::string& jetCuts, double dr=0.3) const;
     //JetVariables jetVariables(const std::string& jetCuts, double dr=0.3) const;
-
+    
     /// Check if two daughters are ordered in PT.
     /// This is equivalent to (daughter(i).pt > daughter(j).pt)
     /// Useful when ensuring a unique candidate is selected from many
@@ -379,6 +401,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // Get the pt of a daughter's userCand if it's closer than deltaR=0.4 and 
     // farther than deltaR=0.01
     const float daughterUserCandIsoContribution(const size_t i, const std::string& label) const;
+
+    // Matching FS object to L1 iso taus
+    const float l1extraIsoTauMatching(const size_t i) const;
+    const float doubleL1extraIsoTauMatching(const size_t i, const size_t j) const;
 
   private:
     edm::Ptr<PATFinalStateEvent> event_;

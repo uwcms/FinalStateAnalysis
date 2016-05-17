@@ -12,8 +12,6 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 
 std::vector<double> computeJetInfo(
-    const std::vector<const reco::Candidate*>& hardScatter,
-    const reco::Candidate::LorentzVector& metp4,
     const std::vector<const reco::Candidate*>& jets);
 
 #endif /* end of include guard: JETSELECTIONS_9N7EKFZ2 */

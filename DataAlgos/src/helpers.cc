@@ -286,6 +286,26 @@ namespace fshelpers {
       return found;
   }
 
+  float genMass(const lhef::HEPEUP lheeventinfo){
+      reco::Candidate::LorentzVector genMass;
+      int cnt = 0;
+      for (size_t i = 0; i < lheeventinfo.ISTUP.size() ; ++i) {
+          if (lheeventinfo.ISTUP[i] == 1 ) {
+              int pdgId = abs(lheeventinfo.IDUP[i]);
+              if (pdgId == 11 || pdgId == 13 || pdgId == 15) {
+                  cnt += 1;
+                  reco::Candidate::LorentzVector tmpVec = reco::Candidate::LorentzVector(lheeventinfo.PUP[i].x[0],
+                            lheeventinfo.PUP[i].x[1],
+                            lheeventinfo.PUP[i].x[2],
+                            lheeventinfo.PUP[i].x[3]);
+                  genMass += tmpVec;
+              }
+          }
+      }
+      //std::cout << " - Gen Mass: " << genMass.M() << std::endl;
+      return genMass.M();
+  }
+
   float genHTT(const lhef::HEPEUP lheeventinfo){
       float sumpt=0;
       for (int i = 0; i < lheeventinfo.NUP ; ++i) {
@@ -297,6 +317,19 @@ namespace fshelpers {
        }
 
       return sumpt;
+  }
+
+  float numGenJets(const lhef::HEPEUP lheeventinfo){
+      float nOutgoing = 0; //  Number of outgoing partons
+      for (int i = 0; i < lheeventinfo.NUP ; ++i) {
+         int absPdgId = TMath::Abs(lheeventinfo.IDUP[i]);
+         int status = lheeventinfo.ISTUP[i];
+         if ( status == 1 && ((absPdgId >= 1 && absPdgId <= 6) || absPdgId == 21) ) { // quarks and gluons
+           ++nOutgoing; 
+         }
+      }
+
+      return nOutgoing;
   }
 
   float jetQGVariables(const reco::CandidatePtr  jetptr, const std::string& myvar, const std::vector<edm::Ptr<reco::Vertex>>& recoVertices)

@@ -55,6 +55,7 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
         'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',    # both 25 and 50 ns cutbased ids produced
         'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_50ns_V1_cff',
         'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV60_cff',                 # recommended for both 50 and 25 ns
+        'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV51_cff',                 # recommended for both 50 and 25 ns
         'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_nonTrig_V1_cff', # will not be produced for 50 ns, triggering still to come
         'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',    # 25 ns trig
         'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',    # 50 ns trig
@@ -83,6 +84,7 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
             addVIDSelectionToPATProducer(patProducer,eids,idName,addUserData)
     for idmod in id_modules:
         setupAllVIDIdsInModule(process,idmod,modSetupVIDElectronSelection)
+
     
     CBIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight", "HEEPV60", "MVANonTrigWP80", "MVANonTrigWP90", "MVATrigWP90", "MVATrigWP80"] # keys of cut based id user floats
     

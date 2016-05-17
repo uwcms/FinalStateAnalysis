@@ -10,19 +10,17 @@
 
 //JetVariables computeJetInfo(
 std::vector<double> computeJetInfo(
-    const std::vector<const reco::Candidate*>& hardScatter,
-    const reco::Candidate::LorentzVector& metp4,
     const std::vector<const reco::Candidate*>& jets) {
   //JetVariables output;
   std::vector<double> output;
 
   //for (auto var : output) {
-  //  var = -10;
+  //  var = -9999;
   //}
   int numJets = jets.size();
   if (numJets == 0) {
-    for (int i = 0; i < 12; ++i) {
-      output.push_back( -10 );
+    for (int i = 0; i < 16; ++i) {
+      output.push_back( -9999 );
     }
   }
   if (numJets == 1) {
@@ -32,10 +30,15 @@ std::vector<double> computeJetInfo(
     output.push_back( jets[0]->phi() );
     output.push_back( jet1Pat->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
     output.push_back( jet1Pat->userFloat("pileupJetId:fullDiscriminant") );
-    //output.push_back( jets[0]->SomeConversionThingForJEC );
-    output.push_back( -10 );
-    for (int i = 0; i < 6; ++i) {
-      output.push_back( -10 );
+    output.push_back( jet1Pat->partonFlavour() );
+    if (jet1Pat->hasUserCand("jes+")) {
+        output.push_back( jet1Pat->userCand("jes+")->pt() );}
+    else output.push_back( -9999 );
+    if (jet1Pat->hasUserCand("jes-")) {
+        output.push_back( jet1Pat->userCand("jes-")->pt() );}
+    else output.push_back( -9999 );
+    for (int i = 0; i < 8; ++i) {
+      output.push_back( -9999 );
     }
   }
   if (numJets >= 2) {
@@ -46,10 +49,16 @@ std::vector<double> computeJetInfo(
       output.push_back( jets[i]->phi() );
       output.push_back( jetPat->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
       output.push_back( jetPat->userFloat("pileupJetId:fullDiscriminant") );
-      //output.push_back( jets[i]->SomeConversionThingForJEC );
-      output.push_back( -10 );
+      output.push_back( jetPat->partonFlavour() );
+      if (jetPat->hasUserCand("jes+")) {
+          output.push_back( jetPat->userCand("jes+")->pt() );}
+      else output.push_back( -9999 );
+      if (jetPat->hasUserCand("jes-")) {
+          output.push_back( jetPat->userCand("jes-")->pt() );}
+      else output.push_back( -9999 );
     }
   }
 
   return output;
 }
+

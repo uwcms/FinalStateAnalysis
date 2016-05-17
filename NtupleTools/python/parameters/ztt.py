@@ -25,15 +25,16 @@ parameters = {
     'preselection' : OrderedDict(
         [
             # Remove jets that overlap our leptons
-            ('j', {
+            ('j', { # Made pt requirement for E/Mu to clean an overlapping jet so
+                    # that this never happens
                     'selection' : 'pt > 20 && abs(eta) < 4.7 && userFloat("idLoose") > 0.5',
                     'e' : {
                         'deltaR' : 0.5,
-                        'selection' : 'userFloat("MVANonTrigWP90") > 0.5 && pt > 10 && abs(eta) < 2.5',
+                        'selection' : 'userFloat("MVANonTrigWP90") > 0.5 && pt > 9999 && abs(eta) < 2.5',
                         },
                     'm' : {
                         'deltaR' : 0.5,
-                        'selection' : 'isMediumMuon() > 0.5 && pt > 10 && abs(eta) < 2.4',
+                        'selection' : 'isMediumMuon() > 0.5 && pt > 9999 && abs(eta) < 2.4',
                         },
                     }
              )
@@ -47,7 +48,7 @@ parameters = {
         'm': 'pt > 10 && (isGlobalMuon | isTrackerMuon)',
         't': 'abs(eta) < 2.5 && pt > 17',
         'g': 'abs(superCluster().eta()) < 3.0 && pt > 10',
-        'j': 'pt>20 && abs(eta) < 2.5 && userFloat("idLoose")'
+        'j': 'pt>20 && abs(eta) < 4.7 && userFloat("idLoose")'
     },
 
 
@@ -59,14 +60,25 @@ parameters = {
 
     # additional variables for ntuple
     'eventVariables' : PSet(
-        muVetoZTTp001 = 'vetoMuons(0.001, "pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt - 0.5 * pfIsolationR03().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0").size()',
-        eVetoZTTp001 = 'vetoElectrons(0.001, "pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0").size()',
+        #buildGenTaus = 'buildGenTaus.size()',
+        numGenJets = 'evt.numGenJets()',
+        genMass = 'evt.getGenMass()',
         muVetoZTTp001dxyz = 'vetoMuons(0.001, "pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt - 0.5 * pfIsolationR03().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
         eVetoZTTp001dxyz = 'vetoElectrons(0.001, "pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
+        muVetoZTTp001dxyzR0 = 'vetoMuons(0.0, "pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt - 0.5 * pfIsolationR03().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
+        eVetoZTTp001dxyzR0 = 'vetoElectrons(0.0, "pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
 
         jetVeto20ZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 4.7").size()',
+        jetVeto20RecoilZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5").size()',
+        jetVeto20UpZTT = 'vetoJets(0.5, "userCand(\'jes+\').pt > 20 & abs(eta) < 4.7").size()',
+        jetVeto20DownZTT = 'vetoJets(0.5, "userCand(\'jes-\').pt > 20 & abs(eta) < 4.7").size()',
         jetVeto30ZTT = 'vetoJets(0.5, "pt > 30 & abs(eta) < 4.7").size()',
-        bjetCISVVeto20MediumZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.89").size()',
+        jetVeto30RecoilZTT = 'vetoJets(0.5, "pt > 30 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5").size()',
+        jetVeto30UpZTT = 'vetoJets(0.5, "userCand(\'jes+\').pt > 30 & abs(eta) < 4.7").size()',
+        jetVeto30DownZTT = 'vetoJets(0.5, "userCand(\'jes-\').pt > 30 & abs(eta) < 4.7").size()',
+        bjetCISVVeto20LooseZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.46").size()',
+        bjetCISVVeto20MediumZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8").size()',
+        bjetCISVVeto20TightZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.935").size()',
         isHtautau='evt.findDecay(25,15)',
         isHmumu='evt.findDecay(25,13)',
         isHee='evt.findDecay(25,11)',
@@ -79,29 +91,47 @@ parameters = {
         vbfDphiZTT = 'vbfVariables("pt > 20 & abs(eta) < 4.7", 0.5).dphi',
         vbfDijetPtZTT = 'vbfVariables("pt > 20 & abs(eta) < 4.7", 0.5).dijetpt',
         
+        # b tag SF promote / demote method
+        NBTagPDL_idL_jVeto = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & userFloat(\'btaggedL\') > 0.5 ").size()',
+        NBTagPDM_idL_jVeto = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & userFloat(\'btaggedM\') > 0.5 ").size()',
+        NBTagPDL_jVeto = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'btaggedL\') > 0.5 ").size()',
+        NBTagPDM_jVeto = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'btaggedM\') > 0.5 ").size()',
+
         # Leading and sublead jets
         j1pt = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(0)',
         j1eta = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(1)',
         j1phi = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(2)',
         j1csv = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(3)',
-        j1mva = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(4)',
-        j2pt = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(6)',
-        j2eta = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(7)',
-        j2phi = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(8)',
-        j2csv = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(9)',
-        j2mva = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(10)',
+        j1pu = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(4)',
+        j1flavor = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(5)',
+        j1ptUp = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(6)',
+        j1ptDown = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(7)',
+        j2pt = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(8)',
+        j2eta = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(9)',
+        j2phi = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(10)',
+        j2csv = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(11)',
+        j2pu = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(12)',
+        j2flavor = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(13)',
+        j2ptUp = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(14)',
+        j2ptDown = 'jetVariables("pt > 20 & abs(eta) < 4.7", 0.5).at(15)',
 
         # Leading and subleading BTagged Jets
-        jb1pt = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.89", 0.5).at(0)',
-        jb1eta = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\')", 0.5).at(1)',
-        jb1phi = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\')", 0.5).at(2)',
-        jb1csv = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\')", 0.5).at(3)',
-        jb1mva = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\')", 0.5).at(4)',
-        jb2pt = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\')", 0.5).at(6)',
-        jb2eta = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\')", 0.5).at(7)',
-        jb2phi = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\')", 0.5).at(8)',
-        jb2csv = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\')", 0.5).at(9)',
-        jb2mva = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\')", 0.5).at(10)',
+        jb1pt = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(0)',
+        jb1eta = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(1)',
+        jb1phi = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(2)',
+        jb1csv = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(3)',
+        jb1pu = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(4)',
+        jb1flavor = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(5)',
+        jb1ptUp = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(6)',
+        jb1ptDown = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(7)',
+        jb2pt = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(8)',
+        jb2eta = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(9)',
+        jb2phi = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(10)',
+        jb2csv = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(11)',
+        jb2pu = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(12)',
+        jb2flavor = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(13)',
+        jb2ptUp = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(14)',
+        jb2ptDown = 'jetVariables("pt > 20 & abs(eta) < 4.7 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8", 0.5).at(15)',
     ),
 
 
@@ -163,6 +193,8 @@ parameters = {
 
 
     'tauVariables' : PSet(
+        
+        objectL1IsoTauMatch = 'l1extraIsoTauMatching({object_idx})',
         # Sync Triggers
         objectDoubleTau40Filter = 'matchToHLTFilter({object_idx}, "hltDoublePFTau40TrackPt1MediumIsolationDz02Reg", 0.5)',
         objectMatchesDoubleTau40Path      = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v\\d+", 0.5)',
@@ -171,6 +203,10 @@ parameters = {
         objectMatchesDoubleTau35Path      = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
         objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isPrompt() : -999',
         objectZTTGenMatching = 'tauGenMatch({object_idx})', 
+        objectZTTGenPt = 'tauGenKin({object_idx}).at(0)', 
+        objectZTTGenEta = 'tauGenKin({object_idx}).at(1)', 
+        objectZTTGenPhi = 'tauGenKin({object_idx}).at(2)', 
+        objectZTTGenDR = 'tauGenKin({object_idx}).at(3)', 
     ),
 
 
@@ -184,5 +220,24 @@ parameters = {
 
 
     # dicandidates of form: object1_object2_VarName = 'string expression for candidate'
-    'dicandidateVariables' : PSet(),
+    'dicandidateVariables' : PSet(
+        object1_object2_PZetaLess0p85PZetaVis = 'pZeta({object1_idx}, {object2_idx}) - 0.85*pZetaVis({object1_idx}, {object2_idx})',
+        object1_object2_pt_tt = 'PtDiTauSyst({object1_idx}, {object2_idx})',
+        object1_object2_MtTotal = 'MtTotal({object1_idx}, {object2_idx})',
+        MvaMet = 'getMVAMET({object1_idx},{object2_idx}).at(0)',
+        MvaMetPhi = 'getMVAMET({object1_idx},{object2_idx}).at(1)',
+        MvaMetCovMatrix00 = 'getMVAMET({object1_idx},{object2_idx}).at(2)',
+        MvaMetCovMatrix10 = 'getMVAMET({object1_idx},{object2_idx}).at(3)',
+        MvaMetCovMatrix01 = 'getMVAMET({object1_idx},{object2_idx}).at(4)',
+        MvaMetCovMatrix11 = 'getMVAMET({object1_idx},{object2_idx}).at(5)',
+        vispX='tauGenMotherKin().at(0)',
+        vispY='tauGenMotherKin().at(1)',
+        genpX='tauGenMotherKin().at(2)',
+        genpY='tauGenMotherKin().at(3)',
+        genpT='tauGenMotherKin().at(4)',
+        genM='tauGenMotherKin().at(5)',
+        doubleL1IsoTauMatch = 'doubleL1extraIsoTauMatching({object1_idx},{object2_idx})',
+        topQuarkPt1 = 'getTopQuarkInitialPts().at(0)',
+        topQuarkPt2 = 'getTopQuarkInitialPts().at(1)',
+    ),
 }

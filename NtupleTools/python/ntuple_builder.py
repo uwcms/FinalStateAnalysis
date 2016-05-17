@@ -207,6 +207,7 @@ def make_ntuple(*legs, **kwargs):
     hzz = kwargs.get('hzz',False)
 
     runMVAMET = kwargs.get('runMVAMET', False)
+    runNewMVAMET = kwargs.get('runNewMVAMET', False)
 
     use25ns = kwargs.get('use25ns', True)
     isMC = kwargs.get('isMC', False)
@@ -389,6 +390,13 @@ def make_ntuple(*legs, **kwargs):
         notInMiniAOD.append("mvaMet((Et)|(Phi))")
         notInMiniAOD.append("mvaMetCov((00)|(01)|(10)|(11))")
         notInMiniAOD.append("[emtgj][1-9]?MtToMVAMET")
+
+    # same for new mvamet
+    if not runNewMVAMET:
+        notInMiniAOD.append("Mva((Met)|(MetPhi))")
+        notInMiniAOD.append("MvaMetCovMatrix((00)|(01)|(10)|(11))")
+        notInMiniAOD.append("NBTagPD((L)|(M))_idL_jVeto")
+        notInMiniAOD.append("NBTagPD((L)|(M))_jVeto")
 
     allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")
     

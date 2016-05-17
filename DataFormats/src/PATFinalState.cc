@@ -336,8 +336,83 @@ PATFinalState::SVfit(int i, int j) const {
       evt()->evtId());
 }
 
+
+std::vector<double>
+PATFinalState::getMVAMET(size_t i, size_t j ) const {
+  //std::cout << "new mva mets" << std::endl;
+  std::vector<double> returns;
+  std::vector<double> failedV(6, -1.0);
+  std::vector<pat::MET> Mets;
+  Mets = evt()->MVAMETs();
+  if (Mets.size() == 0) return failedV;
+  else {
+    double pt1 = daughter(i)->pt();
+    double pt2 = daughter(j)->pt();
+    double eta1 = daughter(i)->eta();
+    double eta2 = daughter(j)->eta();
+    double phi1 = daughter(i)->phi();
+    double phi2 = daughter(j)->phi();
+    double pdgId1 = daughter(i)->pdgId();
+    double pdgId2 = daughter(j)->pdgId();
+    //std::cout << "daughter1 pt: " << pt1 << std::endl;
+    //std::cout << "daughter2 pt: " << pt2 << std::endl;
+    //std::cout << daughter(i) << std::endl;
+    //std::cout << daughter(j) << std::endl;
+    //std::cout << "mets:" << std::endl;
+    //int cnt = 0;
+    for ( auto met : Mets ) {
+      //std::cout << "met: "<<cnt<<std::endl;
+      double ptm1 = met.userCand("lepton0")->pt();
+      double ptm2 = met.userCand("lepton1")->pt();
+      double etam1 = met.userCand("lepton0")->eta();
+      double etam2 = met.userCand("lepton1")->eta();
+      double phim1 = met.userCand("lepton0")->phi();
+      double phim2 = met.userCand("lepton1")->phi();
+      double pdgIdm1 = met.userCand("lepton0")->pdgId();
+      double pdgIdm2 = met.userCand("lepton1")->pdgId();
+
+      bool ptMatch = false;
+      bool etaMatch = false;
+      bool phiMatch = false;
+      bool pdgIdMatch = false;
+
+      if ((pt1==ptm1 && pt2==ptm2) || (pt1==ptm2&&pt2==ptm1)) ptMatch = true;
+      else continue;
+      if ((eta1==etam1 && eta2==etam2) || (eta1==etam2&&eta2==etam1)) etaMatch = true;
+      else continue;
+      if ((phi1==phim1 && phi2==phim2) || (phi1==phim2&&phi2==phim1)) phiMatch = true;
+      else continue;
+      if ((pdgId1==pdgIdm1 && pdgId2==pdgIdm2) || (pdgId1==pdgIdm2&&pdgId2==pdgIdm1)) pdgIdMatch = true;
+      else continue;
+      if (ptMatch && etaMatch && phiMatch && pdgIdMatch) {
+        //std::cout << "\nEQUAL\n" << std::endl;
+        //std::cout << " - MEt: " << met.pt() << std::endl;
+        //std::cout << " - MEtPhi: " << met.phi() << std::endl;
+        //std::cout << " - Cov00: " << met.getSignificanceMatrix()[0][0] << std::endl;
+        //std::cout << " - Cov10: " << met.getSignificanceMatrix()[1][0] << std::endl;
+        //std::cout << " - Cov01: " << met.getSignificanceMatrix()[0][1] << std::endl;
+        //std::cout << " - Cov11: " << met.getSignificanceMatrix()[1][1] << std::endl;
+        returns.push_back( met.pt() );
+        returns.push_back( met.phi() );
+        returns.push_back( met.getSignificanceMatrix()[0][0] );
+        returns.push_back( met.getSignificanceMatrix()[1][0] );
+        returns.push_back( met.getSignificanceMatrix()[0][1] );
+        returns.push_back( met.getSignificanceMatrix()[1][1] );
+        return returns;
+      }
+  
+  
+    }
+  return failedV;
+  }
+}
+
+
+
 double
 PATFinalState::tauGenMatch( size_t i ) const {
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) return -1;
     // Get all gen particles in the event
     const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
     reco::GenParticleCollection genParticles = *genCollectionRef;
@@ -352,46 +427,210 @@ PATFinalState::tauGenMatch( size_t i ) const {
           double tmpDR = reco::deltaR( daughter(i)->p4(), genp.p4() );
           if ( tmpDR < closestDR ) { closest = genp; closestDR = tmpDR; }
         }
-        if (closestDR > 0.2) return 6.0;
+        //if (closestDR > 0.2) return 6.0;
         //std::cout << "Closest DR: " << closestDR << std::endl;
-        double dID = abs(daughter(i)->pdgId());
+        //double dID = abs(daughter(i)->pdgId());
         double genID = abs(closest.pdgId());
         //std::cout << "Cand pdgID: " << dID << " Gen pdgID: " << genID << std::endl;
         if (genID == 11 && closest.pt() > 8 && closest.statusFlags().isPrompt() ) return 1.0;
         else if (genID == 13 && closest.pt() > 8 && closest.statusFlags().isPrompt() ) return 2.0;
         else if (genID == 11 && closest.pt() > 8 && closest.statusFlags().isDirectPromptTauDecayProduct() ) return 3.0;
         else if (genID == 13 && closest.pt() > 8 && closest.statusFlags().isDirectPromptTauDecayProduct() ) return 4.0;
-        else if (dID == 15) {
-            const pat::Tau &patTauRef = *daughterAsTau(i);
-            const reco::GenParticle* genTau = getGenTau( patTauRef );
-            if ( genTau != NULL && genTau->pt() > 15 ) {
-                //std::cout << "getGenTau Worked!" << std::endl;
-                return 5.0;
-            }
-            else return 6.0;
+        // If closest wasn't E / Mu, we need to rebuild taus and check them
+        else {
+
+          // Get rebuilt gen taus w/o neutrino energy
+          std::vector<reco::Candidate::LorentzVector> genTaus = buildGenTaus();
+
+          for ( auto vec : genTaus ) {
+            double tmpDR2 = reco::deltaR( daughter(i)->p4(), vec );
+            //std::cout << "DR: " << tmpDR2 << "   genTauPt: " << vec.Pt() <<std::endl;
+            //std::cout << "DR: " << tmpDR2 << std::endl;
+            if (tmpDR2 < 0.2) {
+              //std::cout << " ~~~~~ Found Gen Tau " << std::endl;
+              return 5.0;}
+          }
+          //std::cout << " - - - - No Gen Tau " << std::endl;
+          return 6.0;
+
         }
-        //else if (genID == 15 && closest.pt() > 15 && closest.statusFlags().isPrompt() ) return 5.0;
-        //else if (genID == 15 && closest.statusFlags().isPrompt() && daughterAsTau(i)->userFloat("genJetPt") > 15.0 ) return 5.0;
-        //else if (dID == 15 && closest.statusFlags().isPrompt() && daughterAsTau(i)->userFloat("genJetPt") > 15.0 ) return 5.0;
-        else return 6.0;
     }
     return -1.0;
 } 
 
-const reco::GenParticle*
-PATFinalState::getGenTau(const pat::Tau& patTau) const
-{
-  std::vector<reco::GenParticleRef> associatedGenParticles = patTau.genParticleRefs();
-  for ( std::vector<reco::GenParticleRef>::const_iterator it = associatedGenParticles.begin();
-    it != associatedGenParticles.end(); ++it ) {
-    if ( it->isAvailable() ) {
-      const reco::GenParticleRef& genParticle = (*it);
-      if ( genParticle->pdgId() == -15 || genParticle->pdgId() == +15 ) return genParticle.get();
+std::vector<double>
+PATFinalState::tauGenKin( size_t i ) const {
+    std::vector<double> output;
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) {
+        for (int i = 0; i < 4; ++i) {
+            output.push_back( -10 );
+        }
+        return output;
     }
-  }
 
-  return 0;
+    // Build gen tau jets in the event
+    std::vector<reco::Candidate::LorentzVector> genTaus = buildGenTaus();
+
+    // Find closest tau jet
+    double closestDR = 999;
+    reco::Candidate::LorentzVector closest;
+    for ( auto vec : genTaus ) {
+        double tmpDR = reco::deltaR( daughter(i)->p4(), vec );
+        if ( tmpDR < closestDR ) { closest = vec; closestDR = tmpDR; }
+    }
+
+    if (closestDR == 999) {
+        for (int i = 0; i < 4; ++i) {
+            output.push_back( -10 );
+        }
+    }
+    else {
+        output.push_back( closest.pt() );
+        output.push_back( closest.eta() );
+        output.push_back( closest.phi() );
+        output.push_back( closestDR );
+    }
+
+    return output;
+} 
+
+
+std::vector<reco::Candidate::LorentzVector>
+PATFinalState::buildGenTaus() const {
+    bool include_leptonic = false;
+    std::vector< reco::Candidate::LorentzVector > genTauJets;
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) return genTauJets;
+    // Get all gen particles in the event
+    const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
+    reco::GenParticleCollection genParticles = *genCollectionRef;
+
+    if ( genParticles.size() > 0 ) {
+        for(size_t m = 0; m != genParticles.size(); ++m) {
+          reco::GenParticle& genp = genParticles[m];
+          size_t id = abs(genp.pdgId());
+          if (id == 15) {
+            //std::cout << " - pdgId: " << id << std::endl;
+            bool prompt = genp.statusFlags().isPrompt();
+            if (prompt) {
+              //std::cout << " --- status: " << prompt << std::endl;
+              //std::cout << " ----- Num of daughters: " << genp.numberOfDaughters() << std::endl;
+              //std::cout << " ----- Num of mothers: " << genp.numberOfMothers() << std::endl;
+              if (genp.numberOfDaughters() > 0) {
+                //std::cout << " ------- Gen > 0" << std::endl;
+                bool has_tau_daughter = false;
+                bool has_lepton_daughter = false;
+                for (unsigned j = 0; j < genp.numberOfDaughters(); ++j) {
+                  if (abs(genp.daughterRef(j)->pdgId()) == 15) has_tau_daughter = true;
+                  if (abs(genp.daughterRef(j)->pdgId()) == 11 || abs(genp.daughterRef(j)->pdgId()) == 13) has_lepton_daughter = true;
+                }
+                if (has_tau_daughter) {
+                  //std::cout << "Has Tau Daughter" << std::endl;
+                  continue;}
+                if (has_lepton_daughter && !include_leptonic) {
+                  //std::cout << "Has E/Mu Daughter" << std::endl;
+                  continue;}
+
+                reco::Candidate::LorentzVector genTau;
+                for(size_t dau = 0; dau != genp.numberOfDaughters(); ++dau) {
+                  size_t id_d = abs(genp.daughterRef( dau )->pdgId());
+                  //if (id_d == 11 || id_d == 12 || id_d == 13 || id_d == 14 || id_d == 16) continue; //exclude neutrinos
+                  if (id_d == 12 || id_d == 14 || id_d == 16) continue; //exclude neutrinos
+                  genTau += genp.daughterRef( dau )->p4();
+                  //std::cout << " ------- " << dau << ": " << genTau.Pt() << std::endl;
+                } // daughers loop
+                genTauJets.push_back( genTau );
+              } // daughers > 0
+            } // prompt
+          } // tau ID
+        } // gen Loop
+        //std::cout << "Total # of Gen Taus Jets: " << genTauJets.size() << std::endl;
+    }
+    return genTauJets;
+} 
+
+std::vector<double>
+PATFinalState::tauGenMotherKin() const {
+
+    std::vector<double> output;
+
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) {
+        for (int i = 0; i < 4; ++i) output.push_back( -10 );
+        return output;}
+    // Get all gen particles in the event
+    const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
+    reco::GenParticleCollection genParticles = *genCollectionRef;
+
+    reco::Candidate::LorentzVector visVec;
+    reco::Candidate::LorentzVector withInvisVec;
+
+    if ( genParticles.size() > 0 ) {
+        for(size_t m = 0; m != genParticles.size(); ++m) {
+          reco::GenParticle& genp = genParticles[m];
+          bool fromHardProcessFinalState = genp.fromHardProcessFinalState();
+          bool isDirectHardProcessTauDecayProduct = genp.statusFlags().isDirectHardProcessTauDecayProduct();
+          bool isMuon = false;
+          bool isElectron = false;
+          bool isNeutrino = false;
+          int pdgId = fabs( genp.pdgId() );
+          if (pdgId == 11) isElectron = true;
+          if (pdgId == 13) isMuon = true;
+          if (pdgId == 12) isNeutrino = true;
+          if (pdgId == 14) isNeutrino = true;
+          if (pdgId == 16) isNeutrino = true;
+          if ((fromHardProcessFinalState && (isMuon || isElectron || isNeutrino)) || isDirectHardProcessTauDecayProduct) {
+            withInvisVec += genp.p4();}
+          if ((fromHardProcessFinalState && (isMuon || isElectron)) || (isDirectHardProcessTauDecayProduct && !isNeutrino)) {
+            visVec += genp.p4();}
+        }
+    }
+    output.push_back( visVec.px() );
+    output.push_back( visVec.py() );
+    output.push_back( withInvisVec.px() );
+    output.push_back( withInvisVec.py() );
+    output.push_back( withInvisVec.pt() );
+    output.push_back( withInvisVec.M() );
+    return output;
+} 
+
+std::vector<double>
+PATFinalState::getTopQuarkInitialPts() const {
+
+    std::vector<double> output;
+
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) {
+        for (int i = 0; i < 2; ++i) output.push_back( -10 );
+        return output;}
+    // Get all gen particles in the event
+    const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
+    reco::GenParticleCollection genParticles = *genCollectionRef;
+
+    // Get pt of generator top quarks
+    //int cnt = 0;
+    if ( genParticles.size() > 0 ) {
+        for(size_t m = 0; m != genParticles.size(); ++m) {
+          reco::GenParticle& genp = genParticles[m];
+          int pdgId = fabs( genp.pdgId() );
+          if (pdgId == 6) {
+            bool fromHardProcess = genp.statusFlags().fromHardProcess();
+            bool isLastCopy = genp.statusFlags().isLastCopy();
+            if (fromHardProcess && isLastCopy) {
+              //cnt += 1;
+              output.push_back( genp.pt() );
+              //std::cout << cnt << " Gen Pt: " << genp.pt() << std::endl;
+            }
+          }
+        }
+    }
+    if (output.size() < 2) {
+        output.push_back( -10 ); output.push_back( -10 );
+    }
+    return output;
 }
+
 
 double
 PATFinalState::dR(int i, const std::string& sysTagI,
@@ -668,6 +907,28 @@ double PATFinalState::pZeta(int i, int j) const {
 double PATFinalState::pZetaVis(int i, int j) const {
   return fshelpers::pZeta(daughter(i)->p4(), daughter(j)->p4(),
       met()->px(), met()->py()).second;
+}
+
+double PATFinalState::PtDiTauSyst(int i, int j) const {
+  return (daughter(i)->p4() + daughter(j)->p4() + met()->p4()).Pt();
+}
+
+double PATFinalState::MtTotal(int i, int j) const {
+  edm::Ptr<pat::MET> mvaMet = evt()->met("mvamet");
+  double rad;
+  // Check if mvaMet is available before trying to use it
+  if (mvaMet.isNull()) {
+    rad = (2 * daughter(i)->pt() * met()->pt()) * (1 - TMath::Cos( daughter(i)->phi() - met()->phi()));
+    rad += (2 * daughter(j)->pt() * met()->pt()) * (1 - TMath::Cos( daughter(j)->phi() - met()->phi()));
+    rad += (2 * daughter(i)->pt() * daughter(j)->pt()) * (1 - TMath::Cos( daughter(i)->phi() - daughter(j)->phi()));
+  }
+  // if MVA MET
+  else {
+    rad = (2 * daughter(i)->pt() * mvaMet->pt()) * (1 - TMath::Cos( daughter(i)->phi() - mvaMet->phi()));
+    rad += (2 * daughter(j)->pt() * mvaMet->pt()) * (1 - TMath::Cos( daughter(j)->phi() - mvaMet->phi()));
+    rad += (2 * daughter(i)->pt() * daughter(j)->pt()) * (1 - TMath::Cos( daughter(i)->phi() - daughter(j)->phi()));
+  }
+  return TMath::Sqrt( rad );
 }
 
 std::vector<reco::CandidatePtr> PATFinalState::extras(
@@ -998,12 +1259,10 @@ VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts, double dr )
 }
 
 std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, double dr ) const {
-//JetVariables PATFinalState::jetVariables(const std::string& jetCuts, double dr ) const {
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
   std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
-  const reco::Candidate::LorentzVector& metp4 = met()->p4();
   // todo cache this
-  return computeJetInfo(hardScatter, metp4, jets);
+  return computeJetInfo(jets);
 }
 
 bool PATFinalState::orderedInPt(int i, int j) const {
@@ -1250,7 +1509,9 @@ const float PATFinalState::getPVDXY(const size_t i) const
     }
   else if(abs(daughter(i)->pdgId()) == 15)
     {
-      return daughterAsTau(i)->dxy();
+      pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>(daughterAsTau(i)->leadChargedHadrCand().get());
+      return (packedLeadTauCand->dxy());
+      //return daughterAsTau(i)->dxy();
     }
   throw cms::Exception("InvalidParticle") << "FSA can only find dXY for electron, muon, and tau for now" << std::endl;
 }
@@ -1394,6 +1655,56 @@ const float PATFinalState::daughterUserCandIsoContribution(const size_t i, const
   return 0.;
 }
 
+const float PATFinalState::l1extraIsoTauMatching(const size_t i) const
+{
+    std::vector< l1extra::L1JetParticle > isoTaus = evt()->l1extraIsoTaus();
+    //for (int i = 0; i < isoTaus.size(); ++i) {
+    for ( auto isoTau : isoTaus ) {
+        //std::cout << " - l1 p4: " << isoTau.p4() << std::endl;
+        if (isoTau.pt() < 28) {
+            //std::cout << " --- Pt small" << std::endl;
+            continue;}
+        float dR = reco::deltaR(daughter(i)->p4(), isoTau.p4() );
+        //std::cout << " --- dR: " << dR << std::endl;
+        if (dR < 0.5) return 1;
+    }
 
+    return 0.0;
+}
 
+const float PATFinalState::doubleL1extraIsoTauMatching(const size_t i, const size_t j) const
+{
+    std::vector< l1extra::L1JetParticle > isoTaus = evt()->l1extraIsoTaus();
+    //for (int i = 0; i < isoTaus.size(); ++i) {
+    int p1MatchCnt = 0;
+    int p2MatchCnt = 0;
+    int bothMatchCnt = 0;
+    
+    // check for matching to each tau, pay attention to objects that match
+    // both taus
+    for ( auto isoTau : isoTaus ) {
+        //std::cout << " - l1 p4: " << isoTau.p4() << std::endl;
+        if (isoTau.pt() < 28) {
+            //std::cout << " --- Pt small" << std::endl;
+            continue;}
+        float dR1 = reco::deltaR(daughter(i)->p4(), isoTau.p4() );
+        float dR2 = reco::deltaR(daughter(j)->p4(), isoTau.p4() );
+        //std::cout << " --- dR1: " << dR1 << std::endl;
+        //std::cout << " --- dR2: " << dR2 << std::endl;
+        if (dR1 < 0.5) p1MatchCnt += 1;
+        if (dR2 < 0.5) p2MatchCnt += 1;
+        if (dR1 < 0.5 && dR2 < 0.5) bothMatchCnt += 1;
+    }
+ 
+    //std::cout << "p1Match "<<p1MatchCnt<<" p2 "<<p2MatchCnt<<" both "<<bothMatchCnt<<std::endl;
+    // both match different iso taus
+    if (p1MatchCnt > 0 && p2MatchCnt > 0 && bothMatchCnt == 0) return 1.0;
+    // both share a single iso tau, but one tau matching 2 iso objects so
+    // it's okay
+    else if ((p1MatchCnt + p2MatchCnt) == 3 && bothMatchCnt == 1) return 2.0;
+    // This should never happen...probably
+    else if ((p1MatchCnt + p2MatchCnt) == 4 && bothMatchCnt == 2) return 3.0;
+   
+    return 0.0;
+}
 

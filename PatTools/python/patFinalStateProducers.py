@@ -170,6 +170,8 @@ def produce_final_states(process, daughter_collections, output_commands,
     for name, label in src.iteritems():
         if label != daughter_collections[name]:
             output_commands.append('*_%s_*_*'%label)
+    output_commands.append('*_MVAMET_*_*')
+    output_commands.append('*_l1extraParticles_IsoTau_*')
     
 
     if not hasattr(process,'patFinalStateVertexFitter'):

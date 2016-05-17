@@ -65,6 +65,7 @@ private:
 
   // Information about the MET
   edm::EDGetTokenT<edm::View<pat::MET> > metSrcToken_;
+  edm::EDGetTokenT<std::vector<pat::MET> > MVAMETSrcToken_;
   //edm::EDGetTokenT<edm::InputTag> metCovSrcToken_;
 
   // Trigger input
@@ -90,6 +91,7 @@ private:
 
   edm::EDGetTokenT<pat::PackedTriggerPrescales> trgPrescaleSrcToken_;
   edm::EDGetTokenT<edm::TriggerResults> trgResultsSrcToken_;
+  edm::EDGetTokenT< std::vector< l1extra::L1JetParticle > > l1extraIsoTauSrcToken_;
 
   //edm::EDGetTokenT<pat::JetCollection> jetAK8SrcToken_;
 
@@ -118,6 +120,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   phoSrcToken_      = consumes<pat::PhotonCollection>(pset.getParameter<edm::InputTag>("phoSrc"));
 
   metSrcToken_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("metSrc"));
+  MVAMETSrcToken_ = consumes<std::vector<pat::MET> >(pset.getParameter<edm::InputTag>("MVAMETSrc"));
   trgSrcToken_ = consumes<std::vector<pat::TriggerObjectStandAlone> >(pset.getParameter<edm::InputTag>("trgSrc"));
   puInfoSrcToken_ = consumes<std::vector<PileupSummaryInfo> >(pset.getParameter<edm::InputTag>("puInfoSrc"));
   truthSrcToken_ = consumes<reco::GenParticleCollection>(pset.getParameter<edm::InputTag>("genParticleSrc"));
@@ -128,6 +131,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
     pset.getParameter<bool>("forbidMissing") : true;
 
   trgResultsSrcToken_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc"));
+  l1extraIsoTauSrcToken_ = consumes< std::vector< l1extra::L1JetParticle > >(pset.getParameter<edm::InputTag>("l1extraIsoTauSrc"));
 
   //photonCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("photonCoreSrc"));
   //gsfCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("gsfCoreSrc"));
@@ -226,6 +230,13 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Ptr<pat::MET> metPtr = met->ptrAt(0);
   TMatrixD metCovariance(2,2);
 
+  // Only get new pairwise Mva Met info if it exist
+  edm::Handle<std::vector<pat::MET> > MVAMETs;
+  evt.getByToken(MVAMETSrcToken_, MVAMETs);
+  std::vector<pat::MET> MVAMETInfo;
+  if (MVAMETs.isValid()) {
+    MVAMETInfo = * MVAMETs;}
+
   std::map<std::string, edm::Ptr<pat::MET> > theMEts;
   // Get different types of METs - this will be a map like
   // "pfmet" ->
@@ -255,6 +266,9 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   evt.getByToken(trgResultsSrcToken_, trigResults);
   const edm::TriggerNames& names = evt.triggerNames(*trigResults);
   evt.getByToken(trgPrescaleSrcToken_, trigPrescale);
+
+  edm::Handle< std::vector<l1extra::L1JetParticle> > l1extraIsoTaus;
+  evt.getByToken(l1extraIsoTauSrcToken_, l1extraIsoTaus);
 
   edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
   evt.getByToken(puInfoSrcToken_, puInfo);
@@ -303,8 +317,8 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
   pat::TriggerEvent trg;
-  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance,
-                              trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
+  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo,
+                              trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
                               phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
