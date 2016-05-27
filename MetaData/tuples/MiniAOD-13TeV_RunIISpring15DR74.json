@@ -78,6 +78,7 @@
   "_TTHTobb" : "ttHTobb_M125_13TeV_powheg_pythia8",
 
   "WJetsToLNu" : "WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
+
   "WJetsToLNuMadgraph" : "WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
 
   "ZGTo2LG" : "ZGTo2LG_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8",
