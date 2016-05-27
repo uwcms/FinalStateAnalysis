@@ -22,18 +22,32 @@ data_name_map = {}
 
 datadefs = {}
 
+#datadefs["VBF_LFV_HToMuTau_M125_13TeV_powheg_pythia8"] = {
+#    'analyses': ['4L'],
+#    'datasetpath': 'GluGlu_LFV_HToMuTau_M120_13TeV_powheg_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+#    'pu': 'Asympt25ns',
+#    'calibrationTarget': 'RunIISpring15DR7',
+#    'x_sec': 3.748*0.01,#xs(14,125,'vbf')[0],
+#}
 datadefs["VBF_LFV_HToMuTau_M125_13TeV_powheg_pythia8"] = {
     'analyses': ['4L'],
-    'datasetpath': 'GluGlu_LFV_HToMuTau_M120_13TeV_powheg_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+    'datasetpath': '/VBF_LFV_HToMuTau_M125_13TeV_powheg_pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
-    'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec': 3.748*0.01,#xs(14,125,'vbf')[0],
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec': 3.748*0.01,#xs(14,125,'vbf')[0],            
 }
+#datadefs["GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8"] = {
+#    'analyses': ['4L'],
+#    'datasetpath': '/GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
+#    'pu': 'Asympt25ns',
+#    'calibrationTarget': 'RunIISpring15DR7',
+#    'x_sec': 43.92*0.01,
+#}
 datadefs["GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8"] = {
     'analyses': ['4L'],
-    'datasetpath': '/GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
+    'datasetpath': '/GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
-    'calibrationTarget': 'RunIISpring15DR7',
+    'calibrationTarget': 'ICHEP2016',
     'x_sec': 43.92*0.01,
 }
 datadefs["GluGlu_LFV_HToETau_M125_13TeV_powheg_pythia8"] = {
@@ -72,9 +86,23 @@ datadefs["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
     'calibrationTarget': 'RunIISpring15DR7',
     'x_sec':  6025.2,
 }
+datadefs["DYJetsToTauTau_ForcedMuDecay_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/DYJetsToTauTau_ForcedMuDecay_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec':  6025.2,
+}
+#datadefs["WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
+#    'analyses': ['4L'],
+#    'datasetpath': '/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
+#    'pu': 'Asympt25ns',
+#    'calibrationTarget': 'RunIISpring15DR7',
+#    'x_sec': 61526.7 ,
+#}
 datadefs["WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
     'analyses': ['4L'],
-    'datasetpath': '/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
+    'datasetpath': '/WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
     'x_sec': 61526.7 ,
@@ -87,22 +115,36 @@ datadefs["WZ_TuneCUETP8M1_13TeV-pythia8"] = {
     'calibrationTarget': 'RunIISpring15DR7',
     'x_sec': 22.82 , #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00002
 }
+#datadefs["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
+#    'analyses': ['4L'],
+#    'datasetpath': '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+#    'pu': 'Asympt25ns',
+#    'calibrationTarget': 'RunIISpring15DR7',
+#    'x_sec': 6025.2 ,
+#}
 datadefs["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
     'analyses': ['4L'],
-    'datasetpath': '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+    'datasetpath': '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
-    'calibrationTarget': 'RunIISpring15DR7',
+    'calibrationTarget': 'ICHEP2016',
     'x_sec': 6025.2 ,
 }
-datadefs["DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
-    'analyses': ['4L'],
-    'datasetpath': '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
-    'pu': 'Asympt25ns',
-    'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec': 18610.0 ,
-}
+#datadefs["DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
+#    'analyses': ['4L'],
+#    'datasetpath': '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
+#    'pu': 'Asympt25ns',
+#    'calibrationTarget': 'RunIISpring15DR7',
+#    'x_sec': 18610.0 ,
+#}
 ###new stuff
 
+#datadefs["DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
+#    'analyses': ['4L'],
+#    'datasetpath': '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
+#    'pu': 'Asympt25ns',
+#    'calibrationTarget': 'RunIISpring15DR7',
+#    'x_sec': 1249.68 ,
+#}
 datadefs["DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
     'analyses': ['4L'],
     'datasetpath': '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
@@ -192,6 +234,13 @@ datadefs["WW_TuneCUETP8M1_13TeV-pythia8"] = {
     'calibrationTarget': 'RunIISpring15DR7',
     'x_sec':  63.21, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
 }
+datadefs["WWTo2L2Nu_13TeV-powheg"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/WWTo2L2Nu_13TeV-powheg/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec':  12.178, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
+}
 datadefs["WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
     'analyses': ['4L'],
     'datasetpath': '',
@@ -204,6 +253,13 @@ datadefs["TT_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = {
     'datasetpath': '',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': 831.76,
+}
+datadefs["TT_TuneCUETP8M1_13TeV-powheg-pythia8-evtgen"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/TT_TuneCUETP8M1_13TeV-powheg-pythia8-evtgen/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
     'x_sec': 831.76,
 }
 datadefs["TT_TuneCUETP8M1_13TeV-powheg-pythia8"] = {
@@ -233,6 +289,13 @@ datadefs["TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = {
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
     'x_sec': 0.009103,
+}
+datadefs["WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec': 0.009103,#wrong******
 }
 datadefs["GluGluHToTauTau_M125_13TeV_powheg_pythia8"] = {
     'analyses': ['4L'],
@@ -298,6 +361,14 @@ datadefs['data_SingleMuon_Run2015D_PromptReco-v4_25ns'] = {
    'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON.txt",
    'firstRun' : 258486,
    'lastRun' : 260403,
+   'analyses' : ['HZZ'],
+    'calibrationTarget':'Moriond2015'
+   }
+datadefs['data_SingleMuon_Run2016B_PromptReco-v2_25ns'] = {
+   'datasetpath' : "/SingleMuon/Run2016B-PromptReco-v2/MINIAOD",
+   'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt",
+   'firstRun' : 272007,
+   'lastRun' : 273450,
    'analyses' : ['HZZ'],
     'calibrationTarget':'Moriond2015'
    }
