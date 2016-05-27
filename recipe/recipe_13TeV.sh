@@ -42,8 +42,9 @@ popd
 # Checkout mva met code
 git cms-addpkg RecoMET/METPUSubtraction
 git cms-addpkg DataFormats/METReco
-git remote add -f mvamet https://github.com/rfriese/cmssw.git
-git checkout MVAMET2_beta_0.6 -b mvamet
+#add the MVA MET when it is working in CMSSW8XY
+#git remote add -f mvamet https://github.com/rfriese/cmssw.git
+#git checkout MVAMET2_beta_0.6 -b mvamet
 
 
 popd
