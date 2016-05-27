@@ -7,6 +7,13 @@ from datacommon import square, cube, quad, picobarns, br_w_leptons, br_z_leptons
 data_name_map = {}
 
 datadefs = {}
+datadefs["VBF_LFV_HToMuTau_M125_13TeV_powheg_pythia8"] = {
+    'analyses': ['LFV'],
+    'datasetpath': '/VBF_LFV_HToMuTau_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv1-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'asymptotic',
+    'calibrationTarget': 'RunIISpring16MiniAODv1',
+    'x_sec': 3.748*0.01,
+    }
 
 datadefs["DYJets_M50-PU20bx25"] = {
     'analyses': ['4L'],
