@@ -61,7 +61,7 @@ namespace :meta do
         # Minbias xsection
         minbias = 68000
         if sqrts == "13" then
-          pu_file = ENV['pu2015JSON']
+          pu_file = ENV['pu2016JSON']
           maxbin = 52
           nbins = 52
           # Minbias xsection
