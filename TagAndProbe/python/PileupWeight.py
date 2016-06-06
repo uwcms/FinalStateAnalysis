@@ -13,7 +13,7 @@ Author: Evan K. Friis, UW
 import array
 from FinalStateAnalysis.Utilities.FileInPath import FileInPath
 import ROOT
-
+from rootpy.io import root_open
 # MC distributions (built at bottom of file)
 _MC_PU_DISTRIBUTIONS = {}
 
@@ -33,11 +33,12 @@ class PileupWeight(object):
         should 600 bins (0-60)
 
         '''
-        ROOT.TH1.AddDirectory(False);
+        ##ROOT.TH1.AddDirectory(False);
         self.mc = None
         self.data = None
         for filename in datafiles:
-            file = ROOT.TFile.Open(filename)
+            ##file = ROOT.TFile.Open(filename)
+            file = root_open(filename)
             pu = file.Get('pileup')
             if self.data is None:
                 self.data = pu.Clone()
@@ -52,14 +53,14 @@ class PileupWeight(object):
         if not mctag in _MC_PU_DISTRIBUTIONS:
             raise KeyError("Unknown PU distribution %s, allowed: %s" %
                            (mctag, " ".join(_MC_PU_DISTRIBUTIONS.keys())))
-
-        mc_file = ROOT.TFile.Open(_MC_PU_DISTRIBUTIONS[mctag])
+        mc_file =root_open(_MC_PU_DISTRIBUTIONS[mctag])
+        #        mc_file = ROOT.TFile.Open(_MC_PU_DISTRIBUTIONS[mctag])
         if not mc_file:
             raise IOError("Can't open %s MC file: %s" % (mctag, _MC_PU_DISTRIBUTIONS[mctag]))
 
         mc_base = mc_file.Get('pileup')
         self.mc = mc_base.Clone()
-
+        self.mc.SetName('pileup_mc')
         # Make sure bins are consistent
         if not ROOT.TEfficiency.CheckBinning(self.mc, self.data):
             error = "Data and MC PU histograms do not have the same binning!\n"
@@ -74,7 +75,7 @@ class PileupWeight(object):
 
         # Normalize MC
         self.mc.Scale(1./self.mc.Integral())
-        ROOT.TH1.AddDirectory(True);
+        ##ROOT.TH1.AddDirectory(True);
 
     def __call__(self, ntruepu):
         '''
@@ -95,3 +96,4 @@ _MC_PU_DISTRIBUTIONS['S6'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_
 _MC_PU_DISTRIBUTIONS['S6_600bins'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_Fall11_PU_S6-600bins.root").full_path()
 _MC_PU_DISTRIBUTIONS['Asympt25ns'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_PU_RunIISpring15DR74_Asympt.root").full_path()
 _MC_PU_DISTRIBUTIONS['25ns_matchData'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_PU_2015_25ns_matchData.root").full_path()
+_MC_PU_DISTRIBUTIONS['MC_Spring16'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/PU_MC_Spring16.root").full_path()
