@@ -33,7 +33,7 @@ class PileupWeight(object):
         should 600 bins (0-60)
 
         '''
-        ##ROOT.TH1.AddDirectory(False);
+        ROOT.TH1.AddDirectory(False);
         self.mc = None
         self.data = None
         for filename in datafiles:
@@ -61,7 +61,8 @@ class PileupWeight(object):
         mc_base = mc_file.Get('pileup')
         self.mc = mc_base.Clone()
         self.mc.SetName('pileup_mc')
-        # Make sure bins are consistent
+       
+       # Make sure bins are consistent
         if not ROOT.TEfficiency.CheckBinning(self.mc, self.data):
             error = "Data and MC PU histograms do not have the same binning!\n"
             def print_bins(tag, x):
@@ -73,10 +74,11 @@ class PileupWeight(object):
             error += print_bins('data', self.data)
             raise ValueError(error)
 
-        # Normalize MC
+       # Normalize MC
         self.mc.Scale(1./self.mc.Integral())
-        ##ROOT.TH1.AddDirectory(True);
 
+        ROOT.TH1.AddDirectory(True);
+                 
     def __call__(self, ntruepu):
         '''
         Get the PU weight given the true number of interactions
