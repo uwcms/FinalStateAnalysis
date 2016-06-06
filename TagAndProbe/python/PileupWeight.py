@@ -53,8 +53,8 @@ class PileupWeight(object):
         if not mctag in _MC_PU_DISTRIBUTIONS:
             raise KeyError("Unknown PU distribution %s, allowed: %s" %
                            (mctag, " ".join(_MC_PU_DISTRIBUTIONS.keys())))
-
-        mc_file = ROOT.TFile.Open(_MC_PU_DISTRIBUTIONS[mctag])
+        mc_file =root_open(_MC_PU_DISTRIBUTIONS[mctag])
+        #        mc_file = ROOT.TFile.Open(_MC_PU_DISTRIBUTIONS[mctag])
         if not mc_file:
             raise IOError("Can't open %s MC file: %s" % (mctag, _MC_PU_DISTRIBUTIONS[mctag]))
 
