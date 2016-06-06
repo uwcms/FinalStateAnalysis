@@ -41,11 +41,9 @@ class MegaMerger(multiprocessing.Process):
         for file in files:
             to_merge.append(file)
             output_file_hash.update(file)
-
         output_file_name = os.path.join(
             tempfile.gettempdir(),
             output_file_hash.hexdigest() + '.root')
-
         # If we are doing a later merge, we need to include the
         # "merged-so-far"
         if self.first_merge:
@@ -53,10 +51,13 @@ class MegaMerger(multiprocessing.Process):
         else:
             to_merge.append(self.output)
 
-        merger = ROOT.TFileMerger()
+        merger = ROOT.TFileMerger(False,True)
+
         merger.OutputFile(output_file_name)
+        
         for file in to_merge:
             merger.AddFile(file, False)
+        merger.GetOutputFileName()
         result = merger.Merge()
 
         self.log.info("Merge completed with result: %s" % result)
@@ -109,6 +110,7 @@ class MegaMerger(multiprocessing.Process):
                 files_to_merge = []
                 for entries, file in inputs_to_merge:
                     files_to_merge.append(file)
+                    
                 self.merge_into_output(files_to_merge)
             if done:
                 return
