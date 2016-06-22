@@ -9,6 +9,9 @@ Author: Evan K. Friis
 import collections
 import os
 import re
+import logging
+import linecache
+log = logging.getLogger("__dags__")
 
 
 def get_jobs(dagfile):
@@ -105,26 +108,40 @@ class CondorDAG(object):
 
         """
         jobmatcher = re.compile(
-            'JOB\s+(?P<jobid>\S+)\s+(?P<status>\S+)\s+\((?P<info>.*)\)')
-        dagmatcher = re.compile(
-            'DAG status:\s+(?P<status>\S+)\s+(?P<info>\S*)')
-
+            'JOB\s+(?P<jobid>\S+)\s+(?P<status>\S+)\s+\((?P<info>.*)\)') 
+        dagmatcher = re.compile(r'NodeStatus\s\S\s\S+\s\S+\s\S(?P<status>\w+)')
+                                           
         dagstatusfile = self.dagfile + '.status'
 
         if not os.path.exists(dagstatusfile):
             return self.status
 
         with open(dagstatusfile, 'r') as statusfile:
-            for line in statusfile:
-                jobmatch = jobmatcher.match(line)
-                if jobmatch:
-                    self.nodes[jobmatch.group('jobid')].status = (
-                        jobmatch.group('status'), jobmatch.group('info'))
+            lines = statusfile.readlines()
+            for i,line in enumerate(lines):
+                
+                if not 'Node = ' and not 'DagStatus =' in line:
                     continue
+                if 'Node =' in line :
+                    #log.info("line %s  and line %s" %(line, lines[i+1]))
+                    jobidmatch = re.search('Node\s\S\s\S(?P<jobid>\S+)\S\S\n', line)
+                    jobmatch =  re.search('NodeStatus\s\S\s\S+\s\S+\s\S(?P<status>\w+)', lines[i+1])
+                    #log.info("jobid %s  and jobstatus %s" %(jobidmatch.group('jobid'), jobmatch.group('status')))
+                    if jobidmatch:
+                        self.nodes[jobidmatch.group('jobid')].status = (
+                            jobmatch.group('status'), "")
+                        
+                        jobreport = re.search('StatusDetails\s\S\s\S(?P<info>\S+)\S\S\n', lines[i+2])    
+                        if jobreport:
+                            self.nodes[jobidmatch.group('jobid')].status = (
+                                jobmatch.group('status'),jobreport.group('info'))
+                        continue
                 dagmatch = dagmatcher.match(line)
-                if dagmatch:
-                    self.status = (dagmatch.group('status'),
-                                   dagmatch.group('info'))
+                if 'DagStatus =' in line:
+                    m = re.search('DagStatus\s\S\s\S+\s\S+\s\S(?P<status>\w+)\s(?P<info>\S+)', line)
+                    if m:
+                        self.status = (m.group('status'), m.group('info')) 
+                     
         return self.status
 
     def failing_nodes(self):
