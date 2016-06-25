@@ -1,7 +1,7 @@
 # Embed IDs for taus
 import FWCore.ParameterSet.Config as cms
 
-def preTaus(process, use25ns, tSrc, vSrc,**kwargs):
+def preTaus(process, tSrc, vSrc,**kwargs):
     postfix = kwargs.pop('postfix','')
     modName = 'genembeddedTaus{0}'.format(postfix)
     mod=cms.EDProducer("PATTauGenInfoEmbedder",
@@ -32,7 +32,7 @@ def preTaus(process, use25ns, tSrc, vSrc,**kwargs):
 
     return tSrc
 
-def postTaus(process, use25ns, tSrc, jSrc,**kwargs):
+def postTaus(process, tSrc, jSrc,**kwargs):
     postfix = kwargs.pop('postfix','')
     modName = 'miniAODTauJetInfoEmbedding{0}'.format(postfix)
     mod = cms.EDProducer(

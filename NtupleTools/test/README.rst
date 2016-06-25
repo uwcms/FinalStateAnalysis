@@ -35,7 +35,6 @@ zero or one) are::
     svFit=0                 - run secondary vertex stuff
     runMVAMET=0             - compute MVA MET (defaults to 1 if svFit is enabled)
     runDQM=0                - run on single objects instead of final states, plotting many quantities to make sure things work
-    use25ns=1               - use conditions for 25ns PHYS14 miniAOD samples
     hzz=0                   - run the H->ZZ->4l group's FSR algorithm, don't clean
                               alternate Z pairings out of ntuples, several other small changes
     nExtraJets=0            - (for non-jet final states) add basic info about this many jets in addition to final state branches

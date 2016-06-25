@@ -1,13 +1,13 @@
 # Embed IDs for jets
 import FWCore.ParameterSet.Config as cms
 
-def prePhotons(process, use25ns, pSrc, vSrc, **kwargs):
+def prePhotons(process, pSrc, vSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
 
 
     return pSrc
 
-def postPhotons(process, use25ns, pSrc, jSrc,**kwargs):
+def postPhotons(process, pSrc, jSrc,**kwargs):
     postfix = kwargs.pop('postfix','')
     modName = 'miniAODPhotonJetInfoEmbedding{0}'.format(postfix)
     mod = cms.EDProducer(
