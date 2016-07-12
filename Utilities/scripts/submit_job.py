@@ -34,7 +34,7 @@ import logging
 import os
 import sys
 from socket import gethostname
-from FinalStateAnalysis.MetaData.datadefs import datadefs
+#from FinalStateAnalysis.MetaData.datadefs import datadefs
 from FinalStateAnalysis.Utilities.dbsinterface import get_das_info
 
 log = logging.getLogger("submit_job")
@@ -133,14 +133,7 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     # temp hardcode
     if args.apply_cms_lumimask:
-        if args.goldenv2:
-            assert not args.silver, "ERROR: Multiple lumimask jsons specified"
-            filename = 'Cert_246908-258750_13TeV_PromptReco_Collisions15_25ns_JSON.txt' # 1341/pb
-        elif args.silver:
-            filename = 'Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt' # 2.63/fb
-        else:
-            filename = 'Cert_271036-273730_13TeV_PromptReco_Collisions16_JSON.txt' # 589.3/pb
-        if args.bunchSpacing==50: filename = 'Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2.txt' # 71.52/pb
+        filename = 'Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt' # 3.99/fb - June 22
         lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV',filename)
         if args.lumimaskjson: 
             assert not (args.silver or args.goldenv2), "ERROR: Multiple lumimask jsons specified"

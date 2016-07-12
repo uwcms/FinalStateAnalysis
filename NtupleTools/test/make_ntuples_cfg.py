@@ -36,7 +36,6 @@ svFit=1        - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
 rerunJets=0    - rerun with new jet energy corrections
 runMetFilter=0 - apply met filters
-use25ns=1      - run on 25 ns miniAOD (0 -> 50ns)
 runDQM=0       - run over single object final states to test all 
                  object properties (wont check diobject properties)
 hzz=0          - Include FSR contribution a la HZZ4l group, 
@@ -109,7 +108,6 @@ options = TauVarParsing.TauVarParsing(
     runTauSpinner=0,
     GlobalTag="",
     runMetFilter=0,
-    use25ns=1,
     runDQM=0,
     hzz=0,
     paramFile='',
@@ -343,13 +341,6 @@ if options.runMVAMET:
     #process.puJetIdForPFMVAMEt.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
     process.puJetIdForPFMVAMEt.vertexes = cms.InputTag(fs_daughter_inputs['vertices'])
     process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
-    
-    if not options.use25ns:
-        process.pfMVAMEt.inputFileNames.U     = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru_7_4_X_miniAOD_50NS_July2015.root')
-        process.pfMVAMEt.inputFileNames.DPhi  = cms.FileInPath('RecoMET/METPUSubtraction/data/gbrphi_7_4_X_miniAOD_50NS_July2015.root')
-        process.pfMVAMEt.inputFileNames.CovU1 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru1cov_7_4_X_miniAOD_50NS_July2015.root')
-        process.pfMVAMEt.inputFileNames.CovU2 = cms.FileInPath('RecoMET/METPUSubtraction/data/gbru2cov_7_4_X_miniAOD_50NS_July2015.root')
-    
     
     from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
     
@@ -586,7 +577,6 @@ electronMVATrigIDLabel = "BDTIDTrig"
 #########################################
 from FinalStateAnalysis.NtupleTools.customization_electrons import preElectrons
 fs_daughter_inputs['electrons'] = preElectrons(process,
-                                               options.use25ns,
                                                fs_daughter_inputs['electrons'],
                                                fs_daughter_inputs['vertices'],
                                                electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
@@ -597,7 +587,6 @@ fs_daughter_inputs['electrons'] = preElectrons(process,
                                                )
 for fs in additional_fs:
     additional_fs[fs]['electrons'] = preElectrons(process,
-                                                  options.use25ns,
                                                   additional_fs[fs]['electrons'],
                                                   additional_fs[fs]['vertices'],
                                                   electronMVANonTrigIDLabel=electronMVANonTrigIDLabel,
@@ -631,13 +620,11 @@ if options.runNewMVAMET:
 ######################
 from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
 fs_daughter_inputs['muons'] = preMuons(process,
-                                       options.use25ns,
                                        fs_daughter_inputs['muons'],
                                        fs_daughter_inputs['vertices'],
                                        skipGhost=options.skipGhost)
 for fs in additional_fs:
     additional_fs[fs]['muons'] = preMuons(process,
-                                          options.use25ns,
                                           additional_fs[fs]['muons'],
                                           additional_fs[fs]['vertices'],
                                           skipGhost=options.skipGhost,
@@ -648,12 +635,10 @@ for fs in additional_fs:
 #####################
 from FinalStateAnalysis.NtupleTools.customization_taus import preTaus
 fs_daughter_inputs['taus'] = preTaus(process,
-                                     options.use25ns,
                                      fs_daughter_inputs['taus'],
                                      fs_daughter_inputs['vertices'])
 for fs in additional_fs:
     additional_fs[fs]['taus'] = preTaus(process,
-                                        options.use25ns,
                                         additional_fs[fs]['taus'],
                                         additional_fs[fs]['vertices'],
                                         postfix=fs)
@@ -663,12 +648,10 @@ for fs in additional_fs:
 ########################
 from FinalStateAnalysis.NtupleTools.customization_photons import prePhotons
 fs_daughter_inputs['photons'] = prePhotons(process,
-                                           options.use25ns,
                                            fs_daughter_inputs['photons'],
                                            fs_daughter_inputs['vertices'])
 for fs in additional_fs:
     additional_fs[fs]['photons'] = prePhotons(process,
-                                              options.use25ns,
                                               additional_fs[fs]['photons'],
                                               additional_fs[fs]['vertices'],
                                               postfix=fs)
@@ -678,7 +661,6 @@ for fs in additional_fs:
 ########################
 from FinalStateAnalysis.NtupleTools.customization_jets import preJets
 fs_daughter_inputs['jets'] = preJets(process,
-                                     options.use25ns,
                                      fs_daughter_inputs['jets'],
                                      fs_daughter_inputs['vertices'],
                                      fs_daughter_inputs['muons'],
@@ -687,7 +669,6 @@ fs_daughter_inputs['jets'] = preJets(process,
                                      jType="AK4PFchs")
 for fs in additional_fs:
     additional_fs[fs]['jets'] = preJets(process,
-                                        options.use25ns,
                                         additional_fs[fs]['jets'],
                                         additional_fs[fs]['vertices'],
                                         additional_fs[fs]['muons'],
@@ -753,34 +734,34 @@ for fs in additional_fs:
 ### post electron customization ###
 ###################################
 from FinalStateAnalysis.NtupleTools.customization_electrons import postElectrons
-fs_daughter_inputs['electrons'] = postElectrons(process,options.use25ns,fs_daughter_inputs['electrons'],fs_daughter_inputs['jets'])
+fs_daughter_inputs['electrons'] = postElectrons(process,fs_daughter_inputs['electrons'],fs_daughter_inputs['jets'])
 for fs in additional_fs:
-    additional_fs[fs]['electrons'] = postElectrons(process,options.use25ns,additional_fs[fs]['electrons'],additional_fs[fs]['jets'],postfix=fs)
+    additional_fs[fs]['electrons'] = postElectrons(process,additional_fs[fs]['electrons'],additional_fs[fs]['jets'],postfix=fs)
 
 
 ###############################
 ### post muon customization ###
 ###############################
 from FinalStateAnalysis.NtupleTools.customization_muons import postMuons
-fs_daughter_inputs['muons'] = postMuons(process,options.use25ns,fs_daughter_inputs['muons'],fs_daughter_inputs['jets'])
+fs_daughter_inputs['muons'] = postMuons(process,fs_daughter_inputs['muons'],fs_daughter_inputs['jets'])
 for fs in additional_fs:
-    additional_fs[fs]['muons'] = postMuons(process,options.use25ns,additional_fs[fs]['muons'],additional_fs[fs]['jets'],postfix=fs)
+    additional_fs[fs]['muons'] = postMuons(process,additional_fs[fs]['muons'],additional_fs[fs]['jets'],postfix=fs)
 
 ##############################
 ### post tau customization ###
 ##############################
 from FinalStateAnalysis.NtupleTools.customization_taus import postTaus
-fs_daughter_inputs['taus'] = postTaus(process,options.use25ns,fs_daughter_inputs['taus'],fs_daughter_inputs['jets'])
+fs_daughter_inputs['taus'] = postTaus(process,fs_daughter_inputs['taus'],fs_daughter_inputs['jets'])
 for fs in additional_fs:
-    additional_fs[fs]['taus'] = postTaus(process,options.use25ns,additional_fs[fs]['taus'],additional_fs[fs]['jets'],postfix=fs)
+    additional_fs[fs]['taus'] = postTaus(process,additional_fs[fs]['taus'],additional_fs[fs]['jets'],postfix=fs)
 
 #################################
 ### post photon customization ###
 #################################
 from FinalStateAnalysis.NtupleTools.customization_photons import postPhotons
-fs_daughter_inputs['photons'] = postPhotons(process,options.use25ns,fs_daughter_inputs['photons'],fs_daughter_inputs['jets'])
+fs_daughter_inputs['photons'] = postPhotons(process,fs_daughter_inputs['photons'],fs_daughter_inputs['jets'])
 for fs in additional_fs:
-    additional_fs[fs]['photons'] = postTaus(process,options.use25ns,additional_fs[fs]['photons'],additional_fs[fs]['jets'],postfix=fs)
+    additional_fs[fs]['photons'] = postTaus(process,additional_fs[fs]['photons'],additional_fs[fs]['jets'],postfix=fs)
 
 
 
@@ -990,7 +971,6 @@ else:
                                 suffix=suffix,
                                 hzz=options.hzz, 
                                 nExtraJets=extraJets, 
-                                use25ns=options.use25ns,
                                 isMC=options.isMC,
                                 isShiftedMet=bool(options.metShift),
                                 **parameters)
@@ -1007,7 +987,6 @@ else:
                                     suffix=suffix,
                                     hzz=options.hzz, 
                                     nExtraJets=extraJets,
-                                    use25ns=options.use25ns,
                                     isMC=options.isMC,
                                     isShiftedMet=bool(options.metShift),
                                     postfix=fs,

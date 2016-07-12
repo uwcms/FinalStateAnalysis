@@ -557,7 +557,7 @@ PATFinalState::tauGenMotherKin() const {
 
     // Check that there are gen particles (MC)
     if (!event_->genParticleRefProd()) {
-        for (int i = 0; i < 4; ++i) output.push_back( -10 );
+        for (int i = 0; i < 6; ++i) output.push_back( -10 );
         return output;}
     // Get all gen particles in the event
     const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();

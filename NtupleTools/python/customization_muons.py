@@ -1,7 +1,7 @@
 # Embed IDs for muons
 import FWCore.ParameterSet.Config as cms
 
-def preMuons(process, use25ns, mSrc, vSrc, **kwargs):
+def preMuons(process, mSrc, vSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
     skipGhost = kwargs.pop('skipGhost', False)
 
@@ -81,7 +81,7 @@ def preMuons(process, use25ns, mSrc, vSrc, **kwargs):
 
     return mSrc
 
-def postMuons(process, use25ns, mSrc, jSrc,**kwargs):
+def postMuons(process, mSrc, jSrc,**kwargs):
     postfix = kwargs.pop('postfix','')
     modName = 'miniAODMuonJetInfoEmbedding{0}'.format(postfix)
     mod = cms.EDProducer(
