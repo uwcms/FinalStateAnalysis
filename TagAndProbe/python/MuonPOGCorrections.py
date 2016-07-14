@@ -37,7 +37,8 @@ muon_pog_Mu13Mu8_eta_eta_2011(eta1, eta2)
 
 import os
 import re
-from FinalStateAnalysis.Utilities.rootbindings import ROOT
+#from FinalStateAnalysis.Utilities.rootbindings import ROOT
+import ROOT
 
 _DATA_DIR = os.path.join(os.environ['CMSSW_BASE'], 'src',
                          "FinalStateAnalysis", "TagAndProbe", "data")
@@ -57,6 +58,11 @@ _DATA_FILES = {
     '2015CD' : {
         'PFID'   : os.path.join(_DATA_DIR, 'MuonID_Z_RunCD_Reco76X_Feb15.root'),
         'Iso'    : os.path.join(_DATA_DIR, 'MuonIso_Z_RunCD_Reco76X_Feb15.root'),
+        'Trigger': os.path.join(_DATA_DIR, 'SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.root')
+    },
+    '2016B'  : {
+        'PFID'   : os.path.join(_DATA_DIR, 'MuonID_Z_2016runB_2p6fb.root'),
+        'Iso'    : os.path.join(_DATA_DIR, 'MuonISO_Z_2016runB_2p6fb.root'),
         'Trigger': os.path.join(_DATA_DIR, 'SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.root')
     }
 }
@@ -144,6 +150,57 @@ def make_muon_pog_TightIso_2015CD():
         "MC_NUM_TightRelIso_DEN_MediumID_PAR_pt_spliteta_bin1/pt_abseta_ratio",
         "MC_NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/pt_abseta_ratio",
     )
+
+
+
+def make_muon_pog_PFTight_2016B():
+    ''' Make PFTight DATA/MC corrector for 2012 '''
+    return MuonPOGCorrection2D(
+        _DATA_FILES['2016B']['PFID'],
+        "MC_NUM_TightIDandIPCut_DEN_genTracks_PAR_pt_spliteta_bin1/pt_abseta_ratio"
+    )
+
+#def make_muon_pog_PFMedium_2016B():
+#    ''' Make PFTight DATA/MC corrector for 2012 '''
+#    return MuonPOGCorrection2D(
+#        _DATA_FILES['2016B']['PFID'],
+#        "MC_NUM_MediumID_DEN_genTracks_PAR_pt_spliteta_bin1/pt_abseta_ratio"
+#    )
+
+def make_muon_pog_PFLoose_2016B():
+    return MuonPOGCorrection2D(
+        _DATA_FILES['2016B']['PFID'],
+        "MC_NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1/pt_abseta_ratio"
+    )
+
+
+def make_muon_pog_LooseIso_2016B():
+    return MuonPOGCorrectionIso2D(
+        _DATA_FILES['2016B']['Iso'],
+        "MC_NUM_LooseRelIso_DEN_LooseID_PAR_pt_spliteta_bin1/pt_abseta_ratio",
+        "MC_NUM_LooseRelIso_DEN_MediumID_PAR_pt_spliteta_bin1/pt_abseta_ratio",
+        "MC_NUM_LooseRelIso_DEN_TightID_PAR_pt_spliteta_bin1/pt_abseta_ratio",
+    )
+
+#def make_muon_pog_MediumIso_2016B():
+#    return MuonPOGCorrectionIso2D(
+#        _DATA_FILES['2016B']['Iso'],
+#        "MC_NUM_MediumRelIso_DEN_LooseID_PAR_pt_spliteta_bin1/pt_abseta_ratio",
+#        "MC_NUM_MediumRelIso_DEN_MediumID_PAR_pt_spliteta_bin1/pt_abseta_ratio",
+#        "MC_NUM_MediumRelIso_DEN_TightID_PAR_pt_spliteta_bin1/pt_abseta_ratio",
+#    )
+
+def make_muon_pog_TightIso_2016B():
+    return MuonPOGCorrectionIso2D(
+        _DATA_FILES['2016B']['Iso'],
+        "MC_NUM_TightRelIso_DEN_LooseID_PAR_pt_spliteta_bin1/pt_abseta_ratio",
+        "MC_NUM_TightRelIso_DEN_MediumID_PAR_pt_spliteta_bin1/pt_abseta_ratio",
+        "MC_NUM_TightRelIso_DEN_TightID_PAR_pt_spliteta_bin1/pt_abseta_ratio",
+    )
+
+
+
+
 
 def make_muon_pog_PFRelIsoDB012_2012():
     return BetterMuonPOGCorrection(
@@ -401,7 +458,7 @@ class MuonPOGCorrection2D(object):
         if pt < 20. : pt = 20.
         key = self.file.Get(self.histopath)
         self.correct_by_pt_abseta =key.GetBinContent(key.FindFixBin(pt, eta))
-#        print 'Mu ID/Tr correction :', pt, eta,  self.correct_by_pt_abseta
+        #print 'Mu ID/Tr correction :', pt, eta,  self.correct_by_pt_abseta
         return self.correct_by_pt_abseta
 
 
