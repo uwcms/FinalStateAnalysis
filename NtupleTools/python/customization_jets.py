@@ -1,7 +1,7 @@
 # Embed IDs for jets
 import FWCore.ParameterSet.Config as cms
 
-def preJets(process, use25ns, jSrc, vSrc, mSrc, eSrc, **kwargs):
+def preJets(process, jSrc, vSrc, mSrc, eSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
     jType = kwargs.pop('jType','AK4PFchs')
     doBTag = kwargs.pop('doBTag',False)

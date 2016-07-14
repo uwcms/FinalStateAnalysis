@@ -2,7 +2,7 @@
 import FWCore.ParameterSet.Config as cms
 from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection, switchOnVIDElectronIdProducer, DataFormat, setupVIDSelection
 
-def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
+def preElectrons(process, eSrc, vSrc,**kwargs):
     postfix = kwargs.pop('postfix','')
     electronMVANonTrigIDLabel = kwargs.pop('electronMVANonTrigIDLabel',"BDTIDNonTrig")
     electronMVATrigIDLabel = kwargs.pop('electronMVATrigIDLabel',"BDTIDTrig")
@@ -89,67 +89,38 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
     CBIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight", "HEEPV60", "MVANonTrigWP80", "MVANonTrigWP90", "MVATrigWP90", "MVATrigWP80"] # keys of cut based id user floats
     
     CBIDTags = [
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-50ns-V1-standalone-veto'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-50ns-V1-standalone-loose'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-50ns-V1-standalone-medium'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-50ns-V1-standalone-tight'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-veto'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-loose'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-medium'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-tight'.format(postfix)),
         cms.InputTag('egmGsfElectronIDs{0}:heepElectronID-HEEPV60'.format(postfix)),
         cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-25ns-nonTrig-V1-wp80'.format(postfix)),
         cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-25ns-nonTrig-V1-wp90'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-50ns-Trig-V1-wp90'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-50ns-Trig-V1-wp80'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-25ns-Trig-V1-wp90'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-25ns-Trig-V1-wp80'.format(postfix)),
         ]
-    if use25ns:
-        CBIDTags = [
-            cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-veto'.format(postfix)),
-            cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-loose'.format(postfix)),
-            cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-medium'.format(postfix)),
-            cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-tight'.format(postfix)),
-            cms.InputTag('egmGsfElectronIDs{0}:heepElectronID-HEEPV60'.format(postfix)),
-            cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-25ns-nonTrig-V1-wp80'.format(postfix)),
-            cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-25ns-nonTrig-V1-wp90'.format(postfix)),
-            cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-25ns-Trig-V1-wp90'.format(postfix)),
-            cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-25ns-Trig-V1-wp80'.format(postfix)),
-            ]
 
     mvaValueLabels = [electronMVANonTrigIDLabel,electronMVATrigIDLabel]
     mvaValues = [
         cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values".format(postfix)),
-        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15Trig50nsV1Values".format(postfix)),
+        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15Trig25nsV1Values".format(postfix)),
         ]
-    if use25ns:
-        mvaValues = [
-            cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values".format(postfix)),
-            cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15Trig25nsV1Values".format(postfix)),
-            ]
     mvaCategoryLabels = ["BDTIDNonTrigCategory","BDTIDTrigCategory"]
     mvaCategories = [
         cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories".format(postfix)),
-        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15Trig50nsV1Categories".format(postfix)),
+        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories".format(postfix)),
         ]
-    if use25ns:
-        mvaCategories = [
-            cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Categories".format(postfix)),
-            cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15Trig25nsV1Categories".format(postfix)),
-            ]
 
     # N-1 results
     nMinusOneNames = ['GsfEleEffAreaPFIsoCut_0']
     nMinusOneLabels = ['NoIso']
     FullIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight"] # keys of cut based id user floats
     FullIDTags = [
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-50ns-V1-standalone-veto'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-50ns-V1-standalone-loose'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-50ns-V1-standalone-medium'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-50ns-V1-standalone-tight'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-veto'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-loose'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-medium'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-tight'.format(postfix)),
         ]
-    if use25ns:
-        FullIDTags = [
-            cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-veto'.format(postfix)),
-            cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-loose'.format(postfix)),
-            cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-medium'.format(postfix)),
-            cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Spring15-25ns-V1-standalone-tight'.format(postfix)),
-            ]
 
     
 
@@ -200,7 +171,7 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
         setattr(process,eaModName,process.patElectronEAEmbedder.clone())
     getattr(process,eaModName).src = cms.InputTag(eSrc)
     eSrc = eaModName
-    eaFile = 'RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_{0}ns.txt'.format('25' if use25ns else '50')
+    eaFile = 'RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_25ns.txt'
     newEaModName = 'miniAODElectronEAEmbedding{0}'.format(postfix)
     newEaMod = cms.EDProducer(
         "MiniAODElectronEffectiveAreaEmbedder",
@@ -247,7 +218,7 @@ def preElectrons(process, use25ns, eSrc, vSrc,**kwargs):
 
     return eSrc
 
-def postElectrons(process, use25ns, eSrc, jSrc,**kwargs):
+def postElectrons(process, eSrc, jSrc,**kwargs):
     postfix = kwargs.pop('postfix','')
     modName = 'miniAODElectronJetInfoEmbedding{0}'.format(postfix)
     mod = cms.EDProducer(
