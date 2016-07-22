@@ -52,8 +52,13 @@
   "data_DoubleMuon_Run2016B_25ns" :  "/DoubleMuon/Run2016B-PromptReco-v2/MINIAOD",
   "data_MuonEG_Run2016B_25ns" :  "/MuonEG/Run2016B-PromptReco-v2/MINIAOD",
   "data_Tau_Run2016B_25ns" :  "/Tau/Run2016B-PromptReco-v2/MINIAOD",
-  "data_SingleMuon_Run2016B_PromptReco-v2_25ns":"/SingleMuon/Run2016B-PromptReco-v2/MINIAOD",
-  "data_SingleElectron_Run2016B_PromptReco-v2_25ns":"/SingleElectron/Run2016B-PromptReco-v2/MINIAOD"
+    "data_SingleMuon_Run2016B_PromptReco-v2_25ns":"/SingleMuon/Run2016B-PromptReco-v2/MINIAOD",
+    
+  "data_SingleElectron_Run2016B" : "/SingleElectron/Run2016B-PromptReco-v2/MINIAOD",
+  "data_SingleElectron_Run2016C" : "/SingleElectron/Run2016C-PromptReco-v2/MINIAOD",
+  "data_SingleElectron_Run2016D" : "/SingleElectron/Run2016D-PromptReco-v2/MINIAOD",
+  "data_SingleElectron_Run2016E" : "/SingleElectron/Run2016E-PromptReco-v2/MINIAOD"
+    
 
 }
 

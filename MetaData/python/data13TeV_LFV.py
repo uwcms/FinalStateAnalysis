@@ -376,6 +376,38 @@ datadefs['data_SingleMuon_Run2016B_PromptReco-v2_25ns'] = {
     'calibrationTarget':'Moriond2015'
    }
 
+datadefs['data_SingleElectron_Run2016B'] = {
+      'datasetpath' : "/SingleElectron/Run2016B-PromptReco-v2/MINIAOD",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt",
+      'firstRun' : 273150,
+      'lastRun' : 275376,
+      'analyses' : ['HET'],
+      'calibrationTarget':'ICHEP2016'
+   }
+datadefs['data_SingleElectron_Run2016C'] = {
+      'datasetpath' : "/SingleElectron/Run2016C-PromptReco-v2/MINIAOD",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt",
+      'firstRun' : 275420,
+      'lastRun' : 276283,
+      'analyses' : ['HET'],
+      'calibrationTarget':'ICHEP2016'
+   }
+datadefs['data_SingleElectron_Run2016D'] = {
+      'datasetpath' : "/SingleElectron/Run2016D-PromptReco-v2/MINIAOD",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt",
+      'firstRun' : 276315,
+      'lastRun' : 276811,
+      'analyses' : ['HET'],
+      'calibrationTarget':'ICHEP2016'
+   }
+datadefs['data_SingleElectron_Run2016E'] = {
+      'datasetpath' : "/SingleElectron/Run2016E-PromptReco-v2/MINIAOD",
+      'lumi_mask' : "FinalStateAnalysis/RecoTools/data/masks/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt",
+      'firstRun' : 276830,
+      'lastRun' : 277075,
+      'analyses' : ['HET'],
+      'calibrationTarget':'ICHEP2016'
+   }
 
 
 datadefs["DYJets_M50-PU20bx25"] = {
