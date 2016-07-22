@@ -13,6 +13,7 @@
 #include "CommonTools/Utils/interface/TFileDirectory.h"
 #include "DataFormats/Common/interface/MergeableCounter.h"
 #include "TH1F.h"
+#include "TH1D.h"
 #include "TTree.h"
 
 #include <sstream>
@@ -59,7 +60,7 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
       "eventWeights", "Events Weights", 100, 0, 5);
   skimEventCounter_ = fs_.make<TH1F>(
       "skimCounter", "Original Events Processed", 1, -0.5, 0.5);
-  summedWeightHist_ = fs_.make<TH1F>(
+  summedWeightHist_ = fs_.make<TH1D>(
       "summedWeights", "Sum of weights for processed events", 1, -0.5, 0.5);
   integratedLumi_ = fs_.make<TH1F>(
       "intLumi", "Integrated Lumi", 1, -0.5, 0.5);

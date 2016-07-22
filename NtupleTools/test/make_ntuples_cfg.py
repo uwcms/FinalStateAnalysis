@@ -66,7 +66,7 @@ from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
 import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")
-
+cmsswversion=os.environ['CMSSW_VERSION']
 # if you want to debug in the future, uncomment this
 #process.ProfilerService = cms.Service (
 #      "ProfilerService",
@@ -428,14 +428,15 @@ if abs(options.runFSRFilter)>0:
 
 #######################################
 ### MET Uncertainty and Corrections ###
+
 #######################################
 
 if not bool(options.skipMET):
     postfix = 'NewMet'
     from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
     isData = not options.isMC
-    process.load ("CondCore.DBCommon.CondDBCommon_cfi")
-    from CondCore.DBCommon.CondDBSetup_cfi import *
+    process.load ("CondCore.CondDB.CondDB_cfi")
+    from CondCore.CondDB.CondDB_cfi import *
     process.jec = cms.ESSource("PoolDBESSource",
       DBParameters = cms.PSet(
         messageLevel = cms.untracked.int32(0)
@@ -444,22 +445,22 @@ if not bool(options.skipMET):
       toGet = cms.VPSet(
         cms.PSet(
               record = cms.string('JetCorrectionsRecord'),
-              tag    = cms.string('JetCorrectorParametersCollection_Fall15_25nsV2_{0}_AK4PFchs'.format('MC' if options.isMC else 'DATA')),
+              tag    = cms.string('JetCorrectorParametersCollection_Spring16_25nsV6_{0}_AK4PFchs'.format('MC' if options.isMC else 'DATA')),
               label  = cms.untracked.string('AK4PFchs')
               )
       ),
-      connect = cms.string('sqlite:../data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA'))
-      #connect = cms.string('sqlite:/CMSSW_7_6_3/src/FinalStateAnalysis/NtupleTools/data/Fall15_25nsV2_{0}.db'.format('MC' if options.isMC else 'DATA'))
+      connect = cms.string('sqlite:/{0}/src/FinalStateAnalysis/NtupleTools/data/Spring16_25nsV6_{1}.db'.format(cmsswversion,'MC' if options.isMC else 'DATA'))
+      #                      connect = cms.string('sqlite:../data/Spring16_25nsV6_{1}.db'.format(cmsswversion,'MC' if options.isMC else 'DATA'))                        
     )
     process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
     runMetCorAndUncFromMiniAOD(process,
-                               jetColl=fs_daughter_inputs['jets'],
+                               #jetColl=fs_daughter_inputs['jets'],
                                jetCollUnskimmed='slimmedJets',
-                               photonColl=fs_daughter_inputs['photons'],
-                               electronColl=fs_daughter_inputs['electrons'],
-                               muonColl=fs_daughter_inputs['muons'],
-                               tauColl=fs_daughter_inputs['taus'],
-                               isData=isData,
+                               #photonColl=fs_daughter_inputs['photons'],
+                               #electronColl=fs_daughter_inputs['electrons'],
+                               #muonColl=fs_daughter_inputs['muons'],
+                               #tauColl=fs_daughter_inputs['taus'],
+                               #isData=isData,
                                #jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
                                postfix=postfix,
                                )
@@ -493,19 +494,20 @@ if not bool(options.skipMET):
     # this should be it, but fails
     #process.applyCorrections = cms.Path(getattr(process,'fullPatMetSequence{0}'.format(postfix)))
     # fix things
-    getattr(process,'patPFMetT1T2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
-    getattr(process,'patPFMetT2Corr{0}'.format(postfix)).src = cms.InputTag('patJets')
-    getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices')
+    getattr(process,'patPFMetT1T2Corr{0}'.format(postfix)).src = cms.InputTag('slimmedJets')
+    getattr(process,'patPFMetT2Corr{0}'.format(postfix)).src = cms.InputTag('slimmedJets')
+    #getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices') #this doesn't work in 80X
+
     process.applyCorrections = cms.Path()
-    if options.isMC: process.applyCorrections += process.genMetExtractor
+    ##if options.isMC: process.applyCorrections += process.genMetExtractor
     process.applyCorrections += getattr(process,'patPFMet{0}'.format(postfix))
-    process.applyCorrections += process.patJetCorrFactorsReapplyJEC
-    process.applyCorrections += process.patJets
-    process.applyCorrections += getattr(process,'patPFMetT1Txy{0}'.format(postfix))
+    #process.applyCorrections += process.patJetCorrFactorsReapplyJEC
+    #process.applyCorrections += process.patJets
+    #process.applyCorrections += getattr(process,'patPFMetT1Txy{0}'.format(postfix))
     process.applyCorrections += getattr(process,'patPFMetT1{0}'.format(postfix))
-    process.applyCorrections += getattr(process,'patPFMetTxy{0}'.format(postfix))
+    #process.applyCorrections += getattr(process,'patPFMetTxy{0}'.format(postfix))
     process.schedule.append(process.applyCorrections)
-    fs_daughter_inputs['jets'] = 'patJets'
+    fs_daughter_inputs['jets'] = 'slimmedJets'
     
     # embed references to shifts
     process.embedShifts = cms.Path()
@@ -1037,7 +1039,7 @@ process.MessageLogger.cerr.UndefinedPreselectionInfo = cms.untracked.PSet(
 )
 
 if options.verbose:
-    process.options.wantSummary = cms.untracked.bool(True)
+    process.options.wantSummary = cms.untracked.bool(False)
 if options.passThru:
     set_passthru(process)
 
