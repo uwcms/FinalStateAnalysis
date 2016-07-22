@@ -45,19 +45,21 @@ class MegaBase(object):
         self.log.debug("booking %s at %s", name, location)
 
         directory = make_dirs(self.output, os.path.normpath(location).split('/'))
-
+        # print directory, self.output, location
         if not directory:
             raise IOError("Couldn't create directory %s in file %s" %
                           (location, self.output))
 
         directory.cd()
         the_type = kwargs.get('type', ROOT.TH1F)
+
         object = the_type(name, *args)
         if isinstance(the_type, ROOT.TH1):
             # Check if we've specified an xaxis, otherwise use the title.
             xaxis = kwargs.get('xaxis', args[1])
             object.GetXaxis().SetTitle(xaxis)
-        directory.Append(object)
+        #directory.Append(object)
+
         self.histograms[os.path.join(location, name)] = object
         return object
 

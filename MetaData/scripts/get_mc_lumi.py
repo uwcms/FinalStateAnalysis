@@ -20,7 +20,7 @@ import sys
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('sample', help="MC sample name")
-    parser.add_argument('nevts', type=int, help="Number of processed events")
+    parser.add_argument('nevts', type=float, help="Number of processed events")
     parser.add_argument('--sqrts', type=int, choices=[0, 7, 8, 13],
                         default=0,
                         help="Use 7 or 8 TeV samples. "

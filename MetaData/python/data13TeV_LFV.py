@@ -32,7 +32,7 @@ datadefs["VBF_LFV_HToMuTau_M125_13TeV_powheg_pythia8"] = {
 
 datadefs["GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8"] = {
     'analyses': ['4L'],
-    'datasetpath': '/GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8/RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/MINIAODSIM',
+      'datasetpath': '/GluGlu_LFV_HToETau_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v2/MINIAODSIM',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'ICHEP2016',
     'x_sec': 43.92*0.01,
@@ -104,13 +104,13 @@ datadefs["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
     'calibrationTarget': 'ICHEP2016',
     'x_sec': 6025.2 ,
 }
-#datadefs["DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
-#    'analyses': ['4L'],
-#    'datasetpath': '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
-#    'pu': 'Asympt25ns',
-#    'calibrationTarget': 'RunIISpring15DR7',
-#    'x_sec': 18610.0 ,
-#}
+datadefs["DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': 18610.0 ,
+}
 ###new stuff
 
 datadefs["DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
