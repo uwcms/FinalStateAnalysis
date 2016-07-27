@@ -403,8 +403,8 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     const float daughterUserCandIsoContribution(const size_t i, const std::string& label) const;
 
     // Matching FS object to L1 iso taus
-    const float l1extraIsoTauMatching(const size_t i) const;
-    const float doubleL1extraIsoTauMatching(const size_t i, const size_t j) const;
+    //const float l1extraIsoTauMatching(const size_t i) const;
+    //const float doubleL1extraIsoTauMatching(const size_t i, const size_t j) const;
 
   private:
     edm::Ptr<PATFinalStateEvent> event_;

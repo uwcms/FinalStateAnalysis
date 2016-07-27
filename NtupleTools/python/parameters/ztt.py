@@ -22,23 +22,24 @@ parameters = {
     },
 
     # selections on all objects whether they're included in final states or not, done immediately after necessary variables are embedded
-    'preselection' : OrderedDict(
-        [
-            # Remove jets that overlap our leptons
-            ('j', { # Made pt requirement for E/Mu to clean an overlapping jet so
-                    # that this never happens
-                    'selection' : 'pt > 20 && abs(eta) < 4.7 && userFloat("idLoose") > 0.5',
-                    'e' : {
-                        'deltaR' : 0.5,
-                        'selection' : 'userFloat("MVANonTrigWP90") > 0.5 && pt > 9999 && abs(eta) < 2.5',
-                        },
-                    'm' : {
-                        'deltaR' : 0.5,
-                        'selection' : 'isMediumMuon() > 0.5 && pt > 9999 && abs(eta) < 2.4',
-                        },
-                    }
-             )
-            ]),
+    'preselection' : OrderedDict(),
+        # Commented out because of 80X jet cleaning memory leak
+        #[
+        #    # Remove jets that overlap our leptons
+        #    ('j', { # Made pt requirement for E/Mu to clean an overlapping jet so
+        #            # that this never happens
+        #            'selection' : 'pt > 20 && abs(eta) < 4.7 && userFloat("idLoose") > 0.5',
+        #            'e' : {
+        #                'deltaR' : 0.5,
+        #                'selection' : 'userFloat("MVANonTrigWP90") > 0.5 && pt > 9999 && abs(eta) < 2.5',
+        #                },
+        #            'm' : {
+        #                'deltaR' : 0.5,
+        #                'selection' : 'isMediumMuon() > 0.5 && pt > 9999 && abs(eta) < 2.4',
+        #                },
+        #            }
+        #     )
+        #    ]),
 
     # selections to include object in final state (should be looser than analysis selections)
     # Based on default finalSelection, this is a little tighter for muons so we keep the min Pt Mu for our triggers
@@ -202,7 +203,7 @@ parameters = {
 
     'tauVariables' : PSet(
         
-        objectL1IsoTauMatch = 'l1extraIsoTauMatching({object_idx})',
+        #objectL1IsoTauMatch = 'l1extraIsoTauMatching({object_idx})',
         # Sync Triggers
         objectMatchesDoubleTau40Filter = 'matchToHLTFilter({object_idx}, "hltDoublePFTau40TrackPt1MediumIsolationDz02Reg", 0.5)',
         objectMatchesDoubleTau40Path      = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumIsoPFTau40_Trk1_eta2p1_Reg_v\\d+", 0.5)',
@@ -240,6 +241,6 @@ parameters = {
         #object1_object2_MvaMetCovMatrix10 = 'getMVAMET({object1_idx},{object2_idx}).at(3)',
         #object1_object2_MvaMetCovMatrix01 = 'getMVAMET({object1_idx},{object2_idx}).at(4)',
         #object1_object2_MvaMetCovMatrix11 = 'getMVAMET({object1_idx},{object2_idx}).at(5)',
-        object1_object2_doubleL1IsoTauMatch = 'doubleL1extraIsoTauMatching({object1_idx},{object2_idx})',
+        #object1_object2_doubleL1IsoTauMatch = 'doubleL1extraIsoTauMatching({object1_idx},{object2_idx})',
     ),
 }
