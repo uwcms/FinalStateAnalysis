@@ -109,6 +109,7 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
         '"--output-dag-file=%s"' % dag_dir,
         '"--output-dir=%s"' % output_dir,
         '--input-files-per-job=%i' % args.filesperjob,
+        '--job-count=%i' % args.jobcount,
     ]
     paramLoc = 'src/FinalStateAnalysis/NtupleTools/python/parameters'
     if 'uwlogin' in gethostname() and not args.extraUserCodeFiles:
@@ -133,7 +134,7 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     # temp hardcode
     if args.apply_cms_lumimask:
-        filename = 'Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt' # 3.99/fb - June 22
+        filename = 'Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt' # 3.99/fb - June 22
         lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV',filename)
         if args.lumimaskjson: 
             assert not (args.silver or args.goldenv2), "ERROR: Multiple lumimask jsons specified"
@@ -309,6 +310,11 @@ def get_com_line_args():
     farmout_group = parser.add_argument_group("farmout",
                                               description="Farmout options")
 
+    farmout_group.add_argument(
+        '--job-count', type=int, dest='jobcount',
+        default=1000000,
+        help = 'number of jobs',
+    )
     farmout_group.add_argument(
         '--extra-usercode-files', nargs='*', type=str, dest='extraUserCodeFiles',
         help = 'Space-separated list of extra directories that need to be included '
