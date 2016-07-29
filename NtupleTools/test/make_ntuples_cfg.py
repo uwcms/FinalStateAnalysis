@@ -441,7 +441,7 @@ if not bool(options.skipMET):
               )
       ),
       connect = cms.string('sqlite:/{0}/src/FinalStateAnalysis/NtupleTools/data/Spring16_25nsV6_{1}.db'.format(cmsswversion,'MC' if options.isMC else 'DATA'))
-      #                      connect = cms.string('sqlite:../data/Spring16_25nsV6_{1}.db'.format(cmsswversion,'MC' if options.isMC else 'DATA'))                        
+      #                         connect = cms.string('sqlite:../data/Spring16_25nsV6_{1}.db'.format(cmsswversion,'MC' if options.isMC else 'DATA'))                        
     )
     process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
     runMetCorAndUncFromMiniAOD(process,

@@ -19,7 +19,7 @@
 #include <TH2D.h>
 #include "TRandom3.h"
 #include "CondFormats/BTauObjects/interface/BTagCalibration.h"
-#include "CondFormats/BTauObjects/interface/BTagCalibrationReader.h"
+#include "CondTools/BTau/interface/BTagCalibrationReader.h"
 #include "boost/filesystem.hpp"
 
 bool applySFM(double eta, bool& isBTagged, float Btag_SF, float Btag_eff){
@@ -115,13 +115,21 @@ MiniAODJetBTagSFMediumEmbedder::MiniAODJetBTagSFMediumEmbedder(const edm::Parame
     // for b tag promote/demote method 2a)
     // https://twiki.cern.ch/twiki/bin/view/CMS/BTagSFMethods#2a_Jet_by_jet_updating_of_the_b
     calib=new BTagCalibration("CSVv2", std::string(std::getenv("CMSSW_BASE"))+"/src/FinalStateAnalysis/PatTools/data/CSVv2_76x.csv");
-    reader_light=new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "incl", "central");
-    reader_light_up=new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "incl", "up");
-    reader_light_down=new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "incl", "down");
-    reader=new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "central");
-    reader_up=new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "up");  // sys up
-    reader_down=new BTagCalibrationReader(calib, BTagEntry::OP_MEDIUM, "mujets", "down");  // sys down
+    reader_light=new BTagCalibrationReader(BTagEntry::OP_MEDIUM, "central");
+    reader_light_up=new BTagCalibrationReader(BTagEntry::OP_MEDIUM,  "up");
+    reader_light_down=new BTagCalibrationReader(BTagEntry::OP_MEDIUM, "down");
+    reader=new BTagCalibrationReader(BTagEntry::OP_MEDIUM, "central");
+    reader_up=new BTagCalibrationReader( BTagEntry::OP_MEDIUM, "up");  // sys up
+    reader_down=new BTagCalibrationReader(BTagEntry::OP_MEDIUM, "down");  // sys down
 
+    reader_light->load(*calib, BTagEntry::FLAV_UDSG, "incl");
+    reader_light_up->load(*calib, BTagEntry::FLAV_UDSG, "incl");
+    reader_light_down->load(*calib, BTagEntry::FLAV_UDSG, "incl");
+    reader->load(*calib, BTagEntry::FLAV_B, "mujets");
+    reader_up->load(*calib, BTagEntry::FLAV_B, "mujets");
+    reader_down->load(*calib, BTagEntry::FLAV_B, "mujets");
+    
+    
     std::cout<<"INFO::NBTagFiller using efficiency map"<<std::endl;
     TFile *f_EffMap = new TFile(path.c_str(),"READONLY");
     h2_TTEffMapB    = (TH2D*)f_EffMap->Get("btag_eff_b");
