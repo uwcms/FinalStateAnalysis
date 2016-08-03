@@ -119,8 +119,12 @@ singleLepton_25ns = PSet(
         paths=r'HLT_IsoMu27_v\\d+'
         ),
     _trig_template.replace(
-        name='singleE',
-        paths=r'HLT_Ele27_WPLoose_Gsf_v\\d+',
+        name='singleE27LooseEr',
+        paths=r'HLT_Ele27_eta2p1_WPLoose_Gsf_v\\d+',
+        ),
+    _trig_template.replace(
+        name='singleE27Tight',
+        paths=r'HLT_Ele27_WPTight_Gsf_v\\d+',
         ),
     _trig_template.replace(
         name='singleE23WPLoose',
@@ -213,6 +217,43 @@ doubleLepton_25ns = PSet(
         name='doubleTau32',
         paths=r'HLT_DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg_v\\d+'
         ),
+    _trig_template.replace(
+        name='singleE22SingleTau20SingleL1',
+        paths=r'HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE24SingleTau20',
+        paths=r'HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE24SingleTau20SingleL1',
+        paths=r'HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE27SingleTau20SingleL1',
+        paths=r'HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE32SingleTau20SingleL1',
+        paths=r'HLT_Ele32_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE20SingleTau28',
+        paths=r'HLT_Ele20_eta2p1_WPLoose_Gsf_LooseIsoPFTau28_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE22SingleTau29',
+        paths=r'HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau29_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE24SingleTau30',
+        paths=r'HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau30_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE36SingleTau30',
+        paths=r'HLT_Ele36_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\d+'
+        ),
+
     )
 
 tripleLepton = PSet(
