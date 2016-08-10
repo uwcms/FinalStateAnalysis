@@ -210,7 +210,7 @@ trigger_25ns = PSet(
     objectMatchesSingleE36SingleTau30 = r'matchToHLTPath({object_idx},"HLT_Ele36_eta2p1_WPLoose_Gsf_LooseIsoPFTau30_v\\d+",0.5)',  
     objectMatchesSingleE22SingleTau20L1 = r'matchToHLTPath({object_idx},"HLT_Ele22_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\d+",0.5)',
     objectMatchesSingleE24SingleTau20 = r'matchToHLTPath({object_idx},"HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_v\\d+",0.5)',
-    objectMatchesSingleE24SingleTau20 = r'matchToHLTPath({object_idx},"HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\d+",0.5)',  
+    objectMatchesSingleE24SingleTau20L1 = r'matchToHLTPath({object_idx},"HLT_Ele24_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\d+",0.5)',  
     objectMatchesSingleE27SingleTau20L1 = r'matchToHLTPath({object_idx},"HLT_Ele27_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\d+",0.5)',
     objectMatchesSingleE32SingleTau20L1 = r'matchToHLTPath({object_idx},"HLT_Ele32_eta2p1_WPLoose_Gsf_LooseIsoPFTau20_SingleL1_v\\d+",0.5)',
 )
