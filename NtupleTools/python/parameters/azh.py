@@ -156,6 +156,9 @@ parameters = {
         # Sync Triggers
         objectMatchesDoubleEPath      = r'matchToHLTPath({object_idx}, "HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+", 0.5)',
         objectMatchesDoubleE23_12Path      = r'matchToHLTPath({object_idx}, "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+", 0.5)',
+        objectMatchesE27Path      = r'matchToHLTPath({object_idx}, "HLT_Ele27_WPLoose_Gsf_v\\d+", 0.5)',
+        objectMatchesE27Path2      = r'matchToHLTPath({object_idx}, "HLT_Ele27_eta2p1_WPLoose_Gsf_v\\d+", 0.5)',
+        objectMatchesE25eta2p1Path      = r'matchToHLTPath({object_idx}, "HLT_Ele25_eta2p1_WPTight_Gsf_v\\d+", 0.5)',
         objectMatchesDoubleEFilter      = 'matchToHLTFilter({object_idx}, "HLT2PhotonPhotonDZ", 0.5)',
         objectMatchesDoubleE23_12Filter      = 'matchToHLTFilter({object_idx}, "HLT2PhotonPhotonDZ", 0.5)',
         objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isPrompt() : -999',
@@ -171,10 +174,13 @@ parameters = {
         objectIsoDB04               = '({object}.pfIsolationR04().sumChargedHadronPt + max( {object}.pfIsolationR04().sumNeutralHadronEt \
                                         + {object}.pfIsolationR04().sumPhotonEt - 0.5 * {object}.pfIsolationR04().sumPUPt, 0.0)) / {object}.pt()',
         # Sync Triggers
-        objectMatchesDoubleMuPath1      = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\d+", 0.5)',
-        objectMatchesDoubleMuPath2      = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+", 0.5)',
-        objectMatchesDoubleMuFilter1 = 'matchToHLTFilter({object_idx}, "HLT2MuonMuonDZ", 0.5)',
-        objectMatchesDoubleMuFilter2 = 'matchToHLTFilter({object_idx}, "HLT2MuonMuonDZ", 0.5)',
+        objectMatchesDoubleMuPath1      = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\d+", 0.1)',
+        objectMatchesDoubleMuPath2      = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+", 0.1)',
+        objectMatchesMu50      = r'matchToHLTPath({object_idx}, "HLT_Mu50_v\\d+", 0.1)',
+        objectMatchesIsoMu22      = r'matchToHLTPath({object_idx}, "HLT_IsoMu22_v\\d+", 0.1)',
+        objectMatchesIsoTkMu22      = r'matchToHLTPath({object_idx}, "HLT_IsoTkMu22_v\\d+", 0.1)',
+        objectMatchesDoubleMuFilter1 = 'matchToHLTFilter({object_idx}, "HLT2MuonMuonDZ", 0.1)',
+        objectMatchesDoubleMuFilter2 = 'matchToHLTFilter({object_idx}, "HLT2MuonMuonDZ", 0.1)',
         objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isPrompt() : -999',
         objectGenDirectPromptTauDecayFinalState       = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef().isDirectPromptTauDecayProductFinalState() : -999',
         objectGenPromptFinalState       = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef().isPromptFinalState() : -999',
