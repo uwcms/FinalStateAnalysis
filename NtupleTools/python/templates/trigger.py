@@ -119,6 +119,10 @@ singleLepton_25ns = PSet(
         paths=r'HLT_IsoMu27_v\\d+'
         ),
     _trig_template.replace(
+        name='singleEeta2p1Loose',
+        paths=r'HLT_Ele27_eta2p1_WPLoose_Gsf_v\\d+',
+        ),
+    _trig_template.replace(
         name='singleE',
         paths=r'HLT_Ele27_WPLoose_Gsf_v\\d+',
         ),
