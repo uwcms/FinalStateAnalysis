@@ -91,6 +91,7 @@ private:
 
   edm::EDGetTokenT<pat::PackedTriggerPrescales> trgPrescaleSrcToken_;
   edm::EDGetTokenT<edm::TriggerResults> trgResultsSrcToken_;
+  edm::EDGetTokenT<edm::TriggerResults> trgResultsSrc2Token_;
   //edm::EDGetTokenT< std::vector< l1extra::L1JetParticle > > l1extraIsoTauSrcToken_;
 
   //edm::EDGetTokenT<pat::JetCollection> jetAK8SrcToken_;
@@ -131,6 +132,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
     pset.getParameter<bool>("forbidMissing") : true;
 
   trgResultsSrcToken_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc"));
+  trgResultsSrc2Token_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc2"));
   //l1extraIsoTauSrcToken_ = consumes< std::vector< l1extra::L1JetParticle > >(pset.getParameter<edm::InputTag>("l1extraIsoTauSrc"));
 
   //photonCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("photonCoreSrc"));
@@ -263,7 +265,16 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
 
   edm::Handle<pat::PackedTriggerPrescales> trigPrescale;
   edm::Handle<edm::TriggerResults> trigResults;
+  
   evt.getByToken(trgResultsSrcToken_, trigResults);
+
+  if (!trigResults.isValid()){
+    evt.getByToken(trgResultsSrc2Token_, trigResults);
+    if (!trigResults.isValid()){
+      throw edm::Exception(edm::errors::ProductNotFound) << " could not find any HLTResult collection \n";
+	return;
+    }
+  }
   const edm::TriggerNames& names = evt.triggerNames(*trigResults);
   evt.getByToken(trgPrescaleSrcToken_, trigPrescale);
 
