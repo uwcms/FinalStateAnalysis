@@ -21,6 +21,7 @@ info = PSet(
     #objectTNPId = '{object}.userInt("ps_sel_nom")',
     objectNSignalCands = '{object}.signalCands().size()',
     objectNChrgHadrSignalCands = '{object}.signalChargedHadrCands().size()',
+    objectNChrgHadrIsolationCands = '{object}.isolationChargedHadrCands().size()',
     objectNGammaSignalCands = '{object}.signalGammaCands().size()',
     objectNNeutralHadrSignalCands = '{object}.signalNeutrHadrCands().size()',
 )

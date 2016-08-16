@@ -11,7 +11,7 @@ parameters = {
     'ptCuts' : {
         'm': '8',
         'e': '10',
-        't': '20',
+        't': '18',
         'j': '18'
     },
     'etaCuts' : {
@@ -23,23 +23,23 @@ parameters = {
 
     # selections on all objects whether they're included in final states or not, done immediately after necessary variables are embedded
     'preselection' : OrderedDict(),
-        # Commented out because of 80X jet cleaning memory leak
-        #[
-        #    # Remove jets that overlap our leptons
-        #    ('j', { # Made pt requirement for E/Mu to clean an overlapping jet so
-        #            # that this never happens
-        #            'selection' : 'pt > 20 && abs(eta) < 4.7 && userFloat("idLoose") > 0.5',
-        #            'e' : {
-        #                'deltaR' : 0.5,
-        #                'selection' : 'userFloat("MVANonTrigWP90") > 0.5 && pt > 9999 && abs(eta) < 2.5',
-        #                },
-        #            'm' : {
-        #                'deltaR' : 0.5,
-        #                'selection' : 'isMediumMuon() > 0.5 && pt > 9999 && abs(eta) < 2.4',
-        #                },
-        #            }
-        #     )
-        #    ]),
+     #    # Commented out because of 80X jet cleaning memory leak
+     #    [
+     #       # Remove jets that overlap our leptons
+     #       ('j', { # Made pt requirement for E/Mu to clean an overlapping jet so
+     #               # that this never happens
+     #               'selection' : 'pt > 20 && abs(eta) < 4.7 && userFloat("idLoose") > 0.5',
+     #               'e' : {
+     #                   'deltaR' : 0.5,
+     #                   'selection' : 'userFloat("MVANonTrigWP90") > 0.5 && pt > 9999 && abs(eta) < 2.5',
+     #                   },
+     #               'm' : {
+     #                   'deltaR' : 0.5,
+     #                   'selection' : 'isMediumMuon() > 0.5 && pt > 9999 && abs(eta) < 2.4',
+     #                   },
+     #               }
+     #        )
+     #    ]),
 
     # selections to include object in final state (should be looser than analysis selections)
     # Based on default finalSelection, this is a little tighter for muons so we keep the min Pt Mu for our triggers
@@ -72,10 +72,12 @@ parameters = {
         #buildGenTaus = 'buildGenTaus.size()',
         numGenJets = 'evt.numGenJets()',
         genMass = 'evt.getGenMass()',
-        muVetoZTTp001dxyz = 'vetoMuons(0.001, "pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt - 0.5 * pfIsolationR03().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
+        muVetoZTTp001dxyz = 'vetoMuons(0.001, "pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolation().sumNeutralHadronEt + pfIsolation().sumPhotonEt - 0.5 * pfIsolation().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
         eVetoZTTp001dxyz = 'vetoElectrons(0.001, "pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
-        muVetoZTTp001dxyzR0 = 'vetoMuons(0.0, "pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolationR03().sumNeutralHadronEt + pfIsolationR03().sumPhotonEt - 0.5 * pfIsolationR03().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
+        muVetoZTTp001dxyzR0 = 'vetoMuons(0.0, "pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolation().sumNeutralHadronEt + pfIsolation().sumPhotonEt - 0.5 * pfIsolation().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
         eVetoZTTp001dxyzR0 = 'vetoElectrons(0.0, "pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
+	dimuonVeto = 'vetoSecondMuon(0.15,"pt > 15 & abs(eta) < 2.4 & ( ( pfIsolationR03().sumChargedHadronPt + max( pfIsolation().sumNeutralHadronEt + pfIsolation().sumPhotonEt - 0.5 * pfIsolation().sumPUPt, 0.0)) / pt() ) < 0.3 & isGlobalMuon > 0 & isTrackerMuon > 0 & isPFMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
+	dielectronVeto = 'vetoSecondElectron(0.15, "pt > 15 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & userFloat(\'CBIDVeto\') > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
 
         jetVeto20ZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 4.7").size()',
     #    jetVeto20RecoilZTT = 'vetoJets(0.5, "pt > 20 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5").size()',
@@ -162,6 +164,8 @@ parameters = {
         objectMatchesMu8Ele23Filter      = 'matchToHLTFilter({object_idx}, "hltMu8TrkIsoVVLEle23CaloIdLTrackIdLIsoVLElectronlegTrackIsoFilter", 0.5)',
         objectMatchesEle22Filter      = 'matchToHLTFilter({object_idx}, "hltSingleEle22WP75GsfTrackIsoFilter", 0.5)',
         objectMatchesEle23Filter      = 'matchToHLTFilter({object_idx}, "hltEle23WPLooseGsfTrackIsoFilter", 0.5)',
+        objectMatchesEle25LooseFilter      = 'matchToHLTFilter({object_idx}, "hltEle25erWPLooseGsfTrackIsoFilter", 0.5)',
+        objectMatchesEle25TightFilter      = 'matchToHLTFilter({object_idx}, "hltEle25erWPTightGsfTrackIsoFilter", 0.5)',
         # Proposed Triggers
         objectMatchesMu17Ele12Path      = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
         objectMatchesMu8Ele17Path      = r'matchToHLTPath({object_idx}, "HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
@@ -188,6 +192,8 @@ parameters = {
         objectMu23Ele12Filter = 'matchToHLTFilter({object_idx}, "hltMu23TrkIsoVVLEle12CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered23", 0.5)',
         objectIsoMu17Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sSingleMu16erL1f0L2f10QL3f17QL3trkIsoFiltered0p09", 0.5)',
         objectIsoMu18Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sMu16L1f0L2f10QL3f18QL3trkIsoFiltered0p09", 0.5)',
+        objectIsoMu22Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sMu20L1f0L2f10QL3f22QL3trkIsoFiltered0p09", 0.5)',
+        objectIsoTkMu22Filter = 'matchToHLTFilter({object_idx}, "hltL3fL1sMu20L1f0Tkf22QL3trkIsoFiltered0p09", 0.5)',
         # Proposed Triggers
         objectMatchesMu8Ele17Path      = r'matchToHLTPath({object_idx}, "HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
         objectMatchesMu17Ele12Path      = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
