@@ -133,8 +133,7 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     # temp hardcode
     if args.apply_cms_lumimask:
-        #filename = 'Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt' # 3.99/fb - June 22
-        filename = 'Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt' # 12.9/fb - July 20, no L1Trig check
+        filename = 'Cert_271036-277148_13TeV_PromptReco_Collisions16_JSON.txt' # 15.9/fb - Aug 4
         lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV',filename)
         if args.lumimaskjson: 
             assert not (args.silver or args.goldenv2), "ERROR: Multiple lumimask jsons specified"
