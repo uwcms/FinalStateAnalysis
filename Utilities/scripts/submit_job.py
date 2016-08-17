@@ -34,7 +34,7 @@ import logging
 import os
 import sys
 from socket import gethostname
-#from FinalStateAnalysis.MetaData.datadefs import datadefs
+from FinalStateAnalysis.MetaData.datadefs import datadefs
 from FinalStateAnalysis.Utilities.dbsinterface import get_das_info
 
 log = logging.getLogger("submit_job")
