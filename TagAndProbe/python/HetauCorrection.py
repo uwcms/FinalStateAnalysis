@@ -1,28 +1,9 @@
 from correctionloader import CorrectionLoader
+from graphReader import GraphReader
 import os
 
-single_ele_wp80 = CorrectionLoader(
-    os.path.join(os.environ['fsa'], 'TagAndProbe/data/efficiency-Run2012ABCD-WP80ToHLTEle.txt')
-)
-single_ele_mva = CorrectionLoader(
-    os.path.join(os.environ['fsa'], 'TagAndProbe/data/ScaleFactors_MySelToHLT_efficiency.txt')
-)
-correct_eEmb = CorrectionLoader(
-    os.path.join(os.environ['fsa'], 'TagAndProbe/data/electronEmbeddedScaleFactor.txt')
-)
-single_ele_eff_mva = CorrectionLoader(
-    os.path.join(os.environ['fsa'], 'TagAndProbe/data/EfficiencySingleElectron_MySelToHLT_efficiency.txt')
-)
-
-scale_eleId_hww = CorrectionLoader(
-    os.path.join(os.environ['fsa'], 'TagAndProbe/data/scaleFactor-Run2012ABCD-GsfElectronToId.txt')
-)
-scale_eleIso_hww = CorrectionLoader(
-    os.path.join(os.environ['fsa'], 'TagAndProbe/data/scaleFactor-Run2012ABCD-RecoToIso.txt')
-)
-
-scale_elereco_hww = CorrectionLoader(
-    os.path.join(os.environ['fsa'], 'TagAndProbe/data/scaleFactor-Run2012ABCD-SCToElectron.txt')
+single_ele_2016 = GraphReader(
+    os.path.join(os.environ['fsa'], 'TagAndProbe/data/Electron_Ele25eta2p1WPTight_eff.root')
 )
 
 
