@@ -967,6 +967,22 @@ std::vector<const reco::Candidate*> PATFinalState::vetoMuons(
       dR, filter);
 }
 
+std::vector<const reco::Candidate*> PATFinalState::vetoSecondMuon(
+    double dR, const std::string& filter) const {
+  return getVetoOSObjects(
+      daughters(),
+      ptrizeCollection(evt()->muons()),
+      dR, filter);
+}
+
+std::vector<const reco::Candidate*> PATFinalState::vetoSecondElectron(
+    double dR, const std::string& filter) const {
+  return getVetoOSObjects(
+      daughters(),
+      ptrizeCollection(evt()->electrons()),
+      dR, filter);
+}
+
 std::vector<const reco::Candidate*> PATFinalState::vetoElectrons(
     double dR, const std::string& filter) const {
   return getVetoObjects(

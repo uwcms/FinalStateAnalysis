@@ -49,6 +49,33 @@ std::vector<const reco::Candidate*> getVetoObjects(
   return output;
 }
 
+std::vector<const reco::Candidate*> getVetoOSObjects(
+    const std::vector<const reco::Candidate*>& hardScatter,
+    const std::vector<const reco::Candidate*>& vetoCollection,
+    double minDeltaR,
+    const std::string& filter) {
+  std::vector<const reco::Candidate*> output;
+
+  const CandFunc& filterFunc = getFunction(filter);
+
+  for (size_t i = 0; i < vetoCollection.size(); ++i) {
+    const reco::Candidate* ptr = vetoCollection[i];
+    bool awayFromEverything = true;
+    for (size_t j = 0; j < 1; ++j) {
+      double deltaR = reco::deltaR(ptr->p4(), hardScatter[j]->p4());
+      if (deltaR < minDeltaR) {
+        awayFromEverything = false;
+        break;
+      }
+    }
+    if (awayFromEverything && (filterFunc)(*ptr) && ptr->charge()*hardScatter[0]->charge()<0) {
+      output.push_back(ptr);
+    }
+  }
+  return output;
+}
+
+
 // Get objects within [minDeltaR] from [object] passing [filter]
 std::vector<const reco::Candidate*> getOverlapObjects(
     const reco::Candidate& candidate,

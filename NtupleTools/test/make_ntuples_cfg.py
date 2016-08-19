@@ -260,7 +260,8 @@ process.load('Configuration.StandardSequences.Services_cff')
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+#GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
+GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': '80X_dataRun2_Prompt_ICHEP16JEC_v0'}
 if options.runNewMVAMET :
     GT = {'mcgt': '76X_mcRun2_asymptotic_RunIIFall15DR76_v1', 'datagt': '76X_dataRun2_16Dec2015_v0'}
 
@@ -317,6 +318,32 @@ if options.runMETNoHF:
 if options.usePUPPI:
     fs_daughter_inputs['pfmet'] = 'slimmedMETsPuppi'
     fs_daughter_inputs['jets'] = 'slimmedJetsPuppi'
+
+##################
+### JEC ##########
+##################
+
+## https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
+isData = not options.isMC
+from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
+process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
+src = cms.InputTag("slimmedJets"),
+  levels = ['L1FastJet', 'L2Relative', 'L3Absolute'],
+  payload = 'AK4PFchs' ) # Make sure to choose the appropriate levels and payload here!
+from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
+process.patJetsReapplyJEC = updatedPatJets.clone(
+  jetSource = cms.InputTag("slimmedJets"),
+  jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactorsReapplyJEC"))
+  )
+if(isData):
+    process.patJetCorrFactorsReapplyJEC.levels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
+
+process.applyJEC = cms.Path()
+process.applyJEC += process.patJetCorrFactorsReapplyJEC
+process.applyJEC += process.patJetsReapplyJEC
+process.schedule.append(process.applyJEC)
+
+fs_daughter_inputs['jets'] = 'patJetsReapplyJEC'
 
 
 ##############

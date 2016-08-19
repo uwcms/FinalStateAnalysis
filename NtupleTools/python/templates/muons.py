@@ -19,6 +19,7 @@ id = PSet(
     objectPFIDTight = 'isTightMuon({object_idx})',
     objectPFIDMedium = '{object}.isMediumMuon()',
     objectPFIDLoose = '{object}.isLooseMuon()',
+    objectSegmentCompatibility = '{object}.segmentCompatibility()',
     # For charged, we use ALL charged particles
     objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
     objectEffectiveArea2011 = '{object}.userFloat("ea_comb_iso04_kt6PFJCth05")',
@@ -112,6 +113,12 @@ energyCorrections = PSet(
 tracking = PSet(
     objectPixHits = '? {object}.innerTrack.isNonnull ? '
         '{object}.innerTrack.hitPattern.numberOfValidPixelHits :-1',
+    objectNormalizedChi2 = '? {object}.globalTrack.isNonnull ? '
+        '{object}.globalTrack().normalizedChi2() : -1',
+    objectValidFraction = '? {object}.innerTrack.isNonnull ? '
+        '{object}.innerTrack().validFraction() : -1',
+    objectChi2LocalPosition = '{object}.combinedQuality().chi2LocalPosition()',
+    objectTrkKink = '{object}.combinedQuality().trkKink()',
     objectNormTrkChi2 = "? {object}.combinedMuon.isNonnull ? "
         "{object}.combinedMuon.normalizedChi2 : 1e99",
     objectTkLayersWithMeasurement = '? {object}.innerTrack.isNonnull ? '
