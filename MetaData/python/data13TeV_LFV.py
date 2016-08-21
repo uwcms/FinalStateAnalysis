@@ -293,6 +293,7 @@ datadefs["TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = {
     'calibrationTarget': 'RunIISpring15DR7',
     'x_sec': 0.009103,
 }
+
 datadefs["WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph"] = {
     'analyses': ['4L'],
     'datasetpath': '/WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
@@ -300,6 +301,32 @@ datadefs["WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph"] = {
     'calibrationTarget': 'ICHEP2016',
     'x_sec': 0.009103,#wrong******
 }
+
+datadefs["WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec': 495.36,# needs to be cross checked
+}
+
+datadefs["WGstarToLNuEE_012Jets_13TeV-madgraph"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec': 11.7,#wrong******
+}
+
+
+datadefs["WGstarToLNuMuMu_012Jets_13TeV-madgraph"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec': 3.8,#wrong******
+}
+
 datadefs["GluGluHToTauTau_M125_13TeV_powheg_pythia8"] = {
     'analyses': ['4L'],
     'datasetpath': '/GluGluHToTauTau_M125_13TeV_powheg_pythia8/RunIISpring15MiniAODv2-AsymptFlat10to50bx25Raw_74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
@@ -462,7 +489,15 @@ datadefs["ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1"] =
     'datasetpath': '/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM',
     'pu': '20bx25',
     'calibrationTarget': 'Phys14DR',
-    'x_sec': 38.09
+    'x_sec': 35.6
+      , ##put the correctnumber
+}
+datadefs["ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1"] = {
+    'analyses': ['mutau'],
+    'datasetpath': '/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM',
+    'pu': '20bx25',
+    'calibrationTarget': 'Phys14DR',
+    'x_sec': 35.6
       , ##put the correctnumber
 }
 
