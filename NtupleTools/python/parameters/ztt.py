@@ -174,6 +174,7 @@ parameters = {
         objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isPrompt() : -999',
         objectGenDirectPromptTauDecay       = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef().statusFlags().isDirectPromptTauDecayProduct() : -999',
         objectZTTGenMatching = 'tauGenMatch({object_idx})', 
+        objectZTTGenMatching2 = 'tauGenMatch2({object_idx})', 
 	#objectZTTThirdLeptonVeto = 'overlapElectrons({object_idx},0.001,"pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
     ),
 
@@ -204,6 +205,7 @@ parameters = {
         objectGenDirectPromptTauDecayFinalState       = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef().isDirectPromptTauDecayProductFinalState() : -999',
         objectGenPromptFinalState       = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef().isPromptFinalState() : -999',
         objectZTTGenMatching = 'tauGenMatch({object_idx})', 
+        objectZTTGenMatching2 = 'tauGenMatch2({object_idx})', 
         ##objectZTTThirdLeptonVeto = 'overlapMuons({object_idx},0.001,"pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR04().sumChargedHadronPt + max( pfIsolationR04().sumNeutralHadronEt + pfIsolationR04().sumPhotonEt - 0.5 * pfIsolationR04().sumPUPt, 0.0)) / pt() ) < 0.3 & isMediumMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2").size()',
     ),
 
@@ -222,6 +224,7 @@ parameters = {
         objectMatchesDoubleTau32Path      = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumIsoPFTau32_Trk1_eta2p1_Reg_v\\d+", 0.5)',
         objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 15, 0).isAvailable && getDaughterGenParticle({object_idx}, 15, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 15, 0).statusFlags().isPrompt() : -999',
         objectZTTGenMatching = 'tauGenMatch({object_idx})', 
+        objectZTTGenMatching2 = 'tauGenMatch2({object_idx})', 
         objectZTTGenPt = 'tauGenKin({object_idx}).at(0)', 
         objectZTTGenEta = 'tauGenKin({object_idx}).at(1)', 
         objectZTTGenPhi = 'tauGenKin({object_idx}).at(2)', 

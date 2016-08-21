@@ -159,6 +159,8 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     // return the Higgs to TauTau decided upon gen matching flags
     double tauGenMatch( size_t i ) const;
+    double tauGenMatch2( size_t i ) const;
+
     // return kin variables for gen taus to test if pat::tau.genJets() works the same
     std::vector<double> tauGenKin( size_t i ) const;
     // return a vector of rebuilt "gen taus" w/o neutrino energy and 

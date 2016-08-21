@@ -22,6 +22,7 @@
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenFilterInfo.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
+#include "DataFormats/JetReco/interface/GenJet.h"
 
 
 #include "FWCore/Framework/interface/GetterOfProducts.h" 
@@ -76,6 +77,9 @@ private:
 
   // MC information
   edm::EDGetTokenT<reco::GenParticleCollection> truthSrcToken_;
+  edm::EDGetTokenT<std::vector<reco::GenJet>> genHadronicTausToken_;
+  edm::EDGetTokenT<std::vector<reco::GenJet>> genElectronicTausToken_;
+  edm::EDGetTokenT<std::vector<reco::GenJet>> genMuonicTausToken_;
   edm::ParameterSet extraWeights_;
 
   edm::EDGetTokenT<GenFilterInfo> generatorFilterToken_;
@@ -125,6 +129,9 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   trgSrcToken_ = consumes<std::vector<pat::TriggerObjectStandAlone> >(pset.getParameter<edm::InputTag>("trgSrc"));
   puInfoSrcToken_ = consumes<std::vector<PileupSummaryInfo> >(pset.getParameter<edm::InputTag>("puInfoSrc"));
   truthSrcToken_ = consumes<reco::GenParticleCollection>(pset.getParameter<edm::InputTag>("genParticleSrc"));
+  genHadronicTausToken_ = consumes<std::vector<reco::GenJet>>(pset.getParameter<edm::InputTag>("tauHadronicSrc")),
+  genElectronicTausToken_ = consumes<std::vector<reco::GenJet>>(pset.getParameter<edm::InputTag>("tauElectronicSrc")),
+  genMuonicTausToken_ = consumes<std::vector<reco::GenJet>>(pset.getParameter<edm::InputTag>("tauMuonicSrc")),
   extraWeights_ = pset.getParameterSet("extraWeights");
   puScenario_ = pset.getParameter<std::string>("puTag");
 
@@ -327,10 +334,28 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   if (!evt.isRealData())
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
+  // Try and get gen taus built from gen products if they were included
+  edm::Handle<std::vector<reco::GenJet>> tausHadronic;   
+  evt.getByToken(genHadronicTausToken_, tausHadronic);
+  edm::Handle<std::vector<reco::GenJet>> tausElectronic;   
+  evt.getByToken(genElectronicTausToken_, tausElectronic);
+  edm::Handle<std::vector<reco::GenJet>> tausMuonic;   
+  evt.getByToken(genMuonicTausToken_, tausMuonic);
+  std::vector<reco::GenJet> hTaus;
+  std::vector<reco::GenJet> eTaus;
+  std::vector<reco::GenJet> mTaus;
+  if (tausHadronic.isValid()) { // Hadronic, electronic, and muonic are all run
+  // together, so checking one should work for all
+    hTaus = *tausHadronic;
+    eTaus = *tausElectronic;
+    mTaus = *tausMuonic;
+  }
+
   pat::TriggerEvent trg;
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo,
                               //trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
                               trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
+                              hTaus, eTaus, mTaus,
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
                               phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
