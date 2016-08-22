@@ -31,7 +31,7 @@ passThru=0     - turn off any preselection/skim
 dump=0         - if one, dump process python to stdout
 verbose=0      - print out timing information
 noPhotons=0    - don't build things which depend on photons.
-rerunMVAMET=0  - rerun the MVAMET algorithm
+runMVAMET=0    - run the MVAMET algorithm
 svFit=1        - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
 rerunJets=0    - rerun with new jet energy corrections
@@ -99,8 +99,7 @@ options = TauVarParsing.TauVarParsing(
     rochCor="",
     eleCor="",
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
-    runMVAMET=0,  # If one, (re)build the MVA MET
-    runNewMVAMET=0,  # If one, (re)build the MVA MET
+    runMVAMET=0,  # If one, (re)build the MVA MET (using pairwise algo)
     runMETNoHF=0,  # If one, use get metnohf (needs to be recalculated in miniaodv1)
     usePUPPI=0,
     rerunJets=0,
@@ -262,8 +261,8 @@ process.load('Configuration.StandardSequences.Services_cff')
 envvar = 'mcgt' if options.isMC else 'datagt'
 #GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
 GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': '80X_dataRun2_Prompt_ICHEP16JEC_v0'}
-if options.runNewMVAMET :
-    GT = {'mcgt': '76X_mcRun2_asymptotic_RunIIFall15DR76_v1', 'datagt': '76X_dataRun2_16Dec2015_v0'}
+if options.runMVAMET :
+    GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': ' 80X_dataRun2_Prompt_ICHEP16JEC_v0'}
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
@@ -344,46 +343,6 @@ process.applyJEC += process.patJetsReapplyJEC
 process.schedule.append(process.applyJEC)
 
 fs_daughter_inputs['jets'] = 'patJetsReapplyJEC'
-
-
-##############
-### mvamet ###
-##############
-if options.runMVAMET:
-
-    process.load("RecoJets.JetProducers.ak4PFJets_cfi")
-    process.ak4PFJets.src = cms.InputTag("packedPFCandidates")
-    process.ak4PFJets.doAreaFastjet = cms.bool(True)
-    
-    from JetMETCorrections.Configuration.DefaultJEC_cff import ak4PFJetsL1FastL2L3
-    
-    process.load("RecoMET.METPUSubtraction.mvaPFMET_cff")
-    #process.pfMVAMEt.srcLeptons = cms.VInputTag("slimmedElectrons")
-    process.pfMVAMEt.srcPFCandidates = cms.InputTag("packedPFCandidates")
-    #process.pfMVAMEt.srcVertices = cms.InputTag("offlineSlimmedPrimaryVertices")
-    process.pfMVAMEt.srcVertices = cms.InputTag(fs_daughter_inputs['vertices'])
-    
-    process.puJetIdForPFMVAMEt.jec =  cms.string('AK4PF')
-    #process.puJetIdForPFMVAMEt.jets = cms.InputTag("ak4PFJets")
-    #process.puJetIdForPFMVAMEt.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
-    process.puJetIdForPFMVAMEt.vertexes = cms.InputTag(fs_daughter_inputs['vertices'])
-    process.puJetIdForPFMVAMEt.rho = cms.InputTag("fixedGridRhoFastjetAll")
-    
-    from PhysicsTools.PatAlgos.producersLayer1.metProducer_cfi import patMETs
-    
-    process.miniAODMVAMEt = patMETs.clone(
-        metSource=cms.InputTag("pfMVAMEt"),
-        addMuonCorrections = cms.bool(False),
-        addGenMET = cms.bool(False)
-    )
-    fs_daughter_inputs['mvamet'] = 'miniAODMVAMEt'
-    
-    process.mvaMetSequence = cms.Path(
-        process.ak4PFJets *
-        process.pfMVAMEtSequence *
-        process.miniAODMVAMEt
-    )
-
 
 
 
@@ -625,24 +584,31 @@ for fs in additional_fs:
                                                   isSync=bool(options.isSync),
                                                   postfix=fs,
                                                   )
-#######################
-###    NEW   mvamet ###
-#######################
 
-if options.runNewMVAMET:
+
+#############################
+###    Pairwise MVA MET   ###
+#############################
+
+if options.runMVAMET:
     from RecoMET.METPUSubtraction.MVAMETConfiguration_cff import runMVAMET
     
-    from RecoMET.METPUSubtraction.localSqlite import recorrectJets
+    mvametJetCollection = "slimmedJets"
     isData = not options.isMC
+    if isData :
+        mvametJetCollection = "patJetsReapplyJEC"
+
+    from RecoMET.METPUSubtraction.jet_recorrections import recorrectJets
     recorrectJets(process, isData)
-    jetCollection = "patJetsReapplyJEC"
     
-    runMVAMET( process, jetCollectionPF = "patJetsReapplyJEC", srcElectrons = "eesDownElectronsEmbedding" )
+    runMVAMET( process, jetCollectionPF = mvametJetCollection )
     process.MVAMET.srcLeptons  = cms.VInputTag("slimmedMuons", "slimmedElectrons", "slimmedTaus")
     process.MVAMET.requireOS = cms.bool(False)
-    process.newestMVAMETSequence = cms.Path(process.MVAMET)
+    process.MVAMETSequence = cms.Path(process.MVAMET)
 
-    process.schedule.append(process.newestMVAMETSequence)
+    process.schedule.append(process.MVAMETSequence)
+
+
 
 ######################
 ### embed muon IDs ###
@@ -694,7 +660,7 @@ fs_daughter_inputs['jets'] = preJets(process,
                                      fs_daughter_inputs['vertices'],
                                      fs_daughter_inputs['muons'],
                                      fs_daughter_inputs['electrons'],
-                                     doBTag=options.runNewMVAMET,
+                                     doBTag=False,
                                      jType="AK4PFchs")
 for fs in additional_fs:
     additional_fs[fs]['jets'] = preJets(process,
@@ -819,7 +785,7 @@ produce_final_states(process,
                      options.channels,
                      buildFSAEvent=True,
                      noTracks=True, 
-                     runMVAMET=options.runMVAMET,
+                     runMVAMET=False,
                      hzz=options.hzz, 
                      rochCor=options.rochCor,
                      eleCor=options.eleCor, 
@@ -839,7 +805,7 @@ for fs in additional_fs:
                          options.channels,
                          buildFSAEvent=True,
                          noTracks=True, 
-                         runMVAMET=options.runMVAMET,
+                         runMVAMET=False,
                          hzz=options.hzz, 
                          rochCor=options.rochCor,
                          eleCor=options.eleCor, 
@@ -995,7 +961,7 @@ else:
                                 svFit=options.svFit, 
                                 dblhMode=options.dblhMode,
                                 runTauSpinner=options.runTauSpinner, 
-                                runMVAMET=options.runMVAMET,
+                                runMVAMET=False,
                                 skimCuts=options.skimCuts, 
                                 suffix=suffix,
                                 hzz=options.hzz, 
@@ -1011,7 +977,7 @@ else:
                                     svFit=options.svFit, 
                                     dblhMode=options.dblhMode,
                                     runTauSpinner=options.runTauSpinner,
-                                    runMVAMET=options.runMVAMET,
+                                    runMVAMET=False,
                                     skimCuts=options.skimCuts, 
                                     suffix=suffix,
                                     hzz=options.hzz, 

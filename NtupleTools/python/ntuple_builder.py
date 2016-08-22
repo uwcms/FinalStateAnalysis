@@ -383,9 +383,6 @@ def make_ntuple(*legs, **kwargs):
         notInMiniAOD.append("mvaMet((Et)|(Phi))")
         notInMiniAOD.append("mvaMetCov((00)|(01)|(10)|(11))")
         notInMiniAOD.append("[emtgj][1-9]?MtToMVAMET")
-
-    # same for new mvamet
-    if not runNewMVAMET:
         notInMiniAOD.append("Mva((Met)|(MetPhi))")
         notInMiniAOD.append("MvaMetCovMatrix((00)|(01)|(10)|(11))")
         notInMiniAOD.append("NBTagPD((L)|(M))_idL_jVeto")
