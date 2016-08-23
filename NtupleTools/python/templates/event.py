@@ -40,6 +40,7 @@ pv_info = PSet(
     pvIsValid=cms.vstring('? evt.pv.isNonnull() ? evt.pv.isValid : 0', 'I'),
     pvIsFake=cms.vstring('? evt.pv.isNonnull() ? evt.pv.isFake : 1', 'I'),
     pvRho = 'evt.pv.position.Rho',
+
 )
 
 met = PSet(
@@ -107,6 +108,8 @@ gen = PSet(
 
     genHTT='evt.genHTT',
     NUP='evt.lesHouches.NUP',
+    numGenJets='evt.numGenJets',
+
     EmbPtWeight='evt.generatorFilter.filterEfficiency',
     GenWeight='? evt.genEventInfo.weights().size>0 ? evt.genEventInfo.weights()[0] : 0',
 )
