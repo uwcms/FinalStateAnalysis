@@ -35,6 +35,7 @@
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenFilterInfo.h"
 #include "DataFormats/Provenance/interface/EventID.h"
+#include "DataFormats/JetReco/interface/GenJet.h"
 
 #include "TMatrixD.h"
 #include <map>
@@ -70,6 +71,9 @@ class PATFinalStateEvent {
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
         const reco::GenParticleRefProd& genParticles,
+        const std::vector<reco::GenJet> genHadronicTaus,
+        const std::vector<reco::GenJet> genElectronicTaus,
+        const std::vector<reco::GenJet> genMuonicTaus,
         const edm::EventID& evtId,
         const GenEventInfoProduct& genEventInfoProd,
         const GenFilterInfo& genFilterInfo,
@@ -79,12 +83,12 @@ class PATFinalStateEvent {
         const edm::RefProd<pat::MuonCollection>& muonRefProd,
         const edm::RefProd<pat::TauCollection>& tauRefProd,
         const edm::RefProd<pat::JetCollection>& jetRefProd,
-	const edm::RefProd<pat::PhotonCollection>& phoRefProd,
+    	const edm::RefProd<pat::PhotonCollection>& phoRefProd,
         const reco::PFCandidateRefProd& pfRefProd,
         const edm::RefProd<pat::PackedCandidateCollection>& packedPFRefProd,
         const reco::TrackRefProd& tracks,
         const reco::GsfTrackRefProd& gsfTracks,
-	const std::map<std::string, edm::Ptr<pat::MET> >& mets
+	    const std::map<std::string, edm::Ptr<pat::MET> >& mets
     );
 
     /// Get PV
@@ -205,6 +209,9 @@ class PATFinalStateEvent {
 
     //Access to GenParticleRefProd
     const reco::GenParticleRefProd genParticleRefProd() const {return genParticles_;} 
+    const std::vector<reco::GenJet> genHadronicTaus() const {return genHadronicTaus_;}
+    const std::vector<reco::GenJet> genElectronicTaus() const {return genElectronicTaus_;}
+    const std::vector<reco::GenJet> genMuonicTaus() const {return genMuonicTaus_;}
 
     /// Get the version of the FinalState data formats API
     /// This allows you to detect which version of the software was used
@@ -232,6 +239,9 @@ class PATFinalStateEvent {
     std::vector<PileupSummaryInfo> puInfo_;
     lhef::HEPEUP lhe_;
     reco::GenParticleRefProd genParticles_;
+    std::vector<reco::GenJet> genHadronicTaus_;
+    std::vector<reco::GenJet> genElectronicTaus_;
+    std::vector<reco::GenJet> genMuonicTaus_;
     edm::EventID evtID_;
     GenEventInfoProduct genEventInfoProduct_;
     GenFilterInfo generatorFilter_;

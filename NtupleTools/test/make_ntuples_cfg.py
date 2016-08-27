@@ -32,6 +32,7 @@ dump=0         - if one, dump process python to stdout
 verbose=0      - print out timing information
 noPhotons=0    - don't build things which depend on photons.
 runMVAMET=0    - run the MVAMET algorithm
+htt=0          - adds Higgs2Taus analysis settings
 svFit=1        - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
 rerunJets=0    - rerun with new jet energy corrections
@@ -100,6 +101,7 @@ options = TauVarParsing.TauVarParsing(
     eleCor="",
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runMVAMET=0,  # If one, (re)build the MVA MET (using pairwise algo)
+    htt=0,         # If one, apply Higgs2Taus analysis settings
     runMETNoHF=0,  # If one, use get metnohf (needs to be recalculated in miniaodv1)
     usePUPPI=0,
     rerunJets=0,
@@ -346,6 +348,52 @@ fs_daughter_inputs['jets'] = 'patJetsReapplyJEC'
 
 
 
+######################
+### Build Gen Taus ###
+######################
+if options.htt:
+
+    # Build all gen taus
+    process.tauGenJets = cms.EDProducer(
+        "TauGenJetProducer",
+        GenParticles =  cms.InputTag('prunedGenParticles'),
+        includeNeutrinos = cms.bool( False ),
+        verbose = cms.untracked.bool( False )
+        )
+    
+    # Create filtered groups of tau decay paths
+    process.tauGenJetsSelectorAllHadrons = cms.EDFilter("TauGenJetDecayModeSelector",
+         src = cms.InputTag("tauGenJets"),
+         select = cms.vstring('oneProng0Pi0', 
+                              'oneProng1Pi0', 
+                              'oneProng2Pi0', 
+                              'oneProngOther',
+                              'threeProng0Pi0', 
+                              'threeProng1Pi0', 
+                              'threeProngOther', 
+                              'rare'),
+         filter = cms.bool(False)
+    )
+    
+    process.tauGenJetsSelectorElectrons = cms.EDFilter("TauGenJetDecayModeSelector",
+         src = cms.InputTag("tauGenJets"),
+         select = cms.vstring('electron'), 
+         filter = cms.bool(False)
+    )
+    
+    process.tauGenJetsSelectorMuons = cms.EDFilter("TauGenJetDecayModeSelector",
+         src = cms.InputTag("tauGenJets"),
+         select = cms.vstring('muon'), 
+         filter = cms.bool(False)
+    )
+
+    process.buildGenTaus = cms.Path( 
+        process.tauGenJets 
+        * process.tauGenJetsSelectorAllHadrons
+        * process.tauGenJetsSelectorElectrons
+        * process.tauGenJetsSelectorMuons
+    )
+    process.schedule.append( process.buildGenTaus )
 
 
 

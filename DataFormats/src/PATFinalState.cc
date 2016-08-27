@@ -18,6 +18,8 @@
 
 #include "DataFormats/TrackReco/interface/HitPattern.h"
 
+#include "DataFormats/JetReco/interface/GenJet.h"
+
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "DataFormats/Math/interface/deltaR.h"
 #include <boost/algorithm/string.hpp>
@@ -454,6 +456,77 @@ PATFinalState::tauGenMatch( size_t i ) const {
           return 6.0;
 
         }
+    }
+    return -1.0;
+} 
+
+
+
+double
+PATFinalState::tauGenMatch2( size_t i ) const {
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) return -1;
+    // Get all gen particles in the event
+    const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
+    reco::GenParticleCollection genParticles = *genCollectionRef;
+
+
+    // Find the closest gen particle to our candidate
+    if ( genParticles.size() > 0 ) {
+        reco::GenParticle& closest = genParticles[0];
+        double closestDR = 999;
+        // The first two codes are based off of matching to true electrons/muons
+        // Find the closest gen particle...
+        for(size_t m = 0; m != genParticles.size(); ++m) {
+            reco::GenParticle& genp = genParticles[m];
+            double tmpDR = reco::deltaR( daughter(i)->p4(), genp.p4() );
+            if ( tmpDR < closestDR ) { closest = genp; closestDR = tmpDR; }
+        }
+        double genID = abs(closest.pdgId());
+
+        // The remaining codes are based off of matching to reconstructed tau decay products
+        const std::vector<reco::GenJet> genHTaus = event_->genHadronicTaus();
+        const std::vector<reco::GenJet> genETaus = event_->genElectronicTaus();
+        const std::vector<reco::GenJet> genMTaus = event_->genMuonicTaus();
+
+        // Loop over all versions of gen taus and find closest one
+        double closestDR_HTau = 999;
+        double closestDR_ETau = 999;
+        double closestDR_MTau = 999;
+        if ( genHTaus.size() > 0 ) {
+            for (size_t j = 0; j != genHTaus.size(); ++j) {
+                double tmpDR = reco::deltaR( daughter(i)->p4(), genHTaus[j].p4() );
+                if (tmpDR < closestDR_HTau) closestDR_HTau = tmpDR;
+            }
+        }
+        if ( genETaus.size() > 0 ) {
+            for (size_t j = 0; j != genETaus.size(); ++j) {
+                double tmpDR = reco::deltaR( daughter(i)->p4(), genETaus[j].p4() );
+                if (tmpDR < closestDR_ETau) closestDR_ETau = tmpDR;
+            }
+        }
+        if ( genMTaus.size() > 0 ) {
+            for (size_t j = 0; j != genMTaus.size(); ++j) {
+                double tmpDR = reco::deltaR( daughter(i)->p4(), genMTaus[j].p4() );
+                if (tmpDR < closestDR_MTau) closestDR_MTau = tmpDR;
+            }
+        }
+
+        // Now return the value based on which object is closer, the closest
+        // single gen particle, or the rebuild gen taus
+        // The first two codes are based off of matching to true electrons/muons
+        double closestGetTau = TMath::Min(closestDR_ETau, closestDR_MTau);
+        if (closestDR_HTau < closestGetTau) closestGetTau = closestDR_HTau;
+        if (closestDR < closestGetTau) {
+            if (genID == 11 && closest.pt() > 8 && closest.statusFlags().isPrompt() && closestDR < 0.2 ) return 1.0;
+            if (genID == 13 && closest.pt() > 8 && closest.statusFlags().isPrompt() && closestDR < 0.2 ) return 2.0;
+        }
+        // Other codes based off of not matching previous 2 options
+        // as closest gen particle, retruns based on closest rebuilt gen tau
+        if (closestDR_ETau < 0.2 && closestDR_ETau < TMath::Min(closestDR_MTau, closestDR_HTau)) return 3.0;
+        if (closestDR_MTau < 0.2 && closestDR_MTau < TMath::Min(closestDR_ETau, closestDR_HTau)) return 4.0;
+        if (closestDR_HTau < 0.2 && closestDR_HTau < TMath::Min(closestDR_ETau, closestDR_MTau)) return 5.0;
+        return 6.0; // No match, return 6 for "fake tau"
     }
     return -1.0;
 } 
