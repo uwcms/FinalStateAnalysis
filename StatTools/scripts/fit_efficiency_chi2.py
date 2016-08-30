@@ -18,7 +18,8 @@ import rootpy.plotting as plotting
 import logging
 import sys
 import rootpy.utils  as rootpy
-#import ROOT 
+import ROOT
+ROOT.gROOT.SetBatch(True)
 #ROOT.gSystem.Load("libRooFit")
 args = sys.argv[:]
 sys.argv = [sys.argv[0]]
@@ -196,16 +197,25 @@ if __name__ == "__main__":
         ws_import(fit_result)
     log.info("Saving workspace in %s", args.output)
     ws.writeToFile(args.output)
+    
+    fit_configuration = args.output[args.output.rindex('/'):].split("_")
+    sign = fit_configuration[1]
+    denom = fit_configuration[2]
+    num = fit_configuration[3]
+    var = fit_configuration[4]
+
+    titlename="%s/%s" %(num, denom)
 
     if args.plot:
         canvas = ROOT.TCanvas("asdf", "asdf", 800, 600)
+        pt = ROOT.TPaveText (0.7,1,1, 0.8,"blNDC")
         try:
             frame = None
             if args.xrange:
-                frame = x.frame(ROOT.RooFit.Title("Efficiency"),
+                frame = x.frame(ROOT.RooFit.Title(titlename),
                                 ROOT.RooFit.Range(args.xrange[0], x.getMax()))
             else:
-                frame = x.frame(ROOT.RooFit.Title("Efficiency"))
+                frame = x.frame(ROOT.RooFit.Title(titlename))
 
             if not args.noFit and args.showerror:
                 function.plotOn(
@@ -214,6 +224,12 @@ if __name__ == "__main__":
                     ROOT.RooFit.VisualizeError(fit_result, 1.0),
                     ROOT.RooFit.FillColor(ROOT.kAzure - 9)
                 )
+                pt.SetFillColor(0)
+                pt.SetBorderSize(1)
+                for ipar in range(0, fit_result.floatParsFinal().getSize()):
+                    parvalue=ROOT.RooRealVar()
+                    parvalue = fit_result.floatParsFinal().at(ipar)
+                    pt.AddText("par %s = %.3f #pm %.3f" %(str(int(ipar)), parvalue.getVal(), parvalue.getError()))
             else:
                 function.plotOn(
                     frame,
@@ -228,12 +244,14 @@ if __name__ == "__main__":
             )
             frame.SetMinimum(args.min)
             frame.SetMaximum(args.max)
-            frame.GetYaxis().SetTitle("Efficiency")
+            frame.GetYaxis().SetTitle("")
             if not args.xtitle:
                 frame.GetXaxis().SetTitle(pass_histo.GetXaxis().GetTitle())
             else:
                 frame.GetXaxis().SetTitle(args.xtitle)
             frame.Draw()
+            if not args.noFit and args.showerror:
+                pt.Draw()
             #canvas.SetLogy(True)
             if args.grid:
                 canvas.SetGrid()
@@ -242,6 +260,13 @@ if __name__ == "__main__":
             log.info("Saving fit plot in %s", plot_name)
             canvas.SaveAs(plot_name)
             canvas.SaveAs(plot_name.replace('.png', '.pdf'))
-        finally:
-            # If we don't explicitly delete this, we get a segfault in the dtor
+            canvas.SaveAs(plot_name.replace('.png', '_canvas.root'))
+             
             frame.Delete()
+
+        except:
+            print "cannot plot the fit"
+        
+ 
+    # If we don't explicitly delete this, we get a segfault in the dtor
+    ws.Delete()
