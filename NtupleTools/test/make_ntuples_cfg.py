@@ -263,8 +263,8 @@ process.load('Configuration.StandardSequences.Services_cff')
 envvar = 'mcgt' if options.isMC else 'datagt'
 #GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
 GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': '80X_dataRun2_Prompt_ICHEP16JEC_v0'}
-if options.runMVAMET :
-    GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': ' 80X_dataRun2_Prompt_ICHEP16JEC_v0'}
+#if options.runMVAMET :
+#    GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': ' 80X_dataRun2_Prompt_ICHEP16JEC_v0'}
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
@@ -351,7 +351,7 @@ fs_daughter_inputs['jets'] = 'patJetsReapplyJEC'
 ######################
 ### Build Gen Taus ###
 ######################
-if options.htt:
+if options.htt and options.isMC :
 
     # Build all gen taus
     process.tauGenJets = cms.EDProducer(
