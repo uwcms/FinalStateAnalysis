@@ -656,6 +656,13 @@ if options.runMVAMET:
 
     process.schedule.append(process.MVAMETSequence)
 
+    # Add met significane for normal RECO METs for svFit testing
+    # of MvaMet vs. Normas Mets
+    # Note, default uses slimmedMETs which is PF Met
+    process.load("RecoMET.METProducers.METSignificance_cfi")
+
+    process.METSigSeq = cms.Path(process.METSignificance)
+    process.schedule.append(process.METSigSeq)
 
 
 ######################

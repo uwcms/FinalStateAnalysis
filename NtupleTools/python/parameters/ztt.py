@@ -61,6 +61,11 @@ parameters = {
 
     # additional variables for ntuple
     'eventVariables' : PSet(
+        metSig='evt.metSig()', # Using PF Met
+        metcov00='evt.metCov(0)', # 0 = (0,0) PF Met based
+        metcov10='evt.metCov(1)', # 1 = (1,0)
+        metcov01='evt.metCov(2)', # 2 = (0,1)
+        metcov11='evt.metCov(3)', # 3 - (1,1)
         vispX='tauGenMotherKin().at(0)',
         vispY='tauGenMotherKin().at(1)',
         genpX='tauGenMotherKin().at(2)',

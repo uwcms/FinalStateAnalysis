@@ -27,6 +27,8 @@ patFinalStateEventProducer = cms.EDProducer(
         mvamet = cms.InputTag("fixme"),
         puppimet = cms.InputTag("slimmedMETsPuppi"),
     ),
+    metSignificanceSrc = cms.InputTag("METSignificance:METSignificance"),
+    metCovarianceSrc = cms.InputTag("METSignificance:METCovariance"),
     extraWeights = cms.PSet(
         #anyOldThing = cms.double(9999), # just an example
         #puAvg = cms.InputTag("lumiWeights", "3bx"),

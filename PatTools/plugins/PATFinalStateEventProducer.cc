@@ -67,7 +67,8 @@ private:
   // Information about the MET
   edm::EDGetTokenT<edm::View<pat::MET> > metSrcToken_;
   edm::EDGetTokenT<std::vector<pat::MET> > MVAMETSrcToken_;
-  //edm::EDGetTokenT<edm::InputTag> metCovSrcToken_;
+  edm::EDGetTokenT<Matrix> metCovSrcToken_;
+  edm::EDGetTokenT<double> metSigSrcToken_;
 
   // Trigger input
   edm::EDGetTokenT<std::vector<pat::TriggerObjectStandAlone> > trgSrcToken_;
@@ -126,6 +127,8 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
 
   metSrcToken_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("metSrc"));
   MVAMETSrcToken_ = consumes<std::vector<pat::MET> >(pset.getParameter<edm::InputTag>("MVAMETSrc"));
+  metCovSrcToken_ = consumes< Matrix >(pset.getParameter<edm::InputTag>("metCovarianceSrc"));
+  metSigSrcToken_ = consumes< double >(pset.getParameter<edm::InputTag>("metSignificanceSrc"));
   trgSrcToken_ = consumes<std::vector<pat::TriggerObjectStandAlone> >(pset.getParameter<edm::InputTag>("trgSrc"));
   puInfoSrcToken_ = consumes<std::vector<PileupSummaryInfo> >(pset.getParameter<edm::InputTag>("puInfoSrc"));
   truthSrcToken_ = consumes<reco::GenParticleCollection>(pset.getParameter<edm::InputTag>("genParticleSrc"));
@@ -245,6 +248,18 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   std::vector<pat::MET> MVAMETInfo;
   if (MVAMETs.isValid()) {
     MVAMETInfo = * MVAMETs;}
+  // MET Significance
+  edm::Handle<double> metSigHandle;
+  evt.getByToken(metSigSrcToken_, metSigHandle);
+  double metSig = -999.;
+  if (metSigHandle.isValid()) {
+   metSig = * metSigHandle;}
+  // MET Covariance
+  edm::Handle<Matrix> metCovHandle;
+  evt.getByToken(metCovSrcToken_, metCovHandle);
+  Matrix metCov;
+  if (metCovHandle.isValid()) {
+    metCov = * metCovHandle;}
 
   std::map<std::string, edm::Ptr<pat::MET> > theMEts;
   // Get different types of METs - this will be a map like
@@ -352,7 +367,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   }
 
   pat::TriggerEvent trg;
-  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo,
+  PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo, metSig, metCov,
                               //trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
                               trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
                               hTaus, eTaus, mTaus,
