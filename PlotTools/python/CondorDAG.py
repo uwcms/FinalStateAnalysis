@@ -120,13 +120,14 @@ class CondorDAG(object):
             lines = statusfile.readlines()
             for i,line in enumerate(lines):
                 
-                if not 'Node = ' and not 'DagStatus =' in line:
+                if not 'Node = ' and not 'DagStatus ='  in line:
                     continue
                 if 'Node =' in line :
                     #log.info("line %s  and line %s" %(line, lines[i+1]))
                     jobidmatch = re.search('Node\s\S\s\S(?P<jobid>\S+)\S\S\n', line)
                     jobmatch =  re.search('NodeStatus\s\S\s\S+\s\S+\s\S(?P<status>\w+)', lines[i+1])
                     #log.info("jobid %s  and jobstatus %s" %(jobidmatch.group('jobid'), jobmatch.group('status')))
+                    if jobidmatch.group('jobid')=='final_notification' : continue
                     if jobidmatch:
                         self.nodes[jobidmatch.group('jobid')].status = (
                             jobmatch.group('status'), "")
