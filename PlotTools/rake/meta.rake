@@ -94,12 +94,12 @@ namespace :meta do
         event=`cat #{t.prerequisites} | extract_json.py n_evts`
         weight=`cat #{t.prerequisites} | extract_json.py sumweights`
         print event.to_i, " " , weight.to_i, "\n"
-        #if event.to_i==weight.to_i then
-        #  sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} `cat #{t.prerequisites} | extract_json.py n_evts` > #{t.name}"
-        #end
-        #if event.to_i!=weight.to_i then
-        #  sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} #{weight.to_f} > #{t.name}"
-        #end
+        if event.to_i==weight.to_i then
+          sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} `cat #{t.prerequisites} | extract_json.py n_evts` > #{t.name}"
+        end
+        if event.to_i!=weight.to_i then
+          sh "get_mc_lumi.py --sqrts #{sqrts} #{sample} #{weight.to_f} > #{t.name}"
+        end
       end
     end
     # Return the final target
