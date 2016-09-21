@@ -72,7 +72,7 @@ datadefs["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
     'datasetpath': '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
     'pu': 'asymptotic_2016',
       'calibrationTarget': 'RunIISpring16MiniAODv1',
-    'x_sec':  6025.2,
+    'x_sec':  5765.4,
 }
 datadefs["DYJetsToTauTau_ForcedMuDecay_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
     'analyses': ['4L'],
@@ -302,6 +302,38 @@ datadefs["TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = {
     'calibrationTarget': 'RunIISpring15DR7',
     'x_sec': 0.009103,
 }
+datadefs["WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec': 0.009103,#wrong***
+}
+
+datadefs["WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec': 495.36,# needs to be cross checked
+}
+
+datadefs["WGstarToLNuEE_012Jets_13TeV-madgraph"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec': 11.7,#needs to be cross checked
+}
+
+datadefs["WGstarToLNuMuMu_012Jets_13TeV-madgraph"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec': 3.8,#neeeds to be cross checked
+}
+
 datadefs["WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph"] = {
     'analyses': ['4L'],
     'datasetpath': '/WGJets_MonoPhoton_PtG-130_TuneCUETP8M1_13TeV-madgraph/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
