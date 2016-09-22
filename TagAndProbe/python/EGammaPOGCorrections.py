@@ -3,6 +3,7 @@ Interface to official corrections from the EGamma  POG
 ===================================================
 Adapted from MuonPOGcorrections.py
 https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPOG
+
 '''
 
 import os
@@ -30,9 +31,6 @@ def make_egamma_pog_electronID_ICHEP2016(wp):
 
 
 class EGammaPOGCorrection2D(object):
-    '''
-    '''
-
     def __init__(self, file, eta_pt):
         self.filename = file
         self.file = ROOT.TFile.Open(file)
