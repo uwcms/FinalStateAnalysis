@@ -28,6 +28,18 @@ import os
 import re
 #from FinalStateAnalysis.Utilities.rootbindings import ROOT
 import ROOT
+from graphReader import GraphReaderTrackingEta
+from correctionloader import CorrectionLoader
+
+mu_trackingEta_2016 = GraphReaderTrackingEta(
+    os.path.join(os.environ['fsa'], 'TagAndProbe/data/muon_ratios_tracking.root')
+)
+mu_trigger_2016 = GraphReaderTrackingEta(
+    os.path.join(os.environ['fsa'], 'TagAndProbe/data/muon_ratios_tracking.root')
+)
+
+
+
 
 _DATA_DIR = os.path.join(os.environ['CMSSW_BASE'], 'src',
                          "FinalStateAnalysis", "TagAndProbe", "data")
@@ -597,19 +609,10 @@ class MuonPOG2012Combiner(object):
 
 
 if __name__ == "__main__":
-    make_muon_pog_PFTight_2011()
-    make_muon_pog_PFTight_2012()
-    #make_muon_pog_PFTight_2015CD()
-    #make_muon_pog_PFMedium_2015CD()
-    #make_muon_pog_PFLoose_2015CD()
-    make_muon_pog_PFRelIsoDB012_2012()
-    make_muon_pog_PFRelIsoDB02_2012()
-    make_muon_pog_PFRelIsoDB02_2011()
-    make_muon_pog_PFRelIsoDB012_2011()
-    #make_muon_pog_TightIso_2015CD()
-    #make_muon_pog_MediumIso_2015CD()
-    #make_muon_pog_LooseIso_2015CD()
-    make_muon_pog_Mu17Mu8_Mu17_2012()
-    make_muon_pog_Mu17Mu8_Mu8_2012()
-    make_muon_pog_IsoMu24eta2p1_2012()
-    #make_muon_pog_IsoMu20oIsoTkMu20_2015()
+    make_muon_pog_PFTight_2016BCD()
+    make_muon_pog_PFLoose_2016BCD()
+    make_muon_pog_TightIso_2016BCD()
+    make_muon_pog_LooseIso_2016BCD()
+    make_muon_pog_IsoMu22oIsoTkMu22_2016BCD()
+
+    
