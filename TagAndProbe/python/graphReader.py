@@ -164,3 +164,42 @@ class GraphReaderSF(object):
                         return correction
         raise ValueError("pt or eta out of boundaries for correction range: %s %s" %(pt, abseta))
                     
+class GraphReaderTrackingEta(object):
+    """Loads a graph with trigger efficiency from data"""
+    def __init__(self, filename):
+        self.table = {} 
+        #dict is fine for small number of bins, 
+        #for larger ones use sorted list and binary search
+        input_file= root_open(filename)
+        if  not input_file:
+               sys.stderr.write("Can't open file: %s\n" % filename)
+        gr1 = input_file.Get("ratio_eta")
+        npoint1=gr1.GetN()
+        eff1 = []
+        for n in range(0, npoint1):
+            xval = ROOT.Double(0)
+            yval = ROOT.Double(0)
+            gr1.GetPoint(n, xval, yval)
+            xevalp = gr1.GetErrorXhigh(n)
+            xevalm = gr1.GetErrorXlow(n)
+            yevalp = gr1.GetErrorYhigh(n)
+            yevalm = gr1.GetErrorYlow(n)
+            
+            eta_thrs = xval-xevalm, xval+xevalp
+            if eta_thrs not in self.table:
+                self.table[eta_thrs] = {}
+            self.table[eta_thrs] = yval, max(yevalp, yevalm)
+
+     
+    
+    def __call__(self, eta):
+        """Return correction given pt and eta, 
+        raise error if out of boundaries"""
+        if eta < -2.4 : eta = -2.39
+        if eta > 2.4 : eta = 2.39
+        for eta_thrs, eta_vals in self.table.iteritems():
+            etamin, etamax = eta_thrs
+            if etamin <= eta < etamax:
+                return eta_vals
+        raise ValueError("pt or eta out of boundaries for correction range: %s %s" %(pt, abseta))
+                    
