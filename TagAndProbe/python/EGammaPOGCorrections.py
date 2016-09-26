@@ -1,10 +1,7 @@
 '''
-
 Interface to official corrections from the EGamma  POG
 ===================================================
-
 Adapted from MuonPOGcorrections.py
-
 https://twiki.cern.ch/twiki/bin/view/CMS/EgammaPOG
 
 '''
@@ -34,10 +31,6 @@ def make_egamma_pog_electronID_ICHEP2016(wp):
 
 
 class EGammaPOGCorrection2D(object):
-    '''
-
-    '''
-
     def __init__(self, file, eta_pt):
         self.filename = file
         self.file = ROOT.TFile.Open(file)
@@ -52,4 +45,3 @@ class EGammaPOGCorrection2D(object):
         self.correct_by_eta_pt =self.key.GetBinContent(self.key.FindFixBin(eta, pt))
 #        print 'E ID correction :', pt, eta,  self.correct_by_eta_pt
         return self.correct_by_eta_pt
-
