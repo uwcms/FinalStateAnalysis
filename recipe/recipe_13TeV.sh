@@ -42,13 +42,15 @@ popd
 # This code leads to a full checkout of CMSSW, see README.md
 # for temporary instructions
 # Checkout mva met code
-#git cms-addpkg RecoMET/METPUSubtraction
-#git cms-addpkg DataFormats/METReco
-#git cms-merge-topic rfriese:mvamet80
-#mkdir RecoMET/METPUSubtraction/data
-#cd RecoMET/METPUSubtraction/data
-#wget https://github.com/rfriese/cmssw/raw/MVAMET2_beta_0.6/RecoMET/METPUSubtraction/data/weightfile.root
-#cd $CMSSW_BASE/src
+git cms-addpkg RecoMET/METPUSubtraction
+git cms-addpkg DataFormats/METReco
+git remote add -f mvamet https://github.com/rfriese/cmssw.git
+git checkout mvamet/mvamet8020 -b mvamet
+mkdir RecoMET/METPUSubtraction/data
+cd RecoMET/METPUSubtraction/data
+wget https://github.com/rfriese/cmssw/raw/MVAMET2_beta_0.6/RecoMET/METPUSubtraction/data/weightfile.root
+cd $CMSSW_BASE/src
+
 
 
 popd
