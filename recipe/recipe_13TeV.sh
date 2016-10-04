@@ -39,8 +39,6 @@ pushd TauAnalysis/SVfitStandalone
 git checkout svFit_2015Apr03
 popd
 
-# This code leads to a full checkout of CMSSW, see README.md
-# for temporary instructions
 # Checkout mva met code
 git cms-addpkg RecoMET/METPUSubtraction
 git cms-addpkg DataFormats/METReco
