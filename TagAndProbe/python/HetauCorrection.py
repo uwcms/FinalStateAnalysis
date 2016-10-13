@@ -1,10 +1,19 @@
 from correctionloader import CorrectionLoader
-from graphReader import GraphReader
+from graphReader import GraphReader, GraphReaderSF
 import os
 
 single_ele_2016 = GraphReader(
     os.path.join(os.environ['fsa'], 'TagAndProbe/data/Electron_Ele25eta2p1WPTight_eff.root')
 )
+
+iso0p15_ele_2016 = GraphReaderSF(
+    os.path.join(os.environ['fsa'], 'TagAndProbe/data/Electron_IdIso0p15_eff.root')
+)
+iso0p10_ele_2016 = GraphReaderSF(
+    os.path.join(os.environ['fsa'], 'TagAndProbe/data/Electron_IdIso0p10_eff.root')
+)
+
+
 
 
 def correct_eid13_mva(pt, abseta):
