@@ -104,6 +104,7 @@ class PATFinalStateEvent {
     const lhef::HEPEUP& lesHouches() const;
     /// Get the GenEventInfo product
     const GenEventInfoProduct& genEventInfo() const;
+
     /// Get weight for embedded samples
     const GenFilterInfo& generatorFilter() const;
     /// Get FastJet rho

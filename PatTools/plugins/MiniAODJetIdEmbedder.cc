@@ -41,7 +41,7 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
     bool loose = true;
     bool tight = true;
     bool tightLepVeto = true;
-    if (std::abs(jet.eta()) <= 3.0) {
+    if (std::abs(jet.eta()) <= 2.7) {
       if (jet.neutralHadronEnergyFraction() >= 0.99) {
         loose = false;
       }
@@ -90,6 +90,17 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
         }
       }
     }
+    if (std::abs(jet.eta()) > 2.7 && std::abs(jet.eta()) <= 3.0) {
+      if (jet.neutralEmEnergyFraction() >= 0.90) {
+        loose = false;
+        tight = false;
+      }
+      if (jet.neutralMultiplicity()<=2) {
+        loose = false;
+        tight = false;
+      }
+    }
+
     if (std::abs(jet.eta()) > 3.0) {
       if (jet.neutralEmEnergyFraction() >= 0.90) {
         loose = false;

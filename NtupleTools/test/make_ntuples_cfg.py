@@ -179,7 +179,7 @@ options.parseArguments()
 filters = []
 
 # SV Fit requires MVA MET
-options.runMVAMET = (options.runMVAMET or options.svFit)
+options.runMVAMET = (options.runMVAMET or options.svFit or options.htt)
 
 eventsToSkip = cms.untracked.VEventRange()
 if options.eventsToSkip:
@@ -320,6 +320,21 @@ if options.usePUPPI:
     fs_daughter_inputs['pfmet'] = 'slimmedMETsPuppi'
     fs_daughter_inputs['jets'] = 'slimmedJetsPuppi'
 
+#####################
+### Pileup Jet ID ###
+#####################
+
+process.load("RecoJets.JetProducers.PileupJetID_cfi")
+process.pileupJetIdUpdated = process.pileupJetId.clone(
+  jets=cms.InputTag("slimmedJets"),
+  inputIsCorrected=True,
+  applyJec=True,
+  vertexes=cms.InputTag("offlineSlimmedPrimaryVertices")
+)
+#process.newPUjetID = cms.Path()
+#process.newPUjetID += process.pileupJetIdUpdated
+#process.schedule.append(process.newPUjetID)
+
 ##################
 ### JEC ##########
 ##################
@@ -339,14 +354,15 @@ process.patJetsReapplyJEC = updatedPatJets.clone(
 if(isData):
     process.patJetCorrFactorsReapplyJEC.levels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
 
+process.patJetsReapplyJEC.userData.userFloats.src += ['pileupJetIdUpdated:fullDiscriminant']
+
 process.applyJEC = cms.Path()
+process.applyJEC += process.pileupJetIdUpdated
 process.applyJEC += process.patJetCorrFactorsReapplyJEC
 process.applyJEC += process.patJetsReapplyJEC
 process.schedule.append(process.applyJEC)
 
 fs_daughter_inputs['jets'] = 'patJetsReapplyJEC'
-
-
 
 ######################
 ### Build Gen Taus ###
@@ -668,6 +684,9 @@ if options.runMVAMET:
 ######################
 ### embed muon IDs ###
 ######################
+
+options.skipGhost = (options.runMVAMET or options.skipGhost or options.htt)
+
 from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
 fs_daughter_inputs['muons'] = preMuons(process,
                                        fs_daughter_inputs['muons'],

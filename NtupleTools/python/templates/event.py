@@ -102,6 +102,7 @@ gen = PSet(
     isGtautau='evt.findDecay(22,15)',
     isWtaunu='evt.findDecay(24,15)',
     isWmunu='evt.findDecay(24,13)',
+    isWenu='evt.findDecay(24,11)',
     isZmumu='evt.findDecay(23,13)',
     isZee='evt.findDecay(23,11)',
 
