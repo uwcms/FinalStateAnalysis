@@ -51,6 +51,8 @@ met = PSet(
     mvaMetCov11    = 'evt.met("mvamet").getSignificanceMatrix[1][1]',
     type1_pfMetEt  = 'evt.met("pfmet").pt', 
     type1_pfMetPhi = 'evt.met("pfmet").phi',
+    puppiMetEt  = 'evt.met("puppimet").pt',
+    puppiMetPhi = 'evt.met("puppimet").phi',
     
     recoilDaught='getDaughtersRecoil().R()',
     recoilWithMet='getDaughtersRecoilWithMet().R()',

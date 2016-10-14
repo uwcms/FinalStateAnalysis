@@ -299,6 +299,7 @@ fs_daughter_inputs = {
     'jets': 'slimmedJets',
     'pfmet': 'slimmedMETs',         # slimmedMETs, slimmedMETsNoHF (miniaodv2), slimmmedMETsPuppi (not correct in miniaodv1)
     'mvamet': 'fixme',              # produced later
+    'puppimet': 'slimmmedMETsPuppi',
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
 
