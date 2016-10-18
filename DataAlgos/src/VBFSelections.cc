@@ -3,11 +3,13 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "FWCore/ParameterSet/interface/FileInPath.h"
+#include "DataFormats/PatCandidates/interface/Jet.h"
 
 VBFVariables computeVBFInfo(
     const std::vector<const reco::Candidate*>& hardScatter,
     const reco::Candidate::LorentzVector& metp4,
-    const std::vector<const reco::Candidate*>& jets) {
+    const std::vector<const reco::Candidate*>& jets,
+    const std::string& sysTag) {
   VBFVariables output;
 
   // number of initial jets
@@ -16,21 +18,21 @@ VBFVariables computeVBFInfo(
   // Not enough jets
   if (output.nJets < 2)
     return output;
+  assert(jets[0]->pt() > jets[1]->pt()); //verify jets are pt ordered
 
-  //assert(jets[0]->pt() > jets[1]->pt());
-
-  if( jets[0]->pt() > jets[1]->pt() ) {
-    output.leadJet = jets[0];
-    output.subleadJet = jets[1];
-  } else {
-    output.leadJet = jets[1];
-    output.subleadJet = jets[0];
-  } 
-
-  // Get 4vectors of two highest jets
-  reco::Candidate::LorentzVector leadJet(output.leadJet->p4());
-  reco::Candidate::LorentzVector subleadJet(output.subleadJet->p4());
-
+  reco::Candidate::LorentzVector leadJet;
+  reco::Candidate::LorentzVector subleadJet;
+  const pat::Jet * firstJet = dynamic_cast<const pat::Jet*> (jets[0]);
+  const pat::Jet * secondJet = dynamic_cast<const pat::Jet*> (jets[1]);
+  //Get jets corresponding to systematics tag
+  if (sysTag.empty()){
+    leadJet = firstJet->p4();
+    subleadJet = secondJet->p4();
+  }
+  else{
+    leadJet = firstJet->userCand(sysTag)->p4();
+    subleadJet = secondJet->userCand(sysTag)->p4();
+  }
   reco::Candidate::LorentzVector dijet = leadJet + subleadJet;
 
   reco::Candidate::LorentzVector ditauvis;
@@ -70,7 +72,15 @@ VBFVariables computeVBFInfo(
   for (size_t k = 2; k < jets.size(); ++k) {
     // Check if central
     if(jets.at(k)->eta() > minEta && jets.at(k)->eta() < maxEta) {
-      double pt = jets.at(k)->pt();
+      //double pt = jets.at(k)->pt();
+      const pat::Jet * centralJet = dynamic_cast<const pat::Jet*> (jets[k]);
+      double pt;
+      if (sysTag.empty()){
+        pt = centralJet->pt();
+      }
+      else{
+        pt = centralJet->userCand(sysTag)->pt();
+      }
       if (pt > 20)
         output.jets20++;
       if (pt > 30)

@@ -1266,15 +1266,28 @@ double PATFinalState::smallestMtt(int i, const std::string& filter="") const
 }
 
 
-VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts, double dr ) const {
+VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts, double dr) const {
+  std::string jetSysTag = "";
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
   std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
-  const reco::Candidate::LorentzVector& metp4 = met()->p4();
+  reco::Candidate::LorentzVector metp4;
+  //Check to see if jes+ or jes- userCand requested
+  if (jetCuts.find("jes+") != std::string::npos) {
+     jetSysTag = "jes+";
+     metp4 =  met()->shiftedP4(pat::MET::JetEnUp);
+  }
+  else if (jetCuts.find("jes-") != std::string::npos) {
+     jetSysTag = "jes-";
+     metp4 = met()->shiftedP4(pat::MET::JetEnDown);
+  }
+  else{
+     metp4 = met()->p4();
+  }
   // todo cache this
-  return computeVBFInfo(hardScatter, metp4, jets);
+  return computeVBFInfo(hardScatter, metp4, jets,jetSysTag);
 }
 
-std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, double dr ) const {
+std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, double dr) const {
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
   std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
   // todo cache this
