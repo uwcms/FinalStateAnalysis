@@ -57,6 +57,8 @@ private:
   edm::EDGetTokenT<pat::TauCollection> tauSrcToken_;
   edm::EDGetTokenT<pat::PhotonCollection> phoSrcToken_;
 
+  edm::EDGetTokenT<LHEEventProduct> lheToken_;
+
   // Information about PFLOW
   //edm::EDGetTokenT<edm::InputTag> pfSrcToken_;
 
@@ -156,6 +158,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   //jetAK8SrcToken_ = consumes<pat::JetCollection>(pset.getParameter<edm::InputTag>("jetAK8Src"));
 
   generatorFilterToken_ = consumes<GenFilterInfo>(edm::InputTag("generator","minVisPtFilter"));
+  lheToken_ = consumes<LHEEventProduct>(edm::InputTag("externalLHEProducer"));
 
   // Get different type of METs
   edm::ParameterSet mets = pset.getParameterSet("mets");
@@ -205,6 +208,15 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
 
   edm::Handle<edm::View<reco::Vertex> > pv_back;
   evt.getByToken(pvBackSrcToken_, pv_back);
+
+  edm::Handle<LHEEventProduct> EvtHandle ;
+  evt.getByLabel("externalLHEProducer", EvtHandle) ;
+
+  std::vector<float> lheweights;
+  for (unsigned int i=0; i<EvtHandle->weights().size(); i++) {
+     lheweights.push_back(EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP()); 
+     //std::cout<<i<<" "<<EvtHandle->weights()[i].id<<" "<<EvtHandle->weights()[i].wgt<<" "<<EvtHandle->originalXWGTUP()<<std::endl;
+  }
 
   edm::Ptr<reco::Vertex> pvPtr;
   if( pv->size() )
@@ -373,7 +385,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
                               hTaus, eTaus, mTaus,
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
-                              phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts);
+                              phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts, lheweights);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {

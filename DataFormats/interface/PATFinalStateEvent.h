@@ -90,7 +90,8 @@ class PATFinalStateEvent {
         const edm::RefProd<pat::PackedCandidateCollection>& packedPFRefProd,
         const reco::TrackRefProd& tracks,
         const reco::GsfTrackRefProd& gsfTracks,
-	    const std::map<std::string, edm::Ptr<pat::MET> >& mets
+	const std::map<std::string, edm::Ptr<pat::MET> >& mets,
+	std::vector<float> lheweights
     );
 
     /// Get PV
@@ -109,6 +110,7 @@ class PATFinalStateEvent {
     const GenFilterInfo& generatorFilter() const;
     /// Get FastJet rho
     double rho() const;
+    std::vector<float> lheweights() const;
     /// Get trigger information
     const pat::TriggerEvent& trig() const;
     const std::vector<pat::TriggerObjectStandAlone>& trigStandAlone() const;
@@ -232,6 +234,7 @@ class PATFinalStateEvent {
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;
     double rho_;
+    std::vector<float> lheweights_;
     pat::TriggerEvent triggerEvent_;
     edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > triggerObjects_;
     edm::TriggerNames names_;

@@ -10,7 +10,7 @@
 #include <map>
 #include <boost/shared_ptr.hpp>
 #include <iostream>
-
+#include <SimDataFormats/GeneratorProducts/interface/LHERunInfoProduct.h>
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
