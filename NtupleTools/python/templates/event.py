@@ -51,6 +51,8 @@ met = PSet(
     mvaMetCov11    = 'evt.met("mvamet").getSignificanceMatrix[1][1]',
     type1_pfMetEt  = 'evt.met("pfmet").pt', 
     type1_pfMetPhi = 'evt.met("pfmet").phi',
+    puppiMetEt  = 'evt.met("puppimet").pt',
+    puppiMetPhi = 'evt.met("puppimet").phi',
     
     recoilDaught='getDaughtersRecoil().R()',
     recoilWithMet='getDaughtersRecoilWithMet().R()',
@@ -102,6 +104,7 @@ gen = PSet(
     isGtautau='evt.findDecay(22,15)',
     isWtaunu='evt.findDecay(24,15)',
     isWmunu='evt.findDecay(24,13)',
+    isWenu='evt.findDecay(24,11)',
     isZmumu='evt.findDecay(23,13)',
     isZee='evt.findDecay(23,11)',
 

@@ -19,7 +19,7 @@ std::vector<double> computeJetInfo(
   //}
   int numJets = jets.size();
   if (numJets == 0) {
-    for (int i = 0; i < 16; ++i) {
+    for (int i = 0; i < 20; ++i) {
       output.push_back( -9999 );
     }
   }
@@ -29,15 +29,18 @@ std::vector<double> computeJetInfo(
     output.push_back( jets[0]->eta() );
     output.push_back( jets[0]->phi() );
     output.push_back( jet1Pat->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
-    output.push_back( jet1Pat->userFloat("pileupJetId:fullDiscriminant") );
+    output.push_back( jet1Pat->userFloat("pileupJetId:fullDiscriminant"));
+    //output.push_back( jet1Pat->userFloat("pileupJetIdUpdated:fullDiscriminant"));
     output.push_back( jet1Pat->partonFlavour() );
+    output.push_back( jet1Pat->hadronFlavour() );
+    output.push_back( jet1Pat->jecFactor("Uncorrected") );
     if (jet1Pat->hasUserCand("jes+")) {
         output.push_back( jet1Pat->userCand("jes+")->pt() );}
     else output.push_back( -9999 );
     if (jet1Pat->hasUserCand("jes-")) {
         output.push_back( jet1Pat->userCand("jes-")->pt() );}
     else output.push_back( -9999 );
-    for (int i = 0; i < 8; ++i) {
+    for (int i = 0; i < 10; ++i) {
       output.push_back( -9999 );
     }
   }
@@ -48,8 +51,11 @@ std::vector<double> computeJetInfo(
       output.push_back( jets[i]->eta() );
       output.push_back( jets[i]->phi() );
       output.push_back( jetPat->bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
-      output.push_back( jetPat->userFloat("pileupJetId:fullDiscriminant") );
+      output.push_back( jetPat->userFloat("pileupJetId:fullDiscriminant"));
+      //output.push_back( jetPat->userFloat("pileupJetIdUpdated:fullDiscriminant"));
       output.push_back( jetPat->partonFlavour() );
+      output.push_back( jetPat->hadronFlavour() );
+      output.push_back( jetPat->jecFactor("Uncorrected") );
       if (jetPat->hasUserCand("jes+")) {
           output.push_back( jetPat->userCand("jes+")->pt() );}
       else output.push_back( -9999 );

@@ -122,7 +122,8 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::RefProd<pat::PackedCandidateCollection>& packedPFRefProd,
     const reco::TrackRefProd& tracks,
     const reco::GsfTrackRefProd& gsfTracks,
-    const std::map<std::string, edm::Ptr<pat::MET> >& mets
+    const std::map<std::string, edm::Ptr<pat::MET> >& mets,
+    std::vector<float> lheweights
     ):
   rho_(rho),
   triggerEvent_(triggerEvent),
@@ -159,7 +160,8 @@ PATFinalStateEvent::PATFinalStateEvent(
   packedPFRefProd_(packedPFRefProd),
   tracks_(tracks),
   gsfTracks_(gsfTracks),
-  mets_(mets)
+  mets_(mets),
+  lheweights_(lheweights)
 { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
@@ -189,6 +191,8 @@ const GenFilterInfo& PATFinalStateEvent::generatorFilter() const {
 }
 
 double PATFinalStateEvent::rho() const { return rho_; }
+
+std::vector<float> PATFinalStateEvent::lheweights() const {return lheweights_;}
 
 const pat::TriggerEvent& PATFinalStateEvent::trig() const {
   return triggerEvent_; }

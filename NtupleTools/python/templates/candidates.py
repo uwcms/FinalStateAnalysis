@@ -60,5 +60,7 @@ base_jet = PSet(
     #'jetVariables({object_idx},"mult_MLP") : -100',
     objectJetPartonFlavour = '? {object}.userCand("patJet").isNonnull ? '
         '{object}.userCand("patJet").partonFlavour : -100',
+    objectJetHadronFlavour = '? {object}.userCand("patJet").isNonnull ? '
+        '{object}.userCand("patJet").hadronFlavour : -100',
 )
 

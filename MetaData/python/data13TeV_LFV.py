@@ -346,14 +346,14 @@ datadefs["GluGluHToTauTau_M125_13TeV_powheg_pythia8"] = {
     'datasetpath': '/GluGluHToTauTau_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
     'pu': 'asymptotic_2016',
     'calibrationTarget': 'RunIISpring16MiniAODv1',
-    'x_sec': 48.57*br(125, 'tautau')[0] ,
+    'x_sec': 44.14*0.0627,
 }
 datadefs["VBFHToTauTau_M125_13TeV_powheg_pythia8"] = {
     'analyses': ['4L'],
       'datasetpath': '/VBFHToTauTau_M125_13TeV_powheg_pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
     'pu': 'asymptotic_2016',
     'calibrationTarget': 'RunIISpring16MiniAODv1',
-    'x_sec': 3.782*br(125, 'tautau')[0],
+    'x_sec': 3.782*0.0627,
 }
 datadefs['data_SingleElectron_Run2015C_05Oct2015_25ns'] = {
    'datasetpath' : "/SingleElectron/Run2015C_25ns-05Oct2015-v1/MINIAOD",

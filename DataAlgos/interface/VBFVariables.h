@@ -46,6 +46,31 @@ class VBFVariables {
     double dijetrapidity;
     double eta1;
     double eta2;
+
+    double mass_JESDown;
+    double deta_JESDown;
+    double dphi_JESDown;
+    double pt1_JESDown;
+    double pt2_JESDown;
+    double dijetpt_JESDown;
+    double dijetrapidity_JESDown;
+    double eta1_JESDown;
+    double eta2_JESDown;
+    unsigned int jets20_JESDown;
+    unsigned int jets30_JESDown;
+
+    double mass_JESUp;
+    double deta_JESUp;
+    double dphi_JESUp;
+    double pt1_JESUp;
+    double pt2_JESUp;
+    double dijetpt_JESUp;
+    double dijetrapidity_JESUp;
+    double eta1_JESUp;
+    double eta2_JESUp;
+    unsigned int jets20_JESUp;
+    unsigned int jets30_JESUp;
+
     double dphihj;
     double dphihj_nomet;
     double c1;
