@@ -48,7 +48,6 @@ class PileupWeight(object):
             file.Close()
         # Normalize
         self.data.Scale(1./self.data.Integral())
-        print 'scaling data'
         if not mctag in _MC_PU_DISTRIBUTIONS:
             raise KeyError("Unknown PU distribution %s, allowed: %s" %
                            (mctag, " ".join(_MC_PU_DISTRIBUTIONS.keys())))
