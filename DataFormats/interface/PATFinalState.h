@@ -287,7 +287,6 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
 
     std::vector<const reco::Candidate*> vetoJets(
         double dR=0.1, const std::string& filter="") const;
-        
 
     std::vector<const reco::Candidate*> vetoPhotons(
         double dR=0.1, const std::string& filter="") const;

@@ -123,7 +123,6 @@ class CondorDAG(object):
                 if not 'Node = ' and not 'DagStatus ='  in line:
                     continue
                 if 'Node =' in line :
-                #if 'Node = "merge' in line :
                     #log.info("line %s  and line %s" %(line, lines[i+1]))
                     jobidmatch = re.search('Node\s\S\s\S(?P<jobid>\S+)\S\S\n', line)
                     jobmatch =  re.search('NodeStatus\s\S\s\S+\s\S+\s\S(?P<status>\w+)', lines[i+1])
