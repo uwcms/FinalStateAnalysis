@@ -192,7 +192,15 @@ const GenFilterInfo& PATFinalStateEvent::generatorFilter() const {
 
 double PATFinalStateEvent::rho() const { return rho_; }
 
-std::vector<float> PATFinalStateEvent::lheweights() const {return lheweights_;}
+std::vector<float> PATFinalStateEvent::lheweights() const {
+  std::vector<float> rtn;
+  if (lheweights_.size() == 0) {
+    for (int i = 0; i < 200; i++) {
+      rtn.push_back( 0. );
+    }
+    return rtn;
+  }
+  return lheweights_;}
 
 const pat::TriggerEvent& PATFinalStateEvent::trig() const {
   return triggerEvent_; }
