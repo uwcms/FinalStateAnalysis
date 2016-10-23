@@ -234,7 +234,6 @@ class PATFinalStateEvent {
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;
     double rho_;
-    std::vector<float> lheweights_;
     pat::TriggerEvent triggerEvent_;
     edm::RefProd<std::vector<pat::TriggerObjectStandAlone> > triggerObjects_;
     edm::TriggerNames names_;
@@ -272,6 +271,7 @@ class PATFinalStateEvent {
     reco::GsfTrackRefProd gsfTracks_;
     // List of different MET types
     std::map<std::string, edm::Ptr<pat::MET> > mets_;
+    std::vector<float> lheweights_;
 
 };
 
