@@ -209,15 +209,16 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle<edm::View<reco::Vertex> > pv_back;
   evt.getByToken(pvBackSrcToken_, pv_back);
 
+  // Only get LHEEventProduct info if it exist
   edm::Handle<LHEEventProduct> EvtHandle ;
   evt.getByLabel("externalLHEProducer", EvtHandle) ;
-
   std::vector<float> lheweights;
-  for (unsigned int i=0; i<EvtHandle->weights().size(); i++) {
-     lheweights.push_back(EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP()); 
-     //std::cout<<i<<" "<<EvtHandle->weights()[i].id<<" "<<EvtHandle->weights()[i].wgt<<" "<<EvtHandle->originalXWGTUP()<<std::endl;
+  if (EvtHandle.isValid()) {
+    for (unsigned int i=0; i<EvtHandle->weights().size(); i++) {
+       lheweights.push_back(EvtHandle->weights()[i].wgt/EvtHandle->originalXWGTUP()); 
+       //std::cout<<i<<" "<<EvtHandle->weights()[i].id<<" "<<EvtHandle->weights()[i].wgt<<" "<<EvtHandle->originalXWGTUP()<<std::endl;
+    };
   }
-
   edm::Ptr<reco::Vertex> pvPtr;
   if( pv->size() )
     pvPtr = pv->ptrAt(0);
