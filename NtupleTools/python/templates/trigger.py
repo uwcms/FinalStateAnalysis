@@ -247,6 +247,10 @@ doubleLepton_25ns = PSet(
         paths=r'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
     _trig_template.replace(
+        name='singleMu23SingleE12DZ',
+        paths=r'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+'
+        ),
+    _trig_template.replace(
         name='singleMu23SingleE8',
         paths=r'HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+'
         ),
