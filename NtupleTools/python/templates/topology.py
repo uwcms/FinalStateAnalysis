@@ -80,6 +80,10 @@ pairs = PSet(
     object2_object1_collinearmass_UnclusteredEnDown = 'collinearMassMET({object2_idx}, "", {object1_idx},"","ues-")',
     object1_object2_collinearmass_TauEnUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"tesUpTaus","tes+")',
     object1_object2_collinearmass_TauEnDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"tesDownTaus","tes-")',
+    object1_object2_collinearmass_EleEnUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"","ees+")',
+    object1_object2_collinearmass_EleEnDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"","ees-")',
+    object1_object2_collinearmass_MuEnUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"","mes+")',
+    object1_object2_collinearmass_MuEnDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"","mes-")',
 
 
     object1_object2_Pt = 'subcand({object1_idx}, {object2_idx}).get.pt',
