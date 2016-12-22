@@ -4,6 +4,8 @@
   "data_SingleElectron_Run2016D" : "/SingleElectron/Run2016D-PromptReco-v2/MINIAOD",
   "data_SingleElectron_Run2016E" : "/SingleElectron/Run2016E-PromptReco-v2/MINIAOD",
   "data_SingleElectron_Run2016F" : "/SingleElectron/Run2016F-PromptReco-v1/MINIAOD",
+  "data_SingleElectron_Run2016G" : "/SingleElectron/Run2016G-PromptReco-v1/MINIAOD",
+  "data_SingleElectron_Run2016H" : "/SingleElectron/Run2016H-PromptReco-v1/MINIAOD",
 
   "data_DoubleEG_Run2016B" :  "/DoubleEG/Run2016B-PromptReco-v2/MINIAOD",
   "data_DoubleEG_Run2016C" :  "/DoubleEG/Run2016C-PromptReco-v2/MINIAOD",
@@ -16,6 +18,8 @@
   "data_DoubleMuon_Run2016D" :  "/DoubleMuon/Run2016D-PromptReco-v2/MINIAOD",
   "data_DoubleMuon_Run2016E" :  "/DoubleMuon/Run2016E-PromptReco-v2/MINIAOD",
   "data_DoubleMuon_Run2016F" :  "/DoubleMuon/Run2016F-PromptReco-v1/MINIAOD",
+  "data_DoubleMuon_Run2016G" :  "/DoubleMuon/Run2016G-PromptReco-v1/MINIAOD",
+  "data_DoubleMuon_Run2016H" :  "/DoubleMuon/Run2016H-PromptReco-v1/MINIAOD",
 
   "data_MuonEG_Run2016B" :  "/MuonEG/Run2016B-PromptReco-v2/MINIAOD",
   "data_MuonEG_Run2016C" :  "/MuonEG/Run2016C-PromptReco-v2/MINIAOD",
