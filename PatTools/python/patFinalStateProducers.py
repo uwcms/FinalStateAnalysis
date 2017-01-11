@@ -198,8 +198,11 @@ def produce_final_states(process, daughter_collections, output_commands,
         # build single object final states
         producerSuffix = get_channel_suffix(channel)
 
+        # Add channel specific pt cuts to elec/mu/taus
+        crossCleaningRep = crossCleaning.replace('CHANNEL',producerSuffix)
+ 
         # Define some basic selections for building combinations
-        cuts = [crossCleaning]  # basic x-cleaning
+        cuts = [crossCleaningRep]  # basic x-cleaning
 
         nObj = len(channel)
         if nObj not in builderSeqs:
