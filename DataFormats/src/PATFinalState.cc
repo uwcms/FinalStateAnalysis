@@ -734,6 +734,26 @@ PATFinalState::smallestDeltaR() const {
 }
 
 double
+PATFinalState::channelSpecificObjCuts( const std::string& channel ) const {
+  // daughters are position ordered in FSA
+  // for channel ElecTau, daughter 0 = elec
+  // daughter 1 = tau
+  double pt0=daughter(0)->pt();
+  double pt1=daughter(1)->pt();
+  if (channel == "TauTau"   && pt0 > 33 && pt1 > 33) return 1.;
+  if (channel == "ElecTau"  && pt0 > 23 && pt1 > 19) return 1.;
+  if (channel == "MuTau"    && pt0 > 19 && pt1 > 19) return 1.;
+  if (channel == "EMu"    && pt0 + pt1 > 30) return 1.;
+
+  // If channel isn't specificed above, return 1.
+  if (channel != "TauTau" && channel != "ElecTau" && channel != "MuTau")
+    return 1.;
+
+  // Failed
+  return 0.;
+}
+
+double
 PATFinalState::deltaPhiToMEt(int i, const std::string& sysTag,
     const std::string& metTag) const {
 

@@ -75,10 +75,10 @@ cmsswversion=os.environ['CMSSW_VERSION']
 #       paths = cms.untracked.vstring('schedule') 
 #)
 #
-#process.SimpleMemoryCheck = cms.Service(
-#    "SimpleMemoryCheck",
-#    ignoreTotal = cms.untracked.int32(1)
-#)
+process.SimpleMemoryCheck = cms.Service(
+    "SimpleMemoryCheck",
+    ignoreTotal = cms.untracked.int32(1)
+)
 
 
 process.options = cms.untracked.PSet(
@@ -473,6 +473,15 @@ if abs(options.runFSRFilter)>0:
 ### MET Uncertainty and Corrections ###
 
 #######################################
+
+from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+
+# If you only want to re-correct and get the proper uncertainties
+runMetCorAndUncFromMiniAOD(process,
+    isData=isData,
+                        )
+process.correctMET=cms.Path(process.fullPatMetSequence)
+process.schedule.append(process.correctMET)
 
 if not bool(options.skipMET):
     postfix = 'NewMet'

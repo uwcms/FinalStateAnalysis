@@ -143,6 +143,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Return the smallest dR between any two daughters
     double smallestDeltaR() const;
 
+   /// Perform channel specific cuts in the cross cleaning step
+   /// of building FSA events
+   double channelSpecificObjCuts( const std::string& channel ) const;
+
     /// Get DeltaPhi to the MEt
     double deltaPhiToMEt(int i, const std::string& tag,
         const std::string& metTag) const;

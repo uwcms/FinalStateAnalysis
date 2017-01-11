@@ -134,11 +134,11 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     # temp hardcode
     if args.apply_cms_lumimask:
-	#/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
+        #/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
         #filename = 'Cert_271036-278808_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt' # 20.1/fb
         #lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV',filename)
-	filename = 'Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt'
-	lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final',filename)
+  	filename = 'Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt' #Full 2016 dataset
+  	lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final',filename)
         if args.lumimaskjson: 
             assert not (args.silver or args.goldenv2), "ERROR: Multiple lumimask jsons specified"
             lumi_mask_path = args.lumimaskjson
@@ -182,7 +182,6 @@ def datasets_from_das(args):
         dbs_datasets = get_das_info('/*/%s/MINIAODSIM' % args.campaignstring)
         # check sample wildcards
         for dataset in dbs_datasets:
-            #dataset_name = dataset.split('/')[1] 
 	    dataset_name = dataset.split('/')[1]+"_v"+dataset.split('_v')[1].split('/')[0]
             passes_filter = True
             passes_wildcard = False
@@ -210,7 +209,6 @@ def datasets_from_das(args):
             passes_filter = True
             passes_wildcard = False
             name_to_use = 'data_' + '_'.join(dataset.split('/'))
-	    #name_to_use = 'data_' + dataset.split('/')[1]+"-v"+dataset.split('-v')[1].split('/')[0]#FIXME
             for pattern in data_patterns:
                 if args.dastuple: # check json for shorthand, links to full dataset name
                     with open(args.dastuple) as tuple_file:
