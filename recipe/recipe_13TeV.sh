@@ -40,6 +40,7 @@ git checkout svFit_2015Apr03
 popd
 
 git cms-merge-topic cms-met:METRecipe_8020
+git cms-merge-topic ikrav:egm_id_80X_v2
 
 # Checkout mva met code
 #git cms-addpkg RecoMET/METPUSubtraction
