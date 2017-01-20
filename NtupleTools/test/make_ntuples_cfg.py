@@ -179,7 +179,7 @@ options.parseArguments()
 filters = []
 
 # SV Fit requires MVA MET
-options.runMVAMET = (options.runMVAMET or options.svFit or options.htt)
+#options.runMVAMET = (options.runMVAMET or options.svFit or options.htt)
 
 eventsToSkip = cms.untracked.VEventRange()
 if options.eventsToSkip:
@@ -262,7 +262,8 @@ process.load('Configuration.StandardSequences.Services_cff')
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
 #GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
-GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': '80X_dataRun2_Prompt_ICHEP16JEC_v0'}
+#GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': '80X_dataRun2_Prompt_ICHEP16JEC_v0'}
+GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v7', 'datagt': '80X_dataRun2_2016SeptRepro_v6'}
 #if options.runMVAMET :
 #    GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': ' 80X_dataRun2_Prompt_ICHEP16JEC_v0'}
 
