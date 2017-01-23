@@ -394,6 +394,8 @@ def make_ntuple(*legs, **kwargs):
         notInMiniAOD.append("MvaMetCovMatrix((00)|(01)|(10)|(11))")
         notInMiniAOD.append("NBTagPD((L)|(M))_idL_jVeto")
         notInMiniAOD.append("NBTagPD((L)|(M))_jVeto")
+    if not fullJES:
+        notInMiniAOD.append("JESTotal|JESClosure")
 
     allRemovals = re.compile("(" + ")|(".join(notInMiniAOD) + ")")
     

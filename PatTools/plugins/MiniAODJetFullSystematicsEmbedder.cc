@@ -35,21 +35,21 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
         "AbsoluteMPFBias",
         "AbsoluteScale",
         "AbsoluteStat",
-        "CorrelationGroupFlavor",
-        "CorrelationGroupIntercalibration",
-        "CorrelationGroupMPFInSitu",
-        "CorrelationGroupUncorrelated",
-        "CorrelationGroupbJES",
-        "FlavorPhotonJet",
-        "FlavorPureBottom",
-        "FlavorPureCharm",
-        "FlavorPureGluon",
-        "FlavorPureQuark",
+        //"CorrelationGroupFlavor",
+        //"CorrelationGroupIntercalibration",
+        //"CorrelationGroupMPFInSitu",
+        //"CorrelationGroupUncorrelated",
+        //"CorrelationGroupbJES",
+        //"FlavorPhotonJet",
+        //"FlavorPureBottom",
+        //"FlavorPureCharm",
+        //"FlavorPureGluon",
+        //"FlavorPureQuark",
         "FlavorQCD",
-        "FlavorZJet",
+        //"FlavorZJet",
         "Fragmentation",
         "PileUpDataMC",
-        "PileUpEnvelope",
+        //"PileUpEnvelope",
         "PileUpMuZero",
         "PileUpPtBB",
         "PileUpPtEC1",
@@ -69,21 +69,22 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
         "RelativeStatHF",
         "SinglePionECAL",
         "SinglePionHCAL",
-        "SubTotalAbsolute",
-        "SubTotalMC",
-        "SubTotalPileUp",
-        "SubTotalPt",
-        "SubTotalRelative",
-        "SubTotalScale",
+        //"SubTotalAbsolute",
+        //"SubTotalMC",
+        //"SubTotalPileUp",
+        //"SubTotalPt",
+        //"SubTotalRelative",
+        //"SubTotalScale",
         "TimePtEta",
-        "TimeRunBCD",
-        "TimeRunE",
-        "TimeRunF",
-        "TimeRunGH",
-        "TotalNoFlavorNoTime",
-        "TotalNoFlavor",
-        "TotalNoTime",
+        //"TimeRunBCD",
+        //"TimeRunE",
+        //"TimeRunF",
+        //"TimeRunGH",
+        //"TotalNoFlavorNoTime",
+        //"TotalNoFlavor",
+        //"TotalNoTime",
         "Total",
+        "Closure",
     }; // end uncertNames
     std::map<std::string, JetCorrectorParameters const *> JetCorParMap;
     std::map<std::string, JetCorrectionUncertainty* > JetUncMap;
@@ -99,7 +100,9 @@ MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::
     produces<ShiftedCandCollection>("p4OutJESUpJetsUncor"+name);
     produces<ShiftedCandCollection>("p4OutJESDownJetsUncor"+name);
 
-    // Do these files have to load every event without this?
+    // Create the uncertainty tool for each uncert
+    // skip Closure, which is a comparison at the end
+    if (name == "Closure") continue;
     JetCorrectorParameters const * JetCorPar = new JetCorrectorParameters(fName_, name);
     JetCorParMap[name] = JetCorPar;
 
@@ -122,6 +125,9 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
     output->push_back(jet);
   }
 
+  // For comparing with Total for Closure test
+  // assume symmetric uncertainties and ignore Down
+  std::vector<double> factorizedTotalUp(nJets, 0.0);
 
   for (auto const& name : uncertNames) {
     std::auto_ptr<ShiftedCandCollection> p4OutJESUpJets(new ShiftedCandCollection);
@@ -134,10 +140,18 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
       const pat::Jet& jet = jets->at(i);
   
       double unc = 0;
-      if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9) {
+      if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9 && name != "Closure") {
         JetUncMap[name]->setJetEta(jet.eta());
         JetUncMap[name]->setJetPt(jet.pt()); // here you must use the CORRECTED jet pt
         unc = JetUncMap[name]->getUncertainty(true);
+      }
+
+      // Save our factorized uncertainties into a cumulative total
+      // Apply this uncertainty to loop "Closure" for future
+      // comparison
+      if (name != "Total" && name != "Closure") factorizedTotalUp[i] += unc*unc;
+      if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9 && name == "Closure") {
+        unc = std::sqrt(factorizedTotalUp[i]);
       }
   
       // Get uncorrected pt
