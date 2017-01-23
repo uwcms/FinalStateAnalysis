@@ -174,6 +174,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // Gives kinematic info on the generator associated mother pt eta phi
     // including and excluding visible products
     std::vector<double> tauGenMotherKin() const;
+    std::vector<double> tauGenMotherKinErsatz(size_t j) const;
 
     // Use this for top pt reweighting, fills the gen pt
     // of top quarks, returns -10 if no tops found
