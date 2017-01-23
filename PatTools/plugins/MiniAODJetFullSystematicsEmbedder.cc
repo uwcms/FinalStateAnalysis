@@ -25,6 +25,7 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
     virtual ~MiniAODJetFullSystematicsEmbedder(){}
     void produce(edm::Event& evt, const edm::EventSetup& es);
   private:
+    typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
     edm::EDGetTokenT<edm::View<pat::Jet> > srcToken_;
     std::string label_;
     //std::string fName_ = "Spring16_25nsV9_DATA_UncertaintySources_AK4PFchs.txt"; // recommended by JetMET
@@ -84,21 +85,27 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
         "TotalNoTime",
         "Total",
     }; // end uncertNames
-    //std::vector<JetCorrectorParameters const &> JetCorParList; // FIXME
+    std::map<std::string, JetCorrectorParameters const *> JetCorParMap;
+    std::map<std::string, JetCorrectionUncertainty* > JetUncMap;
 };
 
 MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::ParameterSet& pset) {
   srcToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src"));
   label_ = pset.getParameter<std::string>("corrLabel");
   fName_ = pset.getParameter<std::string>("fName");
+  std::cout << "Uncert File: " << fName_ << std::endl;
   produces<pat::JetCollection>();
   for (auto const& name : uncertNames) {
     produces<ShiftedCandCollection>("p4OutJESUpJetsUncor"+name);
     produces<ShiftedCandCollection>("p4OutJESDownJetsUncor"+name);
 
     // Do these files have to load every event without this?
-    //JetCorrectorParameters const & JetCorPar = JetCorrectorParameters(fName_, name); // FIXME
-    //JetCorParList.push_back( JetCorPar ); // FIXME
+    JetCorrectorParameters const * JetCorPar = new JetCorrectorParameters(fName_, name);
+    JetCorParMap[name] = JetCorPar;
+
+    JetCorrectionUncertainty * jecUnc(
+        new JetCorrectionUncertainty(*JetCorParMap[name]));
+    JetUncMap[name] = jecUnc;
   };
 }
 
@@ -106,10 +113,8 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
 
   std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
   edm::Handle<edm::View<pat::Jet> > jets;
-  std::cout << "Uncert File: " << fName_ << std::endl;
   evt.getByToken(srcToken_, jets);
   size_t nJets = jets->size();
-  typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
 
   // Make our own copy of the jets to fill
   for (size_t i = 0; i < nJets; ++i) {
@@ -118,7 +123,6 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
   }
 
 
-  int iter = 0;
   for (auto const& name : uncertNames) {
     std::auto_ptr<ShiftedCandCollection> p4OutJESUpJets(new ShiftedCandCollection);
     std::auto_ptr<ShiftedCandCollection> p4OutJESDownJets(new ShiftedCandCollection);
@@ -126,21 +130,14 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
     p4OutJESUpJets->reserve(nJets);
     p4OutJESDownJets->reserve(nJets);
 
-    JetCorrectorParameters const & JetCorPar = JetCorrectorParameters(fName_, name);
-
-    std::auto_ptr<JetCorrectionUncertainty> jecUnc(
-        new JetCorrectionUncertainty(JetCorPar));
-        //new JetCorrectionUncertainty(JetCorParList[iter])); // FIXME
-    iter++;
-
     for (size_t i = 0; i < nJets; ++i) {
       const pat::Jet& jet = jets->at(i);
   
       double unc = 0;
       if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9) {
-        jecUnc->setJetEta(jet.eta());
-        jecUnc->setJetPt(jet.pt()); // here you must use the CORRECTED jet pt
-        unc = jecUnc->getUncertainty(true);
+        JetUncMap[name]->setJetEta(jet.eta());
+        JetUncMap[name]->setJetPt(jet.pt()); // here you must use the CORRECTED jet pt
+        unc = JetUncMap[name]->getUncertainty(true);
       }
   
       // Get uncorrected pt
