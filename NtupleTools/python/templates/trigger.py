@@ -72,11 +72,11 @@ singleLepton_25ns_MC = PSet(
         paths=r'HLT_IsoTkMu24_eta2p1__v\\d+'
         ),
     _trig_template.replace(
-        name='singleE',
+        name='singleE27Tight',
         paths=r'HLT_Ele27_WPTight_Gsf_v\\d+',
         ),
     _trig_template.replace(
-        name='singleEeta2p1Loose',
+        name='singleE27eta2p1Loose',
         paths=r'HLT_Ele27_eta2p1_WPLoose_Gsf_v\\d+',
         ),
     _trig_template.replace(
@@ -132,6 +132,22 @@ singleLepton_25ns = PSet(
         paths=r'HLT_Mu50_v\\d+'
         ),
     _trig_template.replace(
+        name='singleE27Tight',
+        paths=r'HLT_Ele27_WPTight_Gsf_v\\d+',
+        ),
+    _trig_template.replace(
+        name='singleE27eta2p1Loose',
+        paths=r'HLT_Ele27_eta2p1_WPLoose_Gsf_v\\d+',
+        ),
+    _trig_template.replace(
+        name='singleE25eta2p1Tight',
+        paths=r'HLT_Ele25_eta2p1_WPTight_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleE27eta2p1Tight',
+        paths=r'HLT_Ele27_eta2p1_WPTight_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
         name='singleIsoMu18',
         paths=r'HLT_IsoMu18_v\\d+'
         ),
@@ -172,24 +188,12 @@ singleLepton_25ns = PSet(
         paths=r'HLT_IsoTkMu24_v\\d+'
         ),
     _trig_template.replace(
-        name='singleE27LooseEr',
-        paths=r'HLT_Ele27_eta2p1_WPLoose_Gsf_v\\d+',
-        ),
-    _trig_template.replace(
-        name='singleE27Tight',
-        paths=r'HLT_Ele27_WPTight_Gsf_v\\d+',
-        ),
-    _trig_template.replace(
         name='singleE23WPLoose',
         paths=r'HLT_Ele23_WPLoose_Gsf_v\\d+'
         ),
     _trig_template.replace(
         name='singleE22eta2p1Loose',
         paths=r'HLT_Ele22_eta2p1_WPLoose_Gsf_v\\d+'
-        ),
-    _trig_template.replace(
-        name='singleE25eta2p1Tight',
-        paths=r'HLT_Ele25_eta2p1_WPTight_Gsf_v\\d+'
         ),
     _trig_template.replace(
         name='singleE25eta2p1Loose',
@@ -265,6 +269,10 @@ doubleLepton_25ns = PSet(
     _trig_template.replace(
         name='singleMu23SingleE12DZ',
         paths=r'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleMu8SingleE23DZ',
+        paths=r'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+'
         ),
     _trig_template.replace(
         name='singleMu23SingleE8',

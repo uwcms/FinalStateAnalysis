@@ -267,11 +267,10 @@ process.load('Configuration.StandardSequences.Services_cff')
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
-#GT = {'mcgt': 'auto:run2_mc', 'datagt': 'auto:run2_data'}
-#GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': '80X_dataRun2_Prompt_ICHEP16JEC_v0'}
 GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v7', 'datagt': '80X_dataRun2_2016SeptRepro_v6'}
-#if options.runMVAMET :
-#    GT = {'mcgt': '80X_mcRun2_asymptotic_2016_miniAODv2_v1', 'datagt': ' 80X_dataRun2_Prompt_ICHEP16JEC_v0'}
+
+#Uncomment to run on Run2016 H prompt reco
+#GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v7', 'datagt': '80X_dataRun2_Prompt_v14'}
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
@@ -347,8 +346,24 @@ process.pileupJetIdUpdated = process.pileupJetId.clone(
 ### JEC ##########
 ##################
 
-## https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
+from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 isData = not options.isMC
+process.load ("CondCore.CondDB.CondDB_cfi")
+#from CondCore.CondDB.CondDB_cfi import *
+process.jec = cms.ESSource("PoolDBESSource",
+         DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
+         timetype = cms.string('runnumber'),
+         toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
+                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA')),
+                                    label  = cms.untracked.string('AK4PFchs')
+                                    )
+                 ),
+         connect = cms.string('sqlite:/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA'))
+	 #connect = cms.string('sqlite:../data/{0}.db'.format('Spring16_23Sep2016V2_MC'))
+    )
+process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
+
+## https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
 from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
 process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
 src = cms.InputTag("slimmedJets"),
@@ -503,11 +518,11 @@ if not bool(options.skipMET):
       toGet = cms.VPSet(
         cms.PSet(
               record = cms.string('JetCorrectionsRecord'),
-              tag    = cms.string('JetCorrectorParametersCollection_Spring16_25nsV6_{0}_AK4PFchs'.format('MC' if options.isMC else 'DATA')),
+              tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA')),
               label  = cms.untracked.string('AK4PFchs')
               )
       ),
-      connect = cms.string('sqlite:/{0}/src/FinalStateAnalysis/NtupleTools/data/Spring16_25nsV6_{1}.db'.format(cmsswversion,'MC' if options.isMC else 'DATA'))
+      connect = cms.string('sqlite:/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA'))
       #                         connect = cms.string('sqlite:../data/Spring16_25nsV6_{1}.db'.format(cmsswversion,'MC' if options.isMC else 'DATA'))                        
     )
     process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')

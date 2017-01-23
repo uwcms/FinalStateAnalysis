@@ -624,6 +624,53 @@ PATFinalState::buildGenTaus() const {
 } 
 
 std::vector<double>
+PATFinalState::tauGenMotherKinErsatz( size_t j ) const {
+
+    std::vector<double> output;
+
+    // Check that there are gen particles (MC)
+    if (!event_->genParticleRefProd()) {
+        for (int i = 0; i < 10; ++i) output.push_back( -10 );
+        return output;}
+    // Get all gen particles in the event
+    const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
+    reco::GenParticleCollection genParticles = *genCollectionRef;
+
+    reco::Candidate::LorentzVector visVec;
+    reco::Candidate::LorentzVector withInvisVec;
+    if ( genParticles.size() > 0 ) {
+        for(size_t m = 0; m != genParticles.size(); ++m) {
+          reco::GenParticle& genp = genParticles[m];
+          bool fromHardProcessFinalState = genp.fromHardProcessFinalState();
+          bool isDirectHardProcessTauDecayProduct = genp.statusFlags().isDirectHardProcessTauDecayProduct();
+          bool isMuon = false;
+          bool isElectron = false;
+          bool isNeutrino = false;
+          int pdgId = fabs( genp.pdgId() );
+          if (pdgId == 11) isElectron = true;
+          if (pdgId == 13) isMuon = true;
+          if (pdgId == 12) isNeutrino = true;
+          if (pdgId == 14) isNeutrino = true;
+          if (pdgId == 16) isNeutrino = true;
+          if ((fromHardProcessFinalState && (isMuon || isElectron || isNeutrino)) || isDirectHardProcessTauDecayProduct) {
+            withInvisVec += genp.p4();}
+          if ((fromHardProcessFinalState && (isMuon || isElectron)) || (isDirectHardProcessTauDecayProduct && !isNeutrino)) {
+	     if (reco::deltaR( daughter(j)->p4(), genp.p4())>0.5 )
+                 visVec += genp.p4();}
+        }
+    }
+    output.push_back( visVec.px() );
+    output.push_back( visVec.py() );
+    output.push_back( withInvisVec.px() );
+    output.push_back( withInvisVec.py() );
+    output.push_back( withInvisVec.pt() );
+    output.push_back( withInvisVec.M() );
+    output.push_back( withInvisVec.eta() );
+    output.push_back( withInvisVec.phi() );
+    return output;
+}
+
+std::vector<double>
 PATFinalState::tauGenMotherKin() const {
 
     std::vector<double> output;
