@@ -1,0 +1,26 @@
+{ 
+  "data_SingleMuon_Run2016H_v1" : "/SingleMuon/Run2016H-PromptReco-v1/MINIAOD",
+  "data_SingleMuon_Run2016H_v2" : "/SingleMuon/Run2016H-PromptReco-v2/MINIAOD",
+  "data_SingleMuon_Run2016H_v3" : "/SingleMuon/Run2016H-PromptReco-v3/MINIAOD",
+
+  "data_DoubleMuon_Run2016H_v1" : "/DoubleMuon/Run2016H-PromptReco-v1/MINIAOD",
+  "data_DoubleMuon_Run2016H_v2" : "/DoubleMuon/Run2016H-PromptReco-v2/MINIAOD",
+  "data_DoubleMuon_Run2016H_v3" : "/DoubleMuon/Run2016H-PromptReco-v3/MINIAOD",
+
+  "data_SingleEG_Run2016H_v1" : "/SingleElectron/Run2016H-PromptReco-v1/MINIAOD",
+  "data_SingleEG_Run2016H_v2" : "/SingleElectron/Run2016H-PromptReco-v2/MINIAOD",
+  "data_SingleEG_Run2016H_v3" : "/SingleElectron/Run2016H-PromptReco-v3/MINIAOD",
+
+  "data_Tau_Run2016H_v1" : "/Tau/Run2016H-PromptReco-v1/MINIAOD",
+  "data_Tau_Run2016H_v2" : "/Tau/Run2016H-PromptReco-v2/MINIAOD",
+  "data_Tau_Run2016H_v3" : "/Tau/Run2016H-PromptReco-v3/MINIAOD",
+
+  "data_MuonEG_Run2016H_v1" : "/MuonEG/Run2016H-PromptReco-v1/MINIAOD",
+  "data_MuonEG_Run2016H_v2" : "/MuonEG/Run2016H-PromptReco-v2/MINIAOD",
+  "data_MuonEG_Run2016H_v3" : "/MuonEG/Run2016H-PromptReco-v3/MINIAOD",
+
+  "data_DoubleEG_Run2016H_v1" : "/DoubleEG/Run2016H-PromptReco-v1/MINIAOD",
+  "data_DoubleEG_Run2016H_v2" : "/DoubleEG/Run2016H-PromptReco-v2/MINIAOD",
+  "data_DoubleEG_Run2016H_v3" : "/DoubleEG/Run2016H-PromptReco-v3/MINIAOD"
+
+}

@@ -38,12 +38,12 @@ vetos = PSet(
 
 
     #B-JET Vetos
-    bjetCISVVeto20Loose = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.46").size()',
-    bjetCISVVeto20Medium = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8").size()',
-    bjetCISVVeto20Tight = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.935").size()',
-    bjetCISVVeto30Loose = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.46").size()',
-    bjetCISVVeto30Medium = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8").size()',
-    bjetCISVVeto30Tight = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.935").size()',
+    bjetCISVVeto20Loose = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.5426").size()',
+    bjetCISVVeto20Medium = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8484").size()',
+    bjetCISVVeto20Tight = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.9535").size()',
+    bjetCISVVeto30Loose = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.5426").size()',
+    bjetCISVVeto30Medium = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8484").size()',
+    bjetCISVVeto30Tight = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.9535").size()',
 
     #JET VETOS
     jetVeto20 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5").size()',
@@ -57,24 +57,9 @@ vetos = PSet(
     #jetVeto30_JetResUp = 'vetoJets(0.5, "userCand(\'jres+\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5").size()',
     #jetVeto30_JetResDown = 'vetoJets(0.5, "userCand(\'jres-\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5").size()',
 
-    #jetVeto20 = 'vetoJets(0.4, "pt > 20 & abs(eta) < 5.0").size()',
-    #jetVeto20_DR05 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 5.0").size()',
-    #jetVeto30 = 'vetoJets(0.4, "pt > 30 & abs(eta) < 5.0").size()',
-    #jetVeto30_JetEnDown = 'vetoJets(0.4, "userCand(\'jes-\').pt > 30 & abs(eta) < 5.0").size()',
-    #jetVeto30_JetEnUp = 'vetoJets(0.4, "userCand(\'jes+\').pt > 30 & abs(eta) < 5.0").size()',
-    #jetVeto30Eta3 = 'vetoJets(0.4, "pt > 30 & abs(eta) < 3.0").size()',
-    #jetVeto30Eta3_JetEnDown = 'vetoJets(0.4, "userCand(\'jes-\').pt > 30 & abs(eta) < 3.0").size()',
-    #jetVeto30Eta3_JetEnUp = 'vetoJets(0.4, "userCand(\'jes+\').pt > 30 & abs(eta) < 3.0").size()',
-    #jetVeto30_DR05 = 'vetoJets(0.5, "pt > 30 & abs(eta) < 5.0").size()',
-    #jetVeto40 = 'vetoJets(0.4, "pt > 40 & abs(eta) < 5.0").size()',
-    #jetVeto40_DR05 = 'vetoJets(0.5, "pt > 40 & abs(eta) < 5.0").size()',
 )
 
 overlaps = PSet(
-    #objectElectronPt15IdIsoVtxOverlap = 'overlapElectrons({object_idx}, 0.4, "pt > 15 & abs(eta) < 2.5 & userInt(\'mvaidwp\') > 0.5 & ((userIso(0) + max(userIso(1) + neutralHadronIso - 0.5*userIso(2), 0))/pt) < 0.3 & abs(userFloat(\'dz\')) < 0.2").size()', 
-    #objectElectronPt10IdIsoVtxOverlap = 'overlapElectrons({object_idx}, 0.4, "pt > 10 & abs(eta) < 2.5 & userInt(\'mvaidwp\') > 0.5 & ((userIso(0) + max(userIso(1) + neutralHadronIso - 0.5*userIso(2), 0))/pt) < 0.3 & abs(userFloat(\'dz\')) < 0.2").size()', 
-    #objectElectronPt15IdVtxOverlap = 'overlapElectrons({object_idx}, 0.4, "pt > 15 & abs(eta) < 2.5 & userInt(\'mvaidwp\') > 0.5 & abs(userFloat(\'dz\')) < 0.2").size()',
-    #objectElectronPt10IdVtxOverlap = 'overlapElectrons({object_idx}, 0.4, "pt > 10 & abs(eta) < 2.5 & userInt(\'mvaidwp\') > 0.5 & abs(userFloat(\'dz\')) < 0.2").size()',
    
     objectMuonIdIsoVtxOverlap = 'overlapMuons({object_idx}, 0.4, "pt > 10 & abs(eta) < 2.4 & userInt(\'tightID\') > 0.5 & ((userIso(0) + max(photonIso()+neutralHadronIso()-0.5*puChargedHadronIso,0.0))/pt()) < 0.15 & userFloat(\'dz\') < 0.2").size()',
     objectMuonIdVtxOverlap = 'overlapMuons({object_idx}, 0.4, "pt > 10 & abs(eta) < 2.4 & userInt(\'tightID\') > 0.5 & userFloat(\'dz\') < 0.2").size()',
