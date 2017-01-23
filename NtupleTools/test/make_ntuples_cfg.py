@@ -33,6 +33,8 @@ verbose=0      - print out timing information
 noPhotons=0    - don't build things which depend on photons.
 runMVAMET=0    - run the MVAMET algorithm
 htt=0          - adds Higgs2Taus analysis settings
+fullJES=0      - adds full systematics for all ~27 JES uncertainties
+runningLocal=0 - for sqlite loading and other path names, record if we a running locally or on Condor for example
 svFit=1        - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
 rerunJets=0    - rerun with new jet energy corrections
@@ -67,6 +69,8 @@ import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")
 cmsswversion=os.environ['CMSSW_VERSION']
+
+
 # if you want to debug in the future, uncomment this
 #process.ProfilerService = cms.Service (
 #      "ProfilerService",
@@ -75,15 +79,15 @@ cmsswversion=os.environ['CMSSW_VERSION']
 #       paths = cms.untracked.vstring('schedule') 
 #)
 #
-process.SimpleMemoryCheck = cms.Service(
-    "SimpleMemoryCheck",
-    ignoreTotal = cms.untracked.int32(1)
-)
-
-
-process.options = cms.untracked.PSet(
-    allowUnscheduled = cms.untracked.bool(True),
-)
+#process.SimpleMemoryCheck = cms.Service(
+#    "SimpleMemoryCheck",
+#    ignoreTotal = cms.untracked.int32(1)
+#)
+#
+#
+#process.options = cms.untracked.PSet(
+#    allowUnscheduled = cms.untracked.bool(True),
+#)
 
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
@@ -102,6 +106,8 @@ options = TauVarParsing.TauVarParsing(
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runMVAMET=0,  # If one, (re)build the MVA MET (using pairwise algo)
     htt=0,         # If one, apply Higgs2Taus analysis settings
+    fullJES=0,
+    runningLocal=0, # For sqlite loading and other path names, record if we a running locally or on Condor for example
     runMETNoHF=0,  # If one, use get metnohf (needs to be recalculated in miniaodv1)
     usePUPPI=0,
     rerunJets=0,
@@ -745,6 +751,8 @@ fs_daughter_inputs['jets'] = preJets(process,
                                      fs_daughter_inputs['muons'],
                                      fs_daughter_inputs['electrons'],
                                      doBTag=False,
+                                     doFullJESUnc=options.fullJES,
+                                     runningLocal=options.runningLocal,
                                      jType="AK4PFchs")
 for fs in additional_fs:
     additional_fs[fs]['jets'] = preJets(process,
@@ -1046,6 +1054,7 @@ else:
                                 dblhMode=options.dblhMode,
                                 runTauSpinner=options.runTauSpinner, 
                                 runMVAMET=False,
+                                fullJES=options.fullJES,
                                 skimCuts=options.skimCuts, 
                                 suffix=suffix,
                                 hzz=options.hzz, 
@@ -1062,6 +1071,7 @@ else:
                                     dblhMode=options.dblhMode,
                                     runTauSpinner=options.runTauSpinner,
                                     runMVAMET=False,
+                                    fullJES=options.fullJES,
                                     skimCuts=options.skimCuts, 
                                     suffix=suffix,
                                     hzz=options.hzz, 

@@ -208,10 +208,17 @@ def make_ntuple(*legs, **kwargs):
 
     runMVAMET = kwargs.get('runMVAMET', False)
     runNewMVAMET = kwargs.get('runNewMVAMET', False)
+    fullJES = kwargs.get('fullJES', False)
 
     isMC = kwargs.get('isMC', False)
 
     ntuple_config = _common_template.clone()
+    if fullJES:
+        ntuple_config = PSet(
+            ntuple_config,
+            templates.topology.fullJES
+        )
+
     if not isShiftedMet:
         ntuple_config = PSet(
             ntuple_config,
