@@ -655,7 +655,7 @@ PATFinalState::tauGenMotherKinErsatz( size_t j ) const {
           if ((fromHardProcessFinalState && (isMuon || isElectron || isNeutrino)) || isDirectHardProcessTauDecayProduct) {
             withInvisVec += genp.p4();}
           if ((fromHardProcessFinalState && (isMuon || isElectron)) || (isDirectHardProcessTauDecayProduct && !isNeutrino)) {
-	     //if (reco::deltaR( daughter(j)->p4(), genp.p4())>0.5 )
+	     if (reco::deltaR( daughter(j)->p4(), genp.p4())>0.5 )
                  visVec += genp.p4();}
         }
     }
