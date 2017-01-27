@@ -13,6 +13,13 @@ iso0p10_ele_2016 = GraphReaderSF(
     os.path.join(os.environ['fsa'], 'TagAndProbe/data/Electron_IdIso0p10_eff.root')
 )
 
+idiso0p15_ele_2016BtoHReReco = GraphReaderSF(
+    os.path.join(os.environ['fsa'], 'TagAndProbe/data/Electron_IdIso_IsoLt0p15_2016BtoH_eff.root')
+)
+idiso0p10_ele_2016BtoHReReco = GraphReaderSF(
+    os.path.join(os.environ['fsa'], 'TagAndProbe/data/Electron_IdIso_IsoLt0p1_2016BtoH_eff.root')
+)
+
 
 
 

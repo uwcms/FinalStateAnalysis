@@ -146,12 +146,13 @@ class GraphReaderSF(object):
             xevalm = gr3.GetErrorXlow(n)
             yeval = gr3.GetErrorY(n)
             yevalMC = grMC3.GetErrorY(n)
+            pt_thrs = xval-xevalm, xval+xevalp
             if pt_thrs not in self.table:
                 self.table[pt_thrs] = {}
             err2=yeval*yeval/(yvalMC*yvalMC)+yevalMC*yevalMC*yval*yval/pow(yvalMC,4)
             self.table[pt_thrs][eta_thrs] = yval/yvalMC,  sqrt(err2)
   
-    
+
     def __call__(self, pt, abseta):
         """Return correction given pt and eta, 
         raise error if out of boundaries"""
@@ -163,7 +164,8 @@ class GraphReaderSF(object):
                     if etamin <= abseta < etamax:
                         return correction
         raise ValueError("pt or eta out of boundaries for correction range: %s %s" %(pt, abseta))
-                    
+
+
 class GraphReaderTrackingEta(object):
     """Loads a graph with trigger efficiency from data"""
     def __init__(self, filename):
