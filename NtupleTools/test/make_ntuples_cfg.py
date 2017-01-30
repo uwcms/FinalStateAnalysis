@@ -83,11 +83,11 @@ cmsswversion=os.environ['CMSSW_VERSION']
 #    "SimpleMemoryCheck",
 #    ignoreTotal = cms.untracked.int32(1)
 #)
-#
-#
-#process.options = cms.untracked.PSet(
-#    allowUnscheduled = cms.untracked.bool(True),
-#)
+
+
+process.options = cms.untracked.PSet(
+    allowUnscheduled = cms.untracked.bool(True),
+)
 
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
