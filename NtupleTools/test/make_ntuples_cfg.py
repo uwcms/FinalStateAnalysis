@@ -33,6 +33,8 @@ verbose=0      - print out timing information
 noPhotons=0    - don't build things which depend on photons.
 runMVAMET=0    - run the MVAMET algorithm
 htt=0          - adds Higgs2Taus analysis settings
+fullJES=0      - adds full systematics for all ~27 JES uncertainties
+runningLocal=0 - for sqlite loading and other path names, record if we a running locally or on Condor for example
 svFit=1        - run the SVfit on appropriate pairs
 rerunQGJetID=0 - rerun the quark-gluon JetID
 rerunJets=0    - rerun with new jet energy corrections
@@ -67,6 +69,8 @@ import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")
 cmsswversion=os.environ['CMSSW_VERSION']
+
+
 # if you want to debug in the future, uncomment this
 #process.ProfilerService = cms.Service (
 #      "ProfilerService",
@@ -102,6 +106,8 @@ options = TauVarParsing.TauVarParsing(
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runMVAMET=0,  # If one, (re)build the MVA MET (using pairwise algo)
     htt=0,         # If one, apply Higgs2Taus analysis settings
+    fullJES=0,
+    runningLocal=0, # For sqlite loading and other path names, record if we a running locally or on Condor for example
     runMETNoHF=0,  # If one, use get metnohf (needs to be recalculated in miniaodv1)
     usePUPPI=0,
     rerunJets=0,
@@ -345,16 +351,24 @@ from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMet
 isData = not options.isMC
 process.load ("CondCore.CondDB.CondDB_cfi")
 #from CondCore.CondDB.CondDB_cfi import *
+
+# Defaults to running correctly for Condor, you can
+# pass flag to run locally just fine here with runningLocal=1
+sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Summer16_23Sep2016V3_MC' if options.isMC else 'Summer16_23Sep2016AllV3_DATA')
+if options.runningLocal :
+    sqlitePath = '../data/{0}.db'.format('Summer16_23Sep2016V3_MC' if options.isMC else 'Summer16_23Sep2016AllV3_DATA' )
+
 process.jec = cms.ESSource("PoolDBESSource",
          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
          timetype = cms.string('runnumber'),
          toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
-                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA')),
+                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Summer16_23Sep2016V3_MC' if options.isMC else 'Summer16_23Sep2016AllV3_DATA')),
                                     label  = cms.untracked.string('AK4PFchs')
                                     )
                  ),
-         connect = cms.string('sqlite:/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA'))
-	 #connect = cms.string('sqlite:../data/{0}.db'.format('Spring16_23Sep2016V2_MC'))
+         #connect = cms.string('sqlite:/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA'))
+	     #connect = cms.string('sqlite:../data/{0}.db'.format('Spring16_23Sep2016V2_MC'))
+         connect = cms.string('sqlite:'+sqlitePath)
     )
 process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
@@ -761,6 +775,8 @@ fs_daughter_inputs['jets'] = preJets(process,
                                      fs_daughter_inputs['muons'],
                                      fs_daughter_inputs['electrons'],
                                      doBTag=False,
+                                     doFullJESUnc=options.fullJES,
+                                     runningLocal=options.runningLocal,
                                      jType="AK4PFchs")
 for fs in additional_fs:
     additional_fs[fs]['jets'] = preJets(process,
@@ -1062,6 +1078,7 @@ else:
                                 dblhMode=options.dblhMode,
                                 runTauSpinner=options.runTauSpinner, 
                                 runMVAMET=False,
+                                fullJES=options.fullJES,
                                 skimCuts=options.skimCuts, 
                                 suffix=suffix,
                                 hzz=options.hzz, 
@@ -1078,6 +1095,7 @@ else:
                                     dblhMode=options.dblhMode,
                                     runTauSpinner=options.runTauSpinner,
                                     runMVAMET=False,
+                                    fullJES=options.fullJES,
                                     skimCuts=options.skimCuts, 
                                     suffix=suffix,
                                     hzz=options.hzz, 
