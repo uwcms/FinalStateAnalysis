@@ -267,6 +267,7 @@ process.load('Configuration.StandardSequences.Services_cff')
 
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
+#Uncomment to run on reReco
 GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v7', 'datagt': '80X_dataRun2_2016SeptRepro_v6'}
 
 #Uncomment to run on Run2016 H prompt reco

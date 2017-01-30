@@ -67,12 +67,19 @@ datadefs["GluGlu_LFV_HToEMu_M125_13TeV_powheg_pythia8"] = {
     'x_sec': 48.57*0.01 ,
 }
 
-datadefs["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
+datadefs["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1"] = {
     'analyses': ['4L'],
     'datasetpath': '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
     'pu': 'asymptotic_2016',
       'calibrationTarget': 'RunIISpring16MiniAODv1',
-    'x_sec':  5765.4,
+    'x_sec':  4954.0,
+}
+datadefs["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6_ext1-v2"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'asymptotic_2016',
+      'calibrationTarget': 'RunIISpring16MiniAODv1',
+    'x_sec':  4954.0,
 }
 datadefs["DYJetsToTauTau_ForcedMuDecay_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
     'analyses': ['4L'],
@@ -90,13 +97,6 @@ datadefs["WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
     'x_sec': 61526.7 ,
 }
 
-datadefs["WZ_TuneCUETP8M1_13TeV-pythia8"] = {
-    'analyses': ['4L'],
-    'datasetpath': '/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
-    'pu': 'Asympt25ns',
-    'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec': 22.82 , #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00002
-}
 
 datadefs["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
     'analyses': ['4L'],
@@ -112,43 +112,65 @@ datadefs["DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = {
     'calibrationTarget': 'RunIISpring15DR7',
     'x_sec': 18610.0 ,
 }
+datadefs["DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'RunIISpring15DR7',
+    'x_sec': 18610.0 ,
+}
 ###new stuff
 
-datadefs["DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
+datadefs["DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1"] = {
     'analyses': ['4L'],
     'datasetpath': '/DY1JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
     'pu': 'asymptoptic_2016',
     'calibrationTarget': 'RunIISpring16MiniAODv1',
-    'x_sec': 1245.38 ,
+    'x_sec': 1016 ,
+}
+
+datadefs["DY1JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1"] = {
+    'analyses': ['4L'],
+      'datasetpath': '/DY1JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM',
+    'pu': 'asymptoptic_2016',
+    'calibrationTarget': 'RunIISpring16MiniAODv1',
+    'x_sec': 421.5,
+}
+datadefs["DY2JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1"] = {
+    'analyses': ['4L'],
+      'datasetpath': '/DY1JetsToLL_M-10to50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM',
+    'pu': 'asymptoptic_2016',
+    'calibrationTarget': 'RunIISpring16MiniAODv1',
+    'x_sec': 184.3,
 }
 
 
 
-datadefs["DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
+datadefs["DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1"] = {
     'analyses': ['4L'],
     'datasetpath': '/DY2JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
     'pu': 'asymptoptic_2016',
     'calibrationTarget': 'RunIISpring16MiniAODv1',
-    'x_sec':409.34,
+    'x_sec':331.4,
 }
 
 
-datadefs["DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
+datadefs["DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1"] = {
     'analyses': ['4L'],
     'datasetpath': '/DY3JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
     'pu': 'asymptoptic_2016',
     'calibrationTarget': 'RunIISpring16MiniAODv1',
-    'x_sec':125.21 ,
+    'x_sec':96.36 ,
 }
 
 
 
-datadefs["DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {
+datadefs["DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1"] = {
     'analyses': ['4L'],
     'datasetpath': '/DY4JetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
     'pu': 'asymptoptic_2016',
     'calibrationTarget': 'RunIISpring16MiniAODv1',
-    'x_sec': 67.40,
+    'x_sec': 51.4,
 }
 
 
@@ -185,17 +207,74 @@ datadefs["DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] =
     'datasetpath': '/DYJetsToLL_M-10to50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'RunIISpring15DR7',
-    'x_sec':2.70, 
+    'x_sec': 2.70, 
 }
 #2.198*1.23(k-fac)
-datadefs["ZZ_TuneCUETP8M1_13TeV-pythia8"]={
+datadefs["ZZ_TuneCUETP8M1_13TeV-pythia8_v6-v1"]={
       'analyses':['LFV'],
       'datsetpath':'/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/MINIAODSIM',
       'pu':'asymptotic_2016',
       'calibrationTarget': 'PUSpring16',
       'x_sec': 16.523,
       }
-datadefs["WZ_TuneCUETP8M1_13TeV-pythia8"] = {
+datadefs["ZZ_TuneCUETP8M1_13TeV-pythia8_v6_ext1-v1"]={
+      'analyses':['LFV'],
+      'datsetpath':'/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/MINIAODSIM',
+      'pu':'asymptotic_2016',
+      'calibrationTarget': 'PUSpring16',
+      'x_sec': 16.523,
+      }
+datadefs["ZZTo4L_13TeV-amcatnloFXFX-pythia8_v6_ext1-v1"]={
+      'analyses':['LFV'],
+      'datsetpath':'/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/MINIAODSIM',
+      'pu':'asymptotic_2016',
+      'calibrationTarget': 'PUSpring16',
+      'x_sec': 1.256,
+      }
+datadefs["ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_v6-v1"]={
+      'analyses':['LFV'],
+      'datsetpath':'/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/MINIAODSIM',
+      'pu':'asymptotic_2016',
+      'calibrationTarget': 'PUSpring16',
+      'x_sec': 3.38,
+      }
+datadefs["WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_v6-v1"]={
+      'analyses':['LFV'],
+      'datsetpath':'/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/MINIAODSIM',
+      'pu':'asymptotic_2016',
+      'calibrationTarget': 'PUSpring16',
+      'x_sec': 5.52,
+      }
+datadefs["WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_v6-v3"]={
+      'analyses':['LFV'],
+      'datsetpath':'/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/MINIAODSIM',
+      'pu':'asymptotic_2016',
+      'calibrationTarget': 'PUSpring16',
+      'x_sec': 10.96,
+      }
+datadefs["WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8_v6-v1"]={
+      'analyses':['LFV'],
+      'datsetpath':'/ZZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v2/MINIAODSIM',
+      'pu':'asymptotic_2016',
+      'calibrationTarget': 'PUSpring16',
+      'x_sec': 4.43,
+      }
+
+datadefs["WZJToLLLNu_TuneCUETP8M1_13TeV-amcnlo-pythia8_v6-v1"] = {
+      'analyses': ['4L'],
+      'datasetpath': '/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+      'pu':'asymptotic_2016',
+      'calibrationTarget': 'PUSpring16',
+      'x_sec':  5.26, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
+}
+datadefs["WZ_TuneCUETP8M1_13TeV-pythia8_v6-v1"] = {
+      'analyses': ['4L'],
+      'datasetpath': '/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+      'pu':'asymptotic_2016',
+      'calibrationTarget': 'PUSpring16',
+      'x_sec':  47.13, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
+}
+datadefs["WZ_TuneCUETP8M1_13TeV-pythia8_v6_ext1-v1"] = {
       'analyses': ['4L'],
       'datasetpath': '/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
       'pu':'asymptotic_2016',
@@ -203,19 +282,41 @@ datadefs["WZ_TuneCUETP8M1_13TeV-pythia8"] = {
       'x_sec':  47.13, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
 }
 
-datadefs["WW_TuneCUETP8M1_13TeV-pythia8"] = {
+datadefs["WW_TuneCUETP8M1_13TeV-pythia8_v6-v1"] = {
       'analyses': ['4L'],
       'datasetpath': '/WW_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
       'pu':'asymptotic_2016',
       'calibrationTarget': 'PUSpring16',
       'x_sec':  118.7, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
 }
-datadefs["WWTo2L2Nu_13TeV-powheg"] = {
+datadefs["WW_TuneCUETP8M1_13TeV-pythia8_v6_ext1-v1"] = {
+      'analyses': ['4L'],
+      'datasetpath': '/WW_TuneCUETP8M1_13TeV-pythia8/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+      'pu':'asymptotic_2016',
+      'calibrationTarget': 'PUSpring16',
+      'x_sec':  118.7, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
+}
+datadefs["WWTo2L2Nu_13TeV-powheg_v6-v1"] = {
     'analyses': ['4L'],
     'datasetpath': '/WWTo2L2Nu_13TeV-powheg/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
     'pu': 'Asympt25ns',
     'calibrationTarget': 'ICHEP2016',
     'x_sec':  12.178, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
+}
+
+datadefs["VVTo2L2Nu_13TeV_amcatnloFXFX_madspin_pythia8_v6-v1"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/WWTo2L2Nu_13TeV-powheg/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec':  11.95, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
+}
+datadefs["VVTo2L2Nu_13TeV_amcatnloFXFX_madspin_pythia8_v6_ext1-v1"] = {
+    'analyses': ['4L'],
+    'datasetpath': '/WWTo2L2Nu_13TeV-powheg/RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1/MINIAODSIM',
+    'pu': 'Asympt25ns',
+    'calibrationTarget': 'ICHEP2016',
+    'x_sec':  11.95, #from https://cmsweb.cern.ch/das/request?input=mcm%20prepid=TOP-RunIISummer15GS-00001
 }
 
 datadefs["WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = {

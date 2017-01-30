@@ -95,3 +95,4 @@ _MC_PU_DISTRIBUTIONS['S6_600bins'] = FileInPath("FinalStateAnalysis/TagAndProbe/
 _MC_PU_DISTRIBUTIONS['Asympt25ns'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_PU_RunIISpring15DR74_Asympt.root").full_path()
 _MC_PU_DISTRIBUTIONS['25ns_matchData'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_PU_2015_25ns_matchData.root").full_path()
 _MC_PU_DISTRIBUTIONS['MC_Spring16'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/PU_MC_Spring16.root").full_path()
+_MC_PU_DISTRIBUTIONS['MC_Moriond17'] = FileInPath("FinalStateAnalysis/TagAndProbe/data/MC_PU_RunIIMoriond17_Asympt.root").full_path()
