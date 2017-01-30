@@ -50,7 +50,7 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
         "Fragmentation",
         "PileUpDataMC",
         //"PileUpEnvelope",
-        "PileUpMuZero",
+        //"PileUpMuZero",
         "PileUpPtBB",
         "PileUpPtEC1",
         "PileUpPtEC2",
@@ -69,12 +69,12 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
         "RelativeStatHF",
         "SinglePionECAL",
         "SinglePionHCAL",
-        //"SubTotalAbsolute",
-        //"SubTotalMC",
-        //"SubTotalPileUp",
-        //"SubTotalPt",
-        //"SubTotalRelative",
-        //"SubTotalScale",
+        "SubTotalAbsolute",
+        "SubTotalMC",
+        "SubTotalPileUp",
+        "SubTotalPt",
+        "SubTotalRelative",
+        "SubTotalScale",
         "TimePtEta",
         //"TimeRunBCD",
         //"TimeRunE",
@@ -142,14 +142,14 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
       double unc = 0;
       if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9 && name != "Closure") {
         JetUncMap[name]->setJetEta(jet.eta());
-        JetUncMap[name]->setJetPt(jet.pt()); // here you must use the CORRECTED jet pt
+        JetUncMap[name]->setJetPt(jet.pt());
         unc = JetUncMap[name]->getUncertainty(true);
       }
 
       // Save our factorized uncertainties into a cumulative total
       // Apply this uncertainty to loop "Closure" for future
-      // comparison
-      if (name != "Total" && name != "Closure") factorizedTotalUp[i] += unc*unc;
+      // comparison (also skim SubTotals)
+      if (name != "Total" && name != "Closure" && !name.find("SubTotal") ) factorizedTotalUp[i] += unc*unc;
       if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9 && name == "Closure") {
         unc = std::sqrt(factorizedTotalUp[i]);
       }
