@@ -1,7 +1,7 @@
 from correctionloader import CorrectionLoader
 from graphReader import GraphReader, GraphReaderSF
 import os
-
+import ROOT 
 single_ele_2016 = GraphReader(
     os.path.join(os.environ['fsa'], 'TagAndProbe/data/Electron_Ele25eta2p1WPTight_eff.root')
 )
@@ -13,14 +13,25 @@ iso0p10_ele_2016 = GraphReaderSF(
     os.path.join(os.environ['fsa'], 'TagAndProbe/data/Electron_IdIso0p10_eff.root')
 )
 
-idiso0p15_ele_2016BtoHReReco = GraphReaderSF(
-    os.path.join(os.environ['fsa'], 'TagAndProbe/data/Electron_IdIso_IsoLt0p15_2016BtoH_eff.root')
-)
-idiso0p10_ele_2016BtoHReReco = GraphReaderSF(
-    os.path.join(os.environ['fsa'], 'TagAndProbe/data/Electron_IdIso_IsoLt0p1_2016BtoH_eff.root')
-)
+def make_DYreweight():
+    return DYCorrection(
+        os.path.join(os.environ['fsa'], 'TagAndProbe/data/zpt_weights_2016.root'),    
+        "zptmass_histo"   
+    )
 
 
+class DYCorrection(object):
+    def __init__(self, file, mass_pt):
+        ROOT.TH1.AddDirectory(False);
+        self.filename = file
+        self.file = ROOT.TFile.Open(file)
+        self.histopath = mass_pt
+        self.correct_by_mass_pt = {}
+        self.key = self.file.Get(self.histopath)
+        #ROOT.TH1.AddDirectory(True);
+    def __call__(self, mass, pt):
+        self.correct_by_mass_pt =self.key.GetBinContent(self.key.FindFixBin(mass, pt))
+        return self.correct_by_mass_pt
 
 
 def correct_eid13_mva(pt, abseta):

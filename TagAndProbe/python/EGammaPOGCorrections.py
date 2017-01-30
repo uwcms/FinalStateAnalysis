@@ -52,7 +52,7 @@ class EGammaPOGCorrection2D(object):
         if pt >= 180: pt = 180.
         if pt < 5. : pt = 5.
         self.correct_by_eta_pt =self.key.GetBinContent(self.key.FindFixBin(eta, pt))
-        print 'E trk correction :', pt, eta,  self.correct_by_eta_pt
+        #print 'E trk correction :', pt, eta,  self.correct_by_eta_pt
         return self.correct_by_eta_pt
 
 
