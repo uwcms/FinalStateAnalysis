@@ -56,6 +56,7 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
         "PileUpPtEC2",
         "PileUpPtHF",
         "PileUpPtRef",
+        "RelativeBal",
         "RelativeFSR",
         "RelativeJEREC1",
         "RelativeJEREC2",
