@@ -352,11 +352,13 @@ isData = not options.isMC
 process.load ("CondCore.CondDB.CondDB_cfi")
 #from CondCore.CondDB.CondDB_cfi import *
 
+
 # Defaults to running correctly for Condor, you can
 # pass flag to run locally just fine here with runningLocal=1
 sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Summer16_23Sep2016V3_MC' if options.isMC else 'Summer16_23Sep2016AllV3_DATA')
 if options.runningLocal :
     sqlitePath = '../data/{0}.db'.format('Summer16_23Sep2016V3_MC' if options.isMC else 'Summer16_23Sep2016AllV3_DATA' )
+
 
 process.jec = cms.ESSource("PoolDBESSource",
          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
