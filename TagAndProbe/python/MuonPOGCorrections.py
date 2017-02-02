@@ -382,7 +382,7 @@ def make_muon_pog_IsoMu24oIsoTkMu24_2016ReReco():
 
     return MuonPOGCorrectionTrig2D_ReReco(
             _DATA_FILES['2016ReReco']['Trigger'],
-            "IsoMu24_OR_IsoTkMu24_PtEtaBins/pt_abseta_ratio",20.1,16.5
+            "IsoMu24_OR_IsoTkMu24_PtEtaBins/pt_abseta_ratio",20.1,16.7
         )
 
 
@@ -390,19 +390,21 @@ def make_muon_pog_PFTight_2016ReReco():
     ''' Muon ID SFs ReReco lumi '''
     return MuonPOGCorrectionID2D_ReReco(
         _DATA_FILES['2016ReReco']['PFID'],
-        "MC_NUM_TightID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",20.1,16.5
+        "MC_NUM_TightID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",20.1,16.7
+
     )
 def make_muon_pog_PFMedium_2016ReReco():
     ''' Muon ID SFs ReReco lumi '''
     return MuonPOGCorrectionID2D_ReReco(
         _DATA_FILES['2016ReReco']['PFID'],
-        "MC_NUM_MediumID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",20.1,16.5
+        "MC_NUM_MediumID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",20.1,16.7 
+
     )
 def make_muon_pog_PFLoose_2016ReReco():
     ''' Muon ID SFs ReReco lumi '''
     return MuonPOGCorrectionID2D_ReReco(
         _DATA_FILES['2016ReReco']['PFID'],
-        "MC_NUM_LooseID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",20.1,16.5
+        "MC_NUM_LooseID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",20.1,16.7 
     )
 
 
@@ -413,7 +415,7 @@ def make_muon_pog_LooseIso_2016ReReco(MuonID):
        _DATA_FILES['2016ReReco']['Iso'],
       [ "LooseISO_LooseID_pt_eta/pt_abseta_ratio",
        "LooseISO_MediumID_pt_eta/pt_abseta_ratio",
-       "LooseISO_TightID_pt_eta/pt_abseta_ratio",],20.1,16.5
+       "LooseISO_TightID_pt_eta/pt_abseta_ratio",],20.1,16.7 
                 
     )
 
@@ -427,7 +429,7 @@ def make_muon_pog_TightIso_2016ReReco(MuonID):
         _DATA_FILES['2016ReReco']['Iso'],
        [ "TightISO_LooseID_pt_eta/pt_abseta_ratio",
          "TightISO_MediumID_pt_eta/pt_abseta_ratio",
-         "TightISO_TightID_pt_eta/pt_abseta_ratio"],20.1,16.5
+         "TightISO_TightID_pt_eta/pt_abseta_ratio"],20.1,16.7 
                 
  )
 
