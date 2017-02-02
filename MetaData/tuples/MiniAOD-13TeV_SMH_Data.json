@@ -45,6 +45,11 @@
   "data_SingleMuon_Run2016D" : "/SingleMuon/Run2016D-23Sep2016-v1/MINIAOD",
   "data_SingleMuon_Run2016E" : "/SingleMuon/Run2016E-23Sep2016-v1/MINIAOD",
   "data_SingleMuon_Run2016F" : "/SingleMuon/Run2016F-23Sep2016-v1/MINIAOD",
-  "data_SingleMuon_Run2016G" : "/SingleMuon/Run2016G-23Sep2016-v1/MINIAOD"
+  "data_SingleMuon_Run2016G" : "/SingleMuon/Run2016G-23Sep2016-v1/MINIAOD",
+
+  "data_SingleMuon_Run2016H_v1" : "SingleMuon/Run2016H-PromptReco-v1/MINIAOD",
+  "data_SingleMuon_Run2016H_v2" : "SingleMuon/Run2016H-PromptReco-v2/MINIAOD",
+  "data_SingleMuon_Run2016H_v3" : "SingleMuon/Run2016H-PromptReco-v3/MINIAOD"
+
 
 }
