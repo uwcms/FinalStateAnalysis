@@ -94,20 +94,3 @@ class EGammaPOGCorrection2Dtrk(object):
         self.correct_by_eta_pt =self.key.GetBinContent(self.key.FindFixBin(eta, pt))
         #print 'E trk correction :', pt, eta,  self.correct_by_eta_pt
         return self.correct_by_eta_pt
-
-
-class EGammaPOGCorrection2Dtrk(object):
-    def __init__(self, file, eta_pt):
-        self.filename = file
-        self.file = ROOT.TFile.Open(file)
-        #self.pt_thr  = pt_thr                                                                                                                
-        self.histopath = eta_pt
-        self.correct_by_eta_pt = {}
-        self.key = self.file.Get(self.histopath)
-
-    def __call__(self, eta, pt):
-        if pt >= 180: pt = 180.
-        if pt < 20. : pt = 20.#sf flat for low energy electrons
-        self.correct_by_eta_pt =self.key.GetBinContent(self.key.FindFixBin(eta, pt))
-#        print 'E trk correction :', pt, eta,  self.correct_by_eta_pt
-        return self.correct_by_eta_pt
