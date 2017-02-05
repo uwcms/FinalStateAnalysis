@@ -9,6 +9,7 @@
 <use   name="FinalStateAnalysis/DataFormats"/>
 <use   name="FinalStateAnalysis/NtupleTools"/>
 <use   name="RecoMET/METPUSubtraction"/>
+<use   name="RecoTauTag/RecoTau"/>
 
 <environment>
   <bin   file="analyzeFinalStates.cc"></bin>

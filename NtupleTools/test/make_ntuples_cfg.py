@@ -447,6 +447,10 @@ if options.htt and options.isMC :
 
 
 
+
+
+
+
 ################################################
 ### add filters (that wont make it into fsa) ###
 ################################################
@@ -747,12 +751,14 @@ for fs in additional_fs:
 from FinalStateAnalysis.NtupleTools.customization_taus import preTaus
 fs_daughter_inputs['taus'] = preTaus(process,
                                      fs_daughter_inputs['taus'],
-                                     fs_daughter_inputs['vertices'])
+                                     fs_daughter_inputs['vertices'],
+                                     rerunMvaIDs=options.htt)
 for fs in additional_fs:
     additional_fs[fs]['taus'] = preTaus(process,
                                         additional_fs[fs]['taus'],
                                         additional_fs[fs]['vertices'],
-                                        postfix=fs)
+                                        postfix=fs,
+                                        rerunMvaIDs=options.htt)
 
 ########################
 ### embed photon IDs ###
