@@ -91,7 +91,8 @@ class PATFinalStateEvent {
         const reco::TrackRefProd& tracks,
         const reco::GsfTrackRefProd& gsfTracks,
 	const std::map<std::string, edm::Ptr<pat::MET> >& mets,
-	std::vector<float> lheweights
+	std::vector<float> lheweights,
+    const std::map<std::string, bool> filterFlagsMap
     );
 
     /// Get PV
@@ -230,6 +231,11 @@ class PATFinalStateEvent {
     char version() const { return fsaDataFormatVersion_; }
     float jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const;
 
+    // Method used when running MET filters and Bad Muon filters
+    // in tagging mode, this allows one to retrieve the
+    // associated flags
+    const int getFilterFlags( std::string ) const;
+
   private:
     std::map<std::string, float> weights_;
     std::map<std::string, int> flags_;
@@ -272,6 +278,7 @@ class PATFinalStateEvent {
     // List of different MET types
     std::map<std::string, edm::Ptr<pat::MET> > mets_;
     std::vector<float> lheweights_;
+    std::map<std::string, bool> filterFlagsMap_;
 
 };
 

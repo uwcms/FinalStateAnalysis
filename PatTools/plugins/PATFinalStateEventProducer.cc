@@ -93,6 +93,8 @@ private:
   //edm::EDGetTokenT<edm::InputTag> photonCoreSrcToken_;
   //edm::EDGetTokenT<edm::InputTag> gsfCoreSrcToken_;
 
+  edm::EDGetTokenT<std::map<std::string, bool>> filterFlagsToken_;
+
   edm::EDGetTokenT<pat::PackedCandidateCollection> packedPFSrcToken_;
   //edm::EDGetTokenT<edm::InputTag> packedGenSrcToken_;
 
@@ -149,6 +151,8 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
 
   //photonCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("photonCoreSrc"));
   //gsfCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("gsfCoreSrc"));
+  filterFlagsToken_ = consumes<std::map<std::string, bool>>(pset.getParameter<edm::InputTag>("filterFlagsSrc"));
+
 
   packedPFSrcToken_ = consumes<pat::PackedCandidateCollection>(pset.getParameter<edm::InputTag>("packedPFSrc"));
   //packedGenSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("packedGenSrc"));
@@ -379,6 +383,12 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     mTaus = *tausMuonic;
   }
 
+  edm::Handle<std::map<std::string, bool>> filterFlagsMap;   
+  evt.getByToken(filterFlagsToken_, filterFlagsMap);
+  std::map<std::string, bool> filterFlagsInfo;   
+  if (filterFlagsMap.isValid())
+    filterFlagsInfo = * filterFlagsMap;
+
   pat::TriggerEvent trg;
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo, metSig, metCov,
                               //trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
@@ -386,7 +396,8 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
                               hTaus, eTaus, mTaus,
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
-                              phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts, lheweights);
+                              phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts,
+                              lheweights, filterFlagsInfo);
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {

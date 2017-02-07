@@ -56,10 +56,10 @@ def preJets(process, jSrc, vSrc, mSrc, eSrc, **kwargs):
         # Provide proper path name for Jet Uncertainty file
         # V10 is most recent version for JES Uncertainties
         # https://hypernews.cern.ch/HyperNews/CMS/get/jes/642/1/1.html
-        if runningLocal : fName = "../../NtupleTools/data/Summer16_23Sep2016AllV3_DATA_UncertaintySources_AK4PFchs.txt" # recommended by JetMET
+        if runningLocal : fName = "../../NtupleTools/data/Summer16_23Sep2016AllV4_DATA_UncertaintySources_AK4PFchs.txt" # recommended by JetMET
         else :
             cmsswversion=os.environ['CMSSW_VERSION']
-            fName = "{0}/src/FinalStateAnalysis/NtupleTools/data/Summer16_23Sep2016AllV3_DATA_UncertaintySources_AK4PFchs.txt".format(cmsswversion)
+            fName = "{0}/src/FinalStateAnalysis/NtupleTools/data/Summer16_23Sep2016AllV4_DATA_UncertaintySources_AK4PFchs.txt".format(cmsswversion)
 
         modName = 'miniAODJetFullSystematicsEmbedding{0}'.format(postfix)
         mod = cms.EDProducer(

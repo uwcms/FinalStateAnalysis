@@ -32,6 +32,25 @@ if [ "$HZZ" = "1" ]; then
     git clone -b 74x-root6 https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
 fi
 
+echo "Checking out material to run new tau MVA ID"
+pushd $CMSSW_BASE/src
+git cms-addpkg DataFormats/PatCandidates
+git cms-addpkg PhysicsTools/PatAlgos
+git cms-addpkg RecoTauTag/Configuration
+git cms-addpkg RecoTauTag/RecoTau
+
+cd RecoTauTag/RecoTau
+git remote add tau-pog git@github.com:cms-tau-pog/cmssw.git
+git fetch tau-pog
+git merge tau-pog/CMSSW_8_0_X_tau-pog_miniAOD-backport-tauID
+popd
+
+echo "Checking out MET Filters"
+git cms-merge-topic -u cms-met:fromCMSSW_8_0_20_postICHEPfilter
+
+echo "Checking out bad muon filter stuff"
+git cms-merge-topic gpetruc:badMuonFilters_80X_v2
+
 echo "Checking out mva met and svFit material:"
 # svFit packaged checked out for everyone so that svFit code in FSA compiles
 git clone git@github.com:veelken/SVFit_standalone.git TauAnalysis/SVfitStandalone

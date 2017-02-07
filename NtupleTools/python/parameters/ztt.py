@@ -63,6 +63,16 @@ parameters = {
 
     # additional variables for ntuple
     'eventVariables' : PSet(
+        Flag_badGlobalMuonFilter='evt.getFilterFlags("badGlobalMuonFilter")',
+        Flag_badCloneMuonFilter='evt.getFilterFlags("cloneGlobalMuonFilter")',
+        Flag_BadChargedCandidateFilter='evt.getFilterFlags("BadChargedCandidateFilter")',
+        Flag_BadPFMuonFilter='evt.getFilterFlags("BadPFMuonFilter")',
+        Flag_HBHENoiseFilter='evt.getFilterFlags("Flag_HBHENoiseFilter")',
+        Flag_HBHENoiseIsoFilter='evt.getFilterFlags("Flag_HBHENoiseIsoFilter")',
+        Flag_globalTightHalo2016Filter='evt.getFilterFlags("Flag_globalTightHalo2016Filter")',
+        Flag_goodVertices='evt.getFilterFlags("Flag_goodVertices")',
+        Flag_eeBadScFilter='evt.getFilterFlags("Flag_eeBadScFilter")',
+        Flag_EcalDeadCellTriggerPrimitiveFilter='evt.getFilterFlags("Flag_EcalDeadCellTriggerPrimitiveFilter")',
         metSig='evt.metSig()', # Using PF Met
         metcov00='evt.metCov(0)', # 0 = (0,0) PF Met based
         metcov10='evt.metCov(1)', # 1 = (1,0)
@@ -391,6 +401,14 @@ parameters = {
         objectZTTGenEta = 'tauGenKin({object_idx}).at(1)', 
         objectZTTGenPhi = 'tauGenKin({object_idx}).at(2)', 
         objectZTTGenDR = 'tauGenKin({object_idx}).at(3)', 
+
+        objectRerunMVArun2v1DBoldDMwLTraw = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTrawRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTrawRerun") : -10',
+        objectRerunMVArun2v1DBoldDMwLTVLoose = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTVLooseRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTVLooseRerun") : -10',
+        objectRerunMVArun2v1DBoldDMwLTLoose = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTLooseRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTLooseRerun") : -10',
+        objectRerunMVArun2v1DBoldDMwLTMedium = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTMediumRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTMediumRerun") : -10',
+        objectRerunMVArun2v1DBoldDMwLTTight = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTTightRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTTightRerun") : -10',
+        objectRerunMVArun2v1DBoldDMwLTVTight = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTVTightRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTVTightRerun") : -10',
+        objectRerunMVArun2v1DBoldDMwLTVVTight = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTVVTightRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTVVTightRerun") : -10',
     ),
 
 
