@@ -123,7 +123,8 @@ PATFinalStateEvent::PATFinalStateEvent(
     const reco::TrackRefProd& tracks,
     const reco::GsfTrackRefProd& gsfTracks,
     const std::map<std::string, edm::Ptr<pat::MET> >& mets,
-    std::vector<float> lheweights
+    std::vector<float> lheweights,
+    std::map<std::string, bool> filterFlagsMap
     ):
   rho_(rho),
   triggerEvent_(triggerEvent),
@@ -161,7 +162,8 @@ PATFinalStateEvent::PATFinalStateEvent(
   tracks_(tracks),
   gsfTracks_(gsfTracks),
   mets_(mets),
-  lheweights_(lheweights)
+  lheweights_(lheweights),
+  filterFlagsMap_(filterFlagsMap)
 { }
 
 const edm::Ptr<reco::Vertex>& PATFinalStateEvent::pv() const { return pv_; }
@@ -718,4 +720,12 @@ float PATFinalStateEvent::numGenJets() const{
 float  PATFinalStateEvent::jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const{
   return fshelpers::jetQGVariables( jet, myvar, recoVertices_);
 }
+
+const int PATFinalStateEvent::getFilterFlags( std::string filter ) const{
+  if (filterFlagsMap_.find( filter ) != filterFlagsMap_.end())
+    return filterFlagsMap_.at( filter );
+  else return 0;
+}
+
+
 

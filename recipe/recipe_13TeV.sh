@@ -45,6 +45,8 @@ git fetch tau-pog
 git merge tau-pog/CMSSW_8_0_X_tau-pog_miniAOD-backport-tauID
 popd
 
+echo "Checking out bad muon filter stuff"
+git cms-merge-topic gpetruc:badMuonFilters_80X_v2
 
 echo "Checking out mva met and svFit material:"
 # svFit packaged checked out for everyone so that svFit code in FSA compiles

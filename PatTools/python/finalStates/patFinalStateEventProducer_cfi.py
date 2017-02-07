@@ -43,5 +43,6 @@ patFinalStateEventProducer = cms.EDProducer(
     packedPFSrc = cms.InputTag("packedPFCandidates"),
     jetAK8Src = cms.InputTag("slimmedJetsAK8"),
     photonCoreSrc = cms.InputTag("reducedEgamma","reducedGedPhotonCores"),
-    gsfCoreSrc = cms.InputTag("reducedEgamma","reducedGedGsfElectronCores")
+    gsfCoreSrc = cms.InputTag("reducedEgamma","reducedGedGsfElectronCores"),
+    filterFlagsSrc = cms.InputTag("filterFlags")
 )

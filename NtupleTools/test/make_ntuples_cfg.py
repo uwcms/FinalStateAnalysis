@@ -451,6 +451,29 @@ if options.htt and options.isMC :
 ### add filters (that wont make it into fsa) ###
 ################################################
 
+# Add Bad Muon Filter Tagger
+# Contrary to above, the bad muon filters will
+# simply tag an event, not actually filter them
+if options.htt :
+    process.load('RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff')
+    process.badGlobalMuonTagger.taggingMode = cms.bool(True)
+    process.cloneGlobalMuonTagger.taggingMode = cms.bool(True)
+    process.badGlobalMuonTagger.verbose = cms.untracked.bool(True)
+    process.cloneGlobalMuonTagger.verbose = cms.untracked.bool(True)
+   
+    #process.noBadGlobalMuons = cms.Path(process.cloneGlobalMuonTagger + process.badGlobalMuonTagger)
+    process.filterFlags = cms.EDProducer(
+        "MiniAODBadMuonBadFilterEmbedder",
+        badGlobalMuonTagger = cms.InputTag("badGlobalMuonTagger","bad","Ntuples"),
+        cloneGlobalMuonTagger = cms.InputTag("cloneGlobalMuonTagger","bad","Ntuples"),
+        verbose = cms.untracked.bool(True),
+    )
+    process.noBadGlobalMuons = cms.Path(process.badGlobalMuonTagger + process.cloneGlobalMuonTagger + process.filterFlags)
+
+    process.schedule.append( process.noBadGlobalMuons )
+
+
+
 # add met filters
 if options.runMetFilter:
     # flags in miniaod

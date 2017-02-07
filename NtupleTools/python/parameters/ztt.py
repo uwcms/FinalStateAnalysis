@@ -63,6 +63,8 @@ parameters = {
 
     # additional variables for ntuple
     'eventVariables' : PSet(
+        badGlobalMuonFlag='evt.getFilterFlags("badGlobalMuonFilter")',
+        badCloneMuonFlag='evt.getFilterFlags("cloneGlobalMuonFilter")',
         metSig='evt.metSig()', # Using PF Met
         metcov00='evt.metCov(0)', # 0 = (0,0) PF Met based
         metcov10='evt.metCov(1)', # 1 = (1,0)
