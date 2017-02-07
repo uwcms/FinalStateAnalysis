@@ -63,8 +63,16 @@ parameters = {
 
     # additional variables for ntuple
     'eventVariables' : PSet(
-        badGlobalMuonFlag='evt.getFilterFlags("badGlobalMuonFilter")',
-        badCloneMuonFlag='evt.getFilterFlags("cloneGlobalMuonFilter")',
+        Flag_badGlobalMuonFilter='evt.getFilterFlags("badGlobalMuonFilter")',
+        Flag_badCloneMuonFilter='evt.getFilterFlags("cloneGlobalMuonFilter")',
+        Flag_BadChargedCandidateFilter='evt.getFilterFlags("BadChargedCandidateFilter")',
+        Flag_BadPFMuonFilter='evt.getFilterFlags("BadPFMuonFilter")',
+        Flag_HBHENoiseFilter='evt.getFilterFlags("Flag_HBHENoiseFilter")',
+        Flag_HBHENoiseIsoFilter='evt.getFilterFlags("Flag_HBHENoiseIsoFilter")',
+        Flag_globalTightHalo2016Filter='evt.getFilterFlags("Flag_globalTightHalo2016Filter")',
+        Flag_goodVertices='evt.getFilterFlags("Flag_goodVertices")',
+        Flag_eeBadScFilter='evt.getFilterFlags("Flag_eeBadScFilter")',
+        Flag_EcalDeadCellTriggerPrimitiveFilter='evt.getFilterFlags("Flag_EcalDeadCellTriggerPrimitiveFilter")',
         metSig='evt.metSig()', # Using PF Met
         metcov00='evt.metCov(0)', # 0 = (0,0) PF Met based
         metcov10='evt.metCov(1)', # 1 = (1,0)

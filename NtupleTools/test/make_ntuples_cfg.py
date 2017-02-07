@@ -451,26 +451,57 @@ if options.htt and options.isMC :
 ### add filters (that wont make it into fsa) ###
 ################################################
 
-# Add Bad Muon Filter Tagger
+# Add spurious muon filter (for ReReco 2016 data) tagger
 # Contrary to above, the bad muon filters will
 # simply tag an event, not actually filter them
+# Standard MET filters are also tagged
 if options.htt :
+    # 2016 ReReco data spurious muon filters -> tagged
     process.load('RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff')
     process.badGlobalMuonTagger.taggingMode = cms.bool(True)
     process.cloneGlobalMuonTagger.taggingMode = cms.bool(True)
     process.badGlobalMuonTagger.verbose = cms.untracked.bool(True)
     process.cloneGlobalMuonTagger.verbose = cms.untracked.bool(True)
-   
-    #process.noBadGlobalMuons = cms.Path(process.cloneGlobalMuonTagger + process.badGlobalMuonTagger)
+
+    # Standard MET filters -> tagged
+    process.load('RecoMET.METFilters.BadPFMuonFilter_cfi')
+    process.BadPFMuonFilter.muons = cms.InputTag("slimmedMuons")
+    process.BadPFMuonFilter.PFCandidates = cms.InputTag("packedPFCandidates")
+
+    process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
+    process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
+    process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
+
+
+    # Tagger which takes above processes as well as miniAOD filters
+    # as inputs
+    trigSource = "PAT" if options.isMC else "RECO"
     process.filterFlags = cms.EDProducer(
         "MiniAODBadMuonBadFilterEmbedder",
         badGlobalMuonTagger = cms.InputTag("badGlobalMuonTagger","bad","Ntuples"),
         cloneGlobalMuonTagger = cms.InputTag("cloneGlobalMuonTagger","bad","Ntuples"),
-        verbose = cms.untracked.bool(True),
+        BadChargedCandidateFilter = cms.InputTag("BadChargedCandidateFilter"),
+        BadPFMuonFilter = cms.InputTag("BadPFMuonFilter"),
+        triggerSrc = cms.InputTag("TriggerResults","",trigSource),
+        metFilterPaths = cms.vstring(
+            "Flag_HBHENoiseFilter",
+            "Flag_HBHENoiseIsoFilter", 
+            "Flag_EcalDeadCellTriggerPrimitiveFilter"
+            "Flag_goodVertices",
+            "Flag_eeBadScFilter",
+            "Flag_globalTightHalo2016Filter",
+        ),
+        verbose = cms.untracked.bool(False),
     )
-    process.noBadGlobalMuons = cms.Path(process.badGlobalMuonTagger + process.cloneGlobalMuonTagger + process.filterFlags)
 
-    process.schedule.append( process.noBadGlobalMuons )
+    process.filterTagger = cms.Path(
+        process.badGlobalMuonTagger
+        + process.cloneGlobalMuonTagger
+        + process.BadPFMuonFilter
+        + process.BadChargedCandidateFilter
+        + process.filterFlags)
+
+    process.schedule.append( process.filterTagger )
 
 
 

@@ -45,6 +45,9 @@ git fetch tau-pog
 git merge tau-pog/CMSSW_8_0_X_tau-pog_miniAOD-backport-tauID
 popd
 
+echo "Checking out MET Filters"
+git cms-merge-topic -u cms-met:fromCMSSW_8_0_20_postICHEPfilter
+
 echo "Checking out bad muon filter stuff"
 git cms-merge-topic gpetruc:badMuonFilters_80X_v2
 
