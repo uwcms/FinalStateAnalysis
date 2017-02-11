@@ -455,13 +455,14 @@ if options.htt and options.isMC :
 # Contrary to above, the bad muon filters will
 # simply tag an event, not actually filter them
 # Standard MET filters are also tagged
+
 if options.htt :
     # 2016 ReReco data spurious muon filters -> tagged
     process.load('RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff')
-    process.badGlobalMuonTagger.taggingMode = cms.bool(True)
-    process.cloneGlobalMuonTagger.taggingMode = cms.bool(True)
-    process.badGlobalMuonTagger.verbose = cms.untracked.bool(True)
-    process.cloneGlobalMuonTagger.verbose = cms.untracked.bool(True)
+    process.badGlobalMuonTaggerMAOD.taggingMode = cms.bool(True)
+    process.cloneGlobalMuonTaggerMAOD.taggingMode = cms.bool(True)
+    process.badGlobalMuonTaggerMAOD.verbose = cms.untracked.bool(True)
+    process.cloneGlobalMuonTaggerMAOD.verbose = cms.untracked.bool(True)
 
     # Standard MET filters -> tagged
     process.load('RecoMET.METFilters.BadPFMuonFilter_cfi')
@@ -478,8 +479,8 @@ if options.htt :
     trigSource = "PAT" if options.isMC else "RECO"
     process.filterFlags = cms.EDProducer(
         "MiniAODBadMuonBadFilterEmbedder",
-        badGlobalMuonTagger = cms.InputTag("badGlobalMuonTagger","bad","Ntuples"),
-        cloneGlobalMuonTagger = cms.InputTag("cloneGlobalMuonTagger","bad","Ntuples"),
+        badGlobalMuonTagger = cms.InputTag("badGlobalMuonTaggerMAOD","bad","Ntuples"),
+        cloneGlobalMuonTagger = cms.InputTag("cloneGlobalMuonTaggerMAOD","bad","Ntuples"),
         BadChargedCandidateFilter = cms.InputTag("BadChargedCandidateFilter"),
         BadPFMuonFilter = cms.InputTag("BadPFMuonFilter"),
         triggerSrc = cms.InputTag("TriggerResults","",trigSource),
@@ -495,8 +496,8 @@ if options.htt :
     )
 
     process.filterTagger = cms.Path(
-        process.badGlobalMuonTagger
-        + process.cloneGlobalMuonTagger
+        process.badGlobalMuonTaggerMAOD
+        + process.cloneGlobalMuonTaggerMAOD
         + process.BadPFMuonFilter
         + process.BadChargedCandidateFilter
         + process.filterFlags)
