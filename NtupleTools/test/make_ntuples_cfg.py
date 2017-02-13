@@ -491,6 +491,9 @@ if options.htt :
             "Flag_goodVertices",
             "Flag_eeBadScFilter",
             "Flag_globalTightHalo2016Filter",
+            "Flag_badMuons",
+            "Flag_duplicateMuons",
+            "Flag_noBadMuons",
         ),
         verbose = cms.untracked.bool(False),
     )

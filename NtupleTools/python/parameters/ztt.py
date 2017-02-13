@@ -73,6 +73,9 @@ parameters = {
         Flag_goodVertices='evt.getFilterFlags("Flag_goodVertices")',
         Flag_eeBadScFilter='evt.getFilterFlags("Flag_eeBadScFilter")',
         Flag_EcalDeadCellTriggerPrimitiveFilter='evt.getFilterFlags("Flag_EcalDeadCellTriggerPrimitiveFilter")',
+	Flag_badMuons='evt.getFilterFlags("Flag_badMuons")',
+        Flag_duplicateMuons='evt.getFilterFlags("Flag_duplicateMuons")',
+        Flag_noBadMuons='evt.getFilterFlags("Flag_noBadMuons")',
         metSig='evt.metSig()', # Using PF Met
         metcov00='evt.metCov(0)', # 0 = (0,0) PF Met based
         metcov10='evt.metCov(1)', # 1 = (1,0)
