@@ -77,8 +77,8 @@ _DATA_FILES = {
         'Iso'    : [os.path.join(_DATA_DIR, 'MuonIsoEfficienciesAndSF_2016BCDEF.root'),
                     os.path.join(_DATA_DIR, 'MuonIsoEfficienciesAndSF_2016GH.root'),
                     ],
-        'Trigger':[ os.path.join(_DATA_DIR, 'MuonTriggerEfficienciesAndSF_Period3_2016.root'),
-                    os.path.join(_DATA_DIR, 'MuonTriggerEfficienciesAndSF_Period4_2016.root')
+        'Trigger':[ os.path.join(_DATA_DIR, 'MuonTriggerEfficienciesAndSF_PeriodBCDEF_2016.root'),
+                    os.path.join(_DATA_DIR, 'MuonTriggerEfficienciesAndSF_PeriodGH_2016.root')
                     ]
     }
 }
