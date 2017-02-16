@@ -52,7 +52,6 @@ nExtraJets=0   - Include basic info about this many jets (ordered by pt).
 paramFile=''   - custom parameter file for ntuple production
 keepPat=0      - Instead of making flat ntuples, write high level 
                  physics objects including the PATFinalState objects
-skipMET=0      - Don't do MET corrections and systematics (good way to reduce 
                  memory use if you don't use them)
 
 '''
@@ -93,7 +92,7 @@ import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
     skipEvents=0,  # Start at an event offset (for debugging)
     reportEvery=100,
-    channels='mt,em,et,mm,ee',
+    channels='mt,et',
     rerunMCMatch=False,
     eventView=0,  # Switch between final state view (0) and event view (1)
     passThru=0,  # Turn off preselections
@@ -105,7 +104,7 @@ options = TauVarParsing.TauVarParsing(
     eleCor="",
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runMVAMET=0,  # If one, (re)build the MVA MET (using pairwise algo)
-    htt=0,         # If one, apply Higgs2Taus analysis settings
+    htt=1,         # If one, apply Higgs2Taus analysis settings
     fullJES=0,
     runningLocal=0, # For sqlite loading and other path names, record if we a running locally or on Condor for example
     runMETNoHF=0,  # If one, use get metnohf (needs to be recalculated in miniaodv1)
@@ -167,7 +166,7 @@ options.register(
 )
 options.register(
     'skipMET',
-    0,
+    1,
     TauVarParsing.TauVarParsing.multiplicity.singleton,
     TauVarParsing.TauVarParsing.varType.int,
     "Skip MET corrections and systematics (good way to reduce memory "
@@ -566,146 +565,12 @@ from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMet
 # If you only want to re-correct and get the proper uncertainties
 runMetCorAndUncFromMiniAOD(process,
     isData=isData,
+    #pfCandColl=cms.InputTag("packedPFCandidates"),
+    # recoMetFromPFCs=True,
                         )
+
 process.correctMET=cms.Path(process.fullPatMetSequence)
 process.schedule.append(process.correctMET)
-
-if not bool(options.skipMET):
-    postfix = 'NewMet'
-    from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
-    isData = not options.isMC
-    process.load ("CondCore.CondDB.CondDB_cfi")
-    from CondCore.CondDB.CondDB_cfi import *
-    process.jec = cms.ESSource("PoolDBESSource",
-      DBParameters = cms.PSet(
-        messageLevel = cms.untracked.int32(0)
-        ),
-      timetype = cms.string('runnumber'),
-      toGet = cms.VPSet(
-        cms.PSet(
-              record = cms.string('JetCorrectionsRecord'),
-              tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA')),
-              label  = cms.untracked.string('AK4PFchs')
-              )
-      ),
-      connect = cms.string('sqlite:/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Spring16_23Sep2016V2_MC' if options.isMC else 'Spring16_23Sep2016AllV2_DATA'))
-      #                         connect = cms.string('sqlite:../data/Spring16_25nsV6_{1}.db'.format(cmsswversion,'MC' if options.isMC else 'DATA'))                        
-    )
-    process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
-    runMetCorAndUncFromMiniAOD(process,
-                               #jetColl=fs_daughter_inputs['jets'],
-                               jetCollUnskimmed='slimmedJets',
-                               #photonColl=fs_daughter_inputs['photons'],
-                               #electronColl=fs_daughter_inputs['electrons'],
-                               #muonColl=fs_daughter_inputs['muons'],
-                               #tauColl=fs_daughter_inputs['taus'],
-                               #isData=isData,
-                               #jecUncFile='FinalStateAnalysis/NtupleTools/data/Summer15_25nsV6_{0}_UncertaintySources_AK4PFchs.txt'.format('MC' if options.isMC else 'DATA'),
-                               postfix=postfix,
-                               )
-    
-    collMap = {
-        #'jres' : {'Jets'     : 'shiftedPatJetRes{sign}{postfix}'},
-        'jres' : {},
-        'jes'  : {'Jets'     : 'shiftedPatJetEn{sign}{postfix}'},
-        'mes'  : {'Muons'    : 'shiftedPatMuonEn{sign}{postfix}'},
-        'ees'  : {'Electrons': 'shiftedPatElectronEn{sign}{postfix}'},
-        'tes'  : {'Taus'     : 'shiftedPatTauEn{sign}{postfix}'},
-        'ues'  : {},
-        'pes'  : {},
-    }
-    signMap = {
-      '+' : 'Up',
-      '-' : 'Down',
-    }
-    metMap = {
-      'jres' : 'patPFMetT1JetRes{sign}{postfix}',
-      'jes'  : 'patPFMetT1JetEn{sign}{postfix}',
-      'mes'  : 'patPFMetT1MuonEn{sign}{postfix}',
-      'ees'  : 'patPFMetT1ElectronEn{sign}{postfix}',
-      'tes'  : 'patPFMetT1TauEn{sign}{postfix}',
-      'ues'  : 'patPFMetT1UnclusteredEn{sign}{postfix}',
-      'pes'  : '',
-    }
-    allowedShifts = ['jres','jes','mes','ees','tes','ues']
-    allowedSigns = ['+','-']
-    
-    # this should be it, but fails
-    #process.applyCorrections = cms.Path(getattr(process,'fullPatMetSequence{0}'.format(postfix)))
-    # fix things
-    getattr(process,'patPFMetT1T2Corr{0}'.format(postfix)).src = cms.InputTag('slimmedJets')
-    getattr(process,'patPFMetT2Corr{0}'.format(postfix)).src = cms.InputTag('slimmedJets')
-    #getattr(process,'patPFMetTxyCorr{0}'.format(postfix)).vertexCollection = cms.InputTag('offlineSlimmedPrimaryVertices') #this doesn't work in 80X
-
-    process.applyCorrections = cms.Path()
-    ##if options.isMC: process.applyCorrections += process.genMetExtractor
-    process.applyCorrections += getattr(process,'patPFMet{0}'.format(postfix))
-    #process.applyCorrections += process.patJetCorrFactorsReapplyJEC
-    #process.applyCorrections += process.patJets
-    #process.applyCorrections += getattr(process,'patPFMetT1Txy{0}'.format(postfix))
-    process.applyCorrections += getattr(process,'patPFMetT1{0}'.format(postfix))
-    #process.applyCorrections += getattr(process,'patPFMetTxy{0}'.format(postfix))
-    process.schedule.append(process.applyCorrections)
-    fs_daughter_inputs['jets'] = 'slimmedJets'
-    
-    # embed references to shifts
-    process.embedShifts = cms.Path()
-    for shift in allowedShifts:
-        for sign in allowedSigns:
-            # embed shifted objects
-            for coll in collMap[shift]:
-                modName = '{shift}{sign}{coll}Embedding'.format(shift=shift,sign=signMap[sign],coll=coll)
-                pluginName = 'MiniAODShifted{coll}Embedder'.format(coll=coll[:-1])
-                dName = coll.lower()
-                srcName = fs_daughter_inputs[dName]
-                shiftSrcName = collMap[shift][coll].format(sign=signMap[sign],postfix=postfix)
-                label = '{shift}{sign}{coll}'.format(shift=shift,sign=signMap[sign],coll=coll)
-                module = cms.EDProducer(
-                    pluginName,
-                    src = cms.InputTag(srcName),
-                    shiftSrc = cms.InputTag(shiftSrcName),
-                    label = cms.string(label),
-                )
-                setattr(process,modName,module)
-                fs_daughter_inputs[dName] = modName
-                #process.embedShifts *= getattr(process,shiftSrcName)
-                process.embedShifts *= getattr(process,modName)
-            # embed shifted met
-            modName = '{shift}{sign}METEmbedding'.format(shift=shift,sign=signMap[sign])
-            metName = metMap[shift].format(sign=signMap[sign],postfix=postfix)
-            label = '{shift}{sign}MET'.format(shift=shift,sign=signMap[sign])
-            module = cms.EDProducer(
-                'MiniAODShiftedMETEmbedder',
-                src = cms.InputTag(fs_daughter_inputs['pfmet']),
-                shiftSrc = cms.InputTag(metName),
-                label = cms.string(label),
-            )
-            setattr(process,modName,module)
-            fs_daughter_inputs['pfmet'] = modName
-            process.embedShifts *= getattr(process,modName)
-    process.schedule.append(process.embedShifts)
-    
-    
-    # switch input to desired one
-    if options.metShift: 
-        t = options.metShift[:-1]
-        d = options.metShift[-1]
-        if options.metShift=='all':
-            # setup daughters for all
-            for shift in allowedShifts:
-                for sign in allowedSigns:
-                    if sign!='+': continue
-                    label = shift + signMap[sign]
-                    additional_fs[label] = copy.deepcopy(fs_daughter_inputs)
-                    additional_fs[label]['pfmet'] = metMap[shift].format(sign=signMap[sign],postfix=postfix)
-                    for coll in collMap[shift]:
-                        additional_fs[label][coll.lower()] = collMap[shift][coll].format(sign=signMap[sign],postfix=postfix)
-        elif t not in allowedShifts or d not in allowedSigns:
-            print 'Warning: {0} is not an allowed MET shift, using unshifted collections'.format(options.metShift)
-        else:
-            fs_daughter_inputs['pfmet'] = metMap[t].format(sign=signMap[d],postfix=postfix)
-            for coll in collMap[t]:
-                fs_daughter_inputs[coll.lower()] = collMap[t][coll].format(sign=signMap[d],postfix=postfix)
 
 
 
@@ -828,23 +693,49 @@ for fs in additional_fs:
 ### jet id embedding ###
 ########################
 from FinalStateAnalysis.NtupleTools.customization_jets import preJets
-fs_daughter_inputs['jets'] = preJets(process,
+from FinalStateAnalysis.NtupleTools.customization_metjets import preMETFromJES
+
+fs_daughter_inputs['jets']  = preJets(process,
                                      fs_daughter_inputs['jets'],
                                      fs_daughter_inputs['vertices'],
+                                     fs_daughter_inputs['pfmet'], 
                                      fs_daughter_inputs['muons'],
                                      fs_daughter_inputs['electrons'],
                                      doBTag=False,
                                      doFullJESUnc=options.fullJES,
                                      runningLocal=options.runningLocal,
                                      jType="AK4PFchs")
+
+if options.fullJES:
+    fs_daughter_inputs['pfmet'] = preMETFromJES(process,
+                                     fs_daughter_inputs['jets'],
+                                     fs_daughter_inputs['vertices'],
+                                     fs_daughter_inputs['pfmet'],
+                                     fs_daughter_inputs['muons'],
+                                     fs_daughter_inputs['electrons'],
+                                     doBTag=False,
+                                     doFullJESUnc=options.fullJES,
+                                     runningLocal=options.runningLocal,
+                                     jType="AK4PFchs")
+
 for fs in additional_fs:
     additional_fs[fs]['jets'] = preJets(process,
                                         additional_fs[fs]['jets'],
                                         additional_fs[fs]['vertices'],
+                                        fs_daughter_inputs['pfmet'], 
                                         additional_fs[fs]['muons'],
                                         additional_fs[fs]['electrons'],
                                         jType="AK4PFchs",
-                                        postfix=fs)
+                                        postfix=fs)   # why do we need to redo this?  the cleaning?
+    
+    additional_fs[fs]['pfmet'] = preMETFromJES(process,
+                                        additional_fs[fs]['jets'],
+                                        additional_fs[fs]['vertices'],
+                                        fs_daughter_inputs['pfmet'],
+                                        additional_fs[fs]['muons'],
+                                        additional_fs[fs]['electrons'],
+                                        jType="AK4PFchs",
+                                        postfix=fs)   # why do we need to redo this?  the cleaning? 
 
 
 ########################################
@@ -1168,12 +1059,20 @@ else:
 
             
 
+if options.passThru:
+    set_passthru(process)
+
+if options.dump:
+    print process.dumpPython()
+
+
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 
 process.MessageLogger.cerr.FwkReport.reportEvery = options.reportEvery
 process.MessageLogger.categories.append('FSAEventMissingProduct')
 process.MessageLogger.categories.append('UndefinedPreselectionInfo')
 process.MessageLogger.categories.append('GsfElectronAlgo')
+process.MessageLogger.categories.append('MiniAODJetFullSystematicsEmbedder')
 
 # Don't go nuts if there are a lot of missing products.
 process.MessageLogger.cerr.FSAEventMissingProduct = cms.untracked.PSet(
@@ -1194,4 +1093,5 @@ if options.passThru:
 
 if options.dump:
     print process.dumpPython()
+
 

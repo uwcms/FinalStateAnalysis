@@ -13,6 +13,9 @@
 #include "JetMETCorrections/Objects/interface/JetCorrectionsRecord.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
+#include "DataFormats/PatCandidates/interface/MET.h"
+
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
 
 class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
   public:
@@ -91,16 +94,26 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
     std::map<std::string, JetCorrectionUncertainty* > JetUncMap;
 };
 
+// Get the transverse component of the vector
+reco::Candidate::LorentzVector
+transverseVector(const reco::Candidate::LorentzVector& input) {
+  math::PtEtaPhiMLorentzVector outputV(input.pt(), 0, input.phi(), 0);
+    reco::Candidate::LorentzVector outputT(outputV);
+      return outputT;
+      }
+
+
+
 MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::ParameterSet& pset) {
   srcToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src"));
   label_ = pset.getParameter<std::string>("corrLabel");
   fName_ = pset.getParameter<std::string>("fName");
   std::cout << "Uncert File: " << fName_ << std::endl;
   produces<pat::JetCollection>();
+
   for (auto const& name : uncertNames) {
     produces<ShiftedCandCollection>("p4OutJESUpJetsUncor"+name);
     produces<ShiftedCandCollection>("p4OutJESDownJetsUncor"+name);
-
     // Create the uncertainty tool for each uncert
     // skip Closure, which is a comparison at the end
     if (name == "Closure") continue;
@@ -115,16 +128,20 @@ MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::
 
 void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 
+
   std::auto_ptr<pat::JetCollection> output(new pat::JetCollection);
+
   edm::Handle<edm::View<pat::Jet> > jets;
   evt.getByToken(srcToken_, jets);
   size_t nJets = jets->size();
+
 
   // Make our own copy of the jets to fill
   for (size_t i = 0; i < nJets; ++i) {
     const pat::Jet& jet = jets->at(i);
     output->push_back(jet);
   }
+
 
   // For comparing with Total for Closure test
   // assume symmetric uncertainties and ignore Down
@@ -133,7 +150,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
   for (auto const& name : uncertNames) {
     std::auto_ptr<ShiftedCandCollection> p4OutJESUpJets(new ShiftedCandCollection);
     std::auto_ptr<ShiftedCandCollection> p4OutJESDownJets(new ShiftedCandCollection);
-    
+
     p4OutJESUpJets->reserve(nJets);
     p4OutJESDownJets->reserve(nJets);
 
@@ -171,7 +188,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
       p4OutJESUpJets->push_back(candUncUp);
       p4OutJESDownJets->push_back(candUncDown);
     }
-  
+ 
     PutHandle p4OutJESUpJetsH = evt.put(p4OutJESUpJets, "p4OutJESUpJetsUncor"+name);
     PutHandle p4OutJESDownJetsH = evt.put(p4OutJESDownJets, "p4OutJESDownJetsUncor"+name);
   
@@ -181,10 +198,15 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
       //std::cout << "Jet " << i << " uncorr pt: " << jet.pt() << std::endl;
       jet.addUserCand("jes"+name+"+", CandidatePtr(p4OutJESUpJetsH, i));
       jet.addUserCand("jes"+name+"-", CandidatePtr(p4OutJESDownJetsH, i));
-    } // end cycle over all uncertainties
   } // end jets
 
+  } // end cycle over all uncertainties
+
   evt.put(output);
+
+
+
+
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"

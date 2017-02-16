@@ -856,6 +856,7 @@ PATFinalState::twoParticleDeltaPhiToMEt(const int i, const int j, const std::str
   PATFinalStateProxy composite = subcand(i,j);
   double compositePhi = composite.get()->phi();
   double metPhi;
+
   if(metTag != "")
     {
       if(metTag == "jres+")
@@ -913,6 +914,64 @@ PATFinalState::mt(int i, int j) const {
   return mt(i, "", j, "");
 }
 
+reco::Candidate::LorentzVector PATFinalState::METP4(const std::string& metName, const std::string& metTag, const int applyPhiCorr) const{
+
+  //keeping this one for consistency since there is a mt formula that wanted to use PhiCorr - but it does nothing wiht it... 
+  // Awaiting further developments?
+
+  return METP4(metName,metTag);
+}
+
+reco::Candidate::LorentzVector PATFinalState::METP4(const std::string& metName, const std::string& metTag) const {
+   
+  reco::Candidate::LorentzVector metP4;
+
+  evt()->met4vector(metName,metTag);
+
+  if(metName=="mvamet"){  
+     metP4=evt()->met("mvamet")->p4();
+  } 
+  else if ( met()->hasUserCand(metTag) ){ 
+       metP4=met()->userCand(metTag)->p4();
+  }
+  else{
+      if(metTag == "jres+")
+        metP4 = met()->shiftedP4(pat::MET::JetResUp);
+      else if(metTag == "jres-")
+        metP4 = met()->shiftedP4(pat::MET::JetResDown);
+      else if(metTag == "jes+")
+        metP4 = met()->shiftedP4(pat::MET::JetEnUp);
+      else if(metTag == "jes-")
+        metP4 = met()->shiftedP4(pat::MET::JetEnDown);
+      else if(metTag == "mes+")
+        metP4 = met()->shiftedP4(pat::MET::MuonEnUp);
+      else if(metTag == "mes-")
+        metP4 = met()->shiftedP4(pat::MET::MuonEnDown);
+      else if(metTag == "ees+")
+        metP4 = met()->shiftedP4(pat::MET::ElectronEnUp);
+      else if(metTag == "ees-")
+        metP4 = met()->shiftedP4(pat::MET::ElectronEnDown);
+      else if(metTag == "tes+")
+        metP4 = met()->shiftedP4(pat::MET::TauEnUp);
+      else if(metTag == "tes-")
+        metP4 = met()->shiftedP4(pat::MET::TauEnDown);
+      else if(metTag == "ues+")
+        metP4 = met()->shiftedP4(pat::MET::UnclusteredEnUp);
+      else if(metTag == "ues-")
+        metP4 = met()->shiftedP4(pat::MET::UnclusteredEnDown);
+      else if(metTag == "pes+")
+        metP4 = met()->shiftedP4(pat::MET::PhotonEnUp);
+      else if(metTag == "pes-")
+        metP4 = met()->shiftedP4(pat::MET::PhotonEnDown);
+      else if(metTag == "raw")
+        metP4 = met()->uncorP4();
+      else
+        metP4 = met()->p4();
+  } 
+
+  return metP4;
+}
+
 double PATFinalState::mtMET(int i, const std::string& tag,
     const std::string& metTag) const {
  
@@ -921,39 +980,7 @@ double PATFinalState::mtMET(int i, const std::string& tag,
           p1=daughterUserCandP4(i, tag); 
   else  p1=daughter(i)->p4(); 
 
-  reco::Candidate::LorentzVector metP4;
-  if(metTag == "jres+")
-    metP4 = met()->shiftedP4(pat::MET::JetResUp);
-  else if(metTag == "jres-")
-    metP4 = met()->shiftedP4(pat::MET::JetResDown);
-  else if(metTag == "jes+")
-    metP4 = met()->shiftedP4(pat::MET::JetEnUp);
-  else if(metTag == "jes-")
-    metP4 = met()->shiftedP4(pat::MET::JetEnDown);
-  else if(metTag == "mes+")
-    metP4 = met()->shiftedP4(pat::MET::MuonEnUp);
-  else if(metTag == "mes-")
-    metP4 = met()->shiftedP4(pat::MET::MuonEnDown);
-  else if(metTag == "ees+")
-    metP4 = met()->shiftedP4(pat::MET::ElectronEnUp);
-  else if(metTag == "ees-")
-    metP4 = met()->shiftedP4(pat::MET::ElectronEnDown);
-  else if(metTag == "tes+")
-    metP4 = met()->shiftedP4(pat::MET::TauEnUp);
-  else if(metTag == "tes-")
-    metP4 = met()->shiftedP4(pat::MET::TauEnDown);
-  else if(metTag == "ues+")
-    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnUp);
-  else if(metTag == "ues-")
-    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnDown);
-  else if(metTag == "pes+")
-    metP4 = met()->shiftedP4(pat::MET::PhotonEnUp);
-  else if(metTag == "pes-")
-    metP4 = met()->shiftedP4(pat::MET::PhotonEnDown);
-  else if(metTag == "raw")
-    metP4 = met()->uncorP4();
-  else
-    metP4 = met()->p4();
+  reco::Candidate::LorentzVector metP4=METP4("",metTag);
 
   return fshelpers::transverseMass(p1, metP4);
 }
@@ -969,38 +996,8 @@ double PATFinalState::collinearMassMET(int i, const std::string& tag1, int j, co
           p2=daughterUserCandP4(j, tag2);
   else  p2=daughter(j)->p4();
 
-  if(metTag == "jres+")
-    metP4 = met()->shiftedP4(pat::MET::JetResUp);
-  else if(metTag == "jres-")
-    metP4 = met()->shiftedP4(pat::MET::JetResDown);
-  else if(metTag == "jes+")
-    metP4 = met()->shiftedP4(pat::MET::JetEnUp);
-  else if(metTag == "jes-")
-    metP4 = met()->shiftedP4(pat::MET::JetEnDown);
-  else if(metTag == "mes+")
-    metP4 = met()->shiftedP4(pat::MET::MuonEnUp);
-  else if(metTag == "mes-")
-    metP4 = met()->shiftedP4(pat::MET::MuonEnDown);
-  else if(metTag == "ees+")
-    metP4 = met()->shiftedP4(pat::MET::ElectronEnUp);
-  else if(metTag == "ees-")
-    metP4 = met()->shiftedP4(pat::MET::ElectronEnDown);
-  else if(metTag == "tes+")
-    metP4 = met()->shiftedP4(pat::MET::TauEnUp);
-  else if(metTag == "tes-")
-    metP4 = met()->shiftedP4(pat::MET::TauEnDown);
-  else if(metTag == "ues+")
-    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnUp);
-  else if(metTag == "ues-")
-    metP4 = met()->shiftedP4(pat::MET::UnclusteredEnDown);
-  else if(metTag == "pes+")
-    metP4 = met()->shiftedP4(pat::MET::PhotonEnUp);
-  else if(metTag == "pes-")
-    metP4 = met()->shiftedP4(pat::MET::PhotonEnDown);
-  else if(metTag == "raw")
-    metP4 = met()->uncorP4();
-  else
-    metP4 = met()->p4();
+  metP4=METP4("",metTag);
+
   return fshelpers::collinearMass(p1,p2, metP4);
 }
 

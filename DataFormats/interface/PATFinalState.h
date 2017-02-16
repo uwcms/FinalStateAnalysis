@@ -185,6 +185,10 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         int j, const std::string& tagJ) const;
     /// Using the raw four vector
     double mt(int i, int j) const;
+    // MET P4
+    reco::Candidate::LorentzVector METP4(const std::string& metName, const std::string& metTag, const int applyPhiCorr) const;
+    reco::Candidate::LorentzVector METP4(const std::string& metName, const std::string& metTag) const;
+
     /// Get MT with MET
     double mtMET(int i, const std::string& tag,
         const std::string& metTag) const;

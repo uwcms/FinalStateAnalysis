@@ -23,7 +23,7 @@ patFinalStateEventProducer = cms.EDProducer(
     trackSrc = cms.InputTag("generalTracks"),
     gsfTrackSrc = cms.InputTag("electronGsfTracks"),
     mets = cms.PSet(
-        pfmet = cms.InputTag("slimmedMETs"),
+        pfmet = cms.InputTag("fixme"),
         mvamet = cms.InputTag("fixme"),
         puppimet = cms.InputTag("slimmedMETsPuppi"),
     ),
