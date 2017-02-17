@@ -120,7 +120,7 @@ options = TauVarParsing.TauVarParsing(
     skipGhost=0,
     runWZ=0,
     runMetUncertainties=0,
-    metShift='',
+    metShift=1,
     runFSRFilter=0, # 1 = filter for ZG, -1 inverts filter for DY
     eventsToSkip='',
 )
@@ -706,7 +706,7 @@ fs_daughter_inputs['jets']  = preJets(process,
                                      runningLocal=options.runningLocal,
                                      jType="AK4PFchs")
 
-if options.fullJES:
+if options.fullJES and options.metShift:
     fs_daughter_inputs['pfmet'] = preMETFromJES(process,
                                      fs_daughter_inputs['jets'],
                                      fs_daughter_inputs['vertices'],

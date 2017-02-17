@@ -70,6 +70,16 @@ pairs = PSet(
     object1_object2_Mt_TauEnUp = 'subcand({object1_idx}, "",{object2_idx},"tesUpTaus").get.mt',
     object1_object2_Mt_TauEnDown = 'subcand({object1_idx}, "",{object2_idx},"tesDownTaus").get.mt',
  
+    object1_object2_Pt = 'subcand({object1_idx}, {object2_idx}).get.pt',
+    object1_object2_Eta = 'subcand({object1_idx}, {object2_idx}).get.eta',
+    object1_object2_Phi = 'subcand({object1_idx}, {object2_idx}).get.phi',
+    object1_object2_DR = 'dR({object1_idx}, {object2_idx})',
+    object1_object2_DPhi = 'dPhi({object1_idx}, {object2_idx})',
+    object1_object2_SS = 'likeSigned({object1_idx}, {object2_idx})',
+    object1_object2_PZeta = 'pZeta({object1_idx}, {object2_idx})',
+    object1_object2_PZetaVis = 'pZetaVis({object1_idx}, {object2_idx})',
+    object1_object2_CosThetaStar = 'abs(subcand({object1_idx}, {object2_idx}).get.daughterCosThetaStar(0))',
+
     object1_object2_collinearmass_JetEnUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"","jes+")',
     object2_object1_collinearmass_JetEnUp = 'collinearMassMET({object2_idx}, "", {object1_idx},"","jes+")', # for now we only need m_t_coll
     object1_object2_collinearmass_JetEnDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"","jes-")',
@@ -93,16 +103,6 @@ pairs = PSet(
     object2_object1_collinearmass_CheckUESUp = 'collinearMassMET({object2_idx}, "", {object1_idx},"","checkUES+")',
     object1_object2_collinearmass_CheckUESDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"","checkUES-")',
     object2_object1_collinearmass_CheckUESDown = 'collinearMassMET({object2_idx}, "", {object1_idx},"","checkUES-")',
-
-    object1_object2_Pt = 'subcand({object1_idx}, {object2_idx}).get.pt',
-    object1_object2_Eta = 'subcand({object1_idx}, {object2_idx}).get.eta',
-    object1_object2_Phi = 'subcand({object1_idx}, {object2_idx}).get.phi',
-    object1_object2_DR = 'dR({object1_idx}, {object2_idx})',
-    object1_object2_DPhi = 'dPhi({object1_idx}, {object2_idx})',
-    object1_object2_SS = 'likeSigned({object1_idx}, {object2_idx})',
-    object1_object2_PZeta = 'pZeta({object1_idx}, {object2_idx})',
-    object1_object2_PZetaVis = 'pZetaVis({object1_idx}, {object2_idx})',
-    object1_object2_CosThetaStar = 'abs(subcand({object1_idx}, {object2_idx}).get.daughterCosThetaStar(0))',
 
     #Pairs + MET
     object1_object2_ToMETDPhi_Ty1 = 'twoParticleDeltaPhiToMEt({object1_idx}, {object2_idx}, "type1")',

@@ -60,9 +60,6 @@ met = PSet(
 
 # these things break if you pass a shifted met to fsa
 shiftedMet = PSet(
-    raw_pfMetEt    = 'evt.met("pfmet").uncorPt',
-    raw_pfMetPhi   = 'evt.met("pfmet").uncorPhi',
-
 
     # 27s Jes Test
     type1_pfMet_shiftedPt_JetAbsoluteFlavMapUp             = 'evt.metShift("pfmet","pt","jesAbsoluteFlavMap+")',
@@ -183,6 +180,8 @@ shiftedMet = PSet(
     type1_pfMet_shiftedPhi_JetCheckUESUp             = 'evt.metShift("pfmet","phi","checkUES+")',
     type1_pfMet_shiftedPhi_JetCheckUESDown             = 'evt.metShift("pfmet","phi","checkUES-")',
 
+    raw_pfMetEt    = 'evt.met("pfmet").uncorPt',
+    raw_pfMetPhi   = 'evt.met("pfmet").uncorPhi',
 
     # new systematics
     type1_pfMet_shiftedPt_JetResUp             = 'evt.metShift("pfmet","pt","jres+")',
