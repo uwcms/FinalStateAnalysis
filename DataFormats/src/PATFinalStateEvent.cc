@@ -263,87 +263,59 @@ double PATFinalStateEvent::metSignificance() const {
 
 const reco::Candidate::LorentzVector PATFinalStateEvent::met4vector(
 								    const std::string& type, 
-								    const std::string& tag, 
+								    const std::string& metTag, 
 								    const int applyPhiCorr) const 
 {
+
   std::map<std::string, edm::Ptr<pat::MET> >::const_iterator findit =
     mets_.find(type);
   if (findit == mets_.end() || findit->second.isNull())
     return reco::Candidate::LorentzVector();
-  if(tag == "jres+"){
-    if(met(type)->hasUserCand("jresUpMET"))
-        return met(type)->userCand("jresUpMET")->p4();
-    return met(type)->shiftedP4(pat::MET::JetResUp);
-  }
-  else if(tag == "jres-"){
-    if(met(type)->hasUserCand("jresUpMET"))
-        return met(type)->userCand("jresUpMET")->p4();
-    return met(type)->shiftedP4(pat::MET::JetResDown);
-  }
-  else if(tag == "jes+"){
-    if(met(type)->hasUserCand("jesUpMET"))
-        return met(type)->userCand("jesUpMET")->p4();
-    return met(type)->shiftedP4(pat::MET::JetEnUp);
-  }
-  else if(tag == "jes-"){
-    if(met(type)->hasUserCand("jesDownMET"))
-        return met(type)->userCand("jesDownMET")->p4();
-    return met(type)->shiftedP4(pat::MET::JetEnDown);
-  }
-  else if(tag == "mes+"){
-    if(met(type)->hasUserCand("mesUpMET"))
-        return met(type)->userCand("mesUpMET")->p4();
-    return met(type)->shiftedP4(pat::MET::MuonEnUp);
-  }
-  else if(tag == "mes-"){
-    if(met(type)->hasUserCand("mesDownMET"))
-        return met(type)->userCand("mesDownMET")->p4();
-    return met(type)->shiftedP4(pat::MET::MuonEnDown);
-  }
-  else if(tag == "ees+"){
-    if(met(type)->hasUserCand("eesUpMET"))
-        return met(type)->userCand("eesUpMET")->p4();
-    return met(type)->shiftedP4(pat::MET::ElectronEnUp);
-  }
-  else if(tag == "ees-"){
-    if(met(type)->hasUserCand("eesDownMET"))
-        return met(type)->userCand("eesDownMET")->p4();
-    return met(type)->shiftedP4(pat::MET::ElectronEnDown);
-  }
-  else if(tag == "tes+"){
-    if(met(type)->hasUserCand("tesUpMET"))
-        return met(type)->userCand("tesUpMET")->p4();
-    return met(type)->shiftedP4(pat::MET::TauEnUp);
-  }
-  else if(tag == "tes-"){
-    if(met(type)->hasUserCand("tesDownMET"))
-        return met(type)->userCand("tesDownMET")->p4();
-    return met(type)->shiftedP4(pat::MET::TauEnDown);
-  }
-  else if(tag == "ues+"){
-    if(met(type)->hasUserCand("uesUpMET"))
-        return met(type)->userCand("uesUpMET")->p4();
-    return met(type)->shiftedP4(pat::MET::UnclusteredEnUp);
-  }
-  else if(tag == "ues-"){
-    if(met(type)->hasUserCand("uesDownMET"))
-        return met(type)->userCand("uesDownMET")->p4();
-    return met(type)->shiftedP4(pat::MET::UnclusteredEnDown);
-  }
-  else if(tag == "pes+"){
-    if(met(type)->hasUserCand("pesUpMET"))
-        return met(type)->userCand("pesUpMET")->p4();
-    return met(type)->shiftedP4(pat::MET::PhotonEnUp);
-  }
-  else if(tag == "pes-"){
-    if(met(type)->hasUserCand("pesDownMET"))
-        return met(type)->userCand("pesDownMET")->p4();
-    return met(type)->shiftedP4(pat::MET::PhotonEnDown);
+
+  reco::Candidate::LorentzVector metP4;
+
+  if(type=="mvamet"){  
+     metP4=met(type)->p4();
+  } 
+  else if ( met(type)->hasUserCand(metTag) ){ 
+       metP4=met(type)->userCand(metTag)->p4();
   }
   else{
-    return met(type)->p4();
-  }
+      if(metTag == "jres+")
+        metP4 = met(type)->shiftedP4(pat::MET::JetResUp);
+      else if(metTag == "jres-")
+        metP4 = met(type)->shiftedP4(pat::MET::JetResDown);
+      else if(metTag == "jes+")
+        metP4 = met(type)->shiftedP4(pat::MET::JetEnUp);
+      else if(metTag == "jes-")
+        metP4 = met(type)->shiftedP4(pat::MET::JetEnDown);
+      else if(metTag == "mes+")
+        metP4 = met(type)->shiftedP4(pat::MET::MuonEnUp);
+      else if(metTag == "mes-")
+        metP4 = met(type)->shiftedP4(pat::MET::MuonEnDown);
+      else if(metTag == "ees+")
+        metP4 = met(type)->shiftedP4(pat::MET::ElectronEnUp);
+      else if(metTag == "ees-")
+        metP4 = met(type)->shiftedP4(pat::MET::ElectronEnDown);
+      else if(metTag == "tes+")
+        metP4 = met(type)->shiftedP4(pat::MET::TauEnUp);
+      else if(metTag == "tes-")
+        metP4 = met(type)->shiftedP4(pat::MET::TauEnDown);
+      else if(metTag == "ues+")
+        metP4 = met(type)->shiftedP4(pat::MET::UnclusteredEnUp);
+      else if(metTag == "ues-")
+        metP4 = met(type)->shiftedP4(pat::MET::UnclusteredEnDown);
+      else if(metTag == "pes+")
+        metP4 = met(type)->shiftedP4(pat::MET::PhotonEnUp);
+      else if(metTag == "pes-")
+        metP4 = met(type)->shiftedP4(pat::MET::PhotonEnDown);
+      else if(metTag == "raw")
+        metP4 = met(type)->uncorP4();
+      else
+        metP4 = met(type)->p4();
+  } 
 
+  return metP4;
   // TODO
   //if (applyPhiCorr == 1)
   //  return fshelpers::metPhiCorrection(metp4, recoVertices_.size(), !isRealData_);
@@ -351,6 +323,21 @@ const reco::Candidate::LorentzVector PATFinalStateEvent::met4vector(
 
 double PATFinalStateEvent::metShift(const std::string& type, const std::string& var, const std::string& tag) const
 {
+
+  std::map<std::string, edm::Ptr<pat::MET> >::const_iterator findit =
+    mets_.find(type);
+  if (findit == mets_.end() || findit->second.isNull())   
+        return 0.0;
+  
+  if (var=="pt") {
+        return met4vector(type,tag).pt();
+  }
+  else if (var=="phi") {
+        return met4vector(type,tag).phi();
+  }
+  else return 0;
+
+/*
   std::map<std::string, edm::Ptr<pat::MET> >::const_iterator findit =
     mets_.find(type);
   if (findit == mets_.end() || findit->second.isNull())
@@ -535,7 +522,8 @@ double PATFinalStateEvent::metShift(const std::string& type, const std::string& 
   }
   else
     return 0.;
-
+  */
+ 
 }
 
 const edm::EventID& PATFinalStateEvent::evtId() const {

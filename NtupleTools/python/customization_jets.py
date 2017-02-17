@@ -2,12 +2,13 @@
 import FWCore.ParameterSet.Config as cms
 import os
 
-def preJets(process, jSrc, vSrc, mSrc, eSrc, **kwargs):
+def preJets(process, jSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
     jType = kwargs.pop('jType','AK4PFchs')
     doBTag = kwargs.pop('doBTag',False)
     doFullJESUnc = kwargs.pop('doFullJESUnc',False)
     runningLocal = kwargs.pop('runningLocal',False)
+
 
     mod = cms.EDProducer(
         "MiniAODJetIdEmbedder",
@@ -65,6 +66,7 @@ def preJets(process, jSrc, vSrc, mSrc, eSrc, **kwargs):
         mod = cms.EDProducer(
 	    "MiniAODJetFullSystematicsEmbedder",
             src = cms.InputTag(jSrc),
+            srcMET=cms.InputTag(metSrc),
             corrLabel = cms.string(jType),
             fName = cms.string(fName)
         )
@@ -74,8 +76,13 @@ def preJets(process, jSrc, vSrc, mSrc, eSrc, **kwargs):
         pathName = 'jetFullSystematicsEmbedding{0}'.format(postfix)
         path = cms.Path(getattr(process,modName))
         setattr(process,pathName,path)
-  
+
+        print modName+" for  MET?" 
+ 
         process.schedule.append(getattr(process,pathName))
+
+
+    print jSrc 
 
     # embed IP stuff
     modName = 'miniJetsEmbedIp{0}'.format(postfix)
@@ -91,6 +98,8 @@ def preJets(process, jSrc, vSrc, mSrc, eSrc, **kwargs):
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
+
+    print jSrc
 
     modName = 'miniAODJetSystematicsEmbedding{0}'.format(postfix)
     mod = cms.EDProducer(
