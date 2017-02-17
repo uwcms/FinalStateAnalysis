@@ -81,6 +81,10 @@ parameters = {
         metcov10='evt.metCov(1)', # 1 = (1,0)
         metcov01='evt.metCov(2)', # 2 = (0,1)
         metcov11='evt.metCov(3)', # 3 - (1,1)
+	metcov00_DESYlike='evt.met("pfmet").getSignificanceMatrix[0][0]',
+        metcov10_DESYlike='evt.met("pfmet").getSignificanceMatrix[1][0]',
+        metcov01_DESYlike='evt.met("pfmet").getSignificanceMatrix[0][1]',
+        metcov11_DESYlike='evt.met("pfmet").getSignificanceMatrix[1][1]',
         vispX='tauGenMotherKin().at(0)',
         vispY='tauGenMotherKin().at(1)',
         genpX='tauGenMotherKin().at(2)',
@@ -354,7 +358,7 @@ parameters = {
         objectMu23Ele12Filter = 'matchToHLTFilter({object_idx}, "hltMu23TrkIsoVVLEle8CaloIdLTrackIdLIsoVLMuonlegL3IsoFiltered23", 0.5)',
         objectMu8Ele23DZFilter = 'matchToHLTFilter({object_idx}, "hltMu8TrkIsoVVLEle23CaloIdLTrackIdLIsoVLDZFilter", 0.5)',
         objectMu23Ele12DZFilter = 'matchToHLTFilter({object_idx}, "hltMu23TrkIsoVVLEle12CaloIdLTrackIdLIsoVLDZFilter", 0.5)',
-        objectIsoMu22Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sMu18L1f0L2f10QL3f20QL3trkIsoFiltered0p09", 0.5)',
+        objectIsoMu22Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sMu20L1f0L2f10QL3f20QL3trkIsoFiltered0p09", 0.5)',
         objectIsoTkMu22Filter = 'matchToHLTFilter({object_idx}, "hltL3fL1sMu20L1f0Tkf22QL3trkIsoFiltered0p09", 0.5)',
         objectIsoMu22eta2p1Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sSingleMu20erL1f0L2f10QL3f22QL3trkIsoFiltered0p09", 0.5)',
         objectIsoTkMu22eta2p1Filter = 'matchToHLTFilter({object_idx}, "hltL3fL1sMu20erL1f0Tkf22QL3trkIsoFiltered0p09", 0.5)',

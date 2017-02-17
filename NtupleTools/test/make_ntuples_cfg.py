@@ -461,8 +461,8 @@ if options.htt :
     process.load('RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff')
     process.badGlobalMuonTaggerMAOD.taggingMode = cms.bool(True)
     process.cloneGlobalMuonTaggerMAOD.taggingMode = cms.bool(True)
-    process.badGlobalMuonTaggerMAOD.verbose = cms.untracked.bool(True)
-    process.cloneGlobalMuonTaggerMAOD.verbose = cms.untracked.bool(True)
+    process.badGlobalMuonTaggerMAOD.verbose = cms.untracked.bool(False)
+    process.cloneGlobalMuonTaggerMAOD.verbose = cms.untracked.bool(False)
 
     # Standard MET filters -> tagged
     process.load('RecoMET.METFilters.BadPFMuonFilter_cfi')
@@ -485,15 +485,15 @@ if options.htt :
         BadPFMuonFilter = cms.InputTag("BadPFMuonFilter"),
         triggerSrc = cms.InputTag("TriggerResults","",trigSource),
         metFilterPaths = cms.vstring(
+            "Flag_noBadMuons",
             "Flag_HBHENoiseFilter",
             "Flag_HBHENoiseIsoFilter", 
             "Flag_EcalDeadCellTriggerPrimitiveFilter"
             "Flag_goodVertices",
             "Flag_eeBadScFilter",
             "Flag_globalTightHalo2016Filter",
-            "Flag_badMuons",
-            "Flag_duplicateMuons",
-            "Flag_noBadMuons",
+            "Flag_badMuonsFilter",
+            "Flag_duplicateMuonsFilter",
         ),
         verbose = cms.untracked.bool(False),
     )

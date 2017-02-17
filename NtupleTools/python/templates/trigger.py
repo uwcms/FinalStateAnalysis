@@ -125,15 +125,15 @@ singleLepton_25ns_MC = PSet(
 singleLepton_25ns = PSet(
     _trig_template.replace(
         name='singleMu', 
-        paths=r'HLT_Mu50_v\\d+'
+        paths=r'HLT_Mu50_v\\d+',
         ),
     _trig_template.replace(
         name='singleEle115',
-        paths=r'HLT_Ele115_CaloIdVT_GsfTrkIdT_v\\d+'
+        paths=r'HLT_Ele115_CaloIdVT_GsfTrkIdT_v\\d+',
         ),
     _trig_template.replace(
-        name='Ele45L1JetTauSeeded',
-        paths=r'HLT_Ele45_WPLoose_Gsf_L1JetTauSeeded_v\\d+'
+        name='singleEle45L1JetTauSeeded',
+        paths=r'HLT_Ele45_WPLoose_Gsf_L1JetTauSeeded_v\\d+',
         ),
     _trig_template.replace(
         name='singleE27Tight',
@@ -230,6 +230,14 @@ singleLepton_25ns = PSet(
     _trig_template.replace(
         name='singleE_leg2', 
         paths=r'HLT_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleTau140',
+        paths=r'HLT_VLooseIsoPFTau140_eta2p1_v\\d+'
+        ),
+    _trig_template.replace(
+        name='singleTau140Trk50',
+        paths=r'HLT_VLooseIsoPFTau140_Trk50_eta2p1_v\\d+'
         ),
     )
 
