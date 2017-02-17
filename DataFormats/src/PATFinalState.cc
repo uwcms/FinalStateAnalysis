@@ -809,43 +809,8 @@ PATFinalState::deltaPhiToMEt(int i, const std::string& sysTag,
           p1=daughterUserCandP4(i, sysTag);
   else  p1=daughter(i)->p4();
 
-  double metPhi;
-  if(metTag != "")
-    {
-      if(metTag == "jres+")
-        metPhi = met()->shiftedPhi(pat::MET::JetResUp);
-      else if(metTag == "jres-")
-        metPhi = met()->shiftedPhi(pat::MET::JetResDown);
-      else if(metTag == "jes+")
-        metPhi = met()->shiftedPhi(pat::MET::JetEnUp);
-      else if(metTag == "jes-")
-        metPhi = met()->shiftedPhi(pat::MET::JetEnDown);
-      else if(metTag == "mes+")
-        metPhi = met()->shiftedPhi(pat::MET::MuonEnUp);
-      else if(metTag == "mes-")
-        metPhi = met()->shiftedPhi(pat::MET::MuonEnDown);
-      else if(metTag == "ees+")
-        metPhi = met()->shiftedPhi(pat::MET::ElectronEnUp);
-      else if(metTag == "ees-")
-        metPhi = met()->shiftedPhi(pat::MET::ElectronEnDown);
-      else if(metTag == "tes+")
-        metPhi = met()->shiftedPhi(pat::MET::TauEnUp);
-      else if(metTag == "tes-")
-        metPhi = met()->shiftedPhi(pat::MET::TauEnDown);
-      else if(metTag == "ues+")
-        metPhi = met()->shiftedPhi(pat::MET::UnclusteredEnUp);
-      else if(metTag == "ues-")
-        metPhi = met()->shiftedPhi(pat::MET::UnclusteredEnDown);
-      else if(metTag == "pes+")
-        metPhi = met()->shiftedPhi(pat::MET::PhotonEnUp);
-      else if(metTag == "pes-")
-        metPhi = met()->shiftedPhi(pat::MET::PhotonEnDown);
-      else
-        metPhi = met()->phi();
-    }
-  else
-    metPhi = met()->phi();
-      
+  double metPhi=METP4("",metTag).phi();
+
   return reco::deltaPhi(p1.phi(), metPhi);
 }
 
@@ -855,43 +820,7 @@ PATFinalState::twoParticleDeltaPhiToMEt(const int i, const int j, const std::str
 
   PATFinalStateProxy composite = subcand(i,j);
   double compositePhi = composite.get()->phi();
-  double metPhi;
-
-  if(metTag != "")
-    {
-      if(metTag == "jres+")
-        metPhi = met()->shiftedPhi(pat::MET::JetResUp);
-      else if(metTag == "jres-")
-        metPhi = met()->shiftedPhi(pat::MET::JetResDown);
-      else if(metTag == "jes+")
-        metPhi = met()->shiftedPhi(pat::MET::JetEnUp);
-      else if(metTag == "jes-")
-        metPhi = met()->shiftedPhi(pat::MET::JetEnDown);
-      else if(metTag == "mes+")
-        metPhi = met()->shiftedPhi(pat::MET::MuonEnUp);
-      else if(metTag == "mes-")
-        metPhi = met()->shiftedPhi(pat::MET::MuonEnDown);
-      else if(metTag == "ees+")
-        metPhi = met()->shiftedPhi(pat::MET::ElectronEnUp);
-      else if(metTag == "ees-")
-        metPhi = met()->shiftedPhi(pat::MET::ElectronEnDown);
-      else if(metTag == "tes+")
-        metPhi = met()->shiftedPhi(pat::MET::TauEnUp);
-      else if(metTag == "tes-")
-        metPhi = met()->shiftedPhi(pat::MET::TauEnDown);
-      else if(metTag == "ues+")
-        metPhi = met()->shiftedPhi(pat::MET::UnclusteredEnUp);
-      else if(metTag == "ues-")
-        metPhi = met()->shiftedPhi(pat::MET::UnclusteredEnDown);
-      else if(metTag == "pes+")
-        metPhi = met()->shiftedPhi(pat::MET::PhotonEnUp);
-      else if(metTag == "pes-")
-        metPhi = met()->shiftedPhi(pat::MET::PhotonEnDown);
-      else
-        metPhi = met()->phi();
-    }
-  else
-    metPhi = met()->phi();
+  double metPhi=METP4("",metTag).phi();
       
   return reco::deltaPhi(compositePhi, metPhi);
       
@@ -925,8 +854,6 @@ reco::Candidate::LorentzVector PATFinalState::METP4(const std::string& metName, 
 reco::Candidate::LorentzVector PATFinalState::METP4(const std::string& metName, const std::string& metTag) const {
    
   reco::Candidate::LorentzVector metP4;
-
-  evt()->met4vector(metName,metTag);
 
   if(metName=="mvamet"){  
      metP4=evt()->met("mvamet")->p4();
@@ -968,6 +895,8 @@ reco::Candidate::LorentzVector PATFinalState::METP4(const std::string& metName, 
       else
         metP4 = met()->p4();
   } 
+
+  //std::cout<<evt()->met4vector(metName,metTag).pt()<<"   "<<metP4.pt()<<std::endl;
 
   return metP4;
 }

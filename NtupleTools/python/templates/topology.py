@@ -85,10 +85,10 @@ pairs = PSet(
     object1_object2_collinearmass_MuEnUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"","mes+")',
     object1_object2_collinearmass_MuEnDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"","mes-")',
 
-    object1_object2_collinearmass_JenTotalUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"","jetTotal+")',
-    object2_object1_collinearmass_JenTotalUp = 'collinearMassMET({object2_idx}, "", {object1_idx},"","jetTotal+")', # for now we only need m_t_coll
-    object1_object2_collinearmass_JenTotalDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"","jetTotal-")',
-    object2_object1_collinearmass_JenTotalDown = 'collinearMassMET({object2_idx}, "", {object1_idx},"","jetTotal-")',
+    object1_object2_collinearmass_JetCheckTotalUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"","jesTotal+")',
+    object2_object1_collinearmass_JetCheckTotalUp = 'collinearMassMET({object2_idx}, "", {object1_idx},"","jesTotal+")', # for now we only need m_t_coll
+    object1_object2_collinearmass_JetCheckTotalDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"","jesTotal-")',
+    object2_object1_collinearmass_JetCheckTotalDown = 'collinearMassMET({object2_idx}, "", {object1_idx},"","jesTotal-")',
     object1_object2_collinearmass_CheckUESUp = 'collinearMassMET({object1_idx}, "", {object2_idx},"","checkUES+")',
     object2_object1_collinearmass_CheckUESUp = 'collinearMassMET({object2_idx}, "", {object1_idx},"","checkUES+")',
     object1_object2_collinearmass_CheckUESDown = 'collinearMassMET({object1_idx}, "", {object2_idx},"","checkUES-")',
