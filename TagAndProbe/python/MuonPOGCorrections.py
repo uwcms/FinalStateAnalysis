@@ -34,10 +34,9 @@ from correctionloader import CorrectionLoader
 mu_trackingEta_2016 = GraphReaderTrackingEta(
     os.path.join(os.environ['fsa'], 'TagAndProbe/data/muon_ratios_tracking.root')
 )
-mu_trigger_2016 = GraphReaderTrackingEta(
-    os.path.join(os.environ['fsa'], 'TagAndProbe/data/muon_ratios_tracking.root')
+mu_trackingEta_MORIOND2017 = GraphReaderTrackingEta(
+    os.path.join(os.environ['fsa'], 'TagAndProbe/data/Tracking_EfficienciesAndSF_BCDEFGH_full2016.root'),'ratio_eff_eta3_dr030e030_corr'
 )
-
 
 
 
@@ -382,7 +381,7 @@ def make_muon_pog_IsoMu24oIsoTkMu24_2016ReReco():
 
     return MuonPOGCorrectionTrig2D_ReReco(
             _DATA_FILES['2016ReReco']['Trigger'],
-            "IsoMu24_OR_IsoTkMu24_PtEtaBins/pt_abseta_ratio",20.1,16.7
+            "IsoMu24_OR_IsoTkMu24_PtEtaBins/pt_abseta_ratio",19.72,16.15
         )
 
 
@@ -390,21 +389,21 @@ def make_muon_pog_PFTight_2016ReReco():
     ''' Muon ID SFs ReReco lumi '''
     return MuonPOGCorrectionID2D_ReReco(
         _DATA_FILES['2016ReReco']['PFID'],
-        "MC_NUM_TightID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",20.1,16.7
+        "MC_NUM_TightID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",19.72,16.15
 
     )
 def make_muon_pog_PFMedium_2016ReReco():
     ''' Muon ID SFs ReReco lumi '''
     return MuonPOGCorrectionID2D_ReReco(
         _DATA_FILES['2016ReReco']['PFID'],
-        "MC_NUM_MediumID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",20.1,16.7 
+        "MC_NUM_MediumID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",19.72,16.15 
 
     )
 def make_muon_pog_PFLoose_2016ReReco():
     ''' Muon ID SFs ReReco lumi '''
     return MuonPOGCorrectionID2D_ReReco(
         _DATA_FILES['2016ReReco']['PFID'],
-        "MC_NUM_LooseID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",20.1,16.7 
+        "MC_NUM_LooseID_DEN_genTracks_PAR_pt_eta/pt_abseta_ratio",19.72,16.15 
     )
 
 
@@ -415,7 +414,7 @@ def make_muon_pog_LooseIso_2016ReReco(MuonID):
        _DATA_FILES['2016ReReco']['Iso'],
       [ "LooseISO_LooseID_pt_eta/pt_abseta_ratio",
        "LooseISO_MediumID_pt_eta/pt_abseta_ratio",
-       "LooseISO_TightID_pt_eta/pt_abseta_ratio",],20.1,16.7 
+       "LooseISO_TightID_pt_eta/pt_abseta_ratio",],19.72,16.15 
                 
     )
 
@@ -429,7 +428,7 @@ def make_muon_pog_TightIso_2016ReReco(MuonID):
         _DATA_FILES['2016ReReco']['Iso'],
        [ "TightISO_LooseID_pt_eta/pt_abseta_ratio",
          "TightISO_MediumID_pt_eta/pt_abseta_ratio",
-         "TightISO_TightID_pt_eta/pt_abseta_ratio"],20.1,16.7 
+         "TightISO_TightID_pt_eta/pt_abseta_ratio"],19.72,16.15 
                 
  )
 

@@ -156,6 +156,7 @@ class GraphReaderSF(object):
     def __call__(self, pt, abseta):
         """Return correction given pt and eta, 
         raise error if out of boundaries"""
+        if pt>=999:pt=999
         for pt_thrs, pt_vals in self.table.iteritems():
             ptmin, ptmax = pt_thrs
             if ptmin <= pt < ptmax:
@@ -168,14 +169,14 @@ class GraphReaderSF(object):
 
 class GraphReaderTrackingEta(object):
     """Loads a graph with trigger efficiency from data"""
-    def __init__(self, filename):
+    def __init__(self, filename,path_in_file='ratio_eta'):
         self.table = {} 
         #dict is fine for small number of bins, 
         #for larger ones use sorted list and binary search
         input_file= root_open(filename)
         if  not input_file:
                sys.stderr.write("Can't open file: %s\n" % filename)
-        gr1 = input_file.Get("ratio_eta")
+        gr1 = input_file.Get(path_in_file)
         npoint1=gr1.GetN()
         eff1 = []
         for n in range(0, npoint1):
