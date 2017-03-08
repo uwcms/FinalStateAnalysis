@@ -33,6 +33,7 @@ verbose=0      - print out timing information
 noPhotons=0    - don't build things which depend on photons.
 runMVAMET=0    - run the MVAMET algorithm
 htt=0          - adds Higgs2Taus analysis settings
+isLFV=0        - adds LFV Higgs analysis settings
 fullJES=0      - adds full systematics for all ~27 JES uncertainties
 runningLocal=0 - for sqlite loading and other path names, record if we a running locally or on Condor for example
 svFit=1        - run the SVfit on appropriate pairs
@@ -119,6 +120,7 @@ options = TauVarParsing.TauVarParsing(
     paramFile='',
     skipGhost=0,
     runWZ=0,
+    isLFV=0,
     runMetUncertainties=0,
     metShift=1,
     runFSRFilter=0, # 1 = filter for ZG, -1 inverts filter for DY
@@ -164,6 +166,7 @@ options.register(
     'Apply electron energy correction as a 1-sigma shift instead of a '
     'smearing. Only used if eCalib=0 and isMC=1.'
 )
+
 options.register(
     'skipMET',
     1,
@@ -602,7 +605,9 @@ fs_daughter_inputs['electrons'] = preElectrons(process,
                                                applyEnergyCorrections=bool(options.eCalib),
                                                isMC=bool(options.isMC),
                                                isSync=bool(options.isSync),
+                                               isLFV=bool(options.isLFV),
                                                )
+
 for fs in additional_fs:
     additional_fs[fs]['electrons'] = preElectrons(process,
                                                   additional_fs[fs]['electrons'],
@@ -614,6 +619,8 @@ for fs in additional_fs:
                                                   isSync=bool(options.isSync),
                                                   postfix=fs,
                                                   )
+
+
 
 
 #############################
@@ -797,8 +804,10 @@ for fs in additional_fs:
 ###################################
 ### post electron customization ###
 ###################################
+
 from FinalStateAnalysis.NtupleTools.customization_electrons import postElectrons
 fs_daughter_inputs['electrons'] = postElectrons(process,fs_daughter_inputs['electrons'],fs_daughter_inputs['jets'])
+
 for fs in additional_fs:
     additional_fs[fs]['electrons'] = postElectrons(process,additional_fs[fs]['electrons'],additional_fs[fs]['jets'],postfix=fs)
 
@@ -852,6 +861,8 @@ produce_final_states(process,
                      process.buildFSASeq,
                      'puTagDoesntMatter', 
                      options.channels,
+                     isLFV=bool(options.isLFV),
+                     isMC=bool(options.isMC),
                      buildFSAEvent=True,
                      noTracks=True, 
                      runMVAMET=False,
@@ -883,7 +894,6 @@ for fs in additional_fs:
     setattr(process,'buildFSAPath{0}'.format(fs), cms.Path(getattr(process,'buildFSASeq{0}'.format(fs))))
     getattr(process,'patFinalStateEventProducer{0}'.format(fs)).forbidMissing = cms.bool(False)
     process.schedule.append(getattr(process,'buildFSAPath{0}'.format(fs)))
-
 
 # Drop the old stuff. (do we still need this?)
 process.source.inputCommands = cms.untracked.vstring(
@@ -952,6 +962,7 @@ if options.hzz:
 
 # run dqm
 if options.runDQM: options.channels = 'dqm'
+print process.schedule
 
 
 if options.keepPat:
@@ -1060,7 +1071,6 @@ else:
             add_ntuple(final_state+fs, analyzer, process,
                        process.schedule, options.eventView, filters)
 
-            
 
 if options.passThru:
     set_passthru(process)
@@ -1096,5 +1106,7 @@ if options.passThru:
 
 if options.dump:
     print process.dumpPython()
+
+
 
 

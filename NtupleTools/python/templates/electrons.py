@@ -138,15 +138,26 @@ energyCorrections = PSet(
     #objectPtCorrReg_Jan16ReReco = 'getUserLorentzVector({object_idx},"EGCorr_Jan16ReRecoRegressionOnly").Pt',
     #objectEtaCorrReg_Jan16ReReco = 'getUserLorentzVector({object_idx},"EGCorr_Jan16ReRecoRegressionOnly").Eta',
     #objectPhiCorrReg_Jan16ReReco = 'getUserLorentzVector({object_idx},"EGCorr_Jan16ReRecoRegressionOnly").Phi',
-    #objectdECorrReg_Jan16ReReco = '{object}.userFloat("EGCorr_Jan16ReRecoRegressionOnly_error")',
+    #objectdECorrReg_Jan16ReReco = '{object}.userFloat("EGCorr_Jan16ReRecoRegressionOnly_error")',    
 
-    objectPt_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").pt : -999.',
-    objectEta_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").eta : -999.',
-    objectPhi_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").phi : -999.',
+    objectPt_ElectronScaleUp = '? daughterHasUserCand({object_idx}, "eScaleUp") ? daughterAsElectron({object_idx}).userCand("eScaleUp").pt : -999.',
+    objectPt_ElectronScaleDown = '? daughterHasUserCand({object_idx}, "eScaleDown") ? daughterAsElectron({object_idx}).userCand("eScaleDown").pt : -999.',
+    objectPt_ElectronUncorr = '? daughterHasUserCand({object_idx}, "uncorr") ? daughterAsElectron({object_idx}).userCand("uncorr").pt : -999.',
+    objectPt_ElectronResRhoUp = '? daughterHasUserCand({object_idx}, "eResUp") ? daughterAsElectron({object_idx}).userCand("eResUp").pt : -999.',
+    objectPt_ElectronResRhoDown = '? daughterHasUserCand({object_idx}, "eResDown") ? daughterAsElectron({object_idx}).userCand("eResDown").pt : -999.',
+    objectPt_ElectronResPhiDown = '? daughterHasUserCand({object_idx}, "eResPhiDown") ? daughterAsElectron({object_idx}).userCand("eResPhiDown").pt : -999.',
+#    objectPt_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").pt : -999.',
+ #   objectEta_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").eta : -999.',
+  #  objectPhi_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").phi : -999.',
 
-    objectPt_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").pt : -999.',
-    objectEta_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").eta : -999.',
-    objectPhi_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").phi : -999.',
+   # objectPt_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").pt : -999.',
+   # objectEta_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").eta : -999.',
+   # objectPhi_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").phi : -999.',
+
+#    objectPt_ElectronScaleUp = '? daughterHasUserCand({object_idx}, "ees+") ? daughterAsElectron({object_idx}).userCand(n"ees+").pt : -999.',
+
+ #   objectPt_ElectronScaleDown = '? daughterHasUserCand({object_idx}, "ees-") ? daughterAsElectron({object_idx}).userCand("ees-").pt : -999.',
+
 )
 
 tracking = PSet(

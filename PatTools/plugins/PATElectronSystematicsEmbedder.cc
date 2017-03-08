@@ -62,6 +62,7 @@ void PATElectronSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSe
 
     double pt = electron.pt();
     ShiftedCand uncorr = electron;
+    
 
     double correctedPt = nominal_*pt;
     double correctedPtUp = eScaleUp_*pt;

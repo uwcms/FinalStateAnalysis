@@ -1,41 +1,39 @@
 # Embed IDs for electrons
 import FWCore.ParameterSet.Config as cms
 from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection, switchOnVIDElectronIdProducer, DataFormat, setupVIDSelection
+from EgammaAnalysis.ElectronTools.regressionWeights_cfi import regressionWeights
 
 def preElectrons(process, eSrc, vSrc,**kwargs):
     postfix = kwargs.pop('postfix','')
     electronMVANonTrigIDLabel = kwargs.pop('electronMVANonTrigIDLabel',"BDTIDNonTrig")
     electronMVATrigIDLabel = kwargs.pop('electronMVATrigIDLabel',"BDTIDTrig")
     applyEnergyCorrections = kwargs.pop("applyEnergyCorrections", False)
+    isMCflag= kwargs.pop("isMC",False)
+    isLFV=kwargs.pop("isLFV",False)
 
-    # Removed for now; calibrations only currently exist for 74X
-    # if applyEnergyCorrections:
-    #     isMC = kwargs.pop("isMC", False)
-    #     isSync = kwargs.pop("isSync", False) and isMC
-    #     grbForestName = "gedelectron_p4combination_%sns"%("25" if use25ns else "50")
-    #     modName = 'calibratedElectrons{0}'.format(postfix)
-    #     mod = cms.EDProducer(
-    #         "CalibratedPatElectronProducerRun2",
-    #         electrons = cms.InputTag(eSrc),
-    #         grbForestName = cms.string(grbForestName),
-    #         isMC = cms.bool(isMC),
-    #         isSynchronization = cms.bool(isSync),
-    #     )
-    #     setattr(process,modName,mod)
-    #     eSrc = modName
-    #     pathName = 'applyElectronCalibrations{0}'.format(postfix)
-    #     path = cms.Path(process.calibratedElectrons)
-    #     setattr(process,pathName,path)
-    #     process.schedule.append(getattr(process,pathName))
-    # 
-    #     # Get a random number generator and give it a seed if needed
-    #     if isMC and not isSync:
-    #         if not hasattr(process, "RandomNumberGeneratorService"):
-    #             process.load('Configuration.StandardSequences.Services_cff')
-    #         process.RandomNumberGeneratorService.calibratedElectrons = cms.PSet(
-    #             initialSeed = cms.untracked.uint32(1029384756),
-    #             engineName = cms.untracked.string('TRandom3'),
-    #         )
+    if isLFV:
+        process = regressionWeights(process)
+        
+        process.load('EgammaAnalysis.ElectronTools.regressionApplication_cff')
+        
+
+        process.EGMRegression = cms.Path(process.regressionApplication)
+
+        process.schedule.append(process.EGMRegression)
+    
+        process.selectedSlimmedElectrons = cms.EDFilter("PATElectronSelector",
+                                                        ##energy recalibration may take the corrected object outside the acceptable range for the calculation of the MVA score.
+                                                        ## this protects against a crash in electron calibration
+                                                        ## due to electrons with eta > 2.5
+                                                        src = cms.InputTag("slimmedElectrons"),
+                                                        cut = cms.string("pt>5 && abs(eta)<2.5 && abs(-log(tan(superClusterPosition.theta/2.)))<2.5")
+                                                        )
+
+        process.selectInBoundElectrons=cms.Path(process.selectedSlimmedElectrons)
+        process.schedule.append(process.selectInBoundElectrons)
+
+        eSrc='selectedSlimmedElectrons'
+
 
     if not hasattr(process,'egmGsfElectronIDs'):
         switchOnVIDElectronIdProducer(process, DataFormat.MiniAOD)
@@ -43,14 +41,17 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
     mvaMod = 'electronMVAValueMapProducer{0}'.format(postfix)
     regMod = 'electronRegressionValueMapProducer{0}'.format(postfix)
     egmSeq = 'egmGsfElectronIDSequence{0}'.format(postfix)
+
     if postfix:
         setattr(process,egmMod,process.egmGsfElectronIDs.clone())
         setattr(process,mvaMod,process.electronMVAValueMapProducer.clone())
         setattr(process,regMod,process.electronRegressionValueMapProducer.clone())
         setattr(process,egmSeq,cms.Sequence(getattr(process,mvaMod)*getattr(process,egmMod)*getattr(process,regMod)))
+
     getattr(process,egmMod).physicsObjectSrc = cms.InputTag(eSrc)
     getattr(process,mvaMod).srcMiniAOD = cms.InputTag(eSrc)
     getattr(process,regMod).srcMiniAOD = cms.InputTag(eSrc)
+
     id_modules = [
         'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',    # both 25 and 50 ns cutbased ids produced
         #'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_50ns_V1_cff',
@@ -145,9 +146,10 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
     )
     eSrc = modName
     setattr(process,modName,mod)
-    
+
     pathName = 'miniAODElectrons{0}'.format(postfix)
     path = cms.Path(getattr(process,egmSeq)+getattr(process,modName))
+    
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
 
@@ -165,7 +167,6 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
-
     # Embed effective areas in muons and electrons
     if not hasattr(process,'patElectronEAEmbedder'):
         process.load("FinalStateAnalysis.PatTools.electrons.patElectronEAEmbedding_cfi")
@@ -219,6 +220,7 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
 
+    
     return eSrc
 
 def postElectrons(process, eSrc, jSrc,**kwargs):
