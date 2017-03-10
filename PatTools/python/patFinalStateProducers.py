@@ -122,10 +122,44 @@ def produce_final_states(process, daughter_collections, output_commands,
     #    src['electrons'] = "corrElectrons"
 
     #    sequence += process.corrElectrons
+    isLFV=kwargs.get('isLFV',False)    
+    isMC=kwargs.get('isMC',False)    
+    if isLFV:
+    ## electron scale/smear corrections recommended to apply after Id calculation
+        ##first correct/smear the nominal ones
+        process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
+                                                           calibratedPatElectrons  = cms.PSet( initialSeed = cms.untracked.uint32(8675389),
+                                                                                               engineName = cms.untracked.string('TRandom3'),
+                                                                                               ),
+                                                           )
+
+        
+        process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
+        process.calibratedPatElectrons.isMC=cms.bool(isMC) #!fixme!!
+        process.calibratedPatElectrons.electrons=cms.InputTag(src['electrons'])
+        
+        
+        process.EGMSmearerElectrons = cms.Path(process.calibratedPatElectrons)
+        
+
+        sequence+=process.calibratedPatElectrons
+        
+        ##then create up and down scale/resolution systematics using uncorrected input source
+        process.load('FinalStateAnalysis.PatTools.electrons.electronSystematicsLFV_cfi')
+
+        process.electronSystematicsLFV.calibratedElectrons=cms.InputTag("calibratedPatElectrons")
+        process.electronSystematicsLFV.uncalibratedElectrons=cms.InputTag( src['electrons'])
+
+        sequence+=process.electronSystematicsLFV
+
+        ##set electron source in following chain to be the corrected electrons
+        src['electrons']="electronSystematicsLFV"
+
 
 
     ### apply final selections to the objects we'll use in the final states
     # Initialize final-state object sequence
+
     finalSelections = kwargs.get('finalSelection',{})
     from FinalStateAnalysis.NtupleTools.object_parameter_selector import setup_selections, getName
     objSelectName = 'selectObjectsForFinalStates{0}'.format(postfix)
@@ -143,6 +177,7 @@ def produce_final_states(process, daughter_collections, output_commands,
         sequence += getattr(process,objSelectName)
 
     # Rank objects
+
     rankSeqName = 'rankObjects{0}'.format(postfix)
     rankSeq = cms.Sequence()
     for obj in ['muons','electrons','taus','jets','photons']:
@@ -217,7 +252,6 @@ def produce_final_states(process, daughter_collections, output_commands,
         for i in range(nObj):
             setattr(producer, 'leg{}Src'.format(i+1),
                     object_types[channel[i]])
-    
         producer_name = "finalState{0}{1}".format(producerSuffix,postfix)
         setattr(process, producer_name + "Raw", producer)
         builderSeqs[nObj] += producer
