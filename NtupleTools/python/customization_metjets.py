@@ -35,6 +35,23 @@ def preMETFromJES(process, jSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
  
         process.schedule.append(getattr(process,pathName))
 
+        modName = 'miniAODMETUesSystEmbedding{0}'.format(postfix)
+        mod = cms.EDProducer(
+            "MiniAODMETUesSystEmbedder",
+            srcMET=cms.untracked.InputTag(metSrc),
+            srcPF = cms.untracked.InputTag("pfCandsForUnclusteredUnc"),
+        )
+        metSrc = modName
+        setattr(process,modName,mod)
+
+        pathName = 'metUesSystematicsEmbedding{0}'.format(postfix)
+        path = cms.Path(getattr(process,modName))
+        setattr(process,pathName,path)
+
+        print modName+" for  MET?"
+
+        process.schedule.append(getattr(process,pathName))
+
 
     print metSrc 
 
