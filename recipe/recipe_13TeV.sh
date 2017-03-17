@@ -61,11 +61,10 @@ popd
 git cms-merge-topic cms-met:METRecipe_8020
 git cms-merge-topic ikrav:egm_id_80X_v2
 git cms-merge-topic rafaellopesdesa:RegressionCheckNegEnergy
-git cms-merge-topic rafaellopesdesa:EgammaAnalysis80_EGMSmearer_Moriond17_23Jan
-
+git cms-merge-topic cms-egamma:EGM_gain_v1
 
 pushd EgammaAnalysis/ElectronTools/data
-git clone https://github.com/ECALELFS/ScalesSmearings.git
+git clone -b Moriond17_gainSwitch_unc https://github.com/ECALELFS/ScalesSmearings.git
 popd
 
 # Checkout mva met code

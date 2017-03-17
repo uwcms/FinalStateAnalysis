@@ -33,9 +33,9 @@
 #include "FWCore/Utilities/interface/StreamID.h"
 
 #include "DataFormats/Common/interface/View.h"
-
+#include "DataFormats/DetId/interface/DetId.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
-
+#include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 #include "DataFormats/Candidate/interface/LeafCandidate.h"
 #include "EgammaAnalysis/ElectronTools/interface/EnergyScaleCorrection_class.h"
 #include "TRandom3.h"
@@ -62,6 +62,8 @@ private:
   EnergyScaleCorrection_class eScaler_; //correctionloader
   edm::EDGetTokenT<edm::View<pat::Electron> > srcTokencalib_;
   edm::EDGetTokenT<edm::View<pat::Electron> > srcTokenuncalib_;
+  edm::EDGetTokenT<EcalRecHitCollection> recHitCollectionEBToken_;
+  edm::EDGetTokenT<EcalRecHitCollection> recHitCollectionEEToken_;
   double nominal_;
   double eScaleUp_;
   double eScaleDown_;
@@ -78,7 +80,8 @@ PATElectronSystematicsEmbedderLFV::PATElectronSystematicsEmbedderLFV(const edm::
   srcTokencalib_ = consumes<edm::View<pat::Electron> >(pset.getParameter<edm::InputTag>("calibratedElectrons"));
   srcTokenuncalib_ = consumes<edm::View<pat::Electron> >(pset.getParameter<edm::InputTag>("uncalibratedElectrons"));
 
- 
+  recHitCollectionEBToken_=consumes<EcalRecHitCollection>(pset.getParameter<edm::InputTag>( "recHitCollectionEB" ));
+  recHitCollectionEEToken_=consumes<EcalRecHitCollection>(pset.getParameter<edm::InputTag>( "recHitCollectionEE" ));
   // Embedded output collection
   produces<pat::ElectronCollection>();
 
@@ -140,6 +143,12 @@ PATElectronSystematicsEmbedderLFV::produce(edm::Event& evt, const edm::EventSetu
    p4OutResDown->reserve(uncalibratedPatElectrons->size());
    p4OutResPhiDown->reserve(uncalibratedPatElectrons->size());
    
+   edm::Handle<EcalRecHitCollection> recHitCollectionEBHandle;
+   edm::Handle<EcalRecHitCollection> recHitCollectionEEHandle;
+
+   evt.getByToken(recHitCollectionEBToken_, recHitCollectionEBHandle);
+   evt.getByToken(recHitCollectionEEToken_, recHitCollectionEEHandle);
+
 
    for (size_t i = 0; i < uncalibratedPatElectrons->size(); ++i) {
      pat::Electron electron = uncalibratedPatElectrons->at(i); // make a local copy
@@ -156,7 +165,7 @@ PATElectronSystematicsEmbedderLFV::produce(edm::Event& evt, const edm::EventSetu
      double eta2 = calibratedElectron.eta();
      double phi2 = calibratedElectron.phi();
      double mass2 = calibratedElectron.mass();
-
+     double etEle2=calibratedElectron.et();
 
 
 
@@ -166,18 +175,32 @@ PATElectronSystematicsEmbedderLFV::produce(edm::Event& evt, const edm::EventSetu
 
      //     cout<<electron.r9()<<endl;
    
-     bool isEBEle=(fabs(electron.eta())<1.479)? true : false;
-
+     bool isEBEle=electron.isEB();
      int runnum=evt.run();
      
      double etaSCEle=electron.superCluster().get()->eta();
-     double r9Ele=electron.r9();
+     double full5x5r9=electron.full5x5_r9();
      double etEle=electron.et();
+     
+
+     const EcalRecHitCollection* recHits = (electron.isEB()) ? recHitCollectionEBHandle.product() : recHitCollectionEEHandle.product();
+
+     DetId seedDetId = electron.superCluster()->seed()->seed();
+
+     EcalRecHitCollection::const_iterator seedRecHit = recHits->find(seedDetId);
+
+     unsigned int gainSeedSC = 0;
+
+     if (seedRecHit != recHits->end()) 
+       {     
+	 if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain6)) gainSeedSC |= 0x01;
+	 if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain1)) gainSeedSC |= 0x02;
+       }
 
 
+     //     std::bitset<scAll> uncBitMask=100;
      //scale 
-     float error_scale=eScaler_.ScaleCorrectionUncertainty(runnum,isEBEle,r9Ele,etaSCEle,etEle); //error in scale correction
-
+     float error_scale=eScaler_.ScaleCorrectionUncertainty(runnum,isEBEle,full5x5r9,etaSCEle,etEle2,gainSeedSC,3); //error in scale correction
 
      double Up_factor = (1+error_scale);
      double Down_factor =  (1-error_scale);
@@ -192,13 +215,13 @@ PATElectronSystematicsEmbedderLFV::produce(edm::Event& evt, const edm::EventSetu
 
      //resolution
 
-     float sigma_up=eScaler_.getSmearingSigma(runnum,isEBEle,r9Ele,etaSCEle,etEle,1,0); //corrected sigma ->sigma+/-sigma_err
-     float sigma_down=eScaler_.getSmearingSigma(runnum,isEBEle,r9Ele,etaSCEle,etEle,-1,0); //corrected sigma ->sigma+/-sigma_e
+     float sigma_up=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,gainSeedSC,1,0); //corrected sigma ->sigma+/-sigma_err
+     float sigma_down=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,gainSeedSC,-1,0); //corrected sigma ->sigma+/-sigma_e
      
      double ResUp_factor = rgen_->Gaus(1,sigma_up);
      double ResDown_factor = rgen_->Gaus(1,sigma_down);
 
-     float sigma_resphidown=eScaler_.getSmearingSigma(runnum,isEBEle,r9Ele,etaSCEle,etEle,0,-1); //corrected sigma ->sigma+/-sigma_e
+     float sigma_resphidown=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,gainSeedSC,0,-1); //corrected sigma ->sigma+/-sigma_e
 
      double ResPhiDown_factor =rgen_->Gaus(1,sigma_resphidown);
 
