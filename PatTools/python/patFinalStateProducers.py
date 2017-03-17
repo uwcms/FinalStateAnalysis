@@ -135,7 +135,8 @@ def produce_final_states(process, daughter_collections, output_commands,
 
         
         process.load('EgammaAnalysis.ElectronTools.calibratedPatElectronsRun2_cfi')
-        process.calibratedPatElectrons.isMC=cms.bool(isMC) #!fixme!!
+        process.calibratedPatElectrons.isMC=cms.bool(isMC)
+        print process.calibratedPatElectrons.isMC
         process.calibratedPatElectrons.electrons=cms.InputTag(src['electrons'])
         
         
