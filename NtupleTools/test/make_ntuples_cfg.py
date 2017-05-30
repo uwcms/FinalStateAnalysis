@@ -447,6 +447,39 @@ if options.htt and options.isMC :
 
 
 
+#############################################
+### Add Rivet Tools to Ntuples            ###
+### for simplified template cross section ###
+#############################################
+
+if options.htt and options.isMC :
+    process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
+    process.mergedGenParticles = cms.EDProducer("MergedGenParticleProducer",
+        inputPruned = cms.InputTag("prunedGenParticles"),
+        inputPacked = cms.InputTag("packedGenParticles"),
+    )
+    process.myGenerator = cms.EDProducer("GenParticles2HepMCConverterHTXS",
+        genParticles = cms.InputTag("mergedGenParticles"),
+        genEventInfo = cms.InputTag("generator"),
+    )
+    process.rivetProducerHTXS = cms.EDProducer('HTXSRivetProducer',
+      HepMCCollection = cms.InputTag('myGenerator','unsmeared'),
+      LHERunInfo = cms.InputTag('externalLHEProducer'),
+      ProductionMode = cms.string('AUTO'),
+    )
+    
+    process.rivetMethods = cms.Path(
+        process.mergedGenParticles
+        * process.myGenerator
+        * process.rivetProducerHTXS
+    )
+    process.schedule.append( process.rivetMethods )
+
+
+
+
+
+
 
 
 ################################################
