@@ -189,12 +189,11 @@ PATElectronSystematicsEmbedderLFV::produce(edm::Event& evt, const edm::EventSetu
 
      EcalRecHitCollection::const_iterator seedRecHit = recHits->find(seedDetId);
 
-     unsigned int gainSeedSC = 0;
 
-     if (seedRecHit != recHits->end()) 
-       {     
-	 if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain6)) gainSeedSC |= 0x01;
-	 if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain1)) gainSeedSC |= 0x02;
+     unsigned int gainSeedSC = 12;
+     if (seedRecHit != recHits->end()) {
+       if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain6)) gainSeedSC = 6;
+       if(seedRecHit->checkFlag(EcalRecHit::kHasSwitchToGain1)) gainSeedSC = 1;
        }
 
 
