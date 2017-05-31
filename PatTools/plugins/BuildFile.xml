@@ -28,4 +28,6 @@
   <use   name="RecoBTag/SecondaryVertex"/>
 
   <use   name="ZZMatrixElement/MEMCalculators"/>
+
+  <use   name="SimDataFormats/HTXS"/>
 </library>

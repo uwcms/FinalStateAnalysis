@@ -67,6 +67,11 @@ pushd EgammaAnalysis/ElectronTools/data
 git clone -b Moriond17_gainSwitch_unc https://github.com/ECALELFS/ScalesSmearings.git
 popd
 
+echo "Checking out Rivet Tools for Higgs Template Cross Section"
+pushd $CMSSW_BASE/src
+git cms-merge-topic -u perrozzi:HTXS_clean
+popd
+
 # Checkout mva met code
 #git cms-addpkg RecoMET/METPUSubtraction
 #git cms-addpkg DataFormats/METReco

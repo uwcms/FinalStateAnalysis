@@ -63,6 +63,20 @@ parameters = {
 
     # additional variables for ntuple
     'eventVariables' : PSet(
+
+        # Rivet code provides the Simplifed Template Cross Section values
+        Rivet_stage0_cat='evt.getRivetInfo().stage0_cat',
+        Rivet_stage1_cat_pTjet25GeV='evt.getRivetInfo().stage1_cat_pTjet25GeV',
+        Rivet_stage1_cat_pTjet30GeV='evt.getRivetInfo().stage1_cat_pTjet30GeV',
+        Rivet_errorCode='evt.getRivetInfo().errorCode',
+        Rivet_prodMode='evt.getRivetInfo().prodMode',
+        Rivet_higgsPt='evt.getRivetInfo().higgs.pt()',
+        Rivet_higgsEta='evt.getRivetInfo().higgs.eta()',
+        Rivet_VPt='evt.getRivetInfo().V.pt()',
+        Rivet_VEta='evt.getRivetInfo().V.eta()',
+        Rivet_p4decay_VPt='evt.getRivetInfo().p4decay_V.pt()',
+        Rivet_p4decay_VEta='evt.getRivetInfo().p4decay_V.eta()',
+
         Flag_badGlobalMuonFilter='evt.getFilterFlags("badGlobalMuonFilter")',
         Flag_badCloneMuonFilter='evt.getFilterFlags("cloneGlobalMuonFilter")',
         Flag_BadChargedCandidateFilter='evt.getFilterFlags("BadChargedCandidateFilter")',
