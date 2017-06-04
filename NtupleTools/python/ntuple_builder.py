@@ -219,7 +219,7 @@ def make_ntuple(*legs, **kwargs):
             templates.topology.fullJES
         )
 
-    if isShiftedMet:
+    if isShiftedMet and fullJES:
         ntuple_config = PSet(
             ntuple_config,
             templates.event.shiftedMet
