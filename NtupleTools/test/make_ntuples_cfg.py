@@ -122,7 +122,7 @@ options = TauVarParsing.TauVarParsing(
     runWZ=0,
     isLFV=0,
     runMetUncertainties=0,
-    metShift=1,
+    metShift=0,
     runFSRFilter=0, # 1 = filter for ZG, -1 inverts filter for DY
     eventsToSkip='',
 )
