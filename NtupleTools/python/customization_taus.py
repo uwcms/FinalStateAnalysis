@@ -124,7 +124,7 @@ def postTaus(process, tSrc, jSrc,**kwargs):
         embedBtags = cms.bool(False),
         suffix = cms.string(''),
         jetSrc = cms.InputTag(jSrc),
-        maxDeltaR = cms.double(0.1),
+        maxDeltaR = cms.double(0.5),
     )
     setattr(process,modName,mod)
     tSrc = modName

@@ -232,7 +232,7 @@ def postElectrons(process, eSrc, jSrc,**kwargs):
         embedBtags = cms.bool(False),
         suffix = cms.string(''),
         jetSrc = cms.InputTag(jSrc),
-        maxDeltaR = cms.double(0.1),
+        maxDeltaR = cms.double(0.5),
     )
     eSrc = modName
     setattr(process,modName,mod)
