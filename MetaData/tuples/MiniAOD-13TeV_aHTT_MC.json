@@ -30,11 +30,28 @@
   "ZHToTauTau_M125" : "ZHToTauTau_M125_13TeV_powheg_pythia8",
   "ZHToTauTau_M130" : "ZHToTauTau_M130_13TeV_powheg_pythia8",
   "ZHToTauTau_M140" : "ZHToTauTau_M140_13TeV_powheg_pythia8",
+
   "aHTT_VBF_M-125_0L1" : "VBFHiggs0L1_M-125_13TeV-JHUGenV6",
   "aHTT_VBF_M-125_0L1f05ph0" : "VBFHiggs0L1f05ph0_M-125_13TeV-JHUGenV6",
   "aHTT_VBF_M-125_0M" : "VBFHiggs0M_M-125_13TeV-JHUGenV6",
   "aHTT_VBF_M-125_0Mf05ph0" : "VBFHiggs0Mf05ph0_M-125_13TeV-JHUGenV6",
   "aHTT_VBF_M-125_0PH" : "VBFHiggs0PH_M-125_13TeV-JHUGenV6",
   "aHTT_VBF_M-125_0PHf05ph0" : "VBFHiggs0PHf05ph0_M-125_13TeV-JHUGenV6",
-  "aHTT_VBF_M-125_0PM" : "VBFHiggs0PM_M-125_13TeV-JHUGenV6"
+  "aHTT_VBF_M-125_0PM" : "VBFHiggs0PM_M-125_13TeV-JHUGenV6",
+
+  "aHTT_WH_M-125_0L1" : "WHiggs0L1_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_WH_M-125_0L1fWH05ph0" : "WHiggs0L1fWH05ph0_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_WH_M-125_0M" : "WHiggs0M_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_WH_M-125_0MfWH05ph0" : "WHiggs0MfWH05ph0_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_WH_M-125_0PH" : "WHiggs0PH_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_WH_M-125_0PHfWH05ph0" : "WHiggs0PHfWH05ph0_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_WH_M-125_0PM" : "WHiggs0PM_Undecayed_M-125_13TeV-JHUgenV6",
+
+  "aHTT_ZH_M-125_0L1" : "ZHiggs0L1_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_ZH_M-125_0L1fZH05ph0" : "ZHiggs0L1fZH05ph0_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_ZH_M-125_0M" : "ZHiggs0M_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_ZH_M-125_0MfZH05ph0" : "ZHiggs0MfZH05ph0_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_ZH_M-125_0PH" : "ZHiggs0PH_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_ZH_M-125_0PHfZH05ph0" : "ZHiggs0PHfZH05ph0_Undecayed_M-125_13TeV-JHUgenV6",
+  "aHTT_ZH_M-125_0PM" : "ZHiggs0PM_Undecayed_M-125_13TeV-JHUgenV6"
 } 
