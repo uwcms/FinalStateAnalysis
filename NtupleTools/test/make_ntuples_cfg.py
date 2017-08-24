@@ -44,6 +44,8 @@ runDQM=0       - run over single object final states to test all
                  object properties (wont check diobject properties)
 hzz=0          - Include FSR contribution a la HZZ4l group, 
                  include all ZZ candidates (including alternative lepton pairings).
+zh=0           - This relaxes the criteria for choosing the Z candidates in
+                 3lepton+tau and 4lepton final states, is just produces additional combos
 isSync=0       - (with eCalib=1 and isMC=1) Apply electron energy 
                  resolution corrections as a 1sigma shift instead of smearing 
                  for synchronization purposes.
@@ -117,6 +119,7 @@ options = TauVarParsing.TauVarParsing(
     runMetFilter=0,
     runDQM=0,
     hzz=0,
+    zh=0,
     paramFile='',
     skipGhost=0,
     runWZ=0,
@@ -1079,6 +1082,7 @@ else:
                                 skimCuts=options.skimCuts, 
                                 suffix=suffix,
                                 hzz=options.hzz, 
+                                zh=options.zh,
                                 nExtraJets=extraJets, 
                                 isMC=options.isMC,
                                 isShiftedMet=bool(options.metShift),
