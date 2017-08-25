@@ -61,6 +61,8 @@ parameters = {
 
     # additional variables for ntuple
     'eventVariables' : PSet(
+        muVetoAZHdR0 = 'vetoMuons(0.0, "pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR04().sumChargedHadronPt + max( pfIsolationR04().sumNeutralHadronEt + pfIsolationR04().sumPhotonEt - 0.5 * pfIsolationR04().sumPUPt, 0.0)) / pt() ) < 0.25 & (isGlobalMuon | isTrackerMuon) & isPFMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz2\') ) < 0.2").size()',
+        eVetoAZHdR0 = 'vetoElectrons(0.0, "pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2 && userFloat(\'missingHits\') < 2").size()',
         jb1pt = 'jetVariables("pt > 20 & userFloat(\'idLoose\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8484", 0.5).at(0)',
         jb1eta = 'jetVariables("pt > 20 & userFloat(\'idLoose\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8484", 0.5).at(1)',
         jb1phi = 'jetVariables("pt > 20 & userFloat(\'idLoose\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8484", 0.5).at(2)',
@@ -174,7 +176,7 @@ parameters = {
         objectMatchesDoubleEPath      = r'matchToHLTPath({object_idx}, "HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+", 0.5)',
         objectMatchesDoubleE23_12Path      = r'matchToHLTPath({object_idx}, "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+", 0.5)',
         objectMatchesDoubleEFilter      = 'matchToHLTFilter({object_idx}, "HLT2PhotonPhotonDZ", 0.5)',
-        objectMatchesDoubleE23_12Filter      = 'matchToHLTFilter({object_idx}, "HLT2PhotonPhotonDZ", 0.5)',
+        objectMatchesDoubleE23_12Filter      = 'matchToHLTFilter({object_idx}, "hltEle23Ele12CaloIdLTrackIdLIsoVLDZFilter", 0.5)',
         objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isPrompt() : -999',
         objectGenDirectPromptTauDecay       = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef().statusFlags().isDirectPromptTauDecayProduct() : -999',
         objectZTTGenMatching = 'tauGenMatch2({object_idx})', 
@@ -203,8 +205,8 @@ parameters = {
         objectMatchesIsoTkMu22Path      = r'matchToHLTPath({object_idx}, "HLT_IsoTkMu22_v\\d+", 0.5)',
         objectMatchesDoubleMuPath1      = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\d+", 0.5)',
         objectMatchesDoubleMuPath2      = r'matchToHLTPath({object_idx}, "HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+", 0.5)',
-        objectMatchesDoubleMuFilter1 = 'matchToHLTFilter({object_idx}, "HLT2MuonMuonDZ", 0.5)',
-        objectMatchesDoubleMuFilter2 = 'matchToHLTFilter({object_idx}, "HLT2MuonMuonDZ", 0.5)',
+        objectMatchesDoubleMuFilter1 = 'matchToHLTFilter({object_idx}, "hltDiMuonGlb17Glb8RelTrkIsoFiltered0p4DzFiltered0p2", 0.5)',
+        objectMatchesDoubleMuFilter2 = 'matchToHLTFilter({object_idx}, "hltDiMuonGlb17Trk8RelTrkIsoFiltered0p4DzFiltered0p2", 0.5)',
         objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isPrompt() : -999',
         objectGenDirectPromptTauDecayFinalState       = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef().isDirectPromptTauDecayProductFinalState() : -999',
         objectGenPromptFinalState       = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef().isPromptFinalState() : -999',

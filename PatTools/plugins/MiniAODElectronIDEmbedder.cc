@@ -28,6 +28,9 @@
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "DataFormats/PatCandidates/interface/VIDCutFlowResult.h"
 
+// Adding MissingHits as part of ID used in ZHiggs analysis
+#include "DataFormats/TrackReco/interface/HitPattern.h"
+
 class MiniAODElectronIDEmbedder : public edm::EDProducer
 {
 public:
@@ -201,6 +204,11 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetu
           int result = (*(categories.at(i)))[eptr];
           out->back().addUserFloat(categoryLabels_.at(i), float(result));
         }
+
+      // Add missing hits
+      double missingHits = -999;
+      missingHits = eptr->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS);
+      out->back().addUserFloat("missingHits", missingHits);
 
     }
 

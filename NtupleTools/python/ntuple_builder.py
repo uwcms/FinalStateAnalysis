@@ -205,6 +205,7 @@ def make_ntuple(*legs, **kwargs):
     }
 
     hzz = kwargs.get('hzz',False)
+    zh = kwargs.get('zh',False)
 
     runMVAMET = kwargs.get('runMVAMET', False)
     runNewMVAMET = kwargs.get('runNewMVAMET', False)
@@ -438,6 +439,7 @@ def make_ntuple(*legs, **kwargs):
         for name, cut in uniqueness_cuts(legs, pt_cuts, eta_cuts,
                                          skimCuts=kwargs.get('skimCuts', []),
                                          hzz=hzz, 
+                                         zh=zh, 
                                          dblH=kwargs.get('dblhMode', False)).iteritems():
             output.analysis.selections.append(
                 cms.PSet(

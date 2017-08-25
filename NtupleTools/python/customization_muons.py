@@ -51,6 +51,21 @@ def preMuons(process, mSrc, vSrc, **kwargs):
     setattr(process,pathName,modPath)
     process.schedule.append(getattr(process,pathName))
 
+    # embed IP2 (needed for bestMuonTrack version of dZ)
+    modName = 'miniMuonsEmbedIp2{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODMuonIpEmbedder2",
+        muonSrc = cms.InputTag(mSrc),
+        vtxSrc = cms.InputTag(vSrc),
+    )
+    mSrc = modName
+    setattr(process,modName,mod)
+    
+    pathName = 'runMiniAODMuonIpEmbedding2{0}'.format(postfix)
+    modPath = cms.Path(getattr(process,modName))
+    setattr(process,pathName,modPath)
+    process.schedule.append(getattr(process,pathName))
+
     # Embed effective areas in muons
     if not hasattr(process,'patMuonEAEmbedder'):
         process.load("FinalStateAnalysis.PatTools.muons.patMuonEAEmbedding_cfi")

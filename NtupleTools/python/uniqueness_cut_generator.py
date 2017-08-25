@@ -77,9 +77,12 @@ def uniqueness_3(cuts, obj, firstIndex, **kwargs):
     idx = [firstIndex + x for x in range(3)]
 
     hzz = kwargs.get("hzz", False)
+    zh = kwargs.get("zh", False)
 
     if hzz:
         cutstr = 'zCompatibilityWithUserCands(%d, %d, "dretFSRCand") < zCompatibilityWithUserCands(%d, %d, "dretFSRCand")'
+    elif zh:
+        cutstr = 'likeSigned(%d, %d) <= likeSigned(%d, %d)'
     else:
         cutstr = 'zCompatibility(%d, %d) < zCompatibility(%d, %d)'
 
