@@ -215,10 +215,18 @@ def make_ntuple(*legs, **kwargs):
 
     ntuple_config = _common_template.clone()
     if fullJES:
-        ntuple_config = PSet(
-            ntuple_config,
-            templates.topology.fullJES
-        )
+        if isShiftedMet : # don't include metShiftsForFullJES
+            # which has a few redundant vars with shiftedMet
+            ntuple_config = PSet(
+                ntuple_config,
+                templates.topology.fullJES
+            )
+        else : # isShiftedMet
+            ntuple_config = PSet(
+                ntuple_config,
+                templates.topology.fullJES,
+                templates.event.metShiftsForFullJES
+            )
 
     if isShiftedMet :
         ntuple_config = PSet(
