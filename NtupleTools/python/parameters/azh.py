@@ -61,6 +61,8 @@ parameters = {
 
     # additional variables for ntuple
     'eventVariables' : PSet(
+        closestMassZEE = 'closestZMassEE( "pt > 9 & abs(eta) < 2.5 & passConversionVeto() > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2 && userFloat(\'missingHits\') < 2" )',
+        closestMassZMM = 'closestZMassMM( "pt > 9 & abs(eta) < 2.4 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz2\') ) < 0.2" )',
         muVetoAZHdR0 = 'vetoMuons(0.0, "pt > 10 & abs(eta) < 2.4 & ( ( pfIsolationR04().sumChargedHadronPt + max( pfIsolationR04().sumNeutralHadronEt + pfIsolationR04().sumPhotonEt - 0.5 * pfIsolationR04().sumPUPt, 0.0)) / pt() ) < 0.25 & (isGlobalMuon | isTrackerMuon) & isPFMuon > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz2\') ) < 0.2").size()',
         #eVetoAZHdR0 = 'vetoElectrons(0.0, "pt > 10 & abs(eta) < 2.5 & ( ( pfIsolationVariables().sumChargedHadronPt + max( pfIsolationVariables().sumNeutralHadronEt + pfIsolationVariables().sumPhotonEt - 0.5 * pfIsolationVariables().sumPUPt, 0.0)) / pt() ) < 0.3 & userFloat(\'MVANonTrigWP90\') > 0 & passConversionVeto() > 0 & abs( userFloat(\'ipDXY\') ) < 0.045 & abs( userFloat(\'dz\') ) < 0.2 && userFloat(\'missingHits\') < 2").size()',
         # No more iso requirement on electron veto
