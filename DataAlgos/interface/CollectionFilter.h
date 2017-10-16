@@ -57,4 +57,11 @@ std::vector<const reco::Candidate*> getOverlapObjects(
     const std::string& filter
 );
 
+// Get objects passing [filter]
+std::vector<const reco::Candidate*> getObjectsPassingFilter(
+    const std::vector<const reco::Candidate*>& overlapCollection,
+    const std::string& filter
+);
+
+
 #endif /* end of include guard: COLLECTIONFILTER_EKK6HP4C */

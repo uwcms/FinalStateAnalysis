@@ -97,3 +97,23 @@ std::vector<const reco::Candidate*> getOverlapObjects(
   }
   return output;
 }
+
+
+// Get objects passing filter
+std::vector<const reco::Candidate*> getObjectsPassingFilter(
+    const std::vector<const reco::Candidate*>& collection,
+    const std::string& filter) {
+  std::vector<const reco::Candidate*> output;
+
+  const CandFunc& filterFunc = getFunction(filter);
+
+  for (size_t i = 0; i < collection.size(); ++i) {
+    const reco::Candidate* ptr = collection[i];
+    if ((filterFunc)(*ptr)) {
+      output.push_back(ptr);
+    }
+  }
+  return output;
+}
+
+
