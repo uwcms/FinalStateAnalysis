@@ -1,0 +1,15 @@
+<use   name="FWCore/Framework"/>
+<use   name="FWCore/MessageLogger"/>
+<use   name="FinalStateAnalysis/DataFormats"/>
+<use   name="PhysicsTools/SelectorUtils"/>
+<use   name="FWCore/Utilities"/>
+<use   name="FinalStateAnalysis/Utilities"/>
+<use   name="RecoMET/METPUSubtraction"/>
+<use   name="EgammaAnalysis/ElectronTools"/>
+<use   name="RecoEgamma/EgammaTools"/>
+<use   name="rootrflx"/>
+<use   name="xrootd"/>
+<use   name="root"/>
+<export>
+  <lib   name="1"/>
+</export>

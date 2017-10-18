@@ -1,0 +1,9 @@
+<use   name="rootcore"/>
+<use   name="root"/>
+<use   name="rootrflx"/>
+<use   name="rootgraphics"/>
+<use   name="python"/>
+<lib   name="PyROOT"/>
+<export>
+  <lib   name="1"/>
+</export>

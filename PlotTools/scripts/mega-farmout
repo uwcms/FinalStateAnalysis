@@ -1,0 +1,221 @@
+#!/usr/bin/env python
+
+''' Send a mega job to Condor using farmout.
+
+Author: Evan K. Friis, UW Madison
+
+'''
+
+from RecoLuminosity.LumiDB import argparse
+import logging
+import math
+import os
+import shutil
+import subprocess
+import tempfile
+import time
+from pdb import set_trace
+
+# Try and make pretty colors if termcolor is installed.
+try:
+    from termcolor import colored
+except ImportError:
+    def colored(text, *args, **kwargs):
+        return text
+
+from FinalStateAnalysis.PlotTools.CondorDAG import CondorDAG
+from FinalStateAnalysis.PlotTools.MegaPath import find_input_files
+
+log = logging.getLogger(__name__)
+
+
+def get_farmout_username():
+    """ Determine the appropriate user name for HDFS paths, etc. """
+    preferences = ['FARMOUT_USER', 'USER', 'LOGNAME']
+    for variable in preferences:
+        if variable in os.environ:
+            return os.environ[variable]
+    raise KeyError("Could not determine username.")
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('selector', metavar='selector', type=str,
+                        help='Path to TPySelector module')
+
+    parser.add_argument('inputs', metavar='inputs', type=str,
+                        help='Text file listing input ROOT files.')
+
+    parser.add_argument('output', metavar='output',
+                        type=str, help='Output root file')
+
+    parser.add_argument('--files-per-job', dest='filesinjob',
+                        default=10, type=int,
+                        help='Number of files/analysis job. '
+                        'Default: %(default)i')
+
+    parser.add_argument('--files-per-merge', dest='filesinmerge',
+                        default=10, type=int,
+                        help='Number of files/merge job. '
+                        'Default: %(default)i')
+
+    parser.add_argument('--tree', metavar='tree', type=str, default='',
+                        help='Override path to TTree in data files'
+                        ' (Ex: /my/dir/myTree)')
+
+    parser.add_argument('--verbose', action='store_const', const=True,
+                        default=False, help='Print debug output')
+
+    parser.add_argument('--no-clean', action='store_const', const=True,
+                        default=False,
+                        help="Don't clean up the submit directories")
+
+    args = parser.parse_args()
+
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
+    log.info("Processing %s using %s, the output file will be %s", args.inputs, args.selector, args.output)
+
+    # Figure out a nice working directory to create condor submissions
+    inputs_nice_name = os.path.basename(args.inputs).replace('.txt', '')
+    selector_nice_name = os.path.basename(args.selector).replace('.py', '')
+    working_dir = tempfile.mkdtemp(
+        suffix=selector_nice_name + '-' + inputs_nice_name,
+        dir='/nfs_scratch/%s/' % os.environ['LOGNAME']
+    )
+    log.info("Generating submit scripts in %s", working_dir)
+
+    # Construct an output path which has the same tmp token as the submit dir.
+    output_path = 'srm://cmssrm2.hep.wisc.edu:8443/srm/v2/server?SFN='
+    hdfs_directory = '/hdfs/store/user/%s/MegaJob_%s/' % (
+        get_farmout_username(), os.path.basename(working_dir))
+    output_path += hdfs_directory
+
+    resolved_input_files = list(
+        x.replace('/hdfs', '') for x in find_input_files(args.inputs))
+
+    # Write the resolved input file names in temporary file
+    # Determine number of files and jobs to process
+    nfiles = len(resolved_input_files)
+    njobs = (nfiles + (args.filesinjob - 1)) / args.filesinjob
+    log.info("Running over %i files in %i jobs", nfiles, njobs)
+
+    with tempfile.NamedTemporaryFile() as tmp_input_filelist:
+        tmp_input_filelist.write('\n'.join(resolved_input_files)+'\n')
+        tmp_input_filelist.flush()
+        # Generate farmout command for analysis step.
+        farmout_cmd = [
+            'farmoutAnalysisJobs',
+            '--submit-dir=%s/analyze' % working_dir,
+            '--input-file-list=%s' % tmp_input_filelist.name,
+            '--input-files-per-job=%i' % args.filesinjob,
+            '--output-dir=%s' % (output_path),
+            '--fwklite',
+            '--infer-cmssw-path',
+            '--output-dag-file=%s/job.dag' % working_dir,
+            ]
+        if njobs != 1:
+            farmout_cmd.append('--no-submit') # submitted by merge job via DAG dependencies
+        
+        farmout_cmd.extend([
+            '--shared-fs',  # Figure out how to remove this later.
+            'Analyze',      # The job name
+            # Begin script command
+            '%s/PlotTools/scripts/mega-batch.sh' % os.environ['fsa'],
+            os.path.abspath(args.selector),
+            # Begin script arguments - NB these are single quoted.
+            # Mega handles options differently when it detects it is running on
+            # condor.
+            "$inputFileNames",
+            "$outputFileName",
+            os.getcwd(),
+            args.tree,
+        ])
+        subprocess.check_call(farmout_cmd)
+
+    if njobs != 1:
+        # Determine the number of merge layers needed.
+        # Find N where (files-per-merge)^N = num-analysis-jobs, rounding up.
+        num_merge_layers = int(math.ceil(math.log(njobs, args.filesinmerge)))
+
+        merge_layer_names = ['MergeLayer%i' % i for i in range(num_merge_layers)]
+        # Give the last merge layer a nice name
+        merge_layer_names[-1] = 'FinalMerged'
+
+        previous_submit_dir = '%s/analyze' % working_dir
+
+        # Generate farmout command for each merge step.
+        for idx, layer_name in enumerate(merge_layer_names):
+            merge_cmd = [
+                'farmoutAnalysisJobs',
+                '--submit-dir=%s/%s' % (working_dir, layer_name),
+                '--last-submit-dir=%s' % previous_submit_dir,
+                '--output-dag-file=%s/job.dag' % working_dir,
+                '--input-files-per-job=%i' % args.filesinmerge,
+                '--output-dir=%s' % (output_path),
+                '--infer-cmssw-path',
+                '--merge',
+                '--use-hadd'
+            ]
+            previous_submit_dir = '%s/%s' % (working_dir, layer_name)
+            # Only submit the final job. It submits all it's dependencies.
+            if idx != len(merge_layer_names) - 1:
+                merge_cmd.append('--no-submit')
+            merge_cmd.append(layer_name)
+            subprocess.check_call(merge_cmd)
+    # Parse the DAG file
+    dag = CondorDAG(working_dir + '/job.dag')
+
+    def color_status(status):
+        colors = {
+            'UNKNOWN': 'grey',
+            'STATUS_ERROR': 'red',
+            'STATUS_DONE': 'green',
+            'STATUS_SUBMITTED': 'yellow',
+            'STATUS_READY': 'cyan',
+            'STATUS_NOT_READY': 'blue',
+        }
+        if status not in colors:
+            return status
+        return colored(status, colors[status])
+
+    log.info("Waiting for job to complete")
+    jobstatus = dag.update_status()[0]
+    
+    while jobstatus not in ["STATUS_ERROR", "STATUS_DONE"]:
+        time.sleep(10)
+        jobstatus = dag.update_status()[0]
+        # Make a summary of how many jobs are doing what.
+        jobstats = " ".join([
+            "%s(%i)" % (color_status(status), count)
+            for status, count in dag.job_statistics().iteritems()])
+
+        log.info("%s: %s stats: %s",
+                 dag.dagfile, dag.status[0], jobstats)
+
+    if jobstatus == "STATUS_ERROR":
+        log.error("Job failed with reason: %s" % dag.status[1])
+        for node, node_error in dag.failing_nodes():
+            log.error("==> %s: %s", node, node_error)
+        raise SystemExit(1)
+
+    
+    leafnodes = dag.leaves()
+    if len(leafnodes) != 1:
+        log.error("There should be only one output job! I found %i",
+                  len(leafnodes))
+        raise SystemExit(2)
+    final_file = leafnodes[0].output_file()
+    if final_file.startswith('/store'):
+        final_file = '/hdfs' + final_file
+
+    log.info("Copying final output %s => %s", final_file, args.output)
+    shutil.copyfile(final_file, args.output)
+
+    log.info(colored("%s: job complete." % dag.dagfile, "green"))
+
+    raise SystemExit(0)

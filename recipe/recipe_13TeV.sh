@@ -1,0 +1,111 @@
+#!/bin/bash
+set -o errexit
+set -o nounset
+
+HZZ=${HZZ:-0}
+
+# Check CMSSW version
+MAJOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_.*|\1|"`
+MINOR_VERSION=`echo $CMSSW_VERSION | sed "s|CMSSW_\([0-9]\)_\([0-9]\)_.*|\2|"`
+
+
+# Tags for 7XX
+
+pushd $CMSSW_BASE/src
+
+# electron and photon id
+#git cms-merge-topic ikrav:egm_id_7.4.12_v1
+
+# and energy scale and resolution corrections
+#git cms-merge-topic gpetruc:ElectronRun2PromptCalib-74X
+
+# 74X met corrections (no HF)
+#git cms-merge-topic -u cms-met:METCorUnc74X
+
+# HZZ MELA, MEKD etc.
+if [ "$HZZ" = "1" ]; then
+    echo "Checking out ZZ MELA and Higgs combine"
+    git clone https://github.com/cms-analysis/HiggsAnalysis-ZZMatrixElement.git ZZMatrixElement
+    pushd ZZMatrixElement
+    git checkout -b from-V00-02-01-patch1 V00-02-01-patch1
+    popd
+    git clone -b 74x-root6 https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+fi
+
+echo "Checking out material to run new tau MVA ID"
+pushd $CMSSW_BASE/src
+git cms-addpkg DataFormats/PatCandidates
+git cms-addpkg PhysicsTools/PatAlgos
+git cms-addpkg RecoTauTag/Configuration
+git cms-addpkg RecoTauTag/RecoTau
+
+git cms-addpkg RecoMET/METFilters
+git cms-addpkg EgammaAnalysis/ElectronTools
+git cms-addpkg RecoEgamma/EgammaTools
+git cms-addpkg RecoEgamma/ElectronIdentification
+git cms-addpkg RecoJets/JetProducers
+
+if [ "$MAJOR_VERSION" = "9" ] && [ "$MINOR_VERSION" < "4" ] ; then
+    echo "until  the fix is merged a custum fix is needed (taken from ahinzmann)"
+    git remote add taroniCMSSW https://github.com/taroni/cmssw.git
+    git fetch taroniCMSSW
+    git checkout taroniCMSSW/porting92X --  RecoJets/JetProducers/src/PileupJetIdAlgo.cc
+fi
+
+##waiting CMSSW9XY directions
+#cd RecoTauTag/RecoTau
+#git remote add tau-pog git@github.com:cms-tau-pog/cmssw.git
+#git fetch tau-pog
+#git merge tau-pog/CMSSW_8_0_X_tau-pog_miniAOD-backport-tauID
+#popd
+
+#echo "Checking out MET Filters"
+#git cms-merge-topic -u cms-met:fromCMSSW_8_0_20_postICHEPfilter
+
+#echo "Checking out bad muon filter stuff"
+#git cms-merge-topic gpetruc:badMuonFilters_80X_v2
+
+echo "Checking out mva met and svFit material:"
+# svFit packaged checked out for everyone so that svFit code in FSA compiles
+git clone git@github.com:veelken/SVFit_standalone.git TauAnalysis/SVfitStandalone
+pushd TauAnalysis/SVfitStandalone
+git checkout svFit_2015Apr03
+popd
+
+#git cms-merge-topic cms-met:METRecipe_8020
+#git cms-merge-topic ikrav:egm_id_80X_v2
+#git cms-merge-topic rafaellopesdesa:RegressionCheckNegEnergy
+#git cms-merge-topic cms-egamma:EGM_gain_v1
+
+
+##Doesn't work. Need to clone and modify my version
+#pushd $CMSSW_BASE/src
+git remote add cms-egamma git@github.com:cms-egamma/cmssw.git
+git fetch cms-egamma
+#git checkout cms-egamma/CMSSW_9_0_X -- EgammaAnalysis/ElectronTools
+git checkout cms-egamma/EGM_gain_v1 -- EgammaAnalysis/ElectronTools/python/regressionWeights_cfi.py
+git checkout cms-egamma/EGM_gain_v1 -- EgammaAnalysis/ElectronTools/python/regressionApplication_cff.py
+popd
+
+cd EgammaAnalysis/ElectronTools/data
+git clone https://github.com/ECALELFS/ScalesSmearings.git
+cd - 
+#pushd EgammaAnalysis/ElectronTools/data
+#git clone -b Moriond17_gainSwitch_unc https://github.com/ECALELFS/ScalesSmearings.git
+#popd
+
+echo "Checking out Rivet Tools for Higgs Template Cross Section"
+pushd $CMSSW_BASE/src
+git remote add perozzi https://github.com/perrozzi/cmssw.git
+git fetch perozzi
+git checkout perozzi/HTXS_clean -- SimDataFormats/HTXS
+#git cms-merge-topic -u perrozzi:HTXS_clean
+popd
+
+
+cd $CMSSW_BASE/src
+
+
+
+popd
+

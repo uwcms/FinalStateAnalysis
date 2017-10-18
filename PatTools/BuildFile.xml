@@ -1,0 +1,18 @@
+<use   name="FWCore/Framework"/>
+<use   name="FWCore/MessageLogger"/>
+<use   name="DataFormats/Candidate"/>
+<use   name="DataFormats/Common"/>
+<use   name="DataFormats/PatCandidates"/>
+<use   name="FinalStateAnalysis/DataFormats"/>
+<use   name="FinalStateAnalysis/RecoTools"/>
+<use   name="EgammaAnalysis/ElectronTools"/>
+<use   name="RecoMET/METAlgorithms"/>
+<use   name="CommonTools/Utils"/>
+<use   name="RecoTauTag/RecoTau"/>
+<use   name="RecoEgamma/EgammaTools"/>
+<use   name="RecoEgamma/EgammaElectronAlgos"/>
+<use   name="CondTools/BTau"/>
+<use   name="rootrflx"/>
+<export>
+  <lib   name="1"/>
+</export>

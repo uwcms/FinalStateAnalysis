@@ -1,0 +1,20 @@
+<use   name="SimDataFormats/PileupSummaryInfo"/>
+<use   name="FWCore/ParameterSet"/>
+<use   name="FWCore/PythonParameterSet"/>
+<use   name="DataFormats/Luminosity"/>
+<use   name="DataFormats/ParticleFlowCandidate"/>
+<use   name="PhysicsTools/HepMCCandAlgos"/>
+<use   name="DataFormats/Candidate"/>
+<use   name="CommonTools/Utils"/>
+<use   name="root"/>
+<use   name="roottmva"/>
+<use   name="clhep"/>
+<use   name="DataFormats/HepMCCandidate"/>
+<use   name="DataFormats/PatCandidates"/>
+<use   name="FWCore/Utilities"/>
+<use   name="TauAnalysis/SVfitStandalone"/>
+<export>
+  <lib   name="1"/>
+  <use   name="TauAnalysis/CandidateTools"/>
+</export>
+

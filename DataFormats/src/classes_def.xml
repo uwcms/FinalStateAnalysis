@@ -1,0 +1,413 @@
+<lcgdict>
+<selection>
+  <class name="edm::Ptr<reco::Vertex >"/>
+  <class name="edm::PtrVector<reco::Vertex >"/>
+
+  <class name="edm::Ptr<pat::Photon>"/>
+
+  <class name="edm::RefProd<pat::ElectronCollection>"/>
+  <class name="edm::RefProd<pat::MuonCollection>"/>
+  <class name="edm::RefProd<pat::TauCollection>"/>
+  <class name="edm::RefProd<pat::PhotonCollection>"/>
+  <class name="edm::RefProd<pat::JetCollection>"/>
+
+  <class name="std::map<std::string, float>"/>
+  <class name="std::map<std::string, int>"/>
+  <class name ="std::map<std::string,edm::Ptr<pat::MET> >" />
+
+  <class name="VBFVariables" ClassVersion="13">
+   <version ClassVersion="13" checksum="3040145736"/>
+   <version ClassVersion="12" checksum="1002516445"/>
+   <version ClassVersion="11" checksum="2844821699"/>
+   <version ClassVersion="10" checksum="2474259455"/>
+  </class>
+
+  <class name="PATFinalState" ClassVersion="11">
+   <version ClassVersion="11" checksum="2004223533"/>
+   <version ClassVersion="10" checksum="2840789346"/>
+  </class>
+  <class name="std::vector<PATFinalState*>"/>
+  <class name="PATFinalStateCollection"/>
+  <class name="edm::Wrapper<PATFinalStateCollection>"/>
+  <class name="edm::Ref<PATFinalStateCollection,PATFinalState,edm::refhelper::FindUsingAdvance<PATFinalStateCollection,PATFinalState> >"/>
+  <class name="edm::RefVector<PATFinalStateCollection,PATFinalState,edm::refhelper::FindUsingAdvance<PATFinalStateCollection,PATFinalState> >"/>
+  <class name="edm::RefProd<PATFinalStateCollection>"/>
+  <class name="edm::Ptr<PATFinalState>"/>
+
+  <class name="PATFinalStateProxy" ClassVersion="10">
+   <version ClassVersion="10" checksum="4038526841"/>
+  </class>
+
+  <class name="PATFinalStateEvent" ClassVersion="28">
+   <version ClassVersion="28" checksum="3560064230"/>
+   <version ClassVersion="27" checksum="3545045297"/>
+   <version ClassVersion="26" checksum="4121354954"/>
+   <version ClassVersion="25" checksum="1320983526"/>
+   <version ClassVersion="24" checksum="2343486084"/>
+   <version ClassVersion="23" checksum="2815161250"/>
+   <version ClassVersion="21" checksum="2996611432"/>
+   <version ClassVersion="20" checksum="3500615424"/>
+   <version ClassVersion="19" checksum="826230136"/>
+   <version ClassVersion="18" checksum="458817852"/>
+   <version ClassVersion="17" checksum="3431786532"/>
+   <version ClassVersion="16" checksum="319173420"/>
+   <version ClassVersion="15" checksum="1840019056"/>
+   <version ClassVersion="14" checksum="1619979458"/>
+   <version ClassVersion="13" checksum="3775954220"/>
+   <version ClassVersion="12" checksum="4160196554"/>
+   <version ClassVersion="11" checksum="525405272"/>
+   <version ClassVersion="10" checksum="3218457501"/>
+  </class>
+  <class name="PATFinalStateEventCollection"/>
+  <class name="edm::Wrapper<PATFinalStateEvent>"/>
+  <class name="edm::Wrapper<PATFinalStateEventCollection>"/>
+  <class name="edm::Ref<PATFinalStateEventCollection,PATFinalStateEvent,edm::refhelper::FindUsingAdvance<PATFinalStateEventCollection,PATFinalStateEvent> >"/>
+  <class name="edm::RefVector<PATFinalStateEventCollection,PATFinalStateEvent,edm::refhelper::FindUsingAdvance<PATFinalStateEventCollection,PATFinalStateEvent> >"/>
+  <class name="edm::RefProd<PATFinalStateEventCollection>"/>
+  <class name="edm::Ptr<PATFinalStateEvent>"/>
+
+  <class name="PATFinalStateLS" ClassVersion="10">
+   <version ClassVersion="10" checksum="3002000688"/>
+  </class>
+  <class name="PATFinalStateLSCollection"/>
+  <class name="edm::Wrapper<PATFinalStateLS>"/>
+  <class name="edm::Wrapper<PATFinalStateLSCollection>"/>
+  <class name="edm::Ref<PATFinalStateLSCollection,PATFinalStateLS,edm::refhelper::FindUsingAdvance<PATFinalStateLSCollection,PATFinalStateLS> >"/>
+  <class name="edm::RefVector<PATFinalStateLSCollection,PATFinalStateLS,edm::refhelper::FindUsingAdvance<PATFinalStateLSCollection,PATFinalStateLS> >"/>
+  <class name="edm::RefProd<PATFinalStateLSCollection>"/>
+  <class name="edm::Ptr<PATFinalStateLS>"/>
+
+  <class name="PATMultiCandFinalState" ClassVersion="11">
+   <version ClassVersion="11" checksum="2040738471"/>
+   <version ClassVersion="10" checksum="3774322392"/>
+  </class>
+  <class name="PATMultiCandFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMultiCandFinalState>"/>
+  <class name="edm::Wrapper<PATMultiCandFinalStateCollection>"/>
+  <class name="edm::Ref<PATMultiCandFinalStateCollection,PATMultiCandFinalState,edm::refhelper::FindUsingAdvance<PATMultiCandFinalStateCollection,PATMultiCandFinalState> >"/>
+  <class name="edm::RefVector<PATMultiCandFinalStateCollection,PATMultiCandFinalState,edm::refhelper::FindUsingAdvance<PATMultiCandFinalStateCollection,PATMultiCandFinalState> >"/>
+  <class name="edm::RefProd<PATMultiCandFinalStateCollection>"/>
+  <class name="edm::Ptr<PATMultiCandFinalState>"/>
+
+
+  <class name="PATElecFinalState"/>
+  <class name="edm::Wrapper<PATElecFinalState>"/>
+  <class name="PATElecFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecFinalStateCollection>"/>
+
+
+  <class name="PATMuFinalState"/>
+  <class name="edm::Wrapper<PATMuFinalState>"/>
+  <class name="PATMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuFinalStateCollection>"/>
+
+
+  <class name="PATTauFinalState"/>
+  <class name="edm::Wrapper<PATTauFinalState>"/>
+  <class name="PATTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauFinalStateCollection>"/>
+
+
+  <class name="PATPhoFinalState"/>
+  <class name="edm::Wrapper<PATPhoFinalState>"/>
+  <class name="PATPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATPhoFinalStateCollection>"/>
+
+
+  <class name="PATJetFinalState"/>
+  <class name="edm::Wrapper<PATJetFinalState>"/>
+  <class name="PATJetFinalStateCollection"/>
+  <class name="edm::Wrapper<PATJetFinalStateCollection>"/>
+
+
+  <class name="PATElecElecFinalState"/>
+  <class name="edm::Wrapper<PATElecElecFinalState>"/>
+  <class name="PATElecElecFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecFinalStateCollection>"/>
+
+
+  <class name="PATElecMuFinalState"/>
+  <class name="edm::Wrapper<PATElecMuFinalState>"/>
+  <class name="PATElecMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuFinalStateCollection>"/>
+
+
+  <class name="PATElecTauFinalState"/>
+  <class name="edm::Wrapper<PATElecTauFinalState>"/>
+  <class name="PATElecTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecTauFinalStateCollection>"/>
+
+
+  <class name="PATMuTauFinalState"/>
+  <class name="edm::Wrapper<PATMuTauFinalState>"/>
+  <class name="PATMuTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuTauFinalStateCollection>"/>
+
+  <class name="PATMuJetFinalState"/>
+  <class name="edm::Wrapper<PATMuJetFinalState>"/>
+  <class name="PATMuJetFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuJetFinalStateCollection>"/>
+
+  <class name="PATElecJetFinalState"/>
+  <class name="edm::Wrapper<PATElecJetFinalState>"/>
+  <class name="PATElecJetFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecJetFinalStateCollection>"/>
+
+  <class name="PATMuMuFinalState"/>
+  <class name="edm::Wrapper<PATMuMuFinalState>"/>
+  <class name="PATMuMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuFinalStateCollection>"/>
+
+
+  <class name="PATTauTauFinalState"/>
+  <class name="edm::Wrapper<PATTauTauFinalState>"/>
+  <class name="PATTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauTauFinalStateCollection>"/>
+
+
+  <class name="PATElecElecElecFinalState"/>
+  <class name="edm::Wrapper<PATElecElecElecFinalState>"/>
+  <class name="PATElecElecElecFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecElecFinalStateCollection>"/>
+
+
+  <class name="PATElecElecMuFinalState"/>
+  <class name="edm::Wrapper<PATElecElecMuFinalState>"/>
+  <class name="PATElecElecMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecMuFinalStateCollection>"/>
+
+
+  <class name="PATElecElecTauFinalState"/>
+  <class name="edm::Wrapper<PATElecElecTauFinalState>"/>
+  <class name="PATElecElecTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecTauFinalStateCollection>"/>
+
+
+  <class name="PATElecMuMuFinalState"/>
+  <class name="edm::Wrapper<PATElecMuMuFinalState>"/>
+  <class name="PATElecMuMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuMuFinalStateCollection>"/>
+
+
+  <class name="PATElecMuTauFinalState"/>
+  <class name="edm::Wrapper<PATElecMuTauFinalState>"/>
+  <class name="PATElecMuTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuTauFinalStateCollection>"/>
+
+
+  <class name="PATMuMuMuFinalState"/>
+  <class name="edm::Wrapper<PATMuMuMuFinalState>"/>
+  <class name="PATMuMuMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuMuFinalStateCollection>"/>
+
+
+  <class name="PATMuMuTauFinalState"/>
+  <class name="edm::Wrapper<PATMuMuTauFinalState>"/>
+  <class name="PATMuMuTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuTauFinalStateCollection>"/>
+
+  <class name="PATElecTauTauFinalState"/>
+  <class name="edm::Wrapper<PATElecTauTauFinalState>"/>
+  <class name="PATElecTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecTauTauFinalStateCollection>"/>
+
+  <class name="PATMuTauTauFinalState"/>
+  <class name="edm::Wrapper<PATMuTauTauFinalState>"/>
+  <class name="PATMuTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuTauTauFinalStateCollection>"/>
+
+  <class name="PATTauTauTauFinalState"/>
+  <class name="edm::Wrapper<PATTauTauTauFinalState>"/>
+  <class name="PATTauTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauTauTauFinalStateCollection>"/>
+
+  <class name="PATMuJetJetFinalState"/>
+  <class name="edm::Wrapper<PATMuJetJetFinalState>"/>
+  <class name="PATMuJetJetFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuJetJetFinalStateCollection>"/>
+
+  <class name="PATElecElecElecElecFinalState"/>
+  <class name="edm::Wrapper<PATElecElecElecElecFinalState>"/>
+  <class name="PATElecElecElecElecFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecElecElecFinalStateCollection>"/>
+
+
+  <class name="PATElecElecElecMuFinalState"/>
+  <class name="edm::Wrapper<PATElecElecElecMuFinalState>"/>
+  <class name="PATElecElecElecMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecElecMuFinalStateCollection>"/>
+
+
+  <class name="PATElecElecElecTauFinalState"/>
+  <class name="edm::Wrapper<PATElecElecElecTauFinalState>"/>
+  <class name="PATElecElecElecTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecElecTauFinalStateCollection>"/>
+
+
+  <class name="PATElecElecMuMuFinalState"/>
+  <class name="edm::Wrapper<PATElecElecMuMuFinalState>"/>
+  <class name="PATElecElecMuMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecMuMuFinalStateCollection>"/>
+
+
+  <class name="PATElecElecMuTauFinalState"/>
+  <class name="edm::Wrapper<PATElecElecMuTauFinalState>"/>
+  <class name="PATElecElecMuTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecMuTauFinalStateCollection>"/>
+
+
+  <class name="PATElecElecTauTauFinalState"/>
+  <class name="edm::Wrapper<PATElecElecTauTauFinalState>"/>
+  <class name="PATElecElecTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecTauTauFinalStateCollection>"/>
+
+
+  <class name="PATElecMuMuMuFinalState"/>
+  <class name="edm::Wrapper<PATElecMuMuMuFinalState>"/>
+  <class name="PATElecMuMuMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuMuMuFinalStateCollection>"/>
+
+
+  <class name="PATElecMuMuTauFinalState"/>
+  <class name="edm::Wrapper<PATElecMuMuTauFinalState>"/>
+  <class name="PATElecMuMuTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuMuTauFinalStateCollection>"/>
+
+
+  <class name="PATElecTauTauTauFinalState"/>
+  <class name="edm::Wrapper<PATElecTauTauTauFinalState>"/>
+  <class name="PATElecTauTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecTauTauTauFinalStateCollection>"/>
+
+  <class name="PATElecMuTauTauFinalState"/>
+  <class name="edm::Wrapper<PATElecMuTauTauFinalState>"/>
+  <class name="PATElecMuTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuTauTauFinalStateCollection>"/>
+
+
+  <class name="PATMuMuMuMuFinalState"/>
+  <class name="edm::Wrapper<PATMuMuMuMuFinalState>"/>
+  <class name="PATMuMuMuMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuMuMuFinalStateCollection>"/>
+
+
+  <class name="PATMuMuMuTauFinalState"/>
+  <class name="edm::Wrapper<PATMuMuMuTauFinalState>"/>
+  <class name="PATMuMuMuTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuMuTauFinalStateCollection>"/>
+
+
+  <class name="PATMuMuTauTauFinalState"/>
+  <class name="edm::Wrapper<PATMuMuTauTauFinalState>"/>
+  <class name="PATMuMuTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuTauTauFinalStateCollection>"/>
+
+  <class name="PATMuTauTauTauFinalState"/>
+  <class name="edm::Wrapper<PATMuTauTauTauFinalState>"/>
+  <class name="PATMuTauTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuTauTauTauFinalStateCollection>"/>
+
+  <class name="PATTauTauTauTauFinalState"/>
+  <class name="edm::Wrapper<PATTauTauTauTauFinalState>"/>
+  <class name="PATTauTauTauTauFinalStateCollection"/>
+  <class name="edm::Wrapper<PATTauTauTauTauFinalStateCollection>"/>
+
+
+  <class name="PATElecPhoFinalState"/>
+  <class name="edm::Wrapper<PATElecPhoFinalState>"/>
+  <class name="PATElecPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecPhoFinalStateCollection>"/>
+
+
+  <class name="PATMuPhoFinalState"/>
+  <class name="edm::Wrapper<PATMuPhoFinalState>"/>
+  <class name="PATMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuPhoFinalStateCollection>"/>
+
+
+  <class name="PATPhoPhoFinalState"/>
+  <class name="edm::Wrapper<PATPhoPhoFinalState>"/>
+  <class name="PATPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATPhoPhoFinalStateCollection>"/>
+
+
+  <class name="PATElecElecPhoFinalState"/>
+  <class name="edm::Wrapper<PATElecElecPhoFinalState>"/>
+  <class name="PATElecElecPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecPhoFinalStateCollection>"/>
+
+
+  <class name="PATElecMuPhoFinalState"/>
+  <class name="edm::Wrapper<PATElecMuPhoFinalState>"/>
+  <class name="PATElecMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuPhoFinalStateCollection>"/>
+
+
+  <class name="PATElecPhoPhoFinalState"/>
+  <class name="edm::Wrapper<PATElecPhoPhoFinalState>"/>
+  <class name="PATElecPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecPhoPhoFinalStateCollection>"/>
+
+
+  <class name="PATMuMuPhoFinalState"/>
+  <class name="edm::Wrapper<PATMuMuPhoFinalState>"/>
+  <class name="PATMuMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuPhoFinalStateCollection>"/>
+
+
+  <class name="PATMuPhoPhoFinalState"/>
+  <class name="edm::Wrapper<PATMuPhoPhoFinalState>"/>
+  <class name="PATMuPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuPhoPhoFinalStateCollection>"/>
+
+
+  <class name="PATElecElecElecPhoFinalState"/>
+  <class name="edm::Wrapper<PATElecElecElecPhoFinalState>"/>
+  <class name="PATElecElecElecPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecElecPhoFinalStateCollection>"/>
+
+
+  <class name="PATElecElecMuPhoFinalState"/>
+  <class name="edm::Wrapper<PATElecElecMuPhoFinalState>"/>
+  <class name="PATElecElecMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecMuPhoFinalStateCollection>"/>
+
+
+  <class name="PATElecElecPhoPhoFinalState"/>
+  <class name="edm::Wrapper<PATElecElecPhoPhoFinalState>"/>
+  <class name="PATElecElecPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecPhoPhoFinalStateCollection>"/>
+
+
+  <class name="PATElecMuMuPhoFinalState"/>
+  <class name="edm::Wrapper<PATElecMuMuPhoFinalState>"/>
+  <class name="PATElecMuMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuMuPhoFinalStateCollection>"/>
+
+
+  <class name="PATElecMuPhoPhoFinalState"/>
+  <class name="edm::Wrapper<PATElecMuPhoPhoFinalState>"/>
+  <class name="PATElecMuPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuPhoPhoFinalStateCollection>"/>
+
+
+  <class name="PATMuMuMuPhoFinalState"/>
+  <class name="edm::Wrapper<PATMuMuMuPhoFinalState>"/>
+  <class name="PATMuMuMuPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuMuPhoFinalStateCollection>"/>
+
+
+  <class name="PATMuMuPhoPhoFinalState"/>
+  <class name="edm::Wrapper<PATMuMuPhoPhoFinalState>"/>
+  <class name="PATMuMuPhoPhoFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuPhoPhoFinalStateCollection>"/>
+
+
+</selection>
+
+<exclusion>
+  <class name="edm::OwnVector<PATFinalState, edm::ClonePolicy<PATFinalState> >">
+      <method name="sort" />
+    </class>
+</exclusion>
+</lcgdict>

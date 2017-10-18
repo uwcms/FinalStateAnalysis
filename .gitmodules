@@ -1,0 +1,6 @@
+[submodule "recipe/external/src/virtualenv"]
+	path = recipe/external/src/virtualenv
+	url = https://github.com/pypa/virtualenv.git
+[submodule "recipe/external/src/rootpy"]
+	path = recipe/external/src/rootpy
+	url = git@github.com:rootpy/rootpy.git

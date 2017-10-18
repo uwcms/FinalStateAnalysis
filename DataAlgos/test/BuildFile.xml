@@ -1,0 +1,20 @@
+<bin   name="TestSmartTrigger" file="test_SmartTrigger.cppunit.cc">
+  <flags LDFLAGS="-Wl,--unresolved-symbols=ignore-all" />
+
+  <use   name="FinalStateAnalysis/DataAlgos"/>
+  <use   name="cppunit"/>
+</bin>
+
+<bin   name="TestDataAlgoHelpers" file="test_helpers.cppunit.cc">
+  <flags LDFLAGS="-Wl,--unresolved-symbols=ignore-all" />
+
+  <use   name="FinalStateAnalysis/DataAlgos"/>
+  <use   name="cppunit"/>
+</bin>
+
+<bin   name="TestHashing" file="test_Hash.cppunit.cc">
+  <flags LDFLAGS="-Wl,--unresolved-symbols=ignore-all" />
+
+  <use   name="FinalStateAnalysis/DataAlgos"/>
+  <use   name="cppunit"/>
+</bin>

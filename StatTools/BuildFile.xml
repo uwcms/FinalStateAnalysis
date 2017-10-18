@@ -1,0 +1,7 @@
+<use   name="root"/>
+<use   name="roofit"/>
+<use   name="roofitcore"/>
+<use   name="FWCore/Framework"/>
+<export>
+  <lib   name="1"/>
+</export>

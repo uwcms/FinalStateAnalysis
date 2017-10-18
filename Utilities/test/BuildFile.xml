@@ -1,0 +1,24 @@
+<bin   name="TestFinalStateAnalysisUtilities" file="test_Utilities.cppunit.cc">
+  <flags LDFLAGS="-Wl,--unresolved-symbols=ignore-all" />
+
+  <use   name="root"/>
+  <use   name="FinalStateAnalysis/Utilities"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="DataFormats/Common"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/RecoCandidate"/>
+  <use   name="DataFormats/TrackReco"/>
+  <use   name="cppunit"/>
+</bin>
+
+<bin   name="TestFinalStateAnalysisExpressionNtuple" file="test_ExpressionNtpule.cppunit.cc">
+  <flags LDFLAGS="-Wl,--unresolved-symbols=ignore-all" />
+
+  <use   name="root"/>
+  <use   name="FinalStateAnalysis/Utilities"/>
+  <use   name="DataFormats/Math"/>
+  <use   name="DataFormats/Common"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="PhysicsTools/FWLite"/>
+  <use   name="cppunit"/>
+</bin>

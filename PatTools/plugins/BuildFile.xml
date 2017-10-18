@@ -1,0 +1,29 @@
+<library   file="*.cc" name="FinalStateAnalysisPatToolsPlugins">
+  <flags   EDM_PLUGIN="1"/>
+  <use   name="DataFormats/Candidate"/>
+  <use   name="DataFormats/Common"/>
+  <use   name="DataFormats/PatCandidates"/>
+
+  <use   name="FinalStateAnalysis/DataFormats"/>
+  <use   name="FinalStateAnalysis/PatTools"/>
+  <use   name="FinalStateAnalysis/NtupleTools"/>
+
+  <use   name="RecoTauTag/RecoTau"/>
+  <use   name="CommonTools/Utils"/>
+  <use   name="CommonTools/UtilAlgos"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="PhysicsTools/PatAlgos"/>
+  <use   name="RecoEgamma/EgammaTools"/>
+
+  <use   name="CondFormats/JetMETObjects"/>
+  <use   name="CondFormats/BTauObjects"/>
+  <use   name="JetMETCorrections/Objects"/>
+  <use   name="MuonAnalysis/MomentumScaleCalibration"/>
+  <use   name="RecoVertex/KinematicFitPrimitives"/>
+  <use   name="RecoEgamma/EgammaTools"/>
+  <use   name="EgammaAnalysis/ElectronTools"/>
+  
+  <use   name="RecoBTag/SecondaryVertex"/>
+
+  <use   name="SimDataFormats/HTXS"/>
+</library>
