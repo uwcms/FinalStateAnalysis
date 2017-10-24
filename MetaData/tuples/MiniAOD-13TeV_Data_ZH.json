@@ -17,5 +17,25 @@
   "data_DoubleMuon_Run2016F" :  "/DoubleMuon/Run2016F-03Feb2017-v1/MINIAOD",
   "data_DoubleMuon_Run2016G" :  "/DoubleMuon/Run2016G-03Feb2017-v1/MINIAOD",
   "data_DoubleMuon_Run2016H_v2" : "/DoubleMuon/Run2016H-03Feb2017_ver2-v1/MINIAOD",
-  "data_DoubleMuon_Run2016H_v3" : "/DoubleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD"
+  "data_DoubleMuon_Run2016H_v3" : "/DoubleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD",
+
+  "data_SingleElectron_Run2016B_v1" : "/SingleElectron/Run2016B-03Feb2017_ver1-v1/MINIAOD",
+  "data_SingleElectron_Run2016B_v2" : "/SingleElectron/Run2016B-03Feb2017_ver2-v2/MINIAOD",
+  "data_SingleElectron_Run2016C" : "/SingleElectron/Run2016C-03Feb2017-v1/MINIAOD",
+  "data_SingleElectron_Run2016D" : "/SingleElectron/Run2016D-03Feb2017-v1/MINIAOD",
+  "data_SingleElectron_Run2016E" : "/SingleElectron/Run2016E-03Feb2017-v1/MINIAOD",
+  "data_SingleElectron_Run2016F" : "/SingleElectron/Run2016F-03Feb2017-v1/MINIAOD",
+  "data_SingleElectron_Run2016G" : "/SingleElectron/Run2016G-03Feb2017-v1/MINIAOD",
+  "data_SingleElectron_Run2016H_v2" : "/SingleElectron/Run2016H-03Feb2017_ver2-v1/MINIAOD",
+  "data_SingleElectron_Run2016H_v3" : "/SingleElectron/Run2016H-03Feb2017_ver3-v1/MINIAOD",
+
+  "data_SingleMuon_Run2016B_v1" : "/SingleMuon/Run2016B-03Feb2017_ver1-v1/MINIAOD",
+  "data_SingleMuon_Run2016B_v2" : "/SingleMuon/Run2016B-03Feb2017_ver2-v2/MINIAOD",
+  "data_SingleMuon_Run2016C" : "/SingleMuon/Run2016C-03Feb2017-v1/MINIAOD",
+  "data_SingleMuon_Run2016D" : "/SingleMuon/Run2016D-03Feb2017-v1/MINIAOD",
+  "data_SingleMuon_Run2016E" : "/SingleMuon/Run2016E-03Feb2017-v1/MINIAOD",
+  "data_SingleMuon_Run2016F" : "/SingleMuon/Run2016F-03Feb2017-v1/MINIAOD",
+  "data_SingleMuon_Run2016G" : "/SingleMuon/Run2016G-03Feb2017-v1/MINIAOD",
+  "data_SingleMuon_Run2016H_v2" : "/SingleMuon/Run2016H-03Feb2017_ver2-v1/MINIAOD",
+  "data_SingleMuon_Run2016H_v3" : "/SingleMuon/Run2016H-03Feb2017_ver3-v1/MINIAOD"
 }
