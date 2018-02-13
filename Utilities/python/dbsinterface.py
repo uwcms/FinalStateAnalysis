@@ -30,8 +30,8 @@ def get_das_info(query):
     DBS one. '''
     
     das_command = [
-        'das_client',
-        '--query=%s' % query,
+        'dasgoclient',
+        '--query=dataset=%s' % query,
         '--limit=0' 
         ]
     p = subprocess.Popen(
