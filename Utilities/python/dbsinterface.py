@@ -31,7 +31,7 @@ def get_das_info(query):
     
     das_command = [
         'dasgoclient',
-        '--query=dataset=%s' % query,
+        '--query=%s' % query,
         '--limit=0' 
         ]
     p = subprocess.Popen(
