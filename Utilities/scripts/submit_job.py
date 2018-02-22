@@ -204,7 +204,7 @@ def datasets_from_das(args):
     # special handling for data
     elif args.isData:
         data_patterns = [x for x in args.samples if 'data_' in x]
-        data_datasets = get_das_info('/*/*/MINIAOD')
+        data_datasets = get_das_info('dataset=/*/*/MINIAOD')
         for dataset in data_datasets:
             passes_filter = True
             passes_wildcard = False
