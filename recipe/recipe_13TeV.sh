@@ -96,9 +96,10 @@ cd -
 
 echo "Checking out Rivet Tools for Higgs Template Cross Section"
 pushd $CMSSW_BASE/src
-git remote add perozzi https://github.com/perrozzi/cmssw.git
-git fetch perozzi
-git checkout perozzi/HTXS_clean -- SimDataFormats/HTXS
+git cms-addpkg SimDataFormats/HTXS
+#git remote add perozzi https://github.com/perrozzi/cmssw.git
+#git fetch perozzi
+#git checkout perozzi/HTXS_clean -- SimDataFormats/HTXS
 #git cms-merge-topic -u perrozzi:HTXS_clean
 popd
 
