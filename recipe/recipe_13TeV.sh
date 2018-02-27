@@ -42,7 +42,8 @@ git cms-addpkg RecoTauTag/RecoTau
 cd RecoTauTag/RecoTau
 git remote add tau-pog git@github.com:cms-tau-pog/cmssw.git
 git fetch tau-pog
-git merge tau-pog/CMSSW_8_0_X_tau-pog_miniAOD-backport-tauID
+#git merge tau-pog/CMSSW_8_0_X_tau-pog_miniAOD-backport-tauID
+git merge tau-pog/CMSSW_8_0_X_tau-pog_tauIDOnMiniAOD-legacy-backport-81X
 popd
 
 echo "Checking out MET Filters"
