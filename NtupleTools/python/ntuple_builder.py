@@ -13,26 +13,28 @@ from FinalStateAnalysis.Utilities.cfgtools import format, PSet
 import re
 
 # Import the templates used to make the branches
-import FinalStateAnalysis.NtupleTools.templates as templates
+from FinalStateAnalysis.NtupleTools.templates import topology, event, candidates, \
+    cleaning, taus, electrons, muons, photons, bjets, trigger
+
 
 # Define the branches that go in all ntuples
 _common_template = PSet(
     # Basic info about the final state
-    templates.topology.finalstate,
+    topology.finalstate,
     # templates.Event num/lumi/run
-    templates.event.num,
+    event.num,
     # templates.Rho, ntvtx, nTruePU
-    templates.event.pileup,
+    event.pileup,
     # information about the selected primary vertex
-    templates.event.pv_info,
+    event.pv_info,
     # templates.Info about the MET
-    templates.event.met,
+    event.met,
     # templates.Info about the generator
-    templates.event.gen,
+    event.gen,
     # templates.Vetoes on extra objects
-    templates.cleaning.vetos,
+    cleaning.vetos,
     # VBF variables, because most analyses using FSA want them
-    templates.topology.vbf,
+    topology.vbf,
 
     # Triggers different for 25 and 50ns, no longer in common template
     # templates.trigger.singleLepton,
@@ -48,55 +50,52 @@ _common_template = PSet(
 
 # Define the branch templates for different object types.
 _tau_template = PSet(
-    templates.candidates.base_jet,
-    templates.candidates.kinematics,
-    templates.candidates.vertex_info,
-    templates.cleaning.overlaps,
-    templates.taus.info,
-    templates.taus.id,
-    templates.topology.mtToMET,
+    candidates.base_jet,
+    candidates.kinematics,
+    candidates.vertex_info,
+    cleaning.overlaps,
+    taus.info,
+    taus.id,
+    topology.mtToMET,
 )
 
 _muon_template = PSet(
-    templates.candidates.base_jet,
-    templates.candidates.kinematics,
-    templates.candidates.vertex_info,
-    templates.muons.id,
-    templates.muons.energyCorrections,
-    templates.muons.tracking,
-    #templates.muons.trigger_25ns,
-    templates.topology.mtToMET,
+    candidates.base_jet,
+    candidates.kinematics,
+    candidates.vertex_info,
+    muons.id,
+    muons.energyCorrections,
+    muons.tracking,
+    topology.mtToMET,
 )
 
 _bjet_template= PSet(
-    templates.bjets.btagging,
-    templates.candidates.kinematics,
-    templates.bjets.pujets,
-#    templates.candidates.vertex_info, # Always filled with 0 as far as I can tell
+    bjets.btagging,
+    candidates.kinematics,
+    bjets.pujets,
 )
 
 _electron_template = PSet(
-    templates.candidates.base_jet,
-    templates.candidates.kinematics,
-    templates.candidates.vertex_info,
-    templates.electrons.id,
-    templates.electrons.energyCorrections,
-    templates.electrons.tracking,
-    templates.electrons.supercluster,
-    #templates.electrons.trigger_25ns,
-    templates.topology.mtToMET,
+    candidates.base_jet,
+    candidates.kinematics,
+    candidates.vertex_info,
+    electrons.id,
+    electrons.energyCorrections,
+    electrons.tracking,
+    electrons.supercluster,
+    topology.mtToMET,
 )
 
 _photon_template = PSet(
-    templates.candidates.base_jet,
-    templates.candidates.kinematics,
-    #templates.candidates.vertex_info, #photons have no tracking info
-    templates.photons.id,
-    templates.photons.tracking,
-    templates.photons.energyCorrections,
-    templates.photons.supercluster,
-    #templates.photons.trigger, #add photons later
-    templates.topology.mtToMET,
+    candidates.base_jet,
+    candidates.kinematics,
+    #candidates.vertex_info, #photons have no tracking info
+    photons.id,
+    photons.tracking,
+    photons.energyCorrections,
+    photons.supercluster,
+    #photons.trigger, #add photons later
+    topology.mtToMET,
 )
 
 
@@ -217,22 +216,22 @@ def make_ntuple(*legs, **kwargs):
     if fullJES:
         ntuple_config = PSet(
             ntuple_config,
-            templates.topology.fullJES
+            topology.fullJES
         )
 
     if isShiftedMet :
         ntuple_config = PSet(
             ntuple_config,
-            templates.event.shiftedMet
+            event.shiftedMet
         )
         
     if kwargs.get('runTauSpinner', False):
-        for parName in templates.event.tauSpinner.parameterNames_():
+        for parName in event.tauSpinner.parameterNames_():
             setattr(
                 ntuple_config, 
                 parName, 
                 getattr(
-                    templates.event.tauSpinner, 
+                    event.tauSpinner, 
                     parName
                 ) 
             )
@@ -240,14 +239,14 @@ def make_ntuple(*legs, **kwargs):
     # Triggers we care about depend on run configuration
     leg_triggers = { 'e':PSet(), 'm':PSet(), 't':PSet(), 'j':PSet(), 'g':PSet() }
     if isMC:
-        leg_triggers['e'] = templates.electrons.trigger_25ns_MC
-        lep_triggers = templates.trigger.singleLepton_25ns_MC
+        leg_triggers['e'] = electrons.trigger_25ns_MC
+        lep_triggers = trigger.singleLepton_25ns_MC
     else:
-        leg_triggers['e'] = templates.electrons.trigger_25ns
-        lep_triggers = templates.trigger.singleLepton_25ns
-    leg_triggers['m'] = templates.muons.trigger_25ns
-    diLep_triggers = templates.trigger.doubleLepton_25ns
-    triLep_triggers = templates.trigger.tripleLepton
+        leg_triggers['e'] = electrons.trigger_25ns
+        lep_triggers = trigger.singleLepton_25ns
+    leg_triggers['m'] = muons.trigger_25ns
+    diLep_triggers = trigger.doubleLepton_25ns
+    triLep_triggers = trigger.tripleLepton
 
     ntuple_config = PSet(
         ntuple_config,
@@ -291,7 +290,7 @@ def make_ntuple(*legs, **kwargs):
         if isShiftedMet and v!='j':
             leg_branch_templates[v] = PSet(
                 leg_branch_templates[v],
-                templates.topology.shiftedMtToMET
+                topology.shiftedMtToMET
             )
 
 
@@ -318,7 +317,7 @@ def make_ntuple(*legs, **kwargs):
     # If basic jet information is desired for a non-jet final state, put it in
     extraJetVariables = kwargs.get('extraJetVariables', PSet())
     extra_jet_template = PSet(
-        templates.topology.extraJet,
+        topology.extraJet,
         extraJetVariables,
         )
     for i in range(kwargs.get("nExtraJets", 0)):
@@ -333,7 +332,7 @@ def make_ntuple(*legs, **kwargs):
     
     dicandidateVariables = kwargs.get('dicandidateVariables',PSet())
     dicandidate_template = PSet(
-        templates.topology.pairs,
+        topology.pairs,
         dicandidateVariables
     )
 
@@ -372,7 +371,7 @@ def make_ntuple(*legs, **kwargs):
                 leg_a, leg_b, ''.join(legs))
             ntuple_config = PSet(
                 ntuple_config,
-                templates.topology.svfit.replace(object1=leg_a, object2=leg_b)
+                topology.svfit.replace(object1=leg_a, object2=leg_b)
             )
 
     analyzerSrc = "finalState" + "".join(
