@@ -376,21 +376,21 @@ process.load ("CondCore.CondDB.CondDB_cfi")
 #if options.runningLocal :
 #    sqlitePath = '../data/{0}.db'.format('Summer16_23Sep2016V4_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
 
-sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')
-if options.runningLocal :
-    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA' )
-
-process.jec = cms.ESSource("PoolDBESSource",
-         DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
-         timetype = cms.string('runnumber'),
-         toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
-                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')),
-                                    label  = cms.untracked.string('AK4PFchs')
-                                    )
-                 ),
-         connect = cms.string('sqlite:'+sqlitePath)
-    )
-process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
+#XXX sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')
+#XXX if options.runningLocal :
+#XXX     sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA' )
+#XXX 
+#XXX process.jec = cms.ESSource("PoolDBESSource",
+#XXX          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
+#XXX          timetype = cms.string('runnumber'),
+#XXX          toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
+#XXX                                     tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')),
+#XXX                                     label  = cms.untracked.string('AK4PFchs')
+#XXX                                     )
+#XXX                  ),
+#XXX          connect = cms.string('sqlite:'+sqlitePath)
+#XXX     )
+#XXX process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
 ## https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
 from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
@@ -472,28 +472,28 @@ if options.htt and options.isMC :
 ### for simplified template cross section ###
 #############################################
 
-if options.htt and options.isMC :
-    process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
-    process.mergedGenParticles = cms.EDProducer("MergedGenParticleProducer",
-        inputPruned = cms.InputTag("prunedGenParticles"),
-        inputPacked = cms.InputTag("packedGenParticles"),
-    )
-    process.myGenerator = cms.EDProducer("GenParticles2HepMCConverterHTXS",
-        genParticles = cms.InputTag("mergedGenParticles"),
-        genEventInfo = cms.InputTag("generator"),
-    )
-    process.rivetProducerHTXS = cms.EDProducer('HTXSRivetProducer',
-      HepMCCollection = cms.InputTag('myGenerator','unsmeared'),
-      LHERunInfo = cms.InputTag('externalLHEProducer'),
-      ProductionMode = cms.string('AUTO'),
-    )
-    
-    process.rivetMethods = cms.Path(
-        process.mergedGenParticles
-        * process.myGenerator
-        * process.rivetProducerHTXS
-    )
-    process.schedule.append( process.rivetMethods )
+#XXX if options.htt and options.isMC :
+#XXX     process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
+#XXX     process.mergedGenParticles = cms.EDProducer("MergedGenParticleProducer",
+#XXX         inputPruned = cms.InputTag("prunedGenParticles"),
+#XXX         inputPacked = cms.InputTag("packedGenParticles"),
+#XXX     )
+#XXX     process.myGenerator = cms.EDProducer("GenParticles2HepMCConverterHTXS",
+#XXX         genParticles = cms.InputTag("mergedGenParticles"),
+#XXX         genEventInfo = cms.InputTag("generator"),
+#XXX     )
+#XXX     process.rivetProducerHTXS = cms.EDProducer('HTXSRivetProducer',
+#XXX       HepMCCollection = cms.InputTag('myGenerator','unsmeared'),
+#XXX       LHERunInfo = cms.InputTag('externalLHEProducer'),
+#XXX       ProductionMode = cms.string('AUTO'),
+#XXX     )
+#XXX     
+#XXX     process.rivetMethods = cms.Path(
+#XXX         process.mergedGenParticles
+#XXX         * process.myGenerator
+#XXX         * process.rivetProducerHTXS
+#XXX     )
+#XXX     process.schedule.append( process.rivetMethods )
 
 
 

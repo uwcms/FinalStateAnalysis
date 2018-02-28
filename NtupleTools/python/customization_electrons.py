@@ -1,7 +1,7 @@
 # Embed IDs for electrons
 import FWCore.ParameterSet.Config as cms
 from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection, switchOnVIDElectronIdProducer, DataFormat, setupVIDSelection
-from EgammaAnalysis.ElectronTools.regressionWeights_cfi import regressionWeights
+#from EgammaAnalysis.ElectronTools.regressionWeights_cfi import regressionWeights
 
 
 def preElectrons(process, eSrc, vSrc,**kwargs):
@@ -14,27 +14,27 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
     isMCflag= kwargs.pop("isMC",False)
     isLFV=kwargs.pop("isLFV",False)
 
-    if isLFV:
-        process = regressionWeights(process)
-        
-        process.load('EgammaAnalysis.ElectronTools.regressionApplication_cff')
-        
-        process.EGMRegression = cms.Path(process.regressionApplication)
+    #XXXif isLFV:
+    #XXX    process = regressionWeights(process)
+    #XXX    
+    #XXX    process.load('EgammaAnalysis.ElectronTools.regressionApplication_cff')
+    #XXX    
+    #XXX    process.EGMRegression = cms.Path(process.regressionApplication)
 
-        process.schedule.append(process.EGMRegression)
-    
-        process.selectedSlimmedElectrons = cms.EDFilter("PATElectronSelector",
-                                                        ##energy recalibration may take the corrected object outside the acceptable range for the calculation of the MVA score.
-                                                        ## this protects against a crash in electron calibration
-                                                        ## due to electrons with eta > 2.5
-                                                        src = cms.InputTag("slimmedElectrons"),
-                                                        cut = cms.string("pt>5 && abs(eta)<2.5 && abs(-log(tan(superClusterPosition.theta/2.)))<2.5")
-                                                        )
+    #XXX    process.schedule.append(process.EGMRegression)
+    #XXX
+    #XXX    process.selectedSlimmedElectrons = cms.EDFilter("PATElectronSelector",
+    #XXX                                                    ##energy recalibration may take the corrected object outside the acceptable range for the calculation of the MVA score.
+    #XXX                                                    ## this protects against a crash in electron calibration
+    #XXX                                                    ## due to electrons with eta > 2.5
+    #XXX                                                    src = cms.InputTag("slimmedElectrons"),
+    #XXX                                                    cut = cms.string("pt>5 && abs(eta)<2.5 && abs(-log(tan(superClusterPosition.theta/2.)))<2.5")
+    #XXX                                                    )
 
-        process.selectInBoundElectrons=cms.Path(process.selectedSlimmedElectrons)
-        process.schedule.append(process.selectInBoundElectrons)
+    #XXX    process.selectInBoundElectrons=cms.Path(process.selectedSlimmedElectrons)
+    #XXX    process.schedule.append(process.selectInBoundElectrons)
 
-        eSrc='selectedSlimmedElectrons'
+    #XXX    eSrc='selectedSlimmedElectrons'
 
 
     if not hasattr(process,'egmGsfElectronIDs'):
@@ -64,9 +64,9 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
         #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',    # 25 ns trig
         #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',    # 50 ns trig
         #'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronHLTPreselecition_Summer16_V1_cff',
-        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V1_cff',
-        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V1_cff',
-        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V1_cff',
+        #XXX'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V1_cff',
+        #XXX'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V1_cff',
+        #XXX'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V1_cff',
         ]
     # something here breaks the postfix stuff... no idea
     # ----- Begin Fatal Exception 12-Nov-2015 08:36:25 CST-----------------------
@@ -139,30 +139,30 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
 
     
 
-    # Embed cut-based VIDs
-    modName = 'miniAODElectronID{0}'.format(postfix)
-    mod = cms.EDProducer(
-        "MiniAODElectronIDEmbedder",
-        src=cms.InputTag(eSrc),
-        idLabels = cms.vstring(*CBIDLabels),
-        ids = cms.VInputTag(*CBIDTags),
-        valueLabels = cms.vstring(*mvaValueLabels),       # labels for MVA values
-        values = cms.VInputTag(*mvaValues),               # mva values
-        categoryLabels = cms.vstring(*mvaCategoryLabels),
-        categories = cms.VInputTag(*mvaCategories),
-        fullIdLabels = cms.vstring(*FullIDLabels),
-        nMinusOneNames = cms.vstring(*nMinusOneNames),
-        nMinusOneLabels = cms.vstring(*nMinusOneLabels),
-        fullIds = cms.VInputTag(*FullIDTags),
-    )
-    eSrc = modName
-    setattr(process,modName,mod)
+    #XXX # Embed cut-based VIDs
+    #XXX modName = 'miniAODElectronID{0}'.format(postfix)
+    #XXX mod = cms.EDProducer(
+    #XXX     "MiniAODElectronIDEmbedder",
+    #XXX     src=cms.InputTag(eSrc),
+    #XXX     idLabels = cms.vstring(*CBIDLabels),
+    #XXX     ids = cms.VInputTag(*CBIDTags),
+    #XXX     valueLabels = cms.vstring(*mvaValueLabels),       # labels for MVA values
+    #XXX     values = cms.VInputTag(*mvaValues),               # mva values
+    #XXX     categoryLabels = cms.vstring(*mvaCategoryLabels),
+    #XXX     categories = cms.VInputTag(*mvaCategories),
+    #XXX     fullIdLabels = cms.vstring(*FullIDLabels),
+    #XXX     nMinusOneNames = cms.vstring(*nMinusOneNames),
+    #XXX     nMinusOneLabels = cms.vstring(*nMinusOneLabels),
+    #XXX     fullIds = cms.VInputTag(*FullIDTags),
+    #XXX )
+    #XXX eSrc = modName
+    #XXX setattr(process,modName,mod)
 
-    pathName = 'miniAODElectrons{0}'.format(postfix)
-    path = cms.Path(getattr(process,egmSeq)+getattr(process,modName))
-    
-    setattr(process,pathName,path)
-    process.schedule.append(getattr(process,pathName))
+    #XXX pathName = 'miniAODElectrons{0}'.format(postfix)
+    #XXX path = cms.Path(getattr(process,egmSeq)+getattr(process,modName))
+    #XXX 
+    #XXX setattr(process,pathName,path)
+    #XXX process.schedule.append(getattr(process,pathName))
 
     # embed IP stuff
     modName = 'miniElectronsEmbedIp{0}'.format(postfix)
