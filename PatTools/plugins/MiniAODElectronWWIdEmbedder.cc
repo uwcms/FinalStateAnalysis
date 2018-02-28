@@ -49,7 +49,7 @@ void MiniAODElectronWWIdEmbedder::produce(edm::Event& evt, const edm::EventSetup
     double ecalPFClusterIso = electron.ecalPFClusterIso();
     double hcalPFClusterIso = electron.hcalPFClusterIso();
     double trackIso = electron.dr03TkSumPt();
-    int missingHits = electron.gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS);
+    int missingHits = electron.gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS);
     double dxy = std::abs(electron.gsfTrack()->dxy(thePV.position()));
     double dz = std::abs(electron.gsfTrack()->dz(thePV.position()));
     bool passConversionVeto = electron.passConversionVeto();

@@ -12,7 +12,7 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
 Installation
 ------------
 
-Current CMSSW version: ``CMSSW_9_2_10``.
+Current CMSSW version: ``CMSSW_9_4_0``.
 
 Get a supported CMSSW release area:
 
@@ -31,8 +31,9 @@ Get a supported CMSSW release area:
 Checkout the FinalStateAnalysis repository:
 
 ```bash
-  git clone --recursive -b miniAOD92X https://github.com/uwcms/FinalStateAnalysis.git
+  git clone --recursive -b miniAOD94X https://github.com/uwcms/FinalStateAnalysis.git
   cd FinalStateAnalysis
+  source environment.sh
 ```
 
 Checkout extra needed code:

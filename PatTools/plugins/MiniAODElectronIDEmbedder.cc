@@ -207,7 +207,7 @@ void MiniAODElectronIDEmbedder::produce(edm::Event& iEvent, const edm::EventSetu
 
       // Add missing hits
       double missingHits = -999;
-      missingHits = eptr->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS);
+      missingHits = eptr->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS);
       out->back().addUserFloat("missingHits", missingHits);
 
     }

@@ -45,13 +45,6 @@ git cms-addpkg RecoEgamma/EgammaTools
 git cms-addpkg RecoEgamma/ElectronIdentification
 git cms-addpkg RecoJets/JetProducers
 
-if [ "$MAJOR_VERSION" = "9" ] && [ "$MINOR_VERSION" < "4" ] ; then
-    echo "until  the fix is merged a custum fix is needed (taken from ahinzmann)"
-    git remote add taroniCMSSW https://github.com/taroni/cmssw.git
-    git fetch taroniCMSSW
-    git checkout taroniCMSSW/porting92X --  RecoJets/JetProducers/src/PileupJetIdAlgo.cc
-fi
-
 ##waiting CMSSW9XY directions
 #cd RecoTauTag/RecoTau
 #git remote add tau-pog git@github.com:cms-tau-pog/cmssw.git
@@ -80,33 +73,49 @@ popd
 
 ##Doesn't work. Need to clone and modify my version
 #pushd $CMSSW_BASE/src
-git remote add cms-egamma git@github.com:cms-egamma/cmssw.git
-git fetch cms-egamma
-#git checkout cms-egamma/CMSSW_9_0_X -- EgammaAnalysis/ElectronTools
-git checkout cms-egamma/EGM_gain_v1 -- EgammaAnalysis/ElectronTools/python/regressionWeights_cfi.py
-git checkout cms-egamma/EGM_gain_v1 -- EgammaAnalysis/ElectronTools/python/regressionApplication_cff.py
-popd
+#git remote add cms-egamma git@github.com:cms-egamma/cmssw.git
+#git fetch cms-egamma
+##git checkout cms-egamma/CMSSW_9_0_X -- EgammaAnalysis/ElectronTools
+#git checkout cms-egamma/EGM_gain_v1 -- EgammaAnalysis/ElectronTools/python/regressionWeights_cfi.py
+#git checkout cms-egamma/EGM_gain_v1 -- EgammaAnalysis/ElectronTools/python/regressionApplication_cff.py
+#popd
 
-cd EgammaAnalysis/ElectronTools/data
-git clone https://github.com/ECALELFS/ScalesSmearings.git
-cd - 
+##cd EgammaAnalysis/ElectronTools/data
+##git clone https://github.com/ECALELFS/ScalesSmearings.git
+##cd - 
 #pushd EgammaAnalysis/ElectronTools/data
 #git clone -b Moriond17_gainSwitch_unc https://github.com/ECALELFS/ScalesSmearings.git
 #popd
 
-echo "Checking out Rivet Tools for Higgs Template Cross Section"
+#echo "Checking out Rivet Tools for Higgs Template Cross Section"
 pushd $CMSSW_BASE/src
-git cms-addpkg SimDataFormats/HTXS
-#git remote add perozzi https://github.com/perrozzi/cmssw.git
-#git fetch perozzi
-#git checkout perozzi/HTXS_clean -- SimDataFormats/HTXS
-#git cms-merge-topic -u perrozzi:HTXS_clean
+#git cms-addpkg SimDataFormats/HTXS
+git remote add perozzi https://github.com/perrozzi/cmssw.git
+git fetch perozzi
+git checkout perozzi/HTXS_clean -- SimDataFormats/HTXS
+##git cms-merge-topic -u perrozzi:HTXS_clean
 popd
 
 
 cd $CMSSW_BASE/src
 
+git cms-merge-topic lsoffi:CMSSW_9_4_0_pre3_TnP
+scram b -j 9
 
+
+cd $CMSSW_BASE/external
+# below, you may have a different architecture, this is just one example from lxplus
+cd slc6_amd64_gcc630/
+git clone https://github.com/lsoffi/RecoEgamma-PhotonIdentification.git data/RecoEgamma/PhotonIdentification/data
+cd data/RecoEgamma/PhotonIdentification/data
+git checkout CMSSW_9_4_0_pre3_TnP
+cd $CMSSW_BASE/external
+cd slc6_amd64_gcc630/
+git clone https://github.com/lsoffi/RecoEgamma-ElectronIdentification.git data/RecoEgamma/ElectronIdentification/data
+cd data/RecoEgamma/ElectronIdentification/data
+git checkout CMSSW_9_4_0_pre3_TnP
+# Go back to the src/
+cd $CMSSW_BASE/src
 
 popd
 

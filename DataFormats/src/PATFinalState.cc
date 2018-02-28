@@ -1629,7 +1629,7 @@ const bool PATFinalState::isTightMuon(const size_t i) const
 const int PATFinalState::getElectronMissingHits(const size_t i) const
 {
   if(daughterAsElectron(i)->gsfTrack().isNonnull())
-    return daughterAsElectron(i)->gsfTrack()->hitPattern().numberOfHits(reco::HitPattern::MISSING_INNER_HITS);
+    return daughterAsElectron(i)->gsfTrack()->hitPattern().numberOfAllHits(reco::HitPattern::MISSING_INNER_HITS);
   std::cout << "Daughter " << i << " has null gsf track" << std::endl;
   return -1;
 }
@@ -1662,7 +1662,7 @@ const float PATFinalState::electronClosestMuonDR(const size_t i) const
 const int PATFinalState::getMuonHits(const size_t i) const
 {
   if(daughterAsMuon(i)->globalTrack().isNonnull())
-    return daughterAsMuon(i)->globalTrack()->hitPattern().numberOfHits(reco::HitPattern::TRACK_HITS);
+    return daughterAsMuon(i)->globalTrack()->hitPattern().numberOfAllHits(reco::HitPattern::TRACK_HITS);
   std::cout << "Daughter " << i << " has null global track" << std::endl;
   return -1;
 }
