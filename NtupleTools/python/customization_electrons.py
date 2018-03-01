@@ -64,9 +64,10 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
         #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',    # 25 ns trig
         #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',    # 50 ns trig
         #'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronHLTPreselecition_Summer16_V1_cff',
-        #XXX'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V1_cff',
-        #XXX'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V1_cff',
-        #XXX'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V1_cff',
+        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V1_cff',
+        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_GeneralPurpose_V1_cff',
+        #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V1_cff',
+        #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V1_cff',
         ]
     # something here breaks the postfix stuff... no idea
     # ----- Begin Fatal Exception 12-Nov-2015 08:36:25 CST-----------------------
@@ -96,34 +97,34 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
         setupAllVIDIdsInModule(process,idmod,modSetupVIDElectronSelection)
 
     
-    CBIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight", "MVA_WP90", "MVA_WP80", "MVA_WPLoose"]#, "HEEPV60", "MVANonTrigWP80", "MVANonTrigWP90", "MVATrigWP90", "MVATrigWP80"] # keys of cut based id user floats
+    CBIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight", "MVA_WP90", "MVA_WP80", "MVA_WPLoose"]
     
     CBIDTags = [
         cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-veto'.format(postfix)),
         cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-loose'.format(postfix)),
         cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-medium'.format(postfix)),
         cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-tight'.format(postfix)),
-        #cms.InputTag('egmGsfElectronIDs{0}:heepElectronID-HEEPV60'.format(postfix)),
-        #cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring16-GeneralPurpose-V1-wp80'.format(postfix)),
-        #cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring16-GeneralPurpose-V1-wp90'.format(postfix)),
-        #cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-25ns-Trig-V1-wp90'.format(postfix)),
-        #cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Spring15-25ns-Trig-V1-wp80'.format(postfix)),
-        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wp90".format(postfix)),
-        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wp80".format(postfix)),
-        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wpLoose".format(postfix)),
+        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Spring16-GeneralPurpose-V1-wp90".format(postfix)),
+	cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Spring16-GeneralPurpose-V1-wp80".format(postfix)),
+	cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Spring16-GeneralPurpose-V1-wp90".format(postfix)),
+        #cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wp90".format(postfix)),
+        #cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wp80".format(postfix)),
+        #cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wpLoose".format(postfix)),
         ]
 
     mvaValueLabels = [electronMVAGeneralIDLabel,electronMVAHzzIDLabel]
     mvaValues = [
-        #cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15NonTrig25nsV1Values".format(postfix)),
-        #cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring15Trig25nsV1Values".format(postfix)),
-        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV1Values".format(postfix)),
-        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV1Values".format(postfix)),
+        #cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV1Values".format(postfix)),
+        #cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV1Values".format(postfix)),
+	cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values".format(postfix)),
+        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring16HZZV1Values".format(postfix)),
         ]
     mvaCategoryLabels = ["BDTIDGeneral","BDTIDHzz"]
     mvaCategories = [
-        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV1Categories".format(postfix)),
-        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV1Categories".format(postfix)),
+        #cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV1Categories".format(postfix)),
+        #cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV1Categories".format(postfix)),
+	cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Categories".format(postfix)),
+        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring16HZZV1Categories".format(postfix)),
         ]
 
     # N-1 results
@@ -137,32 +138,30 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
         cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-tight'.format(postfix)),
         ]
 
+    # Embed cut-based VIDs
+    modName = 'miniAODElectronID{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODElectronIDEmbedder",
+        src=cms.InputTag(eSrc),
+        idLabels = cms.vstring(*CBIDLabels),
+        ids = cms.VInputTag(*CBIDTags),
+        valueLabels = cms.vstring(*mvaValueLabels),       # labels for MVA values
+        values = cms.VInputTag(*mvaValues),               # mva values
+        categoryLabels = cms.vstring(*mvaCategoryLabels),
+        categories = cms.VInputTag(*mvaCategories),
+        fullIdLabels = cms.vstring(*FullIDLabels),
+        nMinusOneNames = cms.vstring(*nMinusOneNames),
+        nMinusOneLabels = cms.vstring(*nMinusOneLabels),
+        fullIds = cms.VInputTag(*FullIDTags),
+    )
+    eSrc = modName
+    setattr(process,modName,mod)
+
+    pathName = 'miniAODElectrons{0}'.format(postfix)
+    path = cms.Path(getattr(process,egmSeq)+getattr(process,modName))
     
-
-    #XXX # Embed cut-based VIDs
-    #XXX modName = 'miniAODElectronID{0}'.format(postfix)
-    #XXX mod = cms.EDProducer(
-    #XXX     "MiniAODElectronIDEmbedder",
-    #XXX     src=cms.InputTag(eSrc),
-    #XXX     idLabels = cms.vstring(*CBIDLabels),
-    #XXX     ids = cms.VInputTag(*CBIDTags),
-    #XXX     valueLabels = cms.vstring(*mvaValueLabels),       # labels for MVA values
-    #XXX     values = cms.VInputTag(*mvaValues),               # mva values
-    #XXX     categoryLabels = cms.vstring(*mvaCategoryLabels),
-    #XXX     categories = cms.VInputTag(*mvaCategories),
-    #XXX     fullIdLabels = cms.vstring(*FullIDLabels),
-    #XXX     nMinusOneNames = cms.vstring(*nMinusOneNames),
-    #XXX     nMinusOneLabels = cms.vstring(*nMinusOneLabels),
-    #XXX     fullIds = cms.VInputTag(*FullIDTags),
-    #XXX )
-    #XXX eSrc = modName
-    #XXX setattr(process,modName,mod)
-
-    #XXX pathName = 'miniAODElectrons{0}'.format(postfix)
-    #XXX path = cms.Path(getattr(process,egmSeq)+getattr(process,modName))
-    #XXX 
-    #XXX setattr(process,pathName,path)
-    #XXX process.schedule.append(getattr(process,pathName))
+    setattr(process,pathName,path)
+    process.schedule.append(getattr(process,pathName))
 
     # embed IP stuff
     modName = 'miniElectronsEmbedIp{0}'.format(postfix)
