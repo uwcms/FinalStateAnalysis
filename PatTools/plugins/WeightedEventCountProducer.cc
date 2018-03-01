@@ -23,7 +23,7 @@ class WeightedEventCountProducer : public edm::one::EDProducer<edm::one::WatchLu
                                                        edm::EndLuminosityBlockProducer> {
 public:
   explicit WeightedEventCountProducer(const edm::ParameterSet&);
-  ~WeightedEventCountProducer();
+  ~WeightedEventCountProducer() override;
 
 private:
   virtual void produce(edm::Event &, const edm::EventSetup&) override;
@@ -46,7 +46,9 @@ using namespace std;
 
 
 WeightedEventCountProducer::WeightedEventCountProducer(const edm::ParameterSet& iConfig){
-  produces<edm::MergeableCounter, edm::InLumi>();
+  //produces<edm::MergeableCounter, edm::InLumi>();
+  produces<edm::MergeableCounter, edm::Transition::EndLuminosityBlock>();
+  //produces<edm::MergeableCounter>();
   getGenEventInfoProduct_ = edm::GetterOfProducts<GenEventInfoProduct>(edm::ProcessMatch("*"), this);
 
   callWhenNewProductsRegistered([this](edm::BranchDescription const& bd){

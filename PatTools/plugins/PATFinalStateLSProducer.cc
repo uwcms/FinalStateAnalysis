@@ -41,7 +41,9 @@ PATFinalStateLSProducer::PATFinalStateLSProducer(
   xSec_(pset.getParameter<double>("xSec")),
   eventCount_(0),
   srcToken_(consumes<LumiSummary, edm::InLumi>(pset.getParameter<edm::InputTag>("lumiSrc"))) {
-    produces<PATFinalStateLS, edm::InLumi>();
+    //produces<PATFinalStateLS, edm::InLumi>();
+    //  produces<edm::MergeableCounter, edm::Transition::EndLuminosityBlock>();
+    produces<PATFinalStateLS, edm::Transition::EndLuminosityBlock>();
 }
 
 void
