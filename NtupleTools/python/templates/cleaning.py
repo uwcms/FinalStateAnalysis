@@ -38,12 +38,19 @@ vetos = PSet(
 
 
     #B-JET Vetos
-    bjetCISVVeto20Loose = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.5426").size()',
-    bjetCISVVeto20Medium = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8484").size()',
-    bjetCISVVeto20Tight = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.9535").size()',
-    bjetCISVVeto30Loose = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.5426").size()',
-    bjetCISVVeto30Medium = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8484").size()',
-    bjetCISVVeto30Tight = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.9535").size()',
+    bjetCISVVeto20Loose = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.5803").size()',
+    bjetCISVVeto20Medium = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8838").size()',
+    bjetCISVVeto20Tight = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.9693").size()',
+    bjetCISVVeto30Loose = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.5803").size()',
+    bjetCISVVeto30Medium = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8838").size()',
+    bjetCISVVeto30Tight = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.9693").size()',
+
+    bjetDeepCSVVeto20Loose = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.1522").size()',
+    bjetDeepCSVVeto20Medium = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941").size()',
+    bjetDeepCSVVeto20Tight = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.8001").size()',
+    bjetDeepCSVVeto30Loose = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.1522").size()',
+    bjetDeepCSVVeto30Medium = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941").size()',
+    bjetDeepCSVVeto30Tight = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.8001").size()',
 
     #JET VETOS
     jetVeto20 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5").size()',

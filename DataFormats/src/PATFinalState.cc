@@ -531,6 +531,32 @@ PATFinalState::tauGenMatch2( size_t i ) const {
     return -1.0;
 } 
 
+
+double
+PATFinalState::tauGenMatch3( size_t i ) const {
+    if (!event_->genParticleRefProd()) return -1;
+    const reco::GenParticleRefProd genCollectionRef = event_->genParticleRefProd();
+    reco::GenParticleCollection genParticles = *genCollectionRef;
+
+    if ( genParticles.size() > 0 ) {
+        reco::GenParticle& closest = genParticles[0];
+        double closestDR = 999;
+        for(size_t m = 0; m != genParticles.size(); ++m) {
+            reco::GenParticle& genp = genParticles[m];
+            double tmpDR = reco::deltaR( daughter(i)->p4(), genp.p4() );
+            if ( tmpDR < closestDR ) { closest = genp; closestDR = tmpDR; }
+        }
+        double genID = abs(closest.pdgId());
+
+            if (genID == 11 && closestDR < 0.1 ) return 1.0;
+            else if (genID == 13 && closestDR < 0.1 ) return 2.0;
+            else if (genID == 11 && closestDR < 0.2 ) return 11.0;
+            else if (genID == 13 && closestDR < 0.2 ) return 22.0;
+        return 6.0; // No match, return 6 for "fake tau"
+    }
+    return -1.0;
+}
+
 std::vector<double>
 PATFinalState::tauGenKin( size_t i ) const {
     std::vector<double> output;

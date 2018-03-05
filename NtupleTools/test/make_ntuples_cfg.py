@@ -288,7 +288,9 @@ envvar = 'mcgt' if options.isMC else 'datagt'
 #GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
 #GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '93X_dataRun2_v0'}
 GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco_EOY17_v2'}
+#GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco17_forValidation'}
 #92X_dataRun2_2017Prompt_v11
+#94X_dataRun2_ReReco17_forValidation
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
@@ -376,15 +378,21 @@ process.load ("CondCore.CondDB.CondDB_cfi")
 #if options.runningLocal :
 #    sqlitePath = '../data/{0}.db'.format('Summer16_23Sep2016V4_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
 
-sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')
+#sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')
+sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')
+
+#if options.runningLocal :
+#    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA' )
+
 if options.runningLocal :
-    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA' )
+    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
 
 process.jec = cms.ESSource("PoolDBESSource",
          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
          timetype = cms.string('runnumber'),
          toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
-                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')),
+#                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')),
+                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')),
                                     label  = cms.untracked.string('AK4PFchs')
                                     )
                  ),
@@ -1018,6 +1026,27 @@ if options.hzz:
     process.embedHZZ = cms.Path(process.embedHZZSeq)
     process.schedule.append(process.embedHZZ)
         
+
+#Cecile vertex fitting
+
+process.embedVFSeq = cms.Sequence()
+# Embed matrix elements in relevant final states
+suffix = "HZZ"
+for ch in parseChannels(options.channels):
+     prodSuffix = get_channel_suffix(ch)
+     oldName = "finalState%s"%prodSuffix
+     newName = oldName + suffix
+     embedVFProducer = cms.EDProducer(
+             "MiniAODVertexFittingEmbedder",
+             src = cms.InputTag(oldName)
+             )
+     # give the FS collection an intermediate name, with an identifying suffix
+     intermediateName = oldName + "VFCategory"
+     setattr(process, newName, embedVFProducer)
+     process.embedVFSeq += embedVFProducer
+
+process.embedVF = cms.Path(process.embedVFSeq)
+process.schedule.append(process.embedVF)
 
 
 # run dqm
