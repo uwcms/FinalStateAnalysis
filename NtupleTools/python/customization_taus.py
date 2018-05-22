@@ -29,6 +29,7 @@ def preTaus(process, tSrc, vSrc,**kwargs):
 	    }
 	  }
 	tauIdDiscrMVA_2017_version = "v1"
+        tauIdDiscrMVA_2017_version2 = "v2"
 	def loadMVA_WPs_run2_2017(process):     
            for training, gbrForestName in tauIdDiscrMVA_trainings_run2_2017.items():
         	 process.loadRecoTauTagMVAsFromPrepDB.toGet.append(
@@ -53,7 +54,33 @@ def preTaus(process, tSrc, vSrc,**kwargs):
         	       tag = cms.string("RecoTauTag_%s%s_mvaOutput_normalization" % (gbrForestName, tauIdDiscrMVA_2017_version)),
         	       label = cms.untracked.string("RecoTauTag_%s%s_mvaOutput_normalization" % (gbrForestName, tauIdDiscrMVA_2017_version))
         	    )
-)
+		 )
+
+                 process.loadRecoTauTagMVAsFromPrepDB.toGet.append(
+                    cms.PSet(
+                       record = cms.string('GBRWrapperRcd'),
+                       tag = cms.string("RecoTauTag_%s%s" % (gbrForestName, tauIdDiscrMVA_2017_version2)),
+                       label = cms.untracked.string("RecoTauTag_%s%s" % (gbrForestName, tauIdDiscrMVA_2017_version2))
+                    )
+                 )
+                 for WP in tauIdDiscrMVA_WPs_run2_2017[training].keys():
+                    process.loadRecoTauTagMVAsFromPrepDB.toGet.append(
+                       cms.PSet(
+                          record = cms.string('PhysicsTGraphPayloadRcd'),
+                          tag = cms.string("RecoTauTag_%s%s_WP%s" % (gbrForestName, tauIdDiscrMVA_2017_version2, WP)),
+                          label = cms.untracked.string("RecoTauTag_%s%s_WP%s" % (gbrForestName, tauIdDiscrMVA_2017_version2, WP))
+                       )
+                    )
+
+                 process.loadRecoTauTagMVAsFromPrepDB.toGet.append(
+                    cms.PSet(
+                       record = cms.string('PhysicsTFormulaPayloadRcd'),
+                       tag = cms.string("RecoTauTag_%s%s_mvaOutput_normalization" % (gbrForestName, tauIdDiscrMVA_2017_version2)),
+                       label = cms.untracked.string("RecoTauTag_%s%s_mvaOutput_normalization" % (gbrForestName, tauIdDiscrMVA_2017_version2))
+                    )
+                )
+
+
 	loadMVA_WPs_run2_2017(process)
 
         process.rerunDiscriminationByIsolationMVArun2v1raw = patDiscriminationByIsolationMVArun2v1raw.clone(
@@ -61,6 +88,16 @@ def preTaus(process, tSrc, vSrc,**kwargs):
            Prediscriminants = noPrediscriminants,
            loadMVAfromDB = cms.bool(True),
            mvaName = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v1"), # name of the training you want to use
+           mvaOpt = cms.string("DBoldDMwLTwGJ"), # option you want to use for your training (i.e., which variables are used to compute the BDT score)
+           requireDecayMode = cms.bool(True),
+           verbosity = cms.int32(0)
+        )
+
+        process.rerunDiscriminationByIsolationMVArun2v2raw = patDiscriminationByIsolationMVArun2v1raw.clone(
+           PATTauProducer = cms.InputTag(tSrc),
+           Prediscriminants = noPrediscriminants,
+           loadMVAfromDB = cms.bool(True),
+           mvaName = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v2"), # name of the training you want to use
            mvaOpt = cms.string("DBoldDMwLTwGJ"), # option you want to use for your training (i.e., which variables are used to compute the BDT score)
            requireDecayMode = cms.bool(True),
            verbosity = cms.int32(0)
@@ -81,6 +118,22 @@ def preTaus(process, tSrc, vSrc,**kwargs):
               )
            )
         )
+
+        process.rerunDiscriminationByIsolationMVArun2v2VLoose = patDiscriminationByIsolationMVArun2v1VLoose.clone(
+           PATTauProducer = cms.InputTag(tSrc),
+           Prediscriminants = noPrediscriminants,
+           toMultiplex = cms.InputTag('rerunDiscriminationByIsolationMVArun2v2raw'),
+           key = cms.InputTag('rerunDiscriminationByIsolationMVArun2v2raw:category'),
+           loadMVAfromDB = cms.bool(True),
+           mvaOutput_normalization = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v2_mvaOutput_normalization"), # normalization fo the training you want to use
+           mapping = cms.VPSet(
+              cms.PSet(
+                 category = cms.uint32(0),
+                 cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v2_WPEff90"), # this is the name of the working point you want to use
+                 variable = cms.string("pt"),
+              )
+           )
+        )
         
         # here we produce all the other working points for the training
         process.rerunDiscriminationByIsolationMVArun2v1Loose = process.rerunDiscriminationByIsolationMVArun2v1VLoose.clone()
@@ -93,6 +146,18 @@ def preTaus(process, tSrc, vSrc,**kwargs):
         process.rerunDiscriminationByIsolationMVArun2v1VTight.mapping[0].cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v1_WPEff50")
         process.rerunDiscriminationByIsolationMVArun2v1VVTight = process.rerunDiscriminationByIsolationMVArun2v1VLoose.clone()
         process.rerunDiscriminationByIsolationMVArun2v1VVTight.mapping[0].cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v1_WPEff40")
+
+        process.rerunDiscriminationByIsolationMVArun2v2Loose = process.rerunDiscriminationByIsolationMVArun2v2VLoose.clone()
+        process.rerunDiscriminationByIsolationMVArun2v2Loose.mapping[0].cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v2_WPEff80")
+        process.rerunDiscriminationByIsolationMVArun2v2Medium = process.rerunDiscriminationByIsolationMVArun2v2VLoose.clone()
+        process.rerunDiscriminationByIsolationMVArun2v2Medium.mapping[0].cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v2_WPEff70")
+        process.rerunDiscriminationByIsolationMVArun2v2Tight = process.rerunDiscriminationByIsolationMVArun2v2VLoose.clone()
+        process.rerunDiscriminationByIsolationMVArun2v2Tight.mapping[0].cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v2_WPEff60")
+        process.rerunDiscriminationByIsolationMVArun2v2VTight = process.rerunDiscriminationByIsolationMVArun2v2VLoose.clone()
+        process.rerunDiscriminationByIsolationMVArun2v2VTight.mapping[0].cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v2_WPEff50")
+        process.rerunDiscriminationByIsolationMVArun2v2VVTight = process.rerunDiscriminationByIsolationMVArun2v2VLoose.clone()
+        process.rerunDiscriminationByIsolationMVArun2v2VVTight.mapping[0].cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v2_WPEff40")
+
         
         # this sequence has to be included in your cms.Path() before your analyzer which accesses the new variables is called.
         process.rerunMvaIsolation2SeqRun2 = cms.Path(
@@ -103,6 +168,13 @@ def preTaus(process, tSrc, vSrc,**kwargs):
            * process.rerunDiscriminationByIsolationMVArun2v1Tight
            * process.rerunDiscriminationByIsolationMVArun2v1VTight
            * process.rerunDiscriminationByIsolationMVArun2v1VVTight
+	   * process.rerunDiscriminationByIsolationMVArun2v2raw
+           * process.rerunDiscriminationByIsolationMVArun2v2VLoose
+           * process.rerunDiscriminationByIsolationMVArun2v2Loose
+           * process.rerunDiscriminationByIsolationMVArun2v2Medium
+           * process.rerunDiscriminationByIsolationMVArun2v2Tight
+           * process.rerunDiscriminationByIsolationMVArun2v2VTight
+           * process.rerunDiscriminationByIsolationMVArun2v2VVTight
         )
         process.schedule.append( process.rerunMvaIsolation2SeqRun2 )
 
@@ -118,6 +190,13 @@ def preTaus(process, tSrc, vSrc,**kwargs):
             idTight = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1Tight"),
             idVTight = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1VTight"),
             idVVTight = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1VVTight"),
+            idRawv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2raw"),
+            idVLoosev2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VLoose"),
+            idLoosev2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2Loose"),
+            idMediumv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2Medium"),
+            idTightv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2Tight"),
+            idVTightv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VTight"),
+            idVVTightv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VVTight"),
         )
         tSrc = modName
         setattr(process,modName,mod)
@@ -126,8 +205,6 @@ def preTaus(process, tSrc, vSrc,**kwargs):
         path = cms.Path(getattr(process,modName))
         setattr(process,pathName,path)
         process.schedule.append(getattr(process,pathName))
-
-
 
     modName = 'genembeddedTaus{0}'.format(postfix)
     mod=cms.EDProducer("PATTauGenInfoEmbedder",

@@ -30,6 +30,18 @@ singleLepton_25ns_MC = PSet(
         name='IsoMu27',
         paths=r'HLT_IsoMu27_v\\d+'
         ),
+    _trig_template.replace(
+        name='IsoMu24',
+        paths=r'HLT_IsoMu24_v\\d+'
+        ),
+    _trig_template.replace(
+        name='Ele32WPTight',
+        paths=r'HLT_Ele32_WPTight_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
+        name='Ele35WPTight',
+        paths=r'HLT_Ele35_WPTight_Gsf_v\\d+'
+        ),
     )
 
 singleLepton_25ns = PSet(
@@ -40,6 +52,18 @@ singleLepton_25ns = PSet(
     _trig_template.replace(
         name='IsoMu27',
         paths=r'HLT_IsoMu27_v\\d+'
+        ),
+    _trig_template.replace(
+        name='IsoMu24',
+        paths=r'HLT_IsoMu24_v\\d+'
+        ),
+    _trig_template.replace(
+        name='Ele32WPTight',
+        paths=r'HLT_Ele32_WPTight_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
+        name='Ele35WPTight',
+        paths=r'HLT_Ele35_WPTight_Gsf_v\\d+'
         ),
     )
 
@@ -58,7 +82,23 @@ doubleLepton_25ns = PSet(
         ),
     _trig_template.replace(
         name='Mu20Tau27',
-        paths=r'HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1__v\\d+'
+        paths=r'HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1_v\\d+'
+        ),
+    _trig_template.replace(
+        name='DoubleMediumTau35',
+        paths=r'HLT_DoubleMediumChargedIsoPFTau35_Trk1_eta2p1_Reg_v\\d+'
+        ),
+    _trig_template.replace(
+        name='DoubleTightTau35',
+        paths=r'HLT_DoubleTightChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg_v\\d+'
+        ),
+    _trig_template.replace(
+        name='DoubleMediumTau40',
+        paths=r'HLT_DoubleMediumChargedIsoPFTau40_Trk1_TightID_eta2p1_Reg_v\\d+'
+        ),
+    _trig_template.replace(
+        name='DoubleTightTau40',
+        paths=r'HLT_DoubleTightChargedIsoPFTau40_Trk1_eta2p1_Reg_v\\d+'
         ),
     )
 

@@ -180,7 +180,8 @@ def datasets_from_das(args):
     script_content = ""
     # this part searches for MC
     if args.campaignstring:
-        dbs_datasets = get_das_info('dataset=/*/%s/MINIAODSIM' % args.campaignstring)
+        #dbs_datasets = get_das_info('dataset=/*/%s/MINIAODSIM' % args.campaignstring)
+	dbs_datasets = get_das_info('dataset dataset=/*/%s/MINIAODSIM status=*' % args.campaignstring)
         # check sample wildcards
         for dataset in dbs_datasets:
 	    dataset_name = dataset.split('/')[1]+"_v"+dataset.split('_v')[1].split('/')[0]
@@ -344,7 +345,7 @@ def get_com_line_args():
 
     farmout_group.add_argument(
         '--output-dir', dest='outdir',
-        default='srm://cmssrm.hep.wisc.edu:8443/srm/v2/server?SFN=/hdfs/store/user/{user}/{jobid}/{sample}/',
+        default='gsiftp://cms-lvs-gridftp.hep.wisc.edu:2811//hdfs/store/user/{user}/{jobid}/{sample}/',
         help = 'Where to put the output.  Default: %(default)s'
     )
 
