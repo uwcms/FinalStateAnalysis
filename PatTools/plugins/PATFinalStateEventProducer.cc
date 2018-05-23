@@ -32,7 +32,7 @@
 #include "DataFormats/Math/interface/Error.h"
 
 // For Rivet Tools
-#include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
+//#include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
 
 #define DEBUG_ 0 
 class PATFinalStateEventProducer : public edm::EDProducer {
@@ -108,7 +108,7 @@ private:
 
   //edm::EDGetTokenT<pat::JetCollection> jetAK8SrcToken_;
 
-  edm::EDGetTokenT<HTXS::HiggsClassification> htxsSrc_;
+  //edm::EDGetTokenT<HTXS::HiggsClassification> htxsSrc_;
 
   typedef std::pair<std::string, edm::EDGetTokenT<edm::View<pat::MET> > > METTokenMap;
   std::vector<METTokenMap> metCfg_;
@@ -157,7 +157,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   trgResultsSrcToken_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc"));
 						      trgResultsSrc2Token_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc2"));
   //l1extraIsoTauSrcToken_ = consumes< std::vector< l1extra::L1JetParticle > >(pset.getParameter<edm::InputTag>("l1extraIsoTauSrc"));
-  htxsSrc_ = consumes<HTXS::HiggsClassification>(edm::InputTag("rivetProducerHTXS","HiggsClassification"));
+  //htxsSrc_ = consumes<HTXS::HiggsClassification>(edm::InputTag("rivetProducerHTXS","HiggsClassification"));
 
   //photonCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("photonCoreSrc"));
   //gsfCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("gsfCoreSrc"));
@@ -335,12 +335,12 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   //edm::Handle< std::vector<l1extra::L1JetParticle> > l1extraIsoTaus;
   //evt.getByToken(l1extraIsoTauSrcToken_, l1extraIsoTaus);
 
-  edm::Handle<HTXS::HiggsClassification> htxs;
-  evt.getByToken(htxsSrc_,htxs);
-  // Only get Rivet data if valid
-  HTXS::HiggsClassification htxsRivetInfo;
-  if (htxs.isValid())
-    htxsRivetInfo = * htxs;
+  //edm::Handle<HTXS::HiggsClassification> htxs;
+  //evt.getByToken(htxsSrc_,htxs);
+  //// Only get Rivet data if valid
+  //HTXS::HiggsClassification htxsRivetInfo;
+  //if (htxs.isValid())
+  //  htxsRivetInfo = * htxs;
 
 
   edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
@@ -416,7 +416,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo, metSig, metCov,
                               //trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
                               trg, trigStandAlone, names, *trigPrescale, *trigResults, myPuInfo, genInfo, genParticlesRef, 
-                              hTaus, eTaus, mTaus, htxsRivetInfo,
+                              hTaus, eTaus, mTaus, // htxsRivetInfo,
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
                               phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts,

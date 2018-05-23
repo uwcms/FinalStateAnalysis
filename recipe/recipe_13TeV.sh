@@ -87,16 +87,16 @@ popd
 #git clone -b Moriond17_gainSwitch_unc https://github.com/ECALELFS/ScalesSmearings.git
 #popd
 
-#echo "Checking out Rivet Tools for Higgs Template Cross Section"
-#pushd $CMSSW_BASE/src
-cd $CMSSW_BASE/src
-#git cms-addpkg SimDataFormats/HTXS
-git remote add perozzi https://github.com/perrozzi/cmssw.git
-git fetch perozzi
-git checkout perozzi/HTXS_clean -- SimDataFormats/HTXS
-git remote rm perozzi
-##git cms-merge-topic -u perrozzi:HTXS_clean
-popd
+##echo "Checking out Rivet Tools for Higgs Template Cross Section"
+##pushd $CMSSW_BASE/src
+#cd $CMSSW_BASE/src
+##git cms-addpkg SimDataFormats/HTXS
+#git remote add perozzi https://github.com/perrozzi/cmssw.git
+#git fetch perozzi
+#git checkout perozzi/HTXS_clean -- SimDataFormats/HTXS
+#git remote rm perozzi
+###git cms-merge-topic -u perrozzi:HTXS_clean
+#popd
 
 
 cd $CMSSW_BASE/src
