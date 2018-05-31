@@ -1101,6 +1101,14 @@ std::vector<const reco::Candidate*> PATFinalState::vetoJets(
       dR, filter);
 }
 
+std::vector<const reco::Candidate*> PATFinalState::vetoTracks(
+    double dR, const std::string& filter) const {
+  return getVetoObjects(
+      daughters(),
+      ptrizeCollection(evt()->packedPflow()),
+      dR, filter);
+}
+
 std::vector<const reco::Candidate*> PATFinalState::vetoPhotons(
     double dR, const std::string& filter) const {
   return getVetoObjects(
@@ -1394,6 +1402,15 @@ std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, doub
   std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
   // todo cache this
   return computeJetInfo(jets);
+}
+
+std::vector<double> PATFinalState::trackVariables(const std::string& trackCuts, double dr ) const {
+  std::vector<const reco::Candidate*> hardScatter = this->daughters();
+  std::vector<const reco::Candidate*> tracks = this->vetoTracks(dr, trackCuts);
+  bool has_gen=true;
+  if (!event_->genParticleRefProd()) has_gen=false;
+  // todo cache this
+  return computeTrackInfo(tracks,evt()->packedPflow(),event_->genParticleRefProd(),has_gen);
 }
 
 bool PATFinalState::orderedInPt(int i, int j) const {

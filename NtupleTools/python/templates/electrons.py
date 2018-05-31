@@ -21,28 +21,13 @@ id = PSet(
     objectCBIDLoose = '{object}.userFloat("CBIDLoose")',
     objectCBIDMedium = '{object}.userFloat("CBIDMedium")',
     objectCBIDTight = '{object}.userFloat("CBIDTight")',
-    objectCBIDVetoNoIso = '{object}.userFloat("CBIDVetoNoIso")',
-    objectCBIDLooseNoIso = '{object}.userFloat("CBIDLooseNoIso")',
-    objectCBIDMediumNoIso = '{object}.userFloat("CBIDMediumNoIso")',
-    objectCBIDTightNoIso = '{object}.userFloat("CBIDTightNoIso")',
-    #objectMVANonTrigID = '{object}.userFloat("BDTIDNonTrig")',
-    #objectMVANonTrigCategory = '{object}.userFloat("BDTIDNonTrigCategory")',
-    objectMVANonTrigWP80 = '{object}.userFloat("MVA_WP80")',
-    objectMVANonTrigWP90 = '{object}.userFloat("MVA_WP90")',
-    #objectMVATrigID = '{object}.userFloat("BDTIDTrig")',
-    #objectMVATrigCategory = '{object}.userFloat("BDTIDTrigCategory")',
-    #objectMVATrigWP80 = '{object}.userFloat("MVATrigWP80")',
-    #objectMVATrigWP90 = '{object}.userFloat("MVATrigWP90")',
-    objectWWLoose = '{object}.userFloat("WWLoose")',
-    
-    # Use cms.string so we get the parentheses formatting bonus
-#    objectRelPFIsoDB = cms.string(
-#        "({object}.userIso(0)"
-#        "+max({object}.userIso(1)"
-#        "+{object}.neutralHadronIso()"
-#        "-0.5*{object}.userIso(2),0.0))"
-#        "/{object}.pt()"
-#    ),
+    objectMVAIsoWP80 = '{object}.userFloat("MVA_iso_WP80")',
+    objectMVAIsoWP90 = '{object}.userFloat("MVA_iso_WP90")',
+    objectMVAIsoLoose = '{object}.userFloat("MVA_iso_WPLoose")',
+    objectMVANoisoWP80 = '{object}.userFloat("MVA_noiso_WP80")',
+    objectMVANoisoWP90 = '{object}.userFloat("MVA_noiso_WP90")',
+    objectMVANoisoLoose = '{object}.userFloat("MVA_noiso_WPLoose")',    
+
     objectRelPFIsoDB = cms.string(
         "({object}.userIsolation('PfChargedHadronIso')"
         "+max({object}.userIsolation('PfNeutralHadronIso')"

@@ -6,10 +6,8 @@ from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule
 
 def preElectrons(process, eSrc, vSrc,**kwargs):
     postfix = kwargs.pop('postfix','')
-    electronMVAGeneralIDLabel = kwargs.pop('electronMVAGeneralIDLabel',"BDTIDGeneral")
-    electronMVAHzzIDLabel = kwargs.pop('electronMVAHzzIDLabel',"BDTIDHzz")
-    #electronMVANonTrigIDLabel = kwargs.pop('electronMVANonTrigIDLabel',"BDTIDNonTrig")
-    #electronMVATrigIDLabel = kwargs.pop('electronMVATrigIDLabel',"BDTIDTrig")
+    electronMVAIsoGeneralIDLabel = kwargs.pop('electronMVAIsoGeneralIDLabel',"BDTIsoIDGeneral")
+    electronMVANoisoGeneralIDLabel = kwargs.pop('electronMVANoisoGeneralIDLabel',"BDTNoisoIDGeneral")
     applyEnergyCorrections = kwargs.pop("applyEnergyCorrections", False)
     isMCflag= kwargs.pop("isMC",False)
     isLFV=kwargs.pop("isLFV",False)
@@ -55,29 +53,10 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
     getattr(process,regMod).srcMiniAOD = cms.InputTag(eSrc)
 
     id_modules = [
-        
-        #'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_25ns_V1_cff',    # both 25 and 50 ns cutbased ids produced
-        #'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Spring15_50ns_V1_cff',
-        #'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV60_cff',                 # recommended for both 50 and 25 ns
-        #'RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV51_cff',                 # recommended for both 50 and 25 ns
-        #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_nonTrig_V1_cff', # will not be produced for 50 ns, triggering still to come
-        #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_25ns_Trig_V1_cff',    # 25 ns trig
-        #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring15_50ns_Trig_V1_cff',    # 50 ns trig
-        #'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronHLTPreselecition_Summer16_V1_cff',
         'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V1_cff',
-        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Spring16_GeneralPurpose_V1_cff',
-        #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V1_cff',
-        #'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V1_cff',
+	'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V1_cff', 
+        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V1_cff',
         ]
-    # something here breaks the postfix stuff... no idea
-    # ----- Begin Fatal Exception 12-Nov-2015 08:36:25 CST-----------------------
-    # An exception of category 'Configuration' occurred while
-    #    [0] Constructing the EventProcessor
-    #    [1] Constructing module: class=VersionedGsfElectronIdProducer label='egmGsfElectronIDsmesUp'
-    # Exception Message:
-    # Duplicate Process The process name Ntuples was previously used on these products.
-    # Please modify the configuration file to use a distinct process name.
-    # ----- End Fatal Exception -------------------------------------------------
 
     # redefine the setupVIDElectronSelection function
     def modSetupVIDElectronSelection(process,cutflow,patProducer=None,addUserData=True, task=None):
@@ -97,34 +76,30 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
         setupAllVIDIdsInModule(process,idmod,modSetupVIDElectronSelection)
 
     
-    CBIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight", "MVA_WP90", "MVA_WP80", "MVA_WPLoose"]
+    CBIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight", "MVA_iso_WP90", "MVA_iso_WP80", "MVA_iso_WPLoose", "MVA_noiso_WP90", "MVA_noiso_WP80", "MVA_noiso_WPLoose"]
     
     CBIDTags = [
         cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-veto'.format(postfix)),
         cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-loose'.format(postfix)),
         cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-medium'.format(postfix)),
         cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-tight'.format(postfix)),
-        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Spring16-GeneralPurpose-V1-wp90".format(postfix)),
-	cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Spring16-GeneralPurpose-V1-wp80".format(postfix)),
-	cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Spring16-GeneralPurpose-V1-wp90".format(postfix)),
-        #cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wp90".format(postfix)),
-        #cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wp80".format(postfix)),
-        #cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wpLoose".format(postfix)),
+        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wp90".format(postfix)),
+	cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wp80".format(postfix)),
+	cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wpLoose".format(postfix)),
+        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V1-wp90".format(postfix)),
+        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V1-wp80".format(postfix)),
+        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V1-wpLoose".format(postfix)),
         ]
 
-    mvaValueLabels = [electronMVAGeneralIDLabel,electronMVAHzzIDLabel]
+    mvaValueLabels = [electronMVAIsoGeneralIDLabel,electronMVANoisoGeneralIDLabel]
     mvaValues = [
-        #cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV1Values".format(postfix)),
-        #cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV1Values".format(postfix)),
-	cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values".format(postfix)),
-        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring16HZZV1Values".format(postfix)),
+	cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV1Values".format(postfix)),
+        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV1Values".format(postfix)),
         ]
-    mvaCategoryLabels = ["BDTIDGeneral","BDTIDHzz"]
+    mvaCategoryLabels = ["BDTIsoIDGeneral","BDTNoisoIDGeneral"]
     mvaCategories = [
-        #cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV1Categories".format(postfix)),
-        #cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV1Categories".format(postfix)),
-	cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Categories".format(postfix)),
-        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Spring16HZZV1Categories".format(postfix)),
+        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV1Categories".format(postfix)),
+        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV1Categories".format(postfix)),
         ]
 
     # N-1 results
