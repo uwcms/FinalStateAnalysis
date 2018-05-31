@@ -15,6 +15,7 @@
 //#include "FinalStateAnalysis/DataAlgos/interface/JetVariables.h"
 #include "FinalStateAnalysis/DataAlgos/interface/JetSelections.h"
 #include "TVector2.h"
+#include "FinalStateAnalysis/DataAlgos/interface/TrackSelections.h"
 
 
 // Forward delcarations
@@ -265,6 +266,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Use cut jetVeto style argument to get jets dR away from
     /// candidate objects and compute necessary vars
     std::vector<double> jetVariables(const std::string& jetCuts, double dr=0.3) const;
+    std::vector<double> trackVariables(const std::string& trackCuts, double dr=0.3) const;
     //JetVariables jetVariables(const std::string& jetCuts, double dr=0.3) const;
     
     /// Check if two daughters are ordered in PT.
@@ -298,6 +300,9 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
         double dR=0.1, const std::string& filter="") const;
 
     std::vector<const reco::Candidate*> vetoJets(
+        double dR=0.1, const std::string& filter="") const;
+
+    std::vector<const reco::Candidate*> vetoTracks(
         double dR=0.1, const std::string& filter="") const;
 
     std::vector<const reco::Candidate*> vetoPhotons(
