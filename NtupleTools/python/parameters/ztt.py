@@ -242,6 +242,8 @@ parameters = {
 
 
     'tauVariables' : PSet(
+        objectL1IsoTauMatch = 'l1extraIsoTauMatching({object_idx})',
+        objectL1IsoTauPt = 'l1extraIsoTauPt({object_idx})',
         objectMatchesIsoMu20Tau27Path= r'matchToHLTPath({object_idx}, "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1_v\\d+", 0.5)',
         objectMatchesEle24Tau30Path= r'matchToHLTPath({object_idx}, "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1_v\\d+", 0.5)',
         objectMatchesDoubleMediumTau35 = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumChargedIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
@@ -291,6 +293,7 @@ parameters = {
 
     # dicandidates of form: object1_object2_VarName = 'string expression for candidate'
     'dicandidateVariables' : PSet(
+         object1_object2_doubleL1IsoTauMatch = 'doubleL1extraIsoTauMatching({object1_idx},{object2_idx})',
          object1_object2_PZetaLess0p85PZetaVis = 'pZeta({object1_idx}, {object2_idx}) - 0.85*pZetaVis({object1_idx}, {object2_idx})',
          object1_object2_pt_tt = 'PtDiTauSyst({object1_idx}, {object2_idx})',
          object1_object2_MtTotal = 'MtTotal({object1_idx}, {object2_idx})',
