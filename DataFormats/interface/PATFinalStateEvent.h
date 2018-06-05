@@ -36,6 +36,8 @@
 #include "SimDataFormats/GeneratorProducts/interface/GenFilterInfo.h"
 #include "DataFormats/Provenance/interface/EventID.h"
 #include "DataFormats/JetReco/interface/GenJet.h"
+#include "DataFormats/L1Trigger/interface/BXVector.h"
+#include "DataFormats/L1Trigger/interface/Tau.h"
 
 // For Rivet Tools
 //#include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
@@ -72,7 +74,7 @@ class PATFinalStateEvent {
         const edm::TriggerNames& names,
         const pat::PackedTriggerPrescales& triggerPrescale,
         const edm::TriggerResults& triggerResults,
-        //const std::vector<l1extra::L1JetParticle>& l1extraIsoTaus, 
+        const BXVector<l1t::Tau>& l1extraIsoTaus, 
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
         const reco::GenParticleRefProd& genParticles,
@@ -122,7 +124,7 @@ class PATFinalStateEvent {
     const edm::TriggerNames& names() const;
     const pat::PackedTriggerPrescales& trigPrescale() const;
     const edm::TriggerResults& trigResults() const;
-    //const std::vector<l1extra::L1JetParticle>& l1extraIsoTaus() const;
+    const BXVector<l1t::Tau>& l1extraIsoTaus() const;
 
     /*  These methods will be deprecated! */
     /// Get PFMET
@@ -252,7 +254,7 @@ class PATFinalStateEvent {
     edm::TriggerNames names_;
     pat::PackedTriggerPrescales triggerPrescale_;
     edm::TriggerResults triggerResults_;
-    //std::vector<l1extra::L1JetParticle> l1extraIsoTaus_;
+    BXVector<l1t::Tau> l1extraIsoTaus_;
     edm::Ptr<reco::Vertex> pv_;
     std::vector<edm::Ptr<reco::Vertex>> recoVertices_;
     edm::Ptr<pat::MET> met_;

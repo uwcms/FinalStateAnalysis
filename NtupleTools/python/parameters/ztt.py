@@ -87,7 +87,7 @@ parameters = {
         Flag_goodVertices='evt.getFilterFlags("Flag_goodVertices")',
         Flag_eeBadScFilter='evt.getFilterFlags("Flag_eeBadScFilter")',
         Flag_EcalDeadCellTriggerPrimitiveFilter='evt.getFilterFlags("Flag_EcalDeadCellTriggerPrimitiveFilter")',
-	Flag_badMuons='evt.getFilterFlags("Flag_badMuons")',
+        Flag_badMuons='evt.getFilterFlags("Flag_badMuons")',
         Flag_duplicateMuons='evt.getFilterFlags("Flag_duplicateMuons")',
         Flag_noBadMuons='evt.getFilterFlags("Flag_noBadMuons")',
         metSig='evt.metSig()', # Using PF Met
@@ -95,7 +95,7 @@ parameters = {
         metcov10='evt.metCov(1)', # 1 = (1,0)
         metcov01='evt.metCov(2)', # 2 = (0,1)
         metcov11='evt.metCov(3)', # 3 - (1,1)
-	metcov00_DESYlike='evt.met("pfmet").getSignificanceMatrix[0][0]',
+        metcov00_DESYlike='evt.met("pfmet").getSignificanceMatrix[0][0]',
         metcov10_DESYlike='evt.met("pfmet").getSignificanceMatrix[1][0]',
         metcov01_DESYlike='evt.met("pfmet").getSignificanceMatrix[0][1]',
         metcov11_DESYlike='evt.met("pfmet").getSignificanceMatrix[1][1]',
@@ -113,7 +113,7 @@ parameters = {
         numGenJets = 'evt.numGenJets()',
         genMass = 'evt.getGenMass()',
 
-	# Pion variables
+        # Pion variables
         pion1pt='trackVariables("pt > 5 & abs(eta) < 2.4", 0.3).at(0)',
         pion1eta='trackVariables("pt > 5 & abs(eta) < 2.4", 0.3).at(1)',
         pion1phi='trackVariables("pt > 5 & abs(eta) < 2.4", 0.3).at(2)',
@@ -206,7 +206,7 @@ parameters = {
         objectMatchesEle32Path= r'matchToHLTPath({object_idx}, "HLT_Ele32_WPTight_Gsf_v\\d+", 0.5)',
         objectMatchesEle35Path= r'matchToHLTPath({object_idx}, "HLT_Ele35_WPTight_Gsf_v\\d+", 0.5)',
 
-	objectMatchesEle24Tau30Filter = 'matchToHLTFilter({object_idx}, "hltEle24erWPTightGsfTrackIsoFilterForTau", 0.5)',
+        objectMatchesEle24Tau30Filter = 'matchToHLTFilter({object_idx}, "hltEle24erWPTightGsfTrackIsoFilterForTau", 0.5)',
         objectMatchesEle32Filter = 'matchToHLTFilter({object_idx}, "hltEle32WPTightGsfTrackIsoFilter", 0.5)',
         objectMatchesEle35Filter = 'matchToHLTFilter({object_idx}, "hltEle35noerWPTightGsfTrackIsoFilter", 0.5)',
 
@@ -228,7 +228,7 @@ parameters = {
         objectMatchesIsoMu24Path      = r'matchToHLTPath({object_idx}, "HLT_IsoMu24_v\\d+", 0.5)',
         objectMatchesIsoMu20Tau27Path= r'matchToHLTPath({object_idx}, "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1_v\\d+", 0.5)',
 
-	objectMatchesIsoMu24Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07", 0.5)',
+        objectMatchesIsoMu24Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07", 0.5)',
         objectMatchesIsoMu27Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sMu22Or25L1f0L2f10QL3f27QL3trkIsoFiltered0p07", 0.5)',
         objectMatchesIsoMu20Tau27Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sMu18erTau24erIorMu20erTau24erL1f0L2f10QL3f20QL3trkIsoFiltered0p07 ", 0.5)',
 
@@ -242,18 +242,20 @@ parameters = {
 
 
     'tauVariables' : PSet(
+        objectL1IsoTauMatch = 'l1extraIsoTauMatching({object_idx})',
+        objectL1IsoTauPt = 'l1extraIsoTauPt({object_idx})',
         objectMatchesIsoMu20Tau27Path= r'matchToHLTPath({object_idx}, "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1_v\\d+", 0.5)',
         objectMatchesEle24Tau30Path= r'matchToHLTPath({object_idx}, "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1_v\\d+", 0.5)',
-	objectMatchesDoubleMediumTau35 = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumChargedIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
+        objectMatchesDoubleMediumTau35 = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumChargedIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleTightTau35 = r'matchToHLTPath({object_idx}, "HLT_DoubleTightChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleMediumTau40 = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumChargedIsoPFTau40_Trk1_TightID_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleTightTau40 = r'matchToHLTPath({object_idx}, "HLT_DoubleTightChargedIsoPFTau40_Trk1_eta2p1_Reg_v\\d+", 0.5)',
 
-	objectMatchesIsoMu20Tau27Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sMu18erTau24erIorMu20erTau24erL1f0L2f10QL3f20QL3trkIsoFiltered0p07", 0.5)',
+        objectMatchesIsoMu20Tau27Filter = 'matchToHLTFilter({object_idx}, "hltL3crIsoL1sMu18erTau24erIorMu20erTau24erL1f0L2f10QL3f20QL3trkIsoFiltered0p07", 0.5)',
         objectMatchesEle24Tau30Filter = 'matchToHLTFilter({object_idx}, "hltSelectedPFTau30LooseChargedIsolationL1HLTMatched", 0.5)',
         objectMatchesDoubleMediumTau35Filter = 'matchToHLTFilter({object_idx}, "hltDoublePFTau35TrackPt1MediumChargedIsolationDz02Reg", 0.5)',
-        objectMatchesDoubleTightTau35Filter = 'matchToHLTFilter({object_idx}, "hltDoublePFTau35TrackPt1TightChargedIsolationAndTightOOSCPhotonsDz02Reg", 0.5)',
-        objectMatchesDoubleMediumTau40Filter = 'matchToHLTFilter({object_idx}, "hltDoublePFTau40TrackPt1MediumChargedIsolationAndTightOOSCPhotonsDz02Reg", 0.5)',
+        objectMatchesDoubleTightTau35TightIDFilter = 'matchToHLTFilter({object_idx}, "hltDoublePFTau35TrackPt1TightChargedIsolationAndTightOOSCPhotonsDz02Reg", 0.5)',
+        objectMatchesDoubleMediumTau40TightIDFilter = 'matchToHLTFilter({object_idx}, "hltDoublePFTau40TrackPt1MediumChargedIsolationAndTightOOSCPhotonsDz02Reg", 0.5)',
         objectMatchesDoubleTightTau40Filter = 'matchToHLTFilter({object_idx}, "hltDoublePFTau40TrackPt1TightChargedIsolationDz02Reg", 0.5)',
         
         objectZTTGenMatching = 'tauGenMatch2({object_idx})', 
@@ -291,6 +293,7 @@ parameters = {
 
     # dicandidates of form: object1_object2_VarName = 'string expression for candidate'
     'dicandidateVariables' : PSet(
+         object1_object2_doubleL1IsoTauMatch = 'doubleL1extraIsoTauMatching({object1_idx},{object2_idx})',
          object1_object2_PZetaLess0p85PZetaVis = 'pZeta({object1_idx}, {object2_idx}) - 0.85*pZetaVis({object1_idx}, {object2_idx})',
          object1_object2_pt_tt = 'PtDiTauSyst({object1_idx}, {object2_idx})',
          object1_object2_MtTotal = 'MtTotal({object1_idx}, {object2_idx})',
