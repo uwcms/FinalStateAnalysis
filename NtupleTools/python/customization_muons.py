@@ -3,23 +3,6 @@ import FWCore.ParameterSet.Config as cms
 
 def preMuons(process, mSrc, vSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
-    skipGhost = kwargs.pop('skipGhost', False)
-
-    if not skipGhost:
-        # Clean out muon "ghosts" caused by track ambiguities
-        modName = 'ghostCleanedMuons{0}'.format(postfix)
-        mod = cms.EDProducer("PATMuonCleanerBySegments",
-                             src = cms.InputTag(mSrc),
-                             preselection = cms.string("track.isNonnull"),
-                             passthrough = cms.string("isGlobalMuon && numberOfMatches >= 2"),
-                             fractionOfSharedSegments = cms.double(0.499))
-        mSrc = modName
-        setattr(process,modName,mod)
-    
-        pathName = 'miniCleanedMuons{0}'.format(postfix)
-        modPath = cms.Path(getattr(process,modName))
-        setattr(process,pathName,modPath)
-        process.schedule.append(getattr(process,pathName))
 
     # embed ids
     modName = 'miniPatMuons{0}'.format(postfix)

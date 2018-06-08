@@ -1,0 +1,35 @@
+{
+
+  "data_SingleMuon_Run2017B-17Nov2017" : "/SingleMuon/Run2017B-17Nov2017-v1/MINIAOD",
+  "data_SingleMuon_Run2017C-17Nov2017" : "/SingleMuon/Run2017C-17Nov2017-v1/MINIAOD",
+  "data_SingleMuon_Run2017D-17Nov2017" : "/SingleMuon/Run2017D-17Nov2017-v1/MINIAOD",
+  "data_SingleMuon_Run2017E-17Nov2017" : "/SingleMuon/Run2017E-17Nov2017-v1/MINIAOD",
+  "data_SingleMuon_Run2017F-17Nov2017" : "/SingleMuon/Run2017F-17Nov2017-v1/MINIAOD",
+
+  "data_SingleElectron_Run2017B-17Nov2017" : "/SingleElectron/Run2017B-17Nov2017-v1/MINIAOD",
+  "data_SingleElectron_Run2017C-17Nov2017" : "/SingleElectron/Run2017C-17Nov2017-v1/MINIAOD",
+  "data_SingleElectron_Run2017D-17Nov2017" : "/SingleElectron/Run2017D-17Nov2017-v1/MINIAOD",
+  "data_SingleElectron_Run2017E-17Nov2017" : "/SingleElectron/Run2017E-17Nov2017-v1/MINIAOD",
+  "data_SingleElectron_Run2017F-17Nov2017" : "/SingleElectron/Run2017F-17Nov2017-v1/MINIAOD",
+
+  "data_MuOnia_Run2017B-17Nov2017" : "/MuOnia/Run2017B-17Nov2017-v1/MINIAOD",
+  "data_MuOnia_Run2017C-17Nov2017" : "/MuOnia/Run2017C-17Nov2017-v1/MINIAOD",
+  "data_MuOnia_Run2017D-17Nov2017" : "/MuOnia/Run2017D-17Nov2017-v1/MINIAOD",
+  "data_MuOnia_Run2017E-17Nov2017" : "/MuOnia/Run2017E-17Nov2017-v1/MINIAOD",
+  "data_MuOnia_Run2017F-17Nov2017" : "/MuOnia/Run2017F-17Nov2017-v1/MINIAOD",
+
+  "data_MuonEG_Run2017B-17Nov2017" : "/MuonEG/Run2017B-17Nov2017-v1/MINIAOD",
+  "data_MuonEG_Run2017C-17Nov2017" : "/MuonEG/Run2017C-17Nov2017-v1/MINIAOD",
+  "data_MuonEG_Run2017D-17Nov2017" : "/MuonEG/Run2017D-17Nov2017-v1/MINIAOD",
+  "data_MuonEG_Run2017E-17Nov2017" : "/MuonEG/Run2017E-17Nov2017-v1/MINIAOD",
+  "data_MuonEG_Run2017F-17Nov2017" : "/MuonEG/Run2017F-17Nov2017-v1/MINIAOD",
+
+  "data_Tau_Run2017B-17Nov2017" : "/Tau/Run2017B-17Nov2017-v1/MINIAOD",
+  "data_Tau_Run2017C-17Nov2017" : "/Tau/Run2017C-17Nov2017-v1/MINIAOD",
+  "data_Tau_Run2017D-17Nov2017" : "/Tau/Run2017D-17Nov2017-v1/MINIAOD",
+  "data_Tau_Run2017E-17Nov2017" : "/Tau/Run2017E-17Nov2017-v1/MINIAOD",
+  "data_Tau_Run2017F-17Nov2017" : "/Tau/Run2017F-17Nov2017-v1/MINIAOD"
+
+}
+
+

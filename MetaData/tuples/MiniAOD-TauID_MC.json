@@ -1,0 +1,19 @@
+{
+  "WW" : "WW_TuneCP5_13TeV-pythia8",
+  "WZ" : "WZ_TuneCP5_13TeV-pythia8",
+  "ZZ" : "ZZ_TuneCP5_13TeV-pythia8",
+  "WJets" : "WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8",
+  "W1Jets" : "W1JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8",
+  "W2Jets" : "W2JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8",
+  "W3Jets" : "W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8",
+  "W4Jets" : "W4JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8",
+  "DYJets_MLM" : "DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
+  "DY1Jets_MLM" : "DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
+  "DY2Jets_MLM" : "DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
+  "DY3Jets_MLM" : "DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
+  "DY4Jets_MLM" : "DY4JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
+  "TTToSemiLeptonic" : "TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8",
+  "TTToHadronic" : "TTToHadronic_TuneCP5_13TeV-powheg-pythia8",
+  "TTTo2L2Nu" : "TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8"
+
+} 

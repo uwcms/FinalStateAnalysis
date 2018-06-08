@@ -11,11 +11,11 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 kinematics = PSet(
     objectPt = '{object}.pt',
     objectEta = '{object}.eta',
-    objectAbsEta = 'abs({object}.eta)',
+    #objectAbsEta = 'abs({object}.eta)',
     objectPhi = '{object}.phi',
     objectCharge = '{object}.charge',
     objectMass = '{object}.mass',
-    objectRank ='{object}.userFloat("rankByPt")'
+    #objectRank ='{object}.userFloat("rankByPt")'
 )
 
 vertex_info = PSet(

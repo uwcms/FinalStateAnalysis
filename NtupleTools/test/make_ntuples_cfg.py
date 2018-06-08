@@ -132,7 +132,6 @@ options = TauVarParsing.TauVarParsing(
     hzz=0,
     zh=0,
     paramFile='',
-    skipGhost=0,
     runWZ=0,
     isLFV=0,
     runMetUncertainties=0,
@@ -722,18 +721,15 @@ process.schedule.append(process.METSigSeq)
 ### embed muon IDs ###
 ######################
 
-options.skipGhost = (options.runMVAMET or options.skipGhost or options.htt)
 
 from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
 fs_daughter_inputs['muons'] = preMuons(process,
                                        fs_daughter_inputs['muons'],
-                                       fs_daughter_inputs['vertices'],
-                                       skipGhost=options.skipGhost)
+                                       fs_daughter_inputs['vertices'])
 for fs in additional_fs:
     additional_fs[fs]['muons'] = preMuons(process,
                                           additional_fs[fs]['muons'],
                                           additional_fs[fs]['vertices'],
-                                          skipGhost=options.skipGhost,
                                           postfix=fs)
 
 #####################
@@ -1188,7 +1184,7 @@ process.MessageLogger.cerr.UndefinedPreselectionInfo = cms.untracked.PSet(
 )
 
 if options.verbose:
-    process.options.wantSummary = cms.untracked.bool(False)
+    process.options.wantSummary = cms.untracked.bool(True)
 if options.passThru:
     set_passthru(process)
 
