@@ -79,13 +79,6 @@ id = PSet(
         '-{object}.userFloat("rho_fastjet")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
         '/{object}.pt()'
     ),
-    #objectRelPFIsoRhoFSR = cms.string(
-    #    '({object}.chargedHadronIso()'
-    #    '+max(0.0,{object}.neutralHadronIso()'
-    #    '+{object}.photonIso() - userFloat("leg{object_idx}fsrIsoCorr")'
-    #    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
-    #    '/{object}.pt()'
-    #),
 
     objectIsPFMuon = '{object}.isPFMuon',
     objectIsGlobal = '{object}.isGlobalMuon',
@@ -116,12 +109,6 @@ id = PSet(
 )
 
 energyCorrections = PSet(
-    # left as template
-    #objectERochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").t',
-    #objectPtRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Pt',
-    #objectEtaRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Eta',
-    #objectPhiRochCor2012 = 'getUserLorentzVector({object_idx},"p4_RochCor2012").Phi',
-    #objectEErrRochCor2012 = '{object}.userFloat("p4_RochCor2012_tkFitErr")'
     objectPt_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").pt : -999.',
     objectEta_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").eta : -999.',
     objectPhi_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").phi : -999.',
@@ -149,36 +136,11 @@ tracking = PSet(
     objectMuonHits = '? {object}.globalTrack.isNonnull ? '
         '{object}.globalTrack().hitPattern().numberOfValidMuonHits() : -1',
     objectMatchedStations = '{object}.numberOfMatchedStations',
-    #objectD0 = '{object}.dB("PV3D")',
 )
 
 # Trigger matching
 trigger_50ns = PSet(
-    objectMatchesSingleMu = r'matchToHLTPath({object_idx},"HLT_Mu40_v\\d+",0.5)',
-    objectMatchesSingleMu_leg1 = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_v\\d+",0.5)',
-    objectMatchesSingleMu_leg2 = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_v\\d+",0.5)',
-    objectMatchesSingleMu_leg1_noiso = r'matchToHLTPath({object_idx},"HLT_Mu17_v\\d+",0.5)',
-    objectMatchesSingleMu_leg2_noiso = r'matchToHLTPath({object_idx},"HLT_Mu8_v\\d+",0.5)',
-    objectMatchesDoubleMu = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\d+|HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+",0.5)',
-    objectMatchesSingleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
-    objectMatchesSingleMuSingleE = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
-    objectMatchesTripleMu = r'matchToHLTPath({object_idx},"HLT_TripleMu_12_10_5_v\\d+",0.5)',
-    objectMatchesDoubleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+",0.5)',
-    objectMatchesDoubleMuSingleE = r'matchToHLTPath({object_idx},"HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+",0.5)',
 )
 
 trigger_25ns = PSet(
-    objectMatchesSingleMuIso20 = r'matchToHLTPath({object_idx},"HLT_IsoMu20_v\\d+",0.5)',
-    objectMatchesSingleMuIsoTk20 = r'matchToHLTPath({object_idx},"HLT_IsoTkMu20_v\\d+",0.5)',
-    objectMatchesSingleMu = r'matchToHLTPath({object_idx},"HLT_Mu50_v\\d+",0.5)',
-    objectMatchesSingleMu_leg1 = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_v\\d+",0.5)',
-    objectMatchesSingleMu_leg2 = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_v\\d+",0.5)',
-    objectMatchesSingleMu_leg1_noiso = r'matchToHLTPath({object_idx},"HLT_Mu17_v\\d+",0.5)',
-    objectMatchesSingleMu_leg2_noiso = r'matchToHLTPath({object_idx},"HLT_Mu8_v\\d+",0.5)',
-    objectMatchesDoubleMu = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\d+|HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+",0.5)',
-    objectMatchesSingleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_TrkIsoVVL_Ele17_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
-    objectMatchesSingleMuSingleE = r'matchToHLTPath({object_idx},"HLT_Mu17_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+",0.5)',
-    objectMatchesTripleMu = r'matchToHLTPath({object_idx},"HLT_TripleMu_12_10_5_v\\d+",0.5)',
-    objectMatchesDoubleESingleMu = r'matchToHLTPath({object_idx},"HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+",0.5)',
-    objectMatchesDoubleMuSingleE = r'matchToHLTPath({object_idx},"HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+",0.5)',
 )
