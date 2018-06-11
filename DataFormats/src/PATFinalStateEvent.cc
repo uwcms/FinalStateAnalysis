@@ -16,10 +16,9 @@ namespace {
     bool matched = false;
     for (size_t i = 0; i < trgObjects.size(); ++i) {
       pat::TriggerObjectStandAlone obj = trgObjects.at(i);
-      //std::cout << " - - dR(cand,trig" << i << "): " << reco::deltaR(cand, obj) << " max: " << maxDeltaR << std::endl;
       if (reco::deltaR(cand, obj) > maxDeltaR) continue;
       obj.unpackPathNames(names);
-      std::vector<std::string> pathNames = obj.pathNames(false);
+      std::vector<std::string> pathNames = obj.pathNames(true); //Cecile
       for (size_t t = 0; t < pathNames.size(); t++) {
           std::string path = pathNames.at(t);
           if(DEBUG_)std::cout << " - - - path name: " << path << " match name " << trigName << std::endl;
@@ -560,48 +559,37 @@ int PATFinalStateEvent::hltGroup(const std::string& pattern) const {
   return result.group;
 }
 
-int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,
-    const std::string& pattern, double maxDeltaR) const {
-  //std::cout << evtID_ << " running <<< matchedToFilter >>> : " << pattern << std::endl;
-  std::vector<const pat::TriggerFilter*> filters = matchingTriggerFilters(trigStandAlone(), names(), pattern);
-  if (!filters.size())
-    return -1;
-  //std::cout << "Filters Obj: " << filters << std::endl;
-  int matchCount = 0;
-  //std::cout << "Filters: " << std::endl;
-  for (unsigned int i=0; i < filters.size(); ++i)
-  {
-  //std::cout << "     ---- Calling matchedToAnObject for:" << std::endl;
-  //std::cout << "     ---- trigStandAlone() " << trigStandAlone() << std::endl;
-  //std::cout << "     ---- names() " << names() << std::endl;
-  //std::cout << "     ---- cand " << cand << std::endl;
-  //std::cout << "     ---- filter " << filters[i] << std::endl;
-  bool matched = matchedToAnObject(trigStandAlone(), names(), cand, maxDeltaR, pattern);//, filters[i]);
-  if (matched)
-    matchCount += 1;
-  //std::cout << "Filters matched obj " << cand << "number of matches: " << matched << " for dr: " << maxDeltaR << std::endl;
-  }
-  //  //std::cout << "TOTAL MATCHES: " << matchCount << std::endl;
-  return matchCount;
+int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,const std::string& pattern, double maxDeltaR) const {
+   int match=0;
+   for (size_t i = 0; i < trigStandAlone().size(); ++i) {
+      pat::TriggerObjectStandAlone obj = trigStandAlone().at(i);
+      if (reco::deltaR(cand, obj) > maxDeltaR) continue;
+      obj.unpackPathNames(names());
+      std::vector<std::string> pathNamesLast = obj.pathNames(false); 
+      for (unsigned h = 0, n = pathNamesLast.size(); h < n; ++h) {
+	if ((pathNamesLast[h].substr(0, pathNamesLast[h].find_last_of("_v"))).compare(pattern.substr(0, pattern.find_last_of("_v")))==0) {
+	       match++;
+	}
+      }
+   }
+   return match;
 }
 
-int PATFinalStateEvent::matchedToPath(const reco::Candidate& cand,
-    const std::string& pattern, double maxDeltaR) const {
-  if(DEBUG_)std::cout << evtID_ << " smart trigger pattern: " << pattern << std::endl;
-  SmartTriggerResult result = smartTrigger(pattern, names(), trigPrescale(), trigResults(), evtID_);
-  //std::cout << " result: group " << result.group << ", prescale " << result.prescale << ", passed " << result.passed << std::endl;
-  // Loop over all the paths that fired and see if any matched this object.
-  if (!result.passed)
-    return -1;
-  int matchCount = 0;
-  for (size_t i = 0; i < result.paths.size(); ++i) {
-    if(DEBUG_)std::cout << " - path: " << result.paths[i] << std::endl;
-    bool matched = matchedToAnObject(trigStandAlone(), names(), cand, maxDeltaR, result.paths.at(i));
-    if(DEBUG_)std::cout << " - path: " << result.paths[i] << " matched: " << matched << std::endl;
-    if (matched)
-      matchCount += 1;
-  }
-  return matchCount;
+int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,const std::string& pattern, double maxDeltaR) const {
+   int match=0;
+   for (size_t i = 0; i < trigStandAlone().size(); ++i) {
+      pat::TriggerObjectStandAlone obj = trigStandAlone().at(i);
+      if (reco::deltaR(cand, obj) > maxDeltaR) continue;
+      obj.unpackPathNames(names());
+      std::vector<std::string> pathNamesLast = obj.pathNames(true); 
+      for (unsigned h = 0, n = pathNamesLast.size(); h < n; ++h) {
+        if ((pathNamesLast[h].substr(0, pathNamesLast[h].find_last_of("_v"))).compare(pattern.substr(0, pattern.find_last_of("_v")))==0) {
+           if (obj.hasPathName( pathNamesLast[h], true, true )) 
+               match++;
+        }
+      }
+   }
+   return match;
 }
 
 const std::string& PATFinalStateEvent::puTag() const {

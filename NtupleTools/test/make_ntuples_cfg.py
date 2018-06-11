@@ -970,77 +970,77 @@ suffix = '' # most analyses don't need to modify the final states
 from FinalStateAnalysis.NtupleTools.channel_handling import parseChannels, \
     get_channel_suffix
 
-if options.hzz:
-    process.embedHZZSeq = cms.Sequence()
-    # Embed matrix elements in relevant final states
-    suffix = "HZZ"
-    for ch in parseChannels(options.channels):
-        prodSuffix = get_channel_suffix(ch)
-        oldName = "finalState%s"%prodSuffix
-        newName = oldName + suffix
-
-        if len(ch) == 4:
-            # 4l final states might be higgses, so do some higgs analysis
-            embedCategoryProducer = cms.EDProducer(
-                "MiniAODHZZCategoryEmbedder",
-                src = cms.InputTag(oldName),
-                tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
-                bDiscriminator = cms.string("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
-                bDiscriminantCut = cms.double(0.89),
-                )
-            # give the FS collection an intermediate name, with an identifying suffix
-            intermediateName = oldName + "HZZCategory"
-            setattr(process, intermediateName, embedCategoryProducer)
-            process.embedHZZSeq += embedCategoryProducer
-            
-            embedMEProducer = cms.EDProducer(
-                "MiniAODHZZMEEmbedder%s"%prodSuffix,
-                src = cms.InputTag(intermediateName),
-                processes = cms.vstring("p0plus_VAJHU",
-                                        "p0minus_VAJHU",
-                                        "Dgg10_VAMCFM",
-                                        "bkg_VAMCFM",
-                                        "phjj_VAJHU",
-                                        "pvbf_VAJHU",
-                                        ),
-                fsrLabel = cms.string("dretFSRCand"),
-                )
-            # give the FS collection the same name as before, but with an identifying suffix
-            setattr(process, newName, embedMEProducer)
-            process.embedHZZSeq += embedMEProducer
-        else:
-            # Copy the other final states to keep naming consistent
-            copier = cms.EDProducer(
-                "PATFinalStateCopier",
-                src = cms.InputTag(oldName),
-                )
-            setattr(process, newName, copier)
-            process.embedHZZSeq += copier
-            
-    process.embedHZZ = cms.Path(process.embedHZZSeq)
-    process.schedule.append(process.embedHZZ)
+#if options.hzz:
+#    process.embedHZZSeq = cms.Sequence()
+#    # Embed matrix elements in relevant final states
+#    suffix = "HZZ"
+#    for ch in parseChannels(options.channels):
+#        prodSuffix = get_channel_suffix(ch)
+#        oldName = "finalState%s"%prodSuffix
+#        newName = oldName + suffix
+#
+#        if len(ch) == 4:
+#            # 4l final states might be higgses, so do some higgs analysis
+#            embedCategoryProducer = cms.EDProducer(
+#                "MiniAODHZZCategoryEmbedder",
+#                src = cms.InputTag(oldName),
+#                tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
+#                bDiscriminator = cms.string("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
+#                bDiscriminantCut = cms.double(0.89),
+#                )
+#            # give the FS collection an intermediate name, with an identifying suffix
+#            intermediateName = oldName + "HZZCategory"
+#            setattr(process, intermediateName, embedCategoryProducer)
+#            process.embedHZZSeq += embedCategoryProducer
+#            
+#            embedMEProducer = cms.EDProducer(
+#                "MiniAODHZZMEEmbedder%s"%prodSuffix,
+#                src = cms.InputTag(intermediateName),
+#                processes = cms.vstring("p0plus_VAJHU",
+#                                        "p0minus_VAJHU",
+#                                        "Dgg10_VAMCFM",
+#                                        "bkg_VAMCFM",
+#                                        "phjj_VAJHU",
+#                                        "pvbf_VAJHU",
+#                                        ),
+#                fsrLabel = cms.string("dretFSRCand"),
+#                )
+#            # give the FS collection the same name as before, but with an identifying suffix
+#            setattr(process, newName, embedMEProducer)
+#            process.embedHZZSeq += embedMEProducer
+#        else:
+#            # Copy the other final states to keep naming consistent
+#            copier = cms.EDProducer(
+#                "PATFinalStateCopier",
+#                src = cms.InputTag(oldName),
+#                )
+#            setattr(process, newName, copier)
+#            process.embedHZZSeq += copier
+#            
+#    process.embedHZZ = cms.Path(process.embedHZZSeq)
+#    process.schedule.append(process.embedHZZ)
         
 
 #Cecile vertex fitting
 
-process.embedVFSeq = cms.Sequence()
-# Embed matrix elements in relevant final states
-suffix = "HZZ"
-for ch in parseChannels(options.channels):
-     prodSuffix = get_channel_suffix(ch)
-     oldName = "finalState%s"%prodSuffix
-     newName = oldName + suffix
-     embedVFProducer = cms.EDProducer(
-             "MiniAODVertexFittingEmbedder",
-             src = cms.InputTag(oldName)
-             )
-     # give the FS collection an intermediate name, with an identifying suffix
-     intermediateName = oldName + "VFCategory"
-     setattr(process, newName, embedVFProducer)
-     process.embedVFSeq += embedVFProducer
-
-process.embedVF = cms.Path(process.embedVFSeq)
-process.schedule.append(process.embedVF)
+#process.embedVFSeq = cms.Sequence()
+## Embed matrix elements in relevant final states
+#suffix = "HZZ"
+#for ch in parseChannels(options.channels):
+#     prodSuffix = get_channel_suffix(ch)
+#     oldName = "finalState%s"%prodSuffix
+#     newName = oldName + suffix
+#     embedVFProducer = cms.EDProducer(
+#             "MiniAODVertexFittingEmbedder",
+#             src = cms.InputTag(oldName)
+#             )
+#     # give the FS collection an intermediate name, with an identifying suffix
+#     intermediateName = oldName + "VFCategory"
+#     setattr(process, newName, embedVFProducer)
+#     process.embedVFSeq += embedVFProducer
+#
+#process.embedVF = cms.Path(process.embedVFSeq)
+#process.schedule.append(process.embedVF)
 
 
 # run dqm
