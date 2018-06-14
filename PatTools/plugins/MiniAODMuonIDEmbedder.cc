@@ -63,6 +63,33 @@ void MiniAODMuonIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) 
     pat::Muon muon(muons->at(i));
 
     muon.addUserInt("tightID",muon.isTightMuon(pv_));
+    muon.addUserInt("CutBasedIdLoose",muon.passed(reco::Muon::CutBasedIdLoose));
+    muon.addUserInt("CutBasedIdMedium",muon.passed(reco::Muon::CutBasedIdMedium));
+    muon.addUserInt("CutBasedIdMediumPrompt",muon.passed(reco::Muon::CutBasedIdMediumPrompt));
+    muon.addUserInt("CutBasedIdTight",muon.passed(reco::Muon::CutBasedIdTight));
+    muon.addUserInt("CutBasedIdGlobalHighPt",muon.passed(reco::Muon::CutBasedIdGlobalHighPt));
+    muon.addUserInt("CutBasedIdTrkHighPt",muon.passed(reco::Muon::CutBasedIdTrkHighPt));
+    muon.addUserInt("PFIsoVeryLoose",muon.passed(reco::Muon::PFIsoVeryLoose));
+    muon.addUserInt("PFIsoLoose",muon.passed(reco::Muon::PFIsoLoose));
+    muon.addUserInt("PFIsoMedium",muon.passed(reco::Muon::PFIsoMedium));
+    muon.addUserInt("PFIsoTight",muon.passed(reco::Muon::PFIsoTight));
+    muon.addUserInt("PFIsoVeryTight",muon.passed(reco::Muon::PFIsoVeryTight));
+    // for CMSSW_10_1_X muon.addUserInt("PFIsoVeryVeryTight",muon.passed(reco::Muon::PFIsoVeryVeryTight));
+    muon.addUserInt("TkIsoLoose",muon.passed(reco::Muon::TkIsoLoose));
+    muon.addUserInt("TkIsoTight",muon.passed(reco::Muon::TkIsoTight));
+    muon.addUserInt("SoftCutBasedId",muon.passed(reco::Muon::SoftCutBasedId));
+    // for CMSSW_10_1_X muon.addUserInt("SoftMvaId",muon.passed(reco::Muon::SoftMvaId));
+    muon.addUserInt("MvaLoose",muon.passed(reco::Muon::MvaLoose));
+    muon.addUserInt("MvaMedium",muon.passed(reco::Muon::MvaMedium));
+    muon.addUserInt("MvaTight",muon.passed(reco::Muon::MvaTight));
+    muon.addUserInt("MiniIsoLoose",muon.passed(reco::Muon::MiniIsoLoose));
+    muon.addUserInt("MiniIsoMedium",muon.passed(reco::Muon::MiniIsoMedium));
+    muon.addUserInt("MiniIsoTight",muon.passed(reco::Muon::MiniIsoTight));
+    muon.addUserInt("MiniIsoVeryTight",muon.passed(reco::Muon::MiniIsoVeryTight));
+    // for CMSSW_10_1_X muon.addUserInt("TriggerIdLoose",muon.passed(reco::Muon::TriggerIdLoose));
+    // for CMSSW_10_1_X muon.addUserInt("InTimeMuon",muon.passed(reco::Muon::InTimeMuon));
+    // for CMSSW_10_1_X muon.addUserInt("MultiIsoLoose",muon.passed(reco::Muon::MultiIsoLoose));
+    // for CMSSW_10_1_X muon.addUserInt("MultiIsoMedium",muon.passed(reco::Muon::MultiIsoMedium));
 
     output->push_back(muon);
   }
