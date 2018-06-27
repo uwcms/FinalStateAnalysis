@@ -59,19 +59,30 @@ keepPat=0      - Instead of making flat ntuples, write high level
 
 '''
 
+print "1"
+
 import FWCore.ParameterSet.Config as cms
+
+print "2"
 import os
+print "3"
 import copy
+print "4"
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
+print "5"
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
     make_ntuple, add_ntuple
+print "6"
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
+print "7"
 import PhysicsTools.PatAlgos.tools.helpers as helpers
+print "8"
 
 process = cms.Process("Ntuples")
 cmsswversion=os.environ['CMSSW_VERSION']
 
+print "2"
 
 # if you want to debug in the future, uncomment this
 #process.ProfilerService = cms.Service (
@@ -121,7 +132,6 @@ options = TauVarParsing.TauVarParsing(
     hzz=0,
     zh=0,
     paramFile='',
-    skipGhost=0,
     runWZ=0,
     isLFV=0,
     runMetUncertainties=0,
@@ -275,7 +285,12 @@ envvar = 'mcgt' if options.isMC else 'datagt'
 
 # All data falls under unified GT (6 Feb 2017) ReReco BCDEFG, Prompt H
 #GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
-GT = {'mcgt': '94X_mc2017_realistic_v15', 'datagt': '94X_dataRun2_v6'}#'94X_dataRun2_ReReco_EOY17_v2'}#'93X_dataRun2_v0'}
+#GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '93X_dataRun2_v0'}
+#####GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco_EOY17_v2'}
+GT = {'mcgt': '94X_mc2017_realistic_v13', 'datagt': '94X_dataRun2_v6'}
+#GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco17_forValidation'}
+#92X_dataRun2_2017Prompt_v11
+#94X_dataRun2_ReReco17_forValidation
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
@@ -359,16 +374,22 @@ process.load ("CondCore.CondDB.CondDB_cfi")
 
 # Defaults to running correctly for Condor, you can
 # pass flag to run locally just fine here with runningLocal=1
+
 sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')
+#sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')
+
 if options.runningLocal :
     sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA' )
 
+#if options.runningLocal :
+#    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
 
 process.jec = cms.ESSource("PoolDBESSource",
          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
          timetype = cms.string('runnumber'),
          toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
                                     tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')),
+#                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')),
                                     label  = cms.untracked.string('AK4PFchs')
                                     )
                  ),
@@ -456,28 +477,28 @@ if options.htt and options.isMC :
 ### for simplified template cross section ###
 #############################################
 
-# if options.htt and options.isMC :
-#     process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
-#     process.mergedGenParticles = cms.EDProducer("MergedGenParticleProducer",
-#         inputPruned = cms.InputTag("prunedGenParticles"),
-#         inputPacked = cms.InputTag("packedGenParticles"),
-#     )
-#     process.myGenerator = cms.EDProducer("GenParticles2HepMCConverterHTXS",
-#         genParticles = cms.InputTag("mergedGenParticles"),
-#         genEventInfo = cms.InputTag("generator"),
-#     )
-#     process.rivetProducerHTXS = cms.EDProducer('HTXSRivetProducer',
-#       HepMCCollection = cms.InputTag('myGenerator','unsmeared'),
-#       LHERunInfo = cms.InputTag('externalLHEProducer'),
-#       ProductionMode = cms.string('AUTO'),
-#     )
-    
-#     process.rivetMethods = cms.Path(
-#         process.mergedGenParticles
-#         * process.myGenerator
-#         * process.rivetProducerHTXS
-#     )
-#     process.schedule.append( process.rivetMethods )
+#XXX if options.htt and options.isMC :
+#XXX     process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
+#XXX     process.mergedGenParticles = cms.EDProducer("MergedGenParticleProducer",
+#XXX         inputPruned = cms.InputTag("prunedGenParticles"),
+#XXX         inputPacked = cms.InputTag("packedGenParticles"),
+#XXX     )
+#XXX     process.myGenerator = cms.EDProducer("GenParticles2HepMCConverterHTXS",
+#XXX         genParticles = cms.InputTag("mergedGenParticles"),
+#XXX         genEventInfo = cms.InputTag("generator"),
+#XXX     )
+#XXX     process.rivetProducerHTXS = cms.EDProducer('HTXSRivetProducer',
+#XXX       HepMCCollection = cms.InputTag('myGenerator','unsmeared'),
+#XXX       LHERunInfo = cms.InputTag('externalLHEProducer'),
+#XXX       ProductionMode = cms.string('AUTO'),
+#XXX     )
+#XXX     
+#XXX     process.rivetMethods = cms.Path(
+#XXX         process.mergedGenParticles
+#XXX         * process.myGenerator
+#XXX         * process.rivetProducerHTXS
+#XXX     )
+#XXX     process.schedule.append( process.rivetMethods )
 
 
 
@@ -700,18 +721,15 @@ process.schedule.append(process.METSigSeq)
 ### embed muon IDs ###
 ######################
 
-options.skipGhost = (options.runMVAMET or options.skipGhost or options.htt)
 
 from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
 fs_daughter_inputs['muons'] = preMuons(process,
                                        fs_daughter_inputs['muons'],
-                                       fs_daughter_inputs['vertices'],
-                                       skipGhost=options.skipGhost)
+                                       fs_daughter_inputs['vertices'])
 for fs in additional_fs:
     additional_fs[fs]['muons'] = preMuons(process,
                                           additional_fs[fs]['muons'],
                                           additional_fs[fs]['vertices'],
-                                          skipGhost=options.skipGhost,
                                           postfix=fs)
 
 #####################
@@ -952,74 +970,77 @@ suffix = '' # most analyses don't need to modify the final states
 from FinalStateAnalysis.NtupleTools.channel_handling import parseChannels, \
     get_channel_suffix
 
-if options.hzz:
-    process.embedHZZSeq = cms.Sequence()
-    # Embed matrix elements in relevant final states
-    suffix = "HZZ"
-    for ch in parseChannels(options.channels):
-        prodSuffix = get_channel_suffix(ch)
-        oldName = "finalState%s"%prodSuffix
-        newName = oldName + suffix
-
-        if len(ch) == 4:
-            # 4l final states might be higgses, so do some higgs analysis
-            embedCategoryProducer = cms.EDProducer(
-                "MiniAODHZZCategoryEmbedder",
-                src = cms.InputTag(oldName),
-                tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
-                bDiscriminator = cms.string("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
-                bDiscriminantCut = cms.double(0.89),
-                )
-            # give the FS collection an intermediate name, with an identifying suffix
-            intermediateName = oldName + "HZZCategory"
-            setattr(process, intermediateName, embedCategoryProducer)
-            process.embedHZZSeq += embedCategoryProducer
-            
-            embedMEProducer = cms.EDProducer(
-                "MiniAODHZZMEEmbedder%s"%prodSuffix,
-                src = cms.InputTag(intermediateName),
-                processes = cms.vstring("p0plus_VAJHU",
-                                        "p0minus_VAJHU",
-                                        "Dgg10_VAMCFM",
-                                        "bkg_VAMCFM",
-                                        "phjj_VAJHU",
-                                        "pvbf_VAJHU",
-                                        ),
-                fsrLabel = cms.string("dretFSRCand"),
-                )
-            # give the FS collection the same name as before, but with an identifying suffix
-            setattr(process, newName, embedMEProducer)
-            process.embedHZZSeq += embedMEProducer
-        else:
-            # Copy the other final states to keep naming consistent
-            copier = cms.EDProducer(
-                "PATFinalStateCopier",
-                src = cms.InputTag(oldName),
-                )
-            setattr(process, newName, copier)
-            process.embedHZZSeq += copier
-            
-    process.embedHZZ = cms.Path(process.embedHZZSeq)
-    process.schedule.append(process.embedHZZ)
+#if options.hzz:
+#    process.embedHZZSeq = cms.Sequence()
+#    # Embed matrix elements in relevant final states
+#    suffix = "HZZ"
+#    for ch in parseChannels(options.channels):
+#        prodSuffix = get_channel_suffix(ch)
+#        oldName = "finalState%s"%prodSuffix
+#        newName = oldName + suffix
+#
+#        if len(ch) == 4:
+#            # 4l final states might be higgses, so do some higgs analysis
+#            embedCategoryProducer = cms.EDProducer(
+#                "MiniAODHZZCategoryEmbedder",
+#                src = cms.InputTag(oldName),
+#                tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
+#                bDiscriminator = cms.string("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
+#                bDiscriminantCut = cms.double(0.89),
+#                )
+#            # give the FS collection an intermediate name, with an identifying suffix
+#            intermediateName = oldName + "HZZCategory"
+#            setattr(process, intermediateName, embedCategoryProducer)
+#            process.embedHZZSeq += embedCategoryProducer
+#            
+#            embedMEProducer = cms.EDProducer(
+#                "MiniAODHZZMEEmbedder%s"%prodSuffix,
+#                src = cms.InputTag(intermediateName),
+#                processes = cms.vstring("p0plus_VAJHU",
+#                                        "p0minus_VAJHU",
+#                                        "Dgg10_VAMCFM",
+#                                        "bkg_VAMCFM",
+#                                        "phjj_VAJHU",
+#                                        "pvbf_VAJHU",
+#                                        ),
+#                fsrLabel = cms.string("dretFSRCand"),
+#                )
+#            # give the FS collection the same name as before, but with an identifying suffix
+#            setattr(process, newName, embedMEProducer)
+#            process.embedHZZSeq += embedMEProducer
+#        else:
+#            # Copy the other final states to keep naming consistent
+#            copier = cms.EDProducer(
+#                "PATFinalStateCopier",
+#                src = cms.InputTag(oldName),
+#                )
+#            setattr(process, newName, copier)
+#            process.embedHZZSeq += copier
+#            
+#    process.embedHZZ = cms.Path(process.embedHZZSeq)
+#    process.schedule.append(process.embedHZZ)
         
-process.embedVFSeq = cms.Sequence()
-# Embed matrix elements in relevant final states
-suffix = "HZZ"
-for ch in parseChannels(options.channels):
-     prodSuffix = get_channel_suffix(ch)
-     oldName = "finalState%s"%prodSuffix
-     newName = oldName + suffix
-     embedVFProducer = cms.EDProducer(
-             "MiniAODVertexFittingEmbedder",
-             src = cms.InputTag(oldName)
-             )
-     # give the FS collection an intermediate name, with an identifying suffix
-     intermediateName = oldName + "VFCategory"
-     setattr(process, newName, embedVFProducer)
-     process.embedVFSeq += embedVFProducer
 
-process.embedVF = cms.Path(process.embedVFSeq)
-process.schedule.append(process.embedVF)
+#Cecile vertex fitting
+
+#process.embedVFSeq = cms.Sequence()
+## Embed matrix elements in relevant final states
+#suffix = "HZZ"
+#for ch in parseChannels(options.channels):
+#     prodSuffix = get_channel_suffix(ch)
+#     oldName = "finalState%s"%prodSuffix
+#     newName = oldName + suffix
+#     embedVFProducer = cms.EDProducer(
+#             "MiniAODVertexFittingEmbedder",
+#             src = cms.InputTag(oldName)
+#             )
+#     # give the FS collection an intermediate name, with an identifying suffix
+#     intermediateName = oldName + "VFCategory"
+#     setattr(process, newName, embedVFProducer)
+#     process.embedVFSeq += embedVFProducer
+#
+#process.embedVF = cms.Path(process.embedVFSeq)
+#process.schedule.append(process.embedVF)
 
 
 # run dqm
@@ -1163,7 +1184,7 @@ process.MessageLogger.cerr.UndefinedPreselectionInfo = cms.untracked.PSet(
 )
 
 if options.verbose:
-    process.options.wantSummary = cms.untracked.bool(False)
+    process.options.wantSummary = cms.untracked.bool(True)
 if options.passThru:
     set_passthru(process)
 
