@@ -199,8 +199,8 @@ PATElectronSystematicsEmbedderLFV::produce(edm::Event& evt, const edm::EventSetu
 
      //     std::bitset<scAll> uncBitMask=100;
      //scale 
-     float error_scale=eScaler_.ScaleCorrectionUncertainty(runnum,isEBEle,full5x5r9,etaSCEle,etEle2,gainSeedSC,3); //error in scale correction
-     //float error_scale=eScaler_.ScaleCorrectionUncertainty(runnum,isEBEle,full5x5r9,etaSCEle,etEle2); //error in scale correction --> check with egamma if it is the correct one
+     //float error_scale=eScaler_.ScaleCorrectionUncertainty(runnum,isEBEle,full5x5r9,etaSCEle,etEle2,gainSeedSC,3); //error in scale correction
+     float error_scale=eScaler_.ScaleCorrectionUncertainty(runnum,isEBEle,full5x5r9,etaSCEle,etEle2); //error in scale correction --> check with egamma if it is the correct one
 
      double Up_factor = (1+error_scale);
      double Down_factor =  (1-error_scale);
@@ -215,17 +215,17 @@ PATElectronSystematicsEmbedderLFV::produce(edm::Event& evt, const edm::EventSetu
 
      //resolution
 
-     float sigma_up=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,gainSeedSC,1.,0.); //corrected sigma ->sigma+/-sigma_err
-     float sigma_down=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,gainSeedSC,-1.,0.); //corrected sigma ->sigma+/-sigma_e
+     //float sigma_up=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,gainSeedSC,1.,0.); //corrected sigma ->sigma+/-sigma_err
+     //float sigma_down=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,gainSeedSC,-1.,0.); //corrected sigma ->sigma+/-sigma_e
      //float sigma_up=eScaler_.getSmearingSigma(runnum, bool(isEBEle), float(full5x5r9), float(etaSCEle), float(EtEle), unsigned int (gainSeedSC), float(1.), float(0.)) 
-     //float sigma_up=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,1.,0.); //corrected sigma ->sigma+/-sigma_err => modified check with egamma if it is the correct one
-     //float sigma_down=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,-1.,0.); //corrected sigma ->sigma+/-sigma_e => modified check with egamma if it is the correct one
+     float sigma_up=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,1.,0.); //corrected sigma ->sigma+/-sigma_err => modified check with egamma if it is the correct one
+     float sigma_down=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,-1.,0.); //corrected sigma ->sigma+/-sigma_e => modified check with egamma if it is the correct one
      
      double ResUp_factor = rgen_->Gaus(1,sigma_up);
      double ResDown_factor = rgen_->Gaus(1,sigma_down);
 
-     float sigma_resphidown=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,gainSeedSC,0.,-1.); //corrected sigma ->sigma+/-sigma_e
-     //float sigma_resphidown=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,0.,-1.); //corrected sigma ->sigma+/-sigma_e => modified check with egamma if it is the correct one
+     //float sigma_resphidown=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,gainSeedSC,0.,-1.); //corrected sigma ->sigma+/-sigma_e
+     float sigma_resphidown=eScaler_.getSmearingSigma(runnum,isEBEle,full5x5r9,etaSCEle,etEle,0.,-1.); //corrected sigma ->sigma+/-sigma_e => modified check with egamma if it is the correct one
 
      double ResPhiDown_factor =rgen_->Gaus(1,sigma_resphidown);
 
