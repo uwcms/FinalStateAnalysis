@@ -271,6 +271,7 @@ parameters = {
         objectRerunMVArun2v1DBoldDMwLTVVTight = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTVVTightRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTVVTightRerun") : -10',
 
         objectRerunMVArun2v2DBoldDMwLTraw = '? {object}.hasUserFloat("byIsolationMVArun2v2DBoldDMwLTrawRerun") ? {object}.userFloat("byIsolationMVArun2v2DBoldDMwLTrawRerun") : -10',
+        objectRerunMVArun2v2DBoldDMwLTVVLoose = '? {object}.hasUserFloat("byIsolationMVArun2v2DBoldDMwLTVVLooseRerun") ? {object}.userFloat("byIsolationMVArun2v2DBoldDMwLTVVLooseRerun") : -10',
         objectRerunMVArun2v2DBoldDMwLTVLoose = '? {object}.hasUserFloat("byIsolationMVArun2v2DBoldDMwLTVLooseRerun") ? {object}.userFloat("byIsolationMVArun2v2DBoldDMwLTVLooseRerun") : -10',
         objectRerunMVArun2v2DBoldDMwLTLoose = '? {object}.hasUserFloat("byIsolationMVArun2v2DBoldDMwLTLooseRerun") ? {object}.userFloat("byIsolationMVArun2v2DBoldDMwLTLooseRerun") : -10',
         objectRerunMVArun2v2DBoldDMwLTMedium = '? {object}.hasUserFloat("byIsolationMVArun2v2DBoldDMwLTMediumRerun") ? {object}.userFloat("byIsolationMVArun2v2DBoldDMwLTMediumRerun") : -10',

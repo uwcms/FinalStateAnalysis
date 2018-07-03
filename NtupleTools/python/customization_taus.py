@@ -147,6 +147,8 @@ def preTaus(process, tSrc, vSrc,**kwargs):
         process.rerunDiscriminationByIsolationMVArun2v1VVTight = process.rerunDiscriminationByIsolationMVArun2v1VLoose.clone()
         process.rerunDiscriminationByIsolationMVArun2v1VVTight.mapping[0].cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v1_WPEff40")
 
+        process.rerunDiscriminationByIsolationMVArun2v2VVLoose = process.rerunDiscriminationByIsolationMVArun2v2VLoose.clone()
+        process.rerunDiscriminationByIsolationMVArun2v2VVLoose.mapping[0].cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v2_WPEff95")
         process.rerunDiscriminationByIsolationMVArun2v2Loose = process.rerunDiscriminationByIsolationMVArun2v2VLoose.clone()
         process.rerunDiscriminationByIsolationMVArun2v2Loose.mapping[0].cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v2_WPEff80")
         process.rerunDiscriminationByIsolationMVArun2v2Medium = process.rerunDiscriminationByIsolationMVArun2v2VLoose.clone()
@@ -169,6 +171,7 @@ def preTaus(process, tSrc, vSrc,**kwargs):
            * process.rerunDiscriminationByIsolationMVArun2v1VTight
            * process.rerunDiscriminationByIsolationMVArun2v1VVTight
 	   * process.rerunDiscriminationByIsolationMVArun2v2raw
+           * process.rerunDiscriminationByIsolationMVArun2v2VVLoose
            * process.rerunDiscriminationByIsolationMVArun2v2VLoose
            * process.rerunDiscriminationByIsolationMVArun2v2Loose
            * process.rerunDiscriminationByIsolationMVArun2v2Medium
@@ -191,6 +194,7 @@ def preTaus(process, tSrc, vSrc,**kwargs):
             idVTight = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1VTight"),
             idVVTight = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1VVTight"),
             idRawv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2raw"),
+            idVVLoosev2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VVLoose"),
             idVLoosev2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VLoose"),
             idLoosev2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2Loose"),
             idMediumv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2Medium"),
