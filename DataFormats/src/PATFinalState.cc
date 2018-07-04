@@ -1814,7 +1814,7 @@ const float PATFinalState::l1extraIsoTauMatching(const size_t i) const
             continue;}
         float dR = reco::deltaR(daughter(i)->p4(), isoTau.p4() );
         //std::cout << " --- dR: " << dR << std::endl;
-        if (dR < 0.5 && isoTau.hwIso() > 0) return 1;
+        if (dR < 0.5) return 1;
     }
 
     return 0.0;
@@ -1827,7 +1827,7 @@ const float PATFinalState::l1extraIsoTauPt(const size_t i) const
     for ( auto isoTau : isoTaus ) {
         float dR = reco::deltaR(daughter(i)->p4(), isoTau.p4() );
         //std::cout << " --- dR: " << dR << std::endl;
-        if (dR < 0.5 && isoTau.hwIso() > 0) return isoTau.pt();
+        if (dR < 0.5) return isoTau.pt();
     }
 
     return -1.0;
@@ -1853,9 +1853,9 @@ const float PATFinalState::doubleL1extraIsoTauMatching(const size_t i, const siz
         float dR2 = reco::deltaR(daughter(j)->p4(), isoTau.p4() );
         //std::cout << " --- dR1: " << dR1 << std::endl;
         //std::cout << " --- dR2: " << dR2 << std::endl;
-        if (dR1 < 0.5 && isoTau.hwIso() > 0) p1MatchCnt += 1;
-        if (dR2 < 0.5 && isoTau.hwIso() > 0) p2MatchCnt += 1;
-        if (dR1 < 0.5 && dR2 < 0.5 && isoTau.hwIso() > 0) bothMatchCnt += 1;
+        if (dR1 < 0.5) p1MatchCnt += 1;
+        if (dR2 < 0.5) p2MatchCnt += 1;
+        if (dR1 < 0.5 && dR2 < 0.5) bothMatchCnt += 1;
     }
  
     //std::cout << "p1Match "<<p1MatchCnt<<" p2 "<<p2MatchCnt<<" both "<<bothMatchCnt<<std::endl;
