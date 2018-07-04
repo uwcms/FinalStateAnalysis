@@ -59,7 +59,7 @@ export PATH=$fsa/RecoTools/scripts:$PATH
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 echo -e "${RED} USER_CXXFLAGS -Wno-error=delete-non-virtual-dtor and -Wno-error=unused-function added for porting to 9XY. To check if it fine${NC}"
-export USER_CXXFLAGS="-Wno-delete-non-virtual-dtor -Wno-error=unused-but-set-variable -Wno-error=unused-variable -Wno-error=unused-function -Wno-error=sign-compare -Wno-error=reorder -Wno-error=delete-non-virtual-dtor -fpermissive"
+export USER_CXXFLAGS="-Wno-delete-non-virtual-dtor -Wno-error=unused-but-set-variable -Wno-error=unused-variable -Wno-error=unused-function -Wno-error=sign-compare -Wno-error=reorder -Wno-error=delete-non-virtual-dtor -fpermissive -std=c++1y"
 
 # Only use the ZZ MELA packages if we actually need them (they take a long time to compile)
 if [ -d $CMSSW_BASE/src/ZZMatrixElement ]; then
