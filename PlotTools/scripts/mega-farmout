@@ -113,7 +113,7 @@ if __name__ == "__main__":
             '--submit-dir=%s/analyze' % working_dir,
             '--input-file-list=%s' % tmp_input_filelist.name,
             '--input-files-per-job=%i' % args.filesinjob,
-            '--output-dir=%s' % (output_path),
+            #'--output-dir=%s' % (output_path),
             '--fwklite',
             '--infer-cmssw-path',
             '--output-dag-file=%s/job.dag' % working_dir,
@@ -156,7 +156,7 @@ if __name__ == "__main__":
                 '--last-submit-dir=%s' % previous_submit_dir,
                 '--output-dag-file=%s/job.dag' % working_dir,
                 '--input-files-per-job=%i' % args.filesinmerge,
-                '--output-dir=%s' % (output_path),
+                #'--output-dir=%s' % (output_path),
                 '--infer-cmssw-path',
                 '--merge',
                 '--use-hadd'
