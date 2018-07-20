@@ -59,30 +59,16 @@ keepPat=0      - Instead of making flat ntuples, write high level
 
 '''
 
-print "1"
-
 import FWCore.ParameterSet.Config as cms
-
-print "2"
 import os
-print "3"
 import copy
-print "4"
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
-print "5"
-from FinalStateAnalysis.NtupleTools.ntuple_builder import \
-    make_ntuple, add_ntuple
-print "6"
-from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
-    cmssw_minor_version
-print "7"
+from FinalStateAnalysis.NtupleTools.ntuple_builder import make_ntuple, add_ntuple
+from FinalStateAnalysis.Utilities.version import cmssw_major_version, cmssw_minor_version
 import PhysicsTools.PatAlgos.tools.helpers as helpers
-print "8"
 
 process = cms.Process("Ntuples")
 cmsswversion=os.environ['CMSSW_VERSION']
-
-print "2"
 
 # if you want to debug in the future, uncomment this
 #process.ProfilerService = cms.Service (
@@ -284,13 +270,7 @@ process.load('Configuration.StandardSequences.Services_cff')
 envvar = 'mcgt' if options.isMC else 'datagt'
 
 # All data falls under unified GT (6 Feb 2017) ReReco BCDEFG, Prompt H
-#GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
-#GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '93X_dataRun2_v0'}
-#####GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco_EOY17_v2'}
-GT = {'mcgt': '94X_mc2017_realistic_v13', 'datagt': '94X_dataRun2_v6'}
-#GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco17_forValidation'}
-#92X_dataRun2_2017Prompt_v11
-#94X_dataRun2_ReReco17_forValidation
+GT = {'mcgt': '94X_mc2017_realistic_v14', 'datagt': '94X_dataRun2_v6'}
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
@@ -376,20 +356,15 @@ process.load ("CondCore.CondDB.CondDB_cfi")
 # pass flag to run locally just fine here with runningLocal=1
 
 sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')
-#sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')
 
 if options.runningLocal :
     sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA' )
-
-#if options.runningLocal :
-#    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
 
 process.jec = cms.ESSource("PoolDBESSource",
          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
          timetype = cms.string('runnumber'),
          toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
                                     tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Fall17_17Nov2017BCDEF_V6_DATA')),
-#                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')),
                                     label  = cms.untracked.string('AK4PFchs')
                                     )
                  ),

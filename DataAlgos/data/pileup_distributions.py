@@ -22,4 +22,5 @@ pileup_distributions = cms.PSet(
     data2011AB = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/allData_2011AB_pileupTruth_v2.root"),
     data2012A = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/data_2012_190456-194479.root"),
     data2012AB_195947 = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/data_2012_190456-195947.root"),
+    data2017 = cms.FileInPath("FinalStateAnalysis/DataAlgos/data/pu/MyDataPileupHistogram.root"),
 )

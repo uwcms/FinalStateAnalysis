@@ -59,11 +59,11 @@ class Plotter(object):
             'ZZ*',
             'WW*',
         ]
-        file_to_map = filter(lambda x: x.startswith('data_'), self.views.keys())[0]
-        if not file_to_map: #no data here!
-            file_to_map = self.views.keys()[0]
+        #file_to_map = filter(lambda x: x.startswith('data_'), self.views.keys())[0]
+        #if not file_to_map: #no data here!
+        #    file_to_map = self.views.keys()[0]
         #from pdb import set_trace; set_trace()
-        self.file_dir_structure = Plotter.map_dir_structure( self.views[file_to_map]['file'] )
+        #self.file_dir_structure = Plotter.map_dir_structure( self.views[file_to_map]['file'] )
 
     @staticmethod
     def map_dir_structure(directory, dirName=''):
@@ -148,7 +148,7 @@ class Plotter(object):
         if leftside:
             legend = plotting.Legend(nentries, leftmargin=0.03, topmargin=0.05, rightmargin=0.65)
         else:
-            legend = plotting.Legend(nentries, rightmargin=0.07, topmargin=0.05, leftmargin=0.45)
+            legend = plotting.Legend(nentries, rightmargin=0.01, topmargin=0.01, leftmargin=0.65)#rightmargin=0.07, topmargin=0.05, leftmargin=0.45
         for sample in samples:
             legend.AddEntry(sample)
         legend.SetEntrySeparation(0.0)

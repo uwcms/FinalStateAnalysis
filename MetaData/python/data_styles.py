@@ -16,7 +16,67 @@ http://ndawe.github.com/rootpy/reference/rootpy.plotting.html#rootpy.plotting.co
 from FinalStateAnalysis.Utilities.solarized import colors
 
 data_styles = {
-    'Zjets*' : {
+    'GluGlu_LFV*' : {
+        'legendstyle' : 'f',
+        'drawstyle' : 'hist',
+        'fillcolor' : 0,
+        'fillstyle' : 0,
+        'linestyle' : 1,
+        'linewidth' : 4,
+        'linecolor' : colors['blue'],
+        'name' : "LFV ggH",
+    },
+    'VBF_LFV*' : {
+        'legendstyle' : 'f',
+        'drawstyle' : 'hist',
+        'fillcolor' : 0,
+        'fillstyle' : 0,
+        'linestyle' : 1,
+        'linewidth' : 4,
+        'linecolor' : colors['cyan'],
+        'name' : "LFV qqH",
+    },
+    '*HToTauTau*' : {
+        'legendstyle' : 'f',
+        'drawstyle' : 'hist',
+        'fillcolor' : '#1c761c',
+        'fillstyle' : 'solid',
+        'linestyle' : 1,
+        'linewidth' : 4,
+        'linecolor' : '#1c761c',
+        'name' : "TauTau",
+    },
+    'ZH*' : {
+        'legendstyle' : 'f',
+        'drawstyle' : 'hist',
+        'fillcolor' : '#761c76',
+        'fillstyle' : 'solid',
+        'linestyle' : 1,
+        'linewidth' : 4,
+        'linecolor' : '#761c76',
+        'name' : "ZH",
+    },
+    'WH*' : {
+        'legendstyle' : 'f',
+        'drawstyle' : 'hist',
+        'fillcolor' : '#1c7676',
+        'fillstyle' : 'solid',
+        'linestyle' : 1,
+        'linewidth' : 4,
+        'linecolor' : '#1c7676',
+        'name' : "WH",
+    },
+    'VBFH*' : {
+        'legendstyle' : 'f',
+        'drawstyle' : 'hist',
+        'fillcolor' : '#43757d',
+        'fillstyle' : 'solid',
+        'linestyle' : 1,
+        'linewidth' : 4,
+        'linecolor' : '#43757d',
+        'name' : "qqH",
+    },
+    'DY*' : {
         'legendstyle' : 'f',
         'drawstyle' : 'hist',
         'fillcolor' : '#FFCC66',
@@ -24,10 +84,11 @@ data_styles = {
         'name' : "Z + jets",
         'fillstyle': 'solid',
         },
-    'WplusJets*' : {
+    'W*Jets*' : {
         'legendstyle' : 'f',
         'drawstyle' : 'hist',
         'fillcolor' : '#990000',
+        'linecolor' : '#000000',
         'name' : "W + jets",
         'fillstyle': 'solid',
     },
@@ -78,7 +139,7 @@ data_styles = {
         'drawstyle' : 'hist',
         'fillcolor' : colors['red'],
         'linecolor' : colors['red'],
-        'name' : "WZ#rightarrow3l",
+        'name' : "Diboson",
         'fillstyle': 'solid',
     },
     'WW*' : {
@@ -94,7 +155,7 @@ data_styles = {
         'drawstyle' : 'hist',
         'linecolor' : '#50A634',
         'fillcolor' : '#50A634',
-        'name' : "ZZ",
+        'name' : "Diboson",
         'fillstyle': 'solid',
     },
     'data*' : {
@@ -107,7 +168,7 @@ data_styles = {
 }
 
 #makes life easier when converting shape files
-data_styles['fakes'] = data_styles['Zjets*']
+data_styles['fakes'] = data_styles['DY*']
 data_styles['zz'] = data_styles['ZZ*']
 data_styles['wz'] = data_styles['WZ*']
 data_styles['charge_fakes'] = data_styles['TT*']

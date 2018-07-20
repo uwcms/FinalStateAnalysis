@@ -21,7 +21,7 @@ femtobarns = 1.0e-3
 
 # Branching ratios
 #LAG 26 DEC 2012 -- set Z->leptons branching to PDG values
-br_w_leptons = 0.1075+0.1057+0.1125
+br_w_leptons = 0.1075+0.1057+0.1125 #e,mu,tau 
 br_z_leptons = 0.03363+0.03366+0.03370 #e,mu,tau
 
 def square(x):
@@ -46,7 +46,7 @@ def query_cli(datadefs, argv=None):
     query_group.add_argument(
         '--dataset', required=False, type=str,
         help='DBS dataset name (ex: '
-        '/DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball/*')
+        '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/*')
     output_group = parser.add_argument_group(
         title='output', description="Output parameters")
     output_group.add_argument(
