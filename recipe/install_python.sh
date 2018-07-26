@@ -21,6 +21,9 @@ export recipe=$CMSSW_BASE/src/FinalStateAnalysis/recipe
 export vpython=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/vpython
 export hdf5=$CMSSW_BASE/src/FinalStateAnalysis/recipe/external/hdf5
 
+git submodule add -f git@github.com:rootpy/rootpy.git recipe/external/src/rootpy
+git submodule add -f git@github.com:pypa/virtualenv.git recipe/external/src/virtualenv
+
 cd $recipe/external/src/virtualenv
 
 echo "Creating virtual python environment in $vpython"
@@ -33,6 +36,9 @@ fi
 echo "Activating virtual python environment"
 cd $vpython
 source bin/activate
+
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
 
 echo "Updating pip to latest version"
 pip install -U pip
