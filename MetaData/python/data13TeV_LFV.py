@@ -267,86 +267,71 @@ datadefs['WplusHToTauTau_M125_13TeV_powheg_pythia8_v14-v1'] = {
 }
 
 
-datadefs['data_SingleMuon_Run2015C_05Oct2015_25ns'] = {'datasetpath': '/SingleMuon/Run2015C_25ns-05Oct2015-v1/MINIAOD',
- 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON.txt',
- 'firstRun': 254227,
- 'lastRun': 254914,
- 'analyses': ['HZZ'],
- 'calibrationTarget': 'Moriond2015'}
-datadefs['data_SingleMuon_Run2015D_05Oct2015_25ns'] = {'datasetpath': '/SingleMuon/Run2015D-05Oct2015-v1/MINIAOD',
- 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON.txt',
- 'firstRun': 256630,
- 'lastRun': 258158,
- 'analyses': ['HZZ'],
- 'calibrationTarget': 'Moriond2015'}
-datadefs['data_SingleMuon_Run2015D_PromptReco-v4_25ns'] = {'datasetpath': '/SingleMuon/Run2015D-PromptReco-v4/MINIAOD',
- 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON.txt',
- 'firstRun': 258486,
- 'lastRun': 260403,
- 'analyses': ['HZZ'],
- 'calibrationTarget': 'Moriond2015'}
-datadefs['data_SingleMuon_Run2016B_PromptReco-v2_25ns'] = {'datasetpath': '/SingleMuon/Run2016B-PromptReco-v2/MINIAOD',
- 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt',
- 'firstRun': 272007,
- 'lastRun': 273450,
- 'analyses': ['HZZ'],
- 'calibrationTarget': 'Moriond2015'}
-datadefs['data_SingleMuon_Run2016C'] = {'datasetpath': '/SingleMuon/Run2016C-PromptReco-v2/MINIAOD',
- 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt',
- 'firstRun': 275420,
- 'lastRun': 276283,
- 'analyses': ['HET'],
- 'calibrationTarget': 'ICHEP2016'}
-datadefs['data_SingleMuon_Run2016D'] = {'datasetpath': '/SingleMuon/Run2016D-PromptReco-v2/MINIAOD',
- 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.tx',
- 'firstRun': 276315,
- 'lastRun': 276811,
- 'analyses': ['HET'],
- 'calibrationTarget': 'ICHEP2016'}
-datadefs['data_SingleMuon_Run2016E'] = {'datasetpath': '/SingleMuon/Run2016E-PromptReco-v2/MINIAOD',
- 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt',
- 'firstRun': 276830,
- 'lastRun': 277420,
- 'analyses': ['HET'],
- 'calibrationTarget': 'ICHEP2016'}
-datadefs['data_SingleMuon_Run2016F'] = {'datasetpath': '/SingleMuon/Run2016E-PromptReco-v2/MINIAOD',
- 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt',
- 'firstRun': 277856,
- 'lastRun': 278349,
- 'analyses': ['HET'],
- 'calibrationTarget': 'ICHEP2016'}
-datadefs['data_SingleMuon_Run2016G'] = {'datasetpath': '/SingleMuon/Run2016E-PromptReco-v2/MINIAOD',
- 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt',
- 'firstRun': 278802,
- 'lastRun': 280385,
- 'analyses': ['HET'],
- 'calibrationTarget': 'ICHEP2016'}
-
+datadefs['data_SingleMuon_ReReco_Run2017B'] = {
+ 'datasetpath': '/SingleMuon/Run2017B-17Nov2017-v1/MINIAOD',
+ 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt',
+ 'firstRun': 297050,
+ 'lastRun': 299329,
+ 'analyses': ['LFV'],
+ 'calibrationTarget': 'Run2017'
+}
+datadefs['data_SingleMuon_ReReco_Run2017C'] = {
+ 'datasetpath': '/SingleMuon/Run2017C-17Nov2017-v1/MINIAOD',
+ 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt',
+ 'firstRun': 299368,
+ 'lastRun': 302029,
+ 'analyses': ['LFV'],
+ 'calibrationTarget': 'Run2017'
+}
+datadefs['data_SingleMuon_ReReco_Run2017D'] = {
+ 'datasetpath': '/SingleMuon/Run2017D-17Nov2017-v1/MINIAOD',
+ 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt',
+ 'firstRun': 302031,
+ 'lastRun': 302663,
+ 'analyses': ['LFV'],
+ 'calibrationTarget': 'Run2017'
+}
+datadefs['data_SingleMuon_ReReco_Run2017E'] = {
+ 'datasetpath': '/SingleMuon/Run2017E-17Nov2017-v1/MINIAOD',
+ 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt',
+ 'firstRun': 303825,
+ 'lastRun': 304797,
+ 'analyses': ['LFV'],
+ 'calibrationTarget': 'Run2017'
+}
+datadefs['data_SingleMuon_ReReco_Run2017F'] = {
+ 'datasetpath': '/SingleMuon/Run2017F-17Nov2017-v1/MINIAOD',
+ 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt',
+ 'firstRun': 305044,
+ 'lastRun': 306460,
+ 'analyses': ['LFV'],
+ 'calibrationTarget': 'Run2017'
+}
 
 
 datadefs['ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_v14-v1'] = {
- 'analyses': ['MuTau'],
+ 'analyses': ['LFV'],
  'datasetpath': '/ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
  'x_sec': 67.91
 }
 datadefs['ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_v14-v1'] = {
- 'analyses': ['MuTau'],
+ 'analyses': ['LFV'],
  'datasetpath': '/ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
  'x_sec': 113.3
 }
 datadefs['ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_v14-v1'] = {
- 'analyses': ['MuTau'],
+ 'analyses': ['LFV'],
  'datasetpath': '/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
  'x_sec': 34.97
 }
 datadefs['ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_v14-v1'] = {
- 'analyses': ['MuTau'],
+ 'analyses': ['LFV'],
  'datasetpath': '/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
