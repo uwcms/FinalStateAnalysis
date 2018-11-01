@@ -129,7 +129,8 @@ PATFinalStateEvent::PATFinalStateEvent(
     const reco::GsfTrackRefProd& gsfTracks,
     const std::map<std::string, edm::Ptr<pat::MET> >& mets,
     std::vector<float> lheweights,
-    std::map<std::string, bool> filterFlagsMap
+    std::map<std::string, bool> filterFlagsMap,
+    bool isEmbeddedSample,
     ):
   rho_(rho),
   triggerEvent_(triggerEvent),

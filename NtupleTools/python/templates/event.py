@@ -17,6 +17,7 @@ num = PSet(
     lumi=cms.vstring('evt.evtId.luminosityBlock', 'I'),  # use int branch
     run=cms.vstring('evt.evtId.run', 'I'),  # use int branch
     isdata=cms.vstring('evt.isRealData', 'I'),
+    isembed=cms.vstring('evt.isEmbeddedSample', 'I'),
 )
 
 pileup = PSet(
