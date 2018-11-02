@@ -98,7 +98,8 @@ class PATFinalStateEvent {
         const reco::GsfTrackRefProd& gsfTracks,
 	const std::map<std::string, edm::Ptr<pat::MET> >& mets,
 	std::vector<float> lheweights,
-    const std::map<std::string, bool> filterFlagsMap
+    const std::map<std::string, bool> filterFlagsMap,
+    bool isEmbeddedSample,
     );
 
     /// Get PV
@@ -211,6 +212,10 @@ class PATFinalStateEvent {
 
     /// Is real data
     bool isRealData() const { return isRealData_; }
+    
+    /// Is embedded sample
+    bool isEmbeddedSample() const { return isEmbeddedSample_; }
+
 
     /// Access to object collections in the event
     const pat::ElectronCollection& electrons() const;
@@ -289,6 +294,7 @@ class PATFinalStateEvent {
     std::map<std::string, edm::Ptr<pat::MET> > mets_;
     std::vector<float> lheweights_;
     std::map<std::string, bool> filterFlagsMap_;
+    bool isEmbeddedSample_;
 
 };
 
