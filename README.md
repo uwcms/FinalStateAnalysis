@@ -12,7 +12,7 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
 Installation
 ------------
 
-Current CMSSW version: ``CMSSW_9_4_0``.
+Current CMSSW version: ``CMSSW_9_4_11_cand1``.
 
 Get a supported CMSSW release area:
 

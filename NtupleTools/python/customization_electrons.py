@@ -56,6 +56,9 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
         'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V1_cff',
 	'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V1_cff', 
         'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V1_cff',
+        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V2_cff',
+        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V2_cff',
+        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V2_cff',
         ]
 
     # redefine the setupVIDElectronSelection function
@@ -79,27 +82,27 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
     CBIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight", "MVA_iso_WP90", "MVA_iso_WP80", "MVA_iso_WPLoose", "MVA_noiso_WP90", "MVA_noiso_WP80", "MVA_noiso_WPLoose"]
     
     CBIDTags = [
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-veto'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-loose'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-medium'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-tight'.format(postfix)),
-        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wp90".format(postfix)),
-	cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wp80".format(postfix)),
-	cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V1-wpLoose".format(postfix)),
-        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V1-wp90".format(postfix)),
-        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V1-wp80".format(postfix)),
-        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V1-wpLoose".format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V2-veto'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V2-loose'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V2-medium'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V2-tight'.format(postfix)),
+        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V2-wp90".format(postfix)),
+	cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V2-wp80".format(postfix)),
+	cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V2-wpLoose".format(postfix)),
+        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V2-wp90".format(postfix)),
+        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V2-wp80".format(postfix)),
+        cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V2-wpLoose".format(postfix)),
         ]
 
     mvaValueLabels = [electronMVAIsoGeneralIDLabel,electronMVANoisoGeneralIDLabel]
     mvaValues = [
-	cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV1Values".format(postfix)),
-        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV1Values".format(postfix)),
+	cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV2Values".format(postfix)),
+        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV2Values".format(postfix)),
         ]
     mvaCategoryLabels = ["BDTIsoIDGeneral","BDTNoisoIDGeneral"]
     mvaCategories = [
-        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV1Categories".format(postfix)),
-        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV1Categories".format(postfix)),
+        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV2Categories".format(postfix)),
+        cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV2Categories".format(postfix)),
         ]
 
     # N-1 results
@@ -107,10 +110,10 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
     nMinusOneLabels = ['NoIso']
     FullIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight"] # keys of cut based id user floats
     FullIDTags = [
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-veto'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-loose'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-medium'.format(postfix)),
-        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V1-tight'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V2-veto'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V2-loose'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V2-medium'.format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V2-tight'.format(postfix)),
         ]
 
     # Embed cut-based VIDs
@@ -125,8 +128,8 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
         categoryLabels = cms.vstring(*mvaCategoryLabels),
         categories = cms.VInputTag(*mvaCategories),
         fullIdLabels = cms.vstring(*FullIDLabels),
-        nMinusOneNames = cms.vstring(*nMinusOneNames),
-        nMinusOneLabels = cms.vstring(*nMinusOneLabels),
+        #nMinusOneNames = cms.vstring(*nMinusOneNames),
+        #nMinusOneLabels = cms.vstring(*nMinusOneLabels),
         fullIds = cms.VInputTag(*FullIDTags),
     )
     eSrc = modName

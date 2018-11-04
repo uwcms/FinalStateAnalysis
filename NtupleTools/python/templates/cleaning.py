@@ -52,6 +52,13 @@ vetos = PSet(
     bjetDeepCSVVeto30Medium = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941").size()',
     bjetDeepCSVVeto30Tight = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.8001").size()',
 
+    #bjetDeepFlavourVeto20Loose = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepFlavourJetTags:probb\') > 0.1522").size()',
+    #bjetDeepFlavourVeto20Medium = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepFlavourJetTags:probb\') > 0.4941").size()',
+    #bjetDeepFlavourVeto20Tight = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepFlavourJetTags:probb\') > 0.8001").size()',
+    #bjetDeepFlavourVeto30Loose = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepFlavourJetTags:probb\') > 0.1522").size()',
+    #bjetDeepFlavourVeto30Medium = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepFlavourJetTags:probb\') > 0.4941").size()',
+    #bjetDeepFlavourVeto30Tight = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idLoose\') > 0.5 & bDiscriminator(\'pfDeepFlavourJetTags:probb\') > 0.8001").size()',
+
     #JET VETOS
     jetVeto20 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5").size()',
     jetVeto20_JetEnUp = 'vetoJets(0.5, "userCand(\'jes+\').pt > 20 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5").size()',

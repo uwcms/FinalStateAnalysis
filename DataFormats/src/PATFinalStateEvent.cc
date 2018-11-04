@@ -117,6 +117,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const GenEventInfoProduct& genEventInfo,
     const GenFilterInfo& generatorFilter,
     bool isRealData,
+    bool isEmbeddedSample,
     const std::string& puScenario,
     const edm::RefProd<pat::ElectronCollection>& electronRefProd,
     const edm::RefProd<pat::MuonCollection>& muonRefProd,
@@ -129,8 +130,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const reco::GsfTrackRefProd& gsfTracks,
     const std::map<std::string, edm::Ptr<pat::MET> >& mets,
     std::vector<float> lheweights,
-    std::map<std::string, bool> filterFlagsMap,
-    bool isEmbeddedSample,
+    std::map<std::string, bool> filterFlagsMap
     ):
   rho_(rho),
   triggerEvent_(triggerEvent),
@@ -158,6 +158,7 @@ PATFinalStateEvent::PATFinalStateEvent(
   genEventInfoProduct_(genEventInfo),
   generatorFilter_(generatorFilter),
   isRealData_(isRealData),
+  isEmbeddedSample_(isEmbeddedSample),
   puScenario_(puScenario),
   fsaDataFormatVersion_(FSA_DATA_FORMAT_VERSION),
   electronRefProd_(electronRefProd),

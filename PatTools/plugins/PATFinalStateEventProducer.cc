@@ -388,7 +388,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle<reco::GenParticleCollection> genParticles;
   evt.getByToken(truthSrcToken_, genParticles);
   reco::GenParticleRefProd genParticlesRef;
-  if (!evt.isRealData() || evt.isEmbeddedSample)
+  if (!evt.isRealData())//FIXME || evt.isEmbeddedSample())
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
   // Try and get gen taus built from gen products if they were included
@@ -418,10 +418,10 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo, metSig, metCov,
                               trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
                               hTaus, eTaus, mTaus, // htxsRivetInfo,
-                              evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
+                              evt.id(), genEventInfo, generatorFilter, evt.isRealData(), evt.isRealData(), puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
                               phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts,
-                              lheweights, filterFlagsInfo,evt.isEmbeddedSample());
+                              lheweights, filterFlagsInfo); //FIXME 
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
