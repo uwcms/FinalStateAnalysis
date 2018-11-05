@@ -34,7 +34,7 @@
 #include "DataFormats/Math/interface/Error.h"
 
 // For Rivet Tools
-//#include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
+#include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
 
 #define DEBUG_ 0 
 class PATFinalStateEventProducer : public edm::EDProducer {
@@ -110,7 +110,7 @@ private:
 
   //edm::EDGetTokenT<pat::JetCollection> jetAK8SrcToken_;
 
-  //edm::EDGetTokenT<HTXS::HiggsClassification> htxsSrc_;
+  edm::EDGetTokenT<HTXS::HiggsClassification> htxsSrc_;
 
   typedef std::pair<std::string, edm::EDGetTokenT<edm::View<pat::MET> > > METTokenMap;
   std::vector<METTokenMap> metCfg_;
@@ -341,12 +341,12 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle< BXVector<l1t::Tau> > l1extraIsoTaus;
   evt.getByToken(l1extraIsoTauSrcToken_, l1extraIsoTaus);
 
-  //edm::Handle<HTXS::HiggsClassification> htxs;
-  //evt.getByToken(htxsSrc_,htxs);
-  //// Only get Rivet data if valid
-  //HTXS::HiggsClassification htxsRivetInfo;
-  //if (htxs.isValid())
-  //  htxsRivetInfo = * htxs;
+  edm::Handle<HTXS::HiggsClassification> htxs;
+  evt.getByToken(htxsSrc_,htxs);
+  // Only get Rivet data if valid
+  HTXS::HiggsClassification htxsRivetInfo;
+  if (htxs.isValid())
+    htxsRivetInfo = * htxs;
 
 
   edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
@@ -421,7 +421,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   pat::TriggerEvent trg;
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo, metSig, metCov,
                               trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
-                              hTaus, eTaus, mTaus, // htxsRivetInfo,
+                              hTaus, eTaus, mTaus, htxsRivetInfo,
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), evt.isRealData(), puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
                               phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts,

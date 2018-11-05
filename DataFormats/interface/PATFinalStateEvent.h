@@ -40,7 +40,7 @@
 #include "DataFormats/L1Trigger/interface/Tau.h"
 
 // For Rivet Tools
-//#include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
+#include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
 
 #include "TMatrixD.h"
 #include <map>
@@ -81,7 +81,7 @@ class PATFinalStateEvent {
         const std::vector<reco::GenJet> genHadronicTaus,
         const std::vector<reco::GenJet> genElectronicTaus,
         const std::vector<reco::GenJet> genMuonicTaus,
-        //const HTXS::HiggsClassification htxsRivetInfo,
+        const HTXS::HiggsClassification htxsRivetInfo,
         const edm::EventID& evtId,
         const GenEventInfoProduct& genEventInfoProd,
         const GenFilterInfo& genFilterInfo,
@@ -234,7 +234,7 @@ class PATFinalStateEvent {
     const std::vector<reco::GenJet> genMuonicTaus() const {return genMuonicTaus_;}
 
     // Access to HTXS Rivet info
-    //const HTXS::HiggsClassification getRivetInfo() const {return htxsRivetInfo_;}
+    const HTXS::HiggsClassification getRivetInfo() const {return htxsRivetInfo_;}
 
     /// Get the version of the FinalState data formats API
     /// This allows you to detect which version of the software was used
@@ -272,7 +272,7 @@ class PATFinalStateEvent {
     std::vector<reco::GenJet> genHadronicTaus_;
     std::vector<reco::GenJet> genElectronicTaus_;
     std::vector<reco::GenJet> genMuonicTaus_;
-    //HTXS::HiggsClassification htxsRivetInfo_;
+    HTXS::HiggsClassification htxsRivetInfo_;
     edm::EventID evtID_;
     GenEventInfoProduct genEventInfoProduct_;
     GenFilterInfo generatorFilter_;
