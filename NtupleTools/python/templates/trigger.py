@@ -43,6 +43,10 @@ singleLepton_25ns_MC = PSet(
         paths=r'HLT_Mu50_v\\d+'
         ),
     _trig_template.replace(
+        name='Ele27WPTight',
+        paths=r'HLT_Ele27_WPTight_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
         name='Ele32WPTight',
         paths=r'HLT_Ele32_WPTight_Gsf_v\\d+'
         ),
@@ -72,6 +76,10 @@ singleLepton_25ns = PSet(
     _trig_template.replace(
         name='Mu50',
         paths=r'HLT_Mu50_v\\d+'
+        ),
+    _trig_template.replace(
+        name='Ele27WPTight',
+        paths=r'HLT_Ele27_WPTight_Gsf_v\\d+'
         ),
     _trig_template.replace(
         name='Ele32WPTight',
