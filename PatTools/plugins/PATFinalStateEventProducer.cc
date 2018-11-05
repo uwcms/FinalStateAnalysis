@@ -117,6 +117,8 @@ private:
 
   bool forbidMissing_;
 
+  bool isEmbedded_;
+
   // initialize getterOfProducts (replacing getByType)
   edm::GetterOfProducts<LHEEventProduct> getLHEEventProduct_;
   edm::GetterOfProducts<GenEventInfoProduct> getGenEventInfoProduct_;
@@ -155,6 +157,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
 
   forbidMissing_ = pset.exists("forbidMissing") ?
     pset.getParameter<bool>("forbidMissing") : true;
+  isEmbedded_ = pset.getParameter<bool>("isEmbedded");
 
   trgResultsSrcToken_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc"));
 						      trgResultsSrc2Token_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc2"));
@@ -392,7 +395,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle<reco::GenParticleCollection> genParticles;
   evt.getByToken(truthSrcToken_, genParticles);
   reco::GenParticleRefProd genParticlesRef;
-  if (!evt.isRealData())//FIXME || evt.isEmbeddedSample())
+  if (!evt.isRealData() || isEmbedded_)
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
   // Try and get gen taus built from gen products if they were included
@@ -422,7 +425,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo, metSig, metCov,
                               trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
                               hTaus, eTaus, mTaus, htxsRivetInfo,
-                              evt.id(), genEventInfo, generatorFilter, evt.isRealData(), evt.isRealData(), puScenario_,
+                              evt.id(), genEventInfo, generatorFilter, evt.isRealData(), isEmbedded_, puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
                               phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts,
                               lheweights, npNLO, filterFlagsInfo); //FIXME 
