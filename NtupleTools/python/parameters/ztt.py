@@ -112,6 +112,7 @@ parameters = {
         #buildGenTaus = 'buildGenTaus.size()',
         numGenJets = 'evt.numGenJets()',
         genMass = 'evt.getGenMass()',
+        npNLO = 'evt.npNLO()',
 
         # Pion variables
         #pion1pt='trackVariables("pt > 5 & abs(eta) < 2.4", 0.3).at(0)',

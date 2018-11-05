@@ -130,6 +130,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const reco::GsfTrackRefProd& gsfTracks,
     const std::map<std::string, edm::Ptr<pat::MET> >& mets,
     std::vector<float> lheweights,
+    int npNLO,
     std::map<std::string, bool> filterFlagsMap
     ):
   rho_(rho),
@@ -172,6 +173,7 @@ PATFinalStateEvent::PATFinalStateEvent(
   gsfTracks_(gsfTracks),
   mets_(mets),
   lheweights_(lheweights),
+  npNLO_(npNLO),
   filterFlagsMap_(filterFlagsMap)
 { }
 
@@ -212,6 +214,10 @@ std::vector<float> PATFinalStateEvent::lheweights() const {
     return rtn;
   }
   return lheweights_;}
+
+int  PATFinalStateEvent::npNLO() const{
+   return npNLO_;
+}
 
 const pat::TriggerEvent& PATFinalStateEvent::trig() const {
   return triggerEvent_; }

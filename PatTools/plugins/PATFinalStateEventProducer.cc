@@ -235,6 +235,10 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
        //std::cout<<i<<" "<<EvtHandle->weights()[i].id<<" "<<EvtHandle->weights()[i].wgt<<" "<<EvtHandle->originalXWGTUP()<<std::endl;
     };
   }
+
+  int npNLO;
+  npNLO=EvtHandle->npNLO();
+
   edm::Ptr<reco::Vertex> pvPtr;
   if( pv->size() )
     pvPtr = pv->ptrAt(0);
@@ -421,7 +425,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), evt.isRealData(), puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
                               phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts,
-                              lheweights, filterFlagsInfo); //FIXME 
+                              lheweights, npNLO, filterFlagsInfo); //FIXME 
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
