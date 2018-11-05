@@ -563,12 +563,16 @@ if options.htt :
         triggerSrc = cms.InputTag("TriggerResults","",trigSource),
         metFilterPaths = cms.vstring(
             "Flag_noBadMuons",
+            "Flag_BadPFMuonFilter",
+            "Flag_BadChargedCandidateFilter",
             "Flag_HBHENoiseFilter",
             "Flag_HBHENoiseIsoFilter", 
             "Flag_EcalDeadCellTriggerPrimitiveFilter"
             "Flag_goodVertices",
             "Flag_eeBadScFilter",
+            "Flag_ecalBadCalibFilter",
             "Flag_globalTightHalo2016Filter",
+            "Flag_globalSuperTightHalo2016Filter",
             "Flag_badMuonsFilter",
             "Flag_duplicateMuonsFilter",
         ),
@@ -595,6 +599,7 @@ if options.runMetFilter:
                    'Flag_EcalDeadCellTriggerPrimitiveFilter',
                    'Flag_goodVertices',
                    'Flag_eeBadScFilter',
+                   'Flag_eeBadCalibFilter',
                    'Flag_chargedHadronTrackResolutionFilter',
                    'Flag_muonBadTrackFilter',
                    ]
