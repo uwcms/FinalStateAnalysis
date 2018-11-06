@@ -97,8 +97,8 @@ class PATFinalStateEvent {
         const edm::RefProd<pat::PackedCandidateCollection>& packedPFRefProd,
         const reco::TrackRefProd& tracks,
         const reco::GsfTrackRefProd& gsfTracks,
-	const std::map<std::string, edm::Ptr<pat::MET> >& mets,
-	std::vector<float> lheweights,
+	    const std::map<std::string, edm::Ptr<pat::MET> >& mets,
+	    std::vector<float> lheweights,
         const int npNLO,
         const std::map<std::string, bool> filterFlagsMap
     );

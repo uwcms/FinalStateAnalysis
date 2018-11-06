@@ -549,6 +549,7 @@ if options.htt :
         #process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles", "", "MERGE")
         process.patFinalStateEventProducer.packedGenSrc = cms.InputTag("packedGenParticles", "", "MERGE")
         process.patFinalStateEventProducer.l1extraIsoTauSrc=cms.InputTag("caloStage2Digis","Tau","SIMembedding")
+        process.patFinalStateEventProducer.isEmbedded = cms.bool(True)
 
 
         trigSource = "SIMembedding"
