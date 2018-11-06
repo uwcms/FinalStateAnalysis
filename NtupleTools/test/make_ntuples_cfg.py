@@ -492,6 +492,7 @@ if options.htt and options.isMC :
 #XXX       HepMCCollection = cms.InputTag('myGenerator','unsmeared'),
 #XXX       LHERunInfo = cms.InputTag('externalLHEProducer'),
 #XXX       ProductionMode = cms.string('AUTO'),
+#XXX       #ProductionMode = cms.string('GGF'), # For ggH NNLOPS sample
 #XXX     )
 #XXX     
 #XXX     process.rivetMethods = cms.Path(
