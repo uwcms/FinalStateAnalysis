@@ -57,10 +57,14 @@ def preJets(process, jSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
         # Provide proper path name for Jet Uncertainty file
         # V10 is most recent version for JES Uncertainties
         # https://hypernews.cern.ch/HyperNews/CMS/get/jes/642/1/1.html
-        if runningLocal : fName = "../../NtupleTools/data/Summer16_23Sep2016AllV4_DATA_UncertaintySources_AK4PFchs.txt" # recommended by JetMET
+        # recommended by JetMET
+        # The file used below is the one recommended by HTT Working Twiki for 2016 + 2017 combination
+        # - https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2017#Jet/MET_uncertainty_treatment
+        # - https://github.com/cms-jet/JECDatabase/blob/master/textFiles/Summer16_23Sep2016HV4_DATA/Summer16_23Sep2016HV4_DATA_UncertaintySources_AK4PFchs.txt
+        if runningLocal : fName = "../../NtupleTools/data/Summer16_23Sep2016HV4_DATA_UncertaintySources_AK4PFchs.txt"
         else :
             cmsswversion=os.environ['CMSSW_VERSION']
-            fName = "{0}/src/FinalStateAnalysis/NtupleTools/data/Summer16_23Sep2016AllV4_DATA_UncertaintySources_AK4PFchs.txt".format(cmsswversion)
+            fName = "{0}/src/FinalStateAnalysis/NtupleTools/data/Summer16_23Sep2016HV4_DATA_UncertaintySources_AK4PFchs.txt".format(cmsswversion)
 
         modName = 'miniAODJetFullSystematicsEmbedding{0}'.format(postfix)
         mod = cms.EDProducer(
