@@ -63,6 +63,7 @@ class MiniAODMETJesSystematicsEmbedder : public edm::EDProducer {
    "PileUpPtHF",
    "PileUpPtRef",
    "RelativeBal",
+   "RelativeSample", // New for 2017
    "RelativeFSR",
    "RelativeJEREC1",
    "RelativeJEREC2",
