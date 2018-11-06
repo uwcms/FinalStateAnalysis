@@ -288,7 +288,7 @@ envvar = 'mcgt' if options.isMC else 'datagt'
 #GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
 #GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '93X_dataRun2_v0'}
 #####GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco_EOY17_v2'}
-GT = {'mcgt': '94X_mc2017_realistic_v13', 'datagt': '94X_dataRun2_v6'}
+GT = {'mcgt': '94X_mc2017_realistic_v15', 'datagt': '94X_dataRun2_v10'}
 #GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco17_forValidation'}
 #92X_dataRun2_2017Prompt_v11
 #94X_dataRun2_ReReco17_forValidation
@@ -549,6 +549,7 @@ if options.htt :
         #process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles", "", "MERGE")
         process.patFinalStateEventProducer.packedGenSrc = cms.InputTag("packedGenParticles", "", "MERGE")
         process.patFinalStateEventProducer.l1extraIsoTauSrc=cms.InputTag("caloStage2Digis","Tau","SIMembedding")
+        process.patFinalStateEventProducer.isEmbedded = cms.bool(True)
 
 
         trigSource = "SIMembedding"
@@ -563,12 +564,16 @@ if options.htt :
         triggerSrc = cms.InputTag("TriggerResults","",trigSource),
         metFilterPaths = cms.vstring(
             "Flag_noBadMuons",
+            "Flag_BadPFMuonFilter",
+            "Flag_BadChargedCandidateFilter",
             "Flag_HBHENoiseFilter",
             "Flag_HBHENoiseIsoFilter", 
             "Flag_EcalDeadCellTriggerPrimitiveFilter"
             "Flag_goodVertices",
             "Flag_eeBadScFilter",
+            "Flag_ecalBadCalibFilter",
             "Flag_globalTightHalo2016Filter",
+            "Flag_globalSuperTightHalo2016Filter",
             "Flag_badMuonsFilter",
             "Flag_duplicateMuonsFilter",
         ),
@@ -595,6 +600,7 @@ if options.runMetFilter:
                    'Flag_EcalDeadCellTriggerPrimitiveFilter',
                    'Flag_goodVertices',
                    'Flag_eeBadScFilter',
+                   'Flag_eeBadCalibFilter',
                    'Flag_chargedHadronTrackResolutionFilter',
                    'Flag_muonBadTrackFilter',
                    ]
@@ -646,11 +652,15 @@ from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMet
 # If you only want to re-correct and get the proper uncertainties
 runMetCorAndUncFromMiniAOD(process,
     isData=isData,
-    #pfCandColl=cms.InputTag("packedPFCandidates"),
-    # recoMetFromPFCs=True,
+    fixEE2017 = True,
+    fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
+    postfix = "ModifiedMET"
+    ##pfCandColl=cms.InputTag("packedPFCandidates"),
+    ## recoMetFromPFCs=True,
                         )
 
-process.correctMET=cms.Path(process.fullPatMetSequence)
+#process.correctMET=cms.Path(process.fullPatMetSequence)
+process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
 
 

@@ -40,7 +40,7 @@
 #include "DataFormats/L1Trigger/interface/Tau.h"
 
 // For Rivet Tools
-//#include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
+#include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
 
 #include "TMatrixD.h"
 #include <map>
@@ -81,11 +81,12 @@ class PATFinalStateEvent {
         const std::vector<reco::GenJet> genHadronicTaus,
         const std::vector<reco::GenJet> genElectronicTaus,
         const std::vector<reco::GenJet> genMuonicTaus,
-        //const HTXS::HiggsClassification htxsRivetInfo,
+        const HTXS::HiggsClassification htxsRivetInfo,
         const edm::EventID& evtId,
         const GenEventInfoProduct& genEventInfoProd,
         const GenFilterInfo& genFilterInfo,
         bool isRealData,
+        bool isEmbeddedSample,
         const std::string& puScenario,
         const edm::RefProd<pat::ElectronCollection>& electronRefProd,
         const edm::RefProd<pat::MuonCollection>& muonRefProd,
@@ -96,10 +97,10 @@ class PATFinalStateEvent {
         const edm::RefProd<pat::PackedCandidateCollection>& packedPFRefProd,
         const reco::TrackRefProd& tracks,
         const reco::GsfTrackRefProd& gsfTracks,
-	const std::map<std::string, edm::Ptr<pat::MET> >& mets,
-	std::vector<float> lheweights,
-    const std::map<std::string, bool> filterFlagsMap,
-    bool isEmbeddedSample,
+	    const std::map<std::string, edm::Ptr<pat::MET> >& mets,
+	    std::vector<float> lheweights,
+        const int npNLO,
+        const std::map<std::string, bool> filterFlagsMap
     );
 
     /// Get PV
@@ -119,6 +120,7 @@ class PATFinalStateEvent {
     /// Get FastJet rho
     double rho() const;
     std::vector<float> lheweights() const;
+    int npNLO() const;
     /// Get trigger information
     const pat::TriggerEvent& trig() const;
     const std::vector<pat::TriggerObjectStandAlone>& trigStandAlone() const;
@@ -212,11 +214,8 @@ class PATFinalStateEvent {
 
     /// Is real data
     bool isRealData() const { return isRealData_; }
-    
-    /// Is embedded sample
     bool isEmbeddedSample() const { return isEmbeddedSample_; }
-
-
+    
     /// Access to object collections in the event
     const pat::ElectronCollection& electrons() const;
     const pat::MuonCollection& muons() const;
@@ -235,7 +234,7 @@ class PATFinalStateEvent {
     const std::vector<reco::GenJet> genMuonicTaus() const {return genMuonicTaus_;}
 
     // Access to HTXS Rivet info
-    //const HTXS::HiggsClassification getRivetInfo() const {return htxsRivetInfo_;}
+    const HTXS::HiggsClassification getRivetInfo() const {return htxsRivetInfo_;}
 
     /// Get the version of the FinalState data formats API
     /// This allows you to detect which version of the software was used
@@ -273,11 +272,12 @@ class PATFinalStateEvent {
     std::vector<reco::GenJet> genHadronicTaus_;
     std::vector<reco::GenJet> genElectronicTaus_;
     std::vector<reco::GenJet> genMuonicTaus_;
-    //HTXS::HiggsClassification htxsRivetInfo_;
+    HTXS::HiggsClassification htxsRivetInfo_;
     edm::EventID evtID_;
     GenEventInfoProduct genEventInfoProduct_;
     GenFilterInfo generatorFilter_;
     bool isRealData_;
+    bool isEmbeddedSample_;
     std::string puScenario_;
     char fsaDataFormatVersion_;
     // Pointers to object collections in the event
@@ -293,8 +293,8 @@ class PATFinalStateEvent {
     // List of different MET types
     std::map<std::string, edm::Ptr<pat::MET> > mets_;
     std::vector<float> lheweights_;
+    int npNLO_;
     std::map<std::string, bool> filterFlagsMap_;
-    bool isEmbeddedSample_;
 
 };
 
