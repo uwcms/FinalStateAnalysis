@@ -162,7 +162,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   trgResultsSrcToken_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc"));
 						      trgResultsSrc2Token_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc2"));
   l1extraIsoTauSrcToken_ = consumes< BXVector<l1t::Tau> >(pset.getParameter<edm::InputTag>("l1extraIsoTauSrc"));
-  //htxsSrc_ = consumes<HTXS::HiggsClassification>(edm::InputTag("rivetProducerHTXS","HiggsClassification"));
+  htxsSrc_ = consumes<HTXS::HiggsClassification>(edm::InputTag("rivetProducerHTXS","HiggsClassification"));
 
   //photonCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("photonCoreSrc"));
   //gsfCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("gsfCoreSrc"));
