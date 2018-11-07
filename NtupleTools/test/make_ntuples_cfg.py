@@ -59,25 +59,16 @@ keepPat=0      - Instead of making flat ntuples, write high level
 isEmbedded=0   - run on embedded sameples
 '''
 
-print "1"
-
 import FWCore.ParameterSet.Config as cms
 
-print "2"
 import os
-print "3"
 import copy
-print "4"
 from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
-print "5"
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
     make_ntuple, add_ntuple
-print "6"
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
-print "7"
 import PhysicsTools.PatAlgos.tools.helpers as helpers
-print "8"
 
 process = cms.Process("Ntuples")
 cmsswversion=os.environ['CMSSW_VERSION']
