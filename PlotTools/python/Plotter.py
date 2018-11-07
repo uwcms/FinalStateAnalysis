@@ -13,12 +13,17 @@ import rootpy.plotting.views as views
 import rootpy.plotting as plotting
 from FinalStateAnalysis.MetaData.data_views import data_views
 from FinalStateAnalysis.PlotTools.RebinView import RebinView
+from FinalStateAnalysis.PlotTools.SystematicsView     import SystematicsView
 from FinalStateAnalysis.Utilities.struct import struct
 import FinalStateAnalysis.Utilities.prettyjson as prettyjson
 import ROOT
+from ROOT import gStyle
+
+#gStyle.SetOptTitle(0)
+#gStyle.SetTitleFontSize(0.08)
 
 _original_draw = plotting.Legend.Draw
-# Make legends not have crappy border
+
 def _monkey_patch_legend_draw(self, *args, **kwargs):
     ''' Make a plotting.legend look nice '''
     self.SetBorderSize(0)
@@ -37,20 +42,17 @@ class Plotter(object):
         '''
         self.outputdir = outputdir
         self.views = data_views(files, lumifiles, forceLumi)
-        self.canvas = plotting.Canvas(name='adsf', title='asdf')
+        self.canvas = plotting.Canvas(name='Canvas', title='Canvas')
         self.canvas.cd()
-        self.pad    = plotting.Pad(0., 0., 1., 1.) #ful-size pad
+        self.pad = plotting.Pad(0., 0., 1., 1.)
         self.pad.Draw()
         self.pad.cd()
         self.lower_pad = None
         if blinder:
-            # Keep the unblinded data around if desired.
             self.views['data']['unblinded_view'] = self.views['data']['view']
-            # Apply a blinding function
             self.views['data']['view'] = blinder(self.views['data']['view'])
         self.data = self.views['data']['view']
         self.keep = []
-        # List of MC sample names to use.  Can be overridden.
         self.mc_samples = [
             'Zjets_M50',
             'WplusJets_madgraph',
@@ -59,9 +61,11 @@ class Plotter(object):
             'ZZ*',
             'WW*',
         ]
-        #file_to_map = filter(lambda x: x.startswith('data_'), self.views.keys())[0]
-        #if not file_to_map: #no data here!
-        #    file_to_map = self.views.keys()[0]
+        file_to_map = filter(lambda x: 'data_' in x, self.views.keys())[0]
+        if not file_to_map: #no data here!
+            file_to_map = self.views.keys()[0]
+        #else:
+        #    file_to_map = file_to_map[0]
         #from pdb import set_trace; set_trace()
         #self.file_dir_structure = Plotter.map_dir_structure( self.views[file_to_map]['file'] )
 
@@ -137,6 +141,22 @@ class Plotter(object):
             
         return views.StackView(*mc_views, sorted=sort)
 
+    def make_sum(self, rebin=1, preprocess=None, folder=''):
+        ''' Make a sum of the MC histograms '''
+
+        mc_views = []
+        for x in self.mc_samples:
+            mc_view = self.get_view(x)
+            if preprocess:
+                mc_view = preprocess(mc_view)
+            if folder:
+                mc_view = self.get_wild_dir(mc_view, folder)
+            mc_views.append(
+                self.rebin_view(mc_view, rebin)
+                )
+
+        return views.SumView(*mc_views)
+
     def add_legend(self, samples, leftside=True, entries=None):
         ''' Build a legend using samples.
 
@@ -148,16 +168,16 @@ class Plotter(object):
         if leftside:
             legend = plotting.Legend(nentries, leftmargin=0.03, topmargin=0.05, rightmargin=0.65)
         else:
-            legend = plotting.Legend(nentries, rightmargin=0.01, topmargin=0.01, leftmargin=0.65)#rightmargin=0.07, topmargin=0.05, leftmargin=0.45
+            legend = plotting.Legend(nentries, rightmargin=0.01, topmargin=0.01, leftmargin=0.6, entryheight=0.04)
         for sample in samples:
             legend.AddEntry(sample)
-        legend.SetEntrySeparation(0.0)
+        legend.SetEntrySeparation(0.02)
         legend.SetMargin(0.35)
         legend.Draw()
         self.keep.append(legend)
         return legend
 
-    def add_cms_blurb(self, sqrts, preliminary=True, lumiformat='%0.1f'):
+    def add_cms_blurb(self, sqrts, jets, preliminary=True, lumiformat='%0.1f'):
         ''' Add the CMS blurb '''
         latex = ROOT.TLatex()
         latex.SetNDC();
@@ -167,20 +187,31 @@ class Plotter(object):
         label_text = "CMS"
         if preliminary:
             label_text += " Preliminary"
-        label_text += " %i TeV " % sqrts
-        label_text += (lumiformat + " fb^{-1}") % (
-            self.views['data']['intlumi']/1000.)
-        self.keep.append(latex.DrawLatex(0.18,0.96, label_text));
+        data_text = "(2017, %i TeV) " % sqrts
+        data_text += (lumiformat + " fb^{-1}") % (41.8)
+            #self.views['data']['intlumi']/1000.)
+        jets_text = "#mu#tau_{h}, "
+        if jets=='0Jet':
+            jets_text += "0 Jet"
+        elif jets=='1Jet':
+            jets_text += "1 Jet"
+        elif jets=='2Jet':
+            jets_text += "2 Jet GG-enriched"
+        elif jets=='2JetVBF':
+            jets_text += "2 Jet VBF-enriched"
+        self.keep.append(latex.DrawLatex(0.14, 0.84, label_text))
+        self.keep.append(latex.DrawLatex(0.68, 0.94, data_text))
+        self.keep.append(latex.DrawLatex(0.14, 0.80, jets_text))
 
-    def add_ratio_plot(self, data_hist, mc_stack, x_range=None, ratio_range=0.2):
-        #resize the canvas and the pad to fit the second pad
+    def add_ratio_plot(self, data_hist, mc_stack, err_hist, x_range=None, ratio_range=0.5):
         self.canvas.SetCanvasSize( self.canvas.GetWw(), int(self.canvas.GetWh()*1.3) )
         self.canvas.cd()
         self.pad.SetPad(0, 0.33, 1., 1.)
         self.pad.Draw()
         self.canvas.cd()
-        #create lower pad
         self.lower_pad = plotting.Pad( 0, 0., 1., 0.33)
+        self.lower_pad.SetGridx(True)
+        self.lower_pad.SetGridy(True)
         self.lower_pad.Draw()
         self.lower_pad.cd()
         
@@ -189,8 +220,29 @@ class Plotter(object):
             mc_hist = sum(mc_stack.GetHists())
         else:
             mc_hist = mc_stack
+        data_hist.Sumw2()
+        mc_hist.Sumw2()
         data_clone = data_hist.Clone()
+        data_clone.Sumw2()
         data_clone.Divide(mc_hist)
+
+        for ibin in range(0,data_clone.GetXaxis().GetNbins()+1):
+            if mc_hist.GetBinContent(ibin)<> 0:
+                data_clone.SetBinError(ibin,data_hist.GetBinError(ibin)/mc_hist.GetBinContent(ibin))
+        band = err_hist.Clone()
+        band.SetName("bandplot")
+        err = []
+        ibin = 1 
+        while ibin < band.GetXaxis().GetNbins()+1:
+            if mc_hist.GetBinContent(ibin) <> 0 : 
+                err.append((ibin, band.GetBinError(ibin)/band.GetBinContent(ibin)))
+            ibin+=1
+        band.Sumw2()
+        band.Divide(mc_hist.Clone())
+        band.SetFillStyle(0)
+        for ibin in err:
+            band.SetBinError(ibin[0], ibin[1])
+
         if not x_range:
             nbins = data_clone.GetNbinsX()
             x_range = (data_clone.GetBinLowEdge(1), 
@@ -198,14 +250,26 @@ class Plotter(object):
         else:
             data_clone.GetXaxis().SetRangeUser(*x_range)
         ref_function = ROOT.TF1('f', "1.", *x_range)
-        ref_function.SetLineWidth(3)
+        ref_function.SetLineWidth(2)
         ref_function.SetLineStyle(2)
-        
-        data_clone.Draw('ep')
+        data_clone.SetTitle("")
+        data_clone.GetYaxis().SetTitle("Obs./Exp.")
+        data_clone.GetYaxis().SetTitleSize(0.04)
+        data_clone.GetYaxis().SetLabelSize(0.04)
+        data_clone.GetXaxis().SetLabelSize(0.04)
+        data_clone.Draw()
         if ratio_range:
             data_clone.GetYaxis().SetRangeUser(1-ratio_range, 1+ratio_range)
         ref_function.Draw('same')
+
+        band.SetMarkerStyle(0)
+        band.SetLineColor(1)
+        band.SetFillStyle('3002')
+        band.SetFillColor(1)
+        band.Draw('psamee2')
+
         self.keep.append(data_clone)
+        self.keep.append(band)
         self.keep.append(ref_function)
         self.pad.cd()
         return data_clone
@@ -256,7 +320,6 @@ class Plotter(object):
             print line
             stat_box.AddText(line)
         
-        #Set some graphics options not to suck
         stat_box.SetFillColor(0)
         stat_box.SetBorderSize(1)
         return stat_box
@@ -267,9 +330,9 @@ class Plotter(object):
         del self.pad
         del self.lower_pad
         self.keep = []
-        self.canvas = plotting.Canvas(name='adsf', title='asdf')
+        self.canvas = plotting.Canvas(name='Canvas', title='Canvas')
         self.canvas.cd()
-        self.pad    = plotting.Pad( 0., 0., 1., 1.) #ful-size pad
+        self.pad = plotting.Pad( 0., 0., 1., 1.)
         self.pad.Draw()
         self.pad.cd()
         self.lower_pad = None
@@ -283,7 +346,6 @@ class Plotter(object):
         if verbose:
             print 'saving '+os.path.join(self.outputdir, filename) + '.png'
         self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.png')
-        self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.pdf')
         if dotc:
             self.canvas.SaveAs(os.path.join(self.outputdir, filename) + '.C')
         if json:
@@ -303,7 +365,6 @@ class Plotter(object):
             self.canvas.Write()
             for obj in self.keep:
                 obj.Write()
-            #self.keep = []
             self.reset()
             outfile.Close()
             #self.canvas = plotting.Canvas(name='adsf', title='asdf')
@@ -312,12 +373,9 @@ class Plotter(object):
             #self.pad.cd()
 
         if self.keep and self.lower_pad:
-            #pass
             self.reset()
         else:
-            # Reset keeps
             self.keep = []
-        # Reset logx/y
         self.canvas.SetLogx(False)
         self.canvas.SetLogy(False)
         
@@ -358,7 +416,6 @@ class Plotter(object):
         self.keep.append( (histo1, histo2) )
 
     def expand_path(self, pattern):
-        #because fnmatch does not treat / properly and may generate LOTS of problems
         if any((i in pattern) for i in ['*', '?']):
             repattern = re.compile('^'+pattern.replace('*','[^/]*').replace('?','[^/]')+'$')
             return [i for i in self.file_dir_structure if repattern.match(i)]
@@ -374,25 +431,55 @@ class Plotter(object):
 
     def get_wild_path(self, view, path):
         'gets a FULL path with wildcards in it. By full it is intended till the histogram to be picked'
-        base_name = os.path.basename(path)
+        base_name = os.path.baseODname(path)
         dir_name  = os.path.dirname(path)
         return self.get_wild_dir(view, dir_name).Get(base_name)
 
-    def plot_mc_vs_data(self, folder, variable, rebin=1, xaxis='',
+    def plot_mc_vs_data(self, folder, signal, variable, rebin=1, xaxis='',
                         leftside=True, xrange=None, preprocess=None,
-                        show_ratio=False, ratio_range=0.2, sort=False):
+                        show_ratio=False, ratio_range=0.5, sort=False, blind_region=False, control='', jets=''):
         ''' Compare Monte Carlo to data '''
-        #path = os.path.join(folder, variable)
         mc_stack_view = self.make_stack(rebin, preprocess, folder, sort)
         mc_stack = mc_stack_view.Get(variable)
+        mc_stack.SetTitle("")
         mc_stack.Draw()
         mc_stack.GetHistogram().GetXaxis().SetTitle(xaxis)
+        mc_stack.GetHistogram().GetYaxis().SetTitle("Events/bin")
+        mc_stack.GetHistogram().GetYaxis().SetTitleOffset(1.4)
         if xrange:
             mc_stack.GetXaxis().SetRangeUser(xrange[0], xrange[1])
             mc_stack.Draw()
         self.keep.append(mc_stack)
-        # Draw data
-        data_view = self.get_view('data')
+        #####
+        mc_sum_view = self.make_sum(rebin, preprocess, folder)
+        mc_err = mc_sum_view.Get(variable)
+        mc_err.Sumw2()
+        #mc_err = SystematicsView.add_error(mc_err,  0.3)
+        mc_err.SetMarkerStyle(0)
+        mc_err.SetLineColor(1)
+        mc_err.SetFillStyle('x')
+        mc_err.SetFillColor(1)
+        #mc_err.Draw('pe2 same')
+        #mc_err.SetName('error')
+        #####
+
+        signalview=[]
+        mymax=0
+        for sig in signal:
+            signal_view=self.get_view(sig)
+            if preprocess:
+                signal_view=preprocess(signal_view)
+            signal_view = views.SubdirectoryView(signal_view, control)
+            signal_view=self.get_wild_dir(
+                self.rebin_view(signal_view,rebin),folder)
+            signal=signal_view.Get(variable)
+            signalview.append(signal)
+            signal.Draw("SAME")
+            if signal.GetBinContent(signal.GetMaximumBin()) > mymax:
+                mymax = signal.GetBinContent(signal.GetMaximumBin())
+            self.keep.append(signal)
+
+        data_view = views.SubdirectoryView(self.get_view('data'), control)
         if preprocess:
             data_view = preprocess( data_view )
         data_view = self.get_wild_dir(
@@ -400,12 +487,28 @@ class Plotter(object):
             folder
             )
         data = data_view.Get(variable)
-        data.Draw('same')
+
+        if blind_region:
+            for bin in range(data.GetNbinsX()+1):
+                bg_count=mc_stack.GetStack().Last().GetBinContent(bin)
+                if bg_count<=0 : bg_count=0
+                sig_count=0
+                for histo in signalview:
+                    sig_count=histo.GetBinContent(bin)
+                    if sig_count<=0: continue
+                    if bool(bg_count<0.1 and sig_count>0) or ((float(sig_count)/float(sig_count+bg_count))>0.01):
+                        data.SetBinContent(bin,0.)
+                        data.SetBinError(bin,0.)
+
+        data.Draw("SAME")
         self.keep.append(data)
-        # Make sure we can see everything
+
         if data.GetMaximum() > mc_stack.GetMaximum():
             mc_stack.SetMaximum(1.2*data.GetMaximum())
-        # Add legend
-        self.add_legend([data, mc_stack], leftside, entries=len(mc_stack.GetHists())+1)
+
+        self.add_legend([data, mc_stack, signalview[0], signalview[1]], leftside, entries=len(mc_stack.GetHists())+len(signalview)+1)
+        #self.add_legend([data, mc_stack], leftside, entries=len(mc_stack.GetHists())+1)
+        #self.add_legend([data, mc_stack], leftside, entries=len(mc_stack.GetHists())+len(signalview)+1)
+        self.add_cms_blurb(13, jets)
         if show_ratio:
-            self.add_ratio_plot(data, mc_stack, xrange, ratio_range=0.2)
+            self.add_ratio_plot(data, mc_stack, mc_err, xrange, ratio_range=0.5)

@@ -29,17 +29,31 @@ datadefs['GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8_v14-v1'] = {
  'datasetpath': '/GluGlu_LFV_HToMuTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAOD',
- 'x_sec': 30.52*0.01
+ 'x_sec': 44.14*0.01#XSDB30.52*0.01#48.58
 }
 datadefs['VBF_LFV_HToMuTau_M125_13TeV_powheg_pythia8_v14-v1'] = {
 'analyses': ['LFV'],
  'datasetpath': '/VBF_LFV_HToMuTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAOD',
- 'x_sec': 3.861*0.01
+ 'x_sec': 3.782*0.01#XSDB3.861*0.01
 }
 
 
+datadefs['DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_v14-v1'] = {
+ 'analyses': ['LFV'],
+ 'datasetpath': '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+ 'pu': '2017',
+ 'calibrationTarget': 'RunIIFall17MiniAODv2',
+ 'x_sec': 6529.0
+}
+datadefs['DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_v14_ext1-v1'] = {
+ 'analyses': ['LFV'],
+ 'datasetpath': '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
+ 'pu': '2017',
+ 'calibrationTarget': 'RunIIFall17MiniAODv2',
+ 'x_sec': 6529.0
+}
 datadefs['DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datasetpath': '/DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017RECOSIMstep_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
@@ -54,12 +68,19 @@ datadefs['DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_v14_ext1-v1'] = {
  'calibrationTarget': 'RunIIFall17MiniAODv2',
  'x_sec': 5343
 }
-datadefs['DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_v14-v2'] = {
+datadefs['DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8_v14-v1'] = {
  'analyses': ['LFV'],
- 'datasetpath': '/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/MINIAODSIM',
+ 'datasetpath': '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 81880
+ 'x_sec': 18610#15810
+}
+datadefs['DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8_v14_ext1-v1'] = {
+ 'analyses': ['LFV'],
+ 'datasetpath': '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
+ 'pu': '2017',
+ 'calibrationTarget': 'RunIIFall17MiniAODv2',
+ 'x_sec': 18610#15810
 }
 datadefs['DY1JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_v14-v1'] = {
  'analyses': ['LFV'],
@@ -103,6 +124,13 @@ datadefs['DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_v14_ext1-v1'] = {
  'calibrationTarget': 'RunIIFall17MiniAODv2',
  'x_sec': 111.5
 }
+datadefs['DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_v14-v1'] = {
+ 'analyses': ['LFV'],
+ 'datasetpath': 'DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+ 'pu': '2017',
+ 'calibrationTarget': 'RunIIFall17MiniAODv2',
+ 'x_sec': 111.5
+}
 datadefs['DY4JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datasetpath': 'DY4JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
@@ -117,21 +145,21 @@ datadefs['WW_TuneCP5_13TeV-pythia8_v14-v1'] = {
  'datsetpath': '/WW_TuneCP5_13TeV-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 75.8
+ 'x_sec': 118.7#75.8
 }
 datadefs['WZ_TuneCP5_13TeV-pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datsetpath': '/WZ_TuneCP5_13TeV-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 27.6
+ 'x_sec': 47.13#27.6
 }
 datadefs['ZZ_TuneCP5_13TeV-pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datsetpath': '/ZZ_TuneCP5_13TeV-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 12.14
+ 'x_sec': 16.52#12.14
 }
 
 
@@ -166,7 +194,7 @@ datadefs['W1JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_v14-v3'] = {
  'datasetpath': '/W1JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v3/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 8111
+ 'x_sec': 8104.0#8111
 }
 datadefs['W2JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8_v14-v4'] = {
  'analyses': ['LFV'],
@@ -226,44 +254,80 @@ datadefs['GluGluHToTauTau_M125_13TeV_powheg_pythia8_v14-v1'] = {
  'datasetpath': '/GluGluHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 30.52*0.0627
+ 'x_sec': 44.14*0.0627#30.52*0.0627#48.58
 }
 datadefs['VBFHToTauTau_M125_13TeV_powheg_pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datasetpath': '/VBFHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 3.861*0.0627
+ 'x_sec': 3.782*0.0627#3.861*0.0627
 }
 
+datadefs['QCD_Pt-20toInf_MuEnrichedPt15_TuneCP5_13TeV_pythia8_v14-v1'] = {
+ 'analyses': ['LFV'],
+ 'datasetpath': '/QCD_Pt-20toInf_MuEnrichedPt15_TuneCP5_13TeV_pythia8/RunIIFall17MiniAODv2-PU2017RECOSIMstep_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+ 'pu': '2017',
+ 'calibrationTarget': 'RunIIFall17MiniAODv2',
+ 'x_sec': 720648000#238900
+}
 
 datadefs['ZHToTauTau_M125_13TeV_powheg_pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datasetpath': '/ZHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 0.7524*0.0627
+ 'x_sec': 0.884*0.0627#0.7524*0.0627
 }
 datadefs['ttHToTauTau_M125_TuneCP5_13TeV-powheg-pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datasetpath': '/ttHToTauTau_M125_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_new_pmx_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 0.5269*0.067
+ 'x_sec': 0.507*0.0627#0.5269*0.0627
 }
 datadefs['WminusHToTauTau_M125_13TeV_powheg_pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datasetpath': '/WminusHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 0.5331*0.0627
+ 'x_sec': 1.373*0.0627*0.5#0.5331*0.0627
 }
 datadefs['WplusHToTauTau_M125_13TeV_powheg_pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datasetpath': '/WplusHToTauTau_M125_13TeV_powheg_pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 0.851*0.0627
+ 'x_sec': 1.373*0.0627*0.5#0.851*0.0627
+}
+
+datadefs['EWKWMinus2Jets_WToLNu_M-50_TuneCP5_13TeV-madgraph-pythia8_v14-v1'] = {
+ 'analyses': ['LFV'],
+ 'datasetpath': '/EWKWMinus2Jets_WToLNu_M-50_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+ 'pu': '2017',
+ 'calibrationTarget': 'RunIIFall17MiniAODv2',
+ 'x_sec': 20.25
+}
+datadefs['EWKWPlus2Jets_WToLNu_M-50_TuneCP5_13TeV-madgraph-pythia8_v14-v1'] = {
+ 'analyses': ['LFV'],
+ 'datasetpath': '/EWKWPlus2Jets_WToLNu_M-50_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+ 'pu': '2017',
+ 'calibrationTarget': 'RunIIFall17MiniAODv2',
+ 'x_sec': 25.62
+}
+datadefs['EWKZ2Jets_ZToLL_M-50_TuneCP5_13TeV-madgraph-pythia8_v14-v1'] = {
+ 'analyses': ['LFV'],
+ 'datasetpath': '/EWKZ2Jets_ZToLL_M-50_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+ 'pu': '2017',
+ 'calibrationTarget': 'RunIIFall17MiniAODv2',
+ 'x_sec': 3.987
+}
+datadefs['EWKZ2Jets_ZToNuNu_TuneCP5_13TeV-madgraph-pythia8_v14-v1'] = {
+ 'analyses': ['LFV'],
+ 'datasetpath': '/EWKZ2Jets_ZToNuNu_TuneCP5_13TeV-madgraph-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
+ 'pu': '2017',
+ 'calibrationTarget': 'RunIIFall17MiniAODv2',
+ 'x_sec': 10.01
 }
 
 
@@ -273,7 +337,7 @@ datadefs['data_SingleMuon_ReReco_Run2017B'] = {
  'firstRun': 297050,
  'lastRun': 299329,
  'analyses': ['LFV'],
- 'calibrationTarget': 'Run2017'
+ 'calibrationTarget': 'RunIIFall17MiniAODv2'
 }
 datadefs['data_SingleMuon_ReReco_Run2017C'] = {
  'datasetpath': '/SingleMuon/Run2017C-17Nov2017-v1/MINIAOD',
@@ -281,7 +345,7 @@ datadefs['data_SingleMuon_ReReco_Run2017C'] = {
  'firstRun': 299368,
  'lastRun': 302029,
  'analyses': ['LFV'],
- 'calibrationTarget': 'Run2017'
+ 'calibrationTarget': 'RunIIFall17MiniAODv2'
 }
 datadefs['data_SingleMuon_ReReco_Run2017D'] = {
  'datasetpath': '/SingleMuon/Run2017D-17Nov2017-v1/MINIAOD',
@@ -289,7 +353,7 @@ datadefs['data_SingleMuon_ReReco_Run2017D'] = {
  'firstRun': 302031,
  'lastRun': 302663,
  'analyses': ['LFV'],
- 'calibrationTarget': 'Run2017'
+ 'calibrationTarget': 'RunIIFall17MiniAODv2'
 }
 datadefs['data_SingleMuon_ReReco_Run2017E'] = {
  'datasetpath': '/SingleMuon/Run2017E-17Nov2017-v1/MINIAOD',
@@ -297,7 +361,7 @@ datadefs['data_SingleMuon_ReReco_Run2017E'] = {
  'firstRun': 303825,
  'lastRun': 304797,
  'analyses': ['LFV'],
- 'calibrationTarget': 'Run2017'
+ 'calibrationTarget': 'RunIIFall17MiniAODv2'
 }
 datadefs['data_SingleMuon_ReReco_Run2017F'] = {
  'datasetpath': '/SingleMuon/Run2017F-17Nov2017-v1/MINIAOD',
@@ -305,7 +369,49 @@ datadefs['data_SingleMuon_ReReco_Run2017F'] = {
  'firstRun': 305044,
  'lastRun': 306460,
  'analyses': ['LFV'],
- 'calibrationTarget': 'Run2017'
+ 'calibrationTarget': 'RunIIFall17MiniAODv2'
+}
+
+
+datadefs['data_SingleMuon_Run2017B-31Mar2018'] = {
+ 'datasetpath': '/SingleMuon/Run2017B-31Mar2018-v1/MINIAOD',
+ 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt',
+ 'firstRun': 297050,
+ 'lastRun': 299329,
+ 'analyses': ['LFV'],
+ 'calibrationTarget': 'RunIIFall17MiniAODv2'
+}
+datadefs['data_SingleMuon_Run2017C-31Mar2018'] = {
+ 'datasetpath': '/SingleMuon/Run2017C-31Mar2018-v1/MINIAOD',
+ 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt',
+ 'firstRun': 299368,
+ 'lastRun': 302029,
+ 'analyses': ['LFV'],
+ 'calibrationTarget': 'RunIIFall17MiniAODv2'
+}
+datadefs['data_SingleMuon_Run2017D-31Mar2018'] = {
+ 'datasetpath': '/SingleMuon/Run2017D-31Mar2018-v1/MINIAOD',
+ 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt',
+ 'firstRun': 302031,
+ 'lastRun': 302663,
+ 'analyses': ['LFV'],
+ 'calibrationTarget': 'RunIIFall17MiniAODv2'
+}
+datadefs['data_SingleMuon_Run2017E-31Mar2018'] = {
+ 'datasetpath': '/SingleMuon/Run2017E-31Mar2018-v1/MINIAOD',
+ 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt',
+ 'firstRun': 303825,
+ 'lastRun': 304797,
+ 'analyses': ['LFV'],
+ 'calibrationTarget': 'RunIIFall17MiniAODv2'
+}
+datadefs['data_SingleMuon_Run2017F-31Mar2018'] = {
+ 'datasetpath': '/SingleMuon/Run2017F-31Mar2018-v1/MINIAOD',
+ 'lumi_mask': 'FinalStateAnalysis/RecoTools/data/masks/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt',
+ 'firstRun': 305044,
+ 'lastRun': 306460,
+ 'analyses': ['LFV'],
+ 'calibrationTarget': 'RunIIFall17MiniAODv2'
 }
 
 
@@ -314,28 +420,28 @@ datadefs['ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin
  'datasetpath': '/ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 67.91
+ 'x_sec': 67.91#80.95
 }
 datadefs['ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datasetpath': '/ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 113.3
+ 'x_sec': 113.3#136.02
 }
 datadefs['ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datasetpath': '/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 34.97
+ 'x_sec': 34.91#35.85#XSDB34.97
 }
 datadefs['ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_v14-v1'] = {
  'analyses': ['LFV'],
  'datasetpath': '/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
  'pu': '2017',
  'calibrationTarget': 'RunIIFall17MiniAODv2',
- 'x_sec': 34.91
+ 'x_sec': 34.91#35.85#XSDB34.91
 }
 
 

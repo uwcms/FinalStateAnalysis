@@ -33,7 +33,7 @@ data_styles = {
         'fillstyle' : 0,
         'linestyle' : 1,
         'linewidth' : 4,
-        'linecolor' : colors['cyan'],
+        'linecolor' : colors['orange'],
         'name' : "LFV qqH",
     },
     '*HToTauTau*' : {
@@ -42,7 +42,7 @@ data_styles = {
         'fillcolor' : '#1c761c',
         'fillstyle' : 'solid',
         'linecolor' : '#1c761c',
-        'name' : "TauTau",
+        'name' : "HTT",
     },
     'ZH*' : {
         'legendstyle' : 'f',
@@ -94,8 +94,8 @@ data_styles = {
         'legendstyle' : 'f',
         'drawstyle' : 'hist',
         'fillcolor' : colors['cyan'],
-        'linecolor' :colors['cyan'],
-        'name' : "QCD",
+        'linecolor' : colors['cyan'],
+        'name' : "Fakes",
         'fillstyle': 'solid',
     },
     'TT*' : {
@@ -104,6 +104,14 @@ data_styles = {
         'fillcolor' : '#9999CC',
         'linecolor' : '#9999CC',
         'name' : "ttbar",
+        'fillstyle': 'solid',
+    },
+    'ST*' : {
+        'legendstyle' : 'f',
+        'drawstyle' : 'hist',
+        'fillcolor' : '#999900',
+        'linecolor' : '#999900',
+        'name' : "singlet",
         'fillstyle': 'solid',
     },
     'VH*HWW' : {
