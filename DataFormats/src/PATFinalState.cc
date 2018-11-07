@@ -1870,3 +1870,87 @@ const float PATFinalState::doubleL1extraIsoTauMatching(const size_t i, const siz
     return 0.0;
 }
 
+
+const float PATFinalState::closestZMassEE(const std::string& filter="") const {
+  std::vector<const reco::Candidate*> candidates = getObjectsPassingFilter(
+    ptrizeCollection(evt()->electrons()), filter);
+
+  if (candidates.size() == 0) return 999;
+  float bestZmass = 999;
+  float absBestZmass = 999;
+  float currentZmass = 999;
+  float absCurrentZmass = 999;
+  // Make sure we don't calculate this unnecessairly
+  int cnt1 = 0;
+  for (auto cand1 : candidates) {
+    int cnt2 = 0;
+    for (auto cand2 : candidates) {
+      if (cnt2 <= cnt1) {
+        //std::cout << "Skipping: " << cnt1 << " : " << cnt2 << std::endl;
+        ++cnt2;
+        continue;
+      }
+      ++cnt2;
+      //std::cout << "pre - e1: " << cand1->pt() << " e2: " <<  cand2->pt() << std::endl;
+      if (cand1->pt() == cand2->pt()) continue;
+      if (cand1->charge()*cand2->charge() > 0) continue;
+      if (reco::deltaR(cand1->p4(), cand2->p4() ) < 0.3) continue;
+      LorentzVector lorentzTmp;
+      lorentzTmp += cand1->p4();
+      lorentzTmp += cand2->p4();
+      currentZmass = lorentzTmp.M();
+      absCurrentZmass = fabs( currentZmass - 91.1876 );
+      if ( absCurrentZmass < absBestZmass ) {
+        absBestZmass = absCurrentZmass;
+        bestZmass = currentZmass;
+      }
+      //std::cout << " --- mass: " << currentZmass << " abs: " << absCurrentZmass << " bestM: " << bestZmass << " absBM: " << absBestZmass << std::endl;
+    }
+    ++cnt1;
+  }
+  return bestZmass;
+}
+
+
+const float PATFinalState::closestZMassMM(const std::string& filter="") const {
+  std::vector<const reco::Candidate*> candidates = getObjectsPassingFilter(
+    ptrizeCollection(evt()->muons()), filter);
+
+  if (candidates.size() == 0) return 999;
+  float bestZmass = 999;
+  float absBestZmass = 999;
+  float currentZmass = 999;
+  float absCurrentZmass = 999;
+  // Make sure we don't calculate this unnecessairly
+  int cnt1 = 0;
+  for (auto cand1 : candidates) {
+    int cnt2 = 0;
+    for (auto cand2 : candidates) {
+      if (cnt2 <= cnt1) {
+        //std::cout << "Skipping: " << cnt1 << " : " << cnt2 << std::endl;
+        ++cnt2;
+        continue;
+      }
+      ++cnt2;
+      //std::cout << "pre - e1: " << cand1->pt() << " e2: " <<  cand2->pt() << std::endl;
+      if (cand1->pt() == cand2->pt()) continue;
+      if (cand1->charge()*cand2->charge() > 0) continue;
+      if (reco::deltaR(cand1->p4(), cand2->p4() ) < 0.3) continue;
+      LorentzVector lorentzTmp;
+      lorentzTmp += cand1->p4();
+      lorentzTmp += cand2->p4();
+      currentZmass = lorentzTmp.M();
+      absCurrentZmass = fabs( currentZmass - 91.1876 );
+      if ( absCurrentZmass < absBestZmass ) {
+        absBestZmass = absCurrentZmass;
+        bestZmass = currentZmass;
+      }
+      //std::cout << " --- mass: " << currentZmass << " abs: " << absCurrentZmass << " bestM: " << bestZmass << " absBM: " << absBestZmass << std::endl;
+    }
+    ++cnt1;
+  }
+  return bestZmass;
+}
+
+
+

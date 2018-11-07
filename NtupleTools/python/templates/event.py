@@ -119,6 +119,14 @@ shiftedMet = PSet(
     #type1_pfMet_shiftedPt_JetTimePtEtaDown             = 'evt.metShift("pfmet","pt","jesTimePtEta-")',
     #type1_pfMet_shiftedPt_JetTotalUp             = 'evt.metShift("pfmet","pt","jesTotal+")',
     #type1_pfMet_shiftedPt_JetTotalDown             = 'evt.metShift("pfmet","pt","jesTotal-")',
+    #type1_pfMet_shiftedPt_JetEta0to5Up             = 'evt.metShift("pfmet","pt","jesEta0to5+")',
+    #type1_pfMet_shiftedPt_JetEta0to5Down             = 'evt.metShift("pfmet","pt","jesEta0to5-")',
+    #type1_pfMet_shiftedPt_JetEta0to3Up             = 'evt.metShift("pfmet","pt","jesEta0to3+")',
+    #type1_pfMet_shiftedPt_JetEta0to3Down             = 'evt.metShift("pfmet","pt","jesEta0to3-")',
+    #type1_pfMet_shiftedPt_JetEta3to5Up             = 'evt.metShift("pfmet","pt","jesEta3to5+")',
+    #type1_pfMet_shiftedPt_JetEta3to5Down             = 'evt.metShift("pfmet","pt","jesEta3to5-")',
+    #type1_pfMet_shiftedPt_JetRelativeSampleUp             = 'evt.metShift("pfmet","pt","jesRelativeSample+")',
+    #type1_pfMet_shiftedPt_JetRelativeSampleDown             = 'evt.metShift("pfmet","pt","jesRelativeSample-")',
     #type1_pfMet_shiftedPt_JetCheckUESUp             = 'evt.metShift("pfmet","pt","checkUES+")',
     #type1_pfMet_shiftedPt_JetCheckUESDown             = 'evt.metShift("pfmet","pt","checkUES-")',
 
@@ -178,6 +186,14 @@ shiftedMet = PSet(
     #type1_pfMet_shiftedPhi_JetTimePtEtaDown             = 'evt.metShift("pfmet","phi","jesTimePtEta-")',
     #type1_pfMet_shiftedPhi_JetTotalUp             = 'evt.metShift("pfmet","phi","jesTotal+")',
     #type1_pfMet_shiftedPhi_JetTotalDown             = 'evt.metShift("pfmet","phi","jesTotal-")',
+    #type1_pfMet_shiftedPhi_JetEta0to5Up             = 'evt.metShift("pfmet","phi","jesEta0to5+")',
+    #type1_pfMet_shiftedPhi_JetEta0to5Down             = 'evt.metShift("pfmet","phi","jesEta0to5-")',
+    #type1_pfMet_shiftedPhi_JetEta0to3Up             = 'evt.metShift("pfmet","phi","jesEta0to3+")',
+    #type1_pfMet_shiftedPhi_JetEta0to3Down             = 'evt.metShift("pfmet","phi","jesEta0to3-")',
+    #type1_pfMet_shiftedPhi_JetEta3to5Up             = 'evt.metShift("pfmet","phi","jesEta3to5+")',
+    #type1_pfMet_shiftedPhi_JetEta3to5Down             = 'evt.metShift("pfmet","phi","jesEta3to5-")',
+    #type1_pfMet_shiftedPhi_JetRelativeSampleUp             = 'evt.metShift("pfmet","phi","jesRelativeSample+")',
+    #type1_pfMet_shiftedPhi_JetRelativeSampleDown             = 'evt.metShift("pfmet","phi","jesRelativeSample-")',
 
     #type1_pfMet_shiftedPt_RunIUESDown             = 'evt.met().userCand("metSystUesRunI-").pt',
     #type1_pfMet_shiftedPt_RunIUESUp             = 'evt.met().userCand("metSystUesRunI+").pt',
@@ -243,6 +259,23 @@ shiftedMet = PSet(
 #    type1_pfMet_shiftedPhi_TauEnDown           = 'evt.metShift("pfmet","phi","tes-")',
 
 #    type1_pfMet_shiftedPhi_PhotonEnDown        = 'evt.metShift("pfmet","phi","pes-")',
+)
+
+metShiftsForFullJES = PSet(
+    type1_pfMet_shiftedPt_JetResUp             = 'evt.metShift("pfmet","pt","jres+")',
+    type1_pfMet_shiftedPt_JetResDown           = 'evt.metShift("pfmet","pt","jres-")',
+    type1_pfMet_shiftedPhi_JetResUp            = 'evt.metShift("pfmet","phi","jres+")',
+    type1_pfMet_shiftedPhi_JetResDown          = 'evt.metShift("pfmet","phi","jres-")',
+
+    type1_pfMet_shiftedPt_JetEnUp              = 'evt.metShift("pfmet","pt","jes+")',
+    type1_pfMet_shiftedPt_JetEnDown            = 'evt.metShift("pfmet","pt","jes-")',
+    type1_pfMet_shiftedPhi_JetEnUp             = 'evt.metShift("pfmet","phi","jes+")',
+    type1_pfMet_shiftedPhi_JetEnDown           = 'evt.metShift("pfmet","phi","jes-")',
+
+    type1_pfMet_shiftedPhi_UnclusteredEnDown   = 'evt.metShift("pfmet","phi","ues-")',
+    type1_pfMet_shiftedPhi_UnclusteredEnUp     = 'evt.metShift("pfmet","phi","ues+")',
+    type1_pfMet_shiftedPt_UnclusteredEnDown    = 'evt.metShift("pfmet","pt","ues-")',
+    type1_pfMet_shiftedPt_UnclusteredEnUp      = 'evt.metShift("pfmet","pt","ues+")',
 )
 
 gen = PSet(
