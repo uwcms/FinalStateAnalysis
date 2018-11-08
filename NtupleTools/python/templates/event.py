@@ -195,15 +195,15 @@ shiftedMet = PSet(
     #type1_pfMet_shiftedPhi_JetRelativeSampleUp             = 'evt.metShift("pfmet","phi","jesRelativeSample+")',
     #type1_pfMet_shiftedPhi_JetRelativeSampleDown             = 'evt.metShift("pfmet","phi","jesRelativeSample-")',
 
-    #type1_pfMet_shiftedPt_RunIUESDown             = 'evt.met().userCand("metSystUesRunI-").pt',
-    #type1_pfMet_shiftedPt_RunIUESUp             = 'evt.met().userCand("metSystUesRunI+").pt',
-    #type1_pfMet_shiftedPhi_RunIUESDown             = 'evt.met().userCand("metSystUesRunI-").phi',
-    #type1_pfMet_shiftedPhi_RunIUESUp             = 'evt.met().userCand("metSystUesRunI+").phi',
+    type1_pfMet_shiftedPt_RunIUESDown             = 'evt.met().userCand("metSystUesRunI-").pt',
+    type1_pfMet_shiftedPt_RunIUESUp             = 'evt.met().userCand("metSystUesRunI+").pt',
+    type1_pfMet_shiftedPhi_RunIUESDown             = 'evt.met().userCand("metSystUesRunI-").phi',
+    type1_pfMet_shiftedPhi_RunIUESUp             = 'evt.met().userCand("metSystUesRunI+").phi',
 
-    #type1_pfMet_shiftedPt_CHARGEDUESDown             = 'evt.met().userCand("metSystUesCHARGED-").pt',
-    #type1_pfMet_shiftedPt_CHARGEDUESUp             = 'evt.met().userCand("metSystUesCHARGED+").pt',
-    #type1_pfMet_shiftedPhi_CHARGEDUESDown             = 'evt.met().userCand("metSystUesCHARGED-").phi',
-    #type1_pfMet_shiftedPhi_CHARGEDUESUp             = 'evt.met().userCand("metSystUesCHARGED+").phi',
+    type1_pfMet_shiftedPt_CHARGEDUESDown             = 'evt.met().userCand("metSystUesCHARGED-").pt',
+    type1_pfMet_shiftedPt_CHARGEDUESUp             = 'evt.met().userCand("metSystUesCHARGED+").pt',
+    type1_pfMet_shiftedPhi_CHARGEDUESDown             = 'evt.met().userCand("metSystUesCHARGED-").phi',
+    type1_pfMet_shiftedPhi_CHARGEDUESUp             = 'evt.met().userCand("metSystUesCHARGED+").phi',
 
     #type1_pfMet_shiftedPt_ECALUESDown             = 'evt.met().userCand("metSystUesECAL-").pt',
     #type1_pfMet_shiftedPt_ECALUESUp             = 'evt.met().userCand("metSystUesECAL+").pt',

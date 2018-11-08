@@ -73,8 +73,6 @@ import PhysicsTools.PatAlgos.tools.helpers as helpers
 process = cms.Process("Ntuples")
 cmsswversion=os.environ['CMSSW_VERSION']
 
-print "2"
-
 # if you want to debug in the future, uncomment this
 #process.ProfilerService = cms.Service (
 #      "ProfilerService",
