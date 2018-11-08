@@ -1,0 +1,30 @@
+{
+
+  "embedded_EmbeddingRun2017B_MuTauFinalState" : "/EmbeddingRun2017B/MuTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_EmbeddingRun2017C_MuTauFinalState" : "/EmbeddingRun2017C/MuTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_EmbeddingRun2017D_MuTauFinalState" : "/EmbeddingRun2017D/MuTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_EmbeddingRun2017E_MuTauFinalState" : "/EmbeddingRun2017E/MuTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_EmbeddingRun2017F_MuTauFinalState" : "/EmbeddingRun2017F/MuTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+
+  "embedded_etau_2017B" : "/EmbeddingRun2017B/ElTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_etau_2017C" : "/EmbeddingRun2017C/ElTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_etau_2017D" : "/EmbeddingRun2017D/ElTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_etau_2017E" : "/EmbeddingRun2017E/ElTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_etau_2017F" : "/EmbeddingRun2017F/ElTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+
+  "embedded_emu_2017B" : "/EmbeddingRun2017B/ElMuFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_emu_2017C" : "/EmbeddingRun2017C/ElMuFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_emu_2017D" : "/EmbeddingRun2017D/ElMuFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_emu_2017E" : "/EmbeddingRun2017E/ElMuFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_emu_2017F" : "/EmbeddingRun2017F/ElMuFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+
+  "embedded_tautau_2017B" : "/EmbeddingRun2017B/TauTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_tautau_2017C" : "/EmbeddingRun2017C/TauTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_tautau_2017D" : "/EmbeddingRun2017D/TauTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_tautau_2017E" : "/EmbeddingRun2017E/TauTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER",
+  "embedded_tautau_2017F" : "/EmbeddingRun2017F/TauTauFinalState-inputDoubleMu_94X_miniAOD-v2/USER"
+
+
+}
+
+
