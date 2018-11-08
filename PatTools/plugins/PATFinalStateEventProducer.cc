@@ -239,8 +239,10 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     };
   }
 
-  int npNLO;
-  npNLO=EvtHandle->npNLO();
+  int npNLO=-1;
+  if (EvtHandle.isValid()) {
+     npNLO=EvtHandle->npNLO();
+  }
 
   edm::Ptr<reco::Vertex> pvPtr;
   if( pv->size() )

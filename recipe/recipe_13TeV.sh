@@ -52,6 +52,7 @@ git cms-merge-topic cms-met:METFixEE2017_949_v2
 
 # Get deep Tau & DPF based Tau ID (and Tau ID Embedder) (deep Tau & DPF Tau optional)
 git cms-merge-topic ocolegro:dpfisolation # consists updated version of runTauIdMVA.py (RecoTauTag/RecoTau/python/runTauIdMVA.py). Originally, this .py file comes from https://raw.githubusercontent.com/greyxray/TauAnalysisTools/CMSSW_9_4_X_tau-pog_RunIIFall17/TauAnalysisTools/python/runTauIdMVA.py
+rm RecoTauTag/RecoTau/data/*.pb #too heavy to submit the jobs via condor
 
 # Get latest anti-e discriminator MVA6v2 (2017 training) (optional)
 #TODO some files need to be copied from afs. A proper integration of the files will be done by Tau POG. To be followed up.
