@@ -467,36 +467,30 @@ if options.htt and options.isMC :
 ### for simplified template cross section ###
 #############################################
 
-#XXX if options.htt and options.isMC :
-#XXX     process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
-#XXX     process.mergedGenParticles = cms.EDProducer("MergedGenParticleProducer",
-#XXX         inputPruned = cms.InputTag("prunedGenParticles"),
-#XXX         inputPacked = cms.InputTag("packedGenParticles"),
-#XXX     )
-#XXX     process.myGenerator = cms.EDProducer("GenParticles2HepMCConverterHTXS",
-#XXX         genParticles = cms.InputTag("mergedGenParticles"),
-#XXX         genEventInfo = cms.InputTag("generator"),
-#XXX     )
-#XXX     process.rivetProducerHTXS = cms.EDProducer('HTXSRivetProducer',
-#XXX       HepMCCollection = cms.InputTag('myGenerator','unsmeared'),
-#XXX       LHERunInfo = cms.InputTag('externalLHEProducer'),
-#XXX       ProductionMode = cms.string('AUTO'),
-#XXX       #ProductionMode = cms.string('GGF'), # For ggH NNLOPS sample
-#XXX     )
-#XXX     
-#XXX     process.rivetMethods = cms.Path(
-#XXX         process.mergedGenParticles
-#XXX         * process.myGenerator
-#XXX         * process.rivetProducerHTXS
-#XXX     )
-#XXX     process.schedule.append( process.rivetMethods )
-
-
-
-
-
-
-
+if options.htt and options.isMC :
+    process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
+    process.mergedGenParticles = cms.EDProducer("MergedGenParticleProducer",
+        inputPruned = cms.InputTag("prunedGenParticles"),
+        inputPacked = cms.InputTag("packedGenParticles"),
+    )
+    process.myGenerator = cms.EDProducer("GenParticles2HepMCConverter",
+        genParticles = cms.InputTag("mergedGenParticles"),
+        genEventInfo = cms.InputTag("generator"),
+	signalParticlePdgIds = cms.vint32(25),
+    )
+    process.rivetProducerHTXS = cms.EDProducer('HTXSRivetProducer',
+      HepMCCollection = cms.InputTag('myGenerator','unsmeared'),
+      LHERunInfo = cms.InputTag('externalLHEProducer'),
+      ProductionMode = cms.string('AUTO'),
+      #ProductionMode = cms.string('GGF'), # For ggH NNLOPS sample
+    )
+    
+    process.rivetMethods = cms.Path(
+        process.mergedGenParticles
+        * process.myGenerator
+        * process.rivetProducerHTXS
+    )
+    process.schedule.append( process.rivetMethods )
 
 ################################################
 ### add filters (that wont make it into fsa) ###
