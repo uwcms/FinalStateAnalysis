@@ -113,6 +113,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const GenEventInfoProduct& genEventInfo,
     const GenFilterInfo& generatorFilter,
     bool isRealData,
+    bool isEmbeddedSample,
     const std::string& puScenario,
     const edm::RefProd<pat::ElectronCollection>& electronRefProd,
     const edm::RefProd<pat::MuonCollection>& muonRefProd,

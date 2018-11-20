@@ -179,7 +179,7 @@ def datasets_from_das(args):
     script_content = ""
     # this part searches for MC
     if args.campaignstring:
-        dbs_datasets = get_das_info('dataset=/*/%s/MINIAODSIM' % args.campaignstring)
+        dbs_datasets = get_das_info('dataset dataset=/*/%s/MINIAODSIM status=*' % args.campaignstring)
         # check sample wildcards
         for dataset in dbs_datasets:
 	    dataset_name = dataset.split('/')[1]+"_v"+dataset.split('_v')[1].split('/')[0]
@@ -210,6 +210,33 @@ def datasets_from_das(args):
             passes_wildcard = False
             name_to_use = 'data_' + '_'.join(dataset.split('/'))
             for pattern in data_patterns:
+                if args.dastuple: # check json for shorthand, links to full dataset name
+                    with open(args.dastuple) as tuple_file:
+                        tuple_info = json.load(tuple_file)
+                        matching_datasets = []
+                        for shorthand, fullname in tuple_info.iteritems():
+                            if fullname in dataset:
+                                if fnmatch.fnmatchcase(shorthand, pattern):
+                                    passes_wildcard = True
+                                    name_to_use = shorthand
+                else: # check das directly
+                    if fnmatch.fnmatchcase(dataset, pattern):
+                        passes_wildcard = True
+            passes_filter = passes_wildcard and passes_filter
+            if passes_filter:
+                script_content += getFarmoutCommand(args, name_to_use, dataset)
+    elif args.isEmbedded:
+        data_patterns = [x for x in args.samples]
+	print "data_patterns",data_patterns
+	print "args.samples",args.samples
+        data_datasets = get_das_info('dataset dataset=/Embedding*/*/USER instance=prod/phys03')
+        for dataset in data_datasets:
+            passes_filter = True
+            passes_wildcard = False
+            name_to_use = 'embedded_' + '_'.join(dataset.split('/'))
+	    print "name_to_use", name_to_use
+            for pattern in data_patterns:
+	  	print "pattern",pattern
                 if args.dastuple: # check json for shorthand, links to full dataset name
                     with open(args.dastuple) as tuple_file:
                         tuple_info = json.load(tuple_file)
@@ -293,6 +320,10 @@ def get_com_line_args():
         help = 'Run over data',
     )
     input_group.add_argument(
+        '--embedded', dest='isEmbedded', action='store_true',
+        help = 'Run over embedded',
+    )
+    input_group.add_argument(
         '--das-name', dest='useDasName', action='store_true',
         help = 'Run over DAS sample names',
     )
@@ -362,7 +393,7 @@ if __name__ == "__main__":
     script_content += '# The command was: %s\n\n' % ' '.join(sys.argv)
     args = get_com_line_args()
     # first, make DAS query for dataset if not using local dataset or hdfs/dbs tuple list
-    if args.campaignstring or args.isData or args.useDasName:
+    if args.campaignstring or args.isData or args.useDasName or args.isEmbedded:
         script_content += datasets_from_das(args)
     else:
         # this is the old version that uses datadefs

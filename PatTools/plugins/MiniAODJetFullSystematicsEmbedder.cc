@@ -169,6 +169,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
     for (size_t i = 0; i < nJets; ++i) {
       const pat::Jet& jet = jets->at(i);
   
+     double unc=0;
      if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9) {
         // Get unc for normal 28 and Total
         if ( !(name == "Closure") && !(name == "Eta0to3") && !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew") ) {
