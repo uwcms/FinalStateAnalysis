@@ -84,6 +84,7 @@ parameters = {
         Flag_HBHENoiseFilter='evt.getFilterFlags("Flag_HBHENoiseFilter")',
         Flag_HBHENoiseIsoFilter='evt.getFilterFlags("Flag_HBHENoiseIsoFilter")',
         Flag_globalTightHalo2016Filter='evt.getFilterFlags("Flag_globalTightHalo2016Filter")',
+        Flag_globalSuperTightHalo2016Filter='evt.getFilterFlags("Flag_globalSuperTightHalo2016Filter")',
         Flag_goodVertices='evt.getFilterFlags("Flag_goodVertices")',
         Flag_eeBadScFilter='evt.getFilterFlags("Flag_eeBadScFilter")',
         Flag_EcalDeadCellTriggerPrimitiveFilter='evt.getFilterFlags("Flag_EcalDeadCellTriggerPrimitiveFilter")',

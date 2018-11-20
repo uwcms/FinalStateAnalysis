@@ -545,6 +545,7 @@ if options.htt :
             "Flag_goodVertices",
             "Flag_eeBadScFilter",
             "Flag_globalTightHalo2016Filter",
+            "Flag_globalSuperTightHalo2016Filter",
             "Flag_badMuonsFilter",
             "Flag_duplicateMuonsFilter",
         ),
