@@ -432,5 +432,17 @@ fullJES = PSet(
         vbfMass_JetClosureDown = 'vbfVariables("userCand(\'jesClosure-\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5", 0.5).mass',
         jetVeto30_JetClosureUp = 'vetoJets(0.5, "userCand(\'jesClosure+\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5").size()',
         jetVeto30_JetClosureDown = 'vetoJets(0.5, "userCand(\'jesClosure-\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idLoose\') > 0.5").size()',
+        vbfMass_JetEta0to5Up = 'vbfVariables("userCand(\'jesEta0to5+\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).mass',
+        vbfMass_JetEta0to5Down = 'vbfVariables("userCand(\'jesEta0to5-\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).mass',
+        jetVeto30_JetEta0to5Up = 'vetoJets(0.5, "userCand(\'jesEta0to5+\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5").size()',
+        jetVeto30_JetEta0to5Down = 'vetoJets(0.5, "userCand(\'jesEta0to5-\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5").size()',
+        vbfMass_JetEta0to3Up = 'vbfVariables("userCand(\'jesEta0to3+\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).mass',
+        vbfMass_JetEta0to3Down = 'vbfVariables("userCand(\'jesEta0to3-\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).mass',
+        jetVeto30_JetEta0to3Up = 'vetoJets(0.5, "userCand(\'jesEta0to3+\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5").size()',
+        jetVeto30_JetEta0to3Down = 'vetoJets(0.5, "userCand(\'jesEta0to3-\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5").size()',
+        vbfMass_JetEta3to5Up = 'vbfVariables("userCand(\'jesEta3to5+\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).mass',
+        vbfMass_JetEta3to5Down = 'vbfVariables("userCand(\'jesEta3to5-\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).mass',
+        jetVeto30_JetEta3to5Up = 'vetoJets(0.5, "userCand(\'jesEta3to5+\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5").size()',
+        jetVeto30_JetEta3to5Down = 'vetoJets(0.5, "userCand(\'jesEta3to5-\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5").size()',
 )
 

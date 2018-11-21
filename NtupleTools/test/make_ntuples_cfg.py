@@ -56,6 +56,7 @@ paramFile=''   - custom parameter file for ntuple production
 keepPat=0      - Instead of making flat ntuples, write high level 
                  physics objects including the PATFinalState objects
                  memory use if you don't use them)
+is Embedded=0  - run on embedded samples
 
 '''
 
@@ -128,6 +129,7 @@ options = TauVarParsing.TauVarParsing(
     metShift=0,
     runFSRFilter=0, # 1 = filter for ZG, -1 inverts filter for DY
     eventsToSkip='',
+    isEmbedded=0,
 )
 
 options.register(
@@ -515,6 +517,19 @@ if options.htt :
     # Tagger which takes above processes as well as miniAOD filters
     # as inputs
     trigSource = "PAT" if options.isMC else "RECO"
+
+    if options.isEmbedded:
+        process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")
+        #Trigger
+        process.patFinalStateEventProducer.trgResultsSrc= cms.InputTag("TriggerResults","","SIMembedding")
+        process.patFinalStateEventProducer.trgResultsSrc2= cms.InputTag("TriggerResults","","MERGE")
+        #GenInfo
+        #process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles", "", "MERGE")
+        process.patFinalStateEventProducer.packedGenSrc = cms.InputTag("packedGenParticles", "", "MERGE")
+        process.patFinalStateEventProducer.l1extraIsoTauSrc=cms.InputTag("caloStage2Digis","Tau","SIMembedding")
+        process.patFinalStateEventProducer.isEmbedded = cms.bool(True)
+        trigSource = "SIMembedding"
+
     process.filterFlags = cms.EDProducer(
         "MiniAODBadMuonBadFilterEmbedder",
         badGlobalMuonTagger = cms.InputTag("badGlobalMuonTaggerMAOD","bad","Ntuples"),
@@ -530,6 +545,7 @@ if options.htt :
             "Flag_goodVertices",
             "Flag_eeBadScFilter",
             "Flag_globalTightHalo2016Filter",
+            "Flag_globalSuperTightHalo2016Filter",
             "Flag_badMuonsFilter",
             "Flag_duplicateMuonsFilter",
         ),

@@ -84,6 +84,7 @@ class PATFinalStateEvent {
         const GenEventInfoProduct& genEventInfoProd,
         const GenFilterInfo& genFilterInfo,
         bool isRealData,
+        bool isEmbeddedSample,
         const std::string& puScenario,
         const edm::RefProd<pat::ElectronCollection>& electronRefProd,
         const edm::RefProd<pat::MuonCollection>& muonRefProd,
@@ -96,7 +97,7 @@ class PATFinalStateEvent {
         const reco::GsfTrackRefProd& gsfTracks,
 	const std::map<std::string, edm::Ptr<pat::MET> >& mets,
 	std::vector<float> lheweights,
-    const std::map<std::string, bool> filterFlagsMap
+        const std::map<std::string, bool> filterFlagsMap
     );
 
     /// Get PV
@@ -210,6 +211,8 @@ class PATFinalStateEvent {
     /// Is real data
     bool isRealData() const { return isRealData_; }
 
+    bool isEmbeddedSample() const { return isEmbeddedSample_; }
+
     /// Access to object collections in the event
     const pat::ElectronCollection& electrons() const;
     const pat::MuonCollection& muons() const;
@@ -271,6 +274,7 @@ class PATFinalStateEvent {
     GenEventInfoProduct genEventInfoProduct_;
     GenFilterInfo generatorFilter_;
     bool isRealData_;
+    bool isEmbeddedSample_;
     std::string puScenario_;
     char fsaDataFormatVersion_;
     // Pointers to object collections in the event

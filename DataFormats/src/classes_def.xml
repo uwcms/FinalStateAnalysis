@@ -38,7 +38,8 @@
    <version ClassVersion="10" checksum="4038526841"/>
   </class>
 
-  <class name="PATFinalStateEvent" ClassVersion="28">
+  <class name="PATFinalStateEvent" ClassVersion="29">
+   <version ClassVersion="29" checksum="678277635"/>
    <version ClassVersion="28" checksum="3560064230"/>
    <version ClassVersion="27" checksum="3545045297"/>
    <version ClassVersion="26" checksum="4121354954"/>
