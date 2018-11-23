@@ -92,6 +92,9 @@ class MiniAODMETJesSystematicsEmbedder : public edm::EDProducer {
    //"TotalNoFlavor",
    //"TotalNoTime",
    "Total",
+   "Eta3to5",
+   "Eta0to5",
+   "Eta0to3",
    "Closure"
   }; // end uncertNames
   std::map<std::string, JetCorrectorParameters const *> JetCorParMap;
@@ -125,7 +128,7 @@ MiniAODMETJesSystematicsEmbedder::MiniAODMETJesSystematicsEmbedder(const edm::Pa
   produces<ShiftedCandCollection>("p4OutMETDownJetsUncor"+name);
   // Create the uncertainty tool for each uncert
   // skip Closure, which is a comparison at the end
-  if (name == "Closure") continue;
+  if (name == "Closure" or name=="Eta0to3" or name=="Eta0to5" or name=="Eta3to5") continue;
   JetCorrectorParameters const * JetCorPar = new JetCorrectorParameters(fName_, name);
   JetCorParMap[name] = JetCorPar;
 
