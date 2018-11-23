@@ -36,12 +36,20 @@ id = PSet(
         "/{object}.pt()"
     ),
     objectRelPFIsoRho = cms.string(
-        '({object}.chargedHadronIso()'
-        '+max(0.0,{object}.neutralHadronIso()'
-        '+{object}.photonIso()'
+        '({object}.pfIsolationVariables().sumChargedHadronPt'
+        '+max(0.0,{object}.pfIsolationVariables().sumNeutralHadronEt'
+        '+{object}.pfIsolationVariables().sumPhotonEt'
         '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea")))'
         '/{object}.pt()'
     ),
+
+    #objectRelPFIsoRho = cms.string(
+    #    '({object}.chargedHadronIso()'
+    #    '+max(0.0,{object}.neutralHadronIso()'
+    #    '+{object}.photonIso()'
+    #    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea")))'
+    #    '/{object}.pt()'
+    #),
 
     # Number of matched conversions
     objectPassesConversionVeto = '{object}.passConversionVeto()',
