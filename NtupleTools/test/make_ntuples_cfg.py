@@ -634,18 +634,29 @@ if abs(options.runFSRFilter)>0:
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 
 # If you only want to re-correct and get the proper uncertainties
+#runMetCorAndUncFromMiniAOD(process,
+#    isData=isData,
+#    fixEE2017 = True,
+#    fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
+#    postfix = "ModifiedMET"
+#    ##pfCandColl=cms.InputTag("packedPFCandidates"),
+#    ## recoMetFromPFCs=True,
+#                        )
+#
+##process.correctMET=cms.Path(process.fullPatMetSequence)
+#process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
+#process.schedule.append(process.correctMET)
+
 runMetCorAndUncFromMiniAOD(process,
     isData=isData,
     fixEE2017 = True,
     fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
-    postfix = "ModifiedMET"
-    ##pfCandColl=cms.InputTag("packedPFCandidates"),
-    ## recoMetFromPFCs=True,
+    postfix = ""
                         )
 
-#process.correctMET=cms.Path(process.fullPatMetSequence)
-process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
+process.correctMET=cms.Path(process.fullPatMetSequence)
 process.schedule.append(process.correctMET)
+
 
 
 
