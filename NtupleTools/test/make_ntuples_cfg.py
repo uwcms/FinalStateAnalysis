@@ -313,7 +313,7 @@ fs_daughter_inputs = {
     'taus': 'slimmedTaus',
     'photons': 'slimmedPhotons',
     'jets': 'slimmedJets',
-    'pfmet': 'slimmedMETs',         # slimmedMETs, slimmedMETsNoHF (miniaodv2), slimmmedMETsPuppi (not correct in miniaodv1)
+    'pfmet': 'slimmedMETsModifiedMET',         # slimmedMETs, slimmedMETsNoHF (miniaodv2), slimmmedMETsPuppi (not correct in miniaodv1)
     'mvamet': 'fixme',              # produced later
     'puppimet': 'slimmmedMETsPuppi',
     'vertices': 'offlineSlimmedPrimaryVertices',
@@ -638,27 +638,36 @@ from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMet
 #    isData=isData,
 #    fixEE2017 = True,
 #    fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
-#    postfix = "ModifiedMET"
+#    postfix = "ModifiedMet"
 #    ##pfCandColl=cms.InputTag("packedPFCandidates"),
 #    ## recoMetFromPFCs=True,
 #                        )
-#
+
 ##process.correctMET=cms.Path(process.fullPatMetSequence)
-#process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
+#process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMet)
 #process.schedule.append(process.correctMET)
 
 runMetCorAndUncFromMiniAOD(process,
     isData=isData,
     fixEE2017 = True,
     fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
-    postfix = ""
+    postfix = "ModifiedMET"
+    ##pfCandColl=cms.InputTag("packedPFCandidates"),
+    ## recoMetFromPFCs=True,
                         )
-
-process.correctMET=cms.Path(process.fullPatMetSequence)
+process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
 
 
-
+#runMetCorAndUncFromMiniAOD(process,
+#    isData=isData,
+#    fixEE2017 = True,
+#    fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
+#    postfix = ""
+#                        )
+#
+#process.correctMET=cms.Path(process.fullPatMetSequence)
+#process.schedule.append(process.correctMET)
 
 #process.EventAnalyzer = cms.EDAnalyzer("EventContentAnalyzer")
 #process.eventAnalyzerPath = cms.Path(process.EventAnalyzer)
