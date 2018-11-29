@@ -235,6 +235,8 @@ parameters = {
         objectMatchesDoubleTightTau35Filter = r'matchToHLTFilter({object_idx}, "HLT_DoubleTightChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleMediumTau40Filter = r'matchToHLTFilter({object_idx}, "HLT_DoubleMediumChargedIsoPFTau40_Trk1_TightID_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleTightTau40Filter = r'matchToHLTFilter({object_idx}, "HLT_DoubleTightChargedIsoPFTau40_Trk1_eta2p1_Reg_v\\d+", 0.5)',
+
+        #objectDoubleL2IsoTau26Filter = 'matchToHLTFilter2({object_idx}, "hltDoubleL2IsoTau26eta2p2", 0.5)',
         
         objectZTTGenMatching = 'tauGenMatch2({object_idx})', 
         objectZTTGenPt = 'tauGenKin({object_idx}).at(0)', 

@@ -59,7 +59,7 @@ shiftedMtToMET = PSet(
 
 # Variables based on pairs of objects
 pairs = PSet(
-    #object1_object2_Mass = 'subcand({object1_idx}, {object2_idx}).get.mass',
+    object1_object2_Mass = 'subcand({object1_idx}, {object2_idx}).get.mass',
     #object1_object2_Mt = 'subcand({object1_idx}, {object2_idx}).get.mt',
     #object1_object2_collinearmass = 'collinearMassMET({object1_idx}, "", {object2_idx},"","")',
     #object2_object1_collinearmass = 'collinearMassMET({object2_idx}, "", {object1_idx},"","")',
@@ -72,7 +72,7 @@ pairs = PSet(
     #object1_object2_Pt = 'subcand({object1_idx}, {object2_idx}).get.pt',
     #object1_object2_Eta = 'subcand({object1_idx}, {object2_idx}).get.eta',
     #object1_object2_Phi = 'subcand({object1_idx}, {object2_idx}).get.phi',
-    #object1_object2_DR = 'dR({object1_idx}, {object2_idx})',
+    object1_object2_DR = 'dR({object1_idx}, {object2_idx})',
     #object1_object2_DPhi = 'dPhi({object1_idx}, {object2_idx})',
     #object1_object2_SS = 'likeSigned({object1_idx}, {object2_idx})',
     #object1_object2_PZeta = 'pZeta({object1_idx}, {object2_idx})',
