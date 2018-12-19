@@ -47,16 +47,12 @@ vetos = PSet(
     bjetCISVVeto30Medium = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8838").size()',
     bjetCISVVeto30Tight = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.9693").size()',
 
-    bjetCISVVeto20MediumWoNoisyJets = 'vetoJets(0.5, "(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfCombinedInclusiveSecondaryVertexV2BJetTags\') > 0.8838").size()',
-
     bjetDeepCSVVeto20Loose = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.1522").size()',
     bjetDeepCSVVeto20Medium = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941").size()',
     bjetDeepCSVVeto20Tight = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.8001").size()',
     bjetDeepCSVVeto30Loose = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.1522").size()',
     bjetDeepCSVVeto30Medium = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941").size()',
     bjetDeepCSVVeto30Tight = 'vetoJets(0.5, "pt > 30 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.8001").size()',
-
-    bjetDeepCSVVeto20MediumWoNoisyJets = 'vetoJets(0.5, "(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941").size()',
 
     #bjetDeepFlavourVeto20Loose = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepFlavourJetTags:probb\') > 0.1522").size()',
     #bjetDeepFlavourVeto20Medium = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepFlavourJetTags:probb\') > 0.4941").size()',
@@ -72,9 +68,6 @@ vetos = PSet(
     jetVeto30 = 'vetoJets(0.5, "pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5").size()',
     jetVeto30_JetEnUp = 'vetoJets(0.5, "userCand(\'jes+\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5").size()',
     jetVeto30_JetEnDown = 'vetoJets(0.5, "userCand(\'jes-\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5").size()',
-
-    jetVeto20WoNoisyJets = 'vetoJets(0.5, "(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5").size()',
-    jetVeto30WoNoisyJets = 'vetoJets(0.5, "(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5").size()',
 
 )
 

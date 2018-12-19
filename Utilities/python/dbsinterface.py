@@ -1,7 +1,6 @@
 import subprocess
 from xml.dom.minidom import parseString
-from DBSAPI.dbsApi import DbsApi
-
+#from DBSAPI.dbsApi import DbsApi
 
 def get_dbs_info(toFind, requirements):
     "Interface with the DBS API to get the whatever you want of a requirements. ALWAYS RETURN A LIST OF STRINGS"

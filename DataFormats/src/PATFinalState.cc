@@ -4,7 +4,6 @@
 
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 #include "FinalStateAnalysis/DataAlgos/interface/CollectionFilter.h"
-#include "FinalStateAnalysis/DataAlgos/interface/ApplySVfit.h"
 
 #include "DataFormats/PatCandidates/interface/PATObject.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
@@ -307,7 +306,7 @@ PATFinalState::smallestDeltaPhi() const {
   double smallestDeltaPhi = 1e9;
   for (size_t i = 0; i < numberOfDaughters()-1; ++i) {
     for (size_t j = i+1; j < numberOfDaughters(); ++j) {
-      double deltaPhiIJ = deltaPhi(i, j);
+      double deltaPhiIJ = deltaPhi(int(i), int(j));
       if (deltaPhiIJ < smallestDeltaPhi) {
         smallestDeltaPhi = deltaPhiIJ;
       }
@@ -319,7 +318,7 @@ PATFinalState::smallestDeltaPhi() const {
 std::vector<double>
 PATFinalState::SVfit(int i, int j) const {
 
-  std::vector<reco::CandidatePtr> toFit;
+  /*std::vector<reco::CandidatePtr> toFit;
   toFit.push_back(daughterPtr(i));
   toFit.push_back(daughterPtr(j));
 
@@ -335,7 +334,9 @@ PATFinalState::SVfit(int i, int j) const {
 
   return ApplySVfit::getSVfitMass(toFit, *mvaMet,
       mvaMet->getSignificanceMatrix(), 0,
-      evt()->evtId());
+      evt()->evtId());*/
+std::vector<double> dummy;
+return dummy;
 }
 
 

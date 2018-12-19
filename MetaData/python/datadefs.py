@@ -41,5 +41,5 @@ elif cmssw_major_version() == 8  or cmssw_major_version() == 9:
     import data13TeV_LFV
     data_name_map = data13TeV_LFV.data_name_map
     datadefs = data13TeV_LFV.datadefs
-else:
-    raise ValueError("I can't figure out which release to use!")
+#else:
+#    raise ValueError("I can't figure out which release to use!")
