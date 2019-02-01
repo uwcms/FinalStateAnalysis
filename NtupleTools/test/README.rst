@@ -74,7 +74,7 @@ Alternatively, you can define a shorthand json to simplify the selection ntuple 
 can be found in MetData/tuples/MiniAOD-13TeV.json) by using the option --das-replace-tuple=file.json. 
 The command would then use the shorthand names for lookup::
 
-   submit_job.py SMHTT_2017_7nov make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 isEmbedded=0 skipMET=1 htt=1 isLFV=0 runMVAMET=0 paramFile=CMSSW_9_4_11_cand1/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-SMHTT_MC.json --campaign-tag="RunIIFall17MiniAODv2-PU2017*v14*" --samples "*" -o submit_mc.sh
+   submit_job.py SMHTT_2017_7nov make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 isEmbedded=0 skipMET=1 htt=1 isLFV=0 runMVAMET=0 paramFile=CMSSW_9_4_11_cand1/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-SMHTT_MC.json --campaign-tag="RunIIFall17MiniAODv2-PU2017*v14*" --samples "*" -o submit_mc.sh --maxMemory --SLC6
    
    
 Note: It's a good idea to put your sample names with wildcards inside quotes, as otherwise the unix 
@@ -83,11 +83,11 @@ folder would cause the argument WZ* to become Wsubmit.sh, which you don't want)
 
 And for data you should use something like::
    
-   submit_job.py TestData make_ntuples_cfg.py channels="mt" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 runMVAMET=0 isEmbedded=1 paramFile=CMSSW_9_4_11_cand1/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_Data.json --apply-cmsRun-lumimask --samples "*MuTau*" -o submit_embedded.sh --data
+   submit_job.py TestData2017 make_ntuples_cfg.py channels=mt isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 runMVAMET=0 isEmbedded=0 paramFile=CMSSW_9_4_11_cand1/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_Data.json --apply-cmsRun-lumimask --samples "data_SingleMuon*" -o submit_data_2017.sh --maxMemory --data --SLC6
 
 And for embedded::
 
-   submit_job.py TestEmbedded make_ntuples_cfg.py channels="mt" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 runMVAMET=0 isEmbedded=1 paramFile=CMSSW_9_4_11_cand1/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_Embedded.json --apply-cmsRun-lumimask --samples "*MuTau*" -o submit_embedded.sh --embedded --instance prod/phys03
+   submit_job.py TestEmbedded make_ntuples_cfg.py channels="mt" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 runMVAMET=0 isEmbedded=1 paramFile=CMSSW_9_4_11_cand1/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_Embedded.json --apply-cmsRun-lumimask --samples "*MuTau*" -o submit_embedded.sh --embedded --instance prod/phys03 --maxMemory --SLC6
 
 
 
