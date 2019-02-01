@@ -127,6 +127,10 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
         '%s-%s' % (args.jobid, dataset_name),
         args.cfg
     ])
+    if args.setMaxMemory:
+        command.append('--vsize-limit=8000')
+    if args.reqSLC6:
+        command.append('--site-requirements=\'OpSysAndVer == "SL6"\'')
 
     command.extend(args.cmsargs)
     command.append("'inputFiles=$inputFileNames'")
@@ -134,14 +138,9 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     # temp hardcode
     if args.apply_cms_lumimask:
-        #/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
-        #filename = 'Cert_271036-278808_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt' # 20.1/fb
-        #lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV',filename)
-        #/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt
   	filename = 'Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt' #Full 2017 dataset
   	lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco',filename)
         if args.lumimaskjson: 
-            assert not (args.silver or args.goldenv2), "ERROR: Multiple lumimask jsons specified"
             lumi_mask_path = args.lumimaskjson
         command.append('lumiMask=%s' % lumi_mask_path)
 
@@ -293,17 +292,12 @@ def get_com_line_args():
         help = 'Custom lumimask json.',
     )
     cmsrun_group.add_argument(
-        '--goldenv2', dest='goldenv2',
-        action='store_true', help='Use older version of golden JSON.'
+        '--SLC6', dest='reqSLC6', action='store_true',
+        help = 'Require condor machines are SLC6',
     )
     cmsrun_group.add_argument(
-        '--silver', dest='silver',
-        action='store_true', help='Use silver JSON.'
-    )    
-    cmsrun_group.add_argument(
-        '--bunch-spacing', dest='bunchSpacing', type=int,
-        default=25, choices=[25,50],
-        help = 'Bunch spacing in ns.',
+        '--maxMemory', dest='setMaxMemory', action='store_true',
+        help = 'Set virtual memory for jobs',
     )
 
     input_group = parser.add_mutually_exclusive_group(required=True)

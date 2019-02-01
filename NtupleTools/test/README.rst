@@ -83,7 +83,7 @@ folder would cause the argument WZ* to become Wsubmit.sh, which you don't want)
 
 And for data you should use something like::
    
-   submit_job.py TestData make_ntuples_cfg.py channels="mt" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 runMVAMET=0 isEmbedded=1 paramFile=CMSSW_9_4_11_cand1/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_Data.json --apply-cmsRun-lumimask --samples "*MuTau*" -o submit_embedded.sh --data
+   submit_job.py TestData make_ntuples_cfg.py channels="mt" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 runMVAMET=0 isEmbedded=0 paramFile=CMSSW_9_4_11_cand1/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_Data.json --apply-cmsRun-lumimask --samples "data_SingleMuon*" -o submit_my_data.sh --data
 
 And for embedded::
 
