@@ -128,7 +128,7 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
         args.cfg
     ])
     if args.setMaxMemory:
-        command.append('--vsize-limit=8000')
+        command.append('--vsize-limit=6000')
     if args.reqSLC6:
         command.append('--site-requirements=\'OpSysAndVer == "SL6"\'')
 
