@@ -356,6 +356,8 @@ process.pileupJetIdUpdated = process.pileupJetId.clone(
 ### JEC ##########
 ##################
 
+# FIXME - this is temporary and only for 2017 analyses using 31March2018 data rereco. It needs
+# to be update once the recommended data samples change.
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 isData = not options.isMC
 if options.isMC :
