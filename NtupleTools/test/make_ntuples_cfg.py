@@ -274,8 +274,8 @@ process.load('Configuration.StandardSequences.Services_cff')
 envvar = 'mcgt' if options.isMC else 'datagt'
 
 # All data falls under unified GT (6 Feb 2017) ReReco BCDEFG, Prompt H
-#GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Prompt_v11'} # For data run D
-GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'} # For data run ABC
+GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Prompt_v11'} # For data run D
+#GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'} # For data run ABC
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
