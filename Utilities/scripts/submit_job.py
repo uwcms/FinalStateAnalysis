@@ -134,12 +134,8 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     # temp hardcode
     if args.apply_cms_lumimask:
-        #/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
-        #filename = 'Cert_271036-278808_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt' # 20.1/fb
-        #lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV',filename)
-        #/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt
-  	filename = 'Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt' #Full 2017 dataset
-  	lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco',filename)
+  	filename = 'Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt' #Full 2017 dataset
+  	lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/PromptReco',filename)
         if args.lumimaskjson: 
             assert not (args.silver or args.goldenv2), "ERROR: Multiple lumimask jsons specified"
             lumi_mask_path = args.lumimaskjson
@@ -184,7 +180,7 @@ def datasets_from_das(args):
 	dbs_datasets = get_das_info('dataset dataset=/*/%s/MINIAODSIM status=*' % args.campaignstring)
         # check sample wildcards
         for dataset in dbs_datasets:
-	    dataset_name = dataset.split('/')[1]+"_"+dataset.split('_12Apr2018')[1].split('/')[0]
+	    dataset_name = dataset.split('/')[1]+"_"+dataset.split('_upgrade2018_')[1].split('/')[0]
             passes_filter = True
             passes_wildcard = False
             

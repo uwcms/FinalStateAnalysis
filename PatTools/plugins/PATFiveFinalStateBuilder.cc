@@ -1,0 +1,18 @@
+#include "FinalStateAnalysis/PatTools/plugins/PATFiveFinalStateBuilderT.h"
+#include "FinalStateAnalysis/DataFormats/interface/PATFiveLeptonFinalStates.h"
+
+typedef PATFiveFinalStateBuilderT<PATElecElecElecElecElecFinalState> PATElecElecElecElecElecFinalStateProducer;
+typedef PATFiveFinalStateBuilderT<PATElecElecElecElecMuFinalState> PATElecElecElecElecMuFinalStateProducer;
+typedef PATFiveFinalStateBuilderT<PATElecElecElecMuMuFinalState> PATElecElecElecMuMuFinalStateProducer;
+typedef PATFiveFinalStateBuilderT<PATElecElecMuMuMuFinalState> PATElecElecMuMuMuFinalStateProducer;
+typedef PATFiveFinalStateBuilderT<PATElecMuMuMuMuFinalState> PATElecMuMuMuMuFinalStateProducer;
+typedef PATFiveFinalStateBuilderT<PATMuMuMuMuMuFinalState> PATMuMuMuMuMuFinalStateProducer;
+
+#include "FWCore/Framework/interface/MakerMacros.h"
+
+DEFINE_FWK_MODULE(PATElecElecElecElecElecFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecElecElecElecMuFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecElecElecMuMuFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecElecMuMuMuFinalStateProducer);
+DEFINE_FWK_MODULE(PATElecMuMuMuMuFinalStateProducer);
+DEFINE_FWK_MODULE(PATMuMuMuMuMuFinalStateProducer);

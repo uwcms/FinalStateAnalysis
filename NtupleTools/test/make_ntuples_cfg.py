@@ -274,13 +274,8 @@ process.load('Configuration.StandardSequences.Services_cff')
 envvar = 'mcgt' if options.isMC else 'datagt'
 
 # All data falls under unified GT (6 Feb 2017) ReReco BCDEFG, Prompt H
-#GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
-#GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '93X_dataRun2_v0'}
-#####GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco_EOY17_v2'}
-GT = {'mcgt': '94X_mc2017_realistic_v15', 'datagt': '94X_dataRun2_v10'}
-#GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco17_forValidation'}
-#92X_dataRun2_2017Prompt_v11
-#94X_dataRun2_ReReco17_forValidation
+GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Prompt_v11'} # For data run D
+#GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'} # For data run ABC
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
@@ -407,9 +402,9 @@ process.applyJEC = cms.Path()
 process.applyJEC += process.pileupJetIdUpdated
 process.applyJEC += process.patJetCorrFactorsReapplyJEC
 process.applyJEC += process.patJetsReapplyJEC
-process.schedule.append(process.applyJEC)
+#process.schedule.append(process.applyJEC) #FIXME when JEC need to be rerun
 
-fs_daughter_inputs['jets'] = 'patJetsReapplyJEC'
+#fs_daughter_inputs['jets'] = 'patJetsReapplyJEC' #FIXME when JEC need to be rerun
 
 ######################
 ### Build Gen Taus ###
@@ -634,44 +629,14 @@ if abs(options.runFSRFilter)>0:
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 
 # If you only want to re-correct and get the proper uncertainties
-#runMetCorAndUncFromMiniAOD(process,
-#    isData=isData,
-#    fixEE2017 = True,
-#    fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
-#    postfix = "ModifiedMet"
-#    ##pfCandColl=cms.InputTag("packedPFCandidates"),
-#    ## recoMetFromPFCs=True,
-#                        )
-
-##process.correctMET=cms.Path(process.fullPatMetSequence)
-#process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMet)
-#process.schedule.append(process.correctMET)
 
 runMetCorAndUncFromMiniAOD(process,
     isData=isData,
-    fixEE2017 = True,
-    fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
     postfix = "ModifiedMET"
-    ##pfCandColl=cms.InputTag("packedPFCandidates"),
-    ## recoMetFromPFCs=True,
                         )
 process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
 
-
-#runMetCorAndUncFromMiniAOD(process,
-#    isData=isData,
-#    fixEE2017 = True,
-#    fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
-#    postfix = ""
-#                        )
-#
-#process.correctMET=cms.Path(process.fullPatMetSequence)
-#process.schedule.append(process.correctMET)
-
-#process.EventAnalyzer = cms.EDAnalyzer("EventContentAnalyzer")
-#process.eventAnalyzerPath = cms.Path(process.EventAnalyzer)
-#process.schedule.append(process.eventAnalyzerPath)
 
 
 #########################################################

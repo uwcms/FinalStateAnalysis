@@ -1,0 +1,8 @@
+{
+
+  "data_SingleMuon_Run2018D-PromptReco" : "/SingleMuon/Run2018D-PromptReco-v2/MINIAOD",
+
+  "data_EGamma_Run2018D-PromptReco" : "/EGamma/Run2018D-PromptReco-v2/MINIAOD",
+
+  "data_Tau_Run2018D-PromptReco" : "/Tau/Run2018D-PromptReco-v2/MINIAOD"
+}

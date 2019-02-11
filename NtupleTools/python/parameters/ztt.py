@@ -95,14 +95,10 @@ parameters = {
         Flag_duplicateMuons='evt.getFilterFlags("Flag_duplicateMuons")',
         #Flag_noBadMuons='evt.getFilterFlags("Flag_noBadMuons")',
         metSig='evt.metSig()', # Using PF Met
-        metcov00='evt.metCov(0)', # 0 = (0,0) PF Met based
-        metcov10='evt.metCov(1)', # 1 = (1,0)
-        metcov01='evt.metCov(2)', # 2 = (0,1)
-        metcov11='evt.metCov(3)', # 3 - (1,1)
-        metcov00_DESYlike='evt.met("pfmet").getSignificanceMatrix[0][0]',
-        metcov10_DESYlike='evt.met("pfmet").getSignificanceMatrix[1][0]',
-        metcov01_DESYlike='evt.met("pfmet").getSignificanceMatrix[0][1]',
-        metcov11_DESYlike='evt.met("pfmet").getSignificanceMatrix[1][1]',
+        metcov00='evt.met("pfmet").getSignificanceMatrix[0][0]',
+        metcov10='evt.met("pfmet").getSignificanceMatrix[1][0]',
+        metcov01='evt.met("pfmet").getSignificanceMatrix[0][1]',
+        metcov11='evt.met("pfmet").getSignificanceMatrix[1][1]',
         vispX='tauGenMotherKin().at(0)',
         vispY='tauGenMotherKin().at(1)',
         genpX='tauGenMotherKin().at(2)',
@@ -130,18 +126,6 @@ parameters = {
         j2csv = 'jetVariables("pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(13)',
         j2hadronflavor = 'jetVariables("pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(16)',
 
-        j1ptWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(0)',
-        j1etaWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(1)',
-        j1phiWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(2)',
-        j1csvWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(3)',
-        j1hadronflavorWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(6)',
-        j2ptWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(10)',
-        j2etaWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(11)',
-        j2phiWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(12)',
-        j2csvWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(13)',
-        j2hadronflavorWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(16)',
-
-
         # Leading and subleading BTagged Jets
         jb1pt = 'jetVariables("pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(0)',
         jb1eta = 'jetVariables("pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(1)',
@@ -156,18 +140,6 @@ parameters = {
         #jb2pu = 'jetVariables("pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(14)',
         jb2hadronflavor = 'jetVariables("pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(16)',
 
-        jb1ptWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(0)',
-        jb1etaWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(1)',
-        jb1phiWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(2)',
-        jb1csvWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(3)',
-        #jb1puWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(4)',
-        jb1hadronflavorWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(6)',
-        jb2ptWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(10)',
-        jb2etaWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(11)',
-        jb2phiWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(12)',
-        jb2csvWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(13)',
-        #jb2puWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(14)',
-        jb2hadronflavorWoNoisyJets = 'jetVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & userFloat(\'idTight\') > 0.5 & abs(eta) < 2.4 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941", 0.5).at(16)',
 
     ),
 
@@ -244,13 +216,6 @@ parameters = {
         objectZTTGenPhi = 'tauGenKin({object_idx}).at(2)', 
         objectZTTGenDR = 'tauGenKin({object_idx}).at(3)', 
 
-        objectRerunMVArun2v1DBoldDMwLTraw = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTrawRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTrawRerun") : -10',
-        objectRerunMVArun2v1DBoldDMwLTVLoose = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTVLooseRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTVLooseRerun") : -10',
-        objectRerunMVArun2v1DBoldDMwLTLoose = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTLooseRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTLooseRerun") : -10',
-        objectRerunMVArun2v1DBoldDMwLTMedium = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTMediumRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTMediumRerun") : -10',
-        objectRerunMVArun2v1DBoldDMwLTTight = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTTightRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTTightRerun") : -10',
-        objectRerunMVArun2v1DBoldDMwLTVTight = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTVTightRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTVTightRerun") : -10',
-        objectRerunMVArun2v1DBoldDMwLTVVTight = '? {object}.hasUserFloat("byIsolationMVArun2v1DBoldDMwLTVVTightRerun") ? {object}.userFloat("byIsolationMVArun2v1DBoldDMwLTVVTightRerun") : -10',
 
         objectRerunMVArun2v2DBoldDMwLTraw = '? {object}.hasUserFloat("byIsolationMVArun2v2DBoldDMwLTrawRerun") ? {object}.userFloat("byIsolationMVArun2v2DBoldDMwLTrawRerun") : -10',
         objectRerunMVArun2v2DBoldDMwLTVVLoose = '? {object}.hasUserFloat("byIsolationMVArun2v2DBoldDMwLTVVLooseRerun") ? {object}.userFloat("byIsolationMVArun2v2DBoldDMwLTVVLooseRerun") : -10',
