@@ -74,6 +74,7 @@ parameters = {
         vertexFitting1234 = 'userFloat("VertexFitting1234")',
 
         # Rivet code provides the Simplifed Template Cross Section values
+        Flag_ecalBadCalibReducedMINIAODFilter='evt.getFilterFlags("ecalBadCalibReducedMINIAODFilter")',
         Flag_badGlobalMuonFilter='evt.getFilterFlags("badGlobalMuonFilter")',
         Flag_badCloneMuonFilter='evt.getFilterFlags("cloneGlobalMuonFilter")',
         Flag_BadChargedCandidateFilter='evt.getFilterFlags("BadChargedCandidateFilter")',

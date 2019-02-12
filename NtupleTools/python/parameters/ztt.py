@@ -81,6 +81,7 @@ parameters = {
 
         #Flag_badGlobalMuonFilter='evt.getFilterFlags("badGlobalMuonFilter")',
         #Flag_badCloneMuonFilter='evt.getFilterFlags("cloneGlobalMuonFilter")',
+        Flag_ecalBadCalibReducedMINIAODFilter='evt.getFilterFlags("ecalBadCalibReducedMINIAODFilter")',
         Flag_BadChargedCandidateFilter='evt.getFilterFlags("Flag_BadChargedCandidateFilter")',
         Flag_BadPFMuonFilter='evt.getFilterFlags("Flag_BadPFMuonFilter")',
         Flag_HBHENoiseFilter='evt.getFilterFlags("Flag_HBHENoiseFilter")',

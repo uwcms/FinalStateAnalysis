@@ -277,7 +277,7 @@ envvar = 'mcgt' if options.isMC else 'datagt'
 #GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
 #GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '93X_dataRun2_v0'}
 #####GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco_EOY17_v2'}
-GT = {'mcgt': '94X_mc2017_realistic_v15', 'datagt': '94X_dataRun2_v10'}
+GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '94X_dataRun2_v11'}
 #GT = {'mcgt': '94X_mc2017_realistic_v12', 'datagt': '94X_dataRun2_ReReco17_forValidation'}
 #92X_dataRun2_2017Prompt_v11
 #94X_dataRun2_ReReco17_forValidation
@@ -356,60 +356,99 @@ process.pileupJetIdUpdated = process.pileupJetId.clone(
 ### JEC ##########
 ##################
 
+# FIXME - this is temporary and only for 2017 analyses using 31March2018 data rereco. It needs
+# to be update once the recommended data samples change.
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 isData = not options.isMC
-process.load ("CondCore.CondDB.CondDB_cfi")
-#from CondCore.CondDB.CondDB_cfi import *
+if options.isMC :
+    process.load ("CondCore.CondDB.CondDB_cfi")
+    #from CondCore.CondDB.CondDB_cfi import *
+    
+    
+    # Defaults to running correctly for Condor, you can
+    # pass flag to run locally just fine here with runningLocal=1
+
+    sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
+    #sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')
+    
+    if options.runningLocal :
+        sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA' )
+    
+    #if options.runningLocal :
+    #    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
+    
+    process.jec = cms.ESSource("PoolDBESSource",
+             DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
+             timetype = cms.string('runnumber'),
+             toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
+                                        tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')),
+    #                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')),
+                                        label  = cms.untracked.string('AK4PFchs')
+                                        )
+                     ),
+             connect = cms.string('sqlite:'+sqlitePath)
+        )
+    process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
+    
+    ## https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
+    from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
+    process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
+    src = cms.InputTag("slimmedJets"),
+      levels = ['L1FastJet', 'L2Relative', 'L3Absolute'],
+      payload = 'AK4PFchs' ) # Make sure to choose the appropriate levels and payload here!
+    from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
+    process.patJetsReapplyJEC = updatedPatJets.clone(
+      jetSource = cms.InputTag("slimmedJets"),
+      jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactorsReapplyJEC"))
+      )
+    if(isData):
+        process.patJetCorrFactorsReapplyJEC.levels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
+    
+    process.patJetsReapplyJEC.userData.userFloats.src += ['pileupJetIdUpdated:fullDiscriminant']
+    
+    process.applyJEC = cms.Path()
+    process.applyJEC += process.pileupJetIdUpdated
+    process.applyJEC += process.patJetCorrFactorsReapplyJEC
+    process.applyJEC += process.patJetsReapplyJEC
+    process.schedule.append(process.applyJEC)
+    
+    fs_daughter_inputs['jets'] = 'patJetsReapplyJEC'
 
 
-# Defaults to running correctly for Condor, you can
-# pass flag to run locally just fine here with runningLocal=1
+##################################################################
+### Bad MET Filter Tagger (not provided as default in MiniAOD) ###
+##################################################################
 
-sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
-#sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')
+# From: https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_ecal_BadCalibReducedM
+process.load('RecoMET.METFilters.ecalBadCalibFilter_cfi')
 
-if options.runningLocal :
-    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA' )
+baddetEcallist = cms.vuint32(
+    [872439604,872422825,872420274,872423218,
+     872423215,872416066,872435036,872439336,
+     872420273,872436907,872420147,872439731,
+     872436657,872420397,872439732,872439339,
+     872439603,872422436,872439861,872437051,
+     872437052,872420649,872422436,872421950,
+     872437185,872422564,872421566,872421695,
+     872421955,872421567,872437184,872421951,
+     872421694,872437056,872437057,872437313])
 
-#if options.runningLocal :
-#    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
 
-process.jec = cms.ESSource("PoolDBESSource",
-         DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
-         timetype = cms.string('runnumber'),
-         toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
-                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')),
-#                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')),
-                                    label  = cms.untracked.string('AK4PFchs')
-                                    )
-                 ),
-         connect = cms.string('sqlite:'+sqlitePath)
+process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter(
+    "EcalBadCalibFilter",
+    EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
+    ecalMinEt        = cms.double(50.),
+    baddetEcal    = baddetEcallist, 
+    taggingMode = cms.bool(True),
+    debug = cms.bool(False)
     )
-process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
-## https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
-from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
-process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
-src = cms.InputTag("slimmedJets"),
-  levels = ['L1FastJet', 'L2Relative', 'L3Absolute'],
-  payload = 'AK4PFchs' ) # Make sure to choose the appropriate levels and payload here!
-from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
-process.patJetsReapplyJEC = updatedPatJets.clone(
-  jetSource = cms.InputTag("slimmedJets"),
-  jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactorsReapplyJEC"))
-  )
-if(isData):
-    process.patJetCorrFactorsReapplyJEC.levels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
 
-process.patJetsReapplyJEC.userData.userFloats.src += ['pileupJetIdUpdated:fullDiscriminant']
+process.ecalBadCalibReducedMINIAODFilterPath = cms.Path(
+    process.ecalBadCalibReducedMINIAODFilter )
+process.schedule.append( process.ecalBadCalibReducedMINIAODFilterPath )
+    
 
-process.applyJEC = cms.Path()
-process.applyJEC += process.pileupJetIdUpdated
-process.applyJEC += process.patJetCorrFactorsReapplyJEC
-process.applyJEC += process.patJetsReapplyJEC
-process.schedule.append(process.applyJEC)
-
-fs_daughter_inputs['jets'] = 'patJetsReapplyJEC'
 
 ######################
 ### Build Gen Taus ###
