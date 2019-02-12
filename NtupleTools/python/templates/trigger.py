@@ -101,12 +101,20 @@ doubleLepton_25ns = PSet(
         paths=r'HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
     _trig_template.replace(
+        name='mu8e23',
+        paths=r'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+'
+        ),
+    _trig_template.replace(
         name='doubleMuDZminMass3p8',
         paths=r'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8_v\\d+'
         ),
     _trig_template.replace(
         name='doubleE_23_12',
         paths=r'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='doubleE25',
+        paths=r'HLT_DoubleEle25_CaloIdL_MW_v\\d+'
         ),
     _trig_template.replace(
         name='Ele24LooseTau30',
@@ -282,6 +290,10 @@ tripleLepton = PSet(
     _trig_template.replace(
         name='tripleMu12_10_5',
         paths=r'HLT_TripleMu_12_10_5_v\\d+'
+        ),
+    _trig_template.replace(
+        name='dimu9ele9',
+        paths=r'HLT_DiMu9_Ele9_CaloIdL_TrackIdL_DZ_v\\d+'
         ),
     )
 
