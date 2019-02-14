@@ -232,6 +232,36 @@
   <class name="PATMuJetJetFinalStateCollection"/>
   <class name="edm::Wrapper<PATMuJetJetFinalStateCollection>"/>
 
+  <class name="PATElecElecElecElecElecFinalState"/>
+  <class name="edm::Wrapper<PATElecElecElecElecElecFinalState>"/>
+  <class name="PATElecElecElecElecElecFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecElecElecElecFinalStateCollection>"/>
+
+  <class name="PATElecElecElecElecMuFinalState"/>
+  <class name="edm::Wrapper<PATElecElecElecElecMuFinalState>"/>
+  <class name="PATElecElecElecElecMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecElecElecMuFinalStateCollection>"/>
+
+  <class name="PATElecElecElecMuMuFinalState"/>
+  <class name="edm::Wrapper<PATElecElecElecMuMuFinalState>"/>
+  <class name="PATElecElecElecMuMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecElecMuMuFinalStateCollection>"/>
+
+  <class name="PATElecElecMuMuMuFinalState"/>
+  <class name="edm::Wrapper<PATElecElecMuMuMuFinalState>"/>
+  <class name="PATElecElecMuMuMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecElecMuMuMuFinalStateCollection>"/>
+
+  <class name="PATElecMuMuMuMuFinalState"/>
+  <class name="edm::Wrapper<PATElecMuMuMuMuFinalState>"/>
+  <class name="PATElecMuMuMuMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATElecMuMuMuMuFinalStateCollection>"/>
+
+  <class name="PATMuMuMuMuMuFinalState"/>
+  <class name="edm::Wrapper<PATMuMuMuMuMuFinalState>"/>
+  <class name="PATMuMuMuMuMuFinalStateCollection"/>
+  <class name="edm::Wrapper<PATMuMuMuMuMuFinalStateCollection>"/>
+
   <class name="PATElecElecElecElecFinalState"/>
   <class name="edm::Wrapper<PATElecElecElecElecFinalState>"/>
   <class name="PATElecElecElecElecFinalStateCollection"/>

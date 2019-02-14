@@ -41,7 +41,7 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
     bool loose = true;
     bool tight = true;
     bool tightLepVeto = true;
-    if (std::abs(jet.eta()) <= 2.7) {
+    if (std::abs(jet.eta()) <= 2.6) {
       if (jet.neutralHadronEnergyFraction() >= 0.99) {
         loose = false;
       }
@@ -49,7 +49,6 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
         tight = false;
         tightLepVeto = false;
       }
-
       if (jet.neutralEmEnergyFraction() >= 0.99) {
         loose = false;
       }
@@ -57,39 +56,56 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
         tight = false;
         tightLepVeto = false;
       }
-
-      //if (jet.numberOfDaughters() <= 1) { //getPFConstitutents broken in miniAOD
       if (jet.chargedMultiplicity()+jet.neutralMultiplicity() <= 1){
         loose = false;
         tight = false;
         tightLepVeto = false;
       }
-
       if (jet.muonEnergyFraction() >= 0.8)
         {
           tightLepVeto = false;
         }
-
-      if (std::abs(jet.eta()) < 2.4) {
-        if (jet.chargedHadronEnergyFraction() == 0) {
-          loose = false;
-          tight = false;
-          tightLepVeto = false;
-        }
-        if (jet.chargedHadronMultiplicity() == 0) {
-          loose = false;
-          tight = false;
-          tightLepVeto = false;
-        }
-        /*if (jet.chargedEmEnergyFraction() >= 0.99) {
-          loose = false;
-          tight = false;
-        }*/
-        if (jet.chargedEmEnergyFraction() >= 0.80) {
-          tightLepVeto = false;
-        }
+      if (jet.chargedHadronEnergyFraction() == 0) {
+        loose = false;
+        tight = false;
+        tightLepVeto = false;
+      }
+      if (jet.chargedHadronMultiplicity() == 0) {
+        loose = false;
+        tight = false;
+        tightLepVeto = false;
+      }
+      if (jet.chargedEmEnergyFraction() >= 0.80) {
+        tightLepVeto = false;
       }
     }
+
+    if (std::abs(jet.eta()) >2.6 && std::abs(jet.eta()) <= 2.7) {
+      if (jet.neutralHadronEnergyFraction() >= 0.99) {
+        loose = false;
+      }
+      if (jet.neutralHadronEnergyFraction() >= 0.90) {
+        tight = false;
+        tightLepVeto = false;
+      }
+      if (jet.neutralEmEnergyFraction() >= 0.99) {
+        loose = false;
+        tight = false;
+        tightLepVeto = false;
+      }
+      if (jet.muonEnergyFraction() >= 0.8){
+        tightLepVeto = false;
+      }
+      if (jet.chargedHadronMultiplicity() == 0) {
+        loose = false;
+        tight = false;
+        tightLepVeto = false;
+      }
+      if (jet.chargedEmEnergyFraction() >= 0.80) {
+        tightLepVeto = false;
+      }
+    }
+
     if (std::abs(jet.eta()) > 2.7 && std::abs(jet.eta()) <= 3.0) {
       if (jet.neutralEmEnergyFraction() >= 0.99 or jet.neutralEmEnergyFraction()<=0.02) {
         loose = false;

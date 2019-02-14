@@ -18,6 +18,8 @@
 
 #include "FinalStateAnalysis/DataFormats/interface/PATQuadLeptonFinalStates.h"
 
+#include "FinalStateAnalysis/DataFormats/interface/PATFiveLeptonFinalStates.h"
+
 #include "FinalStateAnalysis/DataAlgos/interface/VBFVariables.h"
 
 #include "FinalStateAnalysis/DataFormats/interface/Macros.h"
@@ -118,6 +120,13 @@ namespace {
     FWD_MIN_CLASSDECL(PATMuTauTauTauFinalState)
     FWD_MIN_CLASSDECL(PATTauTauTauTauFinalState)
     FWD_MIN_CLASSDECL(PATMuMuPhoPhoFinalState)
+
+    FWD_MIN_CLASSDECL(PATMuMuMuMuMuFinalState)
+    FWD_MIN_CLASSDECL(PATElecMuMuMuMuFinalState)
+    FWD_MIN_CLASSDECL(PATElecElecMuMuMuFinalState)
+    FWD_MIN_CLASSDECL(PATElecElecElecMuMuFinalState)
+    FWD_MIN_CLASSDECL(PATElecElecElecElecMuFinalState)
+    FWD_MIN_CLASSDECL(PATElecElecElecElecElecFinalState)
 
   };
 }

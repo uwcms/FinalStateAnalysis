@@ -47,6 +47,13 @@ final_states = [
     "PATMuTauTauTauFinalState",
     "PATTauTauTauTauFinalState",
 
+    "PATElecElecElecElecElecFinalState",
+    "PATElecElecElecElecMuFinalState",
+    "PATElecElecElecMuMuFinalState",
+    "PATElecElecMuMuMuFinalState",
+    "PATElecMuMuMuMuFinalState",
+    "PATMuMuMuMuMuFinalState",
+
     "PATElecPhoFinalState",
     "PATMuPhoFinalState",
     "PATTauPhoFinalState",

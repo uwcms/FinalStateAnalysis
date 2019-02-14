@@ -58,6 +58,8 @@ def uniqueness_cuts(channel, ptCuts={'e':'0','m':'0','t':'0','g':'0','j':'0'},
             uniqueness_3(cuts, obj, firstIndex, **kwargs)
         elif count == 4:
             uniqueness_4(cuts, obj, firstIndex, **kwargs)
+        elif count == 5:
+            uniqueness_5(cuts, obj, firstIndex, **kwargs)
         firstIndex += count
         
     return cuts
@@ -129,4 +131,26 @@ def uniqueness_4(cuts, obj, firstIndex, **kwargs):
     cuts['%s_UniqueByPt12'%obj] = 'orderedInPt(%d, %d)'%(idx[0], idx[1])
     cuts['%s_UniqueByPt34'%obj] = 'orderedInPt(%d, %d)'%(idx[2], idx[3])
 
+
+def uniqueness_5(cuts, obj, firstIndex, **kwargs):
+    '''
+    Put the best Z first, order the first and second by pt, order the third and fourth by pt.
+    
+    In hzz mode, it's the same except that we only care about ordering the Z candidates, not
+    removing redundant ones.
+
+    In dblH mode, the first two must be positive, the third and fourth must be negative, and 
+    both pairs are ordered by pt.
+    '''
+    idx = [firstIndex + x for x in range(5)]
+    cuts['%s_UniqueByPt12'%obj] = 'orderedInPt(%d, %d)'%(idx[0], idx[1])
+    cuts['%s_UniqueByPt13'%obj] = 'orderedInPt(%d, %d)'%(idx[0], idx[2])
+    cuts['%s_UniqueByPt14'%obj] = 'orderedInPt(%d, %d)'%(idx[0], idx[3])
+    cuts['%s_UniqueByPt15'%obj] = 'orderedInPt(%d, %d)'%(idx[0], idx[4])
+    cuts['%s_UniqueByPt23'%obj] = 'orderedInPt(%d, %d)'%(idx[1], idx[2])
+    cuts['%s_UniqueByPt24'%obj] = 'orderedInPt(%d, %d)'%(idx[1], idx[3])
+    cuts['%s_UniqueByPt25'%obj] = 'orderedInPt(%d, %d)'%(idx[1], idx[4])
+    cuts['%s_UniqueByPt34'%obj] = 'orderedInPt(%d, %d)'%(idx[2], idx[3])
+    cuts['%s_UniqueByPt35'%obj] = 'orderedInPt(%d, %d)'%(idx[2], idx[4])
+    cuts['%s_UniqueByPt45'%obj] = 'orderedInPt(%d, %d)'%(idx[3], idx[4])
 
