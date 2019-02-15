@@ -34,7 +34,7 @@
 #include "DataFormats/Math/interface/Error.h"
 
 // For Rivet Tools
-//#include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
+#include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
 
 #define DEBUG_ 0 
 class PATFinalStateEventProducer : public edm::EDProducer {
@@ -110,12 +110,14 @@ private:
 
   //edm::EDGetTokenT<pat::JetCollection> jetAK8SrcToken_;
 
-  //edm::EDGetTokenT<HTXS::HiggsClassification> htxsSrc_;
+  edm::EDGetTokenT<HTXS::HiggsClassification> htxsSrc_;
 
   typedef std::pair<std::string, edm::EDGetTokenT<edm::View<pat::MET> > > METTokenMap;
   std::vector<METTokenMap> metCfg_;
 
   bool forbidMissing_;
+
+  bool isEmbedded_;
 
   // initialize getterOfProducts (replacing getByType)
   edm::GetterOfProducts<LHEEventProduct> getLHEEventProduct_;
@@ -155,11 +157,12 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
 
   forbidMissing_ = pset.exists("forbidMissing") ?
     pset.getParameter<bool>("forbidMissing") : true;
+  isEmbedded_ = pset.getParameter<bool>("isEmbedded");
 
   trgResultsSrcToken_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc"));
 						      trgResultsSrc2Token_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("trgResultsSrc2"));
   l1extraIsoTauSrcToken_ = consumes< BXVector<l1t::Tau> >(pset.getParameter<edm::InputTag>("l1extraIsoTauSrc"));
-  //htxsSrc_ = consumes<HTXS::HiggsClassification>(edm::InputTag("rivetProducerHTXS","HiggsClassification"));
+  htxsSrc_ = consumes<HTXS::HiggsClassification>(edm::InputTag("rivetProducerHTXS","HiggsClassification"));
 
   //photonCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("photonCoreSrc"));
   //gsfCoreSrcToken_ = consumes<edm::InputTag>(pset.getParameter<edm::InputTag>("gsfCoreSrc"));
@@ -235,6 +238,12 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
        //std::cout<<i<<" "<<EvtHandle->weights()[i].id<<" "<<EvtHandle->weights()[i].wgt<<" "<<EvtHandle->originalXWGTUP()<<std::endl;
     };
   }
+
+  int npNLO=-1;
+  if (EvtHandle.isValid()) {
+     npNLO=EvtHandle->npNLO();
+  }
+
   edm::Ptr<reco::Vertex> pvPtr;
   if( pv->size() )
     pvPtr = pv->ptrAt(0);
@@ -337,12 +346,12 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle< BXVector<l1t::Tau> > l1extraIsoTaus;
   evt.getByToken(l1extraIsoTauSrcToken_, l1extraIsoTaus);
 
-  //edm::Handle<HTXS::HiggsClassification> htxs;
-  //evt.getByToken(htxsSrc_,htxs);
-  //// Only get Rivet data if valid
-  //HTXS::HiggsClassification htxsRivetInfo;
-  //if (htxs.isValid())
-  //  htxsRivetInfo = * htxs;
+  edm::Handle<HTXS::HiggsClassification> htxs;
+  evt.getByToken(htxsSrc_,htxs);
+  // Only get Rivet data if valid
+  HTXS::HiggsClassification htxsRivetInfo;
+  if (htxs.isValid())
+    htxsRivetInfo = * htxs;
 
 
   edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
@@ -388,7 +397,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle<reco::GenParticleCollection> genParticles;
   evt.getByToken(truthSrcToken_, genParticles);
   reco::GenParticleRefProd genParticlesRef;
-  if (!evt.isRealData())
+  if (!evt.isRealData() || isEmbedded_)
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
   // Try and get gen taus built from gen products if they were included
@@ -417,11 +426,11 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   pat::TriggerEvent trg;
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo, metSig, metCov,
                               trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
-                              hTaus, eTaus, mTaus, // htxsRivetInfo,
-                              evt.id(), genEventInfo, generatorFilter, evt.isRealData(), puScenario_,
+                              hTaus, eTaus, mTaus, htxsRivetInfo,
+                              evt.id(), genEventInfo, generatorFilter, evt.isRealData(), isEmbedded_, puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
                               phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts,
-                              lheweights, filterFlagsInfo);
+                              lheweights, npNLO, filterFlagsInfo); //FIXME 
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {

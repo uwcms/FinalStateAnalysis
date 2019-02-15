@@ -129,6 +129,10 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
         '%s-%s' % (args.jobid, dataset_name),
         args.cfg
     ])
+    if args.setMaxMemory:
+        command.append('--vsize-limit=6000')
+    if args.reqSLC6:
+        command.append('--site-requirements=\'OpSysAndVer == "SL6"\'')
 
     command.extend(args.cmsargs)
     command.append("'inputFiles=$inputFileNames'")
@@ -136,14 +140,9 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
 
     # temp hardcode
     if args.apply_cms_lumimask:
-        #/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
-        #filename = 'Cert_271036-278808_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt' # 20.1/fb
-        #lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV',filename)
-  	#filename = 'Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt' #Full 2016 dataset
-        filename = 'Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt' #full 2017
-  	lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco/',filename)
+  	filename = 'Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt' #Full 2017 dataset
+  	lumi_mask_path = os.path.join('/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/ReReco',filename)
         if args.lumimaskjson: 
-            assert not (args.silver or args.goldenv2), "ERROR: Multiple lumimask jsons specified"
             lumi_mask_path = args.lumimaskjson
         command.append('lumiMask=%s' % lumi_mask_path)
 
@@ -185,7 +184,7 @@ def datasets_from_das(args):
         dbs_datasets = get_das_info('dataset dataset=/*/%s/MINIAODSIM status=*' % args.campaignstring)
         # check sample wildcards
         for dataset in dbs_datasets:
-	    dataset_name = dataset.split('/')[1]+"_v"+dataset.split('_v')[1].split('/')[0]
+	    dataset_name = dataset.split('/')[1]+"_"+dataset.split('_12Apr2018')[1].split('/')[0]
             passes_filter = True
             passes_wildcard = False
             
@@ -209,10 +208,38 @@ def datasets_from_das(args):
         data_patterns = [x for x in args.samples if 'data_' in x]
         data_datasets = get_das_info('dataset=/*/*/MINIAOD')
         for dataset in data_datasets:
+            print dataset
             passes_filter = True
             passes_wildcard = False
             name_to_use = 'data_' + '_'.join(dataset.split('/'))
             for pattern in data_patterns:
+                if args.dastuple: # check json for shorthand, links to full dataset name
+                    with open(args.dastuple) as tuple_file:
+                        tuple_info = json.load(tuple_file)
+                        matching_datasets = []
+                        for shorthand, fullname in tuple_info.iteritems():
+                            if fullname in dataset:
+                                if fnmatch.fnmatchcase(shorthand, pattern):
+                                    passes_wildcard = True
+                                    name_to_use = shorthand
+                else: # check das directly
+                    if fnmatch.fnmatchcase(dataset, pattern):
+                        passes_wildcard = True
+            passes_filter = passes_wildcard and passes_filter
+            if passes_filter:
+                script_content += getFarmoutCommand(args, name_to_use, dataset)
+    elif args.isEmbedded:
+        data_patterns = [x for x in args.samples]
+	print "data_patterns",data_patterns
+	print "args.samples",args.samples
+        data_datasets = get_das_info('dataset dataset=/Embedding*/*/USER instance=prod/phys03')
+        for dataset in data_datasets:
+            passes_filter = True
+            passes_wildcard = False
+            name_to_use = 'embedded_' + '_'.join(dataset.split('/'))
+	    print "name_to_use", name_to_use
+            for pattern in data_patterns:
+	  	print "pattern",pattern
                 if args.dastuple: # check json for shorthand, links to full dataset name
                     with open(args.dastuple) as tuple_file:
                         tuple_info = json.load(tuple_file)
@@ -266,17 +293,12 @@ def get_com_line_args():
         help = 'Custom lumimask json.',
     )
     cmsrun_group.add_argument(
-        '--goldenv2', dest='goldenv2',
-        action='store_true', help='Use older version of golden JSON.'
+        '--SLC6', dest='reqSLC6', action='store_true',
+        help = 'Require condor machines are SLC6',
     )
     cmsrun_group.add_argument(
-        '--silver', dest='silver',
-        action='store_true', help='Use silver JSON.'
-    )    
-    cmsrun_group.add_argument(
-        '--bunch-spacing', dest='bunchSpacing', type=int,
-        default=25, choices=[25,50],
-        help = 'Bunch spacing in ns.',
+        '--maxMemory', dest='setMaxMemory', action='store_true',
+        help = 'Set virtual memory for jobs',
     )
 
     input_group = parser.add_mutually_exclusive_group(required=True)
@@ -294,6 +316,10 @@ def get_com_line_args():
     input_group.add_argument(
         '--data', dest='isData', action='store_true',
         help = 'Run over data',
+    )
+    input_group.add_argument(
+        '--embedded', dest='isEmbedded', action='store_true',
+        help = 'Run over embedded',
     )
     input_group.add_argument(
         '--das-name', dest='useDasName', action='store_true',
@@ -365,7 +391,7 @@ if __name__ == "__main__":
     script_content += '# The command was: %s\n\n' % ' '.join(sys.argv)
     args = get_com_line_args()
     # first, make DAS query for dataset if not using local dataset or hdfs/dbs tuple list
-    if args.campaignstring or args.isData or args.useDasName:
+    if args.campaignstring or args.isData or args.useDasName or args.isEmbedded:
         script_content += datasets_from_das(args)
     else:
         # this is the old version that uses datadefs
