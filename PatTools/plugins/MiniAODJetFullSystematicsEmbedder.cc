@@ -172,6 +172,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
     for (size_t i = 0; i < nJets; ++i) {
       const pat::Jet& jet = jets->at(i);
   
+
       double unc = 0;
       // Only shift jets within absEta < 5.2 and with pT > 9
       // Unc = zero for all others
@@ -183,6 +184,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
           unc = JetUncMap[name]->getUncertainty(true);
         }
 
+
         // Save our factorized uncertainties into a cumulative total
         // Apply this uncertainty to loop "Closure" for future
         // comparison (also skip SubTotals)
@@ -191,6 +193,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
               !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew") ) {
           // All 28
           factorizedTotalUp[i] += unc*unc;
+
 
           // Uncertainties focused in center of detector
           if ((name == "PileUpPtEC1") ||
@@ -227,12 +230,14 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
               (name == "RelativeJERHF") )
                   factorizedEta3to5Up[i] += unc*unc;
 
+
           // New closure test for updated method
           // These two contributed here and the Eta split regions are
           // summed below
           if (name == "RelativeBal")
                   factorizedClosureNewUp[i] += unc*unc;
         }
+
 
         // std::vector is ordered, so Closure comes after all 28 factorized
         // options.  Same for the below Eta regions
