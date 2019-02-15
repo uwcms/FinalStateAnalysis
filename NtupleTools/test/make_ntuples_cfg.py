@@ -94,7 +94,7 @@ process.options = cms.untracked.PSet(
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
     skipEvents=0,  # Start at an event offset (for debugging)
-    reportEvery=100,
+    reportEvery=10,
     channels='mt,et',
     rerunMCMatch=False,
     eventView=0,  # Switch between final state view (0) and event view (1)
