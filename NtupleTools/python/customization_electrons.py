@@ -8,6 +8,7 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
     postfix = kwargs.pop('postfix','')
     electronMVAIsoGeneralIDLabel = kwargs.pop('electronMVAIsoGeneralIDLabel',"BDTIsoIDGeneral")
     electronMVANoisoGeneralIDLabel = kwargs.pop('electronMVANoisoGeneralIDLabel',"BDTNoisoIDGeneral")
+    #electronMVAHZZLabel = kwargs.pop('electronMVAHZZLabel',"BDTIDHZZ")
     applyEnergyCorrections = kwargs.pop("applyEnergyCorrections", False)
     isMCflag= kwargs.pop("isMC",False)
     isLFV=kwargs.pop("isLFV",False)
@@ -79,7 +80,7 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
         setupAllVIDIdsInModule(process,idmod,modSetupVIDElectronSelection)
 
     
-    CBIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight", "MVA_iso_WP90", "MVA_iso_WP80", "MVA_iso_WPLoose", "MVA_noiso_WP90", "MVA_noiso_WP80", "MVA_noiso_WPLoose"]
+    CBIDLabels = ["CBIDVeto", "CBIDLoose", "CBIDMedium", "CBIDTight", "MVA_iso_WP90", "MVA_iso_WP80", "MVA_iso_WPLoose", "MVA_noiso_WP90", "MVA_noiso_WP80", "MVA_noiso_WPLoose", "MVAHZZ"]
     
     CBIDTags = [
         cms.InputTag('egmGsfElectronIDs{0}:cutBasedElectronID-Fall17-94X-V2-veto'.format(postfix)),
@@ -92,17 +93,20 @@ def preElectrons(process, eSrc, vSrc,**kwargs):
         cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V2-wp90".format(postfix)),
         cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V2-wp80".format(postfix)),
         cms.InputTag("egmGsfElectronIDs{0}:mvaEleID-Fall17-noIso-V2-wpLoose".format(postfix)),
+        cms.InputTag('egmGsfElectronIDs{0}:mvaEleID-Fall17-iso-V2-wpHZZ'.format(postfix)),
         ]
 
-    mvaValueLabels = [electronMVAIsoGeneralIDLabel,electronMVANoisoGeneralIDLabel]
+    mvaValueLabels = [electronMVAIsoGeneralIDLabel,electronMVANoisoGeneralIDLabel]#,electronMVAHZZLabel]
     mvaValues = [
 	cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV2Values".format(postfix)),
         cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV2Values".format(postfix)),
+        #cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17HZZV2Values".format(postfix)),
         ]
-    mvaCategoryLabels = ["BDTIsoIDGeneral","BDTNoisoIDGeneral"]
+    mvaCategoryLabels = ["BDTIsoIDGeneral","BDTNoisoIDGeneral"]#,"BDTHZZCategory"]
     mvaCategories = [
         cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17IsoV2Categories".format(postfix)),
         cms.InputTag("electronMVAValueMapProducer{0}:ElectronMVAEstimatorRun2Fall17NoIsoV2Categories".format(postfix)),
+        #cms.InputTag("electronMVAValueMapProducer:ElectronMVAEstimatorRun2Fall17HZZV2Categories".format(postfix)),
         ]
 
     # N-1 results

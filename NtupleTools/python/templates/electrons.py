@@ -23,6 +23,7 @@ id = PSet(
     objectCBIDTight = '{object}.userFloat("CBIDTight")',
     objectMVAIsoWP80 = '{object}.userFloat("MVA_iso_WP80")',
     objectMVAIsoWP90 = '{object}.userFloat("MVA_iso_WP90")',
+    objectMVAIsoHZZ = '{object}.userFloat("MVAHZZ")',
     objectMVAIsoLoose = '{object}.userFloat("MVA_iso_WPLoose")',
     objectMVANoisoWP80 = '{object}.userFloat("MVA_noiso_WP80")',
     objectMVANoisoWP90 = '{object}.userFloat("MVA_noiso_WP90")',
