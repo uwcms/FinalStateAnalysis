@@ -360,21 +360,16 @@ process.load ("CondCore.CondDB.CondDB_cfi")
 # Defaults to running correctly for Condor, you can
 # pass flag to run locally just fine here with runningLocal=1
 
-sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
-#sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')
+sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Autumn18_V3_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
 
 if options.runningLocal :
-    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA' )
-
-#if options.runningLocal :
-#    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
+    sqlitePath = '../data/{0}.db'.format('Autumn18_V3_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA' )
 
 process.jec = cms.ESSource("PoolDBESSource",
          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
          timetype = cms.string('runnumber'),
          toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
-                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')),
-#                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V6_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')),
+                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Autumn18_V3_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')),
                                     label  = cms.untracked.string('AK4PFchs')
                                     )
                  ),
@@ -402,9 +397,10 @@ process.applyJEC = cms.Path()
 process.applyJEC += process.pileupJetIdUpdated
 process.applyJEC += process.patJetCorrFactorsReapplyJEC
 process.applyJEC += process.patJetsReapplyJEC
-#process.schedule.append(process.applyJEC) #FIXME when JEC need to be rerun
 
-#fs_daughter_inputs['jets'] = 'patJetsReapplyJEC' #FIXME when JEC need to be rerun
+if options.isMC: # FIXME apply also to data when the data corrections are released
+   process.schedule.append(process.applyJEC) #FIXME when JEC need to be rerun
+   fs_daughter_inputs['jets'] = 'patJetsReapplyJEC' #FIXME when JEC need to be rerun
 
 ######################
 ### Build Gen Taus ###
