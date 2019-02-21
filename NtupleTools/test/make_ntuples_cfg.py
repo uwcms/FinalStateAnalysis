@@ -358,9 +358,10 @@ process.pileupJetIdUpdated = process.pileupJetId.clone(
 
 # FIXME - this is temporary and only for 2017 analyses using 31March2018 data rereco. It needs
 # to be update once the recommended data samples change.
+# 2017 Embedded samples are produced with 17Nov2017 data, NOT 31March2018, so they need JEC
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 isData = not options.isMC
-if options.isMC :
+if options.isMC or options.isEmbedded :
     process.load ("CondCore.CondDB.CondDB_cfi")
     #from CondCore.CondDB.CondDB_cfi import *
     

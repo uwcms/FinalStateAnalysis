@@ -21,7 +21,9 @@ VBFVariables computeVBFInfo(
   if (output.nJets < 2)
     return output;
 
-  assert(jets[0]->pt() > jets[1]->pt());
+  assert( (jets[0]->pt() > jets[1]->pt()) || (jets[0]->pt() == jets[1]->pt() && jets[0]->eta() != jets[1]->eta()) );
+  // We are seeing some jets with the same pT to 6 decimals but different eta/phi.  Don't crash!
+  // Could check phi too but thats excessive
 
   reco::Candidate::LorentzVector leadJet;
   reco::Candidate::LorentzVector subleadJet;
