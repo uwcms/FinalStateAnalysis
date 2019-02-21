@@ -35,6 +35,19 @@
   "GGHToAAToMuMuTauTau50" : "SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-50_TuneCUETP8M1_13TeV_madgraph_pythia8",
   "GGHToAAToMuMuTauTau55" : "SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-55_TuneCUETP8M1_13TeV_madgraph_pythia8",
   "GGHToAAToMuMuTauTau60" : "SUSYGluGluToHToAA_AToMuMu_AToTauTau_M-60_TuneCUETP8M1_13TeV_madgraph_pythia8",
-  "VBFHToAAToMuMuTauTau40" : "SUSYVBFToHToAA_AToMuMu_AToTauTau_M-40_TuneCUETP8M1_13TeV_madgraph_pythia8"
+  "VBFHToAAToMuMuTauTau40" : "SUSYVBFToHToAA_AToMuMu_AToTauTau_M-40_TuneCUETP8M1_13TeV_madgraph_pythia8",
+  "AZH220" : "AToZhToLLTauTau_M-220_13TeV_madgraph_4f_LO",
+  "AZH240" : "AToZhToLLTauTau_M-240_13TeV_madgraph_4f_LO",
+  "AZH260" : "AToZhToLLTauTau_M-260_13TeV_madgraph_4f_LO",
+  "AZH280" : "AToZhToLLTauTau_M-280_13TeV_madgraph_4f_LO",
+  "AZH300" : "AToZhToLLTauTau_M-300_13TeV_madgraph_4f_LO",
+  "AZH320" : "AToZhToLLTauTau_M-320_13TeV_madgraph_4f_LO",
+  "AZH340" : "AToZhToLLTauTau_M-340_13TeV_madgraph_4f_LO",
+  "AZH350" : "AToZhToLLTauTau_M-350_13TeV_madgraph_4f_LO",
+  "AZH400" : "AToZhToLLTauTau_M-400_13TeV_madgraph_4f_LO",
+  "HZZ" : "GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8",
+  "ttZ1" : "ttZJets_13TeV_madgraphMLM-pythia8",
+  "ttZ2" : "/TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8",
+  "ZHtoHWW": "HZJ_HToWW_M125_13TeV_powheg_pythia8"
 
 } 

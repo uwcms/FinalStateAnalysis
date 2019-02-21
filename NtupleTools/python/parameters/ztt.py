@@ -76,6 +76,8 @@ parameters = {
         Rivet_VEta='evt.getRivetInfo().V.eta()',
         Rivet_p4decay_VPt='evt.getRivetInfo().p4decay_V.pt()',
         Rivet_p4decay_VEta='evt.getRivetInfo().p4decay_V.eta()',
+        Rivet_nJets30='evt.getRivetInfo().jets30.size()',
+        Rivet_nJets25='evt.getRivetInfo().jets25.size()',
 
         Flag_badGlobalMuonFilter='evt.getFilterFlags("badGlobalMuonFilter")',
         Flag_badCloneMuonFilter='evt.getFilterFlags("cloneGlobalMuonFilter")',

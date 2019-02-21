@@ -419,6 +419,13 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     // farther than deltaR=0.01
     const float daughterUserCandIsoContribution(const size_t i, const std::string& label) const;
 
+    // Loop over all available electrons (muons), find all OS pairs
+    // Compare masses and return the mass for the pair closest
+    // to 91.1876 GeV
+    const float closestZMassEE(const std::string& filter) const;
+    const float closestZMassMM(const std::string& filter) const;
+
+
     // Matching FS object to L1 iso taus
     //const float l1extraIsoTauMatching(const size_t i) const;
     //const float doubleL1extraIsoTauMatching(const size_t i, const size_t j) const;
