@@ -21,13 +21,13 @@
   "WplusHToTauTau_M125" : "WplusHToTauTau_M125_13TeV_powheg_pythia8",
   "WminusHToTauTau_M125" : "WminusHToTauTau_M125_13TeV_powheg_pythia8",
   "ZHToTauTau_M125" : "ZHToTauTau_M125_13TeV_powheg_pythia8",
-  "ttHJetToTT_M125": "ttHJetToTT_M125_13TeV_amcatnloFXFX_madspin_pythia8",
-  "ST_tW_antitop" : "ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v2",
+  "ttHJetToTT_M125": "ttHToTauTau_M125_TuneCP5_13TeV-powheg-pythia8",
+  "ST_tW_antitop" : "ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
   "ST_tW_top" : "ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8",
-  "ST_t_top" : "ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
-  "ST_t_antitop" : "ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8",
-  "EWKZLL" : "EWKZ2Jets_ZToLL_M-50_TuneCP5_13TeV-madgraph-pythia8",
+  "ST_t_top" : "ST_t-channel_top_5f_TuneCP5_13TeV-powheg-pythia8",
+  "ST_t_antitop" : "ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8",
+  "EWKZLL" : "EWKZ2Jets_ZToLL_M-50_TuneCP5_PSweights_13TeV-madgraph-pythia8",
   "EWKWminus" : "EWKWMinus2Jets_WToLNu_M-50_TuneCP5_13TeV-madgraph-pythia8",
   "EWKWplus" : "EWKWPlus2Jets_WToLNu_M-50_TuneCP5_13TeV-madgraph-pythia8",
-  "EWKZNuNu" : "EWKZ2Jets_ZToNuNu_TuneCP5_13TeV-madgraph-pythia8"
+  "EWKZNuNu" : "EWKZ2Jets_ZToNuNu_TuneCP5_PSweights_13TeV-madgraph-pythia8"
 } 
