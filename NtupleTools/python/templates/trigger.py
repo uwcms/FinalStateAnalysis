@@ -81,6 +81,18 @@ singleLepton_25ns = PSet(
         name='Ele35WPTight',
         paths=r'HLT_Ele35_WPTight_Gsf_v\\d+'
         ),
+    _trig_template.replace(
+        name='SingleTau180Medium',
+        paths=r'HLT_MediumChargedIsoPFTau180HighPtRelaxedIso_Trk50_eta2p1_v\\d+'
+        ),
+    _trig_template.replace(
+        name='SingleTau200Medium',
+        paths=r'HLT_MediumChargedIsoPFTau200HighPtRelaxedIso_Trk50_eta2p1_v\\d+'
+        ),
+    _trig_template.replace(
+        name='SingleTau220Medium',
+        paths=r'HLT_MediumChargedIsoPFTau220HighPtRelaxedIso_Trk50_eta2p1_v\\d+'
+        ),
     )
 
 doubleLepton_25ns = PSet(
@@ -277,8 +289,28 @@ doubleLepton_25ns = PSet(
         paths=r'HLT_DoubleTightChargedIsoPFTauHPS40_Trk1_TightID_eta2p1_Reg_v\\d+'
         ),
     _trig_template.replace(
-        name='VBFDoubleTightHPSTau20',
+        name='VBFDoubleLooseHPSTau20',
         paths=r'HLT_VBF_DoubleLooseChargedIsoPFTauHPS20_Trk1_eta2p1_Reg_v\\d+'
+        ),
+    _trig_template.replace(
+        name='VBFDoubleMediumHPSTau20',
+        paths=r'HLT_VBF_DoubleMediumChargedIsoPFTauHPS20_Trk1_eta2p1_Reg_v\\d+'
+        ),
+    _trig_template.replace(
+        name='VBFDoubleTightHPSTau20',
+        paths=r'HLT_VBF_DoubleTightChargedIsoPFTauHPS20_Trk1_eta2p1_Reg_v\\d+'
+        ),
+    _trig_template.replace(
+        name='VBFDoubleLooseTau20',
+        paths=r'HLT_VBF_DoubleLooseChargedIsoPFTau20_Trk1_eta2p1_Reg_v\\d+'
+        ),
+    _trig_template.replace(
+        name='VBFDoubleMediumTau20',
+        paths=r'HLT_VBF_DoubleMediumChargedIsoPFTau20_Trk1_eta2p1_Reg_v\\d+'
+        ),
+    _trig_template.replace(
+        name='VBFDoubleTightTau20',
+        paths=r'HLT_VBF_DoubleTightChargedIsoPFTau20_Trk1_eta2p1_Reg_v\\d+'
         ),
     )
 
