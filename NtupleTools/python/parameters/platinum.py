@@ -59,9 +59,9 @@ parameters = {
     # additional variables for ntuple
     'eventVariables' : PSet(
 
-        nbZDee='evt.countFindDecay(1023,11)',
-        nbZDmumu='evt.countFindDecay(1023,13)',
-        nbZDtautau='evt.countFindDecay(1023,15)',
+        #nbZDee='evt.countFindDecay(1023,11)',
+        #nbZDmumu='evt.countFindDecay(1023,13)',
+        #nbZDtautau='evt.countFindDecay(1023,15)',
 
         Flag_badGlobalMuonFilter='evt.getFilterFlags("badGlobalMuonFilter")',
         Flag_badCloneMuonFilter='evt.getFilterFlags("cloneGlobalMuonFilter")',
