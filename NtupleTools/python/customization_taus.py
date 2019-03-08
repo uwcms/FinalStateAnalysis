@@ -164,7 +164,7 @@ def preTaus(process, tSrc, vSrc,**kwargs):
             Prediscriminants = noPrediscriminants,
             loadMVAfromDB = cms.bool(True),
             mvaName = cms.string("RecoTauTag_tauIdMVAIsoDBnewDMwLT2017v2"), # name of the training you want to use
-            mvaOpt = cms.string("DBoldDMwLTwGJ"), # option you want to use for your training (i.e., which variables are used to compute the BDT score)
+            mvaOpt = cms.string("DBnewDMwLTwGJ"), # option you want to use for your training (i.e., which variables are used to compute the BDT score)
             requireDecayMode = cms.bool(True),
             verbosity = cms.int32(0)
             )
