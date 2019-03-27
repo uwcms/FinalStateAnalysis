@@ -6,11 +6,23 @@
   "data_SingleMuon_Run2017E-31Mar2018" : "/SingleMuon/Run2017E-31Mar2018-v1/MINIAOD",
   "data_SingleMuon_Run2017F-31Mar2018" : "/SingleMuon/Run2017F-31Mar2018-v1/MINIAOD",
 
+  "data_DoubleMuon_Run2017B-31Mar2018" : "/DoubleMuon/Run2017B-31Mar2018-v1/MINIAOD",
+  "data_DoubleMuon_Run2017C-31Mar2018" : "/DoubleMuon/Run2017C-31Mar2018-v1/MINIAOD",
+  "data_DoubleMuon_Run2017D-31Mar2018" : "/DoubleMuon/Run2017D-31Mar2018-v1/MINIAOD",
+  "data_DoubleMuon_Run2017E-31Mar2018" : "/DoubleMuon/Run2017E-31Mar2018-v1/MINIAOD",
+  "data_DoubleMuon_Run2017F-31Mar2018" : "/DoubleMuon/Run2017F-31Mar2018-v1/MINIAOD",
+
   "data_SingleElectron_Run2017B-31Mar2018" : "/SingleElectron/Run2017B-31Mar2018-v1/MINIAOD",
   "data_SingleElectron_Run2017C-31Mar2018" : "/SingleElectron/Run2017C-31Mar2018-v1/MINIAOD",
   "data_SingleElectron_Run2017D-31Mar2018" : "/SingleElectron/Run2017D-31Mar2018-v1/MINIAOD",
   "data_SingleElectron_Run2017E-31Mar2018" : "/SingleElectron/Run2017E-31Mar2018-v1/MINIAOD",
   "data_SingleElectron_Run2017F-31Mar2018" : "/SingleElectron/Run2017F-31Mar2018-v1/MINIAOD",
+
+  "data_DoubleEG_Run2017B-31Mar2018" : "/DoubleEG/Run2017B-31Mar2018-v1/MINIAOD",
+  "data_DoubleEG_Run2017C-31Mar2018" : "/DoubleEG/Run2017C-31Mar2018-v1/MINIAOD",
+  "data_DoubleEG_Run2017D-31Mar2018" : "/DoubleEG/Run2017D-31Mar2018-v1/MINIAOD",
+  "data_DoubleEG_Run2017E-31Mar2018" : "/DoubleEG/Run2017E-31Mar2018-v1/MINIAOD",
+  "data_DoubleEG_Run2017F-31Mar2018" : "/DoubleEG/Run2017F-31Mar2018-v1/MINIAOD",
 
   "data_MuOnia_Run2017B-31Mar2018" : "/MuOnia/Run2017B-31Mar2018-v1/MINIAOD",
   "data_MuOnia_Run2017C-31Mar2018" : "/MuOnia/Run2017C-31Mar2018-v1/MINIAOD",

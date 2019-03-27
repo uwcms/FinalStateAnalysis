@@ -274,9 +274,7 @@ process.load('Configuration.StandardSequences.Services_cff')
 envvar = 'mcgt' if options.isMC else 'datagt'
 
 # All data falls under unified GT (6 Feb 2017) ReReco BCDEFG, Prompt H
-GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Prompt_v11'} # For data run D
-#GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'} # For data run ABC
-
+GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '94X_dataRun2_v11'}
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
@@ -361,16 +359,16 @@ process.load ("CondCore.CondDB.CondDB_cfi")
 # Defaults to running correctly for Condor, you can
 # pass flag to run locally just fine here with runningLocal=1
 
-sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Autumn18_V3_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
+sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
 
 if options.runningLocal :
-    sqlitePath = '../data/{0}.db'.format('Autumn18_V3_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA' )
+    sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA' )
 
 process.jec = cms.ESSource("PoolDBESSource",
          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
          timetype = cms.string('runnumber'),
          toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
-                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Autumn18_V3_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')),
+                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')),
                                     label  = cms.untracked.string('AK4PFchs')
                                     )
                  ),
@@ -629,12 +627,12 @@ from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMet
 
 runMetCorAndUncFromMiniAOD(process,
     isData=isData,
+    fixEE2017 = True,
+    fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
     postfix = "ModifiedMET"
                         )
 process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
-
-
 
 #########################################################
 ### embed some things we need before object selection ###
