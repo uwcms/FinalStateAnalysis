@@ -93,6 +93,7 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
         "Eta0to3",
         "Eta0to5",
         "Eta3to5",
+	"EC2",
         "ClosureNew"
     }; // end uncertNames
     std::map<std::string, JetCorrectorParameters const *> JetCorParMap;
@@ -126,6 +127,7 @@ MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::
     if (name == "Eta0to3") continue;
     if (name == "Eta0to5") continue;
     if (name == "Eta3to5") continue;
+    if (name == "EC2") continue;
     if (name == "ClosureNew") continue;
     JetCorrectorParameters const * JetCorPar = new JetCorrectorParameters(fName_, name);
     JetCorParMap[name] = JetCorPar;
@@ -160,6 +162,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
   std::vector<double> factorizedEta0to3Up(nJets, 0.0);
   std::vector<double> factorizedEta0to5Up(nJets, 0.0);
   std::vector<double> factorizedEta3to5Up(nJets, 0.0);
+  std::vector<double> factorizedEC2Up(nJets, 0.0);
   std::vector<double> factorizedClosureNewUp(nJets, 0.0);
 
   for (auto const& name : uncertNames) {
@@ -178,7 +181,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
       // Unc = zero for all others
       if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9) {
         // Get unc for normal 28 and Total
-        if ( !(name == "Closure") && !(name == "Eta0to3") && !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew") ) {
+        if ( !(name == "Closure") && !(name == "EC2") && !(name == "Eta0to3") && !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew") ) {
           JetUncMap[name]->setJetEta(jet.eta());
           JetUncMap[name]->setJetPt(jet.pt());
           unc = JetUncMap[name]->getUncertainty(true);
@@ -188,19 +191,16 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
         // Apply this uncertainty to loop "Closure" for future
         // comparison (also skip SubTotals)
         // ALL factorized uncertainties pass this if statment
-        if ( !(name == "Total") && !(name == "Closure") && !(name == "Eta0to3") && 
+        if ( !(name == "Total") && !(name == "Closure") && !(name == "EC2") && !(name == "Eta0to3") && 
               !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew") ) {
           // All 28
           factorizedTotalUp[i] += unc*unc;
 
           // Uncertainties focused in center of detector
           if ((name == "PileUpPtEC1") ||
-              (name == "PileUpPtEC2") ||
               (name == "PileUpPtBB") ||
               (name == "RelativeJEREC1") ||
-              (name == "RelativeJEREC2") ||
               (name == "RelativePtEC1") ||
-              (name == "RelativePtEC2") ||
               (name == "RelativeStatEC") ||
               (name == "RelativePtBB") )
                   factorizedEta0to3Up[i] += unc*unc;
@@ -228,6 +228,11 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
               (name == "RelativeJERHF") )
                   factorizedEta3to5Up[i] += unc*unc;
 
+          if ((name == "PileUpPtEC2") ||
+              (name == "RelativeJEREC2") ||
+              (name == "RelativePtEC2") )
+                  factorizedEC2Up[i] += unc*unc;
+
           // New closure test for updated method
           // These two contributed here and the Eta split regions are
           // summed below
@@ -251,6 +256,10 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
         }
         if (name == "Eta3to5") {
           unc = std::sqrt(factorizedEta3to5Up[i]);
+          factorizedClosureNewUp[i] += unc*unc;
+        }
+        if (name == "EC2") {
+          unc = std::sqrt(factorizedEC2Up[i]);
           factorizedClosureNewUp[i] += unc*unc;
         }
         if (name == "ClosureNew")
