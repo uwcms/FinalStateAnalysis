@@ -60,7 +60,7 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
         "PileUpPtHF",
         "PileUpPtRef",
         "RelativeBal",
-        "RelativeSample", // New for 2017
+        //"RelativeSample", // New for 2017
         "RelativeFSR",
         "RelativeJEREC1",
         "RelativeJEREC2",
@@ -116,6 +116,9 @@ MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::
   fName_ = pset.getParameter<std::string>("fName");
   std::cout << "Uncert File: " << fName_ << std::endl;
   produces<pat::JetCollection>();
+
+  size_t found = fName_.find("Summer16");
+  if (found==std::string::npos) uncertNames.push_back("RelativeSample");
 
   // Create the uncertainty tool for each uncert
   for (auto const& name : uncertNames) {
@@ -181,7 +184,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
       // Unc = zero for all others
       if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9) {
         // Get unc for normal 28 and Total
-        if ( !(name == "Closure") && !(name == "EC2") && !(name == "Eta0to3") && !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew") ) {
+        if ( !(name == "Closure") && !(name == "EC2") && !(name == "Eta0to3") && !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")) {
           JetUncMap[name]->setJetEta(jet.eta());
           JetUncMap[name]->setJetPt(jet.pt());
           unc = JetUncMap[name]->getUncertainty(true);
@@ -192,7 +195,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
         // comparison (also skip SubTotals)
         // ALL factorized uncertainties pass this if statment
         if ( !(name == "Total") && !(name == "Closure") && !(name == "EC2") && !(name == "Eta0to3") && 
-              !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew") ) {
+              !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")) {
           // All 28
           factorizedTotalUp[i] += unc*unc;
 
