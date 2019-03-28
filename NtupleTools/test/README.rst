@@ -72,22 +72,42 @@ things are now taken care of without special options (miniaod 25ns has been made
 
 Alternatively, you can define a shorthand json to simplify the selection ntuple names (an example
 can be found in MetData/tuples/MiniAOD-13TeV.json) by using the option --das-replace-tuple=file.json. 
-The command would then use the shorthand names for lookup::
+The command would then use the shorthand names for lookup.
 
-   submit_job.py SMHTT_2017_7nov make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 isEmbedded=0 skipMET=1 htt=1 isLFV=0 runMVAMET=0 paramFile=CMSSW_9_4_11_cand1/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-SMHTT_MC.json --campaign-tag="RunIIFall17MiniAODv2-PU2017*v14*" --samples "*" -o submit_mc.sh
+For MC 2016::
+
+   submit_job.py SMHTT_2016 make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 isEmbedded=0 skipMET=1 htt=1 era="2016" isLFV=0 runMVAMET=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2016_SMHTT_MC.json --campaign-tag="RunIIFall17MiniAODv2-PU2017*v14*" --samples "*" -o submit_mc_2016.sh
+
+For MC 2017::
+
+   submit_job.py SMHTT_2017 make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 isEmbedded=0 skipMET=1 htt=1 era="2017" isLFV=0 runMVAMET=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_SMHTT_MC.json --campaign-tag="RunIIFall17MiniAODv2-PU2017*v14*" --samples "*" -o submit_mc_2017.sh
+
+For MC 2018::
+
+   submit_job.py SMHTT_2018 make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 isEmbedded=0 skipMET=1 htt=1 era="2018" isLFV=0 runMVAMET=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2018_SMHTT_MC.json --campaign-tag="RunIIAutumn18MiniAOD-102X_upgrade2018*" --samples "*" -o submit_mc_2018.sh
    
    
 Note: It's a good idea to put your sample names with wildcards inside quotes, as otherwise the unix 
 wildcard will be expanded before it is passed to the program (so a file named 'WZsubmit.sh' in your 
 folder would cause the argument WZ* to become Wsubmit.sh, which you don't want)
 
-And for data you should use something like::
+
+Data 2016::
+
+   submit_job.py SMHTT_2016_data make_ntuples_cfg.py channels="mt,mm" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 era="2016" runMVAMET=0 isEmbedded=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2016_Data.json --apply-cmsRun-lumimask --samples "*SingleMu*" -o submit_data_mt_2016.sh --data --lumimask-json Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
+
+Data 2017::
+
+   submit_job.py SMHTT_2017_data make_ntuples_cfg.py channels="mt,mm" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 era="2017" runMVAMET=0 isEmbedded=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_Data.json --apply-cmsRun-lumimask --samples "*SingleMu*" -o submit_data_mt_2017.sh --data --lumimask-json Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt
+
+Data 2018::
+
+   submit_job.py SMHTT_2018_data make_ntuples_cfg.py channels="mt,mm" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 era="2018" runMVAMET=0 isEmbedded=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2018_DataRereco.json --apply-cmsRun-lumimask --samples "*SingleMu*" -o submit_data_mt_2018.sh --data --lumimask-json Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt
    
-   submit_job.py TestData make_ntuples_cfg.py channels="mt" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 runMVAMET=0 isEmbedded=1 paramFile=CMSSW_9_4_11_cand1/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_Data.json --apply-cmsRun-lumimask --samples "*MuTau*" -o submit_embedded.sh --data
 
-And for embedded::
+Embedded 2017 (no miniAODv3 for 2016 yet, and no embedded samples for 2018 yet)::
 
-   submit_job.py TestEmbedded make_ntuples_cfg.py channels="mt" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 runMVAMET=0 isEmbedded=1 paramFile=CMSSW_9_4_11_cand1/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_Embedded.json --apply-cmsRun-lumimask --samples "*MuTau*" -o submit_embedded.sh --embedded --instance prod/phys03
+   submit_job.py SMHTT_2017_embedded make_ntuples_cfg.py channels="mt" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 era="2017" runMVAMET=0 isEmbedded=1 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_Embedded.json --apply-cmsRun-lumimask --samples "*MuTau*" -o submit_embedded_2017.sh --embedded --instance prod/phys03 --lumimask-json Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt
 
 
 
