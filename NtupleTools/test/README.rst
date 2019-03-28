@@ -104,7 +104,7 @@ Data 2017::
 
 Data 2018::
 
-   submit_job.py SMHTT_2018_data make_ntuples_cfg.py channels="mt,mm" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 era="2018" runMVAMET=0 isEmbedded=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2018_DataRereco.json --apply-cmsRun-lumimask --samples "data_SingleMu*" -o submit_data_mt_2018.sh --data --lumimask-json Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt
+   submit_job.py SMHTT_2018_data make_ntuples_cfg.py channels="mt,mm" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 era="2018" runMVAMET=0 isEmbedded=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2018_DataRereco.json --apply-cmsRun-lumimask --samples "data_SingleMu*" -o submit_data_mt_2018.sh --data --lumimask-json Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt
    
 
 Embedded 2017 (no miniAODv3 for 2016 yet, and no embedded samples for 2018 yet)::
