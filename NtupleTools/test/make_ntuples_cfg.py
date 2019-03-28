@@ -33,6 +33,7 @@ verbose=0      - print out timing information
 noPhotons=0    - don't build things which depend on photons.
 runMVAMET=0    - run the MVAMET algorithm
 htt=0          - adds Higgs2Taus analysis settings
+era="2018"       - choose which era
 isLFV=0        - adds LFV Higgs analysis settings
 fullJES=0      - adds full systematics for all ~27 JES uncertainties
 runningLocal=0 - for sqlite loading and other path names, record if we a running locally or on Condor for example
@@ -108,6 +109,7 @@ options = TauVarParsing.TauVarParsing(
     rerunQGJetID=0,  # If one reruns the quark-gluon JetID
     runMVAMET=0,  # If one, (re)build the MVA MET (using pairwise algo)
     htt=1,         # If one, apply Higgs2Taus analysis settings
+    era="2018",
     fullJES=0,
     runningLocal=0, # For sqlite loading and other path names, record if we a running locally or on Condor for example
     runMETNoHF=0,  # If one, use get metnohf (needs to be recalculated in miniaodv1)
@@ -277,6 +279,13 @@ envvar = 'mcgt' if options.isMC else 'datagt'
 GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Prompt_v11'} # For data run D
 #GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'} # For data run ABC
 
+if options.era=="2018":
+  GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'}
+if options.era=="2017":
+  GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '94X_dataRun2_v11'}
+if options.era=="2016":
+  GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
+
 
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
@@ -362,15 +371,38 @@ process.load ("CondCore.CondDB.CondDB_cfi")
 # pass flag to run locally just fine here with runningLocal=1
 
 sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Autumn18_V3_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
-
 if options.runningLocal :
     sqlitePath = '../data/{0}.db'.format('Autumn18_V3_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA' )
+
+if options.era=="2017":
+    sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
+    if options.runningLocal :
+        sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA' )
+
+if options.era=="2016":
+    sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Summer16_23Sep2016V4_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')
+    if options.runningLocal :
+        sqlitePath = '../data/{0}.db'.format('Summer16_23Sep2016V4_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
+
+JECtag="JetCorrectorParametersCollection_Fall17_17Nov2017_V32_94X_DATA_AK4PFchs"
+if options.isMC:
+    JECtag="JetCorrectorParametersCollection_Autumn18_V3_MC_AK4PFchs"
+
+if options.era=="2017":
+    JECtag="JetCorrectorParametersCollection_Fall17_17Nov2017_V32_94X_DATA_AK4PFchs"
+    if options.isMC:
+        JECtag="JetCorrectorParametersCollection_Fall17_17Nov2017_V32_94X_MC_AK4PFchs"
+
+if options.era=="2016":
+    JECtag="JetCorrectorParametersCollection_Summer16_23Sep2016AllV4_DATA_AK4PFchs"
+    if options.isMC:
+        JECtag="JetCorrectorParametersCollection_Summer16_23Sep2016V4_MC_AK4PFchs"
 
 process.jec = cms.ESSource("PoolDBESSource",
          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
          timetype = cms.string('runnumber'),
          toGet = cms.VPSet(cms.PSet(record = cms.string('JetCorrectionsRecord'),
-                                    tag    = cms.string('JetCorrectorParametersCollection_{0}_AK4PFchs'.format('Autumn18_V3_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')),
+                                    tag    = cms.string(JECtag),
                                     label  = cms.untracked.string('AK4PFchs')
                                     )
                  ),
@@ -756,8 +788,15 @@ for fs in additional_fs:
 ########################
 ### jet id embedding ###
 ########################
-from FinalStateAnalysis.NtupleTools.customization_jets import preJets
-from FinalStateAnalysis.NtupleTools.customization_metjets import preMETFromJES
+if options.era=="2018":
+  from FinalStateAnalysis.NtupleTools.customization_jets import preJets
+  from FinalStateAnalysis.NtupleTools.customization_metjets import preMETFromJES
+if options.era=="2017":
+  from FinalStateAnalysis.NtupleTools.customization_2017jets import preJets
+  from FinalStateAnalysis.NtupleTools.customization_2017metjets import preMETFromJES
+if options.era=="2016":
+  from FinalStateAnalysis.NtupleTools.customization_2016jets import preJets
+  from FinalStateAnalysis.NtupleTools.customization_2016metjets import preMETFromJES
 
 fs_daughter_inputs['jets']  = preJets(process,
                                      fs_daughter_inputs['jets'],
