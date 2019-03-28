@@ -180,12 +180,14 @@ parameters = {
 
         objectMatchesEle24Tau30Path= r'matchToHLTPath({object_idx}, "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1_v\\d+", 0.5)',
         objectMatchesEle24HPSTau30Path= r'matchToHLTPath({object_idx}, "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTauHPS30_eta2p1_CrossL1_v\\d+", 0.5)',
+        objectMatchesEle25Path= r'matchToHLTPath({object_idx}, "HLT_Ele25_eta2p1_WPTight_Gsf_v\\d+", 0.5)',
         objectMatchesEle32Path= r'matchToHLTPath({object_idx}, "HLT_Ele32_WPTight_Gsf_v\\d+", 0.5)',
         objectMatchesEle27Path= r'matchToHLTPath({object_idx}, "HLT_Ele27_WPTight_Gsf_v\\d+", 0.5)',
         objectMatchesEle35Path= r'matchToHLTPath({object_idx}, "HLT_Ele35_WPTight_Gsf_v\\d+", 0.5)',
 
         objectMatchesEle24Tau30Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1_v\\d+", 0.5)',
         objectMatchesEle24HPSTau30Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTauHPS30_eta2p1_CrossL1_v\\d+", 0.5)',
+        objectMatchesEle25Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele25_eta2p1_WPTight_Gsf_v\\d+", 0.5)',
         objectMatchesEle32Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele32_WPTight_Gsf_v\\d+", 0.5)',
         objectMatchesEle27Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele27_WPTight_Gsf_v\\d+", 0.5)',
         objectMatchesEle35Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele35_WPTight_Gsf_v\\d+", 0.5)',
@@ -203,13 +205,25 @@ parameters = {
         objectIsoDB04               = '({object}.pfIsolationR04().sumChargedHadronPt + max( {object}.pfIsolationR04().sumNeutralHadronEt \
                                         + {object}.pfIsolationR04().sumPhotonEt - 0.5 * {object}.pfIsolationR04().sumPUPt, 0.0)) / {object}.pt()',
         # Sync Triggers
+        objectMatchesIsoMu22Path      = r'matchToHLTPath({object_idx}, "HLT_IsoMu22_v\\d+", 0.5)',
+        objectMatchesIsoMu22eta2p1Path      = r'matchToHLTPath({object_idx}, "HLT_IsoMu22_eta2p1_v\\d+", 0.5)',
+        objectMatchesIsoTkMu22Path      = r'matchToHLTPath({object_idx}, "HLT_IsoTkMu22_v\\d+", 0.5)',
+        objectMatchesIsoTkMu22eta2p1Path      = r'matchToHLTPath({object_idx}, "HLT_IsoTkMu22_eta2p1_v\\d+", 0.5)',
         objectMatchesIsoMu27Path      = r'matchToHLTPath({object_idx}, "HLT_IsoMu27_v\\d+", 0.5)',
         objectMatchesIsoMu24Path      = r'matchToHLTPath({object_idx}, "HLT_IsoMu24_v\\d+", 0.5)',
+        objectMatchesIsoMu19Tau20Path= r'matchToHLTPath({object_idx}, "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_v\\d+", 0.5)',
+        objectMatchesIsoMu19Tau20SingleL1Path= r'matchToHLTPath({object_idx}, "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v\\d+", 0.5)',
         objectMatchesIsoMu20Tau27Path= r'matchToHLTPath({object_idx}, "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1_v\\d+", 0.5)',
         objectMatchesIsoMu20HPSTau27Path= r'matchToHLTPath({object_idx}, "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTauHPS27_eta2p1_CrossL1_v\\d+", 0.5)',
 
+        objectMatchesIsoMu22Filter      = r'matchToHLTFilter({object_idx}, "HLT_IsoMu22_v\\d+", 0.5)',
+        objectMatchesIsoMu22eta2p1Filter      = r'matchToHLTFilter({object_idx}, "HLT_IsoMu22_eta2p1_v\\d+", 0.5)',
+        objectMatchesIsoTkMu22Filter      = r'matchToHLTFilter({object_idx}, "HLT_IsoTkMu22_v\\d+", 0.5)',
+        objectMatchesIsoTkMu22eta2p1Filter      = r'matchToHLTFilter({object_idx}, "HLT_IsoTkMu22_eta2p1_v\\d+", 0.5)',
         objectMatchesIsoMu27Filter      = r'matchToHLTFilter({object_idx}, "HLT_IsoMu27_v\\d+", 0.5)',
         objectMatchesIsoMu24Filter      = r'matchToHLTFilter({object_idx}, "HLT_IsoMu24_v\\d+", 0.5)',
+        objectMatchesIsoMu19Tau20Filter= r'matchToHLTFilter({object_idx}, "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_v\\d+", 0.5)',
+        objectMatchesIsoMu19Tau20SingleL1Filter= r'matchToHLTFilter({object_idx}, "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v\\d+", 0.5)',
         objectMatchesIsoMu20Tau27Filter= r'matchToHLTFilter({object_idx}, "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1_v\\d+", 0.5)',
         objectMatchesIsoMu20HPSTau27Filter= r'matchToHLTFilter({object_idx}, "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTauHPS27_eta2p1_CrossL1_v\\d+", 0.5)',
 
@@ -228,6 +242,9 @@ parameters = {
         objectMatchesIsoMu20HPSTau27Path= r'matchToHLTPath({object_idx}, "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTauHPS27_eta2p1_CrossL1_v\\d+", 0.5)',
         objectMatchesEle24Tau30Path= r'matchToHLTPath({object_idx}, "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1_v\\d+", 0.5)',
         objectMatchesEle24HPSTau30Path= r'matchToHLTPath({object_idx}, "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTauHPS30_eta2p1_CrossL1_v\\d+", 0.5)',
+        objectMatchesDoubleMediumIsoTau35Path = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumIso_PFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
+        objectMatchesDoubleMediumCombinedIsoTau35Path = r'matchToHLTPath({object_idx}, "HLT_DoubleMedium_CombinedIso_PFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
+
         objectMatchesDoubleMediumTau35Path = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumChargedIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleTightTau35Path = r'matchToHLTPath({object_idx}, "HLT_DoubleTightChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleMediumTau40Path = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumChargedIsoPFTau40_Trk1_TightID_eta2p1_Reg_v\\d+", 0.5)',
@@ -236,6 +253,8 @@ parameters = {
         objectMatchesDoubleTightHPSTau35Path = r'matchToHLTPath({object_idx}, "HLT_DoubleTightChargedIsoPFTauHPS35_Trk1_TightID_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleMediumHPSTau40Path = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumChargedIsoPFTauHPS40_Trk1_TightID_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleTightHPSTau40Path = r'matchToHLTPath({object_idx}, "HLT_DoubleTightChargedIsoPFTauHPS40_Trk1_eta2p1_Reg_v\\d+", 0.5)',
+        objectMatchesIsoMu19Tau20Path= r'matchToHLTPath({object_idx}, "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_v\\d+", 0.5)',
+        objectMatchesIsoMu19Tau20SingleL1Path= r'matchToHLTPath({object_idx}, "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v\\d+", 0.5)',
 
         objectMatchesIsoMu20Tau27Filter= r'matchToHLTFilter({object_idx}, "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1_v\\d+", 0.5)',
         objectMatchesEle24Tau30Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1_v\\d+", 0.5)',
@@ -249,6 +268,8 @@ parameters = {
         objectMatchesDoubleTightHPSTau35Filter = r'matchToHLTFilter({object_idx}, "HLT_DoubleTightChargedIsoPFTauHPS35_Trk1_TightID_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleMediumHPSTau40Filter = r'matchToHLTFilter({object_idx}, "HLT_DoubleMediumChargedIsoPFTauHPS40_Trk1_TightID_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleTightHPSTau40Filter = r'matchToHLTFilter({object_idx}, "HLT_DoubleTightChargedIsoPFTauHPS40_Trk1_eta2p1_Reg_v\\d+", 0.5)',
+        objectMatchesIsoMu19Tau20Filter= r'matchToHLTFilter({object_idx}, "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_v\\d+", 0.5)',
+        objectMatchesIsoMu19Tau20SingleL1Filter= r'matchToHLTFilter({object_idx}, "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v\\d+", 0.5)',
 
         #objectDoubleL2IsoTau26Filter = 'matchToHLTFilter2({object_idx}, "hltDoubleL2IsoTau26eta2p2", 0.5)',
         
