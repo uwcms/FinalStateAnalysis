@@ -11,7 +11,7 @@ def preJets(process, jSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
 
 
     mod = cms.EDProducer(
-        "MiniAODJetIdEmbedder",
+        "MiniAODJetIdEmbedder2016",
         src=cms.InputTag(jSrc)
     )
     modName = 'miniPatJets{0}'.format(postfix)
