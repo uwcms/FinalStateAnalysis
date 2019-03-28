@@ -284,7 +284,7 @@ if options.era=="2018":
 if options.era=="2017":
   GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '94X_dataRun2_v11'}
 if options.era=="2016":
-  GT = {'mcgt': '80X_mcRun2_asymptotic_2016_TrancheIV_v8', 'datagt': '80X_dataRun2_2016SeptRepro_v7'}
+  GT = {'mcgt': '94X_mcRun2_asymptotic_v3', 'datagt': '94X_dataRun2_v10'}
 
 
 from Configuration.AlCa.GlobalTag import GlobalTag
@@ -370,9 +370,9 @@ process.load ("CondCore.CondDB.CondDB_cfi")
 # Defaults to running correctly for Condor, you can
 # pass flag to run locally just fine here with runningLocal=1
 
-sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Autumn18_V3_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
+sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Autumn18_V8_MC' if options.isMC else 'Autumn18_RunABCD_V8_DATA')
 if options.runningLocal :
-    sqlitePath = '../data/{0}.db'.format('Autumn18_V3_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA' )
+    sqlitePath = '../data/{0}.db'.format('Autumn18_V8_MC' if options.isMC else 'Autumn18_RunABCD_V8_DATA' )
 
 if options.era=="2017":
     sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
@@ -384,9 +384,9 @@ if options.era=="2016":
     if options.runningLocal :
         sqlitePath = '../data/{0}.db'.format('Summer16_23Sep2016V4_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
 
-JECtag="JetCorrectorParametersCollection_Fall17_17Nov2017_V32_94X_DATA_AK4PFchs"
+JECtag="JetCorrectorParametersCollection_Autumn18_RunABCD_V8_DATA_AK4PFchs"
 if options.isMC:
-    JECtag="JetCorrectorParametersCollection_Autumn18_V3_MC_AK4PFchs"
+    JECtag="JetCorrectorParametersCollection_Autumn18_V8_MC_AK4PFchs"
 
 if options.era=="2017":
     JECtag="JetCorrectorParametersCollection_Fall17_17Nov2017_V32_94X_DATA_AK4PFchs"
@@ -659,10 +659,19 @@ from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMet
 
 # If you only want to re-correct and get the proper uncertainties
 
-runMetCorAndUncFromMiniAOD(process,
-    isData=isData,
-    postfix = "ModifiedMET"
+if options.era=="2017":
+    runMetCorAndUncFromMiniAOD(process,
+       isData=isData,
+       fixEE2017 = True,
+       fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
+       postfix = "ModifiedMET"
                         )
+else:
+    runMetCorAndUncFromMiniAOD(process,
+       isData=isData,
+       postfix = "ModifiedMET"
+                        )
+
 process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
 
