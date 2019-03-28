@@ -16,18 +16,32 @@ from FinalStateAnalysis.Utilities.cfgtools import PSet
 
 # ID and isolation
 id = PSet(
-    # PHYS14 IDs (some of which are still CSA14 IDs...)
-    objectCBIDVeto = '{object}.userFloat("CBIDVeto")',
-    objectCBIDLoose = '{object}.userFloat("CBIDLoose")',
-    objectCBIDMedium = '{object}.userFloat("CBIDMedium")',
-    objectCBIDTight = '{object}.userFloat("CBIDTight")',
-    objectMVAIsoWP80 = '{object}.userFloat("MVA_iso_WP80")',
-    objectMVAIsoWP90 = '{object}.userFloat("MVA_iso_WP90")',
-    objectMVAIsoHZZ = '{object}.userFloat("MVAHZZ")',
-    objectMVAIsoLoose = '{object}.userFloat("MVA_iso_WPLoose")',
-    objectMVANoisoWP80 = '{object}.userFloat("MVA_noiso_WP80")',
-    objectMVANoisoWP90 = '{object}.userFloat("MVA_noiso_WP90")',
-    objectMVANoisoLoose = '{object}.userFloat("MVA_noiso_WPLoose")',    
+    objectCBIDVeto = '{object}.electronID("cutBasedElectronID-Fall17-94X-V2-veto")',
+    objectCBIDLoose = '{object}.electronID("cutBasedElectronID-Fall17-94X-V2-loose")',
+    objectCBIDMedium = '{object}.electronID("cutBasedElectronID-Fall17-94X-V2-medium")',
+    objectCBIDTight = '{object}.electronID("cutBasedElectronID-Fall17-94X-V2-tight")',
+    objectMVAIsoWP80 = '{object}.electronID("mvaEleID-Fall17-iso-V2-wp80")',
+    objectMVAIsoWP90 = '{object}.electronID("mvaEleID-Fall17-iso-V2-wp90")',
+    objectMVAIsoWPHZZ = '{object}.electronID("mvaEleID-Fall17-iso-V2-wpHZZ")',
+    objectMVAIsoWPLoose = '{object}.electronID("mvaEleID-Fall17-iso-V2-wpLoose")',
+    objectMVANoisoWP80 = '{object}.electronID("mvaEleID-Fall17-noIso-V2-wp80")',
+    objectMVANoisoWP90 = '{object}.electronID("mvaEleID-Fall17-noIso-V2-wp90")',
+    objectMVANoisoWPLoose = '{object}.electronID("mvaEleID-Fall17-noIso-V2-wpLoose")',
+    objectCorrectedEt = '{object}.userFloat("ecalTrkEnergyPostCorr")',
+    objectEnergyScaleDown = '{object}.userFloat("energyScaleDown")',
+    objectEnergyScaleUp = '{object}.userFloat("energyScaleUp")',
+    objectEnergyScaleStatDown = '{object}.userFloat("energyScaleStatDown")',
+    objectEnergyScaleStatUp = '{object}.userFloat("energyScaleStatUp")',
+    objectEnergyScaleSystDown = '{object}.userFloat("energyScaleSystDown")',
+    objectEnergyScaleSystUp = '{object}.userFloat("energyScaleSystUp")',
+    objectEnergyScaleGainDown = '{object}.userFloat("energyScaleGainDown")',
+    objectEnergyScaleGainUp = '{object}.userFloat("energyScaleGainUp")',
+    objectEnergySigmaDown = '{object}.userFloat("energySigmaDown")',
+    objectEnergySigmaUp = '{object}.userFloat("energySigmaUp")',
+    objectEnergySigmaPhiDown = '{object}.userFloat("energySigmaPhiDown")',
+    objectEnergySigmaPhiUp = '{object}.userFloat("energySigmaPhiUp")',
+    objectEnergySigmaRhoDown = '{object}.userFloat("energySigmaRhoDown")',
+    objectEnergySigmaRhoUp = '{object}.userFloat("energySigmaRhoUp")',
 
     objectRelPFIsoDB = cms.string(
         "({object}.userIsolation('PfChargedHadronIso')"
@@ -43,14 +57,6 @@ id = PSet(
         '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea")))'
         '/{object}.pt()'
     ),
-
-    #objectRelPFIsoRho = cms.string(
-    #    '({object}.chargedHadronIso()'
-    #    '+max(0.0,{object}.neutralHadronIso()'
-    #    '+{object}.photonIso()'
-    #    '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea")))'
-    #    '/{object}.pt()'
-    #),
 
     # Number of matched conversions
     objectPassesConversionVeto = '{object}.passConversionVeto()',
@@ -114,23 +120,6 @@ id = PSet(
 )
 
 energyCorrections = PSet(
-    #objectPt_ElectronScaleUp = '? daughterHasUserCand({object_idx}, "eScaleUp") ? daughterAsElectron({object_idx}).userCand("eScaleUp").pt : -999.',
-    #objectPt_ElectronScaleDown = '? daughterHasUserCand({object_idx}, "eScaleDown") ? daughterAsElectron({object_idx}).userCand("eScaleDown").pt : -999.',
-    #objectPt_ElectronUncorr = '? daughterHasUserCand({object_idx}, "uncorr") ? daughterAsElectron({object_idx}).userCand("uncorr").pt : -999.',
-    #objectPt_ElectronResRhoUp = '? daughterHasUserCand({object_idx}, "eResUp") ? daughterAsElectron({object_idx}).userCand("eResUp").pt : -999.',
-    #objectPt_ElectronResRhoDown = '? daughterHasUserCand({object_idx}, "eResDown") ? daughterAsElectron({object_idx}).userCand("eResDown").pt : -999.',
-    #objectPt_ElectronResPhiDown = '? daughterHasUserCand({object_idx}, "eResPhiDown") ? daughterAsElectron({object_idx}).userCand("eResPhiDown").pt : -999.',
-#    objectPt_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").pt : -999.',
- #   objectEta_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").eta : -999.',
-  #  objectPhi_ElectronEnUp = '? daughterHasUserCand({object_idx}, "eesUpElectrons") ? daughterAsElectron({object_idx}).userCand("eesUpElectrons").phi : -999.',
-
-   # objectPt_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").pt : -999.',
-   # objectEta_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").eta : -999.',
-   # objectPhi_ElectronEnDown = '? daughterHasUserCand({object_idx}, "eesDownElectrons") ? daughterAsElectron({object_idx}).userCand("eesDownElectrons").phi : -999.',
-
-#    objectPt_ElectronScaleUp = '? daughterHasUserCand({object_idx}, "ees+") ? daughterAsElectron({object_idx}).userCand(n"ees+").pt : -999.',
-
- #   objectPt_ElectronScaleDown = '? daughterHasUserCand({object_idx}, "ees-") ? daughterAsElectron({object_idx}).userCand("ees-").pt : -999.',
 
 )
 
