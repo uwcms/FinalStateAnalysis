@@ -95,6 +95,7 @@ class MiniAODMETJesSystematicsEmbedder : public edm::EDProducer {
    "Eta3to5",
    "Eta0to5",
    "Eta0to3",
+   "EC2",
    "Closure"
   }; // end uncertNames
   std::map<std::string, JetCorrectorParameters const *> JetCorParMap;
@@ -128,7 +129,7 @@ MiniAODMETJesSystematicsEmbedder::MiniAODMETJesSystematicsEmbedder(const edm::Pa
   produces<ShiftedCandCollection>("p4OutMETDownJetsUncor"+name);
   // Create the uncertainty tool for each uncert
   // skip Closure, which is a comparison at the end
-  if (name == "Closure" or name=="Eta0to3" or name=="Eta0to5" or name=="Eta3to5") continue;
+  if (name == "Closure" or name=="Eta0to3" or name=="Eta0to5" or name=="Eta3to5" or name=="EC2") continue;
   JetCorrectorParameters const * JetCorPar = new JetCorrectorParameters(fName_, name);
   JetCorParMap[name] = JetCorPar;
 
@@ -163,7 +164,7 @@ void MiniAODMETJesSystematicsEmbedder::produce(edm::Event& evt, const edm::Event
  std::vector<double> factorizedEta0to3Up(nJets, 0.0);
  std::vector<double> factorizedEta0to5Up(nJets, 0.0);
  std::vector<double> factorizedEta3to5Up(nJets, 0.0);
-
+ std::vector<double> factorizedEC2Up(nJets, 0.0);
 
  for (auto const& name : uncertNames) {
   std::unique_ptr<ShiftedCandCollection> p4OutMETUpJets(new ShiftedCandCollection);
@@ -202,7 +203,7 @@ void MiniAODMETJesSystematicsEmbedder::produce(edm::Event& evt, const edm::Event
 //   }
    double unc = 0;
    //double unc2=0;
-   if (std::fabs(jet.eta()) < 5.2 && JetP4.pt() > 9 && name != "Closure" && !(name == "Eta0to3") && !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")) {
+   if (std::fabs(jet.eta()) < 5.2 && JetP4.pt() > 9 && name != "Closure" && !(name == "Eta0to3") && !(name == "EC2") && !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")) {
     JetUncMap[name]->setJetEta(JetP4.eta());
     JetUncMap[name]->setJetPt(JetP4.pt());
     unc = JetUncMap[name]->getUncertainty(true);  //up
@@ -214,25 +215,22 @@ void MiniAODMETJesSystematicsEmbedder::produce(edm::Event& evt, const edm::Event
    // Save our factorized uncertainties into a cumulative total
    // Apply this uncertainty to loop "Closure" for future
    // comparison (also skim SubTotals)
-   if (name != "Total" && name != "Closure" && name != "Eta0to3" && name != "Eta3to5" && name != "Eta0to5" && !name.find("SubTotal") ) factorizedTotalUp[i] += unc*unc;
+   if (name != "Total" && name != "Closure" && name != "Eta0to3" && name != "Eta3to5" && name != "Eta0to5" && name != "EC2" && !name.find("SubTotal") ) factorizedTotalUp[i] += unc*unc;
 
    if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9) {
        // Save our factorized uncertainties into a cumulative total
         // Apply this uncertainty to loop "Closure" for future
         // comparison (also skip SubTotals)
         // ALL factorized uncertainties pass this if statment
-        if ( !(name == "Total") && !(name == "Closure") && !(name == "Eta0to3") &&
+        if ( !(name == "Total") && !(name == "Closure") && !(name == "Eta0to3") && !(name == "EC2") && 
               !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew") ) {
           // All 28
           factorizedTotalUp[i] += unc*unc;
           // Uncertainties focused in center of detector
           if ((name == "PileUpPtEC1") ||
-              (name == "PileUpPtEC2") ||
               (name == "PileUpPtBB") ||
               (name == "RelativeJEREC1") ||
-              (name == "RelativeJEREC2") ||
               (name == "RelativePtEC1") ||
-              (name == "RelativePtEC2") ||
               (name == "RelativeStatEC") ||
               (name == "RelativePtBB") )
                   factorizedEta0to3Up[i] += unc*unc;
@@ -257,6 +255,12 @@ void MiniAODMETJesSystematicsEmbedder::produce(edm::Event& evt, const edm::Event
               (name == "PileUpPtHF") ||
               (name == "RelativeJERHF") )
                   factorizedEta3to5Up[i] += unc*unc;
+
+          if ((name == "PileUpPtEC2") ||
+              (name == "RelativeJEREC2") ||
+              (name == "RelativePtEC2") )
+                  factorizedEC2Up[i] += unc*unc;
+
           // New closure test for updated method
           // These two contributed here and the Eta split regions are
           // summed below
@@ -274,6 +278,9 @@ void MiniAODMETJesSystematicsEmbedder::produce(edm::Event& evt, const edm::Event
         }
         if (name == "Eta3to5") {
           unc = std::sqrt(factorizedEta3to5Up[i]);
+        }
+        if (name == "EC2") {
+          unc = std::sqrt(factorizedEC2Up[i]);
         }
      } // Shifted jets within absEta and pT
 

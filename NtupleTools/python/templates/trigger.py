@@ -50,12 +50,24 @@ singleLepton_25ns_MC = PSet(
         name='Ele35WPTight',
         paths=r'HLT_Ele35_WPTight_Gsf_v\\d+'
         ),
+    _trig_template.replace(
+        name='Ele38WPTight',
+        paths=r'HLT_Ele38_WPTight_Gsf_v\\d+'
+        ),
+    _trig_template.replace(
+        name='Ele40WPTight',
+        paths=r'HLT_Ele40_WPTight_Gsf_v\\d+'
+        ),
     )
 
 singleLepton_25ns = PSet(
     _trig_template.replace(
         name='IsoMu24',
         paths=r'HLT_IsoMu24_v\\d+'
+        ),
+    _trig_template.replace(
+        name='IsoMu27',
+        paths=r'HLT_IsoMu27_v\\d+'
         ),
     _trig_template.replace(
         name='Mu50',
@@ -121,12 +133,20 @@ doubleLepton_25ns = PSet(
         paths=r'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8_v\\d+'
         ),
     _trig_template.replace(
+        name='doubleMuDZminMass8',
+        paths=r'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8_v\\d+'
+        ),
+    _trig_template.replace(
         name='doubleE_23_12',
         paths=r'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
     _trig_template.replace(
         name='doubleE25',
         paths=r'HLT_DoubleEle25_CaloIdL_MW_v\\d+'
+        ),
+    _trig_template.replace(
+        name='doubleE33',
+        paths=r'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v\\d+'
         ),
     _trig_template.replace(
         name='Ele24LooseTau30',
@@ -324,8 +344,20 @@ tripleLepton = PSet(
         paths=r'HLT_TripleMu_12_10_5_v\\d+'
         ),
     _trig_template.replace(
+        name='tripleMu10_5_5',
+        paths=r'HLT_TripleMu_10_5_5_D2_v\\d+'
+        ),
+    _trig_template.replace(
         name='dimu9ele9',
         paths=r'HLT_DiMu9_Ele9_CaloIdL_TrackIdL_DZ_v\\d+'
+        ),
+    _trig_template.replace(
+        name='mu8diele12',
+        paths=r'HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='mu8diele12DZ',
+        paths=r'HLT_Mu8_DiEle12_CaloIdL_TrackIdL_DZ_v\\d+'
         ),
     )
 

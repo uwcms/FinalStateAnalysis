@@ -122,7 +122,7 @@ void MiniAODJetIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
         loose = false;
         tight = false;
       }
-      if (jet.neutralHadronEnergyFraction() <= 0.02) {
+      if (jet.neutralHadronEnergyFraction() <= 0.2) {
         tight = false;
         tightLepVeto = false;
       }
