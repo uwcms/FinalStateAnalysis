@@ -281,6 +281,8 @@ GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Prompt_
 
 if options.era=="2018":
   GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'}
+if options.era=="2018prompt":
+  GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Prompt_v11'}
 if options.era=="2017":
   GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '94X_dataRun2_v11'}
 if options.era=="2016":
@@ -795,7 +797,7 @@ for fs in additional_fs:
 ########################
 ### jet id embedding ###
 ########################
-if options.era=="2018":
+if options.era=="2018" or options.era=="2018prompt":
   from FinalStateAnalysis.NtupleTools.customization_jets import preJets
   from FinalStateAnalysis.NtupleTools.customization_metjets import preMETFromJES
 if options.era=="2017":

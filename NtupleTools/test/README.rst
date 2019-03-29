@@ -74,7 +74,7 @@ Alternatively, you can define a shorthand json to simplify the selection ntuple 
 can be found in MetData/tuples/MiniAOD-13TeV.json) by using the option --das-replace-tuple=file.json. 
 The command would then use the shorthand names for lookup.
 
-All the following commands work when submitting on CentOS7 machines (login01-05), not SLC6 (login06)!
+All the following commands work when submitting on CentOS7 machines (login01-05), not SLC6 (login06)! No need to increase the memory manually anymore as it is included in the farmout command automatically.
 
 For MC 2016::
 
@@ -102,9 +102,13 @@ Data 2017::
 
    submit_job.py SMHTT_2017_data make_ntuples_cfg.py channels="mt,mm" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 era="2017" runMVAMET=0 isEmbedded=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2017_Data.json --apply-cmsRun-lumimask --samples "data_SingleMu*" -o submit_data_mt_2017.sh --data --lumimask-json Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt
 
-Data 2018::
+Data 2018 ABC::
 
    submit_job.py SMHTT_2018_data make_ntuples_cfg.py channels="mt,mm" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 era="2018" runMVAMET=0 isEmbedded=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2018_DataRereco.json --apply-cmsRun-lumimask --samples "data_SingleMu*" -o submit_data_mt_2018.sh --data --lumimask-json Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt
+
+Data 2018 D::
+
+   submit_job.py SMHTT_2018_data make_ntuples_cfg.py channels="mt,mm" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 era="2018prompt" runMVAMET=0 isEmbedded=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --das-replace=../../MetaData/tuples/MiniAOD-2018_DataPrompt.json --apply-cmsRun-lumimask --samples "data_SingleMu*" -o submit_data_mt_2018D.sh --data --lumimask-json Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt
    
 
 Embedded 2017 (no miniAODv3 for 2016 yet, and no embedded samples for 2018 yet)::
