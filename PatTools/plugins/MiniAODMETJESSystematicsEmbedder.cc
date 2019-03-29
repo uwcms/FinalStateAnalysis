@@ -125,6 +125,8 @@ MiniAODMETJesSystematicsEmbedder::MiniAODMETJesSystematicsEmbedder(const edm::Pa
 
  size_t found = fName_.find("Summer16");
  if (found==std::string::npos) uncertNames.push_back("RelativeSample");
+ found = fName_.find("Autumn18");
+ if (found==std::string::npos) uncertNames.push_back("AbsoluteSample");
  for (auto const& name : uncertNames) {
   produces<ShiftedCandCollection>("p4OutMETUpJetsUncor"+name);
   produces<ShiftedCandCollection>("p4OutMETDownJetsUncor"+name);
@@ -242,6 +244,7 @@ void MiniAODMETJesSystematicsEmbedder::produce(edm::Event& evt, const edm::Event
               (name == "AbsoluteMPFBias") ||
               (name == "AbsoluteScale") ||
               (name == "AbsoluteStat") ||
+              (name == "AbsoluteSample") ||
               (name == "Fragmentation") ||
               (name == "FlavorQCD") ||
               (name == "TimePtEta") ||
