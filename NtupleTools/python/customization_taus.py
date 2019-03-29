@@ -159,34 +159,6 @@ def preTaus(process, tSrc, vSrc,**kwargs):
            )
         )
 
-	##NEW
-	#process.rerunDiscriminationAgainstElectronMVA6 = patTauDiscriminationAgainstElectronMVA6.clone(
-	#    PATTauProducer = cms.InputTag(tSrc),
-	#    Prediscriminants = noPrediscriminants,
-	#    #Prediscriminants = requireLeadTrack,
-	#    loadMVAfromDB = cms.bool(True),
-	#    returnMVA = cms.bool(True),
-	#    method = cms.string("BDTG"),
-	#    mvaName_NoEleMatch_woGwoGSF_BL = cms.string("RecoTauTag_antiElectronMVA6v1_gbr_NoEleMatch_woGwoGSF_BL"),
-	#    mvaName_NoEleMatch_wGwoGSF_BL = cms.string("RecoTauTag_antiElectronMVA6v1_gbr_NoEleMatch_wGwoGSF_BL"),
-	#    mvaName_woGwGSF_BL = cms.string("RecoTauTag_antiElectronMVA6v1_gbr_woGwGSF_BL"),
-	#    mvaName_wGwGSF_BL = cms.string("RecoTauTag_antiElectronMVA6v1_gbr_wGwGSF_BL"),
-	#    mvaName_NoEleMatch_woGwoGSF_EC = cms.string("RecoTauTag_antiElectronMVA6v1_gbr_NoEleMatch_woGwoGSF_EC"),
-	#    mvaName_NoEleMatch_wGwoGSF_EC = cms.string("RecoTauTag_antiElectronMVA6v1_gbr_NoEleMatch_wGwoGSF_EC"),
-	#    mvaName_woGwGSF_EC = cms.string("RecoTauTag_antiElectronMVA6v1_gbr_woGwGSF_EC"),
-	#    mvaName_wGwGSF_EC = cms.string("RecoTauTag_antiElectronMVA6v1_gbr_wGwGSF_EC"),
-	#    minMVANoEleMatchWOgWOgsfBL = cms.double(0.0),
-	#    minMVANoEleMatchWgWOgsfBL  = cms.double(0.0),
-	#    minMVAWOgWgsfBL            = cms.double(0.0),
-	#    minMVAWgWgsfBL             = cms.double(0.0),
-	#    minMVANoEleMatchWOgWOgsfEC = cms.double(0.0),
-	#    minMVANoEleMatchWgWOgsfEC  = cms.double(0.0),
-	#    minMVAWOgWgsfEC            = cms.double(0.0),
-	#    minMVAWgWgsfEC             = cms.double(0.0),
-	#    srcElectrons = cms.InputTag(eSrc),
-	#    usePhiAtEcalEntranceExtrapolation = cms.bool(True)
-	#)
-        
         # here we produce all the other working points for the training
         process.rerunDiscriminationByIsolationMVArun2v1Loose = process.rerunDiscriminationByIsolationMVArun2v1VLoose.clone()
         process.rerunDiscriminationByIsolationMVArun2v1Loose.mapping[0].cut = cms.string("RecoTauTag_tauIdMVAIsoDBoldDMwLT2017v1_WPEff80")
@@ -254,27 +226,26 @@ def preTaus(process, tSrc, vSrc,**kwargs):
 	#NEW deep Tau
         tauIDSources = cms.PSet()
         workingPoints_ = {
-            #"e": {
-            #    "VVVLoose" : 0.96424,
-            #    "VVLoose" : 0.98992,
-            #    "VLoose" : 0.99574,
-            #    "Loose": 0.99831,
-            #    "Medium": 0.99868,
-            #    "Tight": 0.99898,
-            #    "VTight": 0.99911,
-            #    "VVTight": 0.99918
-            #},
-            #"mu": {
-            #    "VVVLoose" : 0.959619,
-            #    "VVLoose" : 0.997687,
-            #    "VLoose" : 0.999392,
-            #    "Loose": 0.999755,
-            #    "Medium": 0.999854,
-            #    "Tight": 0.999886,
-            #    "VTight": 0.999944,
-            #    "VVTight": 0.9999971
-            #},
-
+            "e": {
+                "VVVLoose" : 0.96424,
+                "VVLoose" : 0.98992,
+                "VLoose" : 0.99574,
+                "Loose": 0.99831,
+                "Medium": 0.99868,
+                "Tight": 0.99898,
+                "VTight": 0.99911,
+                "VVTight": 0.99918
+            },
+            "mu": {
+                "VVVLoose" : 0.959619,
+                "VVLoose" : 0.997687,
+                "VLoose" : 0.999392,
+                "Loose": 0.999755,
+                "Medium": 0.999854,
+                "Tight": 0.999886,
+                "VTight": 0.999944,
+                "VVTight": 0.9999971
+            },
             "jet": {
                 "VVVLoose" : 0.5329,
                 "VVLoose" : 0.7645,
@@ -556,24 +527,6 @@ def preTaus(process, tSrc, vSrc,**kwargs):
             process.patTauDiscriminationByVTightElectronRejectionMVA62018
         )
         process.patTauDiscriminationByElectronRejectionMVA62018Seq = cms.Sequence(process.patTauDiscriminationByElectronRejectionMVA62018Task)
-        #process.rerunMvaIsolationTask.add(process.patTauDiscriminationByElectronRejectionMVA62018Task)
-        #self.process.rerunMvaIsolationSequence += self.process.patTauDiscriminationByElectronRejectionMVA62018Seq
-
-        #_againstElectronTauIDSources = self.cms.PSet(
-        #    againstElectronMVA6Raw2018 = self.cms.InputTag("patTauDiscriminationByElectronRejectionMVA62018Raw"),
-        #    againstElectronMVA6category2018 = self.cms.InputTag("patTauDiscriminationByElectronRejectionMVA62018Raw","category"),
-        #    againstElectronVLooseMVA62018 = self.cms.InputTag("patTauDiscriminationByVLooseElectronRejectionMVA62018"),
-        #    againstElectronLooseMVA62018 = self.cms.InputTag("patTauDiscriminationByLooseElectronRejectionMVA62018"),
-        #    againstElectronMediumMVA62018 = self.cms.InputTag("patTauDiscriminationByMediumElectronRejectionMVA62018"),
-        #    againstElectronTightMVA62018 = self.cms.InputTag("patTauDiscriminationByTightElectronRejectionMVA62018"),
-        #    againstElectronVTightMVA62018 = self.cms.InputTag("patTauDiscriminationByVTightElectronRejectionMVA62018")
-        #)
-        #_tauIDSourcesWithAgainistEle = self.cms.PSet(
-        #    tauIDSources.clone(),
-        #    _againstElectronTauIDSources
-        #)
-        #tauIDSources =_tauIDSourcesWithAgainistEle.clone()
-
         
         # this sequence has to be included in your cms.Path() before your analyzer which accesses the new variables is called.
         process.rerunMvaIsolation2SeqRun2 = cms.Path(
@@ -592,7 +545,6 @@ def preTaus(process, tSrc, vSrc,**kwargs):
            * process.rerunDiscriminationByIsolationMVArun2v2Tight
            * process.rerunDiscriminationByIsolationMVArun2v2VTight
            * process.rerunDiscriminationByIsolationMVArun2v2VVTight
-	   #* process.rerunDiscriminationAgainstElectronMVA6
 	   * process.dpfTau2016v1
            * process.dpfTau2016v0
            * process.deepTau2017v1
@@ -651,7 +603,6 @@ def preTaus(process, tSrc, vSrc,**kwargs):
             byVVLooseDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetVVLoose"),
             byVVTightDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetVVTight"),
             byVVVLooseDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetVVVLoose"),
-	    #againstElectronMVA6RawNew = cms.InputTag('rerunDiscriminationAgainstElectronMVA6'),#NEW
             againstElectronMVA6Raw2018 = cms.InputTag("patTauDiscriminationByElectronRejectionMVA62018Raw"),
             againstElectronMVA6category2018 = cms.InputTag("patTauDiscriminationByElectronRejectionMVA62018Raw","category"),
             againstElectronVLooseMVA62018 = cms.InputTag("patTauDiscriminationByVLooseElectronRejectionMVA62018"),
