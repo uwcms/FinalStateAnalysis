@@ -63,7 +63,7 @@ class MiniAODMETJesSystematicsEmbedder : public edm::EDProducer {
    "PileUpPtHF",
    "PileUpPtRef",
    "RelativeBal",
-   "RelativeSample", // New for 2017
+   //"RelativeSample", // New for 2017
    "RelativeFSR",
    "RelativeJEREC1",
    "RelativeJEREC2",
@@ -123,7 +123,10 @@ MiniAODMETJesSystematicsEmbedder::MiniAODMETJesSystematicsEmbedder(const edm::Pa
  produces<ShiftedCandCollection>("p4OutMETUpJetsUncorUESUP");
  produces<ShiftedCandCollection>("p4OutMETDownJetsUncorUESDOWN");
 
-
+ size_t found = fName_.find("Summer16");
+ if (found==std::string::npos) uncertNames.push_back("RelativeSample");
+ found = fName_.find("Autumn18");
+ if (found==std::string::npos) uncertNames.push_back("AbsoluteSample");
  for (auto const& name : uncertNames) {
   produces<ShiftedCandCollection>("p4OutMETUpJetsUncor"+name);
   produces<ShiftedCandCollection>("p4OutMETDownJetsUncor"+name);
@@ -223,7 +226,7 @@ void MiniAODMETJesSystematicsEmbedder::produce(edm::Event& evt, const edm::Event
         // comparison (also skip SubTotals)
         // ALL factorized uncertainties pass this if statment
         if ( !(name == "Total") && !(name == "Closure") && !(name == "Eta0to3") && !(name == "EC2") && 
-              !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew") ) {
+              !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")) {
           // All 28
           factorizedTotalUp[i] += unc*unc;
           // Uncertainties focused in center of detector
@@ -241,6 +244,7 @@ void MiniAODMETJesSystematicsEmbedder::produce(edm::Event& evt, const edm::Event
               (name == "AbsoluteMPFBias") ||
               (name == "AbsoluteScale") ||
               (name == "AbsoluteStat") ||
+              (name == "AbsoluteSample") ||
               (name == "Fragmentation") ||
               (name == "FlavorQCD") ||
               (name == "TimePtEta") ||
