@@ -68,6 +68,7 @@ parameters = {
         Rivet_stage0_cat='evt.getRivetInfo().stage0_cat',
         Rivet_stage1_cat_pTjet25GeV='evt.getRivetInfo().stage1_cat_pTjet25GeV',
         Rivet_stage1_cat_pTjet30GeV='evt.getRivetInfo().stage1_cat_pTjet30GeV',
+        Rivet_stage1p1_cat='evt.getRivetInfo().stage1p1_cat',
         Rivet_errorCode='evt.getRivetInfo().errorCode',
         Rivet_prodMode='evt.getRivetInfo().prodMode',
         Rivet_higgsPt='evt.getRivetInfo().higgs.pt()',
