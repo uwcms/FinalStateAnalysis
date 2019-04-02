@@ -103,7 +103,7 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
     ])
 
     command = [
-        'farmoutAnalysisJobs --vsize-limit 8000 --memory-requirements=2500',
+        'farmoutAnalysisJobs --vsize-limit 8000 --memory-requirements=3000',
         '--infer-cmssw-path',
         '"--submit-dir=%s"' % submit_dir,
         '"--output-dag-file=%s"' % dag_dir,
@@ -180,7 +180,7 @@ def datasets_from_das(args):
 	dbs_datasets = get_das_info('dataset dataset=/*/%s/MINIAODSIM status=*' % args.campaignstring)
         # check sample wildcards
         for dataset in dbs_datasets:
-            dataset_name = dataset.split('/')[1]+"_"+dataset.split('20')[1].split('/')[0]
+            dataset_name = dataset.split('/')[1]+"_"+dataset.split('MiniAOD')[1].split('/')[0]
             passes_filter = True
             passes_wildcard = False
             
