@@ -120,7 +120,7 @@ MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::
   size_t found = fName_.find("Summer16");
   if (found==std::string::npos) uncertNames.push_back("RelativeSample");
   found = fName_.find("Autumn18");
-  if (found==std::string::npos) uncertNames.push_back("AbsoluteSample");
+  if (found!=std::string::npos) uncertNames.push_back("AbsoluteSample");
 
   // Create the uncertainty tool for each uncert
   for (auto const& name : uncertNames) {

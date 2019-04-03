@@ -78,15 +78,15 @@ All the following commands work when submitting on CentOS7 machines (login01-05)
 
 For MC 2016::
 
-   submit_job.py SMHTT_2016 make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 isEmbedded=0 skipMET=1 htt=1 era="2016" isLFV=0 runMVAMET=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --extra-usercode-files src/../cfipython/slc7_amd64_gcc700/RecoEgamma/EgammaTools --das-replace=../../MetaData/tuples/MiniAOD-2016_SMHTT_MC.json --campaign-tag="RunIISummer16MiniAODv3-PUMoriond17_94X*" --samples "*" -o submit_mc_2016.sh
+   submit_job.py SMHTT_2016 make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 metShift=1 isEmbedded=0 skipMET=1 htt=1 era="2016" isLFV=0 runMVAMET=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --extra-usercode-files src/../cfipython/slc7_amd64_gcc700/RecoEgamma/EgammaTools --das-replace=../../MetaData/tuples/MiniAOD-2016_SMHTT_MC.json --campaign-tag="RunIISummer16MiniAODv3-PUMoriond17_94X*" --samples "*" -o submit_mc_2016.sh
 
 For MC 2017::
 
-   submit_job.py SMHTT_2017 make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 isEmbedded=0 skipMET=1 htt=1 era="2017" isLFV=0 runMVAMET=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --extra-usercode-files src/../cfipython/slc7_amd64_gcc700/RecoEgamma/EgammaTools --das-replace=../../MetaData/tuples/MiniAOD-2017_SMHTT_MC.json --campaign-tag="RunIIFall17MiniAODv2-PU2017*v14*" --samples "*" -o submit_mc_2017.sh
+   submit_job.py SMHTT_2017 make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 metShift=1 isEmbedded=0 skipMET=1 htt=1 era="2017" isLFV=0 runMVAMET=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --extra-usercode-files src/../cfipython/slc7_amd64_gcc700/RecoEgamma/EgammaTools --das-replace=../../MetaData/tuples/MiniAOD-2017_SMHTT_MC.json --campaign-tag="RunIIFall17MiniAODv2-PU2017*v14*" --samples "*" -o submit_mc_2017.sh
 
 For MC 2018::
 
-   submit_job.py SMHTT_2018 make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 isEmbedded=0 skipMET=1 htt=1 era="2018" isLFV=0 runMVAMET=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --extra-usercode-files src/../cfipython/slc7_amd64_gcc700/RecoEgamma/EgammaTools --das-replace=../../MetaData/tuples/MiniAOD-2018_SMHTT_MC.json --campaign-tag="RunIIAutumn18MiniAOD-102X_upgrade2018*" --samples "*" -o submit_mc_2018.sh
+   submit_job.py SMHTT_2018 make_ntuples_cfg.py channels="em,mm,et,mt,tt" isMC=1 fullJES=1 metShift=1 isEmbedded=0 skipMET=1 htt=1 era="2018" isLFV=0 runMVAMET=0 paramFile=CMSSW_10_2_10/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --extra-usercode-files src/../cfipython/slc7_amd64_gcc700/RecoEgamma/EgammaTools --das-replace=../../MetaData/tuples/MiniAOD-2018_SMHTT_MC.json --campaign-tag="RunIIAutumn18MiniAOD-102X_upgrade2018*" --samples "*" -o submit_mc_2018.sh
    
    
 Note: It's a good idea to put your sample names with wildcards inside quotes, as otherwise the unix 
