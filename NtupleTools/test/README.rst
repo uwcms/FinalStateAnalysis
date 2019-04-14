@@ -93,6 +93,8 @@ Note: It's a good idea to put your sample names with wildcards inside quotes, as
 wildcard will be expanded before it is passed to the program (so a file named 'WZsubmit.sh' in your 
 folder would cause the argument WZ* to become Wsubmit.sh, which you don't want)
 
+Note for LFV: Don't use isLFV=1 option because it is rerunning the electron calibration which is already performed elsewhere.
+
 
 Data 2016::
 
