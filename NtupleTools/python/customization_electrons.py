@@ -44,7 +44,7 @@ def preElectrons(process, eSrc, vSrc, year, **kwargs):
         setattr(process,eaModName,process.patElectronEAEmbedder.clone())
     getattr(process,eaModName).src = cms.InputTag(eSrc)
     eSrc = eaModName
-    eaFile = 'RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_25ns.txt'
+    eaFile = 'RecoEgamma/EgammaTools/data/Fall17/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_94X.txt'
     newEaModName = 'miniAODElectronEAEmbedding{0}'.format(postfix)
     newEaMod = cms.EDProducer(
         "MiniAODElectronEffectiveAreaEmbedder",

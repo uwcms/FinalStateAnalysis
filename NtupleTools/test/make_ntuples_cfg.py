@@ -47,7 +47,7 @@ hzz=0          - Include FSR contribution a la HZZ4l group,
                  include all ZZ candidates (including alternative lepton pairings).
 zh=0           - This relaxes the criteria for choosing the Z candidates in
                  3lepton+tau and 4lepton final states, is just produces additional combos
-isSync=0       - (with eCalib=1 and isMC=1) Apply electron energy 
+isSync=0       - (with eCalib1 and isMC=1) Apply electron energy 
                  resolution corrections as a 1sigma shift instead of smearing 
                  for synchronization purposes.
 eCalib=0       - Apply electron energy scale and resolution corrections.

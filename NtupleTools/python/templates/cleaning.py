@@ -28,6 +28,7 @@ vetos = PSet(
     
     #TAU VETOS
     tauVetoPt20Loose3HitsVtx = 'vetoTaus(0.4, "pt > 20 & abs(eta) < 2.5 & tauID(\'decayModeFinding\') & tauID(\'byLooseCombinedIsolationDeltaBetaCorr3Hits\') & userFloat(\'dz\') < 0.2").size()',
+    tauVetoPt20LooseMVALTVtx = 'vetoTaus(0.4, "pt > 20 & abs(eta) < 2.5 & tauID(\'decayModeFinding\') & tauID(\'byLooseIsolationMVArun2v1DBoldDMwLT\') & userFloat(\'dz\') < 0.2").size()', 
     tauVetoPt20TightMVALTVtx = 'vetoTaus(0.4, "pt > 20 & abs(eta) < 2.5 & tauID(\'decayModeFinding\') & tauID(\'byTightIsolationMVArun2v1DBoldDMwLT\') & userFloat(\'dz\') < 0.2").size()',
 
     ##ELECTRON VETOS
