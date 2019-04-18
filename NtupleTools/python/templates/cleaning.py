@@ -39,20 +39,20 @@ vetos = PSet(
 
     #(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & 
     #B-JET Vetos
-    bjetDeepCSVVeto20Loose_2016_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.2217").size()',
-    bjetDeepCSVVeto20Medium_2016_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.6321").size()',
-    bjetDeepCSVVeto20Tight_2016_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.8953").size()',
-    bjetDeepCSVVeto20Medium_2016_DR0 = 'vetoJets(0.0, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.6321").size()',
+    bjetDeepCSVVeto20Loose_2016_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.2217").size()',
+    bjetDeepCSVVeto20Medium_2016_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.6321").size()',
+    bjetDeepCSVVeto20Tight_2016_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.8953").size()',
+    bjetDeepCSVVeto20Medium_2016_DR0 = 'vetoJets(0.0, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.6321").size()',
 
-    bjetDeepCSVVeto20Loose_2017_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.1522").size()',
-    bjetDeepCSVVeto20Medium_2017_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.4941").size()',
-    bjetDeepCSVVeto20Tight_2017_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.8001").size()',
-    bjetDeepCSVVeto20Medium_2017_DR0 = 'vetoJets(0.0, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.4941").size()',
+    bjetDeepCSVVeto20Loose_2017_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.1522").size()',
+    bjetDeepCSVVeto20Medium_2017_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941").size()',
+    bjetDeepCSVVeto20Tight_2017_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.8001").size()',
+    bjetDeepCSVVeto20Medium_2017_DR0 = 'vetoJets(0.0, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4941").size()',
 
-    bjetDeepCSVVeto20Loose_2018_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.1241").size()',
-    bjetDeepCSVVeto20Medium_2018_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.4184").size()',
-    bjetDeepCSVVeto20Tight_2018_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.7527").size()',
-    bjetDeepCSVVeto20Medium_2018_DR0 = 'vetoJets(0.0, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & (bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probb\') + bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:probbb\')) > 0.4184").size()',
+    bjetDeepCSVVeto20Loose_2018_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.1241").size()',
+    bjetDeepCSVVeto20Medium_2018_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4184").size()',
+    bjetDeepCSVVeto20Tight_2018_DR0p5 = 'vetoJets(0.5, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.7527").size()',
+    bjetDeepCSVVeto20Medium_2018_DR0 = 'vetoJets(0.0, "pt > 20 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5 & bDiscriminator(\'pfDeepCSVDiscriminatorsJetTags:BvsAll\') > 0.4184").size()',
 
 
     #JET VETOS
