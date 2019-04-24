@@ -358,23 +358,23 @@ doubleLepton_25ns = PSet(
         ),
     _trig_template.replace(
         name='VBFDoubleLooseHPSTau20',
-        paths=r'HLT_VBF_DoubleLooseChargedIsoPFTauHPS20_Trk1_eta2p1_Reg_v\\d+'
+        paths=r'HLT_VBF_DoubleLooseChargedIsoPFTauHPS20_Trk1_eta2p1_v\\d+'
         ),
     _trig_template.replace(
         name='VBFDoubleMediumHPSTau20',
-        paths=r'HLT_VBF_DoubleMediumChargedIsoPFTauHPS20_Trk1_eta2p1_Reg_v\\d+'
+        paths=r'HLT_VBF_DoubleMediumChargedIsoPFTauHPS20_Trk1_eta2p1_v\\d+'
         ),
     _trig_template.replace(
         name='VBFDoubleTightHPSTau20',
-        paths=r'HLT_VBF_DoubleTightChargedIsoPFTauHPS20_Trk1_eta2p1_Reg_v\\d+'
+        paths=r'HLT_VBF_DoubleTightChargedIsoPFTauHPS20_Trk1_eta2p1_v\\d+'
         ),
     _trig_template.replace(
         name='VBFDoubleLooseTau20',
-        paths=r'HLT_VBF_DoubleLooseChargedIsoPFTau20_Trk1_eta2p1_Reg_v\\d+'
+        paths=r'HLT_VBF_DoubleLooseChargedIsoPFTau20_Trk1_eta2p1_v\\d+'
         ),
     _trig_template.replace(
         name='VBFDoubleMediumTau20',
-        paths=r'HLT_VBF_DoubleMediumChargedIsoPFTau20_Trk1_eta2p1_Reg_v\\d+'
+        paths=r'HLT_VBF_DoubleMediumChargedIsoPFTau20_Trk1_eta2p1_v\\d+'
         ),
     _trig_template.replace(
         name='VBFDoubleTightTau20',
