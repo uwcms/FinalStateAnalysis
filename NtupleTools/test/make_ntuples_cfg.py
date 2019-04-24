@@ -276,13 +276,13 @@ process.load('Configuration.StandardSequences.Services_cff')
 envvar = 'mcgt' if options.isMC else 'datagt'
 
 # All data falls under unified GT (6 Feb 2017) ReReco BCDEFG, Prompt H
-GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Prompt_v11'} # For data run D
+GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_Prompt_v13'} # For data run D
 #GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'} # For data run ABC
 
 if options.era=="2018":
-  GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'}
+  GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_Sep2018ABC_v2'}
 if options.era=="2018prompt":
-  GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Prompt_v11'}
+  GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_Prompt_v13'}
 if options.era=="2017":
   GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '94X_dataRun2_v11'}
 if options.era=="2016":
@@ -426,6 +426,7 @@ process.patJetsReapplyJEC = updatedPatJets.clone(
 if(isData):
     process.patJetCorrFactorsReapplyJEC.levels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
 
+process.patJetsReapplyJEC.userData.userInts.src += ['pileupJetIdUpdated:fullId']
 process.patJetsReapplyJEC.userData.userFloats.src += ['pileupJetIdUpdated:fullDiscriminant']
 
 process.applyJEC = cms.Path()
@@ -433,9 +434,26 @@ process.applyJEC += process.pileupJetIdUpdated
 process.applyJEC += process.patJetCorrFactorsReapplyJEC
 process.applyJEC += process.patJetsReapplyJEC
 
-if options.isMC: # FIXME apply also to data when the data corrections are released
-   process.schedule.append(process.applyJEC) #FIXME when JEC need to be rerun
-   fs_daughter_inputs['jets'] = 'patJetsReapplyJEC' #FIXME when JEC need to be rerun
+#if options.isMC: # FIXME apply also to data when the data corrections are released
+process.schedule.append(process.applyJEC) #FIXME when JEC need to be rerun
+fs_daughter_inputs['jets'] = 'patJetsReapplyJEC' #FIXME when JEC need to be rerun
+
+
+# Prefiring weights
+prefiring_year='2016BtoH'
+if options.era=="2018" or options.era=="2018prompt" or options.era=="2017":
+   prefiring_year='2017BtoF'
+
+process.prefiringweight = cms.EDProducer(
+        "L1ECALPrefiringWeightProducer",
+        DataEra=cms.string(prefiring_year),  # Use 2016BtoH for 2016
+        UseJetEMPt=cms.bool(False),  # can be set to true to use jet prefiring maps parametrized vs pt(em) instead of pt
+        PrefiringRateSystematicUncty=cms.double(0.2)  # Minimum relative prefiring uncty per object
+)
+process.add_prefiringweight = cms.Path()
+process.add_prefiringweight += process.prefiringweight
+process.schedule.append(process.add_prefiringweight)
+
 
 ######################
 ### Build Gen Taus ###
