@@ -272,6 +272,12 @@ parameters = {
         objectMatchesIsoMu19Tau20Filter= r'matchToHLTFilter({object_idx}, "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_v\\d+", 0.5)',
         objectMatchesIsoMu19Tau20SingleL1Filter= r'matchToHLTFilter({object_idx}, "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v\\d+", 0.5)',
 
+        #originally were missing 2016 th_th path and filters
+        objectMatchesDoubleTauCmbIso35RegFilter = r'matchToHLTFilter({object_idx}, "HLT_DoubleMediumCombinedIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
+        objectMatchesDoubleTauCmbIso35RegPath = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumCombinedIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
+        objectMatchesDoubleTau35Filter = r'matchToHLTFilter({object_idx}, "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\d", 0.5)',
+        objectMatchesDoubleTau35Path = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
+          
         #objectDoubleL2IsoTau26Filter = 'matchToHLTFilter2({object_idx}, "hltDoubleL2IsoTau26eta2p2", 0.5)',
         
         objectZTTGenMatching = 'tauGenMatch2({object_idx})', 
