@@ -23,7 +23,7 @@ rm HiggsTemplateCrossSections.h
 wget https://raw.githubusercontent.com/amarini/cmssw/htxs_stage1p1_cmssw949_v2/SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h
 
 cd $CMSSW_BASE/src
-cd GeneratorInterface/RivetInterface/plugins/
+cd GeneratorInterface/RivetInterface/src/
 rm HiggsTemplateCrossSections.cc 
 wget https://raw.githubusercontent.com/amarini/cmssw/htxs_stage1p1_cmssw949_v2/GeneratorInterface/RivetInterface/src/HiggsTemplateCrossSections.cc
 
@@ -39,6 +39,10 @@ cd -
 git cms-merge-topic cms-egamma:EgammaPostRecoTools_dev
 
 cd $CMSSW_BASE/src
+
+# deep tau ID v2
+git cms-merge-topic -u cms-tau-pog:CMSSW_10_2_X_tau-pog_DeepTau2017v2
+wget https://github.com/cms-tau-pog/RecoTauTag-TrainingFiles/raw/DeepTau2017v2_alone/DeepTauId/deepTau_2017v2p6_e6.pb -P RecoTauTag/TrainingFiles/data/DeepTauId
 
 popd
 
