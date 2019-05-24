@@ -13,7 +13,7 @@ This is for the 2018 data, but should work with 2016 miniAODv3 and 2017 94X samp
 Installation
 ------------
 
-Current CMSSW version: ``CMSSW_10_2_10``.
+Current CMSSW version: ``CMSSW_10_2_14``.
 
 Get a supported CMSSW release area:
 
