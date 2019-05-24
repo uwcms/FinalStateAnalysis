@@ -23,7 +23,7 @@ rm HiggsTemplateCrossSections.h
 wget https://raw.githubusercontent.com/amarini/cmssw/htxs_stage1p1_cmssw949_v2/SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h
 
 cd $CMSSW_BASE/src
-cd GeneratorInterface/RivetInterface/plugins/
+cd GeneratorInterface/RivetInterface/src/
 rm HiggsTemplateCrossSections.cc 
 wget https://raw.githubusercontent.com/amarini/cmssw/htxs_stage1p1_cmssw949_v2/GeneratorInterface/RivetInterface/src/HiggsTemplateCrossSections.cc
 
