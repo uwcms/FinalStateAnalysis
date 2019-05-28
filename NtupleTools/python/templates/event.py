@@ -68,6 +68,8 @@ shiftedMet = PSet(
     type1_pfMet_shiftedPt_JetEta3to5Down             = 'evt.metShift("pfmet","pt","jesEta3to5-")',
     type1_pfMet_shiftedPt_JetEta0to3Up             = 'evt.metShift("pfmet","pt","jesEta0to3+")',
     type1_pfMet_shiftedPt_JetEta0to3Down             = 'evt.metShift("pfmet","pt","jesEta0to3-")',
+    type1_pfMet_shiftedPt_JetEC2Up             = 'evt.metShift("pfmet","pt","jesEC2+")',
+    type1_pfMet_shiftedPt_JetEC2Down             = 'evt.metShift("pfmet","pt","jesEC2-")',
     type1_pfMet_shiftedPt_JetEta0to5Up             = 'evt.metShift("pfmet","pt","jesEta0to5+")',
     type1_pfMet_shiftedPt_JetEta0to5Down             = 'evt.metShift("pfmet","pt","jesEta0to5-")',
     type1_pfMet_shiftedPhi_JetTotalUp             = 'evt.metShift("pfmet","phi","jesTotal+")',
@@ -76,6 +78,8 @@ shiftedMet = PSet(
     type1_pfMet_shiftedPhi_JetEta3to5Down             = 'evt.metShift("pfmet","phi","jesEta3to5-")',
     type1_pfMet_shiftedPhi_JetEta0to3Up             = 'evt.metShift("pfmet","phi","jesEta0to3+")',
     type1_pfMet_shiftedPhi_JetEta0to3Down             = 'evt.metShift("pfmet","phi","jesEta0to3-")',
+    type1_pfMet_shiftedPhi_JetEC2Up             = 'evt.metShift("pfmet","phi","jesEC2+")',
+    type1_pfMet_shiftedPhi_JetEC2Down             = 'evt.metShift("pfmet","phi","jesEC2-")',
     type1_pfMet_shiftedPhi_JetEta0to5Up             = 'evt.metShift("pfmet","phi","jesEta0to5+")',
     type1_pfMet_shiftedPhi_JetEta0to5Down             = 'evt.metShift("pfmet","phi","jesEta0to5-")',
 

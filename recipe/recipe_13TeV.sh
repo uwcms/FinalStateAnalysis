@@ -44,5 +44,8 @@ cd $CMSSW_BASE/src
 git cms-merge-topic -u cms-tau-pog:CMSSW_10_2_X_tau-pog_DeepTau2017v2
 wget https://github.com/cms-tau-pog/RecoTauTag-TrainingFiles/raw/DeepTau2017v2_alone/DeepTauId/deepTau_2017v2p6_e6.pb -P RecoTauTag/TrainingFiles/data/DeepTauId
 
+# MET filter
+git cms-addpkg RecoMET/METFilters
+
 popd
 

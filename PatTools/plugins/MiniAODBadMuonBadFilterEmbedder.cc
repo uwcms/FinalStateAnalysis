@@ -70,6 +70,7 @@ class MiniAODBadMuonBadFilterEmbedder : public edm::stream::EDProducer<> {
     edm::EDGetTokenT<bool> BadPFMuonFilterToken_;
     edm::EDGetTokenT<edm::TriggerResults> triggerToken_;
     std::vector<std::string> metFilterPaths_;
+    edm::EDGetTokenT< bool >ecalBadCalibFilterUpdate_token ;
 
     bool verbose_;
 };
@@ -84,6 +85,7 @@ MiniAODBadMuonBadFilterEmbedder::MiniAODBadMuonBadFilterEmbedder(const edm::Para
   triggerToken_ = consumes<edm::TriggerResults>(pset.getParameter<edm::InputTag>("triggerSrc"));
   metFilterPaths_ = pset.getParameter<std::vector<std::string> >("metFilterPaths");
   verbose_ = pset.getUntrackedParameter<bool> ("verbose",false);
+  ecalBadCalibFilterUpdate_token= consumes< bool >(edm::InputTag("ecalBadCalibReducedMINIAODFilter"));
 
   produces< filterFiredMapType >();
   
@@ -150,7 +152,10 @@ MiniAODBadMuonBadFilterEmbedder::produce(edm::Event& evt, const edm::EventSetup&
     } // end trigger bits
   } // end MET path 
 
-
+  edm::Handle< bool > passecalBadCalibFilterUpdate ;
+  evt.getByToken(ecalBadCalibFilterUpdate_token,passecalBadCalibFilterUpdate);
+  bool    _passecalBadCalibFilterUpdate =  !(*passecalBadCalibFilterUpdate );
+  output->insert( std::make_pair("Flag_ecalBadCalibReducedMINIAODFilter", _passecalBadCalibFilterUpdate) );
 
   if(verbose_) {
     for(map_iter pair = output->begin(); pair != output->end(); pair++) {
