@@ -180,7 +180,8 @@ def datasets_from_das(args):
 	dbs_datasets = get_das_info('dataset dataset=/*/%s/MINIAODSIM status=*' % args.campaignstring)
         # check sample wildcards
         for dataset in dbs_datasets:
-            dataset_name = dataset.split('/')[1]+"_"+dataset.split('MiniAOD')[1].split('/')[0]
+            #dataset_name = dataset.split('/')[1]+"_"+dataset.split('MiniAOD')[1].split('/')[0]
+	    dataset_name = dataset.split('/')[1]+"#"+dataset.split('/')[2]+"#MINIAODSIM"
             passes_filter = True
             passes_wildcard = False
             
