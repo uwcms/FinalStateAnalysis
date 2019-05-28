@@ -545,143 +545,102 @@ if options.htt and options.isMC :
 # simply tag an event, not actually filter them
 # Standard MET filters are also tagged
 
-if options.htt :
-    # 2016 ReReco data spurious muon filters -> tagged
-    process.load('RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff')
-    process.badGlobalMuonTaggerMAOD.taggingMode = cms.bool(True)
-    process.cloneGlobalMuonTaggerMAOD.taggingMode = cms.bool(True)
-    process.badGlobalMuonTaggerMAOD.verbose = cms.untracked.bool(False)
-    process.cloneGlobalMuonTaggerMAOD.verbose = cms.untracked.bool(False)
+# 2016 ReReco data spurious muon filters -> tagged
+process.load('RecoMET.METFilters.badGlobalMuonTaggersMiniAOD_cff')
+process.badGlobalMuonTaggerMAOD.taggingMode = cms.bool(True)
+process.cloneGlobalMuonTaggerMAOD.taggingMode = cms.bool(True)
+process.badGlobalMuonTaggerMAOD.verbose = cms.untracked.bool(False)
+process.cloneGlobalMuonTaggerMAOD.verbose = cms.untracked.bool(False)
 
-    # Standard MET filters -> tagged
-    process.load('RecoMET.METFilters.BadPFMuonFilter_cfi')
-    process.BadPFMuonFilter.muons = cms.InputTag("slimmedMuons")
-    process.BadPFMuonFilter.PFCandidates = cms.InputTag("packedPFCandidates")
+# Standard MET filters -> tagged
+process.load('RecoMET.METFilters.BadPFMuonFilter_cfi')
+process.BadPFMuonFilter.muons = cms.InputTag("slimmedMuons")
+process.BadPFMuonFilter.PFCandidates = cms.InputTag("packedPFCandidates")
 
-    process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
-    process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
-    process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
-
-
-    # Tagger which takes above processes as well as miniAOD filters
-    # as inputs
-    trigSource = "PAT" if options.isMC else "RECO"
+process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
+process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
+process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
 
 
-    if options.isEmbedded:
-        process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")
-        #Trigger
-        process.patFinalStateEventProducer.trgResultsSrc= cms.InputTag("TriggerResults","","SIMembedding")
-        process.patFinalStateEventProducer.trgResultsSrc2= cms.InputTag("TriggerResults","","MERGE")
-        #GenInfo
-        #process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles", "", "MERGE")
-        process.patFinalStateEventProducer.packedGenSrc = cms.InputTag("packedGenParticles", "", "MERGE")
-        process.patFinalStateEventProducer.l1extraIsoTauSrc=cms.InputTag("caloStage2Digis","Tau","SIMembedding")
-        process.patFinalStateEventProducer.isEmbedded = cms.bool(True)
+# Tagger which takes above processes as well as miniAOD filters
+# as inputs
+trigSource = "PAT" if options.isMC else "RECO"
 
 
-        trigSource = "SIMembedding"
+if options.isEmbedded:
+    process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateEventProducer_cfi")
+    #Trigger
+    process.patFinalStateEventProducer.trgResultsSrc= cms.InputTag("TriggerResults","","SIMembedding")
+    process.patFinalStateEventProducer.trgResultsSrc2= cms.InputTag("TriggerResults","","MERGE")
+    #GenInfo
+    #process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles", "", "MERGE")
+    process.patFinalStateEventProducer.packedGenSrc = cms.InputTag("packedGenParticles", "", "MERGE")
+    process.patFinalStateEventProducer.l1extraIsoTauSrc=cms.InputTag("caloStage2Digis","Tau","SIMembedding")
+    process.patFinalStateEventProducer.isEmbedded = cms.bool(True)
 
 
-    process.filterFlags = cms.EDProducer(
-        "MiniAODBadMuonBadFilterEmbedder",
-        badGlobalMuonTagger = cms.InputTag("badGlobalMuonTaggerMAOD","bad","Ntuples"),
-        cloneGlobalMuonTagger = cms.InputTag("cloneGlobalMuonTaggerMAOD","bad","Ntuples"),
-        BadChargedCandidateFilter = cms.InputTag("BadChargedCandidateFilter"),
-        BadPFMuonFilter = cms.InputTag("BadPFMuonFilter"),
-        triggerSrc = cms.InputTag("TriggerResults","",trigSource),
-        metFilterPaths = cms.vstring(
-            "Flag_noBadMuons",
-            "Flag_BadPFMuonFilter",
-            "Flag_BadChargedCandidateFilter",
-            "Flag_HBHENoiseFilter",
-            "Flag_HBHENoiseIsoFilter", 
-            "Flag_EcalDeadCellTriggerPrimitiveFilter"
-            "Flag_goodVertices",
-            "Flag_eeBadScFilter",
-            "Flag_ecalBadCalibFilter",
-            "Flag_globalTightHalo2016Filter",
-            "Flag_globalSuperTightHalo2016Filter",
-            "Flag_badMuonsFilter",
-            "Flag_duplicateMuonsFilter",
-        ),
-        verbose = cms.untracked.bool(False),
+    trigSource = "SIMembedding"
+
+
+process.filterFlags = cms.EDProducer(
+    "MiniAODBadMuonBadFilterEmbedder",
+    badGlobalMuonTagger = cms.InputTag("badGlobalMuonTaggerMAOD","bad","Ntuples"),
+    cloneGlobalMuonTagger = cms.InputTag("cloneGlobalMuonTaggerMAOD","bad","Ntuples"),
+    BadChargedCandidateFilter = cms.InputTag("BadChargedCandidateFilter"),
+    BadPFMuonFilter = cms.InputTag("BadPFMuonFilter"),
+    #triggerSrc = cms.InputTag("TriggerResults","",trigSource),
+    triggerSrc = cms.InputTag("TriggerResults","","RECO"),
+    metFilterPaths = cms.vstring(
+        "Flag_noBadMuons",
+        "Flag_BadPFMuonFilter",
+        "Flag_BadChargedCandidateFilter",
+        "Flag_HBHENoiseFilter",
+        "Flag_HBHENoiseIsoFilter", 
+        "Flag_EcalDeadCellTriggerPrimitiveFilter"
+        "Flag_goodVertices",
+        "Flag_eeBadScFilter",
+        "Flag_ecalBadCalibFilter",
+        "Flag_globalTightHalo2016Filter",
+        "Flag_globalSuperTightHalo2016Filter",
+        "Flag_badMuonsFilter",
+        "Flag_duplicateMuonsFilter",
+    ),
+    verbose = cms.untracked.bool(False),
+)
+
+process.load('RecoMET.METFilters.ecalBadCalibFilter_cfi')
+
+baddetEcallist = cms.vuint32(
+    [872439604,872422825,872420274,872423218,
+     872423215,872416066,872435036,872439336,
+     872420273,872436907,872420147,872439731,
+     872436657,872420397,872439732,872439339,
+     872439603,872422436,872439861,872437051,
+     872437052,872420649,872422436,872421950,
+     872437185,872422564,872421566,872421695,
+     872421955,872421567,872437184,872421951,
+     872421694,872437056,872437057,872437313])
+
+
+process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter(
+    "EcalBadCalibFilter",
+    EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
+    ecalMinEt        = cms.double(50.),
+    baddetEcal    = baddetEcallist, 
+    taggingMode = cms.bool(True),
+    debug = cms.bool(False)
     )
 
-    process.load('RecoMET.METFilters.ecalBadCalibFilter_cfi')
-    
-    baddetEcallist = cms.vuint32(
-        [872439604,872422825,872420274,872423218,
-         872423215,872416066,872435036,872439336,
-         872420273,872436907,872420147,872439731,
-         872436657,872420397,872439732,872439339,
-         872439603,872422436,872439861,872437051,
-         872437052,872420649,872422436,872421950,
-         872437185,872422564,872421566,872421695,
-         872421955,872421567,872437184,872421951,
-         872421694,872437056,872437057,872437313])
-    
-    
-    process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter(
-        "EcalBadCalibFilter",
-        EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
-        ecalMinEt        = cms.double(50.),
-        baddetEcal    = baddetEcallist, 
-        taggingMode = cms.bool(True),
-        debug = cms.bool(False)
-        )
-    
 
-    process.filterTagger = cms.Path(
-        process.badGlobalMuonTaggerMAOD
-        + process.cloneGlobalMuonTaggerMAOD
-        + process.BadPFMuonFilter
-        + process.BadChargedCandidateFilter
-	+ process.ecalBadCalibReducedMINIAODFilter 
-        + process.filterFlags)
+process.filterTagger = cms.Path(
+    process.badGlobalMuonTaggerMAOD
+    + process.cloneGlobalMuonTaggerMAOD
+    + process.BadPFMuonFilter
+    + process.BadChargedCandidateFilter
+    + process.ecalBadCalibReducedMINIAODFilter 
+    + process.filterFlags)
 
-    process.schedule.append( process.filterTagger )
-
-
-
-# add met filters
-if options.runMetFilter:
-    # flags in miniaod
-    listOfFlags = ['Flag_HBHENoiseFilter',
-                   'Flag_HBHENoiseIsoFilter',
-                   'Flag_CSCTightHalo2015Filter',
-                   'Flag_EcalDeadCellTriggerPrimitiveFilter',
-                   'Flag_goodVertices',
-                   'Flag_eeBadScFilter',
-                   'Flag_eeBadCalibFilter',
-                   'Flag_chargedHadronTrackResolutionFilter',
-                   'Flag_muonBadTrackFilter',
-                   ]
-    listOfLabels = ['HBHENoiseFilterResult',
-                   'HBHENoiseIsoFilterResult',
-                   'CSCTightHalo2015FilterResult',
-                   'EcalDeadCellTriggerPrimitiveFilterResult',
-                   'goodVerticesResult',
-                   'eeBadScFilterResult',
-                   'chargedHadronTrackResolutionFilterResult',
-                   'muonBadTrackFilterResult',
-                   ]
-    process.MiniAODMETFilterProducer = cms.EDProducer('MiniAODTriggerProducer',
-        triggers = cms.vstring(*listOfFlags),
-        labels = cms.vstring(*listOfLabels),
-        bits = cms.InputTag("TriggerResults"),
-        #prescales = cms.InputTag("patTrigger"),
-        #objects = cms.InputTag("selectedPatTrigger"),
-    )
-    filters += [process.MiniAODMETFilterProducer]
-    for label in listOfLabels:
-        modName = 'Apply{0}'.format(label)
-        mod = cms.EDFilter('BooleanFlagFilter',
-            inputLabel = cms.InputTag('MiniAODMETFilterProducer',label),
-            reverseDecision = cms.bool(True)
-        )
-        setattr(process,modName,mod)
-        filters += [getattr(process,modName)]
+process.schedule.append( process.filterTagger )
 
 if abs(options.runFSRFilter)>0:
     process.FSRFilter = cms.EDFilter("MiniAODGenLeptonFSRFilter",
