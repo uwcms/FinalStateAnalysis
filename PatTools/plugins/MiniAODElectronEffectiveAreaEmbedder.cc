@@ -41,11 +41,12 @@ private:
   virtual void produce(edm::Event& iEvent, const edm::EventSetup& iSetup);
   virtual void endJob();
 
-  float getEA(const edm::Ptr<pat::Electron>& elec) const;
+  float getEA(const edm::Ptr<pat::Electron>& elec, int year) const;
 
   // Data
   edm::EDGetTokenT<edm::View<pat::Electron> > electronCollectionToken_;
   const std::string label_; // label for the embedded userfloat
+  const std::string year_; // year to choose the effective area
   const std::string filename_; //filename for effective area
   std::unique_ptr<std::vector<pat::Electron> > out; // Collection we'll output at the end
   EffectiveAreas effectiveAreas_;
@@ -61,6 +62,7 @@ MiniAODElectronEffectiveAreaEmbedder::MiniAODElectronEffectiveAreaEmbedder(const
   label_(iConfig.exists("label") ?
 	 iConfig.getParameter<std::string>("label") :
 	 std::string("EffectiveArea")),
+  year_(iConfig.getParameter<std::string>("year")),
   effectiveAreas_((iConfig.getParameter<edm::FileInPath>("configFile")).fullPath())
 {
   produces<std::vector<pat::Electron> >();
@@ -83,7 +85,11 @@ void MiniAODElectronEffectiveAreaEmbedder::produce(edm::Event& iEvent, const edm
       out->push_back(*ei); // copy electron to save correctly in event
 
       float ea;
-      ea = getEA(eptr);
+      ea = getEA(eptr,2016);
+      if (year_=="2017")
+	 ea = getEA(eptr,2017);
+      if (year_=="2018")
+         ea = getEA(eptr,2018);
 	
       out->back().addUserFloat(label_, ea);
     }
@@ -91,19 +97,33 @@ void MiniAODElectronEffectiveAreaEmbedder::produce(edm::Event& iEvent, const edm
   iEvent.put(std::move(out));
 }
 
-float MiniAODElectronEffectiveAreaEmbedder::getEA(const edm::Ptr<pat::Electron>& elec) const
+float MiniAODElectronEffectiveAreaEmbedder::getEA(const edm::Ptr<pat::Electron>& elec, int year) const
 {
   //float abseta = fabs(elec->eta());
   //superCluster().eta
   float abseta = fabs(elec->superCluster()->eta());
-  if (abseta<1.000) return 0.1440;
-  else if (abseta<1.479) return 0.1562;
-  else if (abseta<2.000) return 0.1032;
-  else if (abseta<2.200) return 0.0859;
-  else if (abseta<2.300) return 0.1116;
-  else if (abseta<2.400) return 0.1321;
-  else return 0.1654;
-  //return effectiveAreas_.getEffectiveArea(abseta);
+  if (year==2017 or year==2018){
+     if (abseta<1.000) return 0.1440;
+     else if (abseta<1.479) return 0.1562;
+     else if (abseta<2.000) return 0.1032;
+     else if (abseta<2.200) return 0.0859;
+     else if (abseta<2.300) return 0.1116;
+     else if (abseta<2.400) return 0.1321;
+     else return 0.1654;
+  }
+
+  else if (year==2016){
+     if (abseta<1.000) return 0.1703;
+     else if (abseta<1.479) return 0.1715;
+     else if (abseta<2.000) return 0.1213;
+     else if (abseta<2.200) return 0.1230;
+     else if (abseta<2.300) return 0.1635;
+     else if (abseta<2.400) return 0.1937;
+     else return 0.2393;
+  }
+
+  else return 0.1440; //dummy value
+
 }
 
 void MiniAODElectronEffectiveAreaEmbedder::beginJob()
