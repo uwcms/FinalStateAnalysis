@@ -50,6 +50,7 @@ def preElectrons(process, eSrc, vSrc, year, **kwargs):
         "MiniAODElectronEffectiveAreaEmbedder",
         src = cms.InputTag(eSrc),
         label = cms.string("EffectiveArea"), # embeds a user float with this name
+	year = cms.string("year"),
         configFile = cms.FileInPath(eaFile), # the effective areas file
         )
     eSrc = newEaModName
