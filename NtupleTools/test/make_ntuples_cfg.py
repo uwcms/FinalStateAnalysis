@@ -95,7 +95,7 @@ process.options = cms.untracked.PSet(
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
     skipEvents=0,  # Start at an event offset (for debugging)
-    reportEvery=10,
+    reportEvery=5000,
     channels='mt,et',
     rerunMCMatch=False,
     eventView=0,  # Switch between final state view (0) and event view (1)
@@ -179,6 +179,14 @@ options.register(
     TauVarParsing.TauVarParsing.varType.int,
     "Skip MET corrections and systematics (good way to reduce memory "
     "use if you don't need them)."
+)
+
+options.register(
+    'miniAODName',
+    '',
+    TauVarParsing.TauVarParsing.multiplicity.singleton,
+    TauVarParsing.TauVarParsing.varType.string,
+    "name of miniAOD parent file"
 )
 
 options.outputFile = "ntuplize.root"
@@ -1176,6 +1184,7 @@ else:
                                 nExtraJets=extraJets, 
                                 isMC=options.isMC,
                                 isShiftedMet=bool(options.metShift),
+                                miniAODName=options.miniAODName,
                                 **parameters)
         add_ntuple(final_state, analyzer, process,
                    process.schedule, options.eventView, filters)

@@ -416,6 +416,7 @@ def make_ntuple(*legs, **kwargs):
         # input final state collection.
         src=cms.InputTag( analyzerSrc ),
         evtSrc=cms.InputTag("patFinalStateEventProducer{0}".format(postfix)),
+        miniAODName=cms.string(kwargs.get('miniAODName', '')),
         # counter of events before any selections
         skimCounter=cms.InputTag("eventCount"),
         summedWeight=cms.InputTag("summedWeight"),

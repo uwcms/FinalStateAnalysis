@@ -93,6 +93,10 @@ class PATFinalStateAnalysis {
     edm::InputTag lumiProducer_;
     TH1* integratedLumi_;
 
+    // For 2017 PU Reweighting
+    TH1* miniAODParent_;
+    std::string miniAODName_;
+
     // Keep track of the processed events in each lumi in a tree
     TTree* metaTree_;
     Int_t treeRunBranch_;

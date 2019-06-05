@@ -44,6 +44,8 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
   if (splitRuns_)
     runDir_.reset(new TFileDirectory(fs.mkdir("runs")));
 
+  miniAODName_ = pset.getParameter<std::string>("miniAODName");
+
   skimCounter_  = pset.getParameter<edm::InputTag>("skimCounter");
   skimCounterToken_  = iC.consumes<edm::MergeableCounter,edm::InLumi>(skimCounter_);
   summedWeight_ = pset.getParameter<edm::InputTag>("summedWeight");
@@ -64,6 +66,7 @@ PATFinalStateAnalysis::PATFinalStateAnalysis(
       "summedWeights", "Sum of weights for processed events", 1, -0.5, 0.5);
   integratedLumi_ = fs_.make<TH1F>(
       "intLumi", "Integrated Lumi", 1, -0.5, 0.5);
+  miniAODParent_ = fs_.make<TH1F>(miniAODName_.c_str(), "miniAODName", 1, -0.5, 0.5);
   metaTree_ = fs_.make<TTree>(
       "metaInfo", "Information about processed runs and lumis");
   metaTree_->Branch("run", &treeRunBranch_, "run/I");
