@@ -131,6 +131,7 @@ def getFarmoutCommand(args, dataset_name, full_dataset_name):
     command.extend(args.cmsargs)
     command.append("'inputFiles=$inputFileNames'")
     command.append("'outputFile=$outputFileName'")
+    command.append("miniAODName="+full_dataset_name.split('/')[1]+"#"+full_dataset_name.split('/')[2]+"#MINIAODSIM")
 
     # temp hardcode
     if args.apply_cms_lumimask:
@@ -180,8 +181,8 @@ def datasets_from_das(args):
 	dbs_datasets = get_das_info('dataset dataset=/*/%s/MINIAODSIM status=*' % args.campaignstring)
         # check sample wildcards
         for dataset in dbs_datasets:
-            #dataset_name = dataset.split('/')[1]+"_"+dataset.split('MiniAOD')[1].split('/')[0]
-	    dataset_name = dataset.split('/')[1]+"#"+dataset.split('/')[2]+"#MINIAODSIM"
+            dataset_name = dataset.split('/')[1]+"_"+dataset.split('MiniAOD')[1].split('/')[0]
+	    #dataset_name = dataset.split('/')[1]+"#"+dataset.split('/')[2]+"#MINIAODSIM"
             passes_filter = True
             passes_wildcard = False
             
