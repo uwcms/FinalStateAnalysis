@@ -8,6 +8,36 @@
 #include "FWCore/ParameterSet/interface/FileInPath.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
 
+double get_bweight2016(float pt, float eta, int flavor, float deepcsv){
+  return 1.0;
+}
+
+double get_bweight2017(float pt, float eta, int flavor, float deepcsv){
+  return 1.0;
+}
+
+double get_bweight2018(float pt, float eta, int flavor, float deepcsv){
+  return 1.0;
+}
+
+std::vector<double> computeBInfo(
+  const std::vector<const reco::Candidate*>& jets) {
+  std::vector<double> output;
+  double weight2016=1.0;
+  double weight2017=1.0;
+  double weight2018=1.0;
+  for (unsigned int i = 0; i < jets.size(); ++i) {
+      const pat::Jet * jetPat = dynamic_cast<const pat::Jet*> (jets[i]);
+      weight2016=weight2016*get_bweight2016(jets[i]->pt(),jets[i]->eta(),jetPat->hadronFlavour(),jetPat->bDiscriminator("pfDeepCSVJetTags:probb")+jetPat->bDiscriminator("pfDeepCSVJetTags:probbb"));
+      weight2017=weight2017*get_bweight2017(jets[i]->pt(),jets[i]->eta(),jetPat->hadronFlavour(),jetPat->bDiscriminator("pfDeepCSVJetTags:probb")+jetPat->bDiscriminator("pfDeepCSVJetTags:probbb"));
+      weight2018=weight2018*get_bweight2018(jets[i]->pt(),jets[i]->eta(),jetPat->hadronFlavour(),jetPat->bDiscriminator("pfDeepCSVJetTags:probb")+jetPat->bDiscriminator("pfDeepCSVJetTags:probbb"));
+  }
+  output.push_back(weight2016);
+  output.push_back(weight2017);
+  output.push_back(weight2018);
+  return output;
+}
+
 //JetVariables computeJetInfo(
 std::vector<double> computeJetInfo(
     const std::vector<const reco::Candidate*>& jets) {

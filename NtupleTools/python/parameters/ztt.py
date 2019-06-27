@@ -228,6 +228,10 @@ parameters = {
         #lheweight109='evt.lheweights[109]',
 	#lheweight110='evt.lheweights[110]',
 
+	bweight_2016='jetVariables("pt > 25 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(0)',
+        bweight_2017='jetVariables("pt > 25 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(1)',
+        bweight_2018='jetVariables("pt > 25 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(2)',
+
         # Leading and sublead jets
         j1pt = 'jetVariables("pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(0)',
         j1eta = 'jetVariables("pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5", 0.5).at(1)',

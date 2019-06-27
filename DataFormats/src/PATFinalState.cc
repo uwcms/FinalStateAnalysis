@@ -1405,6 +1405,12 @@ std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, doub
   return computeJetInfo(jets);
 }
 
+std::vector<double> PATFinalState::bVariables(const std::string& jetCuts, double dr ) const {
+  std::vector<const reco::Candidate*> hardScatter = this->daughters();
+  std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
+  return computeBInfo(jets);
+}
+
 std::vector<double> PATFinalState::trackVariables(const std::string& trackCuts, double dr ) const {
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
   std::vector<const reco::Candidate*> tracks = this->vetoTracks(dr, trackCuts);
@@ -1566,7 +1572,6 @@ const float PATFinalState::jetVariables(size_t i, const std::string& key) const 
   }
   return -100; 
 }
-
 
 const float PATFinalState::getIP3D(const size_t i) const
 {

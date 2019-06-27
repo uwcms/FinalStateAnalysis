@@ -267,6 +267,7 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// candidate objects and compute necessary vars
     std::vector<double> jetVariables(const std::string& jetCuts, double dr=0.3) const;
     std::vector<double> trackVariables(const std::string& trackCuts, double dr=0.3) const;
+    std::vector<double> bVariables(const std::string& jetCuts, double dr=0.3) const;
     //JetVariables jetVariables(const std::string& jetCuts, double dr=0.3) const;
     
     /// Check if two daughters are ordered in PT.
