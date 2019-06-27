@@ -1,0 +1,20 @@
+{
+
+  "embedded_EmbeddingRun2018A_MuTauFinalState" : "/EmbeddingRun2018A/MuTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+  "embedded_EmbeddingRun2018B_MuTauFinalState" : "/EmbeddingRun2018B/MuTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+  "embedded_EmbeddingRun2018C_MuTauFinalState" : "/EmbeddingRun2018C/MuTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+
+  "embedded_EmbeddingRun2018A_ElTauFinalState" : "/EmbeddingRun2018A/ElTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+  "embedded_EmbeddingRun2018B_ElTauFinalState" : "/EmbeddingRun2018B/ElTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+  "embedded_EmbeddingRun2018C_ElTauFinalState" : "/EmbeddingRun2018C/ElTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+
+  "embedded_EmbeddingRun2018A_ElMuFinalState" : "/EmbeddingRun2018A/ElMuFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+  "embedded_EmbeddingRun2018B_ElMuFinalState" : "/EmbeddingRun2018B/ElMuFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+  "embedded_EmbeddingRun2018C_ElMuFinalState" : "/EmbeddingRun2018C/ElMuFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+
+  "embedded_EmbeddingRun2018A_TauTauFinalState" : "/EmbeddingRun2018A/TauTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+  "embedded_EmbeddingRun2018B_TauTauFinalState" : "/EmbeddingRun2018B/TauTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+  "embedded_EmbeddingRun2018C_TauTauFinalState" : "/EmbeddingRun2018C/TauTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER"
+
+
+}

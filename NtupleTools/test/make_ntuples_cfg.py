@@ -288,7 +288,7 @@ GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_Prompt_
 #GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'} # For data run ABC
 
 if options.era=="2018":
-  GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_Sep2018ABC_v2'}
+  GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_Sep2018Rereco_v1_v2'}
 if options.era=="2018prompt":
   GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_Prompt_v13'}
 if options.era=="2017":
