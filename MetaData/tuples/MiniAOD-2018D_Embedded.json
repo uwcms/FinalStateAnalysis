@@ -1,0 +1,12 @@
+{
+
+  "embedded_EmbeddingRun2018D_MuTauFinalState" : "/EmbeddingRun2018D/MuTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+
+  "embedded_EmbeddingRun2018D_ElTauFinalState" : "/EmbeddingRun2018D/ElTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+
+  "embedded_EmbeddingRun2018D_ElMuFinalState" : "/EmbeddingRun2018D/ElMuFinalState-inputDoubleMu_102X_miniAOD-v1/USER",
+
+  "embedded_EmbeddingRun2018D_TauTauFinalState" : "/EmbeddingRun2018D/TauTauFinalState-inputDoubleMu_102X_miniAOD-v1/USER"
+
+
+}
