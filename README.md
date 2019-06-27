@@ -7,13 +7,11 @@ PAT tuple, and utilities for generating plain ROOT ntuples from the PAT tuple.
 
 **Documentation:** https://github.com/uwcms/FinalStateAnalysis/wiki
 
-This is for the 2018 data, but should work with 2016 miniAODv3 and 2017 94X samples too.
-
 
 Installation
 ------------
 
-Current CMSSW version: ``CMSSW_10_2_14``.
+Current CMSSW version: ``CMSSW_10_2_15``.
 
 Get a supported CMSSW release area:
 
