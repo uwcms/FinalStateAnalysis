@@ -380,9 +380,9 @@ process.load ("CondCore.CondDB.CondDB_cfi")
 # Defaults to running correctly for Condor, you can
 # pass flag to run locally just fine here with runningLocal=1
 
-sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Autumn18_V8_MC' if options.isMC else 'Autumn18_RunABCD_V8_DATA')
+sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Autumn18_V15_MC' if options.isMC else 'Autumn18_RunABCD_V15_DATA')
 if options.runningLocal :
-    sqlitePath = '../data/{0}.db'.format('Autumn18_V8_MC' if options.isMC else 'Autumn18_RunABCD_V8_DATA' )
+    sqlitePath = '../data/{0}.db'.format('Autumn18_V15_MC' if options.isMC else 'Autumn18_RunABCD_V15_DATA' )
 
 if options.era=="2017":
     sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
@@ -394,9 +394,9 @@ if options.era=="2016":
     if options.runningLocal :
         sqlitePath = '../data/{0}.db'.format('Summer16_23Sep2016V4_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
 
-JECtag="JetCorrectorParametersCollection_Autumn18_RunABCD_V8_DATA_AK4PFchs"
+JECtag="JetCorrectorParametersCollection_Autumn18_RunABCD_V15_DATA_AK4PFchs"
 if options.isMC:
-    JECtag="JetCorrectorParametersCollection_Autumn18_V8_MC_AK4PFchs"
+    JECtag="JetCorrectorParametersCollection_Autumn18_V15_MC_AK4PFchs"
 
 if options.era=="2017":
     JECtag="JetCorrectorParametersCollection_Fall17_17Nov2017_V32_94X_DATA_AK4PFchs"
@@ -596,8 +596,8 @@ process.filterFlags = cms.EDProducer(
     cloneGlobalMuonTagger = cms.InputTag("cloneGlobalMuonTaggerMAOD","bad","Ntuples"),
     BadChargedCandidateFilter = cms.InputTag("BadChargedCandidateFilter"),
     BadPFMuonFilter = cms.InputTag("BadPFMuonFilter"),
-    #triggerSrc = cms.InputTag("TriggerResults","",trigSource),
-    triggerSrc = cms.InputTag("TriggerResults","","RECO"),
+    triggerSrc = cms.InputTag("TriggerResults","",trigSource),
+    #triggerSrc = cms.InputTag("TriggerResults","","RECO"),
     metFilterPaths = cms.vstring(
         "Flag_noBadMuons",
         "Flag_BadPFMuonFilter",
