@@ -75,6 +75,9 @@ def produce_final_states(process, daughter_collections, output_commands,
         eventProducer.pvSrcBackup = cms.InputTag('offlineSlimmedPrimaryVertices')
         eventProducer.verticesSrc = cms.InputTag("offlineSlimmedPrimaryVertices")
         eventProducer.genParticleSrc = cms.InputTag("prunedGenParticles")
+        eventProducer.prefiringSrc = cms.InputTag("prefiringweight:nonPrefiringProb")
+        eventProducer.prefiringUpSrc = cms.InputTag("prefiringweight:nonPrefiringProbUp")
+        eventProducer.prefiringDownSrc = cms.InputTag("prefiringweight:nonPrefiringProbDown")
         eventProducer.mets = cms.PSet(
             pfmet = cms.InputTag(src['pfmet']),
 	    puppimet = cms.InputTag("slimmedMETsPuppi"),

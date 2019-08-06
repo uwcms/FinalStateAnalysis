@@ -99,6 +99,7 @@ class PATFinalStateEvent {
         const reco::GsfTrackRefProd& gsfTracks,
 	    const std::map<std::string, edm::Ptr<pat::MET> >& mets,
 	    std::vector<float> lheweights,
+            std::vector<float> prefiringweights,
         const int npNLO,
         const std::map<std::string, bool> filterFlagsMap
     );
@@ -120,6 +121,7 @@ class PATFinalStateEvent {
     /// Get FastJet rho
     double rho() const;
     std::vector<float> lheweights() const;
+    std::vector<float> prefiringweights() const;
     int npNLO() const;
     /// Get trigger information
     const pat::TriggerEvent& trig() const;
@@ -293,6 +295,7 @@ class PATFinalStateEvent {
     // List of different MET types
     std::map<std::string, edm::Ptr<pat::MET> > mets_;
     std::vector<float> lheweights_;
+    std::vector<float> prefiringweights_;
     int npNLO_;
     std::map<std::string, bool> filterFlagsMap_;
 
