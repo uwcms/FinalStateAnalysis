@@ -228,6 +228,10 @@ parameters = {
         #lheweight109='evt.lheweights[109]',
 	#lheweight110='evt.lheweights[110]',
 
+	prefiring_weight='evt.prefiringweights[0]',
+        prefiring_weight_up='evt.prefiringweights[1]',
+        prefiring_weight_down='evt.prefiringweights[2]',
+
 	bweight_2016='bVariables("pt > 25 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5", 0.5).at(0)',
         bweight_2017='bVariables("pt > 25 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5", 0.5).at(1)',
         bweight_2018='bVariables("pt > 25 & abs(eta) < 2.4 & userFloat(\'idTight\') > 0.5", 0.5).at(2)',

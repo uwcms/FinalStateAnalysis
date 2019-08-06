@@ -55,6 +55,10 @@ private:
   edm::EDGetTokenT<edm::View<reco::Vertex> > pvBackSrcToken_;
   edm::EDGetTokenT<edm::View<reco::Vertex> > verticesSrcToken_;
 
+  edm::EDGetTokenT< double > prefweight_token;
+  edm::EDGetTokenT< double > prefweightup_token;
+  edm::EDGetTokenT< double > prefweightdown_token;
+
   // The final tau/jet/muon etc collections in the event
   edm::EDGetTokenT<pat::ElectronCollection> electronSrcToken_;
   edm::EDGetTokenT<pat::JetCollection> jetSrcToken_;
@@ -133,6 +137,10 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   pvSrcToken_ = consumes<edm::View<reco::Vertex> >(pset.getParameter<edm::InputTag>("pvSrc"));
   pvBackSrcToken_ = consumes<edm::View<reco::Vertex> >(pset.getParameter<edm::InputTag>("pvSrcBackup"));
   verticesSrcToken_ = consumes<edm::View<reco::Vertex> >(pset.getParameter<edm::InputTag>("verticesSrc"));
+
+  prefweight_token = consumes< double >(pset.getParameter<edm::InputTag>("prefiringSrc"));
+  prefweightup_token = consumes< double >(pset.getParameter<edm::InputTag>("prefiringUpSrc"));
+  prefweightdown_token = consumes< double >(pset.getParameter<edm::InputTag>("prefiringDownSrc"));
 
   electronSrcToken_ = consumes<pat::ElectronCollection>(pset.getParameter<edm::InputTag>("electronSrc"));
   muonSrcToken_     = consumes<pat::MuonCollection>(pset.getParameter<edm::InputTag>("muonSrc"));
@@ -238,6 +246,19 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
        //std::cout<<i<<" "<<EvtHandle->weights()[i].id<<" "<<EvtHandle->weights()[i].wgt<<" "<<EvtHandle->originalXWGTUP()<<std::endl;
     };
   }
+
+  edm::Handle< double > theprefweight;
+  evt.getByToken(prefweight_token, theprefweight ) ;
+  edm::Handle< double > theprefweightup;
+  evt.getByToken(prefweightup_token, theprefweightup ) ;
+  edm::Handle< double > theprefweightdown;
+  evt.getByToken(prefweightdown_token, theprefweightdown ) ;
+
+  std::vector<float> prefiringweights;
+  prefiringweights.push_back(*theprefweight);
+  prefiringweights.push_back(*theprefweightup);
+  prefiringweights.push_back(*theprefweightdown);
+
 
   int npNLO=-1;
   if (EvtHandle.isValid()) {
@@ -430,7 +451,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), isEmbedded_, puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
                               phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts,
-                              lheweights, npNLO, filterFlagsInfo); //FIXME 
+                              lheweights, prefiringweights, npNLO, filterFlagsInfo); //FIXME 
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
   for (size_t i = 0; i < extras.size(); ++i) {
