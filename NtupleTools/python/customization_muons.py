@@ -1,7 +1,7 @@
 # Embed IDs for muons
 import FWCore.ParameterSet.Config as cms
 
-def preMuons(process, mSrc, vSrc, **kwargs):
+def preMuons(process, isEmbedded, mSrc, vSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
 
     # embed ids
@@ -13,8 +13,29 @@ def preMuons(process, mSrc, vSrc, **kwargs):
     )
     mSrc = modName
     setattr(process,modName,mod)
-    
+
     pathName = 'runMiniAODMuonEmbedding{0}'.format(postfix)
+    modPath = cms.Path(getattr(process,modName))
+    setattr(process,pathName,modPath)
+    process.schedule.append(getattr(process,pathName))
+
+    # embed trigger filters
+    modName = 'minitriggerfilterMuons{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODMuonTriggerFilterEmbedder",
+        src=cms.InputTag(mSrc),
+        bits = cms.InputTag("TriggerResults","","HLT"),
+        objects = cms.InputTag("slimmedPatTrigger"),
+        #bits = cms.InputTag("TriggerResults","","SIMembedding"),
+        #objects = cms.InputTag("slimmedPatTrigger","","MERGE"),
+    )
+    if isEmbedded:
+        mod.bits=cms.InputTag("TriggerResults","","SIMembedding")
+        mod.objects=cms.InputTag("slimmedPatTrigger","","MERGE")
+    mSrc = modName
+    setattr(process,modName,mod)
+    
+    pathName = 'runTriggerFilterMuonEmbedding{0}'.format(postfix)
     modPath = cms.Path(getattr(process,modName))
     setattr(process,pathName,modPath)
     process.schedule.append(getattr(process,pathName))

@@ -4,7 +4,7 @@ from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule
 #from EgammaAnalysis.ElectronTools.regressionWeights_cfi import regressionWeights
 
 
-def preElectrons(process, eSrc, vSrc, year, **kwargs):
+def preElectrons(process, eSrc, vSrc, year, isEmbedded, **kwargs):
     postfix = kwargs.pop('postfix','')
 
     from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
@@ -74,6 +74,27 @@ def preElectrons(process, eSrc, vSrc, year, **kwargs):
     pathName = 'electronRhoEmbedding{0}'.format(postfix)
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
+    process.schedule.append(getattr(process,pathName))
+
+    # embed trigger filters
+    modName = 'minitriggerfilterElectrons{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODElectronTriggerFilterEmbedder",
+        src=cms.InputTag(eSrc),
+        bits = cms.InputTag("TriggerResults","","HLT"),
+        objects = cms.InputTag("slimmedPatTrigger"),
+        #bits = cms.InputTag("TriggerResults","","SIMembedding"),
+        #objects = cms.InputTag("slimmedPatTrigger","","MERGE"),
+    )
+    if isEmbedded:
+	mod.bits=cms.InputTag("TriggerResults","","SIMembedding")
+	mod.objects=cms.InputTag("slimmedPatTrigger","","MERGE")
+    eSrc = modName
+    setattr(process,modName,mod)
+
+    pathName = 'runTriggerFilterElectronEmbedding{0}'.format(postfix)
+    modPath = cms.Path(getattr(process,modName))
+    setattr(process,pathName,modPath)
     process.schedule.append(getattr(process,pathName))
 
     # embed WW ID
