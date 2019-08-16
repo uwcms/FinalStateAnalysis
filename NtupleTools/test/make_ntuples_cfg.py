@@ -707,6 +707,7 @@ fs_daughter_inputs['electrons'] = preElectrons(process,
                                                fs_daughter_inputs['electrons'],
                                                fs_daughter_inputs['vertices'],
                                                options.era,
+					       bool(options.isEmbedded),
                                                electronMVAGeneralIDLabel=electronMVAGeneralIDLabel,
                                                electronMVAHzzIDLabel=electronMVAHzzIDLabel,
                                                applyEnergyCorrections=bool(options.eCalib),
@@ -768,10 +769,12 @@ process.schedule.append(process.METSigSeq)
 
 from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
 fs_daughter_inputs['muons'] = preMuons(process,
+                                       bool(options.isEmbedded),
                                        fs_daughter_inputs['muons'],
                                        fs_daughter_inputs['vertices'])
 for fs in additional_fs:
     additional_fs[fs]['muons'] = preMuons(process,
+					  bool(options.isEmbedded),
                                           additional_fs[fs]['muons'],
                                           additional_fs[fs]['vertices'],
                                           postfix=fs)
@@ -781,11 +784,13 @@ for fs in additional_fs:
 #####################
 from FinalStateAnalysis.NtupleTools.customization_taus import preTaus
 fs_daughter_inputs['taus'] = preTaus(process,
+                                     bool(options.isEmbedded),
                                      fs_daughter_inputs['taus'],
                                      fs_daughter_inputs['vertices'],
                                      rerunMvaIDs=options.htt)
 for fs in additional_fs:
     additional_fs[fs]['taus'] = preTaus(process,
+	                                bool(options.isEmbedded),
                                         additional_fs[fs]['taus'],
                                         additional_fs[fs]['vertices'],
                                         postfix=fs,

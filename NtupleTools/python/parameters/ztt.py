@@ -308,6 +308,7 @@ parameters = {
 
         objectMatchesEle24Tau30Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTau30_eta2p1_CrossL1_v\\d+", 0.5)',
         objectMatchesEle24HPSTau30Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele24_eta2p1_WPTight_Gsf_LooseChargedIsoPFTauHPS30_eta2p1_CrossL1_v\\d+", 0.5)',
+        #objectMatchesEle24Tau30EmbeddedFilter= r'matchToGivenHLTFilter({object_idx}, "hltEle24erWPTightGsfTrackIsoFilterForTau", 0.5)',
         objectMatchesEle25Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele25_eta2p1_WPTight_Gsf_v\\d+", 0.5)',
         objectMatchesEle32Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele32_WPTight_Gsf_v\\d+", 0.5)',
         objectMatchesEle27Filter= r'matchToHLTFilter({object_idx}, "HLT_Ele27_WPTight_Gsf_v\\d+", 0.5)',
@@ -320,6 +321,13 @@ parameters = {
         objectMatchesMu23e12Path= r'matchToHLTPath({object_idx}, "HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
         objectMatchesMu8e23DZPath= r'matchToHLTPath({object_idx}, "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+", 0.5)',
         objectMatchesMu8e23Path= r'matchToHLTPath({object_idx}, "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
+
+        objectMatchEmbeddedFilterEle27 = '? {object}.hasUserInt("matchEmbeddedFilterEle27") ? {object}.userInt("matchEmbeddedFilterEle27") : -10',
+        objectMatchEmbeddedFilterEle32 = '? {object}.hasUserInt("matchEmbeddedFilterEle32") ? {object}.userInt("matchEmbeddedFilterEle32") : -10',
+        objectMatchEmbeddedFilterEle32DoubleL1_v1 = '? {object}.hasUserInt("matchEmbeddedFilterEle32DoubleL1_v1") ? {object}.userInt("matchEmbeddedFilterEle32DoubleL1_v1") : -10',
+        objectMatchEmbeddedFilterEle32DoubleL1_v2 = '? {object}.hasUserInt("matchEmbeddedFilterEle32DoubleL1_v2") ? {object}.userInt("matchEmbeddedFilterEle32DoubleL1_v2") : -10',
+        objectMatchEmbeddedFilterEle35 = '? {object}.hasUserInt("matchEmbeddedFilterEle35") ? {object}.userInt("matchEmbeddedFilterEle35") : -10',
+        objectMatchEmbeddedFilterEle24Tau30 = '? {object}.hasUserInt("matchEmbeddedFilterEle24Tau30") ? {object}.userInt("matchEmbeddedFilterEle24Tau30") : -10',
 
         objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isPrompt() : -999',
         objectGenDirectPromptTauDecay       = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef().statusFlags().isDirectPromptTauDecayProduct() : -999',
@@ -363,6 +371,12 @@ parameters = {
         objectMatchesMu23e12Path= r'matchToHLTPath({object_idx}, "HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
         objectMatchesMu8e23DZPath= r'matchToHLTPath({object_idx}, "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+", 0.5)',
         objectMatchesMu8e23Path= r'matchToHLTPath({object_idx}, "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_v\\d+", 0.5)',
+
+        objectMatchEmbeddedFilterMu24 = '? {object}.hasUserInt("matchEmbeddedFilterMu24") ? {object}.userInt("matchEmbeddedFilterMu24") : -10',
+        objectMatchEmbeddedFilterMu27 = '? {object}.hasUserInt("matchEmbeddedFilterMu27") ? {object}.userInt("matchEmbeddedFilterMu27") : -10',
+        objectMatchEmbeddedFilterMu20Tau27_2017 = '? {object}.hasUserInt("matchEmbeddedFilterMu20Tau27_2017") ? {object}.userInt("matchEmbeddedFilterMu20Tau27_2017") : -10',
+        objectMatchEmbeddedFilterMu20Tau27_2018 = '? {object}.hasUserInt("matchEmbeddedFilterMu20Tau27_2018") ? {object}.userInt("matchEmbeddedFilterMu20Tau27_2018") : -10',
+
 
         objectGenIsPrompt       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isPrompt() : -999',
         objectGenDirectPromptTauDecayFinalState       = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef().isDirectPromptTauDecayProductFinalState() : -999',
@@ -413,7 +427,12 @@ parameters = {
         objectMatchesDoubleTauCmbIso35RegPath = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumCombinedIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
         objectMatchesDoubleTau35Filter = r'matchToHLTFilter({object_idx}, "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\d", 0.5)',
         objectMatchesDoubleTau35Path = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
-          
+
+        objectMatchEmbeddedFilterMu20Tau27 = '? {object}.hasUserInt("matchEmbeddedFilterMu20Tau27") ? {object}.userInt("matchEmbeddedFilterMu20Tau27") : -10',
+        objectMatchEmbeddedFilterMu20HPSTau27 = '? {object}.hasUserInt("matchEmbeddedFilterMu20HPSTau27") ? {object}.userInt("matchEmbeddedFilterMu20HPSTau27") : -10',
+        objectMatchEmbeddedFilterEle24Tau30 = '? {object}.hasUserInt("matchEmbeddedFilterEle24Tau30") ? {object}.userInt("matchEmbeddedFilterEle24Tau30") : -10',
+        objectMatchEmbeddedFilterTauTau = '? {object}.hasUserInt("matchEmbeddedFilterTauTau") ? {object}.userInt("matchEmbeddedFilterTauTau") : -10',
+
         #objectDoubleL2IsoTau26Filter = 'matchToHLTFilter2({object_idx}, "hltDoubleL2IsoTau26eta2p2", 0.5)',
         
         objectZTTGenMatching = 'tauGenMatch2({object_idx})', 

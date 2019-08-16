@@ -44,7 +44,7 @@ def getDeepTauVersion(file_name):
         return int(year), int(version), int(subversion)
 
 
-def preTaus(process, tSrc, vSrc,**kwargs):
+def preTaus(process, isEmbedded, tSrc, vSrc,**kwargs):
 
     postfix = kwargs.pop('postfix','')
     rerunMvaIDs = bool(kwargs.pop('rerunMvaIDs', 0))
@@ -745,6 +745,28 @@ def preTaus(process, tSrc, vSrc,**kwargs):
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
+
+    # embed trigger filters
+    modName = 'minitriggerfilterTaus{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODTauTriggerFilterEmbedder",
+        src=cms.InputTag(tSrc),
+        bits = cms.InputTag("TriggerResults","","HLT"),
+        objects = cms.InputTag("slimmedPatTrigger"),
+        #bits = cms.InputTag("TriggerResults","","SIMembedding"),
+        #objects = cms.InputTag("slimmedPatTrigger","","MERGE"),
+    )
+    if isEmbedded:
+        mod.bits=cms.InputTag("TriggerResults","","SIMembedding")
+        mod.objects=cms.InputTag("slimmedPatTrigger","","MERGE")
+    tSrc = modName
+    setattr(process,modName,mod)
+
+    pathName = 'runTriggerFilterTauEmbedding{0}'.format(postfix)
+    modPath = cms.Path(getattr(process,modName))
+    setattr(process,pathName,modPath)
+    process.schedule.append(getattr(process,pathName))
+
 
 
     return tSrc
