@@ -277,7 +277,7 @@ def preTaus(process, isEmbedded, tSrc, vSrc,**kwargs):
              'inner:RecoTauTag/TrainingFiles/data/DeepTauId/deepTau_2017v2p6_e6_inner.pb',
              'outer:RecoTauTag/TrainingFiles/data/DeepTauId/deepTau_2017v2p6_e6_outer.pb',
         ]
-        process.deepTau2017v2 = cms.EDProducer("DeepTauId",
+        process.deepTau2017v2p1 = cms.EDProducer("DeepTauId",
                 electrons              = cms.InputTag('slimmedElectrons'),
                 muons                  = cms.InputTag('slimmedMuons'),
                 taus                   = cms.InputTag(tSrc),
@@ -287,11 +287,12 @@ def preTaus(process, isEmbedded, tSrc, vSrc,**kwargs):
                 graph_file             = cms.vstring(file_names),
                 mem_mapped             = cms.bool(True),
                 version                = cms.uint32(getDeepTauVersion(file_names[0])[1]),
-                debug_level            = cms.int32(0)
+                debug_level            = cms.int32(0),
+                disable_dxy_pca        = cms.bool(True)
 
         )
 
-        processDeepProducer(process,'deepTau2017v2', tauIDSources, workingPoints_)
+        processDeepProducer(process,'deepTau2017v2p1', tauIDSources, workingPoints_)
 
 
 	##NEW deep Tau
@@ -619,7 +620,7 @@ def preTaus(process, isEmbedded, tSrc, vSrc,**kwargs):
 	   #* process.dpfTau2016v1
            #* process.dpfTau2016v0
            #* process.deepTau2017v1
-           * process.deepTau2017v2
+           * process.deepTau2017v2p1
 	   * process.patTauDiscriminationByElectronRejectionMVA62018Seq
         )
         process.schedule.append( process.rerunMvaIsolation2SeqRun2 )
@@ -676,33 +677,33 @@ def preTaus(process, isEmbedded, tSrc, vSrc,**kwargs):
             #byVVTightDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetVVTight"),
             #byVVVLooseDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetVVVLoose"),
 
-            byDeepTau2017v2VSmuraw = cms.InputTag("deepTau2017v2","VSmu"),
-            byLooseDeepTau2017v2VSmu = cms.InputTag("deepTau2017v2","VSmuLoose"),
-            byMediumDeepTau2017v2VSmu = cms.InputTag("deepTau2017v2","VSmuMedium"),
-            byTightDeepTau2017v2VSmu = cms.InputTag("deepTau2017v2","VSmuTight"),
-            byVLooseDeepTau2017v2VSmu = cms.InputTag("deepTau2017v2","VSmuVLoose"),
-            byVTightDeepTau2017v2VSmu = cms.InputTag("deepTau2017v2","VSmuVTight"),
-            byVVLooseDeepTau2017v2VSmu = cms.InputTag("deepTau2017v2","VSmuVVLoose"),
-            byVVTightDeepTau2017v2VSmu = cms.InputTag("deepTau2017v2","VSmuVVTight"),
-            byVVVLooseDeepTau2017v2VSmu = cms.InputTag("deepTau2017v2","VSmuVVVLoose"),
-            byDeepTau2017v2VSeraw = cms.InputTag("deepTau2017v2","VSe"),
-            byLooseDeepTau2017v2VSe = cms.InputTag("deepTau2017v2","VSeLoose"),
-            byMediumDeepTau2017v2VSe = cms.InputTag("deepTau2017v2","VSeMedium"),
-            byTightDeepTau2017v2VSe = cms.InputTag("deepTau2017v2","VSeTight"),
-            byVLooseDeepTau2017v2VSe = cms.InputTag("deepTau2017v2","VSeVLoose"),
-            byVTightDeepTau2017v2VSe = cms.InputTag("deepTau2017v2","VSeVTight"),
-            byVVLooseDeepTau2017v2VSe = cms.InputTag("deepTau2017v2","VSeVVLoose"),
-            byVVTightDeepTau2017v2VSe = cms.InputTag("deepTau2017v2","VSeVVTight"),
-            byVVVLooseDeepTau2017v2VSe = cms.InputTag("deepTau2017v2","VSeVVVLoose"),
-            byDeepTau2017v2VSjetraw = cms.InputTag("deepTau2017v2","VSjet"),
-            byLooseDeepTau2017v2VSjet = cms.InputTag("deepTau2017v2","VSjetLoose"),
-            byMediumDeepTau2017v2VSjet = cms.InputTag("deepTau2017v2","VSjetMedium"),
-            byTightDeepTau2017v2VSjet = cms.InputTag("deepTau2017v2","VSjetTight"),
-            byVLooseDeepTau2017v2VSjet = cms.InputTag("deepTau2017v2","VSjetVLoose"),
-            byVTightDeepTau2017v2VSjet = cms.InputTag("deepTau2017v2","VSjetVTight"),
-            byVVLooseDeepTau2017v2VSjet = cms.InputTag("deepTau2017v2","VSjetVVLoose"),
-            byVVTightDeepTau2017v2VSjet = cms.InputTag("deepTau2017v2","VSjetVVTight"),
-            byVVVLooseDeepTau2017v2VSjet = cms.InputTag("deepTau2017v2","VSjetVVVLoose"),
+            byDeepTau2017v2p1VSmuraw = cms.InputTag("deepTau2017v2p1","VSmu"),
+            byLooseDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuLoose"),
+            byMediumDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuMedium"),
+            byTightDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuTight"),
+            byVLooseDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuVLoose"),
+            byVTightDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuVTight"),
+            byVVLooseDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuVVLoose"),
+            byVVTightDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuVVTight"),
+            byVVVLooseDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuVVVLoose"),
+            byDeepTau2017v2p1VSeraw = cms.InputTag("deepTau2017v2p1","VSe"),
+            byLooseDeepTau2017v2p1VSe = cms.InputTag("deepTau2017v2p1","VSeLoose"),
+            byMediumDeepTau2017v2p1VSe = cms.InputTag("deepTau2017v2p1","VSeMedium"),
+            byTightDeepTau2017v2p1VSe = cms.InputTag("deepTau2017v2p1","VSeTight"),
+            byVLooseDeepTau2017v2p1VSe = cms.InputTag("deepTau2017v2p1","VSeVLoose"),
+            byVTightDeepTau2017v2p1VSe = cms.InputTag("deepTau2017v2p1","VSeVTight"),
+            byVVLooseDeepTau2017v2p1VSe = cms.InputTag("deepTau2017v2p1","VSeVVLoose"),
+            byVVTightDeepTau2017v2p1VSe = cms.InputTag("deepTau2017v2p1","VSeVVTight"),
+            byVVVLooseDeepTau2017v2p1VSe = cms.InputTag("deepTau2017v2p1","VSeVVVLoose"),
+            byDeepTau2017v2p1VSjetraw = cms.InputTag("deepTau2017v2p1","VSjet"),
+            byLooseDeepTau2017v2p1VSjet = cms.InputTag("deepTau2017v2p1","VSjetLoose"),
+            byMediumDeepTau2017v2p1VSjet = cms.InputTag("deepTau2017v2p1","VSjetMedium"),
+            byTightDeepTau2017v2p1VSjet = cms.InputTag("deepTau2017v2p1","VSjetTight"),
+            byVLooseDeepTau2017v2p1VSjet = cms.InputTag("deepTau2017v2p1","VSjetVLoose"),
+            byVTightDeepTau2017v2p1VSjet = cms.InputTag("deepTau2017v2p1","VSjetVTight"),
+            byVVLooseDeepTau2017v2p1VSjet = cms.InputTag("deepTau2017v2p1","VSjetVVLoose"),
+            byVVTightDeepTau2017v2p1VSjet = cms.InputTag("deepTau2017v2p1","VSjetVVTight"),
+            byVVVLooseDeepTau2017v2p1VSjet = cms.InputTag("deepTau2017v2p1","VSjetVVVLoose"),
 
             againstElectronMVA6Raw2018 = cms.InputTag("patTauDiscriminationByElectronRejectionMVA62018Raw"),
             againstElectronMVA6category2018 = cms.InputTag("patTauDiscriminationByElectronRejectionMVA62018Raw","category"),
