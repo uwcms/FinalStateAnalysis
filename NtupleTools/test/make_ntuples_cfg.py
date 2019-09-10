@@ -330,7 +330,7 @@ fs_daughter_inputs = {
     'jets': 'slimmedJets',
     'pfmet': 'slimmedMETsModifiedMET',         # slimmedMETs, slimmedMETsNoHF (miniaodv2), slimmmedMETsPuppi (not correct in miniaodv1)
     'mvamet': 'fixme',              # produced later
-    'puppimet': 'slimmmedMETsPuppi',
+    'puppimet': 'slimmmedMETsModifiedPuppi',
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
 
@@ -668,6 +668,8 @@ if abs(options.runFSRFilter)>0:
 #######################################
 
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+from PhysicsTools.PatAlgos.slimming.puppiForMET_cff import makePuppiesFromMiniAOD
+makePuppiesFromMiniAOD( process, True );
 
 # If you only want to re-correct and get the proper uncertainties
 
@@ -678,16 +680,41 @@ if options.era=="2017":
        fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
        postfix = "ModifiedMET"
                         )
+
+    runMetCorAndUncFromMiniAOD(process,
+       isData=isData,
+       fixEE2017 = True,
+       fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
+       metType="Puppi",
+       jetFlavor="AK4PFPuppi",
+       postfix = "ModifiedPuppi"
+                        )
+
 else:
     runMetCorAndUncFromMiniAOD(process,
        isData=isData,
        postfix = "ModifiedMET"
                         )
 
+    runMetCorAndUncFromMiniAOD(process,
+       isData=isData,
+       metType="Puppi",
+       jetFlavor="AK4PFPuppi",
+       postfix = "ModifiedPuppi"
+                        )
+
 process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
 
+process.puppiNoLep.useExistingWeights = False
+process.puppi.useExistingWeights = True
 
+process.correctPuppi = cms.Path(
+                     process.egmPhotonIDSequence *
+                     process.puppiMETSequence *
+                     process.fullPatMetSequenceModifiedPuppi
+                     )
+process.schedule.append(process.correctPuppi)
 
 #########################################################
 ### embed some things we need before object selection ###
