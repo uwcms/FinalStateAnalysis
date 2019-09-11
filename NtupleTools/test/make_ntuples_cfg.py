@@ -284,13 +284,13 @@ process.load('Configuration.StandardSequences.Services_cff')
 envvar = 'mcgt' if options.isMC else 'datagt'
 
 # All data falls under unified GT (6 Feb 2017) ReReco BCDEFG, Prompt H
-GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_Prompt_v13'} # For data run D
+GT = {'mcgt': '102X_upgrade2018_realistic_v19', 'datagt': '102X_dataRun2_Prompt_v14'} # For data run D
 #GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'} # For data run ABC
 
 if options.era=="2018":
-  GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_v11'}
+  GT = {'mcgt': '102X_upgrade2018_realistic_v19', 'datagt': '102X_dataRun2_v11'}
 if options.era=="2018prompt":
-  GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_Prompt_v13'}
+  GT = {'mcgt': '102X_upgrade2018_realistic_v19', 'datagt': '102X_dataRun2_Prompt_v14'}
 if options.era=="2017":
   GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '94X_dataRun2_v11'}
 if options.era=="2016":
