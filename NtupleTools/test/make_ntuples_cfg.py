@@ -466,7 +466,7 @@ process.schedule.append(process.add_prefiringweight)
 ######################
 ### Build Gen Taus ###
 ######################
-if options.htt and options.isMC :
+if options.htt and (options.isMC or options.isEmbedded):
 
     # Build all gen taus
     process.tauGenJets = cms.EDProducer(
