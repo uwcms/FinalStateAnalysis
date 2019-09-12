@@ -330,7 +330,7 @@ fs_daughter_inputs = {
     'jets': 'slimmedJets',
     'pfmet': 'slimmedMETsModifiedMET',         # slimmedMETs, slimmedMETsNoHF (miniaodv2), slimmmedMETsPuppi (not correct in miniaodv1)
     'mvamet': 'fixme',              # produced later
-    'puppimet': 'slimmmedMETsModifiedPuppi',
+    'puppimet': 'slimmmedMETsPuppi',
     'vertices': 'offlineSlimmedPrimaryVertices',
 }
 
@@ -687,7 +687,7 @@ if options.era=="2017":
        fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
        metType="Puppi",
        jetFlavor="AK4PFPuppi",
-       postfix = "ModifiedPuppi"
+       postfix = "Puppi"
                         )
 
 else:
@@ -700,7 +700,7 @@ else:
        isData=isData,
        metType="Puppi",
        jetFlavor="AK4PFPuppi",
-       postfix = "ModifiedPuppi"
+       postfix = "Puppi"
                         )
 
 process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
@@ -712,7 +712,7 @@ process.puppi.useExistingWeights = True
 process.correctPuppi = cms.Path(
                      process.egmPhotonIDSequence *
                      process.puppiMETSequence *
-                     process.fullPatMetSequenceModifiedPuppi
+                     process.fullPatMetSequencePuppi
                      )
 process.schedule.append(process.correctPuppi)
 
