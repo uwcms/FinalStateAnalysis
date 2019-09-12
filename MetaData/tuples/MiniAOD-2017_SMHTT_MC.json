@@ -12,7 +12,6 @@
   "DY2Jets_MLM" : "DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
   "DY3Jets_MLM" : "DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
   "DY4Jets_MLM" : "DY4JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
-  "DYJets_M10to50_MLM" : "DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8",
   "TTToSemiLeptonic" : "TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8",
   "TTToHadronic" : "TTToHadronic_TuneCP5_13TeV-powheg-pythia8",
   "TTTo2L2Nu" : "TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8",

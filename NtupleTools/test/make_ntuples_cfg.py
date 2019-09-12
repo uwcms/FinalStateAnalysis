@@ -284,13 +284,13 @@ process.load('Configuration.StandardSequences.Services_cff')
 envvar = 'mcgt' if options.isMC else 'datagt'
 
 # All data falls under unified GT (6 Feb 2017) ReReco BCDEFG, Prompt H
-GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_Prompt_v13'} # For data run D
+GT = {'mcgt': '102X_upgrade2018_realistic_v19', 'datagt': '102X_dataRun2_Prompt_v14'} # For data run D
 #GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'} # For data run ABC
 
 if options.era=="2018":
-  GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_v11'}
+  GT = {'mcgt': '102X_upgrade2018_realistic_v19', 'datagt': '102X_dataRun2_v11'}
 if options.era=="2018prompt":
-  GT = {'mcgt': '102X_upgrade2018_realistic_v18', 'datagt': '102X_dataRun2_Prompt_v13'}
+  GT = {'mcgt': '102X_upgrade2018_realistic_v19', 'datagt': '102X_dataRun2_Prompt_v14'}
 if options.era=="2017":
   GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '94X_dataRun2_v11'}
 if options.era=="2016":
@@ -380,9 +380,9 @@ process.load ("CondCore.CondDB.CondDB_cfi")
 # Defaults to running correctly for Condor, you can
 # pass flag to run locally just fine here with runningLocal=1
 
-sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Autumn18_V15_MC' if options.isMC else 'Autumn18_RunABCD_V15_DATA')
+sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Autumn18_V16_MC' if options.isMC else 'Autumn18_RunABCD_V16_DATA')
 if options.runningLocal :
-    sqlitePath = '../data/{0}.db'.format('Autumn18_V15_MC' if options.isMC else 'Autumn18_RunABCD_V15_DATA' )
+    sqlitePath = '../data/{0}.db'.format('Autumn18_V16_MC' if options.isMC else 'Autumn18_RunABCD_V16_DATA' )
 
 if options.era=="2017":
     sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA')
@@ -394,9 +394,9 @@ if options.era=="2016":
     if options.runningLocal :
         sqlitePath = '../data/{0}.db'.format('Summer16_23Sep2016V4_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
 
-JECtag="JetCorrectorParametersCollection_Autumn18_RunABCD_V15_DATA_AK4PFchs"
+JECtag="JetCorrectorParametersCollection_Autumn18_RunABCD_V16_DATA_AK4PFchs"
 if options.isMC:
-    JECtag="JetCorrectorParametersCollection_Autumn18_V15_MC_AK4PFchs"
+    JECtag="JetCorrectorParametersCollection_Autumn18_V16_MC_AK4PFchs"
 
 if options.era=="2017":
     JECtag="JetCorrectorParametersCollection_Fall17_17Nov2017_V32_94X_DATA_AK4PFchs"
@@ -466,7 +466,7 @@ process.schedule.append(process.add_prefiringweight)
 ######################
 ### Build Gen Taus ###
 ######################
-if options.htt and options.isMC :
+if options.htt and (options.isMC or options.isEmbedded):
 
     # Build all gen taus
     process.tauGenJets = cms.EDProducer(
@@ -668,6 +668,8 @@ if abs(options.runFSRFilter)>0:
 #######################################
 
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+from PhysicsTools.PatAlgos.slimming.puppiForMET_cff import makePuppiesFromMiniAOD
+makePuppiesFromMiniAOD( process, True );
 
 # If you only want to re-correct and get the proper uncertainties
 
@@ -678,16 +680,41 @@ if options.era=="2017":
        fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
        postfix = "ModifiedMET"
                         )
+
+    runMetCorAndUncFromMiniAOD(process,
+       isData=isData,
+       fixEE2017 = True,
+       fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
+       metType="Puppi",
+       jetFlavor="AK4PFPuppi",
+       postfix = "Puppi"
+                        )
+
 else:
     runMetCorAndUncFromMiniAOD(process,
        isData=isData,
        postfix = "ModifiedMET"
                         )
 
+    runMetCorAndUncFromMiniAOD(process,
+       isData=isData,
+       metType="Puppi",
+       jetFlavor="AK4PFPuppi",
+       postfix = "Puppi"
+                        )
+
 process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
 
+process.puppiNoLep.useExistingWeights = False
+process.puppi.useExistingWeights = True
 
+process.correctPuppi = cms.Path(
+                     process.egmPhotonIDSequence *
+                     process.puppiMETSequence *
+                     process.fullPatMetSequencePuppi
+                     )
+process.schedule.append(process.correctPuppi)
 
 #########################################################
 ### embed some things we need before object selection ###
