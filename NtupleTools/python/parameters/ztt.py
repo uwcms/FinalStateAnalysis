@@ -378,6 +378,7 @@ parameters = {
 
         objectMatchEmbeddedFilterMu24 = '? {object}.hasUserInt("matchEmbeddedFilterMu24") ? {object}.userInt("matchEmbeddedFilterMu24") : -10',
         objectMatchEmbeddedFilterMu27 = '? {object}.hasUserInt("matchEmbeddedFilterMu27") ? {object}.userInt("matchEmbeddedFilterMu27") : -10',
+        objectMatchEmbeddedFilterMu19Tau20_2016 = '? {object}.hasUserInt("matchEmbeddedFilterMu19Tau20_2016") ? {object}.userInt("matchEmbeddedFilterMu19Tau20_2016") : -10',
         objectMatchEmbeddedFilterMu20Tau27_2017 = '? {object}.hasUserInt("matchEmbeddedFilterMu20Tau27_2017") ? {object}.userInt("matchEmbeddedFilterMu20Tau27_2017") : -10',
         objectMatchEmbeddedFilterMu20Tau27_2018 = '? {object}.hasUserInt("matchEmbeddedFilterMu20Tau27_2018") ? {object}.userInt("matchEmbeddedFilterMu20Tau27_2018") : -10',
 
@@ -433,12 +434,12 @@ parameters = {
         objectMatchesDoubleTau35Path = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
 
         objectMatchEmbeddedFilterMu20Tau27 = '? {object}.hasUserInt("matchEmbeddedFilterMu20Tau27") ? {object}.userInt("matchEmbeddedFilterMu20Tau27") : -10',
+        objectMatchEmbeddedFilterMu19Tau20 = '? {object}.hasUserInt("matchEmbeddedFilterMu19Tau20") ? {object}.userInt("matchEmbeddedFilterMu19Tau20") : -10',
         objectMatchEmbeddedFilterMu20HPSTau27 = '? {object}.hasUserInt("matchEmbeddedFilterMu20HPSTau27") ? {object}.userInt("matchEmbeddedFilterMu20HPSTau27") : -10',
         objectMatchEmbeddedFilterEle24Tau30 = '? {object}.hasUserInt("matchEmbeddedFilterEle24Tau30") ? {object}.userInt("matchEmbeddedFilterEle24Tau30") : -10',
         objectMatchEmbeddedFilterTauTau = '? {object}.hasUserInt("matchEmbeddedFilterTauTau") ? {object}.userInt("matchEmbeddedFilterTauTau") : -10',
+        objectMatchEmbeddedFilterTauTau2016 = '? {object}.hasUserInt("matchEmbeddedFilterTauTau2016") ? {object}.userInt("matchEmbeddedFilterTauTau2016") : -10',
 
-        #objectDoubleL2IsoTau26Filter = 'matchToHLTFilter2({object_idx}, "hltDoubleL2IsoTau26eta2p2", 0.5)',
-        
         objectZTTGenMatching = 'tauGenMatch2({object_idx})', 
         objectZTTGenPt = 'tauGenKin({object_idx}).at(0)', 
         objectZTTGenEta = 'tauGenKin({object_idx}).at(1)', 
