@@ -67,9 +67,11 @@ void MiniAODTauTriggerFilterEmbedder::produce(edm::Event& evt, const edm::EventS
   for(unsigned i = 0 ; i < nbTau; i++){
     pat::Tau tau(taus->at(i));
     int matchMu20Tau27=0;
+    int matchMu19Tau20=0;
     int matchMu20HPSTau27=0;
     int matchEle24Tau30=0;
     int matchTauTau=0;
+    int matchTauTau2016=0;
     for (pat::TriggerObjectStandAlone obj : *triggerObjects) {
         if (reco::deltaR(tau, obj) > 0.5) continue;
         obj.unpackPathNames(names);
@@ -80,6 +82,9 @@ void MiniAODTauTriggerFilterEmbedder::produce(edm::Event& evt, const edm::EventS
           if (filter.compare("hltL1sMu18erTau24erIorMu20erTau24er")==0) {
                matchMu20Tau27++;
           }
+          if (filter.compare("hltL1sMu18erTau20er")==0) {
+               matchMu19Tau20++;
+          }
           if (filter.compare("hltL1sBigORMu18erTauXXer2p1")==0) {
                matchMu20HPSTau27++;
           }
@@ -89,13 +94,18 @@ void MiniAODTauTriggerFilterEmbedder::produce(edm::Event& evt, const edm::EventS
           if (filter.compare("hltDoubleL2IsoTau26eta2p2")==0) {
                matchTauTau++;
           }
+          if (filter.compare("hltDoublePFTau35Reg")==0) {
+               matchTauTau2016++;
+          }
         }
     }
 
     tau.addUserInt("matchEmbeddedFilterMu20Tau27",matchMu20Tau27);
+    tau.addUserInt("matchEmbeddedFilterMu19Tau20",matchMu19Tau20);
     tau.addUserInt("matchEmbeddedFilterMu20HPSTau27",matchMu20HPSTau27);
     tau.addUserInt("matchEmbeddedFilterEle24Tau30",matchEle24Tau30);
     tau.addUserInt("matchEmbeddedFilterTauTau",matchTauTau);
+    tau.addUserInt("matchEmbeddedFilterTauTau2016",matchTauTau2016);
 
     output->push_back(tau);
   }

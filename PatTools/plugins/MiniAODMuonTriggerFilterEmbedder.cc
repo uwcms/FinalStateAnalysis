@@ -70,6 +70,7 @@ void MiniAODMuonTriggerFilterEmbedder::produce(edm::Event& evt, const edm::Event
     int matchMu27=0;
     int matchMu20Tau27_2018=0;
     int matchMu20Tau27_2017=0;
+    int matchMu19Tau20_2016=0;
     for (pat::TriggerObjectStandAlone obj : *triggerObjects) {
         if (reco::deltaR(muon, obj) > 0.5) continue;
         obj.unpackPathNames(names);
@@ -83,6 +84,9 @@ void MiniAODMuonTriggerFilterEmbedder::produce(edm::Event& evt, const edm::Event
           if (filter.compare("hltL3crIsoL1sMu18erTau24erIorMu20erTau24erL1f0L2f10QL3f20QL3trkIsoFiltered0p07")==0) {
                matchMu20Tau27_2017++;
           }
+          if (filter.compare("hltL1sMu18erTau20er")==0) {
+               matchMu19Tau20_2016++;
+          }
           if (filter.compare("hltL3crIsoL1sSingleMu22L1f0L2f10QL3f24QL3trkIsoFiltered0p07")==0) {
                matchMu24++;
           }
@@ -94,6 +98,7 @@ void MiniAODMuonTriggerFilterEmbedder::produce(edm::Event& evt, const edm::Event
 
     muon.addUserInt("matchEmbeddedFilterMu24",matchMu24);
     muon.addUserInt("matchEmbeddedFilterMu27",matchMu27);
+    muon.addUserInt("matchEmbeddedFilterMu19Tau20_2016",matchMu19Tau20_2016);
     muon.addUserInt("matchEmbeddedFilterMu20Tau27_2017",matchMu20Tau27_2017);
     muon.addUserInt("matchEmbeddedFilterMu20Tau27_2018",matchMu20Tau27_2018);
 

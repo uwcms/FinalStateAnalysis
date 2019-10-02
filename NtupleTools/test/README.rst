@@ -112,6 +112,10 @@ Data 2018 D::
 
    submit_job.py SMHTT_2018_data make_ntuples_cfg.py channels="mt,mm" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 era="2018prompt" runMVAMET=0 isEmbedded=0 paramFile=CMSSW_10_2_16_UL/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --extra-usercode-files src/../cfipython/slc7_amd64_gcc700/RecoEgamma/EgammaTools --das-replace=../../MetaData/tuples/MiniAOD-2018_DataPrompt.json --apply-cmsRun-lumimask --samples "data_SingleMu*" -o submit_dataMu_mt_2018D.sh --data --lumimask-json Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt
    
+Embedded 2016. In the sh file produced by submit_job.py you need to change --input-files-per-job=1 to --input-files-per-job=75::
+
+   submit_job.py SMHTT_2016_embedded make_ntuples_cfg.py channels="mt" isLFV=0 isMC=0 skipMET=1 fullJES=0 metShift=0 htt=1 era="2016" runMVAMET=0 isEmbedded=1 paramFile=CMSSW_10_2_16_UL/src/FinalStateAnalysis/NtupleTools/python/parameters/ztt.py --extra-usercode-files src/FinalStateAnalysis/NtupleTools/python/parameters --extra-usercode-files src/../cfipython/slc7_amd64_gcc700/RecoEgamma/EgammaTools --das-replace=../../MetaData/tuples/MiniAOD-2016_Embedded.json --apply-cmsRun-lumimask --samples "*MuTau*" -o submit_embedded_2016.sh --embedded --instance prod/phys03 --lumimask-json Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
+
 
 Embedded 2017. In the sh file produced by submit_job.py you need to change --input-files-per-job=1 to --input-files-per-job=100::
 
