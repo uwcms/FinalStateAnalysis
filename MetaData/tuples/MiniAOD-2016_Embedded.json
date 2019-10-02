@@ -1,0 +1,39 @@
+{
+
+  "embedded_EmbeddingRun2016B_MuTauFinalState" : "/EmbeddingRun2016B/MuTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016C_MuTauFinalState" : "/EmbeddingRun2016C/MuTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016D_MuTauFinalState" : "/EmbeddingRun2016D/MuTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016E_MuTauFinalState" : "/EmbeddingRun2016E/MuTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016F_MuTauFinalState" : "/EmbeddingRun2016F/MuTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016G_MuTauFinalState" : "/EmbeddingRun2016G/MuTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016H_MuTauFinalState" : "/EmbeddingRun2016H/MuTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+
+  "embedded_EmbeddingRun2016B_ElTauFinalState" : "/EmbeddingRun2016B/ElTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016C_ElTauFinalState" : "/EmbeddingRun2016C/ElTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016D_ElTauFinalState" : "/EmbeddingRun2016D/ElTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016E_ElTauFinalState" : "/EmbeddingRun2016E/ElTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016F_ElTauFinalState" : "/EmbeddingRun2016F/ElTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016G_ElTauFinalState" : "/EmbeddingRun2016G/ElTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016H_ElTauFinalState" : "/EmbeddingRun2016H/ElTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+
+  "embedded_EmbeddingRun2016B_ElMuFinalState" : "/EmbeddingRun2016B/ElMuFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016C_ElMuFinalState" : "/EmbeddingRun2016C/ElMuFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016D_ElMuFinalState" : "/EmbeddingRun2016D/ElMuFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016E_ElMuFinalState" : "/EmbeddingRun2016E/ElMuFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016F_ElMuFinalState" : "/EmbeddingRun2016F/ElMuFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016G_ElMuFinalState" : "/EmbeddingRun2016G/ElMuFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016H_ElMuFinalState" : "/EmbeddingRun2016H/ElMuFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+
+  "embedded_EmbeddingRun2016B_TauTauFinalState" : "/EmbeddingRun2016B/TauTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016C_TauTauFinalState" : "/EmbeddingRun2016C/TauTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016D_TauTauFinalState" : "/EmbeddingRun2016D/TauTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016E_TauTauFinalState" : "/EmbeddingRun2016E/TauTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016F_TauTauFinalState" : "/EmbeddingRun2016F/TauTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016G_TauTauFinalState" : "/EmbeddingRun2016G/TauTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER",
+  "embedded_EmbeddingRun2016H_TauTauFinalState" : "/EmbeddingRun2016H/TauTauFinalState-inputDoubleMu_94X_Legacy_miniAOD-v5/USER"
+
+
+
+}
+
+
