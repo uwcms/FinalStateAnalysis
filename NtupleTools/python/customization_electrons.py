@@ -89,6 +89,8 @@ def preElectrons(process, eSrc, vSrc, year, isEmbedded, **kwargs):
     if isEmbedded:
 	mod.bits=cms.InputTag("TriggerResults","","SIMembedding")
 	mod.objects=cms.InputTag("slimmedPatTrigger","","MERGE")
+	if year=="2016": 
+	    mod.objects=cms.InputTag("slimmedPatTrigger","","PAT")
     eSrc = modName
     setattr(process,modName,mod)
 

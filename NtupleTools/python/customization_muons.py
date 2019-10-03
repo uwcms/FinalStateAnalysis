@@ -1,7 +1,7 @@
 # Embed IDs for muons
 import FWCore.ParameterSet.Config as cms
 
-def preMuons(process, isEmbedded, mSrc, vSrc, **kwargs):
+def preMuons(process, year, isEmbedded, mSrc, vSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
 
     # embed ids
@@ -32,6 +32,9 @@ def preMuons(process, isEmbedded, mSrc, vSrc, **kwargs):
     if isEmbedded:
         mod.bits=cms.InputTag("TriggerResults","","SIMembedding")
         mod.objects=cms.InputTag("slimmedPatTrigger","","MERGE")
+	if year=="2016":
+	   mod.objects=cms.InputTag("slimmedPatTrigger","","PAT")
+
     mSrc = modName
     setattr(process,modName,mod)
     
