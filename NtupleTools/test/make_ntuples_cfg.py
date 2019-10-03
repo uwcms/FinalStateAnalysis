@@ -580,9 +580,13 @@ if options.isEmbedded:
     #Trigger
     process.patFinalStateEventProducer.trgResultsSrc= cms.InputTag("TriggerResults","","SIMembedding")
     process.patFinalStateEventProducer.trgResultsSrc2= cms.InputTag("TriggerResults","","MERGE")
+    if options.era=="2016":
+	process.patFinalStateEventProducer.trgResultsSrc2= cms.InputTag("TriggerResults","","PAT")
     #GenInfo
     #process.patFinalStateEventProducer.genParticleSrc = cms.InputTag("prunedGenParticles", "", "MERGE")
     process.patFinalStateEventProducer.packedGenSrc = cms.InputTag("packedGenParticles", "", "MERGE")
+    if options.era=="2016":
+	process.patFinalStateEventProducer.packedGenSrc = cms.InputTag("packedGenParticles", "", "PAT")
     process.patFinalStateEventProducer.l1extraIsoTauSrc=cms.InputTag("caloStage2Digis","Tau","SIMembedding")
     process.patFinalStateEventProducer.isEmbedded = cms.bool(True)
 
@@ -796,11 +800,13 @@ process.schedule.append(process.METSigSeq)
 
 from FinalStateAnalysis.NtupleTools.customization_muons import preMuons
 fs_daughter_inputs['muons'] = preMuons(process,
+                                       options.era,
                                        bool(options.isEmbedded),
                                        fs_daughter_inputs['muons'],
                                        fs_daughter_inputs['vertices'])
 for fs in additional_fs:
     additional_fs[fs]['muons'] = preMuons(process,
+                                          options.era,
 					  bool(options.isEmbedded),
                                           additional_fs[fs]['muons'],
                                           additional_fs[fs]['vertices'],
@@ -811,12 +817,14 @@ for fs in additional_fs:
 #####################
 from FinalStateAnalysis.NtupleTools.customization_taus import preTaus
 fs_daughter_inputs['taus'] = preTaus(process,
+                                     options.era,
                                      bool(options.isEmbedded),
                                      fs_daughter_inputs['taus'],
                                      fs_daughter_inputs['vertices'],
                                      rerunMvaIDs=options.htt)
 for fs in additional_fs:
     additional_fs[fs]['taus'] = preTaus(process,
+                                        options.era,
 	                                bool(options.isEmbedded),
                                         additional_fs[fs]['taus'],
                                         additional_fs[fs]['vertices'],

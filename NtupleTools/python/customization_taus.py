@@ -44,7 +44,7 @@ def getDeepTauVersion(file_name):
         return int(year), int(version), int(subversion)
 
 
-def preTaus(process, isEmbedded, tSrc, vSrc,**kwargs):
+def preTaus(process, year, isEmbedded, tSrc, vSrc,**kwargs):
 
     postfix = kwargs.pop('postfix','')
     rerunMvaIDs = bool(kwargs.pop('rerunMvaIDs', 0))
@@ -760,6 +760,8 @@ def preTaus(process, isEmbedded, tSrc, vSrc,**kwargs):
     if isEmbedded:
         mod.bits=cms.InputTag("TriggerResults","","SIMembedding")
         mod.objects=cms.InputTag("slimmedPatTrigger","","MERGE")
+	if year=="2016":
+	   mod.objects=cms.InputTag("slimmedPatTrigger","","PAT")
     tSrc = modName
     setattr(process,modName,mod)
 
