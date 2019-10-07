@@ -54,6 +54,19 @@ class MiniAODTauRerunIDEmbedder : public edm::EDProducer {
     edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationTightv2Token_;
     edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationVTightv2Token_;
     edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationVVTightv2Token_;
+    
+    
+    //newDM
+    edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationv2TokennewDM_;
+    edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationVVLoosev2TokennewDM_;
+    edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationVLoosev2TokennewDM_;
+    edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationLoosev2TokennewDM_;
+    edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationMediumv2TokennewDM_;
+    edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationTightv2TokennewDM_;
+    edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationVTightv2TokennewDM_;
+    edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationVVTightv2TokennewDM_;
+    
+    
     //edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationDpfToken_;
     //edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationTightDpfToken_;
     //edm::EDGetTokenT<pat::PATTauDiscriminator> mvaIsolationDpfv0Token_;
@@ -112,6 +125,18 @@ MiniAODTauRerunIDEmbedder::MiniAODTauRerunIDEmbedder(const edm::ParameterSet& ps
   mvaIsolationTightv2Token_   = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("idTightv2"));
   mvaIsolationVTightv2Token_  = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("idVTightv2"));
   mvaIsolationVVTightv2Token_ = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("idVVTightv2"));
+  
+  
+  //newDm
+  mvaIsolationv2TokennewDM_        = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("idRawv2newDM"));
+  mvaIsolationVVLoosev2TokennewDM_  = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("idVVLoosev2newDM"));
+  mvaIsolationVLoosev2TokennewDM_  = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("idVLoosev2newDM"));
+  mvaIsolationLoosev2TokennewDM_   = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("idLoosev2newDM"));
+  mvaIsolationMediumv2TokennewDM_  = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("idMediumv2newDM"));
+  mvaIsolationTightv2TokennewDM_   = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("idTightv2newDM"));
+  mvaIsolationVTightv2TokennewDM_  = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("idVTightv2newDM"));
+  mvaIsolationVVTightv2TokennewDM_ = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("idVVTightv2newDM"));
+  
   //mvaIsolationDpfToken_  = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("byDpfTau2016v1VSallraw"));
   //mvaIsolationTightDpfToken_ = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("byTightDpfTau2016v1VSall"));
   //mvaIsolationDpfv0Token_  = consumes<pat::PATTauDiscriminator>(pset.getParameter<edm::InputTag>("byDpfTau2016v0VSallraw"));
@@ -203,6 +228,35 @@ void MiniAODTauRerunIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
 
   edm::Handle<pat::PATTauDiscriminator> mvaIsoVVTightv2;
   evt.getByToken(mvaIsolationVVTightv2Token_,mvaIsoVVTightv2);
+  
+  
+  //newDM
+  edm::Handle<pat::PATTauDiscriminator> mvaIsoRawv2newDM;
+  evt.getByToken(mvaIsolationv2TokennewDM_,mvaIsoRawv2newDM);
+  
+  edm::Handle<pat::PATTauDiscriminator> mvaIsoVVLoosev2newDM;
+  evt.getByToken(mvaIsolationVVLoosev2TokennewDM_,mvaIsoVVLoosev2newDM);
+  
+  edm::Handle<pat::PATTauDiscriminator> mvaIsoVLoosev2newDM;
+  evt.getByToken(mvaIsolationVLoosev2TokennewDM_,mvaIsoVLoosev2newDM);
+  
+  edm::Handle<pat::PATTauDiscriminator> mvaIsoLoosev2newDM;
+  evt.getByToken(mvaIsolationLoosev2TokennewDM_,mvaIsoLoosev2newDM);
+  
+  edm::Handle<pat::PATTauDiscriminator> mvaIsoMediumv2newDM;
+  evt.getByToken(mvaIsolationMediumv2TokennewDM_,mvaIsoMediumv2newDM);
+  
+  edm::Handle<pat::PATTauDiscriminator> mvaIsoTightv2newDM;
+  evt.getByToken(mvaIsolationTightv2TokennewDM_,mvaIsoTightv2newDM);
+  
+  edm::Handle<pat::PATTauDiscriminator> mvaIsoVTightv2newDM;
+  evt.getByToken(mvaIsolationVTightv2TokennewDM_,mvaIsoVTightv2newDM);
+  
+  edm::Handle<pat::PATTauDiscriminator> mvaIsoVVTightv2newDM;
+  evt.getByToken(mvaIsolationVVTightv2TokennewDM_,mvaIsoVVTightv2newDM);
+  
+  
+  
 
   //edm::Handle<pat::PATTauDiscriminator> mvaIsoDpf;
   //evt.getByToken(mvaIsolationDpfToken_,mvaIsoDpf);
@@ -322,6 +376,18 @@ void MiniAODTauRerunIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
         tau.addUserFloat("byIsolationMVArun2v2DBoldDMwLTVTightRerun", (*mvaIsoVTightv2)[tauRef]);
         tau.addUserFloat("byIsolationMVArun2v2DBoldDMwLTVVTightRerun", (*mvaIsoVVTightv2)[tauRef]);
 
+
+          //newDM
+        tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTrawRerun", (*mvaIsoRawv2newDM)[tauRef]);
+        tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTVVLooseRerun", (*mvaIsoVVLoosev2newDM)[tauRef]);
+        tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTVLooseRerun", (*mvaIsoVLoosev2newDM)[tauRef]);
+        tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTLooseRerun", (*mvaIsoLoosev2newDM)[tauRef]);
+        tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTMediumRerun", (*mvaIsoMediumv2newDM)[tauRef]);
+        tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTTightRerun", (*mvaIsoTightv2newDM)[tauRef]);
+        tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTVTightRerun", (*mvaIsoVTightv2newDM)[tauRef]);
+        tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTVVTightRerun", (*mvaIsoVVTightv2newDM)[tauRef]);
+
+
         //tau.addUserFloat("byDpfTau2016v1VSallraw", (*mvaIsoDpf)[tauRef]);
         //tau.addUserFloat("byTightDpfTau2016v1VSall", (*mvaIsoTightDpf)[tauRef]);
         //tau.addUserFloat("byDpfTau2016v0VSallraw", (*mvaIsoDpfv0)[tauRef]);
@@ -386,6 +452,19 @@ void MiniAODTauRerunIDEmbedder::produce(edm::Event& evt, const edm::EventSetup& 
         tau.addUserFloat("byIsolationMVArun2v2DBoldDMwLTTightRerun", -10.0);
         tau.addUserFloat("byIsolationMVArun2v2DBoldDMwLTVTightRerun", -10.0);
         tau.addUserFloat("byIsolationMVArun2v2DBoldDMwLTVVTightRerun", -10.0);
+
+
+      //newDM
+      tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTrawRerun", -10.0);
+      tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTVVLooseRerun", -10.0);
+      tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTVLooseRerun", -10.0);
+      tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTLooseRerun", -10.0);
+      tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTMediumRerun", -10.0);
+      tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTTightRerun", -10.0);
+      tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTVTightRerun", -10.0);
+      tau.addUserFloat("byIsolationMVArun2v2DBnewDMwLTVVTightRerun", -10.0);
+
+
 
         //tau.addUserFloat("byDpfTau2016v1VSallraw", -10.0);
         //tau.addUserFloat("byTightDpfTau2016v1VSall", -10.0);
