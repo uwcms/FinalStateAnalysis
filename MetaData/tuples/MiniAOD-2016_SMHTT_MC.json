@@ -29,5 +29,12 @@
   "EWKWminus" : "EWKWMinus2Jets_WToLNu_M-50_13TeV-madgraph-pythia8",
   "EWKWplus" : "EWKWPlus2Jets_WToLNu_M-50_13TeV-madgraph-pythia8",
   "EWKZNuNu" : "EWKZ2Jets_ZToNuNu_13TeV-madgraph-pythia8",
-  "ttHToNonbb125" : "ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8"
+  "ttHToNonbb125" : "ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8",
+    
+    "HWplusJ_HToWW":"HWplusJ_HToWW_M125_13TeV_powheg_pythia8",
+    "HWminusJ_HToWW":"HWminusJ_HToWW_M125_13TeV_powheg_pythia8",
+    "HZJ_HToWW":"HZJ_HToWW_M125_13TeV_powheg_pythia8",
+    "ggZH_HToTauTau_ZToNuNu":"ggZH_HToTauTau_ZToQQ_M125_13TeV_powheg_pythia8",
+    "ggZH_HToTauTau_ZToLL":"ggZH_HToTauTau_ZToLL_M125_13TeV_powheg_pythia8",
+    "GluGluZH_HToWW":"GluGluZH_HToWW_M125_13TeV_powheg_pythia8"
 } 
