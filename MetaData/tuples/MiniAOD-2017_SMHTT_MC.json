@@ -39,5 +39,13 @@
   "GGZHToTauTau_ZToNuNu_M125" : "ggZH_HToTauTau_ZToNuNu_M125_13TeV_powheg_pythia8",
   "GGZHToTauTau_ZToLL_M125" : "ggZH_HToTauTau_ZToLL_M125_13TeV_powheg_pythia8",
   "GGZHToWW_M125" : "GluGluZH_HToWW_M125_13TeV_powheg_pythia8_TuneCP5",
-  "ttHToNonbb_M125" : "ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8"
+  "ttHToNonbb_M125" : "ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8",
+  "VVTo2L2Nu":"VVTo2L2Nu_13TeV_amcatnloFXFX_madspin_pythia8",
+  "WZ1L3Nu": "WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8_v2",
+  "WZ3L1Nu":"WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8",
+  "WZ1L1Nu2Q":"WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8",
+  "WZ2L2Q":"WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8",
+  "WW1L1Nu2Q":"WWTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8",
+  "ZZ2L2Q":"ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8",
+  "ZZ4L":"ZZTo4L_TuneCP5_13TeV-amcatnloFXFX-pythia8"
 } 
