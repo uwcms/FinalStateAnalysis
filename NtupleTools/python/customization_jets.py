@@ -2,7 +2,7 @@
 import FWCore.ParameterSet.Config as cms
 import os
 
-def preJets(process, jSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
+def preJets(process, jSrc, jupSrc, jdownSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
     jType = kwargs.pop('jType','AK4PFchs')
     doBTag = kwargs.pop('doBTag',False)
@@ -112,11 +112,23 @@ def preJets(process, jSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
     )
     jSrc = modName
     setattr(process,modName,mod)
-
     pathName = 'jetSystematicsEmbedding{0}'.format(postfix)
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
-  
+    process.schedule.append(getattr(process,pathName))
+
+    modName = 'miniAODJERSystematicsEmbedding{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODJERSystematicsEmbedder",
+        src = cms.InputTag(jSrc),
+        up = cms.InputTag(jupSrc),
+        down = cms.InputTag(jdownSrc)
+    )
+    jSrc = modName
+    setattr(process,modName,mod)
+    pathName = 'jerSystematicsEmbedding{0}'.format(postfix)
+    path = cms.Path(getattr(process,modName))
+    setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
 
     return jSrc

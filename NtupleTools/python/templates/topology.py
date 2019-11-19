@@ -178,6 +178,23 @@ extraJet = PSet(
 
 # Temporary variables for JES study
 fullJES = PSet(
+        jetVeto30_JERUp = 'vetoJets(0.5, "userCand(\'jer+\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer+\').pt > 50)").size()',
+        jetVeto30_JERDown = 'vetoJets(0.5, "userCand(\'jer-\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer-\').pt > 50)").size()',
+        vbfMass_JERUp = 'vbfVariables("userCand(\'jer+\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer+\').pt() > 50)", 0.5).mass',
+        vbfMass_JERDown = 'vbfVariables("userCand(\'jer-\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer-\').pt() > 50)", 0.5).mass',
+        vbfMassWoNoisyJets_JERUp = 'vbfVariables("(userCand(\'jer+\').pt() > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & userCand(\'jer+\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer+\').pt() > 50)", 0.5).mass',
+        vbfMassWoNoisyJets_JERDown = 'vbfVariables("(userCand(\'jer-\').pt() > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & userCand(\'jer-\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer-\').pt() > 50)", 0.5).mass',
+        jetVeto30WoNoisyJets_JERUp = 'vetoJets(0.5, "(userCand(\'jer+\').pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & userCand(\'jer+\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer+\').pt > 50)").size()',
+        jetVeto30WoNoisyJets_JERDown = 'vetoJets(0.5, "(userCand(\'jer-\').pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & userCand(\'jer-\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer-\').pt > 50)").size()',
+        j1pt_JERDown = 'jetVariables("userCand(\'jer-\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer-\').pt() > 50)", 0.5).at(0)',
+        j2pt_JERDown = 'jetVariables("userCand(\'jer-\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer-\').pt() > 50)", 0.5).at(10)',
+        j1pt_JERUp = 'jetVariables("userCand(\'jer+\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer+\').pt() > 50)", 0.5).at(0)',
+        j2pt_JERUp = 'jetVariables("userCand(\'jer+\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer+\').pt() > 50)", 0.5).at(10)',
+        j1ptWoNoisyJets_JERDown = 'jetVariables("(userCand(\'jer-\').pt() > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & userCand(\'jer-\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer-\').pt() > 50)", 0.5).at(0)',
+        j2ptWoNoisyJets_JERDown = 'jetVariables("(userCand(\'jer-\').pt() > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & userCand(\'jer-\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer-\').pt() > 50)", 0.5).at(10)',
+        j1ptWoNoisyJets_JERUp = 'jetVariables("(userCand(\'jer+\').pt() > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & userCand(\'jer+\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer-\').pt() > 50)", 0.5).at(0)',
+        j2ptWoNoisyJets_JERUp = 'jetVariables("(userCand(\'jer+\').pt() > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & userCand(\'jer+\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jer-\').pt() > 50)", 0.5).at(10)',
+
         vbfMass_JetTotalUp = 'vbfVariables("userCand(\'jesTotal+\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jesTotal+\').pt() > 50)", 0.5).mass',
         vbfMass_JetTotalDown = 'vbfVariables("userCand(\'jesTotal-\').pt() > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jesTotal-\').pt() > 50)", 0.5).mass',
         jetVeto30_JetTotalUp = 'vetoJets(0.5, "userCand(\'jesTotal+\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | userCand(\'jesTotal+\').pt > 50)").size()',

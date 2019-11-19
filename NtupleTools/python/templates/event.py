@@ -62,6 +62,11 @@ met = PSet(
 # these things break if you pass a shifted met to fsa
 shiftedMet = PSet(
 
+    type1_pfMet_shiftedPt_JERUp             = 'evt.metShift("pfmet","pt","jer+")',
+    type1_pfMet_shiftedPhi_JERUp             = 'evt.metShift("pfmet","phi","jer+")',
+    type1_pfMet_shiftedPt_JERDown             = 'evt.metShift("pfmet","pt","jer-")',
+    type1_pfMet_shiftedPhi_JERDown             = 'evt.metShift("pfmet","phi","jer-")',
+
     type1_pfMet_shiftedPt_JetTotalUp             = 'evt.metShift("pfmet","pt","jesTotal+")',
     type1_pfMet_shiftedPt_JetTotalDown             = 'evt.metShift("pfmet","pt","jesTotal-")',
     type1_pfMet_shiftedPt_JetEta3to5Up             = 'evt.metShift("pfmet","pt","jesEta3to5+")',

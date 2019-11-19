@@ -33,6 +33,8 @@ class MiniAODMETJesSystematicsEmbedder : public edm::EDProducer {
   typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
   edm::EDGetTokenT<edm::View<pat::Jet> > srcToken_;
   edm::EDGetTokenT<edm::View<pat::MET> > srcMETToken_;
+  edm::EDGetTokenT<edm::View<pat::MET> > srcDownMETToken_;
+  edm::EDGetTokenT<edm::View<pat::MET> > srcUpMETToken_;
   std::string label_;
   //std::string fName_ = "Spring16_25nsV9_DATA_UncertaintySources_AK4PFchs.txt"; // recommended by JetMET
   std::string fName_;
@@ -115,6 +117,8 @@ transverseVEC(const reco::Candidate::LorentzVector& input) {
 MiniAODMETJesSystematicsEmbedder::MiniAODMETJesSystematicsEmbedder(const edm::ParameterSet& pset) {
  srcToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src"));
  srcMETToken_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("srcMET"));
+ srcUpMETToken_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("upMET"));
+ srcDownMETToken_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("downMET"));
  label_ = pset.getParameter<std::string>("corrLabel");
  fName_ = pset.getParameter<std::string>("fName");
  std::cout << "Uncert File: " << fName_ << std::endl;
@@ -122,6 +126,8 @@ MiniAODMETJesSystematicsEmbedder::MiniAODMETJesSystematicsEmbedder(const edm::Pa
 
  produces<ShiftedCandCollection>("p4OutMETUpJetsUncorUESUP");
  produces<ShiftedCandCollection>("p4OutMETDownJetsUncorUESDOWN");
+ produces<ShiftedCandCollection>("METJERUp");
+ produces<ShiftedCandCollection>("METJERDown");
 
  size_t found = fName_.find("Summer16");
  if (found==std::string::npos) uncertNames.push_back("RelativeSample");
@@ -158,8 +164,17 @@ void MiniAODMETJesSystematicsEmbedder::produce(edm::Event& evt, const edm::Event
  const pat::MET& inputMET = mets->at(0);
  pat::MET extendedMET = inputMET;
 
- bool skipMuons_=true;
+ edm::Handle<edm::View<pat::MET> > mets_jerdown;
+ evt.getByToken(srcDownMETToken_, mets_jerdown);
+ const pat::MET& inputMET_JERDown = mets_jerdown->at(0);
+ pat::MET extendedMET_JERDown = inputMET_JERDown;
 
+ edm::Handle<edm::View<pat::MET> > mets_jerup;
+ evt.getByToken(srcUpMETToken_, mets_jerup);
+ const pat::MET& inputMET_JERUp = mets_jerup->at(0);
+ pat::MET extendedMET_JERUp = inputMET_JERUp;
+
+ bool skipMuons_=true;
 
  // For comparing with Total for Closure test
  // assume symmetric uncertainties and ignore Down
@@ -330,6 +345,20 @@ void MiniAODMETJesSystematicsEmbedder::produce(edm::Event& evt, const edm::Event
   //
 
   } // end cycle over all uncertainties
+
+  std::unique_ptr<ShiftedCandCollection> METUpJets(new ShiftedCandCollection);
+  std::unique_ptr<ShiftedCandCollection> METDownJets(new ShiftedCandCollection);
+
+  
+  ShiftedCand jerCandUP =  extendedMET_JERUp;
+  METUpJets->push_back(jerCandUP);
+  PutHandle p4OutMETUpJetsRH = evt.put(std::move(METUpJets), std::string("METJERUp"));
+  extendedMET.addUserCand("jer+", CandidatePtr(p4OutMETUpJetsRH, 0));
+
+  ShiftedCand jerCandDOWN =  extendedMET_JERDown;
+  METDownJets->push_back(jerCandDOWN);
+  PutHandle p4OutMETDownJetsRH = evt.put(std::move(METDownJets), std::string("METJERDown"));
+  extendedMET.addUserCand("jer-", CandidatePtr(p4OutMETDownJetsRH, 0));
 
   LorentzVector nominalJetP4(0,0,0,0);
 
