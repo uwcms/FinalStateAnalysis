@@ -709,6 +709,29 @@ else:
 
 process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
+fs_daughter_inputs['jets'] = 'patSmearedJetsModifiedMET'
+
+#process.load('Configuration.EventContent.EventContent_cff')
+#process.AODSIMoutput = cms.OutputModule("PoolOutputModule",
+#    compressionAlgorithm = cms.untracked.string('LZMA'),
+#    compressionLevel = cms.untracked.int32(4),
+#    dataset = cms.untracked.PSet(
+#        dataTier = cms.untracked.string('AODSIM'),
+#        filterName = cms.untracked.string('')
+#    ),
+#    eventAutoFlushCompressedSize = cms.untracked.int32(31457280),
+#    fileName = cms.untracked.string('file:TSG-RunIIAutumn18DR-00006.root'),
+#    outputCommands = cms.untracked.vstring(
+#	'drop  *_*_*_RAW',
+#	'keep  *_*_*_SIM',
+#        'keep  *_*_*_RECO',
+#        'keep  *_*_*_PAT',
+#        'keep  *et*_*_*_*',
+#        'keep  *ET*_*_*_*',
+#    )
+#)
+#process.AODSIMoutput_step = cms.EndPath(process.AODSIMoutput)
+#process.schedule.append(process.AODSIMoutput_step)
 
 #process.puppiNoLep.useExistingWeights = False
 #process.puppi.useExistingWeights = True
@@ -859,6 +882,8 @@ if options.era=="2016":
 
 fs_daughter_inputs['jets']  = preJets(process,
                                      fs_daughter_inputs['jets'],
+				     'shiftedPatSmearedJetResUpModifiedMET',
+                                     'shiftedPatSmearedJetResDownModifiedMET',
                                      fs_daughter_inputs['vertices'],
                                      fs_daughter_inputs['pfmet'], 
                                      fs_daughter_inputs['muons'],
@@ -873,6 +898,8 @@ if options.fullJES and options.metShift:
                                      fs_daughter_inputs['jets'],
                                      fs_daughter_inputs['vertices'],
                                      fs_daughter_inputs['pfmet'],
+				     'patPFMetT1SmearJetResUpModifiedMET',
+                                     'patPFMetT1SmearJetResDownModifiedMET',
                                      fs_daughter_inputs['muons'],
                                      fs_daughter_inputs['electrons'],
                                      doBTag=False,

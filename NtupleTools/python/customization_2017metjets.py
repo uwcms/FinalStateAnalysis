@@ -2,7 +2,7 @@
 import FWCore.ParameterSet.Config as cms
 import os
 
-def preMETFromJES(process, jSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
+def preMETFromJES(process, jSrc, vSrc, metSrc, metUpSrc, metDownSrc, mSrc, eSrc, **kwargs):
     postfix = kwargs.pop('postfix','')
     jType = kwargs.pop('jType','AK4PFchs')
     runningLocal = kwargs.pop('runningLocal',False)
@@ -21,6 +21,8 @@ def preMETFromJES(process, jSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
 	    "MiniAODMETJesSystematicsEmbedder",
             src = cms.InputTag(jSrc),
             srcMET=cms.InputTag(metSrc),
+            upMET=cms.InputTag(metUpSrc),
+            downMET=cms.InputTag(metDownSrc),
             corrLabel = cms.string(jType),
             fName = cms.string(fName)
         )
