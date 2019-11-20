@@ -51,7 +51,6 @@ class MiniAODMETJesSystematicsEmbedder : public edm::EDProducer {
    "PileUpPtHF",
    "PileUpPtRef",
    "RelativeBal",
-   "RelativeSample", 
    "RelativeFSR",
    "RelativeJEREC1",
    "RelativeJEREC2",
@@ -108,9 +107,13 @@ MiniAODMETJesSystematicsEmbedder::MiniAODMETJesSystematicsEmbedder(const edm::Pa
  produces<ShiftedCandCollection>("METJERUp");
  produces<ShiftedCandCollection>("METJERDown");
 
+ size_t found = fName_.find("Summer16");
+ if (found==std::string::npos) uncertNames.push_back("RelativeSample");
+
  for (auto const& name : uncertNames) {
   produces<ShiftedCandCollection>("p4OutMETUpJetsUncor"+name);
   produces<ShiftedCandCollection>("p4OutMETDownJetsUncor"+name);
+
   // Create the uncertainty tool for each uncert
   // skip Closure, which is a comparison at the end
   if (name == "Closure" or name=="Eta0to3" or name=="Eta0to5" or name=="Eta3to5" or name=="EC2" or name=="Absolute" or name=="Absoluteyear" or name=="BBEC1" or name=="HF" or name=="BBEC1year" or name=="EC2year" or name=="HFyear") continue;

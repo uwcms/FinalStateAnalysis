@@ -46,7 +46,6 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
    "PileUpPtHF",
    "PileUpPtRef",
    "RelativeBal",
-   "RelativeSample",
    "RelativeFSR",
    "RelativeJEREC1",
    "RelativeJEREC2",
@@ -94,6 +93,9 @@ MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::
   fName_ = pset.getParameter<std::string>("fName");
   std::cout << "Uncert File: " << fName_ << std::endl;
   produces<pat::JetCollection>();
+
+  size_t found = fName_.find("Summer16");
+  if (found==std::string::npos) uncertNames.push_back("RelativeSample");
 
   // Create the uncertainty tool for each uncert
   for (auto const& name : uncertNames) {
