@@ -34,67 +34,45 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
     //std::string fName_ = "Spring16_25nsV9_DATA_UncertaintySources_AK4PFchs.txt"; // recommended by JetMET
     std::string fName_;
     std::vector< std::string > uncertNames = {
-        "AbsoluteFlavMap",
-        "AbsoluteMPFBias",
-        "AbsoluteScale",
-        "AbsoluteStat",
-        //"CorrelationGroupFlavor",
-        //"CorrelationGroupIntercalibration",
-        //"CorrelationGroupMPFInSitu",
-        //"CorrelationGroupUncorrelated",
-        //"CorrelationGroupbJES",
-        //"FlavorPhotonJet",
-        //"FlavorPureBottom",
-        //"FlavorPureCharm",
-        //"FlavorPureGluon",
-        //"FlavorPureQuark",
-        "FlavorQCD",
-        //"FlavorZJet",
-        "Fragmentation",
-        "PileUpDataMC",
-        //"PileUpEnvelope",
-        //"PileUpMuZero",
-        "PileUpPtBB",
-        "PileUpPtEC1",
-        "PileUpPtEC2",
-        "PileUpPtHF",
-        "PileUpPtRef",
-        "RelativeBal",
-        //"RelativeSample", // New for 2017
-        "RelativeFSR",
-        "RelativeJEREC1",
-        "RelativeJEREC2",
-        "RelativeJERHF",
-        "RelativePtBB",
-        "RelativePtEC1",
-        "RelativePtEC2",
-        "RelativePtHF",
-        "RelativeStatEC",
-        "RelativeStatFSR",
-        "RelativeStatHF",
-        "SinglePionECAL",
-        "SinglePionHCAL",
-        //"SubTotalAbsolute", // We don't use the Subtotals, just skip them
-        //"SubTotalMC",
-        //"SubTotalPileUp",
-        //"SubTotalPt",
-        //"SubTotalRelative",
-        //"SubTotalScale",
-        "TimePtEta",
-        //"TimeRunBCD",
-        //"TimeRunE",
-        //"TimeRunF",
-        //"TimeRunGH",
-        //"TotalNoFlavorNoTime",
-        //"TotalNoFlavor",
-        //"TotalNoTime",
-        "Total",
-        "Closure",
-        "Eta0to3",
-        "Eta0to5",
-        "Eta3to5",
-	"EC2",
-        "ClosureNew"
+   "AbsoluteMPFBias",
+   "AbsoluteScale",
+   "AbsoluteStat",
+   "FlavorQCD",
+   "Fragmentation",
+   "PileUpDataMC",
+   "PileUpPtBB",
+   "PileUpPtEC1",
+   "PileUpPtEC2",
+   "PileUpPtHF",
+   "PileUpPtRef",
+   "RelativeBal",
+   "RelativeSample",
+   "RelativeFSR",
+   "RelativeJEREC1",
+   "RelativeJEREC2",
+   "RelativeJERHF",
+   "RelativePtBB",
+   "RelativePtEC1",
+   "RelativePtEC2",
+   "RelativePtHF",
+   "RelativeStatEC",
+   "RelativeStatFSR",
+   "RelativeStatHF",
+   "SinglePionECAL",
+   "SinglePionHCAL",
+   "TimePtEta",
+   "Total",
+   "Eta3to5",
+   "Eta0to5",
+   "Eta0to3",
+   "EC2",
+   "Absolute",
+   "Absoluteyear",
+   "BBEC1",
+   "HF",
+   "BBEC1year",
+   "EC2year",
+   "HFyear"
     }; // end uncertNames
     std::map<std::string, JetCorrectorParameters const *> JetCorParMap;
     std::map<std::string, JetCorrectionUncertainty* > JetUncMap;
@@ -117,11 +95,6 @@ MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::
   std::cout << "Uncert File: " << fName_ << std::endl;
   produces<pat::JetCollection>();
 
-  size_t found = fName_.find("Summer16");
-  if (found==std::string::npos) uncertNames.push_back("RelativeSample");
-  found = fName_.find("Autumn18");
-  if (found!=std::string::npos) uncertNames.push_back("AbsoluteSample");
-
   // Create the uncertainty tool for each uncert
   for (auto const& name : uncertNames) {
     produces<ShiftedCandCollection>("p4OutJESUpJetsUncor"+name);
@@ -133,6 +106,13 @@ MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::
     if (name == "Eta0to5") continue;
     if (name == "Eta3to5") continue;
     if (name == "EC2") continue;
+    if (name == "Absolute") continue;
+    if (name == "Absoluteyear") continue;
+    if (name == "BBEC1") continue;
+    if (name == "HF") continue;
+    if (name == "BBEC1year") continue;
+    if (name == "EC2year") continue;
+    if (name == "HFyear") continue;
     if (name == "ClosureNew") continue;
     JetCorrectorParameters const * JetCorPar = new JetCorrectorParameters(fName_, name);
     JetCorParMap[name] = JetCorPar;
@@ -168,6 +148,13 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
   std::vector<double> factorizedEta0to5Up(nJets, 0.0);
   std::vector<double> factorizedEta3to5Up(nJets, 0.0);
   std::vector<double> factorizedEC2Up(nJets, 0.0);
+  std::vector<double> factorizedHFyearUp(nJets, 0.0);
+  std::vector<double> factorizedEC2yearUp(nJets, 0.0);
+  std::vector<double> factorizedBBEC1yearUp(nJets, 0.0);
+  std::vector<double> factorizedHFUp(nJets, 0.0);
+  std::vector<double> factorizedBBEC1Up(nJets, 0.0);
+  std::vector<double> factorizedAbsoluteyearUp(nJets, 0.0);
+  std::vector<double> factorizedAbsoluteUp(nJets, 0.0);
   std::vector<double> factorizedClosureNewUp(nJets, 0.0);
 
   for (auto const& name : uncertNames) {
@@ -186,7 +173,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
       // Unc = zero for all others
       if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9) {
         // Get unc for normal 28 and Total
-        if ( !(name == "Closure") && !(name == "EC2") && !(name == "Eta0to3") && !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")) {
+        if ( !(name == "Closure") && !(name == "EC2") && !(name == "Eta0to3") && !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")  && !(name=="Absolute") && !(name=="Absoluteyear") && !(name=="BBEC1") && !(name=="HF") && !(name=="BBEC1year") && !(name=="EC2year") && !(name=="HFyear")) {
           JetUncMap[name]->setJetEta(jet.eta());
           JetUncMap[name]->setJetPt(jet.pt());
           unc = JetUncMap[name]->getUncertainty(true);
@@ -197,7 +184,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
         // comparison (also skip SubTotals)
         // ALL factorized uncertainties pass this if statment
         if ( !(name == "Total") && !(name == "Closure") && !(name == "EC2") && !(name == "Eta0to3") && 
-              !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")) {
+              !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")  && !(name=="Absolute") && !(name=="Absoluteyear") && !(name=="BBEC1") && !(name=="HF") && !(name=="BBEC1year") && !(name=="EC2year") && !(name=="HFyear")) {
           // All 28
           factorizedTotalUp[i] += unc*unc;
 
@@ -234,15 +221,51 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
               (name == "RelativeJERHF") )
                   factorizedEta3to5Up[i] += unc*unc;
 
-          if ((name == "PileUpPtEC2") ||
-              (name == "RelativeJEREC2") ||
-              (name == "RelativePtEC2") )
+          if ((name == "PileUpPtEC2") )
                   factorizedEC2Up[i] += unc*unc;
 
-          // New closure test for updated method
+          if ((name == "AbsoluteMPFBias") ||
+              (name == "AbsoluteScale") ||
+              (name == "PileUpDataMC") ||
+              (name == "PileUpPtRef") ||
+              (name == "RelativeFSR") ||
+              (name == "SinglePionECAL") ||
+              (name == "SinglePionHCAL") ||
+              (name == "Fragmentation") )
+                  factorizedAbsoluteUp[i] += unc*unc;
+
+          if ((name == "AbsoluteStat") ||
+              (name == "RelativeStatFSR") ||
+              (name == "TimePtEta") )
+                  factorizedAbsoluteyearUp[i] += unc*unc;
+
+          if ((name == "PileUpPtBB") ||
+              (name == "PileUpPtEC1") ||
+              (name == "RelativePtBB") )
+                  factorizedBBEC1Up[i] += unc*unc;
+
+          if ((name == "PileUpPtHF") ||
+              (name == "RelativeJERHF") ||
+              (name == "RelativePtHF") )
+                  factorizedHFUp[i] += unc*unc;
+
+          if ((name == "RelativeJEREC1") ||
+              (name == "RelativePtEC1") ||
+              (name == "RelativeStatEC") )
+                  factorizedBBEC1yearUp[i] += unc*unc;
+
+          if ((name == "RelativeJEREC2") ||
+              (name == "RelativePtEC2") )
+                  factorizedEC2yearUp[i] += unc*unc;
+
+          if ((name == "RelativeStatHF"))
+                  factorizedHFyearUp[i] += unc*unc;
+
+
           // These two contributed here and the Eta split regions are
           // summed below
           if ((name == "RelativeBal") ||
+              (name == "FlavorQCD") || 
               (name == "RelativeSample") )
                   factorizedClosureNewUp[i] += unc*unc;
         }
@@ -254,18 +277,43 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
         }
         if (name == "Eta0to3") {
           unc = std::sqrt(factorizedEta0to3Up[i]);
-          factorizedClosureNewUp[i] += unc*unc;
         }
         if (name == "Eta0to5") {
           unc = std::sqrt(factorizedEta0to5Up[i]);
-          factorizedClosureNewUp[i] += unc*unc;
         }
         if (name == "Eta3to5") {
           unc = std::sqrt(factorizedEta3to5Up[i]);
-          factorizedClosureNewUp[i] += unc*unc;
         }
         if (name == "EC2") {
           unc = std::sqrt(factorizedEC2Up[i]);
+          factorizedClosureNewUp[i] += unc*unc;
+        }
+        if (name == "Absolute") {
+          unc = std::sqrt(factorizedAbsoluteUp[i]);
+          factorizedClosureNewUp[i] += unc*unc;
+        }
+        if (name == "Absoluteyear") {
+          unc = std::sqrt(factorizedAbsoluteyearUp[i]);
+          factorizedClosureNewUp[i] += unc*unc;
+        }
+        if (name == "BBEC1") {
+          unc = std::sqrt(factorizedBBEC1Up[i]);
+          factorizedClosureNewUp[i] += unc*unc;
+        }
+        if (name == "HF") {
+          unc = std::sqrt(factorizedHFUp[i]);
+          factorizedClosureNewUp[i] += unc*unc;
+        }
+        if (name == "BBEC1year") {
+          unc = std::sqrt(factorizedBBEC1yearUp[i]);
+          factorizedClosureNewUp[i] += unc*unc;
+        }
+        if (name == "EC2year") {
+          unc = std::sqrt(factorizedEC2yearUp[i]);
+          factorizedClosureNewUp[i] += unc*unc;
+        }
+        if (name == "HFyear") {
+          unc = std::sqrt(factorizedHFyearUp[i]);
           factorizedClosureNewUp[i] += unc*unc;
         }
         if (name == "ClosureNew")
