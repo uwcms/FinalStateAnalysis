@@ -880,10 +880,25 @@ if options.era=="2016":
   from FinalStateAnalysis.NtupleTools.customization_2016jets import preJets
   from FinalStateAnalysis.NtupleTools.customization_2016metjets import preMETFromJES
 
-fs_daughter_inputs['jets']  = preJets(process,
+if options.fullJES and options.metShift:
+   fs_daughter_inputs['jets']  = preJets(process,
                                      fs_daughter_inputs['jets'],
-				     'shiftedPatSmearedJetResUpModifiedMET',
+                                     'shiftedPatSmearedJetResUpModifiedMET',
                                      'shiftedPatSmearedJetResDownModifiedMET',
+                                     fs_daughter_inputs['vertices'],
+                                     fs_daughter_inputs['pfmet'],
+                                     fs_daughter_inputs['muons'],
+                                     fs_daughter_inputs['electrons'],
+                                     doBTag=False,
+                                     doFullJESUnc=options.fullJES,
+                                     runningLocal=options.runningLocal,
+                                     jType="AK4PFchs")
+
+else: 
+   fs_daughter_inputs['jets']  = preJets(process,
+                                     fs_daughter_inputs['jets'],
+                                     fs_daughter_inputs['jets'],
+                                     fs_daughter_inputs['jets'],
                                      fs_daughter_inputs['vertices'],
                                      fs_daughter_inputs['pfmet'], 
                                      fs_daughter_inputs['muons'],
