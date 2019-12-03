@@ -66,6 +66,8 @@ parameters = {
 
         # Rivet code provides the Simplifed Template Cross Section values
         Rivet_stage0_cat='evt.getRivetInfo().stage0_cat',
+        Rivet_stage1_cat_pTjet25GeV='evt.getRivetInfo().stage1_cat_pTjet25GeV',
+        Rivet_stage1_cat_pTjet30GeV='evt.getRivetInfo().stage1_cat_pTjet30GeV',
         Rivet_stage1_1_cat_pTjet25GeV='evt.getRivetInfo().stage1_1_cat_pTjet25GeV',
         Rivet_stage1_1_cat_pTjet30GeV='evt.getRivetInfo().stage1_1_cat_pTjet30GeV',
         Rivet_stage1_1_fine_cat_pTjet25GeV='evt.getRivetInfo().stage1_1_fine_cat_pTjet25GeV',
