@@ -1,0 +1,20 @@
+{
+"JJH0MToTauTauPlusOneJets_Filtered" : "JJH0MToTauTauPlusOneJets_Filtered_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0MToTauTauPlusOneJets" : "JJH0MToTauTauPlusOneJets_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0MToTauTauPlusTwoJets_Filtered" : "JJH0MToTauTauPlusTwoJets_Filtered_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0MToTauTauPlusTwoJets" : "JJH0MToTauTauPlusTwoJets_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0MToTauTauPlusZeroJets_Filtered" : "JJH0MToTauTauPlusZeroJets_Filtered_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0MToTauTauPlusZeroJets" : "JJH0MToTauTauPlusZeroJets_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0Mf05ph0ToTauTauPlusOneJets_Filtered" : "JJH0Mf05ph0ToTauTauPlusOneJets_Filtered_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0Mf05ph0ToTauTauPlusOneJets" : "JJH0Mf05ph0ToTauTauPlusOneJets_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0Mf05ph0ToTauTauPlusTwoJets_Filtered" : "JJH0Mf05ph0ToTauTauPlusTwoJets_Filtered_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0Mf05ph0ToTauTauPlusTwoJets" : "JJH0Mf05ph0ToTauTauPlusTwoJets_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0Mf05ph0ToTauTauPlusZeroJets_Filtered" : "JJH0Mf05ph0ToTauTauPlusZeroJets_Filtered_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0Mf05ph0ToTauTauPlusZeroJets" : "JJH0Mf05ph0ToTauTauPlusZeroJets_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0PMToTauTauPlusOneJets_Filtered" : "JJH0PMToTauTauPlusOneJets_Filtered_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0PMToTauTauPlusOneJets" : "JJH0PMToTauTauPlusOneJets_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0PMToTauTauPlusTwoJets_Filtered" : "JJH0PMToTauTauPlusTwoJets_Filtered_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0PMToTauTauPlusTwoJets" : "JJH0PMToTauTauPlusTwoJets_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0PMToTauTauPlusZeroJets_Filtered" : "JJH0PMToTauTauPlusZeroJets_Filtered_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8",
+"JJH0PMToTauTauPlusZeroJets" : "JJH0PMToTauTauPlusZeroJets_M125_TuneCP5_13TeV-mcatnloFXFX-pythia8"
+}
