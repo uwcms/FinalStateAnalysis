@@ -707,6 +707,10 @@ const bool PATFinalStateEvent::findDecay(const int pdgIdMother, const int pdgIdD
   return fshelpers::findDecay(genParticles_, pdgIdMother, pdgIdDaughter);
 }
 
+const std::vector<float> PATFinalStateEvent::findGenTau(const int pdgIdMother, const int pdgIdDaughter) const{
+  return fshelpers::findGenTau(genParticles_, pdgIdMother, pdgIdDaughter);
+}
+
 float PATFinalStateEvent::getGenMass() const{
   if(isRealData_) return -1;
   return fshelpers::genMass(lhe_);

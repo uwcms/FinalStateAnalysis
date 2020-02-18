@@ -76,12 +76,27 @@ parameters = {
         Rivet_prodMode='evt.getRivetInfo().prodMode',
         Rivet_higgsPt='evt.getRivetInfo().higgs.pt()',
         Rivet_higgsEta='evt.getRivetInfo().higgs.eta()',
+        Rivet_higgsRapidity='evt.getRivetInfo().higgs.Rapidity()',
         Rivet_VPt='evt.getRivetInfo().V.pt()',
         Rivet_VEta='evt.getRivetInfo().V.eta()',
         Rivet_p4decay_VPt='evt.getRivetInfo().p4decay_V.pt()',
         Rivet_p4decay_VEta='evt.getRivetInfo().p4decay_V.eta()',
         Rivet_nJets30='evt.getRivetInfo().jets30.size()',
         Rivet_nJets25='evt.getRivetInfo().jets25.size()',
+
+	Rivet_j1pt='? (evt.getRivetInfo().jets30.size()>0) ? evt.getRivetInfo().jets30[0].pt() : -99',
+        Rivet_j2pt='? (evt.getRivetInfo().jets30.size()>1) ? evt.getRivetInfo().jets30[1].pt() : -99',
+	Rivet_j1eta='? (evt.getRivetInfo().jets30.size()>0) ? evt.getRivetInfo().jets30[0].eta() : -99',
+        Rivet_j2eta='? (evt.getRivetInfo().jets30.size()>1) ? evt.getRivetInfo().jets30[1].eta() : -99',
+        Rivet_j1phi='? (evt.getRivetInfo().jets30.size()>0) ? evt.getRivetInfo().jets30[0].phi() : -99',
+        Rivet_j2phi='? (evt.getRivetInfo().jets30.size()>1) ? evt.getRivetInfo().jets30[1].phi() : -99',
+        Rivet_j1m='? (evt.getRivetInfo().jets30.size()>0) ? evt.getRivetInfo().jets30[0].M() : -99',
+        Rivet_j2m='? (evt.getRivetInfo().jets30.size()>1) ? evt.getRivetInfo().jets30[1].M() : -99',
+
+        gentau1_pt='evt.findGenTau(25,15).at(0)',
+        gentau1_eta='evt.findGenTau(25,15).at(1)',
+        gentau2_pt='evt.findGenTau(25,15).at(2)',
+        gentau2_eta='evt.findGenTau(25,15).at(3)',
 
         #Flag_badGlobalMuonFilter='evt.getFilterFlags("badGlobalMuonFilter")',
         #Flag_badCloneMuonFilter='evt.getFilterFlags("cloneGlobalMuonFilter")',
@@ -123,6 +138,13 @@ parameters = {
         genMass = 'evt.getGenMass()',
         npNLO = 'evt.npNLO()',
 
+<<<<<<< Updated upstream
+=======
+        #sm_weight_nlo='evt.lheweights().at(1080)',
+        #ps_weight_nlo='evt.lheweights().at(1081)',
+        #mm_weight_nlo='evt.lheweights().at(1082)',
+        
+>>>>>>> Stashed changes
         #lheweight0='evt.lheweights().at(0)',
         #lheweight1='evt.lheweights().at(1)',
         #lheweight2='evt.lheweights().at(2)',
