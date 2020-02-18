@@ -138,13 +138,10 @@ parameters = {
         genMass = 'evt.getGenMass()',
         npNLO = 'evt.npNLO()',
 
-<<<<<<< Updated upstream
-=======
         #sm_weight_nlo='evt.lheweights().at(1080)',
         #ps_weight_nlo='evt.lheweights().at(1081)',
         #mm_weight_nlo='evt.lheweights().at(1082)',
         
->>>>>>> Stashed changes
         #lheweight0='evt.lheweights().at(0)',
         #lheweight1='evt.lheweights().at(1)',
         #lheweight2='evt.lheweights().at(2)',
