@@ -286,6 +286,36 @@ namespace fshelpers {
       return found;
   }
 
+  const std::vector<float> findGenTau(const reco::GenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter)
+  {
+
+      std::vector<float> gentaus={0.0,0.0,0.0,0.0};
+
+    //if no genPaticle no matching
+       if(!genCollectionRef){
+             return gentaus;
+       }
+
+       reco::GenParticleCollection pGenPart = *genCollectionRef;
+       for( size_t i = 0; i < pGenPart.size(); ++ i ) {
+           const reco::GenParticle& genpart = (pGenPart)[i];
+           if(fabs(genpart.pdgId())==pdgIdMother && genpart.isLastCopy()){
+               for(unsigned int j=0; j<genpart.numberOfDaughters(); j++){
+                  const reco::Candidate* Wdaughter=genpart.daughter(j);
+                  if(Wdaughter->pdgId()==pdgIdDaughter){
+		     gentaus[0]=Wdaughter->pt();
+                     gentaus[1]=Wdaughter->eta();
+		  }
+                  if(Wdaughter->pdgId()==-pdgIdDaughter){
+                     gentaus[2]=Wdaughter->pt();
+                     gentaus[3]=Wdaughter->eta();
+                  }
+               }
+            }
+      }
+      return gentaus;
+  }
+
   float genMass(const lhef::HEPEUP lheeventinfo){
       reco::Candidate::LorentzVector genMass;
       int cnt = 0;
