@@ -178,11 +178,13 @@ def datasets_from_das(args):
     script_content = ""
     # this part searches for MC
     if args.campaignstring:
-	dbs_datasets = get_das_info('dataset dataset=/*/%s/MINIAODSIM status=*' % args.campaignstring)
+	dbs_datasets = get_das_info('dataset dataset=/*/%s/MINIAODSIM status=*' % args.campaignstring)#FIXME
+	#dbs_datasets = get_das_info('dataset dataset=/VBF*/%s/USER instance=prod/phys03' % args.campaignstring)#FIXME
         # check sample wildcards
         for dataset in dbs_datasets:
-            dataset_name = dataset.split('/')[1]+"_"+dataset.split('MiniAOD')[1].split('/')[0]
-	    #dataset_name = dataset.split('/')[1]+"#"+dataset.split('/')[2]+"#MINIAODSIM"
+            dataset_name = dataset.split('/')[1]+"_"+dataset.split('MiniAOD')[1].split('/')[0]#FIXME
+	    #dataset_name = dataset.split('/')[1]
+	    ##dataset_name = dataset.split('/')[1]+"#"+dataset.split('/')[2]+"#MINIAODSIM"
             passes_filter = True
             passes_wildcard = False
             

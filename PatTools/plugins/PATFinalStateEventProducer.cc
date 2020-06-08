@@ -410,10 +410,12 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   //edm::Handle<GenEventInfoProduct> GenInfoHandle ;
   //evt.getByLabel("generator", GenInfoHandle) ;
   std::vector<float> geninfoweights;
-  std::vector<double> myweights=genEventInfo.weights();
-  for (unsigned int i=0; i<myweights.size(); i++) {
-     geninfoweights.push_back(myweights[i]/EvtHandle->originalXWGTUP());
-  };
+  if (genEventInfoH.size() && EvtHandle.isValid()) {
+    std::vector<double> myweights=genEventInfo.weights();
+    for (unsigned int i=0; i<myweights.size(); i++) {
+       geninfoweights.push_back(myweights[i]/EvtHandle->originalXWGTUP());
+    }; 
+  }
 
   // Try and get the GenFilterInfo information
   edm::Handle<GenFilterInfo> generatorFilterH;
