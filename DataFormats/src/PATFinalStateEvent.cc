@@ -211,7 +211,8 @@ double PATFinalStateEvent::rho() const { return rho_; }
 
 std::vector<float> PATFinalStateEvent::lheweights() const {
     // note that I have set the lhe weight to zero for all samples with less than 1080 weights (to include the lhe weights for madgraph)
-  if (lheweights_.size() <1080) {
+  //if (lheweights_.size() <1080) {
+  if (lheweights_.size() <9) {
     std::vector<float> rtn;
     for (int i = 0; i < 1200; i++) {
       rtn.push_back( 0. );
