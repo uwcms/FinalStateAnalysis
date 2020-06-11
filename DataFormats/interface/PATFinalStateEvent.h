@@ -259,6 +259,7 @@ class PATFinalStateEvent {
     char version() const { return fsaDataFormatVersion_; }
     float jetVariables(const reco::CandidatePtr jet, const std::string& myvar) const;
 
+
     // Method used when running MET filters and Bad Muon filters
     // in tagging mode, this allows one to retrieve the
     // associated flags

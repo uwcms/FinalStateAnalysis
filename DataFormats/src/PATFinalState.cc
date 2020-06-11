@@ -1405,6 +1405,18 @@ std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, doub
   return computeJetInfo(jets);
 }
 
+std::vector<double> PATFinalState::deepFlavourJetVariables(const std::string& jetCuts, double dr ) const {
+  std::vector<const reco::Candidate*> hardScatter = this->daughters();
+  std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
+  return computeDeepFlavourJetInfo(jets);
+}
+
+std::vector<double> PATFinalState::deepCSVJetVariables(const std::string& jetCuts, double dr ) const {
+  std::vector<const reco::Candidate*> hardScatter = this->daughters();
+  std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
+  return computeDeepCSVJetInfo(jets);
+}
+
 std::vector<double> PATFinalState::bVariables(const std::string& jetCuts, double dr ) const {
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
   std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
