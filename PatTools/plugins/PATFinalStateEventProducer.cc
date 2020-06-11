@@ -89,6 +89,8 @@ private:
 
   // MC information
   edm::EDGetTokenT<reco::GenParticleCollection> truthSrcToken_;
+  edm::EDGetTokenT<reco::GenJetCollection> dressedSrcToken_;
+  edm::EDGetTokenT<reco::METCollection> rivetmetSrcToken_;
   edm::EDGetTokenT<std::vector<reco::GenJet>> genHadronicTausToken_;
   edm::EDGetTokenT<std::vector<reco::GenJet>> genElectronicTausToken_;
   edm::EDGetTokenT<std::vector<reco::GenJet>> genMuonicTausToken_;
@@ -155,6 +157,8 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   trgSrcToken_ = consumes<std::vector<pat::TriggerObjectStandAlone> >(pset.getParameter<edm::InputTag>("trgSrc"));
   puInfoSrcToken_ = consumes<std::vector<PileupSummaryInfo> >(pset.getParameter<edm::InputTag>("puInfoSrc"));
   truthSrcToken_ = consumes<reco::GenParticleCollection>(pset.getParameter<edm::InputTag>("genParticleSrc"));
+  dressedSrcToken_ = consumes<reco::GenJetCollection>(pset.getParameter<edm::InputTag>("dressedParticleSrc"));
+  rivetmetSrcToken_ = consumes<reco::METCollection>(pset.getParameter<edm::InputTag>("rivetmetParticleSrc"));
   genHadronicTausToken_ = consumes<std::vector<reco::GenJet>>(pset.getParameter<edm::InputTag>("tauHadronicSrc")),
   genElectronicTausToken_ = consumes<std::vector<reco::GenJet>>(pset.getParameter<edm::InputTag>("tauElectronicSrc")),
   genMuonicTausToken_ = consumes<std::vector<reco::GenJet>>(pset.getParameter<edm::InputTag>("tauMuonicSrc")),
@@ -431,6 +435,20 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   if (!evt.isRealData() || isEmbedded_)
     genParticlesRef = reco::GenParticleRefProd(genParticles);
 
+  // Try and get the gen information if it exists
+  edm::Handle<reco::GenJetCollection> dressedParticles;
+  evt.getByToken(dressedSrcToken_, dressedParticles);
+  reco::GenJetRefProd dressedParticlesRef;
+  if (!evt.isRealData() || isEmbedded_)
+    dressedParticlesRef = reco::GenJetRefProd(dressedParticles);
+
+  // Try and get the gen information if it exists
+  edm::Handle<reco::METCollection> rivetmetParticles;
+  evt.getByToken(rivetmetSrcToken_, rivetmetParticles);
+  edm::RefProd<reco::METCollection> rivetmetParticlesRef;
+  if (!evt.isRealData() || isEmbedded_)
+    rivetmetParticlesRef = edm::RefProd<reco::METCollection>(rivetmetParticles);
+
   // Try and get gen taus built from gen products if they were included
   edm::Handle<std::vector<reco::GenJet>> tausHadronic;   
   evt.getByToken(genHadronicTausToken_, tausHadronic);
@@ -456,7 +474,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
 
   pat::TriggerEvent trg;
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo, metSig, metCov,
-                              trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, 
+                              trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, dressedParticlesRef, rivetmetParticlesRef, 
                               hTaus, eTaus, mTaus, htxsRivetInfo,
                               evt.id(), genEventInfo, generatorFilter, evt.isRealData(), isEmbedded_, puScenario_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,

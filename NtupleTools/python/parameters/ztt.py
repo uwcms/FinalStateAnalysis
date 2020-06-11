@@ -98,6 +98,14 @@ parameters = {
         gentau2_pt='evt.findGenTau(25,15).at(2)',
         gentau2_eta='evt.findGenTau(25,15).at(3)',
 
+        dressedElectron_pt='evt.findDressedLepton(11).at(0)',
+        dressedMuon_pt='evt.findDressedLepton(13).at(0)',
+
+	HTTgenfinalstate='evt.findHTTfinalstate()',
+
+  	genMetPt='evt.findRivetMet().at(0)',
+        genMetPhi='evt.findRivetMet().at(1)',
+
         #Flag_badGlobalMuonFilter='evt.getFilterFlags("badGlobalMuonFilter")',
         #Flag_badCloneMuonFilter='evt.getFilterFlags("cloneGlobalMuonFilter")',
         Flag_BadChargedCandidateFilter='evt.getFilterFlags("Flag_BadChargedCandidateFilter")',

@@ -108,6 +108,8 @@ PATFinalStateEvent::PATFinalStateEvent(
     const std::vector<PileupSummaryInfo>& puInfo,
     const lhef::HEPEUP& hepeup,
     const reco::GenParticleRefProd& genParticles,
+    const reco::GenJetRefProd& dressedParticles,
+    const edm::RefProd<reco::METCollection>& rivetmetParticles,
     const std::vector<reco::GenJet> genHadronicTaus,
     const std::vector<reco::GenJet> genElectronicTaus,
     const std::vector<reco::GenJet> genMuonicTaus,
@@ -152,6 +154,8 @@ PATFinalStateEvent::PATFinalStateEvent(
   puInfo_(puInfo),
   lhe_(hepeup),
   genParticles_(genParticles),
+  dressedParticles_(dressedParticles),
+  rivetmetParticles_(rivetmetParticles),
   genHadronicTaus_(genHadronicTaus),
   genElectronicTaus_(genElectronicTaus),
   genMuonicTaus_(genMuonicTaus),
@@ -715,6 +719,18 @@ const bool PATFinalStateEvent::findDecay(const int pdgIdMother, const int pdgIdD
 
 const std::vector<float> PATFinalStateEvent::findGenTau(const int pdgIdMother, const int pdgIdDaughter) const{
   return fshelpers::findGenTau(genParticles_, pdgIdMother, pdgIdDaughter);
+}
+
+const int PATFinalStateEvent::findHTTfinalstate() const{
+  return fshelpers::findHTTfinalstate(genParticles_);
+}
+
+const std::vector<float> PATFinalStateEvent::findDressedLepton(const int pdgId) const{
+  return fshelpers::findDressedLepton(dressedParticles_, pdgId);
+}
+
+const std::vector<float> PATFinalStateEvent::findRivetMet() const{
+  return fshelpers::findRivetMet(rivetmetParticles_);
 }
 
 float PATFinalStateEvent::getGenMass() const{

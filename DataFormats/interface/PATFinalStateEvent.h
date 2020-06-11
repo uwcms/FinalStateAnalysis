@@ -19,6 +19,8 @@
 #include "DataFormats/PatCandidates/interface/TriggerObjectStandAlone.h"
 #include "DataFormats/Common/interface/TriggerResults.h"
 #include "DataFormats/PatCandidates/interface/PackedTriggerPrescales.h"
+#include "DataFormats/METReco/interface/METFwd.h"
+#include "DataFormats/METReco/interface/MET.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Muon.h"
@@ -78,6 +80,8 @@ class PATFinalStateEvent {
         const std::vector<PileupSummaryInfo>& puInfo,
         const lhef::HEPEUP& hepeup, // Les Houches info
         const reco::GenParticleRefProd& genParticles,
+        const reco::GenJetRefProd& dressedParticles,
+        const edm::RefProd<reco::METCollection>& rivetmetParticles,
         const std::vector<reco::GenJet> genHadronicTaus,
         const std::vector<reco::GenJet> genElectronicTaus,
         const std::vector<reco::GenJet> genMuonicTaus,
@@ -188,6 +192,9 @@ class PATFinalStateEvent {
     const bool findDecay(const int pdgIdMother, const int pdgIdDaughter) const;
 
     const std::vector<float> findGenTau(const int pdgIdMother, const int pdgIdDaughter) const;
+    const std::vector<float> findDressedLepton(const int pdgId) const;
+    const std::vector<float> findRivetMet() const;
+    const int findHTTfinalstate() const;
 
     // Get the gen mass for weighting
     float getGenMass() const;
@@ -235,6 +242,8 @@ class PATFinalStateEvent {
 
     //Access to GenParticleRefProd
     const reco::GenParticleRefProd genParticleRefProd() const {return genParticles_;} 
+    const reco::GenJetRefProd dressedParticleRefProd() const {return dressedParticles_;}
+    const edm::RefProd<reco::METCollection> rivetmetParticleRefProd() const {return rivetmetParticles_;}
     const std::vector<reco::GenJet> genHadronicTaus() const {return genHadronicTaus_;}
     const std::vector<reco::GenJet> genElectronicTaus() const {return genElectronicTaus_;}
     const std::vector<reco::GenJet> genMuonicTaus() const {return genMuonicTaus_;}
@@ -275,6 +284,8 @@ class PATFinalStateEvent {
     std::vector<PileupSummaryInfo> puInfo_;
     lhef::HEPEUP lhe_;
     reco::GenParticleRefProd genParticles_;
+    reco::GenJetRefProd dressedParticles_;
+    edm::RefProd<reco::METCollection> rivetmetParticles_;
     std::vector<reco::GenJet> genHadronicTaus_;
     std::vector<reco::GenJet> genElectronicTaus_;
     std::vector<reco::GenJet> genMuonicTaus_;
