@@ -13,6 +13,10 @@
 
 std::vector<double> computeJetInfo(
     const std::vector<const reco::Candidate*>& jets);
+std::vector<double> computeDeepCSVJetInfo(
+    const std::vector<const reco::Candidate*>& jets);
+std::vector<double> computeDeepFlavourJetInfo(
+    const std::vector<const reco::Candidate*>& jets);
 std::vector<double> computeBInfo(
     const std::vector<const reco::Candidate*>& jets);
 

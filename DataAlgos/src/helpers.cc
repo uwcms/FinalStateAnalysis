@@ -316,6 +316,71 @@ namespace fshelpers {
       return gentaus;
   }
 
+  const int  findHTTfinalstate(const reco::GenParticleRefProd genCollectionRef)
+  {
+     int fs=-1;
+     int ele=0;
+     int mu=0;
+       if(!genCollectionRef){
+             return fs;
+       }
+
+       reco::GenParticleCollection pGenPart = *genCollectionRef;
+       for( size_t i = 0; i < pGenPart.size(); ++ i ) {
+           const reco::GenParticle& genpart = (pGenPart)[i];
+           if(fabs(genpart.pdgId())==15 && genpart.isLastCopy()){
+               for(unsigned int j=0; j<genpart.numberOfDaughters(); j++){
+                  const reco::Candidate* Wdaughter=genpart.daughter(j);
+                  if(fabs(Wdaughter->pdgId())==11) ele=ele+1;
+                  if(fabs(Wdaughter->pdgId())==13) mu=mu+1;
+               }
+            }
+      }
+      if (mu==1 and ele==1) fs=1;
+      if (mu==0 and ele==1) fs=2;
+      if (mu==1 and ele==0) fs=3;
+      if (mu==0 and ele==0) fs=4;
+      return fs;
+  }
+
+
+  const std::vector<float> findDressedLepton(const reco::GenJetRefProd dressedCollectionRef, int pdgId)
+  {
+
+      std::vector<float> dressedtaus={0.0,0.0,0.0,0.0};
+
+       if(!dressedCollectionRef){
+             return dressedtaus;
+       }
+
+       reco::GenJetCollection pDressedPart = *dressedCollectionRef;
+       for( size_t i = 0; i < pDressedPart.size(); ++ i ) {
+           const reco::GenJet& dressedpart = (pDressedPart)[i];
+	   //std::cout<<dressedpart.pdgId()<<" "<<dressedpart.pt()<<" "<<dressedpart.eta()<<" "<<dressedpart.phi()<<std::endl;
+           if(fabs(dressedpart.pdgId())==pdgId){
+	       dressedtaus[0]=dressedpart.pt();
+            }
+      }
+      return dressedtaus;
+  }
+
+  const std::vector<float> findRivetMet(const edm::RefProd<reco::METCollection> rivetmetCollectionRef)
+  {
+
+      std::vector<float> met={0.0,0.0};
+
+       if(!rivetmetCollectionRef){
+             return met;
+       }
+
+       reco::METCollection pMetPart = *rivetmetCollectionRef;
+       const reco::MET& metpart = (pMetPart)[0];
+       met[0]=metpart.pt();
+       met[1]=metpart.phi();
+       return met;
+  }
+
+
   float genMass(const lhef::HEPEUP lheeventinfo){
       reco::Candidate::LorentzVector genMass;
       int cnt = 0;

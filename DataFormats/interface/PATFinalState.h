@@ -266,6 +266,8 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     /// Use cut jetVeto style argument to get jets dR away from
     /// candidate objects and compute necessary vars
     std::vector<double> jetVariables(const std::string& jetCuts, double dr=0.3) const;
+    std::vector<double> deepFlavourJetVariables(const std::string& jetCuts, double dr=0.3) const;
+    std::vector<double> deepCSVJetVariables(const std::string& jetCuts, double dr=0.3) const;
     std::vector<double> trackVariables(const std::string& trackCuts, double dr=0.3) const;
     std::vector<double> bVariables(const std::string& jetCuts, double dr=0.3) const;
     //JetVariables jetVariables(const std::string& jetCuts, double dr=0.3) const;

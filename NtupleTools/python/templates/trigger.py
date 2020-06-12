@@ -117,22 +117,22 @@ singleLepton_25ns = PSet(
         name='Ele32WPTight',
         paths=r'HLT_Ele32_WPTight_Gsf_v\\d+'
         ),
-    _trig_template.replace(
-        name='Ele35WPTight',
-        paths=r'HLT_Ele35_WPTight_Gsf_v\\d+'
-        ),
-    _trig_template.replace(
-        name='SingleTau180Medium',
-        paths=r'HLT_MediumChargedIsoPFTau180HighPtRelaxedIso_Trk50_eta2p1_v\\d+'
-        ),
-    _trig_template.replace(
-        name='SingleTau200Medium',
-        paths=r'HLT_MediumChargedIsoPFTau200HighPtRelaxedIso_Trk50_eta2p1_v\\d+'
-        ),
-    _trig_template.replace(
-        name='SingleTau220Medium',
-        paths=r'HLT_MediumChargedIsoPFTau220HighPtRelaxedIso_Trk50_eta2p1_v\\d+'
-        ),
+    #_trig_template.replace(
+    #    name='Ele35WPTight',
+    #    paths=r'HLT_Ele35_WPTight_Gsf_v\\d+'
+    #    ),
+    #_trig_template.replace(
+    #    name='SingleTau180Medium',
+    #    paths=r'HLT_MediumChargedIsoPFTau180HighPtRelaxedIso_Trk50_eta2p1_v\\d+'
+    #    ),
+    #_trig_template.replace(
+    #    name='SingleTau200Medium',
+    #    paths=r'HLT_MediumChargedIsoPFTau200HighPtRelaxedIso_Trk50_eta2p1_v\\d+'
+    #    ),
+    #_trig_template.replace(
+    #    name='SingleTau220Medium',
+    #    paths=r'HLT_MediumChargedIsoPFTau220HighPtRelaxedIso_Trk50_eta2p1_v\\d+'
+    #    ),
     )
 
 doubleLepton_25ns = PSet(
@@ -169,16 +169,36 @@ doubleLepton_25ns = PSet(
         paths=r'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8_v\\d+'
         ),
     _trig_template.replace(
+        name='doubleMuDZ',
+        paths=r'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_v\\d+'
+        ),
+    _trig_template.replace(
+        name='doubleMu',
+        paths=r'HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='doubleMuTkMu8DZ',
+        paths=r'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+'
+        ),
+    _trig_template.replace(
+        name='doubleMuTkMu8',
+        paths=r'HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v\\d+'
+        ),
+    _trig_template.replace(
+        name='doubleMuTkMu17TkMu8DZ',
+        paths=r'HLT_TkMu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ_v\\d+'
+        ),
+    _trig_template.replace(
+        name='doubleMuTkMu17TkMu8',
+        paths=r'HLT_TkMu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v\\d+'
+        ),
+    _trig_template.replace(
         name='doubleE_23_12',
         paths=r'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_v\\d+'
         ),
     _trig_template.replace(
-        name='doubleE25',
-        paths=r'HLT_DoubleEle25_CaloIdL_MW_v\\d+'
-        ),
-    _trig_template.replace(
-        name='doubleE33',
-        paths=r'HLT_DoubleEle33_CaloIdL_GsfTrkIdVL_v\\d+'
+        name='doubleE_23_12DZ',
+        paths=r'HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v\\d+'
         ),
     _trig_template.replace(
         name='Ele24LooseTau30',
@@ -383,33 +403,33 @@ doubleLepton_25ns = PSet(
     )
 
 tripleLepton = PSet(
-    _trig_template.replace(
-        name='doubleMuSingleE',
-        paths=r'HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+'
-        ),
-    _trig_template.replace(
-        name='tripleE',
-        paths=r'HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v\\d+'
-        ),
+    #_trig_template.replace(
+    #    name='doubleMuSingleE',
+    #    paths=r'HLT_DiMu9_Ele9_CaloIdL_TrackIdL_v\\d+'
+    #    ),
+    #_trig_template.replace(
+    #    name='tripleE',
+    #    paths=r'HLT_Ele16_Ele12_Ele8_CaloIdL_TrackIdL_v\\d+'
+    #    ),
     _trig_template.replace(
         name='tripleMu12_10_5',
         paths=r'HLT_TripleMu_12_10_5_v\\d+'
         ),
-    _trig_template.replace(
-        name='tripleMu10_5_5',
-        paths=r'HLT_TripleMu_10_5_5_D2_v\\d+'
-        ),
-    _trig_template.replace(
-        name='dimu9ele9',
-        paths=r'HLT_DiMu9_Ele9_CaloIdL_TrackIdL_DZ_v\\d+'
-        ),
-    _trig_template.replace(
-        name='mu8diele12',
-        paths=r'HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+'
-        ),
-    _trig_template.replace(
-        name='mu8diele12DZ',
-        paths=r'HLT_Mu8_DiEle12_CaloIdL_TrackIdL_DZ_v\\d+'
-        ),
+    #_trig_template.replace(
+    #    name='tripleMu10_5_5',
+    #    paths=r'HLT_TripleMu_10_5_5_D2_v\\d+'
+    #    ),
+    #_trig_template.replace(
+    #    name='dimu9ele9',
+    #    paths=r'HLT_DiMu9_Ele9_CaloIdL_TrackIdL_DZ_v\\d+'
+    #    ),
+    #_trig_template.replace(
+    #    name='mu8diele12',
+    #    paths=r'HLT_Mu8_DiEle12_CaloIdL_TrackIdL_v\\d+'
+    #    ),
+    #_trig_template.replace(
+    #    name='mu8diele12DZ',
+    #    paths=r'HLT_Mu8_DiEle12_CaloIdL_TrackIdL_DZ_v\\d+'
+    #    ),
     )
 

@@ -19,6 +19,10 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "TMatrixD.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+#include "DataFormats/JetReco/interface/GenJet.h"
+#include "DataFormats/PatCandidates/interface/MET.h"
+#include "DataFormats/METReco/interface/METFwd.h"
+#include "DataFormats/METReco/interface/MET.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "SimDataFormats/GeneratorProducts/interface/LHEEventProduct.h"
 
@@ -58,7 +62,9 @@ namespace fshelpers {
   const bool findDecay(const reco::GenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter);
 
   const std::vector<float> findGenTau(const reco::GenParticleRefProd genCollectionRef, int pdgIdMother, int pdgIdDaughter);
-
+  const std::vector<float> findDressedLepton(const reco::GenJetRefProd dressedCollectionRef, int pdgId);
+  const std::vector<float> findRivetMet(const edm::RefProd<reco::METCollection> rivetmetCollectionRef);
+  const int findHTTfinalstate(const reco::GenParticleRefProd genCollectionRef);
 
   //Helper function to get the gen mass of the mother for MC stitching 
   float genMass(const lhef::HEPEUP lheeventinfo); 

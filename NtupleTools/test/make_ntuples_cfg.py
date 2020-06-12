@@ -536,12 +536,36 @@ if options.htt and options.isMC :
       ProductionMode = cms.string('AUTO'),
       #ProductionMode = cms.string('GGF'), # For ggH NNLOPS sample
     )
-    
+
+    process.particleLevel = cms.EDProducer("ParticleLevelProducer",
+        src = cms.InputTag("myGenerator:unsmeared"),
+        usePromptFinalStates = cms.bool(True), # for leptons, photons, neutrinos
+        excludePromptLeptonsFromJetClustering = cms.bool(False),
+        excludeNeutrinosFromJetClustering = cms.bool(True),
+        particleMinPt  = cms.double(0.),
+        particleMaxEta = cms.double(5.), # HF range. Maximum 6.0 on MiniAOD
+        lepConeSize = cms.double(0.1), # for photon dressing
+        lepMinPt    = cms.double(10.),
+        lepMaxEta   = cms.double(2.5),
+        jetConeSize = cms.double(0.4),
+        jetMinPt    = cms.double(10.),
+        jetMaxEta   = cms.double(999.),
+        fatJetConeSize = cms.double(0.8),
+        fatJetMinPt    = cms.double(170.),
+        fatJetMaxEta   = cms.double(999.),
+        phoIsoConeSize = cms.double(0.4),
+        phoMaxRelIso = cms.double(0.5),
+        phoMinPt = cms.double(10),
+        phoMaxEta = cms.double(2.5),
+    )
+
     process.rivetMethods = cms.Path(
         process.mergedGenParticles
         * process.myGenerator
         * process.rivetProducerHTXS
+        * process.particleLevel
     )
+
     process.schedule.append( process.rivetMethods )
 
 ################################################
