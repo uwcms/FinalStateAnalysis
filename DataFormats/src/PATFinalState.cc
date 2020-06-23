@@ -1391,6 +1391,84 @@ VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts, double dr )
       jetSysTag = "jres-";
       metp4 = met()->shiftedP4(pat::MET::JetResDown);
    }
+   else if (jetCuts.find("jesJetHFyear-") != std::string::npos) {
+      jetSysTag = "jesJetHFyear-";
+   }
+   else if (jetCuts.find("jesJetHFyear+") != std::string::npos) {
+      jetSysTag = "jesJetHFyear+";
+   }
+   else if (jetCuts.find("jesJetHF-") != std::string::npos) {
+      jetSysTag = "jesJetHF-";
+   }
+   else if (jetCuts.find("jesJetHF+") != std::string::npos) {
+      jetSysTag = "jesJetHF+";
+   }
+   else if (jetCuts.find("jesJetEC2year-") != std::string::npos) {
+      jetSysTag = "jesJetEC2year-";
+   }
+   else if (jetCuts.find("jesJetEC2year+") != std::string::npos) {
+      jetSysTag = "jesJetEC2year+";
+   }
+   else if (jetCuts.find("jesJetBBEC1year-") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1year-";
+   }
+   else if (jetCuts.find("jesJetBBEC1year+") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1year+";
+   }
+   else if (jetCuts.find("jesJetBBEC1-") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1-";
+   }
+   else if (jetCuts.find("jesJetBBEC1+") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1+";
+   }
+   else if (jetCuts.find("jesJetFlavorQCD-") != std::string::npos) {
+      jetSysTag = "jesJetFlavorQCD-";
+   }
+   else if (jetCuts.find("jesJetFlavorQCD+") != std::string::npos) {
+      jetSysTag = "jesJetFlavorQCD+";
+   }
+   else if (jetCuts.find("jesJetAbsoluteyear-") != std::string::npos) {
+      jetSysTag = "jesJetAbsoluteyear-";
+   }
+   else if (jetCuts.find("jesJetAbsoluteyear+") != std::string::npos) {
+      jetSysTag = "jesJetAbsoluteyear+";
+   }
+   else if (jetCuts.find("jesJetAbsolute-") != std::string::npos) {
+      jetSysTag = "jesJetAbsolute-";
+   }
+   else if (jetCuts.find("jesJetAbsolute+") != std::string::npos) {
+      jetSysTag = "jesJetAbsolute+";
+   }
+   else if (jetCuts.find("jesJetEC2-") != std::string::npos) {
+      jetSysTag = "jesJetEC2-";
+   }
+   else if (jetCuts.find("jesJetEC2+") != std::string::npos) {
+      jetSysTag = "jesJetEC2+";
+   }
+   else if (jetCuts.find("jesRelativeBal-") != std::string::npos) {
+      jetSysTag = "jesRelativeBal-";
+   }
+   else if (jetCuts.find("jesRelativeBal+") != std::string::npos) {
+      jetSysTag = "jesRelativeBal+";
+   }
+   else if (jetCuts.find("jesRelativeSample-") != std::string::npos) {
+      jetSysTag = "jesRelativeSample-";
+   }
+   else if (jetCuts.find("jesRelativeSample+") != std::string::npos) {
+      jetSysTag = "jesRelativeSample+";
+   }
+   else if (jetCuts.find("jesTotal-") != std::string::npos) {
+      jetSysTag = "jesTotal-";
+   }
+   else if (jetCuts.find("jesTotal+") != std::string::npos) {
+      jetSysTag = "jesTotal+";
+   }
+   else if (jetCuts.find("jer-") != std::string::npos) {
+      jetSysTag = "jer-";
+   }
+   else if (jetCuts.find("jer+") != std::string::npos) {
+      jetSysTag = "jer+";
+   }
    else{
       metp4 = met()->p4();
    }
@@ -1402,19 +1480,297 @@ std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, doub
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
   std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
   // todo cache this
-  return computeJetInfo(jets);
+  std::string jetSysTag = "";
+  if (jetCuts.find("jes+") != std::string::npos) {
+      jetSysTag = "jes+";
+   }
+   else if (jetCuts.find("jes-") != std::string::npos) {
+      jetSysTag = "jes-";
+   }
+   else if (jetCuts.find("jres+") != std::string::npos) {
+      jetSysTag = "jres+";
+   }
+   else if (jetCuts.find("jres-") != std::string::npos) {
+      jetSysTag = "jres-";
+   }
+   else if (jetCuts.find("jesJetHFyear-") != std::string::npos) {
+      jetSysTag = "jesJetHFyear-";
+   }
+   else if (jetCuts.find("jesJetHFyear+") != std::string::npos) {
+      jetSysTag = "jesJetHFyear+";
+   }
+   else if (jetCuts.find("jesJetHF-") != std::string::npos) {
+      jetSysTag = "jesJetHF-";
+   }
+   else if (jetCuts.find("jesJetHF+") != std::string::npos) {
+      jetSysTag = "jesJetHF+";
+   }
+   else if (jetCuts.find("jesJetEC2year-") != std::string::npos) {
+      jetSysTag = "jesJetEC2year-";
+   }
+   else if (jetCuts.find("jesJetEC2year+") != std::string::npos) {
+      jetSysTag = "jesJetEC2year+";
+   }
+   else if (jetCuts.find("jesJetBBEC1year-") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1year-";
+   }
+   else if (jetCuts.find("jesJetBBEC1year+") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1year+";
+   }
+   else if (jetCuts.find("jesJetBBEC1-") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1-";
+   }
+   else if (jetCuts.find("jesJetBBEC1+") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1+";
+   }
+   else if (jetCuts.find("jesJetFlavorQCD-") != std::string::npos) {
+      jetSysTag = "jesJetFlavorQCD-";
+   }
+   else if (jetCuts.find("jesJetFlavorQCD+") != std::string::npos) {
+      jetSysTag = "jesJetFlavorQCD+";
+   }
+   else if (jetCuts.find("jesJetAbsoluteyear-") != std::string::npos) {
+      jetSysTag = "jesJetAbsoluteyear-";
+   }
+   else if (jetCuts.find("jesJetAbsoluteyear+") != std::string::npos) {
+      jetSysTag = "jesJetAbsoluteyear+";
+   }
+   else if (jetCuts.find("jesJetAbsolute-") != std::string::npos) {
+      jetSysTag = "jesJetAbsolute-";
+   }
+   else if (jetCuts.find("jesJetAbsolute+") != std::string::npos) {
+      jetSysTag = "jesJetAbsolute+";
+   }
+   else if (jetCuts.find("jesJetEC2-") != std::string::npos) {
+      jetSysTag = "jesJetEC2-";
+   }
+   else if (jetCuts.find("jesJetEC2+") != std::string::npos) {
+      jetSysTag = "jesJetEC2+";
+   }
+   else if (jetCuts.find("jesRelativeBal-") != std::string::npos) {
+      jetSysTag = "jesRelativeBal-";
+   }
+   else if (jetCuts.find("jesRelativeBal+") != std::string::npos) {
+      jetSysTag = "jesRelativeBal+";
+   }
+   else if (jetCuts.find("jesRelativeSample-") != std::string::npos) {
+      jetSysTag = "jesRelativeSample-";
+   }
+   else if (jetCuts.find("jesRelativeSample+") != std::string::npos) {
+      jetSysTag = "jesRelativeSample+";
+   }
+   else if (jetCuts.find("jesTotal-") != std::string::npos) {
+      jetSysTag = "jesTotal-";
+   }
+   else if (jetCuts.find("jesTotal+") != std::string::npos) {
+      jetSysTag = "jesTotal+";
+   }
+   else if (jetCuts.find("jer-") != std::string::npos) {
+      jetSysTag = "jer-";
+   }
+   else if (jetCuts.find("jer+") != std::string::npos) {
+      jetSysTag = "jer+";
+   }
+
+  return computeJetInfo(jets,jetSysTag);
 }
 
 std::vector<double> PATFinalState::deepFlavourJetVariables(const std::string& jetCuts, double dr ) const {
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
   std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
-  return computeDeepFlavourJetInfo(jets);
+
+  std::string jetSysTag = "";
+  if (jetCuts.find("jes+") != std::string::npos) {
+      jetSysTag = "jes+";
+   }
+   else if (jetCuts.find("jes-") != std::string::npos) {
+      jetSysTag = "jes-";
+   }
+   else if (jetCuts.find("jres+") != std::string::npos) {
+      jetSysTag = "jres+";
+   }
+   else if (jetCuts.find("jres-") != std::string::npos) {
+      jetSysTag = "jres-";
+   }
+   else if (jetCuts.find("jesJetHFyear-") != std::string::npos) {
+      jetSysTag = "jesJetHFyear-";
+   }
+   else if (jetCuts.find("jesJetHFyear+") != std::string::npos) {
+      jetSysTag = "jesJetHFyear+";
+   }
+   else if (jetCuts.find("jesJetHF-") != std::string::npos) {
+      jetSysTag = "jesJetHF-";
+   }
+   else if (jetCuts.find("jesJetHF+") != std::string::npos) {
+      jetSysTag = "jesJetHF+";
+   }
+   else if (jetCuts.find("jesJetEC2year-") != std::string::npos) {
+      jetSysTag = "jesJetEC2year-";
+   }
+   else if (jetCuts.find("jesJetEC2year+") != std::string::npos) {
+      jetSysTag = "jesJetEC2year+";
+   }
+   else if (jetCuts.find("jesJetBBEC1year-") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1year-";
+   }
+   else if (jetCuts.find("jesJetBBEC1year+") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1year+";
+   }
+   else if (jetCuts.find("jesJetBBEC1-") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1-";
+   }
+   else if (jetCuts.find("jesJetBBEC1+") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1+";
+   }
+   else if (jetCuts.find("jesJetFlavorQCD-") != std::string::npos) {
+      jetSysTag = "jesJetFlavorQCD-";
+   }
+   else if (jetCuts.find("jesJetFlavorQCD+") != std::string::npos) {
+      jetSysTag = "jesJetFlavorQCD+";
+   }
+   else if (jetCuts.find("jesJetAbsoluteyear-") != std::string::npos) {
+      jetSysTag = "jesJetAbsoluteyear-";
+   }
+   else if (jetCuts.find("jesJetAbsoluteyear+") != std::string::npos) {
+      jetSysTag = "jesJetAbsoluteyear+";
+   }
+   else if (jetCuts.find("jesJetAbsolute-") != std::string::npos) {
+      jetSysTag = "jesJetAbsolute-";
+   }
+   else if (jetCuts.find("jesJetAbsolute+") != std::string::npos) {
+      jetSysTag = "jesJetAbsolute+";
+   }
+   else if (jetCuts.find("jesJetEC2-") != std::string::npos) {
+      jetSysTag = "jesJetEC2-";
+   }
+   else if (jetCuts.find("jesJetEC2+") != std::string::npos) {
+      jetSysTag = "jesJetEC2+";
+   }
+   else if (jetCuts.find("jesRelativeBal-") != std::string::npos) {
+      jetSysTag = "jesRelativeBal-";
+   }
+   else if (jetCuts.find("jesRelativeBal+") != std::string::npos) {
+      jetSysTag = "jesRelativeBal+";
+   }
+   else if (jetCuts.find("jesRelativeSample-") != std::string::npos) {
+      jetSysTag = "jesRelativeSample-";
+   }
+   else if (jetCuts.find("jesRelativeSample+") != std::string::npos) {
+      jetSysTag = "jesRelativeSample+";
+   }
+   else if (jetCuts.find("jesTotal-") != std::string::npos) {
+      jetSysTag = "jesTotal-";
+   }
+   else if (jetCuts.find("jesTotal+") != std::string::npos) {
+      jetSysTag = "jesTotal+";
+   }
+   else if (jetCuts.find("jer-") != std::string::npos) {
+      jetSysTag = "jer-";
+   }
+   else if (jetCuts.find("jer+") != std::string::npos) {
+      jetSysTag = "jer+";
+   }
+
+  return computeDeepFlavourJetInfo(jets,jetSysTag);
 }
 
 std::vector<double> PATFinalState::deepCSVJetVariables(const std::string& jetCuts, double dr ) const {
   std::vector<const reco::Candidate*> hardScatter = this->daughters();
   std::vector<const reco::Candidate*> jets = this->vetoJets(dr, jetCuts);
-  return computeDeepCSVJetInfo(jets);
+
+  std::string jetSysTag = "";
+  if (jetCuts.find("jes+") != std::string::npos) {
+      jetSysTag = "jes+";
+   }
+   else if (jetCuts.find("jes-") != std::string::npos) {
+      jetSysTag = "jes-";
+   }
+   else if (jetCuts.find("jres+") != std::string::npos) {
+      jetSysTag = "jres+";
+   }
+   else if (jetCuts.find("jres-") != std::string::npos) {
+      jetSysTag = "jres-";
+   }
+   else if (jetCuts.find("jesJetHFyear-") != std::string::npos) {
+      jetSysTag = "jesJetHFyear-";
+   }
+   else if (jetCuts.find("jesJetHFyear+") != std::string::npos) {
+      jetSysTag = "jesJetHFyear+";
+   }
+   else if (jetCuts.find("jesJetHF-") != std::string::npos) {
+      jetSysTag = "jesJetHF-";
+   }
+   else if (jetCuts.find("jesJetHF+") != std::string::npos) {
+      jetSysTag = "jesJetHF+";
+   }
+   else if (jetCuts.find("jesJetEC2year-") != std::string::npos) {
+      jetSysTag = "jesJetEC2year-";
+   }
+   else if (jetCuts.find("jesJetEC2year+") != std::string::npos) {
+      jetSysTag = "jesJetEC2year+";
+   }
+   else if (jetCuts.find("jesJetBBEC1year-") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1year-";
+   }
+   else if (jetCuts.find("jesJetBBEC1year+") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1year+";
+   }
+   else if (jetCuts.find("jesJetBBEC1-") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1-";
+   }
+   else if (jetCuts.find("jesJetBBEC1+") != std::string::npos) {
+      jetSysTag = "jesJetBBEC1+";
+   }
+   else if (jetCuts.find("jesJetFlavorQCD-") != std::string::npos) {
+      jetSysTag = "jesJetFlavorQCD-";
+   }
+   else if (jetCuts.find("jesJetFlavorQCD+") != std::string::npos) {
+      jetSysTag = "jesJetFlavorQCD+";
+   }
+   else if (jetCuts.find("jesJetAbsoluteyear-") != std::string::npos) {
+      jetSysTag = "jesJetAbsoluteyear-";
+   }
+   else if (jetCuts.find("jesJetAbsoluteyear+") != std::string::npos) {
+      jetSysTag = "jesJetAbsoluteyear+";
+   }
+   else if (jetCuts.find("jesJetAbsolute-") != std::string::npos) {
+      jetSysTag = "jesJetAbsolute-";
+   }
+   else if (jetCuts.find("jesJetAbsolute+") != std::string::npos) {
+      jetSysTag = "jesJetAbsolute+";
+   }
+   else if (jetCuts.find("jesJetEC2-") != std::string::npos) {
+      jetSysTag = "jesJetEC2-";
+   }
+   else if (jetCuts.find("jesJetEC2+") != std::string::npos) {
+      jetSysTag = "jesJetEC2+";
+   }
+   else if (jetCuts.find("jesRelativeBal-") != std::string::npos) {
+      jetSysTag = "jesRelativeBal-";
+   }
+   else if (jetCuts.find("jesRelativeBal+") != std::string::npos) {
+      jetSysTag = "jesRelativeBal+";
+   }
+   else if (jetCuts.find("jesRelativeSample-") != std::string::npos) {
+      jetSysTag = "jesRelativeSample-";
+   }
+   else if (jetCuts.find("jesRelativeSample+") != std::string::npos) {
+      jetSysTag = "jesRelativeSample+";
+   }
+   else if (jetCuts.find("jesTotal-") != std::string::npos) {
+      jetSysTag = "jesTotal-";
+   }
+   else if (jetCuts.find("jesTotal+") != std::string::npos) {
+      jetSysTag = "jesTotal+";
+   }
+   else if (jetCuts.find("jer-") != std::string::npos) {
+      jetSysTag = "jer-";
+   }
+   else if (jetCuts.find("jer+") != std::string::npos) {
+      jetSysTag = "jer+";
+   }
+
+  return computeDeepCSVJetInfo(jets,jetSysTag);
 }
 
 std::vector<double> PATFinalState::bVariables(const std::string& jetCuts, double dr ) const {

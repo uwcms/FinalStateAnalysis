@@ -12,11 +12,14 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 
 std::vector<double> computeJetInfo(
-    const std::vector<const reco::Candidate*>& jets);
+    const std::vector<const reco::Candidate*>& jets,
+    const std::string& sysTag);
 std::vector<double> computeDeepCSVJetInfo(
-    const std::vector<const reco::Candidate*>& jets);
+    const std::vector<const reco::Candidate*>& jets,
+    const std::string& sysTag);
 std::vector<double> computeDeepFlavourJetInfo(
-    const std::vector<const reco::Candidate*>& jets);
+    const std::vector<const reco::Candidate*>& jets,
+    const std::string& sysTag);
 std::vector<double> computeBInfo(
     const std::vector<const reco::Candidate*>& jets);
 

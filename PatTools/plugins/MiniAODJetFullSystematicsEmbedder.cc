@@ -71,7 +71,8 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
    "HF",
    "BBEC1year",
    "EC2year",
-   "HFyear"
+   "HFyear",
+   "Nominal"
     }; // end uncertNames
     std::map<std::string, JetCorrectorParameters const *> JetCorParMap;
     std::map<std::string, JetCorrectionUncertainty* > JetUncMap;
@@ -116,6 +117,7 @@ MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::
     if (name == "EC2year") continue;
     if (name == "HFyear") continue;
     if (name == "ClosureNew") continue;
+    if (name == "Nominal") continue;
     JetCorrectorParameters const * JetCorPar = new JetCorrectorParameters(fName_, name);
     JetCorParMap[name] = JetCorPar;
 
@@ -151,6 +153,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
   std::vector<double> factorizedEta3to5Up(nJets, 0.0);
   std::vector<double> factorizedEC2Up(nJets, 0.0);
   std::vector<double> factorizedHFyearUp(nJets, 0.0);
+  std::vector<double> factorizedNominalUp(nJets, 0.0);
   std::vector<double> factorizedEC2yearUp(nJets, 0.0);
   std::vector<double> factorizedBBEC1yearUp(nJets, 0.0);
   std::vector<double> factorizedHFUp(nJets, 0.0);
@@ -175,7 +178,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
       // Unc = zero for all others
       if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9) {
         // Get unc for normal 28 and Total
-        if ( !(name == "Closure") && !(name == "EC2") && !(name == "Eta0to3") && !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")  && !(name=="Absolute") && !(name=="Absoluteyear") && !(name=="BBEC1") && !(name=="HF") && !(name=="BBEC1year") && !(name=="EC2year") && !(name=="HFyear")) {
+        if ( !(name == "Closure") && !(name == "EC2") && !(name == "Eta0to3") && !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")  && !(name=="Absolute") && !(name=="Absoluteyear") && !(name=="BBEC1") && !(name=="HF") && !(name=="BBEC1year") && !(name=="EC2year") && !(name=="HFyear") && !(name=="Nominal")) {
           JetUncMap[name]->setJetEta(jet.eta());
           JetUncMap[name]->setJetPt(jet.pt());
           unc = JetUncMap[name]->getUncertainty(true);
@@ -186,7 +189,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
         // comparison (also skip SubTotals)
         // ALL factorized uncertainties pass this if statment
         if ( !(name == "Total") && !(name == "Closure") && !(name == "EC2") && !(name == "Eta0to3") && 
-              !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")  && !(name=="Absolute") && !(name=="Absoluteyear") && !(name=="BBEC1") && !(name=="HF") && !(name=="BBEC1year") && !(name=="EC2year") && !(name=="HFyear")) {
+              !(name == "Eta0to5") && !(name == "Eta3to5") && !(name == "ClosureNew")  && !(name=="Absolute") && !(name=="Absoluteyear") && !(name=="BBEC1") && !(name=="HF") && !(name=="BBEC1year") && !(name=="EC2year") && !(name=="HFyear") && !(name=="Nominal")) {
           // All 28
           factorizedTotalUp[i] += unc*unc;
 
@@ -318,6 +321,9 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
           unc = std::sqrt(factorizedHFyearUp[i]);
           factorizedClosureNewUp[i] += unc*unc;
         }
+        if (name == "Nominal") {
+          unc = 0.;
+        }
         if (name == "ClosureNew")
           unc = std::sqrt(factorizedClosureNewUp[i]);
       } // Shifted jets within absEta and pT
@@ -325,7 +331,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
   
       // Get uncorrected pt
       assert(jet.jecSetsAvailable());
-  
+
       LorentzVector uncDown = (1-unc)*jet.p4();
       LorentzVector uncUp = (1+unc)*jet.p4();
   
@@ -349,7 +355,7 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
       //std::cout << "Jet " << i << " uncorr pt: " << jet.pt() << std::endl;
       jet.addUserCand("jes"+name+"+", CandidatePtr(p4OutJESUpJetsH, i));
       jet.addUserCand("jes"+name+"-", CandidatePtr(p4OutJESDownJetsH, i));
-  } // end jets
+    } // end jets
 
   } // end cycle over all uncertainties
 
