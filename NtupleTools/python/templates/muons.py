@@ -49,9 +49,6 @@ id = PSet(
     objectPFIDLoose = '{object}.isLooseMuon()',
     objectSegmentCompatibility = '{object}.segmentCompatibility()',
     # For charged, we use ALL charged particles
-    objectEffectiveArea2012 = '{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")',
-    objectEffectiveArea2011 = '{object}.userFloat("ea_comb_iso04_kt6PFJCth05")',
-    objectRho = cms.string('{object}.userFloat("rho_fastjet")'),
     objectPFChargedIso = cms.string('{object}.userIsolation("PfChargedHadronIso")'),
     objectPFNeutralIso = cms.string('{object}.userIsolation("PfNeutralHadronIso")'),
     objectPFPhotonIso  = cms.string('{object}.userIsolation("PfGammaIso")'),
@@ -75,13 +72,6 @@ id = PSet(
         '+ max(0., {object}.pfIsolationR04().sumNeutralHadronEt'
         '+ {object}.pfIsolationR04().sumPhotonEt'
         '- 0.5*{object}.pfIsolationR04().sumPUPt))'
-        '/{object}.pt()'
-    ),
-    objectRelPFIsoRho = cms.string(
-        '({object}.chargedHadronIso()'
-        '+max(0.0,{object}.neutralHadronIso()'
-        '+{object}.photonIso()'
-        '-{object}.userFloat("rho_fastjet")*{object}.userFloat("ea_comb_iso04_kt6PFJCNth05")))'
         '/{object}.pt()'
     ),
 

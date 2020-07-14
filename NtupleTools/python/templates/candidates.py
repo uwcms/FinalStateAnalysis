@@ -31,22 +31,22 @@ vertex_info = PSet(
 
 # The info about the associated pat::Jet
 base_jet = PSet(
-    objectJetPt = '{object}.userFloat("jetPt")',
-    objectJetDR = '{object}.userFloat("jetDR")',
-    objectJetBtag = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").bDiscriminator("") : -5',
-    objectJetPFCISVBtag = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") : -5',
-    objectJetEtaPhiSpread = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").constituentEtaPhiSpread() : -5',
-    objectJetEtaEtaMoment = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").etaetaMoment() : -5',
-    objectJetEtaPhiMoment = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").etaphiMoment() : -5',
-    objectJetPhiPhiMoment = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").phiphiMoment() : -5',
-    objectJetArea = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").jetArea() : -5',
+    #objectJetPt = '{object}.userFloat("jetPt")',
+    #objectJetDR = '{object}.userFloat("jetDR")',
+    #objectJetBtag = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").bDiscriminator("") : -5',
+    #objectJetPFCISVBtag = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") : -5',
+    #objectJetEtaPhiSpread = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").constituentEtaPhiSpread() : -5',
+    #objectJetEtaEtaMoment = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").etaetaMoment() : -5',
+    #objectJetEtaPhiMoment = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").etaphiMoment() : -5',
+    #objectJetPhiPhiMoment = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").phiphiMoment() : -5',
+    #objectJetArea = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").jetArea() : -5',
     #objectJetptD  =   '? {object}.userCand("patJet").isNonnull ? '
     #'jetVariables({object_idx}, "ptD") : -100',
     #objectJetaxis1  =   '? {object}.userCand("patJet").isNonnull ? '

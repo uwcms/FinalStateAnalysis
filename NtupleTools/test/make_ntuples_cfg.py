@@ -303,7 +303,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
 # Count events at the beginning of the tuplization
-process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
+process.load("FinalStateAnalysis.PatTools.eventCount_cfi")
 process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateLSProducer_cfi")
 process.generateMetaInfo = cms.Path(process.eventCount *
                                     process.summedWeight *
@@ -807,39 +807,6 @@ for fs in additional_fs:
                                                   postfix=fs,
                                                   )
 
-
-
-
-#############################
-###    Pairwise MVA MET   ###
-#############################
-
-if options.runMVAMET:
-    from RecoMET.METPUSubtraction.MVAMETConfiguration_cff import runMVAMET
-    
-    mvametJetCollection = "slimmedJets"
-    isData = not options.isMC
-    if isData :
-        mvametJetCollection = "patJetsReapplyJEC"
-
-    from RecoMET.METPUSubtraction.jet_recorrections import recorrectJets
-    recorrectJets(process, isData)
-    
-    runMVAMET( process, jetCollectionPF = mvametJetCollection )
-    process.MVAMET.srcLeptons  = cms.VInputTag("slimmedMuons", "slimmedElectrons", "slimmedTaus")
-    process.MVAMET.requireOS = cms.bool(False)
-    process.MVAMETSequence = cms.Path(process.MVAMET)
-
-    process.schedule.append(process.MVAMETSequence)
-
-# Add met significane for normal RECO METs for svFit testing
-# of MvaMet vs. Normas Mets
-# Note, default uses slimmedMETs which is PF Met
-process.load("RecoMET.METProducers.METSignificance_cfi")
-
-process.METSigSeq = cms.Path(process.METSignificance)
-process.schedule.append(process.METSigSeq)
-
 ######################
 ### embed muon IDs ###
 ######################
@@ -877,19 +844,6 @@ for fs in additional_fs:
                                         additional_fs[fs]['vertices'],
                                         postfix=fs,
                                         rerunMvaIDs=options.htt)
-
-########################
-### embed photon IDs ###
-########################
-from FinalStateAnalysis.NtupleTools.customization_photons import prePhotons
-fs_daughter_inputs['photons'] = prePhotons(process,
-                                           fs_daughter_inputs['photons'],
-                                           fs_daughter_inputs['vertices'])
-for fs in additional_fs:
-    additional_fs[fs]['photons'] = prePhotons(process,
-                                              additional_fs[fs]['photons'],
-                                              additional_fs[fs]['vertices'],
-                                              postfix=fs)
 
 ########################
 ### jet id embedding ###
@@ -1046,20 +1000,6 @@ from FinalStateAnalysis.NtupleTools.customization_taus import postTaus
 fs_daughter_inputs['taus'] = postTaus(process,fs_daughter_inputs['taus'],fs_daughter_inputs['jets'])
 for fs in additional_fs:
     additional_fs[fs]['taus'] = postTaus(process,additional_fs[fs]['taus'],additional_fs[fs]['jets'],postfix=fs)
-
-#################################
-### post photon customization ###
-#################################
-from FinalStateAnalysis.NtupleTools.customization_photons import postPhotons
-fs_daughter_inputs['photons'] = postPhotons(process,fs_daughter_inputs['photons'],fs_daughter_inputs['jets'])
-for fs in additional_fs:
-    additional_fs[fs]['photons'] = postTaus(process,additional_fs[fs]['photons'],additional_fs[fs]['jets'],postfix=fs)
-
-
-
-
-
-
 
 ############################
 ### Now do the FSA stuff ###

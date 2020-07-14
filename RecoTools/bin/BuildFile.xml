@@ -1,6 +1,0 @@
-<bin   name="make3DHisto" file="make3DHisto.cc">
-  <use   name="rootcore"/>
-  <use   name="root"/>
-  <use   name="boost"/>
-  <use   name="boost_program_options"/>
-</bin>

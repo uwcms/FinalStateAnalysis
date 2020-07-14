@@ -1,6 +1,5 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataAlgos/interface/SmartTrigger.h"
-#include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 #include "FinalStateAnalysis/DataAlgos/interface/Hash.h"
 
@@ -120,7 +119,6 @@ PATFinalStateEvent::PATFinalStateEvent(
     const GenFilterInfo& generatorFilter,
     bool isRealData,
     bool isEmbeddedSample,
-    const std::string& puScenario,
     const edm::RefProd<pat::ElectronCollection>& electronRefProd,
     const edm::RefProd<pat::MuonCollection>& muonRefProd,
     const edm::RefProd<pat::TauCollection>& tauRefProd,
@@ -166,7 +164,6 @@ PATFinalStateEvent::PATFinalStateEvent(
   generatorFilter_(generatorFilter),
   isRealData_(isRealData),
   isEmbeddedSample_(isEmbeddedSample),
-  puScenario_(puScenario),
   fsaDataFormatVersion_(FSA_DATA_FORMAT_VERSION),
   electronRefProd_(electronRefProd),
   muonRefProd_(muonRefProd),
@@ -621,23 +618,6 @@ int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,const std::s
       }
    }
    return match;
-}
-
-const std::string& PATFinalStateEvent::puTag() const {
-  return puScenario_;
-}
-
-double PATFinalStateEvent::puWeight(const std::string& dataTag) const {
-  if (isRealData_)
-    return 1.;
-  return this->puWeight(dataTag, puTag());
-}
-
-double PATFinalStateEvent::puWeight(const std::string& dataTag,
-    const std::string& mcTag) const {
-  if (isRealData_)
-    return 1.;
-  return getPileupWeight(dataTag, mcTag, puInfo_[1].getTrueNumInteractions());
 }
 
 float PATFinalStateEvent::weight(const std::string& name) const {

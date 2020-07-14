@@ -87,23 +87,6 @@ def preJets(process, jSrc, jupSrc, jdownSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
 
     print jSrc 
 
-    # embed IP stuff
-    modName = 'miniJetsEmbedIp{0}'.format(postfix)
-    mod = cms.EDProducer(
-        "MiniAODJetIpEmbedder",
-        src = cms.InputTag(jSrc),
-        vtxSrc = cms.InputTag(vSrc),
-    )
-    jSrc = modName
-    setattr(process,modName,mod)
-
-    pathName = 'runMiniAODJetIpEmbedding{0}'.format(postfix)
-    path = cms.Path(getattr(process,modName))
-    setattr(process,pathName,path)
-    process.schedule.append(getattr(process,pathName))
-
-    print jSrc
-
     modName = 'miniAODJetSystematicsEmbedding{0}'.format(postfix)
     mod = cms.EDProducer(
 	"MiniAODJetSystematicsEmbedder",

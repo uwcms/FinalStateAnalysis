@@ -476,7 +476,7 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo, metSig, metCov,
                               trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, dressedParticlesRef, rivetmetParticlesRef, 
                               hTaus, eTaus, mTaus, htxsRivetInfo,
-                              evt.id(), genEventInfo, generatorFilter, evt.isRealData(), isEmbedded_, puScenario_,
+                              evt.id(), genEventInfo, generatorFilter, evt.isRealData(), isEmbedded_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
                               phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts,
                               lheweights, geninfoweights, prefiringweights, npNLO, filterFlagsInfo); //FIXME 

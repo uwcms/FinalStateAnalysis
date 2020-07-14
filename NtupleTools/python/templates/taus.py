@@ -29,14 +29,6 @@ info = PSet(
 # ID and isolation
 id = PSet(
 
-    #objectAgainstElectronVLooseMVA6 = '{object}.tauID("againstElectronVLooseMVA6")', 
-    #objectAgainstElectronLooseMVA6  = '{object}.tauID("againstElectronLooseMVA6")',
-    #objectAgainstElectronMediumMVA6 = '{object}.tauID("againstElectronMediumMVA6")',
-    #objectAgainstElectronTightMVA6  = '{object}.tauID("againstElectronTightMVA6")',
-    #objectAgainstElectronVTightMVA6 = '{object}.tauID("againstElectronVTightMVA6")',
-    
-    #objectAgainstElectronMVA6category = '{object}.tauID("againstElectronMVA6category")',
-    #objectAgainstElectronMVA6Raw      = '{object}.tauID("againstElectronMVA6Raw")',
     objectAgainstMuonLoose3 = '{object}.tauID("againstMuonLoose3")',
     objectAgainstMuonTight3 = '{object}.tauID("againstMuonTight3")',
     
@@ -62,32 +54,6 @@ id = PSet(
     objectByTightCombinedIsolationDeltaBetaCorr3Hits = '{object}.tauID("byTightCombinedIsolationDeltaBetaCorr3Hits")',
     objectByCombinedIsolationDeltaBetaCorrRaw3Hits = '{object}.tauID("byCombinedIsolationDeltaBetaCorrRaw3Hits")',
     
-    ## MVA based tau isolation discriminators new 7_6_x
-    ## With Old Decay Mode reconstruction:
-    #objectByVLooseIsolationMVArun2v1DBoldDMwLT = '{object}.tauID("byVLooseIsolationMVArun2v1DBoldDMwLT")',
-    #objectByLooseIsolationMVArun2v1DBoldDMwLT = '{object}.tauID("byLooseIsolationMVArun2v1DBoldDMwLT")',
-    #objectByMediumIsolationMVArun2v1DBoldDMwLT = '{object}.tauID("byMediumIsolationMVArun2v1DBoldDMwLT")',
-    #objectByTightIsolationMVArun2v1DBoldDMwLT = '{object}.tauID("byTightIsolationMVArun2v1DBoldDMwLT")',
-    #objectByVTightIsolationMVArun2v1DBoldDMwLT = '{object}.tauID("byVTightIsolationMVArun2v1DBoldDMwLT")',
-    #objectByVVTightIsolationMVArun2v1DBoldDMwLT = '{object}.tauID("byVVTightIsolationMVArun2v1DBoldDMwLT")',
-    #objectByIsolationMVArun2v1DBoldDMwLTraw = '{object}.tauID("byIsolationMVArun2v1DBoldDMwLTraw")',#real 
-    ## Same but with Iso dR = 0.3
-    #objectByVLooseIsolationMVArun2v1DBdR03oldDMwLT = '{object}.tauID("byVLooseIsolationMVArun2v1DBdR03oldDMwLT")',
-    #objectByLooseIsolationMVArun2v1DBdR03oldDMwLT = '{object}.tauID("byLooseIsolationMVArun2v1DBdR03oldDMwLT")',
-    #objectByMediumIsolationMVArun2v1DBdR03oldDMwLT = '{object}.tauID("byMediumIsolationMVArun2v1DBdR03oldDMwLT")',
-    #objectByTightIsolationMVArun2v1DBdR03oldDMwLT = '{object}.tauID("byTightIsolationMVArun2v1DBdR03oldDMwLT")',
-    #objectByVTightIsolationMVArun2v1DBdR03oldDMwLT = '{object}.tauID("byVTightIsolationMVArun2v1DBdR03oldDMwLT")',
-    #objectByVVTightIsolationMVArun2v1DBdR03oldDMwLT = '{object}.tauID("byVVTightIsolationMVArun2v1DBdR03oldDMwLT")',
-    #objectByIsolationMVArun2v1DBdR03oldDMwLTraw = '{object}.tauID("byIsolationMVArun2v1DBdR03oldDMwLTraw")',
-    #
-    ##With New Decay Mode Reconstruction:
-    #objectByVLooseIsolationMVArun2v1DBnewDMwLT = '{object}.tauID("byVLooseIsolationMVArun2v1DBnewDMwLT")',
-    #objectByLooseIsolationMVArun2v1DBnewDMwLT = '{object}.tauID("byLooseIsolationMVArun2v1DBnewDMwLT")',
-    #objectByMediumIsolationMVArun2v1DBnewDMwLT = '{object}.tauID("byMediumIsolationMVArun2v1DBnewDMwLT")',
-    #objectByTightIsolationMVArun2v1DBnewDMwLT = '{object}.tauID("byTightIsolationMVArun2v1DBnewDMwLT")',
-    #objectByVTightIsolationMVArun2v1DBnewDMwLT = '{object}.tauID("byVTightIsolationMVArun2v1DBnewDMwLT")',
-    #objectByVVTightIsolationMVArun2v1DBnewDMwLT = '{object}.tauID("byVVTightIsolationMVArun2v1DBnewDMwLT")',
-    #objectByIsolationMVArun2v1DBnewDMwLTraw = '{object}.tauID("byIsolationMVArun2v1DBnewDMwLTraw")',
 
     #Deep ID
     objectDeepTau2017v2p1VSmuraw = '? {object}.hasUserFloat("byDeepTau2017v2p1VSmuraw") ? {object}.userFloat("byDeepTau2017v2p1VSmuraw") : -10',
