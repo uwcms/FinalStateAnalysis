@@ -48,7 +48,6 @@ parameters = {
         'e': 'abs(superCluster().eta) < 3.0 && pt > 7',
         'm': 'pt > 8 && (isGlobalMuon | isTrackerMuon)',
         't': 'abs(eta) < 2.5 && pt > 17',
-        'g': 'abs(superCluster().eta()) < 3.0 && pt > 10',
         'j': 'pt>18 && abs(eta) < 4.7 && userFloat("idTight") > 0.5'
     },
 

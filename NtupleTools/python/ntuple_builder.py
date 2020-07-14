@@ -14,7 +14,7 @@ import re
 
 # Import the templates used to make the branches
 from FinalStateAnalysis.NtupleTools.templates import topology, event, candidates, \
-    cleaning, taus, electrons, muons, photons, bjets, trigger
+    cleaning, taus, electrons, muons, bjets, trigger
 
 
 # Define the branches that go in all ntuples
@@ -86,24 +86,10 @@ _electron_template = PSet(
     topology.mtToMET,
 )
 
-_photon_template = PSet(
-    candidates.base_jet,
-    candidates.kinematics,
-    #candidates.vertex_info, #photons have no tracking info
-    photons.id,
-    photons.tracking,
-    photons.energyCorrections,
-    photons.supercluster,
-    #photons.trigger, #add photons later
-    topology.mtToMET,
-)
-
-
 _leg_templates = {
     't': _tau_template,
     'm': _muon_template,
     'e': _electron_template,
-    'g': _photon_template,
     'j': _bjet_template
 }
 
@@ -111,7 +97,6 @@ _pt_cuts = {
     'm': '5',
     'e': '7',
     't': '18',
-    'g': '10',
     'j': '20'
 }
 
@@ -119,7 +104,6 @@ _eta_cuts = {
     'm': '2.5',
     'e': '3.0',
     't': '2.3',
-    'g': '3.0',
     'j': '2.5'
 }
 
@@ -128,7 +112,6 @@ _producer_translation = {
     'm': 'Mu',
     'e': 'Elec',
     't': 'Tau',
-    'g': 'Pho',
     'j': 'Jet'
 }
 
@@ -187,7 +170,7 @@ def make_ntuple(*legs, **kwargs):
     postfix = kwargs.pop('postfix','')
     isShiftedMet = kwargs.pop('isShiftedMet',False)
     # Make sure we only use allowed leg types
-    allowed = set(['m', 'e', 't', 'g','j'])
+    allowed = set(['m', 'e', 't','j'])
     assert(all(x in allowed for x in legs))
     # Make object labels
     object_labels = []
@@ -199,7 +182,6 @@ def make_ntuple(*legs, **kwargs):
         't': 0,
         'm': 0,
         'e': 0,
-        'g': 0,
 	'j': 0,
     }
 
@@ -245,7 +227,7 @@ def make_ntuple(*legs, **kwargs):
             )
 
     # Triggers we care about depend on run configuration
-    leg_triggers = { 'e':PSet(), 'm':PSet(), 't':PSet(), 'j':PSet(), 'g':PSet() }
+    leg_triggers = { 'e':PSet(), 'm':PSet(), 't':PSet(), 'j':PSet() }
     if isMC:
         leg_triggers['e'] = electrons.trigger_25ns_MC
         lep_triggers = trigger.singleLepton_25ns_MC
@@ -284,11 +266,10 @@ def make_ntuple(*legs, **kwargs):
     custVariables['e'] = kwargs.get('electronVariables',PSet())
     custVariables['m'] = kwargs.get('muonVariables',PSet())
     custVariables['t'] = kwargs.get('tauVariables',PSet())
-    custVariables['g'] = kwargs.get('photonVariables',PSet())
     custVariables['j'] = kwargs.get('jetVariables',PSet())
 
     leg_branch_templates = {}
-    for v in ['e','m','t','g','j']:
+    for v in ['e','m','t','j']:
         leg_branch_templates[v] = PSet(
             _leg_templates[v],
             leg_triggers[v],
@@ -441,8 +422,8 @@ def make_ntuple(*legs, **kwargs):
     noclean = kwargs.get('noclean', False)
     from FinalStateAnalysis.NtupleTools.uniqueness_cut_generator import uniqueness_cuts
     if not noclean:
-        pt_cuts = kwargs.get('ptCuts',{'e':'0','m':'0','t':'0','g':'0','j':'0'})
-        eta_cuts = kwargs.get('etaCuts',{'e':'10','m':'10','t':'10','g':'10','j':'10'})
+        pt_cuts = kwargs.get('ptCuts',{'e':'0','m':'0','t':'0','j':'0'})
+        eta_cuts = kwargs.get('etaCuts',{'e':'10','m':'10','t':'10','j':'10'})
 
         for name, cut in uniqueness_cuts(legs, pt_cuts, eta_cuts,
                                          skimCuts=kwargs.get('skimCuts', []),

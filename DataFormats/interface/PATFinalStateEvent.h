@@ -95,7 +95,6 @@ class PATFinalStateEvent {
         const edm::RefProd<pat::MuonCollection>& muonRefProd,
         const edm::RefProd<pat::TauCollection>& tauRefProd,
         const edm::RefProd<pat::JetCollection>& jetRefProd,
-    	const edm::RefProd<pat::PhotonCollection>& phoRefProd,
         const reco::PFCandidateRefProd& pfRefProd,
         const edm::RefProd<pat::PackedCandidateCollection>& packedPFRefProd,
         const reco::TrackRefProd& tracks,
@@ -221,7 +220,7 @@ class PATFinalStateEvent {
     const pat::MuonCollection& muons() const;
     const pat::JetCollection& jets() const;
     const pat::TauCollection& taus() const;
-    const pat::PhotonCollection& photons() const;
+    //const pat::PhotonCollection& photons() const;
 
     /// Access to particle flow collections
     const reco::PFCandidateCollection& pflow() const;
@@ -289,7 +288,7 @@ class PATFinalStateEvent {
     edm::RefProd<pat::MuonCollection> muonRefProd_;
     edm::RefProd<pat::TauCollection> tauRefProd_;
     edm::RefProd<pat::JetCollection> jetRefProd_;
-    edm::RefProd<pat::PhotonCollection> phoRefProd_;
+    //edm::RefProd<pat::PhotonCollection> phoRefProd_;
     reco::PFCandidateRefProd pfRefProd_;
     edm::RefProd<pat::PackedCandidateCollection> packedPFRefProd_;
     reco::TrackRefProd tracks_;

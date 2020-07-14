@@ -123,7 +123,7 @@ PATFinalStateEvent::PATFinalStateEvent(
     const edm::RefProd<pat::MuonCollection>& muonRefProd,
     const edm::RefProd<pat::TauCollection>& tauRefProd,
     const edm::RefProd<pat::JetCollection>& jetRefProd,
-    const edm::RefProd<pat::PhotonCollection>& phoRefProd,
+    //const edm::RefProd<pat::PhotonCollection>& phoRefProd,
     const reco::PFCandidateRefProd& pfRefProd,
     const edm::RefProd<pat::PackedCandidateCollection>& packedPFRefProd,
     const reco::TrackRefProd& tracks,
@@ -169,7 +169,7 @@ PATFinalStateEvent::PATFinalStateEvent(
   muonRefProd_(muonRefProd),
   tauRefProd_(tauRefProd),
   jetRefProd_(jetRefProd),
-  phoRefProd_(phoRefProd),
+  //phoRefProd_(phoRefProd),
   pfRefProd_(pfRefProd),
   packedPFRefProd_(packedPFRefProd),
   tracks_(tracks),
@@ -672,12 +672,12 @@ const pat::JetCollection& PATFinalStateEvent::jets() const {
   return *jetRefProd_;
 }
 
-const pat::PhotonCollection& PATFinalStateEvent::photons() const {
+/*const pat::PhotonCollection& PATFinalStateEvent::photons() const {
   if (!phoRefProd_)
     throw cms::Exception("PATFSAEventNullRefs")
       << "The photon RefProd is null!" << std::endl;
   return *phoRefProd_;
-}
+}*/
 
 const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
   if (!pfRefProd_)

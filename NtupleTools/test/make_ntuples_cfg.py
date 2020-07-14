@@ -326,7 +326,6 @@ fs_daughter_inputs = {
     'electrons': 'slimmedElectrons',
     'muons': 'slimmedMuons',
     'taus': 'slimmedTaus',
-    'photons': 'slimmedPhotons',
     'jets': 'slimmedJets',
     'pfmet': 'slimmedMETsModifiedMET',         # slimmedMETs, slimmedMETsNoHF (miniaodv2), slimmmedMETsPuppi (not correct in miniaodv1)
     'mvamet': 'fixme',              # produced later

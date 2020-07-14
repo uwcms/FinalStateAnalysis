@@ -1110,14 +1110,6 @@ std::vector<const reco::Candidate*> PATFinalState::vetoTracks(
       dR, filter);
 }
 
-std::vector<const reco::Candidate*> PATFinalState::vetoPhotons(
-    double dR, const std::string& filter) const {
-  return getVetoObjects(
-      daughters(),
-      ptrizeCollection(evt()->photons()),
-      dR, filter);
-}
-
 std::vector<const reco::Candidate*> PATFinalState::overlapMuons(
     int i, double dR, const std::string& filter) const {
   return getOverlapObjects(
@@ -1149,21 +1141,6 @@ std::vector<const reco::Candidate*> PATFinalState::overlapJets(
       ptrizeCollection(evt()->jets()),
       dR, filter);
 }
-
-std::vector<const reco::Candidate*> PATFinalState::overlapPhotons(
-    int i, double dR, const std::string& filter) const {
-  return getOverlapObjects(
-      *daughter(i),
-      ptrizeCollection(evt()->photons()),
-      dR, filter);
-}
-
-//double PATFinalState::massUsingSuperCluster(
-//    int electronIndex, int j, int x, int y, int z) const {
-//  reco::Candidate::LorentzVector total;
-//  total += daughterAsElectron(electronIndex);
-//  total += daughter(j)->p4();
-//}
 
 PATFinalStateProxy
 PATFinalState::subcand(int i, int j, int x, int y, int z) const {
