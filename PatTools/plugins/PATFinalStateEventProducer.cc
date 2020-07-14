@@ -439,14 +439,14 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle<reco::GenJetCollection> dressedParticles;
   evt.getByToken(dressedSrcToken_, dressedParticles);
   reco::GenJetRefProd dressedParticlesRef;
-  if (!evt.isRealData() || isEmbedded_)
+  if (!evt.isRealData() && !isEmbedded_)
     dressedParticlesRef = reco::GenJetRefProd(dressedParticles);
 
   // Try and get the gen information if it exists
   edm::Handle<reco::METCollection> rivetmetParticles;
   evt.getByToken(rivetmetSrcToken_, rivetmetParticles);
   edm::RefProd<reco::METCollection> rivetmetParticlesRef;
-  if (!evt.isRealData() || isEmbedded_)
+  if (!evt.isRealData() && !isEmbedded_)
     rivetmetParticlesRef = edm::RefProd<reco::METCollection>(rivetmetParticles);
 
   // Try and get gen taus built from gen products if they were included
