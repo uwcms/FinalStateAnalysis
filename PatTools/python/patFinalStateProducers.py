@@ -183,21 +183,21 @@ def produce_final_states(process, daughter_collections, output_commands,
     if len(finalSelections):
         sequence += getattr(process,objSelectName)
 
-    # Rank objects
+    ## Rank objects
 
-    rankSeqName = 'rankObjects{0}'.format(postfix)
-    rankSeq = cms.Sequence()
-    for obj in ['muons','electrons','taus','jets']:
-        objRankName = '{0}Rank{1}'.format(obj,postfix)
-        mod = cms.EDProducer(
-            "PAT{0}Ranker".format(obj[:-1].capitalize()),
-            src = cms.InputTag(src[obj]),
-        )
-        src[obj] = objRankName
-        setattr(process,objRankName,mod)
-        rankSeq += getattr(process,objRankName)
-    setattr(process,rankSeqName,rankSeq)
-    sequence += getattr(process,rankSeqName)
+    #rankSeqName = 'rankObjects{0}'.format(postfix)
+    #rankSeq = cms.Sequence()
+    #for obj in ['muons','electrons','taus','jets']:
+    #    objRankName = '{0}Rank{1}'.format(obj,postfix)
+    #    mod = cms.EDProducer(
+    #        "PAT{0}Ranker".format(obj[:-1].capitalize()),
+    #        src = cms.InputTag(src[obj]),
+    #    )
+    #    src[obj] = objRankName
+    #    setattr(process,objRankName,mod)
+    #    rankSeq += getattr(process,objRankName)
+    #setattr(process,rankSeqName,rankSeq)
+    #sequence += getattr(process,rankSeqName)
 
 
     # Now build all combinatorics for E/Mu/Tau/Photon
