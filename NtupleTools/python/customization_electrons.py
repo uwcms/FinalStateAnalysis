@@ -15,6 +15,11 @@ def preElectrons(process, eSrc, vSrc, year, isEmbedded, **kwargs):
        myera='2017-Nov17ReReco'
 
     setupEgammaPostRecoSeq(process,
+		       eleIDModules=[
+                        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V2_cff',
+                        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V2_cff',
+                        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V2_cff'
+                        ],
                        era=myera) 
 
     pathName = 'miniAODElectrons{0}'.format(postfix)
