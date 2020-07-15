@@ -64,7 +64,6 @@ import FWCore.ParameterSet.Config as cms
 
 import os
 import copy
-from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
     make_ntuple, add_ntuple
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \

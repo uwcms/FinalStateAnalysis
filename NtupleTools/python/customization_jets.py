@@ -22,36 +22,6 @@ def preJets(process, jSrc, jupSrc, jdownSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
     setattr(process,pathName,cms.Path(getattr(process,modName)))
     process.schedule.append(getattr(process,pathName))
 
-    # embed BTag SFs
-    if doBTag :
-        modName = 'miniJetsEmbedBTagSFLoose{0}'.format(postfix)
-        mod = cms.EDProducer(
-            "MiniAODJetBTagSFLooseEmbedder",
-            src=cms.InputTag(jSrc)
-        )
-        jSrc = modName
-        setattr(process,modName,mod)
-
-        pathName = 'runMiniAODJetBTagSFLooseEmbedding{0}'.format(postfix)
-        path = cms.Path(getattr(process,modName))
-        setattr(process,pathName,path)
-        process.schedule.append(getattr(process,pathName))
-
-    # embed BTag SFs
-    if doBTag :
-        modName = 'miniJetsEmbedBTagSFMedium{0}'.format(postfix)
-        mod = cms.EDProducer(
-            "MiniAODJetBTagSFMediumEmbedder",
-            src=cms.InputTag(jSrc)
-        )
-        jSrc = modName
-        setattr(process,modName,mod)
-
-        pathName = 'runMiniAODJetBTagSFMediumEmbedding{0}'.format(postfix)
-        path = cms.Path(getattr(process,modName))
-        setattr(process,pathName,path)
-        process.schedule.append(getattr(process,pathName))
-
     # doFullJESUnc 
     if doFullJESUnc :
         # Provide proper path name for Jet Uncertainty file

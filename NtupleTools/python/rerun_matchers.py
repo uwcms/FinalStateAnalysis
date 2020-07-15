@@ -99,16 +99,6 @@ def rerun_matchers(process):
         matchSrc = cms.InputTag('tauMatch')
         )
 
-    process.cleanPatPhotonsRematched = cms.EDProducer(
-        "PATPhotonGenRematchEmbedder",
-        src = cms.InputTag('cleanPatPhotons'),
-        matchSrc = cms.InputTag('photonMatch')
-        )
-    process.photonParentage = cms.EDProducer(
-        "PATPhotonParentageEmbedder",
-        src = cms.InputTag("cleanPatPhotonsRematched")
-        )
-
     process.selectedPatJetsRematched = cms.EDProducer(
         "PATJetGenRematchEmbedder",
         src = cms.InputTag('selectedPatJets'),
@@ -122,9 +112,6 @@ def rerun_matchers(process):
                                          process.cleanPatMuonsRematched+
                                          process.tauMatch+
                                          process.cleanPatTausRematched+
-                                         process.photonMatch+
-                                         process.cleanPatPhotonsRematched+
-                                         process.photonParentage+
                                          process.patJetGenJetMatch+
                                          process.patJetPartonMatch+
                                          process.selectedPatJetsRematched )    
