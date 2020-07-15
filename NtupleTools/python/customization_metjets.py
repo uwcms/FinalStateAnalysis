@@ -11,10 +11,10 @@ def preMETFromJES(process, jSrc, vSrc, metSrc, metUpSrc, metDownSrc, mSrc, eSrc,
         # Provide proper path name for Jet Uncertainty file
         # V10 is most recent version for JES Uncertainties
         # https://hypernews.cern.ch/HyperNews/CMS/get/jes/642/1/1.html
-        if runningLocal : fName = "../../NtupleTools/data/Autumn18_V19_MC_UncertaintySources_AK4PFchs.txt" # recommended by JetMET
+        if runningLocal : fName = "../../NtupleTools/data/Regrouped_Autumn18_V19_MC_UncertaintySources_AK4PFchs.txt" # recommended by JetMET
         else :
             cmsswversion=os.environ['CMSSW_VERSION']
-            fName = "{0}/src/FinalStateAnalysis/NtupleTools/data/Autumn18_V19_MC_UncertaintySources_AK4PFchs.txt".format(cmsswversion)
+            fName = "{0}/src/FinalStateAnalysis/NtupleTools/data/Regrouped_Autumn18_V19_MC_UncertaintySources_AK4PFchs.txt".format(cmsswversion)
 
         modName = 'miniAODMETJesSystematicsEmbedding{0}'.format(postfix)
         mod = cms.EDProducer(
