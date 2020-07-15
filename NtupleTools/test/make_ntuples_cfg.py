@@ -86,10 +86,10 @@ process.SimpleMemoryCheck = cms.Service(
     "SimpleMemoryCheck",
     ignoreTotal = cms.untracked.int32(1)
 )
-process.Timing = cms.Service("Timing",
-  summaryOnly = cms.untracked.bool(False),
-  useJobReport = cms.untracked.bool(True)
-)
+#process.Timing = cms.Service("Timing",
+#  summaryOnly = cms.untracked.bool(False),
+#  useJobReport = cms.untracked.bool(True)
+#)
 
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),

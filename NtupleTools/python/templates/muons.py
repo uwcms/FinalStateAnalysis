@@ -81,7 +81,7 @@ id = PSet(
     objectTypeCode = cms.vstring('{object}.type','I'),
     objectBestTrackType = '{object}.muonBestTrackType',
     objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}, 13, 1).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 13, 1).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 13, 1).pdgId() : -999',
-    objectComesFromHiggs = 'comesFromHiggs({object_idx}, 13, 1)',
+    #objectComesFromHiggs = 'comesFromHiggs({object_idx}, 13, 1)',
         
 
     objectGenPromptTauDecay       = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).statusFlags().isPromptTauDecayProduct() : -999',
@@ -96,21 +96,21 @@ id = PSet(
     objectGenPhi         = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).phi()   : -999',
     objectGenPt          = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).pt()   : -999',
     objectGenVZ          = '? (getDaughterGenParticle({object_idx}, 13, 0).isAvailable && getDaughterGenParticle({object_idx}, 13, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 13, 0).vz()   : -999',
-    objectGenVtxPVMatch  = 'genVtxPVMatch({object_idx})', # is PV closest vtx to gen vtx?
-    # closest Z mass
-    objectNearestZMass = 'closestZMuon({object_idx},"")',
-    # lowest invariant mass
-    objectLowestMll = 'smallestMmm({object_idx},"")',
+    #objectGenVtxPVMatch  = 'genVtxPVMatch({object_idx})', # is PV closest vtx to gen vtx?
+    ## closest Z mass
+    #objectNearestZMass = 'closestZMuon({object_idx},"")',
+    ## lowest invariant mass
+    #objectLowestMll = 'smallestMmm({object_idx},"")',
 )
 
 energyCorrections = PSet(
-    objectPt_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").pt : -999.',
-    objectEta_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").eta : -999.',
-    objectPhi_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").phi : -999.',
+    #objectPt_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").pt : -999.',
+    #objectEta_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").eta : -999.',
+    #objectPhi_MuonEnUp = '? daughterHasUserCand({object_idx}, "mesUpMuons") ? daughterAsMuon({object_idx}).userCand("mesUpMuons").phi : -999.',
 
-    objectPt_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").pt : -999.',
-    objectEta_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").eta : -999.',
-    objectPhi_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").phi : -999.',
+    #objectPt_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").pt : -999.',
+    #objectEta_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").eta : -999.',
+    #objectPhi_MuonEnDown = '? daughterHasUserCand({object_idx}, "mesDownMuons") ? daughterAsMuon({object_idx}).userCand("mesDownMuons").phi : -999.',
 
 )
 

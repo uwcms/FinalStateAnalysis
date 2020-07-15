@@ -89,17 +89,6 @@ id = PSet(
     objectDecayModeFinding       = '{object}.tauID("decayModeFinding")',
     objectDecayModeFindingNewDMs = '{object}.tauID("decayModeFindingNewDMs")',
 
-    # closest Z mass
-    objectNearestZMass = 'closestZTau({object_idx},"")',
-    # lowest invariant mass
-    objectLowestMll = 'smallestMtt({object_idx},"")',
-
-    objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).pdgId() : -999',
-    objectGenMotherPt =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).pt() : -999', 
-    objectGenMotherEnergy =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).energy() : -999', 
-    objectGenMotherEta =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).eta() : -999', 
-    objectGenMotherPhi =  '? (getDaughterGenParticleMotherSmartRef({object_idx}).isAvailable && getDaughterGenParticleMotherSmartRef({object_idx}).isNonnull) ? getDaughterGenParticleMotherSmartRef({object_idx}).phi() : -999', 
-
     objectGenJetPt = '{object}.userFloat("genJetPt")',    
     objectGenJetEta = '{object}.userFloat("genJetEta")',  
 
@@ -110,8 +99,6 @@ id = PSet(
     objectGenPt = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.pt : -999 ',
     objectGenEnergy = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.energy : -999 ',
     objectGenCharge = '? {object}.genParticleRef.isNonnull?  {object}.genParticleRef.charge : -999 ',
-
-    objectComesFromHiggs = 'comesFromHiggsRef({object_idx})',
 
 )
 
