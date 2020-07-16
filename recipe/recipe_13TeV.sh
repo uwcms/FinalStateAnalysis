@@ -30,10 +30,10 @@ rm EgammaAnalysis/ElectronTools/data -rf
 git clone git@github.com:cms-data/EgammaAnalysis-ElectronTools.git EgammaAnalysis/ElectronTools/data
 cd $CMSSW_BASE/src
 #git clone git@github.com:cms-egamma/EgammaPostRecoTools.git  EgammaUser/EgammaPostRecoTools
-cd  EgammaUser/EgammaPostRecoTools
-git checkout master
-cd -
-cd $CMSSW_BASE/src
+#cd  EgammaUser/EgammaPostRecoTools
+#git checkout master
+#cd -
+#cd $CMSSW_BASE/src
 
 #Add DeepTau code from Tau POG repository (note "-u" option preventing checkout of unnecessary stuff)
 #git cms-merge-topic -u cms-tau-pog:CMSSW_10_2_X_tau-pog_DeepTau2017v2
