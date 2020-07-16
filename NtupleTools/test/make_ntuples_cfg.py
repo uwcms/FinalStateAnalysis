@@ -388,9 +388,9 @@ if options.era=="2017":
         sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA' )
 
 if options.era=="2016":
-    sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Summer16_23Sep2016V4_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')
+    sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Summer16_07Aug2017_V11_MC' if options.isMC else 'Summer16_07Aug2017All_V11_DATA')
     if options.runningLocal :
-        sqlitePath = '../data/{0}.db'.format('Summer16_23Sep2016V4_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
+        sqlitePath = '../data/{0}.db'.format('Summer16_07Aug2017_V11_MC' if options.isMC else 'Summer16_07Aug2017All_V11_DATA' )
 
 JECtag="JetCorrectorParametersCollection_Autumn18_RunABCD_V19_DATA_AK4PFchs"
 if options.isMC:
@@ -402,9 +402,9 @@ if options.era=="2017":
         JECtag="JetCorrectorParametersCollection_Fall17_17Nov2017_V32_94X_MC_AK4PFchs"
 
 if options.era=="2016":
-    JECtag="JetCorrectorParametersCollection_Summer16_23Sep2016AllV4_DATA_AK4PFchs"
+    JECtag="JetCorrectorParametersCollection_Summer16_07Aug2017AllV11_DATA_AK4PFchs"
     if options.isMC:
-        JECtag="JetCorrectorParametersCollection_Summer16_23Sep2016V4_MC_AK4PFchs"
+        JECtag="JetCorrectorParametersCollection_Summer16_07Aug2017V11_MC_AK4PFchs"
 
 process.jec = cms.ESSource("PoolDBESSource",
          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
