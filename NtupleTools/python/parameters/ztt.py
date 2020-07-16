@@ -9,7 +9,7 @@ from collections import OrderedDict
 parameters = {
     # minimal object kinematic cuts
     'ptCuts' : {
-        'm': '9',
+        'm': '8',
         'e': '9',
         't': '19',
         'j': '18'
@@ -47,7 +47,7 @@ parameters = {
     'finalSelection' : {
         'e': 'abs(superCluster().eta) < 3.0 && pt > 7',
         'm': 'pt > 8 && (isGlobalMuon | isTrackerMuon)',
-        't': 'abs(eta) < 2.5 && pt > 17',
+        't': 'abs(eta) < 2.3 && pt > 17 && userFloat("byVVVLooseDeepTau2017v2p1VSjet")>0',
         'j': 'pt>18 && abs(eta) < 4.7 && userFloat("idTight") > 0.5'
     },
 

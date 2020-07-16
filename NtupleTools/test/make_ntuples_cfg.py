@@ -74,17 +74,17 @@ process = cms.Process("Ntuples")
 cmsswversion=os.environ['CMSSW_VERSION']
 
 ## if you want to debug in the future, uncomment this
-process.ProfilerService = cms.Service (
-      "ProfilerService",
-       firstEvent = cms.untracked.int32(2),
-       lastEvent = cms.untracked.int32(500),
-       paths = cms.untracked.vstring('schedule') 
-)
-
-process.SimpleMemoryCheck = cms.Service(
-    "SimpleMemoryCheck",
-    ignoreTotal = cms.untracked.int32(1)
-)
+#process.ProfilerService = cms.Service (
+#      "ProfilerService",
+#       firstEvent = cms.untracked.int32(2),
+#       lastEvent = cms.untracked.int32(500),
+#       paths = cms.untracked.vstring('schedule') 
+#)
+#
+#process.SimpleMemoryCheck = cms.Service(
+#    "SimpleMemoryCheck",
+#    ignoreTotal = cms.untracked.int32(1)
+#)
 #process.Timing = cms.Service("Timing",
 #  summaryOnly = cms.untracked.bool(False),
 #  useJobReport = cms.untracked.bool(True)
@@ -200,9 +200,6 @@ options.parseArguments()
 
 # list of filters to apply
 filters = []
-
-# SV Fit requires MVA MET
-#options.runMVAMET = (options.runMVAMET or options.svFit or options.htt)
 
 eventsToSkip = cms.untracked.VEventRange()
 if options.eventsToSkip:
@@ -736,38 +733,6 @@ process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
 fs_daughter_inputs['jets'] = 'patSmearedJetsModifiedMET'
 
-#process.load('Configuration.EventContent.EventContent_cff')
-#process.AODSIMoutput = cms.OutputModule("PoolOutputModule",
-#    compressionAlgorithm = cms.untracked.string('LZMA'),
-#    compressionLevel = cms.untracked.int32(4),
-#    dataset = cms.untracked.PSet(
-#        dataTier = cms.untracked.string('AODSIM'),
-#        filterName = cms.untracked.string('')
-#    ),
-#    eventAutoFlushCompressedSize = cms.untracked.int32(31457280),
-#    fileName = cms.untracked.string('file:TSG-RunIIAutumn18DR-00006.root'),
-#    outputCommands = cms.untracked.vstring(
-#	'drop  *_*_*_RAW',
-#	'keep  *_*_*_SIM',
-#        'keep  *_*_*_RECO',
-#        'keep  *_*_*_PAT',
-#        'keep  *et*_*_*_*',
-#        'keep  *ET*_*_*_*',
-#    )
-#)
-#process.AODSIMoutput_step = cms.EndPath(process.AODSIMoutput)
-#process.schedule.append(process.AODSIMoutput_step)
-
-#process.puppiNoLep.useExistingWeights = False
-#process.puppi.useExistingWeights = True
-#
-#process.correctPuppi = cms.Path(
-#                     process.egmPhotonIDSequence *
-#                     process.puppiMETSequence *
-#                     process.fullPatMetSequencePuppi
-#                     )
-#process.schedule.append(process.correctPuppi)
-
 #########################################################
 ### embed some things we need before object selection ###
 #########################################################
@@ -921,21 +886,6 @@ for fs in additional_fs:
                                         postfix=fs)   # why do we need to redo this?  the cleaning? 
 
 
-########################################
-### pre selection HZZ customizations ###
-########################################
-idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
-isoCheatLabel = "HZZ4lIsoPass"
-if options.hzz:
-    from FinalStateAnalysis.NtupleTools.customization_hzz import hzzCustomize
-    hzzCustomize(process, fs_daughter_inputs, idCheatLabel, isoCheatLabel,
-                 electronMVAHzzIDLabel , "dretFSRCand")
-#                 electronMVANonTrigIDLabel, "dretFSRCand")
-    # fs_daughter_inputs entries for electrons, muons, jets, and fsr are automatically 
-    # set by hzzCustomize()
-
-
-
 ###########################
 ### object preselection ###
 ###########################
@@ -1068,79 +1018,6 @@ suffix = '' # most analyses don't need to modify the final states
 from FinalStateAnalysis.NtupleTools.channel_handling import parseChannels, \
     get_channel_suffix
 
-#if options.hzz:
-#    process.embedHZZSeq = cms.Sequence()
-#    # Embed matrix elements in relevant final states
-#    suffix = "HZZ"
-#    for ch in parseChannels(options.channels):
-#        prodSuffix = get_channel_suffix(ch)
-#        oldName = "finalState%s"%prodSuffix
-#        newName = oldName + suffix
-#
-#        if len(ch) == 4:
-#            # 4l final states might be higgses, so do some higgs analysis
-#            embedCategoryProducer = cms.EDProducer(
-#                "MiniAODHZZCategoryEmbedder",
-#                src = cms.InputTag(oldName),
-#                tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
-#                bDiscriminator = cms.string("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
-#                bDiscriminantCut = cms.double(0.89),
-#                )
-#            # give the FS collection an intermediate name, with an identifying suffix
-#            intermediateName = oldName + "HZZCategory"
-#            setattr(process, intermediateName, embedCategoryProducer)
-#            process.embedHZZSeq += embedCategoryProducer
-#            
-#            embedMEProducer = cms.EDProducer(
-#                "MiniAODHZZMEEmbedder%s"%prodSuffix,
-#                src = cms.InputTag(intermediateName),
-#                processes = cms.vstring("p0plus_VAJHU",
-#                                        "p0minus_VAJHU",
-#                                        "Dgg10_VAMCFM",
-#                                        "bkg_VAMCFM",
-#                                        "phjj_VAJHU",
-#                                        "pvbf_VAJHU",
-#                                        ),
-#                fsrLabel = cms.string("dretFSRCand"),
-#                )
-#            # give the FS collection the same name as before, but with an identifying suffix
-#            setattr(process, newName, embedMEProducer)
-#            process.embedHZZSeq += embedMEProducer
-#        else:
-#            # Copy the other final states to keep naming consistent
-#            copier = cms.EDProducer(
-#                "PATFinalStateCopier",
-#                src = cms.InputTag(oldName),
-#                )
-#            setattr(process, newName, copier)
-#            process.embedHZZSeq += copier
-#            
-#    process.embedHZZ = cms.Path(process.embedHZZSeq)
-#    process.schedule.append(process.embedHZZ)
-        
-
-#Cecile vertex fitting
-
-#process.embedVFSeq = cms.Sequence()
-## Embed matrix elements in relevant final states
-#suffix = "HZZ"
-#for ch in parseChannels(options.channels):
-#     prodSuffix = get_channel_suffix(ch)
-#     oldName = "finalState%s"%prodSuffix
-#     newName = oldName + suffix
-#     embedVFProducer = cms.EDProducer(
-#             "MiniAODVertexFittingEmbedder",
-#             src = cms.InputTag(oldName)
-#             )
-#     # give the FS collection an intermediate name, with an identifying suffix
-#     intermediateName = oldName + "VFCategory"
-#     setattr(process, newName, embedVFProducer)
-#     process.embedVFSeq += embedVFProducer
-#
-#process.embedVF = cms.Path(process.embedVFSeq)
-#process.schedule.append(process.embedVF)
-
-
 # run dqm
 if options.runDQM: options.channels = 'dqm'
 print process.schedule
@@ -1149,70 +1026,6 @@ print process.schedule
 if options.keepPat:
     print "Saving final physics objects instead of making ntuples"
 
-    # Clean unwanted final states (otherwise happens at flat ntuple creation)
-    from FinalStateAnalysis.NtupleTools.uniqueness_cut_generator import uniqueness_cuts
-
-    ptCuts = parameters.get('ptCuts', {'e':'0','m':'0','t':'0','g':'0','j':'0'})
-    etaCuts = parameters.get('etaCuts', {'e':'10','m':'10','t':'10','g':'10','j':'10'})
-    skimCuts = parameters.get('skimCuts', [])
-
-    if options.passThru:
-        output_to_keep.append('*')
-    else:
-        process.finalStateCleaning = cms.Sequence()
-
-        for fs in parseChannels(options.channels):
-            fsCuts = cms.vstring()
-            for name, cut in uniqueness_cuts(fs, ptCuts, etaCuts, 
-                                             skimCuts=skimCuts,
-                                             hzz=options.hzz, 
-                                             dblH=options.dblhMode).iteritems():
-                fsCuts.append(cut)
-                
-            fsCleaner = cms.EDProducer(
-                "PATFinalStateSelector",
-                src = cms.InputTag("finalState%s%s"%(get_channel_suffix(fs), suffix)),
-                cuts = fsCuts,
-                )
-            
-            # give the producer a good name so it's easy to find the output
-            cleanerName = 'cleanedFinalState%s'%get_channel_suffix(fs)
-            setattr(process, cleanerName, fsCleaner)
-            process.finalStateCleaning += fsCleaner
-            
-            # and keep the output in the final file
-            output_to_keep.append('*_%s_*_*'%cleanerName)
-
-        process.cleanFinalStates = cms.Path(process.finalStateCleaning)
-        process.schedule.append(process.cleanFinalStates)
-
-    # keep final object collections (final states and associated collections already saved)
-    for name, label in fs_daughter_inputs.iteritems():
-        output_to_keep.append('*_%s_*_*'%label)
-
-    # keep important gen particles
-    output_to_keep.append('*_prunedGenParticles_*_*')
-    if options.keepPat >= 2:
-        print "... Including packedGenParticles"
-        output_to_keep.append('*_packedGenParticles_*_*')
-        if options.keepPat >= 3:
-            print "... Including packedPFCandidates"
-            output_to_keep.append('*_packedPFCandidates_*_*')
-    output_commands = cms.untracked.vstring('drop *')
-
-    for product in output_to_keep:
-        output_commands.append('keep %s'%product)
-
-    process.out = cms.OutputModule(
-        "PoolOutputModule",
-        fileName=cms.untracked.string(options.outputFile),
-        # Drop per-event meta data from dropped objects
-        dropMetaData=cms.untracked.string("ALL"),
-        outputCommands=output_commands,
-        )
-    
-    process.save = cms.EndPath(process.out)
-    process.schedule.append(process.save)
 else:
     print "Building ntuple for final states: %s" % ", ".join(x.strip() for x in options.channels.split(','))
     for final_state in parseChannels(options.channels):
