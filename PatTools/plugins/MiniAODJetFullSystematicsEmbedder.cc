@@ -161,13 +161,11 @@ MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::
 
 void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
 
-
   std::unique_ptr<pat::JetCollection> output(new pat::JetCollection);
 
   edm::Handle<edm::View<pat::Jet> > jets;
   evt.getByToken(srcToken_, jets);
   size_t nJets = jets->size();
-
 
   // Make our own copy of the jets to fill
   for (size_t i = 0; i < nJets; ++i) {
@@ -222,7 +220,6 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
     // Now embed the shifted collections into our output pat jets
     for (size_t i = 0; i < output->size(); ++i) {
       pat::Jet& jet = output->at(i);
-      //std::cout << "Jet " << i << " uncorr pt: " << jet.pt() << std::endl;
       jet.addUserCand("jes"+outputNames[k]+"+", CandidatePtr(p4OutJESUpJetsH, i));
       jet.addUserCand("jes"+outputNames[k]+"-", CandidatePtr(p4OutJESDownJetsH, i));
     } // end jets

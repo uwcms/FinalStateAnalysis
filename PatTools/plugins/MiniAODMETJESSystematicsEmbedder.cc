@@ -49,8 +49,7 @@ class MiniAODMETJesSystematicsEmbedder : public edm::EDProducer {
     "HF",
     "HFyear",
     "RelativeBal",
-    "RelativeSample",
-    "Total"
+    "RelativeSample"
     };
 
     std::vector< std::string > uncertNames2016 = {
@@ -64,8 +63,7 @@ class MiniAODMETJesSystematicsEmbedder : public edm::EDProducer {
     "HF",
     "HF_2016",
     "RelativeBal",
-    "RelativeSample_2016",
-    "Total"
+    "RelativeSample_2016"
     };
 
     std::vector< std::string > uncertNames2017 = {
@@ -79,8 +77,7 @@ class MiniAODMETJesSystematicsEmbedder : public edm::EDProducer {
     "HF",
     "HF_2017",
     "RelativeBal",
-    "RelativeSample_2017",
-    "Total"
+    "RelativeSample_2017"
     };
 
     std::vector< std::string > uncertNames2018 = {
@@ -94,8 +91,7 @@ class MiniAODMETJesSystematicsEmbedder : public edm::EDProducer {
     "HF",
     "HF_2018",
     "RelativeBal",
-    "RelativeSample_2018",
-    "Total"
+    "RelativeSample_2018"
     };
 
     std::vector< std::string > uncertNames = {
@@ -109,8 +105,7 @@ class MiniAODMETJesSystematicsEmbedder : public edm::EDProducer {
     "HF",
     "HFyear",
     "RelativeBal",
-    "RelativeSample",
-    "Total"
+    "RelativeSample"
     };
 
   std::map<std::string, JetCorrectorParameters const *> JetCorParMap;
@@ -128,6 +123,7 @@ transverseVEC(const reco::Candidate::LorentzVector& input) {
 
 
 MiniAODMETJesSystematicsEmbedder::MiniAODMETJesSystematicsEmbedder(const edm::ParameterSet& pset) {
+ std::cout<<"MET uncert"<<std::endl;
  srcToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src"));
  srcMETToken_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("srcMET"));
  srcUpMETToken_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("upMET"));

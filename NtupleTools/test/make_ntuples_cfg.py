@@ -74,17 +74,17 @@ process = cms.Process("Ntuples")
 cmsswversion=os.environ['CMSSW_VERSION']
 
 ## if you want to debug in the future, uncomment this
-#process.ProfilerService = cms.Service (
-#      "ProfilerService",
-#       firstEvent = cms.untracked.int32(2),
-#       lastEvent = cms.untracked.int32(500),
-#       paths = cms.untracked.vstring('schedule') 
-#)
-#
-#process.SimpleMemoryCheck = cms.Service(
-#    "SimpleMemoryCheck",
-#    ignoreTotal = cms.untracked.int32(1)
-#)
+process.ProfilerService = cms.Service (
+      "ProfilerService",
+       firstEvent = cms.untracked.int32(2),
+       lastEvent = cms.untracked.int32(500),
+       paths = cms.untracked.vstring('schedule') 
+)
+
+process.SimpleMemoryCheck = cms.Service(
+    "SimpleMemoryCheck",
+    ignoreTotal = cms.untracked.int32(1)
+)
 #process.Timing = cms.Service("Timing",
 #  summaryOnly = cms.untracked.bool(False),
 #  useJobReport = cms.untracked.bool(True)
@@ -292,6 +292,8 @@ if options.era=="2018prompt":
   GT = {'mcgt': '102X_upgrade2018_realistic_v21', 'datagt': '102X_dataRun2_Prompt_v16'}
 if options.era=="2017":
   GT = {'mcgt': '102X_mc2017_realistic_v8', 'datagt': '102X_dataRun2_v13'}
+#if options.era=="2017":
+#  GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '102X_dataRun2_v13'}
 if options.era=="2016":
   GT = {'mcgt': '102X_mcRun2_asymptotic_v8', 'datagt': '102X_dataRun2_v13'}
 
@@ -402,9 +404,9 @@ if options.era=="2017":
         JECtag="JetCorrectorParametersCollection_Fall17_17Nov2017_V32_94X_MC_AK4PFchs"
 
 if options.era=="2016":
-    JECtag="JetCorrectorParametersCollection_Summer16_07Aug2017AllV11_DATA_AK4PFchs"
+    JECtag="JetCorrectorParametersCollection_Summer16_07Aug2017All_V11_DATA_AK4PFchs"
     if options.isMC:
-        JECtag="JetCorrectorParametersCollection_Summer16_07Aug2017V11_MC_AK4PFchs"
+        JECtag="JetCorrectorParametersCollection_Summer16_07Aug2017_V11_MC_AK4PFchs"
 
 process.jec = cms.ESSource("PoolDBESSource",
          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
