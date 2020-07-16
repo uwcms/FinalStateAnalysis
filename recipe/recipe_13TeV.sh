@@ -54,5 +54,8 @@ cd $CMSSW_BASE/src
 git cms-addpkg SimDataFormats/HTXS
 git cms-addpkg GeneratorInterface/RivetInterface
 
+#cov met fix embedded
+git cms-merge-topic KIT-CMS:embedded_metcov_fix
+
 popd
 
