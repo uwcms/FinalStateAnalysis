@@ -28,6 +28,22 @@ def preElectrons(process, eSrc, vSrc, year, isEmbedded, **kwargs):
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
 
+    # embed IP stuff
+    modName = 'miniElectronsEmbedIp{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODElectronIpEmbedder",
+        src = cms.InputTag(eSrc),
+        vtxSrc = cms.InputTag(vSrc),
+    )
+    eSrc = modName
+    setattr(process,modName,mod)
+
+    pathName = 'runMiniAODElectronIpEmbedding{0}'.format(postfix)
+    path = cms.Path(getattr(process,modName))
+    setattr(process,pathName,path)
+    process.schedule.append(getattr(process,pathName))
+
+
     # Embed effective areas in muons and electrons
     if not hasattr(process,'patElectronEAEmbedder'):
         process.load("FinalStateAnalysis.PatTools.electrons.patElectronEAEmbedding_cfi")

@@ -42,6 +42,37 @@ def preMuons(process, year, isEmbedded, mSrc, vSrc, **kwargs):
     modPath = cms.Path(getattr(process,modName))
     setattr(process,pathName,modPath)
     process.schedule.append(getattr(process,pathName))
+
+    # embed IP
+    modName = 'miniMuonsEmbedIp{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODMuonIpEmbedder",
+        src = cms.InputTag(mSrc),
+        vtxSrc = cms.InputTag(vSrc),
+    )
+    mSrc = modName
+    setattr(process,modName,mod)
+
+    pathName = 'runMiniAODMuonIpEmbedding{0}'.format(postfix)
+    modPath = cms.Path(getattr(process,modName))
+    setattr(process,pathName,modPath)
+    process.schedule.append(getattr(process,pathName))
+
+    # embed IP2 (needed for bestMuonTrack version of dZ)
+    modName = 'miniMuonsEmbedIp2{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODMuonIpEmbedder2",
+        muonSrc = cms.InputTag(mSrc),
+        vtxSrc = cms.InputTag(vSrc),
+    )
+    mSrc = modName
+    setattr(process,modName,mod)
+
+    pathName = 'runMiniAODMuonIpEmbedding2{0}'.format(postfix)
+    modPath = cms.Path(getattr(process,modName))
+    setattr(process,pathName,modPath)
+    process.schedule.append(getattr(process,pathName))
+
     
     return mSrc
 
