@@ -61,5 +61,13 @@ rm -rf RecoEgamma/EgammaTools
 cp -r temporary RecoEgamma/EgammaTools
 rm -rf temporary
 
+#jet pu ID new training
+git cms-addpkg  RecoJets/JetProducers 
+git clone -b 94X_weights_DYJets_inc_v2 git@github.com:cms-jet/PUjetID.git PUJetIDweights/
+cp PUJetIDweights/weights/pileupJetId_{94,102}X_Eta* $CMSSW_BASE/src/RecoJets/JetProducers/data/
+rm -rf PUJetIDweights/  ### If needed
+git cms-merge-topic -u alefisico:PUID_102X
+
+
 popd
 

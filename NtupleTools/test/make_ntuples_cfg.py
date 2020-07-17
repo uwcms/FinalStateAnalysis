@@ -356,7 +356,18 @@ if options.usePUPPI:
 ### Pileup Jet ID ###
 #####################
 
+
+from RecoJets.JetProducers.PileupJetID_cfi import _chsalgos_94x, _chsalgos_102x
 process.load("RecoJets.JetProducers.PileupJetID_cfi")
+process.pileupJetId.inputIsCorrected = True
+#process.pileupJetId.applyJec = False
+process.pileupJetId.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
+if options.era=="2017":
+  process.pileupJetId.algos = cms.VPSet(_chsalgos_94x) # for 2017
+if options.era=="2018":
+  process.pileupJetId.algos = cms.VPSet(_chsalgos_102x) # for 2018
+
+#process.load("RecoJets.JetProducers.PileupJetID_cfi")
 process.pileupJetIdUpdated = process.pileupJetId.clone(
   jets=cms.InputTag("slimmedJets"),
   inputIsCorrected=True,
