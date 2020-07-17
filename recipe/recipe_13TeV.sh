@@ -55,7 +55,11 @@ git cms-addpkg SimDataFormats/HTXS
 git cms-addpkg GeneratorInterface/RivetInterface
 
 #cov met fix embedded
-git cms-merge-topic KIT-CMS:embedded_metcov_fix
+cp -r RecoEgamma/EgammaTools temporary
+git cms-merge-topic -u KIT-CMS:embedded_metcov_fix
+rm -rf RecoEgamma/EgammaTools
+cp -r temporary RecoEgamma/EgammaTools
+rm -rf temporary
 
 popd
 
