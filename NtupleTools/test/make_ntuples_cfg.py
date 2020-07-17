@@ -64,7 +64,6 @@ import FWCore.ParameterSet.Config as cms
 
 import os
 import copy
-from FinalStateAnalysis.NtupleTools.hzg_sync_mod import set_passthru
 from FinalStateAnalysis.NtupleTools.ntuple_builder import \
     make_ntuple, add_ntuple
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
@@ -74,19 +73,22 @@ import PhysicsTools.PatAlgos.tools.helpers as helpers
 process = cms.Process("Ntuples")
 cmsswversion=os.environ['CMSSW_VERSION']
 
-# if you want to debug in the future, uncomment this
-#process.ProfilerService = cms.Service (
-#      "ProfilerService",
-#       firstEvent = cms.untracked.int32(2),
-#       lastEvent = cms.untracked.int32(500),
-#       paths = cms.untracked.vstring('schedule') 
-#)
-#
-#process.SimpleMemoryCheck = cms.Service(
-#    "SimpleMemoryCheck",
-#    ignoreTotal = cms.untracked.int32(1)
-#)
+## if you want to debug in the future, uncomment this
+process.ProfilerService = cms.Service (
+      "ProfilerService",
+       firstEvent = cms.untracked.int32(2),
+       lastEvent = cms.untracked.int32(500),
+       paths = cms.untracked.vstring('schedule') 
+)
 
+process.SimpleMemoryCheck = cms.Service(
+    "SimpleMemoryCheck",
+    ignoreTotal = cms.untracked.int32(1)
+)
+#process.Timing = cms.Service("Timing",
+#  summaryOnly = cms.untracked.bool(False),
+#  useJobReport = cms.untracked.bool(True)
+#)
 
 process.options = cms.untracked.PSet(
     allowUnscheduled = cms.untracked.bool(True),
@@ -199,9 +201,6 @@ options.parseArguments()
 # list of filters to apply
 filters = []
 
-# SV Fit requires MVA MET
-#options.runMVAMET = (options.runMVAMET or options.svFit or options.htt)
-
 eventsToSkip = cms.untracked.VEventRange()
 if options.eventsToSkip:
     # if it is a file
@@ -284,17 +283,19 @@ process.load('Configuration.StandardSequences.Services_cff')
 envvar = 'mcgt' if options.isMC else 'datagt'
 
 # All data falls under unified GT (6 Feb 2017) ReReco BCDEFG, Prompt H
-GT = {'mcgt': '102X_upgrade2018_realistic_v19', 'datagt': '102X_dataRun2_Prompt_v14'} # For data run D
+GT = {'mcgt': '102X_upgrade2018_realistic_v21', 'datagt': '102X_dataRun2_Prompt_v16'} # For data run D
 #GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'} # For data run ABC
 
 if options.era=="2018":
-  GT = {'mcgt': '102X_upgrade2018_realistic_v19', 'datagt': '102X_dataRun2_v11'}
+  GT = {'mcgt': '102X_upgrade2018_realistic_v21', 'datagt': '102X_dataRun2_v13'}
 if options.era=="2018prompt":
-  GT = {'mcgt': '102X_upgrade2018_realistic_v19', 'datagt': '102X_dataRun2_Prompt_v14'}
+  GT = {'mcgt': '102X_upgrade2018_realistic_v21', 'datagt': '102X_dataRun2_Prompt_v16'}
 if options.era=="2017":
-  GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '94X_dataRun2_v11'}
+  GT = {'mcgt': '102X_mc2017_realistic_v8', 'datagt': '102X_dataRun2_v13'}
+#if options.era=="2017":
+#  GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '102X_dataRun2_v13'}
 if options.era=="2016":
-  GT = {'mcgt': '94X_mcRun2_asymptotic_v3', 'datagt': '94X_dataRun2_v10'}
+  GT = {'mcgt': '102X_mcRun2_asymptotic_v8', 'datagt': '102X_dataRun2_v13'}
 
 
 from Configuration.AlCa.GlobalTag import GlobalTag
@@ -303,7 +304,7 @@ process.GlobalTag = GlobalTag(process.GlobalTag, GT[envvar], '')
 print 'Using globalTag: %s' % process.GlobalTag.globaltag
 
 # Count events at the beginning of the tuplization
-process.load("FinalStateAnalysis.RecoTools.eventCount_cfi")
+process.load("FinalStateAnalysis.PatTools.eventCount_cfi")
 process.load("FinalStateAnalysis.PatTools.finalStates.patFinalStateLSProducer_cfi")
 process.generateMetaInfo = cms.Path(process.eventCount *
                                     process.summedWeight *
@@ -326,7 +327,6 @@ fs_daughter_inputs = {
     'electrons': 'slimmedElectrons',
     'muons': 'slimmedMuons',
     'taus': 'slimmedTaus',
-    'photons': 'slimmedPhotons',
     'jets': 'slimmedJets',
     'pfmet': 'slimmedMETsModifiedMET',         # slimmedMETs, slimmedMETsNoHF (miniaodv2), slimmmedMETsPuppi (not correct in miniaodv1)
     'mvamet': 'fixme',              # produced later
@@ -356,7 +356,18 @@ if options.usePUPPI:
 ### Pileup Jet ID ###
 #####################
 
+
+from RecoJets.JetProducers.PileupJetID_cfi import _chsalgos_94x, _chsalgos_102x
 process.load("RecoJets.JetProducers.PileupJetID_cfi")
+process.pileupJetId.inputIsCorrected = True
+#process.pileupJetId.applyJec = False
+process.pileupJetId.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
+if options.era=="2017":
+  process.pileupJetId.algos = cms.VPSet(_chsalgos_94x) # for 2017
+if options.era=="2018":
+  process.pileupJetId.algos = cms.VPSet(_chsalgos_102x) # for 2018
+
+#process.load("RecoJets.JetProducers.PileupJetID_cfi")
 process.pileupJetIdUpdated = process.pileupJetId.clone(
   jets=cms.InputTag("slimmedJets"),
   inputIsCorrected=True,
@@ -390,9 +401,9 @@ if options.era=="2017":
         sqlitePath = '../data/{0}.db'.format('Fall17_17Nov2017_V32_94X_MC' if options.isMC else 'Fall17_17Nov2017_V32_94X_DATA' )
 
 if options.era=="2016":
-    sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Summer16_23Sep2016V4_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA')
+    sqlitePath = '/{0}/src/FinalStateAnalysis/NtupleTools/data/{1}.db'.format(cmsswversion,'Summer16_07Aug2017_V11_MC' if options.isMC else 'Summer16_07Aug2017All_V11_DATA')
     if options.runningLocal :
-        sqlitePath = '../data/{0}.db'.format('Summer16_23Sep2016V4_MC' if options.isMC else 'Summer16_23Sep2016AllV4_DATA' )
+        sqlitePath = '../data/{0}.db'.format('Summer16_07Aug2017_V11_MC' if options.isMC else 'Summer16_07Aug2017All_V11_DATA' )
 
 JECtag="JetCorrectorParametersCollection_Autumn18_RunABCD_V19_DATA_AK4PFchs"
 if options.isMC:
@@ -404,9 +415,9 @@ if options.era=="2017":
         JECtag="JetCorrectorParametersCollection_Fall17_17Nov2017_V32_94X_MC_AK4PFchs"
 
 if options.era=="2016":
-    JECtag="JetCorrectorParametersCollection_Summer16_23Sep2016AllV4_DATA_AK4PFchs"
+    JECtag="JetCorrectorParametersCollection_Summer16_07Aug2017All_V11_DATA_AK4PFchs"
     if options.isMC:
-        JECtag="JetCorrectorParametersCollection_Summer16_23Sep2016V4_MC_AK4PFchs"
+        JECtag="JetCorrectorParametersCollection_Summer16_07Aug2017_V11_MC_AK4PFchs"
 
 process.jec = cms.ESSource("PoolDBESSource",
          DBParameters = cms.PSet(messageLevel = cms.untracked.int32(0)),
@@ -704,6 +715,7 @@ from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMet
 if options.era=="2017":
     runMetCorAndUncFromMiniAOD(process,
        isData=isData,
+       isEmbeddedSample=bool(options.isEmbedded),
        fixEE2017 = True,
        fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
        postfix = "ModifiedMET"
@@ -711,6 +723,7 @@ if options.era=="2017":
 
 #    runMetCorAndUncFromMiniAOD(process,
 #       isData=isData,
+#       isEmbeddedSample=bool(options.isEmbedded),
 #       fixEE2017 = True,
 #       fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
 #       metType="Puppi",
@@ -721,11 +734,13 @@ if options.era=="2017":
 else:
     runMetCorAndUncFromMiniAOD(process,
        isData=isData,
+       isEmbeddedSample=bool(options.isEmbedded),
        postfix = "ModifiedMET"
                         )
 
 #    runMetCorAndUncFromMiniAOD(process,
 #       isData=isData,
+#       isEmbeddedSample=bool(options.isEmbedded),
 #       metType="Puppi",
 #       jetFlavor="AK4PFPuppi",
 #       postfix = "Puppi"
@@ -734,38 +749,6 @@ else:
 process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
 fs_daughter_inputs['jets'] = 'patSmearedJetsModifiedMET'
-
-#process.load('Configuration.EventContent.EventContent_cff')
-#process.AODSIMoutput = cms.OutputModule("PoolOutputModule",
-#    compressionAlgorithm = cms.untracked.string('LZMA'),
-#    compressionLevel = cms.untracked.int32(4),
-#    dataset = cms.untracked.PSet(
-#        dataTier = cms.untracked.string('AODSIM'),
-#        filterName = cms.untracked.string('')
-#    ),
-#    eventAutoFlushCompressedSize = cms.untracked.int32(31457280),
-#    fileName = cms.untracked.string('file:TSG-RunIIAutumn18DR-00006.root'),
-#    outputCommands = cms.untracked.vstring(
-#	'drop  *_*_*_RAW',
-#	'keep  *_*_*_SIM',
-#        'keep  *_*_*_RECO',
-#        'keep  *_*_*_PAT',
-#        'keep  *et*_*_*_*',
-#        'keep  *ET*_*_*_*',
-#    )
-#)
-#process.AODSIMoutput_step = cms.EndPath(process.AODSIMoutput)
-#process.schedule.append(process.AODSIMoutput_step)
-
-#process.puppiNoLep.useExistingWeights = False
-#process.puppi.useExistingWeights = True
-#
-#process.correctPuppi = cms.Path(
-#                     process.egmPhotonIDSequence *
-#                     process.puppiMETSequence *
-#                     process.fullPatMetSequencePuppi
-#                     )
-#process.schedule.append(process.correctPuppi)
 
 #########################################################
 ### embed some things we need before object selection ###
@@ -807,39 +790,6 @@ for fs in additional_fs:
                                                   postfix=fs,
                                                   )
 
-
-
-
-#############################
-###    Pairwise MVA MET   ###
-#############################
-
-if options.runMVAMET:
-    from RecoMET.METPUSubtraction.MVAMETConfiguration_cff import runMVAMET
-    
-    mvametJetCollection = "slimmedJets"
-    isData = not options.isMC
-    if isData :
-        mvametJetCollection = "patJetsReapplyJEC"
-
-    from RecoMET.METPUSubtraction.jet_recorrections import recorrectJets
-    recorrectJets(process, isData)
-    
-    runMVAMET( process, jetCollectionPF = mvametJetCollection )
-    process.MVAMET.srcLeptons  = cms.VInputTag("slimmedMuons", "slimmedElectrons", "slimmedTaus")
-    process.MVAMET.requireOS = cms.bool(False)
-    process.MVAMETSequence = cms.Path(process.MVAMET)
-
-    process.schedule.append(process.MVAMETSequence)
-
-# Add met significane for normal RECO METs for svFit testing
-# of MvaMet vs. Normas Mets
-# Note, default uses slimmedMETs which is PF Met
-process.load("RecoMET.METProducers.METSignificance_cfi")
-
-process.METSigSeq = cms.Path(process.METSignificance)
-process.schedule.append(process.METSigSeq)
-
 ######################
 ### embed muon IDs ###
 ######################
@@ -877,19 +827,6 @@ for fs in additional_fs:
                                         additional_fs[fs]['vertices'],
                                         postfix=fs,
                                         rerunMvaIDs=options.htt)
-
-########################
-### embed photon IDs ###
-########################
-from FinalStateAnalysis.NtupleTools.customization_photons import prePhotons
-fs_daughter_inputs['photons'] = prePhotons(process,
-                                           fs_daughter_inputs['photons'],
-                                           fs_daughter_inputs['vertices'])
-for fs in additional_fs:
-    additional_fs[fs]['photons'] = prePhotons(process,
-                                              additional_fs[fs]['photons'],
-                                              additional_fs[fs]['vertices'],
-                                              postfix=fs)
 
 ########################
 ### jet id embedding ###
@@ -966,21 +903,6 @@ for fs in additional_fs:
                                         postfix=fs)   # why do we need to redo this?  the cleaning? 
 
 
-########################################
-### pre selection HZZ customizations ###
-########################################
-idCheatLabel = "HZZ4lIDPass" # Gets loose ID. For tight ID, append "Tight".
-isoCheatLabel = "HZZ4lIsoPass"
-if options.hzz:
-    from FinalStateAnalysis.NtupleTools.customization_hzz import hzzCustomize
-    hzzCustomize(process, fs_daughter_inputs, idCheatLabel, isoCheatLabel,
-                 electronMVAHzzIDLabel , "dretFSRCand")
-#                 electronMVANonTrigIDLabel, "dretFSRCand")
-    # fs_daughter_inputs entries for electrons, muons, jets, and fsr are automatically 
-    # set by hzzCustomize()
-
-
-
 ###########################
 ### object preselection ###
 ###########################
@@ -1046,20 +968,6 @@ from FinalStateAnalysis.NtupleTools.customization_taus import postTaus
 fs_daughter_inputs['taus'] = postTaus(process,fs_daughter_inputs['taus'],fs_daughter_inputs['jets'])
 for fs in additional_fs:
     additional_fs[fs]['taus'] = postTaus(process,additional_fs[fs]['taus'],additional_fs[fs]['jets'],postfix=fs)
-
-#################################
-### post photon customization ###
-#################################
-from FinalStateAnalysis.NtupleTools.customization_photons import postPhotons
-fs_daughter_inputs['photons'] = postPhotons(process,fs_daughter_inputs['photons'],fs_daughter_inputs['jets'])
-for fs in additional_fs:
-    additional_fs[fs]['photons'] = postTaus(process,additional_fs[fs]['photons'],additional_fs[fs]['jets'],postfix=fs)
-
-
-
-
-
-
 
 ############################
 ### Now do the FSA stuff ###
@@ -1127,79 +1035,6 @@ suffix = '' # most analyses don't need to modify the final states
 from FinalStateAnalysis.NtupleTools.channel_handling import parseChannels, \
     get_channel_suffix
 
-#if options.hzz:
-#    process.embedHZZSeq = cms.Sequence()
-#    # Embed matrix elements in relevant final states
-#    suffix = "HZZ"
-#    for ch in parseChannels(options.channels):
-#        prodSuffix = get_channel_suffix(ch)
-#        oldName = "finalState%s"%prodSuffix
-#        newName = oldName + suffix
-#
-#        if len(ch) == 4:
-#            # 4l final states might be higgses, so do some higgs analysis
-#            embedCategoryProducer = cms.EDProducer(
-#                "MiniAODHZZCategoryEmbedder",
-#                src = cms.InputTag(oldName),
-#                tightLepCut = cms.string('userFloat("HZZ4lIDPassTight") > 0.5 && userFloat("HZZ4lIsoPass") > 0.5'),
-#                bDiscriminator = cms.string("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
-#                bDiscriminantCut = cms.double(0.89),
-#                )
-#            # give the FS collection an intermediate name, with an identifying suffix
-#            intermediateName = oldName + "HZZCategory"
-#            setattr(process, intermediateName, embedCategoryProducer)
-#            process.embedHZZSeq += embedCategoryProducer
-#            
-#            embedMEProducer = cms.EDProducer(
-#                "MiniAODHZZMEEmbedder%s"%prodSuffix,
-#                src = cms.InputTag(intermediateName),
-#                processes = cms.vstring("p0plus_VAJHU",
-#                                        "p0minus_VAJHU",
-#                                        "Dgg10_VAMCFM",
-#                                        "bkg_VAMCFM",
-#                                        "phjj_VAJHU",
-#                                        "pvbf_VAJHU",
-#                                        ),
-#                fsrLabel = cms.string("dretFSRCand"),
-#                )
-#            # give the FS collection the same name as before, but with an identifying suffix
-#            setattr(process, newName, embedMEProducer)
-#            process.embedHZZSeq += embedMEProducer
-#        else:
-#            # Copy the other final states to keep naming consistent
-#            copier = cms.EDProducer(
-#                "PATFinalStateCopier",
-#                src = cms.InputTag(oldName),
-#                )
-#            setattr(process, newName, copier)
-#            process.embedHZZSeq += copier
-#            
-#    process.embedHZZ = cms.Path(process.embedHZZSeq)
-#    process.schedule.append(process.embedHZZ)
-        
-
-#Cecile vertex fitting
-
-#process.embedVFSeq = cms.Sequence()
-## Embed matrix elements in relevant final states
-#suffix = "HZZ"
-#for ch in parseChannels(options.channels):
-#     prodSuffix = get_channel_suffix(ch)
-#     oldName = "finalState%s"%prodSuffix
-#     newName = oldName + suffix
-#     embedVFProducer = cms.EDProducer(
-#             "MiniAODVertexFittingEmbedder",
-#             src = cms.InputTag(oldName)
-#             )
-#     # give the FS collection an intermediate name, with an identifying suffix
-#     intermediateName = oldName + "VFCategory"
-#     setattr(process, newName, embedVFProducer)
-#     process.embedVFSeq += embedVFProducer
-#
-#process.embedVF = cms.Path(process.embedVFSeq)
-#process.schedule.append(process.embedVF)
-
-
 # run dqm
 if options.runDQM: options.channels = 'dqm'
 print process.schedule
@@ -1208,70 +1043,6 @@ print process.schedule
 if options.keepPat:
     print "Saving final physics objects instead of making ntuples"
 
-    # Clean unwanted final states (otherwise happens at flat ntuple creation)
-    from FinalStateAnalysis.NtupleTools.uniqueness_cut_generator import uniqueness_cuts
-
-    ptCuts = parameters.get('ptCuts', {'e':'0','m':'0','t':'0','g':'0','j':'0'})
-    etaCuts = parameters.get('etaCuts', {'e':'10','m':'10','t':'10','g':'10','j':'10'})
-    skimCuts = parameters.get('skimCuts', [])
-
-    if options.passThru:
-        output_to_keep.append('*')
-    else:
-        process.finalStateCleaning = cms.Sequence()
-
-        for fs in parseChannels(options.channels):
-            fsCuts = cms.vstring()
-            for name, cut in uniqueness_cuts(fs, ptCuts, etaCuts, 
-                                             skimCuts=skimCuts,
-                                             hzz=options.hzz, 
-                                             dblH=options.dblhMode).iteritems():
-                fsCuts.append(cut)
-                
-            fsCleaner = cms.EDProducer(
-                "PATFinalStateSelector",
-                src = cms.InputTag("finalState%s%s"%(get_channel_suffix(fs), suffix)),
-                cuts = fsCuts,
-                )
-            
-            # give the producer a good name so it's easy to find the output
-            cleanerName = 'cleanedFinalState%s'%get_channel_suffix(fs)
-            setattr(process, cleanerName, fsCleaner)
-            process.finalStateCleaning += fsCleaner
-            
-            # and keep the output in the final file
-            output_to_keep.append('*_%s_*_*'%cleanerName)
-
-        process.cleanFinalStates = cms.Path(process.finalStateCleaning)
-        process.schedule.append(process.cleanFinalStates)
-
-    # keep final object collections (final states and associated collections already saved)
-    for name, label in fs_daughter_inputs.iteritems():
-        output_to_keep.append('*_%s_*_*'%label)
-
-    # keep important gen particles
-    output_to_keep.append('*_prunedGenParticles_*_*')
-    if options.keepPat >= 2:
-        print "... Including packedGenParticles"
-        output_to_keep.append('*_packedGenParticles_*_*')
-        if options.keepPat >= 3:
-            print "... Including packedPFCandidates"
-            output_to_keep.append('*_packedPFCandidates_*_*')
-    output_commands = cms.untracked.vstring('drop *')
-
-    for product in output_to_keep:
-        output_commands.append('keep %s'%product)
-
-    process.out = cms.OutputModule(
-        "PoolOutputModule",
-        fileName=cms.untracked.string(options.outputFile),
-        # Drop per-event meta data from dropped objects
-        dropMetaData=cms.untracked.string("ALL"),
-        outputCommands=output_commands,
-        )
-    
-    process.save = cms.EndPath(process.out)
-    process.schedule.append(process.save)
 else:
     print "Building ntuple for final states: %s" % ", ".join(x.strip() for x in options.channels.split(','))
     for final_state in parseChannels(options.channels):

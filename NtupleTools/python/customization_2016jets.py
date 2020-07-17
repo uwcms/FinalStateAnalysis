@@ -22,36 +22,6 @@ def preJets(process, jSrc, jupSrc, jdownSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
     setattr(process,pathName,cms.Path(getattr(process,modName)))
     process.schedule.append(getattr(process,pathName))
 
-    # embed BTag SFs
-    if doBTag :
-        modName = 'miniJetsEmbedBTagSFLoose{0}'.format(postfix)
-        mod = cms.EDProducer(
-            "MiniAODJetBTagSFLooseEmbedder",
-            src=cms.InputTag(jSrc)
-        )
-        jSrc = modName
-        setattr(process,modName,mod)
-
-        pathName = 'runMiniAODJetBTagSFLooseEmbedding{0}'.format(postfix)
-        path = cms.Path(getattr(process,modName))
-        setattr(process,pathName,path)
-        process.schedule.append(getattr(process,pathName))
-
-    # embed BTag SFs
-    if doBTag :
-        modName = 'miniJetsEmbedBTagSFMedium{0}'.format(postfix)
-        mod = cms.EDProducer(
-            "MiniAODJetBTagSFMediumEmbedder",
-            src=cms.InputTag(jSrc)
-        )
-        jSrc = modName
-        setattr(process,modName,mod)
-
-        pathName = 'runMiniAODJetBTagSFMediumEmbedding{0}'.format(postfix)
-        path = cms.Path(getattr(process,modName))
-        setattr(process,pathName,path)
-        process.schedule.append(getattr(process,pathName))
-
     # doFullJESUnc 
     if doFullJESUnc :
         # Provide proper path name for Jet Uncertainty file
@@ -60,10 +30,10 @@ def preJets(process, jSrc, jupSrc, jdownSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
         # recommended by HTT Twiki for 2017 data (6 Nov. 2018):
         # - https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2017#Jet/MET_uncertainty_treatment
         # - linked to: https://github.com/cms-jet/JECDatabase/blob/master/textFiles/Fall17_17Nov2017F_V32_DATA/Fall17_17Nov2017F_V32_DATA_UncertaintySources_AK4PFchs.txt
-        if runningLocal : fName = "../../NtupleTools/data/Summer16_23Sep2016AllV4_DATA_UncertaintySources_AK4PFchs.txt" 
+        if runningLocal : fName = "../../NtupleTools/data/Regrouped_Summer16_07Aug2017_V11_MC_UncertaintySources_AK4PFchs.txt" 
         else :
             cmsswversion=os.environ['CMSSW_VERSION']
-            fName = "{0}/src/FinalStateAnalysis/NtupleTools/data/Summer16_23Sep2016AllV4_DATA_UncertaintySources_AK4PFchs.txt".format(cmsswversion)
+            fName = "{0}/src/FinalStateAnalysis/NtupleTools/data/Regrouped_Summer16_07Aug2017_V11_MC_UncertaintySources_AK4PFchs.txt".format(cmsswversion)
 
         modName = 'miniAODJetFullSystematicsEmbedding{0}'.format(postfix)
         mod = cms.EDProducer(
@@ -86,23 +56,6 @@ def preJets(process, jSrc, jupSrc, jdownSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
 
 
     print jSrc 
-
-    # embed IP stuff
-    modName = 'miniJetsEmbedIp{0}'.format(postfix)
-    mod = cms.EDProducer(
-        "MiniAODJetIpEmbedder",
-        src = cms.InputTag(jSrc),
-        vtxSrc = cms.InputTag(vSrc),
-    )
-    jSrc = modName
-    setattr(process,modName,mod)
-
-    pathName = 'runMiniAODJetIpEmbedding{0}'.format(postfix)
-    path = cms.Path(getattr(process,modName))
-    setattr(process,pathName,path)
-    process.schedule.append(getattr(process,pathName))
-
-    print jSrc
 
     modName = 'miniAODJetSystematicsEmbedding{0}'.format(postfix)
     mod = cms.EDProducer(

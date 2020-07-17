@@ -42,7 +42,7 @@ def preMuons(process, year, isEmbedded, mSrc, vSrc, **kwargs):
     modPath = cms.Path(getattr(process,modName))
     setattr(process,pathName,modPath)
     process.schedule.append(getattr(process,pathName))
-    
+
     # embed IP
     modName = 'miniMuonsEmbedIp{0}'.format(postfix)
     mod = cms.EDProducer(
@@ -52,7 +52,7 @@ def preMuons(process, year, isEmbedded, mSrc, vSrc, **kwargs):
     )
     mSrc = modName
     setattr(process,modName,mod)
-    
+
     pathName = 'runMiniAODMuonIpEmbedding{0}'.format(postfix)
     modPath = cms.Path(getattr(process,modName))
     setattr(process,pathName,modPath)
@@ -67,60 +67,16 @@ def preMuons(process, year, isEmbedded, mSrc, vSrc, **kwargs):
     )
     mSrc = modName
     setattr(process,modName,mod)
-    
+
     pathName = 'runMiniAODMuonIpEmbedding2{0}'.format(postfix)
     modPath = cms.Path(getattr(process,modName))
     setattr(process,pathName,modPath)
     process.schedule.append(getattr(process,pathName))
 
-    # Embed effective areas in muons
-    if not hasattr(process,'patMuonEAEmbedder'):
-        process.load("FinalStateAnalysis.PatTools.muons.patMuonEAEmbedding_cfi")
-    eaModName = 'patMuonEAEmbedder{0}'.format(postfix)
-    if postfix:
-         setattr(process,eaModName,process.patMuonEAEmbedder.clone())
-    getattr(process,eaModName).src = cms.InputTag(mSrc)
-    mSrc = eaModName
-    eaPathName = 'MuonEAEmbedding{0}'.format(postfix)
-    eaPath = cms.Path(getattr(process,eaModName))
-    setattr(process,eaPathName,eaPath)
-    process.schedule.append(getattr(process,eaPathName))
     
-    # rho embedding
-    rhoModName = 'miniAODMuonRhoEmbedding{0}'.format(postfix)
-    rhoMod = cms.EDProducer(
-        "MuonRhoOverloader",
-        src = cms.InputTag(mSrc),
-        srcRho = cms.InputTag("fixedGridRhoFastjetCentralNeutral"), # not sure this is right
-        userLabel = cms.string("rho_fastjet")
-        )
-    mSrc = rhoModName
-    setattr(process,rhoModName,rhoMod)
-    rhoPathName = 'muonRhoEmbedding{0}'.format(postfix)
-    rhoPath = cms.Path(getattr(process,rhoModName))
-    setattr(process,rhoPathName,rhoPath)
-    process.schedule.append(getattr(process,rhoPathName))
-
     return mSrc
 
 def postMuons(process, mSrc, jSrc,**kwargs):
-    postfix = kwargs.pop('postfix','')
-    modName = 'miniAODMuonJetInfoEmbedding{0}'.format(postfix)
-    mod = cms.EDProducer(
-        "MiniAODMuonJetInfoEmbedder",
-        src = cms.InputTag(mSrc),
-        embedBtags = cms.bool(False),
-        suffix = cms.string(''),
-        jetSrc = cms.InputTag(jSrc),
-        maxDeltaR = cms.double(0.5),
-    )
-    mSrc = modName
-    setattr(process,modName,mod)
-
-    pathName = 'MuonJetInfoEmbedding{0}'.format(postfix)
-    modPath = cms.Path(getattr(process,modName))
-    setattr(process,pathName,modPath)
-    process.schedule.append(getattr(process,pathName))
 
     return mSrc
 

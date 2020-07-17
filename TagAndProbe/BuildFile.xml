@@ -1,9 +1,0 @@
-<use   name="FWCore/Framework"/>
-<use   name="FWCore/MessageLogger"/>
-<use   name="FinalStateAnalysis/DataFormats"/>
-<use   name="DataFormats/Luminosity"/>
-<use   name="PhysicsTools/SelectorUtils"/>
-<use   name="root"/>
-<export>
-  <lib   name="FinalStateAnalysisTagAndProbe"/>
-</export>

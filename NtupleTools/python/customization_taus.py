@@ -694,41 +694,7 @@ def preTaus(process, year, isEmbedded, tSrc, vSrc,**kwargs):
         
         # this sequence has to be included in your cms.Path() before your analyzer which accesses the new variables is called.
         process.rerunMvaIsolation2SeqRun2 = cms.Path(
-           process.rerunDiscriminationByIsolationMVArun2v1raw
-           * process.rerunDiscriminationByIsolationMVArun2v1VLoose
-           * process.rerunDiscriminationByIsolationMVArun2v1Loose
-           * process.rerunDiscriminationByIsolationMVArun2v1Medium
-           * process.rerunDiscriminationByIsolationMVArun2v1Tight
-           * process.rerunDiscriminationByIsolationMVArun2v1VTight
-           * process.rerunDiscriminationByIsolationMVArun2v1VVTight
-	   * process.rerunDiscriminationByIsolationMVArun2v2raw
-           * process.rerunDiscriminationByIsolationMVArun2v2VVLoose
-           * process.rerunDiscriminationByIsolationMVArun2v2VLoose
-           * process.rerunDiscriminationByIsolationMVArun2v2Loose
-           * process.rerunDiscriminationByIsolationMVArun2v2Medium
-           * process.rerunDiscriminationByIsolationMVArun2v2Tight
-           * process.rerunDiscriminationByIsolationMVArun2v2VTight
-           * process.rerunDiscriminationByIsolationMVArun2v2VVTight
-
-
-           #newDM
-           * process.rerunDiscriminationByIsolationMVArun2v2rawnewDM
-           * process.rerunDiscriminationByIsolationMVArun2v2VVLoosenewDM
-           * process.rerunDiscriminationByIsolationMVArun2v2VLoosenewDM
-           * process.rerunDiscriminationByIsolationMVArun2v2LoosenewDM
-           * process.rerunDiscriminationByIsolationMVArun2v2MediumnewDM
-           * process.rerunDiscriminationByIsolationMVArun2v2TightnewDM
-           * process.rerunDiscriminationByIsolationMVArun2v2VTightnewDM
-           * process.rerunDiscriminationByIsolationMVArun2v2VVTightnewDM
-
-
-
-
-	   #* process.dpfTau2016v1
-           #* process.dpfTau2016v0
-           #* process.deepTau2017v1
-           * process.deepTau2017v2p1
-	   * process.patTauDiscriminationByElectronRejectionMVA62018Seq
+           process.deepTau2017v2p1
         )
         process.schedule.append( process.rerunMvaIsolation2SeqRun2 )
 
@@ -737,66 +703,6 @@ def preTaus(process, year, isEmbedded, tSrc, vSrc,**kwargs):
         mod = cms.EDProducer(
             "MiniAODTauRerunIDEmbedder",
             src = cms.InputTag(tSrc),
-            idRaw = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1raw"),
-            idVLoose = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1VLoose"),
-            idLoose = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1Loose"),
-            idMedium = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1Medium"),
-            idTight = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1Tight"),
-            idVTight = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1VTight"),
-            idVVTight = cms.InputTag("rerunDiscriminationByIsolationMVArun2v1VVTight"),
-            idRawv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2raw"),
-            idVVLoosev2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VVLoose"),
-            idVLoosev2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VLoose"),
-            idLoosev2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2Loose"),
-            idMediumv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2Medium"),
-            idTightv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2Tight"),
-            idVTightv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VTight"),
-            idVVTightv2 = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VVTight"),
-
-
-            #newDM
-            idRawv2newDM = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2rawnewDM"),
-            idVVLoosev2newDM = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VVLoosenewDM"),
-            idVLoosev2newDM = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VLoosenewDM"),
-            idLoosev2newDM = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2LoosenewDM"),
-            idMediumv2newDM = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2MediumnewDM"),
-            idTightv2newDM = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2TightnewDM"),
-            idVTightv2newDM = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VTightnewDM"),
-            idVVTightv2newDM = cms.InputTag("rerunDiscriminationByIsolationMVArun2v2VVTightnewDM"),
-
-
-
-	    #byDpfTau2016v1VSallraw = cms.InputTag("dpfTau2016v1","VSall"),
-    	    #byTightDpfTau2016v1VSall = cms.InputTag("dpfTau2016v1","VSallTight"),
-            #byDpfTau2016v0VSallraw = cms.InputTag("dpfTau2016v0","VSall"),
-            #byTightDpfTau2016v0VSall = cms.InputTag("dpfTau2016v0","VSallTight"),
- 	    #byDeepTau2017v1VSmuraw = cms.InputTag("deepTau2017v1","VSmu"),
-    	    #byLooseDeepTau2017v1VSmu = cms.InputTag("deepTau2017v1","VSmuLoose"),
-    	    #byMediumDeepTau2017v1VSmu = cms.InputTag("deepTau2017v1","VSmuMedium"),
-    	    #byTightDeepTau2017v1VSmu = cms.InputTag("deepTau2017v1","VSmuTight"),
-    	    #byVLooseDeepTau2017v1VSmu = cms.InputTag("deepTau2017v1","VSmuVLoose"),
-    	    #byVTightDeepTau2017v1VSmu = cms.InputTag("deepTau2017v1","VSmuVTight"),
-    	    #byVVLooseDeepTau2017v1VSmu = cms.InputTag("deepTau2017v1","VSmuVVLoose"),
-    	    #byVVTightDeepTau2017v1VSmu = cms.InputTag("deepTau2017v1","VSmuVVTight"),
-    	    #byVVVLooseDeepTau2017v1VSmu = cms.InputTag("deepTau2017v1","VSmuVVVLoose"),
-            #byDeepTau2017v1VSeraw = cms.InputTag("deepTau2017v1","VSe"),
-            #byLooseDeepTau2017v1VSe = cms.InputTag("deepTau2017v1","VSeLoose"),
-            #byMediumDeepTau2017v1VSe = cms.InputTag("deepTau2017v1","VSeMedium"),
-            #byTightDeepTau2017v1VSe = cms.InputTag("deepTau2017v1","VSeTight"),
-            #byVLooseDeepTau2017v1VSe = cms.InputTag("deepTau2017v1","VSeVLoose"),
-            #byVTightDeepTau2017v1VSe = cms.InputTag("deepTau2017v1","VSeVTight"),
-            #byVVLooseDeepTau2017v1VSe = cms.InputTag("deepTau2017v1","VSeVVLoose"),
-            #byVVTightDeepTau2017v1VSe = cms.InputTag("deepTau2017v1","VSeVVTight"),
-            #byVVVLooseDeepTau2017v1VSe = cms.InputTag("deepTau2017v1","VSeVVVLoose"),
-	    #byDeepTau2017v1VSjetraw = cms.InputTag("deepTau2017v1","VSjet"),
-            #byLooseDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetLoose"),
-            #byMediumDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetMedium"),
-            #byTightDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetTight"),
-            #byVLooseDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetVLoose"),
-            #byVTightDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetVTight"),
-            #byVVLooseDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetVVLoose"),
-            #byVVTightDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetVVTight"),
-            #byVVVLooseDeepTau2017v1VSjet = cms.InputTag("deepTau2017v1","VSjetVVVLoose"),
 
             byDeepTau2017v2p1VSmuraw = cms.InputTag("deepTau2017v2p1","VSmu"),
             byLooseDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuLoose"),
@@ -804,9 +710,7 @@ def preTaus(process, year, isEmbedded, tSrc, vSrc,**kwargs):
             byTightDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuTight"),
             byVLooseDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuVLoose"),
             byVTightDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuVTight"),
-            byVVLooseDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuVVLoose"),
             byVVTightDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuVVTight"),
-            byVVVLooseDeepTau2017v2p1VSmu = cms.InputTag("deepTau2017v2p1","VSmuVVVLoose"),
             byDeepTau2017v2p1VSeraw = cms.InputTag("deepTau2017v2p1","VSe"),
             byLooseDeepTau2017v2p1VSe = cms.InputTag("deepTau2017v2p1","VSeLoose"),
             byMediumDeepTau2017v2p1VSe = cms.InputTag("deepTau2017v2p1","VSeMedium"),
@@ -826,13 +730,6 @@ def preTaus(process, year, isEmbedded, tSrc, vSrc,**kwargs):
             byVVTightDeepTau2017v2p1VSjet = cms.InputTag("deepTau2017v2p1","VSjetVVTight"),
             byVVVLooseDeepTau2017v2p1VSjet = cms.InputTag("deepTau2017v2p1","VSjetVVVLoose"),
 
-            againstElectronMVA6Raw2018 = cms.InputTag("patTauDiscriminationByElectronRejectionMVA62018Raw"),
-            againstElectronMVA6category2018 = cms.InputTag("patTauDiscriminationByElectronRejectionMVA62018Raw","category"),
-            againstElectronVLooseMVA62018 = cms.InputTag("patTauDiscriminationByVLooseElectronRejectionMVA62018"),
-            againstElectronLooseMVA62018 = cms.InputTag("patTauDiscriminationByLooseElectronRejectionMVA62018"),
-            againstElectronMediumMVA62018 = cms.InputTag("patTauDiscriminationByMediumElectronRejectionMVA62018"),
-            againstElectronTightMVA62018 = cms.InputTag("patTauDiscriminationByTightElectronRejectionMVA62018"),
-	    againstElectronVTightMVA62018 = cms.InputTag("patTauDiscriminationByVTightElectronRejectionMVA62018"),
         )
         tSrc = modName
         setattr(process,modName,mod)
@@ -852,21 +749,6 @@ def preTaus(process, year, isEmbedded, tSrc, vSrc,**kwargs):
     setattr(process,modPath,cms.Path(getattr(process,modName)))
     
     process.schedule.append(getattr(process,modPath))
-
-    # embed IP stuff
-    modName = 'miniTausEmbedIp{0}'.format(postfix)
-    mod = cms.EDProducer(
-        "MiniAODTauIpEmbedder",
-        src = cms.InputTag(tSrc),
-        vtxSrc = cms.InputTag(vSrc),
-    )
-    tSrc = modName
-    setattr(process,modName,mod)
-
-    pathName = 'runMiniAODTauIpEmbedding{0}'.format(postfix)
-    path = cms.Path(getattr(process,modName))
-    setattr(process,pathName,path)
-    process.schedule.append(getattr(process,pathName))
 
     # embed trigger filters
     modName = 'minitriggerfilterTaus{0}'.format(postfix)
@@ -896,21 +778,6 @@ def preTaus(process, year, isEmbedded, tSrc, vSrc,**kwargs):
     return tSrc
 
 def postTaus(process, tSrc, jSrc,**kwargs):
-    postfix = kwargs.pop('postfix','')
-    modName = 'miniAODTauJetInfoEmbedding{0}'.format(postfix)
-    mod = cms.EDProducer(
-        "MiniAODTauJetInfoEmbedder",
-        src = cms.InputTag(tSrc),
-        embedBtags = cms.bool(False),
-        suffix = cms.string(''),
-        jetSrc = cms.InputTag(jSrc),
-        maxDeltaR = cms.double(0.5),
-    )
-    setattr(process,modName,mod)
-    tSrc = modName
-    modPath = 'TauJetInfoEmbedding{0}'.format(postfix)
-    setattr(process,modPath,cms.Path(getattr(process,modName)))
-    process.schedule.append(getattr(process,modPath))
 
     return tSrc
 

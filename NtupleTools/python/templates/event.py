@@ -29,34 +29,26 @@ pileup = PSet(
 )
 
 pv_info = PSet(
-    pvX='? evt.pv.isNonnull() ? evt.pv.x : -999',
-    pvY='? evt.pv.isNonnull() ? evt.pv.y : -999',
-    pvZ='? evt.pv.isNonnull() ? evt.pv.z : -999',
-    pvDX='? evt.pv.isNonnull() ? evt.pv.xError : -999',
-    pvDY='? evt.pv.isNonnull() ? evt.pv.yError : -999',
-    pvDZ='? evt.pv.isNonnull() ? evt.pv.zError : -999',
-    pvChi2='? evt.pv.isNonnull() ? evt.pv.chi2 : -999',
-    pvndof='? evt.pv.isNonnull() ? evt.pv.ndof : -999',
-    pvNormChi2='? evt.pv.isNonnull() ? evt.pv.normalizedChi2 : -999',
-    pvIsValid=cms.vstring('? evt.pv.isNonnull() ? evt.pv.isValid : 0', 'I'),
-    pvIsFake=cms.vstring('? evt.pv.isNonnull() ? evt.pv.isFake : 1', 'I'),
-    pvRho = 'evt.pv.position.Rho',
+    #pvX='? evt.pv.isNonnull() ? evt.pv.x : -999',
+    #pvY='? evt.pv.isNonnull() ? evt.pv.y : -999',
+    #pvZ='? evt.pv.isNonnull() ? evt.pv.z : -999',
+    #pvDX='? evt.pv.isNonnull() ? evt.pv.xError : -999',
+    #pvDY='? evt.pv.isNonnull() ? evt.pv.yError : -999',
+    #pvDZ='? evt.pv.isNonnull() ? evt.pv.zError : -999',
+    #pvChi2='? evt.pv.isNonnull() ? evt.pv.chi2 : -999',
+    #pvndof='? evt.pv.isNonnull() ? evt.pv.ndof : -999',
+    #pvNormChi2='? evt.pv.isNonnull() ? evt.pv.normalizedChi2 : -999',
+    #pvIsValid=cms.vstring('? evt.pv.isNonnull() ? evt.pv.isValid : 0', 'I'),
+    #pvIsFake=cms.vstring('? evt.pv.isNonnull() ? evt.pv.isFake : 1', 'I'),
+    #pvRho = 'evt.pv.position.Rho',
 )
 
 met = PSet(
-    #mvaMetEt       = 'evt.met("mvamet").et',
-    #mvaMetPhi      = 'evt.met("mvamet").phi',
-    #mvaMetCov00    = 'evt.met("mvamet").getSignificanceMatrix[0][0]',
-    #mvaMetCov01    = 'evt.met("mvamet").getSignificanceMatrix[0][1]',
-    #mvaMetCov10    = 'evt.met("mvamet").getSignificanceMatrix[1][0]',
-    #mvaMetCov11    = 'evt.met("mvamet").getSignificanceMatrix[1][1]',
     type1_pfMetEt  = 'evt.met("pfmet").pt', 
     type1_pfMetPhi = 'evt.met("pfmet").phi',
     puppiMetEt  = 'evt.met("puppimet").pt',
     puppiMetPhi = 'evt.met("puppimet").phi',
     
-    recoilDaught='getDaughtersRecoil().R()',
-    recoilWithMet='getDaughtersRecoilWithMet().R()',
 )
 
 # these things break if you pass a shifted met to fsa
@@ -215,7 +207,7 @@ metShiftsForFullJES = PSet(
 
 gen = PSet(
     # Process ID used to simulate in Pythia
-    processID='evt.genEventInfo.signalProcessID',
+    #processID='evt.genEventInfo.signalProcessID',
     #isZtautau='evt.findDecay(23,15)',
     #isGtautau='evt.findDecay(22,15)',
     #isWtaunu='evt.findDecay(24,15)',
@@ -231,7 +223,7 @@ gen = PSet(
 )
 
 tauSpinner = PSet(
-    tauSpinnerWeight = 'evt.weight("tauSpinnerWeight")'
+    #tauSpinnerWeight = 'evt.weight("tauSpinnerWeight")'
 )
 
 

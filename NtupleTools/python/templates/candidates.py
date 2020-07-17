@@ -19,34 +19,34 @@ kinematics = PSet(
 )
 
 vertex_info = PSet(
-    objectVZ = '{object}.vz',
-    objectIP3D = 'getIP3D({object_idx})',
-    objectIP3DErr = 'getIP3DErr({object_idx})', # uncertainty of IP3D
-    objectSIP3D = 'getIP3D({object_idx}) / getIP3DErr({object_idx})',
+    #objectVZ = '{object}.vz',
+    #objectIP3D = 'getIP3D({object_idx})',
+    #objectIP3DErr = 'getIP3DErr({object_idx})', # uncertainty of IP3D
+    #objectSIP3D = 'getIP3D({object_idx}) / getIP3DErr({object_idx})',
     objectPVDZ = 'getPVDZ({object_idx})',
     objectPVDXY = 'getPVDXY({object_idx})',
-    objectSIP2D = 'getIP2D({object_idx}) / getIP2DErr({object_idx})',
+    #objectSIP2D = 'getIP2D({object_idx}) / getIP2DErr({object_idx})',
 #    objectPVAssociation = '{object}.fromPV', # 0->used in PV fit, 1->PV is closest VTX, 2->other VTX is closest, 3->used in other VTX fit
 )
 
 # The info about the associated pat::Jet
 base_jet = PSet(
-    objectJetPt = '{object}.userFloat("jetPt")',
-    objectJetDR = '{object}.userFloat("jetDR")',
-    objectJetBtag = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").bDiscriminator("") : -5',
-    objectJetPFCISVBtag = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") : -5',
-    objectJetEtaPhiSpread = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").constituentEtaPhiSpread() : -5',
-    objectJetEtaEtaMoment = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").etaetaMoment() : -5',
-    objectJetEtaPhiMoment = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").etaphiMoment() : -5',
-    objectJetPhiPhiMoment = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").phiphiMoment() : -5',
-    objectJetArea = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").jetArea() : -5',
+    #objectJetPt = '{object}.userFloat("jetPt")',
+    #objectJetDR = '{object}.userFloat("jetDR")',
+    #objectJetBtag = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").bDiscriminator("") : -5',
+    #objectJetPFCISVBtag = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") : -5',
+    #objectJetEtaPhiSpread = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").constituentEtaPhiSpread() : -5',
+    #objectJetEtaEtaMoment = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").etaetaMoment() : -5',
+    #objectJetEtaPhiMoment = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").etaphiMoment() : -5',
+    #objectJetPhiPhiMoment = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").phiphiMoment() : -5',
+    #objectJetArea = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").jetArea() : -5',
     #objectJetptD  =   '? {object}.userCand("patJet").isNonnull ? '
     #'jetVariables({object_idx}, "ptD") : -100',
     #objectJetaxis1  =   '? {object}.userCand("patJet").isNonnull ? '
@@ -59,9 +59,9 @@ base_jet = PSet(
     #'jetVariables({object_idx},"mult_MLP_QC") : -100 ',
     #objectJetmultMLP    =   '? {object}.userCand("patJet").isNonnull ? '
     #'jetVariables({object_idx},"mult_MLP") : -100',
-    objectJetPartonFlavour = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").partonFlavour : -100',
-    objectJetHadronFlavour = '? {object}.userCand("patJet").isNonnull ? '
-        '{object}.userCand("patJet").hadronFlavour : -100',
+    #objectJetPartonFlavour = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").partonFlavour : -100',
+    #objectJetHadronFlavour = '? {object}.userCand("patJet").isNonnull ? '
+    #    '{object}.userCand("patJet").hadronFlavour : -100',
 )
 

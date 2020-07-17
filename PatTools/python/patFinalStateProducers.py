@@ -63,7 +63,7 @@ def produce_final_states(process, daughter_collections, output_commands,
         eventProducer.muonSrc = cms.InputTag(src['muons'])
         eventProducer.tauSrc = cms.InputTag(src['taus'])
         eventProducer.jetSrc = cms.InputTag(src['jets'])
-        eventProducer.phoSrc = cms.InputTag(src['photons'])
+        #eventProducer.phoSrc = cms.InputTag(src['photons'])
         eventProducer.metSrc = cms.InputTag(src['pfmet'])
         eventProducer.puTag = cms.string(puTag)
         if 'extraWeights' in src:
@@ -183,21 +183,21 @@ def produce_final_states(process, daughter_collections, output_commands,
     if len(finalSelections):
         sequence += getattr(process,objSelectName)
 
-    # Rank objects
+    ## Rank objects
 
-    rankSeqName = 'rankObjects{0}'.format(postfix)
-    rankSeq = cms.Sequence()
-    for obj in ['muons','electrons','taus','jets','photons']:
-        objRankName = '{0}Rank{1}'.format(obj,postfix)
-        mod = cms.EDProducer(
-            "PAT{0}Ranker".format(obj[:-1].capitalize()),
-            src = cms.InputTag(src[obj]),
-        )
-        src[obj] = objRankName
-        setattr(process,objRankName,mod)
-        rankSeq += getattr(process,objRankName)
-    setattr(process,rankSeqName,rankSeq)
-    sequence += getattr(process,rankSeqName)
+    #rankSeqName = 'rankObjects{0}'.format(postfix)
+    #rankSeq = cms.Sequence()
+    #for obj in ['muons','electrons','taus','jets']:
+    #    objRankName = '{0}Rank{1}'.format(obj,postfix)
+    #    mod = cms.EDProducer(
+    #        "PAT{0}Ranker".format(obj[:-1].capitalize()),
+    #        src = cms.InputTag(src[obj]),
+    #    )
+    #    src[obj] = objRankName
+    #    setattr(process,objRankName,mod)
+    #    rankSeq += getattr(process,objRankName)
+    #setattr(process,rankSeqName,rankSeq)
+    #sequence += getattr(process,rankSeqName)
 
 
     # Now build all combinatorics for E/Mu/Tau/Photon
@@ -206,7 +206,7 @@ def produce_final_states(process, daughter_collections, output_commands,
         'm' : cms.InputTag(src["muons"]),
         't' : cms.InputTag(src["taus"]),
         'j' : cms.InputTag(src["jets"]),
-        'g' : cms.InputTag(src["photons"]),
+        #'g' : cms.InputTag(src["photons"]),
         }
 
     # keep the collections we used to build the final states 

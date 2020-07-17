@@ -15,6 +15,12 @@ def preElectrons(process, eSrc, vSrc, year, isEmbedded, **kwargs):
        myera='2017-Nov17ReReco'
 
     setupEgammaPostRecoSeq(process,
+		       eleIDModules=[
+                        'RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V2_cff',
+                        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_noIso_V2_cff',
+                        'RecoEgamma.ElectronIdentification.Identification.mvaElectronID_Fall17_iso_V2_cff'
+                        ],
+                       phoIDModules=[],
                        era=myera) 
 
     pathName = 'miniAODElectrons{0}'.format(postfix)
@@ -31,11 +37,13 @@ def preElectrons(process, eSrc, vSrc, year, isEmbedded, **kwargs):
     )
     eSrc = modName
     setattr(process,modName,mod)
-    
+
     pathName = 'runMiniAODElectronIpEmbedding{0}'.format(postfix)
     path = cms.Path(getattr(process,modName))
     setattr(process,pathName,path)
     process.schedule.append(getattr(process,pathName))
+
+
     # Embed effective areas in muons and electrons
     if not hasattr(process,'patElectronEAEmbedder'):
         process.load("FinalStateAnalysis.PatTools.electrons.patElectronEAEmbedding_cfi")
@@ -99,41 +107,9 @@ def preElectrons(process, eSrc, vSrc, year, isEmbedded, **kwargs):
     setattr(process,pathName,modPath)
     process.schedule.append(getattr(process,pathName))
 
-    # embed WW ID
-    modName = 'miniAODElectronWWIdEmbedding{0}'.format(postfix)
-    mod = cms.EDProducer(
-        "MiniAODElectronWWIdEmbedder",
-        src = cms.InputTag(eSrc),
-        vertices = cms.InputTag(vSrc),
-    )
-    eSrc = modName
-    setattr(process,modName,mod)
-    pathName = 'miniAODElectronWWEmbeddingPath{0}'.format(postfix)
-    path = cms.Path(getattr(process,modName))
-    setattr(process,pathName,path)
-    process.schedule.append(getattr(process,pathName))
-
-    
     return eSrc
 
 def postElectrons(process, eSrc, jSrc,**kwargs):
-    postfix = kwargs.pop('postfix','')
-    modName = 'miniAODElectronJetInfoEmbedding{0}'.format(postfix)
-    mod = cms.EDProducer(
-        "MiniAODElectronJetInfoEmbedder",
-        src = cms.InputTag(eSrc),
-        embedBtags = cms.bool(False),
-        suffix = cms.string(''),
-        jetSrc = cms.InputTag(jSrc),
-        maxDeltaR = cms.double(0.5),
-    )
-    eSrc = modName
-    setattr(process,modName,mod)
-
-    pathName = 'ElectronJetInfoEmbedding{0}'.format(postfix)
-    modPath = cms.Path(getattr(process,modName))
-    setattr(process,pathName,modPath)
-    process.schedule.append(getattr(process,pathName))
 
     return eSrc
 

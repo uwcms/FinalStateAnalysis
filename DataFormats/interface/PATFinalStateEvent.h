@@ -91,12 +91,10 @@ class PATFinalStateEvent {
         const GenFilterInfo& genFilterInfo,
         bool isRealData,
         bool isEmbeddedSample,
-        const std::string& puScenario,
         const edm::RefProd<pat::ElectronCollection>& electronRefProd,
         const edm::RefProd<pat::MuonCollection>& muonRefProd,
         const edm::RefProd<pat::TauCollection>& tauRefProd,
         const edm::RefProd<pat::JetCollection>& jetRefProd,
-    	const edm::RefProd<pat::PhotonCollection>& phoRefProd,
         const reco::PFCandidateRefProd& pfRefProd,
         const edm::RefProd<pat::PackedCandidateCollection>& packedPFRefProd,
         const reco::TrackRefProd& tracks,
@@ -205,18 +203,6 @@ class PATFinalStateEvent {
     // Get the number of gen jets for weighting
     float numGenJets() const;
 
-    /// Get the PU scenario used to generate this events (if MC)
-    const std::string& puTag() const;
-
-    /// The following allow use of the PileupWeighting feature in DataAlgos
-    /// For the available tags, see DataAlgos/data/pileup_distributions.py
-    /// This version uses the internally stored PU tag
-    double puWeight(const std::string& dataTag) const;
-
-    /// The following allow use of the PileupWeighting feature in DataAlgos,
-    /// manually specifying which MC tag to use.
-    double puWeight(const std::string& dataTag, const std::string& mcTag) const;
-
     /// Get a named event weight
     float weight(const std::string& name) const;
     void addWeight(const std::string& name, float weight);
@@ -234,7 +220,7 @@ class PATFinalStateEvent {
     const pat::MuonCollection& muons() const;
     const pat::JetCollection& jets() const;
     const pat::TauCollection& taus() const;
-    const pat::PhotonCollection& photons() const;
+    //const pat::PhotonCollection& photons() const;
 
     /// Access to particle flow collections
     const reco::PFCandidateCollection& pflow() const;
@@ -296,14 +282,13 @@ class PATFinalStateEvent {
     GenFilterInfo generatorFilter_;
     bool isRealData_;
     bool isEmbeddedSample_;
-    std::string puScenario_;
     char fsaDataFormatVersion_;
     // Pointers to object collections in the event
     edm::RefProd<pat::ElectronCollection> electronRefProd_;
     edm::RefProd<pat::MuonCollection> muonRefProd_;
     edm::RefProd<pat::TauCollection> tauRefProd_;
     edm::RefProd<pat::JetCollection> jetRefProd_;
-    edm::RefProd<pat::PhotonCollection> phoRefProd_;
+    //edm::RefProd<pat::PhotonCollection> phoRefProd_;
     reco::PFCandidateRefProd pfRefProd_;
     edm::RefProd<pat::PackedCandidateCollection> packedPFRefProd_;
     reco::TrackRefProd tracks_;

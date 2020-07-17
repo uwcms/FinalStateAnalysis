@@ -308,11 +308,6 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     std::vector<const reco::Candidate*> vetoTracks(
         double dR=0.1, const std::string& filter="") const;
 
-    std::vector<const reco::Candidate*> vetoPhotons(
-        double dR=0.1, const std::string& filter="") const;
-
-    /// Get overlap objects at least dR within from the ith object, passing
-    /// filter.
     std::vector<const reco::Candidate*> overlapMuons(
         int i, double dR=0.1, const std::string& filter="") const;
 
@@ -325,15 +320,6 @@ class PATFinalState : public pat::PATObject<reco::LeafCandidate> {
     std::vector<const reco::Candidate*> overlapJets(
         int i, double dR=0.1, const std::string& filter="") const;
 
-    std::vector<const reco::Candidate*> overlapPhotons(
-        int i, double dR=0.1, const std::string& filter="") const;
-
-    /// Get the total mass, using the SuperCluster for one of the electrons.
-    /// For example, if it is an EMT state:
-    /// massUsingSuperCluster(0, 2) = tau + super cluster mass
-    /// massUsingSuperCluster(0, 1, 2) = tau + mu + super cluster mass
-//    double massUsingSuperCluster(int electronIndex, int j,
-//        int x=-1, int y=-1, int z=-1) const;
 
     /// Build a subcandidate
     PATFinalStateProxy subcand(int i, int j,

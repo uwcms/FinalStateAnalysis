@@ -4,7 +4,6 @@
 <use   name="DataFormats/Common"/>
 <use   name="DataFormats/PatCandidates"/>
 <use   name="FinalStateAnalysis/DataFormats"/>
-<use   name="FinalStateAnalysis/RecoTools"/>
 <use   name="EgammaAnalysis/ElectronTools"/>
 <use   name="RecoMET/METAlgorithms"/>
 <use   name="CommonTools/Utils"/>

@@ -79,25 +79,25 @@ id = PSet(
     objectChargeIdTight = '{object}.isGsfCtfScPixChargeConsistent',
     objectChargeIdMed = '{object}.isGsfScPixChargeConsistent',
     objectChargeIdLoose = '{object}.isGsfCtfChargeConsistent',
-    # raw energy error
-    objectEnergyError = '{object}.corrections().combinedP4Error',
-    # shower shape / ID variables
-    objectHadronicOverEM = '{object}.hcalOverEcal',
-    objectHadronicDepth1OverEm = '{object}.hcalDepth1OverEcal',
-    objectHadronicDepth2OverEm = '{object}.hcalDepth2OverEcal',
-    objectSigmaIEtaIEta = '{object}.sigmaIetaIeta',
-    objectdeltaEtaSuperClusterTrackAtVtx = '{object}.deltaEtaSuperClusterTrackAtVtx',
-    objectdeltaPhiSuperClusterTrackAtVtx = '{object}.deltaPhiSuperClusterTrackAtVtx',
-    objectfBrem = '{object}.fbrem',
-    objecteSuperClusterOverP = '{object}.eSuperClusterOverP',
-    objectecalEnergy = '{object}.ecalEnergy',
-    objecttrackMomentumAtVtxP = '{object}.trackMomentumAtVtx.r',
-    objectE1x5 = '{object}.scE1x5',
-    objectE2x5Max = '{object}.scE2x5Max',
-    objectE5x5 = '{object}.scE5x5',
-    objectNearMuonVeto = 'overlapMuons({object_idx},0.05,"isGlobalMuon() & abs(eta()) < 2.4").size()',
-    objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).pdgId() : -999',
-    objectComesFromHiggs = 'comesFromHiggs({object_idx}, 11, 1)',
+    ## raw energy error
+    #objectEnergyError = '{object}.corrections().combinedP4Error',
+    ## shower shape / ID variables
+    #objectHadronicOverEM = '{object}.hcalOverEcal',
+    #objectHadronicDepth1OverEm = '{object}.hcalDepth1OverEcal',
+    #objectHadronicDepth2OverEm = '{object}.hcalDepth2OverEcal',
+    #objectSigmaIEtaIEta = '{object}.sigmaIetaIeta',
+    #objectdeltaEtaSuperClusterTrackAtVtx = '{object}.deltaEtaSuperClusterTrackAtVtx',
+    #objectdeltaPhiSuperClusterTrackAtVtx = '{object}.deltaPhiSuperClusterTrackAtVtx',
+    #objectfBrem = '{object}.fbrem',
+    #objecteSuperClusterOverP = '{object}.eSuperClusterOverP',
+    #objectecalEnergy = '{object}.ecalEnergy',
+    #objecttrackMomentumAtVtxP = '{object}.trackMomentumAtVtx.r',
+    #objectE1x5 = '{object}.scE1x5',
+    #objectE2x5Max = '{object}.scE2x5Max',
+    #objectE5x5 = '{object}.scE5x5',
+    #objectNearMuonVeto = 'overlapMuons({object_idx},0.05,"isGlobalMuon() & abs(eta()) < 2.4").size()',
+    #objectGenMotherPdgId = '? (getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isAvailable && getDaughterGenParticleMotherSmart({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticleMotherSmart({object_idx}, 11, 0).pdgId() : -999',
+    #objectComesFromHiggs = 'comesFromHiggs({object_idx}, 11, 1)',
     objectGenParticle    = '? ({object}.genParticleRef.isNonnull() ) ? {object}.genParticleRef().pdgId() : -999',
     objectGenPdgId       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).pdgId() : -999',
     objectGenCharge      = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).charge() : -999',
@@ -111,12 +111,12 @@ id = PSet(
     objectGenTauDecay       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isTauDecayProduct() : -999',
     objectGenPrompt       = '? (getDaughterGenParticle({object_idx}, 11, 0).isAvailable && getDaughterGenParticle({object_idx}, 11, 0).isNonnull) ? getDaughterGenParticle({object_idx}, 11, 0).statusFlags().isPrompt() : -999',
 
-    # How close is the nearest muon passing some basic quality cuts?
-    objectNearestMuonDR = "electronClosestMuonDR({object_idx})",
-    # closest Z mass
-    objectNearestZMass = 'closestZElectron({object_idx},"")',
-    # lowest invariant mass
-    objectLowestMll = 'smallestMee({object_idx},"")',
+    ## How close is the nearest muon passing some basic quality cuts?
+    #objectNearestMuonDR = "electronClosestMuonDR({object_idx})",
+    ## closest Z mass
+    #objectNearestZMass = 'closestZElectron({object_idx},"")',
+    ## lowest invariant mass
+    #objectLowestMll = 'smallestMee({object_idx},"")',
 )
 
 energyCorrections = PSet(

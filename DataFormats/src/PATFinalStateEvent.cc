@@ -1,6 +1,5 @@
 #include "FinalStateAnalysis/DataFormats/interface/PATFinalStateEvent.h"
 #include "FinalStateAnalysis/DataAlgos/interface/SmartTrigger.h"
-#include "FinalStateAnalysis/DataAlgos/interface/PileupWeighting.h"
 #include "FinalStateAnalysis/DataAlgos/interface/helpers.h"
 #include "FinalStateAnalysis/DataAlgos/interface/Hash.h"
 
@@ -120,12 +119,11 @@ PATFinalStateEvent::PATFinalStateEvent(
     const GenFilterInfo& generatorFilter,
     bool isRealData,
     bool isEmbeddedSample,
-    const std::string& puScenario,
     const edm::RefProd<pat::ElectronCollection>& electronRefProd,
     const edm::RefProd<pat::MuonCollection>& muonRefProd,
     const edm::RefProd<pat::TauCollection>& tauRefProd,
     const edm::RefProd<pat::JetCollection>& jetRefProd,
-    const edm::RefProd<pat::PhotonCollection>& phoRefProd,
+    //const edm::RefProd<pat::PhotonCollection>& phoRefProd,
     const reco::PFCandidateRefProd& pfRefProd,
     const edm::RefProd<pat::PackedCandidateCollection>& packedPFRefProd,
     const reco::TrackRefProd& tracks,
@@ -166,13 +164,12 @@ PATFinalStateEvent::PATFinalStateEvent(
   generatorFilter_(generatorFilter),
   isRealData_(isRealData),
   isEmbeddedSample_(isEmbeddedSample),
-  puScenario_(puScenario),
   fsaDataFormatVersion_(FSA_DATA_FORMAT_VERSION),
   electronRefProd_(electronRefProd),
   muonRefProd_(muonRefProd),
   tauRefProd_(tauRefProd),
   jetRefProd_(jetRefProd),
-  phoRefProd_(phoRefProd),
+  //phoRefProd_(phoRefProd),
   pfRefProd_(pfRefProd),
   packedPFRefProd_(packedPFRefProd),
   tracks_(tracks),
@@ -623,23 +620,6 @@ int PATFinalStateEvent::matchedToFilter(const reco::Candidate& cand,const std::s
    return match;
 }
 
-const std::string& PATFinalStateEvent::puTag() const {
-  return puScenario_;
-}
-
-double PATFinalStateEvent::puWeight(const std::string& dataTag) const {
-  if (isRealData_)
-    return 1.;
-  return this->puWeight(dataTag, puTag());
-}
-
-double PATFinalStateEvent::puWeight(const std::string& dataTag,
-    const std::string& mcTag) const {
-  if (isRealData_)
-    return 1.;
-  return getPileupWeight(dataTag, mcTag, puInfo_[1].getTrueNumInteractions());
-}
-
 float PATFinalStateEvent::weight(const std::string& name) const {
   typedef std::map<std::string, float> WeightMap;
   WeightMap::const_iterator findit = weights_.find(name);
@@ -692,12 +672,12 @@ const pat::JetCollection& PATFinalStateEvent::jets() const {
   return *jetRefProd_;
 }
 
-const pat::PhotonCollection& PATFinalStateEvent::photons() const {
+/*const pat::PhotonCollection& PATFinalStateEvent::photons() const {
   if (!phoRefProd_)
     throw cms::Exception("PATFSAEventNullRefs")
       << "The photon RefProd is null!" << std::endl;
   return *phoRefProd_;
-}
+}*/
 
 const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
   if (!pfRefProd_)

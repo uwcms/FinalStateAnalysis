@@ -64,7 +64,7 @@ private:
   edm::EDGetTokenT<pat::JetCollection> jetSrcToken_;
   edm::EDGetTokenT<pat::MuonCollection> muonSrcToken_;
   edm::EDGetTokenT<pat::TauCollection> tauSrcToken_;
-  edm::EDGetTokenT<pat::PhotonCollection> phoSrcToken_;
+  //edm::EDGetTokenT<pat::PhotonCollection> phoSrcToken_;
 
   edm::EDGetTokenT<LHEEventProduct> lheToken_;
 
@@ -148,7 +148,7 @@ PATFinalStateEventProducer::PATFinalStateEventProducer(
   muonSrcToken_     = consumes<pat::MuonCollection>(pset.getParameter<edm::InputTag>("muonSrc"));
   tauSrcToken_      = consumes<pat::TauCollection>(pset.getParameter<edm::InputTag>("tauSrc"));
   jetSrcToken_      = consumes<pat::JetCollection>(pset.getParameter<edm::InputTag>("jetSrc"));
-  phoSrcToken_      = consumes<pat::PhotonCollection>(pset.getParameter<edm::InputTag>("phoSrc"));
+  //phoSrcToken_      = consumes<pat::PhotonCollection>(pset.getParameter<edm::InputTag>("phoSrc"));
 
   metSrcToken_ = consumes<edm::View<pat::MET> >(pset.getParameter<edm::InputTag>("metSrc"));
   MVAMETSrcToken_ = consumes<std::vector<pat::MET> >(pset.getParameter<edm::InputTag>("MVAMETSrc"));
@@ -290,8 +290,8 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
     getRefProd<pat::MuonCollection>(muonSrcToken_, evt);
   edm::RefProd<pat::JetCollection> jetRefProd =
     getRefProd<pat::JetCollection>(jetSrcToken_, evt);
-  edm::RefProd<pat::PhotonCollection> phoRefProd =
-    getRefProd<pat::PhotonCollection>(phoSrcToken_, evt);
+  //edm::RefProd<pat::PhotonCollection> phoRefProd =
+  //  getRefProd<pat::PhotonCollection>(phoSrcToken_, evt);
   edm::RefProd<pat::TauCollection> tauRefProd =
     getRefProd<pat::TauCollection>(tauSrcToken_, evt);
   edm::RefProd<pat::PackedCandidateCollection> packedPFRefProd =
@@ -439,14 +439,14 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   edm::Handle<reco::GenJetCollection> dressedParticles;
   evt.getByToken(dressedSrcToken_, dressedParticles);
   reco::GenJetRefProd dressedParticlesRef;
-  if (!evt.isRealData() || isEmbedded_)
+  if (!evt.isRealData() && !isEmbedded_)
     dressedParticlesRef = reco::GenJetRefProd(dressedParticles);
 
   // Try and get the gen information if it exists
   edm::Handle<reco::METCollection> rivetmetParticles;
   evt.getByToken(rivetmetSrcToken_, rivetmetParticles);
   edm::RefProd<reco::METCollection> rivetmetParticlesRef;
-  if (!evt.isRealData() || isEmbedded_)
+  if (!evt.isRealData() && !isEmbedded_)
     rivetmetParticlesRef = edm::RefProd<reco::METCollection>(rivetmetParticles);
 
   // Try and get gen taus built from gen products if they were included
@@ -476,9 +476,9 @@ void PATFinalStateEventProducer::produce(edm::Event& evt,
   PATFinalStateEvent theEvent(*rho, pvPtr, verticesPtr, metPtr, metCovariance, MVAMETInfo, metSig, metCov,
                               trg, trigStandAlone, names, *trigPrescale, *trigResults, *l1extraIsoTaus, myPuInfo, genInfo, genParticlesRef, dressedParticlesRef, rivetmetParticlesRef, 
                               hTaus, eTaus, mTaus, htxsRivetInfo,
-                              evt.id(), genEventInfo, generatorFilter, evt.isRealData(), isEmbedded_, puScenario_,
+                              evt.id(), genEventInfo, generatorFilter, evt.isRealData(), isEmbedded_,
                               electronRefProd, muonRefProd, tauRefProd, jetRefProd,
-                              phoRefProd, pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts,
+                              pfRefProd, packedPFRefProd, trackRefProd, gsftrackRefProd, theMEts,
                               lheweights, geninfoweights, prefiringweights, npNLO, filterFlagsInfo); //FIXME 
 
   std::vector<std::string> extras = extraWeights_.getParameterNames();
