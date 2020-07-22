@@ -352,9 +352,6 @@ def make_ntuple(*legs, **kwargs):
         # Only do SVfit on mu + tau, e + tau, e + mu, & tau + tau combinations
         if leg_a_type == leg_b_type and leg_a_type in ('m', 'e'):
             do_svfit = False
-        # Always ignore photons
-        if 'g' in legs:
-            do_svfit = False
         if do_svfit:
             print "SV fitting legs %s and %s in final state %s" % (
                 leg_a, leg_b, ''.join(legs))

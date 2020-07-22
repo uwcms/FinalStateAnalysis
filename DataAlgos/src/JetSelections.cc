@@ -258,98 +258,59 @@ std::vector<double> computeDeepFlavourJetInfo(
 }
 
 
-//JetVariables computeJetInfo(
 std::vector<double> computeJetInfo(
     const std::vector<const reco::Candidate*>& jets,
     const std::string& sysTag) {
-  //JetVariables output;
   std::vector<double> output;
 
-  //for (auto var : output) {
-  //  var = -9999;
-  //}
   int numJets = jets.size();
   if (numJets == 0) {
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 6; ++i) {
       output.push_back( -9999 );
     }
   }
 
-if (numJets>1){
-  reco::Candidate::LorentzVector leadJet;
-  reco::Candidate::LorentzVector subleadJet;
-  const pat::Jet * firstJet = dynamic_cast<const pat::Jet*> (jets[0]);
-  const pat::Jet * secondJet = dynamic_cast<const pat::Jet*> (jets[1]);
-  if (sysTag.empty()){
-    leadJet = firstJet->p4();
-    subleadJet = secondJet->p4();
-  }
-  else{
-    leadJet = firstJet->userCand(sysTag)->p4();
-    subleadJet = secondJet->userCand(sysTag)->p4();
-  }
+  if (numJets>1){
+     reco::Candidate::LorentzVector leadJet;
+     reco::Candidate::LorentzVector subleadJet;
+     const pat::Jet * firstJet = dynamic_cast<const pat::Jet*> (jets[0]);
+     const pat::Jet * secondJet = dynamic_cast<const pat::Jet*> (jets[1]);
+     if (sysTag.empty()){
+       leadJet = firstJet->p4();
+       subleadJet = secondJet->p4();
+     }
+     else{
+       leadJet = firstJet->userCand(sysTag)->p4();
+       subleadJet = secondJet->userCand(sysTag)->p4();
+     }
 
-  output.push_back( leadJet.pt() );
-  output.push_back( leadJet.eta() );
-  output.push_back( leadJet.phi() );
-  output.push_back( firstJet->bDiscriminator("pfDeepCSVJetTags:probb") + firstJet->bDiscriminator("pfDeepCSVJetTags:probbb") );
-  output.push_back( firstJet->userFloat("pileupJetId:fullDiscriminant"));
-  output.push_back( firstJet->partonFlavour() );
-  output.push_back( firstJet->hadronFlavour() );
-  output.push_back( firstJet->jecFactor("Uncorrected") );
-  if (firstJet->hasUserCand("jes+")) {
-      output.push_back( firstJet->userCand("jes+")->pt() );}
-  else output.push_back( -9999 );
-  if (firstJet->hasUserCand("jes-")) {
-      output.push_back( firstJet->userCand("jes-")->pt() );}
-  else output.push_back( -9999 );
+     output.push_back( leadJet.pt() );
+     output.push_back( leadJet.eta() );
+     output.push_back( leadJet.phi() );
 
-   output.push_back( subleadJet.pt() );
-   output.push_back( subleadJet.eta() );
-   output.push_back( subleadJet.phi() );
-   output.push_back( secondJet->bDiscriminator("pfDeepCSVJetTags:probb") + secondJet->bDiscriminator("pfDeepCSVJetTags:probbb"));
-   output.push_back( secondJet->userFloat("pileupJetId:fullDiscriminant"));
-   output.push_back( secondJet->partonFlavour() );
-   output.push_back( secondJet->hadronFlavour() );
-   output.push_back( secondJet->jecFactor("Uncorrected") );
-   if (secondJet->hasUserCand("jes+")) {
-       output.push_back( secondJet->userCand("jes+")->pt() );}
-   else output.push_back( -9999 );
-   if (secondJet->hasUserCand("jes-")) {
-       output.push_back( secondJet->userCand("jes-")->pt() );}
-   else output.push_back( -9999 );
-}
+     output.push_back( subleadJet.pt() );
+     output.push_back( subleadJet.eta() );
+     output.push_back( subleadJet.phi() );
+   }
 
-if (numJets==1){
-  reco::Candidate::LorentzVector leadJet;
-  const pat::Jet * firstJet = dynamic_cast<const pat::Jet*> (jets[0]);
-  if (sysTag.empty()){
-    leadJet = firstJet->p4();
-  }
-  else{
-    leadJet = firstJet->userCand(sysTag)->p4();
-  }
+   if (numJets==1){
+     reco::Candidate::LorentzVector leadJet;
+     const pat::Jet * firstJet = dynamic_cast<const pat::Jet*> (jets[0]);
+     if (sysTag.empty()){
+       leadJet = firstJet->p4();
+     }
+     else{
+       leadJet = firstJet->userCand(sysTag)->p4();
+     }
     
-  output.push_back( leadJet.pt() );
-  output.push_back( leadJet.eta() );
-  output.push_back( leadJet.phi() );
-  output.push_back( firstJet->bDiscriminator("pfDeepCSVJetTags:probb") + firstJet->bDiscriminator("pfDeepCSVJetTags:probbb") );
-  output.push_back( firstJet->userFloat("pileupJetId:fullDiscriminant"));
-  output.push_back( firstJet->partonFlavour() );
-  output.push_back( firstJet->hadronFlavour() );
-  output.push_back( firstJet->jecFactor("Uncorrected") );
-  if (firstJet->hasUserCand("jes+")) { 
-      output.push_back( firstJet->userCand("jes+")->pt() );}
-  else output.push_back( -9999 );
-  if (firstJet->hasUserCand("jes-")) { 
-      output.push_back( firstJet->userCand("jes-")->pt() );}
-  else output.push_back( -9999 );
+     output.push_back( leadJet.pt() );
+     output.push_back( leadJet.eta() );
+     output.push_back( leadJet.phi() );
 
-  for (int i = 0; i < 20; ++i) {
-    output.push_back( -9999 );
-  }
-}  
-  
+     for (int i = 0; i < 3; ++i) {
+       output.push_back( -9999 );
+     }
+   }   
 
   return output;
 }

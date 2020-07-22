@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 #########################################################################
 ##                                                                     ##
-##  Embed FSR photons in muons and electrons as userCands              ##
+##  Embed FSR gamma in muons and electrons as userCands              ##
 ##                                                                     ##
 ##  Requires the other lepton collection (e.g. muons if you're         ##
 ##  embedding in electrons as a stupid hack to make a photon is only   ##

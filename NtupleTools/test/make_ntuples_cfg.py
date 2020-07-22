@@ -30,7 +30,7 @@ eventView=0    - make a row in the ntuple correspond to an event
 passThru=0     - turn off any preselection/skim
 dump=0         - if one, dump process python to stdout
 verbose=0      - print out timing information
-noPhotons=0    - don't build things which depend on photons.
+noPhotons=0    - don't build things which depend on ph.
 runMVAMET=0    - run the MVAMET algorithm
 htt=0          - adds Higgs2Taus analysis settings
 era="2018"       - choose which era
@@ -68,7 +68,7 @@ from FinalStateAnalysis.NtupleTools.ntuple_builder import \
     make_ntuple, add_ntuple
 from FinalStateAnalysis.Utilities.version import cmssw_major_version, \
     cmssw_minor_version
-import PhysicsTools.PatAlgos.tools.helpers as helpers
+#import PhysicsTools.PatAlgos.tools.helpers as helpers
 
 process = cms.Process("Ntuples")
 cmsswversion=os.environ['CMSSW_VERSION']
@@ -97,14 +97,14 @@ process.options = cms.untracked.PSet(
 import FinalStateAnalysis.Utilities.TauVarParsing as TauVarParsing
 options = TauVarParsing.TauVarParsing(
     skipEvents=0,  # Start at an event offset (for debugging)
-    reportEvery=5000,
+    reportEvery=100,
     channels='mt,et',
     rerunMCMatch=False,
     eventView=0,  # Switch between final state view (0) and event view (1)
     passThru=0,  # Turn off preselections
     dump=0,  # If one, dump process python to stdout
     verbose=0,  # If one print out the TimeReport
-    noPhotons=0,  # If one, don't assume that photons are in the PAT tuples.
+    noPhotons=0,  # If one, don't assume that ph are in the PAT tuples.
     svFit=0,  # If one, SVfit appropriate lepton pairs.
     rochCor="",
     eleCor="",
@@ -328,6 +328,7 @@ fs_daughter_inputs = {
     'muons': 'slimmedMuons',
     'taus': 'slimmedTaus',
     'jets': 'slimmedJets',
+    'photons' : 'slimmedPhotons',
     'pfmet': 'slimmedMETsModifiedMET',         # slimmedMETs, slimmedMETsNoHF (miniaodv2), slimmmedMETsPuppi (not correct in miniaodv1)
     'mvamet': 'fixme',              # produced later
     'puppimet': 'slimmmedMETsPuppi',
@@ -550,7 +551,7 @@ if options.htt and options.isMC :
 
     process.particleLevel = cms.EDProducer("ParticleLevelProducer",
         src = cms.InputTag("myGenerator:unsmeared"),
-        usePromptFinalStates = cms.bool(True), # for leptons, photons, neutrinos
+        usePromptFinalStates = cms.bool(True), # for leptons, neutrinos
         excludePromptLeptonsFromJetClustering = cms.bool(False),
         excludeNeutrinosFromJetClustering = cms.bool(True),
         particleMinPt  = cms.double(0.),

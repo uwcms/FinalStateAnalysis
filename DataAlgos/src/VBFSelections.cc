@@ -38,8 +38,9 @@ VBFVariables computeVBFInfo(
   }
 
   reco::Candidate::LorentzVector dijet = leadJet + subleadJet;
+  output.mass = dijet.mass();
 
-  reco::Candidate::LorentzVector ditauvis;
+  /*reco::Candidate::LorentzVector ditauvis;
   for (size_t i = 0; i < hardScatter.size(); ++i) {
     ditauvis += hardScatter[i]->p4();
   }
@@ -47,7 +48,6 @@ VBFVariables computeVBFInfo(
   // ditau = hard scatter + MET
   reco::Candidate::LorentzVector ditau = metp4 + ditauvis;
 
-  output.mass = dijet.mass();
   output.deta = std::abs(leadJet.eta() - subleadJet.eta());
   output.dphi = std::abs(reco::deltaPhi(leadJet.phi(), subleadJet.phi()));
   output.pt1 = leadJet.pt();
@@ -90,7 +90,7 @@ VBFVariables computeVBFInfo(
       if (pt > 30)
         output.jets30++;
     }
-  }
+  }*/
 
   return  output;
 }
