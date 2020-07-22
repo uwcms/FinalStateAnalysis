@@ -716,7 +716,7 @@ from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMet
 if options.era=="2017":
     runMetCorAndUncFromMiniAOD(process,
        isData=isData,
-       isEmbeddedSample=bool(options.isEmbedded),
+       #isEmbeddedSample=bool(options.isEmbedded),
        fixEE2017 = True,
        fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
        postfix = "ModifiedMET"
@@ -735,7 +735,7 @@ if options.era=="2017":
 else:
     runMetCorAndUncFromMiniAOD(process,
        isData=isData,
-       isEmbeddedSample=bool(options.isEmbedded),
+       #isEmbeddedSample=bool(options.isEmbedded),
        postfix = "ModifiedMET"
                         )
 
