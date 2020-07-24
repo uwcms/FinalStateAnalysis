@@ -35,8 +35,6 @@ MiniAODJERSystematicsEmbedder::MiniAODJERSystematicsEmbedder(const edm::Paramete
   upToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("up"));
   downToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("down"));
   produces<pat::JetCollection>();
-  produces<ShiftedCandCollection>("p4OutJERUpJets");
-  produces<ShiftedCandCollection>("p4OutJERDownJets");
 }
 void MiniAODJERSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSetup& es) {
   std::unique_ptr<pat::JetCollection> output(new pat::JetCollection);
@@ -50,34 +48,17 @@ void MiniAODJERSystematicsEmbedder::produce(edm::Event& evt, const edm::EventSet
   edm::Handle<edm::View<pat::Jet> > jetsD;
   evt.getByToken(downToken_, jetsD);
 
-  std::unique_ptr<ShiftedCandCollection> p4OutJERUpJets(new ShiftedCandCollection);
-  std::unique_ptr<ShiftedCandCollection> p4OutJERDownJets(new ShiftedCandCollection);
-
-  p4OutJERUpJets->reserve(nJets);
-  p4OutJERDownJets->reserve(nJets);
+  output->reserve(jets->size());
 
   for (size_t i = 0; i < nJets; ++i) {
-    const pat::Jet& jet = jets->at(i);
-    const pat::Jet& jet_up = jetsU->at(i);
-    const pat::Jet& jet_down = jetsD->at(i);
+    pat::Jet jet = jets->at(i);
+    pat::Jet jet_up = jetsU->at(i);
+    pat::Jet jet_down = jetsD->at(i);
+    float ptup=jet_up.pt();
+    float ptdown=jet_down.pt();
+    jet.addUserFloat("jer+", ptup);
+    jet.addUserFloat("jer-", ptdown);
     output->push_back(jet); // make our own copy
-
-    ShiftedCand candUncDown = jet_down;
-    ShiftedCand candUncUp = jet_up;
-
-    p4OutJERUpJets->push_back(candUncUp);
-    p4OutJERDownJets->push_back(candUncDown);
-  }
-
-  typedef edm::OrphanHandle<ShiftedCandCollection> PutHandle;
-  PutHandle p4OutJERUpJetsH = evt.put(std::move(p4OutJERUpJets), std::string("p4OutJERUpJets"));
-  PutHandle p4OutJERDownJetsH = evt.put(std::move(p4OutJERDownJets), std::string("p4OutJERDownJets"));
-
-  // Now embed the shifted collections into our output pat jets
-  for (size_t i = 0; i < output->size(); ++i) {
-    pat::Jet& jet = output->at(i);
-    jet.addUserCand("jer+", CandidatePtr(p4OutJERUpJetsH, i));
-    jet.addUserCand("jer-", CandidatePtr(p4OutJERDownJetsH, i));
   }
 
   evt.put(std::move(output));
