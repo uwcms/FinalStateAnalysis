@@ -74,17 +74,17 @@ process = cms.Process("Ntuples")
 cmsswversion=os.environ['CMSSW_VERSION']
 
 ## if you want to debug in the future, uncomment this
-process.ProfilerService = cms.Service (
-      "ProfilerService",
-       firstEvent = cms.untracked.int32(2),
-       lastEvent = cms.untracked.int32(500),
-       paths = cms.untracked.vstring('schedule') 
-)
-
-process.SimpleMemoryCheck = cms.Service(
-    "SimpleMemoryCheck",
-    ignoreTotal = cms.untracked.int32(1)
-)
+#process.ProfilerService = cms.Service (
+#      "ProfilerService",
+##       firstEvent = cms.untracked.int32(2),
+#       lastEvent = cms.untracked.int32(500),
+#       paths = cms.untracked.vstring('schedule') 
+#)
+#
+#process.SimpleMemoryCheck = cms.Service(
+#    "SimpleMemoryCheck",
+#    ignoreTotal = cms.untracked.int32(1)
+#)
 #process.Timing = cms.Service("Timing",
 #  summaryOnly = cms.untracked.bool(False),
 #  useJobReport = cms.untracked.bool(True)
@@ -282,9 +282,7 @@ process.load('Configuration.StandardSequences.Services_cff')
 # Need the global tag for geometry etc.
 envvar = 'mcgt' if options.isMC else 'datagt'
 
-# All data falls under unified GT (6 Feb 2017) ReReco BCDEFG, Prompt H
 GT = {'mcgt': '102X_upgrade2018_realistic_v21', 'datagt': '102X_dataRun2_Prompt_v16'} # For data run D
-#GT = {'mcgt': '102X_upgrade2018_realistic_v12', 'datagt': '102X_dataRun2_Sep2018Rereco_v1'} # For data run ABC
 
 if options.era=="2018":
   GT = {'mcgt': '102X_upgrade2018_realistic_v21', 'datagt': '102X_dataRun2_v13'}
@@ -292,8 +290,6 @@ if options.era=="2018prompt":
   GT = {'mcgt': '102X_upgrade2018_realistic_v21', 'datagt': '102X_dataRun2_Prompt_v16'}
 if options.era=="2017":
   GT = {'mcgt': '102X_mc2017_realistic_v8', 'datagt': '102X_dataRun2_v13'}
-#if options.era=="2017":
-#  GT = {'mcgt': '94X_mc2017_realistic_v17', 'datagt': '102X_dataRun2_v13'}
 if options.era=="2016":
   GT = {'mcgt': '102X_mcRun2_asymptotic_v8', 'datagt': '102X_dataRun2_v13'}
 
@@ -386,8 +382,6 @@ process.pileupJetIdUpdated = process.pileupJetId.clone(
 from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 isData = not options.isMC
 process.load ("CondCore.CondDB.CondDB_cfi")
-#from CondCore.CondDB.CondDB_cfi import *
-
 
 # Defaults to running correctly for Condor, you can
 # pass flag to run locally just fine here with runningLocal=1
@@ -432,32 +426,22 @@ process.jec = cms.ESSource("PoolDBESSource",
     )
 process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 
-## https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
-from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
-process.patJetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
-src = cms.InputTag("slimmedJets"),
-  levels = ['L1FastJet', 'L2Relative', 'L3Absolute'],
-  payload = 'AK4PFchs' ) # Make sure to choose the appropriate levels and payload here!
-from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
-process.patJetsReapplyJEC = updatedPatJets.clone(
-  jetSource = cms.InputTag("slimmedJets"),
-  jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patJetCorrFactorsReapplyJEC"))
-  )
-if(isData):
-    process.patJetCorrFactorsReapplyJEC.levels = ['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']
+####### https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
+from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
 
-process.patJetsReapplyJEC.userData.userInts.src += ['pileupJetIdUpdated:fullId']
-process.patJetsReapplyJEC.userData.userFloats.src += ['pileupJetIdUpdated:fullDiscriminant']
+updateJetCollection(
+   process,
+   jetSource = cms.InputTag('slimmedJets'),
+   labelName = 'UpdatedJEC',
+   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
+)
 
-process.applyJEC = cms.Path()
-process.applyJEC += process.pileupJetIdUpdated
-process.applyJEC += process.patJetCorrFactorsReapplyJEC
-process.applyJEC += process.patJetsReapplyJEC
-
-#if options.isMC: # FIXME apply also to data when the data corrections are released
-process.schedule.append(process.applyJEC) #FIXME when JEC need to be rerun
-fs_daughter_inputs['jets'] = 'patJetsReapplyJEC' #FIXME when JEC need to be rerun
-
+process.jecSequence=cms.Path()
+process.jecSequence += process.pileupJetIdUpdated
+process.jecSequence += process.patJetCorrFactorsUpdatedJEC
+process.jecSequence += process.updatedPatJetsUpdatedJEC
+process.schedule.append(process.jecSequence)
+fs_daughter_inputs['jets'] = 'updatedPatJetsUpdatedJEC'
 
 # Prefiring weights
 prefiring_year='2016BtoH'
