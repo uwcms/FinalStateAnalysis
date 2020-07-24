@@ -275,20 +275,16 @@ std::vector<double> computeJetInfo(
      reco::Candidate::LorentzVector subleadJet;
      const pat::Jet * firstJet = dynamic_cast<const pat::Jet*> (jets[0]);
      const pat::Jet * secondJet = dynamic_cast<const pat::Jet*> (jets[1]);
-     if (sysTag.empty()){
-       leadJet = firstJet->p4();
-       subleadJet = secondJet->p4();
-     }
-     else{
-       leadJet = firstJet->userCand(sysTag)->p4();
-       subleadJet = secondJet->userCand(sysTag)->p4();
-     }
+     leadJet = firstJet->p4();
+     subleadJet = secondJet->p4();
 
-     output.push_back( leadJet.pt() );
+     if (sysTag.empty()) output.push_back( leadJet.pt() );
+     else output.push_back( firstJet->userFloat(sysTag) );
      output.push_back( leadJet.eta() );
      output.push_back( leadJet.phi() );
 
-     output.push_back( subleadJet.pt() );
+     if (sysTag.empty()) output.push_back( subleadJet.pt() );
+     else output.push_back( secondJet->userFloat(sysTag) );
      output.push_back( subleadJet.eta() );
      output.push_back( subleadJet.phi() );
    }
@@ -296,21 +292,17 @@ std::vector<double> computeJetInfo(
    if (numJets==1){
      reco::Candidate::LorentzVector leadJet;
      const pat::Jet * firstJet = dynamic_cast<const pat::Jet*> (jets[0]);
-     if (sysTag.empty()){
-       leadJet = firstJet->p4();
-     }
-     else{
-       leadJet = firstJet->userCand(sysTag)->p4();
-     }
+     leadJet = firstJet->p4();
     
-     output.push_back( leadJet.pt() );
+     if (sysTag.empty()) output.push_back( leadJet.pt() );
+     else output.push_back( firstJet->userFloat(sysTag));
      output.push_back( leadJet.eta() );
      output.push_back( leadJet.phi() );
 
      for (int i = 0; i < 3; ++i) {
        output.push_back( -9999 );
      }
-   }   
+   }
 
   return output;
 }
