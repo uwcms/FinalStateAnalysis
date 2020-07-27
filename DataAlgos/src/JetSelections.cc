@@ -165,13 +165,10 @@ std::vector<double> computeDeepCSVJetInfo(
   if (num_deepcsv_Jets >= 1) {
     reco::Candidate::LorentzVector leadJet;
     const pat::Jet * jet1Pat = dynamic_cast<const pat::Jet*> (deepcsvorderedjets[0]);
-    if (sysTag.empty()){
-      leadJet = jet1Pat->p4();
-    }
-    else{
-      leadJet = jet1Pat->userCand(sysTag)->p4();
-    }
-    output.push_back( leadJet.pt() );
+    leadJet = jet1Pat->p4();
+
+    if (sysTag.empty()) output.push_back( leadJet.pt() );
+    else output.push_back( jet1Pat->userFloat(sysTag));
     output.push_back( leadJet.eta() );
     output.push_back( leadJet.phi() );
     output.push_back( leadJet.mass() );
@@ -181,13 +178,10 @@ std::vector<double> computeDeepCSVJetInfo(
   if (num_deepcsv_Jets >= 2) {
     reco::Candidate::LorentzVector subleadJet;
     const pat::Jet * jet2Pat = dynamic_cast<const pat::Jet*> (deepcsvorderedjets[1]);
-    if (sysTag.empty()){
-      subleadJet = jet2Pat->p4();
-    }
-    else{
-      subleadJet = jet2Pat->userCand(sysTag)->p4();
-    }
-    output.push_back( subleadJet.pt() );
+    subleadJet = jet2Pat->p4();
+
+    if (sysTag.empty()) output.push_back( subleadJet.pt() );
+    else output.push_back( jet2Pat->userFloat(sysTag));
     output.push_back( subleadJet.eta() );
     output.push_back( subleadJet.phi() );
     output.push_back( subleadJet.mass() );
@@ -220,13 +214,10 @@ std::vector<double> computeDeepFlavourJetInfo(
   if (num_deepflavour_Jets >= 1) {
     reco::Candidate::LorentzVector leadJet;
     const pat::Jet * jet1Pat = dynamic_cast<const pat::Jet*> (deepflavourorderedjets[0]);
-    if (sysTag.empty()){
-      leadJet = jet1Pat->p4();
-    }
-    else{
-      leadJet = jet1Pat->userCand(sysTag)->p4();
-    }
-    output.push_back( leadJet.pt() );
+    leadJet = jet1Pat->p4();
+
+    if (sysTag.empty()) output.push_back( leadJet.pt() );
+    else output.push_back( jet1Pat->userFloat(sysTag));
     output.push_back( leadJet.eta() );
     output.push_back( leadJet.phi() );
     output.push_back( leadJet.mass() );
@@ -236,13 +227,10 @@ std::vector<double> computeDeepFlavourJetInfo(
   if (num_deepflavour_Jets >= 2) {
     reco::Candidate::LorentzVector subleadJet;
     const pat::Jet * jet2Pat = dynamic_cast<const pat::Jet*> (deepflavourorderedjets[1]);
-    if (sysTag.empty()){
-      subleadJet = jet2Pat->p4();
-    }
-    else{
-      subleadJet = jet2Pat->userCand(sysTag)->p4();
-    }
-    output.push_back( subleadJet.pt() );
+    subleadJet = jet2Pat->p4();
+
+    if (sysTag.empty()) output.push_back( subleadJet.pt() );
+    else output.push_back( jet2Pat->userFloat(sysTag));
     output.push_back( subleadJet.eta() );
     output.push_back( subleadJet.phi() );
     output.push_back( subleadJet.mass() );
@@ -258,98 +246,51 @@ std::vector<double> computeDeepFlavourJetInfo(
 }
 
 
-//JetVariables computeJetInfo(
 std::vector<double> computeJetInfo(
     const std::vector<const reco::Candidate*>& jets,
     const std::string& sysTag) {
-  //JetVariables output;
   std::vector<double> output;
 
-  //for (auto var : output) {
-  //  var = -9999;
-  //}
   int numJets = jets.size();
   if (numJets == 0) {
-    for (int i = 0; i < 20; ++i) {
+    for (int i = 0; i < 6; ++i) {
       output.push_back( -9999 );
     }
   }
 
-if (numJets>1){
-  reco::Candidate::LorentzVector leadJet;
-  reco::Candidate::LorentzVector subleadJet;
-  const pat::Jet * firstJet = dynamic_cast<const pat::Jet*> (jets[0]);
-  const pat::Jet * secondJet = dynamic_cast<const pat::Jet*> (jets[1]);
-  if (sysTag.empty()){
-    leadJet = firstJet->p4();
-    subleadJet = secondJet->p4();
-  }
-  else{
-    leadJet = firstJet->userCand(sysTag)->p4();
-    subleadJet = secondJet->userCand(sysTag)->p4();
-  }
+  if (numJets>1){
+     reco::Candidate::LorentzVector leadJet;
+     reco::Candidate::LorentzVector subleadJet;
+     const pat::Jet * firstJet = dynamic_cast<const pat::Jet*> (jets[0]);
+     const pat::Jet * secondJet = dynamic_cast<const pat::Jet*> (jets[1]);
+     leadJet = firstJet->p4();
+     subleadJet = secondJet->p4();
 
-  output.push_back( leadJet.pt() );
-  output.push_back( leadJet.eta() );
-  output.push_back( leadJet.phi() );
-  output.push_back( firstJet->bDiscriminator("pfDeepCSVJetTags:probb") + firstJet->bDiscriminator("pfDeepCSVJetTags:probbb") );
-  output.push_back( firstJet->userFloat("pileupJetId:fullDiscriminant"));
-  output.push_back( firstJet->partonFlavour() );
-  output.push_back( firstJet->hadronFlavour() );
-  output.push_back( firstJet->jecFactor("Uncorrected") );
-  if (firstJet->hasUserCand("jes+")) {
-      output.push_back( firstJet->userCand("jes+")->pt() );}
-  else output.push_back( -9999 );
-  if (firstJet->hasUserCand("jes-")) {
-      output.push_back( firstJet->userCand("jes-")->pt() );}
-  else output.push_back( -9999 );
+     if (sysTag.empty()) output.push_back( leadJet.pt() );
+     else output.push_back( firstJet->userFloat(sysTag) );
+     output.push_back( leadJet.eta() );
+     output.push_back( leadJet.phi() );
 
-   output.push_back( subleadJet.pt() );
-   output.push_back( subleadJet.eta() );
-   output.push_back( subleadJet.phi() );
-   output.push_back( secondJet->bDiscriminator("pfDeepCSVJetTags:probb") + secondJet->bDiscriminator("pfDeepCSVJetTags:probbb"));
-   output.push_back( secondJet->userFloat("pileupJetId:fullDiscriminant"));
-   output.push_back( secondJet->partonFlavour() );
-   output.push_back( secondJet->hadronFlavour() );
-   output.push_back( secondJet->jecFactor("Uncorrected") );
-   if (secondJet->hasUserCand("jes+")) {
-       output.push_back( secondJet->userCand("jes+")->pt() );}
-   else output.push_back( -9999 );
-   if (secondJet->hasUserCand("jes-")) {
-       output.push_back( secondJet->userCand("jes-")->pt() );}
-   else output.push_back( -9999 );
-}
+     if (sysTag.empty()) output.push_back( subleadJet.pt() );
+     else output.push_back( secondJet->userFloat(sysTag) );
+     output.push_back( subleadJet.eta() );
+     output.push_back( subleadJet.phi() );
+   }
 
-if (numJets==1){
-  reco::Candidate::LorentzVector leadJet;
-  const pat::Jet * firstJet = dynamic_cast<const pat::Jet*> (jets[0]);
-  if (sysTag.empty()){
-    leadJet = firstJet->p4();
-  }
-  else{
-    leadJet = firstJet->userCand(sysTag)->p4();
-  }
+   if (numJets==1){
+     reco::Candidate::LorentzVector leadJet;
+     const pat::Jet * firstJet = dynamic_cast<const pat::Jet*> (jets[0]);
+     leadJet = firstJet->p4();
     
-  output.push_back( leadJet.pt() );
-  output.push_back( leadJet.eta() );
-  output.push_back( leadJet.phi() );
-  output.push_back( firstJet->bDiscriminator("pfDeepCSVJetTags:probb") + firstJet->bDiscriminator("pfDeepCSVJetTags:probbb") );
-  output.push_back( firstJet->userFloat("pileupJetId:fullDiscriminant"));
-  output.push_back( firstJet->partonFlavour() );
-  output.push_back( firstJet->hadronFlavour() );
-  output.push_back( firstJet->jecFactor("Uncorrected") );
-  if (firstJet->hasUserCand("jes+")) { 
-      output.push_back( firstJet->userCand("jes+")->pt() );}
-  else output.push_back( -9999 );
-  if (firstJet->hasUserCand("jes-")) { 
-      output.push_back( firstJet->userCand("jes-")->pt() );}
-  else output.push_back( -9999 );
+     if (sysTag.empty()) output.push_back( leadJet.pt() );
+     else output.push_back( firstJet->userFloat(sysTag));
+     output.push_back( leadJet.eta() );
+     output.push_back( leadJet.phi() );
 
-  for (int i = 0; i < 20; ++i) {
-    output.push_back( -9999 );
-  }
-}  
-  
+     for (int i = 0; i < 3; ++i) {
+       output.push_back( -9999 );
+     }
+   }
 
   return output;
 }

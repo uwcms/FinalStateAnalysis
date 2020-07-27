@@ -117,17 +117,17 @@ class MiniAODJetFullSystematicsEmbedder : public edm::EDProducer {
 // Get the transverse component of the vector
 reco::Candidate::LorentzVector
 transverseVector(const reco::Candidate::LorentzVector& input) {
-  math::PtEtaPhiMLorentzVector outputV(input.pt(), 0, input.phi(), 0);
-    reco::Candidate::LorentzVector outputT(outputV);
-      return outputT;
-      }
+	math::PtEtaPhiMLorentzVector outputV(input.pt(), 0, input.phi(), 0);
+	reco::Candidate::LorentzVector outputT(outputV);
+	return outputT;
+}
 
 
 
 MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::ParameterSet& pset) {
-  srcToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src"));
-  label_ = pset.getParameter<std::string>("corrLabel");
-  fName_ = pset.getParameter<std::string>("fName");
+	srcToken_ = consumes<edm::View<pat::Jet> >(pset.getParameter<edm::InputTag>("src"));
+	label_ = pset.getParameter<std::string>("corrLabel");
+        fName_ = pset.getParameter<std::string>("fName");
   std::cout << "Uncert File: " << fName_ << std::endl;
   produces<pat::JetCollection>();
 
@@ -146,9 +146,6 @@ MiniAODJetFullSystematicsEmbedder::MiniAODJetFullSystematicsEmbedder(const edm::
   // Create the uncertainty tool for each uncert
   k=0;
   for (auto const& name : uncertNames) {
-    produces<ShiftedCandCollection>("p4OutJESUpJetsUncor"+outputNames[k]);
-    produces<ShiftedCandCollection>("p4OutJESDownJetsUncor"+outputNames[k]);
-
     JetCorrectorParameters const * JetCorPar = new JetCorrectorParameters(fName_, name);
     JetCorParMap[name] = JetCorPar;
 
@@ -167,67 +164,28 @@ void MiniAODJetFullSystematicsEmbedder::produce(edm::Event& evt, const edm::Even
   evt.getByToken(srcToken_, jets);
   size_t nJets = jets->size();
 
-  // Make our own copy of the jets to fill
-  for (size_t i = 0; i < nJets; ++i) {
-    const pat::Jet& jet = jets->at(i);
-    output->push_back(jet);
-  }
+  output->reserve(jets->size());
+  for (size_t i = 0; i < jets->size(); ++i) {
+    pat::Jet jet = jets->at(i);
 
-  int k=-1;
-  for (auto const& name : uncertNames) {
-    k=k+1;
-    std::unique_ptr<ShiftedCandCollection> p4OutJESUpJets(new ShiftedCandCollection);
-    std::unique_ptr<ShiftedCandCollection> p4OutJESDownJets(new ShiftedCandCollection);
-
-    p4OutJESUpJets->reserve(nJets);
-    p4OutJESDownJets->reserve(nJets);
-
-
-    for (size_t i = 0; i < nJets; ++i) {
-      const pat::Jet& jet = jets->at(i);
-  
+    int k=-1;
+    for (auto const& name : uncertNames) {
+      k=k+1;
       double unc = 0;
-      // Only shift jets within absEta < 5.2 and with pT > 9
-      // Unc = zero for all others
       if (std::abs(jet.eta()) < 5.2 && jet.pt() > 9) {
-        // Get unc for normal 28 and Total
-        if ( !(name == "Closure")) {
           JetUncMap[name]->setJetEta(jet.eta());
           JetUncMap[name]->setJetPt(jet.pt());
           unc = JetUncMap[name]->getUncertainty(true);
-        }
       } // Shifted jets within absEta and pT
-
-  
-      // Get uncorrected pt
-      assert(jet.jecSetsAvailable());
-
-      LorentzVector uncDown = (1-unc)*jet.p4();
-      LorentzVector uncUp = (1+unc)*jet.p4();
-  
-      ShiftedCand candUncDown = jet;
-      candUncDown.setP4(uncDown);
-      ShiftedCand candUncUp = jet;
-      candUncUp.setP4(uncUp);
-  
-      p4OutJESUpJets->push_back(candUncUp);
-      p4OutJESDownJets->push_back(candUncDown);
-    }
- 
-    PutHandle p4OutJESUpJetsH = evt.put(std::move(p4OutJESUpJets), std::string("p4OutJESUpJetsUncor"+outputNames[k]));
-    PutHandle p4OutJESDownJetsH = evt.put(std::move(p4OutJESDownJets), std::string("p4OutJESDownJetsUncor"+outputNames[k]));
-  
-    // Now embed the shifted collections into our output pat jets
-    for (size_t i = 0; i < output->size(); ++i) {
-      pat::Jet& jet = output->at(i);
-      jet.addUserCand("jes"+outputNames[k]+"+", CandidatePtr(p4OutJESUpJetsH, i));
-      jet.addUserCand("jes"+outputNames[k]+"-", CandidatePtr(p4OutJESDownJetsH, i));
-    } // end jets
-
-  } // end cycle over all uncertainties
+      float ptplus=(1+unc)*jet.pt();
+      float ptminus=(1-unc)*jet.pt();
+      jet.addUserFloat("jes"+outputNames[k]+"+", ptplus);
+      jet.addUserFloat("jes"+outputNames[k]+"-", ptminus);
+    } // end loop over uncertainties
+    output->push_back(jet);
+  } // end loop over jets
 
   evt.put(std::move(output));
-
 }
 
 #include "FWCore/Framework/interface/MakerMacros.h"

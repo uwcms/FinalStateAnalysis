@@ -22,14 +22,7 @@ def preJets(process, jSrc, jupSrc, jdownSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
     setattr(process,pathName,cms.Path(getattr(process,modName)))
     process.schedule.append(getattr(process,pathName))
 
-    # doFullJESUnc 
     if doFullJESUnc :
-        # Provide proper path name for Jet Uncertainty file
-        # V10 is most recent version for JES Uncertainties
-        # https://hypernews.cern.ch/HyperNews/CMS/get/jes/642/1/1.html
-        # recommended by HTT Twiki for 2017 data (6 Nov. 2018):
-        # - https://twiki.cern.ch/twiki/bin/viewauth/CMS/HiggsToTauTauWorking2017#Jet/MET_uncertainty_treatment
-        # - linked to: https://github.com/cms-jet/JECDatabase/blob/master/textFiles/Fall17_17Nov2017F_V32_DATA/Fall17_17Nov2017F_V32_DATA_UncertaintySources_AK4PFchs.txt
         if runningLocal : fName = "../../NtupleTools/data/Regrouped_Autumn18_V19_MC_UncertaintySources_AK4PFchs.txt" 
         else :
             cmsswversion=os.environ['CMSSW_VERSION']

@@ -5,7 +5,7 @@ Functions to build the PATFinalStateEvents and friends on top of the PAT tuple
 Arguments:
     process : the CMS process
     collections : a dictionary matching
-        'electrons', 'muons', 'taus', 'jets', 'photons', and 'met'
+        'electrons', 'muons', 'taus', 'jets', and 'met'
         to the appropriate collections (like cleanPatElectrons)
     output_commands : will be modified in place with new products
     sequence : analysis sequence to add to
@@ -63,7 +63,6 @@ def produce_final_states(process, daughter_collections, output_commands,
         eventProducer.muonSrc = cms.InputTag(src['muons'])
         eventProducer.tauSrc = cms.InputTag(src['taus'])
         eventProducer.jetSrc = cms.InputTag(src['jets'])
-        #eventProducer.phoSrc = cms.InputTag(src['photons'])
         eventProducer.metSrc = cms.InputTag(src['pfmet'])
         eventProducer.puTag = cms.string(puTag)
         if 'extraWeights' in src:
@@ -206,7 +205,6 @@ def produce_final_states(process, daughter_collections, output_commands,
         'm' : cms.InputTag(src["muons"]),
         't' : cms.InputTag(src["taus"]),
         'j' : cms.InputTag(src["jets"]),
-        #'g' : cms.InputTag(src["photons"]),
         }
 
     # keep the collections we used to build the final states 

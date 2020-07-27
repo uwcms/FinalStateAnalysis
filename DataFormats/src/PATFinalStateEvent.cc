@@ -672,13 +672,6 @@ const pat::JetCollection& PATFinalStateEvent::jets() const {
   return *jetRefProd_;
 }
 
-/*const pat::PhotonCollection& PATFinalStateEvent::photons() const {
-  if (!phoRefProd_)
-    throw cms::Exception("PATFSAEventNullRefs")
-      << "The photon RefProd is null!" << std::endl;
-  return *phoRefProd_;
-}*/
-
 const reco::PFCandidateCollection& PATFinalStateEvent::pflow() const {
   if (!pfRefProd_)
     throw cms::Exception("PATFSAEventNullRefs")

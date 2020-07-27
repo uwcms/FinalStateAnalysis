@@ -1368,59 +1368,59 @@ VBFVariables PATFinalState::vbfVariables(const std::string& jetCuts, double dr )
       jetSysTag = "jres-";
       metp4 = met()->shiftedP4(pat::MET::JetResDown);
    }
-   else if (jetCuts.find("jesJetHFyear-") != std::string::npos) {
-      jetSysTag = "jesJetHFyear-";
+   else if (jetCuts.find("jesHFyear-") != std::string::npos) {
+      jetSysTag = "jesHFyear-";
    }
-   else if (jetCuts.find("jesJetHFyear+") != std::string::npos) {
-      jetSysTag = "jesJetHFyear+";
+   else if (jetCuts.find("jesHFyear+") != std::string::npos) {
+      jetSysTag = "jesHFyear+";
    }
-   else if (jetCuts.find("jesJetHF-") != std::string::npos) {
-      jetSysTag = "jesJetHF-";
+   else if (jetCuts.find("jesHF-") != std::string::npos) {
+      jetSysTag = "jesHF-";
    }
-   else if (jetCuts.find("jesJetHF+") != std::string::npos) {
-      jetSysTag = "jesJetHF+";
+   else if (jetCuts.find("jesHF+") != std::string::npos) {
+      jetSysTag = "jesHF+";
    }
-   else if (jetCuts.find("jesJetEC2year-") != std::string::npos) {
-      jetSysTag = "jesJetEC2year-";
+   else if (jetCuts.find("jesEC2year-") != std::string::npos) {
+      jetSysTag = "jesEC2year-";
    }
-   else if (jetCuts.find("jesJetEC2year+") != std::string::npos) {
-      jetSysTag = "jesJetEC2year+";
+   else if (jetCuts.find("jesEC2year+") != std::string::npos) {
+      jetSysTag = "jesEC2year+";
    }
-   else if (jetCuts.find("jesJetBBEC1year-") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1year-";
+   else if (jetCuts.find("jesBBEC1year-") != std::string::npos) {
+      jetSysTag = "jesBBEC1year-";
    }
-   else if (jetCuts.find("jesJetBBEC1year+") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1year+";
+   else if (jetCuts.find("jesBBEC1year+") != std::string::npos) {
+      jetSysTag = "jesBBEC1year+";
    }
-   else if (jetCuts.find("jesJetBBEC1-") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1-";
+   else if (jetCuts.find("jesBBEC1-") != std::string::npos) {
+      jetSysTag = "jesBBEC1-";
    }
-   else if (jetCuts.find("jesJetBBEC1+") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1+";
+   else if (jetCuts.find("jesBBEC1+") != std::string::npos) {
+      jetSysTag = "jesBBEC1+";
    }
-   else if (jetCuts.find("jesJetFlavorQCD-") != std::string::npos) {
-      jetSysTag = "jesJetFlavorQCD-";
+   else if (jetCuts.find("jesFlavorQCD-") != std::string::npos) {
+      jetSysTag = "jesFlavorQCD-";
    }
-   else if (jetCuts.find("jesJetFlavorQCD+") != std::string::npos) {
-      jetSysTag = "jesJetFlavorQCD+";
+   else if (jetCuts.find("jesFlavorQCD+") != std::string::npos) {
+      jetSysTag = "jesFlavorQCD+";
    }
-   else if (jetCuts.find("jesJetAbsoluteyear-") != std::string::npos) {
-      jetSysTag = "jesJetAbsoluteyear-";
+   else if (jetCuts.find("jesAbsoluteyear-") != std::string::npos) {
+      jetSysTag = "jesAbsoluteyear-";
    }
-   else if (jetCuts.find("jesJetAbsoluteyear+") != std::string::npos) {
-      jetSysTag = "jesJetAbsoluteyear+";
+   else if (jetCuts.find("jesAbsoluteyear+") != std::string::npos) {
+      jetSysTag = "jesAbsoluteyear+";
    }
-   else if (jetCuts.find("jesJetAbsolute-") != std::string::npos) {
-      jetSysTag = "jesJetAbsolute-";
+   else if (jetCuts.find("jesAbsolute-") != std::string::npos) {
+      jetSysTag = "jesAbsolute-";
    }
-   else if (jetCuts.find("jesJetAbsolute+") != std::string::npos) {
-      jetSysTag = "jesJetAbsolute+";
+   else if (jetCuts.find("jesAbsolute+") != std::string::npos) {
+      jetSysTag = "jesAbsolute+";
    }
-   else if (jetCuts.find("jesJetEC2-") != std::string::npos) {
-      jetSysTag = "jesJetEC2-";
+   else if (jetCuts.find("jesEC2-") != std::string::npos) {
+      jetSysTag = "jesEC2-";
    }
-   else if (jetCuts.find("jesJetEC2+") != std::string::npos) {
-      jetSysTag = "jesJetEC2+";
+   else if (jetCuts.find("jesEC2+") != std::string::npos) {
+      jetSysTag = "jesEC2+";
    }
    else if (jetCuts.find("jesRelativeBal-") != std::string::npos) {
       jetSysTag = "jesRelativeBal-";
@@ -1470,59 +1470,59 @@ std::vector<double> PATFinalState::jetVariables(const std::string& jetCuts, doub
    else if (jetCuts.find("jres-") != std::string::npos) {
       jetSysTag = "jres-";
    }
-   else if (jetCuts.find("jesJetHFyear-") != std::string::npos) {
-      jetSysTag = "jesJetHFyear-";
+   else if (jetCuts.find("jesHFyear-") != std::string::npos) {
+      jetSysTag = "jesHFyear-";
    }
-   else if (jetCuts.find("jesJetHFyear+") != std::string::npos) {
-      jetSysTag = "jesJetHFyear+";
+   else if (jetCuts.find("jesHFyear+") != std::string::npos) {
+      jetSysTag = "jesHFyear+";
    }
-   else if (jetCuts.find("jesJetHF-") != std::string::npos) {
-      jetSysTag = "jesJetHF-";
+   else if (jetCuts.find("jesHF-") != std::string::npos) {
+      jetSysTag = "jesHF-";
    }
-   else if (jetCuts.find("jesJetHF+") != std::string::npos) {
-      jetSysTag = "jesJetHF+";
+   else if (jetCuts.find("jesHF+") != std::string::npos) {
+      jetSysTag = "jesHF+";
    }
-   else if (jetCuts.find("jesJetEC2year-") != std::string::npos) {
-      jetSysTag = "jesJetEC2year-";
+   else if (jetCuts.find("jesEC2year-") != std::string::npos) {
+      jetSysTag = "jesEC2year-";
    }
-   else if (jetCuts.find("jesJetEC2year+") != std::string::npos) {
-      jetSysTag = "jesJetEC2year+";
+   else if (jetCuts.find("jesEC2year+") != std::string::npos) {
+      jetSysTag = "jesEC2year+";
    }
-   else if (jetCuts.find("jesJetBBEC1year-") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1year-";
+   else if (jetCuts.find("jesBBEC1year-") != std::string::npos) {
+      jetSysTag = "jesBBEC1year-";
    }
-   else if (jetCuts.find("jesJetBBEC1year+") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1year+";
+   else if (jetCuts.find("jesBBEC1year+") != std::string::npos) {
+      jetSysTag = "jesBBEC1year+";
    }
-   else if (jetCuts.find("jesJetBBEC1-") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1-";
+   else if (jetCuts.find("jesBBEC1-") != std::string::npos) {
+      jetSysTag = "jesBBEC1-";
    }
-   else if (jetCuts.find("jesJetBBEC1+") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1+";
+   else if (jetCuts.find("jesBBEC1+") != std::string::npos) {
+      jetSysTag = "jesBBEC1+";
    }
-   else if (jetCuts.find("jesJetFlavorQCD-") != std::string::npos) {
-      jetSysTag = "jesJetFlavorQCD-";
+   else if (jetCuts.find("jesFlavorQCD-") != std::string::npos) {
+      jetSysTag = "jesFlavorQCD-";
    }
-   else if (jetCuts.find("jesJetFlavorQCD+") != std::string::npos) {
-      jetSysTag = "jesJetFlavorQCD+";
+   else if (jetCuts.find("jesFlavorQCD+") != std::string::npos) {
+      jetSysTag = "jesFlavorQCD+";
    }
-   else if (jetCuts.find("jesJetAbsoluteyear-") != std::string::npos) {
-      jetSysTag = "jesJetAbsoluteyear-";
+   else if (jetCuts.find("jesAbsoluteyear-") != std::string::npos) {
+      jetSysTag = "jesAbsoluteyear-";
    }
-   else if (jetCuts.find("jesJetAbsoluteyear+") != std::string::npos) {
-      jetSysTag = "jesJetAbsoluteyear+";
+   else if (jetCuts.find("jesAbsoluteyear+") != std::string::npos) {
+      jetSysTag = "jesAbsoluteyear+";
    }
-   else if (jetCuts.find("jesJetAbsolute-") != std::string::npos) {
-      jetSysTag = "jesJetAbsolute-";
+   else if (jetCuts.find("jesAbsolute-") != std::string::npos) {
+      jetSysTag = "jesAbsolute-";
    }
-   else if (jetCuts.find("jesJetAbsolute+") != std::string::npos) {
-      jetSysTag = "jesJetAbsolute+";
+   else if (jetCuts.find("jesAbsolute+") != std::string::npos) {
+      jetSysTag = "jesAbsolute+";
    }
-   else if (jetCuts.find("jesJetEC2-") != std::string::npos) {
-      jetSysTag = "jesJetEC2-";
+   else if (jetCuts.find("jesEC2-") != std::string::npos) {
+      jetSysTag = "jesEC2-";
    }
-   else if (jetCuts.find("jesJetEC2+") != std::string::npos) {
-      jetSysTag = "jesJetEC2+";
+   else if (jetCuts.find("jesEC2+") != std::string::npos) {
+      jetSysTag = "jesEC2+";
    }
    else if (jetCuts.find("jesRelativeBal-") != std::string::npos) {
       jetSysTag = "jesRelativeBal-";
@@ -1569,59 +1569,59 @@ std::vector<double> PATFinalState::deepFlavourJetVariables(const std::string& je
    else if (jetCuts.find("jres-") != std::string::npos) {
       jetSysTag = "jres-";
    }
-   else if (jetCuts.find("jesJetHFyear-") != std::string::npos) {
-      jetSysTag = "jesJetHFyear-";
+   else if (jetCuts.find("jesHFyear-") != std::string::npos) {
+      jetSysTag = "jesHFyear-";
    }
-   else if (jetCuts.find("jesJetHFyear+") != std::string::npos) {
-      jetSysTag = "jesJetHFyear+";
+   else if (jetCuts.find("jesHFyear+") != std::string::npos) {
+      jetSysTag = "jesHFyear+";
    }
-   else if (jetCuts.find("jesJetHF-") != std::string::npos) {
-      jetSysTag = "jesJetHF-";
+   else if (jetCuts.find("jesHF-") != std::string::npos) {
+      jetSysTag = "jesHF-";
    }
-   else if (jetCuts.find("jesJetHF+") != std::string::npos) {
-      jetSysTag = "jesJetHF+";
+   else if (jetCuts.find("jesHF+") != std::string::npos) {
+      jetSysTag = "jesHF+";
    }
-   else if (jetCuts.find("jesJetEC2year-") != std::string::npos) {
-      jetSysTag = "jesJetEC2year-";
+   else if (jetCuts.find("jesEC2year-") != std::string::npos) {
+      jetSysTag = "jesEC2year-";
    }
-   else if (jetCuts.find("jesJetEC2year+") != std::string::npos) {
-      jetSysTag = "jesJetEC2year+";
+   else if (jetCuts.find("jesEC2year+") != std::string::npos) {
+      jetSysTag = "jesEC2year+";
    }
-   else if (jetCuts.find("jesJetBBEC1year-") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1year-";
+   else if (jetCuts.find("jesBBEC1year-") != std::string::npos) {
+      jetSysTag = "jesBBEC1year-";
    }
-   else if (jetCuts.find("jesJetBBEC1year+") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1year+";
+   else if (jetCuts.find("jesBBEC1year+") != std::string::npos) {
+      jetSysTag = "jesBBEC1year+";
    }
-   else if (jetCuts.find("jesJetBBEC1-") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1-";
+   else if (jetCuts.find("jesBBEC1-") != std::string::npos) {
+      jetSysTag = "jesBBEC1-";
    }
-   else if (jetCuts.find("jesJetBBEC1+") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1+";
+   else if (jetCuts.find("jesBBEC1+") != std::string::npos) {
+      jetSysTag = "jesBBEC1+";
    }
-   else if (jetCuts.find("jesJetFlavorQCD-") != std::string::npos) {
-      jetSysTag = "jesJetFlavorQCD-";
+   else if (jetCuts.find("jesFlavorQCD-") != std::string::npos) {
+      jetSysTag = "jesFlavorQCD-";
    }
-   else if (jetCuts.find("jesJetFlavorQCD+") != std::string::npos) {
-      jetSysTag = "jesJetFlavorQCD+";
+   else if (jetCuts.find("jesFlavorQCD+") != std::string::npos) {
+      jetSysTag = "jesFlavorQCD+";
    }
-   else if (jetCuts.find("jesJetAbsoluteyear-") != std::string::npos) {
-      jetSysTag = "jesJetAbsoluteyear-";
+   else if (jetCuts.find("jesAbsoluteyear-") != std::string::npos) {
+      jetSysTag = "jesAbsoluteyear-";
    }
-   else if (jetCuts.find("jesJetAbsoluteyear+") != std::string::npos) {
-      jetSysTag = "jesJetAbsoluteyear+";
+   else if (jetCuts.find("jesAbsoluteyear+") != std::string::npos) {
+      jetSysTag = "jesAbsoluteyear+";
    }
-   else if (jetCuts.find("jesJetAbsolute-") != std::string::npos) {
-      jetSysTag = "jesJetAbsolute-";
+   else if (jetCuts.find("jesAbsolute-") != std::string::npos) {
+      jetSysTag = "jesAbsolute-";
    }
-   else if (jetCuts.find("jesJetAbsolute+") != std::string::npos) {
-      jetSysTag = "jesJetAbsolute+";
+   else if (jetCuts.find("jesAbsolute+") != std::string::npos) {
+      jetSysTag = "jesAbsolute+";
    }
-   else if (jetCuts.find("jesJetEC2-") != std::string::npos) {
-      jetSysTag = "jesJetEC2-";
+   else if (jetCuts.find("jesEC2-") != std::string::npos) {
+      jetSysTag = "jesEC2-";
    }
-   else if (jetCuts.find("jesJetEC2+") != std::string::npos) {
-      jetSysTag = "jesJetEC2+";
+   else if (jetCuts.find("jesEC2+") != std::string::npos) {
+      jetSysTag = "jesEC2+";
    }
    else if (jetCuts.find("jesRelativeBal-") != std::string::npos) {
       jetSysTag = "jesRelativeBal-";
@@ -1668,59 +1668,59 @@ std::vector<double> PATFinalState::deepCSVJetVariables(const std::string& jetCut
    else if (jetCuts.find("jres-") != std::string::npos) {
       jetSysTag = "jres-";
    }
-   else if (jetCuts.find("jesJetHFyear-") != std::string::npos) {
-      jetSysTag = "jesJetHFyear-";
+   else if (jetCuts.find("jesHFyear-") != std::string::npos) {
+      jetSysTag = "jesHFyear-";
    }
-   else if (jetCuts.find("jesJetHFyear+") != std::string::npos) {
-      jetSysTag = "jesJetHFyear+";
+   else if (jetCuts.find("jesHFyear+") != std::string::npos) {
+      jetSysTag = "jesHFyear+";
    }
-   else if (jetCuts.find("jesJetHF-") != std::string::npos) {
-      jetSysTag = "jesJetHF-";
+   else if (jetCuts.find("jesHF-") != std::string::npos) {
+      jetSysTag = "jesHF-";
    }
-   else if (jetCuts.find("jesJetHF+") != std::string::npos) {
-      jetSysTag = "jesJetHF+";
+   else if (jetCuts.find("jesHF+") != std::string::npos) {
+      jetSysTag = "jesHF+";
    }
-   else if (jetCuts.find("jesJetEC2year-") != std::string::npos) {
-      jetSysTag = "jesJetEC2year-";
+   else if (jetCuts.find("jesEC2year-") != std::string::npos) {
+      jetSysTag = "jesEC2year-";
    }
-   else if (jetCuts.find("jesJetEC2year+") != std::string::npos) {
-      jetSysTag = "jesJetEC2year+";
+   else if (jetCuts.find("jesEC2year+") != std::string::npos) {
+      jetSysTag = "jesEC2year+";
    }
-   else if (jetCuts.find("jesJetBBEC1year-") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1year-";
+   else if (jetCuts.find("jesBBEC1year-") != std::string::npos) {
+      jetSysTag = "jesBBEC1year-";
    }
-   else if (jetCuts.find("jesJetBBEC1year+") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1year+";
+   else if (jetCuts.find("jesBBEC1year+") != std::string::npos) {
+      jetSysTag = "jesBBEC1year+";
    }
-   else if (jetCuts.find("jesJetBBEC1-") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1-";
+   else if (jetCuts.find("jesBBEC1-") != std::string::npos) {
+      jetSysTag = "jesBBEC1-";
    }
-   else if (jetCuts.find("jesJetBBEC1+") != std::string::npos) {
-      jetSysTag = "jesJetBBEC1+";
+   else if (jetCuts.find("jesBBEC1+") != std::string::npos) {
+      jetSysTag = "jesBBEC1+";
    }
-   else if (jetCuts.find("jesJetFlavorQCD-") != std::string::npos) {
-      jetSysTag = "jesJetFlavorQCD-";
+   else if (jetCuts.find("jesFlavorQCD-") != std::string::npos) {
+      jetSysTag = "jesFlavorQCD-";
    }
-   else if (jetCuts.find("jesJetFlavorQCD+") != std::string::npos) {
-      jetSysTag = "jesJetFlavorQCD+";
+   else if (jetCuts.find("jesFlavorQCD+") != std::string::npos) {
+      jetSysTag = "jesFlavorQCD+";
    }
-   else if (jetCuts.find("jesJetAbsoluteyear-") != std::string::npos) {
-      jetSysTag = "jesJetAbsoluteyear-";
+   else if (jetCuts.find("jesAbsoluteyear-") != std::string::npos) {
+      jetSysTag = "jesAbsoluteyear-";
    }
-   else if (jetCuts.find("jesJetAbsoluteyear+") != std::string::npos) {
-      jetSysTag = "jesJetAbsoluteyear+";
+   else if (jetCuts.find("jesAbsoluteyear+") != std::string::npos) {
+      jetSysTag = "jesAbsoluteyear+";
    }
-   else if (jetCuts.find("jesJetAbsolute-") != std::string::npos) {
-      jetSysTag = "jesJetAbsolute-";
+   else if (jetCuts.find("jesAbsolute-") != std::string::npos) {
+      jetSysTag = "jesAbsolute-";
    }
-   else if (jetCuts.find("jesJetAbsolute+") != std::string::npos) {
-      jetSysTag = "jesJetAbsolute+";
+   else if (jetCuts.find("jesAbsolute+") != std::string::npos) {
+      jetSysTag = "jesAbsolute+";
    }
-   else if (jetCuts.find("jesJetEC2-") != std::string::npos) {
-      jetSysTag = "jesJetEC2-";
+   else if (jetCuts.find("jesEC2-") != std::string::npos) {
+      jetSysTag = "jesEC2-";
    }
-   else if (jetCuts.find("jesJetEC2+") != std::string::npos) {
-      jetSysTag = "jesJetEC2+";
+   else if (jetCuts.find("jesEC2+") != std::string::npos) {
+      jetSysTag = "jesEC2+";
    }
    else if (jetCuts.find("jesRelativeBal-") != std::string::npos) {
       jetSysTag = "jesRelativeBal-";
