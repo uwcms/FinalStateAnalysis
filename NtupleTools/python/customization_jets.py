@@ -23,10 +23,10 @@ def preJets(process, jSrc, jupSrc, jdownSrc, vSrc, metSrc,mSrc, eSrc, **kwargs):
     process.schedule.append(getattr(process,pathName))
 
     if doFullJESUnc :
-        if runningLocal : fName = "../../NtupleTools/data/Regrouped_Autumn18_V19_MC_UncertaintySources_AK4PFchs.txt" 
+        if runningLocal : fName = "../../NtupleTools/data/RegroupedV2_Autumn18_V19_MC_UncertaintySources_AK4PFchs.txt" 
         else :
             cmsswversion=os.environ['CMSSW_VERSION']
-            fName = "{0}/src/FinalStateAnalysis/NtupleTools/data/Regrouped_Autumn18_V19_MC_UncertaintySources_AK4PFchs.txt".format(cmsswversion)
+            fName = "{0}/src/FinalStateAnalysis/NtupleTools/data/RegroupedV2_Autumn18_V19_MC_UncertaintySources_AK4PFchs.txt".format(cmsswversion)
 
         modName = 'miniAODJetFullSystematicsEmbedding{0}'.format(postfix)
         mod = cms.EDProducer(
