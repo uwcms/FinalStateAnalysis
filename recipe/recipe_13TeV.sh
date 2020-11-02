@@ -45,6 +45,8 @@ cp PUJetIDweights/weights/pileupJetId_{94,102}X_Eta* $CMSSW_BASE/src/RecoJets/Je
 rm -rf PUJetIDweights/  ### If needed
 git cms-merge-topic -u alefisico:PUID_102X
 
+git cms-addpkg  PhysicsTools/PatAlgos
+git cms-addpkg  PhysicsTools/NanoAOD
 
 popd
 

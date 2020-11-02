@@ -740,6 +740,7 @@ fs_daughter_inputs['electrons'] = preElectrons(process,
                                                isMC=bool(options.isMC),
                                                isSync=bool(options.isSync),
                                                isLFV=bool(options.isLFV),
+                                               runningLocal=options.runningLocal
                                                )
 
 for fs in additional_fs:
@@ -752,6 +753,7 @@ for fs in additional_fs:
                                                   applyEnergyCorrections=bool(options.eCalib),
                                                   isMC=bool(options.isMC),
                                                   isSync=bool(options.isSync),
+                                                  runningLocal=options.runningLocal,
                                                   postfix=fs,
                                                   )
 
@@ -765,13 +767,15 @@ fs_daughter_inputs['muons'] = preMuons(process,
                                        options.era,
                                        bool(options.isEmbedded),
                                        fs_daughter_inputs['muons'],
-                                       fs_daughter_inputs['vertices'])
+                                       fs_daughter_inputs['vertices'],
+                                       runningLocal=options.runningLocal)
 for fs in additional_fs:
     additional_fs[fs]['muons'] = preMuons(process,
                                           options.era,
 					  bool(options.isEmbedded),
                                           additional_fs[fs]['muons'],
                                           additional_fs[fs]['vertices'],
+                                          runningLocal=options.runningLocal,
                                           postfix=fs)
 
 #####################

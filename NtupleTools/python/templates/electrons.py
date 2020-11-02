@@ -69,6 +69,7 @@ id = PSet(
     #objectEffectiveArea2012Data = cms.string('{object}.userFloat("ea_comb_Data2012_iso04_kt6PFJ")'),
     #objectEffectiveAreaSpring15 = cms.string('{object}.userFloat("EffectiveArea")'),
 
+    objectMvaTopId = cms.string('{object}.userFloat("electronMVATopID")'),
     objectRho = cms.string('{object}.userFloat("rho_fastjet")'),
     objectRelIso = cms.string("({object}.dr03TkSumPt()"
                "+max({object}.dr03EcalRecHitSumEt()-1.0,0.0)"

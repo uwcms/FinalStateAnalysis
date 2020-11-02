@@ -44,6 +44,7 @@ id = PSet(
     #objectMultiIsoLoose = '{object}.userInt("MultiIsoLoose")', # for CMSSW_10_1_X
     #objectMultiIsoMedium = '{object}.userInt("MultiIsoMedium")', # for CMSSW_10_1_X
 
+    objectMvaTopId = cms.string('{object}.userFloat("muonMVATopID")'),
     objectPFIDTight = 'isTightMuon({object_idx})',
     objectPFIDMedium = '{object}.isMediumMuon()',
     objectPFIDLoose = '{object}.isLooseMuon()',
