@@ -142,7 +142,8 @@ def preElectrons(process, eSrc, vSrc, year, isEmbedded, **kwargs):
     mod = cms.EDProducer(
         "MiniAODElectronTopIdEmbedder",
         src=cms.InputTag(eSrc),
-        jetSrc=cms.InputTag("slimmedJets"),
+        #jetSrc=cms.InputTag("updatedPatJetsUpdatedJEC"),
+        jetSrc=cms.InputTag("updatedPatJetsTransientCorrectedUpdatedJJEC"),
         vtxSrc = cms.InputTag(vSrc),
         srcRho = cms.InputTag("fixedGridRhoFastjetAll"),
         is2016 = cms.bool(False),

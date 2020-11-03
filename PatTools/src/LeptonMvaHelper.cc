@@ -53,6 +53,7 @@ void LeptonMvaHelper::bookCommonVars(double pt, double eta, double selectedTrack
     LepGood_dxy = log(fabs(dxy));
     LepGood_dz = log(fabs(dz));
     LepGood_relIso0p3 = relIso0p3;
+
 }
 
 double LeptonMvaHelper::leptonMvaMuon(double pt, double eta, double selectedTrackMult, double miniIsoCharged, double miniIsoNeutral, double ptRel, double ptRatio, 
@@ -61,6 +62,7 @@ double LeptonMvaHelper::leptonMvaMuon(double pt, double eta, double selectedTrac
     bookCommonVars(pt, eta, selectedTrackMult, miniIsoCharged, miniIsoNeutral, ptRel, ptRatio, closestJetDeepCsv, closestJetDeepFlavor, sip3d, dxy, dz, relIso0p3);
     LepGood_relIso0p3 = relIso0p3DB;
     LepGood_segmentCompatibility = segComp;  
+//std::cout<<"LeptonMvaHelper2 "<<LepGood_pt<<" "<<LepGood_eta<<" "<<LepGood_jetNDauChargedMVASel<<" "<<LepGood_miniRelIsoCharged<<" "<<LepGood_miniRelIsoNeutral<<" "<<LepGood_jetPtRelv2<<" "<<LepGood_jetPtRatio<<" "<<LepGood_relIso0p3<<" "<<LepGood_jetBTag<<" "<<LepGood_sip3d<<" "<<LepGood_dxy<<" "<<LepGood_dz<<" "<<LepGood_segmentCompatibility<<std::endl;
     return reader[0]->EvaluateMVA("BDTG method");
 }
 
@@ -71,5 +73,8 @@ double LeptonMvaHelper::leptonMvaElectron(double pt, double eta, double selected
     LepGood_mvaIdSummer16GP = eleMvaSummer16;
     LepGood_mvaIdFall17v1noIso = eleMvaFall17v1;
     LepGood_mvaIdFall17v2noIso = eleMvaFall17v2;
+
+//std::cout<<"ElectronMvaHelper "<<LepGood_pt<<" "<<LepGood_eta<<" "<<LepGood_jetNDauChargedMVASel<<" "<<LepGood_miniRelIsoCharged<<" "<<LepGood_miniRelIsoNeutral<<" "<<LepGood_jetPtRelv2<<" "<<LepGood_jetPtRatio<<" "<<LepGood_relIso0p3<<" "<<LepGood_jetBTag<<" "<<LepGood_sip3d<<" "<<LepGood_dxy<<" "<<LepGood_dz<<" "<<LepGood_mvaIdFall17v2noIso<<std::endl;
+
     return reader[1]->EvaluateMVA("BDTG method");
 }

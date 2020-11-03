@@ -108,7 +108,8 @@ def preMuons(process, year, isEmbedded, mSrc, vSrc, **kwargs):
     mod = cms.EDProducer(
         "MiniAODMuonTopIdEmbedder",
         src=cms.InputTag(mSrc),
-        jetSrc=cms.InputTag("slimmedJets"),
+        #jetSrc=cms.InputTag("updatedPatJetsUpdatedJEC"),
+        jetSrc= cms.InputTag("updatedPatJetsTransientCorrectedUpdatedJJEC"),
         vtxSrc = cms.InputTag(vSrc),
         srcRho = cms.InputTag("fixedGridRhoFastjetAll"),
         is2016 = cms.bool(False),

@@ -429,19 +429,63 @@ process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 ####### https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
 from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
 
+#updateJetCollection(
+#   process,
+#   jetSource = cms.InputTag('slimmedJets'),
+#   labelName = 'UpdatedJEC',
+#   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
+#)
+#
+#process.jecSequence=cms.Path()
+#process.jecSequence += process.pileupJetIdUpdated
+#process.jecSequence += process.patJetCorrFactorsUpdatedJEC
+#process.jecSequence += process.updatedPatJetsUpdatedJEC
+#process.schedule.append(process.jecSequence)
+#fs_daughter_inputs['jets'] = 'updatedPatJetsUpdatedJEC'
+
 updateJetCollection(
    process,
    jetSource = cms.InputTag('slimmedJets'),
-   labelName = 'UpdatedJEC',
-   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
+   pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
+   svSource = cms.InputTag('slimmedSecondaryVertices'),
+   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None'),
+   btagDiscriminators = [
+      'pfDeepFlavourJetTags:probb',
+      'pfDeepFlavourJetTags:probbb',
+      'pfDeepFlavourJetTags:problepb',
+      'pfDeepFlavourJetTags:probc',
+      'pfDeepFlavourJetTags:probuds',
+      'pfDeepFlavourJetTags:probg'
+      ],
+   postfix='NewDFTraining'
+)
+
+process.jbtagSequence=cms.Path()
+process.jbtagSequence.associate(process.patAlgosToolsTask)
+process.schedule.append(process.jbtagSequence)
+
+updateJetCollection(
+   process,
+   jetSource = cms.InputTag('updatedPatJetsNewDFTraining'),
+   labelName = 'UpdatedJJEC',
+   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
+   btagDiscriminators = [
+      'pfDeepFlavourJetTags:probb',
+      'pfDeepFlavourJetTags:probbb',
+      'pfDeepFlavourJetTags:problepb',
+      'pfDeepFlavourJetTags:probc',
+      'pfDeepFlavourJetTags:probuds',
+      'pfDeepFlavourJetTags:probg'
+      ]
 )
 
 process.jecSequence=cms.Path()
 process.jecSequence += process.pileupJetIdUpdated
-process.jecSequence += process.patJetCorrFactorsUpdatedJEC
-process.jecSequence += process.updatedPatJetsUpdatedJEC
+process.jecSequence += process.patJetCorrFactorsUpdatedJJEC
+process.jecSequence += process.updatedPatJetsUpdatedJJEC
 process.schedule.append(process.jecSequence)
-fs_daughter_inputs['jets'] = 'updatedPatJetsUpdatedJEC'
+fs_daughter_inputs['jets'] = 'updatedPatJetsTransientCorrectedUpdatedJJEC'
+
 
 # Prefiring weights
 prefiring_year='2016BtoH'

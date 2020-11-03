@@ -49,6 +49,9 @@ class MiniAODElectronTopIdEmbedder : public edm::EDProducer {
 
     template< typename T1, typename T2 > bool isSourceCandidatePtrMatch( const T1& lhs, const T2& rhs );
     const pat::Jet* findMatchedJet( const pat::Electron& lepton, const edm::Handle< std::vector< pat::Jet > >& jets, const bool oldMatching );
+    double getRelIso03(const pat::Electron& ele, const double rho, const EffectiveAreas& effectiveAreas) const;
+    double getRelIso04(const pat::Electron& ele, const double rho, const EffectiveAreas& effectiveAreas) const;
+    template< typename T > double getMiniIsolation( const T& lepton, const double rho, const EffectiveAreas& effectiveAreas, const bool onlyCharged ) const;
 };
 
 // class member functions
@@ -83,10 +86,6 @@ void MiniAODElectronTopIdEmbedder::produce(edm::Event& evt, const edm::EventSetu
   evt.getByToken(vtxCollection_ , vtxCollection);
   const reco::Vertex& vertex = *vtxCollection->begin();
 
-  /*edm::Handle<bool> is2016Handle;
-  evt.getByToken(is2016Token_, is2016Handle);
-  bool is_2016 = *is2016Handle;*/
-
   const std::vector<pat::Electron> * electrons = electronsCollection.product();
 
   unsigned int nbElectron =  electrons->size();
@@ -109,47 +108,21 @@ void MiniAODElectronTopIdEmbedder::produce(edm::Event& evt, const edm::EventSetu
     double _dz=1.0;
     _dz=electron.dB(pat::Electron::PVDZ);
 
-    double _relIso_Summer16=1.0;
-    double puCorr = rho*electronsEffectiveAreas_Summer16.getEffectiveArea(electron.superCluster()->eta());
-    double absIso = electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - puCorr);
-    _relIso_Summer16=absIso/electron.pt();
-
     double _relIso=1.0;
-    puCorr = rho*electronsEffectiveAreas.getEffectiveArea(electron.superCluster()->eta());
-    absIso = electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - puCorr);
-    _relIso=absIso/electron.pt();
-
-    double _relIso0p4 = 1.0;
-    puCorr = rho*electronsEffectiveAreas.getEffectiveArea(electron.superCluster()->eta()) * ( 16./9. );
-    absIso = electron.chargedHadronIso() + std::max( 0., electron.neutralHadronIso() + electron.photonIso() - puCorr );
-    _relIso0p4 = absIso/electron.pt();
-
+    _relIso = getRelIso03(electron, rho, electronsEffectiveAreas);
+    double _relIso0p4 =1.0;
+    _relIso0p4 = getRelIso04(electron, rho, electronsEffectiveAreas);
+    double _relIso_Summer16 = 1.0;
+    _relIso_Summer16 = getRelIso03(electron, rho, electronsEffectiveAreas_Summer16);
     double _relIso0p4_Summer16 = 1.0;
-    puCorr = rho*electronsEffectiveAreas_Summer16.getEffectiveArea(electron.superCluster()->eta()) * ( 16./9. );
-    absIso = electron.chargedHadronIso() + std::max( 0., electron.neutralHadronIso() + electron.photonIso() - puCorr );
-    _relIso0p4_Summer16 = absIso/electron.pt();
+    _relIso0p4_Summer16 = getRelIso04(electron, rho, electronsEffectiveAreas_Summer16);
 
-    double _miniIso_Spring15=1.0;
-    auto iso = electron.miniPFIsolation();
-    double cone_size = 10.0 / std::min( std::max( electron.pt(), 50. ), 200. );
-    double effective_area = electronsEffectiveAreas_Spring15.getEffectiveArea( electron.superCluster()->eta());
-    effective_area *= ( cone_size*cone_size )/ ( 0.3*0.3 );
-    double pu_corr = effective_area*rho;
-    absIso = iso.chargedHadronIso() + std::max( iso.neutralHadronIso() + iso.photonIso() - pu_corr, 0. ); 
-    _miniIso_Spring15= ( absIso / electron.pt() );
-
-    double _miniIso=1.0;
-    iso = electron.miniPFIsolation();
-    effective_area = electronsEffectiveAreas.getEffectiveArea(electron.superCluster()->eta());
-    effective_area *= ( cone_size*cone_size )/ ( 0.3*0.3 );
-    pu_corr = effective_area*rho;
-    absIso = iso.chargedHadronIso() + std::max( iso.neutralHadronIso() + iso.photonIso() - pu_corr, 0. );
-    _miniIso= ( absIso / electron.pt() );
-
-    double _miniIsoCharged=1.0;
-    iso = electron.miniPFIsolation();
-    absIso = iso.chargedHadronIso();
-    _miniIsoCharged= ( absIso / electron.pt() );
+    double _miniIso = 1.0;
+    _miniIso = getMiniIsolation(electron, rho, electronsEffectiveAreas, false);
+    double _miniIsoCharged = 1.0;
+    _miniIsoCharged = getMiniIsolation(electron, rho, electronsEffectiveAreas, true);
+    double _miniIso_Spring15 = 1.0;
+    _miniIso_Spring15 = getMiniIsolation(electron, rho, electronsEffectiveAreas_Spring15, false);
 
     double _lElectronMvaSummer16GP=1.0;
     _lElectronMvaSummer16GP = electron.userFloat("ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values");
@@ -159,7 +132,7 @@ void MiniAODElectronTopIdEmbedder::produce(edm::Event& evt, const edm::EventSetu
     _lElectronMvaFall17NoIso = electron.userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV2Values");
 
     // depends on jets
-    int _selectedTrackMult=1.0;
+    double _selectedTrackMult=1.0;
     double _ptRel=1.0;
     double _ptRatio=1.0;
     double _ptRatio_Summer16=1.0;
@@ -263,7 +236,8 @@ void MiniAODElectronTopIdEmbedder::produce(edm::Event& evt, const edm::EventSetu
             _3dIPSig,
             _dxy,
             _dz,
-            is_2016 ? _relIso_Summer16 : _relIso,
+	    _relIso,
+            //is_2016 ? _relIso_Summer16 : _relIso,
             _lElectronMvaSummer16GP,
             _lElectronMvaFall17v1NoIso,
             _lElectronMvaFall17NoIso
@@ -315,6 +289,37 @@ const pat::Jet* MiniAODElectronTopIdEmbedder::findMatchedJet( const pat::Electro
     }
     return matchedJetPtr;
 }
+
+double MiniAODElectronTopIdEmbedder::getRelIso03(const pat::Electron& ele, const double rho, const EffectiveAreas& effectiveAreas) const{
+    double puCorr = rho*effectiveAreas.getEffectiveArea( ele.superCluster()->eta() );
+    double absIso = ele.pfIsolationVariables().sumChargedHadronPt + std::max(0., ele.pfIsolationVariables().sumNeutralHadronEt + ele.pfIsolationVariables().sumPhotonEt - puCorr);
+    return absIso/ele.pt();
+}
+
+
+double MiniAODElectronTopIdEmbedder::getRelIso04(const pat::Electron& ele, const double rho, const EffectiveAreas& effectiveAreas) const{
+
+    //take into account that area is larger in 0.4 cone 
+    double puCorr = rho*effectiveAreas.getEffectiveArea( ele.superCluster()->eta() ) * ( 16./9. );
+    double absIso = ele.chargedHadronIso() + std::max( 0., ele.neutralHadronIso() + ele.photonIso() - puCorr );
+    return absIso/ele.pt();
+}
+
+template< typename T > double MiniAODElectronTopIdEmbedder::getMiniIsolation( const T& lepton, const double rho, const EffectiveAreas& effectiveAreas, const bool onlyCharged ) const{
+    auto iso = lepton.miniPFIsolation();
+    double absIso;
+    if( onlyCharged ){
+        absIso = iso.chargedHadronIso();
+    } else {
+        double cone_size = 10.0 / std::min( std::max( lepton.pt(), 50. ), 200. );
+        double effective_area = effectiveAreas.getEffectiveArea( lepton.eta() );
+        effective_area *= ( cone_size*cone_size )/ ( 0.3*0.3 );
+        double pu_corr = effective_area*rho;
+        absIso = iso.chargedHadronIso() + std::max( iso.neutralHadronIso() + iso.photonIso() - pu_corr, 0. );
+    }
+    return ( absIso / lepton.pt() );
+}
+
 
 
 // define plugin

@@ -132,9 +132,9 @@ void MiniAODMuonTopIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
     _miniIso_80X          = getMiniIsolation(muon, rho, muonsEffectiveAreas_80X, false);
 
     // depends on jets
-    int _selectedTrackMult=1.0;
-    double _ptRel=1.0;
-    double _ptRatio=1.0;
+    double _selectedTrackMult=-1.0;
+    double _ptRel=-1.0;
+    double _ptRatio=-1.0;
     double _closestJetDeepFlavor=1.0;
     double _closestJetDeepFlavor_b = 0;
     double _closestJetDeepFlavor_bb = 0;
@@ -217,8 +217,6 @@ void MiniAODMuonTopIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
         if( std::isnan( _closestJetDeepFlavor ) ) _closestJetDeepFlavor = 0.;
     }
 
-
-
     double topid=1.0;
     topid=leptonMvaComputerTOP->leptonMvaMuon(_lPt,
             _lEta,
@@ -236,6 +234,7 @@ void MiniAODMuonTopIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
             _relIsoDeltaBeta,
             muon.segmentCompatibility()
     );
+
 
     muon.addUserFloat("muonMVATopID",topid);
 
