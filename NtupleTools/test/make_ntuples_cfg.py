@@ -751,6 +751,7 @@ if options.era=="2017":
 else:
     runMetCorAndUncFromMiniAOD(process,
        isData=isData,
+       #jetSrc=cms.InputTag("updatedPatJetsTransientCorrectedUpdatedJJEC"),
        #isEmbeddedSample=bool(options.isEmbedded),
        postfix = "ModifiedMET"
                         )
@@ -758,6 +759,28 @@ else:
 process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
 fs_daughter_inputs['jets'] = 'patSmearedJetsModifiedMET'
+
+updateJetCollection(
+   process,
+   jetSource = cms.InputTag('patSmearedJetsModifiedMET'),
+   labelName = 'UpdatedSmearedBtag',
+   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
+   btagDiscriminators = [
+      'pfDeepFlavourJetTags:probb',
+      'pfDeepFlavourJetTags:probbb',
+      'pfDeepFlavourJetTags:problepb',
+      'pfDeepFlavourJetTags:probc',
+      'pfDeepFlavourJetTags:probuds',
+      'pfDeepFlavourJetTags:probg'
+      ]
+)
+
+process.jec2Sequence=cms.Path()
+process.jec2Sequence += process.pileupJetIdUpdated
+process.jec2Sequence += process.patJetCorrFactorsUpdatedSmearedBtag
+process.jec2Sequence += process.updatedPatJetsUpdatedSmearedBtag
+process.schedule.append(process.jec2Sequence)
+fs_daughter_inputs['jets'] = 'updatedPatJetsTransientCorrectedUpdatedSmearedBtag'
 
 #########################################################
 ### embed some things we need before object selection ###

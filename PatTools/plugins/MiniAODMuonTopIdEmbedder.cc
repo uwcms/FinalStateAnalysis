@@ -237,6 +237,10 @@ void MiniAODMuonTopIdEmbedder::produce(edm::Event& evt, const edm::EventSetup& e
 
 
     muon.addUserFloat("muonMVATopID",topid);
+    muon.addUserFloat("closestJetDeepFlavor",_closestJetDeepFlavor);
+    muon.addUserFloat("ptRatio",_ptRatio);
+    if (is_2016) muon.addUserFloat("miniIso",_miniIso_80X);
+    else muon.addUserFloat("miniIso",_miniIso);
 
     output->push_back(muon);
   }

@@ -27,6 +27,10 @@ id = PSet(
     objectMVANoisoWP80 = '{object}.electronID("mvaEleID-Fall17-noIso-V2-wp80")',
     objectMVANoisoWP90 = '{object}.electronID("mvaEleID-Fall17-noIso-V2-wp90")',
     objectMVANoisoWPLoose = '{object}.electronID("mvaEleID-Fall17-noIso-V2-wpLoose")',
+    objectElectronMvaSummer16GP = '{object}.userFloat("ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values")',
+    objectElectronMvaFall17v1NoIso = '{object}.userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV1Values")',
+    objectElectronMvaFall17NoIso = '{object}.userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV2Values")',
+
     objectCorrectedEt = '{object}.userFloat("ecalTrkEnergyPostCorr")',
     objectEnergyScaleDown = '{object}.userFloat("energyScaleDown")',
     objectEnergyScaleUp = '{object}.userFloat("energyScaleUp")',
@@ -57,6 +61,10 @@ id = PSet(
         '-{object}.userFloat("rho_fastjet")*{object}.userFloat("EffectiveArea")))'
         '/{object}.pt()'
     ),
+    objectMiniIso = cms.string('{object}.userFloat("miniIso")'),
+    objectIP3D = cms.string('{object}.userFloat("ip3D")'),
+    objectIP3DS = cms.string('{object}.userFloat("ip3DS")'),
+    objectIPDXY = cms.string('{object}.userFloat("ipDXY")'),
 
     # Number of matched conversions
     objectPassesConversionVeto = '{object}.passConversionVeto()',
@@ -70,6 +78,8 @@ id = PSet(
     #objectEffectiveAreaSpring15 = cms.string('{object}.userFloat("EffectiveArea")'),
 
     objectMvaTopId = cms.string('{object}.userFloat("electronMVATopID")'),
+    objectPtRatio = cms.string('{object}.userFloat("ptRatio")'),
+    objectClosestJetDeepFlavor = cms.string('{object}.userFloat("closestJetDeepFlavor")'),
     objectRho = cms.string('{object}.userFloat("rho_fastjet")'),
     objectRelIso = cms.string("({object}.dr03TkSumPt()"
                "+max({object}.dr03EcalRecHitSumEt()-1.0,0.0)"
@@ -83,10 +93,11 @@ id = PSet(
     ## raw energy error
     #objectEnergyError = '{object}.corrections().combinedP4Error',
     ## shower shape / ID variables
-    #objectHadronicOverEM = '{object}.hcalOverEcal',
+    objectHadronicOverEM = '{object}.hcalOverEcal',
+    objectElectronEInvMinusPInv = cms.string("(1.0 - {object}.eSuperClusterOverP())/{object}.correctedEcalEnergy()"),
     #objectHadronicDepth1OverEm = '{object}.hcalDepth1OverEcal',
     #objectHadronicDepth2OverEm = '{object}.hcalDepth2OverEcal',
-    #objectSigmaIEtaIEta = '{object}.sigmaIetaIeta',
+    objectSigmaIEtaIEta = '{object}.sigmaIetaIeta',
     #objectdeltaEtaSuperClusterTrackAtVtx = '{object}.deltaEtaSuperClusterTrackAtVtx',
     #objectdeltaPhiSuperClusterTrackAtVtx = '{object}.deltaPhiSuperClusterTrackAtVtx',
     #objectfBrem = '{object}.fbrem',

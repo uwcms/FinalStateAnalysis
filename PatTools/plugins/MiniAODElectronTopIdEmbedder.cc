@@ -244,6 +244,11 @@ void MiniAODElectronTopIdEmbedder::produce(edm::Event& evt, const edm::EventSetu
     );
 
     electron.addUserFloat("electronMVATopID",topid);
+    electron.addUserFloat("closestJetDeepFlavor",_closestJetDeepFlavor);
+    if (is_2016) electron.addUserFloat("ptRatio",_ptRatio_Summer16);
+    else electron.addUserFloat("ptRatio",_ptRatio);
+    if (is_2016) electron.addUserFloat("miniIso",_miniIso_Spring15);
+    else electron.addUserFloat("miniIso",_miniIso);
 
     output->push_back(electron);
   }
