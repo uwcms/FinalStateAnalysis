@@ -357,23 +357,21 @@ if options.usePUPPI:
 from RecoJets.JetProducers.PileupJetID_cfi import _chsalgos_94x, _chsalgos_102x
 process.load("RecoJets.JetProducers.PileupJetID_cfi")
 process.pileupJetId.inputIsCorrected = True
-#process.pileupJetId.applyJec = False
 process.pileupJetId.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
 if options.era=="2017":
   process.pileupJetId.algos = cms.VPSet(_chsalgos_94x) # for 2017
 if options.era=="2018":
   process.pileupJetId.algos = cms.VPSet(_chsalgos_102x) # for 2018
 
-#process.load("RecoJets.JetProducers.PileupJetID_cfi")
 process.pileupJetIdUpdated = process.pileupJetId.clone(
   jets=cms.InputTag("slimmedJets"),
   inputIsCorrected=True,
   applyJec=True,
   vertexes=cms.InputTag("offlineSlimmedPrimaryVertices")
 )
-#process.newPUjetID = cms.Path()
-#process.newPUjetID += process.pileupJetIdUpdated
-#process.schedule.append(process.newPUjetID)
+process.newPUjetID = cms.Path()
+process.newPUjetID += process.pileupJetIdUpdated
+process.schedule.append(process.newPUjetID)
 
 ##################
 ### JEC ##########
@@ -429,20 +427,6 @@ process.es_prefer_jec = cms.ESPrefer('PoolDBESSource','jec')
 ####### https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
 from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
 
-#updateJetCollection(
-#   process,
-#   jetSource = cms.InputTag('slimmedJets'),
-#   labelName = 'UpdatedJEC',
-#   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
-#)
-#
-#process.jecSequence=cms.Path()
-#process.jecSequence += process.pileupJetIdUpdated
-#process.jecSequence += process.patJetCorrFactorsUpdatedJEC
-#process.jecSequence += process.updatedPatJetsUpdatedJEC
-#process.schedule.append(process.jecSequence)
-#fs_daughter_inputs['jets'] = 'updatedPatJetsUpdatedJEC'
-
 updateJetCollection(
    process,
    jetSource = cms.InputTag('slimmedJets'),
@@ -480,12 +464,10 @@ updateJetCollection(
 )
 
 process.jecSequence=cms.Path()
-process.jecSequence += process.pileupJetIdUpdated
 process.jecSequence += process.patJetCorrFactorsUpdatedJJEC
 process.jecSequence += process.updatedPatJetsUpdatedJJEC
 process.schedule.append(process.jecSequence)
 fs_daughter_inputs['jets'] = 'updatedPatJetsTransientCorrectedUpdatedJJEC'
-
 
 # Prefiring weights
 prefiring_year='2016BtoH'
@@ -776,7 +758,6 @@ updateJetCollection(
 )
 
 process.jec2Sequence=cms.Path()
-process.jec2Sequence += process.pileupJetIdUpdated
 process.jec2Sequence += process.patJetCorrFactorsUpdatedSmearedBtag
 process.jec2Sequence += process.updatedPatJetsUpdatedSmearedBtag
 process.schedule.append(process.jec2Sequence)
