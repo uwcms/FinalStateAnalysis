@@ -1,11 +1,13 @@
 # Embed IDs for electrons
 import FWCore.ParameterSet.Config as cms
+import os
 from PhysicsTools.SelectorUtils.tools.vid_id_tools import setupAllVIDIdsInModule, setupVIDElectronSelection, switchOnVIDElectronIdProducer, DataFormat, setupVIDSelection
 #from EgammaAnalysis.ElectronTools.regressionWeights_cfi import regressionWeights
 
 
 def preElectrons(process, eSrc, vSrc, year, isEmbedded, **kwargs):
     postfix = kwargs.pop('postfix','')
+    runningLocal = kwargs.pop('runningLocal',False)
 
     from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
     myera='2018-Prompt'
@@ -103,6 +105,60 @@ def preElectrons(process, eSrc, vSrc, year, isEmbedded, **kwargs):
     setattr(process,modName,mod)
 
     pathName = 'runTriggerFilterElectronEmbedding{0}'.format(postfix)
+    modPath = cms.Path(getattr(process,modName))
+    setattr(process,pathName,modPath)
+    process.schedule.append(getattr(process,pathName))
+
+    # embed top mva id
+    training_file = "FinalStateAnalysis/NtupleTools/data/el_TOP18_BDTG.weights.xml"
+    training_file_mu="FinalStateAnalysis/NtupleTools/data/mu_TOP18_BDTG.weights.xml"
+    if runningLocal : 
+        training_file = "FinalStateAnalysis/NtupleTools/data/el_TOP18_BDTG.weights.xml"
+        if year=="2016":
+           training_file="FinalStateAnalysis/NtupleTools/data/el_TOP16_BDTG.weights.xml"
+        if year=="2017":
+           training_file="FinalStateAnalysis/NtupleTools/data/el_TOP17_BDTG.weights.xml"
+
+        training_file_mu="FinalStateAnalysis/NtupleTools/data/mu_TOP18_BDTG.weights.xml"
+        if year=="2016":
+           training_file_mu="FinalStateAnalysis/NtupleTools/data/mu_TOP16_BDTG.weights.xml"
+        if year=="2017":
+           training_file_mu="FinalStateAnalysis/NtupleTools/data/mu_TOP17_BDTG.weights.xml"
+    else:
+        cmsswversion=os.environ['CMSSW_VERSION']
+        training_file = "{0}/src/FinalStateAnalysis/NtupleTools/data/el_TOP18_BDTG.weights.xml".format(cmsswversion)
+        if year=="2016":
+           training_file="{0}/src/FinalStateAnalysis/NtupleTools/data/el_TOP16_BDTG.weights.xml".format(cmsswversion)
+        if year=="2017":
+           training_file="{0}/src/FinalStateAnalysis/NtupleTools/data/el_TOP17_BDTG.weights.xml".format(cmsswversion)
+
+        training_file_mu="{0}/src/FinalStateAnalysis/NtupleTools/data/mu_TOP18_BDTG.weights.xml".format(cmsswversion)
+        if year=="2016":
+           training_file_mu="{0}/src/FinalStateAnalysis/NtupleTools/data/mu_TOP16_BDTG.weights.xml".format(cmsswversion)
+        if year=="2017":
+           training_file_mu="{0}/src/FinalStateAnalysis/NtupleTools/data/mu_TOP17_BDTG.weights.xml".format(cmsswversion)
+
+    modName = 'minitopmvaidElectrons{0}'.format(postfix)
+    mod = cms.EDProducer(
+        "MiniAODElectronTopIdEmbedder",
+        src=cms.InputTag(eSrc),
+        jetSrc=cms.InputTag("updatedPatJetsTransientCorrectedUpdatedJJEC"),
+        vtxSrc = cms.InputTag(vSrc),
+        srcRho = cms.InputTag("fixedGridRhoFastjetAll"),
+        is2016 = cms.bool(False),
+        electronsEffAreas             = cms.FileInPath('RecoEgamma/ElectronIdentification/data/Fall17/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_94X.txt'),    # Recommended, used by standard IDs (the difference with the outdated effective areas is typically small)
+        electronsEffAreas_Summer16    = cms.FileInPath('RecoEgamma/ElectronIdentification/data/Summer16/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_80X.txt'),  # old effective aras are used in 2016 computation of ttH MVA
+        electronsEffAreas_Spring15    = cms.FileInPath('RecoEgamma/ElectronIdentification/data/Spring15/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_25ns.txt'), # prehistoric effective aras are used in 2016 computation of ttH MVA
+        leptonMvaWeightsEleTOP        = cms.FileInPath(training_file),
+        leptonMvaWeightsMuTOP        = cms.FileInPath(training_file_mu)
+
+    )
+    if year=="2016":
+        mod.is2016 = cms.bool(True)
+    eSrc = modName
+    setattr(process,modName,mod)
+
+    pathName = 'runElectronTopIdEmbedding{0}'.format(postfix)
     modPath = cms.Path(getattr(process,modName))
     setattr(process,pathName,modPath)
     process.schedule.append(getattr(process,pathName))

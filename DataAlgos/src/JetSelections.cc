@@ -253,7 +253,7 @@ std::vector<double> computeJetInfo(
 
   int numJets = jets.size();
   if (numJets == 0) {
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 12; ++i) {
       output.push_back( -9999 );
     }
   }
@@ -270,11 +270,18 @@ std::vector<double> computeJetInfo(
      else output.push_back( firstJet->userFloat(sysTag) );
      output.push_back( leadJet.eta() );
      output.push_back( leadJet.phi() );
+     output.push_back( firstJet->bDiscriminator("pfDeepCSVJetTags:probb") + firstJet->bDiscriminator("pfDeepCSVJetTags:probbb") );
+     output.push_back( (firstJet->bDiscriminator("pfDeepFlavourJetTags:probb") + firstJet->bDiscriminator("pfDeepFlavourJetTags:probbb") + firstJet->bDiscriminator("pfDeepFlavourJetTags:problepb")));
+     output.push_back( firstJet->hadronFlavour() );
+
 
      if (sysTag.empty()) output.push_back( subleadJet.pt() );
      else output.push_back( secondJet->userFloat(sysTag) );
      output.push_back( subleadJet.eta() );
      output.push_back( subleadJet.phi() );
+     output.push_back( secondJet->bDiscriminator("pfDeepCSVJetTags:probb") + secondJet->bDiscriminator("pfDeepCSVJetTags:probbb") );
+     output.push_back( (secondJet->bDiscriminator("pfDeepFlavourJetTags:probb") + secondJet->bDiscriminator("pfDeepFlavourJetTags:probbb") + secondJet->bDiscriminator("pfDeepFlavourJetTags:problepb")));
+     output.push_back( secondJet->hadronFlavour() );
    }
 
    if (numJets==1){
@@ -286,8 +293,11 @@ std::vector<double> computeJetInfo(
      else output.push_back( firstJet->userFloat(sysTag));
      output.push_back( leadJet.eta() );
      output.push_back( leadJet.phi() );
+     output.push_back( firstJet->bDiscriminator("pfDeepCSVJetTags:probb") + firstJet->bDiscriminator("pfDeepCSVJetTags:probbb") );
+     output.push_back( (firstJet->bDiscriminator("pfDeepFlavourJetTags:probb") + firstJet->bDiscriminator("pfDeepFlavourJetTags:probbb") + firstJet->bDiscriminator("pfDeepFlavourJetTags:problepb")));
+     output.push_back( firstJet->hadronFlavour() );
 
-     for (int i = 0; i < 3; ++i) {
+     for (int i = 0; i < 6; ++i) {
        output.push_back( -9999 );
      }
    }

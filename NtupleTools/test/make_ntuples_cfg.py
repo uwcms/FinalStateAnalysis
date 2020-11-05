@@ -357,23 +357,21 @@ if options.usePUPPI:
 from RecoJets.JetProducers.PileupJetID_cfi import _chsalgos_94x, _chsalgos_102x
 process.load("RecoJets.JetProducers.PileupJetID_cfi")
 process.pileupJetId.inputIsCorrected = True
-#process.pileupJetId.applyJec = False
 process.pileupJetId.vertexes = cms.InputTag("offlineSlimmedPrimaryVertices")
 if options.era=="2017":
   process.pileupJetId.algos = cms.VPSet(_chsalgos_94x) # for 2017
 if options.era=="2018":
   process.pileupJetId.algos = cms.VPSet(_chsalgos_102x) # for 2018
 
-#process.load("RecoJets.JetProducers.PileupJetID_cfi")
 process.pileupJetIdUpdated = process.pileupJetId.clone(
   jets=cms.InputTag("slimmedJets"),
   inputIsCorrected=True,
   applyJec=True,
   vertexes=cms.InputTag("offlineSlimmedPrimaryVertices")
 )
-#process.newPUjetID = cms.Path()
-#process.newPUjetID += process.pileupJetIdUpdated
-#process.schedule.append(process.newPUjetID)
+process.newPUjetID = cms.Path()
+process.newPUjetID += process.pileupJetIdUpdated
+process.schedule.append(process.newPUjetID)
 
 ##################
 ### JEC ##########
@@ -432,16 +430,44 @@ from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
 updateJetCollection(
    process,
    jetSource = cms.InputTag('slimmedJets'),
-   labelName = 'UpdatedJEC',
-   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
+   pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
+   svSource = cms.InputTag('slimmedSecondaryVertices'),
+   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None'),
+   btagDiscriminators = [
+      'pfDeepFlavourJetTags:probb',
+      'pfDeepFlavourJetTags:probbb',
+      'pfDeepFlavourJetTags:problepb',
+      'pfDeepFlavourJetTags:probc',
+      'pfDeepFlavourJetTags:probuds',
+      'pfDeepFlavourJetTags:probg'
+      ],
+   postfix='NewDFTraining'
+)
+
+process.jbtagSequence=cms.Path()
+process.jbtagSequence.associate(process.patAlgosToolsTask)
+process.schedule.append(process.jbtagSequence)
+
+updateJetCollection(
+   process,
+   jetSource = cms.InputTag('updatedPatJetsNewDFTraining'),
+   labelName = 'UpdatedJJEC',
+   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
+   btagDiscriminators = [
+      'pfDeepFlavourJetTags:probb',
+      'pfDeepFlavourJetTags:probbb',
+      'pfDeepFlavourJetTags:problepb',
+      'pfDeepFlavourJetTags:probc',
+      'pfDeepFlavourJetTags:probuds',
+      'pfDeepFlavourJetTags:probg'
+      ]
 )
 
 process.jecSequence=cms.Path()
-process.jecSequence += process.pileupJetIdUpdated
-process.jecSequence += process.patJetCorrFactorsUpdatedJEC
-process.jecSequence += process.updatedPatJetsUpdatedJEC
+process.jecSequence += process.patJetCorrFactorsUpdatedJJEC
+process.jecSequence += process.updatedPatJetsUpdatedJJEC
 process.schedule.append(process.jecSequence)
-fs_daughter_inputs['jets'] = 'updatedPatJetsUpdatedJEC'
+fs_daughter_inputs['jets'] = 'updatedPatJetsTransientCorrectedUpdatedJJEC'
 
 # Prefiring weights
 prefiring_year='2016BtoH'
@@ -707,6 +733,7 @@ if options.era=="2017":
 else:
     runMetCorAndUncFromMiniAOD(process,
        isData=isData,
+       #jetSrc=cms.InputTag("updatedPatJetsTransientCorrectedUpdatedJJEC"),
        #isEmbeddedSample=bool(options.isEmbedded),
        postfix = "ModifiedMET"
                         )
@@ -714,6 +741,27 @@ else:
 process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
 fs_daughter_inputs['jets'] = 'patSmearedJetsModifiedMET'
+
+updateJetCollection(
+   process,
+   jetSource = cms.InputTag('patSmearedJetsModifiedMET'),
+   labelName = 'UpdatedSmearedBtag',
+   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
+   btagDiscriminators = [
+      'pfDeepFlavourJetTags:probb',
+      'pfDeepFlavourJetTags:probbb',
+      'pfDeepFlavourJetTags:problepb',
+      'pfDeepFlavourJetTags:probc',
+      'pfDeepFlavourJetTags:probuds',
+      'pfDeepFlavourJetTags:probg'
+      ]
+)
+
+process.jec2Sequence=cms.Path()
+process.jec2Sequence += process.patJetCorrFactorsUpdatedSmearedBtag
+process.jec2Sequence += process.updatedPatJetsUpdatedSmearedBtag
+process.schedule.append(process.jec2Sequence)
+fs_daughter_inputs['jets'] = 'updatedPatJetsTransientCorrectedUpdatedSmearedBtag'
 
 #########################################################
 ### embed some things we need before object selection ###
@@ -740,6 +788,7 @@ fs_daughter_inputs['electrons'] = preElectrons(process,
                                                isMC=bool(options.isMC),
                                                isSync=bool(options.isSync),
                                                isLFV=bool(options.isLFV),
+                                               runningLocal=options.runningLocal
                                                )
 
 for fs in additional_fs:
@@ -752,6 +801,7 @@ for fs in additional_fs:
                                                   applyEnergyCorrections=bool(options.eCalib),
                                                   isMC=bool(options.isMC),
                                                   isSync=bool(options.isSync),
+                                                  runningLocal=options.runningLocal,
                                                   postfix=fs,
                                                   )
 
@@ -765,13 +815,15 @@ fs_daughter_inputs['muons'] = preMuons(process,
                                        options.era,
                                        bool(options.isEmbedded),
                                        fs_daughter_inputs['muons'],
-                                       fs_daughter_inputs['vertices'])
+                                       fs_daughter_inputs['vertices'],
+                                       runningLocal=options.runningLocal)
 for fs in additional_fs:
     additional_fs[fs]['muons'] = preMuons(process,
                                           options.era,
 					  bool(options.isEmbedded),
                                           additional_fs[fs]['muons'],
                                           additional_fs[fs]['vertices'],
+                                          runningLocal=options.runningLocal,
                                           postfix=fs)
 
 #####################
