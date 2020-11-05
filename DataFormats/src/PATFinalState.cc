@@ -814,7 +814,7 @@ PATFinalState::channelSpecificObjCuts( const std::string& channel ) const {
   // daughter 1 = tau
   double pt0=daughter(0)->pt();
   double pt1=daughter(1)->pt();
-  if (channel == "TauTau"   && pt0 > 33 && pt1 > 33) return 1.;
+  if (channel == "TauTau"   && pt0 > 24 && pt1 > 24) return 1.; // Because of VBF ditau trigger
   if (channel == "ElecTau"  && pt0 > 23 && pt1 > 19) return 1.;
   if (channel == "MuTau"    && pt0 > 19 && pt1 > 19) return 1.;
   if (channel == "EMu"    && pt0 + pt1 > 30) return 1.;
