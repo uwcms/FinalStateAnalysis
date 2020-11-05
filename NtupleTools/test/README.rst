@@ -6,16 +6,35 @@ interest.  It can be tested in place by::
 
     cmsRun make_ntuples_cfg.py channels="em,mt" [options] inputFiles=file.root
 
-There are some additional pre-defined groups of channels which are expanded
-for your convenience::
+Things to change in the code depending on which samples are run:
+----------------------------------------------------------------
 
-    zh = eeem, eeet, eemt, eett, emmm, emmt, mmmt, mmtt,
-    zz = eeee, eemm, mmmm,
-    zgg = eegg, mmgg
-    llt = emt, mmt, eet, mmm, emm
-    zg = mmg,eeg
-    zgxtra = mgg, emg, egg,
+If running on MC other than Higgs, comment the lhe and Pythia weights in ztt.py.
+If running on Higgs 2016 and 2017: comment the Pythia weights in ztt.py.
+If running on 2017 (embedded, data, MC), enable the WoNoisyJet variables in topology.py and cleaning.py.
 
+Testing the code locally:
+--------------------------
+
+For Data 2017::
+
+   cmsRun make_ntuples_cfg.py channels="et,mt" htt=1 era="2017" isMC=0 skipMET=1 maxEvents=100 paramFile=../python/parameters/ztt.py runningLocal=1 fullJES=0 metShift=0 inputFiles=file:root://cms-xrd-global.cern.ch///store/data/Run2017F/SingleMuon/MINIAOD/31Mar2018-v1/30000/60E4D629-3037-E811-85E5-0025901D08D8.root
+
+For MC 2016:: 
+
+   cmsRun make_ntuples_cfg.py channels="et,mt,tt,em" htt=1 era="2016" isMC=1 isEmbedded=0 skipMET=1 maxEvents=200 paramFile=../python/parameters/ztt.py runningLocal=1 fullJES=1 metShift=1 inputFiles=file:root://cms-xrd-global.cern.ch///store/mc/RunIISummer16MiniAODv3/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/MINIAODSIM/PUMoriond17_94X_mcRun2_asymptotic_v3-v1/00000/A09B90C3-DAC3-E811-83DD-A4BF0112DD3C.root
+
+For MC 2017::
+
+   cmsRun make_ntuples_cfg.py channels="et,mt,tt,em" htt=1 era="2017" isMC=1 isEmbedded=0 skipMET=1 maxEvents=200 paramFile=../python/parameters/ztt.py runningLocal=1 fullJES=1 metShift=1 inputFiles=file:root://cms-xrd-global.cern.ch///store/mc/RunIIFall17MiniAODv2/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/20000/98F40A55-2342-E811-B42D-001E67F8F6F0.root
+
+For MC 2018::
+
+   cmsRun make_ntuples_cfg.py channels="et,mt,tt,em" htt=1 era="2018" isMC=1 isEmbedded=0 skipMET=1 maxEvents=200 paramFile=../python/parameters/ztt.py runningLocal=1 fullJES=1 metShift=1 inputFiles=file:root://cms-xrd-global.cern.ch///store/mc/RunIIAutumn18MiniAOD/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8/MINIAODSIM/102X_upgrade2018_realistic_v15-v1/270000/BEA0934D-C518-9242-8390-9FBF304CF978.root
+
+For embedded 2016::
+
+   cmsRun make_ntuples_cfg.py channels="mt" htt=1 era="2016" isMC=0 isEmbedded=1 skipMET=1 maxEvents=200 paramFile=../python/parameters/ztt.py runningLocal=1 fullJES=0 metShift=0 inputFiles=file:root://cms-xrd-global.cern.ch///store/user/jbechtel/embedding_disk_update/embedding_16_legacy_miniaod/MuTau_data_legacy_2016_CMSSW9414/TauEmbedding_MuTau_data_legacy_2016_CMSSW9414_Run2016B-v4/74/merged_miniaod_2873.root
 
 Ntuple Options
 --------------
