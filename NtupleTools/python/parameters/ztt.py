@@ -444,6 +444,13 @@ parameters = {
         objectMatchesDoubleTau35Filter = r'matchToHLTFilter({object_idx}, "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\d", 0.5)',
         objectMatchesDoubleTau35Path = r'matchToHLTPath({object_idx}, "HLT_DoubleMediumIsoPFTau35_Trk1_eta2p1_Reg_v\\d+", 0.5)',
 
+        objectMatchesVBFDoubleHPSTau20Path = r'matchToHLTPath({object_idx}, "HLT_VBF_DoubleLooseChargedIsoPFTauHPS20_Trk1_eta2p1_v\\d+", 0.5)',
+        objectMatchesVBFDoubleHPSTau20Filter = r'matchToHLTFilter({object_idx}, "HLT_VBF_DoubleLooseChargedIsoPFTauHPS20_Trk1_eta2p1_v\\d", 0.5)',
+        objectMatchesVBFDoubleTau20Path = r'matchToHLTPath({object_idx}, "HLT_VBF_DoubleLooseChargedIsoPFTau20_Trk1_eta2p1_v\\d+", 0.5)',
+        objectMatchesVBFDoubleTau20Filter = r'matchToHLTFilter({object_idx}, "HLT_VBF_DoubleLooseChargedIsoPFTau20_Trk1_eta2p1_v\\d", 0.5)',
+        objectMatchesVBFDoubleTau20RegPath = r'matchToHLTPath({object_idx}, "HLT_VBF_DoubleLooseChargedIsoPFTau20_Trk1_eta2p1_Reg_v\\d+", 0.5)',
+        objectMatchesVBFDoubleTau20RegFilter = r'matchToHLTFilter({object_idx}, "HLT_VBF_DoubleLooseChargedIsoPFTau20_Trk1_eta2p1_Reg_v\\d", 0.5)',
+
         objectMatchEmbeddedFilterMu20Tau27 = '? {object}.hasUserInt("matchEmbeddedFilterMu20Tau27") ? {object}.userInt("matchEmbeddedFilterMu20Tau27") : -10',
         objectMatchEmbeddedFilterMu19Tau20 = '? {object}.hasUserInt("matchEmbeddedFilterMu19Tau20") ? {object}.userInt("matchEmbeddedFilterMu19Tau20") : -10',
         objectMatchEmbeddedFilterMu20HPSTau27 = '? {object}.hasUserInt("matchEmbeddedFilterMu20HPSTau27") ? {object}.userInt("matchEmbeddedFilterMu20HPSTau27") : -10',
