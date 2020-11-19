@@ -109,6 +109,7 @@ def preMuons(process, year, isEmbedded, mSrc, vSrc, **kwargs):
         "MiniAODMuonTopIdEmbedder",
         src=cms.InputTag(mSrc),
         jetSrc= cms.InputTag("updatedPatJetsTransientCorrectedUpdatedJJEC"),
+        #jetSrc= cms.InputTag("updatedPatJetsTransientCorrectedNewDFTraining"),
         vtxSrc = cms.InputTag(vSrc),
         srcRho = cms.InputTag("fixedGridRhoFastjetAll"),
         is2016 = cms.bool(False),

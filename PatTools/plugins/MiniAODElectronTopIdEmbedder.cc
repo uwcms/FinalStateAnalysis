@@ -95,160 +95,167 @@ void MiniAODElectronTopIdEmbedder::produce(edm::Event& evt, const edm::EventSetu
 
   for(unsigned i = 0 ; i < nbElectron; i++){
     pat::Electron electron(electrons->at(i));
-
-    double _lPt=1.0;
-    _lPt=electron.pt();
-    double _lEta=1.0;
-    _lEta=electron.eta();
-
-    double _3dIPSig=1.0;
-    _3dIPSig=abs(electron.dB(pat::Electron::PV3D)/electron.edB(pat::Electron::PV3D));
-    double _dxy=1.0;
-    _dxy=electron.dB(pat::Electron::PV2D);
-    double _dz=1.0;
-    _dz=electron.dB(pat::Electron::PVDZ);
-
-    double _relIso=1.0;
-    _relIso = getRelIso03(electron, rho, electronsEffectiveAreas);
-    double _relIso0p4 =1.0;
-    _relIso0p4 = getRelIso04(electron, rho, electronsEffectiveAreas);
-    double _relIso_Summer16 = 1.0;
-    _relIso_Summer16 = getRelIso03(electron, rho, electronsEffectiveAreas_Summer16);
-    double _relIso0p4_Summer16 = 1.0;
-    _relIso0p4_Summer16 = getRelIso04(electron, rho, electronsEffectiveAreas_Summer16);
-
-    double _miniIso = 1.0;
-    _miniIso = getMiniIsolation(electron, rho, electronsEffectiveAreas, false);
-    double _miniIsoCharged = 1.0;
-    _miniIsoCharged = getMiniIsolation(electron, rho, electronsEffectiveAreas, true);
-    double _miniIso_Spring15 = 1.0;
-    _miniIso_Spring15 = getMiniIsolation(electron, rho, electronsEffectiveAreas_Spring15, false);
-
-    double _lElectronMvaSummer16GP=1.0;
-    _lElectronMvaSummer16GP = electron.userFloat("ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values");
-    double _lElectronMvaFall17v1NoIso=1.0;
-    _lElectronMvaFall17v1NoIso = electron.userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV1Values");
-    double _lElectronMvaFall17NoIso=1.0;
-    _lElectronMvaFall17NoIso = electron.userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV2Values");
-
-    // depends on jets
-    double _selectedTrackMult=1.0;
-    double _ptRel=1.0;
-    double _ptRatio=1.0;
-    double _ptRatio_Summer16=1.0;
-    double _closestJetDeepFlavor=1.0;
-    double _closestJetDeepFlavor_b = 0;
-    double _closestJetDeepFlavor_bb = 0;
-    double _closestJetDeepFlavor_lepb = 0;
-    double _closestJetDeepCsv_b = 0;
-    double _closestJetDeepCsv_bb = 0;
-    double _closestJetDeepCsv = 0;
-    bool oldMatching=false;
-
-    const pat::Jet* matchedJetPtr = findMatchedJet( electron, jetsCollection, oldMatching );
-    if( matchedJetPtr == nullptr ){
-        _ptRatio          = ( oldMatching ? 1. : 1. / (1. + _relIso0p4));
-        _ptRatio_Summer16 = ( oldMatching ? 1. : 1. / (1. + _relIso0p4_Summer16));
-        _ptRel = 0;
-        _selectedTrackMult = 0;
-        _closestJetDeepFlavor_b = 0;
-        _closestJetDeepFlavor_bb= 0;
-        _closestJetDeepFlavor_lepb = 0;
-        _closestJetDeepFlavor = 0;
-        _closestJetDeepCsv_b = 0;
-        _closestJetDeepCsv_bb = 0;
-        _closestJetDeepCsv = 0;
-    } else {
-        const pat::Jet& jet = *matchedJetPtr;
-
-        auto rawJetP4 = jet.correctedP4("Uncorrected");
-        auto leptonP4 = electron.p4();
-
-        bool leptonEqualsJet = ( ( rawJetP4 - leptonP4 ).P() < 1e-4 );
-
-        //if lepton and jet vector are equal set _ptRatio, _ptRel and track multipliticy to defaults 
-        if( leptonEqualsJet && !oldMatching ){
-            _ptRatio = 1;
-            _ptRatio_Summer16 = 1;
-            _ptRel = 0;
-            _selectedTrackMult = 0;
-        } else {
-
-            //remove all corrections above L1 from the lepton
-            auto L1JetP4 = jet.correctedP4("L1FastJet");
-            double L2L3JEC = jet.pt()/L1JetP4.pt();
-            auto lepAwareJetP4 = ( L1JetP4 - leptonP4 )*L2L3JEC + leptonP4;
-
-            _ptRatio = electron.pt() / lepAwareJetP4.pt();
-            _ptRatio_Summer16 = electron.pt() / lepAwareJetP4.pt();
-
-            //lepton momentum orthogonal to the jet axis
-            //magnitude of cross-product between lepton and rest of jet 
-            _ptRel = leptonP4.Vect().Cross( (lepAwareJetP4 - leptonP4 ).Vect().Unit() ).R();
-
-            _selectedTrackMult = 0;
-            for( const auto daughterPtr : jet.daughterPtrVector() ){
-                const pat::PackedCandidate& daughter = *( (const pat::PackedCandidate*) daughterPtr.get() );
-
-                if( daughter.charge() == 0 ) continue;
-                if( daughter.fromPV() < 2 ) continue;
-                if( reco::deltaR( daughter, electron ) > 0.4 ) continue;
-                if( !daughter.hasTrackDetails() ) continue;
-
-                auto daughterTrack = daughter.pseudoTrack();
-                if( daughterTrack.pt() <= 1 ) continue;
-                if( daughterTrack.hitPattern().numberOfValidHits() < 8 ) continue;
-                if( daughterTrack.hitPattern().numberOfValidPixelHits() < 2 ) continue;
-                if( daughterTrack.normalizedChi2() >= 5 ) continue;
-                if( std::abs( daughterTrack.dz( vertex.position() ) ) >= 17 ) continue;
-                if( std::abs( daughterTrack.dxy( vertex.position() ) ) >= 0.2 ) continue;
-                ++_selectedTrackMult;
-            }
-
-        }
-
-        //DeepCSV of closest jet
-        _closestJetDeepCsv_b  = jet.bDiscriminator("pfDeepCSVJetTags:probb");
-        _closestJetDeepCsv_bb = jet.bDiscriminator("pfDeepCSVJetTags:probbb");
-        _closestJetDeepCsv    = _closestJetDeepCsv_b + _closestJetDeepCsv_bb;
-        if( std::isnan( _closestJetDeepCsv ) ) _closestJetDeepCsv = 0.;
-
-        //DeepFlavor b-tag values of closest jet
-        _closestJetDeepFlavor_b = jet.bDiscriminator("pfDeepFlavourJetTags:probb");
-        _closestJetDeepFlavor_bb = jet.bDiscriminator("pfDeepFlavourJetTags:probbb");
-        _closestJetDeepFlavor_lepb = jet.bDiscriminator("pfDeepFlavourJetTags:problepb");
-        _closestJetDeepFlavor = _closestJetDeepFlavor_b + _closestJetDeepFlavor_bb + _closestJetDeepFlavor_lepb;
-        if( std::isnan( _closestJetDeepFlavor ) ) _closestJetDeepFlavor = 0.;
+    if (electron.pt()<6.5){
+       electron.addUserFloat("electronMVATopID",-999.);
+       electron.addUserFloat("closestJetDeepFlavor",-999.);
+       electron.addUserFloat("ptRatio",-999.);
+       electron.addUserFloat("miniIso",-999.);
     }
+    else{
+       double _lPt=1.0;
+       _lPt=electron.pt();
+       double _lEta=1.0;
+       _lEta=electron.eta();
+
+       double _3dIPSig=1.0;
+       _3dIPSig=abs(electron.dB(pat::Electron::PV3D)/electron.edB(pat::Electron::PV3D));
+       double _dxy=1.0;
+       _dxy=electron.dB(pat::Electron::PV2D);
+       double _dz=1.0;
+       _dz=electron.dB(pat::Electron::PVDZ);
+
+       double _relIso=1.0;
+       _relIso = getRelIso03(electron, rho, electronsEffectiveAreas);
+       double _relIso0p4 =1.0;
+       _relIso0p4 = getRelIso04(electron, rho, electronsEffectiveAreas);
+       double _relIso_Summer16 = 1.0;
+       _relIso_Summer16 = getRelIso03(electron, rho, electronsEffectiveAreas_Summer16);
+       double _relIso0p4_Summer16 = 1.0;
+       _relIso0p4_Summer16 = getRelIso04(electron, rho, electronsEffectiveAreas_Summer16);
+
+       double _miniIso = 1.0;
+       _miniIso = getMiniIsolation(electron, rho, electronsEffectiveAreas, false);
+       double _miniIsoCharged = 1.0;
+       _miniIsoCharged = getMiniIsolation(electron, rho, electronsEffectiveAreas, true);
+       double _miniIso_Spring15 = 1.0;
+       _miniIso_Spring15 = getMiniIsolation(electron, rho, electronsEffectiveAreas_Spring15, false);
+
+       double _lElectronMvaSummer16GP=1.0;
+       _lElectronMvaSummer16GP = electron.userFloat("ElectronMVAEstimatorRun2Spring16GeneralPurposeV1Values");
+       double _lElectronMvaFall17v1NoIso=1.0;
+       _lElectronMvaFall17v1NoIso = electron.userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV1Values");
+       double _lElectronMvaFall17NoIso=1.0;
+       _lElectronMvaFall17NoIso = electron.userFloat("ElectronMVAEstimatorRun2Fall17NoIsoV2Values");
+
+       // depends on jets
+       double _selectedTrackMult=1.0;
+       double _ptRel=1.0;
+       double _ptRatio=1.0;
+       double _ptRatio_Summer16=1.0;
+       double _closestJetDeepFlavor=1.0;
+       double _closestJetDeepFlavor_b = 0;
+       double _closestJetDeepFlavor_bb = 0;
+       double _closestJetDeepFlavor_lepb = 0;
+       double _closestJetDeepCsv_b = 0;
+       double _closestJetDeepCsv_bb = 0;
+       double _closestJetDeepCsv = 0;
+       bool oldMatching=false;
+
+       const pat::Jet* matchedJetPtr = findMatchedJet( electron, jetsCollection, oldMatching );
+       if( matchedJetPtr == nullptr ){
+           _ptRatio          = ( oldMatching ? 1. : 1. / (1. + _relIso0p4));
+           _ptRatio_Summer16 = ( oldMatching ? 1. : 1. / (1. + _relIso0p4_Summer16));
+           _ptRel = 0;
+           _selectedTrackMult = 0;
+           _closestJetDeepFlavor_b = 0;
+           _closestJetDeepFlavor_bb= 0;
+           _closestJetDeepFlavor_lepb = 0;
+           _closestJetDeepFlavor = 0;
+           _closestJetDeepCsv_b = 0;
+           _closestJetDeepCsv_bb = 0;
+           _closestJetDeepCsv = 0;
+       } else {
+           const pat::Jet& jet = *matchedJetPtr;
+
+           auto rawJetP4 = jet.correctedP4("Uncorrected");
+           auto leptonP4 = electron.p4();
+
+           bool leptonEqualsJet = ( ( rawJetP4 - leptonP4 ).P() < 1e-4 );
+
+           //if lepton and jet vector are equal set _ptRatio, _ptRel and track multipliticy to defaults 
+           if( leptonEqualsJet && !oldMatching ){
+               _ptRatio = 1;
+               _ptRatio_Summer16 = 1;
+               _ptRel = 0;
+               _selectedTrackMult = 0;
+           } else {
+
+               //remove all corrections above L1 from the lepton
+               auto L1JetP4 = jet.correctedP4("L1FastJet");
+               double L2L3JEC = jet.pt()/L1JetP4.pt();
+               auto lepAwareJetP4 = ( L1JetP4 - leptonP4 )*L2L3JEC + leptonP4;
+
+               _ptRatio = electron.pt() / lepAwareJetP4.pt();
+               _ptRatio_Summer16 = electron.pt() / lepAwareJetP4.pt();
+
+               //lepton momentum orthogonal to the jet axis
+               //magnitude of cross-product between lepton and rest of jet 
+               _ptRel = leptonP4.Vect().Cross( (lepAwareJetP4 - leptonP4 ).Vect().Unit() ).R();
+
+               _selectedTrackMult = 0;
+               for( const auto daughterPtr : jet.daughterPtrVector() ){
+                   const pat::PackedCandidate& daughter = *( (const pat::PackedCandidate*) daughterPtr.get() );
+
+                   if( daughter.charge() == 0 ) continue;
+                   if( daughter.fromPV() < 2 ) continue;
+                   if( reco::deltaR( daughter, electron ) > 0.4 ) continue;
+                   if( !daughter.hasTrackDetails() ) continue;
+
+                   auto daughterTrack = daughter.pseudoTrack();
+                   if( daughterTrack.pt() <= 1 ) continue;
+                   if( daughterTrack.hitPattern().numberOfValidHits() < 8 ) continue;
+                   if( daughterTrack.hitPattern().numberOfValidPixelHits() < 2 ) continue;
+                   if( daughterTrack.normalizedChi2() >= 5 ) continue;
+                   if( std::abs( daughterTrack.dz( vertex.position() ) ) >= 17 ) continue;
+                   if( std::abs( daughterTrack.dxy( vertex.position() ) ) >= 0.2 ) continue;
+                   ++_selectedTrackMult;
+               }
+
+           }
+
+           //DeepCSV of closest jet
+           _closestJetDeepCsv_b  = jet.bDiscriminator("pfDeepCSVJetTags:probb");
+           _closestJetDeepCsv_bb = jet.bDiscriminator("pfDeepCSVJetTags:probbb");
+           _closestJetDeepCsv    = _closestJetDeepCsv_b + _closestJetDeepCsv_bb;
+           if( std::isnan( _closestJetDeepCsv ) ) _closestJetDeepCsv = 0.;
+
+           //DeepFlavor b-tag values of closest jet
+           _closestJetDeepFlavor_b = jet.bDiscriminator("pfDeepFlavourJetTags:probb");
+           _closestJetDeepFlavor_bb = jet.bDiscriminator("pfDeepFlavourJetTags:probbb");
+           _closestJetDeepFlavor_lepb = jet.bDiscriminator("pfDeepFlavourJetTags:problepb");
+           _closestJetDeepFlavor = _closestJetDeepFlavor_b + _closestJetDeepFlavor_bb + _closestJetDeepFlavor_lepb;
+           if( std::isnan( _closestJetDeepFlavor ) ) _closestJetDeepFlavor = 0.;
+       }
 
 
 
-    double topid=1.0;
-    topid=leptonMvaComputerTOP->leptonMvaElectron(_lPt,
-            _lEta,
-            _selectedTrackMult,
-            _miniIsoCharged,
-            (is_2016 ? _miniIso_Spring15 : _miniIso) - _miniIsoCharged,
-            _ptRel,
-            is_2016 ? _ptRatio_Summer16 : _ptRatio,
-            _closestJetDeepCsv,
-            _closestJetDeepFlavor,
-            _3dIPSig,
-            _dxy,
-            _dz,
-	    _relIso,
-            //is_2016 ? _relIso_Summer16 : _relIso,
-            _lElectronMvaSummer16GP,
-            _lElectronMvaFall17v1NoIso,
-            _lElectronMvaFall17NoIso
-    );
+       double topid=1.0;
+       topid=leptonMvaComputerTOP->leptonMvaElectron(_lPt,
+               _lEta,
+               _selectedTrackMult,
+               _miniIsoCharged,
+               (is_2016 ? _miniIso_Spring15 : _miniIso) - _miniIsoCharged,
+               _ptRel,
+               is_2016 ? _ptRatio_Summer16 : _ptRatio,
+               _closestJetDeepCsv,
+               _closestJetDeepFlavor,
+               _3dIPSig,
+               _dxy,
+               _dz,
+               _relIso,
+               //is_2016 ? _relIso_Summer16 : _relIso,
+               _lElectronMvaSummer16GP,
+               _lElectronMvaFall17v1NoIso,
+               _lElectronMvaFall17NoIso
+       );
 
-    electron.addUserFloat("electronMVATopID",topid);
-    electron.addUserFloat("closestJetDeepFlavor",_closestJetDeepFlavor);
-    if (is_2016) electron.addUserFloat("ptRatio",_ptRatio_Summer16);
-    else electron.addUserFloat("ptRatio",_ptRatio);
-    if (is_2016) electron.addUserFloat("miniIso",_miniIso_Spring15);
-    else electron.addUserFloat("miniIso",_miniIso);
+       electron.addUserFloat("electronMVATopID",topid);
+       electron.addUserFloat("closestJetDeepFlavor",_closestJetDeepFlavor);
+       if (is_2016) electron.addUserFloat("ptRatio",_ptRatio_Summer16);
+       else electron.addUserFloat("ptRatio",_ptRatio);
+       if (is_2016) electron.addUserFloat("miniIso",_miniIso_Spring15);
+       else electron.addUserFloat("miniIso",_miniIso);
+    }
 
     output->push_back(electron);
   }
