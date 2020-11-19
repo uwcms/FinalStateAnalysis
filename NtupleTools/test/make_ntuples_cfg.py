@@ -432,7 +432,7 @@ updateJetCollection(
    jetSource = cms.InputTag('slimmedJets'),
    pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
    svSource = cms.InputTag('slimmedSecondaryVertices'),
-   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None'),
+   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),
    btagDiscriminators = [
       'pfDeepFlavourJetTags:probb',
       'pfDeepFlavourJetTags:probbb',
@@ -441,33 +441,12 @@ updateJetCollection(
       'pfDeepFlavourJetTags:probuds',
       'pfDeepFlavourJetTags:probg'
       ],
-   postfix='NewDFTraining'
+   postfix='UpdatedJJEC'
 )
-
 process.jbtagSequence=cms.Path()
 process.jbtagSequence.associate(process.patAlgosToolsTask)
 process.schedule.append(process.jbtagSequence)
 
-updateJetCollection(
-   process,
-   jetSource = cms.InputTag('updatedPatJetsNewDFTraining'),
-   labelName = 'UpdatedJJEC',
-   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
-   btagDiscriminators = [
-      'pfDeepFlavourJetTags:probb',
-      'pfDeepFlavourJetTags:probbb',
-      'pfDeepFlavourJetTags:problepb',
-      'pfDeepFlavourJetTags:probc',
-      'pfDeepFlavourJetTags:probuds',
-      'pfDeepFlavourJetTags:probg'
-      ]
-)
-
-process.jecSequence=cms.Path()
-process.jecSequence += process.patJetCorrFactorsUpdatedJJEC
-process.jecSequence += process.updatedPatJetsUpdatedJJEC
-process.schedule.append(process.jecSequence)
-fs_daughter_inputs['jets'] = 'updatedPatJetsTransientCorrectedUpdatedJJEC'
 
 # Prefiring weights
 prefiring_year='2016BtoH'
@@ -724,7 +703,6 @@ from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMet
 if options.era=="2017":
     runMetCorAndUncFromMiniAOD(process,
        isData=isData,
-       #isEmbeddedSample=bool(options.isEmbedded),
        fixEE2017 = True,
        fixEE2017Params = {"userawPt": True, "ptThreshold":50.0, "minEtaThreshold":2.65, "maxEtaThreshold": 3.139} ,
        postfix = "ModifiedMET"
@@ -733,8 +711,6 @@ if options.era=="2017":
 else:
     runMetCorAndUncFromMiniAOD(process,
        isData=isData,
-       #jetSrc=cms.InputTag("updatedPatJetsTransientCorrectedUpdatedJJEC"),
-       #isEmbeddedSample=bool(options.isEmbedded),
        postfix = "ModifiedMET"
                         )
 
@@ -742,11 +718,14 @@ process.correctMET=cms.Path(process.fullPatMetSequenceModifiedMET)
 process.schedule.append(process.correctMET)
 fs_daughter_inputs['jets'] = 'patSmearedJetsModifiedMET'
 
+from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+
 updateJetCollection(
    process,
    jetSource = cms.InputTag('patSmearedJetsModifiedMET'),
-   labelName = 'UpdatedSmearedBtag',
-   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None'),  # Update: Safe to always add 'L2L3Residual' as MC contains dummy L2L3Residual corrections (always set to 1)
+   pvSource = cms.InputTag('offlineSlimmedPrimaryVertices'),
+   svSource = cms.InputTag('slimmedSecondaryVertices'),
+   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2L3Residual','L2Relative', 'L3Absolute']), 'None'),
    btagDiscriminators = [
       'pfDeepFlavourJetTags:probb',
       'pfDeepFlavourJetTags:probbb',
@@ -754,14 +733,13 @@ updateJetCollection(
       'pfDeepFlavourJetTags:probc',
       'pfDeepFlavourJetTags:probuds',
       'pfDeepFlavourJetTags:probg'
-      ]
+      ],
+   postfix='NewDFTraining2'
 )
-
-process.jec2Sequence=cms.Path()
-process.jec2Sequence += process.patJetCorrFactorsUpdatedSmearedBtag
-process.jec2Sequence += process.updatedPatJetsUpdatedSmearedBtag
-process.schedule.append(process.jec2Sequence)
-fs_daughter_inputs['jets'] = 'updatedPatJetsTransientCorrectedUpdatedSmearedBtag'
+process.pbtag2 = cms.Path() # Add here whatever goes in your Path
+process.pbtag2.associate(process.patAlgosToolsTask)
+process.schedule.append(process.pbtag2)
+fs_daughter_inputs['jets'] = 'updatedPatJetsTransientCorrectedNewDFTraining2'
 
 #########################################################
 ### embed some things we need before object selection ###

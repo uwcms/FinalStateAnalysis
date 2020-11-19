@@ -112,37 +112,24 @@ def preElectrons(process, eSrc, vSrc, year, isEmbedded, **kwargs):
     # embed top mva id
     training_file = "FinalStateAnalysis/NtupleTools/data/el_TOP18_BDTG.weights.xml"
     training_file_mu="FinalStateAnalysis/NtupleTools/data/mu_TOP18_BDTG.weights.xml"
-    if runningLocal : 
-        training_file = "FinalStateAnalysis/NtupleTools/data/el_TOP18_BDTG.weights.xml"
-        if year=="2016":
-           training_file="FinalStateAnalysis/NtupleTools/data/el_TOP16_BDTG.weights.xml"
-        if year=="2017":
-           training_file="FinalStateAnalysis/NtupleTools/data/el_TOP17_BDTG.weights.xml"
+    training_file = "FinalStateAnalysis/NtupleTools/data/el_TOP18_BDTG.weights.xml"
+    if year=="2016":
+       training_file="FinalStateAnalysis/NtupleTools/data/el_TOP16_BDTG.weights.xml"
+    if year=="2017":
+       training_file="FinalStateAnalysis/NtupleTools/data/el_TOP17_BDTG.weights.xml"
 
-        training_file_mu="FinalStateAnalysis/NtupleTools/data/mu_TOP18_BDTG.weights.xml"
-        if year=="2016":
-           training_file_mu="FinalStateAnalysis/NtupleTools/data/mu_TOP16_BDTG.weights.xml"
-        if year=="2017":
-           training_file_mu="FinalStateAnalysis/NtupleTools/data/mu_TOP17_BDTG.weights.xml"
-    else:
-        cmsswversion=os.environ['CMSSW_VERSION']
-        training_file = "{0}/src/FinalStateAnalysis/NtupleTools/data/el_TOP18_BDTG.weights.xml".format(cmsswversion)
-        if year=="2016":
-           training_file="{0}/src/FinalStateAnalysis/NtupleTools/data/el_TOP16_BDTG.weights.xml".format(cmsswversion)
-        if year=="2017":
-           training_file="{0}/src/FinalStateAnalysis/NtupleTools/data/el_TOP17_BDTG.weights.xml".format(cmsswversion)
-
-        training_file_mu="{0}/src/FinalStateAnalysis/NtupleTools/data/mu_TOP18_BDTG.weights.xml".format(cmsswversion)
-        if year=="2016":
-           training_file_mu="{0}/src/FinalStateAnalysis/NtupleTools/data/mu_TOP16_BDTG.weights.xml".format(cmsswversion)
-        if year=="2017":
-           training_file_mu="{0}/src/FinalStateAnalysis/NtupleTools/data/mu_TOP17_BDTG.weights.xml".format(cmsswversion)
+    training_file_mu="FinalStateAnalysis/NtupleTools/data/mu_TOP18_BDTG.weights.xml"
+    if year=="2016":
+       training_file_mu="FinalStateAnalysis/NtupleTools/data/mu_TOP16_BDTG.weights.xml"
+    if year=="2017":
+       training_file_mu="FinalStateAnalysis/NtupleTools/data/mu_TOP17_BDTG.weights.xml"
 
     modName = 'minitopmvaidElectrons{0}'.format(postfix)
     mod = cms.EDProducer(
         "MiniAODElectronTopIdEmbedder",
         src=cms.InputTag(eSrc),
         jetSrc=cms.InputTag("updatedPatJetsTransientCorrectedUpdatedJJEC"),
+        #jetSrc= cms.InputTag("updatedPatJetsTransientCorrectedNewDFTraining"),
         vtxSrc = cms.InputTag(vSrc),
         srcRho = cms.InputTag("fixedGridRhoFastjetAll"),
         is2016 = cms.bool(False),
