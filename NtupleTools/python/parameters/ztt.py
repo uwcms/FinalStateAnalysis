@@ -55,7 +55,7 @@ parameters = {
 
     # cross cleaning for objects in final state
     #'crossCleaning' : 'smallestDeltaR() > 0.3',
-    'crossCleaning' : 'smallestDeltaR() > 0.3 && channelSpecificObjCuts("CHANNEL")', # CHANNEL is formatted in ./PatTools/python/patFinalStateProducers.py
+    'crossCleaning' : 'smallestDeltaR() > 0.1 && channelSpecificObjCuts("CHANNEL")', # CHANNEL is formatted in ./PatTools/python/patFinalStateProducers.py
   
 
 
@@ -158,7 +158,7 @@ parameters = {
         ##PythiaWeight_fsr_muR0p25='evt.geninfoweights().at(11)',
 	##PythiaWeight_isr_muR4='evt.geninfoweights().at(12)',
         ##PythiaWeight_fsr_muR4='evt.geninfoweights().at(13)',
-        #
+        ##
 	##lheweight_nominal='evt.lheweights().at(0)',
 	##lheweight_muR1_muF2='evt.lheweights().at(1)',
         ##lheweight_muR1_muF0p5='evt.lheweights().at(2)',
