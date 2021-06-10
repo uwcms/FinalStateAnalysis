@@ -72,7 +72,7 @@ vetos = PSet(
 
 
     ## Leading and sublead jets
-    ## Comment for 2017
+    ### Comment for 2017
     j1pt = 'jetVariables("pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)", 0.5).at(0)',
     j1eta = 'jetVariables("pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)", 0.5).at(1)',
     j1phi = 'jetVariables("pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)", 0.5).at(2)',
@@ -90,7 +90,7 @@ vetos = PSet(
     jetVeto30 = 'vetoJets(0.5, "pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)").size()',
     jetVeto30_JetEnUp = 'vetoJets(0.5, "userCand(\'jes+\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)").size()',
     jetVeto30_JetEnDown = 'vetoJets(0.5, "userCand(\'jes-\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)").size()',
-   vbfMass = 'vbfVariables("pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)", 0.5).mass',
+    vbfMass = 'vbfVariables("pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)", 0.5).mass',
 
 
     ## Uncomment for 2017 Noisy jets
@@ -110,7 +110,7 @@ vetos = PSet(
     #jetVeto30 = 'vetoJets(0.5, "(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)").size()',
     #jetVeto30_JetEnUp = 'vetoJets(0.5, "(userCand(\'jes+\').pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & userCand(\'jes+\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)").size()',
     #jetVeto30_JetEnDown = 'vetoJets(0.5, "(userCand(\'jes-\').pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & userCand(\'jes-\').pt > 30 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)").size()',
-   #vbfMass = 'vbfVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)", 0.5).mass',
+    #vbfMass = 'vbfVariables("(pt > 50 | (abs(eta) < 2.65 | abs(eta) > 3.139)) & pt > 20 & abs(eta) < 4.7 & userFloat(\'idTight\') > 0.5 & (userInt(\'pileupJetId:fullId\')>3 | pt>50)", 0.5).mass',
 
 
 )
