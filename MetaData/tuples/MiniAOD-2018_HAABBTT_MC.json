@@ -9,6 +9,7 @@
   "DY2Jets" : "DY2JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
   "DY3Jets" : "DY3JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
   "DY4Jets" : "DY4JetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8",
+  "DYJets_M10to50" : "DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8",
   "TTToSemiLeptonic" : "TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8",
   "TTToHadronic" : "TTToHadronic_TuneCP5_13TeV-powheg-pythia8",
   "TTTo2L2Nu" : "TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8",
@@ -35,6 +36,6 @@
   "WminusHToWW_M125" : "HWminusJ_HToWW_M125_13TeV_powheg_jhugen724_pythia8_TuneCP5",
   "ZHToWW_M125" : "HZJ_HToWW_M125_13TeV_powheg_jhugen714_pythia8_TuneCP5",
   "GGZHToWW_M125" : "GluGluZH_HToWW_M125_13TeV_powheg_pythia8_TuneCP5_PSweights",
-  "ttHToNonbb_M125" : "ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8"
-
+  "ttHToNonbb_M125" : "ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8",
+  "ttHTobb_M125" : "ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8"
 } 
