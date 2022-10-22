@@ -377,7 +377,7 @@ def get_com_line_args():
 
     farmout_group.add_argument(
         '--output-dir', dest='outdir',
-        default='gsiftp://cms-lvs-gridftp.hep.wisc.edu:2811//hdfs/store/user/{user}/{jobid}/{sample}/',
+        default='davs://cmsxrootd.hep.wisc.edu:1094/store/user/{user}/{jobid}/{sample}/',
         help = 'Where to put the output.  Default: %(default)s'
     )
 
